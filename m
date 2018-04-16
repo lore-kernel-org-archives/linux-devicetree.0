@@ -1,47 +1,129 @@
-From: David Collins <collinsd@codeaurora.org>
-Subject: Re: [PATCH v3 2/2] clk: qcom: clk-rpmh: Add QCOM RPMh clock driver
-Date: Mon, 16 Apr 2018 14:47:42 -0700
-Message-ID: <5af35710-b521-e22e-055b-798cbe343dc6@codeaurora.org>
-References: <1523673401-21611-1-git-send-email-tdas@codeaurora.org>
- <1523673401-21611-3-git-send-email-tdas@codeaurora.org>
- <152390031768.51482.12790579493617671456@swboyd.mtv.corp.google.com>
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
+Subject: [PATCH v6 00/11] Sunxi: Add SMP support on A83T
+Date: Mon, 16 Apr 2018 23:50:21 +0200
+Message-ID: <20180416215032.5023-1-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152390031768.51482.12790579493617671456@swboyd.mtv.corp.google.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Taniya Das <tdas@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mylene.josserand@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Taniya,
+Hello everyone,
 
-On 04/16/2018 10:38 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2018-04-13 19:36:41)
->> Add the RPMh clock driver to control the RPMh managed clock resources on
->> some of the Qualcomm Technologies, Inc. SoCs.
->>
->> Signed-off-by: David Collins <collinsd@codeaurora.org>
->> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
-> 
-> Your signoff chain is very confused. The first signoff should match the
-> "From:" header but that doesn't seem to be the case here. And the sender
-> should be the last in the chain.
+This is a V6 of my series that adds SMP support for Allwinner sun8i-a83t.
+Based on sunxi's tree, sunxi/for-next branch.
+Depends on a patch from Doug Berger that allows to include the "cpu-type"
+header on assembly files:
+6c7dd080ba4b ("ARM: Allow this header to be included by assembly files")
 
-It looks like the provenance of this driver go muddled during downstream
-propagation between branches.  The original downstream version of the
-clk-rpmh driver was written by Osvaldo Banuelos [1].  I think that the
-best course of action here would be to remove my Signed-off-by, add
-Osvaldo's, and add yours.
+This new series refactors the shmobile code to use the function introduced
+in this series: "secure_cntvoff_init".
+Geert Uytterhoeven and Simon Horman, could you review and test this series
+on Renesas boards? Thank you very much!
 
-Thanks,
-David
+If you have any remarks/questions, let me know.
+Thank you in advance,
+Mylène
 
-[1]:
-https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/?id=11d3623c37afb945ce36755501812a44efeb6cd9
+Changes since v5:
+    - Remove my patch 01 and use the patch of Doug Berger to be able to
+    include the cpu-type header on assembly files.
+    - Rename smp_init_cntvoff function into secure_cntvoff_init according
+    to Marc Zyngier's review.
+    - According to Chen-Yu and Maxime's reviews, remove the patch that was
+    moving structures. Instead of using an index to retrieve which
+    architecture we are having, use a global variable.
+    - Merge the 2 patches that move assembly code from C to assembly file.
+    - Use a sun8i field instead of sun9i to know on which architecture we
+    are using because many modifications/additions of the code are for
+    sun8i-a83t.
+    - Rework the patch "add is_sun8i field" to add only this field in this
+    patch. The part of the patch that was starting to handle the differences
+    between sun8i-a83t and sun9i-a80 is merged in the patch that adds the
+    support of sun8i-a83t.
+    - Add a new patch that refactor the shmobile code to use the new function
+    secure_cntvoff_init introduced in this series.
+
+Changes since v4:
+    - Rebased my series according to new Chen-Yu series:
+       "ARM: sunxi: Clean and improvements for multi-cluster SMP"
+       https://lkml.org/lkml/2018/3/8/886
+    - Updated my series according to Marc Zyngier's reviews to add CNTVOFF
+    initialization's function into ARM's common part. Thanks to that, other
+    platforms such as Renesa can use this function.
+    - For boot CPU, create a new machine to handle the CNTVOFF initialization
+    using "init_early" callback.
+Changes since v3:
+    - Take into account Maxime's reviews:
+	- split the first patch into 4 new patches: add sun9i device tree
+	parsing, rename some variables, add a83t support and finally,
+	add hotplug support.
+	- Move the code of previous patch 07 (to disable CPU0 disabling)
+	into hotplug support patch (see patch 04)
+	- Remove the patch that added PRCM register because it is already
+	available. Because of that, update the device tree parsing to use
+	"sun8i-a83t-r-ccu".
+	- Use a variable to know which SoC we currently have
+    - Take into account Chen-Yu's reviews: create two iounmap functions
+    to release the resources of the device tree parsing.
+    - Take into account Marc's review: Update the code to initialize CNTVOFF
+    register. As there is already assembly code in the driver, I decided
+    to create an assembly file not to mix assembly and C code.
+    For that, I create 3 new patches: move the current assembly code that
+    handles the cluster cache enabling into a file, move the cpu_resume entry
+    in this file and finally, add a new assembly entry to initialize the timer
+    offset for boot CPU and secondary CPUs.
+
+Changes since v2:
+    - Rebased my modifications according to new Chen Yu's patch series
+    that adds SMP support for sun9i-a80 (without MCPM).
+    - Split the device-tree patches into 3 patches for CPUCFG, R_CPUCFG
+    and PRCM registers for more visibility.
+    - The hotplug of CPU0 is currently not working (even after trying what
+    Allwinner's code is doing) so remove the possibility of disabling
+    this CPU. Created a new patch for it.
+
+Changes since v1:
+    - Add Chen Yu's patch in my series (see path 01)
+    - Add new compatibles for prcm and cpucfg registers for sun8i-a83t.
+    Create two functions to separate the DT parsing of sun9i-a80 and
+    sun8i-a83t.
+    - Thanks to Maxime's review: order device tree's nodes according
+    to physical addresses, remove unused label and fix registers' sizes.
+    Update the commit log and commit title of my last patch (see
+    patch 05).
+
+Mylène Josserand (11):
+  ARM: sunxi: smp: Move assembly code into a file
+  ARM: dts: sun8i: Add CPUCFG device node for A83T dtsi
+  ARM: dts: sun8i: Add R_CPUCFG device node for the A83T dtsi
+  ARM: dts: sun8i: a83t: Add CCI-400 node
+  ARM: smp: Add initialization of CNTVOFF
+  ARM: sunxi: Add initialization of CNTVOFF
+  ARM: sun9i: smp: Rename clusters's power-off
+  ARM: sun9i: smp: Add is_sun8i field
+  ARM: sun8i: smp: Add support for A83T
+  ARM: dts: sun8i: Add enable-method for SMP support for the A83T SoC
+  ARM: shmobile: Convert file to use cntvoff
+
+ arch/arm/boot/dts/sun8i-a83t.dtsi        |  59 ++++++++
+ arch/arm/common/Makefile                 |   1 +
+ arch/arm/common/secure_cntvoff.S         |  31 ++++
+ arch/arm/include/asm/secure_cntvoff.h    |   8 ++
+ arch/arm/mach-shmobile/common.h          |   1 -
+ arch/arm/mach-shmobile/headsmp-apmu.S    |  22 +--
+ arch/arm/mach-shmobile/setup-rcar-gen2.c |   3 +-
+ arch/arm/mach-sunxi/Makefile             |   4 +-
+ arch/arm/mach-sunxi/headsmp.S            |  81 +++++++++++
+ arch/arm/mach-sunxi/mc_smp.c             | 240 +++++++++++++++++++------------
+ arch/arm/mach-sunxi/sunxi.c              |  20 ++-
+ 11 files changed, 349 insertions(+), 121 deletions(-)
+ create mode 100644 arch/arm/common/secure_cntvoff.S
+ create mode 100644 arch/arm/include/asm/secure_cntvoff.h
+ create mode 100644 arch/arm/mach-sunxi/headsmp.S
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.11.0
