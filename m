@@ -1,33 +1,39 @@
-From: Fabian Mewes <architekt@coding4coffee.org>
-Subject: [PATCH] dt-bindings: iio: adc: mcp320x: Use vendor prefix compatible strings
-Date: Mon, 16 Apr 2018 17:34:06 +0200
-Message-ID: <1523892846-25000-1-git-send-email-architekt@coding4coffee.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 1/5] clk: Extract OF clock helpers in <linux/of_clk.h>
+Date: Mon, 16 Apr 2018 09:05:02 -0700
+Message-ID: <152389470206.51482.14969985575347056688@swboyd.mtv.corp.google.com>
+References: <1523364701-15383-1-git-send-email-geert+renesas@glider.be>
+ <1523364701-15383-2-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1523364701-15383-2-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lukas Wunner <lukas@wunner.de>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fabian Mewes <architekt@coding4coffee.org>
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Update the example to use the compatible string including the
-vendor prefix instead of the ones deprecated in 3a872138e4b.
+Quoting Geert Uytterhoeven (2018-04-10 05:51:37)
+> The use of of_clk_get_parent_{count,name}() and of_clk_init() is not
+> limited to clock providers.
+> 
+> Hence move these helpers into their own header file, so callers that are
+> not clock providers no longer have to include <linux/clk-provider.h>.
+> 
+> Suggested-by: Stephen Boyd <sboyd@kernel.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v2:
+>   - New.
+> 
+> I have't added an SPDX-License-Identifier line, as
+> <linux/clk-provider.h> also doesn't have one yet.
+> 
+> Other candidates to be moved here later?
+>   - of_clk_get(),
+>   - of_clk_get_by_name(),
+>   - of_clk_get_from_provider().
 
-Signed-off-by: Fabian Mewes <architekt@coding4coffee.org>
----
- Documentation/devicetree/bindings/iio/adc/mcp320x.txt |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
-index 7d64753..56373d6 100644
---- a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
-@@ -49,7 +49,7 @@ Required properties:
- Examples:
- spi_controller {
- 	mcp3x0x@0 {
--		compatible = "mcp3002";
-+		compatible = "microchip,mcp3002";
- 		reg = <0>;
- 		spi-max-frequency = <1000000>;
- 		vref-supply = <&vref_reg>;
--- 
-1.7.10.4
+The clk_get APIs should stay in the consumer header file (clk.h) because
+they're consumer APIs. Sure they have "of" in the name, but whatever.
