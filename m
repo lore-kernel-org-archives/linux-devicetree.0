@@ -1,24 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] pinctrl: mediatek: update pinmux defintions for MT7623
-Date: Mon, 16 Apr 2018 16:35:52 -0500
-Message-ID: <20180416213552.wbtv2ljwqpxgogqx@rob-hp-laptop>
-References: <c8748c81711b0d41e83418b6c23d82d8c78c7094.1523845138.git.ryder.lee@mediatek.com>
+Subject: Re: [RFC 1/3] dt-bindings: cpu: Add Renesas RZ/N1D SMP enable method.
+Date: Mon, 16 Apr 2018 16:37:30 -0500
+Message-ID: <20180416213730.isfggqngv6zjxahg@rob-hp-laptop>
+References: <1523871304-48517-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1523871304-48517-3-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <c8748c81711b0d41e83418b6c23d82d8c78c7094.1523845138.git.ryder.lee@mediatek.com>
+In-Reply-To: <1523871304-48517-3-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, phil.edworthy@renesas.com, buserror+upstream@gmail.com, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Carlo Caione <carlo@endlessm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>, Frank Rowand <frank.rowand@sony.com>, Juri Lelli <juri.lelli@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 16, 2018 at 10:32:19AM +0800, Ryder Lee wrote:
-> Fulfill the pinmux macros for MT7623
+On Mon, Apr 16, 2018 at 10:34:57AM +0100, Michel Pollet wrote:
+> Add a special enable method for second CA8 of the Renesas RZ/N1D
+> (R9A06G032).
 > 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
 > ---
->  include/dt-bindings/pinctrl/mt7623-pinfunc.h | 90 +++++++++++++++++++++++++++-
->  1 file changed, 87 insertions(+), 3 deletions(-)
+>  Documentation/devicetree/bindings/arm/cpus.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
