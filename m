@@ -1,78 +1,73 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] drivers/of: Introduce ARCH_HAS_OWN_OF_NUMA
-Date: Mon, 16 Apr 2018 11:47:45 -0500
-Message-ID: <CAL_JsqLujBZzo5T0118QiX-CvxfetaBcPG9rC_WGCCK8k4Ka7Q@mail.gmail.com>
-References: <20180409074604.17671-1-oohall@gmail.com>
- <CAL_Jsq+ho2QhmNmPZMDJcfSxposJd=jYDvjhXH8cMAtVFP7n4A@mail.gmail.com>
- <CAPcyv4iCkc7ZSB7Sjk-O7iBWvvTzhTmdccucC4uN6GEu5Bjotw@mail.gmail.com>
+From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [[RFC]DPU PATCH 1/2] drm/bridge: add support for
+ sn65dsi86 bridge driver
+Date: Mon, 16 Apr 2018 12:55:46 -0400
+Message-ID: <20180416165546.GN73214@art_vandelay>
+References: <1523596981-18913-1-git-send-email-spanda@codeaurora.org>
+ <1523596981-18913-2-git-send-email-spanda@codeaurora.org>
+ <20180413192905.GG73214@art_vandelay>
+ <dc5560fc11fff2a7880e32bf47186c8c@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <CAPcyv4iCkc7ZSB7Sjk-O7iBWvvTzhTmdccucC4uN6GEu5Bjotw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <dc5560fc11fff2a7880e32bf47186c8c-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 9, 2018 at 4:05 PM, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Apr 9, 2018 at 1:52 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Mon, Apr 9, 2018 at 2:46 AM, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> Some OF platforms (pseries and some SPARC systems) has their own
->>> implementations of NUMA affinity detection rather than using the generic
->>> OF_NUMA driver, which mainly exists for arm64. For other platforms one
->>> of two fallbacks provided by the base OF driver are used depending on
->>> CONFIG_NUMA.
->>>
->>> In the CONFIG_NUMA=n case the fallback is an inline function in of.h.
->>> In the =y case the fallback is a real function which is defined as a
->>> weak symbol so that it may be overwritten by the architecture if desired.
->>>
->>> The problem with this arrangement is that the real implementations all
->>> export of_node_to_nid(). Unfortunately it's not possible to export the
->>> fallback since it would clash with the non-weak version. As a result
->>> we get build failures when:
->>>
->>> a) CONFIG_NUMA=y && CONFIG_OF=y, and
->>> b) The platform doesn't implement of_node_to_nid(), and
->>> c) A module uses of_node_to_nid()
->>>
->>> Given b) will be true for most platforms this is fairly easy to hit
->>> and has been observed on ia64 and x86.
->>
->> How specifically do we hit this? The only module I see using
->> of_node_to_nid in mainline is Cell EDAC driver.
->
-> The of_pmem driver is using it currently pending for a 4.17 pull
-> request. Stephen hit the compile failure in -next.
-
-I took a look at this. The correct fix here is to use dev_to_node() instead:
-
-diff --git a/drivers/nvdimm/of_pmem.c b/drivers/nvdimm/of_pmem.c
-index 85013bad35de..0a701837dfc0 100644
---- a/drivers/nvdimm/of_pmem.c
-+++ b/drivers/nvdimm/of_pmem.c
-@@ -67,7 +67,7 @@ static int of_pmem_region_probe(struct platform_device *pdev)
-                 */
-                memset(&ndr_desc, 0, sizeof(ndr_desc));
-                ndr_desc.attr_groups = region_attr_groups;
--               ndr_desc.numa_node = of_node_to_nid(np);
-+               ndr_desc.numa_node = dev_to_node(&pdev->dev);
-                ndr_desc.res = &pdev->resource[i];
-                ndr_desc.of_node = np;
-                set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-
-
-And we should remove the exported symbol.
-
-I'll send a proper patch.
-
-Rob
+T24gTW9uLCBBcHIgMTYsIDIwMTggYXQgMTE6MzI6NTBBTSArMDUzMCwgc3BhbmRhQGNvZGVhdXJv
+cmEub3JnIHdyb3RlOgo+IE9uIDIwMTgtMDQtMTQgMDA6NTksIFNlYW4gUGF1bCB3cm90ZToKPiA+
+IE9uIEZyaSwgQXByIDEzLCAyMDE4IGF0IDEwOjUzOjAwQU0gKzA1MzAsIFNhbmRlZXAgUGFuZGEg
+d3JvdGU6Cj4gPiA+IEFkZCBzdXBwb3J0IGZvciBUSSdzIHNuNjVkc2k4NiBkc2kyZWRwIGJyaWRn
+ZSBjaGlwLgo+ID4gPiBUaGUgY2hpcCBjb252ZXJ0cyBEU0kgdHJhbnNtaXR0ZWQgc2lnbmFsIHRv
+IGVEUCBzaWduYWwsCj4gPiA+IHdoaWNoIGlzIGZlZCB0byB0aGUgY29ubmVjdGVkIGVEUCBwYW5l
+bC4KPiA+ID4gCj4gPiA+IFRoaXMgY2hpcCBjYW4gYmUgY29udHJvbGxlZCB2aWEgZWl0aGVyIGky
+YyBpbnRlcmZhY2Ugb3IKPiA+ID4gZHNpIGludGVyZmFjZS4gQ3VycmVudGx5IGluIGRyaXZlciBh
+bGwgdGhlIGNvbnRyb2wgcmVnaXN0ZXJzCj4gPiA+IGFyZSBiZWluZyBhY2Nlc3NlZCB0aHJvdWdo
+IGkyYyBpbnRlcmZhY2Ugb25seS4KPiA+ID4gQWxzbyBhcyBvZiBub3cgSFBEIHN1cHBvcnQgaGFz
+IG5vdCBiZWVuIGFkZGVkIHRvIGJyaWRnZQo+ID4gPiBjaGlwIGRyaXZlci4KPiA+ID4gCj4gPiA+
+IFNpZ25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBjb2RlYXVyb3JhLm9yZz4KCjxz
+bmlwIC8+Cgo+ID4gPiArewo+ID4gPiArCXN0cnVjdCBtaXBpX2RzaV9ob3N0ICpob3N0Owo+ID4g
+PiArCXN0cnVjdCBtaXBpX2RzaV9kZXZpY2UgKmRzaTsKPiA+ID4gKwlzdHJ1Y3Qgc242NWRzaTg2
+ICpwZGF0YSA9IGJyaWRnZV90b19zbjY1ZHNpODYoYnJpZGdlKTsKPiA+ID4gKwlpbnQgcmV0Owo+
+ID4gPiArCWNvbnN0IHN0cnVjdCBtaXBpX2RzaV9kZXZpY2VfaW5mbyBpbmZvID0geyAudHlwZSA9
+ICJzbjY1ZHNpODYiLAo+ID4gPiArCQkJCQkJICAgLmNoYW5uZWwgPSAwLAo+ID4gPiArCQkJCQkJ
+ICAgLm5vZGUgPSBOVUxMLAo+ID4gPiArCQkJCQkJIH07Cj4gPiA+ICsKPiA+ID4gKwlpZiAoIWJy
+aWRnZS0+ZW5jb2Rlcikgewo+ID4gPiArCQlEUk1fRVJST1IoIlBhcmVudCBlbmNvZGVyIG9iamVj
+dCBub3QgZm91bmQiKTsKPiA+ID4gKwkJcmV0dXJuIC1FTk9ERVY7Cj4gPiA+ICsJfQo+ID4gPiAr
+Cj4gPiA+ICsJLyogSFBEIG5vdCBzdXBwb3J0ZWQgKi8KPiA+ID4gKwlwZGF0YS0+Y29ubmVjdG9y
+LnBvbGxlZCA9IDA7Cj4gPiA+ICsKPiA+IAo+ID4gWW91J2xsIG5lZWQgdG8gcmVmYWN0b3IgdGhl
+IGJlbG93IHRvIGFjY29tbW9kYXRlIHBhbmVscy4gSWYgeW91J3JlIG5vdAo+ID4gcGxhbm5pbmcK
+PiA+IG9uIHN1cHBvcnRpbmcgaG90cGx1ZywgeW91IHNob3VsZCBwcm9iYWJseSByZW1vdmUgYWxs
+IG9mIHRoZQo+ID4gY29ubmVjdG9yLXJlbGF0ZWQKPiA+IHN0dWZmIGZyb20gdGhpcyBkcml2ZXIs
+IHNpbmNlIHlvdSB3aWxsIGFsd2F5cyBiZSB1c2luZyBhIHBhbmVsIGRyaXZlci4KPiA+IAo+IAo+
+IFRoYW5rcyBmb3IgcmV2aWV3aW5nIHRoZSBwYXRjaCBpbiBkZXRhaWwuCj4gCj4gSSBoYXZlIG9u
+ZSBkb3VidCBoZXJlLiBJZiB3ZSByZW1vdmUgY29ubmVjdG9yIGZyb20gYnJpZGdlIGRyaXZlciwg
+dGhlbiBob3cKPiB3aWxsIGRldGVjdCgpCj4gYW5kIGdldF9tb2RlcygpIGNhbGxlZC4gSWYgeW91
+IGFyZSBzdWdnZXN0aW5nIHRvIHVzZSBwYW5lbCBmdW5jJ3MgZGV0ZWN0KCkKPiBhbmQgZ2V0X21v
+ZGUoKQo+IHRoZW4gaXQgbWlnaHQgbm90IHdvcmssIGJlY2F1c2Ugb25jZSB1cHN0cmVhbSBEU0kg
+ZHJpdmVyIHNlZXMgYW4gZXh0ZXJuYWwKPiBicmlkZ2UgaXMgY29ubmVjdGVkCj4gdG8gRFNJLCB0
+aGVuIGl0IGRvZXMgbm90IGNyZWF0ZSBhIGNvbm5lY3RvciBvZiBpdCBvd24sIGl0IGV4cGVjdHMg
+dGhlCj4gZXh0ZXJuYWwgYnJpZGdlCj4gdG8gY3JlYXRlIHRoZSBjb25uZWN0b3Igbm9kZS4gSSB0
+aGluayBoZXJlIHRoZSBleHRlcm5hbCBicmlkZ2UgaGFzIHRvIGNyZWF0ZQo+IHRoZSBjb25uZWN0
+b3IKPiBhbmQgd2hlbiBkZXRlY3QoKSBhbmQgZ2V0X21vZGVzKCkgY2FsbCBjb21lIHRvIGV4dGVy
+bmFsIGJyaWRnZSB0aGVuIGl0Cj4gc2hvdWxkIHF1ZXJ5IGNvbm5lY3RlZAo+IHBhbmVsJ3MgZGV0
+ZWN0KCkgYW5kIGdldF9tb2RlcygpIEFQSS4KPiAKClJpZ2h0LCB0aGFua3MgZm9yIHNldHRpbmcg
+bWUgc3RyYWlnaHQuIFlvdSdsbCBuZWVkIHRvIGNhbGwgdGhlIGRybV9wYW5lbF8qCmhlbHBlciBm
+dW5jdGlvbnMgaWYgdGhlIHBhbmVsIGlzIHByZXNlbnQgZm9yIHRoZSBjb25uZWN0b3IgaG9va3Mu
+CgpTZWFuCgoKPHNuaXAgLz4KCi0tIApTZWFuIFBhdWwsIFNvZnR3YXJlIEVuZ2luZWVyLCBHb29n
+bGUgLyBDaHJvbWl1bSBPUwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVl
+ZHJlbm8K
