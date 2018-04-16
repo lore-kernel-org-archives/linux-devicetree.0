@@ -1,30 +1,24 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] PCI: dwc: artpec6: Add reset-gpios for PERST# control
-Date: Mon, 16 Apr 2018 16:35:03 -0500
-Message-ID: <20180416213503.im3dfmbqnqho32w7@rob-hp-laptop>
-References: <20180415185621.GR16746@axis.com>
+Subject: Re: [PATCH] pinctrl: mediatek: update pinmux defintions for MT7623
+Date: Mon, 16 Apr 2018 16:35:52 -0500
+Message-ID: <20180416213552.wbtv2ljwqpxgogqx@rob-hp-laptop>
+References: <c8748c81711b0d41e83418b6c23d82d8c78c7094.1523845138.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180415185621.GR16746@axis.com>
+In-Reply-To: <c8748c81711b0d41e83418b6c23d82d8c78c7094.1523845138.git.ryder.lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jesper Nilsson <jesper.nilsson@axis.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 15, 2018 at 08:56:21PM +0200, Jesper Nilsson wrote:
-> Some devices need an optional external gpio for controlling
-> the PERST# signal to bring up for example a PCIe switch
-> after a soft reset.
+On Mon, Apr 16, 2018 at 10:32:19AM +0800, Ryder Lee wrote:
+> Fulfill the pinmux macros for MT7623
 > 
-> Without this, some boards (the ARTPEC-6 master devboard)
-> would not get the PCIe link back after a soft reset.
-> 
-> Signed-off-by: Jesper Nilsson <jesper.nilsson@axis.com>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 > ---
->  .../devicetree/bindings/pci/axis,artpec6-pcie.txt    |  4 ++++
->  drivers/pci/dwc/pcie-artpec6.c                       | 20 +++++++++++++++++++-
->  2 files changed, 23 insertions(+), 1 deletion(-)
+>  include/dt-bindings/pinctrl/mt7623-pinfunc.h | 90 +++++++++++++++++++++++++++-
+>  1 file changed, 87 insertions(+), 3 deletions(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
