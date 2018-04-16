@@ -1,26 +1,177 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: clock: Introduce QCOM RPMh clock bindings
-Date: Mon, 16 Apr 2018 10:39:15 -0700
-Message-ID: <152390035549.51482.14663987553632487490@swboyd.mtv.corp.google.com>
-References: <1523673401-21611-1-git-send-email-tdas@codeaurora.org>
- <1523673401-21611-2-git-send-email-tdas@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 01/10] Documentations: dt-bindings: Add documents of
+ generic PECI bus, adapter and client drivers
+Date: Mon, 16 Apr 2018 12:59:36 -0500
+Message-ID: <20180416175936.4vcse73mrnyk242m@rob-hp-laptop>
+References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
+ <20180410183212.16787-2-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523673401-21611-2-git-send-email-tdas@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20180410183212.16787-2-jae.hyun.yoo@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2018-04-13 19:36:40)
-> Add RPMh clock device bindings for Qualcomm Technology Inc's SoCs. These
-> devices would be used for communicating resource state requests to control
-> the clocks managed by RPMh.
+On Tue, Apr 10, 2018 at 11:32:03AM -0700, Jae Hyun Yoo wrote:
+> This commit adds documents of generic PECI bus, adapter and client drivers.
+
+"dt-bindings: ..." for the subject prefix please.
+
 > 
-> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
+> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+> Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
+> Reviewed-by: James Feist <james.feist@linux.intel.com>
+> Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
+> Cc: Alan Cox <alan@linux.intel.com>
+> Cc: Andrew Jeffery <andrew@aj.id.au>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Fengguang Wu <fengguang.wu@intel.com>
+> Cc: Greg KH <gregkh@linuxfoundation.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
+> Cc: Jean Delvare <jdelvare@suse.com>
+> Cc: Joel Stanley <joel@jms.id.au>
+> Cc: Julia Cartwright <juliac@eso.teric.us>
+> Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> Cc: Milton Miller II <miltonm@us.ibm.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Stef van Os <stef.van.os@prodrive-technologies.com>
+> Cc: Sumeet R Pawnikar <sumeet.r.pawnikar@intel.com>
+> ---
+>  .../devicetree/bindings/peci/peci-adapter.txt      | 23 ++++++++++++++++++++
+>  .../devicetree/bindings/peci/peci-bus.txt          | 15 +++++++++++++
+>  .../devicetree/bindings/peci/peci-client.txt       | 25 ++++++++++++++++++++++
 
-Is Amit the author? Needs a "From: Amit .." then.
+This should be all one document.
 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+>  3 files changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/peci/peci-adapter.txt
+>  create mode 100644 Documentation/devicetree/bindings/peci/peci-bus.txt
+>  create mode 100644 Documentation/devicetree/bindings/peci/peci-client.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/peci/peci-adapter.txt b/Documentation/devicetree/bindings/peci/peci-adapter.txt
+> new file mode 100644
+> index 000000000000..9221374f6b11
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/peci/peci-adapter.txt
+> @@ -0,0 +1,23 @@
+> +Generic device tree configuration for PECI adapters.
+> +
+> +Required properties:
+> +- compatible     : Should contain hardware specific definition strings that can
+> +		   match an adapter driver implementation.
+> +- reg            : Should contain PECI controller registers location and length.
+
+No need for these 2 here.
+
+> +- #address-cells : Should be <1>.
+> +- #size-cells    : Should be <0>.
+
+Some details on the addressing for PECI would be good.
+
+> +
+> +Example:
+> +	peci: peci@10000000 {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x0 0x10000000 0x1000>;
+> +
+
+This part of the example is not relevant. Just start with the adapter 
+node.
+
+> +		peci0: peci-bus@0 {
+> +			compatible = "soc,soc-peci";
+> +			reg = <0x0 0x1000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +	};
+> diff --git a/Documentation/devicetree/bindings/peci/peci-bus.txt b/Documentation/devicetree/bindings/peci/peci-bus.txt
+> new file mode 100644
+> index 000000000000..90bcc791ccb0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/peci/peci-bus.txt
+> @@ -0,0 +1,15 @@
+> +Generic device tree configuration for PECI buses.
+> +
+> +Required properties:
+> +- compatible     : Should be "simple-bus".
+
+I don't understand what this has to do with PECI? "simple-bus" already 
+has a defined meaning.
+
+> +- #address-cells : Should be <1>.
+> +- #size-cells    : Should be <1>.
+> +- ranges         : Should contain PECI controller registers ranges.
+> +
+> +Example:
+> +	peci: peci@10000000 {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x0 0x10000000 0x1000>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/peci/peci-client.txt b/Documentation/devicetree/bindings/peci/peci-client.txt
+> new file mode 100644
+> index 000000000000..8e2bfd8532f6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/peci/peci-client.txt
+> @@ -0,0 +1,25 @@
+> +Generic device tree configuration for PECI clients.
+> +
+> +Required properties:
+> +- compatible : Should contain target device specific definition strings that can
+> +	       match a client driver implementation.
+
+Bindings are for h/w, not client drivers.
+
+How are PECI devices defined?
+
+> +- reg        : Should contain address of a client CPU. Address range of CPU
+> +	       clients is starting from 0x30 based on PECI specification.
+> +	       <0x30> .. <0x37> (depends on the PECI_OFFSET_MAX definition)
+
+8 devices should be enough for anyone...
+
+Where is PECI_OFFSET_MAX defined?
+
+> +
+> +Example:
+> +	peci-bus@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		< more properties >
+> +
+> +		function@cpu0 {
+
+Not a valid node name. "function@30" is what it probably should be. For 
+a new bus you can define unit-address format you like, but it must be 
+based on the contents of reg. However, it doesn't look like you should 
+create anything special here.
+
+> +			compatible = "device,function";
+> +			reg = <0x30>;
+> +		};
+> +
+> +		function@cpu1 {
+> +			compatible = "device,function";
+> +			reg = <0x31>;
+> +		};
+> +	};
+> -- 
+> 2.16.2
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
