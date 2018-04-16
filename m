@@ -1,78 +1,84 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] ARM: dts: renesas: replace toshiba,
- mmc-wrprotect-disable with disable-wp
-Date: Tue, 17 Apr 2018 00:02:32 +0900
-Message-ID: <1523890952-20866-1-git-send-email-yamada.masahiro@socionext.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: nvmem: Add binding for RAVE SP
+ EEPROM driver
+Date: Mon, 16 Apr 2018 10:05:07 -0500
+Message-ID: <20180416150507.2wm4s7opgr242v6a@rob-hp-laptop>
+References: <20180411015948.19562-1-andrew.smirnov@gmail.com>
+ <20180411015948.19562-2-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180411015948.19562-2-andrew.smirnov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Aleksander Morgado <aleksander@aleksander.es>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Follow up commit 788778b0d21a ("mmc: tmio: deprecate "toshiba,
-mmc-wrprotect-disable" DT property").
+On Tue, Apr 10, 2018 at 06:59:47PM -0700, Andrey Smirnov wrote:
+> Add Device Tree bindings for RAVE SP EEPROM driver - an MFD cell of
+> parent RAVE SP driver (documented in
+> Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
+> 
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Aleksander Morgado <aleksander@aleksander.es>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> ---
+>  .../bindings/nvmem/zii,rave-sp-eeprom.txt          | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
+> new file mode 100644
+> index 000000000000..a4e838c30b67
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
+> @@ -0,0 +1,29 @@
+> +Zodiac Inflight Innovations RAVE EEPROM Bindings
+> +
+> +RAVE SP EEPROM device is a "MFD cell" device exposing physical EEPROM
+> +attached to RAVE Supervisory Processor. It is expected that its Device
+> +Tree node is specified as a child of the node corresponding to the
+> +parent RAVE SP device (as documented in
+> +Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
+> +
+> +Required properties:
+> +
+> +- compatible: Should be "zii,rave-sp-eeprom"
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Need to state somewhere this follows the bindings/nvmem/nvmem.txt 
+binding.
 
- arch/arm/boot/dts/r8a73a4-ape6evm.dts | 4 ++--
- arch/arm/boot/dts/sh73a0.dtsi         | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+> +
+> +Example:
+> +
+> +	rave-sp {
+> +		compatible = "zii,rave-sp-rdu1";
+> +		current-speed = <38400>;
+> +
+> +		main-eeprom {
 
-diff --git a/arch/arm/boot/dts/r8a73a4-ape6evm.dts b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
-index ec7c86e..125c39c 100644
---- a/arch/arm/boot/dts/r8a73a4-ape6evm.dts
-+++ b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
-@@ -234,7 +234,7 @@
- &sdhi0 {
- 	vmmc-supply = <&vcc_sdhi0>;
- 	bus-width = <4>;
--	toshiba,mmc-wrprotect-disable;
-+	disable-wp;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdhi0_pins>;
- 	status = "okay";
-@@ -244,7 +244,7 @@
- 	vmmc-supply = <&ape6evm_fixed_3v3>;
- 	bus-width = <4>;
- 	broken-cd;
--	toshiba,mmc-wrprotect-disable;
-+	disable-wp;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdhi1_pins>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
-index 914a7c2..39cc586 100644
---- a/arch/arm/boot/dts/sh73a0.dtsi
-+++ b/arch/arm/boot/dts/sh73a0.dtsi
-@@ -336,7 +336,7 @@
- 			      GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp3_clks SH73A0_CLK_SDHI1>;
- 		power-domains = <&pd_a3sp>;
--		toshiba,mmc-wrprotect-disable;
-+		disable-wp;
- 		cap-sd-highspeed;
- 		status = "disabled";
- 	};
-@@ -348,7 +348,7 @@
- 			      GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp3_clks SH73A0_CLK_SDHI2>;
- 		power-domains = <&pd_a3sp>;
--		toshiba,mmc-wrprotect-disable;
-+		disable-wp;
- 		cap-sd-highspeed;
- 		status = "disabled";
- 	};
--- 
-2.7.4
+eeprom@a4
+
+> +			compatible = "zii,rave-sp-eeprom";
+> +			reg = <0xA4 0x4000>;
+
+lowercase hex please.
+
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			wdt_timeout: wdt-timeout@81 {
+> +				reg = <0x81 2>;
+> +			};
+> +		};
+> +	}
+> -- 
+> 2.14.3
+> 
