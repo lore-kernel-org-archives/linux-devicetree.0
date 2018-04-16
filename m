@@ -1,64 +1,110 @@
 From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: Re: [PATCH v3 01/10] bindings: PCI: designware: Example update
-Date: Mon, 16 Apr 2018 09:37:42 +0100
-Message-ID: <452a9fc7-872d-05d4-289c-84ec58c0bee9@synopsys.com>
-References: <cover.1523360166.git.gustavo.pimentel@synopsys.com>
- <a3eebc66b17172b92e91d95c12a9d0289b9417c2.1523360166.git.gustavo.pimentel@synopsys.com>
- <20180413213427.3ny7ids3q7yxf35g@rob-hp-laptop>
+Subject: Re: [PATCH v2 8/9] PCI: dwc: Small computation improvement
+Date: Mon, 16 Apr 2018 09:41:11 +0100
+Message-ID: <6a947227-12f5-bc67-71bc-d6d67eb9e98f@synopsys.com>
+References: <cover.1523266508.git.gustavo.pimentel@synopsys.com>
+ <5181f7ffbb9d2889974c49d84e72042251adf8b6.1523266508.git.gustavo.pimentel@synopsys.com>
+ <003001d3d128$39f3eaa0$addbbfe0$@gmail.com>
+ <c295bc5b-e67a-290c-3316-56a1cc001538@synopsys.com>
+ <000001d3d1cc$92706790$b75136b0$@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180413213427.3ny7ids3q7yxf35g@rob-hp-laptop>
+In-Reply-To: <000001d3d1cc$92706790$b75136b0$@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "kishon@ti.com" <kishon@ti.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Jingoo Han <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Jingoo,
 
-On 13/04/2018 22:34, Rob Herring wrote:
-> On Tue, Apr 10, 2018 at 01:58:33PM +0100, Gustavo Pimentel wrote:
->> Replaces "ctrlreg" reg-name by "dbi" to be coherent with similar drivers,
->> however it still be compatible with any previous DT that uses the old
->> reg-name.
+On 11/04/2018 20:37, Jingoo Han wrote:
+> On Wednesday, April 11, 2018 3:40 AM, Gustavo Pimentel wrote:
 >>
->> Replaces the PCIe base address example by a real PCIe base address in use.
+>> Hi Jingoo,
 >>
->> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->> ---
->> Changes v1->v2:
->>  - Removed any iATU reference or changes to avoid confusion.
->>  - Add "snps,dw-pcie" compatible string following Kishon's suggestion.
->> Changes v2->v3:
->> - Nothing changed, just to follow the patch set version.
+>> On 11/04/2018 01:01, Jingoo Han wrote:
+>>> On Monday, April 9, 2018 5:41 AM, Gustavo Pimentel wrote:
+>>>>
+>>>> Replaces a simple division by 2 to a right shift rotation of 1 bit.
+>>>
+>>> It looks good. However, would you add a simple reason to the commit
+>>> message?
 >>
->>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 14 +++++++-------
->>  1 file changed, 7 insertions(+), 7 deletions(-)
+>> Sure.
 >>
->> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> index 1da7ade..f02cd20 100644
->> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> @@ -1,7 +1,8 @@
->>  * Synopsys DesignWare PCIe interface
->>  
->>  Required properties:
->> -- compatible: should contain "snps,dw-pcie" to identify the core.
->> +- compatible:
->> +	"snps,dw-pcie-rc", "snps,dw-pcie" for RC mode;
+>> Can be this one?
+>>
+>> Probably any recent and decent compiler does this kind of substitution
+>> in order to improve code performance. Nevertheless it's a coding good
+>> practice whenever there is a division / multiplication by multiple of 2
+>> to replace it by the equivalent operation in this case, the shift
+>> rotation.
 > 
-> I think adding this compatible is pointless. "snps,dw-pcie" meant RC and 
-> should continue to mean that. We also have compatibles with the IP 
-> version number as well as the SoC specific compatible strings. We don't 
-> need 4 compatible strings here.
+> Yes, that's what I wanted. The most platforms using 'dwc' are based on
+> ARM CPUs. So, the shift rotation can be better.
+> Thank you.
 
-Ok.
+Can I get your acked-by on this?
 
 > 
-> Rob
+> Best regards,
+> Jingoo Han
+> 
+>>
+>>>
+>>> Best regards,
+>>> Jingoo Han
+>>>
+>>>>
+>>>> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>>> ---
+>>>> Change v1->v2:
+>>>> - Nothing changed, just to follow the patch set version.
+>>>>
+>>>>  drivers/pci/dwc/pcie-designware-host.c | 8 ++++----
+>>>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/dwc/pcie-designware-host.c
+>>>> b/drivers/pci/dwc/pcie-designware-host.c
+>>>> index 03e9b82..8e6fed4 100644
+>>>> --- a/drivers/pci/dwc/pcie-designware-host.c
+>>>> +++ b/drivers/pci/dwc/pcie-designware-host.c
+>>>> @@ -332,8 +332,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>>>
+>>>>  	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>>>> "config");
+>>>>  	if (cfg_res) {
+>>>> -		pp->cfg0_size = resource_size(cfg_res) / 2;
+>>>> -		pp->cfg1_size = resource_size(cfg_res) / 2;
+>>>> +		pp->cfg0_size = resource_size(cfg_res) >> 1;
+>>>> +		pp->cfg1_size = resource_size(cfg_res) >> 1;
+>>>>  		pp->cfg0_base = cfg_res->start;
+>>>>  		pp->cfg1_base = cfg_res->start + pp->cfg0_size;
+>>>>  	} else if (!pp->va_cfg0_base) {
+>>>> @@ -377,8 +377,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>>>  			break;
+>>>>  		case 0:
+>>>>  			pp->cfg = win->res;
+>>>> -			pp->cfg0_size = resource_size(pp->cfg) / 2;
+>>>> -			pp->cfg1_size = resource_size(pp->cfg) / 2;
+>>>> +			pp->cfg0_size = resource_size(pp->cfg) >> 1;
+>>>> +			pp->cfg1_size = resource_size(pp->cfg) >> 1;
+>>>>  			pp->cfg0_base = pp->cfg->start;
+>>>>  			pp->cfg1_base = pp->cfg->start + pp->cfg0_size;
+>>>>  			break;
+>>>> --
+>>>> 2.7.4
+>>>>
+>>>
+>>>
+>>
+>> Regards,
+>> Gustavo
+> 
 > 
 
-Thanks,
+Regards,
 Gustavo
