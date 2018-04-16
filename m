@@ -1,50 +1,40 @@
 From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v3 2/2] iio: afe: unit-converter: new driver
-Date: Mon, 16 Apr 2018 09:12:45 +0200
-Message-ID: <81e69701-d49b-6675-010d-99d5d3eaf827@axentia.se>
+Subject: Re: [PATCH 2/2] iio: afe: unit-converter: add support for adi,lt6106
+Date: Mon, 16 Apr 2018 09:17:04 +0200
+Message-ID: <30bf0000-acc0-7d06-2870-74b3c559c707@axentia.se>
 References: <20180410152802.30958-1-peda@axentia.se>
- <20180410152802.30958-3-peda@axentia.se> <20180415183140.04c39ebe@archlinux>
+ <20180411141555.15044-1-peda@axentia.se>
+ <20180411141555.15044-3-peda@axentia.se>
+ <a70e8467-d0da-2b37-5dfa-7e14b388634c@ti.com>
+ <5d9421cc-5c7b-fcdf-a11f-e97127a3d5bd@metafoo.de>
+ <19aeb920-ce5a-4e81-1264-9005e220c237@ti.com>
+ <4aac6870-9159-18ba-0aa8-da227c426f38@axentia.se>
+ <c2923ac0-5e28-eef0-e32a-1e25ce550a82@ti.com>
+ <36e0c96b-89ec-2372-825a-71ead1a43473@axentia.se>
+ <d59697bb-60bf-deee-65b5-c552c59e8d5a@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180415183140.04c39ebe@archlinux>
+In-Reply-To: <d59697bb-60bf-deee-65b5-c552c59e8d5a@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "Andrew F . Davis" <afd@ti.com>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-15 19:31, Jonathan Cameron wrote:
-> On Tue, 10 Apr 2018 17:28:02 +0200
-> Peter Rosin <peda@axentia.se> wrote:
+On 2018-04-13 16:47, Andrew F. Davis wrote:
+> On 04/12/2018 05:31 PM, Peter Rosin wrote:
+>> On 2018-04-12 17:35, Andrew F. Davis wrote:
+>>> True, how about "current-sense-from-voltage" ?
+>>
+>> Doesn't cover "voltage-divider" (and we don't need separate drivers
+>> doing the exact same calculations, that's a maintenance nightmare).
 > 
->> If an ADC channel measures the midpoint of a voltage divider, the
->> interesting voltage is often the voltage over the full resistance.
->> E.g. if the full voltage is too big for the ADC to handle.
->> Likewise, if an ADC channel measures the voltage across a shunt
->> resistor, the interesting value is often the current through the
->> resistor.
->>
->> This driver solves both problems by allowing to linearly scale a channel
->> and by allowing changes to the type of the channel. Or both.
->>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
-> So I 'think' the only outstanding question is Andrew's one about the driver
-> name.  We aren't in a hurry at this point in the kernel cycle, so lets
-> wait until that discussion has ended.  Assuming that we do possibly end
-> up with a change, then please roll all the patches up into a single series
-> to avoid me getting confusion.
+> The driver name doesn't have to cover every use, just more than the
+> other name.
 
-Yeah, sure, sorry for the split series, but the lt6106 that's present in
-one of our newer designs didn't occur to me until just seconds after
-firing the first half of the series. Which is kind of typical...
-
-Anyway, about the driver naming. The suggestion I like best so far is
-linear-scaler from Linus W, but thinking about it some more I think I
-like iio-rescale even better.
-
-Any objections to iio-rescale?
+I also find current-sense-from-voltage unwieldy. It's simply too long.
 
 Cheers,
 Peter
