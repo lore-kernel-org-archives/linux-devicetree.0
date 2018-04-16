@@ -1,449 +1,93 @@
-From: Robert Nelson <robertcnelson@gmail.com>
-Subject: [PATCH] ARM: dts: Add am335x-pocketbeagle
-Date: Mon, 16 Apr 2018 14:29:29 -0500
-Message-ID: <20180416192929.22547-1-robertcnelson@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [[RFC]DPU PATCH 2/2] dt-bindings: drm/bridge:
+ Document sn65dsi86 bridge bindings
+Date: Mon, 16 Apr 2018 14:32:41 -0500
+Message-ID: <20180416193241.ciz2ehq5s6xf7n2w@rob-hp-laptop>
+References: <1523596981-18913-1-git-send-email-spanda@codeaurora.org>
+ <1523596981-18913-3-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tony@atomide.com, devicetree@vger.kernel.org
-Cc: Drew Fustini <drew@beagleboard.org>, Peter Robinson <pbrobinson@redhat.com>, Jason Kridner <jkridner@beagleboard.org>, linux-omap@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1523596981-18913-3-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PocketBeagle Blue is an ultra-tiny-yet-complete open-source USB-key-fob computer.
-
-This board can be indentified by the BPxx value after A335BNLT (BBB)
-in the at24 eeprom:
-BPxx [aa 55 33 ee 41 33 33 35  42 4e 4c 54 42 50 30 30 |.U3.A335BNLTBP00|]
-
-http://beagleboard.org/pocket
-https://github.com/beagleboard/pocketbeagle
-
-Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-CC: Tony Lindgren <tony@atomide.com>
-CC: Jason Kridner <jkridner@beagleboard.org>
-CC: Drew Fustini <drew@beagleboard.org>
-CC: Peter Robinson <pbrobinson@redhat.com>
----
- arch/arm/boot/dts/Makefile                   |   1 +
- arch/arm/boot/dts/am335x-osd335x-common.dtsi | 136 +++++++++++
- arch/arm/boot/dts/am335x-pocketbeagle.dts    | 244 +++++++++++++++++++
- 3 files changed, 381 insertions(+)
- create mode 100644 arch/arm/boot/dts/am335x-osd335x-common.dtsi
- create mode 100644 arch/arm/boot/dts/am335x-pocketbeagle.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7e2424957809..5a09ff15743b 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -688,6 +688,7 @@ dtb-$(CONFIG_SOC_AM33XX) += \
- 	am335x-pdu001.dtb \
- 	am335x-pepper.dtb \
- 	am335x-phycore-rdk.dtb \
-+	am335x-pocketbeagle.dtb \
- 	am335x-shc.dtb \
- 	am335x-sbc-t335.dtb \
- 	am335x-sl50.dtb \
-diff --git a/arch/arm/boot/dts/am335x-osd335x-common.dtsi b/arch/arm/boot/dts/am335x-osd335x-common.dtsi
-new file mode 100644
-index 000000000000..184b3a9f1538
---- /dev/null
-+++ b/arch/arm/boot/dts/am335x-osd335x-common.dtsi
-@@ -0,0 +1,136 @@
-+/*
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/ {
-+	cpus {
-+		cpu@0 {
-+			cpu0-supply = <&dcdc2_reg>;
-+		};
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>; /* 512 MB */
-+	};
-+};
-+
-+&cpu0_opp_table {
-+	/*
-+	* Octavo Systems:
-+	* The EFUSE_SMA register is not programmed for any of the AM335x wafers
-+	* we get and we are not programming them during our production test.
-+	* Therefore, from a DEVICE_ID revision point of view, the silicon looks
-+	* like it is Revision 2.1.  However, from an EFUSE_SMA point of view for
-+	* the HW OPP table, the silicon looks like it is Revision 1.0 (ie the 
-+	* EFUSE_SMA register reads as all zeros).
-+	*/
-+	oppnitro-1000000000 {
-+		opp-supported-hw = <0x06 0x0100>;
-+	};
-+};
-+
-+&am33xx_pinmux {
-+	i2c0_pins: pinmux_i2c0_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x988, PIN_INPUT_PULLUP | MUX_MODE0)	/* (C17) I2C0_SDA.I2C0_SDA */
-+			AM33XX_IOPAD(0x98c, PIN_INPUT_PULLUP | MUX_MODE0)	/* (C16) I2C0_SCL.I2C0_SCL */
-+		>;
-+	};
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins>;
-+
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	tps: tps@24 {
-+		reg = <0x24>;
-+	};
-+
-+	baseboard_eeprom: baseboard_eeprom@50 {
-+		compatible = "atmel,24c256";
-+		reg = <0x50>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		baseboard_data: baseboard_data@0 {
-+			reg = <0 0x100>;
-+		};
-+	};
-+};
-+
-+/include/ "tps65217.dtsi"
-+
-+&tps {
-+	interrupts = <7>; /* NMI */
-+	interrupt-parent = <&intc>;
-+
-+	ti,pmic-shutdown-controller;
-+
-+	pwrbutton {
-+		interrupts = <2>;
-+		status = "okay";
-+	};
-+
-+	regulators {
-+		dcdc1_reg: regulator@0 {
-+			regulator-name = "vdds_dpr";
-+			regulator-always-on;
-+		};
-+
-+		dcdc2_reg: regulator@1 {
-+			/* VDD_MPU voltage limits 0.95V - 1.26V with +/-4% tolerance */
-+			regulator-name = "vdd_mpu";
-+			regulator-min-microvolt = <925000>;
-+			regulator-max-microvolt = <1351500>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		dcdc3_reg: regulator@2 {
-+			/* VDD_CORE voltage limits 0.95V - 1.1V with +/-4% tolerance */
-+			regulator-name = "vdd_core";
-+			regulator-min-microvolt = <925000>;
-+			regulator-max-microvolt = <1150000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		ldo1_reg: regulator@3 {
-+			regulator-name = "vio,vrtc,vdds";
-+			regulator-always-on;
-+		};
-+
-+		ldo2_reg: regulator@4 {
-+			regulator-name = "vdd_3v3aux";
-+			regulator-always-on;
-+		};
-+
-+		ldo3_reg: regulator@5 {
-+			regulator-name = "vdd_1v8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		ldo4_reg: regulator@6 {
-+			regulator-name = "vdd_3v3a";
-+			regulator-always-on;
-+		};
-+	};
-+};
-+
-+&aes {
-+	status = "okay";
-+};
-+
-+&sham {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-new file mode 100644
-index 000000000000..c224cde88920
---- /dev/null
-+++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-@@ -0,0 +1,244 @@
-+/*
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+
-+#include "am33xx.dtsi"
-+#include "am335x-osd335x-common.dtsi"
-+
-+/ {
-+	model = "TI AM335x PocketBeagle";
-+	compatible = "ti,am335x-pocketbeagle", "ti,am335x-bone", "ti,am33xx";
-+
-+	chosen {
-+		stdout-path = &uart0;
-+	};
-+
-+	leds {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&user_leds_s0>;
-+
-+		compatible = "gpio-leds";
-+
-+		usr_0_led {
-+			label = "beaglebone:green:usr0";
-+			gpios = <&gpio1 21 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+
-+		usr_1_led {
-+			label = "beaglebone:green:usr1";
-+			gpios = <&gpio1 22 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc0";
-+			default-state = "off";
-+		};
-+
-+		usr_2_led {
-+			label = "beaglebone:green:usr2";
-+			gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "cpu0";
-+			default-state = "off";
-+		};
-+
-+		usr_3_led {
-+			label = "beaglebone:green:usr3";
-+			gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	vmmcsd_fixed: fixedregulator0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vmmcsd_fixed";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&am33xx_pinmux {
-+	i2c2_pins: pinmux_i2c2_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x97c, PIN_INPUT_PULLUP | MUX_MODE3)	/* (D17) uart1_rtsn.I2C2_SCL */
-+			AM33XX_IOPAD(0x978, PIN_INPUT_PULLUP | MUX_MODE3)	/* (D18) uart1_ctsn.I2C2_SDA */
-+		>;
-+	};
-+
-+	ehrpwm0_pins: pinmux_ehrpwm0_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x990, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* (A13) mcasp0_aclkx.ehrpwm0A */
-+		>;
-+	};
-+
-+	ehrpwm1_pins: pinmux_ehrpwm1_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x848, PIN_OUTPUT_PULLDOWN | MUX_MODE6)	/* (U14) gpmc_a2.ehrpwm1A */
-+		>;
-+	};
-+
-+	mmc0_pins: pinmux_mmc0_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x960, PIN_INPUT | MUX_MODE7)		/* (C15) spi0_cs1.gpio0[6] */
-+			AM33XX_IOPAD(0x8fc, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G16) mmc0_dat0.mmc0_dat0 */
-+			AM33XX_IOPAD(0x8f8, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G15) mmc0_dat1.mmc0_dat1 */
-+			AM33XX_IOPAD(0x8f4, PIN_INPUT_PULLUP | MUX_MODE0)	/* (F18) mmc0_dat2.mmc0_dat2 */
-+			AM33XX_IOPAD(0x8f0, PIN_INPUT_PULLUP | MUX_MODE0)	/* (F17) mmc0_dat3.mmc0_dat3 */
-+			AM33XX_IOPAD(0x904, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G18) mmc0_cmd.mmc0_cmd */
-+			AM33XX_IOPAD(0x900, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G17) mmc0_clk.mmc0_clk */
-+			AM33XX_IOPAD(0x9a0, PIN_INPUT | MUX_MODE4)		/* (B12) mcasp0_aclkr.mmc0_sdwp */
-+		>;
-+	};
-+
-+	spi0_pins: pinmux_spi0_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x950, PIN_INPUT_PULLUP | MUX_MODE0)	/* (A17) spi0_sclk.spi0_sclk */
-+			AM33XX_IOPAD(0x954, PIN_INPUT_PULLUP | MUX_MODE0)	/* (B17) spi0_d0.spi0_d0 */
-+			AM33XX_IOPAD(0x958, PIN_INPUT_PULLUP | MUX_MODE0)	/* (B16) spi0_d1.spi0_d1 */
-+			AM33XX_IOPAD(0x95c, PIN_INPUT_PULLUP | MUX_MODE0)	/* (A16) spi0_cs0.spi0_cs0 */
-+		>;
-+	};
-+
-+	spi1_pins: pinmux_spi1_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x964, PIN_INPUT_PULLUP | MUX_MODE4)	/* (C18) eCAP0_in_PWM0_out.spi1_sclk */
-+			AM33XX_IOPAD(0x968, PIN_INPUT_PULLUP | MUX_MODE4)	/* (E18) uart0_ctsn.spi1_d0 */
-+			AM33XX_IOPAD(0x96c, PIN_INPUT_PULLUP | MUX_MODE4)	/* (E17) uart0_rtsn.spi1_d1 */
-+			AM33XX_IOPAD(0x9b0, PIN_INPUT_PULLUP | MUX_MODE4)	/* (A15) xdma_event_intr0.spi1_cs1 */
-+		>;
-+	};
-+
-+	user_leds_s0: user_leds_s0 {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x854, PIN_OUTPUT | MUX_MODE7)		/* (V15) gpmc_a5.gpio1[21] - USR_LED_0 */
-+			AM33XX_IOPAD(0x858, PIN_OUTPUT | MUX_MODE7)		/* (U15) gpmc_a6.gpio1[22] - USR_LED_1 */
-+			AM33XX_IOPAD(0x85c, PIN_OUTPUT | MUX_MODE7)		/* (T15) gpmc_a7.gpio1[23] - USR_LED_2 */
-+			AM33XX_IOPAD(0x860, PIN_OUTPUT | MUX_MODE7)		/* (V16) gpmc_a8.gpio1[24] - USR_LED_3 */
-+		>;
-+	};
-+
-+	uart0_pins: pinmux_uart0_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x970, PIN_INPUT_PULLUP | MUX_MODE0)	/* (E15) uart0_rxd.uart0_rxd */
-+			AM33XX_IOPAD(0x974, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* (E16) uart0_txd.uart0_txd */
-+		>;
-+	};
-+
-+	uart4_pins: pinmux_uart4_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x870, PIN_INPUT_PULLUP | MUX_MODE6)	/* (T17) gpmc_wait0.uart4_rxd */
-+			AM33XX_IOPAD(0x874, PIN_OUTPUT_PULLDOWN | MUX_MODE6)	/* (U17) gpmc_wpn.uart4_txd */
-+		>;
-+	};
-+};
-+
-+&epwmss0 {
-+	status = "okay";
-+};
-+
-+&ehrpwm0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ehrpwm0_pins>;
-+};
-+
-+&epwmss1 {
-+	status = "okay";
-+};
-+
-+&ehrpwm1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ehrpwm1_pins>;
-+};
-+
-+&i2c0 {
-+	baseboard_eeprom: baseboard_eeprom@50 {
-+		compatible = "atmel,24c256";
-+		reg = <0x50>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		baseboard_data: baseboard_data@0 {
-+			reg = <0 0x100>;
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins>;
-+
-+	status = "okay";
-+	clock-frequency = <400000>;
-+};
-+
-+&mmc1 {
-+	status = "okay";
-+	vmmc-supply = <&vmmcsd_fixed>;
-+	bus-width = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>;
-+	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
-+};
-+
-+&rtc {
-+	system-power-controller;
-+};
-+
-+&tscadc {
-+	status = "okay";
-+	adc {
-+		ti,adc-channels = <0 1 2 3 4 5 6 7>;
-+		ti,chan-step-avg = <16 16 16 16 16 16 16 16>;
-+		ti,chan-step-opendelay = <0x98 0x98 0x98 0x98 0x98 0x98 0x98 0x98>;
-+		ti,chan-step-sampledelay = <0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0>;
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins>;
-+
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart4_pins>;
-+
-+	status = "okay";
-+};
-+
-+&usb {
-+	status = "okay";
-+};
-+
-+&usb_ctrl_mod {
-+	status = "okay";
-+};
-+
-+&usb0_phy {
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+	dr_mode = "otg";
-+};
-+
-+&usb1_phy {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+	dr_mode = "host";
-+};
-+
-+&cppi41dma  {
-+	status = "okay";
-+};
--- 
-2.17.0
+T24gRnJpLCBBcHIgMTMsIDIwMTggYXQgMTA6NTM6MDFBTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
+cm90ZToKPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBmb3IgdGhlIHNuNjVkc2k4NiBEU0kg
+dG8gZURQIGJyaWRnZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBTYW5kZWVwIFBhbmRhIDxzcGFuZGFA
+Y29kZWF1cm9yYS5vcmc+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxz
+bjY1ZHNpODYudHh0ICAgICAgIHwgNzUgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUg
+Y2hhbmdlZCwgNzUgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQK
+PiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAw
+NjQ0Cj4gaW5kZXggMDAwMDAwMC4uY2JkMmYwZQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2
+LnR4dAo+IEBAIC0wLDAgKzEsNzUgQEAKPiArU042NURTSTg2IERTSSB0byBlRFAgYnJpZGdlIGNo
+aXAKPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1RoaXMgaXMgdGhl
+IGJpbmRpbmcgZm9yIFRleGFzIEluc3RydW1lbnRzIFNONjVEU0k4NiBicmlkZ2UuCj4gKwo+ICtS
+ZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IE11c3QgYmUgInRpLHNuNjVkc2k4
+NiIKPiArLSByZWc6IGkyYyBhZGRyZXNzIG9mIHRoZSBjaGlwLCAweDJkIGFzIHBlciBkYXRhc2hl
+ZXQKPiArLSBlbmFibGUtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBm
+b3IgRURQX0JSSUpfRU4gcGluCj4gKy0gYXV4LXNkYS1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3Bp
+byBzcGVjaWZpY2F0aW9uIGZvciBFRFBfQlJJSl9JMkNfU0RBIHBpbiBvZiBBVVggY2hhbm5lbAo+
+ICstIGF1eC1zY2wtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3Ig
+RURQX0JSSUpfSTJDX1NDTCBwaW4gb2YgQVVYIGNoYW5uZWwKCldoYXQgaWYgSSB1c2UgSTJDIGhv
+c3Qgb24gbXkgZGV2aWNlPyBJZiB5b3VyIGJvYXJkIGRlc2lnbiB1c2VzIGJpdGJhbmdlZCAKSTJD
+LCB0aGF0IGlzIG91dHNpZGUgdGhlIHNjb3BlIG9mIHRoaXMgYmluZGluZyBhbmQgaXQgc2hvdWxk
+IHVzZSAKaTJjLWdwaW8gYmluZGluZy4KCj4gKy0gYmlhcy1lbi1ncGlvczogT0YgZGV2aWNlLXRy
+ZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBFTl9QUDMzMDBfRFhfRURQIHBpbiB0bwo+ICsJCQll
+bmFibGUgMy4zViBzdXBwbHkgdG8gZURQIGNvbm5lY3Rvcgo+ICstIGJrbHQtZW4tZ3Bpb3M6IE9G
+IGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgQVBfRURQX0JLTFRFTiAKcGluCj4g
+Kwo+ICstIHZjY2lvLXN1cHBseTogQSAxLjhWIHN1cHBseSB0aGF0IHBvd2VycyB1cCB0aGUgUEhZ
+Lgo+ICstIHZjY2Etc3VwcGx5OiBBIDEuMlYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBDb250
+cm9sbGVyLgo+ICstIHZjY3Mtc3VwcGx5OiBBIDMuM1Ygc3VwcGx5IHRoYXQgcG93ZXIgdGhlIGVE
+UCBjb25uZWN0b3IKPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKwo+ICstIGlycS1ncGlv
+czogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBpbnRlcnJ1cHQgcGluCgpV
+c2UgImludGVycnVwdHMiIHByb3BlcnR5IGluc3RlYWQuCgo+ICstIGJrbHQtY3RybC1ncGlvczog
+T0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBFRFBfQktMVENUTCBwaW4KPiAr
+Cj4gKy0gc24saXMtcGx1Z2dhYmxlOiBib29sZWFuIHByb3BlcnR5IHRvIHNwZWNpZnkgaWYgSFBE
+IHN1cHBvcnRlZCBvciBub3QKPiArLSBzbixjdXN0b20tbW9kZXM6IE9GIGRldmljZS10cmVlIHNw
+ZWNpZmljdGlvbiB0byBhZGQgc3VwcG9ydCBmb3IgY3VzdG9tIG1vZGVzCgoic24iIGlzIG5vdCBh
+IHZlbmRvci4KCj4gKwo+ICtSZXF1aXJlZCBub2RlczoKPiArCj4gK1RoaXMgZGV2aWNlIGhhcyB0
+d28gdmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5lY3Rpb25zIGFyZSBtb2RlbGxlZCB1c2luZyB0aGUg
+T0YKPiArZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4gKwo+ICstIFZpZGVvIHBvcnQgMCBmb3IgRFNJIGlucHV0
+Cj4gKy0gVmlkZW8gcG9ydCAxIGZvciBlRFAgb3V0cHV0Cj4gKwo+ICtFeGFtcGxlCj4gKy0tLS0t
+LS0KPiArCj4gK2VkcC1icmlkZ2VAMmQgewo+ICsJY29tcGF0aWJsZSA9ICJ0aSxzbjY1ZHNpODYi
+Owo+ICsJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCXJl
+ZyA9IDwweDJkPjsKPiArCj4gKwllbmFibGUtZ3Bpb3MgPSA8Jm1zbWdwaW8gMzMgR1BJT19BQ1RJ
+VkVfSElHSD47Cj4gKwlhdXgtc2RhLWdwaW9zID0gPCZtc21ncGlvIDM0IEdQSU9fQUNUSVZFX0hJ
+R0g+Owo+ICsJYXV4LXNjbC1ncGlvcyA9IDwmbXNtZ3BpbyAzNSBHUElPX0FDVElWRV9ISUdIPjsK
+PiArCWJpYXMtZW4tZ3Bpb3MgPSA8Jm1zbWdwaW8gMzYgR1BJT19BQ1RJVkVfSElHSD47Cj4gKwli
+a2x0LWVuLWdwaW9zID0gPCZtc21ncGlvIDM3IEdQSU9fQUNUSVZFX0hJR0g+Owo+ICsKPiArCXZj
+Y2lvLXN1cHBseSA9IDwmcG04OTE2X2wxNz47Cj4gKwl2Y2NhLXN1cHBseSA9IDwmcG04OTE2X2w2
+PjsKPiArCXZjY3Mtc3VwcGx5ID0gPCZwbTg5MTZfbDc+Owo+ICsKPiArCXBvcnRzIHsKPiArCQkj
+YWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJcG9y
+dEAwIHsKPiArCQkJcmVnID0gPDA+Owo+ICsKPiArCQkJZWRwX2JyaWRnZV9pbjogZW5kcG9pbnQg
+ewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2lfb3V0PjsKPiArCQkJfTsKPiArCQl9Owo+
+ICsKPiArCQlwb3J0QDEgewo+ICsJCQlyZWcgPSA8MT47Cj4gKwo+ICsJCQllZHBfYnJpZGdlX291
+dDogZW5kcG9pbnQgewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZlZHBfcGFuZWxfaW4+Owo+
+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+ICt9Cj4gLS0gCj4gVGhlIFF1YWxjb21tIElubm92YXRp
+b24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKPiBh
+IExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cj4gCj4gLS0KPiBUbyB1bnN1
+YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNl
+dHJlZSIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVs
+Lm9yZwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFq
+b3Jkb21vLWluZm8uaHRtbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVl
+ZHJlbm8K
