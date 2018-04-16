@@ -1,29 +1,88 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V2 1/2] clk: imx6sx: add missing lvds2 clock to the clock tree
-Date: Mon, 16 Apr 2018 11:32:24 -0700
-Message-ID: <152390354456.51482.5320966315016822540@swboyd.mtv.corp.google.com>
-References: <1521426645-19246-1-git-send-email-Anson.Huang@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: afe: add binding for adi,lt6106
+Date: Mon, 16 Apr 2018 13:44:50 -0500
+Message-ID: <20180416184450.zbxk6ebarscvfn6d@rob-hp-laptop>
+References: <20180410152802.30958-1-peda@axentia.se>
+ <20180411141555.15044-1-peda@axentia.se>
+ <20180411141555.15044-2-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521426645-19246-1-git-send-email-Anson.Huang@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <20180411141555.15044-2-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>, fabio.estevam@nxp.com, kernel@pengutronix.de, linux@armlinux.org.uk, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, shawnguo@kernel.org, shengjiu.wang@nxp.com
-Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "Andrew F . Davis" <afd@ti.com>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Anson Huang (2018-03-18 19:30:44)
-> i.MX6SX has lvds2 (analog clock2), an I/O clock like lvds1.
-> And this lvds2, along with lvds1, can be used to provide
-> external clock source to the internal pll, such as pll4_audio
-> and pll5_video.
+On Wed, Apr 11, 2018 at 04:15:54PM +0200, Peter Rosin wrote:
+> This is a current sense amplifier from Analog Devices.
 > 
-> This patch mainly adds the lvds2 to the clock tree and fix its
-> relationship with pll accordingly.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 > ---
+>  .../devicetree/bindings/iio/afe/adi,lt6106.txt     | 50 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/afe/adi,lt6106.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/afe/adi,lt6106.txt b/Documentation/devicetree/bindings/iio/afe/adi,lt6106.txt
+> new file mode 100644
+> index 000000000000..98b6d93596f2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/afe/adi,lt6106.txt
+> @@ -0,0 +1,50 @@
+> +LT6106 36V High Side Current Sence Amplifier
+> +============================================
+> +
+> +This binding assumes the typical application of the current sense amplifier
+> +as described in the LT6106 datasheet.
+> +
+> +http://www.analog.com/media/en/technical-documentation/data-sheets/6106fb.pdf
+> +
+> +                                             .------.
+> +    Vin --------------------+--------------+-|Rsense|-+-----.
+> +                            |              | '------' |     |
+> +                            |              |          |   .---.
+> +                 .--------------------.  .---.        |   | L |
+> +                 |          V+        |  |Rin|        |   | O |
+> +                 |                    |  '---'        |   | A |
+> +                 |                    |    |          |   | D |
+> +                 |                -IN |----'          |   '---'
+> +    Vout ---+----| OUT   LT6106       |               |     |
+> +            |    |                +IN |---------------'    GND
+> +         .----.  |                    |
+> +         |Rout|  |                    |
+> +         '----'  |          V-        |
+> +            |    '--------------------'
+> +            |               |
+> +           GND             GND
+> +
+> +The voltage Vsense over Rsense is measured by looking at Vout. They
+> +are related as Vout = Vsense * Rout / Rin. The current Isense through
+> +Rsense is (almost) the same as that through the LOAD. Hence, the
+> +interesting LOAD current can be calculated as
+> +
+> +                 Vout * Rin / (Rout * Rsense)
+> +
+> +Required properties:
+> +- compatible : "adi,lt6106"
+> +- io-channels : Channel node of an io-channel measuring Vout.
+> +- sense-resistor-micro-ohms : The Rsense resistance in microohms.
 
-Applied to clk-next
+> +- input-resistor-ohms : The Rin resistance in ohms.
+> +- output-resistor-ohms : The Rout resistance in ohms.
+
+Are these generic or specific to this binding? For the latter, they 
+shoudl have vendor prefix.
+
+> +
+> +Example:
+> +
+> +sysi {
+> +	compatible = "adi,lt6106";
+> +	io-channels = <&tiadc 0>;
+> +
+> +	sense-resistor-micro-ohms = <20000>;
+> +	input-resistor-ohms = <200>;
+> +	output-resistor-ohms = <10000>;
+> +};
