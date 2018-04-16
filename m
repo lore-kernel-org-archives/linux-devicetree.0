@@ -1,116 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] Documentation: Documentation for qcom, llcc
-Date: Mon, 16 Apr 2018 09:59:12 -0500
-Message-ID: <20180416145912.ja7d2xd2kqiukrgl@rob-hp-laptop>
-References: <1523390893-10904-1-git-send-email-rishabhb@codeaurora.org>
- <1523390893-10904-2-git-send-email-rishabhb@codeaurora.org>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 13/13] dt: bindings: add bindings for wcn3990 wifi block
+Date: Mon, 16 Apr 2018 18:00:38 +0300
+Message-ID: <878t9np561.fsf@kamboji.qca.qualcomm.com>
+References: <1523378986-11551-1-git-send-email-govinds@codeaurora.org>
+        <20180413215340.vhvlhlaapt5uuo7d@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1523390893-10904-2-git-send-email-rishabhb@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@lists.infradead.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, kyan@codeaurora.org, ckadabi@codeaurora.org, stanimir.varbanov@linaro.org, evgreen@chromium.org
+Content-Type: text/plain
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180413215340.vhvlhlaapt5uuo7d@rob-hp-laptop> (Rob Herring's
+        message of "Fri, 13 Apr 2018 16:53:40 -0500")
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2018 at 01:08:12PM -0700, Rishabh Bhatnagar wrote:
-> Documentation for last level cache controller device tree bindings,
-> client bindings usage examples.
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 
-"Documentation: Documentation ..."? That wastes a lot of the subject 
-line... The preferred prefix is "dt-bindings: ..."
+> On Tue, Apr 10, 2018 at 10:19:46PM +0530, Govind Singh wrote:
+>> Add device tree binding documentation details for wcn3990
+>> wifi block present in Qualcomm SDM845/APQ8098 SoC into
+>> "qcom,ath10k.txt".
+>> 
+>> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>  .../bindings/net/wireless/qcom,ath10k.txt          | 31 ++++++++++++++++++++++
+>>  1 file changed, 31 insertions(+)
+>
+> One nit, otherwise:
+>
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
 
-> 
-> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> ---
->  .../devicetree/bindings/arm/msm/qcom,llcc.txt      | 58 ++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-> new file mode 100644
-> index 0000000..497cf0f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-> @@ -0,0 +1,58 @@
-> +== Introduction==
-> +
-> +LLCC (Last Level Cache Controller) provides last level of cache memory in SOC,
-> +that can be shared by multiple clients. Clients here are different cores in the
-> +SOC, the idea is to minimize the local caches at the clients and migrate to
-> +common pool of memory
-> +
-> +Properties:
-> +- compatible:
-> +	 Usage: required
-> +	 Value type: <string>
-> +	 Definition: must be "qcom,sdm845-llcc"
-> +
-> +- reg:
-> +	 Usage: required
-> +	 Value Type: <prop-encoded-array>
-> +	 Definition: must be addresses and sizes of the LLCC registers
+[...]
 
-How many address ranges?
+>> @@ -119,3 +126,27 @@ wifi0: wifi@a000000 {
+>>  	qcom,msi_base = <0x40>;
+>>  	qcom,ath10k-pre-calibration-data = [ 01 02 03 ... ];
+>>  };
+>> +
+>> +Example (to supply wcn3990 SoC wifi block details):
+>> +
+>> +qcom,wifi@18000000 {
+>
+> wifi@...
 
-> +
-> +- #cache-cells:
+I added this and Rob's Reviewed-by to the patch in the pending branch:
 
-This is all written as it is a common binding, but it is not one.
+https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=pending&id=20f4accbe76af8f137b4218ce4973bda6fc3d23e
 
-You already have most of the configuration data for each client in the 
-driver, I think I'd just put the client connection there too. Is there 
-any variation of this for a given SoC?
+Govind, please check that it's ok.
 
-> +	 Usage: required
-> +	 Value Type: <u32>
-> +	 Definition: Number of cache cells, must be 1
-> +
-> +- max-slices:
-> +	 usage: required
-> +	 Value Type: <u32>
-> +	 Definition: Number of cache slices supported by hardware
-
-What's a slice?
-
-> +
-> +Example:
-> +
-> +	llcc: qcom,llcc@1100000 {
-> +		compatible = "qcom,sdm845-llcc";
-> +		reg = <0x1100000 0x250000>;
-> +		#cache-cells = <1>;
-> +		max-slices = <32>;
-> +	};
-> +
-> +== Client ==
-> +
-> +Properties:
-> +- cache-slice-names:
-> +	 Usage: required
-> +	 Value type: <stringlist>
-> +	 Definition: A set of names that identify the usecase names of a
-> +			client that uses cache slice. These strings are
-> +			used to look up the cache slice entries by name.
-> +
-> +- cache-slices:
-> +	 Usage: required
-> +	 Value type: <prop-encoded-array>
-> +	 Definition: The tuple has phandle to llcc device as the first
-> +			argument and the second argument is the usecase
-> +			id of the client.
-> +For Example:
-> +	venus {
-> +		cache-slice-names = "vidsc0", "vidsc1";
-> +	 	cache-slices = <&llcc VIDSC0_ID>, <&llcc VIDSC1_ID>;
-> +	};
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Kalle Valo
