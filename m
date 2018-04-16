@@ -1,88 +1,59 @@
-Return-Path: <SRS0=MwFQ=G7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:48126 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751884AbeDJQt6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Apr 2018 12:49:58 -0400
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v2 13/13] dt: bindings: add bindings for wcn3990 wifi block
-Date: Tue, 10 Apr 2018 22:19:46 +0530
-Message-Id: <1523378986-11551-1-git-send-email-govinds@codeaurora.org>
-Sender: devicetree-owner@vger.kernel.org
-To: ath10k@lists.infradead.org
-Cc: linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
+Return-Path: <SRS0=WvH3=HF=gmail.com=akinobu.mita@kernel.org>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v2 00/10] media: ov772x: support media controller, device tree probing, etc.
+Date: Mon, 16 Apr 2018 11:51:41 +0900
+Message-Id: <1523847111-12986-1-git-send-email-akinobu.mita@gmail.com>
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree binding documentation details for wcn3990
-wifi block present in Qualcomm SDM845/APQ8098 SoC into
-"qcom,ath10k.txt".
+This patchset includes support media controller, device tree probing and
+other miscellanuous changes for ov772x driver.
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
----
- .../bindings/net/wireless/qcom,ath10k.txt          | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+* v2 (thanks to Jacopo Mondi)
+- Replace the implementation of ov772x_read() instead of adding an
+  alternative method
+- Assign the ov772x_read() return value to pid and ver directly
+- Do the same for MIDH and MIDL
+- Move video_probe() before the entity initialization and remove the #ifdef
+  around the media_entity_cleanup()
+- Use generic names for reset and powerdown gpios (New)
+- Add "dt-bindings:" in the subject
+- Add a brief description of the sensor
+- Update the GPIO names
+- Indicate the GPIO active level
+- Add missing NULL checks for priv->info
+- Leave the check for the missing platform data if legacy platform data
+  probe is used.
+- Handle nested s_power() calls (New)
+- Reconstruct s_frame_interval() (New)
+- Avoid accessing registers under power saving mode (New)
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-index 3d2a031..34e4f98 100644
---- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-@@ -4,6 +4,7 @@ Required properties:
- - compatible: Should be one of the following:
- 	* "qcom,ath10k"
- 	* "qcom,ipq4019-wifi"
-+	* "qcom,wcn3990-wifi"
- 
- PCI based devices uses compatible string "qcom,ath10k" and takes calibration
- data along with board specific data via "qcom,ath10k-calibration-data".
-@@ -18,8 +19,12 @@ In general, entry "qcom,ath10k-pre-calibration-data" and
- "qcom,ath10k-calibration-data" conflict with each other and only one
- can be provided per device.
- 
-+SNOC based devices (i.e. wcn3990) uses compatible string "qcom,wcn3990-wifi".
-+
- Optional properties:
- - reg: Address and length of the register set for the device.
-+- reg-names: Must include the list of following reg names,
-+	     "membase"
- - resets: Must contain an entry for each entry in reset-names.
-           See ../reset/reseti.txt for details.
- - reset-names: Must include the list of following reset names,
-@@ -49,6 +54,8 @@ Optional properties:
- 				 hw versions.
- - qcom,ath10k-pre-calibration-data : pre calibration data as an array,
- 				     the length can vary between hw versions.
-+- <supply-name>-supply: handle to the regulator device tree node
-+			   optional "supply-name" is "vdd-0.8-cx-mx".
- 
- Example (to supply the calibration data alone):
- 
-@@ -119,3 +126,27 @@ wifi0: wifi@a000000 {
- 	qcom,msi_base = <0x40>;
- 	qcom,ath10k-pre-calibration-data = [ 01 02 03 ... ];
- };
-+
-+Example (to supply wcn3990 SoC wifi block details):
-+
-+qcom,wifi@18000000 {
-+		compatible = "qcom,wcn3990-wifi";
-+		reg = <0x18800000 0x800000>;
-+		reg-names = "membase";
-+		clocks = <&clock_gcc clk_aggre2_noc_clk>;
-+		clock-names = "smmu_aggre2_noc_clk"
-+		interrupts =
-+			   <0 130 0 /* CE0 */ >,
-+			   <0 131 0 /* CE1 */ >,
-+			   <0 132 0 /* CE2 */ >,
-+			   <0 133 0 /* CE3 */ >,
-+			   <0 134 0 /* CE4 */ >,
-+			   <0 135 0 /* CE5 */ >,
-+			   <0 136 0 /* CE6 */ >,
-+			   <0 137 0 /* CE7 */ >,
-+			   <0 138 0 /* CE8 */ >,
-+			   <0 139 0 /* CE9 */ >,
-+			   <0 140 0 /* CE10 */ >,
-+			   <0 141 0 /* CE11 */ >;
-+		vdd-0.8-cx-mx-supply = <&pm8998_l5>;
-+};
+Akinobu Mita (10):
+  media: ov772x: allow i2c controllers without
+    I2C_FUNC_PROTOCOL_MANGLING
+  media: ov772x: add checks for register read errors
+  media: ov772x: create subdevice device node
+  media: ov772x: add media controller support
+  media: ov772x: use generic names for reset and powerdown gpios
+  media: dt-bindings: ov772x: add device tree binding
+  media: ov772x: support device tree probing
+  media: ov772x: handle nested s_power() calls
+  media: ov772x: reconstruct s_frame_interval()
+  media: ov772x: avoid accessing registers under power saving mode
+
+ .../devicetree/bindings/media/i2c/ov772x.txt       |  42 ++++
+ MAINTAINERS                                        |   1 +
+ arch/sh/boards/mach-migor/setup.c                  |   5 +-
+ drivers/media/i2c/ov772x.c                         | 275 ++++++++++++++++-----
+ 4 files changed, 255 insertions(+), 68 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.txt
+
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: Rob Herring <robh+dt@kernel.org>
 -- 
-1.9.1
-
+2.7.4
