@@ -1,34 +1,69 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCHv4 01/10] mfd: ti-lmu: constify mfd_cell tables
-Date: Mon, 16 Apr 2018 15:20:11 +0100
-Message-ID: <20180416142011.oth6qubigubdpo3i@dell>
-References: <20180330172414.26575-1-sebastian.reichel@collabora.co.uk>
- <20180330172414.26575-2-sebastian.reichel@collabora.co.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/5] dt-bindings: display: atmel: add optional output-mode
+ property
+Date: Mon, 16 Apr 2018 09:22:45 -0500
+Message-ID: <CAL_JsqKvPFp-5Km78Vbt=R-rA8F1pm5H4BzvKh9z2JOYrpVDRA@mail.gmail.com>
+References: <20180409105918.20792-1-peda@axentia.se>
+ <20180409105918.20792-3-peda@axentia.se>
+ <20180413174648.zxljbw634o2r4zty@rob-hp-laptop>
+ <3bf87960-06f8-3224-10d9-4ad76ff446a4@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180330172414.26575-2-sebastian.reichel@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Sebastian Reichel <sre@kernel.org>, Milo Kim <Milo.Kim@ti.com>, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Jingoo Han <jingoohan1@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <3bf87960-06f8-3224-10d9-4ad76ff446a4@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 30 Mar 2018, Sebastian Reichel wrote:
-
-> Add const attribute to all mfd_cell structures.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> ---
->  drivers/mfd/ti-lmu.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+T24gU2F0LCBBcHIgMTQsIDIwMTggYXQgODo1NCBBTSwgUGV0ZXIgUm9zaW4gPHBlZGFAYXhlbnRp
+YS5zZT4gd3JvdGU6Cj4gT24gMjAxOC0wNC0xMyAxOTo0NiwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+
+IE9uIE1vbiwgQXByIDA5LCAyMDE4IGF0IDEyOjU5OjE1UE0gKzAyMDAsIFBldGVyIFJvc2luIHdy
+b3RlOgo+Pj4gVXNlZnVsIGZvciBiZWF0aW5nIGNhc2VzIHdoZXJlIGFuIG91dHB1dCBtb2RlIHNl
+bGVjdGlvbiBoZXVyaXN0aWMKPj4+IGZhaWxzLgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IFBldGVy
+IFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+Cj4+PiAtLS0KPj4+ICBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hdG1lbC9obGNkYy1kYy50eHQgfCA0ICsrKysKPj4+ICAx
+IGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2F0bWVsL2hsY2RjLWRjLnR4dCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2F0bWVsL2hsY2RjLWRj
+LnR4dAo+Pj4gaW5kZXggODJmMmFjYjNkMzc0Li5kYzQ3ODQ1NWI4ODMgMTAwNjQ0Cj4+PiAtLS0g
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hdG1lbC9obGNkYy1k
+Yy50eHQKPj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2F0bWVsL2hsY2RjLWRjLnR4dAo+Pj4gQEAgLTEwLDYgKzEwLDEwIEBAIFJlcXVpcmVkIHByb3Bl
+cnRpZXM6Cj4+PiAgIC0gI2FkZHJlc3MtY2VsbHM6IHNob3VsZCBiZSBzZXQgdG8gMS4KPj4+ICAg
+LSAjc2l6ZS1jZWxsczogc2hvdWxkIGJlIHNldCB0byAwLgo+Pj4KPj4+ICtPcHRpb25hbCBwcm9w
+ZXJ0aWVzOgo+Pj4gKyAtIG91dHB1dC1tb2RlOiBvdmVycmlkZSBhbnkgb3V0cHV0IG1vZGUgc2Vs
+ZWN0aW9uIGh1ZXJpc3RpYyBhbmQgZm9yY2UgYQo+Pj4gKyAgIHBhcnRpY3VsYXIgb3V0cHV0IG1v
+ZGUuIE9uZSBvZiAicmdiNDQ0IiwgInJnYjU2NSIsICJyZ2I2NjYiIGFuZCAicmdiODg4Ii4KPj4+
+ICsKPj4KPj4gVGhpcyBuZWVkcyB0byBiZSBnZW5lcmljLCBub3QganVzdCBhZGRlZCB0byBzb21l
+IHJhbmRvbSBkaXNwbGF5Cj4+IGNvbnRyb2xsZXIgYmluZGluZy4KPj4KPj4gSXQgYWxzbyBiZWxv
+bmdzIGluIHRoZSBwb3J0IG9yIGVuZHBvaW50IG5vZGUgYXMgaXMgZG9uZSBmb3IgY2FtZXJhCj4+
+IGludGVyZmFjZXMuCj4KPiBIbW0sIHNob3VsZCBJIGV4dGVuZCBtZWRpYS92aWRlby1pbnRlcmZh
+Y2VzLnR4dCB3aXRoIG1vcmUgYnVzIHR5cGVzIChvciBzaW5jZQo+IEknbSB0YXJnZXRpbmcgcGFy
+YWxsZWwgaW50ZXJmYWNlcywgcGVyaGFwcyB0aGUgbmV3IGJ1cyB0eXBlcyBzaG91bGQgYmUKPiBh
+dXRvZGV0ZWN0ZWQgZnJvbSBvdGhlciBwcm9wcz8pIG9yIHNob3VsZCBhIHdyaXRlIGEgbmV3IGJp
+bmRpbmcgc2ltaWxhciB0bwo+IGl0PwoKVWx0aW1hdGVseSwgSSdkIGxpa2UgaXQgZG9jdW1lbnRl
+ZCBpbiBvbmUgcGxhY2UuIEl0IGNhbiBzdGF5IGluCm1lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0
+IGZvciBub3csIGJ1dCB3ZSBzaG91bGQgcHJvYmFibHkgbW92ZSBpdCBvcgpwb3J0aW9ucyBvZiBp
+dCBvdXQgb2YgbWVkaWEvLiBJIGRvbid0IGhhdmUgYSBnb29kIHN1Z2dlc3Rpb24gb3RoZXIKdGhh
+biB1cCBhIGxldmVsIHdoZXJlIHBlb3BsZSB3aWxsIGZpbmQgaXQgZWFzaWx5LgoKPiBPbmUgcXVl
+c3Rpb24gcmVnYXJkaW5nIGJ1cy13aWR0aCwgc2hvdWxkIGl0IGluY2x1ZGUgaHN5bmMvdnN5bmMv
+ZGUvY2xrPwo+IElmIHllcywgaG93IHRvIGRpc3Rpbmd1aXNoIHJnYjU2NSB3aXRoIGFsbCB0aG9z
+ZSBmb3VyIGZyb20gcmdiNjY2IHdpdGgKPiBvbmx5IGRlL2NsayAoc29tZSBwYW5lbHMgZG8gbm90
+IG5lZWQgaHN5bmMvdnN5bmMpPyAyMCBsaW5lcyBpbiBib3RoCj4gY2FzZXMuLi4KCkknZCBzYXkg
+bm8sIGl0IGlzIGp1c3QgdGhlIGRhdGEgbGluZXMuCgo+IE9yIGFyZSByZ2I0NDQvcmdiNTY1L3Jn
+YjY2Ni9yZ2I4ODggYWxyZWFkeSBzdXBwb3J0ZWQgYnkgdGhlIG1lZGlhIHZpZGVvCj4gaW50ZXJm
+YWNlIGJpbmRpbmc/IFRoYXQncyBub3QgYXQgYWxsIG9idmlvdXMgdG8gbWUuCgpOb3Qgc3VyZSwg
+SSdkIGd1ZXNzIG5vdC4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
