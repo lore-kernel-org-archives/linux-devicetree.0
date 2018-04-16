@@ -1,160 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: usb: Update documentation for
- Qualcomm DWC3 driver
-Date: Mon, 16 Apr 2018 15:38:27 -0500
-Message-ID: <20180416203827.4jgevj4dgce6r3cq@rob-hp-laptop>
-References: <1523638285-5742-1-git-send-email-mgautam@codeaurora.org>
- <1523638285-5742-2-git-send-email-mgautam@codeaurora.org>
+Subject: Re: [PATCH 3/9] dt-bindings: bcm: Add Raspberry Pi 3 B+
+Date: Mon, 16 Apr 2018 15:38:52 -0500
+Message-ID: <20180416203852.ks7dimndljshcadv@rob-hp-laptop>
+References: <1523640478-4448-1-git-send-email-stefan.wahren@i2se.com>
+ <1523640478-4448-4-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1523638285-5742-2-git-send-email-mgautam@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manu Gautam <mgautam@codeaurora.org>
-Cc: balbi@kernel.org, andy.gross@linaro.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <1523640478-4448-4-git-send-email-stefan.wahren@i2se.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Alexander Graf <agraf@suse.de>, Eric Anholt <eric@anholt.net>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 13, 2018 at 10:21:22PM +0530, Manu Gautam wrote:
-> Existing documentation has lot of incorrect information as it
-> was originally added for a driver that no longer exists.
+On Fri, Apr 13, 2018 at 07:27:52PM +0200, Stefan Wahren wrote:
+> This adds the root properties for the Raspberry Pi 3 B+
 > 
-> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 > ---
->  .../devicetree/bindings/usb/qcom,dwc3.txt          | 78 ++++++++++++++++------
->  1 file changed, 57 insertions(+), 21 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-> index bc8a2fa..fdc574a 100644
-> --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-> @@ -1,54 +1,90 @@
->  Qualcomm SuperSpeed DWC3 USB SoC controller
->  
->  Required properties:
-> -- compatible:	should contain "qcom,dwc3"
-> +- compatible:		should contain "qcom,dwc3"
+>  Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Needs an SoC specific compatible string.
-
-> +- reg:			offset and length of register set for QSCRATCH wrapper
-> +- power-domains:	specifies a phandle to PM domain provider node
->  - clocks:		A list of phandle + clock-specifier pairs for the
->  				clocks listed in clock-names
-> -- clock-names:	Should contain the following:
-> +- clock-names:		Should contain the following:
->    "core"		Master/Core clock, have to be >= 125 MHz for SS
->  				operation and >= 60MHz for HS operation
-> +  "mock_utmi"		Mock utmi clock needed for ITP/SOF generation in
-> +				host mode. Its frequency should be 19.2MHz.
-> +  "sleep"		Sleep clock, used for wakeup when USB3 core goes
-> +				into low power mode (U3).
->  
->  Optional clocks:
->    "iface"		System bus AXI clock.  Not present on all platforms
-> -  "sleep"		Sleep clock, used when USB3 core goes into low
-> -				power mode (U3).
-> +  "cfg_noc"		System Config NOC clock. Not present on all platforms
-
-These need to be specific as to which compatible properties have or 
-don't have these clocks.
-
-> +- assigned-clocks:	should be:
-> +				MOCK_UTMI_CLK
-> +				MASTER_CLK
-> +- assigned-clock-rates: should be:
-> +                                19.2Mhz (192000000) for MOCK_UTMI_CLK
-> +                                >=125Mhz (125000000) for MASTER_CLK in SS mode
-> +                                >=60Mhz (60000000) for MASTER_CLK in HS mode
-> +
-> +Optional properties:
-> +- resets:		list of phandle and reset specifier pairs
-
-How many? 
-
-> +- interrupts:		specifies interrupts from controller wrapper used
-> +			to wakeup from low power/susepnd state.	Must contain
-> +			one or more entry for interrupt-names property
-> +- interrupt-names:	Must include the following entries:
-> +			- "hs_phy_irq": The interrupt that is asserted when a
-> +			   wakeup event is received on USB2 bus
-> +			- "ss_phy_irq": The interrupt that is asserted when a
-> +			   wakeup event is received on USB3 bus
-> +			- "dm_hs_phy_irq" and "dp_hs_phy_irq": Separate
-> +			   interrupts for any wakeup event on DM and DP lines
-
-Sounds like the irqs are actually part of the PHYs? If so, then that's 
-where they should be in the DT.
-
-> +- qcom,select-utmi-as-pipe-clk: if present, disable USB3 pipe_clk requirement.
-> +				Used when dwc3 operates without SSPHY and only
-> +				HS/FS/LS modes are supported.
->  
->  Required child node:
->  A child node must exist to represent the core DWC3 IP block. The name of
->  the node is not important. The content of the node is defined in dwc3.txt.
->  
->  Phy documentation is provided in the following places:
-> -Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
-> +Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
-> +Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 PHY
->  
->  Example device nodes:
->  
->  		hs_phy: phy@100f8800 {
-> -			compatible = "qcom,dwc3-hs-usb-phy";
-> -			reg = <0x100f8800 0x30>;
-> -			clocks = <&gcc USB30_0_UTMI_CLK>;
-> -			clock-names = "ref";
-> -			#phy-cells = <0>;
-> -
-> +			compatible = "qcom,qusb2-v2-phy";
-> +			...
->  		};
->  
->  		ss_phy: phy@100f8830 {
-> -			compatible = "qcom,dwc3-ss-usb-phy";
-> -			reg = <0x100f8830 0x30>;
-> -			clocks = <&gcc USB30_0_MASTER_CLK>;
-> -			clock-names = "ref";
-> -			#phy-cells = <0>;
-> -
-> +			compatible = "qcom,qmp-v3-usb3-phy";
-> +			...
->  		};
->  
-> -		usb3_0: usb30@0 {
-> +		usb3_0: usb30@a6f8800 {
->  			compatible = "qcom,dwc3";
-> +			reg = <0xa6f8800 0x400>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
-> -			clocks = <&gcc USB30_0_MASTER_CLK>;
-> -			clock-names = "core";
-> -
->  			ranges;
->  
-> +			interrupts = <0 131 0>, <0 486 0>, <0 488 0>, <0 489 0>;
-> +			interrupt-names = "hs_phy_irq", "ss_phy_irq",
-> +				  "dm_hs_phy_irq", "dp_hs_phy_irq";
-> +
-> +			clocks = <&gcc GCC_USB30_PRIM_MASTER_CLK>,
-> +				<&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-> +				<&gcc GCC_USB30_PRIM_SLEEP_CLK>;
-> +			clock-names = "core", "mock_utmi", "sleep";
-> +
-> +			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-> +					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
-> +			assigned-clock-rates = <19200000>, <133000000>;
-> +
-> +			resets = <&gcc GCC_USB30_PRIM_BCR>;
-> +			reset-names = "core_reset";
-> +			power-domains = <&gcc USB30_PRIM_GDSC>;
-> +			qcom,select-utmi-as-pipe-clk;
->  
->  			dwc3@10000000 {
->  				compatible = "snps,dwc3";
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
