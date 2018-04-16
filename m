@@ -1,7 +1,7 @@
 From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: [PATCH v4 03/10] PCI: endpoint: functions/pci-epf-test: Add second entry
-Date: Mon, 16 Apr 2018 15:37:51 +0100
-Message-ID: <d025236bb2646eb3b4d4de9f2e745cab5d7ef2b9.1523881182.git.gustavo.pimentel@synopsys.com>
+Subject: [PATCH v4 01/10] bindings: PCI: designware: Example update
+Date: Mon, 16 Apr 2018 15:37:49 +0100
+Message-ID: <1936f007686d3cbb0ed3072d4cd81abc961bf358.1523881182.git.gustavo.pimentel@synopsys.com>
 References: <cover.1523881182.git.gustavo.pimentel@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1523881182.git.gustavo.pimentel@synopsys.com>
@@ -12,45 +12,60 @@ To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jin
 Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Adds a seconds entry on the pci_epf_test_ids structure that disables the
-linkup_notifier parameter on driver.
+Replaces "ctrlreg" reg-name by "dbi" to be coherent with similar drivers,
+however it still be compatible with any previous DT that uses the old
+reg-name.
 
-This allows EPs that doesn't have linkup notification signal to work
-with pcitest.
+Replaces the PCIe base address example by a real PCIe base address in use.
 
 Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
-Change v2->v3:
- - Added second entry in pci_epf_test_ids structure.
- - Remove test_reg_bar field assignment on second entry.
-Changes v3->v4:
+Changes v1->v2:
+ - Removed any iATU reference or changes to avoid confusion.
+ - Add "snps,dw-pcie" compatible string following Kishon's suggestion.
+Changes v2->v3:
 - Nothing changed, just to follow the patch set version.
+Changes v3->v4:
+- Reverted "snps,dw-pcie-rc" compatible string requested by Rob Herring.
 
- drivers/pci/endpoint/functions/pci-epf-test.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/devicetree/bindings/pci/designware-pcie.txt | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 7cef851..63dca44 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -459,10 +459,18 @@ static int pci_epf_test_bind(struct pci_epf *epf)
- 	return 0;
- }
+diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+index 1da7ade..7f9804d 100644
+--- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+@@ -1,7 +1,8 @@
+ * Synopsys DesignWare PCIe interface
  
-+static const struct pci_epf_test_data data_cfg2 = {
-+	.linkup_notifier = false
-+};
-+
- static const struct pci_epf_device_id pci_epf_test_ids[] = {
- 	{
- 		.name = "pci_epf_test",
- 	},
-+	{
-+		.name = "pci_epf_test_cfg2",
-+		.driver_data = (kernel_ulong_t)&data_cfg2,
-+	},
- 	{},
- };
+ Required properties:
+-- compatible: should contain "snps,dw-pcie" to identify the core.
++- compatible:
++	"snps,dw-pcie" for RC mode;
+ - reg: Should contain the configuration address space.
+ - reg-names: Must be "config" for the PCIe configuration space.
+     (The old way of getting the configuration address space from "ranges"
+@@ -41,11 +42,11 @@ EP mode:
  
+ Example configuration:
+ 
+-	pcie: pcie@dffff000 {
++	pcie: pcie@dfc00000 {
+ 		compatible = "snps,dw-pcie";
+-		reg = <0xdffff000 0x1000>, /* Controller registers */
+-		      <0xd0000000 0x2000>; /* PCI config space */
+-		reg-names = "ctrlreg", "config";
++		reg = <0xdfc00000 0x0001000>, /* IP registers */
++		      <0xd0000000 0x0002000>; /* Configuration space */
++		reg-names = "dbi", "config";
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+ 		device_type = "pci";
+@@ -54,5 +55,4 @@ Example configuration:
+ 		interrupts = <25>, <24>;
+ 		#interrupt-cells = <1>;
+ 		num-lanes = <1>;
+-		num-viewport = <3>;
+ 	};
 -- 
 2.7.4
