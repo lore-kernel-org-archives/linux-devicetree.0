@@ -1,104 +1,31 @@
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v4 02/13] dt-bindings: usb: add documentation for typec
- port controller(TCPCI)
-Date: Mon, 16 Apr 2018 11:54:31 +0000
-Message-ID: <VI1PR0402MB391794B3D9A6D7435426189D89B00@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
- <1522253178-32414-3-git-send-email-jun.li@nxp.com>
- <20180409200402.qkhutincgvtmipao@rob-hp-laptop>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH] ARM: dts: stm32: Enable stm32mp1 clock driver on
+ stm32mp157c
+Date: Mon, 16 Apr 2018 13:59:40 +0200
+Message-ID: <661fd823-d7ba-bafe-3dc9-93fd0cf134fe@st.com>
+References: <1521098327-13958-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180409200402.qkhutincgvtmipao@rob-hp-laptop>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1521098327-13958-1-git-send-email-gabriel.fernandez@st.com>
 Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rob Herring <robh@kernel.org>
-Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, Peter Chen <peter.chen@nxp.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "a.hajda@samsung.com" <a.hajda@samsung.com>, dl-linux-imx <linux-imx@nxp.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gabriel.fernandez@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgW21h
-aWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+IFNlbnQ6IDIwMTjE6jTUwjEwyNUgNDowNA0KPiBUbzog
-SnVuIExpIDxqdW4ubGlAbnhwLmNvbT4NCj4gQ2M6IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3Jn
-OyBoZWlra2kua3JvZ2VydXNAbGludXguaW50ZWwuY29tOw0KPiBsaW51eEByb2Vjay11cy5uZXQ7
-IGEuaGFqZGFAc2Ftc3VuZy5jb207IHNodWZhbl9sZWVAcmljaHRlay5jb207IFBldGVyDQo+IENo
-ZW4gPHBldGVyLmNoZW5AbnhwLmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBs
-aW51eC11c2JAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29t
-PjsNCj4gZGV2ZWxAZHJpdmVyZGV2Lm9zdW9zbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2
-NCAwMi8xM10gZHQtYmluZGluZ3M6IHVzYjogYWRkIGRvY3VtZW50YXRpb24gZm9yIHR5cGVjDQo+
-IHBvcnQgY29udHJvbGxlcihUQ1BDSSkNCj4gDQo+IE9uIFRodSwgTWFyIDI5LCAyMDE4IGF0IDEy
-OjA2OjA3QU0gKzA4MDAsIExpIEp1biB3cm90ZToNCj4gPiBUQ1BDSSBzdGFuZHMgZm9yIHR5cGVj
-IHBvcnQgY29udHJvbGxlciBpbnRlcmZhY2UsIGl0cyBpbXBsZW1lbnRhdGlvbg0KPiA+IGhhcyBm
-dWxsIHR5cGVjIHBvcnQgY29udHJvbCB3aXRoIHBvd2VyIGRlbGl2ZXJ5IHN1cHBvcnQsIGl0J3Mg
-YQ0KPiA+IHN0YW5kYXJkIGkyYyBzbGF2ZSB3aXRoIEdQSU8gaW5wdXQgYXMgaXJxIGludGVyZmFj
-ZSwgZGV0YWlsIHNlZSBzcGVjDQo+ID4gIlVuaXZlcnNhbCBTZXJpYWwgQnVzIFR5cGUtQyBQb3J0
-IENvbnRyb2xsZXIgSW50ZXJmYWNlIFNwZWNpZmljYXRpb24NCj4gPiBSZXZpc2lvbiAxLjAsIFZl
-cnNpb24gMS4xIg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNv
-bT4NCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3R5cGVjLXRjcGNp
-LnR4dCAgICAgICAgfCAzMw0KPiArKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi90eXBlYy10Y3BjaS50eHQNCj4gPiBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvdHlwZWMtdGNwY2kudHh0DQo+ID4gbmV3
-IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi43YTdhOGUwDQo+ID4gLS0tIC9k
-ZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2Iv
-dHlwZWMtdGNwY2kudHh0DQo+ID4gQEAgLTAsMCArMSwzMyBAQA0KPiA+ICtUQ1BDSShUeXBlYyBw
-b3J0IGNvdHJvbGxlciBpbnRlcmZhY2UpIGJpbmRpbmcNCj4gPiArLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0
-aWVzOg0KPiA+ICstIGNvbXBhdGlibGU6ICAgICAgIHNob3VsZCBiZSAidXNiLXRjcGNpLGNoaXAt
-c3BlY2lmaWMtc3RyaW5nIi4NCj4gDQo+IENvbXBhdGlibGUgc3RyaW5ncyBzaG91bGQgYmUgaW4g
-dGhlIGZvcm0gb2YgIjx2ZW5kb3IgcHJlZml4Piw8ZGV2aWNlPiINCj4gDQoNCk9LLCBJIHdpbGwg
-bGlzdCB0aGUgc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmcgaGVyZSBhbmQgY2hhbmdlDQpteSBl
-eGFtcGxlIGNhc2UgdG8gYmUgIm54cCxwdG41MTEwIi4NCg0KPiA+ICstIHJlZzogICAgICAgICAg
-ICAgIHRoZSBpMmMgc2xhdmUgYWRkcmVzcyBvZiB0eXBlYyBwb3J0IGNvbnRyb2xsZXIgZGV2aWNl
-Lg0KPiA+ICstIGludGVycnVwdC1wYXJlbnQ6IHRoZSBwaGFuZGxlIHRvIHRoZSBpbnRlcnJ1cHQg
-Y29udHJvbGxlciB3aGljaCBwcm92aWRlcw0KPiA+ICsgICAgICAgICAgICAgICAgICAgIHRoZSBp
-bnRlcnJ1cHQuDQo+ID4gKy0gaW50ZXJydXB0czogICAgICAgaW50ZXJydXB0IHNwZWNpZmljYXRp
-b24gZm9yIHRjcGNpIGFsZXJ0Lg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgc3ViLW5vZGU6DQo+ID4g
-Ky0gY29ubmVjdG9yOiBUaGUgInVzYi1jLWNvbm5lY3RvciIgYXR0YWNoZWQgdG8gdGhlIHRjcGNp
-IGNoaXAsIHRoZQ0KPiA+ICtiaW5kaW5ncw0KPiA+ICsgIG9mIGNvbm5lY3RvciBub2RlIGFyZSBz
-cGVjaWZpZWQgaW4NCj4gPiArICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY29u
-bmVjdG9yL3VzYi1jb25uZWN0b3IudHh0DQo+ID4gKw0KPiA+ICtFeGFtcGxlOg0KPiA+ICsNCj4g
-PiArcHRuNTExMEA1MCB7DQo+ID4gKwljb21wYXRpYmxlID0gInVzYi10Y3BjaSxwdG41MTEwIjsN
-Cj4gPiArCXJlZyA9IDwweDUwPjsNCj4gPiArCWludGVycnVwdC1wYXJlbnQgPSA8JmdwaW8zPjsN
-Cj4gPiArCWludGVycnVwdHMgPSA8MyBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+ICsNCj4gPiAr
-CXVzYl9jb246IGNvbm5lY3RvciB7DQo+IA0KPiBIb3cgaXMgdGhlIE9GIGdyYXBoIGRvbmUgaW4g
-dGhpcyBjYXNlPyBZb3UgbmVlZCBzb21lIGxpbmsgdG8gdGhlIFVTQiBjb250cm9sbGVyLg0KDQpU
-aGUgcGxhdGZvcm0oaS5NWDhNUSBFVkspIGZvciB0aGlzIGlzIHN0aWxsIG9uIHRoZSB3YXkgb2Yg
-c3RhcnQgdXBzdHJlYW0sIEkgd2FzDQpQbGFubmluZyB0byBhZGQgdGhpcyBwYXJ0IHdpdGggZW5h
-YmxpbmcgVVNCMyBmdW5jdGlvbiwgYXMgb2YgaG93IHRoaXMgd2lsbCBiZSBkb25lLA0KSSBvbmx5
-IGhhdmUgdXNiMyBzcyBkYXRhKG5vIGRpc3BsYXkgcG9ydCBvciBTaWRlYmFuZCksIGlzIHNvbWV0
-aGluZyBsaWtlIGJlbG93IE9LPw0KDQp0eXBlYzogcHRuNTExMEA1MCB7DQoJY29tcGF0aWJsZSA9
-ICJueHAscHRuNTExMCI7DQoJLi4uDQoNCgl1c2JfY29uOiBjb25uZWN0b3Igew0KCQljb21wYXRp
-YmxlID0gInVzYi1jLWNvbm5lY3RvciI7DQoJCWxhYmVsID0gIlVTQi1DIjsNCgkJLi4uDQoNCgkJ
-cG9ydHMgew0KCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQoJCQkjc2l6ZS1jZWxscyA9IDwwPjsN
-Cg0KCQkJcG9ydEAxIHsNCgkJCQlyZWcgPSA8MT47DQoJCQkJdXNiX2Nvbl9zczogZW5kcG9pbnQg
-ew0KCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmdXNiM19waHlfc3M+Ow0KCQkJCX07DQoJCQl9Ow0K
-ICAgICAgICAJfTsNCgl9Ow0KfTsNCg0KJnVzYjNfcGh5MCB7DQoJc3RhdHVzID0gIm9rYXkiOw0K
-CQ0KCXBvcnQgew0KCQl1c2IzX3BoeV9zczogZW5kcG9pbnQgew0KCQkJcmVtb3RlLWVuZHBvaW50
-ID0gPCZ1c2JfY29uX3NzPjsNCgkJfTsNCgl9Ow0KfQ0KDQpUaGFua3MNCkp1bg0KPiANCj4gPiAr
-CQljb21wYXRpYmxlID0gInVzYi1jLWNvbm5lY3RvciI7DQo+ID4gKwkJbGFiZWwgPSAiVVNCLUMi
-Ow0KPiA+ICsJCXBvcnQtdHlwZSA9ICJkdWFsIjsNCj4gPiArCQl0cnktcG93ZXItcm9sZSA9ICJz
-aW5rIg0KPiA+ICsJCXNvdXJjZS1wZG9zID0gPDB4MzgwMTkwYzg+Ow0KPiA+ICsJCXNpbmstcGRv
-cyA9IDwweDM4MDE5MGM4IDB4MzgwMmQwYzg+Ow0KPiA+ICsJCW9wLXNpbmstbWljcm93YXR0LWhv
-dXJzID0gPDkwMDAwMDA+Ow0KPiA+ICsJfTsNCj4gPiArfTsNCj4gPiAtLQ0KPiA+IDIuNy40DQo+
-ID4NCj4gPiAtLQ0KPiA+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBs
-aW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIg0KPiA+IGluIHRoZSBib2R5IG9mIGEgbWVzc2Fn
-ZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnIE1vcmUgbWFqb3Jkb21vDQo+ID4gaW5mbyBh
-dA0KPiA+IGh0dHBzOi8vZW1lYTAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91
-cmw9aHR0cCUzQSUyRiUyRnZnZXINCj4gPiAua2VybmVsLm9yZyUyRm1ham9yZG9tby1pbmZvLmh0
-bWwmZGF0YT0wMiU3QzAxJTdDanVuLmxpJTQwbnhwLmNvbSU3Qw0KPiA4Ng0KPiA+DQo+IGE3YzBk
-YTE4MjA0ZGY0MzRkMjA4ZDU5ZTU1MGMyNyU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAx
-NjM1JTdDMA0KPiAlDQo+ID4NCj4gN0MwJTdDNjM2NTg5MDEwNTYyMTkzMDY1JnNkYXRhPTAlMkZt
-b0RycVduOVlnaFdHdWNXWW5NZDFZSzBCTzINCj4gZFZncCUyRmENCj4gPiBLTlpaWiUyQlhFJTNE
-JnJlc2VydmVkPTANCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6
-Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZl
-cmRldi1kZXZlbAo=
+Hi Gabriel,
+
+On 03/15/2018 08:18 AM, gabriel.fernandez@st.com wrote:
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+> 
+> This patch enables stm32mp1 clock driver.
+> 
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+
+
+Applied on stm32-next.
+
+Thanks.
+Alex
