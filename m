@@ -1,54 +1,78 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 13/13] dt: bindings: add bindings for wcn3990 wifi block
-Date: Mon, 16 Apr 2018 18:00:38 +0300
-Message-ID: <878t9np561.fsf@kamboji.qca.qualcomm.com>
-References: <1523378986-11551-1-git-send-email-govinds@codeaurora.org>
-        <20180413215340.vhvlhlaapt5uuo7d@rob-hp-laptop>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] ARM: dts: renesas: replace toshiba,
+ mmc-wrprotect-disable with disable-wp
+Date: Tue, 17 Apr 2018 00:02:32 +0900
+Message-ID: <1523890952-20866-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180413215340.vhvlhlaapt5uuo7d@rob-hp-laptop> (Rob Herring's
-        message of "Fri, 13 Apr 2018 16:53:40 -0500")
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+Follow up commit 788778b0d21a ("mmc: tmio: deprecate "toshiba,
+mmc-wrprotect-disable" DT property").
 
-> On Tue, Apr 10, 2018 at 10:19:46PM +0530, Govind Singh wrote:
->> Add device tree binding documentation details for wcn3990
->> wifi block present in Qualcomm SDM845/APQ8098 SoC into
->> "qcom,ath10k.txt".
->> 
->> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  .../bindings/net/wireless/qcom,ath10k.txt          | 31 ++++++++++++++++++++++
->>  1 file changed, 31 insertions(+)
->
-> One nit, otherwise:
->
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-[...]
+ arch/arm/boot/dts/r8a73a4-ape6evm.dts | 4 ++--
+ arch/arm/boot/dts/sh73a0.dtsi         | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
->> @@ -119,3 +126,27 @@ wifi0: wifi@a000000 {
->>  	qcom,msi_base = <0x40>;
->>  	qcom,ath10k-pre-calibration-data = [ 01 02 03 ... ];
->>  };
->> +
->> +Example (to supply wcn3990 SoC wifi block details):
->> +
->> +qcom,wifi@18000000 {
->
-> wifi@...
-
-I added this and Rob's Reviewed-by to the patch in the pending branch:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=pending&id=20f4accbe76af8f137b4218ce4973bda6fc3d23e
-
-Govind, please check that it's ok.
-
+diff --git a/arch/arm/boot/dts/r8a73a4-ape6evm.dts b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
+index ec7c86e..125c39c 100644
+--- a/arch/arm/boot/dts/r8a73a4-ape6evm.dts
++++ b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
+@@ -234,7 +234,7 @@
+ &sdhi0 {
+ 	vmmc-supply = <&vcc_sdhi0>;
+ 	bus-width = <4>;
+-	toshiba,mmc-wrprotect-disable;
++	disable-wp;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdhi0_pins>;
+ 	status = "okay";
+@@ -244,7 +244,7 @@
+ 	vmmc-supply = <&ape6evm_fixed_3v3>;
+ 	bus-width = <4>;
+ 	broken-cd;
+-	toshiba,mmc-wrprotect-disable;
++	disable-wp;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdhi1_pins>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
+index 914a7c2..39cc586 100644
+--- a/arch/arm/boot/dts/sh73a0.dtsi
++++ b/arch/arm/boot/dts/sh73a0.dtsi
+@@ -336,7 +336,7 @@
+ 			      GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks SH73A0_CLK_SDHI1>;
+ 		power-domains = <&pd_a3sp>;
+-		toshiba,mmc-wrprotect-disable;
++		disable-wp;
+ 		cap-sd-highspeed;
+ 		status = "disabled";
+ 	};
+@@ -348,7 +348,7 @@
+ 			      GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks SH73A0_CLK_SDHI2>;
+ 		power-domains = <&pd_a3sp>;
+-		toshiba,mmc-wrprotect-disable;
++		disable-wp;
+ 		cap-sd-highspeed;
+ 		status = "disabled";
+ 	};
 -- 
-Kalle Valo
+2.7.4
