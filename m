@@ -1,252 +1,301 @@
-From: rishabhb@codeaurora.org
-Subject: Re: [PATCH v4 2/2] drivers: soc: Add LLCC driver
-Date: Mon, 16 Apr 2018 13:50:58 -0700
-Message-ID: <af00da0284e32d3698db855edbf74e45@codeaurora.org>
-References: <1523390893-10904-1-git-send-email-rishabhb@codeaurora.org>
- <1523390893-10904-3-git-send-email-rishabhb@codeaurora.org>
- <CAE=gft6DHtvkLAyAF30p6rwJrs845nxBOxWQ0gmHdJ0VQa4ZxQ@mail.gmail.com>
- <a4d0d993c8bf42d9a2e59078606a4b4d@codeaurora.org>
- <CAE=gft5tF-aTCg6Top+uzX-NfM=RGWizc7g09HNiWPPLfmw=Uw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] regulator: dt-bindings: add QCOM RPMh regulator
+ bindings
+Date: Mon, 16 Apr 2018 15:57:49 -0500
+Message-ID: <20180416205749.556rbkzaja33oref@rob-hp-laptop>
+References: <cover.1523673467.git.collinsd@codeaurora.org>
+ <39b676d2ba7dac2436196cc5a090c6f151498dc8.1523673467.git.collinsd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAE=gft5tF-aTCg6Top+uzX-NfM=RGWizc7g09HNiWPPLfmw=Uw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <39b676d2ba7dac2436196cc5a090c6f151498dc8.1523673467.git.collinsd@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@lists.infradead.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, kyan@codeaurora.org, ckadabi@codeaurora.org, stanimir.varbanov@linaro.org
+To: David Collins <collinsd@codeaurora.org>
+Cc: broonie@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-16 10:14, Evan Green wrote:
-> On Fri, Apr 13, 2018 at 4:08 PM <rishabhb@codeaurora.org> wrote:
+On Fri, Apr 13, 2018 at 07:50:34PM -0700, David Collins wrote:
+> Introduce bindings for RPMh regulator devices found on some
+> Qualcomm Technlogies, Inc. SoCs.  These devices allow a given
+> processor within the SoC to make PMIC regulator requests which
+> are aggregated within the RPMh hardware block along with requests
+> from other processors in the SoC to determine the final PMIC
+> regulator hardware state.
 > 
->> On 2018-04-12 15:02, Evan Green wrote:
->> > Hi Rishabh,
->> >
->> > On Tue, Apr 10, 2018 at 1:09 PM Rishabh Bhatnagar
->> > <rishabhb@codeaurora.org>
->> > wrote:
->> >
->> >> LLCC (Last Level Cache Controller) provides additional cache memory
->> >> in the system. LLCC is partitioned into multiple slices and each
->> >> slice gets its own priority, size, ID and other config parameters.
->> >> LLCC driver programs these parameters for each slice. Clients that
->> >> are assigned to use LLCC need to get information such size & ID of the
->> >> slice they get and activate or deactivate the slice as needed. LLCC
->> >> driver
->> >> provides API for the clients to perform these operations.
->> >
->> >> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
->> >> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
->> >> ---
->> >>   drivers/soc/qcom/Kconfig           |  17 ++
->> >>   drivers/soc/qcom/Makefile          |   2 +
->> >>   drivers/soc/qcom/llcc-sdm845.c     | 110 ++++++++++
->> >>   drivers/soc/qcom/llcc-slice.c      | 404
->> > +++++++++++++++++++++++++++++++++++++
->> >>   include/linux/soc/qcom/llcc-qcom.h | 168 +++++++++++++++
->> >>   5 files changed, 701 insertions(+)
->> >>   create mode 100644 drivers/soc/qcom/llcc-sdm845.c
->> >>   create mode 100644 drivers/soc/qcom/llcc-slice.c
->> >>   create mode 100644 include/linux/soc/qcom/llcc-qcom.h
->> >
->> > [...]
->> >> diff --git a/drivers/soc/qcom/llcc-sdm845.c
->> > b/drivers/soc/qcom/llcc-sdm845.c
->> >> new file mode 100644
->> >> index 0000000..619b226
->> >> --- /dev/null
->> >> +++ b/drivers/soc/qcom/llcc-sdm845.c
->> >> @@ -0,0 +1,110 @@
->> >> +// SPDX-License-Identifier: GPL-2.0
->> >> +/*
->> >> + * Copyright (c) 2017-2018, The Linux Foundation. All rights
->> >> reserved.
->> >> + *
->> >> + */
->> >> +
->> >> +#include <linux/kernel.h>
->> >> +#include <linux/module.h>
->> >> +#include <linux/of.h>
->> >> +#include <linux/of_device.h>
->> >> +#include <linux/soc/qcom/llcc-qcom.h>
->> >> +
->> >> +/*
->> >> + * SCT(System Cache Table) entry contains of the following parameters
->> >
->> > contains the following members:
->> >
->> >> + * name: Name of the client's use case for which the llcc slice is
->> >> used
->> >> + * uid: Unique id for the client's use case
->> >
->> > s/uid/usecase_id/
->> >
->> >> + * slice_id: llcc slice id for each client
->> >> + * max_cap: The maximum capacity of the cache slice provided in KB
->> >> + * priority: Priority of the client used to select victim line for
->> > replacement
->> >> + * fixed_size: Determine if the slice has a fixed capacity
->> >
->> > "Boolean indicating if the slice has a fixed capacity" might be better
->> >
->> >> diff --git a/drivers/soc/qcom/llcc-slice.c
->> >> b/drivers/soc/qcom/llcc-slice.c
->> >> new file mode 100644
->> >> index 0000000..67a81b0
->> >> --- /dev/null
->> >> +++ b/drivers/soc/qcom/llcc-slice.c
->> > ...
->> >> +static int llcc_update_act_ctrl(struct llcc_drv_data *drv, u32 sid,
->> >> +                               u32 act_ctrl_reg_val, u32 status)
->> >> +{
->> >> +       u32 act_ctrl_reg;
->> >> +       u32 status_reg;
->> >> +       u32 slice_status;
->> >> +       int ret = 0;
->> >> +
->> >> +       act_ctrl_reg = drv->bcast_off + LLCC_TRP_ACT_CTRLn(sid);
->> >> +       status_reg = drv->bcast_off + LLCC_TRP_STATUSn(sid);
->> >> +
->> >> +       /*Set the ACTIVE trigger*/
->> >
->> > Add spaces around /* */
->> >
->> >> +       act_ctrl_reg_val |= ACT_CTRL_ACT_TRIG;
->> >> +       ret = regmap_write(drv->regmap, act_ctrl_reg,
->> >> act_ctrl_reg_val);
->> >> +       if (ret)
->> >> +               return ret;
->> >> +
->> >> +       /* Clear the ACTIVE trigger */
->> >> +       act_ctrl_reg_val &= ~ACT_CTRL_ACT_TRIG;
->> >> +       ret = regmap_write(drv->regmap, act_ctrl_reg,
->> >> act_ctrl_reg_val);
->> >> +       if (ret)
->> >> +               return ret;
->> >> +
->> >> +       ret = regmap_read_poll_timeout(drv->regmap, status_reg,
->> > slice_status,
->> >> +                       !(slice_status & status), 0,
->> > LLCC_STATUS_READ_DELAY);
->> >> +       return ret;
->> >> +}
->> >> +
->> >> +/**
->> >> + * llcc_slice_activate - Activate the llcc slice
->> >> + * @desc: Pointer to llcc slice descriptor
->> >> + *
->> >> + * A value zero will be returned on success and a negative errno will
->> >
->> > a value of zero
->> >
->> >> + * be returned in error cases
->> >> + */
->> >> +int llcc_slice_activate(struct llcc_slice_desc *desc)
->> >> +{
->> >> +       int ret;
->> >> +       u32 act_ctrl_val;
->> >> +       struct llcc_drv_data *drv;
->> >> +
->> >> +       if (desc == NULL)
->> >> +               return -EINVAL;
->> >
->> > I think we can remove this check, right?
->> >
->> >> +
->> >> +       drv = dev_get_drvdata(desc->dev);
->> >> +       if (!drv)
->> >> +               return -EINVAL;
->> >> +
->> >> +       mutex_lock(&drv->lock);
->> >> +       if (test_bit(desc->slice_id, drv->bitmap)) {
->> >> +               mutex_unlock(&drv->lock);
->> >> +               return 0;
->> >> +       }
->> >> +
->> >> +       act_ctrl_val = ACT_CTRL_OPCODE_ACTIVATE <<
->> >> ACT_CTRL_OPCODE_SHIFT;
->> >> +
->> >> +       ret = llcc_update_act_ctrl(drv, desc->slice_id, act_ctrl_val,
->> >> +                                 DEACTIVATE);
->> >> +
->> >> +       __set_bit(desc->slice_id, drv->bitmap);
->> >> +       mutex_unlock(&drv->lock);
->> >> +
->> >> +       return ret;
->> >> +}
->> >> +EXPORT_SYMBOL_GPL(llcc_slice_activate);
->> >> +
->> >> +/**
->> >> + * llcc_slice_deactivate - Deactivate the llcc slice
->> >> + * @desc: Pointer to llcc slice descriptor
->> >> + *
->> >> + * A value zero will be returned on success and a negative errno will
->> >> + * be returned in error cases
->> >> + */
->> >> +int llcc_slice_deactivate(struct llcc_slice_desc *desc)
->> >> +{
->> >> +       u32 act_ctrl_val;
->> >> +       int ret;
->> >> +       struct llcc_drv_data *drv;
->> >> +
->> >> +       if (desc == NULL)
->> >> +               return -EINVAL;
->> >> +
->> >> +       drv = dev_get_drvdata(desc->dev);
->> >> +       if (!drv)
->> >> +               return -EINVAL;
->> >> +
->> >> +       mutex_lock(&drv->lock);
->> >> +       if (!test_bit(desc->slice_id, drv->bitmap)) {
->> >> +               mutex_unlock(&drv->lock);
->> >> +               return 0;
->> >> +       }
->> >> +       act_ctrl_val = ACT_CTRL_OPCODE_DEACTIVATE <<
->> > ACT_CTRL_OPCODE_SHIFT;
->> >> +
->> >> +       ret = llcc_update_act_ctrl(drv, desc->slice_id, act_ctrl_val,
->> >> +                                 ACTIVATE);
->> >> +
->> >> +       __clear_bit(desc->slice_id, drv->bitmap);
->> >> +       mutex_unlock(&drv->lock);
->> >> +
->> >> +       return ret;
->> >> +}
->> >> +EXPORT_SYMBOL_GPL(llcc_slice_deactivate);
->> >> +
->> >> +/**
->> >> + * llcc_get_slice_id - return the slice id
->> >> + * @desc: Pointer to llcc slice descriptor
->> >> + *
->> >> + * A positive value will be returned on success and a negative errno
->> >> will
->> >> + * be returned on error
->> >> + */
->> >> +int llcc_get_slice_id(struct llcc_slice_desc *desc)
->> >> +{
->> >> +       if (!desc)
->> >> +               return -EINVAL;
->> >
->> > Can we remove this check too?
->> >
->> We need this check and the following one to protect against the
->> null pointer access which might happen if client doesn't get
->> the descriptor before accessing size and slice_id.
+> Signed-off-by: David Collins <collinsd@codeaurora.org>
+> ---
+>  .../bindings/regulator/qcom,rpmh-regulator.txt     | 207 +++++++++++++++++++++
+>  .../dt-bindings/regulator/qcom,rpmh-regulator.h    |  36 ++++
+>  2 files changed, 243 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+>  create mode 100644 include/dt-bindings/regulator/qcom,rpmh-regulator.h
 > 
-> Is this just to protect against errors made during development, or is 
-> there
-> an expected code path through which this might actually happen? If it's
-> just to protect against developer error, then based on other feedback 
-> I've
-> seen on these lists, the null pointer dereference is preferred, and we
-> should remove this check. If it's an actual expected flow, then I guess
-> clients will call llcc_slice_getd(), see the ERR_PTR(-ENOENT), 
-> transform
-> that into NULL, and then call these other functions anyway?
+> diff --git a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+> new file mode 100644
+> index 0000000..69748ea
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+> @@ -0,0 +1,207 @@
+> +Qualcomm Technologies, Inc. RPMh Regulators
+> +
+> +rpmh-regulator devices support PMIC regulator management via the Voltage
+> +Regulator Manager (VRM) and Oscillator Buffer (XOB) RPMh accelerators.  The APPS
+> +processor communicates with these hardware blocks via a Resource State
+> +Coordinator (RSC) using command packets.  The VRM allows changing four
+> +parameters for a given regulator: enable state, output voltage, operating mode,
+> +and minimum headroom voltage.  The XOB allows changing only a single parameter
+> +for a given regulator: its enable state.  Despite its name, the XOB is capable
+> +of controlling the enable state of any PMIC peripheral.  It is used for clock
+> +buffers, low-voltage switches, and LDO/SMPS regulators which have a fixed
+> +voltage and mode.
+> +
+> +=======================
+> +Required Node Structure
+> +=======================
+> +
+> +RPMh regulators must be described in two levels of device nodes.  The first
+> +level describes the PMIC containing the regulators and must reside within an
+> +RPMh device node.  The second level describes each regulator within the PMIC
+> +which is to be used on the board.  Each of these regulators maps to a single
+> +RPMh resource.
+> +
+> +The names used for regulator nodes must match those supported by a given PMIC.
+> +Supported regulator node names:
+> +	PM8998:		smps1 - smps13, ldo1 - ldo28, lvs1 - lvs2
+> +	PMI8998:	bob
+> +	PM8005:		smps1 - smps4
+> +
+> +========================
+> +First Level Nodes - PMIC
+> +========================
+> +
+> +- compatible
+> +	Usage:      required
+> +	Value type: <string>
+> +	Definition: Must be one of: "qcom,pm8998-rpmh-regulators",
+> +		    "qcom,pmi8998-rpmh-regulators" or
+> +		    "qcom,pm8005-rpmh-regulators".
+> +
+> +- qcom,pmic-id
+> +	Usage:      required
+> +	Value type: <string>
+> +	Definition: RPMh resource name suffix used for the regulators found on
+> +		    this PMIC.  Typical values: "a", "b", "c", "d", "e", "f".
+> +
+> +- vdd_s1-supply
+
+Use '-' rather than '_' on all these.
+
+> +- vdd_s2-supply
+> +- vdd_s3-supply
+> +- vdd_s4-supply
+> +- vdd_s5-supply
+> +- vdd_s6-supply
+> +- vdd_s7-supply
+> +- vdd_s8-supply
+> +- vdd_s9-supply
+> +- vdd_s10-supply
+> +- vdd_s11-supply
+> +- vdd_s12-supply
+> +- vdd_s13-supply
+> +- vdd_l1_l27-supply
+> +- vdd_l2_l8_l17-supply
+> +- vdd_l3_l11-supply
+> +- vdd_l4_l5-supply
+> +- vdd_l6-supply
+> +- vdd_l7_l12_l14_l15-supply
+> +- vdd_l9-supply
+> +- vdd_l10_l23_l25-supply
+> +- vdd_l13_l19_l21-supply
+> +- vdd_l16_l28-supply
+> +- vdd_l18_l22-supply
+> +- vdd_l20_l24-supply
+> +- vdd_l26-supply
+> +- vdd_lvs1_lvs2-supply
+> +- vdd_lvs1_lvs2-supply
+> +	Usage:      optional (PM8998 only)
+> +	Value type: <phandle>
+> +	Definition: phandle of the parent supply regulator of one or more of the
+> +		    regulators for this PMIC.
+> +
+> +- vdd_bob-supply
+> +	Usage:      optional (PMI8998 only)
+> +	Value type: <phandle>
+> +	Definition: BOB regulator parent supply phandle
+> +
+> +- vdd_s1-supply
+> +- vdd_s2-supply
+> +- vdd_s3-supply
+> +- vdd_s4-supply
+
+Listed twice?
+
+> +	Usage:      optional (PM8005 only)
+> +	Value type: <phandle>
+> +	Definition: phandle of the parent supply regulator of one or more of the
+> +		    regulators for this PMIC.
+> +
+> +===============================
+> +Second Level Nodes - Regulators
+> +===============================
+> +
+> +- qcom,regulator-initial-voltage
+> +	Usage:      optional; VRM regulators only
+> +	Value type: <u32>
+> +	Definition: Specifies the initial voltage in microvolts to request for a
+> +		    VRM regulator.
+> +
+> +- regulator-initial-mode
+
+Vendor prefix?
+
+> +	Usage:      optional; VRM regulators only
+> +	Value type: <u32>
+> +	Definition: Specifies the initial mode to request for a VRM regulator.
+> +		    Supported values are RPMH_REGULATOR_MODE_* which are defined
+> +		    in [1] (i.e. 0 to 3).  This property may be specified even
+> +		    if the regulator-allow-set-load property is not specified.
+> +
+> +- qcom,allowed-drms-modes
+> +	Usage:      required if regulator-allow-set-load is specified;
+> +		    VRM regulators only
+> +	Value type: <prop-encoded-array>
+> +	Definition: A list of integers specifying the PMIC regulator modes which
+> +		    can be configured at runtime based upon consumer load needs.
+> +		    Supported values are RPMH_REGULATOR_MODE_* which are defined
+> +		    in [1] (i.e. 0 to 3).
+> +
+> +- qcom,drms-mode-threshold-currents
+> +	Usage:      required if regulator-allow-set-load is specified;
+> +		    VRM regulators only
+> +	Value type: <prop-encoded-array>
+> +	Definition: A list of integers specifying the maximum allowed load
+> +		    current in microamps for each of the modes listed in
+> +		    qcom,allowed-drms-modes (matched 1-to-1 in order).  Elements
+> +		    must be specified in order from lowest to highest value.
+> +
+> +- qcom,headroom-voltage
+> +	Usage:      optional; VRM regulators only
+> +	Value type: <u32>
+> +	Definition: Specifies the headroom voltage in microvolts to request for
+> +		    a VRM regulator.  RPMh hardware automatically ensures that
+> +		    the parent of this regulator outputs a voltage high enough
+> +		    to satisfy the requested headroom.  Supported values are
+> +		    0 to 511000.
+> +
+> +- qcom,always-wait-for-ack
+> +	Usage:      optional
+> +	Value type: <empty>
+> +	Definition: Boolean flag which indicates that the application processor
+> +		    must wait for an ACK or a NACK from RPMh for every request
+> +		    sent for this regulator including those which are for a
+> +		    strictly lower power state.
+> +
+> +Other properties defined in Documentation/devicetree/bindings/regulator.txt
+> +may also be used.
+> +
+> +[1] include/dt-bindings/regulator/qcom,rpmh-regulator.h
+> +
+> +========
+> +Examples
+> +========
+> +
+> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+> +
+> +&apps_rsc {
+> +	pm8998-rpmh-regulators {
+> +		compatible = "qcom,pm8998-rpmh-regulators";
+> +		qcom,pmic-id = "a";
+> +
+> +		vdd_l7_l12_l14_l15-supply = <&pm8998_s5>;
+> +
+> +		smps2 {
+> +			regulator-min-microvolt = <1100000>;
+> +			regulator-max-microvolt = <1100000>;
+> +			qcom,regulator-initial-voltage = <1100000>;
+> +		};
+> +
+> +		pm8998_s5: smps5 {
+> +			regulator-min-microvolt = <1904000>;
+> +			regulator-max-microvolt = <2040000>;
+> +			qcom,regulator-initial-voltage = <1904000>;
+> +		};
+> +
+> +		ldo7 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			qcom,regulator-initial-voltage = <1800000>;
+> +			qcom,headroom-voltage = <56000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> +			regulator-allow-set-load;
+> +			qcom,allowed-drms-modes =
+> +				<RPMH_REGULATOR_MODE_LPM
+> +				 RPMH_REGULATOR_MODE_HPM>;
+> +			qcom,drms-mode-threshold-currents = <10000 1000000>;
+> +		};
+> +
+> +		lvs1 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +		};
+> +	};
+> +
+> +	pmi8998-rpmh-regulators {
+> +		compatible = "qcom,pmi8998-rpmh-regulators";
+> +		qcom,pmic-id = "b";
+> +
+> +		bob {
+> +			regulator-min-microvolt = <3312000>;
+> +			regulator-max-microvolt = <3600000>;
+> +			qcom,regulator-initial-voltage = <3312000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_AUTO>;
+> +		};
+> +	};
+> +};
+> diff --git a/include/dt-bindings/regulator/qcom,rpmh-regulator.h b/include/dt-bindings/regulator/qcom,rpmh-regulator.h
+> new file mode 100644
+> index 0000000..4378c4b
+> --- /dev/null
+> +++ b/include/dt-bindings/regulator/qcom,rpmh-regulator.h
+> @@ -0,0 +1,36 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Copyright (c) 2018, The Linux Foundation. All rights reserved. */
+> +
+> +#ifndef __QCOM_RPMH_REGULATOR_H
+> +#define __QCOM_RPMH_REGULATOR_H
+> +
+> +/*
+> + * These mode constants may be used for regulator-initial-mode and
+> + * qcom,allowed-drms-modes properties of an RPMh regulator device tree node.
+> + * Each type of regulator supports a subset of the possible modes.
+> + *
+> + * %RPMH_REGULATOR_MODE_RET:	Retention mode in which only an extremely small
+> + *				load current is allowed.  This mode is supported
+> + *				by LDO and SMPS type regulators.
+> + * %RPMH_REGULATOR_MODE_LPM:	Low power mode in which a small load current is
+> + *				allowed.  This mode corresponds to PFM for SMPS
+> + *				and BOB type regulators.  This mode is supported
+> + *				by LDO, HFSMPS, BOB, and PMIC4 FTSMPS type
+> + *				regulators.
+> + * %RPMH_REGULATOR_MODE_AUTO:	Auto mode in which the regulator hardware
+> + *				automatically switches between LPM and HPM based
+> + *				upon the real-time load current.  This mode is
+> + *				supported by HFSMPS, BOB, and PMIC4 FTSMPS type
+> + *				regulators.
+> + * %RPMH_REGULATOR_MODE_HPM:	High power mode in which the full rated current
+> + *				of the regulator is allowed.  This mode
+> + *				corresponds to PWM for SMPS and BOB type
+> + *				regulators.  This mode is supported by all types
+> + *				of regulators.
+> + */
+> +#define RPMH_REGULATOR_MODE_RET		0
+> +#define RPMH_REGULATOR_MODE_LPM		1
+> +#define RPMH_REGULATOR_MODE_AUTO	2
+> +#define RPMH_REGULATOR_MODE_HPM		3
+> +
+> +#endif
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 > 
-Yes, this is just to protect against development error. I will remove 
-the
-check here and above.
--Rishabh
