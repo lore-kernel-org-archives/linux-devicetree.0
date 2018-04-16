@@ -1,44 +1,101 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] Input: add bu21029 touch driver
-Date: Mon, 16 Apr 2018 16:44:56 -0500
-Message-ID: <20180416214456.je4nfuk6riw4xdjd@rob-hp-laptop>
-References: <1521651874-15379-1-git-send-email-mark.jonas@de.bosch.com>
- <1523897378-23207-1-git-send-email-mark.jonas@de.bosch.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [RFC 3/3] arm: shmobile: Add the RZ/N1D SMP enabler driver.
+Date: Mon, 16 Apr 2018 14:46:16 -0700
+Message-ID: <9f33a1d2-3c55-2485-a1f2-909def69e5b0@gmail.com>
+References: <1523871304-48517-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1523871304-48517-5-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1523897378-23207-1-git-send-email-mark.jonas@de.bosch.com>
+In-Reply-To: <1523871304-48517-5-git-send-email-michel.pollet@bp.renesas.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Jonas <mark.jonas@de.bosch.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, hs@denx.de, Zhu Yi <yi.zhu5@cn.bosch.com>
+To: Michel Pollet <michel.pollet@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
+Cc: phil.edworthy@renesas.com, buserror+upstream@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Andy Gross <andy.gross@linaro.org>, Carlo Caione <carlo@endlessm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Frank Rowand <frank.rowand@sony.com>, Juri Lelli <juri.lelli@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 16, 2018 at 06:49:38PM +0200, Mark Jonas wrote:
-> From: Zhu Yi <yi.zhu5@cn.bosch.com>
-> 
-> Add Rohm BU21029 resistive touch panel controller support with I2C
-> interface.
-> 
-> Signed-off-by: Zhu Yi <yi.zhu5@cn.bosch.com>
-> Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
-> Reviewed-by: Heiko Schocher <hs@denx.de>
-> ---
-> Changes in v2:
->  - make ABS_PRESSURE proportionally rising with finger pressure
->  - fix race between interrupt and timer during shutdown
->  - use infrastructure from include/linux/input/touchscreen.h
->  - add SPDX tag for the driver
->  - improve binding documentation
->  - fix multi-line comments
-> ---
->  .../bindings/input/touchscreen/bu21029.txt         |  34 ++
+Hi Michel,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 04/16/2018 02:34 AM, Michel Pollet wrote:
+> The Renesas RZ/N1D second CA7 is parked in a ROM pen at boot time, it
+> requires a special enable method to get it started at boot time.
+> 
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
 
->  drivers/input/touchscreen/Kconfig                  |  12 +
->  drivers/input/touchscreen/Makefile                 |   1 +
->  drivers/input/touchscreen/bu21029_ts.c             | 485 +++++++++++++++++++++
->  4 files changed, 532 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/bu21029.txt
->  create mode 100644 drivers/input/touchscreen/bu21029_ts.c
+Some few comments below. This patch should probably be re-ordered in
+your patch series, I would expect you to have this become patch 2 and
+have patch 2 be patch 3 (first you add infrastructure for using
+something, then you make use of it).
+
+> +static int rzn1_smp_boot_secondary(unsigned int cpu, struct task_struct *idle)
+> +{
+> +	if (!cpu_bootaddr)
+> +		return -ENODEV;
+> +
+> +	spin_lock(&cpu_lock);
+> +
+> +	writel(virt_to_phys(secondary_startup), cpu_bootaddr);
+
+Consider using __pa_symbol() instead of virt_to_phys() since
+secondary_startup is part of the kernel's linear memory map.
+
+> +	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
+> +
+> +	spin_unlock(&cpu_lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static void __init rzn1_smp_prepare_cpus(unsigned int max_cpus)
+> +{
+> +	struct device_node *dn;
+> +	int ret;
+> +	u32 bootaddr;
+> +
+> +	dn = of_get_cpu_node(1, NULL);
+> +	if (!dn) {
+> +		pr_err("CPU#1: missing device tree node\n");
+> +		return;
+> +	}
+> +	/*
+> +	 * Determine the address from which the CPU is polling.
+> +	 */
+> +	ret = of_property_read_u32(dn, "cpu-release-addr", &bootaddr);
+> +	if (ret)
+> +		pr_err("CPU#1: invalid cpu-release-addr property\n");
+> +
+> +	of_node_put(dn);
+> +	/* The bootloader *does* change this property */
+
+This comment should probably be moved above the function that fetches
+"cpu-release-addr"
+
+> +	pr_info("CPU#1: cpu-release-addr %08x\n", (u32)bootaddr);
+> +
+> +	if (!bootaddr)
+> +		return;
+
+Would not you want to show a message here to help catch such conditions
+
+> +
+> +	cpu_bootaddr = ioremap(bootaddr, sizeof(bootaddr));
+
+Relying on ioremap() to reject values that might be outside of the
+allowed range may be a little fragile, but I can't suggest any better
+alternative.
+
+> +	if (!cpu_bootaddr)
+> +		pr_err("CPU#1: cpu-release-addr map failed\n");
+> +}
+> +
+> +static const struct smp_operations rzn1_smp_ops __initconst = {
+> +	.smp_prepare_cpus = rzn1_smp_prepare_cpus,
+> +	.smp_boot_secondary = rzn1_smp_boot_secondary,
+> +};
+> +CPU_METHOD_OF_DECLARE(rzn1_smp, "renesas,r9a06g032-smp", &rzn1_smp_ops);
+> 
+
+
+-- 
+Florian
