@@ -1,94 +1,428 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v2 1/3] drm/vc4: Remove the need for the GPU-subsystem DT node.
-Date: Mon, 16 Apr 2018 10:25:46 -0700
-Message-ID: <20180416172546.32118-1-eric@anholt.net>
-References: <20180413175632.oz62n363g6rxdp6z@rob-hp-laptop>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 2/2] clk: qcom: clk-rpmh: Add QCOM RPMh clock driver
+Date: Mon, 16 Apr 2018 10:38:37 -0700
+Message-ID: <152390031768.51482.12790579493617671456@swboyd.mtv.corp.google.com>
+References: <1523673401-21611-1-git-send-email-tdas@codeaurora.org>
+ <1523673401-21611-3-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180413175632.oz62n363g6rxdp6z@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, linux-rpi-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1523673401-21611-3-git-send-email-tdas@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Taniya Das <tdas@codeaurora.org>, David Collins <collinsd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEdQVSBzdWJzeXN0ZW0gbm9kZSB3YXMgYSB3b3JrYXJvdW5kIHRvIGhhdmUgYSBjZW50cmFs
-IGRldmljZSB0bwpiaW5kIFYzRCBhbmQgZGlzcGxheSB0by4gIEZvbGxvd2luZyB0aGUgbGVhZCBv
-ZiAyNDY3NzRkMTdmYzAKKCJkcm0vZXRuYXZpdjogcmVtb3ZlIHRoZSBuZWVkIGZvciBhIGdwdS1z
-dWJzeXN0ZW0gRFQgbm9kZSIpLCByZW1vdmUKdGhlIHN1YnN5c3RlbSBub2RlIHVzYWdlIGFuZCBq
-dXN0IGNyZWF0ZSBhIHBsYXRmb3JtIGRldmljZSBmb3IgdGhlIERSTQpkZXZpY2UgdG8gYXR0YWNo
-IHRvIGlmIGFueSBvZiB0aGUgc3Vic3lzdGVtIGRldmljZXMgYXJlIHByZXNlbnQuCgp2MjogU2lt
-cGxpZnkgdGhlIERUIHdhbGtpbmcgY29kZS4KClNpZ25lZC1vZmYtYnk6IEVyaWMgQW5ob2x0IDxl
-cmljQGFuaG9sdC5uZXQ+Ci0tLQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdmM0LnR4
-dCAgICAgICAgIHwgIDcgLS0tLS0KIGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Rydi5jICAgICAg
-ICAgICAgICAgICB8IDI5ICsrKysrKysrKysrKysrLS0tLS0KIGRyaXZlcnMvZ3B1L2RybS92YzQv
-dmM0X2h2cy5jICAgICAgICAgICAgICAgICB8ICAxICsKIGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0
-X3YzZC5jICAgICAgICAgICAgICAgICB8ICAxICsKIDQgZmlsZXMgY2hhbmdlZCwgMjMgaW5zZXJ0
-aW9ucygrKSwgMTUgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdmM0LnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNtLXZjNC50eHQKaW5kZXggMjg0ZTJi
-MTRjZmJlLi41ZmQ0NzE3MTAxZDYgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNtLXZjNC50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdmM0LnR4dApAQCAtNCw5ICs0LDYg
-QEAgVGhlIFZDNCBkZXZpY2UgcHJlc2VudCBvbiB0aGUgUmFzcGJlcnJ5IFBpIGluY2x1ZGVzIGEg
-ZGlzcGxheSBzeXN0ZW0KIHdpdGggSERNSSBvdXRwdXQgYW5kIHRoZSBIVlMgKEhhcmR3YXJlIFZp
-ZGVvIFNjYWxlcikgZm9yIGNvbXBvc2l0aW5nCiBkaXNwbGF5IHBsYW5lcy4KIAotUmVxdWlyZWQg
-cHJvcGVydGllcyBmb3IgVkM0OgotLSBjb21wYXRpYmxlOglTaG91bGQgYmUgImJyY20sYmNtMjgz
-NS12YzQiIG9yICJicmNtLGN5Z251cy12YzQiCi0KIFJlcXVpcmVkIHByb3BlcnRpZXMgZm9yIFBp
-eGVsIFZhbHZlOgogLSBjb21wYXRpYmxlOglTaG91bGQgYmUgb25lIG9mICJicmNtLGJjbTI4MzUt
-cGl4ZWx2YWx2ZTAiLAogCQkgICJicmNtLGJjbTI4MzUtcGl4ZWx2YWx2ZTEiLCBvciAiYnJjbSxi
-Y20yODM1LXBpeGVsdmFsdmUyIgpAQCAtMTUzLDEwICsxNTAsNiBAQCB2M2Q6IHYzZEA3ZWMwMDAw
-MCB7CiAJaW50ZXJydXB0cyA9IDwxIDEwPjsKIH07CiAKLXZjNDogZ3B1IHsKLQljb21wYXRpYmxl
-ID0gImJyY20sYmNtMjgzNS12YzQiOwotfTsKLQogcGFuZWw6IHBhbmVsIHsKIAljb21wYXRpYmxl
-ID0gIm9udGF0LHl4NzAwd3YwMyIsICJzaW1wbGUtcGFuZWwiOwogCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Rydi5j
-CmluZGV4IDdjOTVlZDVjNWNhYy4uMTNiODQwYjUzNGI4IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vdmM0L3ZjNF9kcnYuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuYwpA
-QCAtMzY0LDIyICszNjQsMzAgQEAgc3RhdGljIGludCB2YzRfcGxhdGZvcm1fZHJtX3JlbW92ZShz
-dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCXJldHVybiAwOwogfQogCi1zdGF0aWMgY29u
-c3Qgc3RydWN0IG9mX2RldmljZV9pZCB2YzRfb2ZfbWF0Y2hbXSA9IHsKLQl7IC5jb21wYXRpYmxl
-ID0gImJyY20sYmNtMjgzNS12YzQiLCB9LAotCXsgLmNvbXBhdGlibGUgPSAiYnJjbSxjeWdudXMt
-dmM0IiwgfSwKLQl7fSwKLX07Ci1NT0RVTEVfREVWSUNFX1RBQkxFKG9mLCB2YzRfb2ZfbWF0Y2gp
-OwotCiBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciB2YzRfcGxhdGZvcm1fZHJpdmVyID0g
-ewogCS5wcm9iZQkJPSB2YzRfcGxhdGZvcm1fZHJtX3Byb2JlLAogCS5yZW1vdmUJCT0gdmM0X3Bs
-YXRmb3JtX2RybV9yZW1vdmUsCiAJLmRyaXZlcgkJPSB7CiAJCS5uYW1lCT0gInZjNC1kcm0iLAot
-CQkub2ZfbWF0Y2hfdGFibGUgPSB2YzRfb2ZfbWF0Y2gsCiAJfSwKIH07CiAKK3N0YXRpYyBib29s
-Citkcml2ZXJfb2ZfdGFibGVfaGFzX2FfbWF0Y2goY29uc3Qgc3RydWN0IHBsYXRmb3JtX2RyaXZl
-ciAqZHJpdmVyKQoreworCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZTsKKworCW5vZGUgPSBvZl9m
-aW5kX21hdGNoaW5nX25vZGVfYW5kX21hdGNoKE5VTEwsCisJCQkJCSAgICAgICBkcml2ZXItPmRy
-aXZlci5vZl9tYXRjaF90YWJsZSwKKwkJCQkJICAgICAgIE5VTEwpOworCWlmIChvZl9kZXZpY2Vf
-aXNfYXZhaWxhYmxlKG5vZGUpKSB7CisJCW9mX25vZGVfcHV0KG5vZGUpOworCQlyZXR1cm4gdHJ1
-ZTsKKwl9CisKKwlyZXR1cm4gZmFsc2U7Cit9CisKIHN0YXRpYyBpbnQgX19pbml0IHZjNF9kcm1f
-cmVnaXN0ZXIodm9pZCkKIHsKIAlpbnQgcmV0OwpAQCAtMzg5LDYgKzM5NywxMSBAQCBzdGF0aWMg
-aW50IF9faW5pdCB2YzRfZHJtX3JlZ2lzdGVyKHZvaWQpCiAJaWYgKHJldCkKIAkJcmV0dXJuIHJl
-dDsKIAorCWlmIChkcml2ZXJfb2ZfdGFibGVfaGFzX2FfbWF0Y2goJnZjNF92M2RfZHJpdmVyKSB8
-fAorCSAgICBkcml2ZXJfb2ZfdGFibGVfaGFzX2FfbWF0Y2goJnZjNF9odnNfZHJpdmVyKSkgewor
-CQlwbGF0Zm9ybV9kZXZpY2VfcmVnaXN0ZXJfc2ltcGxlKCJ2YzQtZHJtIiwgLTEsIE5VTEwsIDAp
-OworCX0KKwogCXJldHVybiBwbGF0Zm9ybV9kcml2ZXJfcmVnaXN0ZXIoJnZjNF9wbGF0Zm9ybV9k
-cml2ZXIpOwogfQogCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9odnMuYyBi
-L2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2h2cy5jCmluZGV4IDJiNjJmYzViOGQ4NS4uNzMwODEz
-ZWU3NGFlIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9odnMuYworKysgYi9k
-cml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9odnMuYwpAQCAtMjYyLDYgKzI2Miw3IEBAIHN0YXRpYyBj
-b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHZjNF9odnNfZHRfbWF0Y2hbXSA9IHsKIAl7IC5jb21w
-YXRpYmxlID0gImJyY20sYmNtMjgzNS1odnMiIH0sCiAJe30KIH07CitNT0RVTEVfREVWSUNFX1RB
-QkxFKG9mLCB2YzRfaHZzX2R0X21hdGNoKTsKIAogc3RydWN0IHBsYXRmb3JtX2RyaXZlciB2YzRf
-aHZzX2RyaXZlciA9IHsKIAkucHJvYmUgPSB2YzRfaHZzX2Rldl9wcm9iZSwKZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3YzZC5jIGIvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRf
-djNkLmMKaW5kZXggYmZjMmZhNzNkMmFlLi5lNzdlOWViYmFiNGIgMTAwNjQ0Ci0tLSBhL2RyaXZl
-cnMvZ3B1L2RybS92YzQvdmM0X3YzZC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3Yz
-ZC5jCkBAIC00NTksNiArNDU5LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
-dmM0X3YzZF9kdF9tYXRjaFtdID0gewogCXsgLmNvbXBhdGlibGUgPSAiYnJjbSx2YzQtdjNkIiB9
-LAogCXt9CiB9OworTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgdmM0X3YzZF9kdF9tYXRjaCk7CiAK
-IHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgdmM0X3YzZF9kcml2ZXIgPSB7CiAJLnByb2JlID0gdmM0
-X3YzZF9kZXZfcHJvYmUsCi0tIAoyLjE3LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+Quoting Taniya Das (2018-04-13 19:36:41)
+> Add the RPMh clock driver to control the RPMh managed clock resources on
+> some of the Qualcomm Technologies, Inc. SoCs.
+> 
+> Signed-off-by: David Collins <collinsd@codeaurora.org>
+> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
+
+Your signoff chain is very confused. The first signoff should match the
+"From:" header but that doesn't seem to be the case here. And the sender
+should be the last in the chain.
+
+> ---
+>  drivers/clk/qcom/Kconfig    |   9 ++
+>  drivers/clk/qcom/Makefile   |   1 +
+>  drivers/clk/qcom/clk-rpmh.c | 367 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 377 insertions(+)
+>  create mode 100644 drivers/clk/qcom/clk-rpmh.c
+> 
+> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+> index fbf4532..63c3372 100644
+> --- a/drivers/clk/qcom/Kconfig
+> +++ b/drivers/clk/qcom/Kconfig
+> @@ -112,6 +112,15 @@ config IPQ_GCC_8074
+>           i2c, USB, SD/eMMC, etc. Select this for the root clock
+>           of ipq8074.
+> 
+> +config QCOM_CLK_RPMH
+> +       tristate "RPMh Clock Driver"
+> +       depends on COMMON_CLK_QCOM && QCOM_RPMH
+> +       help
+> +        RPMh manages shared resources on some Qualcomm Technologies, Inc.
+> +        SoCs. It accepts requests from other hardware subsystems via RSC.
+> +        Say Y if you want to support the clocks exposed by RPMh on
+> +        platforms such as sdm845.
+
+Capitalize sdm?
+
+> +
+
+Can this Kconfig be put into alphabetical order in this file?
+
+>  config MSM_GCC_8660
+>         tristate "MSM8660 Global Clock Controller"
+>         depends on COMMON_CLK_QCOM
+> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+> index 230332c..b2b5babf 100644
+> --- a/drivers/clk/qcom/Makefile
+> +++ b/drivers/clk/qcom/Makefile
+> @@ -36,5 +36,6 @@ obj-$(CONFIG_MSM_MMCC_8996) += mmcc-msm8996.o
+>  obj-$(CONFIG_QCOM_A53PLL) += a53-pll.o
+>  obj-$(CONFIG_QCOM_CLK_APCS_MSM8916) += apcs-msm8916.o
+>  obj-$(CONFIG_QCOM_CLK_RPM) += clk-rpm.o
+> +obj-$(CONFIG_QCOM_CLK_RPMH) += clk-rpmh.o
+>  obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
+>  obj-$(CONFIG_SPMI_PMIC_CLKDIV) += clk-spmi-pmic-div.o
+> diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
+> new file mode 100644
+> index 0000000..fa61284
+> --- /dev/null
+> +++ b/drivers/clk/qcom/clk-rpmh.c
+> @@ -0,0 +1,367 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/clk.h>
+
+Is this include used?
+
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <soc/qcom/cmd-db.h>
+> +#include <soc/qcom/rpmh.h>
+> +
+> +#include <dt-bindings/clock/qcom,rpmh.h>
+> +
+> +#define CLK_RPMH_ARC_EN_OFFSET 0
+> +#define CLK_RPMH_VRM_EN_OFFSET 4
+> +#define CLK_RPMH_APPS_RSC_AO_STATE_MASK (BIT(RPMH_WAKE_ONLY_STATE) | \
+> +                                        BIT(RPMH_ACTIVE_ONLY_STATE))
+> +#define CLK_RPMH_APPS_RSC_STATE_MASK (BIT(RPMH_WAKE_ONLY_STATE) | \
+> +                                     BIT(RPMH_ACTIVE_ONLY_STATE) | \
+> +                                     BIT(RPMH_SLEEP_STATE))
+
+Is there a reason these aren't inlined into the one place they're used?
+
+> +struct clk_rpmh {
+> +       struct clk_hw hw;
+> +       const char *res_name;
+> +       u32 res_addr;
+> +       u32 res_en_offset;
+
+Why do we store both res_addr and res_en_offset? Can't we just store
+res_en_offset and then use that all the time? I don't see a user of
+res_addr anywhere.
+
+> +       u32 res_on_val;
+> +       u32 res_off_val;
+
+Is this used?
+
+> +       u32 state;
+> +       u32 aggr_state;
+> +       u32 last_sent_aggr_state;
+> +       u32 valid_state_mask;
+> +       struct rpmh_client *rpmh_client;
+> +       struct device *dev;
+> +       struct clk_rpmh *peer;
+> +       unsigned long rate;
+> +};
+
+Can you add some kernel-doc on these structure members?
+
+> +
+> +struct rpmh_cc {
+> +       struct clk_onecell_data data;
+> +       struct clk *clks[];
+> +};
+
+Hopefully this structure isn't needed.
+
+> +
+> +struct clk_rpmh_desc {
+> +       struct clk_hw **clks;
+> +       size_t num_clks;
+> +};
+> +
+[...]
+> +
+> +static inline bool has_state_changed(struct clk_rpmh *c, u32 state)
+> +{
+> +       return ((c->last_sent_aggr_state & BIT(state))
+> +               != (c->aggr_state & BIT(state)));
+
+Too many parenthesis here.
+
+> +}
+> +
+> +static int clk_rpmh_send_aggregate_command(struct clk_rpmh *c)
+> +{
+> +       struct tcs_cmd cmd = { 0 };
+> +       u32 cmd_state, on_val;
+> +       enum rpmh_state state = RPMH_SLEEP_STATE;
+> +       int ret = 0;
+> +
+> +       cmd.addr = c->res_addr + c->res_en_offset;
+> +       cmd_state = c->aggr_state;
+> +       on_val = c->res_on_val;
+> +
+> +       for (; state <= RPMH_ACTIVE_ONLY_STATE; state++) {
+> +               if (has_state_changed(c, state)) {
+> +                       cmd.data = (cmd_state & BIT(state)) ? on_val : 0;
+> +                       ret = rpmh_write_async(c->rpmh_client, state,
+> +                                               &cmd, 1);
+> +                       if (ret) {
+> +                               dev_err(c->dev, "set %s state of %s failed: (%d)\n",
+> +                                       (!state) ? "sleep" :
+> +                                       (state == RPMH_WAKE_ONLY_STATE) ?
+> +                                       "wake" : "active", c->res_name, ret);
+> +                               return ret;
+> +                       }
+> +               }
+> +       }
+> +
+> +       c->last_sent_aggr_state = c->aggr_state;
+> +       c->peer->last_sent_aggr_state =  c->last_sent_aggr_state;
+> +
+> +       return 0;
+> +}
+> +
+> +static int clk_rpmh_aggregate_state_send_command(struct clk_rpmh *c,
+> +                                               bool enable)
+> +{
+> +       int ret;
+> +
+> +       /* Update state and aggregate state values based on enable value. */
+
+Maybe this comment can go above the function itself.
+
+> +       c->state = enable ? c->valid_state_mask : 0;
+> +       c->aggr_state = c->state | c->peer->state;
+> +       c->peer->aggr_state = c->aggr_state;
+> +
+> +       ret = clk_rpmh_send_aggregate_command(c);
+> +       if (ret && enable) {
+> +               c->state = 0;
+> +       } else if (ret) {
+> +               c->state = c->valid_state_mask;
+> +               WARN(1, "clk: %s failed to disable\n", c->res_name);
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static int clk_rpmh_prepare(struct clk_hw *hw)
+> +{
+> +       struct clk_rpmh *c = to_clk_rpmh(hw);
+> +       int ret = 0;
+> +
+> +       mutex_lock(&rpmh_clk_lock);
+> +
+> +       if (c->state)
+> +               goto out;
+> +
+> +       ret = clk_rpmh_aggregate_state_send_command(c, true);
+
+Rewrite this as:
+
+	if (!c->state)
+		ret = clk_rpmh_aggregate_state_send_command(c, true);
+	
+and drop the goto.
+
+> +out:
+> +       mutex_unlock(&rpmh_clk_lock);
+> +       return ret;
+> +};
+> +
+> +static void clk_rpmh_unprepare(struct clk_hw *hw)
+> +{
+> +       struct clk_rpmh *c = to_clk_rpmh(hw);
+> +
+> +       mutex_lock(&rpmh_clk_lock);
+> +
+> +       if (!c->state)
+> +               goto out;
+> +
+> +       clk_rpmh_aggregate_state_send_command(c, false);
+> +out:
+
+Same comment.
+
+> +       mutex_unlock(&rpmh_clk_lock);
+> +       return;
+> +};
+> +
+> +static unsigned long clk_rpmh_recalc_rate(struct clk_hw *hw,
+> +                                         unsigned long parent_rate)
+> +{
+> +       struct clk_rpmh *r = to_clk_rpmh(hw);
+> +
+> +       /*
+> +        * RPMh clocks have a fixed rate. Return static rate set
+> +        * at init time.
+> +        */
+> +       return r->rate;
+
+The rate should come from the parent. In the case of tcxo it would be
+board_xo clk rate (or maybe some fixed div-2 on the board XO that's also
+defined in DT because the board_xo seems to be two times 19.2 MHz?).
+
+> +}
+> +
+> +static const struct clk_ops clk_rpmh_ops = {
+> +       .prepare        = clk_rpmh_prepare,
+> +       .unprepare      = clk_rpmh_unprepare,
+> +       .recalc_rate    = clk_rpmh_recalc_rate,
+> +};
+> +
+> +/* Resource name must match resource id present in cmd-db. */
+> +DEFINE_CLK_RPMH_ARC(sdm845, bi_tcxo, bi_tcxo_ao, "xo.lvl", 0x3, 0x0, 19200000);
+> +DEFINE_CLK_RPMH_VRM(sdm845, ln_bb_clk2, ln_bb_clk2_ao, "lnbclka2", 19200000);
+> +DEFINE_CLK_RPMH_VRM(sdm845, ln_bb_clk3, ln_bb_clk3_ao, "lnbclka3", 19200000);
+> +DEFINE_CLK_RPMH_VRM(sdm845, rf_clk1, rf_clk1_ao, "rfclka1", 38400000);
+> +DEFINE_CLK_RPMH_VRM(sdm845, rf_clk2, rf_clk2_ao, "rfclka2", 38400000);
+> +DEFINE_CLK_RPMH_VRM(sdm845, rf_clk3, rf_clk3_ao, "rfclka3", 38400000);
+> +
+> +static struct clk_hw *sdm845_rpmh_clocks[] = {
+> +       [RPMH_CXO_CLK]          = &sdm845_bi_tcxo.hw,
+> +       [RPMH_CXO_CLK_A]        = &sdm845_bi_tcxo_ao.hw,
+> +       [RPMH_LN_BB_CLK2]       = &sdm845_ln_bb_clk2.hw,
+> +       [RPMH_LN_BB_CLK2_A]     = &sdm845_ln_bb_clk2_ao.hw,
+> +       [RPMH_LN_BB_CLK3]       = &sdm845_ln_bb_clk3.hw,
+> +       [RPMH_LN_BB_CLK3_A]     = &sdm845_ln_bb_clk3_ao.hw,
+> +       [RPMH_RF_CLK1]          = &sdm845_rf_clk1.hw,
+> +       [RPMH_RF_CLK1_A]        = &sdm845_rf_clk1_ao.hw,
+> +       [RPMH_RF_CLK2]          = &sdm845_rf_clk2.hw,
+> +       [RPMH_RF_CLK2_A]        = &sdm845_rf_clk2_ao.hw,
+> +       [RPMH_RF_CLK3]          = &sdm845_rf_clk3.hw,
+> +       [RPMH_RF_CLK3_A]        = &sdm845_rf_clk3_ao.hw,
+> +};
+> +
+> +static const struct clk_rpmh_desc clk_rpmh_sdm845 = {
+> +       .clks = sdm845_rpmh_clocks,
+> +       .num_clks = ARRAY_SIZE(sdm845_rpmh_clocks),
+> +};
+> +
+> +static int clk_rpmh_probe(struct platform_device *pdev)
+> +{
+> +       struct clk **clks;
+> +       struct clk *clk;
+> +       struct rpmh_cc *rcc;
+> +       struct clk_onecell_data *data;
+> +       struct clk_hw **hw_clks;
+> +       struct clk_rpmh *rpmh_clk;
+> +       const struct clk_rpmh_desc *desc;
+> +       struct rpmh_client *rpmh_client;
+> +       struct device *dev;
+> +       size_t num_clks, i;
+> +       int ret;
+> +
+> +       dev = &pdev->dev;
+> +
+> +       ret = cmd_db_ready();
+> +       if (ret) {
+> +               if (ret != -EPROBE_DEFER) {
+> +                       dev_err(dev, "Command DB not available (%d)\n", ret);
+> +                       goto fail;
+
+Please just return error here instead of goto.
+
+> +               }
+> +               return ret;
+> +       }
+> +
+> +       rpmh_client = rpmh_get_client(pdev);
+> +       if (IS_ERR(rpmh_client)) {
+> +               ret = PTR_ERR(rpmh_client);
+> +               dev_err(dev, "Failed to request RPMh client, ret=%d\n", ret);
+> +               return ret;
+> +       }
+
+I hope we get rid of rpmh_get_client() still.
+
+> +
+> +       desc = of_device_get_match_data(&pdev->dev);
+> +       hw_clks = desc->clks;
+> +       num_clks = desc->num_clks;
+> +
+> +       rcc = devm_kzalloc(&pdev->dev, sizeof(*rcc) + sizeof(*clks) * num_clks,
+> +                          GFP_KERNEL);
+> +       if (!rcc) {
+> +               ret = -ENOMEM;
+> +               goto err;
+> +       }
+> +
+> +       clks = rcc->clks;
+> +       data = &rcc->data;
+> +       data->clks = clks;
+> +       data->clk_num = num_clks;
+> +
+> +       for (i = 0; i < num_clks; i++) {
+> +               rpmh_clk = to_clk_rpmh(hw_clks[i]);
+> +               rpmh_clk->res_addr = cmd_db_read_addr(rpmh_clk->res_name);
+> +               if (!rpmh_clk->res_addr) {
+> +                       dev_err(dev, "missing RPMh resource address for %s\n",
+> +                                       rpmh_clk->res_name);
+> +                       ret = -ENODEV;
+> +                       goto err;
+> +               }
+> +
+> +               rpmh_clk->rpmh_client = rpmh_client;
+> +
+> +               clk = devm_clk_register(&pdev->dev, hw_clks[i]);
+> +               if (IS_ERR(clk)) {
+> +                       ret = PTR_ERR(clk);
+> +                       dev_err(dev, "failed to register %s\n",
+> +                                       hw_clks[i]->init->name);
+
+This isn't a useful error message either.
+
+> +                       goto err;
+> +               }
+> +
+> +               clks[i] = clk;
+> +               rpmh_clk->dev = &pdev->dev;
+> +       }
+> +
+> +       ret = of_clk_add_provider(pdev->dev.of_node, of_clk_src_onecell_get,
+
+Use devm please and register clk_hw pointers instead of clk pointers.
+
+> +                                 data);
+> +       if (ret) {
+> +               dev_err(dev, "Failed to add clock provider\n");
+> +               goto err;
+> +       }
+> +
+> +       dev_dbg(dev, "Registered RPMh clocks\n");
+> +
+> +       return 0;
+> +err:
+> +       if (rpmh_client)
+> +               rpmh_release(rpmh_client);
+> +fail:
+> +       dev_err(dev, "Error registering RPMh Clock driver (%d)\n", ret);
+
+Please remove this error message.
+
+> +       return ret;
+> +}
+> +
+> +static int clk_rpmh_remove(struct platform_device *pdev)
+> +{
+> +       const struct clk_rpmh_desc *desc =
+> +                       of_device_get_match_data(&pdev->dev);
+> +       struct clk_hw **hw_clks = desc->clks;
+> +       struct clk_rpmh *rpmh_clk = to_clk_rpmh(hw_clks[0]);
+> +
+> +       rpmh_release(rpmh_clk->rpmh_client);
+> +       of_clk_del_provider(pdev->dev.of_node);
+> +
+> +       return 0;
+> +}
+
+Hopefully this whole remove function goes away.
