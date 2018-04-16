@@ -1,96 +1,137 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-Subject: [PATCH v6 11/11] ARM: shmobile: Convert file to use cntvoff
-Date: Mon, 16 Apr 2018 23:50:32 +0200
-Message-ID: <20180416215032.5023-12-mylene.josserand@bootlin.com>
-References: <20180416215032.5023-1-mylene.josserand@bootlin.com>
+From: David Collins <collinsd@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] regulator: dt-bindings: add QCOM RPMh regulator
+ bindings
+Date: Mon, 16 Apr 2018 15:06:52 -0700
+Message-ID: <aad8e393-01bd-5935-5dd8-d96e54f5aa39@codeaurora.org>
+References: <cover.1523673467.git.collinsd@codeaurora.org>
+ <39b676d2ba7dac2436196cc5a090c6f151498dc8.1523673467.git.collinsd@codeaurora.org>
+ <20180416205749.556rbkzaja33oref@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180416215032.5023-1-mylene.josserand@bootlin.com>
+In-Reply-To: <20180416205749.556rbkzaja33oref@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mylene.josserand@bootlin.com
+To: Rob Herring <robh@kernel.org>
+Cc: broonie@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Now that a common function is available for CNTVOFF's
-initialization, let's convert shmobile-apmu code to use
-this function.
+Hello Rob,
 
-Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
----
- arch/arm/mach-shmobile/common.h          |  1 -
- arch/arm/mach-shmobile/headsmp-apmu.S    | 22 +---------------------
- arch/arm/mach-shmobile/setup-rcar-gen2.c |  3 ++-
- 3 files changed, 3 insertions(+), 23 deletions(-)
+On 04/16/2018 01:57 PM, Rob Herring wrote:
+> On Fri, Apr 13, 2018 at 07:50:34PM -0700, David Collins wrote:
+>> Introduce bindings for RPMh regulator devices found on some
+>> Qualcomm Technlogies, Inc. SoCs.  These devices allow a given
+>> processor within the SoC to make PMIC regulator requests which
+>> are aggregated within the RPMh hardware block along with requests
+>> from other processors in the SoC to determine the final PMIC
+>> regulator hardware state.
+>>
+>> Signed-off-by: David Collins <collinsd@codeaurora.org>
+>> ---
+>>  .../bindings/regulator/qcom,rpmh-regulator.txt     | 207 +++++++++++++++++++++
+>>  .../dt-bindings/regulator/qcom,rpmh-regulator.h    |  36 ++++
+>> [...]
+>> +++ b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+>> [...]
+>> +- vdd_s1-supply
+> 
+> Use '-' rather than '_' on all these.
 
-diff --git a/arch/arm/mach-shmobile/common.h b/arch/arm/mach-shmobile/common.h
-index a8fa4f7e1f60..b77ad5b56895 100644
---- a/arch/arm/mach-shmobile/common.h
-+++ b/arch/arm/mach-shmobile/common.h
-@@ -2,7 +2,6 @@
- #ifndef __ARCH_MACH_COMMON_H
- #define __ARCH_MACH_COMMON_H
- 
--extern void shmobile_init_cntvoff(void);
- extern void shmobile_init_delay(void);
- extern void shmobile_boot_vector(void);
- extern unsigned long shmobile_boot_fn;
-diff --git a/arch/arm/mach-shmobile/headsmp-apmu.S b/arch/arm/mach-shmobile/headsmp-apmu.S
-index 5672b5849401..d49ab194766a 100644
---- a/arch/arm/mach-shmobile/headsmp-apmu.S
-+++ b/arch/arm/mach-shmobile/headsmp-apmu.S
-@@ -11,29 +11,9 @@
- #include <linux/linkage.h>
- #include <asm/assembler.h>
- 
--ENTRY(shmobile_init_cntvoff)
--	/*
--	 * CNTVOFF has to be initialized either from non-secure Hypervisor
--	 * mode or secure Monitor mode with SCR.NS==1. If TrustZone is enabled
--	 * then it should be handled by the secure code
--	 */
--	cps	#MON_MODE
--	mrc	p15, 0, r1, c1, c1, 0		/* Get Secure Config */
--	orr	r0, r1, #1
--	mcr	p15, 0, r0, c1, c1, 0		/* Set Non Secure bit */
--	instr_sync
--	mov	r0, #0
--	mcrr	p15, 4, r0, r0, c14		/* CNTVOFF = 0 */
--	instr_sync
--	mcr	p15, 0, r1, c1, c1, 0		/* Set Secure bit */
--	instr_sync
--	cps	#SVC_MODE
--	ret	lr
--ENDPROC(shmobile_init_cntvoff)
--
- #ifdef CONFIG_SMP
- ENTRY(shmobile_boot_apmu)
--	bl	shmobile_init_cntvoff
-+	bl	secure_cntvoff_init
- 	b	secondary_startup
- ENDPROC(shmobile_boot_apmu)
- #endif
-diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-index 5561dbed7a33..4a881026d740 100644
---- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
-+++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-@@ -26,6 +26,7 @@
- #include <linux/of_fdt.h>
- #include <linux/of_platform.h>
- #include <asm/mach/arch.h>
-+#include <asm/secure_cntvoff.h>
- #include "common.h"
- #include "rcar-gen2.h"
- 
-@@ -70,7 +71,7 @@ void __init rcar_gen2_timer_init(void)
- 	void __iomem *base;
- 	u32 freq;
- 
--	shmobile_init_cntvoff();
-+	secure_cntvoff_init();
- 
- 	if (of_machine_is_compatible("renesas,r8a7745") ||
- 	    of_machine_is_compatible("renesas,r8a7792") ||
+I will change this on the next patch set.
+
+
+>> +- vdd_s2-supply
+>> +- vdd_s3-supply
+>> +- vdd_s4-supply
+>> +- vdd_s5-supply
+>> +- vdd_s6-supply
+>> +- vdd_s7-supply
+>> +- vdd_s8-supply
+>> +- vdd_s9-supply
+>> +- vdd_s10-supply
+>> +- vdd_s11-supply
+>> +- vdd_s12-supply
+>> +- vdd_s13-supply
+>> +- vdd_l1_l27-supply
+>> +- vdd_l2_l8_l17-supply
+>> +- vdd_l3_l11-supply
+>> +- vdd_l4_l5-supply
+>> +- vdd_l6-supply
+>> +- vdd_l7_l12_l14_l15-supply
+>> +- vdd_l9-supply
+>> +- vdd_l10_l23_l25-supply
+>> +- vdd_l13_l19_l21-supply
+>> +- vdd_l16_l28-supply
+>> +- vdd_l18_l22-supply
+>> +- vdd_l20_l24-supply
+>> +- vdd_l26-supply
+>> +- vdd_lvs1_lvs2-supply
+>> +- vdd_lvs1_lvs2-supply
+>> +	Usage:      optional (PM8998 only)
+>> +	Value type: <phandle>
+>> +	Definition: phandle of the parent supply regulator of one or more of the
+>> +		    regulators for this PMIC.
+>> +
+>> +- vdd_bob-supply
+>> +	Usage:      optional (PMI8998 only)
+>> +	Value type: <phandle>
+>> +	Definition: BOB regulator parent supply phandle
+>> +
+>> +- vdd_s1-supply
+>> +- vdd_s2-supply
+>> +- vdd_s3-supply
+>> +- vdd_s4-supply
+> 
+> Listed twice?
+> 
+>> +	Usage:      optional (PM8005 only)
+>> +	Value type: <phandle>
+>> +	Definition: phandle of the parent supply regulator of one or more of the
+>> +		    regulators for this PMIC.
+
+I listed vdd_s1-supply to vdd_s4-supply here twice because I wanted to
+group together the supplies supported by each PMIC.  PM8005 only supports
+these 4 regulator supplies.  PM8998 supports these 4 along with many
+others.  How else would suggest that I capture this per-PMIC support
+information?
+
+
+>> +===============================
+>> +Second Level Nodes - Regulators
+>> +===============================
+>> +
+>> +- qcom,regulator-initial-voltage
+>> +	Usage:      optional; VRM regulators only
+>> +	Value type: <u32>
+>> +	Definition: Specifies the initial voltage in microvolts to request for a
+>> +		    VRM regulator.
+>> +
+>> +- regulator-initial-mode
+> 
+> Vendor prefix?
+
+No, this does not need a vendor prefix.  The regulator-initial-mode
+property is already defined for all regulator devices [1]:
+
+    regulator-initial-mode: initial operating mode. The set of possible
+    operating modes depends on the capabilities of every hardware so each
+    device binding documentation explains which values the regulator
+    supports.
+
+The values supported by the property are hardware specific and thus must
+be listed in device specific binding files like this one.  Here is a
+previously merged example: [2].
+
+Thanks,
+David
+
+[1]:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/regulator/regulator.txt?h=v4.17-rc1#n59
+[2]:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/regulator/twl-regulator.txt?h=v4.17-rc1#n60
+
 -- 
-2.11.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
