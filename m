@@ -1,43 +1,166 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 2/2] arm64: dts: exynos: Move syscon poweroff and
- restart nodes under the PMU
-Date: Mon, 16 Apr 2018 20:14:24 +0200
-Message-ID: <20180416181424.chmge5fxd6mecvww@kozik-lap>
-References: <20180416181126.15629-1-krzk@kernel.org>
- <20180416181126.15629-2-krzk@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/5] dt-bindings: pinctrl: document the STMFX pinctrl
+ bindings
+Date: Mon, 16 Apr 2018 13:19:40 -0500
+Message-ID: <20180416181940.4b5z4svbde3ompij@rob-hp-laptop>
+References: <1523440025-18077-1-git-send-email-amelie.delaunay@st.com>
+ <1523440025-18077-2-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180416181126.15629-2-krzk@kernel.org>
+In-Reply-To: <1523440025-18077-2-git-send-email-amelie.delaunay@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 16, 2018 at 08:11:26PM +0200, Krzysztof Kozlowski wrote:
-> The PMU node is the actual block responsible for power management,
-> including typical Exynos on/off/restart procedures.  Therefore the
-> syscon poweroff and restart nodes logically belong to it.
+On Wed, Apr 11, 2018 at 11:47:01AM +0200, Amelie Delaunay wrote:
+> This patch adds documentation of device tree bindings for the
+> STMicroelectronics Multi-Function eXpander (STMFX) GPIO expander.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 > ---
+>  .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 118 +++++++++++++++++++++
+>  1 file changed, 118 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
 > 
-> Previously was "Fix missing missing reg warning for syscon restart
-> nodes" to fix DTC warnings like:
-> 
->     arch/arm64/boot/dts/exynos/exynos7-espresso.dtb: Warning (simple_bus_reg):
->         Node /soc/syscon-reboot missing or empty reg/ranges property
-> 
-> but this warnings are gone in v4.17-rc1 since 9130ba884640
-> ("scripts/dtc: Update to upstream version v1.4.6-9-gaadd0b65c987")
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 14 +++++++-------
->  arch/arm64/boot/dts/exynos/exynos7.dtsi    | 12 ++++++------
->  2 files changed, 13 insertions(+), 13 deletions(-)
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+> new file mode 100644
+> index 0000000..4d8941de
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+> @@ -0,0 +1,118 @@
+> +STMicroelectronics Multi-Function eXpander (STMFX) GPIO expander bindings
+> +
+> +ST Multi-Function eXpander (STMFX) is a slave controller using I2C for
+> +communication with the main MCU. It offers up to 24 GPIOs expansion.
+> +
+> +Required properties:
+> +- compatible: should be "st,stmfx-0300".
+> +- reg: I2C slave address of the device.
+> +- interrupt-parent: phandle of the STMFX parent interrupt controller.
+> +- interrutps: interrupt specifier triggered by MFX_IRQ_OUT signal.
+> +
+> +Optional property:
 
-I forgot to include Marek's tested-by tag (given previously):
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+s/property/properties/
 
-Best regards,
-Krzysztof
+> +- drive-open-drain: configure MFX_IRQ_OUT as open drain.
+> +- vdd-supply: phandle of the regulator supplying STMFX.
+> +
+> +Required properties for gpio controller sub-node:
+> +- #gpio-cells: should be <2>, the first cell is the GPIO number and the second
+> +  cell is the gpio flags in accordance with <dt-bindings/gpio/gpio.h>.
+> +- gpio-controller: marks the device as a GPIO controller.
+> +Please refer to ../gpio/gpio.txt.
+> +
+> +Optional properties for gpio controller sub-node:
+> +- #interrupt-cells: should be <2>, the first cell is the GPIO number and the
+> +  second cell is the interrupt flags in accordance with
+> +  <dt-bindings/interrupt-controller/irq.h>.
+> +- interrupt-controller: marks the device as an interrupt controller.
+> +
+> +Please refer to pinctrl-bindings.txt for pin configuration.
+> +
+> +Required properties for pin configuration sub-nodes:
+> +- pins: list of pins to which the configuration applies.
+> +
+> +Optional properties for pin configuration sub-nodes (pinconf-generic ones):
+> +- bias-disable: disable any bias on the pin.
+> +- bias-pull-up: the pin will be pulled up.
+> +- bias-pull-pin-default: use the pin-default pull state.
+> +- bias-pull-down: the pin will be pulled down.
+> +- drive-open-drain: the pin will be driven with open drain.
+> +- drive-push-pull: the pin will be driven actively high and low.
+> +- output-high: the pin will be configured as an output driving high level.
+> +- output-low: the pin will be configured as an output driving low level.
+> +
+> +Note that STMFX pins[15:0] are called "gpio[15:0]", and STMFX pins[23:16] are
+> +called "agpio[7:0]". Example, to refer to pin 18 of STMFX, use "agpio2".
+> +
+> +Example:
+> +
+> +	stmfxpinctrl: stmfx@42 {
+> +		compatible = "st,stmfx-0300";
+> +		reg = <0x42>;
+> +		interrupt-parent = <&gpioi>;
+> +		interrupts = <8 IRQ_TYPE_EDGE_RISING>;
+> +		vdd-supply = <&v3v3>;
+> +		status = "okay";
+
+Don't show status in examples.
+
+> +
+> +		stmfxgpio: gpio {
+
+Why does this need to be a sub node? Are there functions beyond GPIO?
+
+> +			#gpio-cells = <2>;
+> +			#interrupt-cells = <2>;
+> +			gpio-controller;
+> +			interrupt-controller;
+> +			status = "okay";
+> +		};
+> +
+> +		joystick_pins: joystick@0 {
+
+A unit-address without a reg prop is not valid.
+
+> +			pins = "gpio0", "gpio1", "gpio2", "gpio3", "gpio4";
+> +			drive-push-pull;
+> +			bias-pull-down;
+> +		};
+> +	};
+> +
+> +	joystick {
+> +		compatible = "gpio-keys";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		pinctrl-0 = <&joystick_pins>;
+> +		pinctrl-names = "default";
+> +		button@0 {
+> +			label = "JoySel";
+> +			linux,code = <KEY_ENTER>;
+> +			interrupt-parent = <&stmfxgpio>;
+> +			interrupts = <0 IRQ_TYPE_EDGE_RISING>;
+> +		};
+> +		button@1 {
+> +			label = "JoyDown";
+> +			linux,code = <KEY_DOWN>;
+> +			interrupt-parent = <&stmfxgpio>;
+> +			interrupts = <1 IRQ_TYPE_EDGE_RISING>;
+> +		};
+> +		button@2 {
+> +			label = "JoyLeft";
+> +			linux,code = <KEY_LEFT>;
+> +			interrupt-parent = <&stmfxgpio>;
+> +			interrupts = <2 IRQ_TYPE_EDGE_RISING>;
+> +		};
+> +		button@3 {
+> +			label = "JoyRight";
+> +			linux,code = <KEY_RIGHT>;
+> +			interrupt-parent = <&stmfxgpio>;
+> +			interrupts = <3 IRQ_TYPE_EDGE_RISING>;
+> +		};
+> +		button@4 {
+> +			label = "JoyUp";
+> +			linux,code = <KEY_UP>;
+> +			interrupt-parent = <&stmfxgpio>;
+> +			interrupts = <4 IRQ_TYPE_EDGE_RISING>;
+> +		};
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		orange {
+> +			gpios = <&stmfxgpio 17 1>;
+> +		};
+> +
+> +		blue {
+> +			gpios = <&stmfxgpio 19 1>;
+> +		};
+> +	}
+> -- 
+> 2.7.4
+> 
