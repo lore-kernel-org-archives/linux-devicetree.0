@@ -1,69 +1,77 @@
-Return-Path: <SRS0=o6D7=G6=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-sn1nam01on0065.outbound.protection.outlook.com ([104.47.32.65]:52960
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+Return-Path: <SRS0=pf7g=HG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-bn3nam01on0067.outbound.protection.outlook.com ([104.47.33.67]:63936
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1754222AbeDIUVm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Apr 2018 16:21:42 -0400
-From: Martin Kelly <mkelly@xevo.com>
-Subject: [PATCH v5 2/2] dt-bindings: iio:imu:mpu6050: support more interrupt types
-Date: Mon,  9 Apr 2018 13:21:28 -0700
-Message-Id: <20180409202128.5031-2-mkelly@xevo.com>
-In-Reply-To: <20180409202128.5031-1-mkelly@xevo.com>
-References: <20180409202128.5031-1-mkelly@xevo.com>
+        id S1753072AbeDQM4m (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Apr 2018 08:56:42 -0400
+From: Janek Kotas <jank@cadence.com>
+Subject: Re: [PATCH 1/2] scsi: ufs: Add UFS platform driver for Cadence UFS 
+Date: Tue, 17 Apr 2018 12:56:38 +0000
+Message-ID: <4D71040B-E811-4F60-A227-B3F597057A23@cadence.com>
+References: <2A879077-6CAD-4DAA-8C9A-7368CB93C72D@global.cadence.com>
+ <20180409191002.rv2ug6zbwrvavlr3@rob-hp-laptop>
+In-Reply-To: <20180409191002.rv2ug6zbwrvavlr3@rob-hp-laptop>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CD68907F9756FE4C849C753AE6E5E802@namprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Jean-Baptiste Maneyrol <JManeyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Document that the inv_mpu6050 driver now supports falling edge, rising
-edge, level low, and level high interrupt types, rather than just rising
-edge.
-
-The language used is the same as that in st_lsm6dsx.txt.
-
-Signed-off-by: Martin Kelly <mkelly@xevo.com>
----
- Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-index 2b4514592f83..6b106d5ef298 100644
---- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-+++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-@@ -11,7 +11,12 @@ Required properties:
- 		"invensense,icm20608"
-  - reg : the I2C address of the sensor
-  - interrupt-parent : should be the phandle for the interrupt controller
-- - interrupts : interrupt mapping for GPIO IRQ
-+ - interrupts: interrupt mapping for IRQ. It should be configured with flags
-+   IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_EDGE_RISING, IRQ_TYPE_LEVEL_LOW or
-+   IRQ_TYPE_EDGE_FALLING.
-+
-+  Refer to interrupt-controller/interrupts.txt for generic interrupt client node
-+  bindings.
- 
- Optional properties:
-  - mount-matrix: an optional 3x3 mounting rotation matrix
-@@ -24,7 +29,7 @@ Example:
- 		compatible = "invensense,mpu6050";
- 		reg = <0x68>;
- 		interrupt-parent = <&gpio1>;
--		interrupts = <18 1>;
-+		interrupts = <18 IRQ_TYPE_EDGE_RISING>;
- 		mount-matrix = "-0.984807753012208",  /* x0 */
- 		               "0",                   /* y0 */
- 		               "-0.173648177666930",  /* z0 */
-@@ -41,7 +46,7 @@ Example:
- 		compatible = "invensense,mpu9250";
- 		reg = <0x68>;
- 		interrupt-parent = <&gpio3>;
--		interrupts = <21 1>;
-+		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;
- 		i2c-gate {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--- 
-2.11.0
-
+VGhhbmsgeW91IGZvciB0aGUgcmVwbHkuDQoNCj4gT24gV2VkLCBNYXIgMjgsIDIwMTggYXQgMTE6
+MjU6MzRBTSArMDAwMCwgSmFuZWsgS290YXMgd3JvdGU6DQo+PiBUaGlzIHBhdGNoIGFkZHMgYSBk
+ZXZpY2UgdHJlZSBwbGF0Zm9ybQ0KPj4gZHJpdmVyIGRlc2NyaXB0aW9uIGZvciBDYWRlbmNlIFVG
+UyBDb250cm9sbGVyLg0KPiANCj4gWW91IGhhdmUgZXhhY3RseSB0aGUgc2FtZSBzdWJqZWN0IGZv
+ciBib3RoIHBhdGNoZXMuIERvbid0IGRvIHRoYXQuIEZvciANCj4gYmluZGluZ3MsIHRoZSBwcmVm
+ZXJyZWQgc3ViamVjdCBwcmVmaXggaXMg4oCcZHQtYmluZGluZ3M6IHVmczog4oCcLg0KDQpPSywg
+SSB3aWxsIGNoYW5nZSB0aGF0IGluIHRoZSBuZXh0IHZlcnNpb24gb2YgdGhlIHBhdGguIA0KVGhh
+bmtzIGZvciBsZXR0aW5nIG1lIGtub3cuDQoNCj4+IA0KPj4gU2lnbmVkLW9mZi1ieTogSmFuIEtv
+dGFzIDxqYW5rQGNhZGVuY2UuY29tPg0KPj4gLS0tDQo+PiAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
+cy91ZnMvY2Rucy11ZnMtcGx0ZnJtLnR4dCAgICB8ICAgMzEgKysrKysrKysrKysrKysrKysrKysN
+Cj4+IDEgZmlsZXMgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkNCj4+
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZz
+L2NkbnMtdWZzLXBsdGZybS50eHQNCj4+IA0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvY2Rucy11ZnMtcGx0ZnJtLnR4dCBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvY2Rucy11ZnMtcGx0ZnJtLnR4dA0KPj4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQNCj4+IGluZGV4IDAwMDAwMDAuLmQxMDIyOWQNCj4+IC0tLSAvZGV2L251
+bGwNCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvY2Rucy11
+ZnMtcGx0ZnJtLnR4dA0KPiANCj4gcmVuYW1lIHRvIGNkbnMsdWZzaGMudHh0DQoNCk9LLCBJ4oCZ
+bGwgY2hhbmdlIHRoYXQuDQoNCj4+IEBAIC0wLDAgKzEsMzEgQEANCj4+ICsqIENhZGVuY2UgVW5p
+dmVyc2FsIEZsYXNoIFN0b3JhZ2UgKFVGUykgQ29udHJvbGxlcg0KPj4gKw0KPj4gK1VGUyBub2Rl
+cyBhcmUgZGVmaW5lZCB0byBkZXNjcmliZSBvbi1jaGlwIFVGUyBob3N0IGNvbnRyb2xsZXJzLg0K
+Pj4gK0VhY2ggVUZTIGNvbnRyb2xsZXIgaW5zdGFuY2Ugc2hvdWxkIGhhdmUgaXRzIG93biBub2Rl
+Lg0KPj4gKw0KPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+PiArLSBjb21wYXRpYmxlCTogY29t
+cGF0aWJsZSBsaXN0LCBjb250YWlucyB0aGUgZm9sbG93aW5nIGNvbnRyb2xsZXI6DQo+PiArCQkJ
+ImNkbnMsdWZzaGMiDQo+PiArCQkgIGNvbXBsZW1lbnRlZCB3aXRoIHRoZSBKRURFQyB2ZXJzaW9u
+Og0KPj4gKwkJCSJqZWRlYyx1ZnMtMi4wIg0KPj4gKw0KPj4gKy0gcmVnCQk6IHJlZ2lzdGVycyBt
+YXBwaW5nDQo+PiArLSBpbnRlcnJ1cHRzCTogaW50ZXJydXB0cyBtYXBwaW5nDQo+IA0KPiBIb3cg
+bWFueT8NCg0KQSBzaW5nbGUgcmVnaXN0ZXIgYW5kIGludGVycnVwdC4gDQpUaGUgZGVzY3JpcHRp
+b24gd2FzIGJhc2VkIG9uIHRoZSB1ZnNoY2QtcGx0ZnJtLnR4dC4NCknigJlsbCBjaGFuZ2UgaXQg
+dG8gYmUgbW9yZSBkZXNjcmlwdGl2ZS4NCg0KPj4gKy0gY2xvY2tzCTogTGlzdCBvZiBwaGFuZGxl
+IGFuZCBjbG9jayBzcGVjaWZpZXIgcGFpcnMuDQo+PiArLSBjbG9jay1uYW1lcwk6IExpc3Qgb2Yg
+Y2xvY2sgaW5wdXQgbmFtZSBzdHJpbmdzIHNvcnRlZCBpbiB0aGUgc2FtZQ0KPj4gKwkJICBvcmRl
+ciBhcyB0aGUgY2xvY2tzIHByb3BlcnR5LiAiY29yZV9jbGsiIGlzIG1hbmRhdG9yeS4NCj4gDQo+
+IOKAnF9jbGsiIGlzIHJlZHVuZGFudC4NCg0KQ2hhbmdlZCwgdGhhbmtzLg0KDQo+IFJlYWxseSBv
+bmx5IG9uZSBjbG9jayBmb3IgdGhlIGJsb2NrPyBObyBjbG9jayBmcm9tIHRoZSBQSFk/IE5vIGJ1
+cyANCj4gY2xvY2s/DQoNCkkgd2FzbuKAmXQgc3VyZSBob3cgdG8gaGFuZGxlIHRoYXQuIFRoZSBV
+RlMgY29udHJvbGxlciBibG9jayBvbmx5IHJlcXVpcmVzDQphIGNvcmUgY2xvY2sgZnJvbSBhIHN5
+c3RlbS4gU3ltYm9sIGNsb2NrcyBjb21lIGEgUEhZLCANCndoaWNoIGlzIGFub3RoZXIsIGluZGVw
+ZW5kZW50IGJsb2NrLg0KU2hvdWxkIEkgc2ltcGx5IHVzZSBhIHBoeXMgcGhhbmRsZSwgZm9yIGEg
+VUZTIFBIWSBub2RlPw0KDQo+PiArLSBmcmVxLXRhYmxlLWh6CTogQXJyYXkgb2YgPG1pbiBtYXg+
+IG9wZXJhdGluZyBmcmVxdWVuY2llcyBzdG9yZWQgaW4gdGhlIHNhbWUNCj4+ICsJCSAgb3JkZXIg
+YXMgdGhlIGNsb2NrcyBwcm9wZXJ0eS4gSWYgdGhpcyBwcm9wZXJ0eSBpcyBub3QNCj4+ICsJCSAg
+ZGVmaW5lZCBvciBhIHZhbHVlIGluIHRoZSBhcnJheSBpcyAiMCIgdGhlbiBpdCBpcyBhc3N1bWVk
+DQo+PiArCQkgIHRoYXQgdGhlIGZyZXF1ZW5jeSBpcyBzZXQgYnkgdGhlIHBhcmVudCBjbG9jayBv
+ciBhDQo+PiArCQkgIGZpeGVkIHJhdGUgY2xvY2sgc291cmNlLg0KPiANCj4gVGhlICdhc3NpZ25l
+ZC1jbG9ja3MnIHByb3BlcnR5IGFuZCBmcmllbmRzIHNob3VsZCBiZSBhYmxlIHRvIGhhbmRsZSAN
+Cj4gdGhpcy4NCg0KVGhlIHNoYXJlZCBVRlMgcGxhdGZvcm0gY29kZSB1c2VzIGZyZXEtdGFibGUt
+aHosIA0KSSB3b3VsZCBsaWtlIGl0IHRvIGJlIGNvbnNpc3RlbnQgd2l0aCB0aGUgcmVzdCBvZiB0
+aGUgVUZTIGRyaXZlcnMuDQoNCj4+ICsNCj4+ICtFeGFtcGxlOg0KPj4gKwl1ZnNAZmQwMzAwMDAg
+ew0KPj4gKwkJY29tcGF0aWJsZSA9ICJjZG5zLHVmc2hjIiwgImplZGVjLHVmcy0yLjAiOw0KPj4g
+KwkJcmVnID0gPDB4ZmQwMzAwMDAgMHgxMDAwMD47DQo+PiArCQlpbnRlcnJ1cHRzID0gPDAgMSAw
+PjsNCj4+ICsJCWZyZXEtdGFibGUtaHogPSA8MCAwPjsNCj4+ICsJCWNsb2NrcyA9IDwmdWZzX2Nv
+cmVfY2xrIDA+Ow0KPj4gKwkJY2xvY2stbmFtZXMgPSAiY29yZV9jbGsiOw0KPj4gKwl9Ow0KPj4g
+LS0gDQo+PiAxLjcuMQ0KDQo=
