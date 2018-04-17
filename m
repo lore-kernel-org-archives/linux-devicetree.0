@@ -1,310 +1,179 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v12 2/2] clk: npcm7xx: add clock controller
-Date: Mon, 16 Apr 2018 20:38:20 -0700
-Message-ID: <152393630051.51482.7797391524865573162@swboyd.mtv.corp.google.com>
-References: <1522059386-20601-1-git-send-email-tali.perry1@gmail.com>
- <1522059386-20601-3-git-send-email-tali.perry1@gmail.com>
+From: Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: usb: Update documentation for
+ Qualcomm DWC3 driver
+Date: Tue, 17 Apr 2018 09:09:52 +0530
+Message-ID: <850b4b09-2156-ef16-f4b8-9879923340c9@codeaurora.org>
+References: <1523638285-5742-1-git-send-email-mgautam@codeaurora.org>
+ <1523638285-5742-2-git-send-email-mgautam@codeaurora.org>
+ <20180416203827.4jgevj4dgce6r3cq@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522059386-20601-3-git-send-email-tali.perry1@gmail.com>
+In-Reply-To: <20180416203827.4jgevj4dgce6r3cq@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: avifishman70@gmail.com, brendanhiggins@google.com, linux@armlinux.org.uk, mark.rutland@arm.com, raltherr@google.com, robh+dt@kernel.org, tmaimon77@gmail.com
-Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tali Perry <tali.perry1@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: balbi@kernel.org, andy.gross@linaro.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Tali Perry (2018-03-26 03:16:26)
-> * Nuvoton NPCM7XX Clock Controller
-> 
-> Nuvoton Poleg BMC NPCM7XX contains an integrated clock controller, which
-> generates and supplies clocks to all modules within the BMC.
-> 
-> 
-> 
-> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-> 
-> 
+Hi Rob,
 
-There should be a triple dash here.
 
-I applied this to clk-next with these changes squashed in. If anything
-is wrong let me know.
+On 4/17/2018 2:08 AM, Rob Herring wrote:
+> On Fri, Apr 13, 2018 at 10:21:22PM +0530, Manu Gautam wrote:
+>> Existing documentation has lot of incorrect information as it
+>> was originally added for a driver that no longer exists.
+>>
+>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/usb/qcom,dwc3.txt          | 78 ++++++++++++++++------
+>>  1 file changed, 57 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+>> index bc8a2fa..fdc574a 100644
+>> --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+>> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+>> @@ -1,54 +1,90 @@
+>>  Qualcomm SuperSpeed DWC3 USB SoC controller
+>>  
+>>  Required properties:
+>> -- compatible:	should contain "qcom,dwc3"
+>> +- compatible:		should contain "qcom,dwc3"
+> Needs an SoC specific compatible string.
 
-----8<----
+Thanks for review.
+Sure. Will add that.
 
-diff --git a/drivers/clk/clk-npcm7xx.c b/drivers/clk/clk-npcm7xx.c
-index 7e4964b9e5c8..dba5384f03a4 100644
---- a/drivers/clk/clk-npcm7xx.c
-+++ b/drivers/clk/clk-npcm7xx.c
-@@ -8,24 +8,16 @@
-  */
- 
- #include <linux/module.h>
--#include <linux/clk.h>
- #include <linux/clk-provider.h>
--#include <linux/device.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/of.h>
--#include <linux/of_device.h>
--#include <linux/of_platform.h>
- #include <linux/of_address.h>
--#include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/err.h>
--#include <linux/rational.h>
- #include <linux/bitfield.h>
--#include <dt-bindings/clock/nuvoton,npcm7xx-clock.h>
--
--#include <asm/cp15.h>
- 
-+#include <dt-bindings/clock/nuvoton,npcm7xx-clock.h>
- 
- struct npcm7xx_clk_pll {
- 	struct clk_hw	hw;
-@@ -35,9 +27,6 @@ struct npcm7xx_clk_pll {
- 
- #define to_npcm7xx_clk_pll(_hw) container_of(_hw, struct npcm7xx_clk_pll, hw)
- 
--struct clk_hw *npcm7xx_clk_register_pll(void __iomem *pllcon, const char *name,
--	const char *parent_name, unsigned long flags);
--
- #define PLLCON_LOKI	BIT(31)
- #define PLLCON_LOKS	BIT(30)
- #define PLLCON_FBDV	GENMASK(27, 16)
-@@ -55,8 +44,7 @@ static unsigned long npcm7xx_clk_pll_recalc_rate(struct clk_hw *hw,
- 	u64 ret;
- 
- 	if (parent_rate == 0) {
--		pr_err("%s: parent rate is zero. reg=%x\n", __func__,
--			(u32)(pll->pllcon));
-+		pr_err("%s: parent rate is zero", __func__);
- 		return 0;
- 	}
- 
-@@ -73,13 +61,13 @@ static unsigned long npcm7xx_clk_pll_recalc_rate(struct clk_hw *hw,
- 	return ret;
- }
- 
--const struct clk_ops npcm7xx_clk_pll_ops = {
-+static const struct clk_ops npcm7xx_clk_pll_ops = {
- 	.recalc_rate = npcm7xx_clk_pll_recalc_rate,
- };
- 
--
--struct clk_hw *npcm7xx_clk_register_pll(void __iomem *pllcon, const char *name,
--	const char *parent_name, unsigned long flags)
-+static struct clk_hw *
-+npcm7xx_clk_register_pll(void __iomem *pllcon, const char *name,
-+			 const char *parent_name, unsigned long flags)
- {
- 	struct npcm7xx_clk_pll *pll;
- 	struct clk_init_data init;
-@@ -90,8 +78,7 @@ struct clk_hw *npcm7xx_clk_register_pll(void __iomem *pllcon, const char *name,
- 	if (!pll)
- 		return ERR_PTR(-ENOMEM);
- 
--	pr_debug("%s reg, reg=0x%x, name=%s, p=%s\n",
--		__func__, (unsigned int)pllcon, name, parent_name);
-+	pr_debug("%s reg, name=%s, p=%s\n", __func__, name, parent_name);
- 
- 	init.name = name;
- 	init.ops = &npcm7xx_clk_pll_ops;
-@@ -113,7 +100,6 @@ struct clk_hw *npcm7xx_clk_register_pll(void __iomem *pllcon, const char *name,
- 	return hw;
- }
- 
--
- #define NPCM7XX_CLKEN1          (0x00)
- #define NPCM7XX_CLKEN2          (0x28)
- #define NPCM7XX_CLKEN3          (0x30)
-@@ -143,7 +129,6 @@ struct clk_hw *npcm7xx_clk_register_pll(void __iomem *pllcon, const char *name,
- #define NPCM7XX_SECCNT          (0x68)
- #define NPCM7XX_CNTR25M         (0x6C)
- 
--
- struct npcm7xx_clk_gate_data {
- 	u32 reg;
- 	u8 bit_idx;
-@@ -219,7 +204,6 @@ struct npcm7xx_clk_pll_data {
- 	int onecell_idx;
- };
- 
--
- /*
-  * Single copy of strings used to refer to clocks within this driver indexed by
-  * above enum.
-@@ -271,7 +255,6 @@ struct npcm7xx_clk_pll_data {
- #define NPCM7XX_CLK_S_USB_BRIDGE  "usb_bridge"
- #define NPCM7XX_CLK_S_PCI         "pci"
- 
--
- static u32 pll_mux_table[] = {0, 1, 2, 3};
- static const char * const pll_mux_parents[] __initconst = {
- 	NPCM7XX_CLK_S_PLL0,
-@@ -328,7 +311,6 @@ static const char * const dvcssel_mux_parents[] __initconst = {
- 	NPCM7XX_CLK_S_PLL2,
- };
- 
--
- static const struct npcm7xx_clk_pll_data npcm7xx_plls[] __initconst = {
- 	{NPCM7XX_PLLCON0, NPCM7XX_CLK_S_PLL0, NPCM7XX_CLK_S_REFCLK, 0, -1},
- 
-@@ -342,7 +324,6 @@ static const struct npcm7xx_clk_pll_data npcm7xx_plls[] __initconst = {
- 	NPCM7XX_CLK_S_REFCLK, 0, -1},
- };
- 
--
- static const struct npcm7xx_clk_mux_data npcm7xx_muxes[] __initconst = {
- 	{0, GENMASK(1, 0), cpuck_mux_table, NPCM7XX_CLK_S_CPU_MUX,
- 	cpuck_mux_parents, ARRAY_SIZE(cpuck_mux_parents), CLK_IS_CRITICAL,
-@@ -387,7 +368,6 @@ static const struct npcm7xx_clk_div_fixed_data npcm7xx_divs_fx[] __initconst = {
- 	{ 1, 2, NPCM7XX_CLK_S_PLL2_DIV2, NPCM7XX_CLK_S_PLL2, 0, -1},
- };
- 
--
- /* configurable dividers: */
- static const struct npcm7xx_clk_div_data npcm7xx_divs[] __initconst = {
- 	{NPCM7XX_CLKDIV1, 28, 3, NPCM7XX_CLK_S_ADC,
-@@ -455,7 +435,6 @@ static const struct npcm7xx_clk_div_data npcm7xx_divs[] __initconst = {
- 
- };
- 
--
- static const struct npcm7xx_clk_gate_data npcm7xx_gates[] __initconst = {
- 	{NPCM7XX_CLKEN1, 31, "smb1-gate", NPCM7XX_CLK_S_APB2, 0},
- 	{NPCM7XX_CLKEN1, 30, "smb0-gate", NPCM7XX_CLK_S_APB2, 0},
-@@ -557,23 +536,17 @@ static const struct npcm7xx_clk_gate_data npcm7xx_gates[] __initconst = {
- 	{NPCM7XX_CLKEN3, 0, "pwmm1-gate", NPCM7XX_CLK_S_APB3, 0},
- };
- 
--
--
- static DEFINE_SPINLOCK(npcm7xx_clk_lock);
- 
--
- static void __init npcm7xx_clk_init(struct device_node *clk_np)
- {
- 	struct clk_hw_onecell_data *npcm7xx_clk_data;
- 	void __iomem *clk_base;
- 	struct resource res;
- 	struct clk_hw *hw;
--	struct clk *clk;
- 	int ret;
- 	int i;
- 
--	clk_base = NULL;
--
- 	ret = of_address_to_resource(clk_np, 0, &res);
- 	if (ret) {
- 		pr_err("%s: failed to get resource, ret %d\n", clk_np->name,
-@@ -581,49 +554,20 @@ static void __init npcm7xx_clk_init(struct device_node *clk_np)
- 		return;
- 	}
- 
--
- 	clk_base = ioremap(res.start, resource_size(&res));
- 	if (IS_ERR(clk_base))
- 		goto npcm7xx_init_error;
- 
--
- 	npcm7xx_clk_data = kzalloc(sizeof(*npcm7xx_clk_data->hws) *
- 		NPCM7XX_NUM_CLOCKS + sizeof(npcm7xx_clk_data), GFP_KERNEL);
--
--	npcm7xx_clk_data->num = 0;
--
--	if (!npcm7xx_clk_data->hws) {
--		pr_err("Can't alloc npcm7xx_clk_data\n");
-+	if (!npcm7xx_clk_data)
- 		goto npcm7xx_init_np_err;
--	}
- 
- 	npcm7xx_clk_data->num = NPCM7XX_NUM_CLOCKS;
- 
- 	for (i = 0; i < NPCM7XX_NUM_CLOCKS; i++)
- 		npcm7xx_clk_data->hws[i] = ERR_PTR(-EPROBE_DEFER);
- 
--	/* Read fixed clocks. These 3 clocks must be defined in DT */
--	clk = of_clk_get_by_name(clk_np, NPCM7XX_CLK_S_REFCLK);
--	if (!IS_ERR(clk)) {
--		pr_err("failed to find external REFCLK: %ld\n",
--			PTR_ERR(clk));
--		clk_put(clk);
--	}
--
--	clk = of_clk_get_by_name(clk_np, NPCM7XX_CLK_S_SYSBYPCK);
--	if (!IS_ERR(clk)) {
--		pr_err("failed to find external SYSBYPCK: %ld\n",
--			PTR_ERR(clk));
--		clk_put(clk);
--	}
--
--	clk = of_clk_get_by_name(clk_np, NPCM7XX_CLK_S_MCBYPCK);
--	if (!IS_ERR(clk)) {
--		pr_err("failed to find external MCBYPCK: %ld\n",
--			PTR_ERR(clk));
--		clk_put(clk);
--	}
--
- 	/* Register plls */
- 	for (i = 0; i < ARRAY_SIZE(npcm7xx_plls); i++) {
- 		const struct npcm7xx_clk_pll_data *pll_data = &npcm7xx_plls[i];
-@@ -640,18 +584,16 @@ static void __init npcm7xx_clk_init(struct device_node *clk_np)
- 	}
- 
- 	/* Register fixed dividers */
--	clk = clk_register_fixed_factor(NULL, NPCM7XX_CLK_S_PLL1_DIV2,
-+	hw = clk_hw_register_fixed_factor(NULL, NPCM7XX_CLK_S_PLL1_DIV2,
- 			NPCM7XX_CLK_S_PLL1, 0, 1, 2);
--	if (IS_ERR(clk)) {
-+	if (IS_ERR(hw)) {
- 		pr_err("npcm7xx_clk: Can't register fixed div\n");
- 		goto npcm7xx_init_fail;
- 	}
- 
--
--	clk = clk_register_fixed_factor(NULL, NPCM7XX_CLK_S_PLL2_DIV2,
-+	hw = clk_hw_register_fixed_factor(NULL, NPCM7XX_CLK_S_PLL2_DIV2,
- 			NPCM7XX_CLK_S_PLL2, 0, 1, 2);
--
--	if (IS_ERR(clk)) {
-+	if (IS_ERR(hw)) {
- 		pr_err("npcm7xx_clk: Can't register div2\n");
- 		goto npcm7xx_init_fail;
- 	}
-@@ -676,7 +618,7 @@ static void __init npcm7xx_clk_init(struct device_node *clk_np)
- 			npcm7xx_clk_data->hws[mux_data->onecell_idx] = hw;
- 	}
- 
--	/* Register clock dividers specified in npcm7xx_divs. */
-+	/* Register clock dividers specified in npcm7xx_divs */
- 	for (i = 0; i < ARRAY_SIZE(npcm7xx_divs); i++) {
- 		const struct npcm7xx_clk_div_data *div_data = &npcm7xx_divs[i];
- 
-@@ -700,23 +642,15 @@ static void __init npcm7xx_clk_init(struct device_node *clk_np)
- 	if (ret)
- 		pr_err("failed to add DT provider: %d\n", ret);
- 
--
- 	of_node_put(clk_np);
- 
- 	return;
- 
- npcm7xx_init_fail:
--	if (npcm7xx_clk_data->num)
--		kfree(npcm7xx_clk_data->hws);
-+	kfree(npcm7xx_clk_data->hws);
- npcm7xx_init_np_err:
--	if (clk_base != NULL)
--		iounmap(clk_base);
-+	iounmap(clk_base);
- npcm7xx_init_error:
- 	of_node_put(clk_np);
--	pr_err("clk setup fail\n");
- }
--
- CLK_OF_DECLARE(npcm7xx_clk_init, "nuvoton,npcm750-clk", npcm7xx_clk_init);
--
--
--
+>
+>> +- reg:			offset and length of register set for QSCRATCH wrapper
+>> +- power-domains:	specifies a phandle to PM domain provider node
+>>  - clocks:		A list of phandle + clock-specifier pairs for the
+>>  				clocks listed in clock-names
+>> -- clock-names:	Should contain the following:
+>> +- clock-names:		Should contain the following:
+>>    "core"		Master/Core clock, have to be >= 125 MHz for SS
+>>  				operation and >= 60MHz for HS operation
+>> +  "mock_utmi"		Mock utmi clock needed for ITP/SOF generation in
+>> +				host mode. Its frequency should be 19.2MHz.
+>> +  "sleep"		Sleep clock, used for wakeup when USB3 core goes
+>> +				into low power mode (U3).
+>>  
+>>  Optional clocks:
+>>    "iface"		System bus AXI clock.  Not present on all platforms
+>> -  "sleep"		Sleep clock, used when USB3 core goes into low
+>> -				power mode (U3).
+>> +  "cfg_noc"		System Config NOC clock. Not present on all platforms
+> These need to be specific as to which compatible properties have or 
+> don't have these clocks.
+ok
+
+>
+>> +- assigned-clocks:	should be:
+>> +				MOCK_UTMI_CLK
+>> +				MASTER_CLK
+>> +- assigned-clock-rates: should be:
+>> +                                19.2Mhz (192000000) for MOCK_UTMI_CLK
+>> +                                >=125Mhz (125000000) for MASTER_CLK in SS mode
+>> +                                >=60Mhz (60000000) for MASTER_CLK in HS mode
+>> +
+>> +Optional properties:
+>> +- resets:		list of phandle and reset specifier pairs
+> How many?
+I will provide exact detail for each compatible property.
+>
+>> +- interrupts:		specifies interrupts from controller wrapper used
+>> +			to wakeup from low power/susepnd state.	Must contain
+>> +			one or more entry for interrupt-names property
+>> +- interrupt-names:	Must include the following entries:
+>> +			- "hs_phy_irq": The interrupt that is asserted when a
+>> +			   wakeup event is received on USB2 bus
+>> +			- "ss_phy_irq": The interrupt that is asserted when a
+>> +			   wakeup event is received on USB3 bus
+>> +			- "dm_hs_phy_irq" and "dp_hs_phy_irq": Separate
+>> +			   interrupts for any wakeup event on DM and DP lines
+> Sounds like the irqs are actually part of the PHYs? If so, then that's 
+> where they should be in the DT.
+No. These are actually part of controller wrapper called - qscratch which
+has connectivity to phy outputs signals. Also, these are abstracted from PHY
+and are present irrespective of type of phy present. I will add soc specific
+info also in comments specifying which interrupts are not present on particular
+soc/compatible.
+
+>
+>> +- qcom,select-utmi-as-pipe-clk: if present, disable USB3 pipe_clk requirement.
+>> +				Used when dwc3 operates without SSPHY and only
+>> +				HS/FS/LS modes are supported.
+>>  
+>>  Required child node:
+>>  A child node must exist to represent the core DWC3 IP block. The name of
+>>  the node is not important. The content of the node is defined in dwc3.txt.
+>>  
+>>  Phy documentation is provided in the following places:
+>> -Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
+>> +Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
+>> +Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 PHY
+>>  
+>>  Example device nodes:
+>>  
+>>  		hs_phy: phy@100f8800 {
+>> -			compatible = "qcom,dwc3-hs-usb-phy";
+>> -			reg = <0x100f8800 0x30>;
+>> -			clocks = <&gcc USB30_0_UTMI_CLK>;
+>> -			clock-names = "ref";
+>> -			#phy-cells = <0>;
+>> -
+>> +			compatible = "qcom,qusb2-v2-phy";
+>> +			...
+>>  		};
+>>  
+>>  		ss_phy: phy@100f8830 {
+>> -			compatible = "qcom,dwc3-ss-usb-phy";
+>> -			reg = <0x100f8830 0x30>;
+>> -			clocks = <&gcc USB30_0_MASTER_CLK>;
+>> -			clock-names = "ref";
+>> -			#phy-cells = <0>;
+>> -
+>> +			compatible = "qcom,qmp-v3-usb3-phy";
+>> +			...
+>>  		};
+>>  
+>> -		usb3_0: usb30@0 {
+>> +		usb3_0: usb30@a6f8800 {
+>>  			compatible = "qcom,dwc3";
+>> +			reg = <0xa6f8800 0x400>;
+>>  			#address-cells = <1>;
+>>  			#size-cells = <1>;
+>> -			clocks = <&gcc USB30_0_MASTER_CLK>;
+>> -			clock-names = "core";
+>> -
+>>  			ranges;
+>>  
+>> +			interrupts = <0 131 0>, <0 486 0>, <0 488 0>, <0 489 0>;
+>> +			interrupt-names = "hs_phy_irq", "ss_phy_irq",
+>> +				  "dm_hs_phy_irq", "dp_hs_phy_irq";
+>> +
+>> +			clocks = <&gcc GCC_USB30_PRIM_MASTER_CLK>,
+>> +				<&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+>> +				<&gcc GCC_USB30_PRIM_SLEEP_CLK>;
+>> +			clock-names = "core", "mock_utmi", "sleep";
+>> +
+>> +			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+>> +					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
+>> +			assigned-clock-rates = <19200000>, <133000000>;
+>> +
+>> +			resets = <&gcc GCC_USB30_PRIM_BCR>;
+>> +			reset-names = "core_reset";
+>> +			power-domains = <&gcc USB30_PRIM_GDSC>;
+>> +			qcom,select-utmi-as-pipe-clk;
+>>  
+>>  			dwc3@10000000 {
+>>  				compatible = "snps,dwc3";
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>>
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
