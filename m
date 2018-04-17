@@ -1,37 +1,135 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v6 2/7] ARM: davinci: dts: add a reset control to the dsp node
-Date: Tue, 17 Apr 2018 19:30:33 +0200
-Message-ID: <20180417173038.25510-3-brgl@bgdev.pl>
-References: <20180417173038.25510-1-brgl@bgdev.pl>
+From: rishabhb@codeaurora.org
+Subject: Re: [PATCH v4 1/2] Documentation: Documentation for qcom, llcc
+Date: Tue, 17 Apr 2018 10:43:14 -0700
+Message-ID: <9a9ffe61f85dd28199bcc2d449097059@codeaurora.org>
+References: <1523390893-10904-1-git-send-email-rishabhb@codeaurora.org>
+ <1523390893-10904-2-git-send-email-rishabhb@codeaurora.org>
+ <20180416145912.ja7d2xd2kqiukrgl@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180417173038.25510-1-brgl@bgdev.pl>
+In-Reply-To: <20180416145912.ja7d2xd2kqiukrgl@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@lists.infradead.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, kyan@codeaurora.org, ckadabi@codeaurora.org, stanimir.varbanov@linaro.org, evgreen@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On 2018-04-16 07:59, Rob Herring wrote:
+> On Tue, Apr 10, 2018 at 01:08:12PM -0700, Rishabh Bhatnagar wrote:
+>> Documentation for last level cache controller device tree bindings,
+>> client bindings usage examples.
+> 
+> "Documentation: Documentation ..."? That wastes a lot of the subject
+> line... The preferred prefix is "dt-bindings: ..."
+> 
+>> 
+>> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
+>> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/arm/msm/qcom,llcc.txt      | 58 
+>> ++++++++++++++++++++++
+>>  1 file changed, 58 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>> 
+>> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt 
+>> b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>> new file mode 100644
+>> index 0000000..497cf0f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>> @@ -0,0 +1,58 @@
+>> +== Introduction==
+>> +
+>> +LLCC (Last Level Cache Controller) provides last level of cache 
+>> memory in SOC,
+>> +that can be shared by multiple clients. Clients here are different 
+>> cores in the
+>> +SOC, the idea is to minimize the local caches at the clients and 
+>> migrate to
+>> +common pool of memory
+>> +
+>> +Properties:
+>> +- compatible:
+>> +	 Usage: required
+>> +	 Value type: <string>
+>> +	 Definition: must be "qcom,sdm845-llcc"
+>> +
+>> +- reg:
+>> +	 Usage: required
+>> +	 Value Type: <prop-encoded-array>
+>> +	 Definition: must be addresses and sizes of the LLCC registers
+> 
+> How many address ranges?
+> 
+It consists of just one address range. I'll edit the definition to make
+it more clear.
+>> +
+>> +- #cache-cells:
+> 
+> This is all written as it is a common binding, but it is not one.
+> 
+> You already have most of the configuration data for each client in the
+> driver, I think I'd just put the client connection there too. Is there
+> any variation of this for a given SoC?
+> 
+#cache-cells and max-slices won't change for a given SOC. So you want me
+to hard-code in the driver itself?
 
-The davinci-rproc driver will soon use the reset framework. Add the
-resets property to the dsp node in da850.dtsi.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: David Lechner <david@lechnology.com>
----
- arch/arm/boot/dts/da850.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index d56e670d9a32..250aeee53202 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -109,6 +109,7 @@
- 		interrupt-parent = <&intc>;
- 		interrupts = <28>;
- 		clocks = <&psc0 15>;
-+		resets = <&psc0 15>;
- 		status = "disabled";
- 	};
- 	soc@1c00000 {
--- 
-2.17.0
+>> +	 Usage: required
+>> +	 Value Type: <u32>
+>> +	 Definition: Number of cache cells, must be 1
+>> +
+>> +- max-slices:
+>> +	 usage: required
+>> +	 Value Type: <u32>
+>> +	 Definition: Number of cache slices supported by hardware
+> 
+> What's a slice?
+> 
+System cache memory provided by LLCC is divided into smaller chunks
+called slices. Each slice has its associated size and ID. Clients can
+query slice details, activate and deactivate them.
+>> +
+>> +Example:
+>> +
+>> +	llcc: qcom,llcc@1100000 {
+>> +		compatible = "qcom,sdm845-llcc";
+>> +		reg = <0x1100000 0x250000>;
+>> +		#cache-cells = <1>;
+>> +		max-slices = <32>;
+>> +	};
+>> +
+>> +== Client ==
+>> +
+>> +Properties:
+>> +- cache-slice-names:
+>> +	 Usage: required
+>> +	 Value type: <stringlist>
+>> +	 Definition: A set of names that identify the usecase names of a
+>> +			client that uses cache slice. These strings are
+>> +			used to look up the cache slice entries by name.
+>> +
+>> +- cache-slices:
+>> +	 Usage: required
+>> +	 Value type: <prop-encoded-array>
+>> +	 Definition: The tuple has phandle to llcc device as the first
+>> +			argument and the second argument is the usecase
+>> +			id of the client.
+>> +For Example:
+>> +	venus {
+>> +		cache-slice-names = "vidsc0", "vidsc1";
+>> +	 	cache-slices = <&llcc VIDSC0_ID>, <&llcc VIDSC1_ID>;
+>> +	};
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" 
+>> in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
