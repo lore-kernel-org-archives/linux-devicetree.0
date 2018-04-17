@@ -1,103 +1,160 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3 06/11] iio: inkern: add module put/get on iio dev
- module when requesting channels
-Date: Tue, 17 Apr 2018 12:19:06 -0700
-Message-ID: <20180417191906.GB67621@dtor-ws>
-References: <1523350677-27106-1-git-send-email-eugen.hristev@microchip.com>
- <1523350677-27106-7-git-send-email-eugen.hristev@microchip.com>
- <20180415203321.1aaaf91e@archlinux>
- <20180416235821.GF77055@dtor-ws>
- <67771f4c-d30c-4a28-2a9b-d5585186d60a@microchip.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [v2,2/2] regulator: add QCOM RPMh regulator driver
+Date: Tue, 17 Apr 2018 12:47:55 -0700
+Message-ID: <20180417194755.GE244487@google.com>
+References: <4b45f41996ea3344340e44fab2dc9e487572e209.1523673467.git.collinsd@codeaurora.org>
+ <20180417182347.GD244487@google.com>
+ <2e45c0e5-7e79-3479-de18-9613e8eacf15@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <67771f4c-d30c-4a28-2a9b-d5585186d60a@microchip.com>
+In-Reply-To: <2e45c0e5-7e79-3479-de18-9613e8eacf15@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eugen Hristev <eugen.hristev@microchip.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, nicolas.ferre@microchip.com, robh@kernel.org
+To: David Collins <collinsd@codeaurora.org>
+Cc: broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Eugen,
+On Tue, Apr 17, 2018 at 12:15:18PM -0700, David Collins wrote:
+> On 04/17/2018 11:23 AM, Matthias Kaehlcke wrote:
+> > On Fri, Apr 13, 2018 at 07:50:35PM -0700, David Collins wrote:
+> >> Add the QCOM RPMh regulator driver to manage PMIC regulators
+> >> which are controlled via RPMh on some Qualcomm Technologies, Inc.
+> >> SoCs.  RPMh is a hardware block which contains several
+> >> accelerators which are used to manage various hardware resources
+> >> that are shared between the processors of the SoC.  The final
+> >> hardware state of a regulator is determined within RPMh by
+> >> performing max aggregation of the requests made by all of the
+> >> processors.
+> >> [...]
+> >> +/**
+> >> + * struct rpmh_vreg_hw_data - RPMh regulator hardware configurations
+> >> + * @regulator_type:		RPMh accelerator type used to manage this
+> >> + *				regulator
+> >> + * @ops:			Pointer to regulator ops callback structure
+> >> + * @voltage_range:		The single range of voltages supported by this
+> >> + *				PMIC regulator type
+> >> + * @n_voltages:			The number of unique voltage set points defined
+> >> + *				by voltage_range
+> >> + * @pmic_mode_map:		Array indexed by regulator framework mode
+> >> + *				containing PMIC hardware modes.  Must be large
+> >> + *				enough to index all framework modes supported
+> >> + *				by this regulator hardware type.
+> >> + * @of_map_mode:		Maps an RPMH_REGULATOR_MODE_* mode value defined
+> >> + *				in device tree to a regulator framework mode
+> > 
+> > The name of the field is a bit misleading, this is a map of RPMh mode
+> > to regulator framework mode, the device tree just happens to be the
+> > place where this mapping is defined.
+> 
+> of_map_mode name is used here to match the struct regulator_desc field by
+> the same name that it is assigned to [1].  Do you think that the name
+> should be changed to something else?
 
-On Tue, Apr 17, 2018 at 10:39:24AM +0300, Eugen Hristev wrote:
+Thanks, I missed that it's the name of the field in struct
+regulator_desc field, in that case it certainly makes sense to use the
+same name.
+
+> >> +/**
+> >> + * struct rpmh_vreg - individual rpmh regulator data structure encapsulating a
+> >> + *		single regulator device
+> >> + * @rpmh_client:		Handle used for rpmh communications
+> > 
+> > nit: RPMh
+> 
+> I'll change this.
 > 
 > 
-> On 17.04.2018 02:58, Dmitry Torokhov wrote:
-> > On Sun, Apr 15, 2018 at 08:33:21PM +0100, Jonathan Cameron wrote:
-> > > On Tue, 10 Apr 2018 11:57:52 +0300
-> > > Eugen Hristev <eugen.hristev@microchip.com> wrote:
-> > > 
-> > > > When requesting channels for a particular consumer device,
-> > > > besides requesting the device (incrementing the reference counter), also
-> > > > do it for the driver module of the iio dev. This will avoid the situation
-> > > > where the producer IIO device can be removed and the consumer is still
-> > > > present in the kernel.
-> > > > 
-> > > > Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> > > > ---
-> > > >   drivers/iio/inkern.c | 8 +++++++-
-> > > >   1 file changed, 7 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-> > > > index ec98790..68d9b87 100644
-> > > > --- a/drivers/iio/inkern.c
-> > > > +++ b/drivers/iio/inkern.c
-> > > > @@ -11,6 +11,7 @@
-> > > >   #include <linux/slab.h>
-> > > >   #include <linux/mutex.h>
-> > > >   #include <linux/of.h>
-> > > > +#include <linux/module.h>
-> > > >   #include <linux/iio/iio.h>
-> > > >   #include "iio_core.h"
-> > > > @@ -152,6 +153,7 @@ static int __of_iio_channel_get(struct iio_channel *channel,
-> > > >   	if (index < 0)
-> > > >   		goto err_put;
-> > > >   	channel->channel = &indio_dev->channels[index];
-> > > > +	try_module_get(channel->indio_dev->driver_module);
-> > > 
-> > > And if it fails? (the module we are trying to get is going away...)
-> > > 
-> > > We should try and handle it I think. Be it by just erroring out of here.
+> >> +struct rpmh_vreg {
+> >> +	struct rpmh_client		*rpmh_client;
+> >> +	u32				addr;
+> >> +	struct regulator_desc		rdesc;
+> >> +	const struct rpmh_vreg_hw_data	*hw_data;
+> >> +	enum rpmh_regulator_type	regulator_type;
 > > 
-> > Even more, this has nothing to do with modules. A device can go away for
-> > any number of reasons (we unbind it manually via sysfs, we pull the USB
-> > plug from the host in case it is USB-connected device, we unload I2C
-> > adapter for the bus device resides on, we kick underlying PCI device)
-> > and we should be able to handle this in some fashion. Handling errors
-> > from reads and ignoring garbage is one of methods.
-> > 
-> > FWIW this is a NACK from me.
-> > 
-> > Thanks.
-> Hello,
+> > This value is already available via rpmh_vreg->hw_data->regulator_type,
+> > why duplicate it? The field is assigned in rpmh_regulator_init_vreg()
+> > and only read once in the same function, there seems to be no need for
+> > it, not even to improve readability.
 > 
-> This patch is actually a "best effort attempt" for the consumer driver
-> (touch driver) to get a reference to the producer of the data (the IIO
-> device), when it requests the specific channels.
-> As of this moment, there is no attempt whatsoever for the consumer to have a
-> reference on the producer driver. Thus, the producer can be removed at any
-> time, and the consumer will fail ungraciously.
+> This is present to specifically allow for a future change to support
+> overriding the regulator_type value from device tree in order to force
+> RPMh resources to be handled via XOB instead of VRM in a board-specific
+> manner.  I included support of the property qcom,rpmh-resource-type in the
+> first version of this patch.  I removed this property from the second
+> version of the patch based upon review feedback since SDM845 does not
+> explicitly need it (though an upcoming chip will).
+> 
+> I'll remove regulator_type from struct rpmh_vreg.  It shouldn't be
+> particularly painful to add it back in when needed for XOB override support.
+> 
+> 
+> >> +static int rpmh_regulator_vrm_set_load(struct regulator_dev *rdev, int load_uA)
+> >> +{
+> >> +	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
+> >> +	int i;
+> >> +
+> >> +	for (i = 0; i < vreg->drms_mode_count - 1; i++)
+> >> +		if (load_uA < vreg->drms_mode_max_uA[i])
+> > 
+> > Shouldn't this be '<='?
+> > 
+> > nit: IMO 'vreg->drms_mode_max_uA[i] >= load_uA' would be more readable.
+> 
+> I chose to use '<' here in order to maintain the non-inclusive limit
+> semantics of the downstream RPMh regulator driver.  E.g. with an LPM
+> threshold of 10000 uA, load_uA == 10000 would result in a request for HPM
+> instead of LPM.
+> 
+> I suppose that I can change this to '<=' to be more logically consistent.
+> 
+> 
+> >> +static const u32 pmic_mode_map_pmic4_ldo[REGULATOR_MODE_STANDBY + 1] = {
+> >> +	[REGULATOR_MODE_STANDBY] = 4,
+> >> +	[REGULATOR_MODE_IDLE]    = 5,
+> >> +	[REGULATOR_MODE_NORMAL]  = -EINVAL,
+> >> +	[REGULATOR_MODE_FAST]    = 7,
+> >> +};
+> > 
+> > Define constants for the modes on the PMIC4 side?
+> 
+> Are you suggesting something like this?
+> 
+> #define PMIC4_LDO_MODE_RETENTION	4
+> #define PMIC4_LDO_MODE_LPM		5
+> #define PMIC4_LDO_MODE_HPM		7
+> 
+> static const u32 pmic_mode_map_pmic4_ldo[REGULATOR_MODE_STANDBY + 1] = {
+> 	[REGULATOR_MODE_STANDBY] = PMIC4_LDO_MODE_RETENTION,
+> 	[REGULATOR_MODE_IDLE]    = PMIC4_LDO_MODE_LPM,
+> 	[REGULATOR_MODE_NORMAL]  = -EINVAL,
+> 	[REGULATOR_MODE_FAST]    = PMIC4_LDO_MODE_HPM,
+> };
+> 
+> #define PMIC4_SMPS_MODE_RETENTION	4
+> #define PMIC4_SMPS_MODE_PFM		5
+> #define PMIC4_SMPS_MODE_AUTO		6
+> #define PMIC4_SMPS_MODE_PWM		7
+> 
+> static const u32 pmic_mode_map_pmic4_smps[REGULATOR_MODE_STANDBY + 1] = {
+> 	[REGULATOR_MODE_STANDBY] = PMIC4_SMPS_MODE_RETENTION,
+> 	[REGULATOR_MODE_IDLE]    = PMIC4_SMPS_MODE_PFM,
+> 	[REGULATOR_MODE_NORMAL]  = PMIC4_SMPS_MODE_AUTO,
+> 	[REGULATOR_MODE_FAST]    = PMIC4_SMPS_MODE_PWM,
+> };
+> 
+> I considered using this approach, but it didn't seem like it increased
+> readability and did increase the line count.  Each of the constants would
+> only be used once.  Would you prefer this style (or something else)?
 
-This is the root of the issue. The consumer should be prepared to handle
-errors from producer.
+Personally I prefer this style, since the constants are more
+expressive than the literals. I agree that the 'inline' constant
+definition is a bit noisy, perhaps it would be better to move the
+definitions to the top of the file or group them before the definition
+of pmic_mode_map_pmic4_ldo. Alteratively you could create a
+drivers/regulator/qcom_rpmh-regulator.h and also move the definitions
+of struct struct rpmh_vreg_hw_data, rpmh_vreg, ... there.
 
-> I can change the perspective from "best effort" to "mandatory" to get a
-> reference to the producer, or you wish to stop trying to get any reference
-> at all (remove this patch completely) ?
+Thanks
 
-You should take reference to the device itself (if it is not taken
-already), so it does not disappear completely and you can continue using
-IIO API to access it, and IIO API should be prepared to deal with "dead"
-devices, but as I pointed in my other email, trying to pin the driver
-is quite pointless as there are myriad other ways of device stopping
-working besides module unloading.
-
-In any case, I think this problem is outside of the scope of this
-patchset that adds a generic resistive touchscreen, so if you want to
-continue working on this I'd recommend moving it into a separate series.
-
-Thanks.
-
--- 
-Dmitry
+Matthias
