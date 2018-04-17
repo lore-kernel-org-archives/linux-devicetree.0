@@ -1,7 +1,7 @@
 From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: [PATCH v5 02/10] PCI: dwc: Add support for endpoint mode
-Date: Tue, 17 Apr 2018 15:34:20 +0100
-Message-ID: <b961f8d5682d77d808638b9254daaf6e8770cf67.1523973931.git.gustavo.pimentel@synopsys.com>
+Subject: [PATCH v5 08/10] PCI: dwc: Replace lower into upper case characters
+Date: Tue, 17 Apr 2018 15:34:26 +0100
+Message-ID: <ffebc61b2143027cbfb4914079f7c7b6a7c2bac9.1523973931.git.gustavo.pimentel@synopsys.com>
 References: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
@@ -12,315 +12,344 @@ To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jin
 Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-The PCIe controller dual mode is capable of operating in host mode as well
-as endpoint mode by configuration, therefore this patch aims to add
-endpoint mode support to the designware driver.
+Replaces lower into upper case characters in comments and debug printks.
+
+This is an attempt to keep the messages coherent within the designware
+driver.
+
+Also fixed code style on dw_pcie_irq_domain_free function.
 
 Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
 ---
 Change v1->v2:
- - Removed dw_plat_pcie_stop_link empty function.
- - Implemented Kishon's suggestions about dw-pcie-rc and dw-pcie strings.
-compatibility.
- - Added second entry on pci_epf_test_ids structure.
-Changes v2->v3:
- - Reverted additions in dw_pcie_ep_linkup function.
- - Replaced devm_ioremap by devm_ioremap_resource function.
- - Moved second entry in pci_epf_test_ids structure into a new patch file.
+ - Added an extra log description line about code style following Fabio
+Estevam suggestion.
+Change v2->v3:
+ - Nothing changed, just to follow the patch set version.
 Changes v3->v4:
- - Reverted "snps,dw-pcie-rc" compatible string requested by Rob Herring.
+ - Nothing changed, just to follow the patch set version.
 Changes v4->v5:
  - Nothing changed, just to follow the patch set version.
 
- drivers/pci/dwc/Kconfig                |  45 +++++++---
- drivers/pci/dwc/pcie-designware-plat.c | 149 ++++++++++++++++++++++++++++++---
- 2 files changed, 174 insertions(+), 20 deletions(-)
+ drivers/pci/dwc/pcie-designware-ep.c   | 16 ++++++++--------
+ drivers/pci/dwc/pcie-designware-host.c | 35 ++++++++++++++++++----------------
+ drivers/pci/dwc/pcie-designware.c      | 22 ++++++++++-----------
+ 3 files changed, 38 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
-index 2f3f5c5..3fd7daf 100644
---- a/drivers/pci/dwc/Kconfig
-+++ b/drivers/pci/dwc/Kconfig
-@@ -7,8 +7,7 @@ config PCIE_DW
+diff --git a/drivers/pci/dwc/pcie-designware-ep.c b/drivers/pci/dwc/pcie-designware-ep.c
+index f07678b..15b22a6 100644
+--- a/drivers/pci/dwc/pcie-designware-ep.c
++++ b/drivers/pci/dwc/pcie-designware-ep.c
+@@ -75,7 +75,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, enum pci_barno bar,
  
- config PCIE_DW_HOST
-         bool
--	depends on PCI
--	depends on PCI_MSI_IRQ_DOMAIN
-+	depends on PCI && PCI_MSI_IRQ_DOMAIN
-         select PCIE_DW
+ 	free_win = find_first_zero_bit(ep->ib_window_map, ep->num_ib_windows);
+ 	if (free_win >= ep->num_ib_windows) {
+-		dev_err(pci->dev, "no free inbound window\n");
++		dev_err(pci->dev, "No free inbound window\n");
+ 		return -EINVAL;
+ 	}
  
- config PCIE_DW_EP
-@@ -52,16 +51,42 @@ config PCI_DRA7XX_EP
+@@ -100,7 +100,7 @@ static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, phys_addr_t phys_addr,
  
- config PCIE_DW_PLAT
- 	bool "Platform bus based DesignWare PCIe Controller"
--	depends on PCI
--	depends on PCI_MSI_IRQ_DOMAIN
--	select PCIE_DW_HOST
--	---help---
--	 This selects the DesignWare PCIe controller support. Select this if
--	 you have a PCIe controller on Platform bus.
-+	help
-+	  There are two instances of PCIe controller in Designware IP.
-+	  This controller can work either as EP or RC. In order to enable
-+	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
-+	  order to enable device-specific features PCIE_DW_PLAT_EP must be
-+	  selected.
+ 	free_win = find_first_zero_bit(ep->ob_window_map, ep->num_ob_windows);
+ 	if (free_win >= ep->num_ob_windows) {
+-		dev_err(pci->dev, "no free outbound window\n");
++		dev_err(pci->dev, "No free outbound window\n");
+ 		return -EINVAL;
+ 	}
  
--	 If you have a controller with this interface, say Y or M here.
-+config PCIE_DW_PLAT_HOST
-+	bool "Platform bus based DesignWare PCIe Controller - Host mode"
-+	depends on PCI && PCI_MSI_IRQ_DOMAIN
-+	select PCIE_DW_HOST
-+	select PCIE_DW_PLAT
-+	default y
-+	help
-+	  Enables support for the PCIe controller in the Designware IP to
-+	  work in host mode. There are two instances of PCIe controller in
-+	  Designware IP.
-+	  This controller can work either as EP or RC. In order to enable
-+	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
-+	  order to enable device-specific features PCI_DW_PLAT_EP must be
-+	  selected.
+@@ -204,7 +204,7 @@ static int dw_pcie_ep_map_addr(struct pci_epc *epc, u8 func_no,
  
--	 If unsure, say N.
-+config PCIE_DW_PLAT_EP
-+	bool "Platform bus based DesignWare PCIe Controller - Endpoint mode"
-+	depends on PCI && PCI_MSI_IRQ_DOMAIN
-+	depends on PCI_ENDPOINT
-+	select PCIE_DW_EP
-+	select PCIE_DW_PLAT
-+	help
-+	  Enables support for the PCIe controller in the Designware IP to
-+	  work in endpoint mode. There are two instances of PCIe controller
-+	  in Designware IP.
-+	  This controller can work either as EP or RC. In order to enable
-+	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
-+	  order to enable device-specific features PCI_DW_PLAT_EP must be
-+	  selected.
- 
- config PCI_EXYNOS
- 	bool "Samsung Exynos PCIe controller"
-diff --git a/drivers/pci/dwc/pcie-designware-plat.c b/drivers/pci/dwc/pcie-designware-plat.c
-index 5416aa8..efc315c 100644
---- a/drivers/pci/dwc/pcie-designware-plat.c
-+++ b/drivers/pci/dwc/pcie-designware-plat.c
-@@ -12,19 +12,29 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
-+#include <linux/of_device.h>
- #include <linux/of_gpio.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/resource.h>
- #include <linux/signal.h>
- #include <linux/types.h>
-+#include <linux/regmap.h>
- 
- #include "pcie-designware.h"
- 
- struct dw_plat_pcie {
--	struct dw_pcie		*pci;
-+	struct dw_pcie			*pci;
-+	struct regmap			*regmap;
-+	enum dw_pcie_device_mode	mode;
- };
- 
-+struct dw_plat_pcie_of_data {
-+	enum dw_pcie_device_mode	mode;
-+};
-+
-+static const struct of_device_id dw_plat_pcie_of_match[];
-+
- static int dw_plat_pcie_host_init(struct pcie_port *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-@@ -42,9 +52,53 @@ static const struct dw_pcie_host_ops dw_plat_pcie_host_ops = {
- 	.host_init = dw_plat_pcie_host_init,
- };
- 
--static int dw_plat_add_pcie_port(struct pcie_port *pp,
-+static int dw_plat_pcie_establish_link(struct dw_pcie *pci)
-+{
-+	return 0;
-+}
-+
-+static const struct dw_pcie_ops dw_pcie_ops = {
-+	.start_link = dw_plat_pcie_establish_link,
-+};
-+
-+static void dw_plat_pcie_ep_init(struct dw_pcie_ep *ep)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	enum pci_barno bar;
-+
-+	for (bar = BAR_0; bar <= BAR_5; bar++)
-+		dw_pcie_ep_reset_bar(pci, bar);
-+}
-+
-+static int dw_plat_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-+				     enum pci_epc_irq_type type,
-+				     u8 interrupt_num)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+
-+	switch (type) {
-+	case PCI_EPC_IRQ_LEGACY:
-+		dev_err(pci->dev, "EP cannot trigger legacy IRQs\n");
-+		return -EINVAL;
-+	case PCI_EPC_IRQ_MSI:
-+		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-+	default:
-+		dev_err(pci->dev, "UNKNOWN IRQ type\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static struct dw_pcie_ep_ops pcie_ep_ops = {
-+	.ep_init = dw_plat_pcie_ep_init,
-+	.raise_irq = dw_plat_pcie_ep_raise_irq,
-+};
-+
-+static int dw_plat_add_pcie_port(struct dw_plat_pcie *dw_plat_pcie,
- 				 struct platform_device *pdev)
- {
-+	struct dw_pcie *pci = dw_plat_pcie->pci;
-+	struct pcie_port *pp = &pci->pp;
- 	struct device *dev = &pdev->dev;
- 	int ret;
- 
-@@ -63,15 +117,44 @@ static int dw_plat_add_pcie_port(struct pcie_port *pp,
- 
- 	ret = dw_pcie_host_init(pp);
+ 	ret = dw_pcie_ep_outbound_atu(ep, addr, pci_addr, size);
  	if (ret) {
--		dev_err(dev, "failed to initialize host\n");
-+		dev_err(dev, "Failed to initialize host\n");
+-		dev_err(pci->dev, "failed to enable address\n");
++		dev_err(pci->dev, "Failed to enable address\n");
  		return ret;
  	}
  
- 	return 0;
+@@ -348,21 +348,21 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 
+ 	ret = of_property_read_u32(np, "num-ib-windows", &ep->num_ib_windows);
+ 	if (ret < 0) {
+-		dev_err(dev, "unable to read *num-ib-windows* property\n");
++		dev_err(dev, "Unable to read *num-ib-windows* property\n");
+ 		return ret;
+ 	}
+ 	if (ep->num_ib_windows > MAX_IATU_IN) {
+-		dev_err(dev, "invalid *num-ib-windows*\n");
++		dev_err(dev, "Invalid *num-ib-windows*\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	ret = of_property_read_u32(np, "num-ob-windows", &ep->num_ob_windows);
+ 	if (ret < 0) {
+-		dev_err(dev, "unable to read *num-ob-windows* property\n");
++		dev_err(dev, "Unable to read *num-ob-windows* property\n");
+ 		return ret;
+ 	}
+ 	if (ep->num_ob_windows > MAX_IATU_OUT) {
+-		dev_err(dev, "invalid *num-ob-windows*\n");
++		dev_err(dev, "Invalid *num-ob-windows*\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -389,7 +389,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 
+ 	epc = devm_pci_epc_create(dev, &epc_ops);
+ 	if (IS_ERR(epc)) {
+-		dev_err(dev, "failed to create epc device\n");
++		dev_err(dev, "Failed to create epc device\n");
+ 		return PTR_ERR(epc);
+ 	}
+ 
+diff --git a/drivers/pci/dwc/pcie-designware-host.c b/drivers/pci/dwc/pcie-designware-host.c
+index 6c409079..5a23f78 100644
+--- a/drivers/pci/dwc/pcie-designware-host.c
++++ b/drivers/pci/dwc/pcie-designware-host.c
+@@ -248,8 +248,10 @@ static void dw_pcie_irq_domain_free(struct irq_domain *domain,
+ 	unsigned long flags;
+ 
+ 	raw_spin_lock_irqsave(&pp->lock, flags);
++
+ 	bitmap_release_region(pp->msi_irq_in_use, data->hwirq,
+ 			      order_base_2(nr_irqs));
++
+ 	raw_spin_unlock_irqrestore(&pp->lock, flags);
  }
  
--static const struct dw_pcie_ops dw_pcie_ops = {
--};
-+static int dw_plat_add_pcie_ep(struct dw_plat_pcie *dw_plat_pcie,
-+			       struct platform_device *pdev)
-+{
-+	int ret;
-+	struct dw_pcie_ep *ep;
-+	struct resource *res;
-+	struct device *dev = &pdev->dev;
-+	struct dw_pcie *pci = dw_plat_pcie->pci;
-+
-+	ep = &pci->ep;
-+	ep->ops = &pcie_ep_ops;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
-+	pci->dbi_base2 = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(pci->dbi_base2))
-+		return PTR_ERR(pci->dbi_base2);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
-+	if (!res)
-+		return -EINVAL;
-+
-+	ep->phys_base = res->start;
-+	ep->addr_size = resource_size(res);
-+
-+	ret = dw_pcie_ep_init(ep);
-+	if (ret) {
-+		dev_err(dev, "Failed to initialize endpoint\n");
-+		return ret;
-+	}
-+	return 0;
-+}
+@@ -266,7 +268,7 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
+ 	pp->irq_domain = irq_domain_create_linear(fwnode, pp->num_vectors,
+ 					       &dw_pcie_msi_domain_ops, pp);
+ 	if (!pp->irq_domain) {
+-		dev_err(pci->dev, "failed to create IRQ domain\n");
++		dev_err(pci->dev, "Failed to create IRQ domain\n");
+ 		return -ENOMEM;
+ 	}
  
- static int dw_plat_pcie_probe(struct platform_device *pdev)
+@@ -274,7 +276,7 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
+ 						   &dw_pcie_msi_domain_info,
+ 						   pp->irq_domain);
+ 	if (!pp->msi_domain) {
+-		dev_err(pci->dev, "failed to create MSI domain\n");
++		dev_err(pci->dev, "Failed to create MSI domain\n");
+ 		irq_domain_remove(pp->irq_domain);
+ 		return -ENOMEM;
+ 	}
+@@ -301,13 +303,13 @@ void dw_pcie_msi_init(struct pcie_port *pp)
+ 	page = alloc_page(GFP_KERNEL);
+ 	pp->msi_data = dma_map_page(dev, page, 0, PAGE_SIZE, DMA_FROM_DEVICE);
+ 	if (dma_mapping_error(dev, pp->msi_data)) {
+-		dev_err(dev, "failed to map MSI data\n");
++		dev_err(dev, "Failed to map MSI data\n");
+ 		__free_page(page);
+ 		return;
+ 	}
+ 	msi_target = (u64)pp->msi_data;
+ 
+-	/* program the msi_data */
++	/* Program the msi_data */
+ 	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_LO, 4,
+ 			    lower_32_bits(msi_target));
+ 	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_HI, 4,
+@@ -335,7 +337,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 		pp->cfg0_base = cfg_res->start;
+ 		pp->cfg1_base = cfg_res->start + pp->cfg0_size;
+ 	} else if (!pp->va_cfg0_base) {
+-		dev_err(dev, "missing *config* reg space\n");
++		dev_err(dev, "Missing *config* reg space\n");
+ 	}
+ 
+ 	bridge = pci_alloc_host_bridge(0);
+@@ -357,7 +359,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 		case IORESOURCE_IO:
+ 			ret = pci_remap_iospace(win->res, pp->io_base);
+ 			if (ret) {
+-				dev_warn(dev, "error %d: failed to map resource %pR\n",
++				dev_warn(dev, "Error %d: failed to map resource %pR\n",
+ 					 ret, win->res);
+ 				resource_list_destroy_entry(win);
+ 			} else {
+@@ -391,7 +393,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 						pp->cfg->start,
+ 						resource_size(pp->cfg));
+ 		if (!pci->dbi_base) {
+-			dev_err(dev, "error with ioremap\n");
++			dev_err(dev, "Error with ioremap\n");
+ 			ret = -ENOMEM;
+ 			goto error;
+ 		}
+@@ -403,7 +405,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 		pp->va_cfg0_base = devm_pci_remap_cfgspace(dev,
+ 					pp->cfg0_base, pp->cfg0_size);
+ 		if (!pp->va_cfg0_base) {
+-			dev_err(dev, "error with ioremap in function\n");
++			dev_err(dev, "Error with ioremap in function\n");
+ 			ret = -ENOMEM;
+ 			goto error;
+ 		}
+@@ -414,7 +416,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 						pp->cfg1_base,
+ 						pp->cfg1_size);
+ 		if (!pp->va_cfg1_base) {
+-			dev_err(dev, "error with ioremap\n");
++			dev_err(dev, "Error with ioremap\n");
+ 			ret = -ENOMEM;
+ 			goto error;
+ 		}
+@@ -586,7 +588,7 @@ static int dw_pcie_valid_device(struct pcie_port *pp, struct pci_bus *bus,
+ 			return 0;
+ 	}
+ 
+-	/* access only one slot on each root port */
++	/* Access only one slot on each root port */
+ 	if (bus->number == pp->root_bus_nr && dev > 0)
+ 		return 0;
+ 
+@@ -652,11 +654,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 	for (ctrl = 0; ctrl < num_ctrls; ctrl++)
+ 		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + (ctrl * 12), 4,
+ 				    &pp->irq_status[ctrl]);
+-	/* setup RC BARs */
++
++	/* Setup RC BARs */
+ 	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0x00000004);
+ 	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
+ 
+-	/* setup interrupt pins */
++	/* Setup interrupt pins */
+ 	dw_pcie_dbi_ro_wr_en(pci);
+ 	val = dw_pcie_readl_dbi(pci, PCI_INTERRUPT_LINE);
+ 	val &= 0xffff00ff;
+@@ -664,13 +667,13 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
+ 	dw_pcie_dbi_ro_wr_dis(pci);
+ 
+-	/* setup bus numbers */
++	/* Setup bus numbers */
+ 	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
+ 	val &= 0xff000000;
+ 	val |= 0x00ff0100;
+ 	dw_pcie_writel_dbi(pci, PCI_PRIMARY_BUS, val);
+ 
+-	/* setup command register */
++	/* Setup command register */
+ 	val = dw_pcie_readl_dbi(pci, PCI_COMMAND);
+ 	val &= 0xffff0000;
+ 	val |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
+@@ -683,7 +686,7 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 	 * we should not program the ATU here.
+ 	 */
+ 	if (!pp->ops->rd_other_conf) {
+-		/* get iATU unroll support */
++		/* Get iATU unroll support */
+ 		pci->iatu_unroll_enabled = dw_pcie_iatu_unroll_enabled(pci);
+ 		dev_dbg(pci->dev, "iATU unroll: %s\n",
+ 			pci->iatu_unroll_enabled ? "enabled" : "disabled");
+@@ -701,7 +704,7 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 
+ 	/* Enable write permission for the DBI read-only register */
+ 	dw_pcie_dbi_ro_wr_en(pci);
+-	/* program correct class for RC */
++	/* Program correct class for RC */
+ 	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
+ 	/* Better disable write permission right after the update */
+ 	dw_pcie_dbi_ro_wr_dis(pci);
+diff --git a/drivers/pci/dwc/pcie-designware.c b/drivers/pci/dwc/pcie-designware.c
+index 1b7282e..778c4f7 100644
+--- a/drivers/pci/dwc/pcie-designware.c
++++ b/drivers/pci/dwc/pcie-designware.c
+@@ -69,7 +69,7 @@ u32 __dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+ 
+ 	ret = dw_pcie_read(base + reg, size, &val);
+ 	if (ret)
+-		dev_err(pci->dev, "read DBI address failed\n");
++		dev_err(pci->dev, "Read DBI address failed\n");
+ 
+ 	return val;
+ }
+@@ -86,7 +86,7 @@ void __dw_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+ 
+ 	ret = dw_pcie_write(base + reg, size, val);
+ 	if (ret)
+-		dev_err(pci->dev, "write DBI address failed\n");
++		dev_err(pci->dev, "Write DBI address failed\n");
+ }
+ 
+ static u32 dw_pcie_readl_ob_unroll(struct dw_pcie *pci, u32 index, u32 reg)
+@@ -137,7 +137,7 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int index,
+ 
+ 		usleep_range(LINK_WAIT_IATU_MIN, LINK_WAIT_IATU_MAX);
+ 	}
+-	dev_err(pci->dev, "outbound iATU is not being enabled\n");
++	dev_err(pci->dev, "Outbound iATU is not being enabled\n");
+ }
+ 
+ void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+@@ -180,7 +180,7 @@ void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+ 
+ 		usleep_range(LINK_WAIT_IATU_MIN, LINK_WAIT_IATU_MAX);
+ 	}
+-	dev_err(pci->dev, "outbound iATU is not being enabled\n");
++	dev_err(pci->dev, "Outbound iATU is not being enabled\n");
+ }
+ 
+ static u32 dw_pcie_readl_ib_unroll(struct dw_pcie *pci, u32 index, u32 reg)
+@@ -238,7 +238,7 @@ static int dw_pcie_prog_inbound_atu_unroll(struct dw_pcie *pci, int index,
+ 
+ 		usleep_range(LINK_WAIT_IATU_MIN, LINK_WAIT_IATU_MAX);
+ 	}
+-	dev_err(pci->dev, "inbound iATU is not being enabled\n");
++	dev_err(pci->dev, "Inbound iATU is not being enabled\n");
+ 
+ 	return -EBUSY;
+ }
+@@ -284,7 +284,7 @@ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int bar,
+ 
+ 		usleep_range(LINK_WAIT_IATU_MIN, LINK_WAIT_IATU_MAX);
+ 	}
+-	dev_err(pci->dev, "inbound iATU is not being enabled\n");
++	dev_err(pci->dev, "Inbound iATU is not being enabled\n");
+ 
+ 	return -EBUSY;
+ }
+@@ -313,16 +313,16 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
  {
-@@ -80,6 +163,16 @@ static int dw_plat_pcie_probe(struct platform_device *pdev)
- 	struct dw_pcie *pci;
- 	struct resource *res;  /* Resource from DT */
- 	int ret;
-+	const struct of_device_id *match;
-+	const struct dw_plat_pcie_of_data *data;
-+	enum dw_pcie_device_mode mode;
-+
-+	match = of_match_device(dw_plat_pcie_of_match, dev);
-+	if (!match)
-+		return -EINVAL;
-+
-+	data = (struct dw_plat_pcie_of_data *)match->data;
-+	mode = (enum dw_pcie_device_mode)data->mode;
+ 	int retries;
  
- 	dw_plat_pcie = devm_kzalloc(dev, sizeof(*dw_plat_pcie), GFP_KERNEL);
- 	if (!dw_plat_pcie)
-@@ -93,23 +186,59 @@ static int dw_plat_pcie_probe(struct platform_device *pdev)
- 	pci->ops = &dw_pcie_ops;
+-	/* check if the link is up or not */
++	/* Check if the link is up or not */
+ 	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
+ 		if (dw_pcie_link_up(pci)) {
+-			dev_info(pci->dev, "link up\n");
++			dev_info(pci->dev, "Link up\n");
+ 			return 0;
+ 		}
+ 		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+ 	}
  
- 	dw_plat_pcie->pci = pci;
-+	dw_plat_pcie->mode = mode;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-+	if (!res)
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	dev_err(pci->dev, "phy link never came up\n");
++	dev_err(pci->dev, "Phy link never came up\n");
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	pci->dbi_base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(pci->dbi_base))
- 		return PTR_ERR(pci->dbi_base);
- 
- 	platform_set_drvdata(pdev, dw_plat_pcie);
- 
--	ret = dw_plat_add_pcie_port(&pci->pp, pdev);
--	if (ret < 0)
--		return ret;
-+	switch (dw_plat_pcie->mode) {
-+	case DW_PCIE_RC_TYPE:
-+		if (!IS_ENABLED(CONFIG_PCIE_DW_PLAT_HOST))
-+			return -ENODEV;
-+
-+		ret = dw_plat_add_pcie_port(dw_plat_pcie, pdev);
-+		if (ret < 0)
-+			return ret;
-+		break;
-+	case DW_PCIE_EP_TYPE:
-+		if (!IS_ENABLED(CONFIG_PCIE_DW_PLAT_EP))
-+			return -ENODEV;
-+
-+		ret = dw_plat_add_pcie_ep(dw_plat_pcie, pdev);
-+		if (ret < 0)
-+			return ret;
-+		break;
-+	default:
-+		dev_err(dev, "INVALID device type %d\n", dw_plat_pcie->mode);
-+	}
- 
- 	return 0;
+ 	return -ETIMEDOUT;
  }
+@@ -351,7 +351,7 @@ void dw_pcie_setup(struct dw_pcie *pci)
+ 	if (ret)
+ 		lanes = 0;
  
-+static const struct dw_plat_pcie_of_data dw_plat_pcie_rc_of_data = {
-+	.mode = DW_PCIE_RC_TYPE,
-+};
-+
-+static const struct dw_plat_pcie_of_data dw_plat_pcie_ep_of_data = {
-+	.mode = DW_PCIE_EP_TYPE,
-+};
-+
- static const struct of_device_id dw_plat_pcie_of_match[] = {
--	{ .compatible = "snps,dw-pcie", },
-+	{
-+		.compatible = "snps,dw-pcie",
-+		.data = &dw_plat_pcie_rc_of_data,
-+	},
-+	{
-+		.compatible = "snps,dw-pcie-ep",
-+		.data = &dw_plat_pcie_ep_of_data,
-+	},
- 	{},
- };
+-	/* set the number of lanes */
++	/* Set the number of lanes */
+ 	val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
+ 	val &= ~PORT_LINK_MODE_MASK;
+ 	switch (lanes) {
+@@ -373,7 +373,7 @@ void dw_pcie_setup(struct dw_pcie *pci)
+ 	}
+ 	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
  
+-	/* set link width speed control register */
++	/* Set link width speed control register */
+ 	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+ 	val &= ~PORT_LOGIC_LINK_WIDTH_MASK;
+ 	switch (lanes) {
 -- 
 2.7.4
