@@ -1,37 +1,71 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] of/numa: drop export of of_node_to_nid
-Date: Tue, 17 Apr 2018 08:38:02 -0500
-Message-ID: <20180417133802.19774-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Frank Rowand <frowand.list@gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v5 0/6] Add support for PWM input capture on STM32
+Date: Tue, 17 Apr 2018 15:38:27 +0200
+Message-ID: <1523972313-28765-1-git-send-email-fabrice.gasnier@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: lee.jones@linaro.org, alexandre.torgue@st.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, mcoquelin.stm32@gmail.com, linux-pwm@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@linaro.org, fabrice.gasnier@st.com, dan.carpenter@oracle.com, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-The "generic" implementation of of_node_to_nid is only used by
-arm64 and only in built-in code, so remove its export. Any
-device with a struct device should be able to use dev_to_node()
-instead. Also, exporting of_node_to_nid doesn't actually work if
-we build a module on an arch that doesn't select OF_NUMA nor provide its
-own of_node_to_nid implementation.
+This series adds support for capture to stm32-pwm driver.
+Capture is based on DMAs.
+- First two patches add support for requesting DMAs to MFD core
+- Next three patches add support for capture to stm32-pwm driver
+- This has been tested on stm32429i-eval board.
 
-Cc: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/of_numa.c | 1 -
- 1 file changed, 1 deletion(-)
+Changes in v5:
+- update patch 2 (mfd: stm32-timers: add support for dmas)
+  move stm32_timers_dma struct to header file,
+  fix warning on dma_mapping_error().
 
-diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-index f9d5480a4ae5..27d9b4bba535 100644
---- a/drivers/of/of_numa.c
-+++ b/drivers/of/of_numa.c
-@@ -177,7 +177,6 @@ int of_node_to_nid(struct device_node *device)
- 
- 	return NUMA_NO_NODE;
- }
--EXPORT_SYMBOL(of_node_to_nid);
- 
- int __init of_numa_init(void)
- {
+Changes in v4:
+- Lee's comments on patch 2 (mfd: stm32-timers: add support for dmas)
+  Add kerneldoc header, better format comments.
+
+Changes in v3:
+- Dropped 2 precusor patches applied by Thierry in pwm tree:
+  "pwm: stm32: fix, remove unused struct device"
+  "pwm: stm32: protect common prescaler for all channels"
+- Note: this series applies on top on pwm tree
+- Implements Lee's comments on MFD part: rework stm32_timers_dma struct,
+  exported routine prototype now use generic device struct, more
+  various comments (see patch 2 changelog).
+
+Resend v2:
+- Add collected Acks
+
+Changes in v2:
+- Abstract DMA handling from child driver: move it to MFD core
+- Rework pwm capture routines to adopt this change
+- Comment on optional dma support, beautify DMAs probe
+
+Fabrice Gasnier (6):
+  dt-bindings: mfd: stm32-timers: add support for dmas
+  mfd: stm32-timers: add support for dmas
+  pwm: stm32: add capture support
+  pwm: stm32: improve capture by tuning counter prescaler
+  pwm: stm32: use input prescaler to improve period capture
+  ARM: dts: stm32: Enable pwm3 input capture on stm32f429i-eval
+
+ .../devicetree/bindings/mfd/stm32-timers.txt       |  20 ++
+ arch/arm/boot/dts/stm32429i-eval.dts               |   3 +
+ drivers/mfd/stm32-timers.c                         | 201 +++++++++++++++-
+ drivers/pwm/pwm-stm32.c                            | 257 +++++++++++++++++++++
+ include/linux/mfd/stm32-timers.h                   |  58 +++++
+ 5 files changed, 537 insertions(+), 2 deletions(-)
+
 -- 
-2.14.1
+1.9.1
