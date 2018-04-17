@@ -1,83 +1,88 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [net-next PATCH v4 04/13] net: netcp: ethss: make sgmii configuration conditional
-Date: Tue, 17 Apr 2018 17:30:33 -0400
-Message-ID: <1524000642-23944-5-git-send-email-m-karicheri2@ti.com>
-References: <1524000642-23944-1-git-send-email-m-karicheri2@ti.com>
+From: James Hogan <jhogan@kernel.org>
+Subject: Re: [PATCH] MIPS: dts: avoid unneeded built-in.a creation in vendor
+ DTS directories
+Date: Tue, 17 Apr 2018 22:37:36 +0100
+Message-ID: <20180417213736.GC21386@saruman>
+References: <1523893290-7958-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jousvV0MzM2p6OtC"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524000642-23944-1-git-send-email-m-karicheri2@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1523893290-7958-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org, grygorii.strashko@ti.com, nsekhar@ti.com
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org, Paul Cercueil <paul@crapouillou.net>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Mathieu Malaterre <malat@debian.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Harvey Hunt <harvey.hunt@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-As a preparatory patch to add support for 2u cpsw hardware found on
-K2G SoC, make sgmii configuration conditional. This is required
-since 2u uses RGMII interface instead of SGMII and to allow for driver
-re-use.
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- drivers/net/ethernet/ti/netcp_ethss.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+--jousvV0MzM2p6OtC
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index 1b79fe5..e1e67ff 100644
---- a/drivers/net/ethernet/ti/netcp_ethss.c
-+++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -74,6 +74,8 @@
- 
- #define IS_SS_ID_VER_14(d) \
- 	(GBE_IDENT((d)->ss_version) == GBE_SS_VERSION_14)
-+#define IS_SS_ID_2U(d) \
-+	(GBE_IDENT((d)->ss_version) == GBE_SS_ID_2U)
- 
- #define GBENU_SS_REG_INDEX		0
- #define GBENU_SM_REG_INDEX		1
-@@ -2239,7 +2241,8 @@ static void gbe_slave_stop(struct gbe_intf *intf)
- 	struct gbe_priv *gbe_dev = intf->gbe_dev;
- 	struct gbe_slave *slave = intf->slave;
- 
--	gbe_sgmii_rtreset(gbe_dev, slave, true);
-+	if (!IS_SS_ID_2U(gbe_dev))
-+		gbe_sgmii_rtreset(gbe_dev, slave, true);
- 	gbe_port_reset(slave);
- 	/* Disable forwarding */
- 	cpsw_ale_control_set(gbe_dev->ale, slave->port_num,
-@@ -2274,9 +2277,11 @@ static int gbe_slave_open(struct gbe_intf *gbe_intf)
- 
- 	void (*hndlr)(struct net_device *) = gbe_adjust_link;
- 
--	gbe_sgmii_config(priv, slave);
-+	if (!IS_SS_ID_2U(priv))
-+		gbe_sgmii_config(priv, slave);
- 	gbe_port_reset(slave);
--	gbe_sgmii_rtreset(priv, slave, false);
-+	if (!IS_SS_ID_2U(priv))
-+		gbe_sgmii_rtreset(priv, slave, false);
- 	gbe_port_config(priv, slave, priv->rx_packet_max);
- 	gbe_set_slave_mac(slave, gbe_intf);
- 	/* enable forwarding */
-@@ -3042,7 +3047,8 @@ static void init_secondary_ports(struct gbe_priv *gbe_dev,
- 			continue;
- 		}
- 
--		gbe_sgmii_config(gbe_dev, slave);
-+		if (!IS_SS_ID_2U(gbe_dev))
-+			gbe_sgmii_config(gbe_dev, slave);
- 		gbe_port_reset(slave);
- 		gbe_port_config(gbe_dev, slave, gbe_dev->rx_packet_max);
- 		list_add_tail(&slave->slave_list, &gbe_dev->secondary_slaves);
-@@ -3399,7 +3405,9 @@ static int set_gbenu_ethss_priv(struct gbe_priv *gbe_dev,
- 	}
- 	gbe_dev->switch_regs = regs;
- 
--	gbe_dev->sgmii_port_regs = gbe_dev->ss_regs + GBENU_SGMII_MODULE_OFFSET;
-+	if (!IS_SS_ID_2U(gbe_dev))
-+		gbe_dev->sgmii_port_regs =
-+		       gbe_dev->ss_regs + GBENU_SGMII_MODULE_OFFSET;
- 
- 	/* Although sgmii modules are mem mapped to one contiguous
- 	 * region on GBENU devices, setting sgmii_port34_regs allows
--- 
-1.9.1
+On Tue, Apr 17, 2018 at 12:41:30AM +0900, Masahiro Yamada wrote:
+> arch/mips/boot/dts/Makefile collects objects from sub-directories
+> into built-in.a only when CONFIG_BUILTIN_DTB is enabled.  Reflect
+> it also to the sub-directory Makefiles.  This suppresses unneeded
+> built-in.a creation in arch/mips/boot/dts/*/ directories.
+>=20
+> While I am here, I replaced $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+> with $(addsuffix .o, $(dtb-y)) to simplify the code a little bit.
+>=20
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>=20
+>  arch/mips/boot/dts/brcm/Makefile          | 2 +-
+>  arch/mips/boot/dts/cavium-octeon/Makefile | 2 +-
+>  arch/mips/boot/dts/ingenic/Makefile       | 2 +-
+>  arch/mips/boot/dts/lantiq/Makefile        | 2 +-
+>  arch/mips/boot/dts/mscc/Makefile          | 2 +-
+>  arch/mips/boot/dts/mti/Makefile           | 2 +-
+>  arch/mips/boot/dts/netlogic/Makefile      | 2 +-
+>  arch/mips/boot/dts/pic32/Makefile         | 2 +-
+>  arch/mips/boot/dts/ralink/Makefile        | 2 +-
+>  arch/mips/boot/dts/xilfpga/Makefile       | 2 +-
+>  10 files changed, 10 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/arch/mips/boot/dts/brcm/Makefile b/arch/mips/boot/dts/brcm/M=
+akefile
+> index d8787c9..d85f446 100644
+> --- a/arch/mips/boot/dts/brcm/Makefile
+> +++ b/arch/mips/boot/dts/brcm/Makefile
+> @@ -34,4 +34,4 @@ dtb-$(CONFIG_DT_NONE) +=3D \
+>  	bcm97425svmb.dtb \
+>  	bcm97435svmb.dtb
+> =20
+> -obj-y				+=3D $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+> +obj-$(CONFIG_BUILTIN_DTB)	+=3D $(addsuffix .o, $(dtb-y))
+
+I like this. I had also spotted the .o files being unnecessarily
+generated when building the dtbs target with bmips and CONFIG_DT_NONE=3Dy.
+I'll apply for 4.18.
+
+Thanks
+James
+
+--jousvV0MzM2p6OtC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlrWaSAACgkQbAtpk944
+dnpdnw//YD2A/1lEIzZxj8CEUQ2ujJJrxQouFF1sJi9IXcJbCLSImNRiuI9qsoc3
+h9T4YeQAAHCkXjIfwwQ2HL3wkCH+KK3xnF/Hq6h6wSMFcFHvoDRNrDwLP6XQx/xL
+4cEtVo5DD2IltrFqx1aKI2LFZ9t3kFvaDPQx8rmpLQy/eeExvOG7x0B9MnI49wrT
+5wChz2eKWFj3ngy5PSkMD1KaOfjT8aL5gzgLMKGvl6byo5nuiMSG3waSe8K0izJu
+KPuwgmL5bJp/hEJOCmc9IiG9HzYlBLzC5wXnkkZ+AGx7wj8N6J6A8fgboziQqvND
+CM9LdLwETacwHijTRpRZb66/OjjBgD4gg0Q3Djd6rdkpJJ/g632wZiZm0z8dP722
+BxEfunGnDtUl02fTfcPwLlnMQPDXdQ3ZwyRdl5gbPhGHK6jp5aYVU9bXTcDmimOm
+/SxylcFCf625dBWeqa0JdxR+UvsOnq6B5iTPhQQ2NYG6E6FPZy+tcFGuuYPzYXld
+Lm/SVcoGlfWQpUMm4QMWq8QCISzGQ4bH+c53JzgBpNQ+Hgif+TZGh9SWZFiNfDXw
+vQj2DBxAysPkje/ZFNQ+poAwQqvG1WApk9BUvDsojLcP/8TmV8jQuFwdez4n/P64
+HA5fXyD8gVVezoGESjXOdmVQOBpZS+siBHrvSBOootQH1zyHgUA=
+=wV2M
+-----END PGP SIGNATURE-----
+
+--jousvV0MzM2p6OtC--
