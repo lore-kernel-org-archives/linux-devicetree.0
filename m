@@ -1,50 +1,70 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4 06/10] misc: pci_endpoint_test: Add designware EP entry
-Date: Tue, 17 Apr 2018 14:52:17 +0530
-Message-ID: <549c7c45-4e01-33b6-a105-2a621128c748@ti.com>
-References: <cover.1523881182.git.gustavo.pimentel@synopsys.com>
- <11fa6ecaae3b0c004b18e57b6b16b2b89ad4dfd4.1523881182.git.gustavo.pimentel@synopsys.com>
+From: Michel Pollet <michel.pollet@bp.renesas.com>
+Subject: RE: [RFC 3/3] arm: shmobile: Add the RZ/N1D SMP enabler driver.
+Date: Tue, 17 Apr 2018 09:32:38 +0000
+Message-ID: <OSBPR01MB2054A677AE2DA04684D51468D2B70@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+References: <1523871304-48517-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1523871304-48517-5-git-send-email-michel.pollet@bp.renesas.com>
+ <9f33a1d2-3c55-2485-a1f2-909def69e5b0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <11fa6ecaae3b0c004b18e57b6b16b2b89ad4dfd4.1523881182.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <9f33a1d2-3c55-2485-a1f2-909def69e5b0@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>, "buserror+upstream@gmail.com" <buserror+upstream@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Andy Gross <andy.gross@linaro.org>, Carlo Caione <carlo@endlessm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Frank Rowand <frank.rowand@sony.com>, Juri Lelli <juri.lelli@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.i>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Monday 16 April 2018 08:07 PM, Gustavo Pimentel wrote:
-> Adds the designware EP device ID entry to pci_endpoint_test driver table
-> to allow this device to be recognize and handle by the pci_endpoint_test
-> driver.
-> 
-> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
-> Change v1->v2:
-> - Changed device id following Kishon's suggestion.
-> Change v2->v3:
-> - Nothing changed, just to follow the patch set version.
-> Changes v3->v4:
-> - Nothing changed, just to follow the patch set version.
-> 
->  drivers/misc/pci_endpoint_test.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index fe8897e..37db0fc 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -634,6 +634,7 @@ static void pci_endpoint_test_remove(struct pci_dev *pdev)
->  static const struct pci_device_id pci_endpoint_test_tbl[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_SYNOPSYS, PCI_DEVICE_ID_SYNOPSYS_SMPL_EP) },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
-> 
+SGkgRmxvcmlhbiwNCg0KT24gMTYgQXByaWwgMjAxOCAyMjo0NiwgRmxvcmlhbiBGYWluZWxsaToN
+Cj4gSGkgTWljaGVsLA0KPg0KPiBPbiAwNC8xNi8yMDE4IDAyOjM0IEFNLCBNaWNoZWwgUG9sbGV0
+IHdyb3RlOg0KPiA+IFRoZSBSZW5lc2FzIFJaL04xRCBzZWNvbmQgQ0E3IGlzIHBhcmtlZCBpbiBh
+IFJPTSBwZW4gYXQgYm9vdCB0aW1lLCBpdA0KPiA+IHJlcXVpcmVzIGEgc3BlY2lhbCBlbmFibGUg
+bWV0aG9kIHRvIGdldCBpdCBzdGFydGVkIGF0IGJvb3QgdGltZS4NCj4gPg0KPiA+IFNpZ25lZC1v
+ZmYtYnk6IE1pY2hlbCBQb2xsZXQgPG1pY2hlbC5wb2xsZXRAYnAucmVuZXNhcy5jb20+DQo+DQo+
+IFNvbWUgZmV3IGNvbW1lbnRzIGJlbG93LiBUaGlzIHBhdGNoIHNob3VsZCBwcm9iYWJseSBiZSBy
+ZS1vcmRlcmVkIGluDQo+IHlvdXIgcGF0Y2ggc2VyaWVzLCBJIHdvdWxkIGV4cGVjdCB5b3UgdG8g
+aGF2ZSB0aGlzIGJlY29tZSBwYXRjaCAyIGFuZCBoYXZlDQo+IHBhdGNoIDIgYmUgcGF0Y2ggMyAo
+Zmlyc3QgeW91IGFkZCBpbmZyYXN0cnVjdHVyZSBmb3IgdXNpbmcgc29tZXRoaW5nLCB0aGVuIHlv
+dQ0KPiBtYWtlIHVzZSBvZiBpdCkuDQoNClRoYW5rcywgdG9vayB0aGF0IG9uYm9hcmQgZm9yIHYy
+DQoNCj4NCj4gPiArc3RhdGljIGludCByem4xX3NtcF9ib290X3NlY29uZGFyeSh1bnNpZ25lZCBp
+bnQgY3B1LCBzdHJ1Y3QNCj4gPiArdGFza19zdHJ1Y3QgKmlkbGUpIHsNCj4gPiAraWYgKCFjcHVf
+Ym9vdGFkZHIpDQo+ID4gK3JldHVybiAtRU5PREVWOw0KPiA+ICsNCj4gPiArc3Bpbl9sb2NrKCZj
+cHVfbG9jayk7DQo+ID4gKw0KPiA+ICt3cml0ZWwodmlydF90b19waHlzKHNlY29uZGFyeV9zdGFy
+dHVwKSwgY3B1X2Jvb3RhZGRyKTsNCj4NCj4gQ29uc2lkZXIgdXNpbmcgX19wYV9zeW1ib2woKSBp
+bnN0ZWFkIG9mIHZpcnRfdG9fcGh5cygpIHNpbmNlDQo+IHNlY29uZGFyeV9zdGFydHVwIGlzIHBh
+cnQgb2YgdGhlIGtlcm5lbCdzIGxpbmVhciBtZW1vcnkgbWFwLg0KDQpBZ3JlZWQuDQoNCj4NCj4g
+PiArYXJjaF9zZW5kX3dha2V1cF9pcGlfbWFzayhjcHVtYXNrX29mKGNwdSkpOw0KPiA+ICsNCj4g
+PiArc3Bpbl91bmxvY2soJmNwdV9sb2NrKTsNCj4gPiArDQo+ID4gK3JldHVybiAwOw0KPiA+ICt9
+DQo+ID4gKw0KPiA+ICtzdGF0aWMgdm9pZCBfX2luaXQgcnpuMV9zbXBfcHJlcGFyZV9jcHVzKHVu
+c2lnbmVkIGludCBtYXhfY3B1cykgew0KPiA+ICtzdHJ1Y3QgZGV2aWNlX25vZGUgKmRuOw0KPiA+
+ICtpbnQgcmV0Ow0KPiA+ICt1MzIgYm9vdGFkZHI7DQo+ID4gKw0KPiA+ICtkbiA9IG9mX2dldF9j
+cHVfbm9kZSgxLCBOVUxMKTsNCj4gPiAraWYgKCFkbikgew0KPiA+ICtwcl9lcnIoIkNQVSMxOiBt
+aXNzaW5nIGRldmljZSB0cmVlIG5vZGVcbiIpOw0KPiA+ICtyZXR1cm47DQo+ID4gK30NCj4gPiAr
+LyoNCj4gPiArICogRGV0ZXJtaW5lIHRoZSBhZGRyZXNzIGZyb20gd2hpY2ggdGhlIENQVSBpcyBw
+b2xsaW5nLg0KPiA+ICsgKi8NCj4gPiArcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIoZG4sICJj
+cHUtcmVsZWFzZS1hZGRyIiwgJmJvb3RhZGRyKTsNCj4gPiAraWYgKHJldCkNCj4gPiArcHJfZXJy
+KCJDUFUjMTogaW52YWxpZCBjcHUtcmVsZWFzZS1hZGRyIHByb3BlcnR5XG4iKTsNCj4gPiArDQo+
+ID4gK29mX25vZGVfcHV0KGRuKTsNCj4gPiArLyogVGhlIGJvb3Rsb2FkZXIgKmRvZXMqIGNoYW5n
+ZSB0aGlzIHByb3BlcnR5ICovDQo+DQo+IFRoaXMgY29tbWVudCBzaG91bGQgcHJvYmFibHkgYmUg
+bW92ZWQgYWJvdmUgdGhlIGZ1bmN0aW9uIHRoYXQgZmV0Y2hlcw0KPiAiY3B1LXJlbGVhc2UtYWRk
+ciINCg0KVGhhbmtzLCBJJ3ZlIHNpbXBsaWZpZWQgdGhhdCBiaXQgdG9vLi4NCj4NCj4gPiArcHJf
+aW5mbygiQ1BVIzE6IGNwdS1yZWxlYXNlLWFkZHIgJTA4eFxuIiwgKHUzMilib290YWRkcik7DQo+
+ID4gKw0KPiA+ICtpZiAoIWJvb3RhZGRyKQ0KPiA+ICtyZXR1cm47DQo+DQo+IFdvdWxkIG5vdCB5
+b3Ugd2FudCB0byBzaG93IGEgbWVzc2FnZSBoZXJlIHRvIGhlbHAgY2F0Y2ggc3VjaCBjb25kaXRp
+b25zDQo+DQo+ID4gKw0KPiA+ICtjcHVfYm9vdGFkZHIgPSBpb3JlbWFwKGJvb3RhZGRyLCBzaXpl
+b2YoYm9vdGFkZHIpKTsNCj4NCj4gUmVseWluZyBvbiBpb3JlbWFwKCkgdG8gcmVqZWN0IHZhbHVl
+cyB0aGF0IG1pZ2h0IGJlIG91dHNpZGUgb2YgdGhlIGFsbG93ZWQNCj4gcmFuZ2UgbWF5IGJlIGEg
+bGl0dGxlIGZyYWdpbGUsIGJ1dCBJIGNhbid0IHN1Z2dlc3QgYW55IGJldHRlciBhbHRlcm5hdGl2
+ZS4NCg0KSXQncyBkaWZmaWN1bHQsIEknZCBoYXZlIHRvIGFkZCBhIG1lbW9yeSBtYXAgaGVhZGVy
+IEkndmUgYmVlbiB0cnlpbmcgbm90IHRvDQp1c2Ugc28gZmFyIGZvciBLSVNTIHJlYXNvbi4uLg0K
+DQo+DQo+ID4gK2lmICghY3B1X2Jvb3RhZGRyKQ0KPiA+ICtwcl9lcnIoIkNQVSMxOiBjcHUtcmVs
+ZWFzZS1hZGRyIG1hcCBmYWlsZWRcbiIpOyB9DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3Ry
+dWN0IHNtcF9vcGVyYXRpb25zIHJ6bjFfc21wX29wcyBfX2luaXRjb25zdCA9IHsNCj4gPiArLnNt
+cF9wcmVwYXJlX2NwdXMgPSByem4xX3NtcF9wcmVwYXJlX2NwdXMsDQo+ID4gKy5zbXBfYm9vdF9z
+ZWNvbmRhcnkgPSByem4xX3NtcF9ib290X3NlY29uZGFyeSwgfTsNCj4gPiArQ1BVX01FVEhPRF9P
+Rl9ERUNMQVJFKHJ6bjFfc21wLCAicmVuZXNhcyxyOWEwNmcwMzItc21wIiwNCj4gPiArJnJ6bjFf
+c21wX29wcyk7DQo+ID4NCj4NCg0KTWljaGVsDQoNCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3Mg
+RXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVj
+a2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMg
+dW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
