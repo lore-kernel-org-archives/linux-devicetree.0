@@ -1,66 +1,85 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/2] regulator: dt-bindings: add QCOM RPMh regulator bindings
-Date: Tue, 17 Apr 2018 13:06:57 -0700
-Message-ID: <CAD=FV=UxabaHPa-pkGBvQDcmh7e+bqMRX4WdMS8xfhAQSKD9gg@mail.gmail.com>
-References: <cover.1523673467.git.collinsd@codeaurora.org> <39b676d2ba7dac2436196cc5a090c6f151498dc8.1523673467.git.collinsd@codeaurora.org>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v3 07/10] Documentation: dt-bindings: Add documents for
+ PECI hwmon client drivers
+Date: Tue, 17 Apr 2018 13:40:18 -0700
+Message-ID: <6ff697e8-cd20-e551-da13-b614cc39f900@linux.intel.com>
+References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
+ <20180410183212.16787-8-jae.hyun.yoo@linux.intel.com>
+ <20180416181423.t4vf7sugv6z3aw5h@rob-hp-laptop>
+ <aee4e04c-885f-b1d8-9e85-9e741551342f@linux.intel.com>
+ <287e0fd9-b631-2602-2785-7b8aaed7a6b9@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <39b676d2ba7dac2436196cc5a090c6f151498dc8.1523673467.git.collinsd@codeaurora.org>
+In-Reply-To: <287e0fd9-b631-2602-2785-7b8aaed7a6b9@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 4/16/2018 4:51 PM, Jae Hyun Yoo wrote:
+> On 4/16/2018 4:22 PM, Jae Hyun Yoo wrote:
+>> On 4/16/2018 11:14 AM, Rob Herring wrote:
+>>> On Tue, Apr 10, 2018 at 11:32:09AM -0700, Jae Hyun Yoo wrote:
+>>>> This commit adds dt-bindings documents for PECI cputemp and dimmtemp 
+>>>> client
+>>>> drivers.
+>>>
 
-On Fri, Apr 13, 2018 at 7:50 PM, David Collins <collinsd@codeaurora.org> wrote:
-> Introduce bindings for RPMh regulator devices found on some
-> Qualcomm Technlogies, Inc. SoCs.  These devices allow a given
-> processor within the SoC to make PMIC regulator requests which
-> are aggregated within the RPMh hardware block along with requests
-> from other processors in the SoC to determine the final PMIC
-> regulator hardware state.
->
-> Signed-off-by: David Collins <collinsd@codeaurora.org>
-> ---
->  .../bindings/regulator/qcom,rpmh-regulator.txt     | 207 +++++++++++++++++++++
->  .../dt-bindings/regulator/qcom,rpmh-regulator.h    |  36 ++++
->  2 files changed, 243 insertions(+)
+[...]
 
-I noticed that "qcom,rpmh-resource-type" is now gone.  Not needed
-anymore?  Oh, I see.  Stephen said to add it when it's needed.  OK,
-fine.
+>>>> +Example:
+>>>> +    peci-bus@0 {
+>>>> +        #address-cells = <1>;
+>>>> +        #size-cells = <0>;
+>>>> +        < more properties >
+>>>> +
+>>>> +        peci-dimmtemp@cpu0 {
+>>>
+>>> unit-address is wrong.
+>>>
+>>
+>> Will fix it using the reg value.
+>>
+>>> It is a different bus from cputemp? Otherwise, you have conflicting
+>>> addresses. If that's the case, probably should make it clear by showing
+>>> different host adapters for each example.
+>>>
+>>
+>> It could be the same bus with cputemp. Also, client address sharing is 
+>> possible by PECI core if the functionality is different. I mean, 
+>> cputemp and dimmtemp targeting the same client is possible case like 
+>> this.
+>> peci-cputemp@30
+>> peci-dimmtemp@30
+>>
+> 
+> Oh, I got your point. Probably, I should change these separate settings 
+> into one like
+> 
+> peci-client@30 {
+>      compatible = "intel,peci-client";
+>      reg = <0x30>;
+> };
+> 
+> Then cputemp and dimmtemp drivers could refer the same compatible 
+> string. Will rewrite it.
+> 
 
+I've checked it again and realized that it should use function based 
+node name like:
 
-> +===============================
-> +Second Level Nodes - Regulators
-> +===============================
-> +
-> +- qcom,regulator-initial-voltage
+peci-cputemp@30
+peci-dimmtemp@30
 
-nit: regulator framework tends to include "microvolt" in the name to
-make it really obvious in the device tree what the units are.  Can you
-do that too?
+If it use the same string like 'peci-client@30', the drivers cannot be 
+selectively enabled. The client address sharing way is well handled in 
+PECI core and this way would be better for the future implementations of 
+other PECI functional drivers such as crash dump driver and so on. So 
+I'm going change the unit-address only.
 
+Thanks,
 
-> +- qcom,drms-mode-threshold-currents
-
-Could use microamp in the name of the property too...
-
-
-> +                       qcom,allowed-drms-modes =
-> +                               <RPMH_REGULATOR_MODE_LPM
-> +                                RPMH_REGULATOR_MODE_HPM>;
-> +                       qcom,drms-mode-threshold-currents = <10000 1000000>;
-
-optional nit: to make it match downstream drivers, does it make sense
-to change this to:
-
-  <9999 999999>
-
-...so if a driver used to request exactly 10000 mA that it will end up
-with the same mode (no idea if drivers actually do that).
-
-
--Doug
+Jae
