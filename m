@@ -1,115 +1,153 @@
-Return-Path: <SRS0=idpo=G7=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v2 1/3] dt-bindings: timer: renesas, cmt: Document
- r8a774[35] CMT support
-Date: Tue, 10 Apr 2018 09:36:39 +0000
-Message-ID: <TY1PR01MB1770621EC40038C4237B1BAAC0BE0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1513618743-4773-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1513618743-4773-2-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1513618743-4773-2-git-send-email-fabrizio.castro@bp.renesas.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=kxya=HG=codeaurora.org=yossim@kernel.org>
 MIME-Version: 1.0
-To: Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "Mark Rutland  <mark.rutland@arm.com>, Fabrizio Castro" <fabrizio.castro@bp.renesas.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date: Tue, 17 Apr 2018 16:00:23 +0300
+From: yossim@codeaurora.org
+Subject: Re: [Dragonboard-aosp] [PATCH 2/4] usb: chipidea: Hook into mux
+ framework to toggle usb switch
+In-Reply-To: <b0f6848a-08d6-04ab-4b60-c31aea81041b@axentia.se>
+References: <1519199101-27065-1-git-send-email-yossim@codeaurora.org>
+ <1519199101-27065-2-git-send-email-yossim@codeaurora.org>
+ <20180301221104.uo5xbwjn6gjhfcb6@rob-hp-laptop>
+ <6f4463b04060484bb8cca2e3a5468012@euamsexm01e.eu.qualcomm.com>
+ <22d3658b-d5a0-108b-c8f2-92cbe3786e5b@axentia.se>
+ <889cbb389bee49aea02a8b5de89ed10f@euamsexm01e.eu.qualcomm.com>
+ <b0f6848a-08d6-04ab-4b60-c31aea81041b@axentia.se>
+Message-ID: <bc531a6e55ace1da59a05b4e93bf1cea@codeaurora.org>
+To: Peter Chen <peter.chen@nxp.com>, Peter Rosin <peda@axentia.se>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, swboyd@chromium.org
+Cc: Yossim@codeaurora.org
 List-ID: <devicetree@vger.kernel.org>
 
-Good morning gentlemen,
+On 2018-03-07 12:30, Peter Rosin wrote:
+> [finally remembered to switch email for Stephen Boyd]
+> 
+> On 2018-03-07 10:22, Yossi Mansharoff wrote:
+>>> On 2018-03-06 16:16, Yossi Mansharoff wrote:
+>>>>> On Wed, Feb 21, 2018 at 09:44:59AM +0200, Yossi Mansharoff wrote:
+>>>>>> On the db410c 96boards platform we have a TC7USB40MU on the board 
+>>>>>> to
+>>>>>> mux the D+/D- lines coming from the controller between a micro usb
+>>>>>> "device" port and a USB hub for "host" roles[1]. During a role
+>>>>>> switch, we need to toggle this mux to forward the D+/D- lines to
+>>>>>> either the port or the hub. Add the necessary code to do the role
+>>>>>> switch in chipidea core via the generic mux framework.
+>>>>>> Board configurations like on db410c are expected to change roles 
+>>>>>> via
+>>>>>> the sysfs API described in
+>>>>>> Documentation/ABI/testing/sysfs-platform-chipidea-usb2.
+>>>>>> 
+>>>>>> [1]
+>>>>>> https://github.com/96boards/documentation/raw/master/ConsumerEdition
+>>>>>> /DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
+>>>>>> 
+>>>>>> Cc: Peter Rosin <peda@axentia.se>
+>>>>>> Cc: Peter Chen <peter.chen@nxp.com>
+>>>>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>>>> Cc: <devicetree@vger.kernel.org>
+>>>>>> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+>>>>>> 
+>>>>>> Signed-off-by: Yossi Mansharoff <yossim@codeaurora.org>
+>>>>>> ---
+>>>>>>  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt |  6 
+>>>>>> ++++++
+>>>>> 
+>>>>> Please make bindings a separate patch.
+>>>> sure
+>>>>> 
+>>>>>>  drivers/usb/chipidea/Kconfig                           |  2 ++
+>>>>>>  drivers/usb/chipidea/core.c                            |  6 
+>>>>>> ++++++
+>>>>>>  drivers/usb/chipidea/host.c                            |  7 
+>>>>>> +++++++
+>>>>>>  drivers/usb/chipidea/udc.c                             | 13 
+>>>>>> ++++++++++++-
+>>>>>>  include/linux/usb/chipidea.h                           |  2 ++
+>>>>>>  6 files changed, 35 insertions(+), 1 deletion(-)
+>>>>>> 
+>>>>>> diff --git 
+>>>>>> a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+>>>>>> b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+>>>>>> index 0e03344..2e93181 100644
+>>>>>> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+>>>>>> @@ -76,6 +76,10 @@ Optional properties:
+>>>>>>    needs to make sure it does not send more than 90%
+>>>>>>    maximum_periodic_data_per_frame. The use case is multiple 
+>>>>>> transactions, but
+>>>>>>    less frame rate.
+>>>>>> +- mux-controls: The mux control for toggling host/device output 
+>>>>>> of
+>>>>>> +this
+>>>>>> +  controller. It's expected that a mux state of 0 indicates 
+>>>>>> device
+>>>>>> +mode and a
+>>>>>> +  mux state of 1 indicates host mode.
+>>>>>> +- mux-control-names: Shall be "usb_switch" if mux-controls is 
+>>>>>> specified.
+>>>>> 
+>>>>> -names is pointless when there is only 1.
+>>>> the names  is used to find the attached mux in the dt .
+>>>> it is used in the following lines in mux/core.c if (mux_name) {
+>>>> 		index = of_property_match_string(np, "mux-control-names",
+>>>> 						 mux_name);
+>>>> so I think iwe need to keep it, agreed?
+>>> 
+>>> If mux_name is NULL, index defaults to 0, i.e. the first (and 
+>>> presumably
+>>> only) mux control is grabbed from the mux-controls list.
+>>> 
+>>> So, you should be able to call mux_control_get_optional with a NULL 
+>>> mux_name argument for this to work. But please try it...
+>>> 
+>>> Cheers,
+>>> Peter
+>> 
+>> that's correct, my thought is that it would be safer to explicitly 
+>> call the mux_control_get_optional function with a mux name, just for 
+>> the case of multiple muxes.
+>> Thanks.
+>> For example another mux to switch off vBUS.
+>> Yossi
+> 
+> Right. Rob, how do you propose to handle the future where a second
+> mux with a different function is needed? Specifically, everything
+> I come up with introduces some ugly compatibility crap in the future
+> code to handle old devicetrees w/o the mux-control-names property.
+> So, how to avoid that?
+> 
+> I'm inclined to just requiring a mux-control-names up front to keep
+> the future simple.
+> 
+> Cheers,
+> Peter
+> 
 
-I am very sorry to bother you again, but it seems this patch has no master.=
- Is anybody willing to take it?
+is it ok to keep the "mux-control-names"?
+I want to make a new patch set for this, currently, I'm splitting this 
+patch into two (one for bindings and one for chipidea).
 
 Thanks,
-Fab
+Yossi
 
-> -----Original Message-----
-> From: Fabrizio Castro [mailto:fabrizio.castro@bp.renesas.com]
-> Sent: 18 December 2017 17:39
-> To: Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>
-> Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>; Daniel Lezcano <dan=
-iel.lezcano@linaro.org>; Thomas Gleixner
-> <tglx@linutronix.de>; devicetree@vger.kernel.org; Simon Horman <horms@ver=
-ge.net.au>; Geert Uytterhoeven
-> <geert+renesas@glider.be>; Chris Paterson <Chris.Paterson2@renesas.com>; =
-Biju Das <biju.das@bp.renesas.com>; linux-renesas-
-> soc@vger.kernel.org
-> Subject: [PATCH v2 1/3] dt-bindings: timer: renesas, cmt: Document r8a774=
-[35] CMT support
->
-> Document SoC specific compatible strings for r8a7743 and r8a7745.
-> No driver change is needed as the fallback strings will activate
-> the right code.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Simon Horman <horms@verge.net.au>
-> ---
-> v1->v2:
-> * "R-Car Gen2 or RZ/G1." -> "R-Car Gen2 and RZ/G1."
-> * "all the R-Car" -> "R-Car"
->
->  Documentation/devicetree/bindings/timer/renesas,cmt.txt | 14 ++++++++++-=
----
->  1 file changed, 10 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Do=
-cumentation/devicetree/bindings/timer/renesas,cmt.txt
-> index d740989..b40add2 100644
-> --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> @@ -22,6 +22,10 @@ Required Properties:
->
->      - "renesas,r8a73a4-cmt0" for the 32-bit CMT0 device included in r8a7=
-3a4.
->      - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8a7=
-3a4.
-> +    - "renesas,r8a7743-cmt0" for the 32-bit CMT0 device included in r8a7=
-743.
-> +    - "renesas,r8a7743-cmt1" for the 48-bit CMT1 device included in r8a7=
-743.
-> +    - "renesas,r8a7745-cmt0" for the 32-bit CMT0 device included in r8a7=
-745.
-> +    - "renesas,r8a7745-cmt1" for the 48-bit CMT1 device included in r8a7=
-745.
->      - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7=
-790.
->      - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7=
-790.
->      - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7=
-791.
-> @@ -31,10 +35,12 @@ Required Properties:
->      - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7=
-794.
->      - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7=
-794.
->
-> -    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car=
- Gen2.
-> -    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car=
- Gen2.
-> -These are fallbacks for r8a73a4 and all the R-Car Gen2
-> -entrieslisted above.
-> +    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car=
- Gen2
-> +and RZ/G1.
-> +    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car=
- Gen2
-> +and RZ/G1.
-> +These are fallbacks for r8a73a4, R-Car Gen2 and RZ/G1 entries
-> +listed above.
->
->    - reg: base address and length of the registers block for the timer mo=
-dule.
->    - interrupts: interrupt-specifier for the timer, one per channel.
-> --
-> 2.7.4
-
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+>> 
+>>> 
+>>>>> 
+>>>>>> 
+>>>>>>  i.mx specific properties
+>>>>>>  - fsl,usbmisc: phandler of non-core register device, with one @@
+>>>>>> -102,4 +106,6 @@ Example:
+>>>>>>  		rx-burst-size-dword = <0x10>;
+>>>>>>  		extcon = <0>, <&usb_id>;
+>>>>>>  		phy-clkgate-delay-us = <400>;
+>>>>>> +		mux-controls = <&usb_switch>;
+>>>>>> +		mux-control-names = "usb_switch";
+>>>>>>  	};
+>>>> _______________________________________________
+>>>> Dragonboard-aosp mailing list
+>>>> Dragonboard-aosp@lists.96boards.org
+>>>> https://lists.96boards.org/mailman/listinfo/dragonboard-aosp
+>>>> 
+>>> 
+>>> 
