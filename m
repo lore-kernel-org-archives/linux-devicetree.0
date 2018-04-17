@@ -1,53 +1,50 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode for
- the cells list
-Date: Tue, 17 Apr 2018 16:44:01 +0100
-Message-ID: <8c4b48ad-e99e-030a-a4ee-b6df0fa59c79@linaro.org>
-References: <1521933899-362-1-git-send-email-albeu@free.fr>
- <1521933899-362-2-git-send-email-albeu@free.fr>
- <344e0087-7410-aebb-8a66-c6976064df10@linaro.org>
- <20180417165420.423a691b@avionic-0020>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v5 3/6] dt-bindings: arm: Document the RZN1D-DB board
+Date: Tue, 17 Apr 2018 17:49:25 +0200
+Message-ID: <CAMuHMdU4upXcYZ_yD2a_=J5VAUE28fni7_NotmchjpYUqCxV=A@mail.gmail.com>
+References: <1523963101-56725-1-git-send-email-michel.pollet@bp.renesas.com> <1523963101-56725-4-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180417165420.423a691b@avionic-0020>
-Content-Language: en-US
+In-Reply-To: <1523963101-56725-4-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alban <albeu@free.fr>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for explaining,
+Hi Michel,
 
-On 17/04/18 15:54, Alban wrote:
-> This will not only allow reading the calibration data from nvmem, but
-> will also create a partition on the MTD device, which is not acceptable.
-> With my proposed binding this would become:
-> 
-> flash@0 {
-> 	#address-cells = <1>;
-> 	#size-cells = <1>;
-> 	compatible = "s25sl064a";
-> 	reg = <0>;
-> 
-> 	nvmem-cells {
-> 		compatible = "nvmem-cells";
-> 		#address-cells = <1>;
-> 		#address-cells = <1>;
-> 
-> 		calibration: calib@404 {
-> 			reg = <0x404 0x10>;
-> 		};
-> 	};
+On Tue, Apr 17, 2018 at 1:04 PM, Michel Pollet
+<michel.pollet@bp.renesas.com> wrote:
+> This documents the RZ/N1 bindings for the RZN1D-DB board.
+>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/arm/shmobile.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+> index 61b486f..6efb3f1 100644
+> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
+> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+> @@ -51,7 +51,8 @@ SoCs:
+>      compatible = "renesas,r8a77990"
+>    - R-Car D3 (R8A77995)
+>      compatible = "renesas,r8a77995"
+> -
+> +  - RZ/N1D (R9A06G032)
+> +    compatible = "renesas,r9a06g032", "renesas,rzn1"
 
-Why can't we make nvmem-cells node a nvmem provider in this case?
-Which should work!
+Why do you need a family-specific compatible value ("renesas,rzn1",
+which is a marketing name)?
 
---srini
+Gr{oetje,eeting}s,
 
+                        Geert
 
-> };
-> 
-> Which would work fine as the MTD code will ignore the nvmem-cells
-> subnode thanks to its compatible string.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
