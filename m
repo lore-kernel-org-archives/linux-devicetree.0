@@ -1,85 +1,31 @@
-From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: Re: [PATCH v4 04/10] bindings: PCI: designware: Add support for the
- EP in Designware driver
-Date: Tue, 17 Apr 2018 14:33:35 +0100
-Message-ID: <e61b75ac-bd19-4e69-3138-702156a36d73@synopsys.com>
-References: <cover.1523881182.git.gustavo.pimentel@synopsys.com>
- <7d3445e3f8bb15d27987e0d061275d7d69f2c519.1523881182.git.gustavo.pimentel@synopsys.com>
- <20180416214324.wcyghdwejucoutki@rob-hp-laptop>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 06/10] drivers/peci: Add a PECI adapter driver for
+ Aspeed AST24xx/AST25xx
+Date: Tue, 17 Apr 2018 14:37:29 +0100
+Message-ID: <93e7f93c-a2e4-1e16-be4c-b908f88b9897@arm.com>
+References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
+ <20180410183212.16787-7-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180416214324.wcyghdwejucoutki@rob-hp-laptop>
+In-Reply-To: <20180410183212.16787-7-jae.hyun.yoo@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "kishon@ti.com" <kishon@ti.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Just a drive-by nit:
 
-On 16/04/2018 22:43, Rob Herring wrote:
-> On Mon, Apr 16, 2018 at 03:37:52PM +0100, Gustavo Pimentel wrote:
->> Add device tree binding documentation for the Endpoint in PCIe Designware
->> driver.
->>
->> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->> ---
->> Change v1->v2:
->>  - Add a missing log description.
->>  - Add "snps,dw-pcie" compatible string following Kishon's suggestion.
->> Change v2->v3:
->> - Reverted pcie_ep name to pcie.
->> Changes v3->v4:
->> - Reverted "snps,dw-pcie-rc" compatible string requested by Rob Herring.
->>
->>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> index 7f9804d..980fc9a 100644
->> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> @@ -3,6 +3,7 @@
->>  Required properties:
->>  - compatible:
->>  	"snps,dw-pcie" for RC mode;
->> +	"snps,dw-pcie-ep" for EP mode;
->>  - reg: Should contain the configuration address space.
->>  - reg-names: Must be "config" for the PCIe configuration space.
->>      (The old way of getting the configuration address space from "ranges"
->> @@ -56,3 +57,15 @@ Example configuration:
->>  		#interrupt-cells = <1>;
->>  		num-lanes = <1>;
->>  	};
->> +or
->> +	pcie: pcie@dfc00000 {
->> +		compatible = "snps,dw-pcie-ep";
->> +		reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
->> +		      <0xdfc01000 0x0001000>, /* IP registers 2 */
->> +		      <0xd0000000 0x2000000>; /* Configuration space */
->> +		reg-names = "dbi", "dbi2", "addr_space";
->> +		device_type = "pci";
-> 
-> This should not be present for endpoints.
+On 10/04/18 19:32, Jae Hyun Yoo wrote:
+[...]
+> +#define PECI_CTRL_SAMPLING_MASK     GENMASK(19, 16)
+> +#define PECI_CTRL_SAMPLING(x)       (((x) << 16) & PECI_CTRL_SAMPLING_MASK)
+> +#define PECI_CTRL_SAMPLING_GET(x)   (((x) & PECI_CTRL_SAMPLING_MASK) >> 16)
 
-You're correct. I'll remove it.
+FWIW, <linux/bitfield.h> already provides functionality like this, so it 
+might be worth taking a look at FIELD_{GET,PREP}() to save all these 
+local definitions.
 
-> 
-> With that dropped,
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> 
->> +		num-ib-windows = <6>;
->> +		num-ob-windows = <2>;
->> +		num-lanes = <1>;
->> +	};
->> -- 
->> 2.7.4
->>
->>
-
-Thanks,
-Gustavo
+Robin.
