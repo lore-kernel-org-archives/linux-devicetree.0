@@ -1,62 +1,135 @@
-From: govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [PATCH v2 13/13] dt: bindings: add bindings for wcn3990 wifi
- block
-Date: Tue, 17 Apr 2018 09:57:35 +0530
-Message-ID: <2807e56b227f483ac343c0e4d098aebe@codeaurora.org>
-References: <1523378986-11551-1-git-send-email-govinds@codeaurora.org>
- <20180413215340.vhvlhlaapt5uuo7d@rob-hp-laptop>
- <878t9np561.fsf@kamboji.qca.qualcomm.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v5 02/10] dt-bindings: introduce RPMH RSC bindings for Qualcomm
+ SoCs
+Date: Mon, 16 Apr 2018 23:01:43 -0700
+Message-ID: <152394490349.51482.12712738252386761377@swboyd.mtv.corp.google.com>
+References: <20180405161834.3850-1-ilina@codeaurora.org>
+ <20180405161834.3850-3-ilina@codeaurora.org>
+ <152306368031.94378.14957212064809086345@swboyd.mtv.corp.google.com>
+ <20180409160800.GC19682@codeaurora.org>
+ <152346054406.180276.4468371342222361883@swboyd.mtv.corp.google.com>
+ <20180411212431.GG19682@codeaurora.org>
+ <152365923361.51482.7839380101584600308@swboyd.mtv.corp.google.com>
+ <20180416160818.GC1209@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <878t9np561.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180416160818.GC1209@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Lina Iyer (2018-04-16 09:08:18)
+> On Fri, Apr 13 2018 at 16:40 -0600, Stephen Boyd wrote:
+> >Well it seems like an RSC contains many DRVs and those DRVs contain many
+> >TCSes. This is what I get after talking with Bjorn on IRC.
+> >
+> >       +--------------------------------------------------+ (0x00000)
+> >       |                                                  |
+> >       |                  DRV #0                          |
+> >       |                                                  |
+> >       |----------                          --------------| (tcs-offset =
+(0xd00))
+> >       |                  DRV0_TCS0                       |
+> >       |                common space                      |
+> >       |                cmd sequencer                     | 0xd00 + 0x14
+> >       |                                                  |
+> >       |                  DRV0_TCS1                       |
+> >       |                common space                      | 0xd00 + 0x2a0
+> >       |                cmd sequencer                     | 0xd00 + 0x2a=
+0 + 0x14
+> >       |                                                  |
+> >       |                  DRV0_TCS2                       |
+> >       |                                                  |
+> >       |                                                  |
+> >       +--------------------------------------------------+ (0x10000)
+> >       |                                                  |
+> >       |                  DRV #1                          |
+> >       |                                                  |
+> >       |----------                          --------------| (tcs-offset)
+> >       |                  DRV1_TCS0                       |
+> >       |                  DRV1_TCS1                       |
+> >       |                  DRV1_TCS2                       |
+> >       +--------------------------------------------------+ (0x20000)
+> >       |                                                  |
+> >       |                  DRV #2                          |
+> >       |                                                  |
+> >       |----------                          --------------|
+> >       |                  DRV2_TCS0                       |
+> >       |                  DRV2_TCS1                       |
+> >       |                  DRV2_TCS2                       |
+> >       |                  DRV2_TCS3                       |
+> >       |                  DRV2_TCS4                       |
+> >       |                  DRV2_TCS5                       |
+> >       +--------------------------------------------------+
+> >
+> >I think I understand it now. There aren't any "RSC common" registers
+> >that are common to the entire RSC. Instead, everything goes into a DRV,
+> >or into a common TCS space, or into a TCS "queue".
+> >
+> >> >Put another way, even if the "apps" RSC is complicated, we should be
+> >> >describing it to the best of our abilities in the binding so that when
+> >> >it is used by non-linux OSes things still work by simply tweaking the
+> >> >drv-id that we use to pick the right things out of the node.
+> >> >
+> >> >Or we're describing the RSC but it's really a container node that
+> >> >doesn't do much besides hold DRVs? So this is described at the wrong
+> >> >level?
+> >> What we are describing is a DRV, but a standalone DRV alone is useless
+> >> without the necessary RSC registers. So its a unique RSC+DRV combinati=
+on
+> >> that is represented here.
+> >>
+> >
+> >If my understanding is correct up there then the binding could either
+> >describe a single RSC DRV, or it could describe all the RSC DRV
+> >instances and interrupts going into the RSC "block" and then we can use
+> >drv-id to pick the offset we jump to.
+> >
+> Your understanding is correct.
+> =
 
-On 2018-04-16 20:30, Kalle Valo wrote:
-> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
-> 
->> On Tue, Apr 10, 2018 at 10:19:46PM +0530, Govind Singh wrote:
->>> Add device tree binding documentation details for wcn3990
->>> wifi block present in Qualcomm SDM845/APQ8098 SoC into
->>> "qcom,ath10k.txt".
->>> 
->>> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>> ---
->>>  .../bindings/net/wireless/qcom,ath10k.txt          | 31 
->>> ++++++++++++++++++++++
->>>  1 file changed, 31 insertions(+)
->> 
->> One nit, otherwise:
->> 
->> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> 
-> 
-> [...]
-> 
->>> @@ -119,3 +126,27 @@ wifi0: wifi@a000000 {
->>>  	qcom,msi_base = <0x40>;
->>>  	qcom,ath10k-pre-calibration-data = [ 01 02 03 ... ];
->>>  };
->>> +
->>> +Example (to supply wcn3990 SoC wifi block details):
->>> +
->>> +qcom,wifi@18000000 {
->> 
->> wifi@...
-> 
-> I added this and Rob's Reviewed-by to the patch in the pending branch:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=pending&id=20f4accbe76af8f137b4218ce4973bda6fc3d23e
-> 
-> Govind, please check that it's ok.
+> >I imagine we don't have any practical use-case for the entire RSC space
+> >because there aren't any common RSC registers to deal with.
+> Not true.
 
-Looks good to me.
+So then my understanding is not correct! :/
 
-Thanks,
-Govind
+> =
+
+> >So we've
+> >boiled this all down to describing one DRV and then I wonder why we care
+> >about having drv-id at all? It looks to be used to check for a max
+> >number of TCS, but that's already described by DT so it doesn't seem
+> >very useful to double check what the hardware can tells us.
+> >
+> There is also a number of commands per TCS (NCPT), that may way vary
+> between different RSCs. The RSC of the application processor has 16
+> commands in each TCS, but that is variable. I am not saying it cannot be
+> described in DT, but it is something I read from the common RSC
+> registers, currently.
+> Also, I will using common/DRV0 registers to write wakeup time value,
+> when the processor subsystem goes into power down. This is not DRV2
+> register, but is a DRV0 register that we will have special access to.
+> The patches for those I intend to publish, when we have support for
+> sleep/suspend with this new architecture. So the address of the start of
+> the RSC (=3DDRV0) is necessary.
+> =
+
+> >Long story short, we can remove drv-id and just describe drvs by
+> >themselves?
+> Yes, we may. As long as I have a way to describe the register addresss
+> of the start of the DRV (0x20000 for DRV#2)  and the tcs-offset (0xd00),
+> we can work with the RSC-DRV in the driver.
+> =
+
+
+From=20this new information it seems like we need to know about all the
+DRVs in the RSC then. So let's go back to my previous binding proposal
+describing all of them and having the qcom,drv-id property describe
+which one to use most of the time and hardcode the assumption to use
+DRV0 in the driver when we need to do things for sleep/suspend? Then
+we're back to describing the whole RSC and configuring the picker to
+pick the right DRV depending on firmware configuration.
