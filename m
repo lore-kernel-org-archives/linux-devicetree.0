@@ -1,192 +1,38 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <doudahwezomiechahtah@xff.cz>
-Subject: Re: [PATCH v6 00/11] Sunxi: Add SMP support on A83T
-Date: Tue, 17 Apr 2018 04:15:00 +0200
-Message-ID: <20180417021500.ufcp3fhlcpcu7vmt@core>
-References: <20180416215032.5023-1-mylene.josserand@bootlin.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v6 01/11] ARM: sunxi: smp: Move assembly code into a file
+Date: Tue, 17 Apr 2018 11:12:41 +0800
+Message-ID: <CAGb2v67VL70yqTF7xq4T3_9zA9T3UT2AV0gGarh1mqvC17r3Mg@mail.gmail.com>
+References: <20180416215032.5023-1-mylene.josserand@bootlin.com> <20180416215032.5023-2-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180416215032.5023-1-mylene.josserand@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com, horms@verge.net.au, maxime.ripard@bootlin.com, magnus.damm@gmail.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, marc.zyngier@arm.com, wens@csie.org, robh+dt@kernel.org, geert@linux-m68k.org, thomas.petazzoni@bootlin.com, clabbe.montjoie@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180416215032.5023-2-mylene.josserand@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@bootlin.com>
+Cc: Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@bootlin.com>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Simon <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, "open list:ARM/SHMOBILE ARM..." <linux-renesas-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Quentin Schulz <quentin.schulz@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Myl=E8ne,
-
-Please also add this:
-
-diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
-index ce53ceaf4cc5..d9c8ecf88ec6 100644
---- a/arch/arm/mach-sunxi/Kconfig
-+++ b/arch/arm/mach-sunxi/Kconfig
-@@ -51,7 +51,7 @@ config MACH_SUN9I
- config ARCH_SUNXI_MC_SMP
-        bool
-        depends on SMP
--   default MACH_SUN9I
-+ default MACH_SUN9I || MACH_SUN8I
-        select ARM_CCI400_PORT_CTRL
-        select ARM_CPU_SUSPEND
-
-Because otherwise when I'm building kernel just for sun8i and I don't have =
-sun9i
-enabled, this new SMP code for A83T (which is sun8i) will not be built.
-
-thank you,
-  Ondrej
-
-On Mon, Apr 16, 2018 at 11:50:21PM +0200, Myl=E8ne Josserand wrote:
-> Hello everyone,
-> =
-
-> This is a V6 of my series that adds SMP support for Allwinner sun8i-a83t.
-> Based on sunxi's tree, sunxi/for-next branch.
-> Depends on a patch from Doug Berger that allows to include the "cpu-type"
-> header on assembly files:
-> 6c7dd080ba4b ("ARM: Allow this header to be included by assembly files")
-> =
-
-> This new series refactors the shmobile code to use the function introduced
-> in this series: "secure_cntvoff_init".
-> Geert Uytterhoeven and Simon Horman, could you review and test this series
-> on Renesas boards? Thank you very much!
-> =
-
-> If you have any remarks/questions, let me know.
-> Thank you in advance,
-> Myl=E8ne
-> =
-
-> Changes since v5:
->     - Remove my patch 01 and use the patch of Doug Berger to be able to
->     include the cpu-type header on assembly files.
->     - Rename smp_init_cntvoff function into secure_cntvoff_init according
->     to Marc Zyngier's review.
->     - According to Chen-Yu and Maxime's reviews, remove the patch that was
->     moving structures. Instead of using an index to retrieve which
->     architecture we are having, use a global variable.
->     - Merge the 2 patches that move assembly code from C to assembly file.
->     - Use a sun8i field instead of sun9i to know on which architecture we
->     are using because many modifications/additions of the code are for
->     sun8i-a83t.
->     - Rework the patch "add is_sun8i field" to add only this field in this
->     patch. The part of the patch that was starting to handle the differen=
-ces
->     between sun8i-a83t and sun9i-a80 is merged in the patch that adds the
->     support of sun8i-a83t.
->     - Add a new patch that refactor the shmobile code to use the new func=
-tion
->     secure_cntvoff_init introduced in this series.
-> =
-
-> Changes since v4:
->     - Rebased my series according to new Chen-Yu series:
->        "ARM: sunxi: Clean and improvements for multi-cluster SMP"
->        https://lkml.org/lkml/2018/3/8/886
->     - Updated my series according to Marc Zyngier's reviews to add CNTVOFF
->     initialization's function into ARM's common part. Thanks to that, oth=
-er
->     platforms such as Renesa can use this function.
->     - For boot CPU, create a new machine to handle the CNTVOFF initializa=
-tion
->     using "init_early" callback.
-> Changes since v3:
->     - Take into account Maxime's reviews:
-> 	- split the first patch into 4 new patches: add sun9i device tree
-> 	parsing, rename some variables, add a83t support and finally,
-> 	add hotplug support.
-> 	- Move the code of previous patch 07 (to disable CPU0 disabling)
-> 	into hotplug support patch (see patch 04)
-> 	- Remove the patch that added PRCM register because it is already
-> 	available. Because of that, update the device tree parsing to use
-> 	"sun8i-a83t-r-ccu".
-> 	- Use a variable to know which SoC we currently have
->     - Take into account Chen-Yu's reviews: create two iounmap functions
->     to release the resources of the device tree parsing.
->     - Take into account Marc's review: Update the code to initialize CNTV=
-OFF
->     register. As there is already assembly code in the driver, I decided
->     to create an assembly file not to mix assembly and C code.
->     For that, I create 3 new patches: move the current assembly code that
->     handles the cluster cache enabling into a file, move the cpu_resume e=
-ntry
->     in this file and finally, add a new assembly entry to initialize the =
-timer
->     offset for boot CPU and secondary CPUs.
-> =
-
-> Changes since v2:
->     - Rebased my modifications according to new Chen Yu's patch series
->     that adds SMP support for sun9i-a80 (without MCPM).
->     - Split the device-tree patches into 3 patches for CPUCFG, R_CPUCFG
->     and PRCM registers for more visibility.
->     - The hotplug of CPU0 is currently not working (even after trying what
->     Allwinner's code is doing) so remove the possibility of disabling
->     this CPU. Created a new patch for it.
-> =
-
-> Changes since v1:
->     - Add Chen Yu's patch in my series (see path 01)
->     - Add new compatibles for prcm and cpucfg registers for sun8i-a83t.
->     Create two functions to separate the DT parsing of sun9i-a80 and
->     sun8i-a83t.
->     - Thanks to Maxime's review: order device tree's nodes according
->     to physical addresses, remove unused label and fix registers' sizes.
->     Update the commit log and commit title of my last patch (see
->     patch 05).
-> =
-
-> Myl=E8ne Josserand (11):
->   ARM: sunxi: smp: Move assembly code into a file
->   ARM: dts: sun8i: Add CPUCFG device node for A83T dtsi
->   ARM: dts: sun8i: Add R_CPUCFG device node for the A83T dtsi
->   ARM: dts: sun8i: a83t: Add CCI-400 node
->   ARM: smp: Add initialization of CNTVOFF
->   ARM: sunxi: Add initialization of CNTVOFF
->   ARM: sun9i: smp: Rename clusters's power-off
->   ARM: sun9i: smp: Add is_sun8i field
->   ARM: sun8i: smp: Add support for A83T
->   ARM: dts: sun8i: Add enable-method for SMP support for the A83T SoC
->   ARM: shmobile: Convert file to use cntvoff
-> =
-
->  arch/arm/boot/dts/sun8i-a83t.dtsi        |  59 ++++++++
->  arch/arm/common/Makefile                 |   1 +
->  arch/arm/common/secure_cntvoff.S         |  31 ++++
->  arch/arm/include/asm/secure_cntvoff.h    |   8 ++
->  arch/arm/mach-shmobile/common.h          |   1 -
->  arch/arm/mach-shmobile/headsmp-apmu.S    |  22 +--
->  arch/arm/mach-shmobile/setup-rcar-gen2.c |   3 +-
->  arch/arm/mach-sunxi/Makefile             |   4 +-
->  arch/arm/mach-sunxi/headsmp.S            |  81 +++++++++++
->  arch/arm/mach-sunxi/mc_smp.c             | 240 +++++++++++++++++++------=
-------
->  arch/arm/mach-sunxi/sunxi.c              |  20 ++-
->  11 files changed, 349 insertions(+), 121 deletions(-)
->  create mode 100644 arch/arm/common/secure_cntvoff.S
->  create mode 100644 arch/arm/include/asm/secure_cntvoff.h
+On Tue, Apr 17, 2018 at 5:50 AM, Mylène Josserand
+<mylene.josserand@bootlin.com> wrote:
+> Move the assembly code for cluster cache enabling and resuming
+> into an assembly file instead of having it directly in C code.
+>
+> Remove the CFLAGS because we are using the ARM directive "arch"
+> instead.
+>
+> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> ---
+>  arch/arm/mach-sunxi/Makefile  |  4 +--
+>  arch/arm/mach-sunxi/headsmp.S | 80 +++++++++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-sunxi/mc_smp.c  | 82 +++----------------------------------------
+>  3 files changed, 85 insertions(+), 81 deletions(-)
 >  create mode 100644 arch/arm/mach-sunxi/headsmp.S
-> =
 
-> -- =
+I'm still not convinced about this whole "move ASM to separate
+file" thing, especially now that you aren't actually adding any
+sunxi-specific ASM code beyond a simple function call.
 
-> 2.11.0
-> =
+Could you drop this for now?
 
-> =
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+ChenYu
