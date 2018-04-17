@@ -1,31 +1,43 @@
 From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 2/3] net: phy: Change the array size to 32 for
- device_ids
-Date: Tue, 17 Apr 2018 14:54:29 +0200
-Message-ID: <20180417125429.GE2591@lunn.ch>
+Subject: Re: [PATCH net-next 3/3] net: phy: Enable C45 PHYs with vendor
+ specific address space
+Date: Tue, 17 Apr 2018 14:56:27 +0200
+Message-ID: <20180417125627.GF2591@lunn.ch>
 References: <20180417090233.21548-1-vicentiu.galanopulo@nxp.com>
- <20180417090233.21548-3-vicentiu.galanopulo@nxp.com>
+ <20180417090233.21548-4-vicentiu.galanopulo@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180417090233.21548-3-vicentiu.galanopulo@nxp.com>
+In-Reply-To: <20180417090233.21548-4-vicentiu.galanopulo@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Vicentiu Galanopulo <vicentiu.galanopulo@nxp.com>
 Cc: robh@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, davem@davemloft.net, marcel@holtmann.org, devicetree@vger.kernel.org, alexandru.marginean@nxp.com, madalin.bucur@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 17, 2018 at 04:02:32AM -0500, Vicentiu Galanopulo wrote:
-> In the context of enabling the discovery of the PHYs
-> which have the C45 MDIO address space in a non-standard
-> address:  num_ids in get_phy_c45_ids, has the
-> value 8 (ARRAY_SIZE(c45_ids->device_ids)), but the
-> u32 *devs can store 32 devices in the bitfield.
+On Tue, Apr 17, 2018 at 04:02:33AM -0500, Vicentiu Galanopulo wrote:
+> A search of the dev-addr property is done in of_mdiobus_register.
+> If the property is found in the PHY node, of_mdiobus_register_vend_spec_phy()
+> is called. This is a wrapper function for of_mdiobus_register_phy()
+> which finds the device in package based on dev-addr, and fills
+> devices_addrs, which is a new field added to phy_c45_device_ids.
+> This new field will store the dev-addr property on the same index
+> where the device in package has been found.
 > 
-> If a device is stored in *devs, in bits 32 to 9
-> (bit counting in lookup loop starts from 1), it will
-> not be found.
+> The of_mdiobus_register_phy() now contains an extra parameter,
+> which is struct phy_c45_device_ids *c45_ids.
+> If c45_ids is not NULL, get_vend_spec_addr_phy_device() is called
+> and c45_ids are propagated all the way to get_phy_c45_ids().
+> 
+> Having dev-addr stored in devices_addrs, in get_phy_c45_ids(),
+> when probing the identifiers, dev-addr can be extracted from
+> devices_addrs and probed if devices_addrs[current_identifier] is not 0.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+This still needs work. But i don't want David to see the two
+Reviewed-by and think the series is O.K. So lets make it clear
+
+NACK
+
+More comments to follow.
 
     Andrew
