@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v6 1/7] ARM: davinci: dts: make psc0 a reset provider
-Date: Tue, 17 Apr 2018 19:30:32 +0200
-Message-ID: <20180417173038.25510-2-brgl@bgdev.pl>
+Subject: [PATCH v6 5/7] remoteproc/davinci: use octal permissions for module_param()
+Date: Tue, 17 Apr 2018 19:30:36 +0200
+Message-ID: <20180417173038.25510-6-brgl@bgdev.pl>
 References: <20180417173038.25510-1-brgl@bgdev.pl>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180417173038.25510-1-brgl@bgdev.pl>
@@ -12,26 +12,25 @@ List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The psc driver registers with the reset framework as a provider. Add
-the #reset-cells property to the psc0 node.
+Checkpatch recommends to use octal perms instead of S_IRUGO.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: David Lechner <david@lechnology.com>
 ---
- arch/arm/boot/dts/da850.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/remoteproc/da8xx_remoteproc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index b9639695dc8c..d56e670d9a32 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -123,6 +123,7 @@
- 			compatible = "ti,da850-psc0";
- 			reg = <0x10000 0x1000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
- 			clocks = <&pll0_sysclk 1>, <&pll0_sysclk 2>,
- 				 <&pll0_sysclk 4>, <&pll0_sysclk 6>,
+diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
+index f134192922e0..b668e32996e2 100644
+--- a/drivers/remoteproc/da8xx_remoteproc.c
++++ b/drivers/remoteproc/da8xx_remoteproc.c
+@@ -25,7 +25,7 @@
+ #include "remoteproc_internal.h"
+ 
+ static char *da8xx_fw_name;
+-module_param(da8xx_fw_name, charp, S_IRUGO);
++module_param(da8xx_fw_name, charp, 0444);
+ MODULE_PARM_DESC(da8xx_fw_name,
+ 		 "Name of DSP firmware file in /lib/firmware (if not specified defaults to 'rproc-dsp-fw')");
+ 
 -- 
 2.17.0
