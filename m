@@ -1,58 +1,65 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: add binding for at91-usart in spi mode
-Date: Tue, 17 Apr 2018 12:03:58 +0100
-Message-ID: <20180417110358.GD8973@sirena.org.uk>
-References: <20180413161117.20274-1-radu.pirea@microchip.com>
- <20180413161117.20274-3-radu.pirea@microchip.com>
- <20180413162327.GE22187@piout.net>
- <8e6c447d-dce5-f9af-e5b2-8d1d863159d6@microchip.com>
- <20180413181251.GG22187@piout.net>
+Subject: Re: [PATCH v4 10/14] dt-bindings: Add support for SAW documentation
+Date: Tue, 17 Apr 2018 12:09:08 +0100
+Message-ID: <20180417110908.GE8973@sirena.org.uk>
+References: <1522358807-10413-1-git-send-email-ilialin@codeaurora.org>
+ <1522358807-10413-11-git-send-email-ilialin@codeaurora.org>
+ <20180409202144.76gjmc6kcn2msffl@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="KdquIMZPjGJQvRdI"
+        protocol="application/pgp-signature"; boundary="ZInfyf7laFu/Kiw7"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180413181251.GG22187@piout.net>
+In-Reply-To: <20180409202144.76gjmc6kcn2msffl@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Radu Pirea <radu.pirea@microchip.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Ilia Lin <ilialin@codeaurora.org>, mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, lgirdwood@gmail.com, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
 
---KdquIMZPjGJQvRdI
+--ZInfyf7laFu/Kiw7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 13, 2018 at 08:12:51PM +0200, Alexandre Belloni wrote:
-> On 13/04/2018 19:12:54+0200, Nicolas Ferre wrote:
+On Mon, Apr 09, 2018 at 03:21:44PM -0500, Rob Herring wrote:
+> On Fri, Mar 30, 2018 at 12:26:43AM +0300, Ilia Lin wrote:
+> > Add support for SAW controlled regulators in 8x96.
+> > Document it.
 
-> > This layout of the hardware is completely different from the USART one and
-> > it seems to makes sense to address it with a different hardware description
-> > and so a different compatible string.
+> Perhaps some clue in the subject what subsystem and/or device this=20
+> applies to.
 
-> But then, you can end up with two drivers trying to use the same IP
-> because nothing prevents you from writing a DT with both a usart and an
-> spi node enabled for the same IP. request_mem_region() will not help
-> here because then the working driver will depend on the probing order.
+Right, especially given that if people can't find the documentation for
+driver binding changes that's likely to be one of the first compliants.
 
-We don't really have too much in the way of better ideas for how to
-handle this though.  Take a look at how the PXA SSP stuff handles this,
-though that's not really doing too much different it at least layers a
-mechanism on top to avoid collisions.
+> > +- qcom,saw-leader:
+> > +	Usage: optional
+> > +	Value type: <boo>
+> > +	Description: SAW controlled gang leader. Will be configured as
+> > +		     SAW regulator.
 
---KdquIMZPjGJQvRdI
+> Would the coupled regulator binding work in this case?
+
+Someone would need to get the code working first though depending on
+what the hardware does that might not be the right thing.  It's fairly
+common to have hardware support for grouping multiple physical
+regulators together into a single supply in order to provide more
+current with all the control being done from one of the regulators.
+
+--ZInfyf7laFu/Kiw7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrV1J0ACgkQJNaLcl1U
-h9DCSQf+MvNTpltQosRGeLwGrJwao9U0bH049keLdBcKwW0YHwsyF27+3qgKSt2P
-o0yP3Kc0wpvXsg8nCA8i002IsP0TlMwfoK4iErmRsm3yrq9oW1OvLhQhmSQQPMGo
-nKCK5JnS9yRigDctPIHxBEypFSVz7yeEcISKO7A7xdhsZx9OZAsj+E/IN/msyur0
-qq5dmuxkWEOpHBRVib82AZkiGT4mnKtI1++JyKvtUxPJkALV9/2oZ02zBmF0wP7B
-Xr4/E0ceAJ1dGNoCoDgE3buSyUn/4dPf/+0PnN4hnnAfT64Nr0jAogk8U4yVESEC
-M2sMuJONsvBSwQh9X6OWXvBtec/3Ig==
-=CaAS
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrV1dMACgkQJNaLcl1U
+h9C0bQf+J8T+z/WFL4FRphSZwjRTU+0HhnZzffI5jjGTCYxiT8QBq3RCb2St3qz/
+ZiEqf0N7TGQSwDb3TxMnSmZPJVop2UrKOMKVFDmO6j9i2b8ZsqFgC+PsJ9fEpJyr
+nvaaZZ+TTepltFDR0qFFllIKwB5m1hi+Do+hg/84of5IVXm17OuNY9xEqDSjSKWh
+SIUk2S684iXlHrWhkYgfrfpi1FrwdM/LNcAEUcn85Pd0os1R7pj2cXYONlt0SxQS
+ype0JVeh5/6fLe9rSbJy+4yC4L1FIgvnIu8RY6DloLGLjN5+gpnewq+9ku8ia2W+
++6tF2ug17EqAwRKsjMYk21BGkuUYYA==
+=Wr8V
 -----END PGP SIGNATURE-----
 
---KdquIMZPjGJQvRdI--
+--ZInfyf7laFu/Kiw7--
