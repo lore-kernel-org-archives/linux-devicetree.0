@@ -1,69 +1,45 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 2/5] arm64: dts: mt2712: add pintcrl device node.
-Date: Tue, 17 Apr 2018 16:31:54 +0200
-Message-ID: <5b132440-d71b-b330-ee82-5e1ea915141b@gmail.com>
-References: <1521687523-1604-1-git-send-email-zhiyong.tao@mediatek.com>
- <1521687523-1604-3-git-send-email-zhiyong.tao@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Subject: [PATCH v5 05/10] PCI: Adds device ID for Synopsys Sample Endpoint.
+Date: Tue, 17 Apr 2018 15:34:23 +0100
+Message-ID: <5d20185e88e7b6738d6b6aca41b1a237033fc36f.1523973931.git.gustavo.pimentel@synopsys.com>
+References: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521687523-1604-3-git-send-email-zhiyong.tao@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
+References: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhiyong Tao <zhiyong.tao@mediatek.com>, robh+dt@kernel.org, linus.walleij@linaro.org, mark.rutland@arm.com
-Cc: srv_heupstream@mediatek.com, liguo.zhang@mediatek.com, yingjoe.chen@mediatek.com, hongkun.cao@mediatek.com, biao.huang@mediatek.com, yt.shen@mediatek.com, hongzhou.yang@mediatek.com, erin.lo@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
+The PCIe controller dual mode is capable of operating in host mode as well
+as endpoint mode by configuration.
 
+Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+---
+Change v1->v2:
+ - Register new device id following Kishon's suggestion.
+Change v2->v3:
+ - Nothing changed, just to follow the patch set version.
+Changes v3->v4:
+ - Nothing changed, just to follow the patch set version.
+Changes v4->v5:
+ - Nothing changed, just to follow the patch set version.
 
-On 03/22/2018 03:58 AM, Zhiyong Tao wrote:
-> This patch adds pintcrl device node for mt2712.
-> 
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> ---
+ include/linux/pci_ids.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Applied to v4.17-next/dts64
-
-Thanks!
-
->  arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> index d7688bc..fb3b051 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> @@ -9,6 +9,7 @@
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/power/mt2712-power.h>
-> +#include "mt2712-pinfunc.h"
->  
->  / {
->  	compatible = "mediatek,mt2712";
-> @@ -258,6 +259,23 @@
->  		#clock-cells = <1>;
->  	};
->  
-> +	syscfg_pctl_a: syscfg_pctl_a@10005000 {
-> +		compatible = "mediatek,mt2712-pctl-a-syscfg", "syscon";
-> +		reg = <0 0x10005000 0 0x1000>;
-> +	};
-> +
-> +	pio: pinctrl@10005000 {
-> +		compatible = "mediatek,mt2712-pinctrl";
-> +		reg = <0 0x1000b000 0 0x1000>;
-> +		mediatek,pctl-regmap = <&syscfg_pctl_a>;
-> +		pins-are-numbered;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
->  	scpsys: scpsys@10006000 {
->  		compatible = "mediatek,mt2712-scpsys", "syscon";
->  		#power-domain-cells = <1>;
-> 
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index cc608fc5..22b1c1b 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2350,6 +2350,7 @@
+ #define PCI_DEVICE_ID_CENATEK_IDE	0x0001
+ 
+ #define PCI_VENDOR_ID_SYNOPSYS		0x16c3
++#define PCI_DEVICE_ID_SYNOPSYS_SMPL_EP	0xedda
+ 
+ #define PCI_VENDOR_ID_VITESSE		0x1725
+ #define PCI_DEVICE_ID_VITESSE_VSC7174	0x7174
+-- 
+2.7.4
