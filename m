@@ -1,58 +1,38 @@
-Return-Path: <SRS0=rS5h=HH=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=UpLl=HG=ti.com=t-kristo@kernel.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [RFC 05/13] ARM: dts: ti: add support for building .dtb files containing symbols
+Date: Tue, 17 Apr 2018 12:10:07 +0300
+Message-ID: <1523956215-28154-6-git-send-email-t-kristo@ti.com>
+In-Reply-To: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
+References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
 MIME-Version: 1.0
-Sender: geert.uytterhoeven@gmail.com
-In-Reply-To: <1523956215-28154-6-git-send-email-t-kristo@ti.com>
-References: <1523956215-28154-1-git-send-email-t-kristo@ti.com> <1523956215-28154-6-git-send-email-t-kristo@ti.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 18 Apr 2018 16:20:22 +0200
-Message-ID: <CAMuHMdUjXJwPajeRhgpETHOVSC7KA3NUnqPNBhKYuUGEMoyyow@mail.gmail.com>
-Subject: Re: [RFC 05/13] ARM: dts: ti: add support for building .dtb files
- containing symbols
-Content-Type: text/plain; charset="UTF-8"
-To: Tero Kristo <t-kristo@ti.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, wmills@ti.com, ext Tony Lindgren <tony@atomide.com>, Tom Rini <trini@konsulko.com>, Russell King <rmk@armlinux.org.uk>
+Content-Type: text/plain
+To: devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com
+Cc: wmills@ti.com, tony@atomide.com, trini@konsulko.com, rmk@armlinux.org.uk
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Tero,
+Symbols in the DTB files are needed so that overlays can be applied
+properly. Add support for building TI SoC specific .dtb files, the
+source is fetched from parent directory.
 
-On Tue, Apr 17, 2018 at 11:10 AM, Tero Kristo <t-kristo@ti.com> wrote:
-> Symbols in the DTB files are needed so that overlays can be applied
-> properly. Add support for building TI SoC specific .dtb files, the
-> source is fetched from parent directory.
->
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+ arch/arm/boot/dts/ti/Makefile | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Thanks for your patch!
-
-> ---
->  arch/arm/boot/dts/ti/Makefile | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/ti/Makefile b/arch/arm/boot/dts/ti/Makefile
-> index b26328b..7d2d411 100644
-> --- a/arch/arm/boot/dts/ti/Makefile
-> +++ b/arch/arm/boot/dts/ti/Makefile
-> @@ -1 +1,6 @@
-> +DTC_FLAGS += -@ -Wno-reg_format -Wno-avoid_default_addr_size
-
-Why the -W options?
-
-> +
-> +$(obj)/%.dtb: $(src)/../%.dts FORCE
-
-I guess you want a dependency on $(DTC), too?
-
-> +       $(call if_changed_dep,dtc)
-> +
->  clean-files    += *.dtbo
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm/boot/dts/ti/Makefile b/arch/arm/boot/dts/ti/Makefile
+index b26328b..7d2d411 100644
+--- a/arch/arm/boot/dts/ti/Makefile
++++ b/arch/arm/boot/dts/ti/Makefile
+@@ -1 +1,6 @@
++DTC_FLAGS += -@ -Wno-reg_format -Wno-avoid_default_addr_size
++
++$(obj)/%.dtb: $(src)/../%.dts FORCE
++	$(call if_changed_dep,dtc)
++
+ clean-files	+= *.dtbo
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+1.9.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
