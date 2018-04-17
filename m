@@ -1,155 +1,50 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v2 4/6] drm/atmel-hlcdc: support bus-width (12/16/18/24) in endpoint nodes
-Date: Tue, 17 Apr 2018 15:10:50 +0200
-Message-ID: <20180417131052.16336-5-peda@axentia.se>
-References: <20180417131052.16336-1-peda@axentia.se>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 04/10] Documentations: dt-bindings: Add a document of
+ PECI adapter driver for Aspeed AST24xx/25xx SoCs
+Date: Tue, 17 Apr 2018 08:16:52 -0500
+Message-ID: <CAL_Jsq+1wC-KhXPeCSNhCeCih6=CatJbyumO51ucD17Rt7qofw@mail.gmail.com>
+References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
+ <20180410183212.16787-5-jae.hyun.yoo@linux.intel.com> <20180416181035.rcjvt4rlrwaj5yxf@rob-hp-laptop>
+ <53ff5b2b-eba8-8311-64a9-abd4bc72226d@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180417131052.16336-1-peda@axentia.se>
+In-Reply-To: <53ff5b2b-eba8-8311-64a9-abd4bc72226d@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van>
 List-Id: devicetree@vger.kernel.org
 
-This beats the heuristic that the connector is involved in what format
-should be output for cases where this fails.
+On Mon, Apr 16, 2018 at 6:12 PM, Jae Hyun Yoo
+<jae.hyun.yoo@linux.intel.com> wrote:
+> On 4/16/2018 11:10 AM, Rob Herring wrote:
+>>
+>> On Tue, Apr 10, 2018 at 11:32:06AM -0700, Jae Hyun Yoo wrote:
+>>>
+>>> This commit adds a dt-bindings document of PECI adapter driver for Aspeed
+>>> AST24xx/25xx SoCs.
 
-E.g. if there is a bridge that changes format between the encoder and the
-connector, or if some of the RGB pins between the lcd controller and the
-encoder are not routed on the PCB.
+[...]
 
-This is critical for the devices that have the "conflicting output
-formats" issue (SAM9N12, SAM9X5, SAMA5D3), since the most significant
-RGB bits move around depending on the selected output mode. For
-devices that do not have the "conflicting output formats" issue
-(SAMA5D2, SAMA5D4), this is completely irrelevant.
+>>> +- clocks            : Should contain clock source for PECI controller.
+>>> +                     Should reference clkin.
+>>> +- clock_frequency   : Should contain the operation frequency of PECI
+>>> controller
+>>> +                     in units of Hz.
+>>> +                     187500 ~ 24000000
+>>
+>>
+>> This is the frequency of the bus or used to derive it? It would be
+>> better to specify the bus frequency instead and have the driver
+>> calculate its internal freq. And then use "bus-frequency" instead.
+>>
+>
+> I agree with you. Actually, it is being used for operation frequency setting
+> of PECI controller module in SoC so it's different from the meaning of
+> "bus-frequency". I'll change it to "operation-frequency".
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c | 85 ++++++++++++++++++++------
- 1 file changed, 65 insertions(+), 20 deletions(-)
+No, now you've gone from a standard property name to something custom.
+Why do you need to set the frequency in DT if it is not related to the
+interface frequency?
 
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-index d73281095fac..2e718959981e 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-@@ -19,12 +19,14 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/of_graph.h>
- #include <linux/pm.h>
- #include <linux/pm_runtime.h>
- #include <linux/pinctrl/consumer.h>
- 
- #include <drm/drm_crtc.h>
- #include <drm/drm_crtc_helper.h>
-+#include <drm/drm_of.h>
- #include <drm/drmP.h>
- 
- #include <video/videomode.h>
-@@ -226,6 +228,68 @@ static void atmel_hlcdc_crtc_atomic_enable(struct drm_crtc *c,
- #define ATMEL_HLCDC_RGB888_OUTPUT	BIT(3)
- #define ATMEL_HLCDC_OUTPUT_MODE_MASK	GENMASK(3, 0)
- 
-+static int atmel_hlcdc_connector_output_mode(struct drm_connector_state *state)
-+{
-+	struct drm_connector *connector = state->connector;
-+	struct drm_display_info *info = &connector->display_info;
-+	unsigned int supported_fmts = 0;
-+	struct device_node *ep;
-+	int j;
-+
-+	/*
-+	 * Use the connector index as an approximation of the
-+	 * endpoint node index. We know it's true for our case
-+	 * depending on the driver implementation.
-+	 */
-+	ep = of_graph_get_endpoint_by_regs(connector->dev->dev->of_node, 0,
-+					   connector->index);
-+
-+	if (ep) {
-+		int bus_fmt = drm_of_media_bus_fmt(ep);
-+
-+		of_node_put(ep);
-+
-+		if (bus_fmt < 0)
-+			return bus_fmt;
-+
-+		switch (bus_fmt) {
-+		case 0:
-+			break;
-+		case MEDIA_BUS_FMT_RGB444_1X12:
-+			return ATMEL_HLCDC_RGB444_OUTPUT;
-+		case MEDIA_BUS_FMT_RGB565_1X16:
-+			return ATMEL_HLCDC_RGB565_OUTPUT;
-+		case MEDIA_BUS_FMT_RGB666_1X18:
-+			return ATMEL_HLCDC_RGB666_OUTPUT;
-+		case MEDIA_BUS_FMT_RGB888_1X24:
-+			return ATMEL_HLCDC_RGB888_OUTPUT;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	for (j = 0; j < info->num_bus_formats; j++) {
-+		switch (info->bus_formats[j]) {
-+		case MEDIA_BUS_FMT_RGB444_1X12:
-+			supported_fmts |= ATMEL_HLCDC_RGB444_OUTPUT;
-+			break;
-+		case MEDIA_BUS_FMT_RGB565_1X16:
-+			supported_fmts |= ATMEL_HLCDC_RGB565_OUTPUT;
-+			break;
-+		case MEDIA_BUS_FMT_RGB666_1X18:
-+			supported_fmts |= ATMEL_HLCDC_RGB666_OUTPUT;
-+			break;
-+		case MEDIA_BUS_FMT_RGB888_1X24:
-+			supported_fmts |= ATMEL_HLCDC_RGB888_OUTPUT;
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	return supported_fmts;
-+}
-+
- static int atmel_hlcdc_crtc_select_output_mode(struct drm_crtc_state *state)
- {
- 	unsigned int output_fmts = ATMEL_HLCDC_OUTPUT_MODE_MASK;
-@@ -238,31 +302,12 @@ static int atmel_hlcdc_crtc_select_output_mode(struct drm_crtc_state *state)
- 	crtc = drm_crtc_to_atmel_hlcdc_crtc(state->crtc);
- 
- 	for_each_new_connector_in_state(state->state, connector, cstate, i) {
--		struct drm_display_info *info = &connector->display_info;
- 		unsigned int supported_fmts = 0;
--		int j;
- 
- 		if (!cstate->crtc)
- 			continue;
- 
--		for (j = 0; j < info->num_bus_formats; j++) {
--			switch (info->bus_formats[j]) {
--			case MEDIA_BUS_FMT_RGB444_1X12:
--				supported_fmts |= ATMEL_HLCDC_RGB444_OUTPUT;
--				break;
--			case MEDIA_BUS_FMT_RGB565_1X16:
--				supported_fmts |= ATMEL_HLCDC_RGB565_OUTPUT;
--				break;
--			case MEDIA_BUS_FMT_RGB666_1X18:
--				supported_fmts |= ATMEL_HLCDC_RGB666_OUTPUT;
--				break;
--			case MEDIA_BUS_FMT_RGB888_1X24:
--				supported_fmts |= ATMEL_HLCDC_RGB888_OUTPUT;
--				break;
--			default:
--				break;
--			}
--		}
-+		supported_fmts = atmel_hlcdc_connector_output_mode(cstate);
- 
- 		if (crtc->dc->desc->conflicting_output_formats)
- 			output_fmts &= supported_fmts;
--- 
-2.11.0
+Rob
