@@ -1,30 +1,49 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v2 2/5] ARM: timer-sp: Use of_clk_get_parent_count()
- instead of open coding
-Date: Tue, 17 Apr 2018 10:50:20 +0200
-Message-ID: <20180417085020.GA7214@mai>
-References: <1523364701-15383-1-git-send-email-geert+renesas@glider.be>
- <1523364701-15383-3-git-send-email-geert+renesas@glider.be>
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+Subject: Re: [PATCH v9 7/9] pinctrl: madera: Add DT bindings for Cirrus Logic
+ Madera codecs
+Date: Tue, 17 Apr 2018 09:53:04 +0100
+Message-ID: <bc752fb8-8f2f-70bc-e786-221eb39c618b@opensource.cirrus.com>
+References: <20180313131904.13700-1-rf@opensource.cirrus.com>
+ <20180313131904.13700-8-rf@opensource.cirrus.com>
+ <CACRpkdZspUbmCk7OwA-rva6zd89TZXt45t5mFes0feuRyOUp9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1523364701-15383-3-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <CACRpkdZspUbmCk7OwA-rva6zd89TZXt45t5mFes0feuRyOUp9w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, patches@opensource.cirrus.com, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2018 at 02:51:38PM +0200, Geert Uytterhoeven wrote:
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> This depends on "[PATCH v2 1/5] clk: Extract OF clock helpers in
-> <linux/of_clk.h>".
+On 27/03/18 12:29, Linus Walleij wrote:
+> On Tue, Mar 13, 2018 at 2:19 PM, Richard Fitzgerald
+> <rf@opensource.cirrus.com> wrote:
 > 
-> v2:
->   - of_clk_get_parent_count() was moved to <linux/of_clk.h>,
->   - Dropped RFC, as a dummy is now available in the !CONFIG_COMMON_CLK
->     case.
-> ---
+>> This is the binding description of the pinctrl driver for Cirrus Logic
+>> Madera codecs. The binding uses the generic pinctrl binding so  the main
+>> purpose here is to describe the device-specific names for groups and
+>> functions.
+>>
+>> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
+> 
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> I can also just apply this if you want, as it has no dependencies to
+> anything else. I just assume you want to keep it together with the
+> rest of this complex series.
+> 
+> Yours,
+> Linus Walleij
+> 
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Linus,
+
+What is your opinion of the i.MX6 pinctrl failure after my bugfix patch
+for the hogs?
+If you would want to revert my patch I would need to change this pinctrl
+driver so it has its own child node as a workaround to the hog bug.
+
+Or do you think it is more likely a bug in the i.MX6 pinctrl driver?
