@@ -1,50 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 04/10] Documentations: dt-bindings: Add a document of
- PECI adapter driver for Aspeed AST24xx/25xx SoCs
-Date: Tue, 17 Apr 2018 08:16:52 -0500
-Message-ID: <CAL_Jsq+1wC-KhXPeCSNhCeCih6=CatJbyumO51ucD17Rt7qofw@mail.gmail.com>
-References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
- <20180410183212.16787-5-jae.hyun.yoo@linux.intel.com> <20180416181035.rcjvt4rlrwaj5yxf@rob-hp-laptop>
- <53ff5b2b-eba8-8311-64a9-abd4bc72226d@linux.intel.com>
+Subject: Re: [PATCH v5 3/6] dt-bindings: arm: Document the RZN1D-DB board
+Date: Tue, 17 Apr 2018 08:23:28 -0500
+Message-ID: <20180417132328.g2okcv3akwaxlz2l@rob-hp-laptop>
+References: <1523963101-56725-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1523963101-56725-4-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53ff5b2b-eba8-8311-64a9-abd4bc72226d@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <1523963101-56725-4-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van>
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 16, 2018 at 6:12 PM, Jae Hyun Yoo
-<jae.hyun.yoo@linux.intel.com> wrote:
-> On 4/16/2018 11:10 AM, Rob Herring wrote:
->>
->> On Tue, Apr 10, 2018 at 11:32:06AM -0700, Jae Hyun Yoo wrote:
->>>
->>> This commit adds a dt-bindings document of PECI adapter driver for Aspeed
->>> AST24xx/25xx SoCs.
+On Tue, Apr 17, 2018 at 12:04:18PM +0100, Michel Pollet wrote:
+> This documents the RZ/N1 bindings for the RZN1D-DB board.
+> 
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/arm/shmobile.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
-[...]
-
->>> +- clocks            : Should contain clock source for PECI controller.
->>> +                     Should reference clkin.
->>> +- clock_frequency   : Should contain the operation frequency of PECI
->>> controller
->>> +                     in units of Hz.
->>> +                     187500 ~ 24000000
->>
->>
->> This is the frequency of the bus or used to derive it? It would be
->> better to specify the bus frequency instead and have the driver
->> calculate its internal freq. And then use "bus-frequency" instead.
->>
->
-> I agree with you. Actually, it is being used for operation frequency setting
-> of PECI controller module in SoC so it's different from the meaning of
-> "bus-frequency". I'll change it to "operation-frequency".
-
-No, now you've gone from a standard property name to something custom.
-Why do you need to set the frequency in DT if it is not related to the
-interface frequency?
+Please add acks/reviewed-bys when posting new versions.
 
 Rob
