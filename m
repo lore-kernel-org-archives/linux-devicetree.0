@@ -1,83 +1,158 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH V3 3/4] soc: mediatek: pwrap: add mt6351 for mt6797 SoCs
-Date: Tue, 17 Apr 2018 23:10:15 +0200
-Message-ID: <427130f0-9f7e-22cc-3679-2a8d22124515@gmail.com>
-References: <20180323083238.13569-1-argus.lin@mediatek.com>
- <20180323083238.13569-4-argus.lin@mediatek.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [net-next PATCH v4 03/13] net: netcp: ethss: use macro for checking ss_version consistently
+Date: Tue, 17 Apr 2018 17:30:32 -0400
+Message-ID: <1524000642-23944-4-git-send-email-m-karicheri2@ti.com>
+References: <1524000642-23944-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180323083238.13569-4-argus.lin@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <1524000642-23944-1-git-send-email-m-karicheri2@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: argus.lin@mediatek.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org, grygorii.strashko@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Please update the subject line, we don't add mt5797 here.
+Driver currently uses macro for NU and XBE hardwrae, while other
+places for older hardware such as that on K2H/K SoC (version 1.4
+of the cpsw hardware, it explicitly check for the ss_version
+inline. Add a new macro for version 1.4 and use it to customize
+code in the driver. While at it also fix similar issue with
+checking XBE version by re-using existing macro IS_SS_ID_XGBE().
 
-More comments below.
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ drivers/net/ethernet/ti/netcp_ethss.c | 29 ++++++++++++++++-------------
+ 1 file changed, 16 insertions(+), 13 deletions(-)
 
-On 03/23/2018 09:32 AM, argus.lin@mediatek.com wrote:
-> From: Argus Lin <argus.lin@mediatek.com>
-> 
-> mt6351 is a new power management IC and it is
-> used for mt6797 SoCs. We need to add mt6351_regs for
-> pmic register mapping and pmic_mt6351 for
-> register accessing by regmap.
-> 
-> Signed-off-by: Argus Lin <argus.lin@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-pmic-wrap.c | 31 +++++++++++++++++++++++++++++--
->  1 file changed, 29 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> index d0a0a3d7e88d..d81a585fadf5 100644
-> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> @@ -153,6 +153,21 @@ static const u32 mt6397_regs[] = {
->  	[PWRAP_DEW_CIPHER_SWRST] =	0xbc24,
->  };
->  
-> +static const u32 mt6351_regs[] = {
-> +	[PWRAP_DEW_DIO_EN] =		0x02F2,
-> +	[PWRAP_DEW_READ_TEST] =		0x02F4,
-> +	[PWRAP_DEW_WRITE_TEST] =	0x02F6,
-> +	[PWRAP_DEW_CRC_EN] =		0x02FA,
-> +	[PWRAP_DEW_CRC_VAL] =		0x02FC,
-> +	[PWRAP_DEW_CIPHER_KEY_SEL] =	0x0300,
-> +	[PWRAP_DEW_CIPHER_IV_SEL] =	0x0302,
-> +	[PWRAP_DEW_CIPHER_EN] =		0x0304,
-> +	[PWRAP_DEW_CIPHER_RDY] =	0x0306,
-> +	[PWRAP_DEW_CIPHER_MODE] =	0x0308,
-> +	[PWRAP_DEW_CIPHER_SWRST] =	0x030A,
-> +	[PWRAP_DEW_RDDMY_NO] =		0x030C,
-> +};
-> +
->  enum pwrap_regs {
->  	PWRAP_MUX_SEL,
->  	PWRAP_WRAP_EN,
-> @@ -721,6 +736,7 @@ static int mt8135_regs[] = {
->  
->  enum pmic_type {
->  	PMIC_MT6323,
-> +	PMIC_MT6351,
->  	PMIC_MT6380,
->  	PMIC_MT6397,
->  };
-> @@ -1179,8 +1195,6 @@ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
->  	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_SWRST], 0x0);
->  	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_KEY_SEL], 0x1);
->  	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_IV_SEL], 0x2);
-> -	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_LOAD], 0x1);
-> -	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_START], 0x1);
-
-That might break the driver for other devices. You can't just delete these lines
-without explanation. If you think these lines are not needed, then please put
-the deletion in another patch explaining why.
-
-Other then these two comments, patch looks fine.
-
-Regards,
-Matthias
+diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+index 56dbc0b..1b79fe5 100644
+--- a/drivers/net/ethernet/ti/netcp_ethss.c
++++ b/drivers/net/ethernet/ti/netcp_ethss.c
+@@ -42,7 +42,7 @@
+ 
+ /* 1G Ethernet SS defines */
+ #define GBE_MODULE_NAME			"netcp-gbe"
+-#define GBE_SS_VERSION_14		0x4ed21104
++#define GBE_SS_VERSION_14		0x4ed2
+ 
+ #define GBE_SS_REG_INDEX		0
+ #define GBE_SGMII34_REG_INDEX		1
+@@ -72,6 +72,9 @@
+ #define IS_SS_ID_NU(d) \
+ 	(GBE_IDENT((d)->ss_version) == GBE_SS_ID_NU)
+ 
++#define IS_SS_ID_VER_14(d) \
++	(GBE_IDENT((d)->ss_version) == GBE_SS_VERSION_14)
++
+ #define GBENU_SS_REG_INDEX		0
+ #define GBENU_SM_REG_INDEX		1
+ #define GBENU_SGMII_MODULE_OFFSET	0x100
+@@ -86,7 +89,7 @@
+ 
+ /* 10G Ethernet SS defines */
+ #define XGBE_MODULE_NAME		"netcp-xgbe"
+-#define XGBE_SS_VERSION_10		0x4ee42100
++#define XGBE_SS_VERSION_10		0x4ee4
+ 
+ #define XGBE_SS_REG_INDEX		0
+ #define XGBE_SM_REG_INDEX		1
+@@ -1915,7 +1918,7 @@ static void keystone_get_ethtool_stats(struct net_device *ndev,
+ 
+ 	gbe_dev = gbe_intf->gbe_dev;
+ 	spin_lock_bh(&gbe_dev->hw_stats_lock);
+-	if (gbe_dev->ss_version == GBE_SS_VERSION_14)
++	if (IS_SS_ID_VER_14(gbe_dev))
+ 		gbe_update_stats_ver14(gbe_dev, data);
+ 	else
+ 		gbe_update_stats(gbe_dev, data);
+@@ -2205,7 +2208,7 @@ static void gbe_port_config(struct gbe_priv *gbe_dev, struct gbe_slave *slave,
+ 		max_rx_len = NETCP_MAX_FRAME_SIZE;
+ 
+ 	/* Enable correct MII mode at SS level */
+-	if ((gbe_dev->ss_version == XGBE_SS_VERSION_10) &&
++	if (IS_SS_ID_XGBE(gbe_dev) &&
+ 	    (slave->link_interface >= XGMII_LINK_MAC_PHY)) {
+ 		xgmii_mode = readl(GBE_REG_ADDR(gbe_dev, ss_regs, control));
+ 		xgmii_mode |= (1 << slave->slave_num);
+@@ -2293,7 +2296,7 @@ static int gbe_slave_open(struct gbe_intf *gbe_intf)
+ 	}
+ 
+ 	if (has_phy) {
+-		if (priv->ss_version == XGBE_SS_VERSION_10)
++		if (IS_SS_ID_XGBE(priv))
+ 			hndlr = xgbe_adjust_link;
+ 
+ 		slave->phy = of_phy_connect(gbe_intf->ndev,
+@@ -2764,7 +2767,7 @@ static void netcp_ethss_timer(struct timer_list *t)
+ 	/* A timer runs as a BH, no need to block them */
+ 	spin_lock(&gbe_dev->hw_stats_lock);
+ 
+-	if (gbe_dev->ss_version == GBE_SS_VERSION_14)
++	if (IS_SS_ID_VER_14(gbe_dev))
+ 		gbe_update_stats_ver14(gbe_dev, NULL);
+ 	else
+ 		gbe_update_stats(gbe_dev, NULL);
+@@ -2807,7 +2810,7 @@ static int gbe_open(void *intf_priv, struct net_device *ndev)
+ 		GBE_RTL_VERSION(reg), GBE_IDENT(reg));
+ 
+ 	/* For 10G and on NetCP 1.5, use directed to port */
+-	if ((gbe_dev->ss_version == XGBE_SS_VERSION_10) || IS_SS_ID_MU(gbe_dev))
++	if (IS_SS_ID_XGBE(gbe_dev) || IS_SS_ID_MU(gbe_dev))
+ 		gbe_intf->tx_pipe.flags = SWITCH_TO_PORT_IN_TAGINFO;
+ 
+ 	if (gbe_dev->enable_ale)
+@@ -2924,7 +2927,7 @@ static int init_slave(struct gbe_priv *gbe_dev, struct gbe_slave *slave,
+ 
+ 	/* Emac regs memmap are contiguous but port regs are not */
+ 	port_reg_num = slave->slave_num;
+-	if (gbe_dev->ss_version == GBE_SS_VERSION_14) {
++	if (IS_SS_ID_VER_14(gbe_dev)) {
+ 		if (slave->slave_num > 1) {
+ 			port_reg_ofs = GBE13_SLAVE_PORT2_OFFSET;
+ 			port_reg_num -= 2;
+@@ -2939,7 +2942,7 @@ static int init_slave(struct gbe_priv *gbe_dev, struct gbe_slave *slave,
+ 		emac_reg_ofs = GBENU_EMAC_OFFSET;
+ 		port_reg_blk_sz = 0x1000;
+ 		emac_reg_blk_sz = 0x1000;
+-	} else if (gbe_dev->ss_version == XGBE_SS_VERSION_10) {
++	} else if (IS_SS_ID_XGBE(gbe_dev)) {
+ 		port_reg_ofs = XGBE10_SLAVE_PORT_OFFSET;
+ 		emac_reg_ofs = XGBE10_EMAC_OFFSET;
+ 		port_reg_blk_sz = 0x30;
+@@ -2955,7 +2958,7 @@ static int init_slave(struct gbe_priv *gbe_dev, struct gbe_slave *slave,
+ 	slave->emac_regs = gbe_dev->switch_regs + emac_reg_ofs +
+ 				(emac_reg_blk_sz * slave->slave_num);
+ 
+-	if (gbe_dev->ss_version == GBE_SS_VERSION_14) {
++	if (IS_SS_ID_VER_14(gbe_dev)) {
+ 		/* Initialize  slave port register offsets */
+ 		GBE_SET_REG_OFS(slave, port_regs, port_vlan);
+ 		GBE_SET_REG_OFS(slave, port_regs, tx_pri_map);
+@@ -2989,7 +2992,7 @@ static int init_slave(struct gbe_priv *gbe_dev, struct gbe_slave *slave,
+ 		GBENU_SET_REG_OFS(slave, emac_regs, mac_control);
+ 		GBENU_SET_REG_OFS(slave, emac_regs, soft_reset);
+ 
+-	} else if (gbe_dev->ss_version == XGBE_SS_VERSION_10) {
++	} else if (IS_SS_ID_XGBE(gbe_dev)) {
+ 		/* Initialize  slave port register offsets */
+ 		XGBE_SET_REG_OFS(slave, port_regs, port_vlan);
+ 		XGBE_SET_REG_OFS(slave, port_regs, tx_pri_map);
+@@ -3508,7 +3511,7 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
+ 
+ 		dev_dbg(dev, "ss_version: 0x%08x\n", gbe_dev->ss_version);
+ 
+-		if (gbe_dev->ss_version == GBE_SS_VERSION_14)
++		if (IS_SS_ID_VER_14(gbe_dev))
+ 			ret = set_gbe_ethss14_priv(gbe_dev, node);
+ 		else if (IS_SS_ID_MU(gbe_dev))
+ 			ret = set_gbenu_ethss_priv(gbe_dev, node);
+@@ -3606,7 +3609,7 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
+ 
+ 	spin_lock_bh(&gbe_dev->hw_stats_lock);
+ 	for (i = 0; i < gbe_dev->num_stats_mods; i++) {
+-		if (gbe_dev->ss_version == GBE_SS_VERSION_14)
++		if (IS_SS_ID_VER_14(gbe_dev))
+ 			gbe_reset_mod_stats_ver14(gbe_dev, i);
+ 		else
+ 			gbe_reset_mod_stats(gbe_dev, i);
+-- 
+1.9.1
