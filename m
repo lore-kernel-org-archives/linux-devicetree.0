@@ -1,158 +1,76 @@
-From: Michel Pollet <michel.pollet@bp.renesas.com>
-Subject: [PATCH v5 6/6] reset: Renesas RZ/N1 reboot driver
-Date: Tue, 17 Apr 2018 12:04:21 +0100
-Message-ID: <1523963101-56725-7-git-send-email-michel.pollet@bp.renesas.com>
-References: <1523963101-56725-1-git-send-email-michel.pollet@bp.renesas.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523963101-56725-1-git-send-email-michel.pollet@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
-Cc: phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 0/3] ASoC: stm32: sai: add support of
+	iec958 controls
+Date: Tue, 17 Apr 2018 12:17:33 +0100
+Message-ID: <20180417111733.GG8973@sirena.org.uk>
+References: <1520958428-10930-1-git-send-email-olivier.moysan@st.com>
+ <a0552849-47fa-dc72-a512-a3e075adb07f@st.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8618951527798267387=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <a0552849-47fa-dc72-a512-a3e075adb07f@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Olivier MOYSAN <olivier.moysan@st.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "tiwai@suse.com" <tiwai@suse.com>, "jsarha@ti.com" <jsarha@ti.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "rmk@arm.linux.org.uk" <rmk@arm.linux.org.uk>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>
 List-Id: devicetree@vger.kernel.org
 
-The Renesas RZ/N1 Family (Part #R9A06G0xx) needs a small driver
-to reboot the Cortex-A7 cores. This driver is a sub driver of
-the sysctrl MFD.
 
-Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
----
- drivers/power/reset/Kconfig       |  7 +++
- drivers/power/reset/Makefile      |  1 +
- drivers/power/reset/rzn1-reboot.c | 96 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 104 insertions(+)
- create mode 100644 drivers/power/reset/rzn1-reboot.c
+--===============8618951527798267387==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="doKZ0ri6bHmN2Q5y"
+Content-Disposition: inline
 
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index df58fc8..1416d88 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -144,6 +144,13 @@ config POWER_RESET_RESTART
- 	  Instead they restart, and u-boot holds the SoC until the
- 	  user presses a key. u-boot then boots into Linux.
- 
-+config POWER_RESET_RZN1
-+	bool "Renesas RZ/N1 reboot driver"
-+	depends on ARCH_RZN1
-+	help
-+	  This driver allows rebooting the CA7 cores of the
-+	  Renesas RZ/N1 Family of SoC (Part # R9A06G0xx).
-+
- config POWER_RESET_ST
- 	bool "ST restart driver"
- 	depends on ARCH_STI
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index 7778c74..bad9702 100644
---- a/drivers/power/reset/Makefile
-+++ b/drivers/power/reset/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_POWER_RESET_PIIX4_POWEROFF) += piix4-poweroff.o
- obj-$(CONFIG_POWER_RESET_LTC2952) += ltc2952-poweroff.o
- obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
- obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
-+obj-$(CONFIG_POWER_RESET_RZN1) += rzn1-reboot.o
- obj-$(CONFIG_POWER_RESET_ST) += st-poweroff.o
- obj-$(CONFIG_POWER_RESET_VERSATILE) += arm-versatile-reboot.o
- obj-$(CONFIG_POWER_RESET_VEXPRESS) += vexpress-poweroff.o
-diff --git a/drivers/power/reset/rzn1-reboot.c b/drivers/power/reset/rzn1-reboot.c
-new file mode 100644
-index 0000000..43876d5
---- /dev/null
-+++ b/drivers/power/reset/rzn1-reboot.c
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * RZ/N1 reboot driver
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Europe Limited
-+ *
-+ * Michel Pollet <michel.pollet@bp.renesas.com>, <buserror@gmail.com>
-+ * Derived from zx-reboot.c
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/notifier.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+
-+/* Definitions from the SDK rzn1-sysctrl.h autogenerated file */
-+#define RZN1_SYSCTRL_REG_RSTEN_MRESET_EN		0
-+#define RZN1_SYSCTRL_REG_RSTEN_WDA7RST_EN		1
-+#define RZN1_SYSCTRL_REG_RSTEN_WDA7RST_EN_MASK		0x6
-+#define RZN1_SYSCTRL_REG_RSTEN_WDM3RST_EN		3
-+#define RZN1_SYSCTRL_REG_RSTEN_CM3LOCKUPRST_EN		4
-+#define RZN1_SYSCTRL_REG_RSTEN_CM3SYSRESET_EN		5
-+#define RZN1_SYSCTRL_REG_RSTEN_SWRST_EN			6
-+#define RZN1_SYSCTRL_REG_RSTCTRL_WDA7RST_REQ		1
-+#define RZN1_SYSCTRL_REG_RSTCTRL_WDA7RST_REQ_MASK	0x6
-+#define RZN1_SYSCTRL_REG_RSTCTRL_WDM3RST_REQ		3
-+#define RZN1_SYSCTRL_REG_RSTCTRL_CM3LOCKUPRST_REQ	4
-+#define RZN1_SYSCTRL_REG_RSTCTRL_CM3SYSRESET_REQ	5
-+#define RZN1_SYSCTRL_REG_RSTCTRL_SWRST_REQ		6
-+
-+static void __iomem *reg_rsten, *reg_rstctrl;
-+
-+static int rzn1_reboot_handler(struct notifier_block *this,
-+			      unsigned long mode, void *cmd)
-+{
-+	writel(readl(reg_rsten) |
-+			BIT(RZN1_SYSCTRL_REG_RSTEN_SWRST_EN) |
-+			BIT(RZN1_SYSCTRL_REG_RSTEN_MRESET_EN),
-+		reg_rsten);
-+	writel(readl(reg_rstctrl) |
-+			BIT(RZN1_SYSCTRL_REG_RSTCTRL_SWRST_REQ),
-+		reg_rstctrl);
-+
-+	mdelay(50);
-+	pr_emerg("Unable to restart system\n");
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block rzn1_reboot_nb = {
-+	.notifier_call = rzn1_reboot_handler,
-+	.priority = 128,
-+};
-+
-+static int rzn1_reboot_probe(struct platform_device *ofdev)
-+{
-+	int err;
-+
-+	reg_rsten = of_iomap(ofdev->dev.of_node, 0);
-+	reg_rstctrl = of_iomap(ofdev->dev.of_node, 1);
-+
-+	if (!reg_rsten || !reg_rstctrl) {
-+		dev_err(&ofdev->dev, "invalid register mapping\n");
-+		return -ENODEV;
-+	}
-+
-+	err = register_restart_handler(&rzn1_reboot_nb);
-+	if (err) {
-+		dev_err(&ofdev->dev, "register restart handler failed(err=%d)\n",
-+			err);
-+	}
-+
-+	return err;
-+}
-+
-+static const struct of_device_id rzn1_reboot_of_match[] = {
-+	{ .compatible = "renesas,rzn1-reboot" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, rzn1_reboot_of_match);
-+
-+static struct platform_driver rzn1_reboot_driver = {
-+	.probe = rzn1_reboot_probe,
-+	.driver = {
-+		.name = "rzn1-reboot",
-+		.of_match_table = rzn1_reboot_of_match,
-+	},
-+};
-+module_platform_driver(rzn1_reboot_driver);
-+
-+MODULE_DESCRIPTION("RZ/N1 reboot driver");
-+MODULE_AUTHOR("Michel Pollet <michel.pollet@bp.renesas.com>, <buserror@gmail.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+
+--doKZ0ri6bHmN2Q5y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Apr 17, 2018 at 08:29:17AM +0000, Olivier MOYSAN wrote:
+
+> I guess the blocking patch in this patchset is the patch "add IEC958=20
+> channel status control helper". This patch has been reviewed several=20
+> times, but did not get a ack so far.
+> If you think these helpers will not be merged, I will reintegrate the=20
+> corresponding code in stm driver.
+> Please let me know, if I need to prepare a v2 without helpers, or if we=
+=20
+> can go further in the review of iec helpers patch ?
+
+I don't mind either way but you're right here, I'm waiting for Takashi
+to review the first patch.  I'd probably be OK with it just integrated
+into the driver if we have to go that way though.
+
+--doKZ0ri6bHmN2Q5y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrV18wACgkQJNaLcl1U
+h9BhwAf+K6KCxAJQ456jenbORVhomVdfTbV3KBBzJ6310IiR0Q2XU1ZwQVnWFRMU
+H8RL0UKXcBN/d5vRHV2yETlmn57YR6C6Y+9mC+TAnX13jQpEMIpY1eQrJtlGl52y
+V2jFR2JQsxoZULHSq79w+Hv7yC3nMMUvhz6Rtaz+3neQY7iIzJoIFkRkLKcudEnU
+TzELW+CnwbqmtkQeIIAN2qdwL5EOZbHY3pSK6r5tiHd5A+CSkBLghyqgDGqbfXGI
+Z/81b738xd69CHuZW7WJpmaMffwyrkw4RJotgB24Mmv0KWSVBYE3JzAqt4ymnRnd
+oe8jOo3Xh1dcDYlAPIXu/oEWfYUvIg==
+=gzqA
+-----END PGP SIGNATURE-----
+
+--doKZ0ri6bHmN2Q5y--
+
+--===============8618951527798267387==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============8618951527798267387==--
