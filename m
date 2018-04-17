@@ -1,358 +1,340 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next 3/3] net: phy: Enable C45 PHYs with vendor
- specific address space
-Date: Tue, 17 Apr 2018 11:27:30 -0700
-Message-ID: <b62735bd-d411-2d21-16a2-f6cf7e5d7e4d@gmail.com>
-References: <20180417090233.21548-1-vicentiu.galanopulo@nxp.com>
- <20180417090233.21548-4-vicentiu.galanopulo@nxp.com>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH v5 02/10] PCI: dwc: Add support for endpoint mode
+Date: Tue, 17 Apr 2018 19:46:23 +0100
+Message-ID: <a63cbbb4-0548-c17e-56a5-35cd71ba4092@synopsys.com>
+References: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
+ <b961f8d5682d77d808638b9254daaf6e8770cf67.1523973931.git.gustavo.pimentel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180417090233.21548-4-vicentiu.galanopulo@nxp.com>
-Content-Language: en-US
+In-Reply-To: <b961f8d5682d77d808638b9254daaf6e8770cf67.1523973931.git.gustavo.pimentel@synopsys.com>
+Content-Language: pt-PT
 Sender: linux-kernel-owner@vger.kernel.org
-To: vicentiu.galanopulo@nxp.com, andrew@lunn.ch, robh@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, davem@davemloft.net, marcel@holtmann.org, devicetree@vger.kernel.org
-Cc: alexandru.marginean@nxp.com, madalin.bucur@nxp.com
+To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/17/2018 02:02 AM, Vicentiu Galanopulo wrote:
-> A search of the dev-addr property is done in of_mdiobus_register.
-> If the property is found in the PHY node, of_mdiobus_register_vend_spec_phy()
-> is called. This is a wrapper function for of_mdiobus_register_phy()
-> which finds the device in package based on dev-addr, and fills
-> devices_addrs, which is a new field added to phy_c45_device_ids.
-> This new field will store the dev-addr property on the same index
-> where the device in package has been found.
-> 
-> The of_mdiobus_register_phy() now contains an extra parameter,
-> which is struct phy_c45_device_ids *c45_ids.
-> If c45_ids is not NULL, get_vend_spec_addr_phy_device() is called
-> and c45_ids are propagated all the way to get_phy_c45_ids().
-> 
-> Having dev-addr stored in devices_addrs, in get_phy_c45_ids(),
-> when probing the identifiers, dev-addr can be extracted from
-> devices_addrs and probed if devices_addrs[current_identifier] is not 0.
 
-I must clearly be missing something, but why are you introducing all
-these conditionals instead of updating the existing code to be able to
-operate against an arbitrary dev-addr value, and then just making sure
-the first thing you do is fetch that property from Device Tree? There is
-no way someone is going to be testing with your specific use case in the
-future (except yourselves) so unless you make supporting an arbitrary
-"dev-addr" value become part of how the code works, this is going to be
-breaking badly.
+Hi Gustavo,
 
-And please, can you keep me copied for next submissions?
-
+Às 3:34 PM de 4/17/2018, Gustavo Pimentel escreveu:
+> The PCIe controller dual mode is capable of operating in host mode as well
+> as endpoint mode by configuration, therefore this patch aims to add
+> endpoint mode support to the designware driver.
 > 
-> Signed-off-by: Vicentiu Galanopulo <vicentiu.galanopulo@nxp.com>
+> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  drivers/net/phy/phy_device.c |  49 +++++++++++++++++--
->  drivers/of/of_mdio.c         | 113 +++++++++++++++++++++++++++++++++++++++++--
->  include/linux/phy.h          |  14 ++++++
->  3 files changed, 169 insertions(+), 7 deletions(-)
+> Change v1->v2:
+>  - Removed dw_plat_pcie_stop_link empty function.
+>  - Implemented Kishon's suggestions about dw-pcie-rc and dw-pcie strings.
+> compatibility.
+>  - Added second entry on pci_epf_test_ids structure.
+> Changes v2->v3:
+>  - Reverted additions in dw_pcie_ep_linkup function.
+>  - Replaced devm_ioremap by devm_ioremap_resource function.
+>  - Moved second entry in pci_epf_test_ids structure into a new patch file.
+> Changes v3->v4:
+>  - Reverted "snps,dw-pcie-rc" compatible string requested by Rob Herring.
+> Changes v4->v5:
+>  - Nothing changed, just to follow the patch set version.
 > 
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index ac23322..5c79fd8 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -457,7 +457,7 @@ static int get_phy_c45_devs_in_pkg(struct mii_bus *bus, int addr, int dev_addr,
->  static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
->  			   struct phy_c45_device_ids *c45_ids) {
->  	int phy_reg;
-> -	int i, reg_addr;
-> +	int i, reg_addr, dev_addr;
->  	const int num_ids = ARRAY_SIZE(c45_ids->device_ids);
->  	u32 *devs = &c45_ids->devices_in_package;
+>  drivers/pci/dwc/Kconfig                |  45 +++++++---
+>  drivers/pci/dwc/pcie-designware-plat.c | 149 ++++++++++++++++++++++++++++++---
+>  2 files changed, 174 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
+> index 2f3f5c5..3fd7daf 100644
+> --- a/drivers/pci/dwc/Kconfig
+> +++ b/drivers/pci/dwc/Kconfig
+> @@ -7,8 +7,7 @@ config PCIE_DW
 >  
-> @@ -493,13 +493,23 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
->  		if (!(c45_ids->devices_in_package & (1 << i)))
->  			continue;
+>  config PCIE_DW_HOST
+>          bool
+> -	depends on PCI
+> -	depends on PCI_MSI_IRQ_DOMAIN
+> +	depends on PCI && PCI_MSI_IRQ_DOMAIN
+>          select PCIE_DW
 >  
-> -		reg_addr = MII_ADDR_C45 | i << 16 | MII_PHYSID1;
-> +		/* if c45_ids->devices_addrs for the current id is not 0,
-> +		 * then dev-addr was defined in the PHY device tree node,
-> +		 * and the PHY has been seen as a valid device, and added
-> +		 * in the package. In this case we can use the
-> +		 * dev-addr(c45_ids->devices_addrs[i]) to do the MDIO
-> +		 * reading of the PHY ID.
-> +		 */
-> +		dev_addr = !!c45_ids->devices_addrs[i] ?
-> +					c45_ids->devices_addrs[i] : i;
-> +
-> +		reg_addr = MII_ADDR_C45 | dev_addr << 16 | MII_PHYSID1;
->  		phy_reg = mdiobus_read(bus, addr, reg_addr);
->  		if (phy_reg < 0)
->  			return -EIO;
->  		c45_ids->device_ids[i] = (phy_reg & 0xffff) << 16;
+>  config PCIE_DW_EP
+> @@ -52,16 +51,42 @@ config PCI_DRA7XX_EP
 >  
-> -		reg_addr = MII_ADDR_C45 | i << 16 | MII_PHYSID2;
-> +		reg_addr = MII_ADDR_C45 | dev_addr << 16 | MII_PHYSID2;
->  		phy_reg = mdiobus_read(bus, addr, reg_addr);
->  		if (phy_reg < 0)
->  			return -EIO;
-> @@ -551,6 +561,39 @@ static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
->  }
+>  config PCIE_DW_PLAT
+>  	bool "Platform bus based DesignWare PCIe Controller"
+> -	depends on PCI
+> -	depends on PCI_MSI_IRQ_DOMAIN
+> -	select PCIE_DW_HOST
+> -	---help---
+> -	 This selects the DesignWare PCIe controller support. Select this if
+> -	 you have a PCIe controller on Platform bus.
+> +	help
+> +	  There are two instances of PCIe controller in Designware IP.
+> +	  This controller can work either as EP or RC. In order to enable
+> +	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
+> +	  order to enable device-specific features PCIE_DW_PLAT_EP must be
+> +	  selected.
+
+I just have have a suggestion regarding the PCIE-DW_PLAT Kconfig option that in
+my opinion should be hidden from the user like the PCIE_DW_HOST option, since it
+should be set only by PCIE_DW_PLAT_HOST and PCIE_DW_PLAT_EP.
+
+Thanks,
+Joao
+
 >  
->  /**
-> + * get_vend_spec_addr_phy_device - reads the specified PHY device
-> + *				   and returns its @phy_device struct
-> + * @bus: the target MII bus
-> + * @addr: PHY address on the MII bus
-> + * @is_c45: If true the PHY uses the 802.3 clause 45 protocol
-> + * @c45_ids: Query the c45_ids to see if a PHY with a vendor specific
-> + *           register address space was defined in the PHY device tree
-> + *           node by adding the "dev-addr" property to the node.
-> + *           Store the c45 ID information about the rest of the PHYs
-> + *           found PHYs on the MDIO bus during probing.
-> + *
-> + * Description: Reads the ID registers of the PHY at @addr on the
-> + *   @bus, then allocates and returns the phy_device to represent it.
-> + */
-> +struct phy_device *get_vend_spec_addr_phy_device(struct mii_bus *bus,
-> +						 int addr, bool is_c45,
-> +						 struct phy_c45_device_ids *c45_ids)
-> +{
-> +	u32 phy_id = 0;
-> +	int r;
-> +
-> +	r = get_phy_id(bus, addr, &phy_id, is_c45, c45_ids);
-> +	if (r)
-> +		return ERR_PTR(r);
-> +
-> +	/* If the phy_id is mostly Fs, there is no device there */
-> +	if ((phy_id & 0x1fffffff) == 0x1fffffff)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	return phy_device_create(bus, addr, phy_id, is_c45, c45_ids);
-> +}
-> +
-> +/**
->   * get_phy_device - reads the specified PHY device and returns its @phy_device
->   *		    struct
->   * @bus: the target MII bus
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index 8c0c927..52e8bfb 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -45,7 +45,8 @@ static int of_get_phy_id(struct device_node *device, u32 *phy_id)
->  }
+> -	 If you have a controller with this interface, say Y or M here.
+> +config PCIE_DW_PLAT_HOST
+> +	bool "Platform bus based DesignWare PCIe Controller - Host mode"
+> +	depends on PCI && PCI_MSI_IRQ_DOMAIN
+> +	select PCIE_DW_HOST
+> +	select PCIE_DW_PLAT
+> +	default y
+> +	help
+> +	  Enables support for the PCIe controller in the Designware IP to
+> +	  work in host mode. There are two instances of PCIe controller in
+> +	  Designware IP.
+> +	  This controller can work either as EP or RC. In order to enable
+> +	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
+> +	  order to enable device-specific features PCI_DW_PLAT_EP must be
+> +	  selected.
 >  
->  static int of_mdiobus_register_phy(struct mii_bus *mdio,
-> -				    struct device_node *child, u32 addr)
-> +				   struct device_node *child, u32 addr,
-> +				   struct phy_c45_device_ids *c45_ids)
+> -	 If unsure, say N.
+> +config PCIE_DW_PLAT_EP
+> +	bool "Platform bus based DesignWare PCIe Controller - Endpoint mode"
+> +	depends on PCI && PCI_MSI_IRQ_DOMAIN
+> +	depends on PCI_ENDPOINT
+> +	select PCIE_DW_EP
+> +	select PCIE_DW_PLAT
+> +	help
+> +	  Enables support for the PCIe controller in the Designware IP to
+> +	  work in endpoint mode. There are two instances of PCIe controller
+> +	  in Designware IP.
+> +	  This controller can work either as EP or RC. In order to enable
+> +	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
+> +	  order to enable device-specific features PCI_DW_PLAT_EP must be
+> +	  selected.
+>  
+>  config PCI_EXYNOS
+>  	bool "Samsung Exynos PCIe controller"
+> diff --git a/drivers/pci/dwc/pcie-designware-plat.c b/drivers/pci/dwc/pcie-designware-plat.c
+> index 5416aa8..efc315c 100644
+> --- a/drivers/pci/dwc/pcie-designware-plat.c
+> +++ b/drivers/pci/dwc/pcie-designware-plat.c
+> @@ -12,19 +12,29 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/kernel.h>
+>  #include <linux/init.h>
+> +#include <linux/of_device.h>
+>  #include <linux/of_gpio.h>
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/resource.h>
+>  #include <linux/signal.h>
+>  #include <linux/types.h>
+> +#include <linux/regmap.h>
+>  
+>  #include "pcie-designware.h"
+>  
+>  struct dw_plat_pcie {
+> -	struct dw_pcie		*pci;
+> +	struct dw_pcie			*pci;
+> +	struct regmap			*regmap;
+> +	enum dw_pcie_device_mode	mode;
+>  };
+>  
+> +struct dw_plat_pcie_of_data {
+> +	enum dw_pcie_device_mode	mode;
+> +};
+> +
+> +static const struct of_device_id dw_plat_pcie_of_match[];
+> +
+>  static int dw_plat_pcie_host_init(struct pcie_port *pp)
 >  {
->  	struct phy_device *phy;
->  	bool is_c45;
-> @@ -58,7 +59,12 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
->  	if (!is_c45 && !of_get_phy_id(child, &phy_id))
->  		phy = phy_device_create(mdio, addr, phy_id, 0, NULL);
->  	else
-> -		phy = get_phy_device(mdio, addr, is_c45);
-> +		if (c45_ids)
-> +			phy = get_vend_spec_addr_phy_device(mdio,
-> +							    addr, is_c45,
-> +							    c45_ids);
-> +		else
-> +			phy = get_phy_device(mdio, addr, is_c45);
->  	if (IS_ERR(phy))
->  		return PTR_ERR(phy);
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> @@ -42,9 +52,53 @@ static const struct dw_pcie_host_ops dw_plat_pcie_host_ops = {
+>  	.host_init = dw_plat_pcie_host_init,
+>  };
 >  
-> @@ -190,6 +196,72 @@ static bool of_mdiobus_child_is_phy(struct device_node *child)
->  	return false;
->  }
->  
-> +static void of_fill_c45_devices_addrs(u32 dev_addr,
-> +				      struct phy_c45_device_ids *c45_ids)
+> -static int dw_plat_add_pcie_port(struct pcie_port *pp,
+> +static int dw_plat_pcie_establish_link(struct dw_pcie *pci)
 > +{
-> +	int i;
-> +	const int num_ids = ARRAY_SIZE(c45_ids->device_ids);
-> +
-> +	/* Search through all Device Identifiers
-> +	 * and set dev_addr in c45_ids->devices_addrs,
-> +	 * if the device bit is set in
-> +	 * c45_ids->devices_in_package
-> +	 */
-> +	for (i = 1; i < num_ids; i++) {
-> +		if (!(c45_ids->devices_in_package & (1 << i)))
-> +			continue;
-> +
-> +		c45_ids->devices_addrs[i] = dev_addr;
-> +	}
+> +	return 0;
 > +}
 > +
-> +static int of_find_devaddr_in_pkg(struct mii_bus *bus, u32 addr, u32 dev_addr,
-> +				  struct phy_c45_device_ids *c45_ids)
+> +static const struct dw_pcie_ops dw_pcie_ops = {
+> +	.start_link = dw_plat_pcie_establish_link,
+> +};
+> +
+> +static void dw_plat_pcie_ep_init(struct dw_pcie_ep *ep)
 > +{
-> +	u32 *devs = &c45_ids->devices_in_package;
-> +	int phy_reg, reg_addr;
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	enum pci_barno bar;
 > +
-> +	reg_addr = MII_ADDR_C45 | dev_addr << 16 | MDIO_DEVS2;
-> +	phy_reg = mdiobus_read(bus, addr, reg_addr);
-> +	if (phy_reg < 0)
-> +		return -EIO;
+> +	for (bar = BAR_0; bar <= BAR_5; bar++)
+> +		dw_pcie_ep_reset_bar(pci, bar);
+> +}
 > +
-> +	*devs = (phy_reg & 0xffff) << 16;
+> +static int dw_plat_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> +				     enum pci_epc_irq_type type,
+> +				     u8 interrupt_num)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
 > +
-> +	reg_addr = MII_ADDR_C45 | dev_addr << 16 | MDIO_DEVS1;
-> +	phy_reg = mdiobus_read(bus, addr, reg_addr);
-> +	if (phy_reg < 0)
-> +		return -EIO;
-> +
-> +	*devs |= (phy_reg & 0xffff);
+> +	switch (type) {
+> +	case PCI_EPC_IRQ_LEGACY:
+> +		dev_err(pci->dev, "EP cannot trigger legacy IRQs\n");
+> +		return -EINVAL;
+> +	case PCI_EPC_IRQ_MSI:
+> +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+> +	default:
+> +		dev_err(pci->dev, "UNKNOWN IRQ type\n");
+> +	}
 > +
 > +	return 0;
 > +}
 > +
-> +/*
-> + * Finds the device in package and populates the c45_ids
-> + * if any device is found at dev_addr address. After this
-> + * the PHY is registered
-> + */
-> +static int of_mdiobus_register_vend_spec_phy(struct mii_bus *mdio,
-> +					     struct device_node *child,
-> +					     u32 addr, u32 dev_addr)
-> +{
-> +	struct phy_c45_device_ids c45_ids = {0};
-> +	int dev_err = 0;
+> +static struct dw_pcie_ep_ops pcie_ep_ops = {
+> +	.ep_init = dw_plat_pcie_ep_init,
+> +	.raise_irq = dw_plat_pcie_ep_raise_irq,
+> +};
 > +
-> +	if (!dev_addr)
-> +		goto register_phy;
-> +
-> +	dev_err = of_find_devaddr_in_pkg(mdio, addr, dev_addr, &c45_ids);
-> +
-> +	if (!dev_err)
-> +		of_fill_c45_devices_addrs(dev_addr, &c45_ids);
-> +
-> +register_phy:
-> +	return of_mdiobus_register_phy(mdio, child, addr, &c45_ids);
-> +}
-> +
->  /**
->   * of_mdiobus_register - Register mii_bus and create PHYs from the device tree
->   * @mdio: pointer to mii_bus structure
-> @@ -202,7 +274,10 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+> +static int dw_plat_add_pcie_port(struct dw_plat_pcie *dw_plat_pcie,
+>  				 struct platform_device *pdev)
 >  {
->  	struct device_node *child;
->  	bool scanphys = false;
-> +	bool dev_addr_found = true;
->  	int addr, rc;
-> +	int dev_addr = 0;
-> +	int ret;
+> +	struct dw_pcie *pci = dw_plat_pcie->pci;
+> +	struct pcie_port *pp = &pci->pp;
+>  	struct device *dev = &pdev->dev;
+>  	int ret;
 >  
->  	/* Do not continue if the node is disabled */
->  	if (!of_device_is_available(np))
-> @@ -226,6 +301,14 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+> @@ -63,15 +117,44 @@ static int dw_plat_add_pcie_port(struct pcie_port *pp,
 >  
->  	/* Loop over the child nodes and register a phy_device for each phy */
->  	for_each_available_child_of_node(np, child) {
-> +		/* Check if dev-addr is set in the PHY node */
-> +		ret = of_property_read_u32(child, "dev-addr", &dev_addr);
-> +
-> +		if (ret < 0) {
-> +			/* either not set or invalid */
-> +			dev_addr_found = false;
-> +		}
-> +
->  		addr = of_mdio_parse_addr(&mdio->dev, child);
->  		if (addr < 0) {
->  			scanphys = true;
-> @@ -233,7 +316,14 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
->  		}
+>  	ret = dw_pcie_host_init(pp);
+>  	if (ret) {
+> -		dev_err(dev, "failed to initialize host\n");
+> +		dev_err(dev, "Failed to initialize host\n");
+>  		return ret;
+>  	}
 >  
->  		if (of_mdiobus_child_is_phy(child))
-> -			rc = of_mdiobus_register_phy(mdio, child, addr);
-> +			if (dev_addr_found)
-> +				rc = of_mdiobus_register_vend_spec_phy(mdio,
-> +								       child,
-> +								       addr,
-> +								       dev_addr);
-> +			else
-> +				rc = of_mdiobus_register_phy(mdio, child,
-> +							     addr, NULL);
->  		else
->  			rc = of_mdiobus_register_device(mdio, child, addr);
->  
-> @@ -248,8 +338,16 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
->  	if (!scanphys)
->  		return 0;
->  
-> +	/* reset device found variable */
-> +	dev_addr_found = true;
-> +
->  	/* auto scan for PHYs with empty reg property */
->  	for_each_available_child_of_node(np, child) {
-> +		/* Check if dev-addr is set in the PHY node,
-> +		 * for PHYs which don't have reg property set
-> +		 */
-> +		ret = of_property_read_u32(child, "dev-addr", &dev_addr);
-> +
->  		/* Skip PHYs with reg property set */
->  		if (of_find_property(child, "reg", NULL))
->  			continue;
-> @@ -264,7 +362,14 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
->  				 child->name, addr);
->  
->  			if (of_mdiobus_child_is_phy(child)) {
-> -				rc = of_mdiobus_register_phy(mdio, child, addr);
-> +				if (dev_addr_found)
-> +					rc = of_mdiobus_register_vend_spec_phy(mdio,
-> +									       child,
-> +									       addr,
-> +									       dev_addr);
-> +				else
-> +					rc = of_mdiobus_register_phy(mdio, child,
-> +								     addr, NULL);
->  				if (rc && rc != -ENODEV)
->  					goto unregister;
->  			}
-> diff --git a/include/linux/phy.h b/include/linux/phy.h
-> index 26aa320..889d85e 100644
-> --- a/include/linux/phy.h
-> +++ b/include/linux/phy.h
-> @@ -357,10 +357,13 @@ enum phy_state {
->   * struct phy_c45_device_ids - 802.3-c45 Device Identifiers
->   * @devices_in_package: Bit vector of devices present.
->   * @device_ids: The device identifer for each present device.
-> + * @devices_addrs: The devices addresses from the device tree
-> + *		   for each present device.
->   */
->  struct phy_c45_device_ids {
->  	u32 devices_in_package;
->  	u32 device_ids[32];
-> +	u32 devices_addrs[32];
->  };
->  
->  /* phy_device: An instance of a PHY
-> @@ -904,6 +907,9 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, int phy_id,
->  				     struct phy_c45_device_ids *c45_ids);
->  #if IS_ENABLED(CONFIG_PHYLIB)
->  struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45);
-> +struct phy_device *get_vend_spec_addr_phy_device(struct mii_bus *bus, int addr,
-> +						 bool is_c45,
-> +						 struct phy_c45_device_ids *c45_ids);
->  int phy_device_register(struct phy_device *phy);
->  void phy_device_free(struct phy_device *phydev);
->  #else
-> @@ -913,6 +919,14 @@ struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45)
->  	return NULL;
+>  	return 0;
 >  }
 >  
-> +static inline
-> +struct phy_device *get_vend_spec_addr_phy_device(struct mii_bus *bus, int addr,
-> +						 bool is_c45,
-> +						 struct phy_c45_device_ids *c45_ids)
+> -static const struct dw_pcie_ops dw_pcie_ops = {
+> -};
+> +static int dw_plat_add_pcie_ep(struct dw_plat_pcie *dw_plat_pcie,
+> +			       struct platform_device *pdev)
 > +{
-> +	return NULL;
-> +}
+> +	int ret;
+> +	struct dw_pcie_ep *ep;
+> +	struct resource *res;
+> +	struct device *dev = &pdev->dev;
+> +	struct dw_pcie *pci = dw_plat_pcie->pci;
 > +
->  static inline int phy_device_register(struct phy_device *phy)
+> +	ep = &pci->ep;
+> +	ep->ops = &pcie_ep_ops;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
+> +	pci->dbi_base2 = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(pci->dbi_base2))
+> +		return PTR_ERR(pci->dbi_base2);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	ep->phys_base = res->start;
+> +	ep->addr_size = resource_size(res);
+> +
+> +	ret = dw_pcie_ep_init(ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize endpoint\n");
+> +		return ret;
+> +	}
+> +	return 0;
+> +}
+>  
+>  static int dw_plat_pcie_probe(struct platform_device *pdev)
 >  {
+> @@ -80,6 +163,16 @@ static int dw_plat_pcie_probe(struct platform_device *pdev)
+>  	struct dw_pcie *pci;
+>  	struct resource *res;  /* Resource from DT */
+>  	int ret;
+> +	const struct of_device_id *match;
+> +	const struct dw_plat_pcie_of_data *data;
+> +	enum dw_pcie_device_mode mode;
+> +
+> +	match = of_match_device(dw_plat_pcie_of_match, dev);
+> +	if (!match)
+> +		return -EINVAL;
+> +
+> +	data = (struct dw_plat_pcie_of_data *)match->data;
+> +	mode = (enum dw_pcie_device_mode)data->mode;
+>  
+>  	dw_plat_pcie = devm_kzalloc(dev, sizeof(*dw_plat_pcie), GFP_KERNEL);
+>  	if (!dw_plat_pcie)
+> @@ -93,23 +186,59 @@ static int dw_plat_pcie_probe(struct platform_device *pdev)
+>  	pci->ops = &dw_pcie_ops;
+>  
+>  	dw_plat_pcie->pci = pci;
+> +	dw_plat_pcie->mode = mode;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> +	if (!res)
+> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	pci->dbi_base = devm_ioremap_resource(dev, res);
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+>  
+>  	platform_set_drvdata(pdev, dw_plat_pcie);
+>  
+> -	ret = dw_plat_add_pcie_port(&pci->pp, pdev);
+> -	if (ret < 0)
+> -		return ret;
+> +	switch (dw_plat_pcie->mode) {
+> +	case DW_PCIE_RC_TYPE:
+> +		if (!IS_ENABLED(CONFIG_PCIE_DW_PLAT_HOST))
+> +			return -ENODEV;
+> +
+> +		ret = dw_plat_add_pcie_port(dw_plat_pcie, pdev);
+> +		if (ret < 0)
+> +			return ret;
+> +		break;
+> +	case DW_PCIE_EP_TYPE:
+> +		if (!IS_ENABLED(CONFIG_PCIE_DW_PLAT_EP))
+> +			return -ENODEV;
+> +
+> +		ret = dw_plat_add_pcie_ep(dw_plat_pcie, pdev);
+> +		if (ret < 0)
+> +			return ret;
+> +		break;
+> +	default:
+> +		dev_err(dev, "INVALID device type %d\n", dw_plat_pcie->mode);
+> +	}
+>  
 >  	return 0;
+>  }
+>  
+> +static const struct dw_plat_pcie_of_data dw_plat_pcie_rc_of_data = {
+> +	.mode = DW_PCIE_RC_TYPE,
+> +};
+> +
+> +static const struct dw_plat_pcie_of_data dw_plat_pcie_ep_of_data = {
+> +	.mode = DW_PCIE_EP_TYPE,
+> +};
+> +
+>  static const struct of_device_id dw_plat_pcie_of_match[] = {
+> -	{ .compatible = "snps,dw-pcie", },
+> +	{
+> +		.compatible = "snps,dw-pcie",
+> +		.data = &dw_plat_pcie_rc_of_data,
+> +	},
+> +	{
+> +		.compatible = "snps,dw-pcie-ep",
+> +		.data = &dw_plat_pcie_ep_of_data,
+> +	},
+>  	{},
+>  };
+>  
 > 
-
-
--- 
-Florian
