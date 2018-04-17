@@ -1,90 +1,52 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v6 0/7] ARM: davinci: complete the conversion to using the
- reset framework
-Date: Tue, 17 Apr 2018 19:30:31 +0200
-Message-ID: <20180417173038.25510-1-brgl@bgdev.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH v6 4/7] remoteproc/davinci: prepare and unprepare the clock where needed
+Date: Tue, 17 Apr 2018 19:30:35 +0200
+Message-ID: <20180417173038.25510-5-brgl@bgdev.pl>
+References: <20180417173038.25510-1-brgl@bgdev.pl>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180417173038.25510-1-brgl@bgdev.pl>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Suman Anna <s-anna@ti.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This series converts the only user of the handcoded, mach-specific reset
-routines in the davinci platform to using the reset framework.
+We're currently switching the platform to using the common clock
+framework. We need to explicitly prepare and unprepare the rproc
+clock.
 
-Patches 1-2 add necessary lookups/DT-properties.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Acked-by: Suman Anna <s-anna@ti.com>
+Reviewed-by: David Lechner <david@lechnology.com>
+---
+ drivers/remoteproc/da8xx_remoteproc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Patches 3-5 fix issues found in the remoteproc davinci driver.
-
-Patch 6 converts the davinci-rproc driver to the reset framework.
-
-Patch 7 removes now dead code.
-
-Tested both in DT and legacy modes by booting the examples from
-ti-ipc-rtos recipe in meta-ti.
-
-This series applies on top of David Lechner's common-clk-v9 branch[1].
-
-[1] git://github.com/dlech/ev3dev-kernel.git common-clk-v9
-
-v1 -> v2:
-- fixed the device tree patches the descriptions of which were mixed up
-- return -EPROBE_DEFER from davinci-rproc's probe() if we can't get the
-  reset provider, since it's possible that the lookup table was not yet
-  registered
-- made the local variable naming consistent in the davinci-rproc driver
-- fixed a typo in PATCH 5/8
-
-v2 -> v3:
-- modify PATCH 1/8: drop the provider argument from the function adding
-  lookup entries and instead pass the provider name to the RESET_LOOKUP
-  macro, return -EPROBE_DEFER if we locate a correct lookup entry but
-  cannot get the corresponding reset controller
-- modify the reset lookup entry in psc-da850
-- don't manually return -EPROBE_DEFER from davinci-rproc, instead don't
-  emit an error message if devm_reset_control_get_exclusive() returns
-  this error code
-
-v3 -> v4:
-- make index the second parameter in RESET_LOOKUP() (right after the
-  provider name)
-
-v4 -> v5:
-- fix a bug where the dsp_reset object correctly stored in drproc struct
-
-v5 -> v6:
-- rebased on top of v4.17-rc1 and retested
-- dropped patches that were applied during 4.17 merge window
-- added relevant review and ack tags
-
-Bartosz Golaszewski (7):
-  ARM: davinci: dts: make psc0 a reset provider
-  ARM: davinci: dts: add a reset control to the dsp node
-  remoteproc/davinci: add the missing retval check for clk_enable()
-  remoteproc/davinci: prepare and unprepare the clock where needed
-  remoteproc/davinci: use octal permissions for module_param()
-  remoteproc/davinci: use the reset framework
-  clk: davinci: kill davinci_clk_reset_assert/deassert()
-
- arch/arm/boot/dts/da850.dtsi               |  2 +
- arch/arm/mach-davinci/include/mach/clock.h | 21 ----------
- drivers/clk/davinci/psc.c                  | 18 ---------
- drivers/remoteproc/da8xx_remoteproc.c      | 46 ++++++++++++++++++----
- 4 files changed, 40 insertions(+), 47 deletions(-)
- delete mode 100644 arch/arm/mach-davinci/include/mach/clock.h
-
+diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
+index 2b24291337b7..f134192922e0 100644
+--- a/drivers/remoteproc/da8xx_remoteproc.c
++++ b/drivers/remoteproc/da8xx_remoteproc.c
+@@ -149,9 +149,9 @@ static int da8xx_rproc_start(struct rproc *rproc)
+ 
+ 	writel(rproc->bootaddr, drproc->bootreg);
+ 
+-	ret = clk_enable(dsp_clk);
++	ret = clk_prepare_enable(dsp_clk);
+ 	if (ret) {
+-		dev_err(dev, "clk_enable() failed: %d\n", ret);
++		dev_err(dev, "clk_prepare_enable() failed: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+@@ -165,7 +165,7 @@ static int da8xx_rproc_stop(struct rproc *rproc)
+ 	struct da8xx_rproc *drproc = rproc->priv;
+ 
+ 	davinci_clk_reset_assert(drproc->dsp_clk);
+-	clk_disable(drproc->dsp_clk);
++	clk_disable_unprepare(drproc->dsp_clk);
+ 
+ 	return 0;
+ }
 -- 
 2.17.0
