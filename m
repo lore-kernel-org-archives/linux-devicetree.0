@@ -1,179 +1,44 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: usb: Update documentation for
- Qualcomm DWC3 driver
-Date: Tue, 17 Apr 2018 09:09:52 +0530
-Message-ID: <850b4b09-2156-ef16-f4b8-9879923340c9@codeaurora.org>
-References: <1523638285-5742-1-git-send-email-mgautam@codeaurora.org>
- <1523638285-5742-2-git-send-email-mgautam@codeaurora.org>
- <20180416203827.4jgevj4dgce6r3cq@rob-hp-laptop>
+From: Moritz Fischer <mdf@kernel.org>
+Subject: [PATCH 0/3] FPGA Manager Patches for 4.18
+Date: Mon, 16 Apr 2018 20:43:34 -0700
+Message-ID: <20180417034337.8855-1-mdf@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180416203827.4jgevj4dgce6r3cq@rob-hp-laptop>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: balbi@kernel.org, andy.gross@linaro.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
+To: gregkh@linux-foundation.org
+Cc: linux-fpga.vger@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, atull@kernel.org, robh+dt@kernel.org, Moritz Fischer <mdf@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Greg,
 
+Please queue the following patches for v4.18.
 
-On 4/17/2018 2:08 AM, Rob Herring wrote:
-> On Fri, Apr 13, 2018 at 10:21:22PM +0530, Manu Gautam wrote:
->> Existing documentation has lot of incorrect information as it
->> was originally added for a driver that no longer exists.
->>
->> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
->> ---
->>  .../devicetree/bindings/usb/qcom,dwc3.txt          | 78 ++++++++++++++++------
->>  1 file changed, 57 insertions(+), 21 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
->> index bc8a2fa..fdc574a 100644
->> --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
->> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
->> @@ -1,54 +1,90 @@
->>  Qualcomm SuperSpeed DWC3 USB SoC controller
->>  
->>  Required properties:
->> -- compatible:	should contain "qcom,dwc3"
->> +- compatible:		should contain "qcom,dwc3"
-> Needs an SoC specific compatible string.
+Alan's Patch clarifies the locking in the fpga-region code.
 
-Thanks for review.
-Sure. Will add that.
+Paolo's patches add a new driver with corresponding bindings for a
+Lattice FPGA part.
 
->
->> +- reg:			offset and length of register set for QSCRATCH wrapper
->> +- power-domains:	specifies a phandle to PM domain provider node
->>  - clocks:		A list of phandle + clock-specifier pairs for the
->>  				clocks listed in clock-names
->> -- clock-names:	Should contain the following:
->> +- clock-names:		Should contain the following:
->>    "core"		Master/Core clock, have to be >= 125 MHz for SS
->>  				operation and >= 60MHz for HS operation
->> +  "mock_utmi"		Mock utmi clock needed for ITP/SOF generation in
->> +				host mode. Its frequency should be 19.2MHz.
->> +  "sleep"		Sleep clock, used for wakeup when USB3 core goes
->> +				into low power mode (U3).
->>  
->>  Optional clocks:
->>    "iface"		System bus AXI clock.  Not present on all platforms
->> -  "sleep"		Sleep clock, used when USB3 core goes into low
->> -				power mode (U3).
->> +  "cfg_noc"		System Config NOC clock. Not present on all platforms
-> These need to be specific as to which compatible properties have or 
-> don't have these clocks.
-ok
+Thanks,
 
->
->> +- assigned-clocks:	should be:
->> +				MOCK_UTMI_CLK
->> +				MASTER_CLK
->> +- assigned-clock-rates: should be:
->> +                                19.2Mhz (192000000) for MOCK_UTMI_CLK
->> +                                >=125Mhz (125000000) for MASTER_CLK in SS mode
->> +                                >=60Mhz (60000000) for MASTER_CLK in HS mode
->> +
->> +Optional properties:
->> +- resets:		list of phandle and reset specifier pairs
-> How many?
-I will provide exact detail for each compatible property.
->
->> +- interrupts:		specifies interrupts from controller wrapper used
->> +			to wakeup from low power/susepnd state.	Must contain
->> +			one or more entry for interrupt-names property
->> +- interrupt-names:	Must include the following entries:
->> +			- "hs_phy_irq": The interrupt that is asserted when a
->> +			   wakeup event is received on USB2 bus
->> +			- "ss_phy_irq": The interrupt that is asserted when a
->> +			   wakeup event is received on USB3 bus
->> +			- "dm_hs_phy_irq" and "dp_hs_phy_irq": Separate
->> +			   interrupts for any wakeup event on DM and DP lines
-> Sounds like the irqs are actually part of the PHYs? If so, then that's 
-> where they should be in the DT.
-No. These are actually part of controller wrapper called - qscratch which
-has connectivity to phy outputs signals. Also, these are abstracted from PHY
-and are present irrespective of type of phy present. I will add soc specific
-info also in comments specifying which interrupts are not present on particular
-soc/compatible.
+Moritz
 
->
->> +- qcom,select-utmi-as-pipe-clk: if present, disable USB3 pipe_clk requirement.
->> +				Used when dwc3 operates without SSPHY and only
->> +				HS/FS/LS modes are supported.
->>  
->>  Required child node:
->>  A child node must exist to represent the core DWC3 IP block. The name of
->>  the node is not important. The content of the node is defined in dwc3.txt.
->>  
->>  Phy documentation is provided in the following places:
->> -Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
->> +Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
->> +Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 PHY
->>  
->>  Example device nodes:
->>  
->>  		hs_phy: phy@100f8800 {
->> -			compatible = "qcom,dwc3-hs-usb-phy";
->> -			reg = <0x100f8800 0x30>;
->> -			clocks = <&gcc USB30_0_UTMI_CLK>;
->> -			clock-names = "ref";
->> -			#phy-cells = <0>;
->> -
->> +			compatible = "qcom,qusb2-v2-phy";
->> +			...
->>  		};
->>  
->>  		ss_phy: phy@100f8830 {
->> -			compatible = "qcom,dwc3-ss-usb-phy";
->> -			reg = <0x100f8830 0x30>;
->> -			clocks = <&gcc USB30_0_MASTER_CLK>;
->> -			clock-names = "ref";
->> -			#phy-cells = <0>;
->> -
->> +			compatible = "qcom,qmp-v3-usb3-phy";
->> +			...
->>  		};
->>  
->> -		usb3_0: usb30@0 {
->> +		usb3_0: usb30@a6f8800 {
->>  			compatible = "qcom,dwc3";
->> +			reg = <0xa6f8800 0x400>;
->>  			#address-cells = <1>;
->>  			#size-cells = <1>;
->> -			clocks = <&gcc USB30_0_MASTER_CLK>;
->> -			clock-names = "core";
->> -
->>  			ranges;
->>  
->> +			interrupts = <0 131 0>, <0 486 0>, <0 488 0>, <0 489 0>;
->> +			interrupt-names = "hs_phy_irq", "ss_phy_irq",
->> +				  "dm_hs_phy_irq", "dp_hs_phy_irq";
->> +
->> +			clocks = <&gcc GCC_USB30_PRIM_MASTER_CLK>,
->> +				<&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
->> +				<&gcc GCC_USB30_PRIM_SLEEP_CLK>;
->> +			clock-names = "core", "mock_utmi", "sleep";
->> +
->> +			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
->> +					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
->> +			assigned-clock-rates = <19200000>, <133000000>;
->> +
->> +			resets = <&gcc GCC_USB30_PRIM_BCR>;
->> +			reset-names = "core_reset";
->> +			power-domains = <&gcc USB30_PRIM_GDSC>;
->> +			qcom,select-utmi-as-pipe-clk;
->>  
->>  			dwc3@10000000 {
->>  				compatible = "snps,dwc3";
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
+Alan Tull (1):
+  fpga: fpga-region: comment on fpga_region_program_fpga locking
+
+Paolo Pisati (2):
+  dt: bindings: fpga: add lattice machxo2 slave spi binding description
+  fpga: lattice machxo2: Add Lattice MachXO2 support
+
+ .../bindings/fpga/lattice-machxo2-spi.txt     |  29 ++
+ drivers/fpga/Kconfig                          |   7 +
+ drivers/fpga/Makefile                         |   1 +
+ drivers/fpga/fpga-region.c                    |   5 +
+ drivers/fpga/machxo2-spi.c                    | 403 ++++++++++++++++++
+ 5 files changed, 445 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
+ create mode 100644 drivers/fpga/machxo2-spi.c
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.17.0
