@@ -1,43 +1,31 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode for
- the cells list
-Date: Tue, 17 Apr 2018 13:54:07 +0100
-Message-ID: <344e0087-7410-aebb-8a66-c6976064df10@linaro.org>
-References: <1521933899-362-1-git-send-email-albeu@free.fr>
- <1521933899-362-2-git-send-email-albeu@free.fr>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next 2/3] net: phy: Change the array size to 32 for
+ device_ids
+Date: Tue, 17 Apr 2018 14:54:29 +0200
+Message-ID: <20180417125429.GE2591@lunn.ch>
+References: <20180417090233.21548-1-vicentiu.galanopulo@nxp.com>
+ <20180417090233.21548-3-vicentiu.galanopulo@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521933899-362-2-git-send-email-albeu@free.fr>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180417090233.21548-3-vicentiu.galanopulo@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alban Bedel <albeu@free.fr>, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
+To: Vicentiu Galanopulo <vicentiu.galanopulo@nxp.com>
+Cc: robh@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, davem@davemloft.net, marcel@holtmann.org, devicetree@vger.kernel.org, alexandru.marginean@nxp.com, madalin.bucur@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 24/03/18 23:24, Alban Bedel wrote:
-> Having the cells as subnodes of the provider device without any
-> compatible property might clash with other bindings. To avoid this
-> problem update the binding to have all the cells in a 'nvmem-cells'
-> subnode with a 'nvmem-cells' compatible string. This new binding
-> guarantee that we can turn any kind of device in a nvmem provider.
+On Tue, Apr 17, 2018 at 04:02:32AM -0500, Vicentiu Galanopulo wrote:
+> In the context of enabling the discovery of the PHYs
+> which have the C45 MDIO address space in a non-standard
+> address:  num_ids in get_phy_c45_ids, has the
+> value 8 (ARRAY_SIZE(c45_ids->device_ids)), but the
+> u32 *devs can store 32 devices in the bitfield.
 > 
-> While discouraged for new uses the old scheme is still supported for
-> backward compatibility.
+> If a device is stored in *devs, in bits 32 to 9
+> (bit counting in lookup loop starts from 1), it will
+> not be found.
 
-Am not sure if this a really good idea to change nvmem bindings based on 
-provider requirements. This can be a beginning of other problems!!
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Did you know that we can pass nvmem cells info via nvmem config ?
-
-Why can't mtd-nvmem provider populate the nvmem_config->cells from its 
-dt "nvmem-cells" subnode before it registers the provider?
-
-Doing this way will make the binding very much specific to the provider 
-rather than changing nvmem core bindings.
-
-thanks,
-srini
+    Andrew
