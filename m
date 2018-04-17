@@ -1,57 +1,44 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4] gpio: dwapb: Add support for 1 interrupt per port A GPIO
-Date: Tue, 17 Apr 2018 08:04:24 -0500
-Message-ID: <CAL_JsqKrBa5Rneu+BJOXd6n-xZEVqkKg4RqXHYvNs5xz7gdS2Q@mail.gmail.com>
-References: <1523968977-4241-1-git-send-email-phil.edworthy@renesas.com>
+Subject: Re: [PATCH v3 1/3] drm/vc4: Remove the need for the GPU-subsystem DT
+ node.
+Date: Tue, 17 Apr 2018 08:09:06 -0500
+Message-ID: <CAL_JsqJxG1b2NO6CJTge=7PuYJgLfD9uzit_GiXbH8B79v+aZQ@mail.gmail.com>
+References: <CAL_JsqKJD86tV0jno_cZR=nLoOThT5rjRu3BPpzAwpcHgxSArQ@mail.gmail.com>
+ <20180416225259.6571-1-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523968977-4241-1-git-send-email-phil.edworthy@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180416225259.6571-1-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Stefan Wahren <stefan.wahren@i2se.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, bcm-kernel-feedback-list@broadcom.com, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 17, 2018 at 7:42 AM, Phil Edworthy
-<phil.edworthy@renesas.com> wrote:
-> The DesignWare GPIO IP can be configured for either 1 interrupt or 1
-> per GPIO in port A, but the driver currently only supports 1 interrupt.
-> See the DesignWare DW_apb_gpio Databook description of the
-> 'GPIO_INTR_IO' parameter.
->
-> This change allows the driver to work with up to 32 interrupts, it will
-> get as many interrupts as specified in the DT 'interrupts' property.
-> It doesn't do anything clever with the different interrupts, it just calls
-> the same handler used for single interrupt hardware.
->
-> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> ---
-> One point to mention is that I have made it possible for users to have
-> unconncted interrupts by specifying holes in the list of interrupts. This is
-> done by supporting the interrupts-extended DT prop.
-> However, I have no use for this and had to hack some test case for this.
-> Perhaps the driver should support 1 interrupt or all GPIOa as interrupts?
->
-> v4:
->  - Use of_irq_get() instead of of_irq_parse_one()+irq_create_of_mapping()
-> v3:
->  - Rolled mfd: intel_quark_i2c_gpio fix into this patch to avoid bisect problems
-> v2:
->  - Replaced interrupt-mask DT prop with support for the interrupts-extended
->    prop. This means replacing the call to irq_of_parse_and_map() with calls
->    to of_irq_parse_one() and irq_create_of_mapping().
->
-> Note: There are a few *code* lines over 80 chars, but this is just guidance,
->    right? Especially as there are already some lines over 80 chars.
->
-> snps:gpio fix
->
-> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> ---
->  .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |  9 +++--
->  drivers/gpio/gpio-dwapb.c                          | 42 +++++++++++++++++-----
->  drivers/mfd/intel_quark_i2c_gpio.c                 |  3 +-
->  include/linux/platform_data/gpio-dwapb.h           |  3 +-
->  4 files changed, 44 insertions(+), 13 deletions(-)
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+T24gTW9uLCBBcHIgMTYsIDIwMTggYXQgNTo1MiBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
+Lm5ldD4gd3JvdGU6Cj4gVGhlIEdQVSBzdWJzeXN0ZW0gbm9kZSB3YXMgYSB3b3JrYXJvdW5kIHRv
+IGhhdmUgYSBjZW50cmFsIGRldmljZSB0bwo+IGJpbmQgVjNEIGFuZCBkaXNwbGF5IHRvLiAgRm9s
+bG93aW5nIHRoZSBsZWFkIG9mIDI0Njc3NGQxN2ZjMAo+ICgiZHJtL2V0bmF2aXY6IHJlbW92ZSB0
+aGUgbmVlZCBmb3IgYSBncHUtc3Vic3lzdGVtIERUIG5vZGUiKSwgcmVtb3ZlCj4gdGhlIHN1YnN5
+c3RlbSBub2RlIHVzYWdlIGFuZCBqdXN0IGNyZWF0ZSBhIHBsYXRmb3JtIGRldmljZSBmb3IgdGhl
+IERSTQo+IGRldmljZSB0byBhdHRhY2ggdG8gaWYgYW55IG9mIHRoZSBzdWJzeXN0ZW0gZGV2aWNl
+cyBhcmUgcHJlc2VudC4KPgo+IHYyOiBTaW1wbGlmeSB0aGUgRFQgd2Fsa2luZyBjb2RlLgo+IHYz
+OiBBbHdheXMgcHV0IHRoZSBub2RlLgo+Cj4gU2lnbmVkLW9mZi1ieTogRXJpYyBBbmhvbHQgPGVy
+aWNAYW5ob2x0Lm5ldD4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdmM0
+LnR4dCAgICAgICAgIHwgIDcgLS0tLS0KPiAgZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfZHJ2LmMg
+ICAgICAgICAgICAgICAgIHwgMjggKysrKysrKysrKysrKy0tLS0tLQo+ICBkcml2ZXJzL2dwdS9k
+cm0vdmM0L3ZjNF9odnMuYyAgICAgICAgICAgICAgICAgfCAgMSArCj4gIGRyaXZlcnMvZ3B1L2Ry
+bS92YzQvdmM0X3YzZC5jICAgICAgICAgICAgICAgICB8ICAxICsKPiAgNCBmaWxlcyBjaGFuZ2Vk
+LCAyMiBpbnNlcnRpb25zKCspLCAxNSBkZWxldGlvbnMoLSkKClJldmlld2VkLWJ5OiBSb2IgSGVy
+cmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
