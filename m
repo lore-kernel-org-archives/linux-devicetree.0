@@ -1,90 +1,93 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 2/6] mfd: stm32-timers: add support for dmas
-Date: Tue, 17 Apr 2018 08:12:50 +0100
-Message-ID: <20180417071250.yhgl7c7apn7w53xf@dell>
-References: <1523895561-4073-1-git-send-email-fabrice.gasnier@st.com>
- <1523895561-4073-3-git-send-email-fabrice.gasnier@st.com>
+From: Marcus Folkesson <marcus.folkesson@gmail.com>
+Subject: Re: [PATCH 2/2] input: misc: Add Spreadtrum vibrator driver
+Date: Tue, 17 Apr 2018 09:25:30 +0200
+Message-ID: <20180417072530.GA4629@gmail.com>
+References: <0bfdc811c2b3da3aa1cde2feef278a86503e3804.1523934640.git.baolin.wang@linaro.org>
+ <b5580f22aaed9845af9b981319d6cefa04fddd35.1523934640.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1523895561-4073-3-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <b5580f22aaed9845af9b981319d6cefa04fddd35.1523934640.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: alexandre.torgue@st.com, thierry.reding@gmail.com, benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xiaotong.lu@spreadtrum.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 16 Apr 2018, Fabrice Gasnier wrote:
+Hi Xiaotong,
 
-> STM32 Timers can support up to 7 DMA requests:
-> - 4 channels, update, compare and trigger.
-> Optionally request part, or all DMAs from stm32-timers MFD core.
-> 
-> Also add routine to implement burst reads using DMA from timer registers.
-> This is exported. So, it can be used by child drivers, PWM capture
-> for instance (but not limited to).
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> ---
-> Changes in v4:
-> - Lee's comments: Add kerneldoc header, better format comments.
-> Changes in v3:
-> - Basically Lee's comments:
-> - rather create a struct stm32_timers_dma, and place a reference to it
->   in existing ddata (instead of adding priv struct).
-> - rather use a struct device in exported routine prototype, and use
->   standard helpers instead of ddata. Get rid of to_stm32_timers_priv().
-> - simplify error handling in probe (remove a goto)
-> - comment on devm_of_platform_*populate() usage.
-> 
-> Changes in v2:
-> - Abstract DMA handling from child driver: move it to MFD core
-> - Add comments on optional dma support
-> ---
->  drivers/mfd/stm32-timers.c       | 227 ++++++++++++++++++++++++++++++++++++++-
->  include/linux/mfd/stm32-timers.h |  32 ++++++
->  2 files changed, 257 insertions(+), 2 deletions(-)
+On Tue, Apr 17, 2018 at 11:18:24AM +0800, Baolin Wang wrote:
+> From: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
 
-[...]
+[snip]
 
-> diff --git a/include/linux/mfd/stm32-timers.h b/include/linux/mfd/stm32-timers.h
-> index 2aadab6..a04d7a1 100644
-> --- a/include/linux/mfd/stm32-timers.h
-> +++ b/include/linux/mfd/stm32-timers.h
-> @@ -8,6 +8,8 @@
->  #define _LINUX_STM32_GPTIMER_H_
->  
->  #include <linux/clk.h>
-> +#include <linux/dmaengine.h>
-> +#include <linux/dma-mapping.h>
->  #include <linux/regmap.h>
-
-[...]
-
-> +struct stm32_timers_dma;
+> +static int sc27xx_vibra_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct vibra_info *info;
+> +	int ret;
 > +
->  struct stm32_timers {
->  	struct clk *clk;
->  	struct regmap *regmap;
->  	u32 max_arr;
-> +	struct stm32_timers_dma *dma; /* Only to be used by the parent */
-
-I'm confused.  I thought the point of putting this comment in was so
-that you could place the definition of 'stm32_timers_dma' and remove
-the forward declaration?
-
->  };
+> +	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
+> +	if (!info)
+> +		return -ENOMEM;
 > +
-> +int stm32_timers_dma_burst_read(struct device *dev, u32 *buf,
-> +				enum stm32_timers_dmas id, u32 reg,
-> +				unsigned int num_reg, unsigned int bursts,
-> +				unsigned long tmo_ms);
->  #endif
+> +	info->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!info->regmap) {
+> +		dev_err(&pdev->dev, "failed to get vibrator regmap.\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = of_property_read_u32(node, "reg", &info->base);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to get vibrator base address.\n");
+> +		return ret;
+> +	}
+> +
+> +	info->input_dev = devm_input_allocate_device(&pdev->dev);
+> +	if (!info->input_dev) {
+> +		dev_err(&pdev->dev, "failed to allocate input device.\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	info->input_dev->name = "sc27xx:vibrator";
+> +	info->input_dev->id.version = 0;
+> +	info->input_dev->dev.parent = pdev->dev.parent;
+> +	info->input_dev->close = sc27xx_vibra_close;
+> +
+> +	input_set_drvdata(info->input_dev, info);
+> +	input_set_capability(info->input_dev, EV_FF, FF_RUMBLE);
+> +	INIT_WORK(&info->play_work, sc27xx_vibra_play_work);
+> +	info->enabled = false;
+> +
+> +	ret = input_ff_create_memless(info->input_dev, NULL, sc27xx_vibra_play);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to register vibrator to FF.\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = input_register_device(info->input_dev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to register input device.\n");
+> +		input_ff_destroy(info->input_dev);
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+I'm not sure how the input_ff is freed for managed devices.
+
+Either you don't have to destroy it here, or you also need to destroy it
+in a release() function.
+
+> +		return ret;
+> +	}
+> +
+> +	ret = sc27xx_vibra_hw_init(info);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to initialize the vibrator.\n");
+> +		input_ff_destroy(info->input_dev);
+> +		input_unregister_device(info->input_dev);
+
+No need to unregister managed input devices.
+
+> +		return ret;
+> +	}
+
+Cheers,
+Marcus Folkesson
