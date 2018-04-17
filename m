@@ -1,63 +1,41 @@
 From: Moritz Fischer <mdf@kernel.org>
-Subject: [PATCH 1/3] dt: bindings: fpga: add lattice machxo2 slave spi binding description
-Date: Mon, 16 Apr 2018 20:43:35 -0700
-Message-ID: <20180417034337.8855-2-mdf@kernel.org>
+Subject: [PATCH 3/3] fpga: fpga-region: comment on fpga_region_program_fpga locking
+Date: Mon, 16 Apr 2018 20:43:37 -0700
+Message-ID: <20180417034337.8855-4-mdf@kernel.org>
 References: <20180417034337.8855-1-mdf@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180417034337.8855-1-mdf@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: gregkh@linux-foundation.org
-Cc: linux-fpga.vger@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, atull@kernel.org, robh+dt@kernel.org, Paolo Pisati <p.pisati@gmail.com>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-fpga.vger@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, atull@kernel.org, robh+dt@kernel.org, Moritz Fischer <mdf@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Paolo Pisati <p.pisati@gmail.com>
+From: Alan Tull <atull@kernel.org>
 
-Add dt binding documentation details for Lattice MachXO2 FPGA configuration
-over Slave SPI interface.
+Add a comment to the header of fpga_region_program_fpga()
+regarding locking of the bridges.
 
-Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Alan Tull <atull@kernel.org>
+Signed-off-by: Alan Tull <atull@kernel.org>
 Signed-off-by: Moritz Fischer <mdf@kernel.org>
 ---
- .../bindings/fpga/lattice-machxo2-spi.txt     | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
+ drivers/fpga/fpga-region.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt b/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
-new file mode 100644
-index 000000000000..a8c362eb160c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
-@@ -0,0 +1,29 @@
-+Lattice MachXO2 Slave SPI FPGA Manager
-+
-+Lattice MachXO2 FPGAs support a method of loading the bitstream over
-+'slave SPI' interface.
-+
-+See 'MachXO2ProgrammingandConfigurationUsageGuide.pdf' on www.latticesemi.com
-+
-+Required properties:
-+- compatible: should contain "lattice,machxo2-slave-spi"
-+- reg: spi chip select of the FPGA
-+
-+Example for full FPGA configuration:
-+
-+	fpga-region0 {
-+		compatible = "fpga-region";
-+		fpga-mgr = <&fpga_mgr_spi>;
-+		#address-cells = <0x1>;
-+		#size-cells = <0x1>;
-+	};
-+
-+	spi1: spi@2000 {
-+        ...
-+
-+		fpga_mgr_spi: fpga-mgr@0 {
-+			compatible = "lattice,machxo2-slave-spi";
-+			spi-max-frequency = <8000000>;
-+			reg = <0>;
-+		};
-+	};
+diff --git a/drivers/fpga/fpga-region.c b/drivers/fpga/fpga-region.c
+index edab2a2e03ef..cb0603e07ff8 100644
+--- a/drivers/fpga/fpga-region.c
++++ b/drivers/fpga/fpga-region.c
+@@ -95,6 +95,11 @@ static void fpga_region_put(struct fpga_region *region)
+  * fpga_region_program_fpga - program FPGA
+  * @region: FPGA region
+  * Program an FPGA using fpga image info (region->info).
++ * If the region has a get_bridges function, the exclusive reference for the
++ * bridges will be held if programming succeeds.  This is intended to prevent
++ * reprogramming the region until the caller considers it safe to do so.
++ * The caller will need to call fpga_bridges_put() before attempting to
++ * reprogram the region.
+  * Return 0 for success or negative error code.
+  */
+ int fpga_region_program_fpga(struct fpga_region *region)
 -- 
 2.17.0
