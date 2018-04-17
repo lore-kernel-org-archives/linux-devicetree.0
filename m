@@ -1,27 +1,85 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 3/6] dt-bindings: arm: Document the RZN1D-DB board
-Date: Tue, 17 Apr 2018 08:23:28 -0500
-Message-ID: <20180417132328.g2okcv3akwaxlz2l@rob-hp-laptop>
-References: <1523963101-56725-1-git-send-email-michel.pollet@bp.renesas.com>
- <1523963101-56725-4-git-send-email-michel.pollet@bp.renesas.com>
+From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Subject: Re: [PATCH v4 04/10] bindings: PCI: designware: Add support for the
+ EP in Designware driver
+Date: Tue, 17 Apr 2018 14:33:35 +0100
+Message-ID: <e61b75ac-bd19-4e69-3138-702156a36d73@synopsys.com>
+References: <cover.1523881182.git.gustavo.pimentel@synopsys.com>
+ <7d3445e3f8bb15d27987e0d061275d7d69f2c519.1523881182.git.gustavo.pimentel@synopsys.com>
+ <20180416214324.wcyghdwejucoutki@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1523963101-56725-4-git-send-email-michel.pollet@bp.renesas.com>
+In-Reply-To: <20180416214324.wcyghdwejucoutki@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "kishon@ti.com" <kishon@ti.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 17, 2018 at 12:04:18PM +0100, Michel Pollet wrote:
-> This documents the RZ/N1 bindings for the RZN1D-DB board.
+Hi Rob,
+
+On 16/04/2018 22:43, Rob Herring wrote:
+> On Mon, Apr 16, 2018 at 03:37:52PM +0100, Gustavo Pimentel wrote:
+>> Add device tree binding documentation for the Endpoint in PCIe Designware
+>> driver.
+>>
+>> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> ---
+>> Change v1->v2:
+>>  - Add a missing log description.
+>>  - Add "snps,dw-pcie" compatible string following Kishon's suggestion.
+>> Change v2->v3:
+>> - Reverted pcie_ep name to pcie.
+>> Changes v3->v4:
+>> - Reverted "snps,dw-pcie-rc" compatible string requested by Rob Herring.
+>>
+>>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> index 7f9804d..980fc9a 100644
+>> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> @@ -3,6 +3,7 @@
+>>  Required properties:
+>>  - compatible:
+>>  	"snps,dw-pcie" for RC mode;
+>> +	"snps,dw-pcie-ep" for EP mode;
+>>  - reg: Should contain the configuration address space.
+>>  - reg-names: Must be "config" for the PCIe configuration space.
+>>      (The old way of getting the configuration address space from "ranges"
+>> @@ -56,3 +57,15 @@ Example configuration:
+>>  		#interrupt-cells = <1>;
+>>  		num-lanes = <1>;
+>>  	};
+>> +or
+>> +	pcie: pcie@dfc00000 {
+>> +		compatible = "snps,dw-pcie-ep";
+>> +		reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
+>> +		      <0xdfc01000 0x0001000>, /* IP registers 2 */
+>> +		      <0xd0000000 0x2000000>; /* Configuration space */
+>> +		reg-names = "dbi", "dbi2", "addr_space";
+>> +		device_type = "pci";
 > 
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/arm/shmobile.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> This should not be present for endpoints.
 
-Please add acks/reviewed-bys when posting new versions.
+You're correct. I'll remove it.
 
-Rob
+> 
+> With that dropped,
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> 
+>> +		num-ib-windows = <6>;
+>> +		num-ob-windows = <2>;
+>> +		num-lanes = <1>;
+>> +	};
+>> -- 
+>> 2.7.4
+>>
+>>
+
+Thanks,
+Gustavo
