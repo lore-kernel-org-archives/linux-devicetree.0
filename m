@@ -1,79 +1,52 @@
 From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v2 0/6] Add tda998x (HDMI) support to atmel-hlcdc
-Date: Tue, 17 Apr 2018 15:10:46 +0200
-Message-ID: <20180417131052.16336-1-peda@axentia.se>
+Subject: [PATCH v2 2/6] dt-bindings: display: atmel: optional video-interface of endpoints
+Date: Tue, 17 Apr 2018 15:10:48 +0200
+Message-ID: <20180417131052.16336-3-peda@axentia.se>
+References: <20180417131052.16336-1-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180417131052.16336-1-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Peter Rosin <peda@axentia.se>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+With bus-type/bus-width properties in the endpoint nodes, the video-
+interface of the connection can be specified for cases where the
+heuristic fails to select the correct output mode. This can happen
+e.g. if not all RGB pins are routed on the PCB; the driver has no
+way of knowing this, and needs to be told explicitly.
 
-I naively thought that since there was support for both nxp,tda19988 (in
-the tda998x driver) and the atmel-hlcdc, things would be a smooth ride.
-But it wasn't, so I started looking around, and found some missing
-pieces in the tilcdc driver. I "stole" some things and made it work
-for my use case.
+This is critical for the devices that have the "conflicting output
+formats" issue (SAM9N12, SAM9X5, SAMA5D3), since the most significant
+RGB bits move around depending on the selected output mode. For
+devices that do not have the "conflicting output formats" issue
+(SAMA5D2, SAMA5D4), this is completely irrelevant.
 
-In addition to the above, our PCB interface between the SAMA5D3 and the
-HDMI encoder is only using 16 bits, and this has to be described
-somewhere, or the atmel-hlcdc driver have no chance of selecting the
-correct output mode. Since I had similar problems with ds90c185 lvds
-encoder I added patches to override the atmel-hlcdc output format via
-DT properties compatible with the media video-interface binding and
-things start to play together.
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Since this series superseeds the bridge series [1], I have included the
-leftover bindings patch for the ti,ds90c185 here. I also noticed that
-the driver date for atmel-hlcdc is bonkers, and added a patch for that.
-
-However, I don't know if the tilcdc driver is interfacing with the
-tda998x driver in a sane and modern way, and I don't know if I have
-missed any subtle point when I "stole" the code and componentized the
-atmel-hlcdc driver. I also have not tested how this behaves if I run
-with the components as modules (not targeting that). Further, I'm
-not sure if I interpret the media video-interface binding correctly.
-
-Anyway, this series solves some real issues for my HW.
-
-Cheers,
-Peter
-
-Changes since v1   https://lkml.org/lkml/2018/4/9/294
-- added reviewed-by from Rob to patch 1/6
-- patch 2/6 changed so that the bus format override is in the endpoint
-  DT node, and follows the binding of media video-interfaces.
-- patch 3/6 is new, it adds drm_of_media_bus_fmt which parses above
-  media video-interface binding (partially).
-- patch 4/6 now makes use of the above helper (and also fixes problems
-  with the 3/5 patch from v1 when no override was specified).
-- do not mention unrelated connector display_info details in the cover
-  letter and commit messages.
-
-[1]
-"Bridge" series v2   https://lkml.org/lkml/2018/3/26/610
-"Bridge" series v1   https://lkml.org/lkml/2018/3/17/221
-
-Peter Rosin (6):
-  dt-bindings: display: bridge: lvds-transmitter: add ti,ds90c185
-  dt-bindings: display: atmel: optional video-interface of endpoints
-  drm: of: introduce drm_of_media_bus_fmt
-  drm/atmel-hlcdc: support bus-width (12/16/18/24) in endpoint nodes
-  drm/atmel-hlcdc: add support for connecting to tda998x HDMI encoder
-  drm/atmel-hlcdc: fix broken release date
-
- .../devicetree/bindings/display/atmel/hlcdc-dc.txt |   8 ++
- .../bindings/display/bridge/lvds-transmitter.txt   |   8 +-
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c     |  85 ++++++++++----
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c       |  85 ++++++++++++--
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h       |  15 +++
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c   | 130 +++++++++++++++++++++
- drivers/gpu/drm/drm_of.c                           |  38 ++++++
- include/drm/drm_of.h                               |   7 ++
- 8 files changed, 347 insertions(+), 29 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+index 82f2acb3d374..244b48869eb4 100644
+--- a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
++++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+@@ -15,6 +15,14 @@ Required children nodes:
+  to external devices using the OF graph reprensentation (see ../graph.txt).
+  At least one port node is required.
+ 
++Optional properties in grandchild nodes:
++ Any endpoint grandchild node may specify a desired video interface
++ according to ../../media/video-interfaces.txt, specifically
++ - bus-type: must be <0>.
++ - bus-width: recognized values are <12>, <16>, <18> and <24>, and
++   override any output mode selection hueristic, forcing "rgb444",
++   "rgb565", "rgb666" and "rgb888" respectively.
++
+ Example:
+ 
+ 	hlcdc: hlcdc@f0030000 {
 -- 
 2.11.0
