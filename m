@@ -1,55 +1,71 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 1/3] net: phy: Add binding for vendor specific
- C45 MDIO address space
-Date: Tue, 17 Apr 2018 20:27:41 +0200
-Message-ID: <20180417182741.GC6688@lunn.ch>
-References: <20180417090233.21548-1-vicentiu.galanopulo@nxp.com>
- <20180417090233.21548-2-vicentiu.galanopulo@nxp.com>
- <bc00cc86-2293-0fd2-4e98-c516f59f97ce@gmail.com>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH v5 09/10] PCI: dwc: Small computation improvement
+Date: Tue, 17 Apr 2018 20:05:11 +0100
+Message-ID: <d0a96713-9e34-2351-4301-8a2f9039e224@synopsys.com>
+References: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
+ <4fc069a2b82cc7a3790bc528a6b67636654a3a35.1523973931.git.gustavo.pimentel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <bc00cc86-2293-0fd2-4e98-c516f59f97ce@gmail.com>
+In-Reply-To: <4fc069a2b82cc7a3790bc528a6b67636654a3a35.1523973931.git.gustavo.pimentel@synopsys.com>
+Content-Language: pt-PT
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: vicentiu.galanopulo@nxp.com, robh@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, davem@davemloft.net, marcel@holtmann.org, devicetree@vger.kernel.org, alexandru.marginean@nxp.com, madalin.bucur@nxp.com
+To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 17, 2018 at 11:18:20AM -0700, Florian Fainelli wrote:
-> On 04/17/2018 02:02 AM, Vicentiu Galanopulo wrote:
-> > The extra property enables the discovery on the MDIO bus
-> > of the PHYs which have a vendor specific address space
-> > for accessing the C45 MDIO registers.
-> > 
-> > Signed-off-by: Vicentiu Galanopulo <vicentiu.galanopulo@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/net/phy.txt | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
-> > index d2169a5..82692e2 100644
-> > --- a/Documentation/devicetree/bindings/net/phy.txt
-> > +++ b/Documentation/devicetree/bindings/net/phy.txt
-> > @@ -61,6 +61,11 @@ Optional Properties:
-> >  - reset-deassert-us: Delay after the reset was deasserted in microseconds.
-> >    If this property is missing the delay will be skipped.
-> >  
-> > +- dev-addr: If set, it indicates the device address of the PHY to be used
-> > +  when accessing the C45 PHY registers over MDIO. It is used for vendor specific
-> > +  register space addresses that do no conform to standard address for the MDIO
-> > +  registers (e.g. MMD30)
+Às 3:34 PM de 4/17/2018, Gustavo Pimentel escreveu:
+> Replaces a simple division by 2 to a right shift rotation of 1 bit.
 > 
-> Rob made that comment earlier, and I have to ask again now, why don't we
-> have the Clause 45 PHY binding be modified such that you have a reg
-> property that has #address-size = 2? This should be entirely backwards
-> compatible, but it would allow you to specify that device address in a
-> more traditional way.
+> Probably any recent and decent compiler does this kind of substitution
+> in order to improve code performance. Nevertheless it's a coding good
+> practice whenever there is a division / multiplication by multiple of 2
+> to replace it by the equivalent operation in this case, the shift
+> rotation.
+> 
+> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+> Change v1->v2:
+>  - Nothing changed, just to follow the patch set version.
+> Change v2->v3:
+>  - Nothing changed, just to follow the patch set version.
+> Changes v3->v4:
+>  - Added a small explication to the log description.
+> Changes v4->v5:
+>  - Nothing changed, just to follow the patch set version.
+> 
+>  drivers/pci/dwc/pcie-designware-host.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/dwc/pcie-designware-host.c b/drivers/pci/dwc/pcie-designware-host.c
+> index 5a23f78..fc55fde 100644
+> --- a/drivers/pci/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/dwc/pcie-designware-host.c
+> @@ -332,8 +332,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  
+>  	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+>  	if (cfg_res) {
+> -		pp->cfg0_size = resource_size(cfg_res) / 2;
+> -		pp->cfg1_size = resource_size(cfg_res) / 2;
+> +		pp->cfg0_size = resource_size(cfg_res) >> 1;
+> +		pp->cfg1_size = resource_size(cfg_res) >> 1;
+>  		pp->cfg0_base = cfg_res->start;
+>  		pp->cfg1_base = cfg_res->start + pp->cfg0_size;
+>  	} else if (!pp->va_cfg0_base) {
+> @@ -377,8 +377,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  			break;
+>  		case 0:
+>  			pp->cfg = win->res;
+> -			pp->cfg0_size = resource_size(pp->cfg) / 2;
+> -			pp->cfg1_size = resource_size(pp->cfg) / 2;
+> +			pp->cfg0_size = resource_size(pp->cfg) >> 1;
+> +			pp->cfg1_size = resource_size(pp->cfg) >> 1;
+>  			pp->cfg0_base = pp->cfg->start;
+>  			pp->cfg1_base = pp->cfg->start + pp->cfg0_size;
+>  			break;
+> 
 
-Hi Florian
+Thanks Gustavo!
 
-I think we might get into trouble when we have both c22 and c45 on the
-same bus. Two different reg formats. I would have to try it and see to
-be sure.
-
-     Andrew
+Acked-by: Joao Pinto <jpinto@synopsys.com>
