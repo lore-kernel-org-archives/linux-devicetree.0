@@ -1,34 +1,41 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next 2/3] net: phy: Change the array size to 32 for
- device_ids
-Date: Tue, 17 Apr 2018 11:18:49 -0700
-Message-ID: <9e676fae-6c96-08a5-d27a-478d91416cb4@gmail.com>
-References: <20180417090233.21548-1-vicentiu.galanopulo@nxp.com>
- <20180417090233.21548-3-vicentiu.galanopulo@nxp.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v3 06/10] drivers/peci: Add a PECI adapter driver for
+ Aspeed AST24xx/AST25xx
+Date: Tue, 17 Apr 2018 11:21:13 -0700
+Message-ID: <684d1e9e-b07d-ef79-4333-e47d11326e7f@linux.intel.com>
+References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
+ <20180410183212.16787-7-jae.hyun.yoo@linux.intel.com>
+ <93e7f93c-a2e4-1e16-be4c-b908f88b9897@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180417090233.21548-3-vicentiu.galanopulo@nxp.com>
+In-Reply-To: <93e7f93c-a2e4-1e16-be4c-b908f88b9897@arm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: vicentiu.galanopulo@nxp.com, andrew@lunn.ch, robh@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, davem@davemloft.net, marcel@holtmann.org, devicetree@vger.kernel.org
-Cc: alexandru.marginean@nxp.com, madalin.bucur@nxp.com
+To: Robin Murphy <robin.murphy@arm.com>, Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/17/2018 02:02 AM, Vicentiu Galanopulo wrote:
-> In the context of enabling the discovery of the PHYs
-> which have the C45 MDIO address space in a non-standard
-> address:  num_ids in get_phy_c45_ids, has the
-> value 8 (ARRAY_SIZE(c45_ids->device_ids)), but the
-> u32 *devs can store 32 devices in the bitfield.
-> 
-> If a device is stored in *devs, in bits 32 to 9
-> (bit counting in lookup loop starts from 1), it will
-> not be found.
-> 
-> Signed-off-by: Vicentiu Galanopulo <vicentiu.galanopulo@nxp.com>
+Hi Robin,
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+On 4/17/2018 6:37 AM, Robin Murphy wrote:
+> Just a drive-by nit:
+> 
+> On 10/04/18 19:32, Jae Hyun Yoo wrote:
+> [...]
+>> +#define PECI_CTRL_SAMPLING_MASK     GENMASK(19, 16)
+>> +#define PECI_CTRL_SAMPLING(x)       (((x) << 16) & 
+>> PECI_CTRL_SAMPLING_MASK)
+>> +#define PECI_CTRL_SAMPLING_GET(x)   (((x) & PECI_CTRL_SAMPLING_MASK) 
+>> >> 16)
+> 
+> FWIW, <linux/bitfield.h> already provides functionality like this, so it 
+> might be worth taking a look at FIELD_{GET,PREP}() to save all these 
+> local definitions.
+> 
+> Robin.
+
+Yes, that looks better. Thanks a lot for your pointing it out.
+
+Jae
