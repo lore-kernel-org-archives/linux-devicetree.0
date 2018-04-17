@@ -1,102 +1,57 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
- node
-Date: Tue, 17 Apr 2018 17:37:25 +0300
-Message-ID: <e125d692-62b9-936c-bd04-84e7eb0072f7@ti.com>
-References: <20180302134804.3690-1-bparrot@ti.com>
- <20180302134804.3690-3-bparrot@ti.com>
- <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
- <20180309182751.GC31988@ti.com> <283b6aea-d262-42ec-5e41-294b02b062c5@ti.com>
- <CAL_JsqJxDTj66V5eGYgQErhXZf6sfp=99De2XqaX+GyD7NCtGw@mail.gmail.com>
- <c3b9897f-aae0-35b1-e4e9-99b904d47cda@ti.com>
- <CAL_Jsq+jYa=aE0Z0s_Wr5iN5LVqpq2OfUfoKDx6i_YA-cg1RRg@mail.gmail.com>
- <a2c98c64-570c-4bb1-3976-3d54d3d4ecde@ti.com>
- <CAL_JsqKm6L_66RYJ6JQJfMLA073QyBtP0U+JBkA+m0e34QJWcg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqKm6L_66RYJ6JQJfMLA073QyBtP0U+JBkA+m0e34QJWcg@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Subject: [PATCH v5 07/10] PCI: dwc: Define maximum number of vectors
+Date: Tue, 17 Apr 2018 15:34:25 +0100
+Message-ID: <a71f296a31b14009e2db9608280102a0fa56b1d8.1523973931.git.gustavo.pimentel@synopsys.com>
+References: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
+References: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gMDkvMDQvMTggMjE6MTcsIFJvYiBIZXJyaW5nIHdyb3RlOgoKPj4+IEZvciBI
-RE1JLCB5b3UgY2FuJ3Qga25vdyBpbiBhZHZhbmNlIHdoYXQgcmVzb2x1dGlvbiB3aWxsIGJlLiBT
-byBJCj4+PiB0aGluayB5b3UgYWx3YXlzIG5lZWQgdG8gcmVzZXJ2ZSAyIHBsYW5lcy4gTm93LCBp
-ZiB5b3Ugd2FudCB0byByZWR1Y2UKPj4KPj4gV2UgY2FuIGRlY2lkZSBub3QgdG8gc3VwcG9ydCAy
-aysgcmVzb2x1dGlvbnMgZm9yIEhETUksIHdoaWNoLCB3aXRoIHRoaXMKPj4gc2VyaWVzLCBoYXBw
-ZW5zIGJ5IG5vdCByZXNlcnZpbmcgZHVhbC1wbGFuZSBmb3IgdGhlIEhETUkuCj4gCj4gUmlnaHQu
-IFNvIHR1cm4gdGhpcyBhcm91bmQuIERlZmluZSBpbiBEVCB3aGF0IGlzIHRoZSBtYXhpbXVtCj4g
-cmVzb2x1dGlvbiBzdXBwb3J0ZWQgZm9yIEhETUkgYW5kIGNvbmZpZ3VyZSB0aGUgcGxhbmVzIGJh
-c2VkIG9uIHRoYXQuCgpCdXQgdGhlIGtlcm5lbCBjYW5ub3Qga25vdyB3aGF0IHRoZSB1c2VyIHdh
-bnRzIHRvIGRvLCBzbyBpdCBjYW5ub3QKY29uZmlndXJlIHRoZSBwbGFuZXMuIElmIHdlIGhhdmUg
-YW4gSERNSSBvdXRwdXQgd2hpY2ggc3VwcG9ydHMgMmsrIGFuZCBhCi0yayBMQ0QsIGFuZCA0IGh3
-IHBsYW5lcywgd2UgY2FuIHNldCB1cCB0aGUgcGxhbmVzIGF0IGxlYXN0IGluIHRoZQpmb2xsb3dp
-bmcgd2F5czoKCi0gT25lIHZpcnR1YWwgcGxhbmUgb24gSERNSSwgdHdvIG5vcm1hbCBwbGFuZXMg
-b24gTENELiBIZXJlIHRoZSBub3JtYWwKcGxhbmVzIGNhbiBhbHNvIGJlIHVzZWQgb24gdGhlIEhE
-TUksIGFzIGxvbmcgYXMgdGhlIGlucHV0IHdpZHRoIGlzIC0yay4KCi0gT25lIHZpcnR1YWwgcGxh
-bmUgb24gSERNSSwgb25lIHZpcnR1YWwgcGxhbmUgb24gTENELCBidXQgc29tZXRpbWVzCmJvdGgg
-cGxhbmVzIG9uIHRoZSBzYW1lIGRpc3BsYXkgKGVpdGhlciBIRE1JIG9yIExDRCkuCgotIE5vIHZp
-cnR1YWwgcGxhbmVzIChhbmQgZmJkZXYgc3VwcG9ydCBkaXNhYmxlZCkuIFRoaXMgbmVlZHMgdGhl
-CnVzZXJzcGFjZSB0byB0YWtlIGNhcmUgbm90IHRvIGNvbmZpZ3VyZSAyaysgcGxhbmVzLiBCdXQg
-Y29uc2lkZXJpbmcgdGhhdAp0aGUgbW9kZXMgc3VwcG9ydGVkIGFyZSBzdGlsbCBxdWl0IGNsb3Nl
-IHRvIDJrIGluIHdpZHRoLCBJIGJlbGlldmUKdXBzY2FsaW5nIGEgMmsgcGxhbmUgY292ZXIgdGhl
-IHdob2xlIGRpc3BsYXkgd291bGQgcHJvdmlkZSBxdWl0ZSBvayBpbWFnZS4KCkVhY2ggb2YgdGhv
-c2UgcmVxdWlyZXMgYSBkaWZmZXJlbnQgdmlydHVhbCBwbGFuZSBzZXR1cC4KCj4+IEJ1dCByZXNl
-cnZlIGhvdyBtYW55IG9mIHRoZSBwbGFuZXM/IFdlIGhhdmUgTiBwbGFuZXMgYW5kIE0gZGlzcGxh
-eXMuIEZvcgo+PiBzb21lIG9mIHRoZSBkaXNwbGF5cyB3ZSBrbm93IHRoZXkncmUgMmsrLCBzb21l
-IGFyZSBrbm93biB0byBiZSAtMmsgYW5kCj4+IHNvbWUgYXJlIHVua25vd24uIFRoZSBkcml2ZXIg
-Y2FuJ3QgaW5kZXBlbmRlbnRseSBtYWtlIGFueSBzZW5zaWJsZQo+PiBzdGF0aWMgcmVzZXJ2YXRp
-b24gb2YgdGhlIHBsYW5lcyBmb3IgdGhlIGRpc3BsYXlzLCBiZWNhdXNlIGl0IGRvZXNuJ3QKPj4g
-a25vdyB3aGF0IHRoZSB1c2VyIHdhbnRzIHRvIGRvLgo+IAo+IEFmdGVyIHlvdSd2ZSBoYW5kbGVk
-IEhETUkgYXMgYWJvdmUgYW5kIGFueSBwZXJtYW5lbnRseSBhdHRhY2hlZCBwYW5lbHMKPiB3aXRo
-IGZpeGVkIHJlc29sdXRpb25zLCB3aGF0IGlzIGxlZnQgZm9yIGEgdXNlciB0byBjb25maWd1cmU/
-IFBlcmhhcHMKPiBvbmx5IG9uZSBkaXNwbGF5IGNhbiBzdXBwb3J0IGFuIG92ZXJsYXkgYXQgdGhh
-dCBwb2ludCBiZWNhdXNlIHlvdSBhcmUKPiBvdXQgb2YgcGxhbmVzPwoKSSB0aGluayBJIGNvdmVy
-ZWQgdGhpcyBpbiB0aGUgZXhhbXBsZSB1c2UgY2FzZXMgYWJvdmUuCgo+PiBTbyBlaXRoZXIgd2Ug
-cmVzZXJ2ZSB0aGUgZXh0cmEgcGxhbmVzIGF0IHJ1bnRpbWUgb24gZGVtYW5kLCBtYWtpbmcgaXQK
-Pj4gZGlmZmljdWx0IHRvIG1hbmFnZSBmb3IgdGhlIHVzZXJzcGFjZSwgb3Igd2UgcmVseSBvbiB0
-aGUgdXNlciB0byBnaXZlCj4+IHRoZSBkcml2ZXIgYSBzdGF0aWMgcGFydGl0aW9uaW5nIG9mIHRo
-ZSBwbGFuZXMgYWNjb3JkaW5nIHRvIHRoZSB1c2VyJ3MKPj4gdXNlIGNhc2UuCj4gCj4gQW5kIGJ5
-IHVzZXIsIHdobyBkbyB5b3UgbWVhbiBleGFjdGx5PyBUaGUgdXNlIGNhc2UgaXMgdGllZCB0byB0
-aGUKPiBib2FyZCBkZXNpZ24gYW5kIHByb2R1Y3Qgb3IgdGllZCB0byB0aGUgd2hpbXMgb2YgYW4g
-ZW5kIHVzZXIgKGUuZy4gSQo+IHdhbnQgdG8gZG8gdmlkZW8gcGxheWJhY2sgd2l0aCBvdmVybGF5
-IHRvIGRpc3AgMik/IFlvdSBzaG91bGQgZXF1YXRlCj4gdXNlcnMgbWFraW5nIERUIGNoYW5nZXMg
-d2l0aCB0ZWxsaW5nIHVzZXJzIHRvIHVwZGF0ZS9jaGFuZ2UgdGhlaXIKPiBCSU9TLgoKQnkgdXNl
-ciBJIG1lYW4gdGhlIG93bmVyIG9mIHRoZSBkZXZpY2UsIGJ1dCBpdCBpbiBzb21lIGNhc2VzIGl0
-IGNvdWxkIGJlCnRoZSB2ZW5kb3IgdG9vLgoKSWYgd2UgaGF2ZSBhIGJvYXJkIHdpdGggSERNSSB0
-aGF0IGNhbiBzdXBwb3J0IDJrKywgdGhlbiB0aGUgYm9hcmQgdmVuZG9yCmNvdWxkIHByb3ZpZGUg
-RFQgZmlsZXMgdGhhdCBkbyBub3Qgc3BlY2lmeSB2aXJ0dWFsIHBsYW5lcyAoc28gbm8gMmsrKSwK
-YnV0IGdpdmUgaW5zdHJ1Y3Rpb25zIGhvdyB0byBkZWZpbmUgdGhlbSBmb3IgdGhlIHVzZXJzIHdo
-byB3YW50IDJrKy4gU28KaGVyZSB0aGUgZW5kIHVzZXIgbmVlZHMgdG8gZGVhbCB3aXRoIHRoZSBz
-dGF0aWMgcGFydGl0aW9uaW5nLgoKSWYgd2UgaGF2ZSBhIGJvYXJkIHdpdGggYSBmaXhlZCByZXNv
-bHV0aW9uIDJrKyBMQ0QsIHRoZW4gdGhlIHZlbmRvciBoYXMKdG8gaGF2ZSBhIHZpcnR1YWwgcGxh
-bmUgZGVmaW5lZCBpbiB0aGUgRFQsIGFuZCB0aGUgdmVuZG9yIGhhcyB0byBwaWNrIGEKY29uZmln
-dXJhdGlvbiB0aGF0IGl0IHRoaW5rcyBpcyBtb3N0IHVzZWZ1bC4KCkFuZCB5ZXMsIGl0IHN1Y2tz
-IHRvIGhhdmUgdG8gbWFrZSBjaGFuZ2VzIGluIHRoZSBEVCBvciBCSU9TLCBidXQgSSBzdGlsbApk
-b24ndCBzZWUgYSAoZ29vZCkgYWx0ZXJuYXRpdmUuCgpJIHRoaW5rIG9uZSBvcHRpb24gaXMgdG8g
-aGF2ZSB0aGUgZGV0YWlsZWQgRFQgY29uZmlndXJhdGlvbiBvcHRpb25hbDoKCldlJ2QgaGF2ZSBh
-IGZsYWcgaW4gdGhlIERUIHRvIG1hcmsgdGhhdCBhIGRpc3BsYXkgc3VwcG9ydHMgMmsrIChvciB0
-aGUKbWF4LXJlc29sdXRpb24gcHJvcGVydHkgYXMgeW91IHN1Z2dlc3RlZCkuIEJhc2VkIG9uIHRo
-YXQsIHRoZSBkcml2ZXIKZ3Vlc3NlcyB3aGF0IGtpbmQgb2Ygc2V0dXAgdGhlIHVzZXIgd2FudHMs
-IHdoaWNoIHByb2JhYmx5IGlzIGp1c3QgdG8gc2V0CnVwIHBsYW5lcyBpbiBhIHdheSB0aGF0IGVh
-Y2ggZGlzcGxheSBoYXMgYSBmdWxseSBmdW5jdGlvbmFsICJyb290IgpwbGFuZSwgYW5kIHRoZW4g
-c3BsaXQgdGhlIHJlbWFpbmluZyBvbmVzIGluIHNvbWUgd2F5LgoKQnV0IHRoZSB1c2VyIGNvdWxk
-IGFsc28gaGF2ZSBkZXRhaWxlZCBEVCBkZXNjcmlwdGlvbnMgZm9yIHRoZSBwbGFuZXMKd2hlbiBo
-ZSBuZWVkcyBhIG1vcmUgc3BlY2lhbCBzZXR1cC4KCiBUb21pCgotLSAKVGV4YXMgSW5zdHJ1bWVu
-dHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVubnVz
-L0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Adds a callback that defines the maximum number of vectors that can be use
+by the Root Complex.
+
+Since this is a parameter associated to each SoC IP setting, makes sense to
+be configurable and easily visible to future modifications.
+
+The designware IP supports a maximum of 256 vectors.
+
+Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+---
+Change v1->v2:
+ - Nothing changed, just to follow the patch set version.
+Change v2->v3:
+ - Nothing changed, just to follow the patch set version.
+Changes v3->v4:
+ - Nothing changed, just to follow the patch set version.
+Changes v4->v5:
+ - Nothing changed, just to follow the patch set version.
+
+ drivers/pci/dwc/pcie-designware-plat.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/pci/dwc/pcie-designware-plat.c b/drivers/pci/dwc/pcie-designware-plat.c
+index efc315c..5937fed 100644
+--- a/drivers/pci/dwc/pcie-designware-plat.c
++++ b/drivers/pci/dwc/pcie-designware-plat.c
+@@ -48,8 +48,14 @@ static int dw_plat_pcie_host_init(struct pcie_port *pp)
+ 	return 0;
+ }
+ 
++static void dw_plat_set_num_vectors(struct pcie_port *pp)
++{
++	pp->num_vectors = MAX_MSI_IRQS;
++}
++
+ static const struct dw_pcie_host_ops dw_plat_pcie_host_ops = {
+ 	.host_init = dw_plat_pcie_host_init,
++	.set_num_vectors = dw_plat_set_num_vectors,
+ };
+ 
+ static int dw_plat_pcie_establish_link(struct dw_pcie *pci)
+-- 
+2.7.4
