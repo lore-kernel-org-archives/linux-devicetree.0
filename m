@@ -1,115 +1,70 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC v2 2/6] base: devcon: add a new API to find the graph
-Date: Thu, 26 Apr 2018 20:26:42 +0900
-Message-Id: <1524742006-17984-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1524742006-17984-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1524742006-17984-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=pf7g=HG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-co1nam03on0080.outbound.protection.outlook.com ([104.47.40.80]:50864
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751157AbeDQSOb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Apr 2018 14:14:31 -0400
+Subject: Re: [PATCH v5 1/2] iio:imu: inv_mpu6050: support more interrupt types
+References: <20180409202128.5031-1-mkelly@xevo.com>
+ <64b0a5c7-ee8d-d1ca-b3aa-a1801f19787c@invensense.com>
+ <6e3f08f8-ec16-e67b-c68c-7020eb660b14@xevo.com>
+ <2ab59fc6-49c9-7426-fe95-824a165cfefa@invensense.com>
+ <ef871439-f42f-cb7d-6dc3-4e0c47ff8986@xevo.com>
+ <20180415184351.544f4bfa@archlinux>
+ <b282fe90-a16c-1dd5-f88f-84b73af3f989@xevo.com>
+ <f4c27917-80e7-340d-6f51-42a44f161777@invensense.com>
+From: Martin Kelly <mkelly@xevo.com>
+Message-ID: <ca4ac214-d85f-bf9a-07db-31f72afbb95b@xevo.com>
+Date: Tue, 17 Apr 2018 11:14:22 -0700
 MIME-Version: 1.0
-Content-Type: text/plain
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <f4c27917-80e7-340d-6f51-42a44f161777@invensense.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds a new API "device_connection_find_by_graph()" to
-find device connection by using graph.
+On 04/17/2018 07:10 AM, Jean-Baptiste Maneyrol wrote:
+> 
+> 
+> On 15/04/2018 21:05, Martin Kelly wrote:
+>> On 04/15/2018 10:43 AM, Jonathan Cameron wrote:
+>>> On Wed, 11 Apr 2018 09:42:14 -0700
+>>> Martin Kelly <mkelly@xevo.com> wrote:
+>>>
+>>>> On 04/11/2018 12:01 AM, Jean-Baptiste Maneyrol wrote:
+>>>>> This is OK for me.
+>>>>>
+>>>>> Jonathan will tell us about EBUSY error code for sure if it is not 
+>>>>> correct.
+>>>>>
+>>>>> JB
+>>>>
+>>>> Sounds good; once we hear from Jonathan, I will submit the next 
+>>>> revision.
+>>> Optimists.  I can never make my mind up on some of the error codes.
+>>>
+>>> It's not totally silly so I'm happy with EBUSY or ENODEV as you wish.
+>>>
+>>> Jonathan
+>>>
+>>
+>> OK, then I will defer to Jean-Baptiste on this. Shall we go with ENODEV?
+> 
+> After looking into the irq kernel code, I think perhaps the best value 
+> should be EINVAL. What it really means, is that configuration is missing 
+> in the dts file where it shouldn't. Incorrect value seams more 
+> meaningful in this case.
+> 
+> Do you agree?
+> 
+> JB
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Documentation/driver-api/device_connection.rst |  4 +--
- drivers/base/devcon.c                          | 43 ++++++++++++++++++++++++++
- include/linux/device.h                         |  2 ++
- 3 files changed, 47 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/driver-api/device_connection.rst b/Documentation/driver-api/device_connection.rst
-index affbc556..2e2d26f 100644
---- a/Documentation/driver-api/device_connection.rst
-+++ b/Documentation/driver-api/device_connection.rst
-@@ -19,7 +19,7 @@ Device connections alone do not create a dependency between the two devices.
- They are only descriptions which are not tied to either of the devices directly.
- A dependency between the two devices exists only if one of the two endpoint
- devices requests a reference to the other. The descriptions themselves can be
--defined in firmware (not yet supported) or they can be built-in.
-+defined in firmware or they can be built-in.
- 
- Usage
- -----
-@@ -40,4 +40,4 @@ API
- ---
- 
- .. kernel-doc:: drivers/base/devcon.c
--   : functions: device_connection_find_match device_connection_find device_connection_add device_connection_remove
-+   : functions: device_connection_find_match device_connection_find device_connection_add device_connection_remove device_connection_find_by_graph
-diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
-index d427e80..5a0da33 100644
---- a/drivers/base/devcon.c
-+++ b/drivers/base/devcon.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <linux/device.h>
-+#include <linux/property.h>
- 
- static DEFINE_MUTEX(devcon_lock);
- static LIST_HEAD(devcon_list);
-@@ -134,3 +135,45 @@ void device_connection_remove(struct device_connection *con)
- 	mutex_unlock(&devcon_lock);
- }
- EXPORT_SYMBOL_GPL(device_connection_remove);
-+
-+static int generic_graph_match(struct device *dev, void *fwnode)
-+{
-+	return dev->fwnode == fwnode;
-+}
-+
-+/**
-+ * device_connection_find_by_graph - Find two devices connected together
-+ * @dev: Device to find connected device
-+ * @port: identifier of the @dev port node
-+ * @endpoint: identifier of the @dev endpoint node
-+ *
-+ * Find a connection with @port and @endpoint by using graph between @dev and
-+ * another device. On success returns handle to the device that is connected
-+ * to @dev, with the reference count for the found device incremented. Returns
-+ * NULL if no matching connection was found, or ERR_PTR(-EPROBE_DEFER) when
-+ * a connection was found but the other device has not been enumerated yet.
-+ */
-+struct device *device_connection_find_by_graph(struct device *dev, u32 port,
-+					       u32 endpoint)
-+{
-+	struct bus_type *bus;
-+	struct fwnode_handle *remote;
-+	struct device *conn;
-+
-+	remote = fwnode_graph_get_remote_node(dev_fwnode(dev), port, endpoint);
-+	if (!remote)
-+		return NULL;
-+
-+	for (bus = generic_match_buses[0]; bus; bus++) {
-+		conn = bus_find_device(bus, NULL, remote, generic_graph_match);
-+		if (conn)
-+			return conn;
-+	}
-+
-+	/*
-+	 * We only get called if a connection was found, tell the caller to
-+	 * wait for the other device to show up.
-+	 */
-+	return ERR_PTR(-EPROBE_DEFER);
-+}
-+EXPORT_SYMBOL_GPL(device_connection_find_by_graph);
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 0059b99..58f8544 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -751,6 +751,8 @@ void *device_connection_find_match(struct device *dev, const char *con_id,
- 
- void device_connection_add(struct device_connection *con);
- void device_connection_remove(struct device_connection *con);
-+struct device *device_connection_find_by_graph(struct device *dev, u32 port,
-+					       u32 endpoint);
- 
- /**
-  * enum device_link_state - Device link states.
--- 
-1.9.1
+Yes, EINVAL is fine with me. I didn't use it because there was a note in 
+the aforementioned document saying that it's best to use a more specific 
+error code. However, none of these error codes have a clear case for 
+their use, and it's all a bit muddled, as Jonathan mentioned. I'll send 
+a revision with EINVAL later this week when I'm back to my desk with 
+hardware to test.
