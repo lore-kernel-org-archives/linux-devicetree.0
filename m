@@ -1,26 +1,42 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v6 03/11] ARM: dts: sun8i: Add R_CPUCFG device node for
- the A83T dtsi
-Date: Tue, 17 Apr 2018 11:13:12 +0800
-Message-ID: <CAGb2v67b_-RTF2HyNE5NoWTiHy9BDPR95sxvOYzGbz7=qP_ewA@mail.gmail.com>
-References: <20180416215032.5023-1-mylene.josserand@bootlin.com> <20180416215032.5023-4-mylene.josserand@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH 1/2] dt-bindings: input: Add Add Spreadtrum SC27xx vibrator documentation
+Date: Tue, 17 Apr 2018 11:18:23 +0800
+Message-ID: <0bfdc811c2b3da3aa1cde2feef278a86503e3804.1523934640.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180416215032.5023-4-mylene.josserand@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@bootlin.com>
-Cc: Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@bootlin.com>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Simon <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, "open list:ARM/SHMOBILE ARM..." <linux-renesas-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Quentin Schulz <quentin.schulz@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com
+Cc: baolin.wang@linaro.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xiaotong.lu@spreadtrum.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 17, 2018 at 5:50 AM, Mylène Josserand
-<mylene.josserand@bootlin.com> wrote:
-> The R_CPUCFG is a collection of registers needed for SMP bringup
-> on clusters and cluster's reset.
-> For the moment, documentation about this register is found in
-> Allwinner's code only.
->
-> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+From: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
 
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+This patch adds the binding documentation for Spreadtrum SC27xx series
+vibrator device.
+
+Signed-off-by: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ .../bindings/input/sprd,sc27xx-vibra.txt           |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt
+
+diff --git a/Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt b/Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt
+new file mode 100644
+index 0000000..92ead29
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt
+@@ -0,0 +1,12 @@
++Spreadtrum SC27xx PMIC Vibrator
++
++Required properties:
++- compatible: should be "sprd,sc27xx-vibrator".
++- reg: address of vibrator control register.
++
++Example :
++
++vibrator@eb4 {
++	compatible = "sprd,sc27xx-vibrator";
++	reg = <0xeb4>;
++};
+-- 
+1.7.9.5
