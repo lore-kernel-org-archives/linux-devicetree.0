@@ -1,65 +1,62 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v6 07/11] ARM: sun9i: smp: Rename clusters's power-off
-Date: Tue, 17 Apr 2018 11:21:02 +0300
-Message-ID: <fd19ec26-9240-5ae2-fc6e-d3918ab91d01@cogentembedded.com>
-References: <20180416215032.5023-1-mylene.josserand@bootlin.com>
- <20180416215032.5023-8-mylene.josserand@bootlin.com>
+From: Olivier MOYSAN <olivier.moysan@st.com>
+Subject: Re: [PATCH 0/3] ASoC: stm32: sai: add support of
+	iec958 controls
+Date: Tue, 17 Apr 2018 08:29:17 +0000
+Message-ID: <a0552849-47fa-dc72-a512-a3e075adb07f@st.com>
+References: <1520958428-10930-1-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180416215032.5023-8-mylene.josserand@bootlin.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1520958428-10930-1-git-send-email-olivier.moysan@st.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Myl=c3=a8ne_Josserand?= <mylene.josserand@bootlin.com>, linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com
-Cc: devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
+Content-ID: <2457FA169E377F43A07A71F8D69433AF@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "jsarha@ti.com" <jsarha@ti.com>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, "rmk@arm.linux.org.uk" <rmk@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8hCgpPbiA0LzE3LzIwMTggMTI6NTAgQU0sIE15bMOobmUgSm9zc2VyYW5kIHdyb3RlOgoK
-PiBUbyBwcmVwYXJlIHRoZSBzdXBwb3J0IGZvciBzdW44aS1hODN0LCByZW5hbWUgdGhlIHZhcmlh
-YmxlIG5hbWUKCiAgICBzL3ZhcmlhYmxlL21hY3JvLyBtYXliZT8gQWxzbyAicmVuYW1lIHRoZSAu
-Li4gbmFtZSIgc291bmRzIHRhdXRvbG9naWNhbC4uLgoKPiB0aGF0IGhhbmRsZXMgdGhlIHBvd2Vy
-LW9mZiBvZiBjbHVzdGVycyBiZWNhdXNlIGl0IGlzIGRpZmZlcmVudCBmcm9tCj4gc3VuOWktYTgw
-IHRvIHN1bjhpLWE4M3QuCj4gCj4gVGhlIHBvd2VyIG9mZiByZWdpc3RlciBmb3IgY2x1c3RlcnMg
-YXJlIGRpZmZlcmVudCBmcm9tIGE4MCBhbmQgYTgzdC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBNeWzD
-qG5lIEpvc3NlcmFuZCA8bXlsZW5lLmpvc3NlcmFuZEBib290bGluLmNvbT4KPiBBY2tlZC1ieTog
-TWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBib290bGluLmNvbT4KPiBSZXZpZXdlZC1ieTog
-Q2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPgo+IC0tLQo+ICAgYXJjaC9hcm0vbWFjaC1zdW54
-aS9tY19zbXAuYyB8IDYgKysrLS0tCj4gICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCsp
-LCAzIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLXN1bnhpL21j
-X3NtcC5jIGIvYXJjaC9hcm0vbWFjaC1zdW54aS9tY19zbXAuYwo+IGluZGV4IDcyNzk2OGQ2YTNl
-NS4uMDNmMDIxZDBjNzNlIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL21hY2gtc3VueGkvbWNfc21w
-LmMKPiArKysgYi9hcmNoL2FybS9tYWNoLXN1bnhpL21jX3NtcC5jCj4gQEAgLTYwLDcgKzYwLDcg
-QEAKPiAgICNkZWZpbmUgUFJDTV9DUFVfUE9fUlNUX0NUUkxfQ09SRShuKQlCSVQobikKPiAgICNk
-ZWZpbmUgUFJDTV9DUFVfUE9fUlNUX0NUUkxfQ09SRV9BTEwJMHhmCj4gICAjZGVmaW5lIFBSQ01f
-UFdST0ZGX0dBVElOR19SRUcoYykJKDB4MTAwICsgMHg0ICogKGMpKQo+IC0jZGVmaW5lIFBSQ01f
-UFdST0ZGX0dBVElOR19SRUdfQ0xVU1RFUglCSVQoNCkKPiArI2RlZmluZSBQUkNNX1BXUk9GRl9H
-QVRJTkdfUkVHX0NMVVNURVJfU1VOOUkJQklUKDQpCj4gICAjZGVmaW5lIFBSQ01fUFdST0ZGX0dB
-VElOR19SRUdfQ09SRShuKQlCSVQobikKPiAgICNkZWZpbmUgUFJDTV9QV1JfU1dJVENIX1JFRyhj
-LCBjcHUpCSgweDE0MCArIDB4MTAgKiAoYykgKyAweDQgKiAoY3B1KSkKPiAgICNkZWZpbmUgUFJD
-TV9DUFVfU09GVF9FTlRSWV9SRUcJCTB4MTY0Cj4gQEAgLTI1NSw3ICsyNTUsNyBAQCBzdGF0aWMg
-aW50IHN1bnhpX2NsdXN0ZXJfcG93ZXJ1cCh1bnNpZ25lZCBpbnQgY2x1c3RlcikKPiAgIAo+ICAg
-CS8qIGNsZWFyIGNsdXN0ZXIgcG93ZXIgZ2F0ZSAqLwo+ICAgCXJlZyA9IHJlYWRsKHByY21fYmFz
-ZSArIFBSQ01fUFdST0ZGX0dBVElOR19SRUcoY2x1c3RlcikpOwo+IC0JcmVnICY9IH5QUkNNX1BX
-Uk9GRl9HQVRJTkdfUkVHX0NMVVNURVI7Cj4gKwlyZWcgJj0gflBSQ01fUFdST0ZGX0dBVElOR19S
-RUdfQ0xVU1RFUl9TVU45STsKPiAgIAl3cml0ZWwocmVnLCBwcmNtX2Jhc2UgKyBQUkNNX1BXUk9G
-Rl9HQVRJTkdfUkVHKGNsdXN0ZXIpKTsKPiAgIAl1ZGVsYXkoMjApOwo+ICAgCj4gQEAgLTQ1Miw3
-ICs0NTIsNyBAQCBzdGF0aWMgaW50IHN1bnhpX2NsdXN0ZXJfcG93ZXJkb3duKHVuc2lnbmVkIGlu
-dCBjbHVzdGVyKQo+ICAgCS8qIGdhdGUgY2x1c3RlciBwb3dlciAqLwo+ICAgCXByX2RlYnVnKCIl
-czogZ2F0ZSBjbHVzdGVyIHBvd2VyXG4iLCBfX2Z1bmNfXyk7Cj4gICAJcmVnID0gcmVhZGwocHJj
-bV9iYXNlICsgUFJDTV9QV1JPRkZfR0FUSU5HX1JFRyhjbHVzdGVyKSk7Cj4gLQlyZWcgfD0gUFJD
-TV9QV1JPRkZfR0FUSU5HX1JFR19DTFVTVEVSOwo+ICsJcmVnIHw9IFBSQ01fUFdST0ZGX0dBVElO
-R19SRUdfQ0xVU1RFUl9TVU45STsKPiAgIAl3cml0ZWwocmVnLCBwcmNtX2Jhc2UgKyBQUkNNX1BX
-Uk9GRl9HQVRJTkdfUkVHKGNsdXN0ZXIpKTsKPiAgIAl1ZGVsYXkoMjApOwo+ICAgCgpNQlIsIFNl
-cmdlaQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
-dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
-YXJtLWtlcm5lbAo=
+Hello,
+
+I guess the blocking patch in this patchset is the patch "add IEC958 
+channel status control helper". This patch has been reviewed several 
+times, but did not get a ack so far.
+If you think these helpers will not be merged, I will reintegrate the 
+corresponding code in stm driver.
+Please let me know, if I need to prepare a v2 without helpers, or if we 
+can go further in the review of iec helpers patch ?
+
+Best regards
+olivier
+
+
+On 03/13/2018 05:27 PM, Olivier Moysan wrote:
+> This patchset adds support of iec958 controls to STM32 SAI driver.
+> 
+> The patch makes use of iec958 control status helpers previously proposed
+> and discussed through the following threads:
+> https://patchwork.kernel.org/patch/8062601/
+> https://patchwork.kernel.org/patch/8091551/ (v2)
+> https://patchwork.kernel.org/patch/8462961/ (v3)
+> https://patchwork.kernel.org/patch/8533731/ (v4)
+> 
+> Olivier Moysan (3):
+>    ALSA: pcm: add IEC958 channel status control helper
+>    ASoC: stm32: sai: add iec958 controls support
+>    ASoC: dmaengine_pcm: document process callback
+> 
+>   include/sound/dmaengine_pcm.h |   2 +
+>   include/sound/pcm_iec958.h    |  19 +++++++
+>   sound/core/pcm_iec958.c       | 114 ++++++++++++++++++++++++++++++++++++++++++
+>   sound/soc/stm/Kconfig         |   1 +
+>   sound/soc/stm/stm32_sai_sub.c | 101 ++++++++++++++++++++++++++++++++-----
+>   5 files changed, 225 insertions(+), 12 deletions(-)
+> 
