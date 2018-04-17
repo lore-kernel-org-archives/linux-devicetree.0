@@ -1,8 +1,8 @@
 Return-Path: <SRS0=UpLl=HG=ti.com=t-kristo@kernel.org>
 From: Tero Kristo <t-kristo@ti.com>
-Subject: [RFC 02/13] ARM: dts: add support for building DT overlays
-Date: Tue, 17 Apr 2018 12:10:04 +0300
-Message-ID: <1523956215-28154-3-git-send-email-t-kristo@ti.com>
+Subject: [RFC 11/13] ARM: dts: ti: add FIT image dependencies
+Date: Tue, 17 Apr 2018 12:10:13 +0300
+Message-ID: <1523956215-28154-12-git-send-email-t-kristo@ti.com>
 In-Reply-To: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
 References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
 MIME-Version: 1.0
@@ -11,31 +11,32 @@ To: devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com, mark
 Cc: wmills@ti.com, tony@atomide.com, trini@konsulko.com, rmk@armlinux.org.uk
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for building DT overlay files from the kernel DT source tree.
-These can be built either from the base DT source directory, or platform
-specific subdir under the base directory.
+Add the local FIT image dependencies file to build. This allows building
+the FIT image dependency file before building the FIT image, and to build
+the dependencies themselves also next. Without this, none of the binaries
+required by the FIT image will be found.
+
+Also, add the built FIT images to the clean targets.
 
 Signed-off-by: Tero Kristo <t-kristo@ti.com>
 ---
- arch/arm/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/ti/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index f6c90bc..ca09509 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -343,9 +343,9 @@ $(BOOT_TARGETS): vmlinux
- $(INSTALL_TARGETS):
- 	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $@
+diff --git a/arch/arm/boot/dts/ti/Makefile b/arch/arm/boot/dts/ti/Makefile
+index 7d2d411..3ba8164 100644
+--- a/arch/arm/boot/dts/ti/Makefile
++++ b/arch/arm/boot/dts/ti/Makefile
+@@ -1,6 +1,8 @@
+ DTC_FLAGS += -@ -Wno-reg_format -Wno-avoid_default_addr_size
  
--%.dtb: dtbdir=$(patsubst %/,%,$(patsubst %./,%,$(boot)/dts/$(dir $@)))
-+%.dtb %.dtbo: dtbdir=$(patsubst %/,%,$(patsubst %./,%,$(boot)/dts/$(dir $@)))
++-include $(obj)/.itb-deps.d
++
+ $(obj)/%.dtb: $(src)/../%.dts FORCE
+ 	$(call if_changed_dep,dtc)
  
--%.dtb: | scripts
-+%.dtb %.dtbo: | scripts
- 	$(Q)$(MAKE) $(build)=$(dtbdir) MACHINE=$(MACHINE) $(boot)/dts/$@
- 
- PHONY += dtbs dtbs_install
+-clean-files	+= *.dtbo
++clean-files	+= *.dtbo *.itb
 -- 
 1.9.1
 
