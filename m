@@ -1,68 +1,47 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3 06/11] iio: inkern: add module put/get on iio dev
- module when requesting channels
-Date: Mon, 16 Apr 2018 16:58:21 -0700
-Message-ID: <20180416235821.GF77055@dtor-ws>
-References: <1523350677-27106-1-git-send-email-eugen.hristev@microchip.com>
- <1523350677-27106-7-git-send-email-eugen.hristev@microchip.com>
- <20180415203321.1aaaf91e@archlinux>
+From: Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: Add am335x-pocketbeagle
+Date: Mon, 16 Apr 2018 20:14:57 -0500
+Message-ID: <CAOCHtYjo=HhGxqFrte5TPo1-UQvwyGHJHMjfZ7HaLCtsjOOhvg@mail.gmail.com>
+References: <20180416220828.19338-1-robertcnelson@gmail.com>
+ <6A6A9948-48C5-453E-A84F-8B8CA2C00D88@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180415203321.1aaaf91e@archlinux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Eugen Hristev <eugen.hristev@microchip.com>, ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, nicolas.ferre@microchip.com, robh@kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <6A6A9948-48C5-453E-A84F-8B8CA2C00D88@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Kridner <jkridner@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Drew Fustini <drew@beagleboard.org>, Peter Robinson <pbrobinson@redhat.com>, Jason Kridner <jkridner@beagleboard.org>, linux-omap <linux-omap@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 15, 2018 at 08:33:21PM +0100, Jonathan Cameron wrote:
-> On Tue, 10 Apr 2018 11:57:52 +0300
-> Eugen Hristev <eugen.hristev@microchip.com> wrote:
-> 
-> > When requesting channels for a particular consumer device,
-> > besides requesting the device (incrementing the reference counter), also
-> > do it for the driver module of the iio dev. This will avoid the situation
-> > where the producer IIO device can be removed and the consumer is still
-> > present in the kernel.
-> > 
-> > Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> > ---
-> >  drivers/iio/inkern.c | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-> > index ec98790..68d9b87 100644
-> > --- a/drivers/iio/inkern.c
-> > +++ b/drivers/iio/inkern.c
-> > @@ -11,6 +11,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/mutex.h>
-> >  #include <linux/of.h>
-> > +#include <linux/module.h>
-> >  
-> >  #include <linux/iio/iio.h>
-> >  #include "iio_core.h"
-> > @@ -152,6 +153,7 @@ static int __of_iio_channel_get(struct iio_channel *channel,
-> >  	if (index < 0)
-> >  		goto err_put;
-> >  	channel->channel = &indio_dev->channels[index];
-> > +	try_module_get(channel->indio_dev->driver_module);
-> 
-> And if it fails? (the module we are trying to get is going away...)
-> 
-> We should try and handle it I think. Be it by just erroring out of here.
-
-Even more, this has nothing to do with modules. A device can go away for
-any number of reasons (we unbind it manually via sysfs, we pull the USB
-plug from the host in case it is USB-connected device, we unload I2C
-adapter for the bus device resides on, we kick underlying PCI device)
-and we should be able to handle this in some fashion. Handling errors
-from reads and ignoring garbage is one of methods.
-
-FWIW this is a NACK from me.
-
-Thanks.
-
--- 
-Dmitry
+T24gTW9uLCBBcHIgMTYsIDIwMTggYXQgNToyNyBQTSwgSmFzb24gS3JpZG5lciA8amtyaWRuZXJA
+Z21haWwuY29tPiB3cm90ZToKPgo+Cj4+IE9uIEFwciAxNiwgMjAxOCwgYXQgNjowOCBQTSwgUm9i
+ZXJ0IE5lbHNvbiA8cm9iZXJ0Y25lbHNvbkBnbWFpbC5jb20+IHdyb3RlOgo+Pgo+PiBQb2NrZXRC
+ZWFnbGUgaXMgYW4gdWx0cmEtdGlueS15ZXQtY29tcGxldGUgb3Blbi1zb3VyY2UgVVNCLWtleS1m
+b2IgY29tcHV0ZXIuCj4+Cj4+IFRoaXMgYm9hcmQgY2FuIGJlIGluZGVudGlmaWVkIGJ5IHRoZSBC
+UHh4IHZhbHVlIGFmdGVyIEEzMzVCTkxUIChCQkIpCj4+IGluIHRoZSBhdDI0IGVlcHJvbToKPj4g
+QlB4eCBbYWEgNTUgMzMgZWUgNDEgMzMgMzMgMzUgIDQyIDRlIDRjIDU0IDQyIDUwIDMwIDMwIHwu
+VTMuQTMzNUJOTFRCUDAwfF0KPgo+IFRoZSBFRVBST00gdmFsdWUgaXNu4oCZdCByaWdodC4gV2Ug
+bWFkZSBpdCBQQkdMIGluc3RlYWQgb2YgdXNpbmcgQk5MVC4KClRoYW5rcyBKYXNvbiwKClllYWgg
+SSBtdXN0IGhhdmUgZ290IGRpc3RyYWN0ZWQgYW5kIGNvcGVkIHRoZSBvbmUgb2ZmICJQb2NrZXRC
+b25lIgp2YWx1ZSwgaW4gdjMgaSBoYXZlIGl0IGNoYW5nZWQgdG86CgorVGhpcyBib2FyZCBmYW1p
+bHkgY2FuIGJlIGluZGVudGlmaWVkIGJ5IHRoZSBBMzM1UEJHTCBpbiB0aGUgYXQyNCBlZXByb206
+CitBMjogW2FhIDU1IDMzIGVlIDQxIDMzIDMzIDM1ICA1MCA0MiA0NyA0YyAzMCAzMCA0MSAzMiB8
+LlUzLkEzMzVQQkdMMDBBMnxdCgoKPiBJcyB0aGVyZSBhbnl0aGluZyBwcmV2ZW50aW5nIHRoZSBQ
+UlUgYW5kIEdQSU8gcGlucyBmcm9tIGJlaW5nIGRlZmluZWQ/IEkgZ3Vlc3MgdGhlIEdQSU8gcGlu
+cyBtaWdodCBub3QgYmUgZXhwb3NlZCB0aHJvdWdoIFNZU0ZTIGR1ZSB0byBsYWNrIG9mIHVwc3Ry
+ZWFtIGRyaXZlcnMsIGJ1dCBjb3VsZCB0aGUgcGlubXV4IGF0IGxlYXN0IGJlIHNldD8KClllYWgs
+IHdlIGNvdWxkIGFkZCB0aG9zZSBkZWZhdWx0IHBpbm11eCdzIHRvbyBsaWtlIEkgZGlkIGZvciBz
+cGksICh3ZQp1c2UgYSBzcGlkZXYgbm9kZSwgYnV0IHRoYXQgY2FuJ3QgZ28gbWFpbmxpbmUpCgpS
+ZWdhcmRzLAoKLS0gClJvYmVydCBOZWxzb24KaHR0cHM6Ly9yY24tZWUuY29tLwoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
+YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
