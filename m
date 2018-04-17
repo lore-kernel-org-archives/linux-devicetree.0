@@ -1,182 +1,121 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: [PATCH v4] gpio: dwapb: Add support for 1 interrupt per port A GPIO
-Date: Tue, 17 Apr 2018 13:42:57 +0100
-Message-ID: <1523968977-4241-1-git-send-email-phil.edworthy@renesas.com>
+From: Alban <albeu@free.fr>
+Subject: Re: [PATCH v3 2/3] doc: bindings: Add bindings documentation for
+ mtd nvmem
+Date: Tue, 17 Apr 2018 14:44:57 +0200
+Message-ID: <20180417144457.2831140e@avionic-0020>
+References: <1521933899-362-1-git-send-email-albeu@free.fr>
+        <1521933899-362-3-git-send-email-albeu@free.fr>
+        <20180416210851.shu73nlincslxlde@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/YaQdhV8Xmwhoyq.u7ihIurc"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180416210851.shu73nlincslxlde@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Alban <albeu@free.fr>, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The DesignWare GPIO IP can be configured for either 1 interrupt or 1
-per GPIO in port A, but the driver currently only supports 1 interrupt.
-See the DesignWare DW_apb_gpio Databook description of the
-'GPIO_INTR_IO' parameter.
+--Sig_/YaQdhV8Xmwhoyq.u7ihIurc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This change allows the driver to work with up to 32 interrupts, it will
-get as many interrupts as specified in the DT 'interrupts' property.
-It doesn't do anything clever with the different interrupts, it just calls
-the same handler used for single interrupt hardware.
+On Mon, 16 Apr 2018 16:08:51 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
----
-One point to mention is that I have made it possible for users to have
-unconncted interrupts by specifying holes in the list of interrupts. This is
-done by supporting the interrupts-extended DT prop.
-However, I have no use for this and had to hack some test case for this.
-Perhaps the driver should support 1 interrupt or all GPIOa as interrupts?
+> On Sun, Mar 25, 2018 at 12:24:58AM +0100, Alban Bedel wrote:
+> > Config data for drivers, like MAC addresses, is often stored in MTD.
+> > Add a binding that define how such data storage can be represented in
+> > device tree.
+> >=20
+> > Signed-off-by: Alban Bedel <albeu@free.fr>
+> > ---
+> > Changelog:
+> > v2: * Added a "Required properties" section with the nvmem-provider
+> >       property
+> > v3: * Fixed my name in From and Signed-off-by
+> >     * Moved to the new nvmem binding with the nvmem-cells subnode
+> > ---
+> >  .../devicetree/bindings/nvmem/mtd-nvmem.txt        | 27 ++++++++++++++=
+++++++++
+> >  1 file changed, 27 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/nvmem/mtd-nvmem.t=
+xt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt b/Do=
+cumentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+> > new file mode 100644
+> > index 0000000..c819a69
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+> > @@ -0,0 +1,27 @@
+> > +=3D NVMEM in MTD =3D
+> > +
+> > +Config data for drivers, like MAC addresses, is often stored in MTD.
+> > +An MTD device, or one of its partition, can be defined as a NVMEM prov=
+ider
+> > +by having an 'nvmem-cells' subnode as defined in nvmem.txt.
+> > +
+> > +Example:
+> > +
+> > +	flash@0 {
+> > +		...
+> > +
+> > +		partition@2 { =20
+>=20
+> This unit address is not correct...
 
-v4:
- - Use of_irq_get() instead of of_irq_parse_one()+irq_create_of_mapping()
-v3:
- - Rolled mfd: intel_quark_i2c_gpio fix into this patch to avoid bisect problems
-v2:
- - Replaced interrupt-mask DT prop with support for the interrupts-extended
-   prop. This means replacing the call to irq_of_parse_and_map() with calls
-   to of_irq_parse_one() and irq_create_of_mapping().
+Is it because I ellipsed the #address-cells and #size-cells? I will add
+them.
+=20
+> > +			label =3D "art";
+> > +			reg =3D <0x7F0000 0x010000>; =20
+>=20
+> Lowercase hex.
 
-Note: There are a few *code* lines over 80 chars, but this is just guidance,
-   right? Especially as there are already some lines over 80 chars.
+Will do.
 
-snps:gpio fix
+> > +			read-only;
+> > +
+> > +			nvmem-cells {
+> > +				compatible =3D "nvmem-cells";
+> > +				#address-cells =3D <1>;
+> > +				#size-cells =3D <1>;
+> > +
+> > +				eeprom@1000 { =20
+>=20
+> "eeprom" isn't specific data. The purpose of the nvmem binding is to=20
+> provide specific data fields like MAC addresseses.
+>=20
+> Plus "eeprom" is the node name for EEPROM devices.
 
-Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
----
- .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |  9 +++--
- drivers/gpio/gpio-dwapb.c                          | 42 +++++++++++++++++-----
- drivers/mfd/intel_quark_i2c_gpio.c                 |  3 +-
- include/linux/platform_data/gpio-dwapb.h           |  3 +-
- 4 files changed, 44 insertions(+), 13 deletions(-)
+This example is from a board using an ath9k chip and this field contains
+what the driver names EEPROM, although it is in fact only a config
+binary blob. However I agree that it is misleading for such an example,
+I will replace it with something like "wifi-config-data".
 
-diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-index 4a75da7..3c1118b 100644
---- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-@@ -26,8 +26,13 @@ controller.
-   the second encodes the triger flags encoded as described in
-   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
- - interrupt-parent : The parent interrupt controller.
--- interrupts : The interrupt to the parent controller raised when GPIOs
--  generate the interrupts.
-+- interrupts : The interrupts to the parent controller raised when GPIOs
-+  generate the interrupts. If the controller provides one combined interrupt
-+  for all GPIOs, specify a single interrupt. If the controller provides one
-+  interrupt for each GPIO, provide a list of interrupts that correspond to each
-+  of the GPIO pins. When specifying multiple interrupts, if any are unconnected,
-+  use the interrupts-extended property to specify the interrupts and set the
-+  interrupt controller handle for unused interrupts to 0.
- - snps,nr-gpios : The number of pins in the port, a single cell.
- - resets : Reset line for the controller.
- 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 226977f..7a1022f 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -441,14 +441,19 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
- 	irq_gc->chip_types[1].handler = handle_edge_irq;
- 
- 	if (!pp->irq_shared) {
--		irq_set_chained_handler_and_data(pp->irq, dwapb_irq_handler,
--						 gpio);
-+		int i;
-+
-+		for (i = 0; i < pp->ngpio; i++) {
-+			if (pp->irq[i])
-+				irq_set_chained_handler_and_data(pp->irq[i],
-+						dwapb_irq_handler, gpio);
-+		}
- 	} else {
- 		/*
- 		 * Request a shared IRQ since where MFD would have devices
- 		 * using the same irq pin
- 		 */
--		err = devm_request_irq(gpio->dev, pp->irq,
-+		err = devm_request_irq(gpio->dev, pp->irq[0],
- 				       dwapb_irq_handler_mfd,
- 				       IRQF_SHARED, "gpio-dwapb-mfd", gpio);
- 		if (err) {
-@@ -524,7 +529,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 	if (pp->idx == 0)
- 		port->gc.set_config = dwapb_gpio_set_config;
- 
--	if (pp->irq)
-+	if (pp->has_irq)
- 		dwapb_configure_irqs(gpio, port, pp);
- 
- 	err = gpiochip_add_data(&port->gc, port);
-@@ -535,7 +540,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 		port->is_registered = true;
- 
- 	/* Add GPIO-signaled ACPI event support */
--	if (pp->irq)
-+	if (pp->has_irq)
- 		acpi_gpiochip_request_interrupts(&port->gc);
- 
- 	return err;
-@@ -601,13 +606,32 @@ dwapb_gpio_get_pdata(struct device *dev)
- 		if (dev->of_node && pp->idx == 0 &&
- 			fwnode_property_read_bool(fwnode,
- 						  "interrupt-controller")) {
--			pp->irq = irq_of_parse_and_map(to_of_node(fwnode), 0);
--			if (!pp->irq)
-+			struct device_node *np = to_of_node(fwnode);
-+			unsigned int j;
-+
-+			/*
-+			 * The IP has configuration options to allow a single
-+			 * combined interrupt or one per gpio. If one per gpio,
-+			 * some might not be used.
-+			 */
-+			for (j = 0; j < pp->ngpio; j++) {
-+				int irq = of_irq_get(np, j);
-+				if (irq < 0)
-+					continue;
-+
-+				pp->irq[j] = irq;
-+				pp->has_irq = true;
-+			}
-+
-+			if (!pp->has_irq)
- 				dev_warn(dev, "no irq for port%d\n", pp->idx);
- 		}
- 
--		if (has_acpi_companion(dev) && pp->idx == 0)
--			pp->irq = platform_get_irq(to_platform_device(dev), 0);
-+		if (has_acpi_companion(dev) && pp->idx == 0) {
-+			pp->irq[0] = platform_get_irq(to_platform_device(dev), 0);
-+			if (pp->irq[0])
-+				pp->has_irq = true;
-+		}
- 
- 		pp->irq_shared	= false;
- 		pp->gpio_base	= -1;
-diff --git a/drivers/mfd/intel_quark_i2c_gpio.c b/drivers/mfd/intel_quark_i2c_gpio.c
-index 90e35de..5bddb84 100644
---- a/drivers/mfd/intel_quark_i2c_gpio.c
-+++ b/drivers/mfd/intel_quark_i2c_gpio.c
-@@ -233,7 +233,8 @@ static int intel_quark_gpio_setup(struct pci_dev *pdev, struct mfd_cell *cell)
- 	pdata->properties->idx		= 0;
- 	pdata->properties->ngpio	= INTEL_QUARK_MFD_NGPIO;
- 	pdata->properties->gpio_base	= INTEL_QUARK_MFD_GPIO_BASE;
--	pdata->properties->irq		= pdev->irq;
-+	pdata->properties->irq[0]	= pdev->irq;
-+	pdata->properties->has_irq	= true;
- 	pdata->properties->irq_shared	= true;
- 
- 	cell->platform_data = pdata;
-diff --git a/include/linux/platform_data/gpio-dwapb.h b/include/linux/platform_data/gpio-dwapb.h
-index 2dc7f4a..5a52d69 100644
---- a/include/linux/platform_data/gpio-dwapb.h
-+++ b/include/linux/platform_data/gpio-dwapb.h
-@@ -19,7 +19,8 @@ struct dwapb_port_property {
- 	unsigned int	idx;
- 	unsigned int	ngpio;
- 	unsigned int	gpio_base;
--	unsigned int	irq;
-+	unsigned int	irq[32];
-+	bool		has_irq;
- 	bool		irq_shared;
- };
- 
--- 
-2.7.4
+Alban
+
+--Sig_/YaQdhV8Xmwhoyq.u7ihIurc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJa1exKAAoJEHSUmkuduC28DRcQALqSRWKNSEwlkDiawwP6OTu2
+cR0rBDAJ6j2Hc4Xe9+kk9Ns1DyGEh3/wanyr4/jyVHCmy2qW2bQi6+lC6Z9mtVR7
+jk5j0iUH4KyPoa2GRqjMdhU2LIH4g4UDrOgPa/Uje90sP6kZ29dCIphh8cUG0W/Z
+gyGNvrbFjSINaVs5VaNz/Uobd4md/dKu/oI2zFa0UrMGY6G+pL4ZnxpEyRngUy58
+91i4tEPQJbWc8/LmWoIySwPG2PBi3vHi7RPDSvNGLey6BNDJxZwJYttVrvbbpoxh
+ajBL05V9NkZ/o486m3+PZSu4hxyDtGLjP4TmokqdCS+aqrJ//O6pXWaiaIjJgg8b
+lTOnNrcIRIeGx6yqOmvZ2A4lYtVK0407km8BbJbybS3Gk0l14Qk9psLVKAMsrkC+
+nO2rlQ9qP9cly90cwZ2MdSYhGD4sNI3/UFNyIXv/wtTLDJFB59ws8COjugdEaRjB
+j5b8Oo42O0pCnpnKWqdVeRyoKrJKb34v932SOdHFGI8J738RglTMpNaWgRgv2Stz
+0uBwhjtaxg73I7rgt+n5KdN+kd0J3FlAW7HYsM4Gh3tULeQc+hUp6uuKcscDhkTo
+0PbcObJW2vsltl8rH9yJ0SspB4ROi1WT0l3H4EI7bue/bSEoTOc2m6IDQ6N4ji/j
+5owAfRtQdnI0kCIVm7yF
+=pCmc
+-----END PGP SIGNATURE-----
+
+--Sig_/YaQdhV8Xmwhoyq.u7ihIurc--
