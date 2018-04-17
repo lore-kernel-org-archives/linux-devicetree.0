@@ -1,436 +1,301 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 6/6] arm: dts: mediatek: modify audio related nodes for
- both MT2701 and MT7623
-Date: Tue, 17 Apr 2018 16:26:20 +0200
-Message-ID: <5195afaf-b386-2380-1de8-232c1260604d@gmail.com>
-References: <cover.1520327262.git.ryder.lee@mediatek.com>
- <a431bb8f9c203227b14845058a27d690691d0c20.1520327262.git.ryder.lee@mediatek.com>
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+Subject: [PATCH v10 9/9] gpio: madera: Support Cirrus Logic Madera class codecs
+Date: Tue, 17 Apr 2018 15:29:15 +0100
+Message-ID: <20180417142915.15772-10-rf@opensource.cirrus.com>
+References: <20180417142915.15772-1-rf@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a431bb8f9c203227b14845058a27d690691d0c20.1520327262.git.ryder.lee@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <20180417142915.15772-1-rf@opensource.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>
+To: lee.jones@linaro.org, linus.walleij@linaro.org, andy.shevchenko@gmail.com, robh+dt@kernel.org
+Cc: patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This adds support for the GPIOs on Cirrus Logic Madera class codecs.
+Any pins not used for special functions (see the pinctrl driver) can be
+used as general single-bit input or output lines. The number of available
+GPIOs varies between codecs.
 
+Note that this is part of a composite MFD for these codecs and can only
+be used with the corresponding MFD and other child drivers on those
+silicon. The GPIO block on these codecs does not exist indepedently of
+the rest of the MFD.
 
-On 03/06/2018 10:09 AM, Ryder Lee wrote:
-> Modify audio related nodes to reflect the actual usage in binding documents.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
+Signed-off-by: Nariman Poushin <nariman@opensource.cirrus.com>
+Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Changes since V7:
+As the changes are all small and mostly coding style, I've carried forward Linus's
+previous ack.
 
-applied to v4.17-next/dts32
+- SPDX license headers
+- can now build as a module
+- fixed some coding style issues raised by Andy Shevchenko and Linus Walleij
+- commented why we are calling gpiochip_add_pin_range()
+- commented why there is a struct gpio_chip inside struct madera_gpio
+---
+ MAINTAINERS                |   1 +
+ drivers/gpio/Kconfig       |   6 ++
+ drivers/gpio/Makefile      |   1 +
+ drivers/gpio/gpio-madera.c | 206 +++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 214 insertions(+)
+ create mode 100644 drivers/gpio/gpio-madera.c
 
-Thanks!
-
->  arch/arm/boot/dts/mt2701.dtsi | 188 ++++++++++++++++++++---------------------
->  arch/arm/boot/dts/mt7623.dtsi | 190 ++++++++++++++++++++----------------------
->  2 files changed, 182 insertions(+), 196 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> index 05557fc..05cf65c 100644
-> --- a/arch/arm/boot/dts/mt2701.dtsi
-> +++ b/arch/arm/boot/dts/mt2701.dtsi
-> @@ -426,104 +426,96 @@
->  		status = "disabled";
->  	};
->  
-> -	afe: audio-controller@11220000 {
-> -		compatible = "mediatek,mt2701-audio";
-> -		reg = <0 0x11220000 0 0x2000>,
-> -		      <0 0x112a0000 0 0x20000>;
-> -		interrupts =  <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
-> -			      <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-> -		interrupt-names	= "afe", "asys";
-> -		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-> -
-> -		clocks = <&infracfg CLK_INFRA_AUDIO>,
-> -			 <&topckgen CLK_TOP_AUD_MUX1_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_MUX2_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_MUX1_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_MUX2_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_48K_TIMING>,
-> -			 <&topckgen CLK_TOP_AUD_44K_TIMING>,
-> -			 <&topckgen CLK_TOP_AUDPLL_MUX_SEL>,
-> -			 <&topckgen CLK_TOP_APLL_SEL>,
-> -			 <&topckgen CLK_TOP_AUD1PLL_98M>,
-> -			 <&topckgen CLK_TOP_AUD2PLL_90M>,
-> -			 <&topckgen CLK_TOP_HADDS2PLL_98M>,
-> -			 <&topckgen CLK_TOP_HADDS2PLL_294M>,
-> -			 <&topckgen CLK_TOP_AUDPLL>,
-> -			 <&topckgen CLK_TOP_AUDPLL_D4>,
-> -			 <&topckgen CLK_TOP_AUDPLL_D8>,
-> -			 <&topckgen CLK_TOP_AUDPLL_D16>,
-> -			 <&topckgen CLK_TOP_AUDPLL_D24>,
-> -			 <&topckgen CLK_TOP_AUDINTBUS_SEL>,
-> -			 <&clk26m>,
-> -			 <&topckgen CLK_TOP_SYSPLL1_D4>,
-> -			 <&topckgen CLK_TOP_AUD_K1_SRC_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_K2_SRC_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_K3_SRC_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_K4_SRC_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_K5_SRC_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_K6_SRC_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_K1_SRC_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_K2_SRC_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_K3_SRC_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_K4_SRC_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_K5_SRC_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_K6_SRC_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_I2S1_MCLK>,
-> -			 <&topckgen CLK_TOP_AUD_I2S2_MCLK>,
-> -			 <&topckgen CLK_TOP_AUD_I2S3_MCLK>,
-> -			 <&topckgen CLK_TOP_AUD_I2S4_MCLK>,
-> -			 <&topckgen CLK_TOP_AUD_I2S5_MCLK>,
-> -			 <&topckgen CLK_TOP_AUD_I2S6_MCLK>,
-> -			 <&topckgen CLK_TOP_ASM_M_SEL>,
-> -			 <&topckgen CLK_TOP_ASM_H_SEL>,
-> -			 <&topckgen CLK_TOP_UNIVPLL2_D4>,
-> -			 <&topckgen CLK_TOP_UNIVPLL2_D2>,
-> -			 <&topckgen CLK_TOP_SYSPLL_D5>;
-> -
-> -		clock-names = "infra_sys_audio_clk",
-> -			 "top_audio_mux1_sel",
-> -			 "top_audio_mux2_sel",
-> -			 "top_audio_mux1_div",
-> -			 "top_audio_mux2_div",
-> -			 "top_audio_48k_timing",
-> -			 "top_audio_44k_timing",
-> -			 "top_audpll_mux_sel",
-> -			 "top_apll_sel",
-> -			 "top_aud1_pll_98M",
-> -			 "top_aud2_pll_90M",
-> -			 "top_hadds2_pll_98M",
-> -			 "top_hadds2_pll_294M",
-> -			 "top_audpll",
-> -			 "top_audpll_d4",
-> -			 "top_audpll_d8",
-> -			 "top_audpll_d16",
-> -			 "top_audpll_d24",
-> -			 "top_audintbus_sel",
-> -			 "clk_26m",
-> -			 "top_syspll1_d4",
-> -			 "top_aud_k1_src_sel",
-> -			 "top_aud_k2_src_sel",
-> -			 "top_aud_k3_src_sel",
-> -			 "top_aud_k4_src_sel",
-> -			 "top_aud_k5_src_sel",
-> -			 "top_aud_k6_src_sel",
-> -			 "top_aud_k1_src_div",
-> -			 "top_aud_k2_src_div",
-> -			 "top_aud_k3_src_div",
-> -			 "top_aud_k4_src_div",
-> -			 "top_aud_k5_src_div",
-> -			 "top_aud_k6_src_div",
-> -			 "top_aud_i2s1_mclk",
-> -			 "top_aud_i2s2_mclk",
-> -			 "top_aud_i2s3_mclk",
-> -			 "top_aud_i2s4_mclk",
-> -			 "top_aud_i2s5_mclk",
-> -			 "top_aud_i2s6_mclk",
-> -			 "top_asm_m_sel",
-> -			 "top_asm_h_sel",
-> -			 "top_univpll2_d4",
-> -			 "top_univpll2_d2",
-> -			 "top_syspll_d5";
-> +	audsys: clock-controller@11220000 {
-> +		compatible = "mediatek,mt2701-audsys", "syscon";
-> +		reg = <0 0x11220000 0 0x2000>;
-> +		#clock-cells = <1>;
-> +
-> +		afe: audio-controller {
-> +			compatible = "mediatek,mt2701-audio";
-> +			interrupts =  <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
-> +				      <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-> +			interrupt-names	= "afe", "asys";
-> +			power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-> +
-> +			clocks = <&infracfg CLK_INFRA_AUDIO>,
-> +				 <&topckgen CLK_TOP_AUD_MUX1_SEL>,
-> +				 <&topckgen CLK_TOP_AUD_MUX2_SEL>,
-> +				 <&topckgen CLK_TOP_AUD_48K_TIMING>,
-> +				 <&topckgen CLK_TOP_AUD_44K_TIMING>,
-> +				 <&topckgen CLK_TOP_AUD_K1_SRC_SEL>,
-> +				 <&topckgen CLK_TOP_AUD_K2_SRC_SEL>,
-> +				 <&topckgen CLK_TOP_AUD_K3_SRC_SEL>,
-> +				 <&topckgen CLK_TOP_AUD_K4_SRC_SEL>,
-> +				 <&topckgen CLK_TOP_AUD_K1_SRC_DIV>,
-> +				 <&topckgen CLK_TOP_AUD_K2_SRC_DIV>,
-> +				 <&topckgen CLK_TOP_AUD_K3_SRC_DIV>,
-> +				 <&topckgen CLK_TOP_AUD_K4_SRC_DIV>,
-> +				 <&topckgen CLK_TOP_AUD_I2S1_MCLK>,
-> +				 <&topckgen CLK_TOP_AUD_I2S2_MCLK>,
-> +				 <&topckgen CLK_TOP_AUD_I2S3_MCLK>,
-> +				 <&topckgen CLK_TOP_AUD_I2S4_MCLK>,
-> +				 <&audsys CLK_AUD_I2SO1>,
-> +				 <&audsys CLK_AUD_I2SO2>,
-> +				 <&audsys CLK_AUD_I2SO3>,
-> +				 <&audsys CLK_AUD_I2SO4>,
-> +				 <&audsys CLK_AUD_I2SIN1>,
-> +				 <&audsys CLK_AUD_I2SIN2>,
-> +				 <&audsys CLK_AUD_I2SIN3>,
-> +				 <&audsys CLK_AUD_I2SIN4>,
-> +				 <&audsys CLK_AUD_ASRCO1>,
-> +				 <&audsys CLK_AUD_ASRCO2>,
-> +				 <&audsys CLK_AUD_ASRCO3>,
-> +				 <&audsys CLK_AUD_ASRCO4>,
-> +				 <&audsys CLK_AUD_AFE>,
-> +				 <&audsys CLK_AUD_AFE_CONN>,
-> +				 <&audsys CLK_AUD_A1SYS>,
-> +				 <&audsys CLK_AUD_A2SYS>,
-> +				 <&audsys CLK_AUD_AFE_MRGIF>;
-> +
-> +			clock-names = "infra_sys_audio_clk",
-> +				      "top_audio_mux1_sel",
-> +				      "top_audio_mux2_sel",
-> +				      "top_audio_a1sys_hp",
-> +				      "top_audio_a2sys_hp",
-> +				      "i2s0_src_sel",
-> +				      "i2s1_src_sel",
-> +				      "i2s2_src_sel",
-> +				      "i2s3_src_sel",
-> +				      "i2s0_src_div",
-> +				      "i2s1_src_div",
-> +				      "i2s2_src_div",
-> +				      "i2s3_src_div",
-> +				      "i2s0_mclk_en",
-> +				      "i2s1_mclk_en",
-> +				      "i2s2_mclk_en",
-> +				      "i2s3_mclk_en",
-> +				      "i2so0_hop_ck",
-> +				      "i2so1_hop_ck",
-> +				      "i2so2_hop_ck",
-> +				      "i2so3_hop_ck",
-> +				      "i2si0_hop_ck",
-> +				      "i2si1_hop_ck",
-> +				      "i2si2_hop_ck",
-> +				      "i2si3_hop_ck",
-> +				      "asrc0_out_ck",
-> +				      "asrc1_out_ck",
-> +				      "asrc2_out_ck",
-> +				      "asrc3_out_ck",
-> +				      "audio_afe_pd",
-> +				      "audio_afe_conn_pd",
-> +				      "audio_a1sys_pd",
-> +				      "audio_a2sys_pd",
-> +				      "audio_mrgif_pd";
-> +
-> +			assigned-clocks = <&topckgen CLK_TOP_AUD_MUX1_SEL>,
-> +					  <&topckgen CLK_TOP_AUD_MUX2_SEL>,
-> +					  <&topckgen CLK_TOP_AUD_MUX1_DIV>,
-> +					  <&topckgen CLK_TOP_AUD_MUX2_DIV>;
-> +			assigned-clock-parents = <&topckgen CLK_TOP_AUD1PLL_98M>,
-> +						 <&topckgen CLK_TOP_AUD2PLL_90M>;
-> +			assigned-clock-rates = <0>, <0>, <49152000>, <45158400>;
-> +		};
->  	};
->  
->  	mmsys: syscon@14000000 {
-> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-> index b750da5..e4dd31d 100644
-> --- a/arch/arm/boot/dts/mt7623.dtsi
-> +++ b/arch/arm/boot/dts/mt7623.dtsi
-> @@ -538,105 +538,99 @@
->  		status = "disabled";
->  	};
->  
-> -	afe: audio-controller@11220000 {
-> -		compatible = "mediatek,mt7623-audio",
-> -			     "mediatek,mt2701-audio";
-> -		reg = <0 0x11220000 0 0x2000>,
-> -		      <0 0x112a0000 0 0x20000>;
-> -		interrupts =  <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
-> -			      <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-> -		interrupt-names	= "afe", "asys";
-> -		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-> +	audsys: clock-controller@11220000 {
-> +		compatible = "mediatek,mt7623-audsys",
-> +			     "mediatek,mt2701-audsys",
-> +			     "syscon";
-> +		reg = <0 0x11220000 0 0x2000>;
-> +		#clock-cells = <1>;
->  
-> -		clocks = <&infracfg CLK_INFRA_AUDIO>,
-> -			 <&topckgen CLK_TOP_AUD_MUX1_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_MUX2_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_MUX1_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_MUX2_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_48K_TIMING>,
-> -			 <&topckgen CLK_TOP_AUD_44K_TIMING>,
-> -			 <&topckgen CLK_TOP_AUDPLL_MUX_SEL>,
-> -			 <&topckgen CLK_TOP_APLL_SEL>,
-> -			 <&topckgen CLK_TOP_AUD1PLL_98M>,
-> -			 <&topckgen CLK_TOP_AUD2PLL_90M>,
-> -			 <&topckgen CLK_TOP_HADDS2PLL_98M>,
-> -			 <&topckgen CLK_TOP_HADDS2PLL_294M>,
-> -			 <&topckgen CLK_TOP_AUDPLL>,
-> -			 <&topckgen CLK_TOP_AUDPLL_D4>,
-> -			 <&topckgen CLK_TOP_AUDPLL_D8>,
-> -			 <&topckgen CLK_TOP_AUDPLL_D16>,
-> -			 <&topckgen CLK_TOP_AUDPLL_D24>,
-> -			 <&topckgen CLK_TOP_AUDINTBUS_SEL>,
-> -			 <&clk26m>,
-> -			 <&topckgen CLK_TOP_SYSPLL1_D4>,
-> -			 <&topckgen CLK_TOP_AUD_K1_SRC_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_K2_SRC_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_K3_SRC_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_K4_SRC_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_K5_SRC_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_K6_SRC_SEL>,
-> -			 <&topckgen CLK_TOP_AUD_K1_SRC_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_K2_SRC_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_K3_SRC_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_K4_SRC_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_K5_SRC_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_K6_SRC_DIV>,
-> -			 <&topckgen CLK_TOP_AUD_I2S1_MCLK>,
-> -			 <&topckgen CLK_TOP_AUD_I2S2_MCLK>,
-> -			 <&topckgen CLK_TOP_AUD_I2S3_MCLK>,
-> -			 <&topckgen CLK_TOP_AUD_I2S4_MCLK>,
-> -			 <&topckgen CLK_TOP_AUD_I2S5_MCLK>,
-> -			 <&topckgen CLK_TOP_AUD_I2S6_MCLK>,
-> -			 <&topckgen CLK_TOP_ASM_M_SEL>,
-> -			 <&topckgen CLK_TOP_ASM_H_SEL>,
-> -			 <&topckgen CLK_TOP_UNIVPLL2_D4>,
-> -			 <&topckgen CLK_TOP_UNIVPLL2_D2>,
-> -			 <&topckgen CLK_TOP_SYSPLL_D5>;
-> -
-> -		clock-names = "infra_sys_audio_clk",
-> -			 "top_audio_mux1_sel",
-> -			 "top_audio_mux2_sel",
-> -			 "top_audio_mux1_div",
-> -			 "top_audio_mux2_div",
-> -			 "top_audio_48k_timing",
-> -			 "top_audio_44k_timing",
-> -			 "top_audpll_mux_sel",
-> -			 "top_apll_sel",
-> -			 "top_aud1_pll_98M",
-> -			 "top_aud2_pll_90M",
-> -			 "top_hadds2_pll_98M",
-> -			 "top_hadds2_pll_294M",
-> -			 "top_audpll",
-> -			 "top_audpll_d4",
-> -			 "top_audpll_d8",
-> -			 "top_audpll_d16",
-> -			 "top_audpll_d24",
-> -			 "top_audintbus_sel",
-> -			 "clk_26m",
-> -			 "top_syspll1_d4",
-> -			 "top_aud_k1_src_sel",
-> -			 "top_aud_k2_src_sel",
-> -			 "top_aud_k3_src_sel",
-> -			 "top_aud_k4_src_sel",
-> -			 "top_aud_k5_src_sel",
-> -			 "top_aud_k6_src_sel",
-> -			 "top_aud_k1_src_div",
-> -			 "top_aud_k2_src_div",
-> -			 "top_aud_k3_src_div",
-> -			 "top_aud_k4_src_div",
-> -			 "top_aud_k5_src_div",
-> -			 "top_aud_k6_src_div",
-> -			 "top_aud_i2s1_mclk",
-> -			 "top_aud_i2s2_mclk",
-> -			 "top_aud_i2s3_mclk",
-> -			 "top_aud_i2s4_mclk",
-> -			 "top_aud_i2s5_mclk",
-> -			 "top_aud_i2s6_mclk",
-> -			 "top_asm_m_sel",
-> -			 "top_asm_h_sel",
-> -			 "top_univpll2_d4",
-> -			 "top_univpll2_d2",
-> -			 "top_syspll_d5";
-> +		afe: audio-controller {
-> +			compatible = "mediatek,mt7623-audio",
-> +				     "mediatek,mt2701-audio";
-> +			interrupts =  <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
-> +				      <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-> +			interrupt-names	= "afe", "asys";
-> +			power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-> +
-> +			clocks = <&infracfg CLK_INFRA_AUDIO>,
-> +				 <&topckgen CLK_TOP_AUD_MUX1_SEL>,
-> +				 <&topckgen CLK_TOP_AUD_MUX2_SEL>,
-> +				 <&topckgen CLK_TOP_AUD_48K_TIMING>,
-> +				 <&topckgen CLK_TOP_AUD_44K_TIMING>,
-> +				 <&topckgen CLK_TOP_AUD_K1_SRC_SEL>,
-> +				 <&topckgen CLK_TOP_AUD_K2_SRC_SEL>,
-> +				 <&topckgen CLK_TOP_AUD_K3_SRC_SEL>,
-> +				 <&topckgen CLK_TOP_AUD_K4_SRC_SEL>,
-> +				 <&topckgen CLK_TOP_AUD_K1_SRC_DIV>,
-> +				 <&topckgen CLK_TOP_AUD_K2_SRC_DIV>,
-> +				 <&topckgen CLK_TOP_AUD_K3_SRC_DIV>,
-> +				 <&topckgen CLK_TOP_AUD_K4_SRC_DIV>,
-> +				 <&topckgen CLK_TOP_AUD_I2S1_MCLK>,
-> +				 <&topckgen CLK_TOP_AUD_I2S2_MCLK>,
-> +				 <&topckgen CLK_TOP_AUD_I2S3_MCLK>,
-> +				 <&topckgen CLK_TOP_AUD_I2S4_MCLK>,
-> +				 <&audsys CLK_AUD_I2SO1>,
-> +				 <&audsys CLK_AUD_I2SO2>,
-> +				 <&audsys CLK_AUD_I2SO3>,
-> +				 <&audsys CLK_AUD_I2SO4>,
-> +				 <&audsys CLK_AUD_I2SIN1>,
-> +				 <&audsys CLK_AUD_I2SIN2>,
-> +				 <&audsys CLK_AUD_I2SIN3>,
-> +				 <&audsys CLK_AUD_I2SIN4>,
-> +				 <&audsys CLK_AUD_ASRCO1>,
-> +				 <&audsys CLK_AUD_ASRCO2>,
-> +				 <&audsys CLK_AUD_ASRCO3>,
-> +				 <&audsys CLK_AUD_ASRCO4>,
-> +				 <&audsys CLK_AUD_AFE>,
-> +				 <&audsys CLK_AUD_AFE_CONN>,
-> +				 <&audsys CLK_AUD_A1SYS>,
-> +				 <&audsys CLK_AUD_A2SYS>,
-> +				 <&audsys CLK_AUD_AFE_MRGIF>;
-> +
-> +			clock-names = "infra_sys_audio_clk",
-> +				      "top_audio_mux1_sel",
-> +				      "top_audio_mux2_sel",
-> +				      "top_audio_a1sys_hp",
-> +				      "top_audio_a2sys_hp",
-> +				      "i2s0_src_sel",
-> +				      "i2s1_src_sel",
-> +				      "i2s2_src_sel",
-> +				      "i2s3_src_sel",
-> +				      "i2s0_src_div",
-> +				      "i2s1_src_div",
-> +				      "i2s2_src_div",
-> +				      "i2s3_src_div",
-> +				      "i2s0_mclk_en",
-> +				      "i2s1_mclk_en",
-> +				      "i2s2_mclk_en",
-> +				      "i2s3_mclk_en",
-> +				      "i2so0_hop_ck",
-> +				      "i2so1_hop_ck",
-> +				      "i2so2_hop_ck",
-> +				      "i2so3_hop_ck",
-> +				      "i2si0_hop_ck",
-> +				      "i2si1_hop_ck",
-> +				      "i2si2_hop_ck",
-> +				      "i2si3_hop_ck",
-> +				      "asrc0_out_ck",
-> +				      "asrc1_out_ck",
-> +				      "asrc2_out_ck",
-> +				      "asrc3_out_ck",
-> +				      "audio_afe_pd",
-> +				      "audio_afe_conn_pd",
-> +				      "audio_a1sys_pd",
-> +				      "audio_a2sys_pd",
-> +				      "audio_mrgif_pd";
-> +
-> +			assigned-clocks = <&topckgen CLK_TOP_AUD_MUX1_SEL>,
-> +					  <&topckgen CLK_TOP_AUD_MUX2_SEL>,
-> +					  <&topckgen CLK_TOP_AUD_MUX1_DIV>,
-> +					  <&topckgen CLK_TOP_AUD_MUX2_DIV>;
-> +			assigned-clock-parents = <&topckgen CLK_TOP_AUD1PLL_98M>,
-> +						 <&topckgen CLK_TOP_AUD2PLL_90M>;
-> +			assigned-clock-rates = <0>, <0>, <49152000>, <45158400>;
-> +		};
->  	};
->  
->  	mmc0: mmc@11230000 {
-> 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 716c4743892d..17a5c78924fa 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3487,6 +3487,7 @@ S:	Supported
+ F:	Documentation/devicetree/bindings/mfd/madera.txt
+ F:	Documentation/devicetree/bindings/pinctrl/cirrus,madera-pinctrl.txt
+ F:	include/linux/mfd/madera/*
++F:	drivers/gpio/gpio-madera*
+ F:	drivers/mfd/madera*
+ F:	drivers/mfd/cs47l*
+ F:	drivers/pinctrl/cirrus/*
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index b960f6f35abd..08c2c121a6dc 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1027,6 +1027,12 @@ config GPIO_LP87565
+ 	  This driver can also be built as a module. If so, the module will be
+ 	  called gpio-lp87565.
+ 
++config GPIO_MADERA
++	tristate "Cirrus Logic Madera class codecs"
++	depends on PINCTRL_MADERA
++	help
++	  Support for GPIOs on Cirrus Logic Madera class codecs.
++
+ config GPIO_MAX77620
+ 	tristate "GPIO support for PMIC MAX77620 and MAX20024"
+ 	depends on MFD_MAX77620
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 1324c8f966a7..22bef2e7c162 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -71,6 +71,7 @@ obj-$(CONFIG_ARCH_LPC32XX)	+= gpio-lpc32xx.o
+ obj-$(CONFIG_GPIO_LP873X)	+= gpio-lp873x.o
+ obj-$(CONFIG_GPIO_LP87565)	+= gpio-lp87565.o
+ obj-$(CONFIG_GPIO_LYNXPOINT)	+= gpio-lynxpoint.o
++obj-$(CONFIG_GPIO_MADERA)	+= gpio-madera.o
+ obj-$(CONFIG_GPIO_MAX3191X)	+= gpio-max3191x.o
+ obj-$(CONFIG_GPIO_MAX730X)	+= gpio-max730x.o
+ obj-$(CONFIG_GPIO_MAX7300)	+= gpio-max7300.o
+diff --git a/drivers/gpio/gpio-madera.c b/drivers/gpio/gpio-madera.c
+new file mode 100644
+index 000000000000..7ba68d1a0932
+--- /dev/null
++++ b/drivers/gpio/gpio-madera.c
+@@ -0,0 +1,206 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * GPIO support for Cirrus Logic Madera codecs
++ *
++ * Copyright (C) 2015-2018 Cirrus Logic
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by the
++ * Free Software Foundation; version 2.
++ */
++
++#include <linux/gpio/driver.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++#include <linux/mfd/madera/core.h>
++#include <linux/mfd/madera/pdata.h>
++#include <linux/mfd/madera/registers.h>
++
++struct madera_gpio {
++	struct madera *madera;
++	/* storage space for the gpio_chip we're using */
++	struct gpio_chip gpio_chip;
++};
++
++static int madera_gpio_get_direction(struct gpio_chip *chip,
++				     unsigned int offset)
++{
++	struct madera_gpio *madera_gpio = gpiochip_get_data(chip);
++	struct madera *madera = madera_gpio->madera;
++	unsigned int reg_offset = 2 * offset;
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read(madera->regmap, MADERA_GPIO1_CTRL_2 + reg_offset,
++			  &val);
++	if (ret < 0)
++		return ret;
++
++	return !!(val & MADERA_GP1_DIR_MASK);
++}
++
++static int madera_gpio_direction_in(struct gpio_chip *chip, unsigned int offset)
++{
++	struct madera_gpio *madera_gpio = gpiochip_get_data(chip);
++	struct madera *madera = madera_gpio->madera;
++	unsigned int reg_offset = 2 * offset;
++
++	return regmap_update_bits(madera->regmap,
++				  MADERA_GPIO1_CTRL_2 + reg_offset,
++				  MADERA_GP1_DIR_MASK, MADERA_GP1_DIR);
++}
++
++static int madera_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	struct madera_gpio *madera_gpio = gpiochip_get_data(chip);
++	struct madera *madera = madera_gpio->madera;
++	unsigned int reg_offset = 2 * offset;
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read(madera->regmap, MADERA_GPIO1_CTRL_1 + reg_offset,
++			  &val);
++	if (ret < 0)
++		return ret;
++
++	return !!(val & MADERA_GP1_LVL_MASK);
++}
++
++static int madera_gpio_direction_out(struct gpio_chip *chip,
++				     unsigned int offset, int value)
++{
++	struct madera_gpio *madera_gpio = gpiochip_get_data(chip);
++	struct madera *madera = madera_gpio->madera;
++	unsigned int reg_offset = 2 * offset;
++	unsigned int reg_val = value ? MADERA_GP1_LVL : 0;
++	int ret;
++
++	ret = regmap_update_bits(madera->regmap,
++				 MADERA_GPIO1_CTRL_2 + reg_offset,
++				 MADERA_GP1_DIR_MASK, 0);
++	if (ret < 0)
++		return ret;
++
++	return regmap_update_bits(madera->regmap,
++				  MADERA_GPIO1_CTRL_1 + reg_offset,
++				  MADERA_GP1_LVL_MASK, reg_val);
++}
++
++static void madera_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			    int value)
++{
++	struct madera_gpio *madera_gpio = gpiochip_get_data(chip);
++	struct madera *madera = madera_gpio->madera;
++	unsigned int reg_offset = 2 * offset;
++	unsigned int reg_val = value ? MADERA_GP1_LVL : 0;
++	int ret;
++
++	ret = regmap_update_bits(madera->regmap,
++				 MADERA_GPIO1_CTRL_1 + reg_offset,
++				 MADERA_GP1_LVL_MASK, reg_val);
++
++	/* set() doesn't return an error so log a warning */
++	if (ret)
++		dev_warn(madera->dev, "Failed to write to 0x%x (%d)\n",
++			 MADERA_GPIO1_CTRL_1 + reg_offset, ret);
++}
++
++static struct gpio_chip madera_gpio_chip = {
++	.label			= "madera",
++	.owner			= THIS_MODULE,
++	.request		= gpiochip_generic_request,
++	.free			= gpiochip_generic_free,
++	.get_direction		= madera_gpio_get_direction,
++	.direction_input	= madera_gpio_direction_in,
++	.get			= madera_gpio_get,
++	.direction_output	= madera_gpio_direction_out,
++	.set			= madera_gpio_set,
++	.set_config		= gpiochip_generic_config,
++	.can_sleep		= true,
++};
++
++static int madera_gpio_probe(struct platform_device *pdev)
++{
++	struct madera *madera = dev_get_drvdata(pdev->dev.parent);
++	struct madera_pdata *pdata = dev_get_platdata(madera->dev);
++	struct madera_gpio *madera_gpio;
++	int ret;
++
++	madera_gpio = devm_kzalloc(&pdev->dev, sizeof(*madera_gpio),
++				   GFP_KERNEL);
++	if (!madera_gpio)
++		return -ENOMEM;
++
++	madera_gpio->madera = madera;
++
++	/* Construct suitable gpio_chip from the template in madera_gpio_chip */
++	madera_gpio->gpio_chip = madera_gpio_chip;
++	madera_gpio->gpio_chip.parent = pdev->dev.parent;
++
++	switch (madera->type) {
++	case CS47L35:
++		madera_gpio->gpio_chip.ngpio = CS47L35_NUM_GPIOS;
++		break;
++	case CS47L85:
++	case WM1840:
++		madera_gpio->gpio_chip.ngpio = CS47L85_NUM_GPIOS;
++		break;
++	case CS47L90:
++	case CS47L91:
++		madera_gpio->gpio_chip.ngpio = CS47L90_NUM_GPIOS;
++		break;
++	default:
++		dev_err(&pdev->dev, "Unknown chip variant %d\n", madera->type);
++		return -EINVAL;
++	}
++
++	/* We want to be usable on systems that don't use devicetree or acpi */
++	if (pdata && pdata->gpio_base)
++		madera_gpio->gpio_chip.base = pdata->gpio_base;
++	else
++		madera_gpio->gpio_chip.base = -1;
++
++	ret = devm_gpiochip_add_data(&pdev->dev,
++				     &madera_gpio->gpio_chip,
++				     madera_gpio);
++	if (ret < 0) {
++		dev_dbg(&pdev->dev, "Could not register gpiochip, %d\n", ret);
++		return ret;
++	}
++
++	/*
++	 * This is part of a composite MFD device which can only be used with
++	 * the corresponding pinctrl driver. On all supported silicon the GPIO
++	 * to pinctrl mapping is fixed in the silicon, so we register it
++	 * explicitly instead of requiring a redundant gpio-ranges in the
++	 * devicetree.
++	 * In any case we also want to work on systems that don't use devicetree
++	 * or acpi.
++	 */
++	ret = gpiochip_add_pin_range(&madera_gpio->gpio_chip, "madera-pinctrl",
++				     0, 0, madera_gpio->gpio_chip.ngpio);
++	if (ret) {
++		dev_dbg(&pdev->dev, "Failed to add pin range (%d)\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static struct platform_driver madera_gpio_driver = {
++	.driver = {
++		.name	= "madera-gpio",
++	},
++	.probe		= madera_gpio_probe,
++};
++
++module_platform_driver(madera_gpio_driver);
++
++MODULE_SOFTDEP("pre: pinctrl-madera");
++MODULE_DESCRIPTION("GPIO interface for Madera codecs");
++MODULE_AUTHOR("Nariman Poushin <nariman@opensource.cirrus.com>");
++MODULE_AUTHOR("Richard Fitzgerald <rf@opensource.cirrus.com>");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:madera-gpio");
+-- 
+2.11.0
