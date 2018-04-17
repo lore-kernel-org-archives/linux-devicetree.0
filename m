@@ -1,89 +1,77 @@
-Return-Path: <SRS0=EX5Z=GY=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=t8bI=HG=retiisi.org.uk=sakari.ailus@kernel.org>
+Date: Tue, 17 Apr 2018 23:46:46 +0300
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v8 2/2] v4l: cadence: Add Cadence MIPI-CSI2 TX driver
+Message-ID: <20180417204646.5tokklj3slambqr3@valkosipuli.retiisi.org.uk>
+References: <20180404122025.8726-1-maxime.ripard@bootlin.com>
+ <20180404122025.8726-3-maxime.ripard@bootlin.com>
+ <20180413121437.slsv2ef2j5k2aihw@valkosipuli.retiisi.org.uk>
+ <20180417131024.kc6smxh4mbd44nst@flea>
+ <20180417132010.zhr3nrigeqzeorg3@valkosipuli.retiisi.org.uk>
+ <20180417155947.5hv74hbpmtfzv32l@flea>
 MIME-Version: 1.0
-Sender: geert.uytterhoeven@gmail.com
-In-Reply-To: <1522265176-33226-4-git-send-email-biju.das@bp.renesas.com>
-References: <1522265176-33226-1-git-send-email-biju.das@bp.renesas.com> <1522265176-33226-4-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 3 Apr 2018 13:35:02 +0200
-Message-ID: <CAMuHMdWY5KPoowUostOpyRsZQTLuG+REQed0o7ChE3xoo8UAzg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/8] clk: renesas: Add r8a77470 CPG Core Clock Definitions
-Content-Type: text/plain; charset="UTF-8"
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180417155947.5hv74hbpmtfzv32l@flea>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Biju,
+On Tue, Apr 17, 2018 at 05:59:47PM +0200, Maxime Ripard wrote:
+> On Tue, Apr 17, 2018 at 04:20:10PM +0300, Sakari Ailus wrote:
+> > On Tue, Apr 17, 2018 at 03:10:24PM +0200, Maxime Ripard wrote:
+> > > Hi Sakari,
+> > > 
+> > > On Fri, Apr 13, 2018 at 03:14:37PM +0300, Sakari Ailus wrote:
+> > > > > +static int csi2tx_set_pad_format(struct v4l2_subdev *subdev,
+> > > > > +				 struct v4l2_subdev_pad_config *cfg,
+> > > > > +				 struct v4l2_subdev_format *fmt)
+> > > > > +{
+> > > > > +	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
+> > > > > +
+> > > > > +	if (fmt->pad >= CSI2TX_PAD_MAX)
+> > > > > +		return -EINVAL;
+> > > > > +
+> > > > > +	csi2tx->pad_fmts[fmt->pad] = fmt->format;
+> > > > 
+> > > > Have I asked previously if there are any limitations with this?
+> > > > 
+> > > > The CSI-2 TX link has multiple formats so I wouldn't support formats on
+> > > > that pad in order to be compatible with the planned VC/data type support
+> > > > patchset. Or do you see issues with that?
+> > > 
+> > > It's not just about the CSI-2 link, but more about the input pads as
+> > > well, that can be configured (and we need to know the format in order
+> > > to configure the IP properly).
+> > > 
+> > > Maybe we can simply prevent the format change on the CSI-2 pad, but
+> > > not the others?
+> > 
+> > Yes, that was what I wanted to suggest. It's in line with the intended way
+> > to support multiplexed pads.
+> > 
+> > The latest set is here:
+> > 
+> > <URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=vc>
+> 
+> Thanks for the pointer.
+> 
+> I've looked at the smiapp set_format hook, and especially:
+> https://git.linuxtv.org/sailus/media_tree.git/tree/drivers/media/i2c/smiapp/smiapp-core.c?h=vc&id=cb864a1d8e2d19b793d8f550b026dcf8d2f78f11#n1817
+> 
+> After reading this, I'm not quite sure to get what I should do for the
+> CSI-2 pad. Should I ignore all formats change (and thus return 0), or
+> should I return EINVAL (which would probably be a bit confusing to the
+> userspace)?
 
-On Wed, Mar 28, 2018 at 9:26 PM, Biju Das <biju.das@bp.renesas.com> wrote:
-> Add all RZ/G1C Clock Pulse Generator Core Clock Outputs, as listed in
-> Table 7.2 ("List of Clocks [RZ/G1C]") of the RZ/G1C Hardware User's
-> Manual.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> V1->V2:
-> * incorporated geert's review comment
->
->  include/dt-bindings/clock/r8a77470-cpg-mssr.h | 36 +++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 include/dt-bindings/clock/r8a77470-cpg-mssr.h
->
-> diff --git a/include/dt-bindings/clock/r8a77470-cpg-mssr.h b/include/dt-bindings/clock/r8a77470-cpg-mssr.h
-> new file mode 100644
-> index 0000000..ffc123c
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/r8a77470-cpg-mssr.h
-> @@ -0,0 +1,36 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> + *
-> + * Copyright (C) 2018 Renesas Electronics Corp.
-> + */
-> +#ifndef __DT_BINDINGS_CLOCK_R8A77470_CPG_MSSR_H__
-> +#define __DT_BINDINGS_CLOCK_R8A77470_CPG_MSSR_H__
-> +
-> +#include <dt-bindings/clock/renesas-cpg-mssr.h>
-> +
-> +/* r8a77470 CPG Core Clocks */
-> +#define R8A77470_CLK_Z2                0
-> +#define R8A77470_CLK_ZTR       2
+-EINVAL, please. The subdev uAPI does currently not (nor it is intended to)
+support accessing multiple formats on a single pad, the logical choice is
+to return an error when accessing a format here. That is aligned with the
+stream support patchset (link above).
 
-These should be numbered consecutively, unless there is a good reason not
-to do so.
-
-Sorry for not noticing before, fixing up while applying...
-
-> +#define R8A77470_CLK_ZTRD2     3
-> +#define R8A77470_CLK_ZT                4
-> +#define R8A77470_CLK_ZX                5
-> +#define R8A77470_CLK_ZS                6
-> +#define R8A77470_CLK_HP                7
-> +#define R8A77470_CLK_B         9
-> +#define R8A77470_CLK_LB                10
-> +#define R8A77470_CLK_P         11
-> +#define R8A77470_CLK_CL                12
-> +#define R8A77470_CLK_CP                13
-> +#define R8A77470_CLK_M2                14
-> +#define R8A77470_CLK_ZB3       16
-> +#define R8A77470_CLK_SDH       19
-> +#define R8A77470_CLK_SD0       20
-> +#define R8A77470_CLK_SD1       21
-> +#define R8A77470_CLK_SD2       22
-> +#define R8A77470_CLK_MP                24
-> +#define R8A77470_CLK_QSPI      25
-> +#define R8A77470_CLK_CPEX      26
-> +#define R8A77470_CLK_RCAN      27
-> +#define R8A77470_CLK_R         28
-> +#define R8A77470_CLK_OSC       29
-
-Gr{oetje,eeting}s,
-
-                        Geert
+If you want to access the format, you need to use the pads on the other
+side of the subdev.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
