@@ -1,157 +1,100 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: Re: [PATCH 3/5] net: stmmac: dwmac-sun8i: Allow
- getting syscon regmap from device
-Date: Tue, 17 Apr 2018 20:06:00 +0800
-Message-ID: <B885F825-6131-4F72-A762-17CEB8369893@aosc.io>
-References: <20180411141641.14675-1-icenowy@aosc.io> <20180411141641.14675-4-icenowy@aosc.io> <20180412145628.iaaeue2imiijwx5d@flea> <A027702A-F3F7-4896-B2B8-E024DA521661@aosc.io> <CAGb2v66Qi2D1qgF3-iVJFAiznMUzzen0nHM5vsPe7Cyi6QTYpw@mail.gmail.com> <20180416143130.tls6xtcq3hsv7u7f@flea> <CAGb2v65VLYc1X2bN5v0_1xokZCEkKFYNLzecnE3WeP8goc2KmQ@mail.gmail.com> <20180417115243.x42s7ygdpdbhtys2@flea> <CAGb2v66e+tWsYqzpOnRaJtjq4OneUOruszYML0FnvAGbXi5qsw@mail.gmail.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Alban <albeu@free.fr>
+Subject: Re: [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode
+ for the cells list
+Date: Tue, 17 Apr 2018 14:31:28 +0200
+Message-ID: <20180417143128.69126385@avionic-0020>
+References: <1521933899-362-1-git-send-email-albeu@free.fr>
+        <1521933899-362-2-git-send-email-albeu@free.fr>
+        <20180416210429.e3yo52f355qxnopb@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBNGG27LAKGQECCICI5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v66e+tWsYqzpOnRaJtjq4OneUOruszYML0FnvAGbXi5qsw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/esdboVINWphvIninm4cYbzi"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180416210429.e3yo52f355qxnopb@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Alban <albeu@free.fr>, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+--Sig_/esdboVINWphvIninm4cYbzi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, 16 Apr 2018 16:04:29 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-=E4=BA=8E 2018=E5=B9=B44=E6=9C=8817=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=887:=
-59:38, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> =E5=86=99=E5=88=B0:
->On Tue, Apr 17, 2018 at 7:52 PM, Maxime Ripard
-><maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->> On Mon, Apr 16, 2018 at 10:51:55PM +0800, Chen-Yu Tsai wrote:
->>> On Mon, Apr 16, 2018 at 10:31 PM, Maxime Ripard
->>> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->>> > On Thu, Apr 12, 2018 at 11:23:30PM +0800, Chen-Yu Tsai wrote:
->>> >> On Thu, Apr 12, 2018 at 11:11 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->wrote:
->>> >> > =E4=BA=8E 2018=E5=B9=B44=E6=9C=8812=E6=97=A5 GMT+08:00 =E4=B8=8B=
-=E5=8D=8810:56:28, Maxime Ripard
-><maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
->>> >> >>On Wed, Apr 11, 2018 at 10:16:39PM +0800, Icenowy Zheng wrote:
->>> >> >>> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->>> >> >>>
->>> >> >>> On the Allwinner R40 SoC, the "GMAC clock" register is in the
->CCU
->>> >> >>> address space; on the A64 SoC this register is in the SRAM
->controller
->>> >> >>> address space, and with a different offset.
->>> >> >>>
->>> >> >>> To access the register from another device and hide the
->internal
->>> >> >>> difference between the device, let it register a regmap named
->>> >> >>> "emac-clock". We can then get the device from the phandle,
->and
->>> >> >>> retrieve the regmap with dev_get_regmap(); in this situation
->the
->>> >> >>> regmap_field will be set up to access the only register in
->the
->>> >> >>regmap.
->>> >> >>>
->>> >> >>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->>> >> >>> [Icenowy: change to use regmaps with single register, change
->commit
->>> >> >>>  message]
->>> >> >>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>> >> >>> ---
->>> >> >>>  drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 48
->>> >> >>++++++++++++++++++++++-
->>> >> >>>  1 file changed, 46 insertions(+), 2 deletions(-)
->>> >> >>>
->>> >> >>> diff --git
->a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
->>> >> >>b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
->>> >> >>> index 1037f6c78bca..b61210c0d415 100644
->>> >> >>> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
->>> >> >>> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
->>> >> >>> @@ -85,6 +85,13 @@ const struct reg_field
->old_syscon_reg_field =3D {
->>> >> >>>      .msb =3D 31,
->>> >> >>>  };
->>> >> >>>
->>> >> >>> +/* Specially exported regmap which contains only EMAC
->register */
->>> >> >>> +const struct reg_field single_reg_field =3D {
->>> >> >>> +    .reg =3D 0,
->>> >> >>> +    .lsb =3D 0,
->>> >> >>> +    .msb =3D 31,
->>> >> >>> +};
->>> >> >>> +
->>> >> >>
->>> >> >>I'm not sure this would be wise. If we ever need some other
->register
->>> >> >>exported through the regmap, will have to change all the
->calling sites
->>> >> >>everywhere in the kernel, which will be a pain and will break
->>> >> >>bisectability.
->>> >> >
->>> >> > In this situation the register can be exported as another
->>> >> >  regmap. Currently the code will access a regmap with name
->>> >> > "emac-clock" for this register.
->>> >> >
->>> >> >>
->>> >> >>Chen-Yu's (or was it yours?) initial solution with a custom
->writeable
->>> >> >>hook only allowing a single register seemed like a better one.
->>> >> >
->>> >> > But I remember you mentioned that you want it to hide the
->>> >> > difference inside the device.
->>> >>
->>> >> The idea is that a device can export multiple regmaps. This one,
->>> >> the one named "gmac" (in my soon to come v2) or "emac-clock"
->here,
->>> >> is but one of many possible regmaps, and it only exports the
->register
->>> >> needed by the GMAC/EMAC.
->>> >
->>> > I'm not sure this would be wise either. There's a single register
->map,
->>> > and as far as I know we don't have a binding to express this in
->the
->>> > DT. This means that the customer and provider would have to use
->the
->>> > same name, but without anything actually enforcing it aside from
->>> > "someone in the community knows it".
->>> >
->>> > This is not a really good design, and I was actually preferring
->your
->>> > first option. We shouldn't rely on any undocumented rule. This
->will be
->>> > easy to break and hard to maintain.
->>>
->>> So, one regmap per device covering the whole register range, and the
->>> consumer knows which register to poke by looking at its own
->compatible.
->>>
->>> That sound right?
->>
->> Yep. And ideally, sending a single serie for both the A64 and the R40
->> cases, in order to provide the big picture.
->
->OK. I'll incorporate Icenowy's stuff into my series.
+> On Sun, Mar 25, 2018 at 12:24:57AM +0100, Alban Bedel wrote:
+> > Having the cells as subnodes of the provider device without any
+> > compatible property might clash with other bindings. To avoid this
+> > problem update the binding to have all the cells in a 'nvmem-cells'
+> > subnode with a 'nvmem-cells' compatible string. This new binding
+> > guarantee that we can turn any kind of device in a nvmem provider.
+> >=20
+> > While discouraged for new uses the old scheme is still supported for
+> > backward compatibility.
+> >=20
+> > Signed-off-by: Alban Bedel <albeu@free.fr>
+> > ---
+> >  Documentation/devicetree/bindings/nvmem/nvmem.txt | 55 +++++++++++++++=
++-------
+> >  drivers/nvmem/core.c                              | 10 +++++
+> >  2 files changed, 48 insertions(+), 17 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/nvmem/nvmem.txt b/Docume=
+ntation/devicetree/bindings/nvmem/nvmem.txt
+> > index fd06c09..6b723e7 100644
+> > --- a/Documentation/devicetree/bindings/nvmem/nvmem.txt
+> > +++ b/Documentation/devicetree/bindings/nvmem/nvmem.txt
+> > @@ -11,14 +11,29 @@ these data from, and where they are stored on the s=
+torage device.
+> >  This document is here to document this.
+> > =20
+> >  =3D Data providers =3D
+> > -Contains bindings specific to provider drivers and data cells as child=
+ren
+> > -of this node.
+> > +A data provider should have a subnode named 'nvmem-cells' that contains
+> > +a subnodes for each data cells.
+> > +
+> > +For backward compatibility the nvmem data cells can be direct children
+> > +of the data provider. This use is discouraged as it can conflict with
+> > +other bindings. =20
+>=20
+> I don't think we need to go this far. Whether this is necessary depends=20
+> on the provider.
 
-In this situation maybe I should send newer revision of A64
-drivers to you?
+It depend more on the drivers implementation. Sure as long as the
+driver only support the nvmem API it doesn't matter, both binding are
+fine. But if it ever need to support another API the bindings might
+clash and the whole device binding will need to be updated. So all in
+all I see very few value in still allowing the old binding for new
+devices, or do you seen any problem with the new binding?
 
->
->ChenYu
->
->_______________________________________________
->linux-arm-kernel mailing list
->linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+However if the consensus is to keep both styles I will rewrite this
+paragraph as needed.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Alban
+
+--Sig_/esdboVINWphvIninm4cYbzi
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJa1ekhAAoJEHSUmkuduC28zUMP/R1CQa0hBlA+o8D8cTMQpkcN
+xacENM3vNWs8WCGoiKWnbMtMFPNBTELSg201T+2iL4d/oCTZ29sOjoziTACQyqAJ
+vTI5HqGVZtsUl/r3wzrWCudrGbT+ghon9rvJrkpPE3t+G6YoVrqfYvxYqwRjA2EP
+sg825d9ZtAlijI0JtgYHPklGRej7AMMy8b6KbDXgnGTM+Xr4ETQ/VaefAOUszjL3
+FeZjGL8Su3hZmEcOIMv50yVLrVZt05URnU8nX8FqkX5/i0Hzr50eS1bLjfSKu69m
+pGZuLB9mQMDjEj13SY/fJS/tRe+6g8GLe2EPiWwcy6RN6I0vCquIIzzESJOkwUgo
++FeLp1bZA9UGg3PtFtuY1zvkHJIwafBE/4NwSd7d4nF0lHZsLzDgIhEOUNnwqKvc
+vo9RB+MDskA2viYoLC+IUwgYdYpQHyfRn/AucccNvlfvV8u6uuFnfeXUrGU9bmIO
+80uTEavVCjUVMwixZy4+jUXcgZVusg5S9sjiZQj81jBhtVulUint5/4caApKmQy+
+//ujAMHVq5KxVQ639+exxkM1cqV8+NcsxY0HQHLmYmJwLNoXsLubwM6pYrMfhN0Y
+Idg/c/NVt2/EvrNee0a3W88VpiExZTfzXCdDkUi1qgcPvmdOX/SB0QIFF4bEhV44
+BsEGkmWGx1g7yTvlsU/x
+=eR8l
+-----END PGP SIGNATURE-----
+
+--Sig_/esdboVINWphvIninm4cYbzi--
