@@ -1,45 +1,60 @@
-From: Vicentiu Galanopulo <vicentiu.galanopulo@nxp.com>
-Subject: [PATCH net-next 2/3] net: phy: Change the array size to 32 for device_ids
-Date: Tue, 17 Apr 2018 04:02:32 -0500
-Message-ID: <20180417090233.21548-3-vicentiu.galanopulo@nxp.com>
-References: <20180417090233.21548-1-vicentiu.galanopulo@nxp.com>
-Reply-To: vicentiu.galanopulo@nxp.com
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH] clk: stm32: fix: stm32 clock drivers are not compiled by
+ default
+Date: Tue, 17 Apr 2018 11:15:19 +0200
+Message-ID: <1523956519-20976-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180417090233.21548-1-vicentiu.galanopulo@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andrew@lunn.ch, robh@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, davem@davemloft.net, marcel@holtmann.org, devicetree@vger.kernel.org
-Cc: alexandru.marginean@nxp.com, madalin.bucur@nxp.com, vicentiu.galanopulo@nxp.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gabriel.fernandez@st.com
 List-Id: devicetree@vger.kernel.org
 
-In the context of enabling the discovery of the PHYs
-which have the C45 MDIO address space in a non-standard
-address:  num_ids in get_phy_c45_ids, has the
-value 8 (ARRAY_SIZE(c45_ids->device_ids)), but the
-u32 *devs can store 32 devices in the bitfield.
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-If a device is stored in *devs, in bits 32 to 9
-(bit counting in lookup loop starts from 1), it will
-not be found.
+Clock driver is mandatory if the machine is selected.
+Then don't use 'bool' and 'depends on' commands, but 'def_bool'
+with the machine(s).
 
-Signed-off-by: Vicentiu Galanopulo <vicentiu.galanopulo@nxp.com>
+Fixes: da32d3539fca ("clk: stm32: add configuration flags for each of the stm32 drivers")
+
+
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 ---
- include/linux/phy.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/Kconfig | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index f0b5870..26aa320 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -360,7 +360,7 @@ enum phy_state {
-  */
- struct phy_c45_device_ids {
- 	u32 devices_in_package;
--	u32 device_ids[8];
-+	u32 device_ids[32];
- };
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 41492e9..34968a3 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -266,15 +266,13 @@ config COMMON_CLK_STM32MP157
+ 	  Support for stm32mp157 SoC family clocks
  
- /* phy_device: An instance of a PHY
+ config COMMON_CLK_STM32F
+-	bool "Clock driver for stm32f4 and stm32f7 SoC families"
+-	depends on MACH_STM32F429 || MACH_STM32F469 || MACH_STM32F746
++	def_bool COMMON_CLK && (MACH_STM32F429 || MACH_STM32F469 || MACH_STM32F746)
+ 	help
+ 	---help---
+ 	  Support for stm32f4 and stm32f7 SoC families clocks
+ 
+ config COMMON_CLK_STM32H7
+-	bool "Clock driver for stm32h7 SoC family"
+-	depends on MACH_STM32H743
++	def_bool COMMON_CLK && MACH_STM32H743
+ 	help
+ 	---help---
+ 	  Support for stm32h7 SoC family clocks
 -- 
-2.7.4
+1.9.1
