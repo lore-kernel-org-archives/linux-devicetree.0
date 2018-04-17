@@ -1,65 +1,62 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH v3 04/10] Documentations: dt-bindings: Add a document of
- PECI adapter driver for Aspeed AST24xx/25xx SoCs
-Date: Tue, 17 Apr 2018 11:16:22 -0700
-Message-ID: <f07623c4-5f0c-4ab1-f761-44bd702bbdf0@linux.intel.com>
-References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
- <20180410183212.16787-5-jae.hyun.yoo@linux.intel.com>
- <20180416181035.rcjvt4rlrwaj5yxf@rob-hp-laptop>
- <53ff5b2b-eba8-8311-64a9-abd4bc72226d@linux.intel.com>
- <CAL_Jsq+1wC-KhXPeCSNhCeCih6=CatJbyumO51ucD17Rt7qofw@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH net-next 1/3] net: phy: Add binding for vendor specific
+ C45 MDIO address space
+Date: Tue, 17 Apr 2018 11:18:20 -0700
+Message-ID: <bc00cc86-2293-0fd2-4e98-c516f59f97ce@gmail.com>
+References: <20180417090233.21548-1-vicentiu.galanopulo@nxp.com>
+ <20180417090233.21548-2-vicentiu.galanopulo@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+1wC-KhXPeCSNhCeCih6=CatJbyumO51ucD17Rt7qofw@mail.gmail.com>
+In-Reply-To: <20180417090233.21548-2-vicentiu.galanopulo@nxp.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van>
+To: vicentiu.galanopulo@nxp.com, andrew@lunn.ch, robh@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, davem@davemloft.net, marcel@holtmann.org, devicetree@vger.kernel.org
+Cc: alexandru.marginean@nxp.com, madalin.bucur@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On 4/17/2018 6:16 AM, Rob Herring wrote:
-> On Mon, Apr 16, 2018 at 6:12 PM, Jae Hyun Yoo
-> <jae.hyun.yoo@linux.intel.com> wrote:
->> On 4/16/2018 11:10 AM, Rob Herring wrote:
->>>
->>> On Tue, Apr 10, 2018 at 11:32:06AM -0700, Jae Hyun Yoo wrote:
->>>>
->>>> This commit adds a dt-bindings document of PECI adapter driver for Aspeed
->>>> AST24xx/25xx SoCs.
+On 04/17/2018 02:02 AM, Vicentiu Galanopulo wrote:
+> The extra property enables the discovery on the MDIO bus
+> of the PHYs which have a vendor specific address space
+> for accessing the C45 MDIO registers.
 > 
-> [...]
+> Signed-off-by: Vicentiu Galanopulo <vicentiu.galanopulo@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/net/phy.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
->>>> +- clocks            : Should contain clock source for PECI controller.
->>>> +                     Should reference clkin.
->>>> +- clock_frequency   : Should contain the operation frequency of PECI
->>>> controller
->>>> +                     in units of Hz.
->>>> +                     187500 ~ 24000000
->>>
->>>
->>> This is the frequency of the bus or used to derive it? It would be
->>> better to specify the bus frequency instead and have the driver
->>> calculate its internal freq. And then use "bus-frequency" instead.
->>>
->>
->> I agree with you. Actually, it is being used for operation frequency setting
->> of PECI controller module in SoC so it's different from the meaning of
->> "bus-frequency". I'll change it to "operation-frequency".
-> 
-> No, now you've gone from a standard property name to something custom.
-> Why do you need to set the frequency in DT if it is not related to the
-> interface frequency?
-> 
-> Rob
+> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+> index d2169a5..82692e2 100644
+> --- a/Documentation/devicetree/bindings/net/phy.txt
+> +++ b/Documentation/devicetree/bindings/net/phy.txt
+> @@ -61,6 +61,11 @@ Optional Properties:
+>  - reset-deassert-us: Delay after the reset was deasserted in microseconds.
+>    If this property is missing the delay will be skipped.
+>  
+> +- dev-addr: If set, it indicates the device address of the PHY to be used
+> +  when accessing the C45 PHY registers over MDIO. It is used for vendor specific
+> +  register space addresses that do no conform to standard address for the MDIO
+> +  registers (e.g. MMD30)
+
+Rob made that comment earlier, and I have to ask again now, why don't we
+have the Clause 45 PHY binding be modified such that you have a reg
+property that has #address-size = 2? This should be entirely backwards
+compatible, but it would allow you to specify that device address in a
+more traditional way.
+
+> +
+>  Example:
+>  
+>  ethernet-phy@0 {
+> @@ -72,4 +77,5 @@ ethernet-phy@0 {
+>  	reset-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+>  	reset-assert-us = <1000>;
+>  	reset-deassert-us = <2000>;
+> +	dev-addr = <0x1e>;
+>  };
 > 
 
-Actually, the interface frequency is affected by the operation frequency
-but there is no description of its relationship in datasheet. I'll check
-again about the detail to ASPEED chip vendor and will use
-'bus-frequency' if available.
 
-Thanks,
-
-Jae
+-- 
+Florian
