@@ -1,31 +1,39 @@
-Return-Path: <SRS0=rS5h=HH=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=UpLl=HG=ti.com=t-kristo@kernel.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [RFC 04/13] kbuild: add support for building %.dtbo targets
+Date: Tue, 17 Apr 2018 12:10:06 +0300
+Message-ID: <1523956215-28154-5-git-send-email-t-kristo@ti.com>
+In-Reply-To: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
+References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
 MIME-Version: 1.0
-Sender: geert.uytterhoeven@gmail.com
-In-Reply-To: <1523956215-28154-5-git-send-email-t-kristo@ti.com>
-References: <1523956215-28154-1-git-send-email-t-kristo@ti.com> <1523956215-28154-5-git-send-email-t-kristo@ti.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 18 Apr 2018 16:16:26 +0200
-Message-ID: <CAMuHMdXe_UUmxBKSTZuwQ221eyZ5ypyAtzxEgYmYngzFnt6LEw@mail.gmail.com>
-Subject: Re: [RFC 04/13] kbuild: add support for building %.dtbo targets
-Content-Type: text/plain; charset="UTF-8"
-To: Tero Kristo <t-kristo@ti.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, wmills@ti.com, ext Tony Lindgren <tony@atomide.com>, Tom Rini <trini@konsulko.com>, Russell King <rmk@armlinux.org.uk>
+Content-Type: text/plain
+To: devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com
+Cc: wmills@ti.com, tony@atomide.com, trini@konsulko.com, rmk@armlinux.org.uk
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Apr 17, 2018 at 11:10 AM, Tero Kristo <t-kristo@ti.com> wrote:
-> Add support for building DT overlay targets.
->
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Add support for building DT overlay targets.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+ scripts/Makefile.lib | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 07d0740..95f7a17 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -290,6 +290,9 @@ cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+ $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
+ 	$(call if_changed_dep,dtc)
+ 
++$(obj)/%.dtbo: $(src)/%.dtso $(DTC) FORCE
++	$(call if_changed_dep,dtc)
++
+ dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
+ 
+ # Bzip2
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+1.9.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
