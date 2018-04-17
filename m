@@ -1,78 +1,158 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 1/2] usb: gadget: udc: renesas_usb3: add property "renesas,ignore-id"
-Date: Tue, 10 Apr 2018 21:13:53 +0900
-Message-Id: <1523362434-17808-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1523362434-17808-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1523362434-17808-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=UpLl=HG=ti.com=t-kristo@kernel.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [RFC 07/13] ARM: dts: ti: add camera overlays
+Date: Tue, 17 Apr 2018 12:10:09 +0300
+Message-ID: <1523956215-28154-8-git-send-email-t-kristo@ti.com>
+In-Reply-To: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
+References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To: devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com
+Cc: wmills@ti.com, tony@atomide.com, trini@konsulko.com, rmk@armlinux.org.uk, Benoit Parrot <bparrot@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds a new property to ignore the ID signal on a board.
+From: Benoit Parrot <bparrot@ti.com>
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Add two different camera overlays for am57xx-evm, mt9t111 and ov10635.
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
 ---
- Documentation/devicetree/bindings/usb/renesas_usb3.txt |  2 ++
- drivers/usb/gadget/udc/renesas_usb3.c                  | 10 ++++++++++
- 2 files changed, 12 insertions(+)
+ arch/arm/boot/dts/ti/mt9t111.dtso | 44 ++++++++++++++++++++++++
+ arch/arm/boot/dts/ti/ov10635.dtso | 71 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 115 insertions(+)
+ create mode 100644 arch/arm/boot/dts/ti/mt9t111.dtso
+ create mode 100644 arch/arm/boot/dts/ti/ov10635.dtso
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-index 2c071bb..53949bd 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-@@ -19,6 +19,8 @@ Required properties:
- Optional properties:
-   - phys: phandle + phy specifier pair
-   - phy-names: must be "usb"
-+  - renesas,ignore-id: when a board doesn't use ID pin, you can add this
-+		       property to ignore the ID state.
- 
- Example of R-Car H3 ES1.x:
- 	usb3_peri0: usb@ee020000 {
-diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
-index 409cde4..59e1485 100644
---- a/drivers/usb/gadget/udc/renesas_usb3.c
-+++ b/drivers/usb/gadget/udc/renesas_usb3.c
-@@ -350,6 +350,7 @@ struct renesas_usb3 {
- 	bool extcon_host;		/* check id and set EXTCON_USB_HOST */
- 	bool extcon_usb;		/* check vbus and set EXTCON_USB */
- 	bool forced_b_device;
-+	bool ignore_id;
- };
- 
- #define gadget_to_renesas_usb3(_gadget)	\
-@@ -645,6 +646,9 @@ static void usb3_check_vbus(struct renesas_usb3 *usb3)
- 
- static void usb3_set_mode(struct renesas_usb3 *usb3, bool host)
- {
-+	if (usb3->ignore_id && !usb3->forced_b_device)
-+		return;
+diff --git a/arch/arm/boot/dts/ti/mt9t111.dtso b/arch/arm/boot/dts/ti/mt9t111.dtso
+new file mode 100644
+index 0000000..80e77ae
+--- /dev/null
++++ b/arch/arm/boot/dts/ti/mt9t111.dtso
+@@ -0,0 +1,44 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2015-2018 Texas Instruments Incorporated - http://www.ti.com/
++ */
 +
- 	if (host)
- 		usb3_clear_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
- 	else
-@@ -675,6 +679,9 @@ static void usb3_mode_config(struct renesas_usb3 *usb3, bool host, bool a_dev)
- 
- static bool usb3_is_a_device(struct renesas_usb3 *usb3)
- {
-+	if (usb3->ignore_id)
-+		return false;
++/dts-v1/;
++/plugin/;
++#include <dt-bindings/gpio/gpio.h>
 +
- 	return !(usb3_read(usb3, USB3_USB_OTG_STA) & USB_OTG_IDMON);
- }
- 
-@@ -2632,6 +2639,9 @@ static int renesas_usb3_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto err_add_udc;
- 
-+	if (of_property_read_bool(pdev->dev.of_node, "renesas,no-id"))
-+		usb3->ignore_id = true;
++&i2c5 {
++	mt9t11x@3C {
++		compatible = "aptina,mt9t111";
++		bufen-gpios = <&gpio5 12 GPIO_ACTIVE_LOW>;
++		camen-gpios = <&gpio6 11 GPIO_ACTIVE_LOW>;
++		oscen-gpios = <&gpio5 10 GPIO_ACTIVE_HIGH>;
++		powerdown-gpios = <&gpio5 11 GPIO_ACTIVE_LOW>;
++		reg = <0x3C>;
++		reset-gpios = <&gpio4 17 GPIO_ACTIVE_LOW>;
 +
- 	ret = device_create_file(&pdev->dev, &dev_attr_role);
- 	if (ret < 0)
- 		goto err_dev_create;
++		port {
++			cam: endpoint {
++				hsync-active = <1>;
++				input-clock-freq = <32000000>;
++				pclk-sample = <0>;
++				pixel-clock-freq = <96000000>;
++				remote-endpoint = <&vin3a>;
++				vsync-active = <0>;
++			};
++		};
++	};
++};
++
++&vin3a {
++	status = "okay";
++
++	endpoint {
++		remote-endpoint = <&cam>;
++		slave-mode;
++	};
++};
++
++&vip2 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/ti/ov10635.dtso b/arch/arm/boot/dts/ti/ov10635.dtso
+new file mode 100644
+index 0000000..856f5de
+--- /dev/null
++++ b/arch/arm/boot/dts/ti/ov10635.dtso
+@@ -0,0 +1,71 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2015-2018 Texas Instruments Incorporated - http://www.ti.com/
++ */
++
++/dts-v1/;
++/plugin/;
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++  fragment@101 {
++	target-path = "/";
++
++	__overlay__ {
++		clk_ov10635: clk_ov10635 {
++			compatible = "gpio-gate-clock";
++			#clock-cells = <0>;
++			clocks = <&clk_ov10635_fixed>;
++			enable-gpios = <&gpio5 10 GPIO_ACTIVE_HIGH>;
++		};
++
++		clk_ov10635_fixed: clk_ov10635_fixed {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <24000000>;
++		};
++	};
++  };
++};
++
++&i2c5 {
++	ov10635@30 {
++		compatible = "ovti,ov10635";
++		clock-names = "xvclk";
++		clocks = <&clk_ov10635>;
++		powerdown-gpios = <&gpio5 11 GPIO_ACTIVE_HIGH>;
++		reg = <0x30>;
++		reset-gpios = <&gpio4 17 GPIO_ACTIVE_HIGH>;
++
++		port {
++			cam: endpoint {
++				hsync-active = <1>;
++				pclk-sample = <1>;
++				remote-endpoint = <&vin3a>;
++				vsync-active = <1>;
++			};
++		};
++	};
++};
++
++&vin3a {
++	status = "okay";
++
++	endpoint {
++		remote-endpoint = <&cam>;
++		slave-mode;
++	};
++};
++
++&vip2 {
++	status = "okay";
++};
++
++&gpio6 {
++	p11 {
++		gpio-hog;
++		gpios = <11 GPIO_ACTIVE_LOW>;
++		line-name = "cm-camen-gpio";
++		output-high;
++	};
++};
 -- 
 1.9.1
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
