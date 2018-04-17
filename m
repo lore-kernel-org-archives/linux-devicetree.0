@@ -1,68 +1,168 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v6 09/11] ARM: sun8i: smp: Add support for A83T
-Date: Tue, 17 Apr 2018 13:20:38 +0200
-Message-ID: <20180417112038.mw7bfhqw4xwvzxcw@flea>
-References: <20180416215032.5023-1-mylene.josserand@bootlin.com>
- <20180416215032.5023-10-mylene.josserand@bootlin.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v4 2/6] mfd: stm32-timers: add support for dmas
+Date: Tue, 17 Apr 2018 14:25:18 +0300
+Message-ID: <20180417112518.pmvx4rubgxtr4nea@mwanda>
+References: <1523895561-4073-3-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lgwud7yazkhhokzr"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <kbuild-bounces@lists.01.org>
 Content-Disposition: inline
-In-Reply-To: <20180416215032.5023-10-mylene.josserand@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>
-Cc: linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1523895561-4073-3-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <https://lists.01.org/mailman/options/kbuild>,
+ <mailto:kbuild-request@lists.01.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/kbuild/>
+List-Post: <mailto:kbuild@lists.01.org>
+List-Help: <mailto:kbuild-request@lists.01.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/kbuild>,
+ <mailto:kbuild-request@lists.01.org?subject=subscribe>
+Errors-To: kbuild-bounces@lists.01.org
+Sender: "kbuild" <kbuild-bounces@lists.01.org>
+To: kbuild@01.org
+Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, thierry.reding@gmail.com, kbuild-all@01.org, benjamin.gaignard@linaro.org, fabrice.gasnier@st.com, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Fabrice,
 
---lgwud7yazkhhokzr
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for the patch! Perhaps something to improve:
 
-On Mon, Apr 16, 2018 at 11:50:30PM +0200, Myl=E8ne Josserand wrote:
-> @@ -535,8 +599,12 @@ static int sunxi_mc_smp_cpu_kill(unsigned int l_cpu)
->  	return !ret;
->  }
-> =20
-> -static bool sunxi_mc_smp_cpu_can_disable(unsigned int __unused)
-> +static bool sunxi_mc_smp_cpu_can_disable(unsigned int cpu)
->  {
-> +	/* CPU0 hotplug not handled for sun8i-a83t */
-> +	if (is_sun8i)
-> +		if (cpu =3D=3D 0)
-> +			return false;
->  	return true;
+[auto build test WARNING on pwm/for-next]
+[also build test WARNING on v4.17-rc1 next-20180416]
+[cannot apply to ljones-mfd/for-mfd-next]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-I think Chen-Yu told you how to implement the hotplug in the previous
-iteration, did you have time to test it?
+url:    https://github.com/0day-ci/linux/commits/Fabrice-Gasnier/Add-support-for-PWM-input-capture-on-STM32/20180417-052347
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git for-next
 
-Maxime
+smatch warnings:
+drivers/mfd/stm32-timers.c:165 stm32_timers_dma_burst_read() warn: warn: dma_mapping_error() doesn't return an error code
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+# https://github.com/0day-ci/linux/commit/402362a100e6b02b807fbebdc05b7159b565ffa5
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 402362a100e6b02b807fbebdc05b7159b565ffa5
+vim +165 drivers/mfd/stm32-timers.c
 
---lgwud7yazkhhokzr
-Content-Type: application/pgp-signature; name="signature.asc"
+402362a1 Fabrice Gasnier 2018-04-16   54  
+402362a1 Fabrice Gasnier 2018-04-16   55  /**
+402362a1 Fabrice Gasnier 2018-04-16   56   * stm32_timers_dma_burst_read - Read from timers registers using DMA.
+402362a1 Fabrice Gasnier 2018-04-16   57   *
+402362a1 Fabrice Gasnier 2018-04-16   58   * Read from STM32 timers registers using DMA on a single event.
+402362a1 Fabrice Gasnier 2018-04-16   59   * @dev: reference to stm32_timers MFD device
+402362a1 Fabrice Gasnier 2018-04-16   60   * @buf: DMA'able destination buffer
+402362a1 Fabrice Gasnier 2018-04-16   61   * @id: stm32_timers_dmas event identifier (ch[1..4], up, trig or com)
+402362a1 Fabrice Gasnier 2018-04-16   62   * @reg: registers start offset for DMA to read from (like CCRx for capture)
+402362a1 Fabrice Gasnier 2018-04-16   63   * @num_reg: number of registers to read upon each DMA request, starting @reg.
+402362a1 Fabrice Gasnier 2018-04-16   64   * @bursts: number of bursts to read (e.g. like two for pwm period capture)
+402362a1 Fabrice Gasnier 2018-04-16   65   * @tmo_ms: timeout (milliseconds)
+402362a1 Fabrice Gasnier 2018-04-16   66   */
+402362a1 Fabrice Gasnier 2018-04-16   67  int stm32_timers_dma_burst_read(struct device *dev, u32 *buf,
+402362a1 Fabrice Gasnier 2018-04-16   68  				enum stm32_timers_dmas id, u32 reg,
+402362a1 Fabrice Gasnier 2018-04-16   69  				unsigned int num_reg, unsigned int bursts,
+402362a1 Fabrice Gasnier 2018-04-16   70  				unsigned long tmo_ms)
+402362a1 Fabrice Gasnier 2018-04-16   71  {
+402362a1 Fabrice Gasnier 2018-04-16   72  	struct stm32_timers *ddata = dev_get_drvdata(dev);
+402362a1 Fabrice Gasnier 2018-04-16   73  	unsigned long timeout = msecs_to_jiffies(tmo_ms);
+402362a1 Fabrice Gasnier 2018-04-16   74  	struct regmap *regmap = ddata->regmap;
+402362a1 Fabrice Gasnier 2018-04-16   75  	struct stm32_timers_dma *dma = ddata->dma;
+402362a1 Fabrice Gasnier 2018-04-16   76  	size_t len = num_reg * bursts * sizeof(u32);
+402362a1 Fabrice Gasnier 2018-04-16   77  	struct dma_async_tx_descriptor *desc;
+402362a1 Fabrice Gasnier 2018-04-16   78  	struct dma_slave_config config;
+402362a1 Fabrice Gasnier 2018-04-16   79  	dma_cookie_t cookie;
+402362a1 Fabrice Gasnier 2018-04-16   80  	dma_addr_t dma_buf;
+402362a1 Fabrice Gasnier 2018-04-16   81  	u32 dbl, dba;
+402362a1 Fabrice Gasnier 2018-04-16   82  	long err;
+402362a1 Fabrice Gasnier 2018-04-16   83  	int ret;
+402362a1 Fabrice Gasnier 2018-04-16   84  
+402362a1 Fabrice Gasnier 2018-04-16   85  	/* Sanity check */
+402362a1 Fabrice Gasnier 2018-04-16   86  	if (id < STM32_TIMERS_DMA_CH1 || id >= STM32_TIMERS_MAX_DMAS)
+402362a1 Fabrice Gasnier 2018-04-16   87  		return -EINVAL;
+402362a1 Fabrice Gasnier 2018-04-16   88  
+402362a1 Fabrice Gasnier 2018-04-16   89  	if (!num_reg || !bursts || reg > STM32_TIMERS_MAX_REGISTERS ||
+402362a1 Fabrice Gasnier 2018-04-16   90  	    (reg + num_reg * sizeof(u32)) > STM32_TIMERS_MAX_REGISTERS)
+402362a1 Fabrice Gasnier 2018-04-16   91  		return -EINVAL;
+402362a1 Fabrice Gasnier 2018-04-16   92  
+402362a1 Fabrice Gasnier 2018-04-16   93  	if (!dma->chans[id])
+402362a1 Fabrice Gasnier 2018-04-16   94  		return -ENODEV;
+402362a1 Fabrice Gasnier 2018-04-16   95  	mutex_lock(&dma->lock);
+402362a1 Fabrice Gasnier 2018-04-16   96  
+402362a1 Fabrice Gasnier 2018-04-16   97  	/* Select DMA channel in use */
+402362a1 Fabrice Gasnier 2018-04-16   98  	dma->chan = dma->chans[id];
+402362a1 Fabrice Gasnier 2018-04-16   99  	dma_buf = dma_map_single(dev, buf, len, DMA_FROM_DEVICE);
+402362a1 Fabrice Gasnier 2018-04-16  100  	ret = dma_mapping_error(dev, dma_buf);
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This should be:
 
------BEGIN PGP SIGNATURE-----
+	if (dma_mapping_error(dev, dma_buf)) {
+		ret = -ENOMEM;
+		goto unlock;
+	}
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrV2IYACgkQ0rTAlCFN
-r3QEvQ//YNKIPOzNoGa2Ejl3faAXyCu/JYHhZv5UefGzirp0ZGAkXxwtGsVxVsU2
-UA8ANWgoTabJ63vqsQE9C0cyVSOg6o/maP/dSwob3RsdeXvBY6Tmeb2UIm9MUYiM
-UDkEM7Da1VVK15r6raCgnkb1Dk3jiGoWUD2TqXjT8VE97R6t0f9KYQeI2tm8RVUV
-UB9o1kJ/tTvLdsCi32Y0DfDYUe/uWPa/x1n1Ks4sZgt/493Z/1zUN0qrIzR8Cwwp
-P45P1byWjmK+Rm9DijUO6DiEutmpdLcThogh3K52KRuyWIIW6fdZCjLT11NUDpDo
-Q/YCt7tF/0xsupP6dPQJYtveoMhXxK7HjI/HjA2RuW4+LC9794QI6/eVMe+5USLw
-E49ReIJoY3THaVICOyTllKpRyiQ9Q78fnb45i5JiyUrP4pn4m1YtcEBt8MjZ0pre
-G/MbGgMcUYSYixLjU6SJiiirWuwY6SDmpeIOSUP2YfFL1rZcHvt0KMfZoZ6GJz28
-ojzBqXvNitOdLiTUvv6d1FIOZ2A1WZBtLdDQTR7bj1v0wKOGH9teqtsiucP3IRak
-nA1U9TCrtMNW0I4Jq4nE0mpg3c4i0+p1cLzrU5FgQahoq2VGiZ1Mj1M6Nt83kHWx
-u7Y2NQ0k86EhrSP4wR7GtXsaA2EzGqkvCyltVFQJ3daV/2QqAuI=
-=tbwW
------END PGP SIGNATURE-----
-
---lgwud7yazkhhokzr--
+402362a1 Fabrice Gasnier 2018-04-16  101  	if (ret)
+402362a1 Fabrice Gasnier 2018-04-16  102  		goto unlock;
+402362a1 Fabrice Gasnier 2018-04-16  103  
+402362a1 Fabrice Gasnier 2018-04-16  104  	/* Prepare DMA read from timer registers, using DMA burst mode */
+402362a1 Fabrice Gasnier 2018-04-16  105  	memset(&config, 0, sizeof(config));
+402362a1 Fabrice Gasnier 2018-04-16  106  	config.src_addr = (dma_addr_t)dma->phys_base + TIM_DMAR;
+402362a1 Fabrice Gasnier 2018-04-16  107  	config.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+402362a1 Fabrice Gasnier 2018-04-16  108  	ret = dmaengine_slave_config(dma->chan, &config);
+402362a1 Fabrice Gasnier 2018-04-16  109  	if (ret)
+402362a1 Fabrice Gasnier 2018-04-16  110  		goto unmap;
+402362a1 Fabrice Gasnier 2018-04-16  111  
+402362a1 Fabrice Gasnier 2018-04-16  112  	desc = dmaengine_prep_slave_single(dma->chan, dma_buf, len,
+402362a1 Fabrice Gasnier 2018-04-16  113  					   DMA_DEV_TO_MEM, DMA_PREP_INTERRUPT);
+402362a1 Fabrice Gasnier 2018-04-16  114  	if (!desc) {
+402362a1 Fabrice Gasnier 2018-04-16  115  		ret = -EBUSY;
+402362a1 Fabrice Gasnier 2018-04-16  116  		goto unmap;
+402362a1 Fabrice Gasnier 2018-04-16  117  	}
+402362a1 Fabrice Gasnier 2018-04-16  118  
+402362a1 Fabrice Gasnier 2018-04-16  119  	desc->callback = stm32_timers_dma_done;
+402362a1 Fabrice Gasnier 2018-04-16  120  	desc->callback_param = dma;
+402362a1 Fabrice Gasnier 2018-04-16  121  	cookie = dmaengine_submit(desc);
+402362a1 Fabrice Gasnier 2018-04-16  122  	ret = dma_submit_error(cookie);
+402362a1 Fabrice Gasnier 2018-04-16  123  	if (ret)
+402362a1 Fabrice Gasnier 2018-04-16  124  		goto dma_term;
+402362a1 Fabrice Gasnier 2018-04-16  125  
+402362a1 Fabrice Gasnier 2018-04-16  126  	reinit_completion(&dma->completion);
+402362a1 Fabrice Gasnier 2018-04-16  127  	dma_async_issue_pending(dma->chan);
+402362a1 Fabrice Gasnier 2018-04-16  128  
+402362a1 Fabrice Gasnier 2018-04-16  129  	/* Setup and enable timer DMA burst mode */
+402362a1 Fabrice Gasnier 2018-04-16  130  	dbl = FIELD_PREP(TIM_DCR_DBL, bursts - 1);
+402362a1 Fabrice Gasnier 2018-04-16  131  	dba = FIELD_PREP(TIM_DCR_DBA, reg >> 2);
+402362a1 Fabrice Gasnier 2018-04-16  132  	ret = regmap_write(regmap, TIM_DCR, dbl | dba);
+402362a1 Fabrice Gasnier 2018-04-16  133  	if (ret)
+402362a1 Fabrice Gasnier 2018-04-16  134  		goto dma_term;
+402362a1 Fabrice Gasnier 2018-04-16  135  
+402362a1 Fabrice Gasnier 2018-04-16  136  	/* Clear pending flags before enabling DMA request */
+402362a1 Fabrice Gasnier 2018-04-16  137  	ret = regmap_write(regmap, TIM_SR, 0);
+402362a1 Fabrice Gasnier 2018-04-16  138  	if (ret)
+402362a1 Fabrice Gasnier 2018-04-16  139  		goto dcr_clr;
+402362a1 Fabrice Gasnier 2018-04-16  140  
+402362a1 Fabrice Gasnier 2018-04-16  141  	ret = regmap_update_bits(regmap, TIM_DIER, stm32_timers_dier_dmaen[id],
+402362a1 Fabrice Gasnier 2018-04-16  142  				 stm32_timers_dier_dmaen[id]);
+402362a1 Fabrice Gasnier 2018-04-16  143  	if (ret)
+402362a1 Fabrice Gasnier 2018-04-16  144  		goto dcr_clr;
+402362a1 Fabrice Gasnier 2018-04-16  145  
+402362a1 Fabrice Gasnier 2018-04-16  146  	err = wait_for_completion_interruptible_timeout(&dma->completion,
+402362a1 Fabrice Gasnier 2018-04-16  147  							timeout);
+402362a1 Fabrice Gasnier 2018-04-16  148  	if (err == 0)
+402362a1 Fabrice Gasnier 2018-04-16  149  		ret = -ETIMEDOUT;
+402362a1 Fabrice Gasnier 2018-04-16  150  	else if (err < 0)
+402362a1 Fabrice Gasnier 2018-04-16  151  		ret = err;
+402362a1 Fabrice Gasnier 2018-04-16  152  
+402362a1 Fabrice Gasnier 2018-04-16  153  	regmap_update_bits(regmap, TIM_DIER, stm32_timers_dier_dmaen[id], 0);
+402362a1 Fabrice Gasnier 2018-04-16  154  	regmap_write(regmap, TIM_SR, 0);
+402362a1 Fabrice Gasnier 2018-04-16  155  dcr_clr:
+402362a1 Fabrice Gasnier 2018-04-16  156  	regmap_write(regmap, TIM_DCR, 0);
+402362a1 Fabrice Gasnier 2018-04-16  157  dma_term:
+402362a1 Fabrice Gasnier 2018-04-16  158  	dmaengine_terminate_all(dma->chan);
+402362a1 Fabrice Gasnier 2018-04-16  159  unmap:
+402362a1 Fabrice Gasnier 2018-04-16  160  	dma_unmap_single(dev, dma_buf, len, DMA_FROM_DEVICE);
+402362a1 Fabrice Gasnier 2018-04-16  161  unlock:
+402362a1 Fabrice Gasnier 2018-04-16  162  	dma->chan = NULL;
+402362a1 Fabrice Gasnier 2018-04-16  163  	mutex_unlock(&dma->lock);
+402362a1 Fabrice Gasnier 2018-04-16  164  
+402362a1 Fabrice Gasnier 2018-04-16 @165  	return ret;
+402362a1 Fabrice Gasnier 2018-04-16  166  }
+402362a1 Fabrice Gasnier 2018-04-16  167  EXPORT_SYMBOL_GPL(stm32_timers_dma_burst_read);
+402362a1 Fabrice Gasnier 2018-04-16  168  
