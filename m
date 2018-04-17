@@ -1,51 +1,117 @@
-From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: [PATCH v5 00/10] Designware EP support and code clean up
-Date: Tue, 17 Apr 2018 15:34:18 +0100
-Message-ID: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
+From: Alban <albeu@free.fr>
+Subject: Re: [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode
+ for the cells list
+Date: Tue, 17 Apr 2018 16:54:20 +0200
+Message-ID: <20180417165420.423a691b@avionic-0020>
+References: <1521933899-362-1-git-send-email-albeu@free.fr>
+        <1521933899-362-2-git-send-email-albeu@free.fr>
+        <344e0087-7410-aebb-8a66-c6976064df10@linaro.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/00OHJ=59GszSgSCM9WZWFKb"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <344e0087-7410-aebb-8a66-c6976064df10@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Alban <albeu@free.fr>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The patch set was made against the Lorenzo's master branch.
+--Sig_/00OHJ=59GszSgSCM9WZWFKb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Adds support Designware EP support.
+On Tue, 17 Apr 2018 13:54:07 +0100
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
 
-Increases the maximum number of interrupts allowed for Designware IP
-controller.
+> On 24/03/18 23:24, Alban Bedel wrote:
+> > Having the cells as subnodes of the provider device without any
+> > compatible property might clash with other bindings. To avoid this
+> > problem update the binding to have all the cells in a 'nvmem-cells'
+> > subnode with a 'nvmem-cells' compatible string. This new binding
+> > guarantee that we can turn any kind of device in a nvmem provider.
+> >=20
+> > While discouraged for new uses the old scheme is still supported for
+> > backward compatibility. =20
+>=20
+> Am not sure if this a really good idea to change nvmem bindings based on=
+=20
+> provider requirements. This can be a beginning of other problems!!
 
-Does a code cleanup on Designware driver:
- - Replaces magic numbers without a easy meaning by a well known define
-   that helps the human compreension.
- - Replaces a division by 2 by a simple right shift rotation of 1 bit.
- - Fixes all first letter characters on comments and debug messages to
-   upper case to maintain coherency.
+I think you misunderstood something here, this proposed new binding
+would be for all new nvmem bindings, not just mtd backed nvmem.
 
-Gustavo Pimentel (10):
-  bindings: PCI: designware: Example update
-  PCI: dwc: Add support for endpoint mode
-  PCI: endpoint: functions/pci-epf-test: Add second entry
-  bindings: PCI: designware: Add support for the EP in Designware driver
-  PCI: Adds device ID for Synopsys Sample Endpoint.
-  misc: pci_endpoint_test: Add designware EP entry
-  PCI: dwc: Define maximum number of vectors
-  PCI: dwc: Replace lower into upper case characters
-  PCI: dwc: Small computation improvement
-  PCI: dwc: Replace magic number by defines
+> Did you know that we can pass nvmem cells info via nvmem config ?
+>=20
+> Why can't mtd-nvmem provider populate the nvmem_config->cells from
+> its dt "nvmem-cells" subnode before it registers the provider?
 
- .../PCI/endpoint/function/binding/pci-test.txt     |   2 +
- .../devicetree/bindings/pci/designware-pcie.txt    |  24 +++-
- drivers/misc/pci_endpoint_test.c                   |   1 +
- drivers/pci/dwc/Kconfig                            |  45 ++++--
- drivers/pci/dwc/pcie-designware-ep.c               |  16 +--
- drivers/pci/dwc/pcie-designware-host.c             |  77 +++++-----
- drivers/pci/dwc/pcie-designware-plat.c             | 155 +++++++++++++++++++--
- drivers/pci/dwc/pcie-designware.c                  |  22 +--
- drivers/pci/dwc/pcie-designware.h                  |   1 +
- drivers/pci/endpoint/functions/pci-epf-test.c      |   8 ++
- include/linux/pci_ids.h                            |   1 +
- 11 files changed, 273 insertions(+), 79 deletions(-)
+The DT based lookup of nvmem-cells doesn't use nvmem_config->cells, so
+that's not an option. In fact here the problem come from the MTD side
+because it also had a similar binding using subnodes without compatible
+string. Just to make things clear, here is an example of the clash
+using the current nvmem binding on an unpartitioned MTD device:
 
--- 
-2.7.4
+flash@0 {
+	#address-cells =3D <1>;
+	#size-cells =3D <1>;
+	compatible =3D "s25sl064a";
+	reg =3D <0>;
+
+	calibration: calib@404 {
+		reg =3D <0x404 0x10>;
+	};
+};
+
+This will not only allow reading the calibration data from nvmem, but
+will also create a partition on the MTD device, which is not acceptable.
+With my proposed binding this would become:
+
+flash@0 {
+	#address-cells =3D <1>;
+	#size-cells =3D <1>;
+	compatible =3D "s25sl064a";
+	reg =3D <0>;
+
+	nvmem-cells {
+		compatible =3D "nvmem-cells";
+		#address-cells =3D <1>;
+		#address-cells =3D <1>;
+
+		calibration: calib@404 {
+			reg =3D <0x404 0x10>;
+		};
+	};
+};
+
+Which would work fine as the MTD code will ignore the nvmem-cells
+subnode thanks to its compatible string.
+
+IMHO subnodes without any compatible properties should never be used in
+such generic bindings, as it is very likely that it will at some point
+clash with another generic binding or with a device specific binding.
+
+Alban
+
+--Sig_/00OHJ=59GszSgSCM9WZWFKb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJa1gqdAAoJEHSUmkuduC28wiQQAN81pxiNZy1GBNnelz+TqmWz
+QoQqmaiwcBDs0/H0Dnx01Kwo5mUFTQW++GP0Ae2ybdNF5ONFBesTYzhA7FB1Ew7e
+z9IdDJVhco5zgINFlc8gdvtfHAMkif407hGDt3c0rZoE7Se+93H6oEEZXBERIg36
+96xlzzctk0FRSx5vFRYXcKdf+2EQn3KBm5ni/Q1WnMgqHY6A7hjNEFzWjpbySSIO
+iAdX7D3zU/+wd8rr+PBTVbt3zdOgO/W92tUFWPwtw37AjEr74NavZ2hidK/XUJfp
+qPubryYr+Iuye6uhIbn/Fu4BE/zGHO2BqBRsLxd3BKSkys4ver7BJiu73WEwZpNt
+9swIG7yNQtC/ZJytCspEn8K+BM3NgPTDSR8bjbg9NdHmuWONRhQTD1rxqz79pSWl
++xj5ZqTco8uZh6/V3XNvlbswYX7HRGWS0pUmAm5eOw40mfTDyo9dRZcAsnM96nSy
+37W4JtQ6sC442MtR9FXPG3tYjhoG2rTl6w13j7hNf5MfEvzcLKmDH75mmxu6YE8P
+lKhZdSabrDPuGc1n3X7jbUQ3dQ7vEaqC3A3XYZ2xemVNbYp3Hb30R4hldmuIgABb
+bPPB+7aHF7uh27aJusfkrBAAV/bcR8IIYTGbi2Yd/d27Wo2xYAHZLhG3K044Pih1
+2Or0U4M0QyWAgiA4TFN4
+=DCd6
+-----END PGP SIGNATURE-----
+
+--Sig_/00OHJ=59GszSgSCM9WZWFKb--
