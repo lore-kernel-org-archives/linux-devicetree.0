@@ -1,43 +1,57 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 3/3] net: phy: Enable C45 PHYs with vendor
- specific address space
-Date: Tue, 17 Apr 2018 14:56:27 +0200
-Message-ID: <20180417125627.GF2591@lunn.ch>
-References: <20180417090233.21548-1-vicentiu.galanopulo@nxp.com>
- <20180417090233.21548-4-vicentiu.galanopulo@nxp.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4] gpio: dwapb: Add support for 1 interrupt per port A GPIO
+Date: Tue, 17 Apr 2018 08:04:24 -0500
+Message-ID: <CAL_JsqKrBa5Rneu+BJOXd6n-xZEVqkKg4RqXHYvNs5xz7gdS2Q@mail.gmail.com>
+References: <1523968977-4241-1-git-send-email-phil.edworthy@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180417090233.21548-4-vicentiu.galanopulo@nxp.com>
+In-Reply-To: <1523968977-4241-1-git-send-email-phil.edworthy@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vicentiu Galanopulo <vicentiu.galanopulo@nxp.com>
-Cc: robh@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, davem@davemloft.net, marcel@holtmann.org, devicetree@vger.kernel.org, alexandru.marginean@nxp.com, madalin.bucur@nxp.com
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 17, 2018 at 04:02:33AM -0500, Vicentiu Galanopulo wrote:
-> A search of the dev-addr property is done in of_mdiobus_register.
-> If the property is found in the PHY node, of_mdiobus_register_vend_spec_phy()
-> is called. This is a wrapper function for of_mdiobus_register_phy()
-> which finds the device in package based on dev-addr, and fills
-> devices_addrs, which is a new field added to phy_c45_device_ids.
-> This new field will store the dev-addr property on the same index
-> where the device in package has been found.
-> 
-> The of_mdiobus_register_phy() now contains an extra parameter,
-> which is struct phy_c45_device_ids *c45_ids.
-> If c45_ids is not NULL, get_vend_spec_addr_phy_device() is called
-> and c45_ids are propagated all the way to get_phy_c45_ids().
-> 
-> Having dev-addr stored in devices_addrs, in get_phy_c45_ids(),
-> when probing the identifiers, dev-addr can be extracted from
-> devices_addrs and probed if devices_addrs[current_identifier] is not 0.
+On Tue, Apr 17, 2018 at 7:42 AM, Phil Edworthy
+<phil.edworthy@renesas.com> wrote:
+> The DesignWare GPIO IP can be configured for either 1 interrupt or 1
+> per GPIO in port A, but the driver currently only supports 1 interrupt.
+> See the DesignWare DW_apb_gpio Databook description of the
+> 'GPIO_INTR_IO' parameter.
+>
+> This change allows the driver to work with up to 32 interrupts, it will
+> get as many interrupts as specified in the DT 'interrupts' property.
+> It doesn't do anything clever with the different interrupts, it just calls
+> the same handler used for single interrupt hardware.
+>
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> ---
+> One point to mention is that I have made it possible for users to have
+> unconncted interrupts by specifying holes in the list of interrupts. This is
+> done by supporting the interrupts-extended DT prop.
+> However, I have no use for this and had to hack some test case for this.
+> Perhaps the driver should support 1 interrupt or all GPIOa as interrupts?
+>
+> v4:
+>  - Use of_irq_get() instead of of_irq_parse_one()+irq_create_of_mapping()
+> v3:
+>  - Rolled mfd: intel_quark_i2c_gpio fix into this patch to avoid bisect problems
+> v2:
+>  - Replaced interrupt-mask DT prop with support for the interrupts-extended
+>    prop. This means replacing the call to irq_of_parse_and_map() with calls
+>    to of_irq_parse_one() and irq_create_of_mapping().
+>
+> Note: There are a few *code* lines over 80 chars, but this is just guidance,
+>    right? Especially as there are already some lines over 80 chars.
+>
+> snps:gpio fix
+>
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> ---
+>  .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |  9 +++--
+>  drivers/gpio/gpio-dwapb.c                          | 42 +++++++++++++++++-----
+>  drivers/mfd/intel_quark_i2c_gpio.c                 |  3 +-
+>  include/linux/platform_data/gpio-dwapb.h           |  3 +-
+>  4 files changed, 44 insertions(+), 13 deletions(-)
 
-This still needs work. But i don't want David to see the two
-Reviewed-by and think the series is O.K. So lets make it clear
-
-NACK
-
-More comments to follow.
-
-    Andrew
+Reviewed-by: Rob Herring <robh@kernel.org>
