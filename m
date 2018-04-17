@@ -1,109 +1,82 @@
-Return-Path: <SRS0=Tej7=GZ=bootlin.com=maxime.ripard@kernel.org>
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v9 0/2] media: v4l: Add support for the Cadence MIPI-CSI2 RX
-Date: Wed,  4 Apr 2018 14:22:03 +0200
-Message-Id: <20180404122205.13051-1-maxime.ripard@bootlin.com>
+Return-Path: <SRS0=pf7g=HG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from bin-mail-out-06.binero.net ([195.74.38.229]:20709 "EHLO
+        bin-mail-out-06.binero.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752261AbeDQU4D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Apr 2018 16:56:03 -0400
+From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Subject: [PATCH 2/2] arm64: dts: renesas: r8a7796: decrease temperature hysteresis
+Date: Tue, 17 Apr 2018 22:54:28 +0200
+Message-Id: <20180417205428.15227-3-niklas.soderlund@ragnatech.se>
+In-Reply-To: <20180417205428.15227-1-niklas.soderlund@ragnatech.se>
+References: <20180417205428.15227-1-niklas.soderlund@ragnatech.se>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-Here is another attempt at supporting the MIPI-CSI2 RX block from
-Cadence.
+To incorporate more tests by the hardware team decrease the hysteresis
+value to 1C.
 
-This IP block is able to receive CSI data over up to 4 lanes, and
-split it to over 4 streams. Those streams are basically the interfaces
-to the video grabbers that will perform the capture.
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+---
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-It is able to map streams to both CSI datatypes and virtual channels,
-dynamically. This is unclear at this point what the right way to
-support it would be, so the driver only uses a static mapping between
-the virtual channels and streams, and ignores the data types.
-
-Let me know what you think!
-Maxime
-
-Changes from v8:
-  - Added maintainer entry
-  - Added MODULE_AUTHOR, MODULE_DESCRIPTION and MODULE_LICENSE
-  - Added Kconfig help
-  - Removed unused headers
-  - Added Niklas' Reviewed-by
-
-Changes from v7:
-  - Changed calls to usleep_range to udelay
-  - Rebased on top of 4.16
-  - Renamed the reg variable in _get_resources to dev_cfg
-  - Checked for the clk_prepare_enable return codes
-  - Fixed a race condition in concurrent calls to s_stream by moving
-    from the atomic counter to a mutex.
-
-Changes from v6:
-  - Added Sakari's Acked-by
-  - Added Kconfig help
-  - Removed the comment in the probe next to the kmalloc
-
-Changes from v5:
-  - Use SPDX license header
-  - Fix the lane mapping logic and map unused logical lanes only to unused
-    physical lanes. Added a comment to explain why.
-
-Changes from v4:
-  - Rebased on top of 4.15
-  - Fixed a lane mapping issue that prevented the CSI2-RX device to operate
-    properly.
-  - Reworded the output endpoints documentation in the binding
-
-Changes from v3:
-  - Removed stale printk
-  - Propagate start/stop functions error code to s_stream
-  - Renamed the DT bindings files
-  - Clarified the output ports wording in the DT binding doc
-  - Added a define for the maximum number of lanes
-  - Rebased on top of Sakari's serie
-  - Gathered tags based on the reviews
-
-Changes from v2:
-  - Added reference counting for the controller initialisation
-  - Fixed checkpatch warnings
-  - Moved the sensor initialisation after the DPHY configuration
-  - Renamed the sensor fields to source for consistency
-  - Defined some variables
-  - Renamed a few structures variables
-  - Added internal and external phy errors messages
-  - Reworked the binding slighty by making the external D-PHY optional
-  - Moved the notifier registration in the probe function
-  - Removed some clocks that are not system clocks
-  - Added clocks enabling where needed
-  - Added the code to remap the data lanes
-  - Changed the memory allocator for the non-devm function, and a
-    comment explaining why
-  - Reworked the binding wording
-
-Changes from v1:
-  - Amended the DT bindings as suggested by Rob
-  - Rebase on top of 4.13-rc1 and latest Niklas' serie iteration
-
-Maxime Ripard (2):
-  dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
-  v4l: cadence: Add Cadence MIPI-CSI2 RX driver
-
- .../devicetree/bindings/media/cdns,csi2rx.txt      | 100 +++++
- MAINTAINERS                                        |   7 +
- drivers/media/platform/Kconfig                     |   1 +
- drivers/media/platform/Makefile                    |   2 +
- drivers/media/platform/cadence/Kconfig             |  23 +
- drivers/media/platform/cadence/Makefile            |   1 +
- drivers/media/platform/cadence/cdns-csi2rx.c       | 500 +++++++++++++++++++++
- 7 files changed, 634 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2rx.txt
- create mode 100644 drivers/media/platform/cadence/Kconfig
- create mode 100644 drivers/media/platform/cadence/Makefile
- create mode 100644 drivers/media/platform/cadence/cdns-csi2rx.c
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index 599c74d6a6cb67ab..e3a28b9a5fbdd2a6 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -2438,12 +2438,12 @@
+ 			trips {
+ 				sensor1_passive: sensor1-passive {
+ 					temperature = <95000>;
+-					hysteresis = <2000>;
++					hysteresis = <1000>;
+ 					type = "passive";
+ 				};
+ 				sensor1_crit: sensor1-crit {
+ 					temperature = <120000>;
+-					hysteresis = <2000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -2464,12 +2464,12 @@
+ 			trips {
+ 				sensor2_passive: sensor2-passive {
+ 					temperature = <95000>;
+-					hysteresis = <2000>;
++					hysteresis = <1000>;
+ 					type = "passive";
+ 				};
+ 				sensor2_crit: sensor2-crit {
+ 					temperature = <120000>;
+-					hysteresis = <2000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -2490,12 +2490,12 @@
+ 			trips {
+ 				sensor3_passive: sensor3-passive {
+ 					temperature = <95000>;
+-					hysteresis = <2000>;
++					hysteresis = <1000>;
+ 					type = "passive";
+ 				};
+ 				sensor3_crit: sensor3-crit {
+ 					temperature = <120000>;
+-					hysteresis = <2000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
 -- 
-2.14.3
+2.17.0
+
