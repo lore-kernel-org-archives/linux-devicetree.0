@@ -1,52 +1,61 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: h3: Re-enable EMAC on
- Orange Pi One
-Date: Tue, 17 Apr 2018 11:18:16 +0200
-Message-ID: <20180417091816.xcda7q6gugyqj3ie@flea>
-References: <20180417041714.27266-1-wens@csie.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v4 03/10] PCI: endpoint: functions/pci-epf-test: Add
+ second entry
+Date: Tue, 17 Apr 2018 14:49:37 +0530
+Message-ID: <56bdafe6-1725-6e55-68a4-38667f114e5c@ti.com>
+References: <cover.1523881182.git.gustavo.pimentel@synopsys.com>
+ <d025236bb2646eb3b4d4de9f2e745cab5d7ef2b9.1523881182.git.gustavo.pimentel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ye2tn56dbxqzy7er"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZHX23LAKGQEOAM4XSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180417041714.27266-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d025236bb2646eb3b4d4de9f2e745cab5d7ef2b9.1523881182.git.gustavo.pimentel@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---ye2tn56dbxqzy7er
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+On Monday 16 April 2018 08:07 PM, Gustavo Pimentel wrote:
+> Adds a seconds entry on the pci_epf_test_ids structure that disables the
+> linkup_notifier parameter on driver.
+> 
+> This allows EPs that doesn't have linkup notification signal to work
+> with pcitest.
+> 
+> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+> Change v2->v3:
+>  - Added second entry in pci_epf_test_ids structure.
+>  - Remove test_reg_bar field assignment on second entry.
+> Changes v3->v4:
+> - Nothing changed, just to follow the patch set version.
+> 
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 7cef851..63dca44 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -459,10 +459,18 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>  	return 0;
+>  }
+>  
+> +static const struct pci_epf_test_data data_cfg2 = {
+> +	.linkup_notifier = false
+> +};
+> +
+>  static const struct pci_epf_device_id pci_epf_test_ids[] = {
+>  	{
+>  		.name = "pci_epf_test",
+>  	},
+> +	{
+> +		.name = "pci_epf_test_cfg2",
 
-On Tue, Apr 17, 2018 at 12:17:14PM +0800, Chen-Yu Tsai wrote:
-> In commit f0842bc5637c ("ARM: dts: sun8i: h3: Enable HDMI output on H3
-> boards"), the hunk that enabled HDMI for the Orange Pi One did not add a
-> 
->     status = "okay";
-> 
-> line for the HDMI node, inadvertenly using the one for the EMAC. This
-> resulted in the EMAC now being disabled. Whether this was due to a
-> rebase error or some other mishap is unknown.
-> 
-> This patch re-enables the EMAC by adding the status line to its node.
-> 
-> Fixes: f0842bc5637c ("ARM: dts: sun8i: h3: Enable HDMI output on H3 boards")
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+I'd prefer this to be named pci_epf_test_designware so that configfs entry is
+self explanatory.
 
-Applied, thanks!
-Maxime
-
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---ye2tn56dbxqzy7er--
+Thanks
+Kishon
