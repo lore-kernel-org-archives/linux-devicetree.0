@@ -1,31 +1,37 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 06/10] drivers/peci: Add a PECI adapter driver for
- Aspeed AST24xx/AST25xx
-Date: Tue, 17 Apr 2018 14:37:29 +0100
-Message-ID: <93e7f93c-a2e4-1e16-be4c-b908f88b9897@arm.com>
-References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
- <20180410183212.16787-7-jae.hyun.yoo@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] of/numa: drop export of of_node_to_nid
+Date: Tue, 17 Apr 2018 08:38:02 -0500
+Message-ID: <20180417133802.19774-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180410183212.16787-7-jae.hyun.yoo@linux.intel.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Just a drive-by nit:
+The "generic" implementation of of_node_to_nid is only used by
+arm64 and only in built-in code, so remove its export. Any
+device with a struct device should be able to use dev_to_node()
+instead. Also, exporting of_node_to_nid doesn't actually work if
+we build a module on an arch that doesn't select OF_NUMA nor provide its
+own of_node_to_nid implementation.
 
-On 10/04/18 19:32, Jae Hyun Yoo wrote:
-[...]
-> +#define PECI_CTRL_SAMPLING_MASK     GENMASK(19, 16)
-> +#define PECI_CTRL_SAMPLING(x)       (((x) << 16) & PECI_CTRL_SAMPLING_MASK)
-> +#define PECI_CTRL_SAMPLING_GET(x)   (((x) & PECI_CTRL_SAMPLING_MASK) >> 16)
+Cc: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/of/of_numa.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-FWIW, <linux/bitfield.h> already provides functionality like this, so it 
-might be worth taking a look at FIELD_{GET,PREP}() to save all these 
-local definitions.
-
-Robin.
+diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+index f9d5480a4ae5..27d9b4bba535 100644
+--- a/drivers/of/of_numa.c
++++ b/drivers/of/of_numa.c
+@@ -177,7 +177,6 @@ int of_node_to_nid(struct device_node *device)
+ 
+ 	return NUMA_NO_NODE;
+ }
+-EXPORT_SYMBOL(of_node_to_nid);
+ 
+ int __init of_numa_init(void)
+ {
+-- 
+2.14.1
