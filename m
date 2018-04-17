@@ -1,80 +1,58 @@
-From: Radhey Shyam Pandey <radheys@xilinx.com>
-Subject: RE: [RFC 1/6] dt-bindings: dma: xilinx_dma: Add optional property
- has_axieth_connected
-Date: Tue, 17 Apr 2018 10:54:57 +0000
-Message-ID: <MWHPR02MB3293878F33D165B799DB8A96C7B70@MWHPR02MB3293.namprd02.prod.outlook.com>
-References: <1522665546-10035-1-git-send-email-radheys@xilinx.com>
- <1522665546-10035-2-git-send-email-radheys@xilinx.com>
- <20180411090525.GX6014@localhost>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: add binding for at91-usart in spi mode
+Date: Tue, 17 Apr 2018 12:03:58 +0100
+Message-ID: <20180417110358.GD8973@sirena.org.uk>
+References: <20180413161117.20274-1-radu.pirea@microchip.com>
+ <20180413161117.20274-3-radu.pirea@microchip.com>
+ <20180413162327.GE22187@piout.net>
+ <8e6c447d-dce5-f9af-e5b2-8d1d863159d6@microchip.com>
+ <20180413181251.GG22187@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="KdquIMZPjGJQvRdI"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180411090525.GX6014@localhost>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180413181251.GG22187@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, Appana Durga Kedareswara Rao <appanad@xilinx.com>, "lars@metafoo.de" <lars@metafoo.de>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Radu Pirea <radu.pirea@microchip.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
 
-> -----Original Message-----
-> From: Vinod Koul [mailto:vinod.koul@intel.com]
-> Sent: Wednesday, April 11, 2018 2:35 PM
-> To: Radhey Shyam Pandey <radheys@xilinx.com>; Rob Herring
-> <robh@kernel.org>; devicetree@vger.kernel.org
-> Cc: dan.j.williams@intel.com; michal.simek@xilinx.com; Appana Durga
-> Kedareswara Rao <appanad@xilinx.com>; Radhey Shyam Pandey
-> <radheys@xilinx.com>; lars@metafoo.de; dmaengine@vger.kernel.org;
-> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: Re: [RFC 1/6] dt-bindings: dma: xilinx_dma: Add optional propert=
-y
-> has_axieth_connected
->=20
-> On Mon, Apr 02, 2018 at 04:09:01PM +0530, Radhey Shyam Pandey wrote:
-> > Add an optional AXI DMA property 'has_axieth_connected'. This can be
-> > specified to indicate that AXI DMA is connected to AXI Ethernet in
-> > hardware design and dma driver needs to do some additional handling.
->=20
-> 1. why are DT people and list not added to this? I have added that
-Sorry missed it. I will add in v2. Thanks.
-> 2. should we have a property for a specific peripheral? Wouldn't it help =
-to
-> have
-> a generic property for peripheral connected which can be scaled to more I=
-Ps
-> being connected in future?
-Good point! I will rename this property to xlnx,axistream-connected and
-update description. It can then be reused for other usecases as well.
-> 3. Please use right subsystem name, it damengine: not dma:
-I will fix.
->=20
-> >
-> > Signed-off-by: Radhey Shyam Pandey <radheys@xilinx.com>
-> > ---
-> >  .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |    1 +
-> >  1 files changed, 1 insertions(+), 0 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.tx=
-t
-> b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> > index a2b8bfa..5d592e3 100644
-> > --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> > +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> > @@ -42,6 +42,7 @@ Optional properties:
-> >  	the hardware.
-> >  Optional properties for AXI DMA:
-> >  - xlnx,mcdma: Tells whether configured for multi-channel mode in the
-> hardware.
-> > +- xlnx,axieth-connected: Tells whether AXI DMA is connected to AXI
-> Ethernet.
-> >  Optional properties for VDMA:
-> >  - xlnx,flush-fsync: Tells which channel to Flush on Frame sync.
-> >  	It takes following values:
-> > --
-> > 1.7.1
-> >
->=20
-> --
-> ~Vinod
+--KdquIMZPjGJQvRdI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Apr 13, 2018 at 08:12:51PM +0200, Alexandre Belloni wrote:
+> On 13/04/2018 19:12:54+0200, Nicolas Ferre wrote:
+
+> > This layout of the hardware is completely different from the USART one and
+> > it seems to makes sense to address it with a different hardware description
+> > and so a different compatible string.
+
+> But then, you can end up with two drivers trying to use the same IP
+> because nothing prevents you from writing a DT with both a usart and an
+> spi node enabled for the same IP. request_mem_region() will not help
+> here because then the working driver will depend on the probing order.
+
+We don't really have too much in the way of better ideas for how to
+handle this though.  Take a look at how the PXA SSP stuff handles this,
+though that's not really doing too much different it at least layers a
+mechanism on top to avoid collisions.
+
+--KdquIMZPjGJQvRdI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrV1J0ACgkQJNaLcl1U
+h9DCSQf+MvNTpltQosRGeLwGrJwao9U0bH049keLdBcKwW0YHwsyF27+3qgKSt2P
+o0yP3Kc0wpvXsg8nCA8i002IsP0TlMwfoK4iErmRsm3yrq9oW1OvLhQhmSQQPMGo
+nKCK5JnS9yRigDctPIHxBEypFSVz7yeEcISKO7A7xdhsZx9OZAsj+E/IN/msyur0
+qq5dmuxkWEOpHBRVib82AZkiGT4mnKtI1++JyKvtUxPJkALV9/2oZ02zBmF0wP7B
+Xr4/E0ceAJ1dGNoCoDgE3buSyUn/4dPf/+0PnN4hnnAfT64Nr0jAogk8U4yVESEC
+M2sMuJONsvBSwQh9X6OWXvBtec/3Ig==
+=CaAS
+-----END PGP SIGNATURE-----
+
+--KdquIMZPjGJQvRdI--
