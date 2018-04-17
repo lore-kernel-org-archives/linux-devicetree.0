@@ -1,7 +1,7 @@
 From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: [PATCH v5 06/10] misc: pci_endpoint_test: Add designware EP entry
-Date: Tue, 17 Apr 2018 15:34:24 +0100
-Message-ID: <37e68003e28d2056429276985aae631ed131de5e.1523973931.git.gustavo.pimentel@synopsys.com>
+Subject: [PATCH v5 09/10] PCI: dwc: Small computation improvement
+Date: Tue, 17 Apr 2018 15:34:27 +0100
+Message-ID: <4fc069a2b82cc7a3790bc528a6b67636654a3a35.1523973931.git.gustavo.pimentel@synopsys.com>
 References: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
@@ -12,36 +12,53 @@ To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jin
 Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Adds the designware EP device ID entry to pci_endpoint_test driver table
-to allow this device to be recognize and handle by the pci_endpoint_test
-driver.
+Replaces a simple division by 2 to a right shift rotation of 1 bit.
+
+Probably any recent and decent compiler does this kind of substitution
+in order to improve code performance. Nevertheless it's a coding good
+practice whenever there is a division / multiplication by multiple of 2
+to replace it by the equivalent operation in this case, the shift
+rotation.
 
 Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
 Change v1->v2:
- - Changed device id following Kishon's suggestion.
+ - Nothing changed, just to follow the patch set version.
 Change v2->v3:
  - Nothing changed, just to follow the patch set version.
 Changes v3->v4:
- - Nothing changed, just to follow the patch set version.
+ - Added a small explication to the log description.
 Changes v4->v5:
  - Nothing changed, just to follow the patch set version.
 
- drivers/misc/pci_endpoint_test.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/dwc/pcie-designware-host.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index fe8897e..37db0fc 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -634,6 +634,7 @@ static void pci_endpoint_test_remove(struct pci_dev *pdev)
- static const struct pci_device_id pci_endpoint_test_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_SYNOPSYS, PCI_DEVICE_ID_SYNOPSYS_SMPL_EP) },
- 	{ }
- };
- MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
+diff --git a/drivers/pci/dwc/pcie-designware-host.c b/drivers/pci/dwc/pcie-designware-host.c
+index 5a23f78..fc55fde 100644
+--- a/drivers/pci/dwc/pcie-designware-host.c
++++ b/drivers/pci/dwc/pcie-designware-host.c
+@@ -332,8 +332,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 
+ 	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+ 	if (cfg_res) {
+-		pp->cfg0_size = resource_size(cfg_res) / 2;
+-		pp->cfg1_size = resource_size(cfg_res) / 2;
++		pp->cfg0_size = resource_size(cfg_res) >> 1;
++		pp->cfg1_size = resource_size(cfg_res) >> 1;
+ 		pp->cfg0_base = cfg_res->start;
+ 		pp->cfg1_base = cfg_res->start + pp->cfg0_size;
+ 	} else if (!pp->va_cfg0_base) {
+@@ -377,8 +377,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 			break;
+ 		case 0:
+ 			pp->cfg = win->res;
+-			pp->cfg0_size = resource_size(pp->cfg) / 2;
+-			pp->cfg1_size = resource_size(pp->cfg) / 2;
++			pp->cfg0_size = resource_size(pp->cfg) >> 1;
++			pp->cfg1_size = resource_size(pp->cfg) >> 1;
+ 			pp->cfg0_base = pp->cfg->start;
+ 			pp->cfg1_base = pp->cfg->start + pp->cfg0_size;
+ 			break;
 -- 
 2.7.4
