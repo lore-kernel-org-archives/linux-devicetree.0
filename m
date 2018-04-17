@@ -1,86 +1,79 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH] doc: Add vendor prefix for Kaohsiung
-Date: Tue, 17 Apr 2018 10:06:03 +0200
-Message-ID: <20180417100603.0f5bad79@jawa>
-References: <20180412143401.6433-1-lukma@denx.de>
-        <20180416192341.4fhy674fprei3zlu@rob-hp-laptop>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 4/9] ARM: dts: bcm2837: Add Raspberry Pi 3 B+
+Date: Tue, 17 Apr 2018 10:13:21 +0200
+Message-ID: <60625d11-c521-b004-d64c-f72c9c6aac83@i2se.com>
+References: <1523640478-4448-1-git-send-email-stefan.wahren@i2se.com>
+ <1523640478-4448-5-git-send-email-stefan.wahren@i2se.com>
+ <20180416204331.ft4ehpe5statsw4u@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/bOZ/b9ubSbqTA+mftvzW_0R"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180416192341.4fhy674fprei3zlu@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180416204331.ft4ehpe5statsw4u@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Alexander Graf <agraf@suse.de>, Eric Anholt <eric@anholt.net>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/bOZ/b9ubSbqTA+mftvzW_0R
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Rob,
-
-> On Thu, Apr 12, 2018 at 04:34:01PM +0200, Lukasz Majewski wrote:
-> > The 'kao' entry has been added to vendor-prefixes.txt to indicate
-> > products from Kaohsiung Opto-Electronics Inc. =20
->=20
-> kao or...
->=20
-> >=20
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > b/Documentation/devicetree/bindings/vendor-prefixes.txt index
-> > 8ff7eadc8bef..f995a876d2cc 100644 ---
-> > a/Documentation/devicetree/bindings/vendor-prefixes.txt +++
-> > b/Documentation/devicetree/bindings/vendor-prefixes.txt @@ -184,6
-> > +184,7 @@ khadas	Khadas kiebackpeter    Kieback & Peter GmbH
-> >  kinetic Kinetic Technologies
-> >  kingnovel	Kingnovel Technology Co., Ltd.
-> > +koe	Kaohsiung Opto-Electronics Inc. =20
->=20
-> koe?
-
-Ach... typo. This should be koe. I will fix this in v2.
-
->=20
-> >  kosagi	Sutajio Ko-Usagi PTE Ltd.
-> >  kyo	Kyocera Corporation
-> >  lacie	LaCie
-> > --=20
-> > 2.11.0
-> >  =20
-
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-
---Sig_/bOZ/b9ubSbqTA+mftvzW_0R
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlrVqusACgkQAR8vZIA0
-zr24GQf/QIxcpYk+Svo6Wsqo4zMdsrbj1vuz28hJjIsWKgO3lWFvliHNdFnhvxUE
-pVrhZ7RD64yTDg57Ex1SxN9vEkEMXYsIIoAeRMFfRhs26lBqOy5r3DBcyJMguKdp
-u93nYkS2vBMIZiid//m2h0P94FSu756mXy0bGsIOaXuxEfJ+qr3c7ANaxcG4jQpq
-4fu6IK+ko1Ewcn6S3YoQyKrrI8bjih9YysAkDWQOhZUJAA2YwStFfjFsXMZGP+iE
-obgWnn0p8PfrPxXhciBBBPYkrTIelEr0JJbsBjDN7CQYnklfOQnd4x+1UzfLhpUF
-Rk0lV7Bzextl8by7Vqwi4+PqN8qaDQ==
-=izwO
------END PGP SIGNATURE-----
-
---Sig_/bOZ/b9ubSbqTA+mftvzW_0R--
+SGkgUm9iLAoKQW0gMTYuMDQuMjAxOCB1bSAyMjo0MyBzY2hyaWViIFJvYiBIZXJyaW5nOgo+IE9u
+IEZyaSwgQXByIDEzLCAyMDE4IGF0IDA3OjI3OjUzUE0gKzAyMDAsIFN0ZWZhbiBXYWhyZW4gd3Jv
+dGU6Cj4+IFRoZSBSYXNwYmVycnkgUGkgMyBCKyBoYXMgdGhlIGZvbGxvd2luZyBtYWpvciBkaWZm
+ZXJlbmNlcyBjb21wYXJlZAo+PiB0byB0aGUgbW9kZWwgMyBCOgo+PiAqIE1pY3JvY2hpcCBMQU43
+NTE1IChHaWdhYml0IEV0aGVybmV0KQo+PiAqIEN5cHJlc3MgQ1lXNDM0NTUgKDgwMi4xMW4vYWMg
+YW5kIEJUIDQuMikKPj4KPj4gV2UgbmVlZCB0byBhZGQgdGhlIFVTQiBMQU4gY2hpcCBzbyB0aGUg
+Ym9vdGxvYWRlciBjYW4gYWRkIHRoZSBNQUMgYWRkcmVzcy4KPj4gVGhpcyBpcyBuZWNlc3Nhcnkg
+YmVjYXVzZSB0aGVyZSBhaW4ndCBhIEVFUFJPTSBvciBhIHZhbGlkIE9UUC4KPj4KPj4gU2lnbmVk
+LW9mZi1ieTogUGhpbCBFbHdlbGwgPHBoaWxAcmFzcGJlcnJ5cGkub3JnPgo+PiBTaWduZWQtb2Zm
+LWJ5OiBTdGVmYW4gV2FocmVuIDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPgo+PiAtLS0KPj4gICBh
+cmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSAgICAgICAgICAgICAgICAgfCAgIDEgKwo+PiAgIGFy
+Y2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzctcnBpLTMtYi1wbHVzLmR0cyB8IDEwOCArKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKwo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4M3gtcnBpLWxh
+bjc1MTUuZHRzaSB8ICAyNyArKysrKysrKwo+PiAgIDMgZmlsZXMgY2hhbmdlZCwgMTM2IGluc2Vy
+dGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvYmNtMjgz
+Ny1ycGktMy1iLXBsdXMuZHRzCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3Qv
+ZHRzL2JjbTI4M3gtcnBpLWxhbjc1MTUuZHRzaQo+Pgo+PiAuLi4KPj4gZGlmZiAtLWdpdCBhL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL2JjbTI4M3gtcnBpLWxhbjc1MTUuZHRzaSBiL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2JjbTI4M3gtcnBpLWxhbjc1MTUuZHRzaQo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBp
+bmRleCAwMDAwMDAwLi4xNjkyMDNjCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvYmNtMjgzeC1ycGktbGFuNzUxNS5kdHNpCj4gV2h5IHRoZSBzZXBhcmF0ZSBmaWxl
+PyBUaGlzIGNhbiBiZSBzaGFyZWQ/Cgp0aGlzIGNvbWVzIGZyb20gdGhlIGFzc3VtcHRpb24gdGhl
+IFJQaSAzIEIrIHdvbid0IGJlIHRoZSBvbmx5IFJQaSBib2FyZCAKd2l0aCBhIExBTjc1MTUuIFNo
+b3VsZCBpIGZvbGQgaXQgaW4gdGhlIGR0cyBmaWxlIGFzIGxvbmcgYXMgd2UgZG9uJ3QgCmhhdmUg
+YSBzZWNvbmQgYm9hcmQ/Cgo+Cj4+IEBAIC0wLDAgKzEsMjcgQEAKPj4gKy8vIFNQRFgtTGljZW5z
+ZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4+ICsvIHsKPj4gKwlhbGlhc2VzIHsKPj4gKwkJZXRoZXJu
+ZXQwID0gJmV0aGVybmV0Owo+PiArCX07Cj4+ICt9Owo+PiArCj4+ICsmdXNiIHsKPj4gKwl1c2Ix
+QDEgewo+PiArCQljb21wYXRpYmxlID0gInVzYjQyNCwyNTE0IjsKPj4gKwkJcmVnID0gPDE+Owo+
+PiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gKwkJI3NpemUtY2VsbHMgPSA8MD47Cj4+ICsK
+Pj4gKwkJdXNiMV8xQDEgewo+IHVzYi1wb3J0QDEKPgo+PiArCQkJY29tcGF0aWJsZSA9ICJ1c2I0
+MjQsMjUxNCI7Cj4gVGhlcmUncyByZWFsbHkgMiBsZXZlbHMgb2YgaHVicz8KClllcywgbHN1c2Ig
+LXQgc2hvd3MgdGhlIGZvbGxvd2luZzoKCi86wqAgQnVzIDAxLlBvcnQgMTogRGV2IDEsIENsYXNz
+PXJvb3RfaHViLCBEcml2ZXI9ZHdjMi8xcCwgNDgwTQogwqDCoMKgIHxfXyBQb3J0IDE6IERldiAy
+LCBJZiAwLCBDbGFzcz1IdWIsIERyaXZlcj1odWIvNHAsIDQ4ME0KIMKgwqDCoMKgwqDCoMKgIHxf
+XyBQb3J0IDE6IERldiAzLCBJZiAwLCBDbGFzcz1IdWIsIERyaXZlcj1odWIvM3AsIDQ4ME0KIMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgfF9fIFBvcnQgMjogRGV2IDUsIElmIDAsIENsYXNzPUh1bWFu
+IEludGVyZmFjZSBEZXZpY2UsIApEcml2ZXI9dXNiaGlkLCAxLjVNCiDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIHxfXyBQb3J0IDE6IERldiA2LCBJZiAwLCBDbGFzcz1WZW5kb3IgU3BlY2lmaWMgQ2xh
+c3MsIApEcml2ZXI9bGFuNzh4eCwgNDgwTQogwqDCoMKgwqDCoMKgwqAgfF9fIFBvcnQgMjogRGV2
+IDcsIElmIDAsIENsYXNzPU1hc3MgU3RvcmFnZSwgCkRyaXZlcj11c2Itc3RvcmFnZSwgNDgwTQog
+wqDCoMKgwqDCoMKgwqAgfF9fIFBvcnQgMzogRGV2IDQsIElmIDAsIENsYXNzPUh1bWFuIEludGVy
+ZmFjZSBEZXZpY2UsIApEcml2ZXI9dXNiaGlkLCAxLjVNCgo+Cj4+ICsJCQlyZWcgPSA8MT47Cj4+
+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gKwkJCSNzaXplLWNlbGxzID0gPDA+Owo+PiAr
+Cj4+ICsJCQlldGhlcm5ldDogdXNiZXRoZXJAMSB7Cj4gZXRoZXJuZXRAMQo+Cj4+ICsJCQkJY29t
+cGF0aWJsZSA9ICJ1c2I0MjQsNzgwMCI7Cj4+ICsJCQkJcmVnID0gPDE+Owo+PiArCQkJfTsKPj4g
+KwkJfTsKPj4gKwl9Owo+PiArfTsKPj4gLS0gCj4+IDIuNy40Cj4+Cj4gX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdAo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAoKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
