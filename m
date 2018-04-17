@@ -1,126 +1,67 @@
 From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [net-next PATCH v4 02/13] soc: ti: K2G: provide APIs to support driver probe deferral
-Date: Tue, 17 Apr 2018 17:30:31 -0400
-Message-ID: <1524000642-23944-3-git-send-email-m-karicheri2@ti.com>
+Subject: [net-next PATCH v4 07/13] net: netcp: ethss: map vlan priorities to
+ zero flow
+Date: Tue, 17 Apr 2018 17:30:36 -0400
+Message-ID: <1524000642-23944-8-git-send-email-m-karicheri2@ti.com>
 References: <1524000642-23944-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1524000642-23944-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org, grygorii.strashko@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-This patch provide APIs to allow client drivers to support
-probe deferral. On K2G SoC, devices can be probed only
-after the ti_sci_pm_domains driver is probed and ready.
-As drivers may get probed at different order, any driver
-that depends on knav dma and qmss drivers, for example
-netcp network driver, needs to defer probe until
-knav devices are probed and ready to service. To do this,
-add an API to query the device ready status from the knav
-dma and qmss devices.
+The driver currently support only vlan priority zero. So map the
+vlan priorities to zero flow in hardware.
 
 Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
 ---
- drivers/soc/ti/knav_dma.c        |  8 ++++++++
- drivers/soc/ti/knav_qmss_queue.c |  8 ++++++++
- include/linux/soc/ti/knav_dma.h  | 12 ++++++++++++
- include/linux/soc/ti/knav_qmss.h |  1 +
- 4 files changed, 29 insertions(+)
+ drivers/net/ethernet/ti/netcp_ethss.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/soc/ti/knav_dma.c b/drivers/soc/ti/knav_dma.c
-index 026182d..224d7dd 100644
---- a/drivers/soc/ti/knav_dma.c
-+++ b/drivers/soc/ti/knav_dma.c
-@@ -134,6 +134,13 @@ struct knav_dma_chan {
- 
- static struct knav_dma_pool_device *kdev;
- 
-+static bool device_ready;
-+bool knav_dma_device_ready(void)
-+{
-+	return device_ready;
-+}
-+EXPORT_SYMBOL_GPL(knav_dma_device_ready);
+diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+index 83acb72..91935e5 100644
+--- a/drivers/net/ethernet/ti/netcp_ethss.c
++++ b/drivers/net/ethernet/ti/netcp_ethss.c
+@@ -602,6 +602,7 @@ struct gbe_port_regs {
+ struct gbe_port_regs_ofs {
+ 	u16	port_vlan;
+ 	u16	tx_pri_map;
++	u16     rx_pri_map;
+ 	u16	sa_lo;
+ 	u16	sa_hi;
+ 	u16	ts_ctl;
+@@ -2304,6 +2305,13 @@ static int gbe_slave_open(struct gbe_intf *gbe_intf)
+ 		gbe_sgmii_rtreset(priv, slave, false);
+ 	gbe_port_config(priv, slave, priv->rx_packet_max);
+ 	gbe_set_slave_mac(slave, gbe_intf);
++	/* For NU & 2U switch, map the vlan priorities to zero
++	 * as we only configure to use priority 0
++	 */
++	if (IS_SS_ID_MU(priv))
++		writel(HOST_TX_PRI_MAP_DEFAULT,
++		       GBE_REG_ADDR(slave, port_regs, rx_pri_map));
 +
- static bool check_config(struct knav_dma_chan *chan, struct knav_dma_cfg *cfg)
- {
- 	if (!memcmp(&chan->cfg, cfg, sizeof(*cfg)))
-@@ -773,6 +780,7 @@ static int knav_dma_probe(struct platform_device *pdev)
- 	debugfs_create_file("knav_dma", S_IFREG | S_IRUGO, NULL, NULL,
- 			    &knav_dma_debug_ops);
- 
-+	device_ready = true;
- 	return ret;
- }
- 
-diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
-index 8526c8e..419365a 100644
---- a/drivers/soc/ti/knav_qmss_queue.c
-+++ b/drivers/soc/ti/knav_qmss_queue.c
-@@ -74,6 +74,13 @@
-  */
- const char *knav_acc_firmwares[] = {"ks2_qmss_pdsp_acc48.bin"};
- 
-+static bool device_ready;
-+bool knav_qmss_device_ready(void)
-+{
-+	return device_ready;
-+}
-+EXPORT_SYMBOL_GPL(knav_qmss_device_ready);
-+
- /**
-  * knav_queue_notify: qmss queue notfier call
-  *
-@@ -1849,6 +1856,7 @@ static int knav_queue_probe(struct platform_device *pdev)
- 
- 	debugfs_create_file("qmss", S_IFREG | S_IRUGO, NULL, NULL,
- 			    &knav_queue_debug_ops);
-+	device_ready = true;
- 	return 0;
- 
- err:
-diff --git a/include/linux/soc/ti/knav_dma.h b/include/linux/soc/ti/knav_dma.h
-index 66693bc..7127ec3 100644
---- a/include/linux/soc/ti/knav_dma.h
-+++ b/include/linux/soc/ti/knav_dma.h
-@@ -167,6 +167,8 @@ struct knav_dma_desc {
- void *knav_dma_open_channel(struct device *dev, const char *name,
- 				struct knav_dma_cfg *config);
- void knav_dma_close_channel(void *channel);
-+int knav_dma_get_flow(void *channel);
-+bool knav_dma_device_ready(void);
- #else
- static inline void *knav_dma_open_channel(struct device *dev, const char *name,
- 				struct knav_dma_cfg *config)
-@@ -176,6 +178,16 @@ static inline void *knav_dma_open_channel(struct device *dev, const char *name,
- static inline void knav_dma_close_channel(void *channel)
- {}
- 
-+static inline int knav_dma_get_flow(void *channel)
-+{
-+	return -EINVAL;
-+}
-+
-+static inline bool knav_dma_device_ready(void)
-+{
-+	return false;
-+}
-+
- #endif
- 
- #endif /* __SOC_TI_KEYSTONE_NAVIGATOR_DMA_H__ */
-diff --git a/include/linux/soc/ti/knav_qmss.h b/include/linux/soc/ti/knav_qmss.h
-index 9f0ebb3b..9745df6 100644
---- a/include/linux/soc/ti/knav_qmss.h
-+++ b/include/linux/soc/ti/knav_qmss.h
-@@ -86,5 +86,6 @@ int knav_pool_desc_map(void *ph, void *desc, unsigned size,
- void *knav_pool_desc_unmap(void *ph, dma_addr_t dma, unsigned dma_sz);
- dma_addr_t knav_pool_desc_virt_to_dma(void *ph, void *virt);
- void *knav_pool_desc_dma_to_virt(void *ph, dma_addr_t dma);
-+bool knav_qmss_device_ready(void);
- 
- #endif /* __SOC_TI_KNAV_QMSS_H__ */
+ 	/* enable forwarding */
+ 	cpsw_ale_control_set(priv->ale, slave->port_num,
+ 			     ALE_PORT_STATE, ALE_PORT_STATE_FORWARD);
+@@ -3005,6 +3013,7 @@ static int init_slave(struct gbe_priv *gbe_dev, struct gbe_slave *slave,
+ 		/* Initialize  slave port register offsets */
+ 		GBENU_SET_REG_OFS(slave, port_regs, port_vlan);
+ 		GBENU_SET_REG_OFS(slave, port_regs, tx_pri_map);
++		GBENU_SET_REG_OFS(slave, port_regs, rx_pri_map);
+ 		GBENU_SET_REG_OFS(slave, port_regs, sa_lo);
+ 		GBENU_SET_REG_OFS(slave, port_regs, sa_hi);
+ 		GBENU_SET_REG_OFS(slave, port_regs, ts_ctl);
 -- 
 1.9.1
