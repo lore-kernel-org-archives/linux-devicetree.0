@@ -1,252 +1,169 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC 08/11] usb: role: rcar-usb3-role-switch: add support for R-Car SoCs
-Date: Wed, 18 Apr 2018 17:10:02 +0900
-Message-Id: <1524039005-30618-9-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=UpLl=HG=ti.com=t-kristo@kernel.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [RFC 08/13] ARM: dts: ti: add dra71-evm overlays
+Date: Tue, 17 Apr 2018 12:10:10 +0300
+Message-ID: <1523956215-28154-9-git-send-email-t-kristo@ti.com>
+In-Reply-To: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
+References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com
-Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, p.zabel@pengutronix.de, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To: devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com
+Cc: wmills@ti.com, tony@atomide.com, trini@konsulko.com, rmk@armlinux.org.uk
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds role switch support for R-Car SoCs. Some R-Car SoCs
-(e.g. R-Car H3) have USB 3.0 dual-role device controller which has
-the USB 3.0 xHCI host and Renesas USB 3.0 peripheral.
+Add dra71-evm overlay files. There are two overlays available, the gpmc
+and the display ones. These are mutually exclusive, as they share certain
+hardware resources.
 
-Unfortunately, the mode change register contains the USB 3.0 peripheral
-controller side only. So, the USB 3.0 peripheral driver (renesas_usb3)
-manages this register. However, in peripheral mode, the host should
-stop. Also the host hardware needs to reinitialize its own registers
-when the mode changes from peripheral to host mode. Otherwise,
-the host cannot work correctly (e.g. detect a device as high-speed).
-
-To achieve this by a driver, this role switch driver manages
-the mode change register and attach/release the xhci-plat driver.
-The renesas_usb3 udc driver should call devm_of_platform_populate()
-to probe this driver.
-
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
 ---
- drivers/usb/roles/Kconfig                 |  12 ++
- drivers/usb/roles/Makefile                |   1 +
- drivers/usb/roles/rcar-usb3-role-switch.c | 179 ++++++++++++++++++++++++++++++
- 3 files changed, 192 insertions(+)
- create mode 100644 drivers/usb/roles/rcar-usb3-role-switch.c
+ .../boot/dts/ti/dra71-evm-lcd-auo-g101evn01.0.dtso | 121 +++++++++++++++++++++
+ arch/arm/boot/dts/ti/dra71-evm-nand.dtso           |   6 +
+ 2 files changed, 127 insertions(+)
+ create mode 100644 arch/arm/boot/dts/ti/dra71-evm-lcd-auo-g101evn01.0.dtso
+ create mode 100644 arch/arm/boot/dts/ti/dra71-evm-nand.dtso
 
-diff --git a/drivers/usb/roles/Kconfig b/drivers/usb/roles/Kconfig
-index f5a5e6f..429d784 100644
---- a/drivers/usb/roles/Kconfig
-+++ b/drivers/usb/roles/Kconfig
-@@ -11,4 +11,16 @@ config USB_ROLES_INTEL_XHCI
- 	  To compile the driver as a module, choose M here: the module will
- 	  be called intel-xhci-usb-role-switch.
- 
-+config USB_ROLES_RCAR_USB3
-+	tristate "Renesas R-Car USB3.0 Role Switch"
-+	depends on ARCH_RENESAS && OF
-+	help
-+	  Driver for the internal USB role switch for switching the USB data
-+	  lines between the xHCI host controller and the Renesas gadget
-+	  controller (by using renesas_usb3 driver) found on various Renesas
-+	  R-Car SoCs.
-+
-+	  To compile the driver as a module, choose M here: the module will
-+	  be called rcar-usb3-role-switch.
-+
- endif # USB_ROLE_SWITCH
-diff --git a/drivers/usb/roles/Makefile b/drivers/usb/roles/Makefile
-index e44b179..7ce3be3 100644
---- a/drivers/usb/roles/Makefile
-+++ b/drivers/usb/roles/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_USB_ROLES_INTEL_XHCI) += intel-xhci-usb-role-switch.o
-+obj-$(CONFIG_USB_ROLES_RCAR_USB3) += rcar-usb3-role-switch.o
-diff --git a/drivers/usb/roles/rcar-usb3-role-switch.c b/drivers/usb/roles/rcar-usb3-role-switch.c
+diff --git a/arch/arm/boot/dts/ti/dra71-evm-lcd-auo-g101evn01.0.dtso b/arch/arm/boot/dts/ti/dra71-evm-lcd-auo-g101evn01.0.dtso
 new file mode 100644
-index 0000000..9b56945
+index 0000000..bebfe43
 --- /dev/null
-+++ b/drivers/usb/roles/rcar-usb3-role-switch.c
-@@ -0,0 +1,179 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Renesas R-Car USB 3.0 role switch driver
-+ *
-+ * Copyright (C) 2018  Renesas Electronics Corporation
-+ */
++++ b/arch/arm/boot/dts/ti/dra71-evm-lcd-auo-g101evn01.0.dtso
+@@ -0,0 +1,121 @@
++/dts-v1/;
++/plugin/;
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/gpio/gpio.h>
 +
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/slab.h>
-+#include <linux/usb/role.h>
++/ {
++  fragment@101 {
++	target-path = "/";
 +
-+#define USB3_DRD_CON		0x218
-+#define DRD_CON_PERI_CON	BIT(24)
++	__overlay__ {
++		model = "TI DRA71 EVM-LCD-AUO-Display";
 +
-+struct rcar_usb3_role_switch {
-+	struct usb_role_switch *role_sw;
-+	void __iomem *reg;
-+	enum usb_role save_role;	/* for suspend/resume */
++		aliases {
++			display0 = "/display";
++			display1 = "/connector";
++		};
++
++		backlight {
++			compatible = "led-backlight";
++			brightness-levels = <0 2 38 74 110 146 182 218 255>;
++			default-brightness-level = <8>;
++			enable-gpios = <&pcf_display_board 0 GPIO_ACTIVE_LOW>;
++			leds = <&backlight_led>;
++		};
++
++		lcd: display {
++			compatible = "auo,g101evn01.0", "panel-dpi";
++			enable-gpios = <&pcf_lcd 13 GPIO_ACTIVE_LOW>;
++			label = "lcd";
++
++			panel-timing {
++				clock-frequency = <68930000>;
++				de-active = <1>;
++				hactive = <1280>;
++				hback-porch = <48>;
++				hfront-porch = <48>;
++				hsync-active = <0>;
++				hsync-len = <32>;
++				pixelclk-active = <1>;
++				vactive = <800>;
++				vback-porch = <8>;
++				vfront-porch = <4>;
++				vsync-active = <0>;
++				vsync-len = <4>;
++			};
++
++			port {
++				lcd_in: endpoint {
++					remote-endpoint = <&dpi_out>;
++				};
++			};
++		};
++	};
++  };
 +};
 +
-+static enum usb_role
-+rcar_usb3_role_switch_get_mode(struct rcar_usb3_role_switch *rcar_sw)
-+{
-+	u32 val = readl(rcar_sw->reg + USB3_DRD_CON);
++&pcf_gpio_21 {
++	p0 {
++		gpio-hog;
++		gpios = <0 GPIO_ACTIVE_HIGH>;
++		line-name = "sel_gpmc_ad_vid_s0";
++		output-low;
++	};
 +
-+	if (val & DRD_CON_PERI_CON)
-+		return USB_ROLE_DEVICE;
-+
-+	return USB_ROLE_HOST;
-+}
-+
-+static void
-+rcar_usb3_role_switch_set_mode(struct rcar_usb3_role_switch *rcar_sw,
-+			       bool host)
-+{
-+	void __iomem *drd_con = rcar_sw->reg + USB3_DRD_CON;
-+
-+	if (host)
-+		writel(readl(drd_con) & ~DRD_CON_PERI_CON, drd_con);
-+	else
-+		writel(readl(drd_con) | DRD_CON_PERI_CON, drd_con);
-+}
-+
-+static int rcar_usb3_role_switch_set_role(struct device *dev,
-+					  enum usb_role role)
-+{
-+	struct rcar_usb3_role_switch *rcar_sw = dev_get_drvdata(dev);
-+	struct device *host = usb_role_switch_get_usb3_port(rcar_sw->role_sw);
-+	enum usb_role cur_role;
-+
-+	pm_runtime_get_sync(dev->parent);
-+
-+	cur_role = rcar_usb3_role_switch_get_mode(rcar_sw);
-+	if (cur_role == USB_ROLE_HOST && role == USB_ROLE_DEVICE) {
-+		device_release_driver(host);
-+		rcar_usb3_role_switch_set_mode(rcar_sw, false);
-+	} else if (cur_role == USB_ROLE_DEVICE && role == USB_ROLE_HOST) {
-+		/* Must set the mode before device_attach of the host */
-+		rcar_usb3_role_switch_set_mode(rcar_sw, true);
-+		if (device_attach(host) < 0)
-+			dev_err(dev, "device_attach(usb3_port) failed\n");
-+	}
-+
-+	pm_runtime_put(dev->parent);
-+
-+	return 0;
-+}
-+
-+static enum usb_role rcar_usb3_role_switch_get_role(struct device *dev)
-+{
-+	struct rcar_usb3_role_switch *rcar_sw = dev_get_drvdata(dev);
-+	enum usb_role cur_role;
-+
-+	pm_runtime_get(dev->parent);
-+	cur_role = rcar_usb3_role_switch_get_mode(rcar_sw);
-+	pm_runtime_put(dev->parent);
-+
-+	return cur_role;
-+}
-+
-+static struct usb_role_switch_desc rcar_usb3_role_switch_desc = {
-+	.set = rcar_usb3_role_switch_set_role,
-+	.get = rcar_usb3_role_switch_get_role,
++	p7 {
++		gpio-hog;
++		gpios = <7 GPIO_ACTIVE_HIGH>;
++		line-name = "sel_gpmc_ad_vid_s2";
++		output-high;
++	};
 +};
 +
-+static const struct of_device_id rcar_usb3_role_switch_of_match[] = {
-+	{ .compatible = "renesas,rcar-usb3-role-switch" },
-+	{ }
++&i2c1 {
++	pcf_display_board: gpio@27 {
++		compatible = "nxp,pcf8575";
++		#gpio-cells = <2>;
++		gpio-controller;
++		reg = <0x27>;
++	};
++
++	tlc59108@40 {
++		compatible = "ti,tlc59108";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x40>;
++
++		backlight_led: bl@2 {
++			label = "backlight";
++			reg = <0x2>;
++		};
++	};
++
++	touchscreen: goodix-gt9271@14 {
++		compatible = "goodix,gt9271";
++		interrupt-parent = <&gpio1>;
++		interrupts = <15 IRQ_TYPE_LEVEL_HIGH>;
++		irq-gpios = <&pcf_display_board 6 GPIO_ACTIVE_HIGH>;
++		reg = <0x14>;
++		reset-gpios = <&pcf_display_board 5 GPIO_ACTIVE_LOW>;
++		status = "okay";
++		touchscreen-inverted-y;
++		touchscreen-size-x = <1280>;
++		touchscreen-size-y = <800>;
++	};
 +};
-+MODULE_DEVICE_TABLE(of, rcar_usb3_role_switch_of_match);
 +
-+static int rcar_usb3_role_switch_remove(struct platform_device *pdev)
-+{
-+	struct rcar_usb3_role_switch *rcar_sw = platform_get_drvdata(pdev);
++&dss {
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+	usb_role_switch_unregister(rcar_sw->role_sw);
-+	pm_runtime_disable(pdev->dev.parent);
++		dss_port: port {
++			reg = <2>;
 +
-+	return 0;
-+}
-+
-+static int rcar_usb3_role_switch_probe(struct platform_device *pdev)
-+{
-+	struct rcar_usb3_role_switch *rcar_sw;
-+	struct resource *res;
-+
-+	rcar_sw = devm_kzalloc(&pdev->dev, sizeof(*rcar_sw), GFP_KERNEL);
-+	if (!rcar_sw)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(to_platform_device(pdev->dev.parent),
-+				    IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -ENODEV;
-+
-+	rcar_sw->reg = devm_ioremap_nocache(&pdev->dev, res->start,
-+					    resource_size(res));
-+	if (IS_ERR(rcar_sw->reg))
-+		return PTR_ERR(rcar_sw->reg);
-+
-+	platform_set_drvdata(pdev, rcar_sw);
-+	pm_runtime_enable(pdev->dev.parent);
-+
-+	rcar_usb3_role_switch_desc.allow_userspace_control = true;
-+	rcar_sw->role_sw = usb_role_switch_register(&pdev->dev,
-+						&rcar_usb3_role_switch_desc);
-+	if (IS_ERR(rcar_sw->role_sw)) {
-+		pm_runtime_disable(pdev->dev.parent);
-+		return PTR_ERR(rcar_sw->role_sw);
-+	}
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused rcar_usb3_role_switch_suspend(struct device *dev)
-+{
-+	struct rcar_usb3_role_switch *rcar_sw = dev_get_drvdata(dev);
-+
-+	pm_runtime_get_sync(dev->parent);
-+	rcar_sw->save_role = rcar_usb3_role_switch_get_mode(rcar_sw);
-+	pm_runtime_put(dev->parent);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused rcar_usb3_role_switch_resume(struct device *dev)
-+{
-+	struct rcar_usb3_role_switch *rcar_sw = dev_get_drvdata(dev);
-+	bool host = rcar_sw->save_role == USB_ROLE_HOST ? true : false;
-+
-+	pm_runtime_get_sync(dev->parent);
-+	rcar_usb3_role_switch_set_mode(rcar_sw, host);
-+	pm_runtime_put(dev->parent);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(rcar_usb3_role_switch_pm_ops,
-+			 rcar_usb3_role_switch_suspend,
-+			 rcar_usb3_role_switch_resume);
-+
-+static struct platform_driver rcar_usb3_role_switch_driver = {
-+	.probe		= rcar_usb3_role_switch_probe,
-+	.remove		= rcar_usb3_role_switch_remove,
-+	.driver		= {
-+		.name =	"rcar_usb3_role_switch",
-+		.pm		= &rcar_usb3_role_switch_pm_ops,
-+		.of_match_table = rcar_usb3_role_switch_of_match,
-+	},
++			dpi_out: endpoint {
++				data-lines = <24>;
++				remote-endpoint = <&lcd_in>;
++			};
++		};
++	};
 +};
-+module_platform_driver(rcar_usb3_role_switch_driver);
+diff --git a/arch/arm/boot/dts/ti/dra71-evm-nand.dtso b/arch/arm/boot/dts/ti/dra71-evm-nand.dtso
+new file mode 100644
+index 0000000..280b0ba
+--- /dev/null
++++ b/arch/arm/boot/dts/ti/dra71-evm-nand.dtso
+@@ -0,0 +1,6 @@
++/dts-v1/;
++/plugin/;
 +
-+MODULE_DESCRIPTION("Renesas USB3.0 role switch driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>");
++&gpmc {
++	status = "okay";
++};
 -- 
 1.9.1
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
