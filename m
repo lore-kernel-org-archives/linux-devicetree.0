@@ -1,150 +1,46 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH] ARM: dts: stm32: Add LPtimer support to stm32mp157c
-Date: Wed, 18 Apr 2018 09:43:53 +0200
-Message-ID: <1524037433-25915-1-git-send-email-fabrice.gasnier@st.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v2 6/6] drm/atmel-hlcdc: fix broken release date
+Date: Wed, 18 Apr 2018 09:44:28 +0200
+Message-ID: <20180418094428.6db785dc@bbrezillon>
+References: <20180417131052.16336-1-peda@axentia.se>
+ <20180417131052.16336-7-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.torgue@st.com, robh+dt@kernel.org
-Cc: mcoquelin.stm32@gmail.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, fabrice.gasnier@st.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180417131052.16336-7-peda@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add LPtimer definitions, depending on features they provide:
-- lptimer1 & 2 can act as PWM, trigger and encoder/counter
-- lptimer3 can act as PWM and trigger
-- lptimer4 & 5 can act as PWM
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 108 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 108 insertions(+)
-
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index bc3eddc..7e6301c 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -104,6 +104,33 @@
- 		interrupt-parent = <&intc>;
- 		ranges;
- 
-+		lptimer1: timer@40009000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-lptimer";
-+			reg = <0x40009000 0x400>;
-+			clocks = <&rcc LPTIM1_K>;
-+			clock-names = "mux";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm-lp";
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			trigger@0 {
-+				compatible = "st,stm32-lptimer-trigger";
-+				reg = <0>;
-+				status = "disabled";
-+			};
-+
-+			counter {
-+				compatible = "st,stm32-lptimer-counter";
-+				status = "disabled";
-+			};
-+		};
-+
- 		usart2: serial@4000e000 {
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x4000e000 0x400>;
-@@ -167,6 +194,87 @@
- 			#reset-cells = <1>;
- 		};
- 
-+		lptimer2: timer@50021000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-lptimer";
-+			reg = <0x50021000 0x400>;
-+			clocks = <&rcc LPTIM2_K>;
-+			clock-names = "mux";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm-lp";
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			trigger@1 {
-+				compatible = "st,stm32-lptimer-trigger";
-+				reg = <1>;
-+				status = "disabled";
-+			};
-+
-+			counter {
-+				compatible = "st,stm32-lptimer-counter";
-+				status = "disabled";
-+			};
-+		};
-+
-+		lptimer3: timer@50022000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-lptimer";
-+			reg = <0x50022000 0x400>;
-+			clocks = <&rcc LPTIM3_K>;
-+			clock-names = "mux";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm-lp";
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			trigger@2 {
-+				compatible = "st,stm32-lptimer-trigger";
-+				reg = <2>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		lptimer4: timer@50023000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-lptimer";
-+			reg = <0x50023000 0x400>;
-+			clocks = <&rcc LPTIM4_K>;
-+			clock-names = "mux";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm-lp";
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		lptimer5: timer@50024000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-lptimer";
-+			reg = <0x50024000 0x400>;
-+			clocks = <&rcc LPTIM5_K>;
-+			clock-names = "mux";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm-lp";
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+		};
-+
- 		usart1: serial@5c000000 {
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x5c000000 0x400>;
--- 
-1.9.1
+T24gVHVlLCAxNyBBcHIgMjAxOCAxNToxMDo1MiArMDIwMApQZXRlciBSb3NpbiA8cGVkYUBheGVu
+dGlhLnNlPiB3cm90ZToKCj4gQnVtcCB0aGUgbWlub3IgdmVyc2lvbiB3aGlsZSBhdCBpdC4KPiAK
+PiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlhLnNlPgo+IC0tLQo+ICBk
+cml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfZGMuYyB8IDQgKystLQo+ICAx
+IGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfZGMuYyBiL2Ry
+aXZlcnMvZ3B1L2RybS9hdG1lbC1obGNkYy9hdG1lbF9obGNkY19kYy5jCj4gaW5kZXggODUyM2M0
+MGZhYzk0Li5hYTQ4ZjI4N2I1Y2EgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2F0bWVs
+LWhsY2RjL2F0bWVsX2hsY2RjX2RjLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxj
+ZGMvYXRtZWxfaGxjZGNfZGMuYwo+IEBAIC03NjMsOSArNzYzLDkgQEAgc3RhdGljIHN0cnVjdCBk
+cm1fZHJpdmVyIGF0bWVsX2hsY2RjX2RjX2RyaXZlciA9IHsKPiAgCS5mb3BzID0gJmZvcHMsCj4g
+IAkubmFtZSA9ICJhdG1lbC1obGNkYyIsCj4gIAkuZGVzYyA9ICJBdG1lbCBITENEIENvbnRyb2xs
+ZXIgRFJNIiwKPiAtCS5kYXRlID0gIjIwMTQxNTA0IiwKCkkgZ3Vlc3MgSSB1c2VkIFlZWVlERE1N
+IGZvcm1hdCA6LSkuCgo+ICsJLmRhdGUgPSAiMjAxODA0MDkiLAo+ICAJLm1ham9yID0gMSwKPiAt
+CS5taW5vciA9IDAsCj4gKwkubWlub3IgPSAxLAoKRG9uJ3Qga25vdyB3aGF0IHRoZSBzdHJhdGVn
+eSBpcyByZWdhcmRpbmcgZGF0ZSBhbmQgbWlub3IgdmVyc2lvbgp1cGRhdGVzLiBJIG5ldmVyIGhh
+ZCB0byB1cGRhdGUgdGhhdCBiZWZvcmUsIHNvIEkgZ3Vlc3MgaXQncyBub3QKaW1wb3J0YW50IHRv
+IHVzZXJzcGFjZSBhbnl3YXkuCgo+ICB9Owo+ICAKPiAgc3RhdGljIGludCBhdG1lbF9obGNkY19k
+Y19kcm1faW5pdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
