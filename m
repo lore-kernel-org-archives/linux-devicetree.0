@@ -1,69 +1,113 @@
-Return-Path: <SRS0=MwFQ=G7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.170]:17233 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751471AbeDJQGv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Apr 2018 12:06:51 -0400
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v2 3/5] [RFC] gpio: pca953x: hack to map LEVEL irqs to EDGE irqs (may loose interrupts/hang)
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAHp75VctneZKFrRr5bgq6w1L9JkDzbKW421aDLQU2jf9vZgmFA@mail.gmail.com>
-Date: Tue, 10 Apr 2018 18:06:41 +0200
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D32076BD-A605-4D62-AC22-33711CE0EB39@goldelico.com>
-References: <cover.1522868422.git.hns@goldelico.com> <637f00dd7da98cfeffdc6080914a5f67b433da50.1522868423.git.hns@goldelico.com> <CAHp75VctneZKFrRr5bgq6w1L9JkDzbKW421aDLQU2jf9vZgmFA@mail.gmail.com>
+Return-Path: <SRS0=kRJY=HH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:53805 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750861AbeDRMMN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Apr 2018 08:12:13 -0400
+Date: Wed, 18 Apr 2018 14:12:04 +0200
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v2 01/10] media: ov772x: allow i2c controllers without
+ I2C_FUNC_PROTOCOL_MANGLING
+Message-ID: <20180418121204.GE20486@w540>
+References: <1523847111-12986-1-git-send-email-akinobu.mita@gmail.com>
+ <1523847111-12986-2-git-send-email-akinobu.mita@gmail.com>
+ <20180418100549.GA17088@w540>
+ <20180418104154.lyqj4qipa3d44jb4@valkosipuli.retiisi.org.uk>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ryJZkp9/svQ58syV"
+Content-Disposition: inline
+In-Reply-To: <20180418104154.lyqj4qipa3d44jb4@valkosipuli.retiisi.org.uk>
 Sender: devicetree-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Andy,
 
-> Am 10.04.2018 um 16:38 schrieb Andy Shevchenko =
-<andy.shevchenko@gmail.com>:
->=20
-> On Wed, Apr 4, 2018 at 10:00 PM, H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->=20
->> in driver code. Therefore, the pca953x driver rejects the
->> setup of the irq because it can only handle EDGE interrupts
->> so far.
->>=20
->> This hack translates level interrupts to edge interrupts
->> for the pca953x chips. This is enough for initial testing,
->> but not a good solution since interrupts may be lost.
->>=20
->> If for example the connected chip requests a IRQ_TYPE_LEVEL_LOW
->> this may have the reason that there may be multiple different
->> interrupt sources in the chip - wired-or together to the
->> input of the pca953x. Now if we do edge detecion only,
->> the first interrupt will generate an EDGE_FALLING, but a
->> second one won't ever if the first interrupt wasn't already
->> processed.
->>=20
->> IMHO a better solution would be to make the pca953x interrupt
->> handler check if the irq input is still in the active
->> level and run the device specific handler again.
->=20
-> What I thought about is to enable such exclusively for "L" variants of
-> the chips and check latched values.
+--ryJZkp9/svQ58syV
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, something like this, although we have to think about if the same =
-can't
-be done for other chips.
+Hi Sakari,
 
-The question is who will pick up this topic and when. My job for this =
-chip
-was to check if it can basically work and the hack shows that, but =
-others
-must make the driver perfect.
+On Wed, Apr 18, 2018 at 01:41:54PM +0300, Sakari Ailus wrote:
+> On Wed, Apr 18, 2018 at 12:05:49PM +0200, jacopo mondi wrote:
+> > Hi Akinobu,
+> >
+> > On Mon, Apr 16, 2018 at 11:51:42AM +0900, Akinobu Mita wrote:
+> > > The ov772x driver only works when the i2c controller have
+> > > I2C_FUNC_PROTOCOL_MANGLING.  However, many i2c controller drivers don=
+'t
+> > > support it.
+> > >
+> > > The reason that the ov772x requires I2C_FUNC_PROTOCOL_MANGLING is that
+> > > it doesn't support repeated starts.
+> > >
+> > > This changes the reading ov772x register method so that it doesn't
+> > > require I2C_FUNC_PROTOCOL_MANGLING by calling two separated i2c messa=
+ges.
+> > >
+> > > Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > Cc: Hans Verkuil <hans.verkuil@cisco.com>
+> > > Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+> > > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> > > ---
+> > > * v2
+> > > - Replace the implementation of ov772x_read() instead of adding an
+> > >   alternative method
+> >
+> > I now wonder if my initial reply to this patch was wrong, and where
+> > possible we should try to use smbus operations...
+> >
+> > From Documentation/i2c/smbus-protocol
+> > "If you write a driver for some I2C device, please try to use the SMBus
+> > commands if at all possible... " and that's because, according to
+> > documentation, most I2c adapters support smbus protocol but may not
+> > support the full i2c command set.
+> >
+> > The fact this driver then restricts the supported adapters to the ones
+> > that support protocol mangling makes me think your change is fine,
+> > but as it often happens, I would scale this to more knowledgable
+> > people...
+>
+> Do you actually need to use this on SMBus adapters? A lot of sensor drive=
+rs
+> just use I=C2=B2C; if SMBus support is really needed it can be always add=
+ed back
+> later on...
 
-So for the moment I keep it in our workplace and remove it from the
-patch set.
+That was actually my question, sorry for not being clear.
 
-I am sure that there will be some more kernel developers as soon
-as the Pyra handheld hardware is more widely available.
+As the documentation says that SMBus has to be preferred when
+possible, I was wondering if ditching it completely in favour of plain
+I2c was wrong or not... I assume from your answer it is fine.
 
-BR,
-Nikolaus
+>
+> --
+> Sakari Ailus
+> e-mail: sakari.ailus@iki.fi
 
+--ryJZkp9/svQ58syV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJa1zYUAAoJEHI0Bo8WoVY8n2AP/16QmYlwEWjp5F5aKXSSzurN
+GhG1+mZP000rGB8CLkE4xkdXRGXV59bQ0lk5PlJDuTs+kPwvf4Cm4mPgP7ZejcI1
+eE/Y9Q+2GMKlFauyH3uxM0RiRjTlG95J6hwTQfW2pfpA6cTfKu+lHcuP5gIR6wmL
+jmrw5rGu3LiHNW6kJ2DbNknNX64NRZRbiLA0UY9h5K5Aoq3C9k/uHW+Bf1IxXPk7
+j9cTiLl2xIUh2eqdUlbvivyk2HuxMA/tOYJTS0kzVfQS3wv2oSV5ipD1QaaATsdx
+PryemyQ5lR/IMaFvhcAtetWTCEJukv5NSi1IMrp2ltj3kWflyoT+Hg+rdtESBky0
+0WPBrgcmoOOkXqsxoAihb6QMNRUqOFWNJRwzAFmAohZ9314AWJu4uwFZq1oAkRkt
+iT/PKrzTfaGD8PPG5QKfoIK6tC471olzU+8pBo8XlvHmnVxpgO+zzwj38YYGV6zj
+JlXwzm0z5v3yH9QqObn7t+fN6B1XKCVrrqGEok8KCY9TXq2Nf48ZPUqRJ3BOLkTF
+KyaqPSIGUeb4AIablhbe5WSrWDTaBCMRUkl+oR9ZsQ67VQdXmSeQTI6Sf4TERz+b
+lE6v2JLykfayaZasxkTUMHJZqAITbqZ2UIrJ/Hl2a17sYFvoGsIcTD2GXUhy2qo/
+HfDb1cGuziLtBg+BXrbt
+=uqTw
+-----END PGP SIGNATURE-----
+
+--ryJZkp9/svQ58syV--
