@@ -1,91 +1,68 @@
-Return-Path: <SRS0=NCrW=G4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf0-f194.google.com ([209.85.192.194]:38495 "EHLO
-        mail-pf0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751741AbeDGPsu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Apr 2018 11:48:50 -0400
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH 4/6] media: ov772x: add media controller support
-Date: Sun,  8 Apr 2018 00:48:08 +0900
-Message-Id: <1523116090-13101-5-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1523116090-13101-1-git-send-email-akinobu.mita@gmail.com>
-References: <1523116090-13101-1-git-send-email-akinobu.mita@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC 11/11] arm64: dts: renesas: r8a7795: salvator-xs: add OF graph for usb role switch
+Date: Wed, 18 Apr 2018 17:10:05 +0900
+Message-Id: <1524039005-30618-12-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com
+Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, p.zabel@pengutronix.de, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Create a source pad and set the media controller type to the sensor.
+This patch adds OF graph properties for usb role switch.
 
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+TODO:
+ - Each node should be in salvator-common.dtsi.
+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/media/i2c/ov772x.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ .../arm64/boot/dts/renesas/r8a7795-salvator-xs.dts | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 4bb81ff..5e91fa1 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -425,6 +425,9 @@ struct ov772x_priv {
- 	unsigned short                    band_filter;
- 	unsigned int			  fps;
- 	int (*reg_read)(struct i2c_client *client, u8 addr);
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	struct media_pad pad;
-+#endif
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
+index 8b50ceb..c815fca 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
+@@ -36,6 +36,24 @@
+ 		device_type = "memory";
+ 		reg = <0x7 0x00000000 0x0 0x40000000>;
+ 	};
++
++	/* TODO: should be into salvator-common.dtsi */
++	usb3 {
++		compatible = "usb-a-connector";
++		label = "USB3_0";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@1 {
++				reg = <1>;
++				usb3_connector0: endpoint {
++					remote-endpoint = <&usb3_role_sw0_ep>;
++				};
++			};
++		};
++	};
  };
  
- /*
-@@ -1328,9 +1331,17 @@ static int ov772x_probe(struct i2c_client *client,
- 		goto error_clk_put;
- 	}
+ &du {
+@@ -107,3 +125,13 @@
  
--	ret = ov772x_video_probe(priv);
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	priv->pad.flags = MEDIA_PAD_FL_SOURCE;
-+	priv->subdev.entity.function = MEDIA_ENT_F_CAM_SENSOR;
-+	ret = media_entity_pads_init(&priv->subdev.entity, 1, &priv->pad);
- 	if (ret < 0)
- 		goto error_gpio_put;
-+#endif
+ 	status = "okay";
+ };
 +
-+	ret = ov772x_video_probe(priv);
-+	if (ret < 0)
-+		goto error_entity_cleanup;
- 
- 	priv->cfmt = &ov772x_cfmts[0];
- 	priv->win = &ov772x_win_sizes[0];
-@@ -1338,11 +1349,15 @@ static int ov772x_probe(struct i2c_client *client,
- 
- 	ret = v4l2_async_register_subdev(&priv->subdev);
- 	if (ret)
--		goto error_gpio_put;
-+		goto error_entity_cleanup;
- 
- 	return 0;
- 
-+error_entity_cleanup:
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	media_entity_cleanup(&priv->subdev.entity);
- error_gpio_put:
-+#endif
- 	if (priv->pwdn_gpio)
- 		gpiod_put(priv->pwdn_gpio);
- error_clk_put:
-@@ -1357,6 +1372,9 @@ static int ov772x_remove(struct i2c_client *client)
- {
- 	struct ov772x_priv *priv = to_ov772x(i2c_get_clientdata(client));
- 
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	media_entity_cleanup(&priv->subdev.entity);
-+#endif
- 	clk_put(priv->clk);
- 	if (priv->pwdn_gpio)
- 		gpiod_put(priv->pwdn_gpio);
++	&usb3_role_sw0 {
++		ports {
++			port@3 {
++				usb3_role_sw0_ep: endpoint {
++					remote-endpoint = <&usb3_connector0>;
++				};
++			};
++		};
++	};
 -- 
-2.7.4
-
+1.9.1
