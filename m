@@ -1,43 +1,60 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [v5,05/13] ARM: dts: ipq4019: Add ipq4019-ap.dk04.dtsi
-Date: Wed, 18 Apr 2018 14:09:14 +0530
-Message-ID: <7008f7bb-300e-c2ce-cb2a-61ecfccf3691@codeaurora.org>
-References: <1521800336-19266-6-git-send-email-sricharan@codeaurora.org>
- <2284833.pBtR1QS54F@bentobox>
- <734eb6eb-9af9-d599-81f1-ec66d9cd839c@codeaurora.org>
- <2715737.hC3rduhfyA@bentobox>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v2 5/6] drm/atmel-hlcdc: add support for connecting to
+ tda998x HDMI encoder
+Date: Wed, 18 Apr 2018 10:41:28 +0200
+Message-ID: <20180418104128.6747ad47@bbrezillon>
+References: <20180417131052.16336-1-peda@axentia.se>
+ <20180417131052.16336-6-peda@axentia.se>
+ <20180418093649.2c304f29@bbrezillon>
+ <0155b3cc-29ce-fa43-5588-b465c6ee064a@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2715737.hC3rduhfyA@bentobox>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sven Eckelmann <sven.eckelmann@openmesh.com>
-Cc: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com, richardcochran@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <0155b3cc-29ce-fa43-5588-b465c6ee064a@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sven,
-
-On 4/18/2018 1:08 PM, Sven Eckelmann wrote:
-> Hi,
-> 
-> On Mittwoch, 18. April 2018 12:45:20 CEST Sricharan R wrote:
->>  Right, will add the above change to soc.dtsi in V6. Does that sound ok for 
->> you ?
-> 
-> I have submitted a patch for this now [1] because I need this for OpenWrt 
-> (sooner rather than later). And I am not sure whether it is good to have this 
-> in your feature series because it is a bugfix which might even qualify for 
-> stable@vger.kernel.org.
-> 
-> I hope this patch [1] is ok for you.
-> 
-
- Sure. Acked that. Thanks.
-
-Regards,
- Sricharan
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+T24gV2VkLCAxOCBBcHIgMjAxOCAxMDowMjoxMiArMDIwMApQZXRlciBSb3NpbiA8cGVkYUBheGVu
+dGlhLnNlPiB3cm90ZToKCj4gT24gMjAxOC0wNC0xOCAwOTozNiwgQm9yaXMgQnJlemlsbG9uIHdy
+b3RlOgo+ID4gT24gVHVlLCAxNyBBcHIgMjAxOCAxNToxMDo1MSArMDIwMAo+ID4gUGV0ZXIgUm9z
+aW4gPHBlZGFAYXhlbnRpYS5zZT4gd3JvdGU6Cj4gPiAgIAo+ID4+IFdoZW4gdGhlIG9mLWdyYXBo
+IHBvaW50cyB0byBhIHRkYTk5OHgtY29tcGF0aWJsZSBIRE1JIGVuY29kZXIsIHJlZ2lzdGVyCj4g
+Pj4gYXMgYSBjb21wb25lbnQgbWFzdGVyIGFuZCBiaW5kIHRvIHRoZSBlbmNvZGVyL2Nvbm5lY3Rv
+ciBwcm92aWRlZCBieQo+ID4+IHRoZSB0ZGE5OTh4IGRyaXZlci4gIAo+ID4gCj4gPiBDYW4ndCB3
+ZSBkbyB0aGUgb3Bwb3NpdGU6IG1ha2UgdGhlIHRkYTk5OHggZHJpdmVyIGV4cG9zZSBpdHMgZGV2
+aWNlcyBhcwo+ID4gZHJtIGJyaWRnZXMuIEknZCByYXRoZXIgbm90IGFkZCBhbm90aGVyIHdheSB0
+byBjb25uZWN0IGV4dGVybmFsCj4gPiBlbmNvZGVycyAob3IgYnJpZGdlcykgdG8gZGlzcGxheSBj
+b250cm9sbGVyIGRyaXZlcnMsIGVzcGVjaWFsbHkgc2luY2UsCj4gPiB3aGVuIEkgYXNrZWQgRFJN
+IG1haW50YWluZXJzL2RldnMgd2hhdCB3YXMgdGhlIGdvb2QgYXBwcm9hY2ggdG8KPiA+IHJlcHJl
+c2VudCBzdWNoIGV4dGVybmFsIGVuY29kZXJzIHRoZXkgcG9pbnRlZCBtZSB0byB0aGUgZHJtX2Jy
+aWRnZQo+ID4gaW50ZXJmYWNlLiAgCj4gCj4gRnJvbSB0aGUgY292ZXIgbGV0dGVyOgo+IAo+ICJI
+b3dldmVyLCBJIGRvbid0IGtub3cgaWYgdGhlIHRpbGNkYyBkcml2ZXIgaXMgaW50ZXJmYWNpbmcg
+d2l0aCB0aGUKPiB0ZGE5OTh4IGRyaXZlciBpbiBhIHNhbmUgYW5kIG1vZGVybiB3YXkiCj4gCj4g
+U28sIHdoaWNoIHdheSBpcyB0aGUgZnV0dXJlPyBTaG91bGQgYnJpZGdlcyBiZWNvbWUgY29tcG9u
+ZW50cyBvciBzaG91bGQKPiBleGlzdGluZyBicmlkZ2UtbGlrZSBjb21wb25lbnRzIG5vIGxvbmdl
+ciBiZSBjb21wb25lbnRzPyBBcmUgdGhlcmUgb3RoZXJzPwoKV2VsbCwgd2hhdCBJJ3ZlIGJlZW4g
+dG9sZCBhIHdoaWxlIGFnbyBpcyB0aGF0IGRybV9icmlkZ2Ugd2lsbCB0YWtlIG92ZXIKZHJtX2Vu
+Y29kZXJfc2xhdmUgYW5kIGN1c3RvbSBkcm1fZW5jb2Rlci9kcm1fY29ubmVjdG9yIGltcGxlbWVu
+dGF0aW9ucwp3aGVuIGl0IGNvbWVzIHRvIHJlcHJlc2VudGluZyBicmlkZ2VzLgoKQUZBSVUsIHVz
+aW5nIHRoZSBjb21wb25lbnQgZnJhbWV3b3JrIHRvIGJpbmQgYWxsIGVsZW1lbnRzIG9mIHRoZQpw
+aXBlbGluZSB0byB0aGUgZGlzcGxheSBjb250cm9sbGVyIGlzIG9ydGhvZ29uYWwgdG8gaG93IHlv
+dSByZXByZXNlbnQKZWxlbWVudHMgaW4gdGhlIHBpcGVsaW5lLiBJIG1lYW4sIHlvdSBjb3VsZCBo
+YXZlIGEgYnJpZGdlIHRoYXQKcmVnaXN0ZXJzIGFzIGEgY29tcG9uZW50IHNvIHRoYXQgZGlzcGxh
+eSBjb250cm9sbGVycyBkcml2ZXJzIHdobyB3YW50CnRvIHVzZSB0aGUgY29tcG9uZW50IGZyYW1l
+d29yayBkb24ndCBoYXZlIHRvIHJlLWNvZGUgdGhlCmNvbXBvbmVudC10by1icmlkZ2UgZ2x1ZSBl
+dmVyeSB0aW1lLCBhbmQgdGhvc2Ugd2hvIGRvbid0IHVzZSB0aGUKY29tcG9uZW50IGZyYW1ld29y
+ayBjYW4gc3RpbGwgZ2V0IGFjY2VzcyB0byB0aGUgYnJpZGdlLgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
