@@ -1,60 +1,245 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 5/6] drm/atmel-hlcdc: add support for connecting to
- tda998x HDMI encoder
-Date: Wed, 18 Apr 2018 10:41:28 +0200
-Message-ID: <20180418104128.6747ad47@bbrezillon>
-References: <20180417131052.16336-1-peda@axentia.se>
- <20180417131052.16336-6-peda@axentia.se>
- <20180418093649.2c304f29@bbrezillon>
- <0155b3cc-29ce-fa43-5588-b465c6ee064a@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <0155b3cc-29ce-fa43-5588-b465c6ee064a@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH] arm64: dts: correct SATA addresses for Stingray
+Date: Wed, 18 Apr 2018 14:11:29 +0530
+Message-ID: <1524040889-6876-1-git-send-email-srinath.mannam@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Scott Branden <scott.branden@broadcom.com>, Ray Jui <ray.jui@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinath Mannam <srinath.mannam@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAxOCBBcHIgMjAxOCAxMDowMjoxMiArMDIwMApQZXRlciBSb3NpbiA8cGVkYUBheGVu
-dGlhLnNlPiB3cm90ZToKCj4gT24gMjAxOC0wNC0xOCAwOTozNiwgQm9yaXMgQnJlemlsbG9uIHdy
-b3RlOgo+ID4gT24gVHVlLCAxNyBBcHIgMjAxOCAxNToxMDo1MSArMDIwMAo+ID4gUGV0ZXIgUm9z
-aW4gPHBlZGFAYXhlbnRpYS5zZT4gd3JvdGU6Cj4gPiAgIAo+ID4+IFdoZW4gdGhlIG9mLWdyYXBo
-IHBvaW50cyB0byBhIHRkYTk5OHgtY29tcGF0aWJsZSBIRE1JIGVuY29kZXIsIHJlZ2lzdGVyCj4g
-Pj4gYXMgYSBjb21wb25lbnQgbWFzdGVyIGFuZCBiaW5kIHRvIHRoZSBlbmNvZGVyL2Nvbm5lY3Rv
-ciBwcm92aWRlZCBieQo+ID4+IHRoZSB0ZGE5OTh4IGRyaXZlci4gIAo+ID4gCj4gPiBDYW4ndCB3
-ZSBkbyB0aGUgb3Bwb3NpdGU6IG1ha2UgdGhlIHRkYTk5OHggZHJpdmVyIGV4cG9zZSBpdHMgZGV2
-aWNlcyBhcwo+ID4gZHJtIGJyaWRnZXMuIEknZCByYXRoZXIgbm90IGFkZCBhbm90aGVyIHdheSB0
-byBjb25uZWN0IGV4dGVybmFsCj4gPiBlbmNvZGVycyAob3IgYnJpZGdlcykgdG8gZGlzcGxheSBj
-b250cm9sbGVyIGRyaXZlcnMsIGVzcGVjaWFsbHkgc2luY2UsCj4gPiB3aGVuIEkgYXNrZWQgRFJN
-IG1haW50YWluZXJzL2RldnMgd2hhdCB3YXMgdGhlIGdvb2QgYXBwcm9hY2ggdG8KPiA+IHJlcHJl
-c2VudCBzdWNoIGV4dGVybmFsIGVuY29kZXJzIHRoZXkgcG9pbnRlZCBtZSB0byB0aGUgZHJtX2Jy
-aWRnZQo+ID4gaW50ZXJmYWNlLiAgCj4gCj4gRnJvbSB0aGUgY292ZXIgbGV0dGVyOgo+IAo+ICJI
-b3dldmVyLCBJIGRvbid0IGtub3cgaWYgdGhlIHRpbGNkYyBkcml2ZXIgaXMgaW50ZXJmYWNpbmcg
-d2l0aCB0aGUKPiB0ZGE5OTh4IGRyaXZlciBpbiBhIHNhbmUgYW5kIG1vZGVybiB3YXkiCj4gCj4g
-U28sIHdoaWNoIHdheSBpcyB0aGUgZnV0dXJlPyBTaG91bGQgYnJpZGdlcyBiZWNvbWUgY29tcG9u
-ZW50cyBvciBzaG91bGQKPiBleGlzdGluZyBicmlkZ2UtbGlrZSBjb21wb25lbnRzIG5vIGxvbmdl
-ciBiZSBjb21wb25lbnRzPyBBcmUgdGhlcmUgb3RoZXJzPwoKV2VsbCwgd2hhdCBJJ3ZlIGJlZW4g
-dG9sZCBhIHdoaWxlIGFnbyBpcyB0aGF0IGRybV9icmlkZ2Ugd2lsbCB0YWtlIG92ZXIKZHJtX2Vu
-Y29kZXJfc2xhdmUgYW5kIGN1c3RvbSBkcm1fZW5jb2Rlci9kcm1fY29ubmVjdG9yIGltcGxlbWVu
-dGF0aW9ucwp3aGVuIGl0IGNvbWVzIHRvIHJlcHJlc2VudGluZyBicmlkZ2VzLgoKQUZBSVUsIHVz
-aW5nIHRoZSBjb21wb25lbnQgZnJhbWV3b3JrIHRvIGJpbmQgYWxsIGVsZW1lbnRzIG9mIHRoZQpw
-aXBlbGluZSB0byB0aGUgZGlzcGxheSBjb250cm9sbGVyIGlzIG9ydGhvZ29uYWwgdG8gaG93IHlv
-dSByZXByZXNlbnQKZWxlbWVudHMgaW4gdGhlIHBpcGVsaW5lLiBJIG1lYW4sIHlvdSBjb3VsZCBo
-YXZlIGEgYnJpZGdlIHRoYXQKcmVnaXN0ZXJzIGFzIGEgY29tcG9uZW50IHNvIHRoYXQgZGlzcGxh
-eSBjb250cm9sbGVycyBkcml2ZXJzIHdobyB3YW50CnRvIHVzZSB0aGUgY29tcG9uZW50IGZyYW1l
-d29yayBkb24ndCBoYXZlIHRvIHJlLWNvZGUgdGhlCmNvbXBvbmVudC10by1icmlkZ2UgZ2x1ZSBl
-dmVyeSB0aW1lLCBhbmQgdGhvc2Ugd2hvIGRvbid0IHVzZSB0aGUKY29tcG9uZW50IGZyYW1ld29y
-ayBjYW4gc3RpbGwgZ2V0IGFjY2VzcyB0byB0aGUgYnJpZGdlLgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Correct all SATA ahci and phy controller register
+addresses and interrupt lines to proper values.
+
+Fixes: 344a2e514182 ("arm64: dts: Add SATA DT nodes for Stingray SoC")
+
+Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+Reviewed-by: Andrew Gospodarek <andrew.gospodarek@broadcom.com>
+---
+ .../boot/dts/broadcom/stingray/stingray-sata.dtsi  | 80 +++++++++++-----------
+ 1 file changed, 40 insertions(+), 40 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
+index 4b5465d..8c68e0c 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
+@@ -36,11 +36,11 @@
+ 		#size-cells = <1>;
+ 		ranges = <0x0 0x0 0x67d00000 0x00800000>;
+ 
+-		sata0: ahci@210000 {
++		sata0: ahci@0 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+-			reg = <0x00210000 0x1000>;
++			reg = <0x00000000 0x1000>;
+ 			reg-names = "ahci";
+-			interrupts = <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -52,9 +52,9 @@
+ 			};
+ 		};
+ 
+-		sata_phy0: sata_phy@212100 {
++		sata_phy0: sata_phy@2100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+-			reg = <0x00212100 0x1000>;
++			reg = <0x00002100 0x1000>;
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -66,11 +66,11 @@
+ 			};
+ 		};
+ 
+-		sata1: ahci@310000 {
++		sata1: ahci@10000 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+-			reg = <0x00310000 0x1000>;
++			reg = <0x00010000 0x1000>;
+ 			reg-names = "ahci";
+-			interrupts = <GIC_SPI 347 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -82,9 +82,9 @@
+ 			};
+ 		};
+ 
+-		sata_phy1: sata_phy@312100 {
++		sata_phy1: sata_phy@12100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+-			reg = <0x00312100 0x1000>;
++			reg = <0x00012100 0x1000>;
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -96,11 +96,11 @@
+ 			};
+ 		};
+ 
+-		sata2: ahci@120000 {
++		sata2: ahci@20000 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+-			reg = <0x00120000 0x1000>;
++			reg = <0x00020000 0x1000>;
+ 			reg-names = "ahci";
+-			interrupts = <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -112,9 +112,9 @@
+ 			};
+ 		};
+ 
+-		sata_phy2: sata_phy@122100 {
++		sata_phy2: sata_phy@22100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+-			reg = <0x00122100 0x1000>;
++			reg = <0x00022100 0x1000>;
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -126,11 +126,11 @@
+ 			};
+ 		};
+ 
+-		sata3: ahci@130000 {
++		sata3: ahci@30000 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+-			reg = <0x00130000 0x1000>;
++			reg = <0x00030000 0x1000>;
+ 			reg-names = "ahci";
+-			interrupts = <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -142,9 +142,9 @@
+ 			};
+ 		};
+ 
+-		sata_phy3: sata_phy@132100 {
++		sata_phy3: sata_phy@32100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+-			reg = <0x00132100 0x1000>;
++			reg = <0x00032100 0x1000>;
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -156,11 +156,11 @@
+ 			};
+ 		};
+ 
+-		sata4: ahci@330000 {
++		sata4: ahci@100000 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+-			reg = <0x00330000 0x1000>;
++			reg = <0x00100000 0x1000>;
+ 			reg-names = "ahci";
+-			interrupts = <GIC_SPI 351 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -172,9 +172,9 @@
+ 			};
+ 		};
+ 
+-		sata_phy4: sata_phy@332100 {
++		sata_phy4: sata_phy@102100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+-			reg = <0x00332100 0x1000>;
++			reg = <0x00102100 0x1000>;
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -186,11 +186,11 @@
+ 			};
+ 		};
+ 
+-		sata5: ahci@400000 {
++		sata5: ahci@110000 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+-			reg = <0x00400000 0x1000>;
++			reg = <0x00110000 0x1000>;
+ 			reg-names = "ahci";
+-			interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -202,9 +202,9 @@
+ 			};
+ 		};
+ 
+-		sata_phy5: sata_phy@402100 {
++		sata_phy5: sata_phy@112100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+-			reg = <0x00402100 0x1000>;
++			reg = <0x00112100 0x1000>;
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -216,11 +216,11 @@
+ 			};
+ 		};
+ 
+-		sata6: ahci@410000 {
++		sata6: ahci@120000 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+-			reg = <0x00410000 0x1000>;
++			reg = <0x00120000 0x1000>;
+ 			reg-names = "ahci";
+-			interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -232,9 +232,9 @@
+ 			};
+ 		};
+ 
+-		sata_phy6: sata_phy@412100 {
++		sata_phy6: sata_phy@122100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+-			reg = <0x00412100 0x1000>;
++			reg = <0x00122100 0x1000>;
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -246,11 +246,11 @@
+ 			};
+ 		};
+ 
+-		sata7: ahci@420000 {
++		sata7: ahci@130000 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+-			reg = <0x00420000 0x1000>;
++			reg = <0x00130000 0x1000>;
+ 			reg-names = "ahci";
+-			interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -262,9 +262,9 @@
+ 			};
+ 		};
+ 
+-		sata_phy7: sata_phy@422100 {
++		sata_phy7: sata_phy@132100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+-			reg = <0x00422100 0x1000>;
++			reg = <0x00132100 0x1000>;
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-- 
+2.7.4
