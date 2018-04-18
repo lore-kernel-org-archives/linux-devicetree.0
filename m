@@ -1,67 +1,135 @@
-From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [[RFC]DPU PATCH 0/4] Add suppport for sn65dsi86
- bridge chip and Innolux 2k edp panel driver
-Date: Thu, 19 Apr 2018 00:06:43 +0530
-Message-ID: <2338b419bb1ed99136ed6fa0d068324e@codeaurora.org>
-References: <1524054002-17869-1-git-send-email-spanda@codeaurora.org>
- <20180418141207.GX73214@art_vandelay>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH v5 02/10] dt-bindings: introduce RPMH RSC bindings for
+ Qualcomm SoCs
+Date: Wed, 18 Apr 2018 13:31:15 -0600
+Message-ID: <20180418193115.GA17907@codeaurora.org>
+References: <20180405161834.3850-1-ilina@codeaurora.org>
+ <20180405161834.3850-3-ilina@codeaurora.org>
+ <152306368031.94378.14957212064809086345@swboyd.mtv.corp.google.com>
+ <20180409160800.GC19682@codeaurora.org>
+ <152346054406.180276.4468371342222361883@swboyd.mtv.corp.google.com>
+ <20180411212431.GG19682@codeaurora.org>
+ <152365923361.51482.7839380101584600308@swboyd.mtv.corp.google.com>
+ <20180416160818.GC1209@codeaurora.org>
+ <152394490349.51482.12712738252386761377@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180418141207.GX73214@art_vandelay>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <152394490349.51482.12712738252386761377@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0wNC0xOCAxOTo0MiwgU2VhbiBQYXVsIHdyb3RlOgo+IE9uIFdlZCwgQXByIDE4LCAy
-MDE4IGF0IDA1OjQ5OjU4UE0gKzA1MzAsIFNhbmRlZXAgUGFuZGEgd3JvdGU6Cj4+IENoYW5nZWxv
-ZzoKPj4gCj4+IHYzIC0+IHY0Ogo+IAo+IEkgZGlkbid0IHJlYWxseSBib3RoZXIgdG8gZG8gYSB0
-aG9yb3VnaCByZXZpZXcgZ2l2ZW4gdGhhdCB0aGVyZSBhcmUgCj4gb2J2aW91cwo+IG1pc3Rha2Vz
-IGFuZCBpZ25vcmVkIGZlZWRiYWNrLCBpdCdzIGEgd2FzdGUgb2YgdGltZSwgdGJoLiBQbGVhc2Ug
-Z28gCj4gdGhyb3VnaAo+IHRoZSBwcmV2aW91cyByZXZpZXdzIGFuZCByZXNlbmQgYSBtb3JlIHBv
-bGlzaGVkIHZlcnNpb24uCgpJIGhhdmUgcmVwbGllZCB0byB5b3VyIHJldmlldyBjb21tZW50cy4g
-UGxlYXNlIHJldmlldyB0aGUgZWRwIGRyaXZlciwgc28gCnRoYXQKaSBjYW4gYWRkcmVzcyBhbGwg
-dGhlIGNvbW1lbnRzIHRvZ2V0aGVyIHdoaWxlIHVwbG9hZGluZyBuZXh0IHBhdGNoc2V0Lgo+IAo+
-IFNlYW4KPiAKPj4gQ3VycmVudCBwYXRjaHNldCBzZXBhcmF0ZXMgb3V0IGVEUCBwYW5lbCBzcGVj
-aWZpYyByZXNvdXJjZXMgZnJvbSAKPj4gc242NWRzaTg2Cj4+IGJyaWRnZSBkcml2ZXIgYW5kIGNy
-ZWF0ZXMgYSBzZXBhcmF0ZSBkcml2ZXIgZm9yIHRoZSBpbm5sb3V4IGVkcCBwYW5lbC4KPj4gCj4+
-IE5vdyBicmlkZ2UgZHJpdmVyIGNoZWNrIGlmIGFueSBwYW5lbCBpcyBhdHRhY2hlZCBvciBub3Qg
-dG8gZ2V0IHRoZSAKPj4gc3VwcG9ydGVkCj4+IG1vZGVzLiBJZiBhbnkgcGFuZWwgaXMgYXR0YWNo
-ZWQgdGhlbiBxdWVyeSBmcm9tIHBhbmVsIGRyaXZlciB0byBnZXQgCj4+IHRoZSBtb2RlcywKPj4g
-b3IgZWxzZSBwcm9iZSB0aGUgcHJvdmlkZWQgaTJjIGFkYXB0ZXIgdG8gcmVhZCB0aGUgbW9kZXMg
-ZnJvbSBFRElELgo+PiAKPj4gUmVtb3ZlZCBoYXJkY29kaW5nIG9mIGJyaWRnZSBpbml0IHNlcXVl
-bmNlLiBXaXRoIHRoaXMgcGF0Y2hzZXQgYnJpZGdlIAo+PiBkcml2ZXIgbm93Cj4+IHdpbGwgcHJv
-Z3JhbSB0aGUgaW5pdCBzZXF1ZW5jZSBiYXNlZCBvbiB0aGUgY3VycmVudCBtb2RlIHNldCBieSBk
-cm0gCj4+IGZyYW1ld29yay4KPj4gCj4+IEN1cnJlbnQgcGF0Y2hzZXQgaXMgbm90IHRlc3RlZCBv
-biBhY3R1YWwgYnJpZGdlIGNoaXAvcGFuZWwuCj4+IAo+PiBTYW5kZWVwIFBhbmRhICg0KToKPj4g
-ICBkcm0vYnJpZGdlOiBhZGQgc3VwcG9ydCBmb3Igc242NWRzaTg2IGJyaWRnZSBkcml2ZXIKPj4g
-ICBkdC1iaW5kaW5nczogZHJtL2JyaWRnZTogRG9jdW1lbnQgc242NWRzaTg2IGJyaWRnZSBiaW5k
-aW5ncwo+PiAgIGRybS9wYW5lbDogYWRkIElubm9sdXggVFYxMjNXQU0gZURQIHBhbmVsIGRyaXZl
-cgo+PiAgIGR0LWJpbmRpbmdzOiBBZGQgSW5ub2x1eCBUVjEyM1dBTSBwYW5lbCBiaW5kaW5ncwo+
-PiAKPj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0ICAgICAg
-IHwgIDYwICsrCj4+ICAuLi4vZGlzcGxheS9wYW5lbC9pbm5vbHV4LGVkcC0yay1wYW5lbC50eHQg
-ICAgICAgICB8ICAyMSArCj4+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXNuNjVkc2k4Ni5j
-ICAgICAgICAgICAgICB8IDc0MiAKPj4gKysrKysrKysrKysrKysrKysrKysrCj4+ICBkcml2ZXJz
-L2dwdS9kcm0vcGFuZWwvcGFuZWwtaW5ub2x1eC10djEyM3dhbS5jICAgICB8IDI5OSArKysrKysr
-KysKPj4gIDQgZmlsZXMgY2hhbmdlZCwgMTEyMiBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgCj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
-aWRnZS90aSxzbjY1ZHNpODYudHh0Cj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgCj4+IERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsZWRwLTJrLXBh
-bmVsLnR4dAo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGkt
-c242NWRzaTg2LmMKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcGFuZWwv
-cGFuZWwtaW5ub2x1eC10djEyM3dhbS5jCj4+IAo+PiAtLQo+PiBUaGUgUXVhbGNvbW0gSW5ub3Zh
-dGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIAo+PiBGb3J1
-bSwKPj4gYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAo+PiAKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxp
-bmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+On Mon, Apr 16 2018 at 00:01 -0600, Stephen Boyd wrote:
+>Quoting Lina Iyer (2018-04-16 09:08:18)
+>> On Fri, Apr 13 2018 at 16:40 -0600, Stephen Boyd wrote:
+>> >Well it seems like an RSC contains many DRVs and those DRVs contain many
+>> >TCSes. This is what I get after talking with Bjorn on IRC.
+>> >
+>> >       +--------------------------------------------------+ (0x00000)
+>> >       |                                                  |
+>> >       |                  DRV #0                          |
+>> >       |                                                  |
+>> >       |----------                          --------------| (tcs-offset (0xd00))
+>> >       |                  DRV0_TCS0                       |
+>> >       |                common space                      |
+>> >       |                cmd sequencer                     | 0xd00 + 0x14
+>> >       |                                                  |
+>> >       |                  DRV0_TCS1                       |
+>> >       |                common space                      | 0xd00 + 0x2a0
+>> >       |                cmd sequencer                     | 0xd00 + 0x2a0 + 0x14
+>> >       |                                                  |
+>> >       |                  DRV0_TCS2                       |
+>> >       |                                                  |
+>> >       |                                                  |
+>> >       +--------------------------------------------------+ (0x10000)
+>> >       |                                                  |
+>> >       |                  DRV #1                          |
+>> >       |                                                  |
+>> >       |----------                          --------------| (tcs-offset)
+>> >       |                  DRV1_TCS0                       |
+>> >       |                  DRV1_TCS1                       |
+>> >       |                  DRV1_TCS2                       |
+>> >       +--------------------------------------------------+ (0x20000)
+>> >       |                                                  |
+>> >       |                  DRV #2                          |
+>> >       |                                                  |
+>> >       |----------                          --------------|
+>> >       |                  DRV2_TCS0                       |
+>> >       |                  DRV2_TCS1                       |
+>> >       |                  DRV2_TCS2                       |
+>> >       |                  DRV2_TCS3                       |
+>> >       |                  DRV2_TCS4                       |
+>> >       |                  DRV2_TCS5                       |
+>> >       +--------------------------------------------------+
+>> >
+>> >I think I understand it now. There aren't any "RSC common" registers
+>> >that are common to the entire RSC. Instead, everything goes into a DRV,
+>> >or into a common TCS space, or into a TCS "queue".
+>> >
+>> >> >Put another way, even if the "apps" RSC is complicated, we should be
+>> >> >describing it to the best of our abilities in the binding so that when
+>> >> >it is used by non-linux OSes things still work by simply tweaking the
+>> >> >drv-id that we use to pick the right things out of the node.
+>> >> >
+>> >> >Or we're describing the RSC but it's really a container node that
+>> >> >doesn't do much besides hold DRVs? So this is described at the wrong
+>> >> >level?
+>> >> What we are describing is a DRV, but a standalone DRV alone is useless
+>> >> without the necessary RSC registers. So its a unique RSC+DRV combination
+>> >> that is represented here.
+>> >>
+>> >
+>> >If my understanding is correct up there then the binding could either
+>> >describe a single RSC DRV, or it could describe all the RSC DRV
+>> >instances and interrupts going into the RSC "block" and then we can use
+>> >drv-id to pick the offset we jump to.
+>> >
+>> Your understanding is correct.
+>>
+>> >I imagine we don't have any practical use-case for the entire RSC space
+>> >because there aren't any common RSC registers to deal with.
+>> Not true.
+>
+>So then my understanding is not correct! :/
+>
+>>
+>> >So we've
+>> >boiled this all down to describing one DRV and then I wonder why we care
+>> >about having drv-id at all? It looks to be used to check for a max
+>> >number of TCS, but that's already described by DT so it doesn't seem
+>> >very useful to double check what the hardware can tells us.
+>> >
+>> There is also a number of commands per TCS (NCPT), that may way vary
+>> between different RSCs. The RSC of the application processor has 16
+>> commands in each TCS, but that is variable. I am not saying it cannot be
+>> described in DT, but it is something I read from the common RSC
+>> registers, currently.
+>> Also, I will using common/DRV0 registers to write wakeup time value,
+>> when the processor subsystem goes into power down. This is not DRV2
+>> register, but is a DRV0 register that we will have special access to.
+>> The patches for those I intend to publish, when we have support for
+>> sleep/suspend with this new architecture. So the address of the start of
+>> the RSC (=DRV0) is necessary.
+>>
+>> >Long story short, we can remove drv-id and just describe drvs by
+>> >themselves?
+>> Yes, we may. As long as I have a way to describe the register addresss
+>> of the start of the DRV (0x20000 for DRV#2)  and the tcs-offset (0xd00),
+>> we can work with the RSC-DRV in the driver.
+>>
+>
+>From this new information it seems like we need to know about all the
+>DRVs in the RSC then. So let's go back to my previous binding proposal
+>describing all of them and having the qcom,drv-id property describe
+>which one to use most of the time and hardcode the assumption to use
+>DRV0 in the driver when we need to do things for sleep/suspend? Then
+>we're back to describing the whole RSC and configuring the picker to
+>pick the right DRV depending on firmware configuration.
+>
+Hmm.. I am okay with that, even though it might be bit confusing to
+define all that and not use them.
+
+-- Lina
