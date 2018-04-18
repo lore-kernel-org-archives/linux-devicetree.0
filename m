@@ -1,59 +1,73 @@
-From: Sven Eckelmann <sven.eckelmann@openmesh.com>
-Subject: Re: [v5,05/13] ARM: dts: ipq4019: Add ipq4019-ap.dk04.dtsi
-Date: Wed, 18 Apr 2018 09:07:27 +0200
-Message-ID: <2284833.pBtR1QS54F@bentobox>
-References: <1521800336-19266-6-git-send-email-sricharan@codeaurora.org> <2641190.FRMBLJWkCS@bentobox>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [v5,08/13] ARM: dts: ipq4019: Add ipq4019-ap.dk07.1 common data
+Date: Wed, 18 Apr 2018 12:42:18 +0530
+Message-ID: <4e687302-6c42-315b-e76d-2274131da3a0@codeaurora.org>
+References: <1521800336-19266-9-git-send-email-sricharan@codeaurora.org>
+ <1724020.V9x0kZZp2B@bentobox>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1974979.3aonjUcCjS"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2641190.FRMBLJWkCS@bentobox>
+In-Reply-To: <1724020.V9x0kZZp2B@bentobox>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
+To: Sven Eckelmann <sven.eckelmann@openmesh.com>
 Cc: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com, richardcochran@gmail.com
 List-Id: devicetree@vger.kernel.org
 
---nextPart1974979.3aonjUcCjS
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Hi Sven,
 
-On Mittwoch, 18. April 2018 08:59:46 CEST Sven Eckelmann wrote:
-[...]
+On 4/18/2018 12:29 PM, Sven Eckelmann wrote:
+> On Freitag, 23. März 2018 15:48:51 CEST Sricharan R wrote:
+>> Add the common data for all dk07 based boards.
+>>
+>> Reviewed-by: Abhishek Sahu <absahu@codeaurora.org>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> ---
+>>  arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi | 69 +++++++++++++++++++++++++++
+>>  1 file changed, 69 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi
+> 
+> The no-map reserved-memory for tz and smem are missing. Linux doesn't have 
+> control over these regions and they are placed in the middle of the ram before 
+> Linux even starts. And u-boot is also not adding these ranges automatically.
+> 
+>     	reserved-memory {
+>     		#address-cells = <0x1>;
+>     		#size-cells = <0x1>;
+>     		ranges;
+>     
+>     		smem@87e00000 {
+>     			reg = <0x87e00000 0x080000>;
+>     			no-map;
+>     		};
+>     
+>     		tz@87e80000 {
+>     			reg = <0x87e80000 0x180000>;
+>     			no-map;
+>     		};
+>     	};
+> 
+> This can either (depending on HW/SW configuration) lead to a failed boot [1] 
+> or to runtime crashes like:
+> 
+>     root@OpenWrt:/# /tmp/memory-allocator-test
+>     main 0
+>     [  571.758058] Unhandled fault: imprecise external abort (0xc06) at 0x01715ff8
+>     [  571.758099] pgd = cebec000
+>     [  571.763826] [01715ff8] *pgd=8e7fa835, *pte=87e7f75f, *ppte=87e7fc7f
+>     Bus error
+> 
 > I would not know how to disable QSEE on these boards and thus would assume 
 > that it should be part of this dtsi.
 
+ As we discussed offline, i agree that the smem and tz reserved memory nodes need to
+ be added. It still boots today without that, but would abort when that memory
+ region is allocated and written. I will add the reserved-memory node for that
+ in V6 along with other comments.
 
-Just did some reviews of the reserved-memory regions in other QCA devices and 
-it looks like this tz and smem are often directly added to the SoC dtsi. So I 
-will prepare a similar change for qcom-ipq4019.dtsi and this would then solve 
-it for AP-DK01/04/07 and no changes in the board-family specific dtsi would be 
-necessary.
+Regards,
+ Sricharan
 
-But maybe someone has an objection because tz and smem can actually be 
-disabled in a sane way on these SoCs and thus it would be better to have these 
-regions in the board specific dts(i) files. We will see...
-
-Kind regards,
-	Sven
---nextPart1974979.3aonjUcCjS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAlrW7q8ACgkQXYcKB8Em
-e0Z3kQ//Z5t4uSTLYRLvGFbaVhbCRSNH2o9qKGb2R5DHu/yXKVDqVsFMVsneGOsH
-WqsgXsxaDG27FbfscsLLcCcvALnrsvJliKjI0FafdU3cF5TUQJZqV+A631qW1JQS
-ipUGM01wA3Wn/xluWa6hFRllzUdNh7FQXb6YQ/o5t1KiQvFFHJaRArBsbq/BnFLR
-PGCIi4TvJsT3U1QgpAKXmGqay2bHwQA1sv7wIQ+eCBLiSCt9aKPlSmyA20UeX6ZG
-VpVsvK2xrIH0ClXU8soQPPtAxwWgazEbpSLH19z2oI/sG3TH1gjEC6NeA97pLLVi
-HkDH1pADUvdEPx0X8qWfdjkyw5OhQYcGS9R1snMJIK//ebofDUU8DbLnekSZjvQd
-efLwCdSONm8x1nFub/1/Sl1evu4/HsjF3D33qNdErakzVxjPmqku5Jt9XcNPksC/
-PAPTVLMA2ZS0ecoEzgia1JDOeDBLTqdFhqYvXA3cU/FOMjk47wcJHus4glvhhePV
-1zkoJaUETgT0lWoR1Qs0eizOYdSqVGvj5EAFHTVLpvEKbvJ2FwMfNcdVpH9vtPbC
-81rPtmFrGHXCSHbLMVnIfmxHw57jmswRRxORl8ulayg6uY2Wkaj2P09xBRSWpAV8
-yp9Bz5sSAX00Nc3eR4CIfzRociDoshuClJ8dcI81Xhe14MC5E2c=
-=nY8x
------END PGP SIGNATURE-----
-
---nextPart1974979.3aonjUcCjS--
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
