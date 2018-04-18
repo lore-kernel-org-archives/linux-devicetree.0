@@ -1,35 +1,77 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/3] Add R8A77980/Condor PCIe support
-Date: Wed, 18 Apr 2018 15:57:08 +0200
-Message-ID: <20180418135707.ruifzsv3ljgriujg@verge.net.au>
-References: <f07e6173-75b3-fe10-81d6-915942a5f4fe@cogentembedded.com>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [[RFC]DPU PATCH 2/4] dt-bindings: drm/bridge: Document sn65dsi86
+ bridge bindings
+Date: Wed, 18 Apr 2018 09:58:42 -0400
+Message-ID: <20180418135842.GV73214@art_vandelay>
+References: <1524054002-17869-1-git-send-email-spanda@codeaurora.org>
+ <1524054002-17869-3-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <f07e6173-75b3-fe10-81d6-915942a5f4fe@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1524054002-17869-3-git-send-email-spanda@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sandeep Panda <spanda@codeaurora.org>
+Cc: devicetree@vger.kernel.org, ryadav@codeaurora.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, abhinavk@codeaurora.org, hoegsberg@chromium.org, freedreno@lists.freedesktop.org, chandanu@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 06, 2018 at 11:11:38PM +0300, Sergei Shtylyov wrote:
-> Hello!
-> 
-> Here's the set of 3 patches against Simon Horman's 'renesas.git' repo's
-> 'renesas-devel-20180330-v4.16-rc7' tag. We're adding the R8A77980 PCIe related
-> device nodes and then enable PCIe on the Condor board. These patches depend on
-> the R8A77980 PCIe PHY and PCIEC driver support in order to work properly...
-
-Thanks, I have marked these as deferred.
-
-Please ping me once the dependencies have been accepted.
+T24gV2VkLCBBcHIgMTgsIDIwMTggYXQgMDU6NTA6MDBQTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
+cm90ZToKPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBmb3IgdGhlIHNuNjVkc2k4NiBEU0kg
+dG8gZURQIGJyaWRnZS4KPiAKClBsZWFzZSBhZGQgYSBjaGFuZ2Vsb2cgdG8geW91ciBwYXRjaGVz
+IHNvIHJldmlld2VycyBrbm93IHdoYXQgaGFzIGNoYW5nZWQKYmV0d2VlbiBwYXRjaCB2ZXJzaW9u
+cy4gCgo+IFNpZ25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBjb2RlYXVyb3JhLm9y
+Zz4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQg
+ICAgICAgfCA2MCArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA2MCBp
+bnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAo+IAo+IGRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGks
+c242NWRzaTg2LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAw
+MDAwMDAwLi45ZTI2MTJlCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0Cj4gQEAgLTAs
+MCArMSw2MCBAQAo+ICtTTjY1RFNJODYgRFNJIHRvIGVEUCBicmlkZ2UgY2hpcAo+ICstLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArVGhpcyBpcyB0aGUgYmluZGluZyBmb3Ig
+VGV4YXMgSW5zdHJ1bWVudHMgU042NURTSTg2IGJyaWRnZS4KPiArCj4gK1JlcXVpcmVkIHByb3Bl
+cnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogTXVzdCBiZSAidGksc242NWRzaTg2Igo+ICstIHJlZzog
+aTJjIGFkZHJlc3Mgb2YgdGhlIGNoaXAsIDB4MmQgYXMgcGVyIGRhdGFzaGVldAo+ICstIGVuYWJs
+ZS1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9ucyBmb3IgYnJpZGdlX2Vu
+IHBpbgoKVGhlIGRhdGFzaGVldCBvbmx5IGhhcyBvbmUgZW5hYmxlIHBpbiwgd2h5IGdwaW9zPwoK
+PiArCj4gKy0gdmNjaW8tc3VwcGx5OiBBIDEuOFYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBk
+aWdpdGFsIElPcy4KPiArLSB2Y2NhLXN1cHBseTogQSAxLjJWIHN1cHBseSB0aGF0IHBvd2VycyB1
+cCB0aGUgYW5hbG9nIGNpcmN1aXRzLgo+ICsKPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArCj4g
+Ky0gaXJxLWdwaW9zOiBPRiBkZXZpY2UtdHJlZSBncGlvIHNwZWNpZmljYXRpb24gZm9yIGludGVy
+cnVwdCBwaW4KCkZyb20gdGhlIGxhc3QgcmV2aWV3LCBSb2Igc2FpZCwgJ1VzZSAiaW50ZXJydXB0
+cyIgcHJvcGVydHkgaW5zdGVhZC4nCgpZb3UgZGlkbid0IHByb3ZpZGUgcmVzcG9uc2VzIHRvIHBy
+aW9yIHJldmlldyBjb21tZW50cywgc28gaXQncyB1bmNsZWFyIHdoZXRoZXIKeW91J3ZlIGludGVu
+dGlvbmFsbHkgb3IgdW5pbnRlbnRpb25hbGx5IGlnbm9yZWQgaGltIDopCgpTZWFuCgo+ICsKPiAr
+UmVxdWlyZWQgbm9kZXM6Cj4gKwo+ICtUaGlzIGRldmljZSBoYXMgdHdvIHZpZGVvIHBvcnRzLiBU
+aGVpciBjb25uZWN0aW9ucyBhcmUgbW9kZWxsZWQgdXNpbmcgdGhlCj4gK09GIGdyYXBoIGJpbmRp
+bmdzIHNwZWNpZmllZCBpbiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgu
+dHh0Lgo+ICsKPiArLSBWaWRlbyBwb3J0IDAgZm9yIERTSSBpbnB1dAo+ICstIFZpZGVvIHBvcnQg
+MSBmb3IgZURQIG91dHB1dAo+ICsKPiArRXhhbXBsZQo+ICstLS0tLS0tCj4gKwo+ICtlZHAtYnJp
+ZGdlQDJkIHsKPiArCWNvbXBhdGlibGUgPSAidGksc242NWRzaTg2IjsKPiArCSNhZGRyZXNzLWNl
+bGxzID0gPDE+Owo+ICsJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwlyZWcgPSA8MHgyZD47Cj4gKwo+
+ICsJZW5hYmxlLWdwaW9zID0gPCZtc21ncGlvIDMzIEdQSU9fQUNUSVZFX0hJR0g+Owo+ICsKPiAr
+CXZjY2lvLXN1cHBseSA9IDwmcG04OTE2X2wxNz47Cj4gKwl2Y2NhLXN1cHBseSA9IDwmcG04OTE2
+X2w2PjsKPiArCj4gKwlwb3J0cyB7Cj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJI3Np
+emUtY2VsbHMgPSA8MD47Cj4gKwo+ICsJCXBvcnRAMCB7Cj4gKwkJCXJlZyA9IDwwPjsKPiArCj4g
+KwkJCWVkcF9icmlkZ2VfaW46IGVuZHBvaW50IHsKPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwm
+ZHNpX291dD47Cj4gKwkJCX07Cj4gKwkJfTsKPiArCj4gKwkJcG9ydEAxIHsKPiArCQkJcmVnID0g
+PDE+Owo+ICsKPiArCQkJZWRwX2JyaWRnZV9vdXQ6IGVuZHBvaW50IHsKPiArCQkJCXJlbW90ZS1l
+bmRwb2ludCA9IDwmZWRwX3BhbmVsX2luPjsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiArfQo+
+IC0tIAo+IFRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBv
+ZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCj4gYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRp
+dmUgUHJvamVjdAo+IAoKLS0gClNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5lZXIsIEdvb2dsZSAv
+IENocm9taXVtIE9TCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
