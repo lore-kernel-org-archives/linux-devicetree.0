@@ -1,97 +1,86 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 07/10] Documentation: dt-bindings: Add documents for
- PECI hwmon client drivers
-Date: Wed, 18 Apr 2018 09:32:36 -0500
-Message-ID: <CAL_JsqLcxEnCOywTtU14G4=6A5m6G=KH3oi8m1VxKSEdxuv-ww@mail.gmail.com>
-References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
- <20180410183212.16787-8-jae.hyun.yoo@linux.intel.com> <20180416181423.t4vf7sugv6z3aw5h@rob-hp-laptop>
- <aee4e04c-885f-b1d8-9e85-9e741551342f@linux.intel.com> <287e0fd9-b631-2602-2785-7b8aaed7a6b9@linux.intel.com>
- <6ff697e8-cd20-e551-da13-b614cc39f900@linux.intel.com>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v9 0/2] drm: Add Thine THC63LVD1024 LVDS decoder bridge
+Date: Wed, 18 Apr 2018 16:40:27 +0200
+Message-ID: <1524062429-325-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6ff697e8-cd20-e551-da13-b614cc39f900@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van>
+To: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, vladimir_zapolskiy@mentor.com, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 17, 2018 at 3:40 PM, Jae Hyun Yoo
-<jae.hyun.yoo@linux.intel.com> wrote:
-> On 4/16/2018 4:51 PM, Jae Hyun Yoo wrote:
->>
->> On 4/16/2018 4:22 PM, Jae Hyun Yoo wrote:
->>>
->>> On 4/16/2018 11:14 AM, Rob Herring wrote:
->>>>
->>>> On Tue, Apr 10, 2018 at 11:32:09AM -0700, Jae Hyun Yoo wrote:
->>>>>
->>>>> This commit adds dt-bindings documents for PECI cputemp and dimmtemp
->>>>> client
->>>>> drivers.
->>>>
->>>>
->
-> [...]
->
->>>>> +Example:
->>>>> +    peci-bus@0 {
->>>>> +        #address-cells = <1>;
->>>>> +        #size-cells = <0>;
->>>>> +        < more properties >
->>>>> +
->>>>> +        peci-dimmtemp@cpu0 {
->>>>
->>>>
->>>> unit-address is wrong.
->>>>
->>>
->>> Will fix it using the reg value.
->>>
->>>> It is a different bus from cputemp? Otherwise, you have conflicting
->>>> addresses. If that's the case, probably should make it clear by showing
->>>> different host adapters for each example.
->>>>
->>>
->>> It could be the same bus with cputemp. Also, client address sharing is
->>> possible by PECI core if the functionality is different. I mean, cputemp and
->>> dimmtemp targeting the same client is possible case like this.
->>> peci-cputemp@30
->>> peci-dimmtemp@30
->>>
->>
->> Oh, I got your point. Probably, I should change these separate settings
->> into one like
->>
->> peci-client@30 {
->>      compatible = "intel,peci-client";
->>      reg = <0x30>;
->> };
->>
->> Then cputemp and dimmtemp drivers could refer the same compatible string.
->> Will rewrite it.
->>
->
-> I've checked it again and realized that it should use function based node
-> name like:
->
-> peci-cputemp@30
-> peci-dimmtemp@30
->
-> If it use the same string like 'peci-client@30', the drivers cannot be
-> selectively enabled. The client address sharing way is well handled in PECI
-> core and this way would be better for the future implementations of other
-> PECI functional drivers such as crash dump driver and so on. So I'm going
-> change the unit-address only.
+As I have another series which is based on this one + Eagle board display
+support, I'm re-sending this one to fix the small issue I pointed out in my
+reply to v8.
 
-2 nodes at the same address is wrong (and soon dtc will warn you on
-this). You have 2 potential options. The first is you need additional
-address information in the DT if these are in fact 2 independent
-devices. This could be something like a function number to use
-something from PCI addressing. From what I found on PECI, it doesn't
-seem to have anything like that. The 2nd option is you have a single
-DT node which registers multiple hwmon devices. DT nodes and drivers
-don't have to be 1-1. Don't design your DT nodes from how you want to
-partition drivers in some OS.
+Simon: no changes to Eagle DTS series, so the last one sent is still the good
+one.
 
-Rob
+DRM: I have collected several reviewed-by tags both on driver and bindings.
+Can I send out incremental patches on this series and consider this one to
+be ready to be collected?
+
+Thanks
+   j
+
+v8 -> v9:
+- Put 'remote' OF node after usage not just in error path during device
+  tree parsing routine
+- Add Rob's Reviewed-by tag to the device tree bindings documentation
+
+v7 -> b8:
+- Make 'vcc' supply mandatory
+- Use 'oe' property name to describe "OE" pin
+- Minor fixes as suggested by Laurent on bindings and driver
+
+v6 -> v7:
+- Use semi-standard names for powerdown and output enable GPIOs as suggested
+  by Rob and Vladimir
+- Use 'regulator_get()' not the optional version, and list only 'vcc' as
+  requested supply
+- Addressed Laurent's review comments and removed Eagle display enablement patch
+  to be sent separately
+
+v5 -> v6:
+- Drop check for CONFIG_OF as it is a Kconfig dependency
+- Add Niklas Reviewed-by tags
+- List [3/3] depenencies below commit message to ease integration
+
+v4 -> v5:
+- Fix punctuation in bindings documentation
+- Add small statement to bindings document to clarify the chip has no
+  control bus
+- Print regulator name in enable/disable routines error path
+- Add Andrzej Reviewed-by tag
+
+v3 -> v4:
+- Rename permutations of "pdwn" to just "pdwn" everywhere in the series
+- Improve power enable/disable routines as suggested by Andrzej and Sergei
+- Change "pdwn" gpio initialization to use the logical output level
+- Change Kconfig description
+
+v2 -> v3:
+- Drop support for "lvds-decoder" and make the driver THC63LVD1024 specific
+-- Rework bindings to describe multiple input/output ports
+-- Rename driver and remove "lvds-decoder" references
+-- Rework Eagle DTS to use new bindings
+
+v1 -> v2:
+- Drop support for THC63LVD1024
+
+Jacopo Mondi (2):
+  dt-bindings: display: bridge: Document THC63LVD1024 LVDS decoder
+  drm: bridge: Add thc63lvd1024 LVDS decoder driver
+
+ .../bindings/display/bridge/thine,thc63lvd1024.txt |  60 ++++++
+ drivers/gpu/drm/bridge/Kconfig                     |   6 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ drivers/gpu/drm/bridge/thc63lvd1024.c              | 205 +++++++++++++++++++++
+ 4 files changed, 272 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+ create mode 100644 drivers/gpu/drm/bridge/thc63lvd1024.c
+
+--
+2.7.4
