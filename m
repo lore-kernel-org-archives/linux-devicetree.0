@@ -1,454 +1,138 @@
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v2] ARM: dts: Add am335x-pocketbeagle
-Date: Wed, 18 Apr 2018 11:15:08 +0100
-Message-ID: <20180418111508.0000698b@huawei.com>
-References: <20180416220828.19338-1-robertcnelson@gmail.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v1 4/4] arm: dts: mt7623: add Mali-450 and related device nodes
+Date: Wed, 18 Apr 2018 18:24:56 +0800
+Message-ID: <b9f4f8566bd2c20df528b760447d09aef5aa418f.1524044917.git.sean.wang@mediatek.com>
+References: <cover.1524044917.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180416220828.19338-1-robertcnelson@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robert Nelson <robertcnelson@gmail.com>
-Cc: devicetree@vger.kernel.org, tony@atomide.com, Drew Fustini <drew@beagleboard.org>, Peter Robinson <pbrobinson@redhat.com>, Jason Kridner <jkridner@beagleboard.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1524044917.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, airlied@linux.ie, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 16 Apr 2018 17:08:28 -0500
-Robert Nelson <robertcnelson@gmail.com> wrote:
+From: Sean Wang <sean.wang@mediatek.com>
 
-> PocketBeagle is an ultra-tiny-yet-complete open-source USB-key-fob computer.
-> 
-> This board can be indentified by the BPxx value after A335BNLT (BBB)
-> in the at24 eeprom:
-> BPxx [aa 55 33 ee 41 33 33 35  42 4e 4c 54 42 50 30 30 |.U3.A335BNLTBP00|]
-> 
-> http://beagleboard.org/pocket
-> https://github.com/beagleboard/pocketbeagle
-> 
-> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-> CC: Tony Lindgren <tony@atomide.com>
-> CC: Jason Kridner <jkridner@beagleboard.org>
-> CC: Drew Fustini <drew@beagleboard.org>
-> CC: Peter Robinson <pbrobinson@redhat.com>
-Hi Robert,
+Add nodes for Mali-450 device, g3dsys device providing required clock
+gate and reset control and larb3 offering an arbiter through iommu for
+controlling access to external memory requested from Mali-450.
 
-Great to see this.  One small comment, the copyright notices for 2012
-seem a little unlikely to be 'complete'.  I guess a lot is copied from
-files dating back that far, but not everything so do we not want to
-reflect more recent work on these?
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ arch/arm/boot/dts/mt7623.dtsi  | 70 ++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/mt7623a.dtsi |  4 +++
+ 2 files changed, 74 insertions(+)
 
-Jonathan
-
-> ---
-> Changes in v2:
-> - Use SPDX tags.
-> - Use eeprom@50, remove repeated node and fix  and remove '_' to fix node_name_chars_strict Warning
-> - Fix: PocketBeagle Name in Subject (not PocketBeagle Blue)
-> - Fix: leds remove '_' to fix node_name_chars_strict warning
-> - Fix: node_name_chars_strict pinmux_*_pins label's.
-> ---
->  arch/arm/boot/dts/Makefile                   |   1 +
->  arch/arm/boot/dts/am335x-osd335x-common.dtsi | 124 ++++++++++
->  arch/arm/boot/dts/am335x-pocketbeagle.dts    | 237 +++++++++++++++++++
->  3 files changed, 362 insertions(+)
->  create mode 100644 arch/arm/boot/dts/am335x-osd335x-common.dtsi
->  create mode 100644 arch/arm/boot/dts/am335x-pocketbeagle.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 7e2424957809..5a09ff15743b 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -688,6 +688,7 @@ dtb-$(CONFIG_SOC_AM33XX) += \
->  	am335x-pdu001.dtb \
->  	am335x-pepper.dtb \
->  	am335x-phycore-rdk.dtb \
-> +	am335x-pocketbeagle.dtb \
->  	am335x-shc.dtb \
->  	am335x-sbc-t335.dtb \
->  	am335x-sl50.dtb \
-> diff --git a/arch/arm/boot/dts/am335x-osd335x-common.dtsi b/arch/arm/boot/dts/am335x-osd335x-common.dtsi
-> new file mode 100644
-> index 000000000000..d2150d207b7a
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/am335x-osd335x-common.dtsi
-> @@ -0,0 +1,124 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-Seems a little odd not to have a 'slightly' more recent copyright notice
-for a device that definitely didn't exist in 2012!
-
-> + *
-> + * Author: Robert Nelson <robertcnelson@gmail.com>
-> + */
-> +
-> +/ {
-> +	cpus {
-> +		cpu@0 {
-> +			cpu0-supply = <&dcdc2_reg>;
-> +		};
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x20000000>; /* 512 MB */
-> +	};
-> +};
-> +
-> +&cpu0_opp_table {
-> +	/*
-> +	* Octavo Systems:
-> +	* The EFUSE_SMA register is not programmed for any of the AM335x wafers
-> +	* we get and we are not programming them during our production test.
-> +	* Therefore, from a DEVICE_ID revision point of view, the silicon looks
-> +	* like it is Revision 2.1.  However, from an EFUSE_SMA point of view for
-> +	* the HW OPP table, the silicon looks like it is Revision 1.0 (ie the 
-> +	* EFUSE_SMA register reads as all zeros).
-> +	*/
-> +	oppnitro-1000000000 {
-> +		opp-supported-hw = <0x06 0x0100>;
-> +	};
-> +};
-> +
-> +&am33xx_pinmux {
-> +	i2c0_pins: pinmux-i2c0-pins {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x988, PIN_INPUT_PULLUP | MUX_MODE0)	/* (C17) I2C0_SDA.I2C0_SDA */
-> +			AM33XX_IOPAD(0x98c, PIN_INPUT_PULLUP | MUX_MODE0)	/* (C16) I2C0_SCL.I2C0_SCL */
-> +		>;
-> +	};
-> +};
-> +
-> +&i2c0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c0_pins>;
-> +
-> +	status = "okay";
-> +	clock-frequency = <400000>;
-> +
-> +	tps: tps@24 {
-> +		reg = <0x24>;
-> +	};
-> +};
-> +
-> +/include/ "tps65217.dtsi"
-> +
-> +&tps {
-> +	interrupts = <7>; /* NMI */
-> +	interrupt-parent = <&intc>;
-> +
-> +	ti,pmic-shutdown-controller;
-> +
-> +	pwrbutton {
-> +		interrupts = <2>;
-> +		status = "okay";
-> +	};
-> +
-> +	regulators {
-> +		dcdc1_reg: regulator@0 {
-> +			regulator-name = "vdds_dpr";
-> +			regulator-always-on;
-> +		};
-> +
-> +		dcdc2_reg: regulator@1 {
-> +			/* VDD_MPU voltage limits 0.95V - 1.26V with +/-4% tolerance */
-> +			regulator-name = "vdd_mpu";
-> +			regulator-min-microvolt = <925000>;
-> +			regulator-max-microvolt = <1351500>;
-> +			regulator-boot-on;
-> +			regulator-always-on;
-> +		};
-> +
-> +		dcdc3_reg: regulator@2 {
-> +			/* VDD_CORE voltage limits 0.95V - 1.1V with +/-4% tolerance */
-> +			regulator-name = "vdd_core";
-> +			regulator-min-microvolt = <925000>;
-> +			regulator-max-microvolt = <1150000>;
-> +			regulator-boot-on;
-> +			regulator-always-on;
-> +		};
-> +
-> +		ldo1_reg: regulator@3 {
-> +			regulator-name = "vio,vrtc,vdds";
-> +			regulator-always-on;
-> +		};
-> +
-> +		ldo2_reg: regulator@4 {
-> +			regulator-name = "vdd_3v3aux";
-> +			regulator-always-on;
-> +		};
-> +
-> +		ldo3_reg: regulator@5 {
-> +			regulator-name = "vdd_1v8";
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		ldo4_reg: regulator@6 {
-> +			regulator-name = "vdd_3v3a";
-> +			regulator-always-on;
-> +		};
-> +	};
-> +};
-> +
-> +&aes {
-> +	status = "okay";
-> +};
-> +
-> +&sham {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-> new file mode 100644
-> index 000000000000..62fe5cab9fae
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-> @@ -0,0 +1,237 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-This one didn't exist back then either ;)
-
-> + *
-> + * Author: Robert Nelson <robertcnelson@gmail.com>
-> + */
-> +/dts-v1/;
-> +
-> +#include "am33xx.dtsi"
-> +#include "am335x-osd335x-common.dtsi"
-> +
-> +/ {
-> +	model = "TI AM335x PocketBeagle";
-> +	compatible = "ti,am335x-pocketbeagle", "ti,am335x-bone", "ti,am33xx";
-> +
-> +	chosen {
-> +		stdout-path = &uart0;
-> +	};
-> +
-> +	leds {
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&usr_leds_pins>;
-> +
-> +		compatible = "gpio-leds";
-> +
-> +		usr0 {
-> +			label = "beaglebone:green:usr0";
-> +			gpios = <&gpio1 21 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "heartbeat";
-> +			default-state = "off";
-> +		};
-> +
-> +		usr1 {
-> +			label = "beaglebone:green:usr1";
-> +			gpios = <&gpio1 22 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "mmc0";
-> +			default-state = "off";
-> +		};
-> +
-> +		usr2 {
-> +			label = "beaglebone:green:usr2";
-> +			gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "cpu0";
-> +			default-state = "off";
-> +		};
-> +
-> +		usr3 {
-> +			label = "beaglebone:green:usr3";
-> +			gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +		};
-> +	};
-> +
-> +	vmmcsd_fixed: fixedregulator0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vmmcsd_fixed";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +};
-> +
-> +&am33xx_pinmux {
-> +	i2c2_pins: pinmux-i2c2-pins {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x97c, PIN_INPUT_PULLUP | MUX_MODE3)	/* (D17) uart1_rtsn.I2C2_SCL */
-> +			AM33XX_IOPAD(0x978, PIN_INPUT_PULLUP | MUX_MODE3)	/* (D18) uart1_ctsn.I2C2_SDA */
-> +		>;
-> +	};
-> +
-> +	ehrpwm0_pins: pinmux-ehrpwm0-pins {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x990, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* (A13) mcasp0_aclkx.ehrpwm0A */
-> +		>;
-> +	};
-> +
-> +	ehrpwm1_pins: pinmux-ehrpwm1-pins {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x848, PIN_OUTPUT_PULLDOWN | MUX_MODE6)	/* (U14) gpmc_a2.ehrpwm1A */
-> +		>;
-> +	};
-> +
-> +	mmc0_pins: pinmux-mmc0-pins {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x960, PIN_INPUT | MUX_MODE7)		/* (C15) spi0_cs1.gpio0[6] */
-> +			AM33XX_IOPAD(0x8fc, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G16) mmc0_dat0.mmc0_dat0 */
-> +			AM33XX_IOPAD(0x8f8, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G15) mmc0_dat1.mmc0_dat1 */
-> +			AM33XX_IOPAD(0x8f4, PIN_INPUT_PULLUP | MUX_MODE0)	/* (F18) mmc0_dat2.mmc0_dat2 */
-> +			AM33XX_IOPAD(0x8f0, PIN_INPUT_PULLUP | MUX_MODE0)	/* (F17) mmc0_dat3.mmc0_dat3 */
-> +			AM33XX_IOPAD(0x904, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G18) mmc0_cmd.mmc0_cmd */
-> +			AM33XX_IOPAD(0x900, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G17) mmc0_clk.mmc0_clk */
-> +			AM33XX_IOPAD(0x9a0, PIN_INPUT | MUX_MODE4)		/* (B12) mcasp0_aclkr.mmc0_sdwp */
-> +		>;
-> +	};
-> +
-> +	spi0_pins: pinmux-spi0-pins {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x950, PIN_INPUT_PULLUP | MUX_MODE0)	/* (A17) spi0_sclk.spi0_sclk */
-> +			AM33XX_IOPAD(0x954, PIN_INPUT_PULLUP | MUX_MODE0)	/* (B17) spi0_d0.spi0_d0 */
-> +			AM33XX_IOPAD(0x958, PIN_INPUT_PULLUP | MUX_MODE0)	/* (B16) spi0_d1.spi0_d1 */
-> +			AM33XX_IOPAD(0x95c, PIN_INPUT_PULLUP | MUX_MODE0)	/* (A16) spi0_cs0.spi0_cs0 */
-> +		>;
-> +	};
-> +
-> +	spi1_pins: pinmux-spi1-pins {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x964, PIN_INPUT_PULLUP | MUX_MODE4)	/* (C18) eCAP0_in_PWM0_out.spi1_sclk */
-> +			AM33XX_IOPAD(0x968, PIN_INPUT_PULLUP | MUX_MODE4)	/* (E18) uart0_ctsn.spi1_d0 */
-> +			AM33XX_IOPAD(0x96c, PIN_INPUT_PULLUP | MUX_MODE4)	/* (E17) uart0_rtsn.spi1_d1 */
-> +			AM33XX_IOPAD(0x9b0, PIN_INPUT_PULLUP | MUX_MODE4)	/* (A15) xdma_event_intr0.spi1_cs1 */
-> +		>;
-> +	};
-> +
-> +	usr_leds_pins: pinmux-usr-leds-pins {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x854, PIN_OUTPUT | MUX_MODE7)		/* (V15) gpmc_a5.gpio1[21] - USR_LED_0 */
-> +			AM33XX_IOPAD(0x858, PIN_OUTPUT | MUX_MODE7)		/* (U15) gpmc_a6.gpio1[22] - USR_LED_1 */
-> +			AM33XX_IOPAD(0x85c, PIN_OUTPUT | MUX_MODE7)		/* (T15) gpmc_a7.gpio1[23] - USR_LED_2 */
-> +			AM33XX_IOPAD(0x860, PIN_OUTPUT | MUX_MODE7)		/* (V16) gpmc_a8.gpio1[24] - USR_LED_3 */
-> +		>;
-> +	};
-> +
-> +	uart0_pins: pinmux-uart0-pins {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x970, PIN_INPUT_PULLUP | MUX_MODE0)	/* (E15) uart0_rxd.uart0_rxd */
-> +			AM33XX_IOPAD(0x974, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* (E16) uart0_txd.uart0_txd */
-> +		>;
-> +	};
-> +
-> +	uart4_pins: pinmux-uart4-pins {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x870, PIN_INPUT_PULLUP | MUX_MODE6)	/* (T17) gpmc_wait0.uart4_rxd */
-> +			AM33XX_IOPAD(0x874, PIN_OUTPUT_PULLDOWN | MUX_MODE6)	/* (U17) gpmc_wpn.uart4_txd */
-> +		>;
-> +	};
-> +};
-> +
-> +&epwmss0 {
-> +	status = "okay";
-> +};
-> +
-> +&ehrpwm0 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&ehrpwm0_pins>;
-> +};
-> +
-> +&epwmss1 {
-> +	status = "okay";
-> +};
-> +
-> +&ehrpwm1 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&ehrpwm1_pins>;
-> +};
-> +
-> +&i2c0 {
-> +	eeprom: eeprom@50 {
-> +		compatible = "atmel,24c256";
-> +		reg = <0x50>;
-> +	};
-> +};
-> +
-> +&i2c2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c2_pins>;
-> +
-> +	status = "okay";
-> +	clock-frequency = <400000>;
-> +};
-> +
-> +&mmc1 {
-> +	status = "okay";
-> +	vmmc-supply = <&vmmcsd_fixed>;
-> +	bus-width = <4>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc0_pins>;
-> +	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
-> +};
-> +
-> +&rtc {
-> +	system-power-controller;
-> +};
-> +
-> +&tscadc {
-> +	status = "okay";
-> +	adc {
-> +		ti,adc-channels = <0 1 2 3 4 5 6 7>;
-> +		ti,chan-step-avg = <16 16 16 16 16 16 16 16>;
-> +		ti,chan-step-opendelay = <0x98 0x98 0x98 0x98 0x98 0x98 0x98 0x98>;
-> +		ti,chan-step-sampledelay = <0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0>;
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart0_pins>;
-> +
-> +	status = "okay";
-> +};
-> +
-> +&uart4 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart4_pins>;
-> +
-> +	status = "okay";
-> +};
-> +
-> +&usb {
-> +	status = "okay";
-> +};
-> +
-> +&usb_ctrl_mod {
-> +	status = "okay";
-> +};
-> +
-> +&usb0_phy {
-> +	status = "okay";
-> +};
-> +
-> +&usb0 {
-> +	status = "okay";
-> +	dr_mode = "otg";
-> +};
-> +
-> +&usb1_phy {
-> +	status = "okay";
-> +};
-> +
-> +&usb1 {
-> +	status = "okay";
-> +	dr_mode = "host";
-> +};
-> +
-> +&cppi41dma  {
-> +	status = "okay";
-> +};
+diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+index d1eb123..ace92b3 100644
+--- a/arch/arm/boot/dts/mt7623.dtsi
++++ b/arch/arm/boot/dts/mt7623.dtsi
+@@ -274,6 +274,17 @@
+ 		clock-names = "system-clk", "rtc-clk";
+ 	};
+ 
++	smi_common: smi@1000c000 {
++		compatible = "mediatek,mt7623-smi-common",
++			     "mediatek,mt2701-smi-common";
++		reg = <0 0x1000c000 0 0x1000>;
++		clocks = <&infracfg CLK_INFRA_SMI>,
++			 <&mmsys CLK_MM_SMI_COMMON>,
++			 <&infracfg CLK_INFRA_SMI>;
++		clock-names = "apb", "smi", "async";
++		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
++	};
++
+ 	pwrap: pwrap@1000d000 {
+ 		compatible = "mediatek,mt7623-pwrap",
+ 			     "mediatek,mt2701-pwrap";
+@@ -305,6 +316,17 @@
+ 		reg = <0 0x10200100 0 0x1c>;
+ 	};
+ 
++	iommu: iommu@10205000 {
++		compatible = "mediatek,mt7623-m4u",
++			     "mediatek,mt2701-m4u";
++		reg = <0 0x10205000 0 0x1000>;
++		interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infracfg CLK_INFRA_M4U>;
++		clock-names = "bclk";
++		mediatek,larbs = <&larb3>;
++		#iommu-cells = <1>;
++	};
++
+ 	efuse: efuse@10206000 {
+ 		compatible = "mediatek,mt7623-efuse",
+ 			     "mediatek,mt8173-efuse";
+@@ -680,6 +702,54 @@
+ 		status = "disabled";
+ 	};
+ 
++	g3dsys: clock-controller@13000000 {
++		compatible = "mediatek,mt7623-g3dsys",
++			     "mediatek,mt2701-g3dsys",
++			     "syscon";
++		reg = <0 0x13000000 0 0x200>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++	larb3: larb@13010000 {
++		compatible = "mediatek,mt7623-smi-larb",
++			     "mediatek,mt2701-smi-larb";
++		reg = <0 0x13010000 0 0x1000>;
++		mediatek,smi = <&smi_common>;
++		mediatek,larb-id = <3>;
++		clocks = <&clk26m>, <&clk26m>;
++		clock-names = "apb", "smi";
++		power-domains = <&scpsys MT2701_POWER_DOMAIN_MFG>;
++	};
++
++	mali: gpu@13040000 {
++		compatible = "mediatek,mt7623-mali", "arm,mali-450";
++		reg = <0 0x13040000 0 0x30000>;
++		interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 171 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 172 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 173 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 174 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 175 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 176 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 177 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 180 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-names = "gp", "gpmmu", "pp0", "ppmmu0", "pp1",
++				  "ppmmu1", "pp2", "ppmmu2", "pp";
++		clocks = <&topckgen CLK_TOP_MMPLL>,
++			 <&g3dsys CLK_G3DSYS_CORE>;
++		clock-names = "bus", "core";
++		power-domains = <&scpsys MT2701_POWER_DOMAIN_MFG>;
++		mediatek,larb = <&larb3>;
++		resets = <&g3dsys MT2701_G3DSYS_CORE_RST>;
++	};
++
++	mmsys: syscon@14000000 {
++		compatible = "mediatek,mt2701-mmsys", "syscon";
++		reg = <0 0x14000000 0 0x1000>;
++		#clock-cells = <1>;
++	};
++
+ 	hifsys: syscon@1a000000 {
+ 		compatible = "mediatek,mt7623-hifsys",
+ 			     "mediatek,mt2701-hifsys",
+diff --git a/arch/arm/boot/dts/mt7623a.dtsi b/arch/arm/boot/dts/mt7623a.dtsi
+index 0735a1fb8..a42fd46 100644
+--- a/arch/arm/boot/dts/mt7623a.dtsi
++++ b/arch/arm/boot/dts/mt7623a.dtsi
+@@ -21,6 +21,10 @@
+ 	power-domains = <&scpsys MT7623A_POWER_DOMAIN_ETH>;
+ };
+ 
++&mali {
++	status = "disabled";
++};
++
+ &nandc {
+ 	power-domains = <&scpsys MT7623A_POWER_DOMAIN_IFR_MSC>;
+ };
+-- 
+2.7.4
