@@ -1,81 +1,78 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 2/6] dt-bindings: display: atmel: optional
- video-interface of endpoints
-Date: Wed, 18 Apr 2018 10:29:00 +0200
-Message-ID: <20180418102900.3d36e424@bbrezillon>
-References: <20180417131052.16336-1-peda@axentia.se>
- <20180417131052.16336-3-peda@axentia.se>
- <20180418091658.690e3d5e@bbrezillon>
- <ffa56109-db0a-5619-2214-d163a2a42ef6@axentia.se>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] Revert "ata: ahci-platform: add reset control support"
+Date: Wed, 18 Apr 2018 10:36:47 +0200
+Message-ID: <20180418083647.GA5503@ulmo>
+References: <1523237554-7928-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <c8ec7474-7eb4-24cf-1f53-b4bcee5508dd@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <ffa56109-db0a-5619-2214-d163a2a42ef6@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c8ec7474-7eb4-24cf-1f53-b4bcee5508dd@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAxOCBBcHIgMjAxOCAwOTozMTo1MyArMDIwMApQZXRlciBSb3NpbiA8cGVkYUBheGVu
-dGlhLnNlPiB3cm90ZToKCj4gT24gMjAxOC0wNC0xOCAwOToxNiwgQm9yaXMgQnJlemlsbG9uIHdy
-b3RlOgo+ID4gSGkgUGV0ZXIsCj4gPiAKPiA+IE9uIFR1ZSwgMTcgQXByIDIwMTggMTU6MTA6NDgg
-KzAyMDAKPiA+IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+IHdyb3RlOgo+ID4gICAKPiA+
-PiBXaXRoIGJ1cy10eXBlL2J1cy13aWR0aCBwcm9wZXJ0aWVzIGluIHRoZSBlbmRwb2ludCBub2Rl
-cywgdGhlIHZpZGVvLQo+ID4+IGludGVyZmFjZSBvZiB0aGUgY29ubmVjdGlvbiBjYW4gYmUgc3Bl
-Y2lmaWVkIGZvciBjYXNlcyB3aGVyZSB0aGUKPiA+PiBoZXVyaXN0aWMgZmFpbHMgdG8gc2VsZWN0
-IHRoZSBjb3JyZWN0IG91dHB1dCBtb2RlLiBUaGlzIGNhbiBoYXBwZW4KPiA+PiBlLmcuIGlmIG5v
-dCBhbGwgUkdCIHBpbnMgYXJlIHJvdXRlZCBvbiB0aGUgUENCOyB0aGUgZHJpdmVyIGhhcyBubwo+
-ID4+IHdheSBvZiBrbm93aW5nIHRoaXMsIGFuZCBuZWVkcyB0byBiZSB0b2xkIGV4cGxpY2l0bHku
-Cj4gPj4KPiA+PiBUaGlzIGlzIGNyaXRpY2FsIGZvciB0aGUgZGV2aWNlcyB0aGF0IGhhdmUgdGhl
-ICJjb25mbGljdGluZyBvdXRwdXQKPiA+PiBmb3JtYXRzIiBpc3N1ZSAoU0FNOU4xMiwgU0FNOVg1
-LCBTQU1BNUQzKSwgc2luY2UgdGhlIG1vc3Qgc2lnbmlmaWNhbnQKPiA+PiBSR0IgYml0cyBtb3Zl
-IGFyb3VuZCBkZXBlbmRpbmcgb24gdGhlIHNlbGVjdGVkIG91dHB1dCBtb2RlLiBGb3IKPiA+PiBk
-ZXZpY2VzIHRoYXQgZG8gbm90IGhhdmUgdGhlICJjb25mbGljdGluZyBvdXRwdXQgZm9ybWF0cyIg
-aXNzdWUKPiA+PiAoU0FNQTVEMiwgU0FNQTVENCksIHRoaXMgaXMgY29tcGxldGVseSBpcnJlbGV2
-YW50Lgo+ID4+Cj4gPj4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgUm9zaW4gPHBlZGFAYXhlbnRpYS5z
-ZT4KPiA+PiAtLS0KPiA+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYXRtZWwvaGxjZGMtZGMudHh0IHwgOCArKysrKysrKwo+ID4+ICAxIGZpbGUgY2hhbmdlZCwg
-OCBpbnNlcnRpb25zKCspCj4gPj4KPiA+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXRtZWwvaGxjZGMtZGMudHh0IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXRtZWwvaGxjZGMtZGMudHh0Cj4gPj4gaW5k
-ZXggODJmMmFjYjNkMzc0Li4yNDRiNDg4NjllYjQgMTAwNjQ0Cj4gPj4gLS0tIGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXRtZWwvaGxjZGMtZGMudHh0Cj4gPj4g
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXRtZWwvaGxj
-ZGMtZGMudHh0Cj4gPj4gQEAgLTE1LDYgKzE1LDE0IEBAIFJlcXVpcmVkIGNoaWxkcmVuIG5vZGVz
-Ogo+ID4+ICAgdG8gZXh0ZXJuYWwgZGV2aWNlcyB1c2luZyB0aGUgT0YgZ3JhcGggcmVwcmVuc2Vu
-dGF0aW9uIChzZWUgLi4vZ3JhcGgudHh0KS4KPiA+PiAgIEF0IGxlYXN0IG9uZSBwb3J0IG5vZGUg
-aXMgcmVxdWlyZWQuCj4gPj4gIAo+ID4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzIGluIGdyYW5kY2hp
-bGQgbm9kZXM6Cj4gPj4gKyBBbnkgZW5kcG9pbnQgZ3JhbmRjaGlsZCBub2RlIG1heSBzcGVjaWZ5
-IGEgZGVzaXJlZCB2aWRlbyBpbnRlcmZhY2UKPiA+PiArIGFjY29yZGluZyB0byAuLi8uLi9tZWRp
-YS92aWRlby1pbnRlcmZhY2VzLnR4dCwgc3BlY2lmaWNhbGx5Cj4gPj4gKyAtIGJ1cy10eXBlOiBt
-dXN0IGJlIDwwPi4KPiA+PiArIC0gYnVzLXdpZHRoOiByZWNvZ25pemVkIHZhbHVlcyBhcmUgPDEy
-PiwgPDE2PiwgPDE4PiBhbmQgPDI0PiwgYW5kCj4gPj4gKyAgIG92ZXJyaWRlIGFueSBvdXRwdXQg
-bW9kZSBzZWxlY3Rpb24gaHVlcmlzdGljLCBmb3JjaW5nICJyZ2I0NDQiLCAgCj4gCj4gaGV1cmlz
-dGljLCBJJ2xsIGZpeCB0aGF0IGZvciB2Mywgc28gcGxlYXNlIHJldmlldyBhcyBpZiBpdCB3YXNu
-J3QgdGhlcmUuLi4KPiAKPiA+PiArICAgInJnYjU2NSIsICJyZ2I2NjYiIGFuZCAicmdiODg4IiBy
-ZXNwZWN0aXZlbHkuCj4gPj4gKyAgCj4gPiAKPiA+IENhbiB5b3UgYWRkIGFuIGV4YW1wbGUgb3Ig
-dXBkYXRlIHRoZSBleGlzdGluZyBvbmUgdG8gc2hvdyBob3cgdGhpcwo+ID4gc2hvdWxkIGJlIGRl
-ZmluZWQ/ICAKPiAKPiBGb3IgdjMsIEknbGwgZXh0ZW5kIHRoZSBiaW5kaW5nIHdpdGggdGhpcyBh
-ZnRlciB0aGUgcHJlZXhpc3RpbmcgZXhhbXBsZToKPiAKPiAtLS0tLS0tLS0tLS0tLS0tLS04PC0t
-LS0tLS0tLS0tLS0tLS0tCj4gRXhhbXBsZSAyOiBXaXRoIGEgdmlkZW8gaW50ZXJmYWNlIG92ZXJy
-aWRlIHRvIGZvcmNlIHJnYjU2NSwgYXMgYWJvdmUKPiBidXQgd2l0aCB0aGVzZSBjaGFuZ2VzL2Fk
-ZGl0aW9uczoKPiAKPiAmaGxjZGMgewo+IAlobGNkYy1kaXNwbGF5LWNvbnRyb2xsZXIgewo+IAkJ
-cGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiAJCXBpbmN0cmwtMCA9IDwmcGluY3RybF9sY2Rf
-YmFzZSAmcGluY3RybF9sY2RfcmdiNTY1PjsKPiAKPiAJCXBvcnRAMCB7Cj4gCQkJaGxjZGNfcGFu
-ZWxfb3V0cHV0OiBlbmRwb2ludEAwIHsKPiAJCQkJYnVzLXR5cGUgPSA8MD47Cj4gCQkJCWJ1cy13
-aWR0aCA9IDwxNj47Cj4gCQkJfTsKPiAJCX07Cj4gCX07Cj4gfTsKPiAtLS0tLS0tLS0tLS0tLS0t
-LS04PC0tLS0tLS0tLS0tLS0tLS0tCj4gCj4gSXMgdGhhdCBhIGdvb2QgcGxhbiwgb3Igc2hvdWxk
-IEkgcGVyaGFwcyBkdXBsaWNhdGUgdGhlIHdob2xlIGV4YW1wbGU/CgpMb29rcyBnb29kIHRvIG1l
-LCBubyBuZWVkIHRvIGFkZCBhIG5ldyBleGFtcGxlLgoKVGhhbmtzLAoKQm9yaXMKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--FL5UXtIhxfXey3p5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Apr 09, 2018 at 09:02:33AM +0200, Hans de Goede wrote:
+> HI,
+>=20
+> On 09-04-18 03:32, Kunihiko Hayashi wrote:
+> > This reverts commit f0f56716fc3e5d547fd7811eb218a30ed0695605.
+> >=20
+> > According to Thierry's view,
+> > https://www.spinics.net/lists/linux-ide/msg55357.html
+> > some hardware-specific drivers already use their own resets,
+> > and the common reset might make a path to occur double controls of rese=
+ts.
+> >=20
+> > For now, revert the commit that adds reset control support to ahci-plat=
+form,
+> > and hold until the solution is confirmed not be affect all hardware-spe=
+cific
+> > drivers.
+> >=20
+> > Fixes: f0f56716fc3e ("ata: ahci-platform: add reset control support")
+> > Reported-by: Thierry Reding <thierry.reding@gmail.com>
+> > Suggested-by: Hans de Goede <hdegoede@redhat.com>
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>=20
+> Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+Hi Tejun,
+
+I see that you've applied this to your for-next branch. However, this is
+a fix that needs to go into v4.17 because that's where the regression
+was introduced. Is there any way you can promote this to a fixes branch?
+
+Thanks,
+Thierry
+
+--FL5UXtIhxfXey3p5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlrXA5wACgkQ3SOs138+
+s6FJlBAAv/nfRiMasHog1uChBDJIxUNKLiFTXIjw9IhC4ek++LE9xNi1oDOl+MiQ
+56XUNBMSv8fo/qwcA7rEDjVUn4nej1YQTqTCZjnW0xd0Gd0z99QbucWvCz0b2ocg
+DHJRZF07BlPJoptCpaHgEcaNC6va8UXsbEZMp56gDnXYH5o87p246evlxnPL1nR5
+8QkGLdHOgyxCiG4j9T9E53mRJLhpqbKzgp7l7F2N+Lh8JDyhlOUODCdv/ykhdzkA
+A8q30xQKcgQeiUVvDpmTvqfGxIl6p+hwEpyXD7j0yN1Nfpmjxhzy1ujLmDM8VGR7
+enJiSUmWNgfYfBJU/J+FZ/4GrZZ27JkJUWWWZFVIVe6ye2rfkOWq87U0ODbfcpDH
+q3Hh2Xr9lHBBf3GJfm1DIUzmDqKdi4lforuDtIWrrmAweoNELzsBIBFz8kkcJ86w
+TGksOtR+kfVVk9DjnNS0rbPt9U1Q9DDjMMU2076NuVZ8u6NJNjTOCaFZ9Tx6Sq6/
+htT2AKF9uu7H4NJ0Hkcbro7e/ZMoJdotckCGy/Em/GR9KX342TcknZuHLSciEya1
+KwGT9qT3ft5q3B8zFoxwr90T15Do/vLzwvKQnRukxx7MZahAK2JYYtyoCwp4Z9X9
+Q5tsoB1TjoqlD0+/NUut8v2BbgklT8vHDEncquhXzTCES4hS1dc=
+=jGuO
+-----END PGP SIGNATURE-----
+
+--FL5UXtIhxfXey3p5--
