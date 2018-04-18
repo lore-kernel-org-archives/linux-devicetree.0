@@ -1,105 +1,99 @@
-From: Alban <albeu@free.fr>
-Subject: Re: [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode
- for the cells list
-Date: Wed, 18 Apr 2018 15:34:40 +0200
-Message-ID: <20180418153440.187ed16e@avionic-0020>
-References: <1521933899-362-1-git-send-email-albeu@free.fr>
-        <1521933899-362-2-git-send-email-albeu@free.fr>
-        <344e0087-7410-aebb-8a66-c6976064df10@linaro.org>
-        <20180417165420.423a691b@avionic-0020>
-        <8c4b48ad-e99e-030a-a4ee-b6df0fa59c79@linaro.org>
-        <20180417180040.04f53495@avionic-0020>
-        <20180418134119.2e587621@avionic-0020>
-        <9f7d2987-b33e-79b5-ae58-2985fd7334e4@linaro.org>
-        <20180418143243.3c23493c@avionic-0020>
-        <e34619a4-e9b6-9945-a1cc-a3680aac6819@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v5 00/26] Fix watchdog on Renesas R-Car Gen2 and RZ/G1
+Date: Wed, 18 Apr 2018 15:37:29 +0200
+Message-ID: <CAMuHMdVAi+rU3+TLSp7YQSHzJKFyMH8ZbS3-d8yADKmfz1KiTA@mail.gmail.com>
+References: <1518457475-4480-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdX=m9ui6GczF51SJH2X7Cw1OnxoH9pfk1DybpDX-A873Q@mail.gmail.com>
+ <20180221161326.ktvf3mlzzxith5kw@verge.net.au>
+ <CAMuHMdUTSmrWggMK4ehSL3Ux-JUzVpamTuToveuXogjuvGKkaw@mail.gmail.com>
+ <20180221183223.qacrmmuzoqlzzbpo@verge.net.au>
+ <CAMuHMdXCt1-coXGgtgFBm4rZLGBRMvSjbgeBSweiyKrOfCF0Xg@mail.gmail.com>
+ <20180223081443.ak6kl3z72kamcxob@verge.net.au>
+ <CAMuHMdVKPFSVTbnQy9RwAg13OC3R=H1PN9+1FyU0SDHQPa1cuQ@mail.gmail.com>
+ <20180313200548.fgexoxlha3coa7hs@verge.net.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/AZ+RuJxPdBoTxXd12bCw6CQ"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e34619a4-e9b6-9945-a1cc-a3680aac6819@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Alban <albeu@free.fr>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180313200548.fgexoxlha3coa7hs@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Wim Van Sebroeck <wim@iguana.be>, linux-clk <linux-clk@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Guenter Roeck <linux@roeck-us.net>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Linux-Renesas <linux-renesas-soc@vge>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/AZ+RuJxPdBoTxXd12bCw6CQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Simon,
 
-On Wed, 18 Apr 2018 13:53:56 +0100
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
+On Tue, Mar 13, 2018 at 9:05 PM, Simon Horman <horms@verge.net.au> wrote:
+> I understand that the watchdog driver has been accepted and that as things
+> currently stand if it is enabled in the build it will be enabled in DT and
+> a crash will result. From my POV that is a regression so I have decided
+> to adopt the alternate plan proposed by Geert above: in short drop DT
+> patches (to avoid enabling broken driver) and enqueue mach-shmobile
+> patches (which don't make things any worse.
+>
+> Patch-by-patch things are as follows.
+>
+> Dropped from "[PATCH v5 00/26] Fix watchdog on Renesas R-Car Gen2 and RZ/G1":
+>
+> 979d28f29742 ARM: dts: r8a7743: Adjust SMP routine size
+> 0b205f679f5d ARM: dts: r8a7745: Adjust SMP routine size
+> 2ad21a1d78b3 ARM: dts: r8a7790: Adjust SMP routine size
+> 82c978459c77 ARM: dts: r8a7791: Adjust SMP routine size
+> d303698e6ff3 ARM: dts: r8a7792: Adjust SMP routine size
+> d8b8b9a1e295 ARM: dts: r8a7793: Adjust SMP routine size
+> 70b3ab369773 ARM: dts: r8a7794: Adjust SMP routine size
+>
+> ebf26cf1b1de ARM: dts: r8a7743: Add watchdog support to SoC dtsi
+> 5a4566ab3777 ARM: dts: r8a7745: Add watchdog support to SoC dtsi
+> acd58e2bb1e5 ARM: dts: r8a7790: Add watchdog support to SoC dtsi
+> e3f89168e72f ARM: dts: r8a7791: Add watchdog support to SoC dtsi
+> e76a6a69a1fc ARM: dts: r8a7794: Add watchdog support to SoC dtsi
+> 242cc1ab7f7c ARM: dts: iwg20m: Add watchdog support to SoM dtsi
+> 748ed07f6c7c ARM: dts: iwg22m: Add watchdog support to SoM dtsi
+>
+>
+> Dropped from "[PATCH/RFC 00/11] ARM: dts: rcar-gen2: Enable watchdog support":
+>
+> c257202482e2 ARM: dts: r8a7792: Add RWDT node
+> 01ec04dec8eb ARM: dts: r8a7793: Add RWDT node
+> 8e6ebe4f2f94 ARM: dts: lager: Enable watchdog support
+> f223ad0198f6 ARM: dts: koelsch: Enable watchdog support
+> 1d14d2bb700d ARM: dts: porter: Enable watchdog support
+> bf71652fc955 ARM: dts: blanche: Enable watchdog support
+> 13a0b10aeea4 ARM: dts: wheat: Enable watchdog support
+> 4e247bf110b8 ARM: dts: gose: Enable watchdog support
+> 2dcbd24bbf5e ARM: dts: alt: Enable watchdog support
+> 7f6844c900b4 ARM: dts: silk: Enable watchdog support
+>
+> And applied:
+>
+> [v5] ARM: shmobile: rcar-gen2: Add watchdog support
+> [v5] ARM: shmobile: Add watchdog support
+>
+> In the case of the last patch above I removed the #ifdef from the header file.
 
-> On 18/04/18 13:32, Alban wrote:
-> >> I was also suggesting you to use nvmem-cell subnode, but make it a
-> >> proper nvmem provider device, rather than reusing its parent device.
-> >>
-> >> You would end up some thing like this in dt.
-> >>
-> >> flash@0 {
-> >> 	#address-cells =3D <1>;
-> >> 	#size-cells =3D <1>;
-> >> 	compatible =3D "s25sl064a";
-> >> 	reg =3D <0>;
-> >>
-> >> 	nvmem-cells {
-> >> 		compatible =3D "mtd-nvmem";
-> >> 		#address-cells =3D <1>;
-> >> 		#size-cells =3D <1>;
-> >>
-> >> 		calibration: calib@404 {
-> >> 			reg =3D <0x404 0x10>;
-> >> 		};
-> >> 	};
-> >> }; =20
-> > But the root cause is in the nvmem binding, this conflict could exists =
-=20
-> No, the root cause is because of passing wrong device instance to nvmem=20
-> core. And trying to workaround is the actual issue.
+I guess the time is ripe to apply the DTS patches again, in the following order:
+  1. SMP routine size adjustments,
+  2. Watchdog support additions to dtsi,
+  3. Watchdog enablement for dts?
 
-The data is stored on the MTD, so the nvmem provider is the MTD device.
-I don't think it is a good idea to have a virtual device in the DT to
-accommodate the nvmem API.
+Thanks!
 
-> > with any device type, not just MTD. I don't understand why we would want
-> > such workarounds instead of just fixing the problem once and for all. =
-=20
-> AFAIU, This is not a workaround, this is how nvmem provider bindings are=
-=20
-> and all providers should try to follow it.
->=20
-> I still do not understand what is the issue in making nvmem-cells node a=
-=20
-> proper nvmem provider device?
+Gr{oetje,eeting}s,
 
-It is doable, but beside making the code more complex, AFAIU that would
-goes against DT best practice as no such device exists in the hardware.
-The DT should only represent that this device contains data that can be
-requested by a driver, and ideally in the same way for all kind of
-storages.
+                        Geert
 
-Alban
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---Sig_/AZ+RuJxPdBoTxXd12bCw6CQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJa10lxAAoJEHSUmkuduC28ohsQAOU+13gwBBmeFX9rVtwI/Et/
-pz5qPpHgMWlofIb5UqqNP+jFYZQzd69H17rmHLXXB04pF6UA7qxvorYLsoHp9PAJ
-uavZ3e4Wiavaj/g1iYkO6G5LQNWun5P/X6Cck86Wyz6JhTFhX3i6+0xDdmCC9ToY
-X5sbA47pFFOq0N2s6H+NdYqL0RRtbW5vDzH8QN430h0hU/IFaWnfWKRovrznGVhP
-/x8Wrv3SL2/HrL3anx5P2rcmNWv5cATrlpD6ASjZn8rXrDZJUGgsLQ3W9hYWgh1O
-gAwv6to8REwmkiry4Ui9lJG2n3OEt+24fgtQxXs5s8p60z4rCgnMSNzqEHZwIzog
-pF+tgV3l+xWzb8WlOtnBZbs3JM1fmg82vQrWEPH9j9c3iIqB1GjxQ/RnWT7r039u
-xCeOeFZYJ92niRSzeD1xEID6oeW9gG2ezBL+3n6zLtk6Y+gAYMra6OJPBo+20Thu
-A82PJd9Ah9NIrzTbB/fXkbvubzOJp49BBjR8mHolCRB9y8RJ3+G0Eeg+fYoADC5c
-T/O+URuv//n1+g27t2BzBfAjFnLDWtqeaVknkw1FzOb/vzzsLaeqpKWMw6OM0gf1
-jjjZeOK6bCgA5XN2nWxjgrkwFYrCIg0sZLEuMe9OlDAg7uV9OAxUrjlr9y4uNmqN
-gqFr4TjR+/UNEElgsOHo
-=kviY
------END PGP SIGNATURE-----
-
---Sig_/AZ+RuJxPdBoTxXd12bCw6CQ--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
