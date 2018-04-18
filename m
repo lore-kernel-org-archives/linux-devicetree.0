@@ -1,49 +1,86 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [v2,2/2] regulator: add QCOM RPMh regulator driver
-Date: Wed, 18 Apr 2018 18:02:50 +0100
-Message-ID: <20180418170250.GL10061@sirena.org.uk>
-References: <4b45f41996ea3344340e44fab2dc9e487572e209.1523673467.git.collinsd@codeaurora.org>
- <20180417182347.GD244487@google.com>
+From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [[RFC]DPU PATCH 2/4] dt-bindings: drm/bridge:
+ Document sn65dsi86 bridge bindings
+Date: Wed, 18 Apr 2018 23:38:32 +0530
+Message-ID: <6526809dc63f71f02982b6a57719e01a@codeaurora.org>
+References: <1524054002-17869-1-git-send-email-spanda@codeaurora.org>
+ <1524054002-17869-3-git-send-email-spanda@codeaurora.org>
+ <20180418135842.GV73214@art_vandelay>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TnYVF1hk1c8rpHiF"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180417182347.GD244487@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: David Collins <collinsd@codeaurora.org>, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, dianders@chromium.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180418135842.GV73214@art_vandelay>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---TnYVF1hk1c8rpHiF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Apr 17, 2018 at 11:23:47AM -0700, Matthias Kaehlcke wrote:
-> On Fri, Apr 13, 2018 at 07:50:35PM -0700, David Collins wrote:
-> > Add the QCOM RPMh regulator driver to manage PMIC regulators
-> > which are controlled via RPMh on some Qualcomm Technologies, Inc.
-> > SoCs.  RPMh is a hardware block which contains several
-
-Please delete unneeded context from mails when replying.  Doing this
-makes it much easier to find your reply in the message, helping ensure
-it won't be missed by people scrolling through the irrelevant quoted
-material.
-
---TnYVF1hk1c8rpHiF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrXejkACgkQJNaLcl1U
-h9CsUAf/YJfgBCyg7VCLcYR7z9m/x6x7JybqUog1YofoDD7GT54UR6YflgyVIhGq
-RNs7IYjyRS/00wPBhfhLc0m9RaGGEvnX+fnZ7eyhAZr2gdkRtQiJIkO+TtVdofGz
-nRBTswjOM8hx1zfDB32Q5lxDixxwv44cigQd8UJzzt96lyxh1xg+WOLVDytFQyze
-dJ5tuCE8xEylebos7HiIuixM1JrGK3+ep2uc3NppFrixP6AdmUv8WD28Oa79O52k
-TJLT0tQpj1RfPDLvAeEp8ko+OJFLDLVF8qr1bVrUDnLF9KdJ5NINnHZ83otLFm28
-40inyZhP7YyaOWJp8ms0hy55dPVO/Q==
-=WWCW
------END PGP SIGNATURE-----
-
---TnYVF1hk1c8rpHiF--
+T24gMjAxOC0wNC0xOCAxOToyOCwgU2VhbiBQYXVsIHdyb3RlOgo+IE9uIFdlZCwgQXByIDE4LCAy
+MDE4IGF0IDA1OjUwOjAwUE0gKzA1MzAsIFNhbmRlZXAgUGFuZGEgd3JvdGU6Cj4+IERvY3VtZW50
+IHRoZSBiaW5kaW5ncyB1c2VkIGZvciB0aGUgc242NWRzaTg2IERTSSB0byBlRFAgYnJpZGdlLgo+
+PiAKPiAKPiBQbGVhc2UgYWRkIGEgY2hhbmdlbG9nIHRvIHlvdXIgcGF0Y2hlcyBzbyByZXZpZXdl
+cnMga25vdyB3aGF0IGhhcyAKPiBjaGFuZ2VkCj4gYmV0d2VlbiBwYXRjaCB2ZXJzaW9ucy4KSSB3
+aWxsIHVwZGF0ZSB0aGUgY2hhbmdlIGxvZyBpbiB0aGUgY29tbWl0IHRleHQgb2YgdGhlIHBhdGNo
+ZXMuCj4gCj4+IFNpZ25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBjb2RlYXVyb3Jh
+Lm9yZz4KPj4gLS0tCj4+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2
+LnR4dCAgICAgICB8IDYwIAo+PiArKysrKysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hh
+bmdlZCwgNjAgaW5zZXJ0aW9ucygrKQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IAo+PiBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4
+dAo+PiAKPj4gZGlmZiAtLWdpdCAKPj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dCAKPj4gYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAo+PiBuZXcg
+ZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi45ZTI2MTJlCj4+IC0tLSAvZGV2L251
+bGwKPj4gKysrIAo+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0Cj4+IEBAIC0wLDAgKzEsNjAgQEAKPj4gK1NONjVEU0k4
+NiBEU0kgdG8gZURQIGJyaWRnZSBjaGlwCj4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLQo+PiArCj4+ICtUaGlzIGlzIHRoZSBiaW5kaW5nIGZvciBUZXhhcyBJbnN0cnVtZW50cyBT
+TjY1RFNJODYgYnJpZGdlLgo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArLSBjb21w
+YXRpYmxlOiBNdXN0IGJlICJ0aSxzbjY1ZHNpODYiCj4+ICstIHJlZzogaTJjIGFkZHJlc3Mgb2Yg
+dGhlIGNoaXAsIDB4MmQgYXMgcGVyIGRhdGFzaGVldAo+PiArLSBlbmFibGUtZ3Bpb3M6IE9GIGRl
+dmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbnMgZm9yIGJyaWRnZV9lbiBwaW4KPiAKPiBUaGUg
+ZGF0YXNoZWV0IG9ubHkgaGFzIG9uZSBlbmFibGUgcGluLCB3aHkgZ3Bpb3M/ClRoaXMgaXMgdGhl
+IGNvbnZlbnRpb24gZm9sbG93ZWQgYnkgb3RoZXIgYnJpZGdlIGRyaXZlcnMgYWxzby4KaHR0cHM6
+Ly93d3cua2VybmVsLm9yZy9kb2MvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dw
+aW8vZ3Bpby50eHQKcGxlYXNlIHRoZSBleGFtcGxlIG1lbnRpb25lZCBoZXJlLApFeGFtcGxlIG9m
+IGEgbm9kZSB1c2luZyBHUElPczoKCglub2RlIHsKCQllbmFibGUtZ3Bpb3MgPSA8JnFlX3Bpb19l
+IDE4IEdQSU9fQUNUSVZFX0hJR0g+OwoJfTsKCj4gCj4+ICsKPj4gKy0gdmNjaW8tc3VwcGx5OiBB
+IDEuOFYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBkaWdpdGFsIElPcy4KPj4gKy0gdmNjYS1z
+dXBwbHk6IEEgMS4yViBzdXBwbHkgdGhhdCBwb3dlcnMgdXAgdGhlIGFuYWxvZyBjaXJjdWl0cy4K
+Pj4gKwo+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPj4gKwo+PiArLSBpcnEtZ3Bpb3M6IE9GIGRl
+dmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgaW50ZXJydXB0IHBpbgo+IAo+IEZyb20g
+dGhlIGxhc3QgcmV2aWV3LCBSb2Igc2FpZCwgJ1VzZSAiaW50ZXJydXB0cyIgcHJvcGVydHkgaW5z
+dGVhZC4nCj4gCj4gWW91IGRpZG4ndCBwcm92aWRlIHJlc3BvbnNlcyB0byBwcmlvciByZXZpZXcg
+Y29tbWVudHMsIHNvIGl0J3MgdW5jbGVhciAKPiB3aGV0aGVyCj4geW91J3ZlIGludGVudGlvbmFs
+bHkgb3IgdW5pbnRlbnRpb25hbGx5IGlnbm9yZWQgaGltIDopClNvcnJ5IG1pc3NlZCBpdCBjb21w
+bGV0ZWx5IHdoaWxlIGFkZHJlc3Npbmcgb3RoZXIgcmV2aWV3IGNvbW1lbnRzLgo+IAo+IFNlYW4K
+PiAKPj4gKwo+PiArUmVxdWlyZWQgbm9kZXM6Cj4+ICsKPj4gK1RoaXMgZGV2aWNlIGhhcyB0d28g
+dmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5lY3Rpb25zIGFyZSBtb2RlbGxlZCB1c2luZyAKPj4gdGhl
+Cj4+ICtPRiBncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4gCj4+IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4+ICsKPj4gKy0gVmlkZW8gcG9ydCAwIGZvciBE
+U0kgaW5wdXQKPj4gKy0gVmlkZW8gcG9ydCAxIGZvciBlRFAgb3V0cHV0Cj4+ICsKPj4gK0V4YW1w
+bGUKPj4gKy0tLS0tLS0KPj4gKwo+PiArZWRwLWJyaWRnZUAyZCB7Cj4+ICsJY29tcGF0aWJsZSA9
+ICJ0aSxzbjY1ZHNpODYiOwo+PiArCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArCSNzaXplLWNl
+bGxzID0gPDA+Owo+PiArCXJlZyA9IDwweDJkPjsKPj4gKwo+PiArCWVuYWJsZS1ncGlvcyA9IDwm
+bXNtZ3BpbyAzMyBHUElPX0FDVElWRV9ISUdIPjsKPj4gKwo+PiArCXZjY2lvLXN1cHBseSA9IDwm
+cG04OTE2X2wxNz47Cj4+ICsJdmNjYS1zdXBwbHkgPSA8JnBtODkxNl9sNj47Cj4+ICsKPj4gKwlw
+b3J0cyB7Cj4+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArCQkjc2l6ZS1jZWxscyA9IDww
+PjsKPj4gKwo+PiArCQlwb3J0QDAgewo+PiArCQkJcmVnID0gPDA+Owo+PiArCj4+ICsJCQllZHBf
+YnJpZGdlX2luOiBlbmRwb2ludCB7Cj4+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2lfb3V0
+PjsKPj4gKwkJCX07Cj4+ICsJCX07Cj4+ICsKPj4gKwkJcG9ydEAxIHsKPj4gKwkJCXJlZyA9IDwx
+PjsKPj4gKwo+PiArCQkJZWRwX2JyaWRnZV9vdXQ6IGVuZHBvaW50IHsKPj4gKwkJCQlyZW1vdGUt
+ZW5kcG9pbnQgPSA8JmVkcF9wYW5lbF9pbj47Cj4+ICsJCQl9Owo+PiArCQl9Owo+PiArCX07Cj4+
+ICt9Cj4+IC0tCj4+IFRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1l
+bWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgCj4+IEZvcnVtLAo+PiBhIExpbnV4IEZvdW5kYXRpb24g
+Q29sbGFib3JhdGl2ZSBQcm9qZWN0Cj4+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9mcmVlZHJlbm8K
