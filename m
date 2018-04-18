@@ -1,86 +1,154 @@
-From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [[RFC]DPU PATCH 2/4] dt-bindings: drm/bridge:
- Document sn65dsi86 bridge bindings
-Date: Wed, 18 Apr 2018 23:38:32 +0530
-Message-ID: <6526809dc63f71f02982b6a57719e01a@codeaurora.org>
-References: <1524054002-17869-1-git-send-email-spanda@codeaurora.org>
- <1524054002-17869-3-git-send-email-spanda@codeaurora.org>
- <20180418135842.GV73214@art_vandelay>
+From: Channa <ckadabi@codeaurora.org>
+Subject: Re: [PATCH v4 1/2] Documentation: Documentation for qcom, llcc
+Date: Wed, 18 Apr 2018 11:11:58 -0700
+Message-ID: <589e84221ca7723c1739f713216abce5@codeaurora.org>
+References: <1523390893-10904-1-git-send-email-rishabhb@codeaurora.org>
+ <1523390893-10904-2-git-send-email-rishabhb@codeaurora.org>
+ <20180416145912.ja7d2xd2kqiukrgl@rob-hp-laptop>
+ <9a9ffe61f85dd28199bcc2d449097059@codeaurora.org>
+ <1d31f2d727d32922aaf98c345723229e@codeaurora.org>
+ <CAL_JsqKihiUwPW-aKYtG2cSFnOZonygahUeO5kgLjL3GYO7w=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180418135842.GV73214@art_vandelay>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKihiUwPW-aKYtG2cSFnOZonygahUeO5kgLjL3GYO7w=Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Rishabh Bhatnagar <rishabhb@codeaurora.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm@lists.infradead.org, linux-kernel@vger.kernel.org, Trilok Soni <tsoni@codeaurora.org>, Kyle Yan <kyan@codeaurora.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Evan Green <evgreen@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0wNC0xOCAxOToyOCwgU2VhbiBQYXVsIHdyb3RlOgo+IE9uIFdlZCwgQXByIDE4LCAy
-MDE4IGF0IDA1OjUwOjAwUE0gKzA1MzAsIFNhbmRlZXAgUGFuZGEgd3JvdGU6Cj4+IERvY3VtZW50
-IHRoZSBiaW5kaW5ncyB1c2VkIGZvciB0aGUgc242NWRzaTg2IERTSSB0byBlRFAgYnJpZGdlLgo+
-PiAKPiAKPiBQbGVhc2UgYWRkIGEgY2hhbmdlbG9nIHRvIHlvdXIgcGF0Y2hlcyBzbyByZXZpZXdl
-cnMga25vdyB3aGF0IGhhcyAKPiBjaGFuZ2VkCj4gYmV0d2VlbiBwYXRjaCB2ZXJzaW9ucy4KSSB3
-aWxsIHVwZGF0ZSB0aGUgY2hhbmdlIGxvZyBpbiB0aGUgY29tbWl0IHRleHQgb2YgdGhlIHBhdGNo
-ZXMuCj4gCj4+IFNpZ25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBjb2RlYXVyb3Jh
-Lm9yZz4KPj4gLS0tCj4+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2
-LnR4dCAgICAgICB8IDYwIAo+PiArKysrKysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hh
-bmdlZCwgNjAgaW5zZXJ0aW9ucygrKQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IAo+PiBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4
-dAo+PiAKPj4gZGlmZiAtLWdpdCAKPj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dCAKPj4gYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAo+PiBuZXcg
-ZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi45ZTI2MTJlCj4+IC0tLSAvZGV2L251
-bGwKPj4gKysrIAo+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0Cj4+IEBAIC0wLDAgKzEsNjAgQEAKPj4gK1NONjVEU0k4
-NiBEU0kgdG8gZURQIGJyaWRnZSBjaGlwCj4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLQo+PiArCj4+ICtUaGlzIGlzIHRoZSBiaW5kaW5nIGZvciBUZXhhcyBJbnN0cnVtZW50cyBT
-TjY1RFNJODYgYnJpZGdlLgo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArLSBjb21w
-YXRpYmxlOiBNdXN0IGJlICJ0aSxzbjY1ZHNpODYiCj4+ICstIHJlZzogaTJjIGFkZHJlc3Mgb2Yg
-dGhlIGNoaXAsIDB4MmQgYXMgcGVyIGRhdGFzaGVldAo+PiArLSBlbmFibGUtZ3Bpb3M6IE9GIGRl
-dmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbnMgZm9yIGJyaWRnZV9lbiBwaW4KPiAKPiBUaGUg
-ZGF0YXNoZWV0IG9ubHkgaGFzIG9uZSBlbmFibGUgcGluLCB3aHkgZ3Bpb3M/ClRoaXMgaXMgdGhl
-IGNvbnZlbnRpb24gZm9sbG93ZWQgYnkgb3RoZXIgYnJpZGdlIGRyaXZlcnMgYWxzby4KaHR0cHM6
-Ly93d3cua2VybmVsLm9yZy9kb2MvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dw
-aW8vZ3Bpby50eHQKcGxlYXNlIHRoZSBleGFtcGxlIG1lbnRpb25lZCBoZXJlLApFeGFtcGxlIG9m
-IGEgbm9kZSB1c2luZyBHUElPczoKCglub2RlIHsKCQllbmFibGUtZ3Bpb3MgPSA8JnFlX3Bpb19l
-IDE4IEdQSU9fQUNUSVZFX0hJR0g+OwoJfTsKCj4gCj4+ICsKPj4gKy0gdmNjaW8tc3VwcGx5OiBB
-IDEuOFYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBkaWdpdGFsIElPcy4KPj4gKy0gdmNjYS1z
-dXBwbHk6IEEgMS4yViBzdXBwbHkgdGhhdCBwb3dlcnMgdXAgdGhlIGFuYWxvZyBjaXJjdWl0cy4K
-Pj4gKwo+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPj4gKwo+PiArLSBpcnEtZ3Bpb3M6IE9GIGRl
-dmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgaW50ZXJydXB0IHBpbgo+IAo+IEZyb20g
-dGhlIGxhc3QgcmV2aWV3LCBSb2Igc2FpZCwgJ1VzZSAiaW50ZXJydXB0cyIgcHJvcGVydHkgaW5z
-dGVhZC4nCj4gCj4gWW91IGRpZG4ndCBwcm92aWRlIHJlc3BvbnNlcyB0byBwcmlvciByZXZpZXcg
-Y29tbWVudHMsIHNvIGl0J3MgdW5jbGVhciAKPiB3aGV0aGVyCj4geW91J3ZlIGludGVudGlvbmFs
-bHkgb3IgdW5pbnRlbnRpb25hbGx5IGlnbm9yZWQgaGltIDopClNvcnJ5IG1pc3NlZCBpdCBjb21w
-bGV0ZWx5IHdoaWxlIGFkZHJlc3Npbmcgb3RoZXIgcmV2aWV3IGNvbW1lbnRzLgo+IAo+IFNlYW4K
-PiAKPj4gKwo+PiArUmVxdWlyZWQgbm9kZXM6Cj4+ICsKPj4gK1RoaXMgZGV2aWNlIGhhcyB0d28g
-dmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5lY3Rpb25zIGFyZSBtb2RlbGxlZCB1c2luZyAKPj4gdGhl
-Cj4+ICtPRiBncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4gCj4+IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4+ICsKPj4gKy0gVmlkZW8gcG9ydCAwIGZvciBE
-U0kgaW5wdXQKPj4gKy0gVmlkZW8gcG9ydCAxIGZvciBlRFAgb3V0cHV0Cj4+ICsKPj4gK0V4YW1w
-bGUKPj4gKy0tLS0tLS0KPj4gKwo+PiArZWRwLWJyaWRnZUAyZCB7Cj4+ICsJY29tcGF0aWJsZSA9
-ICJ0aSxzbjY1ZHNpODYiOwo+PiArCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArCSNzaXplLWNl
-bGxzID0gPDA+Owo+PiArCXJlZyA9IDwweDJkPjsKPj4gKwo+PiArCWVuYWJsZS1ncGlvcyA9IDwm
-bXNtZ3BpbyAzMyBHUElPX0FDVElWRV9ISUdIPjsKPj4gKwo+PiArCXZjY2lvLXN1cHBseSA9IDwm
-cG04OTE2X2wxNz47Cj4+ICsJdmNjYS1zdXBwbHkgPSA8JnBtODkxNl9sNj47Cj4+ICsKPj4gKwlw
-b3J0cyB7Cj4+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArCQkjc2l6ZS1jZWxscyA9IDww
-PjsKPj4gKwo+PiArCQlwb3J0QDAgewo+PiArCQkJcmVnID0gPDA+Owo+PiArCj4+ICsJCQllZHBf
-YnJpZGdlX2luOiBlbmRwb2ludCB7Cj4+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2lfb3V0
-PjsKPj4gKwkJCX07Cj4+ICsJCX07Cj4+ICsKPj4gKwkJcG9ydEAxIHsKPj4gKwkJCXJlZyA9IDwx
-PjsKPj4gKwo+PiArCQkJZWRwX2JyaWRnZV9vdXQ6IGVuZHBvaW50IHsKPj4gKwkJCQlyZW1vdGUt
-ZW5kcG9pbnQgPSA8JmVkcF9wYW5lbF9pbj47Cj4+ICsJCQl9Owo+PiArCQl9Owo+PiArCX07Cj4+
-ICt9Cj4+IC0tCj4+IFRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1l
-bWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgCj4+IEZvcnVtLAo+PiBhIExpbnV4IEZvdW5kYXRpb24g
-Q29sbGFib3JhdGl2ZSBQcm9qZWN0Cj4+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9mcmVlZHJlbm8K
+On 2018-04-18 07:52, Rob Herring wrote:
+> On Tue, Apr 17, 2018 at 5:12 PM,  <rishabhb@codeaurora.org> wrote:
+>> On 2018-04-17 10:43, rishabhb@codeaurora.org wrote:
+>>> 
+>>> On 2018-04-16 07:59, Rob Herring wrote:
+>>>> 
+>>>> On Tue, Apr 10, 2018 at 01:08:12PM -0700, Rishabh Bhatnagar wrote:
+>>>>> 
+>>>>> Documentation for last level cache controller device tree bindings,
+>>>>> client bindings usage examples.
+>>>> 
+>>>> 
+>>>> "Documentation: Documentation ..."? That wastes a lot of the subject
+>>>> line... The preferred prefix is "dt-bindings: ..."
+>>>> 
+>>>>> 
+>>>>> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
+>>>>> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+>>>>> ---
+>>>>>  .../devicetree/bindings/arm/msm/qcom,llcc.txt      | 58
+>>>>> ++++++++++++++++++++++
+>>>>>  1 file changed, 58 insertions(+)
+>>>>>  create mode 100644
+>>>>> Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>>>>> 
+>>>>> diff --git 
+>>>>> a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>>>>> b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..497cf0f
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>>>>> @@ -0,0 +1,58 @@
+>>>>> +== Introduction==
+>>>>> +
+>>>>> +LLCC (Last Level Cache Controller) provides last level of cache 
+>>>>> memory
+>>>>> in SOC,
+>>>>> +that can be shared by multiple clients. Clients here are different
+>>>>> cores in the
+>>>>> +SOC, the idea is to minimize the local caches at the clients and
+>>>>> migrate to
+>>>>> +common pool of memory
+>>>>> +
+>>>>> +Properties:
+>>>>> +- compatible:
+>>>>> +        Usage: required
+>>>>> +        Value type: <string>
+>>>>> +        Definition: must be "qcom,sdm845-llcc"
+>>>>> +
+>>>>> +- reg:
+>>>>> +        Usage: required
+>>>>> +        Value Type: <prop-encoded-array>
+>>>>> +        Definition: must be addresses and sizes of the LLCC 
+>>>>> registers
+>>>> 
+>>>> 
+>>>> How many address ranges?
+>>>> 
+>>> It consists of just one address range. I'll edit the definition to 
+>>> make
+>>> it more clear.
+>>>>> 
+>>>>> +
+>>>>> +- #cache-cells:
+>>>> 
+>>>> 
+>>>> This is all written as it is a common binding, but it is not one.
+>>>> 
+>>>> You already have most of the configuration data for each client in 
+>>>> the
+>>>> driver, I think I'd just put the client connection there too. Is 
+>>>> there
+>>>> any variation of this for a given SoC?
+>>>> 
+>>> #cache-cells and max-slices won't change for a given SOC. So you want 
+>>> me
+>>> to hard-code in the driver itself?
+>>> 
+>> I can use of_parse_phandle_with_fixed_args function and fix the number 
+>> of
+>> args as 1 instead of keeping #cache-cells here in DT. Does that look 
+>> fine?
+> 
+> No, I'm saying why even put cache-slices properties in DT to begin
+> with? You could just define client id's within the kernel and clients
+> can use those instead of getting the id from the DT.
+
+The reason to add cache-slices here is to establish a connection between
+client and system cache. For example if we have multiple instances of
+system cache blocks and client wants to choose a system cache instance
+based on the usecase then its easier to establish this connection using
+device tree than hard coding in the driver.
+
+> 
+> I have a couple of hesitations with putting this into the DT. First, I
+> think a cache is just one aspect of describing the interconnect
+> between masters and memory (and there's been discussions on
+> interconnect bindings too) and any binding needs to consider all of
+> the aspects of the interconnect. Second, I'd expect this cache
+> architecture will change SoC to SoC and the binding here is pretty
+> closely tied to the current cache implementation (e.g. slices). If
+> there were a bunch of SoCs with the same design and just different
+> client IDs (like interrupt IDs), then I'd feel differently.
+
+This is partially true, a bunch of SoCs would support this design but
+clients IDs are not expected to change. So Ideally client drivers could
+hard code these IDs.
+
+However I have other concerns of moving the client Ids in the driver.
+The way the APIs implemented today are as follows:
+#1. Client calls into system cache driver to get cache slice handle
+with the usecase Id as input.
+#2. System cache driver gets the phandle of system cache instance from
+the client device to obtain the private data.
+#3. Based on the usecase Id perform look up in the private data to get
+cache slice handle.
+#4. Return the cache slice handle to client
+
+If we don't have the connection between client & system cache then the
+private data needs to declared as static global in the system cache 
+driver,
+that limits us to have just once instance of system cache block.
+
+
+> 
+> Rob
+
+-- 
+--
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum,
+a Linux Foundation Collaborative Project
