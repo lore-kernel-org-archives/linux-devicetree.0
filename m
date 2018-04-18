@@ -1,43 +1,47 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v6 6/7] remoteproc/davinci: use the reset framework
-Date: Wed, 18 Apr 2018 11:14:47 +0530
-Message-ID: <14b8384d-707d-42b7-b3ac-1ad914997a2e@ti.com>
-References: <20180417173038.25510-1-brgl@bgdev.pl>
- <20180417173038.25510-7-brgl@bgdev.pl>
+From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Subject: Re: [PATCH v6 09/11] ARM: sun8i: smp: Add support for A83T
+Date: Wed, 18 Apr 2018 07:46:43 +0200
+Message-ID: <20180418074643.5bd68168@dell-desktop.home>
+References: <20180416215032.5023-1-mylene.josserand@bootlin.com>
+        <20180416215032.5023-10-mylene.josserand@bootlin.com>
+        <20180417112038.mw7bfhqw4xwvzxcw@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180417173038.25510-7-brgl@bgdev.pl>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Suman Anna <s-anna@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180417112038.mw7bfhqw4xwvzxcw@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 17 April 2018 11:00 PM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hello Maxime,
+
+On Tue, 17 Apr 2018 13:20:38 +0200
+Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+
+> On Mon, Apr 16, 2018 at 11:50:30PM +0200, Mylène Josserand wrote:
+> > @@ -535,8 +599,12 @@ static int sunxi_mc_smp_cpu_kill(unsigned int l_cpu)
+> >  	return !ret;
+> >  }
+> >  
+> > -static bool sunxi_mc_smp_cpu_can_disable(unsigned int __unused)
+> > +static bool sunxi_mc_smp_cpu_can_disable(unsigned int cpu)
+> >  {
+> > +	/* CPU0 hotplug not handled for sun8i-a83t */
+> > +	if (is_sun8i)
+> > +		if (cpu == 0)
+> > +			return false;
+> >  	return true;  
 > 
-> Switch to using the reset framework instead of handcoded reset routines
-> we used so far.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> I think Chen-Yu told you how to implement the hotplug in the previous
+> iteration, did you have time to test it?
 
-Looks good!
+Not yet, I will have a look this evening.
 
-Reviewed-by: Sekhar Nori <nsekhar@ti.com>
+Best regards,
 
-This depends on DaVinci gaining common clock / reset framework support
-though. I am guessing remoteproc maintainers will have to be reminded
-when its safe to apply.
-
-Thanks,
-Sekhar
+-- 
+Mylène Josserand, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
