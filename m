@@ -1,63 +1,67 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2 6/6] drm/atmel-hlcdc: fix broken release date
-Date: Wed, 18 Apr 2018 10:09:12 +0200
-Message-ID: <3de958e5-c63c-6935-d577-1be626661601@axentia.se>
-References: <20180417131052.16336-1-peda@axentia.se>
- <20180417131052.16336-7-peda@axentia.se> <20180418094428.6db785dc@bbrezillon>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4] gpio: dwapb: Add support for 1 interrupt per port A
+ GPIO
+Date: Wed, 18 Apr 2018 09:13:13 +0100
+Message-ID: <20180418081313.dqxdtjqmw4z27uny@dell>
+References: <1523968977-4241-1-git-send-email-phil.edworthy@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180418094428.6db785dc@bbrezillon>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1523968977-4241-1-git-send-email-phil.edworthy@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-18 09:44, Boris Brezillon wrote:
-> On Tue, 17 Apr 2018 15:10:52 +0200
-> Peter Rosin <peda@axentia.se> wrote:
-> 
->> Bump the minor version while at it.
->>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
->> ---
->>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
->> index 8523c40fac94..aa48f287b5ca 100644
->> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
->> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
->> @@ -763,9 +763,9 @@ static struct drm_driver atmel_hlcdc_dc_driver = {
->>  	.fops = &fops,
->>  	.name = "atmel-hlcdc",
->>  	.desc = "Atmel HLCD Controller DRM",
->> -	.date = "20141504",
-> 
-> I guess I used YYYYDDMM format :-).
-> 
->> +	.date = "20180409",
->>  	.major = 1,
->> -	.minor = 0,
->> +	.minor = 1,
-> 
-> Don't know what the strategy is regarding date and minor version
-> updates. I never had to update that before, so I guess it's not
-> important to userspace anyway.
+On Tue, 17 Apr 2018, Phil Edworthy wrote:
 
-I have no clue what strategy should be employed. I assume it's
-for easier communication when features are backported into stable
-or distro kernels and users wonder what to expect or for easier
-triage of bug reports or something?? Anyway, I don't really care,
-the date just looked really odd. So feel free to only patch the
-.date to 20140415 or whatever. I'll drop this patch.
-
-Cheers,
-Peter
-
->>  };
->>  
->>  static int atmel_hlcdc_dc_drm_init(struct platform_device *pdev)
+> The DesignWare GPIO IP can be configured for either 1 interrupt or 1
+> per GPIO in port A, but the driver currently only supports 1 interrupt.
+> See the DesignWare DW_apb_gpio Databook description of the
+> 'GPIO_INTR_IO' parameter.
 > 
+> This change allows the driver to work with up to 32 interrupts, it will
+> get as many interrupts as specified in the DT 'interrupts' property.
+> It doesn't do anything clever with the different interrupts, it just calls
+> the same handler used for single interrupt hardware.
+> 
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> ---
+> One point to mention is that I have made it possible for users to have
+> unconncted interrupts by specifying holes in the list of interrupts. This is
+> done by supporting the interrupts-extended DT prop.
+> However, I have no use for this and had to hack some test case for this.
+> Perhaps the driver should support 1 interrupt or all GPIOa as interrupts?
+> 
+> v4:
+>  - Use of_irq_get() instead of of_irq_parse_one()+irq_create_of_mapping()
+> v3:
+>  - Rolled mfd: intel_quark_i2c_gpio fix into this patch to avoid bisect problems
+> v2:
+>  - Replaced interrupt-mask DT prop with support for the interrupts-extended
+>    prop. This means replacing the call to irq_of_parse_and_map() with calls
+>    to of_irq_parse_one() and irq_create_of_mapping().
+> 
+> Note: There are a few *code* lines over 80 chars, but this is just guidance,
+>    right? Especially as there are already some lines over 80 chars.
+> 
+> snps:gpio fix
+> 
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> ---
+>  .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |  9 +++--
+>  drivers/gpio/gpio-dwapb.c                          | 42 +++++++++++++++++-----
+>  drivers/mfd/intel_quark_i2c_gpio.c                 |  3 +-
+
+If Linus, is happy with the GPIO implementation, then the changes in
+MFD look fine:
+
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
