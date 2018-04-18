@@ -1,416 +1,235 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 2/2] clk: renesas: cpg-mssr: Add support for R-Car E3
-Date: Wed, 11 Apr 2018 18:37:27 +0900
-Message-Id: <1523439447-1084-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1523439447-1084-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1523439447-1084-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=kRJY=HH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:37675 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753666AbeDRLsi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Apr 2018 07:48:38 -0400
+Date: Wed, 18 Apr 2018 13:48:33 +0200
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v2 07/10] media: ov772x: support device tree probing
+Message-ID: <20180418114833.GD20486@w540>
+References: <1523847111-12986-1-git-send-email-akinobu.mita@gmail.com>
+ <1523847111-12986-8-git-send-email-akinobu.mita@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, geert+renesas@glider.be, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="cHMo6Wbp1wrKhbfi"
+Content-Disposition: inline
+In-Reply-To: <1523847111-12986-8-git-send-email-akinobu.mita@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Initial support for R-Car E3 (r8a77990), including core and module
-clocks.
 
-Based on the Table 8.2g of "R-Car Series, 3rd Generation User's Manual:
-Hardware ((Rev. 0.80, Oct 31, 2017) with Manual Errata on Feb. 28, 2018".
+--cHMo6Wbp1wrKhbfi
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Inspried by patches by Takeshi Kihara in the BSP.
+Hi Akinobu,
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- .../devicetree/bindings/clock/renesas,cpg-mssr.txt |   3 +-
- drivers/clk/renesas/Kconfig                        |   5 +
- drivers/clk/renesas/Makefile                       |   1 +
- drivers/clk/renesas/r8a77990-cpg-mssr.c            | 291 +++++++++++++++++++++
- drivers/clk/renesas/renesas-cpg-mssr.c             |   6 +
- drivers/clk/renesas/renesas-cpg-mssr.h             |   1 +
- 6 files changed, 306 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/renesas/r8a77990-cpg-mssr.c
+On Mon, Apr 16, 2018 at 11:51:48AM +0900, Akinobu Mita wrote:
+> The ov772x driver currently only supports legacy platform data probe.
+> This change enables device tree probing.
+>
+> Note that the platform data probe can select auto or manual edge control
+> mode, but the device tree probling can only select auto edge control mode
+> for now.
+>
+> Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> ---
+> * v2
+> - Add missing NULL checks for priv->info
+> - Leave the check for the missing platform data if legacy platform data
+>   probe is used.
+>
+>  drivers/media/i2c/ov772x.c | 61 ++++++++++++++++++++++++++++++++--------------
+>  1 file changed, 43 insertions(+), 18 deletions(-)
+>
+> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> index 88d1418a..4245a46 100644
+> --- a/drivers/media/i2c/ov772x.c
+> +++ b/drivers/media/i2c/ov772x.c
+> @@ -749,13 +749,13 @@ static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
+>  	case V4L2_CID_VFLIP:
+>  		val = ctrl->val ? VFLIP_IMG : 0x00;
+>  		priv->flag_vflip = ctrl->val;
+> -		if (priv->info->flags & OV772X_FLAG_VFLIP)
+> +		if (priv->info && (priv->info->flags & OV772X_FLAG_VFLIP))
+>  			val ^= VFLIP_IMG;
+>  		return ov772x_mask_set(client, COM3, VFLIP_IMG, val);
+>  	case V4L2_CID_HFLIP:
+>  		val = ctrl->val ? HFLIP_IMG : 0x00;
+>  		priv->flag_hflip = ctrl->val;
+> -		if (priv->info->flags & OV772X_FLAG_HFLIP)
+> +		if (priv->info && (priv->info->flags & OV772X_FLAG_HFLIP))
+>  			val ^= HFLIP_IMG;
+>  		return ov772x_mask_set(client, COM3, HFLIP_IMG, val);
+>  	case V4L2_CID_BAND_STOP_FILTER:
+> @@ -914,19 +914,14 @@ static void ov772x_select_params(const struct v4l2_mbus_framefmt *mf,
+>  	*win = ov772x_select_win(mf->width, mf->height);
+>  }
+>
+> -static int ov772x_set_params(struct ov772x_priv *priv,
+> -			     const struct ov772x_color_format *cfmt,
+> -			     const struct ov772x_win_size *win)
+> +static int ov772x_edgectrl(struct ov772x_priv *priv)
+>  {
+>  	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
+> -	struct v4l2_fract tpf;
+>  	int ret;
+> -	u8  val;
+>
+> -	/* Reset hardware. */
+> -	ov772x_reset(client);
+> +	if (!priv->info)
+> +		return 0;
+>
+> -	/* Edge Ctrl. */
+>  	if (priv->info->edgectrl.strength & OV772X_MANUAL_EDGE_CTRL) {
+>  		/*
+>  		 * Manual Edge Control Mode.
+> @@ -937,19 +932,19 @@ static int ov772x_set_params(struct ov772x_priv *priv,
+>
+>  		ret = ov772x_mask_set(client, DSPAUTO, EDGE_ACTRL, 0x00);
+>  		if (ret < 0)
+> -			goto ov772x_set_fmt_error;
+> +			return ret;
+>
+>  		ret = ov772x_mask_set(client,
+>  				      EDGE_TRSHLD, OV772X_EDGE_THRESHOLD_MASK,
+>  				      priv->info->edgectrl.threshold);
+>  		if (ret < 0)
+> -			goto ov772x_set_fmt_error;
+> +			return ret;
+>
+>  		ret = ov772x_mask_set(client,
+>  				      EDGE_STRNGT, OV772X_EDGE_STRENGTH_MASK,
+>  				      priv->info->edgectrl.strength);
+>  		if (ret < 0)
+> -			goto ov772x_set_fmt_error;
+> +			return ret;
+>
+>  	} else if (priv->info->edgectrl.upper > priv->info->edgectrl.lower) {
+>  		/*
+> @@ -961,15 +956,35 @@ static int ov772x_set_params(struct ov772x_priv *priv,
+>  				      EDGE_UPPER, OV772X_EDGE_UPPER_MASK,
+>  				      priv->info->edgectrl.upper);
+>  		if (ret < 0)
+> -			goto ov772x_set_fmt_error;
+> +			return ret;
+>
+>  		ret = ov772x_mask_set(client,
+>  				      EDGE_LOWER, OV772X_EDGE_LOWER_MASK,
+>  				      priv->info->edgectrl.lower);
+>  		if (ret < 0)
+> -			goto ov772x_set_fmt_error;
+> +			return ret;
+>  	}
+>
+> +	return 0;
+> +}
+> +
+> +static int ov772x_set_params(struct ov772x_priv *priv,
+> +			     const struct ov772x_color_format *cfmt,
+> +			     const struct ov772x_win_size *win)
+> +{
+> +	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
+> +	struct v4l2_fract tpf;
+> +	int ret;
+> +	u8  val;
+> +
+> +	/* Reset hardware. */
+> +	ov772x_reset(client);
+> +
+> +	/* Edge Ctrl. */
+> +	ret =  ov772x_edgectrl(priv);
+> +	if (ret < 0)
+> +		goto ov772x_set_fmt_error;
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-index c3473df..26b7bae 100644
---- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-+++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-@@ -26,6 +26,7 @@ Required Properties:
-       - "renesas,r8a77965-cpg-mssr" for the r8a77965 SoC (R-Car M3-N)
-       - "renesas,r8a77970-cpg-mssr" for the r8a77970 SoC (R-Car V3M)
-       - "renesas,r8a77980-cpg-mssr" for the r8a77980 SoC (R-Car V3H)
-+      - "renesas,r8a77990-cpg-mssr" for the r8a77995 SoC (R-Car E3)
-       - "renesas,r8a77995-cpg-mssr" for the r8a77995 SoC (R-Car D3)
- 
-   - reg: Base address and length of the memory resource used by the CPG/MSSR
-@@ -36,7 +37,7 @@ Required Properties:
-   - clock-names: List of external parent clock names. Valid names are:
-       - "extal" (r8a7743, r8a7745, r8a77470, r8a7790, r8a7791, r8a7792,
- 		 r8a7793, r8a7794, r8a7795, r8a7796, r8a77965, r8a77970,
--		 r8a77980, r8a77995)
-+		 r8a77980, r8a77990, r8a77995)
-       - "extalr" (r8a7795, r8a7796, r8a77965, r8a77970, r8a77980)
-       - "usb_extal" (r8a7743, r8a7745, r8a77470, r8a7790, r8a7791, r8a7793,
- 		     r8a7794)
-diff --git a/drivers/clk/renesas/Kconfig b/drivers/clk/renesas/Kconfig
-index f32896fa..f9ba71311 100644
---- a/drivers/clk/renesas/Kconfig
-+++ b/drivers/clk/renesas/Kconfig
-@@ -19,6 +19,7 @@ config CLK_RENESAS
- 	select CLK_R8A77965 if ARCH_R8A77965
- 	select CLK_R8A77970 if ARCH_R8A77970
- 	select CLK_R8A77980 if ARCH_R8A77980
-+	select CLK_R8A77990 if ARCH_R8A77990
- 	select CLK_R8A77995 if ARCH_R8A77995
- 	select CLK_SH73A0 if ARCH_SH73A0
- 
-@@ -116,6 +117,10 @@ config CLK_R8A77980
- 	bool "R-Car V3H clock support" if COMPILE_TEST
- 	select CLK_RCAR_GEN3_CPG
- 
-+config CLK_R8A77990
-+	bool "R-Car E3 clock support" if COMPILE_TEST
-+	select CLK_RCAR_GEN3_CPG
-+
- config CLK_R8A77995
- 	bool "R-Car D3 clock support" if COMPILE_TEST
- 	select CLK_RCAR_GEN3_CPG
-diff --git a/drivers/clk/renesas/Makefile b/drivers/clk/renesas/Makefile
-index a4edea9..fe5bac9 100644
---- a/drivers/clk/renesas/Makefile
-+++ b/drivers/clk/renesas/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_CLK_R8A7796)		+= r8a7796-cpg-mssr.o
- obj-$(CONFIG_CLK_R8A77965)		+= r8a77965-cpg-mssr.o
- obj-$(CONFIG_CLK_R8A77970)		+= r8a77970-cpg-mssr.o
- obj-$(CONFIG_CLK_R8A77980)		+= r8a77980-cpg-mssr.o
-+obj-$(CONFIG_CLK_R8A77990)		+= r8a77990-cpg-mssr.o
- obj-$(CONFIG_CLK_R8A77995)		+= r8a77995-cpg-mssr.o
- obj-$(CONFIG_CLK_SH73A0)		+= clk-sh73a0.o
- 
-diff --git a/drivers/clk/renesas/r8a77990-cpg-mssr.c b/drivers/clk/renesas/r8a77990-cpg-mssr.c
-new file mode 100644
-index 0000000..d345458
---- /dev/null
-+++ b/drivers/clk/renesas/r8a77990-cpg-mssr.c
-@@ -0,0 +1,291 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * r8a77990 Clock Pulse Generator / Module Standby and Software Reset
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ *
-+ * Based on r8a7795-cpg-mssr.c
-+ *
-+ * Copyright (C) 2015 Glider bvba
-+ * Copyright (C) 2015 Renesas Electronics Corp.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/soc/renesas/rcar-rst.h>
-+
-+#include <dt-bindings/clock/r8a77990-cpg-mssr.h>
-+
-+#include "renesas-cpg-mssr.h"
-+#include "rcar-gen3-cpg.h"
-+
-+enum clk_ids {
-+	/* Core Clock Outputs exported to DT */
-+	LAST_DT_CORE_CLK = R8A77990_CLK_CPEX,
-+
-+	/* External Input Clocks */
-+	CLK_EXTAL,
-+
-+	/* Internal Core Clocks */
-+	CLK_MAIN,
-+	CLK_PLL0,
-+	CLK_PLL1,
-+	CLK_PLL3,
-+	CLK_PLL0D4,
-+	CLK_PLL0D6,
-+	CLK_PLL0D8,
-+	CLK_PLL0D20,
-+	CLK_PLL0D24,
-+	CLK_PLL1D2,
-+	CLK_PE,
-+	CLK_S0,
-+	CLK_S1,
-+	CLK_S2,
-+	CLK_S3,
-+	CLK_SDSRC,
-+
-+	/* Module Clocks */
-+	MOD_CLK_BASE
-+};
-+
-+static const struct cpg_core_clk r8a77990_core_clks[] __initconst = {
-+	/* External Clock Inputs */
-+	DEF_INPUT("extal",     CLK_EXTAL),
-+
-+	/* Internal Core Clocks */
-+	DEF_BASE(".main",      CLK_MAIN, CLK_TYPE_GEN3_MAIN,       CLK_EXTAL),
-+	DEF_BASE(".pll1",      CLK_PLL1, CLK_TYPE_GEN3_PLL1,       CLK_MAIN),
-+	DEF_BASE(".pll3",      CLK_PLL3, CLK_TYPE_GEN3_PLL3,       CLK_MAIN),
-+
-+	DEF_FIXED(".pll0",     CLK_PLL0,           CLK_MAIN,	   1, 100),
-+	DEF_FIXED(".pll0d4",   CLK_PLL0D4,         CLK_PLL0,       4, 1),
-+	DEF_FIXED(".pll0d6",   CLK_PLL0D6,         CLK_PLL0,       6, 1),
-+	DEF_FIXED(".pll0d8",   CLK_PLL0D8,         CLK_PLL0,       8, 1),
-+	DEF_FIXED(".pll0d20",  CLK_PLL0D20,        CLK_PLL0,      20, 1),
-+	DEF_FIXED(".pll0d24",  CLK_PLL0D24,        CLK_PLL0,      24, 1),
-+	DEF_FIXED(".pll1d2",   CLK_PLL1D2,         CLK_PLL1,       2, 1),
-+	DEF_FIXED(".pe",       CLK_PE,             CLK_PLL0D20,    1, 1),
-+	DEF_FIXED(".s0",       CLK_S0,             CLK_PLL1,       2, 1),
-+	DEF_FIXED(".s1",       CLK_S1,             CLK_PLL1,       3, 1),
-+	DEF_FIXED(".s2",       CLK_S2,             CLK_PLL1,       4, 1),
-+	DEF_FIXED(".s3",       CLK_S3,             CLK_PLL1,       6, 1),
-+	DEF_FIXED(".sdsrc",    CLK_SDSRC,          CLK_PLL1,       2, 1),
-+
-+	/* Core Clock Outputs */
-+	DEF_FIXED("za2",       R8A77990_CLK_ZA2,   CLK_PLL0D24,    1, 1),
-+	DEF_FIXED("za8",       R8A77990_CLK_ZA8,   CLK_PLL0D8,     1, 1),
-+	DEF_FIXED("ztr",       R8A77990_CLK_ZTR,   CLK_PLL1,       6, 1),
-+	DEF_FIXED("zt",        R8A77990_CLK_ZT,    CLK_PLL1,       4, 1),
-+	DEF_FIXED("zx",        R8A77990_CLK_ZX,    CLK_PLL1,       3, 1),
-+	DEF_FIXED("s0d1",      R8A77990_CLK_S0D1,  CLK_S0,         1, 1),
-+	DEF_FIXED("s0d3",      R8A77990_CLK_S0D3,  CLK_S0,         3, 1),
-+	DEF_FIXED("s0d6",      R8A77990_CLK_S0D6,  CLK_S0,         6, 1),
-+	DEF_FIXED("s0d12",     R8A77990_CLK_S0D12, CLK_S0,        12, 1),
-+	DEF_FIXED("s0d24",     R8A77990_CLK_S0D24, CLK_S0,        24, 1),
-+	DEF_FIXED("s1d1",      R8A77990_CLK_S1D1,  CLK_S1,         1, 1),
-+	DEF_FIXED("s1d2",      R8A77990_CLK_S1D2,  CLK_S1,         2, 1),
-+	DEF_FIXED("s1d4",      R8A77990_CLK_S1D4,  CLK_S1,         4, 1),
-+	DEF_FIXED("s2d1",      R8A77990_CLK_S2D1,  CLK_S2,         1, 1),
-+	DEF_FIXED("s2d2",      R8A77990_CLK_S2D2,  CLK_S2,         2, 1),
-+	DEF_FIXED("s2d4",      R8A77990_CLK_S2D4,  CLK_S2,         4, 1),
-+	DEF_FIXED("s3d1",      R8A77990_CLK_S3D1,  CLK_S3,         1, 1),
-+	DEF_FIXED("s3d2",      R8A77990_CLK_S3D2,  CLK_S3,         2, 1),
-+	DEF_FIXED("s3d4",      R8A77990_CLK_S3D4,  CLK_S3,         4, 1),
-+
-+	DEF_GEN3_SD("sd0",     R8A77990_CLK_SD0,   CLK_SDSRC,	  0x0074),
-+	DEF_GEN3_SD("sd1",     R8A77990_CLK_SD1,   CLK_SDSRC,	  0x0078),
-+	DEF_GEN3_SD("sd3",     R8A77990_CLK_SD3,   CLK_SDSRC,	  0x026c),
-+
-+	DEF_FIXED("cl",        R8A77990_CLK_CL,    CLK_PLL1,      48, 1),
-+	DEF_FIXED("cp",        R8A77990_CLK_CP,    CLK_EXTAL,      2, 1),
-+	DEF_FIXED("cpex",      R8A77990_CLK_CPEX,  CLK_EXTAL,      4, 1),
-+	DEF_FIXED("osc",       R8A77990_CLK_OSC,   CLK_EXTAL,    384, 1),
-+	DEF_FIXED("r",         R8A77990_CLK_R,     CLK_EXTAL,   1536, 1),
-+
-+	DEF_GEN3_PE("s0d6c",   R8A77990_CLK_S0D6C, CLK_S0, 6, CLK_PE, 6),
-+	DEF_GEN3_PE("s3d1c",   R8A77990_CLK_S3D1C, CLK_S3, 1, CLK_PE, 1),
-+	DEF_GEN3_PE("s3d2c",   R8A77990_CLK_S3D2C, CLK_S3, 2, CLK_PE, 2),
-+	DEF_GEN3_PE("s3d4c",   R8A77990_CLK_S3D4C, CLK_S3, 4, CLK_PE, 4),
-+
-+	DEF_DIV6P1("canfd",    R8A77990_CLK_CANFD, CLK_PLL0D6, 0x244),
-+	DEF_DIV6P1("csi0",     R8A77990_CLK_CSI0,  CLK_PLL1D2, 0x00c),
-+	DEF_DIV6P1("mso",      R8A77990_CLK_MSO,   CLK_PLL1D2, 0x014),
-+};
-+
-+static const struct mssr_mod_clk r8a77990_mod_clks[] __initconst = {
-+	DEF_MOD("scif5",		 202,	R8A77990_CLK_S3D4C),
-+	DEF_MOD("scif4",		 203,	R8A77990_CLK_S3D4C),
-+	DEF_MOD("scif3",		 204,	R8A77990_CLK_S3D4C),
-+	DEF_MOD("scif1",		 206,	R8A77990_CLK_S3D4C),
-+	DEF_MOD("scif0",		 207,	R8A77990_CLK_S3D4C),
-+	DEF_MOD("msiof3",		 208,	R8A77990_CLK_MSO),
-+	DEF_MOD("msiof2",		 209,	R8A77990_CLK_MSO),
-+	DEF_MOD("msiof1",		 210,	R8A77990_CLK_MSO),
-+	DEF_MOD("msiof0",		 211,	R8A77990_CLK_MSO),
-+	DEF_MOD("sys-dmac2",		 217,	R8A77990_CLK_S3D1),
-+	DEF_MOD("sys-dmac1",		 218,	R8A77990_CLK_S3D1),
-+	DEF_MOD("sys-dmac0",		 219,	R8A77990_CLK_S3D1),
-+
-+	DEF_MOD("cmt3",			 300,	R8A77990_CLK_R),
-+	DEF_MOD("cmt2",			 301,	R8A77990_CLK_R),
-+	DEF_MOD("cmt1",			 302,	R8A77990_CLK_R),
-+	DEF_MOD("cmt0",			 303,	R8A77990_CLK_R),
-+	DEF_MOD("scif2",		 310,	R8A77990_CLK_S3D4C),
-+	DEF_MOD("sdif3",		 311,	R8A77990_CLK_SD3),
-+	DEF_MOD("sdif1",		 313,	R8A77990_CLK_SD1),
-+	DEF_MOD("sdif0",		 314,	R8A77990_CLK_SD0),
-+	DEF_MOD("pcie0",		 319,	R8A77990_CLK_S3D1),
-+	DEF_MOD("usb3-if0",		 328,	R8A77990_CLK_S3D1),
-+	DEF_MOD("usb-dmac0",		 330,	R8A77990_CLK_S3D1),
-+	DEF_MOD("usb-dmac1",		 331,	R8A77990_CLK_S3D1),
-+
-+	DEF_MOD("rwdt",			 402,	R8A77990_CLK_R),
-+	DEF_MOD("intc-ex",		 407,	R8A77990_CLK_CP),
-+	DEF_MOD("intc-ap",		 408,	R8A77990_CLK_S0D3),
-+
-+	DEF_MOD("audmac0",		 502,	R8A77990_CLK_S3D4),
-+	DEF_MOD("drif7",		 508,	R8A77990_CLK_S3D2),
-+	DEF_MOD("drif6",		 509,	R8A77990_CLK_S3D2),
-+	DEF_MOD("drif5",		 510,	R8A77990_CLK_S3D2),
-+	DEF_MOD("drif4",		 511,	R8A77990_CLK_S3D2),
-+	DEF_MOD("drif3",		 512,	R8A77990_CLK_S3D2),
-+	DEF_MOD("drif2",		 513,	R8A77990_CLK_S3D2),
-+	DEF_MOD("drif1",		 514,	R8A77990_CLK_S3D2),
-+	DEF_MOD("drif0",		 515,	R8A77990_CLK_S3D2),
-+	DEF_MOD("hscif4",		 516,	R8A77990_CLK_S3D1C),
-+	DEF_MOD("hscif3",		 517,	R8A77990_CLK_S3D1C),
-+	DEF_MOD("hscif2",		 518,	R8A77990_CLK_S3D1C),
-+	DEF_MOD("hscif1",		 519,	R8A77990_CLK_S3D1C),
-+	DEF_MOD("hscif0",		 520,	R8A77990_CLK_S3D1C),
-+	DEF_MOD("thermal",		 522,	R8A77990_CLK_CP),
-+	DEF_MOD("pwm",			 523,	R8A77990_CLK_S3D4C),
-+
-+	DEF_MOD("fcpvd1",		 602,	R8A77990_CLK_S1D2),
-+	DEF_MOD("fcpvd0",		 603,	R8A77990_CLK_S1D2),
-+	DEF_MOD("fcpvb0",		 607,	R8A77990_CLK_S0D1),
-+	DEF_MOD("fcpvi0",		 611,	R8A77990_CLK_S0D1),
-+	DEF_MOD("fcpf0",		 615,	R8A77990_CLK_S0D1),
-+	DEF_MOD("fcpcs",		 619,	R8A77990_CLK_S0D1),
-+	DEF_MOD("vspd1",		 622,	R8A77990_CLK_S1D2),
-+	DEF_MOD("vspd0",		 623,	R8A77990_CLK_S1D2),
-+	DEF_MOD("vspb",			 626,	R8A77990_CLK_S0D1),
-+	DEF_MOD("vspi0",		 631,	R8A77990_CLK_S0D1),
-+
-+	DEF_MOD("ehci0",		 703,	R8A77990_CLK_S3D4),
-+	DEF_MOD("hsusb",		 704,	R8A77990_CLK_S3D4),
-+	DEF_MOD("csi40",		 716,	R8A77990_CLK_CSI0),
-+	DEF_MOD("du1",			 723,	R8A77990_CLK_S2D1),
-+	DEF_MOD("du0",			 724,	R8A77990_CLK_S2D1),
-+	DEF_MOD("lvds",			 727,	R8A77990_CLK_S2D1),
-+
-+	DEF_MOD("vin7",			 804,	R8A77990_CLK_S1D2),
-+	DEF_MOD("vin6",			 805,	R8A77990_CLK_S1D2),
-+	DEF_MOD("vin5",			 806,	R8A77990_CLK_S1D2),
-+	DEF_MOD("vin4",			 807,	R8A77990_CLK_S1D2),
-+	DEF_MOD("etheravb",		 812,	R8A77990_CLK_S3D2),
-+
-+	DEF_MOD("gpio6",		 906,	R8A77990_CLK_S3D4),
-+	DEF_MOD("gpio5",		 907,	R8A77990_CLK_S3D4),
-+	DEF_MOD("gpio4",		 908,	R8A77990_CLK_S3D4),
-+	DEF_MOD("gpio3",		 909,	R8A77990_CLK_S3D4),
-+	DEF_MOD("gpio2",		 910,	R8A77990_CLK_S3D4),
-+	DEF_MOD("gpio1",		 911,	R8A77990_CLK_S3D4),
-+	DEF_MOD("gpio0",		 912,	R8A77990_CLK_S3D4),
-+	DEF_MOD("can-fd",		 914,	R8A77990_CLK_S3D2),
-+	DEF_MOD("can-if1",		 915,	R8A77990_CLK_S3D4),
-+	DEF_MOD("can-if0",		 916,	R8A77990_CLK_S3D4),
-+	DEF_MOD("i2c6",			 918,	R8A77990_CLK_S3D2),
-+	DEF_MOD("i2c5",			 919,	R8A77990_CLK_S3D2),
-+	DEF_MOD("i2c-dvfs",		 926,	R8A77990_CLK_CP),
-+	DEF_MOD("i2c4",			 927,	R8A77990_CLK_S3D2),
-+	DEF_MOD("i2c3",			 928,	R8A77990_CLK_S3D2),
-+	DEF_MOD("i2c2",			 929,	R8A77990_CLK_S3D2),
-+	DEF_MOD("i2c1",			 930,	R8A77990_CLK_S3D2),
-+	DEF_MOD("i2c0",			 931,	R8A77990_CLK_S3D2),
-+
-+	DEF_MOD("ssi-all",		1005,	R8A77990_CLK_S3D4),
-+	DEF_MOD("ssi9",			1006,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi8",			1007,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi7",			1008,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi6",			1009,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi5",			1010,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi4",			1011,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi3",			1012,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi2",			1013,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi1",			1014,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi0",			1015,	MOD_CLK_ID(1005)),
-+	DEF_MOD("scu-all",		1017,	R8A77990_CLK_S3D4),
-+	DEF_MOD("scu-dvc1",		1018,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-dvc0",		1019,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-ctu1-mix1",	1020,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-ctu0-mix0",	1021,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src9",		1022,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src8",		1023,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src7",		1024,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src6",		1025,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src5",		1026,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src4",		1027,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src3",		1028,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src2",		1029,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src1",		1030,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src0",		1031,	MOD_CLK_ID(1017)),
-+};
-+
-+static const unsigned int r8a77990_crit_mod_clks[] __initconst = {
-+	MOD_CLK_ID(408),	/* INTC-AP (GIC) */
-+};
-+
-+/*
-+ * CPG Clock Data
-+ */
-+
-+/*
-+ * MD19		EXTAL (MHz)	PLL0		PLL1		PLL3
-+ *--------------------------------------------------------------------
-+ * 0		48 x 1		x100/4		x100/3		x100/3
-+ * 1		48 x 1		x100/4		x100/3		 x58/3
-+ */
-+#define CPG_PLL_CONFIG_INDEX(md)	(((md) & BIT(19)) >> 19)
-+
-+static const struct rcar_gen3_cpg_pll_config cpg_pll_configs[2] __initconst = {
-+	/* EXTAL div	PLL1 mult/div	PLL3 mult/div */
-+	{ 1,		100,	3,	100,	3,	},
-+	{ 1,		100,	3,	 58,	3,	},
-+};
-+
-+static int __init r8a77990_cpg_mssr_init(struct device *dev)
-+{
-+	const struct rcar_gen3_cpg_pll_config *cpg_pll_config;
-+	u32 cpg_mode;
-+	int error;
-+
-+	error = rcar_rst_read_mode_pins(&cpg_mode);
-+	if (error)
-+		return error;
-+
-+	cpg_pll_config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
-+
-+	return rcar_gen3_cpg_init(cpg_pll_config, 0, cpg_mode);
-+}
-+
-+const struct cpg_mssr_info r8a77990_cpg_mssr_info __initconst = {
-+	/* Core Clocks */
-+	.core_clks = r8a77990_core_clks,
-+	.num_core_clks = ARRAY_SIZE(r8a77990_core_clks),
-+	.last_dt_core_clk = LAST_DT_CORE_CLK,
-+	.num_total_core_clks = MOD_CLK_BASE,
-+
-+	/* Module Clocks */
-+	.mod_clks = r8a77990_mod_clks,
-+	.num_mod_clks = ARRAY_SIZE(r8a77990_mod_clks),
-+	.num_hw_mod_clks = 12 * 32,
-+
-+	/* Critical Module Clocks */
-+	.crit_mod_clks = r8a77990_crit_mod_clks,
-+	.num_crit_mod_clks = ARRAY_SIZE(r8a77990_crit_mod_clks),
-+
-+	/* Callbacks */
-+	.init = r8a77990_cpg_mssr_init,
-+	.cpg_clk_register = rcar_gen3_cpg_clk_register,
-+};
-diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
-index 2c467f9..49e5106 100644
---- a/drivers/clk/renesas/renesas-cpg-mssr.c
-+++ b/drivers/clk/renesas/renesas-cpg-mssr.c
-@@ -717,6 +717,12 @@ static inline int cpg_mssr_reset_controller_register(struct cpg_mssr_priv *priv)
- 		.data = &r8a77980_cpg_mssr_info,
- 	},
- #endif
-+#ifdef CONFIG_CLK_R8A77990
-+	{
-+		.compatible = "renesas,r8a77990-cpg-mssr",
-+		.data = &r8a77990_cpg_mssr_info,
-+	},
-+#endif
- #ifdef CONFIG_CLK_R8A77995
- 	{
- 		.compatible = "renesas,r8a77995-cpg-mssr",
-diff --git a/drivers/clk/renesas/renesas-cpg-mssr.h b/drivers/clk/renesas/renesas-cpg-mssr.h
-index efe2a14..642f720 100644
---- a/drivers/clk/renesas/renesas-cpg-mssr.h
-+++ b/drivers/clk/renesas/renesas-cpg-mssr.h
-@@ -143,6 +143,7 @@ struct cpg_mssr_info {
- extern const struct cpg_mssr_info r8a77965_cpg_mssr_info;
- extern const struct cpg_mssr_info r8a77970_cpg_mssr_info;
- extern const struct cpg_mssr_info r8a77980_cpg_mssr_info;
-+extern const struct cpg_mssr_info r8a77990_cpg_mssr_info;
- extern const struct cpg_mssr_info r8a77995_cpg_mssr_info;
- 
- 
--- 
-1.9.1
+You should return ret here, jumping to the ov772x_set_fmt_error label
+will only reset the sensor twice and return.
+
+> +
+>  	/* Format and window size. */
+>  	ret = ov772x_write(client, HSTART, win->rect.left >> 2);
+>  	if (ret < 0)
+> @@ -1020,9 +1035,9 @@ static int ov772x_set_params(struct ov772x_priv *priv,
+>
+>  	/* Set COM3. */
+>  	val = cfmt->com3;
+> -	if (priv->info->flags & OV772X_FLAG_VFLIP)
+> +	if (priv->info && (priv->info->flags & OV772X_FLAG_VFLIP))
+>  		val |= VFLIP_IMG;
+> -	if (priv->info->flags & OV772X_FLAG_HFLIP)
+> +	if (priv->info && (priv->info->flags & OV772X_FLAG_HFLIP))
+>  		val |= HFLIP_IMG;
+>  	if (priv->flag_vflip)
+>  		val ^= VFLIP_IMG;
+> @@ -1271,7 +1286,7 @@ static int ov772x_probe(struct i2c_client *client,
+>  	struct i2c_adapter	*adapter = client->adapter;
+>  	int			ret;
+>
+> -	if (!client->dev.platform_data) {
+> +	if (!client->dev.of_node && !client->dev.platform_data) {
+>  		dev_err(&client->dev, "Missing ov772x platform data\n");
+
+Update the error message as well.
+
+Apart from that:
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+
+Thanks
+   j
+
+>  		return -EINVAL;
+>  	}
+> @@ -1372,9 +1387,19 @@ static const struct i2c_device_id ov772x_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, ov772x_id);
+>
+> +#if IS_ENABLED(CONFIG_OF)
+> +static const struct of_device_id ov772x_of_match[] = {
+> +	{ .compatible = "ovti,ov7725", },
+> +	{ .compatible = "ovti,ov7720", },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, ov772x_of_match);
+> +#endif
+> +
+>  static struct i2c_driver ov772x_i2c_driver = {
+>  	.driver = {
+>  		.name = "ov772x",
+> +		.of_match_table = of_match_ptr(ov772x_of_match),
+>  	},
+>  	.probe    = ov772x_probe,
+>  	.remove   = ov772x_remove,
+> --
+> 2.7.4
+>
+
+--cHMo6Wbp1wrKhbfi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJa1zCRAAoJEHI0Bo8WoVY8MBAQAKSXJ6SEt3YFNQNDrcUSOLx2
+FOQdOnGXRDQODk9RM3fn3OTQrHUxXOl+v8X29hRkAfvzZ7GhcAJa8NpqaVDv2sPT
+wK7GVL2iOBMC5YGYgtEYT25PDmFBJ6kZoS8i+lILSe8ipPuc7Uh+MrnBiLmAHoGv
+3COU4a64ij5vaxwYx94JZJD+Pf3fMCZS3jKSbm1BnGYLLGtKJNC/MNCpYNJpyd1x
+rYqKCGMGzTA5zQu95yTxmRp1207izC8CdydMHxIgAHzpeKsrtRHfIPfogho73672
+wqEqiO9nddkBgy3a9MoLriGaEKiwya7fJJw7A1nBlgL6/KeVqhF2dgaUqbylOVyt
+7Ae81SoJzokbt0aZai5HqXJx6ygtSfN/rPT+nn/PyqCmmMq1c9LdOnmbRyHQRYPY
+qCMk+o8uk45g/AIVRT6n9pVNF2/z5h8nadTZ35y+mMtaM/Pr5mnzBy+DyTnThftM
+3UK+GBnFnn2vURTEuhzDB/SD8CVZH5L6B+t+a0ulskzXCwphBsL5QA5cpTlxCy65
+amrmrFAhRhklMy3JdTQBZjkhWPVlT3vzBMmQgIorrMulauFvtfv7r9yobjp1d5rC
+TGZBQwKUObYkM3XxkIdeiUBxg7vNkSH9ohuzTh4WcJ+gbhjJqYRcs+uHu6LHQz9R
+f94sLN9VD93YzvA8/7GA
+=AdWW
+-----END PGP SIGNATURE-----
+
+--cHMo6Wbp1wrKhbfi--
