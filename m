@@ -1,45 +1,80 @@
-Return-Path: <SRS0=UB5y=HJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf0-f181.google.com ([209.85.192.181]:35834 "EHLO
-        mail-pf0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750751AbeDTQgN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Apr 2018 12:36:13 -0400
-MIME-Version: 1.0
-In-Reply-To: <20180418125536.GB3999@w540>
-References: <1523847111-12986-1-git-send-email-akinobu.mita@gmail.com>
- <1523847111-12986-11-git-send-email-akinobu.mita@gmail.com> <20180418125536.GB3999@w540>
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Date: Sat, 21 Apr 2018 01:35:52 +0900
-Message-ID: <CAC5umyjj4RAxwBbtGEFwVo+TYH_H+Wv-NDE-_kqJLLzTf_mJ4Q@mail.gmail.com>
+Return-Path: <SRS0=kRJY=HH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:52839 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752624AbeDRNew (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Apr 2018 09:34:52 -0400
+Date: Wed, 18 Apr 2018 15:34:47 +0200
+From: jacopo mondi <jacopo@jmondi.org>
 Subject: Re: [PATCH v2 10/10] media: ov772x: avoid accessing registers under
  power saving mode
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20180418133447.GD3999@w540>
+References: <1523847111-12986-1-git-send-email-akinobu.mita@gmail.com>
+ <1523847111-12986-11-git-send-email-akinobu.mita@gmail.com>
+ <20180418125536.GB3999@w540>
+ <20180418131702.rgxtqct6htzt3rnq@paasikivi.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="h56sxpGKRmy85csR"
+Content-Disposition: inline
+In-Reply-To: <20180418131702.rgxtqct6htzt3rnq@paasikivi.fi.intel.com>
 Sender: devicetree-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: linux-media@vger.kernel.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-2018-04-18 21:55 GMT+09:00 jacopo mondi <jacopo@jmondi.org>:
->> @@ -898,8 +922,20 @@ static int ov772x_s_power(struct v4l2_subdev *sd, int on)
->>       /* If the power count is modified from 0 to != 0 or from != 0 to 0,
->>        * update the power state.
->>        */
->> -     if (priv->power_count == !on)
->> -             ret = on ? ov772x_power_on(priv) : ov772x_power_off(priv);
->> +     if (priv->power_count == !on) {
->> +             if (on) {
->> +                     ret = ov772x_power_on(priv);
->> +                     /* Restore the controls */
->> +                     if (!ret)
->> +                             ret = ov772x_set_params(priv, priv->cfmt,
->> +                                                     priv->win);
->> +                     /* Restore the format and the frame rate */
->> +                     if (!ret)
->> +                             ret = __v4l2_ctrl_handler_setup(&priv->hdl);
->
-> frame interval is not listed in the sensor control list, it won't be
-> restored if I'm not wrong...
 
-The above two comments were swapped wrongly.  The ov772x_set_params()
-actually restores the format, the frame rate.  It restores COM3,
-COM8, and BDBASE registers, too.  So calling __v4l2_ctrl_handler_setup()
-here is not needed.
+--h56sxpGKRmy85csR
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Sakari,
+
+On Wed, Apr 18, 2018 at 04:17:02PM +0300, Sakari Ailus wrote:
+> On Wed, Apr 18, 2018 at 02:55:36PM +0200, jacopo mondi wrote:
+> > Hi Akinobu,
+> >
+> > On Mon, Apr 16, 2018 at 11:51:51AM +0900, Akinobu Mita wrote:
+> > > The set_fmt() in subdev pad ops, the s_ctrl() for subdev control handler,
+> > > and the s_frame_interval() in subdev video ops could be called when the
+> > > device is under power saving mode.  These callbacks for ov772x driver
+> > > cause updating H/W registers that will fail under power saving mode.
+> > >
+> >
+> > I might be wrong, but if the sensor is powered off, you should not
+> > receive any subdev_pad_ops function call if sensor is powered off.
+>
+> This happens (now that the driver supports sub-device uAPI) if the user
+> opens a sub-device node but the main driver has not powered the sensor on.
+
+Indeed. Sorry for the noise. Could you please check my reply to [08/10] as well?
+
+Thanks
+   j
+
+>
+> --
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
+
+--h56sxpGKRmy85csR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJa10l3AAoJEHI0Bo8WoVY8quQQAIzRq0JRlk2/VwIbPgVCe4bF
+rHKAc/8kWxD9EbxJW4cU6GCjDohaj2CkeolmwBMDVg4nvo/Iy52MUo1v8WVAt78F
+g8KbB/V+rbybFA1pp999GQtQhpPEXUC4BAId5DoOWkAzbnKXV8DlF1NKpPgij0CH
+VlkTlZPHGcgGib8Cs1jPS3r7rHAaFb6Yx6jHR2gthF3tKHDKft9t7lQrqYH79G+h
+okomFbP+pLaYbMNgpdlw7l7webM0LoxQdVRA04WgCfd3MjP3CZNUP9WmJNkrbckN
+554BHiPGmtL8wOSLcVj8ImRdWV1OcX5VbIbXDfZCj41+yOS21f58PLM8jKm03ClG
+9keSkU0cGRgmezcNIQx6yaDSnAhOsoMdzmxH6UUiyK0g0LsRdP4/sSdNeQIoERJC
+eKP10LzfGrOm2qZRIQbjt6yipvD9/XWgcoML2JqgweCGbmY3ljgpoyXHoAuoZknG
+5UF8w+ugQH2XWbMpcZX8o/UlticvSy7T6EMWueEvXQL8pmWZ4+hPebcUoCT0GNeY
+4J0r9OHvJ1wl+pcyJLnmA7Bt4fQfC3iNN3Q2DwWRGymR3IRfVXFBTuBXQUDe+3R6
+teIDKuVPqZmQHhaH3Nb/oPkP247yUFRWy5wzi5M2rLwID+Jl5F1T/l3cEzDCyXxy
+sQyAem8HGJFuBxnOKJ2E
+=KqNl
+-----END PGP SIGNATURE-----
+
+--h56sxpGKRmy85csR--
