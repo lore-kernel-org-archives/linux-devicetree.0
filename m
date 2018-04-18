@@ -1,71 +1,150 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v7 0/4] Bluetooth: hci_qca: Add serdev support
-Date: Wed, 18 Apr 2018 09:41:17 +0200
-Message-ID: <A9CF38EA-6562-4791-9633-DE1BB45C74A3@holtmann.org>
-References: <20180329191524.30225-1-thierry.escande@linaro.org>
-Mime-Version: 1.0 (Mac OS X Mail 11.3 \(3445.6.18\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH] ARM: dts: stm32: Add LPtimer support to stm32mp157c
+Date: Wed, 18 Apr 2018 09:43:53 +0200
+Message-ID: <1524037433-25915-1-git-send-email-fabrice.gasnier@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180329191524.30225-1-thierry.escande@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Escande <thierry.escande@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: alexandre.torgue@st.com, robh+dt@kernel.org
+Cc: mcoquelin.stm32@gmail.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, fabrice.gasnier@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+Add LPtimer definitions, depending on features they provide:
+- lptimer1 & 2 can act as PWM, trigger and encoder/counter
+- lptimer3 can act as PWM and trigger
+- lptimer4 & 5 can act as PWM
 
-> This patchset enables the Qualcomm BT controller QCA6174 node in the
-> device tree of the db820c board. This allows the bluetooth chipset to
-> be probed and registered against the hci layer by using the serdev
-> framework.
-> 
-> This patchset also contains the documentation for the compatible
-> string "qcom,qca6174-bt" related to this chipset.
-> 
-> v7:
-> - Add a new patch enabling regulators and gpios for the bt/wlan
->  combo chip
-> 
-> v6:
-> - Move pinctrl properties into subnodes
-> - fix binding documentation
-> 
-> v5:
-> - Rename 'bt-disable-n' gpio as 'enable'
-> 
-> v4:
-> - Fix dt binding documentation
-> - Address some other issues in patch #3
-> 
-> v3:
-> - Address comments for patch #3 (details in patch)
-> 
-> v2:
-> - Fix author email
-> 
-> 
-> Srinivas Kandagatla (1):
->  arm64: dts: apq8096-db820c: Enable wlan and bt en pins
-> 
-> Thierry Escande (3):
->  arm64: dts: apq8096-db820c: enable bluetooth node
->  dt-bindings: net: bluetooth: Add qualcomm-bluetooth
->  Bluetooth: hci_qca: Add serdev support
-> 
-> .../devicetree/bindings/net/qualcomm-bluetooth.txt |  30 ++++++
-> arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi  |  26 +++++
-> .../boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi    |  32 ++++++
-> arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       |  62 ++++++++++++
-> arch/arm64/boot/dts/qcom/msm8996.dtsi              |  10 ++
-> drivers/bluetooth/Kconfig                          |   1 +
-> drivers/bluetooth/hci_qca.c                        | 109 ++++++++++++++++++++-
-> 7 files changed, 268 insertions(+), 2 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c.dtsi | 108 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 108 insertions(+)
 
-all 4 patches have been applied to bluetooth-next tree.
-
-Regards
-
-Marcel
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index bc3eddc..7e6301c 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -104,6 +104,33 @@
+ 		interrupt-parent = <&intc>;
+ 		ranges;
+ 
++		lptimer1: timer@40009000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "st,stm32-lptimer";
++			reg = <0x40009000 0x400>;
++			clocks = <&rcc LPTIM1_K>;
++			clock-names = "mux";
++			status = "disabled";
++
++			pwm {
++				compatible = "st,stm32-pwm-lp";
++				#pwm-cells = <3>;
++				status = "disabled";
++			};
++
++			trigger@0 {
++				compatible = "st,stm32-lptimer-trigger";
++				reg = <0>;
++				status = "disabled";
++			};
++
++			counter {
++				compatible = "st,stm32-lptimer-counter";
++				status = "disabled";
++			};
++		};
++
+ 		usart2: serial@4000e000 {
+ 			compatible = "st,stm32h7-uart";
+ 			reg = <0x4000e000 0x400>;
+@@ -167,6 +194,87 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		lptimer2: timer@50021000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "st,stm32-lptimer";
++			reg = <0x50021000 0x400>;
++			clocks = <&rcc LPTIM2_K>;
++			clock-names = "mux";
++			status = "disabled";
++
++			pwm {
++				compatible = "st,stm32-pwm-lp";
++				#pwm-cells = <3>;
++				status = "disabled";
++			};
++
++			trigger@1 {
++				compatible = "st,stm32-lptimer-trigger";
++				reg = <1>;
++				status = "disabled";
++			};
++
++			counter {
++				compatible = "st,stm32-lptimer-counter";
++				status = "disabled";
++			};
++		};
++
++		lptimer3: timer@50022000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "st,stm32-lptimer";
++			reg = <0x50022000 0x400>;
++			clocks = <&rcc LPTIM3_K>;
++			clock-names = "mux";
++			status = "disabled";
++
++			pwm {
++				compatible = "st,stm32-pwm-lp";
++				#pwm-cells = <3>;
++				status = "disabled";
++			};
++
++			trigger@2 {
++				compatible = "st,stm32-lptimer-trigger";
++				reg = <2>;
++				status = "disabled";
++			};
++		};
++
++		lptimer4: timer@50023000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "st,stm32-lptimer";
++			reg = <0x50023000 0x400>;
++			clocks = <&rcc LPTIM4_K>;
++			clock-names = "mux";
++			status = "disabled";
++
++			pwm {
++				compatible = "st,stm32-pwm-lp";
++				#pwm-cells = <3>;
++				status = "disabled";
++			};
++		};
++
++		lptimer5: timer@50024000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "st,stm32-lptimer";
++			reg = <0x50024000 0x400>;
++			clocks = <&rcc LPTIM5_K>;
++			clock-names = "mux";
++			status = "disabled";
++
++			pwm {
++				compatible = "st,stm32-pwm-lp";
++				#pwm-cells = <3>;
++				status = "disabled";
++			};
++		};
++
+ 		usart1: serial@5c000000 {
+ 			compatible = "st,stm32h7-uart";
+ 			reg = <0x5c000000 0x400>;
+-- 
+1.9.1
