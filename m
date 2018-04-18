@@ -1,229 +1,105 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 4/4] regulator: bd9571mwv: Add support for backup mode
-Date: Wed, 18 Apr 2018 15:18:04 +0200
-Message-ID: <1524057484-25350-5-git-send-email-geert+renesas@glider.be>
-References: <1524057484-25350-1-git-send-email-geert+renesas@glider.be>
+From: Alban <albeu@free.fr>
+Subject: Re: [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode
+ for the cells list
+Date: Wed, 18 Apr 2018 15:34:40 +0200
+Message-ID: <20180418153440.187ed16e@avionic-0020>
+References: <1521933899-362-1-git-send-email-albeu@free.fr>
+        <1521933899-362-2-git-send-email-albeu@free.fr>
+        <344e0087-7410-aebb-8a66-c6976064df10@linaro.org>
+        <20180417165420.423a691b@avionic-0020>
+        <8c4b48ad-e99e-030a-a4ee-b6df0fa59c79@linaro.org>
+        <20180417180040.04f53495@avionic-0020>
+        <20180418134119.2e587621@avionic-0020>
+        <9f7d2987-b33e-79b5-ae58-2985fd7334e4@linaro.org>
+        <20180418143243.3c23493c@avionic-0020>
+        <e34619a4-e9b6-9945-a1cc-a3680aac6819@linaro.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/AZ+RuJxPdBoTxXd12bCw6CQ"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524057484-25350-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <e34619a4-e9b6-9945-a1cc-a3680aac6819@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut+renesas@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Alban <albeu@free.fr>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The BD9571MWV PMIC supports backup mode, which keeps one or more DDR
-rails powered while the main SoC is powered down.
+--Sig_/AZ+RuJxPdBoTxXd12bCw6CQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Which DDR rails are to be kept powered is board-specific, and controlled
-using the optional "rohm,ddr-backup-power" DT property.  In the absence
-of this property, backup mode is not available.
+On Wed, 18 Apr 2018 13:53:56 +0100
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
 
-Backup mode can be enabled or disabled by the user using the standard
-"wakeup" virtual file in sysfs, e.g. to enable:
+> On 18/04/18 13:32, Alban wrote:
+> >> I was also suggesting you to use nvmem-cell subnode, but make it a
+> >> proper nvmem provider device, rather than reusing its parent device.
+> >>
+> >> You would end up some thing like this in dt.
+> >>
+> >> flash@0 {
+> >> 	#address-cells =3D <1>;
+> >> 	#size-cells =3D <1>;
+> >> 	compatible =3D "s25sl064a";
+> >> 	reg =3D <0>;
+> >>
+> >> 	nvmem-cells {
+> >> 		compatible =3D "mtd-nvmem";
+> >> 		#address-cells =3D <1>;
+> >> 		#size-cells =3D <1>;
+> >>
+> >> 		calibration: calib@404 {
+> >> 			reg =3D <0x404 0x10>;
+> >> 		};
+> >> 	};
+> >> }; =20
+> > But the root cause is in the nvmem binding, this conflict could exists =
+=20
+> No, the root cause is because of passing wrong device instance to nvmem=20
+> core. And trying to workaround is the actual issue.
 
-    echo enabled > /sys/devices/platform/soc/e60b0000.i2c/i2c-7/7-0030/bd9571mwv-regulator.2.auto/power/wakeup
+The data is stored on the MTD, so the nvmem provider is the MTD device.
+I don't think it is a good idea to have a virtual device in the DT to
+accommodate the nvmem API.
 
-When the PMIC is configured for backup mode, the role of the accessory
-power switch changes from a power switch to a wake-up switch.
-Two types of switches (or signals) can be used:
-  A. With a momentary power switch (or pulse signal), the PMIC is
-     configured for backup mode in the PMIC driver's suspend callback,
-     during system suspend.
-     Backup mode is enabled by default, as there is no further impact
-     during normal system operation.
+> > with any device type, not just MTD. I don't understand why we would want
+> > such workarounds instead of just fixing the problem once and for all. =
+=20
+> AFAIU, This is not a workaround, this is how nvmem provider bindings are=
+=20
+> and all providers should try to follow it.
+>=20
+> I still do not understand what is the issue in making nvmem-cells node a=
+=20
+> proper nvmem provider device?
 
-  B. With a toggle power switch (or level signal), the following steps
-     must be followed exactly:
-       1. Configure PMIC for backup mode,
-       2. Switch accessory power switch off, to prepare for system
-          suspend, which is a manual step not controlled by software,
-       3. Suspend system.
-     This mode is not yet supported by the driver.
+It is doable, but beside making the code more complex, AFAIU that would
+goes against DT best practice as no such device exists in the hardware.
+The DT should only represent that this device contains data that can be
+requested by a driver, and ideally in the same way for all kind of
+storages.
 
-As the switch type is board-specific, and cannot be determined
-automatically, it is obtained from the presence of one of the
-"rohm,rstbmode-*" properties in DT.
+Alban
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v3:
-  - No changes,
+--Sig_/AZ+RuJxPdBoTxXd12bCw6CQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-v2:
-  - Use normal "wakeup" sysfs virtual file instead of adding our own
-    "backup_mode" file,
-  - Differentiate between momentary and toggle power switches:
-      - Support for momentary switches is enabled automatically,
-      - Toggle switches are not yet supported (but still work when
-	backup mode is enabled using i2set from userspace).
----
- drivers/regulator/bd9571mwv-regulator.c | 127 +++++++++++++++++++++++++++++++-
- 1 file changed, 126 insertions(+), 1 deletion(-)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-diff --git a/drivers/regulator/bd9571mwv-regulator.c b/drivers/regulator/bd9571mwv-regulator.c
-index c67a83d53c4cb76b..be574eb444ebda97 100644
---- a/drivers/regulator/bd9571mwv-regulator.c
-+++ b/drivers/regulator/bd9571mwv-regulator.c
-@@ -24,6 +24,18 @@
- 
- #include <linux/mfd/bd9571mwv.h>
- 
-+struct bd9571mwv_reg {
-+	struct bd9571mwv *bd;
-+
-+	/* DDR Backup Power */
-+	u8 bkup_mode_cnt_keepon;	/* from "rohm,ddr-backup-power" */
-+	u8 bkup_mode_cnt_saved;
-+
-+	/* Power switch type */
-+	bool rstbmode_level;
-+	bool rstbmode_pulse;
-+};
-+
- enum bd9571mwv_regulators { VD09, VD18, VD25, VD33, DVFS };
- 
- #define BD9571MWV_REG(_name, _of, _id, _ops, _vr, _vm, _nv, _min, _step, _lmin)\
-@@ -131,14 +143,99 @@ static struct regulator_desc regulators[] = {
- 		      0x80, 600000, 10000, 0x3c),
- };
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int bd9571mwv_bkup_mode_read(struct bd9571mwv *bd, unsigned int *mode)
-+{
-+	int ret;
-+
-+	ret = regmap_read(bd->regmap, BD9571MWV_BKUP_MODE_CNT, mode);
-+	if (ret) {
-+		dev_err(bd->dev, "failed to read backup mode (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int bd9571mwv_bkup_mode_write(struct bd9571mwv *bd, unsigned int mode)
-+{
-+	int ret;
-+
-+	ret = regmap_write(bd->regmap, BD9571MWV_BKUP_MODE_CNT, mode);
-+	if (ret) {
-+		dev_err(bd->dev, "failed to configure backup mode 0x%x (%d)\n",
-+			mode, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int bd9571mwv_suspend(struct device *dev)
-+{
-+	struct bd9571mwv_reg *bdreg = dev_get_drvdata(dev);
-+	unsigned int mode;
-+	int ret;
-+
-+	if (!device_may_wakeup(dev))
-+		return 0;
-+
-+	/* Save DDR Backup Mode */
-+	ret = bd9571mwv_bkup_mode_read(bdreg->bd, &mode);
-+	if (ret)
-+		return ret;
-+
-+	bdreg->bkup_mode_cnt_saved = mode;
-+
-+	if (!bdreg->rstbmode_pulse)
-+		return 0;
-+
-+	/* Enable DDR Backup Mode */
-+	mode &= ~BD9571MWV_BKUP_MODE_CNT_KEEPON_MASK;
-+	mode |= bdreg->bkup_mode_cnt_keepon;
-+
-+	if (mode != bdreg->bkup_mode_cnt_saved)
-+		return bd9571mwv_bkup_mode_write(bdreg->bd, mode);
-+
-+	return 0;
-+}
-+
-+static int bd9571mwv_resume(struct device *dev)
-+{
-+	struct bd9571mwv_reg *bdreg = dev_get_drvdata(dev);
-+
-+	if (!device_may_wakeup(dev))
-+		return 0;
-+
-+	/* Restore DDR Backup Mode */
-+	return bd9571mwv_bkup_mode_write(bdreg->bd, bdreg->bkup_mode_cnt_saved);
-+}
-+
-+static const struct dev_pm_ops bd9571mwv_pm  = {
-+	SET_SYSTEM_SLEEP_PM_OPS(bd9571mwv_suspend, bd9571mwv_resume)
-+};
-+
-+#define DEV_PM_OPS	&bd9571mwv_pm
-+#else
-+#define DEV_PM_OPS	NULL
-+#endif /* CONFIG_PM_SLEEP */
-+
- static int bd9571mwv_regulator_probe(struct platform_device *pdev)
- {
- 	struct bd9571mwv *bd = dev_get_drvdata(pdev->dev.parent);
- 	struct regulator_config config = { };
-+	struct bd9571mwv_reg *bdreg;
- 	struct regulator_dev *rdev;
-+	unsigned int val;
- 	int i;
- 
--	platform_set_drvdata(pdev, bd);
-+	bdreg = devm_kzalloc(&pdev->dev, sizeof(*bdreg), GFP_KERNEL);
-+	if (!bdreg)
-+		return -ENOMEM;
-+
-+	bdreg->bd = bd;
-+
-+	platform_set_drvdata(pdev, bdreg);
- 
- 	config.dev = &pdev->dev;
- 	config.dev->of_node = bd->dev->of_node;
-@@ -155,6 +252,33 @@ static int bd9571mwv_regulator_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	val = 0;
-+	of_property_read_u32(bd->dev->of_node, "rohm,ddr-backup-power", &val);
-+	if (val & ~BD9571MWV_BKUP_MODE_CNT_KEEPON_MASK) {
-+		dev_err(bd->dev, "invalid %s mode %u\n",
-+			"rohm,ddr-backup-power", val);
-+		return -EINVAL;
-+	}
-+	bdreg->bkup_mode_cnt_keepon = val;
-+
-+	bdreg->rstbmode_level = of_property_read_bool(bd->dev->of_node,
-+						      "rohm,rstbmode-level");
-+	bdreg->rstbmode_pulse = of_property_read_bool(bd->dev->of_node,
-+						      "rohm,rstbmode-pulse");
-+	if (bdreg->rstbmode_level && bdreg->rstbmode_pulse) {
-+		dev_err(bd->dev, "only one rohm,rstbmode-* may be specified");
-+		return -EINVAL;
-+	}
-+
-+	if (bdreg->bkup_mode_cnt_keepon) {
-+		device_set_wakeup_capable(&pdev->dev, true);
-+		/*
-+		 * Wakeup is enabled by default in pulse mode, but needs
-+		 * explicit user setup in level mode.
-+		 */
-+		device_set_wakeup_enable(&pdev->dev, bdreg->rstbmode_pulse);
-+	}
-+
- 	return 0;
- }
- 
-@@ -167,6 +291,7 @@ MODULE_DEVICE_TABLE(platform, bd9571mwv_regulator_id_table);
- static struct platform_driver bd9571mwv_regulator_driver = {
- 	.driver = {
- 		.name = "bd9571mwv-regulator",
-+		.pm = DEV_PM_OPS,
- 	},
- 	.probe = bd9571mwv_regulator_probe,
- 	.id_table = bd9571mwv_regulator_id_table,
--- 
-2.7.4
+iQIcBAEBCAAGBQJa10lxAAoJEHSUmkuduC28ohsQAOU+13gwBBmeFX9rVtwI/Et/
+pz5qPpHgMWlofIb5UqqNP+jFYZQzd69H17rmHLXXB04pF6UA7qxvorYLsoHp9PAJ
+uavZ3e4Wiavaj/g1iYkO6G5LQNWun5P/X6Cck86Wyz6JhTFhX3i6+0xDdmCC9ToY
+X5sbA47pFFOq0N2s6H+NdYqL0RRtbW5vDzH8QN430h0hU/IFaWnfWKRovrznGVhP
+/x8Wrv3SL2/HrL3anx5P2rcmNWv5cATrlpD6ASjZn8rXrDZJUGgsLQ3W9hYWgh1O
+gAwv6to8REwmkiry4Ui9lJG2n3OEt+24fgtQxXs5s8p60z4rCgnMSNzqEHZwIzog
+pF+tgV3l+xWzb8WlOtnBZbs3JM1fmg82vQrWEPH9j9c3iIqB1GjxQ/RnWT7r039u
+xCeOeFZYJ92niRSzeD1xEID6oeW9gG2ezBL+3n6zLtk6Y+gAYMra6OJPBo+20Thu
+A82PJd9Ah9NIrzTbB/fXkbvubzOJp49BBjR8mHolCRB9y8RJ3+G0Eeg+fYoADC5c
+T/O+URuv//n1+g27t2BzBfAjFnLDWtqeaVknkw1FzOb/vzzsLaeqpKWMw6OM0gf1
+jjjZeOK6bCgA5XN2nWxjgrkwFYrCIg0sZLEuMe9OlDAg7uV9OAxUrjlr9y4uNmqN
+gqFr4TjR+/UNEElgsOHo
+=kviY
+-----END PGP SIGNATURE-----
+
+--Sig_/AZ+RuJxPdBoTxXd12bCw6CQ--
