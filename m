@@ -1,50 +1,49 @@
-From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [[RFC]DPU PATCH 4/4] dt-bindings: Add Innolux TV123WAM
- panel bindings
-Date: Wed, 18 Apr 2018 17:50:02 +0530
-Message-ID: <1524054002-17869-5-git-send-email-spanda@codeaurora.org>
-References: <1524054002-17869-1-git-send-email-spanda@codeaurora.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next 3/3] net: phy: Enable C45 PHYs with vendor
+ specific address space
+Date: Wed, 18 Apr 2018 14:27:07 +0200
+Message-ID: <20180418122707.GC31643@lunn.ch>
+References: <20180417090233.21548-1-vicentiu.galanopulo@nxp.com>
+ <20180417090233.21548-4-vicentiu.galanopulo@nxp.com>
+ <b62735bd-d411-2d21-16a2-f6cf7e5d7e4d@gmail.com>
+ <AM0PR04MB411620E8DB3E7EF8E55C99B5EEB60@AM0PR04MB4116.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1524054002-17869-1-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB411620E8DB3E7EF8E55C99B5EEB60@AM0PR04MB4116.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?VmljZW7Fo2l1?= Galanopulo <vicentiu.galanopulo@nxp.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, "robh@kernel.org" <robh@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "davem@davemloft.net" <davem@davemloft.net>, "marcel@holtmann.org" <marcel@holtmann.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, Madalin-cristian Bucur <madalin.bucur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIElubm9sdXggVFYxMjNXQU0gaXMgYSAxMi4zIiBlRFAgZGlzcGxheSBwYW5lbAp3aXRoIDIx
-NjB4MTQ0MCByZXNvbHV0aW9uLgoKU2lnbmVkLW9mZi1ieTogU2FuZGVlcCBQYW5kYSA8c3BhbmRh
-QGNvZGVhdXJvcmEub3JnPgotLS0KIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgs
-ZWRwLTJrLXBhbmVsLnR4dCB8IDIxICsrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5n
-ZWQsIDIxIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGVkcC0yay1wYW5lbC50eHQK
-CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
-YW5lbC9pbm5vbHV4LGVkcC0yay1wYW5lbC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGVkcC0yay1wYW5lbC50eHQKbmV3IGZpbGUg
-bW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uMTlmMjcxYwotLS0gL2Rldi9udWxsCisrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsZWRw
-LTJrLXBhbmVsLnR4dApAQCAtMCwwICsxLDIxIEBACitJbm5vbHV4IFRWMTIzV0FNIDEyLjMgaW5j
-aCBlRFAgZGlzcGxheSBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBwb3dlci1zdXBw
-bHk6IHJlZ3VsYXRvciB0byBwcm92aWRlIHRoZSBzdXBwbHkgdm9sdGFnZQorLSBlbmFibGUtZ3Bp
-b3M6IEdQSU8gcGluIHRvIGVuYWJsZSBvciBkaXNhYmxlIHRoZSBwYW5lbAorCitPcHRpb25hbCBw
-cm9wZXJ0aWVzOgorLSBiYWNrbGlnaHQ6IHBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2Ug
-YXR0YWNoZWQgdG8gdGhlIHBhbmVsCisKK0V4YW1wbGU6CisKKwllZHBfcGFuZWw6IGVkcF9wYW5l
-bCB7CisJCWNvbXBhdGlibGUgPSAiaW5ub2x1eCwgZWRwXzJrX3BhbmVsIjsKKwkJcmVnID0gPDA+
-OworCisJCWVuYWJsZS1ncGlvcyA9IDwmbXNtZ3BpbyAzMiBHUElPX0FDVElWRV9ISUdIPjsKKwor
-CQlwb3dlci1zdXBwbHkgPSA8JnBtODkxNl9sOD47CisKKwkJYmFja2xpZ2h0ID0gPCZiYWNrbGln
-aHQ+OworCX07Ci0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBt
-ZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFi
-b3JhdGl2ZSBQcm9qZWN0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVl
-ZHJlbm8K
+On Wed, Apr 18, 2018 at 09:38:47AM +0000, Vicenţiu Galanopulo wrote:
+> 
+> 
+> > > Having dev-addr stored in devices_addrs, in get_phy_c45_ids(), when
+> > > probing the identifiers, dev-addr can be extracted from devices_addrs
+> > > and probed if devices_addrs[current_identifier] is not 0.
+> > 
+> > I must clearly be missing something, but why are you introducing all these
+> > conditionals instead of updating the existing code to be able to operate against
+> > an arbitrary dev-addr value, and then just making sure the first thing you do is
+> > fetch that property from Device Tree? There is no way someone is going to be
+> > testing with your specific use case in the future (except yourselves) so unless you
+> > make supporting an arbitrary "dev-addr" value become part of how the code
+> > works, this is going to be breaking badly.
+> >
+> 
+> Hi Florian,
+> 
+> My intention was to have this patch as "plugin" and modify the existing kernel API little to none.
+
+Hi Vicenţiu
+
+In Linux, kernel APIs are not sacred. If you need to change them, do
+so.
+
+We want a clear, well integrated solution, with minimal
+duplication.
+
+	Andrew
