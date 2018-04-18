@@ -1,108 +1,99 @@
-From: srinivas.kandagatla@linaro.org
-Subject: [PATCH] arm64: msm8916: fix gic_irq_domain_translate warnings
-Date: Wed, 18 Apr 2018 17:34:15 +0100
-Message-ID: <20180418163415.21646-1-srinivas.kandagatla@linaro.org>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v3 04/10] Documentations: dt-bindings: Add a document of
+ PECI adapter driver for Aspeed AST24xx/25xx SoCs
+Date: Wed, 18 Apr 2018 09:45:56 -0700
+Message-ID: <7ff3b23c-7dc8-865f-4069-c53642aaf1ab@linux.intel.com>
+References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
+ <20180410183212.16787-5-jae.hyun.yoo@linux.intel.com>
+ <20180416181035.rcjvt4rlrwaj5yxf@rob-hp-laptop>
+ <53ff5b2b-eba8-8311-64a9-abd4bc72226d@linux.intel.com>
+ <CAL_Jsq+1wC-KhXPeCSNhCeCih6=CatJbyumO51ucD17Rt7qofw@mail.gmail.com>
+ <f07623c4-5f0c-4ab1-f761-44bd702bbdf0@linux.intel.com>
+ <584aca6c-c87a-ff7a-2fdc-3c742236be60@linux.intel.com>
+ <CAL_Jsq+9YDv04Gu=WODdqb6wD4fk6=-fFw_3skU79UC8OW0jZA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+9YDv04Gu=WODdqb6wD4fk6=-fFw_3skU79UC8OW0jZA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org
-Cc: david.brown@linaro.org, robh+dt@kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On 4/18/2018 6:59 AM, Rob Herring wrote:
+> On Tue, Apr 17, 2018 at 5:06 PM, Jae Hyun Yoo
+> <jae.hyun.yoo@linux.intel.com> wrote:
+>> On 4/17/2018 11:16 AM, Jae Hyun Yoo wrote:
+>>>
+>>> On 4/17/2018 6:16 AM, Rob Herring wrote:
+>>>>
+>>>> On Mon, Apr 16, 2018 at 6:12 PM, Jae Hyun Yoo
+>>>> <jae.hyun.yoo@linux.intel.com> wrote:
+>>>>>
+>>>>> On 4/16/2018 11:10 AM, Rob Herring wrote:
+>>>>>>
+>>>>>>
+>>>>>> On Tue, Apr 10, 2018 at 11:32:06AM -0700, Jae Hyun Yoo wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>> This commit adds a dt-bindings document of PECI adapter driver for
+>>>>>>> Aspeed
+>>>>>>> AST24xx/25xx SoCs.
+>>>>
+>>>>
+>>>> [...]
+>>>>
+>>>>>>> +- clocks            : Should contain clock source for PECI
+>>>>>>> controller.
+>>>>>>> +                     Should reference clkin.
+>>>>>>> +- clock_frequency   : Should contain the operation frequency of PECI
+>>>>>>> controller
+>>>>>>> +                     in units of Hz.
+>>>>>>> +                     187500 ~ 24000000
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> This is the frequency of the bus or used to derive it? It would be
+>>>>>> better to specify the bus frequency instead and have the driver
+>>>>>> calculate its internal freq. And then use "bus-frequency" instead.
+>>>>>>
+>>>>>
+>>>>> I agree with you. Actually, it is being used for operation frequency
+>>>>> setting
+>>>>> of PECI controller module in SoC so it's different from the meaning of
+>>>>> "bus-frequency". I'll change it to "operation-frequency".
+>>>>
+>>>>
+>>>> No, now you've gone from a standard property name to something custom.
+>>>> Why do you need to set the frequency in DT if it is not related to the
+>>>> interface frequency?
+>>>>
+>>>> Rob
+>>>>
+>>>
+>>> Actually, the interface frequency is affected by the operation frequency
+>>> but there is no description of its relationship in datasheet. I'll check
+>>> again about the detail to ASPEED chip vendor and will use
+>>> 'bus-frequency' if available.
+>>>
+>>
+>> I investigated it more deeply. Basically, by the spec, PECI bus speed
+>> cannot be set as a fixed speed. A PECI bus can have a wide speed range
+>> from 2Kbps to 2Mbps which is dynamically set by a handshaking sequence
+>> between an originator and clients called 'timing negotiation' in spec.
+>> This timing negotiation behavior happens on every single transaction so the
+>> bus speed also can vary on every transactions. So I'm thinking a custom
+>> property name for it, 'peci-clk-frequency' if it is acceptable.
+> 
+> Okay, seems bus-frequency is not appropriate here. So use
+> 'clock-frequency' (note the '-' not '_' as that is the standard
+> property).
+> 
+> Rob
+> 
 
-Remove the usage of IRQ_TYPE_NONE to fix loud warnings from
-patch (83a86fbb5b56b "irqchip/gic: Loudly complain about
-the use of IRQ_TYPE_NONE").
+Thanks! I'll use 'clock-frequency' for it.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index cfbd72186762..5d66a575c7e1 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -180,7 +180,7 @@
- 
- 	pmu {
- 		compatible = "arm,cortex-a53-pmu";
--		interrupts = <GIC_PPI 7 GIC_CPU_MASK_SIMPLE(4)>;
-+		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4)| IRQ_TYPE_LEVEL_HIGH)>;
- 	};
- 
- 	thermal-zones {
-@@ -513,7 +513,7 @@
- 		blsp_i2c2: i2c@78b6000 {
- 			compatible = "qcom,i2c-qup-v2.2.1";
- 			reg = <0x078b6000 0x500>;
--			interrupts = <GIC_SPI 96 0>;
-+			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
- 				 <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
- 			clock-names = "iface", "core";
-@@ -528,7 +528,7 @@
- 		blsp_i2c4: i2c@78b8000 {
- 			compatible = "qcom,i2c-qup-v2.2.1";
- 			reg = <0x078b8000 0x500>;
--			interrupts = <GIC_SPI 98 0>;
-+			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
- 				 <&gcc GCC_BLSP1_QUP4_I2C_APPS_CLK>;
- 			clock-names = "iface", "core";
-@@ -543,7 +543,7 @@
- 		blsp_i2c6: i2c@78ba000 {
- 			compatible = "qcom,i2c-qup-v2.2.1";
- 			reg = <0x078ba000 0x500>;
--			interrupts = <GIC_SPI 100 0>;
-+			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
- 				 <&gcc GCC_BLSP1_QUP6_I2C_APPS_CLK>;
- 			clock-names = "iface", "core";
-@@ -575,7 +575,7 @@
- 					"mi2s-bit-clk3";
- 			#sound-dai-cells = <1>;
- 
--			interrupts = <0 160 0>;
-+			interrupts = <0 160 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "lpass-irq-lpaif";
- 			reg = <0x07708000 0x10000>;
- 			reg-names = "lpass-lpaif";
-@@ -595,7 +595,7 @@
- 			reg = <0x07824900 0x11c>, <0x07824000 0x800>;
- 			reg-names = "hc_mem", "core_mem";
- 
--			interrupts = <0 123 0>, <0 138 0>;
-+			interrupts = <0 123 IRQ_TYPE_LEVEL_HIGH>, <0 138 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "hc_irq", "pwr_irq";
- 			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
- 				 <&gcc GCC_SDCC1_AHB_CLK>,
-@@ -612,7 +612,7 @@
- 			reg = <0x07864900 0x11c>, <0x07864000 0x800>;
- 			reg-names = "hc_mem", "core_mem";
- 
--			interrupts = <0 125 0>, <0 221 0>;
-+			interrupts = <0 125 IRQ_TYPE_LEVEL_HIGH>, <0 221 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "hc_irq", "pwr_irq";
- 			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
- 				 <&gcc GCC_SDCC2_AHB_CLK>,
-@@ -819,7 +819,7 @@
- 			iommu-ctx@2000 {
- 				compatible = "qcom,msm-iommu-v1-ns";
- 				reg = <0x2000 0x1000>;
--				interrupts = <GIC_SPI 242 0>;
-+				interrupts = <GIC_SPI 242 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 		};
- 
-@@ -864,7 +864,7 @@
- 				      "bus_clk",
- 				      "vsync_clk";
- 
--			interrupts = <0 72 0>;
-+			interrupts = <0 72 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
--- 
-2.16.2
+Jae
