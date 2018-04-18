@@ -1,94 +1,53 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode for
- the cells list
-Date: Wed, 18 Apr 2018 13:12:48 +0100
-Message-ID: <9f7d2987-b33e-79b5-ae58-2985fd7334e4@linaro.org>
-References: <1521933899-362-1-git-send-email-albeu@free.fr>
- <1521933899-362-2-git-send-email-albeu@free.fr>
- <344e0087-7410-aebb-8a66-c6976064df10@linaro.org>
- <20180417165420.423a691b@avionic-0020>
- <8c4b48ad-e99e-030a-a4ee-b6df0fa59c79@linaro.org>
- <20180417180040.04f53495@avionic-0020> <20180418134119.2e587621@avionic-0020>
+From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [[RFC]DPU PATCH 0/4] Add suppport for sn65dsi86 bridge
+ chip and Innolux 2k edp panel driver
+Date: Wed, 18 Apr 2018 17:49:58 +0530
+Message-ID: <1524054002-17869-1-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180418134119.2e587621@avionic-0020>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alban <albeu@free.fr>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 18/04/18 12:41, Alban wrote:
-> On Tue, 17 Apr 2018 18:00:40 +0200
-> Alban <albeu@free.fr> wrote:
-> 
->> On Tue, 17 Apr 2018 16:44:01 +0100
->> Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
->>
->>> Thanks for explaining,
->>>
->>> On 17/04/18 15:54, Alban wrote:
->>>> This will not only allow reading the calibration data from nvmem, but
->>>> will also create a partition on the MTD device, which is not acceptable.
->>>> With my proposed binding this would become:
->>>>
->>>> flash@0 {
->>>> 	#address-cells = <1>;
->>>> 	#size-cells = <1>;
->>>> 	compatible = "s25sl064a";
->>>> 	reg = <0>;
->>>>
->>>> 	nvmem-cells {
->>>> 		compatible = "nvmem-cells";
->>>> 		#address-cells = <1>;
->>>> 		#address-cells = <1>;
->>>>
->>>> 		calibration: calib@404 {
->>>> 			reg = <0x404 0x10>;
->>>> 		};
->>>> 	};
->>>
->>> Why can't we make nvmem-cells node a nvmem provider in this case?
->>> Which should work!
->>
->> TBH I just copied what have been done to fix the same problem with the
->> MTD partitions. But yes we could also just extend the current binding
->> to require a compatible string on each nvmem-cell, which would not
->> require any code change to support.
-> 
-> However this scheme will not work if the device node binding already
-> have subnodes with addresses. The addressing, as specified by
-> #address-cells and #size-cells, might be incompatible or might overlap.
-> Using the nvmem-cells subnode solve this problem.
-> 
-
-I was also suggesting you to use nvmem-cell subnode, but make it a 
-proper nvmem provider device, rather than reusing its parent device.
-
-You would end up some thing like this in dt.
-
-flash@0 {
-	#address-cells = <1>;
-	#size-cells = <1>;
-	compatible = "s25sl064a";
-	reg = <0>;
-
-	nvmem-cells {
-		compatible = "mtd-nvmem";
-		#address-cells = <1>;
-		#size-cells = <1>;
-
-		calibration: calib@404 {
-			reg = <0x404 0x10>;
-		};
-	};
-};
-
---srini
-
-> Alban
-> 
+Q2hhbmdlbG9nOgoKdjMgLT4gdjQ6CkN1cnJlbnQgcGF0Y2hzZXQgc2VwYXJhdGVzIG91dCBlRFAg
+cGFuZWwgc3BlY2lmaWMgcmVzb3VyY2VzIGZyb20gc242NWRzaTg2CmJyaWRnZSBkcml2ZXIgYW5k
+IGNyZWF0ZXMgYSBzZXBhcmF0ZSBkcml2ZXIgZm9yIHRoZSBpbm5sb3V4IGVkcCBwYW5lbC4KCk5v
+dyBicmlkZ2UgZHJpdmVyIGNoZWNrIGlmIGFueSBwYW5lbCBpcyBhdHRhY2hlZCBvciBub3QgdG8g
+Z2V0IHRoZSBzdXBwb3J0ZWQKbW9kZXMuIElmIGFueSBwYW5lbCBpcyBhdHRhY2hlZCB0aGVuIHF1
+ZXJ5IGZyb20gcGFuZWwgZHJpdmVyIHRvIGdldCB0aGUgbW9kZXMsCm9yIGVsc2UgcHJvYmUgdGhl
+IHByb3ZpZGVkIGkyYyBhZGFwdGVyIHRvIHJlYWQgdGhlIG1vZGVzIGZyb20gRURJRC4KClJlbW92
+ZWQgaGFyZGNvZGluZyBvZiBicmlkZ2UgaW5pdCBzZXF1ZW5jZS4gV2l0aCB0aGlzIHBhdGNoc2V0
+IGJyaWRnZSBkcml2ZXIgbm93CndpbGwgcHJvZ3JhbSB0aGUgaW5pdCBzZXF1ZW5jZSBiYXNlZCBv
+biB0aGUgY3VycmVudCBtb2RlIHNldCBieSBkcm0gZnJhbWV3b3JrLgoKQ3VycmVudCBwYXRjaHNl
+dCBpcyBub3QgdGVzdGVkIG9uIGFjdHVhbCBicmlkZ2UgY2hpcC9wYW5lbC4KClNhbmRlZXAgUGFu
+ZGEgKDQpOgogIGRybS9icmlkZ2U6IGFkZCBzdXBwb3J0IGZvciBzbjY1ZHNpODYgYnJpZGdlIGRy
+aXZlcgogIGR0LWJpbmRpbmdzOiBkcm0vYnJpZGdlOiBEb2N1bWVudCBzbjY1ZHNpODYgYnJpZGdl
+IGJpbmRpbmdzCiAgZHJtL3BhbmVsOiBhZGQgSW5ub2x1eCBUVjEyM1dBTSBlRFAgcGFuZWwgZHJp
+dmVyCiAgZHQtYmluZGluZ3M6IEFkZCBJbm5vbHV4IFRWMTIzV0FNIHBhbmVsIGJpbmRpbmdzCgog
+Li4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQgICAgICAgfCAgNjAg
+KysKIC4uLi9kaXNwbGF5L3BhbmVsL2lubm9sdXgsZWRwLTJrLXBhbmVsLnR4dCAgICAgICAgIHwg
+IDIxICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGktc242NWRzaTg2LmMgICAgICAgICAgICAg
+IHwgNzQyICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVs
+LWlubm9sdXgtdHYxMjN3YW0uYyAgICAgfCAyOTkgKysrKysrKysrCiA0IGZpbGVzIGNoYW5nZWQs
+IDExMjIgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0CiBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
+ZWwvaW5ub2x1eCxlZHAtMmstcGFuZWwudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
+cHUvZHJtL2JyaWRnZS90aS1zbjY1ZHNpODYuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9wYW5lbC9wYW5lbC1pbm5vbHV4LXR2MTIzd2FtLmMKCi0tIApUaGUgUXVhbGNvbW0g
+SW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZv
+cnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0CgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBs
+aXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
