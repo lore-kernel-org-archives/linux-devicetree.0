@@ -1,64 +1,89 @@
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v3 2/2] iio: afe: unit-converter: new driver
-Date: Wed, 18 Apr 2018 10:37:21 +0100
-Message-ID: <20180418103721.00004171@huawei.com>
-References: <20180410152802.30958-1-peda@axentia.se>
-        <20180410152802.30958-3-peda@axentia.se>
-        <20180415183140.04c39ebe@archlinux>
-        <81e69701-d49b-6675-010d-99d5d3eaf827@axentia.se>
+From: =?utf-8?B?VmljZW7Fo2l1IEdhbGFub3B1bG8=?=
+        <vicentiu.galanopulo@nxp.com>
+Subject: RE: [PATCH net-next 3/3] net: phy: Enable C45 PHYs with vendor
+ specific address space
+Date: Wed, 18 Apr 2018 09:38:47 +0000
+Message-ID: <AM0PR04MB411620E8DB3E7EF8E55C99B5EEB60@AM0PR04MB4116.eurprd04.prod.outlook.com>
+References: <20180417090233.21548-1-vicentiu.galanopulo@nxp.com>
+ <20180417090233.21548-4-vicentiu.galanopulo@nxp.com>
+ <b62735bd-d411-2d21-16a2-f6cf7e5d7e4d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <81e69701-d49b-6675-010d-99d5d3eaf827@axentia.se>
+In-Reply-To: <b62735bd-d411-2d21-16a2-f6cf7e5d7e4d@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "Andrew F . Davis" <afd@ti.com>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, "andrew@lunn.ch" <andrew@lunn.ch>, "robh@kernel.org" <robh@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "davem@davemloft.net" <davem@davemloft.net>, "marcel@holtmann.org" <marcel@holtmann.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Alexandru Marginean <alexandru.marginean@nxp.com>, Madalin-cristian Bucur <madalin.bucur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 16 Apr 2018 09:12:45 +0200
-Peter Rosin <peda@axentia.se> wrote:
-
-> On 2018-04-15 19:31, Jonathan Cameron wrote:
-> > On Tue, 10 Apr 2018 17:28:02 +0200
-> > Peter Rosin <peda@axentia.se> wrote:
-> >   
-> >> If an ADC channel measures the midpoint of a voltage divider, the
-> >> interesting voltage is often the voltage over the full resistance.
-> >> E.g. if the full voltage is too big for the ADC to handle.
-> >> Likewise, if an ADC channel measures the voltage across a shunt
-> >> resistor, the interesting value is often the current through the
-> >> resistor.
-> >>
-> >> This driver solves both problems by allowing to linearly scale a channel
-> >> and by allowing changes to the type of the channel. Or both.
-> >>
-> >> Signed-off-by: Peter Rosin <peda@axentia.se>  
-> > So I 'think' the only outstanding question is Andrew's one about the driver
-> > name.  We aren't in a hurry at this point in the kernel cycle, so lets
-> > wait until that discussion has ended.  Assuming that we do possibly end
-> > up with a change, then please roll all the patches up into a single series
-> > to avoid me getting confusion.  
-> 
-> Yeah, sure, sorry for the split series, but the lt6106 that's present in
-> one of our newer designs didn't occur to me until just seconds after
-> firing the first half of the series. Which is kind of typical...
-> 
-> Anyway, about the driver naming. The suggestion I like best so far is
-> linear-scaler from Linus W, but thinking about it some more I think I
-> like iio-rescale even better.
-> 
-> Any objections to iio-rescale?
-
-Works for me. But then I rarely care 'that much' about naming and am
-responsible for plenty of previous confusing choices ;)
-
-Jonathan
-
-> 
-> Cheers,
-> Peter
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQoNCj4gPiBIYXZpbmcgZGV2LWFkZHIgc3RvcmVkIGluIGRldmljZXNfYWRkcnMsIGluIGdldF9w
+aHlfYzQ1X2lkcygpLCB3aGVuDQo+ID4gcHJvYmluZyB0aGUgaWRlbnRpZmllcnMsIGRldi1hZGRy
+IGNhbiBiZSBleHRyYWN0ZWQgZnJvbSBkZXZpY2VzX2FkZHJzDQo+ID4gYW5kIHByb2JlZCBpZiBk
+ZXZpY2VzX2FkZHJzW2N1cnJlbnRfaWRlbnRpZmllcl0gaXMgbm90IDAuDQo+IA0KPiBJIG11c3Qg
+Y2xlYXJseSBiZSBtaXNzaW5nIHNvbWV0aGluZywgYnV0IHdoeSBhcmUgeW91IGludHJvZHVjaW5n
+IGFsbCB0aGVzZQ0KPiBjb25kaXRpb25hbHMgaW5zdGVhZCBvZiB1cGRhdGluZyB0aGUgZXhpc3Rp
+bmcgY29kZSB0byBiZSBhYmxlIHRvIG9wZXJhdGUgYWdhaW5zdA0KPiBhbiBhcmJpdHJhcnkgZGV2
+LWFkZHIgdmFsdWUsIGFuZCB0aGVuIGp1c3QgbWFraW5nIHN1cmUgdGhlIGZpcnN0IHRoaW5nIHlv
+dSBkbyBpcw0KPiBmZXRjaCB0aGF0IHByb3BlcnR5IGZyb20gRGV2aWNlIFRyZWU/IFRoZXJlIGlz
+IG5vIHdheSBzb21lb25lIGlzIGdvaW5nIHRvIGJlDQo+IHRlc3Rpbmcgd2l0aCB5b3VyIHNwZWNp
+ZmljIHVzZSBjYXNlIGluIHRoZSBmdXR1cmUgKGV4Y2VwdCB5b3Vyc2VsdmVzKSBzbyB1bmxlc3Mg
+eW91DQo+IG1ha2Ugc3VwcG9ydGluZyBhbiBhcmJpdHJhcnkgImRldi1hZGRyIiB2YWx1ZSBiZWNv
+bWUgcGFydCBvZiBob3cgdGhlIGNvZGUNCj4gd29ya3MsIHRoaXMgaXMgZ29pbmcgdG8gYmUgYnJl
+YWtpbmcgYmFkbHkuDQo+DQoNCkhpIEZsb3JpYW4sDQoNCk15IGludGVudGlvbiB3YXMgdG8gaGF2
+ZSB0aGlzIHBhdGNoIGFzICJwbHVnaW4iIGFuZCBtb2RpZnkgdGhlIGV4aXN0aW5nIGtlcm5lbCBB
+UEkgbGl0dGxlIHRvIG5vbmUuIEkgd2FzIHRoaW5raW5nIHRoYXQgd2l0aCBhICNpZmRlZiwgaWRl
+YWxseSwgIGFsbCBjaGFuZ2VzIGNvdWxkIGJlIHBhcnQgb2YgYSBDT05GSUcga2VybmVsIG9wdGlv
+bi4NClVwZGF0aW5nIHRoZSBleGlzdGluZyBjb2RlLCBpbnN0ZWFkIG9mIHRoZSBjb25kaXRpb25h
+bHMsIG1pZ2h0IHJ1biBpbnRvIGp1c3QgdGhhdCwgYW5kIHRoZSBjaGFuZ2UgY291bGQgcHJvcGFn
+YXRlIGFjcm9zcyBtdWx0aXBsZSBtb2R1bGVzLiBUaGlzIGlzIGZyb20gbXkgZmlyc3QgUkZDIHBh
+dGNoLCByZXZpZXcgYnkgQW5kcmV3Og0KICAgICAgICBvZl9tZGlvYnVzX3JlZ2lzdGVyKCksIHdo
+ZW4gaXQgbG9vcHMgb3ZlciB0aGUgY2hpbGRyZW4sIGxvb2tzIGZvciANCiAgICAgICAgdGhlIG5l
+dyBwcm9wZXJ0eS4gSWYgZm91bmQsIGl0IHBhc3NlZCBkZXYtaWQgdG8gb2ZfbWRpb2J1c19yZWdp
+c3Rlcl9waHkoKS4NCiAgICAgICAgVGhhdCBwYXNzZXMgaXQgdG8gZ2V0X3BoeV9kZXZpY2UoKS4g
+SSB0aGluayBnZXRfcGh5X2RldmljZSgpIGNhbiANCiAgICAgICAgdGhlbiBzZXQgdGhlIElEIGlu
+IGM0NV9pZHMsIGJlZm9yZSBwYXNzaW5nIGl0IHRvIGdldF9waHlfaWQoKS4NCiAgICAgICAgZ2V0
+X3BoeV9jNDVfaWRzKCkgd2lsbCBmaXJzdCBsb29rIGF0IGRldmljZXMgaW4gcGFja2FnZSBhbmQg
+Y2FuIGFkZCANCiAgICAgICAgZnVydGhlciBkZXZpY2VzIHRvIGM0NV9pZHMuIEl0IHdpbGwgdGhl
+biBwcm9iZSBib3RoIHRob3NlIGZvdW5kLCBhbmQgDQogICAgICAgIHRoZSBzdGF0aWMNCiAgICAg
+ICAgb25lIHlvdSBhZGRlZC4NCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBB
+bmRyZXcNCg0KICAgICAgICBbVmljZW7Fo2l1IEdhbGFub3B1bG9dDQogICAgICAgIEp1c3QgdG8g
+bWFrZSBzdXJlIEkgdW5kZXJzdGFuZC4gRG8geW91IHdhbnQgbWUgdG8gY2hhbmdlIHRoZSBzaWdu
+YXR1cmUgDQogICAgICAgIG9mIGFsbCBvZl9tZGlvYnVzX3JlZ2lzdGVyX3BoeSgpLCBnZXRfcGh5
+X2RldmljZSgpLCBnZXRfcGh5X2lkKCkgYW5kDQogICAgICAgIGdldF9waHlfYzQ1X2lkcygpIGFu
+ZCBpbmNsdWRlIHRoZSBkZXZfYWRkciBwYXJhbWV0ZXIgb2J0YWluZWQgZnJvbSB0aGUgDQogICAg
+ICAgIGRldmljZSB0cmVlPyAgKGEgcHJvcGFnYXRpb24gb2YgdGhpcyBwYXJhbWV0ZXIgYWNyb3Nz
+IGFsbCBmdW5jdGlvbnMgDQogICAgICAgIGFsbCB0aGUgd2F5IHRvDQogICAgICAgIGdldF9waHlf
+YzQ1X2RldnNfaW5fcGtnPykgVGhpcyB3aWxsIGltcGFjdCB4Z2JlLW1kaW8uYywgZml4ZWRfcGh5
+LmMgDQogICAgICAgIGJlY2F1c2UgZ2V0X3BoeV9kZXZpY2UoKSBpcyB1c2VkIGluIHRoZXNlIGZp
+bGVzLiANCg0KIA0KIFRoZSAiY2F0Y2giIGlzIHRvIHRyYW5zcG9ydCB0aGUgZGV2LWFkZHIgdmFs
+dWUgZnJvbSBvZl9tZGlvLmMgKGxvY2F0aW9uIG9mIHRoZSAgbG9vcCBvZiB0aGUgUEhZIGRldmlj
+ZSB0cmVlIG5vZGUgd2hpY2ggcmVhZHMgYWxsIFBIWSBub2RlIHByb3BlcnRpZXMpIHRvIHBoeV9k
+ZXZpY2UuYyAodGhpcyBpcyB3aGVyZSB5b3UgY2FuIGdldCB0aGUgUEhZIElEKS4NCk15IHVuZGVy
+c3RhbmRpbmcgZnJvbSBBbmRyZXcncyBjb21tZW50IGlzIHRoYXQgdGhlIGtleSBoZXJlIGlzIHRo
+ZSBjNDVfaWRzLCBhbmQgdGhhdCB0aGVzZSBjb3VsZCBiZSBmaWxsZWQgaW4gb2ZfbWRpby5jLCBm
+aXJzdCwgd2l0aCB0aGUgSURzIGZyb20gZGV2LWFkZHIgKGhlIGNhbGxlZCB0aGVtICJzdGF0aWMi
+IGFzIHRoZXkgYXJlIHF1ZXJpZWQgZGlyZWN0bHkgYnkgdXNpbmcgdGhlIHZhbHVlIG9mIGRldi1h
+ZGRyKSBhbmQgYWZ0ZXJ3YXJkcywgaW4gcGh5X2RldmljZS5jIChmb2xsb3dpbmcgdGhlIGxvb2t1
+cCBsb29wIC0gaW4gYSAiZHluYW1pYyIgd2F5KS4NClRoZXJlJ3Mgbm90aGluZyBtb3JlIHRvIHRo
+aXMgcGF0Y2ggdGhhbiBzb21lIGZ1bmN0aW9uYWxpdHkgZnJvbSBwaHlfZGV2aWNlLmMgcG9ydGVk
+IHRvIG9mX21kaW8uYywgdG8gZW5hYmxlIHRoZSBleHRyYWN0aW9uIG9mIHRoZSBQSFkgSURzLiAN
+CkkgZ3Vlc3MgdGhlIGNvZGUgcmVkdW5kYW5jeSBjb3VsZCBiZSByZWR1Y2VkIChiZXR3ZWVuIG9m
+X21kaW8uYyBhbmQgcGh5X2RldmljZS5jKSBhbmQgbWF5YmUgeW91IG9yIEFuZHJldyBjb3VsZCBj
+b21tZW50IG9uIHRoaXMgaWYgeW91IHdvdWxkIGxpa2UgdG8gZ28gd2l0aCB0aGlzIHBhdGNoIGFw
+cHJvYWNoLg0KDQpOb3Qgc3VyZSBJIHVuZGVyc3RhbmQgeW91ciBjb21tZW50IGFib3V0IHRoZSBz
+cGVjaWZpYyB1c2UgY2FzZSBhbmQgdGhlIGJyZWFraW5nIGJhZGx5IHBhcnQuICANClJpZ2h0IG5v
+dyBJJ20gYWJsZSB0byB0ZXN0IGJlY2F1c2UgSSBoYXZlIGFjY2VzcyB0byBhIFBIWSB3aXRoIGRl
+di1hZGRyID0gMHgxZS4gDQpCdXQgdGhlIHdob2xlIG1lY2hhbmlzbSBpbiB0aGlzIHBhdGNoIHN0
+YXJ0cyB0byB3b3JrIHRoZSBtb21lbnQgeW91IHNldCA8ZGV2LWFkZHI+IGluIHRoZSBkZXZpY2Ug
+dHJlZS4gSWYgeW91IGRvbid0IHNldCB0aGF0LCBub3RoaW5nIGhhcHBlbnMuIElmIHlvdSBzZXQg
+aXQgdG8gYSBib2d1cyB2YWx1ZSwgbm8gUEhZIElEIHdpbGwgYmUgZm91bmQgYXQgdGhhdCBhZGRy
+ZXNzLiBCZXNpZGVzIHRoYXQsIHRoZSBQSFkgSUQgZXh0cmFjdGlvbiBjb2RlIGlzIHRoZSBzYW1l
+IGFzIHdoYXQgaXMgY3VycmVudGx5IHdvcmtpbmcgaW4gcGh5X2RldmljZS5jLiANCjgwLTkwJSBv
+ZiB0aGUgcGF0Y2ggaXMgYmFzZWQgb24gd2hhdCBhbHJlYWR5IGV4aXN0cyBpbiBwaHlfZGV2aWNl
+LmMgYW5kIG9mX21kaW8uYy4gV2hlcmUgaXMgdGhlIGJyZWFraW5nIGJhZGx5IHBhcnQgc3VwcG9z
+ZWQgdG8gaGFwcGVuPyANCg0KPiBBbmQgcGxlYXNlLCBjYW4geW91IGtlZXAgbWUgY29waWVkIGZv
+ciBuZXh0IHN1Ym1pc3Npb25zPw0KWWVzLCB0aGUgInRvIiBsaXN0IHdhcyBwcmV0dHkgbG9uZyBh
+bmQgSSBzb21laG93IG1pc3NlZCB5b3UuIFNvcnJ5Lg0KIA0KVmljZW50aXUNCg==
