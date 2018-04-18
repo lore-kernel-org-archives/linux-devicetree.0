@@ -1,58 +1,35 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v5 05/10] PCI: Adds device ID for Synopsys Sample
- Endpoint.
-Date: Wed, 18 Apr 2018 08:40:35 -0500
-Message-ID: <20180418134035.GM28657@bhelgaas-glaptop.roam.corp.google.com>
-References: <cover.1523973931.git.gustavo.pimentel@synopsys.com>
- <5d20185e88e7b6738d6b6aca41b1a237033fc36f.1523973931.git.gustavo.pimentel@synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/1] Add gpio-line-names property for Dragonboard820c
+Date: Wed, 18 Apr 2018 19:16:00 +0530
+Message-ID: <20180418134601.8502-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5d20185e88e7b6738d6b6aca41b1a237033fc36f.1523973931.git.gustavo.pimentel@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, bjorn.andersson@linaro.org, will.deacon@arm.com
+Cc: amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, todor.tomov@linaro.org, dragonboard@lists.96boards.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 17, 2018 at 03:34:23PM +0100, Gustavo Pimentel wrote:
-> The PCIe controller dual mode is capable of operating in host mode as well
-> as endpoint mode by configuration.
-> 
-> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> ---
-> Change v1->v2:
->  - Register new device id following Kishon's suggestion.
-> Change v2->v3:
->  - Nothing changed, just to follow the patch set version.
-> Changes v3->v4:
->  - Nothing changed, just to follow the patch set version.
-> Changes v4->v5:
->  - Nothing changed, just to follow the patch set version.
-> 
->  include/linux/pci_ids.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index cc608fc5..22b1c1b 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2350,6 +2350,7 @@
->  #define PCI_DEVICE_ID_CENATEK_IDE	0x0001
->  
->  #define PCI_VENDOR_ID_SYNOPSYS		0x16c3
-> +#define PCI_DEVICE_ID_SYNOPSYS_SMPL_EP	0xedda
+Add gpio-line-names property for 96Boards Dragonboard820c development
+board based on APQ8096 SoC. The lines are named after the 96Boards
+CE Specification 1.0, Appendix "Expansion Connector Signal Description".
+There are 4 gpio-controllers present on this board, including the
+APQ8096 SoC, PM8994 (GPIO, MPP) and PMI8994 (GPIO).
 
-This definition is only used once, so it fails the test at the top of
-pci_ids.h (we only add entries that will be shared between multiple
-drivers).  Just use the 0xedda constant in the driver.
+Considering the regular 96Boards Consumer Edition boards, this board belongs
+to Entended edition form factor, hence includes additional Primary,
+Secondary High Speed Connectors and one Camera Connector.
 
-I'm not really sure there's much value in the device ID definitions at
-all.  Maybe we should consider adding only new vendor IDs?
+Line names for PMI8994 MPP pins are not added due to the absence of the
+gpio-controller support.
 
->  #define PCI_VENDOR_ID_VITESSE		0x1725
->  #define PCI_DEVICE_ID_VITESSE_VSC7174	0x7174
-> -- 
-> 2.7.4
-> 
-> 
+Changes in v2:
+
+* Added schematic names in comments for lines with 96Boards spec names
+
+Manivannan Sadhasivam (1):
+  dts: qcom: db820c: Add gpio-line-names property
+
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 239 +++++++++++++++++++++++++++
+ 1 file changed, 239 insertions(+)
+
+-- 
+2.14.1
