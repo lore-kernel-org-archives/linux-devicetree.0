@@ -1,197 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [RFC PATCH] dt-bindings: add a jsonschema binding example
-Date: Wed, 18 Apr 2018 17:29:05 -0500
-Message-ID: <20180418222905.10414-1-robh@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: BCM5301X: Make usb3 phy use mdio phy driver
+Date: Wed, 18 Apr 2018 15:31:17 -0700
+Message-ID: <68519de5-9a47-9cb5-064c-dc4703aaa508@gmail.com>
+References: <20180315135647.48456-1-npcomplete13@gmail.com>
+ <20180409223153.41893-1-npcomplete13@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180409223153.41893-1-npcomplete13@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: grant.likely@arm.com, frowand.list@gmail.com, mark.rutland@arm.com, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, shawnguo@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, Jonathan Cameron <jic23@kernel.org>
+To: Vivek Unune <npcomplete13@gmail.com>, hauke@hauke-m.de, zajec5@gmail.com, jonmason@broadcom.com, bcm-kernel-feedback-list@broadcom.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The current DT binding documentation format of freeform text is painful
-to write, review, validate and maintain.
+On 04/09/2018 03:31 PM, Vivek Unune wrote:
+> Currently, usb3 phy in bcm5301x.dtsi uses platform driver which
+> requires register range "ccb-mii" <0x18003000 0x1000>. This range
+> overlaps with mdio cmd and param registers (<0x18003000 0x8>).
+> Essentially, the platform driver partly acts like a mdio bus
+> driver, hence to use of this register range.
+> 
+> In some Northstar devices like Linksys EA9500, secondary switch
+> is connected via external mdio. The only way to access and
+> configure the external switch is via mdio bus. When we enable the
+> mdio bus in it's current state, the mdio bus and any child buses
+> fail to register because of the register range overlap.
+> 
+> On Northstar, the usb3 phy is connected at address 0x10 on the
+> internal mdio bus. This change moves the usb3_phy node and makes
+> it a child node of internal mdio bus.
+> 
+> Thanks to Rafał Miłecki's commit af850e14a7ae
+> ("phy: bcm-ns-usb3: add MDIO driver using proper bus layer") the
+> same usb3 platform driver can now act as usb3 phy mdio driver.
+> 
+> Tested on Linksys Panamera (EA9500)
+> 
+> Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
+> ---
+> v2: Disabled usb3_phy by default, then enabled in dts where
+>     necessary
 
-This is just an example of what a binding in the schema format looks
-like. It's using jsonschema vocabulary in a YAML encoded document. Using
-jsonschema gives us access to existing tooling. A YAML encoding gives us
-something easy to edit.
-
-This example is just the tip of the iceberg, but it the part most
-developers writing bindings will interact with. Backing all this up
-are meta-schema (to validate the binding schemas), some DT core schema,
-YAML encoded DT output with dtc, and a small number of python scripts to
-run validation. The gory details including how to run end-to-end
-validation can be found here:
-
-https://www.spinics.net/lists/devicetree-spec/msg00649.html
-
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-Cc list,
-You all review and/or write lots of binding documents. I'd like some feedback
-on the format.
-
-Thanks,
-Rob
-
- .../devicetree/bindings/example-schema.yaml        | 149 +++++++++++++++++++++
- 1 file changed, 149 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/example-schema.yaml
-
-diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
-new file mode 100644
-index 000000000000..fe0a3bd1668e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/example-schema.yaml
-@@ -0,0 +1,149 @@
-+# SPDX-License-Identifier: BSD-2-Clause
-+# Copyright 2018 Linaro Ltd.
-+%YAML 1.2
-+---
-+# All the top-level keys are standard json-schema keywords except for
-+# 'maintainers' and 'select'
-+
-+# $id is a unique idenifier based on the filename
-+$id: "http://devicetree.org/schemas/example-schema.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+# Only 1 version supported for now
-+version: 1
-+
-+title: An example schema annotated with jsonschema details
-+
-+maintainers:
-+  - Rob Herring <robh@kernel.org>
-+
-+description: |
-+  A more detailed multi-line description of the binding.
-+
-+  Details about the hardware device and any links to datasheets can go here.
-+
-+  The end of the description is marked by indentation less than the first line
-+  in the description.
-+
-+select: false
-+  # 'select' is a schema applied to a DT node to determine if this binding
-+  # schema should be applied to the node. It is optional and by default the
-+  # possible compatible strings are extracted and used to match.
-+
-+properties:
-+  # A dictionary of DT properties for this binding schema
-+  compatible:
-+    # More complicated schema can use oneOf (XOR), anyOf (OR), or allOf (AND)
-+    # to handle different conditions.
-+    # In this case, it's needed to handle a variable number of values as there
-+    # isn't another way to express a constraint of the last string value.
-+    # The boolean schema must be a list of schemas.
-+    oneOf:
-+      - items:
-+          # items is a list of possible values for the property. The number of
-+          # values is determined by the number of elements in the list.
-+          # Order in lists is significant, order in dicts is not
-+          # Must be one of the 1st enums followed by the 2nd enum
-+          #
-+          # Each element in items should be 'enum' or 'const'
-+          - enum:
-+              - vendor,soc4-ip
-+              - vendor,soc3-ip
-+              - vendor,soc2-ip
-+          - enum:
-+              - vendor,soc1-ip
-+        # additionalItems being false is implied
-+        # minItems/maxItems equal to 2 is implied
-+      - items:
-+          # 'const' is just a special case of an enum with a single possible value
-+          - const: vendor,soc1-ip
-+
-+  reg:
-+    # The description of each element defines the order and implicitly defines
-+    # the number of reg entries
-+    items:
-+      - description: core registers
-+      - description: aux registers
-+    # minItems/maxItems equal to 2 is implied
-+
-+  reg-names:
-+    # The core schema enforces this is a string array
-+    items:
-+      - const: core
-+      - const: aux
-+
-+  clocks:
-+    # Only a single entry, so just need to set the max number of items.
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: bus
-+
-+  interrupts:
-+    # Either 1 or 2 interrupts can be present
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: tx or combined interrupt
-+      - description: rx interrupt
-+
-+    description: |
-+      A variable number of interrupts warrants a description of what conditions
-+      affect the number of interrupts. Otherwise, descriptions on standard
-+      properties are not necessary.
-+
-+  interrupt-names:
-+    # minItems must be specified here because the default would be 2
-+    minItems: 1
-+    items:
-+      - const: "tx irq"
-+      - const: "rx irq"
-+
-+  # Property names starting with '#' must be quoted
-+  '#interrupt-cells':
-+    # A simple case where the value must always be '2'.
-+    # The core schema handles that this must be a single integer.
-+    const: 2
-+
-+  interrupt-controller: {}
-+    # The core checks this is a boolean, so just have to list it here to be
-+    # valid for this binding.
-+
-+  clock-frequency:
-+    # The type is set in the core schema. Per device schema only need to set
-+    # constraints on the possible values.
-+    minimum: 100
-+    maximum: 400000
-+    # The value that should be used if the property is not present
-+    default: 200
-+
-+  foo-gpios:
-+    maxItems: 1
-+    description: A connection of the 'foo' gpio line.
-+
-+  vendor,int-property:
-+    description: Vendor specific properties must have a description
-+    type: integer # A type is also required
-+    enum: [2, 4, 6, 8, 10]
-+
-+  vendor,bool-property:
-+    description: Vendor specific properties must have a description
-+    type: boolean
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+
-+examples:
-+  - |
-+    /{
-+          compatible = "vendor,soc4-ip", "vendor,soc1-ip";
-+          reg = <0x1000 0x80>,
-+                <0x3000 0x80>;
-+          reg-names = "core", "aux";
-+          interrupts = <10>;
-+          interrupt-controller;
-+    };
---
-2.14.1
+Rafal, Hauke, this looks good to me, can you review? Thanks
+-- 
+Florian
