@@ -1,53 +1,88 @@
-Return-Path: <SRS0=UpLl=HG=ti.com=t-kristo@kernel.org>
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [RFC 00/13] ARM: dts: DT overlay support infra + some data
-Date: Tue, 17 Apr 2018 12:10:02 +0300
-Message-ID: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC 05/11] usb: common: roles: add fwnode graph parsing
+Date: Wed, 18 Apr 2018 17:09:59 +0900
+Message-Id: <1524039005-30618-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com
-Cc: wmills@ti.com, tony@atomide.com, trini@konsulko.com, rmk@armlinux.org.uk
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com
+Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, p.zabel@pengutronix.de, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+This patch adds fwnode graph parsing to set usb[23]_port and udc
+into the usb_role_switch structure by usb_role_switch_register().
 
-This series is an attempt to start discussion on the DT overlay build time
-support. Basically, one can build DT overlays directly from kernel tree,
-and also build FIT images that contain the kernel + devicetree blobs
-required for specific configuration that can be booted directly with
-u-boot. No runtime support for overlay switching is touched by this
-series.
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ drivers/usb/common/roles.c | 40 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 39 insertions(+), 1 deletion(-)
 
-What this series does, is to:
-
-1) add subdir support under arch/arm/boot/dts
-2) provide DT overlay build support to kernel tree
-3) provide FIT image build support to kernel tree
-4) provide a number of DT overlay + FIT image files for some TI SoCs
-   to show the reasons why we are doing this, this is only a subset
-   of our boards that we would want to use overlays with
-
-Main reason for TI to use DT overlays right now is the rather large
-amount of different displays we have around, which can be used with
-different boards. With the current approach one needs to write a
-separate .dts file for each board + display config, but with overlays,
-one can just create a single overlay that would apply to different boards.
-There are some other cases like the shown dra71-evm case in this series,
-where the gpmc vs. display support is mutually exclusive, as they are
-sharing certain pieces of the HW.
-
-The main controversy with this series is most likely where the DT overlay
-files should be stored at. Should they still reside with the kernel
-tree or someplace else? Also, the FIT image support is probably
-controversial, should it be part of the kernel build system like shown
-here, or should it be separate? The zImage dependency is pretty annoying
-so maybe it should be done somewhere else.
-
-Any comments welcome as this is just an RFC for now, but basically we
-would really want a solution to this problem.
-
--Tero
-
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/drivers/usb/common/roles.c b/drivers/usb/common/roles.c
+index 15cc76e..cc1c55a 100644
+--- a/drivers/usb/common/roles.c
++++ b/drivers/usb/common/roles.c
+@@ -11,6 +11,8 @@
+ #include <linux/device.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
++#include <linux/of_platform.h>
++#include <linux/property.h>
+ #include <linux/slab.h>
+ 
+ static struct class *role_class;
+@@ -219,6 +221,42 @@ static void usb_role_switch_release(struct device *dev)
+ 	.release = usb_role_switch_release,
+ };
+ 
++static void usb_role_parse_fwnode_graph(struct usb_role_switch *sw)
++{
++	struct fwnode_handle *parent = sw->dev.parent->fwnode;
++	struct fwnode_handle *child_ep, *child_port;
++	struct fwnode_handle *remote;
++	/* This order comes from DT bindings */
++	struct device **dev[] = {
++		&sw->usb2_port,
++		&sw->usb3_port,
++		&sw->udc,
++	};
++	u32 port;
++
++	fwnode_graph_for_each_endpoint(parent, child_ep) {
++		child_port = fwnode_get_parent(child_ep);
++		if (!child_port)
++			continue;
++
++		if (fwnode_property_read_u32(child_port, "reg", &port) < 0)
++			continue;
++
++		if (port >= ARRAY_SIZE(dev))
++			break;
++
++		remote = fwnode_graph_get_remote_port_parent(child_ep);
++		if (remote) {
++			struct device_node *remote_np = to_of_node(remote);
++			struct platform_device *pdev;
++
++			pdev = of_find_device_by_node(remote_np);
++			if (pdev)
++				*dev[port] = &pdev->dev;
++		}
++	};
++}
++
+ /**
+  * usb_role_switch_register - Register USB Role Switch
+  * @parent: Parent device for the switch
+@@ -267,7 +305,7 @@ struct usb_role_switch *
+ 		return ERR_PTR(ret);
+ 	}
+ 
+-	/* TODO: Symlinks for the host port and the device controller. */
++	usb_role_parse_fwnode_graph(sw);
+ 
+ 	return sw;
+ }
+-- 
+1.9.1
