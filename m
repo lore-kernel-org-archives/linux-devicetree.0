@@ -1,7 +1,7 @@
 From: Phil Elwell <phil@raspberrypi.org>
-Subject: [PATCH v2 3/3] dt-bindings: Document the DT bindings for lan78xx
-Date: Wed, 18 Apr 2018 16:45:23 +0100
-Message-ID: <1524066323-109628-4-git-send-email-phil@raspberrypi.org>
+Subject: [PATCH v2 1/3] lan78xx: Read MAC address from DT if present
+Date: Wed, 18 Apr 2018 16:45:21 +0100
+Message-ID: <1524066323-109628-2-git-send-email-phil@raspberrypi.org>
 References: <1524066323-109628-1-git-send-email-phil@raspberrypi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1524066323-109628-1-git-send-email-phil@raspberrypi.org>
@@ -10,81 +10,81 @@ To: Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNG
 Cc: Phil Elwell <phil@raspberrypi.org>
 List-Id: devicetree@vger.kernel.org
 
-The Microchip LAN78XX family of devices are Ethernet controllers with
-a USB interface. Despite being discoverable devices it can be useful to
-be able to configure them from Device Tree, particularly in low-cost
-applications without an EEPROM or programmed OTP.
-
-Document the supported properties in a bindings file.
+There is a standard mechanism for locating and using a MAC address from
+the Device Tree. Use this facility in the lan78xx driver to support
+applications without programmed EEPROM or OTP. At the same time,
+regularise the handling of the different address sources.
 
 Signed-off-by: Phil Elwell <phil@raspberrypi.org>
 ---
- .../devicetree/bindings/net/microchip,lan78xx.txt  | 44 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/microchip,lan78xx.txt
+ drivers/net/usb/lan78xx.c | 42 ++++++++++++++++++++----------------------
+ 1 file changed, 20 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/microchip,lan78xx.txt b/Documentation/devicetree/bindings/net/microchip,lan78xx.txt
-new file mode 100644
-index 0000000..fa68f9b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/microchip,lan78xx.txt
-@@ -0,0 +1,44 @@
-+Microchip LAN78xx Gigabit Ethernet controller
-+
-+The LAN78XX devices are usually configured by programming their OTP or with
-+an external EEPROM, but some platforms (e.g. Raspberry Pi 3 B+) have neither.
-+The Device Tree properties, if present, override the OTP and EEPROM.
-+
-+Required properties:
-+- compatible: Should be one of "usb424,7800", "usb424,7801" or "usb424,7850".
-+
-+Optional properties:
-+- local-mac-address:   see ethernet.txt
-+- mac-address:         see ethernet.txt
-+- microchip,led-modes: a 0..4 element vector, with each element configuring
-+  the operating mode of an LED. Omitted LEDs are turned off. Allowed values
-+  are defined in "include/dt-bindings/net/microchip-78xx.h".
-+
-+Example:
-+
-+/* Standard configuration for a Raspberry Pi 3 B+ */
-+&usb {
-+	usb1@1 {
-+		compatible = "usb424,2514";
-+		reg = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usb1_1@1 {
-+			compatible = "usb424,2514";
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			ethernet: usbether@1 {
-+				compatible = "usb424,7800";
-+				reg = <1>;
-+				local-mac-address = [ 00 11 22 33 44 55 ];
-+				microchip,led-modes = <
-+					LAN78XX_LINK_1000_ACTIVITY
-+					LAN78XX_LINK_10_100_ACTIVITY
-+				>;
-+			};
-+		};
-+	};
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9c9bc63..5352bbb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14572,6 +14572,7 @@ M:	Woojung Huh <woojung.huh@microchip.com>
- M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/net/microchip,lan78xx.txt
- F:	drivers/net/usb/lan78xx.*
- F:	include/dt-bindings/net/microchip-78xx.h
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index 0867f72..a823f01 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -37,6 +37,7 @@
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/microchipphy.h>
+ #include <linux/phy.h>
++#include <linux/of_net.h>
+ #include "lan78xx.h"
  
+ #define DRIVER_AUTHOR	"WOOJUNG HUH <woojung.huh@microchip.com>"
+@@ -1652,34 +1653,31 @@ static void lan78xx_init_mac_address(struct lan78xx_net *dev)
+ 	addr[5] = (addr_hi >> 8) & 0xFF;
+ 
+ 	if (!is_valid_ether_addr(addr)) {
+-		/* reading mac address from EEPROM or OTP */
+-		if ((lan78xx_read_eeprom(dev, EEPROM_MAC_OFFSET, ETH_ALEN,
+-					 addr) == 0) ||
+-		    (lan78xx_read_otp(dev, EEPROM_MAC_OFFSET, ETH_ALEN,
+-				      addr) == 0)) {
+-			if (is_valid_ether_addr(addr)) {
+-				/* eeprom values are valid so use them */
+-				netif_dbg(dev, ifup, dev->net,
+-					  "MAC address read from EEPROM");
+-			} else {
+-				/* generate random MAC */
+-				random_ether_addr(addr);
+-				netif_dbg(dev, ifup, dev->net,
+-					  "MAC address set to random addr");
+-			}
+-
+-			addr_lo = addr[0] | (addr[1] << 8) |
+-				  (addr[2] << 16) | (addr[3] << 24);
+-			addr_hi = addr[4] | (addr[5] << 8);
+-
+-			ret = lan78xx_write_reg(dev, RX_ADDRL, addr_lo);
+-			ret = lan78xx_write_reg(dev, RX_ADDRH, addr_hi);
++		if (!eth_platform_get_mac_address(&dev->udev->dev, addr)) {
++			/* valid address present in Device Tree */
++			netif_dbg(dev, ifup, dev->net,
++				  "MAC address read from Device Tree");
++		} else if (((lan78xx_read_eeprom(dev, EEPROM_MAC_OFFSET,
++						 ETH_ALEN, addr) == 0) ||
++			    (lan78xx_read_otp(dev, EEPROM_MAC_OFFSET,
++					      ETH_ALEN, addr) == 0)) &&
++			   is_valid_ether_addr(addr)) {
++			/* eeprom values are valid so use them */
++			netif_dbg(dev, ifup, dev->net,
++				  "MAC address read from EEPROM");
+ 		} else {
+ 			/* generate random MAC */
+ 			random_ether_addr(addr);
+ 			netif_dbg(dev, ifup, dev->net,
+ 				  "MAC address set to random addr");
+ 		}
++
++		addr_lo = addr[0] | (addr[1] << 8) |
++			  (addr[2] << 16) | (addr[3] << 24);
++		addr_hi = addr[4] | (addr[5] << 8);
++
++		ret = lan78xx_write_reg(dev, RX_ADDRL, addr_lo);
++		ret = lan78xx_write_reg(dev, RX_ADDRH, addr_hi);
+ 	}
+ 
+ 	ret = lan78xx_write_reg(dev, MAF_LO(0), addr_lo);
 -- 
 2.7.4
