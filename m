@@ -1,63 +1,97 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [[RFC]DPU PATCH 0/4] Add suppport for sn65dsi86 bridge chip and
- Innolux 2k edp panel driver
-Date: Wed, 18 Apr 2018 10:12:07 -0400
-Message-ID: <20180418141207.GX73214@art_vandelay>
-References: <1524054002-17869-1-git-send-email-spanda@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 07/10] Documentation: dt-bindings: Add documents for
+ PECI hwmon client drivers
+Date: Wed, 18 Apr 2018 09:32:36 -0500
+Message-ID: <CAL_JsqLcxEnCOywTtU14G4=6A5m6G=KH3oi8m1VxKSEdxuv-ww@mail.gmail.com>
+References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
+ <20180410183212.16787-8-jae.hyun.yoo@linux.intel.com> <20180416181423.t4vf7sugv6z3aw5h@rob-hp-laptop>
+ <aee4e04c-885f-b1d8-9e85-9e741551342f@linux.intel.com> <287e0fd9-b631-2602-2785-7b8aaed7a6b9@linux.intel.com>
+ <6ff697e8-cd20-e551-da13-b614cc39f900@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1524054002-17869-1-git-send-email-spanda@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sandeep Panda <spanda@codeaurora.org>
-Cc: devicetree@vger.kernel.org, ryadav@codeaurora.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, abhinavk@codeaurora.org, hoegsberg@chromium.org, freedreno@lists.freedesktop.org, chandanu@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6ff697e8-cd20-e551-da13-b614cc39f900@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBcHIgMTgsIDIwMTggYXQgMDU6NDk6NThQTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
-cm90ZToKPiBDaGFuZ2Vsb2c6Cj4gCj4gdjMgLT4gdjQ6CgpJIGRpZG4ndCByZWFsbHkgYm90aGVy
-IHRvIGRvIGEgdGhvcm91Z2ggcmV2aWV3IGdpdmVuIHRoYXQgdGhlcmUgYXJlIG9idmlvdXMKbWlz
-dGFrZXMgYW5kIGlnbm9yZWQgZmVlZGJhY2ssIGl0J3MgYSB3YXN0ZSBvZiB0aW1lLCB0YmguIFBs
-ZWFzZSBnbyB0aHJvdWdoCnRoZSBwcmV2aW91cyByZXZpZXdzIGFuZCByZXNlbmQgYSBtb3JlIHBv
-bGlzaGVkIHZlcnNpb24uCgpTZWFuCgo+IEN1cnJlbnQgcGF0Y2hzZXQgc2VwYXJhdGVzIG91dCBl
-RFAgcGFuZWwgc3BlY2lmaWMgcmVzb3VyY2VzIGZyb20gc242NWRzaTg2Cj4gYnJpZGdlIGRyaXZl
-ciBhbmQgY3JlYXRlcyBhIHNlcGFyYXRlIGRyaXZlciBmb3IgdGhlIGlubmxvdXggZWRwIHBhbmVs
-Lgo+IAo+IE5vdyBicmlkZ2UgZHJpdmVyIGNoZWNrIGlmIGFueSBwYW5lbCBpcyBhdHRhY2hlZCBv
-ciBub3QgdG8gZ2V0IHRoZSBzdXBwb3J0ZWQKPiBtb2Rlcy4gSWYgYW55IHBhbmVsIGlzIGF0dGFj
-aGVkIHRoZW4gcXVlcnkgZnJvbSBwYW5lbCBkcml2ZXIgdG8gZ2V0IHRoZSBtb2RlcywKPiBvciBl
-bHNlIHByb2JlIHRoZSBwcm92aWRlZCBpMmMgYWRhcHRlciB0byByZWFkIHRoZSBtb2RlcyBmcm9t
-IEVESUQuCj4gCj4gUmVtb3ZlZCBoYXJkY29kaW5nIG9mIGJyaWRnZSBpbml0IHNlcXVlbmNlLiBX
-aXRoIHRoaXMgcGF0Y2hzZXQgYnJpZGdlIGRyaXZlciBub3cKPiB3aWxsIHByb2dyYW0gdGhlIGlu
-aXQgc2VxdWVuY2UgYmFzZWQgb24gdGhlIGN1cnJlbnQgbW9kZSBzZXQgYnkgZHJtIGZyYW1ld29y
-ay4KPiAKPiBDdXJyZW50IHBhdGNoc2V0IGlzIG5vdCB0ZXN0ZWQgb24gYWN0dWFsIGJyaWRnZSBj
-aGlwL3BhbmVsLgo+IAo+IFNhbmRlZXAgUGFuZGEgKDQpOgo+ICAgZHJtL2JyaWRnZTogYWRkIHN1
-cHBvcnQgZm9yIHNuNjVkc2k4NiBicmlkZ2UgZHJpdmVyCj4gICBkdC1iaW5kaW5nczogZHJtL2Jy
-aWRnZTogRG9jdW1lbnQgc242NWRzaTg2IGJyaWRnZSBiaW5kaW5ncwo+ICAgZHJtL3BhbmVsOiBh
-ZGQgSW5ub2x1eCBUVjEyM1dBTSBlRFAgcGFuZWwgZHJpdmVyCj4gICBkdC1iaW5kaW5nczogQWRk
-IElubm9sdXggVFYxMjNXQU0gcGFuZWwgYmluZGluZ3MKPiAKPiAgLi4uL2JpbmRpbmdzL2Rpc3Bs
-YXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQgICAgICAgfCAgNjAgKysKPiAgLi4uL2Rpc3BsYXkv
-cGFuZWwvaW5ub2x1eCxlZHAtMmstcGFuZWwudHh0ICAgICAgICAgfCAgMjEgKwo+ICBkcml2ZXJz
-L2dwdS9kcm0vYnJpZGdlL3RpLXNuNjVkc2k4Ni5jICAgICAgICAgICAgICB8IDc0MiArKysrKysr
-KysrKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLWlubm9sdXgtdHYx
-MjN3YW0uYyAgICAgfCAyOTkgKysrKysrKysrCj4gIDQgZmlsZXMgY2hhbmdlZCwgMTEyMiBpbnNl
-cnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAo+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5u
-b2x1eCxlZHAtMmstcGFuZWwudHh0Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0vYnJpZGdlL3RpLXNuNjVkc2k4Ni5jCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0vcGFuZWwvcGFuZWwtaW5ub2x1eC10djEyM3dhbS5jCj4gCj4gLS0gCj4gVGhlIFF1YWxj
-b21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9y
-YSBGb3J1bSwKPiBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cj4gCgot
-LSAKU2VhbiBQYXVsLCBTb2Z0d2FyZSBFbmdpbmVlciwgR29vZ2xlIC8gQ2hyb21pdW0gT1MKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Apr 17, 2018 at 3:40 PM, Jae Hyun Yoo
+<jae.hyun.yoo@linux.intel.com> wrote:
+> On 4/16/2018 4:51 PM, Jae Hyun Yoo wrote:
+>>
+>> On 4/16/2018 4:22 PM, Jae Hyun Yoo wrote:
+>>>
+>>> On 4/16/2018 11:14 AM, Rob Herring wrote:
+>>>>
+>>>> On Tue, Apr 10, 2018 at 11:32:09AM -0700, Jae Hyun Yoo wrote:
+>>>>>
+>>>>> This commit adds dt-bindings documents for PECI cputemp and dimmtemp
+>>>>> client
+>>>>> drivers.
+>>>>
+>>>>
+>
+> [...]
+>
+>>>>> +Example:
+>>>>> +    peci-bus@0 {
+>>>>> +        #address-cells = <1>;
+>>>>> +        #size-cells = <0>;
+>>>>> +        < more properties >
+>>>>> +
+>>>>> +        peci-dimmtemp@cpu0 {
+>>>>
+>>>>
+>>>> unit-address is wrong.
+>>>>
+>>>
+>>> Will fix it using the reg value.
+>>>
+>>>> It is a different bus from cputemp? Otherwise, you have conflicting
+>>>> addresses. If that's the case, probably should make it clear by showing
+>>>> different host adapters for each example.
+>>>>
+>>>
+>>> It could be the same bus with cputemp. Also, client address sharing is
+>>> possible by PECI core if the functionality is different. I mean, cputemp and
+>>> dimmtemp targeting the same client is possible case like this.
+>>> peci-cputemp@30
+>>> peci-dimmtemp@30
+>>>
+>>
+>> Oh, I got your point. Probably, I should change these separate settings
+>> into one like
+>>
+>> peci-client@30 {
+>>      compatible = "intel,peci-client";
+>>      reg = <0x30>;
+>> };
+>>
+>> Then cputemp and dimmtemp drivers could refer the same compatible string.
+>> Will rewrite it.
+>>
+>
+> I've checked it again and realized that it should use function based node
+> name like:
+>
+> peci-cputemp@30
+> peci-dimmtemp@30
+>
+> If it use the same string like 'peci-client@30', the drivers cannot be
+> selectively enabled. The client address sharing way is well handled in PECI
+> core and this way would be better for the future implementations of other
+> PECI functional drivers such as crash dump driver and so on. So I'm going
+> change the unit-address only.
+
+2 nodes at the same address is wrong (and soon dtc will warn you on
+this). You have 2 potential options. The first is you need additional
+address information in the DT if these are in fact 2 independent
+devices. This could be something like a function number to use
+something from PCI addressing. From what I found on PECI, it doesn't
+seem to have anything like that. The 2nd option is you have a single
+DT node which registers multiple hwmon devices. DT nodes and drivers
+don't have to be 1-1. Don't design your DT nodes from how you want to
+partition drivers in some OS.
+
+Rob
