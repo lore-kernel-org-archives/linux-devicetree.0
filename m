@@ -1,60 +1,454 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v6 01/11] ARM: sunxi: smp: Move assembly code into a file
-Date: Wed, 18 Apr 2018 18:05:03 +0800
-Message-ID: <CAGb2v64UCA825xC=wvBZ6n0K-c=vsOO15F7S6Bn=i9c=eAqYww@mail.gmail.com>
-References: <20180416215032.5023-1-mylene.josserand@bootlin.com>
- <20180416215032.5023-2-mylene.josserand@bootlin.com> <CAGb2v67VL70yqTF7xq4T3_9zA9T3UT2AV0gGarh1mqvC17r3Mg@mail.gmail.com>
- <20180417111737.6dous6eiuvjn33jf@flea> <CAGb2v67qvk=T7u7bOjVZ7q_qsjJuEOM6iarw7by42ga=EYuYDg@mail.gmail.com>
- <20180418084535.lqdvjgcbxtnwqwri@flea>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2] ARM: dts: Add am335x-pocketbeagle
+Date: Wed, 18 Apr 2018 11:15:08 +0100
+Message-ID: <20180418111508.0000698b@huawei.com>
+References: <20180416220828.19338-1-robertcnelson@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180418084535.lqdvjgcbxtnwqwri@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@bootlin.com>, Russell King <linux@armlinux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Simon <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, "open list:ARM/SHMOBILE ARM..." <linux-renesas-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Quentin Schulz <quentin.schulz@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180416220828.19338-1-robertcnelson@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robert Nelson <robertcnelson@gmail.com>
+Cc: devicetree@vger.kernel.org, tony@atomide.com, Drew Fustini <drew@beagleboard.org>, Peter Robinson <pbrobinson@redhat.com>, Jason Kridner <jkridner@beagleboard.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 18, 2018 at 4:45 PM, Maxime Ripard
-<maxime.ripard@bootlin.com> wrote:
-> On Tue, Apr 17, 2018 at 07:25:15PM +0800, Chen-Yu Tsai wrote:
->> On Tue, Apr 17, 2018 at 7:17 PM, Maxime Ripard
->> <maxime.ripard@bootlin.com> wrote:
->> > On Tue, Apr 17, 2018 at 11:12:41AM +0800, Chen-Yu Tsai wrote:
->> >> On Tue, Apr 17, 2018 at 5:50 AM, Mylène Josserand
->> >> <mylene.josserand@bootlin.com> wrote:
->> >> > Move the assembly code for cluster cache enabling and resuming
->> >> > into an assembly file instead of having it directly in C code.
->> >> >
->> >> > Remove the CFLAGS because we are using the ARM directive "arch"
->> >> > instead.
->> >> >
->> >> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
->> >> > ---
->> >> >  arch/arm/mach-sunxi/Makefile  |  4 +--
->> >> >  arch/arm/mach-sunxi/headsmp.S | 80 +++++++++++++++++++++++++++++++++++++++++
->> >> >  arch/arm/mach-sunxi/mc_smp.c  | 82 +++----------------------------------------
->> >> >  3 files changed, 85 insertions(+), 81 deletions(-)
->> >> >  create mode 100644 arch/arm/mach-sunxi/headsmp.S
->> >>
->> >> I'm still not convinced about this whole "move ASM to separate
->> >> file" thing, especially now that you aren't actually adding any
->> >> sunxi-specific ASM code beyond a simple function call.
->> >>
->> >> Could you drop this for now?
->> >
->> > I'd really like to have this merged actually. There's a significant
->> > readibility improvement, so even if there's no particular functional
->> > improvement, I'd still call it a win.
->>
->> What parts do you consider hard to read? The extra quotes? Trailing
->> newline? Or perhaps the __stringify bits?
->
-> All of this, plus the clobbers and operands.
+On Mon, 16 Apr 2018 17:08:28 -0500
+Robert Nelson <robertcnelson@gmail.com> wrote:
 
-Ok. Lets move it then.
+> PocketBeagle is an ultra-tiny-yet-complete open-source USB-key-fob computer.
+> 
+> This board can be indentified by the BPxx value after A335BNLT (BBB)
+> in the at24 eeprom:
+> BPxx [aa 55 33 ee 41 33 33 35  42 4e 4c 54 42 50 30 30 |.U3.A335BNLTBP00|]
+> 
+> http://beagleboard.org/pocket
+> https://github.com/beagleboard/pocketbeagle
+> 
+> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+> CC: Tony Lindgren <tony@atomide.com>
+> CC: Jason Kridner <jkridner@beagleboard.org>
+> CC: Drew Fustini <drew@beagleboard.org>
+> CC: Peter Robinson <pbrobinson@redhat.com>
+Hi Robert,
 
-The kbuild reports indicate this still needs some work though.
+Great to see this.  One small comment, the copyright notices for 2012
+seem a little unlikely to be 'complete'.  I guess a lot is copied from
+files dating back that far, but not everything so do we not want to
+reflect more recent work on these?
 
-ChenYu
+Jonathan
+
+> ---
+> Changes in v2:
+> - Use SPDX tags.
+> - Use eeprom@50, remove repeated node and fix  and remove '_' to fix node_name_chars_strict Warning
+> - Fix: PocketBeagle Name in Subject (not PocketBeagle Blue)
+> - Fix: leds remove '_' to fix node_name_chars_strict warning
+> - Fix: node_name_chars_strict pinmux_*_pins label's.
+> ---
+>  arch/arm/boot/dts/Makefile                   |   1 +
+>  arch/arm/boot/dts/am335x-osd335x-common.dtsi | 124 ++++++++++
+>  arch/arm/boot/dts/am335x-pocketbeagle.dts    | 237 +++++++++++++++++++
+>  3 files changed, 362 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/am335x-osd335x-common.dtsi
+>  create mode 100644 arch/arm/boot/dts/am335x-pocketbeagle.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 7e2424957809..5a09ff15743b 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -688,6 +688,7 @@ dtb-$(CONFIG_SOC_AM33XX) += \
+>  	am335x-pdu001.dtb \
+>  	am335x-pepper.dtb \
+>  	am335x-phycore-rdk.dtb \
+> +	am335x-pocketbeagle.dtb \
+>  	am335x-shc.dtb \
+>  	am335x-sbc-t335.dtb \
+>  	am335x-sl50.dtb \
+> diff --git a/arch/arm/boot/dts/am335x-osd335x-common.dtsi b/arch/arm/boot/dts/am335x-osd335x-common.dtsi
+> new file mode 100644
+> index 000000000000..d2150d207b7a
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/am335x-osd335x-common.dtsi
+> @@ -0,0 +1,124 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
+Seems a little odd not to have a 'slightly' more recent copyright notice
+for a device that definitely didn't exist in 2012!
+
+> + *
+> + * Author: Robert Nelson <robertcnelson@gmail.com>
+> + */
+> +
+> +/ {
+> +	cpus {
+> +		cpu@0 {
+> +			cpu0-supply = <&dcdc2_reg>;
+> +		};
+> +	};
+> +
+> +	memory@80000000 {
+> +		device_type = "memory";
+> +		reg = <0x80000000 0x20000000>; /* 512 MB */
+> +	};
+> +};
+> +
+> +&cpu0_opp_table {
+> +	/*
+> +	* Octavo Systems:
+> +	* The EFUSE_SMA register is not programmed for any of the AM335x wafers
+> +	* we get and we are not programming them during our production test.
+> +	* Therefore, from a DEVICE_ID revision point of view, the silicon looks
+> +	* like it is Revision 2.1.  However, from an EFUSE_SMA point of view for
+> +	* the HW OPP table, the silicon looks like it is Revision 1.0 (ie the 
+> +	* EFUSE_SMA register reads as all zeros).
+> +	*/
+> +	oppnitro-1000000000 {
+> +		opp-supported-hw = <0x06 0x0100>;
+> +	};
+> +};
+> +
+> +&am33xx_pinmux {
+> +	i2c0_pins: pinmux-i2c0-pins {
+> +		pinctrl-single,pins = <
+> +			AM33XX_IOPAD(0x988, PIN_INPUT_PULLUP | MUX_MODE0)	/* (C17) I2C0_SDA.I2C0_SDA */
+> +			AM33XX_IOPAD(0x98c, PIN_INPUT_PULLUP | MUX_MODE0)	/* (C16) I2C0_SCL.I2C0_SCL */
+> +		>;
+> +	};
+> +};
+> +
+> +&i2c0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c0_pins>;
+> +
+> +	status = "okay";
+> +	clock-frequency = <400000>;
+> +
+> +	tps: tps@24 {
+> +		reg = <0x24>;
+> +	};
+> +};
+> +
+> +/include/ "tps65217.dtsi"
+> +
+> +&tps {
+> +	interrupts = <7>; /* NMI */
+> +	interrupt-parent = <&intc>;
+> +
+> +	ti,pmic-shutdown-controller;
+> +
+> +	pwrbutton {
+> +		interrupts = <2>;
+> +		status = "okay";
+> +	};
+> +
+> +	regulators {
+> +		dcdc1_reg: regulator@0 {
+> +			regulator-name = "vdds_dpr";
+> +			regulator-always-on;
+> +		};
+> +
+> +		dcdc2_reg: regulator@1 {
+> +			/* VDD_MPU voltage limits 0.95V - 1.26V with +/-4% tolerance */
+> +			regulator-name = "vdd_mpu";
+> +			regulator-min-microvolt = <925000>;
+> +			regulator-max-microvolt = <1351500>;
+> +			regulator-boot-on;
+> +			regulator-always-on;
+> +		};
+> +
+> +		dcdc3_reg: regulator@2 {
+> +			/* VDD_CORE voltage limits 0.95V - 1.1V with +/-4% tolerance */
+> +			regulator-name = "vdd_core";
+> +			regulator-min-microvolt = <925000>;
+> +			regulator-max-microvolt = <1150000>;
+> +			regulator-boot-on;
+> +			regulator-always-on;
+> +		};
+> +
+> +		ldo1_reg: regulator@3 {
+> +			regulator-name = "vio,vrtc,vdds";
+> +			regulator-always-on;
+> +		};
+> +
+> +		ldo2_reg: regulator@4 {
+> +			regulator-name = "vdd_3v3aux";
+> +			regulator-always-on;
+> +		};
+> +
+> +		ldo3_reg: regulator@5 {
+> +			regulator-name = "vdd_1v8";
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-always-on;
+> +		};
+> +
+> +		ldo4_reg: regulator@6 {
+> +			regulator-name = "vdd_3v3a";
+> +			regulator-always-on;
+> +		};
+> +	};
+> +};
+> +
+> +&aes {
+> +	status = "okay";
+> +};
+> +
+> +&sham {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+> new file mode 100644
+> index 000000000000..62fe5cab9fae
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+> @@ -0,0 +1,237 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
+This one didn't exist back then either ;)
+
+> + *
+> + * Author: Robert Nelson <robertcnelson@gmail.com>
+> + */
+> +/dts-v1/;
+> +
+> +#include "am33xx.dtsi"
+> +#include "am335x-osd335x-common.dtsi"
+> +
+> +/ {
+> +	model = "TI AM335x PocketBeagle";
+> +	compatible = "ti,am335x-pocketbeagle", "ti,am335x-bone", "ti,am33xx";
+> +
+> +	chosen {
+> +		stdout-path = &uart0;
+> +	};
+> +
+> +	leds {
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&usr_leds_pins>;
+> +
+> +		compatible = "gpio-leds";
+> +
+> +		usr0 {
+> +			label = "beaglebone:green:usr0";
+> +			gpios = <&gpio1 21 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "heartbeat";
+> +			default-state = "off";
+> +		};
+> +
+> +		usr1 {
+> +			label = "beaglebone:green:usr1";
+> +			gpios = <&gpio1 22 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "mmc0";
+> +			default-state = "off";
+> +		};
+> +
+> +		usr2 {
+> +			label = "beaglebone:green:usr2";
+> +			gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "cpu0";
+> +			default-state = "off";
+> +		};
+> +
+> +		usr3 {
+> +			label = "beaglebone:green:usr3";
+> +			gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +	};
+> +
+> +	vmmcsd_fixed: fixedregulator0 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vmmcsd_fixed";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +};
+> +
+> +&am33xx_pinmux {
+> +	i2c2_pins: pinmux-i2c2-pins {
+> +		pinctrl-single,pins = <
+> +			AM33XX_IOPAD(0x97c, PIN_INPUT_PULLUP | MUX_MODE3)	/* (D17) uart1_rtsn.I2C2_SCL */
+> +			AM33XX_IOPAD(0x978, PIN_INPUT_PULLUP | MUX_MODE3)	/* (D18) uart1_ctsn.I2C2_SDA */
+> +		>;
+> +	};
+> +
+> +	ehrpwm0_pins: pinmux-ehrpwm0-pins {
+> +		pinctrl-single,pins = <
+> +			AM33XX_IOPAD(0x990, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* (A13) mcasp0_aclkx.ehrpwm0A */
+> +		>;
+> +	};
+> +
+> +	ehrpwm1_pins: pinmux-ehrpwm1-pins {
+> +		pinctrl-single,pins = <
+> +			AM33XX_IOPAD(0x848, PIN_OUTPUT_PULLDOWN | MUX_MODE6)	/* (U14) gpmc_a2.ehrpwm1A */
+> +		>;
+> +	};
+> +
+> +	mmc0_pins: pinmux-mmc0-pins {
+> +		pinctrl-single,pins = <
+> +			AM33XX_IOPAD(0x960, PIN_INPUT | MUX_MODE7)		/* (C15) spi0_cs1.gpio0[6] */
+> +			AM33XX_IOPAD(0x8fc, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G16) mmc0_dat0.mmc0_dat0 */
+> +			AM33XX_IOPAD(0x8f8, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G15) mmc0_dat1.mmc0_dat1 */
+> +			AM33XX_IOPAD(0x8f4, PIN_INPUT_PULLUP | MUX_MODE0)	/* (F18) mmc0_dat2.mmc0_dat2 */
+> +			AM33XX_IOPAD(0x8f0, PIN_INPUT_PULLUP | MUX_MODE0)	/* (F17) mmc0_dat3.mmc0_dat3 */
+> +			AM33XX_IOPAD(0x904, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G18) mmc0_cmd.mmc0_cmd */
+> +			AM33XX_IOPAD(0x900, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G17) mmc0_clk.mmc0_clk */
+> +			AM33XX_IOPAD(0x9a0, PIN_INPUT | MUX_MODE4)		/* (B12) mcasp0_aclkr.mmc0_sdwp */
+> +		>;
+> +	};
+> +
+> +	spi0_pins: pinmux-spi0-pins {
+> +		pinctrl-single,pins = <
+> +			AM33XX_IOPAD(0x950, PIN_INPUT_PULLUP | MUX_MODE0)	/* (A17) spi0_sclk.spi0_sclk */
+> +			AM33XX_IOPAD(0x954, PIN_INPUT_PULLUP | MUX_MODE0)	/* (B17) spi0_d0.spi0_d0 */
+> +			AM33XX_IOPAD(0x958, PIN_INPUT_PULLUP | MUX_MODE0)	/* (B16) spi0_d1.spi0_d1 */
+> +			AM33XX_IOPAD(0x95c, PIN_INPUT_PULLUP | MUX_MODE0)	/* (A16) spi0_cs0.spi0_cs0 */
+> +		>;
+> +	};
+> +
+> +	spi1_pins: pinmux-spi1-pins {
+> +		pinctrl-single,pins = <
+> +			AM33XX_IOPAD(0x964, PIN_INPUT_PULLUP | MUX_MODE4)	/* (C18) eCAP0_in_PWM0_out.spi1_sclk */
+> +			AM33XX_IOPAD(0x968, PIN_INPUT_PULLUP | MUX_MODE4)	/* (E18) uart0_ctsn.spi1_d0 */
+> +			AM33XX_IOPAD(0x96c, PIN_INPUT_PULLUP | MUX_MODE4)	/* (E17) uart0_rtsn.spi1_d1 */
+> +			AM33XX_IOPAD(0x9b0, PIN_INPUT_PULLUP | MUX_MODE4)	/* (A15) xdma_event_intr0.spi1_cs1 */
+> +		>;
+> +	};
+> +
+> +	usr_leds_pins: pinmux-usr-leds-pins {
+> +		pinctrl-single,pins = <
+> +			AM33XX_IOPAD(0x854, PIN_OUTPUT | MUX_MODE7)		/* (V15) gpmc_a5.gpio1[21] - USR_LED_0 */
+> +			AM33XX_IOPAD(0x858, PIN_OUTPUT | MUX_MODE7)		/* (U15) gpmc_a6.gpio1[22] - USR_LED_1 */
+> +			AM33XX_IOPAD(0x85c, PIN_OUTPUT | MUX_MODE7)		/* (T15) gpmc_a7.gpio1[23] - USR_LED_2 */
+> +			AM33XX_IOPAD(0x860, PIN_OUTPUT | MUX_MODE7)		/* (V16) gpmc_a8.gpio1[24] - USR_LED_3 */
+> +		>;
+> +	};
+> +
+> +	uart0_pins: pinmux-uart0-pins {
+> +		pinctrl-single,pins = <
+> +			AM33XX_IOPAD(0x970, PIN_INPUT_PULLUP | MUX_MODE0)	/* (E15) uart0_rxd.uart0_rxd */
+> +			AM33XX_IOPAD(0x974, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* (E16) uart0_txd.uart0_txd */
+> +		>;
+> +	};
+> +
+> +	uart4_pins: pinmux-uart4-pins {
+> +		pinctrl-single,pins = <
+> +			AM33XX_IOPAD(0x870, PIN_INPUT_PULLUP | MUX_MODE6)	/* (T17) gpmc_wait0.uart4_rxd */
+> +			AM33XX_IOPAD(0x874, PIN_OUTPUT_PULLDOWN | MUX_MODE6)	/* (U17) gpmc_wpn.uart4_txd */
+> +		>;
+> +	};
+> +};
+> +
+> +&epwmss0 {
+> +	status = "okay";
+> +};
+> +
+> +&ehrpwm0 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&ehrpwm0_pins>;
+> +};
+> +
+> +&epwmss1 {
+> +	status = "okay";
+> +};
+> +
+> +&ehrpwm1 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&ehrpwm1_pins>;
+> +};
+> +
+> +&i2c0 {
+> +	eeprom: eeprom@50 {
+> +		compatible = "atmel,24c256";
+> +		reg = <0x50>;
+> +	};
+> +};
+> +
+> +&i2c2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c2_pins>;
+> +
+> +	status = "okay";
+> +	clock-frequency = <400000>;
+> +};
+> +
+> +&mmc1 {
+> +	status = "okay";
+> +	vmmc-supply = <&vmmcsd_fixed>;
+> +	bus-width = <4>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc0_pins>;
+> +	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+> +};
+> +
+> +&rtc {
+> +	system-power-controller;
+> +};
+> +
+> +&tscadc {
+> +	status = "okay";
+> +	adc {
+> +		ti,adc-channels = <0 1 2 3 4 5 6 7>;
+> +		ti,chan-step-avg = <16 16 16 16 16 16 16 16>;
+> +		ti,chan-step-opendelay = <0x98 0x98 0x98 0x98 0x98 0x98 0x98 0x98>;
+> +		ti,chan-step-sampledelay = <0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0>;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_pins>;
+> +
+> +	status = "okay";
+> +};
+> +
+> +&uart4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart4_pins>;
+> +
+> +	status = "okay";
+> +};
+> +
+> +&usb {
+> +	status = "okay";
+> +};
+> +
+> +&usb_ctrl_mod {
+> +	status = "okay";
+> +};
+> +
+> +&usb0_phy {
+> +	status = "okay";
+> +};
+> +
+> +&usb0 {
+> +	status = "okay";
+> +	dr_mode = "otg";
+> +};
+> +
+> +&usb1_phy {
+> +	status = "okay";
+> +};
+> +
+> +&usb1 {
+> +	status = "okay";
+> +	dr_mode = "host";
+> +};
+> +
+> +&cppi41dma  {
+> +	status = "okay";
+> +};
