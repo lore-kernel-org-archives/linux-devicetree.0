@@ -1,39 +1,108 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 2/3] lan78xx: Read LED states from Device Tree
-Date: Wed, 18 Apr 2018 18:11:21 +0200
-Message-ID: <20180418161121.GD3036@lunn.ch>
-References: <1524066323-109628-1-git-send-email-phil@raspberrypi.org>
- <1524066323-109628-3-git-send-email-phil@raspberrypi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: srinivas.kandagatla@linaro.org
+Subject: [PATCH] arm64: msm8916: fix gic_irq_domain_translate warnings
+Date: Wed, 18 Apr 2018 17:34:15 +0100
+Message-ID: <20180418163415.21646-1-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1524066323-109628-3-git-send-email-phil@raspberrypi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Phil Elwell <phil@raspberrypi.org>
-Cc: Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: david.brown@linaro.org, robh+dt@kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 18, 2018 at 04:45:22PM +0100, Phil Elwell wrote:
-> Add support for DT property "microchip,led-modes", a vector of zero
-> to four cells (u32s) in the range 0-15, each of which sets the mode
-> for one of the LEDs. Some possible values are:
-> 
->     0=link/activity          1=link1000/activity
->     2=link100/activity       3=link10/activity
->     4=link100/1000/activity  5=link10/1000/activity
->     6=link10/100/activity    14=off    15=on
-> 
-> These values are given symbolic constants in a dt-bindings header.
-> 
-> Also use the presence of the DT property to indicate that the
-> LEDs should be enabled - necessary in the event that no valid OTP
-> or EEPROM is available.
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Hi Phil
+Remove the usage of IRQ_TYPE_NONE to fix loud warnings from
+patch (83a86fbb5b56b "irqchip/gic: Loudly complain about
+the use of IRQ_TYPE_NONE").
 
-As i said last week, these are PHY properties, so should be in the PHY
-node in device tree. It should be the PHY driver which parses these
-properties and configures the LEDs, not the MAC.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-	   Andrew
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index cfbd72186762..5d66a575c7e1 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -180,7 +180,7 @@
+ 
+ 	pmu {
+ 		compatible = "arm,cortex-a53-pmu";
+-		interrupts = <GIC_PPI 7 GIC_CPU_MASK_SIMPLE(4)>;
++		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4)| IRQ_TYPE_LEVEL_HIGH)>;
+ 	};
+ 
+ 	thermal-zones {
+@@ -513,7 +513,7 @@
+ 		blsp_i2c2: i2c@78b6000 {
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+ 			reg = <0x078b6000 0x500>;
+-			interrupts = <GIC_SPI 96 0>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+ 				 <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
+ 			clock-names = "iface", "core";
+@@ -528,7 +528,7 @@
+ 		blsp_i2c4: i2c@78b8000 {
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+ 			reg = <0x078b8000 0x500>;
+-			interrupts = <GIC_SPI 98 0>;
++			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+ 				 <&gcc GCC_BLSP1_QUP4_I2C_APPS_CLK>;
+ 			clock-names = "iface", "core";
+@@ -543,7 +543,7 @@
+ 		blsp_i2c6: i2c@78ba000 {
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+ 			reg = <0x078ba000 0x500>;
+-			interrupts = <GIC_SPI 100 0>;
++			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+ 				 <&gcc GCC_BLSP1_QUP6_I2C_APPS_CLK>;
+ 			clock-names = "iface", "core";
+@@ -575,7 +575,7 @@
+ 					"mi2s-bit-clk3";
+ 			#sound-dai-cells = <1>;
+ 
+-			interrupts = <0 160 0>;
++			interrupts = <0 160 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "lpass-irq-lpaif";
+ 			reg = <0x07708000 0x10000>;
+ 			reg-names = "lpass-lpaif";
+@@ -595,7 +595,7 @@
+ 			reg = <0x07824900 0x11c>, <0x07824000 0x800>;
+ 			reg-names = "hc_mem", "core_mem";
+ 
+-			interrupts = <0 123 0>, <0 138 0>;
++			interrupts = <0 123 IRQ_TYPE_LEVEL_HIGH>, <0 138 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "hc_irq", "pwr_irq";
+ 			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
+ 				 <&gcc GCC_SDCC1_AHB_CLK>,
+@@ -612,7 +612,7 @@
+ 			reg = <0x07864900 0x11c>, <0x07864000 0x800>;
+ 			reg-names = "hc_mem", "core_mem";
+ 
+-			interrupts = <0 125 0>, <0 221 0>;
++			interrupts = <0 125 IRQ_TYPE_LEVEL_HIGH>, <0 221 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "hc_irq", "pwr_irq";
+ 			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
+ 				 <&gcc GCC_SDCC2_AHB_CLK>,
+@@ -819,7 +819,7 @@
+ 			iommu-ctx@2000 {
+ 				compatible = "qcom,msm-iommu-v1-ns";
+ 				reg = <0x2000 0x1000>;
+-				interrupts = <GIC_SPI 242 0>;
++				interrupts = <GIC_SPI 242 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
+ 		};
+ 
+@@ -864,7 +864,7 @@
+ 				      "bus_clk",
+ 				      "vsync_clk";
+ 
+-			interrupts = <0 72 0>;
++			interrupts = <0 72 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 			interrupt-controller;
+ 			#interrupt-cells = <1>;
+-- 
+2.16.2
