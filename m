@@ -1,100 +1,69 @@
-Return-Path: <SRS0=tH5/=HK=rock-chips.com=shawn.lin@kernel.org>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 2/2] mmc: core: add tunable delay waiting for power to be stable
-Date: Sat, 21 Apr 2018 16:03:44 +0800
-Message-Id: <1524297824-94236-2-git-send-email-shawn.lin@rock-chips.com>
-In-Reply-To: <1524297824-94236-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1524297824-94236-1-git-send-email-shawn.lin@rock-chips.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+Return-Path: <SRS0=rS5h=HH=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+Sender: geert.uytterhoeven@gmail.com
+In-Reply-To: <1524039005-30618-9-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1524039005-30618-9-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 18 Apr 2018 10:47:55 +0200
+Message-ID: <CAMuHMdUmHsXnU27JAyA9dq545NLYRb1ypMpdRZ6o0O3MrtfmTQ@mail.gmail.com>
+Subject: Re: [PATCH/RFC 08/11] usb: role: rcar-usb3-role-switch: add support
+ for R-Car SoCs
+Content-Type: text/plain; charset="UTF-8"
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, USB list <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The hard-coded 10ms delay in mmc_power_up came from
-commit 79bccc5aefb4 ("mmc: increase power up delay"), which said "The TI
-controller on Toshiba Tecra M5 needs more time to power up or the cards
-will init incorrectly or not at all." But it's too engineering solution
-for a special board but force all platforms to wait for that long time,
-especially painful for mmc_power_up for eMMC when booting.
+Hi Shimoda-san,
 
-However, it's added since 2009, and we can't tell if other platforms
-benefit from it. But in practise, the modern hardware are most likely to
-have a stable power supply with 1ms after setting it for no matter PMIC
-or discrete power. And more importnatly, most regulators implement the
-callback of ->set_voltage_time_sel() for regulator core to wait for
-specific period of time for the power supply to be stable, which means
-once regulator_set_voltage_* return, the power should reach the the
-minimum voltage that works for initialization. Of course, if there
-are some other ways for host to power the card, we should allow them
-to argue a suitable delay as well.
+On Wed, Apr 18, 2018 at 10:10 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> This patch adds role switch support for R-Car SoCs. Some R-Car SoCs
+> (e.g. R-Car H3) have USB 3.0 dual-role device controller which has
+> the USB 3.0 xHCI host and Renesas USB 3.0 peripheral.
+>
+> Unfortunately, the mode change register contains the USB 3.0 peripheral
+> controller side only. So, the USB 3.0 peripheral driver (renesas_usb3)
+> manages this register. However, in peripheral mode, the host should
+> stop. Also the host hardware needs to reinitialize its own registers
+> when the mode changes from peripheral to host mode. Otherwise,
+> the host cannot work correctly (e.g. detect a device as high-speed).
+>
+> To achieve this by a driver, this role switch driver manages
+> the mode change register and attach/release the xhci-plat driver.
+> The renesas_usb3 udc driver should call devm_of_platform_populate()
+> to probe this driver.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-With this patch, we could assign the delay from firmware, or we could
-assigne it via ->set_ios() callback from host drivers.
+Thanks for your patch!
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
----
+> --- a/drivers/usb/roles/Kconfig
+> +++ b/drivers/usb/roles/Kconfig
+> @@ -11,4 +11,16 @@ config USB_ROLES_INTEL_XHCI
+>           To compile the driver as a module, choose M here: the module will
+>           be called intel-xhci-usb-role-switch.
+>
+> +config USB_ROLES_RCAR_USB3
+> +       tristate "Renesas R-Car USB3.0 Role Switch"
+> +       depends on ARCH_RENESAS && OF
 
- drivers/mmc/core/core.c  | 6 ++++--
- drivers/mmc/core/host.c  | 4 ++++
- include/linux/mmc/host.h | 1 +
- 3 files changed, 9 insertions(+), 2 deletions(-)
+ARCH_RENESAS implies OF.
 
-diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-index 121ce50..04d3cf4 100644
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -1027,6 +1027,8 @@ void mmc_set_initial_state(struct mmc_host *host)
- 	host->ios.bus_width = MMC_BUS_WIDTH_1;
- 	host->ios.timing = MMC_TIMING_LEGACY;
- 	host->ios.drv_type = 0;
-+	if (!host->ios.power_delay_ms)
-+		host->ios.power_delay_ms = 10;
- 	host->ios.enhanced_strobe = false;
- 
- 	/*
-@@ -1658,7 +1660,7 @@ void mmc_power_up(struct mmc_host *host, u32 ocr)
- 	 * This delay should be sufficient to allow the power supply
- 	 * to reach the minimum voltage.
- 	 */
--	mmc_delay(10);
-+	mmc_delay(host->ios.power_delay_ms);
- 
- 	mmc_pwrseq_post_power_on(host);
- 
-@@ -1671,7 +1673,7 @@ void mmc_power_up(struct mmc_host *host, u32 ocr)
- 	 * This delay must be at least 74 clock sizes, or 1 ms, or the
- 	 * time required to reach a stable voltage.
- 	 */
--	mmc_delay(10);
-+	mmc_delay(host->ios.power_delay_ms);
- }
- 
- void mmc_power_off(struct mmc_host *host)
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index 64b03d6..9c34063 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -338,6 +338,10 @@ int mmc_of_parse(struct mmc_host *host)
- 		host->dsr_req = 0;
- 	}
- 
-+	if (device_property_read_u32(dev, "power-delay-ms",
-+				     &host->ios.power_delay_ms))
-+		host->ios.power_delay_ms = 0;
-+
- 	return mmc_pwrseq_alloc(host);
- }
- 
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index 7c6eaf6..efa9bab 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -22,6 +22,7 @@
- struct mmc_ios {
- 	unsigned int	clock;			/* clock rate */
- 	unsigned short	vdd;
-+	unsigned int	power_delay_ms;		/* waiting for stable power */
- 
- /* vdd stores the bit number of the selected voltage range from below. */
- 
+Perhaps you intended:
+
+        depends on OF
+        depends on ARCH_RENESAS || COMPILE_TEST
+
+?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-1.9.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
