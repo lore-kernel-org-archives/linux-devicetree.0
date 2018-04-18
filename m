@@ -1,53 +1,94 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [RESEND PATCH v5] mfd: arizona: Update DT doc to support more standard reset binding
-Date: Wed, 18 Apr 2018 12:17:34 +0100
-Message-ID: <20180418111734.11466-1-ckeepax@opensource.cirrus.com>
+From: Alban <albeu@free.fr>
+Subject: Re: [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode
+ for the cells list
+Date: Wed, 18 Apr 2018 13:41:19 +0200
+Message-ID: <20180418134119.2e587621@avionic-0020>
+References: <1521933899-362-1-git-send-email-albeu@free.fr>
+        <1521933899-362-2-git-send-email-albeu@free.fr>
+        <344e0087-7410-aebb-8a66-c6976064df10@linaro.org>
+        <20180417165420.423a691b@avionic-0020>
+        <8c4b48ad-e99e-030a-a4ee-b6df0fa59c79@linaro.org>
+        <20180417180040.04f53495@avionic-0020>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/6UANJLWS_b0VD=xXkYsV.zT"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180417180040.04f53495@avionic-0020>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, patches@opensource.cirrus.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Alban <albeu@free.fr>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
+--Sig_/6UANJLWS_b0VD=xXkYsV.zT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-No changes since v4.
+On Tue, 17 Apr 2018 18:00:40 +0200
+Alban <albeu@free.fr> wrote:
 
-The corresponding code changes have already been merged.
+> On Tue, 17 Apr 2018 16:44:01 +0100
+> Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
+>=20
+> > Thanks for explaining,
+> >=20
+> > On 17/04/18 15:54, Alban wrote: =20
+> > > This will not only allow reading the calibration data from nvmem, but
+> > > will also create a partition on the MTD device, which is not acceptab=
+le.
+> > > With my proposed binding this would become:
+> > >=20
+> > > flash@0 {
+> > > 	#address-cells =3D <1>;
+> > > 	#size-cells =3D <1>;
+> > > 	compatible =3D "s25sl064a";
+> > > 	reg =3D <0>;
+> > >=20
+> > > 	nvmem-cells {
+> > > 		compatible =3D "nvmem-cells";
+> > > 		#address-cells =3D <1>;
+> > > 		#address-cells =3D <1>;
+> > >=20
+> > > 		calibration: calib@404 {
+> > > 			reg =3D <0x404 0x10>;
+> > > 		};
+> > > 	};   =20
+> >=20
+> > Why can't we make nvmem-cells node a nvmem provider in this case?
+> > Which should work! =20
+>=20
+> TBH I just copied what have been done to fix the same problem with the
+> MTD partitions. But yes we could also just extend the current binding
+> to require a compatible string on each nvmem-cell, which would not
+> require any code change to support.
 
-Thanks,
-Charles
+However this scheme will not work if the device node binding already
+have subnodes with addresses. The addressing, as specified by
+#address-cells and #size-cells, might be incompatible or might overlap.
+Using the nvmem-cells subnode solve this problem.
 
- Documentation/devicetree/bindings/mfd/arizona.txt | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Alban
 
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index bdd017686ea5a..a014afb079023 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -50,7 +50,7 @@ Required properties:
- 
- Optional properties:
- 
--  - wlf,reset : GPIO specifier for the GPIO controlling /RESET
-+  - reset-gpios : GPIO specifier for the GPIO controlling /RESET
- 
-   - clocks: Should reference the clocks supplied on MCLK1 and MCLK2
-   - clock-names: Should contains two strings:
-@@ -70,6 +70,10 @@ Optional properties:
-     Documentation/devicetree/bindings/regulator/regulator.txt
-     (wm5102, wm5110, wm8280, wm8997, wm8998, wm1814)
- 
-+Deprecated properties:
-+
-+  - wlf,reset : GPIO specifier for the GPIO controlling /RESET
-+
- Also see child specific device properties:
-   Regulator - ../regulator/arizona-regulator.txt
-   Extcon    - ../extcon/extcon-arizona.txt
--- 
-2.11.0
+
+--Sig_/6UANJLWS_b0VD=xXkYsV.zT
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJa1y7gAAoJEHSUmkuduC286NAP/1mYRWkrmms4OOs0JteVDswv
+xo+aBOqxH2ju4yUUOlkt9VBNmt+HSmHPM+Wn/MEEQXrkY+fgK5ai+sz/RXGgAhu2
+aq+5ZrsgDORpHpljPNAYMEmXSAud7lXzKlYBiEn7UiuA1nuJTxKhrsMJ35UQmBx7
+A0DJDcDreXJqI09rVja0oU1IESkxZD9Aazl/36rvSrC2ZtOg977oMbagWaNHPhwb
+4PGuW1MqVAxfR5dyBsKixiGhz2mLMnpO7sn+EpLoe/jez7OnjEMHKTG9BcrRAu7n
+/OjjanxuZ/k6ISDXtcoHO5wrIvzdCLmemRXehuQ5OwgLZdKRr5CPmgBsc9Hp+82z
+XAMJOhAvGl1q4J2bVm3GyNN8HepGwZSp8c0bp6/2ButkHVsFy1fO7qxNS0AcQsMt
+bIEIEHTmYC/L80h/l8wQQXii3MvtP0SSCCHdoSXyukg2QGIof1WWeXW9VjQ3kp2a
+7R4zodG7Px5SWRRuXuHQ+Uw5eYfxiBzRwt1NCyT6tns1cTD95UJhsMkc4kn8k82S
+sUnkIuGlUIzIYdR9u5ANb7TEoqvnMbLhB0L5EquZKQ9pk/+UD2nbvU8Cdx9reOVQ
+EaySaKuplXm1a4qASx8PeUw4bP6EAwu6RCxHZ0SlS9EYdgAlNykR2DOTExb8qWng
+xpgYJQEaCm3JytPF9Kwy
+=b649
+-----END PGP SIGNATURE-----
+
+--Sig_/6UANJLWS_b0VD=xXkYsV.zT--
