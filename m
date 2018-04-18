@@ -1,77 +1,87 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [[RFC]DPU PATCH 2/4] dt-bindings: drm/bridge: Document sn65dsi86
- bridge bindings
-Date: Wed, 18 Apr 2018 09:58:42 -0400
-Message-ID: <20180418135842.GV73214@art_vandelay>
-References: <1524054002-17869-1-git-send-email-spanda@codeaurora.org>
- <1524054002-17869-3-git-send-email-spanda@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 04/10] Documentations: dt-bindings: Add a document of
+ PECI adapter driver for Aspeed AST24xx/25xx SoCs
+Date: Wed, 18 Apr 2018 08:59:58 -0500
+Message-ID: <CAL_Jsq+9YDv04Gu=WODdqb6wD4fk6=-fFw_3skU79UC8OW0jZA@mail.gmail.com>
+References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
+ <20180410183212.16787-5-jae.hyun.yoo@linux.intel.com> <20180416181035.rcjvt4rlrwaj5yxf@rob-hp-laptop>
+ <53ff5b2b-eba8-8311-64a9-abd4bc72226d@linux.intel.com> <CAL_Jsq+1wC-KhXPeCSNhCeCih6=CatJbyumO51ucD17Rt7qofw@mail.gmail.com>
+ <f07623c4-5f0c-4ab1-f761-44bd702bbdf0@linux.intel.com> <584aca6c-c87a-ff7a-2fdc-3c742236be60@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1524054002-17869-3-git-send-email-spanda@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sandeep Panda <spanda@codeaurora.org>
-Cc: devicetree@vger.kernel.org, ryadav@codeaurora.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, abhinavk@codeaurora.org, hoegsberg@chromium.org, freedreno@lists.freedesktop.org, chandanu@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <584aca6c-c87a-ff7a-2fdc-3c742236be60@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBcHIgMTgsIDIwMTggYXQgMDU6NTA6MDBQTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
-cm90ZToKPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBmb3IgdGhlIHNuNjVkc2k4NiBEU0kg
-dG8gZURQIGJyaWRnZS4KPiAKClBsZWFzZSBhZGQgYSBjaGFuZ2Vsb2cgdG8geW91ciBwYXRjaGVz
-IHNvIHJldmlld2VycyBrbm93IHdoYXQgaGFzIGNoYW5nZWQKYmV0d2VlbiBwYXRjaCB2ZXJzaW9u
-cy4gCgo+IFNpZ25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBjb2RlYXVyb3JhLm9y
-Zz4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQg
-ICAgICAgfCA2MCArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA2MCBp
-bnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAo+IAo+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGks
-c242NWRzaTg2LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAw
-MDAwMDAwLi45ZTI2MTJlCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0Cj4gQEAgLTAs
-MCArMSw2MCBAQAo+ICtTTjY1RFNJODYgRFNJIHRvIGVEUCBicmlkZ2UgY2hpcAo+ICstLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArVGhpcyBpcyB0aGUgYmluZGluZyBmb3Ig
-VGV4YXMgSW5zdHJ1bWVudHMgU042NURTSTg2IGJyaWRnZS4KPiArCj4gK1JlcXVpcmVkIHByb3Bl
-cnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogTXVzdCBiZSAidGksc242NWRzaTg2Igo+ICstIHJlZzog
-aTJjIGFkZHJlc3Mgb2YgdGhlIGNoaXAsIDB4MmQgYXMgcGVyIGRhdGFzaGVldAo+ICstIGVuYWJs
-ZS1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9ucyBmb3IgYnJpZGdlX2Vu
-IHBpbgoKVGhlIGRhdGFzaGVldCBvbmx5IGhhcyBvbmUgZW5hYmxlIHBpbiwgd2h5IGdwaW9zPwoK
-PiArCj4gKy0gdmNjaW8tc3VwcGx5OiBBIDEuOFYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBk
-aWdpdGFsIElPcy4KPiArLSB2Y2NhLXN1cHBseTogQSAxLjJWIHN1cHBseSB0aGF0IHBvd2VycyB1
-cCB0aGUgYW5hbG9nIGNpcmN1aXRzLgo+ICsKPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArCj4g
-Ky0gaXJxLWdwaW9zOiBPRiBkZXZpY2UtdHJlZSBncGlvIHNwZWNpZmljYXRpb24gZm9yIGludGVy
-cnVwdCBwaW4KCkZyb20gdGhlIGxhc3QgcmV2aWV3LCBSb2Igc2FpZCwgJ1VzZSAiaW50ZXJydXB0
-cyIgcHJvcGVydHkgaW5zdGVhZC4nCgpZb3UgZGlkbid0IHByb3ZpZGUgcmVzcG9uc2VzIHRvIHBy
-aW9yIHJldmlldyBjb21tZW50cywgc28gaXQncyB1bmNsZWFyIHdoZXRoZXIKeW91J3ZlIGludGVu
-dGlvbmFsbHkgb3IgdW5pbnRlbnRpb25hbGx5IGlnbm9yZWQgaGltIDopCgpTZWFuCgo+ICsKPiAr
-UmVxdWlyZWQgbm9kZXM6Cj4gKwo+ICtUaGlzIGRldmljZSBoYXMgdHdvIHZpZGVvIHBvcnRzLiBU
-aGVpciBjb25uZWN0aW9ucyBhcmUgbW9kZWxsZWQgdXNpbmcgdGhlCj4gK09GIGdyYXBoIGJpbmRp
-bmdzIHNwZWNpZmllZCBpbiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgu
-dHh0Lgo+ICsKPiArLSBWaWRlbyBwb3J0IDAgZm9yIERTSSBpbnB1dAo+ICstIFZpZGVvIHBvcnQg
-MSBmb3IgZURQIG91dHB1dAo+ICsKPiArRXhhbXBsZQo+ICstLS0tLS0tCj4gKwo+ICtlZHAtYnJp
-ZGdlQDJkIHsKPiArCWNvbXBhdGlibGUgPSAidGksc242NWRzaTg2IjsKPiArCSNhZGRyZXNzLWNl
-bGxzID0gPDE+Owo+ICsJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwlyZWcgPSA8MHgyZD47Cj4gKwo+
-ICsJZW5hYmxlLWdwaW9zID0gPCZtc21ncGlvIDMzIEdQSU9fQUNUSVZFX0hJR0g+Owo+ICsKPiAr
-CXZjY2lvLXN1cHBseSA9IDwmcG04OTE2X2wxNz47Cj4gKwl2Y2NhLXN1cHBseSA9IDwmcG04OTE2
-X2w2PjsKPiArCj4gKwlwb3J0cyB7Cj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJI3Np
-emUtY2VsbHMgPSA8MD47Cj4gKwo+ICsJCXBvcnRAMCB7Cj4gKwkJCXJlZyA9IDwwPjsKPiArCj4g
-KwkJCWVkcF9icmlkZ2VfaW46IGVuZHBvaW50IHsKPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwm
-ZHNpX291dD47Cj4gKwkJCX07Cj4gKwkJfTsKPiArCj4gKwkJcG9ydEAxIHsKPiArCQkJcmVnID0g
-PDE+Owo+ICsKPiArCQkJZWRwX2JyaWRnZV9vdXQ6IGVuZHBvaW50IHsKPiArCQkJCXJlbW90ZS1l
-bmRwb2ludCA9IDwmZWRwX3BhbmVsX2luPjsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiArfQo+
-IC0tIAo+IFRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBv
-ZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCj4gYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRp
-dmUgUHJvamVjdAo+IAoKLS0gClNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5lZXIsIEdvb2dsZSAv
-IENocm9taXVtIE9TCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+On Tue, Apr 17, 2018 at 5:06 PM, Jae Hyun Yoo
+<jae.hyun.yoo@linux.intel.com> wrote:
+> On 4/17/2018 11:16 AM, Jae Hyun Yoo wrote:
+>>
+>> On 4/17/2018 6:16 AM, Rob Herring wrote:
+>>>
+>>> On Mon, Apr 16, 2018 at 6:12 PM, Jae Hyun Yoo
+>>> <jae.hyun.yoo@linux.intel.com> wrote:
+>>>>
+>>>> On 4/16/2018 11:10 AM, Rob Herring wrote:
+>>>>>
+>>>>>
+>>>>> On Tue, Apr 10, 2018 at 11:32:06AM -0700, Jae Hyun Yoo wrote:
+>>>>>>
+>>>>>>
+>>>>>> This commit adds a dt-bindings document of PECI adapter driver for
+>>>>>> Aspeed
+>>>>>> AST24xx/25xx SoCs.
+>>>
+>>>
+>>> [...]
+>>>
+>>>>>> +- clocks            : Should contain clock source for PECI
+>>>>>> controller.
+>>>>>> +                     Should reference clkin.
+>>>>>> +- clock_frequency   : Should contain the operation frequency of PECI
+>>>>>> controller
+>>>>>> +                     in units of Hz.
+>>>>>> +                     187500 ~ 24000000
+>>>>>
+>>>>>
+>>>>>
+>>>>> This is the frequency of the bus or used to derive it? It would be
+>>>>> better to specify the bus frequency instead and have the driver
+>>>>> calculate its internal freq. And then use "bus-frequency" instead.
+>>>>>
+>>>>
+>>>> I agree with you. Actually, it is being used for operation frequency
+>>>> setting
+>>>> of PECI controller module in SoC so it's different from the meaning of
+>>>> "bus-frequency". I'll change it to "operation-frequency".
+>>>
+>>>
+>>> No, now you've gone from a standard property name to something custom.
+>>> Why do you need to set the frequency in DT if it is not related to the
+>>> interface frequency?
+>>>
+>>> Rob
+>>>
+>>
+>> Actually, the interface frequency is affected by the operation frequency
+>> but there is no description of its relationship in datasheet. I'll check
+>> again about the detail to ASPEED chip vendor and will use
+>> 'bus-frequency' if available.
+>>
+>
+> I investigated it more deeply. Basically, by the spec, PECI bus speed
+> cannot be set as a fixed speed. A PECI bus can have a wide speed range
+> from 2Kbps to 2Mbps which is dynamically set by a handshaking sequence
+> between an originator and clients called 'timing negotiation' in spec.
+> This timing negotiation behavior happens on every single transaction so the
+> bus speed also can vary on every transactions. So I'm thinking a custom
+> property name for it, 'peci-clk-frequency' if it is acceptable.
+
+Okay, seems bus-frequency is not appropriate here. So use
+'clock-frequency' (note the '-' not '_' as that is the standard
+property).
+
+Rob
