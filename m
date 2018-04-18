@@ -1,130 +1,71 @@
-Return-Path: <SRS0=UpLl=HG=ti.com=t-kristo@kernel.org>
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [RFC 13/13] ARM: dts: ti: add am57xx-evm FIT description file
-Date: Tue, 17 Apr 2018 12:10:15 +0300
-Message-ID: <1523956215-28154-14-git-send-email-t-kristo@ti.com>
-In-Reply-To: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
-References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
+Return-Path: <SRS0=57ul=HH=renesas.com=yoshihiro.shimoda.uh@kernel.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH 2/2] clk: renesas: cpg-mssr: Add support for R-Car E3
+Date: Wed, 18 Apr 2018 08:46:35 +0000
+Message-ID: <TY1PR06MB0992839D645B697E5D2DD2C9D8B60@TY1PR06MB0992.apcprd06.prod.outlook.com>
+References: <1523439447-1084-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1523439447-1084-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdXViS-HoHWaO55FW3vepMt-KOmo-EpF1C-6N=Kq_WgV1Q@mail.gmail.com>
+In-Reply-To: <CAMuHMdXViS-HoHWaO55FW3vepMt-KOmo-EpF1C-6N=Kq_WgV1Q@mail.gmail.com>
+Content-Language: ja-JP
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-To: devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com
-Cc: wmills@ti.com, tony@atomide.com, trini@konsulko.com, rmk@armlinux.org.uk
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add FIT image description file for am57xx-evm, which contains the
-available configurations for the board.
-
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- arch/arm/boot/dts/ti/am57xx-evm.its | 97 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 97 insertions(+)
- create mode 100644 arch/arm/boot/dts/ti/am57xx-evm.its
-
-diff --git a/arch/arm/boot/dts/ti/am57xx-evm.its b/arch/arm/boot/dts/ti/am57xx-evm.its
-new file mode 100644
-index 0000000..cd5523c
---- /dev/null
-+++ b/arch/arm/boot/dts/ti/am57xx-evm.its
-@@ -0,0 +1,97 @@
-+/dts-v1/;
-+
-+/ {
-+	description = "AM57xx-evm";
-+	#address-cells = <1>;
-+
-+	images {
-+		kernel@1 {
-+			description = "Linux kernel";
-+			data = /incbin/("../../zImage");
-+			type = "kernel";
-+			arch = "arm";
-+			os = "linux";
-+			compression = "none";
-+			load = <0x82000000>;
-+			entry = <0x82000000>;
-+		};
-+		fdt@1 {
-+			description = "AM57xx-beagle-x15";
-+			data = /incbin/("am57xx-beagle-x15.dtb");
-+			type = "flat_dt";
-+			arch = "arm";
-+			compression = "none";
-+			load = <0x83000000>;
-+		};
-+		fdt@2 {
-+			description = "AM57xx-beagle-x15-revc";
-+			data = /incbin/("am57xx-beagle-x15-revc.dtb");
-+			type = "flat_dt";
-+			arch = "arm";
-+			compression = "none";
-+			load = <0x83000000>;
-+		};
-+		fdt@3 {
-+			description = "AM57xx-evm-common overlay";
-+			data = /incbin/("am57xx-evm-common.dtbo");
-+			type = "flat_dt";
-+			arch = "arm";
-+			compression = "none";
-+			load = <0x83080000>;
-+		};
-+		fdt@4 {
-+			description = "MT9T111 camera support";
-+			data = /incbin/("mt9t111.dtbo");
-+			type = "flat_dt";
-+			arch = "arm";
-+			compression = "none";
-+			load = <0x83100000>;
-+		};
-+		fdt@5 {
-+			description = "OV10635 camera support";
-+			data = /incbin/("ov10635.dtbo");
-+			type = "flat_dt";
-+			arch = "arm";
-+			compression = "none";
-+			load = <0x83100000>;
-+		};
-+		fdt@6 {
-+			description = "AM57xx-evm overlay";
-+			data = /incbin/("am57xx-evm.dtbo");
-+			type = "flat_dt";
-+			arch = "arm";
-+			compression = "none";
-+			load = <0x83090000>;
-+		};
-+		fdt@7 {
-+			description = "AM57xx-evm-reva3 overlay";
-+			data = /incbin/("am57xx-evm-reva3.dtbo");
-+			type = "flat_dt";
-+			arch = "arm";
-+			compression = "none";
-+			load = <0x83090000>;
-+		};
-+	};
-+
-+	configurations {
-+		default = "am57xx-evm";
-+		am57xx-evm {
-+			description = "AM57xx EVM";
-+			kernel = "kernel@1";
-+			fdt = "fdt@1", "fdt@3", "fdt@6";
-+		};
-+		am57xx-evm-reva3 {
-+			description = "AM57xx EVM rev A3";
-+			kernel = "kernel@1";
-+			fdt = "fdt@2", "fdt@3", "fdt@7";
-+		};
-+		cam-mt9t111 {
-+			description = "MT9T111 camera";
-+			fdt = "fdt@4";
-+		};
-+		cam-ov10635 {
-+			description = "OV10635 camera";
-+			fdt = "fdt@5";
-+		};
-+	};
-+};
--- 
-1.9.1
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHRoZSByZXZpZXchDQoNCj4gRnJvbTogR2Vl
+cnQgVXl0dGVyaG9ldmVuLCBTZW50OiBGcmlkYXksIEFwcmlsIDEzLCAyMDE4IDc6MzcgUE0NCj4g
+DQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4gT24gV2VkLCBBcHIgMTEsIDIwMTggYXQgMTE6Mzcg
+QU0sIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNv
+bT4gd3JvdGU6DQo8c25pcD4NCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvY2xvY2svcmVuZXNhcyxjcGctbXNzci50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcmVuZXNhcyxjcGctbXNzci50eHQNCj4gPiBAQCAt
+MjYsNiArMjYsNyBAQCBSZXF1aXJlZCBQcm9wZXJ0aWVzOg0KPiA+ICAgICAgICAtICJyZW5lc2Fz
+LHI4YTc3OTY1LWNwZy1tc3NyIiBmb3IgdGhlIHI4YTc3OTY1IFNvQyAoUi1DYXIgTTMtTikNCj4g
+PiAgICAgICAgLSAicmVuZXNhcyxyOGE3Nzk3MC1jcGctbXNzciIgZm9yIHRoZSByOGE3Nzk3MCBT
+b0MgKFItQ2FyIFYzTSkNCj4gPiAgICAgICAgLSAicmVuZXNhcyxyOGE3Nzk4MC1jcGctbXNzciIg
+Zm9yIHRoZSByOGE3Nzk4MCBTb0MgKFItQ2FyIFYzSCkNCj4gPiArICAgICAgLSAicmVuZXNhcyxy
+OGE3Nzk5MC1jcGctbXNzciIgZm9yIHRoZSByOGE3Nzk5NSBTb0MgKFItQ2FyIEUzKQ0KPiANCj4g
+cjhhNzc5OTAgU29DDQoNCk9vcHMhIEkgd2lsbCBmaXggdGhpcyBpbiB2Mi4NCg0KPiA+ICAgICAg
+ICAtICJyZW5lc2FzLHI4YTc3OTk1LWNwZy1tc3NyIiBmb3IgdGhlIHI4YTc3OTk1IFNvQyAoUi1D
+YXIgRDMpDQo+IA0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL2Nsay9yZW5l
+c2FzL3I4YTc3OTkwLWNwZy1tc3NyLmMNCj4gPiBAQCAtMCwwICsxLDI5MSBAQA0KPiANCj4gPiAr
+c3RhdGljIGNvbnN0IHN0cnVjdCBjcGdfY29yZV9jbGsgcjhhNzc5OTBfY29yZV9jbGtzW10gX19p
+bml0Y29uc3QgPSB7DQo+IA0KPiA+ICsgICAgICAgLyogQ29yZSBDbG9jayBPdXRwdXRzICovDQo+
+IA0KPiA+ICsgICAgICAgREVGX0dFTjNfUEUoInMwZDZjIiwgICBSOEE3Nzk5MF9DTEtfUzBENkMs
+IENMS19TMCwgNiwgQ0xLX1BFLCA2KSwNCj4gDQo+IC4uLiBDTEtfUEUsIDIpLA0KDQpJIHdpbGwg
+Zml4IHRoaXMuDQoNCj4gPiArICAgICAgIERFRl9HRU4zX1BFKCJzM2QxYyIsICAgUjhBNzc5OTBf
+Q0xLX1MzRDFDLCBDTEtfUzMsIDEsIENMS19QRSwgMSksDQo+ID4gKyAgICAgICBERUZfR0VOM19Q
+RSgiczNkMmMiLCAgIFI4QTc3OTkwX0NMS19TM0QyQywgQ0xLX1MzLCAyLCBDTEtfUEUsIDIpLA0K
+PiA+ICsgICAgICAgREVGX0dFTjNfUEUoInMzZDRjIiwgICBSOEE3Nzk5MF9DTEtfUzNENEMsIENM
+S19TMywgNCwgQ0xLX1BFLCA0KSwNCj4gPiArDQo+ID4gKyAgICAgICBERUZfRElWNlAxKCJjYW5m
+ZCIsICAgIFI4QTc3OTkwX0NMS19DQU5GRCwgQ0xLX1BMTDBENiwgMHgyNDQpLA0KPiANCj4gSSBj
+YW5ub3QgY29uZmlybSB0aGUgcGFyZW50LCBhcyBTZWN0aW9uIDguMi4xOCAoIkNBTi1GRCBDbG9j
+ayBGcmVxdWVuY3kNCj4gQ29udHJvbCBSZWdpc3RlciAoQ0FORkRDS0NSKSIpIGRvZXMgbm90IHNw
+ZWNpZnkgdGhlIHNvdXJjZSBjbG9jayBmcmVxdWVuY3kNCj4gZm9yIFItQ2FyIEUzICh1bmxpa2Ug
+Zm9yIEQzKS4gQnV0IDgwMCBNSHogc291bmRzIHNhbmUuDQoNCkFjY29yZGluZyB0byB0aGUgRmln
+dXJlIDguMWcsIFBMTDAgd2l0aCAxLzIgLS0gMS8zIC0tIENBTkZEIGNsb2NrLg0KU28sIHRoZSBw
+YXJlbnQgY2xvY2sgaXMgUExMMEQ2IChQTEwwIHdpdGggRElWIDYpLg0KDQo+ID4gKyAgICAgICBE
+RUZfRElWNlAxKCJjc2kwIiwgICAgIFI4QTc3OTkwX0NMS19DU0kwLCAgQ0xLX1BMTDFEMiwgMHgw
+MGMpLA0KPiANCj4gSSBjYW5ub3QgY29uZmlybSB0aGUgcGFyZW50IGNsb2NrLCBhcyBDU0kwIGlz
+IG5vdCBkb2N1bWVudGVkLg0KPiBCdXQgZ2l2ZW4gUExMMSBydW5zIGF0IDEuNiBHSHosIFBMTDEv
+MiBpcyBjb25zaXN0ZW50IHdpdGggUExMMS80IG9uIG90aGVyDQo+IFItQ2FyIEdlbjMgU29DcyB3
+aXRoIGEgZmFzdGVyIFBMTDEgKDMuMiBHSHopLg0KDQpJIGhlYXJkIHRoZSBDU0kwIHdpbGwgYmUg
+ZG9jdW1lbnRlZCBpbiB0aGUgZnV0dXJlLg0KDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbXNz
+cl9tb2RfY2xrIHI4YTc3OTkwX21vZF9jbGtzW10gX19pbml0Y29uc3QgPSB7DQo+IA0KPiA+ICsg
+ICAgICAgREVGX01PRCgidmluNyIsICAgICAgICAgICAgICAgICAgODA0LCAgIFI4QTc3OTkwX0NM
+S19TMUQyKSwNCj4gPiArICAgICAgIERFRl9NT0QoInZpbjYiLCAgICAgICAgICAgICAgICAgIDgw
+NSwgICBSOEE3Nzk5MF9DTEtfUzFEMiksDQo+IA0KPiBWaW42LzcgaGF2ZSBiZWVuIHJlbW92ZWQg
+aW4gdGhlIEZlYi4gZXJyYXRhLg0KDQpPb3BzLCBJIHdpbGwgcmVtb3ZlIHRoZW0gaW4gdjIgcGF0
+Y2guDQoNCj4gV2l0aCB0aGUgYWJvdmUgZml4ZWQvY29uZmlybWVkOg0KPiBSZXZpZXdlZC1ieTog
+R2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4NCg0KVGhhbmtzIQ0K
+DQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IEdye29ldGplLGVldGluZ31z
+LA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0
+IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2Vl
+cnRAbGludXgtbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0
+ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20g
+dGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhp
+bmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVz
+IFRvcnZhbGRzDQo=
