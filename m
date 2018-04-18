@@ -1,47 +1,51 @@
-From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
-Subject: Re: [PATCH v6 09/11] ARM: sun8i: smp: Add support for A83T
-Date: Wed, 18 Apr 2018 07:46:43 +0200
-Message-ID: <20180418074643.5bd68168@dell-desktop.home>
-References: <20180416215032.5023-1-mylene.josserand@bootlin.com>
-        <20180416215032.5023-10-mylene.josserand@bootlin.com>
-        <20180417112038.mw7bfhqw4xwvzxcw@flea>
+From: yossim@codeaurora.org
+Subject: Re: [PATCH v2] usb: chipidea: Hook into mux framework to toggle usb
+ switch
+Date: Wed, 18 Apr 2018 08:48:10 +0300
+Message-ID: <e75dff8424debcabd79f36faf3b23aaf@codeaurora.org>
+References: <1523973148-2094-1-git-send-email-yossim@codeaurora.org>
+ <ec1c44d7-45a8-a27e-5c45-717b87d3b252@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180417112038.mw7bfhqw4xwvzxcw@flea>
+In-Reply-To: <ec1c44d7-45a8-a27e-5c45-717b87d3b252@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Peter Chen <Peter.Chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:CHIPIDEA USB HIGH SPEED DUAL ROLE CONTROLLER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, robh@kernel.org, swboyd@chromium.org, devicetree@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Maxime,
-
-On Tue, 17 Apr 2018 13:20:38 +0200
-Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-
-> On Mon, Apr 16, 2018 at 11:50:30PM +0200, Mylène Josserand wrote:
-> > @@ -535,8 +599,12 @@ static int sunxi_mc_smp_cpu_kill(unsigned int l_cpu)
-> >  	return !ret;
-> >  }
-> >  
-> > -static bool sunxi_mc_smp_cpu_can_disable(unsigned int __unused)
-> > +static bool sunxi_mc_smp_cpu_can_disable(unsigned int cpu)
-> >  {
-> > +	/* CPU0 hotplug not handled for sun8i-a83t */
-> > +	if (is_sun8i)
-> > +		if (cpu == 0)
-> > +			return false;
-> >  	return true;  
+On 2018-04-17 17:11, Peter Rosin wrote:
+> On 2018-04-17 15:52, Yossi Mansharoff wrote:
+>> On the db410c 96boards platform we have a TC7USB40MU on the board
+>> to mux the D+/D- lines coming from the controller between a micro
+>> usb "device" port and a USB hub for "host" roles[1]. During a
+>> role switch, we need to toggle this mux to forward the D+/D-
+>> lines to either the port or the hub. Add the necessary code to do
+>> the role switch in chipidea core via the generic mux framework.
+>> Board configurations like on db410c are expected to change roles
+>> via the sysfs API described in
+>> Documentation/ABI/testing/sysfs-platform-chipidea-usb2.
 > 
-> I think Chen-Yu told you how to implement the hotplug in the previous
-> iteration, did you have time to test it?
+> Ok, so this is v2. Please describe what is different from v1.
+> I have told you before that this information helps.
+> 
+>> [1] 
+>> https://github.com/96boards/documentation/raw/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
+> 
+> This link returns 404 for me.
+> 
+> Cheers,
+> Peter
 
-Not yet, I will have a look this evening.
 
-Best regards,
+Hi,
+This patch was split apart from the original patch into two patches
+one for chipidea and the other for bindings.
+this patch has no other changes two the code.
 
--- 
-Mylène Josserand, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
+I will update the link.
+
+thanks
+Yossi
