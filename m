@@ -1,60 +1,55 @@
-From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: [PATCH v6 6/9] PCI: dwc: Define maximum number of vectors
-Date: Wed, 18 Apr 2018 15:46:41 +0100
-Message-ID: <94ef244ea1b69bb610e282b59be77baea555797a.1524062073.git.gustavo.pimentel@synopsys.com>
-References: <cover.1524062073.git.gustavo.pimentel@synopsys.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v3 4/5] soc/tegra: pmc: Use of_clk_get_parent_count() instead of open coding
+Date: Wed, 18 Apr 2018 16:50:04 +0200
+Message-ID: <1524063005-1716-5-git-send-email-geert+renesas@glider.be>
+References: <1524063005-1716-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1524062073.git.gustavo.pimentel@synopsys.com>
-In-Reply-To: <cover.1524062073.git.gustavo.pimentel@synopsys.com>
-References: <cover.1524062073.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <1524063005-1716-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Adds a callback that defines the maximum number of vectors that can be use
-by the Root Complex.
+As of_clk_get_parent_count() returns zero on failure, while
+of_count_phandle_with_args() might return a negative error code, this
+also fixes the issue of possibly using a very big number in the
+allocation below.
 
-Since this is a parameter associated to each SoC IP setting, makes sense to
-be configurable and easily visible to future modifications.
-
-The designware IP supports a maximum of 256 vectors.
-
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Acked-by: Joao Pinto <jpinto@synopsys.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 ---
-Change v1->v2:
- - Nothing changed, just to follow the patch set version.
-Change v2->v3:
- - Nothing changed, just to follow the patch set version.
-Changes v3->v4:
- - Nothing changed, just to follow the patch set version.
-Changes v4->v5:
- - Nothing changed, just to follow the patch set version.
-Changes v5->v6:
- - Nothing changed, just to follow the patch set version.
+This depends on "[PATCH v3 1/5] clk: Extract OF clock helpers in
+<linux/of_clk.h>".
 
- drivers/pci/dwc/pcie-designware-plat.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+v3:
+  - Add Acked-by,
 
-diff --git a/drivers/pci/dwc/pcie-designware-plat.c b/drivers/pci/dwc/pcie-designware-plat.c
-index efc315c..5937fed 100644
---- a/drivers/pci/dwc/pcie-designware-plat.c
-+++ b/drivers/pci/dwc/pcie-designware-plat.c
-@@ -48,8 +48,14 @@ static int dw_plat_pcie_host_init(struct pcie_port *pp)
- 	return 0;
- }
+v2:
+  - of_clk_get_parent_count() was moved to <linux/of_clk.h>.
+---
+ drivers/soc/tegra/pmc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index d9fcdb592b3966a5..d8cb48a4b8eb1b78 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -31,6 +31,7 @@
+ #include <linux/iopoll.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/of_clk.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_domain.h>
+@@ -725,7 +726,7 @@ static int tegra_powergate_of_get_clks(struct tegra_powergate *pg,
+ 	unsigned int i, count;
+ 	int err;
  
-+static void dw_plat_set_num_vectors(struct pcie_port *pp)
-+{
-+	pp->num_vectors = MAX_MSI_IRQS;
-+}
-+
- static const struct dw_pcie_host_ops dw_plat_pcie_host_ops = {
- 	.host_init = dw_plat_pcie_host_init,
-+	.set_num_vectors = dw_plat_set_num_vectors,
- };
+-	count = of_count_phandle_with_args(np, "clocks", "#clock-cells");
++	count = of_clk_get_parent_count(np);
+ 	if (count == 0)
+ 		return -ENODEV;
  
- static int dw_plat_pcie_establish_link(struct dw_pcie *pci)
 -- 
 2.7.4
