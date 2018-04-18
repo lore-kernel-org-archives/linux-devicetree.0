@@ -1,448 +1,297 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [v3,2/2] clk: qcom: clk-rpmh: Add QCOM RPMh clock driver
-Date: Tue, 17 Apr 2018 16:57:56 -0700
-Message-ID: <20180417235756.GF244487@google.com>
-References: <1523673401-21611-3-git-send-email-tdas@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] clk: qcom: Add some missing gcc clks for msm8996
+Date: Tue, 17 Apr 2018 17:09:26 -0700
+Message-ID: <20180418000926.4998-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1523673401-21611-3-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, David Collins <collinsd@codeaurora.org>
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 14, 2018 at 08:06:41AM +0530, Taniya Das wrote:
-> Add the RPMh clock driver to control the RPMh managed clock resources on
-> some of the Qualcomm Technologies, Inc. SoCs.
-> 
-> Signed-off-by: David Collins <collinsd@codeaurora.org>
-> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
-> ---
->  drivers/clk/qcom/Kconfig    |   9 ++
->  drivers/clk/qcom/Makefile   |   1 +
->  drivers/clk/qcom/clk-rpmh.c | 367 ++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 377 insertions(+)
->  create mode 100644 drivers/clk/qcom/clk-rpmh.c
->
-> --
-> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> index fbf4532..63c3372 100644
-> --- a/drivers/clk/qcom/Kconfig
-> +++ b/drivers/clk/qcom/Kconfig
-> @@ -112,6 +112,15 @@ config IPQ_GCC_8074
->  	  i2c, USB, SD/eMMC, etc. Select this for the root clock
->  	  of ipq8074.
-> 
-> +config QCOM_CLK_RPMH
-> +	tristate "RPMh Clock Driver"
-> +	depends on COMMON_CLK_QCOM && QCOM_RPMH
-> +	help
-> +	 RPMh manages shared resources on some Qualcomm Technologies, Inc.
-> +	 SoCs. It accepts requests from other hardware subsystems via RSC.
-> +	 Say Y if you want to support the clocks exposed by RPMh on
-> +	 platforms such as sdm845.
-> +
->  config MSM_GCC_8660
->  	tristate "MSM8660 Global Clock Controller"
->  	depends on COMMON_CLK_QCOM
-> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-> index 230332c..b2b5babf 100644
-> --- a/drivers/clk/qcom/Makefile
-> +++ b/drivers/clk/qcom/Makefile
-> @@ -36,5 +36,6 @@ obj-$(CONFIG_MSM_MMCC_8996) += mmcc-msm8996.o
->  obj-$(CONFIG_QCOM_A53PLL) += a53-pll.o
->  obj-$(CONFIG_QCOM_CLK_APCS_MSM8916) += apcs-msm8916.o
->  obj-$(CONFIG_QCOM_CLK_RPM) += clk-rpm.o
-> +obj-$(CONFIG_QCOM_CLK_RPMH) += clk-rpmh.o
->  obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
->  obj-$(CONFIG_SPMI_PMIC_CLKDIV) += clk-spmi-pmic-div.o
-> diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-> new file mode 100644
-> index 0000000..fa61284
-> --- /dev/null
-> +++ b/drivers/clk/qcom/clk-rpmh.c
-> @@ -0,0 +1,367 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <soc/qcom/cmd-db.h>
-> +#include <soc/qcom/rpmh.h>
-> +
-> +#include <dt-bindings/clock/qcom,rpmh.h>
-> +
-> +#define CLK_RPMH_ARC_EN_OFFSET	0
-> +#define CLK_RPMH_VRM_EN_OFFSET	4
-> +#define CLK_RPMH_APPS_RSC_AO_STATE_MASK (BIT(RPMH_WAKE_ONLY_STATE) | \
-> +					 BIT(RPMH_ACTIVE_ONLY_STATE))
-> +#define CLK_RPMH_APPS_RSC_STATE_MASK (BIT(RPMH_WAKE_ONLY_STATE) | \
-> +				      BIT(RPMH_ACTIVE_ONLY_STATE) | \
-> +				      BIT(RPMH_SLEEP_STATE))
-> +struct clk_rpmh {
-> +	struct clk_hw hw;
-> +	const char *res_name;
-> +	u32 res_addr;
-> +	u32 res_en_offset;
-> +	u32 res_on_val;
-> +	u32 res_off_val;
-> +	u32 state;
-> +	u32 aggr_state;
-> +	u32 last_sent_aggr_state;
-> +	u32 valid_state_mask;
-> +	struct rpmh_client *rpmh_client;
-> +	struct device *dev;
-> +	struct clk_rpmh *peer;
-> +	unsigned long rate;
-> +};
-> +
-> +struct rpmh_cc {
-> +	struct clk_onecell_data data;
-> +	struct clk *clks[];
-> +};
-> +
-> +struct clk_rpmh_desc {
-> +	struct clk_hw **clks;
-> +	size_t num_clks;
-> +};
+From: Rajendra Nayak <rnayak@codeaurora.org>
 
-Could you briefly document the struct members, especially struct clk_rpmh?
+Add a few missing gcc clks for msm8996
 
-> +static DEFINE_MUTEX(rpmh_clk_lock);
-> +
-> +#define __DEFINE_CLK_RPMH(_platform, _name, _name_active, _res_name,	\
-> +			  _res_en_offset, _res_on, _res_off, _rate)	\
-> +	static struct clk_rpmh _platform##_##_name_active;		      \
-> +	static struct clk_rpmh _platform##_##_name = {			      \
-> +		.res_name = _res_name,					      \
-> +		.res_en_offset = _res_en_offset,			      \
-> +		.res_on_val = _res_on,					      \
-> +		.res_off_val = _res_off,				      \
-> +		.rate = _rate,						      \
-> +		.peer = &_platform##_##_name_active,			      \
-> +		.valid_state_mask = CLK_RPMH_APPS_RSC_STATE_MASK,	      \
-> +		.hw.init = &(struct clk_init_data){			      \
-> +			.ops = &clk_rpmh_ops,			              \
-> +			.name = #_name,					      \
-> +		},							      \
-> +	};								      \
-> +	static struct clk_rpmh _platform##_##_name_active = {		      \
-> +		.res_name = _res_name,					      \
-> +		.res_en_offset = _res_en_offset,			      \
-> +		.res_on_val = _res_on,					      \
-> +		.res_off_val = _res_off,				      \
-> +		.rate = _rate,						      \
-> +		.peer = &_platform##_##_name,				      \
-> +		.valid_state_mask = CLK_RPMH_APPS_RSC_AO_STATE_MASK,	      \
-> +		.hw.init = &(struct clk_init_data){			      \
-> +			.ops = &clk_rpmh_ops,				      \
-> +			.name = #_name_active,				      \
-> +		},							      \
-> +	}
-> +
-> +#define DEFINE_CLK_RPMH_ARC(_platform, _name, _name_active, _res_name, \
-> +			    _res_on, _res_off, _rate) \
-> +	__DEFINE_CLK_RPMH(_platform, _name, _name_active, _res_name,	\
-> +			  CLK_RPMH_ARC_EN_OFFSET, _res_on, _res_off, _rate)
-> +
-> +#define DEFINE_CLK_RPMH_VRM(_platform, _name, _name_active, _res_name,	\
-> +			    _rate)					 \
-> +	__DEFINE_CLK_RPMH(_platform, _name, _name_active, _res_name,     \
-> +			  CLK_RPMH_VRM_EN_OFFSET, true, false, _rate)
-> +
-> +static inline struct clk_rpmh *to_clk_rpmh(struct clk_hw *_hw)
-> +{
-> +	return container_of(_hw, struct clk_rpmh, hw);
-> +}
-> +
-> +static inline bool has_state_changed(struct clk_rpmh *c, u32 state)
-> +{
-> +	return ((c->last_sent_aggr_state & BIT(state))
-> +		!= (c->aggr_state & BIT(state)));
-> +}
-> +
-> +static int clk_rpmh_send_aggregate_command(struct clk_rpmh *c)
-> +{
-> +	struct tcs_cmd cmd = { 0 };
-> +	u32 cmd_state, on_val;
-> +	enum rpmh_state state = RPMH_SLEEP_STATE;
-> +	int ret = 0;
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+[bjorn: omit aggre0_noc_qosgen_extref_clk]
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-nit: initialization of 'ret' is not needed.
+This patch was accompanied by one that allows the udelay to be defined per
+branch clock, used by the aggre0_noc_qosgen_extref_clk. I dropped this clock
+and the accompanying path in hope that we can get these clock in place.
 
-> +
-> +	cmd.addr = c->res_addr + c->res_en_offset;
-> +	cmd_state = c->aggr_state;
-> +	on_val = c->res_on_val;
-> +
-> +	for (; state <= RPMH_ACTIVE_ONLY_STATE; state++) {
+Several of these clocks are needed by the MSS remoteproc driver.
 
-It would be clearer to initialize 'state' here.
+ drivers/clk/qcom/gcc-msm8996.c               | 186 +++++++++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-msm8996.h |   9 ++
+ 2 files changed, 195 insertions(+)
 
-> +		if (has_state_changed(c, state)) {
-> +			cmd.data = (cmd_state & BIT(state)) ? on_val : 0;
-                                                                       ~
-Shouldn't this be c->res_off_val?
-
-> +			ret = rpmh_write_async(c->rpmh_client, state,
-> +						&cmd, 1);
-> +			if (ret) {
-> +				dev_err(c->dev, "set %s state of %s failed: (%d)\n",
-> +					(!state) ? "sleep" :
-> +					(state == RPMH_WAKE_ONLY_STATE)	?
-> +					"wake" : "active", c->res_name, ret);
-> +				return ret;
-> +			}
-> +		}
-> +	}
-> +
-> +	c->last_sent_aggr_state = c->aggr_state;
-> +	c->peer->last_sent_aggr_state =  c->last_sent_aggr_state;
-> +
-> +	return 0;
-> +}
-> +
-> +static int clk_rpmh_aggregate_state_send_command(struct clk_rpmh *c,
-> +						bool enable)
-> +{
-> +	int ret;
-> +
-> +	/* Update state and aggregate state values based on enable value. */
-> +	c->state = enable ? c->valid_state_mask : 0;
-> +	c->aggr_state = c->state | c->peer->state;
-> +	c->peer->aggr_state = c->aggr_state;
-> +
-> +	ret = clk_rpmh_send_aggregate_command(c);
-> +	if (ret && enable) {
-> +		c->state = 0;
-> +	} else if (ret) {
-> +		c->state = c->valid_state_mask;
-> +		WARN(1, "clk: %s failed to disable\n", c->res_name);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int clk_rpmh_prepare(struct clk_hw *hw)
-> +{
-> +	struct clk_rpmh *c = to_clk_rpmh(hw);
-> +	int ret = 0;
-> +
-> +	mutex_lock(&rpmh_clk_lock);
-> +
-> +	if (c->state)
-> +		goto out;
-> +
-> +	ret = clk_rpmh_aggregate_state_send_command(c, true);
-
-This ends up calling rpmh_write_async(), hence the operation might
-still be in flight when the function returns. Is this intended?
-
-> +out:
-> +	mutex_unlock(&rpmh_clk_lock);
-> +	return ret;
-> +};
-> +
-> +static void clk_rpmh_unprepare(struct clk_hw *hw)
-> +{
-> +	struct clk_rpmh *c = to_clk_rpmh(hw);
-> +
-> +	mutex_lock(&rpmh_clk_lock);
-> +
-> +	if (!c->state)
-> +		goto out;
-> +
-> +	clk_rpmh_aggregate_state_send_command(c, false);
-> +out:
-> +	mutex_unlock(&rpmh_clk_lock);
-> +	return;
-> +};
-> +
-> +static unsigned long clk_rpmh_recalc_rate(struct clk_hw *hw,
-> +					  unsigned long parent_rate)
-> +{
-> +	struct clk_rpmh *r = to_clk_rpmh(hw);
-> +
-> +	/*
-> +	 * RPMh clocks have a fixed rate. Return static rate set
-> +	 * at init time.
-> +	 */
-> +	return r->rate;
-> +}
-> +
-> +static const struct clk_ops clk_rpmh_ops = {
-> +	.prepare	= clk_rpmh_prepare,
-> +	.unprepare	= clk_rpmh_unprepare,
-> +	.recalc_rate	= clk_rpmh_recalc_rate,
-> +};
-> +
-> +/* Resource name must match resource id present in cmd-db. */
-> +DEFINE_CLK_RPMH_ARC(sdm845, bi_tcxo, bi_tcxo_ao, "xo.lvl", 0x3, 0x0, 19200000);
-> +DEFINE_CLK_RPMH_VRM(sdm845, ln_bb_clk2, ln_bb_clk2_ao, "lnbclka2", 19200000);
-> +DEFINE_CLK_RPMH_VRM(sdm845, ln_bb_clk3, ln_bb_clk3_ao, "lnbclka3", 19200000);
-> +DEFINE_CLK_RPMH_VRM(sdm845, rf_clk1, rf_clk1_ao, "rfclka1", 38400000);
-> +DEFINE_CLK_RPMH_VRM(sdm845, rf_clk2, rf_clk2_ao, "rfclka2", 38400000);
-> +DEFINE_CLK_RPMH_VRM(sdm845, rf_clk3, rf_clk3_ao, "rfclka3", 38400000);
-> +
-> +static struct clk_hw *sdm845_rpmh_clocks[] = {
-> +	[RPMH_CXO_CLK]		= &sdm845_bi_tcxo.hw,
-> +	[RPMH_CXO_CLK_A]	= &sdm845_bi_tcxo_ao.hw,
-> +	[RPMH_LN_BB_CLK2]	= &sdm845_ln_bb_clk2.hw,
-> +	[RPMH_LN_BB_CLK2_A]	= &sdm845_ln_bb_clk2_ao.hw,
-> +	[RPMH_LN_BB_CLK3]	= &sdm845_ln_bb_clk3.hw,
-> +	[RPMH_LN_BB_CLK3_A]	= &sdm845_ln_bb_clk3_ao.hw,
-> +	[RPMH_RF_CLK1]		= &sdm845_rf_clk1.hw,
-> +	[RPMH_RF_CLK1_A]	= &sdm845_rf_clk1_ao.hw,
-> +	[RPMH_RF_CLK2]		= &sdm845_rf_clk2.hw,
-> +	[RPMH_RF_CLK2_A]	= &sdm845_rf_clk2_ao.hw,
-> +	[RPMH_RF_CLK3]		= &sdm845_rf_clk3.hw,
-> +	[RPMH_RF_CLK3_A]	= &sdm845_rf_clk3_ao.hw,
-> +};
-> +
-> +static const struct clk_rpmh_desc clk_rpmh_sdm845 = {
-> +	.clks = sdm845_rpmh_clocks,
-> +	.num_clks = ARRAY_SIZE(sdm845_rpmh_clocks),
-> +};
-> +
-> +static int clk_rpmh_probe(struct platform_device *pdev)
-> +{
-> +	struct clk **clks;
-> +	struct clk *clk;
-> +	struct rpmh_cc *rcc;
-> +	struct clk_onecell_data *data;
-> +	struct clk_hw **hw_clks;
-> +	struct clk_rpmh *rpmh_clk;
-> +	const struct clk_rpmh_desc *desc;
-> +	struct rpmh_client *rpmh_client;
-> +	struct device *dev;
-> +	size_t num_clks, i;
-> +	int ret;
-> +
-> +	dev = &pdev->dev;
-> +
-> +	ret = cmd_db_ready();
-> +	if (ret) {
-> +		if (ret != -EPROBE_DEFER) {
-> +			dev_err(dev, "Command DB not available (%d)\n",	ret);
-> +			goto fail;
-> +		}
-> +		return ret;
-> +	}
-> +
-> +	rpmh_client = rpmh_get_client(pdev);
-> +	if (IS_ERR(rpmh_client)) {
-> +		ret = PTR_ERR(rpmh_client);
-> +		dev_err(dev, "Failed to request RPMh client, ret=%d\n",	ret);
-> +		return ret;
-> +	}
-> +
-> +	desc = of_device_get_match_data(&pdev->dev);
-> +	hw_clks = desc->clks;
-> +	num_clks = desc->num_clks;
-> +
-> +	rcc = devm_kzalloc(&pdev->dev, sizeof(*rcc) + sizeof(*clks) * num_clks,
-> +			   GFP_KERNEL);
-> +	if (!rcc) {
-> +		ret = -ENOMEM;
-> +		goto err;
-> +	}
-> +
-> +	clks = rcc->clks;
-> +	data = &rcc->data;
-> +	data->clks = clks;
-> +	data->clk_num = num_clks;
-> +
-> +	for (i = 0; i < num_clks; i++) {
-> +		rpmh_clk = to_clk_rpmh(hw_clks[i]);
-> +		rpmh_clk->res_addr = cmd_db_read_addr(rpmh_clk->res_name);
-> +		if (!rpmh_clk->res_addr) {
-> +			dev_err(dev, "missing RPMh resource address for %s\n",
-> +					rpmh_clk->res_name);
-> +			ret = -ENODEV;
-> +			goto err;
-> +		}
-> +
-> +		rpmh_clk->rpmh_client = rpmh_client;
-> +
-> +		clk = devm_clk_register(&pdev->dev, hw_clks[i]);
-> +		if (IS_ERR(clk)) {
-> +			ret = PTR_ERR(clk);
-> +			dev_err(dev, "failed to register %s\n",
-> +					hw_clks[i]->init->name);
-> +			goto err;
-> +		}
-> +
-> +		clks[i] = clk;
-> +		rpmh_clk->dev = &pdev->dev;
-> +	}
-> +
-> +	ret = of_clk_add_provider(pdev->dev.of_node, of_clk_src_onecell_get,
-> +				  data);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to add clock provider\n");
-> +		goto err;
-> +	}
-> +
-> +	dev_dbg(dev, "Registered RPMh clocks\n");
-> +
-> +	return 0;
-> +err:
-> +	if (rpmh_client)
-> +		rpmh_release(rpmh_client);
-> +fail:
-> +	dev_err(dev, "Error registering RPMh Clock driver (%d)\n", ret);
-> +	return ret;
-> +}
-> +
-> +static int clk_rpmh_remove(struct platform_device *pdev)
-> +{
-> +	const struct clk_rpmh_desc *desc =
-> +			of_device_get_match_data(&pdev->dev);
-> +	struct clk_hw **hw_clks = desc->clks;
-> +	struct clk_rpmh *rpmh_clk = to_clk_rpmh(hw_clks[0]);
-> +
-> +	rpmh_release(rpmh_clk->rpmh_client);
-> +	of_clk_del_provider(pdev->dev.of_node);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id clk_rpmh_match_table[] = {
-> +	{ .compatible = "qcom,sdm845-rpmh-clk", .data = &clk_rpmh_sdm845},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);
-> +
-> +static struct platform_driver clk_rpmh_driver = {
-> +	.probe		= clk_rpmh_probe,
-> +	.remove		= clk_rpmh_remove,
-> +	.driver		= {
-> +		.name	= "clk-rpmh",
-> +		.of_match_table = clk_rpmh_match_table,
-> +	},
-> +};
-> +
-> +static int __init clk_rpmh_init(void)
-> +{
-> +	return platform_driver_register(&clk_rpmh_driver);
-> +}
-> +subsys_initcall(clk_rpmh_init);
-> +
-> +static void __exit clk_rpmh_exit(void)
-> +{
-> +	platform_driver_unregister(&clk_rpmh_driver);
-> +}
-> +module_exit(clk_rpmh_exit);
-> +
-> +MODULE_DESCRIPTION("QCOM RPMh Clock Driver");
-> +MODULE_LICENSE("GPL v2");
+diff --git a/drivers/clk/qcom/gcc-msm8996.c b/drivers/clk/qcom/gcc-msm8996.c
+index 3d6452932797..182e1d2a8bd2 100644
+--- a/drivers/clk/qcom/gcc-msm8996.c
++++ b/drivers/clk/qcom/gcc-msm8996.c
+@@ -262,6 +262,36 @@ static struct clk_alpha_pll_postdiv gpll0 = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_mmss_gpll0_div_clk = {
++	.halt_check = BRANCH_HALT_DELAY,
++	.clkr = {
++		.enable_reg = 0x5200c,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_mmss_gpll0_div_clk",
++			.parent_names = (const char *[]){ "gpll0" },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_mss_gpll0_div_clk = {
++	.halt_check = BRANCH_HALT_DELAY,
++	.clkr = {
++		.enable_reg = 0x5200c,
++		.enable_mask = BIT(2),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_mss_gpll0_div_clk",
++			.parent_names = (const char *[]){ "gpll0" },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops
++		},
++	},
++};
++
+ static struct clk_alpha_pll gpll4_early = {
+ 	.offset = 0x77000,
+ 	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
+@@ -2886,6 +2916,36 @@ static struct clk_branch gcc_ufs_tx_symbol_clk_core_clk = {
+ 	},
+ };
+ 
++static struct clk_branch hlos1_vote_lpass_core_smmu_clk = {
++	.halt_reg = 0x7d010,
++	.halt_check = BRANCH_VOTED,
++	.clkr = {
++		.enable_reg = 0x7d010,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "hlos1_vote_lpass_core_smmu_clk",
++			.parent_names = (const char *[]){ "config_noc_clk_src" },
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch hlos1_vote_lpass_adsp_smmu_clk = {
++	.halt_reg = 0x7d014,
++	.halt_check = BRANCH_VOTED,
++	.clkr = {
++		.enable_reg = 0x7d014,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "hlos1_vote_lpass_adsp_smmu_clk",
++			.parent_names = (const char *[]){ "config_noc_clk_src" },
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_aggre0_snoc_axi_clk = {
+ 	.halt_reg = 0x81008,
+ 	.clkr = {
+@@ -2946,6 +3006,20 @@ static struct clk_branch gcc_smmu_aggre0_ahb_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_aggre1_pnoc_ahb_clk = {
++	.halt_reg = 0x82014,
++	.clkr = {
++		.enable_reg = 0x82014,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_aggre1_pnoc_ahb_clk",
++			.parent_names = (const char *[]){ "periph_noc_clk_src" },
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_aggre2_ufs_axi_clk = {
+ 	.halt_reg = 0x83014,
+ 	.clkr = {
+@@ -2976,6 +3050,34 @@ static struct clk_branch gcc_aggre2_usb3_axi_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_dcc_ahb_clk = {
++	.halt_reg = 0x84004,
++	.clkr = {
++		.enable_reg = 0x84004,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_dcc_ahb_clk",
++			.parent_names = (const char *[]){ "config_noc_clk_src" },
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_aggre0_noc_mpu_cfg_ahb_clk = {
++	.halt_reg = 0x85000,
++	.clkr = {
++		.enable_reg = 0x85000,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_aggre0_noc_mpu_cfg_ahb_clk",
++			.parent_names = (const char *[]){ "config_noc_clk_src" },
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_qspi_ahb_clk = {
+ 	.halt_reg = 0x8b004,
+ 	.clkr = {
+@@ -3034,6 +3136,20 @@ static struct clk_branch gcc_hdmi_clkref_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_edp_clkref_clk = {
++	.halt_reg = 0x88004,
++	.clkr = {
++		.enable_reg = 0x88004,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_edp_clkref_clk",
++			.parent_names = (const char *[]){ "xo" },
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_ufs_clkref_clk = {
+ 	.halt_reg = 0x88008,
+ 	.clkr = {
+@@ -3090,6 +3206,62 @@ static struct clk_branch gcc_rx1_usb2_clkref_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_mss_cfg_ahb_clk = {
++	.halt_reg = 0x8a000,
++	.clkr = {
++		.enable_reg = 0x8a000,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_mss_cfg_ahb_clk",
++			.parent_names = (const char *[]){ "config_noc_clk_src" },
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_mss_mnoc_bimc_axi_clk = {
++	.halt_reg = 0x8a004,
++	.clkr = {
++		.enable_reg = 0x8a004,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_mss_mnoc_bimc_axi_clk",
++			.parent_names = (const char *[]){ "system_noc_clk_src" },
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_mss_snoc_axi_clk = {
++	.halt_reg = 0x8a024,
++	.clkr = {
++		.enable_reg = 0x8a024,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_mss_snoc_axi_clk",
++			.parent_names = (const char *[]){ "system_noc_clk_src" },
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_mss_q6_bimc_axi_clk = {
++	.halt_reg = 0x8a028,
++	.clkr = {
++		.enable_reg = 0x8a028,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_mss_q6_bimc_axi_clk",
++			.parent_names = (const char *[]){ "system_noc_clk_src" },
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_hw *gcc_msm8996_hws[] = {
+ 	&xo.hw,
+ 	&gpll0_early_div.hw,
+@@ -3350,6 +3522,7 @@ static struct clk_regmap *gcc_msm8996_clocks[] = {
+ 	[GCC_AGGRE0_CNOC_AHB_CLK] = &gcc_aggre0_cnoc_ahb_clk.clkr,
+ 	[GCC_SMMU_AGGRE0_AXI_CLK] = &gcc_smmu_aggre0_axi_clk.clkr,
+ 	[GCC_SMMU_AGGRE0_AHB_CLK] = &gcc_smmu_aggre0_ahb_clk.clkr,
++	[GCC_AGGRE1_PNOC_AHB_CLK] = &gcc_aggre1_pnoc_ahb_clk.clkr,
+ 	[GCC_AGGRE2_UFS_AXI_CLK] = &gcc_aggre2_ufs_axi_clk.clkr,
+ 	[GCC_AGGRE2_USB3_AXI_CLK] = &gcc_aggre2_usb3_axi_clk.clkr,
+ 	[GCC_QSPI_AHB_CLK] = &gcc_qspi_ahb_clk.clkr,
+@@ -3360,6 +3533,19 @@ static struct clk_regmap *gcc_msm8996_clocks[] = {
+ 	[GCC_PCIE_CLKREF_CLK] = &gcc_pcie_clkref_clk.clkr,
+ 	[GCC_RX2_USB2_CLKREF_CLK] = &gcc_rx2_usb2_clkref_clk.clkr,
+ 	[GCC_RX1_USB2_CLKREF_CLK] = &gcc_rx1_usb2_clkref_clk.clkr,
++	[GCC_HLOS1_VOTE_LPASS_CORE_SMMU_CLK] =
++					&hlos1_vote_lpass_core_smmu_clk.clkr,
++	[GCC_HLOS1_VOTE_LPASS_ADSP_SMMU_CLK] =
++					&hlos1_vote_lpass_adsp_smmu_clk.clkr,
++	[GCC_EDP_CLKREF_CLK] = &gcc_edp_clkref_clk.clkr,
++	[GCC_MSS_CFG_AHB_CLK] = &gcc_mss_cfg_ahb_clk.clkr,
++	[GCC_MSS_Q6_BIMC_AXI_CLK] = &gcc_mss_q6_bimc_axi_clk.clkr,
++	[GCC_MSS_SNOC_AXI_CLK] = &gcc_mss_snoc_axi_clk.clkr,
++	[GCC_MSS_MNOC_BIMC_AXI_CLK] = &gcc_mss_mnoc_bimc_axi_clk.clkr,
++	[GCC_DCC_AHB_CLK] = &gcc_dcc_ahb_clk.clkr,
++	[GCC_AGGRE0_NOC_MPU_CFG_AHB_CLK] = &gcc_aggre0_noc_mpu_cfg_ahb_clk.clkr,
++	[GCC_MMSS_GPLL0_DIV_CLK] = &gcc_mmss_gpll0_div_clk.clkr,
++	[GCC_MSS_GPLL0_DIV_CLK] = &gcc_mss_gpll0_div_clk.clkr,
+ };
+ 
+ static struct gdsc *gcc_msm8996_gdscs[] = {
+diff --git a/include/dt-bindings/clock/qcom,gcc-msm8996.h b/include/dt-bindings/clock/qcom,gcc-msm8996.h
+index 75b07cf5eed0..db80f2ee571b 100644
+--- a/include/dt-bindings/clock/qcom,gcc-msm8996.h
++++ b/include/dt-bindings/clock/qcom,gcc-msm8996.h
+@@ -235,6 +235,15 @@
+ #define GCC_RX1_USB2_CLKREF_CLK					218
+ #define GCC_HLOS1_VOTE_LPASS_CORE_SMMU_CLK			219
+ #define GCC_HLOS1_VOTE_LPASS_ADSP_SMMU_CLK			220
++#define GCC_EDP_CLKREF_CLK					221
++#define GCC_MSS_CFG_AHB_CLK					222
++#define GCC_MSS_Q6_BIMC_AXI_CLK					223
++#define GCC_MSS_SNOC_AXI_CLK					224
++#define GCC_MSS_MNOC_BIMC_AXI_CLK				225
++#define GCC_DCC_AHB_CLK						226
++#define GCC_AGGRE0_NOC_MPU_CFG_AHB_CLK				227
++#define GCC_MMSS_GPLL0_DIV_CLK					228
++#define GCC_MSS_GPLL0_DIV_CLK					229
+ 
+ #define GCC_SYSTEM_NOC_BCR					0
+ #define GCC_CONFIG_NOC_BCR					1
+-- 
+2.16.2
