@@ -1,118 +1,100 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 4/6] drm/atmel-hlcdc: support bus-width (12/16/18/24)
- in endpoint nodes
-Date: Wed, 18 Apr 2018 09:29:48 +0200
-Message-ID: <20180418092948.6dace10a@bbrezillon>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v2 2/6] dt-bindings: display: atmel: optional
+ video-interface of endpoints
+Date: Wed, 18 Apr 2018 09:31:53 +0200
+Message-ID: <ffa56109-db0a-5619-2214-d163a2a42ef6@axentia.se>
 References: <20180417131052.16336-1-peda@axentia.se>
- <20180417131052.16336-5-peda@axentia.se>
+ <20180417131052.16336-3-peda@axentia.se> <20180418091658.690e3d5e@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180417131052.16336-5-peda@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180418091658.690e3d5e@bbrezillon>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAxNyBBcHIgMjAxOCAxNToxMDo1MCArMDIwMApQZXRlciBSb3NpbiA8cGVkYUBheGVu
-dGlhLnNlPiB3cm90ZToKCj4gVGhpcyBiZWF0cyB0aGUgaGV1cmlzdGljIHRoYXQgdGhlIGNvbm5l
-Y3RvciBpcyBpbnZvbHZlZCBpbiB3aGF0IGZvcm1hdAo+IHNob3VsZCBiZSBvdXRwdXQgZm9yIGNh
-c2VzIHdoZXJlIHRoaXMgZmFpbHMuCj4gCj4gRS5nLiBpZiB0aGVyZSBpcyBhIGJyaWRnZSB0aGF0
-IGNoYW5nZXMgZm9ybWF0IGJldHdlZW4gdGhlIGVuY29kZXIgYW5kIHRoZQo+IGNvbm5lY3Rvciwg
-b3IgaWYgc29tZSBvZiB0aGUgUkdCIHBpbnMgYmV0d2VlbiB0aGUgbGNkIGNvbnRyb2xsZXIgYW5k
-IHRoZQo+IGVuY29kZXIgYXJlIG5vdCByb3V0ZWQgb24gdGhlIFBDQi4KPiAKPiBUaGlzIGlzIGNy
-aXRpY2FsIGZvciB0aGUgZGV2aWNlcyB0aGF0IGhhdmUgdGhlICJjb25mbGljdGluZyBvdXRwdXQK
-PiBmb3JtYXRzIiBpc3N1ZSAoU0FNOU4xMiwgU0FNOVg1LCBTQU1BNUQzKSwgc2luY2UgdGhlIG1v
-c3Qgc2lnbmlmaWNhbnQKPiBSR0IgYml0cyBtb3ZlIGFyb3VuZCBkZXBlbmRpbmcgb24gdGhlIHNl
-bGVjdGVkIG91dHB1dCBtb2RlLiBGb3IKPiBkZXZpY2VzIHRoYXQgZG8gbm90IGhhdmUgdGhlICJj
-b25mbGljdGluZyBvdXRwdXQgZm9ybWF0cyIgaXNzdWUKPiAoU0FNQTVEMiwgU0FNQTVENCksIHRo
-aXMgaXMgY29tcGxldGVseSBpcnJlbGV2YW50Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IFBldGVyIFJv
-c2luIDxwZWRhQGF4ZW50aWEuc2U+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNk
-Yy9hdG1lbF9obGNkY19jcnRjLmMgfCA4NSArKysrKysrKysrKysrKysrKysrKy0tLS0tLQo+ICAx
-IGZpbGUgY2hhbmdlZCwgNjUgaW5zZXJ0aW9ucygrKSwgMjAgZGVsZXRpb25zKC0pCj4gCj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNkYy9hdG1lbF9obGNkY19jcnRjLmMg
-Yi9kcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfY3J0Yy5jCj4gaW5kZXgg
-ZDczMjgxMDk1ZmFjLi4yZTcxODk1OTk4MWUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX2NydGMuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9h
-dG1lbC1obGNkYy9hdG1lbF9obGNkY19jcnRjLmMKPiBAQCAtMTksMTIgKzE5LDE0IEBACj4gICAq
-Lwo+ICAKPiAgI2luY2x1ZGUgPGxpbnV4L2Nsay5oPgo+ICsjaW5jbHVkZSA8bGludXgvb2ZfZ3Jh
-cGguaD4KPiAgI2luY2x1ZGUgPGxpbnV4L3BtLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9wbV9ydW50
-aW1lLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9waW5jdHJsL2NvbnN1bWVyLmg+Cj4gIAo+ICAjaW5j
-bHVkZSA8ZHJtL2RybV9jcnRjLmg+Cj4gICNpbmNsdWRlIDxkcm0vZHJtX2NydGNfaGVscGVyLmg+
-Cj4gKyNpbmNsdWRlIDxkcm0vZHJtX29mLmg+Cj4gICNpbmNsdWRlIDxkcm0vZHJtUC5oPgo+ICAK
-PiAgI2luY2x1ZGUgPHZpZGVvL3ZpZGVvbW9kZS5oPgo+IEBAIC0yMjYsNiArMjI4LDY4IEBAIHN0
-YXRpYyB2b2lkIGF0bWVsX2hsY2RjX2NydGNfYXRvbWljX2VuYWJsZShzdHJ1Y3QgZHJtX2NydGMg
-KmMsCj4gICNkZWZpbmUgQVRNRUxfSExDRENfUkdCODg4X09VVFBVVAlCSVQoMykKPiAgI2RlZmlu
-ZSBBVE1FTF9ITENEQ19PVVRQVVRfTU9ERV9NQVNLCUdFTk1BU0soMywgMCkKPiAgCj4gK3N0YXRp
-YyBpbnQgYXRtZWxfaGxjZGNfY29ubmVjdG9yX291dHB1dF9tb2RlKHN0cnVjdCBkcm1fY29ubmVj
-dG9yX3N0YXRlICpzdGF0ZSkKPiArewo+ICsJc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3Rv
-ciA9IHN0YXRlLT5jb25uZWN0b3I7Cj4gKwlzdHJ1Y3QgZHJtX2Rpc3BsYXlfaW5mbyAqaW5mbyA9
-ICZjb25uZWN0b3ItPmRpc3BsYXlfaW5mbzsKPiArCXVuc2lnbmVkIGludCBzdXBwb3J0ZWRfZm10
-cyA9IDA7Cj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmVwOwo+ICsJaW50IGo7Cj4gKwo+ICsJLyoK
-PiArCSAqIFVzZSB0aGUgY29ubmVjdG9yIGluZGV4IGFzIGFuIGFwcHJveGltYXRpb24gb2YgdGhl
-Cj4gKwkgKiBlbmRwb2ludCBub2RlIGluZGV4LiBXZSBrbm93IGl0J3MgdHJ1ZSBmb3Igb3VyIGNh
-c2UKPiArCSAqIGRlcGVuZGluZyBvbiB0aGUgZHJpdmVyIGltcGxlbWVudGF0aW9uLgo+ICsJICov
-Cj4gKwllcCA9IG9mX2dyYXBoX2dldF9lbmRwb2ludF9ieV9yZWdzKGNvbm5lY3Rvci0+ZGV2LT5k
-ZXYtPm9mX25vZGUsIDAsCj4gKwkJCQkJICAgY29ubmVjdG9yLT5pbmRleCk7Cj4gKwoKSG0sIHRo
-aXMgc291bmRzIGEgYml0IGZyYWdpbGUuIENhbid0IHdlIGhhdmUgYSByZWZlcmVuY2UgdG8gdGhl
-IG9mX25vZGUKYXR0YWNoZWQgdG8gdGhlIGNvbm5lY3Rvcj8gT3IgbWF5YmUgd2UgY2FuIHBhcnNl
-IHRoaXMgZWFybGllciBhbmQgc2V0IGEKY29uc3RyYWludCBvbiB0aGUgYWNjZXB0ZWQgbW9kZXMu
-Cgo+ICsJaWYgKGVwKSB7Cj4gKwkJaW50IGJ1c19mbXQgPSBkcm1fb2ZfbWVkaWFfYnVzX2ZtdChl
-cCk7CgpIbSwgeW91J3JlIGV4dHJhY3RpbmcgdGhpcyBwaWVjZSBvZiBpbmZvcm1hdGlvbiBmcm9t
-IHRoZSBEVCBldmVyeSB0aW1lCmFuIGF0b21pYyBtb2Rlc2V0IGlzIGRvbmUuIEknZCByZWFsbHkg
-cHJlZmVyIHRvIGhhdmUgdGhpcyBkb25lIG9uY2UgYXQKcHJvYmUgdGltZS4gU2luY2UgdGhpcyBw
-cm9wZXJ0eSBpcyBhdHRhY2hlZCB0byB0aGUgY29ubmVjdG9yLCBtYXliZSB3ZQpzaG91bGQgb3Zl
-cndyaXRlIHRoZSBpbmZvLT5idXNfZm9ybWF0c1tdIGFycmF5IG9yIG1hcmsgc29tZSBvZiBpdHMK
-ZW50cmllcyBhcyBpbnZhbGlkLgoKPiArCj4gKwkJb2Zfbm9kZV9wdXQoZXApOwo+ICsKPiArCQlp
-ZiAoYnVzX2ZtdCA8IDApCj4gKwkJCXJldHVybiBidXNfZm10Owo+ICsKPiArCQlzd2l0Y2ggKGJ1
-c19mbXQpIHsKPiArCQljYXNlIDA6Cj4gKwkJCWJyZWFrOwo+ICsJCWNhc2UgTUVESUFfQlVTX0ZN
-VF9SR0I0NDRfMVgxMjoKPiArCQkJcmV0dXJuIEFUTUVMX0hMQ0RDX1JHQjQ0NF9PVVRQVVQ7Cj4g
-KwkJY2FzZSBNRURJQV9CVVNfRk1UX1JHQjU2NV8xWDE2Ogo+ICsJCQlyZXR1cm4gQVRNRUxfSExD
-RENfUkdCNTY1X09VVFBVVDsKPiArCQljYXNlIE1FRElBX0JVU19GTVRfUkdCNjY2XzFYMTg6Cj4g
-KwkJCXJldHVybiBBVE1FTF9ITENEQ19SR0I2NjZfT1VUUFVUOwo+ICsJCWNhc2UgTUVESUFfQlVT
-X0ZNVF9SR0I4ODhfMVgyNDoKPiArCQkJcmV0dXJuIEFUTUVMX0hMQ0RDX1JHQjg4OF9PVVRQVVQ7
-Cj4gKwkJZGVmYXVsdDoKPiArCQkJcmV0dXJuIC1FSU5WQUw7Cj4gKwkJfQo+ICsJfQo+ICsKPiAr
-CWZvciAoaiA9IDA7IGogPCBpbmZvLT5udW1fYnVzX2Zvcm1hdHM7IGorKykgewo+ICsJCXN3aXRj
-aCAoaW5mby0+YnVzX2Zvcm1hdHNbal0pIHsKPiArCQljYXNlIE1FRElBX0JVU19GTVRfUkdCNDQ0
-XzFYMTI6Cj4gKwkJCXN1cHBvcnRlZF9mbXRzIHw9IEFUTUVMX0hMQ0RDX1JHQjQ0NF9PVVRQVVQ7
-Cj4gKwkJCWJyZWFrOwo+ICsJCWNhc2UgTUVESUFfQlVTX0ZNVF9SR0I1NjVfMVgxNjoKPiArCQkJ
-c3VwcG9ydGVkX2ZtdHMgfD0gQVRNRUxfSExDRENfUkdCNTY1X09VVFBVVDsKPiArCQkJYnJlYWs7
-Cj4gKwkJY2FzZSBNRURJQV9CVVNfRk1UX1JHQjY2Nl8xWDE4Ogo+ICsJCQlzdXBwb3J0ZWRfZm10
-cyB8PSBBVE1FTF9ITENEQ19SR0I2NjZfT1VUUFVUOwo+ICsJCQlicmVhazsKPiArCQljYXNlIE1F
-RElBX0JVU19GTVRfUkdCODg4XzFYMjQ6Cj4gKwkJCXN1cHBvcnRlZF9mbXRzIHw9IEFUTUVMX0hM
-Q0RDX1JHQjg4OF9PVVRQVVQ7Cj4gKwkJCWJyZWFrOwo+ICsJCWRlZmF1bHQ6Cj4gKwkJCWJyZWFr
-Owo+ICsJCX0KPiArCX0KPiArCj4gKwlyZXR1cm4gc3VwcG9ydGVkX2ZtdHM7Cj4gK30KPiArCj4g
-IHN0YXRpYyBpbnQgYXRtZWxfaGxjZGNfY3J0Y19zZWxlY3Rfb3V0cHV0X21vZGUoc3RydWN0IGRy
-bV9jcnRjX3N0YXRlICpzdGF0ZSkKPiAgewo+ICAJdW5zaWduZWQgaW50IG91dHB1dF9mbXRzID0g
-QVRNRUxfSExDRENfT1VUUFVUX01PREVfTUFTSzsKPiBAQCAtMjM4LDMxICszMDIsMTIgQEAgc3Rh
-dGljIGludCBhdG1lbF9obGNkY19jcnRjX3NlbGVjdF9vdXRwdXRfbW9kZShzdHJ1Y3QgZHJtX2Ny
-dGNfc3RhdGUgKnN0YXRlKQo+ICAJY3J0YyA9IGRybV9jcnRjX3RvX2F0bWVsX2hsY2RjX2NydGMo
-c3RhdGUtPmNydGMpOwo+ICAKPiAgCWZvcl9lYWNoX25ld19jb25uZWN0b3JfaW5fc3RhdGUoc3Rh
-dGUtPnN0YXRlLCBjb25uZWN0b3IsIGNzdGF0ZSwgaSkgewo+IC0JCXN0cnVjdCBkcm1fZGlzcGxh
-eV9pbmZvICppbmZvID0gJmNvbm5lY3Rvci0+ZGlzcGxheV9pbmZvOwo+ICAJCXVuc2lnbmVkIGlu
-dCBzdXBwb3J0ZWRfZm10cyA9IDA7Cj4gLQkJaW50IGo7Cj4gIAo+ICAJCWlmICghY3N0YXRlLT5j
-cnRjKQo+ICAJCQljb250aW51ZTsKPiAgCj4gLQkJZm9yIChqID0gMDsgaiA8IGluZm8tPm51bV9i
-dXNfZm9ybWF0czsgaisrKSB7Cj4gLQkJCXN3aXRjaCAoaW5mby0+YnVzX2Zvcm1hdHNbal0pIHsK
-PiAtCQkJY2FzZSBNRURJQV9CVVNfRk1UX1JHQjQ0NF8xWDEyOgo+IC0JCQkJc3VwcG9ydGVkX2Zt
-dHMgfD0gQVRNRUxfSExDRENfUkdCNDQ0X09VVFBVVDsKPiAtCQkJCWJyZWFrOwo+IC0JCQljYXNl
-IE1FRElBX0JVU19GTVRfUkdCNTY1XzFYMTY6Cj4gLQkJCQlzdXBwb3J0ZWRfZm10cyB8PSBBVE1F
-TF9ITENEQ19SR0I1NjVfT1VUUFVUOwo+IC0JCQkJYnJlYWs7Cj4gLQkJCWNhc2UgTUVESUFfQlVT
-X0ZNVF9SR0I2NjZfMVgxODoKPiAtCQkJCXN1cHBvcnRlZF9mbXRzIHw9IEFUTUVMX0hMQ0RDX1JH
-QjY2Nl9PVVRQVVQ7Cj4gLQkJCQlicmVhazsKPiAtCQkJY2FzZSBNRURJQV9CVVNfRk1UX1JHQjg4
-OF8xWDI0Ogo+IC0JCQkJc3VwcG9ydGVkX2ZtdHMgfD0gQVRNRUxfSExDRENfUkdCODg4X09VVFBV
-VDsKPiAtCQkJCWJyZWFrOwo+IC0JCQlkZWZhdWx0Ogo+IC0JCQkJYnJlYWs7Cj4gLQkJCX0KPiAt
-CQl9Cj4gKwkJc3VwcG9ydGVkX2ZtdHMgPSBhdG1lbF9obGNkY19jb25uZWN0b3Jfb3V0cHV0X21v
-ZGUoY3N0YXRlKTsKPiAgCj4gIAkJaWYgKGNydGMtPmRjLT5kZXNjLT5jb25mbGljdGluZ19vdXRw
-dXRfZm9ybWF0cykKPiAgCQkJb3V0cHV0X2ZtdHMgJj0gc3VwcG9ydGVkX2ZtdHM7CgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 2018-04-18 09:16, Boris Brezillon wrote:
+> Hi Peter,
+> 
+> On Tue, 17 Apr 2018 15:10:48 +0200
+> Peter Rosin <peda@axentia.se> wrote:
+> 
+>> With bus-type/bus-width properties in the endpoint nodes, the video-
+>> interface of the connection can be specified for cases where the
+>> heuristic fails to select the correct output mode. This can happen
+>> e.g. if not all RGB pins are routed on the PCB; the driver has no
+>> way of knowing this, and needs to be told explicitly.
+>>
+>> This is critical for the devices that have the "conflicting output
+>> formats" issue (SAM9N12, SAM9X5, SAMA5D3), since the most significant
+>> RGB bits move around depending on the selected output mode. For
+>> devices that do not have the "conflicting output formats" issue
+>> (SAMA5D2, SAMA5D4), this is completely irrelevant.
+>>
+>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>> ---
+>>  Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+>> index 82f2acb3d374..244b48869eb4 100644
+>> --- a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+>> +++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+>> @@ -15,6 +15,14 @@ Required children nodes:
+>>   to external devices using the OF graph reprensentation (see ../graph.txt).
+>>   At least one port node is required.
+>>  
+>> +Optional properties in grandchild nodes:
+>> + Any endpoint grandchild node may specify a desired video interface
+>> + according to ../../media/video-interfaces.txt, specifically
+>> + - bus-type: must be <0>.
+>> + - bus-width: recognized values are <12>, <16>, <18> and <24>, and
+>> +   override any output mode selection hueristic, forcing "rgb444",
+
+heuristic, I'll fix that for v3, so please review as if it wasn't there...
+
+>> +   "rgb565", "rgb666" and "rgb888" respectively.
+>> +
+> 
+> Can you add an example or update the existing one to show how this
+> should be defined?
+
+For v3, I'll extend the binding with this after the preexisting example:
+
+------------------8<-----------------
+Example 2: With a video interface override to force rgb565, as above
+but with these changes/additions:
+
+&hlcdc {
+	hlcdc-display-controller {
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
+
+		port@0 {
+			hlcdc_panel_output: endpoint@0 {
+				bus-type = <0>;
+				bus-width = <16>;
+			};
+		};
+	};
+};
+------------------8<-----------------
+
+Is that a good plan, or should I perhaps duplicate the whole example?
+
+Cheers,
+Peter
+
+
+>>  Example:
+>>  
+>>  	hlcdc: hlcdc@f0030000 {
+> 
+> 
+> Thanks,
+> 
+> Boris
+> 
