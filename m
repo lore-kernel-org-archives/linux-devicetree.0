@@ -1,43 +1,63 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [v5,05/13] ARM: dts: ipq4019: Add ipq4019-ap.dk04.dtsi
-Date: Wed, 18 Apr 2018 12:45:20 +0530
-Message-ID: <734eb6eb-9af9-d599-81f1-ec66d9cd839c@codeaurora.org>
-References: <1521800336-19266-6-git-send-email-sricharan@codeaurora.org>
- <2641190.FRMBLJWkCS@bentobox> <2284833.pBtR1QS54F@bentobox>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v2 2/6] dt-bindings: display: atmel: optional
+ video-interface of endpoints
+Date: Wed, 18 Apr 2018 09:16:58 +0200
+Message-ID: <20180418091658.690e3d5e@bbrezillon>
+References: <20180417131052.16336-1-peda@axentia.se>
+ <20180417131052.16336-3-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2284833.pBtR1QS54F@bentobox>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sven Eckelmann <sven.eckelmann@openmesh.com>
-Cc: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com, richardcochran@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180417131052.16336-3-peda@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sven,
-
-On 4/18/2018 12:37 PM, Sven Eckelmann wrote:
-> On Mittwoch, 18. April 2018 08:59:46 CEST Sven Eckelmann wrote:
-> [...]
->> I would not know how to disable QSEE on these boards and thus would assume 
->> that it should be part of this dtsi.
-> 
-> 
-> Just did some reviews of the reserved-memory regions in other QCA devices and 
-> it looks like this tz and smem are often directly added to the SoC dtsi. So I 
-> will prepare a similar change for qcom-ipq4019.dtsi and this would then solve 
-> it for AP-DK01/04/07 and no changes in the board-family specific dtsi would be 
-> necessary.
-> 
-> But maybe someone has an objection because tz and smem can actually be 
-> disabled in a sane way on these SoCs and thus it would be better to have these 
-> regions in the board specific dts(i) files. We will see...
-
- Right, will add the above change to soc.dtsi in V6. Does that sound ok for you ?
-
-Regards,
- Sricharan
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+SGkgUGV0ZXIsCgpPbiBUdWUsIDE3IEFwciAyMDE4IDE1OjEwOjQ4ICswMjAwClBldGVyIFJvc2lu
+IDxwZWRhQGF4ZW50aWEuc2U+IHdyb3RlOgoKPiBXaXRoIGJ1cy10eXBlL2J1cy13aWR0aCBwcm9w
+ZXJ0aWVzIGluIHRoZSBlbmRwb2ludCBub2RlcywgdGhlIHZpZGVvLQo+IGludGVyZmFjZSBvZiB0
+aGUgY29ubmVjdGlvbiBjYW4gYmUgc3BlY2lmaWVkIGZvciBjYXNlcyB3aGVyZSB0aGUKPiBoZXVy
+aXN0aWMgZmFpbHMgdG8gc2VsZWN0IHRoZSBjb3JyZWN0IG91dHB1dCBtb2RlLiBUaGlzIGNhbiBo
+YXBwZW4KPiBlLmcuIGlmIG5vdCBhbGwgUkdCIHBpbnMgYXJlIHJvdXRlZCBvbiB0aGUgUENCOyB0
+aGUgZHJpdmVyIGhhcyBubwo+IHdheSBvZiBrbm93aW5nIHRoaXMsIGFuZCBuZWVkcyB0byBiZSB0
+b2xkIGV4cGxpY2l0bHkuCj4gCj4gVGhpcyBpcyBjcml0aWNhbCBmb3IgdGhlIGRldmljZXMgdGhh
+dCBoYXZlIHRoZSAiY29uZmxpY3Rpbmcgb3V0cHV0Cj4gZm9ybWF0cyIgaXNzdWUgKFNBTTlOMTIs
+IFNBTTlYNSwgU0FNQTVEMyksIHNpbmNlIHRoZSBtb3N0IHNpZ25pZmljYW50Cj4gUkdCIGJpdHMg
+bW92ZSBhcm91bmQgZGVwZW5kaW5nIG9uIHRoZSBzZWxlY3RlZCBvdXRwdXQgbW9kZS4gRm9yCj4g
+ZGV2aWNlcyB0aGF0IGRvIG5vdCBoYXZlIHRoZSAiY29uZmxpY3Rpbmcgb3V0cHV0IGZvcm1hdHMi
+IGlzc3VlCj4gKFNBTUE1RDIsIFNBTUE1RDQpLCB0aGlzIGlzIGNvbXBsZXRlbHkgaXJyZWxldmFu
+dC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlhLnNlPgo+IC0t
+LQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hdG1lbC9obGNk
+Yy1kYy50eHQgfCA4ICsrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKykK
+PiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvYXRtZWwvaGxjZGMtZGMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvYXRtZWwvaGxjZGMtZGMudHh0Cj4gaW5kZXggODJmMmFjYjNkMzc0Li4yNDRiNDg4
+NjllYjQgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvYXRtZWwvaGxjZGMtZGMudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvYXRtZWwvaGxjZGMtZGMudHh0Cj4gQEAgLTE1LDYgKzE1LDE0IEBA
+IFJlcXVpcmVkIGNoaWxkcmVuIG5vZGVzOgo+ICAgdG8gZXh0ZXJuYWwgZGV2aWNlcyB1c2luZyB0
+aGUgT0YgZ3JhcGggcmVwcmVuc2VudGF0aW9uIChzZWUgLi4vZ3JhcGgudHh0KS4KPiAgIEF0IGxl
+YXN0IG9uZSBwb3J0IG5vZGUgaXMgcmVxdWlyZWQuCj4gIAo+ICtPcHRpb25hbCBwcm9wZXJ0aWVz
+IGluIGdyYW5kY2hpbGQgbm9kZXM6Cj4gKyBBbnkgZW5kcG9pbnQgZ3JhbmRjaGlsZCBub2RlIG1h
+eSBzcGVjaWZ5IGEgZGVzaXJlZCB2aWRlbyBpbnRlcmZhY2UKPiArIGFjY29yZGluZyB0byAuLi8u
+Li9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dCwgc3BlY2lmaWNhbGx5Cj4gKyAtIGJ1cy10eXBl
+OiBtdXN0IGJlIDwwPi4KPiArIC0gYnVzLXdpZHRoOiByZWNvZ25pemVkIHZhbHVlcyBhcmUgPDEy
+PiwgPDE2PiwgPDE4PiBhbmQgPDI0PiwgYW5kCj4gKyAgIG92ZXJyaWRlIGFueSBvdXRwdXQgbW9k
+ZSBzZWxlY3Rpb24gaHVlcmlzdGljLCBmb3JjaW5nICJyZ2I0NDQiLAo+ICsgICAicmdiNTY1Iiwg
+InJnYjY2NiIgYW5kICJyZ2I4ODgiIHJlc3BlY3RpdmVseS4KPiArCgpDYW4geW91IGFkZCBhbiBl
+eGFtcGxlIG9yIHVwZGF0ZSB0aGUgZXhpc3Rpbmcgb25lIHRvIHNob3cgaG93IHRoaXMKc2hvdWxk
+IGJlIGRlZmluZWQ/Cgo+ICBFeGFtcGxlOgo+ICAKPiAgCWhsY2RjOiBobGNkY0BmMDAzMDAwMCB7
+CgoKVGhhbmtzLAoKQm9yaXMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
