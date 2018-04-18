@@ -1,42 +1,43 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH] ARM: dts: stm32: Add vrefbuf support to stm32mp157c
-Date: Wed, 18 Apr 2018 09:47:45 +0200
-Message-ID: <1524037665-26178-1-git-send-email-fabrice.gasnier@st.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v2 5/6] drm/atmel-hlcdc: add support for connecting to
+ tda998x HDMI encoder
+Date: Wed, 18 Apr 2018 10:02:12 +0200
+Message-ID: <0155b3cc-29ce-fa43-5588-b465c6ee064a@axentia.se>
+References: <20180417131052.16336-1-peda@axentia.se>
+ <20180417131052.16336-6-peda@axentia.se> <20180418093649.2c304f29@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180418093649.2c304f29@bbrezillon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.torgue@st.com, robh+dt@kernel.org
-Cc: mcoquelin.stm32@gmail.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, fabrice.gasnier@st.com
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-stm32mp157c has vrefbuf regulator that can provide analog reference
-voltage from 1500mV to 2500mV.
+On 2018-04-18 09:36, Boris Brezillon wrote:
+> On Tue, 17 Apr 2018 15:10:51 +0200
+> Peter Rosin <peda@axentia.se> wrote:
+> 
+>> When the of-graph points to a tda998x-compatible HDMI encoder, register
+>> as a component master and bind to the encoder/connector provided by
+>> the tda998x driver.
+> 
+> Can't we do the opposite: make the tda998x driver expose its devices as
+> drm bridges. I'd rather not add another way to connect external
+> encoders (or bridges) to display controller drivers, especially since,
+> when I asked DRM maintainers/devs what was the good approach to
+> represent such external encoders they pointed me to the drm_bridge
+> interface.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+>From the cover letter:
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index bc3eddc..7df3c99 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -167,6 +167,15 @@
- 			#reset-cells = <1>;
- 		};
- 
-+		vrefbuf: vrefbuf@50025000 {
-+			compatible = "st,stm32-vrefbuf";
-+			reg = <0x50025000 0x8>;
-+			regulator-min-microvolt = <1500000>;
-+			regulator-max-microvolt = <2500000>;
-+			clocks = <&rcc VREF>;
-+			status = "disabled";
-+		};
-+
- 		usart1: serial@5c000000 {
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x5c000000 0x400>;
--- 
-1.9.1
+"However, I don't know if the tilcdc driver is interfacing with the
+tda998x driver in a sane and modern way"
+
+So, which way is the future? Should bridges become components or should
+existing bridge-like components no longer be components? Are there others?
+
+Cheers,
+Peter
