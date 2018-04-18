@@ -1,44 +1,64 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v6 11/11] ARM: shmobile: Convert file to use cntvoff
-Date: Wed, 18 Apr 2018 11:36:27 +0200
-Message-ID: <CAMuHMdU9soQuNMC59Y2AQdTmXbWBz-P3EFfZ6NYGKukJVukKgg@mail.gmail.com>
-References: <20180416215032.5023-1-mylene.josserand@bootlin.com> <20180416215032.5023-12-mylene.josserand@bootlin.com>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v3 2/2] iio: afe: unit-converter: new driver
+Date: Wed, 18 Apr 2018 10:37:21 +0100
+Message-ID: <20180418103721.00004171@huawei.com>
+References: <20180410152802.30958-1-peda@axentia.se>
+        <20180410152802.30958-3-peda@axentia.se>
+        <20180415183140.04c39ebe@archlinux>
+        <81e69701-d49b-6675-010d-99d5d3eaf827@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180416215032.5023-12-mylene.josserand@bootlin.com>
+In-Reply-To: <81e69701-d49b-6675-010d-99d5d3eaf827@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@bootlin.com>
-Cc: Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, quentin.schulz@bootlin.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "Andrew F . Davis" <afd@ti.com>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Myl=C3=A8ne,
+On Mon, 16 Apr 2018 09:12:45 +0200
+Peter Rosin <peda@axentia.se> wrote:
 
-On Mon, Apr 16, 2018 at 11:50 PM, Myl=C3=A8ne Josserand
-<mylene.josserand@bootlin.com> wrote:
-> Now that a common function is available for CNTVOFF's
-> initialization, let's convert shmobile-apmu code to use
-> this function.
+> On 2018-04-15 19:31, Jonathan Cameron wrote:
+> > On Tue, 10 Apr 2018 17:28:02 +0200
+> > Peter Rosin <peda@axentia.se> wrote:
+> >   
+> >> If an ADC channel measures the midpoint of a voltage divider, the
+> >> interesting voltage is often the voltage over the full resistance.
+> >> E.g. if the full voltage is too big for the ADC to handle.
+> >> Likewise, if an ADC channel measures the voltage across a shunt
+> >> resistor, the interesting value is often the current through the
+> >> resistor.
+> >>
+> >> This driver solves both problems by allowing to linearly scale a channel
+> >> and by allowing changes to the type of the channel. Or both.
+> >>
+> >> Signed-off-by: Peter Rosin <peda@axentia.se>  
+> > So I 'think' the only outstanding question is Andrew's one about the driver
+> > name.  We aren't in a hurry at this point in the kernel cycle, so lets
+> > wait until that discussion has ended.  Assuming that we do possibly end
+> > up with a change, then please roll all the patches up into a single series
+> > to avoid me getting confusion.  
+> 
+> Yeah, sure, sorry for the split series, but the lt6106 that's present in
+> one of our newer designs didn't occur to me until just seconds after
+> firing the first half of the series. Which is kind of typical...
+> 
+> Anyway, about the driver naming. The suggestion I like best so far is
+> linear-scaler from Linus W, but thinking about it some more I think I
+> like iio-rescale even better.
+> 
+> Any objections to iio-rescale?
 
-Thanks for your patch, works fine on Renesas ALT with R-Car E2,
-which suffers from lack of CNTVOFF initialization.
+Works for me. But then I rarely care 'that much' about naming and am
+responsible for plenty of previous confusing choices ;)
 
-> Signed-off-by: Myl=C3=A8ne Josserand <mylene.josserand@bootlin.com>
+Jonathan
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+> 
+> Cheers,
+> Peter
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
