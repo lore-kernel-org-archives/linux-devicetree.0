@@ -1,67 +1,83 @@
 From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
-Subject: Re: [PATCH v6 11/11] ARM: shmobile: Convert file to use cntvoff
-Date: Thu, 19 Apr 2018 08:40:47 +0200
-Message-ID: <20180419084047.720e2976@dell-desktop.home>
+Subject: Re: [PATCH v6 01/11] ARM: sunxi: smp: Move assembly code into a
+ file
+Date: Thu, 19 Apr 2018 08:53:16 +0200
+Message-ID: <20180419085316.0bd9bfad@dell-desktop.home>
 References: <20180416215032.5023-1-mylene.josserand@bootlin.com>
-        <20180416215032.5023-12-mylene.josserand@bootlin.com>
-        <CAMuHMdU9soQuNMC59Y2AQdTmXbWBz-P3EFfZ6NYGKukJVukKgg@mail.gmail.com>
-        <20180418120327.0f707abf@dell-desktop.home>
-        <20180418134855.j3o7u3bxurnrsuay@verge.net.au>
+        <20180416215032.5023-2-mylene.josserand@bootlin.com>
+        <CAGb2v67VL70yqTF7xq4T3_9zA9T3UT2AV0gGarh1mqvC17r3Mg@mail.gmail.com>
+        <20180417111737.6dous6eiuvjn33jf@flea>
+        <CAGb2v67qvk=T7u7bOjVZ7q_qsjJuEOM6iarw7by42ga=EYuYDg@mail.gmail.com>
+        <20180418084535.lqdvjgcbxtnwqwri@flea>
+        <CAGb2v64UCA825xC=wvBZ6n0K-c=vsOO15F7S6Bn=i9c=eAqYww@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180418134855.j3o7u3bxurnrsuay@verge.net.au>
+In-Reply-To: <CAGb2v64UCA825xC=wvBZ6n0K-c=vsOO15F7S6Bn=i9c=eAqYww@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, quentin.schulz@bootlin.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Russell King <linux@armlinux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Simon <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, "open list:ARM/SHMOBILE ARM..." <linux-renesas-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Quentin Schulz <quentin.schulz@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Simon,
+Hello Chen-Yu,
 
-On Wed, 18 Apr 2018 15:48:55 +0200
-Simon Horman <horms@verge.net.au> wrote:
+On Wed, 18 Apr 2018 18:05:03 +0800
+Chen-Yu Tsai <wens@csie.org> wrote:
 
-> On Wed, Apr 18, 2018 at 12:03:27PM +0200, Mylène Josserand wrote:
-> > Hello,
-> > 
-> > On Wed, 18 Apr 2018 11:36:27 +0200
-> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >   
-> > > Hi Mylène,
-> > > 
-> > > On Mon, Apr 16, 2018 at 11:50 PM, Mylène Josserand
-> > > <mylene.josserand@bootlin.com> wrote:  
-> > > > Now that a common function is available for CNTVOFF's
-> > > > initialization, let's convert shmobile-apmu code to use
-> > > > this function.    
-> > > 
-> > > Thanks for your patch, works fine on Renesas ALT with R-Car E2,
-> > > which suffers from lack of CNTVOFF initialization.  
-> > 
-> > Great to know that it works on this board.
-> >   
-> > >   
-> > > > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>    
-> > > 
-> > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > 
-> > > Gr{oetje,eeting}s,
-> > > 
-> > >                         Geert
-> > >   
-> > 
-> > Thank you again for testing it :)  
+> On Wed, Apr 18, 2018 at 4:45 PM, Maxime Ripard
+> <maxime.ripard@bootlin.com> wrote:
+> > On Tue, Apr 17, 2018 at 07:25:15PM +0800, Chen-Yu Tsai wrote:  
+> >> On Tue, Apr 17, 2018 at 7:17 PM, Maxime Ripard
+> >> <maxime.ripard@bootlin.com> wrote:  
+> >> > On Tue, Apr 17, 2018 at 11:12:41AM +0800, Chen-Yu Tsai wrote:  
+> >> >> On Tue, Apr 17, 2018 at 5:50 AM, Mylène Josserand
+> >> >> <mylene.josserand@bootlin.com> wrote:  
+> >> >> > Move the assembly code for cluster cache enabling and resuming
+> >> >> > into an assembly file instead of having it directly in C code.
+> >> >> >
+> >> >> > Remove the CFLAGS because we are using the ARM directive "arch"
+> >> >> > instead.
+> >> >> >
+> >> >> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> >> >> > ---
+> >> >> >  arch/arm/mach-sunxi/Makefile  |  4 +--
+> >> >> >  arch/arm/mach-sunxi/headsmp.S | 80 +++++++++++++++++++++++++++++++++++++++++
+> >> >> >  arch/arm/mach-sunxi/mc_smp.c  | 82 +++----------------------------------------
+> >> >> >  3 files changed, 85 insertions(+), 81 deletions(-)
+> >> >> >  create mode 100644 arch/arm/mach-sunxi/headsmp.S  
+> >> >>
+> >> >> I'm still not convinced about this whole "move ASM to separate
+> >> >> file" thing, especially now that you aren't actually adding any
+> >> >> sunxi-specific ASM code beyond a simple function call.
+> >> >>
+> >> >> Could you drop this for now?  
+> >> >
+> >> > I'd really like to have this merged actually. There's a significant
+> >> > readibility improvement, so even if there's no particular functional
+> >> > improvement, I'd still call it a win.  
+> >>
+> >> What parts do you consider hard to read? The extra quotes? Trailing
+> >> newline? Or perhaps the __stringify bits?  
+> >
+> > All of this, plus the clobbers and operands.  
 > 
-> What is the plan for merging this patch/series?
-> 
-> I'd be happy to take this patch through the renesas tree once any
-> dependencies are in place.
+> Ok. Lets move it then.
 
-I will send a new series before the end of the week to correct the
-reviews I got so far and I hope that the next one will be merged
-(otherwise, I will fix what needs to be fixed, of course).
+Ok, I will not drop this patch then.
+
+> 
+> The kbuild reports indicate this still needs some work though.
+
+Yes, this is "normal" because the patch, that I depend on, is not
+applied yet (even if my cover-letter can let think that, it is not the
+case, sorry).
+
+It is applied on Broadcom ARM SoC since Tuesday: 
+https://lkml.org/lkml/2018/2/23/1263
+https://github.com/Broadcom/stblinux/commits/soc/next
+
+With this patch, it should fix the errors reported by kbuild.
 
 Best regards,
 
