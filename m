@@ -1,55 +1,57 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [Patch v2 3/6] dt-bindings: display/ti: Add plane binding to
- dispc node
-Date: Thu, 19 Apr 2018 08:35:29 +0200
-Message-ID: <20180419063529.GD31310@phenom.ffwll.local>
-References: <20180326162128.8740-1-bparrot@ti.com>
- <20180326162128.8740-4-bparrot@ti.com> <2164642.vWvZsSsmr9@avalon>
- <40918ef0-247c-595f-5f0b-81a338bfac67@ti.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH 3/7] bus: add bus driver for accessing Allwinner A64 DE2
+Date: Thu, 19 Apr 2018 12:05:36 +0530
+Message-ID: <CAMty3ZBAbMzRaSwWat+irbxALcOCuEHzsL6yOQJ4AkC9N8Ugxg@mail.gmail.com>
+References: <20180316175354.21437-1-icenowy@aosc.io> <20180316175354.21437-4-icenowy@aosc.io>
+ <CAMty3ZBOSXu=+jQpsdnykioDGsp=VphSnzQdDDs_hh3Y1FPKyg@mail.gmail.com>
+ <CAGb2v64-sWsFfHThVrcE5ivrf6kZSZa_tkB_GtC=Z+1TLpWV_Q@mail.gmail.com> <CAMty3ZAfBZSc9f5mRxSaYzW6W1JkVkJ7+swMAm3Gg_EFWUkULw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <40918ef0-247c-595f-5f0b-81a338bfac67@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMty3ZAfBZSc9f5mRxSaYzW6W1JkVkJ7+swMAm3Gg_EFWUkULw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBcHIgMDQsIDIwMTggYXQgMDU6NTY6NDZQTSArMDMwMCwgVG9taSBWYWxrZWluZW4g
-d3JvdGU6Cj4gT24gMDQvMDQvMTggMTc6MzYsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiBI
-aSBCZW5vaXQsCj4gPiAKPiA+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgo+ID4gCj4gPiBPbiBN
-b25kYXksIDI2IE1hcmNoIDIwMTggMTk6MjE6MjUgRUVTVCBCZW5vaXQgUGFycm90IHdyb3RlOgo+
-ID4+IEN1cnJlbnRseSBhbGwgYXZhaWxhYmxlIGRpc3BsYXkgcGlwZWxpbmVzIChpLmUuIHBsYW5l
-KSBhbmQgb3V0cHV0IHBvcnQKPiA+PiByZXNvdXJjZXMgYXJlIGV4cG9zZWQgdG8gdXNlci1zcGFj
-ZS4gSW4gc29tZSBjYXNlcyBpdCBpcyBuZWVkZWQgdG8gYmUKPiA+PiBhYmxlIHRvIHJlc3RyaWN0
-IHdoaWNoIHJlc291cmNlcyBhcmUgYWN0dWFsbHkgdmlzaWJsZSBmcm9tIHVzZXItc3BhY2UuCj4g
-Pj4gQWxzbyBpbiBjYXNlcyB3aGVyZSBhIGRpc3BsYXkgd2lkZXIgdGhhbiAyMDQ4IHBpeGVscyBp
-cyB0byBiZSBzdXBwb3J0ZWQKPiA+PiBtb3JlIHRoYW4gb25lIHZpZGVvIHBpcGVsaW5lIGlzIG5l
-ZWRlZC4gSW4gdGhpcyBjYXNlIHRoZSAybmQgaGFyZHdhcmUKPiA+PiBwaXBlbGluZSBuZWVkZWQg
-aXMgbm90IHZpc2libGUgdG8gdXNlciBzcGFjZSBhcHBsaWNhdGlvbnMuCj4gPj4KPiA+PiBUaGVz
-ZSB2aWRlbyBwaXBlbGluZSBkZWZpbml0aW9ucyBtdXN0IGJlIHN0YXRpY2FsbHkgZGVmaW5lZCBz
-byB0aGF0Cj4gPj4gdGhlIG51bWJlciBvZiB2aXNpYmxlIHBpcGVsaW5lcyBkb2VzIG5vdCBjaGFu
-Z2UgZnJvbSB0aGUgdXNlci1zcGFjZQo+ID4+IHBlcnNwZWN0aXZlLgo+ID4+Cj4gPj4gSW4gb3Jk
-ZXIgdG8gYWxsb3cgdGhpcyB3ZSBhcmUgYWRkaW5nIGFuIG9wdGlvbmFsICdwbGFuZScgc3ViLW5v
-ZGUgdG8KPiA+PiB0aGUgZ2VuZXJpYyBESVNQQyBub2RlLgo+ID4gCj4gPiBJJ20gc29ycnkgYnV0
-IHRoaXMgaXMgcmVhbGx5IGNvbmZpZ3VyYXRpb24gZGF0YSwgaXQgZG9lc24ndCBkZXNjcmliZSB0
-aGUgCj4gPiBoYXJkd2FyZS4gSSBkb24ndCB0aGluayB0aGVzZSBwcm9wZXJ0aWVzIGJlbG9uZyB0
-byBEVC4KPiAKPiBJIGFncmVlLCBidXQgdGhlIHF1ZXN0aW9uIHRoZW4gaXM6IHdoZXJlIHNob3Vs
-ZCBpdCBiZT8gVGhlcmUgd2FzIGEKPiBkaXNjdXNzaW9uIGluIHRoZSB2MSB0aHJlYWQgYWJvdXQg
-dGhpcywgYW5kIGFzIGZhciBhcyBJIHNlZSwgdGhlcmUgYXJlCj4gbm8gb3RoZXIgdXNhYmxlIGFs
-dGVybmF0aXZlcy4KClJ1bnRpbWUgY29uZmlndXJhdGlvbiBhbmQgYXRvbWljX2NoZWNrIG5vdCBh
-biBvcHRpb24/IFNlZSBteSByZXBseSBpbiB2MS4KLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpT
-b2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Sat, Apr 14, 2018 at 4:16 PM, Jagan Teki <jagan@amarulasolutions.com> wrote:
+> On Sat, Apr 14, 2018 at 4:00 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+>> On Sat, Apr 14, 2018 at 6:25 PM, Jagan Teki <jagan@amarulasolutions.com> wrote:
+>>> On Fri, Mar 16, 2018 at 11:23 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
+>>>> The "Display Engine 2.0" (usually called DE2) on the Allwinner A64 SoC
+>>>> is different from the ones on other Allwinner SoCs. It requires a SRAM
+>>>> region to be claimed, otherwise all DE2 subblocks won't be accessible.
+>>>>
+>>>> Add a bus driver for the Allwinner A64 DE2 part which claims the SRAM
+>>>> region when probing.
+>>>
+>>> Along with this bus driver, we also need
+>>> drivers/gpu/drm/sun4i/sun4i_drv.c which can usually drive the
+>>> pipelines like mixer0 and 1 are the cases for A64?
+>>
+>> I imagine that's the next part to be sent out, after the hardware
+>> representation in the device tree has been decided on.
+>
+> Yeah, this hardware representation along with separate bus driver
+> going like in another direction especially if we add pipelines support
+> to it, may be we can add sram stuff to platdata of existinf
+> sun4i_drv.c
+
+Look like SRAM init during sun4i_drv is unable to claim or map the
+memory? do we have any suggestion on adding 'allwinner,pipelines' ? is
+it ok to add one more de which is compatible with sun4i_drv.c like
+this.
+
+de: display-engine {
+                compatible = "allwinner,sun8i-a64-display-engine",
+"allwinner,sun8i-h3-display-engine";
+                allwinner,pipelines = <&mixer0>;
+};
+
+Jagan.
+
+-- 
+Jagan Teki
+Senior Linux Kernel Engineer | Amarula Solutions
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
