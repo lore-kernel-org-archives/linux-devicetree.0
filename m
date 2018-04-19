@@ -1,83 +1,95 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH] ARM: dts: imx6ull: add UART5 RTS input select register
-Date: Thu, 19 Apr 2018 13:19:39 +0200
-Message-ID: <1524136779-13246-1-git-send-email-stefan.wahren@i2se.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH 2/6] dt-bindings: clock: add DDR3 standard speed bins.
+Date: Thu, 19 Apr 2018 13:30:16 +0200
+Message-ID: <62c4b6f0-e67c-8e25-a129-bf0c06c5157b@collabora.com>
+References: <20180419104019.24406-1-enric.balletbo@collabora.com>
+ <20180419104019.24406-3-enric.balletbo@collabora.com>
+ <5662116.zj93FbmDPb@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Greg Ungerer <gerg@linux-m68k.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5662116.zj93FbmDPb@phil>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, dbasehore@chromium.org, linux-kernel@vger.kernel.org, dianders@google.com, groeck@google.com, kernel@collabora.com, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGlNWDZVTEwgVUFSVDVfUlRTX0JfREFUQV9TRUxFQ1RfSU5QVVQgREFJU1kgUmVnaXN0ZXIg
-aGFzIHNvbWUgZGlmZmVyZW50CmJpdCBkZWZpbml0aW9ucyB0byB0aGF0IHNhbWUgcmVnaXN0ZXIg
-aW4gdGhlIGkuTVg2VUwuCgpUaGUgYml0cyBmb3IgdGhlIGkuTVg2VUw6CgowMDAgQ1NJX0RBVEEw
-M19BTFQ4IOKAlCBTZWxlY3RpbmcgUGFkOiBDU0lfREFUQTAzIGZvciBNb2RlOiBBTFQ4CjAwMSBH
-UElPMV9JTzA4X0FMVDgg4oCUIFNlbGVjdGluZyBQYWQ6IEdQSU8xX0lPMDggZm9yIE1vZGU6IEFM
-VDgKMDEwIEdQSU8xX0lPMDlfQUxUOCDigJQgU2VsZWN0aW5nIFBhZDogR1BJTzFfSU8wOSBmb3Ig
-TW9kZTogQUxUOAowMTEgRU5FVDFfUlhfRU5fQUxUMSDigJQgU2VsZWN0aW5nIFBhZDogRU5FVDFf
-UlhfRU4gZm9yIE1vZGU6IEFMVDEKMTAwIEVORVQxX1RYX0RBVEEwX0FMVDEg4oCUIFNlbGVjdGlu
-ZyBQYWQ6IEVORVQxX1RYX0RBVEEwIGZvciBNb2RlOiBBTFQxCjEwMSBDU0lfREFUQTAyX0FMVDgg
-4oCUIFNlbGVjdGluZyBQYWQ6IENTSV9EQVRBMDIgZm9yIE1vZGU6IEFMVDgKCkJ1dCBmb3IgdGhl
-IGkuTVg2VUxMOgoKMDAwIENTSV9EQVRBMDNfQUxUOCDigJQgU2VsZWN0aW5nIFBhZDogQ1NJX0RB
-VEEwMyBmb3IgTW9kZTogQUxUOAowMDEgR1BJTzFfSU8wOF9BTFQ4IOKAlCBTZWxlY3RpbmcgUGFk
-OiBHUElPMV9JTzA4IGZvciBNb2RlOiBBTFQ4CjAxMCBHUElPMV9JTzA5X0FMVDgg4oCUIFNlbGVj
-dGluZyBQYWQ6IEdQSU8xX0lPMDkgZm9yIE1vZGU6IEFMVDgKMDExIFVBUlQxX0NUU19CX0FMVDkg
-4oCUIFNlbGVjdGluZyBQYWQ6IFVBUlQxX0NUU19CIGZvciBNb2RlOiBBTFQ5CjEwMCBVQVJUMV9S
-VFNfQl9BTFQ5IOKAlCBTZWxlY3RpbmcgUGFkOiBVQVJUMV9SVFNfQiBmb3IgTW9kZTogQUxUOQox
-MDEgRU5FVDFfUlhfRU5fQUxUMSDigJQgU2VsZWN0aW5nIFBhZDogRU5FVDFfUlhfRU4gZm9yIE1v
-ZGU6IEFMVDEKMTEwIEVORVQxX1RYX0RBVEEwX0FMVDEg4oCUIFNlbGVjdGluZyBQYWQ6IEVORVQx
-X1RYX0RBVEEwIGZvciBNb2RlOiBBTFQxCjExMSBDU0lfREFUQTAyX0FMVDgg4oCUIFNlbGVjdGlu
-ZyBQYWQ6IENTSV9EQVRBMDIgZm9yIE1vZGU6IEFMVDgKClNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBX
-YWhyZW4gPHN0ZWZhbi53YWhyZW5AaTJzZS5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvaW14
-NnVsbC1waW5mdW5jLmggfCA1ICsrKysrCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCsp
-CgpIaSBTaGF3biwKaW4gdGhlIGxhY2sgb2YgYSBzdWl0YWJsZSBib2FyZCwgdGhpcyBpcyBvbmx5
-IGNvbXBpbGUgdGVzdGVkLgoKU3RlZmFuCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnVsbC1waW5mdW5jLmggYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLXBpbmZ1bmMuaApp
-bmRleCAwOTA4NDZiLi5mZGM0NmJiIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2
-dWxsLXBpbmZ1bmMuaAorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLXBpbmZ1bmMuaApA
-QCAtMTYsOCArMTYsMTIgQEAKICAqLwogI2RlZmluZSBNWDZVTExfUEFEX1VBUlQxX1RYX0RBVEFf
-X1VBUlQ1X0RURV9SWCAgICAgICAgICAgICAgICAgICAgMHgwMDg0IDB4MDMxMCAweDA2NDQgMHg5
-IDB4NAogI2RlZmluZSBNWDZVTExfUEFEX1VBUlQxX1JYX0RBVEFfX1VBUlQ1X0RDRV9SWCAgICAg
-ICAgICAgICAgICAgICAgMHgwMDg4IDB4MDMxNCAweDA2NDQgMHg5IDB4NQorI2RlZmluZSBNWDZV
-TExfUEFEX1VBUlQxX0NUU19CX19VQVJUNV9EQ0VfUlRTICAgICAgICAgICAgICAgICAgICAgMHgw
-MDhDIDB4MDMxOCAweDA2NDAgMHg5IDB4MworI2RlZmluZSBNWDZVTExfUEFEX1VBUlQxX1JUU19C
-X19VQVJUNV9EVEVfUlRTICAgICAgICAgICAgICAgICAgICAgMHgwMDkwIDB4MDMxQyAweDA2NDAg
-MHg5IDB4NAogI2RlZmluZSBNWDZVTExfUEFEX1VBUlQ1X1RYX0RBVEFfX1VBUlQ1X0RURV9SWCAg
-ICAgICAgICAgICAgICAgICAgMHgwMEJDIDB4MDM0OCAweDA2NDQgMHgwIDB4NgogI2RlZmluZSBN
-WDZVTExfUEFEX1VBUlQ1X1JYX0RBVEFfX1VBUlQ1X0RDRV9SWCAgICAgICAgICAgICAgICAgICAg
-MHgwMEMwIDB4MDM0QyAweDA2NDQgMHgwIDB4NworI2RlZmluZSBNWDZVTExfUEFEX0VORVQxX1JY
-X0VOX19VQVJUNV9EQ0VfUlRTICAgICAgICAgICAgICAgICAgICAgMHgwMENDIDB4MDM1OCAweDA2
-NDAgMHgxIDB4NQorI2RlZmluZSBNWDZVTExfUEFEX0VORVQxX1RYX0RBVEEwX19VQVJUNV9EVEVf
-UlRTICAgICAgICAgICAgICAgICAgMHgwMEQwIDB4MDM1QyAweDA2NDAgMHgxIDB4NgogI2RlZmlu
-ZSBNWDZVTExfUEFEX0VORVQyX1JYX0RBVEEwX19FUERDX1NERE8wOCAgICAgICAgICAgICAgICAg
-ICAgMHgwMEU0IDB4MDM3MCAweDAwMDAgMHg5IDB4MAogI2RlZmluZSBNWDZVTExfUEFEX0VORVQy
-X1JYX0RBVEExX19FUERDX1NERE8wOSAgICAgICAgICAgICAgICAgICAgMHgwMEU4IDB4MDM3NCAw
-eDAwMDAgMHg5IDB4MAogI2RlZmluZSBNWDZVTExfUEFEX0VORVQyX1JYX0VOX19FUERDX1NERE8x
-MCAgICAgICAgICAgICAgICAgICAgICAgMHgwMEVDIDB4MDM3OCAweDAwMDAgMHg5IDB4MApAQCAt
-NTEsNiArNTUsNyBAQAogI2RlZmluZSBNWDZVTExfUEFEX0NTSV9EQVRBMDBfX0VTQUlfVFhfSEZf
-Q0xLICAgICAgICAgICAgICAgICAgICAgMHgwMUU0IDB4MDQ3MCAweDAwMDAgMHg5IDB4MAogI2Rl
-ZmluZSBNWDZVTExfUEFEX0NTSV9EQVRBMDFfX0VTQUlfUlhfSEZfQ0xLICAgICAgICAgICAgICAg
-ICAgICAgMHgwMUU4IDB4MDQ3NCAweDAwMDAgMHg5IDB4MAogI2RlZmluZSBNWDZVTExfUEFEX0NT
-SV9EQVRBMDJfX0VTQUlfUlhfRlMgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMUVDIDB4MDQ3
-OCAweDAwMDAgMHg5IDB4MAorI2RlZmluZSBNWDZVTExfUEFEX0NTSV9EQVRBMDJfX1VBUlQ1X0RD
-RV9SVFMgICAgICAgICAgICAgICAgICAgICAgMHgwMUVDIDB4MDQ3OCAweDA2NDAgMHg4IDB4Nwog
-I2RlZmluZSBNWDZVTExfUEFEX0NTSV9EQVRBMDNfX0VTQUlfUlhfQ0xLICAgICAgICAgICAgICAg
-ICAgICAgICAgMHgwMUYwIDB4MDQ3QyAweDAwMDAgMHg5IDB4MAogI2RlZmluZSBNWDZVTExfUEFE
-X0NTSV9EQVRBMDRfX0VTQUlfVFhfRlMgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMUY0IDB4
-MDQ4MCAweDAwMDAgMHg5IDB4MAogI2RlZmluZSBNWDZVTExfUEFEX0NTSV9EQVRBMDVfX0VTQUlf
-VFhfQ0xLICAgICAgICAgICAgICAgICAgICAgICAgMHgwMUY4IDB4MDQ4NCAweDAwMDAgMHg5IDB4
-MAotLSAKMi43LjQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1hcm0ta2VybmVsCg==
+Hi Heiko,
+
+On 19/04/18 13:10, Heiko Stuebner wrote:
+> Hi Enric,
+> 
+> Am Donnerstag, 19. April 2018, 12:40:15 CEST schrieb Enric Balletbo i Serra:
+>> DDR3 SDRAM Standard (JESD79-3F) defines some standard speed bins for
+>> DDR3 memories. The devfreq/rk3399_dmc.txt binding refers to this file
+>> which does not exist, so add a ddr.h file with the standard speed bins
+>> for DDR3.
+>>
+>> Fixes: c1ceb8f7c167 (Documentation: bindings: add dt documentation for rk3399 dmc)
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> ---
+>>
+>>  include/dt-bindings/clock/ddr.h | 34 +++++++++++++++++++++++++++++++++
+>>  1 file changed, 34 insertions(+)
+>>  create mode 100644 include/dt-bindings/clock/ddr.h
+>>
+>> diff --git a/include/dt-bindings/clock/ddr.h b/include/dt-bindings/clock/ddr.h
+>> new file mode 100644
+>> index 000000000000..506aef7e609e
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/ddr.h
+>> @@ -0,0 +1,34 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+>> +
+>> +#ifndef DT_BINDINGS_DDR_H
+>> +#define DT_BINDINGS_DDR_H
+>> +
+>> +/* DDR3-800 Standard Speed Bins */
+>> +#define DDR3_800D	15
+>> +#define DDR3_800E		18
+>> +/* DDR3-1066 Standard Speed Bins */
+>> +#define DDR3_1066E	18
+>> +#define DDR3_1066F	21
+>> +#define DDR3_1066G	24
+> 
+> looking at the mentioned jedec standard, I don't see where these numerical
+> values are defined in the standard itself. [I may be blind though]
+> 
+
+Damm it. No, you're not blind. I did an horrible mistake adding an old version
+of this file. It's wrong, that is supposed to be there is DDR3 table available
+in the ATF [1] not this.
+
+        /* 5-5-5 */
+	DDR3_800D = 0,
+	/* 6-6-6 */
+	DDR3_800E = 1,
+	/* 6-6-6 */
+	DDR3_1066E = 2,
+	/* 7-7-7 */
+	DDR3_1066F = 3,
+        ...
+
+The value is passed directly to the ATF so the above values are the correct.
+
+One question that I have on my mind is if this file should be called as is or if
+will be better name as atf-ddr.h or something like that.
+ddr.h -> atf-ddr.h
+
+[1]
+https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/rockchip/rk3399/drivers/dram/dram_spec_timing.h
+
+Sorry about that. Guess it's needed a v2 but let's wait a little bit for if more
+discussion arises.
+
+Best regards,
+  Enric
+
+> Could you explain a bit more where these numerical values are coming from?
+> 
+> 
+> Thanks
+> Heiko
+> 
