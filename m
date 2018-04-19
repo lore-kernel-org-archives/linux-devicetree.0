@@ -1,47 +1,34 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [net-next PATCH v4 00/13] Add support for netcp driver on K2G
- SoC
-Date: Wed, 18 Apr 2018 21:07:51 -0400 (EDT)
-Message-ID: <20180418.210751.1793156688029577127.davem@davemloft.net>
-References: <1524000642-23944-1-git-send-email-m-karicheri2@ti.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH V2 2/2] ARM: dts: imx6sx-sabreauto: add external 24MHz clock
+ source
+Date: Wed, 18 Apr 2018 20:17:35 -0700
+Message-ID: <152410785516.46528.12432838242068784117@swboyd.mtv.corp.google.com>
+References: <1521426645-19246-1-git-send-email-Anson.Huang@nxp.com>
+ <1521426645-19246-2-git-send-email-Anson.Huang@nxp.com>
+ <20180417142203.GM25429@dragon>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524000642-23944-1-git-send-email-m-karicheri2@ti.com>
+In-Reply-To: <20180417142203.GM25429@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: m-karicheri2@ti.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, grygorii.strashko@ti.com, nsekhar@ti.com
+To: Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shengjiu.wang@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Murali Karicheri <m-karicheri2@ti.com>
-Date: Tue, 17 Apr 2018 17:30:29 -0400
+Quoting Shawn Guo (2018-04-17 07:22:05)
+> On Mon, Mar 19, 2018 at 10:30:45AM +0800, Anson Huang wrote:
+> > On i.MX6SX SabreAuto board, there is external 24MHz clock
+> > source for analog clock2, add this clock source to clock tree.
+> > 
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> > changes since V1:
+> >       remove unnecessary clocks container.
+> 
+> I understand this is suggested by Fabio, but I'm afraid that it's not
+> going to work with imx_obtain_fixed_clock() call, which is coded to
+> look for clocks under /clocks node.
+> 
 
-> K2G SoC is another variant of Keystone family of SoCs. This patch
-> series add support for NetCP driver on this SoC. The QMSS found on
-> K2G SoC is a cut down version of the QMSS found on other keystone
-> devices with less number of queues, internal link ram etc. The patch
-> series has 2 patch sets that goes into the drivers/soc and the
-> rest has to be applied to net sub system. Please review and merge
-> if this looks good.
-> 
-> K2G TRM is located at http://www.ti.com/lit/ug/spruhy8g/spruhy8g.pdf
-> Thanks
-> 
-> The boot logs on K2G ICE board (tftp boot over Ethernet and from mmc)
-> https://pastebin.ubuntu.com/p/yvZ6drFhkW/
-> 
-> 
-> The boot logs on K2G GP board (tftp boot over Ethernet and from mmc)
-> https://pastebin.ubuntu.com/p/QTr6K7s4Zp/
-> 
-> Also regressed boot on K2HK and K2L EVMs as we have modified GBE
-> version detection logic (K2E uses same version of NetCP as in K2L.
-> So regression on one of them is needed).
-> 
-> Boot log on K2L and K2HK EVMs are at
-> https://pastebin.ubuntu.com/p/N9DBdPjbvR/ 
-> 
-> This series applies to net-next master branch.
-
-Series applied, thank you.
+Should patch #1 be dropped from clk tree?
