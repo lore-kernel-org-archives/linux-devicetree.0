@@ -1,87 +1,77 @@
-From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
-Subject: Re: [PATCH v6 01/11] ARM: sunxi: smp: Move assembly code into a
- file
-Date: Thu, 19 Apr 2018 08:53:16 +0200
-Message-ID: <20180419085316.0bd9bfad@dell-desktop.home>
-References: <20180416215032.5023-1-mylene.josserand@bootlin.com>
-        <20180416215032.5023-2-mylene.josserand@bootlin.com>
-        <CAGb2v67VL70yqTF7xq4T3_9zA9T3UT2AV0gGarh1mqvC17r3Mg@mail.gmail.com>
-        <20180417111737.6dous6eiuvjn33jf@flea>
-        <CAGb2v67qvk=T7u7bOjVZ7q_qsjJuEOM6iarw7by42ga=EYuYDg@mail.gmail.com>
-        <20180418084535.lqdvjgcbxtnwqwri@flea>
-        <CAGb2v64UCA825xC=wvBZ6n0K-c=vsOO15F7S6Bn=i9c=eAqYww@mail.gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
+ node
+Date: Thu, 19 Apr 2018 10:11:05 +0300
+Message-ID: <ca131aa6-e9d2-f8cf-1ced-eea97c852493@ti.com>
+References: <20180302134804.3690-3-bparrot@ti.com>
+ <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
+ <20180309182751.GC31988@ti.com> <283b6aea-d262-42ec-5e41-294b02b062c5@ti.com>
+ <CAL_JsqJxDTj66V5eGYgQErhXZf6sfp=99De2XqaX+GyD7NCtGw@mail.gmail.com>
+ <c3b9897f-aae0-35b1-e4e9-99b904d47cda@ti.com>
+ <CAL_Jsq+jYa=aE0Z0s_Wr5iN5LVqpq2OfUfoKDx6i_YA-cg1RRg@mail.gmail.com>
+ <a2c98c64-570c-4bb1-3976-3d54d3d4ecde@ti.com>
+ <CAL_JsqKm6L_66RYJ6JQJfMLA073QyBtP0U+JBkA+m0e34QJWcg@mail.gmail.com>
+ <e125d692-62b9-936c-bd04-84e7eb0072f7@ti.com>
+ <20180419063422.GC31310@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v64UCA825xC=wvBZ6n0K-c=vsOO15F7S6Bn=i9c=eAqYww@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Russell King <linux@armlinux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Simon <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, "open list:ARM/SHMOBILE ARM..." <linux-renesas-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Quentin Schulz <quentin.schulz@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180419063422.GC31310@phenom.ffwll.local>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Chen-Yu,
-
-On Wed, 18 Apr 2018 18:05:03 +0800
-Chen-Yu Tsai <wens@csie.org> wrote:
-
-> On Wed, Apr 18, 2018 at 4:45 PM, Maxime Ripard
-> <maxime.ripard@bootlin.com> wrote:
-> > On Tue, Apr 17, 2018 at 07:25:15PM +0800, Chen-Yu Tsai wrote:  
-> >> On Tue, Apr 17, 2018 at 7:17 PM, Maxime Ripard
-> >> <maxime.ripard@bootlin.com> wrote:  
-> >> > On Tue, Apr 17, 2018 at 11:12:41AM +0800, Chen-Yu Tsai wrote:  
-> >> >> On Tue, Apr 17, 2018 at 5:50 AM, Mylène Josserand
-> >> >> <mylene.josserand@bootlin.com> wrote:  
-> >> >> > Move the assembly code for cluster cache enabling and resuming
-> >> >> > into an assembly file instead of having it directly in C code.
-> >> >> >
-> >> >> > Remove the CFLAGS because we are using the ARM directive "arch"
-> >> >> > instead.
-> >> >> >
-> >> >> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
-> >> >> > ---
-> >> >> >  arch/arm/mach-sunxi/Makefile  |  4 +--
-> >> >> >  arch/arm/mach-sunxi/headsmp.S | 80 +++++++++++++++++++++++++++++++++++++++++
-> >> >> >  arch/arm/mach-sunxi/mc_smp.c  | 82 +++----------------------------------------
-> >> >> >  3 files changed, 85 insertions(+), 81 deletions(-)
-> >> >> >  create mode 100644 arch/arm/mach-sunxi/headsmp.S  
-> >> >>
-> >> >> I'm still not convinced about this whole "move ASM to separate
-> >> >> file" thing, especially now that you aren't actually adding any
-> >> >> sunxi-specific ASM code beyond a simple function call.
-> >> >>
-> >> >> Could you drop this for now?  
-> >> >
-> >> > I'd really like to have this merged actually. There's a significant
-> >> > readibility improvement, so even if there's no particular functional
-> >> > improvement, I'd still call it a win.  
-> >>
-> >> What parts do you consider hard to read? The extra quotes? Trailing
-> >> newline? Or perhaps the __stringify bits?  
-> >
-> > All of this, plus the clobbers and operands.  
-> 
-> Ok. Lets move it then.
-
-Ok, I will not drop this patch then.
-
-> 
-> The kbuild reports indicate this still needs some work though.
-
-Yes, this is "normal" because the patch, that I depend on, is not
-applied yet (even if my cover-letter can let think that, it is not the
-case, sorry).
-
-It is applied on Broadcom ARM SoC since Tuesday: 
-https://lkml.org/lkml/2018/2/23/1263
-https://github.com/Broadcom/stblinux/commits/soc/next
-
-With this patch, it should fix the errors reported by kbuild.
-
-Best regards,
-
--- 
-Mylène Josserand, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
+T24gMTkvMDQvMTggMDk6MzQsIERhbmllbCBWZXR0ZXIgd3JvdGU6Cgo+PiBCdXQgdGhlIGtlcm5l
+bCBjYW5ub3Qga25vdyB3aGF0IHRoZSB1c2VyIHdhbnRzIHRvIGRvLCBzbyBpdCBjYW5ub3QKPj4g
+Y29uZmlndXJlIHRoZSBwbGFuZXMuIElmIHdlIGhhdmUgYW4gSERNSSBvdXRwdXQgd2hpY2ggc3Vw
+cG9ydHMgMmsrIGFuZCBhCj4+IC0yayBMQ0QsIGFuZCA0IGh3IHBsYW5lcywgd2UgY2FuIHNldCB1
+cCB0aGUgcGxhbmVzIGF0IGxlYXN0IGluIHRoZQo+PiBmb2xsb3dpbmcgd2F5czoKPj4KPj4gLSBP
+bmUgdmlydHVhbCBwbGFuZSBvbiBIRE1JLCB0d28gbm9ybWFsIHBsYW5lcyBvbiBMQ0QuIEhlcmUg
+dGhlIG5vcm1hbAo+PiBwbGFuZXMgY2FuIGFsc28gYmUgdXNlZCBvbiB0aGUgSERNSSwgYXMgbG9u
+ZyBhcyB0aGUgaW5wdXQgd2lkdGggaXMgLTJrLgo+Pgo+PiAtIE9uZSB2aXJ0dWFsIHBsYW5lIG9u
+IEhETUksIG9uZSB2aXJ0dWFsIHBsYW5lIG9uIExDRCwgYnV0IHNvbWV0aW1lcwo+PiBib3RoIHBs
+YW5lcyBvbiB0aGUgc2FtZSBkaXNwbGF5IChlaXRoZXIgSERNSSBvciBMQ0QpLgo+Pgo+PiAtIE5v
+IHZpcnR1YWwgcGxhbmVzIChhbmQgZmJkZXYgc3VwcG9ydCBkaXNhYmxlZCkuIFRoaXMgbmVlZHMg
+dGhlCj4+IHVzZXJzcGFjZSB0byB0YWtlIGNhcmUgbm90IHRvIGNvbmZpZ3VyZSAyaysgcGxhbmVz
+LiBCdXQgY29uc2lkZXJpbmcgdGhhdAo+PiB0aGUgbW9kZXMgc3VwcG9ydGVkIGFyZSBzdGlsbCBx
+dWl0IGNsb3NlIHRvIDJrIGluIHdpZHRoLCBJIGJlbGlldmUKPj4gdXBzY2FsaW5nIGEgMmsgcGxh
+bmUgY292ZXIgdGhlIHdob2xlIGRpc3BsYXkgd291bGQgcHJvdmlkZSBxdWl0ZSBvayBpbWFnZS4K
+Pj4KPj4gRWFjaCBvZiB0aG9zZSByZXF1aXJlcyBhIGRpZmZlcmVudCB2aXJ0dWFsIHBsYW5lIHNl
+dHVwLgo+IAo+IFdoeSBkbyB5b3Ugd2FudCB0byBoYXJkY29kZSB0aGlzIGluIERUPyBUaGUgcmVj
+b21tZW5kZWQgYXBwcm9hY2ggaXMgdG8KPiBoYXZlIGEgYnVuY2ggb2YgdmlydHVhbCBwbGFuZXMs
+IGFuZCBydW50aW1lIGFzc2lnbiB3aGF0ZXZlciBodyByZXNvdXJjZXMKPiB5b3UgbmVlZCB0byBn
+ZXQgdGhlcmUuIElmIHlvdSBydW4gb3V0IG9mIGh3IHBsYW5lcyB5b3UganVzdCBmYWlsIHdpdGgK
+PiAtRUlOVkFMIGluIGF0b21pY19jaGVjay4KClRoYXQgaXMgcG9zc2libGUsIGJ1dCBob3cgbWFu
+eSB1c2Vyc3BhY2UgYXBwcyB3aWxsIHdvcmsgY29ycmVjdGx5IGlmIHRoZQpwbGFuZXMgd29yayBv
+ciBkb24ndCB3b3JrIGluIGEgcmFuZG9tIG1hbm5lciAoZnJvbSB1c2Vyc3BhY2UncyBwb2ludCBv
+Zgp2aWV3KT8gSSBsaWtlIHRoZSBpZGVhIG1vcmUgdGhhdCB0aGUgRFJNIGRyaXZlciBleHBvc2Vz
+IGEgbGVzc2VyIG51bWJlcgpvZiBwbGFuZXMgd2hpY2ggYWx3YXlzIHdvcmssIGluc3RlYWQgb2Yg
+ZXhwb3NpbmcgbGFyZ2VyIG51bWJlciBvZiBwbGFuZXMKd2hpY2ggc29tZXRpbWVzIGRvIG5vdCB3
+b3JrLgoKQW5kIHdpdGggdXNlcnNwYWNlIGFwcHMsIEkgZG9uJ3QgbWFpbmx5IG1lYW4gV2VzdG9u
+IGFuZCBYLCBidXQgaW5zdGVhZAp0aGUgbnVtZXJvdXMgY3VzdG9tIGFwcGxpY2F0aW9ucyB0aGUg
+Y3VzdG9tZXJzIHdyaXRlIHRoZW1zZWx2ZXMuIFBlcmhhcHMKSSdtIHdvcnJ5aW5nIHRvbyBtdWNo
+LCBidXQgSSBjYW4gaW1hZ2luZSBhIGZsb29kIG9mIHN1cHBvcnQgcmVxdWVzdHMKYWJvdXQgd2h5
+IHBsYW5lIHNldHVwIGlzIG5vdCB3b3JraW5nIHdoZW4gb25lIGRvZXMgdGhpcyBvciB0aGF0IHNp
+bXBsZQpzZXR1cC4KCkFsc28gb25lIGNvbXBsaWNhdGlvbiB3aXRoIHJ1bnRpbWUgYXNzaWdubWVu
+dCBpcyB0aGF0IHRoZSBodyBwbGFuZXMgYXJlCm5vdCBpZGVudGljYWw6IHNvbWUgc3VwcG9ydCBZ
+VVYgbW9kZXMsIHNvbWUgZG9uJ3QsIHNvbWUgc3VwcG9ydCBzY2FsaW5nLApzb21lIGRvbid0LiBU
+aGF0J3MgcHJvYmFibHkgbm90IGEgc2hvdyBzdG9wcGVyLCBidXQgaXQgZG9lcyBsaW1pdCB0aGUK
+b3B0aW9ucyBhcyBlLmcuIHdlIGNhbid0IGhhdmUgYWxsIHZpcnR1YWwgcGxhbmVzIGFkdmVydGlz
+aW5nIFlVViBzdXBwb3J0CndoZW4gd2UgaGF2ZSBhIGh3IHBsYW5lIHRoYXQgZG9lc24ndCBzdXBw
+b3J0IFlVVi4KCiBUb21pCgotLSAKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2th
+bGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIx
+LTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
