@@ -1,43 +1,43 @@
-Return-Path: <SRS0=UQVZ=HG=ragnatech.se=niklas.soderlund@kernel.org>
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Subject: [PATCH] dt-bindings: thermal: rcar-gen3-thermal: update register size in example
-Date: Tue, 17 Apr 2018 22:49:58 +0200
-Message-Id: <20180417204958.14723-1-niklas.soderlund@ragnatech.se>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+In-Reply-To: <1523956215-28154-2-git-send-email-t-kristo@ti.com>
+References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
+	<1523956215-28154-2-git-send-email-t-kristo@ti.com>
+Date: Wed, 18 Apr 2018 19:02:09 -0500
+Message-ID: <CAL_Jsq+pHeKdEYJ51R6F25OG-zJhFsm5dQUkOoif7ujQeVm+pw@mail.gmail.com>
+Subject: Re: [RFC 01/13] ARM: dts: allow building .dtb files under platform subdirs
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Tero Kristo <t-kristo@ti.com>
+Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Mills, William" <wmills@ti.com>, Tony Lindgren <tony@atomide.com>, Tom Rini <trini@konsulko.com>, Russell King <rmk@armlinux.org.uk>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+On Tue, Apr 17, 2018 at 4:10 AM, Tero Kristo <t-kristo@ti.com> wrote:
+> Add support to base ARM makefile for building .dtb files under platform
+> specific subdirs (e.g. arch/arm/boot/dts/ti for TI SoCs.)
+>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  arch/arm/Makefile | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index e4e537f..f6c90bc 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -343,8 +343,10 @@ $(BOOT_TARGETS): vmlinux
+>  $(INSTALL_TARGETS):
+>         $(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $@
+>
+> +%.dtb: dtbdir=$(patsubst %/,%,$(patsubst %./,%,$(boot)/dts/$(dir $@)))
 
-The datasheet have been expanded with more registers and the DT files
-have been updated with the new size. This change updates the example so
-writing new DT files can use the enchanted driver which uses the new
-registers.
+I'd expect this to look more like the arm64 version and just add
+'subdir-y' entries in the boot/dts/Makefile.
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
----
- .../devicetree/bindings/thermal/rcar-gen3-thermal.txt       | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> +
+>  %.dtb: | scripts
+> -       $(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
+> +       $(Q)$(MAKE) $(build)=$(dtbdir) MACHINE=$(MACHINE) $(boot)/dts/$@
 
-diff --git a/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
-index fdf5caa6229b4fff..39e7d4e61a63c038 100644
---- a/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
-@@ -27,9 +27,9 @@ Example:
- 
- 	tsc: thermal@e6198000 {
- 		compatible = "renesas,r8a7795-thermal";
--		reg = <0 0xe6198000 0 0x68>,
--		      <0 0xe61a0000 0 0x5c>,
--		      <0 0xe61a8000 0 0x5c>;
-+		reg = <0 0xe6198000 0 0x100>,
-+		      <0 0xe61a0000 0 0x100>,
-+		      <0 0xe61a8000 0 0x100>;
- 		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.17.0
+We can drop MACHINE here.
+
+Rob
