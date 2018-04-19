@@ -1,99 +1,115 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 08/10] dt-bindings: media: Document
- bindings for the Sunxi-Cedrus VPU driver
-Date: Thu, 19 Apr 2018 18:04:20 +0200
-Message-ID: <1524153860.3416.9.camel@pengutronix.de>
-References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
-	 <20180419154536.17846-4-paul.kocialkowski@bootlin.com>
-Reply-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH resend v3 3/3] dt-bindings: Document the DT bindings for lan78xx
+Date: Thu, 19 Apr 2018 11:07:45 -0500
+Message-ID: <CAL_Jsq+VyusAGtTPAF6f-t74GtVKnBcEAFQCtEq2ZQZBLzcTFw@mail.gmail.com>
+References: <1524151019-82823-1-git-send-email-phil@raspberrypi.org> <1524151019-82823-4-git-send-email-phil@raspberrypi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDUKXHHSSIJBBDH44LLAKGQEJFYAMRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180419154536.17846-4-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524151019-82823-4-git-send-email-phil@raspberrypi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Phil Elwell <phil@raspberrypi.org>
+Cc: Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
-
-On Thu, 2018-04-19 at 17:45 +0200, Paul Kocialkowski wrote:
-> This adds a device-tree binding document that specifies the properties
-> used by the Sunxi-Cedurs VPU driver, as well as examples.
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+On Thu, Apr 19, 2018 at 10:16 AM, Phil Elwell <phil@raspberrypi.org> wrote:
+> The Microchip LAN78XX family of devices are Ethernet controllers with
+> a USB interface. Despite being discoverable devices it can be useful to
+> be able to configure them from Device Tree, particularly in low-cost
+> applications without an EEPROM or programmed OTP.
+>
+> Document the supported properties in a bindings file.
+>
+> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
 > ---
->  .../devicetree/bindings/media/sunxi-cedrus.txt     | 50 ++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/sunxi-cedrus.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/sunxi-cedrus.txt b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+>  .../devicetree/bindings/net/microchip,lan78xx.txt  | 54 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/microchip,lan78xx.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/microchip,lan78xx.txt b/Documentation/devicetree/bindings/net/microchip,lan78xx.txt
 > new file mode 100644
-> index 000000000000..71ad3f9c3352
+> index 0000000..a5d701b
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
-> @@ -0,0 +1,50 @@
-> +Device-tree bindings for the VPU found in Allwinner SoCs, referred to as the
-> +Video Engine (VE) in Allwinner literature.
+> +++ b/Documentation/devicetree/bindings/net/microchip,lan78xx.txt
+> @@ -0,0 +1,54 @@
+> +Microchip LAN78xx Gigabit Ethernet controller
 > +
-> +The VPU can only access the first 256 MiB of DRAM, that are DMA-mapped starting
-> +from the DRAM base. This requires specific memory allocation and handling.
+> +The LAN78XX devices are usually configured by programming their OTP or with
+> +an external EEPROM, but some platforms (e.g. Raspberry Pi 3 B+) have neither.
+> +The Device Tree properties, if present, override the OTP and EEPROM.
 > +
 > +Required properties:
-> +- compatible	        : "allwinner,sun4i-a10-video-engine";
-> +- memory-region         : DMA pool for buffers allocation;
-> +- clocks	        : list of clock specifiers, corresponding to entries in
-> +                          the clock-names property;
-> +- clock-names	        : should contain "ahb", "mod" and "ram" entries;
-> +- assigned-clocks       : list of clocks assigned to the VE;
-> +- assigned-clocks-rates : list of clock rates for the clocks assigned to the VE;
-> +- resets	        : phandle for reset;
-> +- interrupts	        : should contain VE interrupt number;
-> +- reg		        : should contain register base and length of VE.
+> +- compatible: Should be one of "usb424,7800", "usb424,7801" or "usb424,7850".
+> +
+> +Optional properties:
+> +- local-mac-address:   see ethernet.txt
+> +- mac-address:         see ethernet.txt
+> +
+> +Optional properties of the embedded PHY:
+> +- microchip,led-modes: a 0..4 element vector, with each element configuring
+> +  the operating mode of an LED. Omitted LEDs are turned off. Allowed values
+> +  are defined in "include/dt-bindings/net/microchip-lan78xx.h".
 > +
 > +Example:
 > +
-> +reserved-memory {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges;
+> +/* Based on the configuration for a Raspberry Pi 3 B+ */
+> +&usb {
+> +       usb1@1 {
+
+Same comments as in the dts file:
+
+usb-port@1
+
+> +               compatible = "usb424,2514";
+> +               reg = <1>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
 > +
-> +	/* Address must be kept in the lower 256 MiBs of DRAM for VE. */
-> +	ve_memory: cma@4a000000 {
-> +		compatible = "shared-dma-pool";
-> +		reg = <0x4a000000 0x6000000>;
-> +		no-map;
-> +		linux,cma-default;
-> +	};
+> +               usb1_1@1 {
+
+usb-port@1
+
+> +                       compatible = "usb424,2514";
+> +                       reg = <1>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       ethernet: usbether@1 {
+
+ethernet@1
+
+> +                               compatible = "usb424,7800";
+> +                               reg = <1>;
+> +                               local-mac-address = [ 00 11 22 33 44 55 ];
+> +
+> +                               mdio {
+> +                                       #address-cells = <0x1>;
+> +                                       #size-cells = <0x0>;
+> +                                       eth_phy: ethernet-phy@1 {
+> +                                               reg = <1>;
+> +                                               microchip,led-modes = <
+> +                                                       LAN78XX_LINK_1000_ACTIVITY
+> +                                                       LAN78XX_LINK_10_100_ACTIVITY
+> +                                               >;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +       };
 > +};
-> +
-> +video-engine@1c0e000 {
-
-This is not really required by any specification, and not as common as
-gpu@..., but could this reasonably be called "vpu@1c0e000" to follow
-somewhat-common practice?
-
-> +	compatible = "allwinner,sun4i-a10-video-engine";
-> +	reg = <0x01c0e000 0x1000>;
-> +	memory-region = <&ve_memory>;
-> +
-> +	clocks = <&ccu CLK_AHB_VE>, <&ccu CLK_VE>,
-> +		 <&ccu CLK_DRAM_VE>;
-> +	clock-names = "ahb", "mod", "ram";
-> +
-> +	assigned-clocks = <&ccu CLK_VE>;
-> +	assigned-clock-rates = <320000000>;
-> +
-> +	resets = <&ccu RST_VE>;
-> +
-> +	interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
-> +};
-
-regards
-Philipp
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 23735d9..91cb961 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14572,6 +14572,7 @@ M:      Woojung Huh <woojung.huh@microchip.com>
+>  M:     Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+>  L:     netdev@vger.kernel.org
+>  S:     Maintained
+> +F:     Documentation/devicetree/bindings/net/microchip,lan78xx.txt
+>  F:     drivers/net/usb/lan78xx.*
+>  F:     include/dt-bindings/net/microchip-lan78xx.h
+>
+> --
+> 2.7.4
+>
