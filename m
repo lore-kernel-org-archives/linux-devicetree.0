@@ -1,72 +1,131 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 0/6] drm/sun4i: Support color dithering for LCD panels
-Date: Thu, 19 Apr 2018 17:32:19 +0800
-Message-ID: <20180419093225.614-1-wens@csie.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Subject: [PATCH 6/6] [DO NOT MERGE] ARM: dts: sun7i: bananapi-m1-plus: Enable Bananapi 7" 800x480 RGB LCD panel
+Date: Thu, 19 Apr 2018 17:32:25 +0800
+Message-ID: <20180419093225.614-7-wens@csie.org>
+References: <20180419093225.614-1-wens@csie.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180419093225.614-1-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Jonathan Liu <net147@gmail.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
+Cc: Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Liu <net147@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-RGl0aGVyaW5nIGlzIGEgbWV0aG9kIG9mIGFwcHJveGltYXRpbmcgYSBjb2xvciBmcm9tIGEgbWl4
-dHVyZSBvZiBvdGhlcgpjb2xvcnMgd2hlbiB0aGUgcmVxdWlyZWQgY29sb3IgaXNuJ3QgYXZhaWxh
-YmxlLiBJdCByZWR1Y2VzIGNvbG9yCmJhbmRpbmcgYXJ0aWZhY3RzIHRoYXQgY2FuIGJlIG9ic2Vy
-dmVkIHdoZW4gZGlzcGxheWluZyBncmFkaWVudHMKKGUuZy4gZ3JheXNjYWxlIGdyYWRpZW50cyku
-IFRoaXMgbWF5IG9jY3VyIHdoZW4gdGhlIGltYWdlIHRoYXQgbmVlZHMKdG8gYmUgZGlzcGxheWVk
-IGlzIDI0LWJpdCBidXQgdGhlIExDRCBwYW5lbCBpcyBhIGxvd2VyIGJpdCBkZXB0aCBhbmQKZG9l
-cyBub3QgcGVyZm9ybSBkaXRoZXJpbmcgb24gaXRzIG93bi4KClRoZSBUQ09OIChMQ0QgY29udHJv
-bGxlcikgZm91bmQgaW4gQWxsd2lubmVyIFNvQ3MgaGFzIGhhcmR3YXJlIHN1cHBvcnQKZm9yIGRp
-dGhlcmluZyBvbiBjaGFubmVsIDAsIHRoZSBjaGFubmVsIHVzZWQgdG8gZmVlZCBMQ0QgcGFuZWxz
-LiBUaGlzCnNlcmllcyBhZGRzIHN1cHBvcnQgZm9yIGl0LgoKUGF0Y2ggMSByZXdvcmtzIHRoZSBt
-b2RlIHNldCBmdW5jdGlvbiBmb3IgdGhlIENQVSBpbnRlcmZhY2UgdG8gcGFzcwp0aGUgZW5jb2Rl
-ciBvYmplY3QsIHNvIGl0IGNhbiBiZSBwYXNzZWQgdG8gb3RoZXIgaGVscGVyIGZ1bmN0aW9ucy4K
-ClBhdGNoIDIgcmVuYW1lcyB0aGUgZGl0aGVyaW5nIHJlbGF0ZWQgcmVnaXN0ZXIgbWFjcm9zIHRv
-IHJlZmxlY3QgdGhlCmZhY3QgdGhhdCBkaXRoZXJpbmcgaXMgb25seSBzdXBwb3J0ZWQgb24gY2hh
-bm5lbCAwLgoKUGF0Y2ggMyBhZGRzIHN1cHBvcnQgZm9yIGRpdGhlcmluZyBvbiBhbGwgTENEIHBh
-bmVsIG91dHB1dCB0eXBlcy4KClBhdGNoIDQgYWRkcyBzdXBwb3J0IGZvciBCYW5hbmEgUGkncyA3
-IiBEUEkgTENEIHBhbmVsLgoKUGF0Y2ggNSBhZGRzIGEgcGlubXV4IHNldHRpbmcgZm9yIFJHQjg4
-OCBmb3IgdGhlIEFsbHdpbm5lciBBMjAgU29DLgpUaGlzIGNoYW5nZSBoYXMgYmVlbiBzZW50IGJ5
-IG90aGVycyBiZWZvcmUuCgpQYXRjaCA2IHByb3ZpZGVzIGFuIGV4YW1wbGUgZm9yIGVuYWJsaW5n
-IHRoZSBCYW5hbmEgUGkgNyIgRFBJIExDRCBwYW5lbApvbiB0aGUgQmFuYW5hIFBpIE0xKy4gVGhp
-cyBzaG91bGQgbm90IGJlIG1lcmdlZC4gSSB3aWxsIGxpa2VseSByZXdvcmsKdGhpcyBpbnRvIGFu
-IG92ZXJsYXkgaW4gdGhlIGZ1dHVyZS4KCk5vdGUgdGhhdCBJIHdhcyBvbmx5IGFibGUgdG8gdGVz
-dCBkaXRoZXJpbmcgd2l0aCBEUEksIGFzIEkgZG8gbm90IGhhdmUKb3RoZXIgcGFuZWwgdHlwZXMu
-IEhvd2V2ZXIgdGhlIHVuZGVybHlpbmcgY29uY2VwdCBhbmQgY29yZSBjb2RlIGlzIHRoZQpzYW1l
-LCBhcyBhcmUgdGhlIGRybSBvYmplY3RzIGFjY2Vzc2VkLiBOZXZlcnRoZWxlc3MgSSdtIGhvcGlu
-ZyBKb25hdGhhbgpjYW4gdGVzdCBMVkRTIGFuZCBNYXhpbWUgY2FuIHRlc3QgTUlQSSBEU0kuCgpB
-bHNvIGl0IHNlZW1zIHB3bS1iYWNrbGlnaHQgaGFyZHdhcmUgaXMgdW51c2FibGUgYXQgdGhlIG1v
-bWVudC4gSSdtIG5vdApzdXJlIHdoZXRoZXIgdGhlIHB3bS1iYWNrbGlnaHQgb3Igc3VuNGktcHdt
-IGRyaXZlciBpcyB0byBibGFtZS4gSSBoYWQgdG8KbWFudWFsbHkgcG9rZSB0aGUgcHdtIHJlZ2lz
-dGVycyBzbyB0aGUgTENEIGJhY2tsaWdodCB3b3VsZG4ndCBiZQpjb21wbGV0ZWx5IGJsYWNrLgoK
-ClJlZ2FyZHMKQ2hlbll1CgpDaGVuLVl1IFRzYWkgKDUpOgogIGRybS9zdW40aTogdGNvbjogUGFz
-cyBkcm1fZW5jb2RlciAqIGludG8gc3VuNGlfdGNvbjBfbW9kZV9zZXRfY3B1CiAgZHJtL3N1bjRp
-OiB0Y29uOiBSZW5hbWUgRGl0aGVyaW5nIHJlbGF0ZWQgcmVnaXN0ZXIgbWFjcm9zCiAgZHJtL3Bh
-bmVsOiBzaW1wbGU6IEFkZCBzdXBwb3J0IGZvciBCYW5hbmEgUGkgNyIgUzA3MFdWMjAtQ1QxNiBw
-YW5lbAogIEFSTTogZHRzOiBzdW43aTogYWRkIHBpbm11eCBzZXR0aW5nIGZvciBSR0I4ODggb3V0
-cHV0IGZvciBMQ0QwCiAgW0RPIE5PVCBNRVJHRV0gQVJNOiBkdHM6IHN1bjdpOiBiYW5hbmFwaS1t
-MS1wbHVzOiBFbmFibGUgQmFuYW5hcGkgNyIKICAgIDgwMHg0ODAgUkdCIExDRCBwYW5lbAoKSm9u
-YXRoYW4gTGl1ICgxKToKICBkcm0vc3VuNGk6IHRjb246IEFkZCBkaXRoZXJpbmcgc3VwcG9ydCBm
-b3IgUkdCNTY1L1JHQjY2NiBMQ0QgcGFuZWxzCgogLi4uL2Rpc3BsYXkvcGFuZWwvYmFuYW5hcGks
-czA3MHd2MjAtY3QxNi50eHQgIHwgIDcgKysKIC4uLi9ib290L2R0cy9zdW43aS1hMjAtYmFuYW5h
-cGktbTEtcGx1cy5kdHMgICB8IDYxICsrKysrKysrKysrKysrKwogYXJjaC9hcm0vYm9vdC9kdHMv
-c3VuN2ktYTIwLmR0c2kgICAgICAgICAgICAgIHwgMTEgKysrCiBkcml2ZXJzL2dwdS9kcm0vcGFu
-ZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAgfCAyNSArKysrKysKIGRyaXZlcnMvZ3B1L2RybS9z
-dW40aS9zdW40aV90Y29uLmMgICAgICAgICAgICB8IDc2ICsrKysrKysrKysrKysrKystLS0KIGRy
-aXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmggICAgICAgICAgICB8IDI3ICsrKystLS0K
-IDYgZmlsZXMgY2hhbmdlZCwgMTg2IGluc2VydGlvbnMoKyksIDIxIGRlbGV0aW9ucygtKQogY3Jl
-YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3BhbmVsL2JhbmFuYXBpLHMwNzB3djIwLWN0MTYudHh0CgotLSAKMi4xNy4wCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+The BPI-M1+ has an FPC connector for connecting an RGB (parallel) or
+LVDS LCD panel. One of the compatible panels is a 7" 800x480 RGB panel
+from Bananapi. The backlight can be controlled by driving a PWM signal
+from the SoC at different duty cycles. The LCD enable pin does not seem
+to do anything, but it is nevertheless included for completeness. There
+is also a FT5306 capacitive touchscreen controller.
+
+This should not be confused with the other 7" LCD that is LVDS based
+and has a resolution of 1024x600.
+
+This patch enables all of the above for the BPI-M1+.
+
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ .../boot/dts/sun7i-a20-bananapi-m1-plus.dts   | 61 +++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+index 763cb03033c4..58a923bfa6ef 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+@@ -47,6 +47,7 @@
+ #include "sunxi-common-regulators.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/pwm/pwm.h>
+ 
+ / {
+ 	model = "Banana Pi BPI-M1-Plus";
+@@ -71,6 +72,34 @@
+ 		};
+ 	};
+ 
++	lcd_backlight: lcd-backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm 0 20000 PWM_POLARITY_INVERTED>; /* 50 kHz */
++		enable-gpios = <&pio 7 9 GPIO_ACTIVE_HIGH>; /* PH9 */
++		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
++		default-brightness-level = <8>;
++	};
++
++	lcd_panel: lcd-panel {
++		compatible = "bananapi,s070wv20-ct16", "simple-panel";
++		/* This doesn't do anything for this particular panel */
++		enable-gpios = <&pio 7 12 GPIO_ACTIVE_HIGH>; /* PH12 */
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			backlight = <&lcd_backlight>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			lcd_panel_input: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&tcon0_out_lcd>;
++			};
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -173,6 +202,20 @@
+ 	status = "okay";
+ };
+ 
++&i2c3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c3_pins_a>;
++	status = "okay";
++
++	touchscreen@38 {
++		compatible = "edt,edt-ft5306", "edt,edt-ft5x06";
++		reg = <0x38>;
++		interrupt-parent = <&pio>;
++		interrupts = <7 7 IRQ_TYPE_EDGE_FALLING>; /* PH7 */
++		reset-gpios = <&pio 7 8 GPIO_ACTIVE_LOW>; /* PH8 */
++	};
++};
++
+ &ir0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&ir0_rx_pins_a>;
+@@ -249,6 +292,12 @@
+ 	};
+ };
+ 
++&pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm0_pins_a>;
++	status = "okay";
++};
++
+ &reg_dcdc2 {
+ 	regulator-always-on;
+ 	regulator-min-microvolt = <1000000>;
+@@ -278,6 +327,18 @@
+ 	status = "okay";
+ };
+ 
++&tcon0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&lcd0_rgb888_pins>;
++};
++
++&tcon0_out {
++	tcon0_out_lcd: endpoint@0 {
++		reg = <0>;
++		remote-endpoint = <&lcd_panel_input>;
++	};
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+-- 
+2.17.0
