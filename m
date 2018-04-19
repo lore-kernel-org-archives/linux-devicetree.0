@@ -1,199 +1,185 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH v3 07/10] Documentation: dt-bindings: Add documents for
- PECI hwmon client drivers
-Date: Thu, 19 Apr 2018 12:48:55 -0700
-Message-ID: <411481f1-78fe-d53f-cf56-c58a5ce954f3@linux.intel.com>
-References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
- <20180410183212.16787-8-jae.hyun.yoo@linux.intel.com>
- <20180416181423.t4vf7sugv6z3aw5h@rob-hp-laptop>
- <aee4e04c-885f-b1d8-9e85-9e741551342f@linux.intel.com>
- <287e0fd9-b631-2602-2785-7b8aaed7a6b9@linux.intel.com>
- <6ff697e8-cd20-e551-da13-b614cc39f900@linux.intel.com>
- <CAL_JsqLcxEnCOywTtU14G4=6A5m6G=KH3oi8m1VxKSEdxuv-ww@mail.gmail.com>
- <1f2a86ff-b902-1d1d-488a-807ac1dd20cc@linux.intel.com>
- <CAL_JsqLpuNj4kQ8oXB0kxOsS7ww9Jk-oq4tJrroDKkLRTPrjSA@mail.gmail.com>
- <884d3c16-84e8-e38a-731a-313ba7105176@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH v6 02/10] dt-bindings: introduce RPMH RSC bindings for Qualcomm SoCs
+Date: Thu, 19 Apr 2018 16:16:27 -0600
+Message-ID: <20180419221635.17849-3-ilina@codeaurora.org>
+References: <20180419221635.17849-1-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <884d3c16-84e8-e38a-731a-313ba7105176@linux.intel.com>
-Content-Language: en-US
+In-Reply-To: <20180419221635.17849-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van>
+To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/18/2018 2:57 PM, Jae Hyun Yoo wrote:
-> On 4/18/2018 2:28 PM, Rob Herring wrote:
->> On Wed, Apr 18, 2018 at 3:28 PM, Jae Hyun Yoo
->> <jae.hyun.yoo@linux.intel.com> wrote:
->>> On 4/18/2018 7:32 AM, Rob Herring wrote:
->>>>
->>>> On Tue, Apr 17, 2018 at 3:40 PM, Jae Hyun Yoo
->>>> <jae.hyun.yoo@linux.intel.com> wrote:
->>>>>
->>>>> On 4/16/2018 4:51 PM, Jae Hyun Yoo wrote:
->>>>>>
->>>>>>
->>>>>> On 4/16/2018 4:22 PM, Jae Hyun Yoo wrote:
->>>>>>>
->>>>>>>
->>>>>>> On 4/16/2018 11:14 AM, Rob Herring wrote:
->>>>>>>>
->>>>>>>>
->>>>>>>> On Tue, Apr 10, 2018 at 11:32:09AM -0700, Jae Hyun Yoo wrote:
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> This commit adds dt-bindings documents for PECI cputemp and 
->>>>>>>>> dimmtemp
->>>>>>>>> client
->>>>>>>>> drivers.
->>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>
->>>>> [...]
->>>>>
->>>>>>>>> +Example:
->>>>>>>>> +    peci-bus@0 {
->>>>>>>>> +        #address-cells = <1>;
->>>>>>>>> +        #size-cells = <0>;
->>>>>>>>> +        < more properties >
->>>>>>>>> +
->>>>>>>>> +        peci-dimmtemp@cpu0 {
->>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>>> unit-address is wrong.
->>>>>>>>
->>>>>>>
->>>>>>> Will fix it using the reg value.
->>>>>>>
->>>>>>>> It is a different bus from cputemp? Otherwise, you have conflicting
->>>>>>>> addresses. If that's the case, probably should make it clear by
->>>>>>>> showing
->>>>>>>> different host adapters for each example.
->>>>>>>>
->>>>>>>
->>>>>>> It could be the same bus with cputemp. Also, client address 
->>>>>>> sharing is
->>>>>>> possible by PECI core if the functionality is different. I mean,
->>>>>>> cputemp and
->>>>>>> dimmtemp targeting the same client is possible case like this.
->>>>>>> peci-cputemp@30
->>>>>>> peci-dimmtemp@30
->>>>>>>
->>>>>>
->>>>>> Oh, I got your point. Probably, I should change these separate 
->>>>>> settings
->>>>>> into one like
->>>>>>
->>>>>> peci-client@30 {
->>>>>>        compatible = "intel,peci-client";
->>>>>>        reg = <0x30>;
->>>>>> };
->>>>>>
->>>>>> Then cputemp and dimmtemp drivers could refer the same compatible
->>>>>> string.
->>>>>> Will rewrite it.
->>>>>>
->>>>>
->>>>> I've checked it again and realized that it should use function 
->>>>> based node
->>>>> name like:
->>>>>
->>>>> peci-cputemp@30
->>>>> peci-dimmtemp@30
->>>>>
->>>>> If it use the same string like 'peci-client@30', the drivers cannot be
->>>>> selectively enabled. The client address sharing way is well handled in
->>>>> PECI
->>>>> core and this way would be better for the future implementations of 
->>>>> other
->>>>> PECI functional drivers such as crash dump driver and so on. So I'm 
->>>>> going
->>>>> change the unit-address only.
->>>>
->>>>
->>>> 2 nodes at the same address is wrong (and soon dtc will warn you on
->>>> this). You have 2 potential options. The first is you need additional
->>>> address information in the DT if these are in fact 2 independent
->>>> devices. This could be something like a function number to use
->>>> something from PCI addressing. From what I found on PECI, it doesn't
->>>> seem to have anything like that. The 2nd option is you have a single
->>>> DT node which registers multiple hwmon devices. DT nodes and drivers
->>>> don't have to be 1-1. Don't design your DT nodes from how you want to
->>>> partition drivers in some OS.
->>>>
->>>> Rob
->>>>
->>>
->>> Please correct me if I'm wrong but I'm still thinking that it is
->>> possible. Also, I did compile it but dtc doesn't make a warning. Let me
->>> show an another use case which is similar to this case:
->>
->> I did say *soon*. It's in dtc repo, but not the kernel copy yet.
->>
->>> In arch/arm/boot/dts/aspeed-g5.dtsi
->>> [...]
->>> lpc_host: lpc-host@80 {
->>>          compatible = "aspeed,ast2500-lpc-host", "simple-mfd", "syscon";
->>>          reg = <0x80 0x1e0>;
->>>          reg-io-width = <4>;
->>>
->>>          #address-cells = <1>;
->>>          #size-cells = <1>;
->>>          ranges = <0x0 0x80 0x1e0>;
->>>
->>>          lpc_ctrl: lpc-ctrl@0 {
->>>                  compatible = "aspeed,ast2500-lpc-ctrl";
->>>                  reg = <0x0 0x80>;
->>>                  clocks = <&syscon ASPEED_CLK_GATE_LCLK>;
->>>                  status = "disabled";
->>>          };
->>>
->>>          lpc_snoop: lpc-snoop@0 {
->>>                  compatible = "aspeed,ast2500-lpc-snoop";
->>>                  reg = <0x0 0x80>;
->>>                  interrupts = <8>;
->>>                  status = "disabled";
->>>          };
->>> }
->>> [...]
->>>
->>> This is device tree setting for LPC interface and its child nodes.
->>> LPC interface can be used as a multi-functional interface such as
->>> snoop 80, KCS, SIO and so on. In this use case, lpc-ctrl@0 and
->>> lpc-snoop@0 are sharing their address range from their individual
->>> driver modules and they can be registered quite well through both
->>> static dt or dynamic dtoverlay. PECI is also a multi-functional
->>> interface which is similar to the above case, I think.
->>
->> This case too is poor design and should be fixed as well. Simply put,
->> you can have 2 devices on a bus at the same address without some sort
->> of mux or arbitration device in the middle. If you have a device/block
->> with multiple functions provided to the OS, then it is the OS's
->> problem to arbitrate access. It is not a DT problem because OS's can
->> vary in how they handle that both from OS to OS and over time.
->>
->> Rob
->>
-> 
-> If I change it to a single DT node which registers 2 hwmon devices using
-> the 2nd option above, then I still have 2 devices on a bus at the same
-> address. Does it also make a problem to the OS then?
-> 
-> Jae
+Add device binding documentation for Qualcomm Technology Inc's RPMH RSC
+driver. The driver is used for communicating resource state requests for
+shared resources.
 
-Additionally, I need to explain that there is one and only bus host
-(adapter) and multiple clients on a PECI bus, and PECI spec doesn't
-allow multiple originators so only the host device can originate
-message. In this implementation, all message transactions on a bus from
-client driver modules and user space will be serialized well in the PECI
-core bus driver so bus occupation and traffic arbitration will be
-managed well in the PECI core bus driver even in case of a bus has 2 
-client drivers at the same address. I'm sure that this implementation 
-doesn't make that kind of problem to OS.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes in v6:
+	- Address comments from Stephen Boyd
 
-Jae
+Changes in v3:
+	- Move to soc/qcom
+	- Amend text per Stephen's suggestions
+
+Changes in v2:
+	- Amend text to describe the registers in reg property
+	- Add reg-names for the registers
+	- Update examples to use GIC_SPI in interrupts instead of 0
+	- Rephrase incorrect description
+
+Changes in v3:
+	- Fix unwanted capitalization
+	- Remove clients from the examples, this doc does not describe
+	  them
+	- Rephrase introductory paragraph
+	- Remove hardware specifics from DT bindings
+---
+ .../devicetree/bindings/soc/qcom/rpmh-rsc.txt | 132 ++++++++++++++++++
+ 1 file changed, 132 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+
+diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+new file mode 100644
+index 000000000000..d0cdf9ba42e7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+@@ -0,0 +1,132 @@
++RPMH RSC:
++------------
++
++Resource Power Manager Hardened (RPMH) is the mechanism for communicating with
++the hardened resource accelerators on Qualcomm SoCs. Requests to the resources
++can be written to the Trigger Command Set (TCS)  registers and using a (addr,
++val) pair and triggered. Messages in the TCS are then sent in sequence over an
++internal bus.
++
++The hardware block (Direct Resource Voter or DRV) is a part of the h/w entity
++(Resource State Coordinator a.k.a RSC) that can handle multiple sleep and
++active/wake resource requests. Multiple such DRVs can exist in a SoC and can
++be written to from Linux. The structure of each DRV follows the same template
++with a few variations that are captured by the properties here.
++
++A TCS may be triggered from Linux or triggered by the F/W after all the CPUs
++have powered off to facilitate idle power saving. TCS could be classified as -
++
++	SLEEP   /* Triggered by F/W */
++	WAKE    /* Triggered by F/W */
++	ACTIVE  /* Triggered by Linux */
++	CONTROL /* Triggered by F/W */
++
++The order in which they are described in the DT, should match the hardware
++configuration.
++
++Requests can be made for the state of a resource, when the subsystem is active
++or idle. When all subsystems like Modem, GPU, CPU are idle, the resource state
++will be an aggregate of the sleep votes from each of those subsystems. Clients
++may request a sleep value for their shared resources in addition to the active
++mode requests.
++
++Properties:
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: Should be "qcom,rpmh-rsc".
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: The first register specifies the base address of the
++		    DRV(s). The number of DRVs in the dependent on the RSC.
++	            The tcs-offset specifies the start address of the
++	            TCS in the DRVs.
++
++- reg-names:
++	Usage: required
++	Value type: <string>
++	Definition: Maps the register specified in the reg property. Must be
++	            "drv-0", "drv-1", "drv-2" etc and "tcs-offset". The
++
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-interrupt>
++	Definition: The interrupt that trips when a message complete/response
++	           is received for this DRV from the accelerators.
++
++- qcom,drv-id:
++	Usage: required
++	Value type: <u32>
++	Definition: The id of the DRV in the RSC block that will be used by
++		    this controller.
++
++- qcom,tcs-config:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: The tuple defining the configuration of TCS.
++	            Must have 2 cells which describe each TCS type.
++	            <type number_of_tcs>.
++	            The order of the TCS must match the hardware
++	            configuration.
++	- Cell #1 (TCS Type): TCS types to be specified -
++	            SLEEP_TCS
++	            WAKE_TCS
++	            ACTIVE_TCS
++	            CONTROL_TCS
++	- Cell #2 (Number of TCS): <u32>
++
++- label:
++	Usage: optional
++	Value type: <string>
++	Definition: Name for the RSC. The name would be used in trace logs.
++
++Drivers that want to use the RSC to communicate with RPMH must specify their
++bindings as child nodes of the RSC controllers they wish to communicate with.
++
++Example 1:
++
++For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
++register offsets for DRV2 start at 0D00, the register calculations are like
++this -
++DRV0: 0x179C0000
++DRV2: 0x179C0000 + 0x10000 = 0x179D0000
++DRV2: 0x179C0000 + 0x10000 * 2 = 0x179E0000
++TCS-OFFSET: 0xD00
++
++	apps_rsc: rsc@179e000 {
++		label = "apps_rsc";
++		compatible = "qcom,rpmh-rsc";
++		reg = <0x179c0000 0x10000>, <0x179d0000 0x10000>,
++		      <0x179e0000 0x10000>, <0xd00 0>;
++		reg-names = "drv-0", "drv-1", "drv-2", "tcs-offset";
++		interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++		qcom,drv-id = <2>;
++		qcom,tcs-config = <SLEEP_TCS   3>,
++				  <WAKE_TCS    3>,
++				  <ACTIVE_TCS  2>,
++				  <CONTROL_TCS 1>;
++	};
++
++Example 2:
++
++For a TCS whose RSC base address is 0xAF20000 and is at DRV id of 0, the
++register offsets for DRV0 start at 01C00, the register calculations are like
++this -
++DRV0: 0xAF20000
++TCS-OFFSET: 0x1C00
++
++	disp_rsc: rsc@af20000 {
++		label = "disp_rsc";
++		compatible = "qcom,rpmh-rsc";
++		reg = <0xaf20000 0x10000>, <0x1c00 0>;
++		reg-names = "drv-0", "tcs-offset";
++		interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>;
++		qcom,drv-id = <0>;
++		qcom,tcs-config = <SLEEP_TCS   1>,
++				  <WAKE_TCS    1>,
++				  <ACTIVE_TCS  0>,
++				  <CONTROL_TCS 0>;
++	};
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
