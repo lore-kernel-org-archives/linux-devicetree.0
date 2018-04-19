@@ -1,39 +1,55 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 5/9] ARM: dts: gemini: Fix "debounce-interval" property
- misspelling
-Date: Thu, 19 Apr 2018 08:34:13 +0200
-Message-ID: <CACRpkdYwiCHX9g26WJLUEcfSJZhroz8ZqTGTTJottVgwf2NJ6A@mail.gmail.com>
-References: <1518531335-5170-1-git-send-email-geert+renesas@glider.be>
- <1518531335-5170-6-git-send-email-geert+renesas@glider.be>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [Patch v2 3/6] dt-bindings: display/ti: Add plane binding to
+ dispc node
+Date: Thu, 19 Apr 2018 08:35:29 +0200
+Message-ID: <20180419063529.GD31310@phenom.ffwll.local>
+References: <20180326162128.8740-1-bparrot@ti.com>
+ <20180326162128.8740-4-bparrot@ti.com> <2164642.vWvZsSsmr9@avalon>
+ <40918ef0-247c-595f-5f0b-81a338bfac67@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1518531335-5170-6-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <40918ef0-247c-595f-5f0b-81a338bfac67@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 13, 2018 at 3:15 PM, Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-
-> "debounce_interval" was never supported.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Please apply to your tree when appropriate.
-
-Applied to my Gemini tree.
-
-Yours,
-Linus Walleij
+T24gV2VkLCBBcHIgMDQsIDIwMTggYXQgMDU6NTY6NDZQTSArMDMwMCwgVG9taSBWYWxrZWluZW4g
+d3JvdGU6Cj4gT24gMDQvMDQvMTggMTc6MzYsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiBI
+aSBCZW5vaXQsCj4gPiAKPiA+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgo+ID4gCj4gPiBPbiBN
+b25kYXksIDI2IE1hcmNoIDIwMTggMTk6MjE6MjUgRUVTVCBCZW5vaXQgUGFycm90IHdyb3RlOgo+
+ID4+IEN1cnJlbnRseSBhbGwgYXZhaWxhYmxlIGRpc3BsYXkgcGlwZWxpbmVzIChpLmUuIHBsYW5l
+KSBhbmQgb3V0cHV0IHBvcnQKPiA+PiByZXNvdXJjZXMgYXJlIGV4cG9zZWQgdG8gdXNlci1zcGFj
+ZS4gSW4gc29tZSBjYXNlcyBpdCBpcyBuZWVkZWQgdG8gYmUKPiA+PiBhYmxlIHRvIHJlc3RyaWN0
+IHdoaWNoIHJlc291cmNlcyBhcmUgYWN0dWFsbHkgdmlzaWJsZSBmcm9tIHVzZXItc3BhY2UuCj4g
+Pj4gQWxzbyBpbiBjYXNlcyB3aGVyZSBhIGRpc3BsYXkgd2lkZXIgdGhhbiAyMDQ4IHBpeGVscyBp
+cyB0byBiZSBzdXBwb3J0ZWQKPiA+PiBtb3JlIHRoYW4gb25lIHZpZGVvIHBpcGVsaW5lIGlzIG5l
+ZWRlZC4gSW4gdGhpcyBjYXNlIHRoZSAybmQgaGFyZHdhcmUKPiA+PiBwaXBlbGluZSBuZWVkZWQg
+aXMgbm90IHZpc2libGUgdG8gdXNlciBzcGFjZSBhcHBsaWNhdGlvbnMuCj4gPj4KPiA+PiBUaGVz
+ZSB2aWRlbyBwaXBlbGluZSBkZWZpbml0aW9ucyBtdXN0IGJlIHN0YXRpY2FsbHkgZGVmaW5lZCBz
+byB0aGF0Cj4gPj4gdGhlIG51bWJlciBvZiB2aXNpYmxlIHBpcGVsaW5lcyBkb2VzIG5vdCBjaGFu
+Z2UgZnJvbSB0aGUgdXNlci1zcGFjZQo+ID4+IHBlcnNwZWN0aXZlLgo+ID4+Cj4gPj4gSW4gb3Jk
+ZXIgdG8gYWxsb3cgdGhpcyB3ZSBhcmUgYWRkaW5nIGFuIG9wdGlvbmFsICdwbGFuZScgc3ViLW5v
+ZGUgdG8KPiA+PiB0aGUgZ2VuZXJpYyBESVNQQyBub2RlLgo+ID4gCj4gPiBJJ20gc29ycnkgYnV0
+IHRoaXMgaXMgcmVhbGx5IGNvbmZpZ3VyYXRpb24gZGF0YSwgaXQgZG9lc24ndCBkZXNjcmliZSB0
+aGUgCj4gPiBoYXJkd2FyZS4gSSBkb24ndCB0aGluayB0aGVzZSBwcm9wZXJ0aWVzIGJlbG9uZyB0
+byBEVC4KPiAKPiBJIGFncmVlLCBidXQgdGhlIHF1ZXN0aW9uIHRoZW4gaXM6IHdoZXJlIHNob3Vs
+ZCBpdCBiZT8gVGhlcmUgd2FzIGEKPiBkaXNjdXNzaW9uIGluIHRoZSB2MSB0aHJlYWQgYWJvdXQg
+dGhpcywgYW5kIGFzIGZhciBhcyBJIHNlZSwgdGhlcmUgYXJlCj4gbm8gb3RoZXIgdXNhYmxlIGFs
+dGVybmF0aXZlcy4KClJ1bnRpbWUgY29uZmlndXJhdGlvbiBhbmQgYXRvbWljX2NoZWNrIG5vdCBh
+biBvcHRpb24/IFNlZSBteSByZXBseSBpbiB2MS4KLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpT
+b2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
