@@ -1,42 +1,59 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 8/8] drm: connector: Remove DRM_BUS_FLAG_DATA_* flags
-Date: Thu, 19 Apr 2018 11:31:09 +0200
-Message-ID: <1524130269-32688-9-git-send-email-jacopo+renesas@jmondi.org>
-References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, daniel@ffwll.ch, peda@axentia.se, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 2/6] drm/sun4i: tcon: Rename Dithering related register macros
+Date: Thu, 19 Apr 2018 17:32:21 +0800
+Message-ID: <20180419093225.614-3-wens@csie.org>
+References: <20180419093225.614-1-wens@csie.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180419093225.614-1-wens@csie.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Jonathan Liu <net147@gmail.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DRM_BUS_FLAG_DATA_* flags, defined in drm_connector.h header file are
-used to swap ordering of LVDS RGB format to accommodate DRM objects
-that need to handle LVDS components ordering.
-
-Now that the only 2 users of DRM_BUS_FLAG_DATA_* flags have been ported
-to use the newly introduced MEDIA_BUS_FMT_RGB888_1X7X*_LE media bus
-formats, remove them.
-
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- include/drm/drm_connector.h | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-index 675cc3f..9e0d6d5 100644
---- a/include/drm/drm_connector.h
-+++ b/include/drm/drm_connector.h
-@@ -286,10 +286,6 @@ struct drm_display_info {
- #define DRM_BUS_FLAG_PIXDATA_POSEDGE	(1<<2)
- /* drive data on neg. edge */
- #define DRM_BUS_FLAG_PIXDATA_NEGEDGE	(1<<3)
--/* data is transmitted MSB to LSB on the bus */
--#define DRM_BUS_FLAG_DATA_MSB_TO_LSB	(1<<4)
--/* data is transmitted LSB to MSB on the bus */
--#define DRM_BUS_FLAG_DATA_LSB_TO_MSB	(1<<5)
- 
- 	/**
- 	 * @bus_flags: Additional information (like pixel signal polarity) for
--- 
-2.7.4
+RGl0aGVyaW5nIGlzIG9ubHkgc3VwcG9ydGVkIGZvciBUQ09OIGNoYW5uZWwgMC4gVGhyb3VnaG91
+dCB0aGUgZGF0YXNoZWV0CmFsbCB0aGUgbmFtZXMgYXNzb2NpYXRlZCB3aXRoIHRoZXNlIHJlZ2lz
+dGVyIGFyZSBwcmVmaXhlZCAiVENPTjAiLAppbnN0ZWFkIG9mICJUQ09OIi4gVGhlIG9ubHkgZXhj
+ZXB0aW9uIGlzIHRoZSBjb250cm9sIHJlZ2lzdGVyCiJUQ09OX0ZSTV9DVExfUkVHIi4KClJlbmFt
+ZSB0aGUgbWFjcm9zIHRvIHJlZmxlY3QgdGhpcy4KClNpZ25lZC1vZmYtYnk6IENoZW4tWXUgVHNh
+aSA8d2Vuc0Bjc2llLm9yZz4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5o
+IHwgMjcgKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMTUgaW5z
+ZXJ0aW9ucygrKSwgMTIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L3N1bjRpL3N1bjRpX3Rjb24uaCBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmgK
+aW5kZXggZjZhMDcxY2Q1YTZmLi4zZDQ5MmM4YmUxZmMgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1
+L2RybS9zdW40aS9zdW40aV90Y29uLmgKKysrIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRp
+X3Rjb24uaApAQCAtMzcsMTggKzM3LDIxIEBACiAjZGVmaW5lIFNVTjRJX1RDT05fR0lOVDFfUkVH
+CQkJMHg4CiAKICNkZWZpbmUgU1VONElfVENPTl9GUk1fQ1RMX1JFRwkJCTB4MTAKLSNkZWZpbmUg
+U1VONElfVENPTl9GUk1fQ1RMX0VOCQkJCUJJVCgzMSkKLQotI2RlZmluZSBTVU40SV9UQ09OX0ZS
+TV9TRUVEX1BSX1JFRwkJMHgxNAotI2RlZmluZSBTVU40SV9UQ09OX0ZSTV9TRUVEX1BHX1JFRwkJ
+MHgxOAotI2RlZmluZSBTVU40SV9UQ09OX0ZSTV9TRUVEX1BCX1JFRwkJMHgxYwotI2RlZmluZSBT
+VU40SV9UQ09OX0ZSTV9TRUVEX0xSX1JFRwkJMHgyMAotI2RlZmluZSBTVU40SV9UQ09OX0ZSTV9T
+RUVEX0xHX1JFRwkJMHgyNAotI2RlZmluZSBTVU40SV9UQ09OX0ZSTV9TRUVEX0xCX1JFRwkJMHgy
+OAotI2RlZmluZSBTVU40SV9UQ09OX0ZSTV9UQkwwX1JFRwkJCTB4MmMKLSNkZWZpbmUgU1VONElf
+VENPTl9GUk1fVEJMMV9SRUcJCQkweDMwCi0jZGVmaW5lIFNVTjRJX1RDT05fRlJNX1RCTDJfUkVH
+CQkJMHgzNAotI2RlZmluZSBTVU40SV9UQ09OX0ZSTV9UQkwzX1JFRwkJCTB4MzgKKyNkZWZpbmUg
+U1VONElfVENPTjBfRlJNX0NUTF9FTgkJCQlCSVQoMzEpCisjZGVmaW5lIFNVTjRJX1RDT04wX0ZS
+TV9DVExfTU9ERV9SCQkJQklUKDYpCisjZGVmaW5lIFNVTjRJX1RDT04wX0ZSTV9DVExfTU9ERV9H
+CQkJQklUKDUpCisjZGVmaW5lIFNVTjRJX1RDT04wX0ZSTV9DVExfTU9ERV9CCQkJQklUKDQpCisK
+KyNkZWZpbmUgU1VONElfVENPTjBfRlJNX1NFRURfUFJfUkVHCQkweDE0CisjZGVmaW5lIFNVTjRJ
+X1RDT04wX0ZSTV9TRUVEX1BHX1JFRwkJMHgxOAorI2RlZmluZSBTVU40SV9UQ09OMF9GUk1fU0VF
+RF9QQl9SRUcJCTB4MWMKKyNkZWZpbmUgU1VONElfVENPTjBfRlJNX1NFRURfTFJfUkVHCQkweDIw
+CisjZGVmaW5lIFNVTjRJX1RDT04wX0ZSTV9TRUVEX0xHX1JFRwkJMHgyNAorI2RlZmluZSBTVU40
+SV9UQ09OMF9GUk1fU0VFRF9MQl9SRUcJCTB4MjgKKyNkZWZpbmUgU1VONElfVENPTjBfRlJNX1RC
+TDBfUkVHCQkweDJjCisjZGVmaW5lIFNVTjRJX1RDT04wX0ZSTV9UQkwxX1JFRwkJMHgzMAorI2Rl
+ZmluZSBTVU40SV9UQ09OMF9GUk1fVEJMMl9SRUcJCTB4MzQKKyNkZWZpbmUgU1VONElfVENPTjBf
+RlJNX1RCTDNfUkVHCQkweDM4CiAKICNkZWZpbmUgU1VONElfVENPTjBfQ1RMX1JFRwkJCTB4NDAK
+ICNkZWZpbmUgU1VONElfVENPTjBfQ1RMX1RDT05fRU5BQkxFCQkJQklUKDMxKQotLSAKMi4xNy4w
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
