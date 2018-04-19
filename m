@@ -1,38 +1,54 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/4] ARM64: dts: meson: hhi syscon and clock controllers
-Date: Thu, 19 Apr 2018 10:41:20 -0700
-Message-ID: <7h1sfb5c1r.fsf@baylibre.com>
-References: <20180315115545.1884-1-jbrunet@baylibre.com>
+From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [[RFC]DPU PATCH 0/4] Add suppport for sn65dsi86 bridge
+ chip and Innolux 2k edp panel driver
+Date: Thu, 19 Apr 2018 23:26:04 +0530
+Message-ID: <1524160568-27583-1-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180315115545.1884-1-jbrunet@baylibre.com> (Jerome Brunet's
-        message of "Thu, 15 Mar 2018 12:55:41 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
-
-> The HHI register region provides more than just clocks. Several drivers may
-> need to access this region, such as the clock controllers and the display
-> driver.
->
-> Meson-gx clock controllers has been developed and merged before we knew the
-> hhi could be needed elsewhere, which is why it requests the region directly.
-> Meson-axg was built following the model of meson-gx.
->
-> To fix this situation, the clock controller should be a child of the hhi
-> system controllers. The hhi system controller node already exists on meson-gx.
-> It needs to be added on the axg.
->
-> This changeset depends on [0]. This dependency has been merged in
-> clk-next. A topic branch is available here [1]
-
-As the dependencies are now merged for v4.17, applying this to
-v4.18/dt64,
-
-Thanks,
-
-Kevin
+Q2hhbmdlbG9nOgoKdjQ6CiAtIEN1cnJlbnQgcGF0Y2hzZXQgc2VwYXJhdGVzIG91dCBlRFAgcGFu
+ZWwgc3BlY2lmaWMgcmVzb3VyY2VzIGZyb20gc242NWRzaTg2CiAgIGJyaWRnZSBkcml2ZXIgYW5k
+IGNyZWF0ZXMgYSBzZXBhcmF0ZSBkcml2ZXIgZm9yIHRoZSBpbm5sb3V4IGVkcCBwYW5lbC4KCiAt
+IFJlbW92ZWQgdGhlIHVubmVjZXNzYXJ5IGhlYWRlciBmaWxlcyBhbmQgdmFyaWFibGVzIHVzZWQg
+aW4gZHJpdmVyLgoKIC0gUmVwbGFjZWQgaXJxX2dwaW8gYXMgImludGVycnVwdHMiIHByb3BlcnR5
+IGluIGR0LWJpbmRpbmdzLgoKIC0gVXNlIG9mIHJlZ21hcCBpbnRlcmZhY2UgZm9yIGkyYyB0cmFu
+c2FjdGlvbnMgaW4gYnJpZGdlIGRyaXZlci4KCiAtIENoYW5nZWQgdGhlIGVkcCBwYW5lbCBkcml2
+ZXIgcHJlZml4ZXMgZnJvbSAicGFuZWxfZWRwXzJrICJ0byAiaW5ubG91eF9lZHBfMmsiCiAgCiAt
+IEN1cnJlbnQgcGF0Y2hlcyBhcmUgbm90IHRlc3RlZCBvbiBhY3R1YWwgYnJpZGdlIGNoaXAvcGFu
+ZWwuCgogLSBVcGRhdGVkIENvcHlyaWdodCBhbmQgTGljZW5zZS4KCiAtIE5lZWQgdG8gY29uY2x1
+ZGUgb24sIGlmIHdlIG5lZWQgdG8gdGhlIHByb2dyYW1taW5nIG9mIGVkcCBwYW5lbCB2aWRlbyB0
+aW1laW5ncwogICBpbiBtb2RlX3NldCgpLgoKU2FuZGVlcCBQYW5kYSAoNCk6CiAgZHJtL2JyaWRn
+ZTogYWRkIHN1cHBvcnQgZm9yIHNuNjVkc2k4NiBicmlkZ2UgZHJpdmVyCiAgZHQtYmluZGluZ3M6
+IGRybS9icmlkZ2U6IERvY3VtZW50IHNuNjVkc2k4NiBicmlkZ2UgYmluZGluZ3MKICBkcm0vcGFu
+ZWw6IGFkZCBJbm5vbHV4IFRWMTIzV0FNIGVEUCBwYW5lbCBkcml2ZXIKICBkdC1iaW5kaW5nczog
+ZHJtL3BhbmVsOiBEb2N1bWVudCBJbm5vbHV4IFRWMTIzV0FNIHBhbmVsIGJpbmRpbmdzCgogLi4u
+L2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQgICAgICAgfCAgNjEgKysK
+IC4uLi9kaXNwbGF5L3BhbmVsL2lubm9sdXgsZWRwLTJrLXBhbmVsLnR4dCAgICAgICAgIHwgIDIx
+ICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGktc242NWRzaTg2LmMgICAgICAgICAgICAgIHwg
+NjkwICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLWlu
+bm9sdXgtdHYxMjN3YW0uYyAgICAgfCAyOTMgKysrKysrKysrCiA0IGZpbGVzIGNoYW5nZWQsIDEw
+NjUgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0CiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
+aW5ub2x1eCxlZHAtMmstcGFuZWwudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL2JyaWRnZS90aS1zbjY1ZHNpODYuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
+L2RybS9wYW5lbC9wYW5lbC1pbm5vbHV4LXR2MTIzd2FtLmMKCi0tIApUaGUgUXVhbGNvbW0gSW5u
+b3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVt
+LAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0CgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0
+CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
