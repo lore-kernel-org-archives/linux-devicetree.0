@@ -1,59 +1,69 @@
-From: kevans@FreeBSD.org
-Subject: [PATCH v3] ARM: dts: sunxi: Add sid for a83t
-Date: Thu, 19 Apr 2018 09:11:03 -0500
-Message-ID: <20180419141103.38196-1-kevans@FreeBSD.org>
+From: Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: RE: [PATCH 0/4] Various fixes on STM32 RTC
+Date: Thu, 19 Apr 2018 14:14:17 +0000
+Message-ID: <d2d1897e40834a1c84fc1e64309e2c3f@GPXDAG3NODE5.st.com>
+References: <1524144103-21432-1-git-send-email-amelie.delaunay@st.com>
+ <20180419134321.GF7369@piout.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180419134321.GF7369@piout.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Kyle Evans <kevans@FreeBSD.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner a83t has a 1 KB sid block with efuse for security rootkey and thermal
-calibration data, add node to describe it.
+Hi,
 
-a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
-supported in an external driver for FreeBSD.
+Sorry for that! I take note of your new email address. Thanks for your highlight.
 
-Signed-off-by: Kyle Evans <kevans@FreeBSD.org>
----
+Regards,
+Amelie
 
-Changes in v3:
-- rebased against 4.17
-
-Changes in v2:
-- remove bogus "From:" line in commit text, no functional change
-
- .../devicetree/bindings/nvmem/allwinner,sunxi-sid.txt        | 1 +
- arch/arm/boot/dts/sun8i-a83t.dtsi                            | 5 +++++
- 2 files changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-index d69543701d5d..e319fe5e205a 100644
---- a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-+++ b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-@@ -4,6 +4,7 @@ Required properties:
- - compatible: Should be one of the following:
-   "allwinner,sun4i-a10-sid"
-   "allwinner,sun7i-a20-sid"
-+  "allwinner,sun8i-a83t-sid"
-   "allwinner,sun8i-h3-sid"
-   "allwinner,sun50i-a64-sid"
- 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 568307639be8..379981389eea 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -492,6 +492,11 @@
- 			#size-cells = <0>;
- 		};
- 
-+		sid: eeprom@1c14000 {
-+			compatible = "allwinner,sun8i-a83t-sid";
-+			reg = <0x1c14000 0x400>;
-+		};
-+
- 		usb_otg: usb@1c19000 {
- 			compatible = "allwinner,sun8i-a83t-musb",
- 				     "allwinner,sun8i-a33-musb";
--- 
-2.17.0
+> -----Original Message-----
+> From: Alexandre Belloni [mailto:alexandre.belloni@bootlin.com]
+> Sent: jeudi 19 avril 2018 15:43
+> To: Amelie DELAUNAY <amelie.delaunay@st.com>
+> Cc: Alessandro Zummo <a.zummo@towertech.it>; Rob Herring
+> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Maxime
+> Coquelin <mcoquelin.stm32@gmail.com>; Alexandre TORGUE
+> <alexandre.torgue@st.com>; linux-rtc@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH 0/4] Various fixes on STM32 RTC
+> 
+> Hi,
+> 
+> Both series were not sent to the correct email address. I would suggest
+> rebasing on top of v4.17-rc1 ;). No need to resend just for that.
+> 
+> On 19/04/2018 15:21:39+0200, Amelie Delaunay wrote:
+> > This series makes some corrections on STM32 RTC:
+> > - update copyright and adopt SPDX identifier
+> > - fix alarm interrupt flags
+> > - rework DBP (Disable Backup domain Protection) management.
+> >
+> > This series is a preamble to the serie which will introduce next STM32
+> > RTC version.
+> >
+> > Amelie Delaunay (4):
+> >   rtc: stm32: fix copyright and adopt SPDX identifier
+> >   rtc: stm32: fix alarm interrupt flags by removing IRQF_TRIGGER_RISING
+> >   dt-bindings: rtc: update stm32-rtc documentation for st,syscfg
+> >     property
+> >   rtc: stm32: get DBP register and mask from DT st,syscfg property
+> >
+> >  .../devicetree/bindings/rtc/st,stm32-rtc.txt       | 10 ++--
+> >  drivers/rtc/rtc-stm32.c                            | 68 +++++++++++++---------
+> >  2 files changed, 47 insertions(+), 31 deletions(-)
+> >
+> > --
+> > 2.7.4
+> >
+> 
+> --
+> Alexandre Belloni, Bootlin (formerly Free Electrons)
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
