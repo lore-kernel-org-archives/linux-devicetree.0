@@ -1,7 +1,7 @@
 From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v3 6/7] drm/i2c: tda998x: split encoder and component functions from the work
-Date: Thu, 19 Apr 2018 18:27:50 +0200
-Message-ID: <20180419162751.25223-7-peda@axentia.se>
+Subject: [PATCH v3 3/7] drm: of: introduce drm_of_media_bus_fmt
+Date: Thu, 19 Apr 2018 18:27:47 +0200
+Message-ID: <20180419162751.25223-4-peda@axentia.se>
 References: <20180419162751.25223-1-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,111 +12,91 @@ To: linux-kernel@vger.kernel.org
 Cc: Peter Rosin <peda@axentia.se>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Russell King <linux@armlinux.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This enables reuse of the machinery for the case where a drm_bridge
-needs to do the same work via different interfaces.
+Add a central function to parse a node according to the video
+interface binding and get a media bus format.
+
+Start with only supporting a very limited set of a few basic media
+bus formats.
 
 Signed-off-by: Peter Rosin <peda@axentia.se>
 ---
- drivers/gpu/drm/i2c/tda998x_drv.c | 46 ++++++++++++++++++++++++++++++---------
- 1 file changed, 36 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/drm_of.c | 38 ++++++++++++++++++++++++++++++++++++++
+ include/drm/drm_of.h     |  7 +++++++
+ 2 files changed, 45 insertions(+)
 
-diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-index 8f6e013f2b87..9c78f7bde49c 100644
---- a/drivers/gpu/drm/i2c/tda998x_drv.c
-+++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-@@ -1163,9 +1163,8 @@ static int tda998x_connector_init(struct tda998x_priv *priv,
+diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
+index 4c191c050e7d..f9473edb60a7 100644
+--- a/drivers/gpu/drm/drm_of.c
++++ b/drivers/gpu/drm/drm_of.c
+@@ -212,6 +212,44 @@ int drm_of_encoder_active_endpoint(struct device_node *node,
+ EXPORT_SYMBOL_GPL(drm_of_encoder_active_endpoint);
  
- /* DRM encoder functions */
- 
--static void tda998x_encoder_dpms(struct drm_encoder *encoder, int mode)
-+static void tda998x_dpms(struct tda998x_priv *priv, int mode)
- {
--	struct tda998x_priv *priv = enc_to_tda998x_priv(encoder);
- 	bool on;
- 
- 	/* we only care about on or off: */
-@@ -1195,12 +1194,18 @@ static void tda998x_encoder_dpms(struct drm_encoder *encoder, int mode)
- 	}
- }
- 
--static void
--tda998x_encoder_mode_set(struct drm_encoder *encoder,
--			 struct drm_display_mode *mode,
--			 struct drm_display_mode *adjusted_mode)
-+static void tda998x_encoder_dpms(struct drm_encoder *encoder, int mode)
- {
- 	struct tda998x_priv *priv = enc_to_tda998x_priv(encoder);
+ /*
++ * drm_of_media_bus_fmt - return the media bus format described in the node
++ * @node: device tree node containing the media bus format
++ *
++ * @node is presumably an of-graph endpoint node.
++ *
++ * Return the media bus format, or zero if none is described. Or one of the
++ * standard error codes.
++ */
++int drm_of_media_bus_fmt(struct device_node *node)
++{
++	s32 bus_type;
++	u32 bus_width = 0;
 +
-+	tda998x_dpms(priv, mode);
++	if (!node)
++		return -EINVAL;
++
++	if (of_property_read_u32(node, "bus-type", &bus_type))
++		return 0;
++	if (bus_type != 0)
++		return -EINVAL;
++
++	of_property_read_u32(node, "bus-width", &bus_width);
++	switch (bus_width) {
++	case 12:
++		return MEDIA_BUS_FMT_RGB444_1X12;
++	case 16:
++		return MEDIA_BUS_FMT_RGB565_1X16;
++	case 18:
++		return MEDIA_BUS_FMT_RGB666_1X18;
++	case 24:
++		return MEDIA_BUS_FMT_RGB888_1X24;
++	default:
++		return -EINVAL;
++	}
++}
++EXPORT_SYMBOL_GPL(drm_of_media_bus_fmt);
++
++/*
+  * drm_of_find_panel_or_bridge - return connected panel or bridge device
+  * @np: device tree node containing encoder output ports
+  * @panel: pointer to hold returned drm_panel
+diff --git a/include/drm/drm_of.h b/include/drm/drm_of.h
+index b93c239afb60..f86f0098b21e 100644
+--- a/include/drm/drm_of.h
++++ b/include/drm/drm_of.h
+@@ -29,6 +29,7 @@ int drm_of_component_probe(struct device *dev,
+ int drm_of_encoder_active_endpoint(struct device_node *node,
+ 				   struct drm_encoder *encoder,
+ 				   struct of_endpoint *endpoint);
++int drm_of_media_bus_fmt(struct device_node *node);
+ int drm_of_find_panel_or_bridge(const struct device_node *np,
+ 				int port, int endpoint,
+ 				struct drm_panel **panel,
+@@ -62,6 +63,12 @@ static inline int drm_of_encoder_active_endpoint(struct device_node *node,
+ {
+ 	return -EINVAL;
+ }
++
++static inline int drm_of_media_bus_fmt(struct device_node *node)
++{
++	return -EINVAL;
 +}
 +
-+static void
-+tda998x_mode_set(struct tda998x_priv *priv,
-+		 struct drm_display_mode *mode,
-+		 struct drm_display_mode *adjusted_mode)
-+{
- 	u16 ref_pix, ref_line, n_pix, n_line;
- 	u16 hs_pix_s, hs_pix_e;
- 	u16 vs1_pix_s, vs1_pix_e, vs1_line_s, vs1_line_e;
-@@ -1407,6 +1412,16 @@ tda998x_encoder_mode_set(struct drm_encoder *encoder,
- 	mutex_unlock(&priv->audio_mutex);
- }
- 
-+static void
-+tda998x_encoder_mode_set(struct drm_encoder *encoder,
-+			 struct drm_display_mode *mode,
-+			 struct drm_display_mode *adjusted_mode)
-+{
-+	struct tda998x_priv *priv = enc_to_tda998x_priv(encoder);
-+
-+	tda998x_mode_set(priv, mode, adjusted_mode);
-+}
-+
- static void tda998x_destroy(struct tda998x_priv *priv)
- {
- 	/* disable all IRQs and free the IRQ handler */
-@@ -1653,11 +1668,10 @@ static void tda998x_set_config(struct tda998x_priv *priv,
- 	priv->audio_params = p->audio_params;
- }
- 
--static int tda998x_bind(struct device *dev, struct device *master, void *data)
-+static int tda998x_init(struct device *dev, struct drm_device *drm)
- {
- 	struct tda998x_encoder_params *params = dev->platform_data;
- 	struct i2c_client *client = to_i2c_client(dev);
--	struct drm_device *drm = data;
- 	struct tda998x_priv *priv;
- 	u32 crtcs = 0;
- 	int ret;
-@@ -1705,8 +1719,7 @@ static int tda998x_bind(struct device *dev, struct device *master, void *data)
- 	return ret;
- }
- 
--static void tda998x_unbind(struct device *dev, struct device *master,
--			   void *data)
-+static void tda998x_fini(struct device *dev)
- {
- 	struct tda998x_priv *priv = dev_get_drvdata(dev);
- 
-@@ -1715,6 +1728,19 @@ static void tda998x_unbind(struct device *dev, struct device *master,
- 	tda998x_destroy(priv);
- }
- 
-+static int tda998x_bind(struct device *dev, struct device *master, void *data)
-+{
-+	struct drm_device *drm = data;
-+
-+	return tda998x_init(dev, drm);
-+}
-+
-+static void tda998x_unbind(struct device *dev, struct device *master,
-+			   void *data)
-+{
-+	tda998x_fini(dev);
-+}
-+
- static const struct component_ops tda998x_ops = {
- 	.bind = tda998x_bind,
- 	.unbind = tda998x_unbind,
+ static inline int drm_of_find_panel_or_bridge(const struct device_node *np,
+ 					      int port, int endpoint,
+ 					      struct drm_panel **panel,
 -- 
 2.11.0
