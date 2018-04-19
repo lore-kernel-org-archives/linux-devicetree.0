@@ -1,50 +1,46 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 4/7] mailbox: Add support for Qualcomm SDM845 SoCs
-Date: Thu, 19 Apr 2018 10:22:49 -0700
-Message-ID: <20180419172249.GY18510@minitux>
-References: <1521019283-32212-1-git-send-email-sibis@codeaurora.org>
- <1521019283-32212-5-git-send-email-sibis@codeaurora.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v1 2/4] dt-bindings: clock: mediatek: add g3dsys bindings
+Date: Thu, 19 Apr 2018 10:25:41 -0700
+Message-ID: <152415874117.46528.7501317526173019067@swboyd.mtv.corp.google.com>
+References: <cover.1524044917.git.sean.wang@mediatek.com>
+ <4b5d243d33433f83874359794b796d4228574714.1524044917.git.sean.wang@mediatek.com>
+ <152410791532.46528.10083030894445315558@swboyd.mtv.corp.google.com>
+ <1524109802.12959.10.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1521019283-32212-5-git-send-email-sibis@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi S <sibis@codeaurora.org>
-Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1524109802.12959.10.camel@mtkswgap22>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, mturquette@baylibre.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 14 Mar 02:21 PDT 2018, Sibi S wrote:
-
-> Add the corresponding APCS offset for SDM845 SoC
-> 
-> Signed-off-by: Sibi S <sibis@codeaurora.org>
-
-Full name please.
-
-> ---
->  drivers/mailbox/qcom-apcs-ipc-mailbox.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-> index 57bde0d..62d704d 100644
-> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-> @@ -125,6 +125,7 @@ static int qcom_apcs_ipc_remove(struct platform_device *pdev)
->  static const struct of_device_id qcom_apcs_ipc_of_match[] = {
->  	{ .compatible = "qcom,msm8916-apcs-kpss-global", .data = (void *)8 },
->  	{ .compatible = "qcom,msm8996-apcs-hmss-global", .data = (void *)16 },
-> +	{ .compatible = "qcom,sdm845-apcs-hmss-global", .data = (void *)12 },
-
-The block seems to be called "apss shared", so make the compatible
-"qcom,sdm845-apss-shared".
-
-Please resubmit this patch separate from the others in the series, as
-they can be merged independently of the rest of the series.
-
-
-PS. For updates like this you can generally submit the dt and code
-together.
-
-Regards,
-Bjorn
+UXVvdGluZyBTZWFuIFdhbmcgKDIwMTgtMDQtMTggMjA6NTA6MDIpCj4gT24gV2VkLCAyMDE4LTA0
+LTE4IGF0IDIwOjE4IC0wNzAwLCBTdGVwaGVuIEJveWQgd3JvdGU6Cj4gPiBRdW90aW5nIHNlYW4u
+d2FuZ0BtZWRpYXRlay5jb20gKDIwMTgtMDQtMTggMDM6MjQ6NTQpCj4gPiA+IEZyb206IFNlYW4g
+V2FuZyA8c2Vhbi53YW5nQG1lZGlhdGVrLmNvbT4KPiA+ID4gCj4gPiA+IEFkZCBiaW5kaW5ncyB0
+byBnM2RzeXMgcHJvdmlkaW5nIG5lY2Vzc2FyeSBjbG9jayBhbmQgcmVzZXQgY29udHJvbCB0bwo+
+ID4gPiBNYWxpLTQ1MC4KPiA+ID4gCj4gPiA+IFNpZ25lZC1vZmYtYnk6IFNlYW4gV2FuZyA8c2Vh
+bi53YW5nQG1lZGlhdGVrLmNvbT4KPiA+ID4gLS0tCj4gPiA+ICAuLi4vYmluZGluZ3MvYXJtL21l
+ZGlhdGVrL21lZGlhdGVrLGczZHN5cy50eHQgICAgICB8IDMwICsrKysrKysrKysrKysrKysrKysr
+KysKPiA+IAo+ID4gV2h5IGlzbid0IHRoaXMgdW5kZXIgYmluZGluZ3MvY2xvY2svID8KPiA+IAo+
+IAo+IFRvbnMgb2YgYmluZGluZ3MgZm9yIGNsb2NrIGNvbnRyb2xsZXIgaGF2ZSBiZWVuIHByZXNl
+bnQgYXQKPiBiaW5kaW5nL2FybS9tZWRpYXRlay4gZzNkc3lzIGp1c3QgaGF2ZSBhIGZvbGxvdy11
+cCB0byB0aGVtLgo+IAo+IEl0J3Mgd29ydGggYW5vdGhlciBwYXRjaCBtb3ZpbmcgdGhlbSBhbGwg
+ZnJvbSBiaW5kaW5ncy9hcm0vbWVkaWF0ZWsvIHRvCj4gYmluZGluZ3MvY2xvY2svbWVkaWF0ZWsu
+Cj4gCj4gd2hhdCdzIHlvdXIgb3BpbmlvbiBmb3IgZWl0aGVyIGRvaW5nIGl0IHByaW9yIHRvIGcz
+ZHN5cyBiaW5kaW5nIGJlaW5nCj4gYWRkZWQgb3IgZG9pbmcgaXQgaW4gdGhlIGZ1dHVyZSA/Cj4g
+CgpEb2luZyBpdCBhdCBhIGxhdGVyIHRpbWUgaXMgZmluZS4gSnVzdCB3b25kZXJpbmcgd2h5IHRo
+ZXkncmUgYWxsIGdldHRpbmcKZHVtcGVkIGludG8gdGhlIGFybS8gZGlyZWN0b3J5LgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
