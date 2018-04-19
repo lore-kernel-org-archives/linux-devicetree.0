@@ -1,8 +1,8 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH 12/15] ARM: dts: imx7: Add video mux,
- csi and mipi_csi and connections
-Date: Thu, 19 Apr 2018 11:18:09 +0100
-Message-ID: <20180419101812.30688-13-rui.silva@linaro.org>
+Subject: [PATCH 01/15] media: staging/imx: add support to media dev for no IPU
+ systems
+Date: Thu, 19 Apr 2018 11:17:58 +0100
+Message-ID: <20180419101812.30688-2-rui.silva@linaro.org>
 References: <20180419101812.30688-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,167 +22,83 @@ To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerb
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree nodes for csi, video multiplexer and mipi-csi
-besides the graph connecting the necessary endpoints to make the media capture
-entities to work in imx7 Warp board.
-
-Also add the pin control related with the mipi_csi in that board.
+Some i.MX SoC do not have IPU, like the i.MX7, add to the the media device
+infrastructure support to be used in this type of systems that do not have
+internal subdevices besides the CSI.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- arch/arm/boot/dts/imx7s-warp.dts | 80 ++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx7s.dtsi     | 27 +++++++++++
- 2 files changed, 107 insertions(+)
+ drivers/staging/media/imx/imx-media-dev.c        | 16 +++++++++++-----
+ .../staging/media/imx/imx-media-internal-sd.c    |  3 +++
+ drivers/staging/media/imx/imx-media.h            |  3 +++
+ 3 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
-index 8a30b148534d..91d06adf7c24 100644
---- a/arch/arm/boot/dts/imx7s-warp.dts
-+++ b/arch/arm/boot/dts/imx7s-warp.dts
-@@ -310,6 +310,79 @@
- 	status = "okay";
+diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
+index f67ec8e27093..a8afe0ec4134 100644
+--- a/drivers/staging/media/imx/imx-media-dev.c
++++ b/drivers/staging/media/imx/imx-media-dev.c
+@@ -92,6 +92,9 @@ static int imx_media_get_ipu(struct imx_media_dev *imxmd,
+ 	struct ipu_soc *ipu;
+ 	int ipu_id;
+ 
++	if (imxmd->no_ipu_present)
++		return 0;
++
+ 	ipu = dev_get_drvdata(csi_sd->dev->parent);
+ 	if (!ipu) {
+ 		v4l2_err(&imxmd->v4l2_dev,
+@@ -481,16 +484,19 @@ static int imx_media_probe(struct platform_device *pdev)
+ 		goto notifier_cleanup;
+ 	}
+ 
+-	ret = imx_media_add_internal_subdevs(imxmd);
+-	if (ret) {
+-		v4l2_err(&imxmd->v4l2_dev,
+-			 "add_internal_subdevs failed with %d\n", ret);
+-		goto notifier_cleanup;
++	if (!imxmd->no_ipu_present) {
++		ret = imx_media_add_internal_subdevs(imxmd);
++		if (ret) {
++			v4l2_err(&imxmd->v4l2_dev,
++				 "add_internal_subdevs failed with %d\n", ret);
++			goto notifier_cleanup;
++		}
+ 	}
+ 
+ 	/* no subdevs? just bail */
+ 	if (imxmd->notifier.num_subdevs == 0) {
+ 		ret = -ENODEV;
++		v4l2_err(&imxmd->v4l2_dev, "no subdevs\n");
+ 		goto notifier_cleanup;
+ 	}
+ 
+diff --git a/drivers/staging/media/imx/imx-media-internal-sd.c b/drivers/staging/media/imx/imx-media-internal-sd.c
+index 0fdc45dbfb76..4a246813b4e1 100644
+--- a/drivers/staging/media/imx/imx-media-internal-sd.c
++++ b/drivers/staging/media/imx/imx-media-internal-sd.c
+@@ -238,6 +238,9 @@ int imx_media_create_internal_links(struct imx_media_dev *imxmd,
+ 	struct media_pad *pad;
+ 	int i, j, ret;
+ 
++	if (imxmd->no_ipu_present)
++		return 0;
++
+ 	intsd = find_intsd_by_grp_id(sd->grp_id);
+ 	if (!intsd)
+ 		return -ENODEV;
+diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
+index 44532cd5b812..0c63132861a0 100644
+--- a/drivers/staging/media/imx/imx-media.h
++++ b/drivers/staging/media/imx/imx-media.h
+@@ -147,6 +147,9 @@ struct imx_media_dev {
+ 
+ 	/* for async subdev registration */
+ 	struct v4l2_async_notifier notifier;
++
++	/* indicator to if the system lack IPU */
++	bool no_ipu_present;
  };
  
-+&gpr {
-+	csi_mux {
-+		compatible = "video-mux";
-+		mux-controls = <&mux 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			csi_mux_from_parallel_sensor: endpoint {
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			csi_mux_from_mipi_vc0: endpoint {
-+				remote-endpoint = <&mipi_vc0_to_csi_mux>;
-+			};
-+		};
-+
-+		port@2 {
-+			reg = <2>;
-+
-+			csi_mux_to_csi: endpoint {
-+				remote-endpoint = <&csi_from_csi_mux>;
-+			};
-+		};
-+	};
-+};
-+
-+&csi {
-+	status = "okay";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	port@0 {
-+		reg = <0>;
-+
-+		csi_from_csi_mux: endpoint {
-+			remote-endpoint = <&csi_mux_to_csi>;
-+		};
-+	};
-+};
-+
-+&mipi_csi {
-+	clock-frequency = <166000000>;
-+	status = "okay";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	port@0 {
-+		reg = <0>;
-+
-+		mipi_from_sensor: endpoint {
-+			remote-endpoint = <&ov2680_to_mipi>;
-+			data-lanes = <1>;
-+			csis-hs-settle = <3>;
-+			csis-clk-settle = <0>;
-+			csis-wclk;
-+		};
-+	};
-+
-+	port@1 {
-+		reg = <1>;
-+
-+		mipi_vc0_to_csi_mux: endpoint {
-+			remote-endpoint = <&csi_mux_from_mipi_vc0>;
-+		};
-+	};
-+};
-+
- &wdog1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_wdog>;
-@@ -357,6 +430,13 @@
- 		>;
- 	};
- 
-+	pinctrl_mipi_csi: mipi_csi {
-+		fsl,pins = <
-+			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x14
-+			MX7D_PAD_ENET1_RGMII_TD0__GPIO7_IO6	0x14
-+		>;
-+	};
-+
- 	pinctrl_sai1: sai1grp {
- 		fsl,pins = <
- 			MX7D_PAD_SAI1_RX_DATA__SAI1_RX_DATA0	0x1f
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 3027d6a62021..6b49b73053f9 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -46,6 +46,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/reset/imx7-reset.h>
- #include "imx7d-pinfunc.h"
- 
- / {
-@@ -753,6 +754,17 @@
- 				status = "disabled";
- 			};
- 
-+			csi: csi@30710000 {
-+				compatible = "fsl,imx7-csi";
-+				reg = <0x30710000 0x10000>;
-+				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_CLK_DUMMY>,
-+						<&clks IMX7D_CSI_MCLK_ROOT_CLK>,
-+						<&clks IMX7D_CLK_DUMMY>;
-+				clock-names = "axi", "mclk", "dcic";
-+				status = "disabled";
-+			};
-+
- 			lcdif: lcdif@30730000 {
- 				compatible = "fsl,imx7d-lcdif", "fsl,imx28-lcdif";
- 				reg = <0x30730000 0x10000>;
-@@ -762,6 +774,21 @@
- 				clock-names = "pix", "axi";
- 				status = "disabled";
- 			};
-+
-+			mipi_csi: mipi-csi@30750000 {
-+				compatible = "fsl,imx7-mipi-csi2";
-+				reg = <0x30750000 0x10000>;
-+				interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_MIPI_CSI_ROOT_CLK>,
-+						<&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
-+				clock-names = "mipi", "phy";
-+				power-domains = <&pgc_mipi_phy>;
-+				phy-supply = <&reg_1p0d>;
-+				resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
-+				reset-names = "mrst";
-+				bus-width = <4>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		aips3: aips-bus@30800000 {
+ enum codespace_sel {
 -- 
 2.17.0
