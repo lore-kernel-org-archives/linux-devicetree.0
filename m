@@ -1,8 +1,7 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH 01/15] media: staging/imx: add support to media dev for no IPU
- systems
-Date: Thu, 19 Apr 2018 11:17:58 +0100
-Message-ID: <20180419101812.30688-2-rui.silva@linaro.org>
+Subject: [PATCH 11/15] ARM: dts: imx7s: add multiplexer controls
+Date: Thu, 19 Apr 2018 11:18:08 +0100
+Message-ID: <20180419101812.30688-12-rui.silva@linaro.org>
 References: <20180419101812.30688-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,83 +21,35 @@ To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerb
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some i.MX SoC do not have IPU, like the i.MX7, add to the the media device
-infrastructure support to be used in this type of systems that do not have
-internal subdevices besides the CSI.
+The IOMUXC General Purpose Register has bitfield to control video bus
+multiplexer to control the CSI input between the MIPI-CSI2 and parallel
+interface. Add that register and mask.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- drivers/staging/media/imx/imx-media-dev.c        | 16 +++++++++++-----
- .../staging/media/imx/imx-media-internal-sd.c    |  3 +++
- drivers/staging/media/imx/imx-media.h            |  3 +++
- 3 files changed, 17 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/imx7s.dtsi | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
-index f67ec8e27093..a8afe0ec4134 100644
---- a/drivers/staging/media/imx/imx-media-dev.c
-+++ b/drivers/staging/media/imx/imx-media-dev.c
-@@ -92,6 +92,9 @@ static int imx_media_get_ipu(struct imx_media_dev *imxmd,
- 	struct ipu_soc *ipu;
- 	int ipu_id;
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index d913c3f9c284..3027d6a62021 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -534,8 +534,15 @@
  
-+	if (imxmd->no_ipu_present)
-+		return 0;
+ 			gpr: iomuxc-gpr@30340000 {
+ 				compatible = "fsl,imx7d-iomuxc-gpr",
+-					"fsl,imx6q-iomuxc-gpr", "syscon";
++					"fsl,imx6q-iomuxc-gpr", "syscon", "simple-mfd";
+ 				reg = <0x30340000 0x10000>;
 +
- 	ipu = dev_get_drvdata(csi_sd->dev->parent);
- 	if (!ipu) {
- 		v4l2_err(&imxmd->v4l2_dev,
-@@ -481,16 +484,19 @@ static int imx_media_probe(struct platform_device *pdev)
- 		goto notifier_cleanup;
- 	}
- 
--	ret = imx_media_add_internal_subdevs(imxmd);
--	if (ret) {
--		v4l2_err(&imxmd->v4l2_dev,
--			 "add_internal_subdevs failed with %d\n", ret);
--		goto notifier_cleanup;
-+	if (!imxmd->no_ipu_present) {
-+		ret = imx_media_add_internal_subdevs(imxmd);
-+		if (ret) {
-+			v4l2_err(&imxmd->v4l2_dev,
-+				 "add_internal_subdevs failed with %d\n", ret);
-+			goto notifier_cleanup;
-+		}
- 	}
- 
- 	/* no subdevs? just bail */
- 	if (imxmd->notifier.num_subdevs == 0) {
- 		ret = -ENODEV;
-+		v4l2_err(&imxmd->v4l2_dev, "no subdevs\n");
- 		goto notifier_cleanup;
- 	}
- 
-diff --git a/drivers/staging/media/imx/imx-media-internal-sd.c b/drivers/staging/media/imx/imx-media-internal-sd.c
-index 0fdc45dbfb76..4a246813b4e1 100644
---- a/drivers/staging/media/imx/imx-media-internal-sd.c
-+++ b/drivers/staging/media/imx/imx-media-internal-sd.c
-@@ -238,6 +238,9 @@ int imx_media_create_internal_links(struct imx_media_dev *imxmd,
- 	struct media_pad *pad;
- 	int i, j, ret;
- 
-+	if (imxmd->no_ipu_present)
-+		return 0;
++				mux: mux-controller {
++					compatible = "mmio-mux";
++					#mux-control-cells = <1>;
 +
- 	intsd = find_intsd_by_grp_id(sd->grp_id);
- 	if (!intsd)
- 		return -ENODEV;
-diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
-index 44532cd5b812..0c63132861a0 100644
---- a/drivers/staging/media/imx/imx-media.h
-+++ b/drivers/staging/media/imx/imx-media.h
-@@ -147,6 +147,9 @@ struct imx_media_dev {
++					mux-reg-masks = <0x14 0x00000010>;
++				};
+ 			};
  
- 	/* for async subdev registration */
- 	struct v4l2_async_notifier notifier;
-+
-+	/* indicator to if the system lack IPU */
-+	bool no_ipu_present;
- };
- 
- enum codespace_sel {
+ 			ocotp: ocotp-ctrl@30350000 {
 -- 
 2.17.0
