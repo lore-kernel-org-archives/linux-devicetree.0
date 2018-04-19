@@ -1,127 +1,68 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v1 4/7] soc: mediatek: reuse regmap_read_poll_timeout
- helpers
-Date: Thu, 19 Apr 2018 12:23:32 +0200
-Message-ID: <6fd85b96-f076-36c7-8ff4-8e8ed252edb2@gmail.com>
-References: <cover.1522736996.git.sean.wang@mediatek.com>
- <2f84f7695ea3223b8626a8369aa4ae5e0d03fdce.1522736996.git.sean.wang@mediatek.com>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH 07/15] media: staging/imx: add 10 bit bayer support
+Date: Thu, 19 Apr 2018 11:18:04 +0100
+Message-ID: <20180419101812.30688-8-rui.silva@linaro.org>
+References: <20180419101812.30688-1-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2f84f7695ea3223b8626a8369aa4ae5e0d03fdce.1522736996.git.sean.wang@mediatek.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
-Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Weiyi Lu <weiyi.lu@mediatek.com>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20180419101812.30688-1-rui.silva@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Some sensors can only output 10 bit bayer formats, like the OV2680. Add support
+for that in imx-media.
 
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+---
+ drivers/staging/media/imx/imx-media-utils.c | 24 +++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-On 04/03/2018 09:15 AM, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> Reuse the common helpers regmap_read_poll_timeout provided by Linux core
-> instead of an open-coded handling.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Weiyi Lu <weiyi.lu@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-infracfg.c | 45 +++++++++----------------------------
->  1 file changed, 10 insertions(+), 35 deletions(-)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-infracfg.c b/drivers/soc/mediatek/mtk-infracfg.c
-> index 8c310de..b849aa5 100644
-> --- a/drivers/soc/mediatek/mtk-infracfg.c
-> +++ b/drivers/soc/mediatek/mtk-infracfg.c
-> @@ -12,6 +12,7 @@
->   */
->  
->  #include <linux/export.h>
-> +#include <linux/iopoll.h>
->  #include <linux/jiffies.h>
->  #include <linux/regmap.h>
->  #include <linux/soc/mediatek/infracfg.h>
-> @@ -37,7 +38,6 @@
->  int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
->  		bool reg_update)
->  {
-> -	unsigned long expired;
->  	u32 val;
->  	int ret;
->  
-> @@ -47,22 +47,11 @@ int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
->  	else
->  		regmap_write(infracfg, INFRA_TOPAXI_PROTECTEN_SET, mask);
->  
-> -	expired = jiffies + HZ;
-> +	ret = regmap_read_poll_timeout(infracfg, INFRA_TOPAXI_PROTECTSTA1,
-> +				       val, (val & mask) == mask, 10,
-> +				       jiffies_to_usecs(HZ));
-
-To align with the changes in scpsys, please define MTK_POLL_DELAY_US and
-MTK_POLL_TIMEOUT. I'm not really fan of passing macros as function arguments.
-
-Other then that, the patch looks good.
-
-Thanks a lot,
-Matthias
-
->  
-> -	while (1) {
-> -		ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
-> -		if (ret)
-> -			return ret;
-> -
-> -		if ((val & mask) == mask)
-> -			break;
-> -
-> -		cpu_relax();
-> -		if (time_after(jiffies, expired))
-> -			return -EIO;
-> -	}
-> -
-> -	return 0;
-> +	return ret;
->  }
->  
->  /**
-> @@ -80,30 +69,16 @@ int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
->  int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask,
->  		bool reg_update)
->  {
-> -	unsigned long expired;
->  	int ret;
-> +	u32 val;
->  
->  	if (reg_update)
->  		regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, 0);
->  	else
->  		regmap_write(infracfg, INFRA_TOPAXI_PROTECTEN_CLR, mask);
->  
-> -	expired = jiffies + HZ;
-> -
-> -	while (1) {
-> -		u32 val;
-> -
-> -		ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
-> -		if (ret)
-> -			return ret;
-> -
-> -		if (!(val & mask))
-> -			break;
-> -
-> -		cpu_relax();
-> -		if (time_after(jiffies, expired))
-> -			return -EIO;
-> -	}
-> -
-> -	return 0;
-> +	ret = regmap_read_poll_timeout(infracfg, INFRA_TOPAXI_PROTECTSTA1,
-> +				       val, !(val & mask), 10,
-> +				       jiffies_to_usecs(HZ));
-> +	return ret;
->  }
-> 
+diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
+index fab98fc0d6a0..99527daba29a 100644
+--- a/drivers/staging/media/imx/imx-media-utils.c
++++ b/drivers/staging/media/imx/imx-media-utils.c
+@@ -118,6 +118,30 @@ static const struct imx_media_pixfmt rgb_formats[] = {
+ 		.cs     = IPUV3_COLORSPACE_RGB,
+ 		.bpp    = 8,
+ 		.bayer  = true,
++	}, {
++		.fourcc = V4L2_PIX_FMT_SBGGR10,
++		.codes  = {MEDIA_BUS_FMT_SBGGR10_1X10},
++		.cs     = IPUV3_COLORSPACE_RGB,
++		.bpp    = 16,
++		.bayer  = true,
++	}, {
++		.fourcc = V4L2_PIX_FMT_SGBRG10,
++		.codes  = {MEDIA_BUS_FMT_SGBRG10_1X10},
++		.cs     = IPUV3_COLORSPACE_RGB,
++		.bpp    = 16,
++		.bayer  = true,
++	}, {
++		.fourcc = V4L2_PIX_FMT_SGRBG10,
++		.codes  = {MEDIA_BUS_FMT_SGRBG10_1X10},
++		.cs     = IPUV3_COLORSPACE_RGB,
++		.bpp    = 16,
++		.bayer  = true,
++	}, {
++		.fourcc = V4L2_PIX_FMT_SRGGB10,
++		.codes  = {MEDIA_BUS_FMT_SRGGB10_1X10},
++		.cs     = IPUV3_COLORSPACE_RGB,
++		.bpp    = 16,
++		.bayer  = true,
+ 	}, {
+ 		.fourcc = V4L2_PIX_FMT_SBGGR16,
+ 		.codes  = {
+-- 
+2.17.0
