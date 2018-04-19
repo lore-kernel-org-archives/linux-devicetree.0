@@ -1,89 +1,45 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v1 5/7] soc: mediatek: add a fixed wait for SRAM stable
-Date: Thu, 19 Apr 2018 12:33:37 +0200
-Message-ID: <5f2530a0-aee2-39fe-eb5c-56cd4a68c9db@gmail.com>
-References: <cover.1522736996.git.sean.wang@mediatek.com>
- <0fc10b2498c6dbe20141831c722c32cc74330d3d.1522736996.git.sean.wang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH 0/6] devfreq: rk3399_dmc: improve rk3399_dmc driver and it's documentation
+Date: Thu, 19 Apr 2018 12:40:13 +0200
+Message-ID: <20180419104019.24406-1-enric.balletbo@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0fc10b2498c6dbe20141831c722c32cc74330d3d.1522736996.git.sean.wang@mediatek.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
-Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Weiyi Lu <weiyi.lu@mediatek.com>
+To: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, heiko@sntech.de, linux-pm@vger.kernel.org, dbasehore@chromium.org, linux-kernel@vger.kernel.org, dianders@google.com, groek@google.com, kernel@collabora.com, Elaine Zhang <zhangqing@rock-chips.com>, Chanwoo Choi <cw00.choi@samsung.com>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Lin Huang <hl@rock-chips.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Dear all,
 
+These patches is an attempt to improve a little bit the rk3399_dmc
+driver and it's documentation in order to have all in a better shape for
+a future work I am doing. My final intention is add ddrfreq support for
+rockchip drm driver, but the patches for this are still
+work-in-progress. So let's start with this first patchset that is
+basically some fixes/improvements for the rk3399_dmc driver.
 
-On 04/03/2018 09:15 AM, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> MT7622_POWER_DOMAIN_WB doesn't send an ACK when its managed SRAM becomes
-> stable, which is not like the behavior the other power domains should
-> have. Therefore, it's necessary for such a power domain to have a fixed
-> and well-predefined duration to wait until its managed SRAM can be allowed
-> to access by all functions running on the top.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Weiyi Lu <weiyi.lu@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-scpsys.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-> index f9b7248..19aceb8 100644
-> --- a/drivers/soc/mediatek/mtk-scpsys.c
-> +++ b/drivers/soc/mediatek/mtk-scpsys.c
-> @@ -121,6 +121,7 @@ struct scp_domain_data {
->  	u32 bus_prot_mask;
->  	enum clk_id clk_id[MAX_CLKS];
->  	bool active_wakeup;
-> +	u32 us_sram_fwait;
+Best regards,
 
-Before adding more and more fields to scp_domain_data which get checked in if's,
-I'd prefer to add a caps field used for bus_prot_mask, active_wakeup in a first
-patch and add the cap FORCE_WAIT in a second patch.
+Enric Balletbo i Serra (3):
+  dt-bindings: clock: add DDR3 standard speed bins.
+  devfreq: rk3399_dmc: remove wait for dcf irq event.
+  dt-bindings: devfreq: rk3399_dmc: remove interrupts as is not
+    required.
 
-Can you help to implement this Sean, or shall I give it a try?
+Lin Huang (2):
+  devfreq: rk3399_dmc: do not print error when get supply and clk defer.
+  devfreq: rk3399_dmc: register devfreq notification to dmc driver.
 
-Regards,
-Matthias
+Nick Milner (1):
+  dt-bindings: devfreq: rk3399_dmc: improve binding documentation.
 
->  };
->  
->  struct scp;
-> @@ -234,11 +235,16 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
->  	val &= ~scpd->data->sram_pdn_bits;
->  	writel(val, ctl_addr);
->  
-> -	/* wait until SRAM_PDN_ACK all 0 */
-> -	ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == 0,
-> -				 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
-> -	if (ret < 0)
-> -		goto err_pwr_ack;
-> +	/* Either wait until SRAM_PDN_ACK all 0 or have a force wait */
-> +	if (!scpd->data->us_sram_fwait) {
-> +		ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == 0,
-> +					 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
-> +		if (ret < 0)
-> +			goto err_pwr_ack;
-> +	} else {
-> +		usleep_range(scpd->data->us_sram_fwait,
-> +			     scpd->data->us_sram_fwait + 100);
-> +	};
->  
->  	if (scpd->data->bus_prot_mask) {
->  		ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
-> @@ -783,6 +789,7 @@ static const struct scp_domain_data scp_domain_data_mt7622[] = {
->  		.clk_id = {CLK_NONE},
->  		.bus_prot_mask = MT7622_TOP_AXI_PROT_EN_WB,
->  		.active_wakeup = true,
-> +		.us_sram_fwait = 12000,
->  	},
->  };
->  
-> 
+ .../bindings/devfreq/rk3399_dmc.txt           | 204 +++++++++---------
+ drivers/devfreq/rk3399_dmc.c                  | 106 +--------
+ drivers/soc/rockchip/pm_domains.c             |  31 +++
+ include/dt-bindings/clock/ddr.h               |  34 +++
+ include/soc/rockchip/rk3399_dmc.h             |  63 ++++++
+ 5 files changed, 238 insertions(+), 200 deletions(-)
+ create mode 100644 include/dt-bindings/clock/ddr.h
+ create mode 100644 include/soc/rockchip/rk3399_dmc.h
+
+-- 
+2.17.0
