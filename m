@@ -1,8 +1,10 @@
 From: Phil Elwell <phil@raspberrypi.org>
 Subject: [PATCH v3 0/3] lan78xx: Read configuration from Device Tree
-Date: Thu, 19 Apr 2018 15:32:01 +0100
-Message-ID: <1524148325-78945-1-git-send-email-phil@raspberrypi.org>
+Date: Thu, 19 Apr 2018 15:32:02 +0100
+Message-ID: <1524148325-78945-2-git-send-email-phil@raspberrypi.org>
+References: <1524148325-78945-1-git-send-email-phil@raspberrypi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524148325-78945-1-git-send-email-phil@raspberrypi.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 Cc: Phil Elwell <phil@raspberrypi.org>
