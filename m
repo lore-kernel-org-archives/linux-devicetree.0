@@ -1,171 +1,138 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH] net: phy: TLK10X initial driver submission
-Date: Thu, 19 Apr 2018 14:09:02 +0200
-Message-ID: <20180419120902.GB17888@lunn.ch>
-References: <20180419082816.109338-1-mans.andersson@nibe.se>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH 02/15] media: staging/imx7: add imx7 CSI subdev driver
+Date: Thu, 19 Apr 2018 15:22:30 +0300
+Message-ID: <20180419122230.6wygwob2ajbkbv7o@mwanda>
+References: <20180419101812.30688-1-rui.silva@linaro.org>
+ <20180419101812.30688-3-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <20180419082816.109338-1-mans.andersson@nibe.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?M=E5ns?= Andersson <mans.andersson@nibe.se>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180419101812.30688-3-rui.silva@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 19, 2018 at 10:28:16AM +0200, Måns Andersson wrote:
-> From: Mans Andersson <mans.andersson@nibe.se>
-> 
-> Add suport for the TI TLK105 and TLK106 10/100Mbit ethernet phys.
-> 
-> In addition the TLK10X needs to be removed from DP83848 driver as the
-> power back off support is added here for this device.
-> 
-> Datasheet:
-> http://www.ti.com/lit/gpn/tlk106
-> ---
->  .../devicetree/bindings/net/ti,tlk10x.txt          |  27 +++
->  drivers/net/phy/Kconfig                            |   5 +
->  drivers/net/phy/Makefile                           |   1 +
->  drivers/net/phy/dp83848.c                          |   3 -
->  drivers/net/phy/tlk10x.c                           | 209 +++++++++++++++++++++
->  5 files changed, 242 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/ti,tlk10x.txt
->  create mode 100644 drivers/net/phy/tlk10x.c
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ti,tlk10x.txt b/Documentation/devicetree/bindings/net/ti,tlk10x.txt
-> new file mode 100644
-> index 0000000..371d0d7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/ti,tlk10x.txt
-> @@ -0,0 +1,27 @@
-> +* Texas Instruments - TLK105 / TLK106 ethernet PHYs
-> +
-> +Required properties:
-> +	- reg - The ID number for the phy, usually a small integer
-> +
-> +Optional properties:
-> +	- ti,power-back-off - Power Back Off Level
-> +		Please refer to data sheet chapter 8.6 and TI Application
-> +		Note SLLA3228
-> +		0 - Normal Operation
-> +		1 - Level 1 (up to 140m cable between TLK link partners)
-> +		2 - Level 2 (up to 100m cable between TLK link partners)
-> +		3 - Level 3 (up to 80m cable between TLK link partners)
-
-Hi Måns
-
-Device tree is all about board properties. In most cases, power back
-off is not a board properties, since it depends on the cable length
-and the peer board. If however, your board has two PHYs back to back,
-say to connect to an Ethernet switch, that would be a valid board
-property.
-
-How are you using this?
-
-I know of others who would like such a configuration. Marvell PHYs can
-do something similar. I've always suggested adding a PHY tunable. Pass
-the cable length in meters and let the PHY driver pick the nearest it
-can do, rounding up. The Marvell PHYs also support measuring the cable
-length as part of the cable diagnostics. So it would be good to
-reserve a configuration value to mean 'auto' - measure the cable and
-then pick the best power back off. Quickly scanning the data sheet, i
-see that this PHY also has the ability to measure the cable length.
-
-> +static int tlk10x_read(struct phy_device *phydev, int reg)
+On Thu, Apr 19, 2018 at 11:17:59AM +0100, Rui Miguel Silva wrote:
+> +static int imx7_csi_link_setup(struct media_entity *entity,
+> +			       const struct media_pad *local,
+> +			       const struct media_pad *remote, u32 flags)
 > +{
-> +	if (reg & ~0x1f) {
-> +		/* Extended register */
-> +		phy_write(phydev, TLK10X_REGCR, 0x001F);
-> +		phy_write(phydev, TLK10X_ADDAR, reg);
-> +		phy_write(phydev, TLK10X_REGCR, 0x401F);
-> +		reg = TLK10X_ADDAR;
+> +	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(entity);
+> +	struct imx7_csi *csi = v4l2_get_subdevdata(sd);
+> +	struct v4l2_subdev *remote_sd;
+> +	int ret = 0;
+> +
+> +	dev_dbg(csi->dev, "link setup %s -> %s\n", remote->entity->name,
+> +		local->entity->name);
+> +
+> +	mutex_lock(&csi->lock);
+> +
+> +	if (local->flags & MEDIA_PAD_FL_SINK) {
+> +		if (!is_media_entity_v4l2_subdev(remote->entity)) {
+> +			ret = -EINVAL;
+> +			goto unlock;
+> +		}
+> +
+> +		remote_sd = media_entity_to_v4l2_subdev(remote->entity);
+> +
+> +		if (flags & MEDIA_LNK_FL_ENABLED) {
+> +			if (csi->src_sd) {
+> +				ret = -EBUSY;
+> +				goto unlock;
+> +			}
+> +			csi->src_sd = remote_sd;
+> +		} else {
+> +			csi->src_sd = NULL;
+> +		}
+> +
+> +		goto init;
 > +	}
 > +
-> +	return phy_read(phydev, reg);
-> +}
-> +
-> +static int tlk10x_write(struct phy_device *phydev, int reg, int val)
-> +{
-> +	if (reg & ~0x1f) {
-> +		/* Extended register */
-> +		phy_write(phydev, TLK10X_REGCR, 0x001F);
-> +		phy_write(phydev, TLK10X_ADDAR, reg);
-> +		phy_write(phydev, TLK10X_REGCR, 0x401F);
-> +		reg = TLK10X_ADDAR;
+> +	/* source pad */
+> +	if (flags & MEDIA_LNK_FL_ENABLED) {
+> +		if (csi->sink) {
+> +			ret = -EBUSY;
+> +			goto unlock;
+> +		}
+> +		csi->sink = remote->entity;
+> +	} else {
+> +		v4l2_ctrl_handler_free(&csi->ctrl_hdlr);
+> +		v4l2_ctrl_handler_init(&csi->ctrl_hdlr, 0);
+> +		csi->sink = NULL;
 > +	}
 > +
-> +	return phy_write(phydev, reg, val);
+> +init:
+> +	if (csi->sink || csi->src_sd)
+> +		imx7_csi_init(csi);
+> +	else
+> +		imx7_csi_deinit(csi);
+> +
+> +unlock:
+> +	mutex_unlock(&csi->lock);
+> +
+> +	return 0;
+
+This should be "return ret;" because the failure paths go through here
+as well.
+
 > +}
-
-This looks to be phy_read_mmd() and phy_write_mmd(). If so, please use
-them, they get the locking correct.
-
-
-> +#ifdef CONFIG_OF_MDIO
-> +static int tlk10x_of_init(struct phy_device *phydev)
+> +
+> +static int imx7_csi_pad_link_validate(struct v4l2_subdev *sd,
+> +				      struct media_link *link,
+> +				      struct v4l2_subdev_format *source_fmt,
+> +				      struct v4l2_subdev_format *sink_fmt)
 > +{
-> +	struct tlk10x_private *tlk10x = phydev->priv;
-> +	struct device *dev = &phydev->mdio.dev;
-> +	struct device_node *of_node = dev->of_node;
+> +	struct imx7_csi *csi = v4l2_get_subdevdata(sd);
+> +	struct v4l2_fwnode_endpoint upstream_ep;
 > +	int ret;
 > +
-> +	if (!of_node)
-> +		return 0;
+> +	ret = v4l2_subdev_link_validate_default(sd, link, source_fmt, sink_fmt);
+> +	if (ret)
+> +		return ret;
 > +
-> +	ret = of_property_read_u32(of_node, "ti,power-back-off",
-> +				   &tlk10x->pwrbo_level);
+> +	ret = imx7_csi_get_upstream_endpoint(csi, &upstream_ep, true);
 > +	if (ret) {
-> +		dev_err(dev, "missing ti,power-back-off property");
-> +		tlk10x->pwrbo_level = 0;
+> +		v4l2_err(&csi->sd, "failed to find upstream endpoint\n");
+> +		return ret;
 > +	}
+> +
+> +	mutex_lock(&csi->lock);
+> +
+> +	csi->upstream_ep = upstream_ep;
+> +	csi->is_csi2 = (upstream_ep.bus_type == V4L2_MBUS_CSI2);
+> +
+> +	mutex_unlock(&csi->lock);
+> +
+> +	return ret;
 
-If we decide to accept this, you should do range checking, and return
--EINVAL if the value is out of range.
+return 0;
 
-> +static int tlk10x_config_init(struct phy_device *phydev)
+> +}
+> +
+
+[ snip ]
+
+> +
+> +static int imx7_csi_remove(struct platform_device *pdev)
 > +{
-> +	int ret, reg;
-> +	struct tlk10x_private *tlk10x;
-> +
-> +	ret = genphy_config_init(phydev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (!phydev->priv) {
-> +		tlk10x = devm_kzalloc(&phydev->mdio.dev, sizeof(*tlk10x),
-> +				      GFP_KERNEL);
-> +		if (!tlk10x)
-> +			return -ENOMEM;
-> +
-> +		phydev->priv = tlk10x;
-> +		ret = tlk10x_of_init(phydev);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		tlk10x = (struct tlk10x_private *)phydev->priv;
-> +	}
-
-This allocation should be done in .probe
-
-> +
-> +	// Power back off
-> +	if (tlk10x->pwrbo_level < 0 || tlk10x->pwrbo_level > 3)
-> +		tlk10x->pwrbo_level = 0;
-> +	reg = tlk10x_read(phydev, TLK10X_PWRBOCR);
-> +	reg = ((reg & ~TLK10X_PWRBOCR_MASK)
-> +		| (tlk10x->pwrbo_level << 6));
-> +	ret = tlk10x_write(phydev, TLK10X_PWRBOCR, reg);
-> +	if (ret < 0) {
-> +		dev_err(&phydev->mdio.dev,
-> +			"unable to set power back-off (err=%d)\n", ret);
-> +		return ret;
-> +	}
-> +	dev_info(&phydev->mdio.dev, "power back-off set to level %d\n",
-> +		 tlk10x->pwrbo_level);
-> +
 > +	return 0;
 > +}
 
-  Andrew
+There is no need for this empty (struct platform_driver)->remove()
+function.  See platform_drv_remove() for how it's called.
+
+This looks nice, though.
+
+regards,
+dan carpenter
