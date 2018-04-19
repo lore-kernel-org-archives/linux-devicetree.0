@@ -1,7 +1,7 @@
 From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH 3/3] ARM: dts: stm32: enable USBPHYC on stm32mp157c-ev1
-Date: Thu, 19 Apr 2018 16:59:56 +0200
-Message-ID: <1524149996-27809-4-git-send-email-amelie.delaunay@st.com>
+Subject: [PATCH 1/3] ARM: dts: stm32: add USBPHYC support to stm32mp157c
+Date: Thu, 19 Apr 2018 16:59:54 +0200
+Message-ID: <1524149996-27809-2-git-send-email-amelie.delaunay@st.com>
 References: <1524149996-27809-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,26 +12,44 @@ To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.tor
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables USBPHYC (USB PHY Controller) on stm32mp157c-ev1.
-This enables the two usbphyc usb2 ports.
+Add support for USBPHYC (USB PHY Controller) to STM32MP157C SoC.
+It manages two usb2 ports.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c-ev1.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/stm32mp157c.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-index 57e6dbc..070cdad 100644
---- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-@@ -19,3 +19,8 @@
- 		serial0 = &uart4;
- 	};
- };
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index bc3eddc..c64cac1 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -167,6 +167,26 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		usbphyc: usbphyc@5a006000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "st,stm32mp1-usbphyc";
++			reg = <0x5a006000 0x1000>;
++			clocks = <&rcc USBPHY_K>;
++			resets = <&rcc USBPHY_R>;
++			status = "disabled";
 +
-+&usbphyc {
-+	status = "okay";
-+};
++			usbphyc_port0: usb-phy@0 {
++				#phy-cells = <0>;
++				reg = <0>;
++			};
 +
++			usbphyc_port1: usb-phy@1 {
++				#phy-cells = <1>;
++				reg = <1>;
++			};
++		};
++
+ 		usart1: serial@5c000000 {
+ 			compatible = "st,stm32h7-uart";
+ 			reg = <0x5c000000 0x400>;
 -- 
 2.7.4
