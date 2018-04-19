@@ -1,544 +1,204 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v6] ARM: dts: tpc: Device tree description of the iMX6Q TPC board
-Date: Thu, 19 Apr 2018 16:32:40 +0200
-Message-ID: <20180419143240.3717-1-lukma@denx.de>
-References: <20180405070939.22245-1-lukma@denx.de>
+From: Phil Elwell <phil@raspberrypi.org>
+Subject: [PATCH v3 2/3] lan78xx: Read LED states from Device Tree
+Date: Thu, 19 Apr 2018 15:32:04 +0100
+Message-ID: <1524148325-78945-4-git-send-email-phil@raspberrypi.org>
+References: <1524148325-78945-1-git-send-email-phil@raspberrypi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180405070939.22245-1-lukma@denx.de>
+In-Reply-To: <1524148325-78945-1-git-send-email-phil@raspberrypi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lukasz Majewski <lukma@denx.de>
+To: Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: Phil Elwell <phil@raspberrypi.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds device tree description of Kieback & Peter GmbH
-iMX6Q TPC board.
+Add support for DT property "microchip,led-modes", a vector of zero
+to four cells (u32s) in the range 0-15, each of which sets the mode
+for one of the LEDs. Some possible values are:
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+    0=link/activity          1=link1000/activity
+    2=link100/activity       3=link10/activity
+    4=link100/1000/activity  5=link10/1000/activity
+    6=link10/100/activity    14=off    15=on
 
+These values are given symbolic constants in a dt-bindings header.
+
+Also use the presence of the DT property to indicate that the
+LEDs should be enabled - necessary in the event that no valid OTP
+or EEPROM is available.
+
+Signed-off-by: Phil Elwell <phil@raspberrypi.org>
 ---
-Changes for v6:
-- Add space between // and SPDX
-- Replace 'disp0' with 'display'
-- Replace 'rtc: ds1307@32' with 'ds1307: rtc@32'
-- Replace 'codec: audio-codec@a' with 'sgtl5000: audio-codec@a'
-- Move &can[12] nodes extension to proper position to be alphabetically sorted
+ MAINTAINERS                                 |  1 +
+ drivers/net/phy/microchip.c                 | 25 ++++++++++++++++++++++
+ drivers/net/usb/lan78xx.c                   | 32 ++++++++++++++++++++++++++++-
+ include/dt-bindings/net/microchip-lan78xx.h | 21 +++++++++++++++++++
+ include/linux/microchipphy.h                |  3 +++
+ 5 files changed, 81 insertions(+), 1 deletion(-)
+ create mode 100644 include/dt-bindings/net/microchip-lan78xx.h
 
-Changes for v5:
-- Use 'interpolation-steps' to fill the brightness level table
-- Remove not needed status = "okay" properties
-- Replace goodix_ts -> touchscreen
-- Replace sgtl5000 -> audio-codec
-
-This patch depends on PWM backlight intepolation work:
-https://patchwork.kernel.org/patch/10330775/
-https://patchwork.kernel.org/patch/10330777/
-
-Changes for v4:
-- Remove not needed bus-format-override = "rgb565";
-  property
-
-Changes for v3:
-- Provide proper compatible for RTC DTS node
-- Remove wrong comment style for beeper
-- Add proper SPDX entries for DTS files
-- Add vendor prefix to a separate patch
-
-Changes for v2:
-- SPDX license identifiers used
-- Separate regulators
-- Proper beeper driver
-- Use of the lcd panel (with compatible) instead of timings provided in
-  device tree
-- Add IRQ types (like IRQ_TYPE_EDGE_FALLING) and GPIO active levels (like
-  GPIO_ACTIVE_HIGH)
-- Remove not needed nodes
-- Make W=1 dtbs compilation with no errors
----
- arch/arm/boot/dts/Makefile         |   1 +
- arch/arm/boot/dts/imx6q-kp-tpc.dts |  22 ++
- arch/arm/boot/dts/imx6q-kp.dtsi    | 432 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 455 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-kp-tpc.dts
- create mode 100644 arch/arm/boot/dts/imx6q-kp.dtsi
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index ade7a38543dc..c148c4cf28f2 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -459,6 +459,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-icore-ofcap10.dtb \
- 	imx6q-icore-ofcap12.dtb \
- 	imx6q-icore-rqs.dtb \
-+	imx6q-kp-tpc.dtb \
- 	imx6q-marsboard.dtb \
- 	imx6q-mccmon6.dtb \
- 	imx6q-nitrogen6x.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-kp-tpc.dts b/arch/arm/boot/dts/imx6q-kp-tpc.dts
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b60179d..23735d9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14573,6 +14573,7 @@ M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
+ F:	drivers/net/usb/lan78xx.*
++F:	include/dt-bindings/net/microchip-lan78xx.h
+ 
+ USB MASS STORAGE DRIVER
+ M:	Alan Stern <stern@rowland.harvard.edu>
+diff --git a/drivers/net/phy/microchip.c b/drivers/net/phy/microchip.c
+index 0f293ef..ef5e160 100644
+--- a/drivers/net/phy/microchip.c
++++ b/drivers/net/phy/microchip.c
+@@ -20,6 +20,8 @@
+ #include <linux/ethtool.h>
+ #include <linux/phy.h>
+ #include <linux/microchipphy.h>
++#include <linux/of.h>
++#include <dt-bindings/net/microchip-lan78xx.h>
+ 
+ #define DRIVER_AUTHOR	"WOOJUNG HUH <woojung.huh@microchip.com>"
+ #define DRIVER_DESC	"Microchip LAN88XX PHY driver"
+@@ -70,6 +72,8 @@ static int lan88xx_probe(struct phy_device *phydev)
+ {
+ 	struct device *dev = &phydev->mdio.dev;
+ 	struct lan88xx_priv *priv;
++	u32 led_modes[4];
++	int len;
+ 
+ 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+@@ -77,6 +81,27 @@ static int lan88xx_probe(struct phy_device *phydev)
+ 
+ 	priv->wolopts = 0;
+ 
++	len = of_property_read_variable_u32_array(dev->of_node,
++						  "microchip,led-modes",
++						  led_modes,
++						  0,
++						  ARRAY_SIZE(led_modes));
++	if (len >= 0) {
++		u32 reg = 0;
++		int i;
++
++		for (i = 0; i < len; i++) {
++			if (led_modes[i] > 15)
++				return -EINVAL;
++			reg |= led_modes[i] << (i * 4);
++		}
++		for (; i < ARRAY_SIZE(led_modes); i++)
++			reg |= LAN78XX_FORCE_LED_OFF << (i * 4);
++		(void)phy_write(phydev, LAN78XX_PHY_LED_MODE_SELECT, reg);
++	} else if (len == -EOVERFLOW) {
++		return -EINVAL;
++	}
++
+ 	/* these values can be used to identify internal PHY */
+ 	priv->chip_id = phy_read_mmd(phydev, 3, LAN88XX_MMD3_CHIP_ID);
+ 	priv->chip_rev = phy_read_mmd(phydev, 3, LAN88XX_MMD3_CHIP_REV);
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index a823f01..6b03b97 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -37,6 +37,7 @@
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/microchipphy.h>
+ #include <linux/phy.h>
++#include <linux/of_mdio.h>
+ #include <linux/of_net.h>
+ #include "lan78xx.h"
+ 
+@@ -1760,6 +1761,7 @@ static int lan78xx_mdiobus_write(struct mii_bus *bus, int phy_id, int idx,
+ 
+ static int lan78xx_mdio_init(struct lan78xx_net *dev)
+ {
++	struct device_node *node;
+ 	int ret;
+ 
+ 	dev->mdiobus = mdiobus_alloc();
+@@ -1788,7 +1790,13 @@ static int lan78xx_mdio_init(struct lan78xx_net *dev)
+ 		break;
+ 	}
+ 
+-	ret = mdiobus_register(dev->mdiobus);
++	node = of_get_child_by_name(dev->udev->dev.of_node, "mdio");
++	if (node) {
++		ret = of_mdiobus_register(dev->mdiobus, node);
++		of_node_put(node);
++	} else {
++		ret = mdiobus_register(dev->mdiobus);
++	}
+ 	if (ret) {
+ 		netdev_err(dev->net, "can't register MDIO bus\n");
+ 		goto exit1;
+@@ -2077,6 +2085,28 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
+ 	mii_adv = (u32)mii_advertise_flowctrl(dev->fc_request_control);
+ 	phydev->advertising |= mii_adv_to_ethtool_adv_t(mii_adv);
+ 
++	if (phydev->mdio.dev.of_node) {
++		u32 reg;
++		int len;
++
++		len = of_property_count_elems_of_size(phydev->mdio.dev.of_node,
++						      "microchip,led-modes",
++						      sizeof(u32));
++		if (len >= 0) {
++			/* Ensure the appropriate LEDs are enabled */
++			lan78xx_read_reg(dev, HW_CFG, &reg);
++			reg &= ~(HW_CFG_LED0_EN_ |
++				 HW_CFG_LED1_EN_ |
++				 HW_CFG_LED2_EN_ |
++				 HW_CFG_LED3_EN_);
++			reg |= (len > 0) * HW_CFG_LED0_EN_ |
++				(len > 1) * HW_CFG_LED1_EN_ |
++				(len > 2) * HW_CFG_LED2_EN_ |
++				(len > 3) * HW_CFG_LED3_EN_;
++			lan78xx_write_reg(dev, HW_CFG, reg);
++		}
++	}
++
+ 	genphy_config_aneg(phydev);
+ 
+ 	dev->fc_autoneg = phydev->autoneg;
+diff --git a/include/dt-bindings/net/microchip-lan78xx.h b/include/dt-bindings/net/microchip-lan78xx.h
 new file mode 100644
-index 000000000000..302d8d06e4cc
+index 0000000..0742ff0
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-kp-tpc.dts
-@@ -0,0 +1,22 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright 2018
-+ * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
-+ */
++++ b/include/dt-bindings/net/microchip-lan78xx.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _DT_BINDINGS_MICROCHIP_LAN78XX_H
++#define _DT_BINDINGS_MICROCHIP_LAN78XX_H
 +
-+/dts-v1/;
++/* LED modes for LAN7800/LAN7850 embedded PHY */
 +
-+#include "imx6q-kp.dtsi"
++#define LAN78XX_LINK_ACTIVITY           0
++#define LAN78XX_LINK_1000_ACTIVITY      1
++#define LAN78XX_LINK_100_ACTIVITY       2
++#define LAN78XX_LINK_10_ACTIVITY        3
++#define LAN78XX_LINK_100_1000_ACTIVITY  4
++#define LAN78XX_LINK_10_1000_ACTIVITY   5
++#define LAN78XX_LINK_10_100_ACTIVITY    6
++#define LAN78XX_DUPLEX_COLLISION        8
++#define LAN78XX_COLLISION               9
++#define LAN78XX_ACTIVITY                10
++#define LAN78XX_AUTONEG_FAULT           12
++#define LAN78XX_FORCE_LED_OFF           14
++#define LAN78XX_FORCE_LED_ON            15
 +
-+/ {
-+	model = "Freescale i.MX6 Qwuad K+P TPC Board";
-+	compatible = "kiebackpeter,imx6q-tpc", "fsl,imx6q";
++#endif
+diff --git a/include/linux/microchipphy.h b/include/linux/microchipphy.h
+index eb492d4..8e4015e 100644
+--- a/include/linux/microchipphy.h
++++ b/include/linux/microchipphy.h
+@@ -70,4 +70,7 @@
+ #define	LAN88XX_MMD3_CHIP_ID			(32877)
+ #define	LAN88XX_MMD3_CHIP_REV			(32878)
+ 
++/* Registers specific to the LAN7800/LAN7850 embedded phy */
++#define LAN78XX_PHY_LED_MODE_SELECT		(0x1D)
 +
-+	memory@10000000 {
-+		reg = <0x10000000 0x40000000>;
-+	};
-+};
-+
-+&ipu1_di0_disp0 {
-+	remote-endpoint = <&lcd_display_in>;
-+};
-diff --git a/arch/arm/boot/dts/imx6q-kp.dtsi b/arch/arm/boot/dts/imx6q-kp.dtsi
-new file mode 100644
-index 000000000000..24c8169baf44
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-kp.dtsi
-@@ -0,0 +1,432 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright 2018
-+ * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6q.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pwm/pwm.h>
-+#include <dt-bindings/sound/fsl-imx-audmux.h>
-+
-+/ {
-+	backlight_lcd: backlight-lcd {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm1 0 5000000>;
-+		brightness-levels = <0 255>;
-+		num-interpolated-steps = <255>;
-+		default-brightness-level = <250>;
-+	};
-+
-+	beeper {
-+		compatible = "pwm-beeper";
-+		pwms = <&pwm2 0 500000>;
-+	};
-+
-+	lcd_display: display {
-+		compatible = "fsl,imx-parallel-display";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interface-pix-fmt = "rgb24";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ipu1>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			lcd_display_in: endpoint {
-+				remote-endpoint = <&ipu1_di0_disp0>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			lcd_display_out: endpoint {
-+				remote-endpoint = <&lcd_panel_in>;
-+			};
-+		};
-+	};
-+
-+	lcd_panel: lcd-panel {
-+		compatible = "auo,g070vvn01";
-+		backlight = <&backlight_lcd>;
-+		power-supply = <&reg_display>;
-+
-+		port {
-+			lcd_panel_in: endpoint {
-+				remote-endpoint = <&lcd_display_out>;
-+			};
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		green {
-+			label = "led1";
-+			gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "gpio";
-+			default-state = "off";
-+		};
-+
-+		red {
-+			label = "led0";
-+			gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "gpio";
-+			default-state = "off";
-+		};
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_audio: regulator-audio {
-+		compatible = "regulator-fixed";
-+		regulator-name = "sgtl5000-supply";
-+		gpio = <&gpio6 31 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	reg_display: regulator-display {
-+		compatible = "regulator-fixed";
-+		regulator-name = "display-supply";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_usb_h1_vbus: regulator-usb_h1_vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_h1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		enable-active-high;
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "imx6q-sgtl5000-audio";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&codec_dai>;
-+		simple-audio-card,frame-master = <&codec_dai>;
-+
-+		cpu_dai: simple-audio-card,cpu {
-+			sound-dai = <&ssi1>;
-+		};
-+
-+		codec_dai: simple-audio-card,codec {
-+			sound-dai = <&sgtl5000>;
-+		};
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>;
-+	status = "okay";
-+
-+	ssi1 {
-+		fsl,audmux-port = <0>;
-+		fsl,port-config = <
-+			(IMX_AUDMUX_V2_PTCR_SYN |
-+			IMX_AUDMUX_V2_PTCR_TFSEL(2) |
-+			IMX_AUDMUX_V2_PTCR_TCSEL(2) |
-+			IMX_AUDMUX_V2_PTCR_TFSDIR |
-+			IMX_AUDMUX_V2_PTCR_TCLKDIR)
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(2)
-+		>;
-+	};
-+
-+	aud3 {
-+		fsl,audmux-port = <2>;
-+		fsl,port-config = <
-+			IMX_AUDMUX_V2_PTCR_SYN
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(0)
-+		>;
-+	};
-+};
-+
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+};
-+
-+&can2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet>;
-+	phy-mode = "rgmii";
-+	fsl,magic-packet;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	touchscreen@5d {
-+		compatible = "goodix,gt911";
-+		reg = <0x5d>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ts>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
-+		irq-gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio5 2 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	ds1307: rtc@32 {
-+		compatible = "dallas,ds1307";
-+		reg = <0x32>;
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <400000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+
-+	sgtl5000: audio-codec@a {
-+		compatible = "fsl,sgtl5000";
-+		#sound-dai-cells = <0>;
-+		reg = <0x0a>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_codec>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		VDDA-supply = <&reg_3p3v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl_audmux: audmuxgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
-+			MX6QDL_PAD_CSI0_DAT4__AUD3_TXC		0x130b0
-+			MX6QDL_PAD_CSI0_DAT5__AUD3_TXD		0x110b0
-+			MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS	0x130b0
-+		>;
-+	};
-+
-+	pinctrl_codec: codecgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_BCLK__GPIO6_IO31   0x1b0b0
-+			/* sgtl5000 sys_mclk clock routed to CLKO1 */
-+			MX6QDL_PAD_GPIO_0__CCM_CLKO1      0x000b0
-+		>;
-+	};
-+
-+	pinctrl_enet: enetgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_MDIO__ENET_MDIO	0x1b0b0
-+			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
-+			MX6QDL_PAD_RGMII_TXC__RGMII_TXC	0x1b0b0
-+			MX6QDL_PAD_RGMII_TD0__RGMII_TD0	0x1b0b0
-+			MX6QDL_PAD_RGMII_TD1__RGMII_TD1	0x1b0b0
-+			MX6QDL_PAD_RGMII_TD2__RGMII_TD2	0x1b0b0
-+			MX6QDL_PAD_RGMII_TD3__RGMII_TD3	0x1b0b0
-+			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
-+			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
-+			MX6QDL_PAD_RGMII_RXC__RGMII_RXC	0x1b0b0
-+			MX6QDL_PAD_RGMII_RD0__RGMII_RD0	0x1b0b0
-+			MX6QDL_PAD_RGMII_RD1__RGMII_RD1	0x1b0b0
-+			MX6QDL_PAD_RGMII_RD2__RGMII_RD2	0x1b0b0
-+			MX6QDL_PAD_RGMII_RD3__RGMII_RD3	0x1b0b0
-+			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b0b0
-+			MX6QDL_PAD_GPIO_16__ENET_REF_CLK 0x4001b0a8
-+		>;
-+	};
-+
-+	pinctrl_flexcan1: can1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_7__FLEXCAN1_TX        0x1b0b0
-+			MX6QDL_PAD_GPIO_8__FLEXCAN1_RX        0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_flexcan2: can2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX        0x1b0b0
-+			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX        0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA	0x4001b8b1
-+			MX6QDL_PAD_CSI0_DAT9__I2C1_SCL	0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL3__I2C2_SCL	0x4001b8b1
-+			MX6QDL_PAD_KEY_ROW3__I2C2_SDA	0x4001b8b1
-+		 >;
-+	};
-+
-+	pinctrl_ipu1: ipu1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x10
-+			MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x10
-+			MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x10
-+			MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x10
-+			MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00   0x10
-+			MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0x10
-+			MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0x10
-+			MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0x10
-+			MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0x10
-+			MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0x10
-+			MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0x10
-+			MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0x10
-+			MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0x10
-+			MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0x10
-+			MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0x10
-+			MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0x10
-+			MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0x10
-+			MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0x10
-+			MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0x10
-+			MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0x10
-+			MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0x10
-+			MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0x10
-+			MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0x10
-+			MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0x10
-+			MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0x10
-+			MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0x10
-+			MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0x10
-+			MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0x10
-+		>;
-+	};
-+
-+	pinctrl_pwm1: pwm1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_DAT3__PWM1_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_pwm2: pwm2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_DAT2__PWM2_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_ts: tsgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_9__GPIO1_IO09 0x1b0b0
-+			MX6QDL_PAD_EIM_A25__GPIO5_IO02 0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_DAT7__UART1_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_SD3_DAT6__UART1_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D26__UART2_TX_DATA       0x1b0b1
-+			MX6QDL_PAD_EIM_D27__UART2_RX_DATA       0x1b0b1
-+			MX6QDL_PAD_EIM_D28__UART2_CTS_B         0x1b0b1
-+			MX6QDL_PAD_EIM_D29__UART2_RTS_B         0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x17059
-+			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x10059
-+			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x17059
-+			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
-+			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
-+			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc4: usdhc4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD4_CMD__SD4_CMD		0x17059
-+			MX6QDL_PAD_SD4_CLK__SD4_CLK		0x10059
-+			MX6QDL_PAD_SD4_DAT0__SD4_DATA0		0x17059
-+			MX6QDL_PAD_SD4_DAT1__SD4_DATA1		0x17059
-+			MX6QDL_PAD_SD4_DAT2__SD4_DATA2		0x17059
-+			MX6QDL_PAD_SD4_DAT3__SD4_DATA3		0x17059
-+			MX6QDL_PAD_SD4_DAT4__SD4_DATA4		0x17059
-+			MX6QDL_PAD_SD4_DAT5__SD4_DATA5		0x17059
-+			MX6QDL_PAD_SD4_DAT6__SD4_DATA6		0x17059
-+			MX6QDL_PAD_SD4_DAT7__SD4_DATA7		0x17059
-+		>;
-+	};
-+};
-+
-+&pwm1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1>;
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm2>;
-+	status = "okay";
-+};
-+
-+&ssi1 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	uart-has-rtscts;
-+};
-+
-+&usbh1 {
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&usdhc4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc4>;
-+	bus-width = <8>;
-+	non-removable;
-+	no-1-8-v;
-+	keep-power-in-suspend;
-+	status = "okay";
-+};
-+
-+&wdog1 {
-+	status = "okay";
-+};
+ #endif /* _MICROCHIPPHY_H */
 -- 
-2.11.0
+2.7.4
