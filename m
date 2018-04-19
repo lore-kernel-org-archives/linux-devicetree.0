@@ -1,7 +1,7 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH 13/15] ARM: dts: imx7s: add capture subsystem
-Date: Thu, 19 Apr 2018 11:18:10 +0100
-Message-ID: <20180419101812.30688-14-rui.silva@linaro.org>
+Subject: [PATCH 10/15] ARM: dts: imx7s: add mipi phy power domain
+Date: Thu, 19 Apr 2018 11:18:07 +0100
+Message-ID: <20180419101812.30688-11-rui.silva@linaro.org>
 References: <20180419101812.30688-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,26 +21,29 @@ To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerb
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add media capture subsystem device to i.MX7 definitions.
+Add power domain index 0 related with mipi-phy to imx7s.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- arch/arm/boot/dts/imx7s.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/imx7s.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 6b49b73053f9..333d9fe6b989 100644
+index 142ea709d296..d913c3f9c284 100644
 --- a/arch/arm/boot/dts/imx7s.dtsi
 +++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -1189,4 +1189,9 @@
- 			assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_500M_CLK>;
- 		};
- 	};
+@@ -650,6 +650,12 @@
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+ 
++					pgc_mipi_phy: pgc-power-domain@0 {
++						#power-domain-cells = <0>;
++						reg = <0>;
++						power-supply = <&reg_1p0d>;
++					};
 +
-+	capture-subsystem {
-+		compatible = "fsl,imx7-capture-subsystem";
-+		ports = <&csi>;
-+	};
- };
+ 					pgc_pcie_phy: pgc-power-domain@1 {
+ 						#power-domain-cells = <0>;
+ 						reg = <1>;
 -- 
 2.17.0
