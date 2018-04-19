@@ -1,397 +1,87 @@
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Subject: Re: [PATCH] net: phy: TLK10X initial driver submission
-Date: Thu, 19 Apr 2018 14:24:27 +0200
-Message-ID: <CANiq72=oPqsCkQ_aaO2cQgMxa_VLzL1yPC7APri6FL5jpxU15g@mail.gmail.com>
-References: <20180419082816.109338-1-mans.andersson@nibe.se>
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH 4/6] drm/panel: simple: Add support for Banana Pi 7"
+ S070WV20-CT16 panel
+Date: Thu, 19 Apr 2018 14:31:13 +0200
+Message-ID: <58ce9e3b-00ee-87d2-f05b-b9f1414d1cfa@micronovasrl.com>
+References: <20180419093225.614-1-wens@csie.org>
+ <20180419093225.614-5-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419082816.109338-1-mans.andersson@nibe.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?M=C3=A5ns_Andersson?= <mans.andersson@nibe.se>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Network Development <netdev@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180419093225.614-5-wens@csie.org>
+Content-Language: it
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Jonathan Liu <net147@gmail.com>, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 19, 2018 at 10:28 AM, M=C3=A5ns Andersson <mans.andersson@nibe.=
-se> wrote:
-> From: Mans Andersson <mans.andersson@nibe.se>
->
-> Add suport for the TI TLK105 and TLK106 10/100Mbit ethernet phys.
->
-
-Hi Mans,
-
-Some quick notes.
-
-> In addition the TLK10X needs to be removed from DP83848 driver as the
-> power back off support is added here for this device.
->
-> Datasheet:
-> http://www.ti.com/lit/gpn/tlk106
-
-Missing signature.
-
-> ---
->  .../devicetree/bindings/net/ti,tlk10x.txt          |  27 +++
->  drivers/net/phy/Kconfig                            |   5 +
->  drivers/net/phy/Makefile                           |   1 +
->  drivers/net/phy/dp83848.c                          |   3 -
->  drivers/net/phy/tlk10x.c                           | 209 +++++++++++++++=
-++++++
->  5 files changed, 242 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/ti,tlk10x.txt
->  create mode 100644 drivers/net/phy/tlk10x.c
->
-> diff --git a/Documentation/devicetree/bindings/net/ti,tlk10x.txt b/Docume=
-ntation/devicetree/bindings/net/ti,tlk10x.txt
-> new file mode 100644
-> index 0000000..371d0d7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/ti,tlk10x.txt
-> @@ -0,0 +1,27 @@
-> +* Texas Instruments - TLK105 / TLK106 ethernet PHYs
-> +
-> +Required properties:
-> +       - reg - The ID number for the phy, usually a small integer
-> +
-> +Optional properties:
-> +       - ti,power-back-off - Power Back Off Level
-> +               Please refer to data sheet chapter 8.6 and TI Application
-> +               Note SLLA3228
-> +               0 - Normal Operation
-> +               1 - Level 1 (up to 140m cable between TLK link partners)
-> +               2 - Level 2 (up to 100m cable between TLK link partners)
-> +               3 - Level 3 (up to 80m cable between TLK link partners)
-> +
-> +Default child nodes are standard Ethernet PHY device
-> +nodes as described in Documentation/devicetree/bindings/net/phy.txt
-> +
-> +Example:
-> +
-> +       ethernet-phy@0 {
-> +               reg =3D <0>;
-> +               ti,power-back-off =3D <2>;
-> +       };
-> +
-> +Datasheets and documentation can be found at:
-> +http://www.ti.com/lit/gpn/tlk106
-> +http://www.ti.com/lit/an/slla328/slla328.pdf
-> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> index bdfbabb..c980240 100644
-> --- a/drivers/net/phy/Kconfig
-> +++ b/drivers/net/phy/Kconfig
-> @@ -295,6 +295,11 @@ config DP83867_PHY
->         ---help---
->           Currently supports the DP83867 PHY.
->
-> +config TLK10X_PHY
-> +       tristate "Texas Instruments TLK10x PHY"
-> +       ---help---
-> +         Supports the TLK105 and TLK106 PHYs.
-> +
->  config FIXED_PHY
->         tristate "MDIO Bus/PHY emulation with fixed speed/link PHYs"
->         depends on PHYLIB
-> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> index 01acbcb..37e4e02 100644
-> --- a/drivers/net/phy/Makefile
-> +++ b/drivers/net/phy/Makefile
-> @@ -79,5 +79,6 @@ obj-$(CONFIG_ROCKCHIP_PHY)    +=3D rockchip.o
->  obj-$(CONFIG_SMSC_PHY)         +=3D smsc.o
->  obj-$(CONFIG_STE10XP)          +=3D ste10Xp.o
->  obj-$(CONFIG_TERANETICS_PHY)   +=3D teranetics.o
-> +obj-$(CONFIG_TLK10X_PHY)       +=3D tlk10x.o
->  obj-$(CONFIG_VITESSE_PHY)      +=3D vitesse.o
->  obj-$(CONFIG_XILINX_GMII2RGMII) +=3D xilinx_gmii2rgmii.o
-> diff --git a/drivers/net/phy/dp83848.c b/drivers/net/phy/dp83848.c
-> index cd09c3a..435f401 100644
-> --- a/drivers/net/phy/dp83848.c
-> +++ b/drivers/net/phy/dp83848.c
-> @@ -19,7 +19,6 @@
->  #define TI_DP83848C_PHY_ID             0x20005ca0
->  #define TI_DP83620_PHY_ID              0x20005ce0
->  #define NS_DP83848C_PHY_ID             0x20005c90
-> -#define TLK10X_PHY_ID                  0x2000a210
->
->  /* Registers */
->  #define DP83848_MICR                   0x11 /* MII Interrupt Control Reg=
-ister */
-> @@ -78,7 +77,6 @@ static struct mdio_device_id __maybe_unused dp83848_tbl=
-[] =3D {
->         { TI_DP83848C_PHY_ID, 0xfffffff0 },
->         { NS_DP83848C_PHY_ID, 0xfffffff0 },
->         { TI_DP83620_PHY_ID, 0xfffffff0 },
-> -       { TLK10X_PHY_ID, 0xfffffff0 },
->         { }
->  };
->  MODULE_DEVICE_TABLE(mdio, dp83848_tbl);
-> @@ -105,7 +103,6 @@ static struct phy_driver dp83848_driver[] =3D {
->         DP83848_PHY_DRIVER(TI_DP83848C_PHY_ID, "TI DP83848C 10/100 Mbps P=
-HY"),
->         DP83848_PHY_DRIVER(NS_DP83848C_PHY_ID, "NS DP83848C 10/100 Mbps P=
-HY"),
->         DP83848_PHY_DRIVER(TI_DP83620_PHY_ID, "TI DP83620 10/100 Mbps PHY=
-"),
-> -       DP83848_PHY_DRIVER(TLK10X_PHY_ID, "TI TLK10X 10/100 Mbps PHY"),
->  };
->  module_phy_driver(dp83848_driver);
->
-> diff --git a/drivers/net/phy/tlk10x.c b/drivers/net/phy/tlk10x.c
-> new file mode 100644
-> index 0000000..1efc81e
-> --- /dev/null
-> +++ b/drivers/net/phy/tlk10x.c
-> @@ -0,0 +1,209 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/**
-> + * Driver for the Texas Instruments TLK105 / TLK106
-> + *
-> + * Copyright (C) 2018 NIBE Industrier AB - http://www.nibe.com
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-
-Since you are using the SPDX id, please remove the license text (which
-is actually wrong: it seems you have cut the v2+ version and then
-removed the last sentence of the first paragraph? :-).
-
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/phy.h>
-> +#include <linux/of.h>
-> +
-> +#define TLK10X_PHY_ID                  0x2000a210
-> +
-> +/* Registers */
-> +#define TLK10X_MICR                    0x11 /* MII Interrupt Control Reg=
- */
-> +#define TLK10X_MISR                    0x12 /* MII Interrupt Status Reg =
-*/
-> +#define TLK10X_REGCR                   0x0d /* Register Control Register=
- */
-> +#define TLK10X_ADDAR                   0x0e /* Data Register */
-> +#define TLK10X_PWRBOCR                 0xae /* Power Backoff Register */
-> +
-> +/* MICR Register Fields */
-> +#define TLK10X_MICR_INT_OE             BIT(0) /* Interrupt Output Enable=
- */
-> +#define TLK10X_MICR_INTEN              BIT(1) /* Interrupt Enable */
-> +
-> +/* MISR Register Fields */
-> +#define TLK10X_MISR_RHF_INT_EN         BIT(0) /* Receive Error Counter *=
-/
-> +#define TLK10X_MISR_FHF_INT_EN         BIT(1) /* False Carrier Counter *=
-/
-> +#define TLK10X_MISR_ANC_INT_EN         BIT(2) /* Auto-negotiation comple=
-te */
-> +#define TLK10X_MISR_DUP_INT_EN         BIT(3) /* Duplex Status */
-> +#define TLK10X_MISR_SPD_INT_EN         BIT(4) /* Speed status */
-> +#define TLK10X_MISR_LINK_INT_EN                BIT(5) /* Link status */
-> +#define TLK10X_MISR_ED_INT_EN          BIT(6) /* Energy detect */
-> +#define TLK10X_MISR_LQM_INT_EN         BIT(7) /* Link Quality Monitor */
-> +
-> +/* PWRBOCR Register Fields */
-> +#define TLK10X_PWRBOCR_MASK            0xe0 /* Power Backoff Mask */
-> +
-> +#define TLK10X_INT_EN_MASK             \
-> +       (TLK10X_MISR_ANC_INT_EN |       \
-> +        TLK10X_MISR_DUP_INT_EN |       \
-> +        TLK10X_MISR_SPD_INT_EN |       \
-> +        TLK10X_MISR_LINK_INT_EN)
-> +
-> +struct tlk10x_private {
-> +       int pwrbo_level;
-> +};
-> +
-> +static int tlk10x_read(struct phy_device *phydev, int reg)
-> +{
-> +       if (reg & ~0x1f) {
-
-0x1f or ~0x1f should probably have a #define name.
-
-> +               /* Extended register */
-> +               phy_write(phydev, TLK10X_REGCR, 0x001F);
-> +               phy_write(phydev, TLK10X_ADDAR, reg);
-> +               phy_write(phydev, TLK10X_REGCR, 0x401F);
-> +               reg =3D TLK10X_ADDAR;
-> +       }
-> +
-> +       return phy_read(phydev, reg);
-> +}
-> +
-> +static int tlk10x_write(struct phy_device *phydev, int reg, int val)
-> +{
-> +       if (reg & ~0x1f) {
-
-Ditto.
-
-> +               /* Extended register */
-> +               phy_write(phydev, TLK10X_REGCR, 0x001F);
-> +               phy_write(phydev, TLK10X_ADDAR, reg);
-> +               phy_write(phydev, TLK10X_REGCR, 0x401F);
-> +               reg =3D TLK10X_ADDAR;
-> +       }
-> +
-> +       return phy_write(phydev, reg, val);
-> +}
-> +
-> +#ifdef CONFIG_OF_MDIO
-
-Maybe you want the #ifdef inside.
-
-> +static int tlk10x_of_init(struct phy_device *phydev)
-> +{
-> +       struct tlk10x_private *tlk10x =3D phydev->priv;
-> +       struct device *dev =3D &phydev->mdio.dev;
-> +       struct device_node *of_node =3D dev->of_node;
-> +       int ret;
-> +
-> +       if (!of_node)
-> +               return 0;
-> +
-> +       ret =3D of_property_read_u32(of_node, "ti,power-back-off",
-> +                                  &tlk10x->pwrbo_level);
-> +       if (ret) {
-> +               dev_err(dev, "missing ti,power-back-off property");
-> +               tlk10x->pwrbo_level =3D 0;
-> +       }
-> +
-> +       return 0;
-> +}
-> +#else
-> +static int tlk10x_of_init(struct phy_device *phydev)
-> +{
-> +       return 0;
-> +}
-> +#endif /* CONFIG_OF_MDIO */
-> +
-> +static int tlk10x_config_init(struct phy_device *phydev)
-> +{
-> +       int ret, reg;
-> +       struct tlk10x_private *tlk10x;
-> +
-> +       ret =3D genphy_config_init(phydev);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       if (!phydev->priv) {
-> +               tlk10x =3D devm_kzalloc(&phydev->mdio.dev, sizeof(*tlk10x=
-),
-> +                                     GFP_KERNEL);
-> +               if (!tlk10x)
-> +                       return -ENOMEM;
-> +
-> +               phydev->priv =3D tlk10x;
-> +               ret =3D tlk10x_of_init(phydev);
-> +               if (ret)
-> +                       return ret;
-> +       } else {
-> +               tlk10x =3D (struct tlk10x_private *)phydev->priv;
-> +       }
-> +
-> +       // Power back off
-> +       if (tlk10x->pwrbo_level < 0 || tlk10x->pwrbo_level > 3)
-> +               tlk10x->pwrbo_level =3D 0;
-> +       reg =3D tlk10x_read(phydev, TLK10X_PWRBOCR);
-> +       reg =3D ((reg & ~TLK10X_PWRBOCR_MASK)
-> +               | (tlk10x->pwrbo_level << 6));
-
-Maybe the 6 should have a name, or maybe a bigger macro for this would clar=
-ify.
-
-> +       ret =3D tlk10x_write(phydev, TLK10X_PWRBOCR, reg);
-> +       if (ret < 0) {
-> +               dev_err(&phydev->mdio.dev,
-> +                       "unable to set power back-off (err=3D%d)\n", ret)=
-;
-> +               return ret;
-> +       }
-> +       dev_info(&phydev->mdio.dev, "power back-off set to level %d\n",
-> +                tlk10x->pwrbo_level);
-> +
-> +       return 0;
-> +}
-> +
-> +static int tlk10x_ack_interrupt(struct phy_device *phydev)
-> +{
-> +       int err =3D tlk10x_read(phydev, TLK10X_MISR);
-
-Following the style of the rest of the file, shouldn't this be:
-
-    if (err < 0)
-        return err;
-
-    return 0;
-
-?
-
-> +
-> +       return err < 0 ? err : 0;
-> +}
-> +
-> +static int tlk10x_config_intr(struct phy_device *phydev)
-> +{
-> +       int control, ret;
-> +
-> +       control =3D tlk10x_read(phydev, TLK10X_MICR);
-> +       if (control < 0)
-> +               return control;
-> +
-> +       if (phydev->interrupts =3D=3D PHY_INTERRUPT_ENABLED) {
-> +               control |=3D TLK10X_MICR_INT_OE;
-> +               control |=3D TLK10X_MICR_INTEN;
-> +
-> +               ret =3D tlk10x_write(phydev, TLK10X_MISR, TLK10X_INT_EN_M=
-ASK);
-> +               if (ret < 0)
-> +                       return ret;
-> +       } else {
-> +               control &=3D ~TLK10X_MICR_INTEN;
-> +       }
-> +
-> +       return tlk10x_write(phydev, TLK10X_MICR, control);
-> +}
-> +
-> +static struct phy_driver tlk10x_driver[] =3D {
-> +       {
-> +               .phy_id         =3D TLK10X_PHY_ID,
-> +               .phy_id_mask    =3D 0xfffffff0,
-> +               .name           =3D "TI TLK10X 10/100 Mbps PHY",
-> +               .features       =3D PHY_BASIC_FEATURES,
-> +               .flags          =3D PHY_HAS_INTERRUPT,
-> +
-> +               .config_init    =3D tlk10x_config_init,
-> +               .soft_reset     =3D genphy_soft_reset,
-> +
-> +               /* IRQ related */
-> +               .ack_interrupt  =3D tlk10x_ack_interrupt,
-> +               .config_intr    =3D tlk10x_config_intr,
-> +
-> +               .suspend        =3D genphy_suspend,
-> +               .resume         =3D genphy_resume,
-> +       },
-> +};
-> +module_phy_driver(tlk10x_driver);
-> +
-> +static struct mdio_device_id __maybe_unused tlk10x_tbl[] =3D {
-> +       { TLK10X_PHY_ID, 0xfffffff0 },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(mdio, tlk10x_tbl);
-> +
-> +MODULE_DESCRIPTION("Texas Instruments TLK105 / TLK106 PHY driver");
-> +MODULE_AUTHOR("Mans Andersson <mans.andersson@nibe.se>");
-> +MODULE_LICENSE("GPL");
-
-Should be "GPL v2".
-
-Cheers,
-Miguel
+SGksCgpJbCAxOS8wNC8yMDE4IDExOjMyLCBDaGVuLVl1IFRzYWkgaGEgc2NyaXR0bzoKPiBUaGlz
+IHBhbmVsIGlzIG1hcmtldGVkIGFzIEJhbmFuYSBQaSA3IiBMQ0QgZGlzcGxheS4gT24gdGhlIGJh
+Y2sgaXMKPiBhIHN0aWNrZXIgZGVub3RpbmcgdGhlIG1vZGVsIG5hbWUgUzA3MFdWMjAtQ1QxNi4K
+Ckp1ZGdpbmcgZnJvbSB0aGUgY29kZSwgdGhlIHJlYWwgdmVuZG9yIHNob3VsZCBiZSBDRFRlY2gu
+ClRha2UgYSBsb29rIGF0IHRoZWlyIHdlYnNpdGU6Cmh0dHA6Ly93d3cuY2R0ZWNoLWxjZC5jb20v
+ZW4vc3RhbmRhcmRzY3JlZW4uaHRtbAoKSSBwb2ludCB5b3UgbXkgcGF0Y2ggZm9yIGluc2VydGlu
+ZyBhbm90aGVyIHNpbWlsYXIgcGFuZWw6Cmh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9y
+Zy9wYXRjaC8yMTE5MTQvCgpNYXliZSBpdCB3b3VsZCBtYWtlIHNlbnNlIHRvIHVzZSBDRFRlY2gg
+YXMgdGhlIHZlbmRvciwKYmVjYXVzZSBtYXliZSBCYW5hbmFwaSByZXNlbGxzIG9ubHkgaXQuCk9y
+IG1heWJlIGl0IGlzIGEgY3VzdG9tIHBhbmVsIGRvbmUgZm9yIHRoZW0sCmJ1dCB0aGUgc2FtZSBp
+cyBmb3Igb3RoZXIgcGFuZWxzIEkndmUgc3VibWl0dGVkIHBhdGNoZXMuCk1pY3Jvbm92YSBzcmwg
+Y3VzdG9tLCBidXQgdmVuZG9yIGlzIENEVGVjaC4KCldoYXQgZG8geW91IHRoaW5rPwoKLS0gCkdp
+dWxpbyBCZW5ldHRpCkNUTwoKTUlDUk9OT1ZBIFNSTApTZWRlOiBWaWEgQS4gTmllZGRhIDMgLSAz
+NTAxMCBWaWdvbnphIChQRCkKVGVsLiAwNDkvODkzMTU2MyAtIEZheCAwNDkvODkzMTM0NgpDb2Qu
+RmlzY2FsZSAtIFAuSVZBIDAyNjYzNDIwMjg1CkNhcGl0YWxlIFNvY2lhbGUg4oKsIDI2LjAwMCBp
+LnYuCklzY3JpdHRhIGFsIFJlZy4gSW1wcmVzZSBkaSBQYWRvdmEgTi4gMDI2NjM0MjAyODUKTnVt
+ZXJvIFIuRS5BLiAyNTg2NDIKCj4gCj4gVGhpcyBpcyBhIDciIDgwMHg0ODAgcGFuZWwgY29ubmVj
+dGVkIHRocm91Z2ggYSAyNC1iaXQgUkdCIGludGVyZmFjZS4KPiBIb3dldmVyIHRoZSBwYW5lbCBv
+bmx5IGRvZXMgMjYyayBjb2xvcnMuCj4gCj4gU2lnbmVkLW9mZi1ieTogQ2hlbi1ZdSBUc2FpIDx3
+ZW5zQGNzaWUub3JnPgo+IC0tLQo+ICAgLi4uL2Rpc3BsYXkvcGFuZWwvYmFuYW5hcGksczA3MHd2
+MjAtY3QxNi50eHQgIHwgIDcgKysrKysrCj4gICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwt
+c2ltcGxlLmMgICAgICAgICAgfCAyNSArKysrKysrKysrKysrKysrKysrCj4gICAyIGZpbGVzIGNo
+YW5nZWQsIDMyIGluc2VydGlvbnMoKykKPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9iYW5hbmFwaSxzMDcwd3YyMC1j
+dDE2LnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9wYW5lbC9iYW5hbmFwaSxzMDcwd3YyMC1jdDE2LnR4dCBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2JhbmFuYXBpLHMwNzB3djIwLWN0
+MTYudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjJlYzM1
+Y2UzNmU5YQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9wYW5lbC9iYW5hbmFwaSxzMDcwd3YyMC1jdDE2LnR4dAo+IEBAIC0w
+LDAgKzEsNyBAQAo+ICtCYW5hbmEgUGkgNyIgKFMwNzBXVjIwLUNUMTYpIFRGVCBMQ0QgUGFuZWwK
+PiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJi
+YW5hbmFwaSxzMDcwd3YyMC1jdDE2Igo+ICsKPiArVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUg
+d2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAo+ICtpbiBz
+aW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5Lgo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFu
+ZWwtc2ltcGxlLmMKPiBpbmRleCBjYmYxYWI0MDRlZTcuLjliYzAzN2Y3NGQ2YyAxMDA2NDQKPiAt
+LS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPiArKysgYi9kcml2ZXJz
+L2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPiBAQCAtNzQ1LDYgKzc0NSwyOCBAQCBzdGF0
+aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgYXZpY190bTA3MGRkaDAzID0gewo+ICAgCX0sCj4g
+ICB9Owo+ICAgCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBiYW5hbmFw
+aV9zMDcwd3YyMF9jdDE2X21vZGUgPSB7Cj4gKwkuY2xvY2sgPSAzMDAwMCwKPiArCS5oZGlzcGxh
+eSA9IDgwMCwKPiArCS5oc3luY19zdGFydCA9IDgwMCArIDQwLAo+ICsJLmhzeW5jX2VuZCA9IDgw
+MCArIDQwICsgNDgsCj4gKwkuaHRvdGFsID0gODAwICsgNDAgKyA0OCArIDQwLAo+ICsJLnZkaXNw
+bGF5ID0gNDgwLAo+ICsJLnZzeW5jX3N0YXJ0ID0gNDgwICsgMTMsCj4gKwkudnN5bmNfZW5kID0g
+NDgwICsgMTMgKyAzLAo+ICsJLnZ0b3RhbCA9IDQ4MCArIDEzICsgMyArIDI5LAo+ICt9Owo+ICsK
+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGJhbmFuYXBpX3MwNzB3djIwX2N0MTYg
+PSB7Cj4gKwkubW9kZXMgPSAmYmFuYW5hcGlfczA3MHd2MjBfY3QxNl9tb2RlLAo+ICsJLm51bV9t
+b2RlcyA9IDEsCj4gKwkuYnBjID0gNiwKPiArCS5zaXplID0gewo+ICsJCS53aWR0aCA9IDE1NCwK
+PiArCQkuaGVpZ2h0ID0gODYsCj4gKwl9LAo+ICt9Owo+ICsKPiAgIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgZHJtX2Rpc3BsYXlfbW9kZSBib2VfbnYxMDF3eG1uNTFfbW9kZXNbXSA9IHsKPiAgIAl7Cj4g
+ICAJCS5jbG9jayA9IDcxOTAwLAo+IEBAIC0yMTEyLDYgKzIxMzQsOSBAQCBzdGF0aWMgY29uc3Qg
+c3RydWN0IG9mX2RldmljZV9pZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0gewo+ICAgCX0sIHsKPiAg
+IAkJLmNvbXBhdGlibGUgPSAiYXZpYyx0bTA3MGRkaDAzIiwKPiAgIAkJLmRhdGEgPSAmYXZpY190
+bTA3MGRkaDAzLAo+ICsJfSwgewo+ICsJCS5jb21wYXRpYmxlID0gImJhbmFuYXBpLHMwNzB3djIw
+LWN0MTYiLAo+ICsJCS5kYXRhID0gJmJhbmFuYXBpX3MwNzB3djIwX2N0MTYsCj4gICAJfSwgewo+
+ICAgCQkuY29tcGF0aWJsZSA9ICJib2UsbnYxMDF3eG1uNTEiLAo+ICAgCQkuZGF0YSA9ICZib2Vf
+bnYxMDF3eG1uNTEsCj4gCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
