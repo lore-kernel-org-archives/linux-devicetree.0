@@ -1,14 +1,18 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v8 2/2] drm: bridge: Add thc63lvd1024 LVDS decoder driver
-Date: Thu, 19 Apr 2018 14:33:55 +0200
-Message-ID: <20180419123355.GB4235@w540>
-References: <1523357590-3841-1-git-send-email-jacopo+renesas@jmondi.org>
- <1523357590-3841-3-git-send-email-jacopo+renesas@jmondi.org>
- <241462f3-0396-c763-6fb4-aff8fc5d29bd@mentor.com>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [PATCH 1/2] dt-bindings/display/bridge: sii902x: add optional
+ power supplies
+Date: Thu, 19 Apr 2018 12:41:20 +0000
+Message-ID: <a10d41bc-c766-568b-a9cb-d1f0f03390a8@st.com>
+References: <20180410051927.8268-1-philippe.cornu@st.com>
+ <20599695.GSkeUvMnvx@avalon> <e709e4f7-2266-f99f-5864-5a8c037dbdc2@st.com>
+ <1733412.i2Wslp7VkI@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0181382873=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <241462f3-0396-c763-6fb4-aff8fc5d29bd@mentor.com>
+In-Reply-To: <1733412.i2Wslp7VkI@avalon>
+Content-Language: en-US
+Content-ID: <63B4169087856944A9896EBD4F7B6F5A@st.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -18,126 +22,62 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, dri-devel@lists.freedesktop.org, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, geert@linux-m68k.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Yannick FERTRE <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============0181382873==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
-Content-Disposition: inline
-
-
---3uo+9/B/ebqu+fSQ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Vladimir,
-
-On Thu, Apr 19, 2018 at 02:18:30PM +0300, Vladimir Zapolskiy wrote:
-> Hi Jacopo,
->
-> On 04/10/2018 01:53 PM, Jacopo Mondi wrote:
-> > Add DRM bridge driver for Thine THC63LVD1024 LVDS to digital parallel
-> > output converter.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-> > Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.=
-se>
->
-> Reviewed-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
->
-
-Thanks. FYI I sent v9 yesterday with a minimal change compared to v8.
-
-> Generally I have only one pretty ignorable comment.
->
-> > +
-> > +enum thc63_ports {
-> > +	THC63_LVDS_IN0,
-> > +	THC63_LVDS_IN1,
-> > +	THC63_RGB_OUT0,
-> > +	THC63_RGB_OUT1,
-> > +};
-> > +
->
-> The driver uses only THC63_RGB_OUT0 value, or port@2, and MODE{0,1,2} IC
-> configuration is ignored.
->
-> I don't know if right from the beginning it would be better to support
-> dual-out modes, preferably both single-in and dual-in ones. Will it
-> impact port enumeration?
-
-The bindings have been designed to support dual in/out modes, as you
-can see there are 4 possible ports described there:
-
-Required video port nodes:
-- port@0: First LVDS input port
-- port@2: First digital CMOS/TTL parallel output
-
-Optional video port nodes:
-- port@1: Second LVDS input port
-- port@3: Second digital CMOS/TTL parallel output
-
-Future extension should not require changing the port enumeration,
-just add a property to specify the selected mode.
-
->
-> I do understand that the extension is possible, and likely only hardware
-> accessibility postpones it.
-
-Yes, hardware on one side, but also what I think is a shortcoming of
-DRM (which exists in other sub-systems, say v4l2) that matches devices
-on their OF device nodes and makes cumbersome handling drivers wanting
-to register on 'port' nodes instead, as it would happen if you have 2
-input endpoints.
-
-See my [1] note here: https://lkml.org/lkml/2018/3/9/422
-And this reply to Archit's comment which has been left floating as it
-is not a real issue (yet): https://lkml.org/lkml/2018/3/10/214
-
-Thanks
-   j
-
->
-> --
-> With best wishes,
-> Vladimir
-
---3uo+9/B/ebqu+fSQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJa2IyzAAoJEHI0Bo8WoVY8zPUQAMKMTJb0ltO5D6MbN6eE+ybr
-pRJifFB6zTMJ1QYu/LrKgiMye9n4IcOBQSXf3To07HlPnAAMNUiNNvqF6lV7Wx9N
-Wm6Dgd8DRgbR7IJMvEg7HZQeawoGaxXuLmvtmcv++bTCIuoj5l0GwvHHagFuScNz
-yPaFcrRKoGznymL03EI1YSmZ/KDbieuZ1P3DYVxappYmk9mmTW0v8PJXsALTQgON
-H0Zv80Xs9pqGFQCAiL6H9hosBR4TKsoiqrMOoaMTnGPBRwhXJFBWsSfylXpe/1pQ
-zzDbFEa4FVY2L3vcKxkRLc7aGKnmHDNc32PevIiX/iPYDefUnzHLnookPiSmTiFS
-jiwW+3L//CKZaPuuOIjkWcqWCDjC7wH/MF9MoQNWahFE4CvOODEYaWZ6EwcoKKOY
-aXyr0Sf3E8vo+54IeoRIkwuO2tq8FdfnoKvGGhgCbeKXu3osF0a0XHM79DFri73P
-Siye0VyH+cMjD9EJ+/waQI2wInL0CDkRwapsfZB00XoKt3GP+ap30rssb9RiMwJz
-w3940WeCHjD35U4EgF7tjCyFKW5VDHICY3trn1HrqkdV7x6cQZvRwlkAzXaJSuXi
-vpcsX5T25LRx3BKblBuX6M9ksAKTAwzSUX0wpT/UyDXm5AfpfmwDfJqbGhhRLAzq
-uR40QogrduP0JTstz4mD
-=AYcB
------END PGP SIGNATURE-----
-
---3uo+9/B/ebqu+fSQ--
-
---===============0181382873==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0181382873==--
+SGkgTGF1cmVudCwNCg0KDQpPbiAwNC8xOS8yMDE4IDAxOjA5IFBNLCBMYXVyZW50IFBpbmNoYXJ0
+IHdyb3RlOg0KPiBIaSBQaGlsaXBwZSwNCj4gDQo+IE9uIFRodXJzZGF5LCAxOSBBcHJpbCAyMDE4
+IDEyOjMxOjE1IEVFU1QgUGhpbGlwcGUgQ09STlUgd3JvdGU6DQo+PiBPbiAwNC8xOS8yMDE4IDEw
+OjExIEFNLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOg0KPj4+IE9uIFR1ZXNkYXksIDEwIEFwcmls
+IDIwMTggMDg6MTk6MjYgRUVTVCBQaGlsaXBwZSBDb3JudSB3cm90ZToNCj4+Pg0KPj4+PiBBZGQg
+dGhlIDMgb3B0aW9uYWwgcG93ZXIgc3VwcGxpZXMgdXNpbmcgdGhlIGV4YWN0IGRlc2NyaXB0aW9u
+DQo+Pj4+IGZvdW5kIGluIHRoZSBkb2N1bWVudCBuYW1lZA0KPj4+PiAiU2lJOTAyMkEvU2lJOTAy
+NEEgSERNSSBUcmFuc21pdHRlciBEYXRhIFNoZWV0IChBdWd1c3QgMjAxNikiLg0KPj4+Pg0KPj4+
+PiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0K
+Pj4+PiAtLS0NCj4+Pj4NCj4+Pj4gICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0IHwgMyArKysNCj4+Pj4gICAgMSBmaWxlIGNoYW5n
+ZWQsIDMgaW5zZXJ0aW9ucygrKQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0DQo+Pj4+IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0DQo+
+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Np
+aTkwMngudHh0IGluZGV4DQo+Pj4+IDU2YTNlNjhjY2I4MC4uY2Y1MzY3OGZlNTc0IDEwMDY0NA0K
+Pj4+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlk
+Z2Uvc2lpOTAyeC50eHQNCj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0DQo+Pj4+IEBAIC04LDYgKzgsOSBAQCBPcHRp
+b25hbCBwcm9wZXJ0aWVzOg0KPj4+PiAgICAJLSBpbnRlcnJ1cHRzLWV4dGVuZGVkIG9yIGludGVy
+cnVwdC1wYXJlbnQgKyBpbnRlcnJ1cHRzOiBkZXNjcmliZQ0KPj4+PiAgICAJICB0aGUgaW50ZXJy
+dXB0IGxpbmUgdXNlZCB0byBpbmZvcm0gdGhlIGhvc3QgYWJvdXQgaG90cGx1ZyBldmVudHMuDQo+
+Pj4+ICAgIAktIHJlc2V0LWdwaW9zOiBPRiBkZXZpY2UtdHJlZSBncGlvIHNwZWNpZmljYXRpb24g
+Zm9yIFJTVF9OIHBpbi4NCj4+Pj4gKwktIGlvdmNjLXN1cHBseTogSS9PIHN1cHBseSB2b2x0YWdl
+ICgxLjhWIG9yIDMuM1YsIGhvc3QtZGVwZW5kZW50KS4NCj4+Pj4gKwktIGF2Y2MxMi1zdXBwbHk6
+IFRNRFMgYW5hbG9nIHN1cHBseSB2b2x0YWdlICgxLjJWKS4NCj4+Pj4gKwktIGN2Y2MxMi1zdXBw
+bHk6IERpZ2l0YWwgY29yZSBzdXBwbHkgdm9sdGFnZSAoMS4yVikuDQo+Pj4NCj4+PiBJdCBzZWVt
+cyB0aGF0IHRoZSBBVkNDMTIgYW5kIENWQ0MxMiBwb3dlciBzdXBwbGllcyBhcmUgdXN1YWxseSBk
+ZXJpdmVkDQo+Pj4gZnJvbSB0aGUgc2FtZSBzb3VyY2UuIEhvdyBhYm91dCBzdGFydGluZyB3aXRo
+IG9uZSBEVCBwcm9wZXJ0eSBmb3IgYm90aCwNCj4+PiBhbmQgYWRkaW5nIGEgc2Vjb25kIG9uZSBs
+YXRlciBpZiBuZWVkZWQgPw0KPj4NCj4+IFdlbGwsIEkgZG8gbm90IGtub3cgd2hhdCBpcyB0aGUg
+YmVzdC4gSGVyZSBJIHRvb2sgdGhlIGRlc2NyaXB0aW9uIGZyb20NCj4+IHRoZSBkb2N1bWVudGF0
+aW9uLCBhbmQgdG8gYWxsb3cgYWxsIHBvc3NpYmxlIGJvYXJkIGNvbmZpZ3VyYXRpb25zLCBJDQo+
+PiBhZGRlZCB0aGVzZSBzdXBwbGllcyBhcyAib3B0aW9uYWwiIHByb3BlcnRpZXM6IGlmIHRoZXJl
+IGlzIG9ubHkgb25lIDF2Mg0KPj4gcmVndWxhdG9yIG9uIHRoZSBib2FyZCwgdGhlIGR0IHdpbGwg
+Y29udGFpbiBvbmx5IGF2Y2MxMiBvciBjdmNjMTIgYW5kDQo+PiBldmVyeXRoaW5nIHdpbGwgd29y
+ayBmaW5lICh3ZSB3aWxsIGhhdmUgYSBkdW1teSByZWd1bGF0b3IgZm9yIHRoZQ0KPj4gbWlzc2lu
+ZyBvcHRpb25hbCAxdjIgcmVnKSwgaWYgYm90aCByZWd1bGF0b3JzIGFyZSB0aGVyZSBmb3IgYW55
+IHJlYXNvbnMNCj4+IChzdGFiaWxpdHksIG5vaXNlLCB3aGF0ZXZlci4uLikgdGhlbiBib3RoIGVu
+dHJpZXMgd2lsbCBiZSBpbiB0aGUgZHQuDQo+Pg0KPj4gSWYgeW91IGNvbmZpcm0geW91IHByZWZl
+ciBhIHNpbmdsZSAxdjIgc3VwcGx5IChuYW1lZCBmb3IgaW5zdGFuY2UNCj4+ICJ2Y2MxMi1zdXBw
+bHkiKSB0aGVuIEkgd2lsbCBkbyA6LSkNCj4gDQo+IFBsZWFzZSBzZWUgaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTgtQXByaWwvDQo+IDE3MjQwMC5o
+dG1sIChhbmQgdGhlIG1lc3NhZ2VzIHRoYXQgbGVhZCB0byBpdCkgYW5kIGh0dHBzOi8vDQo+IGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxOC1NYXJjaC8xNzA3NjMu
+aHRtbC4NCj4gDQoNClRoYW5rcyBmb3IgdGhpcyBkaXNjdXNzaW9uIHRocmVhZC4NCg0KT24gbXkg
+c2lkZSwgSSBmb3VuZCAiQ1ZDQzEyIGFuZCBBVkNDMTIgY2FuIGJlIGRlcml2ZWQgZnJvbSB0aGUg
+c2FtZSANCnBvd2VyIHNvdXJjZSIgd3JpdHRlbiB3aXRoIGEgc21hbGwgZm9udCAoYXVndXN0IDIw
+MTYgZGF0YXNoZWV0IHAxMykgc28gDQp0aGVuIHlvdXIgYWR2aWNlIGlzIGNsZWFybHkgd2hhdCB3
+ZSBoYXZlIHRvIGRvIDotKQ0KSSB3aWxsIGFkZCB0aGlzIGluZm8gaW4gdjIgdG9vLg0KVGhhbmsg
+eW91LA0KUGhpbGlwcGUgOi0pDQoNCj4+Pj4gICAgT3B0aW9uYWwgc3Vibm9kZXM6DQo+Pj4+ICAg
+IAktIHZpZGVvIGlucHV0OiB0aGlzIHN1Ym5vZGUgY2FuIGNvbnRhaW4gYSB2aWRlbyBpbnB1dCBw
+b3J0IG5vZGUNCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
