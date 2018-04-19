@@ -1,50 +1,39 @@
-From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [[RFC]DPU PATCH 4/4] dt-bindings: drm/panel: Document
- Innolux TV123WAM panel bindings
-Date: Thu, 19 Apr 2018 23:26:08 +0530
-Message-ID: <1524160568-27583-5-git-send-email-spanda@codeaurora.org>
-References: <1524160568-27583-1-git-send-email-spanda@codeaurora.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2] ARM64: dts: meson-axg: enable the eMMC controller
+Date: Thu, 19 Apr 2018 10:58:52 -0700
+Message-ID: <7ho9if3wo3.fsf@baylibre.com>
+References: <20180408113647.13543-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1524160568-27583-1-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180408113647.13543-1-yixun.lan@amlogic.com> (Yixun Lan's
+        message of "Sun, 8 Apr 2018 11:36:47 +0000")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: Nan Li <nan.li@amlogic.com>, Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh@kernel.org>, linux-mmc@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIElubm9sdXggVFYxMjNXQU0gaXMgYSAxMi4zIiBlRFAgZGlzcGxheSBwYW5lbAp3aXRoIDIx
-NjB4MTQ0MCByZXNvbHV0aW9uLgoKU2lnbmVkLW9mZi1ieTogU2FuZGVlcCBQYW5kYSA8c3BhbmRh
-QGNvZGVhdXJvcmEub3JnPgotLS0KIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgs
-ZWRwLTJrLXBhbmVsLnR4dCB8IDIxICsrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5n
-ZWQsIDIxIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGVkcC0yay1wYW5lbC50eHQK
-CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
-YW5lbC9pbm5vbHV4LGVkcC0yay1wYW5lbC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGVkcC0yay1wYW5lbC50eHQKbmV3IGZpbGUg
-bW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uMTlmMjcxYwotLS0gL2Rldi9udWxsCisrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsZWRw
-LTJrLXBhbmVsLnR4dApAQCAtMCwwICsxLDIxIEBACitJbm5vbHV4IFRWMTIzV0FNIDEyLjMgaW5j
-aCBlRFAgZGlzcGxheSBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBwb3dlci1zdXBw
-bHk6IHJlZ3VsYXRvciB0byBwcm92aWRlIHRoZSBzdXBwbHkgdm9sdGFnZQorLSBlbmFibGUtZ3Bp
-b3M6IEdQSU8gcGluIHRvIGVuYWJsZSBvciBkaXNhYmxlIHRoZSBwYW5lbAorCitPcHRpb25hbCBw
-cm9wZXJ0aWVzOgorLSBiYWNrbGlnaHQ6IHBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2Ug
-YXR0YWNoZWQgdG8gdGhlIHBhbmVsCisKK0V4YW1wbGU6CisKKwllZHBfcGFuZWw6IGVkcF9wYW5l
-bCB7CisJCWNvbXBhdGlibGUgPSAiaW5ub2x1eCwgZWRwXzJrX3BhbmVsIjsKKwkJcmVnID0gPDA+
-OworCisJCWVuYWJsZS1ncGlvcyA9IDwmbXNtZ3BpbyAzMiBHUElPX0FDVElWRV9ISUdIPjsKKwor
-CQlwb3dlci1zdXBwbHkgPSA8JnBtODkxNl9sOD47CisKKwkJYmFja2xpZ2h0ID0gPCZiYWNrbGln
-aHQ+OworCX07Ci0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBt
-ZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFi
-b3JhdGl2ZSBQcm9qZWN0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVl
-ZHJlbm8K
+Yixun Lan <yixun.lan@amlogic.com> writes:
+
+> From: Nan Li <nan.li@amlogic.com>
+>
+> The IP of eMMC controller in AXG is similiar to Meson-GX series.
+> Here we add the initial support of the HS200 mode with
+> clock running at 166MHz (to be safe), since we found some eMMC chip
+> fail to run at 200MHz due to tunning phase error.
+>
+> Signed-off-by: Nan Li <nan.li@amlogic.com>
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+
+Applied to v4.18/dt64
+
+> ---
+> Hi Kevin
+>   Please note this patch actually depend on the eMMC driver here [0].
+>   Still a few problem to solve, to improve the tuning phase driver to make
+> the clock running at 200MHz, and to further support the HS400 mode.
+> Anyway, this patch itself is quite independent.
+
+The driver changes are queued for v4.18 also.  Good!
+
+Kevin
