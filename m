@@ -1,131 +1,117 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 6/6] [DO NOT MERGE] ARM: dts: sun7i: bananapi-m1-plus: Enable Bananapi 7" 800x480 RGB LCD panel
-Date: Thu, 19 Apr 2018 17:32:25 +0800
-Message-ID: <20180419093225.614-7-wens@csie.org>
-References: <20180419093225.614-1-wens@csie.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH 6/8] drm: rcar-du: rcar-lvds: Add bridge format support
+Date: Thu, 19 Apr 2018 11:31:07 +0200
+Message-ID: <1524130269-32688-7-git-send-email-jacopo+renesas@jmondi.org>
+References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419093225.614-1-wens@csie.org>
+In-Reply-To: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Liu <net147@gmail.com>
+To: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, daniel@ffwll.ch, peda@axentia.se, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The BPI-M1+ has an FPC connector for connecting an RGB (parallel) or
-LVDS LCD panel. One of the compatible panels is a 7" 800x480 RGB panel
-from Bananapi. The backlight can be controlled by driving a PWM signal
-from the SoC at different duty cycles. The LCD enable pin does not seem
-to do anything, but it is nevertheless included for completeness. There
-is also a FT5306 capacitive touchscreen controller.
+With the introduction of static input image format enumeration in DRM
+bridges, add support to retrieve the format in rcar-lvds LVDS encoder
+from both panel or bridge, to set the desired LVDS mode.
 
-This should not be confused with the other 7" LCD that is LVDS based
-and has a resolution of 1024x600.
+Do not rely on 'DRM_BUS_FLAG_DATA_LSB_TO_MSB' flag to mirror the LVDS
+format, as it is only defined for drm connectors, but use the newly
+introduced _LE version of LVDS mbus image formats.
 
-This patch enables all of the above for the BPI-M1+.
-
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
- .../boot/dts/sun7i-a20-bananapi-m1-plus.dts   | 61 +++++++++++++++++++
- 1 file changed, 61 insertions(+)
+ drivers/gpu/drm/rcar-du/rcar_lvds.c | 64 +++++++++++++++++++++++++------------
+ 1 file changed, 44 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-index 763cb03033c4..58a923bfa6ef 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-@@ -47,6 +47,7 @@
- #include "sunxi-common-regulators.dtsi"
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/pwm/pwm.h>
+diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+index 3d2d3bb..2fa875f 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
++++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+@@ -280,41 +280,65 @@ static bool rcar_lvds_mode_fixup(struct drm_bridge *bridge,
+ 	return true;
+ }
  
- / {
- 	model = "Banana Pi BPI-M1-Plus";
-@@ -71,6 +72,34 @@
- 		};
- 	};
+-static void rcar_lvds_get_lvds_mode(struct rcar_lvds *lvds)
++static int rcar_lvds_get_lvds_mode_from_connector(struct rcar_lvds *lvds,
++						  unsigned int *bus_fmt)
+ {
+ 	struct drm_display_info *info = &lvds->connector.display_info;
+-	enum rcar_lvds_mode mode;
+-
+-	/*
+-	 * There is no API yet to retrieve LVDS mode from a bridge, only panels
+-	 * are supported.
+-	 */
+-	if (!lvds->panel)
+-		return;
  
-+	lcd_backlight: lcd-backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 20000 PWM_POLARITY_INVERTED>; /* 50 kHz */
-+		enable-gpios = <&pio 7 9 GPIO_ACTIVE_HIGH>; /* PH9 */
-+		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
-+		default-brightness-level = <8>;
-+	};
+ 	if (!info->num_bus_formats || !info->bus_formats) {
+ 		dev_err(lvds->dev, "no LVDS bus format reported\n");
+-		return;
++		return -EINVAL;
++	}
 +
-+	lcd_panel: lcd-panel {
-+		compatible = "bananapi,s070wv20-ct16", "simple-panel";
-+		/* This doesn't do anything for this particular panel */
-+		enable-gpios = <&pio 7 12 GPIO_ACTIVE_HIGH>; /* PH12 */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++	*bus_fmt = info->bus_formats[0];
 +
-+		port@0 {
-+			reg = <0>;
-+			backlight = <&lcd_backlight>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++	return 0;
++}
 +
-+			lcd_panel_input: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&tcon0_out_lcd>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -173,6 +202,20 @@
- 	status = "okay";
- };
++static int rcar_lvds_get_lvds_mode_from_bridge(struct rcar_lvds *lvds,
++					       unsigned int *bus_fmt)
++{
++	if (!lvds->next_bridge->num_bus_formats ||
++	    !lvds->next_bridge->bus_formats) {
++		dev_err(lvds->dev, "no LVDS bus format reported\n");
++		return -EINVAL;
+ 	}
  
-+&i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c3_pins_a>;
-+	status = "okay";
+-	switch (info->bus_formats[0]) {
++	*bus_fmt = lvds->next_bridge->bus_formats[0];
 +
-+	touchscreen@38 {
-+		compatible = "edt,edt-ft5306", "edt,edt-ft5x06";
-+		reg = <0x38>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 7 IRQ_TYPE_EDGE_FALLING>; /* PH7 */
-+		reset-gpios = <&pio 7 8 GPIO_ACTIVE_LOW>; /* PH8 */
-+	};
-+};
++	return 0;
++}
 +
- &ir0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ir0_rx_pins_a>;
-@@ -249,6 +292,12 @@
- 	};
- };
++static void rcar_lvds_get_lvds_mode(struct rcar_lvds *lvds)
++{
++	unsigned int bus_fmt;
++	int ret;
++
++	if (lvds->panel)
++		ret = rcar_lvds_get_lvds_mode_from_connector(lvds, &bus_fmt);
++	else
++		ret = rcar_lvds_get_lvds_mode_from_bridge(lvds, &bus_fmt);
++	if (ret)
++		return;
++
++	switch (bus_fmt) {
++	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG_LE:
++	case MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA_LE:
++		lvds->mode |= RCAR_LVDS_MODE_MIRROR;
+ 	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG:
+ 	case MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA:
+-		mode = RCAR_LVDS_MODE_JEIDA;
++		lvds->mode = RCAR_LVDS_MODE_JEIDA;
+ 		break;
++
++	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG_LE:
++		lvds->mode |= RCAR_LVDS_MODE_MIRROR;
+ 	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG:
+-		mode = RCAR_LVDS_MODE_VESA;
++		lvds->mode = RCAR_LVDS_MODE_VESA;
+ 		break;
+ 	default:
+ 		dev_err(lvds->dev, "unsupported LVDS bus format 0x%04x\n",
+-			info->bus_formats[0]);
+-		return;
++			bus_fmt);
+ 	}
+-
+-	if (info->bus_flags & DRM_BUS_FLAG_DATA_LSB_TO_MSB)
+-		mode |= RCAR_LVDS_MODE_MIRROR;
+-
+-	lvds->mode = mode;
+ }
  
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_pins_a>;
-+	status = "okay";
-+};
-+
- &reg_dcdc2 {
- 	regulator-always-on;
- 	regulator-min-microvolt = <1000000>;
-@@ -278,6 +327,18 @@
- 	status = "okay";
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd0_rgb888_pins>;
-+};
-+
-+&tcon0_out {
-+	tcon0_out_lcd: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&lcd_panel_input>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
+ static void rcar_lvds_mode_set(struct drm_bridge *bridge,
 -- 
-2.17.0
+2.7.4
