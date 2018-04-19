@@ -1,46 +1,66 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 2/8] dt-bindings: display: bridge: thc63lvd1024: Add lvds map property
-Date: Thu, 19 Apr 2018 11:31:03 +0200
-Message-ID: <1524130269-32688-3-git-send-email-jacopo+renesas@jmondi.org>
-References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, daniel@ffwll.ch, peda@axentia.se, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH v8 1/2] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Thu, 19 Apr 2018 12:44:32 +0300
+Message-ID: <29caaf6f-1783-9b01-5304-8748398d41c6@mentor.com>
+References: <1523357590-3841-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1523357590-3841-2-git-send-email-jacopo+renesas@jmondi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1523357590-3841-2-git-send-email-jacopo+renesas@jmondi.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-The THC63LVD1024 LVDS to RGB bridge supports two different input mapping
-modes, selectable by means of an external pin.
-
-Describe the LVDS mode map through a newly defined mandatory property in
-device tree bindings.
-
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- .../devicetree/bindings/display/bridge/thine,thc63lvd1024.txt          | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
-index 37f0c04..0937595 100644
---- a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
-+++ b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
-@@ -12,6 +12,8 @@ Required properties:
- - compatible: Shall be "thine,thc63lvd1024"
- - vcc-supply: Power supply for TTL output, TTL CLOCKOUT signal, LVDS input,
-   PPL and digital circuitry
-+- thine,map: LVDS mapping mode selection signal, pin name "MAP". Shall be <1>
-+  for mapping mode 1, <0> for mapping mode 2
- 
- Optional properties:
- - powerdown-gpios: Power down GPIO signal, pin name "/PDWN". Active low
-@@ -36,6 +38,7 @@ Example:
- 
- 		vcc-supply = <&reg_lvds_vcc>;
- 		powerdown-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
-+		thine,map = <1>;
- 
- 		ports {
- 			#address-cells = <1>;
--- 
-2.7.4
+SGkgSmFjb3BvLCBMYXVyZW50LAoKT24gMDQvMTAvMjAxOCAwMTo1MyBQTSwgSmFjb3BvIE1vbmRp
+IHdyb3RlOgo+IERvY3VtZW50IFRoaW5lIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIgZGV2aWNl
+IHRyZWUgYmluZGluZ3MuCj4gCj4gU2lnbmVkLW9mZi1ieTogSmFjb3BvIE1vbmRpIDxqYWNvcG8r
+cmVuZXNhc0BqbW9uZGkub3JnPgo+IFJldmlld2VkLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRh
+QHNhbXN1bmcuY29tPgo+IFJldmlld2VkLWJ5OiBOaWtsYXMgU8O2ZGVybHVuZCA8bmlrbGFzLnNv
+ZGVybHVuZCtyZW5lc2FzQHJhZ25hdGVjaC5zZT4KPiBSZXZpZXdlZC1ieTogTGF1cmVudCBQaW5j
+aGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgoKUmV2aWV3ZWQtYnk6IFZs
+YWRpbWlyIFphcG9sc2tpeSA8dmxhZGltaXJfemFwb2xza2l5QG1lbnRvci5jb20+Cgo+IC0tLQo+
+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dCB8IDYw
+ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDYwIGluc2VydGlvbnMo
+KykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4gCj4gZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0
+aGM2M2x2ZDEwMjQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+
+IGluZGV4IDAwMDAwMDAuLjBiMjNlNzAKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAy
+NC50eHQKPiBAQCAtMCwwICsxLDYwIEBACj4gK1RoaW5lIEVsZWN0cm9uaWNzIFRIQzYzTFZEMTAy
+NCBMVkRTIGRlY29kZXIKPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLQo+ICsKPiArVGhlIFRIQzYzTFZEMTAyNCBpcyBhIGR1YWwgbGluayBMVkRTIHJlY2VpdmVy
+IGRlc2lnbmVkIHRvIGNvbnZlcnQgTFZEUyBzdHJlYW1zCj4gK3RvIHBhcmFsbGVsIGRhdGEgb3V0
+cHV0cy4gVGhlIGNoaXAgc3VwcG9ydHMgc2luZ2xlL2R1YWwgaW5wdXQvb3V0cHV0IG1vZGVzLAo+
+ICtoYW5kbGluZyB1cCB0byB0d28gTFZEUyBpbnB1dCBzdHJlYW1zIGFuZCB1cCB0byB0d28gZGln
+aXRhbCBDTU9TL1RUTCBvdXRwdXRzLgo+ICsKPiArU2luZ2xlIG9yIGR1YWwgb3BlcmF0aW9uIG1v
+ZGUsIG91dHB1dCBkYXRhIG1hcHBpbmcgYW5kIEREUiBvdXRwdXQgbW9kZXMgYXJlCj4gK2NvbmZp
+Z3VyZWQgdGhyb3VnaCBpbnB1dCBzaWduYWxzIGFuZCB0aGUgY2hpcCBkb2VzIG5vdCBleHBvc2Ug
+YW55IGNvbnRyb2wgYnVzLgo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSBjb21wYXRp
+YmxlOiBTaGFsbCBiZSAidGhpbmUsdGhjNjNsdmQxMDI0Igo+ICstIHZjYy1zdXBwbHk6IFBvd2Vy
+IHN1cHBseSBmb3IgVFRMIG91dHB1dCwgVFRMIENMT0NLT1VUIHNpZ25hbCwgTFZEUyBpbnB1dCwK
+PiArICBQUEwgYW5kIGRpZ2l0YWwgY2lyY3VpdHJ5Cj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVz
+Ogo+ICstIHBvd2VyZG93bi1ncGlvczogUG93ZXIgZG93biBHUElPIHNpZ25hbCwgcGluIG5hbWUg
+Ii9QRFdOIi4gQWN0aXZlIGxvdwoKVGhhbmsgeW91IGZvciB0aGUgY2hhbmdlLgoKSSB3b3VsZCBz
+dWdnZXN0IHRvIHJlbmFtZSAncHdkbi1ncGlvcycgcHJvcGVydHkgb2YgVEhDNjNMVkRNODNEIGFz
+IHdlbGwsCmFzIGZhciBhcyBJIHVuZGVyc3RhbmQgaXQgaXMgb25seSBkZXNjcmliZWQgaW4gRFQg
+YmluZGluZ3MgZG9jdW1lbnRhdGlvbiwKYW5kIHRoZSBwcm9wZXJ0eSBpcyB1bnVzZWQgaW4gdGhl
+IGRyaXZlciBvciBib2FyZCBEVFMgZmlsZXMgYXQgdGhlIG1vbWVudC4KCj4gKy0gb2UtZ3Bpb3M6
+IE91dHB1dCBlbmFibGUgR1BJTyBzaWduYWwsIHBpbiBuYW1lICJPRSIuIEFjdGl2ZSBoaWdoCgpP
+a2F5IDopCgotLQpXaXRoIGJlc3Qgd2lzaGVzLApWbGFkaW1pcgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
