@@ -1,8 +1,8 @@
 From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 09/10] ARM: dts: sun7i-a20: Add Video Engine
- and reserved memory nodes
-Date: Thu, 19 Apr 2018 17:45:35 +0200
-Message-ID: <20180419154536.17846-5-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v2 08/10] dt-bindings: media: Document bindings
+ for the Sunxi-Cedrus VPU driver
+Date: Thu, 19 Apr 2018 17:45:34 +0200
+Message-ID: <20180419154536.17846-4-paul.kocialkowski@bootlin.com>
 References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
 Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
@@ -20,67 +20,70 @@ To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY7
 Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds nodes for the Video Engine and the associated reserved memory
-for the Allwinner A20. Up to 96 MiB of memory are dedicated to the VPU.
-
-The VPU can only map the first 256 MiB of DRAM, so the reserved memory
-pool has to be located in that area. Following Allwinner's decision in
-downstream software, the last 96 MiB of the first 256 MiB of RAM are
-reserved for this purpose.
+This adds a device-tree binding document that specifies the properties
+used by the Sunxi-Cedurs VPU driver, as well as examples.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/sun7i-a20.dtsi | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ .../devicetree/bindings/media/sunxi-cedrus.txt     | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/sunxi-cedrus.txt
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index bd0cd3204273..cb6d82065dcf 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -163,6 +163,20 @@
- 		reg = <0x40000000 0x80000000>;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
+diff --git a/Documentation/devicetree/bindings/media/sunxi-cedrus.txt b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+new file mode 100644
+index 000000000000..71ad3f9c3352
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+@@ -0,0 +1,50 @@
++Device-tree bindings for the VPU found in Allwinner SoCs, referred to as the
++Video Engine (VE) in Allwinner literature.
 +
-+		/* Address must be kept in the lower 256 MiBs of DRAM for VE. */
-+		ve_memory: cma@4a000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x4a000000 0x6000000>;
-+			no-map;
-+			linux,cma-default;
-+		};
++The VPU can only access the first 256 MiB of DRAM, that are DMA-mapped starting
++from the DRAM base. This requires specific memory allocation and handling.
++
++Required properties:
++- compatible	        : "allwinner,sun4i-a10-video-engine";
++- memory-region         : DMA pool for buffers allocation;
++- clocks	        : list of clock specifiers, corresponding to entries in
++                          the clock-names property;
++- clock-names	        : should contain "ahb", "mod" and "ram" entries;
++- assigned-clocks       : list of clocks assigned to the VE;
++- assigned-clocks-rates : list of clock rates for the clocks assigned to the VE;
++- resets	        : phandle for reset;
++- interrupts	        : should contain VE interrupt number;
++- reg		        : should contain register base and length of VE.
++
++Example:
++
++reserved-memory {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges;
++
++	/* Address must be kept in the lower 256 MiBs of DRAM for VE. */
++	ve_memory: cma@4a000000 {
++		compatible = "shared-dma-pool";
++		reg = <0x4a000000 0x6000000>;
++		no-map;
++		linux,cma-default;
 +	};
++};
 +
- 	timer {
- 		compatible = "arm,armv7-timer";
- 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-@@ -451,6 +465,23 @@
- 			};
- 		};
- 
-+		ve: video-engine@1c0e000 {
-+			compatible = "allwinner,sun4i-a10-video-engine";
-+			reg = <0x01c0e000 0x1000>;
-+			memory-region = <&ve_memory>;
++video-engine@1c0e000 {
++	compatible = "allwinner,sun4i-a10-video-engine";
++	reg = <0x01c0e000 0x1000>;
++	memory-region = <&ve_memory>;
 +
-+			clocks = <&ccu CLK_AHB_VE>, <&ccu CLK_VE>,
-+				 <&ccu CLK_DRAM_VE>;
-+			clock-names = "ahb", "mod", "ram";
++	clocks = <&ccu CLK_AHB_VE>, <&ccu CLK_VE>,
++		 <&ccu CLK_DRAM_VE>;
++	clock-names = "ahb", "mod", "ram";
 +
-+			assigned-clocks = <&ccu CLK_VE>;
-+			assigned-clock-rates = <320000000>;
++	assigned-clocks = <&ccu CLK_VE>;
++	assigned-clock-rates = <320000000>;
 +
-+			resets = <&ccu RST_VE>;
++	resets = <&ccu RST_VE>;
 +
-+			interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 		mmc0: mmc@1c0f000 {
- 			compatible = "allwinner,sun7i-a20-mmc";
- 			reg = <0x01c0f000 0x1000>;
++	interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
++};
 -- 
 2.16.3
