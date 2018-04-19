@@ -1,61 +1,89 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2 3/6] drm: of: introduce drm_of_media_bus_fmt
-Date: Thu, 19 Apr 2018 18:40:01 +0200
-Message-ID: <3181dfde-cd19-41a1-6e6d-5be7a9e40674@axentia.se>
-References: <20180417131052.16336-1-peda@axentia.se>
- <20180417131052.16336-4-peda@axentia.se>
- <CAL_JsqL1=fzTb5dUgrj07Jv3r026ndsU2o=Nr2eft-bni5jueQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Phil Elwell <phil@raspberrypi.org>
+Subject: [PATCH v4 1/3] lan78xx: Read MAC address from DT if present
+Date: Thu, 19 Apr 2018 17:59:38 +0100
+Message-ID: <1524157180-27276-2-git-send-email-phil@raspberrypi.org>
+References: <1524157180-27276-1-git-send-email-phil@raspberrypi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL1=fzTb5dUgrj07Jv3r026ndsU2o=Nr2eft-bni5jueQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1524157180-27276-1-git-send-email-phil@raspberrypi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Phil Elwell <phil@raspberrypi.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-19 18:22, Rob Herring wrote:
-> On Tue, Apr 17, 2018 at 8:10 AM, Peter Rosin <peda@axentia.se> wrote:
->> Add a central function to parse a node according to the video
->> interface binding and get a media bus format.
->>
->> Start with only supporting a very limited set of a few basic media
->> bus formats.
->>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
->> ---
->>  drivers/gpu/drm/drm_of.c | 38 ++++++++++++++++++++++++++++++++++++++
->>  include/drm/drm_of.h     |  7 +++++++
->>  2 files changed, 45 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
->> index 4c191c050e7d..f9473edb60a7 100644
->> --- a/drivers/gpu/drm/drm_of.c
->> +++ b/drivers/gpu/drm/drm_of.c
->> @@ -212,6 +212,44 @@ int drm_of_encoder_active_endpoint(struct device_node *node,
->>  EXPORT_SYMBOL_GPL(drm_of_encoder_active_endpoint);
->>
->>  /*
->> + * drm_of_media_bus_fmt - return the media bus format described in the node
->> + * @node: device tree node containing the media bus format
->> + *
->> + * @node is presumably an of-graph endpoint node.
->> + *
->> + * Return the media bus format, or zero if none is described. Or one of the
->> + * standard error codes.
->> + */
->> +int drm_of_media_bus_fmt(struct device_node *node)
-> 
-> Should use endpoint or ep here instead of node to be clear what node
-> this function operates on.
+There is a standard mechanism for locating and using a MAC address from
+the Device Tree. Use this facility in the lan78xx driver to support
+applications without programmed EEPROM or OTP. At the same time,
+regularise the handling of the different address sources.
 
-I just sent v3 and missed this. Anyway, the reason I didn't use ep,
-was that you at one point said "port of endpoint", and I wanted this
-function to cover both cases. And maybe others. Anyway, if I hear
-nothing I'll make the change to ep and I'll also reword the comment
-to talk more decisively about endpoints for v4.
+Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+---
+ drivers/net/usb/lan78xx.c | 42 ++++++++++++++++++++----------------------
+ 1 file changed, 20 insertions(+), 22 deletions(-)
 
-Cheers,
-Peter
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index 0867f72..a823f01 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -37,6 +37,7 @@
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/microchipphy.h>
+ #include <linux/phy.h>
++#include <linux/of_net.h>
+ #include "lan78xx.h"
+ 
+ #define DRIVER_AUTHOR	"WOOJUNG HUH <woojung.huh@microchip.com>"
+@@ -1652,34 +1653,31 @@ static void lan78xx_init_mac_address(struct lan78xx_net *dev)
+ 	addr[5] = (addr_hi >> 8) & 0xFF;
+ 
+ 	if (!is_valid_ether_addr(addr)) {
+-		/* reading mac address from EEPROM or OTP */
+-		if ((lan78xx_read_eeprom(dev, EEPROM_MAC_OFFSET, ETH_ALEN,
+-					 addr) == 0) ||
+-		    (lan78xx_read_otp(dev, EEPROM_MAC_OFFSET, ETH_ALEN,
+-				      addr) == 0)) {
+-			if (is_valid_ether_addr(addr)) {
+-				/* eeprom values are valid so use them */
+-				netif_dbg(dev, ifup, dev->net,
+-					  "MAC address read from EEPROM");
+-			} else {
+-				/* generate random MAC */
+-				random_ether_addr(addr);
+-				netif_dbg(dev, ifup, dev->net,
+-					  "MAC address set to random addr");
+-			}
+-
+-			addr_lo = addr[0] | (addr[1] << 8) |
+-				  (addr[2] << 16) | (addr[3] << 24);
+-			addr_hi = addr[4] | (addr[5] << 8);
+-
+-			ret = lan78xx_write_reg(dev, RX_ADDRL, addr_lo);
+-			ret = lan78xx_write_reg(dev, RX_ADDRH, addr_hi);
++		if (!eth_platform_get_mac_address(&dev->udev->dev, addr)) {
++			/* valid address present in Device Tree */
++			netif_dbg(dev, ifup, dev->net,
++				  "MAC address read from Device Tree");
++		} else if (((lan78xx_read_eeprom(dev, EEPROM_MAC_OFFSET,
++						 ETH_ALEN, addr) == 0) ||
++			    (lan78xx_read_otp(dev, EEPROM_MAC_OFFSET,
++					      ETH_ALEN, addr) == 0)) &&
++			   is_valid_ether_addr(addr)) {
++			/* eeprom values are valid so use them */
++			netif_dbg(dev, ifup, dev->net,
++				  "MAC address read from EEPROM");
+ 		} else {
+ 			/* generate random MAC */
+ 			random_ether_addr(addr);
+ 			netif_dbg(dev, ifup, dev->net,
+ 				  "MAC address set to random addr");
+ 		}
++
++		addr_lo = addr[0] | (addr[1] << 8) |
++			  (addr[2] << 16) | (addr[3] << 24);
++		addr_hi = addr[4] | (addr[5] << 8);
++
++		ret = lan78xx_write_reg(dev, RX_ADDRL, addr_lo);
++		ret = lan78xx_write_reg(dev, RX_ADDRH, addr_hi);
+ 	}
+ 
+ 	ret = lan78xx_write_reg(dev, MAF_LO(0), addr_lo);
+-- 
+2.7.4
