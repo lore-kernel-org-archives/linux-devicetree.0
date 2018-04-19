@@ -1,70 +1,252 @@
-From: Philippe CORNU <philippe.cornu@st.com>
-Subject: Re: [PATCH 1/2] dt-bindings/display/bridge: sii902x: add optional
- power supplies
-Date: Thu, 19 Apr 2018 09:31:15 +0000
-Message-ID: <e709e4f7-2266-f99f-5864-5a8c037dbdc2@st.com>
-References: <20180410051927.8268-1-philippe.cornu@st.com>
- <20180410051927.8268-2-philippe.cornu@st.com> <20599695.GSkeUvMnvx@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20599695.GSkeUvMnvx@avalon>
-Content-Language: en-US
-Content-ID: <577F0AB04DDEC941AA5E2A39AB505DB4@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Yannick FERTRE <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH 5/8] media: Add LE version of RGB LVDS formats
+Date: Thu, 19 Apr 2018 11:31:06 +0200
+Message-ID: <1524130269-32688-6-git-send-email-jacopo+renesas@jmondi.org>
+References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, daniel@ffwll.ch, peda@axentia.se, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCA6ICkNCg0KT24gMDQvMTkvMjAxOCAxMDoxMSBBTSwgTGF1cmVudCBQaW5jaGFy
-dCB3cm90ZToNCj4gSGkgUGhpbGlwcGUsDQo+IA0KPiBUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4N
-Cj4gDQo+IE9uIFR1ZXNkYXksIDEwIEFwcmlsIDIwMTggMDg6MTk6MjYgRUVTVCBQaGlsaXBwZSBD
-b3JudSB3cm90ZToNCj4+IEFkZCB0aGUgMyBvcHRpb25hbCBwb3dlciBzdXBwbGllcyB1c2luZyB0
-aGUgZXhhY3QgZGVzY3JpcHRpb24NCj4+IGZvdW5kIGluIHRoZSBkb2N1bWVudCBuYW1lZA0KPj4g
-IlNpSTkwMjJBL1NpSTkwMjRBIEhETUkgVHJhbnNtaXR0ZXIgRGF0YSBTaGVldCAoQXVndXN0IDIw
-MTYpIi4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29y
-bnVAc3QuY29tPg0KPj4gLS0tDQo+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dCB8IDMgKysrDQo+PiAgIDEgZmlsZSBjaGFuZ2Vk
-LCAzIGluc2VydGlvbnMoKykNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0DQo+PiBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dCBpbmRl
-eA0KPj4gNTZhM2U2OGNjYjgwLi5jZjUzNjc4ZmU1NzQgMTAwNjQ0DQo+PiAtLS0gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQNCj4+
-ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9z
-aWk5MDJ4LnR4dA0KPj4gQEAgLTgsNiArOCw5IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+PiAg
-IAktIGludGVycnVwdHMtZXh0ZW5kZWQgb3IgaW50ZXJydXB0LXBhcmVudCArIGludGVycnVwdHM6
-IGRlc2NyaWJlDQo+PiAgIAkgIHRoZSBpbnRlcnJ1cHQgbGluZSB1c2VkIHRvIGluZm9ybSB0aGUg
-aG9zdCBhYm91dCBob3RwbHVnIGV2ZW50cy4NCj4+ICAgCS0gcmVzZXQtZ3Bpb3M6IE9GIGRldmlj
-ZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgUlNUX04gcGluLg0KPj4gKwktIGlvdmNjLXN1
-cHBseTogSS9PIHN1cHBseSB2b2x0YWdlICgxLjhWIG9yIDMuM1YsIGhvc3QtZGVwZW5kZW50KS4N
-Cj4+ICsJLSBhdmNjMTItc3VwcGx5OiBUTURTIGFuYWxvZyBzdXBwbHkgdm9sdGFnZSAoMS4yViku
-DQo+PiArCS0gY3ZjYzEyLXN1cHBseTogRGlnaXRhbCBjb3JlIHN1cHBseSB2b2x0YWdlICgxLjJW
-KS4NCj4gDQo+IEl0IHNlZW1zIHRoYXQgdGhlIEFWQ0MxMiBhbmQgQ1ZDQzEyIHBvd2VyIHN1cHBs
-aWVzIGFyZSB1c3VhbGx5IGRlcml2ZWQgZnJvbQ0KPiB0aGUgc2FtZSBzb3VyY2UuIEhvdyBhYm91
-dCBzdGFydGluZyB3aXRoIG9uZSBEVCBwcm9wZXJ0eSBmb3IgYm90aCwgYW5kIGFkZGluZw0KPiBh
-IHNlY29uZCBvbmUgbGF0ZXIgaWYgbmVlZGVkID8NCj4gDQoNCldlbGwsIEkgZG8gbm90IGtub3cg
-d2hhdCBpcyB0aGUgYmVzdC4gSGVyZSBJIHRvb2sgdGhlIGRlc2NyaXB0aW9uIGZyb20gDQp0aGUg
-ZG9jdW1lbnRhdGlvbiwgYW5kIHRvIGFsbG93IGFsbCBwb3NzaWJsZSBib2FyZCBjb25maWd1cmF0
-aW9ucywgSSANCmFkZGVkIHRoZXNlIHN1cHBsaWVzIGFzICJvcHRpb25hbCIgcHJvcGVydGllczog
-aWYgdGhlcmUgaXMgb25seSBvbmUgMXYyIA0KcmVndWxhdG9yIG9uIHRoZSBib2FyZCwgdGhlIGR0
-IHdpbGwgY29udGFpbiBvbmx5IGF2Y2MxMiBvciBjdmNjMTIgYW5kIA0KZXZlcnl0aGluZyB3aWxs
-IHdvcmsgZmluZSAod2Ugd2lsbCBoYXZlIGEgZHVtbXkgcmVndWxhdG9yIGZvciB0aGUgDQptaXNz
-aW5nIG9wdGlvbmFsIDF2MiByZWcpLCBpZiBib3RoIHJlZ3VsYXRvcnMgYXJlIHRoZXJlIGZvciBh
-bnkgcmVhc29ucyANCihzdGFiaWxpdHksIG5vaXNlLCB3aGF0ZXZlci4uLikgdGhlbiBib3RoIGVu
-dHJpZXMgd2lsbCBiZSBpbiB0aGUgZHQuDQoNCklmIHlvdSBjb25maXJtIHlvdSBwcmVmZXIgYSBz
-aW5nbGUgMXYyIHN1cHBseSAobmFtZWQgZm9yIGluc3RhbmNlIA0KInZjYzEyLXN1cHBseSIpIHRo
-ZW4gSSB3aWxsIGRvIDotKQ0KDQpNYW55IHRoYW5rcywNClBoaWxpcHBlDQoNCg0KPj4gICBPcHRp
-b25hbCBzdWJub2RlczoNCj4+ICAgCS0gdmlkZW8gaW5wdXQ6IHRoaXMgc3Vibm9kZSBjYW4gY29u
-dGFpbiBhIHZpZGVvIGlucHV0IHBvcnQgbm9kZQ0KPiAKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Some LVDS controller can output swapped versions of LVDS RGB formats.
+Define and document them in the list of supported media bus formats
+
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+ Documentation/media/uapi/v4l/subdev-formats.rst | 174 ++++++++++++++++++++++++
+ include/uapi/linux/media-bus-format.h           |   5 +-
+ 2 files changed, 178 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/media/uapi/v4l/subdev-formats.rst b/Documentation/media/uapi/v4l/subdev-formats.rst
+index 9fcabe7..9a5263c 100644
+--- a/Documentation/media/uapi/v4l/subdev-formats.rst
++++ b/Documentation/media/uapi/v4l/subdev-formats.rst
+@@ -1669,6 +1669,64 @@ JEIDA defined bit mapping will be named
+       - b\ :sub:`2`
+       - g\ :sub:`1`
+       - r\ :sub:`0`
++    * .. _MEDIA-BUS-FMT-RGB666-1X7X3-SPWG_LE:
++
++      - MEDIA_BUS_FMT_RGB666_1X7X3_SPWG_LE
++      - 0x101b
++      - 0
++      -
++      -
++      - b\ :sub:`2`
++      - g\ :sub:`1`
++      - r\ :sub:`0`
++    * -
++      -
++      - 1
++      -
++      -
++      - b\ :sub:`3`
++      - g\ :sub:`2`
++      - r\ :sub:`1`
++    * -
++      -
++      - 2
++      -
++      -
++      - b\ :sub:`4`
++      - g\ :sub:`3`
++      - r\ :sub:`2`
++    * -
++      -
++      - 3
++      -
++      -
++      - b\ :sub:`5`
++      - g\ :sub:`4`
++      - r\ :sub:`3`
++    * -
++      -
++      - 4
++      -
++      -
++      - d
++      - g\ :sub:`5`
++      - r\ :sub:`4`
++    * -
++      -
++      - 5
++      -
++      -
++      - d
++      - b\ :sub:`0`
++      - r\ :sub:`5`
++    * -
++      -
++      - 6
++      -
++      -
++      - d
++      - b\ :sub:`1`
++      - g\ :sub:`0`
+     * .. _MEDIA-BUS-FMT-RGB888-1X7X4-SPWG:
+ 
+       - MEDIA_BUS_FMT_RGB888_1X7X4_SPWG
+@@ -1727,6 +1785,64 @@ JEIDA defined bit mapping will be named
+       - b\ :sub:`2`
+       - g\ :sub:`1`
+       - r\ :sub:`0`
++    * .. _MEDIA-BUS-FMT-RGB888-1X7X4-SPWG_LE:
++
++      - MEDIA_BUS_FMT_RGB888_1X7X4_SPWG_LE
++      - 0x101c
++      - 0
++      -
++      - r\ :sub:`6`
++      - b\ :sub:`2`
++      - g\ :sub:`1`
++      - r\ :sub:`0`
++    * -
++      -
++      - 1
++      -
++      - r\ :sub:`7`
++      - b\ :sub:`3`
++      - g\ :sub:`2`
++      - r\ :sub:`1`
++    * -
++      -
++      - 2
++      -
++      - g\ :sub:`6`
++      - b\ :sub:`4`
++      - g\ :sub:`3`
++      - r\ :sub:`2`
++    * -
++      -
++      - 3
++      -
++      - g\ :sub:`7`
++      - b\ :sub:`5`
++      - g\ :sub:`4`
++      - r\ :sub:`3`
++    * -
++      -
++      - 4
++      -
++      - b\ :sub:`6`
++      - d
++      - g\ :sub:`5`
++      - r\ :sub:`4`
++    * -
++      -
++      - 5
++      -
++      - b\ :sub:`7`
++      - d
++      - b\ :sub:`0`
++      - r\ :sub:`5`
++    * -
++      -
++      - 6
++      -
++      - d
++      - d
++      - b\ :sub:`1`
++      - g\ :sub:`0`
+     * .. _MEDIA-BUS-FMT-RGB888-1X7X4-JEIDA:
+ 
+       - MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA
+@@ -1785,6 +1901,64 @@ JEIDA defined bit mapping will be named
+       - b\ :sub:`4`
+       - g\ :sub:`3`
+       - r\ :sub:`2`
++    * .. _MEDIA-BUS-FMT-RGB888-1X7X4-JEIDA_LE:
++
++      - MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA_LE
++      - 0x101d
++      - 0
++      -
++      - r\ :sub:`0`
++      - b\ :sub:`4`
++      - g\ :sub:`3`
++      - r\ :sub:`2`
++    * -
++      -
++      - 1
++      -
++      - r\ :sub:`1`
++      - b\ :sub:`5`
++      - g\ :sub:`4`
++      - r\ :sub:`3`
++    * -
++      -
++      - 2
++      -
++      - g\ :sub:`0`
++      - b\ :sub:`6`
++      - g\ :sub:`5`
++      - r\ :sub:`4`
++    * -
++      -
++      - 3
++      -
++      - g\ :sub:`1`
++      - b\ :sub:`7`
++      - g\ :sub:`6`
++      - r\ :sub:`5`
++    * -
++      -
++      - 4
++      -
++      - b\ :sub:`0`
++      - d
++      - g\ :sub:`7`
++      - r\ :sub:`6`
++    * -
++      -
++      - 5
++      -
++      - b\ :sub:`1`
++      - d
++      - b\ :sub:`2`
++      - r\ :sub:`7`
++    * -
++      -
++      - 6
++      -
++      - d
++      - d
++      - b\ :sub:`3`
++      - g\ :sub:`2`
+ 
+ .. raw:: latex
+ 
+diff --git a/include/uapi/linux/media-bus-format.h b/include/uapi/linux/media-bus-format.h
+index 9e35117..5bea7c0 100644
+--- a/include/uapi/linux/media-bus-format.h
++++ b/include/uapi/linux/media-bus-format.h
+@@ -34,7 +34,7 @@
+ 
+ #define MEDIA_BUS_FMT_FIXED			0x0001
+ 
+-/* RGB - next is	0x101b */
++/* RGB - next is	0x101f */
+ #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
+ #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
+ #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
+@@ -49,13 +49,16 @@
+ #define MEDIA_BUS_FMT_RBG888_1X24		0x100e
+ #define MEDIA_BUS_FMT_RGB666_1X24_CPADHI	0x1015
+ #define MEDIA_BUS_FMT_RGB666_1X7X3_SPWG		0x1010
++#define MEDIA_BUS_FMT_RGB666_1X7X3_SPWG_LE	0x101b
+ #define MEDIA_BUS_FMT_BGR888_1X24		0x1013
+ #define MEDIA_BUS_FMT_GBR888_1X24		0x1014
+ #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
+ #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
+ #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
+ #define MEDIA_BUS_FMT_RGB888_1X7X4_SPWG		0x1011
++#define MEDIA_BUS_FMT_RGB888_1X7X4_SPWG_LE	0x101c
+ #define MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA	0x1012
++#define MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA_LE	0x101d
+ #define MEDIA_BUS_FMT_ARGB8888_1X32		0x100d
+ #define MEDIA_BUS_FMT_RGB888_1X32_PADHI		0x100f
+ #define MEDIA_BUS_FMT_RGB101010_1X30		0x1018
+-- 
+2.7.4
