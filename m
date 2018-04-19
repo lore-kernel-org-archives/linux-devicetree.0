@@ -1,7 +1,7 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH 06/15] media: staging/imx: add imx7 capture subsystem
-Date: Thu, 19 Apr 2018 11:18:03 +0100
-Message-ID: <20180419101812.30688-7-rui.silva@linaro.org>
+Subject: [PATCH 04/15] clk: imx7d: reset parent for mipi csi root
+Date: Thu, 19 Apr 2018 11:18:01 +0100
+Message-ID: <20180419101812.30688-5-rui.silva@linaro.org>
 References: <20180419101812.30688-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,38 +21,29 @@ To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerb
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add imx7 capture subsystem to imx-media core to allow the use some of the
-existing modules for i.MX5/6 with i.MX7 SoC.
-
-Since i.MX7 does not have an IPU set the no_ipu_present flag to differentiate
-some runtime behaviors.
+To guarantee that we do not get Overflow in image FIFO the outer bandwidth has
+to be faster than inputer bandwidth. For that it must be possible to set a
+faster frequency clock. So set new parent to sys_pfd3 clock for the mipi csi
+block.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- drivers/staging/media/imx/imx-media-dev.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/clk/imx/clk-imx7d.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
-index a8afe0ec4134..967d172f1447 100644
---- a/drivers/staging/media/imx/imx-media-dev.c
-+++ b/drivers/staging/media/imx/imx-media-dev.c
-@@ -484,6 +484,9 @@ static int imx_media_probe(struct platform_device *pdev)
- 		goto notifier_cleanup;
- 	}
+diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
+index f7f4db2e6fa6..9a1a18ceb132 100644
+--- a/drivers/clk/imx/clk-imx7d.c
++++ b/drivers/clk/imx/clk-imx7d.c
+@@ -891,6 +891,9 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
+ 	clk_set_parent(clks[IMX7D_PLL_AUDIO_MAIN_BYPASS], clks[IMX7D_PLL_AUDIO_MAIN]);
+ 	clk_set_parent(clks[IMX7D_PLL_VIDEO_MAIN_BYPASS], clks[IMX7D_PLL_VIDEO_MAIN]);
  
-+	if (of_device_is_compatible(node, "fsl,imx7-capture-subsystem"))
-+		imxmd->no_ipu_present = true;
++	clk_set_parent(clks[IMX7D_MIPI_CSI_ROOT_SRC],
++		       clks[IMX7D_PLL_SYS_PFD3_CLK]);
 +
- 	if (!imxmd->no_ipu_present) {
- 		ret = imx_media_add_internal_subdevs(imxmd);
- 		if (ret) {
-@@ -541,6 +544,7 @@ static int imx_media_remove(struct platform_device *pdev)
+ 	/* use old gpt clk setting, gpt1 root clk must be twice as gpt counter freq */
+ 	clk_set_parent(clks[IMX7D_GPT1_ROOT_SRC], clks[IMX7D_OSC_24M_CLK]);
  
- static const struct of_device_id imx_media_dt_ids[] = {
- 	{ .compatible = "fsl,imx-capture-subsystem" },
-+	{ .compatible = "fsl,imx7-capture-subsystem" },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, imx_media_dt_ids);
 -- 
 2.17.0
