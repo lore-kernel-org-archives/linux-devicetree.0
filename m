@@ -1,211 +1,150 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH 14/15] media: imx7.rst: add documentation for i.MX7 media
- driver
-Date: Thu, 19 Apr 2018 11:18:11 +0100
-Message-ID: <20180419101812.30688-15-rui.silva@linaro.org>
-References: <20180419101812.30688-1-rui.silva@linaro.org>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v8 1/2] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Thu, 19 Apr 2018 12:32:07 +0200
+Message-ID: <20180419103207.GA4235@w540>
+References: <1523357590-3841-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1523357590-3841-2-git-send-email-jacopo+renesas@jmondi.org>
+ <29caaf6f-1783-9b01-5304-8748398d41c6@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180419101812.30688-1-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0770609932=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <29caaf6f-1783-9b01-5304-8748398d41c6@mentor.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, dri-devel@lists.freedesktop.org, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, geert@linux-m68k.org
 List-Id: devicetree@vger.kernel.org
 
-Add rst document to describe the i.MX7 media driver and also a working example
-from the Warp7 board usage with a OV2680 sensor.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- Documentation/media/v4l-drivers/imx7.rst  | 157 ++++++++++++++++++++++
- Documentation/media/v4l-drivers/index.rst |   1 +
- 2 files changed, 158 insertions(+)
- create mode 100644 Documentation/media/v4l-drivers/imx7.rst
+--===============0770609932==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
+Content-Disposition: inline
 
-diff --git a/Documentation/media/v4l-drivers/imx7.rst b/Documentation/media/v4l-drivers/imx7.rst
-new file mode 100644
-index 000000000000..64b97b442277
---- /dev/null
-+++ b/Documentation/media/v4l-drivers/imx7.rst
-@@ -0,0 +1,157 @@
-+i.MX7 Video Capture Driver
-+==========================
-+
-+Introduction
-+------------
-+
-+The i.MX7 contrary to the i.MX5/6 family does not contain an Image Processing
-+Unit (IPU), because of that the capabilities to perform operations or
-+manipulation of the capture frames is less feature rich.
-+
-+For image capture the i.MX7 have three units:
-+- CMOS Sensor Interface (CSI)
-+- Video Multiplexer
-+- MIPI CSI-2 Receiver
-+
-+::
-+                                           |\
-+   MIPI Camera Input ---> MIPI CSI-2 --- > | \
-+                                           |  \
-+                                           | M |
-+                                           | U | ------>  CSI ---> Capture
-+                                           | X |
-+                                           |  /
-+   Parallel Camera Input ----------------> | /
-+                                           |/
-+
-+For additional information, please refer to the latest versions of the i.MX7
-+reference manual [#f1]_.
-+
-+Entities
-+--------
-+
-+imx7-mipi-csi2
-+--------------
-+
-+This is the MIPI CSI-2 recevier entity. It has one sink pad to receive the pixel
-+data from MIPI CSI-2 camera sensor. It has one source pad, corresponding to the
-+virtual channel 0. This module is compliant to previous version of Samsung
-+D-phy, and support two D-PHY Rx Data lanes.
-+
-+csi_mux
-+-------
-+
-+This is the video multiplexer. It has two sink pads to select from either camera
-+sensors with a parallel interface or from MIPI CSI-2 virtual channel 0.  It has
-+a single source pad that routes to the CSI.
-+
-+csi
-+---
-+
-+The CSI enables the chip to connect directly to external CMOS image sensor. CSI
-+can interfaces directly with Parallel and MIPI CSI-2 buses. It has 256 x 64 FIFO
-+to store received image pixel data and embedded DMA controllers to transfer data
-+from the FIFO through AHB bus.
-+
-+This entity has one sink pad that receive from the csi_mux entity and a single
-+source pad that route video frames directly to memory buffers, this pad is
-+routed to a capture device node.
-+
-+Usage Notes
-+-----------
-+
-+To aid in configuration and for backward compatibility with V4L2 applications
-+that access controls only from video device nodes, the capture device interfaces
-+inherit controls from the active entities in the current pipeline, so controls
-+can be accessed either directly from the subdev or from the active capture
-+device interface. For example, the sensor controls are available either from the
-+sensor subdevs or from the active capture device.
-+
-+Warp7 with OV2680
-+-----------------
-+
-+On this platform an OV2680 MIPI CSI-2 module is connected to the internal MIPI
-+CSI-2 receiver. The following example configures a video capture pipeline with
-+an output of 800x600, and BGGR 10 bit bayer format:
-+
-+.. code-block:: none
-+   # Setup links
-+   media-ctl -l "'ov2680 1-0036':0 -> 'imx7-mipi-csis.0':0[1]"
-+   media-ctl -l "'imx7-mipi-csis.0':1 -> 'csi_mux':1[1]"
-+   media-ctl -l "'csi_mux':2 -> 'csi':0[1]"
-+   media-ctl -l "'csi':1 -> 'csi capture':0[1]"
-+
-+   # Configure pads for pipeline
-+   media-ctl -V "'ov2680 1-0036':0 [fmt:SBGGR10_1X10/800x600 field:none]"
-+   media-ctl -V "'csi_mux':1 [fmt:SBGGR10_1X10/800x600 field:none]"
-+   media-ctl -V "'csi_mux':2 [fmt:SBGGR10_1X10/800x600 field:none]"
-+   media-ctl -V "'imx7-mipi-csis.0':0 [fmt:SBGGR10_1X10/800x600 field:none]"
-+   media-ctl -V "'csi':0 [fmt:SBGGR10_1X10/800x600 field:none]"
-+
-+After this streaming can start, the v4l2-ctl tool can be used to select any of
-+the resolutions supported by the sensor.
-+
-+.. code-block:: none
-+    root@imx7s-warp:~# media-ctl -p
-+    Media controller API version 4.17.0
-+
-+    Media device information
-+    ------------------------
-+    driver          imx-media
-+    model           imx-media
-+    serial
-+    bus info
-+    hw revision     0x0
-+    driver version  4.17.0
-+
-+    Device topology
-+    - entity 1: csi (2 pads, 2 links)
-+		type V4L2 subdev subtype Unknown flags 0
-+		device node name /dev/v4l-subdev0
-+	    pad0: Sink
-+		    [fmt:SBGGR10_1X10/800x600 field:none]
-+		    <- "csi_mux":2 [ENABLED]
-+	    pad1: Source
-+		    [fmt:SBGGR10_1X10/800x600 field:none]
-+		    -> "csi capture":0 [ENABLED]
-+
-+    - entity 4: csi capture (1 pad, 1 link)
-+		type Node subtype V4L flags 0
-+		device node name /dev/video0
-+	    pad0: Sink
-+		    <- "csi":1 [ENABLED]
-+
-+    - entity 10: csi_mux (3 pads, 2 links)
-+		type V4L2 subdev subtype Unknown flags 0
-+		device node name /dev/v4l-subdev1
-+	    pad0: Sink
-+		    [fmt:unknown/0x0]
-+	    pad1: Sink
-+		    [fmt:unknown/800x600 field:none]
-+		    <- "imx7-mipi-csis.0":1 [ENABLED]
-+	    pad2: Source
-+		    [fmt:unknown/800x600 field:none]
-+		    -> "csi":0 [ENABLED]
-+
-+    - entity 14: imx7-mipi-csis.0 (2 pads, 2 links)
-+		type V4L2 subdev subtype Unknown flags 0
-+		device node name /dev/v4l-subdev2
-+	    pad0: Sink
-+		    [fmt:SBGGR10_1X10/800x600 field:none]
-+		    <- "ov2680 1-0036":0 [ENABLED]
-+	    pad1: Source
-+		    [fmt:SBGGR10_1X10/800x600 field:none]
-+		    -> "csi_mux":1 [ENABLED]
-+
-+    - entity 17: ov2680 1-0036 (1 pad, 1 link)
-+		type V4L2 subdev subtype Sensor flags 0
-+		device node name /dev/v4l-subdev3
-+	    pad0: Source
-+		    [fmt:SBGGR10_1X10/800x600 field:none]
-+		    -> "imx7-mipi-csis.0":0 [ENABLED]
-+
-+
-+References
-+----------
-+
-+.. [#f1] https://www.nxp.com/docs/en/reference-manual/IMX7SRM.pdf
-diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
-index 679238e786a7..693295bbc53f 100644
---- a/Documentation/media/v4l-drivers/index.rst
-+++ b/Documentation/media/v4l-drivers/index.rst
-@@ -44,6 +44,7 @@ For more details see the file COPYING in the source distribution of Linux.
- 	davinci-vpbe
- 	fimc
- 	imx
-+	imx7
- 	ivtv
- 	max2175
- 	meye
--- 
-2.17.0
+
+--BOKacYhQ+x31HxR3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Apr 19, 2018 at 12:44:32PM +0300, Vladimir Zapolskiy wrote:
+Hi Vladimir,
+
+> Hi Jacopo, Laurent,
+>
+> On 04/10/2018 01:53 PM, Jacopo Mondi wrote:
+> > Document Thine THC63LVD1024 LVDS decoder device tree bindings.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+> > Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.=
+se>
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+> Reviewed-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+>
+> > ---
+> >  .../bindings/display/bridge/thine,thc63lvd1024.txt | 60 ++++++++++++++=
+++++++++
+> >  1 file changed, 60 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/th=
+ine,thc63lvd1024.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc=
+63lvd1024.txt b/Documentation/devicetree/bindings/display/bridge/thine,thc6=
+3lvd1024.txt
+> > new file mode 100644
+> > index 0000000..0b23e70
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd10=
+24.txt
+> > @@ -0,0 +1,60 @@
+> > +Thine Electronics THC63LVD1024 LVDS decoder
+> > +-------------------------------------------
+> > +
+> > +The THC63LVD1024 is a dual link LVDS receiver designed to convert LVDS=
+ streams
+> > +to parallel data outputs. The chip supports single/dual input/output m=
+odes,
+> > +handling up to two LVDS input streams and up to two digital CMOS/TTL o=
+utputs.
+> > +
+> > +Single or dual operation mode, output data mapping and DDR output mode=
+s are
+> > +configured through input signals and the chip does not expose any cont=
+rol bus.
+> > +
+> > +Required properties:
+> > +- compatible: Shall be "thine,thc63lvd1024"
+> > +- vcc-supply: Power supply for TTL output, TTL CLOCKOUT signal, LVDS i=
+nput,
+> > +  PPL and digital circuitry
+> > +
+> > +Optional properties:
+> > +- powerdown-gpios: Power down GPIO signal, pin name "/PDWN". Active low
+>
+> Thank you for the change.
+>
+> I would suggest to rename 'pwdn-gpios' property of THC63LVDM83D as well,
+> as far as I understand it is only described in DT bindings documentation,
+> and the property is unused in the driver or board DTS files at the moment.
+
+Thanks for the suggestion, I'll do that!
+
+>
+> > +- oe-gpios: Output enable GPIO signal, pin name "OE". Active high
+>
+> Okay :)
+
+Yeah, please see Rob's and Laurent's reply to v7, where I renamed this
+to 'enable'.
+
+Thanks
+   j
+>
+> --
+> With best wishes,
+> Vladimir
+
+--BOKacYhQ+x31HxR3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJa2HAnAAoJEHI0Bo8WoVY8CLUP/0oI3S4m1u0cQT7zFrVBWQKA
+Z/1mTuAz3fbLQgzg3IRlQm9CdmTqt3EzZ6bCkuV/qw2Xx9VXLqHp/tQbw7oYKTzD
+ZinQKq4o5vx+EjrKmoA8T4YFgfIHYvlfGAc+s5GvZ/+xjP5sJv6O0oEZe9jrrtz3
+ZL7fxvkwSrBnpz9xrkmBfZLhlrSQW+eseEEATIQ0Fr0njHr+ojVcAIEurEpfvF6u
+MJ6LMpGJY6clEJZWNQ/HjFvmVupJxz5LS14utEdKM1fHOjte2fPjlmd+RCaKu1T4
+jlx/QMY6/m5YWv+tjBRSmHA7LVF5eZzw/six5F1vSnjfsGfpSRa5f4RO2O0hheX6
+mEAjzjh699D8zCl2i/9ZDiiRVoSCQsvopS32ry/ZNnjqVoiqQkpKYg4GPtOWBLEr
+IxsUFdXC88+Z0cywWnwYgHbMfgY0Ine1NitAItkY3Tr4lArPC521FMg6fshiOKTz
+ALKAbcmMXTAEHrw8B67Bsew5G9+m+FDu5zj5P9gVznsE+fVrYjmrIuuTpwVZQZEJ
+VKY7CNxwWnR8UIEoHWnBsDGDwKxcl+ulF8xkgxzePWzaRaiaCJ/ds8eb1ddzV9zr
+5Zlkg5uXo7aGYYLepXVbk/0t/WhbahLZ6w9R7y5iQih1f/Ua85G3GXpJb5a4nz1M
+k0T8RtEx0GtoSHxcjZN/
+=2O14
+-----END PGP SIGNATURE-----
+
+--BOKacYhQ+x31HxR3--
+
+--===============0770609932==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0770609932==--
