@@ -1,120 +1,39 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
- node
-Date: Thu, 19 Apr 2018 08:34:22 +0200
-Message-ID: <20180419063422.GC31310@phenom.ffwll.local>
-References: <20180302134804.3690-3-bparrot@ti.com>
- <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
- <20180309182751.GC31988@ti.com>
- <283b6aea-d262-42ec-5e41-294b02b062c5@ti.com>
- <CAL_JsqJxDTj66V5eGYgQErhXZf6sfp=99De2XqaX+GyD7NCtGw@mail.gmail.com>
- <c3b9897f-aae0-35b1-e4e9-99b904d47cda@ti.com>
- <CAL_Jsq+jYa=aE0Z0s_Wr5iN5LVqpq2OfUfoKDx6i_YA-cg1RRg@mail.gmail.com>
- <a2c98c64-570c-4bb1-3976-3d54d3d4ecde@ti.com>
- <CAL_JsqKm6L_66RYJ6JQJfMLA073QyBtP0U+JBkA+m0e34QJWcg@mail.gmail.com>
- <e125d692-62b9-936c-bd04-84e7eb0072f7@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 5/9] ARM: dts: gemini: Fix "debounce-interval" property
+ misspelling
+Date: Thu, 19 Apr 2018 08:34:13 +0200
+Message-ID: <CACRpkdYwiCHX9g26WJLUEcfSJZhroz8ZqTGTTJottVgwf2NJ6A@mail.gmail.com>
+References: <1518531335-5170-1-git-send-email-geert+renesas@glider.be>
+ <1518531335-5170-6-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <e125d692-62b9-936c-bd04-84e7eb0072f7@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1518531335-5170-6-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMTcsIDIwMTggYXQgMDU6Mzc6MjVQTSArMDMwMCwgVG9taSBWYWxrZWluZW4g
-d3JvdGU6Cj4gSGkgUm9iLAo+IAo+IE9uIDA5LzA0LzE4IDIxOjE3LCBSb2IgSGVycmluZyB3cm90
-ZToKPiAKPiA+Pj4gRm9yIEhETUksIHlvdSBjYW4ndCBrbm93IGluIGFkdmFuY2Ugd2hhdCByZXNv
-bHV0aW9uIHdpbGwgYmUuIFNvIEkKPiA+Pj4gdGhpbmsgeW91IGFsd2F5cyBuZWVkIHRvIHJlc2Vy
-dmUgMiBwbGFuZXMuIE5vdywgaWYgeW91IHdhbnQgdG8gcmVkdWNlCj4gPj4KPiA+PiBXZSBjYW4g
-ZGVjaWRlIG5vdCB0byBzdXBwb3J0IDJrKyByZXNvbHV0aW9ucyBmb3IgSERNSSwgd2hpY2gsIHdp
-dGggdGhpcwo+ID4+IHNlcmllcywgaGFwcGVucyBieSBub3QgcmVzZXJ2aW5nIGR1YWwtcGxhbmUg
-Zm9yIHRoZSBIRE1JLgo+ID4gCj4gPiBSaWdodC4gU28gdHVybiB0aGlzIGFyb3VuZC4gRGVmaW5l
-IGluIERUIHdoYXQgaXMgdGhlIG1heGltdW0KPiA+IHJlc29sdXRpb24gc3VwcG9ydGVkIGZvciBI
-RE1JIGFuZCBjb25maWd1cmUgdGhlIHBsYW5lcyBiYXNlZCBvbiB0aGF0Lgo+IAo+IEJ1dCB0aGUg
-a2VybmVsIGNhbm5vdCBrbm93IHdoYXQgdGhlIHVzZXIgd2FudHMgdG8gZG8sIHNvIGl0IGNhbm5v
-dAo+IGNvbmZpZ3VyZSB0aGUgcGxhbmVzLiBJZiB3ZSBoYXZlIGFuIEhETUkgb3V0cHV0IHdoaWNo
-IHN1cHBvcnRzIDJrKyBhbmQgYQo+IC0yayBMQ0QsIGFuZCA0IGh3IHBsYW5lcywgd2UgY2FuIHNl
-dCB1cCB0aGUgcGxhbmVzIGF0IGxlYXN0IGluIHRoZQo+IGZvbGxvd2luZyB3YXlzOgo+IAo+IC0g
-T25lIHZpcnR1YWwgcGxhbmUgb24gSERNSSwgdHdvIG5vcm1hbCBwbGFuZXMgb24gTENELiBIZXJl
-IHRoZSBub3JtYWwKPiBwbGFuZXMgY2FuIGFsc28gYmUgdXNlZCBvbiB0aGUgSERNSSwgYXMgbG9u
-ZyBhcyB0aGUgaW5wdXQgd2lkdGggaXMgLTJrLgo+IAo+IC0gT25lIHZpcnR1YWwgcGxhbmUgb24g
-SERNSSwgb25lIHZpcnR1YWwgcGxhbmUgb24gTENELCBidXQgc29tZXRpbWVzCj4gYm90aCBwbGFu
-ZXMgb24gdGhlIHNhbWUgZGlzcGxheSAoZWl0aGVyIEhETUkgb3IgTENEKS4KPiAKPiAtIE5vIHZp
-cnR1YWwgcGxhbmVzIChhbmQgZmJkZXYgc3VwcG9ydCBkaXNhYmxlZCkuIFRoaXMgbmVlZHMgdGhl
-Cj4gdXNlcnNwYWNlIHRvIHRha2UgY2FyZSBub3QgdG8gY29uZmlndXJlIDJrKyBwbGFuZXMuIEJ1
-dCBjb25zaWRlcmluZyB0aGF0Cj4gdGhlIG1vZGVzIHN1cHBvcnRlZCBhcmUgc3RpbGwgcXVpdCBj
-bG9zZSB0byAyayBpbiB3aWR0aCwgSSBiZWxpZXZlCj4gdXBzY2FsaW5nIGEgMmsgcGxhbmUgY292
-ZXIgdGhlIHdob2xlIGRpc3BsYXkgd291bGQgcHJvdmlkZSBxdWl0ZSBvayBpbWFnZS4KPiAKPiBF
-YWNoIG9mIHRob3NlIHJlcXVpcmVzIGEgZGlmZmVyZW50IHZpcnR1YWwgcGxhbmUgc2V0dXAuCgpX
-aHkgZG8geW91IHdhbnQgdG8gaGFyZGNvZGUgdGhpcyBpbiBEVD8gVGhlIHJlY29tbWVuZGVkIGFw
-cHJvYWNoIGlzIHRvCmhhdmUgYSBidW5jaCBvZiB2aXJ0dWFsIHBsYW5lcywgYW5kIHJ1bnRpbWUg
-YXNzaWduIHdoYXRldmVyIGh3IHJlc291cmNlcwp5b3UgbmVlZCB0byBnZXQgdGhlcmUuIElmIHlv
-dSBydW4gb3V0IG9mIGh3IHBsYW5lcyB5b3UganVzdCBmYWlsIHdpdGgKLUVJTlZBTCBpbiBhdG9t
-aWNfY2hlY2suCgpBbmQgcmVhc3NpZ25pbmcgaHcgcGxhbmVzIGlzIGFsbG93ZWQgdG8gYmUgcmVh
-bGx5IGV4cGVuc2l2ZSwgdGhhdCdzIHdoeSB3ZQpoYXZlIHRoZSBBTExPV19NT0RFU0VUIGZsYWcg
-c28gdXNlcnNwYWNlIGNhbiBjaG9vc2Ugd2hldGhlciBpdCB3YW50cyB0bwphbGxvdyBleHBlbnNp
-dmUgcmVhc3NpZ25tZW50IG9yIG5vdC4KCkZvciBleGFtcGxlcywgc2VlIHdoYXQgbXNtIGZvbGtz
-IGFyZSB0cnlpbmcgdG8gZG8gcmlnaHQgbm93LgotRGFuaWVsCgo+ID4+IEJ1dCByZXNlcnZlIGhv
-dyBtYW55IG9mIHRoZSBwbGFuZXM/IFdlIGhhdmUgTiBwbGFuZXMgYW5kIE0gZGlzcGxheXMuIEZv
-cgo+ID4+IHNvbWUgb2YgdGhlIGRpc3BsYXlzIHdlIGtub3cgdGhleSdyZSAyayssIHNvbWUgYXJl
-IGtub3duIHRvIGJlIC0yayBhbmQKPiA+PiBzb21lIGFyZSB1bmtub3duLiBUaGUgZHJpdmVyIGNh
-bid0IGluZGVwZW5kZW50bHkgbWFrZSBhbnkgc2Vuc2libGUKPiA+PiBzdGF0aWMgcmVzZXJ2YXRp
-b24gb2YgdGhlIHBsYW5lcyBmb3IgdGhlIGRpc3BsYXlzLCBiZWNhdXNlIGl0IGRvZXNuJ3QKPiA+
-PiBrbm93IHdoYXQgdGhlIHVzZXIgd2FudHMgdG8gZG8uCj4gPiAKPiA+IEFmdGVyIHlvdSd2ZSBo
-YW5kbGVkIEhETUkgYXMgYWJvdmUgYW5kIGFueSBwZXJtYW5lbnRseSBhdHRhY2hlZCBwYW5lbHMK
-PiA+IHdpdGggZml4ZWQgcmVzb2x1dGlvbnMsIHdoYXQgaXMgbGVmdCBmb3IgYSB1c2VyIHRvIGNv
-bmZpZ3VyZT8gUGVyaGFwcwo+ID4gb25seSBvbmUgZGlzcGxheSBjYW4gc3VwcG9ydCBhbiBvdmVy
-bGF5IGF0IHRoYXQgcG9pbnQgYmVjYXVzZSB5b3UgYXJlCj4gPiBvdXQgb2YgcGxhbmVzPwo+IAo+
-IEkgdGhpbmsgSSBjb3ZlcmVkIHRoaXMgaW4gdGhlIGV4YW1wbGUgdXNlIGNhc2VzIGFib3ZlLgo+
-IAo+ID4+IFNvIGVpdGhlciB3ZSByZXNlcnZlIHRoZSBleHRyYSBwbGFuZXMgYXQgcnVudGltZSBv
-biBkZW1hbmQsIG1ha2luZyBpdAo+ID4+IGRpZmZpY3VsdCB0byBtYW5hZ2UgZm9yIHRoZSB1c2Vy
-c3BhY2UsIG9yIHdlIHJlbHkgb24gdGhlIHVzZXIgdG8gZ2l2ZQo+ID4+IHRoZSBkcml2ZXIgYSBz
-dGF0aWMgcGFydGl0aW9uaW5nIG9mIHRoZSBwbGFuZXMgYWNjb3JkaW5nIHRvIHRoZSB1c2VyJ3MK
-PiA+PiB1c2UgY2FzZS4KPiA+IAo+ID4gQW5kIGJ5IHVzZXIsIHdobyBkbyB5b3UgbWVhbiBleGFj
-dGx5PyBUaGUgdXNlIGNhc2UgaXMgdGllZCB0byB0aGUKPiA+IGJvYXJkIGRlc2lnbiBhbmQgcHJv
-ZHVjdCBvciB0aWVkIHRvIHRoZSB3aGltcyBvZiBhbiBlbmQgdXNlciAoZS5nLiBJCj4gPiB3YW50
-IHRvIGRvIHZpZGVvIHBsYXliYWNrIHdpdGggb3ZlcmxheSB0byBkaXNwIDIpPyBZb3Ugc2hvdWxk
-IGVxdWF0ZQo+ID4gdXNlcnMgbWFraW5nIERUIGNoYW5nZXMgd2l0aCB0ZWxsaW5nIHVzZXJzIHRv
-IHVwZGF0ZS9jaGFuZ2UgdGhlaXIKPiA+IEJJT1MuCj4gCj4gQnkgdXNlciBJIG1lYW4gdGhlIG93
-bmVyIG9mIHRoZSBkZXZpY2UsIGJ1dCBpdCBpbiBzb21lIGNhc2VzIGl0IGNvdWxkIGJlCj4gdGhl
-IHZlbmRvciB0b28uCj4gCj4gSWYgd2UgaGF2ZSBhIGJvYXJkIHdpdGggSERNSSB0aGF0IGNhbiBz
-dXBwb3J0IDJrKywgdGhlbiB0aGUgYm9hcmQgdmVuZG9yCj4gY291bGQgcHJvdmlkZSBEVCBmaWxl
-cyB0aGF0IGRvIG5vdCBzcGVjaWZ5IHZpcnR1YWwgcGxhbmVzIChzbyBubyAyayspLAo+IGJ1dCBn
-aXZlIGluc3RydWN0aW9ucyBob3cgdG8gZGVmaW5lIHRoZW0gZm9yIHRoZSB1c2VycyB3aG8gd2Fu
-dCAyaysuIFNvCj4gaGVyZSB0aGUgZW5kIHVzZXIgbmVlZHMgdG8gZGVhbCB3aXRoIHRoZSBzdGF0
-aWMgcGFydGl0aW9uaW5nLgo+IAo+IElmIHdlIGhhdmUgYSBib2FyZCB3aXRoIGEgZml4ZWQgcmVz
-b2x1dGlvbiAyaysgTENELCB0aGVuIHRoZSB2ZW5kb3IgaGFzCj4gdG8gaGF2ZSBhIHZpcnR1YWwg
-cGxhbmUgZGVmaW5lZCBpbiB0aGUgRFQsIGFuZCB0aGUgdmVuZG9yIGhhcyB0byBwaWNrIGEKPiBj
-b25maWd1cmF0aW9uIHRoYXQgaXQgdGhpbmtzIGlzIG1vc3QgdXNlZnVsLgo+IAo+IEFuZCB5ZXMs
-IGl0IHN1Y2tzIHRvIGhhdmUgdG8gbWFrZSBjaGFuZ2VzIGluIHRoZSBEVCBvciBCSU9TLCBidXQg
-SSBzdGlsbAo+IGRvbid0IHNlZSBhIChnb29kKSBhbHRlcm5hdGl2ZS4KPiAKPiBJIHRoaW5rIG9u
-ZSBvcHRpb24gaXMgdG8gaGF2ZSB0aGUgZGV0YWlsZWQgRFQgY29uZmlndXJhdGlvbiBvcHRpb25h
-bDoKPiAKPiBXZSdkIGhhdmUgYSBmbGFnIGluIHRoZSBEVCB0byBtYXJrIHRoYXQgYSBkaXNwbGF5
-IHN1cHBvcnRzIDJrKyAob3IgdGhlCj4gbWF4LXJlc29sdXRpb24gcHJvcGVydHkgYXMgeW91IHN1
-Z2dlc3RlZCkuIEJhc2VkIG9uIHRoYXQsIHRoZSBkcml2ZXIKPiBndWVzc2VzIHdoYXQga2luZCBv
-ZiBzZXR1cCB0aGUgdXNlciB3YW50cywgd2hpY2ggcHJvYmFibHkgaXMganVzdCB0byBzZXQKPiB1
-cCBwbGFuZXMgaW4gYSB3YXkgdGhhdCBlYWNoIGRpc3BsYXkgaGFzIGEgZnVsbHkgZnVuY3Rpb25h
-bCAicm9vdCIKPiBwbGFuZSwgYW5kIHRoZW4gc3BsaXQgdGhlIHJlbWFpbmluZyBvbmVzIGluIHNv
-bWUgd2F5Lgo+IAo+IEJ1dCB0aGUgdXNlciBjb3VsZCBhbHNvIGhhdmUgZGV0YWlsZWQgRFQgZGVz
-Y3JpcHRpb25zIGZvciB0aGUgcGxhbmVzCj4gd2hlbiBoZSBuZWVkcyBhIG1vcmUgc3BlY2lhbCBz
-ZXR1cC4KPiAKPiAgVG9taQo+IAo+IC0tIAo+IFRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ks
-IFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgo+IFktdHVubnVzL0J1c2luZXNzIElE
-OiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCj4gX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKRGFuaWVsIFZldHRl
-cgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwu
-Y2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Feb 13, 2018 at 3:15 PM, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+
+> "debounce_interval" was never supported.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Please apply to your tree when appropriate.
+
+Applied to my Gemini tree.
+
+Yours,
+Linus Walleij
