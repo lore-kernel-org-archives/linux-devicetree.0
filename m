@@ -1,249 +1,134 @@
-From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH 3/3] rtc: stm32: add stm32mp1 rtc support
-Date: Thu, 19 Apr 2018 15:34:05 +0200
-Message-ID: <1524144845-23016-4-git-send-email-amelie.delaunay@st.com>
-References: <1524144845-23016-1-git-send-email-amelie.delaunay@st.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sunxi: Add sid for a83t
+Date: Thu, 19 Apr 2018 15:38:33 +0200
+Message-ID: <20180419133833.etuuxm3eygp3wfye@flea>
+References: <CACNAnaE9GiVTXD-TV1xXyBJKtTGKpdA6n0REk6a=qm218EgHbg@mail.gmail.com>
+ <20171221152630.2vf57x5o2yi5sv3n@flea.lan>
+ <20171221190903.56ebae536acf51401c63802c@bidouilliste.com>
+ <20171222083508.dfcp6egfvxykmogg@flea.lan>
+ <20171222110727.520df7394234f6a5dc0b9ec0@bidouilliste.com>
+ <CAGb2v64mf-ihyOs-WJZuVa4Yib3Szp90RZu_a1EeQ1LJXnoXEQ@mail.gmail.com>
+ <20180104140119.5pyfihp4zs2poz35@flea.lan>
+ <CACNAnaHOuPH05hsJ-jt1135-Giknb-DOuvjeQRSGVR2L7Xc-Cg@mail.gmail.com>
+ <20180109133412.uyai4s6vfnh37hn2@flea>
+ <CACNAnaEyKztSt_SO25e+VcmyN=fdGTVbpooWSu891ueY6xvh-g@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524144845-23016-1-git-send-email-amelie.delaunay@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
-Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4syblqsgtkenq3hx"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWVX4LLAKGQE42A475Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CACNAnaEyKztSt_SO25e+VcmyN=fdGTVbpooWSu891ueY6xvh-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Kyle Evans <kevans-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for stm32mp1 RTC.
-Some common registers with previous RTC version have a different offset.
-It is the case for Control Register (CR) and ALaRMA Register (ALRMAR).
-There are also new registers regarding event flags: now, Alarm event flag
-is in Status Register (SR) and write 1 in Status Clear Register (SCR) is
-required to clear the event.
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
- drivers/rtc/rtc-stm32.c | 88 +++++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 81 insertions(+), 7 deletions(-)
+--4syblqsgtkenq3hx
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
-index 52ee027..45e0175 100644
---- a/drivers/rtc/rtc-stm32.c
-+++ b/drivers/rtc/rtc-stm32.c
-@@ -11,6 +11,7 @@
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
-+#include <linux/pm_wakeirq.h>
- #include <linux/regmap.h>
- #include <linux/rtc.h>
- 
-@@ -39,7 +40,7 @@
- #define STM32_RTC_CR_ALRAE		BIT(8)
- #define STM32_RTC_CR_ALRAIE		BIT(12)
- 
--/* STM32_RTC_ISR bit fields */
-+/* STM32_RTC_ISR/STM32_RTC_ICSR bit fields */
- #define STM32_RTC_ISR_ALRAWF		BIT(0)
- #define STM32_RTC_ISR_INITS		BIT(4)
- #define STM32_RTC_ISR_RSF		BIT(5)
-@@ -71,11 +72,22 @@
- #define STM32_RTC_ALRMXR_WDAY		GENMASK(27, 24)
- #define STM32_RTC_ALRMXR_DATE_MASK	BIT(31)
- 
-+/* STM32_RTC_SR/_SCR bit fields */
-+#define STM32_RTC_SR_ALRA		BIT(0)
-+
-+/* STM32_RTC_VERR bit fields */
-+#define STM32_RTC_VERR_MINREV_SHIFT	0
-+#define STM32_RTC_VERR_MINREV		GENMASK(3, 0)
-+#define STM32_RTC_VERR_MAJREV_SHIFT	4
-+#define STM32_RTC_VERR_MAJREV		GENMASK(7, 4)
-+
- /* STM32_RTC_WPR key constants */
- #define RTC_WPR_1ST_KEY			0xCA
- #define RTC_WPR_2ND_KEY			0x53
- #define RTC_WPR_WRONG_KEY		0xFF
- 
-+#define UNDEF_REG ~0
-+
- struct stm32_rtc;
- 
- struct stm32_rtc_registers {
-@@ -86,6 +98,9 @@ struct stm32_rtc_registers {
- 	u8 prer;
- 	u8 alrmar;
- 	u8 wpr;
-+	u8 sr;
-+	u8 scr;
-+	u16 verr;
- };
- 
- struct stm32_rtc_events {
-@@ -98,6 +113,7 @@ struct stm32_rtc_data {
- 	void (*clear_events)(struct stm32_rtc *rtc, unsigned int flags);
- 	bool has_pclk;
- 	bool need_dbp;
-+	bool has_wakeirq;
- };
- 
- struct stm32_rtc {
-@@ -110,6 +126,7 @@ struct stm32_rtc {
- 	struct clk *rtc_ck;
- 	const struct stm32_rtc_data *data;
- 	int irq_alarm;
-+	int wakeirq_alarm;
- };
- 
- static void stm32_rtc_wpr_unlock(struct stm32_rtc *rtc)
-@@ -193,7 +210,7 @@ static irqreturn_t stm32_rtc_alarm_irq(int irq, void *dev_id)
- 
- 	mutex_lock(&rtc->rtc_dev->ops_lock);
- 
--	status = readl_relaxed(rtc->base + regs.isr);
-+	status = readl_relaxed(rtc->base + regs.sr);
- 	cr = readl_relaxed(rtc->base + regs.cr);
- 
- 	if ((status & evts.alra) &&
-@@ -325,7 +342,7 @@ static int stm32_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
- 
- 	alrmar = readl_relaxed(rtc->base + regs.alrmar);
- 	cr = readl_relaxed(rtc->base + regs.cr);
--	status = readl_relaxed(rtc->base + regs.isr);
-+	status = readl_relaxed(rtc->base + regs.sr);
- 
- 	if (alrmar & STM32_RTC_ALRMXR_DATE_MASK) {
- 		/*
-@@ -533,6 +550,7 @@ static void stm32_rtc_clear_events(struct stm32_rtc *rtc,
- static const struct stm32_rtc_data stm32_rtc_data = {
- 	.has_pclk = false,
- 	.need_dbp = true,
-+	.has_wakeirq = false,
- 	.regs = {
- 		.tr = 0x00,
- 		.dr = 0x04,
-@@ -541,6 +559,9 @@ static const struct stm32_rtc_data stm32_rtc_data = {
- 		.prer = 0x10,
- 		.alrmar = 0x1C,
- 		.wpr = 0x24,
-+		.sr = 0x0C, /* set to ISR offset to ease alarm management */
-+		.scr = UNDEF_REG,
-+		.verr = UNDEF_REG,
- 	},
- 	.events = {
- 		.alra = STM32_RTC_ISR_ALRAF,
-@@ -551,6 +572,7 @@ static const struct stm32_rtc_data stm32_rtc_data = {
- static const struct stm32_rtc_data stm32h7_rtc_data = {
- 	.has_pclk = true,
- 	.need_dbp = true,
-+	.has_wakeirq = false,
- 	.regs = {
- 		.tr = 0x00,
- 		.dr = 0x04,
-@@ -559,6 +581,9 @@ static const struct stm32_rtc_data stm32h7_rtc_data = {
- 		.prer = 0x10,
- 		.alrmar = 0x1C,
- 		.wpr = 0x24,
-+		.sr = 0x0C, /* set to ISR offset to ease alarm management */
-+		.scr = UNDEF_REG,
-+		.verr = UNDEF_REG,
- 	},
- 	.events = {
- 		.alra = STM32_RTC_ISR_ALRAF,
-@@ -566,9 +591,41 @@ static const struct stm32_rtc_data stm32h7_rtc_data = {
- 	.clear_events = stm32_rtc_clear_events,
- };
- 
-+static void stm32mp1_rtc_clear_events(struct stm32_rtc *rtc,
-+				      unsigned int flags)
-+{
-+	struct stm32_rtc_registers regs = rtc->data->regs;
-+
-+	/* Flags are cleared by writing 1 in RTC_SCR */
-+	writel_relaxed(flags, rtc->base + regs.scr);
-+}
-+
-+static const struct stm32_rtc_data stm32mp1_data = {
-+	.has_pclk = true,
-+	.need_dbp = false,
-+	.has_wakeirq = true,
-+	.regs = {
-+		.tr = 0x00,
-+		.dr = 0x04,
-+		.cr = 0x18,
-+		.isr = 0x0C, /* named RTC_ICSR on stm32mp1 */
-+		.prer = 0x10,
-+		.alrmar = 0x40,
-+		.wpr = 0x24,
-+		.sr = 0x50,
-+		.scr = 0x5C,
-+		.verr = 0x3F4,
-+	},
-+	.events = {
-+		.alra = STM32_RTC_SR_ALRA,
-+	},
-+	.clear_events = stm32mp1_rtc_clear_events,
-+};
-+
- static const struct of_device_id stm32_rtc_of_match[] = {
- 	{ .compatible = "st,stm32-rtc", .data = &stm32_rtc_data },
- 	{ .compatible = "st,stm32h7-rtc", .data = &stm32h7_rtc_data },
-+	{ .compatible = "st,stm32mp1-rtc", .data = &stm32mp1_data },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, stm32_rtc_of_match);
-@@ -727,12 +784,19 @@ static int stm32_rtc_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--	platform_set_drvdata(pdev, rtc);
--
- 	ret = device_init_wakeup(&pdev->dev, true);
-+	if (rtc->data->has_wakeirq) {
-+		rtc->wakeirq_alarm = platform_get_irq(pdev, 1);
-+		if (rtc->wakeirq_alarm <= 0)
-+			ret = rtc->wakeirq_alarm;
-+		else
-+			ret = dev_pm_set_dedicated_wake_irq(&pdev->dev,
-+							    rtc->wakeirq_alarm);
-+	}
- 	if (ret)
--		dev_warn(&pdev->dev,
--			 "alarm won't be able to wake up the system");
-+		dev_warn(&pdev->dev, "alarm can't wake up the system: %d", ret);
-+
-+	platform_set_drvdata(pdev, rtc);
- 
- 	rtc->rtc_dev = devm_rtc_device_register(&pdev->dev, pdev->name,
- 						&stm32_rtc_ops, THIS_MODULE);
-@@ -760,6 +824,14 @@ static int stm32_rtc_probe(struct platform_device *pdev)
- 	if (!(readl_relaxed(rtc->base + regs.isr) & STM32_RTC_ISR_INITS))
- 		dev_warn(&pdev->dev, "Date/Time must be initialized\n");
- 
-+	if (regs.verr != UNDEF_REG) {
-+		u32 ver = readl_relaxed(rtc->base + regs.verr);
-+
-+		dev_info(&pdev->dev, "registered rev:%d.%d\n",
-+			 (ver >> STM32_RTC_VERR_MAJREV_SHIFT) & 0xF,
-+			 (ver >> STM32_RTC_VERR_MINREV_SHIFT) & 0xF);
-+	}
-+
- 	return 0;
- err:
- 	if (rtc->data->has_pclk)
-@@ -769,6 +841,7 @@ static int stm32_rtc_probe(struct platform_device *pdev)
- 	if (rtc->data->need_dbp)
- 		regmap_update_bits(rtc->dbp, rtc->dbp_reg, rtc->dbp_mask, 0);
- 
-+	dev_pm_clear_wake_irq(&pdev->dev);
- 	device_init_wakeup(&pdev->dev, false);
- 
- 	return ret;
-@@ -795,6 +868,7 @@ static int stm32_rtc_remove(struct platform_device *pdev)
- 	if (rtc->data->need_dbp)
- 		regmap_update_bits(rtc->dbp, rtc->dbp_reg, rtc->dbp_mask, 0);
- 
-+	dev_pm_clear_wake_irq(&pdev->dev);
- 	device_init_wakeup(&pdev->dev, false);
- 
- 	return 0;
+On Wed, Apr 18, 2018 at 09:05:19AM -0500, Kyle Evans wrote:
+> On Tue, Jan 9, 2018 at 7:34 AM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On Mon, Jan 08, 2018 at 09:30:57AM -0600, Kyle Evans wrote:
+> >> On Thu, Jan 4, 2018 at 8:01 AM, Maxime Ripard
+> >> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >> > On Fri, Dec 22, 2017 at 06:11:52PM +0800, Chen-Yu Tsai wrote:
+> >> >> On Fri, Dec 22, 2017 at 6:07 PM, Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org> wrote:
+> >> >> > On Fri, 22 Dec 2017 09:35:08 +0100
+> >> >> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >> >> >
+> >> >> >> On Thu, Dec 21, 2017 at 07:09:03PM +0100, Emmanuel Vadot wrote:
+> >> >> >> >
+> >> >> >> >  Hi Maxime,
+> >> >> >> >
+> >> >> >> > On Thu, 21 Dec 2017 16:26:30 +0100
+> >> >> >> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >> >> >> >
+> >> >> >> > > Hi,
+> >> >> >> > >
+> >> >> >> > > On Thu, Dec 21, 2017 at 09:19:24AM -0600, Kyle Evans wrote:
+> >> >> >> > > > On Thu, Dec 21, 2017 at 8:55 AM, Maxime Ripard
+> >> >> >> > > > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >> >> >> > > > > Hi Kyle,
+> >> >> >> > > > >
+> >> >> >> > > > > On Tue, Dec 19, 2017 at 03:05:23PM -0600, kevans91-OYTqUY/oFF8@public.gmane.org wrote:
+> >> >> >> > > > >> Allwinner a83t has a 1 KB sid block with efuse for security rootkey and
+> >> >> >> > > > >> thermal calibration data, add node to describe it.
+> >> >> >> > > > >>
+> >> >> >> > > > >> a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
+> >> >> >> > > > >> supported in an external driver for FreeBSD.
+> >> >> >> > > > >>
+> >> >> >> > > > >> Signed-off-by: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
+> >> >> >> > > > >
+> >> >> >> > > > > The patch looks fine in itself, but we've had a number of issues with
+> >> >> >> > > > > the register layout (and access patterns) in the past, so I'd rather
+> >> >> >> > > > > have something that works in Linux too if possible.
+> >> >> >> > > >
+> >> >> >> > > > I have a patch that I think should make it work fine on Linux [1], but
+> >> >> >> > > > I'm afraid I have little to no capability to test it myself and so I
+> >> >> >> > > > did not add it as well.
+> >> >> >> > > >
+> >> >> >> > > > I do know that the rootkey is offset 0x200 into the given space [2],
+> >> >> >> > > > as is the case with the H3, and that the readout quirk is not needed.
+> >> >> >> > > > I wasn't 100% sure that the a83t has 2Kbit worth of efuse space as the
+> >> >> >> > > > H3, but I do know that thermal data can be found at 0x34 and 0x38 in
+> >> >> >> > > > this space.
+> >> >> >> > >
+> >> >> >> > > Then maybe we should leave it aside until someone takes some time on
+> >> >> >> > > the A83t.
+> >> >> >> >
+> >> >> >> >  Take some time on the Linux driver and do not apply this patch for
+> >> >> >> > now you mean ?
+> >> >> >>
+> >> >> >> Yep.
+> >> >> >>
+> >> >> >> Maxime
+> >> >> >
+> >> >> >  Since linux doesn't have the compatible in it's driver what would
+> >> >> > be the harm to add the node in the DTS ? If a quirks is needed because
+> >> >> > some region is weird this would go in the driver right ? I don't see a
+> >> >> > technical problem for adding this node right now.
+> >> >> >  If Kyle confirm the lenght of the region and that no quirk is needed
+> >> >> > will it be enough ?
+> >> >>
+> >> >> I guess I wasn't very clear. I'm OK with the patch going in. The device
+> >> >> node currently says nothing about how much efuse space there is. The
+> >> >> memory region covers that and the control section, and the size matches
+> >> >> what the memory map says.
+> >> >>
+> >> >> The size and offset of the efuse space would be dealt with in the driver.
+> >> >
+> >> > Let's merge it then.
+> >> >
+> >> > Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> >>
+> >> What does the timeline for these things normally look like? I'm new to
+> >> these parts. =)
+> >
+> > We're one week away from the merge window, so it's a bit late for it
+> > to be merged in 4.16, but it'll be in 4.17.
+
+> It's been two months and this still hasn't quite landed in
+> sunxi/for-next. =( May I ask the status on this?
+
+It seems to have fallen through the cracks, sorry :/
+
+Can you resend it based on 4.17?
+
+Thanks!
+Maxime
+
 -- 
-2.7.4
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--4syblqsgtkenq3hx--
