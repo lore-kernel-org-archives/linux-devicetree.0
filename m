@@ -1,95 +1,57 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCH 2/6] dt-bindings: clock: add DDR3 standard speed bins.
-Date: Thu, 19 Apr 2018 13:30:16 +0200
-Message-ID: <62c4b6f0-e67c-8e25-a129-bf0c06c5157b@collabora.com>
-References: <20180419104019.24406-1-enric.balletbo@collabora.com>
- <20180419104019.24406-3-enric.balletbo@collabora.com>
- <5662116.zj93FbmDPb@phil>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH 01/15] media: staging/imx: add support to media dev for
+ no IPU systems
+Date: Thu, 19 Apr 2018 15:06:06 +0300
+Message-ID: <20180419120606.p32pl5at7wky7u3y@mwanda>
+References: <20180419101812.30688-1-rui.silva@linaro.org>
+ <20180419101812.30688-2-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5662116.zj93FbmDPb@phil>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, dbasehore@chromium.org, linux-kernel@vger.kernel.org, dianders@google.com, groeck@google.com, kernel@collabora.com, Mark Rutland <mark.rutland@arm.com>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <20180419101812.30688-2-rui.silva@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
-
-On 19/04/18 13:10, Heiko Stuebner wrote:
-> Hi Enric,
+On Thu, Apr 19, 2018 at 11:17:58AM +0100, Rui Miguel Silva wrote:
+> Some i.MX SoC do not have IPU, like the i.MX7, add to the the media device
+> infrastructure support to be used in this type of systems that do not have
+> internal subdevices besides the CSI.
 > 
-> Am Donnerstag, 19. April 2018, 12:40:15 CEST schrieb Enric Balletbo i Serra:
->> DDR3 SDRAM Standard (JESD79-3F) defines some standard speed bins for
->> DDR3 memories. The devfreq/rk3399_dmc.txt binding refers to this file
->> which does not exist, so add a ddr.h file with the standard speed bins
->> for DDR3.
->>
->> Fixes: c1ceb8f7c167 (Documentation: bindings: add dt documentation for rk3399 dmc)
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> ---
->>
->>  include/dt-bindings/clock/ddr.h | 34 +++++++++++++++++++++++++++++++++
->>  1 file changed, 34 insertions(+)
->>  create mode 100644 include/dt-bindings/clock/ddr.h
->>
->> diff --git a/include/dt-bindings/clock/ddr.h b/include/dt-bindings/clock/ddr.h
->> new file mode 100644
->> index 000000000000..506aef7e609e
->> --- /dev/null
->> +++ b/include/dt-bindings/clock/ddr.h
->> @@ -0,0 +1,34 @@
->> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
->> +
->> +#ifndef DT_BINDINGS_DDR_H
->> +#define DT_BINDINGS_DDR_H
->> +
->> +/* DDR3-800 Standard Speed Bins */
->> +#define DDR3_800D	15
->> +#define DDR3_800E		18
->> +/* DDR3-1066 Standard Speed Bins */
->> +#define DDR3_1066E	18
->> +#define DDR3_1066F	21
->> +#define DDR3_1066G	24
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> ---
+>  drivers/staging/media/imx/imx-media-dev.c        | 16 +++++++++++-----
+>  .../staging/media/imx/imx-media-internal-sd.c    |  3 +++
+>  drivers/staging/media/imx/imx-media.h            |  3 +++
+>  3 files changed, 17 insertions(+), 5 deletions(-)
 > 
-> looking at the mentioned jedec standard, I don't see where these numerical
-> values are defined in the standard itself. [I may be blind though]
-> 
+> diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
+> index f67ec8e27093..a8afe0ec4134 100644
+> --- a/drivers/staging/media/imx/imx-media-dev.c
+> +++ b/drivers/staging/media/imx/imx-media-dev.c
+> @@ -92,6 +92,9 @@ static int imx_media_get_ipu(struct imx_media_dev *imxmd,
+>  	struct ipu_soc *ipu;
+>  	int ipu_id;
+>  
+> +	if (imxmd->no_ipu_present)
 
-Damm it. No, you're not blind. I did an horrible mistake adding an old version
-of this file. It's wrong, that is supposed to be there is DDR3 table available
-in the ATF [1] not this.
+It's sort of nicer if variables don't have a negative built in because
+otherwise you get confusing double negatives like "if (!no_ipu) {".
+It's not hard to invert the varible in this case, because the only thing
+we need to change is imx_media_probe() to set:
 
-        /* 5-5-5 */
-	DDR3_800D = 0,
-	/* 6-6-6 */
-	DDR3_800E = 1,
-	/* 6-6-6 */
-	DDR3_1066E = 2,
-	/* 7-7-7 */
-	DDR3_1066F = 3,
-        ...
++	imxmd->ipu_present = true;
 
-The value is passed directly to the ATF so the above values are the correct.
-
-One question that I have on my mind is if this file should be called as is or if
-will be better name as atf-ddr.h or something like that.
-ddr.h -> atf-ddr.h
-
-[1]
-https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/rockchip/rk3399/drivers/dram/dram_spec_timing.h
-
-Sorry about that. Guess it's needed a v2 but let's wait a little bit for if more
-discussion arises.
-
-Best regards,
-  Enric
-
-> Could you explain a bit more where these numerical values are coming from?
-> 
-> 
-> Thanks
-> Heiko
-> 
+regards,
+dan carpenter
