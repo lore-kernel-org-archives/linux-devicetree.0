@@ -1,45 +1,72 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: dts: sunxi: Add sid for a83t
-Date: Thu, 19 Apr 2018 17:05:18 +0200
-Message-ID: <20180419150518.nbeq5zelrl236grv@flea>
-References: <20180419141103.38196-1-kevans@FreeBSD.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Kyle Evans <kevans@freebsd.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v2 14/16] arm: dts: sun8i: h3: enable H3
+ sid controller
+Date: Thu, 19 Apr 2018 10:11:22 -0500
+Message-ID: <CACNAnaGVSbk7czb+mcGTx1C=YwCWe1qqHQDQe9+PNifwEXovMw@mail.gmail.com>
+References: <20180128232919.12639-1-embed3d@gmail.com> <20180128232919.12639-15-embed3d@gmail.com>
+ <20180129095200.attg7cgvpifpchtn@flea.lan> <470ec61e-8b08-5193-ede1-01d02b2c865e@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kdx76qelsr5r5vbe"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBL7A4LLAKGQEIWFNZ5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180419141103.38196-1-kevans-HZy0K5TPuP5AfugRpC6u6w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: kevans-HZy0K5TPuP5AfugRpC6u6w@public.gmane.org
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <470ec61e-8b08-5193-ede1-01d02b2c865e@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: embed3d@gmail.com
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, lee.jones@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, davem@davemloft.net, hans.verkuil@cisco.com, mchehab@kernel.org, rask@formelder.dk, clabbe.montjoie@gmail.com, sean@mess.org, krzk@kernel.org, quentin.schulz@free-electrons.com, icenowy@aosc.io, edu.molinas@gmail.com, singhalsimran0@gmail.com, linux-iio@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jan 29, 2018 at 6:03 AM, Philipp Rossak <embed3d@gmail.com> wrote:
+>
+>
+> On 29.01.2018 10:52, Maxime Ripard wrote:
+>>
+>> On Mon, Jan 29, 2018 at 12:29:17AM +0100, Philipp Rossak wrote:
+>>>
+>>> This patch enables the the sid controller in the H3. It can be used
+>>> for thermal calibration data.
+>>>
+>>> Signed-off-by: Philipp Rossak <embed3d@gmail.com>
+>>> ---
+>>>   arch/arm/boot/dts/sun8i-h3.dtsi | 7 +++++++
+>>>   1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi
+>>> b/arch/arm/boot/dts/sun8i-h3.dtsi
+>>> index 3f83f6a27c74..9bb5cc29fec5 100644
+>>> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+>>> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+>>> @@ -72,6 +72,13 @@
+>>>                 };
+>>>         };
+>>>   +     soc {
+>>> +               sid: eeprom@1c14000 {
+>>> +                       compatible = "allwinner,sun8i-h3-sid";
+>>> +                       reg = <0x01c14000 0x400>;
+>>> +               };
+>>> +       };
+>>> +
+>>
+>>
+>> Shouldn't you also use a nvmem-cells property to the THS node?
+>>
+>> Maxime
+>>
+>
+> Oh seems like I forgot that.
+> As related to the wiki [1] this should be 64 bit wide at the address 0x34. I
+> will add that in the next version.
+>
+>
+> [1]: http://linux-sunxi.org/SID_Register_Guide#eFUSE
+>
+> Thanks,
+> Philipp
+>
 
---kdx76qelsr5r5vbe
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Hi,
 
-On Thu, Apr 19, 2018 at 09:11:03AM -0500, kevans-HZy0K5TPuP5AfugRpC6u6w@public.gmane.org wrote:
-> Allwinner a83t has a 1 KB sid block with efuse for security rootkey and thermal
-> calibration data, add node to describe it.
-> 
-> a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
-> supported in an external driver for FreeBSD.
-> 
-> Signed-off-by: Kyle Evans <kevans-HZy0K5TPuP5AfugRpC6u6w@public.gmane.org>
+Any chance this will see a v3 soon? I'm kind of interested in sid node
+for h3. =)
 
-Applied, thanks!
-Maxime
+Thanks,
 
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---kdx76qelsr5r5vbe--
+Kyle Evans
