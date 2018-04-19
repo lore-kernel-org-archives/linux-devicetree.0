@@ -1,68 +1,47 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 1/6] drm/sun4i: tcon: Pass drm_encoder * into
- sun4i_tcon0_mode_set_cpu
-Date: Thu, 19 Apr 2018 17:32:20 +0800
-Message-ID: <20180419093225.614-2-wens@csie.org>
+Subject: [PATCH 5/6] ARM: dts: sun7i: add pinmux setting for RGB888 output for LCD0
+Date: Thu, 19 Apr 2018 17:32:24 +0800
+Message-ID: <20180419093225.614-6-wens@csie.org>
 References: <20180419093225.614-1-wens@csie.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180419093225.614-1-wens@csie.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Jonathan Liu <net147@gmail.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
+Cc: Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Liu <net147@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-c3VuNGlfdGNvbjBfbW9kZV9zZXRfY3B1KCkgY3VycmVudGx5IGFjY2VwdHMgc3RydWN0IG1pcGlf
-ZHNpX2RldmljZSAqCmFzIGl0cyBzZWNvbmQgcGFyYW1ldGVyLiBUaGlzIGlzIGRlcml2ZWQgZnJv
-bSBkcm1fZW5jb2Rlci4KClRoZSBEU0kgZW5jb2RlciBpcyB0aWVkIHRvIHRoZSBDUFUgaW50ZXJm
-YWNlIG1vZGUgb2YgdGhlIFRDT04gYXMgYQpzcGVjaWFsIGNhc2UuIEluIHRoZW9yeSwgaWYgaGFy
-ZHdhcmUgd2VyZSBhdmFpbGFibGUsIHdlIGNvdWxkIGFsc28Kc3VwcG9ydCBub3JtYWwgQ1BVIGlu
-dGVyZmFjZSBtb2Rlcy4gSXQgaXMgYmV0dGVyIHRvIHBhc3MgdGhlIGdlbmVyaWMKZW5jb2RlciBp
-bnN0ZWFkIG9mIHRoZSBzcGVjaWFsaXplZCBtaXBpX2RzaV9kZXZpY2UsIGFuZCBoYW5kbGUgdGhl
-CmRpZmZlcmVuY2VzIGluc2lkZSB0aGUgZnVuY3Rpb24uCgpQYXNzaW5nIHRoZSBlbmNvZGVyIHdv
-dWxkIGFsc28gZW5hYmxlIHRoZSBmdW5jdGlvbiB0byBwYXNzIGl0LCBvciBhbnkKb3RoZXIgZGF0
-YSBzdHJ1Y3R1cmVzIHJlbGF0ZWQgdG8gaXQsIHRvIG90aGVyIGZ1bmN0aW9ucyBleHBlY3Rpbmcg
-aXQuCk9uZSBzdWNoIGV4YW1wbGUgd291bGQgYmUgZGl0aGVyaW5nIHN1cHBvcnQgdGhhdCB3aWxs
-IGJlIGFkZGVkIGluIGEKbGF0ZXIgcGF0Y2gsIHdoaWNoIGxvb2tzIGF0IHByb3BlcnRpZXMgdGll
-ZCB0byB0aGUgY29ubmVjdG9yIHRvCmRldGVybWluZSB3aGV0aGVyIGRpdGhlcmluZyBzaG91bGQg
-YmUgZW5hYmxlZCBvciBub3QuCgpTaWduZWQtb2ZmLWJ5OiBDaGVuLVl1IFRzYWkgPHdlbnNAY3Np
-ZS5vcmc+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYyB8IDE1ICsrKysr
-Ky0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMo
-LSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jIGIvZHJp
-dmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYwppbmRleCAwODc0N2ZjM2VlNzEuLjJiZDUz
-ZWY3ZDRiOCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYwor
-KysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jCkBAIC0yNzcsOSArMjc3LDEy
-IEBAIHN0YXRpYyB2b2lkIHN1bjRpX3Rjb24wX21vZGVfc2V0X2NvbW1vbihzdHJ1Y3Qgc3VuNGlf
-dGNvbiAqdGNvbiwKIH0KIAogc3RhdGljIHZvaWQgc3VuNGlfdGNvbjBfbW9kZV9zZXRfY3B1KHN0
-cnVjdCBzdW40aV90Y29uICp0Y29uLAotCQkJCSAgICAgc3RydWN0IG1pcGlfZHNpX2RldmljZSAq
-ZGV2aWNlLAorCQkJCSAgICAgc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyLAogCQkJCSAgICAg
-Y29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUpCiB7CisJLyogVE9ETyBzdXBwb3J0
-IG5vcm1hbCBDUFUgaW50ZXJmYWNlIG1vZGVzICovCisJc3RydWN0IHN1bjZpX2RzaSAqZHNpID0g
-ZW5jb2Rlcl90b19zdW42aV9kc2koZW5jb2Rlcik7CisJc3RydWN0IG1pcGlfZHNpX2RldmljZSAq
-ZGV2aWNlID0gZHNpLT5kZXZpY2U7CiAJdTggYnBwID0gbWlwaV9kc2lfcGl4ZWxfZm9ybWF0X3Rv
-X2JwcChkZXZpY2UtPmZvcm1hdCk7CiAJdTggbGFuZXMgPSBkZXZpY2UtPmxhbmVzOwogCXUzMiBi
-bG9ja19zcGFjZSwgc3RhcnRfZGVsYXk7CkBAIC02MDYsMTYgKzYwOSwxMCBAQCB2b2lkIHN1bjRp
-X3Rjb25fbW9kZV9zZXQoc3RydWN0IHN1bjRpX3Rjb24gKnRjb24sCiAJCQkgY29uc3Qgc3RydWN0
-IGRybV9lbmNvZGVyICplbmNvZGVyLAogCQkJIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2Rl
-ICptb2RlKQogewotCXN0cnVjdCBzdW42aV9kc2kgKmRzaTsKLQogCXN3aXRjaCAoZW5jb2Rlci0+
-ZW5jb2Rlcl90eXBlKSB7CiAJY2FzZSBEUk1fTU9ERV9FTkNPREVSX0RTSToKLQkJLyoKLQkJICog
-VGhpcyBpcyBub3QgcmVhbGx5IGVsZWdhbnQsIGJ1dCBpdCdzIHRoZSAiY2xlYW5lciIKLQkJICog
-d2F5IEkgY291bGQgdGhpbmsgb2YuLi4KLQkJICovCi0JCWRzaSA9IGVuY29kZXJfdG9fc3VuNmlf
-ZHNpKGVuY29kZXIpOwotCQlzdW40aV90Y29uMF9tb2RlX3NldF9jcHUodGNvbiwgZHNpLT5kZXZp
-Y2UsIG1vZGUpOworCQkvKiBEU0kgaXMgdGllZCB0byBzcGVjaWFsIGNhc2Ugb2YgQ1BVIGludGVy
-ZmFjZSAqLworCQlzdW40aV90Y29uMF9tb2RlX3NldF9jcHUodGNvbiwgZW5jb2RlciwgbW9kZSk7
-CiAJCWJyZWFrOwogCWNhc2UgRFJNX01PREVfRU5DT0RFUl9MVkRTOgogCQlzdW40aV90Y29uMF9t
-b2RlX3NldF9sdmRzKHRjb24sIGVuY29kZXIsIG1vZGUpOwotLSAKMi4xNy4wCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On the A20, as well as many other Allwinner SoCs, the PD pingroup has
+the LCD0 RGB output functions.
+
+Add a pinmux setting for RGB888 output from LCD0, so boards and tablets
+with parallel RGB LCD panels may reference it.
+
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index e529e4ff2174..e06c14649d22 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -920,6 +920,17 @@
+ 				pins = "PI20", "PI21";
+ 				function = "uart7";
+ 			};
++
++			lcd0_rgb888_pins: lcd0-rgb888-pins {
++				pins = "PD0", "PD1", "PD2", "PD3", "PD4",
++				       "PD5", "PD6", "PD7", "PD8", "PD9",
++				       "PD10", "PD11", "PD12", "PD13",
++				       "PD14", "PD15", "PD16", "PD17",
++				       "PD18", "PD19", "PD20", "PD21",
++				       "PD22", "PD23", "PD24", "PD25",
++				       "PD26", "PD27";
++				function = "lcd0";
++			};
+ 		};
+ 
+ 		timer@1c20c00 {
+-- 
+2.17.0
