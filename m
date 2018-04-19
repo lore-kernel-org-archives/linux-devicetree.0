@@ -1,16 +1,14 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [PATCH 4/6] drm/panel: simple: Add support for Banana Pi 7"
- S070WV20-CT16 panel
-Date: Thu, 19 Apr 2018 14:31:13 +0200
-Message-ID: <58ce9e3b-00ee-87d2-f05b-b9f1414d1cfa@micronovasrl.com>
-References: <20180419093225.614-1-wens@csie.org>
- <20180419093225.614-5-wens@csie.org>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v8 2/2] drm: bridge: Add thc63lvd1024 LVDS decoder driver
+Date: Thu, 19 Apr 2018 14:33:55 +0200
+Message-ID: <20180419123355.GB4235@w540>
+References: <1523357590-3841-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1523357590-3841-3-git-send-email-jacopo+renesas@jmondi.org>
+ <241462f3-0396-c763-6fb4-aff8fc5d29bd@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============0181382873=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180419093225.614-5-wens@csie.org>
-Content-Language: it
+In-Reply-To: <241462f3-0396-c763-6fb4-aff8fc5d29bd@mentor.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -20,68 +18,126 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Jonathan Liu <net147@gmail.com>, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, dri-devel@lists.freedesktop.org, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, geert@linux-m68k.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpJbCAxOS8wNC8yMDE4IDExOjMyLCBDaGVuLVl1IFRzYWkgaGEgc2NyaXR0bzoKPiBUaGlz
-IHBhbmVsIGlzIG1hcmtldGVkIGFzIEJhbmFuYSBQaSA3IiBMQ0QgZGlzcGxheS4gT24gdGhlIGJh
-Y2sgaXMKPiBhIHN0aWNrZXIgZGVub3RpbmcgdGhlIG1vZGVsIG5hbWUgUzA3MFdWMjAtQ1QxNi4K
-Ckp1ZGdpbmcgZnJvbSB0aGUgY29kZSwgdGhlIHJlYWwgdmVuZG9yIHNob3VsZCBiZSBDRFRlY2gu
-ClRha2UgYSBsb29rIGF0IHRoZWlyIHdlYnNpdGU6Cmh0dHA6Ly93d3cuY2R0ZWNoLWxjZC5jb20v
-ZW4vc3RhbmRhcmRzY3JlZW4uaHRtbAoKSSBwb2ludCB5b3UgbXkgcGF0Y2ggZm9yIGluc2VydGlu
-ZyBhbm90aGVyIHNpbWlsYXIgcGFuZWw6Cmh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9y
-Zy9wYXRjaC8yMTE5MTQvCgpNYXliZSBpdCB3b3VsZCBtYWtlIHNlbnNlIHRvIHVzZSBDRFRlY2gg
-YXMgdGhlIHZlbmRvciwKYmVjYXVzZSBtYXliZSBCYW5hbmFwaSByZXNlbGxzIG9ubHkgaXQuCk9y
-IG1heWJlIGl0IGlzIGEgY3VzdG9tIHBhbmVsIGRvbmUgZm9yIHRoZW0sCmJ1dCB0aGUgc2FtZSBp
-cyBmb3Igb3RoZXIgcGFuZWxzIEkndmUgc3VibWl0dGVkIHBhdGNoZXMuCk1pY3Jvbm92YSBzcmwg
-Y3VzdG9tLCBidXQgdmVuZG9yIGlzIENEVGVjaC4KCldoYXQgZG8geW91IHRoaW5rPwoKLS0gCkdp
-dWxpbyBCZW5ldHRpCkNUTwoKTUlDUk9OT1ZBIFNSTApTZWRlOiBWaWEgQS4gTmllZGRhIDMgLSAz
-NTAxMCBWaWdvbnphIChQRCkKVGVsLiAwNDkvODkzMTU2MyAtIEZheCAwNDkvODkzMTM0NgpDb2Qu
-RmlzY2FsZSAtIFAuSVZBIDAyNjYzNDIwMjg1CkNhcGl0YWxlIFNvY2lhbGUg4oKsIDI2LjAwMCBp
-LnYuCklzY3JpdHRhIGFsIFJlZy4gSW1wcmVzZSBkaSBQYWRvdmEgTi4gMDI2NjM0MjAyODUKTnVt
-ZXJvIFIuRS5BLiAyNTg2NDIKCj4gCj4gVGhpcyBpcyBhIDciIDgwMHg0ODAgcGFuZWwgY29ubmVj
-dGVkIHRocm91Z2ggYSAyNC1iaXQgUkdCIGludGVyZmFjZS4KPiBIb3dldmVyIHRoZSBwYW5lbCBv
-bmx5IGRvZXMgMjYyayBjb2xvcnMuCj4gCj4gU2lnbmVkLW9mZi1ieTogQ2hlbi1ZdSBUc2FpIDx3
-ZW5zQGNzaWUub3JnPgo+IC0tLQo+ICAgLi4uL2Rpc3BsYXkvcGFuZWwvYmFuYW5hcGksczA3MHd2
-MjAtY3QxNi50eHQgIHwgIDcgKysrKysrCj4gICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwt
-c2ltcGxlLmMgICAgICAgICAgfCAyNSArKysrKysrKysrKysrKysrKysrCj4gICAyIGZpbGVzIGNo
-YW5nZWQsIDMyIGluc2VydGlvbnMoKykKPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9iYW5hbmFwaSxzMDcwd3YyMC1j
-dDE2LnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9wYW5lbC9iYW5hbmFwaSxzMDcwd3YyMC1jdDE2LnR4dCBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2JhbmFuYXBpLHMwNzB3djIwLWN0
-MTYudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjJlYzM1
-Y2UzNmU5YQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9iYW5hbmFwaSxzMDcwd3YyMC1jdDE2LnR4dAo+IEBAIC0w
-LDAgKzEsNyBAQAo+ICtCYW5hbmEgUGkgNyIgKFMwNzBXVjIwLUNUMTYpIFRGVCBMQ0QgUGFuZWwK
-PiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJi
-YW5hbmFwaSxzMDcwd3YyMC1jdDE2Igo+ICsKPiArVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUg
-d2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAo+ICtpbiBz
-aW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5Lgo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFu
-ZWwtc2ltcGxlLmMKPiBpbmRleCBjYmYxYWI0MDRlZTcuLjliYzAzN2Y3NGQ2YyAxMDA2NDQKPiAt
-LS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPiArKysgYi9kcml2ZXJz
-L2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPiBAQCAtNzQ1LDYgKzc0NSwyOCBAQCBzdGF0
-aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgYXZpY190bTA3MGRkaDAzID0gewo+ICAgCX0sCj4g
-ICB9Owo+ICAgCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBiYW5hbmFw
-aV9zMDcwd3YyMF9jdDE2X21vZGUgPSB7Cj4gKwkuY2xvY2sgPSAzMDAwMCwKPiArCS5oZGlzcGxh
-eSA9IDgwMCwKPiArCS5oc3luY19zdGFydCA9IDgwMCArIDQwLAo+ICsJLmhzeW5jX2VuZCA9IDgw
-MCArIDQwICsgNDgsCj4gKwkuaHRvdGFsID0gODAwICsgNDAgKyA0OCArIDQwLAo+ICsJLnZkaXNw
-bGF5ID0gNDgwLAo+ICsJLnZzeW5jX3N0YXJ0ID0gNDgwICsgMTMsCj4gKwkudnN5bmNfZW5kID0g
-NDgwICsgMTMgKyAzLAo+ICsJLnZ0b3RhbCA9IDQ4MCArIDEzICsgMyArIDI5LAo+ICt9Owo+ICsK
-PiArc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGJhbmFuYXBpX3MwNzB3djIwX2N0MTYg
-PSB7Cj4gKwkubW9kZXMgPSAmYmFuYW5hcGlfczA3MHd2MjBfY3QxNl9tb2RlLAo+ICsJLm51bV9t
-b2RlcyA9IDEsCj4gKwkuYnBjID0gNiwKPiArCS5zaXplID0gewo+ICsJCS53aWR0aCA9IDE1NCwK
-PiArCQkuaGVpZ2h0ID0gODYsCj4gKwl9LAo+ICt9Owo+ICsKPiAgIHN0YXRpYyBjb25zdCBzdHJ1
-Y3QgZHJtX2Rpc3BsYXlfbW9kZSBib2VfbnYxMDF3eG1uNTFfbW9kZXNbXSA9IHsKPiAgIAl7Cj4g
-ICAJCS5jbG9jayA9IDcxOTAwLAo+IEBAIC0yMTEyLDYgKzIxMzQsOSBAQCBzdGF0aWMgY29uc3Qg
-c3RydWN0IG9mX2RldmljZV9pZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0gewo+ICAgCX0sIHsKPiAg
-IAkJLmNvbXBhdGlibGUgPSAiYXZpYyx0bTA3MGRkaDAzIiwKPiAgIAkJLmRhdGEgPSAmYXZpY190
-bTA3MGRkaDAzLAo+ICsJfSwgewo+ICsJCS5jb21wYXRpYmxlID0gImJhbmFuYXBpLHMwNzB3djIw
-LWN0MTYiLAo+ICsJCS5kYXRhID0gJmJhbmFuYXBpX3MwNzB3djIwX2N0MTYsCj4gICAJfSwgewo+
-ICAgCQkuY29tcGF0aWJsZSA9ICJib2UsbnYxMDF3eG1uNTEiLAo+ICAgCQkuZGF0YSA9ICZib2Vf
-bnYxMDF3eG1uNTEsCj4gCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+
+--===============0181382873==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
+Content-Disposition: inline
+
+
+--3uo+9/B/ebqu+fSQ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Vladimir,
+
+On Thu, Apr 19, 2018 at 02:18:30PM +0300, Vladimir Zapolskiy wrote:
+> Hi Jacopo,
+>
+> On 04/10/2018 01:53 PM, Jacopo Mondi wrote:
+> > Add DRM bridge driver for Thine THC63LVD1024 LVDS to digital parallel
+> > output converter.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+> > Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.=
+se>
+>
+> Reviewed-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+>
+
+Thanks. FYI I sent v9 yesterday with a minimal change compared to v8.
+
+> Generally I have only one pretty ignorable comment.
+>
+> > +
+> > +enum thc63_ports {
+> > +	THC63_LVDS_IN0,
+> > +	THC63_LVDS_IN1,
+> > +	THC63_RGB_OUT0,
+> > +	THC63_RGB_OUT1,
+> > +};
+> > +
+>
+> The driver uses only THC63_RGB_OUT0 value, or port@2, and MODE{0,1,2} IC
+> configuration is ignored.
+>
+> I don't know if right from the beginning it would be better to support
+> dual-out modes, preferably both single-in and dual-in ones. Will it
+> impact port enumeration?
+
+The bindings have been designed to support dual in/out modes, as you
+can see there are 4 possible ports described there:
+
+Required video port nodes:
+- port@0: First LVDS input port
+- port@2: First digital CMOS/TTL parallel output
+
+Optional video port nodes:
+- port@1: Second LVDS input port
+- port@3: Second digital CMOS/TTL parallel output
+
+Future extension should not require changing the port enumeration,
+just add a property to specify the selected mode.
+
+>
+> I do understand that the extension is possible, and likely only hardware
+> accessibility postpones it.
+
+Yes, hardware on one side, but also what I think is a shortcoming of
+DRM (which exists in other sub-systems, say v4l2) that matches devices
+on their OF device nodes and makes cumbersome handling drivers wanting
+to register on 'port' nodes instead, as it would happen if you have 2
+input endpoints.
+
+See my [1] note here: https://lkml.org/lkml/2018/3/9/422
+And this reply to Archit's comment which has been left floating as it
+is not a real issue (yet): https://lkml.org/lkml/2018/3/10/214
+
+Thanks
+   j
+
+>
+> --
+> With best wishes,
+> Vladimir
+
+--3uo+9/B/ebqu+fSQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJa2IyzAAoJEHI0Bo8WoVY8zPUQAMKMTJb0ltO5D6MbN6eE+ybr
+pRJifFB6zTMJ1QYu/LrKgiMye9n4IcOBQSXf3To07HlPnAAMNUiNNvqF6lV7Wx9N
+Wm6Dgd8DRgbR7IJMvEg7HZQeawoGaxXuLmvtmcv++bTCIuoj5l0GwvHHagFuScNz
+yPaFcrRKoGznymL03EI1YSmZ/KDbieuZ1P3DYVxappYmk9mmTW0v8PJXsALTQgON
+H0Zv80Xs9pqGFQCAiL6H9hosBR4TKsoiqrMOoaMTnGPBRwhXJFBWsSfylXpe/1pQ
+zzDbFEa4FVY2L3vcKxkRLc7aGKnmHDNc32PevIiX/iPYDefUnzHLnookPiSmTiFS
+jiwW+3L//CKZaPuuOIjkWcqWCDjC7wH/MF9MoQNWahFE4CvOODEYaWZ6EwcoKKOY
+aXyr0Sf3E8vo+54IeoRIkwuO2tq8FdfnoKvGGhgCbeKXu3osF0a0XHM79DFri73P
+Siye0VyH+cMjD9EJ+/waQI2wInL0CDkRwapsfZB00XoKt3GP+ap30rssb9RiMwJz
+w3940WeCHjD35U4EgF7tjCyFKW5VDHICY3trn1HrqkdV7x6cQZvRwlkAzXaJSuXi
+vpcsX5T25LRx3BKblBuX6M9ksAKTAwzSUX0wpT/UyDXm5AfpfmwDfJqbGhhRLAzq
+uR40QogrduP0JTstz4mD
+=AYcB
+-----END PGP SIGNATURE-----
+
+--3uo+9/B/ebqu+fSQ--
+
+--===============0181382873==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0181382873==--
