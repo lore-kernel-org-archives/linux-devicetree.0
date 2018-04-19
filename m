@@ -1,75 +1,48 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 07/15] media: staging/imx: add 10 bit bayer support
-Date: Thu, 19 Apr 2018 15:38:21 +0200
-Message-ID: <1524145101.3416.7.camel@pengutronix.de>
-References: <20180419101812.30688-1-rui.silva@linaro.org>
- <20180419101812.30688-8-rui.silva@linaro.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 0/4] Various fixes on STM32 RTC
+Date: Thu, 19 Apr 2018 15:43:21 +0200
+Message-ID: <20180419134321.GF7369@piout.net>
+References: <1524144103-21432-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180419101812.30688-8-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>, mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1524144103-21432-1-git-send-email-amelie.delaunay@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-04-19 at 11:18 +0100, Rui Miguel Silva wrote:
-> Some sensors can only output 10 bit bayer formats, like the OV2680. Add support
-> for that in imx-media.
+Hi,
+
+Both series were not sent to the correct email address. I would suggest
+rebasing on top of v4.17-rc1 ;). No need to resend just for that.
+
+On 19/04/2018 15:21:39+0200, Amelie Delaunay wrote:
+> This series makes some corrections on STM32 RTC:
+> - update copyright and adopt SPDX identifier
+> - fix alarm interrupt flags
+> - rework DBP (Disable Backup domain Protection) management.
 > 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> ---
->  drivers/staging/media/imx/imx-media-utils.c | 24 +++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+> This series is a preamble to the serie which will introduce next STM32 RTC
+> version.
 > 
-> diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
-> index fab98fc0d6a0..99527daba29a 100644
-> --- a/drivers/staging/media/imx/imx-media-utils.c
-> +++ b/drivers/staging/media/imx/imx-media-utils.c
-> @@ -118,6 +118,30 @@ static const struct imx_media_pixfmt rgb_formats[] = {
->  		.cs     = IPUV3_COLORSPACE_RGB,
->  		.bpp    = 8,
->  		.bayer  = true,
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SBGGR10,
-> +		.codes  = {MEDIA_BUS_FMT_SBGGR10_1X10},
-> +		.cs     = IPUV3_COLORSPACE_RGB,
-> +		.bpp    = 16,
-> +		.bayer  = true,
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SGBRG10,
-> +		.codes  = {MEDIA_BUS_FMT_SGBRG10_1X10},
-> +		.cs     = IPUV3_COLORSPACE_RGB,
-> +		.bpp    = 16,
-> +		.bayer  = true,
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SGRBG10,
-> +		.codes  = {MEDIA_BUS_FMT_SGRBG10_1X10},
-> +		.cs     = IPUV3_COLORSPACE_RGB,
-> +		.bpp    = 16,
-> +		.bayer  = true,
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SRGGB10,
-> +		.codes  = {MEDIA_BUS_FMT_SRGGB10_1X10},
-> +		.cs     = IPUV3_COLORSPACE_RGB,
-> +		.bpp    = 16,
-> +		.bayer  = true,
+> Amelie Delaunay (4):
+>   rtc: stm32: fix copyright and adopt SPDX identifier
+>   rtc: stm32: fix alarm interrupt flags by removing IRQF_TRIGGER_RISING
+>   dt-bindings: rtc: update stm32-rtc documentation for st,syscfg
+>     property
+>   rtc: stm32: get DBP register and mask from DT st,syscfg property
+> 
+>  .../devicetree/bindings/rtc/st,stm32-rtc.txt       | 10 ++--
+>  drivers/rtc/rtc-stm32.c                            | 68 +++++++++++++---------
+>  2 files changed, 47 insertions(+), 31 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
 
-This will break 10-bit bayer formats on i.MX6, which currently stores
-them in memory expanded to 16-bit, as listed in the entries below:
-
->  	}, {
->  		.fourcc = V4L2_PIX_FMT_SBGGR16,
->  		.codes  = {
-
-regards
-Philipp
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
