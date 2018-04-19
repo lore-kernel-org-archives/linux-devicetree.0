@@ -1,52 +1,83 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v8 2/2] drm: bridge: Add thc63lvd1024 LVDS decoder driver
-Date: Thu, 19 Apr 2018 14:18:30 +0300
-Message-ID: <241462f3-0396-c763-6fb4-aff8fc5d29bd@mentor.com>
-References: <1523357590-3841-1-git-send-email-jacopo+renesas@jmondi.org>
- <1523357590-3841-3-git-send-email-jacopo+renesas@jmondi.org>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH] ARM: dts: imx6ull: add UART5 RTS input select register
+Date: Thu, 19 Apr 2018 13:19:39 +0200
+Message-ID: <1524136779-13246-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523357590-3841-3-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Greg Ungerer <gerg@linux-m68k.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
-
-On 04/10/2018 01:53 PM, Jacopo Mondi wrote:
-> Add DRM bridge driver for Thine THC63LVD1024 LVDS to digital parallel
-> output converter.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-> Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-
-Reviewed-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-
-Generally I have only one pretty ignorable comment.
-
-> +
-> +enum thc63_ports {
-> +	THC63_LVDS_IN0,
-> +	THC63_LVDS_IN1,
-> +	THC63_RGB_OUT0,
-> +	THC63_RGB_OUT1,
-> +};
-> +
-
-The driver uses only THC63_RGB_OUT0 value, or port@2, and MODE{0,1,2} IC
-configuration is ignored.
-
-I don't know if right from the beginning it would be better to support
-dual-out modes, preferably both single-in and dual-in ones. Will it
-impact port enumeration?
-
-I do understand that the extension is possible, and likely only hardware
-accessibility postpones it.
-
---
-With best wishes,
-Vladimir
+VGhlIGlNWDZVTEwgVUFSVDVfUlRTX0JfREFUQV9TRUxFQ1RfSU5QVVQgREFJU1kgUmVnaXN0ZXIg
+aGFzIHNvbWUgZGlmZmVyZW50CmJpdCBkZWZpbml0aW9ucyB0byB0aGF0IHNhbWUgcmVnaXN0ZXIg
+aW4gdGhlIGkuTVg2VUwuCgpUaGUgYml0cyBmb3IgdGhlIGkuTVg2VUw6CgowMDAgQ1NJX0RBVEEw
+M19BTFQ4IOKAlCBTZWxlY3RpbmcgUGFkOiBDU0lfREFUQTAzIGZvciBNb2RlOiBBTFQ4CjAwMSBH
+UElPMV9JTzA4X0FMVDgg4oCUIFNlbGVjdGluZyBQYWQ6IEdQSU8xX0lPMDggZm9yIE1vZGU6IEFM
+VDgKMDEwIEdQSU8xX0lPMDlfQUxUOCDigJQgU2VsZWN0aW5nIFBhZDogR1BJTzFfSU8wOSBmb3Ig
+TW9kZTogQUxUOAowMTEgRU5FVDFfUlhfRU5fQUxUMSDigJQgU2VsZWN0aW5nIFBhZDogRU5FVDFf
+UlhfRU4gZm9yIE1vZGU6IEFMVDEKMTAwIEVORVQxX1RYX0RBVEEwX0FMVDEg4oCUIFNlbGVjdGlu
+ZyBQYWQ6IEVORVQxX1RYX0RBVEEwIGZvciBNb2RlOiBBTFQxCjEwMSBDU0lfREFUQTAyX0FMVDgg
+4oCUIFNlbGVjdGluZyBQYWQ6IENTSV9EQVRBMDIgZm9yIE1vZGU6IEFMVDgKCkJ1dCBmb3IgdGhl
+IGkuTVg2VUxMOgoKMDAwIENTSV9EQVRBMDNfQUxUOCDigJQgU2VsZWN0aW5nIFBhZDogQ1NJX0RB
+VEEwMyBmb3IgTW9kZTogQUxUOAowMDEgR1BJTzFfSU8wOF9BTFQ4IOKAlCBTZWxlY3RpbmcgUGFk
+OiBHUElPMV9JTzA4IGZvciBNb2RlOiBBTFQ4CjAxMCBHUElPMV9JTzA5X0FMVDgg4oCUIFNlbGVj
+dGluZyBQYWQ6IEdQSU8xX0lPMDkgZm9yIE1vZGU6IEFMVDgKMDExIFVBUlQxX0NUU19CX0FMVDkg
+4oCUIFNlbGVjdGluZyBQYWQ6IFVBUlQxX0NUU19CIGZvciBNb2RlOiBBTFQ5CjEwMCBVQVJUMV9S
+VFNfQl9BTFQ5IOKAlCBTZWxlY3RpbmcgUGFkOiBVQVJUMV9SVFNfQiBmb3IgTW9kZTogQUxUOQox
+MDEgRU5FVDFfUlhfRU5fQUxUMSDigJQgU2VsZWN0aW5nIFBhZDogRU5FVDFfUlhfRU4gZm9yIE1v
+ZGU6IEFMVDEKMTEwIEVORVQxX1RYX0RBVEEwX0FMVDEg4oCUIFNlbGVjdGluZyBQYWQ6IEVORVQx
+X1RYX0RBVEEwIGZvciBNb2RlOiBBTFQxCjExMSBDU0lfREFUQTAyX0FMVDgg4oCUIFNlbGVjdGlu
+ZyBQYWQ6IENTSV9EQVRBMDIgZm9yIE1vZGU6IEFMVDgKClNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBX
+YWhyZW4gPHN0ZWZhbi53YWhyZW5AaTJzZS5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvaW14
+NnVsbC1waW5mdW5jLmggfCA1ICsrKysrCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCsp
+CgpIaSBTaGF3biwKaW4gdGhlIGxhY2sgb2YgYSBzdWl0YWJsZSBib2FyZCwgdGhpcyBpcyBvbmx5
+IGNvbXBpbGUgdGVzdGVkLgoKU3RlZmFuCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
+aW14NnVsbC1waW5mdW5jLmggYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLXBpbmZ1bmMuaApp
+bmRleCAwOTA4NDZiLi5mZGM0NmJiIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2
+dWxsLXBpbmZ1bmMuaAorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLXBpbmZ1bmMuaApA
+QCAtMTYsOCArMTYsMTIgQEAKICAqLwogI2RlZmluZSBNWDZVTExfUEFEX1VBUlQxX1RYX0RBVEFf
+X1VBUlQ1X0RURV9SWCAgICAgICAgICAgICAgICAgICAgMHgwMDg0IDB4MDMxMCAweDA2NDQgMHg5
+IDB4NAogI2RlZmluZSBNWDZVTExfUEFEX1VBUlQxX1JYX0RBVEFfX1VBUlQ1X0RDRV9SWCAgICAg
+ICAgICAgICAgICAgICAgMHgwMDg4IDB4MDMxNCAweDA2NDQgMHg5IDB4NQorI2RlZmluZSBNWDZV
+TExfUEFEX1VBUlQxX0NUU19CX19VQVJUNV9EQ0VfUlRTICAgICAgICAgICAgICAgICAgICAgMHgw
+MDhDIDB4MDMxOCAweDA2NDAgMHg5IDB4MworI2RlZmluZSBNWDZVTExfUEFEX1VBUlQxX1JUU19C
+X19VQVJUNV9EVEVfUlRTICAgICAgICAgICAgICAgICAgICAgMHgwMDkwIDB4MDMxQyAweDA2NDAg
+MHg5IDB4NAogI2RlZmluZSBNWDZVTExfUEFEX1VBUlQ1X1RYX0RBVEFfX1VBUlQ1X0RURV9SWCAg
+ICAgICAgICAgICAgICAgICAgMHgwMEJDIDB4MDM0OCAweDA2NDQgMHgwIDB4NgogI2RlZmluZSBN
+WDZVTExfUEFEX1VBUlQ1X1JYX0RBVEFfX1VBUlQ1X0RDRV9SWCAgICAgICAgICAgICAgICAgICAg
+MHgwMEMwIDB4MDM0QyAweDA2NDQgMHgwIDB4NworI2RlZmluZSBNWDZVTExfUEFEX0VORVQxX1JY
+X0VOX19VQVJUNV9EQ0VfUlRTICAgICAgICAgICAgICAgICAgICAgMHgwMENDIDB4MDM1OCAweDA2
+NDAgMHgxIDB4NQorI2RlZmluZSBNWDZVTExfUEFEX0VORVQxX1RYX0RBVEEwX19VQVJUNV9EVEVf
+UlRTICAgICAgICAgICAgICAgICAgMHgwMEQwIDB4MDM1QyAweDA2NDAgMHgxIDB4NgogI2RlZmlu
+ZSBNWDZVTExfUEFEX0VORVQyX1JYX0RBVEEwX19FUERDX1NERE8wOCAgICAgICAgICAgICAgICAg
+ICAgMHgwMEU0IDB4MDM3MCAweDAwMDAgMHg5IDB4MAogI2RlZmluZSBNWDZVTExfUEFEX0VORVQy
+X1JYX0RBVEExX19FUERDX1NERE8wOSAgICAgICAgICAgICAgICAgICAgMHgwMEU4IDB4MDM3NCAw
+eDAwMDAgMHg5IDB4MAogI2RlZmluZSBNWDZVTExfUEFEX0VORVQyX1JYX0VOX19FUERDX1NERE8x
+MCAgICAgICAgICAgICAgICAgICAgICAgMHgwMEVDIDB4MDM3OCAweDAwMDAgMHg5IDB4MApAQCAt
+NTEsNiArNTUsNyBAQAogI2RlZmluZSBNWDZVTExfUEFEX0NTSV9EQVRBMDBfX0VTQUlfVFhfSEZf
+Q0xLICAgICAgICAgICAgICAgICAgICAgMHgwMUU0IDB4MDQ3MCAweDAwMDAgMHg5IDB4MAogI2Rl
+ZmluZSBNWDZVTExfUEFEX0NTSV9EQVRBMDFfX0VTQUlfUlhfSEZfQ0xLICAgICAgICAgICAgICAg
+ICAgICAgMHgwMUU4IDB4MDQ3NCAweDAwMDAgMHg5IDB4MAogI2RlZmluZSBNWDZVTExfUEFEX0NT
+SV9EQVRBMDJfX0VTQUlfUlhfRlMgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMUVDIDB4MDQ3
+OCAweDAwMDAgMHg5IDB4MAorI2RlZmluZSBNWDZVTExfUEFEX0NTSV9EQVRBMDJfX1VBUlQ1X0RD
+RV9SVFMgICAgICAgICAgICAgICAgICAgICAgMHgwMUVDIDB4MDQ3OCAweDA2NDAgMHg4IDB4Nwog
+I2RlZmluZSBNWDZVTExfUEFEX0NTSV9EQVRBMDNfX0VTQUlfUlhfQ0xLICAgICAgICAgICAgICAg
+ICAgICAgICAgMHgwMUYwIDB4MDQ3QyAweDAwMDAgMHg5IDB4MAogI2RlZmluZSBNWDZVTExfUEFE
+X0NTSV9EQVRBMDRfX0VTQUlfVFhfRlMgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMUY0IDB4
+MDQ4MCAweDAwMDAgMHg5IDB4MAogI2RlZmluZSBNWDZVTExfUEFEX0NTSV9EQVRBMDVfX0VTQUlf
+VFhfQ0xLICAgICAgICAgICAgICAgICAgICAgICAgMHgwMUY4IDB4MDQ4NCAweDAwMDAgMHg5IDB4
+MAotLSAKMi43LjQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsCg==
