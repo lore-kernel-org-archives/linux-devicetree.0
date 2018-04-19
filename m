@@ -1,55 +1,124 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: add binding for at91-usart in spi mode
-Date: Thu, 19 Apr 2018 15:07:14 +0100
-Message-ID: <20180419140714.GF27188@sirena.org.uk>
-References: <20180413161117.20274-1-radu.pirea@microchip.com>
- <20180413161117.20274-3-radu.pirea@microchip.com>
- <20180413162327.GE22187@piout.net>
- <8e6c447d-dce5-f9af-e5b2-8d1d863159d6@microchip.com>
- <20180413181251.GG22187@piout.net>
- <20180417110358.GD8973@sirena.org.uk>
- <20180419133233.GE7369@piout.net>
+From: Rui Miguel Silva <rmfrfs@gmail.com>
+Subject: Re: [PATCH 05/15] media: staging/imx7: add MIPI CSI-2 receiver subdev
+ for i.MX7
+Date: Thu, 19 Apr 2018 15:09:19 +0100
+Message-ID: <m3h8o79tkg.fsf@gmail.com>
+References: <20180419101812.30688-1-rui.silva@linaro.org>
+ <20180419101812.30688-6-rui.silva@linaro.org>
+ <20180419124515.r4336zu4ecsu3k6k@mwanda>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NQTVMVnDVuULnIzU"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180419133233.GE7369@piout.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Radu Pirea <radu.pirea@microchip.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-reply-to: <20180419124515.r4336zu4ecsu3k6k@mwanda>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Dan,
+On Thu 19 Apr 2018 at 12:45, Dan Carpenter wrote:
+>> +static int mipi_csis_clk_get(struct csi_state *state)
+>> +{
+>> +	struct device *dev = &state->pdev->dev;
+>> +	int ret = true;
+>
+> Better to leave ret unitialized.
 
---NQTVMVnDVuULnIzU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ack.
 
-On Thu, Apr 19, 2018 at 03:32:33PM +0200, Alexandre Belloni wrote:
+>
+>> +
+>> +	state->mipi_clk = devm_clk_get(dev, "mipi");
+>> +	if (IS_ERR(state->mipi_clk)) {
+>> +		dev_err(dev, "Could not get mipi csi clock\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	state->phy_clk = devm_clk_get(dev, "phy");
+>> +	if (IS_ERR(state->phy_clk)) {
+>> +		dev_err(dev, "Could not get mipi phy clock\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	/* Set clock rate */
+>> +	if (state->clk_frequency)
+>> +		ret = clk_set_rate(state->mipi_clk, 
+>> state->clk_frequency);
+>> +	else
+>> +		dev_warn(dev, "No clock frequency specified!\n");
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "set rate=%d failed: %d\n", 
+>> state->clk_frequency,
+>> +			ret);
+>> +		return -EINVAL;
+>
+> Preserve the error code.
 
-> My suggestion was to add an MFD driver that would match the current
-> compatible and either have an atmel,usart-mode property or maybe more
-> risky, check whether there are children nodes. Based on that, the
-> correct platform device can be added, either an usart or an spi master
-> device can be registered.
+agree.
 
-Yeah, that's another approach which could work and is a bit easier from
-the DT point of view - the PXA stuff predated DT and was adapted into
-it.
+>
+>> +	}
+>> +
+>> +	return ret;
+>
+> This could be "return 0;" (let's not return true).  It might be 
+> nicer
+> like:
+>
+> 	if (!state->clk_frequency) {
 
---NQTVMVnDVuULnIzU
-Content-Type: application/pgp-signature; name="signature.asc"
+looking back again to my code ;), this can never happen, because 
+if
+clock-frequency is not given by dts I give it a default value. So, 
+this
+error path will never happen. I will take this in account in v2.
 
------BEGIN PGP SIGNATURE-----
+> 		dev_warn(dev, "No clock frequency specified!\n");
+> 		return 0;
+> 	}
+>
+> 	ret = clk_set_rate(state->mipi_clk, state->clk_frequency);
+> 	if (ret < 0)
+> 		dev_err(dev, "set rate=%d failed: %d\n", 
+> state->clk_frequency,
+> 			ret);
+>
+> 	return ret;
+>
+>
+>> +}
+>> +
+>
+> [ snip ]
+>
+>> +static irqreturn_t mipi_csis_irq_handler(int irq, void 
+>> *dev_id)
+>> +{
+>> +	struct csi_state *state = dev_id;
+>> +	unsigned long flags;
+>> +	u32 status;
+>> +	int i;
+>> +
+>> +	status = mipi_csis_read(state, MIPI_CSIS_INTSRC);
+>> +
+>> +	spin_lock_irqsave(&state->slock, flags);
+>> +
+>> +	/* Update the event/error counters */
+>> +	if ((status & MIPI_CSIS_INTSRC_ERRORS) || 1) {
+>                                                  ^^^
+> Was this supposed to make it into the published code?
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrYopEACgkQJNaLcl1U
-h9B0iwf8DJAbNZ57AaIWFWCNwfrF/crGozXn98JaRznV9iFV3ikqGyDH+Yk8JdH/
-lWGLneeoz7HTOgSLAaQn3bRcH/K6ZDjXCQQMV9ckGHpbFdkTzbPPXWLmUTn20Hw2
-X314CE8FCvD4dUmTOJYHAzexxisLd9GJ5qnEIoyzKMN7ju8i3G2kqFhFudfZhMEe
-tlqqAf+FxU8eDwBw+usszBivKsKz3wpV1/GDOK0MQTlqF6elrehlL5HgOufTwMWZ
-zVg6ddRxl3bwt2oS7czToe91E1yAvXRDQiqeRAyoIMdxKt8N9soH1x3PaC+vbEMt
-a2W+2YsaTZyawtHffcVNmrKQwu59QQ==
-=54d/
------END PGP SIGNATURE-----
+No... ;). Only for my debug purpose... Good catch.
 
---NQTVMVnDVuULnIzU--
+---
+Cheers,
+	Rui
