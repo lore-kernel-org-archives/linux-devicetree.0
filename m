@@ -1,50 +1,83 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 3/6] drm: of: introduce drm_of_media_bus_fmt
-Date: Thu, 19 Apr 2018 11:22:38 -0500
-Message-ID: <CAL_JsqL1=fzTb5dUgrj07Jv3r026ndsU2o=Nr2eft-bni5jueQ@mail.gmail.com>
-References: <20180417131052.16336-1-peda@axentia.se>
- <20180417131052.16336-4-peda@axentia.se>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v3 0/7] Add tda998x (HDMI) support to atmel-hlcdc
+Date: Thu, 19 Apr 2018 18:27:44 +0200
+Message-ID: <20180419162751.25223-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180417131052.16336-4-peda@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Russell King <linux@armlinux.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMTcsIDIwMTggYXQgODoxMCBBTSwgUGV0ZXIgUm9zaW4gPHBlZGFAYXhlbnRp
-YS5zZT4gd3JvdGU6Cj4gQWRkIGEgY2VudHJhbCBmdW5jdGlvbiB0byBwYXJzZSBhIG5vZGUgYWNj
-b3JkaW5nIHRvIHRoZSB2aWRlbwo+IGludGVyZmFjZSBiaW5kaW5nIGFuZCBnZXQgYSBtZWRpYSBi
-dXMgZm9ybWF0Lgo+Cj4gU3RhcnQgd2l0aCBvbmx5IHN1cHBvcnRpbmcgYSB2ZXJ5IGxpbWl0ZWQg
-c2V0IG9mIGEgZmV3IGJhc2ljIG1lZGlhCj4gYnVzIGZvcm1hdHMuCj4KPiBTaWduZWQtb2ZmLWJ5
-OiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlhLnNlPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0v
-ZHJtX29mLmMgfCAzOCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICBp
-bmNsdWRlL2RybS9kcm1fb2YuaCAgICAgfCAgNyArKysrKysrCj4gIDIgZmlsZXMgY2hhbmdlZCwg
-NDUgaW5zZXJ0aW9ucygrKQo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fb2Yu
-YyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fb2YuYwo+IGluZGV4IDRjMTkxYzA1MGU3ZC4uZjk0NzNl
-ZGI2MGE3IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fb2YuYwo+ICsrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9kcm1fb2YuYwo+IEBAIC0yMTIsNiArMjEyLDQ0IEBAIGludCBkcm1fb2Zf
-ZW5jb2Rlcl9hY3RpdmVfZW5kcG9pbnQoc3RydWN0IGRldmljZV9ub2RlICpub2RlLAo+ICBFWFBP
-UlRfU1lNQk9MX0dQTChkcm1fb2ZfZW5jb2Rlcl9hY3RpdmVfZW5kcG9pbnQpOwo+Cj4gIC8qCj4g
-KyAqIGRybV9vZl9tZWRpYV9idXNfZm10IC0gcmV0dXJuIHRoZSBtZWRpYSBidXMgZm9ybWF0IGRl
-c2NyaWJlZCBpbiB0aGUgbm9kZQo+ICsgKiBAbm9kZTogZGV2aWNlIHRyZWUgbm9kZSBjb250YWlu
-aW5nIHRoZSBtZWRpYSBidXMgZm9ybWF0Cj4gKyAqCj4gKyAqIEBub2RlIGlzIHByZXN1bWFibHkg
-YW4gb2YtZ3JhcGggZW5kcG9pbnQgbm9kZS4KPiArICoKPiArICogUmV0dXJuIHRoZSBtZWRpYSBi
-dXMgZm9ybWF0LCBvciB6ZXJvIGlmIG5vbmUgaXMgZGVzY3JpYmVkLiBPciBvbmUgb2YgdGhlCj4g
-KyAqIHN0YW5kYXJkIGVycm9yIGNvZGVzLgo+ICsgKi8KPiAraW50IGRybV9vZl9tZWRpYV9idXNf
-Zm10KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSkKClNob3VsZCB1c2UgZW5kcG9pbnQgb3IgZXAg
-aGVyZSBpbnN0ZWFkIG9mIG5vZGUgdG8gYmUgY2xlYXIgd2hhdCBub2RlCnRoaXMgZnVuY3Rpb24g
-b3BlcmF0ZXMgb24uCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+Hi!
+
+I naively thought that since there was support for both nxp,tda19988 (in
+the tda998x driver) and the atmel-hlcdc, things would be a smooth ride.
+But it wasn't, so I started looking around and realized I had to fix
+things.
+
+In v1 and v2 I fixed things by making the atmel-hlcdc driver a master
+component, but now in v3 I fix things by making the tda998x driver
+a bridge instead. This was after a suggestion from Boris Brezillion
+(the atmel-hlcdc maintainer), so there was some risk of bias ... but
+after comparing what was needed, I too find the bridge approach better.
+
+In addition to the above, our PCB interface between the SAMA5D3 and the
+HDMI encoder is only using 16 bits, and this has to be described
+somewhere, or the atmel-hlcdc driver have no chance of selecting the
+correct output mode. Since I have similar problems with a ds90c185 lvds
+encoder I added patches to override the atmel-hlcdc output format via
+DT properties compatible with the media video-interface binding and
+things start to play together.
+
+Since this series superseeds the bridge series [1], I have included the
+leftover bindings patch for the ti,ds90c185 here.
+
+Anyway, this series solves some real issues for my HW.
+
+Cheers,
+Peter
+
+Changes since v2   https://lkml.org/lkml/2018/4/17/385
+- patch 2/7 fixed spelling and added an example
+- patch 4/7 parse the DT up front and store the result indexed by encoder
+- old patch 5/6 and 6/6 dropped
+- patch 5-7/7 are new and makes the tda998x driver a drm_bridge
+
+Changes since v1   https://lkml.org/lkml/2018/4/9/294
+- added reviewed-by from Rob to patch 1/6
+- patch 2/6 changed so that the bus format override is in the endpoint
+  DT node, and follows the binding of media video-interfaces.
+- patch 3/6 is new, it adds drm_of_media_bus_fmt which parses above
+  media video-interface binding (partially).
+- patch 4/6 now makes use of the above helper (and also fixes problems
+  with the 3/5 patch from v1 when no override was specified).
+- do not mention unrelated connector display_info details in the cover
+  letter and commit messages.
+
+[1]
+"Bridge" series v2   https://lkml.org/lkml/2018/3/26/610
+"Bridge" series v1   https://lkml.org/lkml/2018/3/17/221
+
+Peter Rosin (7):
+  dt-bindings: display: bridge: lvds-transmitter: add ti,ds90c185
+  dt-bindings: display: atmel: optional video-interface of endpoints
+  drm: of: introduce drm_of_media_bus_fmt
+  drm/atmel-hlcdc: support bus-width (12/16/18/24) in endpoint nodes
+  drm/i2c: tda998x: find the drm_device via the drm_connector
+  drm/i2c: tda998x: split encoder and component functions from the work
+  drm/i2c: tda998x: register as a drm bridge
+
+ .../devicetree/bindings/display/atmel/hlcdc-dc.txt |  26 +++
+ .../bindings/display/bridge/lvds-transmitter.txt   |   8 +-
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c     |  71 ++++++--
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h       |   2 +
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c   |  40 +++-
+ drivers/gpu/drm/drm_of.c                           |  38 ++++
+ drivers/gpu/drm/i2c/tda998x_drv.c                  | 201 ++++++++++++++++++---
+ include/drm/drm_of.h                               |   7 +
+ 8 files changed, 342 insertions(+), 51 deletions(-)
+
+-- 
+2.11.0
