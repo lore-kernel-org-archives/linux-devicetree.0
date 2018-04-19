@@ -1,280 +1,55 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH net-next v2 1/3] net: ethernet: ave: add multiple clocks and resets support as required property
-Date: Thu, 19 Apr 2018 16:24:53 +0900
-Message-ID: <1524122695-19597-2-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1524122695-19597-1-git-send-email-hayashi.kunihiko@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524122695-19597-1-git-send-email-hayashi.kunihiko@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>, netdev@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2] dt-bindings/display/bridge: sii902x: add optional
+ power supplies
+Date: Thu, 19 Apr 2018 11:11:26 +0300
+Message-ID: <20599695.GSkeUvMnvx@avalon>
+References: <20180410051927.8268-1-philippe.cornu@st.com>
+ <20180410051927.8268-2-philippe.cornu@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180410051927.8268-2-philippe.cornu@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philippe Cornu <philippe.cornu@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Yannick Fertre <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-When the link is becoming up for Pro4 SoC, the kernel is stalled
-due to some missing clocks and resets.
-
-The AVE block for Pro4 is connected to the GIO bus in the SoC.
-Without its clock/reset, the access to the AVE register makes the
-system stall.
-
-In the same way, another MAC clock for Giga-bit Connection and
-the PHY clock are also required for Pro4 to activate the Giga-bit feature
-and to recognize the PHY.
-
-To satisfy these requirements, this patch adds support for multiple clocks
-and resets, and adds the clock-names and reset-names to the binding because
-we need to distinguish clock/reset for the AVE main block and the others.
-
-Also, make the resets a required property. Currently, "reset is
-optional" relies on that the bootloader or firmware has deasserted
-the reset before booting the kernel.  Drivers should work without
-such expectation.
-
-Fixes: 4c270b55a5af ("net: ethernet: socionext: add AVE ethernet driver")
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/net/socionext,uniphier-ave4.txt       |  13 ++-
- drivers/net/ethernet/socionext/sni_ave.c           | 108 ++++++++++++++++-----
- 2 files changed, 96 insertions(+), 25 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-index 96398cc..85e0c49 100644
---- a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-+++ b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-@@ -17,9 +17,18 @@ Required properties:
-  - phy-handle: Should point to the external phy device.
- 	See ethernet.txt file in the same directory.
-  - clocks: A phandle to the clock for the MAC.
-+	For Pro4 SoC, that is "socionext,uniphier-pro4-ave4",
-+	another MAC clock, GIO bus clock and PHY clock are also required.
-+ - clock-names: Should contain
-+	- "ether", "ether-gb", "gio", "ether-phy" for Pro4 SoC
-+	- "ether" for others
-+ - resets: A phandle to the reset control for the MAC. For Pro4 SoC,
-+	GIO bus reset is also required.
-+ - reset-names: Should contain
-+	- "ether", "gio" for Pro4 SoC
-+	- "ether" for others
- 
- Optional properties:
-- - resets: A phandle to the reset control for the MAC.
-  - local-mac-address: See ethernet.txt in the same directory.
- 
- Required subnode:
-@@ -34,7 +43,9 @@ Example:
- 		interrupts = <0 66 4>;
- 		phy-mode = "rgmii";
- 		phy-handle = <&ethphy>;
-+		clock-names = "ether";
- 		clocks = <&sys_clk 6>;
-+		reset-names = "ether";
- 		resets = <&sys_rst 6>;
- 		local-mac-address = [00 00 00 00 00 00];
- 
-diff --git a/drivers/net/ethernet/socionext/sni_ave.c b/drivers/net/ethernet/socionext/sni_ave.c
-index 0b3b7a4..52940bd 100644
---- a/drivers/net/ethernet/socionext/sni_ave.c
-+++ b/drivers/net/ethernet/socionext/sni_ave.c
-@@ -199,6 +199,9 @@
- 
- #define IS_DESC_64BIT(p)	((p)->data->is_desc_64bit)
- 
-+#define AVE_MAX_CLKS		4
-+#define AVE_MAX_RSTS		2
-+
- enum desc_id {
- 	AVE_DESCID_RX,
- 	AVE_DESCID_TX,
-@@ -227,6 +230,8 @@ struct ave_desc_info {
- 
- struct ave_soc_data {
- 	bool	is_desc_64bit;
-+	const char	*clock_names[AVE_MAX_CLKS];
-+	const char	*reset_names[AVE_MAX_RSTS];
- };
- 
- struct ave_stats {
-@@ -245,8 +250,10 @@ struct ave_private {
- 	int			phy_id;
- 	unsigned int		desc_size;
- 	u32			msg_enable;
--	struct clk		*clk;
--	struct reset_control	*rst;
-+	int			nclks;
-+	struct clk		*clk[AVE_MAX_CLKS];
-+	int			nrsts;
-+	struct reset_control	*rst[AVE_MAX_RSTS];
- 	phy_interface_t		phy_mode;
- 	struct phy_device	*phydev;
- 	struct mii_bus		*mdio;
-@@ -1153,18 +1160,23 @@ static int ave_init(struct net_device *ndev)
- 	struct device_node *np = dev->of_node;
- 	struct device_node *mdio_np;
- 	struct phy_device *phydev;
--	int ret;
-+	int nc, nr, ret;
- 
- 	/* enable clk because of hw access until ndo_open */
--	ret = clk_prepare_enable(priv->clk);
--	if (ret) {
--		dev_err(dev, "can't enable clock\n");
--		return ret;
-+	for (nc = 0; nc < priv->nclks; nc++) {
-+		ret = clk_prepare_enable(priv->clk[nc]);
-+		if (ret) {
-+			dev_err(dev, "can't enable clock\n");
-+			goto out_clk_disable;
-+		}
- 	}
--	ret = reset_control_deassert(priv->rst);
--	if (ret) {
--		dev_err(dev, "can't deassert reset\n");
--		goto out_clk_disable;
-+
-+	for (nr = 0; nr < priv->nrsts; nr++) {
-+		ret = reset_control_deassert(priv->rst[nr]);
-+		if (ret) {
-+			dev_err(dev, "can't deassert reset\n");
-+			goto out_reset_assert;
-+		}
- 	}
- 
- 	ave_global_reset(ndev);
-@@ -1207,9 +1219,11 @@ static int ave_init(struct net_device *ndev)
- out_mdio_unregister:
- 	mdiobus_unregister(priv->mdio);
- out_reset_assert:
--	reset_control_assert(priv->rst);
-+	while (--nr >= 0)
-+		reset_control_assert(priv->rst[nr]);
- out_clk_disable:
--	clk_disable_unprepare(priv->clk);
-+	while (--nc >= 0)
-+		clk_disable_unprepare(priv->clk[nc]);
- 
- 	return ret;
- }
-@@ -1217,13 +1231,16 @@ static int ave_init(struct net_device *ndev)
- static void ave_uninit(struct net_device *ndev)
- {
- 	struct ave_private *priv = netdev_priv(ndev);
-+	int i;
- 
- 	phy_disconnect(priv->phydev);
- 	mdiobus_unregister(priv->mdio);
- 
- 	/* disable clk because of hw access after ndo_stop */
--	reset_control_assert(priv->rst);
--	clk_disable_unprepare(priv->clk);
-+	for (i = 0; i < priv->nrsts; i++)
-+		reset_control_assert(priv->rst[i]);
-+	for (i = 0; i < priv->nclks; i++)
-+		clk_disable_unprepare(priv->clk[i]);
- }
- 
- static int ave_open(struct net_device *ndev)
-@@ -1527,8 +1544,9 @@ static int ave_probe(struct platform_device *pdev)
- 	struct resource	*res;
- 	const void *mac_addr;
- 	void __iomem *base;
-+	const char *name;
-+	int i, irq, ret;
- 	u64 dma_mask;
--	int irq, ret;
- 	u32 ave_id;
- 
- 	data = of_device_get_match_data(dev);
-@@ -1614,16 +1632,28 @@ static int ave_probe(struct platform_device *pdev)
- 	u64_stats_init(&priv->stats_tx.syncp);
- 	u64_stats_init(&priv->stats_rx.syncp);
- 
--	priv->clk = devm_clk_get(dev, NULL);
--	if (IS_ERR(priv->clk)) {
--		ret = PTR_ERR(priv->clk);
--		goto out_free_netdev;
-+	for (i = 0; i < AVE_MAX_CLKS; i++) {
-+		name = priv->data->clock_names[i];
-+		if (!name)
-+			break;
-+		priv->clk[i] = devm_clk_get(dev, name);
-+		if (IS_ERR(priv->clk[i])) {
-+			ret = PTR_ERR(priv->clk[i]);
-+			goto out_free_netdev;
-+		}
-+		priv->nclks++;
- 	}
- 
--	priv->rst = devm_reset_control_get_optional_shared(dev, NULL);
--	if (IS_ERR(priv->rst)) {
--		ret = PTR_ERR(priv->rst);
--		goto out_free_netdev;
-+	for (i = 0; i < AVE_MAX_RSTS; i++) {
-+		name = priv->data->reset_names[i];
-+		if (!name)
-+			break;
-+		priv->rst[i] = devm_reset_control_get_shared(dev, name);
-+		if (IS_ERR(priv->rst[i])) {
-+			ret = PTR_ERR(priv->rst[i]);
-+			goto out_free_netdev;
-+		}
-+		priv->nrsts++;
- 	}
- 
- 	priv->mdio = devm_mdiobus_alloc(dev);
-@@ -1687,22 +1717,52 @@ static int ave_remove(struct platform_device *pdev)
- 
- static const struct ave_soc_data ave_pro4_data = {
- 	.is_desc_64bit = false,
-+	.clock_names = {
-+		"gio", "ether", "ether-gb", "ether-phy",
-+	},
-+	.reset_names = {
-+		"gio", "ether",
-+	},
- };
- 
- static const struct ave_soc_data ave_pxs2_data = {
- 	.is_desc_64bit = false,
-+	.clock_names = {
-+		"ether",
-+	},
-+	.reset_names = {
-+		"ether",
-+	},
- };
- 
- static const struct ave_soc_data ave_ld11_data = {
- 	.is_desc_64bit = false,
-+	.clock_names = {
-+		"ether",
-+	},
-+	.reset_names = {
-+		"ether",
-+	},
- };
- 
- static const struct ave_soc_data ave_ld20_data = {
- 	.is_desc_64bit = true,
-+	.clock_names = {
-+		"ether",
-+	},
-+	.reset_names = {
-+		"ether",
-+	},
- };
- 
- static const struct ave_soc_data ave_pxs3_data = {
- 	.is_desc_64bit = false,
-+	.clock_names = {
-+		"ether",
-+	},
-+	.reset_names = {
-+		"ether",
-+	},
- };
- 
- static const struct of_device_id of_ave_match[] = {
--- 
-2.7.4
+SGkgUGhpbGlwcGUsCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIFR1ZXNkYXksIDEwIEFw
+cmlsIDIwMTggMDg6MTk6MjYgRUVTVCBQaGlsaXBwZSBDb3JudSB3cm90ZToKPiBBZGQgdGhlIDMg
+b3B0aW9uYWwgcG93ZXIgc3VwcGxpZXMgdXNpbmcgdGhlIGV4YWN0IGRlc2NyaXB0aW9uCj4gZm91
+bmQgaW4gdGhlIGRvY3VtZW50IG5hbWVkCj4gIlNpSTkwMjJBL1NpSTkwMjRBIEhETUkgVHJhbnNt
+aXR0ZXIgRGF0YSBTaGVldCAoQXVndXN0IDIwMTYpIi4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBQaGls
+aXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPgo+IC0tLQo+ICBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQgfCAzICsrKwo+
+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dAo+
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkw
+MngudHh0IGluZGV4Cj4gNTZhM2U2OGNjYjgwLi5jZjUzNjc4ZmU1NzQgMTAwNjQ0Cj4gLS0tIGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngu
+dHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
+ZGdlL3NpaTkwMngudHh0Cj4gQEAgLTgsNiArOCw5IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4g
+IAktIGludGVycnVwdHMtZXh0ZW5kZWQgb3IgaW50ZXJydXB0LXBhcmVudCArIGludGVycnVwdHM6
+IGRlc2NyaWJlCj4gIAkgIHRoZSBpbnRlcnJ1cHQgbGluZSB1c2VkIHRvIGluZm9ybSB0aGUgaG9z
+dCBhYm91dCBob3RwbHVnIGV2ZW50cy4KPiAgCS0gcmVzZXQtZ3Bpb3M6IE9GIGRldmljZS10cmVl
+IGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgUlNUX04gcGluLgo+ICsJLSBpb3ZjYy1zdXBwbHk6IEkv
+TyBzdXBwbHkgdm9sdGFnZSAoMS44ViBvciAzLjNWLCBob3N0LWRlcGVuZGVudCkuCj4gKwktIGF2
+Y2MxMi1zdXBwbHk6IFRNRFMgYW5hbG9nIHN1cHBseSB2b2x0YWdlICgxLjJWKS4KPiArCS0gY3Zj
+YzEyLXN1cHBseTogRGlnaXRhbCBjb3JlIHN1cHBseSB2b2x0YWdlICgxLjJWKS4KCkl0IHNlZW1z
+IHRoYXQgdGhlIEFWQ0MxMiBhbmQgQ1ZDQzEyIHBvd2VyIHN1cHBsaWVzIGFyZSB1c3VhbGx5IGRl
+cml2ZWQgZnJvbSAKdGhlIHNhbWUgc291cmNlLiBIb3cgYWJvdXQgc3RhcnRpbmcgd2l0aCBvbmUg
+RFQgcHJvcGVydHkgZm9yIGJvdGgsIGFuZCBhZGRpbmcgCmEgc2Vjb25kIG9uZSBsYXRlciBpZiBu
+ZWVkZWQgPwoKPiAgT3B0aW9uYWwgc3Vibm9kZXM6Cj4gIAktIHZpZGVvIGlucHV0OiB0aGlzIHN1
+Ym5vZGUgY2FuIGNvbnRhaW4gYSB2aWRlbyBpbnB1dCBwb3J0IG5vZGUKCi0tIApSZWdhcmRzLAoK
+TGF1cmVudCBQaW5jaGFydAoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
