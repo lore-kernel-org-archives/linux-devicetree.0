@@ -1,83 +1,116 @@
-From: Philippe CORNU <philippe.cornu@st.com>
-Subject: Re: [PATCH 1/2] dt-bindings/display/bridge: sii902x: add optional
- power supplies
-Date: Thu, 19 Apr 2018 12:41:20 +0000
-Message-ID: <a10d41bc-c766-568b-a9cb-d1f0f03390a8@st.com>
-References: <20180410051927.8268-1-philippe.cornu@st.com>
- <20599695.GSkeUvMnvx@avalon> <e709e4f7-2266-f99f-5864-5a8c037dbdc2@st.com>
- <1733412.i2Wslp7VkI@avalon>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH 05/15] media: staging/imx7: add MIPI CSI-2 receiver
+ subdev for i.MX7
+Date: Thu, 19 Apr 2018 15:45:15 +0300
+Message-ID: <20180419124515.r4336zu4ecsu3k6k@mwanda>
+References: <20180419101812.30688-1-rui.silva@linaro.org>
+ <20180419101812.30688-6-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1733412.i2Wslp7VkI@avalon>
-Content-Language: en-US
-Content-ID: <63B4169087856944A9896EBD4F7B6F5A@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Yannick FERTRE <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <20180419101812.30688-6-rui.silva@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwNCg0KDQpPbiAwNC8xOS8yMDE4IDAxOjA5IFBNLCBMYXVyZW50IFBpbmNoYXJ0
-IHdyb3RlOg0KPiBIaSBQaGlsaXBwZSwNCj4gDQo+IE9uIFRodXJzZGF5LCAxOSBBcHJpbCAyMDE4
-IDEyOjMxOjE1IEVFU1QgUGhpbGlwcGUgQ09STlUgd3JvdGU6DQo+PiBPbiAwNC8xOS8yMDE4IDEw
-OjExIEFNLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOg0KPj4+IE9uIFR1ZXNkYXksIDEwIEFwcmls
-IDIwMTggMDg6MTk6MjYgRUVTVCBQaGlsaXBwZSBDb3JudSB3cm90ZToNCj4+Pg0KPj4+PiBBZGQg
-dGhlIDMgb3B0aW9uYWwgcG93ZXIgc3VwcGxpZXMgdXNpbmcgdGhlIGV4YWN0IGRlc2NyaXB0aW9u
-DQo+Pj4+IGZvdW5kIGluIHRoZSBkb2N1bWVudCBuYW1lZA0KPj4+PiAiU2lJOTAyMkEvU2lJOTAy
-NEEgSERNSSBUcmFuc21pdHRlciBEYXRhIFNoZWV0IChBdWd1c3QgMjAxNikiLg0KPj4+Pg0KPj4+
-PiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0K
-Pj4+PiAtLS0NCj4+Pj4NCj4+Pj4gICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0IHwgMyArKysNCj4+Pj4gICAgMSBmaWxlIGNoYW5n
-ZWQsIDMgaW5zZXJ0aW9ucygrKQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0DQo+Pj4+IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0DQo+
-Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Np
-aTkwMngudHh0IGluZGV4DQo+Pj4+IDU2YTNlNjhjY2I4MC4uY2Y1MzY3OGZlNTc0IDEwMDY0NA0K
-Pj4+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlk
-Z2Uvc2lpOTAyeC50eHQNCj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0DQo+Pj4+IEBAIC04LDYgKzgsOSBAQCBPcHRp
-b25hbCBwcm9wZXJ0aWVzOg0KPj4+PiAgICAJLSBpbnRlcnJ1cHRzLWV4dGVuZGVkIG9yIGludGVy
-cnVwdC1wYXJlbnQgKyBpbnRlcnJ1cHRzOiBkZXNjcmliZQ0KPj4+PiAgICAJICB0aGUgaW50ZXJy
-dXB0IGxpbmUgdXNlZCB0byBpbmZvcm0gdGhlIGhvc3QgYWJvdXQgaG90cGx1ZyBldmVudHMuDQo+
-Pj4+ICAgIAktIHJlc2V0LWdwaW9zOiBPRiBkZXZpY2UtdHJlZSBncGlvIHNwZWNpZmljYXRpb24g
-Zm9yIFJTVF9OIHBpbi4NCj4+Pj4gKwktIGlvdmNjLXN1cHBseTogSS9PIHN1cHBseSB2b2x0YWdl
-ICgxLjhWIG9yIDMuM1YsIGhvc3QtZGVwZW5kZW50KS4NCj4+Pj4gKwktIGF2Y2MxMi1zdXBwbHk6
-IFRNRFMgYW5hbG9nIHN1cHBseSB2b2x0YWdlICgxLjJWKS4NCj4+Pj4gKwktIGN2Y2MxMi1zdXBw
-bHk6IERpZ2l0YWwgY29yZSBzdXBwbHkgdm9sdGFnZSAoMS4yVikuDQo+Pj4NCj4+PiBJdCBzZWVt
-cyB0aGF0IHRoZSBBVkNDMTIgYW5kIENWQ0MxMiBwb3dlciBzdXBwbGllcyBhcmUgdXN1YWxseSBk
-ZXJpdmVkDQo+Pj4gZnJvbSB0aGUgc2FtZSBzb3VyY2UuIEhvdyBhYm91dCBzdGFydGluZyB3aXRo
-IG9uZSBEVCBwcm9wZXJ0eSBmb3IgYm90aCwNCj4+PiBhbmQgYWRkaW5nIGEgc2Vjb25kIG9uZSBs
-YXRlciBpZiBuZWVkZWQgPw0KPj4NCj4+IFdlbGwsIEkgZG8gbm90IGtub3cgd2hhdCBpcyB0aGUg
-YmVzdC4gSGVyZSBJIHRvb2sgdGhlIGRlc2NyaXB0aW9uIGZyb20NCj4+IHRoZSBkb2N1bWVudGF0
-aW9uLCBhbmQgdG8gYWxsb3cgYWxsIHBvc3NpYmxlIGJvYXJkIGNvbmZpZ3VyYXRpb25zLCBJDQo+
-PiBhZGRlZCB0aGVzZSBzdXBwbGllcyBhcyAib3B0aW9uYWwiIHByb3BlcnRpZXM6IGlmIHRoZXJl
-IGlzIG9ubHkgb25lIDF2Mg0KPj4gcmVndWxhdG9yIG9uIHRoZSBib2FyZCwgdGhlIGR0IHdpbGwg
-Y29udGFpbiBvbmx5IGF2Y2MxMiBvciBjdmNjMTIgYW5kDQo+PiBldmVyeXRoaW5nIHdpbGwgd29y
-ayBmaW5lICh3ZSB3aWxsIGhhdmUgYSBkdW1teSByZWd1bGF0b3IgZm9yIHRoZQ0KPj4gbWlzc2lu
-ZyBvcHRpb25hbCAxdjIgcmVnKSwgaWYgYm90aCByZWd1bGF0b3JzIGFyZSB0aGVyZSBmb3IgYW55
-IHJlYXNvbnMNCj4+IChzdGFiaWxpdHksIG5vaXNlLCB3aGF0ZXZlci4uLikgdGhlbiBib3RoIGVu
-dHJpZXMgd2lsbCBiZSBpbiB0aGUgZHQuDQo+Pg0KPj4gSWYgeW91IGNvbmZpcm0geW91IHByZWZl
-ciBhIHNpbmdsZSAxdjIgc3VwcGx5IChuYW1lZCBmb3IgaW5zdGFuY2UNCj4+ICJ2Y2MxMi1zdXBw
-bHkiKSB0aGVuIEkgd2lsbCBkbyA6LSkNCj4gDQo+IFBsZWFzZSBzZWUgaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTgtQXByaWwvDQo+IDE3MjQwMC5o
-dG1sIChhbmQgdGhlIG1lc3NhZ2VzIHRoYXQgbGVhZCB0byBpdCkgYW5kIGh0dHBzOi8vDQo+IGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxOC1NYXJjaC8xNzA3NjMu
-aHRtbC4NCj4gDQoNClRoYW5rcyBmb3IgdGhpcyBkaXNjdXNzaW9uIHRocmVhZC4NCg0KT24gbXkg
-c2lkZSwgSSBmb3VuZCAiQ1ZDQzEyIGFuZCBBVkNDMTIgY2FuIGJlIGRlcml2ZWQgZnJvbSB0aGUg
-c2FtZSANCnBvd2VyIHNvdXJjZSIgd3JpdHRlbiB3aXRoIGEgc21hbGwgZm9udCAoYXVndXN0IDIw
-MTYgZGF0YXNoZWV0IHAxMykgc28gDQp0aGVuIHlvdXIgYWR2aWNlIGlzIGNsZWFybHkgd2hhdCB3
-ZSBoYXZlIHRvIGRvIDotKQ0KSSB3aWxsIGFkZCB0aGlzIGluZm8gaW4gdjIgdG9vLg0KVGhhbmsg
-eW91LA0KUGhpbGlwcGUgOi0pDQoNCj4+Pj4gICAgT3B0aW9uYWwgc3Vibm9kZXM6DQo+Pj4+ICAg
-IAktIHZpZGVvIGlucHV0OiB0aGlzIHN1Ym5vZGUgY2FuIGNvbnRhaW4gYSB2aWRlbyBpbnB1dCBw
-b3J0IG5vZGUNCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+
+> +static int mipi_csis_clk_get(struct csi_state *state)
+> +{
+> +	struct device *dev = &state->pdev->dev;
+> +	int ret = true;
+
+Better to leave ret unitialized.
+
+> +
+> +	state->mipi_clk = devm_clk_get(dev, "mipi");
+> +	if (IS_ERR(state->mipi_clk)) {
+> +		dev_err(dev, "Could not get mipi csi clock\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	state->phy_clk = devm_clk_get(dev, "phy");
+> +	if (IS_ERR(state->phy_clk)) {
+> +		dev_err(dev, "Could not get mipi phy clock\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	/* Set clock rate */
+> +	if (state->clk_frequency)
+> +		ret = clk_set_rate(state->mipi_clk, state->clk_frequency);
+> +	else
+> +		dev_warn(dev, "No clock frequency specified!\n");
+> +	if (ret < 0) {
+> +		dev_err(dev, "set rate=%d failed: %d\n", state->clk_frequency,
+> +			ret);
+> +		return -EINVAL;
+
+Preserve the error code.
+
+> +	}
+> +
+> +	return ret;
+
+This could be "return 0;" (let's not return true).  It might be nicer
+like:
+
+	if (!state->clk_frequency) {
+		dev_warn(dev, "No clock frequency specified!\n");
+		return 0;
+	}
+
+	ret = clk_set_rate(state->mipi_clk, state->clk_frequency);
+	if (ret < 0)
+		dev_err(dev, "set rate=%d failed: %d\n", state->clk_frequency,
+			ret);
+
+	return ret;
+
+
+> +}
+> +
+
+[ snip ]
+
+> +static irqreturn_t mipi_csis_irq_handler(int irq, void *dev_id)
+> +{
+> +	struct csi_state *state = dev_id;
+> +	unsigned long flags;
+> +	u32 status;
+> +	int i;
+> +
+> +	status = mipi_csis_read(state, MIPI_CSIS_INTSRC);
+> +
+> +	spin_lock_irqsave(&state->slock, flags);
+> +
+> +	/* Update the event/error counters */
+> +	if ((status & MIPI_CSIS_INTSRC_ERRORS) || 1) {
+                                                 ^^^
+Was this supposed to make it into the published code?
+
+> +		for (i = 0; i < MIPI_CSIS_NUM_EVENTS; i++) {
+> +			if (!(status & state->events[i].mask))
+> +				continue;
+> +			state->events[i].counter++;
+> +		}
+> +	}
+> +	spin_unlock_irqrestore(&state->slock, flags);
+> +
+> +	mipi_csis_write(state, MIPI_CSIS_INTSRC, status);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+
+regards,
+dan carpenter
