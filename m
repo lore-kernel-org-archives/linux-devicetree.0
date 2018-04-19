@@ -1,25 +1,86 @@
-From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH 0/2] Add STM32 RTC to stm32mp157c
-Date: Thu, 19 Apr 2018 16:35:23 +0200
-Message-ID: <1524148525-25209-1-git-send-email-amelie.delaunay@st.com>
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v4 02/13] dt-bindings: usb: add documentation for typec
+ port controller(TCPCI)
+Date: Thu, 19 Apr 2018 14:47:55 +0000
+Message-ID: <VI1PR0402MB39177F67346ECF7E66303A0089B50@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
+ <1522253178-32414-3-git-send-email-jun.li@nxp.com>
+ <20180409200402.qkhutincgvtmipao@rob-hp-laptop>
+ <VI1PR0402MB391794B3D9A6D7435426189D89B00@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+ <CAL_Jsq+4=hoYPeXy9gXQ6tzwbZ7vvXwj5eZK7Ow6CfBY+aG15Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <CAL_Jsq+4=hoYPeXy9gXQ6tzwbZ7vvXwj5eZK7Ow6CfBY+aG15Q@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, Peter Chen <peter.chen@nxp.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "a.hajda@samsung.com" <a.hajda@samsung.com>, dl-linux-imx <linux-imx@nxp.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for STM32 RTC to stm32mp157c SoC and enable it
-on stm32mp157c-ed1 board.
-
-Amelie Delaunay (2):
-  ARM: dts: stm32: add RTC support to stm32mp157c
-  ARM: dts: stm32: enable RTC on stm32mp157c-ed1
-
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 4 ++++
- arch/arm/boot/dts/stm32mp157c.dtsi    | 9 +++++++++
- 2 files changed, 13 insertions(+)
-
--- 
-2.7.4
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRv
+OnJvYmhAa2VybmVsLm9yZ10NCj4gU2VudDogMjAxOOW5tDTmnIgxNuaXpSAyMjoyOA0KPiBUbzog
+SnVuIExpIDxqdW4ubGlAbnhwLmNvbT4NCj4gQ2M6IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3Jn
+OyBoZWlra2kua3JvZ2VydXNAbGludXguaW50ZWwuY29tOw0KPiBsaW51eEByb2Vjay11cy5uZXQ7
+IGEuaGFqZGFAc2Ftc3VuZy5jb207IHNodWZhbl9sZWVAcmljaHRlay5jb207IFBldGVyDQo+IENo
+ZW4gPHBldGVyLmNoZW5AbnhwLmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBs
+aW51eC11c2JAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29t
+PjsNCj4gZGV2ZWxAZHJpdmVyZGV2Lm9zdW9zbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2
+NCAwMi8xM10gZHQtYmluZGluZ3M6IHVzYjogYWRkIGRvY3VtZW50YXRpb24gZm9yIHR5cGVjDQo+
+IHBvcnQgY29udHJvbGxlcihUQ1BDSSkNCj4gDQo+IE9uIE1vbiwgQXByIDE2LCAyMDE4IGF0IDY6
+NTQgQU0sIEp1biBMaSA8anVuLmxpQG54cC5jb20+IHdyb3RlOg0KPiA+IEhpDQo+ID4+IC0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9i
+aEBrZXJuZWwub3JnXQ0KPiA+PiBTZW50OiAyMDE45bm0NOaciDEw5pelIDQ6MDQNCj4gPj4gVG86
+IEp1biBMaSA8anVuLmxpQG54cC5jb20+DQo+ID4+IENjOiBncmVna2hAbGludXhmb3VuZGF0aW9u
+Lm9yZzsgaGVpa2tpLmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbTsNCj4gPj4gbGludXhAcm9lY2st
+dXMubmV0OyBhLmhhamRhQHNhbXN1bmcuY29tOyBzaHVmYW5fbGVlQHJpY2h0ZWsuY29tOw0KPiA+
+PiBQZXRlciBDaGVuIDxwZXRlci5jaGVuQG54cC5jb20+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZzsNCj4gPj4gbGludXgtdXNiQHZnZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51
+eC1pbXhAbnhwLmNvbT47DQo+ID4+IGRldmVsQGRyaXZlcmRldi5vc3Vvc2wub3JnDQo+ID4+IFN1
+YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMDIvMTNdIGR0LWJpbmRpbmdzOiB1c2I6IGFkZCBkb2N1bWVu
+dGF0aW9uIGZvcg0KPiA+PiB0eXBlYyBwb3J0IGNvbnRyb2xsZXIoVENQQ0kpDQo+ID4+DQo+ID4+
+IE9uIFRodSwgTWFyIDI5LCAyMDE4IGF0IDEyOjA2OjA3QU0gKzA4MDAsIExpIEp1biB3cm90ZToN
+Cj4gDQo+IFsuLi5dDQo+IA0KPiA+PiA+ICtwdG41MTEwQDUwIHsNCj4gPj4gPiArICAgY29tcGF0
+aWJsZSA9ICJ1c2ItdGNwY2kscHRuNTExMCI7DQo+ID4+ID4gKyAgIHJlZyA9IDwweDUwPjsNCj4g
+Pj4gPiArICAgaW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzM+Ow0KPiA+PiA+ICsgICBpbnRlcnJ1
+cHRzID0gPDMgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPj4gPiArDQo+ID4+ID4gKyAgIHVzYl9j
+b246IGNvbm5lY3RvciB7DQo+ID4+DQo+ID4+IEhvdyBpcyB0aGUgT0YgZ3JhcGggZG9uZSBpbiB0
+aGlzIGNhc2U/IFlvdSBuZWVkIHNvbWUgbGluayB0byB0aGUgVVNCDQo+IGNvbnRyb2xsZXIuDQo+
+ID4NCj4gPiBUaGUgcGxhdGZvcm0oaS5NWDhNUSBFVkspIGZvciB0aGlzIGlzIHN0aWxsIG9uIHRo
+ZSB3YXkgb2Ygc3RhcnQNCj4gPiB1cHN0cmVhbSwgSSB3YXMgUGxhbm5pbmcgdG8gYWRkIHRoaXMg
+cGFydCB3aXRoIGVuYWJsaW5nIFVTQjMgZnVuY3Rpb24sDQo+ID4gYXMgb2YgaG93IHRoaXMgd2ls
+bCBiZSBkb25lLCBJIG9ubHkgaGF2ZSB1c2IzIHNzIGRhdGEobm8gZGlzcGxheSBwb3J0IG9yDQo+
+IFNpZGViYW5kKSwgaXMgc29tZXRoaW5nIGxpa2UgYmVsb3cgT0s/DQo+ID4NCj4gPiB0eXBlYzog
+cHRuNTExMEA1MCB7DQo+ID4gICAgICAgICBjb21wYXRpYmxlID0gIm54cCxwdG41MTEwIjsNCj4g
+PiAgICAgICAgIC4uLg0KPiA+DQo+ID4gICAgICAgICB1c2JfY29uOiBjb25uZWN0b3Igew0KPiA+
+ICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInVzYi1jLWNvbm5lY3RvciI7DQo+ID4gICAg
+ICAgICAgICAgICAgIGxhYmVsID0gIlVTQi1DIjsNCj4gPiAgICAgICAgICAgICAgICAgLi4uDQo+
+ID4NCj4gPiAgICAgICAgICAgICAgICAgcG9ydHMgew0KPiA+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICNz
+aXplLWNlbGxzID0gPDA+Ow0KPiA+DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgcG9ydEAx
+IHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwxPjsNCj4gPiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVzYl9jb25fc3M6IGVuZHBvaW50IHsNCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmdXNi
+M19waHlfc3M+Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPiAg
+ICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+ICAgICAgICAgICAgICAgICB9Ow0KPiA+ICAg
+ICAgICAgfTsNCj4gPiB9Ow0KPiA+DQo+ID4gJnVzYjNfcGh5MCB7DQo+ID4gICAgICAgICBzdGF0
+dXMgPSAib2theSI7DQo+ID4NCj4gPiAgICAgICAgIHBvcnQgew0KPiA+ICAgICAgICAgICAgICAg
+ICB1c2IzX3BoeV9zczogZW5kcG9pbnQgew0KPiANCj4gTm9ybWFsbHksIHRoZSBncmFwaCBjb25u
+ZWN0aW9uIHdvdWxkIGJlIHRvIHRoZSBVU0IgY29udHJvbGxlciwgbm90IHRoZSBwaHkgYXMNCj4g
+dGhlIHBoeSBpcyBqdXN0IHJlZmVycmVkIHRvIHdpdGggYSAicGh5cyIgcHJvcGVydHkuDQoNClVu
+ZGVyc3Rvb2QsIEkgd2lsbCBwdXQgdGhpcyBpbnRvIGEgVVNCIGNvbnRyb2xsZXIgbm9kZS4gVGhh
+bmtzLg0KDQpKdW4NCj4gDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBv
+aW50ID0gPCZ1c2JfY29uX3NzPjsNCj4gPiAgICAgICAgICAgICAgICAgfTsNCj4gPiAgICAgICAg
+IH07DQo+ID4gfQ0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDov
+L2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVy
+ZGV2LWRldmVsCg==
