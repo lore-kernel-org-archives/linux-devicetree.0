@@ -1,134 +1,75 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Add sid for a83t
-Date: Thu, 19 Apr 2018 15:38:33 +0200
-Message-ID: <20180419133833.etuuxm3eygp3wfye@flea>
-References: <CACNAnaE9GiVTXD-TV1xXyBJKtTGKpdA6n0REk6a=qm218EgHbg@mail.gmail.com>
- <20171221152630.2vf57x5o2yi5sv3n@flea.lan>
- <20171221190903.56ebae536acf51401c63802c@bidouilliste.com>
- <20171222083508.dfcp6egfvxykmogg@flea.lan>
- <20171222110727.520df7394234f6a5dc0b9ec0@bidouilliste.com>
- <CAGb2v64mf-ihyOs-WJZuVa4Yib3Szp90RZu_a1EeQ1LJXnoXEQ@mail.gmail.com>
- <20180104140119.5pyfihp4zs2poz35@flea.lan>
- <CACNAnaHOuPH05hsJ-jt1135-Giknb-DOuvjeQRSGVR2L7Xc-Cg@mail.gmail.com>
- <20180109133412.uyai4s6vfnh37hn2@flea>
- <CACNAnaEyKztSt_SO25e+VcmyN=fdGTVbpooWSu891ueY6xvh-g@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 07/15] media: staging/imx: add 10 bit bayer support
+Date: Thu, 19 Apr 2018 15:38:21 +0200
+Message-ID: <1524145101.3416.7.camel@pengutronix.de>
+References: <20180419101812.30688-1-rui.silva@linaro.org>
+ <20180419101812.30688-8-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4syblqsgtkenq3hx"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWVX4LLAKGQE42A475Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CACNAnaEyKztSt_SO25e+VcmyN=fdGTVbpooWSu891ueY6xvh-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Kyle Evans <kevans-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20180419101812.30688-8-rui.silva@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>, mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 2018-04-19 at 11:18 +0100, Rui Miguel Silva wrote:
+> Some sensors can only output 10 bit bayer formats, like the OV2680. Add support
+> for that in imx-media.
+> 
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> ---
+>  drivers/staging/media/imx/imx-media-utils.c | 24 +++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
+> index fab98fc0d6a0..99527daba29a 100644
+> --- a/drivers/staging/media/imx/imx-media-utils.c
+> +++ b/drivers/staging/media/imx/imx-media-utils.c
+> @@ -118,6 +118,30 @@ static const struct imx_media_pixfmt rgb_formats[] = {
+>  		.cs     = IPUV3_COLORSPACE_RGB,
+>  		.bpp    = 8,
+>  		.bayer  = true,
+> +	}, {
+> +		.fourcc = V4L2_PIX_FMT_SBGGR10,
+> +		.codes  = {MEDIA_BUS_FMT_SBGGR10_1X10},
+> +		.cs     = IPUV3_COLORSPACE_RGB,
+> +		.bpp    = 16,
+> +		.bayer  = true,
+> +	}, {
+> +		.fourcc = V4L2_PIX_FMT_SGBRG10,
+> +		.codes  = {MEDIA_BUS_FMT_SGBRG10_1X10},
+> +		.cs     = IPUV3_COLORSPACE_RGB,
+> +		.bpp    = 16,
+> +		.bayer  = true,
+> +	}, {
+> +		.fourcc = V4L2_PIX_FMT_SGRBG10,
+> +		.codes  = {MEDIA_BUS_FMT_SGRBG10_1X10},
+> +		.cs     = IPUV3_COLORSPACE_RGB,
+> +		.bpp    = 16,
+> +		.bayer  = true,
+> +	}, {
+> +		.fourcc = V4L2_PIX_FMT_SRGGB10,
+> +		.codes  = {MEDIA_BUS_FMT_SRGGB10_1X10},
+> +		.cs     = IPUV3_COLORSPACE_RGB,
+> +		.bpp    = 16,
+> +		.bayer  = true,
 
---4syblqsgtkenq3hx
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+This will break 10-bit bayer formats on i.MX6, which currently stores
+them in memory expanded to 16-bit, as listed in the entries below:
 
-On Wed, Apr 18, 2018 at 09:05:19AM -0500, Kyle Evans wrote:
-> On Tue, Jan 9, 2018 at 7:34 AM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > On Mon, Jan 08, 2018 at 09:30:57AM -0600, Kyle Evans wrote:
-> >> On Thu, Jan 4, 2018 at 8:01 AM, Maxime Ripard
-> >> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> >> > On Fri, Dec 22, 2017 at 06:11:52PM +0800, Chen-Yu Tsai wrote:
-> >> >> On Fri, Dec 22, 2017 at 6:07 PM, Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org> wrote:
-> >> >> > On Fri, 22 Dec 2017 09:35:08 +0100
-> >> >> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> >> >> >
-> >> >> >> On Thu, Dec 21, 2017 at 07:09:03PM +0100, Emmanuel Vadot wrote:
-> >> >> >> >
-> >> >> >> >  Hi Maxime,
-> >> >> >> >
-> >> >> >> > On Thu, 21 Dec 2017 16:26:30 +0100
-> >> >> >> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> >> >> >> >
-> >> >> >> > > Hi,
-> >> >> >> > >
-> >> >> >> > > On Thu, Dec 21, 2017 at 09:19:24AM -0600, Kyle Evans wrote:
-> >> >> >> > > > On Thu, Dec 21, 2017 at 8:55 AM, Maxime Ripard
-> >> >> >> > > > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> >> >> >> > > > > Hi Kyle,
-> >> >> >> > > > >
-> >> >> >> > > > > On Tue, Dec 19, 2017 at 03:05:23PM -0600, kevans91-OYTqUY/oFF8@public.gmane.org wrote:
-> >> >> >> > > > >> Allwinner a83t has a 1 KB sid block with efuse for security rootkey and
-> >> >> >> > > > >> thermal calibration data, add node to describe it.
-> >> >> >> > > > >>
-> >> >> >> > > > >> a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
-> >> >> >> > > > >> supported in an external driver for FreeBSD.
-> >> >> >> > > > >>
-> >> >> >> > > > >> Signed-off-by: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
-> >> >> >> > > > >
-> >> >> >> > > > > The patch looks fine in itself, but we've had a number of issues with
-> >> >> >> > > > > the register layout (and access patterns) in the past, so I'd rather
-> >> >> >> > > > > have something that works in Linux too if possible.
-> >> >> >> > > >
-> >> >> >> > > > I have a patch that I think should make it work fine on Linux [1], but
-> >> >> >> > > > I'm afraid I have little to no capability to test it myself and so I
-> >> >> >> > > > did not add it as well.
-> >> >> >> > > >
-> >> >> >> > > > I do know that the rootkey is offset 0x200 into the given space [2],
-> >> >> >> > > > as is the case with the H3, and that the readout quirk is not needed.
-> >> >> >> > > > I wasn't 100% sure that the a83t has 2Kbit worth of efuse space as the
-> >> >> >> > > > H3, but I do know that thermal data can be found at 0x34 and 0x38 in
-> >> >> >> > > > this space.
-> >> >> >> > >
-> >> >> >> > > Then maybe we should leave it aside until someone takes some time on
-> >> >> >> > > the A83t.
-> >> >> >> >
-> >> >> >> >  Take some time on the Linux driver and do not apply this patch for
-> >> >> >> > now you mean ?
-> >> >> >>
-> >> >> >> Yep.
-> >> >> >>
-> >> >> >> Maxime
-> >> >> >
-> >> >> >  Since linux doesn't have the compatible in it's driver what would
-> >> >> > be the harm to add the node in the DTS ? If a quirks is needed because
-> >> >> > some region is weird this would go in the driver right ? I don't see a
-> >> >> > technical problem for adding this node right now.
-> >> >> >  If Kyle confirm the lenght of the region and that no quirk is needed
-> >> >> > will it be enough ?
-> >> >>
-> >> >> I guess I wasn't very clear. I'm OK with the patch going in. The device
-> >> >> node currently says nothing about how much efuse space there is. The
-> >> >> memory region covers that and the control section, and the size matches
-> >> >> what the memory map says.
-> >> >>
-> >> >> The size and offset of the efuse space would be dealt with in the driver.
-> >> >
-> >> > Let's merge it then.
-> >> >
-> >> > Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >>
-> >> What does the timeline for these things normally look like? I'm new to
-> >> these parts. =)
-> >
-> > We're one week away from the merge window, so it's a bit late for it
-> > to be merged in 4.16, but it'll be in 4.17.
+>  	}, {
+>  		.fourcc = V4L2_PIX_FMT_SBGGR16,
+>  		.codes  = {
 
-> It's been two months and this still hasn't quite landed in
-> sunxi/for-next. =( May I ask the status on this?
-
-It seems to have fallen through the cracks, sorry :/
-
-Can you resend it based on 4.17?
-
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---4syblqsgtkenq3hx--
+regards
+Philipp
