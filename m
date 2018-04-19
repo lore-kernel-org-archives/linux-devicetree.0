@@ -1,89 +1,45 @@
 From: Phil Elwell <phil@raspberrypi.org>
-Subject: [PATCH resend v3 1/3] lan78xx: Read MAC address from DT if present
-Date: Thu, 19 Apr 2018 16:16:57 +0100
-Message-ID: <1524151019-82823-2-git-send-email-phil@raspberrypi.org>
-References: <1524151019-82823-1-git-send-email-phil@raspberrypi.org>
+Subject: [PATCH resend v3 0/3] lan78xx: Read configuration from Device Tree
+Date: Thu, 19 Apr 2018 16:16:56 +0100
+Message-ID: <1524151019-82823-1-git-send-email-phil@raspberrypi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524151019-82823-1-git-send-email-phil@raspberrypi.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Phil Elwell <phil@raspberrypi.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There is a standard mechanism for locating and using a MAC address from
-the Device Tree. Use this facility in the lan78xx driver to support
-applications without programmed EEPROM or OTP. At the same time,
-regularise the handling of the different address sources.
+[ Resending due to incorrect distribution list ]
 
-Signed-off-by: Phil Elwell <phil@raspberrypi.org>
----
- drivers/net/usb/lan78xx.c | 42 ++++++++++++++++++++----------------------
- 1 file changed, 20 insertions(+), 22 deletions(-)
+The Microchip LAN78XX family of devices are Ethernet controllers with
+a USB interface. Despite being discoverable devices it can be useful to
+be able to configure them from Device Tree, particularly in low-cost
+applications without an EEPROM or programmed OTP.
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 0867f72..a823f01 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -37,6 +37,7 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/microchipphy.h>
- #include <linux/phy.h>
-+#include <linux/of_net.h>
- #include "lan78xx.h"
- 
- #define DRIVER_AUTHOR	"WOOJUNG HUH <woojung.huh@microchip.com>"
-@@ -1652,34 +1653,31 @@ static void lan78xx_init_mac_address(struct lan78xx_net *dev)
- 	addr[5] = (addr_hi >> 8) & 0xFF;
- 
- 	if (!is_valid_ether_addr(addr)) {
--		/* reading mac address from EEPROM or OTP */
--		if ((lan78xx_read_eeprom(dev, EEPROM_MAC_OFFSET, ETH_ALEN,
--					 addr) == 0) ||
--		    (lan78xx_read_otp(dev, EEPROM_MAC_OFFSET, ETH_ALEN,
--				      addr) == 0)) {
--			if (is_valid_ether_addr(addr)) {
--				/* eeprom values are valid so use them */
--				netif_dbg(dev, ifup, dev->net,
--					  "MAC address read from EEPROM");
--			} else {
--				/* generate random MAC */
--				random_ether_addr(addr);
--				netif_dbg(dev, ifup, dev->net,
--					  "MAC address set to random addr");
--			}
--
--			addr_lo = addr[0] | (addr[1] << 8) |
--				  (addr[2] << 16) | (addr[3] << 24);
--			addr_hi = addr[4] | (addr[5] << 8);
--
--			ret = lan78xx_write_reg(dev, RX_ADDRL, addr_lo);
--			ret = lan78xx_write_reg(dev, RX_ADDRH, addr_hi);
-+		if (!eth_platform_get_mac_address(&dev->udev->dev, addr)) {
-+			/* valid address present in Device Tree */
-+			netif_dbg(dev, ifup, dev->net,
-+				  "MAC address read from Device Tree");
-+		} else if (((lan78xx_read_eeprom(dev, EEPROM_MAC_OFFSET,
-+						 ETH_ALEN, addr) == 0) ||
-+			    (lan78xx_read_otp(dev, EEPROM_MAC_OFFSET,
-+					      ETH_ALEN, addr) == 0)) &&
-+			   is_valid_ether_addr(addr)) {
-+			/* eeprom values are valid so use them */
-+			netif_dbg(dev, ifup, dev->net,
-+				  "MAC address read from EEPROM");
- 		} else {
- 			/* generate random MAC */
- 			random_ether_addr(addr);
- 			netif_dbg(dev, ifup, dev->net,
- 				  "MAC address set to random addr");
- 		}
-+
-+		addr_lo = addr[0] | (addr[1] << 8) |
-+			  (addr[2] << 16) | (addr[3] << 24);
-+		addr_hi = addr[4] | (addr[5] << 8);
-+
-+		ret = lan78xx_write_reg(dev, RX_ADDRL, addr_lo);
-+		ret = lan78xx_write_reg(dev, RX_ADDRH, addr_hi);
- 	}
- 
- 	ret = lan78xx_write_reg(dev, MAF_LO(0), addr_lo);
+This patch set adds support for reading the MAC address and LED modes from
+Device Tree.
+
+v3:
+- Move LED setting into PHY driver.
+
+v2:
+- Use eth_platform_get_mac_address.
+- Support up to 4 LEDs, and move LED mode constants into dt-bindings header.
+- Improve bindings document.
+- Remove EEE support.
+
+Phil Elwell (3):
+  lan78xx: Read MAC address from DT if present
+  lan78xx: Read LED states from Device Tree
+  dt-bindings: Document the DT bindings for lan78xx
+
+ .../devicetree/bindings/net/microchip,lan78xx.txt  | 54 ++++++++++++++++
+ MAINTAINERS                                        |  2 +
+ drivers/net/phy/microchip.c                        | 25 ++++++++
+ drivers/net/usb/lan78xx.c                          | 74 +++++++++++++++-------
+ include/dt-bindings/net/microchip-lan78xx.h        | 21 ++++++
+ include/linux/microchipphy.h                       |  3 +
+ 6 files changed, 156 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/microchip,lan78xx.txt
+ create mode 100644 include/dt-bindings/net/microchip-lan78xx.h
+
 -- 
 2.7.4
