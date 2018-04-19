@@ -1,68 +1,107 @@
 Return-Path: <SRS0=8H1Q=HI=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-bl2nam02on0080.outbound.protection.outlook.com ([104.47.38.80]:11079
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1753074AbeDSSyD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Apr 2018 14:54:03 -0400
-From: Martin Kelly <mkelly@xevo.com>
-Subject: [PATCH v6 2/2] dt-bindings: iio:imu:mpu6050: support more interrupt types
-Date: Thu, 19 Apr 2018 11:53:35 -0700
-Message-Id: <20180419185335.11012-2-mkelly@xevo.com>
-In-Reply-To: <20180419185335.11012-1-mkelly@xevo.com>
-References: <20180419185335.11012-1-mkelly@xevo.com>
+Received: from mail-pf0-f193.google.com ([209.85.192.193]:41206 "EHLO
+        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753692AbeDSQVq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Apr 2018 12:21:46 -0400
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20180418124119.GA3999@w540>
+References: <1523847111-12986-1-git-send-email-akinobu.mita@gmail.com>
+ <1523847111-12986-9-git-send-email-akinobu.mita@gmail.com> <20180418124119.GA3999@w540>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Date: Fri, 20 Apr 2018 01:21:25 +0900
+Message-ID: <CAC5umyiQOTpEqiRpVst2VtpwWCtACndVF_K6aqtHwzpF4JDW6Q@mail.gmail.com>
+Subject: Re: [PATCH v2 08/10] media: ov772x: handle nested s_power() calls
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Jean-Baptiste Maneyrol <JManeyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: linux-media@vger.kernel.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document that the hardware supports falling edge, rising edge, level
-low, and level high interrupt types, rather than just rising edge.
+2018-04-18 21:41 GMT+09:00 jacopo mondi <jacopo@jmondi.org>:
+> Hi Akinobu,
+>
+> On Mon, Apr 16, 2018 at 11:51:49AM +0900, Akinobu Mita wrote:
+>> Depending on the v4l2 driver, calling s_power() could be nested.  So the
+>> actual transitions between power saving mode and normal operation mode
+>> should only happen at the first power on and the last power off.
+>
+> What do you mean with 'nested' ?
+>
+> My understanding is that:
+> - if a sensor driver is mc compliant, it's s_power is called from
+>   v4l2_mc.c pipeline_pm_power_one() only when the power state changes
+> - if a sensor driver is not mc compliant, the s_power routine is
+>   called from the platform driver, and it should not happen that it is
+>   called twice with the same power state
+> - if a sensor implements subdev's internal operations open and close
+>   it may call it's own s_power routines from there, and it can be
+>   opened more that once.
+>
+> My understanding is that this driver s_power routines are only called
+> from platform drivers, and they -should- be safe.
 
-The language used is the same as that in st_lsm6dsx.txt.
+For pxa_camera driver, if there are more than two openers for a video
+device at the same time, calling s_power() could be nested.  Because
+there is nothing to prevent from calling s_power() in
+pxac_fops_camera_open().
 
-Signed-off-by: Martin Kelly <mkelly@xevo.com>
----
- Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+However, most of other V4L2 drivers use v4l2_fh_is_singular_file() to
+prevent from nested s_power() in their open operation.  So we can do
+the same for pxa_camera driver.
 
-diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-index 2b4514592f83..6b106d5ef298 100644
---- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-+++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-@@ -11,7 +11,12 @@ Required properties:
- 		"invensense,icm20608"
-  - reg : the I2C address of the sensor
-  - interrupt-parent : should be the phandle for the interrupt controller
-- - interrupts : interrupt mapping for GPIO IRQ
-+ - interrupts: interrupt mapping for IRQ. It should be configured with flags
-+   IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_EDGE_RISING, IRQ_TYPE_LEVEL_LOW or
-+   IRQ_TYPE_EDGE_FALLING.
-+
-+  Refer to interrupt-controller/interrupts.txt for generic interrupt client node
-+  bindings.
- 
- Optional properties:
-  - mount-matrix: an optional 3x3 mounting rotation matrix
-@@ -24,7 +29,7 @@ Example:
- 		compatible = "invensense,mpu6050";
- 		reg = <0x68>;
- 		interrupt-parent = <&gpio1>;
--		interrupts = <18 1>;
-+		interrupts = <18 IRQ_TYPE_EDGE_RISING>;
- 		mount-matrix = "-0.984807753012208",  /* x0 */
- 		               "0",                   /* y0 */
- 		               "-0.173648177666930",  /* z0 */
-@@ -41,7 +46,7 @@ Example:
- 		compatible = "invensense,mpu9250";
- 		reg = <0x68>;
- 		interrupt-parent = <&gpio3>;
--		interrupts = <21 1>;
-+		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;
- 		i2c-gate {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--- 
-2.11.0
+> Although, I'm not against this protection completely. Others might be,
+> though.
+>
+>>
+>> This adds an s_power() nesting counter and updates the power state if the
+>> counter is modified from 0 to != 0 or from != 0 to 0.
+>>
+>> Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+>> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+>> ---
+>> * v2
+>> - New patch
+>>
+>>  drivers/media/i2c/ov772x.c | 33 +++++++++++++++++++++++++++++----
+>>  1 file changed, 29 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+>> index 4245a46..2cd6e85 100644
+>> --- a/drivers/media/i2c/ov772x.c
+>> +++ b/drivers/media/i2c/ov772x.c
+>> @@ -424,6 +424,9 @@ struct ov772x_priv {
+>>       /* band_filter = COM8[5] ? 256 - BDBASE : 0 */
+>>       unsigned short                    band_filter;
+>>       unsigned int                      fps;
+>> +     /* lock to protect power_count */
+>> +     struct mutex                      power_lock;
+>> +     int                               power_count;
+>>  #ifdef CONFIG_MEDIA_CONTROLLER
+>>       struct media_pad pad;
+>>  #endif
+>> @@ -871,9 +874,25 @@ static int ov772x_power_off(struct ov772x_priv *priv)
+>>  static int ov772x_s_power(struct v4l2_subdev *sd, int on)
+>>  {
+>>       struct ov772x_priv *priv = to_ov772x(sd);
+>> +     int ret = 0;
+>> +
+>> +     mutex_lock(&priv->power_lock);
+>>
+>> -     return on ? ov772x_power_on(priv) :
+>> -                 ov772x_power_off(priv);
+>> +     /* If the power count is modified from 0 to != 0 or from != 0 to 0,
+>> +      * update the power state.
+>> +      */
+>> +     if (priv->power_count == !on)
+>> +             ret = on ? ov772x_power_on(priv) : ov772x_power_off(priv);
+>
+> Just release the mutex and return 0 if (power_count == on)
+> The code will be more readable imho.
 
+OK.  Actually, the change in this patch is used like boilerplate in
+many subdev drivers.  Also, it's better to print warning when nested
+s_power() call is detected as it should not be happened.
