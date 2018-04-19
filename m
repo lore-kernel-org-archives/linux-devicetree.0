@@ -1,29 +1,136 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 3/3] dt-bindings: Document the DT bindings for lan78xx
-Date: Thu, 19 Apr 2018 17:20:56 +0200
-Message-ID: <20180419152056.GD29658@lunn.ch>
-References: <1524148325-78945-1-git-send-email-phil@raspberrypi.org>
- <1524148325-78945-5-git-send-email-phil@raspberrypi.org>
+From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 00/10] Sunxi-Cedrus driver for the Allwinner
+ Video Engine, using media requests
+Date: Thu, 19 Apr 2018 17:41:14 +0200
+Message-ID: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
+Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1524148325-78945-5-git-send-email-phil@raspberrypi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Phil Elwell <phil@raspberrypi.org>
-Cc: Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBNXS4LLAKGQEQYB53IA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 19, 2018 at 03:32:05PM +0100, Phil Elwell wrote:
-> The Microchip LAN78XX family of devices are Ethernet controllers with
-> a USB interface. Despite being discoverable devices it can be useful to
-> be able to configure them from Device Tree, particularly in low-cost
-> applications without an EEPROM or programmed OTP.
-> 
-> Document the supported properties in a bindings file.
-> 
-> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+This presents a second iteration of the updated Sunxi-Cedrus driver,
+that supports the Video Engine found in most Allwinner SoCs, starting
+with the A10. It was tested on both the A20 and the A33.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+The initial version of this driver[0] was originally written and
+submitted by Florent Revest using a previous version of the request API
+that is necessary to provide coherency between controls and the buffers
+they apply to.
 
-    Andrew
+The driver was adapted to use the latest version of the media request
+API[1], as submitted by Hand Verkuil. Media request API support is a
+hard requirement for the Sunxi-Cedrus driver.
+
+This series also contains fixes for issues encountered with the current
+version of the request API. If accepted, these should eventually be
+squashed into the request API series.
+
+The driver itself currently only supports MPEG2 and more codecs will be
+added to the driver eventually. The output frames provided by the
+Video Engine are in a multi-planar 32x32-tiled YUV format, with a plane
+for luminance (Y) and a plane for chrominance (UV). A specific format is
+introduced in the V4L2 API to describe it.
+
+This implementation is based on the significant work that was conducted
+by various members of the linux-sunxi community for understanding and
+documenting the Video Engine's innards.
+
+Changes since v1:
+* use the latest version of the request API for Hans Verkuil;
+* added media controller support and dependency
+* renamed v4l2 format to the more explicit V4L2_PIX_FMT_MB32_NV12;
+* reworked bindings documentation;
+* moved driver to drivers/media/platforms/sunxi/cedrus to pair with
+  incoming CSI support ;
+* added a workqueue and lists to schedule buffer completion, since it
+  cannot be done in interrupt context;
+* split mpeg2 support into a setup and a trigger function to avoid race
+  condition;
+* split video-related ops to a dedicated sunxi_cedrus_video file;
+* cleaned up the included headers for each file;
+* used device PFN offset instead of subtracting PHYS_BASE;
+* used reset_control_reset instead of assert+deassert;
+* put the device in reset when removing driver;
+* changed dt bindings to use the last 96 Mib of the first 256 MiB of
+  DRAM;
+* made it clear in the mpeg frame header structure that forward and
+  backward indexes are used as reference frames for motion vectors;
+* lots of small cosmetic and consistency changes, including naming
+  harmonization and headers text rework.
+
+Remaining tasks:
+* using the dedicated SRAM controller driver;
+* cleaning up registers description and documenting the fields used;
+* removing the assigned-clocks property and setting the clock rate
+  in the driver directly;
+* testing on more platforms.
+
+Cheers!
+
+Paul Kocialkowski (10):
+  media: v4l2-ctrls: Add missing v4l2 ctrl unlock
+  media-request: Add a request complete operation to allow m2m
+    scheduling
+  videobuf2-core: Add helper to get buffer private data from media
+    request
+  media: vim2m: Implement media request complete op to schedule m2m run
+  media: v4l: Add definitions for MPEG2 frame format and header metadata
+  media: v4l: Add definition for Allwinner's MB32-tiled NV12 format
+  media: platform: Add Sunxi-Cedrus VPU decoder driver
+  dt-bindings: media: Document bindings for the Sunxi-Cedrus VPU driver
+  ARM: dts: sun7i-a20: Add Video Engine and reserved memory nodes
+  ARM: dts: sun8i-a33: Add Video Engine and reserved memory nodes
+
+ .../devicetree/bindings/media/sunxi-cedrus.txt     |  50 +++
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |  31 ++
+ arch/arm/boot/dts/sun8i-a33.dtsi                   |  38 ++
+ drivers/media/common/videobuf2/videobuf2-core.c    |  15 +
+ drivers/media/media-request.c                      |   3 +
+ drivers/media/platform/Kconfig                     |  15 +
+ drivers/media/platform/Makefile                    |   1 +
+ drivers/media/platform/sunxi/cedrus/Makefile       |   4 +
+ drivers/media/platform/sunxi/cedrus/sunxi_cedrus.c | 292 ++++++++++++
+ .../platform/sunxi/cedrus/sunxi_cedrus_common.h    | 105 +++++
+ .../media/platform/sunxi/cedrus/sunxi_cedrus_dec.c | 228 ++++++++++
+ .../media/platform/sunxi/cedrus/sunxi_cedrus_dec.h |  36 ++
+ .../media/platform/sunxi/cedrus/sunxi_cedrus_hw.c  | 201 +++++++++
+ .../media/platform/sunxi/cedrus/sunxi_cedrus_hw.h  |  29 ++
+ .../platform/sunxi/cedrus/sunxi_cedrus_mpeg2.c     | 157 +++++++
+ .../platform/sunxi/cedrus/sunxi_cedrus_mpeg2.h     |  33 ++
+ .../platform/sunxi/cedrus/sunxi_cedrus_regs.h      | 172 +++++++
+ .../platform/sunxi/cedrus/sunxi_cedrus_video.c     | 497 +++++++++++++++++++++
+ .../platform/sunxi/cedrus/sunxi_cedrus_video.h     |  31 ++
+ drivers/media/platform/vim2m.c                     |  12 +
+ drivers/media/v4l2-core/v4l2-ctrls.c               |  17 +-
+ drivers/media/v4l2-core/v4l2-ioctl.c               |   1 +
+ include/media/media-device.h                       |   2 +
+ include/media/videobuf2-core.h                     |   1 +
+ include/uapi/linux/v4l2-controls.h                 |  26 ++
+ include/uapi/linux/videodev2.h                     |   4 +
+ 26 files changed, 2000 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+ create mode 100644 drivers/media/platform/sunxi/cedrus/Makefile
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus.c
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_common.h
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_dec.c
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_dec.h
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_hw.c
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_hw.h
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_mpeg2.c
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_mpeg2.h
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_regs.h
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_video.c
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_video.h
+
+-- 
+2.16.3
