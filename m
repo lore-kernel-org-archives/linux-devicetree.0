@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 5/6] ARM: dts: sun7i: add pinmux setting for RGB888 output for LCD0
-Date: Thu, 19 Apr 2018 17:32:24 +0800
-Message-ID: <20180419093225.614-6-wens@csie.org>
+Subject: [PATCH 4/6] drm/panel: simple: Add support for Banana Pi 7" S070WV20-CT16 panel
+Date: Thu, 19 Apr 2018 17:32:23 +0800
+Message-ID: <20180419093225.614-5-wens@csie.org>
 References: <20180419093225.614-1-wens@csie.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180419093225.614-1-wens@csie.org>
@@ -10,38 +10,74 @@ To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, 
 Cc: Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Liu <net147@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On the A20, as well as many other Allwinner SoCs, the PD pingroup has
-the LCD0 RGB output functions.
+This panel is marketed as Banana Pi 7" LCD display. On the back is
+a sticker denoting the model name S070WV20-CT16.
 
-Add a pinmux setting for RGB888 output from LCD0, so boards and tablets
-with parallel RGB LCD panels may reference it.
+This is a 7" 800x480 panel connected through a 24-bit RGB interface.
+However the panel only does 262k colors.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm/boot/dts/sun7i-a20.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ .../display/panel/bananapi,s070wv20-ct16.txt  |  7 ++++++
+ drivers/gpu/drm/panel/panel-simple.c          | 25 +++++++++++++++++++
+ 2 files changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index e529e4ff2174..e06c14649d22 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -920,6 +920,17 @@
- 				pins = "PI20", "PI21";
- 				function = "uart7";
- 			};
+diff --git a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
+new file mode 100644
+index 000000000000..2ec35ce36e9a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
+@@ -0,0 +1,7 @@
++Banana Pi 7" (S070WV20-CT16) TFT LCD Panel
 +
-+			lcd0_rgb888_pins: lcd0-rgb888-pins {
-+				pins = "PD0", "PD1", "PD2", "PD3", "PD4",
-+				       "PD5", "PD6", "PD7", "PD8", "PD9",
-+				       "PD10", "PD11", "PD12", "PD13",
-+				       "PD14", "PD15", "PD16", "PD17",
-+				       "PD18", "PD19", "PD20", "PD21",
-+				       "PD22", "PD23", "PD24", "PD25",
-+				       "PD26", "PD27";
-+				function = "lcd0";
-+			};
- 		};
++Required properties:
++- compatible: should be "bananapi,s070wv20-ct16"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index cbf1ab404ee7..9bc037f74d6c 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -745,6 +745,28 @@ static const struct panel_desc avic_tm070ddh03 = {
+ 	},
+ };
  
- 		timer@1c20c00 {
++static const struct drm_display_mode bananapi_s070wv20_ct16_mode = {
++	.clock = 30000,
++	.hdisplay = 800,
++	.hsync_start = 800 + 40,
++	.hsync_end = 800 + 40 + 48,
++	.htotal = 800 + 40 + 48 + 40,
++	.vdisplay = 480,
++	.vsync_start = 480 + 13,
++	.vsync_end = 480 + 13 + 3,
++	.vtotal = 480 + 13 + 3 + 29,
++};
++
++static const struct panel_desc bananapi_s070wv20_ct16 = {
++	.modes = &bananapi_s070wv20_ct16_mode,
++	.num_modes = 1,
++	.bpc = 6,
++	.size = {
++		.width = 154,
++		.height = 86,
++	},
++};
++
+ static const struct drm_display_mode boe_nv101wxmn51_modes[] = {
+ 	{
+ 		.clock = 71900,
+@@ -2112,6 +2134,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "avic,tm070ddh03",
+ 		.data = &avic_tm070ddh03,
++	}, {
++		.compatible = "bananapi,s070wv20-ct16",
++		.data = &bananapi_s070wv20_ct16,
+ 	}, {
+ 		.compatible = "boe,nv101wxmn51",
+ 		.data = &boe_nv101wxmn51,
 -- 
 2.17.0
