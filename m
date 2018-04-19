@@ -1,50 +1,67 @@
 From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH 5/6] devfreq: rk3399_dmc: do not print error when get supply and clk defer.
-Date: Thu, 19 Apr 2018 12:40:18 +0200
-Message-ID: <20180419104019.24406-6-enric.balletbo@collabora.com>
+Subject: [PATCH 2/6] dt-bindings: clock: add DDR3 standard speed bins.
+Date: Thu, 19 Apr 2018 12:40:15 +0200
+Message-ID: <20180419104019.24406-3-enric.balletbo@collabora.com>
 References: <20180419104019.24406-1-enric.balletbo@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180419104019.24406-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, heiko@sntech.de, linux-pm@vger.kernel.org, dbasehore@chromium.org, linux-kernel@vger.kernel.org, dianders@google.com, groek@google.com, kernel@collabora.com, Lin Huang <hl@rock-chips.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Cc: devicetree@vger.kernel.org, heiko@sntech.de, linux-pm@vger.kernel.org, dbasehore@chromium.org, linux-kernel@vger.kernel.org, dianders@google.com, groek@google.com, kernel@collabora.com, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Lin Huang <hl@rock-chips.com>
+DDR3 SDRAM Standard (JESD79-3F) defines some standard speed bins for
+DDR3 memories. The devfreq/rk3399_dmc.txt binding refers to this file
+which does not exist, so add a ddr.h file with the standard speed bins
+for DDR3.
 
-We just return -EPROBE_DEFER error code to caller and do not
-print error message when try to get center logic regulator
-and DMC clock defer.
-
-Signed-off-by: Lin Huang <hl@rock-chips.com>
+Fixes: c1ceb8f7c167 (Documentation: bindings: add dt documentation for rk3399 dmc)
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 
- drivers/devfreq/rk3399_dmc.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/dt-bindings/clock/ddr.h | 34 +++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 include/dt-bindings/clock/ddr.h
 
-diff --git a/drivers/devfreq/rk3399_dmc.c b/drivers/devfreq/rk3399_dmc.c
-index 44a379657cd5..5bfca028eaaf 100644
---- a/drivers/devfreq/rk3399_dmc.c
-+++ b/drivers/devfreq/rk3399_dmc.c
-@@ -308,12 +308,18 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
- 
- 	data->vdd_center = devm_regulator_get(dev, "center");
- 	if (IS_ERR(data->vdd_center)) {
-+		if (PTR_ERR(data->vdd_center) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
+diff --git a/include/dt-bindings/clock/ddr.h b/include/dt-bindings/clock/ddr.h
+new file mode 100644
+index 000000000000..506aef7e609e
+--- /dev/null
++++ b/include/dt-bindings/clock/ddr.h
+@@ -0,0 +1,34 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
 +
- 		dev_err(dev, "Cannot get the regulator \"center\"\n");
- 		return PTR_ERR(data->vdd_center);
- 	}
- 
- 	data->dmc_clk = devm_clk_get(dev, "dmc_clk");
- 	if (IS_ERR(data->dmc_clk)) {
-+		if (PTR_ERR(data->dmc_clk) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
++#ifndef DT_BINDINGS_DDR_H
++#define DT_BINDINGS_DDR_H
 +
- 		dev_err(dev, "Cannot get the clk dmc_clk\n");
- 		return PTR_ERR(data->dmc_clk);
- 	};
++/* DDR3-800 Standard Speed Bins */
++#define DDR3_800D	15
++#define DDR3_800E	18
++/* DDR3-1066 Standard Speed Bins */
++#define DDR3_1066E	18
++#define DDR3_1066F	21
++#define DDR3_1066G	24
++/* DDR3-1333 Standard Speed Bins */
++#define DDR3_1333F	21
++#define DDR3_1333G	24
++#define DDR3_1333H	27
++#define DDR3_1333J	30
++/* DDR3-1600 Standard Speed Bins */
++#define DDR3_1600G	24
++#define DDR3_1600H	27
++#define DDR3_1600J	30
++#define DDR3_1600K	33
++/* DDR3-1600 Standard Speed Bins */
++#define DDR3_1866J	30
++#define DDR3_1866K	33
++#define DDR3_1866L	36
++#define DDR3_1866M	39
++/* DDR3-2133 Standard Speed Bins */
++#define DDR3_2133K	33
++#define DDR3_2133L	36
++#define DDR3_2133M	39
++#define DDR3_2133N	42
++
++#endif
 -- 
 2.17.0
