@@ -1,65 +1,50 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v8 1/2] dt-bindings: display: bridge: Document
- THC63LVD1024 LVDS decoder
-Date: Thu, 19 Apr 2018 12:48:51 +0300
-Message-ID: <55ac6669-3dc6-8c6f-d9a0-f6c44f7f0953@mentor.com>
-References: <1523357590-3841-1-git-send-email-jacopo+renesas@jmondi.org>
- <1523357590-3841-2-git-send-email-jacopo+renesas@jmondi.org>
- <29caaf6f-1783-9b01-5304-8748398d41c6@mentor.com>
+From: Radu Pirea <radu.pirea@microchip.com>
+Subject: Re: [PATCH 2/3] dt-bindings: add binding for at91-usart in spi mode
+Date: Thu, 19 Apr 2018 13:04:16 +0300
+Message-ID: <68cdbb8b60c32980caa7b130409d05d28788edd9.camel@microchip.com>
+References: <20180413161117.20274-1-radu.pirea@microchip.com>
+         <20180413161117.20274-3-radu.pirea@microchip.com>
+         <20180413162327.GE22187@piout.net>
+         <8e6c447d-dce5-f9af-e5b2-8d1d863159d6@microchip.com>
+         <20180413181251.GG22187@piout.net> <20180417110358.GD8973@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <29caaf6f-1783-9b01-5304-8748398d41c6@mentor.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180417110358.GD8973@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKT24gMDQvMTkvMjAxOCAxMjo0NCBQTSwgVmxhZGltaXIgWmFwb2xza2l5IHdy
-b3RlOgo+IEhpIEphY29wbywgTGF1cmVudCwKPiAKPiBPbiAwNC8xMC8yMDE4IDAxOjUzIFBNLCBK
-YWNvcG8gTW9uZGkgd3JvdGU6Cj4+IERvY3VtZW50IFRoaW5lIFRIQzYzTFZEMTAyNCBMVkRTIGRl
-Y29kZXIgZGV2aWNlIHRyZWUgYmluZGluZ3MuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEphY29wbyBN
-b25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KPj4gUmV2aWV3ZWQtYnk6IEFuZHJ6ZWog
-SGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+Cj4+IFJldmlld2VkLWJ5OiBOaWtsYXMgU8O2ZGVy
-bHVuZCA8bmlrbGFzLnNvZGVybHVuZCtyZW5lc2FzQHJhZ25hdGVjaC5zZT4KPj4gUmV2aWV3ZWQt
-Ynk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4K
-PiAKPiBSZXZpZXdlZC1ieTogVmxhZGltaXIgWmFwb2xza2l5IDx2bGFkaW1pcl96YXBvbHNraXlA
-bWVudG9yLmNvbT4KPiAKPj4gLS0tCj4+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhp
-bmUsdGhjNjNsdmQxMDI0LnR4dCB8IDYwICsrKysrKysrKysrKysrKysrKysrKysKPj4gIDEgZmls
-ZSBjaGFuZ2VkLCA2MCBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZk
-MTAyNC50eHQKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50
-eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMC4uMGIyM2U3MAo+PiAt
-LS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4+IEBAIC0wLDAgKzEsNjAgQEAK
-Pj4gK1RoaW5lIEVsZWN0cm9uaWNzIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIKPj4gKy0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4gKwo+PiArVGhlIFRIQzYz
-TFZEMTAyNCBpcyBhIGR1YWwgbGluayBMVkRTIHJlY2VpdmVyIGRlc2lnbmVkIHRvIGNvbnZlcnQg
-TFZEUyBzdHJlYW1zCj4+ICt0byBwYXJhbGxlbCBkYXRhIG91dHB1dHMuIFRoZSBjaGlwIHN1cHBv
-cnRzIHNpbmdsZS9kdWFsIGlucHV0L291dHB1dCBtb2RlcywKPj4gK2hhbmRsaW5nIHVwIHRvIHR3
-byBMVkRTIGlucHV0IHN0cmVhbXMgYW5kIHVwIHRvIHR3byBkaWdpdGFsIENNT1MvVFRMIG91dHB1
-dHMuCj4+ICsKPj4gK1NpbmdsZSBvciBkdWFsIG9wZXJhdGlvbiBtb2RlLCBvdXRwdXQgZGF0YSBt
-YXBwaW5nIGFuZCBERFIgb3V0cHV0IG1vZGVzIGFyZQo+PiArY29uZmlndXJlZCB0aHJvdWdoIGlu
-cHV0IHNpZ25hbHMgYW5kIHRoZSBjaGlwIGRvZXMgbm90IGV4cG9zZSBhbnkgY29udHJvbCBidXMu
-Cj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICstIGNvbXBhdGlibGU6IFNoYWxsIGJl
-ICJ0aGluZSx0aGM2M2x2ZDEwMjQiCj4+ICstIHZjYy1zdXBwbHk6IFBvd2VyIHN1cHBseSBmb3Ig
-VFRMIG91dHB1dCwgVFRMIENMT0NLT1VUIHNpZ25hbCwgTFZEUyBpbnB1dCwKPj4gKyAgUFBMIGFu
-ZCBkaWdpdGFsIGNpcmN1aXRyeQo+PiArCj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+PiArLSBw
-b3dlcmRvd24tZ3Bpb3M6IFBvd2VyIGRvd24gR1BJTyBzaWduYWwsIHBpbiBuYW1lICIvUERXTiIu
-IEFjdGl2ZSBsb3cKPiAKCnNvcnJ5IGZvciBhIGZvbGxvdy11cCwgSSd2ZSBqdXN0IG5vdGljZWQg
-aXQsIGNvdWxkIHlvdSBwbGVhc2UgZG91YmxlIGNoZWNrCnNwZWxsaW5nIFBEV04gdnMgUFdETj8g
-VGhhbmsgeW91IGluIGFkdmFuY2UuCgotLQpXaXRoIGJlc3Qgd2lzaGVzLApWbGFkaW1pcgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, 2018-04-17 at 12:03 +0100, Mark Brown wrote:
+> On Fri, Apr 13, 2018 at 08:12:51PM +0200, Alexandre Belloni wrote:
+> > On 13/04/2018 19:12:54+0200, Nicolas Ferre wrote:
+> > > This layout of the hardware is completely different from the
+> > > USART one and
+> > > it seems to makes sense to address it with a different hardware
+> > > description
+> > > and so a different compatible string.
+> > But then, you can end up with two drivers trying to use the same IP
+> > because nothing prevents you from writing a DT with both a usart
+> > and an
+> > spi node enabled for the same IP. request_mem_region() will not
+> > help
+> > here because then the working driver will depend on the probing
+> > order.
+> 
+> We don't really have too much in the way of better ideas for how to
+> handle this though.  Take a look at how the PXA SSP stuff handles
+> this,
+> though that's not really doing too much different it at least layers
+> a
+> mechanism on top to avoid collisions.
+Hi Mark,
+
+Thank you for suggestions. I followed your advice and looked at PXA SSP
+driver. In my opinion it is a layer that avoids collsions and
+unfortunately complicates things a bit. My ideea is to keep the things
+as simple as possible. For example, I can enhance usart-serial and
+usart-spi drivers to print detailed messages if probe fails because one
+driver tries to request a memory region already used by another driver.
+What do you think? Is this approach a good way to move forward?
