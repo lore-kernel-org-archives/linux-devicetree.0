@@ -1,37 +1,81 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v6 3/7] dt-bindings: clock: axg-aoclkc: New binding for Meson-AXG SoC
-Date: Thu, 19 Apr 2018 21:54:22 +0800
-Message-ID: <20180419135426.155794-4-yixun.lan@amlogic.com>
-References: <20180419135426.155794-1-yixun.lan@amlogic.com>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: Re: [PATCH 01/15] media: staging/imx: add support to media dev for no
+ IPU systems
+Date: Thu, 19 Apr 2018 15:02:21 +0100
+Message-ID: <m3k1t39tw2.fsf@linaro.org>
+References: <20180419101812.30688-1-rui.silva@linaro.org>
+ <20180419101812.30688-2-rui.silva@linaro.org>
+ <20180419120606.p32pl5at7wky7u3y@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419135426.155794-1-yixun.lan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-reply-to: <20180419120606.p32pl5at7wky7u3y@mwanda>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Update the dt-binding documentation to support new compatible string
-for the Amlogic's Meson-AXG SoC.
+Hi Dan,
+Thanks for this and the other reviews.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+On Thu 19 Apr 2018 at 12:06, Dan Carpenter wrote:
+> On Thu, Apr 19, 2018 at 11:17:58AM +0100, Rui Miguel Silva 
+> wrote:
+>> Some i.MX SoC do not have IPU, like the i.MX7, add to the the 
+>> media device
+>> infrastructure support to be used in this type of systems that 
+>> do not have
+>> internal subdevices besides the CSI.
+>> 
+>> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+>> ---
+>>  drivers/staging/media/imx/imx-media-dev.c        | 16 
+>>  +++++++++++-----
+>>  .../staging/media/imx/imx-media-internal-sd.c    |  3 +++
+>>  drivers/staging/media/imx/imx-media.h            |  3 +++
+>>  3 files changed, 17 insertions(+), 5 deletions(-)
+>> 
+>> diff --git a/drivers/staging/media/imx/imx-media-dev.c 
+>> b/drivers/staging/media/imx/imx-media-dev.c
+>> index f67ec8e27093..a8afe0ec4134 100644
+>> --- a/drivers/staging/media/imx/imx-media-dev.c
+>> +++ b/drivers/staging/media/imx/imx-media-dev.c
+>> @@ -92,6 +92,9 @@ static int imx_media_get_ipu(struct 
+>> imx_media_dev *imxmd,
+>>  	struct ipu_soc *ipu;
+>>  	int ipu_id;
+>>  
+>> +	if (imxmd->no_ipu_present)
+>
+> It's sort of nicer if variables don't have a negative built in 
+> because
+> otherwise you get confusing double negatives like "if (!no_ipu) 
+> {".
+> It's not hard to invert the varible in this case, because the 
+> only thing
+> we need to change is imx_media_probe() to set:
+>
+> +	imxmd->ipu_present = true;
+
+Yeah, my code was like this till last minute, and I also dislike 
+the
+double negatives... but since the logic that reset the variable 
+would
+only be done in a later patch I switched the logic.
+
+But You are right I could just had the initialization here to 
+true.
+Will take this in account in v2.
+
 ---
- Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
-index 786dc39ca904..3a880528030e 100644
---- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
-+++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
-@@ -9,6 +9,7 @@ Required Properties:
- 	- GXBB (S905) : "amlogic,meson-gxbb-aoclkc"
- 	- GXL (S905X, S905D) : "amlogic,meson-gxl-aoclkc"
- 	- GXM (S912) : "amlogic,meson-gxm-aoclkc"
-+	- AXG (A113D, A113X) : "amlogic,meson-axg-aoclkc"
- 	followed by the common "amlogic,meson-gx-aoclkc"
- 
- - #clock-cells: should be 1.
--- 
-2.15.1
+Cheers,
+	Rui
