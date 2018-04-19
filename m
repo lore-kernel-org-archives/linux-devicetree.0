@@ -1,95 +1,90 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v5 2/6] dt-bindings: reset: renesas,rzn1-reboot: document
- RZ/N1 reboot driver
-Date: Thu, 19 Apr 2018 11:10:50 +0200
-Message-ID: <CAMuHMdU0rR9xcQtuoHXywv_7qpwRsPRyh8+AtHAoyY29BkiHHg@mail.gmail.com>
-References: <1523963101-56725-1-git-send-email-michel.pollet@bp.renesas.com> <1523963101-56725-3-git-send-email-michel.pollet@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH 0/8] drm: bridge: Add support for static image formats
+Date: Thu, 19 Apr 2018 11:31:01 +0200
+Message-ID: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523963101-56725-3-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>
+To: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, daniel@ffwll.ch, peda@axentia.se, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michel,
+Hello DRM list,
+  cc media-list for the mbus format extension
+  cc renesas-soc and devicetree for Eagle DTS patch
 
-On Tue, Apr 17, 2018 at 1:04 PM, Michel Pollet
-<michel.pollet@bp.renesas.com> wrote:
-> The Renesas RZ/N1 Family (Part #R9A06G0xx) requires a driver
-> as part of the sysctrl MFD to handle rebooting the CA7 cores.
-> This documents the driver bindings.
->
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
-> ---
->  .../devicetree/bindings/power/renesas,rzn1-reboot.txt   | 17 +++++++++++=
-++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/renesas,rzn1-=
-reboot.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/renesas,rzn1-reboot.=
-txt b/Documentation/devicetree/bindings/power/renesas,rzn1-reboot.txt
-> new file mode 100644
-> index 0000000..a553864
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/renesas,rzn1-reboot.txt
-> @@ -0,0 +1,17 @@
-> +DT bindings for the Renesas RZ/N1 Reboot Driver
-> +
-> +=3D=3D Reboot Driver Node =3D=3D
-> +
-> +The reboot driver allows restarting the RZ/N1.
-> +
-> +Bindings:
-> ++ Required:
-> +       compatible =3D "renesas,r9a06g032-reboot", "renesas,rzn1-reboot";
-> +
-> +Example:
-> +       reboot@4000c120 {
-> +               compatible =3D "renesas,r9a06g032-reboot",
-> +                               "renesas,rzn1-reboot";
-> +               reg =3D <0x4000c120 4>,
-> +                       <0x4000c198 4>;
-> +       };
+This series adds support for static image formats to DRM bridges, mimicking
+what display_info.bus_formats represents for DRM connectors.
 
-I'm afraid this will become a messy DT structure, once device nodes for the
-registers just before, between, and after these 2 registers will be added..=
-.
+The main use case of this series is the R-Car DU LVDS encoder. This component
+can output LVDS streams compatible with JEIDA or SPWG specification, and so far
+it has only been possible to decide which one to output if the next component
+in the DRM pipeline was a panel, equipped with a DRM connector where to inspect
+the accepted input image format from.
 
-There's really only a single multi-function sysctrl device here, using a 4 =
-KiB
-block at 0x4000c000, containing a mix of:
-  1. Clock Control Registers (Table 6.1 [*]),
-  2. Reset Control (Table 6.2 [*]),
-  3. System Configuration (Table 6.3 [*]).
+With the introduction of the transparent THC63LVD1024 LVDS decoder driver, the
+next component in the pipeline is now a bridge, and the DU LVDS encoder needs
+to inspect which media bus image formats it accepts and set its LVDS output
+mode accordingly.
 
-Looks a lot like the mix used in the Amiga's custom chip block at 0xdff000,
-which also cannot be separated into logical blocks without listing individu=
-al
-registers ;-)
+The series implements -static- image format supports for bridges. As a result
+of the discussion on Peter Rosin's patch series:
+[PATCH v2 0/5] allow override of bus format in bridges
+https://lkml.org/lkml/2018/3/26/610
+my understanding is that the accepted image formats can be 'dynamic' (or
+'atomic') if depends on the configured DRM mode, or 'static' as in the
+THC63LVD1024 case, where an external pin configuration decides which LVDS
+mapping mode the encoder accepts (which implies it comes from DT, as in Peter's
+use case).
 
-So I suggest to have a DT binding for the whole block, and a clock driver
-matching against the whole block, registering all clocks and a small reset
-controller driver.
+For dynamic formats Daniel already suggested a possible implementation:
+https://lkml.org/lkml/2018/3/28/57
+while for static image formats I am proposing an implementation that
+copies what we have for connectors at the moment.
 
-[*] RZ/N1D Group, RZ/N1S Group, RZ/N1L Group User=E2=80=99s Manual: System
-    Introduction, Multiplexing, Electrical and Mechanical Information.
-    https://www.renesas.com/en-eu/doc/products/mpumcu/doc/rz/r01uh0750ej009=
-0-rzn1-introduction.pdf
+One more detail: the DU LVDS encoder supports 'mirroring' of LVDS modes, and
+that was handled through a set of flags (DRM_BUS_FLAG_DATA_*) defined for
+connectors only, and added for that specific purpose, if I got this right.
+Instead of replicating the same flags for bridges, or moving them to some shared
+header which I had trouble to identify, I have introduced the _LE version of
+mbus formats used to describe LVDS streams. While 'little endian' is not
+*technically* exact for those mirrored formats, it is my opinion they represent
+a good description anyhow of the reversed component ordering.
 
-Gr{oetje,eeting}s,
+As a result, the connector specific DRM_BUS_FLAG_DATA_* have been removed as
+all their user have been ported to use the new _LE formats.
 
-                        Geert
+The series depends on THC63LVD1024 support, implemented by the following
+in-review series:
+ [PATCH v9 0/2] drm: Add Thine THC63LVD1024 LVDS decoder bridge
+ [PATCH v3 0/5] V3M-Eagle HDMI output enablement
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+available for the interested at:
+git://jmondi.org/linux lvds-bridge/linus-master/v9-eagle-v3
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Thanks for comments
+   j
+
+Jacopo Mondi (8):
+  drm: bridge: Add support for static image formats
+  dt-bindings: display: bridge: thc63lvd1024: Add lvds map property
+  drm: bridge: thc63lvd1024: Add support for LVDS mode map
+  arm64: dts: renesas: eagle: Add thc63 LVDS map
+  media: Add LE version of RGB LVDS formats
+  drm: rcar-du: rcar-lvds: Add bridge format support
+  drm: panel: Use _LE LVDS formats for data mirroring
+  drm: connector: Remove DRM_BUS_FLAG_DATA_* flags
+
+ .../bindings/display/bridge/thine,thc63lvd1024.txt |   3 +
+ Documentation/media/uapi/v4l/subdev-formats.rst    | 174 +++++++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a77970-eagle.dts     |   1 +
+ drivers/gpu/drm/bridge/thc63lvd1024.c              |  41 +++++
+ drivers/gpu/drm/drm_bridge.c                       |  30 ++++
+ drivers/gpu/drm/panel/panel-lvds.c                 |  21 +--
+ drivers/gpu/drm/rcar-du/rcar_lvds.c                |  64 +++++---
+ include/drm/drm_bridge.h                           |   8 +
+ include/drm/drm_connector.h                        |   4 -
+ include/uapi/linux/media-bus-format.h              |   5 +-
+ 10 files changed, 317 insertions(+), 34 deletions(-)
+
+--
+2.7.4
