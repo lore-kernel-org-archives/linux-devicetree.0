@@ -1,72 +1,58 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/2] dt-bindings/display/bridge: sii902x: add optional
- power supplies
-Date: Thu, 19 Apr 2018 14:09:52 +0300
-Message-ID: <1733412.i2Wslp7VkI@avalon>
-References: <20180410051927.8268-1-philippe.cornu@st.com>
- <20599695.GSkeUvMnvx@avalon> <e709e4f7-2266-f99f-5864-5a8c037dbdc2@st.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 2/6] dt-bindings: clock: add DDR3 standard speed bins.
+Date: Thu, 19 Apr 2018 13:10:35 +0200
+Message-ID: <5662116.zj93FbmDPb@phil>
+References: <20180419104019.24406-1-enric.balletbo@collabora.com> <20180419104019.24406-3-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <e709e4f7-2266-f99f-5864-5a8c037dbdc2@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philippe CORNU <philippe.cornu@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Yannick FERTRE <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180419104019.24406-3-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, dbasehore@chromium.org, linux-kernel@vger.kernel.org, dianders@google.com, groek@google.com, kernel@collabora.com, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcGUsCgpPbiBUaHVyc2RheSwgMTkgQXByaWwgMjAxOCAxMjozMToxNSBFRVNUIFBo
-aWxpcHBlIENPUk5VIHdyb3RlOgo+IE9uIDA0LzE5LzIwMTggMTA6MTEgQU0sIExhdXJlbnQgUGlu
-Y2hhcnQgd3JvdGU6Cj4gPiBPbiBUdWVzZGF5LCAxMCBBcHJpbCAyMDE4IDA4OjE5OjI2IEVFU1Qg
-UGhpbGlwcGUgQ29ybnUgd3JvdGU6Cj4gPiAKPiA+PiBBZGQgdGhlIDMgb3B0aW9uYWwgcG93ZXIg
-c3VwcGxpZXMgdXNpbmcgdGhlIGV4YWN0IGRlc2NyaXB0aW9uCj4gPj4gZm91bmQgaW4gdGhlIGRv
-Y3VtZW50IG5hbWVkCj4gPj4gIlNpSTkwMjJBL1NpSTkwMjRBIEhETUkgVHJhbnNtaXR0ZXIgRGF0
-YSBTaGVldCAoQXVndXN0IDIwMTYpIi4KPiA+Pgo+ID4+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBl
-IENvcm51IDxwaGlsaXBwZS5jb3JudUBzdC5jb20+Cj4gPj4gLS0tCj4gPj4gCj4gPj4gICBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQg
-fCAzICsrKwo+ID4+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQo+ID4+Cj4gPj4g
-ZGlmZiAtLWdpdAo+ID4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYnJpZGdlL3NpaTkwMngudHh0Cj4gPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQgaW5kZXgKPiA+PiA1NmEzZTY4Y2NiODAu
-LmNmNTM2NzhmZTU3NCAxMDA2NDQKPiA+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQKPiA+PiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQKPiA+PiBA
-QCAtOCw2ICs4LDkgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPiA+PiAgIAktIGludGVycnVwdHMt
-ZXh0ZW5kZWQgb3IgaW50ZXJydXB0LXBhcmVudCArIGludGVycnVwdHM6IGRlc2NyaWJlCj4gPj4g
-ICAJICB0aGUgaW50ZXJydXB0IGxpbmUgdXNlZCB0byBpbmZvcm0gdGhlIGhvc3QgYWJvdXQgaG90
-cGx1ZyBldmVudHMuCj4gPj4gICAJLSByZXNldC1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBz
-cGVjaWZpY2F0aW9uIGZvciBSU1RfTiBwaW4uCj4gPj4gKwktIGlvdmNjLXN1cHBseTogSS9PIHN1
-cHBseSB2b2x0YWdlICgxLjhWIG9yIDMuM1YsIGhvc3QtZGVwZW5kZW50KS4KPiA+PiArCS0gYXZj
-YzEyLXN1cHBseTogVE1EUyBhbmFsb2cgc3VwcGx5IHZvbHRhZ2UgKDEuMlYpLgo+ID4+ICsJLSBj
-dmNjMTItc3VwcGx5OiBEaWdpdGFsIGNvcmUgc3VwcGx5IHZvbHRhZ2UgKDEuMlYpLgo+ID4gCj4g
-PiBJdCBzZWVtcyB0aGF0IHRoZSBBVkNDMTIgYW5kIENWQ0MxMiBwb3dlciBzdXBwbGllcyBhcmUg
-dXN1YWxseSBkZXJpdmVkCj4gPiBmcm9tIHRoZSBzYW1lIHNvdXJjZS4gSG93IGFib3V0IHN0YXJ0
-aW5nIHdpdGggb25lIERUIHByb3BlcnR5IGZvciBib3RoLAo+ID4gYW5kIGFkZGluZyBhIHNlY29u
-ZCBvbmUgbGF0ZXIgaWYgbmVlZGVkID8KPiAKPiBXZWxsLCBJIGRvIG5vdCBrbm93IHdoYXQgaXMg
-dGhlIGJlc3QuIEhlcmUgSSB0b29rIHRoZSBkZXNjcmlwdGlvbiBmcm9tIAo+IHRoZSBkb2N1bWVu
-dGF0aW9uLCBhbmQgdG8gYWxsb3cgYWxsIHBvc3NpYmxlIGJvYXJkIGNvbmZpZ3VyYXRpb25zLCBJ
-IAo+IGFkZGVkIHRoZXNlIHN1cHBsaWVzIGFzICJvcHRpb25hbCIgcHJvcGVydGllczogaWYgdGhl
-cmUgaXMgb25seSBvbmUgMXYyIAo+IHJlZ3VsYXRvciBvbiB0aGUgYm9hcmQsIHRoZSBkdCB3aWxs
-IGNvbnRhaW4gb25seSBhdmNjMTIgb3IgY3ZjYzEyIGFuZCAKPiBldmVyeXRoaW5nIHdpbGwgd29y
-ayBmaW5lICh3ZSB3aWxsIGhhdmUgYSBkdW1teSByZWd1bGF0b3IgZm9yIHRoZSAKPiBtaXNzaW5n
-IG9wdGlvbmFsIDF2MiByZWcpLCBpZiBib3RoIHJlZ3VsYXRvcnMgYXJlIHRoZXJlIGZvciBhbnkg
-cmVhc29ucyAKPiAoc3RhYmlsaXR5LCBub2lzZSwgd2hhdGV2ZXIuLi4pIHRoZW4gYm90aCBlbnRy
-aWVzIHdpbGwgYmUgaW4gdGhlIGR0Lgo+IAo+IElmIHlvdSBjb25maXJtIHlvdSBwcmVmZXIgYSBz
-aW5nbGUgMXYyIHN1cHBseSAobmFtZWQgZm9yIGluc3RhbmNlIAo+ICJ2Y2MxMi1zdXBwbHkiKSB0
-aGVuIEkgd2lsbCBkbyA6LSkKClBsZWFzZSBzZWUgaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTgtQXByaWwvCjE3MjQwMC5odG1sIChhbmQgdGhlIG1l
-c3NhZ2VzIHRoYXQgbGVhZCB0byBpdCkgYW5kIGh0dHBzOi8vCmxpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxOC1NYXJjaC8xNzA3NjMuaHRtbC4KCj4gPj4gICBPcHRp
-b25hbCBzdWJub2RlczoKPiA+PiAgIAktIHZpZGVvIGlucHV0OiB0aGlzIHN1Ym5vZGUgY2FuIGNv
-bnRhaW4gYSB2aWRlbyBpbnB1dCBwb3J0IG5vZGUKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5j
-aGFydAoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Enric,
+
+Am Donnerstag, 19. April 2018, 12:40:15 CEST schrieb Enric Balletbo i Serra:
+> DDR3 SDRAM Standard (JESD79-3F) defines some standard speed bins for
+> DDR3 memories. The devfreq/rk3399_dmc.txt binding refers to this file
+> which does not exist, so add a ddr.h file with the standard speed bins
+> for DDR3.
+> 
+> Fixes: c1ceb8f7c167 (Documentation: bindings: add dt documentation for rk3399 dmc)
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> 
+>  include/dt-bindings/clock/ddr.h | 34 +++++++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/ddr.h
+> 
+> diff --git a/include/dt-bindings/clock/ddr.h b/include/dt-bindings/clock/ddr.h
+> new file mode 100644
+> index 000000000000..506aef7e609e
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/ddr.h
+> @@ -0,0 +1,34 @@
+> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+> +
+> +#ifndef DT_BINDINGS_DDR_H
+> +#define DT_BINDINGS_DDR_H
+> +
+> +/* DDR3-800 Standard Speed Bins */
+> +#define DDR3_800D	15
+> +#define DDR3_800E		18
+> +/* DDR3-1066 Standard Speed Bins */
+> +#define DDR3_1066E	18
+> +#define DDR3_1066F	21
+> +#define DDR3_1066G	24
+
+looking at the mentioned jedec standard, I don't see where these numerical
+values are defined in the standard itself. [I may be blind though]
+
+Could you explain a bit more where these numerical values are coming from?
+
+
+Thanks
+Heiko
