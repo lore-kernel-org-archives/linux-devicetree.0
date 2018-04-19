@@ -1,103 +1,86 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 4/6] drm/panel: simple: Add support for Banana Pi 7"
- S070WV20-CT16 panel
-Date: Thu, 19 Apr 2018 20:45:14 +0800
-Message-ID: <CAGb2v65tH_8_J27Xmx4TeEYhpHLJf4m0AzXJoGXZYMfJH=51xQ@mail.gmail.com>
-References: <20180419093225.614-1-wens@csie.org>
- <20180419093225.614-5-wens@csie.org>
- <58ce9e3b-00ee-87d2-f05b-b9f1414d1cfa@micronovasrl.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2] dt-bindings/display/bridge: sii902x: add optional power supplies
+Date: Thu, 19 Apr 2018 15:50:26 +0300
+Message-ID: <5933919.oNossTj3O6@avalon>
+References: <20180410051927.8268-1-philippe.cornu@st.com> <1733412.i2Wslp7VkI@avalon> <a10d41bc-c766-568b-a9cb-d1f0f03390a8@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <58ce9e3b-00ee-87d2-f05b-b9f1414d1cfa@micronovasrl.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jonathan Liu <net147@gmail.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a10d41bc-c766-568b-a9cb-d1f0f03390a8@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philippe CORNU <philippe.cornu@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Yannick FERTRE <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBBcHIgMTksIDIwMTggYXQgODozMSBQTSwgR2l1bGlvIEJlbmV0dGkKPGdpdWxpby5i
-ZW5ldHRpQG1pY3Jvbm92YXNybC5jb20+IHdyb3RlOgo+IEhpLAo+Cj4gSWwgMTkvMDQvMjAxOCAx
-MTozMiwgQ2hlbi1ZdSBUc2FpIGhhIHNjcml0dG86Cj4+Cj4+IFRoaXMgcGFuZWwgaXMgbWFya2V0
-ZWQgYXMgQmFuYW5hIFBpIDciIExDRCBkaXNwbGF5LiBPbiB0aGUgYmFjayBpcwo+PiBhIHN0aWNr
-ZXIgZGVub3RpbmcgdGhlIG1vZGVsIG5hbWUgUzA3MFdWMjAtQ1QxNi4KPgo+Cj4gSnVkZ2luZyBm
-cm9tIHRoZSBjb2RlLCB0aGUgcmVhbCB2ZW5kb3Igc2hvdWxkIGJlIENEVGVjaC4KPiBUYWtlIGEg
-bG9vayBhdCB0aGVpciB3ZWJzaXRlOgo+IGh0dHA6Ly93d3cuY2R0ZWNoLWxjZC5jb20vZW4vc3Rh
-bmRhcmRzY3JlZW4uaHRtbAo+Cj4gSSBwb2ludCB5b3UgbXkgcGF0Y2ggZm9yIGluc2VydGluZyBh
-bm90aGVyIHNpbWlsYXIgcGFuZWw6Cj4gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3Jn
-L3BhdGNoLzIxMTkxNC8KPgo+IE1heWJlIGl0IHdvdWxkIG1ha2Ugc2Vuc2UgdG8gdXNlIENEVGVj
-aCBhcyB0aGUgdmVuZG9yLAo+IGJlY2F1c2UgbWF5YmUgQmFuYW5hcGkgcmVzZWxscyBvbmx5IGl0
-Lgo+IE9yIG1heWJlIGl0IGlzIGEgY3VzdG9tIHBhbmVsIGRvbmUgZm9yIHRoZW0sCj4gYnV0IHRo
-ZSBzYW1lIGlzIGZvciBvdGhlciBwYW5lbHMgSSd2ZSBzdWJtaXR0ZWQgcGF0Y2hlcy4KPiBNaWNy
-b25vdmEgc3JsIGN1c3RvbSwgYnV0IHZlbmRvciBpcyBDRFRlY2guCj4KPiBXaGF0IGRvIHlvdSB0
-aGluaz8KClRoYXQgbWlnaHQgYmUgdHJ1ZS4gQnV0IGZvciBwZW9wbGUgd2l0aG91dCBhY2Nlc3Mg
-dG8gdGhlIHZlbmRvcnMsCnRoaXMgaXMgaG9ycmlibHkgaGFyZCB0byBmaWd1cmUgb3V0LiBQZW9w
-bGUgYXJlIG9ubHkgZ29pbmcgdG8gbG9vawphdCB3aGF0ZXZlciBtYXJraW5nIHRoZXJlIGlzIG9u
-IHRoZSBMQ0QgcGFuZWwsIGFuZCB3aGF0ZXZlciB0aGUKc2VsbGVyIHNheXMuIFRoaXMgcGFuZWwg
-aGFzIHRoZSBtb2RlbCBudW1iZXIgc3RpY2tlcmVkIG9uLCBidXQgdGhlClBDQiBhdHRhY2hlZCB0
-byBpdCBvbmx5IGhhcyB0aGUgQmFuYW5hIFBpIGxvZ28uCgpBbmQgZ2l2ZW4gaXQncyBhIGN1c3Rv
-bSBwaWVjZSwgcHJvYmFibHkgT0VNIG9yIE9ETSwgdGhlIHJlYWwKbWFudWZhY3R1cmVyIG1hdHRl
-cnMgbGVzcy4gWW91IGRvbid0IG1lbnRpb24gIkZveGNvbm4iIGFzIHRoZQp2ZW5kb3Igb2YgdGhl
-IGlQaG9uZSwgZG8geW91PwoKQ2hlbll1Cgo+Cj4gLS0KPiBHaXVsaW8gQmVuZXR0aQo+IENUTwo+
-Cj4gTUlDUk9OT1ZBIFNSTAo+IFNlZGU6IFZpYSBBLiBOaWVkZGEgMyAtIDM1MDEwIFZpZ29uemEg
-KFBEKQo+IFRlbC4gMDQ5Lzg5MzE1NjMgLSBGYXggMDQ5Lzg5MzEzNDYKPiBDb2QuRmlzY2FsZSAt
-IFAuSVZBIDAyNjYzNDIwMjg1Cj4gQ2FwaXRhbGUgU29jaWFsZSDigqwgMjYuMDAwIGkudi4KPiBJ
-c2NyaXR0YSBhbCBSZWcuIEltcHJlc2UgZGkgUGFkb3ZhIE4uIDAyNjYzNDIwMjg1Cj4gTnVtZXJv
-IFIuRS5BLiAyNTg2NDIKPgo+Cj4+Cj4+IFRoaXMgaXMgYSA3IiA4MDB4NDgwIHBhbmVsIGNvbm5l
-Y3RlZCB0aHJvdWdoIGEgMjQtYml0IFJHQiBpbnRlcmZhY2UuCj4+IEhvd2V2ZXIgdGhlIHBhbmVs
-IG9ubHkgZG9lcyAyNjJrIGNvbG9ycy4KPj4KPj4gU2lnbmVkLW9mZi1ieTogQ2hlbi1ZdSBUc2Fp
-IDx3ZW5zQGNzaWUub3JnPgo+PiAtLS0KPj4gICAuLi4vZGlzcGxheS9wYW5lbC9iYW5hbmFwaSxz
-MDcwd3YyMC1jdDE2LnR4dCAgfCAgNyArKysrKysKPj4gICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwv
-cGFuZWwtc2ltcGxlLmMgICAgICAgICAgfCAyNSArKysrKysrKysrKysrKysrKysrCj4+ICAgMiBm
-aWxlcyBjaGFuZ2VkLCAzMiBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0Cj4+
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2JhbmFuYXBp
-LHMwNzB3djIwLWN0MTYudHh0Cj4+Cj4+IGRpZmYgLS1naXQKPj4gYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9iYW5hbmFwaSxzMDcwd3YyMC1jdDE2LnR4
-dAo+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2Jh
-bmFuYXBpLHMwNzB3djIwLWN0MTYudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4
-IDAwMDAwMDAwMDAwMC4uMmVjMzVjZTM2ZTlhCj4+IC0tLSAvZGV2L251bGwKPj4gKysrCj4+IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYmFuYW5hcGks
-czA3MHd2MjAtY3QxNi50eHQKPj4gQEAgLTAsMCArMSw3IEBACj4+ICtCYW5hbmEgUGkgNyIgKFMw
-NzBXVjIwLUNUMTYpIFRGVCBMQ0QgUGFuZWwKPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGllczoK
-Pj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJiYW5hbmFwaSxzMDcwd3YyMC1jdDE2Igo+PiAr
-Cj4+ICtUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmlu
-ZGluZywgd2hpY2ggaXMKPj4gc3BlY2lmaWVkCj4+ICtpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRo
-aXMgZGlyZWN0b3J5Lgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVs
-LXNpbXBsZS5jCj4+IGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4+IGlu
-ZGV4IGNiZjFhYjQwNGVlNy4uOWJjMDM3Zjc0ZDZjIDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVs
-L3BhbmVsLXNpbXBsZS5jCj4+IEBAIC03NDUsNiArNzQ1LDI4IEBAIHN0YXRpYyBjb25zdCBzdHJ1
-Y3QgcGFuZWxfZGVzYyBhdmljX3RtMDcwZGRoMDMgPSB7Cj4+ICAgICAgICAgfSwKPj4gICB9Owo+
-PiAgICtzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgYmFuYW5hcGlfczA3MHd2
-MjBfY3QxNl9tb2RlID0gewo+PiArICAgICAgIC5jbG9jayA9IDMwMDAwLAo+PiArICAgICAgIC5o
-ZGlzcGxheSA9IDgwMCwKPj4gKyAgICAgICAuaHN5bmNfc3RhcnQgPSA4MDAgKyA0MCwKPj4gKyAg
-ICAgICAuaHN5bmNfZW5kID0gODAwICsgNDAgKyA0OCwKPj4gKyAgICAgICAuaHRvdGFsID0gODAw
-ICsgNDAgKyA0OCArIDQwLAo+PiArICAgICAgIC52ZGlzcGxheSA9IDQ4MCwKPj4gKyAgICAgICAu
-dnN5bmNfc3RhcnQgPSA0ODAgKyAxMywKPj4gKyAgICAgICAudnN5bmNfZW5kID0gNDgwICsgMTMg
-KyAzLAo+PiArICAgICAgIC52dG90YWwgPSA0ODAgKyAxMyArIDMgKyAyOSwKPj4gK307Cj4+ICsK
-Pj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBiYW5hbmFwaV9zMDcwd3YyMF9jdDE2
-ID0gewo+PiArICAgICAgIC5tb2RlcyA9ICZiYW5hbmFwaV9zMDcwd3YyMF9jdDE2X21vZGUsCj4+
-ICsgICAgICAgLm51bV9tb2RlcyA9IDEsCj4+ICsgICAgICAgLmJwYyA9IDYsCj4+ICsgICAgICAg
-LnNpemUgPSB7Cj4+ICsgICAgICAgICAgICAgICAud2lkdGggPSAxNTQsCj4+ICsgICAgICAgICAg
-ICAgICAuaGVpZ2h0ID0gODYsCj4+ICsgICAgICAgfSwKPj4gK307Cj4+ICsKPj4gICBzdGF0aWMg
-Y29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgYm9lX252MTAxd3htbjUxX21vZGVzW10gPSB7
-Cj4+ICAgICAgICAgewo+PiAgICAgICAgICAgICAgICAgLmNsb2NrID0gNzE5MDAsCj4+IEBAIC0y
-MTEyLDYgKzIxMzQsOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBwbGF0Zm9y
-bV9vZl9tYXRjaFtdCj4+ID0gewo+PiAgICAgICAgIH0sIHsKPj4gICAgICAgICAgICAgICAgIC5j
-b21wYXRpYmxlID0gImF2aWMsdG0wNzBkZGgwMyIsCj4+ICAgICAgICAgICAgICAgICAuZGF0YSA9
-ICZhdmljX3RtMDcwZGRoMDMsCj4+ICsgICAgICAgfSwgewo+PiArICAgICAgICAgICAgICAgLmNv
-bXBhdGlibGUgPSAiYmFuYW5hcGksczA3MHd2MjAtY3QxNiIsCj4+ICsgICAgICAgICAgICAgICAu
-ZGF0YSA9ICZiYW5hbmFwaV9zMDcwd3YyMF9jdDE2LAo+PiAgICAgICAgIH0sIHsKPj4gICAgICAg
-ICAgICAgICAgIC5jb21wYXRpYmxlID0gImJvZSxudjEwMXd4bW41MSIsCj4+ICAgICAgICAgICAg
-ICAgICAuZGF0YSA9ICZib2VfbnYxMDF3eG1uNTEsCj4+Cj4KPgo+Cl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Philippe,
+
+On Thursday, 19 April 2018 15:41:20 EEST Philippe CORNU wrote:
+> On 04/19/2018 01:09 PM, Laurent Pinchart wrote:
+> > On Thursday, 19 April 2018 12:31:15 EEST Philippe CORNU wrote:
+> >> On 04/19/2018 10:11 AM, Laurent Pinchart wrote:
+> >>> On Tuesday, 10 April 2018 08:19:26 EEST Philippe Cornu wrote:
+> >>>> Add the 3 optional power supplies using the exact description
+> >>>> found in the document named
+> >>>> "SiI9022A/SiI9024A HDMI Transmitter Data Sheet (August 2016)".
+> >>>>
+> >>>> Signed-off-by: Philippe Cornu <philippe.cornu@st.com>
+> >>>> ---
+> >>>>
+> >>>> Documentation/devicetree/bindings/display/bridge/sii902x.txt | 3 +++
+> >>>> 1 file changed, 3 insertions(+)
+> >>>>
+> >>>> diff --git
+> >>>> a/Documentation/devicetree/bindings/display/bridge/sii902x.txt
+> >>>> b/Documentation/devicetree/bindings/display/bridge/sii902x.txt index
+> >>>> 56a3e68ccb80..cf53678fe574 100644
+> >>>> --- a/Documentation/devicetree/bindings/display/bridge/sii902x.txt
+> >>>> +++ b/Documentation/devicetree/bindings/display/bridge/sii902x.txt
+> >>>> @@ -8,6 +8,9 @@ Optional properties:
+> >>>>    	- interrupts-extended or interrupt-parent + interrupts: describe
+> >>>>    	  the interrupt line used to inform the host about hotplug events.
+> >>>>    	- reset-gpios: OF device-tree gpio specification for RST_N pin.
+> >>>> +	- iovcc-supply: I/O supply voltage (1.8V or 3.3V, host-dependent).
+> >>>> +	- avcc12-supply: TMDS analog supply voltage (1.2V).
+> >>>> +	- cvcc12-supply: Digital core supply voltage (1.2V).
+> >>>
+> >>> It seems that the AVCC12 and CVCC12 power supplies are usually derived
+> >>> from the same source. How about starting with one DT property for both,
+> >>> and adding a second one later if needed ?
+> >>
+> >> Well, I do not know what is the best. Here I took the description from
+> >> the documentation, and to allow all possible board configurations, I
+> >> added these supplies as "optional" properties: if there is only one 1v2
+> >> regulator on the board, the dt will contain only avcc12 or cvcc12 and
+> >> everything will work fine (we will have a dummy regulator for the
+> >> missing optional 1v2 reg), if both regulators are there for any reasons
+> >> (stability, noise, whatever...) then both entries will be in the dt.
+> >>
+> >> If you confirm you prefer a single 1v2 supply (named for instance
+> >> "vcc12-supply") then I will do :-)
+> > 
+> > Please see https://lists.freedesktop.org/archives/dri-devel/2018-April/
+> > 172400.html (and the messages that lead to it) and https://
+> > lists.freedesktop.org/archives/dri-devel/2018-March/170763.html.
+> 
+> Thanks for this discussion thread.
+> 
+> On my side, I found "CVCC12 and AVCC12 can be derived from the same 
+> power source" written with a small font (august 2016 datasheet p13) so 
+> then your advice is clearly what we have to do :-)
+> I will add this info in v2 too.
+
+I have seen that too. While the datasheet only says that the two supplies 
+*can* be derived from the same power source, I expect that to be the case in 
+practice for a really vast majority of cases (I wouldn't be surprised to never 
+hear of a system using two different supplies). That's why I think starting 
+with one supply would be better.
+
+> >>>>    Optional subnodes:
+> >>>>    
+> >>>>    	- video input: this subnode can contain a video input port node
+
+-- 
+Regards,
+
+Laurent Pinchart
