@@ -1,7 +1,7 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 7/8] drm: panel: Use _LE LVDS formats for data mirroring
-Date: Thu, 19 Apr 2018 11:31:08 +0200
-Message-ID: <1524130269-32688-8-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH 8/8] drm: connector: Remove DRM_BUS_FLAG_DATA_* flags
+Date: Thu, 19 Apr 2018 11:31:09 +0200
+Message-ID: <1524130269-32688-9-git-send-email-jacopo+renesas@jmondi.org>
 References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
@@ -10,76 +10,33 @@ To: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.c
 Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, daniel@ffwll.ch, peda@axentia.se, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As now both bridges and panels report supported image formats,
-use the newly introduced _LE version of LVDS media bus formats in place
-of the DRM_BUS_FLAG_DATA_ flags defined in drm_connector.h
+DRM_BUS_FLAG_DATA_* flags, defined in drm_connector.h header file are
+used to swap ordering of LVDS RGB format to accommodate DRM objects
+that need to handle LVDS components ordering.
+
+Now that the only 2 users of DRM_BUS_FLAG_DATA_* flags have been ported
+to use the newly introduced MEDIA_BUS_FMT_RGB888_1X7X*_LE media bus
+formats, remove them.
 
 Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
- drivers/gpu/drm/panel/panel-lvds.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ include/drm/drm_connector.h | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-lvds.c b/drivers/gpu/drm/panel/panel-lvds.c
-index 5185819..ac03eab 100644
---- a/drivers/gpu/drm/panel/panel-lvds.c
-+++ b/drivers/gpu/drm/panel/panel-lvds.c
-@@ -37,7 +37,6 @@ struct panel_lvds {
- 	unsigned int height;
- 	struct videomode video_mode;
- 	unsigned int bus_format;
--	bool data_mirror;
+diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+index 675cc3f..9e0d6d5 100644
+--- a/include/drm/drm_connector.h
++++ b/include/drm/drm_connector.h
+@@ -286,10 +286,6 @@ struct drm_display_info {
+ #define DRM_BUS_FLAG_PIXDATA_POSEDGE	(1<<2)
+ /* drive data on neg. edge */
+ #define DRM_BUS_FLAG_PIXDATA_NEGEDGE	(1<<3)
+-/* data is transmitted MSB to LSB on the bus */
+-#define DRM_BUS_FLAG_DATA_MSB_TO_LSB	(1<<4)
+-/* data is transmitted LSB to MSB on the bus */
+-#define DRM_BUS_FLAG_DATA_LSB_TO_MSB	(1<<5)
  
- 	struct backlight_device *backlight;
- 	struct regulator *supply;
-@@ -129,9 +128,6 @@ static int panel_lvds_get_modes(struct drm_panel *panel)
- 	connector->display_info.height_mm = lvds->height;
- 	drm_display_info_set_bus_formats(&connector->display_info,
- 					 &lvds->bus_format, 1);
--	connector->display_info.bus_flags = lvds->data_mirror
--					  ? DRM_BUS_FLAG_DATA_LSB_TO_MSB
--					  : DRM_BUS_FLAG_DATA_MSB_TO_LSB;
- 
- 	return 1;
- }
-@@ -149,6 +145,7 @@ static int panel_lvds_parse_dt(struct panel_lvds *lvds)
- 	struct device_node *np = lvds->dev->of_node;
- 	struct display_timing timing;
- 	const char *mapping;
-+	bool data_mirror;
- 	int ret;
- 
- 	ret = of_get_display_timing(np, "panel-timing", &timing);
-@@ -179,20 +176,26 @@ static int panel_lvds_parse_dt(struct panel_lvds *lvds)
- 		return -ENODEV;
- 	}
- 
-+	data_mirror = of_property_read_bool(np, "data-mirror");
-+
- 	if (!strcmp(mapping, "jeida-18")) {
--		lvds->bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG;
-+		lvds->bus_format = data_mirror ?
-+				   MEDIA_BUS_FMT_RGB666_1X7X3_SPWG_LE :
-+				   MEDIA_BUS_FMT_RGB666_1X7X3_SPWG;
- 	} else if (!strcmp(mapping, "jeida-24")) {
--		lvds->bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA;
-+		lvds->bus_format = data_mirror ?
-+				   MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA_LE :
-+				   MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA;
- 	} else if (!strcmp(mapping, "vesa-24")) {
--		lvds->bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG;
-+		lvds->bus_format = data_mirror ?
-+				   MEDIA_BUS_FMT_RGB888_1X7X4_SPWG_LE :
-+				   MEDIA_BUS_FMT_RGB888_1X7X4_SPWG;
- 	} else {
- 		dev_err(lvds->dev, "%pOF: invalid or missing %s DT property\n",
- 			np, "data-mapping");
- 		return -EINVAL;
- 	}
- 
--	lvds->data_mirror = of_property_read_bool(np, "data-mirror");
--
- 	return 0;
- }
- 
+ 	/**
+ 	 * @bus_flags: Additional information (like pixel signal polarity) for
 -- 
 2.7.4
