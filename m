@@ -1,169 +1,132 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: RE: [PATCH v2] usb: chipidea: Hook into mux framework to toggle usb
- switch
-Date: Fri, 20 Apr 2018 02:00:08 +0000
-Message-ID: <HE1PR04MB14504981D8B409CD8F9E7B7D8BB40@HE1PR04MB1450.eurprd04.prod.outlook.com>
-References: <1523973148-2094-1-git-send-email-yossim@codeaurora.org>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v1 4/7] soc: mediatek: reuse regmap_read_poll_timeout
+ helpers
+Date: Fri, 20 Apr 2018 11:42:54 +0800
+Message-ID: <1524195774.26454.1.camel@mtkswgap22>
+References: <cover.1522736996.git.sean.wang@mediatek.com>
+         <2f84f7695ea3223b8626a8369aa4ae5e0d03fdce.1522736996.git.sean.wang@mediatek.com>
+         <6fd85b96-f076-36c7-8ff4-8e8ed252edb2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523973148-2094-1-git-send-email-yossim@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <6fd85b96-f076-36c7-8ff4-8e8ed252edb2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yossi Mansharoff <yossim@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:CHIPIDEA USB HIGH SPEED DUAL ROLE CONTROLLER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: "robh@kernel.org" <robh@kernel.org>, "swboyd@chromium.org" <swboyd@chromium.org>, Peter Rosin <peda@axentia.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Boyd <stephen.boyd@linaro.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Weiyi Lu <weiyi.lu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-=20
-=20
-> --- a/drivers/usb/chipidea/Kconfig
-> +++ b/drivers/usb/chipidea/Kconfig
-> @@ -3,6 +3,8 @@ config USB_CHIPIDEA
->  	depends on ((USB_EHCI_HCD && USB_GADGET) || (USB_EHCI_HCD
-> && !USB_GADGET) || (!USB_EHCI_HCD && USB_GADGET)) && HAS_DMA
->  	select EXTCON
->  	select RESET_CONTROLLER
-> +	select MULTIPLEXER
-> +	select MUX_GPIO
+On Thu, 2018-04-19 at 12:23 +0200, Matthias Brugger wrote:
+> 
+> On 04/03/2018 09:15 AM, sean.wang@mediatek.com wrote:
+> > From: Sean Wang <sean.wang@mediatek.com>
+> > 
+> > Reuse the common helpers regmap_read_poll_timeout provided by Linux core
+> > instead of an open-coded handling.
+> > 
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> > Cc: Weiyi Lu <weiyi.lu@mediatek.com>
+> > ---
+> >  drivers/soc/mediatek/mtk-infracfg.c | 45 +++++++++----------------------------
+> >  1 file changed, 10 insertions(+), 35 deletions(-)
+> > 
+> > diff --git a/drivers/soc/mediatek/mtk-infracfg.c b/drivers/soc/mediatek/mtk-infracfg.c
+> > index 8c310de..b849aa5 100644
+> > --- a/drivers/soc/mediatek/mtk-infracfg.c
+> > +++ b/drivers/soc/mediatek/mtk-infracfg.c
+> > @@ -12,6 +12,7 @@
+> >   */
+> >  
+> >  #include <linux/export.h>
+> > +#include <linux/iopoll.h>
+> >  #include <linux/jiffies.h>
+> >  #include <linux/regmap.h>
+> >  #include <linux/soc/mediatek/infracfg.h>
+> > @@ -37,7 +38,6 @@
+> >  int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
+> >  		bool reg_update)
+> >  {
+> > -	unsigned long expired;
+> >  	u32 val;
+> >  	int ret;
+> >  
+> > @@ -47,22 +47,11 @@ int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
+> >  	else
+> >  		regmap_write(infracfg, INFRA_TOPAXI_PROTECTEN_SET, mask);
+> >  
+> > -	expired = jiffies + HZ;
+> > +	ret = regmap_read_poll_timeout(infracfg, INFRA_TOPAXI_PROTECTSTA1,
+> > +				       val, (val & mask) == mask, 10,
+> > +				       jiffies_to_usecs(HZ));
+> 
+> To align with the changes in scpsys, please define MTK_POLL_DELAY_US and
+> MTK_POLL_TIMEOUT. I'm not really fan of passing macros as function arguments.
+> 
 
-The above two configurations are only used at your specific platforms, plea=
-se add
-them at either your platform defconfig or the related hardware driver's Kco=
-nfig.=20
+Agreed on. will have an improve on it
 
->  	help
->  	  Say Y here if your system has a dual role high speed USB
->  	  controller based on ChipIdea silicon IP. It supports:
-> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c in=
-dex
-> 33ae87f..8fa0991 100644
-> --- a/drivers/usb/chipidea/core.c
-> +++ b/drivers/usb/chipidea/core.c
-> @@ -61,6 +61,7 @@
->  #include <linux/of.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/usb/ehci_def.h>
-> +#include <linux/mux/consumer.h>
->=20
->  #include "ci.h"
->  #include "udc.h"
-> @@ -687,6 +688,10 @@ static int ci_get_platdata(struct device *dev,
->  	if (of_find_property(dev->of_node, "non-zero-ttctrl-ttha", NULL))
->  		platdata->flags |=3D CI_HDRC_SET_NON_ZERO_TTHA;
->=20
-> +	platdata->usb_switch =3D devm_mux_control_get_optional(dev, "usb_switch=
-");
-> +	if (IS_ERR(platdata->usb_switch))
-> +		return PTR_ERR(platdata->usb_switch);
-> +
->  	ext_id =3D ERR_PTR(-ENODEV);
->  	ext_vbus =3D ERR_PTR(-ENODEV);
->  	if (of_property_read_bool(dev->of_node, "extcon")) { diff --git
-> a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c index af45aa3=
-2..d9d2d00
-> 100644
-> --- a/drivers/usb/chipidea/host.c
-> +++ b/drivers/usb/chipidea/host.c
-> @@ -13,6 +13,7 @@
->  #include <linux/usb/hcd.h>
->  #include <linux/usb/chipidea.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/mux/consumer.h>
->=20
->  #include "../host/ehci.h"
->=20
-> @@ -161,6 +162,10 @@ static int host_start(struct ci_hdrc *ci)
->  		if (ci_otg_is_fsm_mode(ci)) {
->  			otg->host =3D &hcd->self;
->  			hcd->self.otg_port =3D 1;
-> +		} else {
-> +			ret =3D mux_control_select(ci->platdata->usb_switch, 1);
-> +			if (ret)
-> +				goto disable_reg;
+thanks!
 
-What will happen if ci->platdata->usb_switch  is NULL?
-
->  		}
->  	}
->=20
-> @@ -181,6 +186,8 @@ static void host_stop(struct ci_hdrc *ci)
->  	struct usb_hcd *hcd =3D ci->hcd;
->=20
->  	if (hcd) {
-> +		if (!ci_otg_is_fsm_mode(ci))
-> +			mux_control_deselect(ci->platdata->usb_switch);
-
-Ditto.
-
->  		if (ci->platdata->notify_event)
->  			ci->platdata->notify_event(ci,
->  				CI_HDRC_CONTROLLER_STOPPED_EVENT);
-> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c inde=
-x
-> 9852ec5..209d3f6 100644
-> --- a/drivers/usb/chipidea/udc.c
-> +++ b/drivers/usb/chipidea/udc.c
-> @@ -19,6 +19,7 @@
->  #include <linux/usb/gadget.h>
->  #include <linux/usb/otg-fsm.h>
->  #include <linux/usb/chipidea.h>
-> +#include <linux/mux/consumer.h>
->=20
->  #include "ci.h"
->  #include "udc.h"
-> @@ -1965,16 +1966,26 @@ void ci_hdrc_gadget_destroy(struct ci_hdrc *ci)
->=20
->  static int udc_id_switch_for_device(struct ci_hdrc *ci)  {
-> +	int ret =3D 0;
-> +
->  	if (ci->is_otg)
->  		/* Clear and enable BSV irq */
->  		hw_write_otgsc(ci, OTGSC_BSVIS | OTGSC_BSVIE,
->  					OTGSC_BSVIS | OTGSC_BSVIE);
->=20
-> -	return 0;
-> +	if (!ci_otg_is_fsm_mode(ci))
-> +		ret =3D mux_control_select(ci->platdata->usb_switch, 0);
-> +
-
-Ditto
-
-> +	if (ci->is_otg && ret)
-> +		hw_write_otgsc(ci, OTGSC_BSVIE | OTGSC_BSVIS,
-> OTGSC_BSVIS);
-> +
-> +	return ret;
->  }
->=20
->  static void udc_id_switch_for_host(struct ci_hdrc *ci)  {
-> +	mux_control_deselect(ci->platdata->usb_switch);
-> +
->  	/*
->  	 * host doesn't care B_SESSION_VALID event
->  	 * so clear and disbale BSV irq
-> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h =
-index
-> 07f9936..9ea55a1 100644
-> --- a/include/linux/usb/chipidea.h
-> +++ b/include/linux/usb/chipidea.h
-> @@ -10,6 +10,7 @@
->  #include <linux/usb/otg.h>
->=20
->  struct ci_hdrc;
-> +struct mux_control;
->=20
->  /**
->   * struct ci_hdrc_cable - structure for external connector cable state t=
-racking @@ -
-> 76,6 +77,7 @@ struct ci_hdrc_platform_data {
->  	/* VBUS and ID signal state tracking, using extcon framework */
->  	struct ci_hdrc_cable		vbus_extcon;
->  	struct ci_hdrc_cable		id_extcon;
-> +	struct mux_control		*usb_switch;
->  	u32			phy_clkgate_delay_us;
-=20
-If CONFIG_USB_CHIPIDEA_HOST is not defined, it may cause build error
-
-Peter
-=20
+> Other then that, the patch looks good.
+> 
+> Thanks a lot,
+> Matthias
+> 
+> >  
+> > -	while (1) {
+> > -		ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
+> > -		if (ret)
+> > -			return ret;
+> > -
+> > -		if ((val & mask) == mask)
+> > -			break;
+> > -
+> > -		cpu_relax();
+> > -		if (time_after(jiffies, expired))
+> > -			return -EIO;
+> > -	}
+> > -
+> > -	return 0;
+> > +	return ret;
+> >  }
+> >  
+> >  /**
+> > @@ -80,30 +69,16 @@ int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
+> >  int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask,
+> >  		bool reg_update)
+> >  {
+> > -	unsigned long expired;
+> >  	int ret;
+> > +	u32 val;
+> >  
+> >  	if (reg_update)
+> >  		regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, 0);
+> >  	else
+> >  		regmap_write(infracfg, INFRA_TOPAXI_PROTECTEN_CLR, mask);
+> >  
+> > -	expired = jiffies + HZ;
+> > -
+> > -	while (1) {
+> > -		u32 val;
+> > -
+> > -		ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
+> > -		if (ret)
+> > -			return ret;
+> > -
+> > -		if (!(val & mask))
+> > -			break;
+> > -
+> > -		cpu_relax();
+> > -		if (time_after(jiffies, expired))
+> > -			return -EIO;
+> > -	}
+> > -
+> > -	return 0;
+> > +	ret = regmap_read_poll_timeout(infracfg, INFRA_TOPAXI_PROTECTSTA1,
+> > +				       val, !(val & mask), 10,
+> > +				       jiffies_to_usecs(HZ));
+> > +	return ret;
+> >  }
+> > 
