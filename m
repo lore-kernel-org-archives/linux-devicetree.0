@@ -1,69 +1,65 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
- node
-Date: Fri, 20 Apr 2018 10:21:35 +0300
-Message-ID: <5efc8763-7ab8-5f4e-de40-95e2671e2af3@ti.com>
-References: <20180309182751.GC31988@ti.com>
- <283b6aea-d262-42ec-5e41-294b02b062c5@ti.com>
- <CAL_JsqJxDTj66V5eGYgQErhXZf6sfp=99De2XqaX+GyD7NCtGw@mail.gmail.com>
- <c3b9897f-aae0-35b1-e4e9-99b904d47cda@ti.com>
- <CAL_Jsq+jYa=aE0Z0s_Wr5iN5LVqpq2OfUfoKDx6i_YA-cg1RRg@mail.gmail.com>
- <a2c98c64-570c-4bb1-3976-3d54d3d4ecde@ti.com>
- <CAL_JsqKm6L_66RYJ6JQJfMLA073QyBtP0U+JBkA+m0e34QJWcg@mail.gmail.com>
- <e125d692-62b9-936c-bd04-84e7eb0072f7@ti.com>
- <20180419063422.GC31310@phenom.ffwll.local>
- <ca131aa6-e9d2-f8cf-1ced-eea97c852493@ti.com>
- <20180420070025.GE31310@phenom.ffwll.local>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 01/10] media: v4l2-ctrls: Add missing
+ v4l2 ctrl unlock
+Date: Fri, 20 Apr 2018 09:23:16 +0200
+Message-ID: <20180420072316.sifritx54mppgwz3@flea>
+References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
+ <20180419154124.17512-2-paul.kocialkowski@bootlin.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180420070025.GE31310@phenom.ffwll.local>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yqpvzbuk2a5n4355"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4FK43LAKGQE22AVAVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180419154124.17512-2-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAvMDQvMTggMTA6MDAsIERhbmllbCBWZXR0ZXIgd3JvdGU6CgooQWRkaW5nIEJlbm9pdCBi
-YWNrLCBoZSB3YXMgZHJvcHBlZCBhdCBzb21lIHBvaW50IGluIHRoZSB0aHJlYWQpCgo+IFN0dWZm
-IHJhbmRvbWx5IG5vdCB3b3JraW5nIGlzIG9mZmljaWFsbHkgaG93IGF0b21pYyB3b3Jrcy4gVGhh
-dCdzIHdoYXQgdGhlCj4gVEVTVF9PTkxZIG1vZGUgaXMgZm9yLiBUaGVyZSdzIGEgbG90IG1vcmUg
-dGhhbiB2aXJ0dWFsaXplZCBwbGFuZXMgdGhhdAo+IG1pZ2h0IG9yIG1pZ2h0IG5vdCBwdXNoIGFu
-eSBnaXZlbiBwbGFuZSBzZXR1cCBvdmVyIHNvbWUgcmFuZG9tIGh3IGxpbWl0Ogo+IG1lbW9yeSBi
-YW5kd2lkdGgsIGFnZ3JlZ2F0ZSBzY2FsaW5nIGxpbWl0cyAoYmVjYXVzZSBub3QgZW5vdWdoIGZp
-Zm8pLAo+IHRoZXJtYWwgbGltaXRzLCBhZ2dyZWdhdGUgcGl4ZWwgY2xvY2sgbGltaXRzLiBUaGVy
-ZSdzIGFsbCBraW5kcyBvZiBjYXNlcwo+IHdoZXJlIHdpdGggb25lIHNldHVwIHlvdSBjYW4gbGln
-aHQgdXAgNCBwbGFuZXMsIHRoZW4gbW92ZSB0aGVtIGEgYml0IGFuZAo+IG9ubHkgMyB3b3JrLiBB
-bmQgeWVzIHNvbWV0aW1lcyB0aGF0IG1lYW5zIHlvdSBjYW4ndCBsaWdodCB1cCBhbGwgdGhlCj4g
-b3V0cHV0cyBpZiB5b3UgaGF2ZSBhIHRvbyBmYW5jeSBwbGFuZSBjb25maWcgb24gdGhlIG90aGVy
-IENSVEMuCj4gCj4gT25seSB1c2Vyc3BhY2Ugd2hpY2ggaXMgd3JpdHRlbiB3aXRoIGludGltYXRl
-IGtub3dsZWRnZSBvZiB0aGUgZXhhY3QKPiBrZXJuZWwgZHJpdmVyIGFuZCBodyBpdCBydW5zIG9u
-IGNhbiBhdm9pZCBURVNUX09OTFkgYW5kIHNvbWUga2luZCBvZgo+IGZhbGxiYWNrIHN0cmF0ZWd5
-IHRvICJyZW5kZXIgZXZlcnl0aGluZyBpbnRvIHRoZSAxIHNpbmdsZSBwcmltYXJ5IHBsYW5lIi4K
-PiBCb3RoIGRybV9od2NvbXBvc2VyIGFuZCB3ZXN0b24gYXRvbWljIGhhdmUgc3VjaCBhIGZhbGxi
-YWNrIHN0cmF0ZWd5ICh3aXRoCj4gdmFyaW91cyBkZWdyZWVzIG9mIGludGVybWVkaWF0ZSBjbGV2
-ZXJuZXNzKS4KCk9rLCB0aGFua3MuIFRoaXMgbWFrZXMgc2Vuc2UgdG8gbWUsIGFuZCBhY3R1YWxs
-eSBtYWtlcyBvdXIgKGRyaXZlcgpkZXZlbG9wZXJzKSBsaWZlIGVhc2llci4uLiBJcyAiU3R1ZmYg
-cmFuZG9tbHkgbm90IHdvcmtpbmcgaXMgb2ZmaWNpYWxseQpob3cgYXRvbWljIHdvcmtzLiIgbWVu
-dGlvbmVkIGluIHRoZSBEUk0gZG9jdW1lbnRhdGlvbj8gSSB0aGluayB0aGF0CnNlbnRlbmNlIHN1
-bW1hcml6ZXMgaXQgcXVpdGUgd2VsbCA9KS4KCkRvZXMgdGhlIGRyaXZlciBzdGlsbCBoYXZlIHNv
-bWUgbWluaW1hbCBzZXQgb2YgZnVuY3Rpb25hbGl0eSBpdCBhbHdheXMKaGFzIHRvIGFsbG93PyBF
-LmcuIGlzIGVuYWJsaW5nIGFsbCB0aGUgYXZhaWxhYmxlIGRpc3BsYXlzIHdpdGggdGhlCmRpc3Bs
-YXkncyBuYXRpdmUgcmVzb2x1dGlvbiAob3Igd2hhdGV2ZXIgcGFzc2VzIHRoZSBtb2RlX3ZhbGlk
-KSwgZWFjaAp3aXRoIGEgc2luZ2xlIG5vbi1zY2FsZWQgZnVsbC1zY3JlZW4gcHJpbWFyeSBwbGFu
-ZSwgc29tZXRoaW5nIGV2ZXJ5CmRyaXZlciBzaG91bGQgZW5zdXJlIGlzIGFsd2F5cyBwb3NzaWJs
-ZT8KCiBUb21pCgotLSAKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0
-dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtv
-dGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+
+--yqpvzbuk2a5n4355
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Thu, Apr 19, 2018 at 05:41:15PM +0200, Paul Kocialkowski wrote:
+> This adds a missing v4l2_ctrl_unlock call that is required to avoid
+> deadlocks.
+
+Maybe you can explain what the deadlock scenario is?
+
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/media/v4l2-core/v4l2-ctrls.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index f67e9f5531fa..ba05a8b9a095 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -3614,10 +3614,12 @@ void v4l2_ctrl_request_complete(struct media_request *req,
+>  			continue;
+>  
+>  		v4l2_ctrl_lock(ctrl);
+> +
+>  		if (ref->req)
+>  			ptr_to_ptr(ctrl, ref->req->p_req, ref->p_req);
+>  		else
+>  			ptr_to_ptr(ctrl, ctrl->p_cur, ref->p_req);
+> +
+
+I'm not sure that this is relevant in this patch.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--yqpvzbuk2a5n4355--
