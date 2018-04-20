@@ -1,149 +1,74 @@
-From: Stephen Boyd <sboyd@kernel.org>
+From: Mark Brown <broonie@kernel.org>
 Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
-Date: Fri, 20 Apr 2018 09:47:02 -0700
-Message-ID: <152424282214.46528.2511757264045171935@swboyd.mtv.corp.google.com>
+Date: Fri, 20 Apr 2018 17:59:21 +0100
+Message-ID: <20180420165921.GD22369@sirena.org.uk>
 References: <20180418222905.10414-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IDYEmSnFhs3mNXr+"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20180418222905.10414-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree-spec@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: grant.likely@arm.com, frowand.list@gmail.com, mark.rutland@arm.com, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, shawnguo@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Jonathan Cameron <jic23@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@arm.com, frowand.list@gmail.com, mark.rutland@arm.com, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, shawnguo@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring (2018-04-18 15:29:05)
-> diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
-> new file mode 100644
-> index 000000000000..fe0a3bd1668e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/example-schema.yaml
-> @@ -0,0 +1,149 @@
-> +# SPDX-License-Identifier: BSD-2-Clause
-> +# Copyright 2018 Linaro Ltd.
-> +%YAML 1.2
-> +---
-> +# All the top-level keys are standard json-schema keywords except for
-> +# 'maintainers' and 'select'
-> +
-> +# $id is a unique idenifier based on the filename
-> +$id: "http://devicetree.org/schemas/example-schema.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +# Only 1 version supported for now
-> +version: 1
-> +
-> +title: An example schema annotated with jsonschema details
-> +
-> +maintainers:
-> +  - Rob Herring <robh@kernel.org>
-> +
-> +description: |
-> +  A more detailed multi-line description of the binding.
-> +
-> +  Details about the hardware device and any links to datasheets can go here.
-> +
-> +  The end of the description is marked by indentation less than the first line
-> +  in the description.
-> +
-> +select: false
-> +  # 'select' is a schema applied to a DT node to determine if this binding
-> +  # schema should be applied to the node. It is optional and by default the
-> +  # possible compatible strings are extracted and used to match.
 
-Can we get a concrete example here?
+--IDYEmSnFhs3mNXr+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +
-> +properties:
-[...]
-> +
-> +  interrupts:
-> +    # Either 1 or 2 interrupts can be present
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: tx or combined interrupt
-> +      - description: rx interrupt
-> +
+On Wed, Apr 18, 2018 at 05:29:05PM -0500, Rob Herring wrote:
+> The current DT binding documentation format of freeform text is painful
+> to write, review, validate and maintain.
+>=20
+> This is just an example of what a binding in the schema format looks
+> like. It's using jsonschema vocabulary in a YAML encoded document. Using
+> jsonschema gives us access to existing tooling. A YAML encoding gives us
+> something easy to edit.
+
+It'd be useful to see some examples of how things like including by
+reference other schema work.  It feels like something we should be able
+to use more in a schema based thing but perhaps that's not viable with
+realistic tooling.  In general this looks OK, especially with all the
+meta comments about the language stripped out.
+
 > +    description: |
+> +      A variable number of interrupts warrants a description of what con=
+ditions
 
-The '|' is needed to make yaml happy?
+Like Stephen said the | looks odd.
 
-> +      A variable number of interrupts warrants a description of what conditions
-> +      affect the number of interrupts. Otherwise, descriptions on standard
-> +      properties are not necessary.
-> +
 > +  interrupt-names:
 > +    # minItems must be specified here because the default would be 2
 > +    minItems: 1
 > +    items:
 > +      - const: "tx irq"
 > +      - const: "rx irq"
-> +
+
+Any way to relate this to the interrupts property in the schema
+language (eg, must have the less or equal number of elements)?
+
 > +  # Property names starting with '#' must be quoted
-> +  '#interrupt-cells':
-> +    # A simple case where the value must always be '2'.
-> +    # The core schema handles that this must be a single integer.
-> +    const: 2
-> +
-> +  interrupt-controller: {}
 
-Does '{}' mean nothing to see here?
+That's awkward :/  Perhaps just by convention quote all property names
+for simplicity?
 
-> +    # The core checks this is a boolean, so just have to list it here to be
-> +    # valid for this binding.
-> +
-> +  clock-frequency:
-> +    # The type is set in the core schema. Per device schema only need to set
-> +    # constraints on the possible values.
-> +    minimum: 100
-> +    maximum: 400000
-> +    # The value that should be used if the property is not present
-> +    default: 200
-> +
+--IDYEmSnFhs3mNXr+
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The 'default' field is neat. I look forward to the compiler using the
-schema to insert defaults into the dtb if the properties aren't present
-in the input file.
+-----BEGIN PGP SIGNATURE-----
 
-> +  foo-gpios:
-> +    maxItems: 1
-> +    description: A connection of the 'foo' gpio line.
-> +
-> +  vendor,int-property:
-> +    description: Vendor specific properties must have a description
-> +    type: integer # A type is also required
-> +    enum: [2, 4, 6, 8, 10]
-> +
-> +  vendor,bool-property:
-> +    description: Vendor specific properties must have a description
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlraHGgACgkQJNaLcl1U
+h9Cwcwf+OPT6H3e4dIpc3TXlGFnRUlq6lOCoKrFgghQKJGb++VRCZ5En6R3KgC9/
+GwuGMxXL8DofYs6bmSlsfHBXFfIgixvNcWeoVMtXxZI2YiXZ2560F0i4ccL0pZgc
+WkZsv2QDD+6k9to98mrX7pJG95+5mziDnbSmSFaemLSYGnPCM2JH+VsxuX1sblg+
+BFu0PbSjuht7QVqiI6BraLT/YuoSkX35Il/oL8GVkpMn0mtLXoPhd6zzhSt+qNZV
+BHc7CIacO/FejCygpY+4TlBqk7S53grNwvcxEQNeTGLT2QJZdJZOOHmzeaPqD2Ee
+V/oXJpbYRoeXiBwC3F4PfMJO7j2K7g==
+=Dqz+
+-----END PGP SIGNATURE-----
 
-Can the required or optional parts go under each property instead of
-having a different section? Or does that make the schema parser
-difficult to implement? It may also make sense to negate this and
-specify only the optional properties, or to require both optional and
-required lists to make things more explicit at the cost of some
-verbosity.
-
-> +
-> +examples:
-> +  - |
-> +    /{
-
-Is the first slash required here?
-
-> +          compatible = "vendor,soc4-ip", "vendor,soc1-ip";
-> +          reg = <0x1000 0x80>,
-> +                <0x3000 0x80>;
-> +          reg-names = "core", "aux";
-> +          interrupts = <10>;
-> +          interrupt-controller;
-> +    };
+--IDYEmSnFhs3mNXr+--
