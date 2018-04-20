@@ -1,81 +1,234 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 7/7] drm/i2c: tda998x: register as a drm bridge
-Date: Fri, 20 Apr 2018 11:24:09 +0100
-Message-ID: <20180420102408.GW16141@n2100.armlinux.org.uk>
-References: <20180419162751.25223-1-peda@axentia.se>
- <20180419162751.25223-8-peda@axentia.se>
- <2556566.3fxMPoIyx0@avalon>
+From: Thierry Escande <thierry.escande@linaro.org>
+Subject: [PATCH] ARM: dts: qcom-apq8064: fix gic_irq_domain_translate warnings
+Date: Fri, 20 Apr 2018 12:39:13 +0200
+Message-ID: <20180420103913.10133-1-thierry.escande@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset = "utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2556566.3fxMPoIyx0@avalon>
+Content-Transfert-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Daniel Vetter <daniel.vetter@intel.com>, Peter Rosin <peda@axentia.se>, linux-arm-kernel@lists.infradead.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 20, 2018 at 01:06:49PM +0300, Laurent Pinchart wrote:
-> Hi Peter,
-> 
-> Thank you for the patch.
-> 
-> On Thursday, 19 April 2018 19:27:51 EEST Peter Rosin wrote:
-> > This makes this driver work with all(?) drivers that are not
-> > componentized and instead expect to connect to a panel/bridge. That
-> > said, the only one tested is atmel_hlcdc.
-> > 
-> > This hooks the relevant work function previously called by the encoder
-> > and the component also to the bridge, since the encoder goes away when
-> > connecting to the bridge interface of the driver and the equivalent of
-> > bind/unbind of the component is handled by bridge attach/detach.
-> > 
-> > The lifetime requirements of a bridge and a component are slightly
-> > different, which is the reason for struct tda998x_bridge.
-> 
-> Couldn't you move the allocation and initialization (tda998x_create) of the 
-> tda998x_priv structure to probe time ? I think you wouldn't need a separate 
-> structure in that case. Unless I'm mistaken there would be an added benefit of 
-> separating component and bridge initialization, resulting in the encoder not 
-> being initialized at all if the component isn't used. You wouldn't need to add 
-> a local_encoder parameter to the tda998x_init() function.
+Remove the usage of IRQ_TYPE_NONE to fix loud warnings from
+patch (83a86fbb5b56b "irqchip/gic: Loudly complain about
+the use of IRQ_TYPE_NONE").
 
-No, I don't like that idea one bit, as I've stated in the past about the
-component API.  The same (probably) goes for the bridge stuff too.
+Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
+---
+ arch/arm/boot/dts/qcom-apq8064.dtsi | 52 ++++++++++++++++++-------------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
 
-Consider the following:
-
-Your DRM system is initialised.  You then remove a module, which results
-in the DRM system being torn down.  You re-insert the module (eg, having
-made a change to it).  The DRM system is then re-initialised.
-
-At this point, what is the state of variables such as priv->is_on if
-you allocate the structure at probe time?
-
-What about all the other variables in the driver private structure - are
-you sure that the driver can cope with random values from the previous
-"usage" remaining there?
-
-At the moment, this isn't a concern for the driver because we
-dev_kzalloc() the structure in the bind callback.  Move that to the
-probe function, and the structure is no longer re-initialised each
-time, and so it retains the previous state.  The driver is not setup
-to cope with that.
-
-So, to work around that, you would need to reinitialise _everything_
-in the structure that the driver requires, which IMHO is a very
-open to bugs (eg, if a member is missed, or added without the
-necessary re-initialisation), _especially_ when this is not a path
-that will get regular testing.
-
-If you want to do this for a subset of data, it would be much better
-to separate them into independent structures (maybe one embedded into
-the other) so that this problem can not occur.  That way, a subset
-of the data can be memset() when bound to the rest of the DRM system
-ensuring a consistent driver state and still achieve what you're
-suggesting.
-
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index 5341a39c0392..f26613ffc9e7 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -444,7 +444,7 @@
+ 				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
+ 				reg = <0x12450000 0x100>,
+ 				      <0x12400000 0x03>;
+-				interrupts = <0 193 0x0>;
++				interrupts = <0 193 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&gcc GSBI1_UART_CLK>, <&gcc GSBI1_H_CLK>;
+ 				clock-names = "core", "iface";
+ 				status = "disabled";
+@@ -456,7 +456,7 @@
+ 				pinctrl-1 = <&i2c1_pins_sleep>;
+ 				pinctrl-names = "default", "sleep";
+ 				reg = <0x12460000 0x1000>;
+-				interrupts = <0 194 IRQ_TYPE_NONE>;
++				interrupts = <0 194 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&gcc GSBI1_QUP_CLK>, <&gcc GSBI1_H_CLK>;
+ 				clock-names = "core", "iface";
+ 				#address-cells = <1>;
+@@ -484,7 +484,7 @@
+ 				pinctrl-0 = <&i2c2_pins>;
+ 				pinctrl-1 = <&i2c2_pins_sleep>;
+ 				pinctrl-names = "default", "sleep";
+-				interrupts = <0 196 IRQ_TYPE_NONE>;
++				interrupts = <0 196 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&gcc GSBI2_QUP_CLK>, <&gcc GSBI2_H_CLK>;
+ 				clock-names = "core", "iface";
+ 				#address-cells = <1>;
+@@ -508,7 +508,7 @@
+ 				pinctrl-1 = <&i2c3_pins_sleep>;
+ 				pinctrl-names = "default", "sleep";
+ 				reg = <0x16280000 0x1000>;
+-				interrupts = <GIC_SPI 151 IRQ_TYPE_NONE>;
++				interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&gcc GSBI3_QUP_CLK>,
+ 					 <&gcc GSBI3_H_CLK>;
+ 				clock-names = "core", "iface";
+@@ -534,7 +534,7 @@
+ 				pinctrl-1 = <&i2c4_pins_sleep>;
+ 				pinctrl-names = "default", "sleep";
+ 				reg = <0x16380000 0x1000>;
+-				interrupts = <GIC_SPI 153 IRQ_TYPE_NONE>;
++				interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&gcc GSBI4_QUP_CLK>,
+ 					 <&gcc GSBI4_H_CLK>;
+ 				clock-names = "core", "iface";
+@@ -556,7 +556,7 @@
+ 				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
+ 				reg = <0x1a240000 0x100>,
+ 				      <0x1a200000 0x03>;
+-				interrupts = <0 154 0x0>;
++				interrupts = <0 154 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&gcc GSBI5_UART_CLK>, <&gcc GSBI5_H_CLK>;
+ 				clock-names = "core", "iface";
+ 				status = "disabled";
+@@ -565,7 +565,7 @@
+ 			gsbi5_spi: spi@1a280000 {
+ 				compatible = "qcom,spi-qup-v1.1.1";
+ 				reg = <0x1a280000 0x1000>;
+-				interrupts = <0 155 0>;
++				interrupts = <0 155 IRQ_TYPE_LEVEL_HIGH>;
+ 				pinctrl-0 = <&spi5_default>;
+ 				pinctrl-1 = <&spi5_sleep>;
+ 				pinctrl-names = "default", "sleep";
+@@ -592,7 +592,7 @@
+ 				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
+ 				reg = <0x16540000 0x100>,
+ 				      <0x16500000 0x03>;
+-				interrupts = <0 156 0x0>;
++				interrupts = <0 156 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&gcc GSBI6_UART_CLK>, <&gcc GSBI6_H_CLK>;
+ 				clock-names = "core", "iface";
+ 				status = "disabled";
+@@ -604,7 +604,7 @@
+ 				pinctrl-1 = <&i2c6_pins_sleep>;
+ 				pinctrl-names = "default", "sleep";
+ 				reg = <0x16580000 0x1000>;
+-				interrupts = <GIC_SPI 157 IRQ_TYPE_NONE>;
++				interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&gcc GSBI6_QUP_CLK>,
+ 					 <&gcc GSBI6_H_CLK>;
+ 				clock-names = "core", "iface";
+@@ -628,7 +628,7 @@
+ 				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
+ 				reg = <0x16640000 0x1000>,
+ 				      <0x16600000 0x1000>;
+-				interrupts = <0 158 0x0>;
++				interrupts = <0 158 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&gcc GSBI7_UART_CLK>, <&gcc GSBI7_H_CLK>;
+ 				clock-names = "core", "iface";
+ 				status = "disabled";
+@@ -640,7 +640,7 @@
+ 				pinctrl-1 = <&i2c7_pins_sleep>;
+ 				pinctrl-names = "default", "sleep";
+ 				reg = <0x16680000 0x1000>;
+-				interrupts = <GIC_SPI 159 IRQ_TYPE_NONE>;
++				interrupts = <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&gcc GSBI7_QUP_CLK>,
+ 					 <&gcc GSBI7_H_CLK>;
+ 				clock-names = "core", "iface";
+@@ -1056,7 +1056,7 @@
+ 			compatible		= "qcom,apq8064-ahci", "generic-ahci";
+ 			status			= "disabled";
+ 			reg			= <0x29000000 0x180>;
+-			interrupts		= <GIC_SPI 209 IRQ_TYPE_NONE>;
++			interrupts		= <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 			clocks			= <&gcc SFAB_SATA_S_H_CLK>,
+ 						<&gcc SATA_H_CLK>,
+@@ -1082,7 +1082,7 @@
+ 		sdcc1bam:dma@12402000{
+ 			compatible = "qcom,bam-v1.3.0";
+ 			reg = <0x12402000 0x8000>;
+-			interrupts = <0 98 0>;
++			interrupts = <0 98 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc SDC1_H_CLK>;
+ 			clock-names = "bam_clk";
+ 			#dma-cells = <1>;
+@@ -1092,7 +1092,7 @@
+ 		sdcc3bam:dma@12182000{
+ 			compatible = "qcom,bam-v1.3.0";
+ 			reg = <0x12182000 0x8000>;
+-			interrupts = <0 96 0>;
++			interrupts = <0 96 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc SDC3_H_CLK>;
+ 			clock-names = "bam_clk";
+ 			#dma-cells = <1>;
+@@ -1102,7 +1102,7 @@
+ 		sdcc4bam:dma@121c2000{
+ 			compatible = "qcom,bam-v1.3.0";
+ 			reg = <0x121c2000 0x8000>;
+-			interrupts = <0 95 0>;
++			interrupts = <0 95 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc SDC4_H_CLK>;
+ 			clock-names = "bam_clk";
+ 			#dma-cells = <1>;
+@@ -1181,7 +1181,7 @@
+ 			compatible = "qcom,adreno-3xx";
+ 			reg = <0x04300000 0x20000>;
+ 			reg-names = "kgsl_3d0_reg_memory";
+-			interrupts = <GIC_SPI 80 0>;
++			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "kgsl_3d0_irq";
+ 			clock-names =
+ 			    "core_clk",
+@@ -1281,7 +1281,7 @@
+ 			label = "MDSS DSI CTRL->0";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			interrupts = <GIC_SPI 82 0>;
++			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg = <0x04700000 0x200>;
+ 			reg-names = "dsi_ctrl";
+ 
+@@ -1350,8 +1350,8 @@
+ 			    <&mmcc MDP_AXI_CLK>;
+ 			reg = <0x07500000 0x100000>;
+ 			interrupts =
+-			    <GIC_SPI 63 0>,
+-			    <GIC_SPI 64 0>;
++			    <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>,
++			    <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+ 			qcom,ncb = <2>;
+ 		};
+ 
+@@ -1366,8 +1366,8 @@
+ 			    <&mmcc MDP_AXI_CLK>;
+ 			reg = <0x07600000 0x100000>;
+ 			interrupts =
+-			    <GIC_SPI 61 0>,
+-			    <GIC_SPI 62 0>;
++			    <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
++			    <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+ 			qcom,ncb = <2>;
+ 		};
+ 
+@@ -1382,8 +1382,8 @@
+ 			    <&mmcc GFX3D_AXI_CLK>;
+ 			reg = <0x07c00000 0x100000>;
+ 			interrupts =
+-			    <GIC_SPI 69 0>,
+-			    <GIC_SPI 70 0>;
++			    <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
++			    <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
+ 			qcom,ncb = <3>;
+ 		};
+ 
+@@ -1398,8 +1398,8 @@
+ 			    <&mmcc GFX3D_AXI_CLK>;
+ 			reg = <0x07d00000 0x100000>;
+ 			interrupts =
+-			    <GIC_SPI 210 0>,
+-			    <GIC_SPI 211 0>;
++			    <GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>,
++			    <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>;
+ 			qcom,ncb = <3>;
+ 		};
+ 
+@@ -1418,7 +1418,7 @@
+ 			#size-cells = <2>;
+ 			ranges = <0x81000000 0 0 0x0fe00000 0 0x00100000   /* I/O */
+ 				  0x82000000 0 0 0x08000000 0 0x07e00000>; /* memory */
+-			interrupts = <GIC_SPI 238 IRQ_TYPE_NONE>;
++			interrupts = <GIC_SPI 238 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "msi";
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 0x7>;
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+2.14.1
