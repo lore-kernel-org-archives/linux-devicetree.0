@@ -1,32 +1,85 @@
-Return-Path: <SRS0=jzey=HN=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-Sender: geert.uytterhoeven@gmail.com
-In-Reply-To: <1524238029-55315-5-git-send-email-biju.das@bp.renesas.com>
-References: <1524238029-55315-1-git-send-email-biju.das@bp.renesas.com> <1524238029-55315-5-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 24 Apr 2018 16:44:17 +0200
-Message-ID: <CAMuHMdVRubXKL-HXbjEpabwN-6eiJ1=vbRfD2mtipNQTvjyrbw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] ARM: dts: r8a77470: Add SCIF DMA support
-Content-Type: text/plain; charset="UTF-8"
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Return-Path: <SRS0=tKDt=HJ=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH  4/4] ARM: dts: r8a77470: Add SCIF DMA support
+Date: Fri, 20 Apr 2018 16:27:09 +0100
+Message-Id: <1524238029-55315-5-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1524238029-55315-1-git-send-email-biju.das@bp.renesas.com>
+References: <1524238029-55315-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Apr 20, 2018 at 5:27 PM, Biju Das <biju.das@bp.renesas.com> wrote:
-> Add SCIF DMA support for R8A77470 SoC.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Add SCIF DMA support for R8A77470 SoC.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+---
+ arch/arm/boot/dts/r8a77470.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
+index 39549f2..baec3ca 100644
+--- a/arch/arm/boot/dts/r8a77470.dtsi
++++ b/arch/arm/boot/dts/r8a77470.dtsi
+@@ -198,6 +198,9 @@
+ 			clocks = <&cpg CPG_MOD 721>,
+ 				 <&cpg CPG_CORE 5>, <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0x29>, <&dmac0 0x2a>,
++			       <&dmac1 0x29>, <&dmac1 0x2a>;
++			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc 32>;
+ 			resets = <&cpg 721>;
+ 			status = "disabled";
+@@ -211,6 +214,9 @@
+ 			clocks = <&cpg CPG_MOD 720>,
+ 				 <&cpg CPG_CORE 5>, <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0x2d>, <&dmac0 0x2e>,
++			       <&dmac1 0x2d>, <&dmac1 0x2e>;
++			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc 32>;
+ 			resets = <&cpg 720>;
+ 			status = "disabled";
+@@ -224,6 +230,9 @@
+ 			clocks = <&cpg CPG_MOD 719>,
+ 				 <&cpg CPG_CORE 5>, <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0x2b>, <&dmac0 0x2c>,
++			       <&dmac1 0x2b>, <&dmac1 0x2c>;
++			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc 32>;
+ 			resets = <&cpg 719>;
+ 			status = "disabled";
+@@ -237,6 +246,9 @@
+ 			clocks = <&cpg CPG_MOD 718>,
+ 				 <&cpg CPG_CORE 5>, <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0x2f>, <&dmac0 0x30>,
++			       <&dmac1 0x2f>, <&dmac1 0x30>;
++			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc 32>;
+ 			resets = <&cpg 718>;
+ 			status = "disabled";
+@@ -250,6 +262,9 @@
+ 			clocks = <&cpg CPG_MOD 715>,
+ 				 <&cpg CPG_CORE 5>, <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0xfb>, <&dmac0 0xfc>,
++			       <&dmac1 0xfb>, <&dmac1 0xfc>;
++			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc 32>;
+ 			resets = <&cpg 715>;
+ 			status = "disabled";
+@@ -263,6 +278,9 @@
+ 			clocks = <&cpg CPG_MOD 714>,
+ 				 <&cpg CPG_CORE 5>, <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0xfd>, <&dmac0 0xfe>,
++			       <&dmac1 0xfd>, <&dmac1 0xfe>;
++			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc 32>;
+ 			resets = <&cpg 714>;
+ 			status = "disabled";
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.7.4
