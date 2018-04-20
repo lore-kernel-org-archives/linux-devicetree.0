@@ -1,93 +1,125 @@
-From: David Veenstra <davidjulianveenstra@gmail.com>
-Subject: [PATCH v2 00/13] staging: iio: ad2s1200: Driver clean up
-Date: Fri, 20 Apr 2018 21:28:17 +0200
-Message-ID: <cover.1524247563.git.davidjulianveenstra@gmail.com>
+From: David Collins <collinsd@codeaurora.org>
+Subject: Re: [PATCH 1/2] regulator: add QCOM RPMh regulator driver
+Date: Fri, 20 Apr 2018 12:28:21 -0700
+Message-ID: <38f42537-f801-115a-4120-1344a67a0462@codeaurora.org>
+References: <cover.1521246069.git.collinsd@codeaurora.org>
+ <71fab82672524b95632cdb588c16edfc9711866a.1521246069.git.collinsd@codeaurora.org>
+ <152165924074.91116.13025068669916027026@swboyd.mtv.corp.google.com>
+ <493c1f5d-df99-ca68-0f90-a7937a696f5d@codeaurora.org>
+ <152411734938.46528.9676451637772936597@swboyd.mtv.corp.google.com>
+ <20180419120813.GD27188@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: lars@metafoo.de, jic23@kernel.org, pmeerw@pmeerw.net
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, robh+dt@kernel.org, knaack.h@gmx.de, daniel.baluta@nxp.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180419120813.GD27188@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Stephen Boyd <swboyd@chromium.org>
+Cc: lgirdwood@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, ilina@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-For v1 of the patch see [1].
+On 04/19/2018 05:08 AM, Mark Brown wrote:
+> On Wed, Apr 18, 2018 at 10:55:49PM -0700, Stephen Boyd wrote:
+>>>> Is this regulator-microvolt-offset? Ah I guess it's a thing in the RPMh
+>>>> registers. This probably needs to be pushed into the framework and come
+>>>> down through a 'set_headroom' op in the regulator ops via a
+>>>> regulator-headroom-microvolt property that's parsed in of_regulator.c.
+> 
+>>> The qcom,headroom-voltage property is equivalent to struct
+>>> regulator_desc.min_dropout_uV, but handled in hardware.  I don't see the
+>>> need to make a new regulator op to configure this value dynamically.
+> 
+>> Ok? We have other regulator ops just to configure boot time things. The
+>> goal is to come up with generic regulator properties that can be applied
+>> from the framework perspective and be used by other regulator drivers in
+>> the future.
+> 
+> This doesn't sound like what the min_dropout_uV constraint is intended
+> to handle - that's there for the regulator driver (not constraints) to
+> indicate how much headroom the regulator needs in the supply voltage in
+> order to provide regulation.  It's not something the regulator uses,
+> it's something that gets fed into voltage requests made on the supply of
+> the regulator which I can't see that the hardware is going to be able to
+> handle unaided.
 
-A summary of this patch:
-1. Clean up of minor code style issues
-2. Replace legacy GPIO ABI with modern ABI
-4. Add scaling factor for angular position and angular velocity to
-   match the sysfs IIO ABI
-5. Add documentation for device tree binding, and angle channel
-6. Move driver to main line
+RPMh hardware enforces the requested minimum headroom voltage for all
+regulators with a parent.  It has full knowledge of the parent-child
+connections of regulators on the board (as programmed by the bootloader).
+It automatically reconfigures the parent voltage when needed as a result
+of requests changing the voltage of any of its child regulators.
 
-Changes in v2:
-- Removed an unneeded include
-- Instead of using inclination channel for the angular position,
-  use angle channel
-- Added documentation for device tree binding, and sysfs IIO ABI
-  documentation for angle channel
 
-For the scaling factors, a fractional approximation of Pi is needed.
-As in v1 of the patch, the fraction 103993 / 33102 was chosen, which is
-based on the OEIS series of nominator/denominator of convergents to
-Pi (A002485 and A002486). I have looked at the implementation of
-iio_read_channel_info, and compared using the fraction above, with
-the fraction and offset used in the IIO_DEGREE_TO_RAD in iio.h, and
-found the first method to be more accurate for all possible 12-bit values,
-as the error is neglible. Also it does not cause overflow.
+>> Cool. This should be a generic regulator DT property that all regulators
+>> can use. We have the same problem on other RPM based regulator drivers
+>> where boot sends a bunch of voltages because we don't know what it is by
+>> default out of boot and we can't read it.
+> 
+> Ideally future versions of the RPM will have improved interfaces,
+> there's a bunch of problems like this :(
 
-In [2] Jonathan suggested to remove usage of platform data altogether,
-and asked for Michael Hennerich opinion. Since Michael didn't weigh in,
-I have left this how it was.
+Do you have a preference for qcom,regulator-initial-microvolt vs a generic
+framework supported regulator-initial-microvolt property for configuring a
+specific voltage at registration time?  We'll need to have support for one
+or the other in order for the qcom_rpmh-regulator driver to be functional.
 
-Best regards,
-David Veenstra
 
-[1] https://marc.info/?l=linux-iio&m=152137920426820&w=2
-[2] https://marc.info/?l=linux-iio&m=152181140619243&w=2
+>>>>> +       if (type == RPMH_REGULATOR_TYPE_XOB && init_data->constraints.min_uV) {
+>>>>> +               vreg->rdesc.fixed_uV = init_data->constraints.min_uV;
+>>>>> +               init_data->constraints.apply_uV = 0;
+>>>>> +               vreg->rdesc.n_voltages = 1;
+>>>>> +       }
+> 
+>>>> What is this doing? Usually constraints aren't touched by the driver.
+> 
+>>> For XOB managed regulators, we need to set fixed_uV to match the DT
+>>> constraint voltage and n_voltages = 1.  This allows consumers
+>>> regulator_set_voltage() calls to succeed for such regulators.  It works
+>>> the same as a fixed regulator.  I think that apply_uV = 0 could be left out.
+> 
+>> Wouldn't XOB regulators only have one voltage specified for min/max in
+>> DT already though? I seem to recall that's how we make set_voltage() in
+>> those cases work. Or it could be that drivers aren't supposed to call
+>> set_voltage() on single or fixed voltage regulators anyway, because
+>> constraints take care of it for them.
+> 
+> Yes, constraints that specify a single voltage are done by setting min
+> and max to the same value.  fixed_uV is *only* for regulators that have
+> a physically fixed voltage.
 
-David Veenstra (13):
-  staging: iio: ad2s1200: Remove unneeded include
-  staging: iio: ad2s1200: Sort includes alphabetically
-  staging: iio: ad2s1200: Reverse Christmas tree ordering
-  staging: iio: ad2s1200: Add blank lines
-  staging: iio: ad2s1200: Add kernel docs to driver state
-  staging: iio: ad2s1200: Introduce variable for repeated value
-  staging: iio: ad2s1200: Improve readability with be16_to_cpup
-  staging: iio: ad2s1200: Replace legacy gpio API with modern API
-  staging: iio: ad2s1200: Add documentation for device tree binding
-  staging: iio: ad2s1200: Add scaling factor for angular velocity
-    channel
-  staging: iio: Documentation: Add missing sysfs docs for angle channel
-  staging: iio: ad2s1200: Add scaling factor for angle channel
-  staging: iio: ad2s1200: Move driver out of staging
+XOB managed regulators physically cannot change voltage.  Therefore, do
+you agree that it is reasonable to use fixed_uV for them?  Note that I
+removed init_data->constraints.apply_uV manipulation in version 2 of this
+patch.
 
- Documentation/ABI/testing/sysfs-bus-iio            |  11 +
- .../devicetree/bindings/iio/resolver/ad2s1200.txt  |  16 ++
- drivers/iio/Kconfig                                |   1 +
- drivers/iio/Makefile                               |   1 +
- drivers/iio/resolver/Kconfig                       |  17 ++
- drivers/iio/resolver/Makefile                      |   5 +
- drivers/iio/resolver/ad2s1200.c                    | 250 +++++++++++++++++++++
- drivers/staging/iio/resolver/Kconfig               |  12 -
- drivers/staging/iio/resolver/Makefile              |   1 -
- drivers/staging/iio/resolver/ad2s1200.c            | 165 --------------
- 10 files changed, 301 insertions(+), 178 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
- create mode 100644 drivers/iio/resolver/Kconfig
- create mode 100644 drivers/iio/resolver/Makefile
- create mode 100644 drivers/iio/resolver/ad2s1200.c
- delete mode 100644 drivers/staging/iio/resolver/ad2s1200.c
+
+>>>>> +       if (vreg->hw_data->mode_map) {
+>>>>> +               init_data->constraints.valid_ops_mask |= REGULATOR_CHANGE_MODE;
+> 
+> A driver must *NEVER* modify any constraints.
+> 
+>>>> Huh, I thought this was assigned by the framework.
+> 
+>>> No, this is not set anywhere in the regulator framework.  There isn't a DT
+>>> method to configure it.  It seems that it could only be handled before
+>>> with board files.  Other regulator drivers also configure it.
+> 
+>> Hmm ok. Would something be bad if we did support it through DT? I can't
+>> seem to recall the history here.
+> 
+> Yes, if someone wants to configure this through DT they should add
+> support for configuring it using DT.  The mode support in most
+> regulators is not practically useful so nobody did that yet.  Mostly the
+> hardware does a much better job of adjusting modes on the fly for
+> anything that's going on at runtime than software is ever likely to do
+> so it's not worth it.
+
+I'll send out a patch to add generic support for this configuration via
+device tree in the of_get_regulation_constraints() function.
+
+Thanks,
+David
 
 -- 
-2.16.2
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
