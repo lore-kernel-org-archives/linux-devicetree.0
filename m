@@ -1,55 +1,78 @@
-From: <jan.tuerk@emtrion.com>
-Subject: [PATCH v3 6/6] ARM: imx_v6_v7_defconfig: Enable DA0963 PMIC support.
-Date: Fri, 20 Apr 2018 14:50:53 +0200
-Message-ID: <20180420125108.14197-7-jan.tuerk@emtrion.com>
-References: <20171220134710.64479-2-jan.tuerk@emtrion.com>
- <20180420125108.14197-1-jan.tuerk@emtrion.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v3 7/7] drm/i2c: tda998x: register as a drm bridge
+Date: Fri, 20 Apr 2018 15:09:51 +0200
+Message-ID: <82eb95e8-c085-59d6-7b13-ef7e1abaa40d@axentia.se>
+References: <20180419162751.25223-8-peda@axentia.se>
+ <201804201731.D3OnDg0p%fengguang.wu@intel.com>
+ <4e9bd91c-6b29-cdd2-9e1d-1728311ddb81@axentia.se>
+ <20180420105337.GX16141@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180420125108.14197-1-jan.tuerk@emtrion.com>
+In-Reply-To: <20180420105337.GX16141@n2100.armlinux.org.uk>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Jan Tuerk <jan.tuerk@emtrion.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jan Tuerk <jan.tuerk@emtrion.com>
+On 2018-04-20 12:53, Russell King - ARM Linux wrote:
+> On Fri, Apr 20, 2018 at 12:49:42PM +0200, Peter Rosin wrote:
+>> On 2018-04-20 12:41, kbuild test robot wrote:
+>>> Hi Peter,
+>>>
+>>> I love your patch! Yet something to improve:
+>>
+>> Yup, right you are!
+>>
+>>> [auto build test ERROR on drm/drm-next]
+>>> [also build test ERROR on v4.17-rc1 next-20180420]
+>>> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>>>
+>>> url:    https://github.com/0day-ci/linux/commits/Peter-Rosin/Add-tda998x-HDMI-support-to-atmel-hlcdc/20180420-160131
+>>> base:   git://people.freedesktop.org/~airlied/linux.git drm-next
+>>> config: i386-randconfig-a0-201815 (attached as .config)
+>>> compiler: gcc-4.9 (Debian 4.9.4-2) 4.9.4
+>>> reproduce:
+>>>         # save the attached .config to linux build tree
+>>>         make ARCH=i386 
+>>>
+>>> All errors (new ones prefixed by >>):
+>>>
+>>>    drivers/gpu/drm/i2c/tda998x_drv.c: In function 'tda998x_probe':
+>>>>> drivers/gpu/drm/i2c/tda998x_drv.c:1859:16: error: 'struct drm_bridge' has no member named 'of_node'
+>>>      bridge->bridge.of_node = dev->of_node;
+>>>                    ^
+>>
+>> Anybody got a better fix than this?
+>>
+>> #ifdef CONFIG_OF
+>> 	bridge->bridge.of_node = dev->of_node;
+>> #endif
+> 
+> How about the bridge code provides a helper to do this, something like:
+> 
+> static inline void bridge_set_device(struct drm_bridge *bridge,
+> 				     struct device *dev)
+> {
+> #ifdef CONFIG_OF
+> 	bridge->of_node = dev->of_node;
+> #endif
+> }
+> 
+> which (a) nicely hides the firmware flavour, and (b) hides the ifdef in
+> the bridge header where it belongs.  If the bridge code needs to be
+> converted to fwnode in the future, at least this would be abstracted
+> from the drivers.
+> 
 
-All recent emtrion modules based on i.mx6 make use of the DA0963.
-Therefore enable it with the following defaults:
-	- CONFIG_MFD_DA9063=y
-	- CONFIG_REGULATOR_DA9063=y
-	- CONFIG_DA9063_WATCHDOG=m
-MFD and REGULATOR are built-in to have it at Kernel boot-time.
-The WATCHDOG is optional and could be loaded from userspace.
+Hmm, I looked around and found numerous other #ifdefs for this, so my plan
+is to just add one more. Fixing up all these ifdefs is orthogonal and can
+be done later.
 
-Signed-off-by: Jan Tuerk <jan.tuerk@emtrion.com>
----
- arch/arm/configs/imx_v6_v7_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+Cheers,
+Peter
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 3a308437b088..691d431250d4 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -214,9 +214,11 @@ CONFIG_CPU_THERMAL=y
- CONFIG_IMX_THERMAL=y
- CONFIG_WATCHDOG=y
- CONFIG_DA9062_WATCHDOG=y
-+CONFIG_DA9063_WATCHDOG=m
- CONFIG_IMX2_WDT=y
- CONFIG_MFD_DA9052_I2C=y
- CONFIG_MFD_DA9062=y
-+CONFIG_MFD_DA9063=y
- CONFIG_MFD_MC13XXX_SPI=y
- CONFIG_MFD_MC13XXX_I2C=y
- CONFIG_MFD_STMPE=y
-@@ -225,6 +227,7 @@ CONFIG_REGULATOR_FIXED_VOLTAGE=y
- CONFIG_REGULATOR_ANATOP=y
- CONFIG_REGULATOR_DA9052=y
- CONFIG_REGULATOR_DA9062=y
-+CONFIG_REGULATOR_DA9063=y
- CONFIG_REGULATOR_GPIO=y
- CONFIG_REGULATOR_MC13783=y
- CONFIG_REGULATOR_MC13892=y
--- 
-2.11.0
+PS. I also noted that I had forgotten to remove a couple of dev_info calls
+in this patch. Will remove for v4.
