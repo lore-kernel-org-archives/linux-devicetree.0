@@ -1,80 +1,38 @@
-From: Ezequiel Garcia <ezequiel@collabora.com>
-Subject: Re: [PATCH] ARM: dts: imx53-ppd: Use IRQ_TYPE_* constants
-Date: Fri, 20 Apr 2018 14:04:43 -0300
-Message-ID: <ac518e1f3b943385f641ea9aa785846ad64a6eb4.camel@collabora.com>
-References: <20180420154553.18070-1-sebastian.reichel@collabora.co.uk>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 0/3] Add R8A77980/Condor PFC support
+Date: Fri, 20 Apr 2018 20:33:20 +0300
+Message-ID: <4b325d8a-f018-5279-17b9-7fa8aac5b4da@cogentembedded.com>
+References: <88e52531-e538-8685-110a-1a2e79a3fe49@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180420154553.18070-1-sebastian.reichel@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <88e52531-e538-8685-110a-1a2e79a3fe49@cogentembedded.com>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-04-20 at 17:45 +0200, Sebastian Reichel wrote:
-> Replace magic numbers with IRQ_TYPE_* constants to improve
-> DT readability.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> ---
->  arch/arm/boot/dts/imx53-ppd.dts | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx53-ppd.dts b/arch/arm/boot/dts/imx53-ppd.dts
-> index d5628af2e301..d02d07470ad3 100644
-> --- a/arch/arm/boot/dts/imx53-ppd.dts
-> +++ b/arch/arm/boot/dts/imx53-ppd.dts
-> @@ -300,7 +300,7 @@
->  		compatible = "dlg,da9053-aa";
->  		reg = <0>;
->  		interrupt-parent = <&gpio3>;
-> -		interrupts = <12 0x8>;
-> +		interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
->  		spi-max-frequency = <1000000>;
->  		dlg,tsi-as-adc;
->  		tsiref-supply = <&reg_tsiref>;
-> @@ -473,7 +473,7 @@
->  				compatible = "fsl,mma8453";
->  				reg = <0x1c>;
->  				interrupt-parent = <&gpio1>;
-> -				interrupts = <6 0>;
-> +				interrupts = <6 IRQ_TYPE_NONE>;
->  				interrupt-names = "INT1";
->  			};
->  
-> @@ -539,7 +539,7 @@
->  		reset-gpio = <&gpio5 19 GPIO_ACTIVE_HIGH>;
->  		reg = <0x4b>;
->  		interrupt-parent = <&gpio5>;
-> -		interrupts = <4 0x8>;
-> +		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
->  	};
->  };
->  
-> 
+On 03/09/2018 03:04 PM, Sergei Shtylyov wrote:
 
-Looks good to me:
+> Here's the set of 3 patches against Simon Horman's 'renesas.git' repo's
+> 'renesas-devel-20180308-v4.16-rc4' tag.  We're adding the R8A77980 PFC node
+> and then describing the pins for SCIF0 and EtherAVB devices declared earlier.
+> These patches depend on the R8A77980 PFC support in order to work properly.
 
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+  ... and their time has finally come! Please merge.
 
-And it made me think, how many of these do we have?
-Or even worse, how many are using the wrong specifiers?
+> [1/3] arm64: dts: renesas: r8a77980: add PFC support
+> [2/3] arm64: dts: renesas: condor: add SCIF0 pins
+> [3/3] arm64: dts: renesas: condor: add EtherAVB pins
 
-$ git grep interrupts -- arch/arm/boot/dts  | grep -v IRQ_TYPE | grep GPIO
-arch/arm/boot/dts/am335x-baltos-ir3220.dts:		interrupts = <20 GPIO_ACTIVE_LOW>;
-arch/arm/boot/dts/am335x-baltos-ir5221.dts:		interrupts = <20 GPIO_ACTIVE_LOW>;
-arch/arm/boot/dts/am335x-baltos.dtsi:		interrupts = <28 GPIO_ACTIVE_LOW>;
-arch/arm/boot/dts/am335x-boneblue.dts:		interrupts = <21 GPIO_ACTIVE_LOW>;
-arch/arm/boot/dts/at91-sama5d2_xplained.dts:						interrupts = <PIN_PB13
-GPIO_ACTIVE_LOW>;
-arch/arm/boot/dts/imx53-qsb.dts:		interrupts = <11 0x8>; /* low-level active IRQ at GPIO7_11 */
-arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi:		interrupts = <11 0x8>; /* low-level active IRQ at GPIO7_11
-*/
-arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi:		interrupts = <9 0x8>; /* active-low GPIO2_9 */
-arch/arm/boot/dts/omap3-pandora-common.dtsi:		interrupts = <30 0>;	/* GPIO_94 */
-arch/arm/boot/dts/ste-href-stuib.dtsi:					 * GPIO 67 for interrupts. Pull-up
-arch/arm/boot/dts/tegra124-nyan.dtsi:					interrupts = <TEGRA_GPIO(J, 0)
-arch/arm/boot/dts/tegra124-venice2.dts:					interrupts = <TEGRA_GPIO(J, 0)
-arch/arm/boot/dts/vf-colibri-eval-v3.dtsi:		interrupts = <11 GPIO_ACTIVE_LOW>;
+WBR, Sergei
