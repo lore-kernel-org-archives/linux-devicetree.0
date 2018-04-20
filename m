@@ -1,54 +1,149 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH 1/2] regulator: add QCOM RPMh regulator driver
-Date: Fri, 20 Apr 2018 16:44:45 -0600
-Message-ID: <20180420224445.GB18235@codeaurora.org>
-References: <cover.1521246069.git.collinsd@codeaurora.org>
- <71fab82672524b95632cdb588c16edfc9711866a.1521246069.git.collinsd@codeaurora.org>
- <152165924074.91116.13025068669916027026@swboyd.mtv.corp.google.com>
- <493c1f5d-df99-ca68-0f90-a7937a696f5d@codeaurora.org>
- <152411734938.46528.9676451637772936597@swboyd.mtv.corp.google.com>
- <dcd4e178-cfd3-1c3f-da7c-1eb66a58cf15@codeaurora.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
+Date: Fri, 20 Apr 2018 16:41:44 -0700
+Message-ID: <152426770474.46528.1592920281091105196@swboyd.mtv.corp.google.com>
+References: <20180418222905.10414-1-robh@kernel.org>
+ <152424282214.46528.2511757264045171935@swboyd.mtv.corp.google.com>
+ <CAL_Jsq+1G61+E0wtVEkzann3Z=2Cr=2PkbDJ_OuaA5GysWZsXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <dcd4e178-cfd3-1c3f-da7c-1eb66a58cf15@codeaurora.org>
+In-Reply-To: <CAL_Jsq+1G61+E0wtVEkzann3Z=2Cr=2PkbDJ_OuaA5GysWZsXQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Stephen Boyd <swboyd@chromium.org>, broonie@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree-spec@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 20 2018 at 13:07 -0600, David Collins wrote:
->On 04/18/2018 10:55 PM, Stephen Boyd wrote:
->> Quoting David Collins (2018-03-22 18:30:06)
->>> On 03/21/2018 12:07 PM, Stephen Boyd wrote:
->>>> Quoting David Collins (2018-03-16 18:09:10)
->>>>> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
->>>>> index 097f617..e0ecd0a 100644
+Quoting Rob Herring (2018-04-20 11:15:04)
+> On Fri, Apr 20, 2018 at 11:47 AM, Stephen Boyd <sboyd@kernel.org> wrote:
+> > Quoting Rob Herring (2018-04-18 15:29:05)
+> >> diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
+> >> new file mode 100644
+> >> index 000000000000..fe0a3bd1668e
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/example-schema.yaml
+> >> @@ -0,0 +1,149 @@
+> >> +
+> >> +  The end of the description is marked by indentation less than the first line
+> >> +  in the description.
+> >> +
+> >> +select: false
+> >> +  # 'select' is a schema applied to a DT node to determine if this binding
+> >> +  # schema should be applied to the node. It is optional and by default the
+> >> +  # possible compatible strings are extracted and used to match.
+> >
+> > Can we get a concrete example here?
+> 
+> select: true
+> 
+> :) Which is apply to every node.
+> 
+> A better one is from the memory node schema ('$nodename' gets added :
+> 
+> select:
+>   required: ["$nodename"]
+>   properties:
+>     $nodename:
+>       oneOf:
+>         - pattern: "^memory@[0-9a-f]*"
+>         - const: "memory" # 'memory' only allowed for selecting
+> 
+> 
+> I expect the vast majority of device bindings will not use select at
+> all and rely on compatible string matching.
 
->>>>> +       ret = cmd_db_ready();
->>>>> +       if (ret < 0) {
->>>>> +               if (ret != -EPROBE_DEFER)
->>>>> +                       dev_err(dev, "Command DB not available, ret=%d\n", ret);
->>>>> +               return ret;
->>>>> +       }
->>>>
->>>> We should just make rpmh parent device call cmd_db_ready() so that these
->>>> devices aren't even populated until then and so that cmd_db_ready() is
->>>> only in one place. Lina?
->>>
->>> Let's see if Lina has qualms about this plan.
->>
->> Sounds like you're ok with it.
->
->Sure, I'll remove this check if Lina agrees to add it in the rpmh driver.
->
-We want to make the RSC nodes child of Command DB? That way we probe the
-controllers only if the command DB is ready?
+Thanks! I was looking to see how the select syntax would work and this
+shows one example nicely. I suppose another way would be to show how a
+compatible string would be matched through select, even though it's
+redundant.
 
-I could do that. Just so you know, there is are no strict directives to
-use Command DB. If a driver knows the information it needs to pass to
-the accelerator, it may choose to skip command DB completely.
+Is there a way we can enforce node names through the schema too? For
+example to enforce that a clock controller is called 'clock-controller'
+or a spi master is called 'spi'.
 
-Thanks,
-Lina
+> 
+> >> +
+> >> +properties:
+> > [...]
+> >> +
+> >> +  interrupts:
+> >> +    # Either 1 or 2 interrupts can be present
+> >> +    minItems: 1
+> >> +    maxItems: 2
+> >> +    items:
+> >> +      - description: tx or combined interrupt
+> >> +      - description: rx interrupt
+> >> +
+> >> +    description: |
+> >
+> > The '|' is needed to make yaml happy?
+> 
+> Yes, this is simply how you do literal text blocks in yaml.
+> 
+> We don't really need for this one really, but for the top-level
+> 'description' we do. The long term intent is 'description' would be
+> written in sphinx/rst and can be extracted into the DT spec (for
+> common bindings). Grant has experimented with that some.
+
+Ok. That sounds cool. Then we could embed links to datasheets and SVGs
+too.
+
+> 
+> >> +      A variable number of interrupts warrants a description of what conditions
+> >> +      affect the number of interrupts. Otherwise, descriptions on standard
+> >> +      properties are not necessary.
+> >> +
+> >> +  interrupt-names:
+> >> +    # minItems must be specified here because the default would be 2
+> >> +    minItems: 1
+> >> +    items:
+> >> +      - const: "tx irq"
+> >> +      - const: "rx irq"
+> >> +
+> >> +  # Property names starting with '#' must be quoted
+> >> +  '#interrupt-cells':
+> >> +    # A simple case where the value must always be '2'.
+> >> +    # The core schema handles that this must be a single integer.
+> >> +    const: 2
+> >> +
+> >> +  interrupt-controller: {}
+> >
+> > Does '{}' mean nothing to see here?
+> 
+> Yes. It's just an empty schema that's always valid.
+
+Could we include another schema to indicate that this is an interrupt
+controller? I'm sort of asking for multi-schema inheritance.
+
+> 
+> >> +  foo-gpios:
+> >> +    maxItems: 1
+> >> +    description: A connection of the 'foo' gpio line.
+> >> +
+> >> +  vendor,int-property:
+> >> +    description: Vendor specific properties must have a description
+> >> +    type: integer # A type is also required
+> >> +    enum: [2, 4, 6, 8, 10]
+> >> +
+> >> +  vendor,bool-property:
+> >> +    description: Vendor specific properties must have a description
+> >> +    type: boolean
+> >> +
+> >> +required:
+> >> +  - compatible
+> >> +  - reg
+> >> +  - interrupts
+> >> +  - interrupt-controller
+> >
+> > Can the required or optional parts go under each property instead of
+> > having a different section?
+> 
+> No, because then it is not json-schema language.
+> 
+> > Or does that make the schema parser
+> > difficult to implement?
+> 
+> Yes, because then we have to implement a schema parser.
+
+:/
