@@ -1,26 +1,45 @@
-Return-Path: <SRS0=tKDt=HJ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH  0/4] Add SYS-DMAC, IRQC and SCIF to SoC dtsi
-Date: Fri, 20 Apr 2018 16:27:05 +0100
-Message-Id: <1524238029-55315-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=UB5y=HJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf0-f181.google.com ([209.85.192.181]:35834 "EHLO
+        mail-pf0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750751AbeDTQgN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Apr 2018 12:36:13 -0400
+MIME-Version: 1.0
+In-Reply-To: <20180418125536.GB3999@w540>
+References: <1523847111-12986-1-git-send-email-akinobu.mita@gmail.com>
+ <1523847111-12986-11-git-send-email-akinobu.mita@gmail.com> <20180418125536.GB3999@w540>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Date: Sat, 21 Apr 2018 01:35:52 +0900
+Message-ID: <CAC5umyjj4RAxwBbtGEFwVo+TYH_H+Wv-NDE-_kqJLLzTf_mJ4Q@mail.gmail.com>
+Subject: Re: [PATCH v2 10/10] media: ov772x: avoid accessing registers under
+ power saving mode
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: linux-media@vger.kernel.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch series add support for SYS-DMAC, External interrupt
-Controller(IRQC) and SCIF wth DMA support to the r8a77470 SoC dtsi
+2018-04-18 21:55 GMT+09:00 jacopo mondi <jacopo@jmondi.org>:
+>> @@ -898,8 +922,20 @@ static int ov772x_s_power(struct v4l2_subdev *sd, int on)
+>>       /* If the power count is modified from 0 to != 0 or from != 0 to 0,
+>>        * update the power state.
+>>        */
+>> -     if (priv->power_count == !on)
+>> -             ret = on ? ov772x_power_on(priv) : ov772x_power_off(priv);
+>> +     if (priv->power_count == !on) {
+>> +             if (on) {
+>> +                     ret = ov772x_power_on(priv);
+>> +                     /* Restore the controls */
+>> +                     if (!ret)
+>> +                             ret = ov772x_set_params(priv, priv->cfmt,
+>> +                                                     priv->win);
+>> +                     /* Restore the format and the frame rate */
+>> +                     if (!ret)
+>> +                             ret = __v4l2_ctrl_handler_setup(&priv->hdl);
+>
+> frame interval is not listed in the sensor control list, it won't be
+> restored if I'm not wrong...
 
-This patch series tested against renesas-dev branch 
-tag "renesas-dev-20180420-v4.17-rc1"
-
-Biju Das (4):
-  ARM: dts: r8a77470: Add SYS-DMAC support
-  ARM: dts: r8a77470: Add IRQC support
-  ARM: dts: r8a77470: Add SCIF support
-  ARM: dts: r8a77470: Add SCIF DMA support
-
- arch/arm/boot/dts/r8a77470.dtsi | 173 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 171 insertions(+), 2 deletions(-)
-
--- 
-2.7.4
+The above two comments were swapped wrongly.  The ov772x_set_params()
+actually restores the format, the frame rate.  It restores COM3,
+COM8, and BDBASE registers, too.  So calling __v4l2_ctrl_handler_setup()
+here is not needed.
