@@ -1,65 +1,155 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 01/10] media: v4l2-ctrls: Add missing
- v4l2 ctrl unlock
-Date: Fri, 20 Apr 2018 09:23:16 +0200
-Message-ID: <20180420072316.sifritx54mppgwz3@flea>
+From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 08/10] dt-bindings: media: Document
+ bindings for the Sunxi-Cedrus VPU driver
+Date: Fri, 20 Apr 2018 09:22:20 +0200
+Message-ID: <5fa80b1e88ad2a215f51ea3a2b9b62274fa9b1ec.camel@bootlin.com>
 References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
- <20180419154124.17512-2-paul.kocialkowski@bootlin.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+	 <20180419154536.17846-4-paul.kocialkowski@bootlin.com>
+	 <1524153860.3416.9.camel@pengutronix.de>
+	 <CAAFQd5DT_xjUbZzFOoKk7_duiSZ8Awb1J=0dPEhVTBk0P3gppA@mail.gmail.com>
+Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yqpvzbuk2a5n4355"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4FK43LAKGQE22AVAVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-9FZvfMmIQIhuBv3NJwWK"
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBANL43LAKGQEYIGGCKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180419154124.17512-2-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <CAAFQd5DT_xjUbZzFOoKk7_duiSZ8Awb1J=0dPEhVTBk0P3gppA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS
+ <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,	Joerg   Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>," <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, wens-jdAy2FN1RRM@public.gmane.org, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---yqpvzbuk2a5n4355
+--=-9FZvfMmIQIhuBv3NJwWK
 Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
 
-On Thu, Apr 19, 2018 at 05:41:15PM +0200, Paul Kocialkowski wrote:
-> This adds a missing v4l2_ctrl_unlock call that is required to avoid
-> deadlocks.
+Hi and thanks for the review,
 
-Maybe you can explain what the deadlock scenario is?
-
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/media/v4l2-core/v4l2-ctrls.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+On Fri, 2018-04-20 at 01:31 +0000, Tomasz Figa wrote:
+> Hi Paul, Philipp,
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index f67e9f5531fa..ba05a8b9a095 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -3614,10 +3614,12 @@ void v4l2_ctrl_request_complete(struct media_request *req,
->  			continue;
->  
->  		v4l2_ctrl_lock(ctrl);
-> +
->  		if (ref->req)
->  			ptr_to_ptr(ctrl, ref->req->p_req, ref->p_req);
->  		else
->  			ptr_to_ptr(ctrl, ctrl->p_cur, ref->p_req);
-> +
+> On Fri, Apr 20, 2018 at 1:04 AM Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> wrote:
+> 
+> > Hi Paul,
+> > On Thu, 2018-04-19 at 17:45 +0200, Paul Kocialkowski wrote:
+> > > This adds a device-tree binding document that specifies the
+> > > properties
+> > > used by the Sunxi-Cedurs VPU driver, as well as examples.
+> > > 
+> > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> > > ---
+> > >  .../devicetree/bindings/media/sunxi-cedrus.txt     | 50
+> 
+> ++++++++++++++++++++++
+> > >  1 file changed, 50 insertions(+)
+> > >  create mode 100644
+> 
+> Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/media/sunxi-
+> > > cedrus.txt
+> 
+> b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+> > > new file mode 100644
+> > > index 000000000000..71ad3f9c3352
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+> > > @@ -0,0 +1,50 @@
+> > > +Device-tree bindings for the VPU found in Allwinner SoCs,
+> > > referred to
+> 
+> as the
+> > > +Video Engine (VE) in Allwinner literature.
+> > > +
+> > > +The VPU can only access the first 256 MiB of DRAM, that are DMA-
+> > > mapped
+> 
+> starting
+> > > +from the DRAM base. This requires specific memory allocation and
+> 
+> handling.
+> 
+> And no IOMMU? Brings back memories.
 
-I'm not sure that this is relevant in this patch.
+Exactly, no IOMMU so we don't have much choice but cope with that
+hardware limitation...
 
-Maxime
+> > > +
+> > > +Required properties:
+> > > +- compatible         : "allwinner,sun4i-a10-video-engine";
+> > > +- memory-region         : DMA pool for buffers allocation;
+> > > +- clocks             : list of clock specifiers, corresponding to
+> 
+> entries in
+> > > +                          the clock-names property;
+> > > +- clock-names                : should contain "ahb", "mod" and
+> > > "ram"
+> 
+> entries;
+> > > +- assigned-clocks       : list of clocks assigned to the VE;
+> > > +- assigned-clocks-rates : list of clock rates for the clocks
+> > > assigned
+> 
+> to the VE;
+> > > +- resets             : phandle for reset;
+> > > +- interrupts         : should contain VE interrupt number;
+> > > +- reg                        : should contain register base and
+> > > length
+> 
+> of VE.
+> > > +
+> > > +Example:
+> > > +
+> > > +reserved-memory {
+> > > +     #address-cells = <1>;
+> > > +     #size-cells = <1>;
+> > > +     ranges;
+> > > +
+> > > +     /* Address must be kept in the lower 256 MiBs of DRAM for
+> > > VE. */
+> > > +     ve_memory: cma@4a000000 {
+> > > +             compatible = "shared-dma-pool";
+> > > +             reg = <0x4a000000 0x6000000>;
+> > > +             no-map;
+> > > +             linux,cma-default;
+> > > +     };
+> > > +};
+> > > +
+> > > +video-engine@1c0e000 {
+> > This is not really required by any specification, and not as common
+> > as
+> > gpu@..., but could this reasonably be called "vpu@1c0e000" to follow
+> > somewhat-common practice?
+> 
+> AFAIR the name is supposed to be somewhat readable for someone that
+> doesn't know the hardware. To me, "video-engine" sounds more obvious
+> than "vpu", but we actually use "codec" already, in case of MFC and
+> JPEG codec on Exynos. If encode/decode is the only functionality of
+> this block, I'd personally go with "codec". If it can do other things,
+> e.g. scaling/rotation without encode/decode, I'd probably call it
+> "video-processor".
+
+I agree that the term VPU is more commonly associated with video
+decoding, while video engine could mean a number of things.
+
+The reason I went with "video-engine" here (while still presenting the
+driver as a VPU driver) is that Video Engine is the term used in
+Allwinner's litterature. Other nodes in Allwinner device-trees generally
+stick to these terms (for instance, we have "display-engine" nodes).
+This also makes it easier to find the matching parts in the
+documentation.
+
+Cheers,
 
 -- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
+Paul Kocialkowski, Bootlin (formerly Free Electrons)
+Embedded Linux and kernel engineering
 https://bootlin.com
---yqpvzbuk2a5n4355--
+--=-9FZvfMmIQIhuBv3NJwWK--
