@@ -1,52 +1,81 @@
-From: Pascal Roeleven <dev@pascalroeleven.nl>
-Subject: [PATCH] ARM: dts: sun4i: Fix incorrect clocks for displays
-Date: Fri, 20 Apr 2018 12:21:12 +0200
-Message-ID: <20180420102112.2843-1-dev@pascalroeleven.nl>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 7/7] drm/i2c: tda998x: register as a drm bridge
+Date: Fri, 20 Apr 2018 11:24:09 +0100
+Message-ID: <20180420102408.GW16141@n2100.armlinux.org.uk>
+References: <20180419162751.25223-1-peda@axentia.se>
+ <20180419162751.25223-8-peda@axentia.se>
+ <2556566.3fxMPoIyx0@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2556566.3fxMPoIyx0@avalon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: linux-sunxi@googlegroups.com, Pascal Roeleven <dev@pascalroeleven.nl>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Daniel Vetter <daniel.vetter@intel.com>, Peter Rosin <peda@axentia.se>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Some displays on SUN4i devices wouldn't properly stay on unless 'clk_ignore_unused' is used.
+On Fri, Apr 20, 2018 at 01:06:49PM +0300, Laurent Pinchart wrote:
+> Hi Peter,
+> 
+> Thank you for the patch.
+> 
+> On Thursday, 19 April 2018 19:27:51 EEST Peter Rosin wrote:
+> > This makes this driver work with all(?) drivers that are not
+> > componentized and instead expect to connect to a panel/bridge. That
+> > said, the only one tested is atmel_hlcdc.
+> > 
+> > This hooks the relevant work function previously called by the encoder
+> > and the component also to the bridge, since the encoder goes away when
+> > connecting to the bridge interface of the driver and the equivalent of
+> > bind/unbind of the component is handled by bridge attach/detach.
+> > 
+> > The lifetime requirements of a bridge and a component are slightly
+> > different, which is the reason for struct tda998x_bridge.
+> 
+> Couldn't you move the allocation and initialization (tda998x_create) of the 
+> tda998x_priv structure to probe time ? I think you wouldn't need a separate 
+> structure in that case. Unless I'm mistaken there would be an added benefit of 
+> separating component and bridge initialization, resulting in the encoder not 
+> being initialized at all if the component isn't used. You wouldn't need to add 
+> a local_encoder parameter to the tda998x_init() function.
 
-Change the duplicate clocks to the probably intended ones.
+No, I don't like that idea one bit, as I've stated in the past about the
+component API.  The same (probably) goes for the bridge stuff too.
 
-Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
----
- arch/arm/boot/dts/sun4i-a10.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Consider the following:
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index 77e8436b..3a1c6b45 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -76,7 +76,7 @@
- 			allwinner,pipeline = "de_fe0-de_be0-lcd0-hdmi";
- 			clocks = <&ccu CLK_AHB_LCD0>, <&ccu CLK_AHB_HDMI0>,
- 				 <&ccu CLK_AHB_DE_BE0>, <&ccu CLK_AHB_DE_FE0>,
--				 <&ccu CLK_DE_BE0>, <&ccu CLK_AHB_DE_FE0>,
-+				 <&ccu CLK_DE_BE0>, <&ccu CLK_DE_FE0>,
- 				 <&ccu CLK_TCON0_CH1>, <&ccu CLK_HDMI>,
- 				 <&ccu CLK_DRAM_DE_FE0>, <&ccu CLK_DRAM_DE_BE0>;
- 			status = "disabled";
-@@ -88,7 +88,7 @@
- 			allwinner,pipeline = "de_fe0-de_be0-lcd0";
- 			clocks = <&ccu CLK_AHB_LCD0>, <&ccu CLK_AHB_DE_BE0>,
- 				 <&ccu CLK_AHB_DE_FE0>, <&ccu CLK_DE_BE0>,
--				 <&ccu CLK_AHB_DE_FE0>, <&ccu CLK_TCON0_CH0>,
-+				 <&ccu CLK_DE_FE0>, <&ccu CLK_TCON0_CH0>,
- 				 <&ccu CLK_DRAM_DE_FE0>, <&ccu CLK_DRAM_DE_BE0>;
- 			status = "disabled";
- 		};
-@@ -99,7 +99,7 @@
- 			allwinner,pipeline = "de_fe0-de_be0-lcd0-tve0";
- 			clocks = <&ccu CLK_AHB_TVE0>, <&ccu CLK_AHB_LCD0>,
- 				 <&ccu CLK_AHB_DE_BE0>, <&ccu CLK_AHB_DE_FE0>,
--				 <&ccu CLK_DE_BE0>, <&ccu CLK_AHB_DE_FE0>,
-+				 <&ccu CLK_DE_BE0>, <&ccu CLK_DE_FE0>,
- 				 <&ccu CLK_TCON0_CH1>, <&ccu CLK_DRAM_TVE0>,
- 				 <&ccu CLK_DRAM_DE_FE0>, <&ccu CLK_DRAM_DE_BE0>;
- 			status = "disabled";
+Your DRM system is initialised.  You then remove a module, which results
+in the DRM system being torn down.  You re-insert the module (eg, having
+made a change to it).  The DRM system is then re-initialised.
+
+At this point, what is the state of variables such as priv->is_on if
+you allocate the structure at probe time?
+
+What about all the other variables in the driver private structure - are
+you sure that the driver can cope with random values from the previous
+"usage" remaining there?
+
+At the moment, this isn't a concern for the driver because we
+dev_kzalloc() the structure in the bind callback.  Move that to the
+probe function, and the structure is no longer re-initialised each
+time, and so it retains the previous state.  The driver is not setup
+to cope with that.
+
+So, to work around that, you would need to reinitialise _everything_
+in the structure that the driver requires, which IMHO is a very
+open to bugs (eg, if a member is missed, or added without the
+necessary re-initialisation), _especially_ when this is not a path
+that will get regular testing.
+
+If you want to do this for a subset of data, it would be much better
+to separate them into independent structures (maybe one embedded into
+the other) so that this problem can not occur.  That way, a subset
+of the data can be memset() when bound to the rest of the DRM system
+ensuring a consistent driver state and still achieve what you're
+suggesting.
+
 -- 
-2.14.1
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
