@@ -1,186 +1,209 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [[RFC]DPU PATCH 3/4] drm/panel: add Innolux
- TV123WAM eDP panel driver
-Date: Fri, 20 Apr 2018 15:43:02 -0400
-Message-ID: <20180420194302.GJ73214@art_vandelay>
-References: <1524160568-27583-1-git-send-email-spanda@codeaurora.org>
- <1524160568-27583-4-git-send-email-spanda@codeaurora.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
+Date: Fri, 20 Apr 2018 12:53:10 -0700
+Message-ID: <de8cf071-2280-45fb-c41a-feb1f039d68b@gmail.com>
+References: <20180418222905.10414-1-robh@kernel.org>
+ <152424282214.46528.2511757264045171935@swboyd.mtv.corp.google.com>
+ <CAL_Jsq+1G61+E0wtVEkzann3Z=2Cr=2PkbDJ_OuaA5GysWZsXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1524160568-27583-4-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+1G61+E0wtVEkzann3Z=2Cr=2PkbDJ_OuaA5GysWZsXQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: devicetree-spec@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBBcHIgMTksIDIwMTggYXQgMTE6MjY6MDdQTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
-cm90ZToKPiBBZGQgc3VwcG9ydCBmb3IgSW5ub2x1eCBUVjEyM1dBTSAxMi4zIiBwYW5lbCB3aGlj
-aAo+IGlzIGFuIGVEUCBwYW5lbC4KCkl0IHNlZW1zIGxpa2UgeW91IGNvdWxkIGp1c3QgdXNlIHRo
-ZSBwYW5lbC1zaW1wbGUgZHJpdmVyLCBubz8gR2l2ZW4gdGhhdCB0aGlzCmRyaXZlciBkb2Vzbid0
-IGhhdmUgYW55IHBvd2VyIHRpbWluZywgdGhhdCB3aWxsIHByb2JhYmx5IHdvcmsgYmV0dGVyIHNp
-bmNlIHRoZQp3YXJyYW50eSB3b24ndCBiZSB2b2lkZWQgOikKClNlYW4KCj4gCj4gU2lnbmVkLW9m
-Zi1ieTogU2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+ICBkcml2
-ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtaW5ub2x1eC10djEyM3dhbS5jIHwgMjkzICsrKysrKysr
-KysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDI5MyBpbnNlcnRpb25zKCspCj4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtaW5ub2x1eC10
-djEyM3dhbS5jCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1p
-bm5vbHV4LXR2MTIzd2FtLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtaW5ub2x1eC10
-djEyM3dhbS5jCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi41NjMyYjAy
-Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1pbm5v
-bHV4LXR2MTIzd2FtLmMKPiBAQCAtMCwwICsxLDI5MyBAQAo+ICsvKgo+ICsgKiBDb3B5cmlnaHQg
-KGMpIDIwMTgsIFRoZSBMaW51eCBGb3VuZGF0aW9uLiBBbGwgcmlnaHRzIHJlc2VydmVkLgo+ICsg
-Kgo+ICsgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1
-dGUgaXQgYW5kL29yIG1vZGlmeQo+ICsgKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBH
-ZW5lcmFsIFB1YmxpYyBMaWNlbnNlIHZlcnNpb24gMiBhbmQKPiArICogb25seSB2ZXJzaW9uIDIg
-YXMgcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24uCj4gKyAqCj4gKyAq
-IFRoaXMgcHJvZ3JhbSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUg
-dXNlZnVsLAo+ICsgKiBidXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUg
-aW1wbGllZCB3YXJyYW50eSBvZgo+ICsgKiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBGT1Ig
-QSBQQVJUSUNVTEFSIFBVUlBPU0UuICBTZWUgdGhlCj4gKyAqIEdOVSBHZW5lcmFsIFB1YmxpYyBM
-aWNlbnNlIGZvciBtb3JlIGRldGFpbHMuCj4gKyAqLwo+ICsKPiArI2luY2x1ZGUgPGRybS9kcm1Q
-Lmg+Cj4gKyNpbmNsdWRlIDxkcm0vZHJtX3BhbmVsLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9ncGlv
-L2NvbnN1bWVyLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KPiArI2lu
-Y2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPgo+ICsKPiArc3RydWN0IGlubm9sdXhf
-ZWRwXzJrX3BhbmVsX2Rlc2Mgewo+ICsJY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1v
-ZGVzOwo+ICsJdW5zaWduZWQgaW50IG51bV9tb2RlczsKPiArCXUzMiBicGM7Cj4gKwl1MzIgYnVz
-X2ZsYWdzOwo+ICt9Owo+ICsKPiArc3RydWN0IGlubm9sdXhfZWRwXzJrX3BhbmVsIHsKPiArCXN0
-cnVjdCBkcm1fcGFuZWwgYmFzZTsKPiArCWJvb2wgZW5hYmxlZDsKPiArCWJvb2wgcHJlcGFyZWQ7
-Cj4gKwljb25zdCBzdHJ1Y3QgaW5ub2x1eF9lZHBfMmtfcGFuZWxfZGVzYyAqZGVzYzsKPiArCXN0
-cnVjdCByZWd1bGF0b3IgKnN1cHBseTsKPiArCXN0cnVjdCBncGlvX2Rlc2MgKmVuYWJsZV9ncGlv
-Owo+ICsJc3RydWN0IGJhY2tsaWdodF9kZXZpY2UgKmJhY2tsaWdodDsKPiArfTsKPiArCj4gK3N0
-YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBpbm5vbHV4X2VkcF8ya19tb2RlID0g
-ewo+ICsJLmNsb2NrID0gMjA2MDE2LAo+ICsJLmhkaXNwbGF5ID0gMjE2MCwKPiArCS5oc3luY19z
-dGFydCA9IDIxNjAgKyA0OCwKPiArCS5oc3luY19lbmQgPSAyMTYwICsgNDggKyAzMiwKPiArCS5o
-dG90YWwgPSAyMTYwICsgNDggKyAzMiArIDgwLAo+ICsJLnZkaXNwbGF5ID0gMTQ0MCwKPiArCS52
-c3luY19zdGFydCA9IDE0NDAgKyAzLAo+ICsJLnZzeW5jX2VuZCA9IDE0NDAgKyAzICsgMTAsCj4g
-KwkudnRvdGFsID0gMTQ0MCArIDMgKyAxMCArIDI3LAo+ICsJLnZyZWZyZXNoID0gNjAsCj4gKwku
-ZmxhZ3MgPSBEUk1fTU9ERV9GTEFHX1BIU1lOQyB8IERSTV9NT0RFX0ZMQUdfUFZTWU5DLAo+ICt9
-Owo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBpbm5vbHV4X2VkcF8ya19wYW5lbF9kZXNjIGlu
-bm9sdXhfZWRwXzJrID0gewo+ICsJLm1vZGVzID0gJmlubm9sdXhfZWRwXzJrX21vZGUsCj4gKwku
-bnVtX21vZGVzID0gMSwKPiArCS5icGMgPSA4LAo+ICsJLmJ1c19mbGFncyA9IERSTV9CVVNfRkxB
-R19QSVhEQVRBX1BPU0VER0UsCj4gK307Cj4gKwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2Rl
-dmljZV9pZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0gewo+ICsJewo+ICsJCS5jb21wYXRpYmxlID0g
-Imlubm9sdXgsIGVkcF8ya19wYW5lbCIsCj4gKwkJLmRhdGEgPSAmaW5ub2x1eF9lZHBfMmssCj4g
-Kwl9LAo+ICt9Owo+ICsKPiArc3RhdGljIGlubGluZSBzdHJ1Y3QgaW5ub2x1eF9lZHBfMmtfcGFu
-ZWwgKgo+ICt0b19pbm5vbHV4X2VkcF8ya19wYW5lbChzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkK
-PiArewo+ICsJcmV0dXJuIGNvbnRhaW5lcl9vZihwYW5lbCwgc3RydWN0IGlubm9sdXhfZWRwXzJr
-X3BhbmVsLCBiYXNlKTsKPiArfQo+ICsKPiArc3RhdGljIGludCBpbm5vbHV4X2VkcF8ya19wYW5l
-bF9kaXNhYmxlKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQo+ICt7Cj4gKwlzdHJ1Y3QgaW5ub2x1
-eF9lZHBfMmtfcGFuZWwgKnBkYXRhID0gdG9faW5ub2x1eF9lZHBfMmtfcGFuZWwocGFuZWwpOwo+
-ICsKPiArCWlmICghcGRhdGEtPmVuYWJsZWQpCj4gKwkJcmV0dXJuIDA7Cj4gKwo+ICsJaWYgKHBk
-YXRhLT5iYWNrbGlnaHQpIHsKPiArCQlwZGF0YS0+YmFja2xpZ2h0LT5wcm9wcy5wb3dlciA9IEZC
-X0JMQU5LX1BPV0VSRE9XTjsKPiArCQlwZGF0YS0+YmFja2xpZ2h0LT5wcm9wcy5zdGF0ZSB8PSBC
-TF9DT1JFX0ZCQkxBTks7Cj4gKwkJYmFja2xpZ2h0X3VwZGF0ZV9zdGF0dXMocGRhdGEtPmJhY2ts
-aWdodCk7Cj4gKwl9Cj4gKwo+ICsJcGRhdGEtPmVuYWJsZWQgPSBmYWxzZTsKPiArCj4gKwlyZXR1
-cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIGludCBpbm5vbHV4X2VkcF8ya19wYW5lbF91bnByZXBh
-cmUoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpCj4gK3sKPiArCXN0cnVjdCBpbm5vbHV4X2VkcF8y
-a19wYW5lbCAqcGRhdGEgPSB0b19pbm5vbHV4X2VkcF8ya19wYW5lbChwYW5lbCk7Cj4gKwo+ICsJ
-aWYgKCFwZGF0YS0+cHJlcGFyZWQpCj4gKwkJcmV0dXJuIDA7Cj4gKwo+ICsJaWYgKHBkYXRhLT5l
-bmFibGVfZ3BpbykKPiArCQlncGlvZF9zZXRfdmFsdWVfY2Fuc2xlZXAocGRhdGEtPmVuYWJsZV9n
-cGlvLCAwKTsKPiArCj4gKwlyZWd1bGF0b3JfZGlzYWJsZShwZGF0YS0+c3VwcGx5KTsKPiArCj4g
-KwlwZGF0YS0+cHJlcGFyZWQgPSBmYWxzZTsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiAr
-c3RhdGljIGludCBpbm5vbHV4X2VkcF8ya19wYW5lbF9wcmVwYXJlKHN0cnVjdCBkcm1fcGFuZWwg
-KnBhbmVsKQo+ICt7Cj4gKwlzdHJ1Y3QgaW5ub2x1eF9lZHBfMmtfcGFuZWwgKnBkYXRhID0gdG9f
-aW5ub2x1eF9lZHBfMmtfcGFuZWwocGFuZWwpOwo+ICsJaW50IHJldDsKPiArCj4gKwlpZiAocGRh
-dGEtPnByZXBhcmVkKQo+ICsJCXJldHVybiAwOwo+ICsKPiArCXJldCA9IHJlZ3VsYXRvcl9lbmFi
-bGUocGRhdGEtPnN1cHBseSk7Cj4gKwlpZiAocmV0IDwgMCkgewo+ICsJCWRldl9lcnIocGFuZWwt
-PmRldiwgImZhaWxlZCB0byBlbmFibGUgc3VwcGx5OiAlZFxuIiwgcmV0KTsKPiArCQlyZXR1cm4g
-cmV0Owo+ICsJfQo+ICsKPiArCWlmIChwZGF0YS0+ZW5hYmxlX2dwaW8pCj4gKwkJZ3Bpb2Rfc2V0
-X3ZhbHVlX2NhbnNsZWVwKHBkYXRhLT5lbmFibGVfZ3BpbywgMSk7Cj4gKwo+ICsJcGRhdGEtPnBy
-ZXBhcmVkID0gdHJ1ZTsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIGludCBp
-bm5vbHV4X2VkcF8ya19wYW5lbF9lbmFibGUoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpCj4gK3sK
-PiArCXN0cnVjdCBpbm5vbHV4X2VkcF8ya19wYW5lbCAqcGRhdGEgPSB0b19pbm5vbHV4X2VkcF8y
-a19wYW5lbChwYW5lbCk7Cj4gKwo+ICsJaWYgKHBkYXRhLT5lbmFibGVkKQo+ICsJCXJldHVybiAw
-Owo+ICsKPiArCWlmIChwZGF0YS0+YmFja2xpZ2h0KSB7Cj4gKwkJcGRhdGEtPmJhY2tsaWdodC0+
-cHJvcHMuc3RhdGUgJj0gfkJMX0NPUkVfRkJCTEFOSzsKPiArCQlwZGF0YS0+YmFja2xpZ2h0LT5w
-cm9wcy5wb3dlciA9IEZCX0JMQU5LX1VOQkxBTks7Cj4gKwkJYmFja2xpZ2h0X3VwZGF0ZV9zdGF0
-dXMocGRhdGEtPmJhY2tsaWdodCk7Cj4gKwl9Cj4gKwo+ICsJcGRhdGEtPmVuYWJsZWQgPSB0cnVl
-Owo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGlubm9sdXhfZWRwXzJr
-X3BhbmVsX2dldF9tb2RlcyhzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkKPiArewo+ICsJc3RydWN0
-IGlubm9sdXhfZWRwXzJrX3BhbmVsICpwZGF0YSA9IHRvX2lubm9sdXhfZWRwXzJrX3BhbmVsKHBh
-bmVsKTsKPiArCXN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IgPSBwZGF0YS0+YmFzZS5j
-b25uZWN0b3I7Cj4gKwlzdHJ1Y3QgZHJtX2RldmljZSAqZHJtID0gcGRhdGEtPmJhc2UuZHJtOwo+
-ICsJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGU7Cj4gKwl1bnNpZ25lZCBpbnQgaSwgbnVt
-ID0gMDsKPiArCj4gKwlpZiAoIXBkYXRhLT5kZXNjIHx8ICFjb25uZWN0b3IgfHwgIWRybSkKPiAr
-CQlyZXR1cm4gMDsKPiArCj4gKwlmb3IgKGkgPSAwOyBpIDwgcGRhdGEtPmRlc2MtPm51bV9tb2Rl
-czsgaSsrKSB7Cj4gKwkJY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm0gPSAmcGRhdGEt
-PmRlc2MtPm1vZGVzW2ldOwo+ICsKPiArCQltb2RlID0gZHJtX21vZGVfZHVwbGljYXRlKGRybSwg
-bSk7Cj4gKwkJaWYgKCFtb2RlKSB7Cj4gKwkJCWRldl9lcnIoZHJtLT5kZXYsICJmYWlsZWQgdG8g
-YWRkIG1vZGUgJXV4JXVAJXVcbiIsCj4gKwkJCQltLT5oZGlzcGxheSwgbS0+dmRpc3BsYXksIG0t
-PnZyZWZyZXNoKTsKPiArCQkJY29udGludWU7Cj4gKwkJfQo+ICsKPiArCQltb2RlLT50eXBlIHw9
-IERSTV9NT0RFX1RZUEVfRFJJVkVSOwo+ICsKPiArCQlpZiAocGRhdGEtPmRlc2MtPm51bV9tb2Rl
-cyA9PSAxKQo+ICsJCQltb2RlLT50eXBlIHw9IERSTV9NT0RFX1RZUEVfUFJFRkVSUkVEOwo+ICsK
-PiArCQlkcm1fbW9kZV9zZXRfbmFtZShtb2RlKTsKPiArCj4gKwkJZHJtX21vZGVfcHJvYmVkX2Fk
-ZChjb25uZWN0b3IsIG1vZGUpOwo+ICsJCW51bSsrOwo+ICsJfQo+ICsKPiArCWNvbm5lY3Rvci0+
-ZGlzcGxheV9pbmZvLmJwYyA9IHBkYXRhLT5kZXNjLT5icGM7Cj4gKwljb25uZWN0b3ItPmRpc3Bs
-YXlfaW5mby5idXNfZmxhZ3MgPSBwZGF0YS0+ZGVzYy0+YnVzX2ZsYWdzOwo+ICsKPiArCXJldHVy
-biBudW07Cj4gK30KPiArCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX3BhbmVsX2Z1bmNzIGlu
-bm9sdXhfZWRwXzJrX3BhbmVsX2Z1bmNzID0gewo+ICsJLmRpc2FibGUgPSBpbm5vbHV4X2VkcF8y
-a19wYW5lbF9kaXNhYmxlLAo+ICsJLnVucHJlcGFyZSA9IGlubm9sdXhfZWRwXzJrX3BhbmVsX3Vu
-cHJlcGFyZSwKPiArCS5wcmVwYXJlID0gaW5ub2x1eF9lZHBfMmtfcGFuZWxfcHJlcGFyZSwKPiAr
-CS5lbmFibGUgPSBpbm5vbHV4X2VkcF8ya19wYW5lbF9lbmFibGUsCj4gKwkuZ2V0X21vZGVzID0g
-aW5ub2x1eF9lZHBfMmtfcGFuZWxfZ2V0X21vZGVzLAo+ICt9Owo+ICsKPiArc3RhdGljIGludCBp
-bm5vbHV4X2VkcF8ya19wYW5lbF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+
-ICt7Cj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Owo+ICsJY29uc3Qgc3RydWN0
-IG9mX2RldmljZV9pZCAqaWQ7Cj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmJhY2tsaWdodDsKPiAr
-CXN0cnVjdCBpbm5vbHV4X2VkcF8ya19wYW5lbCAqcGRhdGE7Cj4gKwlpbnQgcmV0Owo+ICsKPiAr
-CWlkID0gb2ZfbWF0Y2hfbm9kZShwbGF0Zm9ybV9vZl9tYXRjaCwgcGRldi0+ZGV2Lm9mX25vZGUp
-Owo+ICsJaWYgKCFpZCkKPiArCQlyZXR1cm4gLUVOT0RFVjsKPiArCj4gKwlwZGF0YSA9IGRldm1f
-a3phbGxvYyhkZXYsIHNpemVvZigqcGRhdGEpLCBHRlBfS0VSTkVMKTsKPiArCWlmICghcGRhdGEp
-Cj4gKwkJcmV0dXJuIC1FTk9NRU07Cj4gKwo+ICsJcGRhdGEtPmVuYWJsZWQgPSBmYWxzZTsKPiAr
-CXBkYXRhLT5wcmVwYXJlZCA9IGZhbHNlOwo+ICsJcGRhdGEtPmRlc2MgPSBpZC0+ZGF0YTsKPiAr
-Cj4gKwlwZGF0YS0+c3VwcGx5ID0gZGV2bV9yZWd1bGF0b3JfZ2V0KGRldiwgInBvd2VyIik7Cj4g
-KwlpZiAoSVNfRVJSKHBkYXRhLT5zdXBwbHkpKQo+ICsJCXJldHVybiBQVFJfRVJSKHBkYXRhLT5z
-dXBwbHkpOwo+ICsKPiArCXBkYXRhLT5lbmFibGVfZ3BpbyA9IGRldm1fZ3Bpb2RfZ2V0KGRldiwg
-ImVuYWJsZSIsIEdQSU9EX09VVF9MT1cpOwo+ICsJaWYgKElTX0VSUihwZGF0YS0+ZW5hYmxlX2dw
-aW8pKQo+ICsJCXJldHVybiBQVFJfRVJSKHBkYXRhLT5lbmFibGVfZ3Bpbyk7Cj4gKwo+ICsJYmFj
-a2xpZ2h0ID0gb2ZfcGFyc2VfcGhhbmRsZShkZXYtPm9mX25vZGUsICJiYWNrbGlnaHQiLCAwKTsK
-PiArCWlmIChiYWNrbGlnaHQpIHsKPiArCQlwZGF0YS0+YmFja2xpZ2h0ID0gb2ZfZmluZF9iYWNr
-bGlnaHRfYnlfbm9kZShiYWNrbGlnaHQpOwo+ICsJCW9mX25vZGVfcHV0KGJhY2tsaWdodCk7Cj4g
-Kwo+ICsJCWlmICghcGRhdGEtPmJhY2tsaWdodCkKPiArCQkJcmV0dXJuIC1FUFJPQkVfREVGRVI7
-Cj4gKwl9Cj4gKwo+ICsJZHJtX3BhbmVsX2luaXQoJnBkYXRhLT5iYXNlKTsKPiArCXBkYXRhLT5i
-YXNlLmRldiA9IGRldjsKPiArCXBkYXRhLT5iYXNlLmZ1bmNzID0gJmlubm9sdXhfZWRwXzJrX3Bh
-bmVsX2Z1bmNzOwo+ICsKPiArCXJldCA9IGRybV9wYW5lbF9hZGQoJnBkYXRhLT5iYXNlKTsKPiAr
-CWlmIChyZXQgPCAwKQo+ICsJCWdvdG8gZnJlZV9iYWNrbGlnaHQ7Cj4gKwo+ICsJZGV2X3NldF9k
-cnZkYXRhKGRldiwgcGRhdGEpOwo+ICsKPiArCXJldHVybiAwOwo+ICsKPiArZnJlZV9iYWNrbGln
-aHQ6Cj4gKwlpZiAocGRhdGEtPmJhY2tsaWdodCkKPiArCQlwdXRfZGV2aWNlKCZwZGF0YS0+YmFj
-a2xpZ2h0LT5kZXYpOwo+ICsKPiArCXJldHVybiByZXQ7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQg
-aW5ub2x1eF9lZHBfMmtfcGFuZWxfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYp
-Cj4gK3sKPiArCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7Cj4gKwlzdHJ1Y3QgaW5u
-b2x1eF9lZHBfMmtfcGFuZWwgKnBkYXRhID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4gKwo+ICsJ
-ZHJtX3BhbmVsX2RldGFjaCgmcGRhdGEtPmJhc2UpOwo+ICsJZHJtX3BhbmVsX3JlbW92ZSgmcGRh
-dGEtPmJhc2UpOwo+ICsKPiArCWlubm9sdXhfZWRwXzJrX3BhbmVsX2Rpc2FibGUoJnBkYXRhLT5i
-YXNlKTsKPiArCWlubm9sdXhfZWRwXzJrX3BhbmVsX3VucHJlcGFyZSgmcGRhdGEtPmJhc2UpOwo+
-ICsKPiArCWlmIChwZGF0YS0+YmFja2xpZ2h0KQo+ICsJCXB1dF9kZXZpY2UoJnBkYXRhLT5iYWNr
-bGlnaHQtPmRldik7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gK3N0YXRpYyBzdHJ1Y3Qg
-cGxhdGZvcm1fZHJpdmVyIGlubm9sdXhfZWRwXzJrX3BhbmVsX2RyaXZlciA9IHsKPiArCS5kcml2
-ZXIgPSB7Cj4gKwkJLm5hbWUgPSAiaW5ub2x1eC0yay1lZHAtcGFuZWwiLAo+ICsJCS5vZl9tYXRj
-aF90YWJsZSA9IHBsYXRmb3JtX29mX21hdGNoLAo+ICsJfSwKPiArCS5wcm9iZSA9IGlubm9sdXhf
-ZWRwXzJrX3BhbmVsX3Byb2JlLAo+ICsJLnJlbW92ZSA9IGlubm9sdXhfZWRwXzJrX3BhbmVsX3Jl
-bW92ZSwKPiArfTsKPiArCj4gK3N0YXRpYyBpbnQgX19pbml0IGlubm9sdXhfZWRwXzJrX3BhbmVs
-X2luaXQodm9pZCkKPiArewo+ICsJaW50IHJldDsKPiArCj4gKwlyZXQgPSBwbGF0Zm9ybV9kcml2
-ZXJfcmVnaXN0ZXIoJmlubm9sdXhfZWRwXzJrX3BhbmVsX2RyaXZlcik7Cj4gKwlpZiAocmV0IDwg
-MCkKPiArCQlyZXR1cm4gcmV0Owo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gK21vZHVsZV9pbml0
-KGlubm9sdXhfZWRwXzJrX3BhbmVsX2luaXQpOwo+ICsKPiArc3RhdGljIHZvaWQgX19leGl0IGlu
-bm9sdXhfZWRwXzJrX3BhbmVsX2V4aXQodm9pZCkKPiArewo+ICsJcGxhdGZvcm1fZHJpdmVyX3Vu
-cmVnaXN0ZXIoJmlubm9sdXhfZWRwXzJrX3BhbmVsX2RyaXZlcik7Cj4gK30KPiArbW9kdWxlX2V4
-aXQoaW5ub2x1eF9lZHBfMmtfcGFuZWxfZXhpdCk7Cj4gKwo+ICtNT0RVTEVfREVTQ1JJUFRJT04o
-Iklubm9sdXggMmsgZURQIHBhbmVsIGRyaXZlciIpOwo+ICtNT0RVTEVfTElDRU5TRSgiR1BMIik7
-Cj4gLS0gCj4gVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVy
-IG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKPiBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3Jh
-dGl2ZSBQcm9qZWN0Cj4gCgotLSAKU2VhbiBQYXVsLCBTb2Z0d2FyZSBFbmdpbmVlciwgR29vZ2xl
-IC8gQ2hyb21pdW0gT1MKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRy
-ZW5vCg==
+On 04/20/18 11:15, Rob Herring wrote:
+> On Fri, Apr 20, 2018 at 11:47 AM, Stephen Boyd <sboyd@kernel.org> wrote:
+>> Quoting Rob Herring (2018-04-18 15:29:05)
+>>> diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
+>>> new file mode 100644
+>>> index 000000000000..fe0a3bd1668e
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/example-schema.yaml
+>>> @@ -0,0 +1,149 @@
+>>> +# SPDX-License-Identifier: BSD-2-Clause
+>>> +# Copyright 2018 Linaro Ltd.
+>>> +%YAML 1.2
+>>> +---
+>>> +# All the top-level keys are standard json-schema keywords except for
+>>> +# 'maintainers' and 'select'
+>>> +
+>>> +# $id is a unique idenifier based on the filename
+>>> +$id: "http://devicetree.org/schemas/example-schema.yaml#"
+>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>>> +
+>>> +# Only 1 version supported for now
+>>> +version: 1
+>>> +
+>>> +title: An example schema annotated with jsonschema details
+>>> +
+>>> +maintainers:
+>>> +  - Rob Herring <robh@kernel.org>
+>>> +
+>>> +description: |
+>>> +  A more detailed multi-line description of the binding.
+>>> +
+>>> +  Details about the hardware device and any links to datasheets can go here.
+>>> +
+>>> +  The end of the description is marked by indentation less than the first line
+>>> +  in the description.
+>>> +
+>>> +select: false
+>>> +  # 'select' is a schema applied to a DT node to determine if this binding
+>>> +  # schema should be applied to the node. It is optional and by default the
+>>> +  # possible compatible strings are extracted and used to match.
+>>
+>> Can we get a concrete example here?
+> 
+> select: true
+> 
+> :) Which is apply to every node.
+> 
+> A better one is from the memory node schema ('$nodename' gets added :
+> 
+> select:
+>   required: ["$nodename"]
+>   properties:
+>     $nodename:
+>       oneOf:
+>         - pattern: "^memory@[0-9a-f]*"
+>         - const: "memory" # 'memory' only allowed for selecting
+> 
+> 
+> I expect the vast majority of device bindings will not use select at
+> all and rely on compatible string matching.
+> 
+>>> +
+>>> +properties:
+>> [...]
+>>> +
+>>> +  interrupts:
+>>> +    # Either 1 or 2 interrupts can be present
+>>> +    minItems: 1
+>>> +    maxItems: 2
+>>> +    items:
+>>> +      - description: tx or combined interrupt
+>>> +      - description: rx interrupt
+>>> +
+>>> +    description: |
+>>
+>> The '|' is needed to make yaml happy?
+> 
+> Yes, this is simply how you do literal text blocks in yaml.
+> 
+> We don't really need for this one really, but for the top-level
+> 'description' we do. The long term intent is 'description' would be
+> written in sphinx/rst and can be extracted into the DT spec (for
+> common bindings). Grant has experimented with that some.
+> 
+>>> +      A variable number of interrupts warrants a description of what conditions
+>>> +      affect the number of interrupts. Otherwise, descriptions on standard
+>>> +      properties are not necessary.
+>>> +
+>>> +  interrupt-names:
+>>> +    # minItems must be specified here because the default would be 2
+>>> +    minItems: 1
+>>> +    items:
+>>> +      - const: "tx irq"
+>>> +      - const: "rx irq"
+>>> +
+>>> +  # Property names starting with '#' must be quoted
+>>> +  '#interrupt-cells':
+>>> +    # A simple case where the value must always be '2'.
+>>> +    # The core schema handles that this must be a single integer.
+>>> +    const: 2
+>>> +
+>>> +  interrupt-controller: {}
+>>
+>> Does '{}' mean nothing to see here?
+> 
+> Yes. It's just an empty schema that's always valid.
+> 
+>>> +    # The core checks this is a boolean, so just have to list it here to be
+>>> +    # valid for this binding.
+>>> +
+>>> +  clock-frequency:
+>>> +    # The type is set in the core schema. Per device schema only need to set
+>>> +    # constraints on the possible values.
+>>> +    minimum: 100
+>>> +    maximum: 400000
+>>> +    # The value that should be used if the property is not present
+>>> +    default: 200
+>>> +
+>>
+>> The 'default' field is neat. I look forward to the compiler using the
+>> schema to insert defaults into the dtb if the properties aren't present
+>> in the input file.
+> 
+> That wasn't really my intention, but it's what the OS should use if
+> property is not present. But at least for required properties, we
+> could certainly do as you suggest.
+
+I understand the thought of 'neat', but it would also add yet one more
+layer to the "how did this property get into my dtb?" stew.
+
+But more importantly, if this becomes a required part of the kernel
+build process, is it adding a new required tool (python)?  (Or is
+python already required?)  There is resistance to adding new tools.
+
+-Frank
+
+
+>>> +  foo-gpios:
+>>> +    maxItems: 1
+>>> +    description: A connection of the 'foo' gpio line.
+>>> +
+>>> +  vendor,int-property:
+>>> +    description: Vendor specific properties must have a description
+>>> +    type: integer # A type is also required
+>>> +    enum: [2, 4, 6, 8, 10]
+>>> +
+>>> +  vendor,bool-property:
+>>> +    description: Vendor specific properties must have a description
+>>> +    type: boolean
+>>> +
+>>> +required:
+>>> +  - compatible
+>>> +  - reg
+>>> +  - interrupts
+>>> +  - interrupt-controller
+>>
+>> Can the required or optional parts go under each property instead of
+>> having a different section?
+> 
+> No, because then it is not json-schema language.
+> 
+>> Or does that make the schema parser
+>> difficult to implement?
+> 
+> Yes, because then we have to implement a schema parser.
+> 
+>> It may also make sense to negate this and
+>> specify only the optional properties, or to require both optional and
+>> required lists to make things more explicit at the cost of some
+>> verbosity.
+>>
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +    /{
+>>
+>> Is the first slash required here?
+> 
+> No, just leftover from being the root node in the example.
+> 
+> 
+> Thanks for taking a look.
+> 
+>>> +          compatible = "vendor,soc4-ip", "vendor,soc1-ip";
+>>> +          reg = <0x1000 0x80>,
+>>> +                <0x3000 0x80>;
+>>> +          reg-names = "core", "aux";
+>>> +          interrupts = <10>;
+>>> +          interrupt-controller;
+>>> +    };
+> 
