@@ -1,57 +1,127 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-Subject: [PATCH v7 08/11] ARM: sun9i: smp: Add is_a83t field
-Date: Fri, 20 Apr 2018 23:10:19 +0200
-Message-ID: <20180420211022.11759-9-mylene.josserand@bootlin.com>
-References: <20180420211022.11759-1-mylene.josserand@bootlin.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
+Date: Fri, 20 Apr 2018 14:47:22 -0700
+Message-ID: <20180420214722.GA18510@minitux>
+References: <20180418222905.10414-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180420211022.11759-1-mylene.josserand@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <20180418222905.10414-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mylene.josserand@bootlin.com
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@arm.com, frowand.list@gmail.com, mark.rutland@arm.com, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, shawnguo@kernel.org, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-To prepare the support of sun8i-a83t, add a field in the smp_data
-structure to know if we are on sun9i-a80 or sun8i-a83t.
+On Wed 18 Apr 15:29 PDT 2018, Rob Herring wrote:
 
-Add also a global variable to retrieve which architecture we are
-having.
+> The current DT binding documentation format of freeform text is painful
+> to write, review, validate and maintain.
+> 
+> This is just an example of what a binding in the schema format looks
+> like. It's using jsonschema vocabulary in a YAML encoded document. Using
+> jsonschema gives us access to existing tooling. A YAML encoding gives us
+> something easy to edit.
+> 
+> This example is just the tip of the iceberg, but it the part most
+> developers writing bindings will interact with. Backing all this up
+> are meta-schema (to validate the binding schemas), some DT core schema,
+> YAML encoded DT output with dtc, and a small number of python scripts to
+> run validation. The gory details including how to run end-to-end
+> validation can be found here:
+> 
+> https://www.spinics.net/lists/devicetree-spec/msg00649.html
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Cc list,
+> You all review and/or write lots of binding documents. I'd like some feedback
+> on the format.
+> 
 
-Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
----
- arch/arm/mach-sunxi/mc_smp.c | 4 ++++
- 1 file changed, 4 insertions(+)
+I really like the idea of formalizing the binding document format and
+the ability of validating a dtb is really nice.
 
-diff --git a/arch/arm/mach-sunxi/mc_smp.c b/arch/arm/mach-sunxi/mc_smp.c
-index 03f021d0c73e..48e5f4db64b6 100644
---- a/arch/arm/mach-sunxi/mc_smp.c
-+++ b/arch/arm/mach-sunxi/mc_smp.c
-@@ -74,6 +74,7 @@ static void __iomem *sram_b_smp_base;
- 
- extern void sunxi_mc_smp_secondary_startup(void);
- extern void sunxi_mc_smp_resume(void);
-+static int is_a83t;
- 
- static bool sunxi_core_is_cortex_a15(unsigned int core, unsigned int cluster)
- {
-@@ -624,6 +625,7 @@ struct sunxi_mc_smp_nodes {
- struct sunxi_mc_smp_data {
- 	const char *enable_method;
- 	int (*get_smp_nodes)(struct sunxi_mc_smp_nodes *nodes);
-+	int is_a83t;
- };
- 
- static void __init sunxi_mc_smp_put_nodes(struct sunxi_mc_smp_nodes *nodes)
-@@ -697,6 +699,8 @@ static int __init sunxi_mc_smp_init(void)
- 			break;
- 	}
- 
-+	is_a83t = sunxi_mc_smp_data[i].is_a83t;
-+
- 	of_node_put(node);
- 	if (ret)
- 		return -ENODEV;
--- 
-2.11.0
+> Thanks,
+> Rob
+> 
+>  .../devicetree/bindings/example-schema.yaml        | 149 +++++++++++++++++++++
+>  1 file changed, 149 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/example-schema.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
+[..]
+> +  reg:
+> +    # The description of each element defines the order and implicitly defines
+> +    # the number of reg entries
+> +    items:
+> +      - description: core registers
+> +      - description: aux registers
+> +    # minItems/maxItems equal to 2 is implied
+
+I assume that a reg with variable number of entries would have
+"description" for all of them and then a minItems that matches the
+required ones and maxItems matching all of them?
+
+> +
+> +  reg-names:
+> +    # The core schema enforces this is a string array
+> +    items:
+> +      - const: core
+> +      - const: aux
+
+I presume validation based on this should check that there's equal
+number of entries in reg-names as there where in reg. Should this
+relationship be described in the schema?
+
+[..]
+> +  interrupts:
+> +    # Either 1 or 2 interrupts can be present
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: tx or combined interrupt
+> +      - description: rx interrupt
+> +
+> +    description: |
+> +      A variable number of interrupts warrants a description of what conditions
+> +      affect the number of interrupts. Otherwise, descriptions on standard
+> +      properties are not necessary.
+
+For validation purposes this could be interrupts with interrupt-parents
+or a interrupts-extend, a fact that we probably don't want to duplicate
+in every definition?
+
+Perhaps we should just do like you did here and define the "interrupts"
+and then in the validation tool - where we need to encode the logic
+behind this anyways - we support the different variants.
+
+> +
+> +  interrupt-names:
+> +    # minItems must be specified here because the default would be 2
+> +    minItems: 1
+
+As with reg-names, it would be good to have the validator warn if this
+is not the same number of items as entries in "interrupts".
+
+> +    items:
+> +      - const: "tx irq"
+> +      - const: "rx irq"
+> +
+> +  # Property names starting with '#' must be quoted
+> +  '#interrupt-cells':
+> +    # A simple case where the value must always be '2'.
+> +    # The core schema handles that this must be a single integer.
+> +    const: 2
+
+If this is specified then interrupt-controller should also be given, or
+vise versa. How would we describe that?
+
+> +
+> +  interrupt-controller: {}
+> +    # The core checks this is a boolean, so just have to list it here to be
+> +    # valid for this binding.
+> +
+
+Regards,
+Bjorn
