@@ -1,86 +1,71 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v3 7/7] drm/i2c: tda998x: register as a drm bridge
-Date: Fri, 20 Apr 2018 15:28:41 +0200
-Message-ID: <790d7a89-ae13-098f-3c0c-a8dfbc84e4a7@axentia.se>
-References: <20180419162751.25223-1-peda@axentia.se>
- <20180419162751.25223-8-peda@axentia.se> <2556566.3fxMPoIyx0@avalon>
- <20180420102408.GW16141@n2100.armlinux.org.uk>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v2 01/10] media: v4l2-ctrls: Add missing
+ v4l2 ctrl unlock
+Date: Fri, 20 Apr 2018 15:38:32 +0200
+Message-ID: <47861cbd-e385-66c0-798d-f6ff3f454bac@xs4all.nl>
+References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
+ <20180419154124.17512-2-paul.kocialkowski@bootlin.com>
+Reply-To: hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180420102408.GW16141@n2100.armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBC3MVVMX3ELBBYO247LAKGQECLH4UWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180419154124.17512-2-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-20 12:24, Russell King - ARM Linux wrote:
-> On Fri, Apr 20, 2018 at 01:06:49PM +0300, Laurent Pinchart wrote:
->> Hi Peter,
->>
->> Thank you for the patch.
->>
->> On Thursday, 19 April 2018 19:27:51 EEST Peter Rosin wrote:
->>> This makes this driver work with all(?) drivers that are not
->>> componentized and instead expect to connect to a panel/bridge. That
->>> said, the only one tested is atmel_hlcdc.
->>>
->>> This hooks the relevant work function previously called by the encoder
->>> and the component also to the bridge, since the encoder goes away when
->>> connecting to the bridge interface of the driver and the equivalent of
->>> bind/unbind of the component is handled by bridge attach/detach.
->>>
->>> The lifetime requirements of a bridge and a component are slightly
->>> different, which is the reason for struct tda998x_bridge.
->>
->> Couldn't you move the allocation and initialization (tda998x_create) of the 
->> tda998x_priv structure to probe time ? I think you wouldn't need a separate 
->> structure in that case. Unless I'm mistaken there would be an added benefit of 
->> separating component and bridge initialization, resulting in the encoder not 
->> being initialized at all if the component isn't used. You wouldn't need to add 
->> a local_encoder parameter to the tda998x_init() function.
+On 04/19/18 17:41, Paul Kocialkowski wrote:
+> This adds a missing v4l2_ctrl_unlock call that is required to avoid
+> deadlocks.
 > 
-> No, I don't like that idea one bit, as I've stated in the past about the
-> component API.  The same (probably) goes for the bridge stuff too.
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/media/v4l2-core/v4l2-ctrls.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
-> Consider the following:
-> 
-> Your DRM system is initialised.  You then remove a module, which results
-> in the DRM system being torn down.  You re-insert the module (eg, having
-> made a change to it).  The DRM system is then re-initialised.
-> 
-> At this point, what is the state of variables such as priv->is_on if
-> you allocate the structure at probe time?
-> 
-> What about all the other variables in the driver private structure - are
-> you sure that the driver can cope with random values from the previous
-> "usage" remaining there?
-> 
-> At the moment, this isn't a concern for the driver because we
-> dev_kzalloc() the structure in the bind callback.  Move that to the
-> probe function, and the structure is no longer re-initialised each
-> time, and so it retains the previous state.  The driver is not setup
-> to cope with that.
-> 
-> So, to work around that, you would need to reinitialise _everything_
-> in the structure that the driver requires, which IMHO is a very
-> open to bugs (eg, if a member is missed, or added without the
-> necessary re-initialisation), _especially_ when this is not a path
-> that will get regular testing.
-> 
-> If you want to do this for a subset of data, it would be much better
-> to separate them into independent structures (maybe one embedded into
-> the other) so that this problem can not occur.  That way, a subset
-> of the data can be memset() when bound to the rest of the DRM system
-> ensuring a consistent driver state and still achieve what you're
-> suggesting.
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index f67e9f5531fa..ba05a8b9a095 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -3614,10 +3614,12 @@ void v4l2_ctrl_request_complete(struct media_request *req,
+>  			continue;
+>  
+>  		v4l2_ctrl_lock(ctrl);
+> +
+>  		if (ref->req)
+>  			ptr_to_ptr(ctrl, ref->req->p_req, ref->p_req);
+>  		else
+>  			ptr_to_ptr(ctrl, ctrl->p_cur, ref->p_req);
+> +
+>  		v4l2_ctrl_unlock(ctrl);
+>  	}
+>  
+> @@ -3677,8 +3679,11 @@ void v4l2_ctrl_request_setup(struct media_request *req,
+>  				}
+>  			}
+>  		}
+> -		if (!have_new_data)
+> +
+> +		if (!have_new_data) {
+> +			v4l2_ctrl_unlock(master);
+>  			continue;
+> +		}
 
-This was the exact reason I added struct tda998x_bridge. It seemed
-very risky to move the tda998x_create call (or some of its meat) to
-the probe function. Even if that could be done I think it should
-definitely be a separate patch.
+Oops! Thanks for finding this. I'll fold this into the relevant patch in my tree.
 
-Cheers,
-Peter
+>  
+>  		for (i = 0; i < master->ncontrols; i++) {
+>  			if (master->cluster[i]) {
+> 
+
+Regards,
+
+	Hans
