@@ -1,14 +1,15 @@
 From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v9 2/2] drm: bridge: Add thc63lvd1024 LVDS decoder driver
-Date: Fri, 20 Apr 2018 09:20:05 +0300
-Message-ID: <cf1263ff-313e-109e-13f0-32cf15d27b41@mentor.com>
+Subject: Re: [PATCH v9 1/2] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Fri, 20 Apr 2018 09:19:58 +0300
+Message-ID: <74f4f147-cdca-6421-9ad0-558d2d7914e5@mentor.com>
 References: <1524062429-325-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524062429-325-3-git-send-email-jacopo+renesas@jmondi.org>
+ <1524062429-325-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1524062429-325-3-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1524062429-325-2-git-send-email-jacopo+renesas@jmondi.org>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -23,19 +24,18 @@ Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@
 List-Id: devicetree@vger.kernel.org
 
 SGkgSmFjb3BvLAoKT24gMDQvMTgvMjAxOCAwNTo0MCBQTSwgSmFjb3BvIE1vbmRpIHdyb3RlOgo+
-IEFkZCBEUk0gYnJpZGdlIGRyaXZlciBmb3IgVGhpbmUgVEhDNjNMVkQxMDI0IExWRFMgdG8gZGln
-aXRhbCBwYXJhbGxlbAo+IG91dHB1dCBjb252ZXJ0ZXIuCj4gCj4gU2lnbmVkLW9mZi1ieTogSmFj
-b3BvIE1vbmRpIDxqYWNvcG8rcmVuZXNhc0BqbW9uZGkub3JnPgo+IFJldmlld2VkLWJ5OiBBbmRy
-emVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+IFJldmlld2VkLWJ5OiBOaWtsYXMgU8O2
-ZGVybHVuZCA8bmlrbGFzLnNvZGVybHVuZCtyZW5lc2FzQHJhZ25hdGVjaC5zZT4KPiBSZXZpZXdl
-ZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29t
-Pgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAgIHwgICA2ICsK
-PiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICB8ICAgMSArCj4gIGRyaXZl
-cnMvZ3B1L2RybS9icmlkZ2UvdGhjNjNsdmQxMDI0LmMgfCAyMDYgKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKwo+ICAzIGZpbGVzIGNoYW5nZWQsIDIxMyBpbnNlcnRpb25zKCspCj4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RoYzYzbHZkMTAyNC5j
-CgpSZXZpZXdlZC1ieTogVmxhZGltaXIgWmFwb2xza2l5IDx2bGFkaW1pcl96YXBvbHNraXlAbWVu
-dG9yLmNvbT4KCi0tCldpdGggYmVzdCB3aXNoZXMsClZsYWRpbWlyCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+IERvY3VtZW50IFRoaW5lIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIgZGV2aWNlIHRyZWUgYmlu
+ZGluZ3MuCj4gCj4gU2lnbmVkLW9mZi1ieTogSmFjb3BvIE1vbmRpIDxqYWNvcG8rcmVuZXNhc0Bq
+bW9uZGkub3JnPgo+IFJldmlld2VkLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcu
+Y29tPgo+IFJldmlld2VkLWJ5OiBOaWtsYXMgU8O2ZGVybHVuZCA8bmlrbGFzLnNvZGVybHVuZCty
+ZW5lc2FzQHJhZ25hdGVjaC5zZT4KPiBSZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1
+cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgo+IFJldmlld2VkLWJ5OiBSb2IgSGVycmlu
+ZyA8cm9iaEBrZXJuZWwub3JnPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
+dGhpbmUsdGhjNjNsdmQxMDI0LnR4dCB8IDYwICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBm
+aWxlIGNoYW5nZWQsIDYwIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2
+ZDEwMjQudHh0Cj4gCgpSZXZpZXdlZC1ieTogVmxhZGltaXIgWmFwb2xza2l5IDx2bGFkaW1pcl96
+YXBvbHNraXlAbWVudG9yLmNvbT4KCi0tCldpdGggYmVzdCB3aXNoZXMsClZsYWRpbWlyCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
