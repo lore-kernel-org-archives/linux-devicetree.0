@@ -1,39 +1,51 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v4 0/3] lan78xx: Read configuration from Device Tree
-Date: Fri, 20 Apr 2018 11:39:27 -0400 (EDT)
-Message-ID: <20180420.113927.810364321398349353.davem@davemloft.net>
-References: <1524157180-27276-1-git-send-email-phil@raspberrypi.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: [PATCH] ARM: dts: imx53-ppd: Use IRQ_TYPE_* constants
+Date: Fri, 20 Apr 2018 17:45:53 +0200
+Message-ID: <20180420154553.18070-1-sebastian.reichel@collabora.co.uk>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524157180-27276-1-git-send-email-phil@raspberrypi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: phil@raspberrypi.org
-Cc: woojung.huh@microchip.com, UNGLinuxDriver@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, mchehab@kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, akpm@linux-foundation.org, rdunlap@infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-From: Phil Elwell <phil@raspberrypi.org>
-Date: Thu, 19 Apr 2018 17:59:37 +0100
+Replace magic numbers with IRQ_TYPE_* constants to improve
+DT readability.
 
-> The Microchip LAN78XX family of devices are Ethernet controllers with
-> a USB interface. Despite being discoverable devices it can be useful to
-> be able to configure them from Device Tree, particularly in low-cost
-> applications without an EEPROM or programmed OTP.
-> 
-> This patch set adds support for reading the MAC address and LED modes from
-> Device Tree.
-> 
-> v4:
-> - Rename nodes in bindings doc.
-> 
-> v3:
-> - Move LED setting into PHY driver.
-> 
-> v2:
-> - Use eth_platform_get_mac_address.
-> - Support up to 4 LEDs, and move LED mode constants into dt-bindings header.
-> - Improve bindings document.
-> - Remove EEE support.
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+---
+ arch/arm/boot/dts/imx53-ppd.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Series applied, thanks Phil.
+diff --git a/arch/arm/boot/dts/imx53-ppd.dts b/arch/arm/boot/dts/imx53-ppd.dts
+index d5628af2e301..d02d07470ad3 100644
+--- a/arch/arm/boot/dts/imx53-ppd.dts
++++ b/arch/arm/boot/dts/imx53-ppd.dts
+@@ -300,7 +300,7 @@
+ 		compatible = "dlg,da9053-aa";
+ 		reg = <0>;
+ 		interrupt-parent = <&gpio3>;
+-		interrupts = <12 0x8>;
++		interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
+ 		spi-max-frequency = <1000000>;
+ 		dlg,tsi-as-adc;
+ 		tsiref-supply = <&reg_tsiref>;
+@@ -473,7 +473,7 @@
+ 				compatible = "fsl,mma8453";
+ 				reg = <0x1c>;
+ 				interrupt-parent = <&gpio1>;
+-				interrupts = <6 0>;
++				interrupts = <6 IRQ_TYPE_NONE>;
+ 				interrupt-names = "INT1";
+ 			};
+ 
+@@ -539,7 +539,7 @@
+ 		reset-gpio = <&gpio5 19 GPIO_ACTIVE_HIGH>;
+ 		reg = <0x4b>;
+ 		interrupt-parent = <&gpio5>;
+-		interrupts = <4 0x8>;
++		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
+ 	};
+ };
+ 
+-- 
+2.17.0
