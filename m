@@ -1,118 +1,91 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: condor: add eMMC support
-Date: Fri, 20 Apr 2018 12:03:13 +0200
-Message-ID: <20180420100313.4cmngxeibpc2r3h2@verge.net.au>
-References: <611daf1f-42a2-d463-0814-ebf762871018@cogentembedded.com>
- <309b5211-bab6-53de-b8a8-6e1049e1705e@cogentembedded.com>
+From: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: [PATCH 2/3] ASoC: tas6424: Add support for the standby pin
+Date: Fri, 20 Apr 2018 12:04:43 +0200
+Message-ID: <1524218684-19752-3-git-send-email-jjhiblot@ti.com>
+References: <1524218684-19752-1-git-send-email-jjhiblot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <309b5211-bab6-53de-b8a8-6e1049e1705e@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524218684-19752-1-git-send-email-jjhiblot@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com
+Cc: dannenberg@ti.com, afd@ti.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 14, 2018 at 10:28:29PM +0300, Sergei Shtylyov wrote:
-> Define the Condor board dependent part of the MMC0 (connected to eMMC chip)
-> device node along with the necessary voltage regulators...
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
->  arch/arm64/boot/dts/renesas/r8a77980-condor.dts |   43 ++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
-> 
-> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-> ===================================================================
-> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-> @@ -27,6 +27,24 @@
->  		/* first 128MB is reserved for secure area. */
->  		reg = <0 0x48000000 0 0x78000000>;
->  	};
-> +
-> +	d3_3v: regulator-0 {
+The standby pin can be connected to a GPIO. In that case we have to drive
+it to the correct values for the TAS6424 to operate properly.
 
-Please use reg_3p3v: regulator1 for consistency with salvator-common.dtsi
+Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+---
+ .../devicetree/bindings/sound/ti,tas6424.txt       |  1 +
+ sound/soc/codecs/tas6424.c                         | 22 ++++++++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "D3.3V";
-
-And "fixed-3.3V"
-
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +
-> +	vddq_vin01: regulator-1 {
-
-And reg_1p8v: regulator0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDQ_VIN01";
-
-And "fixed-1.8V"
-
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
->  };
->  
->  &avb {
-> @@ -52,6 +70,19 @@
->  	clock-frequency = <32768>;
->  };
->  
-> +&mmc0 {
-> +	pinctrl-0 = <&mmc_3_3v_pins>;
-> +	pinctrl-1 = <&mmc_1_8v_pins>;
-> +	pinctrl-names = "default", "state_uhs";
-> +
-> +	vmmc-supply = <&d3_3v>;
-> +	vqmmc-supply = <&vddq_vin01>;
-> +	mmc-hs200-1_8v;
-> +	bus-width = <8>;
-> +	non-removable;
-> +	status = "okay";
-> +};
-> +
->  &pciec {
->  	status = "okay";
->  };
-> @@ -70,6 +101,18 @@
->  		function = "avb";
->  	};
->  
-> +	mmc_1_8v_pins: mmc_1_8v {
-> +		groups = "mmc_data8", "mmc_ctrl", "mmc_ds";
-> +		function = "mmc";
-> +		power-source = <1800>;
-> +	};
-> +
-> +	mmc_3_3v_pins: mmc_3_3v {
-> +		groups = "mmc_data8", "mmc_ctrl", "mmc_ds";
-> +		function = "mmc";
-> +		power-source = <3300>;
-> +	};
-
-Again please make this more consistent with salvator-common.dtsi.
-
-> +
->  	scif0_pins: scif0 {
->  		groups = "scif0_data";
->  		function = "scif0";
-> 
+diff --git a/Documentation/devicetree/bindings/sound/ti,tas6424.txt b/Documentation/devicetree/bindings/sound/ti,tas6424.txt
+index bf2ff98..82c6d48 100644
+--- a/Documentation/devicetree/bindings/sound/ti,tas6424.txt
++++ b/Documentation/devicetree/bindings/sound/ti,tas6424.txt
+@@ -8,6 +8,7 @@ Required properties:
+ 	- sound-dai-cells: must be equal to 0
+ 	- disable-auto-diagnostics: disable DC auto diagnostics (faster power
+ 	  on, but less safe as shortage won't be detected)
++	- standby-gpio: GPIO used to shut the TAS6424 down.
+ 
+ Example:
+ 
+diff --git a/sound/soc/codecs/tas6424.c b/sound/soc/codecs/tas6424.c
+index 5cee400..926259a 100644
+--- a/sound/soc/codecs/tas6424.c
++++ b/sound/soc/codecs/tas6424.c
+@@ -16,6 +16,7 @@
+ #include <linux/slab.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ 
+ #include <sound/pcm.h>
+ #include <sound/pcm_params.h>
+@@ -44,6 +45,7 @@ struct tas6424_data {
+ 	unsigned int last_fault2;
+ 	unsigned int last_warn;
+ 	bool no_auto_diags;
++	struct gpio_desc *standby_gpio;
+ };
+ 
+ /*
+@@ -632,6 +634,22 @@ static int tas6424_i2c_probe(struct i2c_client *client,
+ 	tas6424->no_auto_diags = of_property_read_bool(dev->of_node,
+ 						"disable-auto-diagnostics");
+ 
++	/*
++	 * Get control of the standby pin and set it LOW to take the codec
++	 * out of the stand-by mode.
++	 * Note: The actual pin polarity is taken care of in the GPIO lib
++	 * according the polarity specified in the DTS.
++	 */
++	tas6424->standby_gpio = devm_gpiod_get_optional(dev, "standby",
++						      GPIOD_OUT_LOW);
++	if (IS_ERR(tas6424->standby_gpio)) {
++		if (PTR_ERR(tas6424->standby_gpio) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++		dev_info(dev, "failed to get standvby GPIO: %ld\n",
++			PTR_ERR(tas6424->standby_gpio));
++		tas6424->standby_gpio = NULL;
++	}
++
+ 	for (i = 0; i < ARRAY_SIZE(tas6424->supplies); i++)
+ 		tas6424->supplies[i].supply = tas6424_supply_names[i];
+ 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(tas6424->supplies),
+@@ -691,6 +709,10 @@ static int tas6424_i2c_remove(struct i2c_client *client)
+ 
+ 	cancel_delayed_work_sync(&tas6424->fault_check_work);
+ 
++	/* put the codec in stand-by */
++	if (tas6424->standby_gpio)
++		gpiod_set_value_cansleep(tas6424->standby_gpio, 1);
++
+ 	ret = regulator_bulk_disable(ARRAY_SIZE(tas6424->supplies),
+ 				     tas6424->supplies);
+ 	if (ret < 0) {
+-- 
+2.7.4
