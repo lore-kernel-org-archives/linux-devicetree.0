@@ -1,35 +1,93 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 0/4] regulator: bd9571mwv: Add support for DDR backup
- mode
-Date: Fri, 20 Apr 2018 08:49:14 +0100
-Message-ID: <20180420074914.vl4rer5zdeldfzb3@dell>
-References: <1524057484-25350-1-git-send-email-geert+renesas@glider.be>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
+ node
+Date: Fri, 20 Apr 2018 10:08:47 +0200
+Message-ID: <20180420080847.GN31310@phenom.ffwll.local>
+References: <CAL_JsqJxDTj66V5eGYgQErhXZf6sfp=99De2XqaX+GyD7NCtGw@mail.gmail.com>
+ <c3b9897f-aae0-35b1-e4e9-99b904d47cda@ti.com>
+ <CAL_Jsq+jYa=aE0Z0s_Wr5iN5LVqpq2OfUfoKDx6i_YA-cg1RRg@mail.gmail.com>
+ <a2c98c64-570c-4bb1-3976-3d54d3d4ecde@ti.com>
+ <CAL_JsqKm6L_66RYJ6JQJfMLA073QyBtP0U+JBkA+m0e34QJWcg@mail.gmail.com>
+ <e125d692-62b9-936c-bd04-84e7eb0072f7@ti.com>
+ <20180419063422.GC31310@phenom.ffwll.local>
+ <ca131aa6-e9d2-f8cf-1ced-eea97c852493@ti.com>
+ <20180420070025.GE31310@phenom.ffwll.local>
+ <5efc8763-7ab8-5f4e-de40-95e2671e2af3@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1524057484-25350-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <5efc8763-7ab8-5f4e-de40-95e2671e2af3@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Apr 2018, Geert Uytterhoeven wrote:
-
-> 	Hi all,
-> 
-> The ROHM BD9571MWV PMIC on the Renesas Salvator-X(S) and ULCB
-> development boards supports DDR Backup Power, which means that the DDR
-> power rails can be kept powered while the main SoC is powered down.
-
-Should this set be applied together, or can the MFD patches be applied
-on their own, without the Regulator patch?
-
-If the former, then we're going to need an Ack from Mark.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+T24gRnJpLCBBcHIgMjAsIDIwMTggYXQgMTA6MjE6MzVBTSArMDMwMCwgVG9taSBWYWxrZWluZW4g
+d3JvdGU6Cj4gT24gMjAvMDQvMTggMTA6MDAsIERhbmllbCBWZXR0ZXIgd3JvdGU6Cj4gCj4gKEFk
+ZGluZyBCZW5vaXQgYmFjaywgaGUgd2FzIGRyb3BwZWQgYXQgc29tZSBwb2ludCBpbiB0aGUgdGhy
+ZWFkKQo+IAo+ID4gU3R1ZmYgcmFuZG9tbHkgbm90IHdvcmtpbmcgaXMgb2ZmaWNpYWxseSBob3cg
+YXRvbWljIHdvcmtzLiBUaGF0J3Mgd2hhdCB0aGUKPiA+IFRFU1RfT05MWSBtb2RlIGlzIGZvci4g
+VGhlcmUncyBhIGxvdCBtb3JlIHRoYW4gdmlydHVhbGl6ZWQgcGxhbmVzIHRoYXQKPiA+IG1pZ2h0
+IG9yIG1pZ2h0IG5vdCBwdXNoIGFueSBnaXZlbiBwbGFuZSBzZXR1cCBvdmVyIHNvbWUgcmFuZG9t
+IGh3IGxpbWl0Ogo+ID4gbWVtb3J5IGJhbmR3aWR0aCwgYWdncmVnYXRlIHNjYWxpbmcgbGltaXRz
+IChiZWNhdXNlIG5vdCBlbm91Z2ggZmlmbyksCj4gPiB0aGVybWFsIGxpbWl0cywgYWdncmVnYXRl
+IHBpeGVsIGNsb2NrIGxpbWl0cy4gVGhlcmUncyBhbGwga2luZHMgb2YgY2FzZXMKPiA+IHdoZXJl
+IHdpdGggb25lIHNldHVwIHlvdSBjYW4gbGlnaHQgdXAgNCBwbGFuZXMsIHRoZW4gbW92ZSB0aGVt
+IGEgYml0IGFuZAo+ID4gb25seSAzIHdvcmsuIEFuZCB5ZXMgc29tZXRpbWVzIHRoYXQgbWVhbnMg
+eW91IGNhbid0IGxpZ2h0IHVwIGFsbCB0aGUKPiA+IG91dHB1dHMgaWYgeW91IGhhdmUgYSB0b28g
+ZmFuY3kgcGxhbmUgY29uZmlnIG9uIHRoZSBvdGhlciBDUlRDLgo+ID4gCj4gPiBPbmx5IHVzZXJz
+cGFjZSB3aGljaCBpcyB3cml0dGVuIHdpdGggaW50aW1hdGUga25vd2xlZGdlIG9mIHRoZSBleGFj
+dAo+ID4ga2VybmVsIGRyaXZlciBhbmQgaHcgaXQgcnVucyBvbiBjYW4gYXZvaWQgVEVTVF9PTkxZ
+IGFuZCBzb21lIGtpbmQgb2YKPiA+IGZhbGxiYWNrIHN0cmF0ZWd5IHRvICJyZW5kZXIgZXZlcnl0
+aGluZyBpbnRvIHRoZSAxIHNpbmdsZSBwcmltYXJ5IHBsYW5lIi4KPiA+IEJvdGggZHJtX2h3Y29t
+cG9zZXIgYW5kIHdlc3RvbiBhdG9taWMgaGF2ZSBzdWNoIGEgZmFsbGJhY2sgc3RyYXRlZ3kgKHdp
+dGgKPiA+IHZhcmlvdXMgZGVncmVlcyBvZiBpbnRlcm1lZGlhdGUgY2xldmVybmVzcykuCj4gCj4g
+T2ssIHRoYW5rcy4gVGhpcyBtYWtlcyBzZW5zZSB0byBtZSwgYW5kIGFjdHVhbGx5IG1ha2VzIG91
+ciAoZHJpdmVyCj4gZGV2ZWxvcGVycykgbGlmZSBlYXNpZXIuLi4gSXMgIlN0dWZmIHJhbmRvbWx5
+IG5vdCB3b3JraW5nIGlzIG9mZmljaWFsbHkKPiBob3cgYXRvbWljIHdvcmtzLiIgbWVudGlvbmVk
+IGluIHRoZSBEUk0gZG9jdW1lbnRhdGlvbj8gSSB0aGluayB0aGF0Cj4gc2VudGVuY2Ugc3VtbWFy
+aXplcyBpdCBxdWl0ZSB3ZWxsID0pLgoKSG0sIEkgdGhpbmsgd2UgZmFpbCB0byBkb2MgdGhhdCBw
+cm9wZXJseSwgYXQgbGVhc3QgaW4ta2VybmVsLiBJbXByb3ZpbmcKYXRvbWljIGRvY3MgaXMgc29t
+ZXdoZXJlIG9uIG15IGh1Z2UgdG9kbyBsaXN0IHN0aWxsIDotLwoKVGhlIGx3biBhcnRpY2xlIEkn
+dmUgd3JpdHRlbiBkb2VzIGV4cGxhaW4gdGhlIG1vdGl2YXRpb24gYmVoaW5kIFRFU1RfT05MWQpp
+biBkZXRhaWwgdGhvdWdoOgoKaHR0cHM6Ly9sd24ubmV0L0FydGljbGVzLzY1MzA3MS8KCj4gRG9l
+cyB0aGUgZHJpdmVyIHN0aWxsIGhhdmUgc29tZSBtaW5pbWFsIHNldCBvZiBmdW5jdGlvbmFsaXR5
+IGl0IGFsd2F5cwo+IGhhcyB0byBhbGxvdz8gRS5nLiBpcyBlbmFibGluZyBhbGwgdGhlIGF2YWls
+YWJsZSBkaXNwbGF5cyB3aXRoIHRoZQo+IGRpc3BsYXkncyBuYXRpdmUgcmVzb2x1dGlvbiAob3Ig
+d2hhdGV2ZXIgcGFzc2VzIHRoZSBtb2RlX3ZhbGlkKSwgZWFjaAo+IHdpdGggYSBzaW5nbGUgbm9u
+LXNjYWxlZCBmdWxsLXNjcmVlbiBwcmltYXJ5IHBsYW5lLCBzb21ldGhpbmcgZXZlcnkKPiBkcml2
+ZXIgc2hvdWxkIGVuc3VyZSBpcyBhbHdheXMgcG9zc2libGU/CgpTdHJpdmUgZm9yLCBzdXJlLiAi
+QWx3YXlzIiBpcyBhIGJpdCBtdWNoIHNpbmNlIHlvdSBlYXNpbHkgbWlnaHQgcnVuIG91dCBvZgpj
+bG9ja3MgKGlmIHRoZXkgYWxsIHJ1biBhdCBkaWZmZXJlbnQgbW9kZXMpLCBvciBtZW1tb3J5IGJh
+bmR3aWR0aCAoaWYKdGhlcmUncyB0b28gbWFueSA4ayBzY3JlZW5zKSBhbmQgc3R1ZmYgbGlrZSB0
+aGF0LiBJdCdzIHJlYWxseSBhbGwgYmVzdAplZmZvcnQuCgpUaGUgb25seSBndWFyYW50ZWUgd2Ug
+Z2l2ZSBmb3IgbW9kZV92YWxpZCBpcyB0aGF0IHlvdSBzaG91bGQgYmUgYWJsZSB0bwpsaWdodCB0
+aGlzIG1vZGUgdXAgaWYKLSBubyBvdGhlciBDUlRDIGVuYWJsZWQsCi0gb25seSB1c2luZyB0aGUg
+cHJpbWFyeSBwbGFuZSwKLSBhbmQgeW91IHRyaWVkIGFsbCB0aGUgcGl4ZWwgZm9ybWF0cyBvZiB0
+aGF0IHBsYW5lIChpbiBjYXNlIHhyYmc4ODg4IGlzCiAgdG9vIG11Y2ggeW91IG1pZ2h0IG5lZWQg
+dG8gdHJ5IG91dCByZ2I1NjUsIG9yICpzaG9jayogQzgpLiBJIHRoaW5rIGluCiAgcHJhY3RpY2Ug
+anVzdCB0cnlpbmcgeHJiZzg4ODggc2hvdWxkIGJlIGdvb2QgZW5vdWdoLCBzaW5jZSB0aGF0J3Mg
+d2hhdAogIHBseW1vdXRoIGFuZCBvdGhlciBzaW1wbGUgZ2VuZXJpYyB1c2Vyc3BhY2UgcmVxdWly
+ZXMuIFlvdSdyZSBydW5uaW5nIG9uCiAgc29tZSByZWFsbHkgZnVua3kgaHcgaWYgdGhhdCBkb2Vz
+bid0IHdvcmsuCgpZZXMgdGhhdCBndWFyYW50ZWUgaXMgdmVyeSBtaW5pbWFsLCBidXQgaXQncyB0
+aGUgYmVzdCB3ZSBjYW4gZG8gcmVhbGx5LgoKSGlzdG9yaWNhbCBub3RlIGFzaWRlOiBUaGUgYWJv
+dmUgcHJvYmxlbSBpcyB3aHkgYXRvbWljJ3MgVEVTVF9PTkxZIGFsc28Kd29ya3MgZm9yIG1vZGVz
+ZXRzLCBhbmQgd2h5IGF0b21pYyBkb2VzIHVwZGF0ZXMgYWNyb3NzIG11bHRpcGxlIENSVEM6Cklu
+dGVsJ3MgZ2VuNyB3YXMgdGhlIGZpcnN0IHBvcHVsYXIgcGxhdGZvcm0gdGhhdCBoYWQgMyBwaXBl
+IHN1cHBvcnQgYnV0IGluCm1hbnkgc2l0dWF0aW9ucyBvbmx5IGFsbG93ZWQgdG8gbGlnaHQgdXAg
+MiBvdXRwdXRzLCBub3QgMy4gVXNlcnNwYWNlIGRpZWQKdG8gbm8gZW5kIG9uIGZhaWxlZCBtb2Rl
+c2V0cyA6LS8KLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50
+ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
