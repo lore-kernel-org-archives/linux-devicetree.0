@@ -1,86 +1,101 @@
-From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v1 3/5] ARM: dts: stm32: Add I2Cs pin control on STM32MP157C
-Date: Fri, 20 Apr 2018 11:17:52 +0200
-Message-ID: <1524215874-15093-4-git-send-email-pierre-yves.mordret@st.com>
-References: <1524215874-15093-1-git-send-email-pierre-yves.mordret@st.com>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH v2] usb: chipidea: Hook into mux framework to toggle usb
+ switch
+Date: Fri, 20 Apr 2018 09:22:13 +0000
+Message-ID: <VI1PR04MB1455162DE3FF630262693E558BB40@VI1PR04MB1455.eurprd04.prod.outlook.com>
+References: <1523973148-2094-1-git-send-email-yossim@codeaurora.org>
+ <HE1PR04MB14504981D8B409CD8F9E7B7D8BB40@HE1PR04MB1450.eurprd04.prod.outlook.com>
+ <1fd0df0a-3930-94c8-2973-2c90e0b07530@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524215874-15093-1-git-send-email-pierre-yves.mordret@st.com>
+In-Reply-To: <1fd0df0a-3930-94c8-2973-2c90e0b07530@axentia.se>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, Marek Szyprowski <m.szyprowski@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Marc Zyngier <marc.zyngier@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Yangbo Lu <yangbo.lu@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+To: Peter Rosin <peda@axentia.se>, Yossi Mansharoff <yossim@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:CHIPIDEA USB HIGH SPEED DUAL ROLE CONTROLLER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>, "swboyd@chromium.org" <swboyd@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a dedicated pin control applied on I2C1,2,4 & 5
-
-Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
----
-  Version history:
-     v1:
-        * Initial
----
----
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 40 +++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-index 6f044100..862e626 100644
---- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -146,6 +146,36 @@
- 				gpio-ranges = <&pinctrl 0 160 8>;
- 			};
- 
-+			i2c1_pins_a: i2c1@0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('D', 12, AF5)>, /* I2C1_SCL */
-+						 <STM32_PINMUX('F', 15, AF5)>; /* I2C1_SDA */
-+					bias-disable;
-+					drive-open-drain;
-+					slew-rate = <0>;
-+				};
-+			};
-+
-+			i2c2_pins_a: i2c2@0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('H', 4, AF4)>, /* I2C2_SCL */
-+						 <STM32_PINMUX('H', 5, AF4)>; /* I2C2_SDA */
-+					bias-disable;
-+					drive-open-drain;
-+					slew-rate = <0>;
-+				};
-+			};
-+
-+			i2c5_pins_a: i2c5@0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('A', 11, AF4)>, /* I2C5_SCL */
-+						 <STM32_PINMUX('A', 12, AF4)>; /* I2C5_SDA */
-+					bias-disable;
-+					drive-open-drain;
-+					slew-rate = <0>;
-+				};
-+			};
-+
- 			uart4_pins_a: uart4@0 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
-@@ -180,6 +210,16 @@
- 				ngpios = <8>;
- 				gpio-ranges = <&pinctrl_z 0 400 8>;
- 			};
-+
-+			i2c4_pins_a: i2c4@0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('Z', 4, AF6)>, /* I2C4_SCL */
-+						 <STM32_PINMUX('Z', 5, AF6)>; /* I2C4_SDA */
-+					bias-disable;
-+					drive-open-drain;
-+					slew-rate = <0>;
-+				};
-+			};
- 		};
- 	};
- };
--- 
-2.7.4
+IA0KPiA+PiBAQCAtMyw2ICszLDggQEAgY29uZmlnIFVTQl9DSElQSURFQQ0KPiA+PiAgCWRlcGVu
+ZHMgb24gKChVU0JfRUhDSV9IQ0QgJiYgVVNCX0dBREdFVCkgfHwgKFVTQl9FSENJX0hDRCAmJg0K
+PiA+PiAhVVNCX0dBREdFVCkgfHwgKCFVU0JfRUhDSV9IQ0QgJiYgVVNCX0dBREdFVCkpICYmIEhB
+U19ETUENCj4gPj4gIAlzZWxlY3QgRVhUQ09ODQo+ID4+ICAJc2VsZWN0IFJFU0VUX0NPTlRST0xM
+RVINCj4gPj4gKwlzZWxlY3QgTVVMVElQTEVYRVINCj4gPj4gKwlzZWxlY3QgTVVYX0dQSU8NCj4g
+Pg0KPiA+IFRoZSBhYm92ZSB0d28gY29uZmlndXJhdGlvbnMgYXJlIG9ubHkgdXNlZCBhdCB5b3Vy
+IHNwZWNpZmljIHBsYXRmb3JtcywNCj4gPiBwbGVhc2UgYWRkIHRoZW0gYXQgZWl0aGVyIHlvdXIg
+cGxhdGZvcm0gZGVmY29uZmlnIG9yIHRoZSByZWxhdGVkIGhhcmR3YXJlIGRyaXZlcidzDQo+IEtj
+b25maWcuDQo+IA0KPiAic2VsZWN0IE1VWF9HUElPIiBpcyBpbmRlZWQgcXVlc3Rpb25hYmxlIGFu
+ZCBzaG91bGQgYmUgc29tZXdoZXJlIGVsc2UgYmVjYXVzZQ0KPiB0aGlzIGRyaXZlciB3aWxsIHdv
+cmsgd2l0aCBhbnkgb3RoZXIgbXV4IGFzIHdlbGwuIEl0J3Mgc2ltcGx5IHNvbWV0aGluZyBlbHNl
+IHRoYXQNCj4gcmVxdWlyZXMgaXQuIElmIGl0IHdhcyB0aGUgY2FzZSB0aGF0IE1VWF9HUElPIGlz
+IGluZGVlZCByZXF1aXJlZCB0aGVuIHRoZSB3aG9sZSB1c2UNCj4gb2YgdGhlIG11eCBzdWJzeXN0
+ZW0gaXMgcXVlc3Rpb25hYmxlIGFuZCB0aGUgdGhpbmcgY29udHJvbGxlZCBtaWdodCBhcyB3ZWxs
+IGJlDQo+IGNvbnRyb2xsZWQgZGlyZWN0bHkgd2l0aCB0aGUgR1BJTyBsaW5lLiBUaGUgbXV4IHN1
+YnN5c3RlbSBpcyBnb29kIHdoZW4gYSBzaW5nbGUgbXV4DQo+ICJjb250cm9sbGVyIiBpcyBzaGFy
+ZWQgYmV0d2VlbiBzZXZlcmFsIHVucmVsYXRlZCBkcml2ZXJzIHV0aWxpemluZyBkaWZmZXJlbnQg
+bXV4ZXMNCj4gY29udHJvbGxlZCBieSB0aGF0IHNhbWUgbXV4ICJjb250cm9sbGVyIiAodGhpbmsg
+c2V2ZXJhbCBtdXhlcyBjb250cm9sbGVkIGJ5IHRoZSBzYW1lDQo+IEdQSU8gbGluZS9saW5lcyku
+IFRoZSBtdXggc3Vic3lzdGVtIGlzIGFsc28gdXNlZnVsIHdoZW4gdGhlIGRyaXZlciBkb2VzIG5v
+dCB3YW50IHRvDQo+IGhhbmRsZS9rbm93IGhvdyB0aGUgc3BlY2lmaWMgbXV4IGlzIGNvbnRyb2xs
+ZWQuIFRoYXQgc2FpZCwgaXQncyBvZiBjb3Vyc2Ugbm90IHdyb25nIHRvDQo+IHVzZSB0aGUgbXV4
+IHN1YnN5c3RlbSBpbiBjYXNlcyBsaWtlIHRoaXMgZWl0aGVyLCBidXQgSSB0aGluayBpdCBtaWdo
+dCBiZSBtdWNoIGVhc2llcg0KPiBhbmQgZGlyZWN0IHRvIGp1c3QgdHdpZGRsZSB0aGUgc2luZ2xl
+IEdQSU8gbGluZSBkaXJlY3RseSBoZXJlPw0KPiANCj4gT3IgZG8geW91IGV4cGVjdCBzb21lIGZ1
+dHVyZSBIVyB2YXJpYW50IHRoYXQgd2lsbCB1c2Ugc29tZSBvdGhlciBtZWFucyB0byBjb250cm9s
+DQo+IHRoaXMgbXV4Pw0KPiANCg0KTm8sIHRoaXMgbXV4IGlzIG9ubHkgdXNlZCBhdCBZb3NzaSdz
+IGJvYXJkcywgSSBleHBlY3QgdGhlc2UgdHdvIGNvbmZpZ3VyYXRpb25zIGlzIHVuZGVyDQpNVVgn
+cyBoYXJkd2FyZSBkcml2ZXIgS2NvbmZpZyBpZiBpdCBpcyBleGlzdGVkLCBvciB1bmRlciBpdHMg
+cGxhdGZvcm0gZGVmY29uZmlnLiBTb21lb25lDQpoYXMgYWxyZWFkeSBjb21wbGFpbmVkIHRvbyBt
+YW55IHNlbGVjdHMgaW5jcmVhc2UgdGhlIGNvZGUgc2l6ZToNCg0KaHR0cHM6Ly9wYXRjaHdvcmsu
+a2VybmVsLm9yZy9wYXRjaC8xMDM0OTI5My8NCg0KPiA+PiAgCWhlbHANCj4gPj4gIAkgIFNheSBZ
+IGhlcmUgaWYgeW91ciBzeXN0ZW0gaGFzIGEgZHVhbCByb2xlIGhpZ2ggc3BlZWQgVVNCDQo+ID4+
+ICAJICBjb250cm9sbGVyIGJhc2VkIG9uIENoaXBJZGVhIHNpbGljb24gSVAuIEl0IHN1cHBvcnRz
+Og0KPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvY2hpcGlkZWEvY29yZS5jDQo+ID4+IGIv
+ZHJpdmVycy91c2IvY2hpcGlkZWEvY29yZS5jIGluZGV4DQo+ID4+IDMzYWU4N2YuLjhmYTA5OTEg
+MTAwNjQ0DQo+ID4+IC0tLSBhL2RyaXZlcnMvdXNiL2NoaXBpZGVhL2NvcmUuYw0KPiA+PiArKysg
+Yi9kcml2ZXJzL3VzYi9jaGlwaWRlYS9jb3JlLmMNCj4gPj4gQEAgLTYxLDYgKzYxLDcgQEANCj4g
+Pj4gICNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPiA+PiAgI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRv
+ci9jb25zdW1lci5oPiAgI2luY2x1ZGUNCj4gPj4gPGxpbnV4L3VzYi9laGNpX2RlZi5oPg0KPiA+
+PiArI2luY2x1ZGUgPGxpbnV4L211eC9jb25zdW1lci5oPg0KPiA+Pg0KPiA+PiAgI2luY2x1ZGUg
+ImNpLmgiDQo+ID4+ICAjaW5jbHVkZSAidWRjLmgiDQo+ID4+IEBAIC02ODcsNiArNjg4LDEwIEBA
+IHN0YXRpYyBpbnQgY2lfZ2V0X3BsYXRkYXRhKHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPj4gIAlp
+ZiAob2ZfZmluZF9wcm9wZXJ0eShkZXYtPm9mX25vZGUsICJub24temVyby10dGN0cmwtdHRoYSIs
+IE5VTEwpKQ0KPiA+PiAgCQlwbGF0ZGF0YS0+ZmxhZ3MgfD0gQ0lfSERSQ19TRVRfTk9OX1pFUk9f
+VFRIQTsNCj4gPj4NCj4gPj4gKwlwbGF0ZGF0YS0+dXNiX3N3aXRjaCA9IGRldm1fbXV4X2NvbnRy
+b2xfZ2V0X29wdGlvbmFsKGRldiwgInVzYl9zd2l0Y2giKTsNCj4gPj4gKwlpZiAoSVNfRVJSKHBs
+YXRkYXRhLT51c2Jfc3dpdGNoKSkNCj4gPj4gKwkJcmV0dXJuIFBUUl9FUlIocGxhdGRhdGEtPnVz
+Yl9zd2l0Y2gpOw0KPiA+PiArDQo+ID4+ICAJZXh0X2lkID0gRVJSX1BUUigtRU5PREVWKTsNCj4g
+Pj4gIAlleHRfdmJ1cyA9IEVSUl9QVFIoLUVOT0RFVik7DQo+ID4+ICAJaWYgKG9mX3Byb3BlcnR5
+X3JlYWRfYm9vbChkZXYtPm9mX25vZGUsICJleHRjb24iKSkgeyBkaWZmIC0tZ2l0DQo+ID4+IGEv
+ZHJpdmVycy91c2IvY2hpcGlkZWEvaG9zdC5jIGIvZHJpdmVycy91c2IvY2hpcGlkZWEvaG9zdC5j
+IGluZGV4DQo+ID4+IGFmNDVhYTMyLi5kOWQyZDAwDQo+ID4+IDEwMDY0NA0KPiA+PiAtLS0gYS9k
+cml2ZXJzL3VzYi9jaGlwaWRlYS9ob3N0LmMNCj4gPj4gKysrIGIvZHJpdmVycy91c2IvY2hpcGlk
+ZWEvaG9zdC5jDQo+ID4+IEBAIC0xMyw2ICsxMyw3IEBADQo+ID4+ICAjaW5jbHVkZSA8bGludXgv
+dXNiL2hjZC5oPg0KPiA+PiAgI2luY2x1ZGUgPGxpbnV4L3VzYi9jaGlwaWRlYS5oPg0KPiA+PiAg
+I2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPg0KPiA+PiArI2luY2x1ZGUgPGxp
+bnV4L211eC9jb25zdW1lci5oPg0KPiA+Pg0KPiA+PiAgI2luY2x1ZGUgIi4uL2hvc3QvZWhjaS5o
+Ig0KPiA+Pg0KPiA+PiBAQCAtMTYxLDYgKzE2MiwxMCBAQCBzdGF0aWMgaW50IGhvc3Rfc3RhcnQo
+c3RydWN0IGNpX2hkcmMgKmNpKQ0KPiA+PiAgCQlpZiAoY2lfb3RnX2lzX2ZzbV9tb2RlKGNpKSkg
+ew0KPiA+PiAgCQkJb3RnLT5ob3N0ID0gJmhjZC0+c2VsZjsNCj4gPj4gIAkJCWhjZC0+c2VsZi5v
+dGdfcG9ydCA9IDE7DQo+ID4+ICsJCX0gZWxzZSB7DQo+ID4+ICsJCQlyZXQgPSBtdXhfY29udHJv
+bF9zZWxlY3QoY2ktPnBsYXRkYXRhLT51c2Jfc3dpdGNoLCAxKTsNCj4gPj4gKwkJCWlmIChyZXQp
+DQo+ID4+ICsJCQkJZ290byBkaXNhYmxlX3JlZzsNCj4gPg0KPiA+IFdoYXQgd2lsbCBoYXBwZW4g
+aWYgY2ktPnBsYXRkYXRhLT51c2Jfc3dpdGNoICBpcyBOVUxMPw0KPiANCj4gV2hhdCBoYXMgbm90
+IGJlZW4gbWVudGlvbmVkIGluIHRoaXMgcGF0Y2ggaXMgdGhhdCBpdCBkZXBlbmRzIG9uIGFub3Ro
+ZXIgcGF0Y2ggd2hpY2gNCj4gaXMgbm90IHlldCB1cHN0cmVhbS4gWW91IGNhbiBnb29nbGUgZm9y
+DQo+IA0KPiBtdXg6IGFkZCBtdXhfY29udHJvbF9nZXRfb3B0aW9uYWwoKSBBUEkNCj4gDQo+IHRv
+IGdldCBhbiBpZGVhIChpdCdzIGFsc28gaW4gbGludXgtbmV4dCkuIEFueXdheSwgd2l0aCB0aGF0
+IHBhdGNoIHRoaXMgaXMgbm90IGEgcHJvYmxlbS4NCj4gDQoNClRoYW5rcywgSSBzZWUgaXQganVk
+Z2VzIE5VTEwgcG9pbnRlciwgdGhlbiBpdCBpcyBPSy4NCg0KIA0KPiA+PiAgLyoqDQo+ID4+ICAg
+KiBzdHJ1Y3QgY2lfaGRyY19jYWJsZSAtIHN0cnVjdHVyZSBmb3IgZXh0ZXJuYWwgY29ubmVjdG9y
+IGNhYmxlDQo+ID4+IHN0YXRlIHRyYWNraW5nIEBAIC0NCj4gPj4gNzYsNiArNzcsNyBAQCBzdHJ1
+Y3QgY2lfaGRyY19wbGF0Zm9ybV9kYXRhIHsNCj4gPj4gIAkvKiBWQlVTIGFuZCBJRCBzaWduYWwg
+c3RhdGUgdHJhY2tpbmcsIHVzaW5nIGV4dGNvbiBmcmFtZXdvcmsgKi8NCj4gPj4gIAlzdHJ1Y3Qg
+Y2lfaGRyY19jYWJsZQkJdmJ1c19leHRjb247DQo+ID4+ICAJc3RydWN0IGNpX2hkcmNfY2FibGUJ
+CWlkX2V4dGNvbjsNCj4gPj4gKwlzdHJ1Y3QgbXV4X2NvbnRyb2wJCSp1c2Jfc3dpdGNoOw0KPiA+
+PiAgCXUzMgkJCXBoeV9jbGtnYXRlX2RlbGF5X3VzOw0KPiA+DQo+ID4gSWYgQ09ORklHX1VTQl9D
+SElQSURFQV9IT1NUIGlzIG5vdCBkZWZpbmVkLCBpdCBtYXkgY2F1c2UgYnVpbGQgZXJyb3INCj4g
+DQo+IEhvdyBpcyB0aGF0IHJlbGF0ZWQ/IFRoZXJlIGlzIGEgZm9yd2FyZCBkZWNsYXJhdGlvbiBh
+Ym92ZT8NCj4gDQoNClNvcnJ5LCBJIGRpZCBub3Qgbm90aWNlIGRyaXZlcnMvdXNiL2NoaXBpZGVh
+L2NvcmUuYyBhbHNvIGluY2x1ZGVzIDxsaW51eC9tdXgvY29uc3VtZXIuaD4uDQoNClBldGVyDQo=
