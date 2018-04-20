@@ -1,50 +1,34 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 5/7] drm/i2c: tda998x: find the drm_device via the drm_connector
-Date: Fri, 20 Apr 2018 12:41:14 +0300
-Message-ID: <1995876.dqZyKbpDZd@avalon>
-References: <20180419162751.25223-1-peda@axentia.se> <20180419162751.25223-6-peda@axentia.se>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 5/5] arm64: dts: renesas: eagle: Enable HDMI output
+Date: Fri, 20 Apr 2018 11:48:55 +0200
+Message-ID: <20180420094855.ikfsjjn4m7vp54fp@verge.net.au>
+References: <1523520841-16455-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1523520841-16455-6-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419162751.25223-6-peda@axentia.se>
+Content-Disposition: inline
+In-Reply-To: <1523520841-16455-6-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Nicolas Ferre <nicolas.ferre@microchip.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: magnus.damm@gmail.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
-
-Thank you for the patch.
-
-On Thursday, 19 April 2018 19:27:49 EEST Peter Rosin wrote:
-> This prepares for being a drm_bridge which will not register the
-> encoder. That makes the connector the better choice.
+On Thu, Apr 12, 2018 at 10:14:01AM +0200, Jacopo Mondi wrote:
+> Enable HDMI output on Renesas R-Car V3M Eagle board.
 > 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+> The HDMI ouput is enabled connecting the DU LVDS output to the
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+s/ouput/output/
 
-> ---
->  drivers/gpu/drm/i2c/tda998x_drv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> transparent LVDS converter THC63LVD1024, and successively routing its
+> RGB output to the ADV7511W HDMI encoder.
 > 
-> diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c
-> b/drivers/gpu/drm/i2c/tda998x_drv.c index cd3f0873bbdd..8f6e013f2b87 100644
-> --- a/drivers/gpu/drm/i2c/tda998x_drv.c
-> +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-> @@ -630,7 +630,7 @@ static void tda998x_detect_work(struct work_struct
-> *work) {
->  	struct tda998x_priv *priv =
->  		container_of(work, struct tda998x_priv, detect_work);
-> -	struct drm_device *dev = priv->encoder.dev;
-> +	struct drm_device *dev = priv->connector.dev;
-> 
->  	if (dev)
->  		drm_kms_helper_hotplug_event(dev);
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> [for THC63LVD1024: ]
+> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
 
-
--- 
-Regards,
-
-Laurent Pinchart
+Thanks, applied.
