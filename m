@@ -1,209 +1,283 @@
 From: Frank Rowand <frowand.list@gmail.com>
 Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
-Date: Fri, 20 Apr 2018 12:53:10 -0700
-Message-ID: <de8cf071-2280-45fb-c41a-feb1f039d68b@gmail.com>
+Date: Fri, 20 Apr 2018 14:00:28 -0700
+Message-ID: <e7a2f4ca-40c2-05ef-097c-2cecd31fb731@gmail.com>
 References: <20180418222905.10414-1-robh@kernel.org>
- <152424282214.46528.2511757264045171935@swboyd.mtv.corp.google.com>
- <CAL_Jsq+1G61+E0wtVEkzann3Z=2Cr=2PkbDJ_OuaA5GysWZsXQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+1G61+E0wtVEkzann3Z=2Cr=2PkbDJ_OuaA5GysWZsXQ@mail.gmail.com>
+In-Reply-To: <20180418222905.10414-1-robh@kernel.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree-spec@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Jonathan Cameron <jic23@kernel.org>
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: grant.likely@arm.com, mark.rutland@arm.com, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, shawnguo@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/20/18 11:15, Rob Herring wrote:
-> On Fri, Apr 20, 2018 at 11:47 AM, Stephen Boyd <sboyd@kernel.org> wrote:
->> Quoting Rob Herring (2018-04-18 15:29:05)
->>> diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
->>> new file mode 100644
->>> index 000000000000..fe0a3bd1668e
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/example-schema.yaml
->>> @@ -0,0 +1,149 @@
->>> +# SPDX-License-Identifier: BSD-2-Clause
->>> +# Copyright 2018 Linaro Ltd.
->>> +%YAML 1.2
->>> +---
->>> +# All the top-level keys are standard json-schema keywords except for
->>> +# 'maintainers' and 'select'
->>> +
->>> +# $id is a unique idenifier based on the filename
->>> +$id: "http://devicetree.org/schemas/example-schema.yaml#"
->>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->>> +
->>> +# Only 1 version supported for now
->>> +version: 1
->>> +
->>> +title: An example schema annotated with jsonschema details
->>> +
->>> +maintainers:
->>> +  - Rob Herring <robh@kernel.org>
->>> +
->>> +description: |
->>> +  A more detailed multi-line description of the binding.
->>> +
->>> +  Details about the hardware device and any links to datasheets can go here.
->>> +
->>> +  The end of the description is marked by indentation less than the first line
->>> +  in the description.
->>> +
->>> +select: false
->>> +  # 'select' is a schema applied to a DT node to determine if this binding
->>> +  # schema should be applied to the node. It is optional and by default the
->>> +  # possible compatible strings are extracted and used to match.
->>
->> Can we get a concrete example here?
-> 
-> select: true
-> 
-> :) Which is apply to every node.
-> 
-> A better one is from the memory node schema ('$nodename' gets added :
-> 
-> select:
->   required: ["$nodename"]
->   properties:
->     $nodename:
->       oneOf:
->         - pattern: "^memory@[0-9a-f]*"
->         - const: "memory" # 'memory' only allowed for selecting
-> 
-> 
-> I expect the vast majority of device bindings will not use select at
-> all and rely on compatible string matching.
-> 
->>> +
->>> +properties:
->> [...]
->>> +
->>> +  interrupts:
->>> +    # Either 1 or 2 interrupts can be present
->>> +    minItems: 1
->>> +    maxItems: 2
->>> +    items:
->>> +      - description: tx or combined interrupt
->>> +      - description: rx interrupt
->>> +
->>> +    description: |
->>
->> The '|' is needed to make yaml happy?
-> 
-> Yes, this is simply how you do literal text blocks in yaml.
-> 
-> We don't really need for this one really, but for the top-level
-> 'description' we do. The long term intent is 'description' would be
-> written in sphinx/rst and can be extracted into the DT spec (for
-> common bindings). Grant has experimented with that some.
-> 
->>> +      A variable number of interrupts warrants a description of what conditions
->>> +      affect the number of interrupts. Otherwise, descriptions on standard
->>> +      properties are not necessary.
->>> +
->>> +  interrupt-names:
->>> +    # minItems must be specified here because the default would be 2
->>> +    minItems: 1
->>> +    items:
->>> +      - const: "tx irq"
->>> +      - const: "rx irq"
->>> +
->>> +  # Property names starting with '#' must be quoted
->>> +  '#interrupt-cells':
->>> +    # A simple case where the value must always be '2'.
->>> +    # The core schema handles that this must be a single integer.
->>> +    const: 2
->>> +
->>> +  interrupt-controller: {}
->>
->> Does '{}' mean nothing to see here?
-> 
-> Yes. It's just an empty schema that's always valid.
-> 
->>> +    # The core checks this is a boolean, so just have to list it here to be
->>> +    # valid for this binding.
->>> +
->>> +  clock-frequency:
->>> +    # The type is set in the core schema. Per device schema only need to set
->>> +    # constraints on the possible values.
->>> +    minimum: 100
->>> +    maximum: 400000
->>> +    # The value that should be used if the property is not present
->>> +    default: 200
->>> +
->>
->> The 'default' field is neat. I look forward to the compiler using the
->> schema to insert defaults into the dtb if the properties aren't present
->> in the input file.
-> 
-> That wasn't really my intention, but it's what the OS should use if
-> property is not present. But at least for required properties, we
-> could certainly do as you suggest.
+Hi Rob,
 
-I understand the thought of 'neat', but it would also add yet one more
-layer to the "how did this property get into my dtb?" stew.
-
-But more importantly, if this becomes a required part of the kernel
-build process, is it adding a new required tool (python)?  (Or is
-python already required?)  There is resistance to adding new tools.
-
--Frank
+Thanks for the example.  It was a good starting tutorial of sorts for me
+to understand the format a bit.
 
 
->>> +  foo-gpios:
->>> +    maxItems: 1
->>> +    description: A connection of the 'foo' gpio line.
->>> +
->>> +  vendor,int-property:
->>> +    description: Vendor specific properties must have a description
->>> +    type: integer # A type is also required
->>> +    enum: [2, 4, 6, 8, 10]
->>> +
->>> +  vendor,bool-property:
->>> +    description: Vendor specific properties must have a description
->>> +    type: boolean
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +  - interrupts
->>> +  - interrupt-controller
->>
->> Can the required or optional parts go under each property instead of
->> having a different section?
+On 04/18/18 15:29, Rob Herring wrote:
+> The current DT binding documentation format of freeform text is painful
+> to write, review, validate and maintain.
 > 
-> No, because then it is not json-schema language.
+> This is just an example of what a binding in the schema format looks
+> like. It's using jsonschema vocabulary in a YAML encoded document. Using
+> jsonschema gives us access to existing tooling. A YAML encoding gives us
+> something easy to edit.
 > 
->> Or does that make the schema parser
->> difficult to implement?
+> This example is just the tip of the iceberg, but it the part most
+> developers writing bindings will interact with. Backing all this up
+> are meta-schema (to validate the binding schemas), some DT core schema,
+> YAML encoded DT output with dtc, and a small number of python scripts to
+> run validation. The gory details including how to run end-to-end
+> validation can be found here:
 > 
-> Yes, because then we have to implement a schema parser.
+> https://www.spinics.net/lists/devicetree-spec/msg00649.html
 > 
->> It may also make sense to negate this and
->> specify only the optional properties, or to require both optional and
->> required lists to make things more explicit at the cost of some
->> verbosity.
->>
->>> +
->>> +examples:
->>> +  - |
->>> +    /{
->>
->> Is the first slash required here?
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Cc list,
+> You all review and/or write lots of binding documents. I'd like some feedback
+> on the format.
 > 
-> No, just leftover from being the root node in the example.
+> Thanks,
+> Rob
 > 
+>  .../devicetree/bindings/example-schema.yaml        | 149 +++++++++++++++++++++
+>  1 file changed, 149 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/example-schema.yaml
 > 
-> Thanks for taking a look.
-> 
->>> +          compatible = "vendor,soc4-ip", "vendor,soc1-ip";
->>> +          reg = <0x1000 0x80>,
->>> +                <0x3000 0x80>;
->>> +          reg-names = "core", "aux";
->>> +          interrupts = <10>;
->>> +          interrupt-controller;
->>> +    };
+> diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
+> new file mode 100644
+> index 000000000000..fe0a3bd1668e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/example-schema.yaml
+
+I'm guessing by the path name that this is in the Linux kernel source tree.
+
+
+> @@ -0,0 +1,149 @@
+> +# SPDX-License-Identifier: BSD-2-Clause
+
+If in the Linux kernel source tree, then allow gpl-v2 as a possible license.
+
+
+> +# Copyright 2018 Linaro Ltd.
+> +%YAML 1.2
+> +---
+> +# All the top-level keys are standard json-schema keywords except for
+> +# 'maintainers' and 'select'
+> +
+> +# $id is a unique idenifier based on the filename
+
+                     ^^^^^^^^^  identifier
+
+> +$id: "http://devicetree.org/schemas/example-schema.yaml#"
+
+Does this imply that all schemas will be at devicetree.org instead
+of in the Linux kernel source tree?  This would be counter to my
+earlier guess about where this patch is applied.
+
+
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+
+How is $schema used?  Is it accessed across the network?
+
+> +
+> +# Only 1 version supported for now
+> +version: 1
+> +
+> +title: An example schema annotated with jsonschema details
+> +
+> +maintainers:
+> +  - Rob Herring <robh@kernel.org>
+> +
+> +description: |
+> +  A more detailed multi-line description of the binding.
+> +
+> +  Details about the hardware device and any links to datasheets can go here.
+> +
+> +  The end of the description is marked by indentation less than the first line
+> +  in the description.
+> +
+> +select: false
+> +  # 'select' is a schema applied to a DT node to determine if this binding
+> +  # schema should be applied to the node. It is optional and by default the
+> +  # possible compatible strings are extracted and used to match.
+
+My first reaction was that 'node' should somehow be included in the name
+of 'select'.  But my second thought was that maybe 'node' is implied,
+because every schema file describes a single node???  This is where my
+lack of knowledge kicks in - I'll go read stuff in your yaml-bindings
+repo to get a better background...
+
+
+> +
+> +properties:
+> +  # A dictionary of DT properties for this binding schema
+> +  compatible:
+> +    # More complicated schema can use oneOf (XOR), anyOf (OR), or allOf (AND)
+> +    # to handle different conditions.
+> +    # In this case, it's needed to handle a variable number of values as there
+> +    # isn't another way to express a constraint of the last string value.
+> +    # The boolean schema must be a list of schemas.
+> +    oneOf:
+> +      - items:
+> +          # items is a list of possible values for the property. The number of
+> +          # values is determined by the number of elements in the list.
+> +          # Order in lists is significant, order in dicts is not
+> +          # Must be one of the 1st enums followed by the 2nd enum
+> +          #
+> +          # Each element in items should be 'enum' or 'const'
+> +          - enum:
+> +              - vendor,soc4-ip
+> +              - vendor,soc3-ip
+> +              - vendor,soc2-ip
+> +          - enum:
+> +              - vendor,soc1-ip
+> +        # additionalItems being false is implied
+> +        # minItems/maxItems equal to 2 is implied
+> +      - items:
+> +          # 'const' is just a special case of an enum with a single possible value
+> +          - const: vendor,soc1-ip
+
+I'm using this as an example of a concept, not to pick on this one specific
+instance.
+
+One of my concerns with YAML has been the rich, flexible syntax available.  To
+a YAML expert, this is a very useful feature.  To someone who does not use YAML
+and will not use it for anything other than binding schemas, this adds more
+complexity.
+
+What I have heard some people say in the validation discussions is that the
+allowed YAML syntax for binding schemas would be limited to one (or a very
+small number) of the possible YAML alternative syntaxes for use in the
+bindings.  Will there be a document describing such a limitation on
+alternate syntaxes?
+
+(This example file provides a good example of a single syntax style, but does
+not preclude other equivalent syntax.)
+
+Getting back to the specific example of 'const', it is a less verbose way of
+specifying a single value enum, and I think it looks cleaner and more
+readable.  But it is also a case of adding more complexity for someone who
+does not otherwise use YAML.  I would using the more verbose syntax of
+enum even for a single possible value.
+
+
+> +
+> +  reg:
+> +    # The description of each element defines the order and implicitly defines
+> +    # the number of reg entries
+> +    items:
+> +      - description: core registers
+> +      - description: aux registers
+> +    # minItems/maxItems equal to 2 is implied
+> +
+> +  reg-names:
+> +    # The core schema enforces this is a string array
+> +    items:
+> +      - const: core
+> +      - const: aux
+> +
+> +  clocks:
+> +    # Only a single entry, so just need to set the max number of items.
+
+       # More restrictions are provided in meta-schemas/clocks.yaml
+
+
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: bus
+> +
+> +  interrupts:
+> +    # Either 1 or 2 interrupts can be present
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: tx or combined interrupt
+> +      - description: rx interrupt
+> +
+> +    description: |
+> +      A variable number of interrupts warrants a description of what conditions
+> +      affect the number of interrupts. Otherwise, descriptions on standard
+> +      properties are not necessary.
+> +
+> +  interrupt-names:
+> +    # minItems must be specified here because the default would be 2
+> +    minItems: 1
+
+Why the difference between the interrupts property and the interrupt-names
+property (specifying maxItems for interrupt, but not interrupt-names)?
+
+Others have already commented on a desire to have a way to specify that
+number of interrupts should match number of interrupt-names.
+
+
+> +    items:
+> +      - const: "tx irq"
+> +      - const: "rx irq"
+> +
+> +  # Property names starting with '#' must be quoted
+> +  '#interrupt-cells':
+> +    # A simple case where the value must always be '2'.
+> +    # The core schema handles that this must be a single integer.
+> +    const: 2
+> +
+> +  interrupt-controller: {}
+> +    # The core checks this is a boolean, so just have to list it here to be
+> +    # valid for this binding.
+> +
+> +  clock-frequency:
+> +    # The type is set in the core schema. Per device schema only need to set
+> +    # constraints on the possible values.
+> +    minimum: 100
+> +    maximum: 400000
+> +    # The value that should be used if the property is not present
+> +    default: 200
+
+This is confusing to me.  (Beyond the discussion of this in Stephen Boyd's
+reply...)  My naive reading of this is that the default is the value that
+the driver should implement if the property is missing, which is unrelated
+to the concept of validating a dts file.
+
+
+> +
+> +  foo-gpios:
+> +    maxItems: 1
+> +    description: A connection of the 'foo' gpio line.
+> +
+> +  vendor,int-property:
+> +    description: Vendor specific properties must have a description
+> +    type: integer # A type is also required
+> +    enum: [2, 4, 6, 8, 10]
+> +
+> +  vendor,bool-property:
+> +    description: Vendor specific properties must have a description
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +
+> +examples:
+> +  - |
+> +    /{
+> +          compatible = "vendor,soc4-ip", "vendor,soc1-ip";
+> +          reg = <0x1000 0x80>,
+> +                <0x3000 0x80>;
+> +          reg-names = "core", "aux";
+> +          interrupts = <10>;
+> +          interrupt-controller;
+> +    };
+> --
+> 2.14.1
 > 
