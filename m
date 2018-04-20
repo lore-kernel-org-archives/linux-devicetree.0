@@ -1,47 +1,33 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 0/4] regulator: bd9571mwv: Add support for DDR backup
- mode
-Date: Fri, 20 Apr 2018 09:58:26 +0100
-Message-ID: <20180420085826.4omlf2rrwuno3mtj@dell>
-References: <1524057484-25350-1-git-send-email-geert+renesas@glider.be>
- <20180420074914.vl4rer5zdeldfzb3@dell>
- <CAMuHMdWeROfJNvUtfooN8gqA+nTRXhVLvQFpc-xiqUbG9XgcmA@mail.gmail.com>
+From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: [PATCH v1 0/3] Append additional I2C instances and activate I2C1.
+Date: Fri, 20 Apr 2018 11:05:07 +0200
+Message-ID: <1524215110-13967-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWeROfJNvUtfooN8gqA+nTRXhVLvQFpc-xiqUbG9XgcmA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Marek Vasut <marek.vasut+renesas@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 20 Apr 2018, Geert Uytterhoeven wrote:
-> On Fri, Apr 20, 2018 at 9:49 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> > On Wed, 18 Apr 2018, Geert Uytterhoeven wrote:
-> >> The ROHM BD9571MWV PMIC on the Renesas Salvator-X(S) and ULCB
-> >> development boards supports DDR Backup Power, which means that the DDR
-> >> power rails can be kept powered while the main SoC is powered down.
-> >
-> > Should this set be applied together, or can the MFD patches be applied
-> > on their own, without the Regulator patch?
-> 
-> The regulator patch depends on the MFD patches, so it's best for them to
-> go in together.
-> 
-> > If the former, then we're going to need an Ack from Mark.
-> 
-> Alternative, as you've already supplied (some form of) your Ack for the firs
-> 3 patches, they can go in through Mark? All of it is enhancing the
-> regulator part.
+This patch intends to appends 3 additional I2C instances (2, 3 and 4).
+In the same time I2C1 is setup for both STM32F746 and STM32F769 Discovery
+boards.
+---
+  Version history:
+     v1:
+        * Initial
+---
 
-Yes, that's fine too:
+Pierre-Yves MORDRET (3):
+  ARM: dts: stm32: Append additional I2Cs for STM32F746 SoC
+  ARM: dts: stm32: Add I2C1 support for STM32F769-DISCO Board
+  ARM: dts: stm32: Add I2C1 support for STM32F746-DISCO Board
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+ arch/arm/boot/dts/stm32f746-disco.dts |  8 ++++++++
+ arch/arm/boot/dts/stm32f746.dtsi      | 36 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/stm32f769-disco.dts |  8 ++++++++
+ 3 files changed, 52 insertions(+)
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
