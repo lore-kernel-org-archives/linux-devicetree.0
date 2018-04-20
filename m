@@ -1,106 +1,61 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v5 2/3] pinctrl: bcm2835: Add support for generic
- pinctrl binding
-Date: Sat, 21 Apr 2018 12:30:02 +0200 (CEST)
-Message-ID: <1775241593.21185.1524306602836@email.1und1.de>
-References: <f500b25c-eea0-9f01-7d7b-5a9dd90c50fa@castello.eng.br>
- <1523422726-7910-1-git-send-email-matheus@castello.eng.br>
- <1523422726-7910-3-git-send-email-matheus@castello.eng.br>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 5/7] drm/i2c: tda9950: add CEC driver
+Date: Fri, 20 Apr 2018 17:07:31 +0100
+Message-ID: <20180420160731.GA16141@n2100.armlinux.org.uk>
+References: <20180409121529.GA31403@n2100.armlinux.org.uk>
+ <E1f5Viq-0002Lj-Ru@rmk-PC.armlinux.org.uk>
+ <20180420153137.GZ16141@n2100.armlinux.org.uk>
+ <bd644882-50b3-3022-de21-1f0b7fe008b7@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523422726-7910-3-git-send-email-matheus@castello.eng.br>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matheus Castello <matheus@castello.eng.br>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, eric@anholt.net
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <bd644882-50b3-3022-de21-1f0b7fe008b7@xs4all.nl>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matheus,
-
-> Matheus Castello <matheus@castello.eng.br> hat am 11. April 2018 um 06:58 geschrieben:
-> 
-> 
-> To keep driver up to date we add generic pinctrl binding support, which covers
-> the features used in this driver and has additional node properties that this
-> SoC has compatibility, so enabling future implementations of these properties
-> without the need to create new node properties in the device trees.
-> 
-> The logic of this change maintain the old brcm legacy binding support in order
-> to keep the ABI stable.
-> 
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
-> 
-> A brief explanation of what I did:
-> 
-> Add pinconf-generic header for use the defines and pinctrl-generic API.
-> 
-> Add dt-bindings pinctrl bcm2835 header to use functions selections and
-> pulls definitions, which functions definitions where duplicated in the
-> enum bcm2835_fsel, I removed the duplicate defines from enum.
-> 
-> In the bcm2835_pctl_dt_node_to_map_pull I used the generic macro for
-> pack the legacy param and arguments, since it will be unpacked along with
-> generic properties that is packed with this same macro.
-> 
-> In bcm2835_pctl_dt_node_to_map I thougt it was better, and simpler, to use
-> pinctrl-generic parse code instead of parsing it inside the driver, so code
-> first check for generic binding parse, if something is parsed then it is
-> assumed that are using the new generic style, and when nothing is found then
-> parse continues to search for legacy properties.
-> 
-> In the bcm2835_pinconf_set was changed the unpack legacy by the generic, and
-> was added a switch for the parameter tests, since pinctrl generic uses 3
-> properties to define the states of the pull instead of one with arguments, that
-> was the reason too that bcm2835_pull_config_set function was added, for reuse
-> the code that set state of pull.
-> 
->  drivers/pinctrl/bcm/Kconfig           |  1 +
->  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 87 ++++++++++++++++++++++-------------
->  2 files changed, 55 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
-> index e8c4e4f..0f38d51 100644
-> --- a/drivers/pinctrl/bcm/Kconfig
-> +++ b/drivers/pinctrl/bcm/Kconfig
-> @@ -20,6 +20,7 @@ config PINCTRL_BCM2835
->  	bool
->  	select PINMUX
->  	select PINCONF
-> +	select GENERIC_PINCONF
->  	select GPIOLIB_IRQCHIP
-> 
->  config PINCTRL_IPROC_GPIO
-> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> index 785c366..010c565 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> @@ -36,11 +36,13 @@
->  #include <linux/pinctrl/pinconf.h>
->  #include <linux/pinctrl/pinctrl.h>
->  #include <linux/pinctrl/pinmux.h>
-> +#include <linux/pinctrl/pinconf-generic.h>
->  #include <linux/platform_device.h>
->  #include <linux/seq_file.h>
->  #include <linux/slab.h>
->  #include <linux/spinlock.h>
->  #include <linux/types.h>
-> +#include <dt-bindings/pinctrl/bcm2835.h>
-> 
->  #define MODULE_NAME "pinctrl-bcm2835"
->  #define BCM2835_NUM_GPIOS 54
-> @@ -75,10 +77,6 @@ enum bcm2835_pinconf_param {
->  	BCM2835_PINCONF_PARAM_PULL,
-
-Since we use bcm2835_pinconf_param and pin_config_param in bcm2835_pinconf_set, there are potential conflicts. According to include/linux/pinctrl/pinconf-generic.h:
-
- * @PIN_CONFIG_END: this is the last enumerator for pin configurations, if
- *	you need to pass in custom configurations to the pin controller, use
- *	PIN_CONFIG_END+1 as the base offset.
-
-Please adjust BCM2835_PINCONF_PARAM_PULL accordingly.
-
-Sorry for not notice this before.
-
-Stefan
+T24gRnJpLCBBcHIgMjAsIDIwMTggYXQgMDU6NDg6MTJQTSArMDIwMCwgSGFucyBWZXJrdWlsIHdy
+b3RlOgo+IE9uIDA0LzIwLzIwMTggMDU6MzEgUE0sIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCB3
+cm90ZToKPiA+IEhpIEhhbnMsCj4gPiAKPiA+IEFueSBjb21tZW50cz8KPiAKPiBJIGhhdmUgYmVl
+biB0cmF2ZWxpbmcgYW5kIGhhdmVuJ3QgaGFkIHRpbWUgdG8gbG9vayBhdCB0aGlzLiBOZXh0IHdl
+ZWsgd2lsbAo+IGJlIGJ1c3kgYXMgd2VsbCwgYnV0IEkgZXhwZWN0IHRvIGJlIGFibGUgdG8gbG9v
+ayBhdCBpdCB0aGUgd2VlayBhZnRlciB0aGF0LgoKV2VsbCwgdGhhdCBkb2Vzbid0IHdvcmsgYmVj
+YXVzZSBJIHdvbid0IGJlIHJlYWRpbmcgbWFpbCB0aGF0IHdlZWssCmFuZCBJJ2xsIHByb2JhYmx5
+IHNpbXBseSBpZ25vcmUgdGhlIGV4Y2Vzc2l2ZSBiYWNrbG9nIHdoZW4gSSBkbwpzdGFydCByZWFk
+aW5nIG1haWwgYWdhaW4uCgo+IEkgcmVtZW1iZXIgZnJvbSB0aGUgcHJldmlvdXMgc2VyaWVzIHRo
+YXQgSSBjb3VsZG4ndCB0ZXN0IGl0IHdpdGggbXkgQmVhZ2xlQm9uZQo+IEJsYWNrIGJvYXJkICh0
+aGUgY2FsaWJyYXRpb24gZ3BpbyBoYWQgdG8gc3dpdGNoIGZyb20gaW4gdG8gb3V0IGJ1dCBpdCB3
+YXNuJ3QgYWxsb3dlZAo+IHNpbmNlIGl0IGhhZCBhbiBhc3NvY2lhdGVkIGlycSkuIFRoYXQncyBz
+dGlsbCBhIHByb2JsZW0/Cj4gCj4gSSBkaWRuJ3Qgc2VlIGFueSBjaGFuZ2VzIGluIHRoYXQgYXJl
+YSB3aGVuIEkgZGlkIGEgcXVpY2sgc2Nhbi4KCkNvcnJlY3QsIGFuZCB1bmxlc3MgeW91IHdpc2gg
+bWUgdG8gZG8gdGhlIHdvcmsgZm9yIHlvdSAoaW4gd2hpY2ggY2FzZQp5b3UgY2FuIHBheSBtZSkg
+bm90aGluZyBpcyBnb2luZyB0byBjaGFuZ2Ugb24gdGhhdCBmcm9udCEgIFNlcmlvdXNseSwKcGxl
+YXNlIGRvIG5vdCBleHBlY3QgbWUgdG8gYWRkIHN1cHBvcnQgZm9yIHBsYXRmb3JtcyBJIGRvbid0
+IGhhdmUKYWNjZXNzIHRvLiAgSSdtIGp1c3QgYSB2b2x1bnRlZXIgZm9yIHRoaXMsIHByb2JhYmx5
+IHRoZSBzYW1lIGFzIHlvdS4KCkkgZG9uJ3QgdGhpbmsgd2UgZW5kZWQgdXAgd2l0aCBhbiBhbnN3
+ZXIgZm9yIHRoYXQgcHJvYmxlbS4gIEkgZG9uJ3QKc2VlIHRoYXQgZHJvcHBpbmcgdGhlIHJlcXVl
+c3RlZCBpbnRlcnJ1cHQsIHVzaW5nIHRoZSBHUElPLCBhbmQgdGhlbgpyZS1yZXF1ZXN0aW5nIHRo
+ZSBpbnRlcnJ1cHQgaXMgYW4gb3B0aW9uIC0gaG93IGRvIHdlIGhhbmRsZSBhIGZhaWx1cmUKdG8g
+cmUtcmVxdWVzdCB0aGUgaW50ZXJydXB0PyAgRG8gd2UganVzdCBpZ25vcmUgdGhlIGVycm9yLCBv
+ciBsZXQgRFJNCnN0b3Agd29ya2luZyBwcm9wZXJseT8KCkluIGFueSBjYXNlLCBJIGRvbid0IGhh
+dmUgYSB3b3JraW5nIEhETUkgQ0VDLWNvbXBsaWFudCBzZXR1cCBhbnltb3JlLAoobm8gVFYsIGp1
+c3QgYSBIRE1JIG1vbml0b3Igbm93KSBzbyBJIHdvdWxkIHJhdGhlciBfbm90XyBjaGFuZ2UgdGhl
+CmRyaXZlciBmcm9tIGl0cyBrbm93bi10by1iZS13b3JraW5nIHN0YXRlLgoKLS0gClJNSydzIFBh
+dGNoIHN5c3RlbTogaHR0cDovL3d3dy5hcm1saW51eC5vcmcudWsvZGV2ZWxvcGVyL3BhdGNoZXMv
+CkZUVEMgYnJvYWRiYW5kIGZvciAwLjhtaWxlIGxpbmUgaW4gc3VidXJiaWE6IHN5bmMgYXQgOC44
+TWJwcyBkb3duIDYzMGticHMgdXAKQWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQ6IDguMjFNYnBz
+IGRvd24gNTEwa2JwcyB1cApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
