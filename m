@@ -1,155 +1,189 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 08/10] dt-bindings: media: Document
- bindings for the Sunxi-Cedrus VPU driver
-Date: Fri, 20 Apr 2018 09:22:20 +0200
-Message-ID: <5fa80b1e88ad2a215f51ea3a2b9b62274fa9b1ec.camel@bootlin.com>
-References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
-	 <20180419154536.17846-4-paul.kocialkowski@bootlin.com>
-	 <1524153860.3416.9.camel@pengutronix.de>
-	 <CAAFQd5DT_xjUbZzFOoKk7_duiSZ8Awb1J=0dPEhVTBk0P3gppA@mail.gmail.com>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v2] usb: chipidea: Hook into mux framework to toggle usb
+ switch
+Date: Fri, 20 Apr 2018 09:30:37 +0200
+Message-ID: <1fd0df0a-3930-94c8-2973-2c90e0b07530@axentia.se>
+References: <1523973148-2094-1-git-send-email-yossim@codeaurora.org>
+ <HE1PR04MB14504981D8B409CD8F9E7B7D8BB40@HE1PR04MB1450.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-9FZvfMmIQIhuBv3NJwWK"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBANL43LAKGQEYIGGCKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAAFQd5DT_xjUbZzFOoKk7_duiSZ8Awb1J=0dPEhVTBk0P3gppA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS
- <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,	Joerg   Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>," <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, wens-jdAy2FN1RRM@public.gmane.org, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <HE1PR04MB14504981D8B409CD8F9E7B7D8BB40@HE1PR04MB1450.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Chen <peter.chen@nxp.com>, Yossi Mansharoff <yossim@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:CHIPIDEA USB HIGH SPEED DUAL ROLE CONTROLLER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>, "swboyd@chromium.org" <swboyd@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Boyd <stephen.boyd@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On 2018-04-20 04:00, Peter Chen wrote:
+>  
+>  
+>> --- a/drivers/usb/chipidea/Kconfig
+>> +++ b/drivers/usb/chipidea/Kconfig
+>> @@ -3,6 +3,8 @@ config USB_CHIPIDEA
+>>  	depends on ((USB_EHCI_HCD && USB_GADGET) || (USB_EHCI_HCD
+>> && !USB_GADGET) || (!USB_EHCI_HCD && USB_GADGET)) && HAS_DMA
+>>  	select EXTCON
+>>  	select RESET_CONTROLLER
+>> +	select MULTIPLEXER
+>> +	select MUX_GPIO
+> 
+> The above two configurations are only used at your specific platforms, please add
+> them at either your platform defconfig or the related hardware driver's Kconfig. 
 
---=-9FZvfMmIQIhuBv3NJwWK
-Content-Type: text/plain; charset="UTF-8"
+"select MUX_GPIO" is indeed questionable and should be somewhere else because
+this driver will work with any other mux as well. It's simply something else
+that requires it. If it was the case that MUX_GPIO is indeed required then the
+whole use of the mux subsystem is questionable and the thing controlled might
+as well be controlled directly with the GPIO line. The mux subsystem is good
+when a single mux "controller" is shared between several unrelated drivers
+utilizing different muxes controlled by that same mux "controller" (think
+several muxes controlled by the same GPIO line/lines). The mux subsystem is
+also useful when the driver does not want to handle/know how the specific mux
+is controlled. That said, it's of course not wrong to use the mux subsystem
+in cases like this either, but I think it might be much easier and direct to
+just twiddle the single GPIO line directly here?
 
-Hi and thanks for the review,
+Or do you expect some future HW variant that will use some other means to
+control this mux?
 
-On Fri, 2018-04-20 at 01:31 +0000, Tomasz Figa wrote:
-> Hi Paul, Philipp,
+>>  	help
+>>  	  Say Y here if your system has a dual role high speed USB
+>>  	  controller based on ChipIdea silicon IP. It supports:
+>> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c index
+>> 33ae87f..8fa0991 100644
+>> --- a/drivers/usb/chipidea/core.c
+>> +++ b/drivers/usb/chipidea/core.c
+>> @@ -61,6 +61,7 @@
+>>  #include <linux/of.h>
+>>  #include <linux/regulator/consumer.h>
+>>  #include <linux/usb/ehci_def.h>
+>> +#include <linux/mux/consumer.h>
+>>
+>>  #include "ci.h"
+>>  #include "udc.h"
+>> @@ -687,6 +688,10 @@ static int ci_get_platdata(struct device *dev,
+>>  	if (of_find_property(dev->of_node, "non-zero-ttctrl-ttha", NULL))
+>>  		platdata->flags |= CI_HDRC_SET_NON_ZERO_TTHA;
+>>
+>> +	platdata->usb_switch = devm_mux_control_get_optional(dev, "usb_switch");
+>> +	if (IS_ERR(platdata->usb_switch))
+>> +		return PTR_ERR(platdata->usb_switch);
+>> +
+>>  	ext_id = ERR_PTR(-ENODEV);
+>>  	ext_vbus = ERR_PTR(-ENODEV);
+>>  	if (of_property_read_bool(dev->of_node, "extcon")) { diff --git
+>> a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c index af45aa32..d9d2d00
+>> 100644
+>> --- a/drivers/usb/chipidea/host.c
+>> +++ b/drivers/usb/chipidea/host.c
+>> @@ -13,6 +13,7 @@
+>>  #include <linux/usb/hcd.h>
+>>  #include <linux/usb/chipidea.h>
+>>  #include <linux/regulator/consumer.h>
+>> +#include <linux/mux/consumer.h>
+>>
+>>  #include "../host/ehci.h"
+>>
+>> @@ -161,6 +162,10 @@ static int host_start(struct ci_hdrc *ci)
+>>  		if (ci_otg_is_fsm_mode(ci)) {
+>>  			otg->host = &hcd->self;
+>>  			hcd->self.otg_port = 1;
+>> +		} else {
+>> +			ret = mux_control_select(ci->platdata->usb_switch, 1);
+>> +			if (ret)
+>> +				goto disable_reg;
 > 
-> On Fri, Apr 20, 2018 at 1:04 AM Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> wrote:
-> 
-> > Hi Paul,
-> > On Thu, 2018-04-19 at 17:45 +0200, Paul Kocialkowski wrote:
-> > > This adds a device-tree binding document that specifies the
-> > > properties
-> > > used by the Sunxi-Cedurs VPU driver, as well as examples.
-> > > 
-> > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> > > ---
-> > >  .../devicetree/bindings/media/sunxi-cedrus.txt     | 50
-> 
-> ++++++++++++++++++++++
-> > >  1 file changed, 50 insertions(+)
-> > >  create mode 100644
-> 
-> Documentation/devicetree/bindings/media/sunxi-cedrus.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/media/sunxi-
-> > > cedrus.txt
-> 
-> b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
-> > > new file mode 100644
-> > > index 000000000000..71ad3f9c3352
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
-> > > @@ -0,0 +1,50 @@
-> > > +Device-tree bindings for the VPU found in Allwinner SoCs,
-> > > referred to
-> 
-> as the
-> > > +Video Engine (VE) in Allwinner literature.
-> > > +
-> > > +The VPU can only access the first 256 MiB of DRAM, that are DMA-
-> > > mapped
-> 
-> starting
-> > > +from the DRAM base. This requires specific memory allocation and
-> 
-> handling.
-> 
-> And no IOMMU? Brings back memories.
+> What will happen if ci->platdata->usb_switch  is NULL?
 
-Exactly, no IOMMU so we don't have much choice but cope with that
-hardware limitation...
+What has not been mentioned in this patch is that it depends on another
+patch which is not yet upstream. You can google for
 
-> > > +
-> > > +Required properties:
-> > > +- compatible         : "allwinner,sun4i-a10-video-engine";
-> > > +- memory-region         : DMA pool for buffers allocation;
-> > > +- clocks             : list of clock specifiers, corresponding to
-> 
-> entries in
-> > > +                          the clock-names property;
-> > > +- clock-names                : should contain "ahb", "mod" and
-> > > "ram"
-> 
-> entries;
-> > > +- assigned-clocks       : list of clocks assigned to the VE;
-> > > +- assigned-clocks-rates : list of clock rates for the clocks
-> > > assigned
-> 
-> to the VE;
-> > > +- resets             : phandle for reset;
-> > > +- interrupts         : should contain VE interrupt number;
-> > > +- reg                        : should contain register base and
-> > > length
-> 
-> of VE.
-> > > +
-> > > +Example:
-> > > +
-> > > +reserved-memory {
-> > > +     #address-cells = <1>;
-> > > +     #size-cells = <1>;
-> > > +     ranges;
-> > > +
-> > > +     /* Address must be kept in the lower 256 MiBs of DRAM for
-> > > VE. */
-> > > +     ve_memory: cma@4a000000 {
-> > > +             compatible = "shared-dma-pool";
-> > > +             reg = <0x4a000000 0x6000000>;
-> > > +             no-map;
-> > > +             linux,cma-default;
-> > > +     };
-> > > +};
-> > > +
-> > > +video-engine@1c0e000 {
-> > This is not really required by any specification, and not as common
-> > as
-> > gpu@..., but could this reasonably be called "vpu@1c0e000" to follow
-> > somewhat-common practice?
-> 
-> AFAIR the name is supposed to be somewhat readable for someone that
-> doesn't know the hardware. To me, "video-engine" sounds more obvious
-> than "vpu", but we actually use "codec" already, in case of MFC and
-> JPEG codec on Exynos. If encode/decode is the only functionality of
-> this block, I'd personally go with "codec". If it can do other things,
-> e.g. scaling/rotation without encode/decode, I'd probably call it
-> "video-processor".
+mux: add mux_control_get_optional() API
 
-I agree that the term VPU is more commonly associated with video
-decoding, while video engine could mean a number of things.
+to get an idea (it's also in linux-next). Anyway, with that patch this
+is not a problem.
 
-The reason I went with "video-engine" here (while still presenting the
-driver as a VPU driver) is that Video Engine is the term used in
-Allwinner's litterature. Other nodes in Allwinner device-trees generally
-stick to these terms (for instance, we have "display-engine" nodes).
-This also makes it easier to find the matching parts in the
-documentation.
+>>  		}
+>>  	}
+>>
+>> @@ -181,6 +186,8 @@ static void host_stop(struct ci_hdrc *ci)
+>>  	struct usb_hcd *hcd = ci->hcd;
+>>
+>>  	if (hcd) {
+>> +		if (!ci_otg_is_fsm_mode(ci))
+>> +			mux_control_deselect(ci->platdata->usb_switch);
+> 
+> Ditto.
+> 
+>>  		if (ci->platdata->notify_event)
+>>  			ci->platdata->notify_event(ci,
+>>  				CI_HDRC_CONTROLLER_STOPPED_EVENT);
+>> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c index
+>> 9852ec5..209d3f6 100644
+>> --- a/drivers/usb/chipidea/udc.c
+>> +++ b/drivers/usb/chipidea/udc.c
+>> @@ -19,6 +19,7 @@
+>>  #include <linux/usb/gadget.h>
+>>  #include <linux/usb/otg-fsm.h>
+>>  #include <linux/usb/chipidea.h>
+>> +#include <linux/mux/consumer.h>
+>>
+>>  #include "ci.h"
+>>  #include "udc.h"
+>> @@ -1965,16 +1966,26 @@ void ci_hdrc_gadget_destroy(struct ci_hdrc *ci)
+>>
+>>  static int udc_id_switch_for_device(struct ci_hdrc *ci)  {
+>> +	int ret = 0;
+>> +
+>>  	if (ci->is_otg)
+>>  		/* Clear and enable BSV irq */
+>>  		hw_write_otgsc(ci, OTGSC_BSVIS | OTGSC_BSVIE,
+>>  					OTGSC_BSVIS | OTGSC_BSVIE);
+>>
+>> -	return 0;
+>> +	if (!ci_otg_is_fsm_mode(ci))
+>> +		ret = mux_control_select(ci->platdata->usb_switch, 0);
+>> +
+> 
+> Ditto
+> 
+>> +	if (ci->is_otg && ret)
+>> +		hw_write_otgsc(ci, OTGSC_BSVIE | OTGSC_BSVIS,
+>> OTGSC_BSVIS);
+>> +
+>> +	return ret;
+>>  }
+>>
+>>  static void udc_id_switch_for_host(struct ci_hdrc *ci)  {
+>> +	mux_control_deselect(ci->platdata->usb_switch);
+>> +
+>>  	/*
+>>  	 * host doesn't care B_SESSION_VALID event
+>>  	 * so clear and disbale BSV irq
+>> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h index
+>> 07f9936..9ea55a1 100644
+>> --- a/include/linux/usb/chipidea.h
+>> +++ b/include/linux/usb/chipidea.h
+>> @@ -10,6 +10,7 @@
+>>  #include <linux/usb/otg.h>
+>>
+>>  struct ci_hdrc;
+>> +struct mux_control;
+>>
+>>  /**
+>>   * struct ci_hdrc_cable - structure for external connector cable state tracking @@ -
+>> 76,6 +77,7 @@ struct ci_hdrc_platform_data {
+>>  	/* VBUS and ID signal state tracking, using extcon framework */
+>>  	struct ci_hdrc_cable		vbus_extcon;
+>>  	struct ci_hdrc_cable		id_extcon;
+>> +	struct mux_control		*usb_switch;
+>>  	u32			phy_clkgate_delay_us;
+>  
+> If CONFIG_USB_CHIPIDEA_HOST is not defined, it may cause build error
+
+How is that related? There is a forward declaration above?
 
 Cheers,
-
--- 
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
---=-9FZvfMmIQIhuBv3NJwWK--
+peda
