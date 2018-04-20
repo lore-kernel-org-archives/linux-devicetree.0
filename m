@@ -1,117 +1,91 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 09/10] ARM: dts: sun7i-a20: Add Video
- Engine and reserved memory nodes
-Date: Fri, 20 Apr 2018 09:39:08 +0200
-Message-ID: <20180420073908.nkcbsdxibnzkqski@flea>
-References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
- <20180419154536.17846-5-paul.kocialkowski@bootlin.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH V3 1/2] clk: imx6sx: add missing lvds2 clock to the clock tree
+Date: Fri, 20 Apr 2018 15:38:10 +0800
+Message-ID: <1524209891-14146-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gx2hl7khsqiaus56"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKFS43LAKGQEU4P2F2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180419154536.17846-5-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, shengjiu.wang@nxp.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+i.MX6SX has lvds2 (analog clock2), an I/O clock like lvds1.
+And this lvds2, along with lvds1, can be used to provide
+external clock source to the internal pll, such as pll4_audio
+and pll5_video.
 
---gx2hl7khsqiaus56
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+This patch mainly adds the lvds2 to the clock tree and fix its
+relationship with pll accordingly.
 
-On Thu, Apr 19, 2018 at 05:45:35PM +0200, Paul Kocialkowski wrote:
-> This adds nodes for the Video Engine and the associated reserved memory
-> for the Allwinner A20. Up to 96 MiB of memory are dedicated to the VPU.
-> 
-> The VPU can only map the first 256 MiB of DRAM, so the reserved memory
-> pool has to be located in that area. Following Allwinner's decision in
-> downstream software, the last 96 MiB of the first 256 MiB of RAM are
-> reserved for this purpose.
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun7i-a20.dtsi | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-> index bd0cd3204273..cb6d82065dcf 100644
-> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
-> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-> @@ -163,6 +163,20 @@
->  		reg = <0x40000000 0x80000000>;
->  	};
->  
-> +	reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		/* Address must be kept in the lower 256 MiBs of DRAM for VE. */
-> +		ve_memory: cma@4a000000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x4a000000 0x6000000>;
-> +			no-map;
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+changes since V2:
+	use of_clk_get_by_name instead of imx_obtain_fixed_clock for anaclkX node.
+ drivers/clk/imx/clk-imx6sx.c             | 10 +++++++---
+ include/dt-bindings/clock/imx6sx-clock.h |  6 +++++-
+ 2 files changed, 12 insertions(+), 4 deletions(-)
 
-I'm not sure why no-map is needed.
-
-And I guess we could use alloc-ranges to make sure the region is in
-the proper memory range, instead of hardcoding it.
-
-> +			linux,cma-default;
-> +		};
-> +	};
-> +
->  	timer {
->  		compatible = "arm,armv7-timer";
->  		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> @@ -451,6 +465,23 @@
->  			};
->  		};
->  
-> +		ve: video-engine@1c0e000 {
-> +			compatible = "allwinner,sun4i-a10-video-engine";
-
-We should have an A20-specific compatible here, at least, so that we
-can deal with any quirk we might find down the road.
-
-> +			reg = <0x01c0e000 0x1000>;
-> +			memory-region = <&ve_memory>;
-
-Since you made the CMA region the default one, you don't need to tie
-it to that device in particular (and you can drop it being mandatory
-from your binding as well).
-
-> +
-> +			clocks = <&ccu CLK_AHB_VE>, <&ccu CLK_VE>,
-> +				 <&ccu CLK_DRAM_VE>;
-> +			clock-names = "ahb", "mod", "ram";
-> +
-> +			assigned-clocks = <&ccu CLK_VE>;
-> +			assigned-clock-rates = <320000000>;
-
-This should be set from within the driver. If it's something that you
-absolutely needed for the device to operate, you have no guarantee
-that the clock rate won't change at any point in time after the device
-probe, so that's not a proper solution.
-
-And if it's not needed and can be adjusted depending on the
-framerate/codec/resolution, then it shouldn't be in the DT either.
-
-Don't you also need to map the SRAM on the A20?
-
-Maxime
-
+diff --git a/drivers/clk/imx/clk-imx6sx.c b/drivers/clk/imx/clk-imx6sx.c
+index bc3f9eb..0178ee2 100644
+--- a/drivers/clk/imx/clk-imx6sx.c
++++ b/drivers/clk/imx/clk-imx6sx.c
+@@ -80,7 +80,7 @@ static const char *lvds_sels[]	= {
+ 	"arm", "pll1_sys", "dummy", "dummy", "dummy", "dummy", "dummy", "pll5_video_div",
+ 	"dummy", "dummy", "pcie_ref_125m", "dummy", "usbphy1", "usbphy2",
+ };
+-static const char *pll_bypass_src_sels[] = { "osc", "lvds1_in", };
++static const char *pll_bypass_src_sels[] = { "osc", "lvds1_in", "lvds2_in", "dummy", };
+ static const char *pll1_bypass_sels[] = { "pll1", "pll1_bypass_src", };
+ static const char *pll2_bypass_sels[] = { "pll2", "pll2_bypass_src", };
+ static const char *pll3_bypass_sels[] = { "pll3", "pll3_bypass_src", };
+@@ -158,8 +158,9 @@ static void __init imx6sx_clocks_init(struct device_node *ccm_node)
+ 	clks[IMX6SX_CLK_IPP_DI0] = of_clk_get_by_name(ccm_node, "ipp_di0");
+ 	clks[IMX6SX_CLK_IPP_DI1] = of_clk_get_by_name(ccm_node, "ipp_di1");
+ 
+-	/* Clock source from external clock via CLK1 PAD */
+-	clks[IMX6SX_CLK_ANACLK1] = imx_obtain_fixed_clock("anaclk1", 0);
++	/* Clock source from external clock via CLK1/2 PAD */
++	clks[IMX6SX_CLK_ANACLK1] = of_clk_get_by_name(ccm_node, "anaclk1");
++	clks[IMX6SX_CLK_ANACLK2] = of_clk_get_by_name(ccm_node, "anaclk2");
+ 
+ 	np = of_find_compatible_node(NULL, NULL, "fsl,imx6sx-anatop");
+ 	base = of_iomap(np, 0);
+@@ -228,7 +229,9 @@ static void __init imx6sx_clocks_init(struct device_node *ccm_node)
+ 	clks[IMX6SX_CLK_PCIE_REF_125M] = imx_clk_gate("pcie_ref_125m", "pcie_ref", base + 0xe0, 19);
+ 
+ 	clks[IMX6SX_CLK_LVDS1_OUT] = imx_clk_gate_exclusive("lvds1_out", "lvds1_sel", base + 0x160, 10, BIT(12));
++	clks[IMX6SX_CLK_LVDS2_OUT] = imx_clk_gate_exclusive("lvds2_out", "lvds2_sel", base + 0x160, 11, BIT(13));
+ 	clks[IMX6SX_CLK_LVDS1_IN]  = imx_clk_gate_exclusive("lvds1_in",  "anaclk1",   base + 0x160, 12, BIT(10));
++	clks[IMX6SX_CLK_LVDS2_IN]  = imx_clk_gate_exclusive("lvds2_in",  "anaclk2",   base + 0x160, 13, BIT(11));
+ 
+ 	clks[IMX6SX_CLK_ENET_REF] = clk_register_divider_table(NULL, "enet_ref", "pll6_enet", 0,
+ 			base + 0xe0, 0, 2, 0, clk_enet_ref_table,
+@@ -270,6 +273,7 @@ static void __init imx6sx_clocks_init(struct device_node *ccm_node)
+ 
+ 	/*                                                name                reg           shift   width   parent_names       num_parents */
+ 	clks[IMX6SX_CLK_LVDS1_SEL]          = imx_clk_mux("lvds1_sel",        base + 0x160, 0,      5,      lvds_sels,         ARRAY_SIZE(lvds_sels));
++	clks[IMX6SX_CLK_LVDS2_SEL]          = imx_clk_mux("lvds2_sel",        base + 0x160, 5,      5,      lvds_sels,         ARRAY_SIZE(lvds_sels));
+ 
+ 	np = ccm_node;
+ 	base = of_iomap(np, 0);
+diff --git a/include/dt-bindings/clock/imx6sx-clock.h b/include/dt-bindings/clock/imx6sx-clock.h
+index 36f0324..cd2d6c5 100644
+--- a/include/dt-bindings/clock/imx6sx-clock.h
++++ b/include/dt-bindings/clock/imx6sx-clock.h
+@@ -275,6 +275,10 @@
+ #define IMX6SX_PLL6_BYPASS		262
+ #define IMX6SX_PLL7_BYPASS		263
+ #define IMX6SX_CLK_SPDIF_GCLK		264
+-#define IMX6SX_CLK_CLK_END		265
++#define IMX6SX_CLK_LVDS2_SEL		265
++#define IMX6SX_CLK_LVDS2_OUT		266
++#define IMX6SX_CLK_LVDS2_IN		267
++#define IMX6SX_CLK_ANACLK2		268
++#define IMX6SX_CLK_CLK_END		269
+ 
+ #endif /* __DT_BINDINGS_CLOCK_IMX6SX_H */
 -- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---gx2hl7khsqiaus56--
+2.7.4
