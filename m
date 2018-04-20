@@ -1,16 +1,16 @@
 From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v2 01/10] media: v4l2-ctrls: Add missing
- v4l2 ctrl unlock
-Date: Fri, 20 Apr 2018 15:38:32 +0200
-Message-ID: <47861cbd-e385-66c0-798d-f6ff3f454bac@xs4all.nl>
+Subject: Re: [PATCH v2 03/10] videobuf2-core: Add helper to get
+ buffer private data from media request
+Date: Fri, 20 Apr 2018 15:43:36 +0200
+Message-ID: <581bb769-acad-1050-3060-f3f11802be89@xs4all.nl>
 References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
- <20180419154124.17512-2-paul.kocialkowski@bootlin.com>
+ <20180419154124.17512-4-paul.kocialkowski@bootlin.com>
 Reply-To: hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBC3MVVMX3ELBBYO247LAKGQECLH4UWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBC3MVVMX3ELBBDO547LAKGQEJK2B52A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180419154124.17512-2-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20180419154124.17512-4-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 Content-Language: en-US
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -23,49 +23,68 @@ Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob
 List-Id: devicetree@vger.kernel.org
 
 On 04/19/18 17:41, Paul Kocialkowski wrote:
-> This adds a missing v4l2_ctrl_unlock call that is required to avoid
-> deadlocks.
+> When calling media operation driver callbacks related to media requests,
+> only a pointer to the request itself is provided, which is insufficient
+> to retrieve the driver's context. Since the driver context is usually
+> set as vb2 queue private data and given that the core can determine
+> which objects attached to the request are buffers, it is possible to
+> extract the associated private data for the first buffer found.
+> 
+> This is required in order to access the current m2m context from m2m
+> drivers' private data in the context of media request operation
+> callbacks. More specifically, this allows scheduling m2m device runs
+> from the newly-introduced request complete operation.
 > 
 > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 > ---
->  drivers/media/v4l2-core/v4l2-ctrls.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>  drivers/media/common/videobuf2/videobuf2-core.c | 15 +++++++++++++++
+>  include/media/videobuf2-core.h                  |  1 +
+>  2 files changed, 16 insertions(+)
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index f67e9f5531fa..ba05a8b9a095 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -3614,10 +3614,12 @@ void v4l2_ctrl_request_complete(struct media_request *req,
->  			continue;
+> diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
+> index 13c9d9e243dd..6fa46bfc620f 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-core.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-core.c
+> @@ -1351,6 +1351,21 @@ bool vb2_core_request_has_buffers(struct media_request *req)
+>  }
+>  EXPORT_SYMBOL_GPL(vb2_core_request_has_buffers);
 >  
->  		v4l2_ctrl_lock(ctrl);
+> +void *vb2_core_request_find_buffer_priv(struct media_request *req)
+> +{
+> +	struct media_request_object *obj;
+> +	struct vb2_buffer *vb;
 > +
->  		if (ref->req)
->  			ptr_to_ptr(ctrl, ref->req->p_req, ref->p_req);
->  		else
->  			ptr_to_ptr(ctrl, ctrl->p_cur, ref->p_req);
-> +
->  		v4l2_ctrl_unlock(ctrl);
->  	}
->  
-> @@ -3677,8 +3679,11 @@ void v4l2_ctrl_request_setup(struct media_request *req,
->  				}
->  			}
->  		}
-> -		if (!have_new_data)
-> +
-> +		if (!have_new_data) {
-> +			v4l2_ctrl_unlock(master);
->  			continue;
-> +		}
+> +	obj = media_request_object_find(req, &vb2_core_req_ops, NULL);
 
-Oops! Thanks for finding this. I'll fold this into the relevant patch in my tree.
+This increases the object refcount but it is never decreased here.
 
->  
->  		for (i = 0; i < master->ncontrols; i++) {
->  			if (master->cluster[i]) {
-> 
+> +	if (!obj)
+> +		return NULL;
+> +
+> +	vb = container_of(obj, struct vb2_buffer, req_obj);
+> +
+> +	return vb2_get_drv_priv(vb->vb2_queue);
+
+You need to add a media_request_object_put(obj); before returning here.
 
 Regards,
 
 	Hans
+
+> +}
+> +EXPORT_SYMBOL_GPL(vb2_core_request_find_buffer_priv);
+> +
+>  int vb2_core_prepare_buf(struct vb2_queue *q, unsigned int index, void *pb,
+>  			 struct media_request *req)
+>  {
+> diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
+> index 032bd1bec555..65c0cf6afb55 100644
+> --- a/include/media/videobuf2-core.h
+> +++ b/include/media/videobuf2-core.h
+> @@ -1153,4 +1153,5 @@ int vb2_verify_memory_type(struct vb2_queue *q,
+>  		enum vb2_memory memory, unsigned int type);
+>  
+>  bool vb2_core_request_has_buffers(struct media_request *req);
+> +void *vb2_core_request_find_buffer_priv(struct media_request *req);
+>  #endif /* _MEDIA_VIDEOBUF2_CORE_H */
+> 
