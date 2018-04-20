@@ -1,84 +1,78 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
-Date: Fri, 20 Apr 2018 13:47:03 -0500
-Message-ID: <CAL_Jsq+ZB-afhtDqq333qG9fs060WX8jkEqWmgOJyJVtztL2XA@mail.gmail.com>
-References: <20180418222905.10414-1-robh@kernel.org> <20180420165921.GD22369@sirena.org.uk>
+Subject: Re: [PATCH 4/9] ARM: dts: bcm2837: Add Raspberry Pi 3 B+
+Date: Fri, 20 Apr 2018 13:50:27 -0500
+Message-ID: <CAL_JsqKtNP_e2HRB2p03cJGedH2QVXc8+MZYVRNBZrRxVhhzXg@mail.gmail.com>
+References: <1523640478-4448-1-git-send-email-stefan.wahren@i2se.com>
+ <1523640478-4448-5-git-send-email-stefan.wahren@i2se.com>
+ <20180416204331.ft4ehpe5statsw4u@rob-hp-laptop>
+ <60625d11-c521-b004-d64c-f72c9c6aac83@i2se.com> <87muy1253i.fsf@anholt.net>
+ <656517811.10338.1524223449795@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180420165921.GD22369@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <656517811.10338.1524223449795@email.1und1.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Will Deacon <will.deacon@arm.com>, Alexander Graf <agraf@suse.de>, Eric Anholt <eric@anholt.net>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 20, 2018 at 11:59 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Wed, Apr 18, 2018 at 05:29:05PM -0500, Rob Herring wrote:
->> The current DT binding documentation format of freeform text is painful
->> to write, review, validate and maintain.
+On Fri, Apr 20, 2018 at 6:24 AM, Stefan Wahren <stefan.wahren@i2se.com> wrote:
+> Hi Rob,
+>
+>> Eric Anholt <eric@anholt.net> hat am 17. April 2018 um 18:02 geschrieben:
 >>
->> This is just an example of what a binding in the schema format looks
->> like. It's using jsonschema vocabulary in a YAML encoded document. Using
->> jsonschema gives us access to existing tooling. A YAML encoding gives us
->> something easy to edit.
+>>
+>> Stefan Wahren <stefan.wahren@i2se.com> writes:
+>>
+>> > Hi Rob,
+>> >
+>> > Am 16.04.2018 um 22:43 schrieb Rob Herring:
+>> >> On Fri, Apr 13, 2018 at 07:27:53PM +0200, Stefan Wahren wrote:
+>> >>> The Raspberry Pi 3 B+ has the following major differences compared
+>> >>> to the model 3 B:
+>> >>> * Microchip LAN7515 (Gigabit Ethernet)
+>> >>> * Cypress CYW43455 (802.11n/ac and BT 4.2)
+>> >>>
+>> >>> We need to add the USB LAN chip so the bootloader can add the MAC address.
+>> >>> This is necessary because there ain't a EEPROM or a valid OTP.
+>> >>>
+>> >>> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+>> >>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>> >>> ---
+>> >>>   arch/arm/boot/dts/Makefile                 |   1 +
+>> >>>   arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts | 108 +++++++++++++++++++++++++++++
+>> >>>   arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi |  27 ++++++++
+>> >>>   3 files changed, 136 insertions(+)
+>> >>>   create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
+>> >>>   create mode 100644 arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi
+>> >>>
+>> >>> ...
+>> >>> diff --git a/arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi b/arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi
+>> >>> new file mode 100644
+>> >>> index 0000000..169203c
+>> >>> --- /dev/null
+>> >>> +++ b/arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi
+>> >> Why the separate file? This can be shared?
+>> >
+>> > this comes from the assumption the RPi 3 B+ won't be the only RPi board
+>> > with a LAN7515. Should i fold it in the dts file as long as we don't
+>> > have a second board?
+>>
+>> I think it's great as is -- our other network chips are hooked up this
+>> way and it makes 3b+ match all the others.  Also, while I have no
+>> specific knowledge, it seems likely that this would get reused.
 >
-> It'd be useful to see some examples of how things like including by
-> reference other schema work.  It feels like something we should be able
-> to use more in a schema based thing but perhaps that's not viable with
-> realistic tooling.  In general this looks OK, especially with all the
-> meta comments about the language stripped out.
+> sorry for my impatience, but what's your opinion?
 
-There are several examples in the meta-schema and some of the core
-schema as references are used there quite a bit. It gets quite fun to
-follow with recursion. :)
-
-I think the need for references in device bindings should be pretty
-minimal. We'd probably mainly need references for some vendor specific
-properties which will need to reference some of our compound types. So
-we'd have something like this:
-
-vendor,a-string-array-prop:
-  $ref: "dt-core.yaml#/definitions/proptypes/stringarray"
-
-For common bindings, we don't have to reference them in device
-bindings (which should save lots of boilerplate). We can select and
-apply them based on presence of properties and that happens
-independent of the device binding. The device binding only needs
-define what the common binding cannot which is typically how many
-elements and what are they.
-
->
->> +    description: |
->> +      A variable number of interrupts warrants a description of what conditions
->
-> Like Stephen said the | looks odd.
-
-That's just how literal blocks in yaml are done.
-
->> +  interrupt-names:
->> +    # minItems must be specified here because the default would be 2
->> +    minItems: 1
->> +    items:
->> +      - const: "tx irq"
->> +      - const: "rx irq"
->
-> Any way to relate this to the interrupts property in the schema
-> language (eg, must have the less or equal number of elements)?
-
-I've wanted something like that, but there isn't any way that I've
-come up with. Generally, the "jsonschema way" is each schema is
-supposed to be independent of each other. There's some discussion
-about adding data dependent schema which might help in this case.
-
->
->> +  # Property names starting with '#' must be quoted
->
-> That's awkward :/  Perhaps just by convention quote all property names
-> for simplicity?
-
-Yes, perhaps we should. I have a formatting tool, I'll look into
-whether i can make it do that.
-
-Thanks for taking a look.
+It's fine as-is.
 
 Rob
