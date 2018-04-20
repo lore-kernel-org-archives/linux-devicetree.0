@@ -1,116 +1,113 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: msm8996: Add modem remoteproc
-Date: Thu, 19 Apr 2018 18:26:57 -0700
-Message-ID: <20180420012657.29895-1-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v2 08/10] dt-bindings: media: Document bindings for the
+ Sunxi-Cedrus VPU driver
+Date: Fri, 20 Apr 2018 01:31:59 +0000
+Message-ID: <CAAFQd5DT_xjUbZzFOoKk7_duiSZ8Awb1J=0dPEhVTBk0P3gppA@mail.gmail.com>
+References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
+ <20180419154536.17846-4-paul.kocialkowski@bootlin.com>
+ <1524153860.3416.9.camel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1524153860.3416.9.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Pawel Osciak <pawel@osciak.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, wens@csie.org, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Alexandre Courbot <acourbot@chromium.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>,
+ Joerg Roedel <joro@8bytes.org>, " <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the modem remoteproc node and the child smd-edge in order to be able
-to boot the modem Hexagon found in MSM8996 based devices.
+Hi Paul, Philipp,
 
-Also extend the tcsr mutex node size, to cover the registers at the end
-of the block, used for halting the modem subsystem.
+On Fri, Apr 20, 2018 at 1:04 AM Philipp Zabel <p.zabel@pengutronix.de>
+wrote:
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+> Hi Paul,
 
-This patch depends on the recent patch adding a few additional clocks to
-gcc-msm8996.
+> On Thu, 2018-04-19 at 17:45 +0200, Paul Kocialkowski wrote:
+> > This adds a device-tree binding document that specifies the properties
+> > used by the Sunxi-Cedurs VPU driver, as well as examples.
+> >
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > ---
+> >  .../devicetree/bindings/media/sunxi-cedrus.txt     | 50
+++++++++++++++++++++++
+> >  1 file changed, 50 insertions(+)
+> >  create mode 100644
+Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+> > new file mode 100644
+> > index 000000000000..71ad3f9c3352
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+> > @@ -0,0 +1,50 @@
+> > +Device-tree bindings for the VPU found in Allwinner SoCs, referred to
+as the
+> > +Video Engine (VE) in Allwinner literature.
+> > +
+> > +The VPU can only access the first 256 MiB of DRAM, that are DMA-mapped
+starting
+> > +from the DRAM base. This requires specific memory allocation and
+handling.
 
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 64 +++++++++++++++++++++++++++++++++--
- 1 file changed, 62 insertions(+), 2 deletions(-)
+And no IOMMU? Brings back memories.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 4010e2f1a177..70009b15ffd1 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -620,7 +620,6 @@
- 				pm8994_l31: l31 {};
- 				pm8994_l32: l32 {};
- 			};
--
- 		};
- 	};
- 
-@@ -637,7 +636,7 @@
- 
- 		tcsr_mutex_regs: syscon@740000 {
- 			compatible = "syscon";
--			reg = <0x740000 0x20000>;
-+			reg = <0x740000 0x40000>;
- 		};
- 
- 		tcsr: syscon@7a0000 {
-@@ -1850,6 +1849,67 @@
- 				power-domains = <&mmcc VENUS_CORE1_GDSC>;
- 			};
- 		};
-+
-+		remoteproc@2080000 {
-+			compatible = "qcom,msm8996-mss-pil";
-+
-+			reg = <0x2080000 0x100>,
-+			      <0x2180000 0x040>;
-+			reg-names = "qdsp6", "rmb";
-+
-+			interrupts-extended = <&intc 0 448 IRQ_TYPE_EDGE_RISING>,
-+					      <&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+					      <&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+					      <&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+					      <&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready",
-+					  "handover", "stop-ack";
-+
-+			clocks = <&xo_board>,
-+				 <&gcc GCC_MSS_CFG_AHB_CLK>,
-+				 <&rpmcc RPM_SMD_PCNOC_CLK>,
-+				 <&gcc GCC_MSS_Q6_BIMC_AXI_CLK>,
-+				 <&gcc GCC_BOOT_ROM_AHB_CLK>,
-+				 <&gcc GCC_MSS_GPLL0_DIV_CLK>,
-+				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
-+				 <&gcc GCC_MSS_MNOC_BIMC_AXI_CLK>,
-+				 <&rpmcc RPM_SMD_QDSS_CLK>;
-+
-+			clock-names = "xo", "iface", "pnoc", "bus",
-+				      "mem", "gpll0_mss_clk", "snoc_axi_clk",
-+				      "mnoc_axi_clk", "qdss";
-+
-+			mx-supply = <&pm8994_s2>;
-+			cx-supply = <&pm8994_s1>;
-+			pll-supply = <&pm8994_l12>;
-+
-+			resets = <&gcc GCC_MSS_RESTART>;
-+			reset-names = "mss_restart";
-+
-+			qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
-+
-+			qcom,smem-states = <&modem_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			status = "disabled";
-+
-+			mba {
-+				memory-region = <&mba_region>;
-+			};
-+
-+			mpss {
-+				memory-region = <&mpss_region>;
-+			};
-+
-+			smd-edge {
-+				interrupts = <0 449 IRQ_TYPE_EDGE_RISING>;
-+
-+				label = "modem";
-+				mboxes = <&apcs_glb 12>;
-+				qcom,smd-edge = <0>;
-+				qcom,remote-pid = <1>;
-+			};
-+		};
- 	};
- 
- 	sound: sound {
--- 
-2.16.2
+> > +
+> > +Required properties:
+> > +- compatible         : "allwinner,sun4i-a10-video-engine";
+> > +- memory-region         : DMA pool for buffers allocation;
+> > +- clocks             : list of clock specifiers, corresponding to
+entries in
+> > +                          the clock-names property;
+> > +- clock-names                : should contain "ahb", "mod" and "ram"
+entries;
+> > +- assigned-clocks       : list of clocks assigned to the VE;
+> > +- assigned-clocks-rates : list of clock rates for the clocks assigned
+to the VE;
+> > +- resets             : phandle for reset;
+> > +- interrupts         : should contain VE interrupt number;
+> > +- reg                        : should contain register base and length
+of VE.
+> > +
+> > +Example:
+> > +
+> > +reserved-memory {
+> > +     #address-cells = <1>;
+> > +     #size-cells = <1>;
+> > +     ranges;
+> > +
+> > +     /* Address must be kept in the lower 256 MiBs of DRAM for VE. */
+> > +     ve_memory: cma@4a000000 {
+> > +             compatible = "shared-dma-pool";
+> > +             reg = <0x4a000000 0x6000000>;
+> > +             no-map;
+> > +             linux,cma-default;
+> > +     };
+> > +};
+> > +
+> > +video-engine@1c0e000 {
+
+> This is not really required by any specification, and not as common as
+> gpu@..., but could this reasonably be called "vpu@1c0e000" to follow
+> somewhat-common practice?
+
+AFAIR the name is supposed to be somewhat readable for someone that doesn't
+know the hardware. To me, "video-engine" sounds more obvious than "vpu",
+but we actually use "codec" already, in case of MFC and JPEG codec on
+Exynos. If encode/decode is the only functionality of this block, I'd
+personally go with "codec". If it can do other things, e.g.
+scaling/rotation without encode/decode, I'd probably call it
+"video-processor".
+
+Best regards,
+Tomasz
