@@ -1,8 +1,8 @@
 From: David Veenstra <davidjulianveenstra@gmail.com>
-Subject: [PATCH v2 11/13] staging: iio: Documentation: Add missing sysfs docs
- for angle channel
-Date: Fri, 20 Apr 2018 21:31:37 +0200
-Message-ID: <e2eaff8115d8fd170767c76119cf6cdd2d1ebc92.1524247563.git.davidjulianveenstra@gmail.com>
+Subject: [PATCH v2 12/13] staging: iio: ad2s1200: Add scaling factor for
+ angle channel
+Date: Fri, 20 Apr 2018 21:31:48 +0200
+Message-ID: <9352ade3afee830795315b5931dfb316853dc094.1524247563.git.davidjulianveenstra@gmail.com>
 References: <cover.1524247563.git.davidjulianveenstra@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,57 +23,48 @@ To: lars@metafoo.de, jic23@kernel.org, pmeerw@pmeerw.net
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, robh+dt@kernel.org, knaack.h@gmx.de, daniel.baluta@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-The iio resolver drivers in staging use angle channels. This patch
-add missing documentation for this type of channel.
-
-As was discussed in [1], radians is chosen as the unit, to match the
-unit of angular velocity.
-
-[1] https://marc.info/?l=linux-driver-devel&m=152190078308330&w=2
+A fractional scaling factor of approximately 2 * Pi / (2^12 -1) is added,
+to scale the 12-bits angular position to radians.
 
 Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
 ---
-Change in v2:
-  - Introduces in this version.
+Changes in v2:
+  - This patch replaces the patch that changed the
+    the channel for angular position to inclination
+    channel.
 
- Documentation/ABI/testing/sysfs-bus-iio | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/staging/iio/resolver/ad2s1200.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 6a5f34b4d5b9..8ad0e55f99ee 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -190,6 +190,15 @@ Description:
- 		but should match other such assignments on device).
- 		Units after application of scale and offset are m/s^2.
- 
-+What:		/sys/bus/iio/devices/iio:deviceX/in_angl_x_raw
-+What:		/sys/bus/iio/devices/iio:deviceX/in_angl_y_raw
-+What:		/sys/bus/iio/devices/iio:deviceX/in_angl_z_raw
-+KernelVersion:	4.17
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Angle about axis x, y or z (may be arbitrarily assigned). Units
-+		after application of scale and offset are radians.
-+
- What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_x_raw
- What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_y_raw
- What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_z_raw
-@@ -297,6 +306,7 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_pressure_offset
- What:		/sys/bus/iio/devices/iio:deviceX/in_humidityrelative_offset
- What:		/sys/bus/iio/devices/iio:deviceX/in_magn_offset
- What:		/sys/bus/iio/devices/iio:deviceX/in_rot_offset
-+What:		/sys/bus/iio/devices/iio:deviceX/in_angl_offset
- KernelVersion:	2.6.35
- Contact:	linux-iio@vger.kernel.org
- Description:
-@@ -350,6 +360,7 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_humidityrelative_scale
- What:		/sys/bus/iio/devices/iio:deviceX/in_velocity_sqrt(x^2+y^2+z^2)_scale
- What:		/sys/bus/iio/devices/iio:deviceX/in_illuminance_scale
- What:		/sys/bus/iio/devices/iio:deviceX/in_countY_scale
-+What:		/sys/bus/iio/devices/iio:deviceX/in_angl_scale
- KernelVersion:	2.6.35
- Contact:	linux-iio@vger.kernel.org
- Description:
+diff --git a/drivers/staging/iio/resolver/ad2s1200.c b/drivers/staging/iio/resolver/ad2s1200.c
+index 6c56257be3b1..4f5dd28b174a 100644
+--- a/drivers/staging/iio/resolver/ad2s1200.c
++++ b/drivers/staging/iio/resolver/ad2s1200.c
+@@ -71,6 +71,17 @@ static int ad2s1200_read_raw(struct iio_dev *indio_dev,
+ 	switch (m) {
+ 	case IIO_CHAN_INFO_SCALE:
+ 		switch (chan->type) {
++		case IIO_ANGL:
++			/*
++			 * 2 * Pi / (2^12 - 1) ~= 2 * 103993 / (33102 * 0xFFF)
++			 *
++			 * Since there only fit 3 whole radians in 360 degrees,
++			 * usage of iio_convert_raw_to_processed for this
++			 * channel will be highly inaccurate.
++			 */
++			*val = 103993;
++			*val2 = 16551 * 0xFFF;
++			return IIO_VAL_FRACTIONAL;
+ 		case IIO_ANGL_VEL:
+ 			/*
+ 			 * 2 * Pi ~= 2 * 103993 / 33102
+@@ -133,6 +144,7 @@ static const struct iio_chan_spec ad2s1200_channels[] = {
+ 		.indexed = 1,
+ 		.channel = 0,
+ 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
++		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+ 	}, {
+ 		.type = IIO_ANGL_VEL,
+ 		.indexed = 1,
 -- 
 2.16.2
