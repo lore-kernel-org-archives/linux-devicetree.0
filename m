@@ -1,39 +1,53 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] arm64: dts: renesas: v3msk: add EtherAVB pins
-Date: Fri, 20 Apr 2018 14:28:51 +0300
-Message-ID: <ed7ddd72-4e52-0b2b-d2ef-1d407f638745@cogentembedded.com>
-References: <c42c9e9a-8fe8-5cad-0eeb-0c1fbd09f83c@cogentembedded.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 0/4] ARM: dts: am437x boards: Correct tps65218 irq type
+Date: Fri, 20 Apr 2018 14:38:18 +0300
+Message-ID: <20180420113822.17577-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <c42c9e9a-8fe8-5cad-0eeb-0c1fbd09f83c@cogentembedded.com>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, j-keerthy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/14/2018 11:30 PM, Sergei Shtylyov wrote:
+Hi,
 
-> Add the (previously omitted) EtherAVB pin data to the V3M Starter Kit
-> board's device tree.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
-> The patch is against the 'renesas-devel-20180314-v4.16-rc5' tag of Simon's
-> 'renesas.git repo. It depends on the R8A77970 PFC driver patch adding EtherAVB
-> pin groups (posted yesterday) in order to work properly...
+In linux-next I started to see: https://pastebin.com/wrDdptzh
+[    2.813985] ------------[ cut here ]------------
+[    2.818746] WARNING: CPU: 0 PID: 19 at /home/ujfalusi/work/kernel/github.omap-audio.linux-audio/drivers/irqchip/irq-gic.c:1016 gic_irq_domain_translate+0xd4/0xec
+[    2.833311] Modules linked in:
+[    2.836417] CPU: 0 PID: 19 Comm: kworker/0:2 Not tainted 4.17.0-rc1-next-20180420-00057-gffd03ee19b9b #182
+[    2.846113] Hardware name: Generic AM43 (Flattened Device Tree)
+[    2.852073] Workqueue: events deferred_probe_work_func
+...
 
-   The dependency has been now met, please merge this patch.
+Becasue most of the am437x boards had IRQ_TYPE_NONE for tps65218.
 
-MBR, Sergei
+According to the datasheet [1] the interrult line is low active, so fix up the board
+DTS files.
+
+Interestingly the am437x-sk-evm had IRQ_TYPE_LEVEL_HIGH, which is not matching
+with the datasheet.
+
+[1] http://www.ti.com/lit/ds/symlink/tps65218.pdf, page 8.
+
+Regards,
+Peter
+---
+Peter Ujfalusi (4):
+  ARM: dts: am437x-gp-evm: Correct tps65218 irq type
+  ARM: dts: am437x-cm-t43: Correct tps65218 irq type
+  ARM: dts: am437x-epos-evm: Correct tps65218 irq type
+  ARM: dts: am437x-sk-evm: Correct tps65218 irq type
+
+ arch/arm/boot/dts/am437x-cm-t43.dts  | 2 +-
+ arch/arm/boot/dts/am437x-gp-evm.dts  | 2 +-
+ arch/arm/boot/dts/am437x-sk-evm.dts  | 2 +-
+ arch/arm/boot/dts/am43x-epos-evm.dts | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
