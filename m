@@ -1,193 +1,84 @@
 From: Rob Herring <robh@kernel.org>
 Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
-Date: Fri, 20 Apr 2018 13:15:04 -0500
-Message-ID: <CAL_Jsq+1G61+E0wtVEkzann3Z=2Cr=2PkbDJ_OuaA5GysWZsXQ@mail.gmail.com>
-References: <20180418222905.10414-1-robh@kernel.org> <152424282214.46528.2511757264045171935@swboyd.mtv.corp.google.com>
+Date: Fri, 20 Apr 2018 13:47:03 -0500
+Message-ID: <CAL_Jsq+ZB-afhtDqq333qG9fs060WX8jkEqWmgOJyJVtztL2XA@mail.gmail.com>
+References: <20180418222905.10414-1-robh@kernel.org> <20180420165921.GD22369@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152424282214.46528.2511757264045171935@swboyd.mtv.corp.google.com>
+In-Reply-To: <20180420165921.GD22369@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree-spec@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Jonathan Cameron <jic23@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 20, 2018 at 11:47 AM, Stephen Boyd <sboyd@kernel.org> wrote:
-> Quoting Rob Herring (2018-04-18 15:29:05)
->> diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
->> new file mode 100644
->> index 000000000000..fe0a3bd1668e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/example-schema.yaml
->> @@ -0,0 +1,149 @@
->> +# SPDX-License-Identifier: BSD-2-Clause
->> +# Copyright 2018 Linaro Ltd.
->> +%YAML 1.2
->> +---
->> +# All the top-level keys are standard json-schema keywords except for
->> +# 'maintainers' and 'select'
->> +
->> +# $id is a unique idenifier based on the filename
->> +$id: "http://devicetree.org/schemas/example-schema.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +# Only 1 version supported for now
->> +version: 1
->> +
->> +title: An example schema annotated with jsonschema details
->> +
->> +maintainers:
->> +  - Rob Herring <robh@kernel.org>
->> +
->> +description: |
->> +  A more detailed multi-line description of the binding.
->> +
->> +  Details about the hardware device and any links to datasheets can go here.
->> +
->> +  The end of the description is marked by indentation less than the first line
->> +  in the description.
->> +
->> +select: false
->> +  # 'select' is a schema applied to a DT node to determine if this binding
->> +  # schema should be applied to the node. It is optional and by default the
->> +  # possible compatible strings are extracted and used to match.
+On Fri, Apr 20, 2018 at 11:59 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Wed, Apr 18, 2018 at 05:29:05PM -0500, Rob Herring wrote:
+>> The current DT binding documentation format of freeform text is painful
+>> to write, review, validate and maintain.
+>>
+>> This is just an example of what a binding in the schema format looks
+>> like. It's using jsonschema vocabulary in a YAML encoded document. Using
+>> jsonschema gives us access to existing tooling. A YAML encoding gives us
+>> something easy to edit.
 >
-> Can we get a concrete example here?
+> It'd be useful to see some examples of how things like including by
+> reference other schema work.  It feels like something we should be able
+> to use more in a schema based thing but perhaps that's not viable with
+> realistic tooling.  In general this looks OK, especially with all the
+> meta comments about the language stripped out.
 
-select: true
+There are several examples in the meta-schema and some of the core
+schema as references are used there quite a bit. It gets quite fun to
+follow with recursion. :)
 
-:) Which is apply to every node.
+I think the need for references in device bindings should be pretty
+minimal. We'd probably mainly need references for some vendor specific
+properties which will need to reference some of our compound types. So
+we'd have something like this:
 
-A better one is from the memory node schema ('$nodename' gets added :
+vendor,a-string-array-prop:
+  $ref: "dt-core.yaml#/definitions/proptypes/stringarray"
 
-select:
-  required: ["$nodename"]
-  properties:
-    $nodename:
-      oneOf:
-        - pattern: "^memory@[0-9a-f]*"
-        - const: "memory" # 'memory' only allowed for selecting
+For common bindings, we don't have to reference them in device
+bindings (which should save lots of boilerplate). We can select and
+apply them based on presence of properties and that happens
+independent of the device binding. The device binding only needs
+define what the common binding cannot which is typically how many
+elements and what are they.
 
-
-I expect the vast majority of device bindings will not use select at
-all and rely on compatible string matching.
-
->> +
->> +properties:
-> [...]
->> +
->> +  interrupts:
->> +    # Either 1 or 2 interrupts can be present
->> +    minItems: 1
->> +    maxItems: 2
->> +    items:
->> +      - description: tx or combined interrupt
->> +      - description: rx interrupt
->> +
+>
 >> +    description: |
->
-> The '|' is needed to make yaml happy?
-
-Yes, this is simply how you do literal text blocks in yaml.
-
-We don't really need for this one really, but for the top-level
-'description' we do. The long term intent is 'description' would be
-written in sphinx/rst and can be extracted into the DT spec (for
-common bindings). Grant has experimented with that some.
-
 >> +      A variable number of interrupts warrants a description of what conditions
->> +      affect the number of interrupts. Otherwise, descriptions on standard
->> +      properties are not necessary.
->> +
+>
+> Like Stephen said the | looks odd.
+
+That's just how literal blocks in yaml are done.
+
 >> +  interrupt-names:
 >> +    # minItems must be specified here because the default would be 2
 >> +    minItems: 1
 >> +    items:
 >> +      - const: "tx irq"
 >> +      - const: "rx irq"
->> +
+>
+> Any way to relate this to the interrupts property in the schema
+> language (eg, must have the less or equal number of elements)?
+
+I've wanted something like that, but there isn't any way that I've
+come up with. Generally, the "jsonschema way" is each schema is
+supposed to be independent of each other. There's some discussion
+about adding data dependent schema which might help in this case.
+
+>
 >> +  # Property names starting with '#' must be quoted
->> +  '#interrupt-cells':
->> +    # A simple case where the value must always be '2'.
->> +    # The core schema handles that this must be a single integer.
->> +    const: 2
->> +
->> +  interrupt-controller: {}
 >
-> Does '{}' mean nothing to see here?
+> That's awkward :/  Perhaps just by convention quote all property names
+> for simplicity?
 
-Yes. It's just an empty schema that's always valid.
-
->> +    # The core checks this is a boolean, so just have to list it here to be
->> +    # valid for this binding.
->> +
->> +  clock-frequency:
->> +    # The type is set in the core schema. Per device schema only need to set
->> +    # constraints on the possible values.
->> +    minimum: 100
->> +    maximum: 400000
->> +    # The value that should be used if the property is not present
->> +    default: 200
->> +
->
-> The 'default' field is neat. I look forward to the compiler using the
-> schema to insert defaults into the dtb if the properties aren't present
-> in the input file.
-
-That wasn't really my intention, but it's what the OS should use if
-property is not present. But at least for required properties, we
-could certainly do as you suggest.
-
->> +  foo-gpios:
->> +    maxItems: 1
->> +    description: A connection of the 'foo' gpio line.
->> +
->> +  vendor,int-property:
->> +    description: Vendor specific properties must have a description
->> +    type: integer # A type is also required
->> +    enum: [2, 4, 6, 8, 10]
->> +
->> +  vendor,bool-property:
->> +    description: Vendor specific properties must have a description
->> +    type: boolean
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - interrupt-controller
->
-> Can the required or optional parts go under each property instead of
-> having a different section?
-
-No, because then it is not json-schema language.
-
-> Or does that make the schema parser
-> difficult to implement?
-
-Yes, because then we have to implement a schema parser.
-
-> It may also make sense to negate this and
-> specify only the optional properties, or to require both optional and
-> required lists to make things more explicit at the cost of some
-> verbosity.
->
->> +
->> +examples:
->> +  - |
->> +    /{
->
-> Is the first slash required here?
-
-No, just leftover from being the root node in the example.
-
+Yes, perhaps we should. I have a formatting tool, I'll look into
+whether i can make it do that.
 
 Thanks for taking a look.
 
->> +          compatible = "vendor,soc4-ip", "vendor,soc1-ip";
->> +          reg = <0x1000 0x80>,
->> +                <0x3000 0x80>;
->> +          reg-names = "core", "aux";
->> +          interrupts = <10>;
->> +          interrupt-controller;
->> +    };
+Rob
