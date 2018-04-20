@@ -1,212 +1,74 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v3 0/7] Add tda998x (HDMI) support to atmel-hlcdc
-Date: Fri, 20 Apr 2018 13:22:04 +0200
-Message-ID: <20180420112204.GK4235@w540>
-References: <20180419162751.25223-1-peda@axentia.se>
- <20180420085235.GI4235@w540> <6354350.l8DgUyNhLT@avalon>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 4/9] ARM: dts: bcm2837: Add Raspberry Pi 3 B+
+Date: Fri, 20 Apr 2018 13:24:09 +0200 (CEST)
+Message-ID: <656517811.10338.1524223449795@email.1und1.de>
+References: <1523640478-4448-1-git-send-email-stefan.wahren@i2se.com>
+ <1523640478-4448-5-git-send-email-stefan.wahren@i2se.com>
+ <20180416204331.ft4ehpe5statsw4u@rob-hp-laptop>
+ <60625d11-c521-b004-d64c-f72c9c6aac83@i2se.com> <87muy1253i.fsf@anholt.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0280997715=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <6354350.l8DgUyNhLT@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Daniel Vetter <daniel.vetter@intel.com>, Peter Rosin <peda@axentia.se>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87muy1253i.fsf@anholt.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Will Deacon <will.deacon@arm.com>, Alexander Graf <agraf@suse.de>, Eric Anholt <eric@anholt.net>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
---===============0280997715==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="d8Lz2Tf5e5STOWUP"
-Content-Disposition: inline
-
-
---d8Lz2Tf5e5STOWUP
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Laurent,
-
-On Fri, Apr 20, 2018 at 01:18:13PM +0300, Laurent Pinchart wrote:
-> Hello,
->
-> On Friday, 20 April 2018 11:52:35 EEST jacopo mondi wrote:
-> > Hi Peter,
-> >     I've been a bit a pain in the arse for you recently, but please
-> > bear with me a bit more, and sorry for jumping late on the band wagon.
+> Eric Anholt <eric@anholt.net> hat am 17. April 2018 um 18:02 geschrieben:
+> 
+> 
+> Stefan Wahren <stefan.wahren@i2se.com> writes:
+> 
+> > Hi Rob,
 > >
-> > On Thu, Apr 19, 2018 at 06:27:44PM +0200, Peter Rosin wrote:
-> > > Hi!
-> > >
-> > > I naively thought that since there was support for both nxp,tda19988 (in
-> > > the tda998x driver) and the atmel-hlcdc, things would be a smooth ride.
-> > > But it wasn't, so I started looking around and realized I had to fix
-> > > things.
-> > >
-> > > In v1 and v2 I fixed things by making the atmel-hlcdc driver a master
-> > > component, but now in v3 I fix things by making the tda998x driver
-> > > a bridge instead. This was after a suggestion from Boris Brezillion
-> > > (the atmel-hlcdc maintainer), so there was some risk of bias ... but
-> > > after comparing what was needed, I too find the bridge approach better.
-> > >
-> > > In addition to the above, our PCB interface between the SAMA5D3 and the
-> > > HDMI encoder is only using 16 bits, and this has to be described
-> > > somewhere, or the atmel-hlcdc driver have no chance of selecting the
-> > > correct output mode. Since I have similar problems with a ds90c185 lvds
-> > > encoder I added patches to override the atmel-hlcdc output format via
-> > > DT properties compatible with the media video-interface binding and
-> > > things start to play together.
-> > >
-> > > Since this series superseeds the bridge series [1], I have included the
-> > > leftover bindings patch for the ti,ds90c185 here.
+> > Am 16.04.2018 um 22:43 schrieb Rob Herring:
+> >> On Fri, Apr 13, 2018 at 07:27:53PM +0200, Stefan Wahren wrote:
+> >>> The Raspberry Pi 3 B+ has the following major differences compared
+> >>> to the model 3 B:
+> >>> * Microchip LAN7515 (Gigabit Ethernet)
+> >>> * Cypress CYW43455 (802.11n/ac and BT 4.2)
+> >>>
+> >>> We need to add the USB LAN chip so the bootloader can add the MAC address.
+> >>> This is necessary because there ain't a EEPROM or a valid OTP.
+> >>>
+> >>> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+> >>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> >>> ---
+> >>>   arch/arm/boot/dts/Makefile                 |   1 +
+> >>>   arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts | 108 +++++++++++++++++++++++++++++
+> >>>   arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi |  27 ++++++++
+> >>>   3 files changed, 136 insertions(+)
+> >>>   create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
+> >>>   create mode 100644 arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi
+> >>>
+> >>> ...
+> >>> diff --git a/arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi b/arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi
+> >>> new file mode 100644
+> >>> index 0000000..169203c
+> >>> --- /dev/null
+> >>> +++ b/arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi
+> >> Why the separate file? This can be shared?
 > >
-> > I feel like this series would look better if it would make use of the
-> > proposed bridge media bus format support I have recently sent out [1]
-> > (and which was not there when you first sent v1).
-> >
-> > I understand your fundamental problem here is that the bus format
-> > that should be reported by your bridge is different from the ones
-> > actually supported by the TDA19988 chip, as the wirings ground some
-> > of the input pins.
-> >
-> > Although this is defintely something that could be described in the
-> > bridge's own OF node with the 'bus_width' property, and what I would do,
-> > now that you have made a bridge out from the tda19988 driver, is:
-> >
-> > 1) Set the bridge accepted input bus_format parsing its pin
-> > configuration, or default it if that's not implemented yet.
-> > This will likely be rgb888. You can do that using the trivial
-> > support for bridge input image formats implemented by my series.
-> > 2) Specify in the bridge endpoint a 'bus_width' of <16>
-> > 3) In your atmel-hlcd get both the image format of the bridge (rgb888)
-> > and parse the remote endpoint property 'bus_width' and get the <16>
-> > value back.
->
-> Parsing properties of remote nodes should be avoided as much as possible, as
-> they need to be interpreted in the context of the DT bindings related to the
-> compatible string applicable to that node. I'd rather have the bus_width
-> property in the local endpoint node.
+> > this comes from the assumption the RPi 3 B+ won't be the only RPi board 
+> > with a LAN7515. Should i fold it in the dts file as long as we don't 
+> > have a second board?
+> 
+> I think it's great as is -- our other network chips are hooked up this
+> way and it makes 3b+ match all the others.  Also, while I have no
+> specific knowledge, it seems likely that this would get reused.
 
-Right, I see...
-Well, in Peter's case, the bus width, being a consequence of
-wirings, can be described safely in both endpoints, right?
+sorry for my impatience, but what's your opinion?
 
->
-> > 4) Set the correct format in the atmel hlcd driver to accommodate a
-> > bridge that wants rgb888 on a 16 bit wide bus (that would be rgb565,
-> > or are there other possible combinations I am missing?)
-> >
-> > I would consider this better mostly because in this series you are
-> > creating a semantic for the whole DRM subsystem on the 'bus_width'
-> > property, where numerical values as '12', '16' etc are arbitrary tied
-> > to the selection of a media bus format. At least you should use a
-> > common set of defines [1] between the device tree and the driver,
-> > but this looks anyway fragile imho.
->
-> This I agree with though. Combining the remote bus format with the local bus
-> width should fix the problem without having to parse remote properties.
->
-> > Have I maybe missed some parts of the problem you are trying to solve
-> > here?
-> >
-> > Thank you
-> >    j
-> >
-> > [1] drm: bridge: Add support for static image formats
-> >     https://lwn.net/Articles/752296/
-> > [2] include/uapi/linux/media-bus-format.h
-> >
-> > > Anyway, this series solves some real issues for my HW.
-> > >
-> > > Cheers,
-> > > Peter
-> > >
-> > > Changes since v2   https://lkml.org/lkml/2018/4/17/385
-> > > - patch 2/7 fixed spelling and added an example
-> > > - patch 4/7 parse the DT up front and store the result indexed by encoder
-> > > - old patch 5/6 and 6/6 dropped
-> > > - patch 5-7/7 are new and makes the tda998x driver a drm_bridge
-> > >
-> > > Changes since v1   https://lkml.org/lkml/2018/4/9/294
-> > > - added reviewed-by from Rob to patch 1/6
-> > > - patch 2/6 changed so that the bus format override is in the endpoint
-> > >   DT node, and follows the binding of media video-interfaces.
-> > > - patch 3/6 is new, it adds drm_of_media_bus_fmt which parses above
-> > >   media video-interface binding (partially).
-> > > - patch 4/6 now makes use of the above helper (and also fixes problems
-> > >   with the 3/5 patch from v1 when no override was specified).
-> > > - do not mention unrelated connector display_info details in the cover
-> > >   letter and commit messages.
-> > >
-> > > [1]
-> > > "Bridge" series v2   https://lkml.org/lkml/2018/3/26/610
-> > > "Bridge" series v1   https://lkml.org/lkml/2018/3/17/221
-> > >
-> > > Peter Rosin (7):
-> > >   dt-bindings: display: bridge: lvds-transmitter: add ti,ds90c185
-> > >   dt-bindings: display: atmel: optional video-interface of endpoints
-> > >   drm: of: introduce drm_of_media_bus_fmt
-> > >   drm/atmel-hlcdc: support bus-width (12/16/18/24) in endpoint nodes
-> > >   drm/i2c: tda998x: find the drm_device via the drm_connector
-> > >   drm/i2c: tda998x: split encoder and component functions from the work
-> > >   drm/i2c: tda998x: register as a drm bridge
-> > >
-> > >  .../devicetree/bindings/display/atmel/hlcdc-dc.txt |  26 +++
-> > >  .../bindings/display/bridge/lvds-transmitter.txt   |   8 +-
-> > >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c     |  71 ++++++--
-> > >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h       |   2 +
-> > >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c   |  40 +++-
-> > >  drivers/gpu/drm/drm_of.c                           |  38 ++++
-> > >  drivers/gpu/drm/i2c/tda998x_drv.c                  | 201 ++++++++++++++--
-> > >  include/drm/drm_of.h                               |   7 +
-> > >  8 files changed, 342 insertions(+), 51 deletions(-)
->
-> --
-> Regards,
->
-> Laurent Pinchart
->
->
->
-
---d8Lz2Tf5e5STOWUP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJa2c1cAAoJEHI0Bo8WoVY8mTYP/ireNw+s3433VFFdGe6ODpnG
-DFqSsw1xM594JlbB1TpR3t6vV5bxCWb1PwaDqbpN0G2S+RpD06WLM1gcHe/9/caa
-R8yF6wBxtM+OAIzU8SAsCjTJA0LY1yCmivjuh88my0BMOtGKg8Xn6Ztqjh9XfL71
-gwbpHiJr24a2GTxAKk0OvMB4hmXIVEw3DsOnxmDJ/wLUiuTFLJYcAzb/8FcUDiQT
-krEEa90OOAY+6IOW9veNYAO7E9Q1XnUEt7Lkd9ZQ3VFDaVLNuu3VEokUB8K9TyxR
-pxJbOtgnBtKIcO/fmESOf0h5rQn7R5nzg2myk0BZkgWrsy5wvFz1STNjwdHRwocF
-HceiknS5ldrCZxfRlkRDm+1/uqs4XD5YyIpZYMQVkOSB9SUjIBHOXdfAT0Wbbti0
-f3tFPrbE8ygO6tKpwFXh5ZMiQJk2zJucrDDZ7o0fWZs1dwf3bC9BzAEAfoOl3Co/
-jIq4/P2v+Y1HQJKK4gcRDXud8UEo/zx8iMPRGvzMim8OZywrxue5cc0pId09UQjm
-gEM+jSDYRh1n+R92kE6FgwmBpVvYG1XHJ3Z/kfBPIoWxnzdV8B/HMW5WN18+hN85
-Gpdu6W5EA91Zl7Qh5j2yDcdh+U9PX3SZxOjjYjgJGbEW8CGrsTa2LMIx0cafJ/Bz
-M2r5E3k/oT7t/kXf8Tf3
-=mh3I
------END PGP SIGNATURE-----
-
---d8Lz2Tf5e5STOWUP--
-
---===============0280997715==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0280997715==--
+Stefan
