@@ -1,32 +1,50 @@
-From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: add reset binding on stm32mp157c
-Date: Fri, 20 Apr 2018 09:40:30 +0000
-Message-ID: <26cab19f-e8ea-edf1-9ee7-e7a0cc589d2d@st.com>
-References: <1524215347-10600-1-git-send-email-gabriel.fernandez@st.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 5/7] drm/i2c: tda998x: find the drm_device via the drm_connector
+Date: Fri, 20 Apr 2018 12:41:14 +0300
+Message-ID: <1995876.dqZyKbpDZd@avalon>
+References: <20180419162751.25223-1-peda@axentia.se> <20180419162751.25223-6-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524215347-10600-1-git-send-email-gabriel.fernandez@st.com>
-Content-Language: en-US
-Content-ID: <03FBC517EE0B5E4BBA83A4031F655B8F@st.com>
+In-Reply-To: <20180419162751.25223-6-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Nicolas Ferre <nicolas.ferre@microchip.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DQpPbiAwNC8yMC8yMDE4IDExOjA5IEFNLCBnYWJyaWVsLmZlcm5hbmRlekBzdC5jb20gd3JvdGU6
-DQo+IEZyb206IEdhYnJpZWwgRmVybmFuZGV6IDxnYWJyaWVsLmZlcm5hbmRlekBzdC5jb20+DQo+
-IA0KPiBUaGlzIHBhdGNoIGFkZHMgcmVzZXQgYmluZGluZyBmaWxlLg0KPiANCj4gU2lnbmVkLW9m
-Zi1ieTogR2FicmllbCBGZXJuYW5kZXogPGdhYnJpZWwuZmVybmFuZGV6QHN0LmNvbT4NCj4gLS0t
-DQo+ICAgYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJtcDE1N2MuZHRzaSB8IDEgKw0KPiAgIDEgZmls
-ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL3N0bTMybXAxNTdjLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9zdG0zMm1wMTU3Yy5k
-dHNpDQo+IGluZGV4IGJjM2VkZGMuLjdlOTFmZDYgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL3N0bTMybXAxNTdjLmR0c2kNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJt
-cDE1N2MuZHRzaQ0KPiBAQCAtNSw2ICs1LDcgQEANCj4gICAgKi8NCj4gICAjaW5jbHVkZSA8ZHQt
-YmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPg0KPiAgICNpbmNsdWRlIDxk
-dC1iaW5kaW5ncy9jbG9jay9zdG0zMm1wMS1jbGtzLmg+DQo+ICsjaW5jbHVkZSA8ZHQtYmluZGlu
-Z3MvcmVzZXQvc3RtMzJtcDEtcmVzZXRzLmg+DQo+ICAgDQo+ICAgLyB7DQo+ICAgCSNhZGRyZXNz
-LWNlbGxzID0gPDE+Ow0KPiANCg0KUmV2aWV3ZWQtYnk6IEFtZWxpZSBEZWxhdW5heSA8YW1lbGll
-LmRlbGF1bmF5QHN0LmNvbT4=
+Hi Peter,
+
+Thank you for the patch.
+
+On Thursday, 19 April 2018 19:27:49 EEST Peter Rosin wrote:
+> This prepares for being a drm_bridge which will not register the
+> encoder. That makes the connector the better choice.
+> 
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  drivers/gpu/drm/i2c/tda998x_drv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c
+> b/drivers/gpu/drm/i2c/tda998x_drv.c index cd3f0873bbdd..8f6e013f2b87 100644
+> --- a/drivers/gpu/drm/i2c/tda998x_drv.c
+> +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
+> @@ -630,7 +630,7 @@ static void tda998x_detect_work(struct work_struct
+> *work) {
+>  	struct tda998x_priv *priv =
+>  		container_of(work, struct tda998x_priv, detect_work);
+> -	struct drm_device *dev = priv->encoder.dev;
+> +	struct drm_device *dev = priv->connector.dev;
+> 
+>  	if (dev)
+>  		drm_kms_helper_hotplug_event(dev);
+
+
+-- 
+Regards,
+
+Laurent Pinchart
