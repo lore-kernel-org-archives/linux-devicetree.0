@@ -1,40 +1,84 @@
-Return-Path: <SRS0=jzey=HN=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-Sender: geert.uytterhoeven@gmail.com
-In-Reply-To: <1524227297-24955-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 2/2] arm64: dts: renesas: Add Renesas Ebisu board support
+Date: Fri, 20 Apr 2018 21:28:17 +0900
+Message-Id: <1524227297-24955-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1524227297-24955-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1524227297-24955-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1524227297-24955-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 24 Apr 2018 10:31:57 +0200
-Message-ID: <CAMuHMdV2hVjPXZpCk6cGNUxcgLRkW0Wk=Dj=iKa_AGAGknb0Cg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: renesas: Add Renesas Ebisu board support
-Content-Type: text/plain; charset="UTF-8"
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Apr 20, 2018 at 2:28 PM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
->
-> Basic support for the Renesas Ebisu board based on R-Car E3:
->   - Memory,
->   - Main crystal,
->   - Serial console,
->
-> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> [shimoda: rebase and add SPDX-License-Identifier]
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Basic support for the Renesas Ebisu board based on R-Car E3:
+  - Memory,
+  - Main crystal,
+  - Serial console,
 
-Gr{oetje,eeting}s,
+Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+[shimoda: rebase and add SPDX-License-Identifier]
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ arch/arm64/boot/dts/renesas/Makefile           |  1 +
+ arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts | 37 ++++++++++++++++++++++++++
+ 2 files changed, 38 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
 
-                        Geert
-
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index 5ede060..a235961 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -10,4 +10,5 @@ dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-xs.dtb
+ dtb-$(CONFIG_ARCH_R8A77965) += r8a77965-salvator-x.dtb r8a77965-salvator-xs.dtb
+ dtb-$(CONFIG_ARCH_R8A77970) += r8a77970-eagle.dtb r8a77970-v3msk.dtb
+ dtb-$(CONFIG_ARCH_R8A77980) += r8a77980-condor.dtb
++dtb-$(CONFIG_ARCH_R8A77990) += r8a77990-ebisu.dtb
+ dtb-$(CONFIG_ARCH_R8A77995) += r8a77995-draak.dtb
+diff --git a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+new file mode 100644
+index 0000000..63ee134
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+@@ -0,0 +1,37 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Device Tree Source for the ebisu board
++ *
++ * Copyright (C) 2018 Renesas Electronics Corp.
++ */
++
++/dts-v1/;
++#include "r8a77990.dtsi"
++
++/ {
++	model = "Renesas Ebisu board based on r8a77990";
++	compatible = "renesas,ebisu", "renesas,r8a77990";
++
++	aliases {
++		serial0 = &scif2;
++	};
++
++	chosen {
++		bootargs = "ignore_loglevel";
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@48000000 {
++		device_type = "memory";
++		/* first 128MB is reserved for secure area. */
++		reg = <0x0 0x48000000 0x0 0x38000000>;
++	};
++};
++
++&extal_clk {
++	clock-frequency = <48000000>;
++};
++
++&scif2 {
++	status = "okay";
++};
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+1.9.1
