@@ -1,10 +1,12 @@
 From: <patrice.chotard@st.com>
-Subject: [PATCH 0/5] ARM: dts: STi: Fix complain about IRQ_TYPE_NONE_usage
-Date: Fri, 20 Apr 2018 17:54:39 +0200
-Message-ID: <1524239684-25463-1-git-send-email-patrice.chotard@st.com>
+Subject: [PATCH 3/5] ARM: dts: stih407: Fix complain about IRQ_TYPE_NONE usage
+Date: Fri, 20 Apr 2018 17:54:42 +0200
+Message-ID: <1524239684-25463-4-git-send-email-patrice.chotard@st.com>
+References: <1524239684-25463-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524239684-25463-1-git-send-email-patrice.chotard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 Cc: patrice.chotard@st.com
@@ -12,26 +14,29 @@ List-Id: devicetree@vger.kernel.org
 
 From: Patrice Chotard <patrice.chotard@st.com>
 
-Fix the STi following DT files which make usage of IRQ_TYPE_NONE flag:
- _ stih407-family.dtsi
- _ stih407-pinctrl.dtsi
- _ stih407.dtsi
- _ stih410.dtsi
- _ stihxxx-b2120.dtsi  
+Since commit 83a86fbb5b56 ("irqchip/gic: Loudly complain about the use of IRQ_TYPE_NONE")
+kernel is complaining about the IRQ_TYPE_NONE usage which shouldn't
+be used.
 
-Patrice Chotard (5):
-  ARM: dts: stih407-family: Fix complain about IRQ_TYPE_NONE usage
-  ARM: dts: stih407-pinctrl: Fix complain about IRQ_TYPE_NONE usage
-  ARM: dts: stih407: Fix complain about IRQ_TYPE_NONE usage
-  ARM: dts: stih410: Fix complain about IRQ_TYPE_NONE usage
-  ARM: dts: stihxxx-b2120: Fix complain about IRQ_TYPE_NONE usage
+Use IRQ_TYPE_LEVEL_HIGH instead.
 
- arch/arm/boot/dts/stih407-family.dtsi  | 52 +++++++++++++++++-----------------
- arch/arm/boot/dts/stih407-pinctrl.dtsi | 10 +++----
- arch/arm/boot/dts/stih407.dtsi         |  2 +-
- arch/arm/boot/dts/stih410.dtsi         | 18 ++++++------
- arch/arm/boot/dts/stihxxx-b2120.dtsi   |  4 +--
- 5 files changed, 43 insertions(+), 43 deletions(-)
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+---
+ arch/arm/boot/dts/stih407.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm/boot/dts/stih407.dtsi b/arch/arm/boot/dts/stih407.dtsi
+index 57efc87dec2b..5b7951ffc350 100644
+--- a/arch/arm/boot/dts/stih407.dtsi
++++ b/arch/arm/boot/dts/stih407.dtsi
+@@ -108,7 +108,7 @@
+ 				reg = <0x8d04000 0x1000>;
+ 				reg-names = "hdmi-reg";
+ 				#sound-dai-cells = <0>;
+-				interrupts = <GIC_SPI 106 IRQ_TYPE_NONE>;
++				interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
+ 				interrupt-names	= "irq";
+ 				clock-names = "pix",
+ 					      "tmds",
 -- 
 1.9.1
