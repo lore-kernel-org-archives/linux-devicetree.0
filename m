@@ -1,63 +1,33 @@
-From: Pascal Roeleven <dev@pascalroeleven.nl>
-Subject: [PATCH] ARM: dts: sun4i: Fix incorrect clocks for displays
-Date: Fri, 20 Apr 2018 11:18:10 +0200
-Message-ID: <20180420091810.2130-1-dev@pascalroeleven.nl>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 2/5] arm64: dts: renesas: r8a77970: add VSPD support
+Date: Fri, 20 Apr 2018 11:31:25 +0200
+Message-ID: <20180420093125.apsnijk744z2g5l2@verge.net.au>
+References: <1523520841-16455-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1523520841-16455-3-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: linux-sunxi@googlegroups.com, Pascal Roeleven <dev@pascalroeleven.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1523520841-16455-3-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: magnus.damm@gmail.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
 List-Id: devicetree@vger.kernel.org
 
-Some displays on SUN4i devices wouldn't properly stay on unless 'clk_ignore_unused' is used.
+On Thu, Apr 12, 2018 at 10:13:58AM +0200, Jacopo Mondi wrote:
+> From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> Describe VSPD0 in the R8A77970 device tree; it will be used by DU in
+> the next patch...
+> 
+> Based on the original (and large) patch by Daisuke Matsushita
+> <daisuke.matsushita.ns@hitachi.com>.
+> 
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Change the duplicate clocks to the probably intended ones.
-
-Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
----
- arch/arm/boot/dts/sun4i-a10.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index 77e8436b..3a1c6b45 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -76,7 +76,7 @@
- 			allwinner,pipeline = "de_fe0-de_be0-lcd0-hdmi";
- 			clocks = <&ccu CLK_AHB_LCD0>, <&ccu CLK_AHB_HDMI0>,
- 				 <&ccu CLK_AHB_DE_BE0>, <&ccu CLK_AHB_DE_FE0>,
--				 <&ccu CLK_DE_BE0>, <&ccu CLK_AHB_DE_FE0>,
-+				 <&ccu CLK_DE_BE0>, <&ccu CLK_DE_FE0>,
- 				 <&ccu CLK_TCON0_CH1>, <&ccu CLK_HDMI>,
- 				 <&ccu CLK_DRAM_DE_FE0>, <&ccu CLK_DRAM_DE_BE0>;
- 			status = "disabled";
-@@ -88,7 +88,7 @@
- 			allwinner,pipeline = "de_fe0-de_be0-lcd0";
- 			clocks = <&ccu CLK_AHB_LCD0>, <&ccu CLK_AHB_DE_BE0>,
- 				 <&ccu CLK_AHB_DE_FE0>, <&ccu CLK_DE_BE0>,
--				 <&ccu CLK_AHB_DE_FE0>, <&ccu CLK_TCON0_CH0>,
-+				 <&ccu CLK_DE_FE0>, <&ccu CLK_TCON0_CH0>,
- 				 <&ccu CLK_DRAM_DE_FE0>, <&ccu CLK_DRAM_DE_BE0>;
- 			status = "disabled";
- 		};
-@@ -99,7 +99,7 @@
- 			allwinner,pipeline = "de_fe0-de_be0-lcd0-tve0";
- 			clocks = <&ccu CLK_AHB_TVE0>, <&ccu CLK_AHB_LCD0>,
- 				 <&ccu CLK_AHB_DE_BE0>, <&ccu CLK_AHB_DE_FE0>,
--				 <&ccu CLK_DE_BE0>, <&ccu CLK_AHB_DE_FE0>,
-+				 <&ccu CLK_DE_BE0>, <&ccu CLK_DE_FE0>,
- 				 <&ccu CLK_TCON0_CH1>, <&ccu CLK_DRAM_TVE0>,
- 				 <&ccu CLK_DRAM_DE_FE0>, <&ccu CLK_DRAM_DE_BE0>;
- 			status = "disabled";
--- 
-2.14.1
+Thanks, applied.
