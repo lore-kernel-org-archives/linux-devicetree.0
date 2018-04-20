@@ -1,75 +1,69 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH] ARM: tegra: fix ulpi regression on tegra20
-Date: Fri, 20 Apr 2018 13:50:10 +0300
-Message-ID: <4f2ac009-8618-4b4d-e137-a5fd4907a56f@gmail.com>
-References: <20180219151252.29289-1-marcel@ziswiler.com>
- <6600596.BijQW1iq1K@ax5200p>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 7/7] drm/i2c: tda998x: register as a drm bridge
+Date: Fri, 20 Apr 2018 11:53:38 +0100
+Message-ID: <20180420105337.GX16141@n2100.armlinux.org.uk>
+References: <20180419162751.25223-8-peda@axentia.se>
+ <201804201731.D3OnDg0p%fengguang.wu@intel.com>
+ <4e9bd91c-6b29-cdd2-9e1d-1728311ddb81@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6600596.BijQW1iq1K@ax5200p>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <4e9bd91c-6b29-cdd2-9e1d-1728311ddb81@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Dietrich <marvin24@gmx.de>, Marcel Ziswiler <marcel@ziswiler.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+To: Peter Rosin <peda@axentia.se>
+Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20.04.2018 11:52, Marc Dietrich wrote:
-> Hi Marcel,
+On Fri, Apr 20, 2018 at 12:49:42PM +0200, Peter Rosin wrote:
+> On 2018-04-20 12:41, kbuild test robot wrote:
+> > Hi Peter,
+> > 
+> > I love your patch! Yet something to improve:
 > 
-> Am Montag, 19. Februar 2018, 16:12:52 CEST schrieb Marcel Ziswiler:
->> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
->>
->> Since commit f8f8f1d04494 ("clk: Don't touch hardware when reparenting
->> during registration") ULPI has been broken on Tegra20 leading to the
->> following error message during boot:
->>
->> [    1.974698] ulpi_phy_power_on: ulpi write failed
->> [    1.979384] tegra-ehci c5004000.usb: Failed to power on the phy
->> [    1.985434] tegra-ehci: probe of c5004000.usb failed with error -110
->>
->> Debugging through the changes and finally also consulting the TRM
->> revealed that rather than the CDEV2 clock off OSC requiring such pin
->> muxing actually the PLL_P_OUT4 clock is in use. It looks like so far it
->> just worked by chance of that one having been enabled which Stephen's
->> commit now changed when reparenting sclk away from pll_p_out4 leaving
->> that one disabled. Fix this by properly assigning the PLL_P_OUT4 clock
->> as the ULPI PHY clock.
+> Yup, right you are!
 > 
-> I booted 4.17-rc1 (which includes this fix) on an AC100 (T20 paz00 board) and 
-> the error above is still there. Surprisingly the error vanishes when I revert 
-> your patch. So this patch actually *causes* the problem above on my board. 
-> Could it be, that we need all four clocks? Dimitry mentioned on IRC that it 
-> could also be a problem in the clock init table. I don't have the technical 
-> background myself to fix it, but I still wonder what could be so different 
-> between TrimSlice and AC100.
+> > [auto build test ERROR on drm/drm-next]
+> > [also build test ERROR on v4.17-rc1 next-20180420]
+> > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> > 
+> > url:    https://github.com/0day-ci/linux/commits/Peter-Rosin/Add-tda998x-HDMI-support-to-atmel-hlcdc/20180420-160131
+> > base:   git://people.freedesktop.org/~airlied/linux.git drm-next
+> > config: i386-randconfig-a0-201815 (attached as .config)
+> > compiler: gcc-4.9 (Debian 4.9.4-2) 4.9.4
+> > reproduce:
+> >         # save the attached .config to linux build tree
+> >         make ARCH=i386 
+> > 
+> > All errors (new ones prefixed by >>):
+> > 
+> >    drivers/gpu/drm/i2c/tda998x_drv.c: In function 'tda998x_probe':
+> >>> drivers/gpu/drm/i2c/tda998x_drv.c:1859:16: error: 'struct drm_bridge' has no member named 'of_node'
+> >      bridge->bridge.of_node = dev->of_node;
+> >                    ^
+> 
+> Anybody got a better fix than this?
+> 
+> #ifdef CONFIG_OF
+> 	bridge->bridge.of_node = dev->of_node;
+> #endif
 
-I managed to find CDEV clocks in TRM this time. Seems assigning CDEV2 clock to
-"ulpi-link" was correct and both CDEV2 and PLL_P_OUT4 should be enabled, CDEV2
-should gate the PLL_P_OUT4 that feeds USB HW and PLL_P_OUT4 should be
-always-enabled because it is enabled by init_table, but apparently it is getting
-disabled erroneously.
+How about the bridge code provides a helper to do this, something like:
 
-Marcel, could you please revert your patch, add
-"trace_event=clk_enable,clk_disable,clk_set_parent tp_printk" to kernels cmdline
-and post the log?
+static inline void bridge_set_device(struct drm_bridge *bridge,
+				     struct device *dev)
+{
+#ifdef CONFIG_OF
+	bridge->of_node = dev->of_node;
+#endif
+}
 
-It looks like there is some clk framework bug, but just in case please also try
-to apply this patch:
+which (a) nicely hides the firmware flavour, and (b) hides the ifdef in
+the bridge header where it belongs.  If the bridge code needs to be
+converted to fwnode in the future, at least this would be abstracted
+from the drivers.
 
-diff --git a/drivers/clk/tegra/clk-tegra-periph.c
-b/drivers/clk/tegra/clk-tegra-periph.c
-index 2acba2986bc6..407bd0c0ac2f 100644
---- a/drivers/clk/tegra/clk-tegra-periph.c
-+++ b/drivers/clk/tegra/clk-tegra-periph.c
-@@ -1024,7 +1024,7 @@ static void __init init_pllp(void __iomem *clk_base, void
-__iomem *pmc_base,
-                if (dt_clk) {
-                        clk = tegra_clk_register_pll_out("pll_p_out4",
-                                        "pll_p_out4_div", clk_base + PLLP_OUTB,
--                                       17, 16, CLK_IGNORE_UNUSED |
-+                                       17, 16, CLK_IS_CRITICAL |
-                                        CLK_SET_RATE_PARENT, 0,
-                                        &PLLP_OUTB_lock);
-                        *dt_clk = clk;
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
