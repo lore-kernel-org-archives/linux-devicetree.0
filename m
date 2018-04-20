@@ -1,80 +1,117 @@
-From: Alexandre Courbot <acourbot@chromium.org>
-Subject: Re: [PATCH v2 02/10] media-request: Add a request complete operation
- to allow m2m scheduling
-Date: Fri, 20 Apr 2018 07:38:57 +0000
-Message-ID: <CAPBb6MVuyN+NdCrLQaM-7Rv0SyutgQjORBU=rZvq-dKs6RDjQA@mail.gmail.com>
-References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com> <20180419154124.17512-3-paul.kocialkowski@bootlin.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 09/10] ARM: dts: sun7i-a20: Add Video
+ Engine and reserved memory nodes
+Date: Fri, 20 Apr 2018 09:39:08 +0200
+Message-ID: <20180420073908.nkcbsdxibnzkqski@flea>
+References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
+ <20180419154536.17846-5-paul.kocialkowski@bootlin.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419154124.17512-3-paul.kocialkowski@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com, Mauro Carvalho Chehab <mchehab@kernel.org>, robh+dt@kernel.org, mark.rutland@arm.com, Maxime Ripard <maxime.ripard@bootlin.com>, wens@csie.org, Pawel Osciak <pawel@osciak.com>, Marek Szyprowski <m.szyprowski@samsung.com>, kyungmin.park@samsung.com, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, p.zabel@pengutronix.de, arnd@arndb.de, Tomasz Figa <tfiga@chromium.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gx2hl7khsqiaus56"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKFS43LAKGQEU4P2F2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180419154536.17846-5-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 20, 2018 at 12:43 AM Paul Kocialkowski <
-paul.kocialkowski@bootlin.com> wrote:
 
-> When using the request API in the context of a m2m driver, the
-> operations that come with a m2m run scheduling call in their
-> (m2m-specific) ioctl handler are delayed until the request is queued
-> (for instance, this includes queuing buffers and streamon).
+--gx2hl7khsqiaus56
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-> Thus, the m2m run scheduling calls are not called in due time since the
-> request AP's internal plumbing will (rightfully) use the relevant core
-> functions directly instead of the ioctl handler.
-
-> This ends up in a situation where nothing happens if there is no
-> run-scheduling ioctl called after queuing the request.
-
-> In order to circumvent the issue, a new media operation is introduced,
-> called at the time of handling the media request queue ioctl. It gives
-> m2m drivers a chance to schedule a m2m device run at that time.
-
-> The existing req_queue operation cannot be used for this purpose, since
-> it is called with the request queue mutex held, that is eventually needed
-> in the device_run call to apply relevant controls.
-
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+On Thu, Apr 19, 2018 at 05:45:35PM +0200, Paul Kocialkowski wrote:
+> This adds nodes for the Video Engine and the associated reserved memory
+> for the Allwinner A20. Up to 96 MiB of memory are dedicated to the VPU.
+> 
+> The VPU can only map the first 256 MiB of DRAM, so the reserved memory
+> pool has to be located in that area. Following Allwinner's decision in
+> downstream software, the last 96 MiB of the first 256 MiB of RAM are
+> reserved for this purpose.
+> 
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 > ---
->   drivers/media/media-request.c | 3 +++
->   include/media/media-device.h  | 2 ++
->   2 files changed, 5 insertions(+)
-
-> diff --git a/drivers/media/media-request.c b/drivers/media/media-request.c
-> index 415f7e31019d..28ac5ccfe6a2 100644
-> --- a/drivers/media/media-request.c
-> +++ b/drivers/media/media-request.c
-> @@ -157,6 +157,9 @@ static long media_request_ioctl_queue(struct
-media_request *req)
->                  media_request_get(req);
->          }
-
-> +       if (mdev->ops->req_complete)
-> +               mdev->ops->req_complete(req);
+>  arch/arm/boot/dts/sun7i-a20.dtsi | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+> index bd0cd3204273..cb6d82065dcf 100644
+> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+> @@ -163,6 +163,20 @@
+>  		reg = <0x40000000 0x80000000>;
+>  	};
+>  
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
 > +
->          return ret;
->   }
+> +		/* Address must be kept in the lower 256 MiBs of DRAM for VE. */
+> +		ve_memory: cma@4a000000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x4a000000 0x6000000>;
+> +			no-map;
 
-> diff --git a/include/media/media-device.h b/include/media/media-device.h
-> index 07e323c57202..c7dcf2079cc9 100644
-> --- a/include/media/media-device.h
-> +++ b/include/media/media-device.h
-> @@ -55,6 +55,7 @@ struct media_entity_notify {
->    * @req_alloc: Allocate a request
->    * @req_free: Free a request
->    * @req_queue: Queue a request
-> + * @req_complete: Complete a request
->    */
->   struct media_device_ops {
->          int (*link_notify)(struct media_link *link, u32 flags,
-> @@ -62,6 +63,7 @@ struct media_device_ops {
->          struct media_request *(*req_alloc)(struct media_device *mdev);
->          void (*req_free)(struct media_request *req);
->          int (*req_queue)(struct media_request *req);
-> +       void (*req_complete)(struct media_request *req);
+I'm not sure why no-map is needed.
 
-This is called *before* the request is actually run, isn't it? In that
-case, wouldn't something like "req_schedule" be less confusing?
-req_complete implies that the request is already completed.
+And I guess we could use alloc-ranges to make sure the region is in
+the proper memory range, instead of hardcoding it.
+
+> +			linux,cma-default;
+> +		};
+> +	};
+> +
+>  	timer {
+>  		compatible = "arm,armv7-timer";
+>  		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> @@ -451,6 +465,23 @@
+>  			};
+>  		};
+>  
+> +		ve: video-engine@1c0e000 {
+> +			compatible = "allwinner,sun4i-a10-video-engine";
+
+We should have an A20-specific compatible here, at least, so that we
+can deal with any quirk we might find down the road.
+
+> +			reg = <0x01c0e000 0x1000>;
+> +			memory-region = <&ve_memory>;
+
+Since you made the CMA region the default one, you don't need to tie
+it to that device in particular (and you can drop it being mandatory
+from your binding as well).
+
+> +
+> +			clocks = <&ccu CLK_AHB_VE>, <&ccu CLK_VE>,
+> +				 <&ccu CLK_DRAM_VE>;
+> +			clock-names = "ahb", "mod", "ram";
+> +
+> +			assigned-clocks = <&ccu CLK_VE>;
+> +			assigned-clock-rates = <320000000>;
+
+This should be set from within the driver. If it's something that you
+absolutely needed for the device to operate, you have no guarantee
+that the clock rate won't change at any point in time after the device
+probe, so that's not a proper solution.
+
+And if it's not needed and can be adjusted depending on the
+framerate/codec/resolution, then it shouldn't be in the DT either.
+
+Don't you also need to map the SRAM on the A20?
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--gx2hl7khsqiaus56--
