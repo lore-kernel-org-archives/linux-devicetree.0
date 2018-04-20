@@ -1,7 +1,7 @@
 From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v1 1/5] ARM: configs: multi_v7: Add I2C support
-Date: Fri, 20 Apr 2018 11:17:50 +0200
-Message-ID: <1524215874-15093-2-git-send-email-pierre-yves.mordret@st.com>
+Subject: [PATCH v1 5/5] ARM: dts: stm32: Add I2C2/5 support for STM32MP157C-EV1
+Date: Fri, 20 Apr 2018 11:17:54 +0200
+Message-ID: <1524215874-15093-6-git-send-email-pierre-yves.mordret@st.com>
 References: <1524215874-15093-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,7 +12,8 @@ To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.tor
 Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds I2C F7 support to multi_v7_defconfig
+Add I2C1/5 support for STM32MP157C evaluation daughter on evaluation
+mother board.
 
 Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 ---
@@ -21,20 +22,33 @@ Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
         * Initial
 ---
 ---
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/stm32mp157c-ev1.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index e6b3c96..2a87784 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -385,6 +385,7 @@ CONFIG_I2C_S3C2410=y
- CONFIG_I2C_SH_MOBILE=y
- CONFIG_I2C_SIRF=y
- CONFIG_I2C_ST=y
-+CONFIG_I2C_STM32F7=y
- CONFIG_I2C_SUN6I_P2WI=y
- CONFIG_I2C_TEGRA=y
- CONFIG_I2C_UNIPHIER=y
+diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+index 57e6dbc..20dd8aa 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+@@ -19,3 +19,20 @@
+ 		serial0 = &uart4;
+ 	};
+ };
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins_a>;
++	i2c-scl-rising-time-ns = <185>;
++	i2c-scl-falling-time-ns = <20>;
++	status = "okay";
++};
++
++&i2c5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c5_pins_a>;
++	i2c-scl-rising-time-ns = <185>;
++	i2c-scl-falling-time-ns = <20>;
++	status = "okay";
++};
++
 -- 
 2.7.4
