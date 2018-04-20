@@ -1,18 +1,18 @@
 From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v1 1/3] ARM: dts: stm32: Append additional I2Cs for STM32F746 SoC
-Date: Fri, 20 Apr 2018 11:05:08 +0200
-Message-ID: <1524215110-13967-2-git-send-email-pierre-yves.mordret@st.com>
-References: <1524215110-13967-1-git-send-email-pierre-yves.mordret@st.com>
+Subject: [PATCH v1 2/2] ARM: dts: stm32: Add I2C1 support for STM32H743I-EVAL Board
+Date: Fri, 20 Apr 2018 11:05:22 +0200
+Message-ID: <1524215122-14046-3-git-send-email-pierre-yves.mordret@st.com>
+References: <1524215122-14046-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524215110-13967-1-git-send-email-pierre-yves.mordret@st.com>
+In-Reply-To: <1524215122-14046-1-git-send-email-pierre-yves.mordret@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Append 3 additional I2C instance for STM32F746 SoC.
+Add I2C1 support for STM32H743I-EVAL Board
 
 Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 ---
@@ -21,55 +21,27 @@ Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
         * Initial
 ---
 ---
- arch/arm/boot/dts/stm32f746.dtsi | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ arch/arm/boot/dts/stm32h743i-eval.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-index 4be2ee5..1479e3e 100644
---- a/arch/arm/boot/dts/stm32f746.dtsi
-+++ b/arch/arm/boot/dts/stm32f746.dtsi
-@@ -345,6 +345,42 @@
- 			status = "disabled";
- 		};
+diff --git a/arch/arm/boot/dts/stm32h743i-eval.dts b/arch/arm/boot/dts/stm32h743i-eval.dts
+index c7187e1..3f8e0c4 100644
+--- a/arch/arm/boot/dts/stm32h743i-eval.dts
++++ b/arch/arm/boot/dts/stm32h743i-eval.dts
+@@ -92,6 +92,14 @@
+ 	clock-frequency = <25000000>;
+ };
  
-+		i2c2: i2c@40005800 {
-+			compatible = "st,stm32f7-i2c";
-+			reg = <0x40005800 0x400>;
-+			interrupts = <33>,
-+				     <34>;
-+			resets = <&rcc STM32F7_APB1_RESET(I2C2)>;
-+			clocks = <&rcc 1 CLK_I2C2>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
++&i2c1 {
++	pinctrl-0 = <&i2c1_pins_a>;
++	pinctrl-names = "default";
++	i2c-scl-rising-time-ns = <185>;
++	i2c-scl-falling-time-ns = <20>;
++	status = "okay";
++};
 +
-+		i2c3: i2c@40005C00 {
-+			compatible = "st,stm32f7-i2c";
-+			reg = <0x40005C00 0x400>;
-+			interrupts = <72>,
-+				     <73>;
-+			resets = <&rcc STM32F7_APB1_RESET(I2C3)>;
-+			clocks = <&rcc 1 CLK_I2C3>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c4: i2c@40006000 {
-+			compatible = "st,stm32f7-i2c";
-+			reg = <0x40006000 0x400>;
-+			interrupts = <95>,
-+				     <96>;
-+			resets = <&rcc STM32F7_APB1_RESET(I2C4)>;
-+			clocks = <&rcc 1 CLK_I2C4>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		cec: cec@40006c00 {
- 			compatible = "st,stm32-cec";
- 			reg = <0x40006C00 0x400>;
+ &rtc {
+ 	status = "okay";
+ };
 -- 
 2.7.4
