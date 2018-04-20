@@ -1,87 +1,62 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v2 05/10] media: v4l: Add definitions for MPEG2 frame
- format and header metadata
-Date: Fri, 20 Apr 2018 09:51:49 +0000
-Message-ID: <CAAFQd5Dq4OeshtFaoxFK2357+-_=hzh0C7W=zksTWtaDuDCiGg@mail.gmail.com>
-References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com> <20180419154536.17846-1-paul.kocialkowski@bootlin.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77980: add MMC support
+Date: Fri, 20 Apr 2018 11:58:57 +0200
+Message-ID: <20180420095857.latofivdh3dnvu2z@verge.net.au>
+References: <611daf1f-42a2-d463-0814-ebf762871018@cogentembedded.com>
+ <aaa58189-2c27-e51f-1f97-3671c50a1479@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419154536.17846-1-paul.kocialkowski@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, wens@csie.org, Pawel Osciak <pawel@osciak.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Al
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <aaa58189-2c27-e51f-1f97-3671c50a1479@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+On Sat, Apr 14, 2018 at 10:27:04PM +0300, Sergei Shtylyov wrote:
+> Define the generic R8A77980 part of the MMC0 (SDHI2) device node.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+>  arch/arm64/boot/dts/renesas/r8a77980.dtsi |   12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> @@ -371,6 +371,18 @@
+>  			dma-channels = <16>;
+>  		};
+>  
+> +		mmc0: mmc@ee140000 {
 
-On Fri, Apr 20, 2018 at 12:46 AM Paul Kocialkowski <
-paul.kocialkowski@bootlin.com> wrote:
-[snip]
-> +struct v4l2_ctrl_mpeg2_frame_hdr {
-> +       __u32 slice_len;
-> +       __u32 slice_pos;
-> +       enum { MPEG1, MPEG2 } type;
+Please use sdhi2: sd@ee140000 for consistency with other SoCs
+(I refereed to the r8a7795).
 
-Is enum suitable for UAPI?
-
+> +			compatible = "renesas,sdhi-r8a77980",
+> +				     "renesas,rcar-gen3-sdhi";
+> +			reg = <0 0xee140000 0 0x2000>;
+> +			interrupts = <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 314>;
+> +			power-domains = <&sysc 32>;
+> +			resets = <&cpg 314>;
+> +			max-frequency = <200000000>;
+> +			status = "disabled";
+> +		};
 > +
-> +       __u16 width;
-> +       __u16 height;
-> +
-> +       enum { PCT_I = 1, PCT_P, PCT_B, PCT_D } picture_coding_type;
-
-Ditto.
-
-> +       __u8 f_code[2][2];
-> +
-> +       __u8 intra_dc_precision;
-> +       __u8 picture_structure;
-> +       __u8 top_field_first;
-> +       __u8 frame_pred_frame_dct;
-> +       __u8 concealment_motion_vectors;
-> +       __u8 q_scale_type;
-> +       __u8 intra_vlc_format;
-> +       __u8 alternate_scan;
-> +
-> +       __u8 backward_ref_index;
-> +       __u8 forward_ref_index;
-> +};
-> +
->   #endif
-> diff --git a/include/uapi/linux/videodev2.h
-b/include/uapi/linux/videodev2.h
-> index 31b5728b56e9..4b8336f7bcf0 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -635,6 +635,7 @@ struct v4l2_pix_format {
->   #define V4L2_PIX_FMT_VC1_ANNEX_L v4l2_fourcc('V', 'C', '1', 'L') /*
-SMPTE 421M Annex L compliant stream */
->   #define V4L2_PIX_FMT_VP8      v4l2_fourcc('V', 'P', '8', '0') /* VP8 */
->   #define V4L2_PIX_FMT_VP9      v4l2_fourcc('V', 'P', '9', '0') /* VP9 */
-> +#define V4L2_PIX_FMT_MPEG2_FRAME v4l2_fourcc('M', 'G', '2', 'F') /*
-MPEG2 frame */
-
->   /*  Vendor-specific formats   */
->   #define V4L2_PIX_FMT_CPIA1    v4l2_fourcc('C', 'P', 'I', 'A') /* cpia1
-YUV */
-> @@ -1586,6 +1587,7 @@ struct v4l2_ext_control {
->                  __u8 __user *p_u8;
->                  __u16 __user *p_u16;
->                  __u32 __user *p_u32;
-> +               struct v4l2_ctrl_mpeg2_frame_hdr __user
-*p_mpeg2_frame_hdr;
->                  void __user *ptr;
->          };
->   } __attribute__ ((packed));
-> @@ -1631,6 +1633,7 @@ enum v4l2_ctrl_type {
->          V4L2_CTRL_TYPE_U8            = 0x0100,
->          V4L2_CTRL_TYPE_U16           = 0x0101,
->          V4L2_CTRL_TYPE_U32           = 0x0102,
-> +       V4L2_CTRL_TYPE_MPEG2_FRAME_HDR = 0x0109,
-
-Why 0x0109?
-
-Best regards,
-Tomasz
+>  		gic: interrupt-controller@f1010000 {
+>  			compatible = "arm,gic-400";
+>  			#interrupt-cells = <3>;
+> 
