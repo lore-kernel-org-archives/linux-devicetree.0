@@ -1,136 +1,212 @@
-From: Peter Rosin <peda@axentia.se>
+From: jacopo mondi <jacopo@jmondi.org>
 Subject: Re: [PATCH v3 0/7] Add tda998x (HDMI) support to atmel-hlcdc
-Date: Fri, 20 Apr 2018 13:05:21 +0200
-Message-ID: <7f709cea-e1f4-2204-7320-5a1075d721d1@axentia.se>
+Date: Fri, 20 Apr 2018 13:22:04 +0200
+Message-ID: <20180420112204.GK4235@w540>
 References: <20180419162751.25223-1-peda@axentia.se>
  <20180420085235.GI4235@w540> <6354350.l8DgUyNhLT@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============0280997715=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <6354350.l8DgUyNhLT@avalon>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, jacopo mondi <jacopo@jmondi.org>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Russell King <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Daniel Vetter <daniel.vetter@intel.com>, Peter Rosin <peda@axentia.se>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-20 12:18, Laurent Pinchart wrote:
+
+--===============0280997715==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="d8Lz2Tf5e5STOWUP"
+Content-Disposition: inline
+
+
+--d8Lz2Tf5e5STOWUP
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Laurent,
+
+On Fri, Apr 20, 2018 at 01:18:13PM +0300, Laurent Pinchart wrote:
 > Hello,
-> 
+>
 > On Friday, 20 April 2018 11:52:35 EEST jacopo mondi wrote:
->> Hi Peter,
->>     I've been a bit a pain in the arse for you recently, but please
->> bear with me a bit more, and sorry for jumping late on the band wagon.
->>
->> On Thu, Apr 19, 2018 at 06:27:44PM +0200, Peter Rosin wrote:
->>> Hi!
->>>
->>> I naively thought that since there was support for both nxp,tda19988 (in
->>> the tda998x driver) and the atmel-hlcdc, things would be a smooth ride.
->>> But it wasn't, so I started looking around and realized I had to fix
->>> things.
->>>
->>> In v1 and v2 I fixed things by making the atmel-hlcdc driver a master
->>> component, but now in v3 I fix things by making the tda998x driver
->>> a bridge instead. This was after a suggestion from Boris Brezillion
-
-That should be Brezillon, sorry for being sloppy with the spelling.
-
->>> (the atmel-hlcdc maintainer), so there was some risk of bias ... but
->>> after comparing what was needed, I too find the bridge approach better.
->>>
->>> In addition to the above, our PCB interface between the SAMA5D3 and the
->>> HDMI encoder is only using 16 bits, and this has to be described
->>> somewhere, or the atmel-hlcdc driver have no chance of selecting the
->>> correct output mode. Since I have similar problems with a ds90c185 lvds
->>> encoder I added patches to override the atmel-hlcdc output format via
->>> DT properties compatible with the media video-interface binding and
->>> things start to play together.
->>>
->>> Since this series superseeds the bridge series [1], I have included the
->>> leftover bindings patch for the ti,ds90c185 here.
->>
->> I feel like this series would look better if it would make use of the
->> proposed bridge media bus format support I have recently sent out [1]
->> (and which was not there when you first sent v1).
->>
->> I understand your fundamental problem here is that the bus format
->> that should be reported by your bridge is different from the ones
->> actually supported by the TDA19988 chip, as the wirings ground some
->> of the input pins.
->>
->> Although this is defintely something that could be described in the
->> bridge's own OF node with the 'bus_width' property, and what I would do,
->> now that you have made a bridge out from the tda19988 driver, is:
->>
->> 1) Set the bridge accepted input bus_format parsing its pin
->> configuration, or default it if that's not implemented yet.
->> This will likely be rgb888. You can do that using the trivial
->> support for bridge input image formats implemented by my series.
->> 2) Specify in the bridge endpoint a 'bus_width' of <16>
->> 3) In your atmel-hlcd get both the image format of the bridge (rgb888)
->> and parse the remote endpoint property 'bus_width' and get the <16>
->> value back.
-> 
-> Parsing properties of remote nodes should be avoided as much as possible, as 
-> they need to be interpreted in the context of the DT bindings related to the 
-> compatible string applicable to that node. I'd rather have the bus_width 
+> > Hi Peter,
+> >     I've been a bit a pain in the arse for you recently, but please
+> > bear with me a bit more, and sorry for jumping late on the band wagon.
+> >
+> > On Thu, Apr 19, 2018 at 06:27:44PM +0200, Peter Rosin wrote:
+> > > Hi!
+> > >
+> > > I naively thought that since there was support for both nxp,tda19988 (in
+> > > the tda998x driver) and the atmel-hlcdc, things would be a smooth ride.
+> > > But it wasn't, so I started looking around and realized I had to fix
+> > > things.
+> > >
+> > > In v1 and v2 I fixed things by making the atmel-hlcdc driver a master
+> > > component, but now in v3 I fix things by making the tda998x driver
+> > > a bridge instead. This was after a suggestion from Boris Brezillion
+> > > (the atmel-hlcdc maintainer), so there was some risk of bias ... but
+> > > after comparing what was needed, I too find the bridge approach better.
+> > >
+> > > In addition to the above, our PCB interface between the SAMA5D3 and the
+> > > HDMI encoder is only using 16 bits, and this has to be described
+> > > somewhere, or the atmel-hlcdc driver have no chance of selecting the
+> > > correct output mode. Since I have similar problems with a ds90c185 lvds
+> > > encoder I added patches to override the atmel-hlcdc output format via
+> > > DT properties compatible with the media video-interface binding and
+> > > things start to play together.
+> > >
+> > > Since this series superseeds the bridge series [1], I have included the
+> > > leftover bindings patch for the ti,ds90c185 here.
+> >
+> > I feel like this series would look better if it would make use of the
+> > proposed bridge media bus format support I have recently sent out [1]
+> > (and which was not there when you first sent v1).
+> >
+> > I understand your fundamental problem here is that the bus format
+> > that should be reported by your bridge is different from the ones
+> > actually supported by the TDA19988 chip, as the wirings ground some
+> > of the input pins.
+> >
+> > Although this is defintely something that could be described in the
+> > bridge's own OF node with the 'bus_width' property, and what I would do,
+> > now that you have made a bridge out from the tda19988 driver, is:
+> >
+> > 1) Set the bridge accepted input bus_format parsing its pin
+> > configuration, or default it if that's not implemented yet.
+> > This will likely be rgb888. You can do that using the trivial
+> > support for bridge input image formats implemented by my series.
+> > 2) Specify in the bridge endpoint a 'bus_width' of <16>
+> > 3) In your atmel-hlcd get both the image format of the bridge (rgb888)
+> > and parse the remote endpoint property 'bus_width' and get the <16>
+> > value back.
+>
+> Parsing properties of remote nodes should be avoided as much as possible, as
+> they need to be interpreted in the context of the DT bindings related to the
+> compatible string applicable to that node. I'd rather have the bus_width
 > property in the local endpoint node.
 
-In addition to that, my view of this binding
+Right, I see...
+Well, in Peter's case, the bus width, being a consequence of
+wirings, can be described safely in both endpoints, right?
 
-	endpoint {
-		bus-type = <0>;
-		bus-widht = <16>;
-	};
-
-is that it always means rgb565. See further below.
-
->> 4) Set the correct format in the atmel hlcd driver to accommodate a
->> bridge that wants rgb888 on a 16 bit wide bus (that would be rgb565,
->> or are there other possible combinations I am missing?)
->>
->> I would consider this better mostly because in this series you are
->> creating a semantic for the whole DRM subsystem on the 'bus_width'
->> property, where numerical values as '12', '16' etc are arbitrary tied
->> to the selection of a media bus format. At least you should use a
->> common set of defines [1] between the device tree and the driver,
->> but this looks anyway fragile imho.
-> 
-> This I agree with though. Combining the remote bus format with the local bus 
+>
+> > 4) Set the correct format in the atmel hlcd driver to accommodate a
+> > bridge that wants rgb888 on a 16 bit wide bus (that would be rgb565,
+> > or are there other possible combinations I am missing?)
+> >
+> > I would consider this better mostly because in this series you are
+> > creating a semantic for the whole DRM subsystem on the 'bus_width'
+> > property, where numerical values as '12', '16' etc are arbitrary tied
+> > to the selection of a media bus format. At least you should use a
+> > common set of defines [1] between the device tree and the driver,
+> > but this looks anyway fragile imho.
+>
+> This I agree with though. Combining the remote bus format with the local bus
 > width should fix the problem without having to parse remote properties.
+>
+> > Have I maybe missed some parts of the problem you are trying to solve
+> > here?
+> >
+> > Thank you
+> >    j
+> >
+> > [1] drm: bridge: Add support for static image formats
+> >     https://lwn.net/Articles/752296/
+> > [2] include/uapi/linux/media-bus-format.h
+> >
+> > > Anyway, this series solves some real issues for my HW.
+> > >
+> > > Cheers,
+> > > Peter
+> > >
+> > > Changes since v2   https://lkml.org/lkml/2018/4/17/385
+> > > - patch 2/7 fixed spelling and added an example
+> > > - patch 4/7 parse the DT up front and store the result indexed by encoder
+> > > - old patch 5/6 and 6/6 dropped
+> > > - patch 5-7/7 are new and makes the tda998x driver a drm_bridge
+> > >
+> > > Changes since v1   https://lkml.org/lkml/2018/4/9/294
+> > > - added reviewed-by from Rob to patch 1/6
+> > > - patch 2/6 changed so that the bus format override is in the endpoint
+> > >   DT node, and follows the binding of media video-interfaces.
+> > > - patch 3/6 is new, it adds drm_of_media_bus_fmt which parses above
+> > >   media video-interface binding (partially).
+> > > - patch 4/6 now makes use of the above helper (and also fixes problems
+> > >   with the 3/5 patch from v1 when no override was specified).
+> > > - do not mention unrelated connector display_info details in the cover
+> > >   letter and commit messages.
+> > >
+> > > [1]
+> > > "Bridge" series v2   https://lkml.org/lkml/2018/3/26/610
+> > > "Bridge" series v1   https://lkml.org/lkml/2018/3/17/221
+> > >
+> > > Peter Rosin (7):
+> > >   dt-bindings: display: bridge: lvds-transmitter: add ti,ds90c185
+> > >   dt-bindings: display: atmel: optional video-interface of endpoints
+> > >   drm: of: introduce drm_of_media_bus_fmt
+> > >   drm/atmel-hlcdc: support bus-width (12/16/18/24) in endpoint nodes
+> > >   drm/i2c: tda998x: find the drm_device via the drm_connector
+> > >   drm/i2c: tda998x: split encoder and component functions from the work
+> > >   drm/i2c: tda998x: register as a drm bridge
+> > >
+> > >  .../devicetree/bindings/display/atmel/hlcdc-dc.txt |  26 +++
+> > >  .../bindings/display/bridge/lvds-transmitter.txt   |   8 +-
+> > >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c     |  71 ++++++--
+> > >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h       |   2 +
+> > >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c   |  40 +++-
+> > >  drivers/gpu/drm/drm_of.c                           |  38 ++++
+> > >  drivers/gpu/drm/i2c/tda998x_drv.c                  | 201 ++++++++++++++--
+> > >  include/drm/drm_of.h                               |   7 +
+> > >  8 files changed, 342 insertions(+), 51 deletions(-)
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
+>
+>
 
-My thinking was that the binding with bus-type = <0> and bus-width = <bpp>
-would mean a parallel bus (type 0 means auto-detect and with a bus-width that
-auto-detect means a parallel bus) and the most natural/common interpretation
-of that bus-width. For bus widths of 12, 16, 18, 24, 30 etc I think that
-would be rgb444, rgb565, rgb666, rgb888, rgb101010 (or, I'm first so I get
-to define the default). If you have some other interpretation of a bus with
-that width, you'd need to extend the video-interface binding with some way
-of saying what you need, perhaps using some kind of data mapping or something
-to say e.g. bgr666. And you'd need some kind of indicator if you have YUV
-signals instead of RGB, and LVDS isn't a completely parallel bus, so you'd
-need something for that. Etc.
+--d8Lz2Tf5e5STOWUP
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Because the word from Rob was that there should be one common binding that
-describes video interfaces. I started an implementation that interprets that
-binding in a drm context in
-[PATCH 3/7] drm: of: introduce drm_of_media_bus_fmt
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-With that view, any input format specification of the bridge is not helpful
-for me since what the bridge specifies (without help) is going to be wrong
-anyway. End result, I need to specify the format manually on either the
-bridge or the atmel-hlcdc side, and I happen to think that the correct side
-is with the atmel-hlcdc, because that is where my issue originates. In short,
-the "drm: bridge: Add support for static image formats" series is unrelated
-as far as I can tell.
+iQIcBAEBAgAGBQJa2c1cAAoJEHI0Bo8WoVY8mTYP/ireNw+s3433VFFdGe6ODpnG
+DFqSsw1xM594JlbB1TpR3t6vV5bxCWb1PwaDqbpN0G2S+RpD06WLM1gcHe/9/caa
+R8yF6wBxtM+OAIzU8SAsCjTJA0LY1yCmivjuh88my0BMOtGKg8Xn6Ztqjh9XfL71
+gwbpHiJr24a2GTxAKk0OvMB4hmXIVEw3DsOnxmDJ/wLUiuTFLJYcAzb/8FcUDiQT
+krEEa90OOAY+6IOW9veNYAO7E9Q1XnUEt7Lkd9ZQ3VFDaVLNuu3VEokUB8K9TyxR
+pxJbOtgnBtKIcO/fmESOf0h5rQn7R5nzg2myk0BZkgWrsy5wvFz1STNjwdHRwocF
+HceiknS5ldrCZxfRlkRDm+1/uqs4XD5YyIpZYMQVkOSB9SUjIBHOXdfAT0Wbbti0
+f3tFPrbE8ygO6tKpwFXh5ZMiQJk2zJucrDDZ7o0fWZs1dwf3bC9BzAEAfoOl3Co/
+jIq4/P2v+Y1HQJKK4gcRDXud8UEo/zx8iMPRGvzMim8OZywrxue5cc0pId09UQjm
+gEM+jSDYRh1n+R92kE6FgwmBpVvYG1XHJ3Z/kfBPIoWxnzdV8B/HMW5WN18+hN85
+Gpdu6W5EA91Zl7Qh5j2yDcdh+U9PX3SZxOjjYjgJGbEW8CGrsTa2LMIx0cafJ/Bz
+M2r5E3k/oT7t/kXf8Tf3
+=mh3I
+-----END PGP SIGNATURE-----
 
-Cheers,
-Peter
+--d8Lz2Tf5e5STOWUP--
 
->> Have I maybe missed some parts of the problem you are trying to solve
->> here?
->>
->> Thank you
->>    j
+--===============0280997715==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0280997715==--
