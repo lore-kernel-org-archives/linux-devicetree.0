@@ -1,74 +1,80 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
-Date: Fri, 20 Apr 2018 17:59:21 +0100
-Message-ID: <20180420165921.GD22369@sirena.org.uk>
-References: <20180418222905.10414-1-robh@kernel.org>
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [PATCH] ARM: dts: imx53-ppd: Use IRQ_TYPE_* constants
+Date: Fri, 20 Apr 2018 14:04:43 -0300
+Message-ID: <ac518e1f3b943385f641ea9aa785846ad64a6eb4.camel@collabora.com>
+References: <20180420154553.18070-1-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="IDYEmSnFhs3mNXr+"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180418222905.10414-1-robh@kernel.org>
+In-Reply-To: <20180420154553.18070-1-sebastian.reichel@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@arm.com, frowand.list@gmail.com, mark.rutland@arm.com, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, shawnguo@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, Jonathan Cameron <jic23@kernel.org>
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 2018-04-20 at 17:45 +0200, Sebastian Reichel wrote:
+> Replace magic numbers with IRQ_TYPE_* constants to improve
+> DT readability.
+> 
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> ---
+>  arch/arm/boot/dts/imx53-ppd.dts | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx53-ppd.dts b/arch/arm/boot/dts/imx53-ppd.dts
+> index d5628af2e301..d02d07470ad3 100644
+> --- a/arch/arm/boot/dts/imx53-ppd.dts
+> +++ b/arch/arm/boot/dts/imx53-ppd.dts
+> @@ -300,7 +300,7 @@
+>  		compatible = "dlg,da9053-aa";
+>  		reg = <0>;
+>  		interrupt-parent = <&gpio3>;
+> -		interrupts = <12 0x8>;
+> +		interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
+>  		spi-max-frequency = <1000000>;
+>  		dlg,tsi-as-adc;
+>  		tsiref-supply = <&reg_tsiref>;
+> @@ -473,7 +473,7 @@
+>  				compatible = "fsl,mma8453";
+>  				reg = <0x1c>;
+>  				interrupt-parent = <&gpio1>;
+> -				interrupts = <6 0>;
+> +				interrupts = <6 IRQ_TYPE_NONE>;
+>  				interrupt-names = "INT1";
+>  			};
+>  
+> @@ -539,7 +539,7 @@
+>  		reset-gpio = <&gpio5 19 GPIO_ACTIVE_HIGH>;
+>  		reg = <0x4b>;
+>  		interrupt-parent = <&gpio5>;
+> -		interrupts = <4 0x8>;
+> +		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
+>  	};
+>  };
+>  
+> 
 
---IDYEmSnFhs3mNXr+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks good to me:
 
-On Wed, Apr 18, 2018 at 05:29:05PM -0500, Rob Herring wrote:
-> The current DT binding documentation format of freeform text is painful
-> to write, review, validate and maintain.
->=20
-> This is just an example of what a binding in the schema format looks
-> like. It's using jsonschema vocabulary in a YAML encoded document. Using
-> jsonschema gives us access to existing tooling. A YAML encoding gives us
-> something easy to edit.
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
 
-It'd be useful to see some examples of how things like including by
-reference other schema work.  It feels like something we should be able
-to use more in a schema based thing but perhaps that's not viable with
-realistic tooling.  In general this looks OK, especially with all the
-meta comments about the language stripped out.
+And it made me think, how many of these do we have?
+Or even worse, how many are using the wrong specifiers?
 
-> +    description: |
-> +      A variable number of interrupts warrants a description of what con=
-ditions
-
-Like Stephen said the | looks odd.
-
-> +  interrupt-names:
-> +    # minItems must be specified here because the default would be 2
-> +    minItems: 1
-> +    items:
-> +      - const: "tx irq"
-> +      - const: "rx irq"
-
-Any way to relate this to the interrupts property in the schema
-language (eg, must have the less or equal number of elements)?
-
-> +  # Property names starting with '#' must be quoted
-
-That's awkward :/  Perhaps just by convention quote all property names
-for simplicity?
-
---IDYEmSnFhs3mNXr+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlraHGgACgkQJNaLcl1U
-h9Cwcwf+OPT6H3e4dIpc3TXlGFnRUlq6lOCoKrFgghQKJGb++VRCZ5En6R3KgC9/
-GwuGMxXL8DofYs6bmSlsfHBXFfIgixvNcWeoVMtXxZI2YiXZ2560F0i4ccL0pZgc
-WkZsv2QDD+6k9to98mrX7pJG95+5mziDnbSmSFaemLSYGnPCM2JH+VsxuX1sblg+
-BFu0PbSjuht7QVqiI6BraLT/YuoSkX35Il/oL8GVkpMn0mtLXoPhd6zzhSt+qNZV
-BHc7CIacO/FejCygpY+4TlBqk7S53grNwvcxEQNeTGLT2QJZdJZOOHmzeaPqD2Ee
-V/oXJpbYRoeXiBwC3F4PfMJO7j2K7g==
-=Dqz+
------END PGP SIGNATURE-----
-
---IDYEmSnFhs3mNXr+--
+$ git grep interrupts -- arch/arm/boot/dts  | grep -v IRQ_TYPE | grep GPIO
+arch/arm/boot/dts/am335x-baltos-ir3220.dts:		interrupts = <20 GPIO_ACTIVE_LOW>;
+arch/arm/boot/dts/am335x-baltos-ir5221.dts:		interrupts = <20 GPIO_ACTIVE_LOW>;
+arch/arm/boot/dts/am335x-baltos.dtsi:		interrupts = <28 GPIO_ACTIVE_LOW>;
+arch/arm/boot/dts/am335x-boneblue.dts:		interrupts = <21 GPIO_ACTIVE_LOW>;
+arch/arm/boot/dts/at91-sama5d2_xplained.dts:						interrupts = <PIN_PB13
+GPIO_ACTIVE_LOW>;
+arch/arm/boot/dts/imx53-qsb.dts:		interrupts = <11 0x8>; /* low-level active IRQ at GPIO7_11 */
+arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi:		interrupts = <11 0x8>; /* low-level active IRQ at GPIO7_11
+*/
+arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi:		interrupts = <9 0x8>; /* active-low GPIO2_9 */
+arch/arm/boot/dts/omap3-pandora-common.dtsi:		interrupts = <30 0>;	/* GPIO_94 */
+arch/arm/boot/dts/ste-href-stuib.dtsi:					 * GPIO 67 for interrupts. Pull-up
+arch/arm/boot/dts/tegra124-nyan.dtsi:					interrupts = <TEGRA_GPIO(J, 0)
+arch/arm/boot/dts/tegra124-venice2.dts:					interrupts = <TEGRA_GPIO(J, 0)
+arch/arm/boot/dts/vf-colibri-eval-v3.dtsi:		interrupts = <11 GPIO_ACTIVE_LOW>;
