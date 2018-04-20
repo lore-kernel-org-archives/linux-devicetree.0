@@ -1,84 +1,26 @@
-Return-Path: <SRS0=hkU0=HL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pg0-f68.google.com ([74.125.83.68]:36633 "EHLO
-        mail-pg0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754524AbeDVP4q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Apr 2018 11:56:46 -0400
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v3 03/11] media: ov772x: add checks for register read errors
-Date: Mon, 23 Apr 2018 00:56:09 +0900
-Message-Id: <1524412577-14419-4-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
-References: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Return-Path: <SRS0=tKDt=HJ=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH  0/4] Add SYS-DMAC, IRQC and SCIF to SoC dtsi
+Date: Fri, 20 Apr 2018 16:27:05 +0100
+Message-Id: <1524238029-55315-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This change adds checks for register read errors and returns correct
-error code.
+This patch series add support for SYS-DMAC, External interrupt
+Controller(IRQC) and SCIF wth DMA support to the r8a77470 SoC dtsi
 
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* v3
-- Add a Reviewed-by: line
+This patch series tested against renesas-dev branch 
+tag "renesas-dev-20180420-v4.17-rc1"
 
- drivers/media/i2c/ov772x.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+Biju Das (4):
+  ARM: dts: r8a77470: Add SYS-DMAC support
+  ARM: dts: r8a77470: Add IRQC support
+  ARM: dts: r8a77470: Add SCIF support
+  ARM: dts: r8a77470: Add SCIF DMA support
 
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 2ae730f..f25150d 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -1146,7 +1146,7 @@ static int ov772x_set_fmt(struct v4l2_subdev *sd,
- static int ov772x_video_probe(struct ov772x_priv *priv)
- {
- 	struct i2c_client  *client = v4l2_get_subdevdata(&priv->subdev);
--	u8                  pid, ver;
-+	int		    pid, ver, midh, midl;
- 	const char         *devname;
- 	int		    ret;
- 
-@@ -1156,7 +1156,11 @@ static int ov772x_video_probe(struct ov772x_priv *priv)
- 
- 	/* Check and show product ID and manufacturer ID. */
- 	pid = ov772x_read(client, PID);
-+	if (pid < 0)
-+		return pid;
- 	ver = ov772x_read(client, VER);
-+	if (ver < 0)
-+		return ver;
- 
- 	switch (VERSION(pid, ver)) {
- 	case OV7720:
-@@ -1172,13 +1176,17 @@ static int ov772x_video_probe(struct ov772x_priv *priv)
- 		goto done;
- 	}
- 
-+	midh = ov772x_read(client, MIDH);
-+	if (midh < 0)
-+		return midh;
-+	midl = ov772x_read(client, MIDL);
-+	if (midl < 0)
-+		return midl;
-+
- 	dev_info(&client->dev,
- 		 "%s Product ID %0x:%0x Manufacturer ID %x:%x\n",
--		 devname,
--		 pid,
--		 ver,
--		 ov772x_read(client, MIDH),
--		 ov772x_read(client, MIDL));
-+		 devname, pid, ver, midh, midl);
-+
- 	ret = v4l2_ctrl_handler_setup(&priv->hdl);
- 
- done:
+ arch/arm/boot/dts/r8a77470.dtsi | 173 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 171 insertions(+), 2 deletions(-)
+
 -- 
 2.7.4
-
