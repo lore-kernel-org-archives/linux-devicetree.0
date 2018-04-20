@@ -1,47 +1,35 @@
-From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v1 2/3] ARM: dts: stm32: Add I2C1 support for STM32F769-DISCO Board
-Date: Fri, 20 Apr 2018 11:05:09 +0200
-Message-ID: <1524215110-13967-3-git-send-email-pierre-yves.mordret@st.com>
-References: <1524215110-13967-1-git-send-email-pierre-yves.mordret@st.com>
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH] ARM: dts: stm32: add reset binding on stm32mp157c
+Date: Fri, 20 Apr 2018 11:09:07 +0200
+Message-ID: <1524215347-10600-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524215110-13967-1-git-send-email-pierre-yves.mordret@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gabriel.fernandez@st.com
 List-Id: devicetree@vger.kernel.org
 
-Add I2C1 support for STM32F769-DISCO Board
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
----
-  Version history:
-     v1:
-        * Initial
----
----
- arch/arm/boot/dts/stm32f769-disco.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+This patch adds reset binding file.
 
-diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
-index 2241eec..677276ba 100644
---- a/arch/arm/boot/dts/stm32f769-disco.dts
-+++ b/arch/arm/boot/dts/stm32f769-disco.dts
-@@ -111,6 +111,14 @@
- 	clock-frequency = <25000000>;
- };
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index bc3eddc..7e91fd6 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -5,6 +5,7 @@
+  */
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/stm32mp1-clks.h>
++#include <dt-bindings/reset/stm32mp1-resets.h>
  
-+&i2c1 {
-+	pinctrl-0 = <&i2c1_pins_b>;
-+	pinctrl-names = "default";
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	status = "okay";
-+};
-+
- &rtc {
- 	status = "okay";
- };
+ / {
+ 	#address-cells = <1>;
 -- 
-2.7.4
+1.9.1
