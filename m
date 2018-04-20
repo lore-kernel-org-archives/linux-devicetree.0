@@ -1,48 +1,67 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 0/4] regulator: bd9571mwv: Add support for DDR backup mode
-Date: Fri, 20 Apr 2018 10:11:34 +0200
-Message-ID: <CAMuHMdWeROfJNvUtfooN8gqA+nTRXhVLvQFpc-xiqUbG9XgcmA@mail.gmail.com>
-References: <1524057484-25350-1-git-send-email-geert+renesas@glider.be> <20180420074914.vl4rer5zdeldfzb3@dell>
+From: Marc Dietrich <marvin24@gmx.de>
+Subject: Re: [PATCH] ARM: tegra: fix ulpi regression on tegra20
+Date: Fri, 20 Apr 2018 10:52:00 +0200
+Message-ID: <6600596.BijQW1iq1K@ax5200p>
+References: <20180219151252.29289-1-marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180420074914.vl4rer5zdeldfzb3@dell>
+In-Reply-To: <20180219151252.29289-1-marcel@ziswiler.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Marek Vasut <marek.vasut+renesas@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Marcel Ziswiler <marcel@ziswiler.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Hi Marcel,
 
-On Fri, Apr 20, 2018 at 9:49 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Wed, 18 Apr 2018, Geert Uytterhoeven wrote:
->> The ROHM BD9571MWV PMIC on the Renesas Salvator-X(S) and ULCB
->> development boards supports DDR Backup Power, which means that the DDR
->> power rails can be kept powered while the main SoC is powered down.
->
-> Should this set be applied together, or can the MFD patches be applied
-> on their own, without the Regulator patch?
+Am Montag, 19. Februar 2018, 16:12:52 CEST schrieb Marcel Ziswiler:
+> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> Since commit f8f8f1d04494 ("clk: Don't touch hardware when reparenting
+> during registration") ULPI has been broken on Tegra20 leading to the
+> following error message during boot:
+> 
+> [    1.974698] ulpi_phy_power_on: ulpi write failed
+> [    1.979384] tegra-ehci c5004000.usb: Failed to power on the phy
+> [    1.985434] tegra-ehci: probe of c5004000.usb failed with error -110
+> 
+> Debugging through the changes and finally also consulting the TRM
+> revealed that rather than the CDEV2 clock off OSC requiring such pin
+> muxing actually the PLL_P_OUT4 clock is in use. It looks like so far it
+> just worked by chance of that one having been enabled which Stephen's
+> commit now changed when reparenting sclk away from pll_p_out4 leaving
+> that one disabled. Fix this by properly assigning the PLL_P_OUT4 clock
+> as the ULPI PHY clock.
 
-The regulator patch depends on the MFD patches, so it's best for them to
-go in together.
+I booted 4.17-rc1 (which includes this fix) on an AC100 (T20 paz00 board) and 
+the error above is still there. Surprisingly the error vanishes when I revert 
+your patch. So this patch actually *causes* the problem above on my board. 
+Could it be, that we need all four clocks? Dimitry mentioned on IRC that it 
+could also be a problem in the clock init table. I don't have the technical 
+background myself to fix it, but I still wonder what could be so different 
+between TrimSlice and AC100.
 
-> If the former, then we're going to need an Ack from Mark.
+Marc
 
-Alternative, as you've already supplied (some form of) your Ack for the firs
-3 patches, they can go in through Mark? All of it is enhancing the
-regulator part.
 
-I don't care much which path the patches take, though.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> ---
+> 
+>  arch/arm/boot/dts/tegra20.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+> index 864a95872b8d..e05b6bb2599f 100644
+> --- a/arch/arm/boot/dts/tegra20.dtsi
+> +++ b/arch/arm/boot/dts/tegra20.dtsi
+> @@ -741,7 +741,7 @@
+>  		phy_type = "ulpi";
+>  		clocks = <&tegra_car TEGRA20_CLK_USB2>,
+>  			 <&tegra_car TEGRA20_CLK_PLL_U>,
+> -			 <&tegra_car TEGRA20_CLK_CDEV2>;
+> +			 <&tegra_car TEGRA20_CLK_PLL_P_OUT4>;
+>  		clock-names = "reg", "pll_u", "ulpi-link";
+>  		resets = <&tegra_car 58>, <&tegra_car 22>;
+>  		reset-names = "usb", "utmi-pads";
