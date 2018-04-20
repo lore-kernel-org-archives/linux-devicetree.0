@@ -1,106 +1,136 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 2/6] dt-bindings: clock: add DDR3 standard speed bins.
-Date: Fri, 20 Apr 2018 12:58:10 +0200
-Message-ID: <39099779.d2GlTJ02DA@phil>
-References: <20180419104019.24406-1-enric.balletbo@collabora.com> <5662116.zj93FbmDPb@phil> <62c4b6f0-e67c-8e25-a129-bf0c06c5157b@collabora.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v3 0/7] Add tda998x (HDMI) support to atmel-hlcdc
+Date: Fri, 20 Apr 2018 13:05:21 +0200
+Message-ID: <7f709cea-e1f4-2204-7320-5a1075d721d1@axentia.se>
+References: <20180419162751.25223-1-peda@axentia.se>
+ <20180420085235.GI4235@w540> <6354350.l8DgUyNhLT@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <62c4b6f0-e67c-8e25-a129-bf0c06c5157b@collabora.com>
+In-Reply-To: <6354350.l8DgUyNhLT@avalon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>, robh+dt@kernel.org
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, dbasehore@chromium.org, linux-kernel@vger.kernel.org, dianders@google.com, groeck@google.com, kernel@collabora.com, Mark Rutland <mark.rutland@arm.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, jacopo mondi <jacopo@jmondi.org>
+Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Russell King <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Enric,
-
-Am Donnerstag, 19. April 2018, 13:30:16 CEST schrieb Enric Balletbo i Serra:
-> On 19/04/18 13:10, Heiko Stuebner wrote:
-> > Am Donnerstag, 19. April 2018, 12:40:15 CEST schrieb Enric Balletbo i Serra:
-> >> DDR3 SDRAM Standard (JESD79-3F) defines some standard speed bins for
-> >> DDR3 memories. The devfreq/rk3399_dmc.txt binding refers to this file
-> >> which does not exist, so add a ddr.h file with the standard speed bins
-> >> for DDR3.
-> >>
-> >> Fixes: c1ceb8f7c167 (Documentation: bindings: add dt documentation for rk3399 dmc)
-> >> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> >> ---
-> >>
-> >>  include/dt-bindings/clock/ddr.h | 34 +++++++++++++++++++++++++++++++++
-> >>  1 file changed, 34 insertions(+)
-> >>  create mode 100644 include/dt-bindings/clock/ddr.h
-> >>
-> >> diff --git a/include/dt-bindings/clock/ddr.h b/include/dt-bindings/clock/ddr.h
-> >> new file mode 100644
-> >> index 000000000000..506aef7e609e
-> >> --- /dev/null
-> >> +++ b/include/dt-bindings/clock/ddr.h
-> >> @@ -0,0 +1,34 @@
-> >> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> >> +
-> >> +#ifndef DT_BINDINGS_DDR_H
-> >> +#define DT_BINDINGS_DDR_H
-> >> +
-> >> +/* DDR3-800 Standard Speed Bins */
-> >> +#define DDR3_800D	15
-> >> +#define DDR3_800E		18
-> >> +/* DDR3-1066 Standard Speed Bins */
-> >> +#define DDR3_1066E	18
-> >> +#define DDR3_1066F	21
-> >> +#define DDR3_1066G	24
-> > 
-> > looking at the mentioned jedec standard, I don't see where these numerical
-> > values are defined in the standard itself. [I may be blind though]
-> > 
+On 2018-04-20 12:18, Laurent Pinchart wrote:
+> Hello,
 > 
-> Damm it. No, you're not blind. I did an horrible mistake adding an old version
-> of this file. It's wrong, that is supposed to be there is DDR3 table available
-> in the ATF [1] not this.
+> On Friday, 20 April 2018 11:52:35 EEST jacopo mondi wrote:
+>> Hi Peter,
+>>     I've been a bit a pain in the arse for you recently, but please
+>> bear with me a bit more, and sorry for jumping late on the band wagon.
+>>
+>> On Thu, Apr 19, 2018 at 06:27:44PM +0200, Peter Rosin wrote:
+>>> Hi!
+>>>
+>>> I naively thought that since there was support for both nxp,tda19988 (in
+>>> the tda998x driver) and the atmel-hlcdc, things would be a smooth ride.
+>>> But it wasn't, so I started looking around and realized I had to fix
+>>> things.
+>>>
+>>> In v1 and v2 I fixed things by making the atmel-hlcdc driver a master
+>>> component, but now in v3 I fix things by making the tda998x driver
+>>> a bridge instead. This was after a suggestion from Boris Brezillion
 
-Mistakes can always happen ... so no problem :-) .
+That should be Brezillon, sorry for being sloppy with the spelling.
 
-
->         /* 5-5-5 */
-> 	DDR3_800D = 0,
-> 	/* 6-6-6 */
-> 	DDR3_800E = 1,
-> 	/* 6-6-6 */
-> 	DDR3_1066E = 2,
-> 	/* 7-7-7 */
-> 	DDR3_1066F = 3,
->         ...
+>>> (the atmel-hlcdc maintainer), so there was some risk of bias ... but
+>>> after comparing what was needed, I too find the bridge approach better.
+>>>
+>>> In addition to the above, our PCB interface between the SAMA5D3 and the
+>>> HDMI encoder is only using 16 bits, and this has to be described
+>>> somewhere, or the atmel-hlcdc driver have no chance of selecting the
+>>> correct output mode. Since I have similar problems with a ds90c185 lvds
+>>> encoder I added patches to override the atmel-hlcdc output format via
+>>> DT properties compatible with the media video-interface binding and
+>>> things start to play together.
+>>>
+>>> Since this series superseeds the bridge series [1], I have included the
+>>> leftover bindings patch for the ti,ds90c185 here.
+>>
+>> I feel like this series would look better if it would make use of the
+>> proposed bridge media bus format support I have recently sent out [1]
+>> (and which was not there when you first sent v1).
+>>
+>> I understand your fundamental problem here is that the bus format
+>> that should be reported by your bridge is different from the ones
+>> actually supported by the TDA19988 chip, as the wirings ground some
+>> of the input pins.
+>>
+>> Although this is defintely something that could be described in the
+>> bridge's own OF node with the 'bus_width' property, and what I would do,
+>> now that you have made a bridge out from the tda19988 driver, is:
+>>
+>> 1) Set the bridge accepted input bus_format parsing its pin
+>> configuration, or default it if that's not implemented yet.
+>> This will likely be rgb888. You can do that using the trivial
+>> support for bridge input image formats implemented by my series.
+>> 2) Specify in the bridge endpoint a 'bus_width' of <16>
+>> 3) In your atmel-hlcd get both the image format of the bridge (rgb888)
+>> and parse the remote endpoint property 'bus_width' and get the <16>
+>> value back.
 > 
-> The value is passed directly to the ATF so the above values are the correct.
-> 
-> One question that I have on my mind is if this file should be called as is or if
-> will be better name as atf-ddr.h or something like that.
-> ddr.h -> atf-ddr.h
+> Parsing properties of remote nodes should be avoided as much as possible, as 
+> they need to be interpreted in the context of the DT bindings related to the 
+> compatible string applicable to that node. I'd rather have the bus_width 
+> property in the local endpoint node.
 
-The more interesting question would be if this isn't a very much rockchip
-or even rk3399-specific scheme. So such a generic header name looks very
-much out of place (also including the very generic constant names).
+In addition to that, my view of this binding
 
-So far the only upstream ATF implementation is for the rk3399.
+	endpoint {
+		bus-type = <0>;
+		bus-widht = <16>;
+	};
 
+is that it always means rgb565. See further below.
 
-Heiko
+>> 4) Set the correct format in the atmel hlcd driver to accommodate a
+>> bridge that wants rgb888 on a 16 bit wide bus (that would be rgb565,
+>> or are there other possible combinations I am missing?)
+>>
+>> I would consider this better mostly because in this series you are
+>> creating a semantic for the whole DRM subsystem on the 'bus_width'
+>> property, where numerical values as '12', '16' etc are arbitrary tied
+>> to the selection of a media bus format. At least you should use a
+>> common set of defines [1] between the device tree and the driver,
+>> but this looks anyway fragile imho.
+> 
+> This I agree with though. Combining the remote bus format with the local bus 
+> width should fix the problem without having to parse remote properties.
 
-> 
-> [1]
-> https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/rockchip/rk3399/drivers/dram/dram_spec_timing.h
->
-> Sorry about that. Guess it's needed a v2 but let's wait a little bit for if more
-> discussion arises.
-> 
-> Best regards,
->   Enric
-> 
-> > Could you explain a bit more where these numerical values are coming from?
-> > 
-> > 
-> > Thanks
-> > Heiko
-> > 
-> 
-> 
+My thinking was that the binding with bus-type = <0> and bus-width = <bpp>
+would mean a parallel bus (type 0 means auto-detect and with a bus-width that
+auto-detect means a parallel bus) and the most natural/common interpretation
+of that bus-width. For bus widths of 12, 16, 18, 24, 30 etc I think that
+would be rgb444, rgb565, rgb666, rgb888, rgb101010 (or, I'm first so I get
+to define the default). If you have some other interpretation of a bus with
+that width, you'd need to extend the video-interface binding with some way
+of saying what you need, perhaps using some kind of data mapping or something
+to say e.g. bgr666. And you'd need some kind of indicator if you have YUV
+signals instead of RGB, and LVDS isn't a completely parallel bus, so you'd
+need something for that. Etc.
+
+Because the word from Rob was that there should be one common binding that
+describes video interfaces. I started an implementation that interprets that
+binding in a drm context in
+[PATCH 3/7] drm: of: introduce drm_of_media_bus_fmt
+
+With that view, any input format specification of the bridge is not helpful
+for me since what the bridge specifies (without help) is going to be wrong
+anyway. End result, I need to specify the format manually on either the
+bridge or the atmel-hlcdc side, and I happen to think that the correct side
+is with the atmel-hlcdc, because that is where my issue originates. In short,
+the "drm: bridge: Add support for static image formats" series is unrelated
+as far as I can tell.
+
+Cheers,
+Peter
+
+>> Have I maybe missed some parts of the problem you are trying to solve
+>> here?
+>>
+>> Thank you
+>>    j
