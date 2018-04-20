@@ -1,41 +1,59 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v9 1/2] dt-bindings: display: bridge: Document
- THC63LVD1024 LVDS decoder
-Date: Fri, 20 Apr 2018 09:19:58 +0300
-Message-ID: <74f4f147-cdca-6421-9ad0-558d2d7914e5@mentor.com>
-References: <1524062429-325-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524062429-325-2-git-send-email-jacopo+renesas@jmondi.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 1/5] clk: Extract OF clock helpers in <linux/of_clk.h>
+Date: Fri, 20 Apr 2018 08:28:28 +0200
+Message-ID: <CAMuHMdUX9dJcGLgftAAeCOXYxKUOQ_dW7=oLwNt5VRbd6nQpuA@mail.gmail.com>
+References: <1524063005-1716-1-git-send-email-geert+renesas@glider.be>
+ <1524063005-1716-2-git-send-email-geert+renesas@glider.be> <152417672470.46528.14790019208345640453@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1524062429-325-2-git-send-email-jacopo+renesas@jmondi.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <152417672470.46528.14790019208345640453@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-clk <linux-clk@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-tegra@vger.kernel.org, open list:OPEN FIRMWARE AND FLATTENE
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKT24gMDQvMTgvMjAxOCAwNTo0MCBQTSwgSmFjb3BvIE1vbmRpIHdyb3RlOgo+
-IERvY3VtZW50IFRoaW5lIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIgZGV2aWNlIHRyZWUgYmlu
-ZGluZ3MuCj4gCj4gU2lnbmVkLW9mZi1ieTogSmFjb3BvIE1vbmRpIDxqYWNvcG8rcmVuZXNhc0Bq
-bW9uZGkub3JnPgo+IFJldmlld2VkLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcu
-Y29tPgo+IFJldmlld2VkLWJ5OiBOaWtsYXMgU8O2ZGVybHVuZCA8bmlrbGFzLnNvZGVybHVuZCty
-ZW5lc2FzQHJhZ25hdGVjaC5zZT4KPiBSZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1
-cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgo+IFJldmlld2VkLWJ5OiBSb2IgSGVycmlu
-ZyA8cm9iaEBrZXJuZWwub3JnPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
-dGhpbmUsdGhjNjNsdmQxMDI0LnR4dCB8IDYwICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBm
-aWxlIGNoYW5nZWQsIDYwIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2
-ZDEwMjQudHh0Cj4gCgpSZXZpZXdlZC1ieTogVmxhZGltaXIgWmFwb2xza2l5IDx2bGFkaW1pcl96
-YXBvbHNraXlAbWVudG9yLmNvbT4KCi0tCldpdGggYmVzdCB3aXNoZXMsClZsYWRpbWlyCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Stephen, Rob,
+
+On Fri, Apr 20, 2018 at 12:25 AM, Stephen Boyd <sboyd@kernel.org> wrote:
+> Quoting Geert Uytterhoeven (2018-04-18 07:50:01)
+>> The use of of_clk_get_parent_{count,name}() and of_clk_init() is not
+>> limited to clock providers.
+>>
+>> Hence move these helpers into their own header file, so callers that are
+>> not clock providers no longer have to include <linux/clk-provider.h>.
+>>
+>> Suggested-by: Stephen Boyd <sboyd@kernel.org>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+>> ---
+>> v3:
+>>   - Add Reviewed-by,
+>>   - Add SPDX-License-Identifier,
+>>   - Add to clock section in MAINTAINERS (note that Rob is still listed
+>>     as a maintainer, too, due to the include/linux/of*.h catch-all
+>>     rule),
+>
+> Can you X: out this file so Rob is happy? Or that doesn't work?
+
+I guess that should work.
+
+My point here is that due to the catch-all rule, he's listed as maintainer
+for of_{dma,gpio,irq,iommu,mdio,net,pci} too, which are all helpers for
+other subsystems. Perhaps these should be X'd-out too?
+Or is it OK without X-ing them out, as the clock maintainers are now shown, too?
+
+Rob: What's your preference?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
