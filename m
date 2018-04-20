@@ -1,69 +1,106 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 7/7] drm/i2c: tda998x: register as a drm bridge
-Date: Fri, 20 Apr 2018 11:53:38 +0100
-Message-ID: <20180420105337.GX16141@n2100.armlinux.org.uk>
-References: <20180419162751.25223-8-peda@axentia.se>
- <201804201731.D3OnDg0p%fengguang.wu@intel.com>
- <4e9bd91c-6b29-cdd2-9e1d-1728311ddb81@axentia.se>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 2/6] dt-bindings: clock: add DDR3 standard speed bins.
+Date: Fri, 20 Apr 2018 12:58:10 +0200
+Message-ID: <39099779.d2GlTJ02DA@phil>
+References: <20180419104019.24406-1-enric.balletbo@collabora.com> <5662116.zj93FbmDPb@phil> <62c4b6f0-e67c-8e25-a129-bf0c06c5157b@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4e9bd91c-6b29-cdd2-9e1d-1728311ddb81@axentia.se>
+In-Reply-To: <62c4b6f0-e67c-8e25-a129-bf0c06c5157b@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>, robh+dt@kernel.org
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, dbasehore@chromium.org, linux-kernel@vger.kernel.org, dianders@google.com, groeck@google.com, kernel@collabora.com, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 20, 2018 at 12:49:42PM +0200, Peter Rosin wrote:
-> On 2018-04-20 12:41, kbuild test robot wrote:
-> > Hi Peter,
-> > 
-> > I love your patch! Yet something to improve:
-> 
-> Yup, right you are!
-> 
-> > [auto build test ERROR on drm/drm-next]
-> > [also build test ERROR on v4.17-rc1 next-20180420]
-> > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> > 
-> > url:    https://github.com/0day-ci/linux/commits/Peter-Rosin/Add-tda998x-HDMI-support-to-atmel-hlcdc/20180420-160131
-> > base:   git://people.freedesktop.org/~airlied/linux.git drm-next
-> > config: i386-randconfig-a0-201815 (attached as .config)
-> > compiler: gcc-4.9 (Debian 4.9.4-2) 4.9.4
-> > reproduce:
-> >         # save the attached .config to linux build tree
-> >         make ARCH=i386 
-> > 
-> > All errors (new ones prefixed by >>):
-> > 
-> >    drivers/gpu/drm/i2c/tda998x_drv.c: In function 'tda998x_probe':
-> >>> drivers/gpu/drm/i2c/tda998x_drv.c:1859:16: error: 'struct drm_bridge' has no member named 'of_node'
-> >      bridge->bridge.of_node = dev->of_node;
-> >                    ^
-> 
-> Anybody got a better fix than this?
-> 
-> #ifdef CONFIG_OF
-> 	bridge->bridge.of_node = dev->of_node;
-> #endif
+Hi Enric,
 
-How about the bridge code provides a helper to do this, something like:
+Am Donnerstag, 19. April 2018, 13:30:16 CEST schrieb Enric Balletbo i Serra:
+> On 19/04/18 13:10, Heiko Stuebner wrote:
+> > Am Donnerstag, 19. April 2018, 12:40:15 CEST schrieb Enric Balletbo i Serra:
+> >> DDR3 SDRAM Standard (JESD79-3F) defines some standard speed bins for
+> >> DDR3 memories. The devfreq/rk3399_dmc.txt binding refers to this file
+> >> which does not exist, so add a ddr.h file with the standard speed bins
+> >> for DDR3.
+> >>
+> >> Fixes: c1ceb8f7c167 (Documentation: bindings: add dt documentation for rk3399 dmc)
+> >> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> >> ---
+> >>
+> >>  include/dt-bindings/clock/ddr.h | 34 +++++++++++++++++++++++++++++++++
+> >>  1 file changed, 34 insertions(+)
+> >>  create mode 100644 include/dt-bindings/clock/ddr.h
+> >>
+> >> diff --git a/include/dt-bindings/clock/ddr.h b/include/dt-bindings/clock/ddr.h
+> >> new file mode 100644
+> >> index 000000000000..506aef7e609e
+> >> --- /dev/null
+> >> +++ b/include/dt-bindings/clock/ddr.h
+> >> @@ -0,0 +1,34 @@
+> >> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+> >> +
+> >> +#ifndef DT_BINDINGS_DDR_H
+> >> +#define DT_BINDINGS_DDR_H
+> >> +
+> >> +/* DDR3-800 Standard Speed Bins */
+> >> +#define DDR3_800D	15
+> >> +#define DDR3_800E		18
+> >> +/* DDR3-1066 Standard Speed Bins */
+> >> +#define DDR3_1066E	18
+> >> +#define DDR3_1066F	21
+> >> +#define DDR3_1066G	24
+> > 
+> > looking at the mentioned jedec standard, I don't see where these numerical
+> > values are defined in the standard itself. [I may be blind though]
+> > 
+> 
+> Damm it. No, you're not blind. I did an horrible mistake adding an old version
+> of this file. It's wrong, that is supposed to be there is DDR3 table available
+> in the ATF [1] not this.
 
-static inline void bridge_set_device(struct drm_bridge *bridge,
-				     struct device *dev)
-{
-#ifdef CONFIG_OF
-	bridge->of_node = dev->of_node;
-#endif
-}
+Mistakes can always happen ... so no problem :-) .
 
-which (a) nicely hides the firmware flavour, and (b) hides the ifdef in
-the bridge header where it belongs.  If the bridge code needs to be
-converted to fwnode in the future, at least this would be abstracted
-from the drivers.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+>         /* 5-5-5 */
+> 	DDR3_800D = 0,
+> 	/* 6-6-6 */
+> 	DDR3_800E = 1,
+> 	/* 6-6-6 */
+> 	DDR3_1066E = 2,
+> 	/* 7-7-7 */
+> 	DDR3_1066F = 3,
+>         ...
+> 
+> The value is passed directly to the ATF so the above values are the correct.
+> 
+> One question that I have on my mind is if this file should be called as is or if
+> will be better name as atf-ddr.h or something like that.
+> ddr.h -> atf-ddr.h
+
+The more interesting question would be if this isn't a very much rockchip
+or even rk3399-specific scheme. So such a generic header name looks very
+much out of place (also including the very generic constant names).
+
+So far the only upstream ATF implementation is for the rk3399.
+
+
+Heiko
+
+> 
+> [1]
+> https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/rockchip/rk3399/drivers/dram/dram_spec_timing.h
+>
+> Sorry about that. Guess it's needed a v2 but let's wait a little bit for if more
+> discussion arises.
+> 
+> Best regards,
+>   Enric
+> 
+> > Could you explain a bit more where these numerical values are coming from?
+> > 
+> > 
+> > Thanks
+> > Heiko
+> > 
+> 
+> 
