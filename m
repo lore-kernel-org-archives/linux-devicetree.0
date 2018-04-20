@@ -1,8 +1,8 @@
 From: David Veenstra <davidjulianveenstra@gmail.com>
-Subject: [PATCH v2 06/13] staging: iio: ad2s1200: Introduce variable for
- repeated value
-Date: Fri, 20 Apr 2018 21:30:19 +0200
-Message-ID: <6ec9752ef32af09d0f0f419030be09d1dec68c6d.1524247563.git.davidjulianveenstra@gmail.com>
+Subject: [PATCH v2 07/13] staging: iio: ad2s1200: Improve readability with
+ be16_to_cpup
+Date: Fri, 20 Apr 2018 21:30:32 +0200
+Message-ID: <22b031a8baafad18c3ba2136f8d43fbb4083c1cf.1524247563.git.davidjulianveenstra@gmail.com>
 References: <cover.1524247563.git.davidjulianveenstra@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,60 +23,49 @@ To: lars@metafoo.de, jic23@kernel.org, pmeerw@pmeerw.net
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, robh+dt@kernel.org, knaack.h@gmx.de, daniel.baluta@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Add variable to hold &spi->dev in ad2s1200_probe. This value is repeatedly
-used in ad2s1200_probe.
+The manual states that the data is contained in the upper 12 bits
+of the 16 bits read by spi. The code that extracts these 12 bits
+is correct for both be and le machines, but this is not clear
+from a first glance.
+
+To improve readability the relevant expressions are replaced
+with equivalent expressions that use be16_to_cpup.
 
 Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
 ---
- drivers/staging/iio/resolver/ad2s1200.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/staging/iio/resolver/ad2s1200.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/staging/iio/resolver/ad2s1200.c b/drivers/staging/iio/resolver/ad2s1200.c
-index f07aab7e7a35..0a5fc9917e32 100644
+index 0a5fc9917e32..11ed9c7332e6 100644
 --- a/drivers/staging/iio/resolver/ad2s1200.c
 +++ b/drivers/staging/iio/resolver/ad2s1200.c
-@@ -117,19 +117,22 @@ static int ad2s1200_probe(struct spi_device *spi)
- 	unsigned short *pins = spi->dev.platform_data;
- 	struct ad2s1200_state *st;
- 	struct iio_dev *indio_dev;
-+	struct device *dev;
- 	int pn, ret = 0;
+@@ -57,7 +57,7 @@ static int ad2s1200_read_raw(struct iio_dev *indio_dev,
+ {
+ 	struct ad2s1200_state *st = iio_priv(indio_dev);
+ 	int ret = 0;
+-	s16 vel;
++	u16 vel;
  
-+	dev = &spi->dev;
-+
- 	for (pn = 0; pn < AD2S1200_PN; pn++) {
--		ret = devm_gpio_request_one(&spi->dev, pins[pn], GPIOF_DIR_OUT,
-+		ret = devm_gpio_request_one(dev, pins[pn], GPIOF_DIR_OUT,
- 					    DRV_NAME);
- 		if (ret) {
--			dev_err(&spi->dev, "request gpio pin %d failed\n",
-+			dev_err(dev, "request gpio pin %d failed\n",
- 				pins[pn]);
- 			return ret;
- 		}
+ 	mutex_lock(&st->lock);
+ 	gpio_set_value(st->sample, 0);
+@@ -73,14 +73,13 @@ static int ad2s1200_read_raw(struct iio_dev *indio_dev,
+ 		return ret;
  	}
  
--	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
- 	if (!indio_dev)
- 		return -ENOMEM;
- 
-@@ -140,14 +143,14 @@ static int ad2s1200_probe(struct spi_device *spi)
- 	st->sample = pins[0];
- 	st->rdvel = pins[1];
- 
--	indio_dev->dev.parent = &spi->dev;
-+	indio_dev->dev.parent = dev;
- 	indio_dev->info = &ad2s1200_info;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 	indio_dev->channels = ad2s1200_channels;
- 	indio_dev->num_channels = ARRAY_SIZE(ad2s1200_channels);
- 	indio_dev->name = spi_get_device_id(spi)->name;
- 
--	ret = devm_iio_device_register(&spi->dev, indio_dev);
-+	ret = devm_iio_device_register(dev, indio_dev);
- 	if (ret)
- 		return ret;
- 
++	vel = be16_to_cpup((__be16 *)st->rx);
+ 	switch (chan->type) {
+ 	case IIO_ANGL:
+-		*val = (((u16)(st->rx[0])) << 4) | ((st->rx[1] & 0xF0) >> 4);
++		*val = vel >> 4;
+ 		break;
+ 	case IIO_ANGL_VEL:
+-		vel = (((s16)(st->rx[0])) << 4) | ((st->rx[1] & 0xF0) >> 4);
+-		vel = sign_extend32(vel, 11);
+-		*val = vel;
++		*val = sign_extend32((s16)vel >> 4, 11);
+ 		break;
+ 	default:
+ 		mutex_unlock(&st->lock);
 -- 
 2.16.2
