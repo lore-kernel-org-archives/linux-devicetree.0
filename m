@@ -1,78 +1,86 @@
 From: Peter Rosin <peda@axentia.se>
 Subject: Re: [PATCH v3 7/7] drm/i2c: tda998x: register as a drm bridge
-Date: Fri, 20 Apr 2018 15:09:51 +0200
-Message-ID: <82eb95e8-c085-59d6-7b13-ef7e1abaa40d@axentia.se>
-References: <20180419162751.25223-8-peda@axentia.se>
- <201804201731.D3OnDg0p%fengguang.wu@intel.com>
- <4e9bd91c-6b29-cdd2-9e1d-1728311ddb81@axentia.se>
- <20180420105337.GX16141@n2100.armlinux.org.uk>
+Date: Fri, 20 Apr 2018 15:28:41 +0200
+Message-ID: <790d7a89-ae13-098f-3c0c-a8dfbc84e4a7@axentia.se>
+References: <20180419162751.25223-1-peda@axentia.se>
+ <20180419162751.25223-8-peda@axentia.se> <2556566.3fxMPoIyx0@avalon>
+ <20180420102408.GW16141@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180420105337.GX16141@n2100.armlinux.org.uk>
+In-Reply-To: <20180420102408.GW16141@n2100.armlinux.org.uk>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-20 12:53, Russell King - ARM Linux wrote:
-> On Fri, Apr 20, 2018 at 12:49:42PM +0200, Peter Rosin wrote:
->> On 2018-04-20 12:41, kbuild test robot wrote:
->>> Hi Peter,
->>>
->>> I love your patch! Yet something to improve:
+On 2018-04-20 12:24, Russell King - ARM Linux wrote:
+> On Fri, Apr 20, 2018 at 01:06:49PM +0300, Laurent Pinchart wrote:
+>> Hi Peter,
 >>
->> Yup, right you are!
+>> Thank you for the patch.
 >>
->>> [auto build test ERROR on drm/drm-next]
->>> [also build test ERROR on v4.17-rc1 next-20180420]
->>> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>> On Thursday, 19 April 2018 19:27:51 EEST Peter Rosin wrote:
+>>> This makes this driver work with all(?) drivers that are not
+>>> componentized and instead expect to connect to a panel/bridge. That
+>>> said, the only one tested is atmel_hlcdc.
 >>>
->>> url:    https://github.com/0day-ci/linux/commits/Peter-Rosin/Add-tda998x-HDMI-support-to-atmel-hlcdc/20180420-160131
->>> base:   git://people.freedesktop.org/~airlied/linux.git drm-next
->>> config: i386-randconfig-a0-201815 (attached as .config)
->>> compiler: gcc-4.9 (Debian 4.9.4-2) 4.9.4
->>> reproduce:
->>>         # save the attached .config to linux build tree
->>>         make ARCH=i386 
+>>> This hooks the relevant work function previously called by the encoder
+>>> and the component also to the bridge, since the encoder goes away when
+>>> connecting to the bridge interface of the driver and the equivalent of
+>>> bind/unbind of the component is handled by bridge attach/detach.
 >>>
->>> All errors (new ones prefixed by >>):
->>>
->>>    drivers/gpu/drm/i2c/tda998x_drv.c: In function 'tda998x_probe':
->>>>> drivers/gpu/drm/i2c/tda998x_drv.c:1859:16: error: 'struct drm_bridge' has no member named 'of_node'
->>>      bridge->bridge.of_node = dev->of_node;
->>>                    ^
+>>> The lifetime requirements of a bridge and a component are slightly
+>>> different, which is the reason for struct tda998x_bridge.
 >>
->> Anybody got a better fix than this?
->>
->> #ifdef CONFIG_OF
->> 	bridge->bridge.of_node = dev->of_node;
->> #endif
+>> Couldn't you move the allocation and initialization (tda998x_create) of the 
+>> tda998x_priv structure to probe time ? I think you wouldn't need a separate 
+>> structure in that case. Unless I'm mistaken there would be an added benefit of 
+>> separating component and bridge initialization, resulting in the encoder not 
+>> being initialized at all if the component isn't used. You wouldn't need to add 
+>> a local_encoder parameter to the tda998x_init() function.
 > 
-> How about the bridge code provides a helper to do this, something like:
+> No, I don't like that idea one bit, as I've stated in the past about the
+> component API.  The same (probably) goes for the bridge stuff too.
 > 
-> static inline void bridge_set_device(struct drm_bridge *bridge,
-> 				     struct device *dev)
-> {
-> #ifdef CONFIG_OF
-> 	bridge->of_node = dev->of_node;
-> #endif
-> }
+> Consider the following:
 > 
-> which (a) nicely hides the firmware flavour, and (b) hides the ifdef in
-> the bridge header where it belongs.  If the bridge code needs to be
-> converted to fwnode in the future, at least this would be abstracted
-> from the drivers.
+> Your DRM system is initialised.  You then remove a module, which results
+> in the DRM system being torn down.  You re-insert the module (eg, having
+> made a change to it).  The DRM system is then re-initialised.
 > 
+> At this point, what is the state of variables such as priv->is_on if
+> you allocate the structure at probe time?
+> 
+> What about all the other variables in the driver private structure - are
+> you sure that the driver can cope with random values from the previous
+> "usage" remaining there?
+> 
+> At the moment, this isn't a concern for the driver because we
+> dev_kzalloc() the structure in the bind callback.  Move that to the
+> probe function, and the structure is no longer re-initialised each
+> time, and so it retains the previous state.  The driver is not setup
+> to cope with that.
+> 
+> So, to work around that, you would need to reinitialise _everything_
+> in the structure that the driver requires, which IMHO is a very
+> open to bugs (eg, if a member is missed, or added without the
+> necessary re-initialisation), _especially_ when this is not a path
+> that will get regular testing.
+> 
+> If you want to do this for a subset of data, it would be much better
+> to separate them into independent structures (maybe one embedded into
+> the other) so that this problem can not occur.  That way, a subset
+> of the data can be memset() when bound to the rest of the DRM system
+> ensuring a consistent driver state and still achieve what you're
+> suggesting.
 
-Hmm, I looked around and found numerous other #ifdefs for this, so my plan
-is to just add one more. Fixing up all these ifdefs is orthogonal and can
-be done later.
+This was the exact reason I added struct tda998x_bridge. It seemed
+very risky to move the tda998x_create call (or some of its meat) to
+the probe function. Even if that could be done I think it should
+definitely be a separate patch.
 
 Cheers,
 Peter
-
-PS. I also noted that I had forgotten to remove a couple of dev_info calls
-in this patch. Will remove for v4.
