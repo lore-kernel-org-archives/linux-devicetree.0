@@ -1,78 +1,40 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v9 0/2] drm: Add Thine THC63LVD1024 LVDS decoder bridge
-Date: Fri, 20 Apr 2018 11:18:35 +0200
-Message-ID: <eaa9df5f-99af-69f0-dff0-c03869d7571b@samsung.com>
-References: <CGME20180418144054epcas5p3ec7816f76cd84d4c429b47e23331ee7d@epcas5p3.samsung.com>
- <1524062429-325-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: [PATCH v1 1/5] ARM: configs: multi_v7: Add I2C support
+Date: Fri, 20 Apr 2018 11:17:50 +0200
+Message-ID: <1524215874-15093-2-git-send-email-pierre-yves.mordret@st.com>
+References: <1524215874-15093-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1524062429-325-1-git-send-email-jacopo+renesas@jmondi.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, vladimir_zapolskiy@mentor.com, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524215874-15093-1-git-send-email-pierre-yves.mordret@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, Marek Szyprowski <m.szyprowski@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Marc Zyngier <marc.zyngier@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Yangbo Lu <yangbo.lu@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTguMDQuMjAxOCAxNjo0MCwgSmFjb3BvIE1vbmRpIHdyb3RlOgo+IEFzIEkgaGF2ZSBhbm90
-aGVyIHNlcmllcyB3aGljaCBpcyBiYXNlZCBvbiB0aGlzIG9uZSArIEVhZ2xlIGJvYXJkIGRpc3Bs
-YXkKPiBzdXBwb3J0LCBJJ20gcmUtc2VuZGluZyB0aGlzIG9uZSB0byBmaXggdGhlIHNtYWxsIGlz
-c3VlIEkgcG9pbnRlZCBvdXQgaW4gbXkKPiByZXBseSB0byB2OC4KPgo+IFNpbW9uOiBubyBjaGFu
-Z2VzIHRvIEVhZ2xlIERUUyBzZXJpZXMsIHNvIHRoZSBsYXN0IG9uZSBzZW50IGlzIHN0aWxsIHRo
-ZSBnb29kCj4gb25lLgo+Cj4gRFJNOiBJIGhhdmUgY29sbGVjdGVkIHNldmVyYWwgcmV2aWV3ZWQt
-YnkgdGFncyBib3RoIG9uIGRyaXZlciBhbmQgYmluZGluZ3MuCj4gQ2FuIEkgc2VuZCBvdXQgaW5j
-cmVtZW50YWwgcGF0Y2hlcyBvbiB0aGlzIHNlcmllcyBhbmQgY29uc2lkZXIgdGhpcyBvbmUgdG8K
-PiBiZSByZWFkeSB0byBiZSBjb2xsZWN0ZWQ/CgpRdWV1ZWQgdG8gZHJtLW1pc2MtbmV4dC4KClJl
-Z2FyZHMKQW5kcnplagoKCj4KPiBUaGFua3MKPiAgICBqCj4KPiB2OCAtPiB2OToKPiAtIFB1dCAn
-cmVtb3RlJyBPRiBub2RlIGFmdGVyIHVzYWdlIG5vdCBqdXN0IGluIGVycm9yIHBhdGggZHVyaW5n
-IGRldmljZQo+ICAgdHJlZSBwYXJzaW5nIHJvdXRpbmUKPiAtIEFkZCBSb2IncyBSZXZpZXdlZC1i
-eSB0YWcgdG8gdGhlIGRldmljZSB0cmVlIGJpbmRpbmdzIGRvY3VtZW50YXRpb24KPgo+IHY3IC0+
-IGI4Ogo+IC0gTWFrZSAndmNjJyBzdXBwbHkgbWFuZGF0b3J5Cj4gLSBVc2UgJ29lJyBwcm9wZXJ0
-eSBuYW1lIHRvIGRlc2NyaWJlICJPRSIgcGluCj4gLSBNaW5vciBmaXhlcyBhcyBzdWdnZXN0ZWQg
-YnkgTGF1cmVudCBvbiBiaW5kaW5ncyBhbmQgZHJpdmVyCj4KPiB2NiAtPiB2NzoKPiAtIFVzZSBz
-ZW1pLXN0YW5kYXJkIG5hbWVzIGZvciBwb3dlcmRvd24gYW5kIG91dHB1dCBlbmFibGUgR1BJT3Mg
-YXMgc3VnZ2VzdGVkCj4gICBieSBSb2IgYW5kIFZsYWRpbWlyCj4gLSBVc2UgJ3JlZ3VsYXRvcl9n
-ZXQoKScgbm90IHRoZSBvcHRpb25hbCB2ZXJzaW9uLCBhbmQgbGlzdCBvbmx5ICd2Y2MnIGFzCj4g
-ICByZXF1ZXN0ZWQgc3VwcGx5Cj4gLSBBZGRyZXNzZWQgTGF1cmVudCdzIHJldmlldyBjb21tZW50
-cyBhbmQgcmVtb3ZlZCBFYWdsZSBkaXNwbGF5IGVuYWJsZW1lbnQgcGF0Y2gKPiAgIHRvIGJlIHNl
-bnQgc2VwYXJhdGVseQo+Cj4gdjUgLT4gdjY6Cj4gLSBEcm9wIGNoZWNrIGZvciBDT05GSUdfT0Yg
-YXMgaXQgaXMgYSBLY29uZmlnIGRlcGVuZGVuY3kKPiAtIEFkZCBOaWtsYXMgUmV2aWV3ZWQtYnkg
-dGFncwo+IC0gTGlzdCBbMy8zXSBkZXBlbmVuY2llcyBiZWxvdyBjb21taXQgbWVzc2FnZSB0byBl
-YXNlIGludGVncmF0aW9uCj4KPiB2NCAtPiB2NToKPiAtIEZpeCBwdW5jdHVhdGlvbiBpbiBiaW5k
-aW5ncyBkb2N1bWVudGF0aW9uCj4gLSBBZGQgc21hbGwgc3RhdGVtZW50IHRvIGJpbmRpbmdzIGRv
-Y3VtZW50IHRvIGNsYXJpZnkgdGhlIGNoaXAgaGFzIG5vCj4gICBjb250cm9sIGJ1cwo+IC0gUHJp
-bnQgcmVndWxhdG9yIG5hbWUgaW4gZW5hYmxlL2Rpc2FibGUgcm91dGluZXMgZXJyb3IgcGF0aAo+
-IC0gQWRkIEFuZHJ6ZWogUmV2aWV3ZWQtYnkgdGFnCj4KPiB2MyAtPiB2NDoKPiAtIFJlbmFtZSBw
-ZXJtdXRhdGlvbnMgb2YgInBkd24iIHRvIGp1c3QgInBkd24iIGV2ZXJ5d2hlcmUgaW4gdGhlIHNl
-cmllcwo+IC0gSW1wcm92ZSBwb3dlciBlbmFibGUvZGlzYWJsZSByb3V0aW5lcyBhcyBzdWdnZXN0
-ZWQgYnkgQW5kcnplaiBhbmQgU2VyZ2VpCj4gLSBDaGFuZ2UgInBkd24iIGdwaW8gaW5pdGlhbGl6
-YXRpb24gdG8gdXNlIHRoZSBsb2dpY2FsIG91dHB1dCBsZXZlbAo+IC0gQ2hhbmdlIEtjb25maWcg
-ZGVzY3JpcHRpb24KPgo+IHYyIC0+IHYzOgo+IC0gRHJvcCBzdXBwb3J0IGZvciAibHZkcy1kZWNv
-ZGVyIiBhbmQgbWFrZSB0aGUgZHJpdmVyIFRIQzYzTFZEMTAyNCBzcGVjaWZpYwo+IC0tIFJld29y
-ayBiaW5kaW5ncyB0byBkZXNjcmliZSBtdWx0aXBsZSBpbnB1dC9vdXRwdXQgcG9ydHMKPiAtLSBS
-ZW5hbWUgZHJpdmVyIGFuZCByZW1vdmUgImx2ZHMtZGVjb2RlciIgcmVmZXJlbmNlcwo+IC0tIFJl
-d29yayBFYWdsZSBEVFMgdG8gdXNlIG5ldyBiaW5kaW5ncwo+Cj4gdjEgLT4gdjI6Cj4gLSBEcm9w
-IHN1cHBvcnQgZm9yIFRIQzYzTFZEMTAyNAo+Cj4gSmFjb3BvIE1vbmRpICgyKToKPiAgIGR0LWJp
-bmRpbmdzOiBkaXNwbGF5OiBicmlkZ2U6IERvY3VtZW50IFRIQzYzTFZEMTAyNCBMVkRTIGRlY29k
-ZXIKPiAgIGRybTogYnJpZGdlOiBBZGQgdGhjNjNsdmQxMDI0IExWRFMgZGVjb2RlciBkcml2ZXIK
-Pgo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dCB8
-ICA2MCArKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnICAgICAgICAgICAg
-ICAgICAgICAgfCAgIDYgKwo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAgICAg
-ICAgICAgICAgICAgICB8ICAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGhjNjNsdmQx
-MDI0LmMgICAgICAgICAgICAgIHwgMjA1ICsrKysrKysrKysrKysrKysrKysrKwo+ICA0IGZpbGVz
-IGNoYW5nZWQsIDI3MiBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQx
-MDI0LnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aGM2
-M2x2ZDEwMjQuYwo+Cj4gLS0KPiAyLjcuNAo+Cj4KPgo+CgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This patch adds I2C F7 support to multi_v7_defconfig
+
+Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+---
+  Version history:
+     v1:
+        * Initial
+---
+---
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index e6b3c96..2a87784 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -385,6 +385,7 @@ CONFIG_I2C_S3C2410=y
+ CONFIG_I2C_SH_MOBILE=y
+ CONFIG_I2C_SIRF=y
+ CONFIG_I2C_ST=y
++CONFIG_I2C_STM32F7=y
+ CONFIG_I2C_SUN6I_P2WI=y
+ CONFIG_I2C_TEGRA=y
+ CONFIG_I2C_UNIPHIER=y
+-- 
+2.7.4
