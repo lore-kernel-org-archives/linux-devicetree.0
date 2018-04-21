@@ -1,77 +1,65 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 26/27] arm64: dts: marvell: add interrupt support to ap806
- thermal node
-Date: Sat, 21 Apr 2018 17:12:54 +0200
-Message-ID: <20180421151255.29929-27-miquel.raynal@bootlin.com>
-References: <20180421151255.29929-1-miquel.raynal@bootlin.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: iio: stm32-adc: add support for
+ STM32MP1.
+Date: Sat, 21 Apr 2018 16:36:51 +0100
+Message-ID: <20180421163651.2a9f19e1@archlinux>
+References: <1524065874-434-1-git-send-email-fabrice.gasnier@st.com>
+        <1524065874-434-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180421151255.29929-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524065874-434-2-git-send-email-fabrice.gasnier@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: robh+dt@kernel.org, alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, benjamin.gaignard@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add interrupt properties in the thermal node as well as a critical trip
-point in the thermal-zone.
+On Wed, 18 Apr 2018 17:37:52 +0200
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+> Document support for STM32MP1 ADC. It's quite similar to STM32H7 ADC.
+> Introduce "st,stm32mp1-adc" compatible to handle variants of this
+> hardware such as vregready flag, interrupts, clock rate.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Pretty uncontroversial I think so I'll take this one with out
+waiting Rob or Mark's time (though of course they are welcome
+to offer feedback!)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-index a6fee3ccbc11..d5a7448896b2 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-@@ -273,6 +273,8 @@
- 
- 				ap_thermal: ap-thermal {
- 					compatible = "marvell,armada-ap806-thermal";
-+					interrupt-parent = <&sei_wired_controller>;
-+					interrupts = <18>;
- 					#thermal-sensor-cells = <1>;
- 				};
- 			};
-@@ -283,16 +285,26 @@
- 	 * The thermal IP features one internal sensor plus, if applicable, one
- 	 * remote channel wired to one sensor per CPU.
- 	 *
-+	 * Only one thermal zone per AP/CP may trigger interrupts at a time, the
-+	 * first one that will have a critical trip point will be chosen.
-+	 *
- 	 * The cooling maps are always empty as there are no cooling devices.
- 	 */
- 	thermal-zones {
- 		ap_thermal_ic: ap-thermal-ic {
--			polling-delay-passive = <1000>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>; /* Interrupt driven */
-+			polling-delay = <0>; /* Interrupt driven */
- 
- 			thermal-sensors = <&ap_thermal 0>;
- 
--			trips {	};
-+			trips {
-+				ap_crit: ap-crit {
-+					temperature = <100000>; /* mC degrees */
-+					hysteresis = <2000>; /* mC degrees */
-+					type = "critical";
-+				};
-+			};
-+
- 			cooling-maps { };
- 		};
- 
--- 
-2.14.1
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> index e8bb824..9994384 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> @@ -24,8 +24,11 @@ Required properties:
+>  - compatible: Should be one of:
+>    "st,stm32f4-adc-core"
+>    "st,stm32h7-adc-core"
+> +  "st,stm32mp1-adc-core"
+>  - reg: Offset and length of the ADC block register set.
+> -- interrupts: Must contain the interrupt for ADC block.
+> +- interrupts: One or more interrupts for ADC block. Some parts like stm32f4
+> +  and stm32h7 share a common ADC interrupt line. stm32mp1 has separate
+> +  lines for each ADC within ADC block.
+>  - clocks: Core can use up to two clocks, depending on part used:
+>    - "adc" clock: for the analog circuitry, common to all ADCs.
+>      It's required on stm32f4.
+> @@ -53,6 +56,7 @@ Required properties:
+>  - compatible: Should be one of:
+>    "st,stm32f4-adc"
+>    "st,stm32h7-adc"
+> +  "st,stm32mp1-adc"
+>  - reg: Offset of ADC instance in ADC block (e.g. may be 0x0, 0x100, 0x200).
+>  - clocks: Input clock private to this ADC instance. It's required only on
+>    stm32f4, that has per instance clock input for registers access.
