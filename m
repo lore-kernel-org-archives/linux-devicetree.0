@@ -1,215 +1,106 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 0/7] Add tda998x (HDMI) support to atmel-hlcdc
-Date: Sat, 21 Apr 2018 11:38:00 +0300
-Message-ID: <1549346.R82tLOL7eo@avalon>
-References: <20180419162751.25223-1-peda@axentia.se>
- <20180420113859.GL4235@w540>
- <840625e9-42ff-49b7-605a-202b4d980beb@axentia.se>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v5 2/3] pinctrl: bcm2835: Add support for generic
+ pinctrl binding
+Date: Sat, 21 Apr 2018 12:30:02 +0200 (CEST)
+Message-ID: <1775241593.21185.1524306602836@email.1und1.de>
+References: <f500b25c-eea0-9f01-7d7b-5a9dd90c50fa@castello.eng.br>
+ <1523422726-7910-1-git-send-email-matheus@castello.eng.br>
+ <1523422726-7910-3-git-send-email-matheus@castello.eng.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <840625e9-42ff-49b7-605a-202b4d980beb@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, jacopo mondi <jacopo@jmondi.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Daniel Vetter <daniel.vetter@intel.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1523422726-7910-3-git-send-email-matheus@castello.eng.br>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matheus Castello <matheus@castello.eng.br>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, eric@anholt.net
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGV0ZXIsCgpPbiBGcmlkYXksIDIwIEFwcmlsIDIwMTggMTU6NTU6NTAgRUVTVCBQZXRlciBS
-b3NpbiB3cm90ZToKPiBPbiAyMDE4LTA0LTIwIDEzOjM4LCBqYWNvcG8gbW9uZGkgd3JvdGU6Cj4g
-PiBPbiBGcmksIEFwciAyMCwgMjAxOCBhdCAwMTowNToyMVBNICswMjAwLCBQZXRlciBSb3NpbiB3
-cm90ZToKPiA+PiBPbiAyMDE4LTA0LTIwIDEyOjE4LCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+
-ID4+PiBPbiBGcmlkYXksIDIwIEFwcmlsIDIwMTggMTE6NTI6MzUgRUVTVCBqYWNvcG8gbW9uZGkg
-d3JvdGU6Cj4gPj4+PiBIaSBQZXRlciwKPiA+Pj4+IAo+ID4+Pj4gSSd2ZSBiZWVuIGEgYml0IGEg
-cGFpbiBpbiB0aGUgYXJzZSBmb3IgeW91IHJlY2VudGx5LCBidXQgcGxlYXNlCj4gPj4+PiBiZWFy
-IHdpdGggbWUgYSBiaXQgbW9yZSwgYW5kIHNvcnJ5IGZvciBqdW1waW5nIGxhdGUgb24gdGhlIGJh
-bmQgd2Fnb24uCj4gPj4+PiAKPiA+Pj4+IE9uIFRodSwgQXByIDE5LCAyMDE4IGF0IDA2OjI3OjQ0
-UE0gKzAyMDAsIFBldGVyIFJvc2luIHdyb3RlOgo+ID4+Pj4+IEhpIQo+ID4+Pj4+IAo+ID4+Pj4+
-IEkgbmFpdmVseSB0aG91Z2h0IHRoYXQgc2luY2UgdGhlcmUgd2FzIHN1cHBvcnQgZm9yIGJvdGgg
-bnhwLHRkYTE5OTg4Cj4gPj4+Pj4gKGluIHRoZSB0ZGE5OTh4IGRyaXZlcikgYW5kIHRoZSBhdG1l
-bC1obGNkYywgdGhpbmdzIHdvdWxkIGJlIGEgc21vb3RoCj4gPj4+Pj4gcmlkZS4gQnV0IGl0IHdh
-c24ndCwgc28gSSBzdGFydGVkIGxvb2tpbmcgYXJvdW5kIGFuZCByZWFsaXplZCBJIGhhZCB0bwo+
-ID4+Pj4+IGZpeCB0aGluZ3MuCj4gPj4+Pj4gCj4gPj4+Pj4gSW4gdjEgYW5kIHYyIEkgZml4ZWQg
-dGhpbmdzIGJ5IG1ha2luZyB0aGUgYXRtZWwtaGxjZGMgZHJpdmVyIGEgbWFzdGVyCj4gPj4+Pj4g
-Y29tcG9uZW50LCBidXQgbm93IGluIHYzIEkgZml4IHRoaW5ncyBieSBtYWtpbmcgdGhlIHRkYTk5
-OHggZHJpdmVyCj4gPj4+Pj4gYSBicmlkZ2UgaW5zdGVhZC4gVGhpcyB3YXMgYWZ0ZXIgYSBzdWdn
-ZXN0aW9uIGZyb20gQm9yaXMgQnJlemlsbGlvbgo+ID4+IAo+ID4+IFRoYXQgc2hvdWxkIGJlIEJy
-ZXppbGxvbiwgc29ycnkgZm9yIGJlaW5nIHNsb3BweSB3aXRoIHRoZSBzcGVsbGluZy4KPiA+PiAK
-PiA+Pj4+PiAodGhlIGF0bWVsLWhsY2RjIG1haW50YWluZXIpLCBzbyB0aGVyZSB3YXMgc29tZSBy
-aXNrIG9mIGJpYXMgLi4uIGJ1dAo+ID4+Pj4+IGFmdGVyIGNvbXBhcmluZyB3aGF0IHdhcyBuZWVk
-ZWQsIEkgdG9vIGZpbmQgdGhlIGJyaWRnZSBhcHByb2FjaAo+ID4+Pj4+IGJldHRlci4KPiA+Pj4+
-PiAKPiA+Pj4+PiBJbiBhZGRpdGlvbiB0byB0aGUgYWJvdmUsIG91ciBQQ0IgaW50ZXJmYWNlIGJl
-dHdlZW4gdGhlIFNBTUE1RDMgYW5kCj4gPj4+Pj4gdGhlIEhETUkgZW5jb2RlciBpcyBvbmx5IHVz
-aW5nIDE2IGJpdHMsIGFuZCB0aGlzIGhhcyB0byBiZSBkZXNjcmliZWQKPiA+Pj4+PiBzb21ld2hl
-cmUsIG9yIHRoZSBhdG1lbC1obGNkYyBkcml2ZXIgaGF2ZSBubyBjaGFuY2Ugb2Ygc2VsZWN0aW5n
-IHRoZQo+ID4+Pj4+IGNvcnJlY3Qgb3V0cHV0IG1vZGUuIFNpbmNlIEkgaGF2ZSBzaW1pbGFyIHBy
-b2JsZW1zIHdpdGggYSBkczkwYzE4NQo+ID4+Pj4+IGx2ZHMgZW5jb2RlciBJIGFkZGVkIHBhdGNo
-ZXMgdG8gb3ZlcnJpZGUgdGhlIGF0bWVsLWhsY2RjIG91dHB1dCBmb3JtYXQKPiA+Pj4+PiB2aWEg
-RFQgcHJvcGVydGllcyBjb21wYXRpYmxlIHdpdGggdGhlIG1lZGlhIHZpZGVvLWludGVyZmFjZSBi
-aW5kaW5nCj4gPj4+Pj4gYW5kIHRoaW5ncyBzdGFydCB0byBwbGF5IHRvZ2V0aGVyLgo+ID4+Pj4+
-IAo+ID4+Pj4+IFNpbmNlIHRoaXMgc2VyaWVzIHN1cGVyc2VlZHMgdGhlIGJyaWRnZSBzZXJpZXMg
-WzFdLCBJIGhhdmUgaW5jbHVkZWQKPiA+Pj4+PiB0aGUgbGVmdG92ZXIgYmluZGluZ3MgcGF0Y2gg
-Zm9yIHRoZSB0aSxkczkwYzE4NSBoZXJlLgo+ID4+Pj4gCj4gPj4+PiBJIGZlZWwgbGlrZSB0aGlz
-IHNlcmllcyB3b3VsZCBsb29rIGJldHRlciBpZiBpdCB3b3VsZCBtYWtlIHVzZSBvZiB0aGUKPiA+
-Pj4+IHByb3Bvc2VkIGJyaWRnZSBtZWRpYSBidXMgZm9ybWF0IHN1cHBvcnQgSSBoYXZlIHJlY2Vu
-dGx5IHNlbnQgb3V0IFsxXQo+ID4+Pj4gKGFuZCB3aGljaCB3YXMgbm90IHRoZXJlIHdoZW4geW91
-IGZpcnN0IHNlbnQgdjEpLgo+ID4+Pj4gCj4gPj4+PiBJIHVuZGVyc3RhbmQgeW91ciBmdW5kYW1l
-bnRhbCBwcm9ibGVtIGhlcmUgaXMgdGhhdCB0aGUgYnVzIGZvcm1hdAo+ID4+Pj4gdGhhdCBzaG91
-bGQgYmUgcmVwb3J0ZWQgYnkgeW91ciBicmlkZ2UgaXMgZGlmZmVyZW50IGZyb20gdGhlIG9uZXMK
-PiA+Pj4+IGFjdHVhbGx5IHN1cHBvcnRlZCBieSB0aGUgVERBMTk5ODggY2hpcCwgYXMgdGhlIHdp
-cmluZ3MgZ3JvdW5kIHNvbWUKPiA+Pj4+IG9mIHRoZSBpbnB1dCBwaW5zLgo+ID4+Pj4gCj4gPj4+
-PiBBbHRob3VnaCB0aGlzIGlzIGRlZmludGVseSBzb21ldGhpbmcgdGhhdCBjb3VsZCBiZSBkZXNj
-cmliZWQgaW4gdGhlCj4gPj4+PiBicmlkZ2UncyBvd24gT0Ygbm9kZSB3aXRoIHRoZSAnYnVzX3dp
-ZHRoJyBwcm9wZXJ0eSwgYW5kIHdoYXQgSSB3b3VsZAo+ID4+Pj4gZG8sIG5vdyB0aGF0IHlvdSBo
-YXZlIG1hZGUgYSBicmlkZ2Ugb3V0IGZyb20gdGhlIHRkYTE5OTg4IGRyaXZlciwgaXM6Cj4gPj4+
-PiAKPiA+Pj4+IDEpIFNldCB0aGUgYnJpZGdlIGFjY2VwdGVkIGlucHV0IGJ1c19mb3JtYXQgcGFy
-c2luZyBpdHMgcGluCj4gPj4+PiBjb25maWd1cmF0aW9uLCBvciBkZWZhdWx0IGl0IGlmIHRoYXQn
-cyBub3QgaW1wbGVtZW50ZWQgeWV0Lgo+ID4+Pj4gVGhpcyB3aWxsIGxpa2VseSBiZSByZ2I4ODgu
-IFlvdSBjYW4gZG8gdGhhdCB1c2luZyB0aGUgdHJpdmlhbAo+ID4+Pj4gc3VwcG9ydCBmb3IgYnJp
-ZGdlIGlucHV0IGltYWdlIGZvcm1hdHMgaW1wbGVtZW50ZWQgYnkgbXkgc2VyaWVzLgo+ID4+Pj4g
-MikgU3BlY2lmeSBpbiB0aGUgYnJpZGdlIGVuZHBvaW50IGEgJ2J1c193aWR0aCcgb2YgPDE2Pgo+
-ID4+Pj4gMykgSW4geW91ciBhdG1lbC1obGNkIGdldCBib3RoIHRoZSBpbWFnZSBmb3JtYXQgb2Yg
-dGhlIGJyaWRnZSAocmdiODg4KQo+ID4+Pj4gYW5kIHBhcnNlIHRoZSByZW1vdGUgZW5kcG9pbnQg
-cHJvcGVydHkgJ2J1c193aWR0aCcgYW5kIGdldCB0aGUgPDE2Pgo+ID4+Pj4gdmFsdWUgYmFjay4K
-PiA+Pj4gCj4gPj4+IFBhcnNpbmcgcHJvcGVydGllcyBvZiByZW1vdGUgbm9kZXMgc2hvdWxkIGJl
-IGF2b2lkZWQgYXMgbXVjaCBhcwo+ID4+PiBwb3NzaWJsZSwgYXMgdGhleSBuZWVkIHRvIGJlIGlu
-dGVycHJldGVkIGluIHRoZSBjb250ZXh0IG9mIHRoZSBEVAo+ID4+PiBiaW5kaW5ncyByZWxhdGVk
-IHRvIHRoZSBjb21wYXRpYmxlIHN0cmluZyBhcHBsaWNhYmxlIHRvIHRoYXQgbm9kZS4gSSdkCj4g
-Pj4+IHJhdGhlciBoYXZlIHRoZSBidXNfd2lkdGggcHJvcGVydHkgaW4gdGhlIGxvY2FsIGVuZHBv
-aW50IG5vZGUuCj4gPj4gCj4gPj4gSW4gYWRkaXRpb24gdG8gdGhhdCwgbXkgdmlldyBvZiB0aGlz
-IGJpbmRpbmcKPiA+PiAKPiA+PiAJZW5kcG9pbnQgewo+ID4+IAkJYnVzLXR5cGUgPSA8MD47Cj4g
-PiAKPiA+IGJ1cy10eXBlIGlzIHVzZWQgYnkgdjRsMl9md25vZGUgaGVscGVycyB0byBkZWNpZGUg
-d2hpY2ggdHlwZSBvZiBidXMKPiA+IHRoZXkncmUgZGVhbGluZyB3aXRoIGlpcmMuIEhlcmUgaXQg
-c2VlbXMgdG8gbWUgaXQgaGFzIG5vIGFkZGVkCj4gPiB2YWx1ZSwgYWxzbyBiZWNhdXNlIGluIHlv
-dXIgYmluZGluZ3MgZGVzY3JpcHRpb24gIml0IHNoYWxsIGJlIDAiIGFuZAo+ID4gaXQgaXMgbm90
-IHBhcnNlZCBhbnl3aGVyZSBpbiB5b3UgY29kZSwgYnV0IG5vIGJpZyBkZWFsLi4uLgo+IAo+IGJ1
-cy10eXBlIGlzIGluZGVlZCBwYXJzZWQgYW5kIHZlcmlmaWVkIHRvIGJlIHplcm8gd2hpY2ggbWVh
-bnMgYXV0by1kZXRlY3QKPiBhY2NvcmRpbmcgdG8gdGhlIHZpZGVvLWludGVyZmFjZXMgYmluZGlu
-Zy4gQW4gYXV0by1kZXRlY3QgYnVzLXR5cGUgd2l0aAo+IGEgZ2l2ZW4gYnVzLXdpZHRoIG1lYW5z
-IGEgcGFyYWxsZWwgaW50ZXJmYWNlIElJVUMuCgpJIGJlbGlldmUgeW91IGNvdWxkIGxlYXZlIGl0
-IG91dCB0aG91Z2guIFlvdXIgZGlzcGxheSBjb250cm9sbGVyIG9ubHkgc3VwcG9ydHMgCnBhcmFs
-bGVsIGJ1c2VzLCBzbyB0aGVyZSdzIG5vIG5lZWQgdG8gc3BlY2lmeSB0aGUgYnVzIHR5cGUgZXhw
-bGljaXRseS4KCj4gRnJvbSBwYXRjaCAzLzc6Cj4gCj4gCWlmIChvZl9wcm9wZXJ0eV9yZWFkX3Uz
-Mihub2RlLCAiYnVzLXR5cGUiLCAmYnVzX3R5cGUpKQo+IAkJcmV0dXJuIDA7Cj4gCWlmIChidXNf
-dHlwZSAhPSAwKQo+IAkJcmV0dXJuIC1FSU5WQUw7Cj4gCj4gPj4gCQlidXMtd2lkaHQgPSA8MTY+
-Owo+ID4+IAl9Owo+ID4+IAo+ID4+IGlzIHRoYXQgaXQgYWx3YXlzIG1lYW5zIHJnYjU2NS4gU2Vl
-IGZ1cnRoZXIgYmVsb3cuCj4gPj4gCj4gPj4+PiA0KSBTZXQgdGhlIGNvcnJlY3QgZm9ybWF0IGlu
-IHRoZSBhdG1lbCBobGNkIGRyaXZlciB0byBhY2NvbW1vZGF0ZSBhCj4gPj4+PiBicmlkZ2UgdGhh
-dCB3YW50cyByZ2I4ODggb24gYSAxNiBiaXQgd2lkZSBidXMgKHRoYXQgd291bGQgYmUgcmdiNTY1
-LAo+ID4+Pj4gb3IgYXJlIHRoZXJlIG90aGVyIHBvc3NpYmxlIGNvbWJpbmF0aW9ucyBJIGFtIG1p
-c3Npbmc/KQo+ID4+Pj4gCj4gPj4+PiBJIHdvdWxkIGNvbnNpZGVyIHRoaXMgYmV0dGVyIG1vc3Rs
-eSBiZWNhdXNlIGluIHRoaXMgc2VyaWVzIHlvdSBhcmUKPiA+Pj4+IGNyZWF0aW5nIGEgc2VtYW50
-aWMgZm9yIHRoZSB3aG9sZSBEUk0gc3Vic3lzdGVtIG9uIHRoZSAnYnVzX3dpZHRoJwo+ID4+Pj4g
-cHJvcGVydHksIHdoZXJlIG51bWVyaWNhbCB2YWx1ZXMgYXMgJzEyJywgJzE2JyBldGMgYXJlIGFy
-Yml0cmFyeSB0aWVkCj4gPj4+PiB0byB0aGUgc2VsZWN0aW9uIG9mIGEgbWVkaWEgYnVzIGZvcm1h
-dC4gQXQgbGVhc3QgeW91IHNob3VsZCB1c2UgYQo+ID4+Pj4gY29tbW9uIHNldCBvZiBkZWZpbmVz
-IFsxXSBiZXR3ZWVuIHRoZSBkZXZpY2UgdHJlZSBhbmQgdGhlIGRyaXZlciwKPiA+Pj4+IGJ1dCB0
-aGlzIGxvb2tzIGFueXdheSBmcmFnaWxlIGltaG8uCj4gPj4+IAo+ID4+PiBUaGlzIEkgYWdyZWUg
-d2l0aCB0aG91Z2guIENvbWJpbmluZyB0aGUgcmVtb3RlIGJ1cyBmb3JtYXQgd2l0aCB0aGUgbG9j
-YWwKPiA+Pj4gYnVzIHdpZHRoIHNob3VsZCBmaXggdGhlIHByb2JsZW0gd2l0aG91dCBoYXZpbmcg
-dG8gcGFyc2UgcmVtb3RlCj4gPj4+IHByb3BlcnRpZXMuCj4gPj4gCj4gPj4gTXkgdGhpbmtpbmcg
-d2FzIHRoYXQgdGhlIGJpbmRpbmcgd2l0aCBidXMtdHlwZSA9IDwwPiBhbmQgYnVzLXdpZHRoID0K
-PiA+PiA8YnBwPiB3b3VsZCBtZWFuIGEgcGFyYWxsZWwgYnVzICh0eXBlIDAgbWVhbnMgYXV0by1k
-ZXRlY3QgYW5kIHdpdGggYSBidXMtCj4gPj4gd2lkdGggdGhhdCBhdXRvLWRldGVjdCBtZWFucyBh
-IHBhcmFsbGVsIGJ1cykgYW5kIHRoZSBtb3N0IG5hdHVyYWwvY29tbW9uCj4gPj4gaW50ZXJwcmV0
-YXRpb24gb2YgdGhhdCBidXMtd2lkdGguIEZvciBidXMgd2lkdGhzIG9mIDEyLCAxNiwgMTgsIDI0
-LCAzMAo+ID4+IGV0YyBJIHRoaW5rIHRoYXQgd291bGQgYmUgcmdiNDQ0LCByZ2I1NjUsIHJnYjY2
-NiwgcmdiODg4LCByZ2IxMDEwMTAgKG9yLAo+ID4+IEknbSBmaXJzdCBzbyBJIGdldCB0byBkZWZp
-bmUgdGhlIGRlZmF1bHQpLiBJZiB5b3UgaGF2ZSBzb21lIG90aGVyCj4gPj4gaW50ZXJwcmV0YXRp
-b24gb2YgYSBidXMgd2l0aCB0aGF0IHdpZHRoLCB5b3UnZCBuZWVkIHRvIGV4dGVuZCB0aGUKPiA+
-PiB2aWRlby1pbnRlcmZhY2UgYmluZGluZyB3aXRoIHNvbWUgd2F5IG9mIHNheWluZyB3aGF0IHlv
-dSBuZWVkLCBwZXJoYXBzCj4gPj4gdXNpbmcgc29tZSBraW5kIG9mIGRhdGEgbWFwcGluZyBvciBz
-b21ldGhpbmcgdG8gc2F5IGUuZy4gYmdyNjY2LiBBbmQKPiA+PiB5b3UnZCBuZWVkIHNvbWUga2lu
-ZCBvZiBpbmRpY2F0b3IgaWYgeW91IGhhdmUgWVVWIHNpZ25hbHMgaW5zdGVhZCBvZgo+ID4+IFJH
-QiwgYW5kIExWRFMgaXNuJ3QgYSBjb21wbGV0ZWx5IHBhcmFsbGVsIGJ1cywgc28geW91J2QgbmVl
-ZCBzb21ldGhpbmcKPiA+PiBmb3IgdGhhdC4gRXRjLgo+ID4gCj4gPiBUaGUgZnVuZGFtZW50YWwg
-aXNzdWUgaGVyZSBpcyB0aGF0IHlvdSdyZSB0eWluZyB0aGUgYnVzIHdpdGggdG8gYW4KPiA+IGlt
-YWdlIGZvcm1hdC4gV2h5IDwxNj4gY2FuJ3QgYmUsIHNheSwgTUVESUFfQlVTX0ZNVF9ZVllVOF8x
-WDE2PyBpdAo+ID4gc3BhbnMgdG8gMTYgYml0cywgZG9lc24ndCBpdD8gQW5kIEknbSBzb3JyeSBi
-dXQgdGhlICdJJ20gZmlyc3Qgc28gSQo+ID4gZ2V0IHRvIGRlZmluZSBkZWZhdWx0cycgYXJndW1l
-bnQgZG9lc24ndCBhcHBseSBoZXJlLgo+IAo+IEkgbmV2ZXIgc2FpZCB0aGF0IDwxNj4gY291bGQg
-bm90IGJlIHNvbWV0aGluZyBZVVYuIEkgc2FpZCB0aGF0IDwxNj4gd2l0aG91dAo+IGFueSBmdXJ0
-aGVyIGluZm9ybWF0aW9uIGlzIFJHQi4gQnV0IHlvdSBhcmUgcmlnaHQsIHRoZSBmdW5kYW1lbnRh
-bCBpc3N1ZQo+IGlzIHRoYXQgSSB3YW50IHRvIHNwZWNpZnkgdGhlIGZ1bGwgZm9ybWF0IGluIHRo
-ZSBlbmRwb2ludCBub2RlLCB3aGlsZSB5b3UKPiBkbyBub3QgZm9yIHNvbWUgcmVhc29uIEkgZG9u
-J3QgdW5kZXJzdGFuZC4gQW5kIG1heWJlIHNheWluZyB0aGF0ICI8MTY+Cj4gd2l0aG91dCBtb3Jl
-IGluZm8gaXMgUkdCIiBpcyB0b28gcHJlc3VtcHR1b3VzLCBidXQgdGhlbiBJIHRoaW5rIHRoYXQg
-dGhlCj4gcmlnaHQgZml4IGlzIGFkZGluZyBzb21ldGhpbmcgY2xlYXJseSBpbmRpY2F0aW5nIFJH
-QiBpcyB0aGUgd2F5IHRvIGdvLCBzbwo+IHRoYXQgdGhlcmUgaXMgYSB3YXkgZm9yIGVuZHBvaW50
-cyB0byBzcGVjaWZ5IFJHQjU2NSAob3Igd2hhdGV2ZXIgaXMgbmVlZGVkKS4KCkkgdGhpbmsgdGhh
-dCB3b3VsZCBsYWNrIGdlbmVyaWNpdHkgdGhvdWdoLiBJIGNvdWxkIGVhc2lseSBpbWFnaW5lIGEg
-c2V0dXAgCnNpbWlsYXIgdG8geW91cnMgd2hlcmUgdGhlIGJyaWRnZSBjYW4gYWNjZXB0IGRpZmZl
-cmVudCB0eXBlcyBvZiBwYXJhbGxlbCAKZm9ybWF0cyAoUkdCLCBCR1IsIFlVViwgLi4uKS4gV2hp
-bGUgdGhlIGJ1cyB3aWR0aCBpcyBhIHByb3BlcnR5IG9mIHRoZSBQQ0IgCnJvdXRpbmcgYW5kIGlz
-IHRodXMgZml4ZWQsIHRoZSBmb3JtYXQgd291bGRuJ3QgYmUgYSBwcm9wZXJ0eSBvZiB0aGUgcGxh
-dGZvcm0gCmJ1dCB3b3VsZCBiZSBkeW5hbWljLiBJIGJlbGlldmUgdGhhdCBjb21iaW5pbmcgdGhl
-IGJ1cy13aWR0aCBEVCBwcm9wZXJ0eSB0aGF0IApjYXJyaWVzIHN0YXRpYyBwbGF0Zm9ybSBpbmZv
-cm1hdGlvbiB3aXRoIHRoZSBkeW5hbWljIGZvcm1hdCByZXBvcnRlZCBieSB0aGUgCmJyaWRnZSAo
-dGhyb3VnaCB0aGUgQVBJIHByb3Bvc2VkIGJ5IEphY29wbykgd291bGQgdGhlbiBiZSBhIG1vcmUg
-Z2VuZXJpYyAKYXBwcm9hY2guCgpZb3UgZG9uJ3QgaGF2ZSB0byBkZXBlbmQgb24gSmFjb3BvJ3Mg
-cGF0Y2ggc2VyaWVzIHRob3VnaCwgSSB3b3VsZCBiZSB0b3RhbGx5IApmaW5lIHdpdGggYXNzdW1p
-bmcgdGhhdCBhIDE2LWJpdCB3aWR0aCBtZWFucyBSR0I1NjUgaW4gdGhlIGF0bWVsLWhsY2RjIGRy
-aXZlci4gCldoYXQgSSdtIG5vdCBjb21mb3J0YWJsZSB3aXRoIGlzIGhhcmRjb2RpbmcgdGhhdCBh
-c3N1bXB0aW9uIGluIHRoZSBoZWxwZXIgCmRlZmluZWQgaW4gcGF0Y2ggMy83LiBJIHdvdWxkIHRo
-dXMgcHJvcG9zZSBtb3ZpbmcgdGhhdCBjb2RlIHRvIHRoZSBhdG1lbC1obGNkYyAKZHJpdmVyIGZv
-ciBub3csIGFuZCBjcmVhdGluZyBhIGdlbmVyaWMgaGVscGVyIHRoYXQgdXNlcyBib3RoIGJ1cy13
-aWR0aCBhbmQgdGhlIApmb3JtYXQgcXVlcmllZCBmcm9tIHRoZSBicmlkZ2Ugd2hlbiBKYWNvcG8n
-cyBzZXJpZXMgbWFrZXMgaXQgdG8gbWFpbmxpbmUuIApXb3VsZCB0aGF0IGJlIGFuIGFjY2VwdGFi
-bGUgYXBwcm9hY2ggZm9yIHlvdSA/Cgo+ID4gU28sIGl0IGlzIG15IG9waW5pb24geW91IG5lZWQg
-dG8gZXhwb3NlIGFuIGltYWdlIGZvcm1hdCBzb21ld2hlcmUuIEFuZAo+ID4gaXQgaXMgbXkgb3Bp
-bmlvbiBhZ2Fpbiwgd2hpY2ggY2FuIGJlIHZlcnkgd3Jvbmcgb2ZjLCB0aGF0IHRoaXMgcGxhY2UK
-PiA+IGlzIHRoZSBicmlkZ2UgZHJpdmVyLgo+IAo+IEkgZG9uJ3Qgc2VlIHdoeSB0aGUgaW5wdXQg
-c2lkZSBpcyBiZXR0ZXIgdGhhbiB0aGUgb3V0cHV0IHNpZGUgd2hlbiBpdAo+IGNvbWVzIHRvIHNw
-ZWNpZnlpbmcgdGhlc2UgZGV0YWlscz8gVGhlIGlucHV0IHNpZGUgaXMgYXMgbGlrZWx5IHRvIGhh
-dmUKPiBkaWZmZXJlbnQgb3B0aW9ucyBhcyB0aGUgb3V0cHV0IHNpZGUuCgpEUk0vS01TIGlzIGJ1
-aWx0IHVwb24gYSBzaW5rIHRvIHNvdXJjZSBtb2RlbCwgd2hlcmUgdXNlcnNwYWNlIHNwZWNpZmll
-cyB0aGUgCmZvcm1hdCBvbiB0aGUgY29ubmVjdG9yIGF0IHRoZSBvdXRwdXQgb2YgYSBwaXBlbGlu
-ZSwgYW5kIHRoZSBmb3JtYXRzIGFsb25nIHRoZSAKY2hhaW4gb2YgYnJpZGdlcyBhcmUgdGhlbiBj
-b21wdXRlZCBhdXRvbWF0aWNhbGx5LiBUaGF0J3Mgd2h5IHdlIHVzdWFsbHkgcXVlcnkgCmZvcm1h
-dHMgc3VwcG9ydGVkIGJ5IHNpbmtzIGFuZCBjb25maWd1cmUgc291cmNlcyBhY2NvcmRpbmdseS4K
-Cj4gPiBZb3UgbmVlZCB0byBhZGp1c3QgdGhlIG91dHB1dCB0byBhY2NvbW1vZGF0ZSB3aXJpbmdz
-PyBZb3UgY2FuIHVzZSB0aGUKPiA+IGJ1c193aWR0aCBvbiB0aGUgaGxjZCBzaWRlLCBhcyBMYXVy
-ZW50IHN1Z2dlc3RlZCwgYnV0IHRoZSBidXMgd2lkdGgKPiA+IGRvZXMgbm90IHRpZSB0byBhbnkg
-aW1hZ2UgZm9ybWF0IGF0IGFsbCwgZXZlbiBtb3JlIGlmIHlvdSdyZSBtYWtpbmcKPiA+IHRoYXQg
-ZGVjaXNpb24gaW4gYSBkcm0td2lkZSBmdW5jdGlvbi4KPiA+IAo+ID4+IEJlY2F1c2UgdGhlIHdv
-cmQgZnJvbSBSb2Igd2FzIHRoYXQgdGhlcmUgc2hvdWxkIGJlIG9uZSBjb21tb24gYmluZGluZwo+
-ID4+IHRoYXQgZGVzY3JpYmVzIHZpZGVvIGludGVyZmFjZXMuIEkgc3RhcnRlZCBhbiBpbXBsZW1l
-bnRhdGlvbiB0aGF0Cj4gPj4gaW50ZXJwcmV0cyB0aGF0IGJpbmRpbmcgaW4gYSBkcm0gY29udGV4
-dCBpbgo+ID4+IFtQQVRDSCAzLzddIGRybTogb2Y6IGludHJvZHVjZSBkcm1fb2ZfbWVkaWFfYnVz
-X2ZtdAo+ID4gCj4gPiBBcyB1c3VhbCwgb25lIHNob3VsZCB0cnkgdG8gcmV1c2UgYXMgbXVjaCBh
-cyBwb3NzaWJsZSBvZiB0aGUgZXhpc3RpbmcKPiA+IGJpbmRpbmdzLiBUaGF0J3MgYSB0b3RhbGx5
-IGRpZmZlcmVudCB0aGluZyBjb21wYXJlZCB0byBhc3NpZ24gdG8gYSBidXMKPiA+IHdpZHRoIHBy
-b3BlcnR5IGFuIGFzc29jaWF0ZWQgaW1hZ2UgZm9ybWF0IGZvciB0aGUgd2hvbGUgRFJNIHN1YnN5
-c3RlbQo+ID4gCj4gPiBvdDogdGhvc2UgcHJvcGVydGllcyBzaG91bGQgYmUgbW92ZWQgb3V0c2lk
-ZSBvZgo+ID4gbWVkaWEvdmlkZW9faW50ZXJmYWNlcy50eHQgc29vbmVyIG9yIGxhdGVyLCB0byBh
-IG1vcmUgZ2VuZXJpYyBwbGFjZS4uLgo+ID4gCj4gPj4gV2l0aCB0aGF0IHZpZXcsIGFueSBpbnB1
-dCBmb3JtYXQgc3BlY2lmaWNhdGlvbiBvZiB0aGUgYnJpZGdlIGlzIG5vdAo+ID4+IGhlbHBmdWwg
-Zm9yIG1lIHNpbmNlIHdoYXQgdGhlIGJyaWRnZSBzcGVjaWZpZXMgKHdpdGhvdXQgaGVscCkgaXMg
-Z29pbmcgdG8KPiA+PiBiZSB3cm9uZwo+ID4gCj4gPiBObyBpdCdzIG5vdCB1c2VsZXNzLiBJIGNh
-biBoYXZlIGFuIGVuY29kZXIgdGhhdCBjYW4gcHJvdmlkZSBib3RoIFlVVgo+ID4gYW5kIFJHQiBm
-b3JtYXRzLiBJZiB5b3VyIGJyaWRnZSBhY2NlcHRzIFJHQiBJIHdhbnQgdG8ga25vdyB0aGF0LCBh
-bmQKPiA+IHRoZSBidXNfd2lkdGggaXMgdW5yZWxhdGVkIGltaG8uCj4gCj4gSSBkaWRuJ3Qgc2F5
-IHVzZWxlc3MgKnBlcmlvZCosIEkgc2FpZCBub3QgaGVscGZ1bCAqZm9yIG1lKi4gV2hhdCBJIG1l
-YW4gaXMKPiB0aGF0IHNpbmNlIEkgaGF2ZSBhbiBlbmNvZGVyIHRoYXQgY2FuIG9ubHkgb3V0cHV0
-IFJHQiBmb3JtYXRzLCBhc2tpbmcgdGhlCj4gYnJpZGdlIGlmIGl0IGV4cGVjdHMgUkdCIGlzIHJh
-dGhlciB1c2VsZXNzLiBJdCBhZGRzIG5vdGhpbmcgd2hhdHNvZXZlci4KPiAKPiA+PiBhbnl3YXku
-IEVuZCByZXN1bHQsIEkgbmVlZCB0byBzcGVjaWZ5IHRoZSBmb3JtYXQgbWFudWFsbHkgb24gZWl0
-aGVyIHRoZQo+ID4+IGJyaWRnZSBvciB0aGUgYXRtZWwtaGxjZGMgc2lkZSwgYW5kIEkgaGFwcGVu
-IHRvIHRoaW5rIHRoYXQgdGhlIGNvcnJlY3QKPiA+PiBzaWRlCj4gPj4gaXMgd2l0aCB0aGUgYXRt
-ZWwtaGxjZGMsIGJlY2F1c2UgdGhhdCBpcyB3aGVyZSBteSBpc3N1ZSBvcmlnaW5hdGVzLiBJbgo+
-ID4+IHNob3J0LCB0aGUgImRybTogYnJpZGdlOiBBZGQgc3VwcG9ydCBmb3Igc3RhdGljIGltYWdl
-IGZvcm1hdHMiIHNlcmllcyBpcwo+ID4+IHVucmVsYXRlZCBhcyBmYXIgYXMgSSBjYW4gdGVsbC4K
-PiA+IAo+ID4gSSBtYXkgYmUgYmlhc2VkIG9uIHRoaXMsIHNvIEkgbGV0IG90aGVyIHRvIGp1ZGdl
-IGFuZCBwcm92aWRlIG1vcmUKPiA+IHN1Z2dlc3Rpb25zLgoKLS0gClJlZ2FyZHMsCgpMYXVyZW50
-IFBpbmNoYXJ0CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+Hi Matheus,
+
+> Matheus Castello <matheus@castello.eng.br> hat am 11. April 2018 um 06:58 geschrieben:
+> 
+> 
+> To keep driver up to date we add generic pinctrl binding support, which covers
+> the features used in this driver and has additional node properties that this
+> SoC has compatibility, so enabling future implementations of these properties
+> without the need to create new node properties in the device trees.
+> 
+> The logic of this change maintain the old brcm legacy binding support in order
+> to keep the ABI stable.
+> 
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+> 
+> A brief explanation of what I did:
+> 
+> Add pinconf-generic header for use the defines and pinctrl-generic API.
+> 
+> Add dt-bindings pinctrl bcm2835 header to use functions selections and
+> pulls definitions, which functions definitions where duplicated in the
+> enum bcm2835_fsel, I removed the duplicate defines from enum.
+> 
+> In the bcm2835_pctl_dt_node_to_map_pull I used the generic macro for
+> pack the legacy param and arguments, since it will be unpacked along with
+> generic properties that is packed with this same macro.
+> 
+> In bcm2835_pctl_dt_node_to_map I thougt it was better, and simpler, to use
+> pinctrl-generic parse code instead of parsing it inside the driver, so code
+> first check for generic binding parse, if something is parsed then it is
+> assumed that are using the new generic style, and when nothing is found then
+> parse continues to search for legacy properties.
+> 
+> In the bcm2835_pinconf_set was changed the unpack legacy by the generic, and
+> was added a switch for the parameter tests, since pinctrl generic uses 3
+> properties to define the states of the pull instead of one with arguments, that
+> was the reason too that bcm2835_pull_config_set function was added, for reuse
+> the code that set state of pull.
+> 
+>  drivers/pinctrl/bcm/Kconfig           |  1 +
+>  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 87 ++++++++++++++++++++++-------------
+>  2 files changed, 55 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
+> index e8c4e4f..0f38d51 100644
+> --- a/drivers/pinctrl/bcm/Kconfig
+> +++ b/drivers/pinctrl/bcm/Kconfig
+> @@ -20,6 +20,7 @@ config PINCTRL_BCM2835
+>  	bool
+>  	select PINMUX
+>  	select PINCONF
+> +	select GENERIC_PINCONF
+>  	select GPIOLIB_IRQCHIP
+> 
+>  config PINCTRL_IPROC_GPIO
+> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+> index 785c366..010c565 100644
+> --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+> +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+> @@ -36,11 +36,13 @@
+>  #include <linux/pinctrl/pinconf.h>
+>  #include <linux/pinctrl/pinctrl.h>
+>  #include <linux/pinctrl/pinmux.h>
+> +#include <linux/pinctrl/pinconf-generic.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/slab.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/types.h>
+> +#include <dt-bindings/pinctrl/bcm2835.h>
+> 
+>  #define MODULE_NAME "pinctrl-bcm2835"
+>  #define BCM2835_NUM_GPIOS 54
+> @@ -75,10 +77,6 @@ enum bcm2835_pinconf_param {
+>  	BCM2835_PINCONF_PARAM_PULL,
+
+Since we use bcm2835_pinconf_param and pin_config_param in bcm2835_pinconf_set, there are potential conflicts. According to include/linux/pinctrl/pinconf-generic.h:
+
+ * @PIN_CONFIG_END: this is the last enumerator for pin configurations, if
+ *	you need to pass in custom configurations to the pin controller, use
+ *	PIN_CONFIG_END+1 as the base offset.
+
+Please adjust BCM2835_PINCONF_PARAM_PULL accordingly.
+
+Sorry for not notice this before.
+
+Stefan
