@@ -1,126 +1,74 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
-Date: Fri, 20 Apr 2018 20:34:16 -0500
-Message-ID: <CAL_JsqJpp2iF-wRWuEuCuTjRsOKD_K7kjyRQq6iNGmjdGJqpuQ@mail.gmail.com>
-References: <20180418222905.10414-1-robh@kernel.org> <152424282214.46528.2511757264045171935@swboyd.mtv.corp.google.com>
- <CAL_Jsq+1G61+E0wtVEkzann3Z=2Cr=2PkbDJ_OuaA5GysWZsXQ@mail.gmail.com> <152426770474.46528.1592920281091105196@swboyd.mtv.corp.google.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v6 1/2] drm/bridge: Add Cadence DSI driver
+Date: Sat, 21 Apr 2018 08:20:17 +0200
+Message-ID: <20180421082017.4738b65d@bbrezillon>
+References: <20180410130001.1234-1-boris.brezillon@bootlin.com>
+ <c9b7c668-9d34-abdc-a98e-8d218209ec13@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152426770474.46528.1592920281091105196@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree-spec@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <c9b7c668-9d34-abdc-a98e-8d218209ec13@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: "Menon, Nishanth" <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Alan Douglas <adouglas@cadence.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Richard Sproul <sproul@cadence.com>, devicetree@vger.kernel.org, Rafal Ciepiela <rafalc@cadence.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, Jyri Sarha <jsarha@ti.com>, Rob Herring <robh+dt@kernel.org>, Suresh Punnoose <sureshp@cadence.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 20, 2018 at 6:41 PM, Stephen Boyd <sboyd@kernel.org> wrote:
-> Quoting Rob Herring (2018-04-20 11:15:04)
->> On Fri, Apr 20, 2018 at 11:47 AM, Stephen Boyd <sboyd@kernel.org> wrote:
->> > Quoting Rob Herring (2018-04-18 15:29:05)
->> >> diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
->> >> new file mode 100644
->> >> index 000000000000..fe0a3bd1668e
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/example-schema.yaml
->> >> @@ -0,0 +1,149 @@
->> >> +
->> >> +  The end of the description is marked by indentation less than the first line
->> >> +  in the description.
->> >> +
->> >> +select: false
->> >> +  # 'select' is a schema applied to a DT node to determine if this binding
->> >> +  # schema should be applied to the node. It is optional and by default the
->> >> +  # possible compatible strings are extracted and used to match.
->> >
->> > Can we get a concrete example here?
->>
->> select: true
->>
->> :) Which is apply to every node.
->>
->> A better one is from the memory node schema ('$nodename' gets added :
->>
->> select:
->>   required: ["$nodename"]
->>   properties:
->>     $nodename:
->>       oneOf:
->>         - pattern: "^memory@[0-9a-f]*"
->>         - const: "memory" # 'memory' only allowed for selecting
->>
->>
->> I expect the vast majority of device bindings will not use select at
->> all and rely on compatible string matching.
->
-> Thanks! I was looking to see how the select syntax would work and this
-> shows one example nicely. I suppose another way would be to show how a
-> compatible string would be matched through select, even though it's
-> redundant.
->
-> Is there a way we can enforce node names through the schema too? For
-> example to enforce that a clock controller is called 'clock-controller'
-> or a spi master is called 'spi'.
-
-Yes, that's something I'd like to do. I think the easiest is to just
-treat node name as a property. We already generate a $nodename
-property when parsing the yaml format DT.
-
->>
->> >> +
->> >> +properties:
->> > [...]
->> >> +
->> >> +  interrupts:
->> >> +    # Either 1 or 2 interrupts can be present
->> >> +    minItems: 1
->> >> +    maxItems: 2
->> >> +    items:
->> >> +      - description: tx or combined interrupt
->> >> +      - description: rx interrupt
->> >> +
->> >> +    description: |
->> >
->> > The '|' is needed to make yaml happy?
->>
->> Yes, this is simply how you do literal text blocks in yaml.
->>
->> We don't really need for this one really, but for the top-level
->> 'description' we do. The long term intent is 'description' would be
->> written in sphinx/rst and can be extracted into the DT spec (for
->> common bindings). Grant has experimented with that some.
->
-> Ok. That sounds cool. Then we could embed links to datasheets and SVGs
-> too.
->
->>
->> >> +      A variable number of interrupts warrants a description of what conditions
->> >> +      affect the number of interrupts. Otherwise, descriptions on standard
->> >> +      properties are not necessary.
->> >> +
->> >> +  interrupt-names:
->> >> +    # minItems must be specified here because the default would be 2
->> >> +    minItems: 1
->> >> +    items:
->> >> +      - const: "tx irq"
->> >> +      - const: "rx irq"
->> >> +
->> >> +  # Property names starting with '#' must be quoted
->> >> +  '#interrupt-cells':
->> >> +    # A simple case where the value must always be '2'.
->> >> +    # The core schema handles that this must be a single integer.
->> >> +    const: 2
->> >> +
->> >> +  interrupt-controller: {}
->> >
->> > Does '{}' mean nothing to see here?
->>
->> Yes. It's just an empty schema that's always valid.
->
-> Could we include another schema to indicate that this is an interrupt
-> controller? I'm sort of asking for multi-schema inheritance.
-
-Yes, but there's no need to do that here. Another schema can select on
-"interrupt-controller" property and be applied independently. There's
-already an example of that for the root node in my yaml-bindings repo.
-
-Rob
+SGkgQXJjaGl0LAoKT24gU3VuLCAxNSBBcHIgMjAxOCAxMzozOTo0NCArMDUzMApBcmNoaXQgVGFu
+ZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPiB3cm90ZToKCj4gPiArc3RhdGljIGludCBjZG5z
+X2RzaV9nZXRfZHBoeV9wbGxfY2ZnKHN0cnVjdCBjZG5zX2RwaHkgKmRwaHksCj4gPiArCQkJCSAg
+ICAgc3RydWN0IGNkbnNfZHBoeV9jZmcgKmNmZywKPiA+ICsJCQkJICAgICB1bnNpZ25lZCBpbnQg
+ZHBpX2h0b3RhbCwKPiA+ICsJCQkJICAgICB1bnNpZ25lZCBpbnQgZHBpX2JwcCwKPiA+ICsJCQkJ
+ICAgICB1bnNpZ25lZCBpbnQgZHBpX2h6LAo+ID4gKwkJCQkgICAgIHVuc2lnbmVkIGludCBkc2lf
+aHRvdGFsLAo+ID4gKwkJCQkgICAgIHVuc2lnbmVkIGludCBkc2lfbmxhbmVzLAo+ID4gKwkJCQkg
+ICAgIHVuc2lnbmVkIGludCAqZHNpX2hmcF9leHQpCj4gPiArewo+ID4gKwl1NjQgZGxhbmVfYnBz
+LCBkbGFuZV9icHNfbWF4LCBmYmRpdiwgZmJkaXZfbWF4LCBhZGpfZHNpX2h0b3RhbDsKPiA+ICsJ
+dW5zaWduZWQgbG9uZyBwbGxfcmVmX2h6ID0gY2xrX2dldF9yYXRlKGRwaHktPnBsbF9yZWZfY2xr
+KTsKPiA+ICsKPiA+ICsJbWVtc2V0KGNmZywgMCwgc2l6ZW9mKCpjZmcpKTsKPiA+ICsKPiA+ICsJ
+Y2ZnLT5ubGFuZXMgPSBkc2lfbmxhbmVzOwo+ID4gKwo+ID4gKwlpZiAocGxsX3JlZl9oeiA8IDk2
+MDAwMDAgfHwgcGxsX3JlZl9oeiA+PSAxNTAwMDAwMDApCj4gPiArCQlyZXR1cm4gLUVJTlZBTDsK
+PiA+ICsJZWxzZSBpZiAocGxsX3JlZl9oeiA8IDE5MjAwMDAwKQo+ID4gKwkJY2ZnLT5wbGxfaXBk
+aXYgPSAxOwo+ID4gKwllbHNlIGlmIChwbGxfcmVmX2h6IDwgMzg0MDAwMDApCj4gPiArCQljZmct
+PnBsbF9pcGRpdiA9IDI7Cj4gPiArCWVsc2UgaWYgKHBsbF9yZWZfaHogPCA3NjgwMDAwMCkKPiA+
+ICsJCWNmZy0+cGxsX2lwZGl2ID0gNDsKPiA+ICsJZWxzZQo+ID4gKwkJY2ZnLT5wbGxfaXBkaXYg
+PSA4Owo+ID4gKwo+ID4gKwkvKgo+ID4gKwkgKiBNYWtlIHN1cmUgRFNJIGh0b3RhbCBpcyBhbGln
+bmVkIG9uIGEgbGFuZSBib3VuZGFyeSB3aGVuIGNhbGN1bGF0aW5nCj4gPiArCSAqIHRoZSBleHBl
+Y3RlZCBkYXRhIHJhdGUuIFRoaXMgaXMgZG9uZSBieSBleHRlbmRpbmcgSEZQIGluIGNhc2Ugb2YK
+PiA+ICsJICogbWlzYWxpZ25tZW50Lgo+ID4gKwkgKi8KPiA+ICsJYWRqX2RzaV9odG90YWwgPSBk
+c2lfaHRvdGFsOwo+ID4gKwlpZiAoZHNpX2h0b3RhbCAlIGRzaV9ubGFuZXMpCj4gPiArCQlhZGpf
+ZHNpX2h0b3RhbCArPSBkc2lfbmxhbmVzIC0gKGRzaV9odG90YWwgJSBkc2lfbmxhbmVzKTsKPiA+
+ICsKPiA+ICsJZGxhbmVfYnBzID0gKHU2NClkcGlfaHogKiBhZGpfZHNpX2h0b3RhbDsKPiA+ICsK
+PiA+ICsJLyogZGF0YSByYXRlIGluIGJ5dGVzL3NlYyBpcyBub3QgYW4gaW50ZWdlciwgcmVmdXNl
+IHRoZSBtb2RlLiAqLwo+ID4gKwlpZiAoZG9fZGl2KGRsYW5lX2JwcywgZHNpX25sYW5lcyAqIGRw
+aV9odG90YWwpKQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4gPiArCj4gPiArCS8qIGRhdGEgcmF0
+ZSB3YXMgaW4gYnl0ZXMvc2VjLCBjb252ZXJ0IHRvIGJpdHMvc2VjLiAqLwo+ID4gKwlkbGFuZV9i
+cHMgKj0gODsKPiA+ICsKPiA+ICsJaWYgKGRsYW5lX2JwcyA+IDI1MDAwMDAwMDBVTCB8fCBkbGFu
+ZV9icHMgPCAxNjAwMDAwMDBVTCkKPiA+ICsJCXJldHVybiAtRUlOVkFMOwo+ID4gKwllbHNlIGlm
+IChkbGFuZV9icHMgPj0gMTI1MDAwMDAwMCkKPiA+ICsJCWNmZy0+cGxsX29wZGl2ID0gMTsKPiA+
+ICsJZWxzZSBpZiAoZGxhbmVfYnBzID49IDYzMDAwMDAwMCkKPiA+ICsJCWNmZy0+cGxsX29wZGl2
+ID0gMjsKPiA+ICsJZWxzZSBpZiAoZGxhbmVfYnBzID49IDMyMDAwMDAwMCkKPiA+ICsJCWNmZy0+
+cGxsX29wZGl2ID0gNDsKPiA+ICsJZWxzZSBpZiAoZGxhbmVfYnBzID49IDE2MDAwMDAwMCkKPiA+
+ICsJCWNmZy0+cGxsX29wZGl2ID0gODsKPiA+ICsKPiA+ICsJLyoKPiA+ICsJICogQWxsb3cgYSBk
+ZXZpYXRpb24gb2YgMC4yJSBvbiB0aGUgcGVyLWxhbmUgZGF0YSByYXRlIHRvIHRyeSB0bwo+ID4g
+KwkgKiByZWNvdmVyIGEgcG90ZW50aWFsIG1pc21hdGNoIGJldHdlZW4gRFBJIGFuZCBQUEkgY2xr
+cy4KPiA+ICsJICovCj4gPiArCWRsYW5lX2Jwc19tYXggPSBkbGFuZV9icHMgKyAoZGxhbmVfYnBz
+IC8gNTAwKTsgIAo+IAo+IGtidWlsZCByZXBvcnRlZCBhbiBlcnJvciBmb3IgMzIgYml0IGFyY2hz
+LiBJJ20gZ3Vlc3NpbmcgaXQncyBiZWNhdXNlIG9mCj4gdGhpcyBkaXZpZGUgYWJvdmU/CgpZZXAs
+IERJVl9ST1VORF9VUF9VTEwoKSBzaG91bGQgZml4IHRoZSBwcm9ibGVtLgoKPiAKPiAKPiA+ICsK
+PiA+ICsJZmJkaXZfbWF4ID0gRElWX1JPVU5EX0RPV05fVUxMKChkbGFuZV9icHMgKyAoZGxhbmVf
+YnBzIC8gNTAwKSkgKiAyICogIAo+IAo+IFlvdSBjb3VsZCB1c2UgZGxhbmVfYnBzX21heCBoZXJl
+IGluc3RlYWQuCgpTdXJlLgoKPiAKPiBPdGhlcndpc2UsCj4gCj4gUmV2aWV3ZWQtYnk6IEFyY2hp
+dCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+CgpUaGFua3MgZm9yIHRoZSByZXZpZXcu
+CgpEb2VzIHRoYXQgbWVhbiBJJ20gYWxsb3dlZCB0byBhcHBseSB0aGUgcGF0Y2ggdG8gZHJtLW1p
+c2MtbmV4dCBteXNlbGYKYWZ0ZXIgZml4aW5nIHRoZSBkaXY2NCBpc3N1ZT8KClJlZ2FyZHMsCgpC
+b3JpcwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
