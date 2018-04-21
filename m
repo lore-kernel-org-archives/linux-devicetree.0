@@ -1,50 +1,74 @@
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: marvell: armada-37xx: reserve memory for ATF
-Date: Sat, 21 Apr 2018 16:18:59 +0200
-Message-ID: <20180421161859.22d1ed18@windsurf>
-References: <20180421140342.25082-1-miquel.raynal@bootlin.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: afe: add current-sense-shunt
+ and voltage-divider
+Date: Sat, 21 Apr 2018 15:34:52 +0100
+Message-ID: <20180421153452.6499e151@archlinux>
+References: <20180410152802.30958-1-peda@axentia.se>
+        <20180410152802.30958-2-peda@axentia.se>
+        <f4665f80-97a8-dedb-6d4b-b5e92b99ed78@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180421140342.25082-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Victor Gu <xigu@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f4665f80-97a8-dedb-6d4b-b5e92b99ed78@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "Andrew F . Davis" <afd@ti.com>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Mon, 16 Apr 2018 16:00:44 +0200
+Peter Rosin <peda@axentia.se> wrote:
 
-On Sat, 21 Apr 2018 16:03:42 +0200, Miquel Raynal wrote:
-> From: Victor Gu <xigu@marvell.com>
+> On 2018-04-10 17:28, Peter Rosin wrote:
+> > +Example:
+> > +The system voltage is circa 12V, but divided down with a 22/200
+> > +voltage divider to adjust it to the ADC range.
+> > +
+> > +SYSV        ADC       GND
+> > +  +          +         +
+> > +  |  .-----. | .----.  |
+> > +  '--| 200 |-+-| 22 |--'
+> > +     '-----'   '----'
+> > +
+> > +sysv {
+> > +	compatible = "voltage-divider";
+> > +	io-channels = <&maxadc 1>;
+> > +
+> > +	/* Multiply the ADC voltage by 222/22 to get the system voltage. */
+> > +	numerator = <222>; /* 200 + 22 */
+> > +	denominator = <22>;
+> > +};  
 > 
-> The PSCI area should be reserved in Linux for PSCI operations such as
-> suspend/resume.
+> While I already got a reviewed-by from Rob, and maybe I shouldn't be
+> stirring the pot, but I had an umpteenth look and I now think this
+> one looks a bit odd. It shows a bit that it originates from when the
+> compatible was the very generic "io-channel-unit-converter" in v1
+> of the series. What I mean is that a voltage divider presumable always
+> gets you a lower voltage. Therefore, one would assume that the
+> denominator should be larger than the numerator. The fact that this
+> translates into the inverted fraction when calculating backwards
+> through the voltage divider should probably not affect the binding.
 > 
-> Reserve 2MiB of memory which matches the area used by ATF (BL1, BL2,
-> BL3x, see [1] in ATF source code). This covers all PSCI code and data
-> area and is 2MiB aligned, which is required by Linux for huge pages
-> handling.
+> So, in the above example, I think it would make more sense to have
 > 
-> [1] plat/marvell/a3700/common/include/platform_def.h
+> 	numerator = <22>;
+> 	denominator = <222>; /* 200 + 22 */
 > 
-> Signed-off-by: Victor Gu <xigu@marvell.com>
-> [miquel.raynal@bootlin.com: reword of commit message]
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> (and then, naturally, adjust the driver to invert the fraction)
+> 
+> Comments?
+Agreed - it is odd as we currently have it.  I wouldn't have
+a particular problem with renaming this compatible as voltage
+scaler (voltage multiplier has a specific meaning we should avoid
+stepping on!)  Anyhow, either way is fine with me, but I agree
+the current version is odd.
 
-Shouldn't this be done automatically by the bootloader, before passing
-the DTB to the kernel ?
+Jonathan
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> 
+> Cheers,
+> Peter
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
