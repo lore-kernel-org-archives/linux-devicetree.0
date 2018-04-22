@@ -1,15 +1,14 @@
 From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 3/8] drm: bridge: thc63lvd1024: Add support for LVDS mode
- map
-Date: Sun, 22 Apr 2018 22:02:51 +0200
-Message-ID: <86c2d4c9-8079-9f25-f24a-58c7866a8274@axentia.se>
+Subject: Re: [PATCH 6/8] drm: rcar-du: rcar-lvds: Add bridge format support
+Date: Sun, 22 Apr 2018 22:08:21 +0200
+Message-ID: <11e82e23-4ab0-7441-1798-1eeb4fb96995@axentia.se>
 References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524130269-32688-4-git-send-email-jacopo+renesas@jmondi.org>
+ <1524130269-32688-7-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524130269-32688-4-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1524130269-32688-7-git-send-email-jacopo+renesas@jmondi.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie
@@ -17,91 +16,126 @@ Cc: daniel@ffwll.ch, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.
 List-Id: devicetree@vger.kernel.org
 
 On 2018-04-19 11:31, Jacopo Mondi wrote:
-> The THC63LVD1024 LVDS to RGB bridge supports two different LVDS mapping
-> modes, selectable by means of an external pin.
+> With the introduction of static input image format enumeration in DRM
+> bridges, add support to retrieve the format in rcar-lvds LVDS encoder
+> from both panel or bridge, to set the desired LVDS mode.
 > 
-> Add support for configurable LVDS input mapping modes, using the newly
-> introduced support for bridge input image formats.
+> Do not rely on 'DRM_BUS_FLAG_DATA_LSB_TO_MSB' flag to mirror the LVDS
+> format, as it is only defined for drm connectors, but use the newly
+> introduced _LE version of LVDS mbus image formats.
 > 
 > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > ---
->  drivers/gpu/drm/bridge/thc63lvd1024.c | 41 +++++++++++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
+>  drivers/gpu/drm/rcar-du/rcar_lvds.c | 64 +++++++++++++++++++++++++------------
+>  1 file changed, 44 insertions(+), 20 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/bridge/thc63lvd1024.c b/drivers/gpu/drm/bridge/thc63lvd1024.c
-> index 48527f8..a3071a1 100644
-> --- a/drivers/gpu/drm/bridge/thc63lvd1024.c
-> +++ b/drivers/gpu/drm/bridge/thc63lvd1024.c
-> @@ -10,9 +10,15 @@
->  #include <drm/drm_panel.h>
->  
->  #include <linux/gpio/consumer.h>
-> +#include <linux/of.h>
->  #include <linux/of_graph.h>
->  #include <linux/regulator/consumer.h>
->  
-> +enum thc63_lvds_mapping_mode {
-> +	THC63_LVDS_MAP_MODE2,
-> +	THC63_LVDS_MAP_MODE1,
-> +};
-> +
->  enum thc63_ports {
->  	THC63_LVDS_IN0,
->  	THC63_LVDS_IN1,
-> @@ -116,6 +122,37 @@ static int thc63_parse_dt(struct thc63_dev *thc63)
->  	return 0;
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> index 3d2d3bb..2fa875f 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> @@ -280,41 +280,65 @@ static bool rcar_lvds_mode_fixup(struct drm_bridge *bridge,
+>  	return true;
 >  }
 >  
-> +static int thc63_set_bus_fmt(struct thc63_dev *thc63)
-> +{
-> +	u32 bus_fmt;
-> +	u32 map;
-> +	int ret;
-> +
-> +	ret = of_property_read_u32(thc63->dev->of_node, "thine,map", &map);
-> +	if (ret) {
-> +		dev_err(thc63->dev,
-> +			"Unable to parse property \"thine,map\": %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	switch (map) {
-> +	case THC63_LVDS_MAP_MODE1:
-> +		bus_fmt = MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA;
-> +		break;
-> +	case THC63_LVDS_MAP_MODE2:
-> +		bus_fmt = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG;
-
-Why do you assume rgb888/1x7x4 here? It might as well be rgb666/1x7x3
-or rgb101010/1x7x5, no?
-
-Cheers,
-Peter
-
-> +		break;
-> +	default:
-> +		dev_err(thc63->dev,
-> +			"Invalid value for property \"thine,map\": %u\n", map);
+> -static void rcar_lvds_get_lvds_mode(struct rcar_lvds *lvds)
+> +static int rcar_lvds_get_lvds_mode_from_connector(struct rcar_lvds *lvds,
+> +						  unsigned int *bus_fmt)
+>  {
+>  	struct drm_display_info *info = &lvds->connector.display_info;
+> -	enum rcar_lvds_mode mode;
+> -
+> -	/*
+> -	 * There is no API yet to retrieve LVDS mode from a bridge, only panels
+> -	 * are supported.
+> -	 */
+> -	if (!lvds->panel)
+> -		return;
+>  
+>  	if (!info->num_bus_formats || !info->bus_formats) {
+>  		dev_err(lvds->dev, "no LVDS bus format reported\n");
+> -		return;
 > +		return -EINVAL;
 > +	}
 > +
-> +	drm_bridge_set_bus_formats(&thc63->bridge, &bus_fmt, 1);
+> +	*bus_fmt = info->bus_formats[0];
 > +
 > +	return 0;
 > +}
 > +
->  static int thc63_gpio_init(struct thc63_dev *thc63)
->  {
->  	thc63->oe = devm_gpiod_get_optional(thc63->dev, "oe", GPIOD_OUT_LOW);
-> @@ -166,6 +203,10 @@ static int thc63_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
+> +static int rcar_lvds_get_lvds_mode_from_bridge(struct rcar_lvds *lvds,
+> +					       unsigned int *bus_fmt)
+> +{
+> +	if (!lvds->next_bridge->num_bus_formats ||
+> +	    !lvds->next_bridge->bus_formats) {
+> +		dev_err(lvds->dev, "no LVDS bus format reported\n");
+> +		return -EINVAL;
+>  	}
 >  
-> +	ret = thc63_set_bus_fmt(thc63);
-> +	if (ret)
-> +		return ret;
+> -	switch (info->bus_formats[0]) {
+> +	*bus_fmt = lvds->next_bridge->bus_formats[0];
+
+What makes the first reported format the best choice?
+
 > +
->  	thc63->bridge.driver_private = thc63;
->  	thc63->bridge.of_node = pdev->dev.of_node;
->  	thc63->bridge.funcs = &thc63_bridge_func;
+> +	return 0;
+> +}
+> +
+> +static void rcar_lvds_get_lvds_mode(struct rcar_lvds *lvds)
+> +{
+> +	unsigned int bus_fmt;
+> +	int ret;
+> +
+> +	if (lvds->panel)
+> +		ret = rcar_lvds_get_lvds_mode_from_connector(lvds, &bus_fmt);
+> +	else
+> +		ret = rcar_lvds_get_lvds_mode_from_bridge(lvds, &bus_fmt);
+
+What if no bridge reports any format, shouldn't the connector be examined
+then?
+
+> +	if (ret)
+> +		return;
+> +
+> +	switch (bus_fmt) {
+> +	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG_LE:
+> +	case MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA_LE:
+> +		lvds->mode |= RCAR_LVDS_MODE_MIRROR;
+>  	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG:
+>  	case MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA:
+> -		mode = RCAR_LVDS_MODE_JEIDA;
+> +		lvds->mode = RCAR_LVDS_MODE_JEIDA;
+
+This is b0rken, first the mirror bit is ORed into some unknown preexisting
+value, then the code falls through (without any fall through comment, btw)
+and forcibly sets the mode, thus discarding the mirror bit which was
+carefully ORed in.
+
+>  		break;
+> +
+> +	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG_LE:
+> +		lvds->mode |= RCAR_LVDS_MODE_MIRROR;
+>  	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG:
+> -		mode = RCAR_LVDS_MODE_VESA;
+> +		lvds->mode = RCAR_LVDS_MODE_VESA;
+
+Dito.
+
+Cheers,
+Peter
+
+>  		break;
+>  	default:
+>  		dev_err(lvds->dev, "unsupported LVDS bus format 0x%04x\n",
+> -			info->bus_formats[0]);
+> -		return;
+> +			bus_fmt);
+>  	}
+> -
+> -	if (info->bus_flags & DRM_BUS_FLAG_DATA_LSB_TO_MSB)
+> -		mode |= RCAR_LVDS_MODE_MIRROR;
+> -
+> -	lvds->mode = mode;
+>  }
+>  
+>  static void rcar_lvds_mode_set(struct drm_bridge *bridge,
 > 
