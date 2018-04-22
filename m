@@ -1,84 +1,47 @@
-Return-Path: <SRS0=z9yY=HS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pg0-f67.google.com ([74.125.83.67]:37775 "EHLO
-        mail-pg0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753963AbeD2RNo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Apr 2018 13:13:44 -0400
+Return-Path: <SRS0=hkU0=HL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf0-f196.google.com ([209.85.192.196]:42457 "EHLO
+        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754448AbeDVP5J (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Apr 2018 11:57:09 -0400
 From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v4 04/14] media: ov772x: add checks for register read errors
-Date: Mon, 30 Apr 2018 02:13:03 +0900
-Message-Id: <1525021993-17789-5-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
-References: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
+Subject: [PATCH v3 11/11] media: ov772x: create subdevice device node
+Date: Mon, 23 Apr 2018 00:56:17 +0900
+Message-Id: <1524412577-14419-12-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
+References: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
 Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This change adds checks for register read errors and returns correct
-error code.
+Set the V4L2_SUBDEV_FL_HAS_DEVNODE flag for the subdevice so that the
+subdevice device node is created.
 
 Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: Hans Verkuil <hans.verkuil@cisco.com>
 Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
 Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
 Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
-* v4
+* v3
 - No changes
 
- drivers/media/i2c/ov772x.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ drivers/media/i2c/ov772x.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index b6223bf..3fdbe64 100644
+index c9fdc67..a41c9d3 100644
 --- a/drivers/media/i2c/ov772x.c
 +++ b/drivers/media/i2c/ov772x.c
-@@ -1146,7 +1146,7 @@ static int ov772x_set_fmt(struct v4l2_subdev *sd,
- static int ov772x_video_probe(struct ov772x_priv *priv)
- {
- 	struct i2c_client  *client = v4l2_get_subdevdata(&priv->subdev);
--	u8                  pid, ver;
-+	int		    pid, ver, midh, midl;
- 	const char         *devname;
- 	int		    ret;
+@@ -1404,6 +1404,7 @@ static int ov772x_probe(struct i2c_client *client,
+ 	mutex_init(&priv->lock);
  
-@@ -1156,7 +1156,11 @@ static int ov772x_video_probe(struct ov772x_priv *priv)
- 
- 	/* Check and show product ID and manufacturer ID. */
- 	pid = ov772x_read(client, PID);
-+	if (pid < 0)
-+		return pid;
- 	ver = ov772x_read(client, VER);
-+	if (ver < 0)
-+		return ver;
- 
- 	switch (VERSION(pid, ver)) {
- 	case OV7720:
-@@ -1172,13 +1176,17 @@ static int ov772x_video_probe(struct ov772x_priv *priv)
- 		goto done;
- 	}
- 
-+	midh = ov772x_read(client, MIDH);
-+	if (midh < 0)
-+		return midh;
-+	midl = ov772x_read(client, MIDL);
-+	if (midl < 0)
-+		return midl;
-+
- 	dev_info(&client->dev,
- 		 "%s Product ID %0x:%0x Manufacturer ID %x:%x\n",
--		 devname,
--		 pid,
--		 ver,
--		 ov772x_read(client, MIDH),
--		 ov772x_read(client, MIDL));
-+		 devname, pid, ver, midh, midl);
-+
- 	ret = v4l2_ctrl_handler_setup(&priv->hdl);
- 
- done:
+ 	v4l2_i2c_subdev_init(&priv->subdev, client, &ov772x_subdev_ops);
++	priv->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+ 	v4l2_ctrl_handler_init(&priv->hdl, 3);
+ 	/* Use our mutex for the controls */
+ 	priv->hdl.lock = &priv->lock;
 -- 
 2.7.4
 
