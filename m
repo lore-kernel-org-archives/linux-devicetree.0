@@ -1,199 +1,113 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH] mtd: rawnand: sunxi: Remove support for GPIO-based
- Ready/Busy polling
-Date: Sun, 22 Apr 2018 19:25:17 +0200
-Message-ID: <20180422192517.2037ef1c@bbrezillon>
-References: <20180327070614.3288-1-boris.brezillon@bootlin.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 1/8] drm: bridge: Add support for static image formats
+Date: Sun, 22 Apr 2018 22:02:23 +0200
+Message-ID: <10891e93-ede5-8c39-b53e-da892e163b52@axentia.se>
+References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1524130269-32688-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180327070614.3288-1-boris.brezillon@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-mtd@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524130269-32688-2-git-send-email-jacopo+renesas@jmondi.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie
+Cc: daniel@ffwll.ch, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 27 Mar 2018 09:06:14 +0200
-Boris Brezillon <boris.brezillon@bootlin.com> wrote:
-
-> None of the existing platforms connect the R/B pin to a GPIO (they all
-> use one of the dedicated R/B pin).
-> Anyway, if we ever get short of native R/B pins, it's probably better
-> to fallback to STATUS reg polling than trying to poll a GPIO.
+On 2018-04-19 11:31, Jacopo Mondi wrote:
+> Add support for storing image format information in DRM bridges with
+> associated helper function.
 > 
-> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-
-Applied to nand/next.
-
+> This patch replicates for bridges what 'drm_display_info_set_bus_formats()'
+> is for connectors.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > ---
->  .../devicetree/bindings/mtd/sunxi-nand.txt         |  2 -
->  drivers/mtd/nand/raw/sunxi_nand.c                  | 91 ++++------------------
->  2 files changed, 15 insertions(+), 78 deletions(-)
+>  drivers/gpu/drm/drm_bridge.c | 30 ++++++++++++++++++++++++++++++
+>  include/drm/drm_bridge.h     |  8 ++++++++
+>  2 files changed, 38 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-> index 0734f03bf3d3..dcd5a5d80dc0 100644
-> --- a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-> @@ -22,8 +22,6 @@ Optional properties:
->  - reset : phandle + reset specifier pair
->  - reset-names : must contain "ahb"
->  - allwinner,rb : shall contain the native Ready/Busy ids.
-> - or
-> -- rb-gpios : shall contain the gpios used as R/B pins.
->  - nand-ecc-mode : one of the supported ECC modes ("hw", "soft", "soft_bch" or
->  		  "none")
->  
-> diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
-> index aad42812a353..d831a141a196 100644
-> --- a/drivers/mtd/nand/raw/sunxi_nand.c
-> +++ b/drivers/mtd/nand/raw/sunxi_nand.c
-> @@ -165,49 +165,16 @@
->  
->  #define NFC_MAX_CS		7
->  
-> -/*
-> - * Ready/Busy detection type: describes the Ready/Busy detection modes
-> - *
-> - * @RB_NONE:	no external detection available, rely on STATUS command
-> - *		and software timeouts
-> - * @RB_NATIVE:	use sunxi NAND controller Ready/Busy support. The Ready/Busy
-> - *		pin of the NAND flash chip must be connected to one of the
-> - *		native NAND R/B pins (those which can be muxed to the NAND
-> - *		Controller)
-> - * @RB_GPIO:	use a simple GPIO to handle Ready/Busy status. The Ready/Busy
-> - *		pin of the NAND flash chip must be connected to a GPIO capable
-> - *		pin.
-> - */
-> -enum sunxi_nand_rb_type {
-> -	RB_NONE,
-> -	RB_NATIVE,
-> -	RB_GPIO,
-> -};
-> -
-> -/*
-> - * Ready/Busy structure: stores information related to Ready/Busy detection
-> - *
-> - * @type:	the Ready/Busy detection mode
-> - * @info:	information related to the R/B detection mode. Either a gpio
-> - *		id or a native R/B id (those supported by the NAND controller).
-> - */
-> -struct sunxi_nand_rb {
-> -	enum sunxi_nand_rb_type type;
-> -	union {
-> -		int gpio;
-> -		int nativeid;
-> -	} info;
-> -};
-> -
->  /*
->   * Chip Select structure: stores information related to NAND Chip Select
->   *
->   * @cs:		the NAND CS id used to communicate with a NAND Chip
-> - * @rb:		the Ready/Busy description
-> + * @rb:		the Ready/Busy pin ID. -1 means no R/B pin connected to the
-> + *		NFC
->   */
->  struct sunxi_nand_chip_sel {
->  	u8 cs;
-> -	struct sunxi_nand_rb rb;
-> +	s8 rb;
->  };
->  
->  /*
-> @@ -440,30 +407,19 @@ static int sunxi_nfc_dev_ready(struct mtd_info *mtd)
->  	struct nand_chip *nand = mtd_to_nand(mtd);
->  	struct sunxi_nand_chip *sunxi_nand = to_sunxi_nand(nand);
->  	struct sunxi_nfc *nfc = to_sunxi_nfc(sunxi_nand->nand.controller);
-> -	struct sunxi_nand_rb *rb;
-> -	int ret;
-> +	u32 mask;
->  
->  	if (sunxi_nand->selected < 0)
->  		return 0;
->  
-> -	rb = &sunxi_nand->sels[sunxi_nand->selected].rb;
-> -
-> -	switch (rb->type) {
-> -	case RB_NATIVE:
-> -		ret = !!(readl(nfc->regs + NFC_REG_ST) &
-> -			 NFC_RB_STATE(rb->info.nativeid));
-> -		break;
-> -	case RB_GPIO:
-> -		ret = gpio_get_value(rb->info.gpio);
-> -		break;
-> -	case RB_NONE:
-> -	default:
-> -		ret = 0;
-> +	if (sunxi_nand->sels[sunxi_nand->selected].rb < 0) {
->  		dev_err(nfc->dev, "cannot check R/B NAND status!\n");
-> -		break;
-> +		return 0;
->  	}
->  
-> -	return ret;
-> +	mask = NFC_RB_STATE(sunxi_nand->sels[sunxi_nand->selected].rb);
-> +
-> +	return !!(readl(nfc->regs + NFC_REG_ST) & mask);
+> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> index 1638bfe..e2ad098 100644
+> --- a/drivers/gpu/drm/drm_bridge.c
+> +++ b/drivers/gpu/drm/drm_bridge.c
+> @@ -157,6 +157,36 @@ void drm_bridge_detach(struct drm_bridge *bridge)
 >  }
 >  
->  static void sunxi_nfc_select_chip(struct mtd_info *mtd, int chip)
-> @@ -488,12 +444,11 @@ static void sunxi_nfc_select_chip(struct mtd_info *mtd, int chip)
->  
->  		ctl |= NFC_CE_SEL(sel->cs) | NFC_EN |
->  		       NFC_PAGE_SHIFT(nand->page_shift);
-> -		if (sel->rb.type == RB_NONE) {
-> +		if (sel->rb < 0) {
->  			nand->dev_ready = NULL;
->  		} else {
->  			nand->dev_ready = sunxi_nfc_dev_ready;
-> -			if (sel->rb.type == RB_NATIVE)
-> -				ctl |= NFC_RB_SEL(sel->rb.info.nativeid);
-> +			ctl |= NFC_RB_SEL(sel->rb);
->  		}
->  
->  		writel(mtd->writesize, nfc->regs + NFC_REG_SPARE_AREA);
-> @@ -1946,26 +1901,10 @@ static int sunxi_nand_chip_init(struct device *dev, struct sunxi_nfc *nfc,
->  		chip->sels[i].cs = tmp;
->  
->  		if (!of_property_read_u32_index(np, "allwinner,rb", i, &tmp) &&
-> -		    tmp < 2) {
-> -			chip->sels[i].rb.type = RB_NATIVE;
-> -			chip->sels[i].rb.info.nativeid = tmp;
-> -		} else {
-> -			ret = of_get_named_gpio(np, "rb-gpios", i);
-> -			if (ret >= 0) {
-> -				tmp = ret;
-> -				chip->sels[i].rb.type = RB_GPIO;
-> -				chip->sels[i].rb.info.gpio = tmp;
-> -				ret = devm_gpio_request(dev, tmp, "nand-rb");
-> -				if (ret)
-> -					return ret;
-> -
-> -				ret = gpio_direction_input(tmp);
-> -				if (ret)
-> -					return ret;
-> -			} else {
-> -				chip->sels[i].rb.type = RB_NONE;
-> -			}
-> -		}
-> +		    tmp < 2)
-> +			chip->sels[i].rb = tmp;
-> +		else
-> +			chip->sels[i].rb = -1;
->  	}
->  
->  	nand = &chip->nand;
+>  /**
+> + * drm_bridge_set_bus_formats() - set bridge supported image formats
+> + * @bridge: the bridge to set image formats in
+> + * @formats: array of MEDIA_BUS_FMT\_ supported image formats
+> + * @num_formats: number of elements in the @formats array
+> + *
+> + * Store a list of supported image formats in a bridge.
+> + * See MEDIA_BUS_FMT_* definitions in include/uapi/linux/media-bus-format.h for
+> + * a full list of available formats.
+> + */
+> +int drm_bridge_set_bus_formats(struct drm_bridge *bridge, const u32 *formats,
+> +			       unsigned int num_formats)
+> +{
+> +	u32 *fmts;
+> +
+> +	if (!formats || !num_formats)
+> +		return -EINVAL;
 
+I see no compelling reason to forbid restoring the number of reported
+input formats to zero? I can't think of a use right now of course, but it
+seems a bit odd all the same.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Cheers,
+Peter
+
+> +
+> +	fmts = kmemdup(formats, sizeof(*formats) * num_formats, GFP_KERNEL);
+> +	if (!fmts)
+> +		return -ENOMEM;
+> +
+> +	kfree(bridge->bus_formats);
+> +	bridge->bus_formats = fmts;
+> +	bridge->num_bus_formats = num_formats;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(drm_bridge_set_bus_formats);
+> +
+> +/**
+>   * DOC: bridge callbacks
+>   *
+>   * The &drm_bridge_funcs ops are populated by the bridge driver. The DRM
+> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> index 3270fec..6b3648c 100644
+> --- a/include/drm/drm_bridge.h
+> +++ b/include/drm/drm_bridge.h
+> @@ -258,6 +258,9 @@ struct drm_bridge_timings {
+>   * @encoder: encoder to which this bridge is connected
+>   * @next: the next bridge in the encoder chain
+>   * @of_node: device node pointer to the bridge
+> + * @bus_formats: wire image formats. Array of @num_bus_formats MEDIA_BUS_FMT\_
+> + * elements
+> + * @num_bus_formats: size of @bus_formats array
+>   * @list: to keep track of all added bridges
+>   * @timings: the timing specification for the bridge, if any (may
+>   * be NULL)
+> @@ -271,6 +274,9 @@ struct drm_bridge {
+>  #ifdef CONFIG_OF
+>  	struct device_node *of_node;
+>  #endif
+> +	const u32 *bus_formats;
+> +	unsigned int num_bus_formats;
+> +
+>  	struct list_head list;
+>  	const struct drm_bridge_timings *timings;
+>  
+> @@ -296,6 +302,8 @@ void drm_bridge_mode_set(struct drm_bridge *bridge,
+>  			struct drm_display_mode *adjusted_mode);
+>  void drm_bridge_pre_enable(struct drm_bridge *bridge);
+>  void drm_bridge_enable(struct drm_bridge *bridge);
+> +int drm_bridge_set_bus_formats(struct drm_bridge *bridge, const u32 *fmts,
+> +			       unsigned int num_fmts);
+>  
+>  #ifdef CONFIG_DRM_PANEL_BRIDGE
+>  struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel,
+> 
