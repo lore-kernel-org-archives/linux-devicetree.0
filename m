@@ -1,42 +1,100 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-cubox-i: Move card-detect GPIO to 1.5
- SOM devices only
-Date: Sun, 22 Apr 2018 15:39:12 +0100
-Message-ID: <20180422143911.GB16141@n2100.armlinux.org.uk>
-References: <20180422142151.17910-1-contact@paulk.fr>
+From: David Julian Veenstra <davidjulianveenstra@gmail.com>
+Subject: Re: [PATCH v2 11/13] staging: iio: Documentation: Add missing sysfs
+ docs for angle channel
+Date: Sun, 22 Apr 2018 16:41:16 +0200
+Message-ID: <87in8jmhgz.fsf@gmail.com>
+References: <cover.1524247563.git.davidjulianveenstra@gmail.com>
+ <e2eaff8115d8fd170767c76119cf6cdd2d1ebc92.1524247563.git.davidjulianveenstra@gmail.com>
+ <20180421180843.3bd3042a@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180422142151.17910-1-contact@paulk.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <contact@paulk.fr>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-reply-to: <20180421180843.3bd3042a@archlinux>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, daniel.baluta@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 22, 2018 at 04:21:51PM +0200, Paul Kocialkowski wrote:
-> The Solid-Run CuBox-i lower board used in the first generation of
-> CuBox-i devices feature a hinged micro SD card slot, that does not have
-> card-detect capability. Since the card-detect GPIO was specified in the
-> common cubox-i dtsi, it is moved to each device using the 1.5 SOM and is
-> thus removed from the imx6q-cubox-i dts.
 
-This seems incorrect.
+On 21, April 2018 19:08, Jonathan Cameron wrote:
 
-The 1.5 SOM is a relatively recent thing, and I have one of the first
-Cubox-i's that were produced which is not hinged, and does not have a
-1.5 SOM.  There is _no_ correlation between the 1.5 SOM and the SD
-card slot.
+> On Fri, 20 Apr 2018 21:31:37 +0200
+> David Veenstra <davidjulianveenstra@gmail.com> wrote:
+>
+>> The iio resolver drivers in staging use angle channels. This patch
+>> add missing documentation for this type of channel.
+>> 
+>> As was discussed in [1], radians is chosen as the unit, to match the
+>> unit of angular velocity.
+>> 
+>> [1] https://marc.info/?l=linux-driver-devel&m=152190078308330&w=2
+>> 
+>> Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
+>> ---
+>> Change in v2:
+>>   - Introduces in this version.
+>> 
+>>  Documentation/ABI/testing/sysfs-bus-iio | 11 +++++++++++
+>>  1 file changed, 11 insertions(+)
+>> 
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+>> index 6a5f34b4d5b9..8ad0e55f99ee 100644
+>> --- a/Documentation/ABI/testing/sysfs-bus-iio
+>> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+>> @@ -190,6 +190,15 @@ Description:
+>>  		but should match other such assignments on device).
+>>  		Units after application of scale and offset are m/s^2.
+>>  
+>> +What:		/sys/bus/iio/devices/iio:deviceX/in_angl_x_raw
+>> +What:		/sys/bus/iio/devices/iio:deviceX/in_angl_y_raw
+>> +What:		/sys/bus/iio/devices/iio:deviceX/in_angl_z_raw
+> This surprised me.  A resolver is not going to inherently have any
+> notion of a particular axis.
+> Would expect.
+> in_angl_raw
 
-Talking to folk at SolidRun, we're all confused about your assertions.
+For the attributes that were added, I tried to match it with
+the angular velocity counterpart. But it indeed doesn't make
+much sense to have an axis for a resolver. I'll remove axis
+modifier for v3.
 
-We're also confused about "hinged micro SD card slot" - Cubox-i's
-come with either a push-push slot or a static (push-in, pull-out) slot.
-(Prototypes were the latter.)
+Best regards,
+David Veenstra
 
-Maybe someone's modified yours?
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+>
+> Jonathan
+>
+>> +KernelVersion:	4.17
+>> +Contact:	linux-iio@vger.kernel.org
+>> +Description:
+>> +		Angle about axis x, y or z (may be arbitrarily assigned). Units
+>> +		after application of scale and offset are radians.
+>> +
+>>  What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_x_raw
+>>  What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_y_raw
+>>  What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_z_raw
+>> @@ -297,6 +306,7 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_pressure_offset
+>>  What:		/sys/bus/iio/devices/iio:deviceX/in_humidityrelative_offset
+>>  What:		/sys/bus/iio/devices/iio:deviceX/in_magn_offset
+>>  What:		/sys/bus/iio/devices/iio:deviceX/in_rot_offset
+>> +What:		/sys/bus/iio/devices/iio:deviceX/in_angl_offset
+>>  KernelVersion:	2.6.35
+>>  Contact:	linux-iio@vger.kernel.org
+>>  Description:
+>> @@ -350,6 +360,7 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_humidityrelative_scale
+>>  What:		/sys/bus/iio/devices/iio:deviceX/in_velocity_sqrt(x^2+y^2+z^2)_scale
+>>  What:		/sys/bus/iio/devices/iio:deviceX/in_illuminance_scale
+>>  What:		/sys/bus/iio/devices/iio:deviceX/in_countY_scale
+>> +What:		/sys/bus/iio/devices/iio:deviceX/in_angl_scale
+>>  KernelVersion:	2.6.35
+>>  Contact:	linux-iio@vger.kernel.org
+>>  Description:
