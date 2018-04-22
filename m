@@ -1,122 +1,173 @@
-From: Jan Kiszka <jan.kiszka@web.de>
-Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
- unflattened to FDT
-Date: Sun, 22 Apr 2018 12:30:25 +0200
-Message-ID: <e06d1c0f-f60d-fc23-cd74-82f557dbc432@web.de>
-References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
- <1520122673-11003-3-git-send-email-frowand.list@gmail.com>
- <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
- <7bbf615b-3cdd-6bb4-6918-33e48de4225d@gmail.com>
- <a21dbee8-6e4e-9ceb-c798-dda43c2eae2d@web.de>
- <d7e94a45-5d46-0491-e5dc-2b098a11c5b1@gmail.com>
- <CAL_Jsq+MmUTMrd+jNqUB2=A-q3cCy7+QWOKG0iF6zM0hjCy3PQ@mail.gmail.com>
- <e508f3de-f21b-2510-2c6a-b810073ba1a7@web.de>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v5 2/3] pinctrl: bcm2835: Add support for generic
+ pinctrl binding
+Date: Sun, 22 Apr 2018 14:44:06 +0200 (CEST)
+Message-ID: <1005266613.32129.1524401046815@email.1und1.de>
+References: <f500b25c-eea0-9f01-7d7b-5a9dd90c50fa@castello.eng.br>
+ <1523422726-7910-1-git-send-email-matheus@castello.eng.br>
+ <1523422726-7910-3-git-send-email-matheus@castello.eng.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <jailhouse-dev+bncBDDNLV6S7AOBBSGI6HLAKGQEOD6A5BQ@googlegroups.com>
-Sender: jailhouse-dev@googlegroups.com
-In-Reply-To: <e508f3de-f21b-2510-2c6a-b810073ba1a7@web.de>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
-List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
-List-Archive: <https://groups.google.com/group/jailhouse-dev
-List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
-List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
- <https://groups.google.com/group/jailhouse-dev/subscribe>
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jailhouse <jailhouse-dev@googlegroups.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1523422726-7910-3-git-send-email-matheus@castello.eng.br>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matheus Castello <matheus@castello.eng.br>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, eric@anholt.net, mark.rutland@arm.com, devicetree@vger.kernel.org, robh@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-11 07:42, Jan Kiszka wrote:
-> On 2018-04-05 23:12, Rob Herring wrote:
->> On Thu, Apr 5, 2018 at 2:28 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->>> On 04/05/18 12:13, Jan Kiszka wrote:
->>>> On 2018-04-05 20:59, Frank Rowand wrote:
->>>>> Hi Jan,
->>>>>
->>>>> On 04/04/18 15:35, Jan Kiszka wrote:
->>>>>> Hi Frank,
->>>>>>
->>>>>> On 2018-03-04 01:17, frowand.list@gmail.com wrote:
->>>>>>> From: Frank Rowand <frank.rowand@sony.com>
->>>>>>>
->>>>>>> Move duplicating and unflattening of an overlay flattened devicetree
->>>>>>> (FDT) into the overlay application code.  To accomplish this,
->>>>>>> of_overlay_apply() is replaced by of_overlay_fdt_apply().
->>>>>>>
->>>>>>> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
->>>>>>> code, which is thus responsible for freeing the duplicate FDT.  The
->>>>>>> caller of of_overlay_fdt_apply() remains responsible for freeing the
->>>>>>> original FDT.
->>>>>>>
->>>>>>> The unflattened devicetree now belongs to devicetree code, which is
->>>>>>> thus responsible for freeing the unflattened devicetree.
->>>>>>>
->>>>>>> These ownership changes prevent early freeing of the duplicated FDT
->>>>>>> or the unflattened devicetree, which could result in use after free
->>>>>>> errors.
->>>>>>>
->>>>>>> of_overlay_fdt_apply() is a private function for the anticipated
->>>>>>> overlay loader.
->>>>>>
->>>>>> We are using of_fdt_unflatten_tree + of_overlay_apply in the
->>>>>> (out-of-tree) Jailhouse loader driver in order to register a virtual
->>>>>> device during hypervisor activation with Linux. The DT overlay is
->>>>>> created from a a template but modified prior to application to account
->>>>>> for runtime-specific parameters. See [1] for the current implementation.
->>>>>>
->>>>>> I'm now wondering how to model that scenario best with the new API.
->>>>>> Given that the loader lost ownership of the unflattened tree but the
->>>>>> modification API exist only for the that DT state, I'm not yet seeing a
->>>>>> clear solution. Should we apply the template in disabled form (status =
->>>>>> "disabled"), modify it, and then activate it while it is already applied?
->>>>>
->>>>> Thank you for the pointer to the driver - that makes it much easier to
->>>>> understand the use case and consider solutions.
->>>>>
->>>>> If you can make the changes directly on the FDT instead of on the
->>>>> expanded devicetree, then you could move to the new API.
->>>>
->>>> Are there some examples/references on how to edit FDTs in-place in the
->>>> kernel? I'd like to avoid writing the n-th FDT parser/generator.
->>>
->>> I don't know of any existing in-kernel edits of the FDT (but they might
->>> exist).  The functions to access an FDT are in libfdt, which is in
->>> scripts/dtc/libfdt/.
->>
->> Let's please not go down that route of doing FDT modifications. There
->> is little reason to other than for early boot changes. And it is much
->> easier to work on unflattened trees.
+Hi Matheus,
+
+> Matheus Castello <matheus@castello.eng.br> hat am 11. April 2018 um 06:58 geschrieben:
 > 
-> I just briefly looked into libfdt, and it would have meant building it
-> into the module as there are no library functions exported by the kernel
-> either. Another reason to drop that.
 > 
-> What's apparently working now is the pattern I initially suggested:
-> Register template with status = "disabled" as overlay, then prepare and
-> apply changeset that contains all needed modifications and sets the
-> status to "ok". I might be leaking additional resources, but to find
-> that out, I will now finally have to resolve clean unbinding of the
-> generic PCI host controller [1] first.
+> To keep driver up to date we add generic pinctrl binding support, which covers
+> the features used in this driver and has additional node properties that this
+> SoC has compatibility, so enabling future implementations of these properties
+> without the need to create new node properties in the device trees.
+> 
+> The logic of this change maintain the old brcm legacy binding support in order
+> to keep the ABI stable.
+> 
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+> 
+> A brief explanation of what I did:
+> 
+> Add pinconf-generic header for use the defines and pinctrl-generic API.
+> 
+> Add dt-bindings pinctrl bcm2835 header to use functions selections and
+> pulls definitions, which functions definitions where duplicated in the
+> enum bcm2835_fsel, I removed the duplicate defines from enum.
+> 
+> In the bcm2835_pctl_dt_node_to_map_pull I used the generic macro for
+> pack the legacy param and arguments, since it will be unpacked along with
+> generic properties that is packed with this same macro.
+> 
+> In bcm2835_pctl_dt_node_to_map I thougt it was better, and simpler, to use
+> pinctrl-generic parse code instead of parsing it inside the driver, so code
+> first check for generic binding parse, if something is parsed then it is
+> assumed that are using the new generic style, and when nothing is found then
+> parse continues to search for legacy properties.
+> 
+> In the bcm2835_pinconf_set was changed the unpack legacy by the generic, and
+> was added a switch for the parameter tests, since pinctrl generic uses 3
+> properties to define the states of the pull instead of one with arguments, that
+> was the reason too that bcm2835_pull_config_set function was added, for reuse
+> the code that set state of pull.
+> 
+>  drivers/pinctrl/bcm/Kconfig           |  1 +
+>  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 87 ++++++++++++++++++++++-------------
+>  2 files changed, 55 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
+> index e8c4e4f..0f38d51 100644
+> --- a/drivers/pinctrl/bcm/Kconfig
+> +++ b/drivers/pinctrl/bcm/Kconfig
+> @@ -20,6 +20,7 @@ config PINCTRL_BCM2835
+>  	bool
+>  	select PINMUX
+>  	select PINCONF
+> +	select GENERIC_PINCONF
+>  	select GPIOLIB_IRQCHIP
+> 
+>  config PINCTRL_IPROC_GPIO
+> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+> index 785c366..010c565 100644
+> --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+> +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+> ...
+> @@ -917,37 +913,62 @@ static int bcm2835_pinconf_get(struct pinctrl_dev *pctldev,
+>  	return -ENOTSUPP;
+>  }
+> 
+> +static void bcm2835_pull_config_set(struct bcm2835_pinctrl *pc,
+> +		unsigned pin, unsigned arg)
 
-static void free_overlay_changeset(struct overlay_changeset *ovcs)
-{
-	[...]
-	/*
-	 * TODO
-	 *
-	 * would like to: kfree(ovcs->overlay_tree);
-	 * but can not since drivers may have pointers into this data
-	 *
-	 * would like to: kfree(ovcs->fdt);
-	 * but can not since drivers may have pointers into this data
-	 */
+checkpatch is complaining about missing "int" here. Please fix this here.
 
-	kfree(ovcs);
-}
+> +{
+> +	u32 off, bit;
+> +
+> +	off = GPIO_REG_OFFSET(pin);
+> +	bit = GPIO_REG_SHIFT(pin);
+> +
+> +	bcm2835_gpio_wr(pc, GPPUD, arg & 3);
+> +	/*
+> +	* BCM2835 datasheet say to wait 150 cycles, but not of what.
+> +	* But the VideoCore firmware delay for this operation
+> +	* based nearly on the same amount of VPU cycles and this clock
+> +	* runs at 250 MHz.
+> +	*/
 
-What's this? I have kmemleak now jumping at me over this. Who is suppose
-to plug these leaks? The caller of of_overlay_fdt_apply has no pointers
-to those objects. I would say that's a regression of the new API.
+checkpatch complains here about comment alignment. Please fix it.
 
-Jan
+Stefan
+
+> +	udelay(1);
+> +	bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), BIT(bit));
+> +	udelay(1);
+> +	bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), 0);
+> +}
+> +
+>  static int bcm2835_pinconf_set(struct pinctrl_dev *pctldev,
+>  			unsigned pin, unsigned long *configs,
+>  			unsigned num_configs)
+>  {
+>  	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
+> -	enum bcm2835_pinconf_param param;
+> -	u16 arg;
+> -	u32 off, bit;
+> +	u32 param, arg;
+>  	int i;
+> 
+>  	for (i = 0; i < num_configs; i++) {
+> -		param = BCM2835_PINCONF_UNPACK_PARAM(configs[i]);
+> -		arg = BCM2835_PINCONF_UNPACK_ARG(configs[i]);
+> +		param = pinconf_to_config_param(configs[i]);
+> +		arg = pinconf_to_config_argument(configs[i]);
+> 
+> -		if (param != BCM2835_PINCONF_PARAM_PULL)
+> -			return -EINVAL;
+> +		switch (param) {
+> +		/* Set legacy brcm,pull */
+> +		case BCM2835_PINCONF_PARAM_PULL:
+> +			bcm2835_pull_config_set(pc, pin, arg);
+> +			break;
+> 
+> -		off = GPIO_REG_OFFSET(pin);
+> -		bit = GPIO_REG_SHIFT(pin);
+> +		/* Set pull generic bindings */
+> +		case PIN_CONFIG_BIAS_DISABLE:
+> +			bcm2835_pull_config_set(pc, pin, BCM2835_PUD_OFF);
+> +			break;
+> 
+> -		bcm2835_gpio_wr(pc, GPPUD, arg & 3);
+> -		/*
+> -		 * BCM2835 datasheet say to wait 150 cycles, but not of what.
+> -		 * But the VideoCore firmware delay for this operation
+> -		 * based nearly on the same amount of VPU cycles and this clock
+> -		 * runs at 250 MHz.
+> -		 */
+> -		udelay(1);
+> -		bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), BIT(bit));
+> -		udelay(1);
+> -		bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), 0);
+> +		case PIN_CONFIG_BIAS_PULL_DOWN:
+> +			bcm2835_pull_config_set(pc, pin, BCM2835_PUD_DOWN);
+> +			break;
+> +
+> +		case PIN_CONFIG_BIAS_PULL_UP:
+> +			bcm2835_pull_config_set(pc, pin, BCM2835_PUD_UP);
+> +			break;
+> +
+> +		default:
+> +			return -EINVAL;
+> +
+> +		} /* switch param type */
+>  	} /* for each config */
+> 
+>  	return 0;
+> --
+> 2.7.4
+>
