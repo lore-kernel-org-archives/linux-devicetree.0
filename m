@@ -1,35 +1,149 @@
-Return-Path: <SRS0=4xjV=HF=cogentembedded.com=sergei.shtylyov@kernel.org>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] DT: mmc: tmio_mmc: document R8A77980 bindings
-Message-ID: <cee91fe1-7bf0-e4c8-d6a9-5653be3358b0@cogentembedded.com>
-Date: Mon, 16 Apr 2018 21:30:02 +0300
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=hkU0=HL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf0-f193.google.com ([209.85.192.193]:34850 "EHLO
+        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754473AbeDVP5B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Apr 2018 11:57:01 -0400
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v3 08/11] media: ov772x: reconstruct s_frame_interval()
+Date: Mon, 23 Apr 2018 00:56:14 +0900
+Message-Id: <1524412577-14419-9-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
+References: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document the R-Car V3H (R8A77980) SoC in the Renesas SDHI bindings.
+This splits the s_frame_interval() in subdev video ops into selecting the
+frame interval and setting up the registers.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+This is a preparatory change to avoid accessing registers under power
+saving mode.
 
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
-This patch is against the 'next' branch of Ulf Hansson's 'mmc.git' repo.
+* v3
+- No changes
 
- Documentation/devicetree/bindings/mmc/tmio_mmc.txt |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/i2c/ov772x.c | 56 +++++++++++++++++++++++++++++-----------------
+ 1 file changed, 35 insertions(+), 21 deletions(-)
 
-Index: mmc/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-===================================================================
---- mmc.orig/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-+++ mmc/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-@@ -26,6 +26,7 @@ Required properties:
- 		"renesas,sdhi-r8a7794" - SDHI IP on R8A7794 SoC
- 		"renesas,sdhi-r8a7795" - SDHI IP on R8A7795 SoC
- 		"renesas,sdhi-r8a7796" - SDHI IP on R8A7796 SoC
-+		"renesas,sdhi-r8a77980" - SDHI IP on R8A77980 SoC
- 		"renesas,sdhi-r8a77995" - SDHI IP on R8A77995 SoC
- 		"renesas,sdhi-shmobile" - a generic sh-mobile SDHI controller
- 		"renesas,rcar-gen1-sdhi" - a generic R-Car Gen1 SDHI controller
+diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+index 8c0b850..452406c 100644
+--- a/drivers/media/i2c/ov772x.c
++++ b/drivers/media/i2c/ov772x.c
+@@ -617,25 +617,16 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
+ 	return 0;
+ }
+ 
+-static int ov772x_set_frame_rate(struct ov772x_priv *priv,
+-				 struct v4l2_fract *tpf,
+-				 const struct ov772x_color_format *cfmt,
+-				 const struct ov772x_win_size *win)
++static unsigned int ov772x_select_fps(struct ov772x_priv *priv,
++				 struct v4l2_fract *tpf)
+ {
+-	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
+-	unsigned long fin = clk_get_rate(priv->clk);
+ 	unsigned int fps = tpf->numerator ?
+ 			   tpf->denominator / tpf->numerator :
+ 			   tpf->denominator;
+ 	unsigned int best_diff;
+-	unsigned int fsize;
+-	unsigned int pclk;
+ 	unsigned int diff;
+ 	unsigned int idx;
+ 	unsigned int i;
+-	u8 clkrc = 0;
+-	u8 com4 = 0;
+-	int ret;
+ 
+ 	/* Approximate to the closest supported frame interval. */
+ 	best_diff = ~0L;
+@@ -646,7 +637,25 @@ static int ov772x_set_frame_rate(struct ov772x_priv *priv,
+ 			best_diff = diff;
+ 		}
+ 	}
+-	fps = ov772x_frame_intervals[idx];
++
++	return ov772x_frame_intervals[idx];
++}
++
++static int ov772x_set_frame_rate(struct ov772x_priv *priv,
++				 unsigned int fps,
++				 const struct ov772x_color_format *cfmt,
++				 const struct ov772x_win_size *win)
++{
++	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
++	unsigned long fin = clk_get_rate(priv->clk);
++	unsigned int fsize;
++	unsigned int pclk;
++	unsigned int best_diff;
++	unsigned int diff;
++	unsigned int i;
++	u8 clkrc = 0;
++	u8 com4 = 0;
++	int ret;
+ 
+ 	/* Use image size (with blankings) to calculate desired pixel clock. */
+ 	switch (cfmt->com7 & OFMT_MASK) {
+@@ -711,10 +720,6 @@ static int ov772x_set_frame_rate(struct ov772x_priv *priv,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	tpf->numerator = 1;
+-	tpf->denominator = fps;
+-	priv->fps = tpf->denominator;
+-
+ 	return 0;
+ }
+ 
+@@ -735,8 +740,20 @@ static int ov772x_s_frame_interval(struct v4l2_subdev *sd,
+ {
+ 	struct ov772x_priv *priv = to_ov772x(sd);
+ 	struct v4l2_fract *tpf = &ival->interval;
++	unsigned int fps;
++	int ret;
++
++	fps = ov772x_select_fps(priv, tpf);
++
++	ret = ov772x_set_frame_rate(priv, fps, priv->cfmt, priv->win);
++	if (ret)
++		return ret;
+ 
+-	return ov772x_set_frame_rate(priv, tpf, priv->cfmt, priv->win);
++	tpf->numerator = 1;
++	tpf->denominator = fps;
++	priv->fps = fps;
++
++	return 0;
+ }
+ 
+ static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
+@@ -993,7 +1010,6 @@ static int ov772x_set_params(struct ov772x_priv *priv,
+ 			     const struct ov772x_win_size *win)
+ {
+ 	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
+-	struct v4l2_fract tpf;
+ 	int ret;
+ 	u8  val;
+ 
+@@ -1075,9 +1091,7 @@ static int ov772x_set_params(struct ov772x_priv *priv,
+ 		goto ov772x_set_fmt_error;
+ 
+ 	/* COM4, CLKRC: Set pixel clock and framerate. */
+-	tpf.numerator = 1;
+-	tpf.denominator = priv->fps;
+-	ret = ov772x_set_frame_rate(priv, &tpf, cfmt, win);
++	ret = ov772x_set_frame_rate(priv, priv->fps, cfmt, win);
+ 	if (ret < 0)
+ 		goto ov772x_set_fmt_error;
+ 
+-- 
+2.7.4
+
