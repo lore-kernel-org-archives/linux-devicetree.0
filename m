@@ -1,85 +1,103 @@
-Return-Path: <SRS0=d2rx=HS=gmail.com=akinobu.mita@kernel.org>
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v4 00/14] media: ov772x: support media controller, device tree probing, etc.
-Date: Mon, 30 Apr 2018 02:12:59 +0900
-Message-Id: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa@the-dreams.de>
+Return-Path: <SRS0=1SUd=HL=solid-run.com=jon@kernel.org>
+MIME-Version: 1.0
+References: <20180422142151.17910-1-contact@paulk.fr> <20180422143911.GB16141@n2100.armlinux.org.uk>
+In-Reply-To: <20180422143911.GB16141@n2100.armlinux.org.uk>
+From: Jon Nettleton <jon@solid-run.com>
+Date: Sun, 22 Apr 2018 15:02:17 +0000
+Message-ID: <CABdtJHuE05ea1EPSR916vSEz6gtCirLF77c_PW2N2ofGnzN-bw@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-cubox-i: Move card-detect GPIO to 1.5
+ SOM devices only
+Content-Type: multipart/alternative; boundary="000000000000a91109056a7135be"
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Paul Kocialkowski <contact@paulk.fr>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patchset includes support media controller, sub-device interface,
-device tree probing and other miscellanuous changes for ov772x driver.
+--000000000000a91109056a7135be
+Content-Type: text/plain; charset="UTF-8"
 
-* v4 (thanks to Laurent Pinchart)
-- Add Reviewed-by: lines
-- Correct setting of banding filter (New)
-- Omit consumer ID when getting clock reference (New)
-- Use v4l2_ctrl to get current control value (New)
-- Correctly restore the controls changed under power saving mode
+On Sun, Apr 22, 2018 at 4:39 PM Russell King - ARM Linux <
+linux@armlinux.org.uk> wrote:
 
-* v3 (thanks to Sakari Ailus and Jacopo Mondi)
-- Reorder the patches
-- Add Reviewed-by: lines
-- Remove I2C_CLIENT_SCCB flag set as it isn't needed anymore
-- Fix typo in the commit log
-- Return without resetting if ov772x_edgectrl() failed
-- Update the error message for missing platform data
-- Rename mutex name from power_lock to lock
-- Add warning for duplicated s_power call
-- Add newlines before labels
-- Remove __v4l2_ctrl_handler_setup in s_power() as it causes duplicated
-  register settings
-- Make set_fmt() return -EBUSY while streaming (New)
+> On Sun, Apr 22, 2018 at 04:21:51PM +0200, Paul Kocialkowski wrote:
+> > The Solid-Run CuBox-i lower board used in the first generation of
+> > CuBox-i devices feature a hinged micro SD card slot, that does not have
+> > card-detect capability. Since the card-detect GPIO was specified in the
+> > common cubox-i dtsi, it is moved to each device using the 1.5 SOM and is
+> > thus removed from the imx6q-cubox-i dts.
+>
+> This seems incorrect.
+>
+> The 1.5 SOM is a relatively recent thing, and I have one of the first
+> Cubox-i's that were produced which is not hinged, and does not have a
+> 1.5 SOM.  There is _no_ correlation between the 1.5 SOM and the SD
+> card slot.
+>
+> Talking to folk at SolidRun, we're all confused about your assertions.
+>
+> We're also confused about "hinged micro SD card slot" - Cubox-i's
+> come with either a push-push slot or a static (push-in, pull-out) slot.
+> (Prototypes were the latter.)
+>
+> Maybe someone's modified yours?
+>
+>
+>
+Regardless of the physical mechanics of the device, the CD-GPIO is a
+mechanism of the carrier and not the SOM. I have one of the few Cubox-i's
+that have been physically modified to work with the rev 1.5 som and have no
+issues (the heat spreader needs additional cutouts).  Now if you are still
+using the old 2013 u-boot then there is possibly confusion between the eMMC
+and SDHC slots which can cause strangeness.  Please use the 2018.01 branch
+on our github and that will handle this properly.
 
-* v2 (thanks to Jacopo Mondi)
-- Replace the implementation of ov772x_read() instead of adding an
-  alternative method
-- Assign the ov772x_read() return value to pid and ver directly
-- Do the same for MIDH and MIDL
-- Move video_probe() before the entity initialization and remove the #ifdef
-  around the media_entity_cleanup()
-- Use generic names for reset and powerdown gpios (New)
-- Add "dt-bindings:" in the subject
-- Add a brief description of the sensor
-- Update the GPIO names
-- Indicate the GPIO active level
-- Add missing NULL checks for priv->info
-- Leave the check for the missing platform data if legacy platform data
-  probe is used.
-- Handle nested s_power() calls (New)
-- Reconstruct s_frame_interval() (New)
-- Avoid accessing registers
+This is not a device-tree nor kernel issue, so NAK.
 
-Akinobu Mita (14):
-  media: dt-bindings: ov772x: add device tree binding
-  media: ov772x: correct setting of banding filter
-  media: ov772x: allow i2c controllers without
-    I2C_FUNC_PROTOCOL_MANGLING
-  media: ov772x: add checks for register read errors
-  media: ov772x: add media controller support
-  media: ov772x: use generic names for reset and powerdown gpios
-  media: ov772x: omit consumer ID when getting clock reference
-  media: ov772x: support device tree probing
-  media: ov772x: handle nested s_power() calls
-  media: ov772x: reconstruct s_frame_interval()
-  media: ov772x: use v4l2_ctrl to get current control value
-  media: ov772x: avoid accessing registers under power saving mode
-  media: ov772x: make set_fmt() return -EBUSY while streaming
-  media: ov772x: create subdevice device node
+-Jon
 
- .../devicetree/bindings/media/i2c/ov772x.txt       |  40 +++
- MAINTAINERS                                        |   1 +
- arch/sh/boards/mach-migor/setup.c                  |   7 +-
- drivers/media/i2c/ov772x.c                         | 351 +++++++++++++++------
- 4 files changed, 302 insertions(+), 97 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.txt
+--000000000000a91109056a7135be
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>
--- 
-2.7.4
+<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr">On Sun, Apr 22=
+, 2018 at 4:39 PM Russell King - ARM Linux &lt;<a href=3D"mailto:linux@arml=
+inux.org.uk">linux@armlinux.org.uk</a>&gt; wrote:<br></div><blockquote clas=
+s=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;pad=
+ding-left:1ex">On Sun, Apr 22, 2018 at 04:21:51PM +0200, Paul Kocialkowski =
+wrote:<br>
+&gt; The Solid-Run CuBox-i lower board used in the first generation of<br>
+&gt; CuBox-i devices feature a hinged micro SD card slot, that does not hav=
+e<br>
+&gt; card-detect capability. Since the card-detect GPIO was specified in th=
+e<br>
+&gt; common cubox-i dtsi, it is moved to each device using the 1.5 SOM and =
+is<br>
+&gt; thus removed from the imx6q-cubox-i dts.<br>
+<br>
+This seems incorrect.<br>
+<br>
+The 1.5 SOM is a relatively recent thing, and I have one of the first<br>
+Cubox-i&#39;s that were produced which is not hinged, and does not have a<b=
+r>
+1.5 SOM.=C2=A0 There is _no_ correlation between the 1.5 SOM and the SD<br>
+card slot.<br>
+<br>
+Talking to folk at SolidRun, we&#39;re all confused about your assertions.<=
+br>
+<br>
+We&#39;re also confused about &quot;hinged micro SD card slot&quot; - Cubox=
+-i&#39;s<br>
+come with either a push-push slot or a static (push-in, pull-out) slot.<br>
+(Prototypes were the latter.)<br>
+<br>
+Maybe someone&#39;s modified yours?<br>
+<br><br></blockquote><div><br></div><div>Regardless of the physical mechani=
+cs of the device, the CD-GPIO is a mechanism of the carrier and not the SOM=
+. I have one of the few Cubox-i&#39;s that have been physically modified to=
+ work with the rev 1.5 som and have no issues (the heat spreader needs addi=
+tional cutouts).=C2=A0 Now if you are still using the old 2013 u-boot then =
+there is possibly confusion between the eMMC and SDHC slots which can cause=
+ strangeness.=C2=A0 Please use the 2018.01 branch on our github and that wi=
+ll handle this properly.</div><div><br></div><div>This is not a device-tree=
+ nor kernel issue, so NAK.</div><div><br></div><div>-Jon</div></div></div>
+
+--000000000000a91109056a7135be--
