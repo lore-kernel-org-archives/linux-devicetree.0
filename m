@@ -1,45 +1,199 @@
-Return-Path: <SRS0=ISde=HC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from lucky1.263xmail.com ([211.157.147.134]:35395 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752391AbeDMC0L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Apr 2018 22:26:11 -0400
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v2 1/2] Documentation: mmc: add optional cd-delay-ms property
-Date: Fri, 13 Apr 2018 10:18:44 +0800
-Message-Id: <1523585925-169568-1-git-send-email-shawn.lin@rock-chips.com>
+Return-Path: <SRS0=hkU0=HL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf0-f195.google.com ([209.85.192.195]:43382 "EHLO
+        mail-pf0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754289AbeDVP5D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Apr 2018 11:57:03 -0400
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v3 09/11] media: ov772x: avoid accessing registers under power saving mode
+Date: Mon, 23 Apr 2018 00:56:15 +0900
+Message-Id: <1524412577-14419-10-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
+References: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-slot-gpio uses a fixed delay, 200ms, before detecting card after the card
-is inserted. 200ms doesn't work for some platforms, so some host drivers
-added their own properties for parsing that from DT, for instance,
-dw_mmc and pxamci. That being said, it should also be tunable when using
-slog-gpio.
+The set_fmt() in subdev pad ops, the s_ctrl() for subdev control handler,
+and the s_frame_interval() in subdev video ops could be called when the
+device is under power saving mode.  These callbacks for ov772x driver
+cause updating H/W registers that will fail under power saving mode.
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+This avoids it by not apply any changes to H/W if the device is not powered
+up.  Instead the changes will be restored right after power-up.
+
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
+* v3
+- Add newlines before labels
+- Remove __v4l2_ctrl_handler_setup in s_power() as it causes duplicated
+  register settings
 
-Changes in v2: None
+ drivers/media/i2c/ov772x.c | 79 +++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 64 insertions(+), 15 deletions(-)
 
- Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-index 467cd7b..215b9a2 100644
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -19,6 +19,8 @@ Optional properties:
- - wp-gpios: Specify GPIOs for write protection, see gpio binding
- - cd-inverted: when present, polarity on the CD line is inverted. See the note
-   below for the case, when a GPIO is used for the CD line
-+- cd-delay-ms: Set delay time before detecting card after card insert interrupt.
-+  It's only valid when cd-gpios is present.
- - wp-inverted: when present, polarity on the WP line is inverted. See the note
-   below for the case, when a GPIO is used for the WP line
- - disable-wp: When set no physical WP line is present. This property should
+diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+index 452406c..96dd37a 100644
+--- a/drivers/media/i2c/ov772x.c
++++ b/drivers/media/i2c/ov772x.c
+@@ -741,19 +741,30 @@ static int ov772x_s_frame_interval(struct v4l2_subdev *sd,
+ 	struct ov772x_priv *priv = to_ov772x(sd);
+ 	struct v4l2_fract *tpf = &ival->interval;
+ 	unsigned int fps;
+-	int ret;
++	int ret = 0;
+ 
+ 	fps = ov772x_select_fps(priv, tpf);
+ 
+-	ret = ov772x_set_frame_rate(priv, fps, priv->cfmt, priv->win);
+-	if (ret)
+-		return ret;
++	mutex_lock(&priv->lock);
++	/*
++	 * If the device is not powered up by the host driver do
++	 * not apply any changes to H/W at this time. Instead
++	 * the frame rate will be restored right after power-up.
++	 */
++	if (priv->power_count > 0) {
++		ret = ov772x_set_frame_rate(priv, fps, priv->cfmt, priv->win);
++		if (ret)
++			goto error;
++	}
+ 
+ 	tpf->numerator = 1;
+ 	tpf->denominator = fps;
+ 	priv->fps = fps;
+ 
+-	return 0;
++error:
++	mutex_unlock(&priv->lock);
++
++	return ret;
+ }
+ 
+ static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
+@@ -765,6 +776,16 @@ static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
+ 	int ret = 0;
+ 	u8 val;
+ 
++	/* v4l2_ctrl_lock() locks our own mutex */
++
++	/*
++	 * If the device is not powered up by the host driver do
++	 * not apply any controls to H/W at this time. Instead
++	 * the controls will be restored right after power-up.
++	 */
++	if (priv->power_count == 0)
++		return 0;
++
+ 	switch (ctrl->id) {
+ 	case V4L2_CID_VFLIP:
+ 		val = ctrl->val ? VFLIP_IMG : 0x00;
+@@ -888,6 +909,10 @@ static int ov772x_power_off(struct ov772x_priv *priv)
+ 	return 0;
+ }
+ 
++static int ov772x_set_params(struct ov772x_priv *priv,
++			     const struct ov772x_color_format *cfmt,
++			     const struct ov772x_win_size *win);
++
+ static int ov772x_s_power(struct v4l2_subdev *sd, int on)
+ {
+ 	struct ov772x_priv *priv = to_ov772x(sd);
+@@ -898,8 +923,20 @@ static int ov772x_s_power(struct v4l2_subdev *sd, int on)
+ 	/* If the power count is modified from 0 to != 0 or from != 0 to 0,
+ 	 * update the power state.
+ 	 */
+-	if (priv->power_count == !on)
+-		ret = on ? ov772x_power_on(priv) : ov772x_power_off(priv);
++	if (priv->power_count == !on) {
++		if (on) {
++			ret = ov772x_power_on(priv);
++			/*
++			 * Restore the format, the frame rate, and
++			 * the controls
++			 */
++			if (!ret)
++				ret = ov772x_set_params(priv, priv->cfmt,
++							priv->win);
++		} else {
++			ret = ov772x_power_off(priv);
++		}
++	}
+ 
+ 	if (!ret) {
+ 		/* Update the power count. */
+@@ -1164,7 +1201,7 @@ static int ov772x_set_fmt(struct v4l2_subdev *sd,
+ 	struct v4l2_mbus_framefmt *mf = &format->format;
+ 	const struct ov772x_color_format *cfmt;
+ 	const struct ov772x_win_size *win;
+-	int ret;
++	int ret = 0;
+ 
+ 	if (format->pad)
+ 		return -EINVAL;
+@@ -1185,14 +1222,24 @@ static int ov772x_set_fmt(struct v4l2_subdev *sd,
+ 		return 0;
+ 	}
+ 
+-	ret = ov772x_set_params(priv, cfmt, win);
+-	if (ret < 0)
+-		return ret;
+-
++	mutex_lock(&priv->lock);
++	/*
++	 * If the device is not powered up by the host driver do
++	 * not apply any changes to H/W at this time. Instead
++	 * the format will be restored right after power-up.
++	 */
++	if (priv->power_count > 0) {
++		ret = ov772x_set_params(priv, cfmt, win);
++		if (ret < 0)
++			goto error;
++	}
+ 	priv->win = win;
+ 	priv->cfmt = cfmt;
+ 
+-	return 0;
++error:
++	mutex_unlock(&priv->lock);
++
++	return ret;
+ }
+ 
+ static int ov772x_video_probe(struct ov772x_priv *priv)
+@@ -1202,7 +1249,7 @@ static int ov772x_video_probe(struct ov772x_priv *priv)
+ 	const char         *devname;
+ 	int		    ret;
+ 
+-	ret = ov772x_s_power(&priv->subdev, 1);
++	ret = ov772x_power_on(priv);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -1242,7 +1289,7 @@ static int ov772x_video_probe(struct ov772x_priv *priv)
+ 	ret = v4l2_ctrl_handler_setup(&priv->hdl);
+ 
+ done:
+-	ov772x_s_power(&priv->subdev, 0);
++	ov772x_power_off(priv);
+ 
+ 	return ret;
+ }
+@@ -1341,6 +1388,8 @@ static int ov772x_probe(struct i2c_client *client,
+ 
+ 	v4l2_i2c_subdev_init(&priv->subdev, client, &ov772x_subdev_ops);
+ 	v4l2_ctrl_handler_init(&priv->hdl, 3);
++	/* Use our mutex for the controls */
++	priv->hdl.lock = &priv->lock;
+ 	v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
+ 			  V4L2_CID_VFLIP, 0, 1, 1, 0);
+ 	v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
 -- 
-1.9.1
-
+2.7.4
 
