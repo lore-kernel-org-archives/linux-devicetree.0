@@ -1,8 +1,8 @@
 From: David Veenstra <davidjulianveenstra@gmail.com>
-Subject: [PATCH v3 4/9] staging: iio: ad2s1200: Replace platform data with dt
- bindings
-Date: Mon, 23 Apr 2018 00:03:32 +0200
-Message-ID: <b8cfea845842947415b5da44b59ed305c93cceda.1524432236.git.davidjulianveenstra@gmail.com>
+Subject: [PATCH v3 5/9] staging: iio: ad2s1200: Add documentation for device
+ tree binding
+Date: Mon, 23 Apr 2018 00:03:47 +0200
+Message-ID: <0aa68c6684c2b45dd0af398c166d6b36c18be1af.1524432236.git.davidjulianveenstra@gmail.com>
 References: <cover.1524432236.git.davidjulianveenstra@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,75 +23,40 @@ To: jic23@kernel.org, lars@metafoo.de, pmeerw@pmeerw.net
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, robh+dt@kernel.org, knaack.h@gmx.de, daniel.baluta@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Remove usage of platform data, and replace it with device tree
-facilities.
+Add documentation for the added device tree bindings.
 
 Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
 ---
 Changes in v3:
- - Introduced in this version.
+ - Documentation is added to Documentation/devicetree/bindings/iio/resolver
+   instead of staging directory.
+ - Add mention to ad2s1205 device.
 
- drivers/staging/iio/resolver/ad2s1200.c | 32 +++++++++++++++-----------------
- 1 file changed, 15 insertions(+), 17 deletions(-)
+ .../devicetree/bindings/iio/resolver/ad2s1200.txt        | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
 
-diff --git a/drivers/staging/iio/resolver/ad2s1200.c b/drivers/staging/iio/resolver/ad2s1200.c
-index e7bfe5aa4c45..3c7163610ff6 100644
---- a/drivers/staging/iio/resolver/ad2s1200.c
-+++ b/drivers/staging/iio/resolver/ad2s1200.c
-@@ -26,9 +26,6 @@
- 
- #define DRV_NAME "ad2s1200"
- 
--/* input pin sample and rdvel is controlled by driver */
--#define AD2S1200_PN	2
--
- /* input clock on serial interface */
- #define AD2S1200_HZ	8192000
- /* clock period in nano second */
-@@ -113,20 +110,9 @@ static const struct iio_info ad2s1200_info = {
- 
- static int ad2s1200_probe(struct spi_device *spi)
- {
--	unsigned short *pins = spi->dev.platform_data;
- 	struct ad2s1200_state *st;
- 	struct iio_dev *indio_dev;
--	int pn, ret = 0;
--
--	for (pn = 0; pn < AD2S1200_PN; pn++) {
--		ret = devm_gpio_request_one(&spi->dev, pins[pn], GPIOF_DIR_OUT,
--					    DRV_NAME);
--		if (ret) {
--			dev_err(&spi->dev, "request gpio pin %d failed\n",
--				pins[pn]);
--			return ret;
--		}
--	}
-+	int ret = 0;
- 
- 	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
- 	if (!indio_dev)
-@@ -136,8 +122,20 @@ static int ad2s1200_probe(struct spi_device *spi)
- 	st = iio_priv(indio_dev);
- 	mutex_init(&st->lock);
- 	st->sdev = spi;
--	st->sample = gpio_to_desc(pins[0]);
--	st->rdvel = gpio_to_desc(pins[1]);
+diff --git a/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+new file mode 100644
+index 000000000000..46b51db38368
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+@@ -0,0 +1,16 @@
++Analog Devices AD2S1200 and AD2S1205 Resolver-to-Digital Converter
 +
-+	st->sample = devm_gpiod_get(&spi->dev, "sample", GPIOD_OUT_LOW);
-+	if (IS_ERR(st->sample)) {
-+		dev_err(&spi->dev, "Failed to claim SAMPLE gpio: err=%ld\n",
-+			PTR_ERR(st->sample));
-+		return PTR_ERR(st->sample);
-+	}
++Required properties:
++ - compatible : should be "adi,ad2s1200" or "adi,ad2s1205"
++ - reg : the SPI chip select number of the device
++ - sample-gpios : The GPIO pin connected to the SAMPLE line of the AD2S1200
++ - rdvel-gpios : The GPIO pin connected to the RDVEL line of the AD2S1200
 +
-+	st->rdvel = devm_gpiod_get(&spi->dev, "rdvel", GPIOD_OUT_LOW);
-+	if (IS_ERR(st->rdvel)) {
-+		dev_err(&spi->dev, "Failed to claim RDVEL gpio: err=%ld\n",
-+			PTR_ERR(st->rdvel));
-+		return PTR_ERR(st->rdvel);
-+	}
- 
- 	indio_dev->dev.parent = &spi->dev;
- 	indio_dev->info = &ad2s1200_info;
++Example:
++
++	resolver {
++		compatible = "adi,ad2s1200";
++		reg = <4>;
++		sample-gpios = <&gpio 5 GPIO_ACTIVE_HIGH>;
++		rdvel-gpios = <&gpio 6 GPIO_ACTIVE_HIGH>;
++	};
 -- 
 2.16.2
