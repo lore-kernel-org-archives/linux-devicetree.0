@@ -1,12 +1,12 @@
 Return-Path: <SRS0=hkU0=HL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193]:34850 "EHLO
-        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754473AbeDVP5B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Apr 2018 11:57:01 -0400
+Received: from mail-pf0-f194.google.com ([209.85.192.194]:37415 "EHLO
+        mail-pf0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754451AbeDVP4x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Apr 2018 11:56:53 -0400
 From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v3 08/11] media: ov772x: reconstruct s_frame_interval()
-Date: Mon, 23 Apr 2018 00:56:14 +0900
-Message-Id: <1524412577-14419-9-git-send-email-akinobu.mita@gmail.com>
+Subject: [PATCH v3 05/11] media: ov772x: use generic names for reset and powerdown gpios
+Date: Mon, 23 Apr 2018 00:56:11 +0900
+Message-Id: <1524412577-14419-6-git-send-email-akinobu.mita@gmail.com>
 In-Reply-To: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
 References: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
@@ -14,136 +14,75 @@ To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
 Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This splits the s_frame_interval() in subdev video ops into selecting the
-frame interval and setting up the registers.
+The ov772x driver uses "rstb-gpios" and "pwdn-gpios" for reset and
+powerdown pins.  However, using generic names for these gpios is
+preferred.  ("reset-gpios" and "powerdown-gpios" respectively)
 
-This is a preparatory change to avoid accessing registers under power
-saving mode.
+There is only one mainline user for these gpios, so rename to generic
+names.
 
 Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: Hans Verkuil <hans.verkuil@cisco.com>
 Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
 Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
 Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
 * v3
-- No changes
+- Fix typo in the commit log
+- Add a Reviewed-by: line
 
- drivers/media/i2c/ov772x.c | 56 +++++++++++++++++++++++++++++-----------------
- 1 file changed, 35 insertions(+), 21 deletions(-)
+ arch/sh/boards/mach-migor/setup.c | 5 +++--
+ drivers/media/i2c/ov772x.c        | 8 ++++----
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
+diff --git a/arch/sh/boards/mach-migor/setup.c b/arch/sh/boards/mach-migor/setup.c
+index 271dfc2..73b9ee4 100644
+--- a/arch/sh/boards/mach-migor/setup.c
++++ b/arch/sh/boards/mach-migor/setup.c
+@@ -351,8 +351,9 @@ static struct platform_device migor_ceu_device = {
+ static struct gpiod_lookup_table ov7725_gpios = {
+ 	.dev_id		= "0-0021",
+ 	.table		= {
+-		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT0, "pwdn", GPIO_ACTIVE_HIGH),
+-		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT3, "rstb", GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT0, "powerdown",
++			    GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT3, "reset", GPIO_ACTIVE_LOW),
+ 	},
+ };
+ 
 diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 8c0b850..452406c 100644
+index 18a5ed6..8cac206 100644
 --- a/drivers/media/i2c/ov772x.c
 +++ b/drivers/media/i2c/ov772x.c
-@@ -617,25 +617,16 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
- 	return 0;
- }
- 
--static int ov772x_set_frame_rate(struct ov772x_priv *priv,
--				 struct v4l2_fract *tpf,
--				 const struct ov772x_color_format *cfmt,
--				 const struct ov772x_win_size *win)
-+static unsigned int ov772x_select_fps(struct ov772x_priv *priv,
-+				 struct v4l2_fract *tpf)
- {
--	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
--	unsigned long fin = clk_get_rate(priv->clk);
- 	unsigned int fps = tpf->numerator ?
- 			   tpf->denominator / tpf->numerator :
- 			   tpf->denominator;
- 	unsigned int best_diff;
--	unsigned int fsize;
--	unsigned int pclk;
- 	unsigned int diff;
- 	unsigned int idx;
- 	unsigned int i;
--	u8 clkrc = 0;
--	u8 com4 = 0;
--	int ret;
- 
- 	/* Approximate to the closest supported frame interval. */
- 	best_diff = ~0L;
-@@ -646,7 +637,25 @@ static int ov772x_set_frame_rate(struct ov772x_priv *priv,
- 			best_diff = diff;
- 		}
+@@ -837,10 +837,10 @@ static int ov772x_power_on(struct ov772x_priv *priv)
+ 	 * available to handle this cleanly, request the GPIO temporarily
+ 	 * to avoid conflicts.
+ 	 */
+-	priv->rstb_gpio = gpiod_get_optional(&client->dev, "rstb",
++	priv->rstb_gpio = gpiod_get_optional(&client->dev, "reset",
+ 					     GPIOD_OUT_LOW);
+ 	if (IS_ERR(priv->rstb_gpio)) {
+-		dev_info(&client->dev, "Unable to get GPIO \"rstb\"");
++		dev_info(&client->dev, "Unable to get GPIO \"reset\"");
+ 		return PTR_ERR(priv->rstb_gpio);
  	}
--	fps = ov772x_frame_intervals[idx];
-+
-+	return ov772x_frame_intervals[idx];
-+}
-+
-+static int ov772x_set_frame_rate(struct ov772x_priv *priv,
-+				 unsigned int fps,
-+				 const struct ov772x_color_format *cfmt,
-+				 const struct ov772x_win_size *win)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
-+	unsigned long fin = clk_get_rate(priv->clk);
-+	unsigned int fsize;
-+	unsigned int pclk;
-+	unsigned int best_diff;
-+	unsigned int diff;
-+	unsigned int i;
-+	u8 clkrc = 0;
-+	u8 com4 = 0;
-+	int ret;
  
- 	/* Use image size (with blankings) to calculate desired pixel clock. */
- 	switch (cfmt->com7 & OFMT_MASK) {
-@@ -711,10 +720,6 @@ static int ov772x_set_frame_rate(struct ov772x_priv *priv,
- 	if (ret < 0)
- 		return ret;
+@@ -1307,10 +1307,10 @@ static int ov772x_probe(struct i2c_client *client,
+ 		goto error_ctrl_free;
+ 	}
  
--	tpf->numerator = 1;
--	tpf->denominator = fps;
--	priv->fps = tpf->denominator;
--
- 	return 0;
- }
- 
-@@ -735,8 +740,20 @@ static int ov772x_s_frame_interval(struct v4l2_subdev *sd,
- {
- 	struct ov772x_priv *priv = to_ov772x(sd);
- 	struct v4l2_fract *tpf = &ival->interval;
-+	unsigned int fps;
-+	int ret;
-+
-+	fps = ov772x_select_fps(priv, tpf);
-+
-+	ret = ov772x_set_frame_rate(priv, fps, priv->cfmt, priv->win);
-+	if (ret)
-+		return ret;
- 
--	return ov772x_set_frame_rate(priv, tpf, priv->cfmt, priv->win);
-+	tpf->numerator = 1;
-+	tpf->denominator = fps;
-+	priv->fps = fps;
-+
-+	return 0;
- }
- 
- static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
-@@ -993,7 +1010,6 @@ static int ov772x_set_params(struct ov772x_priv *priv,
- 			     const struct ov772x_win_size *win)
- {
- 	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
--	struct v4l2_fract tpf;
- 	int ret;
- 	u8  val;
- 
-@@ -1075,9 +1091,7 @@ static int ov772x_set_params(struct ov772x_priv *priv,
- 		goto ov772x_set_fmt_error;
- 
- 	/* COM4, CLKRC: Set pixel clock and framerate. */
--	tpf.numerator = 1;
--	tpf.denominator = priv->fps;
--	ret = ov772x_set_frame_rate(priv, &tpf, cfmt, win);
-+	ret = ov772x_set_frame_rate(priv, priv->fps, cfmt, win);
- 	if (ret < 0)
- 		goto ov772x_set_fmt_error;
- 
+-	priv->pwdn_gpio = gpiod_get_optional(&client->dev, "pwdn",
++	priv->pwdn_gpio = gpiod_get_optional(&client->dev, "powerdown",
+ 					     GPIOD_OUT_LOW);
+ 	if (IS_ERR(priv->pwdn_gpio)) {
+-		dev_info(&client->dev, "Unable to get GPIO \"pwdn\"");
++		dev_info(&client->dev, "Unable to get GPIO \"powerdown\"");
+ 		ret = PTR_ERR(priv->pwdn_gpio);
+ 		goto error_clk_put;
+ 	}
 -- 
 2.7.4
 
