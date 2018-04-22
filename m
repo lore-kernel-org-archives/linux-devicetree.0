@@ -1,18 +1,18 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.16 148/196] dt-bindings: clock: mediatek: add binding for fixed-factor clock axisel_d4
-Date: Sun, 22 Apr 2018 15:52:48 +0200
-Message-ID: <20180422135111.890281754@linuxfoundation.org>
-References: <20180422135104.278511750@linuxfoundation.org>
+Subject: [PATCH 4.9 57/95] dt-bindings: clock: mediatek: add binding for fixed-factor clock axisel_d4
+Date: Sun, 22 Apr 2018 15:53:26 +0200
+Message-ID: <20180422135212.751499486@linuxfoundation.org>
+References: <20180422135210.432103639@linuxfoundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20180422135104.278511750@linuxfoundation.org>
-Sender: stable-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180422135210.432103639@linuxfoundation.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-4.16-stable review patch.  If anyone has any objections, please let me know.
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
