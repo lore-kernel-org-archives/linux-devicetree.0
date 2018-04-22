@@ -1,181 +1,122 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v3 4/7] drm/atmel-hlcdc: support bus-width (12/16/18/24)
- in endpoint nodes
-Date: Sun, 22 Apr 2018 00:13:25 +0200
-Message-ID: <894b0408-038f-6bd2-2130-d46de332e215@axentia.se>
-References: <20180419162751.25223-1-peda@axentia.se>
- <20180419162751.25223-5-peda@axentia.se> <20180421181921.75c41917@bbrezillon>
+From: Jan Kiszka <jan.kiszka@web.de>
+Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
+ unflattened to FDT
+Date: Sun, 22 Apr 2018 12:30:25 +0200
+Message-ID: <e06d1c0f-f60d-fc23-cd74-82f557dbc432@web.de>
+References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
+ <1520122673-11003-3-git-send-email-frowand.list@gmail.com>
+ <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
+ <7bbf615b-3cdd-6bb4-6918-33e48de4225d@gmail.com>
+ <a21dbee8-6e4e-9ceb-c798-dda43c2eae2d@web.de>
+ <d7e94a45-5d46-0491-e5dc-2b098a11c5b1@gmail.com>
+ <CAL_Jsq+MmUTMrd+jNqUB2=A-q3cCy7+QWOKG0iF6zM0hjCy3PQ@mail.gmail.com>
+ <e508f3de-f21b-2510-2c6a-b810073ba1a7@web.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180421181921.75c41917@bbrezillon>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <jailhouse-dev+bncBDDNLV6S7AOBBSGI6HLAKGQEOD6A5BQ@googlegroups.com>
+Sender: jailhouse-dev@googlegroups.com
+In-Reply-To: <e508f3de-f21b-2510-2c6a-b810073ba1a7@web.de>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Russell King <linux@armlinux.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
+List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
+List-Archive: <https://groups.google.com/group/jailhouse-dev
+List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
+List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/group/jailhouse-dev/subscribe>
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jailhouse <jailhouse-dev@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-21 18:19, Boris Brezillon wrote:
-> On Thu, 19 Apr 2018 18:27:48 +0200
-> Peter Rosin <peda@axentia.se> wrote:
-> 
->> This beats the heuristic that the connector is involved in what format
->> should be output for cases where this fails.
+On 2018-04-11 07:42, Jan Kiszka wrote:
+> On 2018-04-05 23:12, Rob Herring wrote:
+>> On Thu, Apr 5, 2018 at 2:28 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>>> On 04/05/18 12:13, Jan Kiszka wrote:
+>>>> On 2018-04-05 20:59, Frank Rowand wrote:
+>>>>> Hi Jan,
+>>>>>
+>>>>> On 04/04/18 15:35, Jan Kiszka wrote:
+>>>>>> Hi Frank,
+>>>>>>
+>>>>>> On 2018-03-04 01:17, frowand.list@gmail.com wrote:
+>>>>>>> From: Frank Rowand <frank.rowand@sony.com>
+>>>>>>>
+>>>>>>> Move duplicating and unflattening of an overlay flattened devicetree
+>>>>>>> (FDT) into the overlay application code.  To accomplish this,
+>>>>>>> of_overlay_apply() is replaced by of_overlay_fdt_apply().
+>>>>>>>
+>>>>>>> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
+>>>>>>> code, which is thus responsible for freeing the duplicate FDT.  The
+>>>>>>> caller of of_overlay_fdt_apply() remains responsible for freeing the
+>>>>>>> original FDT.
+>>>>>>>
+>>>>>>> The unflattened devicetree now belongs to devicetree code, which is
+>>>>>>> thus responsible for freeing the unflattened devicetree.
+>>>>>>>
+>>>>>>> These ownership changes prevent early freeing of the duplicated FDT
+>>>>>>> or the unflattened devicetree, which could result in use after free
+>>>>>>> errors.
+>>>>>>>
+>>>>>>> of_overlay_fdt_apply() is a private function for the anticipated
+>>>>>>> overlay loader.
+>>>>>>
+>>>>>> We are using of_fdt_unflatten_tree + of_overlay_apply in the
+>>>>>> (out-of-tree) Jailhouse loader driver in order to register a virtual
+>>>>>> device during hypervisor activation with Linux. The DT overlay is
+>>>>>> created from a a template but modified prior to application to account
+>>>>>> for runtime-specific parameters. See [1] for the current implementation.
+>>>>>>
+>>>>>> I'm now wondering how to model that scenario best with the new API.
+>>>>>> Given that the loader lost ownership of the unflattened tree but the
+>>>>>> modification API exist only for the that DT state, I'm not yet seeing a
+>>>>>> clear solution. Should we apply the template in disabled form (status =
+>>>>>> "disabled"), modify it, and then activate it while it is already applied?
+>>>>>
+>>>>> Thank you for the pointer to the driver - that makes it much easier to
+>>>>> understand the use case and consider solutions.
+>>>>>
+>>>>> If you can make the changes directly on the FDT instead of on the
+>>>>> expanded devicetree, then you could move to the new API.
+>>>>
+>>>> Are there some examples/references on how to edit FDTs in-place in the
+>>>> kernel? I'd like to avoid writing the n-th FDT parser/generator.
+>>>
+>>> I don't know of any existing in-kernel edits of the FDT (but they might
+>>> exist).  The functions to access an FDT are in libfdt, which is in
+>>> scripts/dtc/libfdt/.
 >>
->> E.g. if there is a bridge that changes format between the encoder and the
->> connector, or if some of the RGB pins between the lcd controller and the
->> encoder are not routed on the PCB.
->>
->> This is critical for the devices that have the "conflicting output
->> formats" issue (SAM9N12, SAM9X5, SAMA5D3), since the most significant
->> RGB bits move around depending on the selected output mode. For
->> devices that do not have the "conflicting output formats" issue
->> (SAMA5D2, SAMA5D4), this is completely irrelevant.
->>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
->> ---
->>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c   | 71 +++++++++++++++++-------
->>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h     |  2 +
->>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c | 40 ++++++++++++-
->>  3 files changed, 92 insertions(+), 21 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
->> index d73281095fac..b4e7f5b6f497 100644
->> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
->> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
->> @@ -226,6 +226,56 @@ static void atmel_hlcdc_crtc_atomic_enable(struct drm_crtc *c,
->>  #define ATMEL_HLCDC_RGB888_OUTPUT	BIT(3)
->>  #define ATMEL_HLCDC_OUTPUT_MODE_MASK	GENMASK(3, 0)
->>  
->> +static int atmel_hlcdc_connector_output_mode(struct drm_connector_state *state)
->> +{
->> +	struct drm_connector *connector = state->connector;
->> +	struct atmel_hlcdc_dc *dc = connector->dev->dev_private;
->> +	struct drm_encoder *encoder;
->> +	struct drm_display_info *info = &connector->display_info;
->> +	unsigned int supported_fmts = 0;
->> +	int j;
->> +
->> +	encoder = state->best_encoder;
->> +	if (!encoder)
->> +		encoder = connector->encoder;
->> +
->> +	switch (dc->bus_fmt[encoder->index]) {
->> +	case 0:
->> +		break;
->> +	case MEDIA_BUS_FMT_RGB444_1X12:
->> +		return ATMEL_HLCDC_RGB444_OUTPUT;
->> +	case MEDIA_BUS_FMT_RGB565_1X16:
->> +		return ATMEL_HLCDC_RGB565_OUTPUT;
->> +	case MEDIA_BUS_FMT_RGB666_1X18:
->> +		return ATMEL_HLCDC_RGB666_OUTPUT;
->> +	case MEDIA_BUS_FMT_RGB888_1X24:
->> +		return ATMEL_HLCDC_RGB888_OUTPUT;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	for (j = 0; j < info->num_bus_formats; j++) {
->> +		switch (info->bus_formats[j]) {
->> +		case MEDIA_BUS_FMT_RGB444_1X12:
->> +			supported_fmts |= ATMEL_HLCDC_RGB444_OUTPUT;
->> +			break;
->> +		case MEDIA_BUS_FMT_RGB565_1X16:
->> +			supported_fmts |= ATMEL_HLCDC_RGB565_OUTPUT;
->> +			break;
->> +		case MEDIA_BUS_FMT_RGB666_1X18:
->> +			supported_fmts |= ATMEL_HLCDC_RGB666_OUTPUT;
->> +			break;
->> +		case MEDIA_BUS_FMT_RGB888_1X24:
->> +			supported_fmts |= ATMEL_HLCDC_RGB888_OUTPUT;
->> +			break;
->> +		default:
->> +			break;
->> +		}
->> +	}
->> +
->> +	return supported_fmts;
->> +}
->> +
->>  static int atmel_hlcdc_crtc_select_output_mode(struct drm_crtc_state *state)
->>  {
->>  	unsigned int output_fmts = ATMEL_HLCDC_OUTPUT_MODE_MASK;
->> @@ -238,31 +288,12 @@ static int atmel_hlcdc_crtc_select_output_mode(struct drm_crtc_state *state)
->>  	crtc = drm_crtc_to_atmel_hlcdc_crtc(state->crtc);
->>  
->>  	for_each_new_connector_in_state(state->state, connector, cstate, i) {
->> -		struct drm_display_info *info = &connector->display_info;
->>  		unsigned int supported_fmts = 0;
->> -		int j;
->>  
->>  		if (!cstate->crtc)
->>  			continue;
->>  
->> -		for (j = 0; j < info->num_bus_formats; j++) {
->> -			switch (info->bus_formats[j]) {
->> -			case MEDIA_BUS_FMT_RGB444_1X12:
->> -				supported_fmts |= ATMEL_HLCDC_RGB444_OUTPUT;
->> -				break;
->> -			case MEDIA_BUS_FMT_RGB565_1X16:
->> -				supported_fmts |= ATMEL_HLCDC_RGB565_OUTPUT;
->> -				break;
->> -			case MEDIA_BUS_FMT_RGB666_1X18:
->> -				supported_fmts |= ATMEL_HLCDC_RGB666_OUTPUT;
->> -				break;
->> -			case MEDIA_BUS_FMT_RGB888_1X24:
->> -				supported_fmts |= ATMEL_HLCDC_RGB888_OUTPUT;
->> -				break;
->> -			default:
->> -				break;
->> -			}
->> -		}
->> +		supported_fmts = atmel_hlcdc_connector_output_mode(cstate);
->>  
->>  		if (crtc->dc->desc->conflicting_output_formats)
->>  			output_fmts &= supported_fmts;
->> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
->> index ab32d5b268d2..be2d180dd169 100644
->> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
->> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
->> @@ -365,6 +365,7 @@ struct atmel_hlcdc_plane_properties {
->>   * @hlcdc: pointer to the atmel_hlcdc structure provided by the MFD device
->>   * @fbdev: framebuffer device attached to the Display Controller
->>   * @crtc: CRTC provided by the display controller
->> + * @bus_fmt: Array of bus format overrides, per connector.
->>   * @planes: instantiated planes
->>   * @layers: active HLCDC layers
->>   * @wq: display controller workqueue
->> @@ -376,6 +377,7 @@ struct atmel_hlcdc_dc {
->>  	struct dma_pool *dscrpool;
->>  	struct atmel_hlcdc *hlcdc;
->>  	struct drm_crtc *crtc;
->> +	int *bus_fmt;
+>> Let's please not go down that route of doing FDT modifications. There
+>> is little reason to other than for early boot changes. And it is much
+>> easier to work on unflattened trees.
 > 
-> Looks like this bus_fmt information should be attached to the
-> atmel_hlcdc_rgb_output object, since the property is placed in the
-> endpoint representing the DPI encoder output.
+> I just briefly looked into libfdt, and it would have meant building it
+> into the module as there are no library functions exported by the kernel
+> either. Another reason to drop that.
 > 
-> You could then parse the format in atmel_hlcdc_attach_endpoint() and
-> provide a helper to retrieve the hardcoded bus-format attached to an
-> encoder:
-> 
->   int atmel_hlcdc_encoder_get_bus_fmt(struct drm_encoder *encoder);
-> 
-> and if it returns zero you can fallback to bus formats
-> defined in drm_display_info, as you do in this patch.
+> What's apparently working now is the pattern I initially suggested:
+> Register template with status = "disabled" as overlay, then prepare and
+> apply changeset that contains all needed modifications and sets the
+> status to "ok". I might be leaking additional resources, but to find
+> that out, I will now finally have to resolve clean unbinding of the
+> generic PCI host controller [1] first.
 
-Good suggestion. However, it appears the atmel_hlcdc_rgb_output object
-was removed in 4.13. But I'm bringing it back like this
+static void free_overlay_changeset(struct overlay_changeset *ovcs)
+{
+	[...]
+	/*
+	 * TODO
+	 *
+	 * would like to: kfree(ovcs->overlay_tree);
+	 * but can not since drivers may have pointers into this data
+	 *
+	 * would like to: kfree(ovcs->fdt);
+	 * but can not since drivers may have pointers into this data
+	 */
 
-struct atmel_hlcdc_rgb_output {
-	struct drm_encoder encoder;
-	int bus_fmt;
-};
+	kfree(ovcs);
+}
 
-and adjusting the code to match that. It all looks nice and tidy, methinks.
+What's this? I have kmemleak now jumping at me over this. Who is suppose
+to plug these leaks? The caller of of_overlay_fdt_apply has no pointers
+to those objects. I would say that's a regression of the new API.
 
-v4 coming up Monday, if nothing unexpected happens.
-
-Cheers,
-Peter
+Jan
