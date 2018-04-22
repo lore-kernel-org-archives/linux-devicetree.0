@@ -1,100 +1,50 @@
-From: David Julian Veenstra <davidjulianveenstra@gmail.com>
-Subject: Re: [PATCH v2 11/13] staging: iio: Documentation: Add missing sysfs
- docs for angle channel
-Date: Sun, 22 Apr 2018 16:41:16 +0200
-Message-ID: <87in8jmhgz.fsf@gmail.com>
-References: <cover.1524247563.git.davidjulianveenstra@gmail.com>
- <e2eaff8115d8fd170767c76119cf6cdd2d1ebc92.1524247563.git.davidjulianveenstra@gmail.com>
- <20180421180843.3bd3042a@archlinux>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 112/164] dt-bindings: clock: mediatek: add binding for fixed-factor clock axisel_d4
+Date: Sun, 22 Apr 2018 15:52:59 +0200
+Message-ID: <20180422135140.006855491@linuxfoundation.org>
+References: <20180422135135.400265110@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-reply-to: <20180421180843.3bd3042a@archlinux>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, daniel.baluta@nxp.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180422135135.400265110@linuxfoundation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
-On 21, April 2018 19:08, Jonathan Cameron wrote:
+------------------
 
-> On Fri, 20 Apr 2018 21:31:37 +0200
-> David Veenstra <davidjulianveenstra@gmail.com> wrote:
->
->> The iio resolver drivers in staging use angle channels. This patch
->> add missing documentation for this type of channel.
->> 
->> As was discussed in [1], radians is chosen as the unit, to match the
->> unit of angular velocity.
->> 
->> [1] https://marc.info/?l=linux-driver-devel&m=152190078308330&w=2
->> 
->> Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
->> ---
->> Change in v2:
->>   - Introduces in this version.
->> 
->>  Documentation/ABI/testing/sysfs-bus-iio | 11 +++++++++++
->>  1 file changed, 11 insertions(+)
->> 
->> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
->> index 6a5f34b4d5b9..8ad0e55f99ee 100644
->> --- a/Documentation/ABI/testing/sysfs-bus-iio
->> +++ b/Documentation/ABI/testing/sysfs-bus-iio
->> @@ -190,6 +190,15 @@ Description:
->>  		but should match other such assignments on device).
->>  		Units after application of scale and offset are m/s^2.
->>  
->> +What:		/sys/bus/iio/devices/iio:deviceX/in_angl_x_raw
->> +What:		/sys/bus/iio/devices/iio:deviceX/in_angl_y_raw
->> +What:		/sys/bus/iio/devices/iio:deviceX/in_angl_z_raw
-> This surprised me.  A resolver is not going to inherently have any
-> notion of a particular axis.
-> Would expect.
-> in_angl_raw
+From: Sean Wang <sean.wang@mediatek.com>
 
-For the attributes that were added, I tried to match it with
-the angular velocity counterpart. But it indeed doesn't make
-much sense to have an axis for a resolver. I'll remove axis
-modifier for v3.
+commit 55a5fcafe3a94e8a0777bb993d09107d362258d2 upstream.
 
-Best regards,
-David Veenstra
+Just add binding for a fixed-factor clock axisel_d4, which would be
+referenced by PWM devices on MT7623 or MT2701 SoC.
 
->
-> Jonathan
->
->> +KernelVersion:	4.17
->> +Contact:	linux-iio@vger.kernel.org
->> +Description:
->> +		Angle about axis x, y or z (may be arbitrarily assigned). Units
->> +		after application of scale and offset are radians.
->> +
->>  What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_x_raw
->>  What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_y_raw
->>  What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_z_raw
->> @@ -297,6 +306,7 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_pressure_offset
->>  What:		/sys/bus/iio/devices/iio:deviceX/in_humidityrelative_offset
->>  What:		/sys/bus/iio/devices/iio:deviceX/in_magn_offset
->>  What:		/sys/bus/iio/devices/iio:deviceX/in_rot_offset
->> +What:		/sys/bus/iio/devices/iio:deviceX/in_angl_offset
->>  KernelVersion:	2.6.35
->>  Contact:	linux-iio@vger.kernel.org
->>  Description:
->> @@ -350,6 +360,7 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_humidityrelative_scale
->>  What:		/sys/bus/iio/devices/iio:deviceX/in_velocity_sqrt(x^2+y^2+z^2)_scale
->>  What:		/sys/bus/iio/devices/iio:deviceX/in_illuminance_scale
->>  What:		/sys/bus/iio/devices/iio:deviceX/in_countY_scale
->> +What:		/sys/bus/iio/devices/iio:deviceX/in_angl_scale
->>  KernelVersion:	2.6.35
->>  Contact:	linux-iio@vger.kernel.org
->>  Description:
+Cc: stable@vger.kernel.org
+Fixes: 1de9b21633d6 ("clk: mediatek: Add dt-bindings for MT2701 clocks")
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ include/dt-bindings/clock/mt2701-clk.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/include/dt-bindings/clock/mt2701-clk.h
++++ b/include/dt-bindings/clock/mt2701-clk.h
+@@ -176,7 +176,8 @@
+ #define CLK_TOP_AUD_EXT1			156
+ #define CLK_TOP_AUD_EXT2			157
+ #define CLK_TOP_NFI1X_PAD			158
+-#define CLK_TOP_NR				159
++#define CLK_TOP_AXISEL_D4			159
++#define CLK_TOP_NR				160
+ 
+ /* APMIXEDSYS */
+ 
