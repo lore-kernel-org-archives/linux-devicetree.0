@@ -1,85 +1,74 @@
-Return-Path: <SRS0=hkU0=HL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193]:45990 "EHLO
-        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754201AbeDVP4t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Apr 2018 11:56:49 -0400
+Return-Path: <SRS0=mL6q=HL=gmail.com=akinobu.mita@kernel.org>
 From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v3 04/11] media: ov772x: add media controller support
-Date: Mon, 23 Apr 2018 00:56:10 +0900
-Message-Id: <1524412577-14419-5-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
-References: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
+Subject: [PATCH v3 00/11] media: ov772x: support media controller, device tree probing, etc.
+Date: Mon, 23 Apr 2018 00:56:06 +0900
+Message-Id: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
 To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Create a source pad and set the media controller type to the sensor.
+This patchset includes support media controller, sub-device interface,
+device tree probing and other miscellanuous changes for ov772x driver.
+
+* v3 (thanks to Sakari Ailus and Jacopo Mondi)
+- Reorder the patches
+- Add Reviewed-by: lines
+- Remove I2C_CLIENT_SCCB flag set as it isn't needed anymore
+- Fix typo in the commit log
+- Return without resetting if ov772x_edgectrl() failed
+- Update the error message for missing platform data
+- Rename mutex name from power_lock to lock
+- Add warning for duplicated s_power call
+- Add newlines before labels
+- Remove __v4l2_ctrl_handler_setup in s_power() as it causes duplicated
+  register settings
+- Make set_fmt() return -EBUSY while streaming (New)
+
+* v2 (thanks to Jacopo Mondi)
+- Replace the implementation of ov772x_read() instead of adding an
+  alternative method
+- Assign the ov772x_read() return value to pid and ver directly
+- Do the same for MIDH and MIDL
+- Move video_probe() before the entity initialization and remove the #ifdef
+  around the media_entity_cleanup()
+- Use generic names for reset and powerdown gpios (New)
+- Add "dt-bindings:" in the subject
+- Add a brief description of the sensor
+- Update the GPIO names
+- Indicate the GPIO active level
+- Add missing NULL checks for priv->info
+- Leave the check for the missing platform data if legacy platform data
+  probe is used.
+- Handle nested s_power() calls (New)
+- Reconstruct s_frame_interval() (New)
+- Avoid accessing registers
+
+Akinobu Mita (11):
+  media: dt-bindings: ov772x: add device tree binding
+  media: ov772x: allow i2c controllers without
+    I2C_FUNC_PROTOCOL_MANGLING
+  media: ov772x: add checks for register read errors
+  media: ov772x: add media controller support
+  media: ov772x: use generic names for reset and powerdown gpios
+  media: ov772x: support device tree probing
+  media: ov772x: handle nested s_power() calls
+  media: ov772x: reconstruct s_frame_interval()
+  media: ov772x: avoid accessing registers under power saving mode
+  media: ov772x: make set_fmt() return -EBUSY while streaming
+  media: ov772x: create subdevice device node
+
+ .../devicetree/bindings/media/i2c/ov772x.txt       |  42 +++
+ MAINTAINERS                                        |   1 +
+ arch/sh/boards/mach-migor/setup.c                  |   5 +-
+ drivers/media/i2c/ov772x.c                         | 313 ++++++++++++++++-----
+ 4 files changed, 284 insertions(+), 77 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.txt
 
 Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: Hans Verkuil <hans.verkuil@cisco.com>
 Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
 Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* v3
-- Add a Reviewed-by: line
-
- drivers/media/i2c/ov772x.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index f25150d..18a5ed6 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -424,6 +424,9 @@ struct ov772x_priv {
- 	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
- 	unsigned short                    band_filter;
- 	unsigned int			  fps;
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	struct media_pad pad;
-+#endif
- };
- 
- /*
-@@ -1316,16 +1319,26 @@ static int ov772x_probe(struct i2c_client *client,
- 	if (ret < 0)
- 		goto error_gpio_put;
- 
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	priv->pad.flags = MEDIA_PAD_FL_SOURCE;
-+	priv->subdev.entity.function = MEDIA_ENT_F_CAM_SENSOR;
-+	ret = media_entity_pads_init(&priv->subdev.entity, 1, &priv->pad);
-+	if (ret < 0)
-+		goto error_gpio_put;
-+#endif
-+
- 	priv->cfmt = &ov772x_cfmts[0];
- 	priv->win = &ov772x_win_sizes[0];
- 	priv->fps = 15;
- 
- 	ret = v4l2_async_register_subdev(&priv->subdev);
- 	if (ret)
--		goto error_gpio_put;
-+		goto error_entity_cleanup;
- 
- 	return 0;
- 
-+error_entity_cleanup:
-+	media_entity_cleanup(&priv->subdev.entity);
- error_gpio_put:
- 	if (priv->pwdn_gpio)
- 		gpiod_put(priv->pwdn_gpio);
-@@ -1341,6 +1354,7 @@ static int ov772x_remove(struct i2c_client *client)
- {
- 	struct ov772x_priv *priv = to_ov772x(i2c_get_clientdata(client));
- 
-+	media_entity_cleanup(&priv->subdev.entity);
- 	clk_put(priv->clk);
- 	if (priv->pwdn_gpio)
- 		gpiod_put(priv->pwdn_gpio);
+Cc: Rob Herring <robh+dt@kernel.org>
 -- 
 2.7.4
-
