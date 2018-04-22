@@ -1,77 +1,74 @@
 From: Paul Kocialkowski <contact@paulk.fr>
 Subject: Re: [PATCH] ARM: dts: imx6qdl-cubox-i: Move card-detect GPIO to 1.5
  SOM devices only
-Date: Sun, 22 Apr 2018 19:22:14 +0200
-Message-ID: <8012696a7bf0132dd2361a896bf0abfbe8a3084e.camel@paulk.fr>
+Date: Sun, 22 Apr 2018 19:23:42 +0200
+Message-ID: <12bc46186bb643203601165b7b0136d96e0613c9.camel@paulk.fr>
 References: <20180422142151.17910-1-contact@paulk.fr>
          <20180422143911.GB16141@n2100.armlinux.org.uk>
+         <CABdtJHuE05ea1EPSR916vSEz6gtCirLF77c_PW2N2ofGnzN-bw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-cv3H+KZnNuNMpz0d3X7i"
+        protocol="application/pgp-signature"; boundary="=-X06kYKnvUfRarPRWXKkU"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180422143911.GB16141@n2100.armlinux.org.uk>
+In-Reply-To: <CABdtJHuE05ea1EPSR916vSEz6gtCirLF77c_PW2N2ofGnzN-bw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
+To: Jon Nettleton <jon@solid-run.com>, Russell King - ARM Linux <linux@armlinux.org.uk>
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
---=-cv3H+KZnNuNMpz0d3X7i
+--=-X06kYKnvUfRarPRWXKkU
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-Le dimanche 22 avril 2018 =C3=A0 15:39 +0100, Russell King - ARM Linux a
-=C3=A9crit :
-> On Sun, Apr 22, 2018 at 04:21:51PM +0200, Paul Kocialkowski wrote:
-> > The Solid-Run CuBox-i lower board used in the first generation of
-> > CuBox-i devices feature a hinged micro SD card slot, that does not
+Le dimanche 22 avril 2018 =C3=A0 15:02 +0000, Jon Nettleton a =C3=A9crit :
+> On Sun, Apr 22, 2018 at 4:39 PM Russell King - ARM Linux <linux@armlin
+> ux.org.uk> wrote:
+> > On Sun, Apr 22, 2018 at 04:21:51PM +0200, Paul Kocialkowski wrote:
+> > > The Solid-Run CuBox-i lower board used in the first generation of
+> > > CuBox-i devices feature a hinged micro SD card slot, that does not
 > > have
-> > card-detect capability. Since the card-detect GPIO was specified in
-> > the
-> > common cubox-i dtsi, it is moved to each device using the 1.5 SOM
+> > > card-detect capability. Since the card-detect GPIO was specified
+> > in the
+> > > common cubox-i dtsi, it is moved to each device using the 1.5 SOM
 > > and is
-> > thus removed from the imx6q-cubox-i dts.
->=20
-> This seems incorrect.
->=20
-> The 1.5 SOM is a relatively recent thing, and I have one of the first
-> Cubox-i's that were produced which is not hinged, and does not have a
-> 1.5 SOM.  There is _no_ correlation between the 1.5 SOM and the SD
-> card slot.
->=20
-> Talking to folk at SolidRun, we're all confused about your assertions.
+> > > thus removed from the imx6q-cubox-i dts.
+> >=20
+> > This seems incorrect.
+> >=20
+> > The 1.5 SOM is a relatively recent thing, and I have one of the
+> > first
+> > Cubox-i's that were produced which is not hinged, and does not have
+> > a
+> > 1.5 SOM.  There is _no_ correlation between the 1.5 SOM and the SD
+> > card slot.
+> >=20
+> > Talking to folk at SolidRun, we're all confused about your
+> > assertions.
+> >=20
+> > We're also confused about "hinged micro SD card slot" - Cubox-i's
+> > come with either a push-push slot or a static (push-in, pull-out)
+> > slot.
+> > (Prototypes were the latter.)
+> >=20
+> > Maybe someone's modified yours?
+> >=20
+> Regardless of the physical mechanics of the device, the CD-GPIO is a
+> mechanism of the carrier and not the SOM. I have one of the few Cubox-
+> i's that have been physically modified to work with the rev 1.5 som
+> and have no issues (the heat spreader needs additional cutouts).
 
-It appears that I was also confused about the different models in the
-CuBox-i line. I had assumed that the models had been updated to a new
-revision (carrying that 1.5 SOM) since the time I bought mine (which was
-thus some sort of first generation). With this scenario in mind, it made
-sense to me that a CD GPIO required only for the second generation would
-have been applied by mistake to all the cubox-i devices by having it in
-the common dtsi.
+There was some confusion about the relationship with the 1.5 SOM. It is
+now clear that the issue is not linked to it at all.
 
-I checked on the leaflet inside the box and models did not change, only
-the 4x4 model was added in the meantime.=20
+> Now if you are still using the old 2013 u-boot then there is possibly
+> confusion between the eMMC and SDHC slots which can cause
+> strangeness.  Please use the 2018.01 branch on our github and that
+> will handle this properly.
 
-> We're also confused about "hinged micro SD card slot" - Cubox-i's
-> come with either a push-push slot or a static (push-in, pull-out)
-> slot.
-> (Prototypes were the latter.)
-
-The one I have definitely does not have a spring-loaded mechanism, so I
-would call it a push/pull static slot. I mentioned a hinged slot because
-that's the term used to describe the layout in the CuBox-i-Lower
-schematics, SD/MMC Connector part: "U3 is an internal hinged micro SD".
-Looking at pictures of what hinged slots look like, that's definitely
-not what I have here.
-
-Are all CuBox-i units that have ever been sold supposed to have a
-connector with a CD line? I find it hard to believe that it's broken
-specifically on mine.
-
-If that's really needed, I could open up the device, check whether the
-R8 pull is in place and check the voltage there.
+I'm using U-Boot 2018.03, so I think I'm safe on that side.
 
 Cheers,
 
@@ -83,26 +80,26 @@ developer of free digital technology and hardware support.
 Website: https://www.paulk.fr/
 Coding blog: https://code.paulk.fr/
 Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
---=-cv3H+KZnNuNMpz0d3X7i
+--=-X06kYKnvUfRarPRWXKkU
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlrcxMYACgkQhP3B6o/u
-lQxfog//Qc0HFoAUIFHU4DV6ZaHUTPKCpiYB44sqt7VQp0GXLKBa73lOGH6zipqR
-guG2Ytsjn9+/Tx7jHSOlpKP7RodtXPGk1DAH1i+BP4mKsIDLGd+bPnoI4Zz0Si7J
-EW5Hhz5zb3GfPpbj30oy1bQ/G2bq9N/gubtNMNMHSZzlBXXnLPGcqZYm1maNnDkj
-rg/AnRTQJpr4Ko2f0wDuaYzZMVqWNzO4mqsMVgAAsmeAPHj3Rdew588efQ6TE7Ck
-Qywx5+ZuDKdhXNHpyhiICW+FitHJyreZ7VLlOmk4g8vCP+ZgW2P9Yc8M4Z5f1Cm7
-InrTQ6p6ldTL5Nc23Ky+XY+JJ+C5geXLlFg/vsMGZf6pwMyt8fO99wvcOjcbWSm5
-LSrKbTwJ9x+c3sKklSu/ZnLa9KesNgcdUpUsvuxj11UM5SfhMl8E34PN5hF9HhxO
-h56m4XS3WjnXALYq6sH9dMAwwsqa91xYxR4Cacu/DdOEnv5VcYYdGexsD5clVG4C
-YzJsMhKGM0akfbhqqDtYk9IWharhQKQcBya+p4wwuLt90M3ezeFRdzMbVidHoHDg
-RJDL8eMhdPt9eXjgtglC1/X9UNZuaPsmaAfu+g+bGFCgPNqpadTftfZwarTdOKbR
-EGkFH4KsHmZ5rnASRnqzw5jd6BI1KL88zKiMFFlYccrCsblOums=
-=3oIn
+iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlrcxR4ACgkQhP3B6o/u
+lQw6gRAAmHn9wjxHcrvGN6Cp9E9IdLTCk4PGWlIzPXk9MVWpV4jp+A1Q9MUJCse+
+Ur6dWqZM0sbW9+rdG9JT3qFQIrHdrMvPeDGeQxShKWqk9VF9s5tnsUHKhNFz2Tq0
+1q09V3zqqS1dKrkx5zwANosETlkgbh3nZlqlMvuftZxJTk2KZy6GyrzVY5RTNHw7
+hjij1JNdFojflPn6KOQRYzPdpwy3ReWz11gYKls93rYQcj6cCnklYaDRnf7OfPEV
+jtkS4bFxGJ+FFqtn3H9fi+HHcCfJ+zx+LCn/ycGxqsITESbDRFT/sE6JVccn5mTH
+euW+CgNTF0DgjiFWEimzVu7smAnNqaHv2/ZUS5yFlZRrZhZsq86FW4CV4XskcP5G
+uZX5rALAFbrdMMgQ8n1QfsaJ1uGlC5QwlCiBkD5BD2u+v0WAgf4L6XFlCkhAEJhu
+JRLKvGOKhrG1KpaBrQ4MIOXWV7DPks3CykVZAbx1latPlrH1moBu3WJgMVgDjEM9
+C4VBkI+SmoGgqSM4vbutDTfNFtm2OQ0YqF5yMKVIIn2w1P/R6MxG4OwgCvfmujTl
+r4ji883QciqFfxHO7tzTdIO75pH+CbXOfp5HYdIDDZmJXQfsvFfLlB9Ik25wmpte
+SCndOLeHaY1BSe7Ftp4zeQz7Ro+spjp+Ep1Rq3IFUkpioSpjLZ0=
+=J2Dh
 -----END PGP SIGNATURE-----
 
---=-cv3H+KZnNuNMpz0d3X7i--
+--=-X06kYKnvUfRarPRWXKkU--
