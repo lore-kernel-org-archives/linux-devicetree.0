@@ -1,50 +1,95 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 57/95] dt-bindings: clock: mediatek: add binding for fixed-factor clock axisel_d4
-Date: Sun, 22 Apr 2018 15:53:26 +0200
-Message-ID: <20180422135212.751499486@linuxfoundation.org>
-References: <20180422135210.432103639@linuxfoundation.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Paul Kocialkowski <contact@paulk.fr>
+Subject: [PATCH] ARM: dts: imx6qdl-cubox-i: Move card-detect GPIO to 1.5 SOM devices only
+Date: Sun, 22 Apr 2018 16:21:51 +0200
+Message-ID: <20180422142151.17910-1-contact@paulk.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180422135210.432103639@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Kocialkowski <contact@paulk.fr>
 List-Id: devicetree@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+The Solid-Run CuBox-i lower board used in the first generation of
+CuBox-i devices feature a hinged micro SD card slot, that does not have
+card-detect capability. Since the card-detect GPIO was specified in the
+common cubox-i dtsi, it is moved to each device using the 1.5 SOM and is
+thus removed from the imx6q-cubox-i dts.
 
-------------------
+Enabling the card-detect GPIO on the first generation CuBox-i devices
+results in waiting for a card-detect event (that never occurs) and thus
+not detecting the mmc card.
 
-From: Sean Wang <sean.wang@mediatek.com>
+Since the CD pin is still dedicated to the purpose on the SOM board even
+on the first generation CuBox-i devices, the pin control properties are
+kept untouched regardless of the slot capability.
 
-commit 55a5fcafe3a94e8a0777bb993d09107d362258d2 upstream.
-
-Just add binding for a fixed-factor clock axisel_d4, which would be
-referenced by PWM devices on MT7623 or MT2701 SoC.
-
-Cc: stable@vger.kernel.org
-Fixes: 1de9b21633d6 ("clk: mediatek: Add dt-bindings for MT2701 clocks")
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
 ---
- include/dt-bindings/clock/mt2701-clk.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6dl-cubox-i-emmc-som-v15.dts | 4 ++++
+ arch/arm/boot/dts/imx6dl-cubox-i-som-v15.dts      | 4 ++++
+ arch/arm/boot/dts/imx6q-cubox-i-emmc-som-v15.dts  | 4 ++++
+ arch/arm/boot/dts/imx6q-cubox-i-som-v15.dts       | 4 ++++
+ arch/arm/boot/dts/imx6qdl-cubox-i.dtsi            | 1 -
+ 5 files changed, 16 insertions(+), 1 deletion(-)
 
---- a/include/dt-bindings/clock/mt2701-clk.h
-+++ b/include/dt-bindings/clock/mt2701-clk.h
-@@ -176,7 +176,8 @@
- #define CLK_TOP_AUD_EXT1			156
- #define CLK_TOP_AUD_EXT2			157
- #define CLK_TOP_NFI1X_PAD			158
--#define CLK_TOP_NR				159
-+#define CLK_TOP_AXISEL_D4			159
-+#define CLK_TOP_NR				160
+diff --git a/arch/arm/boot/dts/imx6dl-cubox-i-emmc-som-v15.dts b/arch/arm/boot/dts/imx6dl-cubox-i-emmc-som-v15.dts
+index 2b2fc360b865..90a15f3b4fc0 100644
+--- a/arch/arm/boot/dts/imx6dl-cubox-i-emmc-som-v15.dts
++++ b/arch/arm/boot/dts/imx6dl-cubox-i-emmc-som-v15.dts
+@@ -50,3 +50,7 @@
+ 	model = "SolidRun Cubox-i Solo/DualLite (1.5som+emmc)";
+ 	compatible = "solidrun,cubox-i/dl", "fsl,imx6dl";
+ };
++
++&usdhc2 {
++	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
++};
+diff --git a/arch/arm/boot/dts/imx6dl-cubox-i-som-v15.dts b/arch/arm/boot/dts/imx6dl-cubox-i-som-v15.dts
+index e09c565d1d1f..9bdec07fefe3 100644
+--- a/arch/arm/boot/dts/imx6dl-cubox-i-som-v15.dts
++++ b/arch/arm/boot/dts/imx6dl-cubox-i-som-v15.dts
+@@ -49,3 +49,7 @@
+ 	model = "SolidRun Cubox-i Solo/DualLite (1.5som)";
+ 	compatible = "solidrun,cubox-i/dl", "fsl,imx6dl";
+ };
++
++&usdhc2 {
++	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
++};
+diff --git a/arch/arm/boot/dts/imx6q-cubox-i-emmc-som-v15.dts b/arch/arm/boot/dts/imx6q-cubox-i-emmc-som-v15.dts
+index 3e59ebbb3608..679a5431cbdb 100644
+--- a/arch/arm/boot/dts/imx6q-cubox-i-emmc-som-v15.dts
++++ b/arch/arm/boot/dts/imx6q-cubox-i-emmc-som-v15.dts
+@@ -58,3 +58,7 @@
+ 	fsl,transmit-atten-16ths = <9>;
+ 	fsl,no-spread-spectrum;
+ };
++
++&usdhc2 {
++	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
++};
+diff --git a/arch/arm/boot/dts/imx6q-cubox-i-som-v15.dts b/arch/arm/boot/dts/imx6q-cubox-i-som-v15.dts
+index dab70d1230a2..b9b8733f13c3 100644
+--- a/arch/arm/boot/dts/imx6q-cubox-i-som-v15.dts
++++ b/arch/arm/boot/dts/imx6q-cubox-i-som-v15.dts
+@@ -57,3 +57,7 @@
+ 	fsl,transmit-atten-16ths = <9>;
+ 	fsl,no-spread-spectrum;
+ };
++
++&usdhc2 {
++	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+index d1cfdc264126..170b3d27f875 100644
+--- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+@@ -254,7 +254,6 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_cubox_i_usdhc2_aux &pinctrl_cubox_i_usdhc2>;
+ 	vmmc-supply = <&vcc_3v3>;
+-	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
  
- /* APMIXEDSYS */
- 
+-- 
+2.17.0
