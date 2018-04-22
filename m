@@ -1,8 +1,8 @@
 From: David Veenstra <davidjulianveenstra@gmail.com>
-Subject: [PATCH v3 2/9] staging: iio: ad2s1200: Improve readability with
- be16_to_cpup
-Date: Mon, 23 Apr 2018 00:03:03 +0200
-Message-ID: <8e171d819a0916d7a4870bf70cfeada8ba9ebdc6.1524432236.git.davidjulianveenstra@gmail.com>
+Subject: [PATCH v3 3/9] staging: iio: ad2s1200: Replace legacy gpio API with
+ modern API
+Date: Mon, 23 Apr 2018 00:03:16 +0200
+Message-ID: <14ae9c1f81cf85a04d6d44109fad6cb4891be4c4.1524432236.git.davidjulianveenstra@gmail.com>
 References: <cover.1524432236.git.davidjulianveenstra@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,68 +23,67 @@ To: jic23@kernel.org, lars@metafoo.de, pmeerw@pmeerw.net
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, robh+dt@kernel.org, knaack.h@gmx.de, daniel.baluta@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-The manual states that the data is contained in the upper 12 bits
-of the 16 bits read by spi. The code that extracts these 12 bits
-is correct for both be and le machines, but this is not clear
-from a first glance.
-
-To improve readability the relevant expressions are replaced
-with equivalent expressions that use be16_to_cpup.
+The legacy, integer based gpio API is replaced with the modern
+descriptor based API.
 
 Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
 ---
 Changes in v3:
- - change type of rx to __be16.
- - remove unneeded variable vel.
- - remove unneeded type cast to s16 (patch line 79).
+ - This patch no longer deals with dt bindings. See the next
+   patch.
 
- drivers/staging/iio/resolver/ad2s1200.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ drivers/staging/iio/resolver/ad2s1200.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/staging/iio/resolver/ad2s1200.c b/drivers/staging/iio/resolver/ad2s1200.c
-index 17d65cb437fd..998f458dc1bd 100644
+index 998f458dc1bd..e7bfe5aa4c45 100644
 --- a/drivers/staging/iio/resolver/ad2s1200.c
 +++ b/drivers/staging/iio/resolver/ad2s1200.c
-@@ -47,7 +47,7 @@ struct ad2s1200_state {
+@@ -14,6 +14,7 @@
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/spi/spi.h>
+@@ -45,8 +46,8 @@
+ struct ad2s1200_state {
+ 	struct mutex lock;
  	struct spi_device *sdev;
- 	int sample;
- 	int rdvel;
--	u8 rx[2] ____cacheline_aligned;
-+	__be16 rx ____cacheline_aligned;
+-	int sample;
+-	int rdvel;
++	struct gpio_desc *sample;
++	struct gpio_desc *rdvel;
+ 	__be16 rx ____cacheline_aligned;
  };
  
- static int ad2s1200_read_raw(struct iio_dev *indio_dev,
-@@ -58,7 +58,6 @@ static int ad2s1200_read_raw(struct iio_dev *indio_dev,
- {
- 	struct ad2s1200_state *st = iio_priv(indio_dev);
+@@ -60,12 +61,12 @@ static int ad2s1200_read_raw(struct iio_dev *indio_dev,
  	int ret = 0;
--	s16 vel;
  
  	mutex_lock(&st->lock);
- 	gpio_set_value(st->sample, 0);
-@@ -68,7 +67,7 @@ static int ad2s1200_read_raw(struct iio_dev *indio_dev,
- 	gpio_set_value(st->sample, 1);
- 	gpio_set_value(st->rdvel, !!(chan->type == IIO_ANGL));
+-	gpio_set_value(st->sample, 0);
++	gpiod_set_value(st->sample, 0);
  
--	ret = spi_read(st->sdev, st->rx, 2);
-+	ret = spi_read(st->sdev, &st->rx, 2);
+ 	/* delay (6 * AD2S1200_TSCLK + 20) nano seconds */
+ 	udelay(1);
+-	gpio_set_value(st->sample, 1);
+-	gpio_set_value(st->rdvel, !!(chan->type == IIO_ANGL));
++	gpiod_set_value(st->sample, 1);
++	gpiod_set_value(st->rdvel, !!(chan->type == IIO_ANGL));
+ 
+ 	ret = spi_read(st->sdev, &st->rx, 2);
  	if (ret < 0) {
- 		mutex_unlock(&st->lock);
- 		return ret;
-@@ -76,12 +75,10 @@ static int ad2s1200_read_raw(struct iio_dev *indio_dev,
+@@ -135,8 +136,8 @@ static int ad2s1200_probe(struct spi_device *spi)
+ 	st = iio_priv(indio_dev);
+ 	mutex_init(&st->lock);
+ 	st->sdev = spi;
+-	st->sample = pins[0];
+-	st->rdvel = pins[1];
++	st->sample = gpio_to_desc(pins[0]);
++	st->rdvel = gpio_to_desc(pins[1]);
  
- 	switch (chan->type) {
- 	case IIO_ANGL:
--		*val = (((u16)(st->rx[0])) << 4) | ((st->rx[1] & 0xF0) >> 4);
-+		*val = be16_to_cpup(&st->rx) >> 4;
- 		break;
- 	case IIO_ANGL_VEL:
--		vel = (((s16)(st->rx[0])) << 4) | ((st->rx[1] & 0xF0) >> 4);
--		vel = sign_extend32(vel, 11);
--		*val = vel;
-+		*val = sign_extend32(be16_to_cpup(&st->rx) >> 4, 11);
- 		break;
- 	default:
- 		mutex_unlock(&st->lock);
+ 	indio_dev->dev.parent = &spi->dev;
+ 	indio_dev->info = &ad2s1200_info;
 -- 
 2.16.2
