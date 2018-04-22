@@ -1,50 +1,108 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 112/164] dt-bindings: clock: mediatek: add binding for fixed-factor clock axisel_d4
-Date: Sun, 22 Apr 2018 15:52:59 +0200
-Message-ID: <20180422135140.006855491@linuxfoundation.org>
-References: <20180422135135.400265110@linuxfoundation.org>
+From: Paul Kocialkowski <contact@paulk.fr>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-cubox-i: Move card-detect GPIO to 1.5
+ SOM devices only
+Date: Sun, 22 Apr 2018 19:22:14 +0200
+Message-ID: <8012696a7bf0132dd2361a896bf0abfbe8a3084e.camel@paulk.fr>
+References: <20180422142151.17910-1-contact@paulk.fr>
+         <20180422143911.GB16141@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-cv3H+KZnNuNMpz0d3X7i"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180422135135.400265110@linuxfoundation.org>
+In-Reply-To: <20180422143911.GB16141@n2100.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
 
-------------------
+--=-cv3H+KZnNuNMpz0d3X7i
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Sean Wang <sean.wang@mediatek.com>
+Hi,
 
-commit 55a5fcafe3a94e8a0777bb993d09107d362258d2 upstream.
+Le dimanche 22 avril 2018 =C3=A0 15:39 +0100, Russell King - ARM Linux a
+=C3=A9crit :
+> On Sun, Apr 22, 2018 at 04:21:51PM +0200, Paul Kocialkowski wrote:
+> > The Solid-Run CuBox-i lower board used in the first generation of
+> > CuBox-i devices feature a hinged micro SD card slot, that does not
+> > have
+> > card-detect capability. Since the card-detect GPIO was specified in
+> > the
+> > common cubox-i dtsi, it is moved to each device using the 1.5 SOM
+> > and is
+> > thus removed from the imx6q-cubox-i dts.
+>=20
+> This seems incorrect.
+>=20
+> The 1.5 SOM is a relatively recent thing, and I have one of the first
+> Cubox-i's that were produced which is not hinged, and does not have a
+> 1.5 SOM.  There is _no_ correlation between the 1.5 SOM and the SD
+> card slot.
+>=20
+> Talking to folk at SolidRun, we're all confused about your assertions.
 
-Just add binding for a fixed-factor clock axisel_d4, which would be
-referenced by PWM devices on MT7623 or MT2701 SoC.
+It appears that I was also confused about the different models in the
+CuBox-i line. I had assumed that the models had been updated to a new
+revision (carrying that 1.5 SOM) since the time I bought mine (which was
+thus some sort of first generation). With this scenario in mind, it made
+sense to me that a CD GPIO required only for the second generation would
+have been applied by mistake to all the cubox-i devices by having it in
+the common dtsi.
 
-Cc: stable@vger.kernel.org
-Fixes: 1de9b21633d6 ("clk: mediatek: Add dt-bindings for MT2701 clocks")
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+I checked on the leaflet inside the box and models did not change, only
+the 4x4 model was added in the meantime.=20
 
----
- include/dt-bindings/clock/mt2701-clk.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> We're also confused about "hinged micro SD card slot" - Cubox-i's
+> come with either a push-push slot or a static (push-in, pull-out)
+> slot.
+> (Prototypes were the latter.)
 
---- a/include/dt-bindings/clock/mt2701-clk.h
-+++ b/include/dt-bindings/clock/mt2701-clk.h
-@@ -176,7 +176,8 @@
- #define CLK_TOP_AUD_EXT1			156
- #define CLK_TOP_AUD_EXT2			157
- #define CLK_TOP_NFI1X_PAD			158
--#define CLK_TOP_NR				159
-+#define CLK_TOP_AXISEL_D4			159
-+#define CLK_TOP_NR				160
- 
- /* APMIXEDSYS */
- 
+The one I have definitely does not have a spring-loaded mechanism, so I
+would call it a push/pull static slot. I mentioned a hinged slot because
+that's the term used to describe the layout in the CuBox-i-Lower
+schematics, SD/MMC Connector part: "U3 is an internal hinged micro SD".
+Looking at pictures of what hinged slots look like, that's definitely
+not what I have here.
+
+Are all CuBox-i units that have ever been sold supposed to have a
+connector with a CD line? I find it hard to believe that it's broken
+specifically on mine.
+
+If that's really needed, I could open up the device, check whether the
+R8 pull is in place and check the voltage there.
+
+Cheers,
+
+--=20
+Paul Kocialkowski,
+
+developer of free digital technology and hardware support.
+
+Website: https://www.paulk.fr/
+Coding blog: https://code.paulk.fr/
+Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+--=-cv3H+KZnNuNMpz0d3X7i
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlrcxMYACgkQhP3B6o/u
+lQxfog//Qc0HFoAUIFHU4DV6ZaHUTPKCpiYB44sqt7VQp0GXLKBa73lOGH6zipqR
+guG2Ytsjn9+/Tx7jHSOlpKP7RodtXPGk1DAH1i+BP4mKsIDLGd+bPnoI4Zz0Si7J
+EW5Hhz5zb3GfPpbj30oy1bQ/G2bq9N/gubtNMNMHSZzlBXXnLPGcqZYm1maNnDkj
+rg/AnRTQJpr4Ko2f0wDuaYzZMVqWNzO4mqsMVgAAsmeAPHj3Rdew588efQ6TE7Ck
+Qywx5+ZuDKdhXNHpyhiICW+FitHJyreZ7VLlOmk4g8vCP+ZgW2P9Yc8M4Z5f1Cm7
+InrTQ6p6ldTL5Nc23Ky+XY+JJ+C5geXLlFg/vsMGZf6pwMyt8fO99wvcOjcbWSm5
+LSrKbTwJ9x+c3sKklSu/ZnLa9KesNgcdUpUsvuxj11UM5SfhMl8E34PN5hF9HhxO
+h56m4XS3WjnXALYq6sH9dMAwwsqa91xYxR4Cacu/DdOEnv5VcYYdGexsD5clVG4C
+YzJsMhKGM0akfbhqqDtYk9IWharhQKQcBya+p4wwuLt90M3ezeFRdzMbVidHoHDg
+RJDL8eMhdPt9eXjgtglC1/X9UNZuaPsmaAfu+g+bGFCgPNqpadTftfZwarTdOKbR
+EGkFH4KsHmZ5rnASRnqzw5jd6BI1KL88zKiMFFlYccrCsblOums=
+=3oIn
+-----END PGP SIGNATURE-----
+
+--=-cv3H+KZnNuNMpz0d3X7i--
