@@ -1,105 +1,199 @@
-From: Paul Kocialkowski <contact@paulk.fr>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-cubox-i: Move card-detect GPIO to 1.5
- SOM devices only
-Date: Sun, 22 Apr 2018 19:23:42 +0200
-Message-ID: <12bc46186bb643203601165b7b0136d96e0613c9.camel@paulk.fr>
-References: <20180422142151.17910-1-contact@paulk.fr>
-         <20180422143911.GB16141@n2100.armlinux.org.uk>
-         <CABdtJHuE05ea1EPSR916vSEz6gtCirLF77c_PW2N2ofGnzN-bw@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH] mtd: rawnand: sunxi: Remove support for GPIO-based
+ Ready/Busy polling
+Date: Sun, 22 Apr 2018 19:25:17 +0200
+Message-ID: <20180422192517.2037ef1c@bbrezillon>
+References: <20180327070614.3288-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-X06kYKnvUfRarPRWXKkU"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABdtJHuE05ea1EPSR916vSEz6gtCirLF77c_PW2N2ofGnzN-bw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Nettleton <jon@solid-run.com>, Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180327070614.3288-1-boris.brezillon@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-mtd@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 27 Mar 2018 09:06:14 +0200
+Boris Brezillon <boris.brezillon@bootlin.com> wrote:
 
---=-X06kYKnvUfRarPRWXKkU
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> None of the existing platforms connect the R/B pin to a GPIO (they all
+> use one of the dedicated R/B pin).
+> Anyway, if we ever get short of native R/B pins, it's probably better
+> to fallback to STATUS reg polling than trying to poll a GPIO.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 
-Hi,
+Applied to nand/next.
 
-Le dimanche 22 avril 2018 =C3=A0 15:02 +0000, Jon Nettleton a =C3=A9crit :
-> On Sun, Apr 22, 2018 at 4:39 PM Russell King - ARM Linux <linux@armlin
-> ux.org.uk> wrote:
-> > On Sun, Apr 22, 2018 at 04:21:51PM +0200, Paul Kocialkowski wrote:
-> > > The Solid-Run CuBox-i lower board used in the first generation of
-> > > CuBox-i devices feature a hinged micro SD card slot, that does not
-> > have
-> > > card-detect capability. Since the card-detect GPIO was specified
-> > in the
-> > > common cubox-i dtsi, it is moved to each device using the 1.5 SOM
-> > and is
-> > > thus removed from the imx6q-cubox-i dts.
-> >=20
-> > This seems incorrect.
-> >=20
-> > The 1.5 SOM is a relatively recent thing, and I have one of the
-> > first
-> > Cubox-i's that were produced which is not hinged, and does not have
-> > a
-> > 1.5 SOM.  There is _no_ correlation between the 1.5 SOM and the SD
-> > card slot.
-> >=20
-> > Talking to folk at SolidRun, we're all confused about your
-> > assertions.
-> >=20
-> > We're also confused about "hinged micro SD card slot" - Cubox-i's
-> > come with either a push-push slot or a static (push-in, pull-out)
-> > slot.
-> > (Prototypes were the latter.)
-> >=20
-> > Maybe someone's modified yours?
-> >=20
-> Regardless of the physical mechanics of the device, the CD-GPIO is a
-> mechanism of the carrier and not the SOM. I have one of the few Cubox-
-> i's that have been physically modified to work with the rev 1.5 som
-> and have no issues (the heat spreader needs additional cutouts).
+> ---
+>  .../devicetree/bindings/mtd/sunxi-nand.txt         |  2 -
+>  drivers/mtd/nand/raw/sunxi_nand.c                  | 91 ++++------------------
+>  2 files changed, 15 insertions(+), 78 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+> index 0734f03bf3d3..dcd5a5d80dc0 100644
+> --- a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+> @@ -22,8 +22,6 @@ Optional properties:
+>  - reset : phandle + reset specifier pair
+>  - reset-names : must contain "ahb"
+>  - allwinner,rb : shall contain the native Ready/Busy ids.
+> - or
+> -- rb-gpios : shall contain the gpios used as R/B pins.
+>  - nand-ecc-mode : one of the supported ECC modes ("hw", "soft", "soft_bch" or
+>  		  "none")
+>  
+> diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
+> index aad42812a353..d831a141a196 100644
+> --- a/drivers/mtd/nand/raw/sunxi_nand.c
+> +++ b/drivers/mtd/nand/raw/sunxi_nand.c
+> @@ -165,49 +165,16 @@
+>  
+>  #define NFC_MAX_CS		7
+>  
+> -/*
+> - * Ready/Busy detection type: describes the Ready/Busy detection modes
+> - *
+> - * @RB_NONE:	no external detection available, rely on STATUS command
+> - *		and software timeouts
+> - * @RB_NATIVE:	use sunxi NAND controller Ready/Busy support. The Ready/Busy
+> - *		pin of the NAND flash chip must be connected to one of the
+> - *		native NAND R/B pins (those which can be muxed to the NAND
+> - *		Controller)
+> - * @RB_GPIO:	use a simple GPIO to handle Ready/Busy status. The Ready/Busy
+> - *		pin of the NAND flash chip must be connected to a GPIO capable
+> - *		pin.
+> - */
+> -enum sunxi_nand_rb_type {
+> -	RB_NONE,
+> -	RB_NATIVE,
+> -	RB_GPIO,
+> -};
+> -
+> -/*
+> - * Ready/Busy structure: stores information related to Ready/Busy detection
+> - *
+> - * @type:	the Ready/Busy detection mode
+> - * @info:	information related to the R/B detection mode. Either a gpio
+> - *		id or a native R/B id (those supported by the NAND controller).
+> - */
+> -struct sunxi_nand_rb {
+> -	enum sunxi_nand_rb_type type;
+> -	union {
+> -		int gpio;
+> -		int nativeid;
+> -	} info;
+> -};
+> -
+>  /*
+>   * Chip Select structure: stores information related to NAND Chip Select
+>   *
+>   * @cs:		the NAND CS id used to communicate with a NAND Chip
+> - * @rb:		the Ready/Busy description
+> + * @rb:		the Ready/Busy pin ID. -1 means no R/B pin connected to the
+> + *		NFC
+>   */
+>  struct sunxi_nand_chip_sel {
+>  	u8 cs;
+> -	struct sunxi_nand_rb rb;
+> +	s8 rb;
+>  };
+>  
+>  /*
+> @@ -440,30 +407,19 @@ static int sunxi_nfc_dev_ready(struct mtd_info *mtd)
+>  	struct nand_chip *nand = mtd_to_nand(mtd);
+>  	struct sunxi_nand_chip *sunxi_nand = to_sunxi_nand(nand);
+>  	struct sunxi_nfc *nfc = to_sunxi_nfc(sunxi_nand->nand.controller);
+> -	struct sunxi_nand_rb *rb;
+> -	int ret;
+> +	u32 mask;
+>  
+>  	if (sunxi_nand->selected < 0)
+>  		return 0;
+>  
+> -	rb = &sunxi_nand->sels[sunxi_nand->selected].rb;
+> -
+> -	switch (rb->type) {
+> -	case RB_NATIVE:
+> -		ret = !!(readl(nfc->regs + NFC_REG_ST) &
+> -			 NFC_RB_STATE(rb->info.nativeid));
+> -		break;
+> -	case RB_GPIO:
+> -		ret = gpio_get_value(rb->info.gpio);
+> -		break;
+> -	case RB_NONE:
+> -	default:
+> -		ret = 0;
+> +	if (sunxi_nand->sels[sunxi_nand->selected].rb < 0) {
+>  		dev_err(nfc->dev, "cannot check R/B NAND status!\n");
+> -		break;
+> +		return 0;
+>  	}
+>  
+> -	return ret;
+> +	mask = NFC_RB_STATE(sunxi_nand->sels[sunxi_nand->selected].rb);
+> +
+> +	return !!(readl(nfc->regs + NFC_REG_ST) & mask);
+>  }
+>  
+>  static void sunxi_nfc_select_chip(struct mtd_info *mtd, int chip)
+> @@ -488,12 +444,11 @@ static void sunxi_nfc_select_chip(struct mtd_info *mtd, int chip)
+>  
+>  		ctl |= NFC_CE_SEL(sel->cs) | NFC_EN |
+>  		       NFC_PAGE_SHIFT(nand->page_shift);
+> -		if (sel->rb.type == RB_NONE) {
+> +		if (sel->rb < 0) {
+>  			nand->dev_ready = NULL;
+>  		} else {
+>  			nand->dev_ready = sunxi_nfc_dev_ready;
+> -			if (sel->rb.type == RB_NATIVE)
+> -				ctl |= NFC_RB_SEL(sel->rb.info.nativeid);
+> +			ctl |= NFC_RB_SEL(sel->rb);
+>  		}
+>  
+>  		writel(mtd->writesize, nfc->regs + NFC_REG_SPARE_AREA);
+> @@ -1946,26 +1901,10 @@ static int sunxi_nand_chip_init(struct device *dev, struct sunxi_nfc *nfc,
+>  		chip->sels[i].cs = tmp;
+>  
+>  		if (!of_property_read_u32_index(np, "allwinner,rb", i, &tmp) &&
+> -		    tmp < 2) {
+> -			chip->sels[i].rb.type = RB_NATIVE;
+> -			chip->sels[i].rb.info.nativeid = tmp;
+> -		} else {
+> -			ret = of_get_named_gpio(np, "rb-gpios", i);
+> -			if (ret >= 0) {
+> -				tmp = ret;
+> -				chip->sels[i].rb.type = RB_GPIO;
+> -				chip->sels[i].rb.info.gpio = tmp;
+> -				ret = devm_gpio_request(dev, tmp, "nand-rb");
+> -				if (ret)
+> -					return ret;
+> -
+> -				ret = gpio_direction_input(tmp);
+> -				if (ret)
+> -					return ret;
+> -			} else {
+> -				chip->sels[i].rb.type = RB_NONE;
+> -			}
+> -		}
+> +		    tmp < 2)
+> +			chip->sels[i].rb = tmp;
+> +		else
+> +			chip->sels[i].rb = -1;
+>  	}
+>  
+>  	nand = &chip->nand;
 
-There was some confusion about the relationship with the 1.5 SOM. It is
-now clear that the issue is not linked to it at all.
 
-> Now if you are still using the old 2013 u-boot then there is possibly
-> confusion between the eMMC and SDHC slots which can cause
-> strangeness.  Please use the 2018.01 branch on our github and that
-> will handle this properly.
-
-I'm using U-Boot 2018.03, so I think I'm safe on that side.
-
-Cheers,
-
---=20
-Paul Kocialkowski,
-
-developer of free digital technology and hardware support.
-
-Website: https://www.paulk.fr/
-Coding blog: https://code.paulk.fr/
-Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
---=-X06kYKnvUfRarPRWXKkU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlrcxR4ACgkQhP3B6o/u
-lQw6gRAAmHn9wjxHcrvGN6Cp9E9IdLTCk4PGWlIzPXk9MVWpV4jp+A1Q9MUJCse+
-Ur6dWqZM0sbW9+rdG9JT3qFQIrHdrMvPeDGeQxShKWqk9VF9s5tnsUHKhNFz2Tq0
-1q09V3zqqS1dKrkx5zwANosETlkgbh3nZlqlMvuftZxJTk2KZy6GyrzVY5RTNHw7
-hjij1JNdFojflPn6KOQRYzPdpwy3ReWz11gYKls93rYQcj6cCnklYaDRnf7OfPEV
-jtkS4bFxGJ+FFqtn3H9fi+HHcCfJ+zx+LCn/ycGxqsITESbDRFT/sE6JVccn5mTH
-euW+CgNTF0DgjiFWEimzVu7smAnNqaHv2/ZUS5yFlZRrZhZsq86FW4CV4XskcP5G
-uZX5rALAFbrdMMgQ8n1QfsaJ1uGlC5QwlCiBkD5BD2u+v0WAgf4L6XFlCkhAEJhu
-JRLKvGOKhrG1KpaBrQ4MIOXWV7DPks3CykVZAbx1latPlrH1moBu3WJgMVgDjEM9
-C4VBkI+SmoGgqSM4vbutDTfNFtm2OQ0YqF5yMKVIIn2w1P/R6MxG4OwgCvfmujTl
-r4ji883QciqFfxHO7tzTdIO75pH+CbXOfp5HYdIDDZmJXQfsvFfLlB9Ik25wmpte
-SCndOLeHaY1BSe7Ftp4zeQz7Ro+spjp+Ep1Rq3IFUkpioSpjLZ0=
-=J2Dh
------END PGP SIGNATURE-----
-
---=-X06kYKnvUfRarPRWXKkU--
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
