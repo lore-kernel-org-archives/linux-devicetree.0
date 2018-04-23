@@ -1,58 +1,101 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v7 08/11] ARM: sun9i: smp: Add is_a83t field
-Date: Mon, 23 Apr 2018 10:14:23 +0200
-Message-ID: <20180423081423.h7b35sobagypokpe@flea>
+Subject: Re: [PATCH v7 06/11] ARM: sunxi: Add initialization of CNTVOFF
+Date: Mon, 23 Apr 2018 10:16:09 +0200
+Message-ID: <20180423081609.dirsitco3aeaqztx@flea>
 References: <20180420211022.11759-1-mylene.josserand@bootlin.com>
- <20180420211022.11759-9-mylene.josserand@bootlin.com>
+ <20180420211022.11759-7-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qmq5ehzlj356zjuy"
+        protocol="application/pgp-signature"; boundary="7qoatix34pogn6m2"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180420211022.11759-9-mylene.josserand@bootlin.com>
+In-Reply-To: <20180420211022.11759-7-mylene.josserand@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>
 Cc: linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---qmq5ehzlj356zjuy
+--7qoatix34pogn6m2
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 20, 2018 at 11:10:19PM +0200, Myl=E8ne Josserand wrote:
-> To prepare the support of sun8i-a83t, add a field in the smp_data
-> structure to know if we are on sun9i-a80 or sun8i-a83t.
+On Fri, Apr 20, 2018 at 11:10:17PM +0200, Myl=E8ne Josserand wrote:
+> Add the initialization of CNTVOFF for sun8i-a83t.
 >=20
-> Add also a global variable to retrieve which architecture we are
-> having.
+> For boot CPU, create a new machine that handles this
+> function's call in an "init_early" callback. We need to initialize
+> CNTVOFF before the arch timer's initialization otherwise, it will
+> not be taken into account and fails to boot correctly.
+> Because of that, this function can't be called in SMP's early_initcall
+> function which is called after timer's init.
+>=20
+> For secondary CPUs, add this function into secondary_startup
+> assembly entry.
 >=20
 > Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
 > ---
->  arch/arm/mach-sunxi/mc_smp.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  arch/arm/mach-sunxi/headsmp.S |  1 +
+>  arch/arm/mach-sunxi/sunxi.c   | 20 +++++++++++++++++++-
+>  2 files changed, 20 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/arch/arm/mach-sunxi/mc_smp.c b/arch/arm/mach-sunxi/mc_smp.c
-> index 03f021d0c73e..48e5f4db64b6 100644
-> --- a/arch/arm/mach-sunxi/mc_smp.c
-> +++ b/arch/arm/mach-sunxi/mc_smp.c
-> @@ -74,6 +74,7 @@ static void __iomem *sram_b_smp_base;
+> diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/headsmp.S
+> index 37dc772701f3..32d76be98541 100644
+> --- a/arch/arm/mach-sunxi/headsmp.S
+> +++ b/arch/arm/mach-sunxi/headsmp.S
+> @@ -71,6 +71,7 @@ ENDPROC(sunxi_mc_smp_cluster_cache_enable)
 > =20
->  extern void sunxi_mc_smp_secondary_startup(void);
->  extern void sunxi_mc_smp_resume(void);
-> +static int is_a83t;
+>  ENTRY(sunxi_mc_smp_secondary_startup)
+>  	bl	sunxi_mc_smp_cluster_cache_enable
+> +	bl	secure_cntvoff_init
+>  	b	secondary_startup
+>  ENDPROC(sunxi_mc_smp_secondary_startup)
 > =20
->  static bool sunxi_core_is_cortex_a15(unsigned int core, unsigned int clu=
-ster)
->  {
-> @@ -624,6 +625,7 @@ struct sunxi_mc_smp_nodes {
->  struct sunxi_mc_smp_data {
->  	const char *enable_method;
->  	int (*get_smp_nodes)(struct sunxi_mc_smp_nodes *nodes);
-> +	int is_a83t;
+> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
+> index 5e9602ce1573..ddc439f6269b 100644
+> --- a/arch/arm/mach-sunxi/sunxi.c
+> +++ b/arch/arm/mach-sunxi/sunxi.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/platform_device.h>
+> =20
+>  #include <asm/mach/arch.h>
+> +#include <asm/secure_cntvoff.h>
+> =20
+>  static const char * const sunxi_board_dt_compat[] =3D {
+>  	"allwinner,sun4i-a10",
+> @@ -62,7 +63,6 @@ MACHINE_END
+>  static const char * const sun8i_board_dt_compat[] =3D {
+>  	"allwinner,sun8i-a23",
+>  	"allwinner,sun8i-a33",
+> -	"allwinner,sun8i-a83t",
+>  	"allwinner,sun8i-h2-plus",
+>  	"allwinner,sun8i-h3",
+>  	"allwinner,sun8i-r40",
+> @@ -75,6 +75,24 @@ DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i Family")
+>  	.dt_compat	=3D sun8i_board_dt_compat,
+>  MACHINE_END
+> =20
+> +void __init sun8i_cntvoff_init(void)
+> +{
+> +#ifdef CONFIG_SMP
+> +	secure_cntvoff_init();
+> +#endif
+> +}
+> +
+> +static const char * const sun8i_cntvoff_board_dt_compat[] =3D {
+> +	"allwinner,sun8i-a83t",
+> +	NULL,
+> +};
+> +
+> +DT_MACHINE_START(SUN8I_CNTVOFF_DT, "Allwinner sun8i-a83t board")
 
-This can be made a boolean.
+This name still doesn't really make much sense. It's an A83t, that's
+it.
+
+Apart from the other minor comment I had, and once that name has been
+fixed:
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
 Maxime
 
@@ -61,24 +104,24 @@ Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---qmq5ehzlj356zjuy
+--7qoatix34pogn6m2
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrdld4ACgkQ0rTAlCFN
-r3QoohAAmqsGMdtV9sKqbxoEg9PNx3E5cqw7/5L8YY+nFx+m33Osld8kJzyP4/uL
-QPSU91AWDuujEE62O5K599qtOFO6IATGkE92gx/HgHiNGQvO604ci0tEpH7JnKEE
-hmRnf4MN+CXh/bgCZJ8lsfLx5i3nw2wk9mmXVr9fzVDOgyPU6iXHJa8f2T+f8mcG
-SQ8GFKGCgmnyNHCTWTAPKChTuT8YpujSWrkaLBo3msWf3CHXy6dfRHrPFo5poqF7
-8tXH5NqrRfq1QwyD2sxBKHzWOioFMNOqvJyoGtDC99P5UZC+QGEWsin5/BwI3qxj
-pWEyyAV/FGyJ2tmX3RBScgg3yqLRwplL18giS5uwON0N2kbW6x8Yq2SmLwzK/Mes
-91cTNpC7eP9+q3t3/Dc0PrCN1gGO5eDjWuvbaeIA15z6+4WcjaNyrO+cQ846kTID
-UTd/Dh/PxdivW2atu7LkMRjXbB77ZZeQyT6dWpr5+PxY5Bh6JByCwg8gorHKpGN0
-ezABMxPJdyI1cG2CPPkirUWI3s7DOszTRMh2ONMsO3691NzkTnoc9XrH2ff+cv8Q
-rqgnz+QNEBnyi+6qvge0jl+A0giBASfWCmJv3JOPGcJxc7ZDiDr+KJsI5m98WOqr
-PozjDhp+HqEzymCME1BsgVAT3L8VGwSPyjsF/SUfjZyfa27szMA=
-=kwK7
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrdlkgACgkQ0rTAlCFN
+r3RsNg/+IIHUgmXY1d9Txs9BLjRMCA5npo2bVo0roi54Xp/YirIfVf4NyeJrRuit
+aT7e7Rjo0JH4KbvAP08eWxqueQfbDJG+uSqdfCG2rudc2QnwfH5vVJLi/ubcDQ8u
+JrAZaYQOZ7d57rDdsHXu2UdItI7baoxbKpoaYTAqRca2xp9BL5m1igsPot9gBCo+
+g3opiV5pRMp0MrRzWgxAfz6RocSVlqsHCCrmRy4ePRAfAv1hs7EgzUmoCYhrX0rN
+XHR6cl/mzcZvsQHfnHgIGtBGQmZnLslqReWlXV3v3IDyrwA+huuvl/7ITNElMAb7
+djPmqOQZCZaRtErZKWSOiOpjRwG0n0cQl9l/iZcn3HDZjTW1VRXEoOmnmW07iBki
+25TUk61qHzaDetAvW1EUfpfKNB8HUnVYL3v4p9pL0rGPJ+Ys/peZHbe4mCMH+2t5
+39VUdIY4S7lM01WGppz52BqA1hnSpPvSezN4XrFZ2MRKAPycv2jwiKVvGDYxpMCN
+vQw5WywK5jmqwV/9iqfbAyYhZ4IThJYE8SVjKL2lzzxj2ZmIbSRjnzT+L5YppSvT
+yqq/PMcS2Dy9F+Y20FblEkTrdSF4tC1WqAU+R9iEsNoxP51FC1DAoZ2pumcyZI0e
+bkZTx0u7iW/Qlo+98akag3WsVhnIP+DYdlOiiP/kMRWpKfveeEA=
+=Imj8
 -----END PGP SIGNATURE-----
 
---qmq5ehzlj356zjuy--
+--7qoatix34pogn6m2--
