@@ -1,67 +1,47 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 0/6] devfreq: rk3399_dmc: improve rk3399_dmc driver and
- it's documentation
-Date: Mon, 23 Apr 2018 12:53:12 +0200
-Message-ID: <CAPDyKFr_NPNqCmyD0XHa=vy_--kOCzgwUjNqkvXO0uUOdFM=tQ@mail.gmail.com>
-References: <20180419104019.24406-1-enric.balletbo@collabora.com>
+From: Pascal Roeleven <dev-/1Tg0gxlrOS4ObxHbWkkimZHpeb/A1Y/@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun4i: Fix incorrect clocks
+ for displays
+Date: Mon, 23 Apr 2018 13:01:03 +0200
+Message-ID: <887c9144972ab75a4520141a17e1607b@pascalroeleven.nl>
+References: <20180420102112.2843-1-dev@pascalroeleven.nl>
+ <20180423071421.byupsz4gxpmhfe44@flea>
+Reply-To: dev-/1Tg0gxlrOS4ObxHbWkkimZHpeb/A1Y/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419104019.24406-1-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Myungjoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Linux PM <linux-pm@vger.kernel.org>, Derek Basehore <dbasehore@chromium.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Doug Anderson <dianders@google.com>, groek@google.com, kernel@collabora.com, Elaine Zhang <zhangqing@rock-chips.com>, Chanwoo Choi <cw00.choi@samsung.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Lin Huang <hl@rock-chips.com>, Jeffy Chen <jeffy.chen@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBDVPTC5KRECBBEX263LAKGQE2KNZMOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180423071421.byupsz4gxpmhfe44@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19 April 2018 at 12:40, Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
-> Dear all,
->
-> These patches is an attempt to improve a little bit the rk3399_dmc
-> driver and it's documentation in order to have all in a better shape for
-> a future work I am doing. My final intention is add ddrfreq support for
-> rockchip drm driver, but the patches for this are still
-> work-in-progress. So let's start with this first patchset that is
-> basically some fixes/improvements for the rk3399_dmc driver.
-
-I didn't get cc:ed the series, but only the last part, which makes it
-bit hard to get the full context.
-
-Moreover, it would be good if you explained a bit more on what the
-above series actually does and why. Also I don't get why is the PM
-domain changes is in the series, as this seems to be about devfreq.
-
-My point is, if you want me to review, please try to be more precise
-so I know what to review.
-
->
-> Best regards,
->
-> Enric Balletbo i Serra (3):
->   dt-bindings: clock: add DDR3 standard speed bins.
->   devfreq: rk3399_dmc: remove wait for dcf irq event.
->   dt-bindings: devfreq: rk3399_dmc: remove interrupts as is not
->     required.
->
-> Lin Huang (2):
->   devfreq: rk3399_dmc: do not print error when get supply and clk defer.
->   devfreq: rk3399_dmc: register devfreq notification to dmc driver.
->
-> Nick Milner (1):
->   dt-bindings: devfreq: rk3399_dmc: improve binding documentation.
->
->  .../bindings/devfreq/rk3399_dmc.txt           | 204 +++++++++---------
->  drivers/devfreq/rk3399_dmc.c                  | 106 +--------
->  drivers/soc/rockchip/pm_domains.c             |  31 +++
->  include/dt-bindings/clock/ddr.h               |  34 +++
->  include/soc/rockchip/rk3399_dmc.h             |  63 ++++++
->  5 files changed, 238 insertions(+), 200 deletions(-)
->  create mode 100644 include/dt-bindings/clock/ddr.h
->  create mode 100644 include/soc/rockchip/rk3399_dmc.h
->
+On 2018-04-23 09:14, Maxime Ripard wrote:
+> On Fri, Apr 20, 2018 at 12:21:12PM +0200, Pascal Roeleven wrote:
+>> Some displays on SUN4i devices wouldn't properly stay on unless
+>> 'clk_ignore_unused' is used.
+>> 
+>> Change the duplicate clocks to the probably intended ones.
+>> 
+>> Signed-off-by: Pascal Roeleven <dev-/1Tg0gxlrOS4ObxHbWkkimZHpeb/A1Y/@public.gmane.org>
+> 
+> What was the difference with the first patch you sent?
+> 
+> Anyway, I've applied it, thanks
+> 
+> Maxime
+> 
 > --
-> 2.17.0
->
+> Maxime Ripard, Bootlin (formerly Free Electrons)
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
-Kind regards
-Uffe
+I'm sorry there isn't any.
+It's the first patch I have ever send so had some git-send-email issues 
+and
+didn't know the correct procedure to resend a patch.
