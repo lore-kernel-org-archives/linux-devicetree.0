@@ -1,22 +1,51 @@
-Return-Path: <SRS0=V8UA=HN=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH  0/2] Add EtherAVB support
-Date: Tue, 24 Apr 2018 16:37:31 +0100
-Message-Id: <1524584253-52936-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=pQuZ=HM=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-dm3nam03on0077.outbound.protection.outlook.com ([104.47.41.77]:8480
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1755571AbeDWQxS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Apr 2018 12:53:18 -0400
+Subject: Re: [PATCH v7 2/2] dt-bindings: iio:imu:mpu6050: support more
+ interrupt types
+References: <20180420165401.13076-1-mkelly@xevo.com>
+ <20180420165401.13076-2-mkelly@xevo.com>
+ <e4b895f2-8730-598c-5716-3dee151de26d@invensense.com>
+ <20180421162801.4b8ddc25@archlinux>
+From: Martin Kelly <mkelly@xevo.com>
+Message-ID: <cf9a541f-d266-8ae5-9c59-b4a2661ffb54@xevo.com>
+Date: Mon, 23 Apr 2018 09:53:09 -0700
+MIME-Version: 1.0
+In-Reply-To: <20180421162801.4b8ddc25@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch series add EtherAVB support to r8a77470 SoC dtsi and 
-iwg23s-sbc board.
+On 04/21/2018 08:28 AM, Jonathan Cameron wrote:
+> On Fri, 20 Apr 2018 19:05:12 +0200
+> Jean-Baptiste Maneyrol <jmaneyrol@invensense.com> wrote:
+> 
+>> On 20/04/2018 18:54, Martin Kelly wrote:
+>>> Document that the hardware supports falling edge, rising edge, level
+>>> low, and level high interrupt types, rather than just rising edge.
+>>>
+>>> The language used is the same as that in st_lsm6dsx.txt.
+>>>
+>>> Signed-off-by: Martin Kelly <mkelly@xevo.com>
+> Hi Martin,
+> 
+> Please pick up an acks / reviewed-by's from earlier versions.
+> The chances are I'll miss them some of the time otherwise.
+> Rob acked this one.
+> 
+> Applied with the two acks I know of to the togreg branch of iio.git
+> and pushed out as testing for the autobuilders to play with it.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
 
-Biju Das (2):
-  ARM: dts: r8a77470: Add EtherAVB support
-  ARM: dts: iwg23s-sbc: Add EtherAVB support
-
- arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 15 ++++++++++++++-
- arch/arm/boot/dts/r8a77470.dtsi           | 13 +++++++++++++
- 2 files changed, 27 insertions(+), 1 deletion(-)
-
--- 
-2.7.4
+OK, I'll try to remember to do that in the future.
