@@ -1,202 +1,84 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 6/8] drm: rcar-du: rcar-lvds: Add bridge format support
-Date: Mon, 23 Apr 2018 09:59:22 +0200
-Message-ID: <9378eadb-1dbf-ecfe-9bd1-40bec21c4648@axentia.se>
-References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524130269-32688-7-git-send-email-jacopo+renesas@jmondi.org>
- <11e82e23-4ab0-7441-1798-1eeb4fb96995@axentia.se>
- <20180423072815.GM4235@w540>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v7 08/11] ARM: sun9i: smp: Add is_a83t field
+Date: Mon, 23 Apr 2018 10:14:23 +0200
+Message-ID: <20180423081423.h7b35sobagypokpe@flea>
+References: <20180420211022.11759-1-mylene.josserand@bootlin.com>
+ <20180420211022.11759-9-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qmq5ehzlj356zjuy"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180423072815.GM4235@w540>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180420211022.11759-9-mylene.josserand@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, daniel@ffwll.ch, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+To: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>
+Cc: linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-23 09:28, jacopo mondi wrote:
-> Hi Peter,
->    thanks for looking into this
-> 
-> On Sun, Apr 22, 2018 at 10:08:21PM +0200, Peter Rosin wrote:
->> On 2018-04-19 11:31, Jacopo Mondi wrote:
->>> With the introduction of static input image format enumeration in DRM
->>> bridges, add support to retrieve the format in rcar-lvds LVDS encoder
->>> from both panel or bridge, to set the desired LVDS mode.
->>>
->>> Do not rely on 'DRM_BUS_FLAG_DATA_LSB_TO_MSB' flag to mirror the LVDS
->>> format, as it is only defined for drm connectors, but use the newly
->>> introduced _LE version of LVDS mbus image formats.
->>>
->>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->>> ---
->>>  drivers/gpu/drm/rcar-du/rcar_lvds.c | 64 +++++++++++++++++++++++++------------
->>>  1 file changed, 44 insertions(+), 20 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
->>> index 3d2d3bb..2fa875f 100644
->>> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
->>> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
->>> @@ -280,41 +280,65 @@ static bool rcar_lvds_mode_fixup(struct drm_bridge *bridge,
->>>  	return true;
->>>  }
->>>
->>> -static void rcar_lvds_get_lvds_mode(struct rcar_lvds *lvds)
->>> +static int rcar_lvds_get_lvds_mode_from_connector(struct rcar_lvds *lvds,
->>> +						  unsigned int *bus_fmt)
->>>  {
->>>  	struct drm_display_info *info = &lvds->connector.display_info;
->>> -	enum rcar_lvds_mode mode;
->>> -
->>> -	/*
->>> -	 * There is no API yet to retrieve LVDS mode from a bridge, only panels
->>> -	 * are supported.
->>> -	 */
->>> -	if (!lvds->panel)
->>> -		return;
->>>
->>>  	if (!info->num_bus_formats || !info->bus_formats) {
->>>  		dev_err(lvds->dev, "no LVDS bus format reported\n");
->>> -		return;
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	*bus_fmt = info->bus_formats[0];
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int rcar_lvds_get_lvds_mode_from_bridge(struct rcar_lvds *lvds,
->>> +					       unsigned int *bus_fmt)
->>> +{
->>> +	if (!lvds->next_bridge->num_bus_formats ||
->>> +	    !lvds->next_bridge->bus_formats) {
->>> +		dev_err(lvds->dev, "no LVDS bus format reported\n");
->>> +		return -EINVAL;
->>>  	}
->>>
->>> -	switch (info->bus_formats[0]) {
->>> +	*bus_fmt = lvds->next_bridge->bus_formats[0];
->>
->> What makes the first reported format the best choice?
-> 
-> It already was the selection 'policy' in place in this driver before
-> introducing bridge formats. As you can see from the switch I have here
-> removed, the first format was selected even when only the format
-> reported by the connector was inspected.
 
-Well, *if* some bridge/panel do support more than one format, and your
-driver depends on it being the first reported format, then I can easily
-see that some other driver also requires its expected format to be first.
-Then we might end up in a war over what format should be reported as the
-first so that this multi-input bridge/panel could be used by both drivers.
+--qmq5ehzlj356zjuy
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> And, anyway, as DRM lacks a format negotiation API, there is no way to
-> tell a bridge/panel "use this format instead of this other one" (which
-> makes me wonders why more formats can be reported, but the
-> bus_formats[] helpers for connectors allow that, so I thought it made
-> sense to do the same for bridges).
+On Fri, Apr 20, 2018 at 11:10:19PM +0200, Myl=E8ne Josserand wrote:
+> To prepare the support of sun8i-a83t, add a field in the smp_data
+> structure to know if we are on sun9i-a80 or sun8i-a83t.
+>=20
+> Add also a global variable to retrieve which architecture we are
+> having.
+>=20
+> Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
+> ---
+>  arch/arm/mach-sunxi/mc_smp.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/arch/arm/mach-sunxi/mc_smp.c b/arch/arm/mach-sunxi/mc_smp.c
+> index 03f021d0c73e..48e5f4db64b6 100644
+> --- a/arch/arm/mach-sunxi/mc_smp.c
+> +++ b/arch/arm/mach-sunxi/mc_smp.c
+> @@ -74,6 +74,7 @@ static void __iomem *sram_b_smp_base;
+> =20
+>  extern void sunxi_mc_smp_secondary_startup(void);
+>  extern void sunxi_mc_smp_resume(void);
+> +static int is_a83t;
+> =20
+>  static bool sunxi_core_is_cortex_a15(unsigned int core, unsigned int clu=
+ster)
+>  {
+> @@ -624,6 +625,7 @@ struct sunxi_mc_smp_nodes {
+>  struct sunxi_mc_smp_data {
+>  	const char *enable_method;
+>  	int (*get_smp_nodes)(struct sunxi_mc_smp_nodes *nodes);
+> +	int is_a83t;
 
-Since there is no way to negotiate, I would assume that the other end
-really does support all reported formats (in some automagical way). To
-me, the only sensible approach is to loop over the formats and see if
-*any* of them fits, and assume that something else<tm> deals with the
-details.
+This can be made a boolean.
 
->>
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static void rcar_lvds_get_lvds_mode(struct rcar_lvds *lvds)
->>> +{
->>> +	unsigned int bus_fmt;
->>> +	int ret;
->>> +
->>> +	if (lvds->panel)
->>> +		ret = rcar_lvds_get_lvds_mode_from_connector(lvds, &bus_fmt);
->>> +	else
->>> +		ret = rcar_lvds_get_lvds_mode_from_bridge(lvds, &bus_fmt);
->>
->> What if no bridge reports any format, shouldn't the connector be examined
->> then?
-> 
-> There is no fallback selection policy at the moment as you can see, or
-> either, as it was before, the LVDS mode is not set for the rcar_lvds
-> component  if it's not reported by the next element in the pipeline (and I
-> should probably return 0, not an error here in that case).
-> 
-> The connector associated with a panel is only inspected if it's next in the
-> pipeline.
+Maxime
 
-But by not going to the connector for the case where no bridge in the
-pipeline has any info on the format, you effectively demand that at
-least some bridge in the pipeline should report supported input
-format(s). That excludes a lot of existing bridge combinations from
-being used. Or do you see it as a requirement that bridges must
-report their supported input formats? Perhaps only when used with
-this driver?
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
->>
->>> +	if (ret)
->>> +		return;
->>> +
->>> +	switch (bus_fmt) {
->>> +	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG_LE:
->>> +	case MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA_LE:
->>> +		lvds->mode |= RCAR_LVDS_MODE_MIRROR;
->>>  	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG:
->>>  	case MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA:
->>> -		mode = RCAR_LVDS_MODE_JEIDA;
->>> +		lvds->mode = RCAR_LVDS_MODE_JEIDA;
->>
->> This is b0rken, first the mirror bit is ORed into some unknown preexisting
->> value, then the code falls through (without any fall through comment, btw)
->> and forcibly sets the mode, thus discarding the mirror bit which was
->> carefully ORed in.
-> 
-> You are correct, the second assignment should have been an |= and not
-> a plain assignment. The variable is 0ed though, as 'struct rcar_lvds
-> *lvds' is kzalloc-ed in probe function.
+--qmq5ehzlj356zjuy
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The code would be clearer if you explicitly zeroed the mode in this
-function. Or do you rely on this function to not clobber other bits?
-In that case apply some bit-mask.
+-----BEGIN PGP SIGNATURE-----
 
-Cheers,
-Peter
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrdld4ACgkQ0rTAlCFN
+r3QoohAAmqsGMdtV9sKqbxoEg9PNx3E5cqw7/5L8YY+nFx+m33Osld8kJzyP4/uL
+QPSU91AWDuujEE62O5K599qtOFO6IATGkE92gx/HgHiNGQvO604ci0tEpH7JnKEE
+hmRnf4MN+CXh/bgCZJ8lsfLx5i3nw2wk9mmXVr9fzVDOgyPU6iXHJa8f2T+f8mcG
+SQ8GFKGCgmnyNHCTWTAPKChTuT8YpujSWrkaLBo3msWf3CHXy6dfRHrPFo5poqF7
+8tXH5NqrRfq1QwyD2sxBKHzWOioFMNOqvJyoGtDC99P5UZC+QGEWsin5/BwI3qxj
+pWEyyAV/FGyJ2tmX3RBScgg3yqLRwplL18giS5uwON0N2kbW6x8Yq2SmLwzK/Mes
+91cTNpC7eP9+q3t3/Dc0PrCN1gGO5eDjWuvbaeIA15z6+4WcjaNyrO+cQ846kTID
+UTd/Dh/PxdivW2atu7LkMRjXbB77ZZeQyT6dWpr5+PxY5Bh6JByCwg8gorHKpGN0
+ezABMxPJdyI1cG2CPPkirUWI3s7DOszTRMh2ONMsO3691NzkTnoc9XrH2ff+cv8Q
+rqgnz+QNEBnyi+6qvge0jl+A0giBASfWCmJv3JOPGcJxc7ZDiDr+KJsI5m98WOqr
+PozjDhp+HqEzymCME1BsgVAT3L8VGwSPyjsF/SUfjZyfa27szMA=
+=kwK7
+-----END PGP SIGNATURE-----
 
->>
->>>  		break;
->>> +
->>> +	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG_LE:
->>> +		lvds->mode |= RCAR_LVDS_MODE_MIRROR;
->>>  	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG:
->>> -		mode = RCAR_LVDS_MODE_VESA;
->>> +		lvds->mode = RCAR_LVDS_MODE_VESA;
->>
->> Dito.
->>
->> Cheers,
->> Peter
->>
->>>  		break;
->>>  	default:
->>>  		dev_err(lvds->dev, "unsupported LVDS bus format 0x%04x\n",
->>> -			info->bus_formats[0]);
->>> -		return;
->>> +			bus_fmt);
->>>  	}
->>> -
->>> -	if (info->bus_flags & DRM_BUS_FLAG_DATA_LSB_TO_MSB)
->>> -		mode |= RCAR_LVDS_MODE_MIRROR;
->>> -
->>> -	lvds->mode = mode;
->>>  }
->>>
->>>  static void rcar_lvds_mode_set(struct drm_bridge *bridge,
->>>
->>
+--qmq5ehzlj356zjuy--
