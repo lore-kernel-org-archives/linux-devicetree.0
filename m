@@ -1,107 +1,79 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 4/5] ARM: dts: imx: Remove #address/#size-cells from stmpe
- nodes
-Date: Mon, 23 Apr 2018 10:46:13 -0300
-Message-ID: <1524491174-16878-4-git-send-email-festevam@gmail.com>
-References: <1524491174-16878-1-git-send-email-festevam@gmail.com>
+From: Grant Likely <grant.likely@arm.com>
+Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
+Date: Mon, 23 Apr 2018 15:01:20 +0100
+Message-ID: <63a1c096-7d78-3850-83b7-94c6009e93f0@arm.com>
+References: <20180418222905.10414-1-robh@kernel.org>
+ <152424282214.46528.2511757264045171935@swboyd.mtv.corp.google.com>
+ <CAL_Jsq+1G61+E0wtVEkzann3Z=2Cr=2PkbDJ_OuaA5GysWZsXQ@mail.gmail.com>
+ <152426770474.46528.1592920281091105196@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1524491174-16878-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <152426770474.46528.1592920281091105196@swboyd.mtv.corp.google.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: devicetree-spec@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+On 21/04/2018 00:41, Stephen Boyd wrote:
+> Quoting Rob Herring (2018-04-20 11:15:04)
+>> On Fri, Apr 20, 2018 at 11:47 AM, Stephen Boyd <sboyd@kernel.org> wrote:
+>>> Quoting Rob Herring (2018-04-18 15:29:05)
+>>>> diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/D=
+ocumentation/devicetree/bindings/example-schema.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..fe0a3bd1668e
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/example-schema.yaml
+[...]
+>>>> +  interrupts:
+>>>> +    # Either 1 or 2 interrupts can be present
+>>>> +    minItems: 1
+>>>> +    maxItems: 2
+>>>> +    items:
+>>>> +      - description: tx or combined interrupt
+>>>> +      - description: rx interrupt
+>>>> +
+>>>> +    description: |
+>>>
+>>> The '|' is needed to make yaml happy?
+>>
+>> Yes, this is simply how you do literal text blocks in yaml.
+>>
+>> We don't really need for this one really, but for the top-level
+>> 'description' we do. The long term intent is 'description' would be
+>> written in sphinx/rst and can be extracted into the DT spec (for
+>> common bindings). Grant has experimented with that some.
+>
+> Ok. That sounds cool. Then we could embed links to datasheets and SVGs
+> too.
 
-Remove unnecessary #address-cells/#size-cells to fix the following
-DTC warnings:
+I'd like it if we can define the description text blocks to be
+reStructeredText markup. That makes it even easier to integrate with the
+specification documentation.
 
-arch/arm/boot/dts/imx6q-novena.dtb: Warning (avoid_unnecessary_addr_size): /soc/aips-bus@2100000/i2c@21a0000/stmpe811@44: unnecessary #address-cells/#size-cells without "ranges" or child "reg"
+[...]
+>>>> +  # Property names starting with '#' must be quoted
+>>>> +  '#interrupt-cells':
+>>>> +    # A simple case where the value must always be '2'.
+>>>> +    # The core schema handles that this must be a single integer.
+>>>> +    const: 2
+>>>> +
+>>>> +  interrupt-controller: {}
+>>>
+>>> Does '{}' mean nothing to see here?
+>>
+>> Yes. It's just an empty schema that's always valid.
 
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
----
- arch/arm/boot/dts/imx53-m53.dtsi       | 2 --
- arch/arm/boot/dts/imx6q-novena.dts     | 2 --
- arch/arm/boot/dts/imx6qdl-apalis.dtsi  | 2 --
- arch/arm/boot/dts/imx6qdl-colibri.dtsi | 2 --
- arch/arm/boot/dts/imx6ul-isiot.dtsi    | 2 --
- 5 files changed, 10 deletions(-)
+IIRC, in the current jsonschema draft-6 spec, the following also has the
+same behaviour, which I like slightly better:
+     interrupt-controller: true
 
-diff --git a/arch/arm/boot/dts/imx53-m53.dtsi b/arch/arm/boot/dts/imx53-m53.dtsi
-index 3da6dd5..ce45f08 100644
---- a/arch/arm/boot/dts/imx53-m53.dtsi
-+++ b/arch/arm/boot/dts/imx53-m53.dtsi
-@@ -53,8 +53,6 @@
- 
- 	stmpe610@41 {
- 		compatible = "st,stmpe610";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		reg = <0x41>;
- 		id = <0>;
- 		blocks = <0x5>;
-diff --git a/arch/arm/boot/dts/imx6q-novena.dts b/arch/arm/boot/dts/imx6q-novena.dts
-index 52f3937..fcd824d 100644
---- a/arch/arm/boot/dts/imx6q-novena.dts
-+++ b/arch/arm/boot/dts/imx6q-novena.dts
-@@ -268,8 +268,6 @@
- 	touch: stmpe811@44 {
- 		compatible = "st,stmpe811";
- 		reg = <0x44>;
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		irq-gpio = <&gpio5 13 GPIO_ACTIVE_HIGH>;
- 		id = <0>;
- 		blocks = <0x5>;
-diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-index 8206683..64fbee6 100644
---- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-@@ -331,8 +331,6 @@
- 		compatible = "st,stmpe811";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_touch_int>;
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		reg = <0x41>;
- 		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-parent = <&gpio4>;
-diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-index e4eb300..76035db 100644
---- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-@@ -262,8 +262,6 @@
- 		compatible = "st,stmpe811";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_touch_int>;
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		reg = <0x41>;
- 		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-parent = <&gpio6>;
-diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-index 921e12c..cd99285 100644
---- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-@@ -153,8 +153,6 @@
- 	stmpe811: gpio-expander@44 {
- 		compatible = "st,stmpe811";
- 		reg = <0x44>;
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_stmpe>;
- 		interrupt-parent = <&gpio1>;
--- 
-2.7.4
+g.
+IMPORTANT NOTICE: The contents of this email and any attachments are confid=
+ential and may also be privileged. If you are not the intended recipient, p=
+lease notify the sender immediately and do not disclose the contents to any=
+ other person, use it for any purpose, or store or copy the information in =
+any medium. Thank you.
