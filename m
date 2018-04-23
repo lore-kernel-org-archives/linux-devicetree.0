@@ -1,7 +1,7 @@
 From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v4 3/4] dt-bindings: iio: afe: add binding for current-sense-amplifier
-Date: Mon, 23 Apr 2018 23:08:08 +0200
-Message-ID: <20180423210809.29586-4-peda@axentia.se>
+Subject: [PATCH v4 2/4] dt-bindings: iio: afe: add binding for voltage-divider
+Date: Mon, 23 Apr 2018 23:08:07 +0200
+Message-ID: <20180423210809.29586-3-peda@axentia.se>
 References: <20180423210809.29586-1-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,59 +12,87 @@ To: linux-kernel@vger.kernel.org
 Cc: Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "Andrew F . Davis" <afd@ti.com>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Similar to current sense shunts, but an amplifier enables the use
-of a smaller sense resistance.
+An ADC is often used to measure other quantities indirectly. This
+binding describe one cases, a "big" voltage measured with the help
+of a voltage divider.
 
 Signed-off-by: Peter Rosin <peda@axentia.se>
 ---
- .../bindings/iio/afe/current-sense-amplifier.txt   | 26 ++++++++++++++++++++++
+ .../bindings/iio/afe/voltage-divider.txt           | 53 ++++++++++++++++++++++
  MAINTAINERS                                        |  1 +
- 2 files changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/afe/current-sense-amplifier.txt
+ 2 files changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
 
-diff --git a/Documentation/devicetree/bindings/iio/afe/current-sense-amplifier.txt b/Documentation/devicetree/bindings/iio/afe/current-sense-amplifier.txt
+diff --git a/Documentation/devicetree/bindings/iio/afe/voltage-divider.txt b/Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
 new file mode 100644
-index 000000000000..0ddbaebba8ce
+index 000000000000..afb52ce77c27
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/afe/current-sense-amplifier.txt
-@@ -0,0 +1,26 @@
-+Current Sense Amplifier
-+=======================
++++ b/Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
+@@ -0,0 +1,53 @@
++Voltage divider
++===============
 +
-+When an io-channel measures the output voltage from a current sense
-+amplifier, the interesting mesaurement is almost always the current
-+through the sense resistor, not the voltage output. This binding
-+describes such a current sense circuit.
++When an io-channel measures the midpoint of a voltage divider, the
++interesting voltage is often the voltage over the full resistance
++of the divider. This binding describes the voltage divider in such
++a curcuit.
++
++    Vin ----.
++            |
++         .-----.
++         |  R  |
++         '-----'
++            |
++            +---- Vout
++            |
++         .-----.
++         | Rout|
++         '-----'
++            |
++           GND
 +
 +Required properties:
-+- compatible : "current-sense-amplifier"
-+- io-channels : Channel node of a voltage io-channel.
-+- sense-resistor-micro-ohms : The sense resistance in microohms.
-+
-+Optional properties:
-+- sense-gain-mult: Amplifier gain multiplier. The default is <1>.
-+- sense-gain-div: Amplifier gain divider. The default is <1>.
++- compatible : "voltage-divider"
++- io-channels : Channel node of a voltage io-channel measuring Vout.
++- output-ohms : Resistance Rout over which the output voltage is measured.
++	        See full-ohms.
++- full-ohms : Resistance R + Rout for the full divider. The io-channel
++	      is scaled by the Rout / (R + Rout) quotient.
 +
 +Example:
++The system voltage is circa 12V, but divided down with a 22/222
++voltage divider (R = 200 Ohms, Rout = 22 Ohms) and fed to an ADC.
 +
-+sysi {
-+	compatible = "current-sense-amplifier";
-+	io-channels = <&tiadc 0>;
++sysv {
++	compatible = "voltage-divider";
++	io-channels = <&maxadc 1>;
 +
-+	sense-resistor-micro-ohms = <20000>;
-+	sense-gain-mul = <50>;
++	/* Scale the system voltage by 22/222 to fit the ADC range. */
++	output-ohms = <22>;
++	full-ohms = <222>; /* 200 + 22 */
++};
++
++&spi {
++	maxadc: adc@0 {
++		compatible = "maxim,max1027";
++	      	reg = <0>;
++		#io-channel-cells = <1>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <15 IRQ_TYPE_EDGE_RISING>;
++		spi-max-frequency = <1000000>;
++	};
 +};
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 4d534c9321de..1b23e9ebff9c 100644
+index 0f7bec878919..4d534c9321de 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -6893,6 +6893,7 @@ IIO UNIT CONVERTER
- M:	Peter Rosin <peda@axentia.se>
+@@ -6894,6 +6894,7 @@ M:	Peter Rosin <peda@axentia.se>
  L:	linux-iio@vger.kernel.org
  S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/afe/current-sense-amplifier.txt
  F:	Documentation/devicetree/bindings/iio/afe/current-sense-shunt.txt
- F:	Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
++F:	Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
  
+ IKANOS/ADI EAGLE ADSL USB DRIVER
+ M:	Matthieu Castet <castet.matthieu@free.fr>
 -- 
 2.11.0
