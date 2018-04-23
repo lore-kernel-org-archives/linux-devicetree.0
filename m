@@ -1,88 +1,212 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/3] ASoC: tas6424: Allow disabling auto
- diagnostics for faster power-on
-Date: Mon, 23 Apr 2018 16:44:12 +0100
-Message-ID: <20180423154411.GK19834@sirena.org.uk>
-References: <1524218684-19752-1-git-send-email-jjhiblot@ti.com>
- <1524218684-19752-2-git-send-email-jjhiblot@ti.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2 11/15] ARM: dts: imx7: Add video mux, csi and
+ mipi_csi and connections
+Date: Mon, 23 Apr 2018 17:46:33 +0200
+Message-ID: <1524498393.3396.4.camel@pengutronix.de>
+References: <20180423134750.30403-1-rui.silva@linaro.org>
+ <20180423134750.30403-12-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8980880342058464309=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1524218684-19752-2-git-send-email-jjhiblot@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, afd@ti.com, robh+dt@kernel.org, dannenberg@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20180423134750.30403-12-rui.silva@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>, mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2018-04-23 at 14:47 +0100, Rui Miguel Silva wrote:
+> This patch adds the device tree nodes for csi, video multiplexer and mipi-csi
+> besides the graph connecting the necessary endpoints to make the media capture
+> entities to work in imx7 Warp board.
+> 
+> Also add the pin control related with the mipi_csi in that board.
+> 
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> ---
+>  arch/arm/boot/dts/imx7s-warp.dts | 80 ++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/imx7s.dtsi     | 27 +++++++++++
+>  2 files changed, 107 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
+> index 8a30b148534d..91d06adf7c24 100644
+> --- a/arch/arm/boot/dts/imx7s-warp.dts
+> +++ b/arch/arm/boot/dts/imx7s-warp.dts
+> @@ -310,6 +310,79 @@
+>  	status = "okay";
+>  };
+>  
+> +&gpr {
+> +	csi_mux {
+> +		compatible = "video-mux";
+> +		mux-controls = <&mux 0>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			csi_mux_from_parallel_sensor: endpoint {
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			csi_mux_from_mipi_vc0: endpoint {
+> +				remote-endpoint = <&mipi_vc0_to_csi_mux>;
+> +			};
+> +		};
+> +
+> +		port@2 {
+> +			reg = <2>;
+> +
+> +			csi_mux_to_csi: endpoint {
+> +				remote-endpoint = <&csi_from_csi_mux>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&csi {
+> +	status = "okay";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	port@0 {
+> +		reg = <0>;
+> +
+> +		csi_from_csi_mux: endpoint {
+> +			remote-endpoint = <&csi_mux_to_csi>;
+> +		};
+> +	};
+> +};
+> +
+> +&mipi_csi {
+> +	clock-frequency = <166000000>;
+> +	status = "okay";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	port@0 {
+> +		reg = <0>;
+> +
+> +		mipi_from_sensor: endpoint {
+> +			remote-endpoint = <&ov2680_to_mipi>;
+> +			data-lanes = <1>;
+> +			csis-hs-settle = <3>;
+> +			csis-clk-settle = <0>;
+> +			csis-wclk;
 
---===============8980880342058464309==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2WS97oupGEGbYNpW"
-Content-Disposition: inline
+Why is this an endpoint property? Under which condition would a board
+designer choose PCLK instead of WRAP_CLK as pixel clock source?
 
+I'd naively assume that the driver should set this bit automatically
+whenever a "wrap" clock is provided via device tree.
 
---2WS97oupGEGbYNpW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> +		};
+> +	};
+> +
+> +	port@1 {
+> +		reg = <1>;
+> +
+> +		mipi_vc0_to_csi_mux: endpoint {
+> +			remote-endpoint = <&csi_mux_from_mipi_vc0>;
+> +		};
+> +	};
+> +};
+> +
+>  &wdog1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_wdog>;
+> @@ -357,6 +430,13 @@
+>  		>;
+>  	};
+>  
+> +	pinctrl_mipi_csi: mipi_csi {
+> +		fsl,pins = <
+> +			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x14
+> +			MX7D_PAD_ENET1_RGMII_TD0__GPIO7_IO6	0x14
+> +		>;
+> +	};
+> +
 
-On Fri, Apr 20, 2018 at 12:04:42PM +0200, Jean-Jacques Hiblot wrote:
-> The TAS6424 incorporates both DC-load and AC-load diagnostics which are
-> used to determine the status of the load. The DC diagnostics runs when any
-> channel is directed to leave the Hi-Z state and enter the MUTE or PLAY
-> state.
-> The DC diagnostics are turned on by default but if a fast startup without
-> diagnostics is required the DC diagnostics can be bypassed by adding the
-> property "disable-auto-diagnostics".
+Unrelated change?
 
-This is making me think we should be smarter here and either only run
-the diagnostics once during boot or provide a user control for the
-diagnostics.  It seems like something that is more of a runtime software
-decision than something that's fixed in hardware design, is there
-anything about the hardware design that'd make it impossible to run
-diagnostics?
+>  	pinctrl_sai1: sai1grp {
+>  		fsl,pins = <
+>  			MX7D_PAD_SAI1_RX_DATA__SAI1_RX_DATA0	0x1f
+> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+> index 3027d6a62021..6b49b73053f9 100644
+> --- a/arch/arm/boot/dts/imx7s.dtsi
+> +++ b/arch/arm/boot/dts/imx7s.dtsi
+> @@ -46,6 +46,7 @@
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/reset/imx7-reset.h>
+>  #include "imx7d-pinfunc.h"
+>  
+>  / {
+> @@ -753,6 +754,17 @@
+>  				status = "disabled";
+>  			};
+>  
+> +			csi: csi@30710000 {
+> +				compatible = "fsl,imx7-csi";
+> +				reg = <0x30710000 0x10000>;
+> +				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX7D_CLK_DUMMY>,
+> +						<&clks IMX7D_CSI_MCLK_ROOT_CLK>,
+> +						<&clks IMX7D_CLK_DUMMY>;
+> +				clock-names = "axi", "mclk", "dcic";
+> +				status = "disabled";
+> +			};
+> +
+>  			lcdif: lcdif@30730000 {
+>  				compatible = "fsl,imx7d-lcdif", "fsl,imx28-lcdif";
+>  				reg = <0x30730000 0x10000>;
+> @@ -762,6 +774,21 @@
+>  				clock-names = "pix", "axi";
+>  				status = "disabled";
+>  			};
+> +
+> +			mipi_csi: mipi-csi@30750000 {
+> +				compatible = "fsl,imx7-mipi-csi2";
+> +				reg = <0x30750000 0x10000>;
+> +				interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX7D_MIPI_CSI_ROOT_CLK>,
+> +						<&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
+> +				clock-names = "mipi", "phy";
 
-> +	if (tas6424->no_auto_diags) {
-> +		/*
-> +		 * Disable DC auto-diagnostics to save time when channel leave
-> +		 * Hi-Z state
-> +		 */
-> +		ret = regmap_update_bits(tas6424->regmap,
-> +					 TAS6424_DC_DIAG_CTRL1,
-> +					  0xff, TAS6424_LDGBYPASS);
+The i.MX7Dual and i.MX7Solo reference manuals mention three clock inputs
+to the MIPI CSI: mipi_csi.ipg_clk_s, mipi_csi.I_PCLK, and
+mipi.csi.I_WRAP_CLK (all three gated by CCGR100).
+The MIPI_CSI2 chapters mention I_PCLK and I_WRAP_CLK again. Shouldn't at
+least those two be used in place of just "mipi"?
 
-This could just be exposed to userspace as a simple switch control
-couldn't it?  I do note that it masks more bits than it sets though...
+> +				power-domains = <&pgc_mipi_phy>;
+> +				phy-supply = <&reg_1p0d>;
+> +				resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
+> +				reset-names = "mrst";
+> +				bus-width = <4>;
 
---2WS97oupGEGbYNpW
-Content-Type: application/pgp-signature; name="signature.asc"
+It looks to me like both i.MX7Dual and i.MX7Solo only have two data
+lanes connected.
 
------BEGIN PGP SIGNATURE-----
+> +				status = "disabled";
+> +			};
+>  		};
+>  
+>  		aips3: aips-bus@30800000 {
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrd/0sACgkQJNaLcl1U
-h9BJJQf+LarwNv6nMCjPJuZ01r2WdQ8JnLzPZ8TUSXu7IoQHYAgSthTL024mNAi5
-4q5+gnO3UtOYJ6ij62m8j6btoTZTBWh3Xtc/oABbFYA46hThuw3w9oNgLWXL9eWd
-SmETAZ1RVCmQ8KrmRf2XF3hmHgba4Y14ts1gQsF203iFa69FLhFOs99r7rWzoOS1
-NZQ4+0bUJNh0MCAr5kuGiZmofDCevGCBHKBWUVG/fhWKGirsXNko02uDak/12Hvd
-dM/9wXXaYyvKScbPoBoYnXLgvvFw8drprINRTw9RkE2CrW+tyKX9+2Pvz+ZVKVDu
-Jm643AogFadU8Kp6s86j+9eBqjRDdg==
-=ruBO
------END PGP SIGNATURE-----
-
---2WS97oupGEGbYNpW--
-
---===============8980880342058464309==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8980880342058464309==--
+regards
+Philipp
