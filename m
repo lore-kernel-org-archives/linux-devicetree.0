@@ -1,204 +1,58 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH] mmc: disable card sleep via device-tree
-Date: Mon, 23 Apr 2018 17:01:14 +0200
-Message-ID: <CAPDyKFoe7+M=ftQmMrP5O68TkuwkMSsoLuGrMa6N9ygew4eHPw@mail.gmail.com>
-References: <20180422213126.32756-1-lukma@denx.de> <CAPDyKFqaV0ehiHCNdt0i4sWE9cskBa9AQHdRZmzCphPzCdm9ow@mail.gmail.com>
- <20180423113619.6f557d8e@jawa> <CAPDyKFrhzVcST2SYjJaLb1vLTG3Rv+X7tmh7E-78A8xTYQyXOg@mail.gmail.com>
- <20180423161113.463d4f0e@jawa>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] ARM: dts: sun8i: h3: Add SY8106A
+ regulator to Orange Pi PC
+Date: Mon, 23 Apr 2018 17:03:09 +0200
+Message-ID: <20180423150309.dksr2rjazlrmlzx2@flea>
+References: <20180423144657.63264-1-icenowy@aosc.io>
+ <20180423144657.63264-4-icenowy@aosc.io>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180423161113.463d4f0e@jawa>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Fabio Estevam <fabio.estevam@nxp.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Chanho Min <chanho.min@lge.com>, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Stanislav Meduna <stanislav.meduna@nxtcontrol.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5n6aegyizyrw7jdc"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBL7L67LAKGQEQH4EXYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180423144657.63264-4-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23 April 2018 at 16:11, Lukasz Majewski <lukma@denx.de> wrote:
-> Hi Ulf,
->
->> On 23 April 2018 at 11:36, Lukasz Majewski <lukma@denx.de> wrote:
->> > Hi Ulf,
->> >
->> >> On 22 April 2018 at 23:31, Lukasz Majewski <lukma@denx.de> wrote:
->> >> > From: Stanislav Meduna <stanislav.meduna@nxtcontrol.com>
->> >> >
->> >> > On a TQMa53 module the mmc_sleep leaves the eMMC card in a state
->> >> > that the imx53 rom boot code is unable to probe, resulting in
->> >> > reboot hanging. Add a device tree property to disable sleeping
->> >> > on suspend.
->> >> >
->> >> > For TQMa53 modules the exact commit to cause hang after reboot
->> >> > (v3.10 -> v3.11):
->> >> > commit 486fdbbc1483 ("mmc: core: Add shutdown callback for (e)MMC
->> >> > bus_ops")
->> >> >
->> >> > [The exact discussion can be found here:
->> >> > https://patchwork.kernel.org/patch/8881401/
->> >> > "i.MX53 restart via watchdog does not work"
->> >> >
->> >> > Signed-off-by: Stanislav Meduna <stanislav.meduna@nxtcontrol.com>
->> >> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
->> >> > ---
->> >> >  Documentation/devicetree/bindings/mmc/mmc-card.txt | 4 ++++
->> >> >  drivers/mmc/core/mmc.c                             | 7 +++++--
->> >> >  include/linux/mmc/card.h                           | 2 +-
->> >> >  3 files changed, 10 insertions(+), 3 deletions(-)
->> >> >
->> >> > diff --git a/Documentation/devicetree/bindings/mmc/mmc-card.txt
->> >> > b/Documentation/devicetree/bindings/mmc/mmc-card.txt index
->> >> > 8d2d71758907..c3ee151edd7c 100644 ---
->> >> > a/Documentation/devicetree/bindings/mmc/mmc-card.txt +++
->> >> > b/Documentation/devicetree/bindings/mmc/mmc-card.txt @@ -12,6
->> >> > +12,9 @@ Required properties: Optional properties:
->> >> >  -broken-hpi : Use this to indicate that the mmc-card has a
->> >> > broken hpi implementation, and that hpi should not be used
->> >> > +-no-sleep-on-suspend : Do not put the card to sleep when
->> >> > suspending.
->> >> > +              There are boards with bootloaders that are unable
->> >> > +              to probe such card when rebooting.
->> >> >
->> >> >  Example:
->> >> >
->> >> > @@ -26,5 +29,6 @@ Example:
->> >> >                 reg = <0>;
->> >> >                 compatible = "mmc-card";
->> >> >                 broken-hpi;
->> >> > +               no-sleep-on-suspend;
->> >> >         };
->> >> >  };
->> >> > diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
->> >> > index 208a762b87ef..a3b74b5c8893 100644
->> >> > --- a/drivers/mmc/core/mmc.c
->> >> > +++ b/drivers/mmc/core/mmc.c
->> >> > @@ -381,8 +381,11 @@ static int mmc_decode_ext_csd(struct
->> >> > mmc_card *card, u8 *ext_csd) }
->> >> >
->> >> >         np = mmc_of_find_child_device(card->host, 0);
->> >> > -       if (np && of_device_is_compatible(np, "mmc-card"))
->> >> > +       if (np && of_device_is_compatible(np, "mmc-card")) {
->> >> >                 broken_hpi = of_property_read_bool(np,
->> >> > "broken-hpi");
->> >> > +               card->no_sleep_on_suspend =
->> >> > +                       of_property_read_bool(np,
->> >> > "no-sleep-on-suspend");
->> >> > +       }
->> >> >         of_node_put(np);
->> >> >
->> >> >         /*
->> >> > @@ -1990,7 +1993,7 @@ static int _mmc_suspend(struct mmc_host
->> >> > *host, bool is_suspend) if (mmc_can_poweroff_notify(host->card)
->> >> > && ((host->caps2 & MMC_CAP2_FULL_PWR_CYCLE)
->> >> > || !is_suspend)) err = mmc_poweroff_notify(host->card,
->> >> > notify_type);
->> >> > -       else if (mmc_can_sleep(host->card))
->> >> > +       else if (mmc_can_sleep(host->card)
->> >> > && !host->card->no_sleep_on_suspend)
->> >>
->> >> No, this is wrong.
->> >>
->> >> This means that the mmc_power_off() a few lines below would start
->> >> to violate the eMMC spec.
->> >> That via powering off the card, without first
->> >> sending the sleep or power-off-notify command.
->> >> You are probably just lucky, as your particular eMMC card still
->> >> copes with this in-correct sequence (I know there are these kind
->> >> of cards).
->> >>
->> >> Well, what is also interesting in this regards, is what is
->> >> happening during mmc_power_off().
->> >
->> > The mmc_power_off() -> mmc_pwrseq_power_off() -> here the *pwrseq is
->> > null, so we do nothing with the power.
->> >
->> > In mmc_power_off() function we call mmc_set_initial_state(host);
->> >
->> >> Does your host driver cut power to VMMC and/or
->> >> VQMMC?
->> >
->> > The esdhci3 controller uses 'vmm-supply' which is a
->> > 'regulator-fixed' with 'regulator-always-on' attribute.
->>
->> Assume you mean vmmc-supply.
->>
->> Anyway, it seems a bit weird to have this regulator as fixed and
->> always on. Of course it's possible, but it's more common to have vqmmc
->> fixed and always on. Maybe double check the schematics.
->>
->> >
->> > It seems like the eMMC is always powered with 3.3V.
->>
->> What about vqmmc then?
->
-> It seems like the vqmmc is not added/used in dts (imx53.dtsi). Only the
-> vmmc-supply is used.
 
-My point is, that perhaps DTS is wrong or too simplified.
+--5n6aegyizyrw7jdc
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Perhaps vmmc can be powered off/on?
+On Mon, Apr 23, 2018 at 10:46:57PM +0800, Icenowy Zheng wrote:
+> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> 
+> Add SY8106A regulator to r_i2c bus and enable the r_i2c bus on
+> Orange Pi PC, then set the power supply of the ARM cores to this
+> regulator, in order to enable DVFS.
+> 
+> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> [Icenowy: Enable DVFS in this patch, slight changes and change commit
+>  message]
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> [wens-jdAy2FN1RRM@public.gmane.org: Rename regulator label]
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
->
->>
->> >
->> > Considering the above it seems like the card is still powered - the
->> > HW design also supports some backup powering (so the voltage from
->> > the board is not took immediately).
->>
->> I think you need to verify that the CMD5 (sleep) is actually sent and
->> successfully completed.
->>
->> In regards to that, do your host support MMC_CAP_WAIT_WHILE_BUSY?
->
-> No. This flag is not supported (set) on this host.
+Why is there Chen-Yu's SoB? It doesn't really make much sense, unless
+Chen-Yu would have applied this patch already, but then you wouldn't
+post it, right?
 
-Okay. One thing to remove from possible root causes.
+Maxime 
 
->
->> If
->> not, there is a delay (specific to the card) after the CMD5.
->
-> Yes, the delay is used (mmc.c Line 1890).
-> The delay is 7ms (as read from card->ext_csd.sa_timeout).
->
-> Increasing it by 10 (or 100) ms doesn't solve the problem.
+> ---
 
-Okay. To really be sure, I would also try 1000ms.
-
->
->>
->> So the support in your host driver for MMC_CAP_WAIT_WHILE_BUSY could
->> be broken, or the delay may be too short. Perhaps forcing to use the
->> delay and use a delay that for sure should work is worth to test.
->>
->> >
->> >
->> > To be even more strange the suspend to mem works without any issues
->> > (without this patch).
->> > With "reboot -f" it seems like we hang in imx53 BootROM (as I can
->> > read it from my JTAG debugger).
->>
->> So clearly there is a difference during reboot.
->>
->> A wild guess... Probably vmmc supply is turned on/off in this path,
->> while perhaps the CMD5 support has failed when the kernel issued
->> it...
->
-> This needs to be checked.
->
-> It may be also possible that the BootROM expects that the eMMC would
-> not be in SLEEP state (after CMD5 issuing).
-
-Well, in principle that shouldn't matter.
-
-CMD0 is fine to use to wakeup the card from sleep state and that can
-be followed by a regular initialization sequence. This is the way the
-mmc core, during system resume does it.
-
-Another possible option is that the power to vqmmc becomes power
-cycled during reboot, while power to vmmc isn't.
-
-Hope my ideas to narrow down the problem are helping and not adding
-confusion. :-)
-
-Kind regards
-Uffe
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--5n6aegyizyrw7jdc--
