@@ -1,54 +1,50 @@
-From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v2 5/5] ARM: dts: stm32: Add I2C2/5 support for STM32MP157C-EV1
-Date: Mon, 23 Apr 2018 11:48:31 +0200
-Message-ID: <1524476911-19056-6-git-send-email-pierre-yves.mordret@st.com>
-References: <1524476911-19056-1-git-send-email-pierre-yves.mordret@st.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v5 3/6] dt-bindings: arm: Document the RZN1D-DB board
+Date: Mon, 23 Apr 2018 12:02:52 +0200
+Message-ID: <20180423100248.et7lsq25fmmxdhrn@verge.net.au>
+References: <1523963101-56725-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1523963101-56725-4-git-send-email-michel.pollet@bp.renesas.com>
+ <CAMuHMdU4upXcYZ_yD2a_=J5VAUE28fni7_NotmchjpYUqCxV=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524476911-19056-1-git-send-email-pierre-yves.mordret@st.com>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdU4upXcYZ_yD2a_=J5VAUE28fni7_NotmchjpYUqCxV=A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, Marek Szyprowski <m.szyprowski@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Marc Zyngier <marc.zyngier@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Yangbo Lu <yangbo.lu@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michel Pollet <michel.pollet@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add I2C1/5 support for STM32MP157C evaluation daughter on evaluation
-mother board.
+On Tue, Apr 17, 2018 at 05:49:25PM +0200, Geert Uytterhoeven wrote:
+> Hi Michel,
+> 
+> On Tue, Apr 17, 2018 at 1:04 PM, Michel Pollet
+> <michel.pollet@bp.renesas.com> wrote:
+> > This documents the RZ/N1 bindings for the RZN1D-DB board.
+> >
+> > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/shmobile.txt | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+> > index 61b486f..6efb3f1 100644
+> > --- a/Documentation/devicetree/bindings/arm/shmobile.txt
+> > +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+> > @@ -51,7 +51,8 @@ SoCs:
+> >      compatible = "renesas,r8a77990"
+> >    - R-Car D3 (R8A77995)
+> >      compatible = "renesas,r8a77995"
+> > -
+> > +  - RZ/N1D (R9A06G032)
+> > +    compatible = "renesas,r9a06g032", "renesas,rzn1"
+> 
+> Why do you need a family-specific compatible value ("renesas,rzn1",
+> which is a marketing name)?
 
-Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
----
-  Version history:
-     v1:
-        * Initial
----
----
- arch/arm/boot/dts/stm32mp157c-ev1.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Thanks Michel, Thanks Geert,
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-index 57e6dbc..20dd8aa 100644
---- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-@@ -19,3 +19,20 @@
- 		serial0 = &uart4;
- 	};
- };
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	status = "okay";
-+};
-+
-+&i2c5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c5_pins_a>;
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	status = "okay";
-+};
-+
--- 
-2.7.4
+it looks like this extra compatible value should be dropped.
+Its not consistent with the way other Renesas SoC families are handled
+and past experience has not lead us to want family-specific compatible
+values.
