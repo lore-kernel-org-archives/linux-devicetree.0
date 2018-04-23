@@ -1,51 +1,70 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH v3 03/10] drivers/peci: Add support for PECI bus driver
- core
-Date: Mon, 23 Apr 2018 10:40:53 -0700
-Message-ID: <09b1a8af-4d47-0714-8f68-d7fe35cc7a72@linux.intel.com>
-References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
- <20180410183212.16787-4-jae.hyun.yoo@linux.intel.com>
- <20180423105224.GA1444@kroah.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v4 2/8] dt-bindings: display: atmel: optional
+ video-interface of endpoints
+Date: Mon, 23 Apr 2018 19:41:06 +0200
+Message-ID: <20180423194106.3b178211@bbrezillon>
+References: <20180423072301.11962-1-peda@axentia.se>
+ <20180423072301.11962-3-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180423105224.GA1444@kroah.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van.os@prodrive-technologies.com>, Sumeet
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180423072301.11962-3-peda@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/23/2018 3:52 AM, Greg KH wrote:
-> On Tue, Apr 10, 2018 at 11:32:05AM -0700, Jae Hyun Yoo wrote:
->> +static void peci_adapter_dev_release(struct device *dev)
->> +{
->> +	/* do nothing */
->> +}
-> 
-> As per the in-kernel documentation, I am now allowed to make fun of you.
-> 
-> You are trying to "out smart" the kernel by getting rid of a warning
-> message that was explicitly put there for you to do something.  To think
-> that by just providing an "empty" function you are somehow fulfilling
-> the API requirement is quite bold, don't you think?
-> 
-> This has to be fixed.  I didn't put that warning in there for no good
-> reason.  Please go read the documentation again...
-> 
-> greg k-h
-> 
-
-Hi Greg,
-
-Thanks a lot for your review.
-
-I think, it should contain actual device resource release code which is
-being done by peci_del_adapter(), or a coupling logic should be added
-between peci_adapter_dev_release() and peci_del_adapter().
-
-As you suggested, I'll check it again after reading documentation and
-understanding core.c code more deeply.
-
-Jae
+T24gTW9uLCAyMyBBcHIgMjAxOCAwOToyMjo1NSArMDIwMApQZXRlciBSb3NpbiA8cGVkYUBheGVu
+dGlhLnNlPiB3cm90ZToKCj4gV2l0aCBidXMtdHlwZS9idXMtd2lkdGggcHJvcGVydGllcyBpbiB0
+aGUgZW5kcG9pbnQgbm9kZXMsIHRoZSB2aWRlby0KPiBpbnRlcmZhY2Ugb2YgdGhlIGNvbm5lY3Rp
+b24gY2FuIGJlIHNwZWNpZmllZCBmb3IgY2FzZXMgd2hlcmUgdGhlCj4gaGV1cmlzdGljIGZhaWxz
+IHRvIHNlbGVjdCB0aGUgY29ycmVjdCBvdXRwdXQgbW9kZS4gVGhpcyBjYW4gaGFwcGVuCj4gZS5n
+LiBpZiBub3QgYWxsIFJHQiBwaW5zIGFyZSByb3V0ZWQgb24gdGhlIFBDQjsgdGhlIGRyaXZlciBo
+YXMgbm8KPiB3YXkgb2Yga25vd2luZyB0aGlzLCBhbmQgbmVlZHMgdG8gYmUgdG9sZCBleHBsaWNp
+dGx5Lgo+IAo+IFRoaXMgaXMgY3JpdGljYWwgZm9yIHRoZSBkZXZpY2VzIHRoYXQgaGF2ZSB0aGUg
+ImNvbmZsaWN0aW5nIG91dHB1dAo+IGZvcm1hdHMiIGlzc3VlIChTQU05TjEyLCBTQU05WDUsIFNB
+TUE1RDMpLCBzaW5jZSB0aGUgbW9zdCBzaWduaWZpY2FudAo+IFJHQiBiaXRzIG1vdmUgYXJvdW5k
+IGRlcGVuZGluZyBvbiB0aGUgc2VsZWN0ZWQgb3V0cHV0IG1vZGUuIEZvcgo+IGRldmljZXMgdGhh
+dCBkbyBub3QgaGF2ZSB0aGUgImNvbmZsaWN0aW5nIG91dHB1dCBmb3JtYXRzIiBpc3N1ZQo+IChT
+QU1BNUQyLCBTQU1BNUQ0KSwgdGhpcyBpcyBjb21wbGV0ZWx5IGlycmVsZXZhbnQuCj4gCj4gU2ln
+bmVkLW9mZi1ieTogUGV0ZXIgUm9zaW4gPHBlZGFAYXhlbnRpYS5zZT4KCkFja2VkLWJ5OiBCb3Jp
+cyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBib290bGluLmNvbT4KCj4gLS0tCj4gIC4uLi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXRtZWwvaGxjZGMtZGMudHh0IHwgMjYgKysrKysr
+KysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMjYgaW5zZXJ0aW9ucygrKQo+IAo+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9h
+dG1lbC9obGNkYy1kYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9hdG1lbC9obGNkYy1kYy50eHQKPiBpbmRleCA4MmYyYWNiM2QzNzQuLjlkZTQzNGE4ZjUy
+MyAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9hdG1lbC9obGNkYy1kYy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9hdG1lbC9obGNkYy1kYy50eHQKPiBAQCAtMTUsNiArMTUsMTQgQEAgUmVx
+dWlyZWQgY2hpbGRyZW4gbm9kZXM6Cj4gICB0byBleHRlcm5hbCBkZXZpY2VzIHVzaW5nIHRoZSBP
+RiBncmFwaCByZXByZW5zZW50YXRpb24gKHNlZSAuLi9ncmFwaC50eHQpLgo+ICAgQXQgbGVhc3Qg
+b25lIHBvcnQgbm9kZSBpcyByZXF1aXJlZC4KPiAgCj4gK09wdGlvbmFsIHByb3BlcnRpZXMgaW4g
+Z3JhbmRjaGlsZCBub2RlczoKPiArIEFueSBlbmRwb2ludCBncmFuZGNoaWxkIG5vZGUgbWF5IHNw
+ZWNpZnkgYSBkZXNpcmVkIHZpZGVvIGludGVyZmFjZQo+ICsgYWNjb3JkaW5nIHRvIC4uLy4uL21l
+ZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0LCBzcGVjaWZpY2FsbHkKPiArIC0gYnVzLXR5cGU6IG11
+c3QgYmUgPDA+Lgo+ICsgLSBidXMtd2lkdGg6IHJlY29nbml6ZWQgdmFsdWVzIGFyZSA8MTI+LCA8
+MTY+LCA8MTg+IGFuZCA8MjQ+LCBhbmQKPiArICAgb3ZlcnJpZGUgYW55IG91dHB1dCBtb2RlIHNl
+bGVjdGlvbiBoZXVyaXN0aWMsIGZvcmNpbmcgInJnYjQ0NCIsCj4gKyAgICJyZ2I1NjUiLCAicmdi
+NjY2IiBhbmQgInJnYjg4OCIgcmVzcGVjdGl2ZWx5Lgo+ICsKPiAgRXhhbXBsZToKPiAgCj4gIAlo
+bGNkYzogaGxjZGNAZjAwMzAwMDAgewo+IEBAIC01MCwzICs1OCwyMSBAQCBFeGFtcGxlOgo+ICAJ
+CQkjcHdtLWNlbGxzID0gPDM+Owo+ICAJCX07Cj4gIAl9Owo+ICsKPiArCj4gK0V4YW1wbGUgMjog
+V2l0aCBhIHZpZGVvIGludGVyZmFjZSBvdmVycmlkZSB0byBmb3JjZSByZ2I1NjU7IGFzIGFib3Zl
+Cj4gK2J1dCB3aXRoIHRoZXNlIGNoYW5nZXMvYWRkaXRpb25zOgo+ICsKPiArCSZobGNkYyB7Cj4g
+KwkJaGxjZGMtZGlzcGxheS1jb250cm9sbGVyIHsKPiArCQkJcGluY3RybC1uYW1lcyA9ICJkZWZh
+dWx0IjsKPiArCQkJcGluY3RybC0wID0gPCZwaW5jdHJsX2xjZF9iYXNlICZwaW5jdHJsX2xjZF9y
+Z2I1NjU+Owo+ICsKPiArCQkJcG9ydEAwIHsKPiArCQkJCWhsY2RjX3BhbmVsX291dHB1dDogZW5k
+cG9pbnRAMCB7Cj4gKwkJCQkJYnVzLXR5cGUgPSA8MD47Cj4gKwkJCQkJYnVzLXdpZHRoID0gPDE2
+PjsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwkJfTsKPiArCX07CgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
