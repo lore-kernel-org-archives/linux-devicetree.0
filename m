@@ -1,143 +1,164 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v5 4/6] ARM: dts: Renesas RZ/N1 SoC base device tree file
-Date: Mon, 23 Apr 2018 12:14:06 +0200
-Message-ID: <20180423101406.7vfx4yb525ycbk57@verge.net.au>
-References: <1523963101-56725-1-git-send-email-michel.pollet@bp.renesas.com>
- <1523963101-56725-5-git-send-email-michel.pollet@bp.renesas.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] mmc: disable card sleep via device-tree
+Date: Mon, 23 Apr 2018 12:24:38 +0200
+Message-ID: <CAPDyKFrhzVcST2SYjJaLb1vLTG3Rv+X7tmh7E-78A8xTYQyXOg@mail.gmail.com>
+References: <20180422213126.32756-1-lukma@denx.de> <CAPDyKFqaV0ehiHCNdt0i4sWE9cskBa9AQHdRZmzCphPzCdm9ow@mail.gmail.com>
+ <20180423113619.6f557d8e@jawa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1523963101-56725-5-git-send-email-michel.pollet@bp.renesas.com>
+In-Reply-To: <20180423113619.6f557d8e@jawa>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org, phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Fabio Estevam <fabio.estevam@nxp.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Chanho Min <chanho.min@lge.com>, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Stanislav Meduna <stanislav.meduna@nxtcontrol.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 17, 2018 at 12:04:19PM +0100, Michel Pollet wrote:
-> This adds the Renesas RZ/N1D (Part #R9A06G032) SoC bare
-> bone support.
-> 
-> This currently only handles generic parts (gic, architected timer)
-> and a UART.
-> For simplicity sake, this also relies on the bootloader to set the
-> pinctrl and clocks.
-> 
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
-> ---
->  arch/arm/boot/dts/r9a06g032.dtsi | 89 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 89 insertions(+)
->  create mode 100644 arch/arm/boot/dts/r9a06g032.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
-> new file mode 100644
-> index 0000000..23c56d7
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/r9a06g032.dtsi
-> @@ -0,0 +1,89 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Base Device Tree Source for the Renesas RZ/N1D (R9A06G032)
-> + *
-> + * Copyright (C) 2018 Renesas Electronics Europe Limited
-> + *
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	compatible = "renesas,r9a06g032", "renesas,rzn1";
+On 23 April 2018 at 11:36, Lukasz Majewski <lukma@denx.de> wrote:
+> Hi Ulf,
+>
+>> On 22 April 2018 at 23:31, Lukasz Majewski <lukma@denx.de> wrote:
+>> > From: Stanislav Meduna <stanislav.meduna@nxtcontrol.com>
+>> >
+>> > On a TQMa53 module the mmc_sleep leaves the eMMC card in a state
+>> > that the imx53 rom boot code is unable to probe, resulting in
+>> > reboot hanging. Add a device tree property to disable sleeping
+>> > on suspend.
+>> >
+>> > For TQMa53 modules the exact commit to cause hang after reboot
+>> > (v3.10 -> v3.11):
+>> > commit 486fdbbc1483 ("mmc: core: Add shutdown callback for (e)MMC
+>> > bus_ops")
+>> >
+>> > [The exact discussion can be found here:
+>> > https://patchwork.kernel.org/patch/8881401/
+>> > "i.MX53 restart via watchdog does not work"
+>> >
+>> > Signed-off-by: Stanislav Meduna <stanislav.meduna@nxtcontrol.com>
+>> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+>> > ---
+>> >  Documentation/devicetree/bindings/mmc/mmc-card.txt | 4 ++++
+>> >  drivers/mmc/core/mmc.c                             | 7 +++++--
+>> >  include/linux/mmc/card.h                           | 2 +-
+>> >  3 files changed, 10 insertions(+), 3 deletions(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/mmc/mmc-card.txt
+>> > b/Documentation/devicetree/bindings/mmc/mmc-card.txt index
+>> > 8d2d71758907..c3ee151edd7c 100644 ---
+>> > a/Documentation/devicetree/bindings/mmc/mmc-card.txt +++
+>> > b/Documentation/devicetree/bindings/mmc/mmc-card.txt @@ -12,6 +12,9
+>> > @@ Required properties: Optional properties:
+>> >  -broken-hpi : Use this to indicate that the mmc-card has a broken
+>> > hpi implementation, and that hpi should not be used
+>> > +-no-sleep-on-suspend : Do not put the card to sleep when
+>> > suspending.
+>> > +              There are boards with bootloaders that are unable
+>> > +              to probe such card when rebooting.
+>> >
+>> >  Example:
+>> >
+>> > @@ -26,5 +29,6 @@ Example:
+>> >                 reg = <0>;
+>> >                 compatible = "mmc-card";
+>> >                 broken-hpi;
+>> > +               no-sleep-on-suspend;
+>> >         };
+>> >  };
+>> > diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+>> > index 208a762b87ef..a3b74b5c8893 100644
+>> > --- a/drivers/mmc/core/mmc.c
+>> > +++ b/drivers/mmc/core/mmc.c
+>> > @@ -381,8 +381,11 @@ static int mmc_decode_ext_csd(struct mmc_card
+>> > *card, u8 *ext_csd) }
+>> >
+>> >         np = mmc_of_find_child_device(card->host, 0);
+>> > -       if (np && of_device_is_compatible(np, "mmc-card"))
+>> > +       if (np && of_device_is_compatible(np, "mmc-card")) {
+>> >                 broken_hpi = of_property_read_bool(np,
+>> > "broken-hpi");
+>> > +               card->no_sleep_on_suspend =
+>> > +                       of_property_read_bool(np,
+>> > "no-sleep-on-suspend");
+>> > +       }
+>> >         of_node_put(np);
+>> >
+>> >         /*
+>> > @@ -1990,7 +1993,7 @@ static int _mmc_suspend(struct mmc_host
+>> > *host, bool is_suspend) if (mmc_can_poweroff_notify(host->card) &&
+>> >                 ((host->caps2 & MMC_CAP2_FULL_PWR_CYCLE)
+>> > || !is_suspend)) err = mmc_poweroff_notify(host->card, notify_type);
+>> > -       else if (mmc_can_sleep(host->card))
+>> > +       else if (mmc_can_sleep(host->card)
+>> > && !host->card->no_sleep_on_suspend)
+>>
+>> No, this is wrong.
+>>
+>> This means that the mmc_power_off() a few lines below would start to
+>> violate the eMMC spec.
+>> That via powering off the card, without first
+>> sending the sleep or power-off-notify command.
+>> You are probably just lucky, as your particular eMMC card still copes
+>> with this in-correct sequence (I know there are these kind of cards).
+>>
+>> Well, what is also interesting in this regards, is what is happening
+>> during mmc_power_off().
+>
+> The mmc_power_off() -> mmc_pwrseq_power_off() -> here the *pwrseq is
+> null, so we do nothing with the power.
+>
+> In mmc_power_off() function we call mmc_set_initial_state(host);
+>
+>> Does your host driver cut power to VMMC and/or
+>> VQMMC?
+>
+> The esdhci3 controller uses 'vmm-supply' which is a 'regulator-fixed'
+> with 'regulator-always-on' attribute.
 
-As discussed elsewhere, please drop "renesas,rzn1".
+Assume you mean vmmc-supply.
 
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +
-> +	clkuarts: clkuarts {
-> +		#clock-cells = <0>;
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <47619047>;
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0>;
-> +		};
-> +
-> +		cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <1>;
-> +		};
-> +	};
-> +
-> +	soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		interrupt-parent = <&gic>;
-> +		ranges;
-> +
-> +		reboot@4000c120 {
-> +			compatible = "renesas,r9a06g032-reboot",
-> +					"renesas,rzn1-reboot";
-> +			reg = <0x4000c120 4>,
-> +				<0x4000c198 4>;
-> +		};
-> +
-> +		uart0: serial@40060000 {
-> +			compatible = "snps,dw-apb-uart";
-> +			reg = <0x40060000 0x400>;
-> +			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-> +			reg-shift = <2>;
-> +			reg-io-width = <4>;
-> +			clocks = <&clkuarts>;
-> +			clock-names = "baudclk";
-> +			status = "disabled";
-> +		};
-> +
-> +		gic: gic@44101000 {
-> +			compatible = "arm,cortex-a7-gic", "arm,gic-400";
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			reg = <0x44101000 0x1000>, /* Distributer */
-> +			      <0x44102000 0x2000>, /* CPU interface */
-> +			      <0x44104000 0x2000>, /* Virt interface control */
-> +			      <0x44106000 0x2000>; /* Virt CPU interface */
-> +			interrupts =
-> +				<GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,cortex-a7-timer",
-> +			     "arm,armv7-timer";
-> +		interrupt-parent = <&gic>;
-> +		arm,cpu-registers-not-fw-configured;
-> +		always-on;
-> +		interrupts =
-> +			<GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-> +			<GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-> +			<GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-> +			<GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
+Anyway, it seems a bit weird to have this regulator as fixed and
+always on. Of course it's possible, but it's more common to have vqmmc
+fixed and always on. Maybe double check the schematics.
 
-Rather than using interrupt-parent, please use interrupts-extended,
-something like this:
+>
+> It seems like the eMMC is always powered with 3.3V.
 
-		interrupts-extended =
-			<&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-			<&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-			<&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-			<&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
+What about vqmmc then?
 
+>
+> Considering the above it seems like the card is still powered - the HW
+> design also supports some backup powering (so the voltage from the
+> board is not took immediately).
 
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
+I think you need to verify that the CMD5 (sleep) is actually sent and
+successfully completed.
+
+In regards to that, do your host support MMC_CAP_WAIT_WHILE_BUSY? If
+not, there is a delay (specific to the card) after the CMD5.
+
+So the support in your host driver for MMC_CAP_WAIT_WHILE_BUSY could
+be broken, or the delay may be too short. Perhaps forcing to use the
+delay and use a delay that for sure should work is worth to test.
+
+>
+>
+> To be even more strange the suspend to mem works without any issues
+> (without this patch).
+> With "reboot -f" it seems like we hang in imx53 BootROM (as I can read
+> it from my JTAG debugger).
+
+So clearly there is a difference during reboot.
+
+A wild guess... Probably vmmc supply is turned on/off in this path,
+while perhaps the CMD5 support has failed when the kernel issued it...
+
+>
+> As written in the commit message - problems started after sending
+> suspend sequence of eMMC commands to the eMMC device.
+>
+>
+> [The eMMC memory itself is Micron 4GiB - 4.4.1]
+
+[...]
+
+Kind regards
+Uffe
