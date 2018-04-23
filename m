@@ -1,92 +1,62 @@
-From: Grant Likely <grant.likely@arm.com>
-Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
-Date: Mon, 23 Apr 2018 15:49:36 +0100
-Message-ID: <e8fdb764-77f4-6631-c9b4-a6cf393a69a7@arm.com>
-References: <20180418222905.10414-1-robh@kernel.org>
- <152424282214.46528.2511757264045171935@swboyd.mtv.corp.google.com>
- <CAL_Jsq+1G61+E0wtVEkzann3Z=2Cr=2PkbDJ_OuaA5GysWZsXQ@mail.gmail.com>
- <152426770474.46528.1592920281091105196@swboyd.mtv.corp.google.com>
- <63a1c096-7d78-3850-83b7-94c6009e93f0@arm.com>
- <CAL_Jsq+te3o5=X=1n2QHfrLL_MtoiL92_p8jN2=UeFe3L7mmNA@mail.gmail.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v5 12/44] clk: davinci: Add platform information for TI
+ DA850 PSC
+Date: Mon, 23 Apr 2018 09:59:27 -0500
+Message-ID: <48c8531f-8cd9-a9f8-9c38-cbc4c921c4c9@lechnology.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-13-git-send-email-david@lechnology.com>
+ <CAMRc=MfQuqTK+mDT0Gawa6J-3d1z6djLutaHREKfVm+3hATEqQ@mail.gmail.com>
+ <CAEG3pND6Cu0P_t3y_VM9Sm-GCb3yW0Pa8q4cRUOXYxa5=2nWUQ@mail.gmail.com>
+ <a4d84be0-e3d3-4e39-40f9-cae9006cb6ee@ti.com>
+ <CAMRc=Mc228JAxxBXcObmokh2h-toojG8OHrmbunm_ORqbGWUnA@mail.gmail.com>
+ <69bc0848-0698-b936-96a3-2257a5e27809@ti.com>
+ <CAMRc=MenWp=2dtOs1yafnHVkCxfT7SDS0fS2UxUd+U0s_UDwVw@mail.gmail.com>
+ <57f2182e-09b4-2cab-5602-9d0e029495be@ti.com>
+ <152303318048.143116.2883441215887455211@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+te3o5=X=1n2QHfrLL_MtoiL92_p8jN2=UeFe3L7mmNA@mail.gmail.com>
-Content-Language: en-GB
+In-Reply-To: <152303318048.143116.2883441215887455211@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, devicetree-spec@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Jonathan Cameron <jic23@kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23/04/2018 15:38, Rob Herring wrote:
-> On Mon, Apr 23, 2018 at 9:01 AM, Grant Likely <grant.likely@arm.com> wrot=
-e:
->> On 21/04/2018 00:41, Stephen Boyd wrote:
->>>
->>> Quoting Rob Herring (2018-04-20 11:15:04)
->>>>
->>>> On Fri, Apr 20, 2018 at 11:47 AM, Stephen Boyd <sboyd@kernel.org> wrot=
-e:
->>>>>
->>>>> Quoting Rob Herring (2018-04-18 15:29:05)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/example-schema.yaml
->>>>>> b/Documentation/devicetree/bindings/example-schema.yaml
->>>>>> new file mode 100644
->>>>>> index 000000000000..fe0a3bd1668e
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/example-schema.yaml
+On 04/06/2018 11:46 AM, Stephen Boyd wrote:
+> Quoting Sekhar Nori (2018-04-06 02:37:03)
 >>
->> [...]
->>>>>>
->>>>>> +  interrupts:
->>>>>> +    # Either 1 or 2 interrupts can be present
->>>>>> +    minItems: 1
->>>>>> +    maxItems: 2
->>>>>> +    items:
->>>>>> +      - description: tx or combined interrupt
->>>>>> +      - description: rx interrupt
->>>>>> +
->>>>>> +    description: |
->>>>>
->>>>>
->>>>> The '|' is needed to make yaml happy?
->>>>
->>>>
->>>> Yes, this is simply how you do literal text blocks in yaml.
->>>>
->>>> We don't really need for this one really, but for the top-level
->>>> 'description' we do. The long term intent is 'description' would be
->>>> written in sphinx/rst and can be extracted into the DT spec (for
->>>> common bindings). Grant has experimented with that some.
->>>
->>>
->>> Ok. That sounds cool. Then we could embed links to datasheets and SVGs
->>> too.
+>> Can you please check that and confirm there is no issue with genpd and
+>> using CLK_OF_DECLARE() to initialize clocks?
 >>
->>
->> I'd like it if we can define the description text blocks to be
->> reStructeredText markup. That makes it even easier to integrate with the
->> specification documentation.
->
-> I think that's going to require thinking about how each binding is
-> integrated into the spec. We're only talking about common bindings I
-> presume, but still we have no model defined. For example, with
-> properties, I'd assume we'd want to generate a table of properties and
-> we wouldn't want the property descriptions in rST because the
-> description becomes just a cell in the table. So we need some sort of
-> template.
->
-> Also, how do we validate that description contains valid rST? No point
-> requiring it until we can validate it.
+>> Unless you report an issue back, or Mike and Stephen have ideas about
+>> how to handle the dependency between PSC/PLL derived timer clock
+>> initialization and and timer_probe(), I think we need to move back to
+>> using CLK_OF_DECLARE().
+> 
+> In such a case, please use the hybrid approach where the clks required
+> for the clockevent and/or clocksource are registered in the early
+> CLK_OF_DECLARE path but the rest of the clks get registered with a
+> proper platform device and driver. There are examples of this approach
+> on other platforms already.
+> 
 
-Indeed. Part of that was me thinking outloud. Need to actually get it
-working before adding constraints.
+I looked at this a bit last week, but I didn't come up with any approach
+that I was happy with. It seems like it would be nice to just register
+the absolute minimum clocks needed. On DA8XX, that would just be the PLL0
+AUXCLK. On most of the other SoCs, it would be the PLL AUXCLK plus one
+LPSC clock. The AUXCLKs are easy because they are just a simple gate
+from the oscillator. The LPSC clocks are a bit more tricky because they
+have a complex sequence for turning on. Furthermore, on DM646X, we need
+the whole PLL up to SYSCLK3 plus one LPSC clock, so things get a bit
+messy there.
 
-g.
-IMPORTANT NOTICE: The contents of this email and any attachments are confid=
-ential and may also be privileged. If you are not the intended recipient, p=
-lease notify the sender immediately and do not disclose the contents to any=
- other person, use it for any purpose, or store or copy the information in =
-any medium. Thank you.
+The other approach I considered was to make the PLL and PSC drivers
+work as platform devices or pure clock devices so that when needed,
+the whole IP block could be registered in very early init. However,
+this approach will pretty much require massive changes to the drivers
+to remove all of the uses of devm_, dev_err, etc. so that it works
+when dev == NULL.
+
+Any other bright ideas or a preference for one of these two approaches?
