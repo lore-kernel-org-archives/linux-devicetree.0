@@ -1,41 +1,68 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 0/2] clk: renesas: Add support for R-Car E3
-Date: Fri, 20 Apr 2018 21:27:42 +0900
-Message-Id: <1524227264-24896-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=kDyz=HM=rock-chips.com=shawn.lin@kernel.org>
+Subject: Re: [PATCH v3 1/2] Documentation: mmc: add optional cd-delay-ms
+ property
+References: <1524207555-165403-1-git-send-email-shawn.lin@rock-chips.com>
+ <CAPDyKFrVaSwNxCUg1JYOYN9wx=yX68uU-LvNJMght-JOsmZhHw@mail.gmail.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Message-ID: <4be95489-2ba0-5062-af12-b97398f36ef1@rock-chips.com>
+Date: Mon, 23 Apr 2018 18:00:12 +0800
 MIME-Version: 1.0
-Content-Type: text/plain
-To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, geert+renesas@glider.be, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <CAPDyKFrVaSwNxCUg1JYOYN9wx=yX68uU-LvNJMght-JOsmZhHw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: shawn.lin@rock-chips.com, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch is based on the renesas-devel-20180418-v4.17-rc1 tag of
-renesas.git.
+Hi Ulf,
 
-Changes from v1:
- - Remove POST3's definition in patch 1.
-  Discussed on https://patchwork.kernel.org/patch/10335231/
+On 2018/4/23 17:04, Ulf Hansson wrote:
+> On 20 April 2018 at 08:59, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+>> slot-gpio uses a fixed delay, 200ms, before detecting card after the card
+>> is inserted. 200ms doesn't work for some platforms, so some host drivers
+>> added their own properties for parsing that from DT, for instance,
+>> dw_mmc and pxamci. That being said, it should also be tunable when using
+>> cd-gpios.
+>>
+>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>>
+>> ---
+>>
+>> Changes in v3:
+>> - fix misleading typo in commit msg
+>>
+>> Changes in v2: None
+>>
+>>   Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+>> index 467cd7b..215b9a2 100644
+>> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+>> @@ -19,6 +19,8 @@ Optional properties:
+>>   - wp-gpios: Specify GPIOs for write protection, see gpio binding
+>>   - cd-inverted: when present, polarity on the CD line is inverted. See the note
+>>     below for the case, when a GPIO is used for the CD line
+>> +- cd-delay-ms: Set delay time before detecting card after card insert interrupt.
+>> +  It's only valid when cd-gpios is present.
+> 
+> I would prefer the property to be named "cd-debounce-delay-ms"
+> instead. Would you mind changing it?
+> 
 
- - Fix typo and some errors in patch 2.
- - Add Geert-san's Reviewed-by in patch 2.
-  Discussed on https://patchwork.kernel.org/patch/10335235/
+ok, will change it in v4.
 
-Takeshi Kihara (1):
-  clk: renesas: Add r8a77990 CPG Core Clock Definitions
-
-Yoshihiro Shimoda (1):
-  clk: renesas: cpg-mssr: Add support for R-Car E3
-
- .../devicetree/bindings/clock/renesas,cpg-mssr.txt |   3 +-
- drivers/clk/renesas/Kconfig                        |   5 +
- drivers/clk/renesas/Makefile                       |   1 +
- drivers/clk/renesas/r8a77990-cpg-mssr.c            | 289 +++++++++++++++++++++
- drivers/clk/renesas/renesas-cpg-mssr.c             |   6 +
- drivers/clk/renesas/renesas-cpg-mssr.h             |   1 +
- include/dt-bindings/clock/r8a77990-cpg-mssr.h      |  62 +++++
- 7 files changed, 366 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/renesas/r8a77990-cpg-mssr.c
- create mode 100644 include/dt-bindings/clock/r8a77990-cpg-mssr.h
-
--- 
-1.9.1
+>>   - wp-inverted: when present, polarity on the WP line is inverted. See the note
+>>     below for the case, when a GPIO is used for the WP line
+>>   - disable-wp: When set no physical WP line is present. This property should
+>> --
+>> 1.9.1
+>>
+>>
+> 
+> Kind regards
+> Uffe
+> 
+> 
+> 
