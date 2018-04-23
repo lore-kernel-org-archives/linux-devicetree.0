@@ -1,7 +1,7 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v2 03/15] clk: imx7d: fix mipi dphy div parent
-Date: Mon, 23 Apr 2018 14:47:38 +0100
-Message-ID: <20180423134750.30403-4-rui.silva@linaro.org>
+Subject: [PATCH v2 04/15] clk: imx7d: reset parent for mipi csi root
+Date: Mon, 23 Apr 2018 14:47:39 +0100
+Message-ID: <20180423134750.30403-5-rui.silva@linaro.org>
 References: <20180423134750.30403-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,49 +21,30 @@ To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerb
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Fix the mipi dphy root divider to mipi_dphy_pre_div, this would remove a orphan
-clock and set the correct parent.
-
-before:
-cat clk_orphan_summary
-                                 enable  prepare  protect
-   clock                          count    count    count        rate   accuracy   phase
-----------------------------------------------------------------------------------------
- mipi_dphy_post_div                   1        1        0           0          0 0
-    mipi_dphy_root_clk                1        1        0           0          0 0
-
-cat clk_dump | grep mipi_dphy
-mipi_dphy_post_div                    1        1        0           0          0 0
-    mipi_dphy_root_clk                1        1        0           0          0 0
-
-after:
-cat clk_dump | grep mipi_dphy
-   mipi_dphy_src                     1        1        0    24000000          0 0
-       mipi_dphy_cg                  1        1        0    24000000          0 0
-          mipi_dphy_pre_div          1        1        0    24000000          0 0
-             mipi_dphy_post_div      1        1        0    24000000          0 0
-                mipi_dphy_root_clk   1        1        0    24000000          0 0
+To guarantee that we do not get Overflow in image FIFO the outer bandwidth has
+to be faster than inputer bandwidth. For that it must be possible to set a
+faster frequency clock. So set new parent to sys_pfd3 clock for the mipi csi
+block.
 
 Cc: linux-clk@vger.kernel.org
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- drivers/clk/imx/clk-imx7d.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/imx/clk-imx7d.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
-index 975a20d3cc94..f7f4db2e6fa6 100644
+index f7f4db2e6fa6..9a1a18ceb132 100644
 --- a/drivers/clk/imx/clk-imx7d.c
 +++ b/drivers/clk/imx/clk-imx7d.c
-@@ -729,7 +729,7 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
- 	clks[IMX7D_LCDIF_PIXEL_ROOT_DIV] = imx_clk_divider2("lcdif_pixel_post_div", "lcdif_pixel_pre_div", base + 0xa300, 0, 6);
- 	clks[IMX7D_MIPI_DSI_ROOT_DIV] = imx_clk_divider2("mipi_dsi_post_div", "mipi_dsi_pre_div", base + 0xa380, 0, 6);
- 	clks[IMX7D_MIPI_CSI_ROOT_DIV] = imx_clk_divider2("mipi_csi_post_div", "mipi_csi_pre_div", base + 0xa400, 0, 6);
--	clks[IMX7D_MIPI_DPHY_ROOT_DIV] = imx_clk_divider2("mipi_dphy_post_div", "mipi_csi_dphy_div", base + 0xa480, 0, 6);
-+	clks[IMX7D_MIPI_DPHY_ROOT_DIV] = imx_clk_divider2("mipi_dphy_post_div", "mipi_dphy_pre_div", base + 0xa480, 0, 6);
- 	clks[IMX7D_SAI1_ROOT_DIV] = imx_clk_divider2("sai1_post_div", "sai1_pre_div", base + 0xa500, 0, 6);
- 	clks[IMX7D_SAI2_ROOT_DIV] = imx_clk_divider2("sai2_post_div", "sai2_pre_div", base + 0xa580, 0, 6);
- 	clks[IMX7D_SAI3_ROOT_DIV] = imx_clk_divider2("sai3_post_div", "sai3_pre_div", base + 0xa600, 0, 6);
+@@ -891,6 +891,9 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
+ 	clk_set_parent(clks[IMX7D_PLL_AUDIO_MAIN_BYPASS], clks[IMX7D_PLL_AUDIO_MAIN]);
+ 	clk_set_parent(clks[IMX7D_PLL_VIDEO_MAIN_BYPASS], clks[IMX7D_PLL_VIDEO_MAIN]);
+ 
++	clk_set_parent(clks[IMX7D_MIPI_CSI_ROOT_SRC],
++		       clks[IMX7D_PLL_SYS_PFD3_CLK]);
++
+ 	/* use old gpt clk setting, gpt1 root clk must be twice as gpt counter freq */
+ 	clk_set_parent(clks[IMX7D_GPT1_ROOT_SRC], clks[IMX7D_OSC_24M_CLK]);
+ 
 -- 
 2.17.0
