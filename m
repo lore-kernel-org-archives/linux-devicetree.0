@@ -1,7 +1,7 @@
 From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v4 2/8] dt-bindings: display: atmel: optional video-interface of endpoints
-Date: Mon, 23 Apr 2018 09:22:55 +0200
-Message-ID: <20180423072301.11962-3-peda@axentia.se>
+Subject: [PATCH v4 4/8] drm/i2c: tda998x: find the drm_device via the drm_connector
+Date: Mon, 23 Apr 2018 09:22:57 +0200
+Message-ID: <20180423072301.11962-5-peda@axentia.se>
 References: <20180423072301.11962-1-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,63 +12,27 @@ To: linux-kernel@vger.kernel.org
 Cc: Peter Rosin <peda@axentia.se>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Russell King <linux@armlinux.org.uk>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-With bus-type/bus-width properties in the endpoint nodes, the video-
-interface of the connection can be specified for cases where the
-heuristic fails to select the correct output mode. This can happen
-e.g. if not all RGB pins are routed on the PCB; the driver has no
-way of knowing this, and needs to be told explicitly.
+This prepares for being a drm_bridge which will not register the
+encoder. That makes the connector the better choice.
 
-This is critical for the devices that have the "conflicting output
-formats" issue (SAM9N12, SAM9X5, SAMA5D3), since the most significant
-RGB bits move around depending on the selected output mode. For
-devices that do not have the "conflicting output formats" issue
-(SAMA5D2, SAMA5D4), this is completely irrelevant.
-
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Peter Rosin <peda@axentia.se>
 ---
- .../devicetree/bindings/display/atmel/hlcdc-dc.txt | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/gpu/drm/i2c/tda998x_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
-index 82f2acb3d374..9de434a8f523 100644
---- a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
-+++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
-@@ -15,6 +15,14 @@ Required children nodes:
-  to external devices using the OF graph reprensentation (see ../graph.txt).
-  At least one port node is required.
+diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
+index cd3f0873bbdd..8f6e013f2b87 100644
+--- a/drivers/gpu/drm/i2c/tda998x_drv.c
++++ b/drivers/gpu/drm/i2c/tda998x_drv.c
+@@ -630,7 +630,7 @@ static void tda998x_detect_work(struct work_struct *work)
+ {
+ 	struct tda998x_priv *priv =
+ 		container_of(work, struct tda998x_priv, detect_work);
+-	struct drm_device *dev = priv->encoder.dev;
++	struct drm_device *dev = priv->connector.dev;
  
-+Optional properties in grandchild nodes:
-+ Any endpoint grandchild node may specify a desired video interface
-+ according to ../../media/video-interfaces.txt, specifically
-+ - bus-type: must be <0>.
-+ - bus-width: recognized values are <12>, <16>, <18> and <24>, and
-+   override any output mode selection heuristic, forcing "rgb444",
-+   "rgb565", "rgb666" and "rgb888" respectively.
-+
- Example:
- 
- 	hlcdc: hlcdc@f0030000 {
-@@ -50,3 +58,21 @@ Example:
- 			#pwm-cells = <3>;
- 		};
- 	};
-+
-+
-+Example 2: With a video interface override to force rgb565; as above
-+but with these changes/additions:
-+
-+	&hlcdc {
-+		hlcdc-display-controller {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
-+
-+			port@0 {
-+				hlcdc_panel_output: endpoint@0 {
-+					bus-type = <0>;
-+					bus-width = <16>;
-+				};
-+			};
-+		};
-+	};
+ 	if (dev)
+ 		drm_kms_helper_hotplug_event(dev);
 -- 
 2.11.0
