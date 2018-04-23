@@ -1,18 +1,18 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "dt-bindings: mfd: bd9571mwv: Document DDR Backup Mode properties" to the regulator tree
-Date: Mon, 23 Apr 2018 19:05:11 +0100
-Message-ID: <E1fAfpv-0004FS-DO@debutante>
-References: <1524057484-25350-2-git-send-email-geert+renesas@glider.be>
+Subject: Applied "mfd: bd9571mwv: Add DDR Backup Power register bit definitions" to the regulator tree
+Date: Mon, 23 Apr 2018 19:05:07 +0100
+Message-ID: <E1fAfpr-0004EG-QZ@debutante>
+References: <1507649178-31473-3-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524057484-25350-2-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1507649178-31473-3-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Marek Vasut <marek.vasut+renesas@gmail.com>Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.orglinux-kernel@vger.kernel.org
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>Lee Jones <lee.jones@linaro.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.orglinux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   dt-bindings: mfd: bd9571mwv: Document DDR Backup Mode properties
+   mfd: bd9571mwv: Add DDR Backup Power register bit definitions
 
 has been applied to the regulator tree at
 
@@ -37,61 +37,37 @@ to this mail.
 Thanks,
 Mark
 
->From c85964de544cae98c3d8d29c936b6d13258e4a10 Mon Sep 17 00:00:00 2001
+>From 2ff0dab80a8999e99a93fd70f8d701ec3deab207 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Wed, 18 Apr 2018 15:18:01 +0200
-Subject: [PATCH] dt-bindings: mfd: bd9571mwv: Document DDR Backup Mode
- properties
+Date: Wed, 18 Apr 2018 15:18:02 +0200
+Subject: [PATCH] mfd: bd9571mwv: Add DDR Backup Power register bit definitions
 
-Document the new optional properties related to DDR Backup Mode and
-toggle/momentary power switches.
+Add definitions for the KEEPON_* bits in the "BKUP Mode Cnt" register,
+which control the DDR rails to be kept powered when backup mode is
+enabled.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Acked-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/mfd/bd9571mwv.txt     | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ include/linux/mfd/bd9571mwv.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
-index 9ab216a851d5..25d1f697eb25 100644
---- a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
-+++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
-@@ -25,6 +25,25 @@ Required properties:
- 			    Each child node is defined using the standard
- 			    binding for regulators.
+diff --git a/include/linux/mfd/bd9571mwv.h b/include/linux/mfd/bd9571mwv.h
+index f0708ba4cbba..eb05569f752b 100644
+--- a/include/linux/mfd/bd9571mwv.h
++++ b/include/linux/mfd/bd9571mwv.h
+@@ -33,6 +33,11 @@
+ #define BD9571MWV_I2C_MD2_E1_BIT_2		0x12
  
-+Optional properties:
-+  - rohm,ddr-backup-power : Value to use for DDR-Backup Power (default 0).
-+			    This is a bitmask that specifies which DDR power
-+			    rails need to be kept powered when backup mode is
-+			    entered, for system suspend:
-+			      - bit 0: DDR0
-+			      - bit 1: DDR1
-+			      - bit 2: DDR0C
-+			      - bit 3: DDR1C
-+			    These bits match the KEEPON_DDR* bits in the
-+			    documentation for the "BKUP Mode Cnt" register.
-+  - rohm,rstbmode-level: The RSTB signal is configured for level mode, to
-+			 accommodate a toggle power switch (the RSTBMODE pin is
-+			 strapped low).
-+  - rohm,rstbmode-pulse: The RSTB signal is configured for pulse mode, to
-+			 accommodate a momentary power switch (the RSTBMODE pin
-+			 is strapped high).
-+			 The two properties above are mutually exclusive.
-+
- Example:
- 
- 	pmic: pmic@30 {
-@@ -36,6 +55,8 @@ Example:
- 		#interrupt-cells = <2>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
-+		rohm,ddr-backup-power = <0xf>;
-+		rohm,rstbmode-pulse;
- 
- 		regulators {
- 			dvfs: dvfs {
+ #define BD9571MWV_BKUP_MODE_CNT			0x20
++#define BD9571MWV_BKUP_MODE_CNT_KEEPON_MASK	GENMASK(3, 0)
++#define BD9571MWV_BKUP_MODE_CNT_KEEPON_DDR0	BIT(0)
++#define BD9571MWV_BKUP_MODE_CNT_KEEPON_DDR1	BIT(1)
++#define BD9571MWV_BKUP_MODE_CNT_KEEPON_DDR0C	BIT(2)
++#define BD9571MWV_BKUP_MODE_CNT_KEEPON_DDR1C	BIT(3)
+ #define BD9571MWV_BKUP_MODE_STATUS		0x21
+ #define BD9571MWV_BKUP_RECOVERY_CNT		0x22
+ #define BD9571MWV_BKUP_CTRL_TIM_CNT		0x23
 -- 
 2.17.0
