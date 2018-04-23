@@ -1,40 +1,83 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 01/11] dt-bindings: firmware: Add bindings for ZynqMP
- firmware
-Date: Mon, 23 Apr 2018 13:56:57 +0200
-Message-ID: <20180423115657.GB7951@kroah.com>
-References: <1523389127-14243-1-git-send-email-jollys@xilinx.com>
- <1523389127-14243-2-git-send-email-jollys@xilinx.com>
- <20180413151501.gvroqgbmwwyfy5pq@rob-hp-laptop>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/8] dt-bindings: display: bridge: thc63lvd1024: Add lvds
+ map property
+Date: Mon, 23 Apr 2018 14:59:40 +0300
+Message-ID: <4581508.09qg8X0yyC@avalon>
+References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
+ <17d6f6b0-e657-4a5f-63a6-572cdf062bd3@axentia.se>
+ <20180423073504.GN4235@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180413151501.gvroqgbmwwyfy5pq@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org, mingo@kernel.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, mark.rutland@arm.com, linux-clk@vger.kernel.org, rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180423073504.GN4235@w540>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Peter Rosin <peda@axentia.se>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 13, 2018 at 10:15:01AM -0500, Rob Herring wrote:
-> On Tue, Apr 10, 2018 at 12:38:37PM -0700, Jolly Shah wrote:
-> > From: Rajan Vaja <rajanv@xilinx.com>
-> > 
-> > Add documentation to describe Xilinx ZynqMP firmware driver
-> > bindings. Firmware driver provides an interface to firmware
-> > APIs. Interface APIs can be used by any driver to communicate
-> > to PMUFW (Platform Management Unit).
-> > 
-> > Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
-> > Signed-off-by: Jolly Shah <jollys@xilinx.com>
-> > ---
-> >  .../firmware/xilinx/xlnx,zynqmp-firmware.txt       | 29 ++++++++++++++++++++++
-> >  1 file changed, 29 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> 
-> Please add acks/reviewed-by's when posting new versions.
-
-I'll just wait for the resend with those acks before considering to
-merge these...
-
-greg k-h
+SGkgSmFjb3BvLAoKT24gTW9uZGF5LCAyMyBBcHJpbCAyMDE4IDEwOjM1OjA0IEVFU1QgamFjb3Bv
+IG1vbmRpIHdyb3RlOgo+IE9uIFN1biwgQXByIDIyLCAyMDE4IGF0IDEwOjAyOjQxUE0gKzAyMDAs
+IFBldGVyIFJvc2luIHdyb3RlOgo+ID4gT24gMjAxOC0wNC0xOSAxMTozMSwgSmFjb3BvIE1vbmRp
+IHdyb3RlOgo+ID4+IFRoZSBUSEM2M0xWRDEwMjQgTFZEUyB0byBSR0IgYnJpZGdlIHN1cHBvcnRz
+IHR3byBkaWZmZXJlbnQgaW5wdXQgbWFwcGluZwo+ID4+IG1vZGVzLCBzZWxlY3RhYmxlIGJ5IG1l
+YW5zIG9mIGFuIGV4dGVybmFsIHBpbi4KPiA+PiAKPiA+PiBEZXNjcmliZSB0aGUgTFZEUyBtb2Rl
+IG1hcCB0aHJvdWdoIGEgbmV3bHkgZGVmaW5lZCBtYW5kYXRvcnkgcHJvcGVydHkgaW4KPiA+PiBk
+ZXZpY2UgdHJlZSBiaW5kaW5ncy4KPiA+PiAKPiA+PiBTaWduZWQtb2ZmLWJ5OiBKYWNvcG8gTW9u
+ZGkgPGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+Cj4gPj4gLS0tCj4gPj4gCj4gPj4gIC4uLi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQg
+ICAgfCAzICsrKwo+ID4+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4gPj4gCj4g
+Pj4gZGlmZiAtLWdpdAo+ID4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQKPiA+PiBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0
+Cj4gPj4gaW5kZXggMzdmMGMwNC4uMDkzNzU5NSAxMDA2NDQKPiA+PiAtLS0KPiA+PiBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2
+ZDEwMjQudHh0Cj4gPj4gKysrCj4gPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dAo+ID4+IEBAIC0xMiw2ICsx
+Miw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPj4gIC0gY29tcGF0aWJsZTogU2hhbGwgYmUg
+InRoaW5lLHRoYzYzbHZkMTAyNCIKPiA+PiAgLSB2Y2Mtc3VwcGx5OiBQb3dlciBzdXBwbHkgZm9y
+IFRUTCBvdXRwdXQsIFRUTCBDTE9DS09VVCBzaWduYWwsIExWRFMKPiA+PiAgaW5wdXQsCj4gPj4g
+ICAgUFBMIGFuZCBkaWdpdGFsIGNpcmN1aXRyeQo+ID4+IAo+ID4+ICstIHRoaW5lLG1hcDogTFZE
+UyBtYXBwaW5nIG1vZGUgc2VsZWN0aW9uIHNpZ25hbCwgcGluIG5hbWUgIk1BUCIuIFNoYWxsCj4g
+Pj4gYmUgPDE+Cj4gPj4gKyAgZm9yIG1hcHBpbmcgbW9kZSAxLCA8MD4gZm9yIG1hcHBpbmcgbW9k
+ZSAyCj4gPiAKPiA+IFNpbmNlIHRoZSBNQVAgcGluIGlzIGFuIGlucHV0IHBpbiwgSSB3b3VsZCBl
+eHBlY3QgdGhlcmUgdG8gYmUgYW4gb3B0aW9uYWwKPiA+IGdwaW8gc3BlY2lmaWVyIGxpa2UgdGhp
+bmUsbWFwLWdwaW9zIHNvIHRoYXQgdGhlIGRyaXZlciBjYW4gc2V0IGl0Cj4gPiBhY2NvcmRpbmcg
+dG8gdGhlIHZhbHVlIGdpdmVuIGluIHRoaW5lLG1hcCBpbiBjYXNlIHRoZSBIVyBoYXMgYSBsaW5l
+IGZyb20KPiA+IHNvbWUgZ3BpbyBvdXRwdXQgdG8gdGhlIE1BUCBwaW4gKGluc3RlYWQgb2YgaGFy
+ZHdpcmVkIGhpL2xvdyB3aGljaCBzZWVtCj4gPiB0byBiZSB5b3VyIHRoaW5raW5nKS4KPiAKPiBJ
+IHNlZS4uLiBBcyB0aGUgb25seSB1c2UgY2FzZSBJIGhhZCBoYXMgdGhlIHBpbiB0aWVkIHRvIHZj
+YywgSQo+IHRob3VnaHQgYWJvdXQgbWFraW5nIGl0IGEgYmluYXJ5IHByb3BlcnR5LCBhbmQgSSB3
+b25kZXIgaW4gaG93IG1hbnkKPiBjYXNlcyB0aGUgY2hpcCAnTUFQJyBwaW4gd291bGQgYWN0dWFs
+bHkgYmUgR1BJTyBjb250cm9sbGVkIGlucHV0IGFuZAo+IG5vdCBhbiBoYXJkd2lyZWQgb25lIGlu
+c3RlYWQuIEkgZG9uJ3Qgc2VlIHRoZSBMVkRTIG1hcHBpbmcgbW9kZSB0byBiZQo+IGNoYW5nZWQg
+YXQgcnVudGltZSwgYnV0IHlvdSBhcmUgcmlnaHQsIHdobyBrbm93cy4uLi4KPiAKPiBEbyB5b3Ug
+dGhpbmsgd2UgY2FuIGFkZCBhbiBvcHRpb25zICd0aGluZSxtYXAtZ3Bpb3MnIHByb3BlcnR5IGFs
+b25nCj4gdG8gdGhlIHByb3Bvc2VkIG9uZXM/CgpJZiB0aGUgTUFQIHBpbiBpcyBjb25uZWN0ZWQg
+dG8gYW4gU29DLWNvbnRyb2xsZWQgR1BJTyBmb3IgYSBnaXZlbiBwbGF0Zm9ybSAKdGhlbiB3ZSB3
+aWxsIGxpa2VseSBuZWVkIGEgdGhpbmUsbWFwLWdwaW9zIHByb3BlcnR5IHRvIGNvbnRyb2wgdGhl
+IHBpbi4gSSAKdGhpbmsgd2UgY2FuIGxlYXZlIGl0IG91dCBmb3Igbm93IGFuZCBhZGQgaXQgbGF0
+ZXIgaWYgdGhlIG5lZWQgYXJpc2VzLgoKVGhlIHRoaW5lLG1hcCBwcm9wZXJ0eSBzZXJ2ZXMgYSBk
+aWZmZXJlbnQgcHVycG9zZSwgaXQgaW5kaWNhdGVzIHRoZSBsZXZlbCBvZiAKdGhlIE1BUCBwaW4g
+Zm9yIHBsYXRmb3JtcyB3aGVyZSB0aGUgcGluIGlzIGhhcmR3aXJlZC4gSWYgd2UgbGF0ZXIgaW50
+cm9kdWNlIGEgCnRoaW5lLG1hcC1ncGlvcyBwcm9wZXJ0eSBpdCBzaG91bGQgYmUgbXV0dWFsbHkg
+ZXhjbHVzaXZlIHdpdGggdGhlIHRoaW5lLG1hcCAKcHJvcGVydHkuIFRoZSBsZXZlbCBvZiB0aGUg
+TUFQIHBpbiBzaG91bGQgYmUgdGhlbiBzb2Z0d2FyZS1jb250cm9sbGVkLCBub3Qgc2V0IAp0aHJv
+dWdoIERULgoKPiA+PiAgT3B0aW9uYWwgcHJvcGVydGllczoKPiA+PiAgLSBwb3dlcmRvd24tZ3Bp
+b3M6IFBvd2VyIGRvd24gR1BJTyBzaWduYWwsIHBpbiBuYW1lICIvUERXTiIuIEFjdGl2ZSBsb3cK
+PiA+PiAKPiA+PiBAQCAtMzYsNiArMzgsNyBAQCBFeGFtcGxlOgo+ID4+ICAJCXZjYy1zdXBwbHkg
+PSA8JnJlZ19sdmRzX3ZjYz47Cj4gPj4gIAkJcG93ZXJkb3duLWdwaW9zID0gPCZncGlvNCAxNSBH
+UElPX0FDVElWRV9MT1c+Owo+ID4+ICsJCXRoaW5lLG1hcCA9IDwxPjsKPiA+PiAKPiA+PiAgCQlw
+b3J0cyB7Cj4gPj4gIAkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OwoKLS0gClJlZ2FyZHMsCgpMYXVy
+ZW50IFBpbmNoYXJ0CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
