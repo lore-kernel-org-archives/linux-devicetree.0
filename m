@@ -1,64 +1,68 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH] mmc: disable card sleep via device-tree
-Date: Mon, 23 Apr 2018 09:04:09 +0300
-Message-ID: <f4b6291f-2756-38ff-31e0-0ba290f64e48@mentor.com>
-References: <20180422213126.32756-1-lukma@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v6 1/3] regulator: axp20x: add drivevbus support for axp803
+Date: Mon, 23 Apr 2018 12:02:37 +0530
+Message-ID: <20180423063239.3988-1-jagan@amarulasolutions.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180422213126.32756-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>, Stanislav Meduna <stanislav.meduna@nxtcontrol.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Fabio Estevam <fabio.estevam@nxp.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Chanho Min <chanho.min@lge.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
+Like axp221, axp223, axp813 the axp803 is also supporting external
+regulator to drive the  OTG VBus through N_VBUSEN PMIC pin.
 
-On 04/23/2018 12:31 AM, Lukasz Majewski wrote:
-> From: Stanislav Meduna <stanislav.meduna@nxtcontrol.com>
-> 
-> On a TQMa53 module the mmc_sleep leaves the eMMC card in a state
-> that the imx53 rom boot code is unable to probe, resulting in
-> reboot hanging. Add a device tree property to disable sleeping
-> on suspend.
-> 
-> For TQMa53 modules the exact commit to cause hang after reboot
-> (v3.10 -> v3.11):
-> commit 486fdbbc1483 ("mmc: core: Add shutdown callback for (e)MMC bus_ops")
-> 
-> [The exact discussion can be found here:
-> https://patchwork.kernel.org/patch/8881401/
-> "i.MX53 restart via watchdog does not work"
-> 
-> Signed-off-by: Stanislav Meduna <stanislav.meduna@nxtcontrol.com>
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> ---
->  Documentation/devicetree/bindings/mmc/mmc-card.txt | 4 ++++
->  drivers/mmc/core/mmc.c                             | 7 +++++--
->  include/linux/mmc/card.h                           | 2 +-
->  3 files changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-card.txt b/Documentation/devicetree/bindings/mmc/mmc-card.txt
-> index 8d2d71758907..c3ee151edd7c 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc-card.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-card.txt
-> @@ -12,6 +12,9 @@ Required properties:
->  Optional properties:
->  -broken-hpi : Use this to indicate that the mmc-card has a broken hpi
->                implementation, and that hpi should not be used
-> +-no-sleep-on-suspend : Do not put the card to sleep when suspending.
-> +              There are boards with bootloaders that are unable
-> +              to probe such card when rebooting.
+Add support for it.
 
-I would recommend to examine an option to reuse the existing host
-controller property 'keep-power-in-suspend', note that a particular
-host controller driver may ignore it.
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+---
+Changes for v6:
+- Rebase on master 
+Changes for v5:
+- Collect Chen-Yu reviewed-by tag
+Changes for v4:
+- rebase on master
+Changes for v3:
+- Update drivevbus in table of regulators
 
-In general the problem sounds like a PCB hardware bug, and if it is
-eMMC card specific, please provide more information about that eMMC
-rather than about the host.
+ Documentation/devicetree/bindings/mfd/axp20x.txt | 3 ++-
+ drivers/regulator/axp20x-regulator.c             | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
---
-With best wishes,
-Vladimir
+diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+index 9455503b0299..d1762f3b30af 100644
+--- a/Documentation/devicetree/bindings/mfd/axp20x.txt
++++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+@@ -43,7 +43,7 @@ Optional properties:
+ 			  regulator to drive the OTG VBus, rather then
+ 			  as an input pin which signals whether the
+ 			  board is driving OTG VBus or not.
+-			  (axp221 / axp223 / axp813 only)
++			  (axp221 / axp223 / axp803/ axp813 only)
+ 
+ - x-powers,master-mode: Boolean (axp806 only). Set this when the PMIC is
+ 			wired for master mode. The default is slave mode.
+@@ -132,6 +132,7 @@ FLDO2		: LDO		: fldoin-supply		: shared supply
+ LDO_IO0		: LDO		: ips-supply		: GPIO 0
+ LDO_IO1		: LDO		: ips-supply		: GPIO 1
+ RTC_LDO		: LDO		: ips-supply		: always on
++DRIVEVBUS	: Enable output	: drivevbus-supply	: external regulator
+ 
+ AXP806 regulators, type, and corresponding input supply names:
+ 
+diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+index 181622b2813d..91b8ff8bac15 100644
+--- a/drivers/regulator/axp20x-regulator.c
++++ b/drivers/regulator/axp20x-regulator.c
+@@ -721,6 +721,8 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+ 	case AXP803_ID:
+ 		regulators = axp803_regulators;
+ 		nregulators = AXP803_REG_ID_MAX;
++		drivevbus = of_property_read_bool(pdev->dev.parent->of_node,
++						  "x-powers,drive-vbus-en");
+ 		break;
+ 	case AXP806_ID:
+ 		regulators = axp806_regulators;
+-- 
+2.14.3
