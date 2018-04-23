@@ -1,67 +1,63 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun4i: Fix incorrect clocks
- for displays
-Date: Mon, 23 Apr 2018 14:24:44 +0200
-Message-ID: <20180423122444.msxpe5e4ovr6eqqb@flea>
-References: <20180420102112.2843-1-dev@pascalroeleven.nl>
- <20180423071421.byupsz4gxpmhfe44@flea>
- <887c9144972ab75a4520141a17e1607b@pascalroeleven.nl>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: marvell: armada-37xx: reserve memory for ATF
+Date: Mon, 23 Apr 2018 14:49:40 +0200
+Message-ID: <20180423144940.64fa884d@windsurf>
+References: <20180421140342.25082-1-miquel.raynal@bootlin.com>
+ <20180421161859.22d1ed18@windsurf> <20180423103127.5b9ac041@xps13>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2tmxv6dh5nmwdvru"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBF5B67LAKGQE4IU6GLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <887c9144972ab75a4520141a17e1607b-/1Tg0gxlrOS4ObxHbWkkimZHpeb/A1Y/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Pascal Roeleven <dev-/1Tg0gxlrOS4ObxHbWkkimZHpeb/A1Y/@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180423103127.5b9ac041@xps13>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Victor Gu <xigu@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---2tmxv6dh5nmwdvru
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+On Mon, 23 Apr 2018 10:31:27 +0200, Miquel Raynal wrote:
 
-On Mon, Apr 23, 2018 at 01:01:03PM +0200, Pascal Roeleven wrote:
-> On 2018-04-23 09:14, Maxime Ripard wrote:
-> > On Fri, Apr 20, 2018 at 12:21:12PM +0200, Pascal Roeleven wrote:
-> > > Some displays on SUN4i devices wouldn't properly stay on unless
-> > > 'clk_ignore_unused' is used.
-> > > 
-> > > Change the duplicate clocks to the probably intended ones.
-> > > 
-> > > Signed-off-by: Pascal Roeleven <dev-/1Tg0gxlrOS4ObxHbWkkimZHpeb/A1Y/@public.gmane.org>
-> > 
-> > What was the difference with the first patch you sent?
-> > 
-> > Anyway, I've applied it, thanks
-> > 
-> > Maxime
-> > 
-> > --
-> > Maxime Ripard, Bootlin (formerly Free Electrons)
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com
+> > Shouldn't this be done automatically by the bootloader, before passing
+> > the DTB to the kernel ?  
 > 
-> I'm sorry there isn't any.
-> It's the first patch I have ever send so had some git-send-email issues and
-> didn't know the correct procedure to resend a patch.
+> I am working with a 2017.09 mainline U-Boot.
+> 
+> I did not know the bootloader was supposedly in charge of that.
 
-Just set RESEND in the subject prefix (using --subject-prefix="PATCH
-RESEND"), and say why you resent it in the patch / cover letter after
-the --- and before the diffstat.
+I thought it should be the case, but I indeed see nothing in U-Boot
+that does that, except for OMAP2 platforms.
 
-Maxime
+> But what if it fails doing it?
 
+Well if something fails in the boot process, the platform fails to boot.
+I find this question a bit weird/silly. It's like "and what if the user
+used the wrong DT for the wrong platform ?"
+
+> Fixing the bootloader is one thing, I assume very few people would
+> update it. Is it worth keeping this in Linux DT?
+
+The issue I see with having this in the Linux DT is that depending on
+the bootloader, the memory area that is used to keep the PSCI firmware
+may very well be different. It's really not a property of the HW
+itself, but a pure software choice of the bootloader. For example, are
+you sure the mainline U-Boot puts the PSCI firmware at the same place
+as the vendor U-Boot ?
+
+What are other platforms doing to solve this problem ?
+
+Best regards,
+
+Thomas
 -- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
+Thomas Petazzoni, CTO, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
---2tmxv6dh5nmwdvru--
