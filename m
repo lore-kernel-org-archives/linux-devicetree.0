@@ -1,50 +1,49 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v2 04/15] clk: imx7d: reset parent for mipi csi root
-Date: Mon, 23 Apr 2018 14:47:39 +0100
-Message-ID: <20180423134750.30403-5-rui.silva@linaro.org>
-References: <20180423134750.30403-1-rui.silva@linaro.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 1/5] ARM: dts: imx6qdl: Remove #address/#size-cells from
+ mipi_dsi
+Date: Mon, 23 Apr 2018 10:46:10 -0300
+Message-ID: <1524491174-16878-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180423134750.30403-1-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-To guarantee that we do not get Overflow in image FIFO the outer bandwidth has
-to be faster than inputer bandwidth. For that it must be possible to set a
-faster frequency clock. So set new parent to sys_pfd3 clock for the mipi csi
-block.
+From: Fabio Estevam <fabio.estevam@nxp.com>
 
-Cc: linux-clk@vger.kernel.org
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Remove unnecessary #address-cells/#size-cells to fix the following
+DTC warnings:
+
+arch/arm/boot/dts/imx6dl-apf6dev.dtb: Warning (avoid_unnecessary_addr_size): /soc/aips-bus@2100000/mipi@21e0000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
 ---
- drivers/clk/imx/clk-imx7d.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/imx6qdl.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
-index f7f4db2e6fa6..9a1a18ceb132 100644
---- a/drivers/clk/imx/clk-imx7d.c
-+++ b/drivers/clk/imx/clk-imx7d.c
-@@ -891,6 +891,9 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
- 	clk_set_parent(clks[IMX7D_PLL_AUDIO_MAIN_BYPASS], clks[IMX7D_PLL_AUDIO_MAIN]);
- 	clk_set_parent(clks[IMX7D_PLL_VIDEO_MAIN_BYPASS], clks[IMX7D_PLL_VIDEO_MAIN]);
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index c003e62..1fbd970 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1187,8 +1187,6 @@
+ 			};
  
-+	clk_set_parent(clks[IMX7D_MIPI_CSI_ROOT_SRC],
-+		       clks[IMX7D_PLL_SYS_PFD3_CLK]);
-+
- 	/* use old gpt clk setting, gpt1 root clk must be twice as gpt counter freq */
- 	clk_set_parent(clks[IMX7D_GPT1_ROOT_SRC], clks[IMX7D_OSC_24M_CLK]);
+ 			mipi_dsi: mipi@21e0000 {
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 				reg = <0x021e0000 0x4000>;
+ 				status = "disabled";
  
 -- 
-2.17.0
+2.7.4
