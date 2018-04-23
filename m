@@ -1,18 +1,18 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "mfd: bd9571mwv: Allow DDR Backup Power register access" to the regulator tree
-Date: Mon, 23 Apr 2018 19:05:04 +0100
-Message-ID: <E1fAfpo-0004D5-5n@debutante>
-References: <1507649178-31473-4-git-send-email-geert+renesas@glider.be>
+Subject: Applied "dt-bindings: mfd: bd9571mwv: Document DDR Backup Mode properties" to the regulator tree
+Date: Mon, 23 Apr 2018 19:05:11 +0100
+Message-ID: <E1fAfpv-0004FS-DO@debutante>
+References: <1524057484-25350-2-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1507649178-31473-4-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1524057484-25350-2-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>Lee Jones <lee.jones@linaro.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.orglinux-kernel@vger.kernel.org
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Marek Vasut <marek.vasut+renesas@gmail.com>Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.orglinux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   mfd: bd9571mwv: Allow DDR Backup Power register access
+   dt-bindings: mfd: bd9571mwv: Document DDR Backup Mode properties
 
 has been applied to the regulator tree at
 
@@ -37,40 +37,61 @@ to this mail.
 Thanks,
 Mark
 
->From 7b569bcb2a2f985fe2d1407aed705882af30cb77 Mon Sep 17 00:00:00 2001
+>From c85964de544cae98c3d8d29c936b6d13258e4a10 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Wed, 18 Apr 2018 15:18:03 +0200
-Subject: [PATCH] mfd: bd9571mwv: Allow DDR Backup Power register access
+Date: Wed, 18 Apr 2018 15:18:01 +0200
+Subject: [PATCH] dt-bindings: mfd: bd9571mwv: Document DDR Backup Mode
+ properties
 
-Enable read/write access to the BD9571MWV_BKUP_MODE_CNT register, which
-is amongst others used to configure DDR Backup Power.
+Document the new optional properties related to DDR Backup Mode and
+toggle/momentary power switches.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Acked-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/mfd/bd9571mwv.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/mfd/bd9571mwv.txt     | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/mfd/bd9571mwv.c b/drivers/mfd/bd9571mwv.c
-index 64e088dfe7b0..503979c81dae 100644
---- a/drivers/mfd/bd9571mwv.c
-+++ b/drivers/mfd/bd9571mwv.c
-@@ -29,6 +29,7 @@ static const struct mfd_cell bd9571mwv_cells[] = {
+diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+index 9ab216a851d5..25d1f697eb25 100644
+--- a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
++++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+@@ -25,6 +25,25 @@ Required properties:
+ 			    Each child node is defined using the standard
+ 			    binding for regulators.
  
- static const struct regmap_range bd9571mwv_readable_yes_ranges[] = {
- 	regmap_reg_range(BD9571MWV_VENDOR_CODE, BD9571MWV_PRODUCT_REVISION),
-+	regmap_reg_range(BD9571MWV_BKUP_MODE_CNT, BD9571MWV_BKUP_MODE_CNT),
- 	regmap_reg_range(BD9571MWV_AVS_SET_MONI, BD9571MWV_AVS_DVFS_VID(3)),
- 	regmap_reg_range(BD9571MWV_VD18_VID, BD9571MWV_VD33_VID),
- 	regmap_reg_range(BD9571MWV_DVFS_VINIT, BD9571MWV_DVFS_VINIT),
-@@ -44,6 +45,7 @@ static const struct regmap_access_table bd9571mwv_readable_table = {
- };
++Optional properties:
++  - rohm,ddr-backup-power : Value to use for DDR-Backup Power (default 0).
++			    This is a bitmask that specifies which DDR power
++			    rails need to be kept powered when backup mode is
++			    entered, for system suspend:
++			      - bit 0: DDR0
++			      - bit 1: DDR1
++			      - bit 2: DDR0C
++			      - bit 3: DDR1C
++			    These bits match the KEEPON_DDR* bits in the
++			    documentation for the "BKUP Mode Cnt" register.
++  - rohm,rstbmode-level: The RSTB signal is configured for level mode, to
++			 accommodate a toggle power switch (the RSTBMODE pin is
++			 strapped low).
++  - rohm,rstbmode-pulse: The RSTB signal is configured for pulse mode, to
++			 accommodate a momentary power switch (the RSTBMODE pin
++			 is strapped high).
++			 The two properties above are mutually exclusive.
++
+ Example:
  
- static const struct regmap_range bd9571mwv_writable_yes_ranges[] = {
-+	regmap_reg_range(BD9571MWV_BKUP_MODE_CNT, BD9571MWV_BKUP_MODE_CNT),
- 	regmap_reg_range(BD9571MWV_AVS_VD09_VID(0), BD9571MWV_AVS_VD09_VID(3)),
- 	regmap_reg_range(BD9571MWV_DVFS_SETVID, BD9571MWV_DVFS_SETVID),
- 	regmap_reg_range(BD9571MWV_GPIO_DIR, BD9571MWV_GPIO_OUT),
+ 	pmic: pmic@30 {
+@@ -36,6 +55,8 @@ Example:
+ 		#interrupt-cells = <2>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		rohm,ddr-backup-power = <0xf>;
++		rohm,rstbmode-pulse;
+ 
+ 		regulators {
+ 			dvfs: dvfs {
 -- 
 2.17.0
