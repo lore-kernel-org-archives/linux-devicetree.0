@@ -1,64 +1,23 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 06/15] media: staging/imx: add imx7 capture subsystem
-Date: Mon, 23 Apr 2018 17:48:23 +0200
-Message-ID: <1524498503.3396.5.camel@pengutronix.de>
-References: <20180423134750.30403-1-rui.silva@linaro.org>
- <20180423134750.30403-7-rui.silva@linaro.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v5 1/2] media: ov2680: dt: Add bindings for OV2680
+Date: Mon, 23 Apr 2018 12:58:52 -0300
+Message-ID: <CAOMZO5DO1ZkrTz5UBpMxERTpkEWrPkTEb5w6ShMh754nybZ4nA@mail.gmail.com>
+References: <20180419110056.10342-1-rui.silva@linaro.org> <20180419110056.10342-2-rui.silva@linaro.org>
+ <CAOMZO5A3+WMu+U5STP-z3qdXnUQN2yTJne2OV9-SrEs70JJyDA@mail.gmail.com> <m3wowydkn0.fsf@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180423134750.30403-7-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>, mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <m3wowydkn0.fsf@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media <linux-media@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Ryan Harkin <ryan.harkin@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-04-23 at 14:47 +0100, Rui Miguel Silva wrote:
-> Add imx7 capture subsystem to imx-media core to allow the use some of the
-> existing modules for i.MX5/6 with i.MX7 SoC.
-> 
-> Since i.MX7 does not have an IPU unset the ipu_present flag to differentiate
-> some runtime behaviors.
-> 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> ---
->  drivers/staging/media/imx/imx-media-dev.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
-> index c0f277adeebe..be68235c4caa 100644
-> --- a/drivers/staging/media/imx/imx-media-dev.c
-> +++ b/drivers/staging/media/imx/imx-media-dev.c
-> @@ -486,6 +486,9 @@ static int imx_media_probe(struct platform_device *pdev)
->  
->  	imxmd->ipu_present = true;
->  
-> +	if (of_device_is_compatible(node, "fsl,imx7-capture-subsystem"))
-> +		imxmd->ipu_present = false;
-> +
+On Mon, Apr 23, 2018 at 12:09 PM, Rui Miguel Silva <rui.silva@linaro.org> wrote:
 
-Is this something of_match_device should be used for?
+> Yes, you are correct, I will fix this, and the dts entry.
 
->  	if (imxmd->ipu_present) {
->  		ret = imx_media_add_internal_subdevs(imxmd);
->  		if (ret) {
-> @@ -543,6 +546,7 @@ static int imx_media_remove(struct platform_device *pdev)
->  
->  static const struct of_device_id imx_media_dt_ids[] = {
->  	{ .compatible = "fsl,imx-capture-subsystem" },
-> +	{ .compatible = "fsl,imx7-capture-subsystem" },
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, imx_media_dt_ids);
+As this pin has both reset and powerdown functionalities, maybe you
+can name the property as 'reset-gpios'
 
-regards
-Philipp
+Thanks
