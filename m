@@ -1,67 +1,48 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v4 7/8] drm/i2c: tda998x: register as a drm bridge
-Date: Mon, 23 Apr 2018 17:08:33 +0100
-Message-ID: <20180423160833.GF16141@n2100.armlinux.org.uk>
-References: <20180423072301.11962-1-peda@axentia.se>
- <20180423072301.11962-8-peda@axentia.se>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2] ARM64: dts: meson-axg: enable the eMMC controller
+Date: Mon, 23 Apr 2018 09:41:05 -0700
+Message-ID: <CAOi56cUwzrpA1AdRQE3gdW55my-_dqSNnwyEd4poUPjUkpaBag@mail.gmail.com>
+References: <20180408113647.13543-1-yixun.lan@amlogic.com> <7ho9if3wo3.fsf@baylibre.com>
+ <CAPDyKFpcmO7LYuyuNPcYmzeDyq_AXDH5W4Y9dByTL-B+DGZSqg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180423072301.11962-8-peda@axentia.se>
+In-Reply-To: <CAPDyKFpcmO7LYuyuNPcYmzeDyq_AXDH5W4Y9dByTL-B+DGZSqg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Yixun Lan <yixun.lan@amlogic.com>, Rob Herring <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Nan Li <nan.li@amlogic.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Carlo Caione <carlo@caione.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 23, 2018 at 09:23:00AM +0200, Peter Rosin wrote:
->  static int tda998x_remove(struct i2c_client *client)
->  {
-> -	component_del(&client->dev, &tda998x_ops);
-> +	struct device *dev = &client->dev;
-> +	struct tda998x_bridge *bridge = dev_get_drvdata(dev);
-> +
-> +	drm_bridge_remove(&bridge->bridge);
-> +	component_del(dev, &tda998x_ops);
-> +
+On Thu, Apr 19, 2018 at 11:55 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> On 19 April 2018 at 19:58, Kevin Hilman <khilman@baylibre.com> wrote:
+>> Yixun Lan <yixun.lan@amlogic.com> writes:
+>>
+>>> From: Nan Li <nan.li@amlogic.com>
+>>>
+>>> The IP of eMMC controller in AXG is similiar to Meson-GX series.
+>>> Here we add the initial support of the HS200 mode with
+>>> clock running at 166MHz (to be safe), since we found some eMMC chip
+>>> fail to run at 200MHz due to tunning phase error.
+>>>
+>>> Signed-off-by: Nan Li <nan.li@amlogic.com>
+>>> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+>>
+>> Applied to v4.18/dt64
+>>
+>>> ---
+>>> Hi Kevin
+>>>   Please note this patch actually depend on the eMMC driver here [0].
+>>>   Still a few problem to solve, to improve the tuning phase driver to make
+>>> the clock running at 200MHz, and to further support the HS400 mode.
+>>> Anyway, this patch itself is quite independent.
+>>
+>> The driver changes are queued for v4.18 also.  Good!
+>
+> Right, may I consider that as an ack? :-)
 
-I'd like to ask a rather fundamental question about DRM bridge support,
-because I suspect that there's a major fsckup here.
+I thought it was already merged while I was OoO, so I didn't bother to
+reply with an ack, but if it's not too late, then yes:
 
-The above is the function that deals with the TDA998x device being
-unbound from the driver.  With the component API, this results in the
-DRM device correctly being torn down, because one of the hardware
-devices has gone.
+Acked-by: Kevin Hilman <khilman@baylibre.com>
 
-With DRM bridge, the bridge is merely removed from the list of
-bridges:
-
-void drm_bridge_remove(struct drm_bridge *bridge)
-{
-        mutex_lock(&bridge_lock);
-        list_del_init(&bridge->list);
-        mutex_unlock(&bridge_lock);
-}
-EXPORT_SYMBOL(drm_bridge_remove);
-
-and the memory backing the "struct tda998x_bridge" (which contains
-the struct drm_bridge) will be freed by the devm subsystem.
-
-However, there is no notification into the rest of the DRM subsystem
-that the device has gone away.  Worse, the memory that is still in
-use by DRM has now been freed, so further use of the DRM device
-results in a use-after-free bug.
-
-This is really not good, and to me looks like a fundamental problem
-with the DRM bridge code.  I see nothing in the DRM bridge code that
-deals with the lifetime of a "DRM bridge" or indeed the lifetime of
-the actual device itself.
-
-So, from what I can see, there seems to be a fundamental lifetime
-issue with the design of the DRM bridge code.  This needs to be
-fixed.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+Kevin
