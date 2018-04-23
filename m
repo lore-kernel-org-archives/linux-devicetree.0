@@ -1,126 +1,79 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH] mmc: disable card sleep via device-tree
-Date: Mon, 23 Apr 2018 10:26:09 +0200
-Message-ID: <CAPDyKFqaV0ehiHCNdt0i4sWE9cskBa9AQHdRZmzCphPzCdm9ow@mail.gmail.com>
-References: <20180422213126.32756-1-lukma@denx.de>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v6 1/2] drm/bridge: Add Cadence DSI driver
+Date: Mon, 23 Apr 2018 13:56:42 +0530
+Message-ID: <7d4ddac2-1df2-c4a3-6b11-8418ebbb97b7@codeaurora.org>
+References: <20180410130001.1234-1-boris.brezillon@bootlin.com>
+ <c9b7c668-9d34-abdc-a98e-8d218209ec13@codeaurora.org>
+ <20180421082017.4738b65d@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180422213126.32756-1-lukma@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Fabio Estevam <fabio.estevam@nxp.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Chanho Min <chanho.min@lge.com>, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Stanislav Meduna <stanislav.meduna@nxtcontrol.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180421082017.4738b65d@bbrezillon>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: "Menon, Nishanth" <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Alan Douglas <adouglas@cadence.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Richard Sproul <sproul@cadence.com>, devicetree@vger.kernel.org, Rafal Ciepiela <rafalc@cadence.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, Jyri Sarha <jsarha@ti.com>, Rob Herring <robh+dt@kernel.org>, Suresh Punnoose <sureshp@cadence.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22 April 2018 at 23:31, Lukasz Majewski <lukma@denx.de> wrote:
-> From: Stanislav Meduna <stanislav.meduna@nxtcontrol.com>
->
-> On a TQMa53 module the mmc_sleep leaves the eMMC card in a state
-> that the imx53 rom boot code is unable to probe, resulting in
-> reboot hanging. Add a device tree property to disable sleeping
-> on suspend.
->
-> For TQMa53 modules the exact commit to cause hang after reboot
-> (v3.10 -> v3.11):
-> commit 486fdbbc1483 ("mmc: core: Add shutdown callback for (e)MMC bus_ops")
->
-> [The exact discussion can be found here:
-> https://patchwork.kernel.org/patch/8881401/
-> "i.MX53 restart via watchdog does not work"
->
-> Signed-off-by: Stanislav Meduna <stanislav.meduna@nxtcontrol.com>
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> ---
->  Documentation/devicetree/bindings/mmc/mmc-card.txt | 4 ++++
->  drivers/mmc/core/mmc.c                             | 7 +++++--
->  include/linux/mmc/card.h                           | 2 +-
->  3 files changed, 10 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-card.txt b/Documentation/devicetree/bindings/mmc/mmc-card.txt
-> index 8d2d71758907..c3ee151edd7c 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc-card.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-card.txt
-> @@ -12,6 +12,9 @@ Required properties:
->  Optional properties:
->  -broken-hpi : Use this to indicate that the mmc-card has a broken hpi
->                implementation, and that hpi should not be used
-> +-no-sleep-on-suspend : Do not put the card to sleep when suspending.
-> +              There are boards with bootloaders that are unable
-> +              to probe such card when rebooting.
->
->  Example:
->
-> @@ -26,5 +29,6 @@ Example:
->                 reg = <0>;
->                 compatible = "mmc-card";
->                 broken-hpi;
-> +               no-sleep-on-suspend;
->         };
->  };
-> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-> index 208a762b87ef..a3b74b5c8893 100644
-> --- a/drivers/mmc/core/mmc.c
-> +++ b/drivers/mmc/core/mmc.c
-> @@ -381,8 +381,11 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
->         }
->
->         np = mmc_of_find_child_device(card->host, 0);
-> -       if (np && of_device_is_compatible(np, "mmc-card"))
-> +       if (np && of_device_is_compatible(np, "mmc-card")) {
->                 broken_hpi = of_property_read_bool(np, "broken-hpi");
-> +               card->no_sleep_on_suspend =
-> +                       of_property_read_bool(np, "no-sleep-on-suspend");
-> +       }
->         of_node_put(np);
->
->         /*
-> @@ -1990,7 +1993,7 @@ static int _mmc_suspend(struct mmc_host *host, bool is_suspend)
->         if (mmc_can_poweroff_notify(host->card) &&
->                 ((host->caps2 & MMC_CAP2_FULL_PWR_CYCLE) || !is_suspend))
->                 err = mmc_poweroff_notify(host->card, notify_type);
-> -       else if (mmc_can_sleep(host->card))
-> +       else if (mmc_can_sleep(host->card) && !host->card->no_sleep_on_suspend)
-
-No, this is wrong.
-
-This means that the mmc_power_off() a few lines below would start to
-violate the eMMC spec. That via powering off the card, without first
-sending the sleep or power-off-notify command.
-You are probably just lucky, as your particular eMMC card still copes
-with this in-correct sequence (I know there are these kind of cards).
-
-Well, what is also interesting in this regards, is what is happening
-during mmc_power_off(). Does your host driver cut power to VMMC and/or
-VQMMC?
-
->                 err = mmc_sleep(host);
->         else if (!mmc_host_is_spi(host))
->                 err = mmc_deselect_cards(host);
-> diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
-> index 279b39008a33..c64d88e6de3b 100644
-> --- a/include/linux/mmc/card.h
-> +++ b/include/linux/mmc/card.h
-> @@ -304,8 +304,8 @@ struct mmc_card {
->         struct dentry           *debugfs_root;
->         struct mmc_part part[MMC_NUM_PHY_PARTITION]; /* physical partitions */
->         unsigned int    nr_parts;
-> -
->         unsigned int            bouncesz;       /* Bounce buffer size */
-> +       bool    no_sleep_on_suspend;
->  };
->
->  static inline bool mmc_large_sector(struct mmc_card *card)
-> --
-> 2.11.0
->
-
-My impression is that it seems like there are still some uncertainties
-around what actually happens when the failure occurs during re-boot. I
-am guessing this boils done to how VMMC and VQMMC are being managed.
-
-BTW, in the the pwrseq_emmc, we register a restart handler to pull the
-reset GPIO for the eMMC. Perhaps that can help to fix this problem as
-well!?
-
-Kind regards
-Uffe
+CgpPbiBTYXR1cmRheSAyMSBBcHJpbCAyMDE4IDExOjUwIEFNLCBCb3JpcyBCcmV6aWxsb24gd3Jv
+dGU6Cj4gSGkgQXJjaGl0LAo+IAo+IE9uIFN1biwgMTUgQXByIDIwMTggMTM6Mzk6NDQgKzA1MzAK
+PiBBcmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiAKPj4+ICtz
+dGF0aWMgaW50IGNkbnNfZHNpX2dldF9kcGh5X3BsbF9jZmcoc3RydWN0IGNkbnNfZHBoeSAqZHBo
+eSwKPj4+ICsJCQkJICAgICBzdHJ1Y3QgY2Ruc19kcGh5X2NmZyAqY2ZnLAo+Pj4gKwkJCQkgICAg
+IHVuc2lnbmVkIGludCBkcGlfaHRvdGFsLAo+Pj4gKwkJCQkgICAgIHVuc2lnbmVkIGludCBkcGlf
+YnBwLAo+Pj4gKwkJCQkgICAgIHVuc2lnbmVkIGludCBkcGlfaHosCj4+PiArCQkJCSAgICAgdW5z
+aWduZWQgaW50IGRzaV9odG90YWwsCj4+PiArCQkJCSAgICAgdW5zaWduZWQgaW50IGRzaV9ubGFu
+ZXMsCj4+PiArCQkJCSAgICAgdW5zaWduZWQgaW50ICpkc2lfaGZwX2V4dCkKPj4+ICt7Cj4+PiAr
+CXU2NCBkbGFuZV9icHMsIGRsYW5lX2Jwc19tYXgsIGZiZGl2LCBmYmRpdl9tYXgsIGFkal9kc2lf
+aHRvdGFsOwo+Pj4gKwl1bnNpZ25lZCBsb25nIHBsbF9yZWZfaHogPSBjbGtfZ2V0X3JhdGUoZHBo
+eS0+cGxsX3JlZl9jbGspOwo+Pj4gKwo+Pj4gKwltZW1zZXQoY2ZnLCAwLCBzaXplb2YoKmNmZykp
+Owo+Pj4gKwo+Pj4gKwljZmctPm5sYW5lcyA9IGRzaV9ubGFuZXM7Cj4+PiArCj4+PiArCWlmIChw
+bGxfcmVmX2h6IDwgOTYwMDAwMCB8fCBwbGxfcmVmX2h6ID49IDE1MDAwMDAwMCkKPj4+ICsJCXJl
+dHVybiAtRUlOVkFMOwo+Pj4gKwllbHNlIGlmIChwbGxfcmVmX2h6IDwgMTkyMDAwMDApCj4+PiAr
+CQljZmctPnBsbF9pcGRpdiA9IDE7Cj4+PiArCWVsc2UgaWYgKHBsbF9yZWZfaHogPCAzODQwMDAw
+MCkKPj4+ICsJCWNmZy0+cGxsX2lwZGl2ID0gMjsKPj4+ICsJZWxzZSBpZiAocGxsX3JlZl9oeiA8
+IDc2ODAwMDAwKQo+Pj4gKwkJY2ZnLT5wbGxfaXBkaXYgPSA0Owo+Pj4gKwllbHNlCj4+PiArCQlj
+ZmctPnBsbF9pcGRpdiA9IDg7Cj4+PiArCj4+PiArCS8qCj4+PiArCSAqIE1ha2Ugc3VyZSBEU0kg
+aHRvdGFsIGlzIGFsaWduZWQgb24gYSBsYW5lIGJvdW5kYXJ5IHdoZW4gY2FsY3VsYXRpbmcKPj4+
+ICsJICogdGhlIGV4cGVjdGVkIGRhdGEgcmF0ZS4gVGhpcyBpcyBkb25lIGJ5IGV4dGVuZGluZyBI
+RlAgaW4gY2FzZSBvZgo+Pj4gKwkgKiBtaXNhbGlnbm1lbnQuCj4+PiArCSAqLwo+Pj4gKwlhZGpf
+ZHNpX2h0b3RhbCA9IGRzaV9odG90YWw7Cj4+PiArCWlmIChkc2lfaHRvdGFsICUgZHNpX25sYW5l
+cykKPj4+ICsJCWFkal9kc2lfaHRvdGFsICs9IGRzaV9ubGFuZXMgLSAoZHNpX2h0b3RhbCAlIGRz
+aV9ubGFuZXMpOwo+Pj4gKwo+Pj4gKwlkbGFuZV9icHMgPSAodTY0KWRwaV9oeiAqIGFkal9kc2lf
+aHRvdGFsOwo+Pj4gKwo+Pj4gKwkvKiBkYXRhIHJhdGUgaW4gYnl0ZXMvc2VjIGlzIG5vdCBhbiBp
+bnRlZ2VyLCByZWZ1c2UgdGhlIG1vZGUuICovCj4+PiArCWlmIChkb19kaXYoZGxhbmVfYnBzLCBk
+c2lfbmxhbmVzICogZHBpX2h0b3RhbCkpCj4+PiArCQlyZXR1cm4gLUVJTlZBTDsKPj4+ICsKPj4+
+ICsJLyogZGF0YSByYXRlIHdhcyBpbiBieXRlcy9zZWMsIGNvbnZlcnQgdG8gYml0cy9zZWMuICov
+Cj4+PiArCWRsYW5lX2JwcyAqPSA4Owo+Pj4gKwo+Pj4gKwlpZiAoZGxhbmVfYnBzID4gMjUwMDAw
+MDAwMFVMIHx8IGRsYW5lX2JwcyA8IDE2MDAwMDAwMFVMKQo+Pj4gKwkJcmV0dXJuIC1FSU5WQUw7
+Cj4+PiArCWVsc2UgaWYgKGRsYW5lX2JwcyA+PSAxMjUwMDAwMDAwKQo+Pj4gKwkJY2ZnLT5wbGxf
+b3BkaXYgPSAxOwo+Pj4gKwllbHNlIGlmIChkbGFuZV9icHMgPj0gNjMwMDAwMDAwKQo+Pj4gKwkJ
+Y2ZnLT5wbGxfb3BkaXYgPSAyOwo+Pj4gKwllbHNlIGlmIChkbGFuZV9icHMgPj0gMzIwMDAwMDAw
+KQo+Pj4gKwkJY2ZnLT5wbGxfb3BkaXYgPSA0Owo+Pj4gKwllbHNlIGlmIChkbGFuZV9icHMgPj0g
+MTYwMDAwMDAwKQo+Pj4gKwkJY2ZnLT5wbGxfb3BkaXYgPSA4Owo+Pj4gKwo+Pj4gKwkvKgo+Pj4g
+KwkgKiBBbGxvdyBhIGRldmlhdGlvbiBvZiAwLjIlIG9uIHRoZSBwZXItbGFuZSBkYXRhIHJhdGUg
+dG8gdHJ5IHRvCj4+PiArCSAqIHJlY292ZXIgYSBwb3RlbnRpYWwgbWlzbWF0Y2ggYmV0d2VlbiBE
+UEkgYW5kIFBQSSBjbGtzLgo+Pj4gKwkgKi8KPj4+ICsJZGxhbmVfYnBzX21heCA9IGRsYW5lX2Jw
+cyArIChkbGFuZV9icHMgLyA1MDApOwo+Pgo+PiBrYnVpbGQgcmVwb3J0ZWQgYW4gZXJyb3IgZm9y
+IDMyIGJpdCBhcmNocy4gSSdtIGd1ZXNzaW5nIGl0J3MgYmVjYXVzZSBvZgo+PiB0aGlzIGRpdmlk
+ZSBhYm92ZT8KPiAKPiBZZXAsIERJVl9ST1VORF9VUF9VTEwoKSBzaG91bGQgZml4IHRoZSBwcm9i
+bGVtLgo+IAo+Pgo+Pgo+Pj4gKwo+Pj4gKwlmYmRpdl9tYXggPSBESVZfUk9VTkRfRE9XTl9VTEwo
+KGRsYW5lX2JwcyArIChkbGFuZV9icHMgLyA1MDApKSAqIDIgKgo+Pgo+PiBZb3UgY291bGQgdXNl
+IGRsYW5lX2Jwc19tYXggaGVyZSBpbnN0ZWFkLgo+IAo+IFN1cmUuCj4gCj4+Cj4+IE90aGVyd2lz
+ZSwKPj4KPj4gUmV2aWV3ZWQtYnk6IEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5v
+cmc+Cj4gCj4gVGhhbmtzIGZvciB0aGUgcmV2aWV3Lgo+IAo+IERvZXMgdGhhdCBtZWFuIEknbSBh
+bGxvd2VkIHRvIGFwcGx5IHRoZSBwYXRjaCB0byBkcm0tbWlzYy1uZXh0IG15c2VsZgo+IGFmdGVy
+IGZpeGluZyB0aGUgZGl2NjQgaXNzdWU/CgpTdXJlLCBwbGVhc2UgZ28gYWhlYWQuCgpBcmNoaXQK
+Cj4gCj4gUmVnYXJkcywKPiAKPiBCb3Jpcwo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
