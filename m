@@ -1,149 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
-Date: Mon, 23 Apr 2018 11:51:52 -0500
-Message-ID: <CAL_JsqJRGBmjEoaaiPTuqqN=H3oF+VJXz=pbmkQSTZJisPB40w@mail.gmail.com>
-References: <20180418222905.10414-1-robh@kernel.org> <20180420214722.GA18510@minitux>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 0/4] regulator: bd9571mwv: Add support for DDR backup
+ mode
+Date: Mon, 23 Apr 2018 17:57:02 +0100
+Message-ID: <20180423165702.GM19834@sirena.org.uk>
+References: <1524057484-25350-1-git-send-email-geert+renesas@glider.be>
+ <20180420074914.vl4rer5zdeldfzb3@dell>
+ <CAMuHMdWeROfJNvUtfooN8gqA+nTRXhVLvQFpc-xiqUbG9XgcmA@mail.gmail.com>
+ <20180420085826.4omlf2rrwuno3mtj@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="SEFvVLxbW/dEDtN8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180420214722.GA18510@minitux>
+Content-Disposition: inline
+In-Reply-To: <20180420085826.4omlf2rrwuno3mtj@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, Jonathan Cameron <jic23@kernel.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Marek Vasut <marek.vasut+renesas@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 20, 2018 at 4:47 PM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> On Wed 18 Apr 15:29 PDT 2018, Rob Herring wrote:
->
->> The current DT binding documentation format of freeform text is painful
->> to write, review, validate and maintain.
->>
->> This is just an example of what a binding in the schema format looks
->> like. It's using jsonschema vocabulary in a YAML encoded document. Using
->> jsonschema gives us access to existing tooling. A YAML encoding gives us
->> something easy to edit.
->>
->> This example is just the tip of the iceberg, but it the part most
->> developers writing bindings will interact with. Backing all this up
->> are meta-schema (to validate the binding schemas), some DT core schema,
->> YAML encoded DT output with dtc, and a small number of python scripts to
->> run validation. The gory details including how to run end-to-end
->> validation can be found here:
->>
->> https://www.spinics.net/lists/devicetree-spec/msg00649.html
->>
->> Signed-off-by: Rob Herring <robh@kernel.org>
->> ---
->> Cc list,
->> You all review and/or write lots of binding documents. I'd like some feedback
->> on the format.
->>
->
-> I really like the idea of formalizing the binding document format and
-> the ability of validating a dtb is really nice.
->
->> Thanks,
->> Rob
->>
->>  .../devicetree/bindings/example-schema.yaml        | 149 +++++++++++++++++++++
->>  1 file changed, 149 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/example-schema.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
-> [..]
->> +  reg:
->> +    # The description of each element defines the order and implicitly defines
->> +    # the number of reg entries
->> +    items:
->> +      - description: core registers
->> +      - description: aux registers
->> +    # minItems/maxItems equal to 2 is implied
->
-> I assume that a reg with variable number of entries would have
-> "description" for all of them and then a minItems that matches the
-> required ones and maxItems matching all of them?
 
-You could do that, but it doesn't really enforce which compatible(s)
-each size of reg is valid for. It would work okay when just the last N
-entries are variable, but it will break down if you have cases where
-essentially any subset is valid. For bindings with lots of conditional
-sizes for reg, clocks, resets, etc. based on compatible strings, I
-think we will need to split the binding into a schema per compatible.
+--SEFvVLxbW/dEDtN8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-IMO, things like this are probably not going to be addressed at the
-start and may remain in the description (as we have today). I think we
-need to start with a base schema and can improve them over time.
+On Fri, Apr 20, 2018 at 09:58:26AM +0100, Lee Jones wrote:
+> On Fri, 20 Apr 2018, Geert Uytterhoeven wrote:
 
->> +
->> +  reg-names:
->> +    # The core schema enforces this is a string array
->> +    items:
->> +      - const: core
->> +      - const: aux
->
-> I presume validation based on this should check that there's equal
-> number of entries in reg-names as there where in reg. Should this
-> relationship be described in the schema?
+> > Alternative, as you've already supplied (some form of) your Ack for the firs
+> > 3 patches, they can go in through Mark? All of it is enhancing the
+> > regulator part.
 
-Yes, if we can figure out how. But I don't think it belongs in per
-device schema as it is a core requirement.
+> Yes, that's fine too:
 
->
-> [..]
->> +  interrupts:
->> +    # Either 1 or 2 interrupts can be present
->> +    minItems: 1
->> +    maxItems: 2
->> +    items:
->> +      - description: tx or combined interrupt
->> +      - description: rx interrupt
->> +
->> +    description: |
->> +      A variable number of interrupts warrants a description of what conditions
->> +      affect the number of interrupts. Otherwise, descriptions on standard
->> +      properties are not necessary.
->
-> For validation purposes this could be interrupts with interrupt-parents
-> or a interrupts-extend, a fact that we probably don't want to duplicate
-> in every definition?
->
-> Perhaps we should just do like you did here and define the "interrupts"
-> and then in the validation tool - where we need to encode the logic
-> behind this anyways - we support the different variants.
+> Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Yes, essentially as we do now where the binding just describes
-'interrupts' and 'interrupts-extended' is implicitly supported.
+I've applied them, let me know if you need a pull request.
 
->> +
->> +  interrupt-names:
->> +    # minItems must be specified here because the default would be 2
->> +    minItems: 1
->
-> As with reg-names, it would be good to have the validator warn if this
-> is not the same number of items as entries in "interrupts".
->
->> +    items:
->> +      - const: "tx irq"
->> +      - const: "rx irq"
->> +
->> +  # Property names starting with '#' must be quoted
->> +  '#interrupt-cells':
->> +    # A simple case where the value must always be '2'.
->> +    # The core schema handles that this must be a single integer.
->> +    const: 2
->
-> If this is specified then interrupt-controller should also be given, or
-> vise versa. How would we describe that?
+--SEFvVLxbW/dEDtN8
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The core meta-schema can check that with 'dependencies'. Here's gpio
-meta-schema for example:
+-----BEGIN PGP SIGNATURE-----
 
-dependencies:
-  gpio-controller: ['#gpio-cells']
-  '#gpio-cells': [gpio-controller]
-  gpio-ranges: [gpio-controller]
-  ngpios: [gpio-controller]
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlreEF0ACgkQJNaLcl1U
+h9Cmbwf+PK1gWYHB1N11I6mVp6+02nsMl918pmBAB+MYSp0mMP9W8Ql963VL2ePO
++XgeEe+IjNdlv1BGUZSf/rMTYxSG52deDs4EL4h525xxDtJaBRSSATvicv67ncFo
+garmhMAGkkeCaUWQ3JzLyWTWt3nUrSuA+FDqq9DNQomnN+H8NPHeipTDRbiW9o4L
+J2QgG0I19SdrV9p15TvmMyRq5cRAJ3aDYe67c1/lP9QmvcAoGXklJxGQ8hfj+Jzw
+YNOaN27/DqMya/o+/di6aKa2Y88R0g7GWAtftz0Eexl9TGe4v4KedH/EbEsLTQHb
+vYN/EFy4WtImnNWD+B3HNamExDo4zQ==
+=DFY0
+-----END PGP SIGNATURE-----
 
-
-Rob
+--SEFvVLxbW/dEDtN8--
