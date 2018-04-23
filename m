@@ -1,206 +1,54 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v3] arm64: dts: renesas: v3msk: add DU/LVDS/HDMI support
-Date: Mon, 23 Apr 2018 23:45:49 +0300
-Message-ID: <d18c4314-e6ad-1558-30fb-1a32397494b6@cogentembedded.com>
-References: <23a6ac28-134b-b5dd-69a7-910774c4b8c1@cogentembedded.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 8/8] drm: connector: Remove DRM_BUS_FLAG_DATA_* flags
+Date: Tue, 24 Apr 2018 00:03:04 +0300
+Message-ID: <5371494.OmLzBJ8YyX@avalon>
+References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1524130269-32688-9-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <23a6ac28-134b-b5dd-69a7-910774c4b8c1@cogentembedded.com>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1524130269-32688-9-git-send-email-jacopo+renesas@jmondi.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, peda@axentia.se, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Define the V3M Starter Kit board dependent part of the DU and LVDS device
-nodes. Also add the device nodes for Thine THC63LVD1024 LVDS decoder and
-Analog Devices ADV7511W HDMI transmitter...
-
-Based on the original (and large) patch by Vladimir Barinov.
-
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
-This patch is against the 'renesas-devel-20180423-v4.17-rc2' tag of Simon
-Horman's 'renesas.git' repo. It requires the Thine THC63LVD1024 driver in
-order to work (the same as the Eagle HDMI patch by Jacopo/Niklas).
-
-Changes in version 3:
-- added  Thine THC63LVD1024 device node, updating the respected endpoints;
-- merged the I2C pins subnode to the main PFC device node;
-- renamed the regulators;
-
- arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts |  129 +++++++++++++++++++++++++
- 1 file changed, 129 insertions(+)
-
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
-@@ -29,6 +29,65 @@
- 		/* first 128MB is reserved for secure area. */
- 		reg = <0x0 0x48000000 0x0 0x38000000>;
- 	};
-+
-+	osc5_clk: osc5-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <148500000>;
-+	};
-+
-+	vcc_d1_8v: regulator-0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_D1.8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vcc_d3_3v: regulator-1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_D3.3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	lvds-decoder {
-+		compatible = "thine,thc63lvd1024";
-+		vcc-supply = <&vcc_d3_3v>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				thc63lvd1024_in: endpoint {
-+					remote-endpoint = <&lvds0_out>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <2>;
-+				thc63lvd1024_out: endpoint {
-+					remote-endpoint = <&adv7511_in>;
-+				};
-+			};
-+		};
-+	};
-+
-+	hdmi-out {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con: endpoint {
-+				remote-endpoint = <&adv7511_out>;
-+			};
-+		};
-+	};
- };
- 
- &avb {
-@@ -46,6 +105,13 @@
- 	};
- };
- 
-+&du {
-+	clocks = <&cpg CPG_MOD 724>,
-+		 <&osc5_clk>;
-+	clock-names = "du.0", "dclkin.0";
-+	status = "okay";
-+};
-+
- &extal_clk {
- 	clock-frequency = <16666666>;
- };
-@@ -60,12 +126,75 @@
- 		function = "avb0";
- 	};
- 
-+	i2c0_pins: i2c0 {
-+		groups = "i2c0";
-+		function = "i2c0";
-+	};
-+
- 	scif0_pins: scif0 {
- 		groups = "scif0_data";
- 		function = "scif0";
- 	};
- };
- 
-+&i2c0 {
-+	pinctrl-0 = <&i2c0_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	hdmi@39{
-+		compatible = "adi,adv7511w";
-+		#sound-dai-cells = <0>;
-+		reg = <0x39>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
-+		avdd-supply = <&vcc_d1_8v>;
-+		dvdd-supply = <&vcc_d1_8v>;
-+		pvdd-supply = <&vcc_d1_8v>;
-+		bgvdd-supply = <&vcc_d1_8v>;
-+		dvdd-3v-supply = <&vcc_d3_3v>;
-+
-+		adi,input-depth = <8>;
-+		adi,input-colorspace = "rgb";
-+		adi,input-clock = "1x";
-+		adi,input-style = <1>;
-+		adi,input-justification = "evenly";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				adv7511_in: endpoint {
-+					remote-endpoint = <&thc63lvd1024_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				adv7511_out: endpoint {
-+					remote-endpoint = <&hdmi_con>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&lvds0 {
-+	status = "okay";
-+
-+	ports {
-+		port@1 {
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&thc63lvd1024_in>;
-+			};
-+		};
-+	};
-+};
-+
- &scif0 {
- 	pinctrl-0 = <&scif0_pins>;
- 	pinctrl-names = "default";
+SGkgSmFjb3BvLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUaHVyc2RheSwgMTkgQXBy
+aWwgMjAxOCAxMjozMTowOSBFRVNUIEphY29wbyBNb25kaSB3cm90ZToKPiBEUk1fQlVTX0ZMQUdf
+REFUQV8qIGZsYWdzLCBkZWZpbmVkIGluIGRybV9jb25uZWN0b3IuaCBoZWFkZXIgZmlsZSBhcmUK
+PiB1c2VkIHRvIHN3YXAgb3JkZXJpbmcgb2YgTFZEUyBSR0IgZm9ybWF0IHRvIGFjY29tbW9kYXRl
+IERSTSBvYmplY3RzCj4gdGhhdCBuZWVkIHRvIGhhbmRsZSBMVkRTIGNvbXBvbmVudHMgb3JkZXJp
+bmcuCj4gCj4gTm93IHRoYXQgdGhlIG9ubHkgMiB1c2VycyBvZiBEUk1fQlVTX0ZMQUdfREFUQV8q
+IGZsYWdzIGhhdmUgYmVlbiBwb3J0ZWQKPiB0byB1c2UgdGhlIG5ld2x5IGludHJvZHVjZWQgTUVE
+SUFfQlVTX0ZNVF9SR0I4ODhfMVg3WCpfTEUgbWVkaWEgYnVzCj4gZm9ybWF0cywgcmVtb3ZlIHRo
+ZW0uCgpJJ20gbm90IG9wcG9zZWQgdG8gdGhpcyAoZGVzcGl0ZSBteSByZXZpZXcgb2YgcGF0Y2gg
+NS84KSwgYnV0IEkgdGhpbmsgdGhlIF9MRSAKc3VmZml4IGlzbid0IHRoZSByaWdodCBuYW1lIGZv
+ciB0aGUgbmV3IGZvcm1hdHMuIF9CRSBhbmQgX0xFIHJlbGF0ZSB0byBieXRlIApzd2FwcGluZywg
+d2hpbGUgaGVyZSB5b3UgcmVhbGx5IG5lZWQgdG8gZGVzY3JpYmUgZnVsbCBtaXJyb3JpbmcuIE1h
+eWJlIGEgCl9NSVJST1IgdmFyaWFudCB3b3VsZCBiZSBtb3JlIGFwcHJvcHJpYXRlID8KCj4gU2ln
+bmVkLW9mZi1ieTogSmFjb3BvIE1vbmRpIDxqYWNvcG8rcmVuZXNhc0BqbW9uZGkub3JnPgo+IC0t
+LQo+ICBpbmNsdWRlL2RybS9kcm1fY29ubmVjdG9yLmggfCA0IC0tLS0KPiAgMSBmaWxlIGNoYW5n
+ZWQsIDQgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL2RybV9jb25u
+ZWN0b3IuaCBiL2luY2x1ZGUvZHJtL2RybV9jb25uZWN0b3IuaAo+IGluZGV4IDY3NWNjM2YuLjll
+MGQ2ZDUgMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9kcm0vZHJtX2Nvbm5lY3Rvci5oCj4gKysrIGIv
+aW5jbHVkZS9kcm0vZHJtX2Nvbm5lY3Rvci5oCj4gQEAgLTI4NiwxMCArMjg2LDYgQEAgc3RydWN0
+IGRybV9kaXNwbGF5X2luZm8gewo+ICAjZGVmaW5lIERSTV9CVVNfRkxBR19QSVhEQVRBX1BPU0VE
+R0UJKDE8PDIpCj4gIC8qIGRyaXZlIGRhdGEgb24gbmVnLiBlZGdlICovCj4gICNkZWZpbmUgRFJN
+X0JVU19GTEFHX1BJWERBVEFfTkVHRURHRQkoMTw8MykKPiAtLyogZGF0YSBpcyB0cmFuc21pdHRl
+ZCBNU0IgdG8gTFNCIG9uIHRoZSBidXMgKi8KPiAtI2RlZmluZSBEUk1fQlVTX0ZMQUdfREFUQV9N
+U0JfVE9fTFNCCSgxPDw0KQo+IC0vKiBkYXRhIGlzIHRyYW5zbWl0dGVkIExTQiB0byBNU0Igb24g
+dGhlIGJ1cyAqLwo+IC0jZGVmaW5lIERSTV9CVVNfRkxBR19EQVRBX0xTQl9UT19NU0IJKDE8PDUp
+Cj4gCj4gIAkvKioKPiAgCSAqIEBidXNfZmxhZ3M6IEFkZGl0aW9uYWwgaW5mb3JtYXRpb24gKGxp
+a2UgcGl4ZWwgc2lnbmFsIHBvbGFyaXR5KSBmb3IKCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGlu
+Y2hhcnQKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
