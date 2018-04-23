@@ -1,122 +1,88 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH] arm64: allwinner: h6: restore the usage of
- CCU slice macros
-Date: Mon, 23 Apr 2018 14:58:48 +0800
-Message-ID: <1524466728.25095.0.camel@aosc.io>
-References: <20180403134024.43156-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH] ARM64: dts: meson-axg: enable AP6255 wifi module
+Date: Mon, 23 Apr 2018 14:57:29 +0000
+Message-ID: <20180423145729.14368-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBOEI63LAKGQE6IU3VBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180403134024.43156-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Yixun Lan <yixun.lan@amlogic.com>, Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2018-04-03=E4=BA=8C=E7=9A=84 21:40 +0800=EF=BC=8CIcenowy Zheng=E5=
-=86=99=E9=81=93=EF=BC=9A
-> As the definition of CCU slice macros are already merged into the
-> source
-> tree, restore the usage of the macros now.
+The Meson-AXG S400 board is shipped with AP6255 wifi module,
+which is actually using the brcmfmac 43455 driver.
 
-Maxime, could you check this patch and pick it?
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+---
+ .../arm64/boot/dts/amlogic/meson-axg-s400.dts | 44 ++++++++++++++++++-
+ 1 file changed, 43 insertions(+), 1 deletion(-)
 
-Thanks!
-
->=20
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 20 +++++++++++-------
-> --
->  1 file changed, 11 insertions(+), 9 deletions(-)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> index 56563150d61a..4debc3962830 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -4,6 +4,8 @@
->   */
-> =20
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/sun50i-h6-ccu.h>
-> +#include <dt-bindings/reset/sun50i-h6-ccu.h>
-> =20
->  / {
->  	interrupt-parent =3D <&gic>;
-> @@ -115,7 +117,7 @@
->  				     <GIC_SPI 53
-> IRQ_TYPE_LEVEL_HIGH>,
->  				     <GIC_SPI 54
-> IRQ_TYPE_LEVEL_HIGH>,
->  				     <GIC_SPI 59
-> IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks =3D <&ccu 26>, <&osc24M>, <&osc32k>;
-> +			clocks =3D <&ccu CLK_APB1>, <&osc24M>,
-> <&osc32k>;
->  			clock-names =3D "apb", "hosc", "losc";
->  			gpio-controller;
->  			#gpio-cells =3D <3>;
-> @@ -134,8 +136,8 @@
->  			interrupts =3D <GIC_SPI 0
-> IRQ_TYPE_LEVEL_HIGH>;
->  			reg-shift =3D <2>;
->  			reg-io-width =3D <4>;
-> -			clocks =3D <&ccu 70>;
-> -			resets =3D <&ccu 21>;
-> +			clocks =3D <&ccu CLK_BUS_UART0>;
-> +			resets =3D <&ccu RST_BUS_UART0>;
->  			status =3D "disabled";
->  		};
-> =20
-> @@ -145,8 +147,8 @@
->  			interrupts =3D <GIC_SPI 1
-> IRQ_TYPE_LEVEL_HIGH>;
->  			reg-shift =3D <2>;
->  			reg-io-width =3D <4>;
-> -			clocks =3D <&ccu 71>;
-> -			resets =3D <&ccu 22>;
-> +			clocks =3D <&ccu CLK_BUS_UART1>;
-> +			resets =3D <&ccu RST_BUS_UART1>;
->  			status =3D "disabled";
->  		};
-> =20
-> @@ -156,8 +158,8 @@
->  			interrupts =3D <GIC_SPI 2
-> IRQ_TYPE_LEVEL_HIGH>;
->  			reg-shift =3D <2>;
->  			reg-io-width =3D <4>;
-> -			clocks =3D <&ccu 72>;
-> -			resets =3D <&ccu 23>;
-> +			clocks =3D <&ccu CLK_BUS_UART2>;
-> +			resets =3D <&ccu RST_BUS_UART2>;
->  			status =3D "disabled";
->  		};
-> =20
-> @@ -167,8 +169,8 @@
->  			interrupts =3D <GIC_SPI 3
-> IRQ_TYPE_LEVEL_HIGH>;
->  			reg-shift =3D <2>;
->  			reg-io-width =3D <4>;
-> -			clocks =3D <&ccu 73>;
-> -			resets =3D <&ccu 24>;
-> +			clocks =3D <&ccu CLK_BUS_UART3>;
-> +			resets =3D <&ccu RST_BUS_UART3>;
->  			status =3D "disabled";
->  		};
->  	};
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index f67d4e47e641..b3e1bdca32bb 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -51,7 +51,16 @@
+ 
+ 	sdio_pwrseq: sdio-pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+-		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
++		reset-gpios = <&gpio GPIOX_7 GPIO_ACTIVE_LOW>;
++		clocks = <&wifi32k>;
++		clock-names = "ext_clock";
++	};
++
++	wifi32k: wifi32k {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		pwms = <&pwm_ab 0 30518 0>; /* PWM_A at 32.768KHz */
+ 	};
+ };
+ 
+@@ -86,6 +95,12 @@
+ 	pinctrl-names = "default";
+ };
+ 
++&pwm_ab {
++	status = "okay";
++	pinctrl-0 = <&pwm_a_x20_pins>;
++	pinctrl-names = "default";
++};
++
+ /* emmc storage */
+ &sd_emmc_c {
+ 	status = "okay";
+@@ -105,3 +120,30 @@
+ 	vmmc-supply = <&vcc_3v3>;
+ 	vqmmc-supply = <&vddio_boot>;
+ };
++
++/* wifi module */
++&sd_emmc_b {
++	status = "okay";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	pinctrl-0 = <&sdio_pins>;
++	pinctrl-1 = <&sdio_clk_gate_pins>;
++	pinctrl-names = "default", "clk-gate";
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <100000000>;
++	non-removable;
++	disable-wp;
++
++	mmc-pwrseq = <&sdio_pwrseq>;
++
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
++};
+-- 
+2.17.0
