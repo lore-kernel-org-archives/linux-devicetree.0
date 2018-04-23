@@ -1,127 +1,126 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v7 06/11] ARM: sunxi: Add initialization of CNTVOFF
-Date: Mon, 23 Apr 2018 10:16:09 +0200
-Message-ID: <20180423081609.dirsitco3aeaqztx@flea>
-References: <20180420211022.11759-1-mylene.josserand@bootlin.com>
- <20180420211022.11759-7-mylene.josserand@bootlin.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] mmc: disable card sleep via device-tree
+Date: Mon, 23 Apr 2018 10:26:09 +0200
+Message-ID: <CAPDyKFqaV0ehiHCNdt0i4sWE9cskBa9AQHdRZmzCphPzCdm9ow@mail.gmail.com>
+References: <20180422213126.32756-1-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7qoatix34pogn6m2"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180420211022.11759-7-mylene.josserand@bootlin.com>
+In-Reply-To: <20180422213126.32756-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>
-Cc: linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Fabio Estevam <fabio.estevam@nxp.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Chanho Min <chanho.min@lge.com>, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Stanislav Meduna <stanislav.meduna@nxtcontrol.com>
 List-Id: devicetree@vger.kernel.org
 
-
---7qoatix34pogn6m2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Apr 20, 2018 at 11:10:17PM +0200, Myl=E8ne Josserand wrote:
-> Add the initialization of CNTVOFF for sun8i-a83t.
->=20
-> For boot CPU, create a new machine that handles this
-> function's call in an "init_early" callback. We need to initialize
-> CNTVOFF before the arch timer's initialization otherwise, it will
-> not be taken into account and fails to boot correctly.
-> Because of that, this function can't be called in SMP's early_initcall
-> function which is called after timer's init.
->=20
-> For secondary CPUs, add this function into secondary_startup
-> assembly entry.
->=20
-> Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
+On 22 April 2018 at 23:31, Lukasz Majewski <lukma@denx.de> wrote:
+> From: Stanislav Meduna <stanislav.meduna@nxtcontrol.com>
+>
+> On a TQMa53 module the mmc_sleep leaves the eMMC card in a state
+> that the imx53 rom boot code is unable to probe, resulting in
+> reboot hanging. Add a device tree property to disable sleeping
+> on suspend.
+>
+> For TQMa53 modules the exact commit to cause hang after reboot
+> (v3.10 -> v3.11):
+> commit 486fdbbc1483 ("mmc: core: Add shutdown callback for (e)MMC bus_ops")
+>
+> [The exact discussion can be found here:
+> https://patchwork.kernel.org/patch/8881401/
+> "i.MX53 restart via watchdog does not work"
+>
+> Signed-off-by: Stanislav Meduna <stanislav.meduna@nxtcontrol.com>
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
 > ---
->  arch/arm/mach-sunxi/headsmp.S |  1 +
->  arch/arm/mach-sunxi/sunxi.c   | 20 +++++++++++++++++++-
->  2 files changed, 20 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/headsmp.S
-> index 37dc772701f3..32d76be98541 100644
-> --- a/arch/arm/mach-sunxi/headsmp.S
-> +++ b/arch/arm/mach-sunxi/headsmp.S
-> @@ -71,6 +71,7 @@ ENDPROC(sunxi_mc_smp_cluster_cache_enable)
-> =20
->  ENTRY(sunxi_mc_smp_secondary_startup)
->  	bl	sunxi_mc_smp_cluster_cache_enable
-> +	bl	secure_cntvoff_init
->  	b	secondary_startup
->  ENDPROC(sunxi_mc_smp_secondary_startup)
-> =20
-> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-> index 5e9602ce1573..ddc439f6269b 100644
-> --- a/arch/arm/mach-sunxi/sunxi.c
-> +++ b/arch/arm/mach-sunxi/sunxi.c
-> @@ -16,6 +16,7 @@
->  #include <linux/platform_device.h>
-> =20
->  #include <asm/mach/arch.h>
-> +#include <asm/secure_cntvoff.h>
-> =20
->  static const char * const sunxi_board_dt_compat[] =3D {
->  	"allwinner,sun4i-a10",
-> @@ -62,7 +63,6 @@ MACHINE_END
->  static const char * const sun8i_board_dt_compat[] =3D {
->  	"allwinner,sun8i-a23",
->  	"allwinner,sun8i-a33",
-> -	"allwinner,sun8i-a83t",
->  	"allwinner,sun8i-h2-plus",
->  	"allwinner,sun8i-h3",
->  	"allwinner,sun8i-r40",
-> @@ -75,6 +75,24 @@ DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i Family")
->  	.dt_compat	=3D sun8i_board_dt_compat,
->  MACHINE_END
-> =20
-> +void __init sun8i_cntvoff_init(void)
-> +{
-> +#ifdef CONFIG_SMP
-> +	secure_cntvoff_init();
-> +#endif
-> +}
-> +
-> +static const char * const sun8i_cntvoff_board_dt_compat[] =3D {
-> +	"allwinner,sun8i-a83t",
-> +	NULL,
-> +};
-> +
-> +DT_MACHINE_START(SUN8I_CNTVOFF_DT, "Allwinner sun8i-a83t board")
+>  Documentation/devicetree/bindings/mmc/mmc-card.txt | 4 ++++
+>  drivers/mmc/core/mmc.c                             | 7 +++++--
+>  include/linux/mmc/card.h                           | 2 +-
+>  3 files changed, 10 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc-card.txt b/Documentation/devicetree/bindings/mmc/mmc-card.txt
+> index 8d2d71758907..c3ee151edd7c 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc-card.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc-card.txt
+> @@ -12,6 +12,9 @@ Required properties:
+>  Optional properties:
+>  -broken-hpi : Use this to indicate that the mmc-card has a broken hpi
+>                implementation, and that hpi should not be used
+> +-no-sleep-on-suspend : Do not put the card to sleep when suspending.
+> +              There are boards with bootloaders that are unable
+> +              to probe such card when rebooting.
+>
+>  Example:
+>
+> @@ -26,5 +29,6 @@ Example:
+>                 reg = <0>;
+>                 compatible = "mmc-card";
+>                 broken-hpi;
+> +               no-sleep-on-suspend;
+>         };
+>  };
+> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+> index 208a762b87ef..a3b74b5c8893 100644
+> --- a/drivers/mmc/core/mmc.c
+> +++ b/drivers/mmc/core/mmc.c
+> @@ -381,8 +381,11 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
+>         }
+>
+>         np = mmc_of_find_child_device(card->host, 0);
+> -       if (np && of_device_is_compatible(np, "mmc-card"))
+> +       if (np && of_device_is_compatible(np, "mmc-card")) {
+>                 broken_hpi = of_property_read_bool(np, "broken-hpi");
+> +               card->no_sleep_on_suspend =
+> +                       of_property_read_bool(np, "no-sleep-on-suspend");
+> +       }
+>         of_node_put(np);
+>
+>         /*
+> @@ -1990,7 +1993,7 @@ static int _mmc_suspend(struct mmc_host *host, bool is_suspend)
+>         if (mmc_can_poweroff_notify(host->card) &&
+>                 ((host->caps2 & MMC_CAP2_FULL_PWR_CYCLE) || !is_suspend))
+>                 err = mmc_poweroff_notify(host->card, notify_type);
+> -       else if (mmc_can_sleep(host->card))
+> +       else if (mmc_can_sleep(host->card) && !host->card->no_sleep_on_suspend)
 
-This name still doesn't really make much sense. It's an A83t, that's
-it.
+No, this is wrong.
 
-Apart from the other minor comment I had, and once that name has been
-fixed:
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+This means that the mmc_power_off() a few lines below would start to
+violate the eMMC spec. That via powering off the card, without first
+sending the sleep or power-off-notify command.
+You are probably just lucky, as your particular eMMC card still copes
+with this in-correct sequence (I know there are these kind of cards).
 
-Maxime
+Well, what is also interesting in this regards, is what is happening
+during mmc_power_off(). Does your host driver cut power to VMMC and/or
+VQMMC?
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+>                 err = mmc_sleep(host);
+>         else if (!mmc_host_is_spi(host))
+>                 err = mmc_deselect_cards(host);
+> diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
+> index 279b39008a33..c64d88e6de3b 100644
+> --- a/include/linux/mmc/card.h
+> +++ b/include/linux/mmc/card.h
+> @@ -304,8 +304,8 @@ struct mmc_card {
+>         struct dentry           *debugfs_root;
+>         struct mmc_part part[MMC_NUM_PHY_PARTITION]; /* physical partitions */
+>         unsigned int    nr_parts;
+> -
+>         unsigned int            bouncesz;       /* Bounce buffer size */
+> +       bool    no_sleep_on_suspend;
+>  };
+>
+>  static inline bool mmc_large_sector(struct mmc_card *card)
+> --
+> 2.11.0
+>
 
---7qoatix34pogn6m2
-Content-Type: application/pgp-signature; name="signature.asc"
+My impression is that it seems like there are still some uncertainties
+around what actually happens when the failure occurs during re-boot. I
+am guessing this boils done to how VMMC and VQMMC are being managed.
 
------BEGIN PGP SIGNATURE-----
+BTW, in the the pwrseq_emmc, we register a restart handler to pull the
+reset GPIO for the eMMC. Perhaps that can help to fix this problem as
+well!?
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrdlkgACgkQ0rTAlCFN
-r3RsNg/+IIHUgmXY1d9Txs9BLjRMCA5npo2bVo0roi54Xp/YirIfVf4NyeJrRuit
-aT7e7Rjo0JH4KbvAP08eWxqueQfbDJG+uSqdfCG2rudc2QnwfH5vVJLi/ubcDQ8u
-JrAZaYQOZ7d57rDdsHXu2UdItI7baoxbKpoaYTAqRca2xp9BL5m1igsPot9gBCo+
-g3opiV5pRMp0MrRzWgxAfz6RocSVlqsHCCrmRy4ePRAfAv1hs7EgzUmoCYhrX0rN
-XHR6cl/mzcZvsQHfnHgIGtBGQmZnLslqReWlXV3v3IDyrwA+huuvl/7ITNElMAb7
-djPmqOQZCZaRtErZKWSOiOpjRwG0n0cQl9l/iZcn3HDZjTW1VRXEoOmnmW07iBki
-25TUk61qHzaDetAvW1EUfpfKNB8HUnVYL3v4p9pL0rGPJ+Ys/peZHbe4mCMH+2t5
-39VUdIY4S7lM01WGppz52BqA1hnSpPvSezN4XrFZ2MRKAPycv2jwiKVvGDYxpMCN
-vQw5WywK5jmqwV/9iqfbAyYhZ4IThJYE8SVjKL2lzzxj2ZmIbSRjnzT+L5YppSvT
-yqq/PMcS2Dy9F+Y20FblEkTrdSF4tC1WqAU+R9iEsNoxP51FC1DAoZ2pumcyZI0e
-bkZTx0u7iW/Qlo+98akag3WsVhnIP+DYdlOiiP/kMRWpKfveeEA=
-=Imj8
------END PGP SIGNATURE-----
-
---7qoatix34pogn6m2--
+Kind regards
+Uffe
