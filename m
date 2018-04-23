@@ -1,62 +1,197 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] ARM: dts: sun8i: h3: Add SY8106A
- regulator to Orange Pi PC
-Date: Mon, 23 Apr 2018 23:04:43 +0800
-Message-ID: <34DAE9CF-AB6D-4FB9-9FA6-FAE4E4D2D4C3@aosc.io>
-References: <20180423144657.63264-1-icenowy@aosc.io> <20180423144657.63264-4-icenowy@aosc.io> <20180423150309.dksr2rjazlrmlzx2@flea>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] dt-bindings: more status property removal from examples
+Date: Mon, 23 Apr 2018 17:05:19 +0200
+Message-ID: <CAPDyKFqjrp_CMvaB_oAQ7Nkr4JJ5Y_z7+Q_E6ht32GY0qZJ9RQ@mail.gmail.com>
+References: <20180417135732.10100-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBHXM67LAKGQEDQQPCXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180423150309.dksr2rjazlrmlzx2@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180417135732.10100-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Matthias Brugger <matthias.bgg@gmail.com>, Tanmay Inamdar <tinamdar@apm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rodolfo Giometti <giometti@enneenne.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-=E4=BA=8E 2018=E5=B9=B44=E6=9C=8823=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=8811=
-:03:09, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
->On Mon, Apr 23, 2018 at 10:46:57PM +0800, Icenowy Zheng wrote:
->> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
->>=20
->> Add SY8106A regulator to r_i2c bus and enable the r_i2c bus on
->> Orange Pi PC, then set the power supply of the ARM cores to this
->> regulator, in order to enable DVFS.
->>=20
->> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
->> [Icenowy: Enable DVFS in this patch, slight changes and change commit
->>  message]
->> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> [wens-jdAy2FN1RRM@public.gmane.org: Rename regulator label]
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On 17 April 2018 at 15:57, Rob Herring <robh@kernel.org> wrote:
+> Whack-a-mole some more occurrences of status in examples.
 >
->Why is there Chen-Yu's SoB? It doesn't really make much sense, unless
->Chen-Yu would have applied this patch already, but then you wouldn't
->post it, right?
+> Cc: Vinod Koul <vinod.koul@intel.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: James Hogan <jhogan@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: David Woodhouse <dwmw2@infradead.org>
+> Cc: Brian Norris <computersforpeace@gmail.com>
+> Cc: Boris Brezillon <boris.brezillon@bootlin.com>
+> Cc: Marek Vasut <marek.vasut@gmail.com>
+> Cc: Richard Weinberger <richard@nod.at>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Tanmay Inamdar <tinamdar@apm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Rodolfo Giometti <giometti@enneenne.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/dma/k3dma.txt       | 1 -
+>  Documentation/devicetree/bindings/dma/ti-edma.txt     | 1 -
+>  Documentation/devicetree/bindings/mips/lantiq/rcu.txt | 2 --
+>  Documentation/devicetree/bindings/mmc/tmio_mmc.txt    | 4 ----
+>  Documentation/devicetree/bindings/mtd/mtk-nand.txt    | 4 ----
+>  Documentation/devicetree/bindings/pci/xgene-pci.txt   | 7 -------
+>  Documentation/devicetree/bindings/pps/pps-gpio.txt    | 1 -
+>  7 files changed, 20 deletions(-)
 
-This is taken from sunxi/h3-h5-for-4.18 branch, which has
-label name change from wens, and then added microvolt property.
+For mmc:
 
-So his SoB is from when he apply it for the first time.
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Kind regards
+Uffe
 
 >
->Maxime=20
+> diff --git a/Documentation/devicetree/bindings/dma/k3dma.txt b/Documentation/devicetree/bindings/dma/k3dma.txt
+> index 23f8d712c3ce..4945aeac4dc4 100644
+> --- a/Documentation/devicetree/bindings/dma/k3dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/k3dma.txt
+> @@ -23,7 +23,6 @@ Controller:
+>                         dma-requests = <27>;
+>                         interrupts = <0 12 4>;
+>                         clocks = <&pclk>;
+> -                       status = "disable";
+>                 };
 >
->> ---
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+>  Client:
+> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
+> index 66026dcf53e1..3f15f6644527 100644
+> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
+> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
+> @@ -190,7 +190,6 @@ mmc0: mmc@23000000 {
+>         power-domains = <&k2g_pds 0xb>;
+>         clocks = <&k2g_clks 0xb 1>, <&k2g_clks 0xb 2>;
+>         clock-names = "fck", "mmchsdb_fck";
+> -       status = "disabled";
+>  };
+>
+>  ------------------------------------------------------------------------------
+> diff --git a/Documentation/devicetree/bindings/mips/lantiq/rcu.txt b/Documentation/devicetree/bindings/mips/lantiq/rcu.txt
+> index a086f1e1cdd7..7f0822b4beae 100644
+> --- a/Documentation/devicetree/bindings/mips/lantiq/rcu.txt
+> +++ b/Documentation/devicetree/bindings/mips/lantiq/rcu.txt
+> @@ -61,7 +61,6 @@ Example of the RCU bindings on a xRX200 SoC:
+>                 usb_phy0: usb2-phy@18 {
+>                         compatible = "lantiq,xrx200-usb2-phy";
+>                         reg = <0x18 4>, <0x38 4>;
+> -                       status = "disabled";
+>
+>                         resets = <&reset1 4 4>, <&reset0 4 4>;
+>                         reset-names = "phy", "ctrl";
+> @@ -71,7 +70,6 @@ Example of the RCU bindings on a xRX200 SoC:
+>                 usb_phy1: usb2-phy@34 {
+>                         compatible = "lantiq,xrx200-usb2-phy";
+>                         reg = <0x34 4>, <0x3C 4>;
+> -                       status = "disabled";
+>
+>                         resets = <&reset1 5 4>, <&reset0 4 4>;
+>                         reset-names = "phy", "ctrl";
+> diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> index 2d5287eeed95..634bb66fc49c 100644
+> --- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> @@ -67,7 +67,6 @@ Example: R8A7790 (R-Car H2) SDHI controller nodes
+>                 max-frequency = <195000000>;
+>                 power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
+>                 resets = <&cpg 314>;
+> -               status = "disabled";
+>         };
+>
+>         sdhi1: sd@ee120000 {
+> @@ -81,7 +80,6 @@ Example: R8A7790 (R-Car H2) SDHI controller nodes
+>                 max-frequency = <195000000>;
+>                 power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
+>                 resets = <&cpg 313>;
+> -               status = "disabled";
+>         };
+>
+>         sdhi2: sd@ee140000 {
+> @@ -95,7 +93,6 @@ Example: R8A7790 (R-Car H2) SDHI controller nodes
+>                 max-frequency = <97500000>;
+>                 power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
+>                 resets = <&cpg 312>;
+> -               status = "disabled";
+>         };
+>
+>         sdhi3: sd@ee160000 {
+> @@ -109,5 +106,4 @@ Example: R8A7790 (R-Car H2) SDHI controller nodes
+>                 max-frequency = <97500000>;
+>                 power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
+>                 resets = <&cpg 311>;
+> -               status = "disabled";
+>         };
+> diff --git a/Documentation/devicetree/bindings/mtd/mtk-nand.txt b/Documentation/devicetree/bindings/mtd/mtk-nand.txt
+> index 1c88526dedfc..c5ba6a4ba1f2 100644
+> --- a/Documentation/devicetree/bindings/mtd/mtk-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/mtk-nand.txt
+> @@ -20,7 +20,6 @@ Required NFI properties:
+>  - interrupts:                  Interrupts of NFI.
+>  - clocks:                      NFI required clocks.
+>  - clock-names:                 NFI clocks internal name.
+> -- status:                      Disabled default. Then set "okay" by platform.
+>  - ecc-engine:                  Required ECC Engine node.
+>  - #address-cells:              NAND chip index, should be 1.
+>  - #size-cells:                 Should be 0.
+> @@ -34,7 +33,6 @@ Example:
+>                 clocks = <&pericfg CLK_PERI_NFI>,
+>                          <&pericfg CLK_PERI_NFI_PAD>;
+>                 clock-names = "nfi_clk", "pad_clk";
+> -               status = "disabled";
+>                 ecc-engine = <&bch>;
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+> @@ -152,7 +150,6 @@ Required BCH properties:
+>  - interrupts:  Interrupts of ECC.
+>  - clocks:      ECC required clocks.
+>  - clock-names: ECC clocks internal name.
+> -- status:      Disabled default. Then set "okay" by platform.
+>
+>  Example:
+>
+> @@ -162,5 +159,4 @@ Example:
+>                 interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_LOW>;
+>                 clocks = <&pericfg CLK_PERI_NFI_ECC>;
+>                 clock-names = "nfiecc_clk";
+> -               status = "disabled";
+>         };
+> diff --git a/Documentation/devicetree/bindings/pci/xgene-pci.txt b/Documentation/devicetree/bindings/pci/xgene-pci.txt
+> index 6fd2decfa66c..92490330dc1c 100644
+> --- a/Documentation/devicetree/bindings/pci/xgene-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/xgene-pci.txt
+> @@ -25,8 +25,6 @@ Optional properties:
+>
+>  Example:
+>
+> -SoC-specific DT Entry:
+> -
+>         pcie0: pcie@1f2b0000 {
+>                 status = "disabled";
+>                 device_type = "pci";
+> @@ -50,8 +48,3 @@ SoC-specific DT Entry:
+>                 clocks = <&pcie0clk 0>;
+>         };
+>
+> -
+> -Board-specific DT Entry:
+> -       &pcie0 {
+> -               status = "ok";
+> -       };
+> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> index 0de23b793657..3683874832ae 100644
+> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> @@ -20,5 +20,4 @@ Example:
+>                 assert-falling-edge;
+>
+>                 compatible = "pps-gpio";
+> -               status = "okay";
+>         };
+> --
+> 2.14.1
+>
