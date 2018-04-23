@@ -1,483 +1,149 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v3 2/2] clk: qcom: clk-rpmh: Add QCOM RPMh clock driver
-Date: Mon, 23 Apr 2018 22:20:22 +0530
-Message-ID: <2b0ba677-921c-c6e0-00d2-ac5bdefd2d6b@codeaurora.org>
-References: <1523673401-21611-1-git-send-email-tdas@codeaurora.org>
- <1523673401-21611-3-git-send-email-tdas@codeaurora.org>
- <152390031768.51482.12790579493617671456@swboyd.mtv.corp.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
+Date: Mon, 23 Apr 2018 11:51:52 -0500
+Message-ID: <CAL_JsqJRGBmjEoaaiPTuqqN=H3oF+VJXz=pbmkQSTZJisPB40w@mail.gmail.com>
+References: <20180418222905.10414-1-robh@kernel.org> <20180420214722.GA18510@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152390031768.51482.12790579493617671456@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <20180420214722.GA18510@minitux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, David Collins <collinsd@codeaurora.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Stephen for the review comments.
-
-On 4/16/2018 11:08 PM, Stephen Boyd wrote:
-> Quoting Taniya Das (2018-04-13 19:36:41)
->> Add the RPMh clock driver to control the RPMh managed clock resources on
->> some of the Qualcomm Technologies, Inc. SoCs.
+On Fri, Apr 20, 2018 at 4:47 PM, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> On Wed 18 Apr 15:29 PDT 2018, Rob Herring wrote:
+>
+>> The current DT binding documentation format of freeform text is painful
+>> to write, review, validate and maintain.
 >>
->> Signed-off-by: David Collins <collinsd@codeaurora.org>
->> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
-> 
-> Your signoff chain is very confused. The first signoff should match the
-> "From:" header but that doesn't seem to be the case here. And the sender
-> should be the last in the chain.
-> 
+>> This is just an example of what a binding in the schema format looks
+>> like. It's using jsonschema vocabulary in a YAML encoded document. Using
+>> jsonschema gives us access to existing tooling. A YAML encoding gives us
+>> something easy to edit.
+>>
+>> This example is just the tip of the iceberg, but it the part most
+>> developers writing bindings will interact with. Backing all this up
+>> are meta-schema (to validate the binding schemas), some DT core schema,
+>> YAML encoded DT output with dtc, and a small number of python scripts to
+>> run validation. The gory details including how to run end-to-end
+>> validation can be found here:
+>>
+>> https://www.spinics.net/lists/devicetree-spec/msg00649.html
+>>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
 >> ---
->>   drivers/clk/qcom/Kconfig    |   9 ++
->>   drivers/clk/qcom/Makefile   |   1 +
->>   drivers/clk/qcom/clk-rpmh.c | 367 ++++++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 377 insertions(+)
->>   create mode 100644 drivers/clk/qcom/clk-rpmh.c
+>> Cc list,
+>> You all review and/or write lots of binding documents. I'd like some feedback
+>> on the format.
 >>
->> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
->> index fbf4532..63c3372 100644
->> --- a/drivers/clk/qcom/Kconfig
->> +++ b/drivers/clk/qcom/Kconfig
->> @@ -112,6 +112,15 @@ config IPQ_GCC_8074
->>            i2c, USB, SD/eMMC, etc. Select this for the root clock
->>            of ipq8074.
+>
+> I really like the idea of formalizing the binding document format and
+> the ability of validating a dtb is really nice.
+>
+>> Thanks,
+>> Rob
 >>
->> +config QCOM_CLK_RPMH
->> +       tristate "RPMh Clock Driver"
->> +       depends on COMMON_CLK_QCOM && QCOM_RPMH
->> +       help
->> +        RPMh manages shared resources on some Qualcomm Technologies, Inc.
->> +        SoCs. It accepts requests from other hardware subsystems via RSC.
->> +        Say Y if you want to support the clocks exposed by RPMh on
->> +        platforms such as sdm845.
-> 
-> Capitalize sdm?
-> 
->> +
-> 
-
-Would use SDM845.
-
-> Can this Kconfig be put into alphabetical order in this file?
-> 
-
-Would place it with the QCOM_* configs in this file.
-
->>   config MSM_GCC_8660
->>          tristate "MSM8660 Global Clock Controller"
->>          depends on COMMON_CLK_QCOM
->> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
->> index 230332c..b2b5babf 100644
->> --- a/drivers/clk/qcom/Makefile
->> +++ b/drivers/clk/qcom/Makefile
->> @@ -36,5 +36,6 @@ obj-$(CONFIG_MSM_MMCC_8996) += mmcc-msm8996.o
->>   obj-$(CONFIG_QCOM_A53PLL) += a53-pll.o
->>   obj-$(CONFIG_QCOM_CLK_APCS_MSM8916) += apcs-msm8916.o
->>   obj-$(CONFIG_QCOM_CLK_RPM) += clk-rpm.o
->> +obj-$(CONFIG_QCOM_CLK_RPMH) += clk-rpmh.o
->>   obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
->>   obj-$(CONFIG_SPMI_PMIC_CLKDIV) += clk-spmi-pmic-div.o
->> diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
->> new file mode 100644
->> index 0000000..fa61284
->> --- /dev/null
->> +++ b/drivers/clk/qcom/clk-rpmh.c
->> @@ -0,0 +1,367 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/clk.h>
-> 
-> Is this include used?
-> 
-
-Would remove this include.
-
->> +#include <linux/clk-provider.h>
->> +#include <linux/err.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <soc/qcom/cmd-db.h>
->> +#include <soc/qcom/rpmh.h>
->> +
->> +#include <dt-bindings/clock/qcom,rpmh.h>
->> +
->> +#define CLK_RPMH_ARC_EN_OFFSET 0
->> +#define CLK_RPMH_VRM_EN_OFFSET 4
->> +#define CLK_RPMH_APPS_RSC_AO_STATE_MASK (BIT(RPMH_WAKE_ONLY_STATE) | \
->> +                                        BIT(RPMH_ACTIVE_ONLY_STATE))
->> +#define CLK_RPMH_APPS_RSC_STATE_MASK (BIT(RPMH_WAKE_ONLY_STATE) | \
->> +                                     BIT(RPMH_ACTIVE_ONLY_STATE) | \
->> +                                     BIT(RPMH_SLEEP_STATE))
-> 
-> Is there a reason these aren't inlined into the one place they're used?
-> 
-
-Would clean the above.
-
->> +struct clk_rpmh {
->> +       struct clk_hw hw;
->> +       const char *res_name;
->> +       u32 res_addr;
->> +       u32 res_en_offset;
-> 
-> Why do we store both res_addr and res_en_offset? Can't we just store
-> res_en_offset and then use that all the time? I don't see a user of
-> res_addr anywhere.
-> 
-
-The res_addr would be the address for the resource returned by the 
-cmd_db_read_addr. And the res_en_offset would be the offsets of ARC_EN 
-or VRM_EN.
-
->> +       u32 res_on_val;
->> +       u32 res_off_val;
-> 
-> Is this used?
-
-Yes the above are used.
-> 
->> +       u32 state;
->> +       u32 aggr_state;
->> +       u32 last_sent_aggr_state;
->> +       u32 valid_state_mask;
->> +       struct rpmh_client *rpmh_client;
->> +       struct device *dev;
->> +       struct clk_rpmh *peer;
->> +       unsigned long rate;
->> +};
-> 
-> Can you add some kernel-doc on these structure members?
-> 
-Sure will add the same.
->> +
->> +struct rpmh_cc {
->> +       struct clk_onecell_data data;
->> +       struct clk *clks[];
->> +};
-> 
-> Hopefully this structure isn't needed.
-> 
-
-Yes, would remove the above.
->> +
->> +struct clk_rpmh_desc {
->> +       struct clk_hw **clks;
->> +       size_t num_clks;
->> +};
->> +
-> [...]
->> +
->> +static inline bool has_state_changed(struct clk_rpmh *c, u32 state)
->> +{
->> +       return ((c->last_sent_aggr_state & BIT(state))
->> +               != (c->aggr_state & BIT(state)));
-> 
-> Too many parenthesis here.
-> 
-
-Would clean it up.
->> +}
->> +
->> +static int clk_rpmh_send_aggregate_command(struct clk_rpmh *c)
->> +{
->> +       struct tcs_cmd cmd = { 0 };
->> +       u32 cmd_state, on_val;
->> +       enum rpmh_state state = RPMH_SLEEP_STATE;
->> +       int ret = 0;
->> +
->> +       cmd.addr = c->res_addr + c->res_en_offset;
->> +       cmd_state = c->aggr_state;
->> +       on_val = c->res_on_val;
->> +
->> +       for (; state <= RPMH_ACTIVE_ONLY_STATE; state++) {
->> +               if (has_state_changed(c, state)) {
->> +                       cmd.data = (cmd_state & BIT(state)) ? on_val : 0;
->> +                       ret = rpmh_write_async(c->rpmh_client, state,
->> +                                               &cmd, 1);
->> +                       if (ret) {
->> +                               dev_err(c->dev, "set %s state of %s failed: (%d)\n",
->> +                                       (!state) ? "sleep" :
->> +                                       (state == RPMH_WAKE_ONLY_STATE) ?
->> +                                       "wake" : "active", c->res_name, ret);
->> +                               return ret;
->> +                       }
->> +               }
->> +       }
->> +
->> +       c->last_sent_aggr_state = c->aggr_state;
->> +       c->peer->last_sent_aggr_state =  c->last_sent_aggr_state;
->> +
->> +       return 0;
->> +}
->> +
->> +static int clk_rpmh_aggregate_state_send_command(struct clk_rpmh *c,
->> +                                               bool enable)
->> +{
->> +       int ret;
->> +
->> +       /* Update state and aggregate state values based on enable value. */
-> 
-> Maybe this comment can go above the function itself.
+>>  .../devicetree/bindings/example-schema.yaml        | 149 +++++++++++++++++++++
+>>  1 file changed, 149 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/example-schema.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
+> [..]
+>> +  reg:
+>> +    # The description of each element defines the order and implicitly defines
+>> +    # the number of reg entries
+>> +    items:
+>> +      - description: core registers
+>> +      - description: aux registers
+>> +    # minItems/maxItems equal to 2 is implied
 >
+> I assume that a reg with variable number of entries would have
+> "description" for all of them and then a minItems that matches the
+> required ones and maxItems matching all of them?
 
-Sure would move it above the function.
+You could do that, but it doesn't really enforce which compatible(s)
+each size of reg is valid for. It would work okay when just the last N
+entries are variable, but it will break down if you have cases where
+essentially any subset is valid. For bindings with lots of conditional
+sizes for reg, clocks, resets, etc. based on compatible strings, I
+think we will need to split the binding into a schema per compatible.
 
->> +       c->state = enable ? c->valid_state_mask : 0;
->> +       c->aggr_state = c->state | c->peer->state;
->> +       c->peer->aggr_state = c->aggr_state;
->> +
->> +       ret = clk_rpmh_send_aggregate_command(c);
->> +       if (ret && enable) {
->> +               c->state = 0;
->> +       } else if (ret) {
->> +               c->state = c->valid_state_mask;
->> +               WARN(1, "clk: %s failed to disable\n", c->res_name);
->> +       }
->> +
->> +       return ret;
->> +}
->> +
->> +static int clk_rpmh_prepare(struct clk_hw *hw)
->> +{
->> +       struct clk_rpmh *c = to_clk_rpmh(hw);
->> +       int ret = 0;
->> +
->> +       mutex_lock(&rpmh_clk_lock);
->> +
->> +       if (c->state)
->> +               goto out;
->> +
->> +       ret = clk_rpmh_aggregate_state_send_command(c, true);
-> 
-> Rewrite this as:
-> 
-> 	if (!c->state)
-> 		ret = clk_rpmh_aggregate_state_send_command(c, true);
-> 	
-> and drop the goto.
-> 
+IMO, things like this are probably not going to be addressed at the
+start and may remain in the description (as we have today). I think we
+need to start with a base schema and can improve them over time.
 
-Would cleanup to remove goto.
-
->> +out:
->> +       mutex_unlock(&rpmh_clk_lock);
->> +       return ret;
->> +};
 >> +
->> +static void clk_rpmh_unprepare(struct clk_hw *hw)
->> +{
->> +       struct clk_rpmh *c = to_clk_rpmh(hw);
->> +
->> +       mutex_lock(&rpmh_clk_lock);
->> +
->> +       if (!c->state)
->> +               goto out;
->> +
->> +       clk_rpmh_aggregate_state_send_command(c, false);
->> +out:
-> 
-> Same comment.
-> 
->> +       mutex_unlock(&rpmh_clk_lock);
->> +       return;
->> +};
->> +
->> +static unsigned long clk_rpmh_recalc_rate(struct clk_hw *hw,
->> +                                         unsigned long parent_rate)
->> +{
->> +       struct clk_rpmh *r = to_clk_rpmh(hw);
->> +
->> +       /*
->> +        * RPMh clocks have a fixed rate. Return static rate set
->> +        * at init time.
->> +        */
->> +       return r->rate;
-> 
-> The rate should come from the parent. In the case of tcxo it would be
-> board_xo clk rate (or maybe some fixed div-2 on the board XO that's also
-> defined in DT because the board_xo seems to be two times 19.2 MHz?).
-> 
-
-There would not be any parent for the RPMH clock, they would be the 
-parent for other clocks.
-
-The TCXO is 19.2MHz and once we have the RPMH clocks, we would remove 
-the DT reference for board_xo.
-
->> +}
->> +
->> +static const struct clk_ops clk_rpmh_ops = {
->> +       .prepare        = clk_rpmh_prepare,
->> +       .unprepare      = clk_rpmh_unprepare,
->> +       .recalc_rate    = clk_rpmh_recalc_rate,
->> +};
->> +
->> +/* Resource name must match resource id present in cmd-db. */
->> +DEFINE_CLK_RPMH_ARC(sdm845, bi_tcxo, bi_tcxo_ao, "xo.lvl", 0x3, 0x0, 19200000);
->> +DEFINE_CLK_RPMH_VRM(sdm845, ln_bb_clk2, ln_bb_clk2_ao, "lnbclka2", 19200000);
->> +DEFINE_CLK_RPMH_VRM(sdm845, ln_bb_clk3, ln_bb_clk3_ao, "lnbclka3", 19200000);
->> +DEFINE_CLK_RPMH_VRM(sdm845, rf_clk1, rf_clk1_ao, "rfclka1", 38400000);
->> +DEFINE_CLK_RPMH_VRM(sdm845, rf_clk2, rf_clk2_ao, "rfclka2", 38400000);
->> +DEFINE_CLK_RPMH_VRM(sdm845, rf_clk3, rf_clk3_ao, "rfclka3", 38400000);
->> +
->> +static struct clk_hw *sdm845_rpmh_clocks[] = {
->> +       [RPMH_CXO_CLK]          = &sdm845_bi_tcxo.hw,
->> +       [RPMH_CXO_CLK_A]        = &sdm845_bi_tcxo_ao.hw,
->> +       [RPMH_LN_BB_CLK2]       = &sdm845_ln_bb_clk2.hw,
->> +       [RPMH_LN_BB_CLK2_A]     = &sdm845_ln_bb_clk2_ao.hw,
->> +       [RPMH_LN_BB_CLK3]       = &sdm845_ln_bb_clk3.hw,
->> +       [RPMH_LN_BB_CLK3_A]     = &sdm845_ln_bb_clk3_ao.hw,
->> +       [RPMH_RF_CLK1]          = &sdm845_rf_clk1.hw,
->> +       [RPMH_RF_CLK1_A]        = &sdm845_rf_clk1_ao.hw,
->> +       [RPMH_RF_CLK2]          = &sdm845_rf_clk2.hw,
->> +       [RPMH_RF_CLK2_A]        = &sdm845_rf_clk2_ao.hw,
->> +       [RPMH_RF_CLK3]          = &sdm845_rf_clk3.hw,
->> +       [RPMH_RF_CLK3_A]        = &sdm845_rf_clk3_ao.hw,
->> +};
->> +
->> +static const struct clk_rpmh_desc clk_rpmh_sdm845 = {
->> +       .clks = sdm845_rpmh_clocks,
->> +       .num_clks = ARRAY_SIZE(sdm845_rpmh_clocks),
->> +};
->> +
->> +static int clk_rpmh_probe(struct platform_device *pdev)
->> +{
->> +       struct clk **clks;
->> +       struct clk *clk;
->> +       struct rpmh_cc *rcc;
->> +       struct clk_onecell_data *data;
->> +       struct clk_hw **hw_clks;
->> +       struct clk_rpmh *rpmh_clk;
->> +       const struct clk_rpmh_desc *desc;
->> +       struct rpmh_client *rpmh_client;
->> +       struct device *dev;
->> +       size_t num_clks, i;
->> +       int ret;
->> +
->> +       dev = &pdev->dev;
->> +
->> +       ret = cmd_db_ready();
->> +       if (ret) {
->> +               if (ret != -EPROBE_DEFER) {
->> +                       dev_err(dev, "Command DB not available (%d)\n", ret);
->> +                       goto fail;
-> 
-> Please just return error here instead of goto.
-> 
-
-Sure would clean this.
-
->> +               }
->> +               return ret;
->> +       }
->> +
->> +       rpmh_client = rpmh_get_client(pdev);
->> +       if (IS_ERR(rpmh_client)) {
->> +               ret = PTR_ERR(rpmh_client);
->> +               dev_err(dev, "Failed to request RPMh client, ret=%d\n", ret);
->> +               return ret;
->> +       }
-> 
-> I hope we get rid of rpmh_get_client() still.
->  >> +
->> +       desc = of_device_get_match_data(&pdev->dev);
->> +       hw_clks = desc->clks;
->> +       num_clks = desc->num_clks;
->> +
->> +       rcc = devm_kzalloc(&pdev->dev, sizeof(*rcc) + sizeof(*clks) * num_clks,
->> +                          GFP_KERNEL);
->> +       if (!rcc) {
->> +               ret = -ENOMEM;
->> +               goto err;
->> +       }
->> +
->> +       clks = rcc->clks;
->> +       data = &rcc->data;
->> +       data->clks = clks;
->> +       data->clk_num = num_clks;
->> +
->> +       for (i = 0; i < num_clks; i++) {
->> +               rpmh_clk = to_clk_rpmh(hw_clks[i]);
->> +               rpmh_clk->res_addr = cmd_db_read_addr(rpmh_clk->res_name);
->> +               if (!rpmh_clk->res_addr) {
->> +                       dev_err(dev, "missing RPMh resource address for %s\n",
->> +                                       rpmh_clk->res_name);
->> +                       ret = -ENODEV;
->> +                       goto err;
->> +               }
->> +
->> +               rpmh_clk->rpmh_client = rpmh_client;
->> +
->> +               clk = devm_clk_register(&pdev->dev, hw_clks[i]);
->> +               if (IS_ERR(clk)) {
->> +                       ret = PTR_ERR(clk);
->> +                       dev_err(dev, "failed to register %s\n",
->> +                                       hw_clks[i]->init->name);
-> 
-> This isn't a useful error message either.
-> 
->> +                       goto err;
->> +               }
->> +
->> +               clks[i] = clk;
->> +               rpmh_clk->dev = &pdev->dev;
->> +       }
->> +
->> +       ret = of_clk_add_provider(pdev->dev.of_node, of_clk_src_onecell_get,
-> 
-> Use devm please and register clk_hw pointers instead of clk pointers.
+>> +  reg-names:
+>> +    # The core schema enforces this is a string array
+>> +    items:
+>> +      - const: core
+>> +      - const: aux
 >
-Sure would move to use devm & would register clk_hw.
+> I presume validation based on this should check that there's equal
+> number of entries in reg-names as there where in reg. Should this
+> relationship be described in the schema?
 
->> +                                 data);
->> +       if (ret) {
->> +               dev_err(dev, "Failed to add clock provider\n");
->> +               goto err;
->> +       }
->> +
->> +       dev_dbg(dev, "Registered RPMh clocks\n");
->> +
->> +       return 0;
->> +err:
->> +       if (rpmh_client)
->> +               rpmh_release(rpmh_client);
->> +fail:
->> +       dev_err(dev, "Error registering RPMh Clock driver (%d)\n", ret);
-> 
-> Please remove this error message.
-> 
-Thanks would remove the above.
+Yes, if we can figure out how. But I don't think it belongs in per
+device schema as it is a core requirement.
 
->> +       return ret;
->> +}
+>
+> [..]
+>> +  interrupts:
+>> +    # Either 1 or 2 interrupts can be present
+>> +    minItems: 1
+>> +    maxItems: 2
+>> +    items:
+>> +      - description: tx or combined interrupt
+>> +      - description: rx interrupt
 >> +
->> +static int clk_rpmh_remove(struct platform_device *pdev)
->> +{
->> +       const struct clk_rpmh_desc *desc =
->> +                       of_device_get_match_data(&pdev->dev);
->> +       struct clk_hw **hw_clks = desc->clks;
->> +       struct clk_rpmh *rpmh_clk = to_clk_rpmh(hw_clks[0]);
->> +
->> +       rpmh_release(rpmh_clk->rpmh_client);
->> +       of_clk_del_provider(pdev->dev.of_node);
->> +
->> +       return 0;
->> +}
-> 
-> Hopefully this whole remove function goes away.
-> We would still require the rpmh_release code.
+>> +    description: |
+>> +      A variable number of interrupts warrants a description of what conditions
+>> +      affect the number of interrupts. Otherwise, descriptions on standard
+>> +      properties are not necessary.
+>
+> For validation purposes this could be interrupts with interrupt-parents
+> or a interrupts-extend, a fact that we probably don't want to duplicate
+> in every definition?
+>
+> Perhaps we should just do like you did here and define the "interrupts"
+> and then in the validation tool - where we need to encode the logic
+> behind this anyways - we support the different variants.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+Yes, essentially as we do now where the binding just describes
+'interrupts' and 'interrupts-extended' is implicitly supported.
 
---
+>> +
+>> +  interrupt-names:
+>> +    # minItems must be specified here because the default would be 2
+>> +    minItems: 1
+>
+> As with reg-names, it would be good to have the validator warn if this
+> is not the same number of items as entries in "interrupts".
+>
+>> +    items:
+>> +      - const: "tx irq"
+>> +      - const: "rx irq"
+>> +
+>> +  # Property names starting with '#' must be quoted
+>> +  '#interrupt-cells':
+>> +    # A simple case where the value must always be '2'.
+>> +    # The core schema handles that this must be a single integer.
+>> +    const: 2
+>
+> If this is specified then interrupt-controller should also be given, or
+> vise versa. How would we describe that?
+
+The core meta-schema can check that with 'dependencies'. Here's gpio
+meta-schema for example:
+
+dependencies:
+  gpio-controller: ['#gpio-cells']
+  '#gpio-cells': [gpio-controller]
+  gpio-ranges: [gpio-controller]
+  ngpios: [gpio-controller]
+
+
+Rob
