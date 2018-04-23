@@ -1,132 +1,148 @@
 From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 2/8] dt-bindings: display: bridge: thc63lvd1024: Add lvds
- map property
-Date: Mon, 23 Apr 2018 09:35:04 +0200
-Message-ID: <20180423073504.GN4235@w540>
+Subject: Re: [PATCH 3/8] drm: bridge: thc63lvd1024: Add support for LVDS mode
+ map
+Date: Mon, 23 Apr 2018 09:41:56 +0200
+Message-ID: <20180423074156.GO4235@w540>
 References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524130269-32688-3-git-send-email-jacopo+renesas@jmondi.org>
- <17d6f6b0-e657-4a5f-63a6-572cdf062bd3@axentia.se>
+ <1524130269-32688-4-git-send-email-jacopo+renesas@jmondi.org>
+ <86c2d4c9-8079-9f25-f24a-58c7866a8274@axentia.se>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0030117874=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <17d6f6b0-e657-4a5f-63a6-572cdf062bd3@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="NyChO5MpGs3JHJbz"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <86c2d4c9-8079-9f25-f24a-58c7866a8274@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Peter Rosin <peda@axentia.se>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, daniel@ffwll.ch, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============0030117874==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="D6IIOQQv2Iwyp54J"
-Content-Disposition: inline
-
-
---D6IIOQQv2Iwyp54J
+--NyChO5MpGs3JHJbz
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 
 Hi Peter,
-   thanks for commenting,
 
-On Sun, Apr 22, 2018 at 10:02:41PM +0200, Peter Rosin wrote:
+On Sun, Apr 22, 2018 at 10:02:51PM +0200, Peter Rosin wrote:
 > On 2018-04-19 11:31, Jacopo Mondi wrote:
-> > The THC63LVD1024 LVDS to RGB bridge supports two different input mapping
+> > The THC63LVD1024 LVDS to RGB bridge supports two different LVDS mapping
 > > modes, selectable by means of an external pin.
 > >
-> > Describe the LVDS mode map through a newly defined mandatory property in
-> > device tree bindings.
+> > Add support for configurable LVDS input mapping modes, using the newly
+> > introduced support for bridge input image formats.
 > >
 > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > > ---
-> >  .../devicetree/bindings/display/bridge/thine,thc63lvd1024.txt          | 3 +++
-> >  1 file changed, 3 insertions(+)
+> >  drivers/gpu/drm/bridge/thc63lvd1024.c | 41 +++++++++++++++++++++++++++++++++++
+> >  1 file changed, 41 insertions(+)
 > >
-> > diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
-> > index 37f0c04..0937595 100644
-> > --- a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
-> > +++ b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
-> > @@ -12,6 +12,8 @@ Required properties:
-> >  - compatible: Shall be "thine,thc63lvd1024"
-> >  - vcc-supply: Power supply for TTL output, TTL CLOCKOUT signal, LVDS input,
-> >    PPL and digital circuitry
-> > +- thine,map: LVDS mapping mode selection signal, pin name "MAP". Shall be <1>
-> > +  for mapping mode 1, <0> for mapping mode 2
+> > diff --git a/drivers/gpu/drm/bridge/thc63lvd1024.c b/drivers/gpu/drm/bridge/thc63lvd1024.c
+> > index 48527f8..a3071a1 100644
+> > --- a/drivers/gpu/drm/bridge/thc63lvd1024.c
+> > +++ b/drivers/gpu/drm/bridge/thc63lvd1024.c
+> > @@ -10,9 +10,15 @@
+> >  #include <drm/drm_panel.h>
+> >
+> >  #include <linux/gpio/consumer.h>
+> > +#include <linux/of.h>
+> >  #include <linux/of_graph.h>
+> >  #include <linux/regulator/consumer.h>
+> >
+> > +enum thc63_lvds_mapping_mode {
+> > +	THC63_LVDS_MAP_MODE2,
+> > +	THC63_LVDS_MAP_MODE1,
+> > +};
+> > +
+> >  enum thc63_ports {
+> >  	THC63_LVDS_IN0,
+> >  	THC63_LVDS_IN1,
+> > @@ -116,6 +122,37 @@ static int thc63_parse_dt(struct thc63_dev *thc63)
+> >  	return 0;
+> >  }
+> >
+> > +static int thc63_set_bus_fmt(struct thc63_dev *thc63)
+> > +{
+> > +	u32 bus_fmt;
+> > +	u32 map;
+> > +	int ret;
+> > +
+> > +	ret = of_property_read_u32(thc63->dev->of_node, "thine,map", &map);
+> > +	if (ret) {
+> > +		dev_err(thc63->dev,
+> > +			"Unable to parse property \"thine,map\": %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	switch (map) {
+> > +	case THC63_LVDS_MAP_MODE1:
+> > +		bus_fmt = MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA;
+> > +		break;
+> > +	case THC63_LVDS_MAP_MODE2:
+> > +		bus_fmt = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG;
 >
-> Since the MAP pin is an input pin, I would expect there to be an optional gpio
-> specifier like thine,map-gpios so that the driver can set it according to
-> the value given in thine,map in case the HW has a line from some gpio output
-> to the MAP pin (instead of hardwired hi/low which seem to be your thinking).
+> Why do you assume rgb888/1x7x4 here? It might as well be rgb666/1x7x3
+> or rgb101010/1x7x5, no?
 
-I see... As the only use case I had has the pin tied to vcc, I
-thought about making it a binary property, and I wonder in how many
-cases the chip 'MAP' pin would actually be GPIO controlled input and
-not an hardwired one instead. I don't see the LVDS mapping mode to be
-changed at runtime, but you are right, who knows....
+I should combine the 'map' pin input mode property with the 'bus_width' one
+to find that out probably.
 
-Do you think we can add an options 'thine,map-gpios' property along
-to the proposed ones?
-
-thanks
+Thanks
    j
+
 
 >
 > Cheers,
 > Peter
 >
+> > +		break;
+> > +	default:
+> > +		dev_err(thc63->dev,
+> > +			"Invalid value for property \"thine,map\": %u\n", map);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	drm_bridge_set_bus_formats(&thc63->bridge, &bus_fmt, 1);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int thc63_gpio_init(struct thc63_dev *thc63)
+> >  {
+> >  	thc63->oe = devm_gpiod_get_optional(thc63->dev, "oe", GPIOD_OUT_LOW);
+> > @@ -166,6 +203,10 @@ static int thc63_probe(struct platform_device *pdev)
+> >  	if (ret)
+> >  		return ret;
 > >
-> >  Optional properties:
-> >  - powerdown-gpios: Power down GPIO signal, pin name "/PDWN". Active low
-> > @@ -36,6 +38,7 @@ Example:
-> >
-> >  		vcc-supply = <&reg_lvds_vcc>;
-> >  		powerdown-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
-> > +		thine,map = <1>;
-> >
-> >  		ports {
-> >  			#address-cells = <1>;
+> > +	ret = thc63_set_bus_fmt(thc63);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> >  	thc63->bridge.driver_private = thc63;
+> >  	thc63->bridge.of_node = pdev->dev.of_node;
+> >  	thc63->bridge.funcs = &thc63_bridge_func;
 > >
 >
 
---D6IIOQQv2Iwyp54J
+--NyChO5MpGs3JHJbz
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJa3YynAAoJEHI0Bo8WoVY8dl8P/i0yToIkzEvqWHs1+lqzgB8r
-9L5j9C4G+MvNIybk/J/edo0UIIXttc/GAtr5ESNw3zl8qj3fPwkZ4LHnDaVnow8U
-qbdrgBKV9d4OeOOttz7JoufVGg1CkdIry2oFQsqAgSOWUAda78XRxzXx0n2FGOJe
-tIja6IJkDSXuPrKc7p4GldZd/5ZUwY/0b/MVAbqq56XEwveX2deeW1lmt1lWEcmw
-TFH1jfigtjrnQBqh1WLalUDbmVnDk90ooGg10ooRb5SuLNdhBpDCMl5Kv43Wuuq3
-AAC/5gaTkXaLbeLxHkEa2PG113/sEXurAEOi1EiWHLvwA1fNYdV9Wr28/BF/kKI4
-Z9FiCfuW/lqdSFAxmtDrfHJYZhbEdAZmP4VFnSjOMd3pYiPffyW4Rl+f+cHykRu4
-DqTtvAELMAfbEv1GFsty/j+bfYV4PBssfCkYeMY1W8b/2xUBbhabyg3tuCNh8Q65
-ffHXiGB1qHtQL90F457beTu+ABix2lnSV46MiYQzyXbQYoO67hWWWC3nZFAHnueA
-2fyp8tGTluy5G61cp9Y3IcPp+Q0cxqyef8Pzk8KIj4yJSD7lxg/xzLNz4MAzuybG
-BbPmo0uUkZ16t0+t3AhCjsW/W/xyAfhXBwrRHzAXNgXqmqBfGFKtBZTUw/l8ckGZ
-PSlPzfBpb3uT7QZZk9vG
-=4Kpk
+iQIcBAEBAgAGBQJa3Y5EAAoJEHI0Bo8WoVY8JwcP/02uvblFIFHBRV8hNd2CsuWM
+iak+iVSqM6cjH06kELz4FtQOQLoA5jSlL5Zq3MtNlFISIbW0CVjPqus0NTuSJvGN
+fk79kMv66dbEsQAI+TZQHuKAHOGihuLFLrHOlM3qefL+30P0cPIzZPkR6UKrDuFO
+Tf7ZP/civlbJFGg6vOSA2+tNPhykOqo2e3Z75n/l10k17ETygyQcdmAPLuJdqSkT
+H3aSUBRE/h451m0Fg5/CvFu0zaHNf3Li4q3POsmUVaHBZXt5ukrhguthqwSP00Gw
+sNQ2TQvpONUeDYCu9n5Bk0PmiMdKs8OYVecxA8h+GinR8VSJ+ip5m/lfN9AbYmIm
+0Tr5Dptpn1Z+yq8ugTz6XcQU+qvlVwbRy1nbmd4Xso1UdQDIxQdrz83mujhHgFAT
+E8JKs2YHaBjF1qSzIflx0xr4EHMjRKN86ACC9eEJQKWEau2X99pzB3eXJaJcCXfm
+lB66JbHd20bpn0ZghnlEyhAf4A0ZSQ3tQXDq8d5NNPpp2GSc0fvy9P/F1+iSlhCE
+0ngxZGbwQ9pMeht/P5tpfSqvCAiKWlf0UIdGNd+03GJDyWTLEPlrxE4XlA+ZYFPA
+FfqduV+PAlxkUHicB1Vmx4MxGvtPkSbmxQnr9szH5YKasZpL2TATD85B2IcrQSzX
+lVUlAZ+h6Ol5Ki2hAco0
+=WFaU
 -----END PGP SIGNATURE-----
 
---D6IIOQQv2Iwyp54J--
-
---===============0030117874==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0030117874==--
+--NyChO5MpGs3JHJbz--
