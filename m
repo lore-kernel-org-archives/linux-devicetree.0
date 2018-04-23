@@ -1,176 +1,167 @@
 From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v4 00/10] Add the I3C subsystem
-Date: Mon, 23 Apr 2018 19:38:14 +0200
-Message-ID: <20180423193814.5c8ca75a@bbrezillon>
-References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v4 3/8] drm/atmel-hlcdc: support bus-width (12/16/18/24)
+ in endpoint nodes
+Date: Mon, 23 Apr 2018 19:40:50 +0200
+Message-ID: <20180423194050.6e8be628@bbrezillon>
+References: <20180423072301.11962-1-peda@axentia.se>
+ <20180423072301.11962-4-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180330074751.25987-1-boris.brezillon@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180423072301.11962-4-peda@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, 30 Mar 2018 09:47:41 +0200
-Boris Brezillon <boris.brezillon@bootlin.com> wrote:
-
-> This patch series is a proposal for a new I3C subsystem.
-
-This v4 has been sent almost a month ago and I didn't get any feedback
-so far apart from Rob's R-b. Greg, is there any chance we can get these
-patches merged in 4.18? If not, could you tell me what should be
-addressed/improved/reworked?
-
-Thanks,
-
-Boris
-
-> 
-> This infrastructure is not complete yet and will be extended over
-> time.
-> 
-> There are a few design choices that are worth mentioning because they
-> impact the way I3C device drivers can interact with their devices:
-> 
-> - all functions used to send I3C/I2C frames must be called in
->   non-atomic context. Mainly done this way to ease implementation, but
->   this is still open to discussion. Please let me know if you think it's
->   worth considering an asynchronous model here
-> - the bus element is a separate object and is not implicitly described
->   by the master (as done in I2C). The reason is that I want to be able
->   to handle multiple master connected to the same bus and visible to
->   Linux.
->   In this situation, we should only have one instance of the device and
->   not one per master, and sharing the bus object would be part of the
->   solution to gracefully handle this case.
->   I'm not sure if we will ever need to deal with multiple masters
->   controlling the same bus and exposed under Linux, but separating the
->   bus and master concept is pretty easy, hence the decision to do it
->   now, just in case we need it some day.
->   The other benefit of separating the bus and master concepts is that
->   master devices appear under the bus directory in sysfs.
-> - I2C backward compatibility has been designed to be transparent to I2C
->   drivers and the I2C subsystem. The I3C master just registers an I2C
->   adapter which creates a new I2C bus. I'd say that, from a
->   representation PoV it's not ideal because what should appear as a
->   single I3C bus exposing I3C and I2C devices here appears as 2
->   different busses connected to each other through the parenting (the
->   I3C master is the parent of the I2C and I3C busses).
->   On the other hand, I don't see a better solution if we want something
->   that is not invasive.
-> 
-> Missing features in this preliminary version:
-> - support for HDR modes (has been removed because of lack of real users)
-> - no support for multi-master and the associated concepts (mastership
->   handover, support for secondary masters, ...)
-> - I2C devices can only be described using DT because this is the only
->   use case I have. However, the framework can easily be extended with
->   ACPI and board info support
-> - I3C slave framework. This has been completely omitted, but shouldn't
->   have a huge impact on the I3C framework because I3C slaves don't see
->   the whole bus, it's only about handling master requests and generating
->   IBIs. Some of the struct, constant and enum definitions could be
->   shared, but most of the I3C slave framework logic will be different
-> 
-> Main changes between v2 and v3 are:
-> - Reworked the DT bindings as suggested by Rob
-> - Reworked the bus initialization step as suggested by Vitor
-> - Added a driver for an I3C GPIO expander
-> 
-> Main changes between the initial RFC and this v2 are:
-> - Add a generic infrastructure to support IBIs. It's worth mentioning
->   that I tried exposing IBIs as a regular IRQs, but after several
->   attempts and a discussion with Mark Zyngier, it appeared that it was
->   not really fitting in the Linux IRQ model (the fact that you have
->   payload attached to IBIs, the fact that most of the time an IBI will
->   generate a transfer on the bus which has to be done in an atomic
->   context, ...)
->   The counterpart of this decision is the latency induced by the
->   workqueue approach, but since I don't have real use cases, I don't
->   know if this can be a problem or not. 
-> - Add helpers to support Hot Join
-> - Add support for IBIs and Hot Join in Cadence I3C master driver
-> - Address several issues in how I was using the device model
-> 
-> Note that I2C changes have been sent separately [1] this time. Other
-> than that, no big changes in this version, I just addressed the
-> comments I received from Thomas, Peter, Geert and Rob.
-> 
-> Thanks,
-> 
-> Boris
-> 
-> [1]https://patchwork.ozlabs.org/project/linux-i2c/list/?series=35687
-> 
-> Boris Brezillon (10):
->   i3c: Add core I3C infrastructure
->   docs: driver-api: Add I3C documentation
->   i3c: Add sysfs ABI spec
->   dt-bindings: i3c: Document core bindings
->   dt-bindings: i3c: Add macros to help fill I3C/I2C device's reg
->     property
->   MAINTAINERS: Add myself as the I3C subsystem maintainer
->   i3c: master: Add driver for Cadence IP
->   dt-bindings: i3c: Document Cadence I3C master bindings
->   gpio: Add a driver for Cadence I3C GPIO expander
->   dt-bindings: gpio: Add bindings for Cadence I3C gpio expander
-> 
->  Documentation/ABI/testing/sysfs-bus-i3c            |   95 ++
->  .../devicetree/bindings/gpio/gpio-cdns-i3c.txt     |   39 +
->  .../devicetree/bindings/i3c/cdns,i3c-master.txt    |   44 +
->  Documentation/devicetree/bindings/i3c/i3c.txt      |  140 ++
->  Documentation/driver-api/i3c/conf.py               |   10 +
->  Documentation/driver-api/i3c/device-driver-api.rst |    7 +
->  Documentation/driver-api/i3c/index.rst             |    9 +
->  Documentation/driver-api/i3c/master-driver-api.rst |    8 +
->  Documentation/driver-api/i3c/protocol.rst          |  201 +++
->  Documentation/driver-api/index.rst                 |    1 +
->  MAINTAINERS                                        |    9 +
->  drivers/Kconfig                                    |    2 +
->  drivers/Makefile                                   |    2 +-
->  drivers/gpio/Kconfig                               |   11 +
->  drivers/gpio/Makefile                              |    1 +
->  drivers/gpio/gpio-cdns-i3c.c                       |  380 +++++
->  drivers/i3c/Kconfig                                |   24 +
->  drivers/i3c/Makefile                               |    4 +
->  drivers/i3c/core.c                                 |  620 +++++++
->  drivers/i3c/device.c                               |  294 ++++
->  drivers/i3c/internals.h                            |   28 +
->  drivers/i3c/master.c                               | 1723 ++++++++++++++++++++
->  drivers/i3c/master/Kconfig                         |    5 +
->  drivers/i3c/master/Makefile                        |    1 +
->  drivers/i3c/master/i3c-master-cdns.c               | 1650 +++++++++++++++++++
->  include/dt-bindings/i3c/i3c.h                      |   28 +
->  include/linux/i3c/ccc.h                            |  382 +++++
->  include/linux/i3c/device.h                         |  305 ++++
->  include/linux/i3c/master.h                         |  587 +++++++
->  include/linux/mod_devicetable.h                    |   17 +
->  30 files changed, 6626 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-i3c
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-cdns-i3c.txt
->  create mode 100644 Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
->  create mode 100644 Documentation/devicetree/bindings/i3c/i3c.txt
->  create mode 100644 Documentation/driver-api/i3c/conf.py
->  create mode 100644 Documentation/driver-api/i3c/device-driver-api.rst
->  create mode 100644 Documentation/driver-api/i3c/index.rst
->  create mode 100644 Documentation/driver-api/i3c/master-driver-api.rst
->  create mode 100644 Documentation/driver-api/i3c/protocol.rst
->  create mode 100644 drivers/gpio/gpio-cdns-i3c.c
->  create mode 100644 drivers/i3c/Kconfig
->  create mode 100644 drivers/i3c/Makefile
->  create mode 100644 drivers/i3c/core.c
->  create mode 100644 drivers/i3c/device.c
->  create mode 100644 drivers/i3c/internals.h
->  create mode 100644 drivers/i3c/master.c
->  create mode 100644 drivers/i3c/master/Kconfig
->  create mode 100644 drivers/i3c/master/Makefile
->  create mode 100644 drivers/i3c/master/i3c-master-cdns.c
->  create mode 100644 include/dt-bindings/i3c/i3c.h
->  create mode 100644 include/linux/i3c/ccc.h
->  create mode 100644 include/linux/i3c/device.h
->  create mode 100644 include/linux/i3c/master.h
-> 
+T24gTW9uLCAyMyBBcHIgMjAxOCAwOToyMjo1NiArMDIwMApQZXRlciBSb3NpbiA8cGVkYUBheGVu
+dGlhLnNlPiB3cm90ZToKCj4gVGhpcyBiZWF0cyB0aGUgaGV1cmlzdGljIHRoYXQgdGhlIGNvbm5l
+Y3RvciBpcyBpbnZvbHZlZCBpbiB3aGF0IGZvcm1hdAo+IHNob3VsZCBiZSBvdXRwdXQgZm9yIGNh
+c2VzIHdoZXJlIHRoaXMgZmFpbHMuCj4gCj4gRS5nLiBpZiB0aGVyZSBpcyBhIGJyaWRnZSB0aGF0
+IGNoYW5nZXMgZm9ybWF0IGJldHdlZW4gdGhlIGVuY29kZXIgYW5kIHRoZQo+IGNvbm5lY3Rvciwg
+b3IgaWYgc29tZSBvZiB0aGUgUkdCIHBpbnMgYmV0d2VlbiB0aGUgbGNkIGNvbnRyb2xsZXIgYW5k
+IHRoZQo+IGVuY29kZXIgYXJlIG5vdCByb3V0ZWQgb24gdGhlIFBDQi4KPiAKPiBUaGlzIGlzIGNy
+aXRpY2FsIGZvciB0aGUgZGV2aWNlcyB0aGF0IGhhdmUgdGhlICJjb25mbGljdGluZyBvdXRwdXQK
+PiBmb3JtYXRzIiBpc3N1ZSAoU0FNOU4xMiwgU0FNOVg1LCBTQU1BNUQzKSwgc2luY2UgdGhlIG1v
+c3Qgc2lnbmlmaWNhbnQKPiBSR0IgYml0cyBtb3ZlIGFyb3VuZCBkZXBlbmRpbmcgb24gdGhlIHNl
+bGVjdGVkIG91dHB1dCBtb2RlLiBGb3IKPiBkZXZpY2VzIHRoYXQgZG8gbm90IGhhdmUgdGhlICJj
+b25mbGljdGluZyBvdXRwdXQgZm9ybWF0cyIgaXNzdWUKPiAoU0FNQTVEMiwgU0FNQTVENCksIHRo
+aXMgaXMgY29tcGxldGVseSBpcnJlbGV2YW50Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IFBldGVyIFJv
+c2luIDxwZWRhQGF4ZW50aWEuc2U+CgpBY2tlZC1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5i
+cmV6aWxsb25AYm9vdGxpbi5jb20+Cgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxj
+ZGMvYXRtZWxfaGxjZGNfY3J0Yy5jICAgfCA3MCArKysrKysrKysrKysrKysrKy0tLS0tLS0KPiAg
+ZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX2RjLmggICAgIHwgIDEgKwo+
+ICBkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfb3V0cHV0LmMgfCA2NyAr
+KysrKysrKysrKysrKysrKysrKy0tLQo+ICAzIGZpbGVzIGNoYW5nZWQsIDExMSBpbnNlcnRpb25z
+KCspLCAyNyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2F0
+bWVsLWhsY2RjL2F0bWVsX2hsY2RjX2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNk
+Yy9hdG1lbF9obGNkY19jcnRjLmMKPiBpbmRleCBkNzMyODEwOTVmYWMuLmMzOGE0NzlhZGE5OCAx
+MDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfY3J0
+Yy5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX2NydGMu
+Ywo+IEBAIC0yMjYsNiArMjI2LDU1IEBAIHN0YXRpYyB2b2lkIGF0bWVsX2hsY2RjX2NydGNfYXRv
+bWljX2VuYWJsZShzdHJ1Y3QgZHJtX2NydGMgKmMsCj4gICNkZWZpbmUgQVRNRUxfSExDRENfUkdC
+ODg4X09VVFBVVAlCSVQoMykKPiAgI2RlZmluZSBBVE1FTF9ITENEQ19PVVRQVVRfTU9ERV9NQVNL
+CUdFTk1BU0soMywgMCkKPiAgCj4gK3N0YXRpYyBpbnQgYXRtZWxfaGxjZGNfY29ubmVjdG9yX291
+dHB1dF9tb2RlKHN0cnVjdCBkcm1fY29ubmVjdG9yX3N0YXRlICpzdGF0ZSkKPiArewo+ICsJc3Ry
+dWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciA9IHN0YXRlLT5jb25uZWN0b3I7Cj4gKwlzdHJ1
+Y3QgZHJtX2Rpc3BsYXlfaW5mbyAqaW5mbyA9ICZjb25uZWN0b3ItPmRpc3BsYXlfaW5mbzsKPiAr
+CXN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcjsKPiArCXVuc2lnbmVkIGludCBzdXBwb3J0ZWRf
+Zm10cyA9IDA7Cj4gKwlpbnQgajsKPiArCj4gKwllbmNvZGVyID0gc3RhdGUtPmJlc3RfZW5jb2Rl
+cjsKPiArCWlmICghZW5jb2RlcikKPiArCQllbmNvZGVyID0gY29ubmVjdG9yLT5lbmNvZGVyOwo+
+ICsKPiArCXN3aXRjaCAoYXRtZWxfaGxjZGNfZW5jb2Rlcl9nZXRfYnVzX2ZtdChlbmNvZGVyKSkg
+ewo+ICsJY2FzZSAwOgo+ICsJCWJyZWFrOwo+ICsJY2FzZSBNRURJQV9CVVNfRk1UX1JHQjQ0NF8x
+WDEyOgo+ICsJCXJldHVybiBBVE1FTF9ITENEQ19SR0I0NDRfT1VUUFVUOwo+ICsJY2FzZSBNRURJ
+QV9CVVNfRk1UX1JHQjU2NV8xWDE2Ogo+ICsJCXJldHVybiBBVE1FTF9ITENEQ19SR0I1NjVfT1VU
+UFVUOwo+ICsJY2FzZSBNRURJQV9CVVNfRk1UX1JHQjY2Nl8xWDE4Ogo+ICsJCXJldHVybiBBVE1F
+TF9ITENEQ19SR0I2NjZfT1VUUFVUOwo+ICsJY2FzZSBNRURJQV9CVVNfRk1UX1JHQjg4OF8xWDI0
+Ogo+ICsJCXJldHVybiBBVE1FTF9ITENEQ19SR0I4ODhfT1VUUFVUOwo+ICsJZGVmYXVsdDoKPiAr
+CQlyZXR1cm4gLUVJTlZBTDsKPiArCX0KPiArCj4gKwlmb3IgKGogPSAwOyBqIDwgaW5mby0+bnVt
+X2J1c19mb3JtYXRzOyBqKyspIHsKPiArCQlzd2l0Y2ggKGluZm8tPmJ1c19mb3JtYXRzW2pdKSB7
+Cj4gKwkJY2FzZSBNRURJQV9CVVNfRk1UX1JHQjQ0NF8xWDEyOgo+ICsJCQlzdXBwb3J0ZWRfZm10
+cyB8PSBBVE1FTF9ITENEQ19SR0I0NDRfT1VUUFVUOwo+ICsJCQlicmVhazsKPiArCQljYXNlIE1F
+RElBX0JVU19GTVRfUkdCNTY1XzFYMTY6Cj4gKwkJCXN1cHBvcnRlZF9mbXRzIHw9IEFUTUVMX0hM
+Q0RDX1JHQjU2NV9PVVRQVVQ7Cj4gKwkJCWJyZWFrOwo+ICsJCWNhc2UgTUVESUFfQlVTX0ZNVF9S
+R0I2NjZfMVgxODoKPiArCQkJc3VwcG9ydGVkX2ZtdHMgfD0gQVRNRUxfSExDRENfUkdCNjY2X09V
+VFBVVDsKPiArCQkJYnJlYWs7Cj4gKwkJY2FzZSBNRURJQV9CVVNfRk1UX1JHQjg4OF8xWDI0Ogo+
+ICsJCQlzdXBwb3J0ZWRfZm10cyB8PSBBVE1FTF9ITENEQ19SR0I4ODhfT1VUUFVUOwo+ICsJCQli
+cmVhazsKPiArCQlkZWZhdWx0Ogo+ICsJCQlicmVhazsKPiArCQl9Cj4gKwl9Cj4gKwo+ICsJcmV0
+dXJuIHN1cHBvcnRlZF9mbXRzOwo+ICt9Cj4gKwo+ICBzdGF0aWMgaW50IGF0bWVsX2hsY2RjX2Ny
+dGNfc2VsZWN0X291dHB1dF9tb2RlKHN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAqc3RhdGUpCj4gIHsK
+PiAgCXVuc2lnbmVkIGludCBvdXRwdXRfZm10cyA9IEFUTUVMX0hMQ0RDX09VVFBVVF9NT0RFX01B
+U0s7Cj4gQEAgLTIzOCwzMSArMjg3LDEyIEBAIHN0YXRpYyBpbnQgYXRtZWxfaGxjZGNfY3J0Y19z
+ZWxlY3Rfb3V0cHV0X21vZGUoc3RydWN0IGRybV9jcnRjX3N0YXRlICpzdGF0ZSkKPiAgCWNydGMg
+PSBkcm1fY3J0Y190b19hdG1lbF9obGNkY19jcnRjKHN0YXRlLT5jcnRjKTsKPiAgCj4gIAlmb3Jf
+ZWFjaF9uZXdfY29ubmVjdG9yX2luX3N0YXRlKHN0YXRlLT5zdGF0ZSwgY29ubmVjdG9yLCBjc3Rh
+dGUsIGkpIHsKPiAtCQlzdHJ1Y3QgZHJtX2Rpc3BsYXlfaW5mbyAqaW5mbyA9ICZjb25uZWN0b3It
+PmRpc3BsYXlfaW5mbzsKPiAgCQl1bnNpZ25lZCBpbnQgc3VwcG9ydGVkX2ZtdHMgPSAwOwo+IC0J
+CWludCBqOwo+ICAKPiAgCQlpZiAoIWNzdGF0ZS0+Y3J0YykKPiAgCQkJY29udGludWU7Cj4gIAo+
+IC0JCWZvciAoaiA9IDA7IGogPCBpbmZvLT5udW1fYnVzX2Zvcm1hdHM7IGorKykgewo+IC0JCQlz
+d2l0Y2ggKGluZm8tPmJ1c19mb3JtYXRzW2pdKSB7Cj4gLQkJCWNhc2UgTUVESUFfQlVTX0ZNVF9S
+R0I0NDRfMVgxMjoKPiAtCQkJCXN1cHBvcnRlZF9mbXRzIHw9IEFUTUVMX0hMQ0RDX1JHQjQ0NF9P
+VVRQVVQ7Cj4gLQkJCQlicmVhazsKPiAtCQkJY2FzZSBNRURJQV9CVVNfRk1UX1JHQjU2NV8xWDE2
+Ogo+IC0JCQkJc3VwcG9ydGVkX2ZtdHMgfD0gQVRNRUxfSExDRENfUkdCNTY1X09VVFBVVDsKPiAt
+CQkJCWJyZWFrOwo+IC0JCQljYXNlIE1FRElBX0JVU19GTVRfUkdCNjY2XzFYMTg6Cj4gLQkJCQlz
+dXBwb3J0ZWRfZm10cyB8PSBBVE1FTF9ITENEQ19SR0I2NjZfT1VUUFVUOwo+IC0JCQkJYnJlYWs7
+Cj4gLQkJCWNhc2UgTUVESUFfQlVTX0ZNVF9SR0I4ODhfMVgyNDoKPiAtCQkJCXN1cHBvcnRlZF9m
+bXRzIHw9IEFUTUVMX0hMQ0RDX1JHQjg4OF9PVVRQVVQ7Cj4gLQkJCQlicmVhazsKPiAtCQkJZGVm
+YXVsdDoKPiAtCQkJCWJyZWFrOwo+IC0JCQl9Cj4gLQkJfQo+ICsJCXN1cHBvcnRlZF9mbXRzID0g
+YXRtZWxfaGxjZGNfY29ubmVjdG9yX291dHB1dF9tb2RlKGNzdGF0ZSk7Cj4gIAo+ICAJCWlmIChj
+cnRjLT5kYy0+ZGVzYy0+Y29uZmxpY3Rpbmdfb3V0cHV0X2Zvcm1hdHMpCj4gIAkJCW91dHB1dF9m
+bXRzICY9IHN1cHBvcnRlZF9mbXRzOwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXRt
+ZWwtaGxjZGMvYXRtZWxfaGxjZGNfZGMuaCBiL2RyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNkYy9h
+dG1lbF9obGNkY19kYy5oCj4gaW5kZXggYWIzMmQ1YjI2OGQyLi43N2JkMmQwYWU1MDggMTAwNjQ0
+Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX2RjLmgKPiAr
+KysgYi9kcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfZGMuaAo+IEBAIC00
+NTQsNSArNDU0LDYgQEAgdm9pZCBhdG1lbF9obGNkY19jcnRjX2lycShzdHJ1Y3QgZHJtX2NydGMg
+KmMpOwo+ICBpbnQgYXRtZWxfaGxjZGNfY3J0Y19jcmVhdGUoc3RydWN0IGRybV9kZXZpY2UgKmRl
+dik7Cj4gIAo+ICBpbnQgYXRtZWxfaGxjZGNfY3JlYXRlX291dHB1dHMoc3RydWN0IGRybV9kZXZp
+Y2UgKmRldik7Cj4gK2ludCBhdG1lbF9obGNkY19lbmNvZGVyX2dldF9idXNfZm10KHN0cnVjdCBk
+cm1fZW5jb2RlciAqZW5jb2Rlcik7Cj4gIAo+ICAjZW5kaWYgLyogRFJNX0FUTUVMX0hMQ0RDX0gg
+Ki8KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2Rj
+X291dHB1dC5jIGIvZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX291dHB1
+dC5jCj4gaW5kZXggOGRiNTFmYjEzMWRiLi5kYjRkNmFhYWVmOTMgMTAwNjQ0Cj4gLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX291dHB1dC5jCj4gKysrIGIvZHJp
+dmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX291dHB1dC5jCj4gQEAgLTI3LDMz
+ICsyNyw4NiBAQAo+ICAKPiAgI2luY2x1ZGUgImF0bWVsX2hsY2RjX2RjLmgiCj4gIAo+ICtzdHJ1
+Y3QgYXRtZWxfaGxjZGNfcmdiX291dHB1dCB7Cj4gKwlzdHJ1Y3QgZHJtX2VuY29kZXIgZW5jb2Rl
+cjsKPiArCWludCBidXNfZm10Owo+ICt9Owo+ICsKPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1f
+ZW5jb2Rlcl9mdW5jcyBhdG1lbF9obGNkY19wYW5lbF9lbmNvZGVyX2Z1bmNzID0gewo+ICAJLmRl
+c3Ryb3kgPSBkcm1fZW5jb2Rlcl9jbGVhbnVwLAo+ICB9Owo+ICAKPiArc3RhdGljIHN0cnVjdCBh
+dG1lbF9obGNkY19yZ2Jfb3V0cHV0ICoKPiArYXRtZWxfaGxjZGNfZW5jb2Rlcl90b19yZ2Jfb3V0
+cHV0KHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKPiArewo+ICsJcmV0dXJuIGNvbnRhaW5l
+cl9vZihlbmNvZGVyLCBzdHJ1Y3QgYXRtZWxfaGxjZGNfcmdiX291dHB1dCwgZW5jb2Rlcik7Cj4g
+K30KPiArCj4gK2ludCBhdG1lbF9obGNkY19lbmNvZGVyX2dldF9idXNfZm10KHN0cnVjdCBkcm1f
+ZW5jb2RlciAqZW5jb2RlcikKPiArewo+ICsJc3RydWN0IGF0bWVsX2hsY2RjX3JnYl9vdXRwdXQg
+Km91dHB1dDsKPiArCj4gKwlvdXRwdXQgPSBhdG1lbF9obGNkY19lbmNvZGVyX3RvX3JnYl9vdXRw
+dXQoZW5jb2Rlcik7Cj4gKwo+ICsJcmV0dXJuIG91dHB1dC0+YnVzX2ZtdDsKPiArfQo+ICsKPiAr
+c3RhdGljIGludCBhdG1lbF9obGNkY19vZl9idXNfZm10KHN0cnVjdCBkZXZpY2Vfbm9kZSAqZXAp
+Cj4gK3sKPiArCXUzMiBidXNfd2lkdGggPSAwOwo+ICsKPiArCW9mX3Byb3BlcnR5X3JlYWRfdTMy
+KGVwLCAiYnVzLXdpZHRoIiwgJmJ1c193aWR0aCk7Cj4gKwo+ICsJc3dpdGNoIChidXNfd2lkdGgp
+IHsKPiArCWNhc2UgMDoKPiArCQlyZXR1cm4gMDsKPiArCWNhc2UgMTI6Cj4gKwkJcmV0dXJuIE1F
+RElBX0JVU19GTVRfUkdCNDQ0XzFYMTI7Cj4gKwljYXNlIDE2Ogo+ICsJCXJldHVybiBNRURJQV9C
+VVNfRk1UX1JHQjU2NV8xWDE2Owo+ICsJY2FzZSAxODoKPiArCQlyZXR1cm4gTUVESUFfQlVTX0ZN
+VF9SR0I2NjZfMVgxODsKPiArCWNhc2UgMjQ6Cj4gKwkJcmV0dXJuIE1FRElBX0JVU19GTVRfUkdC
+ODg4XzFYMjQ7Cj4gKwlkZWZhdWx0Ogo+ICsJCXJldHVybiAtRUlOVkFMOwo+ICsJfQo+ICt9Cj4g
+Kwo+ICBzdGF0aWMgaW50IGF0bWVsX2hsY2RjX2F0dGFjaF9lbmRwb2ludChzdHJ1Y3QgZHJtX2Rl
+dmljZSAqZGV2LCBpbnQgZW5kcG9pbnQpCj4gIHsKPiAtCXN0cnVjdCBkcm1fZW5jb2RlciAqZW5j
+b2RlcjsKPiArCXN0cnVjdCBhdG1lbF9obGNkY19yZ2Jfb3V0cHV0ICpvdXRwdXQ7Cj4gKwlzdHJ1
+Y3QgZGV2aWNlX25vZGUgKmVwOwo+ICAJc3RydWN0IGRybV9wYW5lbCAqcGFuZWw7Cj4gIAlzdHJ1
+Y3QgZHJtX2JyaWRnZSAqYnJpZGdlOwo+ICAJaW50IHJldDsKPiAgCj4gKwllcCA9IG9mX2dyYXBo
+X2dldF9lbmRwb2ludF9ieV9yZWdzKGRldi0+ZGV2LT5vZl9ub2RlLCAwLCBlbmRwb2ludCk7Cj4g
+KwlpZiAoIWVwKQo+ICsJCXJldHVybiAtRU5PREVWOwo+ICsKPiAgCXJldCA9IGRybV9vZl9maW5k
+X3BhbmVsX29yX2JyaWRnZShkZXYtPmRldi0+b2Zfbm9kZSwgMCwgZW5kcG9pbnQsCj4gIAkJCQkJ
+ICAmcGFuZWwsICZicmlkZ2UpOwo+ICAJaWYgKHJldCkKPiAgCQlyZXR1cm4gcmV0Owo+ICAKPiAt
+CWVuY29kZXIgPSBkZXZtX2t6YWxsb2MoZGV2LT5kZXYsIHNpemVvZigqZW5jb2RlciksIEdGUF9L
+RVJORUwpOwo+IC0JaWYgKCFlbmNvZGVyKQo+ICsJb3V0cHV0ID0gZGV2bV9remFsbG9jKGRldi0+
+ZGV2LCBzaXplb2YoKm91dHB1dCksIEdGUF9LRVJORUwpOwo+ICsJaWYgKCFvdXRwdXQpCj4gIAkJ
+cmV0dXJuIC1FSU5WQUw7Cj4gIAo+IC0JcmV0ID0gZHJtX2VuY29kZXJfaW5pdChkZXYsIGVuY29k
+ZXIsCj4gKwlvdXRwdXQtPmJ1c19mbXQgPSBhdG1lbF9obGNkY19vZl9idXNfZm10KGVwKTsKPiAr
+CWlmIChvdXRwdXQtPmJ1c19mbXQgPCAwKSB7Cj4gKwkJZGV2X2VycihkZXYtPmRldiwgImludmFs
+aWQgYnVzIHdpZHRoXG4iKTsKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCX0KPiArCj4gKwlyZXQg
+PSBkcm1fZW5jb2Rlcl9pbml0KGRldiwgJm91dHB1dC0+ZW5jb2RlciwKPiAgCQkJICAgICAgICZh
+dG1lbF9obGNkY19wYW5lbF9lbmNvZGVyX2Z1bmNzLAo+ICAJCQkgICAgICAgRFJNX01PREVfRU5D
+T0RFUl9OT05FLCBOVUxMKTsKPiAgCWlmIChyZXQpCj4gIAkJcmV0dXJuIHJldDsKPiAgCj4gLQll
+bmNvZGVyLT5wb3NzaWJsZV9jcnRjcyA9IDB4MTsKPiArCW91dHB1dC0+ZW5jb2Rlci5wb3NzaWJs
+ZV9jcnRjcyA9IDB4MTsKPiAgCj4gIAlpZiAocGFuZWwpIHsKPiAgCQlicmlkZ2UgPSBkcm1fcGFu
+ZWxfYnJpZGdlX2FkZChwYW5lbCwgRFJNX01PREVfQ09OTkVDVE9SX1Vua25vd24pOwo+IEBAIC02
+Miw3ICsxMTUsNyBAQCBzdGF0aWMgaW50IGF0bWVsX2hsY2RjX2F0dGFjaF9lbmRwb2ludChzdHJ1
+Y3QgZHJtX2RldmljZSAqZGV2LCBpbnQgZW5kcG9pbnQpCj4gIAl9Cj4gIAo+ICAJaWYgKGJyaWRn
+ZSkgewo+IC0JCXJldCA9IGRybV9icmlkZ2VfYXR0YWNoKGVuY29kZXIsIGJyaWRnZSwgTlVMTCk7
+Cj4gKwkJcmV0ID0gZHJtX2JyaWRnZV9hdHRhY2goJm91dHB1dC0+ZW5jb2RlciwgYnJpZGdlLCBO
+VUxMKTsKPiAgCQlpZiAoIXJldCkKPiAgCQkJcmV0dXJuIDA7Cj4gIAo+IEBAIC03MCw3ICsxMjMs
+NyBAQCBzdGF0aWMgaW50IGF0bWVsX2hsY2RjX2F0dGFjaF9lbmRwb2ludChzdHJ1Y3QgZHJtX2Rl
+dmljZSAqZGV2LCBpbnQgZW5kcG9pbnQpCj4gIAkJCWRybV9wYW5lbF9icmlkZ2VfcmVtb3ZlKGJy
+aWRnZSk7Cj4gIAl9Cj4gIAo+IC0JZHJtX2VuY29kZXJfY2xlYW51cChlbmNvZGVyKTsKPiArCWRy
+bV9lbmNvZGVyX2NsZWFudXAoJm91dHB1dC0+ZW5jb2Rlcik7Cj4gIAo+ICAJcmV0dXJuIHJldDsK
+PiAgfQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
