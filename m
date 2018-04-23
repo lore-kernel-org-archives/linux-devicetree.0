@@ -1,88 +1,47 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH] ARM64: dts: meson-axg: enable AP6255 wifi module
-Date: Mon, 23 Apr 2018 14:57:29 +0000
-Message-ID: <20180423145729.14368-1-yixun.lan@amlogic.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun4i: Fix incorrect clocks for displays
+Date: Mon, 23 Apr 2018 09:14:21 +0200
+Message-ID: <20180423071421.byupsz4gxpmhfe44@flea>
+References: <20180420102112.2843-1-dev@pascalroeleven.nl>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yofuic37aad2weiq"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWMP63LAKGQEBKZFR3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180420102112.2843-1-dev-/1Tg0gxlrOS4ObxHbWkkimZHpeb/A1Y/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Pascal Roeleven <dev-/1Tg0gxlrOS4ObxHbWkkimZHpeb/A1Y/@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Meson-AXG S400 board is shipped with AP6255 wifi module,
-which is actually using the brcmfmac 43455 driver.
 
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- .../arm64/boot/dts/amlogic/meson-axg-s400.dts | 44 ++++++++++++++++++-
- 1 file changed, 43 insertions(+), 1 deletion(-)
+--yofuic37aad2weiq
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index f67d4e47e641..b3e1bdca32bb 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -51,7 +51,16 @@
- 
- 	sdio_pwrseq: sdio-pwrseq {
- 		compatible = "mmc-pwrseq-simple";
--		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-+		reset-gpios = <&gpio GPIOX_7 GPIO_ACTIVE_LOW>;
-+		clocks = <&wifi32k>;
-+		clock-names = "ext_clock";
-+	};
-+
-+	wifi32k: wifi32k {
-+		compatible = "pwm-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		pwms = <&pwm_ab 0 30518 0>; /* PWM_A at 32.768KHz */
- 	};
- };
- 
-@@ -86,6 +95,12 @@
- 	pinctrl-names = "default";
- };
- 
-+&pwm_ab {
-+	status = "okay";
-+	pinctrl-0 = <&pwm_a_x20_pins>;
-+	pinctrl-names = "default";
-+};
-+
- /* emmc storage */
- &sd_emmc_c {
- 	status = "okay";
-@@ -105,3 +120,30 @@
- 	vmmc-supply = <&vcc_3v3>;
- 	vqmmc-supply = <&vddio_boot>;
- };
-+
-+/* wifi module */
-+&sd_emmc_b {
-+	status = "okay";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	pinctrl-0 = <&sdio_pins>;
-+	pinctrl-1 = <&sdio_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <100000000>;
-+	non-removable;
-+	disable-wp;
-+
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+
-+	vmmc-supply = <&vddao_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+	};
-+};
+On Fri, Apr 20, 2018 at 12:21:12PM +0200, Pascal Roeleven wrote:
+> Some displays on SUN4i devices wouldn't properly stay on unless
+> 'clk_ignore_unused' is used.
+> 
+> Change the duplicate clocks to the probably intended ones.
+> 
+> Signed-off-by: Pascal Roeleven <dev-/1Tg0gxlrOS4ObxHbWkkimZHpeb/A1Y/@public.gmane.org>
+
+What was the difference with the first patch you sent?
+
+Anyway, I've applied it, thanks
+
+Maxime
+
 -- 
-2.17.0
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--yofuic37aad2weiq--
