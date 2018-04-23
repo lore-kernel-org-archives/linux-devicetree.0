@@ -1,90 +1,125 @@
 Return-Path: <SRS0=pQuZ=HM=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from sauhun.de ([88.99.104.3]:48494 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932393AbeDWULZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Apr 2018 16:11:25 -0400
-Date: Mon, 23 Apr 2018 22:11:21 +0200
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 02/11] media: ov772x: allow i2c controllers without
- I2C_FUNC_PROTOCOL_MANGLING
-Message-ID: <20180423201121.cgcg6isobtku7swy@ninjato>
-References: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
- <4036479.nT1QDtF4Ij@avalon>
- <CAC5umyiBvBK3QpaszSx0XuMKyj66gCNyKfX8apEh2mk6xG5vtQ@mail.gmail.com>
- <3172940.h9isB0x1K9@avalon>
+Received: from perceval.ideasonboard.com ([213.167.242.64]:39922 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932244AbeDWTlU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Apr 2018 15:41:20 -0400
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 02/11] media: ov772x: allow i2c controllers without I2C_FUNC_PROTOCOL_MANGLING
+Date: Mon, 23 Apr 2018 22:41:32 +0300
+Message-ID: <3172940.h9isB0x1K9@avalon>
+In-Reply-To: <CAC5umyiBvBK3QpaszSx0XuMKyj66gCNyKfX8apEh2mk6xG5vtQ@mail.gmail.com>
+References: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com> <4036479.nT1QDtF4Ij@avalon> <CAC5umyiBvBK3QpaszSx0XuMKyj66gCNyKfX8apEh2mk6xG5vtQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mgvg4derk4imnofd"
-Content-Disposition: inline
-In-Reply-To: <3172940.h9isB0x1K9@avalon>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, linux-media@vger.kernel.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+To: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: linux-media@vger.kernel.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Wolfram Sang <wsa@the-dreams.de>
 List-ID: <devicetree@vger.kernel.org>
 
+Hi Mita-san,
 
---mgvg4derk4imnofd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+(CC'ing Wolfram Sang)
+
+On Monday, 23 April 2018 18:55:20 EEST Akinobu Mita wrote:
+> 2018-04-23 18:18 GMT+09:00 Laurent Pinchart:
+> > On Sunday, 22 April 2018 18:56:08 EEST Akinobu Mita wrote:
+> >> The ov772x driver only works when the i2c controller have
+> >> I2C_FUNC_PROTOCOL_MANGLING.  However, many i2c controller drivers don't
+> >> support it.
+> >> 
+> >> The reason that the ov772x requires I2C_FUNC_PROTOCOL_MANGLING is that
+> >> it doesn't support repeated starts.
+> >> 
+> >> This changes the reading ov772x register method so that it doesn't
+> >> require I2C_FUNC_PROTOCOL_MANGLING by calling two separated i2c messages.
+> > 
+> > As commented in a reply to v1, given that this implementation is in no way
+> > specific to the ov772x driver, I'd prefer implementing the fallback in the
+> > I2C core instead.
+> 
+> Do you have any ideas how to implement in the I2C core?
+> I wonder if I can modify i2c_smbus_read_byte_data() or i2c_transfer()
+> for I2C_CLIENT_SCCB.
+
+How about i2c_smbus_xfer_emulated() ? The tricky part will be to handle the 
+I2C adapters that implement .smbus_xfer(), as those won't go through 
+i2c_smbus_xfer_emulated(). i2c_smbus_xfer_emulated() relies on i2c_transfer(), 
+which itself relies on the I2C adapter's .master_xfer() operation. We're thus 
+only concerned about the drivers that implement both .smbus_xfer() and 
+master_xfer(), and there's only 4 of them (i2c-opal, i2c-pasemi, i2c-powermac 
+and i2c-zx2967). Maybe the simplest solution would be to force the emulation 
+path if I2C_CLIENT_SCCB && !I2C_FUNC_PROTOCOL_MANGLING && ->master_xfer != 
+NULL ?
+
+Wolfram, what do you think ?
+
+> >> Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+> >> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> >> Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+> >> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> >> ---
+> >> * v3
+> >> - Remove I2C_CLIENT_SCCB flag set as it isn't needed anymore
+> >> 
+> >>  drivers/media/i2c/ov772x.c | 20 ++++++++++++++------
+> >>  1 file changed, 14 insertions(+), 6 deletions(-)
+> >> 
+> >> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> >> index b62860c..2ae730f 100644
+> >> --- a/drivers/media/i2c/ov772x.c
+> >> +++ b/drivers/media/i2c/ov772x.c
+> >> @@ -542,9 +542,19 @@ static struct ov772x_priv *to_ov772x(struct
+> >> v4l2_subdev *sd)
+> >>  	return container_of(sd, struct ov772x_priv, subdev);
+> >>  }
+> >> 
+> >> -static inline int ov772x_read(struct i2c_client *client, u8 addr)
+> >> +static int ov772x_read(struct i2c_client *client, u8 addr)
+> >>  {
+> >> -     return i2c_smbus_read_byte_data(client, addr);
+> >> +     int ret;
+> >> +     u8 val;
+> >> +
+> >> +     ret = i2c_master_send(client, &addr, 1);
+> >> +     if (ret < 0)
+> >> +             return ret;
+> >> +     ret = i2c_master_recv(client, &val, 1);
+> >> +     if (ret < 0)
+> >> +             return ret;
+> >> +
+> >> +     return val;
+> >>  }
+> >>  
+> >>  static inline int ov772x_write(struct i2c_client *client, u8 addr, u8
+> >> value)
+> >> @@ -1255,13 +1265,11 @@ static int ov772x_probe(struct i2c_client
+> >> *client,
+> >>  			return -EINVAL;
+> >>       }
+> >> 
+> >> -     if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA |
+> >> -                                           I2C_FUNC_PROTOCOL_MANGLING))
+> >> {
+> >> +     if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
+> >>               dev_err(&adapter->dev,
+> >> -                     "I2C-Adapter doesn't support SMBUS_BYTE_DATA or
+> >> PROTOCOL_MANGLING\n");
+> >> +                     "I2C-Adapter doesn't support SMBUS_BYTE_DATA\n");
+> >>               return -EIO;
+> >>       }
+> >> 
+> >> -     client->flags |= I2C_CLIENT_SCCB;
+> >> 
+> >>       priv = devm_kzalloc(&client->dev, sizeof(*priv), GFP_KERNEL);
+> >>       if (!priv)
+
+-- 
+Regards,
+
+Laurent Pinchart
 
 
-> How about i2c_smbus_xfer_emulated() ? The tricky part will be to handle t=
-he=20
-> I2C adapters that implement .smbus_xfer(), as those won't go through=20
-> i2c_smbus_xfer_emulated(). i2c_smbus_xfer_emulated() relies on i2c_transf=
-er(),=20
-> which itself relies on the I2C adapter's .master_xfer() operation. We're =
-thus=20
-> only concerned about the drivers that implement both .smbus_xfer() and=20
-> master_xfer(), and there's only 4 of them (i2c-opal, i2c-pasemi, i2c-powe=
-rmac=20
-> and i2c-zx2967). Maybe the simplest solution would be to force the emulat=
-ion=20
-> path if I2C_CLIENT_SCCB && !I2C_FUNC_PROTOCOL_MANGLING && ->master_xfer !=
-=3D=20
-> NULL ?
->=20
-> Wolfram, what do you think ?
 
-I think it is a mess :)
-
-Further: I don't think we will ever see an SMBus controller which allows
-mangling. SMBus is way more precisely defined than I2C, so HW can then
-do much more things automatically. They will always do a REP_START, so I
-don't think you can connect SCCB devices to SMBus.
-
-As a result, we shouldn't do SMBus calls for SCCB. Maybe we should
-introduce sccb_byte_read? SCCB didn't specify much more than byte read
-IIRC, or? The implementation here with two seperate messages makes much
-sense to me then.
-
-I could argue that the sccb_* helpers should live in drivers/media since
-it is probably only Omnivision trying to work around I2C licensing here?
-
-But if it is not too heavy, maybe we could take it into i2c as well.
-
-Makes sense or did I miss something?
-
-
---mgvg4derk4imnofd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlrePeQACgkQFA3kzBSg
-KbZQxA//XVbGH3BiXXGq5x2XKuN0UD84wZBtS8CqzlNgCfvJR07kpNUE3RHgRd2L
-5E002zJmqOaCgq1CtSuo4CXPL4zKj1HnqPSXuowj/xJY3+PlsB3BIdqENubOif72
-d0O9i13zB94NkaKt0AHZzvOVmpKIhZGvuheGw1ZTvUQyPnKdkqCdbDOChkbzpHAQ
-tbGooKwW9aEdXkb58m6wcb1Yylt/UNLzt55RfWd/uyOqE6v0PyJc7O4EcvecJXAV
-hmXfGo9co0dMRTua+whCEay+YrFeLqFN84LMznZ99zKx8LH2L/1zVNwLqDa1KiNn
-OoG+VRcTGOpuaJ0q1RZU5oVMurmqUsGtziFUHZzscXsaRtRsK/n+zNYwGS4GhHie
-yQcrG5RpYFejXccduK9D2GaUUgpMMZwBp4u0HNf1P+zYh13kGSIrTUiEkYhUxWRn
-TBprHxYn++yP/bleytCp858UpZlAECeqHImT0MdOWYmQi/jEg0nXFa/6ajdcqATN
-TNTh1s25goKTT3GsIBMVltKywZmeBpASQ69+zRBVTJ18+23ecG6kAM1eB2MfF/06
-NKKB/XXwhVgnT2EmREbyrYi43edvOBPGpyVIDzMkY0oIEFRyzfu/tLHWTG14mP3t
-vtjCW0zFOoUkwN7RhnlZk2xwVhgP7+QC5UGQvF6szmkC88F9EBM=
-=o9j6
------END PGP SIGNATURE-----
-
---mgvg4derk4imnofd--
