@@ -1,70 +1,90 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v4 2/8] dt-bindings: display: atmel: optional
- video-interface of endpoints
-Date: Mon, 23 Apr 2018 19:41:06 +0200
-Message-ID: <20180423194106.3b178211@bbrezillon>
-References: <20180423072301.11962-1-peda@axentia.se>
- <20180423072301.11962-3-peda@axentia.se>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 2/2] usb: dwc3: support clocks and resets for DWC3 core
+Date: Mon, 23 Apr 2018 19:44:27 +0200
+Message-ID: <CAFBinCDwbyovMZ-qAKaMiBfz_YKMwxC1c4MjfNyLAvnXEfXtMw@mail.gmail.com>
+References: <1524135818-14825-1-git-send-email-yamada.masahiro@socionext.com> <1524135818-14825-3-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180423072301.11962-3-peda@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524135818-14825-3-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-usb@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh@kernel.org>, Roger Quadros <rogerq@ti.com>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMyBBcHIgMjAxOCAwOToyMjo1NSArMDIwMApQZXRlciBSb3NpbiA8cGVkYUBheGVu
-dGlhLnNlPiB3cm90ZToKCj4gV2l0aCBidXMtdHlwZS9idXMtd2lkdGggcHJvcGVydGllcyBpbiB0
-aGUgZW5kcG9pbnQgbm9kZXMsIHRoZSB2aWRlby0KPiBpbnRlcmZhY2Ugb2YgdGhlIGNvbm5lY3Rp
-b24gY2FuIGJlIHNwZWNpZmllZCBmb3IgY2FzZXMgd2hlcmUgdGhlCj4gaGV1cmlzdGljIGZhaWxz
-IHRvIHNlbGVjdCB0aGUgY29ycmVjdCBvdXRwdXQgbW9kZS4gVGhpcyBjYW4gaGFwcGVuCj4gZS5n
-LiBpZiBub3QgYWxsIFJHQiBwaW5zIGFyZSByb3V0ZWQgb24gdGhlIFBDQjsgdGhlIGRyaXZlciBo
-YXMgbm8KPiB3YXkgb2Yga25vd2luZyB0aGlzLCBhbmQgbmVlZHMgdG8gYmUgdG9sZCBleHBsaWNp
-dGx5Lgo+IAo+IFRoaXMgaXMgY3JpdGljYWwgZm9yIHRoZSBkZXZpY2VzIHRoYXQgaGF2ZSB0aGUg
-ImNvbmZsaWN0aW5nIG91dHB1dAo+IGZvcm1hdHMiIGlzc3VlIChTQU05TjEyLCBTQU05WDUsIFNB
-TUE1RDMpLCBzaW5jZSB0aGUgbW9zdCBzaWduaWZpY2FudAo+IFJHQiBiaXRzIG1vdmUgYXJvdW5k
-IGRlcGVuZGluZyBvbiB0aGUgc2VsZWN0ZWQgb3V0cHV0IG1vZGUuIEZvcgo+IGRldmljZXMgdGhh
-dCBkbyBub3QgaGF2ZSB0aGUgImNvbmZsaWN0aW5nIG91dHB1dCBmb3JtYXRzIiBpc3N1ZQo+IChT
-QU1BNUQyLCBTQU1BNUQ0KSwgdGhpcyBpcyBjb21wbGV0ZWx5IGlycmVsZXZhbnQuCj4gCj4gU2ln
-bmVkLW9mZi1ieTogUGV0ZXIgUm9zaW4gPHBlZGFAYXhlbnRpYS5zZT4KCkFja2VkLWJ5OiBCb3Jp
-cyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBib290bGluLmNvbT4KCj4gLS0tCj4gIC4uLi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXRtZWwvaGxjZGMtZGMudHh0IHwgMjYgKysrKysr
-KysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMjYgaW5zZXJ0aW9ucygrKQo+IAo+
-IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9h
-dG1lbC9obGNkYy1kYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9hdG1lbC9obGNkYy1kYy50eHQKPiBpbmRleCA4MmYyYWNiM2QzNzQuLjlkZTQzNGE4ZjUy
-MyAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9hdG1lbC9obGNkYy1kYy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9hdG1lbC9obGNkYy1kYy50eHQKPiBAQCAtMTUsNiArMTUsMTQgQEAgUmVx
-dWlyZWQgY2hpbGRyZW4gbm9kZXM6Cj4gICB0byBleHRlcm5hbCBkZXZpY2VzIHVzaW5nIHRoZSBP
-RiBncmFwaCByZXByZW5zZW50YXRpb24gKHNlZSAuLi9ncmFwaC50eHQpLgo+ICAgQXQgbGVhc3Qg
-b25lIHBvcnQgbm9kZSBpcyByZXF1aXJlZC4KPiAgCj4gK09wdGlvbmFsIHByb3BlcnRpZXMgaW4g
-Z3JhbmRjaGlsZCBub2RlczoKPiArIEFueSBlbmRwb2ludCBncmFuZGNoaWxkIG5vZGUgbWF5IHNw
-ZWNpZnkgYSBkZXNpcmVkIHZpZGVvIGludGVyZmFjZQo+ICsgYWNjb3JkaW5nIHRvIC4uLy4uL21l
-ZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0LCBzcGVjaWZpY2FsbHkKPiArIC0gYnVzLXR5cGU6IG11
-c3QgYmUgPDA+Lgo+ICsgLSBidXMtd2lkdGg6IHJlY29nbml6ZWQgdmFsdWVzIGFyZSA8MTI+LCA8
-MTY+LCA8MTg+IGFuZCA8MjQ+LCBhbmQKPiArICAgb3ZlcnJpZGUgYW55IG91dHB1dCBtb2RlIHNl
-bGVjdGlvbiBoZXVyaXN0aWMsIGZvcmNpbmcgInJnYjQ0NCIsCj4gKyAgICJyZ2I1NjUiLCAicmdi
-NjY2IiBhbmQgInJnYjg4OCIgcmVzcGVjdGl2ZWx5Lgo+ICsKPiAgRXhhbXBsZToKPiAgCj4gIAlo
-bGNkYzogaGxjZGNAZjAwMzAwMDAgewo+IEBAIC01MCwzICs1OCwyMSBAQCBFeGFtcGxlOgo+ICAJ
-CQkjcHdtLWNlbGxzID0gPDM+Owo+ICAJCX07Cj4gIAl9Owo+ICsKPiArCj4gK0V4YW1wbGUgMjog
-V2l0aCBhIHZpZGVvIGludGVyZmFjZSBvdmVycmlkZSB0byBmb3JjZSByZ2I1NjU7IGFzIGFib3Zl
-Cj4gK2J1dCB3aXRoIHRoZXNlIGNoYW5nZXMvYWRkaXRpb25zOgo+ICsKPiArCSZobGNkYyB7Cj4g
-KwkJaGxjZGMtZGlzcGxheS1jb250cm9sbGVyIHsKPiArCQkJcGluY3RybC1uYW1lcyA9ICJkZWZh
-dWx0IjsKPiArCQkJcGluY3RybC0wID0gPCZwaW5jdHJsX2xjZF9iYXNlICZwaW5jdHJsX2xjZF9y
-Z2I1NjU+Owo+ICsKPiArCQkJcG9ydEAwIHsKPiArCQkJCWhsY2RjX3BhbmVsX291dHB1dDogZW5k
-cG9pbnRAMCB7Cj4gKwkJCQkJYnVzLXR5cGUgPSA8MD47Cj4gKwkJCQkJYnVzLXdpZHRoID0gPDE2
-PjsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwkJfTsKPiArCX07CgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hello,
+
+On Thu, Apr 19, 2018 at 1:03 PM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> Historically, the clocks and resets are handled on the glue layer
+> side instead of the DWC3 core.  For simple cases, dwc3-of-simple.c
+> takes care of arbitrary number of clocks and resets.  The DT node
+> structure typically looks like as follows:
+>
+>   dwc3-glue {
+>           compatible = "foo,dwc3";
+>           clocks = ...;
+>           resets = ...;
+>           ...
+>
+>           dwc3 {
+>                   compatible = "snps,dwc3";
+>                   ...
+>           };
+>   }
+>
+> By supporting the clocks and the reset in the dwc3/core.c, it will
+> be turned into a single node:
+>
+>   dwc3 {
+>           compatible = "foo,dwc3", "snps,dwc3";
+>           clocks = ...;
+>           resets = ...;
+>           ...
+>   }
+>
+> This commit adds the binding of clocks and resets specific to this IP.
+> The number of clocks should generally be the same across SoCs, it is
+> just some SoCs either tie clocks together or do not provide software
+> control of some of the clocks.
+>
+> I took the clock names from the Synopsys datasheet: "ref" (ref_clk),
+> "bus_early" (bus_clk_early), and "suspend" (suspend_clk).
+looking at the code: this could mean that dwc3-exynos.c can be removed
+mid-term (assuming the PHY and regulator handling can be
+moved/removed/changed)
+
+does the datasheet state anything about the clock speeds? from
+Documentation/devicetree/bindings/usb/dwc3-xilinx.txt:
+"bus_clk" Master/Core clock, have to be >= 125 MHz for SS operation
+and >= 60MHz for HS operation
+
+> I found only one reset line in the datasheet, hence the reset-names
+> property is omitted.
+does the datasheet state whether this is a level or a pulsed reset line?
+on Amlogic Meson GXL, GXM and AXG SoCs we use a pulsed (and shared)
+reset line (see ff0a632f08759e "usb: dwc3: of-simple: add support for
+shared and pulsed reset lines") because the reset line is shared
+between various components (USB2 PHY, USB3 PHY, dwc3 controller, ...)
+your current approach (having a vendor-specific "foo,dwc3" binding
+along with the generic "snps,dwc3") would allow having
+per-"of_device_id" settings which could indicate whether the reset
+lines are level or pulsed reset if these are "implementation specific"
+
+> Supporting those clocks and resets is the requirement for new platforms.
+just to confirm:
+with this series your goal is to replace the wrapper node which is
+needed due to dwc3-of-simple.c ?
+would other drivers which currently create a wrapper node (like
+dwc3-keystone.c) keep their wrapper node or do you have any plans for
+removing it for the other "wrapper" drivers too?
+
+> Enforcing the new binding breaks existing platforms since they specify
+> clocks and resets in their glue layer node, but nothing in the core
+> node.  I listed such exceptional cases in the DT binding.  The driver
+> code is loosened up to accept no clock/reset.  This change is based
+> on the discussion [1].
+(snip)
+
+Regards
+Martin
