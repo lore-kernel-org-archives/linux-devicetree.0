@@ -1,86 +1,38 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/8] drm: bridge: Add support for static image formats
-Date: Mon, 23 Apr 2018 12:27:39 +0300
-Message-ID: <3108314.q4SV6s3NXE@avalon>
-References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524130269-32688-2-git-send-email-jacopo+renesas@jmondi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1524130269-32688-2-git-send-email-jacopo+renesas@jmondi.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, peda@axentia.se, linux-media@vger.kernel.org
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [RFC. PATCH] earlycon: Remove hardcoded port->uartclk initialization in of_setup_earlycon
+Date: Mon, 23 Apr 2018 11:27:50 +0200
+Message-ID: <b05e4d329c556357bf7393075c6c1602509eb9c2.1524475668.git.michal.simek@xilinx.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, monstr@monstr.eu, devicetree@vger.kernel.org, Rob Herring <robherring2@gmail.com>, matt.redfearn@mips.com
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUaHVyc2RheSwgMTkgQXBy
-aWwgMjAxOCAxMjozMTowMiBFRVNUIEphY29wbyBNb25kaSB3cm90ZToKPiBBZGQgc3VwcG9ydCBm
-b3Igc3RvcmluZyBpbWFnZSBmb3JtYXQgaW5mb3JtYXRpb24gaW4gRFJNIGJyaWRnZXMgd2l0aAo+
-IGFzc29jaWF0ZWQgaGVscGVyIGZ1bmN0aW9uLgo+IAo+IFRoaXMgcGF0Y2ggcmVwbGljYXRlcyBm
-b3IgYnJpZGdlcyB3aGF0ICdkcm1fZGlzcGxheV9pbmZvX3NldF9idXNfZm9ybWF0cygpJwo+IGlz
-IGZvciBjb25uZWN0b3JzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEphY29wbyBNb25kaSA8amFjb3Bv
-K3JlbmVzYXNAam1vbmRpLm9yZz4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL2RybV9icmlkZ2Uu
-YyB8IDMwICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICBpbmNsdWRlL2RybS9kcm1f
-YnJpZGdlLmggICAgIHwgIDggKysrKysrKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCAzOCBpbnNlcnRp
-b25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fYnJpZGdlLmMgYi9k
-cml2ZXJzL2dwdS9kcm0vZHJtX2JyaWRnZS5jCj4gaW5kZXggMTYzOGJmZS4uZTJhZDA5OCAxMDA2
-NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2JyaWRnZS5jCj4gKysrIGIvZHJpdmVycy9n
-cHUvZHJtL2RybV9icmlkZ2UuYwo+IEBAIC0xNTcsNiArMTU3LDM2IEBAIHZvaWQgZHJtX2JyaWRn
-ZV9kZXRhY2goc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkKPiAgfQo+IAo+ICAvKioKPiArICog
-ZHJtX2JyaWRnZV9zZXRfYnVzX2Zvcm1hdHMoKSAtIHNldCBicmlkZ2Ugc3VwcG9ydGVkIGltYWdl
-IGZvcm1hdHMKPiArICogQGJyaWRnZTogdGhlIGJyaWRnZSB0byBzZXQgaW1hZ2UgZm9ybWF0cyBp
-bgo+ICsgKiBAZm9ybWF0czogYXJyYXkgb2YgTUVESUFfQlVTX0ZNVFxfIHN1cHBvcnRlZCBpbWFn
-ZSBmb3JtYXRzCgpXaHkgdGhlIFwgKGhlcmUgYW5kIGJlbG93KSA/Cgo+ICsgKiBAbnVtX2Zvcm1h
-dHM6IG51bWJlciBvZiBlbGVtZW50cyBpbiB0aGUgQGZvcm1hdHMgYXJyYXkKPiArICoKPiArICog
-U3RvcmUgYSBsaXN0IG9mIHN1cHBvcnRlZCBpbWFnZSBmb3JtYXRzIGluIGEgYnJpZGdlLgo+ICsg
-KiBTZWUgTUVESUFfQlVTX0ZNVF8qIGRlZmluaXRpb25zIGluIGluY2x1ZGUvdWFwaS9saW51eC9t
-ZWRpYS1idXMtZm9ybWF0LmgKPiBmb3IKPiArICogYSBmdWxsIGxpc3Qgb2YgYXZhaWxhYmxlIGZv
-cm1hdHMuCj4gKyAqLwo+ICtpbnQgZHJtX2JyaWRnZV9zZXRfYnVzX2Zvcm1hdHMoc3RydWN0IGRy
-bV9icmlkZ2UgKmJyaWRnZSwgY29uc3QgdTMyCj4gKmZvcm1hdHMsCj4gKwkJCSAgICAgICB1bnNp
-Z25lZCBpbnQgbnVtX2Zvcm1hdHMpCj4gK3sKPiArCXUzMiAqZm10czsKPiArCj4gKwlpZiAoIWZv
-cm1hdHMgfHwgIW51bV9mb3JtYXRzKQo+ICsJCXJldHVybiAtRUlOVkFMOwo+ICsKPiArCWZtdHMg
-PSBrbWVtZHVwKGZvcm1hdHMsIHNpemVvZigqZm9ybWF0cykgKiBudW1fZm9ybWF0cywgR0ZQX0tF
-Uk5FTCk7CgpUaGlzIG1lbW9yeSB3aWxsIGJlIGxlYWtlZCB3aGVuIHRoZSBicmlkZ2UgaXMgZGVz
-dHJveWVkLgoKPiArCWlmICghZm10cykKPiArCQlyZXR1cm4gLUVOT01FTTsKPiArCj4gKwlrZnJl
-ZShicmlkZ2UtPmJ1c19mb3JtYXRzKTsKPiArCWJyaWRnZS0+YnVzX2Zvcm1hdHMgPSBmbXRzOwo+
-ICsJYnJpZGdlLT5udW1fYnVzX2Zvcm1hdHMgPSBudW1fZm9ybWF0czsKPiArCj4gKwlyZXR1cm4g
-MDsKPiArfQo+ICtFWFBPUlRfU1lNQk9MKGRybV9icmlkZ2Vfc2V0X2J1c19mb3JtYXRzKTsKPiAr
-Cj4gKy8qKgo+ICAgKiBET0M6IGJyaWRnZSBjYWxsYmFja3MKPiAgICoKPiAgICogVGhlICZkcm1f
-YnJpZGdlX2Z1bmNzIG9wcyBhcmUgcG9wdWxhdGVkIGJ5IHRoZSBicmlkZ2UgZHJpdmVyLiBUaGUg
-RFJNCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL2RybV9icmlkZ2UuaCBiL2luY2x1ZGUvZHJt
-L2RybV9icmlkZ2UuaAo+IGluZGV4IDMyNzBmZWMuLjZiMzY0OGMgMTAwNjQ0Cj4gLS0tIGEvaW5j
-bHVkZS9kcm0vZHJtX2JyaWRnZS5oCj4gKysrIGIvaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oCj4g
-QEAgLTI1OCw2ICsyNTgsOSBAQCBzdHJ1Y3QgZHJtX2JyaWRnZV90aW1pbmdzIHsKPiAgICogQGVu
-Y29kZXI6IGVuY29kZXIgdG8gd2hpY2ggdGhpcyBicmlkZ2UgaXMgY29ubmVjdGVkCj4gICAqIEBu
-ZXh0OiB0aGUgbmV4dCBicmlkZ2UgaW4gdGhlIGVuY29kZXIgY2hhaW4KPiAgICogQG9mX25vZGU6
-IGRldmljZSBub2RlIHBvaW50ZXIgdG8gdGhlIGJyaWRnZQo+ICsgKiBAYnVzX2Zvcm1hdHM6IHdp
-cmUgaW1hZ2UgZm9ybWF0cy4gQXJyYXkgb2YgQG51bV9idXNfZm9ybWF0cwo+IE1FRElBX0JVU19G
-TVRcXwo+ICsgKiBlbGVtZW50cwo+ICsgKiBAbnVtX2J1c19mb3JtYXRzOiBzaXplIG9mIEBidXNf
-Zm9ybWF0cyBhcnJheQo+ICAgKiBAbGlzdDogdG8ga2VlcCB0cmFjayBvZiBhbGwgYWRkZWQgYnJp
-ZGdlcwo+ICAgKiBAdGltaW5nczogdGhlIHRpbWluZyBzcGVjaWZpY2F0aW9uIGZvciB0aGUgYnJp
-ZGdlLCBpZiBhbnkgKG1heQo+ICAgKiBiZSBOVUxMKQo+IEBAIC0yNzEsNiArMjc0LDkgQEAgc3Ry
-dWN0IGRybV9icmlkZ2Ugewo+ICAjaWZkZWYgQ09ORklHX09GCj4gIAlzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKm9mX25vZGU7Cj4gICNlbmRpZgo+ICsJY29uc3QgdTMyICpidXNfZm9ybWF0czsKPiArCXVu
-c2lnbmVkIGludCBudW1fYnVzX2Zvcm1hdHM7Cj4gKwo+ICAJc3RydWN0IGxpc3RfaGVhZCBsaXN0
-Owo+ICAJY29uc3Qgc3RydWN0IGRybV9icmlkZ2VfdGltaW5ncyAqdGltaW5nczsKPiAKPiBAQCAt
-Mjk2LDYgKzMwMiw4IEBAIHZvaWQgZHJtX2JyaWRnZV9tb2RlX3NldChzdHJ1Y3QgZHJtX2JyaWRn
-ZSAqYnJpZGdlLAo+ICAJCQlzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqYWRqdXN0ZWRfbW9kZSk7
-Cj4gIHZvaWQgZHJtX2JyaWRnZV9wcmVfZW5hYmxlKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2Up
-Owo+ICB2b2lkIGRybV9icmlkZ2VfZW5hYmxlKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpOwo+
-ICtpbnQgZHJtX2JyaWRnZV9zZXRfYnVzX2Zvcm1hdHMoc3RydWN0IGRybV9icmlkZ2UgKmJyaWRn
-ZSwgY29uc3QgdTMyICpmbXRzLAo+ICsJCQkgICAgICAgdW5zaWduZWQgaW50IG51bV9mbXRzKTsK
-PiAKPiAgI2lmZGVmIENPTkZJR19EUk1fUEFORUxfQlJJREdFCj4gIHN0cnVjdCBkcm1fYnJpZGdl
-ICpkcm1fcGFuZWxfYnJpZGdlX2FkZChzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCwKCi0tIApSZWdh
-cmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+There is no reason to initialize uartclk to BASE_BAUD * 16 for DT based
+systems.
+
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
+
+It looks like from history that portclk = BASE_BAUD * 16 was setup to
+get on calculation on x86 (divisor = 1) but it shouldn't be needed on DT based
+system. That's why I think that there is no DT based system which really
+requires this line.
+---
+ drivers/tty/serial/earlycon.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
+index a24278380fec..c12b1edcdd8e 100644
+--- a/drivers/tty/serial/earlycon.c
++++ b/drivers/tty/serial/earlycon.c
+@@ -244,7 +244,6 @@ int __init of_setup_earlycon(const struct earlycon_id *match,
+ 		return -ENXIO;
+ 	}
+ 	port->mapbase = addr;
+-	port->uartclk = BASE_BAUD * 16;
+ 
+ 	val = of_get_flat_dt_prop(node, "reg-offset", NULL);
+ 	if (val)
+-- 
+2.17.0
