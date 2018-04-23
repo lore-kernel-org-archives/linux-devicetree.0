@@ -1,88 +1,80 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCHv3 3/7] driver, misc: add Intel Stratix10 service layer
- driver
-Date: Mon, 23 Apr 2018 14:03:00 +0200
-Message-ID: <20180423120300.GC7951@kroah.com>
-References: <1522182014-7338-1-git-send-email-richard.gong@linux.intel.com>
- <1522182014-7338-4-git-send-email-richard.gong@linux.intel.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 3/8] drm: bridge: thc63lvd1024: Add support for LVDS mode
+ map
+Date: Mon, 23 Apr 2018 15:08:39 +0300
+Message-ID: <11465771.5tI9t3u2ch@avalon>
+References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1524130269-32688-4-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1522182014-7338-4-git-send-email-richard.gong@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: richard.gong@linux.intel.com
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1524130269-32688-4-git-send-email-jacopo+renesas@jmondi.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, peda@axentia.se, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 27, 2018 at 03:20:10PM -0500, richard.gong@linux.intel.com wrote:
-> +config INTEL_SERVICE
-
-Naming is hard, but this is a _very_ generic name, don't you agree?
-
-> +	tristate "Intel Service Layer"
-
-As is this.  Can you make this a bit more specific to what hardware is
-being controlled here?
-
-> +++ b/drivers/misc/intel-service.c
-
-Same for the file name, why not stratix10.c?
-
-or intel_svc.c?  That makes it a _bit_ more generic.  Well, not really,
-but it does hide the "genericness" a bit more, right?
-
-> --- /dev/null
-> +++ b/include/linux/intel-service-client.h
-> @@ -0,0 +1,188 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2017-2018, Intel Corporation
-> + */
-> +
-> +#ifndef __INTEL_SERVICE_CLIENT_H
-> +#define __INTEL_SERVICE_CLIENT_H
-> +
-> +/*
-> + * Service layer driver supports client names
-> + *
-> + * fpga: for FPGA configuration
-> + * dummy: for integration/debug/trouble-shooting
-> + */
-> +#define SVC_CLIENT_FPGA		"fpga"
-> +#define SVC_CLIENT_DUMMY	"dummy"
-> +
-> +/*
-> + * Status of the sent command, in bit number
-> + *
-> + * SVC_COMMAND_STATUS_RECONFIG_REQUEST_OK:
-> + * Secure firmware accepts the request of FPGA reconfiguration.
-> + *
-> + * SVC_STATUS_RECONFIG_BUFFER_SUBMITTED:
-> + * Service client successfully submits FPGA configuration
-> + * data buffer to secure firmware.
-> + *
-> + * SVC_COMMAND_STATUS_RECONFIG_BUFFER_DONE:
-> + * Secure firmware completes data process, ready to accept the
-> + * next WRITE transaction.
-> + *
-> + * SVC_COMMAND_STATUS_RECONFIG_COMPLETED:
-> + * Secure firmware completes FPGA configuration successfully, FPGA should
-> + * be in user mode.
-> + *
-> + * SVC_COMMAND_STATUS_RECONFIG_BUSY:
-> + * FPGA configuration is still in process.
-> + *
-> + * SVC_COMMAND_STATUS_RECONFIG_ERROR:
-> + * Error encountered during FPGA configuration.
-> + */
-
-You have an odd mix of kernel-doc formatting and non-kernel-doc
-formatting in this file.  Pick one and stick with it :)
-
-Also, if you use kernel-doc (as you should), please hook it up to the
-kernel documentation build process to take advantage of it.
-
-thanks,
-
-greg k-h
+SGkgSmFjb3BvLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUaHVyc2RheSwgMTkgQXBy
+aWwgMjAxOCAxMjozMTowNCBFRVNUIEphY29wbyBNb25kaSB3cm90ZToKPiBUaGUgVEhDNjNMVkQx
+MDI0IExWRFMgdG8gUkdCIGJyaWRnZSBzdXBwb3J0cyB0d28gZGlmZmVyZW50IExWRFMgbWFwcGlu
+Zwo+IG1vZGVzLCBzZWxlY3RhYmxlIGJ5IG1lYW5zIG9mIGFuIGV4dGVybmFsIHBpbi4KPiAKPiBB
+ZGQgc3VwcG9ydCBmb3IgY29uZmlndXJhYmxlIExWRFMgaW5wdXQgbWFwcGluZyBtb2RlcywgdXNp
+bmcgdGhlIG5ld2x5Cj4gaW50cm9kdWNlZCBzdXBwb3J0IGZvciBicmlkZ2UgaW5wdXQgaW1hZ2Ug
+Zm9ybWF0cy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKYWNvcG8gTW9uZGkgPGphY29wbytyZW5lc2Fz
+QGptb25kaS5vcmc+Cj4gLS0tCj4gZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aGM2M2x2ZDEwMjQu
+YyB8IDQxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+IDEgZmlsZSBjaGFuZ2Vk
+LCA0MSBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlk
+Z2UvdGhjNjNsdmQxMDI0LmMKPiBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGhjNjNsdmQxMDI0
+LmMgaW5kZXggNDg1MjdmOC4uYTMwNzFhMSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0v
+YnJpZGdlL3RoYzYzbHZkMTAyNC5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aGM2
+M2x2ZDEwMjQuYwo+IEBAIC0xMCw5ICsxMCwxNSBAQAo+ICAjaW5jbHVkZSA8ZHJtL2RybV9wYW5l
+bC5oPgo+IAo+ICAjaW5jbHVkZSA8bGludXgvZ3Bpby9jb25zdW1lci5oPgo+ICsjaW5jbHVkZSA8
+bGludXgvb2YuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L29mX2dyYXBoLmg+Cj4gICNpbmNsdWRlIDxs
+aW51eC9yZWd1bGF0b3IvY29uc3VtZXIuaD4KPiAKPiArZW51bSB0aGM2M19sdmRzX21hcHBpbmdf
+bW9kZSB7Cj4gKwlUSEM2M19MVkRTX01BUF9NT0RFMiwKPiArCVRIQzYzX0xWRFNfTUFQX01PREUx
+LAo+ICt9Owo+ICsKPiAgZW51bSB0aGM2M19wb3J0cyB7Cj4gIAlUSEM2M19MVkRTX0lOMCwKPiAg
+CVRIQzYzX0xWRFNfSU4xLAo+IEBAIC0xMTYsNiArMTIyLDM3IEBAIHN0YXRpYyBpbnQgdGhjNjNf
+cGFyc2VfZHQoc3RydWN0IHRoYzYzX2RldiAqdGhjNjMpCj4gIAlyZXR1cm4gMDsKPiAgfQo+IAo+
+ICtzdGF0aWMgaW50IHRoYzYzX3NldF9idXNfZm10KHN0cnVjdCB0aGM2M19kZXYgKnRoYzYzKQo+
+ICt7Cj4gKwl1MzIgYnVzX2ZtdDsKPiArCXUzMiBtYXA7Cj4gKwlpbnQgcmV0Owo+ICsKPiArCXJl
+dCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKHRoYzYzLT5kZXYtPm9mX25vZGUsICJ0aGluZSxtYXAi
+LCAmbWFwKTsKPiArCWlmIChyZXQpIHsKPiArCQlkZXZfZXJyKHRoYzYzLT5kZXYsCj4gKwkJCSJV
+bmFibGUgdG8gcGFyc2UgcHJvcGVydHkgXCJ0aGluZSxtYXBcIjogJWRcbiIsIHJldCk7Cj4gKwkJ
+cmV0dXJuIHJldDsKCkdpdmVuIHRoYXQgdGhlIHByb3BlcnR5IGlzIGN1cnJlbnRseSBub3QgZGVm
+aW5lZCwgSSB0aGluayB5b3Ugc2hvdWxkIHNlbGVjdCBhIApkZWZhdWx0IGluc3RlYWQgb2YgcmV0
+dXJuaW5nIGFuIGVycm9yIHRvIHByZXNlcnZlIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkuIFlvdSAK
+Y2FuIHByaW50IGEgd2FybmluZyBtZXNzYWdlIHRvIGdldCB0aGUgRFQgdXBkYXRlZCwgbWF5YmUg
+c29tZXRoaW5nIGxpa2UKCgl1MzIgbWFwID0gMDsKCS4uLgoKCXJldCA9IG9mX3Byb3BlcnR5X3Jl
+YWRfdTMyKHRoYzYzLT5kZXYtPm9mX25vZGUsICJ0aGluZSxtYXAiLCAmbWFwKTsKCWlmIChyZXQp
+CgkJZGV2X3dhcm4odGhjNjMtPmRldiwKCQkJICJVbmFibGUgdG8gcGFyc2UgdGhpbmUsbWFwIHBy
+b3BlcnR5ICglZCksIGRlZmF1bHRpbmcgdG8gMFxuIiwKCQkJIHJldCk7Cgo+ICsJfQo+ICsKPiAr
+CXN3aXRjaCAobWFwKSB7Cj4gKwljYXNlIFRIQzYzX0xWRFNfTUFQX01PREUxOgo+ICsJCWJ1c19m
+bXQgPSBNRURJQV9CVVNfRk1UX1JHQjg4OF8xWDdYNF9KRUlEQTsKPiArCQlicmVhazsKPiArCWNh
+c2UgVEhDNjNfTFZEU19NQVBfTU9ERTI6Cj4gKwkJYnVzX2ZtdCA9IE1FRElBX0JVU19GTVRfUkdC
+ODg4XzFYN1g0X1NQV0c7Cj4gKwkJYnJlYWs7Cj4gKwlkZWZhdWx0Ogo+ICsJCWRldl9lcnIodGhj
+NjMtPmRldiwKPiArCQkJIkludmFsaWQgdmFsdWUgZm9yIHByb3BlcnR5IFwidGhpbmUsbWFwXCI6
+ICV1XG4iLCBtYXApOwo+ICsJCXJldHVybiAtRUlOVkFMOwoKVGhpcyBpcyBmaW4gYXMgaW52YWxp
+ZCBwcm9wZXJ0eSB2YWx1ZXMgc2hvdWxkIGJlIHJlamVjdGVkLgoKPiArCX0KPiArCj4gKwlkcm1f
+YnJpZGdlX3NldF9idXNfZm9ybWF0cygmdGhjNjMtPmJyaWRnZSwgJmJ1c19mbXQsIDEpOwo+ICsK
+PiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICBzdGF0aWMgaW50IHRoYzYzX2dwaW9faW5pdChzdHJ1
+Y3QgdGhjNjNfZGV2ICp0aGM2MykKPiAgewo+ICAJdGhjNjMtPm9lID0gZGV2bV9ncGlvZF9nZXRf
+b3B0aW9uYWwodGhjNjMtPmRldiwgIm9lIiwgR1BJT0RfT1VUX0xPVyk7Cj4gQEAgLTE2Niw2ICsy
+MDMsMTAgQEAgc3RhdGljIGludCB0aGM2M19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpw
+ZGV2KQo+ICAJaWYgKHJldCkKPiAgCQlyZXR1cm4gcmV0Owo+IAo+ICsJcmV0ID0gdGhjNjNfc2V0
+X2J1c19mbXQodGhjNjMpOwo+ICsJaWYgKHJldCkKPiArCQlyZXR1cm4gcmV0Owo+ICsKCk9yIHlv
+dSBjb3VsZCBtb3ZlIHRoZSBjb2RlIHRvIHRoYzYzX3BhcnNlX2R0KCkgYXMgeW91J3JlIHBhcnNp
+bmcgRFQuCgo+ICAJdGhjNjMtPmJyaWRnZS5kcml2ZXJfcHJpdmF0ZSA9IHRoYzYzOwo+ICAJdGhj
+NjMtPmJyaWRnZS5vZl9ub2RlID0gcGRldi0+ZGV2Lm9mX25vZGU7Cj4gIAl0aGM2My0+YnJpZGdl
+LmZ1bmNzID0gJnRoYzYzX2JyaWRnZV9mdW5jOwoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNo
+YXJ0CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
