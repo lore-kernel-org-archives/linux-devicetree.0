@@ -1,67 +1,67 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 3/8] drm: bridge: thc63lvd1024: Add support for LVDS mode
- map
-Date: Mon, 23 Apr 2018 15:12:54 +0300
-Message-ID: <1653352.Yto2ZqehFs@avalon>
-References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
- <86c2d4c9-8079-9f25-f24a-58c7866a8274@axentia.se>
- <20180423074156.GO4235@w540>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun4i: Fix incorrect clocks
+ for displays
+Date: Mon, 23 Apr 2018 14:24:44 +0200
+Message-ID: <20180423122444.msxpe5e4ovr6eqqb@flea>
+References: <20180420102112.2843-1-dev@pascalroeleven.nl>
+ <20180423071421.byupsz4gxpmhfe44@flea>
+ <887c9144972ab75a4520141a17e1607b@pascalroeleven.nl>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180423074156.GO4235@w540>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Peter Rosin <peda@axentia.se>, linux-media@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2tmxv6dh5nmwdvru"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBF5B67LAKGQE4IU6GLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <887c9144972ab75a4520141a17e1607b-/1Tg0gxlrOS4ObxHbWkkimZHpeb/A1Y/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Pascal Roeleven <dev-/1Tg0gxlrOS4ObxHbWkkimZHpeb/A1Y/@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKT24gTW9uZGF5LCAyMyBBcHJpbCAyMDE4IDEwOjQxOjU2IEVFU1QgamFjb3Bv
-IG1vbmRpIHdyb3RlOgo+IE9uIFN1biwgQXByIDIyLCAyMDE4IGF0IDEwOjAyOjUxUE0gKzAyMDAs
-IFBldGVyIFJvc2luIHdyb3RlOgo+ID4gT24gMjAxOC0wNC0xOSAxMTozMSwgSmFjb3BvIE1vbmRp
-IHdyb3RlOgo+ID4+IFRoZSBUSEM2M0xWRDEwMjQgTFZEUyB0byBSR0IgYnJpZGdlIHN1cHBvcnRz
-IHR3byBkaWZmZXJlbnQgTFZEUyBtYXBwaW5nCj4gPj4gbW9kZXMsIHNlbGVjdGFibGUgYnkgbWVh
-bnMgb2YgYW4gZXh0ZXJuYWwgcGluLgo+ID4+IAo+ID4+IEFkZCBzdXBwb3J0IGZvciBjb25maWd1
-cmFibGUgTFZEUyBpbnB1dCBtYXBwaW5nIG1vZGVzLCB1c2luZyB0aGUgbmV3bHkKPiA+PiBpbnRy
-b2R1Y2VkIHN1cHBvcnQgZm9yIGJyaWRnZSBpbnB1dCBpbWFnZSBmb3JtYXRzLgo+ID4+IAo+ID4+
-IFNpZ25lZC1vZmYtYnk6IEphY29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4K
-PiA+PiAtLS0KPiA+PiAKPiA+PiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aGM2M2x2ZDEwMjQu
-YyB8IDQxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiA+PiAgMSBmaWxlIGNoYW5nZWQs
-IDQxIGluc2VydGlvbnMoKykKPiA+PiAKPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS90aGM2M2x2ZDEwMjQuYwo+ID4+IGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aGM2
-M2x2ZDEwMjQuYyBpbmRleCA0ODUyN2Y4Li5hMzA3MWExIDEwMDY0NAo+ID4+IC0tLSBhL2RyaXZl
-cnMvZ3B1L2RybS9icmlkZ2UvdGhjNjNsdmQxMDI0LmMKPiA+PiArKysgYi9kcml2ZXJzL2dwdS9k
-cm0vYnJpZGdlL3RoYzYzbHZkMTAyNC5jCgpbc25pcF0KCj4gPj4gK3N0YXRpYyBpbnQgdGhjNjNf
-c2V0X2J1c19mbXQoc3RydWN0IHRoYzYzX2RldiAqdGhjNjMpCj4gPj4gK3sKPiA+PiArCXUzMiBi
-dXNfZm10Owo+ID4+ICsJdTMyIG1hcDsKPiA+PiArCWludCByZXQ7Cj4gPj4gKwo+ID4+ICsJcmV0
-ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIodGhjNjMtPmRldi0+b2Zfbm9kZSwgInRoaW5lLG1hcCIs
-ICZtYXApOwo+ID4+ICsJaWYgKHJldCkgewo+ID4+ICsJCWRldl9lcnIodGhjNjMtPmRldiwKPiA+
-PiArCQkJIlVuYWJsZSB0byBwYXJzZSBwcm9wZXJ0eSBcInRoaW5lLG1hcFwiOiAlZFxuIiwgcmV0
-KTsKPiA+PiArCQlyZXR1cm4gcmV0Owo+ID4+ICsJfQo+ID4+ICsKPiA+PiArCXN3aXRjaCAobWFw
-KSB7Cj4gPj4gKwljYXNlIFRIQzYzX0xWRFNfTUFQX01PREUxOgo+ID4+ICsJCWJ1c19mbXQgPSBN
-RURJQV9CVVNfRk1UX1JHQjg4OF8xWDdYNF9KRUlEQTsKPiA+PiArCQlicmVhazsKPiA+PiArCWNh
-c2UgVEhDNjNfTFZEU19NQVBfTU9ERTI6Cj4gPj4gKwkJYnVzX2ZtdCA9IE1FRElBX0JVU19GTVRf
-UkdCODg4XzFYN1g0X1NQV0c7Cj4gPiAKPiA+IFdoeSBkbyB5b3UgYXNzdW1lIHJnYjg4OC8xeDd4
-NCBoZXJlPyBJdCBtaWdodCBhcyB3ZWxsIGJlIHJnYjY2Ni8xeDd4Mwo+ID4gb3IgcmdiMTAxMDEw
-LzF4N3g1LCBubz8KPiAKPiBJIHNob3VsZCBjb21iaW5lIHRoZSAnbWFwJyBwaW4gaW5wdXQgbW9k
-ZSBwcm9wZXJ0eSB3aXRoIHRoZSAnYnVzX3dpZHRoJyBvbmUKPiB0byBmaW5kIHRoYXQgb3V0IHBy
-b2JhYmx5LgoKWWVzLCBidXQgdGhhdCBjb3VsZCBhbHNvIGJlIGxlZnQgZm9yIGxhdGVyLCB3aGVu
-IHRoZSBuZWVkIHRvIHN1cHBvcnQgdGhvc2UgCmZvcm1hdHMgYXJpc2UsIGVzcGVjaWFsbHkgZ2l2
-ZW4gdGhhdCBpbmNsdWRlL3VhcGkvbGludXgvbWVkaWEtYnVzLWZvcm1hdC5oIGhhcyAKbm8gMXg3
-eDUgZm9ybWF0cyB5ZXQuCgo+ID4+ICsJCWJyZWFrOwo+ID4+ICsJZGVmYXVsdDoKPiA+PiArCQlk
-ZXZfZXJyKHRoYzYzLT5kZXYsCj4gPj4gKwkJCSJJbnZhbGlkIHZhbHVlIGZvciBwcm9wZXJ0eSBc
-InRoaW5lLG1hcFwiOiAldVxuIiwgbWFwKTsKPiA+PiArCQlyZXR1cm4gLUVJTlZBTDsKPiA+PiAr
-CX0KPiA+PiArCj4gPj4gKwlkcm1fYnJpZGdlX3NldF9idXNfZm9ybWF0cygmdGhjNjMtPmJyaWRn
-ZSwgJmJ1c19mbXQsIDEpOwo+ID4+ICsKPiA+PiArCXJldHVybiAwOwo+ID4+ICt9CgotLSAKUmVn
-YXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+
+--2tmxv6dh5nmwdvru
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Mon, Apr 23, 2018 at 01:01:03PM +0200, Pascal Roeleven wrote:
+> On 2018-04-23 09:14, Maxime Ripard wrote:
+> > On Fri, Apr 20, 2018 at 12:21:12PM +0200, Pascal Roeleven wrote:
+> > > Some displays on SUN4i devices wouldn't properly stay on unless
+> > > 'clk_ignore_unused' is used.
+> > > 
+> > > Change the duplicate clocks to the probably intended ones.
+> > > 
+> > > Signed-off-by: Pascal Roeleven <dev-/1Tg0gxlrOS4ObxHbWkkimZHpeb/A1Y/@public.gmane.org>
+> > 
+> > What was the difference with the first patch you sent?
+> > 
+> > Anyway, I've applied it, thanks
+> > 
+> > Maxime
+> > 
+> > --
+> > Maxime Ripard, Bootlin (formerly Free Electrons)
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
+> 
+> I'm sorry there isn't any.
+> It's the first patch I have ever send so had some git-send-email issues and
+> didn't know the correct procedure to resend a patch.
+
+Just set RESEND in the subject prefix (using --subject-prefix="PATCH
+RESEND"), and say why you resent it in the patch / cover letter after
+the --- and before the diffstat.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--2tmxv6dh5nmwdvru--
