@@ -1,73 +1,37 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] ASoC: tas6424: Add support for the
-	standby pin
-Date: Mon, 23 Apr 2018 16:35:53 +0100
-Message-ID: <20180423153553.GI19834@sirena.org.uk>
-References: <1524218684-19752-1-git-send-email-jjhiblot@ti.com>
- <1524218684-19752-3-git-send-email-jjhiblot@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0510961045112970897=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1524218684-19752-3-git-send-email-jjhiblot@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, afd@ti.com, robh+dt@kernel.org, dannenberg@ti.com
+From: Liming Sun <lsun@mellanox.com>
+Subject: [PATCH v2 3/3] arm64: defconfig: Enable dw_mmc-bluefield driver
+Date: Mon, 23 Apr 2018 11:32:22 -0400
+Message-ID: <fd0bce71b881a4e9c58e8b39fdb2fc8d00ccbacd.1524497286.git.lsun@mellanox.com>
+References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+In-Reply-To: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Liming Sun <lsun@mellanox.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This patch updates arm64 defconfig to enable dw_mmc-bluefield,
+which is a driver extension of Synopsys Designware MMC for the
+Mellanox BlueField Soc.
 
---===============0510961045112970897==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="sl5MdczEF/OU2Miu"
-Content-Disposition: inline
+Signed-off-by: Liming Sun <lsun@mellanox.com>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-
---sl5MdczEF/OU2Miu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Apr 20, 2018 at 12:04:43PM +0200, Jean-Jacques Hiblot wrote:
-
-> +	- standby-gpio: GPIO used to shut the TAS6424 down.
-
-All GPIO property names are supposed to be called -gpios regardless of
-if there can ever be more than one GPIO (though the framework does
-support the singular, I wonder if it's not more helpful to just get the
-spec relaxed here).
-
-> +		dev_info(dev, "failed to get standvby GPIO: %ld\n",
-
-Typo.
-
---sl5MdczEF/OU2Miu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrd/VkACgkQJNaLcl1U
-h9DvMQf/WlAalw9VVpnJyOR7ezVpFT7BAS/zA4+NemWVT8DS0Juwk3kD/1mFjnFJ
-RuJECYe1tPHFv8a2/6rqMrD48zBfXG/YcGpKm0SF05ZA9/f1r8UTNdDJMiM4IHvh
-rfCJLGBraGX8TOuEZ2j8mmGBj7ToV3MXQ2Zq1tANd7mZKZ+WH+3nhl37IP7tu0t8
-V6qEGKK8Aklh6+fk/zWXwrnVtIJzFqXGUx7GZepahm558nSilomVSJ/+nTN0N8iH
-6RsGMJpDtfyf68fL5amN3z+ZHu9/FYCVIKICFoFRHxMqK5U3cc3ucSrCyOHGTNew
-rdfB+RVfHbNwCQq8QNeAQU/QYwuN2Q==
-=yJSP
------END PGP SIGNATURE-----
-
---sl5MdczEF/OU2Miu--
-
---===============0510961045112970897==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============0510961045112970897==--
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index ecf6137..43464ab 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -487,6 +487,7 @@ CONFIG_MMC_DW=y
+ CONFIG_MMC_DW_EXYNOS=y
+ CONFIG_MMC_DW_K3=y
+ CONFIG_MMC_DW_ROCKCHIP=y
++CONFIG_MMC_DW_BLUEFIELD=y
+ CONFIG_MMC_SUNXI=y
+ CONFIG_MMC_BCM2835=y
+ CONFIG_MMC_SDHCI_XENON=y
+-- 
+1.8.3.1
