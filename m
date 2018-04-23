@@ -1,272 +1,176 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 2/2] input: misc: Add Spreadtrum vibrator driver
-Date: Mon, 23 Apr 2018 10:29:37 -0700
-Message-ID: <20180423172937.GA66646@dtor-ws>
-References: <e2f85ec0b1fb66baa41dd85bb31e8113e23c704b.1524450536.git.baolin.wang@linaro.org>
- <dc7af2705ab659a7cf579145b7e1eda9697b0ef2.1524450536.git.baolin.wang@linaro.org>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v4 00/10] Add the I3C subsystem
+Date: Mon, 23 Apr 2018 19:38:14 +0200
+Message-ID: <20180423193814.5c8ca75a@bbrezillon>
+References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <dc7af2705ab659a7cf579145b7e1eda9697b0ef2.1524450536.git.baolin.wang@linaro.org>
+In-Reply-To: <20180330074751.25987-1-boris.brezillon@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xiaotong.lu@spreadtrum.com
+To: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus
 List-Id: devicetree@vger.kernel.org
 
-Hi Xiaotong,
+Hi,
 
-On Mon, Apr 23, 2018 at 10:33:36AM +0800, Baolin Wang wrote:
-> From: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+On Fri, 30 Mar 2018 09:47:41 +0200
+Boris Brezillon <boris.brezillon@bootlin.com> wrote:
+
+> This patch series is a proposal for a new I3C subsystem.
+
+This v4 has been sent almost a month ago and I didn't get any feedback
+so far apart from Rob's R-b. Greg, is there any chance we can get these
+patches merged in 4.18? If not, could you tell me what should be
+addressed/improved/reworked?
+
+Thanks,
+
+Boris
+
 > 
-> This patch adds the Spreadtrum vibrator driver, which embedded in the
-> Spreadtrum SC27xx series PMICs.
+> This infrastructure is not complete yet and will be extended over
+> time.
 > 
-> Signed-off-by: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
-> Changes since v1:
->  - Remove input_ff_destroy() and input_unregister_device()
-> ---
->  drivers/input/misc/Kconfig        |   10 +++
->  drivers/input/misc/Makefile       |    1 +
->  drivers/input/misc/sc27xx-vibra.c |  156 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 167 insertions(+)
->  create mode 100644 drivers/input/misc/sc27xx-vibra.c
+> There are a few design choices that are worth mentioning because they
+> impact the way I3C device drivers can interact with their devices:
 > 
-> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-> index 572b15f..c761c0c 100644
-> --- a/drivers/input/misc/Kconfig
-> +++ b/drivers/input/misc/Kconfig
-> @@ -841,4 +841,14 @@ config INPUT_RAVE_SP_PWRBUTTON
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called rave-sp-pwrbutton.
->  
-> +config INPUT_SC27XX_VIBRA
-> +	tristate "Spreadtrum sc27xx vibrator support"
-> +	depends on MFD_SC27XX_PMIC || COMPILE_TEST
-> +	select INPUT_FF_MEMLESS
-> +	help
-> +	  This option enables support for Spreadtrum sc27xx vibrator driver.
-> +
-> +	  To compile this driver as a module, choose M here. The module will
-> +	  be called sc27xx_vibra.
-> +
->  endif
-> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-> index 72cde28..9d0f9d1 100644
-> --- a/drivers/input/misc/Makefile
-> +++ b/drivers/input/misc/Makefile
-> @@ -66,6 +66,7 @@ obj-$(CONFIG_INPUT_RETU_PWRBUTTON)	+= retu-pwrbutton.o
->  obj-$(CONFIG_INPUT_AXP20X_PEK)		+= axp20x-pek.o
->  obj-$(CONFIG_INPUT_GPIO_ROTARY_ENCODER)	+= rotary_encoder.o
->  obj-$(CONFIG_INPUT_RK805_PWRKEY)	+= rk805-pwrkey.o
-> +obj-$(CONFIG_INPUT_SC27XX_VIBRA)	+= sc27xx-vibra.o
->  obj-$(CONFIG_INPUT_SGI_BTNS)		+= sgi_btns.o
->  obj-$(CONFIG_INPUT_SIRFSOC_ONKEY)	+= sirfsoc-onkey.o
->  obj-$(CONFIG_INPUT_SOC_BUTTON_ARRAY)	+= soc_button_array.o
-> diff --git a/drivers/input/misc/sc27xx-vibra.c b/drivers/input/misc/sc27xx-vibra.c
-> new file mode 100644
-> index 0000000..f78e70f
-> --- /dev/null
-> +++ b/drivers/input/misc/sc27xx-vibra.c
-> @@ -0,0 +1,156 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 Spreadtrum Communications Inc.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/input.h>
-> +#include <linux/workqueue.h>
-> +
-> +#define CUR_DRV_CAL_SEL		GENMASK(13, 12)
-> +#define SLP_LDOVIBR_PD_EN	BIT(9)
-> +#define LDO_VIBR_PD		BIT(8)
-> +
-> +struct vibra_info {
-> +	struct input_dev	*input_dev;
-> +	struct work_struct	play_work;
-> +	struct regmap		*regmap;
-> +	u32			base;
-> +	u32			strength;
-> +	bool			enabled;
-> +};
-> +
-> +static void sc27xx_vibra_set(struct vibra_info *info, bool on)
-> +{
-> +	if (on) {
-> +		regmap_update_bits(info->regmap, info->base, LDO_VIBR_PD, 0);
-> +		regmap_update_bits(info->regmap, info->base,
-> +				   SLP_LDOVIBR_PD_EN, 0);
-> +		info->enabled = true;
-> +	} else {
-> +		regmap_update_bits(info->regmap, info->base, LDO_VIBR_PD,
-> +				   LDO_VIBR_PD);
-> +		regmap_update_bits(info->regmap, info->base,
-> +				   SLP_LDOVIBR_PD_EN, SLP_LDOVIBR_PD_EN);
-> +		info->enabled = false;
-> +	}
-> +}
-> +
-> +static int sc27xx_vibra_hw_init(struct vibra_info *info)
-> +{
-> +	return regmap_update_bits(info->regmap, info->base, CUR_DRV_CAL_SEL, 0);
-> +}
-> +
-> +static void sc27xx_vibra_play_work(struct work_struct *work)
-> +{
-> +	struct vibra_info *info = container_of(work, struct vibra_info,
-> +					       play_work);
-> +
-> +	if (info->strength && !info->enabled)
-> +		sc27xx_vibra_set(info, true);
-> +	else if (info->enabled)
-> +		sc27xx_vibra_set(info, false);
-
-I do not think this is correct. If you issue 2 play requests with
-info->strength that is not 0 then you'll end up disabling the vibrator.
-
-I think you want the 2nd condition to be:
-
-	else if (info->strength == 0 && info->enabled)
-		sc27xx_vibra_set(info, false);
-
-
-> +}
-> +
-> +static int sc27xx_vibra_play(struct input_dev *input, void *data,
-> +			     struct ff_effect *effect)
-> +{
-> +	struct vibra_info *info = input_get_drvdata(input);
-> +
-> +	info->strength = effect->u.rumble.weak_magnitude;
-> +	schedule_work(&info->play_work);
-> +
-> +	return 0;
-> +}
-> +
-> +static void sc27xx_vibra_close(struct input_dev *input)
-> +{
-> +	struct vibra_info *info = input_get_drvdata(input);
-> +
-> +	cancel_work_sync(&info->play_work);
-> +	if (info->enabled)
-> +		sc27xx_vibra_set(info, false);
-> +}
-> +
-> +static int sc27xx_vibra_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *node = pdev->dev.of_node;
-> +	struct vibra_info *info;
-> +	int ret;
-
-Can we please call this variable "error"?
-
-> +
-> +	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
-> +	if (!info)
-> +		return -ENOMEM;
-> +
-> +	info->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +	if (!info->regmap) {
-> +		dev_err(&pdev->dev, "failed to get vibrator regmap.\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = of_property_read_u32(node, "reg", &info->base);
-
-I am fan of generic device properties, please change to
-device_property_read_u32().
-
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to get vibrator base address.\n");
-> +		return ret;
-> +	}
-> +
-> +	info->input_dev = devm_input_allocate_device(&pdev->dev);
-> +	if (!info->input_dev) {
-> +		dev_err(&pdev->dev, "failed to allocate input device.\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	info->input_dev->name = "sc27xx:vibrator";
-> +	info->input_dev->id.version = 0;
-> +	info->input_dev->dev.parent = pdev->dev.parent;
-
-Why is device reparented to the parent of platform device? This breaks
-devm implementation for the input device. If you really need this,
-you'll have to switch to unmanaged API.
-
-> +	info->input_dev->close = sc27xx_vibra_close;
-> +
-> +	input_set_drvdata(info->input_dev, info);
-> +	input_set_capability(info->input_dev, EV_FF, FF_RUMBLE);
-> +	INIT_WORK(&info->play_work, sc27xx_vibra_play_work);
-> +	info->enabled = false;
-> +
-> +	ret = input_ff_create_memless(info->input_dev, NULL, sc27xx_vibra_play);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to register vibrator to FF.\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = input_register_device(info->input_dev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to register input device.\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = sc27xx_vibra_hw_init(info);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to initialize the vibrator.\n");
-> +		return ret;
-> +	}
-
-It is too late to initialize hardware after registering the input
-device, as once registered it should be fully functional. I'd recommend
-calling this before calling input_register_device(), or (maybe even
-better) doing this as part of open() method.
-
-> +
-> +	platform_set_drvdata(pdev, info);
-
-I do not think you are using platform device's driver data anywhere.
-
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id sc27xx_vibra_of_match[] = {
-> +	{ .compatible = "sprd,sc27xx-vibrator", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, sc27xx_vibra_of_match);
-> +
-> +static struct platform_driver sc27xx_vibra_driver = {
-> +	.driver = {
-> +		.name = "sc27xx-vibrator",
-> +		.of_match_table = sc27xx_vibra_of_match,
-
-Do you need suspend support by chance? To shut off the vibrator when
-system transitions to sleep?
-
-> +	},
-> +	.probe = sc27xx_vibra_probe,
-> +};
-> +
-> +module_platform_driver(sc27xx_vibra_driver);
-> +
-> +MODULE_DESCRIPTION("Spreadtrum SC27xx Vibrator Driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Xiaotong Lu <xiaotong.lu@spreadtrum.com>");
-> -- 
-> 1.7.9.5
+> - all functions used to send I3C/I2C frames must be called in
+>   non-atomic context. Mainly done this way to ease implementation, but
+>   this is still open to discussion. Please let me know if you think it's
+>   worth considering an asynchronous model here
+> - the bus element is a separate object and is not implicitly described
+>   by the master (as done in I2C). The reason is that I want to be able
+>   to handle multiple master connected to the same bus and visible to
+>   Linux.
+>   In this situation, we should only have one instance of the device and
+>   not one per master, and sharing the bus object would be part of the
+>   solution to gracefully handle this case.
+>   I'm not sure if we will ever need to deal with multiple masters
+>   controlling the same bus and exposed under Linux, but separating the
+>   bus and master concept is pretty easy, hence the decision to do it
+>   now, just in case we need it some day.
+>   The other benefit of separating the bus and master concepts is that
+>   master devices appear under the bus directory in sysfs.
+> - I2C backward compatibility has been designed to be transparent to I2C
+>   drivers and the I2C subsystem. The I3C master just registers an I2C
+>   adapter which creates a new I2C bus. I'd say that, from a
+>   representation PoV it's not ideal because what should appear as a
+>   single I3C bus exposing I3C and I2C devices here appears as 2
+>   different busses connected to each other through the parenting (the
+>   I3C master is the parent of the I2C and I3C busses).
+>   On the other hand, I don't see a better solution if we want something
+>   that is not invasive.
 > 
-
-Thanks.
-
--- 
-Dmitry
+> Missing features in this preliminary version:
+> - support for HDR modes (has been removed because of lack of real users)
+> - no support for multi-master and the associated concepts (mastership
+>   handover, support for secondary masters, ...)
+> - I2C devices can only be described using DT because this is the only
+>   use case I have. However, the framework can easily be extended with
+>   ACPI and board info support
+> - I3C slave framework. This has been completely omitted, but shouldn't
+>   have a huge impact on the I3C framework because I3C slaves don't see
+>   the whole bus, it's only about handling master requests and generating
+>   IBIs. Some of the struct, constant and enum definitions could be
+>   shared, but most of the I3C slave framework logic will be different
+> 
+> Main changes between v2 and v3 are:
+> - Reworked the DT bindings as suggested by Rob
+> - Reworked the bus initialization step as suggested by Vitor
+> - Added a driver for an I3C GPIO expander
+> 
+> Main changes between the initial RFC and this v2 are:
+> - Add a generic infrastructure to support IBIs. It's worth mentioning
+>   that I tried exposing IBIs as a regular IRQs, but after several
+>   attempts and a discussion with Mark Zyngier, it appeared that it was
+>   not really fitting in the Linux IRQ model (the fact that you have
+>   payload attached to IBIs, the fact that most of the time an IBI will
+>   generate a transfer on the bus which has to be done in an atomic
+>   context, ...)
+>   The counterpart of this decision is the latency induced by the
+>   workqueue approach, but since I don't have real use cases, I don't
+>   know if this can be a problem or not. 
+> - Add helpers to support Hot Join
+> - Add support for IBIs and Hot Join in Cadence I3C master driver
+> - Address several issues in how I was using the device model
+> 
+> Note that I2C changes have been sent separately [1] this time. Other
+> than that, no big changes in this version, I just addressed the
+> comments I received from Thomas, Peter, Geert and Rob.
+> 
+> Thanks,
+> 
+> Boris
+> 
+> [1]https://patchwork.ozlabs.org/project/linux-i2c/list/?series=35687
+> 
+> Boris Brezillon (10):
+>   i3c: Add core I3C infrastructure
+>   docs: driver-api: Add I3C documentation
+>   i3c: Add sysfs ABI spec
+>   dt-bindings: i3c: Document core bindings
+>   dt-bindings: i3c: Add macros to help fill I3C/I2C device's reg
+>     property
+>   MAINTAINERS: Add myself as the I3C subsystem maintainer
+>   i3c: master: Add driver for Cadence IP
+>   dt-bindings: i3c: Document Cadence I3C master bindings
+>   gpio: Add a driver for Cadence I3C GPIO expander
+>   dt-bindings: gpio: Add bindings for Cadence I3C gpio expander
+> 
+>  Documentation/ABI/testing/sysfs-bus-i3c            |   95 ++
+>  .../devicetree/bindings/gpio/gpio-cdns-i3c.txt     |   39 +
+>  .../devicetree/bindings/i3c/cdns,i3c-master.txt    |   44 +
+>  Documentation/devicetree/bindings/i3c/i3c.txt      |  140 ++
+>  Documentation/driver-api/i3c/conf.py               |   10 +
+>  Documentation/driver-api/i3c/device-driver-api.rst |    7 +
+>  Documentation/driver-api/i3c/index.rst             |    9 +
+>  Documentation/driver-api/i3c/master-driver-api.rst |    8 +
+>  Documentation/driver-api/i3c/protocol.rst          |  201 +++
+>  Documentation/driver-api/index.rst                 |    1 +
+>  MAINTAINERS                                        |    9 +
+>  drivers/Kconfig                                    |    2 +
+>  drivers/Makefile                                   |    2 +-
+>  drivers/gpio/Kconfig                               |   11 +
+>  drivers/gpio/Makefile                              |    1 +
+>  drivers/gpio/gpio-cdns-i3c.c                       |  380 +++++
+>  drivers/i3c/Kconfig                                |   24 +
+>  drivers/i3c/Makefile                               |    4 +
+>  drivers/i3c/core.c                                 |  620 +++++++
+>  drivers/i3c/device.c                               |  294 ++++
+>  drivers/i3c/internals.h                            |   28 +
+>  drivers/i3c/master.c                               | 1723 ++++++++++++++++++++
+>  drivers/i3c/master/Kconfig                         |    5 +
+>  drivers/i3c/master/Makefile                        |    1 +
+>  drivers/i3c/master/i3c-master-cdns.c               | 1650 +++++++++++++++++++
+>  include/dt-bindings/i3c/i3c.h                      |   28 +
+>  include/linux/i3c/ccc.h                            |  382 +++++
+>  include/linux/i3c/device.h                         |  305 ++++
+>  include/linux/i3c/master.h                         |  587 +++++++
+>  include/linux/mod_devicetable.h                    |   17 +
+>  30 files changed, 6626 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-i3c
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-cdns-i3c.txt
+>  create mode 100644 Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
+>  create mode 100644 Documentation/devicetree/bindings/i3c/i3c.txt
+>  create mode 100644 Documentation/driver-api/i3c/conf.py
+>  create mode 100644 Documentation/driver-api/i3c/device-driver-api.rst
+>  create mode 100644 Documentation/driver-api/i3c/index.rst
+>  create mode 100644 Documentation/driver-api/i3c/master-driver-api.rst
+>  create mode 100644 Documentation/driver-api/i3c/protocol.rst
+>  create mode 100644 drivers/gpio/gpio-cdns-i3c.c
+>  create mode 100644 drivers/i3c/Kconfig
+>  create mode 100644 drivers/i3c/Makefile
+>  create mode 100644 drivers/i3c/core.c
+>  create mode 100644 drivers/i3c/device.c
+>  create mode 100644 drivers/i3c/internals.h
+>  create mode 100644 drivers/i3c/master.c
+>  create mode 100644 drivers/i3c/master/Kconfig
+>  create mode 100644 drivers/i3c/master/Makefile
+>  create mode 100644 drivers/i3c/master/i3c-master-cdns.c
+>  create mode 100644 include/dt-bindings/i3c/i3c.h
+>  create mode 100644 include/linux/i3c/ccc.h
+>  create mode 100644 include/linux/i3c/device.h
+>  create mode 100644 include/linux/i3c/master.h
+> 
