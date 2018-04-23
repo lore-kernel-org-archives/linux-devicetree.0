@@ -1,203 +1,226 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v5 0/10] Add endpoint driver for Rockchip PCIe controller
-Date: Mon, 23 Apr 2018 09:07:46 +0800
-Message-ID: <834c0cd3-f036-53f6-8447-774e7ee1ea36@rock-chips.com>
-References: <1522630865-151344-1-git-send-email-shawn.lin@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1522630865-151344-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v2 2/2] input: misc: Add Spreadtrum vibrator driver
+Date: Mon, 23 Apr 2018 10:33:36 +0800
+Message-ID: <dc7af2705ab659a7cf579145b7e1eda9697b0ef2.1524450536.git.baolin.wang@linaro.org>
+References: <e2f85ec0b1fb66baa41dd85bb31e8113e23c704b.1524450536.git.baolin.wang@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e2f85ec0b1fb66baa41dd85bb31e8113e23c704b.1524450536.git.baolin.wang@linaro.org>
+In-Reply-To: <e2f85ec0b1fb66baa41dd85bb31e8113e23c704b.1524450536.git.baolin.wang@linaro.org>
+References: <e2f85ec0b1fb66baa41dd85bb31e8113e23c704b.1524450536.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, baolin.wang@linaro.org, xiaotong.lu@spreadtrum.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+From: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
 
-Gentle ping :)
+This patch adds the Spreadtrum vibrator driver, which embedded in the
+Spreadtrum SC27xx series PMICs.
 
-On 2018/4/2 9:01, Shawn Lin wrote:
-> Hi Lorenzo,
-> 
->      This's the 5th try to upstream endpoint driver for Rockchip PCIe
-> controller. In previous discussion, we both agree to do some directory
-> reconstruction as soon as possible in 4.17 cycle. So the first 3 patches
-> attempt to move forward with that.
-> 
-> Then patch 4-9 are mostly the same as previous version, but just
-> fold in the fixes found by Kbuild Robot.
-> 
-> And patch 10 will update the defconfig for arm64 to avoid the warning,
-> which may go via linux-rockchip tree.
-> 
-> Hope it looks good to you. :)
-> 
-> Changes in v5:
-> - fix all issues found by Kbuild Robot
-> - rename directory from host to controller, and move back dwc and cadence
-> 
-> Changes in v4:
-> - remove empty line
-> - keep rockchip's order next to cadence and dwc, but we will
->    try to resort it later when reconstructing the directories
-> 
-> Changes in v2:
-> - remove rockchip,rk3399-pcie-host compatible(Suggested by Rob)
-> - fix some error handling
-> 
-> 
-> 
-> Shawn Lin (10):
->    PCI: Rename directory from host to controller
->    PCI: cadence: Move cadence drivers back to controller directory
->    PCI: dwc: Move dwc drivers back to controller directory
->    PCI: rockchip: Factor out common code and host code
->    PCI: rockchip: Split out common function to parse DT
->    PCI: rockchip: Split out common function to init controller
->    dt-bindings: PCI: rockchip: Rename rockchip-pcie.txt to
->      rockchip-pcie-host.txt
->    PCI: rockchip: Add Endpoint controller driver for Rockchip PCIe
->      controller
->    dt-bindings: PCI: rockchip: Add DT bindings for Rockchip PCIe endpoint
->      controller
->    arm64: defconfig: update config for Rockchip PCIe
-> 
->   .../devicetree/bindings/pci/rockchip-pcie-ep.txt   |  62 ++
->   .../{rockchip-pcie.txt => rockchip-pcie-host.txt}  |   0
->   MAINTAINERS                                        |  65 ++-
->   arch/arm64/configs/defconfig                       |   3 +-
->   drivers/pci/Kconfig                                |   4 +-
->   drivers/pci/Makefile                               |   6 +-
->   drivers/pci/cadence/Kconfig                        |  27 -
->   drivers/pci/cadence/Makefile                       |   4 -
->   drivers/pci/{host => controller}/Kconfig           |  50 +-
->   drivers/pci/{host => controller}/Makefile          |   7 +
->   drivers/pci/{ => controller}/dwc/Kconfig           |   0
->   drivers/pci/{ => controller}/dwc/Makefile          |   0
->   drivers/pci/{ => controller}/dwc/pci-dra7xx.c      |   0
->   drivers/pci/{ => controller}/dwc/pci-exynos.c      |   0
->   drivers/pci/{ => controller}/dwc/pci-imx6.c        |   0
->   drivers/pci/{ => controller}/dwc/pci-keystone-dw.c |   0
->   drivers/pci/{ => controller}/dwc/pci-keystone.c    |   0
->   drivers/pci/{ => controller}/dwc/pci-keystone.h    |   0
->   drivers/pci/{ => controller}/dwc/pci-layerscape.c  |   0
->   drivers/pci/{ => controller}/dwc/pcie-armada8k.c   |   0
->   drivers/pci/{ => controller}/dwc/pcie-artpec6.c    |   0
->   .../pci/{ => controller}/dwc/pcie-designware-ep.c  |   0
->   .../{ => controller}/dwc/pcie-designware-host.c    |   0
->   .../{ => controller}/dwc/pcie-designware-plat.c    |   0
->   drivers/pci/{ => controller}/dwc/pcie-designware.c |   0
->   drivers/pci/{ => controller}/dwc/pcie-designware.h |   0
->   drivers/pci/{ => controller}/dwc/pcie-hisi.c       |   2 +-
->   drivers/pci/{ => controller}/dwc/pcie-histb.c      |   0
->   drivers/pci/{ => controller}/dwc/pcie-kirin.c      |   0
->   drivers/pci/{ => controller}/dwc/pcie-qcom.c       |   0
->   drivers/pci/{ => controller}/dwc/pcie-spear13xx.c  |   0
->   drivers/pci/{host => controller}/pci-aardvark.c    |   0
->   drivers/pci/{host => controller}/pci-ftpci100.c    |   0
->   drivers/pci/{host => controller}/pci-host-common.c |   0
->   .../pci/{host => controller}/pci-host-generic.c    |   0
->   drivers/pci/{host => controller}/pci-hyperv.c      |   0
->   drivers/pci/{host => controller}/pci-mvebu.c       |   0
->   drivers/pci/{host => controller}/pci-rcar-gen2.c   |   0
->   drivers/pci/{host => controller}/pci-tegra.c       |   0
->   .../pci/{host => controller}/pci-thunder-ecam.c    |   0
->   drivers/pci/{host => controller}/pci-thunder-pem.c |   0
->   drivers/pci/{host => controller}/pci-v3-semi.c     |   0
->   drivers/pci/{host => controller}/pci-versatile.c   |   0
->   drivers/pci/{host => controller}/pci-xgene-msi.c   |   0
->   drivers/pci/{host => controller}/pci-xgene.c       |   0
->   drivers/pci/{host => controller}/pcie-altera-msi.c |   0
->   drivers/pci/{host => controller}/pcie-altera.c     |   0
->   .../pci/{cadence => controller}/pcie-cadence-ep.c  |   0
->   .../{cadence => controller}/pcie-cadence-host.c    |   0
->   drivers/pci/{cadence => controller}/pcie-cadence.c |   0
->   drivers/pci/{cadence => controller}/pcie-cadence.h |   0
->   drivers/pci/{host => controller}/pcie-iproc-bcma.c |   0
->   drivers/pci/{host => controller}/pcie-iproc-msi.c  |   0
->   .../pci/{host => controller}/pcie-iproc-platform.c |   0
->   drivers/pci/{host => controller}/pcie-iproc.c      |   0
->   drivers/pci/{host => controller}/pcie-iproc.h      |   0
->   drivers/pci/{host => controller}/pcie-mediatek.c   |   0
->   drivers/pci/{host => controller}/pcie-rcar.c       |   0
->   drivers/pci/controller/pcie-rockchip-ep.c          | 639 +++++++++++++++++++++
->   .../pcie-rockchip-host.c}                          | 600 +------------------
->   drivers/pci/controller/pcie-rockchip.c             | 423 ++++++++++++++
->   drivers/pci/controller/pcie-rockchip.h             | 338 +++++++++++
->   drivers/pci/{host => controller}/pcie-tango.c      |   0
->   drivers/pci/{host => controller}/pcie-xilinx-nwl.c |   0
->   drivers/pci/{host => controller}/pcie-xilinx.c     |   0
->   drivers/pci/{host => controller}/vmd.c             |   0
->   66 files changed, 1571 insertions(+), 659 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
->   rename Documentation/devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} (100%)
->   delete mode 100644 drivers/pci/cadence/Kconfig
->   delete mode 100644 drivers/pci/cadence/Makefile
->   rename drivers/pci/{host => controller}/Kconfig (84%)
->   rename drivers/pci/{host => controller}/Makefile (84%)
->   rename drivers/pci/{ => controller}/dwc/Kconfig (100%)
->   rename drivers/pci/{ => controller}/dwc/Makefile (100%)
->   rename drivers/pci/{ => controller}/dwc/pci-dra7xx.c (100%)
->   rename drivers/pci/{ => controller}/dwc/pci-exynos.c (100%)
->   rename drivers/pci/{ => controller}/dwc/pci-imx6.c (100%)
->   rename drivers/pci/{ => controller}/dwc/pci-keystone-dw.c (100%)
->   rename drivers/pci/{ => controller}/dwc/pci-keystone.c (100%)
->   rename drivers/pci/{ => controller}/dwc/pci-keystone.h (100%)
->   rename drivers/pci/{ => controller}/dwc/pci-layerscape.c (100%)
->   rename drivers/pci/{ => controller}/dwc/pcie-armada8k.c (100%)
->   rename drivers/pci/{ => controller}/dwc/pcie-artpec6.c (100%)
->   rename drivers/pci/{ => controller}/dwc/pcie-designware-ep.c (100%)
->   rename drivers/pci/{ => controller}/dwc/pcie-designware-host.c (100%)
->   rename drivers/pci/{ => controller}/dwc/pcie-designware-plat.c (100%)
->   rename drivers/pci/{ => controller}/dwc/pcie-designware.c (100%)
->   rename drivers/pci/{ => controller}/dwc/pcie-designware.h (100%)
->   rename drivers/pci/{ => controller}/dwc/pcie-hisi.c (99%)
->   rename drivers/pci/{ => controller}/dwc/pcie-histb.c (100%)
->   rename drivers/pci/{ => controller}/dwc/pcie-kirin.c (100%)
->   rename drivers/pci/{ => controller}/dwc/pcie-qcom.c (100%)
->   rename drivers/pci/{ => controller}/dwc/pcie-spear13xx.c (100%)
->   rename drivers/pci/{host => controller}/pci-aardvark.c (100%)
->   rename drivers/pci/{host => controller}/pci-ftpci100.c (100%)
->   rename drivers/pci/{host => controller}/pci-host-common.c (100%)
->   rename drivers/pci/{host => controller}/pci-host-generic.c (100%)
->   rename drivers/pci/{host => controller}/pci-hyperv.c (100%)
->   rename drivers/pci/{host => controller}/pci-mvebu.c (100%)
->   rename drivers/pci/{host => controller}/pci-rcar-gen2.c (100%)
->   rename drivers/pci/{host => controller}/pci-tegra.c (100%)
->   rename drivers/pci/{host => controller}/pci-thunder-ecam.c (100%)
->   rename drivers/pci/{host => controller}/pci-thunder-pem.c (100%)
->   rename drivers/pci/{host => controller}/pci-v3-semi.c (100%)
->   rename drivers/pci/{host => controller}/pci-versatile.c (100%)
->   rename drivers/pci/{host => controller}/pci-xgene-msi.c (100%)
->   rename drivers/pci/{host => controller}/pci-xgene.c (100%)
->   rename drivers/pci/{host => controller}/pcie-altera-msi.c (100%)
->   rename drivers/pci/{host => controller}/pcie-altera.c (100%)
->   rename drivers/pci/{cadence => controller}/pcie-cadence-ep.c (100%)
->   rename drivers/pci/{cadence => controller}/pcie-cadence-host.c (100%)
->   rename drivers/pci/{cadence => controller}/pcie-cadence.c (100%)
->   rename drivers/pci/{cadence => controller}/pcie-cadence.h (100%)
->   rename drivers/pci/{host => controller}/pcie-iproc-bcma.c (100%)
->   rename drivers/pci/{host => controller}/pcie-iproc-msi.c (100%)
->   rename drivers/pci/{host => controller}/pcie-iproc-platform.c (100%)
->   rename drivers/pci/{host => controller}/pcie-iproc.c (100%)
->   rename drivers/pci/{host => controller}/pcie-iproc.h (100%)
->   rename drivers/pci/{host => controller}/pcie-mediatek.c (100%)
->   rename drivers/pci/{host => controller}/pcie-rcar.c (100%)
->   create mode 100644 drivers/pci/controller/pcie-rockchip-ep.c
->   rename drivers/pci/{host/pcie-rockchip.c => controller/pcie-rockchip-host.c} (61%)
->   create mode 100644 drivers/pci/controller/pcie-rockchip.c
->   create mode 100644 drivers/pci/controller/pcie-rockchip.h
->   rename drivers/pci/{host => controller}/pcie-tango.c (100%)
->   rename drivers/pci/{host => controller}/pcie-xilinx-nwl.c (100%)
->   rename drivers/pci/{host => controller}/pcie-xilinx.c (100%)
->   rename drivers/pci/{host => controller}/vmd.c (100%)
-> 
+Signed-off-by: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+Changes since v1:
+ - Remove input_ff_destroy() and input_unregister_device()
+---
+ drivers/input/misc/Kconfig        |   10 +++
+ drivers/input/misc/Makefile       |    1 +
+ drivers/input/misc/sc27xx-vibra.c |  156 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 167 insertions(+)
+ create mode 100644 drivers/input/misc/sc27xx-vibra.c
+
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index 572b15f..c761c0c 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -841,4 +841,14 @@ config INPUT_RAVE_SP_PWRBUTTON
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called rave-sp-pwrbutton.
+ 
++config INPUT_SC27XX_VIBRA
++	tristate "Spreadtrum sc27xx vibrator support"
++	depends on MFD_SC27XX_PMIC || COMPILE_TEST
++	select INPUT_FF_MEMLESS
++	help
++	  This option enables support for Spreadtrum sc27xx vibrator driver.
++
++	  To compile this driver as a module, choose M here. The module will
++	  be called sc27xx_vibra.
++
+ endif
+diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+index 72cde28..9d0f9d1 100644
+--- a/drivers/input/misc/Makefile
++++ b/drivers/input/misc/Makefile
+@@ -66,6 +66,7 @@ obj-$(CONFIG_INPUT_RETU_PWRBUTTON)	+= retu-pwrbutton.o
+ obj-$(CONFIG_INPUT_AXP20X_PEK)		+= axp20x-pek.o
+ obj-$(CONFIG_INPUT_GPIO_ROTARY_ENCODER)	+= rotary_encoder.o
+ obj-$(CONFIG_INPUT_RK805_PWRKEY)	+= rk805-pwrkey.o
++obj-$(CONFIG_INPUT_SC27XX_VIBRA)	+= sc27xx-vibra.o
+ obj-$(CONFIG_INPUT_SGI_BTNS)		+= sgi_btns.o
+ obj-$(CONFIG_INPUT_SIRFSOC_ONKEY)	+= sirfsoc-onkey.o
+ obj-$(CONFIG_INPUT_SOC_BUTTON_ARRAY)	+= soc_button_array.o
+diff --git a/drivers/input/misc/sc27xx-vibra.c b/drivers/input/misc/sc27xx-vibra.c
+new file mode 100644
+index 0000000..f78e70f
+--- /dev/null
++++ b/drivers/input/misc/sc27xx-vibra.c
+@@ -0,0 +1,156 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2018 Spreadtrum Communications Inc.
++ */
++
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/input.h>
++#include <linux/workqueue.h>
++
++#define CUR_DRV_CAL_SEL		GENMASK(13, 12)
++#define SLP_LDOVIBR_PD_EN	BIT(9)
++#define LDO_VIBR_PD		BIT(8)
++
++struct vibra_info {
++	struct input_dev	*input_dev;
++	struct work_struct	play_work;
++	struct regmap		*regmap;
++	u32			base;
++	u32			strength;
++	bool			enabled;
++};
++
++static void sc27xx_vibra_set(struct vibra_info *info, bool on)
++{
++	if (on) {
++		regmap_update_bits(info->regmap, info->base, LDO_VIBR_PD, 0);
++		regmap_update_bits(info->regmap, info->base,
++				   SLP_LDOVIBR_PD_EN, 0);
++		info->enabled = true;
++	} else {
++		regmap_update_bits(info->regmap, info->base, LDO_VIBR_PD,
++				   LDO_VIBR_PD);
++		regmap_update_bits(info->regmap, info->base,
++				   SLP_LDOVIBR_PD_EN, SLP_LDOVIBR_PD_EN);
++		info->enabled = false;
++	}
++}
++
++static int sc27xx_vibra_hw_init(struct vibra_info *info)
++{
++	return regmap_update_bits(info->regmap, info->base, CUR_DRV_CAL_SEL, 0);
++}
++
++static void sc27xx_vibra_play_work(struct work_struct *work)
++{
++	struct vibra_info *info = container_of(work, struct vibra_info,
++					       play_work);
++
++	if (info->strength && !info->enabled)
++		sc27xx_vibra_set(info, true);
++	else if (info->enabled)
++		sc27xx_vibra_set(info, false);
++}
++
++static int sc27xx_vibra_play(struct input_dev *input, void *data,
++			     struct ff_effect *effect)
++{
++	struct vibra_info *info = input_get_drvdata(input);
++
++	info->strength = effect->u.rumble.weak_magnitude;
++	schedule_work(&info->play_work);
++
++	return 0;
++}
++
++static void sc27xx_vibra_close(struct input_dev *input)
++{
++	struct vibra_info *info = input_get_drvdata(input);
++
++	cancel_work_sync(&info->play_work);
++	if (info->enabled)
++		sc27xx_vibra_set(info, false);
++}
++
++static int sc27xx_vibra_probe(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	struct vibra_info *info;
++	int ret;
++
++	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
++	info->regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!info->regmap) {
++		dev_err(&pdev->dev, "failed to get vibrator regmap.\n");
++		return -ENODEV;
++	}
++
++	ret = of_property_read_u32(node, "reg", &info->base);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to get vibrator base address.\n");
++		return ret;
++	}
++
++	info->input_dev = devm_input_allocate_device(&pdev->dev);
++	if (!info->input_dev) {
++		dev_err(&pdev->dev, "failed to allocate input device.\n");
++		return -ENOMEM;
++	}
++
++	info->input_dev->name = "sc27xx:vibrator";
++	info->input_dev->id.version = 0;
++	info->input_dev->dev.parent = pdev->dev.parent;
++	info->input_dev->close = sc27xx_vibra_close;
++
++	input_set_drvdata(info->input_dev, info);
++	input_set_capability(info->input_dev, EV_FF, FF_RUMBLE);
++	INIT_WORK(&info->play_work, sc27xx_vibra_play_work);
++	info->enabled = false;
++
++	ret = input_ff_create_memless(info->input_dev, NULL, sc27xx_vibra_play);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to register vibrator to FF.\n");
++		return ret;
++	}
++
++	ret = input_register_device(info->input_dev);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to register input device.\n");
++		return ret;
++	}
++
++	ret = sc27xx_vibra_hw_init(info);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to initialize the vibrator.\n");
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, info);
++	return 0;
++}
++
++static const struct of_device_id sc27xx_vibra_of_match[] = {
++	{ .compatible = "sprd,sc27xx-vibrator", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, sc27xx_vibra_of_match);
++
++static struct platform_driver sc27xx_vibra_driver = {
++	.driver = {
++		.name = "sc27xx-vibrator",
++		.of_match_table = sc27xx_vibra_of_match,
++	},
++	.probe = sc27xx_vibra_probe,
++};
++
++module_platform_driver(sc27xx_vibra_driver);
++
++MODULE_DESCRIPTION("Spreadtrum SC27xx Vibrator Driver");
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Xiaotong Lu <xiaotong.lu@spreadtrum.com>");
+-- 
+1.7.9.5
