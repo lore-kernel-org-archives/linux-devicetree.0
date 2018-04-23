@@ -1,14 +1,15 @@
 From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 6/8] drm: rcar-du: rcar-lvds: Add bridge format support
-Date: Mon, 23 Apr 2018 09:28:15 +0200
-Message-ID: <20180423072815.GM4235@w540>
+Subject: Re: [PATCH 2/8] dt-bindings: display: bridge: thc63lvd1024: Add lvds
+ map property
+Date: Mon, 23 Apr 2018 09:35:04 +0200
+Message-ID: <20180423073504.GN4235@w540>
 References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524130269-32688-7-git-send-email-jacopo+renesas@jmondi.org>
- <11e82e23-4ab0-7441-1798-1eeb4fb96995@axentia.se>
+ <1524130269-32688-3-git-send-email-jacopo+renesas@jmondi.org>
+ <17d6f6b0-e657-4a5f-63a6-572cdf062bd3@axentia.se>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0463905805=="
+Content-Type: multipart/mixed; boundary="===============0030117874=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <11e82e23-4ab0-7441-1798-1eeb4fb96995@axentia.se>
+In-Reply-To: <17d6f6b0-e657-4a5f-63a6-572cdf062bd3@axentia.se>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -23,195 +24,102 @@ Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, 
 List-Id: devicetree@vger.kernel.org
 
 
---===============0463905805==
+--===============0030117874==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hcut4fGOf7Kh6EdG"
+	protocol="application/pgp-signature"; boundary="D6IIOQQv2Iwyp54J"
 Content-Disposition: inline
 
 
---hcut4fGOf7Kh6EdG
+--D6IIOQQv2Iwyp54J
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 
 Hi Peter,
-   thanks for looking into this
+   thanks for commenting,
 
-On Sun, Apr 22, 2018 at 10:08:21PM +0200, Peter Rosin wrote:
+On Sun, Apr 22, 2018 at 10:02:41PM +0200, Peter Rosin wrote:
 > On 2018-04-19 11:31, Jacopo Mondi wrote:
-> > With the introduction of static input image format enumeration in DRM
-> > bridges, add support to retrieve the format in rcar-lvds LVDS encoder
-> > from both panel or bridge, to set the desired LVDS mode.
+> > The THC63LVD1024 LVDS to RGB bridge supports two different input mapping
+> > modes, selectable by means of an external pin.
 > >
-> > Do not rely on 'DRM_BUS_FLAG_DATA_LSB_TO_MSB' flag to mirror the LVDS
-> > format, as it is only defined for drm connectors, but use the newly
-> > introduced _LE version of LVDS mbus image formats.
+> > Describe the LVDS mode map through a newly defined mandatory property in
+> > device tree bindings.
 > >
 > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > > ---
-> >  drivers/gpu/drm/rcar-du/rcar_lvds.c | 64 +++++++++++++++++++++++++------------
-> >  1 file changed, 44 insertions(+), 20 deletions(-)
+> >  .../devicetree/bindings/display/bridge/thine,thc63lvd1024.txt          | 3 +++
+> >  1 file changed, 3 insertions(+)
 > >
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> > index 3d2d3bb..2fa875f 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> > @@ -280,41 +280,65 @@ static bool rcar_lvds_mode_fixup(struct drm_bridge *bridge,
-> >  	return true;
-> >  }
-> >
-> > -static void rcar_lvds_get_lvds_mode(struct rcar_lvds *lvds)
-> > +static int rcar_lvds_get_lvds_mode_from_connector(struct rcar_lvds *lvds,
-> > +						  unsigned int *bus_fmt)
-> >  {
-> >  	struct drm_display_info *info = &lvds->connector.display_info;
-> > -	enum rcar_lvds_mode mode;
-> > -
-> > -	/*
-> > -	 * There is no API yet to retrieve LVDS mode from a bridge, only panels
-> > -	 * are supported.
-> > -	 */
-> > -	if (!lvds->panel)
-> > -		return;
-> >
-> >  	if (!info->num_bus_formats || !info->bus_formats) {
-> >  		dev_err(lvds->dev, "no LVDS bus format reported\n");
-> > -		return;
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	*bus_fmt = info->bus_formats[0];
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int rcar_lvds_get_lvds_mode_from_bridge(struct rcar_lvds *lvds,
-> > +					       unsigned int *bus_fmt)
-> > +{
-> > +	if (!lvds->next_bridge->num_bus_formats ||
-> > +	    !lvds->next_bridge->bus_formats) {
-> > +		dev_err(lvds->dev, "no LVDS bus format reported\n");
-> > +		return -EINVAL;
-> >  	}
-> >
-> > -	switch (info->bus_formats[0]) {
-> > +	*bus_fmt = lvds->next_bridge->bus_formats[0];
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> > index 37f0c04..0937595 100644
+> > --- a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> > +++ b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> > @@ -12,6 +12,8 @@ Required properties:
+> >  - compatible: Shall be "thine,thc63lvd1024"
+> >  - vcc-supply: Power supply for TTL output, TTL CLOCKOUT signal, LVDS input,
+> >    PPL and digital circuitry
+> > +- thine,map: LVDS mapping mode selection signal, pin name "MAP". Shall be <1>
+> > +  for mapping mode 1, <0> for mapping mode 2
 >
-> What makes the first reported format the best choice?
+> Since the MAP pin is an input pin, I would expect there to be an optional gpio
+> specifier like thine,map-gpios so that the driver can set it according to
+> the value given in thine,map in case the HW has a line from some gpio output
+> to the MAP pin (instead of hardwired hi/low which seem to be your thinking).
 
-It already was the selection 'policy' in place in this driver before
-introducing bridge formats. As you can see from the switch I have here
-removed, the first format was selected even when only the format
-reported by the connector was inspected.
+I see... As the only use case I had has the pin tied to vcc, I
+thought about making it a binary property, and I wonder in how many
+cases the chip 'MAP' pin would actually be GPIO controlled input and
+not an hardwired one instead. I don't see the LVDS mapping mode to be
+changed at runtime, but you are right, who knows....
 
-And, anyway, as DRM lacks a format negotiation API, there is no way to
-tell a bridge/panel "use this format instead of this other one" (which
-makes me wonders why more formats can be reported, but the
-bus_formats[] helpers for connectors allow that, so I thought it made
-sense to do the same for bridges).
+Do you think we can add an options 'thine,map-gpios' property along
+to the proposed ones?
 
->
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void rcar_lvds_get_lvds_mode(struct rcar_lvds *lvds)
-> > +{
-> > +	unsigned int bus_fmt;
-> > +	int ret;
-> > +
-> > +	if (lvds->panel)
-> > +		ret = rcar_lvds_get_lvds_mode_from_connector(lvds, &bus_fmt);
-> > +	else
-> > +		ret = rcar_lvds_get_lvds_mode_from_bridge(lvds, &bus_fmt);
->
-> What if no bridge reports any format, shouldn't the connector be examined
-> then?
+thanks
+   j
 
-There is no fallback selection policy at the moment as you can see, or
-either, as it was before, the LVDS mode is not set for the rcar_lvds
-component  if it's not reported by the next element in the pipeline (and I
-should probably return 0, not an error here in that case).
-
-The connector associated with a panel is only inspected if it's next in the
-pipeline.
-
->
-> > +	if (ret)
-> > +		return;
-> > +
-> > +	switch (bus_fmt) {
-> > +	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG_LE:
-> > +	case MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA_LE:
-> > +		lvds->mode |= RCAR_LVDS_MODE_MIRROR;
-> >  	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG:
-> >  	case MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA:
-> > -		mode = RCAR_LVDS_MODE_JEIDA;
-> > +		lvds->mode = RCAR_LVDS_MODE_JEIDA;
->
-> This is b0rken, first the mirror bit is ORed into some unknown preexisting
-> value, then the code falls through (without any fall through comment, btw)
-> and forcibly sets the mode, thus discarding the mirror bit which was
-> carefully ORed in.
-
-You are correct, the second assignment should have been an |= and not
-a plain assignment. The variable is 0ed though, as 'struct rcar_lvds
-*lvds' is kzalloc-ed in probe function.
->
-> >  		break;
-> > +
-> > +	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG_LE:
-> > +		lvds->mode |= RCAR_LVDS_MODE_MIRROR;
-> >  	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG:
-> > -		mode = RCAR_LVDS_MODE_VESA;
-> > +		lvds->mode = RCAR_LVDS_MODE_VESA;
->
-> Dito.
 >
 > Cheers,
 > Peter
 >
-> >  		break;
-> >  	default:
-> >  		dev_err(lvds->dev, "unsupported LVDS bus format 0x%04x\n",
-> > -			info->bus_formats[0]);
-> > -		return;
-> > +			bus_fmt);
-> >  	}
-> > -
-> > -	if (info->bus_flags & DRM_BUS_FLAG_DATA_LSB_TO_MSB)
-> > -		mode |= RCAR_LVDS_MODE_MIRROR;
-> > -
-> > -	lvds->mode = mode;
-> >  }
 > >
-> >  static void rcar_lvds_mode_set(struct drm_bridge *bridge,
+> >  Optional properties:
+> >  - powerdown-gpios: Power down GPIO signal, pin name "/PDWN". Active low
+> > @@ -36,6 +38,7 @@ Example:
+> >
+> >  		vcc-supply = <&reg_lvds_vcc>;
+> >  		powerdown-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
+> > +		thine,map = <1>;
+> >
+> >  		ports {
+> >  			#address-cells = <1>;
 > >
 >
 
---hcut4fGOf7Kh6EdG
+--D6IIOQQv2Iwyp54J
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJa3YsPAAoJEHI0Bo8WoVY8WKcP/0yHz9QK3VEHvfINxU3ZEBFV
-qPt9IUsr2763p7P5DdV/c2Q9VBd0z7uoU8G8B2H2Zveb/yqFd9UbvTbTiAI6Ci2y
-T1btH2HWWuXsCEJaxTy8M2vpgi02O6NS5uTgyqCkxkHEn+jgna4KFw+x6LpaaxwW
-8H1P0sGagy61NWWLkO3goAw/1DtfuRLLMuH1CHYhHHyLowv8+1DQEAy1uJYHzoMW
-RD0iOoFwq7vMFuL3bSgoa4BtkXSxIPPNILKeLcSGhTNvOGA8SFSVIOYyIgCENS9O
-znq9ea9OuxG8m6Jd6OWKx2NeuHBAGp/+MA+H86UlfjFnq8uDT0OgrRw7S07AANGl
-Q+TTDM4uaXL1kvfDht1EAL445eLAPk7gr0HIvQzd5RLB+ox2RKS1eMakwxEgyQZ0
-T22Q+RRK00XHdVFX/0VcjVMDQkiWZQfgK7+Q7B3ek2qWOl3B1lNJ5ihuW8M9gd4i
-Y3kP7/uKpG2LI75p6HaownN2qvZtRrgAO+hAtcu/ZOZrPSfugnEf3zxfmomTjaB0
-NeVuf/BSCONR89rGhuD2PFUtlOx3oMfWSVjOYHZ0d2HziJD6EGoqJbOGwXvG9CRO
-CmwYFJLe9JB28zXA6Ewh2FrkBti2YNET+L/12+GQjkmqNpl0b38Eju7Yeq8GySkF
-lUS8JMqfil/eyFZdlgP8
-=n57G
+iQIcBAEBAgAGBQJa3YynAAoJEHI0Bo8WoVY8dl8P/i0yToIkzEvqWHs1+lqzgB8r
+9L5j9C4G+MvNIybk/J/edo0UIIXttc/GAtr5ESNw3zl8qj3fPwkZ4LHnDaVnow8U
+qbdrgBKV9d4OeOOttz7JoufVGg1CkdIry2oFQsqAgSOWUAda78XRxzXx0n2FGOJe
+tIja6IJkDSXuPrKc7p4GldZd/5ZUwY/0b/MVAbqq56XEwveX2deeW1lmt1lWEcmw
+TFH1jfigtjrnQBqh1WLalUDbmVnDk90ooGg10ooRb5SuLNdhBpDCMl5Kv43Wuuq3
+AAC/5gaTkXaLbeLxHkEa2PG113/sEXurAEOi1EiWHLvwA1fNYdV9Wr28/BF/kKI4
+Z9FiCfuW/lqdSFAxmtDrfHJYZhbEdAZmP4VFnSjOMd3pYiPffyW4Rl+f+cHykRu4
+DqTtvAELMAfbEv1GFsty/j+bfYV4PBssfCkYeMY1W8b/2xUBbhabyg3tuCNh8Q65
+ffHXiGB1qHtQL90F457beTu+ABix2lnSV46MiYQzyXbQYoO67hWWWC3nZFAHnueA
+2fyp8tGTluy5G61cp9Y3IcPp+Q0cxqyef8Pzk8KIj4yJSD7lxg/xzLNz4MAzuybG
+BbPmo0uUkZ16t0+t3AhCjsW/W/xyAfhXBwrRHzAXNgXqmqBfGFKtBZTUw/l8ckGZ
+PSlPzfBpb3uT7QZZk9vG
+=4Kpk
 -----END PGP SIGNATURE-----
 
---hcut4fGOf7Kh6EdG--
+--D6IIOQQv2Iwyp54J--
 
---===============0463905805==
+--===============0030117874==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -221,4 +129,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
---===============0463905805==--
+--===============0030117874==--
