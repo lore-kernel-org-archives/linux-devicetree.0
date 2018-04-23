@@ -1,7 +1,7 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v2 06/15] media: staging/imx: add imx7 capture subsystem
-Date: Mon, 23 Apr 2018 14:47:41 +0100
-Message-ID: <20180423134750.30403-7-rui.silva@linaro.org>
+Subject: [PATCH v2 07/15] ARM: dts: increase default cma size to 40MB
+Date: Mon, 23 Apr 2018 14:47:42 +0100
+Message-ID: <20180423134750.30403-8-rui.silva@linaro.org>
 References: <20180423134750.30403-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,38 +21,41 @@ To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerb
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add imx7 capture subsystem to imx-media core to allow the use some of the
-existing modules for i.MX5/6 with i.MX7 SoC.
+To support camera in i.MX7 the cma heap is used to allocate frame buffers. The
+default size of CMA is 16MB which is not enough for higher resolutions (ex:
+1600x1200).
 
-Since i.MX7 does not have an IPU unset the ipu_present flag to differentiate
-some runtime behaviors.
+So, increase the default CMA size to 40MB.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- drivers/staging/media/imx/imx-media-dev.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/imx7s.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
-index c0f277adeebe..be68235c4caa 100644
---- a/drivers/staging/media/imx/imx-media-dev.c
-+++ b/drivers/staging/media/imx/imx-media-dev.c
-@@ -486,6 +486,9 @@ static int imx_media_probe(struct platform_device *pdev)
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 4d42335c0dee..142ea709d296 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -182,6 +182,20 @@
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 	};
  
- 	imxmd->ipu_present = true;
- 
-+	if (of_device_is_compatible(node, "fsl,imx7-capture-subsystem"))
-+		imxmd->ipu_present = false;
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
 +
- 	if (imxmd->ipu_present) {
- 		ret = imx_media_add_internal_subdevs(imxmd);
- 		if (ret) {
-@@ -543,6 +546,7 @@ static int imx_media_remove(struct platform_device *pdev)
- 
- static const struct of_device_id imx_media_dt_ids[] = {
- 	{ .compatible = "fsl,imx-capture-subsystem" },
-+	{ .compatible = "fsl,imx7-capture-subsystem" },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, imx_media_dt_ids);
++		/* global autoconfigured region for contiguous allocations */
++		linux,cma {
++			compatible = "shared-dma-pool";
++			reusable;
++			size = <0x2800000>;
++			linux,cma-default;
++		};
++	};
++
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 2.17.0
