@@ -1,64 +1,88 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/8] dt-bindings: display: bridge: thc63lvd1024: Add lvds
- map property
-Date: Mon, 23 Apr 2018 15:02:59 +0300
-Message-ID: <2645564.GDIDDgbfar@avalon>
-References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524130269-32688-3-git-send-email-jacopo+renesas@jmondi.org>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCHv3 3/7] driver, misc: add Intel Stratix10 service layer
+ driver
+Date: Mon, 23 Apr 2018 14:03:00 +0200
+Message-ID: <20180423120300.GC7951@kroah.com>
+References: <1522182014-7338-1-git-send-email-richard.gong@linux.intel.com>
+ <1522182014-7338-4-git-send-email-richard.gong@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1524130269-32688-3-git-send-email-jacopo+renesas@jmondi.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, peda@axentia.se, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1522182014-7338-4-git-send-email-richard.gong@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: richard.gong@linux.intel.com
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@intel.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUaHVyc2RheSwgMTkgQXBy
-aWwgMjAxOCAxMjozMTowMyBFRVNUIEphY29wbyBNb25kaSB3cm90ZToKPiBUaGUgVEhDNjNMVkQx
-MDI0IExWRFMgdG8gUkdCIGJyaWRnZSBzdXBwb3J0cyB0d28gZGlmZmVyZW50IGlucHV0IG1hcHBp
-bmcKPiBtb2Rlcywgc2VsZWN0YWJsZSBieSBtZWFucyBvZiBhbiBleHRlcm5hbCBwaW4uCj4gCj4g
-RGVzY3JpYmUgdGhlIExWRFMgbW9kZSBtYXAgdGhyb3VnaCBhIG5ld2x5IGRlZmluZWQgbWFuZGF0
-b3J5IHByb3BlcnR5IGluCj4gZGV2aWNlIHRyZWUgYmluZGluZ3MuCj4gCj4gU2lnbmVkLW9mZi1i
-eTogSmFjb3BvIE1vbmRpIDxqYWNvcG8rcmVuZXNhc0BqbW9uZGkub3JnPgo+IC0tLQo+ICAuLi4v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0
-ICAgICAgICAgIHwgMwo+ICsrKyAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4gCj4g
-ZGlmZiAtLWdpdAo+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-YnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQKPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4gaW5kZXgg
-MzdmMGMwNC4uMDkzNzU5NSAxMDA2NDQKPiAtLS0KPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4gKysrCj4g
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUs
-dGhjNjNsdmQxMDI0LnR4dAo+IEBAIC0xMiw2ICsxMiw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6
-Cj4gIC0gY29tcGF0aWJsZTogU2hhbGwgYmUgInRoaW5lLHRoYzYzbHZkMTAyNCIKPiAgLSB2Y2Mt
-c3VwcGx5OiBQb3dlciBzdXBwbHkgZm9yIFRUTCBvdXRwdXQsIFRUTCBDTE9DS09VVCBzaWduYWws
-IExWRFMgaW5wdXQsCj4gUFBMIGFuZCBkaWdpdGFsIGNpcmN1aXRyeQo+ICstIHRoaW5lLG1hcDog
-TFZEUyBtYXBwaW5nIG1vZGUgc2VsZWN0aW9uIHNpZ25hbCwgcGluIG5hbWUgIk1BUCIuIFNoYWxs
-IGJlCj4gPDE+Cj4gKyAgZm9yIG1hcHBpbmcgbW9kZSAxLCA8MD4gZm9yIG1hcHBpbmcgbW9kZSAy
-CgpUaGF0J3Mgc291bmRzIGxpa2UgYW4gb2RkIG1hcHBpbmcuIEkgc3VwcG9zZSB5b3UgaGF2ZSBt
-b2RlbGVkIGl0IGJhc2VkIG9uIHRoZSAKc3RhdGUgb2YgdGhlIE1BUCBwaW4gaW5zdGVhZCBvZiB0
-aGUgbW9kZSBudW1iZXIgKE1BUCBsb3cgbWVhbnMgbW9kZSAyLCBNQVAgCmhpZ2ggbWVhbnMgbW9k
-ZSAxKS4gVG8gYXZvaWQgY29uZnVzaW5nIHJlYWRlcnMgSSB3b3VsZCB3cml0ZSBpdCBhcwoKLSB0
-aGluZSxtYXA6IGxldmVsIG9mIHRoZSBNQVAgcGluIHRoYXQgc2VsZWN0cyB0aGUgTFZEUyBtYXBw
-aW5nIG1vZGUuIFNoYWxsIGJlCiAgPDA+IGZvciBsb3cgbGV2ZWwgKG1hcHBpbmcgbW9kZSAyKSBv
-ciA8MT4gZm9yIGhpZ2ggbGV2ZWwgKG1hcHBpbmcgbW9kZSAxKS4KCkFwYXJ0IGZyb20gdGhhdCB0
-aGlzIHBhdGNoIGxvb2tzIGdvb2QgdG8gbWUuCgpSZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFy
-dCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgoKPiAgT3B0aW9uYWwgcHJvcGVy
-dGllczoKPiAgLSBwb3dlcmRvd24tZ3Bpb3M6IFBvd2VyIGRvd24gR1BJTyBzaWduYWwsIHBpbiBu
-YW1lICIvUERXTiIuIEFjdGl2ZSBsb3cKPiBAQCAtMzYsNiArMzgsNyBAQCBFeGFtcGxlOgo+IAo+
-ICAJCXZjYy1zdXBwbHkgPSA8JnJlZ19sdmRzX3ZjYz47Cj4gIAkJcG93ZXJkb3duLWdwaW9zID0g
-PCZncGlvNCAxNSBHUElPX0FDVElWRV9MT1c+Owo+ICsJCXRoaW5lLG1hcCA9IDwxPjsKPiAKPiAg
-CQlwb3J0cyB7Cj4gIAkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OwoKLS0gClJlZ2FyZHMsCgpMYXVy
-ZW50IFBpbmNoYXJ0CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+On Tue, Mar 27, 2018 at 03:20:10PM -0500, richard.gong@linux.intel.com wrote:
+> +config INTEL_SERVICE
+
+Naming is hard, but this is a _very_ generic name, don't you agree?
+
+> +	tristate "Intel Service Layer"
+
+As is this.  Can you make this a bit more specific to what hardware is
+being controlled here?
+
+> +++ b/drivers/misc/intel-service.c
+
+Same for the file name, why not stratix10.c?
+
+or intel_svc.c?  That makes it a _bit_ more generic.  Well, not really,
+but it does hide the "genericness" a bit more, right?
+
+> --- /dev/null
+> +++ b/include/linux/intel-service-client.h
+> @@ -0,0 +1,188 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2017-2018, Intel Corporation
+> + */
+> +
+> +#ifndef __INTEL_SERVICE_CLIENT_H
+> +#define __INTEL_SERVICE_CLIENT_H
+> +
+> +/*
+> + * Service layer driver supports client names
+> + *
+> + * fpga: for FPGA configuration
+> + * dummy: for integration/debug/trouble-shooting
+> + */
+> +#define SVC_CLIENT_FPGA		"fpga"
+> +#define SVC_CLIENT_DUMMY	"dummy"
+> +
+> +/*
+> + * Status of the sent command, in bit number
+> + *
+> + * SVC_COMMAND_STATUS_RECONFIG_REQUEST_OK:
+> + * Secure firmware accepts the request of FPGA reconfiguration.
+> + *
+> + * SVC_STATUS_RECONFIG_BUFFER_SUBMITTED:
+> + * Service client successfully submits FPGA configuration
+> + * data buffer to secure firmware.
+> + *
+> + * SVC_COMMAND_STATUS_RECONFIG_BUFFER_DONE:
+> + * Secure firmware completes data process, ready to accept the
+> + * next WRITE transaction.
+> + *
+> + * SVC_COMMAND_STATUS_RECONFIG_COMPLETED:
+> + * Secure firmware completes FPGA configuration successfully, FPGA should
+> + * be in user mode.
+> + *
+> + * SVC_COMMAND_STATUS_RECONFIG_BUSY:
+> + * FPGA configuration is still in process.
+> + *
+> + * SVC_COMMAND_STATUS_RECONFIG_ERROR:
+> + * Error encountered during FPGA configuration.
+> + */
+
+You have an odd mix of kernel-doc formatting and non-kernel-doc
+formatting in this file.  Pick one and stick with it :)
+
+Also, if you use kernel-doc (as you should), please hook it up to the
+kernel documentation build process to take advantage of it.
+
+thanks,
+
+greg k-h
