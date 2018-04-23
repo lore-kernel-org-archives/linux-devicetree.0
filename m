@@ -1,45 +1,65 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: Re: [PATCH v5 1/2] media: ov2680: dt: Add bindings for OV2680
-Date: Mon, 23 Apr 2018 16:09:55 +0100
-Message-ID: <m3wowydkn0.fsf@linaro.org>
-References: <20180419110056.10342-1-rui.silva@linaro.org> <20180419110056.10342-2-rui.silva@linaro.org> <CAOMZO5A3+WMu+U5STP-z3qdXnUQN2yTJne2OV9-SrEs70JJyDA@mail.gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: marvell: armada-37xx: reserve memory for ATF
+Date: Mon, 23 Apr 2018 17:15:59 +0200
+Message-ID: <20180423171559.53bcc2d9@xps13>
+References: <20180421140342.25082-1-miquel.raynal@bootlin.com>
+ <20180421161859.22d1ed18@windsurf> <20180423103127.5b9ac041@xps13>
+ <20180423144940.64fa884d@windsurf>
 Mime-Version: 1.0
-Content-Type: text/plain; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAOMZO5A3+WMu+U5STP-z3qdXnUQN2yTJne2OV9-SrEs70JJyDA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Rui Miguel Silva <rui.silva@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media <linux-media@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Ryan Harkin <ryan.harkin@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180423144940.64fa884d@windsurf>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Victor Gu <xigu@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
-Thanks for the review.
-
-On Mon 23 Apr 2018 at 14:11, Fabio Estevam wrote:
-> Hi Rui,
->
-> On Thu, Apr 19, 2018 at 8:00 AM, Rui Miguel Silva 
-> <rui.silva@linaro.org> wrote:
->
->> +Optional Properties:
->> +- powerdown-gpios: reference to the GPIO connected to the 
->> powerdown pin,
->> +                    if any. This is an active high signal to 
->> the OV2680.
->
-> I looked at the OV2680 datasheet and I see a pin called XSHUTDN, 
-> which has
-> the following description:
->
-> XSHUTDN: reset and power down (active low with internal pull 
-> down resistor)
->
-> So it should be active low, not active high.
-
-Yes, you are correct, I will fix this, and the dts entry.
-
-Thanks.
-
----
-Cheers,
-	Rui
+SGkgVGhvbWFzLAoKT24gTW9uLCAyMyBBcHIgMjAxOCAxNDo0OTo0MCArMDIwMCwgVGhvbWFzIFBl
+dGF6em9uaQo8dGhvbWFzLnBldGF6em9uaUBib290bGluLmNvbT4gd3JvdGU6Cgo+IEhlbGxvLAo+
+IAo+IE9uIE1vbiwgMjMgQXByIDIwMTggMTA6MzE6MjcgKzAyMDAsIE1pcXVlbCBSYXluYWwgd3Jv
+dGU6Cj4gCj4gPiA+IFNob3VsZG4ndCB0aGlzIGJlIGRvbmUgYXV0b21hdGljYWxseSBieSB0aGUg
+Ym9vdGxvYWRlciwgYmVmb3JlIHBhc3NpbmcKPiA+ID4gdGhlIERUQiB0byB0aGUga2VybmVsID8g
+ICAgCj4gPiAKPiA+IEkgYW0gd29ya2luZyB3aXRoIGEgMjAxNy4wOSBtYWlubGluZSBVLUJvb3Qu
+Cj4gPiAKPiA+IEkgZGlkIG5vdCBrbm93IHRoZSBib290bG9hZGVyIHdhcyBzdXBwb3NlZGx5IGlu
+IGNoYXJnZSBvZiB0aGF0LiAgCj4gCj4gSSB0aG91Z2h0IGl0IHNob3VsZCBiZSB0aGUgY2FzZSwg
+YnV0IEkgaW5kZWVkIHNlZSBub3RoaW5nIGluIFUtQm9vdAo+IHRoYXQgZG9lcyB0aGF0LCBleGNl
+cHQgZm9yIE9NQVAyIHBsYXRmb3Jtcy4KPiAKPiA+IEJ1dCB3aGF0IGlmIGl0IGZhaWxzIGRvaW5n
+IGl0PyAgCj4gCj4gV2VsbCBpZiBzb21ldGhpbmcgZmFpbHMgaW4gdGhlIGJvb3QgcHJvY2Vzcywg
+dGhlIHBsYXRmb3JtIGZhaWxzIHRvIGJvb3QuCj4gSSBmaW5kIHRoaXMgcXVlc3Rpb24gYSBiaXQg
+d2VpcmQvc2lsbHkuIEl0J3MgbGlrZSAiYW5kIHdoYXQgaWYgdGhlIHVzZXIKPiB1c2VkIHRoZSB3
+cm9uZyBEVCBmb3IgdGhlIHdyb25nIHBsYXRmb3JtID8iCgpTb3JyeSwgSSBtZWFudCAid2hhdCBp
+ZiB0aGUgYm9vdGxvYWRlciBkb2VzIG5vdCBkbyBpdD8iLCBpbiBvdGhlcgp3b3JkczogY3VycmVu
+dGx5IHRoZSBib290bG9hZGVyIGRvZXMgbm90IGRvIGl0LCBsZXQncyBhc3N1bWUgaXQgc2hvdWxk
+LApzaGFsbCB3ZSB0YWtlIGludG8gYWNjb3VudCB0aGF0IGl0IGRvZXMgbm90IGFuZCBhZGQgdGhp
+cyBjb2RlIHRvIExpbnV4CnRvbywgb3Igc2hhbGwgd2Ugc2F5IHRvIHBlb3BsZSAidXBncmFkZSB5
+b3VyIGJvb3Rsb2FkZXIvQVRGIj8gQnV0IGZyb20KdGhlIHJlc3Qgb2YgeW91ciBhbnN3ZXIgSSBh
+c3N1bWUgdGhlIGxhdHRlciBpcyB0aGUgcmlnaHQgYXBwcm9hY2guCgo+IAo+ID4gRml4aW5nIHRo
+ZSBib290bG9hZGVyIGlzIG9uZSB0aGluZywgSSBhc3N1bWUgdmVyeSBmZXcgcGVvcGxlIHdvdWxk
+Cj4gPiB1cGRhdGUgaXQuIElzIGl0IHdvcnRoIGtlZXBpbmcgdGhpcyBpbiBMaW51eCBEVD8gIAo+
+IAo+IFRoZSBpc3N1ZSBJIHNlZSB3aXRoIGhhdmluZyB0aGlzIGluIHRoZSBMaW51eCBEVCBpcyB0
+aGF0IGRlcGVuZGluZyBvbgo+IHRoZSBib290bG9hZGVyLCB0aGUgbWVtb3J5IGFyZWEgdGhhdCBp
+cyB1c2VkIHRvIGtlZXAgdGhlIFBTQ0kgZmlybXdhcmUKPiBtYXkgdmVyeSB3ZWxsIGJlIGRpZmZl
+cmVudC4gSXQncyByZWFsbHkgbm90IGEgcHJvcGVydHkgb2YgdGhlIEhXCj4gaXRzZWxmLCBidXQg
+YSBwdXJlIHNvZnR3YXJlIGNob2ljZSBvZiB0aGUgYm9vdGxvYWRlci4gRm9yIGV4YW1wbGUsIGFy
+ZQo+IHlvdSBzdXJlIHRoZSBtYWlubGluZSBVLUJvb3QgcHV0cyB0aGUgUFNDSSBmaXJtd2FyZSBh
+dCB0aGUgc2FtZSBwbGFjZQo+IGFzIHRoZSB2ZW5kb3IgVS1Cb290ID8KPiAKPiBXaGF0IGFyZSBv
+dGhlciBwbGF0Zm9ybXMgZG9pbmcgdG8gc29sdmUgdGhpcyBwcm9ibGVtID8KCkkgd2lsbCBhbHNv
+IGNoZWNrIGlmIGl0IGlzIGFjdHVhbGx5IFUtQm9vdCBvciBBVEYgY2hvaWNlLiBNeQp1bmRlcnN0
+YW5kaW5nIGlzIHRoYXQgQVRGJ3MgaGFuZGxlIHRoZSBQU0NJIGZpcm13YXJlIGJ1dCBVLUJvb3Qg
+c2hvdWxkCnByb3BhZ2F0ZSBhIHJlc2VydmVkIG5vZGUgKGZvciB0aGlzIGZpcm13YXJlKSBpbiBM
+aW51eCdzIERUQi4gTGV0IG1lCmNoZWNrIGFsbCBvZiB0aGF0LgoKPiAKPiBCZXN0IHJlZ2FyZHMs
+Cj4gCj4gVGhvbWFzCgoKVGhhbmtzLApNaXF1w6hsCgotLSAKTWlxdWVsIFJheW5hbCwgQm9vdGxp
+biAoZm9ybWVybHkgRnJlZSBFbGVjdHJvbnMpCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5n
+aW5lZXJpbmcKaHR0cHM6Ly9ib290bGluLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
