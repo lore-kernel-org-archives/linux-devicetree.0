@@ -1,477 +1,89 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v4 4/4] iio: afe: rescale: new driver
-Date: Mon, 23 Apr 2018 23:08:09 +0200
-Message-ID: <20180423210809.29586-5-peda@axentia.se>
-References: <20180423210809.29586-1-peda@axentia.se>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH] ARM: tegra: fix ulpi regression on tegra20
+Date: Mon, 23 Apr 2018 22:05:44 +0000
+Message-ID: <1524521136.4493.70.camel@toradex.com>
+References: <20180219151252.29289-1-marcel@ziswiler.com>
+         <6600596.BijQW1iq1K@ax5200p>
+         <4f2ac009-8618-4b4d-e137-a5fd4907a56f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180423210809.29586-1-peda@axentia.se>
+In-Reply-To: <4f2ac009-8618-4b4d-e137-a5fd4907a56f@gmail.com>
+Content-Language: en-US
+Content-ID: <F44244DA3365E842AB0BCD2F93B6A28F@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "Andrew F . Davis" <afd@ti.com>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: "marvin24@gmx.de" <marvin24@gmx.de>, "digetx@gmail.com" <digetx@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-If an ADC channel measures the midpoint of a voltage divider, the
-interesting voltage is often the voltage over the full resistance.
-E.g. if the full voltage is too big for the ADC to handle.
-Likewise, if an ADC channel measures the voltage across a shunt
-resistor, with or without amplification, the interesting value is
-often the current through the resistor.
-
-This driver solves these problems by allowing to linearly scale a channel
-and/or by allowing changes to the type of the channel.
-
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- MAINTAINERS                   |   1 +
- drivers/iio/Kconfig           |   1 +
- drivers/iio/Makefile          |   1 +
- drivers/iio/afe/Kconfig       |  19 +++
- drivers/iio/afe/Makefile      |   6 +
- drivers/iio/afe/iio-rescale.c | 359 ++++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 387 insertions(+)
- create mode 100644 drivers/iio/afe/Kconfig
- create mode 100644 drivers/iio/afe/Makefile
- create mode 100644 drivers/iio/afe/iio-rescale.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1b23e9ebff9c..73b8fc5dd2a1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6896,6 +6896,7 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/iio/afe/current-sense-amplifier.txt
- F:	Documentation/devicetree/bindings/iio/afe/current-sense-shunt.txt
- F:	Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
-+F:	drivers/iio/afe/iio-rescale.c
- 
- IKANOS/ADI EAGLE ADSL USB DRIVER
- M:	Matthieu Castet <castet.matthieu@free.fr>
-diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
-index b3c8c6ef0dff..d69e85a8bdc3 100644
---- a/drivers/iio/Kconfig
-+++ b/drivers/iio/Kconfig
-@@ -70,6 +70,7 @@ config IIO_TRIGGERED_EVENT
- 
- source "drivers/iio/accel/Kconfig"
- source "drivers/iio/adc/Kconfig"
-+source "drivers/iio/afe/Kconfig"
- source "drivers/iio/amplifiers/Kconfig"
- source "drivers/iio/chemical/Kconfig"
- source "drivers/iio/common/Kconfig"
-diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
-index b16b2e9ddc40..d8cba9c229c0 100644
---- a/drivers/iio/Makefile
-+++ b/drivers/iio/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_IIO_TRIGGERED_EVENT) += industrialio-triggered-event.o
- 
- obj-y += accel/
- obj-y += adc/
-+obj-y += afe/
- obj-y += amplifiers/
- obj-y += buffer/
- obj-y += chemical/
-diff --git a/drivers/iio/afe/Kconfig b/drivers/iio/afe/Kconfig
-new file mode 100644
-index 000000000000..c91eef04825a
---- /dev/null
-+++ b/drivers/iio/afe/Kconfig
-@@ -0,0 +1,19 @@
-+#
-+# Analog Front End drivers
-+#
-+# When adding new entries keep the list in alphabetical order
-+
-+menu "Analog Front Ends"
-+
-+config IIO_RESCALE
-+	tristate "IIO rescale"
-+	depends on OF || COMPILE_TEST
-+	help
-+	  Say yes here to build support for the IIO rescaling
-+	  that handles voltage dividers, current sense shunts and
-+	  current sense amplifiers.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called iio-rescale.
-+
-+endmenu
-diff --git a/drivers/iio/afe/Makefile b/drivers/iio/afe/Makefile
-new file mode 100644
-index 000000000000..5fabb7bcac47
---- /dev/null
-+++ b/drivers/iio/afe/Makefile
-@@ -0,0 +1,6 @@
-+#
-+# Makefile for industrial I/O Analog Front Ends (AFE)
-+#
-+
-+# When adding new entries keep the list in alphabetical order
-+obj-$(CONFIG_IIO_RESCALE) += iio-rescale.o
-diff --git a/drivers/iio/afe/iio-rescale.c b/drivers/iio/afe/iio-rescale.c
-new file mode 100644
-index 000000000000..e9ceee66d1e7
---- /dev/null
-+++ b/drivers/iio/afe/iio-rescale.c
-@@ -0,0 +1,359 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * IIO rescale driver
-+ *
-+ * Copyright (C) 2018 Axentia Technologies AB
-+ *
-+ * Author: Peter Rosin <peda@axentia.se>
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/gcd.h>
-+#include <linux/iio/consumer.h>
-+#include <linux/iio/iio.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+
-+struct rescale;
-+
-+struct rescale_cfg {
-+	enum iio_chan_type type;
-+	int (*props)(struct device *dev, struct rescale *rescale);
-+};
-+
-+struct rescale {
-+	const struct rescale_cfg *cfg;
-+	struct iio_channel *source;
-+	struct iio_chan_spec chan;
-+	struct iio_chan_spec_ext_info *ext_info;
-+	s32 numerator;
-+	s32 denominator;
-+};
-+
-+static int rescale_read_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int *val, int *val2, long mask)
-+{
-+	struct rescale *rescale = iio_priv(indio_dev);
-+	unsigned long long tmp;
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		return iio_read_channel_raw(rescale->source, val);
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		ret = iio_read_channel_scale(rescale->source, val, val2);
-+		switch (ret) {
-+		case IIO_VAL_FRACTIONAL:
-+			*val *= rescale->numerator;
-+			*val2 *= rescale->denominator;
-+			return ret;
-+		case IIO_VAL_INT:
-+			*val *= rescale->numerator;
-+			if (rescale->denominator == 1)
-+				return ret;
-+			*val2 = rescale->denominator;
-+			return IIO_VAL_FRACTIONAL;
-+		case IIO_VAL_FRACTIONAL_LOG2:
-+			tmp = *val * 1000000000LL;
-+			do_div(tmp, rescale->denominator);
-+			tmp *= rescale->numerator;
-+			do_div(tmp, 1000000000LL);
-+			*val = tmp;
-+			return ret;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int rescale_read_avail(struct iio_dev *indio_dev,
-+			      struct iio_chan_spec const *chan,
-+			      const int **vals, int *type, int *length,
-+			      long mask)
-+{
-+	struct rescale *rescale = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		*type = IIO_VAL_INT;
-+		return iio_read_avail_channel_raw(rescale->source,
-+						  vals, length);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info rescale_info = {
-+	.read_raw = rescale_read_raw,
-+	.read_avail = rescale_read_avail,
-+};
-+
-+static ssize_t rescale_read_ext_info(struct iio_dev *indio_dev,
-+				     uintptr_t private,
-+				     struct iio_chan_spec const *chan,
-+				     char *buf)
-+{
-+	struct rescale *rescale = iio_priv(indio_dev);
-+
-+	return iio_read_channel_ext_info(rescale->source,
-+					 rescale->ext_info[private].name,
-+					 buf);
-+}
-+
-+static ssize_t rescale_write_ext_info(struct iio_dev *indio_dev,
-+				      uintptr_t private,
-+				      struct iio_chan_spec const *chan,
-+				      const char *buf, size_t len)
-+{
-+	struct rescale *rescale = iio_priv(indio_dev);
-+
-+	return iio_write_channel_ext_info(rescale->source,
-+					  rescale->ext_info[private].name,
-+					  buf, len);
-+}
-+
-+static int rescale_configure_channel(struct device *dev,
-+				     struct rescale *rescale)
-+{
-+	struct iio_chan_spec *chan = &rescale->chan;
-+	struct iio_chan_spec const *schan = rescale->source->channel;
-+
-+	chan->indexed = 1;
-+	chan->output = schan->output;
-+	chan->ext_info = rescale->ext_info;
-+	chan->type = rescale->cfg->type;
-+
-+	if (!iio_channel_has_info(schan, IIO_CHAN_INFO_RAW) ||
-+	    !iio_channel_has_info(schan, IIO_CHAN_INFO_SCALE)) {
-+		dev_err(dev, "source channel does not support raw/scale\n");
-+		return -EINVAL;
-+	}
-+
-+	chan->info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+		BIT(IIO_CHAN_INFO_SCALE);
-+
-+	if (iio_channel_has_available(schan, IIO_CHAN_INFO_RAW))
-+		chan->info_mask_separate_available |= BIT(IIO_CHAN_INFO_RAW);
-+
-+	return 0;
-+}
-+
-+static int rescale_current_sense_amplifier_props(struct device *dev,
-+						 struct rescale *rescale)
-+{
-+	u32 sense;
-+	u32 gain_mult = 1;
-+	u32 gain_div = 1;
-+	u32 factor;
-+	int ret;
-+
-+	ret = device_property_read_u32(dev, "sense-resistor-micro-ohms",
-+				       &sense);
-+	if (ret) {
-+		dev_err(dev, "failed to read the sense resistance: %d\n", ret);
-+		return ret;
-+	}
-+
-+	device_property_read_u32(dev, "sense-gain-mult", &gain_mult);
-+	device_property_read_u32(dev, "sense-gain-div", &gain_div);
-+
-+	/*
-+	 * Calculate the scaling factor, 1 / (gain * sense), or
-+	 * gain_div / (gain_mult * sense), while trying to keep the
-+	 * numerator/denominator from overflowing.
-+	 */
-+	factor = gcd(sense, 1000000);
-+	rescale->numerator = 1000000 / factor;
-+	rescale->denominator = sense / factor;
-+
-+	factor = gcd(rescale->numerator, gain_mult);
-+	rescale->numerator /= factor;
-+	rescale->denominator *= gain_mult / factor;
-+
-+	factor = gcd(rescale->denominator, gain_div);
-+	rescale->numerator *= gain_div / factor;
-+	rescale->denominator /= factor;
-+
-+	return 0;
-+}
-+
-+static int rescale_current_sense_shunt_props(struct device *dev,
-+					     struct rescale *rescale)
-+{
-+	u32 shunt;
-+	u32 factor;
-+	int ret;
-+
-+	ret = device_property_read_u32(dev, "shunt-resistor-micro-ohms",
-+				       &shunt);
-+	if (ret) {
-+		dev_err(dev, "failed to read the shunt resistance: %d\n", ret);
-+		return ret;
-+	}
-+
-+	factor = gcd(shunt, 1000000);
-+	rescale->numerator = 1000000 / factor;
-+	rescale->denominator = shunt / factor;
-+
-+	return 0;
-+}
-+
-+static int rescale_voltage_divider_props(struct device *dev,
-+					 struct rescale *rescale)
-+{
-+	int ret;
-+	u32 factor;
-+
-+	ret = device_property_read_u32(dev, "output-ohms",
-+				       &rescale->denominator);
-+	if (ret) {
-+		dev_err(dev, "failed to read output-ohms: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = device_property_read_u32(dev, "full-ohms",
-+				       &rescale->numerator);
-+	if (ret) {
-+		dev_err(dev, "failed to read full-ohms: %d\n", ret);
-+		return ret;
-+	}
-+
-+	factor = gcd(rescale->numerator, rescale->denominator);
-+	rescale->numerator /= factor;
-+	rescale->denominator /= factor;
-+
-+	return 0;
-+}
-+
-+enum rescale_variant {
-+	CURRENT_SENSE_AMPLIFIER,
-+	CURRENT_SENSE_SHUNT,
-+	VOLTAGE_DIVIDER,
-+};
-+
-+static const struct rescale_cfg rescale_cfg[] = {
-+	[CURRENT_SENSE_AMPLIFIER] = {
-+		.type = IIO_CURRENT,
-+		.props = rescale_current_sense_amplifier_props,
-+	},
-+	[CURRENT_SENSE_SHUNT] = {
-+		.type = IIO_CURRENT,
-+		.props = rescale_current_sense_shunt_props,
-+	},
-+	[VOLTAGE_DIVIDER] = {
-+		.type = IIO_VOLTAGE,
-+		.props = rescale_voltage_divider_props,
-+	},
-+};
-+
-+static const struct of_device_id rescale_match[] = {
-+	{ .compatible = "current-sense-amplifier",
-+	  .data = &rescale_cfg[CURRENT_SENSE_AMPLIFIER], },
-+	{ .compatible = "current-sense-shunt",
-+	  .data = &rescale_cfg[CURRENT_SENSE_SHUNT], },
-+	{ .compatible = "voltage-divider",
-+	  .data = &rescale_cfg[VOLTAGE_DIVIDER], },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, rescale_match);
-+
-+static int rescale_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct iio_dev *indio_dev;
-+	struct iio_channel *source;
-+	struct rescale *rescale;
-+	int sizeof_ext_info;
-+	int sizeof_priv;
-+	int i;
-+	int ret;
-+
-+	source = devm_iio_channel_get(dev, NULL);
-+	if (IS_ERR(source)) {
-+		if (PTR_ERR(source) != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get source channel\n");
-+		return PTR_ERR(source);
-+	}
-+
-+	sizeof_ext_info = iio_get_channel_ext_info_count(source);
-+	if (sizeof_ext_info) {
-+		sizeof_ext_info += 1; /* one extra entry for the sentinel */
-+		sizeof_ext_info *= sizeof(*rescale->ext_info);
-+	}
-+
-+	sizeof_priv = sizeof(*rescale) + sizeof_ext_info;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof_priv);
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	rescale = iio_priv(indio_dev);
-+
-+	rescale->cfg = of_device_get_match_data(dev);
-+	rescale->numerator = 1;
-+	rescale->denominator = 1;
-+
-+	ret = rescale->cfg->props(dev, rescale);
-+	if (ret)
-+		return ret;
-+
-+	if (!rescale->numerator || !rescale->denominator) {
-+		dev_err(dev, "invalid scaling factor.\n");
-+		return -EINVAL;
-+	}
-+
-+	platform_set_drvdata(pdev, indio_dev);
-+
-+	rescale->source = source;
-+
-+	indio_dev->name = dev_name(dev);
-+	indio_dev->dev.parent = dev;
-+	indio_dev->info = &rescale_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = &rescale->chan;
-+	indio_dev->num_channels = 1;
-+	if (sizeof_ext_info) {
-+		rescale->ext_info = devm_kmemdup(dev,
-+						 source->channel->ext_info,
-+						 sizeof_ext_info, GFP_KERNEL);
-+		if (!rescale->ext_info)
-+			return -ENOMEM;
-+
-+		for (i = 0; rescale->ext_info[i].name; ++i) {
-+			struct iio_chan_spec_ext_info *ext_info =
-+				&rescale->ext_info[i];
-+
-+			if (source->channel->ext_info[i].read)
-+				ext_info->read = rescale_read_ext_info;
-+			if (source->channel->ext_info[i].write)
-+				ext_info->write = rescale_write_ext_info;
-+			ext_info->private = i;
-+		}
-+	}
-+
-+	ret = rescale_configure_channel(dev, rescale);
-+	if (ret)
-+		return ret;
-+
-+	return devm_iio_device_register(dev, indio_dev);
-+}
-+
-+static struct platform_driver rescale_driver = {
-+	.probe = rescale_probe,
-+	.driver = {
-+		.name = "iio-rescale",
-+		.of_match_table = rescale_match,
-+	},
-+};
-+module_platform_driver(rescale_driver);
-+
-+MODULE_DESCRIPTION("IIO rescale driver");
-+MODULE_AUTHOR("Peter Rosin <peda@axentia.se>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+SGkgRG1pdHJ5DQoNCk9uIEZyaSwgMjAxOC0wNC0yMCBhdCAxMzo1MCArMDMwMCwgRG1pdHJ5IE9z
+aXBlbmtvIHdyb3RlOg0KPiAuLi4NCj4gSSBtYW5hZ2VkIHRvIGZpbmQgQ0RFViBjbG9ja3MgaW4g
+VFJNIHRoaXMgdGltZS4NCg0KQW5kIHdoZXJlIGV4YWN0bHkgaW4gd2hpY2ggVFJNPyBJbiBhbGwg
+bXkgYXR0ZW1wdHMgYXQgZmluZGluZyBhbnl0aGluZw0KQ0RFVjIgaXMganVzdCBhIHBhZCBncm91
+cCB3aGljaCBpbmNsdWRlcyB0aGUgREFQX01DTEsyIHBhZCBpbiBxdWVzdGlvbi4NCg0KPiBTZWVt
+cyBhc3NpZ25pbmcgQ0RFVjIgY2xvY2sgdG8NCj4gInVscGktbGluayIgd2FzIGNvcnJlY3QNCg0K
+U29ycnksIGJ1dCBJIGRvIHJlYWxseSBub3Qgc2VlIGhvdyB5b3UgY2FuIGdldCB0byBhbnkgc3Vj
+aCBjb25jbHVzaW9uLg0KDQpXaGF0ZXZlciB0aGF0IENERVYyIGNsb2NrIGV4YWN0bHkgaXMuIEl0
+cyBvZmZzZXQgOTMgcG9pbnRzIHRvd2FyZHMgdGhlDQpDTEtfUlNUX0NPTlRST0xMRVJfQ0xLX09V
+VF9FTkJfVV8wIHJlZ2lzdGVyIHdoaWNoIGhhcyBDTEtfRU5CX0RFVjJfT1VUDQphdCBiaXQgcG9z
+aXRpb24gMjkgcmVhZGluZyAiRW5hYmxlIGNsb2NrIHRvIERFVjIgcGFkIi4gV2hpbGUgdGhlIFRS
+TQ0KbWlzc2VzIGZ1cnRoZXIgZG9jdW1lbnRpbmcgd2hhdCBleGFjdGx5IHRoYXQgREVWMiBwYWQg
+c2hvdWxkIGJlIEkgZ3Vlc3MNCml0IG1heSBwb2ludCB0b3dhcmRzIG91ciBzdXNwZWN0ZWQgREFQ
+X01DTEsyLiBTbyBmb3Igc29tZSByZWFzb24NCmJlc2lkZXMgUExMX1BfT1VUNCB3aGljaCBpcyB3
+aGF0IHRoYXQgcGFkIGlzIGFjdHVhbGx5IG11eGVkIHRvIGFsc28NCnNvbWUgYWRkaXRpb25hbCBE
+RVYyIHBhZCBjbG9jayBuZWVkcyBlbmFibGluZy4gSW4gYWRkaXRpb24gdGhlcmUgd291bGQNCmJl
+IGEgQ0xLX1JTVF9DT05UUk9MTEVSX01JU0NfQ0xLX0VOQl8wIHJlZ2lzdGVyIHdoZXJlIG9uZSBj
+b3VsZCBhbHNvDQpzcGVjaWZ5IGEgREVWMl9PU0NfRElWX1NFTCBidXQgSSB3b3VsZCBhc3N1bWUg
+dGhhdCBvbmUgb25seSBhcHBsaWVzIGlmDQp0aGUgcGFkIGluIHF1ZXN0aW9uIGJlaW5nIG11eGVk
+IHRvIE9TQyB3aGljaCBpcyBub3QgdGhlIGNhc2UgYXQgbGVhc3QNCmluIGFsbCBkZXZpY2UgdHJl
+ZXMgSSBoYXZlIGxvb2tlZCBhdC4NCg0KPiBhbmQgYm90aCBDREVWMiBhbmQgUExMX1BfT1VUNCBz
+aG91bGQgYmUgZW5hYmxlZCwNCg0KQWdyZWVkLCBiYXNpY2FsbHkgdGhlIERBUF9NQ0xLMiBwYWQg
+c2VlbXMgZ2F0ZWQgYnkgYW4gYWRkaXRpb25hbCBlbmFibGUNCmNhbGxlZCBDTEtfRU5CX0RFVjJf
+T1VULg0KDQo+IENERVYyDQo+IHNob3VsZCBnYXRlIHRoZSBQTExfUF9PVVQ0IHRoYXQgZmVlZHMg
+VVNCIEhXIGFuZCBQTExfUF9PVVQ0IHNob3VsZCBiZQ0KPiBhbHdheXMtZW5hYmxlZCBiZWNhdXNl
+IGl0IGlzIGVuYWJsZWQgYnkgaW5pdF90YWJsZSwgYnV0IGFwcGFyZW50bHkgaXQNCj4gaXMgZ2V0
+dGluZw0KPiBkaXNhYmxlZCBlcnJvbmVvdXNseS4NCg0KQXQgbGVhc3QgdGhhdCB3YXMgdGhlIGNh
+c2UgYmFjayB3aGVuIEkgaGFkIHRyb3VibGUgZ2V0dGluZyBVTFBJIHRvIHdvcmsNCm9uIFQyMC4g
+U3RyYW5nZWx5IGxhdGVzdCAtbmV4dCByaWdodCBub3cgZG9lcyBubyBsb25nZXIgc2VlbSB0byBz
+dWZmZXINCmZyb20gdGhhdCBzYW1lIGlzc3VlIGV2ZW4gaWYgbXkgcGF0Y2ggaXMgcmV2ZXJ0ZWQg
+YnV0IGFzIG1lbnRpb25lZA0KYmVmb3JlIG5vYm9keSBzdG9wcyB0aGUgcmVxdWlyZWQgUExMX1Bf
+T1VUNCB3aGljaCBpcyB3aGF0IGlzIGFjdHVhbGx5DQpkcml2aW5nIERBUF9NQ0xLMiB0byBub3Qg
+YmUgY2hhbmdlZCBiZWhpbmQgdGhlIHNjZW5lcyBicmVha2luZyB0aGUNCndob2xlIHRoaW5nIGFn
+YWluLg0KDQo+IE1hcmNlbCwgY291bGQgeW91IHBsZWFzZSByZXZlcnQgeW91ciBwYXRjaCwgYWRk
+DQo+ICJ0cmFjZV9ldmVudD1jbGtfZW5hYmxlLGNsa19kaXNhYmxlLGNsa19zZXRfcGFyZW50IHRw
+X3ByaW50ayIgdG8NCj4ga2VybmVscyBjbWRsaW5lDQo+IGFuZCBwb3N0IHRoZSBsb2c/DQoNClll
+cywgdGhlIG9ubHkgZGlmZmVyZW5jZSBpbiB0aG9zZSB0cmFjZXMgaXMgd2hldGhlciBvciBub3Qg
+dGhhdCBub24tDQpleGlzdGVudCBDREVWMiBjbG9jayBpcyBlbmFibGVkIG9yIG5vdDoNCg0KWyAg
+ICAxLjg5NzUyMV0gY2xrX2VuYWJsZTogY2RldjJfZml4ZWQNClsgICAgMS45MDEwMDhdIGNsa19l
+bmFibGU6IGNkZXYyDQoNCkkgYWxzbyBkbyBoYXZlIGFuIGV4cGxhbmF0aW9uIHdoeSBpdCBrZXB0
+IHdvcmtpbmcgaW4gbXkgY2FzZS4gUHJvYmFibHkNCnRoZSBib290IFJPTSBvciBVLUJvb3QgaXMg
+YWxyZWFkeSBzZXR0aW5nIHRoYXQgYml0Lg0KDQo+IEl0IGxvb2tzIGxpa2UgdGhlcmUgaXMgc29t
+ZSBjbGsgZnJhbWV3b3JrIGJ1ZywNCg0KTXkgY29uY2x1c2lvbiBpcyB0aGF0IHRoZXJlIHNob3Vs
+ZCBiZSBhIERBUF9NQ0xLMiBjbG9jayB3aGljaCBpcyBnYXRlZA0KYnkgdGhhdCBDTEtfRU5CX0RF
+VjJfT1VUIGJ1dCByZWFsbHkgb3V0cHV0cyBhIFQyMCBpbnRlcm5hbCBjbG9jaw0KYWNjb3JkaW5n
+IHRvIGl0cyBwaW4gbXV4aW5nIHdoaWNoIGlmIHNldCB0byBPU0MgbWF5IGJlIGZ1cnRoZXIgZGl2
+aWRlZA0KZG93biBieSBERVYyX09TQ19ESVZfU0VMLg0KDQo+IGJ1dCBqdXN0IGluIGNhc2UgcGxl
+YXNlIGFsc28gdHJ5DQo+IHRvIGFwcGx5IHRoaXMgcGF0Y2g6DQo+IA0KPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9jbGsvdGVncmEvY2xrLXRlZ3JhLXBlcmlwaC5jDQo+IGIvZHJpdmVycy9jbGsvdGVn
+cmEvY2xrLXRlZ3JhLXBlcmlwaC5jDQo+IGluZGV4IDJhY2JhMjk4NmJjNi4uNDA3YmQwYzBhYzJm
+IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2Nsay90ZWdyYS9jbGstdGVncmEtcGVyaXBoLmMNCj4g
+KysrIGIvZHJpdmVycy9jbGsvdGVncmEvY2xrLXRlZ3JhLXBlcmlwaC5jDQo+IEBAIC0xMDI0LDcg
+KzEwMjQsNyBAQCBzdGF0aWMgdm9pZCBfX2luaXQgaW5pdF9wbGxwKHZvaWQgX19pb21lbQ0KPiAq
+Y2xrX2Jhc2UsIHZvaWQNCj4gX19pb21lbSAqcG1jX2Jhc2UsDQo+ICAgICAgICAgICAgICAgICBp
+ZiAoZHRfY2xrKSB7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIGNsayA9DQo+IHRlZ3JhX2Ns
+a19yZWdpc3Rlcl9wbGxfb3V0KCJwbGxfcF9vdXQ0IiwNCj4gICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICJwbGxfcF9vdXQ0X2RpdiIsIGNsa19iYXNlICsNCj4gUExMUF9P
+VVRCLA0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMTcsIDE2LCBD
+TEtfSUdOT1JFX1VOVVNFRCB8DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAxNywgMTYsIENMS19JU19DUklUSUNBTCB8DQo+ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBDTEtfU0VUX1JBVEVfUEFSRU5ULCAwLA0KPiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgJlBMTFBfT1VUQl9sb2NrKTsNCj4gICAgICAgICAg
+ICAgICAgICAgICAgICAgKmR0X2NsayA9IGNsazsNCg0KSSBkaWQgbm90IGhhdmUgdG8gZG8gYW55
+IHN1Y2ggYnV0IG1heWJlIHRoYXQgd291bGQgYXQgbGVhc3QgcHJldmVudCBhbnkNCmZ1cnRoZXIg
+aXNzdWVzIG9uIFBMTF9QX09VVDQuIEhvd2V2ZXIgSSBzdGlsbCBiZWxpZXZlIHRoaXMgaXMga2lu
+ZCBvZg0Kd3JvbmcgYXMgUExMX1BfT1VUNCBpcyB3aGF0IGRyaXZlcyBEQVBfTUNMSzIgaW4gaXRz
+IGN1cnJlbnQgbXV4aW5nDQp3aGljaCBpcyBjb25uZWN0ZWQgdG8gdGhlIFVMUEkgdHJhbnNjZWl2
+ZXJzIFJFRkNMSyBwaW4uDQoNCkJUVzogVGhhdCBwaW4gaXMgdXN1YWxseSB0byBiZSBkcml2ZW4g
+YXQgMjQgTUh6IGFuZCBub3QgMjYgTUh6IHdoaWNoDQpDREVWMiBjbGFpbXMgdG8gYmUgYXQuDQoN
+CldoYXQgZG8geW91IHRoaW5rPw0KDQpDaGVlcnMNCg0KTWFyY2Vs
