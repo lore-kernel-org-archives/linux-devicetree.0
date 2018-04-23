@@ -1,14 +1,14 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 5/5] ARM: dts: imx6q-var-dt6customboard: Remove
- #address/#size-cells from gpio-keys
-Date: Mon, 23 Apr 2018 16:50:33 -0300
-Message-ID: <1524513033-21136-5-git-send-email-festevam@gmail.com>
-References: <1524513033-21136-1-git-send-email-festevam@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3] arm64: dts: renesas: v3msk: add DU/LVDS/HDMI support
+Date: Mon, 23 Apr 2018 23:45:49 +0300
+Message-ID: <d18c4314-e6ad-1558-30fb-1a32397494b6@cogentembedded.com>
+References: <23a6ac28-134b-b5dd-69a7-910774c4b8c1@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1524513033-21136-1-git-send-email-festevam@gmail.com>
+In-Reply-To: <23a6ac28-134b-b5dd-69a7-910774c4b8c1@cogentembedded.com>
+Content-Language: en-MW
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,34 +18,189 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+Define the V3M Starter Kit board dependent part of the DU and LVDS device
+nodes. Also add the device nodes for Thine THC63LVD1024 LVDS decoder and
+Analog Devices ADV7511W HDMI transmitter...
 
-Remove unnecessary #address-cells/#size-cells to fix the following
-DTC warning:
+Based on the original (and large) patch by Vladimir Barinov.
 
-arch/arm/boot/dts/imx6q-var-dt6customboard.dtb: Warning (avoid_unnecessary_addr_size): /gpio-keys: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
 ---
- arch/arm/boot/dts/imx6q-var-dt6customboard.dts | 2 --
- 1 file changed, 2 deletions(-)
+This patch is against the 'renesas-devel-20180423-v4.17-rc2' tag of Simon
+Horman's 'renesas.git' repo. It requires the Thine THC63LVD1024 driver in
+order to work (the same as the Eagle HDMI patch by Jacopo/Niklas).
 
-diff --git a/arch/arm/boot/dts/imx6q-var-dt6customboard.dts b/arch/arm/boot/dts/imx6q-var-dt6customboard.dts
-index e0728d4..f2368a0 100644
---- a/arch/arm/boot/dts/imx6q-var-dt6customboard.dts
-+++ b/arch/arm/boot/dts/imx6q-var-dt6customboard.dts
-@@ -26,8 +26,6 @@
+Changes in version 3:
+- added  Thine THC63LVD1024 device node, updating the respected endpoints;
+- merged the I2C pins subnode to the main PFC device node;
+- renamed the regulators;
+
+ arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts |  129 +++++++++++++++++++++++++
+ 1 file changed, 129 insertions(+)
+
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
++++ renesas/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
+@@ -29,6 +29,65 @@
+ 		/* first 128MB is reserved for secure area. */
+ 		reg = <0x0 0x48000000 0x0 0x38000000>;
+ 	};
++
++	osc5_clk: osc5-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <148500000>;
++	};
++
++	vcc_d1_8v: regulator-0 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_D1.8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	vcc_d3_3v: regulator-1 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_D3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	lvds-decoder {
++		compatible = "thine,thc63lvd1024";
++		vcc-supply = <&vcc_d3_3v>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				thc63lvd1024_in: endpoint {
++					remote-endpoint = <&lvds0_out>;
++				};
++			};
++
++			port@2 {
++				reg = <2>;
++				thc63lvd1024_out: endpoint {
++					remote-endpoint = <&adv7511_in>;
++				};
++			};
++		};
++	};
++
++	hdmi-out {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con: endpoint {
++				remote-endpoint = <&adv7511_out>;
++			};
++		};
++	};
+ };
  
- 	gpio-keys {
- 		compatible = "gpio-keys";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		autorepeat;
+ &avb {
+@@ -46,6 +105,13 @@
+ 	};
+ };
  
- 		back {
--- 
-2.7.4
++&du {
++	clocks = <&cpg CPG_MOD 724>,
++		 <&osc5_clk>;
++	clock-names = "du.0", "dclkin.0";
++	status = "okay";
++};
++
+ &extal_clk {
+ 	clock-frequency = <16666666>;
+ };
+@@ -60,12 +126,75 @@
+ 		function = "avb0";
+ 	};
+ 
++	i2c0_pins: i2c0 {
++		groups = "i2c0";
++		function = "i2c0";
++	};
++
+ 	scif0_pins: scif0 {
+ 		groups = "scif0_data";
+ 		function = "scif0";
+ 	};
+ };
+ 
++&i2c0 {
++	pinctrl-0 = <&i2c0_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++	clock-frequency = <400000>;
++
++	hdmi@39{
++		compatible = "adi,adv7511w";
++		#sound-dai-cells = <0>;
++		reg = <0x39>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
++		avdd-supply = <&vcc_d1_8v>;
++		dvdd-supply = <&vcc_d1_8v>;
++		pvdd-supply = <&vcc_d1_8v>;
++		bgvdd-supply = <&vcc_d1_8v>;
++		dvdd-3v-supply = <&vcc_d3_3v>;
++
++		adi,input-depth = <8>;
++		adi,input-colorspace = "rgb";
++		adi,input-clock = "1x";
++		adi,input-style = <1>;
++		adi,input-justification = "evenly";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				adv7511_in: endpoint {
++					remote-endpoint = <&thc63lvd1024_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				adv7511_out: endpoint {
++					remote-endpoint = <&hdmi_con>;
++				};
++			};
++		};
++	};
++};
++
++&lvds0 {
++	status = "okay";
++
++	ports {
++		port@1 {
++			lvds0_out: endpoint {
++				remote-endpoint = <&thc63lvd1024_in>;
++			};
++		};
++	};
++};
++
+ &scif0 {
+ 	pinctrl-0 = <&scif0_pins>;
+ 	pinctrl-names = "default";
