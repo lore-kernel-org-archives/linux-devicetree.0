@@ -1,7 +1,7 @@
 From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 5/5] ARM: dts: imx6sx-sabreauto: add wdog external reset support
-Date: Mon, 23 Apr 2018 11:46:59 +0800
-Message-ID: <1524455219-6736-5-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 2/5] ARM: dts: imx6sx-sabreauto: add max7322 IO expander support
+Date: Mon, 23 Apr 2018 11:46:56 +0800
+Message-ID: <1524455219-6736-2-git-send-email-Anson.Huang@nxp.com>
 References: <1524455219-6736-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,41 +12,30 @@ To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@k
 Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-i.MX6SX Sabre Auto board has GPIO1_IO13 pin can be
-MUXed as WDOG output to reset PMIC, add this function
-support.
+Add MAX7322 IO expander support.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm/boot/dts/imx6sx-sabreauto.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/imx6sx-sabreauto.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-index eadd483..bf19f4f 100644
+index 2caca934..d59084f 100644
 --- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
 +++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-@@ -231,6 +231,12 @@
- 				MX6SX_PAD_KEY_COL1__GPIO2_IO_11		0x17059
- 			>;
- 		};
-+
-+		pinctrl_wdog: wdoggrp {
-+			fsl,pins = <
-+				MX6SX_PAD_GPIO1_IO13__WDOG1_WDOG_ANY 0x30b0
-+			>;
-+		};
- 	};
- };
+@@ -163,6 +163,13 @@
+ 	pinctrl-0 = <&pinctrl_i2c2_1>;
+ 	status = "okay";
  
-@@ -370,3 +376,9 @@
- 		#gpio-cells = <2>;
- 	};
- };
++	max7322: gpio@68 {
++		compatible = "maxim,max7322";
++		reg = <0x68>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
 +
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+};
+ 	pmic: pfuze100@08 {
+ 		compatible = "fsl,pfuze100";
+ 		reg = <0x08>;
 -- 
 2.7.4
