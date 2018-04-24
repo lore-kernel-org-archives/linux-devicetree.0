@@ -1,61 +1,84 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [[RFC]DPU PATCH 4/4] dt-bindings: Add Innolux TV123WAM panel
- bindings
-Date: Tue, 24 Apr 2018 09:43:22 -0500
-Message-ID: <20180424144322.ceyeiwe5apiyxacn@rob-hp-laptop>
-References: <1524054002-17869-1-git-send-email-spanda@codeaurora.org>
- <1524054002-17869-5-git-send-email-spanda@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1524054002-17869-5-git-send-email-spanda@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sandeep Panda <spanda@codeaurora.org>
-Cc: devicetree@vger.kernel.org, ryadav@codeaurora.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, abhinavk@codeaurora.org, hoegsberg@chromium.org, freedreno@lists.freedesktop.org, chandanu@codeaurora.org
+From: Todor Tomov <todor.tomov@linaro.org>
+Subject: [PATCH v3 1/2] dt-bindings: media: Binding document for OV7251 camera sensor
+Date: Tue, 24 Apr 2018 18:01:06 +0300
+Message-ID: <1524582067-28585-2-git-send-email-todor.tomov@linaro.org>
+References: <1524582067-28585-1-git-send-email-todor.tomov@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524582067-28585-1-git-send-email-todor.tomov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@iki.fi, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBcHIgMTgsIDIwMTggYXQgMDU6NTA6MDJQTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
-cm90ZToKPiBUaGUgSW5ub2x1eCBUVjEyM1dBTSBpcyBhIDEyLjMiIGVEUCBkaXNwbGF5IHBhbmVs
-Cj4gd2l0aCAyMTYweDE0NDAgcmVzb2x1dGlvbi4KCldoeSBkb24ndCB5b3UganVzdCBzdWJtaXQg
-dGhpcyBmb3IgdXBzdHJlYW0/Cgo+IAo+IFNpZ25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNw
-YW5kYUBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
-aW5ub2x1eCxlZHAtMmstcGFuZWwudHh0IHwgMjEgKysrKysrKysrKysrKysrKysrKysrCj4gIDEg
-ZmlsZSBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGVkcC0y
-ay1wYW5lbC50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCxlZHAtMmstcGFuZWwudHh0IGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCxlZHAtMmstcGFu
-ZWwudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi4xOWYyNzFjCj4g
-LS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3BhbmVsL2lubm9sdXgsZWRwLTJrLXBhbmVsLnR4dAo+IEBAIC0wLDAgKzEsMjEgQEAK
-PiArSW5ub2x1eCBUVjEyM1dBTSAxMi4zIGluY2ggZURQIGRpc3BsYXkgcGFuZWwKPiArCj4gK1Jl
-cXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gcG93ZXItc3VwcGx5OiByZWd1bGF0b3IgdG8gcHJvdmlk
-ZSB0aGUgc3VwcGx5IHZvbHRhZ2UKPiArLSBlbmFibGUtZ3Bpb3M6IEdQSU8gcGluIHRvIGVuYWJs
-ZSBvciBkaXNhYmxlIHRoZSBwYW5lbAoKTmVlZCB0byBzdGF0ZSB0aGUgYWN0aXZlIHN0YXRlLgoK
-PiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gYmFja2xpZ2h0OiBwaGFuZGxlIG9mIHRo
-ZSBiYWNrbGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5lbAo+ICsKPiArRXhhbXBsZToK
-PiArCj4gKwllZHBfcGFuZWw6IGVkcF9wYW5lbCB7CgpwYW5lbCB7Cgo+ICsJCWNvbXBhdGlibGUg
-PSAiaW5ub2x1eCwgZWRwXzJrX3BhbmVsIjsKCnNwdXJpb3VzIHNwYWNlICAgICAgICAgICAgICAg
-ICAgICAgICAgXgoKPiArCQlyZWcgPSA8MD47CgpOb3QgZG9jdW1lbnRlZC4gU2hvdWxkIGJlIGRy
-b3BwZWQuCgo+ICsKPiArCQllbmFibGUtZ3Bpb3MgPSA8Jm1zbWdwaW8gMzIgR1BJT19BQ1RJVkVf
-SElHSD47Cj4gKwo+ICsJCXBvd2VyLXN1cHBseSA9IDwmcG04OTE2X2w4PjsKPiArCgpSZW1vdmUg
-dGhlIGV4dHJhIGJsYW5rIGxpbmVzLgoKPiArCQliYWNrbGlnaHQgPSA8JmJhY2tsaWdodD47Cj4g
-Kwl9Owo+IC0tIAo+IFRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1l
-bWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCj4gYSBMaW51eCBGb3VuZGF0aW9uIENvbGxh
-Ym9yYXRpdmUgUHJvamVjdAo+IAo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6
-IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGRldmljZXRyZWUiIGluCj4gdGhlIGJvZHkgb2Yg
-YSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBp
-bmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Add the document for ov7251 device tree binding.
+
+CC: Rob Herring <robh@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: devicetree@vger.kernel.org
+Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/media/i2c/ov7251.txt       | 52 ++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7251.txt
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov7251.txt b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
+new file mode 100644
+index 0000000..8281151
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
+@@ -0,0 +1,52 @@
++* Omnivision 1/7.5-Inch B&W VGA CMOS Digital Image Sensor
++
++The Omnivision OV7251 is a 1/7.5-Inch CMOS active pixel digital image sensor
++with an active array size of 640H x 480V. It is programmable through a serial
++I2C interface.
++
++Required Properties:
++- compatible: Value should be "ovti,ov7251".
++- clocks: Reference to the xclk clock.
++- clock-names: Should be "xclk".
++- clock-frequency: Frequency of the xclk clock.
++- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
++  to the hardware pin XSHUTDOWN which is physically active low.
++- vdddo-supply: Chip digital IO regulator.
++- vdda-supply: Chip analog regulator.
++- vddd-supply: Chip digital core regulator.
++
++The device node shall contain one 'port' child node with a single 'endpoint'
++subnode for its digital output video port, in accordance with the video
++interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++
++	&i2c1 {
++		...
++
++		ov7251: camera-sensor@60 {
++			compatible = "ovti,ov7251";
++			reg = <0x60>;
++
++			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&camera_bw_default>;
++
++			clocks = <&clks 200>;
++			clock-names = "xclk";
++			clock-frequency = <24000000>;
++
++			vdddo-supply = <&camera_dovdd_1v8>;
++			vdda-supply = <&camera_avdd_2v8>;
++			vddd-supply = <&camera_dvdd_1v2>;
++
++			port {
++				ov7251_ep: endpoint {
++					clock-lanes = <1>;
++					data-lanes = <0>;
++					remote-endpoint = <&csi0_ep>;
++				};
++			};
++		};
++	};
+-- 
+2.7.4
