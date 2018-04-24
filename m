@@ -1,81 +1,109 @@
-Return-Path: <SRS0=i8TH=HN=bootlin.com=maxime.ripard@kernel.org>
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v11 0/4] media: v4l: Add support for the Cadence MIPI-CSI2 TX controller
-Date: Tue, 24 Apr 2018 14:26:56 +0200
-Message-Id: <20180424122700.5387-1-maxime.ripard@bootlin.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Return-Path: <SRS0=g9wP=HN=martin.sperl.org=kernel@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH V3 0/3] Microchip mcp25xxfd can controller driver
+From: kernel@martin.sperl.org
+In-Reply-To: <20180326160624.32230-1-kernel@martin.sperl.org>
+Date: Tue, 24 Apr 2018 19:10:23 +0200
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F5453773-354D-4091-A96D-071D2C4D65C4@martin.sperl.org>
+References: <20180326160624.32230-1-kernel@martin.sperl.org>
+To: linux-can@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Marcel Birthelmer <Marcel.Birthelmer@microchip.com>, Sukkin Pang <skp@skpang.co.uk>, Gerhard Bertelsmann <info@gerhard-bertelsmann.de>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+Any feedback on the driver besides the sign-off by Rob Herring on the =
+DT-portion?
 
-Here is a hopefully final attempt at supporting the MIPI-CSI2 RX and
-TX blocks from Cadence.
+Thanks,
+	Martin
 
-This is a merged serie of the CSI2-RX and CSI2-TX series I've been
-sending for a while now and gathered a significant amount of
-Reviewed-by/Acked-by. The merge has been done thanks to Sakari's
-suggestion to ease the merge and the dependency between the two
-drivers on the MAINTAINERS/Kconfig/Makefile sides.
-
-The CSI2-RX has not received any comment on its previous iteration,
-and CSI2-TX received some minor comments from Sakari that have been
-fixed in this series. You can have a look at the Changelog below if
-needed.
-
-The TX controller is able to receive 4 video streams and stream them over a
-MIPI-CSI2 link using up to 4 lanes. Those streams are basically the
-interfaces to controllers generating some video signals, like a camera
-or a pattern generator.
-
-The RX controller is able to receive CSI data over up to 4 lanes, and
-split it to over 4 streams. Those streams are basically the interfaces
-to the video grabbers that will perform the capture.
-
-TX is then able to map input streams to CSI2 virtual channels and
-datatypes dynamically. The streaming devices choose their virtual
-channels through an additional signal that is transparent to the
-CSI2-TX. The datatypes however are yet another additional input
-signal, and can be mapped to any CSI2 datatypes. RX can do the
-opposite, being able to take virtual channel / datatypes and route
-them to proper pixel interfaces on demand.
-
-Since v4l2 doesn't really allow for that setup at the moment, this
-preliminary version is a rather dumb one in order to start the
-discussion on how to address this properly.
-
-Let me know what you think!
-Maxime
-
-Changes from CSI2-TX v10:
-  - Reword the source pad exception comment
-  - Handle the V4L2_SUBDEV_FORMAT_TRY case for get_fmt / set_fmt
-
-Maxime Ripard (4):
-  dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
-  v4l: cadence: Add Cadence MIPI-CSI2 RX driver
-  dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
-  v4l: cadence: Add Cadence MIPI-CSI2 TX driver
-
- .../devicetree/bindings/media/cdns,csi2rx.txt | 100 ++++
- .../devicetree/bindings/media/cdns,csi2tx.txt |  98 +++
- MAINTAINERS                                   |   7 +
- drivers/media/platform/Kconfig                |   1 +
- drivers/media/platform/Makefile               |   1 +
- drivers/media/platform/cadence/Kconfig        |  34 ++
- drivers/media/platform/cadence/Makefile       |   2 +
- drivers/media/platform/cadence/cdns-csi2rx.c  | 500 ++++++++++++++++
- drivers/media/platform/cadence/cdns-csi2tx.c  | 563 ++++++++++++++++++
- 9 files changed, 1306 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2rx.txt
- create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
- create mode 100644 drivers/media/platform/cadence/Kconfig
- create mode 100644 drivers/media/platform/cadence/Makefile
- create mode 100644 drivers/media/platform/cadence/cdns-csi2rx.c
- create mode 100644 drivers/media/platform/cadence/cdns-csi2tx.c
-
--- 
-2.17.0
+> On 26.03.2018, at 18:06, kernel@martin.sperl.org wrote:
+>=20
+> From: Martin Sperl <kernel@martin.sperl.org>
+>=20
+> This patchset adds a driver for the mcp25xxfd CanFD controller.
+>=20
+> Most of the features of the controller are supported by this driver =
+release.
+>=20
+> The controller includes a few features that the current core Can(FD)
+> implementation does not support:
+> * Transmit Bandwidth Sharing bits
+>  - this waits for a configurable number of syncronization bits before
+>    atempting to transmit the next frame - for the moment controllable
+>    via a module parameter
+> * SID11 with CanFD frames
+>  - at this moment not supported by driver
+> * 3 transmit attempts in addition to ONE_SHOT
+> * transmitter delay compensation configurations
+> * micro second exact transmission and reception timestamps
+>  - used internally by driver
+> * variable number of tx-fifos
+>  - exposed via module parameter at this moment
+>=20
+> The driver has been heavily optimized so that it can handle
+> a 100% utilized 1MHz Can-bus (with 11 bit can frames with DLC=3D0)
+> even on less powerfull SOCs like the raspberry pi 1 without
+> dropping frames due to driver/spi latencies (still dropps
+> are observed in the can/network stack).
+>=20
+> To achive this the driver includes several code optimization
+> Two of which prefers continuous long spi transfers over multiple
+> small individual spi transfers of variable length.
+> This is an optimization that would favour spi dma transfers instead
+> of more expensive PIO in typical SPI controllers.
+> Both of them can get explicitly enabled by the use of a module =
+parameter.
+> One of those is automatically used in the case of Can2.0 only bus
+> configurations.
+>=20
+> Finer details of the implementation and rational is included with
+> the driver code it self for future reference.
+>=20
+> The driver has also been tested for basic CanFD transfers with
+> BRS up to 5.7Mhz data bitrates - the available transceiver did
+> not allow for faster rates...
+>=20
+> The driver itself exposes lots of internal data/statistics via
+> debugfs.
+>=20
+> The driver implements a lock-less design for transmissions
+> making use instead of prepared spi messages submitted via spi_async
+> for transmission in the start_xmit_start code without requireing
+> an extra workqueue and the corresponding latencies.
+>=20
+> Note that there is an extra patch in the pipeline to implement pinctrl
+> but this still shows some issues, so it is not included in this =
+patchset.
+>=20
+> Changelog:
+>  V1 -> V2: new more generic name based on feedback from microchip
+>            cleanup of code (checkpatch)
+>            address all feedback on code
+>            handle (HW) systemerrors in a much better/reliable way
+>            cleanup of dt custom properties removing (most) gpio =
+related properties
+>            implemented GPIOLIB support as per feedback
+>  V2 -> V3: added vendor-prefix for gpio-opendrain to dt-binding
+>            added gpio-controller to dt-binding
+> 	    added feedback by Rob Herring
+> 	    waited for other feedback regarding the code
+>=20
+> Martin Sperl (3):
+>  dt-binding: can: mcp25xxfd: document device tree bindings
+>  can: mcp25xxfd: Add Microchip mcp25xxfd CAN FD driver
+>  can: mcp25xxfd: add gpiolib support for GPIO0/1 (aka. INT0/INT1)
+>=20
+> .../bindings/net/can/microchip,mcp25xxfd.txt       |   32 +
+> drivers/net/can/spi/Kconfig                        |    6 +
+> drivers/net/can/spi/Makefile                       |    1 +
+> drivers/net/can/spi/mcp25xxfd.c                    | 4509 =
+++++++++++++++++++++
+> 4 files changed, 4548 insertions(+)
+> create mode 100644 =
+Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+> create mode 100644 drivers/net/can/spi/mcp25xxfd.c
+>=20
+> --
+> 2.11.0
