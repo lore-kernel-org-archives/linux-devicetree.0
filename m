@@ -1,55 +1,189 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2 1/3] drm: Make the prime vmap/vunmap hooks optional.
-Date: Tue, 24 Apr 2018 15:13:09 +0200
-Message-ID: <20180424131309.GE31310@phenom.ffwll.local>
-References: <20180424004610.4637-1-eric@anholt.net>
- <20180424004610.4637-2-eric@anholt.net>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v4 7/8] drm/i2c: tda998x: register as a drm bridge
+Date: Tue, 24 Apr 2018 15:26:43 +0200
+Message-ID: <ab0d5160-88db-3589-916f-ef973f7b506f@axentia.se>
+References: <20180423072301.11962-1-peda@axentia.se>
+ <20180423072301.11962-8-peda@axentia.se>
+ <20180423160833.GF16141@n2100.armlinux.org.uk>
+ <5d6866d0-75bc-4de8-9b87-4fee5430e9dd@axentia.se>
+ <20180424080833.GJ16141@n2100.armlinux.org.uk>
+ <8448e90a-4562-b564-c160-1b5c67e0f92f@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180424004610.4637-2-eric@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8448e90a-4562-b564-c160-1b5c67e0f92f@axentia.se>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBcHIgMjMsIDIwMTggYXQgMDU6NDY6MDhQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
-dGU6Cj4gU29tZSBkcml2ZXJzIGxlYXZlIHRoZXNlIHVuaW1wbGVtZW50ZWQsIHNvIGRvbid0IG1h
-a2UgdGhlbSBoYXZlCj4gdW5pbXBsZW1lbnRlZCBzdHVicy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBF
-cmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0PgoKUmV2aWV3ZWQtYnk6IERhbmllbCBWZXR0ZXIg
-PGRhbmllbC52ZXR0ZXJAZmZ3bGwuY2g+Cgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vZHJtX3By
-aW1lLmMgfCA4ICsrKysrKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDIg
-ZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fcHJpbWUu
-YyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fcHJpbWUuYwo+IGluZGV4IGNhZjY3NWUzZTY5Mi4uMzk3
-YjQ2YjMzNzM5IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fcHJpbWUuYwo+ICsr
-KyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fcHJpbWUuYwo+IEBAIC00MDksNyArNDA5LDEwIEBAIHZv
-aWQgKmRybV9nZW1fZG1hYnVmX3ZtYXAoc3RydWN0IGRtYV9idWYgKmRtYV9idWYpCj4gIAlzdHJ1
-Y3QgZHJtX2dlbV9vYmplY3QgKm9iaiA9IGRtYV9idWYtPnByaXY7Cj4gIAlzdHJ1Y3QgZHJtX2Rl
-dmljZSAqZGV2ID0gb2JqLT5kZXY7Cj4gIAo+IC0JcmV0dXJuIGRldi0+ZHJpdmVyLT5nZW1fcHJp
-bWVfdm1hcChvYmopOwo+ICsJaWYgKGRldi0+ZHJpdmVyLT5nZW1fcHJpbWVfdm1hcCkKPiArCQly
-ZXR1cm4gZGV2LT5kcml2ZXItPmdlbV9wcmltZV92bWFwKG9iaik7Cj4gKwllbHNlCj4gKwkJcmV0
-dXJuIE5VTEw7Cj4gIH0KPiAgRVhQT1JUX1NZTUJPTChkcm1fZ2VtX2RtYWJ1Zl92bWFwKTsKPiAg
-Cj4gQEAgLTQyNiw3ICs0MjksOCBAQCB2b2lkIGRybV9nZW1fZG1hYnVmX3Z1bm1hcChzdHJ1Y3Qg
-ZG1hX2J1ZiAqZG1hX2J1Ziwgdm9pZCAqdmFkZHIpCj4gIAlzdHJ1Y3QgZHJtX2dlbV9vYmplY3Qg
-Km9iaiA9IGRtYV9idWYtPnByaXY7Cj4gIAlzdHJ1Y3QgZHJtX2RldmljZSAqZGV2ID0gb2JqLT5k
-ZXY7Cj4gIAo+IC0JZGV2LT5kcml2ZXItPmdlbV9wcmltZV92dW5tYXAob2JqLCB2YWRkcik7Cj4g
-KwlpZiAoZGV2LT5kcml2ZXItPmdlbV9wcmltZV92dW5tYXApCj4gKwkJZGV2LT5kcml2ZXItPmdl
-bV9wcmltZV92dW5tYXAob2JqLCB2YWRkcik7Cj4gIH0KPiAgRVhQT1JUX1NZTUJPTChkcm1fZ2Vt
-X2RtYWJ1Zl92dW5tYXApOwo+ICAKPiAtLSAKPiAyLjE3LjAKPiAKPiBfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-PiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKCi0tIApEYW5pZWwgVmV0dGVyClNv
-ZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgpodHRwOi8vYmxvZy5mZndsbC5jaApf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 2018-04-24 12:14, Peter Rosin wrote:
+> On 2018-04-24 10:08, Russell King - ARM Linux wrote:
+>> On Tue, Apr 24, 2018 at 08:58:42AM +0200, Peter Rosin wrote:
+>>> On 2018-04-23 18:08, Russell King - ARM Linux wrote:
+>>>> On Mon, Apr 23, 2018 at 09:23:00AM +0200, Peter Rosin wrote:
+>>>>>  static int tda998x_remove(struct i2c_client *client)
+>>>>>  {
+>>>>> -	component_del(&client->dev, &tda998x_ops);
+>>>>> +	struct device *dev = &client->dev;
+>>>>> +	struct tda998x_bridge *bridge = dev_get_drvdata(dev);
+>>>>> +
+>>>>> +	drm_bridge_remove(&bridge->bridge);
+>>>>> +	component_del(dev, &tda998x_ops);
+>>>>> +
+>>>>
+>>>> I'd like to ask a rather fundamental question about DRM bridge support,
+>>>> because I suspect that there's a major fsckup here.
+>>>>
+>>>> The above is the function that deals with the TDA998x device being
+>>>> unbound from the driver.  With the component API, this results in the
+>>>> DRM device correctly being torn down, because one of the hardware
+>>>> devices has gone.
+>>>>
+>>>> With DRM bridge, the bridge is merely removed from the list of
+>>>> bridges:
+>>>>
+>>>> void drm_bridge_remove(struct drm_bridge *bridge)
+>>>> {
+>>>>         mutex_lock(&bridge_lock);
+>>>>         list_del_init(&bridge->list);
+>>>>         mutex_unlock(&bridge_lock);
+>>>> }
+>>>> EXPORT_SYMBOL(drm_bridge_remove);
+>>>>
+>>>> and the memory backing the "struct tda998x_bridge" (which contains
+>>>> the struct drm_bridge) will be freed by the devm subsystem.
+>>>>
+>>>> However, there is no notification into the rest of the DRM subsystem
+>>>> that the device has gone away.  Worse, the memory that is still in
+>>>> use by DRM has now been freed, so further use of the DRM device
+>>>> results in a use-after-free bug.
+>>>>
+>>>> This is really not good, and to me looks like a fundamental problem
+>>>> with the DRM bridge code.  I see nothing in the DRM bridge code that
+>>>> deals with the lifetime of a "DRM bridge" or indeed the lifetime of
+>>>> the actual device itself.
+>>>>
+>>>> So, from what I can see, there seems to be a fundamental lifetime
+>>>> issue with the design of the DRM bridge code.  This needs to be
+>>>> fixed.
+>>>
+>>> Oh crap. A gigantic can of worms...
+>>
+>> Yes, it's especially annoying for me, having put the effort in to
+>> the component helper to cover all these cases.
+>>
+>>> Would a patch (completely untested btw) along this line of thinking make
+>>> any difference whatsoever?
+>>
+>> It looks interesting - from what I can see of the device links code,
+>> it would have the effect of unbinding the DRM device just before
+>> TDA998x is unbound, so that's an improvement.
+>>
+>> However, from what I can see, the link vanishes at that point (as
+>> DL_FLAG_AUTOREMOVE is set), and re-binding the TDA998x device results
+>> in nothing further happening - the link will be recreated, but there
+>> appears to be nothing that triggers the "consumer" to rebind at that
+>> point.  Maybe I've missed something?
+> 
+> Right, auto-remove is a no-go. So, improving on the previous...
+
+Heh, I didn't address the rebind triggering part at all, and while I'm by
+no means responsible or have any deep knowledge, I thought this was true:
+
+- driver .remove for the device owning the drm_bridge is what typically
+  calls drm_bridge_remove()
+- driver .remove is called as part of the device being unbound from the
+  driver by the bus (i2c in this case)
+- by registering a link to the consumer, this unbinding will trigger the
+  removal of this main drm consumer device as part of the unbinding
+- so everything aboput the drm device will be torn down, and everything
+  will thus have to be reprobed to get things back
+
+But I could easily have misunderstood just about everything in the above...
+
+And maybe it's really inconvenient to have to trigger a reprobe of the
+whole drm cluster? Maybe all drm driver parts should be components?
+
+I have no idea.
+
+Cheers,
+Peter
+
+PS. compile-tested the below and drm_bridge.c needs to
+#include <drm/drm_device.h>
+
+> (I think drm_panel might suffer from this issue too?)
+> 
+> Cheers,
+> Peter
+> 
+> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> index 1638bfe9627c..b1365cfee445 100644
+> --- a/drivers/gpu/drm/drm_bridge.c
+> +++ b/drivers/gpu/drm/drm_bridge.c
+> @@ -121,12 +121,17 @@ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
+>  	if (bridge->dev)
+>  		return -EBUSY;
+>  
+> +	bridge->link = device_link_add(encoder->dev->dev, bridge->owner, 0);
+> +	if (!bridge->link)
+> +		return -EINVAL;
+> +
+>  	bridge->dev = encoder->dev;
+>  	bridge->encoder = encoder;
+>  
+>  	if (bridge->funcs->attach) {
+>  		ret = bridge->funcs->attach(bridge);
+>  		if (ret < 0) {
+> +			device_link_del(bridge->link);
+>  			bridge->dev = NULL;
+>  			bridge->encoder = NULL;
+>  			return ret;
+> @@ -153,6 +158,8 @@ void drm_bridge_detach(struct drm_bridge *bridge)
+>  	if (bridge->funcs->detach)
+>  		bridge->funcs->detach(bridge);
+>  
+> +	device_link_del(bridge->link);
+> +
+>  	bridge->dev = NULL;
+>  }
+>  
+> diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
+> index b8cb6237a38b..29eba4e9a39d 100644
+> --- a/drivers/gpu/drm/i2c/tda998x_drv.c
+> +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
+> @@ -1857,6 +1857,7 @@ tda998x_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  	bridge->dev = dev;
+>  	dev_set_drvdata(dev, bridge);
+>  
+> +	bridge->bridge.owner = dev;
+>  	bridge->bridge.funcs = &tda998x_bridge_funcs;
+>  #ifdef CONFIG_OF
+>  	bridge->bridge.of_node = dev->of_node;
+> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> index 682d01ba920c..b8f33aba3216 100644
+> --- a/include/drm/drm_bridge.h
+> +++ b/include/drm/drm_bridge.h
+> @@ -224,6 +224,8 @@ struct drm_bridge_funcs {
+>  
+>  /**
+>   * struct drm_bridge - central DRM bridge control structure
+> + * @owner: device that owns the bridge
+> + * @link: drm consumer <-> bridge supplier
+>   * @dev: DRM device this bridge belongs to
+>   * @encoder: encoder to which this bridge is connected
+>   * @next: the next bridge in the encoder chain
+> @@ -233,6 +235,8 @@ struct drm_bridge_funcs {
+>   * @driver_private: pointer to the bridge driver's internal context
+>   */
+>  struct drm_bridge {
+> +	struct device *owner;
+> +	struct device_link *link;
+>  	struct drm_device *dev;
+>  	struct drm_encoder *encoder;
+>  	struct drm_bridge *next;
+> 
+> 
