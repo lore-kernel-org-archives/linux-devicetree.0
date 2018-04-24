@@ -1,45 +1,56 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v5 1/2] media: ov2680: dt: Add bindings for OV2680
-Date: Tue, 24 Apr 2018 12:53:23 -0300
-Message-ID: <CAOMZO5CHOcjctMDcbPBU1-1JkcxbL+JWrgfDtnt8dXLtMFCZBg@mail.gmail.com>
-References: <20180419110056.10342-1-rui.silva@linaro.org> <20180419110056.10342-2-rui.silva@linaro.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v3 09/10] drivers/hwmon: Add PECI hwmon client drivers
+Date: Tue, 24 Apr 2018 18:56:37 +0300
+Message-ID: <1524585397.21176.502.camel@linux.intel.com>
+References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
+         <20180410183212.16787-10-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419110056.10342-2-rui.silva@linaro.org>
+In-Reply-To: <20180410183212.16787-10-jae.hyun.yoo@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rui Miguel Silva <rui.silva@linaro.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media <linux-media@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Ryan Harkin <ryan.harkin@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van.o>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rui,
+On Tue, 2018-04-10 at 11:32 -0700, Jae Hyun Yoo wrote:
 
-On Thu, Apr 19, 2018 at 8:00 AM, Rui Miguel Silva <rui.silva@linaro.org> wrote:
-> Add device tree binding documentation for the OV2680 camera sensor.
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> CC: devicetree@vger.kernel.org
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> ---
->  .../devicetree/bindings/media/i2c/ov2680.txt  | 40 +++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2680.txt
->
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov2680.txt b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
-> new file mode 100644
-> index 000000000000..0e29f1a113c0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
-> @@ -0,0 +1,40 @@
-> +* Omnivision OV2680 MIPI CSI-2 sensor
-> +
-> +Required Properties:
-> +- compatible: should be "ovti,ov2680".
-> +- clocks: reference to the xvclk input clock.
-> +- clock-names: should be "xvclk".
+>  drivers/hwmon/peci-cputemp.c  | 783
+> ++++++++++++++++++++++++++++++++++++++++++
+>  drivers/hwmon/peci-dimmtemp.c | 432 +++++++++++++++++++++++
 
-You missed to pass the camera power supplies as required properties:
+Does it make sense one driver per patch?
 
-DOVDD-supply
-AVDD-supply
-DVDD-supply
+> +#define CLIENT_CPU_ID_MASK    0xf0ff0  /* Mask for Family / Model
+> info */
+
+> +struct cpu_gen_info {
+> +	u32 type;
+> +	u32 cpu_id;
+> +	u32 core_max;
+> +};
+> 
+
+> +static const struct cpu_gen_info cpu_gen_info_table[] = {
+> +	{ .type = CPU_GEN_HSX,
+> +	  .cpu_id = 0x306f0, /* Family code: 6, Model number: 63
+> (0x3f) */
+> +	  .core_max = CORE_MAX_ON_HSX },
+> +	{ .type = CPU_GEN_BRX,
+> +	  .cpu_id = 0x406f0, /* Family code: 6, Model number: 79
+> (0x4f) */
+> +	  .core_max = CORE_MAX_ON_BDX },
+> +	{ .type = CPU_GEN_SKX,
+> +	  .cpu_id = 0x50650, /* Family code: 6, Model number: 85
+> (0x55) */
+> +	  .core_max = CORE_MAX_ON_SKX },
+> +};
+
+Are we talking about x86 CPU IDs here?
+If so, why x86 corresponding headers, including intel-family.h are not
+used?
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
