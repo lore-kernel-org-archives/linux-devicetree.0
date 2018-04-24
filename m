@@ -1,173 +1,80 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 1/2] arm64: dts: renesas: Add Renesas R8A77990 SoC support
-Date: Wed, 11 Apr 2018 18:37:41 +0900
-Message-Id: <1523439462-1130-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1523439462-1130-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1523439462-1130-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <krzk@kernel.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [RFC 09/10] usb: host: exynos: Remove support for Exynos5440
+Date: Tue, 24 Apr 2018 22:32:38 +0200
+Message-Id: <20180424203239.21885-10-krzk@kernel.org>
+In-Reply-To: <20180424203239.21885-1-krzk@kernel.org>
+References: <20180424203239.21885-1-krzk@kernel.org>
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Jaehoon Chung <jh80.chung@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds basic support for the Renesas R-Car E3 (R8A77990) SoC:
-  - PSCI
-  - CPU (single)
-  - Cache controller
-  - Main clocks and controller
-  - Interrupt controller
-  - Timer
-  - PMU
-  - Reset controller
-  - Product register
-  - System controller
-  - UART for console
+The Exynos5440 is not actively developed, there are no development
+boards available and probably there are no real products with it.
+Remove wide-tree support for Exynos5440.
 
-Inspried by a patch by Takeshi Kihara in the BSP.
-
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a77990.dtsi | 131 ++++++++++++++++++++++++++++++
- 1 file changed, 131 insertions(+)
- create mode 100644 arch/arm64/boot/dts/renesas/r8a77990.dtsi
+ drivers/usb/host/ehci-exynos.c | 7 -------
+ drivers/usb/host/ohci-exynos.c | 6 ------
+ 2 files changed, 13 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-new file mode 100644
-index 0000000..310bfd9
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-@@ -0,0 +1,131 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Device Tree Source for the r8a77990 SoC
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
-+
-+#include <dt-bindings/clock/renesas-cpg-mssr.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "renesas,r8a77990";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* 1 core only at this point */
-+		a53_0: cpu@0 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0>;
-+			device_type = "cpu";
-+			power-domains = <&sysc 5>;
-+			next-level-cache = <&L2_CA53>;
-+			enable-method = "psci";
-+		};
-+
-+		L2_CA53: cache-controller@0 {
-+			compatible = "cache";
-+			reg = <0>;
-+			power-domains = <&sysc 21>;
-+			cache-unified;
-+			cache-level = <2>;
-+		};
-+	};
-+
-+	extal_clk: extal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board */
-+		clock-frequency = <0>;
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	soc: soc {
-+		compatible = "simple-bus";
-+		interrupt-parent = <&gic>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		gic: interrupt-controller@f1010000 {
-+			compatible = "arm,gic-400";
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+			reg = <0x0 0xf1010000 0 0x1000>,
-+			      <0x0 0xf1020000 0 0x20000>,
-+			      <0x0 0xf1040000 0 0x20000>,
-+			      <0x0 0xf1060000 0 0x20000>;
-+			interrupts = <GIC_PPI 9
-+					(GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH)>;
-+			clocks = <&cpg CPG_MOD 408>;
-+			clock-names = "clk";
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 408>;
-+		};
-+
-+		timer {
-+			compatible = "arm,armv8-timer";
-+			interrupts = <GIC_PPI 13
-+					(GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 14
-+					(GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 11
-+					(GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 10
-+					(GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
-+		};
-+
-+		pmu_a53 {
-+			compatible = "arm,cortex-a53-pmu";
-+			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-affinity = <&a53_0>;
-+		};
-+
-+		cpg: clock-controller@e6150000 {
-+			compatible = "renesas,r8a77990-cpg-mssr";
-+			reg = <0 0xe6150000 0 0x1000>;
-+			clocks = <&extal_clk>;
-+			clock-names = "extal";
-+			#clock-cells = <2>;
-+			#power-domain-cells = <0>;
-+			#reset-cells = <1>;
-+		};
-+
-+		rst: reset-controller@e6160000 {
-+			compatible = "renesas,r8a77990-rst";
-+			reg = <0 0xe6160000 0 0x0200>;
-+		};
-+
-+		prr: chipid@fff00044 {
-+			compatible = "renesas,prr";
-+			reg = <0 0xfff00044 0 4>;
-+		};
-+
-+		sysc: system-controller@e6180000 {
-+			compatible = "renesas,r8a77990-sysc";
-+			reg = <0 0xe6180000 0 0x0400>;
-+			#power-domain-cells = <1>;
-+		};
-+
-+		scif2: serial@e6e88000 {
-+			compatible = "renesas,scif-r8a77990",
-+				     "renesas,rcar-gen3-scif", "renesas,scif";
-+			reg = <0 0xe6e88000 0 64>;
-+			interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 310>;
-+			clock-names = "fck";
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 310>;
-+			status = "disabled";
-+		};
-+	};
-+};
+diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
+index d9145a8f35d2..8e3bab1e0c1f 100644
+--- a/drivers/usb/host/ehci-exynos.c
++++ b/drivers/usb/host/ehci-exynos.c
+@@ -161,16 +161,10 @@ static int exynos_ehci_probe(struct platform_device *pdev)
+ 	}
+ 	exynos_ehci = to_exynos_ehci(hcd);
+ 
+-	if (of_device_is_compatible(pdev->dev.of_node,
+-					"samsung,exynos5440-ehci"))
+-		goto skip_phy;
+-
+ 	err = exynos_ehci_get_phy(&pdev->dev, exynos_ehci);
+ 	if (err)
+ 		goto fail_clk;
+ 
+-skip_phy:
+-
+ 	exynos_ehci->clk = devm_clk_get(&pdev->dev, "usbhost");
+ 
+ 	if (IS_ERR(exynos_ehci->clk)) {
+@@ -304,7 +298,6 @@ static const struct dev_pm_ops exynos_ehci_pm_ops = {
+ #ifdef CONFIG_OF
+ static const struct of_device_id exynos_ehci_match[] = {
+ 	{ .compatible = "samsung,exynos4210-ehci" },
+-	{ .compatible = "samsung,exynos5440-ehci" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, exynos_ehci_match);
+diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
+index a39fae41bc70..c0c4dcca6f3c 100644
+--- a/drivers/usb/host/ohci-exynos.c
++++ b/drivers/usb/host/ohci-exynos.c
+@@ -130,15 +130,10 @@ static int exynos_ohci_probe(struct platform_device *pdev)
+ 
+ 	exynos_ohci = to_exynos_ohci(hcd);
+ 
+-	if (of_device_is_compatible(pdev->dev.of_node,
+-					"samsung,exynos5440-ohci"))
+-		goto skip_phy;
+-
+ 	err = exynos_ohci_get_phy(&pdev->dev, exynos_ohci);
+ 	if (err)
+ 		goto fail_clk;
+ 
+-skip_phy:
+ 	exynos_ohci->clk = devm_clk_get(&pdev->dev, "usbhost");
+ 
+ 	if (IS_ERR(exynos_ohci->clk)) {
+@@ -270,7 +265,6 @@ static const struct dev_pm_ops exynos_ohci_pm_ops = {
+ #ifdef CONFIG_OF
+ static const struct of_device_id exynos_ohci_match[] = {
+ 	{ .compatible = "samsung,exynos4210-ohci" },
+-	{ .compatible = "samsung,exynos5440-ohci" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, exynos_ohci_match);
 -- 
-1.9.1
+2.14.1
