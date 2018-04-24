@@ -1,71 +1,57 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v2 0/3] V3D DRM driver
-Date: Mon, 23 Apr 2018 17:46:07 -0700
-Message-ID: <20180424004610.4637-1-eric@anholt.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Subject: [PATCH v2 2/3] dt-bindings: Add a new binding for Broadcom V3D 3.x and newer GPUs.
+Date: Mon, 23 Apr 2018 17:46:09 -0700
+Message-ID: <20180424004610.4637-3-eric@anholt.net>
+References: <20180424004610.4637-1-eric@anholt.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180424004610.4637-1-eric@anholt.net>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-SGVyZSdzIHYyIG9mIHRoZSBkcml2ZXIuICBUaGlzIGlzIG1vc3RseSBoYW5kbGluZyBkYW52ZXQn
-cyBmZWVkYmFjaywKYnV0IHRoZXJlIGFyZSBhIGNvdXBsZSBvZiBvdGhlciBjaGFuZ2VzOgoKLSBu
-ZXcgY29yZSBwYXRjaCBmb3IgcHJpbWUgdm1hcC92dW5tYXAKLSBrYnVpbGQgdGVzdCByb2JvdCBm
-aXhlcwotIG92ZXJmbG93IG1lbSBzaW1wbGlmaWNhdGlvbiAoZmlndXJlZCBpdCBvdXQgb3ZlciBi
-cmVha2Zhc3Qgd2l0aCBrZWl0aHApCi0gZHJtX2dlbV9vYmplY3RfdW5yZWZlcmVuY2VfdW5sb2Nr
-ZWQoKSB0byBfcHV0X3VubG9ja2VkKCkuCgpFcmljIEFuaG9sdCAoMyk6CiAgZHJtOiBNYWtlIHRo
-ZSBwcmltZSB2bWFwL3Z1bm1hcCBob29rcyBvcHRpb25hbC4KICBkdC1iaW5kaW5nczogQWRkIGEg
-bmV3IGJpbmRpbmcgZm9yIEJyb2FkY29tIFYzRCAzLnggYW5kIG5ld2VyIEdQVXMuCiAgZHJtL3Yz
-ZDogSW50cm9kdWNlIGEgbmV3IERSTSBkcml2ZXIgZm9yIEJyb2FkY29tIFYzRCBWMy54KwoKIC4u
-Li9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNtLXYzZC50eHQgICAgICAgICB8ICAyOCArCiBEb2N1
-bWVudGF0aW9uL2dwdS9kcml2ZXJzLnJzdCAgICAgICAgICAgICAgICAgfCAgIDEgKwogTUFJTlRB
-SU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA4ICsKIGRyaXZlcnMv
-Z3B1L2RybS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArCiBkcml2ZXJzL2dw
-dS9kcm0vTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9ncHUv
-ZHJtL2RybV9wcmltZS5jICAgICAgICAgICAgICAgICAgIHwgICA4ICstCiBkcml2ZXJzL2dwdS9k
-cm0vdjNkL0tjb25maWcgICAgICAgICAgICAgICAgICAgfCAgIDkgKwogZHJpdmVycy9ncHUvZHJt
-L3YzZC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgIHwgIDE4ICsKIGRyaXZlcnMvZ3B1L2RybS92
-M2QvdjNkX2JvLmMgICAgICAgICAgICAgICAgICB8IDM3OSArKysrKysrKysrCiBkcml2ZXJzL2dw
-dS9kcm0vdjNkL3YzZF9kZWJ1Z2ZzLmMgICAgICAgICAgICAgfCAxOTEgKysrKysKIGRyaXZlcnMv
-Z3B1L2RybS92M2QvdjNkX2Rydi5jICAgICAgICAgICAgICAgICB8IDM3MSArKysrKysrKysrCiBk
-cml2ZXJzL2dwdS9kcm0vdjNkL3YzZF9kcnYuaCAgICAgICAgICAgICAgICAgfCAyOTQgKysrKysr
-KysKIGRyaXZlcnMvZ3B1L2RybS92M2QvdjNkX2ZlbmNlLmMgICAgICAgICAgICAgICB8ICA1OCAr
-KwogZHJpdmVycy9ncHUvZHJtL3YzZC92M2RfZ2VtLmMgICAgICAgICAgICAgICAgIHwgNjYzICsr
-KysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3YzZC92M2RfaXJxLmMgICAgICAgICAg
-ICAgICAgIHwgMjA2ICsrKysrKwogZHJpdmVycy9ncHUvZHJtL3YzZC92M2RfbW11LmMgICAgICAg
-ICAgICAgICAgIHwgMTIyICsrKysKIGRyaXZlcnMvZ3B1L2RybS92M2QvdjNkX3JlZ3MuaCAgICAg
-ICAgICAgICAgICB8IDI5NSArKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3YzZC92M2Rfc2NoZWQu
-YyAgICAgICAgICAgICAgIHwgMjI4ICsrKysrKwogZHJpdmVycy9ncHUvZHJtL3YzZC92M2RfdHJh
-Y2UuaCAgICAgICAgICAgICAgIHwgIDgyICsrKwogZHJpdmVycy9ncHUvZHJtL3YzZC92M2RfdHJh
-Y2VfcG9pbnRzLmMgICAgICAgIHwgICA5ICsKIGluY2x1ZGUvdWFwaS9kcm0vdjNkX2RybS5oICAg
-ICAgICAgICAgICAgICAgICB8IDE5MSArKysrKwogMjEgZmlsZXMgY2hhbmdlZCwgMzE2MiBpbnNl
-cnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNtLXYzZC50eHQKIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vdjNkL0tjb25maWcKIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBkcml2ZXJzL2dwdS9kcm0vdjNkL01ha2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9ncHUvZHJtL3YzZC92M2RfYm8uYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
-bS92M2QvdjNkX2RlYnVnZnMuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS92
-M2QvdjNkX2Rydi5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3YzZC92M2Rf
-ZHJ2LmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vdjNkL3YzZF9mZW5jZS5j
-CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3YzZC92M2RfZ2VtLmMKIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vdjNkL3YzZF9pcnEuYwogY3JlYXRlIG1vZGUg
-MTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS92M2QvdjNkX21tdS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL3YzZC92M2RfcmVncy5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9ncHUvZHJtL3YzZC92M2Rfc2NoZWQuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
-L2RybS92M2QvdjNkX3RyYWNlLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
-djNkL3YzZF90cmFjZV9wb2ludHMuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvdWFwaS9k
-cm0vdjNkX2RybS5oCgotLSAKMi4xNy4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+These OpenGL ES GPUs are present in the 7268 and 7278 set top box
+chips.
+
+Signed-off-by: Eric Anholt <eric@anholt.net>
+---
+ .../bindings/display/brcm,bcm-v3d.txt         | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm-v3d.txt
+
+diff --git a/Documentation/devicetree/bindings/display/brcm,bcm-v3d.txt b/Documentation/devicetree/bindings/display/brcm,bcm-v3d.txt
+new file mode 100644
+index 000000000000..1c814714de0e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/brcm,bcm-v3d.txt
+@@ -0,0 +1,28 @@
++Broadcom V3D GPU
++
++Only the Broadcom V3D 3.x and newer GPUs are covered by this binding.
++For V3D 2.x, see brcm,bcm-vc4.txt.
++
++Required properties:
++- compatible:	Should be "brcm,7268-v3d" or "brcm,7278-v3d"
++- reg:		Physical base addresses and lengths of the register areas
++- reg-names:	Names for the register areas.  The "hub", "bridge", and "core0"
++		  register areas are always required.  The "gca" register area
++		  is required if the GCA cache controller is present.
++- interrupts:	The interrupt numbers.  The first interrupt is for the hub,
++		  while the following inerrupts are for the cores.
++		  See bindings/interrupt-controller/interrupts.txt
++
++Optional properties:
++- clocks:	The core clock the unit runs on
++
++v3d {
++	compatible = "brcm,7268-v3d";
++	reg = <0xf1204000 0x100>,
++	      <0xf1200000 0x4000>,
++	      <0xf1208000 0x4000>,
++	      <0xf1204100 0x100>;
++	reg-names = "bridge", "hub", "core0", "gca";
++	interrupts = <0 78 4>,
++		     <0 77 4>;
++};
+-- 
+2.17.0
