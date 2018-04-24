@@ -1,130 +1,142 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v5 01/23] soc: qcom dt-bindings: Add APR
-	bus bindings
-Date: Tue, 24 Apr 2018 17:04:10 +0100
-Message-ID: <de5fac3b-1a56-61d0-facd-a592715d7606@linaro.org>
-References: <20180418153157.1960-1-srinivas.kandagatla@linaro.org>
- <20180418153157.1960-2-srinivas.kandagatla@linaro.org>
- <20180424155226.fo6rgdea4kmqqjdy@rob-hp-laptop>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v4 7/8] drm/i2c: tda998x: register as a drm bridge
+Date: Tue, 24 Apr 2018 19:04:16 +0300
+Message-ID: <0cbee3bd-8987-5f2f-519d-f8d1b426f2a3@ti.com>
+References: <20180423072301.11962-1-peda@axentia.se>
+ <20180423072301.11962-8-peda@axentia.se>
+ <20180423160833.GF16141@n2100.armlinux.org.uk>
+ <5d6866d0-75bc-4de8-9b87-4fee5430e9dd@axentia.se>
+ <20180424080833.GJ16141@n2100.armlinux.org.uk>
+ <8448e90a-4562-b564-c160-1b5c67e0f92f@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180424155226.fo6rgdea4kmqqjdy@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, spatakok@qti.qualcomm.com, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, andy.gross@linaro.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <8448e90a-4562-b564-c160-1b5c67e0f92f@axentia.se>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>, Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review comments,
-
-On 24/04/18 16:52, Rob Herring wrote:
-> On Wed, Apr 18, 2018 at 04:31:35PM +0100, srinivas.kandagatla@linaro.org wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>
->> This patch add dt bindings for Qualcomm APR (Asynchronous Packet Router)
->> bus driver. This bus is used for communicating with DSP which provides
->> audio and various other services to cpu.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../devicetree/bindings/soc/qcom/qcom,apr.txt      | 85 ++++++++++++++++++++++
-> 
-> This should probably go under bindings/sound/ as it is at least mostly
-> sound related.
-There are other non audio dsp/modem services that will be using apr.
-
-> 
->>   include/dt-bindings/soc/qcom,apr.h                 | 27 +++++++
->>   2 files changed, 112 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
->>   create mode 100644 include/dt-bindings/soc/qcom,apr.h
->>
->> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
->> new file mode 100644
->> index 000000000000..85cc0433fb00
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
->> @@ -0,0 +1,85 @@
->> +Qualcomm APR (Asynchronous Packet Router) binding
->> +
->> +This binding describes the Qualcomm APR. APR is a IPC protocol for
->> +communication between Application processor and QDSP. APR is mainly
->> +used for audio/voice services on the QDSP.
->> +
->> +- compatible:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: must be "qcom,apr-v<VERSION-NUMBER>", example "qcom,apr-v2"
->> +
->> +- qcom,dest-domain-id
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
-> 
-> If this is an array, what do the indexes of the array correspond to?
-> 
-This should be
-  Value type: <u32>
-
-these indexes point to the remote processor ID.
-
->> +	Definition: Destination processor ID.
->> +	Possible values are :
->> +			1 - APR simulator
->> +			2 - PC
->> +			3 - MODEM
->> +			4 - ADSP
->> +			5 - APPS
->> +			6 - MODEM2
->> +			7 - APPS2
->> +
->> += APR SERVICES
->> +Each subnode of the APR node represents service tied to this apr. The name
->> +of the nodes are not important. The properties of these nodes are defined
->> +by the individual bindings for the specific service
->> +- All APR services MUST contain the following property:
->> +
->> +- reg
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
-> 
-> Not really an array, right?
-No, again this is  Value type: <u32>
-
-> 
->> +	Definition: APR Service ID
->> +	Possible values are :
->> +			3 - DSP Core Service
->> +			4 - Audio Front End Service.
->> +			5 - Voice Stream Manager Service.
->> +			6 - Voice processing manager.
->> +			7 - Audio Stream Manager Service.
->> +			8 - Audio Device Manager Service.
->> +			9 - Multimode voice manager.
->> +			10 - Core voice stream.
->> +			11 - Core voice processor.
->> +			12 - Ultrasound stream manager.
->> +			13 - Listen stream manager.
->> +
->> += EXAMPLE
->> +The following example represents a QDSP based sound card on a MSM8996 device
->> +which uses apr as communication between Apps and QDSP.
->> +
->> +	apr {
->> +		compatible = "qcom,apr-v2";
->> +		qcom,smd-channels = "apr_audio_svc";
-> 
-> Drop this?
-Sure
-
-
---srini
+T24gMjQvMDQvMTggMTM6MTQsIFBldGVyIFJvc2luIHdyb3RlOgo+IE9uIDIwMTgtMDQtMjQgMTA6
+MDgsIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCB3cm90ZToKPj4gT24gVHVlLCBBcHIgMjQsIDIw
+MTggYXQgMDg6NTg6NDJBTSArMDIwMCwgUGV0ZXIgUm9zaW4gd3JvdGU6Cj4+PiBPbiAyMDE4LTA0
+LTIzIDE4OjA4LCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXggd3JvdGU6Cj4+Pj4gT24gTW9uLCBB
+cHIgMjMsIDIwMTggYXQgMDk6MjM6MDBBTSArMDIwMCwgUGV0ZXIgUm9zaW4gd3JvdGU6Cj4+Pj4+
+ICBzdGF0aWMgaW50IHRkYTk5OHhfcmVtb3ZlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpCj4+
+Pj4+ICB7Cj4+Pj4+IC0JY29tcG9uZW50X2RlbCgmY2xpZW50LT5kZXYsICZ0ZGE5OTh4X29wcyk7
+Cj4+Pj4+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gJmNsaWVudC0+ZGV2Owo+Pj4+PiArCXN0cnVj
+dCB0ZGE5OTh4X2JyaWRnZSAqYnJpZGdlID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4+Pj4+ICsK
+Pj4+Pj4gKwlkcm1fYnJpZGdlX3JlbW92ZSgmYnJpZGdlLT5icmlkZ2UpOwo+Pj4+PiArCWNvbXBv
+bmVudF9kZWwoZGV2LCAmdGRhOTk4eF9vcHMpOwo+Pj4+PiArCj4+Pj4KPj4+PiBJJ2QgbGlrZSB0
+byBhc2sgYSByYXRoZXIgZnVuZGFtZW50YWwgcXVlc3Rpb24gYWJvdXQgRFJNIGJyaWRnZSBzdXBw
+b3J0LAo+Pj4+IGJlY2F1c2UgSSBzdXNwZWN0IHRoYXQgdGhlcmUncyBhIG1ham9yIGZzY2t1cCBo
+ZXJlLgo+Pj4+Cj4+Pj4gVGhlIGFib3ZlIGlzIHRoZSBmdW5jdGlvbiB0aGF0IGRlYWxzIHdpdGgg
+dGhlIFREQTk5OHggZGV2aWNlIGJlaW5nCj4+Pj4gdW5ib3VuZCBmcm9tIHRoZSBkcml2ZXIuICBX
+aXRoIHRoZSBjb21wb25lbnQgQVBJLCB0aGlzIHJlc3VsdHMgaW4gdGhlCj4+Pj4gRFJNIGRldmlj
+ZSBjb3JyZWN0bHkgYmVpbmcgdG9ybiBkb3duLCBiZWNhdXNlIG9uZSBvZiB0aGUgaGFyZHdhcmUK
+Pj4+PiBkZXZpY2VzIGhhcyBnb25lLgo+Pj4+Cj4+Pj4gV2l0aCBEUk0gYnJpZGdlLCB0aGUgYnJp
+ZGdlIGlzIG1lcmVseSByZW1vdmVkIGZyb20gdGhlIGxpc3Qgb2YKPj4+PiBicmlkZ2VzOgo+Pj4+
+Cj4+Pj4gdm9pZCBkcm1fYnJpZGdlX3JlbW92ZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+
+Pj4+IHsKPj4+PiAgICAgICAgIG11dGV4X2xvY2soJmJyaWRnZV9sb2NrKTsKPj4+PiAgICAgICAg
+IGxpc3RfZGVsX2luaXQoJmJyaWRnZS0+bGlzdCk7Cj4+Pj4gICAgICAgICBtdXRleF91bmxvY2so
+JmJyaWRnZV9sb2NrKTsKPj4+PiB9Cj4+Pj4gRVhQT1JUX1NZTUJPTChkcm1fYnJpZGdlX3JlbW92
+ZSk7Cj4+Pj4KPj4+PiBhbmQgdGhlIG1lbW9yeSBiYWNraW5nIHRoZSAic3RydWN0IHRkYTk5OHhf
+YnJpZGdlIiAod2hpY2ggY29udGFpbnMKPj4+PiB0aGUgc3RydWN0IGRybV9icmlkZ2UpIHdpbGwg
+YmUgZnJlZWQgYnkgdGhlIGRldm0gc3Vic3lzdGVtLgo+Pj4+Cj4+Pj4gSG93ZXZlciwgdGhlcmUg
+aXMgbm8gbm90aWZpY2F0aW9uIGludG8gdGhlIHJlc3Qgb2YgdGhlIERSTSBzdWJzeXN0ZW0KPj4+
+PiB0aGF0IHRoZSBkZXZpY2UgaGFzIGdvbmUgYXdheS4gIFdvcnNlLCB0aGUgbWVtb3J5IHRoYXQg
+aXMgc3RpbGwgaW4KPj4+PiB1c2UgYnkgRFJNIGhhcyBub3cgYmVlbiBmcmVlZCwgc28gZnVydGhl
+ciB1c2Ugb2YgdGhlIERSTSBkZXZpY2UKPj4+PiByZXN1bHRzIGluIGEgdXNlLWFmdGVyLWZyZWUg
+YnVnLgo+Pj4+Cj4+Pj4gVGhpcyBpcyByZWFsbHkgbm90IGdvb2QsIGFuZCB0byBtZSBsb29rcyBs
+aWtlIGEgZnVuZGFtZW50YWwgcHJvYmxlbQo+Pj4+IHdpdGggdGhlIERSTSBicmlkZ2UgY29kZS4g
+IEkgc2VlIG5vdGhpbmcgaW4gdGhlIERSTSBicmlkZ2UgY29kZSB0aGF0Cj4+Pj4gZGVhbHMgd2l0
+aCB0aGUgbGlmZXRpbWUgb2YgYSAiRFJNIGJyaWRnZSIgb3IgaW5kZWVkIHRoZSBsaWZldGltZSBv
+Zgo+Pj4+IHRoZSBhY3R1YWwgZGV2aWNlIGl0c2VsZi4KPj4+Pgo+Pj4+IFNvLCBmcm9tIHdoYXQg
+SSBjYW4gc2VlLCB0aGVyZSBzZWVtcyB0byBiZSBhIGZ1bmRhbWVudGFsIGxpZmV0aW1lCj4+Pj4g
+aXNzdWUgd2l0aCB0aGUgZGVzaWduIG9mIHRoZSBEUk0gYnJpZGdlIGNvZGUuICBUaGlzIG5lZWRz
+IHRvIGJlCj4+Pj4gZml4ZWQuCj4+Pgo+Pj4gT2ggY3JhcC4gQSBnaWdhbnRpYyBjYW4gb2Ygd29y
+bXMuLi4KPj4KPj4gWWVzLCBpdCdzIGVzcGVjaWFsbHkgYW5ub3lpbmcgZm9yIG1lLCBoYXZpbmcg
+cHV0IHRoZSBlZmZvcnQgaW4gdG8KPj4gdGhlIGNvbXBvbmVudCBoZWxwZXIgdG8gY292ZXIgYWxs
+IHRoZXNlIGNhc2VzLgo+Pgo+Pj4gV291bGQgYSBwYXRjaCAoY29tcGxldGVseSB1bnRlc3RlZCBi
+dHcpIGFsb25nIHRoaXMgbGluZSBvZiB0aGlua2luZyBtYWtlCj4+PiBhbnkgZGlmZmVyZW5jZSB3
+aGF0c29ldmVyPwo+Pgo+PiBJdCBsb29rcyBpbnRlcmVzdGluZyAtIGZyb20gd2hhdCBJIGNhbiBz
+ZWUgb2YgdGhlIGRldmljZSBsaW5rcyBjb2RlLAo+PiBpdCB3b3VsZCBoYXZlIHRoZSBlZmZlY3Qg
+b2YgdW5iaW5kaW5nIHRoZSBEUk0gZGV2aWNlIGp1c3QgYmVmb3JlCj4+IFREQTk5OHggaXMgdW5i
+b3VuZCwgc28gdGhhdCdzIGFuIGltcHJvdmVtZW50Lgo+Pgo+PiBIb3dldmVyLCBmcm9tIHdoYXQg
+SSBjYW4gc2VlLCB0aGUgbGluayB2YW5pc2hlcyBhdCB0aGF0IHBvaW50IChhcwo+PiBETF9GTEFH
+X0FVVE9SRU1PVkUgaXMgc2V0KSwgYW5kIHJlLWJpbmRpbmcgdGhlIFREQTk5OHggZGV2aWNlIHJl
+c3VsdHMKPj4gaW4gbm90aGluZyBmdXJ0aGVyIGhhcHBlbmluZyAtIHRoZSBsaW5rIHdpbGwgYmUg
+cmVjcmVhdGVkLCBidXQgdGhlcmUKPj4gYXBwZWFycyB0byBiZSBub3RoaW5nIHRoYXQgdHJpZ2dl
+cnMgdGhlICJjb25zdW1lciIgdG8gcmViaW5kIGF0IHRoYXQKPj4gcG9pbnQuICBNYXliZSBJJ3Zl
+IG1pc3NlZCBzb21ldGhpbmc/Cj4gCj4gUmlnaHQsIGF1dG8tcmVtb3ZlIGlzIGEgbm8tZ28uIFNv
+LCBpbXByb3Zpbmcgb24gdGhlIHByZXZpb3VzLi4uCj4gCj4gKEkgdGhpbmsgZHJtX3BhbmVsIG1p
+Z2h0IHN1ZmZlciBmcm9tIHRoaXMgaXNzdWUgdG9vPykKClllcyBpdCBkb2VzIGFuZCBJIHRvb2sg
+YSBzaG90IGF0IHRyeWluZyB0byBmaXggaXQgYXQgdGhlIGVuZCBvZiB0aGUKcHJldmlvdXMgbWVy
+Z2Ugd2luZG93LCBidXQgZ2F2ZSB1cCBhcyBJIHJ1biBvdXQgb2YgdGltZS4gSSByZS1zcHVuIHRo
+ZQp3b3JrIG5vdyBhZnRlciByZWFkaW5nIHRoaXMgdGhyZWFkLiBJIGFkZCB5b3UgYW5kIFJ1c3Nl
+bGwgdG8gY2MuCgpBcyBmYXIgYXMgSSB1bmRlcnN0YW5kIHRoZSByZS1iaW5kaW5nIHByb2JsZW0g
+Y2FuIGJlIHNvbHZlZCB3aXRoIHRoaXMgcGF0Y2g6CgpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxOC1GZWJydWFyeS8xNjY5MDcuaHRtbAoKVGhlIGRl
+dmljZV9saW5rcyBhcmUgc3VjaCBhIG5ldyBjb25jZXB0IHRoYXQgdGhlcmUgaXMgYXQgbGVhc3Qg
+aG9wZSB0aGlzCmNoYW5nZSB3b24ndCBoYXZlIHRvbyB1bndhbnRlZCBzaWRlIGVmZmVjdHMuCgo+
+ID4gQ2hlZXJzLAo+IFBldGVyCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1f
+YnJpZGdlLmMgYi9kcml2ZXJzL2dwdS9kcm0vZHJtX2JyaWRnZS5jCj4gaW5kZXggMTYzOGJmZTk2
+MjdjLi5iMTM2NWNmZWU0NDUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2RybV9icmlk
+Z2UuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fYnJpZGdlLmMKPiBAQCAtMTIxLDEyICsx
+MjEsMTcgQEAgaW50IGRybV9icmlkZ2VfYXR0YWNoKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2Rl
+ciwgc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSwKPiAgCWlmIChicmlkZ2UtPmRldikKPiAgCQly
+ZXR1cm4gLUVCVVNZOwo+ICAKPiArCWJyaWRnZS0+bGluayA9IGRldmljZV9saW5rX2FkZChlbmNv
+ZGVyLT5kZXYtPmRldiwgYnJpZGdlLT5vd25lciwgMCk7Cj4gKwlpZiAoIWJyaWRnZS0+bGluaykK
+PiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCgpBdCBsZWFzdCB0aGlzIHBpZWNlIGNvZGUgc2hvdWxk
+IHByZXBhcmUgZm9yIHRoZSBicmlkZ2Ugb3duZXIgYW5kIHRoZQptYXN0ZXIgZHJtIGRldmljZSBi
+ZWluZyB0aGUgc2FtZSwgSSB3aGljaCBjYXNlIHRoZSBsaW5rIHNob3VsZCBub3QgYmUKbmVlZGVk
+LiBUaGlzIGhhcHBlbnMgYXQgbGVhc3Qgd2hlbiBhIHBhbmVsIGlzIGF0dGFjaGVkIHVzaW5nCmRy
+bV9wYW5lbF9icmlkZ2VfYWRkKCkuCgpCZXN0IHJlYWdhcmRzLApKeXJpCgo+ICAJYnJpZGdlLT5k
+ZXYgPSBlbmNvZGVyLT5kZXY7Cj4gIAlicmlkZ2UtPmVuY29kZXIgPSBlbmNvZGVyOwo+ICAKPiAg
+CWlmIChicmlkZ2UtPmZ1bmNzLT5hdHRhY2gpIHsKPiAgCQlyZXQgPSBicmlkZ2UtPmZ1bmNzLT5h
+dHRhY2goYnJpZGdlKTsKPiAgCQlpZiAocmV0IDwgMCkgewo+ICsJCQlkZXZpY2VfbGlua19kZWwo
+YnJpZGdlLT5saW5rKTsKPiAgCQkJYnJpZGdlLT5kZXYgPSBOVUxMOwo+ICAJCQlicmlkZ2UtPmVu
+Y29kZXIgPSBOVUxMOwo+ICAJCQlyZXR1cm4gcmV0Owo+IEBAIC0xNTMsNiArMTU4LDggQEAgdm9p
+ZCBkcm1fYnJpZGdlX2RldGFjaChzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+ICAJaWYgKGJy
+aWRnZS0+ZnVuY3MtPmRldGFjaCkKPiAgCQlicmlkZ2UtPmZ1bmNzLT5kZXRhY2goYnJpZGdlKTsK
+PiAgCj4gKwlkZXZpY2VfbGlua19kZWwoYnJpZGdlLT5saW5rKTsKPiArCj4gIAlicmlkZ2UtPmRl
+diA9IE5VTEw7Cj4gIH0KPiAgCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9pMmMvdGRh
+OTk4eF9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9pMmMvdGRhOTk4eF9kcnYuYwo+IGluZGV4IGI4
+Y2I2MjM3YTM4Yi4uMjllYmE0ZTlhMzlkIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9p
+MmMvdGRhOTk4eF9kcnYuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9pMmMvdGRhOTk4eF9kcnYu
+Ywo+IEBAIC0xODU3LDYgKzE4NTcsNyBAQCB0ZGE5OTh4X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50
+ICpjbGllbnQsIGNvbnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lkICppZCkKPiAgCWJyaWRnZS0+ZGV2
+ID0gZGV2Owo+ICAJZGV2X3NldF9kcnZkYXRhKGRldiwgYnJpZGdlKTsKPiAgCj4gKwlicmlkZ2Ut
+PmJyaWRnZS5vd25lciA9IGRldjsKPiAgCWJyaWRnZS0+YnJpZGdlLmZ1bmNzID0gJnRkYTk5OHhf
+YnJpZGdlX2Z1bmNzOwo+ICAjaWZkZWYgQ09ORklHX09GCj4gIAlicmlkZ2UtPmJyaWRnZS5vZl9u
+b2RlID0gZGV2LT5vZl9ub2RlOwo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2RybS9kcm1fYnJpZGdl
+LmggYi9pbmNsdWRlL2RybS9kcm1fYnJpZGdlLmgKPiBpbmRleCA2ODJkMDFiYTkyMGMuLmI4ZjMz
+YWJhMzIxNiAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL2RybS9kcm1fYnJpZGdlLmgKPiArKysgYi9p
+bmNsdWRlL2RybS9kcm1fYnJpZGdlLmgKPiBAQCAtMjI0LDYgKzIyNCw4IEBAIHN0cnVjdCBkcm1f
+YnJpZGdlX2Z1bmNzIHsKPiAgCj4gIC8qKgo+ICAgKiBzdHJ1Y3QgZHJtX2JyaWRnZSAtIGNlbnRy
+YWwgRFJNIGJyaWRnZSBjb250cm9sIHN0cnVjdHVyZQo+ICsgKiBAb3duZXI6IGRldmljZSB0aGF0
+IG93bnMgdGhlIGJyaWRnZQo+ICsgKiBAbGluazogZHJtIGNvbnN1bWVyIDwtPiBicmlkZ2Ugc3Vw
+cGxpZXIKPiAgICogQGRldjogRFJNIGRldmljZSB0aGlzIGJyaWRnZSBiZWxvbmdzIHRvCj4gICAq
+IEBlbmNvZGVyOiBlbmNvZGVyIHRvIHdoaWNoIHRoaXMgYnJpZGdlIGlzIGNvbm5lY3RlZAo+ICAg
+KiBAbmV4dDogdGhlIG5leHQgYnJpZGdlIGluIHRoZSBlbmNvZGVyIGNoYWluCj4gQEAgLTIzMyw2
+ICsyMzUsOCBAQCBzdHJ1Y3QgZHJtX2JyaWRnZV9mdW5jcyB7Cj4gICAqIEBkcml2ZXJfcHJpdmF0
+ZTogcG9pbnRlciB0byB0aGUgYnJpZGdlIGRyaXZlcidzIGludGVybmFsIGNvbnRleHQKPiAgICov
+Cj4gIHN0cnVjdCBkcm1fYnJpZGdlIHsKPiArCXN0cnVjdCBkZXZpY2UgKm93bmVyOwo+ICsJc3Ry
+dWN0IGRldmljZV9saW5rICpsaW5rOwo+ICAJc3RydWN0IGRybV9kZXZpY2UgKmRldjsKPiAgCXN0
+cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcjsKPiAgCXN0cnVjdCBkcm1fYnJpZGdlICpuZXh0Owo+
+IAo+IAoKCi0tIApUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIy
+LCAwMDE4MCBIZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBh
+aWtrYS9Eb21pY2lsZTogSGVsc2lua2kKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
