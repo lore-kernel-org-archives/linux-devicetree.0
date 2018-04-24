@@ -1,221 +1,82 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
- unflattened to FDT
-Date: Tue, 24 Apr 2018 11:08:19 -0500
-Message-ID: <CANk1AXQKSS+rwbXzPRkF4V_TXA56fQR+1EVFyspCM7dpVNJaQA@mail.gmail.com>
-References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
- <1520122673-11003-3-git-send-email-frowand.list@gmail.com>
- <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de> <7bbf615b-3cdd-6bb4-6918-33e48de4225d@gmail.com>
- <a21dbee8-6e4e-9ceb-c798-dda43c2eae2d@web.de> <d7e94a45-5d46-0491-e5dc-2b098a11c5b1@gmail.com>
- <CAL_Jsq+MmUTMrd+jNqUB2=A-q3cCy7+QWOKG0iF6zM0hjCy3PQ@mail.gmail.com>
- <e508f3de-f21b-2510-2c6a-b810073ba1a7@web.de> <e06d1c0f-f60d-fc23-cd74-82f557dbc432@web.de>
- <7bbb9472-9c96-6012-68e6-4ec2773c7732@gmail.com> <4422f58a-ca7c-16e6-e0df-63faea50f553@web.de>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v5 12/44] clk: davinci: Add platform information for TI
+ DA850 PSC
+Date: Tue, 24 Apr 2018 11:11:12 -0500
+Message-ID: <d32a4cd5-4344-6e20-fdca-1ed830a52466@lechnology.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-13-git-send-email-david@lechnology.com>
+ <CAMRc=MfQuqTK+mDT0Gawa6J-3d1z6djLutaHREKfVm+3hATEqQ@mail.gmail.com>
+ <CAEG3pND6Cu0P_t3y_VM9Sm-GCb3yW0Pa8q4cRUOXYxa5=2nWUQ@mail.gmail.com>
+ <a4d84be0-e3d3-4e39-40f9-cae9006cb6ee@ti.com>
+ <CAMRc=Mc228JAxxBXcObmokh2h-toojG8OHrmbunm_ORqbGWUnA@mail.gmail.com>
+ <69bc0848-0698-b936-96a3-2257a5e27809@ti.com>
+ <CAMRc=MenWp=2dtOs1yafnHVkCxfT7SDS0fS2UxUd+U0s_UDwVw@mail.gmail.com>
+ <57f2182e-09b4-2cab-5602-9d0e029495be@ti.com>
+ <152303318048.143116.2883441215887455211@swboyd.mtv.corp.google.com>
+ <48c8531f-8cd9-a9f8-9c38-cbc4c921c4c9@lechnology.com>
+ <aa1c2e6f-793c-1d9e-366a-3496f500f946@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <jailhouse-dev+bncBAABBHVN7XLAKGQEE6DEHAQ@googlegroups.com>
-Sender: jailhouse-dev@googlegroups.com
-In-Reply-To: <4422f58a-ca7c-16e6-e0df-63faea50f553@web.de>
-List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
-List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
-List-Archive: <https://groups.google.com/group/jailhouse-dev
-List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
-List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
- <https://groups.google.com/group/jailhouse-dev/subscribe>
-To: Jan Kiszka <jan.kiszka@web.de>
-Cc: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jailhouse <jailhouse-dev@googlegroups.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <aa1c2e6f-793c-1d9e-366a-3496f500f946@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Stephen Boyd <sboyd@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 24, 2018 at 12:29 AM, Jan Kiszka <jan.kiszka@web.de> wrote:
-> On 2018-04-24 00:38, Frank Rowand wrote:
->> Hi Jan,
->>
->> + Alan Tull for fpga perspective
->>
->> On 04/22/18 03:30, Jan Kiszka wrote:
->>> On 2018-04-11 07:42, Jan Kiszka wrote:
->>>> On 2018-04-05 23:12, Rob Herring wrote:
->>>>> On Thu, Apr 5, 2018 at 2:28 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->>>>>> On 04/05/18 12:13, Jan Kiszka wrote:
->>>>>>> On 2018-04-05 20:59, Frank Rowand wrote:
->>>>>>>> Hi Jan,
->>>>>>>>
->>>>>>>> On 04/04/18 15:35, Jan Kiszka wrote:
->>>>>>>>> Hi Frank,
->>>>>>>>>
->>>>>>>>> On 2018-03-04 01:17, frowand.list@gmail.com wrote:
->>>>>>>>>> From: Frank Rowand <frank.rowand@sony.com>
->>>>>>>>>>
->>>>>>>>>> Move duplicating and unflattening of an overlay flattened devicetree
->>>>>>>>>> (FDT) into the overlay application code.  To accomplish this,
->>>>>>>>>> of_overlay_apply() is replaced by of_overlay_fdt_apply().
->>>>>>>>>>
->>>>>>>>>> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
->>>>>>>>>> code, which is thus responsible for freeing the duplicate FDT.  The
->>>>>>>>>> caller of of_overlay_fdt_apply() remains responsible for freeing the
->>>>>>>>>> original FDT.
->>>>>>>>>>
->>>>>>>>>> The unflattened devicetree now belongs to devicetree code, which is
->>>>>>>>>> thus responsible for freeing the unflattened devicetree.
->>>>>>>>>>
->>>>>>>>>> These ownership changes prevent early freeing of the duplicated FDT
->>>>>>>>>> or the unflattened devicetree, which could result in use after free
->>>>>>>>>> errors.
->>>>>>>>>>
->>>>>>>>>> of_overlay_fdt_apply() is a private function for the anticipated
->>>>>>>>>> overlay loader.
->>>>>>>>>
->>>>>>>>> We are using of_fdt_unflatten_tree + of_overlay_apply in the
->>>>>>>>> (out-of-tree) Jailhouse loader driver in order to register a virtual
->>>>>>>>> device during hypervisor activation with Linux. The DT overlay is
->>>>>>>>> created from a a template but modified prior to application to account
->>>>>>>>> for runtime-specific parameters. See [1] for the current implementation.
->>>>>>>>>
->>>>>>>>> I'm now wondering how to model that scenario best with the new API.
->>>>>>>>> Given that the loader lost ownership of the unflattened tree but the
->>>>>>>>> modification API exist only for the that DT state, I'm not yet seeing a
->>>>>>>>> clear solution. Should we apply the template in disabled form (status =
->>>>>>>>> "disabled"), modify it, and then activate it while it is already applied?
->>>>>>>>
->>>>>>>> Thank you for the pointer to the driver - that makes it much easier to
->>>>>>>> understand the use case and consider solutions.
->>>>>>>>
->>>>>>>> If you can make the changes directly on the FDT instead of on the
->>>>>>>> expanded devicetree, then you could move to the new API.
->>>>>>>
->>>>>>> Are there some examples/references on how to edit FDTs in-place in the
->>>>>>> kernel? I'd like to avoid writing the n-th FDT parser/generator.
->>>>>>
->>>>>> I don't know of any existing in-kernel edits of the FDT (but they might
->>>>>> exist).  The functions to access an FDT are in libfdt, which is in
->>>>>> scripts/dtc/libfdt/.
->>>>>
->>>>> Let's please not go down that route of doing FDT modifications. There
->>>>> is little reason to other than for early boot changes. And it is much
->>>>> easier to work on unflattened trees.
+On 04/24/2018 03:28 AM, Sekhar Nori wrote:
+> On Monday 23 April 2018 08:29 PM, David Lechner wrote:
+>> On 04/06/2018 11:46 AM, Stephen Boyd wrote:
+>>> Quoting Sekhar Nori (2018-04-06 02:37:03)
 >>>>
->>>> I just briefly looked into libfdt, and it would have meant building it
->>>> into the module as there are no library functions exported by the kernel
->>>> either. Another reason to drop that.
+>>>> Can you please check that and confirm there is no issue with genpd and
+>>>> using CLK_OF_DECLARE() to initialize clocks?
 >>>>
->>>> What's apparently working now is the pattern I initially suggested:
->>>> Register template with status = "disabled" as overlay, then prepare and
->>>> apply changeset that contains all needed modifications and sets the
->>>> status to "ok". I might be leaking additional resources, but to find
->>>> that out, I will now finally have to resolve clean unbinding of the
->>>> generic PCI host controller [1] first.
+>>>> Unless you report an issue back, or Mike and Stephen have ideas about
+>>>> how to handle the dependency between PSC/PLL derived timer clock
+>>>> initialization and and timer_probe(), I think we need to move back to
+>>>> using CLK_OF_DECLARE().
 >>>
->>> static void free_overlay_changeset(struct overlay_changeset *ovcs)
->>> {
->>>      [...]
->>>      /*
->>>       * TODO
->>>       *
->>>       * would like to: kfree(ovcs->overlay_tree);
->>>       * but can not since drivers may have pointers into this data
->>>       *
->>>       * would like to: kfree(ovcs->fdt);
->>>       * but can not since drivers may have pointers into this data
->>>       */
+>>> In such a case, please use the hybrid approach where the clks required
+>>> for the clockevent and/or clocksource are registered in the early
+>>> CLK_OF_DECLARE path but the rest of the clks get registered with a
+>>> proper platform device and driver. There are examples of this approach
+>>> on other platforms already.
 >>>
->>>      kfree(ovcs);
->>> }
->>>
->>> What's this? I have kmemleak now jumping at me over this. Who is suppose
->>> to plug these leaks? The caller of of_overlay_fdt_apply has no pointers
->>> to those objects. I would say that's a regression of the new API.
 >>
->> The problem already existed but it was hidden.  We have never been able to
->> kfree() these object because we do not know if there are any pointers into
->> these objects.  The new API makes the problem visible to kmemleak.
->
-> My old code didn't have the problem because there was no one steeling
-> pointers to my overlay, and I was able to safely release all the
-> resources that I or the core on my behalf allocated. In fact, I recently
-> even dropped the duplication the fdt prior to unflattening it because I
-> got its lifecycle under control (and both kmemleak as well as kasan
-> confirmed this). I still consider this intentional leak a regression of
-> the new API.
->
->>
->> The reason that we do not know if there are any pointers into these objects
->> is that devicetree access APIs return pointers into the devicetree internal
->> data structures (that is, into the overlay unflattened devicetree).  If we
->> want to be able to do the kfree()s, we could change the devicetree access
->> APIs.
->>
->> The reason that pointers into the overlay flattened tree (ovcs->fdt) are
->> also exposed is that the overlay unflattened devicetree property values
->> are pointers into the overlay fdt.
->>
->> ** This paragraph becomes academic (and not needed) if the fix in the next
->> paragraph can be implemented. **
->> I _think_ that the fdt issue __for overlays__ can be fixed somewhat easily.
->> (I would want to read through the code again to make sure I'm not missing
->> any issues.)  If the of_fdt_unflatten_tree() called by of_overlay_fdt_apply()
->> was modified so that property values were copied into newly allocated memory
->> and the live tree property pointers were set to the copy instead of to
->> the value in the fdt, then I _think_ the fdt could be freed in
->> of_overlay_fdt_apply() after calling of_overlay_apply().  The code that
->
-> I don't see yet how more duplicating of objects would help. Then we
-> would not leak the fdt or the unflattened tree on overlay destruction
-> but that duplicates, no?
->
->> frees a devicetree would also have to be aware of this change -- I'm not
->> sure if that leads to ugly complications or if it is easy.  The other
->> question to consider is whether to make the same change to
->> of_fdt_unflatten_tree() when it is called in early boot to unflatten
->> the base devicetree.  Doing so would increase the memory usage of the
->> live tree (we would not be able to free the base fdt after unflattening
->> it because we make the fdt visible in /sys/firmware/fdt -- though
->> _maybe_ that could be conditioned on CONFIG_KEXEC).
->>
->> But all of the complexity of that fix is _only_ because of_overlay_apply()
->> and of_overlay_remove() call overlay_notify(), passing in the overlay
->> unflattened devicetree (which has pointers into the overlay fdt). Pointers
->> into the overlay unflattened devicetree are then passed to the notifiers.
->> (Again, I may be missing some other place that the overlay unflattened
->> devicetree is made visible to other code -- a more thorough reading of
->> the code is needed.) If the notifiers could be modified to accept the
->> changeset list instead of of pointers to the fragments in the overlay
->> unflattened devicetree then there would be no possibility of the notifiers
->> keeping a pointer into the overlay fdt. I do not know if this is a
->
-> But then again the convention has to be that those changeset pointers
-> must not be kept - because the changeset is history after of_overlay_remove.
->
->> practical change for the notifiers -- there are no callers of
->> of_overlay_notifier_register() in the mainline kernel source. My
->> recollection is that the overlay notifiers were added for the fpga
->> subsystem.
+>> I looked at this a bit last week, but I didn't come up with any approach
+>> that I was happy with. It seems like it would be nice to just register
+>> the absolute minimum clocks needed. On DA8XX, that would just be the PLL0
+>> AUXCLK. On most of the other SoCs, it would be the PLL AUXCLK plus one
+>> LPSC clock. The AUXCLKs are easy because they are just a simple gate
+>> from the oscillator. The LPSC clocks are a bit more tricky because they
+>> have a complex sequence for turning on. Furthermore, on DM646X, we need
+>> the whole PLL up to SYSCLK3 plus one LPSC clock, so things get a bit
+>> messy there.
+> 
+> Things might change in the context of work being done here by Bartosz
+> for converting clocks to early platform devices.
+> 
+> But, keeping that development aside for a moment: I think this means the
+> PLLs and PSCs need to be CLK_OF_DECLARE(). What we can have as platform
+> devices are clocks that are not in the path to get timer clock working
+> (like CFGCHIP clocks).
 
-That's right.
+CLK_OF_DECLARE() only matters on DA850. None of the other SoCs use device
+tree. And on DA850, the timer0 clock is just the PLL0 AUXCLK, so PSCs can
+still be platform devices there. And in fact, one of the PSC clocks on
+DA850 depends on async3, which is a CFGCHIP clock, so if we made the PSCs
+CLK_OF_DECLARE(), then we also have to make at least the async3 CFGCHIP
+clock CLK_OF_DECLARE(). But, like I said, I think that can be avoided by
+leaving the PSC clocks as a platform device on DA850 (and DA830).
 
->
-> We have drivers/fpga/of-fpga-region.c in-tree, and that does not seem to
-> store any pointers to objects, rather consumes them in-place. And I
-> would consider it fair to impose such a limitation on the notifier
-> interface.
+For everything else, we need the legacy board file equivalent of
+CLK_OF_DECLARE(), which is basically what I had here in v5 of the
+series.
 
-The FPGA code was written assuming that overlays could be removed.
-
->
->>
->> Why is overlay_notify() the only issue related to unknown users having
->> pointers into the overlay fdt?  The answer is that the overlay code
->> does not directly expose the overlay unflattened devicetree (and thus
->> indirectly the overlay fdt) to the live devicetree -- when the
->> overlay code creates the overlay changeset, it copies from the
->> overlay unflattened devicetree and overlay fdt and only exposes
->> pointers to the copies.
->>
->> And hopefully the issues with the overlay unflattened devicetree can
->> be resolved in the same way as for the overlay fdt.
->
-> As noted above, I don't see there is a technical solution to this issue
-> but it's rather a matter of convention: no overlay notifier callback is
-> allowed to keep references to the passed tree content (unless it
-> reference-counts some tree nodes) beyond the execution of the callback.
-> With that in place, we can safely drop the backing memory IMHO.
->
-> Jan
+So, if we want this to keep moving before the if/when of Bartosz's
+early platform device stuff, I'm thinking that I will make the PLL
+and PSC drivers loadable with or without a platform device and let
+each SoC pick which one it should use.
