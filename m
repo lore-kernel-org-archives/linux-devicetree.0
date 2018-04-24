@@ -1,74 +1,51 @@
-Return-Path: <SRS0=w2p0=HQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37990 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753569AbeD0WCd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Apr 2018 18:02:33 -0400
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: [PATCH v3 6/6] arm64: dts: r8a77965-salvator-xs: Enable DU external clocks and HDMI
-Date: Fri, 27 Apr 2018 23:02:20 +0100
-Message-Id: <20180427220220.31286-7-kieran.bingham+renesas@ideasonboard.com>
-In-Reply-To: <20180427220220.31286-1-kieran.bingham+renesas@ideasonboard.com>
-References: <20180427220220.31286-1-kieran.bingham+renesas@ideasonboard.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Return-Path: <krzk@kernel.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [RFC 05/10] i2c: s3c2410: Remove support for Exynos5440
+Date: Tue, 24 Apr 2018 22:32:34 +0200
+Message-Id: <20180424203239.21885-6-krzk@kernel.org>
+In-Reply-To: <20180424203239.21885-1-krzk@kernel.org>
+References: <20180424203239.21885-1-krzk@kernel.org>
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Jaehoon Chung <jh80.chung@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The DU1 external dot clock is provided by the fixed frequency clock
-generator X21, while the DU0 and DU3 clocks are provided by the
-programmable Versaclock6 clock generator.
+The Exynos5440 is not actively developed, there are no development
+boards available and probably there are no real products with it.
+Remove wide-tree support for Exynos5440.
 
-Enable the clocks, and the HDMI encoder for the M3-N Salvator-XS, and
-hook it up to the HDMI connector
-
-Based on patches from Takeshi Kihara <takeshi.kihara.df@renesas.com>
-
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
-v3:
- - Remove LVDS references
----
- .../boot/dts/renesas/r8a77965-salvator-xs.dts | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt | 4 +---
+ drivers/i2c/busses/i2c-s3c2410.c                      | 2 --
+ 2 files changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
-index a83a00deed9e..9de4e3db1621 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
-@@ -19,3 +19,31 @@
- 		reg = <0x0 0x48000000 0x0 0x78000000>;
- 	};
- };
-+
-+&du {
-+	clocks = <&cpg CPG_MOD 724>,
-+		 <&cpg CPG_MOD 723>,
-+		 <&cpg CPG_MOD 721>,
-+		 <&versaclock6 1>,
-+		 <&x21_clk>,
-+		 <&versaclock6 2>;
-+	clock-names = "du.0", "du.1", "du.3",
-+		      "dclkin.0", "dclkin.1", "dclkin.3";
-+};
-+
-+&hdmi0 {
-+	status = "okay";
-+
-+	ports {
-+		port@1 {
-+			reg = <1>;
-+			rcar_dw_hdmi0_out: endpoint {
-+				remote-endpoint = <&hdmi0_con>;
-+			};
-+		};
-+	};
-+};
-+
-+&hdmi0_con {
-+	remote-endpoint = <&rcar_dw_hdmi0_out>;
-+};
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt b/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt
+index 89b3250f049b..66ae46d3bc2f 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt
+@@ -8,9 +8,7 @@ Required properties:
+       (b) "samsung, s3c2440-i2c", for i2c compatible with s3c2440 i2c.
+       (c) "samsung, s3c2440-hdmiphy-i2c", for s3c2440-like i2c used
+           inside HDMIPHY block found on several samsung SoCs
+-      (d) "samsung, exynos5440-i2c", for s3c2440-like i2c used
+-	   on EXYNOS5440 which does not need GPIO configuration.
+-      (e) "samsung, exynos5-sata-phy-i2c", for s3c2440-like i2c used as
++      (d) "samsung, exynos5-sata-phy-i2c", for s3c2440-like i2c used as
+ 	   a host to SATA PHY controller on an internal bus.
+   - reg: physical base address of the controller and length of memory mapped
+     region.
+diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
+index 5d97510ee48b..9fe2b6951895 100644
+--- a/drivers/i2c/busses/i2c-s3c2410.c
++++ b/drivers/i2c/busses/i2c-s3c2410.c
+@@ -154,8 +154,6 @@ static const struct of_device_id s3c24xx_i2c_match[] = {
+ 	{ .compatible = "samsung,s3c2440-i2c", .data = (void *)QUIRK_S3C2440 },
+ 	{ .compatible = "samsung,s3c2440-hdmiphy-i2c",
+ 	  .data = (void *)(QUIRK_S3C2440 | QUIRK_HDMIPHY | QUIRK_NO_GPIO) },
+-	{ .compatible = "samsung,exynos5440-i2c",
+-	  .data = (void *)(QUIRK_S3C2440 | QUIRK_NO_GPIO) },
+ 	{ .compatible = "samsung,exynos5-sata-phy-i2c",
+ 	  .data = (void *)(QUIRK_S3C2440 | QUIRK_POLL | QUIRK_NO_GPIO) },
+ 	{},
 -- 
-2.17.0
-
+2.14.1
