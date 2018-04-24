@@ -1,424 +1,85 @@
-From: Amit Nischal <anischal@codeaurora.org>
-Subject: [PATCH 2/2] clk: qcom: Add video clock controller driver for SDM845
-Date: Tue, 24 Apr 2018 19:02:51 +0530
-Message-ID: <1524576771-31096-3-git-send-email-anischal@codeaurora.org>
-References: <1524576771-31096-1-git-send-email-anischal@codeaurora.org>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [RFC 00/13] arm64: allwinner: Add A64 DE2 pipeline support
+Date: Tue, 24 Apr 2018 19:04:12 +0530
+Message-ID: <20180424133425.24291-1-jagan@amarulasolutions.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524576771-31096-1-git-send-email-anischal@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Amit Nischal <anischal@codeaurora.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the video clock controller found on SDM845
-based devices. This would allow video drivers to probe and
-control their clocks.
+Allwinner A64 has display engine pipeline like other Allwinner SOC's A83T/H3/H5.
 
-Signed-off-by: Amit Nischal <anischal@codeaurora.org>
----
- drivers/clk/qcom/Kconfig          |  11 ++
- drivers/clk/qcom/Makefile         |   1 +
- drivers/clk/qcom/videocc-sdm845.c | 359 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 371 insertions(+)
- create mode 100644 drivers/clk/qcom/videocc-sdm845.c
+A64 DE2 behaviour similar to Allwinner A83T where mixer0, connected to tcon0 with
+RGB, LVDS MIPI-DSI and mixer1, connected to tcon1 with HDMI.
+This series merely concentrated on HDMI pipeline and rest will add eventually.
 
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index fb03d99..0464477 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -236,6 +236,17 @@ config SDM_GCC_845
- 	  Say Y if you want to use peripheral devices such as UART, SPI,
- 	  I2C, USB, UFS, SDDC, PCIe, etc.
+patch 1: dt-bindings for a64 DE2 CCU
 
-+config SDM_VIDEOCC_845
-+	tristate "SDM845 Video Clock Controller"
-+	depends on COMMON_CLK_QCOM
-+	select SDM_GCC_845
-+	select QCOM_GDSC
-+	help
-+	  Support for the video clock controller on Qualcomm Technologies, Inc
-+	  SDM845 devices.
-+	  Say Y if you want to support video devices and functionality such as
-+	  video encode and decode.
-+
- config SPMI_PMIC_CLKDIV
- 	tristate "SPMI PMIC clkdiv Support"
- 	depends on (COMMON_CLK_QCOM && SPMI) || COMPILE_TEST
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 23bf50c..7738f50 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -39,4 +39,5 @@ obj-$(CONFIG_QCOM_CLK_RPM) += clk-rpm.o
- obj-$(CONFIG_QCOM_CLK_RPMH) += clk-rpmh.o
- obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
- obj-$(CONFIG_SDM_GCC_845) += gcc-sdm845.o
-+obj-$(CONFIG_SDM_VIDEOCC_845) += videocc-sdm845.o
- obj-$(CONFIG_SPMI_PMIC_CLKDIV) += clk-spmi-pmic-div.o
-diff --git a/drivers/clk/qcom/videocc-sdm845.c b/drivers/clk/qcom/videocc-sdm845.c
-new file mode 100644
-index 0000000..726275a
---- /dev/null
-+++ b/drivers/clk/qcom/videocc-sdm845.c
-@@ -0,0 +1,359 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include <dt-bindings/clock/qcom,videocc-sdm845.h>
-+
-+#include "common.h"
-+#include "clk-alpha-pll.h"
-+#include "clk-branch.h"
-+#include "clk-rcg.h"
-+#include "clk-regmap.h"
-+#include "clk-pll.h"
-+#include "gdsc.h"
-+#include "reset.h"
-+
-+#define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
-+
-+enum {
-+	P_BI_TCXO,
-+	P_CORE_BI_PLL_TEST_SE,
-+	P_VIDEO_PLL0_OUT_EVEN,
-+	P_VIDEO_PLL0_OUT_MAIN,
-+	P_VIDEO_PLL0_OUT_ODD,
-+};
-+
-+static const struct parent_map video_cc_parent_map_0[] = {
-+	{ P_BI_TCXO, 0 },
-+	{ P_VIDEO_PLL0_OUT_MAIN, 1 },
-+	{ P_VIDEO_PLL0_OUT_EVEN, 2 },
-+	{ P_VIDEO_PLL0_OUT_ODD, 3 },
-+	{ P_CORE_BI_PLL_TEST_SE, 4 },
-+};
-+
-+static const char * const video_cc_parent_names_0[] = {
-+	"bi_tcxo",
-+	"video_pll0",
-+	"video_pll0_out_even",
-+	"video_pll0_out_odd",
-+	"core_bi_pll_test_se",
-+};
-+
-+static const struct alpha_pll_config video_pll0_config = {
-+	.l = 0x10,
-+	.alpha = 0xaaab,
-+};
-+
-+static struct clk_alpha_pll video_pll0 = {
-+	.offset = 0x42c,
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_FABIA],
-+	.clkr = {
-+		.hw.init = &(struct clk_init_data){
-+			.name = "video_pll0",
-+			.parent_names = (const char *[]){ "bi_tcxo" },
-+			.num_parents = 1,
-+			.ops = &clk_alpha_pll_fabia_ops,
-+		},
-+	},
-+};
-+
-+static const struct freq_tbl ftbl_video_cc_venus_clk_src[] = {
-+	F(100000000, P_VIDEO_PLL0_OUT_MAIN, 4, 0, 0),
-+	F(200000000, P_VIDEO_PLL0_OUT_MAIN, 2, 0, 0),
-+	F(330000000, P_VIDEO_PLL0_OUT_MAIN, 1, 0, 0),
-+	F(404000000, P_VIDEO_PLL0_OUT_MAIN, 1, 0, 0),
-+	F(444000000, P_VIDEO_PLL0_OUT_MAIN, 1, 0, 0),
-+	F(533000000, P_VIDEO_PLL0_OUT_MAIN, 1, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 video_cc_venus_clk_src = {
-+	.cmd_rcgr = 0x7f0,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = video_cc_parent_map_0,
-+	.freq_tbl = ftbl_video_cc_venus_clk_src,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "video_cc_venus_clk_src",
-+		.parent_names = video_cc_parent_names_0,
-+		.num_parents = 5,
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_rcg2_shared_ops,
-+	},
-+};
-+
-+static struct clk_branch video_cc_apb_clk = {
-+	.halt_reg = 0x990,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x990,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "video_cc_apb_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_at_clk = {
-+	.halt_reg = 0x9f0,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x9f0,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "video_cc_at_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_qdss_trig_clk = {
-+	.halt_reg = 0x970,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x970,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "video_cc_qdss_trig_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_qdss_tsctr_div8_clk = {
-+	.halt_reg = 0x9d0,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x9d0,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "video_cc_qdss_tsctr_div8_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_vcodec0_axi_clk = {
-+	.halt_reg = 0x930,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x930,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "video_cc_vcodec0_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_vcodec0_core_clk = {
-+	.halt_reg = 0x890,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x890,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "video_cc_vcodec0_core_clk",
-+			.parent_names = (const char *[]){
-+				"video_cc_venus_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_vcodec1_axi_clk = {
-+	.halt_reg = 0x950,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x950,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "video_cc_vcodec1_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_vcodec1_core_clk = {
-+	.halt_reg = 0x8d0,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x8d0,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "video_cc_vcodec1_core_clk",
-+			.parent_names = (const char *[]){
-+				"video_cc_venus_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_venus_ahb_clk = {
-+	.halt_reg = 0x9b0,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x9b0,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "video_cc_venus_ahb_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_venus_ctl_axi_clk = {
-+	.halt_reg = 0x910,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x910,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "video_cc_venus_ctl_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_venus_ctl_core_clk = {
-+	.halt_reg = 0x850,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x850,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "video_cc_venus_ctl_core_clk",
-+			.parent_names = (const char *[]){
-+				"video_cc_venus_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct gdsc venus_gdsc = {
-+	.gdscr = 0x814,
-+	.pd = {
-+		.name = "venus_gdsc",
-+	},
-+	.cxcs = (unsigned int []){ 0x850, 0x910 },
-+	.cxc_count = 2,
-+	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = POLL_CFG_GDSCR,
-+};
-+
-+static struct gdsc vcodec0_gdsc = {
-+	.gdscr = 0x874,
-+	.pd = {
-+		.name = "vcodec0_gdsc",
-+	},
-+	.cxcs = (unsigned int []){ 0x890, 0x930 },
-+	.cxc_count = 2,
-+	.flags = HW_CTRL | POLL_CFG_GDSCR,
-+	.pwrsts = PWRSTS_OFF_ON,
-+};
-+
-+static struct gdsc vcodec1_gdsc = {
-+	.gdscr = 0x8b4,
-+	.pd = {
-+		.name = "vcodec1_gdsc",
-+	},
-+	.cxcs = (unsigned int []){ 0x8d0, 0x950 },
-+	.cxc_count = 2,
-+	.flags = HW_CTRL | POLL_CFG_GDSCR,
-+	.pwrsts = PWRSTS_OFF_ON,
-+};
-+
-+static struct clk_regmap *video_cc_sdm845_clocks[] = {
-+	[VIDEO_CC_APB_CLK] = &video_cc_apb_clk.clkr,
-+	[VIDEO_CC_AT_CLK] = &video_cc_at_clk.clkr,
-+	[VIDEO_CC_QDSS_TRIG_CLK] = &video_cc_qdss_trig_clk.clkr,
-+	[VIDEO_CC_QDSS_TSCTR_DIV8_CLK] = &video_cc_qdss_tsctr_div8_clk.clkr,
-+	[VIDEO_CC_VCODEC0_AXI_CLK] = &video_cc_vcodec0_axi_clk.clkr,
-+	[VIDEO_CC_VCODEC0_CORE_CLK] = &video_cc_vcodec0_core_clk.clkr,
-+	[VIDEO_CC_VCODEC1_AXI_CLK] = &video_cc_vcodec1_axi_clk.clkr,
-+	[VIDEO_CC_VCODEC1_CORE_CLK] = &video_cc_vcodec1_core_clk.clkr,
-+	[VIDEO_CC_VENUS_AHB_CLK] = &video_cc_venus_ahb_clk.clkr,
-+	[VIDEO_CC_VENUS_CLK_SRC] = &video_cc_venus_clk_src.clkr,
-+	[VIDEO_CC_VENUS_CTL_AXI_CLK] = &video_cc_venus_ctl_axi_clk.clkr,
-+	[VIDEO_CC_VENUS_CTL_CORE_CLK] = &video_cc_venus_ctl_core_clk.clkr,
-+	[VIDEO_PLL0] = &video_pll0.clkr,
-+};
-+
-+static struct gdsc *video_cc_sdm845_gdscs[] = {
-+	[VENUS_GDSC] = &venus_gdsc,
-+	[VCODEC0_GDSC] = &vcodec0_gdsc,
-+	[VCODEC1_GDSC] = &vcodec1_gdsc,
-+};
-+
-+static const struct regmap_config video_cc_sdm845_regmap_config = {
-+	.reg_bits	= 32,
-+	.reg_stride	= 4,
-+	.val_bits	= 32,
-+	.max_register	= 0xb90,
-+	.fast_io	= true,
-+};
-+
-+static const struct qcom_cc_desc video_cc_sdm845_desc = {
-+	.config = &video_cc_sdm845_regmap_config,
-+	.clks = video_cc_sdm845_clocks,
-+	.num_clks = ARRAY_SIZE(video_cc_sdm845_clocks),
-+	.gdscs = video_cc_sdm845_gdscs,
-+	.num_gdscs = ARRAY_SIZE(video_cc_sdm845_gdscs),
-+};
-+
-+static const struct of_device_id video_cc_sdm845_match_table[] = {
-+	{ .compatible = "qcom,videocc-sdm845" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, video_cc_sdm845_match_table);
-+
-+static int video_cc_sdm845_probe(struct platform_device *pdev)
-+{
-+	struct regmap *regmap;
-+
-+	regmap = qcom_cc_map(pdev, &video_cc_sdm845_desc);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	clk_fabia_pll_configure(&video_pll0, regmap, &video_pll0_config);
-+
-+	return qcom_cc_really_probe(pdev, &video_cc_sdm845_desc, regmap);
-+}
-+
-+static struct platform_driver video_cc_sdm845_driver = {
-+	.probe		= video_cc_sdm845_probe,
-+	.driver		= {
-+		.name	= "videocc-sdm845",
-+		.of_match_table = video_cc_sdm845_match_table,
-+	},
-+};
-+
-+static int __init video_cc_sdm845_init(void)
-+{
-+	return platform_driver_register(&video_cc_sdm845_driver);
-+}
-+subsys_initcall(video_cc_sdm845_init);
-+
-+static void __exit video_cc_sdm845_exit(void)
-+{
-+	platform_driver_unregister(&video_cc_sdm845_driver);
-+}
-+module_exit(video_cc_sdm845_exit);
-+
-+MODULE_LICENSE("GPL v2");
---
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+patch 2: a64 DE2 CCU node addition
+
+patch 3: dt-bindings for a64 DE2 pipeline
+
+patch 4 - 5: dt-bindings for a64 mixer0 and tcon-lcd
+
+patch 6: a64 DE2 pipeline node addition
+
+patch 7 - 8: dt-bindings for a64 HDMI and HDMI PHY
+
+patch 9: a64 HDMI nodes addition
+
+patch 10 - 11: dt-bindings for a64 mixer1 and tcon-tv
+
+patch 12: a64 HDMI pipeline
+
+patch 13: enable HDMI out on bananpi-m64
+
+Tested HDMI on bananapi-m64 (along with DE2 SRAM C changes from [1]
+thread), able to detect the HDMI but, no penguins on screen.
+
+Request for any suggestions.
+
+Test log on Bananpi-m64:
+[    0.247631] sun4i-drm display-engine: bound 1100000.mixer (ops sun8i_mixer_ops)
+[    0.256717] sun4i-drm display-engine: bound 1200000.mixer (ops sun8i_mixer_ops)
+[    0.256783] sun4i-tcon 1c0c000.lcd-controller: Missing LVDS properties, Please upgrade your DT
+[    0.256792] sun4i-tcon 1c0c000.lcd-controller: LVDS output disabled
+[    0.257081] sun4i-drm display-engine: No panel or bridge found... RGB output disabled
+[    0.257099] sun4i-drm display-engine: bound 1c0c000.lcd-controller (ops sun4i_tcon_ops)
+[    0.257273] sun4i-drm display-engine: No panel or bridge found... RGB output disabled
+[    0.257288] sun4i-drm display-engine: bound 1c0d000.lcd-controller (ops sun4i_tcon_ops)
+[    0.258176] sun8i-dw-hdmi 1ee0000.hdmi: Detected HDMI TX controller v1.32a with HDCP (sun8i_dw_hdmi_p)
+[    0.258596] sun8i-dw-hdmi 1ee0000.hdmi: registered DesignWare HDMI I2C bus driver
+[    0.259188] sun4i-drm display-engine: bound 1ee0000.hdmi (ops sun8i_dw_hdmi_ops)
+[    0.259199] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[    0.259205] [drm] No driver support for vblank timestamp query.
+[    0.259308] [drm] Cannot find any crtc or sizes
+[    0.259824] [drm] Initialized sun4i-drm 1.0.0 20150629 for display-engine on minor 0
+
+[1] https://lkml.org/lkml/2018/3/16/1096
+
+Jagan Teki (13):
+  dt-bindings: clock: Add compatible for A64 DE2 CCU
+  arm64: dts: allwinner: a64: Add DE2 CCU
+  bindings: display: Add compatible for A64 DE2 pipeline
+  bindings: display: Add compatible for A64 Mixer0
+  bindings: display: Add compatible for A64 tcon-lcd
+  arm64: dts: allwinner: a64: Add DE2 pipeline
+  bindings: display: Add compatible for A64 HDMI
+  bindings: display: Add compatible for A64 HDMI PHY
+  arm64: dts: allwinner: a64: Add HDMI support
+  bindings: display: Add compatible for A64 Mixer1
+  bindings: display: Add compatible for A64 tcon-tv
+  arm64: dts: allwinner: a64: Add HDMI pipeline
+  arm64: dts: allwinner: a64: bananapi-m64: Enable HDMI output
+
+ .../devicetree/bindings/clock/sun8i-de2.txt        |   1 +
+ .../bindings/display/sunxi/sun4i-drm.txt           |   7 +
+ .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts |  26 +++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      | 181 +++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun4i_drv.c                  |   1 +
+ include/dt-bindings/clock/sun50i-a64-ccu.h         |   2 +
+ 6 files changed, 218 insertions(+)
+
+-- 
+2.14.3
