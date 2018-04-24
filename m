@@ -1,32 +1,55 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] doc: Add vendor prefix for Kaohsiung
-Date: Tue, 24 Apr 2018 08:05:10 -0500
-Message-ID: <20180424130510.qdd3pmk6nzvkwojm@rob-hp-laptop>
-References: <20180412143401.6433-1-lukma@denx.de>
- <20180417083115.11000-1-lukma@denx.de>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v2 1/3] drm: Make the prime vmap/vunmap hooks optional.
+Date: Tue, 24 Apr 2018 15:13:09 +0200
+Message-ID: <20180424131309.GE31310@phenom.ffwll.local>
+References: <20180424004610.4637-1-eric@anholt.net>
+ <20180424004610.4637-2-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20180417083115.11000-1-lukma@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20180424004610.4637-2-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 17, 2018 at 10:31:15AM +0200, Lukasz Majewski wrote:
-> The 'koe' entry has been added to vendor-prefixes.txt to indicate
-> products from Kaohsiung Opto-Electronics Inc.
-> 
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> ---
-> Changes for v2:
-> - Replace 'kao' to 'koe' in commit message
-> 
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
-
-Applied.
-
-Rob
+T24gTW9uLCBBcHIgMjMsIDIwMTggYXQgMDU6NDY6MDhQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
+dGU6Cj4gU29tZSBkcml2ZXJzIGxlYXZlIHRoZXNlIHVuaW1wbGVtZW50ZWQsIHNvIGRvbid0IG1h
+a2UgdGhlbSBoYXZlCj4gdW5pbXBsZW1lbnRlZCBzdHVicy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBF
+cmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0PgoKUmV2aWV3ZWQtYnk6IERhbmllbCBWZXR0ZXIg
+PGRhbmllbC52ZXR0ZXJAZmZ3bGwuY2g+Cgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vZHJtX3By
+aW1lLmMgfCA4ICsrKysrKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDIg
+ZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fcHJpbWUu
+YyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fcHJpbWUuYwo+IGluZGV4IGNhZjY3NWUzZTY5Mi4uMzk3
+YjQ2YjMzNzM5IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fcHJpbWUuYwo+ICsr
+KyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fcHJpbWUuYwo+IEBAIC00MDksNyArNDA5LDEwIEBAIHZv
+aWQgKmRybV9nZW1fZG1hYnVmX3ZtYXAoc3RydWN0IGRtYV9idWYgKmRtYV9idWYpCj4gIAlzdHJ1
+Y3QgZHJtX2dlbV9vYmplY3QgKm9iaiA9IGRtYV9idWYtPnByaXY7Cj4gIAlzdHJ1Y3QgZHJtX2Rl
+dmljZSAqZGV2ID0gb2JqLT5kZXY7Cj4gIAo+IC0JcmV0dXJuIGRldi0+ZHJpdmVyLT5nZW1fcHJp
+bWVfdm1hcChvYmopOwo+ICsJaWYgKGRldi0+ZHJpdmVyLT5nZW1fcHJpbWVfdm1hcCkKPiArCQly
+ZXR1cm4gZGV2LT5kcml2ZXItPmdlbV9wcmltZV92bWFwKG9iaik7Cj4gKwllbHNlCj4gKwkJcmV0
+dXJuIE5VTEw7Cj4gIH0KPiAgRVhQT1JUX1NZTUJPTChkcm1fZ2VtX2RtYWJ1Zl92bWFwKTsKPiAg
+Cj4gQEAgLTQyNiw3ICs0MjksOCBAQCB2b2lkIGRybV9nZW1fZG1hYnVmX3Z1bm1hcChzdHJ1Y3Qg
+ZG1hX2J1ZiAqZG1hX2J1Ziwgdm9pZCAqdmFkZHIpCj4gIAlzdHJ1Y3QgZHJtX2dlbV9vYmplY3Qg
+Km9iaiA9IGRtYV9idWYtPnByaXY7Cj4gIAlzdHJ1Y3QgZHJtX2RldmljZSAqZGV2ID0gb2JqLT5k
+ZXY7Cj4gIAo+IC0JZGV2LT5kcml2ZXItPmdlbV9wcmltZV92dW5tYXAob2JqLCB2YWRkcik7Cj4g
+KwlpZiAoZGV2LT5kcml2ZXItPmdlbV9wcmltZV92dW5tYXApCj4gKwkJZGV2LT5kcml2ZXItPmdl
+bV9wcmltZV92dW5tYXAob2JqLCB2YWRkcik7Cj4gIH0KPiAgRVhQT1JUX1NZTUJPTChkcm1fZ2Vt
+X2RtYWJ1Zl92dW5tYXApOwo+ICAKPiAtLSAKPiAyLjE3LjAKPiAKPiBfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+PiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKCi0tIApEYW5pZWwgVmV0dGVyClNv
+ZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgpodHRwOi8vYmxvZy5mZndsbC5jaApf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
