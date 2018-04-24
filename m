@@ -1,164 +1,77 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2 2/2] usb: dwc3: support clocks and resets for DWC3 core
-Date: Tue, 24 Apr 2018 10:17:12 +0900
-Message-ID: <CAK7LNATN+Dp3MRQbELzd4G+cy614dGDDTM_=0a-LB8QzWj7k9w@mail.gmail.com>
-References: <1524135818-14825-1-git-send-email-yamada.masahiro@socionext.com>
- <1524135818-14825-3-git-send-email-yamada.masahiro@socionext.com> <CAFBinCDwbyovMZ-qAKaMiBfz_YKMwxC1c4MjfNyLAvnXEfXtMw@mail.gmail.com>
+From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 03/37] iommu/sva: Manage process address spaces
+Date: Mon, 23 Apr 2018 21:32:33 -0400
+Message-ID: <57d77955-caa7-ddac-df7d-7eef1f05dbb2@codeaurora.org>
+References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
+	<20180212183352.22730-4-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCDwbyovMZ-qAKaMiBfz_YKMwxC1c4MjfNyLAvnXEfXtMw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-usb@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh@kernel.org>, Roger Quadros <rogerq@ti.com>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, DTML <devicetree@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180212183352.22730-4-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2018-04-24 2:44 GMT+09:00 Martin Blumenstingl
-<martin.blumenstingl@googlemail.com>:
-> Hello,
->
-> On Thu, Apr 19, 2018 at 1:03 PM, Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
->> Historically, the clocks and resets are handled on the glue layer
->> side instead of the DWC3 core.  For simple cases, dwc3-of-simple.c
->> takes care of arbitrary number of clocks and resets.  The DT node
->> structure typically looks like as follows:
->>
->>   dwc3-glue {
->>           compatible = "foo,dwc3";
->>           clocks = ...;
->>           resets = ...;
->>           ...
->>
->>           dwc3 {
->>                   compatible = "snps,dwc3";
->>                   ...
->>           };
->>   }
->>
->> By supporting the clocks and the reset in the dwc3/core.c, it will
->> be turned into a single node:
->>
->>   dwc3 {
->>           compatible = "foo,dwc3", "snps,dwc3";
->>           clocks = ...;
->>           resets = ...;
->>           ...
->>   }
->>
->> This commit adds the binding of clocks and resets specific to this IP.
->> The number of clocks should generally be the same across SoCs, it is
->> just some SoCs either tie clocks together or do not provide software
->> control of some of the clocks.
->>
->> I took the clock names from the Synopsys datasheet: "ref" (ref_clk),
->> "bus_early" (bus_clk_early), and "suspend" (suspend_clk).
-> looking at the code: this could mean that dwc3-exynos.c can be removed
-> mid-term (assuming the PHY and regulator handling can be
-> moved/removed/changed)
+On 2/12/2018 1:33 PM, Jean-Philippe Brucker wrote:
+> /**
+>   * iommu_sva_device_init() - Initialize Shared Virtual Addressing for a device
+>   * @dev: the device
+> @@ -129,7 +439,10 @@ EXPORT_SYMBOL_GPL(iommu_sva_device_shutdown);
+>  int iommu_sva_bind_device(struct device *dev, struct mm_struct *mm, int *pasid,
+>  			  unsigned long flags, void *drvdata)
+>  {
+> +	int i, ret;
+> +	struct io_mm *io_mm = NULL;
+>  	struct iommu_domain *domain;
+> +	struct iommu_bond *bond = NULL, *tmp;
+>  	struct iommu_param *dev_param = dev->iommu_param;
+>  
+>  	domain = iommu_get_domain_for_dev(dev);
+> @@ -145,7 +458,42 @@ int iommu_sva_bind_device(struct device *dev, struct mm_struct *mm, int *pasid,
+>  	if (flags != (IOMMU_SVA_FEAT_PASID | IOMMU_SVA_FEAT_IOPF))
+>  		return -EINVAL;
+>  
+> -	return -ENOSYS; /* TODO */
+> +	/* If an io_mm already exists, use it */
+> +	spin_lock(&iommu_sva_lock);
+> +	idr_for_each_entry(&iommu_pasid_idr, io_mm, i) {
+> +		if (io_mm->mm != mm || !io_mm_get_locked(io_mm))
+> +			continue;
+> +
+> +		/* Is it already bound to this device? */
+> +		list_for_each_entry(tmp, &io_mm->devices, mm_head) {
+> +			if (tmp->dev != dev)
+> +				continue;
+> +
+> +			bond = tmp;
+> +			refcount_inc(&bond->refs);
+> +			io_mm_put_locked(io_mm);
+> +			break;
+> +		}
+> +		break;
+> +	}
+> +	spin_unlock(&iommu_sva_lock);
+> +
+> +	if (bond)
 
-That is a good news.
+Please return pasid when you find an io_mm that is already bound. Something like
+*pasid = io_mm->pasid should do the work here when bond is true.
 
-
-
-> does the datasheet state anything about the clock speeds? from
-> Documentation/devicetree/bindings/usb/dwc3-xilinx.txt:
-> "bus_clk" Master/Core clock, have to be >= 125 MHz for SS operation
-> and >= 60MHz for HS operation
-
-
-Not sure.
-"xlnx,zynqmp-dwc3" is a member of dwc3-of-simple.c
-which just enables/disables clocks.
-
-That information is not important.
-
-
->> I found only one reset line in the datasheet, hence the reset-names
->> property is omitted.
-> does the datasheet state whether this is a level or a pulsed reset line?
-> on Amlogic Meson GXL, GXM and AXG SoCs we use a pulsed (and shared)
-> reset line (see ff0a632f08759e "usb: dwc3: of-simple: add support for
-> shared and pulsed reset lines") because the reset line is shared
-> between various components (USB2 PHY, USB3 PHY, dwc3 controller, ...)
-> your current approach (having a vendor-specific "foo,dwc3" binding
-> along with the generic "snps,dwc3") would allow having
-> per-"of_device_id" settings which could indicate whether the reset
-> lines are level or pulsed reset if these are "implementation specific"
-
-
-I guess your commit
-ff0a632f08759e31f45b06fee27bc71c826c6b11
-is wrong.
-
-
-About the clocks, Rob Herring pointed out:
-
-  However, this should be specific as to how many clocks and their
-  function. This should be readily available to someone with access to
-  Synopsys datasheet. The number of clocks should generally be the same
-  across SoCs, it is just some SoCs either tie clocks together or don't
-  provide s/w control of some of the clocks.
-
-
-
-The same applies to the reset control.
-The reset policy should be the same across SoCs
-since we are using the same IP (i.e. the same delivered RTL).
-
-
-You are using a pulse reset for DWC3
-just because the reset controller in your SoC
-is implemented like that.
-
-This is NOT because your DWC3 in your SoC is
-specially customized, right?
-
-You put a reset-provider matter to a reset-consumer.
-
-
-
-
-
->> Supporting those clocks and resets is the requirement for new platforms.
-> just to confirm:
-> with this series your goal is to replace the wrapper node which is
-> needed due to dwc3-of-simple.c ?
-
-
-In my _hope_.
-
-But, I cannot do this by myself
-since I do not have such boards.
-
-Depends on how people make efforts to covert existing platforms.
-
-
-> would other drivers which currently create a wrapper node (like
-> dwc3-keystone.c) keep their wrapper node or do you have any plans for
-> removing it for the other "wrapper" drivers too?
-
-
-We need to take a close look per driver.
-
-Looking at the dwc3-keystone.c,
-it works like an interrupt controller with irq-domain hierarchy.
-If it is moved to the irqchip subsystem,
-dwc3-keystone.c could be removed.
-
-
->> Enforcing the new binding breaks existing platforms since they specify
->> clocks and resets in their glue layer node, but nothing in the core
->> node.  I listed such exceptional cases in the DT binding.  The driver
->> code is loosened up to accept no clock/reset.  This change is based
->> on the discussion [1].
-> (snip)
->
-> Regards
-> Martin
-
+> +		return 0;
 
 
 -- 
-Best Regards
-Masahiro Yamada
+Sinan Kaya
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
