@@ -1,7 +1,7 @@
 From: yannick fertre <yannick.fertre@st.com>
-Subject: [PATCH v1 1/3] ARM: dts: stm32: add cec support on stm32mp157c
-Date: Tue, 24 Apr 2018 09:54:07 +0200
-Message-ID: <1524556449-5262-2-git-send-email-yannick.fertre@st.com>
+Subject: [PATCH v1 3/3] ARM: dts: stm32: add cec support on stm32mp157c-ev1
+Date: Tue, 24 Apr 2018 09:54:09 +0200
+Message-ID: <1524556449-5262-4-git-send-email-yannick.fertre@st.com>
 References: <1524556449-5262-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,32 +12,26 @@ To: Philippe Cornu <philippe.cornu@st.com>, Alexandre Torgue <alexandre.torgue@s
 Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Add cec support on stm32mp157c
+This patch enables cec node on stm32mp157c-ev1 board
 
-Signed-off-by: yannick fertre <yannick.fertre@st.com>
+Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/stm32mp157c-ev1.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index bc3eddc..b80eb6b 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -136,6 +136,15 @@
- 			status = "disabled";
- 		};
- 
-+		cec: cec@40016000 {
-+			compatible = "st,stm32-cec";
-+			reg = <0x40016000 0x400>;
-+			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&rcc CEC_K>, <&clk_lse>;
-+			clock-names = "cec", "hdmi-cec";
-+			status = "disabled";
-+		};
+diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+index 57e6dbc..e2a583b 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+@@ -19,3 +19,9 @@
+ 		serial0 = &uart4;
+ 	};
+ };
 +
- 		uart7: serial@40018000 {
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x40018000 0x400>;
++&cec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&cec_pins_a>;
++	status = "okay";
++};
 -- 
 1.9.1
