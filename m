@@ -1,90 +1,174 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/2] regulator: add QCOM RPMh regulator driver
-Date: Tue, 24 Apr 2018 18:45:07 +0100
-Message-ID: <20180424174507.GI22073@sirena.org.uk>
-References: <cover.1523673467.git.collinsd@codeaurora.org>
- <4b45f41996ea3344340e44fab2dc9e487572e209.1523673467.git.collinsd@codeaurora.org>
- <CAD=FV=XKYCDtF93RtYi+dokR2BcT-z6Ex3UjgJ0ia_kF=847eA@mail.gmail.com>
- <4e3353fe-ebb5-46bb-aa58-49ad04c4d9db@codeaurora.org>
- <CAD=FV=W28_exRv+H0MJvPnHWGEeUG=SMKr=UqEKpBzkH44Fzmg@mail.gmail.com>
- <132ab845-52d6-6192-4d8c-5a9c95410688@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gTY1JhLGodeuSBqf"
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 1/5] ARM: dts: exynos: Remove unnecessary address/size properties in Midas boards
+Date: Tue, 24 Apr 2018 19:45:58 +0200
+Message-ID: <20180424174602.3915-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <132ab845-52d6-6192-4d8c-5a9c95410688@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Doug Anderson <dianders@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The children of regulators node do not have reg/ranges properties.  Move the
+children up one level, get rid of regulators node and remove
+address-cells and size-cells properties.  This fixes warnings for
+Exynos4412 Midas family boards:
 
---gTY1JhLGodeuSBqf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+    arch/arm/boot/dts/exynos4412-i9300.dtb: Warning (avoid_unnecessary_addr_size):
+        /regulators: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+    arch/arm/boot/dts/exynos4412-i9305.dtb: Warning (avoid_unnecessary_addr_size):
+        /regulators: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+    arch/arm/boot/dts/exynos4412-n710x.dtb: Warning (avoid_unnecessary_addr_size):
+        /regulators: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
 
-On Fri, Apr 20, 2018 at 03:08:57PM -0700, David Collins wrote:
-> On 04/19/2018 09:16 AM, Doug Anderson wrote:
-> > On Wed, Apr 18, 2018 at 4:30 PM, David Collins <collinsd@codeaurora.org=
-> wrote:
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi | 32 +++++------
+ arch/arm/boot/dts/exynos4412-midas.dtsi     | 86 ++++++++++++++---------------
+ 2 files changed, 55 insertions(+), 63 deletions(-)
 
-Please delete unneeded context from mails when replying.  Doing this
-makes it much easier to find your reply in the message, helping ensure
-it won't be missed by people scrolling through the irrelevant quoted
-material.
-
-> > You'd need to ask Mark if he's OK with it, but a option #3 is to add a
-> > patch to your series fix the regulator framework to try setting the
-> > voltage if _regulator_get_voltage() fails.  Presumably in
-> > machine_constraints_voltage() you'd now do something like:
-> >=20
-> >   int target_min, target_max;
-> >   int current_uV =3D _regulator_get_voltage(rdev);
-> >   if (current_uV < 0) {
-> >     /* Maybe this regulator's hardware can't be read and needs to be in=
-itted */
-> >     _regulator_do_set_voltage(
-> >       rdev, rdev->constraints->min_uV, rdev->constraints->min_uV);
-> >     current_uV =3D _regulator_get_voltage(rdev);
-> >   }
-> >   if (current_uV < 0) {
-> >     rdev_err(rdev,
-> >       "failed to get the current voltage(%d)\n",
-> >       current_uV);
-> >       return current_uV;
-> >   }
-
-> > If Mark doesn't like that then I guess I'd be OK w/ initting it to 0
-> > but this needs to be documented _somewhere_ (unlike for bypass it's
-> > not obvious, so you need to find someplace to put it).  I'd rather not
-> > hack the DT to deal with our software limitations.
-
-> I'm not opposed to your option #3 though it does seem a little hacky and
-> tailored to the qcom_rpmh-regulator specific case.  Note that I think it
-> would be better to vote for min_uV to max_uV than min_uV to min_uV though.
-
-> Mark, what are your thoughts on the best way to handle this situation?
-
-I think that's probably only OK if we have a specific error code for the
-regulator being limited in this way otherwise our error handling for I/O
-problems involves us trying to reconfigure supplies which seems like it
-would be risky. =20
-
---gTY1JhLGodeuSBqf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrfbSIACgkQJNaLcl1U
-h9C9WAf/SZljCZJDKB4bLgbVYGBdwEaqqJMWz4oNgio8hF/RR5NeyKDZ8vnlfoLV
-JwTzMO3F9m2tLinAzq8c9jc6dRLqTn3SBaWOolg5syXustWlVbchf2+Gjjgo4JDM
-VNMYmsDc7UMxMmUnzo1/fBDgTaBC5P3xb/HVTFGV4cktSKOea4tPg6L2JAmDpVL3
-/CNf61gKBsKZcJeekPUosVGIeVfyRx+5CWGSHSZ/gdVmy+muKUvT1n6U5Ya1Y31Y
-Mz/DJq3+bM/6HwUg5ym/0h1VRq8kZO4MTb/j0Jsr+v+3A7cMaVXaxMM/4weV0sww
-blXiNiQT73dqtrJh5I0lGZt1v5Hclg==
-=Quty
------END PGP SIGNATURE-----
-
---gTY1JhLGodeuSBqf--
+diff --git a/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi b/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
+index ee8e1f445370..31cd5f6fd83c 100644
+--- a/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
++++ b/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
+@@ -15,24 +15,22 @@
+ 		i2c10 = &i2c_cm36651;
+ 	};
+ 
+-	regulators {
+-		lcd_vdd3_reg: voltage-regulator-2 {
+-			compatible = "regulator-fixed";
+-			regulator-name = "LCD_VDD_2.2V";
+-			regulator-min-microvolt = <2200000>;
+-			regulator-max-microvolt = <2200000>;
+-			gpio = <&gpc0 1 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-		};
++	lcd_vdd3_reg: voltage-regulator-2 {
++		compatible = "regulator-fixed";
++		regulator-name = "LCD_VDD_2.2V";
++		regulator-min-microvolt = <2200000>;
++		regulator-max-microvolt = <2200000>;
++		gpio = <&gpc0 1 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
+ 
+-		ps_als_reg: voltage-regulator-5 {
+-			compatible = "regulator-fixed";
+-			regulator-name = "LED_A_3.0V";
+-			regulator-min-microvolt = <3000000>;
+-			regulator-max-microvolt = <3000000>;
+-			gpio = <&gpj0 5 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-		};
++	ps_als_reg: voltage-regulator-5 {
++		compatible = "regulator-fixed";
++		regulator-name = "LED_A_3.0V";
++		regulator-min-microvolt = <3000000>;
++		regulator-max-microvolt = <3000000>;
++		gpio = <&gpj0 5 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
+ 	};
+ 
+ 	i2c_ak8975: i2c-gpio-0 {
+diff --git a/arch/arm/boot/dts/exynos4412-midas.dtsi b/arch/arm/boot/dts/exynos4412-midas.dtsi
+index 76f2b30f1731..4b182e26cfc8 100644
+--- a/arch/arm/boot/dts/exynos4412-midas.dtsi
++++ b/arch/arm/boot/dts/exynos4412-midas.dtsi
+@@ -46,56 +46,50 @@
+ 		};
+ 	};
+ 
+-	regulators {
+-		compatible = "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		cam_io_reg: voltage-regulator-1 {
+-			compatible = "regulator-fixed";
+-			regulator-name = "CAM_SENSOR_A";
+-			regulator-min-microvolt = <2800000>;
+-			regulator-max-microvolt = <2800000>;
+-			enable-active-high;
+-			status = "disabled";
+-		};
++	cam_io_reg: voltage-regulator-1 {
++		compatible = "regulator-fixed";
++		regulator-name = "CAM_SENSOR_A";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		enable-active-high;
++		status = "disabled";
++	};
+ 
+-		cam_af_reg: voltage-regulator-3 {
+-			compatible = "regulator-fixed";
+-			regulator-name = "CAM_AF";
+-			regulator-min-microvolt = <2800000>;
+-			regulator-max-microvolt = <2800000>;
+-			enable-active-high;
+-			status = "disabled";
+-		};
++	cam_af_reg: voltage-regulator-3 {
++		compatible = "regulator-fixed";
++		regulator-name = "CAM_AF";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		enable-active-high;
++		status = "disabled";
++	};
+ 
+-		vsil12: voltage-regulator-6 {
+-			compatible = "regulator-fixed";
+-			regulator-name = "VSIL_1.2V";
+-			regulator-min-microvolt = <1200000>;
+-			regulator-max-microvolt = <1200000>;
+-			gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-			vin-supply = <&buck7_reg>;
+-		};
++	vsil12: voltage-regulator-6 {
++		compatible = "regulator-fixed";
++		regulator-name = "VSIL_1.2V";
++		regulator-min-microvolt = <1200000>;
++		regulator-max-microvolt = <1200000>;
++		gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		vin-supply = <&buck7_reg>;
++	};
+ 
+-		vcc33mhl: voltage-regulator-7 {
+-			compatible = "regulator-fixed";
+-			regulator-name = "VCC_3.3_MHL";
+-			regulator-min-microvolt = <3300000>;
+-			regulator-max-microvolt = <3300000>;
+-			gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-		};
++	vcc33mhl: voltage-regulator-7 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_3.3_MHL";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
+ 
+-		vcc18mhl: voltage-regulator-8 {
+-			compatible = "regulator-fixed";
+-			regulator-name = "VCC_1.8_MHL";
+-			regulator-min-microvolt = <1800000>;
+-			regulator-max-microvolt = <1800000>;
+-			gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-		};
++	vcc18mhl: voltage-regulator-8 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_1.8_MHL";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
+ 	};
+ 
+ 	gpio-keys {
+-- 
+2.14.1
