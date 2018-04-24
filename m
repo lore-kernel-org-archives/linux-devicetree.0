@@ -1,132 +1,143 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC v2 5/6] usb: gadget: udc: renesas_usb3: add support for a usb role switch
-Date: Thu, 26 Apr 2018 20:26:45 +0900
-Message-Id: <1524742006-17984-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1524742006-17984-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1524742006-17984-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=VPMM=HN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:37272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750962AbeDXTwN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Apr 2018 15:52:13 -0400
+Date: Tue, 24 Apr 2018 14:52:10 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v7 2/3] PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP
+ driver
+Message-ID: <20180424195210.GA72698@bhelgaas-glaptop.roam.corp.google.com>
+References: <1524580195-4680-1-git-send-email-l.subrahmanya@mobiveil.co.in>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1524580195-4680-1-git-send-email-l.subrahmanya@mobiveil.co.in>
+Sender: devicetree-owner@vger.kernel.org
+To: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, mingkai.hu@nxp.com, peter.newton@nxp.com, minghuan.lian@nxp.com, rajesh.raina@nxp.com, rajan.kapoor@nxp.com, prabhjot.singh@nxp.com, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds support for a usb role switch driver. And then,
-this driver uses the usb role switch APIs instead of hardware
-access to initialize usb host side at specific timings.
+On Tue, Apr 24, 2018 at 10:29:55AM -0400, Subrahmanya Lingappa wrote:
+> Adds driver for Mobiveil AXI PCIe Host Bridge Soft IP
+>  - GPEX 4.0, a PCIe gen4 IP. This IP has upto 8 outbound and inbound windows
+>  for the address translation.
+> 
+> Signed-off-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> ---
+>  drivers/pci/host/pcie-mobiveil.c | 692 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 692 insertions(+)
+>  create mode 100644 drivers/pci/host/pcie-mobiveil.c
+> 
+> diff --git a/drivers/pci/host/pcie-mobiveil.c b/drivers/pci/host/pcie-mobiveil.c
+> new file mode 100644
+> index 0000000..28f488b
+> --- /dev/null
+> +++ b/drivers/pci/host/pcie-mobiveil.c
+> @@ -0,0 +1,692 @@
+> +/*
+> + * PCIe host controller driver for Mobiveil PCIe Host controller
+> + *
+> + * SPDX-License-Identifier: GPL-2.0
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/usb/gadget/udc/Kconfig        |  1 +
- drivers/usb/gadget/udc/renesas_usb3.c | 34 ++++++++++++++++++++++++++++------
- 2 files changed, 29 insertions(+), 6 deletions(-)
+Incorrect usage of SPDX tag, see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/license-rules.rst
 
-diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
-index 0875d38..7e4a5dd 100644
---- a/drivers/usb/gadget/udc/Kconfig
-+++ b/drivers/usb/gadget/udc/Kconfig
-@@ -193,6 +193,7 @@ config USB_RENESAS_USB3
- 	tristate 'Renesas USB3.0 Peripheral controller'
- 	depends on ARCH_RENESAS || COMPILE_TEST
- 	depends on EXTCON && HAS_DMA
-+	select USB_ROLE_SWITCH
- 	help
- 	   Renesas USB3.0 Peripheral controller is a USB peripheral controller
- 	   that supports super, high, and full speed USB 3.0 data transfers.
-diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
-index 409cde4..5b7b1ce 100644
---- a/drivers/usb/gadget/udc/renesas_usb3.c
-+++ b/drivers/usb/gadget/udc/renesas_usb3.c
-@@ -23,6 +23,7 @@
- #include <linux/uaccess.h>
- #include <linux/usb/ch9.h>
- #include <linux/usb/gadget.h>
-+#include <linux/usb/role.h>
- 
- /* register definitions */
- #define USB3_AXI_INT_STA	0x008
-@@ -330,6 +331,7 @@ struct renesas_usb3 {
- 
- 	struct usb_gadget gadget;
- 	struct usb_gadget_driver *driver;
-+	struct usb_role_switch *role_sw;	/* Optional */
- 	struct extcon_dev *extcon;
- 	struct work_struct extcon_work;
- 	struct phy *phy;
-@@ -454,7 +456,11 @@ static void usb3_disable_pipe_irq(struct renesas_usb3 *usb3, int num)
- 
- static bool usb3_is_host(struct renesas_usb3 *usb3)
- {
--	return !(usb3_read(usb3, USB3_DRD_CON) & DRD_CON_PERI_CON);
-+	if (usb3->role_sw)
-+		return usb_role_switch_get_role(usb3->role_sw) ==
-+						USB_ROLE_HOST ? true : false;
-+	else
-+		return !(usb3_read(usb3, USB3_DRD_CON) & DRD_CON_PERI_CON);
- }
- 
- static void usb3_init_axi_bridge(struct renesas_usb3 *usb3)
-@@ -645,10 +651,16 @@ static void usb3_check_vbus(struct renesas_usb3 *usb3)
- 
- static void usb3_set_mode(struct renesas_usb3 *usb3, bool host)
- {
--	if (host)
--		usb3_clear_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
--	else
--		usb3_set_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
-+	if (usb3->role_sw) {
-+		enum usb_role role = host ? USB_ROLE_HOST : USB_ROLE_DEVICE;
-+
-+		usb_role_switch_set_role(usb3->role_sw, role);
-+	} else {
-+		if (host)
-+			usb3_clear_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
-+		else
-+			usb3_set_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
-+	}
- }
- 
- static void usb3_vbus_out(struct renesas_usb3 *usb3, bool enable)
-@@ -663,8 +675,8 @@ static void usb3_mode_config(struct renesas_usb3 *usb3, bool host, bool a_dev)
- {
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&usb3->lock, flags);
- 	usb3_set_mode(usb3, host);
-+	spin_lock_irqsave(&usb3->lock, flags);
- 	usb3_vbus_out(usb3, a_dev);
- 	/* for A-Peripheral or forced B-device mode */
- 	if ((!host && a_dev) ||
-@@ -2238,6 +2250,10 @@ static int renesas_usb3_start(struct usb_gadget *gadget,
- 	/* hook up the driver */
- 	usb3->driver = driver;
- 
-+	usb3->role_sw = usb_role_switch_get_by_graph(usb3_to_dev(usb3), 0, 0);
-+	if (IS_ERR_OR_NULL(usb3->role_sw))
-+		usb3->role_sw = NULL;
-+
- 	if (usb3->phy)
- 		phy_init(usb3->phy);
- 
-@@ -2260,6 +2276,8 @@ static int renesas_usb3_stop(struct usb_gadget *gadget)
- 	if (usb3->phy)
- 		phy_exit(usb3->phy);
- 
-+	usb_role_switch_put(usb3->role_sw);
-+
- 	pm_runtime_put(usb3_to_dev(usb3));
- 
- 	return 0;
-@@ -2632,6 +2650,10 @@ static int renesas_usb3_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto err_add_udc;
- 
-+	ret = devm_of_platform_populate(&pdev->dev);
-+	if (ret < 0)
-+		goto err_dev_create;
-+
- 	ret = device_create_file(&pdev->dev, &dev_attr_role);
- 	if (ret < 0)
- 		goto err_dev_create;
--- 
-1.9.1
+(Must be first line of file, should use "//" comment in C source)
+
+> + * Copyright (c) 2017 Mobiveil Inc.
+
+It's 2018 already, so use 2018 here instead of 2017 in this patch and
+then updating it in the next.
+
+> +/* supported number of interrupts */
+> +#define PCI_NUM_INTX    4
+
+This is already defined in include/linux/pci.h; you don't need another
+one.
+
+> +static inline u32 csr_readl(struct mobiveil_pcie *pcie,	const u32 reg)
+
+Should be space, not tab, after ","
+
+> +/*
+> + * Routine to check the downstream link status, its recommended to
+> + * check the link status before accessing downstream config resources.
+
+Checking the link status before accessing downstream config resources
+is racy because the link may go down after you check the status but
+before you actually do the access.
+
+> + */
+> +static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
+> +{
+> +	return (csr_readl(pcie, LTSSM_STATUS) &
+> +		LTSSM_STATUS_L0_MASK) == LTSSM_STATUS_L0;
+> +}
+
+> +static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
+> +					unsigned int devfn, int where)
+> +{
+> +	struct mobiveil_pcie *pcie = bus->sysdata;
+> +
+> +	if (!mobiveil_pcie_valid_device(bus, devfn))
+> +		return NULL;
+> +
+> +	if (bus->number == pcie->root_bus_nr) {
+> +		/* RC config access */
+> +		return pcie->csr_axi_slave_base + where;
+> +	} else {
+
+No "else" needed, since the "if" body always returns.  Then you can
+unindent the block below.
+
+> +		/*
+> +		 * EP config access (in Config/APIO space)
+> +		 * Program PEX Address base (31..16 bits) with appropriate value
+> +		 * (BDF) in PAB_AXI_AMAP_PEX_WIN_L0 Register.
+> +		 * Relies on pci_lock serialization
+> +		 */
+> +		csr_writel(pcie,
+> +			bus->number << PAB_BUS_SHIFT |
+> +			PCI_SLOT(devfn) << PAB_DEVICE_SHIFT |
+> +			PCI_FUNC(devfn) << PAB_FUNCTION_SHIFT,
+> +			PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
+> +		return pcie->config_axi_slave_base + where;
+> +	}
+
+> +/*
+> + * select_paged_register - routine to access paged register of root complex
+> + *
+> + * registers of RC are paged, for this scheme to work
+> + * extracted higher 6 bits of the offset will be written to pg_sel
+> + * field of PAB_CTRL register and rest of the lower 10 bits enabled with
+> + * PAGE_SEL_EN are used as offset of the register.
+> + *
+
+Remove the extra blank line at the end of the comment.
+
+> + */
+> +static void select_paged_register(struct mobiveil_pcie *pcie, u32 offset)
+
+> +	value = csr_readl(pcie, PCI_COMMAND);
+> +	csr_writel(pcie, value | PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
+> +		PCI_COMMAND_MASTER,	PCI_COMMAND);
+
+Use space, not tab, after the comma.
+
+> +	/* program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
+> +	 * PAB_AXI_PIO_CTRL Register
+> +	 */
+
+Wrong comment style, needs:
+
+  /*
+   * Program PIO ...
+   * ...
+   */
+
+Bjorn
