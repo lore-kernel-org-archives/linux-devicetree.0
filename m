@@ -1,43 +1,55 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH 0/4] add additional required properties for UniPhier ethernet
- nodes
-Date: Tue, 24 Apr 2018 13:46:59 +0900
-Message-ID: <1524545223-5893-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] mfd: qcom-spmi-pmic: Add support for pm8005,pm8998,pmi8998
+Date: Mon, 23 Apr 2018 22:26:29 -0700
+Message-ID: <CAD=FV=VoGpRLsPXcfPaiaJh18u+79DcN9PUGScDKUu+COgj7Gw@mail.gmail.com>
+References: <20180419230032.13611-1-swboyd@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180419230032.13611-1-swboyd@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add required clocks and their names, resets and their names, and system
-controller properties to fix the activation issues for the ethernet
-controllers implemented on some UniPhier SoCs.
+Hi,
 
-Kunihiko Hayashi (4):
-  ARM: dts: uniphier: add required clocks and resets to Pro4 ethernet
-    node
-  arm64: dts: uniphier: add clock-names and reset-names to ethernet node
-  ARM: dts: uniphier: add syscon-phy-mode property to each ethernet node
-  arm64: dts: uniphier: add syscon-phy-mode property to each ethernet
-    node
+On Thu, Apr 19, 2018 at 4:00 PM, Stephen Boyd <swboyd@chromium.org> wrote:
+> diff --git a/drivers/mfd/qcom-spmi-pmic.c b/drivers/mfd/qcom-spmi-pmic.c
+> index 2022bdfa7ab4..0b26387c22e7 100644
+> --- a/drivers/mfd/qcom-spmi-pmic.c
+> +++ b/drivers/mfd/qcom-spmi-pmic.c
+> @@ -39,6 +39,9 @@
+>  #define PM8916_SUBTYPE         0x0b
+>  #define PM8004_SUBTYPE         0x0c
+>  #define PM8909_SUBTYPE         0x0d
+> +#define PM8998_SUBTYPE         0x14
+> +#define PMI8998_SUBTYPE                0x15
+> +#define PM8005_SUBTYPE         0x18
 
- arch/arm/boot/dts/uniphier-pro4.dtsi             | 10 +++++++---
- arch/arm/boot/dts/uniphier-pxs2.dtsi             |  3 +++
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi |  5 ++++-
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi |  3 +++
- arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi |  8 +++++++-
- 5 files changed, 24 insertions(+), 5 deletions(-)
+I was being overly paranoid and double-checking these numbers.  I
+confirmed PMI8998 and PM8005 from the docs (yay!).  The PM8998 docs
+didn't have this, but I confirmed that I was talking to PM8998 by
+confirming it was on the right USID and and then printing out the
+value at probe time.  All look good.
 
--- 
-2.7.4
+
+>  static const struct of_device_id pmic_spmi_id_table[] = {
+>         { .compatible = "qcom,spmi-pmic", .data = (void *)COMMON_SUBTYPE },
+> @@ -54,7 +57,10 @@ static const struct of_device_id pmic_spmi_id_table[] = {
+>         { .compatible = "qcom,pmi8994",   .data = (void *)PMI8994_SUBTYPE },
+>         { .compatible = "qcom,pm8916",    .data = (void *)PM8916_SUBTYPE },
+>         { .compatible = "qcom,pm8004",    .data = (void *)PM8004_SUBTYPE },
+> +       { .compatible = "qcom,pmi8998",   .data = (void *)PMI8998_SUBTYPE },
+> +       { .compatible = "qcom,pm8005",    .data = (void *)PM8005_SUBTYPE },
+>         { .compatible = "qcom,pm8909",    .data = (void *)PM8909_SUBTYPE },
+> +       { .compatible = "qcom,pm8998",    .data = (void *)PM8998_SUBTYPE },
+
+nit: It appears that the above table was previously sorted by SUBTYPE
+ID.  Could you perhaps move your 3 new PMICs to the bottom to maintain
+this?  Other than that, you can add my Reviewed-by if you would like
+(not that I have _any_ real expertise on SPMI, so might not be worth
+it).
+
+
+-Doug
