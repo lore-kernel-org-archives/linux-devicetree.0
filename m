@@ -1,124 +1,67 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFC 00/10] ARM: Remove support for Exynos5440
-Date: Tue, 24 Apr 2018 22:32:29 +0200
-Message-ID: <20180424203239.21885-1-krzk__25446.683218661$1524601886$gmane$org@kernel.org>
+From: David Collins <collinsd@codeaurora.org>
+Subject: Re: [PATCH 1/2] regulator: add QCOM RPMh regulator driver
+Date: Tue, 24 Apr 2018 13:33:18 -0700
+Message-ID: <916d2d21-3a49-5818-3fb9-66b2ee5fc359@codeaurora.org>
+References: <cover.1521246069.git.collinsd@codeaurora.org>
+ <71fab82672524b95632cdb588c16edfc9711866a.1521246069.git.collinsd@codeaurora.org>
+ <152165924074.91116.13025068669916027026@swboyd.mtv.corp.google.com>
+ <493c1f5d-df99-ca68-0f90-a7937a696f5d@codeaurora.org>
+ <152411734938.46528.9676451637772936597@swboyd.mtv.corp.google.com>
+ <dcd4e178-cfd3-1c3f-da7c-1eb66a58cf15@codeaurora.org>
+ <20180420224445.GB18235@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org
-Cc: Olof Johansson <olof@lixom.net>, Jaehoon Chung <jh80.chung@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Marek Szyprowski <m.szyprowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180420224445.GB18235@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: Stephen Boyd <swboyd@chromium.org>, broonie@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+>>>>>> +       ret = cmd_db_ready();
+>>>>>> +       if (ret < 0) {
+>>>>>> +               if (ret != -EPROBE_DEFER)
+>>>>>> +                       dev_err(dev, "Command DB not available,
+>>>>>> ret=%d\n", ret);
+>>>>>> +               return ret;
+>>>>>> +       }
+>>>>>
+>>>>> We should just make rpmh parent device call cmd_db_ready() so that these
+>>>>> devices aren't even populated until then and so that cmd_db_ready() is
+>>>>> only in one place. Lina?
+>>>>
+>>>> Let's see if Lina has qualms about this plan.
+>>>
+>>> Sounds like you're ok with it.
+>>
+>> Sure, I'll remove this check if Lina agrees to add it in the rpmh driver.
+>>
+> We want to make the RSC nodes child of Command DB? That way we probe the
+> controllers only if the command DB is ready?
+> 
+> I could do that. Just so you know, there is are no strict directives to
+> use Command DB. If a driver knows the information it needs to pass to
+> the accelerator, it may choose to skip command DB completely.
 
+The ask here is for the rpmh driver to call cmd_db_ready() in its probe
+function and return any error encountered (e.g. -EPROBE_DEFER).
 
-Overview
-========
-Let's continue the removal of old platforms. We already get rid of Exynos4212.
-Now it's time for Exynos5440.
+I suppose that specifying the rpmh rsc device tree node as a child inside
+of the command DB node could achieve the same result.  However, that seems
+a little hacky as the rsc device is describing a hardware block physically
+found on the SoC as opposed to a subcomponent of the command DB SMEM data
+structure.  I defer to device tree maintainers to comment on the
+acceptability of this approach.
 
-The Exynos5440 (quad-core A15 with GMAC, PCIe, SATA) was targeting
-server platforms but it did not make it to the market really.  There are
-no development boards with it and probably there are no real products
-neither.  The development for Exynos5440 ended in 2013 and since then
-the platform is in maintenance mode.
+While technically it is possible for an rpmh consumer to intrinsically
+know the addresses for its resources without polling command DB, do you
+have any examples where this is the case?
 
-The only development happening around it is the PCIe driver for Exynos5433
-(ARMv8). [1]
-
-Removing Exynos5440, makes our life slightly easier:
-1. Less maintenance,
-2. Smaller code, less quirks,
-3. No need to preserve (imaginary) backward-compatibility for Exynos PCIe
-   driver (so it is easier to add support for Exynos5433).
-
-
-Because of point (3) above - I left the PCIe and PCIe PHY drivers intact.
-
-
-Dependencies
-============
-I think about starting with removal of DTS in some kernel release (patch 1/10).
-Then all drivers can be removed/updated - subsystem maintainers can pick their
-patches freely.
-
-Finally, after getting rid of all Exynos5440 symbols, the last patch (10/10) will
-end in arm-soc tree.
-
-
-Any comments?
-
-
-Best regards,
-Krzysztof
-
-[1] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1569919.html
-
-Krzysztof Kozlowski (10):
-  ARM: dts: exynos: Remove Exynos5440
-  ata: ahci-platform: Remove support for Exynos5440
-  cpufreq: exynos: Remove support for Exynos5440
-  clk: samsung: Remove support for Exynos5440
-  i2c: s3c2410: Remove support for Exynos5440
-  thermal: samsung: Remove support for Exynos5440
-  pinctrl: samsung: Remove support for Exynos5440
-  spi: s3c64xx: samsung: Remove support for Exynos5440
-  usb: host: exynos: Remove support for Exynos5440
-  ARM: exynos: Remove support for Exynos5440
-
- .../bindings/arm/samsung/samsung-boards.txt        |    2 -
- .../devicetree/bindings/ata/ahci-platform.txt      |    1 -
- .../devicetree/bindings/clock/exynos5440-clock.txt |   28 -
- .../bindings/cpufreq/cpufreq-exynos5440.txt        |   28 -
- .../devicetree/bindings/i2c/i2c-s3c2410.txt        |    4 +-
- .../devicetree/bindings/thermal/exynos-thermal.txt |   14 +-
- arch/arm/boot/dts/Makefile                         |    2 -
- arch/arm/boot/dts/exynos5440-sd5v1.dts             |   42 -
- arch/arm/boot/dts/exynos5440-ssdk5440.dts          |   81 --
- arch/arm/boot/dts/exynos5440-tmu-sensor-conf.dtsi  |   20 -
- arch/arm/boot/dts/exynos5440-trip-points.dtsi      |   21 -
- arch/arm/boot/dts/exynos5440.dtsi                  |  355 -------
- arch/arm/mach-exynos/Kconfig                       |   12 -
- arch/arm/mach-exynos/common.h                      |    8 -
- arch/arm/mach-exynos/exynos.c                      |   15 +-
- drivers/ata/ahci_platform.c                        |    1 -
- drivers/clk/samsung/Makefile                       |    1 -
- drivers/clk/samsung/clk-exynos5440.c               |  167 ----
- drivers/cpufreq/Kconfig.arm                        |   14 -
- drivers/cpufreq/Makefile                           |    1 -
- drivers/cpufreq/exynos5440-cpufreq.c               |  452 ---------
- drivers/i2c/busses/i2c-s3c2410.c                   |    2 -
- drivers/pinctrl/samsung/Kconfig                    |   10 +-
- drivers/pinctrl/samsung/Makefile                   |    1 -
- drivers/pinctrl/samsung/pinctrl-exynos5440.c       | 1005 --------------------
- drivers/spi/spi-s3c64xx.c                          |   12 -
- drivers/thermal/samsung/exynos_tmu.c               |  155 +--
- drivers/thermal/samsung/exynos_tmu.h               |    1 -
- drivers/usb/host/ehci-exynos.c                     |    7 -
- drivers/usb/host/ohci-exynos.c                     |    6 -
- include/dt-bindings/clock/exynos5440.h             |   44 -
- 31 files changed, 9 insertions(+), 2503 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/exynos5440-clock.txt
- delete mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-exynos5440.txt
- delete mode 100644 arch/arm/boot/dts/exynos5440-sd5v1.dts
- delete mode 100644 arch/arm/boot/dts/exynos5440-ssdk5440.dts
- delete mode 100644 arch/arm/boot/dts/exynos5440-tmu-sensor-conf.dtsi
- delete mode 100644 arch/arm/boot/dts/exynos5440-trip-points.dtsi
- delete mode 100644 arch/arm/boot/dts/exynos5440.dtsi
- delete mode 100644 drivers/clk/samsung/clk-exynos5440.c
- delete mode 100644 drivers/cpufreq/exynos5440-cpufreq.c
- delete mode 100644 drivers/pinctrl/samsung/pinctrl-exynos5440.c
- delete mode 100644 include/dt-bindings/clock/exynos5440.h
+Thanks,
+David
 
 -- 
-2.14.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
