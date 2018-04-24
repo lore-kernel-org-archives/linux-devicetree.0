@@ -1,42 +1,154 @@
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: RE: [PATCH 1/6] dt-bindings: devfreq: rk3399_dmc: improve binding
- documentation.
-Date: Tue, 24 Apr 2018 10:53:43 +0900
-Message-ID: <20180424015343epcms1p30dd08ebdea1e25582012711470cf7cdf@epcms1p3>
-References: <20180419104019.24406-2-enric.balletbo@collabora.com>
-        <20180419104019.24406-1-enric.balletbo@collabora.com>
-        <CGME20180419104054epcas5p49612174afb26493bcd937a0232b9b1df@epcms1p3>
-Reply-To: myungjoo.ham@samsung.com
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH V2 1/5] ARM: dts: imx6sx-sabreauto: add PMIC support
+Date: Tue, 24 Apr 2018 10:04:57 +0800
+Message-ID: <1524535501-8567-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419104019.24406-2-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Kyungmin Park <kyungmin.park@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "heiko@sntech.de" <heiko@sntech.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "dbasehore@chromium.org" <dbasehore@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dianders@google.com" <dianders@google.com>, "groek@google.com" <groek@google.com>, "kernel@collabora.com" <kernel@collabora.com>, Nick Milner <nick.milner@collabora.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->From: Nick Milner <nick.milner@collabora.com>
->
->There are several typos, references to non existent files, grammar and
->punctuation mistakes in the rk3399_dmc.txt binding. This patch tries
->to improve the binding documentation and fix these mistakes.
->
->Signed-off-by: Nick Milner <nick.milner@collabora.com>
->Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Add pfuze100 support on i.MX6SX Sabre Auto board.
 
-Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+no changes since V1.
+ arch/arm/boot/dts/imx6sx-sabreauto.dts | 117 +++++++++++++++++++++++++++++++++
+ 1 file changed, 117 insertions(+)
 
-CC (The original author of this doc): Lin Huang <hl@rock-chips.com>
-
-
-Cheers,
-MyungJoo.
-
->---
->
-> .../bindings/devfreq/rk3399_dmc.txt           | 207 +++++++++---------
-> 1 file changed, 105 insertions(+), 102 deletions(-)
->
->diff --git a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
+diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+index 57d1ea0..2caca934 100644
+--- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
++++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+@@ -74,6 +74,14 @@
+ 
+ &iomuxc {
+ 	imx6x-sabreauto {
++
++		pinctrl_i2c2_1: i2c2grp-1 {
++			fsl,pins = <
++				MX6SX_PAD_GPIO1_IO03__I2C2_SDA          0x4001b8b1
++				MX6SX_PAD_GPIO1_IO02__I2C2_SCL          0x4001b8b1
++			>;
++		};
++
+ 		pinctrl_uart1: uart1grp {
+ 			fsl,pins = <
+ 				MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1
+@@ -148,3 +156,112 @@
+ 		};
+ 	};
+ };
++
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2_1>;
++	status = "okay";
++
++	pmic: pfuze100@08 {
++		compatible = "fsl,pfuze100";
++		reg = <0x08>;
++
++		regulators {
++			sw1a_reg: sw1ab {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			sw1c_reg: sw1c {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3a_reg: sw3a {
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3b_reg: sw3b {
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw4_reg: sw4 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			swbst_reg: swbst {
++				regulator-min-microvolt = <5000000>;
++				regulator-max-microvolt = <5150000>;
++			};
++
++			snvs_reg: vsnvs {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vref_reg: vrefddr {
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vgen1_reg: vgen1 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++				regulator-always-on;
++			};
++
++			vgen2_reg: vgen2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++			};
++
++			vgen3_reg: vgen3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen4_reg: vgen4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen5_reg: vgen5 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen6_reg: vgen6 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++		};
++	};
++};
+-- 
+2.7.4
