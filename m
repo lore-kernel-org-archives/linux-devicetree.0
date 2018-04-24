@@ -1,42 +1,61 @@
-From: David Laight <David.Laight@ACULAB.COM>
-Subject: RE: [PATCHv3 3/7] driver, misc: add Intel Stratix10 service layer
- driver
-Date: Tue, 24 Apr 2018 11:24:52 +0000
-Message-ID: <9498165854b84321801d8186d3040b1e@AcuMS.aculab.com>
-References: <1522182014-7338-1-git-send-email-richard.gong@linux.intel.com>
- <1522182014-7338-4-git-send-email-richard.gong@linux.intel.com>
- <20180423120300.GC7951@kroah.com>
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH] ARM: dts: stm32: add USB Host (USBH) support to stm32mp157c
+Date: Tue, 24 Apr 2018 13:24:40 +0200
+Message-ID: <1524569080-22475-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180423120300.GC7951@kroah.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Greg KH' <gregkh@linuxfoundation.org>, "richard.gong@linux.intel.com" <richard.gong@linux.intel.com>
-Cc: "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "dinguyen@kernel.org" <dinguyen@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "atull@kernel.org" <atull@kernel.org>, "mdf@kernel.org" <mdf@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>, "yves.vandervennet@linux.intel.com" <yves.vandervennet@linux.intel.com>, "richard.gong@intel.com" <richard.gong@intel.com>
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Greg KH
-> Sent: 23 April 2018 13:03
-> On Tue, Mar 27, 2018 at 03:20:10PM -0500, richard.gong@linux.intel.com wrote:
-> > +config INTEL_SERVICE
-> 
-> Naming is hard, but this is a _very_ generic name, don't you agree?
-> 
-> > +	tristate "Intel Service Layer"
-> 
-> As is this.  Can you make this a bit more specific to what hardware is
-> being controlled here?
-> 
-> > +++ b/drivers/misc/intel-service.c
-> 
-> Same for the file name, why not stratix10.c?
-> 
-> or intel_svc.c?  That makes it a _bit_ more generic.  Well, not really,
-> but it does hide the "genericness" a bit more, right?
+Add support for USBH (USB Host) to STM32MP157C SoC.
+USBH is a USB Host controller supporting the standard registers used for
+full- and low-speed (OHCI controller) and high-speed (EHCI controller).
 
-It'll all be even worse if (when) Intel decide to sell Altera to
-someone else.
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-	David
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index bc3eddc..cc06d6b 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -5,6 +5,7 @@
+  */
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/stm32mp1-clks.h>
++#include <dt-bindings/reset/stm32mp1-resets.h>
+ 
+ / {
+ 	#address-cells = <1>;
+@@ -167,6 +168,25 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		usbh_ohci: usbh-ohci@5800c000 {
++			compatible = "generic-ohci";
++			reg = <0x5800c000 0x1000>;
++			clocks = <&rcc USBH>;
++			resets = <&rcc USBH_R>;
++			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
++		usbh_ehci: usbh-ehci@5800d000 {
++			compatible = "generic-ehci";
++			reg = <0x5800d000 0x1000>;
++			clocks = <&rcc USBH>;
++			resets = <&rcc USBH_R>;
++			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
++			companion = <&usbh_ohci>;
++			status = "disabled";
++		};
++
+ 		usart1: serial@5c000000 {
+ 			compatible = "st,stm32h7-uart";
+ 			reg = <0x5c000000 0x400>;
+-- 
+2.7.4
