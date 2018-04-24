@@ -1,92 +1,36 @@
-From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Subject: Re: [PATCH v3 6/6] arm64: dts: rockchip: Specify override mode for
- kevin panel
-Date: Tue, 24 Apr 2018 11:31:38 -0300
-Message-ID: <CAAEAJfAQMzUfM86o-xNoyBQzTiEMNH+W=9FyFpBy99nA3HrVgw@mail.gmail.com>
-References: <20180208174855.55620-1-seanpaul@chromium.org>
- <20180208174855.55620-7-seanpaul@chromium.org>
- <CAD=FV=WGU+s015DQbNeWHkpqpHLFz+9AjHKAd0N3HWag0p5FWA@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] clk: qcom: Add some missing gcc clks for msm8996
+Date: Tue, 24 Apr 2018 09:31:52 -0500
+Message-ID: <20180424143152.kwnxzt7jyvga5hbi@rob-hp-laptop>
+References: <20180418000926.4998-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAD=FV=WGU+s015DQbNeWHkpqpHLFz+9AjHKAd0N3HWag0p5FWA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Emil Renner Berthing <kernel@esmil.dk>, Arnd Bergmann <arnd@arndb.de>, tomeu.vizoso@collabora.com, Catalin Marinas <catalin.marinas@arm.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, enric.balletbo@collabora.co.uk, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, hoegsberg@chromium.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180418000926.4998-1-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRG91ZywgU2VhbjoKCkkgd291bGQgbGlrZSB0byBtb3ZlIHRoaXMgZm9yd2FyZC4KCk9uIDI2
-IEZlYnJ1YXJ5IDIwMTggYXQgMTU6MjMsIERvdWcgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVt
-Lm9yZz4gd3JvdGU6Cj4gSGksCj4KPiBPbiBUaHUsIEZlYiA4LCAyMDE4IGF0IDk6NDggQU0sIFNl
-YW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3JnPiB3cm90ZToKPj4gVGhpcyBwYXRjaCBhZGRz
-IGFuIG92ZXJyaWRlIG1vZGUgZm9yIGtldmluIGRldmljZXMuIFRoZSBtb2RlIGluY3JlYXNlcwo+
-PiBib3RoIGJhY2sgcG9yY2hlcyB0byBhbGxvdyBhIHBpeGVsIGNsb2NrIG9mIDI2NjY2a0h6IGFz
-IG9wcG9zZWQgdG8gdGhlCj4+ICd0eXBpY2FsJyB2YWx1ZSBvZiAyNTI3NTBrSHouIFRoaXMgaXMg
-bmVlZGVkIHRvIGF2b2lkIGludGVyZmVyZW5jZSB3aXRoCj4+IHRoZSB0b3VjaCBkaWdpdGl6ZXIg
-b24gdGhlc2UgbGFwdG9wcy4KPj4KPj4gQ2hhbmdlcyBpbiB2MjoKPj4gIC0gV3JhcCB0aGUgdGlt
-aW5nIGluIGRpc3BsYXktdGltaW5ncyBub2RlIHRvIG1hdGNoIGJpbmRpbmcgKFJvYi9UaGllcnJ5
-KQo+PiBDaGFuZ2VzIGluIHYzOgo+PiAgLSBVbndyYXAgdGhlIHRpbWluZyBmcm9tIGRpc3BsYXkt
-dGltaW5ncyBhbmQgcmVuYW1lIHBhbmVsLXRpbWluZyAoUm9iKQo+Pgo+PiBDYzogRG91ZyBBbmRl
-cnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgo+PiBDYzogRXJpYyBBbmhvbHQgPGVyaWNAYW5o
-b2x0Lm5ldD4KPj4gQ2M6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4+IENjOiBK
-ZWZmeSBDaGVuIDxqZWZmeS5jaGVuQHJvY2stY2hpcHMuY29tPgo+PiBDYzogUm9iIEhlcnJpbmcg
-PHJvYmgrZHRAa2VybmVsLm9yZz4KPj4gQ2M6IFN0w6lwaGFuZSBNYXJjaGVzaW4gPG1hcmNoZXVA
-Y2hyb21pdW0ub3JnPgo+PiBDYzogVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWls
-LmNvbT4KPj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4+IENjOiBkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4+IENjOiBsaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRl
-YWQub3JnCj4+IFNpZ25lZC1vZmYtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3Jn
-Pgo+PiAtLS0KPj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LWdydS1rZXZp
-bi5kdHMgfCAxNCArKysrKysrKysrKysrKwo+PiAgMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlv
-bnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmsz
-Mzk5LWdydS1rZXZpbi5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS1n
-cnUta2V2aW4uZHRzCj4+IGluZGV4IDE5MWE2YmNiMTcwNC4uNjU4NDExY2UzN2VhIDEwMDY0NAo+
-PiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS1ncnUta2V2aW4uZHRz
-Cj4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LWdydS1rZXZpbi5k
-dHMKPj4gQEAgLTk4LDYgKzk4LDIwIEBACj4+ICAgICAgICAgICAgICAgICBiYWNrbGlnaHQgPSA8
-JmJhY2tsaWdodD47Cj4+ICAgICAgICAgICAgICAgICBwb3dlci1zdXBwbHkgPSA8JnBwMzMwMF9k
-aXNwPjsKPj4KPj4gKyAgICAgICAgICAgICAgIHBhbmVsLXRpbWluZyB7Cj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIGNsb2NrLWZyZXF1ZW5jeSA9IDwyNjY2MDQ3MjA+Owo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICBoYWN0aXZlID0gPDI0MDA+Owo+PiArICAgICAgICAgICAgICAgICAgICAg
-ICBoZnJvbnQtcG9yY2ggPSA8NDg+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICBoYmFjay1w
-b3JjaCA9IDw4ND47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGhzeW5jLWxlbiA9IDwzMj47
-Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGhzeW5jLWFjdGl2ZSA9IDwwPjsKPj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgdmFjdGl2ZSA9IDwxNjAwPjsKPj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgdmZyb250LXBvcmNoID0gPDM+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICB2YmFj
-ay1wb3JjaCA9IDwxMjA+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICB2c3luYy1sZW4gPSA8
-MTA+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICB2c3luYy1hY3RpdmUgPSA8MD47Cj4+ICsg
-ICAgICAgICAgICAgICB9Owo+PiArCj4+ICAgICAgICAgICAgICAgICBwb3J0cyB7Cj4+ICAgICAg
-ICAgICAgICAgICAgICAgICAgIHBhbmVsX2luX2VkcDogZW5kcG9pbnQgewo+PiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmZWRwX291dF9wYW5lbD47
-Cj4KPiBLcmlzdGlhbiBicm91Z2h0IGFuIG9sZCBidWcgdG8gbXkgYXR0ZW50aW9uCj4gPGh0dHBz
-Oi8vYnVncy5jaHJvbWl1bS5vcmcvcC9jaHJvbWl1bS9pc3N1ZXMvZGV0YWlsP2lkPTc1MDM1ND4g
-YW5kIGl0Cj4gbWFkZSBtZSB0aGluay4gIFNob3VsZCB3ZSBzb21laG93IGFkanVzdCB0aGUgYmlu
-ZGluZ3MgaGVyZSB0byBhY2NvdW50Cj4gZm9yIHRoZSBmYWN0IHRoYXQgYSBib2FyZCBtYXkgc291
-cmNlIHNldmVyYWwgZGlmZmVyZW50IHBhbmVscz8KPgo+IEFLQTogb24gc29tZSBib2FyZHMgYW4g
-T0RNIG1heSB3YW50IHRvIHNlY29uZCBzb3VyY2UgKG9yIHRoaXJkIHNvdXJjZSwKPiBvciAuLi4p
-IHRoZSBwYW5lbC4gIFRoZXknbGwgcmFuZG9tbHkgY29ubmVjdCBzZXZlcmFsIGRpZmZlcmVudCBw
-YW5lbHMKPiB0byB0aGUgYm9hcmQgYW5kIHNoaXAgdGhlIGJvYXJkcyBvdXQuICBUaGUgcGFuZWxz
-IGFyZSBhbGwgY29tcGF0aWJsZQo+IGVsZWN0cmljYWxseSAoc2FtZSBwb3dlciBzZXF1ZW5jaW5n
-KSBidXQgbWlnaHQgbmVlZCBzbGlnaHRseSBkaWZmZXJlbnQKPiB0aW1pbmdzLiAgSW4gdGhpcyBw
-YXJ0aWN1bGFyIGNhc2UgdGhlcmUncyBubyBib2FyZC1sZXZlbCBzdHJhcHBpbmdzCj4gZm9yIHRo
-ZSBkaWZmZXJlbnQgcGFuZWxzLS1pdCdzIGFzc3VtZWQgdGhhdCB0aGUgRURJRCBvbiB0aGUgcGFu
-ZWxzIGNhbgo+IGJlIHVzZWQgdG8gZGlzdGluZ3Vpc2ggdGhlbS4KPgo+IEluIHRoYXQgY2FzZSBp
-dCBzZWVtcyBsaWtlIGl0IHdvdWxkIGJlIG5pY2UgdG8gYWxsb3cgc3BlY2lmeWluZyBtb3JlCj4g
-dGhhbiBvbmUgInBhbmVsLXRpbWluZyIgbm9kZXMuICBNYXliZSBrZXllZCBvZmYgc29tZSB0eXBl
-IG9mIElEIHRoYXQncwo+IHByZXNlbnQgaW4gdGhlIEVESUQ/Cj4KPgo+IElzIHRoYXQgc29tZXRo
-aW5nIHdlJ2Qgd2FudCB0byBhY2NvdW50IGZvciBiZWZvcmUgd2UgbGFuZCB0aGlzIHNlcmllcz8K
-PiAgSXQgc2VlbXMgbGlrZSBpdCB3b3VsZCBqdXN0IGJlIGFkZGluZyBhbiBleHRyYSBsZXZlbCBv
-ZiBub2Rlcz8KPgoKQUZBSUNTLCB0aGVyZSBpcyBubyBFRElEIHdpdGhvdXQgYSBEREMgYnVzLCB3
-aGljaCB3ZSBkb24ndApzZWVtIHRvIGhhdmUgb24gZ3J1IHBsYXRmb3JtcywgZG8gd2U/CgpSZWdh
-cmRzLAotLSAKRXplcXVpZWwgR2FyY8OtYSwgVmFuZ3VhcmRpYVN1cgp3d3cudmFuZ3VhcmRpYXN1
-ci5jb20uYXIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Apr 17, 2018 at 05:09:26PM -0700, Bjorn Andersson wrote:
+> From: Rajendra Nayak <rnayak@codeaurora.org>
+> 
+> Add a few missing gcc clks for msm8996
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> [bjorn: omit aggre0_noc_qosgen_extref_clk]
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> This patch was accompanied by one that allows the udelay to be defined per
+> branch clock, used by the aggre0_noc_qosgen_extref_clk. I dropped this clock
+> and the accompanying path in hope that we can get these clock in place.
+> 
+> Several of these clocks are needed by the MSS remoteproc driver.
+> 
+>  drivers/clk/qcom/gcc-msm8996.c               | 186 +++++++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-msm8996.h |   9 ++
+>  2 files changed, 195 insertions(+)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
