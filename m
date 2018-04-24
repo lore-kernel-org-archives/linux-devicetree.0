@@ -1,68 +1,67 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V2 3/5] ARM: dts: imx6sx-sabreauto: add IO expander max7310 support
-Date: Tue, 24 Apr 2018 10:04:59 +0800
-Message-ID: <1524535501-8567-3-git-send-email-Anson.Huang@nxp.com>
-References: <1524535501-8567-1-git-send-email-Anson.Huang@nxp.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] [PATCH v2 00/10] Allwinner H3 DVFS support
+Date: Tue, 24 Apr 2018 10:10:27 +0800
+Message-ID: <CAGb2v64zj=DHW2ta9d7=SGGbE2BZUeigJw=NqJMUfK0aV9+Aow@mail.gmail.com>
+References: <20180206044905.30508-1-icenowy@aosc.io> <CAGb2v67FaU3_su9XGaGj4zVSoAnpfN8cAhbBHEJu3Owt=Qicmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524535501-8567-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <CAGb2v67FaU3_su9XGaGj4zVSoAnpfN8cAhbBHEJu3Owt=Qicmg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-i.MX6SX Sabre Auto board has two max7310 IO expander
-on I2C3 bus, add support for them.
+On Mon, Apr 16, 2018 at 12:41 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+> Hi,
+>
+> On Tue, Feb 6, 2018 at 12:48 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
+>> This patchset tries to add DVFS support for Allwinner H3 SoC,
+>> considering two kinds of adjustable regulators used on H3 boards:
+>> SY8106A I2C-controlled regulator and SY8113B regulator (controllable
+>> by GPIO with some special designs on the board), and also taking the
+>> uncontrollable boards into consider.
+>>
+>> PATCH 1 and PATCH 2 are for the SY8106A regulator, then PATCH 3 and
+>> PATCH 4 are for the r_i2c bus, which is used by boards with SY8106A
+>> to communicate with the regulator.
+>>
+>> PATCH 5 adds the operating points v2 table to the H3 SoC, but with
+>> OPPs higher than 1008MHz temporarily dropped.
+>>
+>> Then there's patches for several tested boards: Orange Pi PC (with
+>> SY8106A), Orange Pi One/Zero (with GPIO-adjustable SY8113B) and
+>> ALL-H3-CC (unadjustable).
+>>
+>> Icenowy Zheng (5):
+>>   ARM: sun8i: h3: add operating-points-v2 table for CPU
+>>   ARM: sun8i: h2+: add SY8113B regulator used by Orange Pi Zero board
+>>   ARM: sun8i: h3: add SY8113B regulator used by Orange Pi One board
+>>   ARM: sun8i: h3: fix ALL-H3-CC H3 ver VDD-CPUX voltage
+>>   ARM: sun8i: h3: set the cpu-supply to VDD-CPUX on ALL-H3-CC H3 ver
+>>
+>> Ondrej Jirman (5):
+>>   dt-bindings: add binding for the SY8106A voltage regulator
+>>   regulator: add support for SY8106A regulator
+>>   ARM: sunxi: h3/h5: Add r_i2c pinmux node
+>>   ARM: sunxi: h3/h5: Add r_i2c I2C controller
+>>   ARM: sun8i: h3: Add SY8106A regulator to Orange Pi PC
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-no changes since V1.
- arch/arm/boot/dts/imx6sx-sabreauto.dts | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+Dropped this patch at your request. The rest will be in -next.
 
-diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-index d59084f..812f40b 100644
---- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
-+++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-@@ -82,6 +82,13 @@
- 			>;
- 		};
- 
-+		pinctrl_i2c3_2: i2c3grp-2 {
-+			fsl,pins = <
-+				MX6SX_PAD_KEY_ROW4__I2C3_SDA            0x4001b8b1
-+				MX6SX_PAD_KEY_COL4__I2C3_SCL            0x4001b8b1
-+			>;
-+		};
-+
- 		pinctrl_uart1: uart1grp {
- 			fsl,pins = <
- 				MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1
-@@ -272,3 +279,24 @@
- 		};
- 	};
- };
-+
-+&i2c3 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3_2>;
-+	status = "okay";
-+
-+	max7310_a: gpio@30 {
-+		compatible = "maxim,max7310";
-+		reg = <0x30>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	max7310_b: gpio@32 {
-+		compatible = "maxim,max7310";
-+		reg = <0x32>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+};
--- 
-2.7.4
+ChenYu
+
+>
+> I've applied all the device tree patches for 4.18, taking into account
+> comments from Maxime. See
+>
+>     https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux.git/log/?h=sunxi/h3-h5-for-4.17
+>
+> Mostly it's just renaming the regulator node names and labels.
+>
+> Please resend the first two patches to Mark Brown, the regulator
+> subsystem maintainer. And you might want to mention the branch
+> above in case he needs a use case reference.
+>
+> Regards
+> ChenYu
