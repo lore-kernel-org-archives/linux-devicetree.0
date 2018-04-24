@@ -1,102 +1,143 @@
-From: =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>
-Subject: Re: [PATCH v3 6/6] arm64: dts: rockchip: Specify override mode for
- kevin panel
-Date: Tue, 24 Apr 2018 16:02:26 -0700
-Message-ID: <CADMs+9a+dwKeKUDHYeiUON6q1UOnt84HoJ4bpjT=6aYm7OZG9A@mail.gmail.com>
-References: <20180208174855.55620-1-seanpaul@chromium.org>
- <20180208174855.55620-7-seanpaul@chromium.org>
- <CAD=FV=WGU+s015DQbNeWHkpqpHLFz+9AjHKAd0N3HWag0p5FWA@mail.gmail.com>
- <CAAEAJfAQMzUfM86o-xNoyBQzTiEMNH+W=9FyFpBy99nA3HrVgw@mail.gmail.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 7/8] drm/i2c: tda998x: register as a drm bridge
+Date: Wed, 25 Apr 2018 00:25:23 +0100
+Message-ID: <20180424232523.GN16141@n2100.armlinux.org.uk>
+References: <20180423072301.11962-1-peda@axentia.se>
+ <20180423072301.11962-8-peda@axentia.se>
+ <20180423160833.GF16141@n2100.armlinux.org.uk>
+ <5d6866d0-75bc-4de8-9b87-4fee5430e9dd@axentia.se>
+ <20180424080833.GJ16141@n2100.armlinux.org.uk>
+ <8448e90a-4562-b564-c160-1b5c67e0f92f@axentia.se>
+ <0cbee3bd-8987-5f2f-519d-f8d1b426f2a3@ti.com>
+ <20180424170625.GL16141@n2100.armlinux.org.uk>
+ <b7a7ffb6-b282-cbc5-435e-9ca1cd405e33@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAAEAJfAQMzUfM86o-xNoyBQzTiEMNH+W=9FyFpBy99nA3HrVgw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Emil Renner Berthing <kernel@esmil.dk>, Arnd Bergmann <arnd@arndb.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Catalin Marinas <catalin.marinas@arm.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, Doug Anderson <dianders@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, enric.balletbo@collabora.co.uk, Thierry Reding <thierry.reding@gmail.com>, "Kristian H. Kristensen" <hoegsberg@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <b7a7ffb6-b282-cbc5-435e-9ca1cd405e33@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMjQsIDIwMTggYXQgNzozMSBBTSwgRXplcXVpZWwgR2FyY2lhCjxlemVxdWll
-bEB2YW5ndWFyZGlhc3VyLmNvbS5hcj4gd3JvdGU6Cj4gSGkgRG91ZywgU2VhbjoKPgo+IEkgd291
-bGQgbGlrZSB0byBtb3ZlIHRoaXMgZm9yd2FyZC4KPgo+IE9uIDI2IEZlYnJ1YXJ5IDIwMTggYXQg
-MTU6MjMsIERvdWcgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4gd3JvdGU6Cj4+IEhp
-LAo+Pgo+PiBPbiBUaHUsIEZlYiA4LCAyMDE4IGF0IDk6NDggQU0sIFNlYW4gUGF1bCA8c2VhbnBh
-dWxAY2hyb21pdW0ub3JnPiB3cm90ZToKPj4+IFRoaXMgcGF0Y2ggYWRkcyBhbiBvdmVycmlkZSBt
-b2RlIGZvciBrZXZpbiBkZXZpY2VzLiBUaGUgbW9kZSBpbmNyZWFzZXMKPj4+IGJvdGggYmFjayBw
-b3JjaGVzIHRvIGFsbG93IGEgcGl4ZWwgY2xvY2sgb2YgMjY2NjZrSHogYXMgb3Bwb3NlZCB0byB0
-aGUKPj4+ICd0eXBpY2FsJyB2YWx1ZSBvZiAyNTI3NTBrSHouIFRoaXMgaXMgbmVlZGVkIHRvIGF2
-b2lkIGludGVyZmVyZW5jZSB3aXRoCj4+PiB0aGUgdG91Y2ggZGlnaXRpemVyIG9uIHRoZXNlIGxh
-cHRvcHMuCj4+Pgo+Pj4gQ2hhbmdlcyBpbiB2MjoKPj4+ICAtIFdyYXAgdGhlIHRpbWluZyBpbiBk
-aXNwbGF5LXRpbWluZ3Mgbm9kZSB0byBtYXRjaCBiaW5kaW5nIChSb2IvVGhpZXJyeSkKPj4+IENo
-YW5nZXMgaW4gdjM6Cj4+PiAgLSBVbndyYXAgdGhlIHRpbWluZyBmcm9tIGRpc3BsYXktdGltaW5n
-cyBhbmQgcmVuYW1lIHBhbmVsLXRpbWluZyAoUm9iKQo+Pj4KPj4+IENjOiBEb3VnIEFuZGVyc29u
-IDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+Cj4+PiBDYzogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
-Lm5ldD4KPj4+IENjOiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgo+Pj4gQ2M6IEpl
-ZmZ5IENoZW4gPGplZmZ5LmNoZW5Acm9jay1jaGlwcy5jb20+Cj4+PiBDYzogUm9iIEhlcnJpbmcg
-PHJvYmgrZHRAa2VybmVsLm9yZz4KPj4+IENjOiBTdMOpcGhhbmUgTWFyY2hlc2luIDxtYXJjaGV1
-QGNocm9taXVtLm9yZz4KPj4+IENjOiBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21h
-aWwuY29tPgo+Pj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4+PiBDYzogZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+Pj4gQ2M6IGxpbnV4LXJvY2tjaGlwQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKPj4+IFNpZ25lZC1vZmYtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21p
-dW0ub3JnPgo+Pj4gLS0tCj4+PiAgYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTkt
-Z3J1LWtldmluLmR0cyB8IDE0ICsrKysrKysrKysrKysrCj4+PiAgMSBmaWxlIGNoYW5nZWQsIDE0
-IGluc2VydGlvbnMoKykKPj4+Cj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9y
-b2NrY2hpcC9yazMzOTktZ3J1LWtldmluLmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2No
-aXAvcmszMzk5LWdydS1rZXZpbi5kdHMKPj4+IGluZGV4IDE5MWE2YmNiMTcwNC4uNjU4NDExY2Uz
-N2VhIDEwMDY0NAo+Pj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTkt
-Z3J1LWtldmluLmR0cwo+Pj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMz
-OTktZ3J1LWtldmluLmR0cwo+Pj4gQEAgLTk4LDYgKzk4LDIwIEBACj4+PiAgICAgICAgICAgICAg
-ICAgYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+Owo+Pj4gICAgICAgICAgICAgICAgIHBvd2VyLXN1
-cHBseSA9IDwmcHAzMzAwX2Rpc3A+Owo+Pj4KPj4+ICsgICAgICAgICAgICAgICBwYW5lbC10aW1p
-bmcgewo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgY2xvY2stZnJlcXVlbmN5ID0gPDI2NjYw
-NDcyMD47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICBoYWN0aXZlID0gPDI0MDA+Owo+Pj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgaGZyb250LXBvcmNoID0gPDQ4PjsKPj4+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIGhiYWNrLXBvcmNoID0gPDg0PjsKPj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIGhzeW5jLWxlbiA9IDwzMj47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICBoc3lu
-Yy1hY3RpdmUgPSA8MD47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICB2YWN0aXZlID0gPDE2
-MDA+Owo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgdmZyb250LXBvcmNoID0gPDM+Owo+Pj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgdmJhY2stcG9yY2ggPSA8MTIwPjsKPj4+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIHZzeW5jLWxlbiA9IDwxMD47Cj4+PiArICAgICAgICAgICAgICAgICAg
-ICAgICB2c3luYy1hY3RpdmUgPSA8MD47Cj4+PiArICAgICAgICAgICAgICAgfTsKPj4+ICsKPj4+
-ICAgICAgICAgICAgICAgICBwb3J0cyB7Cj4+PiAgICAgICAgICAgICAgICAgICAgICAgICBwYW5l
-bF9pbl9lZHA6IGVuZHBvaW50IHsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-cmVtb3RlLWVuZHBvaW50ID0gPCZlZHBfb3V0X3BhbmVsPjsKPj4KPj4gS3Jpc3RpYW4gYnJvdWdo
-dCBhbiBvbGQgYnVnIHRvIG15IGF0dGVudGlvbgo+PiA8aHR0cHM6Ly9idWdzLmNocm9taXVtLm9y
-Zy9wL2Nocm9taXVtL2lzc3Vlcy9kZXRhaWw/aWQ9NzUwMzU0PiBhbmQgaXQKPj4gbWFkZSBtZSB0
-aGluay4gIFNob3VsZCB3ZSBzb21laG93IGFkanVzdCB0aGUgYmluZGluZ3MgaGVyZSB0byBhY2Nv
-dW50Cj4+IGZvciB0aGUgZmFjdCB0aGF0IGEgYm9hcmQgbWF5IHNvdXJjZSBzZXZlcmFsIGRpZmZl
-cmVudCBwYW5lbHM/Cj4+Cj4+IEFLQTogb24gc29tZSBib2FyZHMgYW4gT0RNIG1heSB3YW50IHRv
-IHNlY29uZCBzb3VyY2UgKG9yIHRoaXJkIHNvdXJjZSwKPj4gb3IgLi4uKSB0aGUgcGFuZWwuICBU
-aGV5J2xsIHJhbmRvbWx5IGNvbm5lY3Qgc2V2ZXJhbCBkaWZmZXJlbnQgcGFuZWxzCj4+IHRvIHRo
-ZSBib2FyZCBhbmQgc2hpcCB0aGUgYm9hcmRzIG91dC4gIFRoZSBwYW5lbHMgYXJlIGFsbCBjb21w
-YXRpYmxlCj4+IGVsZWN0cmljYWxseSAoc2FtZSBwb3dlciBzZXF1ZW5jaW5nKSBidXQgbWlnaHQg
-bmVlZCBzbGlnaHRseSBkaWZmZXJlbnQKPj4gdGltaW5ncy4gIEluIHRoaXMgcGFydGljdWxhciBj
-YXNlIHRoZXJlJ3Mgbm8gYm9hcmQtbGV2ZWwgc3RyYXBwaW5ncwo+PiBmb3IgdGhlIGRpZmZlcmVu
-dCBwYW5lbHMtLWl0J3MgYXNzdW1lZCB0aGF0IHRoZSBFRElEIG9uIHRoZSBwYW5lbHMgY2FuCj4+
-IGJlIHVzZWQgdG8gZGlzdGluZ3Vpc2ggdGhlbS4KPj4KPj4gSW4gdGhhdCBjYXNlIGl0IHNlZW1z
-IGxpa2UgaXQgd291bGQgYmUgbmljZSB0byBhbGxvdyBzcGVjaWZ5aW5nIG1vcmUKPj4gdGhhbiBv
-bmUgInBhbmVsLXRpbWluZyIgbm9kZXMuICBNYXliZSBrZXllZCBvZmYgc29tZSB0eXBlIG9mIElE
-IHRoYXQncwo+PiBwcmVzZW50IGluIHRoZSBFRElEPwo+Pgo+Pgo+PiBJcyB0aGF0IHNvbWV0aGlu
-ZyB3ZSdkIHdhbnQgdG8gYWNjb3VudCBmb3IgYmVmb3JlIHdlIGxhbmQgdGhpcyBzZXJpZXM/Cj4+
-ICBJdCBzZWVtcyBsaWtlIGl0IHdvdWxkIGp1c3QgYmUgYWRkaW5nIGFuIGV4dHJhIGxldmVsIG9m
-IG5vZGVzPwo+Pgo+Cj4gQUZBSUNTLCB0aGVyZSBpcyBubyBFRElEIHdpdGhvdXQgYSBEREMgYnVz
-LCB3aGljaCB3ZSBkb24ndAo+IHNlZW0gdG8gaGF2ZSBvbiBncnUgcGxhdGZvcm1zLCBkbyB3ZT8K
-CklJUkMgaGlzdG9yaWNhbGx5IHdlJ3ZlIG9ubHkgZG9uZSBzZWNvbmQgc291cmNpbmcgd2hlbgpk
-b2FibGUgYmVjYXVzZSBlaXRoZXI6CjEuIHRoZSB0aW1pbmdzIGJldHdlZW4gYWxsIHRoZSBwYW5l
-bHMgd2UgdXNlIGFyZSBjb21wYXRpYmxlLCBvcgoyLiB3ZSBoYXZlIGEgd29ya2luZyBEREMgdG8g
-ZmlndXJlIGl0IG91dCBmb3IgdXMuCgpJbiBvdGhlciB3b3Jkcywgd2UgaGF2ZW4ndCBoYW5kbGVk
-IHRoZSBjYXNlIHdoZXJlIHRpbWluZ3MgYXJlIG5vdApjb21wYXRpYmxlIGFuZCB3ZSBjYW4ndCBh
-ZGRyZXNzIHRoaXMgYnkgcmVhZGluZyBFRElEcy4KClN0w6lwaGFuZQoKPgo+IFJlZ2FyZHMsCj4g
-LS0KPiBFemVxdWllbCBHYXJjw61hLCBWYW5ndWFyZGlhU3VyCj4gd3d3LnZhbmd1YXJkaWFzdXIu
-Y29tLmFyCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, Apr 24, 2018 at 09:25:44PM +0300, Jyri Sarha wrote:
+> On 24/04/18 20:06, Russell King - ARM Linux wrote:
+> > On Tue, Apr 24, 2018 at 07:04:16PM +0300, Jyri Sarha wrote:
+> >> On 24/04/18 13:14, Peter Rosin wrote:
+> >>> On 2018-04-24 10:08, Russell King - ARM Linux wrote:
+> >>>> On Tue, Apr 24, 2018 at 08:58:42AM +0200, Peter Rosin wrote:
+> >>>>> On 2018-04-23 18:08, Russell King - ARM Linux wrote:
+> >>>>>> On Mon, Apr 23, 2018 at 09:23:00AM +0200, Peter Rosin wrote:
+> >>>>>>>  static int tda998x_remove(struct i2c_client *client)
+> >>>>>>>  {
+> >>>>>>> -	component_del(&client->dev, &tda998x_ops);
+> >>>>>>> +	struct device *dev = &client->dev;
+> >>>>>>> +	struct tda998x_bridge *bridge = dev_get_drvdata(dev);
+> >>>>>>> +
+> >>>>>>> +	drm_bridge_remove(&bridge->bridge);
+> >>>>>>> +	component_del(dev, &tda998x_ops);
+> >>>>>>> +
+> >>>>>>
+> >>>>>> I'd like to ask a rather fundamental question about DRM bridge support,
+> >>>>>> because I suspect that there's a major fsckup here.
+> >>>>>>
+> >>>>>> The above is the function that deals with the TDA998x device being
+> >>>>>> unbound from the driver.  With the component API, this results in the
+> >>>>>> DRM device correctly being torn down, because one of the hardware
+> >>>>>> devices has gone.
+> >>>>>>
+> >>>>>> With DRM bridge, the bridge is merely removed from the list of
+> >>>>>> bridges:
+> >>>>>>
+> >>>>>> void drm_bridge_remove(struct drm_bridge *bridge)
+> >>>>>> {
+> >>>>>>         mutex_lock(&bridge_lock);
+> >>>>>>         list_del_init(&bridge->list);
+> >>>>>>         mutex_unlock(&bridge_lock);
+> >>>>>> }
+> >>>>>> EXPORT_SYMBOL(drm_bridge_remove);
+> >>>>>>
+> >>>>>> and the memory backing the "struct tda998x_bridge" (which contains
+> >>>>>> the struct drm_bridge) will be freed by the devm subsystem.
+> >>>>>>
+> >>>>>> However, there is no notification into the rest of the DRM subsystem
+> >>>>>> that the device has gone away.  Worse, the memory that is still in
+> >>>>>> use by DRM has now been freed, so further use of the DRM device
+> >>>>>> results in a use-after-free bug.
+> >>>>>>
+> >>>>>> This is really not good, and to me looks like a fundamental problem
+> >>>>>> with the DRM bridge code.  I see nothing in the DRM bridge code that
+> >>>>>> deals with the lifetime of a "DRM bridge" or indeed the lifetime of
+> >>>>>> the actual device itself.
+> >>>>>>
+> >>>>>> So, from what I can see, there seems to be a fundamental lifetime
+> >>>>>> issue with the design of the DRM bridge code.  This needs to be
+> >>>>>> fixed.
+> >>>>>
+> >>>>> Oh crap. A gigantic can of worms...
+> >>>>
+> >>>> Yes, it's especially annoying for me, having put the effort in to
+> >>>> the component helper to cover all these cases.
+> >>>>
+> >>>>> Would a patch (completely untested btw) along this line of thinking make
+> >>>>> any difference whatsoever?
+> >>>>
+> >>>> It looks interesting - from what I can see of the device links code,
+> >>>> it would have the effect of unbinding the DRM device just before
+> >>>> TDA998x is unbound, so that's an improvement.
+> >>>>
+> >>>> However, from what I can see, the link vanishes at that point (as
+> >>>> DL_FLAG_AUTOREMOVE is set), and re-binding the TDA998x device results
+> >>>> in nothing further happening - the link will be recreated, but there
+> >>>> appears to be nothing that triggers the "consumer" to rebind at that
+> >>>> point.  Maybe I've missed something?
+> >>>
+> >>> Right, auto-remove is a no-go. So, improving on the previous...
+> >>>
+> >>> (I think drm_panel might suffer from this issue too?)
+> >>
+> >> Yes it does and I took a shot at trying to fix it at the end of the
+> >> previous merge window, but gave up as I run out of time. I re-spun the
+> >> work now after reading this thread. I add you and Russell to cc.
+> > 
+> > Right, and these exact problems are what the component helper is
+> > there to sort out, in a subsystem independent way.
+> > 
+> > What is the problem with the component helper that people seem to
+> > be soo loathed to use it, instead preferring to come up with sub-
+> > standard and broken alternatives?
+> > 
+> 
+> Nothing but time. Embedding component helpers seamlessly into drm
+> framework does not sound like a couple of days job. Right now I simply
+> do not have time to take on a challenge like that. If someone does it I
+> am all for it.
+> 
+> However, I would not call device links substandard. They are in the
+> device core after all.
+
+Umm, no, I was not talking about the device links, but the tendency to
+have subsystem or component specific solutions to this problem.
+
+We're now heading down the path of trying to retrofit the functionality
+that one expects and is provided by the component helpers into DRM
+bridge and DRM panel by using device links, which appears to only
+partially resolve the problem.
+
+On the point of device links, I've been wondering whether the component
+helpers could take advantage of the device links, but at the moment
+that would cause a regression if there's no facility to re-probe the
+"consumer" when a "supplier" returns.
+
+As you bring that up, I would say that they _are_ a substandard way to
+solve this problem _if_, as I suspect, they would cause a regression
+to the component helper if the component helper were to use them as a
+means to control the probing of the "master" device.  This is not a
+matter of which part of the kernel they are "in", but the functionality
+that they can offer vs what would be expected.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
