@@ -1,29 +1,243 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC 00/10] ARM: Remove support for Exynos5440
-Date: Tue, 24 Apr 2018 23:12:15 +0200
-Message-ID: <CAK8P3a1Az9acSZwdhPz+Gwy6nSL=WAB6-z6Cq9m=nPLzF240_A@mail.gmail.com>
-References: <20180424203239.21885-1-krzk@kernel.org> <CAK8P3a2CZU1CYFt0fdVSFFnj2Wg=mUcC=yuWAW7zDO0u2Q2dUQ@mail.gmail.com>
- <20180424205636.cdp4czq6hhs5gu5a@kozik-lap>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
+ unflattened to FDT
+Date: Tue, 24 Apr 2018 14:15:07 -0700
+Message-ID: <3d7cb4d3-5070-e878-51d3-59f9772f756b@gmail.com>
+References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
+ <1520122673-11003-3-git-send-email-frowand.list@gmail.com>
+ <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
+ <7bbf615b-3cdd-6bb4-6918-33e48de4225d@gmail.com>
+ <a21dbee8-6e4e-9ceb-c798-dda43c2eae2d@web.de>
+ <d7e94a45-5d46-0491-e5dc-2b098a11c5b1@gmail.com>
+ <CAL_Jsq+MmUTMrd+jNqUB2=A-q3cCy7+QWOKG0iF6zM0hjCy3PQ@mail.gmail.com>
+ <e508f3de-f21b-2510-2c6a-b810073ba1a7@web.de>
+ <e06d1c0f-f60d-fc23-cd74-82f557dbc432@web.de>
+ <7bbb9472-9c96-6012-68e6-4ec2773c7732@gmail.com>
+ <4422f58a-ca7c-16e6-e0df-63faea50f553@web.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180424205636.cdp4czq6hhs5gu5a@kozik-lap>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg
+Return-path: <jailhouse-dev+bncBD3LJZVFUEJBBXV473LAKGQEQVF7IFY@googlegroups.com>
+Sender: jailhouse-dev@googlegroups.com
+In-Reply-To: <4422f58a-ca7c-16e6-e0df-63faea50f553@web.de>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
+List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
+List-Archive: <https://groups.google.com/group/jailhouse-dev
+List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
+List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/group/jailhouse-dev/subscribe>
+To: Jan Kiszka <jan.kiszka@web.de>, Rob Herring <robh+dt@kernel.org>, Alan Tull <atull@kernel.org>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jailhouse <jailhouse-dev@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 24, 2018 at 10:56 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Tue, Apr 24, 2018 at 10:50:58PM +0200, Arnd Bergmann wrote:
->> On Tue, Apr 24, 2018 at 10:32 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> The only dependency is through Kconfig symbol (SOC_EXYNOS5440).  After
-> applying 10/10, which removes SOC_EXYNOS5440, some automatic code
-> testers can complain about non-existing Kconfig option.  That's not big
-> issue because all this will go away so indeed we could take everything
-> in one release.
+On 04/23/18 22:29, Jan Kiszka wrote:
+> On 2018-04-24 00:38, Frank Rowand wrote:
+>> Hi Jan,
+>>
+>> + Alan Tull for fpga perspective
+>>
+>> On 04/22/18 03:30, Jan Kiszka wrote:
+>>> On 2018-04-11 07:42, Jan Kiszka wrote:
+>>>> On 2018-04-05 23:12, Rob Herring wrote:
+>>>>> On Thu, Apr 5, 2018 at 2:28 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>>>>>> On 04/05/18 12:13, Jan Kiszka wrote:
+>>>>>>> On 2018-04-05 20:59, Frank Rowand wrote:
+>>>>>>>> Hi Jan,
+>>>>>>>>
+>>>>>>>> On 04/04/18 15:35, Jan Kiszka wrote:
+>>>>>>>>> Hi Frank,
+>>>>>>>>>
+>>>>>>>>> On 2018-03-04 01:17, frowand.list@gmail.com wrote:
+>>>>>>>>>> From: Frank Rowand <frank.rowand@sony.com>
+>>>>>>>>>>
+>>>>>>>>>> Move duplicating and unflattening of an overlay flattened devicetree
+>>>>>>>>>> (FDT) into the overlay application code.  To accomplish this,
+>>>>>>>>>> of_overlay_apply() is replaced by of_overlay_fdt_apply().
+>>>>>>>>>>
+>>>>>>>>>> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
+>>>>>>>>>> code, which is thus responsible for freeing the duplicate FDT.  The
+>>>>>>>>>> caller of of_overlay_fdt_apply() remains responsible for freeing the
+>>>>>>>>>> original FDT.
+>>>>>>>>>>
+>>>>>>>>>> The unflattened devicetree now belongs to devicetree code, which is
+>>>>>>>>>> thus responsible for freeing the unflattened devicetree.
+>>>>>>>>>>
+>>>>>>>>>> These ownership changes prevent early freeing of the duplicated FDT
+>>>>>>>>>> or the unflattened devicetree, which could result in use after free
+>>>>>>>>>> errors.
+>>>>>>>>>>
+>>>>>>>>>> of_overlay_fdt_apply() is a private function for the anticipated
+>>>>>>>>>> overlay loader.
+>>>>>>>>>
+>>>>>>>>> We are using of_fdt_unflatten_tree + of_overlay_apply in the
+>>>>>>>>> (out-of-tree) Jailhouse loader driver in order to register a virtual
+>>>>>>>>> device during hypervisor activation with Linux. The DT overlay is
+>>>>>>>>> created from a a template but modified prior to application to account
+>>>>>>>>> for runtime-specific parameters. See [1] for the current implementation.
+>>>>>>>>>
+>>>>>>>>> I'm now wondering how to model that scenario best with the new API.
+>>>>>>>>> Given that the loader lost ownership of the unflattened tree but the
+>>>>>>>>> modification API exist only for the that DT state, I'm not yet seeing a
+>>>>>>>>> clear solution. Should we apply the template in disabled form (status =
+>>>>>>>>> "disabled"), modify it, and then activate it while it is already applied?
+>>>>>>>>
+>>>>>>>> Thank you for the pointer to the driver - that makes it much easier to
+>>>>>>>> understand the use case and consider solutions.
+>>>>>>>>
+>>>>>>>> If you can make the changes directly on the FDT instead of on the
+>>>>>>>> expanded devicetree, then you could move to the new API.
+>>>>>>>
+>>>>>>> Are there some examples/references on how to edit FDTs in-place in the
+>>>>>>> kernel? I'd like to avoid writing the n-th FDT parser/generator.
+>>>>>>
+>>>>>> I don't know of any existing in-kernel edits of the FDT (but they might
+>>>>>> exist).  The functions to access an FDT are in libfdt, which is in
+>>>>>> scripts/dtc/libfdt/.
+>>>>>
+>>>>> Let's please not go down that route of doing FDT modifications. There
+>>>>> is little reason to other than for early boot changes. And it is much
+>>>>> easier to work on unflattened trees.
+>>>>
+>>>> I just briefly looked into libfdt, and it would have meant building it
+>>>> into the module as there are no library functions exported by the kernel
+>>>> either. Another reason to drop that.
+>>>>
+>>>> What's apparently working now is the pattern I initially suggested:
+>>>> Register template with status = "disabled" as overlay, then prepare and
+>>>> apply changeset that contains all needed modifications and sets the
+>>>> status to "ok". I might be leaking additional resources, but to find
+>>>> that out, I will now finally have to resolve clean unbinding of the
+>>>> generic PCI host controller [1] first.
+>>>
+>>> static void free_overlay_changeset(struct overlay_changeset *ovcs)
+>>> {
+>>> 	[...]
+>>> 	/*
+>>> 	 * TODO
+>>> 	 *
+>>> 	 * would like to: kfree(ovcs->overlay_tree);
+>>> 	 * but can not since drivers may have pointers into this data
+>>> 	 *
+>>> 	 * would like to: kfree(ovcs->fdt);
+>>> 	 * but can not since drivers may have pointers into this data
+>>> 	 */
+>>>
+>>> 	kfree(ovcs);
+>>> }
+>>>
+>>> What's this? I have kmemleak now jumping at me over this. Who is suppose
+>>> to plug these leaks? The caller of of_overlay_fdt_apply has no pointers
+>>> to those objects. I would say that's a regression of the new API.
+>>
+>> The problem already existed but it was hidden.  We have never been able to
+>> kfree() these object because we do not know if there are any pointers into
+>> these objects.  The new API makes the problem visible to kmemleak.
+> 
+> My old code didn't have the problem because there was no one steeling
+> pointers to my overlay, and I was able to safely release all the
+> resources that I or the core on my behalf allocated. In fact, I recently
+> even dropped the duplication the fdt prior to unflattening it because I
+> got its lifecycle under control (and both kmemleak as well as kasan
+> confirmed this). I still consider this intentional leak a regression of
+> the new API.
 
-Right, I wouldn't worry about that. Kbuild itself doesn't warn about missing
-symbols, so this is only for helpful automated checks that tell us that there
-is still some pending work.
+The API has to work for any user, not just your clean code.
 
-       Arnd
+
+>> The reason that we do not know if there are any pointers into these objects
+>> is that devicetree access APIs return pointers into the devicetree internal
+>> data structures (that is, into the overlay unflattened devicetree).  If we
+>> want to be able to do the kfree()s, we could change the devicetree access
+>> APIs.
+>>
+>> The reason that pointers into the overlay flattened tree (ovcs->fdt) are
+>> also exposed is that the overlay unflattened devicetree property values
+>> are pointers into the overlay fdt.
+>>
+>> ** This paragraph becomes academic (and not needed) if the fix in the next
+>> paragraph can be implemented. **
+>> I _think_ that the fdt issue __for overlays__ can be fixed somewhat easily.
+>> (I would want to read through the code again to make sure I'm not missing
+>> any issues.)  If the of_fdt_unflatten_tree() called by of_overlay_fdt_apply()
+>> was modified so that property values were copied into newly allocated memory
+>> and the live tree property pointers were set to the copy instead of to
+>> the value in the fdt, then I _think_ the fdt could be freed in
+>> of_overlay_fdt_apply() after calling of_overlay_apply().  The code that
+> 
+> I don't see yet how more duplicating of objects would help. Then we
+> would not leak the fdt or the unflattened tree on overlay destruction
+> but that duplicates, no?
+
+Yes, we would leak the duplicates.  That is exactly what the existing
+overlay remove code does.  My long term goal is to remove that leakage.
+But that leakage can not be resolved until we can guarantee that there
+are no pointers held to those duplicates.
+
+I don't like adding this additional copy - I would much prefer to change
+the overlay notify code as proposed below.
+
+
+>> frees a devicetree would also have to be aware of this change -- I'm not
+>> sure if that leads to ugly complications or if it is easy.  The other
+>> question to consider is whether to make the same change to
+>> of_fdt_unflatten_tree() when it is called in early boot to unflatten
+>> the base devicetree.  Doing so would increase the memory usage of the
+>> live tree (we would not be able to free the base fdt after unflattening
+>> it because we make the fdt visible in /sys/firmware/fdt -- though
+>> _maybe_ that could be conditioned on CONFIG_KEXEC).
+>>
+>> But all of the complexity of that fix is _only_ because of_overlay_apply()
+>> and of_overlay_remove() call overlay_notify(), passing in the overlay
+>> unflattened devicetree (which has pointers into the overlay fdt). Pointers
+>> into the overlay unflattened devicetree are then passed to the notifiers.
+>> (Again, I may be missing some other place that the overlay unflattened
+>> devicetree is made visible to other code -- a more thorough reading of
+>> the code is needed.) If the notifiers could be modified to accept the
+>> changeset list instead of of pointers to the fragments in the overlay
+>> unflattened devicetree then there would be no possibility of the notifiers
+>> keeping a pointer into the overlay fdt. I do not know if this is a
+> 
+> But then again the convention has to be that those changeset pointers
+> must not be kept - because the changeset is history after of_overlay_remove.
+
+I don't trust convention.  The result is fragile code.
+
+
+>> practical change for the notifiers -- there are no callers of
+>> of_overlay_notifier_register() in the mainline kernel source. My
+>> recollection is that the overlay notifiers were added for the fpga
+>> subsystem.
+> 
+> We have drivers/fpga/of-fpga-region.c in-tree, and that does not seem to
+
+Thanks for finding that.  For some reason my 'git grep' did not find
+that.  (I'll blame fat fingers or something...)
+
+
+> store any pointers to objects, rather consumes them in-place. And I
+> would consider it fair to impose such a limitation on the notifier
+> interface.
+
+How do you enforce that limitation?
+
+
+>> Why is overlay_notify() the only issue related to unknown users having
+>> pointers into the overlay fdt?  The answer is that the overlay code
+>> does not directly expose the overlay unflattened devicetree (and thus
+>> indirectly the overlay fdt) to the live devicetree -- when the
+>> overlay code creates the overlay changeset, it copies from the
+>> overlay unflattened devicetree and overlay fdt and only exposes
+>> pointers to the copies.
+>>
+>> And hopefully the issues with the overlay unflattened devicetree can
+>> be resolved in the same way as for the overlay fdt.
+> 
+> As noted above, I don't see there is a technical solution to this issue
+> but it's rather a matter of convention: no overlay notifier callback is
+> allowed to keep references to the passed tree content (unless it
+> reference-counts some tree nodes) beyond the execution of the callback.
+> With that in place, we can safely drop the backing memory IMHO.
+> 
+> Jan
+> .
+> 
