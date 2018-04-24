@@ -1,66 +1,132 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v5 12/44] clk: davinci: Add platform information for TI
- DA850 PSC
-Date: Tue, 24 Apr 2018 13:58:33 +0530
-Message-ID: <aa1c2e6f-793c-1d9e-366a-3496f500f946@ti.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-13-git-send-email-david@lechnology.com>
- <CAMRc=MfQuqTK+mDT0Gawa6J-3d1z6djLutaHREKfVm+3hATEqQ@mail.gmail.com>
- <CAEG3pND6Cu0P_t3y_VM9Sm-GCb3yW0Pa8q4cRUOXYxa5=2nWUQ@mail.gmail.com>
- <a4d84be0-e3d3-4e39-40f9-cae9006cb6ee@ti.com>
- <CAMRc=Mc228JAxxBXcObmokh2h-toojG8OHrmbunm_ORqbGWUnA@mail.gmail.com>
- <69bc0848-0698-b936-96a3-2257a5e27809@ti.com>
- <CAMRc=MenWp=2dtOs1yafnHVkCxfT7SDS0fS2UxUd+U0s_UDwVw@mail.gmail.com>
- <57f2182e-09b4-2cab-5602-9d0e029495be@ti.com>
- <152303318048.143116.2883441215887455211@swboyd.mtv.corp.google.com>
- <48c8531f-8cd9-a9f8-9c38-cbc4c921c4c9@lechnology.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v10 04/10] ARM: dts: r7s72100: Add Capture Engine Unit
+ (CEU)
+Date: Tue, 24 Apr 2018 10:31:11 +0200
+Message-ID: <20180424083111.GG17088@w540>
+References: <1519235284-32286-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1519235284-32286-5-git-send-email-jacopo+renesas@jmondi.org>
+ <20180221182918.fbxnhdl4r4y3ejfj@verge.net.au>
+ <20180423152143.GH3999@w540>
+ <20180424082355.y2cnfkqa7bj4fpy4@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="O8XZ+2Hy8Kj8wLPZ"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <48c8531f-8cd9-a9f8-9c38-cbc4c921c4c9@lechnology.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180424082355.y2cnfkqa7bj4fpy4@verge.net.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, Stephen Boyd <sboyd@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 23 April 2018 08:29 PM, David Lechner wrote:
-> On 04/06/2018 11:46 AM, Stephen Boyd wrote:
->> Quoting Sekhar Nori (2018-04-06 02:37:03)
->>>
->>> Can you please check that and confirm there is no issue with genpd and
->>> using CLK_OF_DECLARE() to initialize clocks?
->>>
->>> Unless you report an issue back, or Mike and Stephen have ideas about
->>> how to handle the dependency between PSC/PLL derived timer clock
->>> initialization and and timer_probe(), I think we need to move back to
->>> using CLK_OF_DECLARE().
->>
->> In such a case, please use the hybrid approach where the clks required
->> for the clockevent and/or clocksource are registered in the early
->> CLK_OF_DECLARE path but the rest of the clks get registered with a
->> proper platform device and driver. There are examples of this approach
->> on other platforms already.
->>
-> 
-> I looked at this a bit last week, but I didn't come up with any approach
-> that I was happy with. It seems like it would be nice to just register
-> the absolute minimum clocks needed. On DA8XX, that would just be the PLL0
-> AUXCLK. On most of the other SoCs, it would be the PLL AUXCLK plus one
-> LPSC clock. The AUXCLKs are easy because they are just a simple gate
-> from the oscillator. The LPSC clocks are a bit more tricky because they
-> have a complex sequence for turning on. Furthermore, on DM646X, we need
-> the whole PLL up to SYSCLK3 plus one LPSC clock, so things get a bit
-> messy there.
 
-Things might change in the context of work being done here by Bartosz
-for converting clocks to early platform devices.
+--O8XZ+2Hy8Kj8wLPZ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-But, keeping that development aside for a moment: I think this means the
-PLLs and PSCs need to be CLK_OF_DECLARE(). What we can have as platform
-devices are clocks that are not in the path to get timer clock working
-(like CFGCHIP clocks).
+Hi Simon,
 
-Thanks,
-Sekhar
+On Tue, Apr 24, 2018 at 10:23:56AM +0200, Simon Horman wrote:
+> On Mon, Apr 23, 2018 at 05:21:43PM +0200, jacopo mondi wrote:
+> > Hi Simon,
+> >
+> > On Wed, Feb 21, 2018 at 07:29:18PM +0100, Simon Horman wrote:
+> > > On Wed, Feb 21, 2018 at 06:47:58PM +0100, Jacopo Mondi wrote:
+> > > > Add Capture Engine Unit (CEU) node to device tree.
+> > > >
+> > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > > Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> > >
+> > > This patch depends on the binding for "renesas,r7s72100-ceu".
+> > > Please repost or otherwise ping me once that dependency has been accepted.
+> >
+> > Bindings for the CEU interface went in v4.17-rc1.
+> >
+> > Could you please resurect this patch?
+>
+> Sure, I took the liberty of "rebasing" it to preserve the new node-order
+> of r7s72100.dtsi. The result is as follows:
+
+That's even better.
+
+Thanks
+   j
+
+>
+> From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Subject: [PATCH] ARM: dts: r7s72100: Add Capture Engine Unit (CEU)
+>
+> Add Capture Engine Unit (CEU) node to device tree.
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> [simon: rebased]
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> ---
+>  arch/arm/boot/dts/r7s72100.dtsi | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+> index ecf9516bcda8..4a1aade0e751 100644
+> --- a/arch/arm/boot/dts/r7s72100.dtsi
+> +++ b/arch/arm/boot/dts/r7s72100.dtsi
+> @@ -375,6 +375,15 @@
+>  			status = "disabled";
+>  		};
+>
+> +		ceu: camera@e8210000 {
+> +			reg = <0xe8210000 0x3000>;
+> +			compatible = "renesas,r7s72100-ceu";
+> +			interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&mstp6_clks R7S72100_CLK_CEU>;
+> +			power-domains = <&cpg_clocks>;
+> +			status = "disabled";
+> +		};
+> +
+>  		wdt: watchdog@fcfe0000 {
+>  			compatible = "renesas,r7s72100-wdt", "renesas,rza-wdt";
+>  			reg = <0xfcfe0000 0x6>;
+> @@ -429,9 +438,9 @@
+>  			#clock-cells = <1>;
+>  			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
+>  			reg = <0xfcfe042c 4>;
+> -			clocks = <&p0_clk>;
+> -			clock-indices = <R7S72100_CLK_RTC>;
+> -			clock-output-names = "rtc";
+> +			clocks = <&b_clk>, <&p0_clk>;
+> +			clock-indices = <R7S72100_CLK_CEU R7S72100_CLK_RTC>;
+> +			clock-output-names = "ceu", "rtc";
+>  		};
+>
+>  		mstp7_clks: mstp7_clks@fcfe0430 {
+> --
+> 2.11.0
+>
+>
+
+--O8XZ+2Hy8Kj8wLPZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJa3utPAAoJEHI0Bo8WoVY83SwQAMcRemJH4whTol5SgaUhhiwt
+7vPzUri9leP+smhF8kzP/cmWuGEHIyQKHzqSivVBZrtRHyk2JZCGNMdp0M1lloCv
+SCVfyv6R/nnPVKdTqJNZYrTN1yJOcGXle271QLEEZUXkL1aDxy5K5Xb5qpSuwu89
+qH1mKj9K39/B/0lmlrn+ENWlVvzewAaZB+WZfFVU89i+4NncFLhx+6gOMceSF8oy
+I4PyfNOIEXXGmKiv7v8H0uHJf0yUTK0NgFLLnFrIwueogXuQTitV2dIdjDuF99SR
+yOR2XPE+h+Ws1BeqnWX81AdSbAeDj6uC+3VVkjiQ6uwXq6BsCmkyqRvY04xmOgNl
+JDwHUYlW/d3D/xs8zYVJ9GxRywKDW48t5kc6MFWxWEPg2DUYV2LrFiwjBGzkcJIv
+wctnUSf3/rh2nNAzeeESbgGvdqSM2iZuCA7PElFZZpudj+F6wcQtLZWoaLrzkdiN
+3pwLo63R67nRzGIvR2DA3xz3Y9rB58kCFHaOrebBSI//wWRBQgXaaruCm1ebYtXt
+3DkKM3uddKTWAkKcEtH8USq1GReGOwZ1CE9vP8zkgKNjoLjEFYHgdRWYKnn5/Fu1
+gDMKw6mStzZHNK/phxoDl1xUehaqH3eMp34fUN4dW6NTnxVYuWdYVx3TINacajjm
+UT3EmMoeafGOJen5gXDI
+=8F7o
+-----END PGP SIGNATURE-----
+
+--O8XZ+2Hy8Kj8wLPZ--
