@@ -1,112 +1,144 @@
-Return-Path: <krzk@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFC 00/10] ARM: Remove support for Exynos5440
-Date: Tue, 24 Apr 2018 22:32:29 +0200
-Message-Id: <20180424203239.21885-1-krzk@kernel.org>
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Jaehoon Chung <jh80.chung@samsung.com>
+Return-Path: <SRS0=VPMM=HN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf0-f195.google.com ([209.85.192.195]:34109 "EHLO
+        mail-pf0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752262AbeDXO0a (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Apr 2018 10:26:30 -0400
+Received: by mail-pf0-f195.google.com with SMTP id a14so1897262pfi.1
+        for <devicetree@vger.kernel.org>; Tue, 24 Apr 2018 07:26:30 -0700 (PDT)
+From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Subject: [PATCH v7 1/3] PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver DT bindings
+Date: Tue, 24 Apr 2018 10:26:08 -0400
+Message-Id: <1524579968-4496-1-git-send-email-l.subrahmanya@mobiveil.co.in>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, marc.zyngier@arm.com
+Cc: mingkai.hu@nxp.com, peter.newton@nxp.com, minghuan.lian@nxp.com, rajesh.raina@nxp.com, rajan.kapoor@nxp.com, prabhjot.singh@nxp.com, Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+This patch adds the DT bindings for Mobiveil PCIe Host Bridge
+IP driver and updates the vendor prefixes file.
 
+Signed-off-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Acked-by: Rob Herring <robh@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-pci@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+---
+ .../devicetree/bindings/pci/mobiveil-pcie.txt      | 73 ++++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ MAINTAINERS                                        |  7 +++
+ 3 files changed, 81 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
 
-Overview
-========
-Let's continue the removal of old platforms. We already get rid of Exynos4212.
-Now it's time for Exynos5440.
-
-The Exynos5440 (quad-core A15 with GMAC, PCIe, SATA) was targeting
-server platforms but it did not make it to the market really.  There are
-no development boards with it and probably there are no real products
-neither.  The development for Exynos5440 ended in 2013 and since then
-the platform is in maintenance mode.
-
-The only development happening around it is the PCIe driver for Exynos5433
-(ARMv8). [1]
-
-Removing Exynos5440, makes our life slightly easier:
-1. Less maintenance,
-2. Smaller code, less quirks,
-3. No need to preserve (imaginary) backward-compatibility for Exynos PCIe
-   driver (so it is easier to add support for Exynos5433).
-
-
-Because of point (3) above - I left the PCIe and PCIe PHY drivers intact.
-
-
-Dependencies
-============
-I think about starting with removal of DTS in some kernel release (patch 1/10).
-Then all drivers can be removed/updated - subsystem maintainers can pick their
-patches freely.
-
-Finally, after getting rid of all Exynos5440 symbols, the last patch (10/10) will
-end in arm-soc tree.
-
-
-Any comments?
-
-
-Best regards,
-Krzysztof
-
-[1] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1569919.html
-
-Krzysztof Kozlowski (10):
-  ARM: dts: exynos: Remove Exynos5440
-  ata: ahci-platform: Remove support for Exynos5440
-  cpufreq: exynos: Remove support for Exynos5440
-  clk: samsung: Remove support for Exynos5440
-  i2c: s3c2410: Remove support for Exynos5440
-  thermal: samsung: Remove support for Exynos5440
-  pinctrl: samsung: Remove support for Exynos5440
-  spi: s3c64xx: samsung: Remove support for Exynos5440
-  usb: host: exynos: Remove support for Exynos5440
-  ARM: exynos: Remove support for Exynos5440
-
- .../bindings/arm/samsung/samsung-boards.txt        |    2 -
- .../devicetree/bindings/ata/ahci-platform.txt      |    1 -
- .../devicetree/bindings/clock/exynos5440-clock.txt |   28 -
- .../bindings/cpufreq/cpufreq-exynos5440.txt        |   28 -
- .../devicetree/bindings/i2c/i2c-s3c2410.txt        |    4 +-
- .../devicetree/bindings/thermal/exynos-thermal.txt |   14 +-
- arch/arm/boot/dts/Makefile                         |    2 -
- arch/arm/boot/dts/exynos5440-sd5v1.dts             |   42 -
- arch/arm/boot/dts/exynos5440-ssdk5440.dts          |   81 --
- arch/arm/boot/dts/exynos5440-tmu-sensor-conf.dtsi  |   20 -
- arch/arm/boot/dts/exynos5440-trip-points.dtsi      |   21 -
- arch/arm/boot/dts/exynos5440.dtsi                  |  355 -------
- arch/arm/mach-exynos/Kconfig                       |   12 -
- arch/arm/mach-exynos/common.h                      |    8 -
- arch/arm/mach-exynos/exynos.c                      |   15 +-
- drivers/ata/ahci_platform.c                        |    1 -
- drivers/clk/samsung/Makefile                       |    1 -
- drivers/clk/samsung/clk-exynos5440.c               |  167 ----
- drivers/cpufreq/Kconfig.arm                        |   14 -
- drivers/cpufreq/Makefile                           |    1 -
- drivers/cpufreq/exynos5440-cpufreq.c               |  452 ---------
- drivers/i2c/busses/i2c-s3c2410.c                   |    2 -
- drivers/pinctrl/samsung/Kconfig                    |   10 +-
- drivers/pinctrl/samsung/Makefile                   |    1 -
- drivers/pinctrl/samsung/pinctrl-exynos5440.c       | 1005 --------------------
- drivers/spi/spi-s3c64xx.c                          |   12 -
- drivers/thermal/samsung/exynos_tmu.c               |  155 +--
- drivers/thermal/samsung/exynos_tmu.h               |    1 -
- drivers/usb/host/ehci-exynos.c                     |    7 -
- drivers/usb/host/ohci-exynos.c                     |    6 -
- include/dt-bindings/clock/exynos5440.h             |   44 -
- 31 files changed, 9 insertions(+), 2503 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/exynos5440-clock.txt
- delete mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-exynos5440.txt
- delete mode 100644 arch/arm/boot/dts/exynos5440-sd5v1.dts
- delete mode 100644 arch/arm/boot/dts/exynos5440-ssdk5440.dts
- delete mode 100644 arch/arm/boot/dts/exynos5440-tmu-sensor-conf.dtsi
- delete mode 100644 arch/arm/boot/dts/exynos5440-trip-points.dtsi
- delete mode 100644 arch/arm/boot/dts/exynos5440.dtsi
- delete mode 100644 drivers/clk/samsung/clk-exynos5440.c
- delete mode 100644 drivers/cpufreq/exynos5440-cpufreq.c
- delete mode 100644 drivers/pinctrl/samsung/pinctrl-exynos5440.c
- delete mode 100644 include/dt-bindings/clock/exynos5440.h
-
+diff --git a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+new file mode 100644
+index 0000000..65038aa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+@@ -0,0 +1,73 @@
++* Mobiveil AXI PCIe Root Port Bridge DT description
++
++Mobiveil's GPEX 4.0 is a PCIe Gen4 root port bridge IP. This configurable IP
++has up to 8 outbound and inbound windows for the address translation.
++
++Required properties:
++- #address-cells: Address representation for root ports, set to <3>
++- #size-cells: Size representation for root ports, set to <2>
++- #interrupt-cells: specifies the number of cells needed to encode an
++	interrupt source. The value must be 1.
++- compatible: Should contain "mbvl,gpex40-pcie"
++- reg: Should contain PCIe registers location and length
++	"config_axi_slave": PCIe controller registers
++	"csr_axi_slave"	  : Bridge config registers
++	"gpio_slave"	  : GPIO registers to control slot power
++	"apb_csr"	  : MSI registers
++
++- device_type: must be "pci"
++- apio-wins : number of requested apio outbound windows
++		default 2 outbound windows are configured -
++		1. Config window
++		2. Memory window
++- ppio-wins : number of requested ppio inbound windows
++		default 1 inbound memory window is configured.
++- bus-range: PCI bus numbers covered
++- interrupt-controller: identifies the node as an interrupt controller
++- #interrupt-cells: specifies the number of cells needed to encode an
++	interrupt source. The value must be 1.
++- interrupt-parent : phandle to the interrupt controller that
++		it is attached to, it should be set to gic to point to
++		ARM's Generic Interrupt Controller node in system DT.
++- interrupts: The interrupt line of the PCIe controller
++		last cell of this field is set to 4 to
++		denote it as IRQ_TYPE_LEVEL_HIGH type interrupt.
++- interrupt-map-mask,
++	interrupt-map: standard PCI properties to define the mapping of the
++	PCI interface to interrupt numbers.
++- ranges: ranges for the PCI memory regions (I/O space region is not
++	supported by hardware)
++	Please refer to the standard PCI bus binding document for a more
++	detailed explanation
++
++
++Example:
++++++++++
++	pcie0: pcie@a0000000 {
++		#address-cells = <3>;
++		#size-cells = <2>;
++		compatible = "mbvl,gpex40-pcie";
++		reg =	<0xa0000000 0x00001000>,
++			<0xb0000000 0x00010000>,
++			<0xff000000 0x00200000>,
++			<0xb0010000 0x00001000>;
++		reg-names =	"config_axi_slave",
++				"csr_axi_slave",
++				"gpio_slave",
++				"apb_csr";
++		device_type = "pci";
++		apio-wins = <2>;
++		ppio-wins = <1>;
++		bus-range = <0x00000000 0x000000ff>;
++		interrupt-controller;
++		interrupt-parent = <&gic>;
++		#interrupt-cells = <1>;
++		interrupts = < 0 89 4 >;
++		interrupt-map-mask = <0 0 0 7>;
++		interrupt-map = <0 0 0 0 &pci_express 0>,
++				<0 0 0 1 &pci_express 1>,
++				<0 0 0 2 &pci_express 2>,
++				<0 0 0 3 &pci_express 3>;
++		ranges = < 0x83000000 0 0x00000000 0xa8000000 0 0x8000000>;
++
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 0994bdd..8263cc7 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -197,6 +197,7 @@ lwn	Liebherr-Werk Nenzing GmbH
+ macnica	Macnica Americas
+ marvell	Marvell Technology Group Ltd.
+ maxim	Maxim Integrated Products
++mbvl	Mobiveil Inc.
+ mcube	mCube
+ meas	Measurement Specialties
+ mediatek	MediaTek Inc.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 44512c3..b295080 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9162,6 +9162,13 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
+ S:	Maintained
+ F:	drivers/media/dvb-frontends/mn88473*
+ 
++PCI DRIVER FOR MOBIVEIL PCIE IP
++M:	Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
++L:	linux-pci@vger.kernel.org
++S:	Supported
++F:	Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
++F:	drivers/pci/host/pcie-mobiveil.c
++
+ MODULE SUPPORT
+ M:	Jessica Yu <jeyu@kernel.org>
+ M:	Rusty Russell <rusty@rustcorp.com.au>
 -- 
-2.14.1
+1.8.3.1
+
