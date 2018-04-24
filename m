@@ -1,52 +1,68 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 4/5] ARM: dts: imx6sx-sabreauto: add fec support
-Date: Tue, 24 Apr 2018 02:09:58 +0000
-Message-ID: <AM3PR04MB131566E1C8033D256686F192F5880@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1524455219-6736-1-git-send-email-Anson.Huang@nxp.com>
- <1524455219-6736-4-git-send-email-Anson.Huang@nxp.com>
- <CAOMZO5CDAQtw7Q6NgSzKP4ogaqRaGSE0A+st1iqZ=cQsK49moQ@mail.gmail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH V2 3/5] ARM: dts: imx6sx-sabreauto: add IO expander max7310 support
+Date: Tue, 24 Apr 2018 10:04:59 +0800
+Message-ID: <1524535501-8567-3-git-send-email-Anson.Huang@nxp.com>
+References: <1524535501-8567-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5CDAQtw7Q6NgSzKP4ogaqRaGSE0A+st1iqZ=cQsK49moQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1524535501-8567-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIEZhYmlvDQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1A
-Z21haWwuY29tXQ0KPiBTZW50OiBNb25kYXksIEFwcmlsIDIzLCAyMDE4IDc6MDkgUE0NCj4gVG86
-IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogU2hhd24gR3VvIDxzaGF3
-bmd1b0BrZXJuZWwub3JnPjsgU2FzY2hhIEhhdWVyDQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+
-OyBGYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBSb2INCj4gSGVycmluZyA8
-cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47
-DQo+IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+OyBtb2RlcmF0ZWQgbGlzdDpBUk0v
-RlJFRVNDQUxFIElNWCAvIE1YQw0KPiBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmc+OyBvcGVuIGxpc3Q6T1BFTg0KPiBGSVJNV0FSRSBBTkQgRkxB
-VFRFTkVEIERFVklDRSBUUkVFIEJJTkRJTkdTDQo+IDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-Zz47IGxpbnV4LWtlcm5lbCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz4NCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCA0LzVdIEFSTTogZHRzOiBpbXg2c3gtc2FicmVhdXRvOiBhZGQgZmVjIHN1
-cHBvcnQNCj4gDQo+IEhpIEFuc29uLA0KPiANCj4gT24gTW9uLCBBcHIgMjMsIDIwMTggYXQgMTI6
-NDYgQU0sIEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiB3cm90ZToNCj4gPiBB
-ZGQgRkVDIHN1cHBvcnQgb24gaS5NWDZTWCBTYWJyZSBBdXRvIGJvYXJkLg0KPiA+DQo+ID4gU2ln
-bmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gLS0tDQo+
-ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZzeC1zYWJyZWF1dG8uZHRzIHwgNzANCj4gKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNzAgaW5z
-ZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZz
-eC1zYWJyZWF1dG8uZHRzDQo+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnN4LXNhYnJlYXV0by5k
-dHMNCj4gPiBpbmRleCA4MTJmNDBiLi5lYWRkNDgzIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL2lteDZzeC1zYWJyZWF1dG8uZHRzDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvaW14NnN4LXNhYnJlYXV0by5kdHMNCj4gPiBAQCAtNDEsNiArNDEsNDAgQEANCj4gPiAgICAg
-ICAgIGNsb2NrLWZyZXF1ZW5jeSA9IDwyNDU3NjAwMD47DQo+ID4gIH07DQo+ID4NCj4gPiArJmZl
-YzEgew0KPiA+ICsgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiArICAgICAg
-IHBpbmN0cmwtMCA9IDwmcGluY3RybF9lbmV0MV8xPjsNCj4gPiArICAgICAgIHBoeS1tb2RlID0g
-InJnbWlpIjsNCj4gPiArICAgICAgIHBoeS1oYW5kbGUgPSA8JmV0aHBoeTE+Ow0KPiA+ICsgICAg
-ICAgcGluY3RybC1hc3NlcnQtZ3Bpb3MgPSA8Jm1heDczMjIgMCBHUElPX0FDVElWRV9ISUdIPjsN
-Cj4gDQo+IFRoaXMgcHJvcGVydHkgZG9lcyBub3QgZXhpc3QgaW4gbWFpbmxpbmUsIG9ubHkgaW4g
-dGhlIE5YUCB2ZW5kb3Iga2VybmVsLg0KDQpBaCwgeWVzLCB0aGFua3MgZm9yIHBvaW50aW5nIG91
-dCB0aGlzIGlzc3VlLCBJIGp1c3QgcmVtb3ZlZCBpdCBhbmQgdGhlIGZ1bmN0aW9uIGlzIHN0aWxs
-IHdvcmtpbmcsDQphbHJlYWR5IHNlbnQgb3V0IFYyIHBhdGNoIHNldCwgdGhhbmtzLg0KDQpBbnNv
-bi4NCiANCg0KDQoNCg==
+i.MX6SX Sabre Auto board has two max7310 IO expander
+on I2C3 bus, add support for them.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+no changes since V1.
+ arch/arm/boot/dts/imx6sx-sabreauto.dts | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+index d59084f..812f40b 100644
+--- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
++++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+@@ -82,6 +82,13 @@
+ 			>;
+ 		};
+ 
++		pinctrl_i2c3_2: i2c3grp-2 {
++			fsl,pins = <
++				MX6SX_PAD_KEY_ROW4__I2C3_SDA            0x4001b8b1
++				MX6SX_PAD_KEY_COL4__I2C3_SCL            0x4001b8b1
++			>;
++		};
++
+ 		pinctrl_uart1: uart1grp {
+ 			fsl,pins = <
+ 				MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1
+@@ -272,3 +279,24 @@
+ 		};
+ 	};
+ };
++
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3_2>;
++	status = "okay";
++
++	max7310_a: gpio@30 {
++		compatible = "maxim,max7310";
++		reg = <0x30>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	max7310_b: gpio@32 {
++		compatible = "maxim,max7310";
++		reg = <0x32>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++};
+-- 
+2.7.4
