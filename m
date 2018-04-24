@@ -1,62 +1,42 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2 0/2] usb: dwc3: support clocks and resets for DWC3 core
-Date: Tue, 24 Apr 2018 10:36:01 +0900
-Message-ID: <CAK7LNAQZEkarVA-JKgivjJsV8yhGsXpJUEeoJB=UhXfj5y-Knw@mail.gmail.com>
-References: <1524135818-14825-1-git-send-email-yamada.masahiro@socionext.com> <31be9c49-7562-1c06-7bf9-bafaea2f1c16@codeaurora.org>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: RE: [PATCH 1/6] dt-bindings: devfreq: rk3399_dmc: improve binding
+ documentation.
+Date: Tue, 24 Apr 2018 10:53:43 +0900
+Message-ID: <20180424015343epcms1p30dd08ebdea1e25582012711470cf7cdf@epcms1p3>
+References: <20180419104019.24406-2-enric.balletbo@collabora.com>
+        <20180419104019.24406-1-enric.balletbo@collabora.com>
+        <CGME20180419104054epcas5p49612174afb26493bcd937a0232b9b1df@epcms1p3>
+Reply-To: myungjoo.ham@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <31be9c49-7562-1c06-7bf9-bafaea2f1c16@codeaurora.org>
+In-Reply-To: <20180419104019.24406-2-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manu Gautam <mgautam@codeaurora.org>
-Cc: linux-usb@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh@kernel.org>, Roger Quadros <rogerq@ti.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, DTML <devicetree@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Kyungmin Park <kyungmin.park@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "heiko@sntech.de" <heiko@sntech.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "dbasehore@chromium.org" <dbasehore@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dianders@google.com" <dianders@google.com>, "groek@google.com" <groek@google.com>, "kernel@collabora.com" <kernel@collabora.com>, Nick Milner <nick.milner@collabora.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-2018-04-24 9:11 GMT+09:00 Manu Gautam <mgautam@codeaurora.org>:
-> HI,
+>From: Nick Milner <nick.milner@collabora.com>
 >
+>There are several typos, references to non existent files, grammar and
+>punctuation mistakes in the rk3399_dmc.txt binding. This patch tries
+>to improve the binding documentation and fix these mistakes.
 >
-> On 4/19/2018 4:03 AM, Masahiro Yamada wrote:
->> In the current design of DWC3 driver,
->> the DT typically becomes a nested structure like follows:
->>
->>   dwc3-glue {
->>           compatible = "foo,dwc3";
->>           ...
->>
->>           dwc3 {
->>                   compatible = "snps,dwc3";
->>                   ...
->>           };
->>   }
->>
->> The current DWC3 core (drivers/usb/dwc3/core.c) can not handle
->> clocks / resets at all.
->>
->> The only solution we have now, is to put DWC3 core node under
->> the glue layer node, then add clocks and resets there.
->> Actually, dwc3-of-simple.c exists to handle clocks and resets.
->>
->> As always for digital circuits, DWC3 core IP itself needs clock input.
->> This is specific to this IP.  So, supporting clocks and resets in
->> dwc3/core.c makes sense.
+>Signed-off-by: Nick Milner <nick.milner@collabora.com>
+>Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+
+CC (The original author of this doc): Lin Huang <hl@rock-chips.com>
+
+
+Cheers,
+MyungJoo.
+
+>---
 >
-> Why can't dwc3-of-simple be used with this IP?
-> Adding core/reset handling in both core and glue drivers might
-> only add to confusion and I cant think of a reason why having a parent
-> node representing dwc3-of-simple glue would be any concern.
-> Or are you planning to remove dwc3-of-simple.c driver?
-
-
-dwc3-of-simple.c can be removed only after at least
-all upstream DT files are migrated.
-(and give enough time for migration of downstream DT)
-
-At least, new platforms are not required to use this hack.
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> .../bindings/devfreq/rk3399_dmc.txt           | 207 +++++++++---------
+> 1 file changed, 105 insertions(+), 102 deletions(-)
+>
+>diff --git a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
