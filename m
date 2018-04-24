@@ -1,77 +1,62 @@
-From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 03/37] iommu/sva: Manage process address spaces
-Date: Mon, 23 Apr 2018 21:32:33 -0400
-Message-ID: <57d77955-caa7-ddac-df7d-7eef1f05dbb2@codeaurora.org>
-References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
-	<20180212183352.22730-4-jean-philippe.brucker@arm.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2 0/2] usb: dwc3: support clocks and resets for DWC3 core
+Date: Tue, 24 Apr 2018 10:36:01 +0900
+Message-ID: <CAK7LNAQZEkarVA-JKgivjJsV8yhGsXpJUEeoJB=UhXfj5y-Knw@mail.gmail.com>
+References: <1524135818-14825-1-git-send-email-yamada.masahiro@socionext.com> <31be9c49-7562-1c06-7bf9-bafaea2f1c16@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180212183352.22730-4-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <31be9c49-7562-1c06-7bf9-bafaea2f1c16@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manu Gautam <mgautam@codeaurora.org>
+Cc: linux-usb@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh@kernel.org>, Roger Quadros <rogerq@ti.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, DTML <devicetree@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2/12/2018 1:33 PM, Jean-Philippe Brucker wrote:
-> /**
->   * iommu_sva_device_init() - Initialize Shared Virtual Addressing for a device
->   * @dev: the device
-> @@ -129,7 +439,10 @@ EXPORT_SYMBOL_GPL(iommu_sva_device_shutdown);
->  int iommu_sva_bind_device(struct device *dev, struct mm_struct *mm, int *pasid,
->  			  unsigned long flags, void *drvdata)
->  {
-> +	int i, ret;
-> +	struct io_mm *io_mm = NULL;
->  	struct iommu_domain *domain;
-> +	struct iommu_bond *bond = NULL, *tmp;
->  	struct iommu_param *dev_param = dev->iommu_param;
->  
->  	domain = iommu_get_domain_for_dev(dev);
-> @@ -145,7 +458,42 @@ int iommu_sva_bind_device(struct device *dev, struct mm_struct *mm, int *pasid,
->  	if (flags != (IOMMU_SVA_FEAT_PASID | IOMMU_SVA_FEAT_IOPF))
->  		return -EINVAL;
->  
-> -	return -ENOSYS; /* TODO */
-> +	/* If an io_mm already exists, use it */
-> +	spin_lock(&iommu_sva_lock);
-> +	idr_for_each_entry(&iommu_pasid_idr, io_mm, i) {
-> +		if (io_mm->mm != mm || !io_mm_get_locked(io_mm))
-> +			continue;
-> +
-> +		/* Is it already bound to this device? */
-> +		list_for_each_entry(tmp, &io_mm->devices, mm_head) {
-> +			if (tmp->dev != dev)
-> +				continue;
-> +
-> +			bond = tmp;
-> +			refcount_inc(&bond->refs);
-> +			io_mm_put_locked(io_mm);
-> +			break;
-> +		}
-> +		break;
-> +	}
-> +	spin_unlock(&iommu_sva_lock);
-> +
-> +	if (bond)
+2018-04-24 9:11 GMT+09:00 Manu Gautam <mgautam@codeaurora.org>:
+> HI,
+>
+>
+> On 4/19/2018 4:03 AM, Masahiro Yamada wrote:
+>> In the current design of DWC3 driver,
+>> the DT typically becomes a nested structure like follows:
+>>
+>>   dwc3-glue {
+>>           compatible = "foo,dwc3";
+>>           ...
+>>
+>>           dwc3 {
+>>                   compatible = "snps,dwc3";
+>>                   ...
+>>           };
+>>   }
+>>
+>> The current DWC3 core (drivers/usb/dwc3/core.c) can not handle
+>> clocks / resets at all.
+>>
+>> The only solution we have now, is to put DWC3 core node under
+>> the glue layer node, then add clocks and resets there.
+>> Actually, dwc3-of-simple.c exists to handle clocks and resets.
+>>
+>> As always for digital circuits, DWC3 core IP itself needs clock input.
+>> This is specific to this IP.  So, supporting clocks and resets in
+>> dwc3/core.c makes sense.
+>
+> Why can't dwc3-of-simple be used with this IP?
+> Adding core/reset handling in both core and glue drivers might
+> only add to confusion and I cant think of a reason why having a parent
+> node representing dwc3-of-simple glue would be any concern.
+> Or are you planning to remove dwc3-of-simple.c driver?
 
-Please return pasid when you find an io_mm that is already bound. Something like
-*pasid = io_mm->pasid should do the work here when bond is true.
 
-> +		return 0;
+dwc3-of-simple.c can be removed only after at least
+all upstream DT files are migrated.
+(and give enough time for migration of downstream DT)
+
+At least, new platforms are not required to use this hack.
+
+
 
 
 -- 
-Sinan Kaya
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+Best Regards
+Masahiro Yamada
