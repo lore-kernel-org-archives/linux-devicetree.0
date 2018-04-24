@@ -1,109 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 06/23] ASoC: qdsp6: dt-bindings: Add q6asm dt bindings
-Date: Tue, 24 Apr 2018 11:17:30 -0500
-Message-ID: <20180424161730.4r3vixqa4sdjv7a2@rob-hp-laptop>
-References: <20180418153157.1960-1-srinivas.kandagatla@linaro.org>
- <20180418153157.1960-7-srinivas.kandagatla@linaro.org>
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Subject: [PATCH] of: overlay: Stop leaking resources on overlay removal
+Date: Tue, 24 Apr 2018 18:19:55 +0200
+Message-ID: <097f1b01-6cb4-8dcb-0498-7b4c59a7ea53@siemens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180418153157.1960-7-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org
-Cc: andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, gregkh@linuxfoundation.org, david.brown@linaro.org, mark.rutland@arm.com, lgirdwood@gmail.com, plai@codeaurora.org, bgoswami@codeaurora.org, tiwai@suse.com, perex@perex.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com, spatakok@qti.qualcomm.com
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alan Tull <atull@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 18, 2018 at 04:31:40PM +0100, srinivas.kandagatla@linaro.org wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> 
-> This patch add DT bindings for ASM (Audio Stream Manager) DSP module.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Reviewed-and-tested-by: Rohit kumar <rohitkr@codeaurora.org>
-> ---
->  .../devicetree/bindings/sound/qcom,q6asm.txt       | 33 ++++++++++++++++++++++
->  include/dt-bindings/sound/qcom,q6asm.h             | 22 +++++++++++++++
->  2 files changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6asm.txt
->  create mode 100644 include/dt-bindings/sound/qcom,q6asm.h
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,q6asm.txt b/Documentation/devicetree/bindings/sound/qcom,q6asm.txt
-> new file mode 100644
-> index 000000000000..d034a50a202a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,q6asm.txt
-> @@ -0,0 +1,33 @@
-> +Qualcomm Audio Stream Manager (Q6ASM) binding
-> +
-> +Q6ASM is one of the APR audio service on Q6DSP.
-> +Please refer to qcom,apr.txt for details of the coommon apr service bindings
-> +used by the apr service device.
+Only the overlay notifier callbacks have a chance to potentially get
+hold of references to those two resources, but they do not store them.
+So it is safe to stop the intentional leaking.
 
-Need to be clear this is a child of APR.
+See also https://lkml.org/lkml/2018/4/23/1063 and following.
 
-> +
-> +- but must contain the following property:
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "qcom,asm-v<MAJOR-NUMBER>.<MINOR-NUMBER>".
-> +		    Or "qcom,asm" where the version number can be queried
-> +		    from DSP.
-> +		    example "qcom,asm-v2.0"
-> +
-> += ASM DAIs (Digial Audio Interface)
-> +"dais" subnode of the ASM node represents dai specific configuration
-> +
-> +- #sound-dai-cells
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: Must be 1
-> +
-> += EXAMPLE
-> +
-> +q6asm {
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+---
 
-Unit address needed.
+Ideally, we sort out any remaining worries during the 4.17-rc cycle.
 
-> +	compatible = "qcom,q6asm";
+ drivers/of/overlay.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
-Doesn't match the doc.
-
-> +	reg = <APR_SVC_ASM>;
-> +	q6asmdai: dais {
-> +		#sound-dai-cells = <1>;
-> +	};
-> +};
-> diff --git a/include/dt-bindings/sound/qcom,q6asm.h b/include/dt-bindings/sound/qcom,q6asm.h
-> new file mode 100644
-> index 000000000000..2e11b15d930d
-> --- /dev/null
-> +++ b/include/dt-bindings/sound/qcom,q6asm.h
-> @@ -0,0 +1,22 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#ifndef __DT_BINDINGS_Q6_ASM_H__
-> +#define __DT_BINDINGS_Q6_ASM_H__
-> +
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA1	0
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA2	1
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA3	2
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA4	3
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA5	4
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA6	5
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA7	6
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA8	7
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA9	8
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA10	9
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA11	10
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA12	11
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA13	12
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA14	13
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA15	14
-> +#define	MSM_FRONTEND_DAI_MULTIMEDIA16	15
-> +
-> +#endif /* __DT_BINDINGS_Q6_ASM_H__ */
-> -- 
-> 2.16.2
-> 
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index b35fe88f1851..3553f1f57a62 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -671,17 +671,8 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
+ 		of_node_put(ovcs->fragments[i].overlay);
+ 	}
+ 	kfree(ovcs->fragments);
+-
+-	/*
+-	 * TODO
+-	 *
+-	 * would like to: kfree(ovcs->overlay_tree);
+-	 * but can not since drivers may have pointers into this data
+-	 *
+-	 * would like to: kfree(ovcs->fdt);
+-	 * but can not since drivers may have pointers into this data
+-	 */
+-
++	kfree(ovcs->overlay_tree);
++	kfree(ovcs->fdt);
+ 	kfree(ovcs);
+ }
+ 
+-- 
+2.13.6
