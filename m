@@ -1,58 +1,77 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 2/4] dt-bindings: clock: mediatek: add g3dsys bindings
-Date: Tue, 24 Apr 2018 09:39:07 -0500
-Message-ID: <20180424143907.eewrpzdmkhhux3lb@rob-hp-laptop>
-References: <cover.1524044917.git.sean.wang@mediatek.com>
- <4b5d243d33433f83874359794b796d4228574714.1524044917.git.sean.wang@mediatek.com>
+From: "Jingoo Han" <jingoohan1@gmail.com>
+Subject: Re: [PATCH v7 6/9] PCI: dwc: Define maximum number of vectors
+Date: Tue, 24 Apr 2018 10:39:20 -0400
+Message-ID: <000001d3dbda$0a135930$1e3a0b90$@gmail.com>
+References: <cover.1524577064.git.gustavo.pimentel@synopsys.com> <6b2c7ec1835cf422af5703aa14c99dbad8c6ffb8.1524577064.git.gustavo.pimentel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <4b5d243d33433f83874359794b796d4228574714.1524044917.git.sean.wang@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: sean.wang@mediatek.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6b2c7ec1835cf422af5703aa14c99dbad8c6ffb8.1524577064.git.gustavo.pimentel@synopsys.com>
+Content-Language: en-us
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Gustavo Pimentel' <gustavo.pimentel@synopsys.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBcHIgMTgsIDIwMTggYXQgMDY6MjQ6NTRQTSArMDgwMCwgc2Vhbi53YW5nQG1lZGlh
-dGVrLmNvbSB3cm90ZToKPiBGcm9tOiBTZWFuIFdhbmcgPHNlYW4ud2FuZ0BtZWRpYXRlay5jb20+
-Cj4gCj4gQWRkIGJpbmRpbmdzIHRvIGczZHN5cyBwcm92aWRpbmcgbmVjZXNzYXJ5IGNsb2NrIGFu
-ZCByZXNldCBjb250cm9sIHRvCj4gTWFsaS00NTAuCj4gCj4gU2lnbmVkLW9mZi1ieTogU2VhbiBX
-YW5nIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29tPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvYXJtL21l
-ZGlhdGVrL21lZGlhdGVrLGczZHN5cy50eHQgICAgICB8IDMwICsrKysrKysrKysrKysrKysrKysr
-KysKPiAgMSBmaWxlIGNoYW5nZWQsIDMwIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0
-ZWssZzNkc3lzLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLGczZHN5cy50eHQgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLGczZHN5cy50eHQKPiBu
-ZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLmZmMmQ3MGMKPiAtLS0gL2Rldi9u
-dWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tZWRpYXRl
-ay9tZWRpYXRlayxnM2RzeXMudHh0Cj4gQEAgLTAsMCArMSwzMCBAQAo+ICtNZWRpYVRlayBnM2Rz
-eXMgY29udHJvbGxlcgo+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gKwo+ICtUaGUg
-TWVkaWFUZWsgZzNkc3lzIGNvbnRyb2xsZXIgcHJvdmlkZXMgdmFyaW91cyBjbG9ja3MgYW5kIHJl
-c2V0IGNvbnRyb2xsZXIgdG8KPiArdGhlIEdQVS4KPiArCj4gK1JlcXVpcmVkIFByb3BlcnRpZXM6
-Cj4gKwo+ICstIGNvbXBhdGlibGU6IFNob3VsZCBiZToKPiArCS0gIm1lZGlhdGVrLG10MjcwMS1n
-M2RzeXMiLCAic3lzY29uIjoKPiArCQlmb3IgTVQyNzAxIFNvQwo+ICsJLSAibWVkaWF0ZWssbXQ3
-NjIzLWV0aHN5cyIsICJtZWRpYXRlayxtdDI3MDEtZzNkc3lzIiwgInN5c2NvbiI6Cj4gKwkJZm9y
-IE1UNzYyMyBTb0MKCmV0aHN5cz8KCj4gKy0gI2Nsb2NrLWNlbGxzOiBNdXN0IGJlIDEKPiArLSAj
-cmVzZXQtY2VsbHM6IE11c3QgYmUgMQo+ICsKPiArVGhlIGV0aHN5cyBjb250cm9sbGVyIHVzZXMg
-dGhlIGNvbW1vbiBjbGsgYmluZGluZyBmcm9tCj4gK0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQKPiArVGhlIGF2YWlsYWJsZSBjbG9ja3Mg
-YXJlIGRlZmluZWQgaW4gZHQtYmluZGluZ3MvY2xvY2svbXQqLWNsay5oLgo+ICsKPiArRXhhbXBs
-ZToKPiArCj4gK2czZHN5czogY2xvY2stY29udHJvbGxlckAxMzAwMDAwMCB7Cj4gKwljb21wYXRp
-YmxlID0gIm1lZGlhdGVrLG10NzYyMy1nM2RzeXMiLAo+ICsJCSAgICAgIm1lZGlhdGVrLG10Mjcw
-MS1nM2RzeXMiLAo+ICsJCSAgICAgInN5c2NvbiI7Cj4gKwlyZWcgPSA8MCAweDEzMDAwMDAwIDAg
-MHgyMDA+Owo+ICsJI2Nsb2NrLWNlbGxzID0gPDE+Owo+ICsJI3Jlc2V0LWNlbGxzID0gPDE+Owo+
-ICt9Owo+IC0tIAo+IDIuNy40Cj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+On Tuesday, April 24, 2018 9:45 AM, Gustavo Pimentel wrote:
+> 
+> Adds a callback that defines the maximum number of vectors that can be use
+> by the Root Complex.
+> 
+> Since this is a parameter associated to each SoC IP setting, makes sense
+> to
+> be configurable and easily visible to future modifications.
+> 
+> The designware IP supports a maximum of 256 vectors.
+> 
+> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Acked-by: Joao Pinto <jpinto@synopsys.com>
+
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
+
+Best regards,
+Jingoo Han
+
+
+> ---
+> Change v1->v2:
+>  - Nothing changed, just to follow the patch set version.
+> Change v2->v3:
+>  - Nothing changed, just to follow the patch set version.
+> Changes v3->v4:
+>  - Nothing changed, just to follow the patch set version.
+> Changes v4->v5:
+>  - Nothing changed, just to follow the patch set version.
+> Changes v5->v6:
+>  - Nothing changed, just to follow the patch set version.
+> Changes v6->v7:
+>  - Nothing changed, just to follow the patch set version.
+> 
+>  drivers/pci/dwc/pcie-designware-plat.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/pci/dwc/pcie-designware-plat.c
+> b/drivers/pci/dwc/pcie-designware-plat.c
+> index efc315c..5937fed 100644
+> --- a/drivers/pci/dwc/pcie-designware-plat.c
+> +++ b/drivers/pci/dwc/pcie-designware-plat.c
+> @@ -48,8 +48,14 @@ static int dw_plat_pcie_host_init(struct pcie_port *pp)
+>  	return 0;
+>  }
+> 
+> +static void dw_plat_set_num_vectors(struct pcie_port *pp)
+> +{
+> +	pp->num_vectors = MAX_MSI_IRQS;
+> +}
+> +
+>  static const struct dw_pcie_host_ops dw_plat_pcie_host_ops = {
+>  	.host_init = dw_plat_pcie_host_init,
+> +	.set_num_vectors = dw_plat_set_num_vectors,
+>  };
+> 
+>  static int dw_plat_pcie_establish_link(struct dw_pcie *pci)
+> --
+> 2.7.4
+> 
