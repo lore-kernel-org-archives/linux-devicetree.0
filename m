@@ -1,189 +1,40 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v4 7/8] drm/i2c: tda998x: register as a drm bridge
-Date: Tue, 24 Apr 2018 15:26:43 +0200
-Message-ID: <ab0d5160-88db-3589-916f-ef973f7b506f@axentia.se>
-References: <20180423072301.11962-1-peda@axentia.se>
- <20180423072301.11962-8-peda@axentia.se>
- <20180423160833.GF16141@n2100.armlinux.org.uk>
- <5d6866d0-75bc-4de8-9b87-4fee5430e9dd@axentia.se>
- <20180424080833.GJ16141@n2100.armlinux.org.uk>
- <8448e90a-4562-b564-c160-1b5c67e0f92f@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Amit Nischal <anischal@codeaurora.org>
+Subject: [PATCH 0/2] Add QCOM video clock controller driver
+Date: Tue, 24 Apr 2018 19:02:49 +0530
+Message-ID: <1524576771-31096-1-git-send-email-anischal@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8448e90a-4562-b564-c160-1b5c67e0f92f@axentia.se>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Amit Nischal <anischal@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-24 12:14, Peter Rosin wrote:
-> On 2018-04-24 10:08, Russell King - ARM Linux wrote:
->> On Tue, Apr 24, 2018 at 08:58:42AM +0200, Peter Rosin wrote:
->>> On 2018-04-23 18:08, Russell King - ARM Linux wrote:
->>>> On Mon, Apr 23, 2018 at 09:23:00AM +0200, Peter Rosin wrote:
->>>>>  static int tda998x_remove(struct i2c_client *client)
->>>>>  {
->>>>> -	component_del(&client->dev, &tda998x_ops);
->>>>> +	struct device *dev = &client->dev;
->>>>> +	struct tda998x_bridge *bridge = dev_get_drvdata(dev);
->>>>> +
->>>>> +	drm_bridge_remove(&bridge->bridge);
->>>>> +	component_del(dev, &tda998x_ops);
->>>>> +
->>>>
->>>> I'd like to ask a rather fundamental question about DRM bridge support,
->>>> because I suspect that there's a major fsckup here.
->>>>
->>>> The above is the function that deals with the TDA998x device being
->>>> unbound from the driver.  With the component API, this results in the
->>>> DRM device correctly being torn down, because one of the hardware
->>>> devices has gone.
->>>>
->>>> With DRM bridge, the bridge is merely removed from the list of
->>>> bridges:
->>>>
->>>> void drm_bridge_remove(struct drm_bridge *bridge)
->>>> {
->>>>         mutex_lock(&bridge_lock);
->>>>         list_del_init(&bridge->list);
->>>>         mutex_unlock(&bridge_lock);
->>>> }
->>>> EXPORT_SYMBOL(drm_bridge_remove);
->>>>
->>>> and the memory backing the "struct tda998x_bridge" (which contains
->>>> the struct drm_bridge) will be freed by the devm subsystem.
->>>>
->>>> However, there is no notification into the rest of the DRM subsystem
->>>> that the device has gone away.  Worse, the memory that is still in
->>>> use by DRM has now been freed, so further use of the DRM device
->>>> results in a use-after-free bug.
->>>>
->>>> This is really not good, and to me looks like a fundamental problem
->>>> with the DRM bridge code.  I see nothing in the DRM bridge code that
->>>> deals with the lifetime of a "DRM bridge" or indeed the lifetime of
->>>> the actual device itself.
->>>>
->>>> So, from what I can see, there seems to be a fundamental lifetime
->>>> issue with the design of the DRM bridge code.  This needs to be
->>>> fixed.
->>>
->>> Oh crap. A gigantic can of worms...
->>
->> Yes, it's especially annoying for me, having put the effort in to
->> the component helper to cover all these cases.
->>
->>> Would a patch (completely untested btw) along this line of thinking make
->>> any difference whatsoever?
->>
->> It looks interesting - from what I can see of the device links code,
->> it would have the effect of unbinding the DRM device just before
->> TDA998x is unbound, so that's an improvement.
->>
->> However, from what I can see, the link vanishes at that point (as
->> DL_FLAG_AUTOREMOVE is set), and re-binding the TDA998x device results
->> in nothing further happening - the link will be recreated, but there
->> appears to be nothing that triggers the "consumer" to rebind at that
->> point.  Maybe I've missed something?
-> 
-> Right, auto-remove is a no-go. So, improving on the previous...
+This patch series adds a driver and device tree documentation binding
+for the video clock controller on some Qualcomm Technologies, Inc, SoCs
+such as SDM845. This would allow video drivers to probe and control their
+clocks.
 
-Heh, I didn't address the rebind triggering part at all, and while I'm by
-no means responsible or have any deep knowledge, I thought this was true:
+The video clock driver depends upon the RPMh driver[1], command DB driver[2],
+RPMh clock driver[3], rcg2 shared ops[4] changes which are undergoing review.
 
-- driver .remove for the device owning the drm_bridge is what typically
-  calls drm_bridge_remove()
-- driver .remove is called as part of the device being unbound from the
-  driver by the bus (i2c in this case)
-- by registering a link to the consumer, this unbinding will trigger the
-  removal of this main drm consumer device as part of the unbinding
-- so everything aboput the drm device will be torn down, and everything
-  will thus have to be reprobed to get things back
+[1]: https://lkml.org/lkml/2018/4/19/914
+[2]: https://lkml.org/lkml/2018/4/5/451
+[3]: https://lkml.org/lkml/2018/4/24/390
+[4]: https://lkml.org/lkml/2018/4/18/367
 
-But I could easily have misunderstood just about everything in the above...
+Amit Nischal (2):
+  dt-bindings: clock: Introduce QCOM Video clock bindings
+  clk: qcom: Add video clock controller driver for SDM845
 
-And maybe it's really inconvenient to have to trigger a reprobe of the
-whole drm cluster? Maybe all drm driver parts should be components?
+ .../devicetree/bindings/clock/qcom,videocc.txt     |  18 ++
+ drivers/clk/qcom/Kconfig                           |  11 +
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/videocc-sdm845.c                  | 359 +++++++++++++++++++++
+ include/dt-bindings/clock/qcom,videocc-sdm845.h    |  25 ++
+ 5 files changed, 414 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,videocc.txt
+ create mode 100644 drivers/clk/qcom/videocc-sdm845.c
+ create mode 100644 include/dt-bindings/clock/qcom,videocc-sdm845.h
 
-I have no idea.
-
-Cheers,
-Peter
-
-PS. compile-tested the below and drm_bridge.c needs to
-#include <drm/drm_device.h>
-
-> (I think drm_panel might suffer from this issue too?)
-> 
-> Cheers,
-> Peter
-> 
-> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> index 1638bfe9627c..b1365cfee445 100644
-> --- a/drivers/gpu/drm/drm_bridge.c
-> +++ b/drivers/gpu/drm/drm_bridge.c
-> @@ -121,12 +121,17 @@ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
->  	if (bridge->dev)
->  		return -EBUSY;
->  
-> +	bridge->link = device_link_add(encoder->dev->dev, bridge->owner, 0);
-> +	if (!bridge->link)
-> +		return -EINVAL;
-> +
->  	bridge->dev = encoder->dev;
->  	bridge->encoder = encoder;
->  
->  	if (bridge->funcs->attach) {
->  		ret = bridge->funcs->attach(bridge);
->  		if (ret < 0) {
-> +			device_link_del(bridge->link);
->  			bridge->dev = NULL;
->  			bridge->encoder = NULL;
->  			return ret;
-> @@ -153,6 +158,8 @@ void drm_bridge_detach(struct drm_bridge *bridge)
->  	if (bridge->funcs->detach)
->  		bridge->funcs->detach(bridge);
->  
-> +	device_link_del(bridge->link);
-> +
->  	bridge->dev = NULL;
->  }
->  
-> diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-> index b8cb6237a38b..29eba4e9a39d 100644
-> --- a/drivers/gpu/drm/i2c/tda998x_drv.c
-> +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-> @@ -1857,6 +1857,7 @@ tda998x_probe(struct i2c_client *client, const struct i2c_device_id *id)
->  	bridge->dev = dev;
->  	dev_set_drvdata(dev, bridge);
->  
-> +	bridge->bridge.owner = dev;
->  	bridge->bridge.funcs = &tda998x_bridge_funcs;
->  #ifdef CONFIG_OF
->  	bridge->bridge.of_node = dev->of_node;
-> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> index 682d01ba920c..b8f33aba3216 100644
-> --- a/include/drm/drm_bridge.h
-> +++ b/include/drm/drm_bridge.h
-> @@ -224,6 +224,8 @@ struct drm_bridge_funcs {
->  
->  /**
->   * struct drm_bridge - central DRM bridge control structure
-> + * @owner: device that owns the bridge
-> + * @link: drm consumer <-> bridge supplier
->   * @dev: DRM device this bridge belongs to
->   * @encoder: encoder to which this bridge is connected
->   * @next: the next bridge in the encoder chain
-> @@ -233,6 +235,8 @@ struct drm_bridge_funcs {
->   * @driver_private: pointer to the bridge driver's internal context
->   */
->  struct drm_bridge {
-> +	struct device *owner;
-> +	struct device_link *link;
->  	struct drm_device *dev;
->  	struct drm_encoder *encoder;
->  	struct drm_bridge *next;
-> 
-> 
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
