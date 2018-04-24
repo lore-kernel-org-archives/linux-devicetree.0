@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 04/11] of: platform: use pdev as name for vars of type struct platform_device
-Date: Tue, 24 Apr 2018 19:30:44 +0200
-Message-ID: <20180424173051.15099-5-brgl@bgdev.pl>
+Subject: [PATCH 03/11] platform: make support for early platform devices conditional
+Date: Tue, 24 Apr 2018 19:30:43 +0200
+Message-ID: <20180424173051.15099-4-brgl@bgdev.pl>
 References: <20180424173051.15099-1-brgl@bgdev.pl>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180424173051.15099-1-brgl@bgdev.pl>
@@ -12,136 +12,117 @@ List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-It's a good convention to name struct device local variables 'dev'
-and reserve 'pdev' for struct platform_device. Otherwise the code
-sometimes becomes confusing to read. Rename all such instances in
-of/platform.c
+We want to add support for device tree based early platform devices.
+
+In order not to introduce additional bloat for all users when we extend
+struct device to accomodate early platform DT support, let's make the
+current machine code support conditional.
+
+The only current user of the early platform infrastructure is SuperH so
+make it select the appropriate Kconfig option.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/of/platform.c | 50 +++++++++++++++++++++----------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+ arch/sh/Kconfig                 |  1 +
+ drivers/base/Kconfig            |  4 ++++
+ drivers/base/platform.c         |  3 +++
+ include/linux/platform_device.h | 32 ++++++++++++++++++++++++++++++++
+ 4 files changed, 40 insertions(+)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index c00d81dfac0b..60342209fbd8 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -109,12 +109,12 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 				  const char *bus_id,
- 				  struct device *parent)
- {
--	struct platform_device *dev;
-+	struct platform_device *pdev;
- 	int rc, i, num_reg = 0, num_irq;
- 	struct resource *res, temp_res;
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 97fe29316476..1b2c0b2ce402 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -50,6 +50,7 @@ config SUPERH
+ 	select HAVE_ARCH_AUDITSYSCALL
+ 	select HAVE_FUTEX_CMPXCHG if FUTEX
+ 	select HAVE_NMI
++	select EARLY_PLATFORM_DEVICES
+ 	help
+ 	  The SuperH is a RISC processor targeted for use in embedded systems
+ 	  and consumer electronics; it was also used in the Sega Dreamcast
+diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
+index 29b0eb452b3a..37de5e1d6217 100644
+--- a/drivers/base/Kconfig
++++ b/drivers/base/Kconfig
+@@ -205,6 +205,10 @@ config DEBUG_TEST_DRIVER_REMOVE
+ 	  unusable. You should say N here unless you are explicitly looking to
+ 	  test this functionality.
  
--	dev = platform_device_alloc("", PLATFORM_DEVID_NONE);
--	if (!dev)
-+	pdev = platform_device_alloc("", PLATFORM_DEVID_NONE);
-+	if (!pdev)
- 		return NULL;
++config EARLY_PLATFORM_DEVICES
++	bool
++	default n
++
+ source "drivers/base/test/Kconfig"
  
- 	/* count the io and irq resources */
-@@ -126,12 +126,12 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 	if (num_irq || num_reg) {
- 		res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
- 		if (!res) {
--			platform_device_put(dev);
-+			platform_device_put(pdev);
- 			return NULL;
- 		}
+ config SYS_HYPERVISOR
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 8075ddc70a17..af440d703f0b 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -1186,6 +1186,8 @@ u64 dma_get_required_mask(struct device *dev)
+ EXPORT_SYMBOL_GPL(dma_get_required_mask);
+ #endif
  
--		dev->num_resources = num_reg + num_irq;
--		dev->resource = res;
-+		pdev->num_resources = num_reg + num_irq;
-+		pdev->resource = res;
- 		for (i = 0; i < num_reg; i++, res++) {
- 			rc = of_address_to_resource(np, i, res);
- 			WARN_ON(rc);
-@@ -141,16 +141,16 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 				 np->name);
++#ifdef CONFIG_EARLY_PLATFORM_DEVICES
++
+ static __initdata LIST_HEAD(early_platform_driver_list);
+ static __initdata LIST_HEAD(early_platform_device_list);
+ 
+@@ -1471,3 +1473,4 @@ void __init early_platform_cleanup(void)
  	}
- 
--	dev->dev.of_node = of_node_get(np);
--	dev->dev.fwnode = &np->fwnode;
--	dev->dev.parent = parent ? : &platform_bus;
-+	pdev->dev.of_node = of_node_get(np);
-+	pdev->dev.fwnode = &np->fwnode;
-+	pdev->dev.parent = parent ? : &platform_bus;
- 
- 	if (bus_id)
--		dev_set_name(&dev->dev, "%s", bus_id);
-+		dev_set_name(&pdev->dev, "%s", bus_id);
- 	else
--		of_device_make_bus_id(&dev->dev);
-+		of_device_make_bus_id(&pdev->dev);
- 
--	return dev;
-+	return pdev;
  }
- EXPORT_SYMBOL(of_device_alloc);
  
-@@ -170,26 +170,26 @@ static struct platform_device *of_platform_device_create_pdata(
- 					void *platform_data,
- 					struct device *parent)
- {
--	struct platform_device *dev;
-+	struct platform_device *pdev;
++#endif /* CONFIG_EARLY_PLATFORM_DEVICES */
+diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+index a06b194ba30b..514ada776004 100644
+--- a/include/linux/platform_device.h
++++ b/include/linux/platform_device.h
+@@ -297,6 +297,8 @@ struct early_platform_driver {
+ #define EARLY_PLATFORM_ID_UNSET -2
+ #define EARLY_PLATFORM_ID_ERROR -3
  
- 	if (!of_device_is_available(np) ||
- 	    of_node_test_and_set_flag(np, OF_POPULATED))
- 		return NULL;
++#ifdef CONFIG_EARLY_PLATFORM_DEVICES
++
+ extern int early_platform_driver_register(struct early_platform_driver *epdrv,
+ 					  char *buf);
+ extern void early_platform_add_devices(struct platform_device **devs, int num);
+@@ -350,6 +352,36 @@ static inline char *early_platform_driver_setup_func(void)		\
+ }
+ #endif /* MODULE */
  
--	dev = of_device_alloc(np, bus_id, parent);
--	if (!dev)
-+	pdev = of_device_alloc(np, bus_id, parent);
-+	if (!pdev)
- 		goto err_clear_flag;
- 
--	dev->dev.bus = &platform_bus_type;
--	dev->dev.platform_data = platform_data;
--	of_msi_configure(&dev->dev, dev->dev.of_node);
-+	pdev->dev.bus = &platform_bus_type;
-+	pdev->dev.platform_data = platform_data;
-+	of_msi_configure(&pdev->dev, pdev->dev.of_node);
- 
--	if (of_device_add(dev) != 0) {
--		platform_device_put(dev);
-+	if (of_device_add(pdev) != 0) {
-+		platform_device_put(pdev);
- 		goto err_clear_flag;
- 	}
- 
--	return dev;
-+	return pdev;
- 
- err_clear_flag:
- 	of_node_clear_flag(np, OF_POPULATED);
-@@ -344,7 +344,7 @@ static int of_platform_bus_create(struct device_node *bus,
- {
- 	const struct of_dev_auxdata *auxdata;
- 	struct device_node *child;
--	struct platform_device *dev;
-+	struct platform_device *pdev;
- 	const char *bus_id = NULL;
- 	void *platform_data = NULL;
- 	int rc = 0;
-@@ -377,13 +377,13 @@ static int of_platform_bus_create(struct device_node *bus,
- 		return 0;
- 	}
- 
--	dev = of_platform_device_create_pdata(bus, bus_id, platform_data, parent);
--	if (!dev || !of_match_node(matches, bus))
-+	pdev = of_platform_device_create_pdata(bus, bus_id, platform_data, parent);
-+	if (!pdev || !of_match_node(matches, bus))
- 		return 0;
- 
- 	for_each_child_of_node(bus, child) {
- 		pr_debug("   create child: %pOF\n", child);
--		rc = of_platform_bus_create(child, matches, lookup, &dev->dev, strict);
-+		rc = of_platform_bus_create(child, matches, lookup, &pdev->dev, strict);
- 		if (rc) {
- 			of_node_put(child);
- 			break;
++#else /* CONFIG_EARLY_PLATFORM_DEVICES */
++static inline int
++early_platform_driver_register(struct early_platform_driver *epdrv, char *buf)
++{
++	return -ENOSYS;
++}
++static inline void
++early_platform_add_devices(struct platform_device **devs, int num) {}
++static inline void early_platform_add_device(struct platform_device *pdev) {}
++static inline int is_early_platform_device(struct platform_device *pdev)
++{
++	return -ENOSYS;
++}
++static inline void early_platform_driver_register_all(char *class_str) {}
++static inline int early_platform_driver_probe(char *class_str,
++					      int nr_probe, int user_only)
++{
++	return -ENOSYS;
++}
++static inline int early_platform_driver_register_probe_all(char *class_str,
++							   int nr_probe,
++							   int user_only)
++{
++	return -ENOSYS;
++}
++static inline void early_platform_cleanup(void) {}
++#define early_platform_init(class_string, platdrv)
++#define early_platform_init_buffer(class_string, platdrv, buf, bufsiz)
++#endif /* CONFIG_EARLY_PLATFORM_DEVICES */
++
+ #ifdef CONFIG_SUSPEND
+ extern int platform_pm_suspend(struct device *dev);
+ extern int platform_pm_resume(struct device *dev);
 -- 
 2.17.0
