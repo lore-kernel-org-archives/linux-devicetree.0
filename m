@@ -1,96 +1,110 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 00/11] platform: device tree support for early platform
- drivers
-Date: Tue, 24 Apr 2018 19:19:14 +0100
-Message-ID: <9f097271-5953-9587-7dcb-a2a9368bd015@arm.com>
-References: <20180424173051.15099-1-brgl@bgdev.pl>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v4 7/8] drm/i2c: tda998x: register as a drm bridge
+Date: Tue, 24 Apr 2018 21:25:44 +0300
+Message-ID: <b7a7ffb6-b282-cbc5-435e-9ca1cd405e33@ti.com>
+References: <20180423072301.11962-1-peda@axentia.se>
+ <20180423072301.11962-8-peda@axentia.se>
+ <20180423160833.GF16141@n2100.armlinux.org.uk>
+ <5d6866d0-75bc-4de8-9b87-4fee5430e9dd@axentia.se>
+ <20180424080833.GJ16141@n2100.armlinux.org.uk>
+ <8448e90a-4562-b564-c160-1b5c67e0f92f@axentia.se>
+ <0cbee3bd-8987-5f2f-519d-f8d1b426f2a3@ti.com>
+ <20180424170625.GL16141@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180424173051.15099-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180424170625.GL16141@n2100.armlinux.org.uk>
 Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Peter Rosin <peda@axentia.se>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/04/18 18:30, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Device tree based systems often use OF_DECLARE() macros for devices
-> that need to be initialized early in the boot process such as clocks,
-> timers etc. However platform devices are more desirable.
-> 
-> This series aims at introducing support for early platform drivers for
-> OF-based systems.
-> 
-> The idea is to have a special compatible fallback string: "earlydev"
-> that similarily to "syscon" would be added to device nodes that need
-> early probing. We then need to call of_early_platform_populate() early
-> in the boot process to actually probe the registered devices.
-> 
-> I am aware that this new compatible does not strictly correspond with
-> the "hardware description only" rule of DT, but we already have many
-> functionalities that break this rule: syscon, gpio hogs etc.
-
-Eww, it's the "u-boot,dm-pre-reloc" mess all over again :(
-
-The examples you give do represent hardware though - "syscon" falls wide 
-of the DT abstraction of nice distinct devices, but is at least still 
-describing a real relationship of some registers somewhere affecting 
-some component somewhere else; GPIO hogs may not be real devices but 
-they still describe a hardware configuration which the OS is expected to 
-set up.
-
-Things that describe pure consumer-specific software policy are a whole 
-other level beyond that IMO.
-
-> The first user of this new functionality will be the DaVinci platform
-> for which we want to probe the pll, psc and timer drivers early in the
-> boot sequence but keep them implemented as platform drivers.
-> 
-> In the future, if this series gets accepted, this could become and
-> alternative to TIMER_OF_DECLARE, CLK_OF_DECLARE etc. and could lead
-> to deprecating of those macros in favor of early platform drivers.
-
-Admittedly it doesn't apply as super-early as timers and clocksources, 
-but I feel compelled to point out that IOMMU_OF_DECLARE was already 
-doing a variant on "early platform devices" for ages (until 4.16 when 
-everything was finally cleaned up to rely on regular probe-deferral and 
-left it as just a vestigial lookup table). AFAICS the same basic concept 
-could translate to other subsystems without invasive DT changes.
-
-Robin.
-
-> Bartosz Golaszewski (11):
->    platform: early: provide early_platform_add_device()
->    platform: provide early_platform_driver_register_probe_all()
->    platform: make support for early platform devices conditional
->    of: platform: use pdev as name for vars of type struct platform_device
->    platform: use a dedicated list_head for early devices
->    of: provide for_each_compatible_child_node()
->    dt-bindings: add bindings for early devices
->    of: platform: provide of_early_platform_populate()
->    platform: provide early_platform_driver()
->    of: platform: provide of_early_platform_probe()
->    misc: implement a dummy early platform driver
-> 
->   Documentation/devicetree/bindings/early.txt |   7 +
->   arch/sh/Kconfig                             |   1 +
->   drivers/base/Kconfig                        |   4 +
->   drivers/base/platform.c                     |  26 ++--
->   drivers/misc/Kconfig                        |   8 ++
->   drivers/misc/Makefile                       |   1 +
->   drivers/misc/dummy-early.c                  |  40 ++++++
->   drivers/of/device.c                         |  14 +-
->   drivers/of/platform.c                       | 143 +++++++++++++++-----
->   include/linux/device.h                      |   4 +
->   include/linux/of.h                          |   3 +
->   include/linux/of_device.h                   |   5 +
->   include/linux/of_platform.h                 |  19 +++
->   include/linux/platform_device.h             |  52 +++++++
->   14 files changed, 279 insertions(+), 48 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/early.txt
->   create mode 100644 drivers/misc/dummy-early.c
-> 
+T24gMjQvMDQvMTggMjA6MDYsIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCB3cm90ZToKPiBPbiBU
+dWUsIEFwciAyNCwgMjAxOCBhdCAwNzowNDoxNlBNICswMzAwLCBKeXJpIFNhcmhhIHdyb3RlOgo+
+PiBPbiAyNC8wNC8xOCAxMzoxNCwgUGV0ZXIgUm9zaW4gd3JvdGU6Cj4+PiBPbiAyMDE4LTA0LTI0
+IDEwOjA4LCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXggd3JvdGU6Cj4+Pj4gT24gVHVlLCBBcHIg
+MjQsIDIwMTggYXQgMDg6NTg6NDJBTSArMDIwMCwgUGV0ZXIgUm9zaW4gd3JvdGU6Cj4+Pj4+IE9u
+IDIwMTgtMDQtMjMgMTg6MDgsIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCB3cm90ZToKPj4+Pj4+
+IE9uIE1vbiwgQXByIDIzLCAyMDE4IGF0IDA5OjIzOjAwQU0gKzAyMDAsIFBldGVyIFJvc2luIHdy
+b3RlOgo+Pj4+Pj4+ICBzdGF0aWMgaW50IHRkYTk5OHhfcmVtb3ZlKHN0cnVjdCBpMmNfY2xpZW50
+ICpjbGllbnQpCj4+Pj4+Pj4gIHsKPj4+Pj4+PiAtCWNvbXBvbmVudF9kZWwoJmNsaWVudC0+ZGV2
+LCAmdGRhOTk4eF9vcHMpOwo+Pj4+Pj4+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gJmNsaWVudC0+
+ZGV2Owo+Pj4+Pj4+ICsJc3RydWN0IHRkYTk5OHhfYnJpZGdlICpicmlkZ2UgPSBkZXZfZ2V0X2Ry
+dmRhdGEoZGV2KTsKPj4+Pj4+PiArCj4+Pj4+Pj4gKwlkcm1fYnJpZGdlX3JlbW92ZSgmYnJpZGdl
+LT5icmlkZ2UpOwo+Pj4+Pj4+ICsJY29tcG9uZW50X2RlbChkZXYsICZ0ZGE5OTh4X29wcyk7Cj4+
+Pj4+Pj4gKwo+Pj4+Pj4KPj4+Pj4+IEknZCBsaWtlIHRvIGFzayBhIHJhdGhlciBmdW5kYW1lbnRh
+bCBxdWVzdGlvbiBhYm91dCBEUk0gYnJpZGdlIHN1cHBvcnQsCj4+Pj4+PiBiZWNhdXNlIEkgc3Vz
+cGVjdCB0aGF0IHRoZXJlJ3MgYSBtYWpvciBmc2NrdXAgaGVyZS4KPj4+Pj4+Cj4+Pj4+PiBUaGUg
+YWJvdmUgaXMgdGhlIGZ1bmN0aW9uIHRoYXQgZGVhbHMgd2l0aCB0aGUgVERBOTk4eCBkZXZpY2Ug
+YmVpbmcKPj4+Pj4+IHVuYm91bmQgZnJvbSB0aGUgZHJpdmVyLiAgV2l0aCB0aGUgY29tcG9uZW50
+IEFQSSwgdGhpcyByZXN1bHRzIGluIHRoZQo+Pj4+Pj4gRFJNIGRldmljZSBjb3JyZWN0bHkgYmVp
+bmcgdG9ybiBkb3duLCBiZWNhdXNlIG9uZSBvZiB0aGUgaGFyZHdhcmUKPj4+Pj4+IGRldmljZXMg
+aGFzIGdvbmUuCj4+Pj4+Pgo+Pj4+Pj4gV2l0aCBEUk0gYnJpZGdlLCB0aGUgYnJpZGdlIGlzIG1l
+cmVseSByZW1vdmVkIGZyb20gdGhlIGxpc3Qgb2YKPj4+Pj4+IGJyaWRnZXM6Cj4+Pj4+Pgo+Pj4+
+Pj4gdm9pZCBkcm1fYnJpZGdlX3JlbW92ZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+Pj4+
+Pj4gewo+Pj4+Pj4gICAgICAgICBtdXRleF9sb2NrKCZicmlkZ2VfbG9jayk7Cj4+Pj4+PiAgICAg
+ICAgIGxpc3RfZGVsX2luaXQoJmJyaWRnZS0+bGlzdCk7Cj4+Pj4+PiAgICAgICAgIG11dGV4X3Vu
+bG9jaygmYnJpZGdlX2xvY2spOwo+Pj4+Pj4gfQo+Pj4+Pj4gRVhQT1JUX1NZTUJPTChkcm1fYnJp
+ZGdlX3JlbW92ZSk7Cj4+Pj4+Pgo+Pj4+Pj4gYW5kIHRoZSBtZW1vcnkgYmFja2luZyB0aGUgInN0
+cnVjdCB0ZGE5OTh4X2JyaWRnZSIgKHdoaWNoIGNvbnRhaW5zCj4+Pj4+PiB0aGUgc3RydWN0IGRy
+bV9icmlkZ2UpIHdpbGwgYmUgZnJlZWQgYnkgdGhlIGRldm0gc3Vic3lzdGVtLgo+Pj4+Pj4KPj4+
+Pj4+IEhvd2V2ZXIsIHRoZXJlIGlzIG5vIG5vdGlmaWNhdGlvbiBpbnRvIHRoZSByZXN0IG9mIHRo
+ZSBEUk0gc3Vic3lzdGVtCj4+Pj4+PiB0aGF0IHRoZSBkZXZpY2UgaGFzIGdvbmUgYXdheS4gIFdv
+cnNlLCB0aGUgbWVtb3J5IHRoYXQgaXMgc3RpbGwgaW4KPj4+Pj4+IHVzZSBieSBEUk0gaGFzIG5v
+dyBiZWVuIGZyZWVkLCBzbyBmdXJ0aGVyIHVzZSBvZiB0aGUgRFJNIGRldmljZQo+Pj4+Pj4gcmVz
+dWx0cyBpbiBhIHVzZS1hZnRlci1mcmVlIGJ1Zy4KPj4+Pj4+Cj4+Pj4+PiBUaGlzIGlzIHJlYWxs
+eSBub3QgZ29vZCwgYW5kIHRvIG1lIGxvb2tzIGxpa2UgYSBmdW5kYW1lbnRhbCBwcm9ibGVtCj4+
+Pj4+PiB3aXRoIHRoZSBEUk0gYnJpZGdlIGNvZGUuICBJIHNlZSBub3RoaW5nIGluIHRoZSBEUk0g
+YnJpZGdlIGNvZGUgdGhhdAo+Pj4+Pj4gZGVhbHMgd2l0aCB0aGUgbGlmZXRpbWUgb2YgYSAiRFJN
+IGJyaWRnZSIgb3IgaW5kZWVkIHRoZSBsaWZldGltZSBvZgo+Pj4+Pj4gdGhlIGFjdHVhbCBkZXZp
+Y2UgaXRzZWxmLgo+Pj4+Pj4KPj4+Pj4+IFNvLCBmcm9tIHdoYXQgSSBjYW4gc2VlLCB0aGVyZSBz
+ZWVtcyB0byBiZSBhIGZ1bmRhbWVudGFsIGxpZmV0aW1lCj4+Pj4+PiBpc3N1ZSB3aXRoIHRoZSBk
+ZXNpZ24gb2YgdGhlIERSTSBicmlkZ2UgY29kZS4gIFRoaXMgbmVlZHMgdG8gYmUKPj4+Pj4+IGZp
+eGVkLgo+Pj4+Pgo+Pj4+PiBPaCBjcmFwLiBBIGdpZ2FudGljIGNhbiBvZiB3b3Jtcy4uLgo+Pj4+
+Cj4+Pj4gWWVzLCBpdCdzIGVzcGVjaWFsbHkgYW5ub3lpbmcgZm9yIG1lLCBoYXZpbmcgcHV0IHRo
+ZSBlZmZvcnQgaW4gdG8KPj4+PiB0aGUgY29tcG9uZW50IGhlbHBlciB0byBjb3ZlciBhbGwgdGhl
+c2UgY2FzZXMuCj4+Pj4KPj4+Pj4gV291bGQgYSBwYXRjaCAoY29tcGxldGVseSB1bnRlc3RlZCBi
+dHcpIGFsb25nIHRoaXMgbGluZSBvZiB0aGlua2luZyBtYWtlCj4+Pj4+IGFueSBkaWZmZXJlbmNl
+IHdoYXRzb2V2ZXI/Cj4+Pj4KPj4+PiBJdCBsb29rcyBpbnRlcmVzdGluZyAtIGZyb20gd2hhdCBJ
+IGNhbiBzZWUgb2YgdGhlIGRldmljZSBsaW5rcyBjb2RlLAo+Pj4+IGl0IHdvdWxkIGhhdmUgdGhl
+IGVmZmVjdCBvZiB1bmJpbmRpbmcgdGhlIERSTSBkZXZpY2UganVzdCBiZWZvcmUKPj4+PiBUREE5
+OTh4IGlzIHVuYm91bmQsIHNvIHRoYXQncyBhbiBpbXByb3ZlbWVudC4KPj4+Pgo+Pj4+IEhvd2V2
+ZXIsIGZyb20gd2hhdCBJIGNhbiBzZWUsIHRoZSBsaW5rIHZhbmlzaGVzIGF0IHRoYXQgcG9pbnQg
+KGFzCj4+Pj4gRExfRkxBR19BVVRPUkVNT1ZFIGlzIHNldCksIGFuZCByZS1iaW5kaW5nIHRoZSBU
+REE5OTh4IGRldmljZSByZXN1bHRzCj4+Pj4gaW4gbm90aGluZyBmdXJ0aGVyIGhhcHBlbmluZyAt
+IHRoZSBsaW5rIHdpbGwgYmUgcmVjcmVhdGVkLCBidXQgdGhlcmUKPj4+PiBhcHBlYXJzIHRvIGJl
+IG5vdGhpbmcgdGhhdCB0cmlnZ2VycyB0aGUgImNvbnN1bWVyIiB0byByZWJpbmQgYXQgdGhhdAo+
+Pj4+IHBvaW50LiAgTWF5YmUgSSd2ZSBtaXNzZWQgc29tZXRoaW5nPwo+Pj4KPj4+IFJpZ2h0LCBh
+dXRvLXJlbW92ZSBpcyBhIG5vLWdvLiBTbywgaW1wcm92aW5nIG9uIHRoZSBwcmV2aW91cy4uLgo+
+Pj4KPj4+IChJIHRoaW5rIGRybV9wYW5lbCBtaWdodCBzdWZmZXIgZnJvbSB0aGlzIGlzc3VlIHRv
+bz8pCj4+Cj4+IFllcyBpdCBkb2VzIGFuZCBJIHRvb2sgYSBzaG90IGF0IHRyeWluZyB0byBmaXgg
+aXQgYXQgdGhlIGVuZCBvZiB0aGUKPj4gcHJldmlvdXMgbWVyZ2Ugd2luZG93LCBidXQgZ2F2ZSB1
+cCBhcyBJIHJ1biBvdXQgb2YgdGltZS4gSSByZS1zcHVuIHRoZQo+PiB3b3JrIG5vdyBhZnRlciBy
+ZWFkaW5nIHRoaXMgdGhyZWFkLiBJIGFkZCB5b3UgYW5kIFJ1c3NlbGwgdG8gY2MuCj4gCj4gUmln
+aHQsIGFuZCB0aGVzZSBleGFjdCBwcm9ibGVtcyBhcmUgd2hhdCB0aGUgY29tcG9uZW50IGhlbHBl
+ciBpcwo+IHRoZXJlIHRvIHNvcnQgb3V0LCBpbiBhIHN1YnN5c3RlbSBpbmRlcGVuZGVudCB3YXku
+Cj4gCj4gV2hhdCBpcyB0aGUgcHJvYmxlbSB3aXRoIHRoZSBjb21wb25lbnQgaGVscGVyIHRoYXQg
+cGVvcGxlIHNlZW0gdG8KPiBiZSBzb28gbG9hdGhlZCB0byB1c2UgaXQsIGluc3RlYWQgcHJlZmVy
+cmluZyB0byBjb21lIHVwIHdpdGggc3ViLQo+IHN0YW5kYXJkIGFuZCBicm9rZW4gYWx0ZXJuYXRp
+dmVzPwo+IAoKTm90aGluZyBidXQgdGltZS4gRW1iZWRkaW5nIGNvbXBvbmVudCBoZWxwZXJzIHNl
+YW1sZXNzbHkgaW50byBkcm0KZnJhbWV3b3JrIGRvZXMgbm90IHNvdW5kIGxpa2UgYSBjb3VwbGUg
+b2YgZGF5cyBqb2IuIFJpZ2h0IG5vdyBJIHNpbXBseQpkbyBub3QgaGF2ZSB0aW1lIHRvIHRha2Ug
+b24gYSBjaGFsbGVuZ2UgbGlrZSB0aGF0LiBJZiBzb21lb25lIGRvZXMgaXQgSQphbSBhbGwgZm9y
+IGl0LgoKSG93ZXZlciwgSSB3b3VsZCBub3QgY2FsbCBkZXZpY2UgbGlua3Mgc3Vic3RhbmRhcmQu
+IFRoZXkgYXJlIGluIHRoZQpkZXZpY2UgY29yZSBhZnRlciBhbGwuCgpCZXN0IHJlZ2FyZHMsCkp5
+cmkKCi0tIApUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAw
+MDE4MCBIZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtr
+YS9Eb21pY2lsZTogSGVsc2lua2kKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
