@@ -1,11 +1,13 @@
 From: thor.thayer@linux.intel.com
-Subject: [PATCH 0/3] Add SDRAM ECC support for Stratix10
-Date: Tue, 24 Apr 2018 13:35:56 -0500
-Message-ID: <1524594959-5259-1-git-send-email-thor.thayer@linux.intel.com>
+Subject: [PATCH 3/3] arm64: dts: stratix10: add sdram ecc
+Date: Tue, 24 Apr 2018 13:35:59 -0500
+Message-ID: <1524594959-5259-4-git-send-email-thor.thayer@linux.intel.com>
+References: <1524594959-5259-1-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1524594959-5259-1-git-send-email-thor.thayer@linux.intel.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,24 +23,41 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <thor.thayer@linux.intel.com>
 
-The Intel Stratix10 platform is an ARM64 but still has many register
-definitions that are similar to the Arria10. One significant difference
-is the Stratix10 hypervisor which requires handling registers that may
-be shared by guest OSes at a different exception level. Register access
-is through an ARM SMC call. Currently, SMC handling is implemented
-in U-Boot.
+Add the Stratix10 ECC Manager and SDRAM EDAC nodes to the
+device tree.
 
-Thor Thayer (3):
-  Documentation: dt: socfpga: Add Stratix10 ECC Manager binding
-  edac: altera: Add support for Stratix10 SDRAM EDAC
-  arm64: dts: stratix10: add sdram ecc
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+---
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
- .../bindings/arm/altera/socfpga-eccmgr.txt         |  47 +++
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |  17 +
- drivers/edac/Kconfig                               |   2 +-
- drivers/edac/altera_edac.c                         | 459 +++++++++++++++++++++
- drivers/edac/altera_edac.h                         | 114 +++++
- 5 files changed, 638 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index 76d5db4138b0..3a7da19216bb 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -924,6 +924,23 @@
+ 			status = "disabled";
+ 		};
+ 
++		eccmgr: eccmgr@ffd12000 {
++			compatible = "altr,socfpga-s10-ecc-manager";
++			altr,sysmgr-syscon = <&sysmgr>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			interrupts = <0 15 4>, <0 95 4>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			ranges;
++
++			sdramedac@f8011100 {
++				compatible = "altr,sdram-edac-s10";
++				reg = <0xf8011100 0xC0>;
++				interrupts = <16 4>, <48 4>;
++			};
++		};
++
+ 		qspi: spi@ff8d2000 {
+ 			compatible = "cdns,qspi-nor";
+ 			#address-cells = <1>;
 -- 
 2.7.4
