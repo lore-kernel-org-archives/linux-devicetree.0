@@ -1,72 +1,157 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH V2 0/9] ARM: bcm283x: RPi 3 B+ support and other
- improvements
-Date: Mon, 23 Apr 2018 18:02:33 -0700
-Message-ID: <87zi1to1qu.fsf@anholt.net>
-References: <1524310122-9439-1-git-send-email-stefan.wahren@i2se.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v2 1/3] mmc: dw_mmc-bluefield: Add driver extension
+Date: Tue, 24 Apr 2018 09:11:18 +0800
+Message-ID: <a59e321a-2498-d9c1-4a22-296ffa13417a@rock-chips.com>
+References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3067156482382706672=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1524310122-9439-1-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Alexander Graf <agraf@suse.de>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liming Sun <lsun@mellanox.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, shawn.lin@rock-chips.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---===============3067156482382706672==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+Hi Liming,
 
---=-=-=
-Content-Type: text/plain
+On 2018/4/23 23:32, Liming Sun wrote:
+> This commit adds extension to the dw_mmc driver for Mellanox BlueField
+> SoC. It updates the UHS_REG_EXT register to bring up the eMMC card on
+> this SoC.
+> 
+> Signed-off-by: Liming Sun <lsun@mellanox.com>
+> ---
+>   drivers/mmc/host/Kconfig            |  9 +++++
+>   drivers/mmc/host/Makefile           |  1 +
+>   drivers/mmc/host/dw_mmc-bluefield.c | 72 +++++++++++++++++++++++++++++++++++++
+>   3 files changed, 82 insertions(+)
+>   create mode 100644 drivers/mmc/host/dw_mmc-bluefield.c
+> 
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 9589f9c..26ac6b5 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -717,6 +717,15 @@ config MMC_DW_K3
+>   	  Synopsys DesignWare Memory Card Interface driver. Select this option
+>   	  for platforms based on Hisilicon K3 SoC's.
+>   
+> +config MMC_DW_BLUEFIELD
+> +	tristate "BlueField specific extensions for Synopsys DW Memory Card Interface"
+> +	depends on MMC_DW
+> +	select MMC_DW_PLTFM
+> +	help
+> +	  This selects support for Mellanox BlueField SoC specific extensions to
+> +	  the Synopsys DesignWare Memory Card Interface driver. Select this
+> +	  option for platforms based on Mellanox BlueField SoC's.
+> +
 
-Stefan Wahren <stefan.wahren@i2se.com> writes:
+It'd better to keep the order, so you could place it before
+MMC_DW_EXYNOS.
 
-> The main focus of the patch series is to provide support for the new
-> Raspberry Pi 3 B+ . The rest are parts which missed the merge window for 4.17.
+>   config MMC_DW_PCI
+>   	tristate "Synopsys Designware MCI support on PCI bus"
+>   	depends on MMC_DW && PCI
+> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+> index 6aead24..267b3f1 100644
+> --- a/drivers/mmc/host/Makefile
+> +++ b/drivers/mmc/host/Makefile
+> @@ -55,6 +55,7 @@ obj-$(CONFIG_MMC_DW_K3)		+= dw_mmc-k3.o
+>   obj-$(CONFIG_MMC_DW_PCI)	+= dw_mmc-pci.o
+>   obj-$(CONFIG_MMC_DW_ROCKCHIP)	+= dw_mmc-rockchip.o
+>   obj-$(CONFIG_MMC_DW_ZX)		+= dw_mmc-zx.o
+> +obj-$(CONFIG_MMC_DW_BLUEFIELD)	+= dw_mmc-bluefield.o
 
-I've merged this series to my -next branches, and once some kbuilds come
-back clean, I'll send PRs up.
+Ditto.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+>   obj-$(CONFIG_MMC_SH_MMCIF)	+= sh_mmcif.o
+>   obj-$(CONFIG_MMC_JZ4740)	+= jz4740_mmc.o
+>   obj-$(CONFIG_MMC_VUB300)	+= vub300.o
+> diff --git a/drivers/mmc/host/dw_mmc-bluefield.c b/drivers/mmc/host/dw_mmc-bluefield.c
+> new file mode 100644
+> index 0000000..12067b1
+> --- /dev/null
+> +++ b/drivers/mmc/host/dw_mmc-bluefield.c
+> @@ -0,0 +1,72 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2018 Mellanox Technologies.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/mmc/host.h>
+> +#include <linux/mmc/mmc.h>
+> +#include <linux/of.h>
+> +
 
------BEGIN PGP SIGNATURE-----
+Ditto.
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlregikACgkQtdYpNtH8
-nuhwaw//WZeFl81kdNaMfoh24Lnbl+rQrXtUjY9WfA8KsMt01li+Ks+2H01VXGMA
-tPpgxjzZAmri59pcTjqvCOj7N6GRKQqbo3AmF8mNNfNOzEvuXEOxlHONsUKZF9Y9
-bW2h+BVZWCn61BLjywLsbZPxgHnFzrh8E9dg+EL9QOFc8rEaH0h3tCw7uHNNz80D
-lH3Xm5avH1fGstkF3mr6arwZfKHfSA+mmtvhQpANafnJKUve0t0I5lDletI6UzDB
-VkgoW2mnxyqGrpQGGQQjJU3aU6uWZUAH2ARJyKpfKs4ctOi8m0gqDVVldkw7PwA2
-ApBnomLYtAvjfm3mzxjudlTizHgnSFztMlUHJ1pc9luLzviGBZ2YYO0vCra5QrdH
-oXUz1WgkoMK6/hjHP68XWrvXU/E1umARR2lfzndDO3Ni1mSMFrusFPgucdZxvwjI
-AWlextoeUAILw7Ah07yBh/0knZF3+nf5Rq/JJHIKtfU6tqcTfcqmGvwj2Me7BcTZ
-+5wHk81puhoNQr27KWjOxu9UZ0nF68MZT5YpRh48Bkus79FnjEU299jhItW1hopI
-bW4usNrg9Jxc5Id3rySlXv61v0bnv4H1AgVy1ryE85jt6ysM9vcjLGnHvszhBWJN
-IwbKo2m2p3odaCG+A8A/Rs80awXEhFWgi9UXgcnuVmYvHORcPDE=
-=JNHG
------END PGP SIGNATURE-----
---=-=-=--
+> +#include "dw_mmc.h"
+> +#include "dw_mmc-pltfm.h"
+> +
+> +static void dw_mci_bluefield_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+> +{
+> +	u32 regs;
+> +
+> +	/* Set drive=4 (bit 29:23) and sample=2 (bit 22:16) in UHS_REG_EXT. */
+> +	regs = mci_readl(host, UHS_REG_EXT);
+> +	regs = (regs & ~0x3F100000 & ~0x7F0000) | (4 << 23) | (2 << 16);
 
+GENMASK woule be more readable IMHO.
 
---===============3067156482382706672==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> +	mci_writel(host, UHS_REG_EXT, regs);
+> +}
+> +
+> +static const struct dw_mci_drv_data bluefield_drv_data = {
+> +	.set_ios		= dw_mci_bluefield_set_ios
+> +};
+> +
+> +static const struct of_device_id dw_mci_bluefield_match[] = {
+> +	{ .compatible = "mellanox,bluefield-dw-mshc",
+> +		.data = &bluefield_drv_data },
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Keep the indent.
 
---===============3067156482382706672==--
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, dw_mci_bluefield_match);
+> +
+> +static int dw_mci_bluefield_probe(struct platform_device *pdev)
+> +{
+> +	const struct dw_mci_drv_data *drv_data = NULL;
+> +	const struct of_device_id *match;
+> +
+> +	if (pdev->dev.of_node) {
+> +		match = of_match_node(dw_mci_bluefield_match,
+> +				      pdev->dev.of_node);
+> +		drv_data = match->data;
+> +	}
+> +
+> +	return dw_mci_pltfm_register(pdev, drv_data);
+> +}
+> +
+> +static struct platform_driver dw_mci_bluefield_pltfm_driver = {
+> +	.probe		= dw_mci_bluefield_probe,
+> +	.remove		= dw_mci_pltfm_remove,
+> +	.driver		= {
+> +		.name		= "dwmmc_bluefield",
+> +		.of_match_table	= dw_mci_bluefield_match,
+> +		.pm		= &dw_mci_pltfm_pmops,
+> +	},
+> +};
+> +
+> +module_platform_driver(dw_mci_bluefield_pltfm_driver);
+> +
+> +MODULE_DESCRIPTION("BlueField DW Multimedia Card driver");
+> +MODULE_AUTHOR("Mellanox Technologies");
+> +MODULE_LICENSE("GPL v2");
+> 
