@@ -1,144 +1,81 @@
-Return-Path: <SRS0=4hkJ=HO=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193]:36529 "EHLO
-        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750888AbeDYFeo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Apr 2018 01:34:44 -0400
-Received: by mail-pf0-f193.google.com with SMTP id g14so14218420pfh.3
-        for <devicetree@vger.kernel.org>; Tue, 24 Apr 2018 22:34:44 -0700 (PDT)
-From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Subject: [PATCH v8 1/3] PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver DT bindings
-Date: Wed, 25 Apr 2018 01:32:31 -0400
-Message-Id: <1524634351-9444-1-git-send-email-l.subrahmanya@mobiveil.co.in>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, marc.zyngier@arm.com
-Cc: mingkai.hu@nxp.com, peter.newton@nxp.com, minghuan.lian@nxp.com, rajesh.raina@nxp.com, rajan.kapoor@nxp.com, prabhjot.singh@nxp.com, Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>, devicetree@vger.kernel.org
+Return-Path: <SRS0=i8TH=HN=bootlin.com=maxime.ripard@kernel.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v11 0/4] media: v4l: Add support for the Cadence MIPI-CSI2 TX controller
+Date: Tue, 24 Apr 2018 14:26:56 +0200
+Message-Id: <20180424122700.5387-1-maxime.ripard@bootlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the DT bindings for Mobiveil PCIe Host Bridge
-IP driver and updates the vendor prefixes file.
+Hi,
 
-Signed-off-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/pci/mobiveil-pcie.txt      | 73 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- MAINTAINERS                                        |  7 +++
- 3 files changed, 81 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+Here is a hopefully final attempt at supporting the MIPI-CSI2 RX and
+TX blocks from Cadence.
 
-diff --git a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-new file mode 100644
-index 0000000..65038aa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-@@ -0,0 +1,73 @@
-+* Mobiveil AXI PCIe Root Port Bridge DT description
-+
-+Mobiveil's GPEX 4.0 is a PCIe Gen4 root port bridge IP. This configurable IP
-+has up to 8 outbound and inbound windows for the address translation.
-+
-+Required properties:
-+- #address-cells: Address representation for root ports, set to <3>
-+- #size-cells: Size representation for root ports, set to <2>
-+- #interrupt-cells: specifies the number of cells needed to encode an
-+	interrupt source. The value must be 1.
-+- compatible: Should contain "mbvl,gpex40-pcie"
-+- reg: Should contain PCIe registers location and length
-+	"config_axi_slave": PCIe controller registers
-+	"csr_axi_slave"	  : Bridge config registers
-+	"gpio_slave"	  : GPIO registers to control slot power
-+	"apb_csr"	  : MSI registers
-+
-+- device_type: must be "pci"
-+- apio-wins : number of requested apio outbound windows
-+		default 2 outbound windows are configured -
-+		1. Config window
-+		2. Memory window
-+- ppio-wins : number of requested ppio inbound windows
-+		default 1 inbound memory window is configured.
-+- bus-range: PCI bus numbers covered
-+- interrupt-controller: identifies the node as an interrupt controller
-+- #interrupt-cells: specifies the number of cells needed to encode an
-+	interrupt source. The value must be 1.
-+- interrupt-parent : phandle to the interrupt controller that
-+		it is attached to, it should be set to gic to point to
-+		ARM's Generic Interrupt Controller node in system DT.
-+- interrupts: The interrupt line of the PCIe controller
-+		last cell of this field is set to 4 to
-+		denote it as IRQ_TYPE_LEVEL_HIGH type interrupt.
-+- interrupt-map-mask,
-+	interrupt-map: standard PCI properties to define the mapping of the
-+	PCI interface to interrupt numbers.
-+- ranges: ranges for the PCI memory regions (I/O space region is not
-+	supported by hardware)
-+	Please refer to the standard PCI bus binding document for a more
-+	detailed explanation
-+
-+
-+Example:
-+++++++++
-+	pcie0: pcie@a0000000 {
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		compatible = "mbvl,gpex40-pcie";
-+		reg =	<0xa0000000 0x00001000>,
-+			<0xb0000000 0x00010000>,
-+			<0xff000000 0x00200000>,
-+			<0xb0010000 0x00001000>;
-+		reg-names =	"config_axi_slave",
-+				"csr_axi_slave",
-+				"gpio_slave",
-+				"apb_csr";
-+		device_type = "pci";
-+		apio-wins = <2>;
-+		ppio-wins = <1>;
-+		bus-range = <0x00000000 0x000000ff>;
-+		interrupt-controller;
-+		interrupt-parent = <&gic>;
-+		#interrupt-cells = <1>;
-+		interrupts = < 0 89 4 >;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 0 &pci_express 0>,
-+				<0 0 0 1 &pci_express 1>,
-+				<0 0 0 2 &pci_express 2>,
-+				<0 0 0 3 &pci_express 3>;
-+		ranges = < 0x83000000 0 0x00000000 0xa8000000 0 0x8000000>;
-+
-+	};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 0994bdd..8263cc7 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -197,6 +197,7 @@ lwn	Liebherr-Werk Nenzing GmbH
- macnica	Macnica Americas
- marvell	Marvell Technology Group Ltd.
- maxim	Maxim Integrated Products
-+mbvl	Mobiveil Inc.
- mcube	mCube
- meas	Measurement Specialties
- mediatek	MediaTek Inc.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 44512c3..b295080 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9162,6 +9162,13 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
- S:	Maintained
- F:	drivers/media/dvb-frontends/mn88473*
- 
-+PCI DRIVER FOR MOBIVEIL PCIE IP
-+M:	Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-+L:	linux-pci@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-+F:	drivers/pci/host/pcie-mobiveil.c
-+
- MODULE SUPPORT
- M:	Jessica Yu <jeyu@kernel.org>
- M:	Rusty Russell <rusty@rustcorp.com.au>
+This is a merged serie of the CSI2-RX and CSI2-TX series I've been
+sending for a while now and gathered a significant amount of
+Reviewed-by/Acked-by. The merge has been done thanks to Sakari's
+suggestion to ease the merge and the dependency between the two
+drivers on the MAINTAINERS/Kconfig/Makefile sides.
+
+The CSI2-RX has not received any comment on its previous iteration,
+and CSI2-TX received some minor comments from Sakari that have been
+fixed in this series. You can have a look at the Changelog below if
+needed.
+
+The TX controller is able to receive 4 video streams and stream them over a
+MIPI-CSI2 link using up to 4 lanes. Those streams are basically the
+interfaces to controllers generating some video signals, like a camera
+or a pattern generator.
+
+The RX controller is able to receive CSI data over up to 4 lanes, and
+split it to over 4 streams. Those streams are basically the interfaces
+to the video grabbers that will perform the capture.
+
+TX is then able to map input streams to CSI2 virtual channels and
+datatypes dynamically. The streaming devices choose their virtual
+channels through an additional signal that is transparent to the
+CSI2-TX. The datatypes however are yet another additional input
+signal, and can be mapped to any CSI2 datatypes. RX can do the
+opposite, being able to take virtual channel / datatypes and route
+them to proper pixel interfaces on demand.
+
+Since v4l2 doesn't really allow for that setup at the moment, this
+preliminary version is a rather dumb one in order to start the
+discussion on how to address this properly.
+
+Let me know what you think!
+Maxime
+
+Changes from CSI2-TX v10:
+  - Reword the source pad exception comment
+  - Handle the V4L2_SUBDEV_FORMAT_TRY case for get_fmt / set_fmt
+
+Maxime Ripard (4):
+  dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
+  v4l: cadence: Add Cadence MIPI-CSI2 RX driver
+  dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
+  v4l: cadence: Add Cadence MIPI-CSI2 TX driver
+
+ .../devicetree/bindings/media/cdns,csi2rx.txt | 100 ++++
+ .../devicetree/bindings/media/cdns,csi2tx.txt |  98 +++
+ MAINTAINERS                                   |   7 +
+ drivers/media/platform/Kconfig                |   1 +
+ drivers/media/platform/Makefile               |   1 +
+ drivers/media/platform/cadence/Kconfig        |  34 ++
+ drivers/media/platform/cadence/Makefile       |   2 +
+ drivers/media/platform/cadence/cdns-csi2rx.c  | 500 ++++++++++++++++
+ drivers/media/platform/cadence/cdns-csi2tx.c  | 563 ++++++++++++++++++
+ 9 files changed, 1306 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+ create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+ create mode 100644 drivers/media/platform/cadence/Kconfig
+ create mode 100644 drivers/media/platform/cadence/Makefile
+ create mode 100644 drivers/media/platform/cadence/cdns-csi2rx.c
+ create mode 100644 drivers/media/platform/cadence/cdns-csi2tx.c
+
 -- 
-1.8.3.1
-
+2.17.0
