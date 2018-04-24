@@ -1,80 +1,80 @@
-Return-Path: <krzk@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFC 09/10] usb: host: exynos: Remove support for Exynos5440
-Date: Tue, 24 Apr 2018 22:32:38 +0200
-Message-Id: <20180424203239.21885-10-krzk@kernel.org>
-In-Reply-To: <20180424203239.21885-1-krzk@kernel.org>
-References: <20180424203239.21885-1-krzk@kernel.org>
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Jaehoon Chung <jh80.chung@samsung.com>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 24 Apr 2018 09:35:42 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH/RFC 02/11] dt-bindings: usb: add usb role switch driver
+Message-ID: <20180424143542.xvl4oa4nt6evgtaq@rob-hp-laptop>
+References: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1524039005-30618-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1524039005-30618-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, frowand.list@gmail.com, heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, p.zabel@pengutronix.de, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The Exynos5440 is not actively developed, there are no development
-boards available and probably there are no real products with it.
-Remove wide-tree support for Exynos5440.
+On Wed, Apr 18, 2018 at 05:09:56PM +0900, Yoshihiro Shimoda wrote:
+> This patch adds a new documentation for a usb role switch driver.
+> The usb role switch framework will parse this to get each device
+> pointer by using each remote-endpoint.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/usb/host/ehci-exynos.c | 7 -------
- drivers/usb/host/ohci-exynos.c | 6 ------
- 2 files changed, 13 deletions(-)
+Bindings describe h/w, not drivers. This doesn't look like a h/w device.
 
-diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
-index d9145a8f35d2..8e3bab1e0c1f 100644
---- a/drivers/usb/host/ehci-exynos.c
-+++ b/drivers/usb/host/ehci-exynos.c
-@@ -161,16 +161,10 @@ static int exynos_ehci_probe(struct platform_device *pdev)
- 	}
- 	exynos_ehci = to_exynos_ehci(hcd);
- 
--	if (of_device_is_compatible(pdev->dev.of_node,
--					"samsung,exynos5440-ehci"))
--		goto skip_phy;
--
- 	err = exynos_ehci_get_phy(&pdev->dev, exynos_ehci);
- 	if (err)
- 		goto fail_clk;
- 
--skip_phy:
--
- 	exynos_ehci->clk = devm_clk_get(&pdev->dev, "usbhost");
- 
- 	if (IS_ERR(exynos_ehci->clk)) {
-@@ -304,7 +298,6 @@ static const struct dev_pm_ops exynos_ehci_pm_ops = {
- #ifdef CONFIG_OF
- static const struct of_device_id exynos_ehci_match[] = {
- 	{ .compatible = "samsung,exynos4210-ehci" },
--	{ .compatible = "samsung,exynos5440-ehci" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, exynos_ehci_match);
-diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
-index a39fae41bc70..c0c4dcca6f3c 100644
---- a/drivers/usb/host/ohci-exynos.c
-+++ b/drivers/usb/host/ohci-exynos.c
-@@ -130,15 +130,10 @@ static int exynos_ohci_probe(struct platform_device *pdev)
- 
- 	exynos_ohci = to_exynos_ohci(hcd);
- 
--	if (of_device_is_compatible(pdev->dev.of_node,
--					"samsung,exynos5440-ohci"))
--		goto skip_phy;
--
- 	err = exynos_ohci_get_phy(&pdev->dev, exynos_ohci);
- 	if (err)
- 		goto fail_clk;
- 
--skip_phy:
- 	exynos_ohci->clk = devm_clk_get(&pdev->dev, "usbhost");
- 
- 	if (IS_ERR(exynos_ohci->clk)) {
-@@ -270,7 +265,6 @@ static const struct dev_pm_ops exynos_ohci_pm_ops = {
- #ifdef CONFIG_OF
- static const struct of_device_id exynos_ohci_match[] = {
- 	{ .compatible = "samsung,exynos4210-ohci" },
--	{ .compatible = "samsung,exynos5440-ohci" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, exynos_ohci_match);
--- 
-2.14.1
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  .../devicetree/bindings/usb/usb-role-switch.txt    | 42 ++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/usb-role-switch.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/usb-role-switch.txt b/Documentation/devicetree/bindings/usb/usb-role-switch.txt
+> new file mode 100644
+> index 0000000..941d582
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/usb-role-switch.txt
+> @@ -0,0 +1,42 @@
+> +USB role switch driver
+> +
+> +Optional nodes:
+> +- If a role switch driver has OF graph ports, the usb role switch framework
+> +  will parse the remote-endpoints in usb_role_switch_register(). The OF graph
+> +  port number as follows:
+> +    0: USB 2.0 host port
+> +    1: USB 3.0 host port
+> +    2: UDC port
+> +
+> +For example:
+> +	usb-role-sw {
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +
+> +				usb2_host_sw0: endpoint {
+> +					remote-endpoint = <&usb2_host_ep0>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +
+> +				usb3_host_sw0: endpoint {
+> +					remote-endpoint = <&usb3_host_ep0>;
+> +				};
+> +			};
+> +
+> +			port@2 {
+> +				reg = <2>;
+> +
+> +				udc_sw0: endpoint {
+> +					remote-endpoint = <&udc_ep0>;
+> +				};
+> +			};
+> +		};
+> +	};
+> -- 
+> 1.9.1
+> 
