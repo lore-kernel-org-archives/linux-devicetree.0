@@ -1,118 +1,92 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [RFC 00/13] arm64: allwinner: Add A64 DE2 pipeline support
-Date: Tue, 24 Apr 2018 16:08:50 +0200
-Message-ID: <20180424140850.ptxpmtusour7u6nb@flea>
-References: <20180424133425.24291-1-jagan@amarulasolutions.com>
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: Re: [PATCH v3 6/6] arm64: dts: rockchip: Specify override mode for
+ kevin panel
+Date: Tue, 24 Apr 2018 11:31:38 -0300
+Message-ID: <CAAEAJfAQMzUfM86o-xNoyBQzTiEMNH+W=9FyFpBy99nA3HrVgw@mail.gmail.com>
+References: <20180208174855.55620-1-seanpaul@chromium.org>
+ <20180208174855.55620-7-seanpaul@chromium.org>
+ <CAD=FV=WGU+s015DQbNeWHkpqpHLFz+9AjHKAd0N3HWag0p5FWA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pqvbqcet3rmln5gs"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180424133425.24291-1-jagan@amarulasolutions.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAD=FV=WGU+s015DQbNeWHkpqpHLFz+9AjHKAd0N3HWag0p5FWA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Emil Renner Berthing <kernel@esmil.dk>, Arnd Bergmann <arnd@arndb.de>, tomeu.vizoso@collabora.com, Catalin Marinas <catalin.marinas@arm.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, enric.balletbo@collabora.co.uk, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, hoegsberg@chromium.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---pqvbqcet3rmln5gs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Apr 24, 2018 at 07:04:12PM +0530, Jagan Teki wrote:
-> Allwinner A64 has display engine pipeline like other Allwinner SOC's A83T=
-/H3/H5.
->=20
-> A64 DE2 behaviour similar to Allwinner A83T where mixer0, connected to tc=
-on0 with
-> RGB, LVDS MIPI-DSI and mixer1, connected to tcon1 with HDMI.
-> This series merely concentrated on HDMI pipeline and rest will add eventu=
-ally.
->=20
-> patch 1: dt-bindings for a64 DE2 CCU
->=20
-> patch 2: a64 DE2 CCU node addition
->=20
-> patch 3: dt-bindings for a64 DE2 pipeline
->=20
-> patch 4 - 5: dt-bindings for a64 mixer0 and tcon-lcd
->=20
-> patch 6: a64 DE2 pipeline node addition
->=20
-> patch 7 - 8: dt-bindings for a64 HDMI and HDMI PHY
->=20
-> patch 9: a64 HDMI nodes addition
->=20
-> patch 10 - 11: dt-bindings for a64 mixer1 and tcon-tv
->=20
-> patch 12: a64 HDMI pipeline
->=20
-> patch 13: enable HDMI out on bananpi-m64
->=20
-> Tested HDMI on bananapi-m64 (along with DE2 SRAM C changes from [1]
-> thread), able to detect the HDMI but, no penguins on screen.
->=20
-> Request for any suggestions.
->=20
-> Test log on Bananpi-m64:
-> [    0.247631] sun4i-drm display-engine: bound 1100000.mixer (ops sun8i_m=
-ixer_ops)
-> [    0.256717] sun4i-drm display-engine: bound 1200000.mixer (ops sun8i_m=
-ixer_ops)
-> [    0.256783] sun4i-tcon 1c0c000.lcd-controller: Missing LVDS properties=
-, Please upgrade your DT
-> [    0.256792] sun4i-tcon 1c0c000.lcd-controller: LVDS output disabled
-
-That doesn't seem to work so well for LVDS.
-
-> [    0.257081] sun4i-drm display-engine: No panel or bridge found... RGB =
-output disabled
-> [    0.257099] sun4i-drm display-engine: bound 1c0c000.lcd-controller (op=
-s sun4i_tcon_ops)
-> [    0.257273] sun4i-drm display-engine: No panel or bridge found... RGB =
-output disabled
-> [    0.257288] sun4i-drm display-engine: bound 1c0d000.lcd-controller (op=
-s sun4i_tcon_ops)
-> [    0.258176] sun8i-dw-hdmi 1ee0000.hdmi: Detected HDMI TX controller v1=
-=2E32a with HDCP (sun8i_dw_hdmi_p)
-> [    0.258596] sun8i-dw-hdmi 1ee0000.hdmi: registered DesignWare HDMI I2C=
- bus driver
-> [    0.259188] sun4i-drm display-engine: bound 1ee0000.hdmi (ops sun8i_dw=
-_hdmi_ops)
-> [    0.259199] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-> [    0.259205] [drm] No driver support for vblank timestamp query.
-> [    0.259308] [drm] Cannot find any crtc or sizes
-
-A good guess would be that you can't get the EDIDs for some
-reason. Have you tried forcing a mode to see if the display part
-already works?
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---pqvbqcet3rmln5gs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrfOnEACgkQ0rTAlCFN
-r3Qvlg/+MjOva/LMdrvxZ4DeYIpYzXEKG9plq6mlcc2jGvVFtBBBUew3QunX9b2G
-bnPOYwqywqAbXeASbcU+7A+Srf11gDfCs8T3Zd7SX8aqCEGIsWeCv5HDoJM9yVA6
-tB7g/hROvXPomkGrqH6HrRzYyqVue0gCYbUWQICg2Lm++Jg/zxuv/kOkpUX50hvC
-1ScNaFaLE2yfYF3ZajXHBUotvFA+0fmj8/UEZxuSMc0STFegvYnPLIKb7FXWfO3Q
-WS/QSqZ2N30xi5FbdyLBB3mkDFosOR1Bn+Ws0npuFxhCc6JiZyvopmQ8bNL7uJfi
-arfVgDUgfsYeFSAO1fPwimQkIUouh+TMNJcRvpogf7dqIh5gsMLw20g5o+O3H4MV
-3E+468Pi6cV9mbWDbgEZks/FGjmfI3tFzH8sUDBgOR75+8bsnck+O6a0B49Cp/DX
-cJ/8bgbRsiW0VmQ/oXc5XKe1FYOm0lLkjnBb5NNkAlvZWRo/w9iQcBujVZndtNDM
-LXenocnL8hVjTIfVf2XxhSX026eRFV0OeOSd7Mmvrbx3IjMuSOPhp+WcBnorvkGX
-XvMLUfKT3iEcG1PyoGOgTR+1+3LjhbWqycGtkV2OanF+FHx4Ne7KXZbXiu4eNe16
-YeCmHfhoQdOp2y65XpY+PnByS8iz+OF0wuRjT8ugDzEpDNc6FOM=
-=gYwQ
------END PGP SIGNATURE-----
-
---pqvbqcet3rmln5gs--
+SGkgRG91ZywgU2VhbjoKCkkgd291bGQgbGlrZSB0byBtb3ZlIHRoaXMgZm9yd2FyZC4KCk9uIDI2
+IEZlYnJ1YXJ5IDIwMTggYXQgMTU6MjMsIERvdWcgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVt
+Lm9yZz4gd3JvdGU6Cj4gSGksCj4KPiBPbiBUaHUsIEZlYiA4LCAyMDE4IGF0IDk6NDggQU0sIFNl
+YW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3JnPiB3cm90ZToKPj4gVGhpcyBwYXRjaCBhZGRz
+IGFuIG92ZXJyaWRlIG1vZGUgZm9yIGtldmluIGRldmljZXMuIFRoZSBtb2RlIGluY3JlYXNlcwo+
+PiBib3RoIGJhY2sgcG9yY2hlcyB0byBhbGxvdyBhIHBpeGVsIGNsb2NrIG9mIDI2NjY2a0h6IGFz
+IG9wcG9zZWQgdG8gdGhlCj4+ICd0eXBpY2FsJyB2YWx1ZSBvZiAyNTI3NTBrSHouIFRoaXMgaXMg
+bmVlZGVkIHRvIGF2b2lkIGludGVyZmVyZW5jZSB3aXRoCj4+IHRoZSB0b3VjaCBkaWdpdGl6ZXIg
+b24gdGhlc2UgbGFwdG9wcy4KPj4KPj4gQ2hhbmdlcyBpbiB2MjoKPj4gIC0gV3JhcCB0aGUgdGlt
+aW5nIGluIGRpc3BsYXktdGltaW5ncyBub2RlIHRvIG1hdGNoIGJpbmRpbmcgKFJvYi9UaGllcnJ5
+KQo+PiBDaGFuZ2VzIGluIHYzOgo+PiAgLSBVbndyYXAgdGhlIHRpbWluZyBmcm9tIGRpc3BsYXkt
+dGltaW5ncyBhbmQgcmVuYW1lIHBhbmVsLXRpbWluZyAoUm9iKQo+Pgo+PiBDYzogRG91ZyBBbmRl
+cnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgo+PiBDYzogRXJpYyBBbmhvbHQgPGVyaWNAYW5o
+b2x0Lm5ldD4KPj4gQ2M6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4+IENjOiBK
+ZWZmeSBDaGVuIDxqZWZmeS5jaGVuQHJvY2stY2hpcHMuY29tPgo+PiBDYzogUm9iIEhlcnJpbmcg
+PHJvYmgrZHRAa2VybmVsLm9yZz4KPj4gQ2M6IFN0w6lwaGFuZSBNYXJjaGVzaW4gPG1hcmNoZXVA
+Y2hyb21pdW0ub3JnPgo+PiBDYzogVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWls
+LmNvbT4KPj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4+IENjOiBkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4+IENjOiBsaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRl
+YWQub3JnCj4+IFNpZ25lZC1vZmYtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3Jn
+Pgo+PiAtLS0KPj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LWdydS1rZXZp
+bi5kdHMgfCAxNCArKysrKysrKysrKysrKwo+PiAgMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlv
+bnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmsz
+Mzk5LWdydS1rZXZpbi5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS1n
+cnUta2V2aW4uZHRzCj4+IGluZGV4IDE5MWE2YmNiMTcwNC4uNjU4NDExY2UzN2VhIDEwMDY0NAo+
+PiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS1ncnUta2V2aW4uZHRz
+Cj4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LWdydS1rZXZpbi5k
+dHMKPj4gQEAgLTk4LDYgKzk4LDIwIEBACj4+ICAgICAgICAgICAgICAgICBiYWNrbGlnaHQgPSA8
+JmJhY2tsaWdodD47Cj4+ICAgICAgICAgICAgICAgICBwb3dlci1zdXBwbHkgPSA8JnBwMzMwMF9k
+aXNwPjsKPj4KPj4gKyAgICAgICAgICAgICAgIHBhbmVsLXRpbWluZyB7Cj4+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIGNsb2NrLWZyZXF1ZW5jeSA9IDwyNjY2MDQ3MjA+Owo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICBoYWN0aXZlID0gPDI0MDA+Owo+PiArICAgICAgICAgICAgICAgICAgICAg
+ICBoZnJvbnQtcG9yY2ggPSA8NDg+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICBoYmFjay1w
+b3JjaCA9IDw4ND47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGhzeW5jLWxlbiA9IDwzMj47
+Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGhzeW5jLWFjdGl2ZSA9IDwwPjsKPj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgdmFjdGl2ZSA9IDwxNjAwPjsKPj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgdmZyb250LXBvcmNoID0gPDM+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICB2YmFj
+ay1wb3JjaCA9IDwxMjA+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICB2c3luYy1sZW4gPSA8
+MTA+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICB2c3luYy1hY3RpdmUgPSA8MD47Cj4+ICsg
+ICAgICAgICAgICAgICB9Owo+PiArCj4+ICAgICAgICAgICAgICAgICBwb3J0cyB7Cj4+ICAgICAg
+ICAgICAgICAgICAgICAgICAgIHBhbmVsX2luX2VkcDogZW5kcG9pbnQgewo+PiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmZWRwX291dF9wYW5lbD47
+Cj4KPiBLcmlzdGlhbiBicm91Z2h0IGFuIG9sZCBidWcgdG8gbXkgYXR0ZW50aW9uCj4gPGh0dHBz
+Oi8vYnVncy5jaHJvbWl1bS5vcmcvcC9jaHJvbWl1bS9pc3N1ZXMvZGV0YWlsP2lkPTc1MDM1ND4g
+YW5kIGl0Cj4gbWFkZSBtZSB0aGluay4gIFNob3VsZCB3ZSBzb21laG93IGFkanVzdCB0aGUgYmlu
+ZGluZ3MgaGVyZSB0byBhY2NvdW50Cj4gZm9yIHRoZSBmYWN0IHRoYXQgYSBib2FyZCBtYXkgc291
+cmNlIHNldmVyYWwgZGlmZmVyZW50IHBhbmVscz8KPgo+IEFLQTogb24gc29tZSBib2FyZHMgYW4g
+T0RNIG1heSB3YW50IHRvIHNlY29uZCBzb3VyY2UgKG9yIHRoaXJkIHNvdXJjZSwKPiBvciAuLi4p
+IHRoZSBwYW5lbC4gIFRoZXknbGwgcmFuZG9tbHkgY29ubmVjdCBzZXZlcmFsIGRpZmZlcmVudCBw
+YW5lbHMKPiB0byB0aGUgYm9hcmQgYW5kIHNoaXAgdGhlIGJvYXJkcyBvdXQuICBUaGUgcGFuZWxz
+IGFyZSBhbGwgY29tcGF0aWJsZQo+IGVsZWN0cmljYWxseSAoc2FtZSBwb3dlciBzZXF1ZW5jaW5n
+KSBidXQgbWlnaHQgbmVlZCBzbGlnaHRseSBkaWZmZXJlbnQKPiB0aW1pbmdzLiAgSW4gdGhpcyBw
+YXJ0aWN1bGFyIGNhc2UgdGhlcmUncyBubyBib2FyZC1sZXZlbCBzdHJhcHBpbmdzCj4gZm9yIHRo
+ZSBkaWZmZXJlbnQgcGFuZWxzLS1pdCdzIGFzc3VtZWQgdGhhdCB0aGUgRURJRCBvbiB0aGUgcGFu
+ZWxzIGNhbgo+IGJlIHVzZWQgdG8gZGlzdGluZ3Vpc2ggdGhlbS4KPgo+IEluIHRoYXQgY2FzZSBp
+dCBzZWVtcyBsaWtlIGl0IHdvdWxkIGJlIG5pY2UgdG8gYWxsb3cgc3BlY2lmeWluZyBtb3JlCj4g
+dGhhbiBvbmUgInBhbmVsLXRpbWluZyIgbm9kZXMuICBNYXliZSBrZXllZCBvZmYgc29tZSB0eXBl
+IG9mIElEIHRoYXQncwo+IHByZXNlbnQgaW4gdGhlIEVESUQ/Cj4KPgo+IElzIHRoYXQgc29tZXRo
+aW5nIHdlJ2Qgd2FudCB0byBhY2NvdW50IGZvciBiZWZvcmUgd2UgbGFuZCB0aGlzIHNlcmllcz8K
+PiAgSXQgc2VlbXMgbGlrZSBpdCB3b3VsZCBqdXN0IGJlIGFkZGluZyBhbiBleHRyYSBsZXZlbCBv
+ZiBub2Rlcz8KPgoKQUZBSUNTLCB0aGVyZSBpcyBubyBFRElEIHdpdGhvdXQgYSBEREMgYnVzLCB3
+aGljaCB3ZSBkb24ndApzZWVtIHRvIGhhdmUgb24gZ3J1IHBsYXRmb3JtcywgZG8gd2U/CgpSZWdh
+cmRzLAotLSAKRXplcXVpZWwgR2FyY8OtYSwgVmFuZ3VhcmRpYVN1cgp3d3cudmFuZ3VhcmRpYXN1
+ci5jb20uYXIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
