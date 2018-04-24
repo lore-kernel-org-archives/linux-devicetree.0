@@ -1,67 +1,41 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] [PATCH v2 00/10] Allwinner H3 DVFS support
-Date: Tue, 24 Apr 2018 10:10:27 +0800
-Message-ID: <CAGb2v64zj=DHW2ta9d7=SGGbE2BZUeigJw=NqJMUfK0aV9+Aow@mail.gmail.com>
-References: <20180206044905.30508-1-icenowy@aosc.io> <CAGb2v67FaU3_su9XGaGj4zVSoAnpfN8cAhbBHEJu3Owt=Qicmg@mail.gmail.com>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: RE: [PATCH 3/6] devfreq: rk3399_dmc: remove wait for dcf irq event.
+Date: Tue, 24 Apr 2018 11:31:04 +0900
+Message-ID: <20180424023104epcms1p7935bae38d97c401b0d2a25d7b1b9ee14@epcms1p7>
+References: <20180419104019.24406-4-enric.balletbo@collabora.com>
+        <20180419104019.24406-1-enric.balletbo@collabora.com>
+        <CGME20180419104056epcas2p29c74949b650fea596900e395dec662e8@epcms1p7>
+Reply-To: myungjoo.ham@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v67FaU3_su9XGaGj4zVSoAnpfN8cAhbBHEJu3Owt=Qicmg@mail.gmail.com>
+In-Reply-To: <20180419104019.24406-4-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Kyungmin Park <kyungmin.park@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "heiko@sntech.de" <heiko@sntech.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "dbasehore@chromium.org" <dbasehore@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dianders@google.com" <dianders@google.com>, "groek@google.com" <groek@google.com>, "kernel@collabora.com" <kernel@collabora.com>, Lin Huang <hl@rock-chips.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 16, 2018 at 12:41 PM, Chen-Yu Tsai <wens@csie.org> wrote:
-> Hi,
->
-> On Tue, Feb 6, 2018 at 12:48 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
->> This patchset tries to add DVFS support for Allwinner H3 SoC,
->> considering two kinds of adjustable regulators used on H3 boards:
->> SY8106A I2C-controlled regulator and SY8113B regulator (controllable
->> by GPIO with some special designs on the board), and also taking the
->> uncontrollable boards into consider.
->>
->> PATCH 1 and PATCH 2 are for the SY8106A regulator, then PATCH 3 and
->> PATCH 4 are for the r_i2c bus, which is used by boards with SY8106A
->> to communicate with the regulator.
->>
->> PATCH 5 adds the operating points v2 table to the H3 SoC, but with
->> OPPs higher than 1008MHz temporarily dropped.
->>
->> Then there's patches for several tested boards: Orange Pi PC (with
->> SY8106A), Orange Pi One/Zero (with GPIO-adjustable SY8113B) and
->> ALL-H3-CC (unadjustable).
->>
->> Icenowy Zheng (5):
->>   ARM: sun8i: h3: add operating-points-v2 table for CPU
->>   ARM: sun8i: h2+: add SY8113B regulator used by Orange Pi Zero board
->>   ARM: sun8i: h3: add SY8113B regulator used by Orange Pi One board
->>   ARM: sun8i: h3: fix ALL-H3-CC H3 ver VDD-CPUX voltage
->>   ARM: sun8i: h3: set the cpu-supply to VDD-CPUX on ALL-H3-CC H3 ver
->>
->> Ondrej Jirman (5):
->>   dt-bindings: add binding for the SY8106A voltage regulator
->>   regulator: add support for SY8106A regulator
->>   ARM: sunxi: h3/h5: Add r_i2c pinmux node
->>   ARM: sunxi: h3/h5: Add r_i2c I2C controller
->>   ARM: sun8i: h3: Add SY8106A regulator to Orange Pi PC
+> We have already wait dcf done in ATF, so don't need wait dcf irq
+> in kernel, besides, clear dcf irq in kernel will import competiton
+> between kernel and ATF, only handle dcf irq in ATF is a better way.
+> 
+> Signed-off-by: Lin Huang <hl@rock-chips.com>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-Dropped this patch at your request. The rest will be in -next.
+This does not apply to 4.17-rc2 or a little less recent rc's.
 
-ChenYu
+Would you please rebase to the latest?
 
->
-> I've applied all the device tree patches for 4.18, taking into account
-> comments from Maxime. See
->
->     https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux.git/log/?h=sunxi/h3-h5-for-4.17
->
-> Mostly it's just renaming the regulator node names and labels.
->
-> Please resend the first two patches to Mark Brown, the regulator
-> subsystem maintainer. And you might want to mention the branch
-> above in case he needs a use case reference.
->
-> Regards
-> ChenYu
+
+Cheers,
+MyungJoo
+
+> ---
+> 
+>  drivers/devfreq/rk3399_dmc.c | 53 +-----------------------------------
+>  1 file changed, 1 insertion(+), 52 deletions(-)
+> 
+> diff --git a/drivers/devfreq/rk3399_dmc.c b/drivers/devfreq/rk3399_dmc.c
+> index 5dfbfa3cc878..44a379657cd5 100644
+> 
