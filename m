@@ -1,73 +1,58 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH v3 09/10] drivers/hwmon: Add PECI hwmon client drivers
-Date: Tue, 24 Apr 2018 09:26:44 -0700
-Message-ID: <c62f1c9a-1eae-49d9-2fde-c65452d5f0e6@linux.intel.com>
-References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
- <20180410183212.16787-10-jae.hyun.yoo@linux.intel.com>
- <1524585397.21176.502.camel@linux.intel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: iio: stm32-adc: add support for
+ STM32MP1.
+Date: Tue, 24 Apr 2018 11:27:21 -0500
+Message-ID: <20180424162721.qbfsc7j3syzzykeh@rob-hp-laptop>
+References: <1524065874-434-1-git-send-email-fabrice.gasnier@st.com>
+ <1524065874-434-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524585397.21176.502.camel@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1524065874-434-2-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: jic23@kernel.org, alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, benjamin.gaignard@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
-
-Thanks a lot for your review. Please check my inline answers.
-
-On 4/24/2018 8:56 AM, Andy Shevchenko wrote:
-> On Tue, 2018-04-10 at 11:32 -0700, Jae Hyun Yoo wrote:
+On Wed, Apr 18, 2018 at 05:37:52PM +0200, Fabrice Gasnier wrote:
+> Document support for STM32MP1 ADC. It's quite similar to STM32H7 ADC.
+> Introduce "st,stm32mp1-adc" compatible to handle variants of this
+> hardware such as vregready flag, interrupts, clock rate.
 > 
->>   drivers/hwmon/peci-cputemp.c  | 783
->> ++++++++++++++++++++++++++++++++++++++++++
->>   drivers/hwmon/peci-dimmtemp.c | 432 +++++++++++++++++++++++
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> Does it make sense one driver per patch?
-> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> index e8bb824..9994384 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> @@ -24,8 +24,11 @@ Required properties:
+>  - compatible: Should be one of:
+>    "st,stm32f4-adc-core"
+>    "st,stm32h7-adc-core"
+> +  "st,stm32mp1-adc-core"
+>  - reg: Offset and length of the ADC block register set.
+> -- interrupts: Must contain the interrupt for ADC block.
+> +- interrupts: One or more interrupts for ADC block. Some parts like stm32f4
+> +  and stm32h7 share a common ADC interrupt line. stm32mp1 has separate
+> +  lines for each ADC within ADC block.
 
-Yes, I'll separate it into two patches.
+How many interrupt lines is that?
 
->> +#define CLIENT_CPU_ID_MASK    0xf0ff0  /* Mask for Family / Model
->> info */
+>  - clocks: Core can use up to two clocks, depending on part used:
+>    - "adc" clock: for the analog circuitry, common to all ADCs.
+>      It's required on stm32f4.
+> @@ -53,6 +56,7 @@ Required properties:
+>  - compatible: Should be one of:
+>    "st,stm32f4-adc"
+>    "st,stm32h7-adc"
+> +  "st,stm32mp1-adc"
+>  - reg: Offset of ADC instance in ADC block (e.g. may be 0x0, 0x100, 0x200).
+>  - clocks: Input clock private to this ADC instance. It's required only on
+>    stm32f4, that has per instance clock input for registers access.
+> -- 
+> 1.9.1
 > 
->> +struct cpu_gen_info {
->> +	u32 type;
->> +	u32 cpu_id;
->> +	u32 core_max;
->> +};
->>
-> 
->> +static const struct cpu_gen_info cpu_gen_info_table[] = {
->> +	{ .type = CPU_GEN_HSX,
->> +	  .cpu_id = 0x306f0, /* Family code: 6, Model number: 63
->> (0x3f) */
->> +	  .core_max = CORE_MAX_ON_HSX },
->> +	{ .type = CPU_GEN_BRX,
->> +	  .cpu_id = 0x406f0, /* Family code: 6, Model number: 79
->> (0x4f) */
->> +	  .core_max = CORE_MAX_ON_BDX },
->> +	{ .type = CPU_GEN_SKX,
->> +	  .cpu_id = 0x50650, /* Family code: 6, Model number: 85
->> (0x55) */
->> +	  .core_max = CORE_MAX_ON_SKX },
->> +};
-> 
-> Are we talking about x86 CPU IDs here?
-> If so, why x86 corresponding headers, including intel-family.h are not
-> used?
-> 
-
-Yes, that would make more sense. I'll include the intel-family.h and 
-will use these defines instead:
-INTEL_FAM6_HASWELL_X
-INTEL_FAM6_BROADWELL_X
-INTEL_FAM6_SKYLAKE_X
-
-Thanks,
-
-Jae
