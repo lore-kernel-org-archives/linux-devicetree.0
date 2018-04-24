@@ -1,68 +1,157 @@
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: RE: [PATCH 6/6] devfreq: rk3399_dmc: register devfreq notification
- to dmc driver.
-Date: Tue, 24 Apr 2018 13:22:33 +0900
-Message-ID: <20180424042233epcms1p7b27cb007b11ed467d773ce93d8bc7ed4@epcms1p7>
-References: <20180419104019.24406-7-enric.balletbo@collabora.com>
-        <20180419104019.24406-1-enric.balletbo@collabora.com>
-        <CGME20180419104059epcas2p3fe5aba95859e02307556200a42bc1ac2@epcms1p7>
-Reply-To: myungjoo.ham@samsung.com
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v6 03/17] media: rkisp1: Add user space ABI definitions
+Date: Tue, 24 Apr 2018 04:28:49 +0000
+Message-ID: <CAAFQd5APomi1tx0X=agbSQfsX3SLBwqsXyqGhWzS4mdDcS+N9g@mail.gmail.com>
+References: <20180308094807.9443-1-jacob-chen@iotwrt.com> <20180308094807.9443-4-jacob-chen@iotwrt.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419104019.24406-7-enric.balletbo@collabora.com>
+In-Reply-To: <20180308094807.9443-4-jacob-chen@iotwrt.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Kyungmin Park <kyungmin.park@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "heiko@sntech.de" <heiko@sntech.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "dbasehore@chromium.org" <dbasehore@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dianders@google.com" <dianders@google.com>, "groek@google.com" <groek@google.com>, "kernel@collabora.com" <kernel@collabora.com>, Lin Huang <hl@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, Chanwoo Choi <cw00.choi@samsung.com>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Jeffy Chen <jeffy.chen@rock-chips.com>, Ulf
+To: Jacob Chen <jacob-chen@iotwrt.com>, Shunqian Zheng <zhengsq@rock-chips.com>
+Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>, Eddie Cai <eddie.cai.linux@gmail.com>, Jeffy <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Chen Jacob <jacob2.chen@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
->From: Lin Huang <hl@rock-chips.com>
->
->Because dmc may also access the PMU_BUS_IDLE_REQ register, we need to
->ensure that the pd driver and the dmc driver will not access at this
->register at the same time.
->
->Signed-off-by: Lin Huang <hl@rock-chips.com>
->Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->---
->
-> drivers/devfreq/rk3399_dmc.c      | 47 +----------------------
-> drivers/soc/rockchip/pm_domains.c | 31 +++++++++++++++
-> include/soc/rockchip/rk3399_dmc.h | 63 +++++++++++++++++++++++++++++++
-> 3 files changed, 96 insertions(+), 45 deletions(-)
-> create mode 100644 include/soc/rockchip/rk3399_dmc.h
->
->diff --git a/drivers/devfreq/rk3399_dmc.c b/drivers/devfreq/rk3399_dmc.c
->index 5bfca028eaaf..a1f320634d69 100644
->--- a/drivers/devfreq/rk3399_dmc.c
->+++ b/drivers/devfreq/rk3399_dmc.c
-[]
->diff --git a/drivers/soc/rockchip/pm_domains.c b/drivers/soc/rockchip/pm_domains.c
->index 53efc386b1ad..7acc836e7eb7 100644
->--- a/drivers/soc/rockchip/pm_domains.c
->+++ b/drivers/soc/rockchip/pm_domains.c
-[]
->+static int dmc_notify(struct notifier_block *nb, unsigned long event,
->+		      void *data)
->+{
->+	if (event == DEVFREQ_PRECHANGE)
->+		mutex_lock(&dmc_pmu->mutex);
->+	else if (event == DEVFREQ_POSTCHANGE)
->+		mutex_unlock(&dmc_pmu->mutex);
->+
->+	return NOTIFY_OK;
->+}
->+
+On Thu, Mar 8, 2018 at 6:48 PM Jacob Chen <jacob-chen@iotwrt.com> wrote:
+[snip]
+> +/**
+> + * struct cifisp_lsc_config - Configuration used by Lens shading
+correction
+> + *
+> + * refer to REF_01 for details
+> + */
+> +struct cifisp_lsc_config {
+> +       __u32 r_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
+> +       __u32 gr_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
+> +       __u32 gb_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
+> +       __u32 b_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
+> +
+> +       __u32 x_grad_tbl[CIFISP_LSC_GRAD_TBL_SIZE];
+> +       __u32 y_grad_tbl[CIFISP_LSC_GRAD_TBL_SIZE];
+> +
+> +       __u32 x_size_tbl[CIFISP_LSC_SIZE_TBL_SIZE];
+> +       __u32 y_size_tbl[CIFISP_LSC_SIZE_TBL_SIZE];
 
-Doesn't this incur a deadlock?
+Looking at the code, we only need 12 bits of each, so perhaps it could make
+sense to make those __u16? Also, the natural layout for these seems to be
+two-dimensional, i.e. [CIFISP_LSC_NUM_SECTORS][CIFISP_LSC_NUM_SECTORS]. I
+think it wouldn't be a problem to define it this way for UAPI too.
 
-1. devfreq.c:update_freq calls devfreq_notify_transition(DEVFREQ_PRECHANGE)
-2. pm_domain.c:dmc_notify calls mutex_lock(dmc_pmu->mutex)
-3. devfreq.c:update_freq calls target callback
-4. rk3399_dmc.c:rk3399_dmcfreq_target calls mutex_lock(&dmcfreq->lock)
-   >>>>>> update_freq cannot proceed. <<<<
+> +       __u16 config_width;
+> +       __u16 config_height;
 
+These 2 seem unused. Just making sure. If they are part of hardware LSC
+configuration, then we should keep them.
 
-Cheers,
-MyungJoo
+[snip]
+> +struct cifisp_awb_meas_config {
+> +       /*
+> +        * Note: currently the h and v offsets are mapped to grid offsets
+> +        */
+
+Perhaps should be part of the kerneldoc comment above? Also, I don't seem
+to understand what this means.
+
+> +       struct cifisp_window awb_wnd;
+> +       __u32 awb_mode;
+> +       __u8 max_y;
+> +       __u8 min_y;
+> +       __u8 max_csum;
+> +       __u8 min_c;
+> +       __u8 frames;
+> +       __u8 awb_ref_cr;
+> +       __u8 awb_ref_cb;
+> +       __u8 enable_ymax_cmp;
+> +} __attribute__ ((packed));
+> +
+> +/**
+> + * struct cifisp_awb_gain_config - Configuration used by auto white
+balance gain
+> + *
+> + * out_data_x = ( AWB_GEAIN_X * in_data + 128) >> 8
+
+typo: AWB_GAIN?
+
+> + */
+> +struct cifisp_awb_gain_config {
+> +       __u16 gain_red;
+> +       __u16 gain_green_r;
+> +       __u16 gain_blue;
+> +       __u16 gain_green_b;
+> +} __attribute__ ((packed));
+> +
+> +/**
+> + * struct cifisp_flt_config - Configuration used by ISP filtering
+> + *
+> + * @mode: ISP_FILT_MODE register fields (from enum cifisp_flt_mode)
+> + * @grn_stage1: ISP_FILT_MODE register fields
+> + * @chr_h_mode: ISP_FILT_MODE register fields
+> + * @chr_v_mode: ISP_FILT_MODE register fields
+
+Missing documentation for remaining fields.
+
+> + *
+> + * refer to REF_01 for details.
+> + */
+> +
+> +struct cifisp_flt_config {
+> +       __u32 mode;
+> +       __u8 grn_stage1;
+> +       __u8 chr_h_mode;
+> +       __u8 chr_v_mode;
+
+Maybe we could move u8 below u32 to optimize the alignment?
+
+[snip]
+> +/**
+> + * struct cifisp_hst_config - Configuration used by Histogram
+> + *
+> + * @mode: histogram mode (from enum cifisp_histogram_mode)
+> + * @histogram_predivider: process every stepsize pixel, all other pixels
+are skipped
+> + * @meas_window: coordinates of the measure window
+> + * @hist_weight: weighting factor for sub-windows
+> + */
+> +struct cifisp_hst_config {
+> +       __u32 mode;
+> +       __u8 histogram_predivider;
+> +       struct cifisp_window meas_window;
+
+Perhaps could swap the two above for better alignment?
+
+> +       __u8 hist_weight[CIFISP_HISTOGRAM_WEIGHT_GRIDS_SIZE];
+> +} __attribute__ ((packed));
+> +
+> +/**
+> + * struct cifisp_aec_config - Configuration used by Auto Exposure Control
+> + *
+> + * @mode: Exposure measure mode (from enum cifisp_exp_meas_mode)
+> + * @autostop: stop mode (from enum cifisp_exp_ctrl_autostop)
+> + * @meas_window: coordinates of the measure window
+> + */
+> +struct cifisp_aec_config {
+> +       __u32 mode;
+> +       __u32 autostop;
+> +       struct cifisp_window meas_window;
+> +} __attribute__ ((packed));
+> +
+> +/**
+> + * struct cifisp_afc_config - Configuration used by Auto Focus Control
+> + *
+> + * @num_afm_win: max CIFISP_AFM_MAX_WINDOWS
+> + * @afm_win: coordinates of the meas window
+> + * @thres: threshold used for minimizing the influence of noise
+> + * @var_shift: the number of bits for the shift operation at the end of
+the calculation chain.
+> + */
+> +struct cifisp_afc_config {
+> +       __u8 num_afm_win;
+> +       struct cifisp_window afm_win[CIFISP_AFM_MAX_WINDOWS];
+> +       __u32 thres;
+> +       __u32 var_shift;
+
+Perhaps could put afm_win[] and then num_afm_win here, for better alignment?
+
+Best regards,
+Tomasz
