@@ -1,49 +1,74 @@
-From: Jean-Philippe Brucker via iommu <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Subject: Re: [PATCH 03/37] iommu/sva: Manage process address spaces
-Date: Tue, 24 Apr 2018 19:52:55 +0100
-Message-ID: <73db4255-9f7a-28d8-a37f-6ecbf1135cb0@arm.com>
-References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
-	<20180212183352.22730-4-jean-philippe.brucker@arm.com>
-	<57d77955-caa7-ddac-df7d-7eef1f05dbb2@codeaurora.org>
-	<66ec18ca-ea4e-d224-c9c5-8dbee5da8a72@arm.com>
-	<e7c4053a-20cc-d2db-16da-100b1157eca4@codeaurora.org>
-Reply-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [Patch v2 1/6] drm/omap: Add ability to filter out modes which
+ can't be supported
+Date: Tue, 24 Apr 2018 22:08:29 +0300
+Message-ID: <2039005.2ZS85g3FTB@avalon>
+References: <20180326162128.8740-1-bparrot@ti.com> <1527419.mcdjVnGTTs@avalon>
+ <f8e60ec4-20ec-4b7d-f102-bc9d7d50e37a@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <e7c4053a-20cc-d2db-16da-100b1157eca4-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "christian.koenig-5C7GfCeVMHo@public.gmane.org" <christian.koenig-5C7GfCeVMHo@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <f8e60ec4-20ec-4b7d-f102-bc9d7d50e37a@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 24/04/18 18:17, Sinan Kaya wrote:
-> On 4/24/2018 5:33 AM, Jean-Philippe Brucker wrote:
->>> Please return pasid when you find an io_mm that is already bound. Something like
->>> *pasid = io_mm->pasid should do the work here when bond is true.
->> Right. I think we should also keep returning 0, not switch to -EEXIST or
->> similar. So in next version a driver can call bind(devX, mmY) multiple
->> times, but the first unbind() removes the bond.
-> 
-> If we are going to allow multiple binds, then the last unbind should
-> remove the bond rather than the first one via reference counting.
-
-Yeah that's probably better. Since a bond belongs to a device driver it
-doesn't need multiple bind/unbind, so earlier in this thread (1/37) I
-talked about removing the bond->refs. But thinking about it, there still
-is a need for it. When mm exits, we now need to call the device driver's
-mm_exit handler outside of the spinlock, so we have to take a ref in
-order to prevent a concurrent unbind() from freeing the bond.
-
-Thanks,
-Jean
+SGkgVG9taSwKCk9uIFRodXJzZGF5LCA1IEFwcmlsIDIwMTggMTM6MjE6MzAgRUVTVCBUb21pIFZh
+bGtlaW5lbiB3cm90ZToKPiBPbiAwNC8wNC8xOCAxNzoyMywgTGF1cmVudCBQaW5jaGFydCB3cm90
+ZToKPiA+Pj4+ICsJV0FSTihvdXRfd2lkdGggPiBkaXNwYy5mZWF0LT5vdmxfd2lkdGhfbWF4LAo+
+ID4+Pj4gKwkgICAgICJSZXF1ZXN0ZWQgT1ZMIHdpZHRoICglZCkgaXMgbGFyZ2VyIHRoYW4gY2Fu
+IGJlIHN1cHBvcnRlZAo+ID4+Pj4gKCVkKS5cbiIsCj4gPj4+PiArCSAgICAgb3V0X3dpZHRoLCBk
+aXNwYy5mZWF0LT5vdmxfd2lkdGhfbWF4KTsKPiA+Pj4gCj4gPj4+IFdoeSBkb24ndCB5b3UgcmV0
+dXJuIGFuIGVycm9yIGhlcmU/IEkgZG9uJ3Qgc2VlIGEgbmVlZCBmb3IgV0FSTiBoZXJlLgo+ID4+
+IAo+ID4+IFNvIGhlcmUgeW91IG1lYW4gcmVwbGFjZSB0aGUgV0FSTiB3aXRoIHNvbWV0aGluZyBs
+aWtlIHRoaXM6Cj4gPj4gCWlmIChvdXRfd2lkdGggPiBkaXNwYy5mZWF0LT5vdmxfd2lkdGhfbWF4
+KSB7Cj4gPj4gCQlEU1NFUlIoIlJlcXVlc3RlZCBPVkwgd2lkdGggKCVkKSBpcyBsYXJnZXIgdGhh
+biBjYW4gYmUgc3VwcG9ydGVkCj4gPj4gCQkoJWQpLlxuIiwKPiA+PiBvdXRfd2lkdGgsIGRpc3Bj
+LmZlYXQtPm92bF93aWR0aF9tYXgpOwo+ID4+ICAgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZB
+TDsKPiA+PiAJfQo+ID4gCj4gPiBDYW4gdGhpcyBoYXBwZW4gPyBJZiB3ZSByZWplY3QgaW52YWxp
+ZCBzZXR0aW5ncyBpbiBvbWFwZHJtIHdlIHNob3VsZCBuZXZlcgo+ID4gZ2V0IHRoZW0gaGVyZS4K
+PiAKPiBUaGF0J3MgdHJ1ZS4gQW5kIHdlIHNob3VsZCBjaGVjayB0aGVtIGluIHRoZSBwbGFuZSBh
+dG9taWMgY2hlY2sgKGJ1dCBkbwo+IHdlPykuCgpXZSBkb24ndCwgdGhhdCBzaG91bGQgYmUgYWRk
+ZWQuCgo+IEluIHRoYXQgY2FzZSBJIGRvbid0IG1pbmQgYSB3YXJuIHRoZXJlLCBidXQgeW91IHNo
+b3VsZCBzdGlsbCByZXR1cm4gYW4KPiBlcnJvciBpZiBpdCBoYXBwZW5zLCBpbnN0ZWFkIG9mIGNv
+bnRpbnVpbmcgd2l0aCBiYWQgY29uZmlnLgoKQnV0IHRoaXMgc2hvdWxkIHJlYWxseSBub3QgaGFw
+cGVuIGlmIHdlIGFkZCBhIGNoZWNrIHRvIHRoZSBDUlRDIAphdG9taWNfY2hlY2soKSBoYW5kbGVy
+LiBEbyB5b3UgZGlzdHJ1c3QgdGhlIERSTSBjb3JlIHRoYXQgbXVjaCA/IDotKQoKPiA+Pj4+ICsJ
+LyogQ2hlY2sgaWYgdGhlIGFkdmVydGlzZWQgd2lkdGggZXhjZWVkIHdoYXQgdGhlIHBpcGVsaW5l
+IGNhbiBkbyAqLwo+ID4+Pj4gKwlpZiAoIXIpIHsKPiA+Pj4+ICsJCXN0cnVjdCBvbWFwX2RybV9w
+cml2YXRlICpwcml2ID0gZGV2LT5kZXZfcHJpdmF0ZTsKPiA+Pj4+ICsJCXUxNiB3aWR0aCwgaGVp
+Z2h0Owo+ID4+Pj4gKwo+ID4+Pj4gKwkJcHJpdi0+ZGlzcGNfb3BzLT5vdmxfZ2V0X21heF9zaXpl
+KCZ3aWR0aCwgJmhlaWdodCk7Cj4gPj4+PiArCQlpZiAobW9kZS0+aGRpc3BsYXkgPiB3aWR0aCkK
+PiA+Pj4+ICsJCQlyID0gLUVJTlZBTDsKPiA+Pj4gCj4gPj4+IFlvdSBzaG91bGQgY2hlY2sgdGhl
+IGhlaWdodCBhbHNvLgo+ID4+IAo+ID4+IFllYWgsIEknbGwgZml4IHRoYXQuCj4gPiAKPiA+IFVu
+bGVzcyBJJ20gbWlzdGFrZW4gdGhlIHJlc3RyaWN0aW9uIGRvZXNuJ3QgY29tZSBmcm9tIHRoZSBv
+dXRwdXQgc2lkZSBvZgo+ID4gdGhlIGRpc3BsYXkgY29udHJvbGxlciBidXQgZnJvbSB0aGUgb3Zl
+cmxheXMgKHBsYW5lcyksIHJpZ2h0ID8gU2hvdWxkbid0Cj4gPiBpdCB0aGVuIGJlIGltcGxlbWVu
+dGVkIGluIHRoZSBkcm1fcGxhbmVfaGVscGVyX2Z1bmNzLmF0b21pY19jaGVjawo+ID4gb3BlcmF0
+aW9uID8KPiAKPiBZZXMsIGJ1dCBJIGRvbid0IHNvLiBJZiBvdXIgcGxhbmVzIGNhbiBzdXBwb3J0
+IHVwIHRvLCBzYXksIDEwMDAuIFRoZW4gd2UKPiBwbHVnIGluIGEgbW9uaXRvciB3aXRoIG5hdGl2
+ZSB3aWR0aCBvZiAxMTAwLCB3aGljaCBvbWFwZHJtIHdvdWxkIGFjY2VwdAo+IGhhcHBpbHkgYW5k
+IHRyeSB0byB1c2UgaXQgYnkgZGVmYXVsdC4gQnV0IHdlIGNhbid0IHNob3cgZmJkZXYgb3IgYW55
+Cj4gbm9ybWFsIHNldHVwIHRoZXJlLCBiZWNhdXNlIHRoZSBwbGFuZXMgd29uJ3Qgc3VwcG9ydCBp
+dC4gSG93IHdvdWxkIHdlCj4gbWFuYWdlIHRoYXQ/Cj4gCj4gV2hpbGUgbm90IHN0cmljdGx5IGNv
+cnJlY3QsIEkgdGhpbmsgaXQncyBmaW5lIHRvIHJlamVjdCB2aWRlb21vZGVzIHdoaWNoCj4gY2Fu
+J3QgYmUgc2hvd24gd2l0aCBhIG5vcm1hbCBmdWxsLXNjcmVlbiBwbGFuZS4KCkl0IGNvdWxkIGJl
+IGFyZ3VlZCB0aGF0IHN1Y2ggbW9kZXMgd291bGQgc3RpbGwgYmUgdXNlZnVsIGV2ZW4gaWYgcGxh
+bmVzIGNhbid0IApiZSBzaG93biBmdWxsLXNjcmVlbiwgb3IgdGhhdCB0d28gcGxhbmVzIGNvdWxk
+IGJlIHVzZWQgc2lkZSBieSBzaWRlIHRvIGFjaGlldmUgCmEgbGFyZ2VyIGZ1bGwtc2NyZWVuIGRp
+c3BsYXkgdGhhbiB3aGF0IHdvdWxkIGJlIHBvc3NpYmxlIHdpdGggYSBzaW5nbGUgcGxhbmUuIApJ
+J2xsIGxlYXZlIGl0IHVwIHRvIHlvdSB0byBkZWNpZGUgd2hldGhlciB3ZSBzaG91bGQgc3VwcG9y
+dCBzdWNoIHVzZSBjYXNlcy4KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
