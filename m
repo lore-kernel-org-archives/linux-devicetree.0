@@ -1,70 +1,72 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [RFC 00/10] ARM: Remove support for Exynos5440
-Date: Tue, 24 Apr 2018 22:56:36 +0200
-Message-ID: <20180424205636.cdp4czq6hhs5gu5a@kozik-lap>
-References: <20180424203239.21885-1-krzk@kernel.org>
- <CAK8P3a2CZU1CYFt0fdVSFFnj2Wg=mUcC=yuWAW7zDO0u2Q2dUQ@mail.gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: overlay: Stop leaking resources on overlay removal
+Date: Tue, 24 Apr 2018 13:58:27 -0700
+Message-ID: <b813ac8f-a1e3-3e27-2e44-0a576e05d01c@gmail.com>
+References: <097f1b01-6cb4-8dcb-0498-7b4c59a7ea53@siemens.com>
+ <7aca82c1-a02c-2f84-bc32-6e8a118ba601@gmail.com>
+ <90e7da9d-d40a-17f1-e627-873f58a3dce5@siemens.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2CZU1CYFt0fdVSFFnj2Wg=mUcC=yuWAW7zDO0u2Q2dUQ@mail.gmail.com>
+In-Reply-To: <90e7da9d-d40a-17f1-e627-873f58a3dce5@siemens.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg
+To: Jan Kiszka <jan.kiszka@siemens.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alan Tull <atull@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 24, 2018 at 10:50:58PM +0200, Arnd Bergmann wrote:
-> On Tue, Apr 24, 2018 at 10:32 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > Hi,
-> >
-> >
-> > Overview
-> > ========
-> > Let's continue the removal of old platforms. We already get rid of Exynos4212.
-> > Now it's time for Exynos5440.
-> >
-> > The Exynos5440 (quad-core A15 with GMAC, PCIe, SATA) was targeting
-> > server platforms but it did not make it to the market really.  There are
-> > no development boards with it and probably there are no real products
-> > neither.  The development for Exynos5440 ended in 2013 and since then
-> > the platform is in maintenance mode.
-> >
-> > The only development happening around it is the PCIe driver for Exynos5433
-> > (ARMv8). [1]
-> >
-> > Removing Exynos5440, makes our life slightly easier:
-> > 1. Less maintenance,
-> > 2. Smaller code, less quirks,
-> > 3. No need to preserve (imaginary) backward-compatibility for Exynos PCIe
-> >    driver (so it is easier to add support for Exynos5433).
-> >
-> >
-> > Because of point (3) above - I left the PCIe and PCIe PHY drivers intact.
-> >
-> >
-> > Dependencies
-> > ============
-> > I think about starting with removal of DTS in some kernel release (patch 1/10).
-> > Then all drivers can be removed/updated - subsystem maintainers can pick their
-> > patches freely.
-> >
-> > Finally, after getting rid of all Exynos5440 symbols, the last patch (10/10) will
-> > end in arm-soc tree.
-> >
-> >
-> > Any comments?
+On 04/24/18 10:50, Jan Kiszka wrote:
+> On 2018-04-24 19:44, Frank Rowand wrote:
+>> On 04/24/18 09:19, Jan Kiszka wrote:
+>>> Only the overlay notifier callbacks have a chance to potentially get
+>>> hold of references to those two resources, but they do not store them.
+>>> So it is safe to stop the intentional leaking.
+>>>
+>>> See also https://lkml.org/lkml/2018/4/23/1063 and following.
+>>>
+>>> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+>>> ---
+>>>
+>>> Ideally, we sort out any remaining worries during the 4.17-rc cycle.
+>>>
+>>>  drivers/of/overlay.c | 13 ++-----------
+>>>  1 file changed, 2 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>>> index b35fe88f1851..3553f1f57a62 100644
+>>> --- a/drivers/of/overlay.c
+>>> +++ b/drivers/of/overlay.c
+>>> @@ -671,17 +671,8 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
+>>>  		of_node_put(ovcs->fragments[i].overlay);
+>>>  	}
+>>>  	kfree(ovcs->fragments);
+>>> -
+>>> -	/*
+>>> -	 * TODO
+>>> -	 *
+>>> -	 * would like to: kfree(ovcs->overlay_tree);
+>>> -	 * but can not since drivers may have pointers into this data
+>>> -	 *
+>>> -	 * would like to: kfree(ovcs->fdt);
+>>> -	 * but can not since drivers may have pointers into this data
+>>> -	 */
+>>> -
+>>> +	kfree(ovcs->overlay_tree);
+>>> +	kfree(ovcs->fdt);
+>>>  	kfree(ovcs);
+>>>  }
+>>>  
+>>>
+>>
+>> Nack.  It is premature to submit this while the conversation is
+>> continuing in the other thread.
+>>
+>> I'll continue the conversation in the other thread.
+>>
 > 
-> I don't see any hard dependency here, if this is all unused, I think we
-> can apply both patches 1 and 10 into arm-soc at the same time as merging
-> the other patches through the respective subsystem trees.
+> Well, at least the strongest argument has been resolved now, the
+> notifier topic. Curious to learn what remains. As I noted, we should
+> work hard to sort out the API regression prior to the release.
 
-The only dependency is through Kconfig symbol (SOC_EXYNOS5440).  After
-applying 10/10, which removes SOC_EXYNOS5440, some automatic code
-testers can complain about non-existing Kconfig option.  That's not big
-issue because all this will go away so indeed we could take everything
-in one release.
-
-
-Best regards,
-rzysztof
+Nope, the notifier discussion continues in the other thread.
