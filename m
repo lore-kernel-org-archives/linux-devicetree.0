@@ -1,94 +1,140 @@
-Return-Path: <SRS0=Fkpo=HH=openmesh.com=sven.eckelmann@kernel.org>
-From: Sven Eckelmann <sven.eckelmann@openmesh.com>
-Subject: [PATCH] ARM: dts: ipq4019: Add TZ and SMEM reserved regions
-Date: Wed, 18 Apr 2018 09:32:59 +0200
-Message-Id: <20180418073259.18645-1-sven.eckelmann@openmesh.com>
-To: linux-arm-msm@vger.kernel.org
-Cc: linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Andy Gross <andy.gross@linaro.org>, Sven Eckelmann <sven.eckelmann@openmesh.com>, Sricharan Ramabadhran <srichara@qti.qualcomm.com>, Senthilkumar N L <snlakshm@qti.qualcomm.com>
+Return-Path: <SRS0=i8TH=HN=bootlin.com=maxime.ripard@kernel.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v11 1/4] dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
+Date: Tue, 24 Apr 2018 14:26:57 +0200
+Message-Id: <20180424122700.5387-2-maxime.ripard@bootlin.com>
+In-Reply-To: <20180424122700.5387-1-maxime.ripard@bootlin.com>
+References: <20180424122700.5387-1-maxime.ripard@bootlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The QSEE (trustzone) is started on IPQ4019 before Linux is started.
-According to QCA, it is placed in in the the memory region
-0x87e80000-0x88000000 and must not be accessed directly. There is an
-additional memory region 0x87e00000-0x87E80000 smem which which can be used
-for communication with the TZ. The driver for the latter is not yet ready
-but it is still not allowed to use this memory region like any other
-memory region.
+The Cadence MIPI-CSI2 RX controller is a CSI2RX bridge that supports up to
+4 CSI-2 lanes, and can route the frames to up to 4 streams, depending on
+the hardware implementation.
 
-Not reserving this memory region either leads to kernel crashes, kernel
-hangs (often during the boot) or bus errors for userspace programs. The
-latter happens when a program is using a memory region which is mapped to
-these physical memory regions.
+It can operate with an external D-PHY, an internal one or no D-PHY at all
+in some configurations.
 
-  [  571.758058] Unhandled fault: imprecise external abort (0xc06) at 0x01715ff8
-  [  571.758099] pgd = cebec000
-  [  571.763826] [01715ff8] *pgd=8e7fa835, *pte=87e7f75f, *ppte=87e7fc7f
-  Bus error
-
-Signed-off-by: Sven Eckelmann <sven.eckelmann@openmesh.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Benoit Parrot <bparrot@ti.com>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
-Cc: Sricharan Ramabadhran <srichara@qti.qualcomm.com>
-Cc: Senthilkumar N L <snlakshm@qti.qualcomm.com>
+ .../devicetree/bindings/media/cdns,csi2rx.txt | 100 ++++++++++++++++++
+ 1 file changed, 100 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2rx.txt
 
-There are additional memory regions which have to be initialized first by
-Linux. So they are currently not used. We were told by QCA that the
-features QSDK uses them for are:
-
-* crash dump feature
-  - a couple of regions used when 'qca,scm_restart_reason' dt node has the
-    value 'dload_status' not set to 1
-    + apps_bl <0x87000000 0x400000>
-    + sbl <0x87400000 0x100000>
-    + cnss_debug <0x87400000 0x100000>
-    + cpu_context_dump <0x87b00000 0x080000>
-  - required driver not available in Linux
-  - safe to remove
-* QSEE app execution
-  - region tz_apps <0x87b80000 0x280000>
-  - required driver not available in Linux
-  - safe to remove
-* communication with TZ/QSEE
-  - region smem <0x87b80000 0x280000>
-  - driver changes not yet upstreamed
-  - must not be removed because any access can crash kernel/program
-* trustzone (QSEE) private memory
-  - region tz <0x87e80000 0x180000>
-  - must not be removed because any access can crash kernel/program
-
-The problem with the missing regions was reported in 2016 [1]. So maybe
-this change qualifies for a stable@vger.kernel.org submission.
-
-[1] https://www.spinics.net/lists/linux-arm-msm/msg21536.html
----
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index 10d112a4078e..b25daf368012 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -23,6 +23,22 @@
- 	compatible = "qcom,ipq4019";
- 	interrupt-parent = <&intc>;
- 
-+	reserved-memory {
-+		#address-cells = <0x1>;
-+		#size-cells = <0x1>;
-+		ranges;
+diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+new file mode 100644
+index 000000000000..6b02a0657ad9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+@@ -0,0 +1,100 @@
++Cadence MIPI-CSI2 RX controller
++===============================
 +
-+		smem_region: smem@87e00000 {
-+			reg = <0x87e00000 0x080000>;
-+			no-map;
++The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to 4 CSI
++lanes in input, and 4 different pixel streams in output.
++
++Required properties:
++  - compatible: must be set to "cdns,csi2rx" and an SoC-specific compatible
++  - reg: base address and size of the memory mapped region
++  - clocks: phandles to the clocks driving the controller
++  - clock-names: must contain:
++    * sys_clk: main clock
++    * p_clk: register bank clock
++    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
++                         implemented in hardware, between 0 and 3
++
++Optional properties:
++  - phys: phandle to the external D-PHY, phy-names must be provided
++  - phy-names: must contain "dphy", if the implementation uses an
++               external D-PHY
++
++Required subnodes:
++  - ports: A ports node with one port child node per device input and output
++           port, in accordance with the video interface bindings defined in
++           Documentation/devicetree/bindings/media/video-interfaces.txt. The
++           port nodes are numbered as follows:
++
++           Port Description
++           -----------------------------
++           0    CSI-2 input
++           1    Stream 0 output
++           2    Stream 1 output
++           3    Stream 2 output
++           4    Stream 3 output
++
++           The stream output port nodes are optional if they are not
++           connected to anything at the hardware level or implemented
++           in the design.Since there is only one endpoint per port,
++           the endpoints are not numbered.
++
++
++Example:
++
++csi2rx: csi-bridge@0d060000 {
++	compatible = "cdns,csi2rx";
++	reg = <0x0d060000 0x1000>;
++	clocks = <&byteclock>, <&byteclock>
++		 <&coreclock>, <&coreclock>,
++		 <&coreclock>, <&coreclock>;
++	clock-names = "sys_clk", "p_clk",
++		      "pixel_if0_clk", "pixel_if1_clk",
++		      "pixel_if2_clk", "pixel_if3_clk";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++
++			csi2rx_in_sensor: endpoint {
++				remote-endpoint = <&sensor_out_csi2rx>;
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++			};
 +		};
 +
-+		tz@87e80000 {
-+			reg = <0x87e80000 0x180000>;
-+			no-map;
++		port@1 {
++			reg = <1>;
++
++			csi2rx_out_grabber0: endpoint {
++				remote-endpoint = <&grabber0_in_csi2rx>;
++			};
++		};
++
++		port@2 {
++			reg = <2>;
++
++			csi2rx_out_grabber1: endpoint {
++				remote-endpoint = <&grabber1_in_csi2rx>;
++			};
++		};
++
++		port@3 {
++			reg = <3>;
++
++			csi2rx_out_grabber2: endpoint {
++				remote-endpoint = <&grabber2_in_csi2rx>;
++			};
++		};
++
++		port@4 {
++			reg = <4>;
++
++			csi2rx_out_grabber3: endpoint {
++				remote-endpoint = <&grabber3_in_csi2rx>;
++			};
 +		};
 +	};
-+
- 	aliases {
- 		spi0 = &spi_0;
- 		i2c0 = &i2c_0;
++};
 -- 
-2.11.0
+2.17.0
