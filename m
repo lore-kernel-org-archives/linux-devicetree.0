@@ -1,85 +1,41 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 2/2] clk: qcom: clk-rpmh: Add QCOM RPMh clock driver
-Date: Tue, 24 Apr 2018 08:40:09 -0700
-Message-ID: <152458440904.46528.10430507697972810594@swboyd.mtv.corp.google.com>
-References: <1523673401-21611-1-git-send-email-tdas@codeaurora.org>
- <1523673401-21611-3-git-send-email-tdas@codeaurora.org>
- <152390031768.51482.12790579493617671456@swboyd.mtv.corp.google.com>
- <2b0ba677-921c-c6e0-00d2-ac5bdefd2d6b@codeaurora.org>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v1 3/4] clk: mediatek: add g3dsys support for MT2701 and
+ MT7623
+Date: Tue, 24 Apr 2018 23:43:22 +0800
+Message-ID: <1524584602.12322.16.camel@mtkswgap22>
+References: <cover.1524044917.git.sean.wang@mediatek.com>
+         <96dc02879c10388c2efa08b1cf33b77f938908ee.1524044917.git.sean.wang@mediatek.com>
+         <20180424144009.b66sxo3okjvsr4yc@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2b0ba677-921c-c6e0-00d2-ac5bdefd2d6b@codeaurora.org>
+In-Reply-To: <20180424144009.b66sxo3okjvsr4yc@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Taniya Das <tdas@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, David Collins <collinsd@codeaurora.org>
+To: Rob Herring <robh@kernel.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, airlied@linux.ie, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2018-04-23 09:50:22)
-> On 4/16/2018 11:08 PM, Stephen Boyd wrote:
-> > Quoting Taniya Das (2018-04-13 19:36:41)
+On Tue, 2018-04-24 at 09:40 -0500, Rob Herring wrote:
+> On Wed, Apr 18, 2018 at 06:24:55PM +0800, sean.wang@mediatek.com wrote:
+> > From: Sean Wang <sean.wang@mediatek.com>
+> > 
+> > Add clock driver support for g3dsys on MT2701 and MT7623, which is
+> > providing essential clock gate and reset controller to Mali-450.
+> > 
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > ---
+> >  drivers/clk/mediatek/Kconfig              |  6 ++
+> >  drivers/clk/mediatek/Makefile             |  1 +
+> >  drivers/clk/mediatek/clk-mt2701-g3d.c     | 95 +++++++++++++++++++++++++++++++
 > 
-> >> +struct clk_rpmh {
-> >> +       struct clk_hw hw;
-> >> +       const char *res_name;
-> >> +       u32 res_addr;
-> >> +       u32 res_en_offset;
-> > 
-> > Why do we store both res_addr and res_en_offset? Can't we just store
-> > res_en_offset and then use that all the time? I don't see a user of
-> > res_addr anywhere.
-> > 
+> >  include/dt-bindings/clock/mt2701-clk.h    |  4 ++
+> >  include/dt-bindings/reset/mt2701-resets.h |  3 +
 > 
-> The res_addr would be the address for the resource returned by the 
-> cmd_db_read_addr. And the res_en_offset would be the offsets of ARC_EN 
-> or VRM_EN.
-
-Yes. But why can't we store the combination of the two?
-
+> These below in the binding patch.
 > 
-> >> +       u32 res_on_val;
-> >> +       u32 res_off_val;
-> > 
-> > Is this used?
-> 
-> Yes the above are used.
 
-I just meant res_off_val. Which looks unused.
+Thanks, I will split them out in the next version.
 
-> > 
-> >> +       u32 state;
-> >> +       u32 aggr_state;
-> >> +       u32 last_sent_aggr_state;
-> >> +       u32 valid_state_mask;
-> >> +       struct rpmh_client *rpmh_client;
-> >> +       struct device *dev;
-> >> +       struct clk_rpmh *peer;
-> >> +       unsigned long rate;
-> >> +};
-> > 
-> > Can you add some kernel-doc on these structure members?
-> > 
-> Sure will add the same.
-
-Great! Hopefully that clarifies things.
-
-> >> +       /*
-> >> +        * RPMh clocks have a fixed rate. Return static rate set
-> >> +        * at init time.
-> >> +        */
-> >> +       return r->rate;
-> > 
-> > The rate should come from the parent. In the case of tcxo it would be
-> > board_xo clk rate (or maybe some fixed div-2 on the board XO that's also
-> > defined in DT because the board_xo seems to be two times 19.2 MHz?).
-> > 
-> 
-> There would not be any parent for the RPMH clock, they would be the 
-> parent for other clocks.
-> 
-> The TCXO is 19.2MHz and once we have the RPMH clocks, we would remove 
-> the DT reference for board_xo.
-
-No that's wrong. There is a parent of the RPMh clks, and that's the
-board XO clk in the DT file. We will never remove the board clks.
+> >  5 files changed, 109 insertions(+)
+> >  create mode 100644 drivers/clk/mediatek/clk-mt2701-g3d.c
