@@ -1,160 +1,75 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v4 7/8] drm/i2c: tda998x: register as a drm bridge
-Date: Tue, 24 Apr 2018 12:14:46 +0200
-Message-ID: <8448e90a-4562-b564-c160-1b5c67e0f92f@axentia.se>
-References: <20180423072301.11962-1-peda@axentia.se>
- <20180423072301.11962-8-peda@axentia.se>
- <20180423160833.GF16141@n2100.armlinux.org.uk>
- <5d6866d0-75bc-4de8-9b87-4fee5430e9dd@axentia.se>
- <20180424080833.GJ16141@n2100.armlinux.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/3] ASoC: tas6424: Allow disabling auto
+ diagnostics for faster power-on
+Date: Tue, 24 Apr 2018 11:19:53 +0100
+Message-ID: <20180424101953.GA22073@sirena.org.uk>
+References: <1524218684-19752-1-git-send-email-jjhiblot@ti.com>
+ <1524218684-19752-2-git-send-email-jjhiblot@ti.com>
+ <20180423154411.GK19834@sirena.org.uk>
+ <d6a1c01b-7a9f-423f-d314-ff2e52aa9ab9@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180424080833.GJ16141@n2100.armlinux.org.uk>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============9024464989625510573=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <d6a1c01b-7a9f-423f-d314-ff2e52aa9ab9@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, afd@ti.com, robh+dt@kernel.org, dannenberg@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-24 10:08, Russell King - ARM Linux wrote:
-> On Tue, Apr 24, 2018 at 08:58:42AM +0200, Peter Rosin wrote:
->> On 2018-04-23 18:08, Russell King - ARM Linux wrote:
->>> On Mon, Apr 23, 2018 at 09:23:00AM +0200, Peter Rosin wrote:
->>>>  static int tda998x_remove(struct i2c_client *client)
->>>>  {
->>>> -	component_del(&client->dev, &tda998x_ops);
->>>> +	struct device *dev = &client->dev;
->>>> +	struct tda998x_bridge *bridge = dev_get_drvdata(dev);
->>>> +
->>>> +	drm_bridge_remove(&bridge->bridge);
->>>> +	component_del(dev, &tda998x_ops);
->>>> +
->>>
->>> I'd like to ask a rather fundamental question about DRM bridge support,
->>> because I suspect that there's a major fsckup here.
->>>
->>> The above is the function that deals with the TDA998x device being
->>> unbound from the driver.  With the component API, this results in the
->>> DRM device correctly being torn down, because one of the hardware
->>> devices has gone.
->>>
->>> With DRM bridge, the bridge is merely removed from the list of
->>> bridges:
->>>
->>> void drm_bridge_remove(struct drm_bridge *bridge)
->>> {
->>>         mutex_lock(&bridge_lock);
->>>         list_del_init(&bridge->list);
->>>         mutex_unlock(&bridge_lock);
->>> }
->>> EXPORT_SYMBOL(drm_bridge_remove);
->>>
->>> and the memory backing the "struct tda998x_bridge" (which contains
->>> the struct drm_bridge) will be freed by the devm subsystem.
->>>
->>> However, there is no notification into the rest of the DRM subsystem
->>> that the device has gone away.  Worse, the memory that is still in
->>> use by DRM has now been freed, so further use of the DRM device
->>> results in a use-after-free bug.
->>>
->>> This is really not good, and to me looks like a fundamental problem
->>> with the DRM bridge code.  I see nothing in the DRM bridge code that
->>> deals with the lifetime of a "DRM bridge" or indeed the lifetime of
->>> the actual device itself.
->>>
->>> So, from what I can see, there seems to be a fundamental lifetime
->>> issue with the design of the DRM bridge code.  This needs to be
->>> fixed.
->>
->> Oh crap. A gigantic can of worms...
-> 
-> Yes, it's especially annoying for me, having put the effort in to
-> the component helper to cover all these cases.
-> 
->> Would a patch (completely untested btw) along this line of thinking make
->> any difference whatsoever?
-> 
-> It looks interesting - from what I can see of the device links code,
-> it would have the effect of unbinding the DRM device just before
-> TDA998x is unbound, so that's an improvement.
-> 
-> However, from what I can see, the link vanishes at that point (as
-> DL_FLAG_AUTOREMOVE is set), and re-binding the TDA998x device results
-> in nothing further happening - the link will be recreated, but there
-> appears to be nothing that triggers the "consumer" to rebind at that
-> point.  Maybe I've missed something?
 
-Right, auto-remove is a no-go. So, improving on the previous...
+--===============9024464989625510573==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
+Content-Disposition: inline
 
-(I think drm_panel might suffer from this issue too?)
 
-Cheers,
-Peter
+--UugvWAfsgieZRqgk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-index 1638bfe9627c..b1365cfee445 100644
---- a/drivers/gpu/drm/drm_bridge.c
-+++ b/drivers/gpu/drm/drm_bridge.c
-@@ -121,12 +121,17 @@ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
- 	if (bridge->dev)
- 		return -EBUSY;
- 
-+	bridge->link = device_link_add(encoder->dev->dev, bridge->owner, 0);
-+	if (!bridge->link)
-+		return -EINVAL;
-+
- 	bridge->dev = encoder->dev;
- 	bridge->encoder = encoder;
- 
- 	if (bridge->funcs->attach) {
- 		ret = bridge->funcs->attach(bridge);
- 		if (ret < 0) {
-+			device_link_del(bridge->link);
- 			bridge->dev = NULL;
- 			bridge->encoder = NULL;
- 			return ret;
-@@ -153,6 +158,8 @@ void drm_bridge_detach(struct drm_bridge *bridge)
- 	if (bridge->funcs->detach)
- 		bridge->funcs->detach(bridge);
- 
-+	device_link_del(bridge->link);
-+
- 	bridge->dev = NULL;
- }
- 
-diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-index b8cb6237a38b..29eba4e9a39d 100644
---- a/drivers/gpu/drm/i2c/tda998x_drv.c
-+++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-@@ -1857,6 +1857,7 @@ tda998x_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	bridge->dev = dev;
- 	dev_set_drvdata(dev, bridge);
- 
-+	bridge->bridge.owner = dev;
- 	bridge->bridge.funcs = &tda998x_bridge_funcs;
- #ifdef CONFIG_OF
- 	bridge->bridge.of_node = dev->of_node;
-diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index 682d01ba920c..b8f33aba3216 100644
---- a/include/drm/drm_bridge.h
-+++ b/include/drm/drm_bridge.h
-@@ -224,6 +224,8 @@ struct drm_bridge_funcs {
- 
- /**
-  * struct drm_bridge - central DRM bridge control structure
-+ * @owner: device that owns the bridge
-+ * @link: drm consumer <-> bridge supplier
-  * @dev: DRM device this bridge belongs to
-  * @encoder: encoder to which this bridge is connected
-  * @next: the next bridge in the encoder chain
-@@ -233,6 +235,8 @@ struct drm_bridge_funcs {
-  * @driver_private: pointer to the bridge driver's internal context
-  */
- struct drm_bridge {
-+	struct device *owner;
-+	struct device_link *link;
- 	struct drm_device *dev;
- 	struct drm_encoder *encoder;
- 	struct drm_bridge *next;
+On Mon, Apr 23, 2018 at 09:00:18PM +0200, Jean-Jacques Hiblot wrote:
+
+> I can't think of anything that would make it unusable.
+> This auto diagnostic is really useful in cars where wires can get
+> disconnected or shorted to ground.
+> In quieter environment it may not be as useful, and a test at startup may be
+> sufficient.
+> Diagnostics can also be triggered at will.
+> Do you think a sysfs interface would be better suited to disable the
+> autodiag ?
+
+I'd just make it an ALSA control TBH.  sysfs should work as well though.
+
+--UugvWAfsgieZRqgk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrfBMUACgkQJNaLcl1U
+h9AmdAf9G2hWHGY7WD/hfxizWfpUaXImjYIXNKDx+C5ZRJNzNR0J34RRiOi4l7R9
+PCD9FYNShJiWygRKrE8XhNbLouhXw6M02W+7zjD2Hj280TLTbg4JcH/IpwPvgwER
+ZWiRyWLsm5CY/TwM9HqBhDTfSZWZuC3hLK9fWezm1HCkFGZyQA1b34Bg/7ZdNbDH
+rRpL1vN7cWoNiESP7GPikmCDyVI8sU5BPV6mfu9yW1C72wcsy6KTZ+uTRyKc9F1z
+qXsvHUpQtwktIDPXe+u1BKbRLO69y/unfgrF97ANFii5ziWYLh3lLwUg9ZSTbM9R
+PL7Nuh2gZaZJIilyxvbiHg7pfuGkzQ==
+=2PQK
+-----END PGP SIGNATURE-----
+
+--UugvWAfsgieZRqgk--
+
+--===============9024464989625510573==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============9024464989625510573==--
