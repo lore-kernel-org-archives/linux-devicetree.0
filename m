@@ -1,57 +1,46 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v2 0/2] usb: dwc3: support clocks and resets for DWC3 core
-Date: Mon, 23 Apr 2018 17:11:39 -0700
-Message-ID: <31be9c49-7562-1c06-7bf9-bafaea2f1c16@codeaurora.org>
-References: <1524135818-14825-1-git-send-email-yamada.masahiro@socionext.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH v2 1/3] drm: Make the prime vmap/vunmap hooks optional.
+Date: Mon, 23 Apr 2018 17:46:08 -0700
+Message-ID: <20180424004610.4637-2-eric@anholt.net>
+References: <20180424004610.4637-1-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524135818-14825-1-git-send-email-yamada.masahiro@socionext.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-usb@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Rob Herring <robh@kernel.org>, Roger Quadros <rogerq@ti.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180424004610.4637-1-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-HI,
-
-
-On 4/19/2018 4:03 AM, Masahiro Yamada wrote:
-> In the current design of DWC3 driver,
-> the DT typically becomes a nested structure like follows:
->
->   dwc3-glue {
->           compatible = "foo,dwc3";
->           ...
->
->           dwc3 {
->                   compatible = "snps,dwc3";
->                   ...
->           };
->   }
->
-> The current DWC3 core (drivers/usb/dwc3/core.c) can not handle
-> clocks / resets at all.
->
-> The only solution we have now, is to put DWC3 core node under
-> the glue layer node, then add clocks and resets there.
-> Actually, dwc3-of-simple.c exists to handle clocks and resets.
->
-> As always for digital circuits, DWC3 core IP itself needs clock input.
-> This is specific to this IP.  So, supporting clocks and resets in
-> dwc3/core.c makes sense.
-
-Why can't dwc3-of-simple be used with this IP?
-Adding core/reset handling in both core and glue drivers might
-only add to confusion and I cant think of a reason why having a parent
-node representing dwc3-of-simple glue would be any concern.
-Or are you planning to remove dwc3-of-simple.c driver?
-
->
-> In this version, the number of clocks (and names) is specific
-> to this IP, with clock names taken from Synopsys datasheet.
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+U29tZSBkcml2ZXJzIGxlYXZlIHRoZXNlIHVuaW1wbGVtZW50ZWQsIHNvIGRvbid0IG1ha2UgdGhl
+bSBoYXZlCnVuaW1wbGVtZW50ZWQgc3R1YnMuCgpTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9sdCA8
+ZXJpY0BhbmhvbHQubmV0PgotLS0KIGRyaXZlcnMvZ3B1L2RybS9kcm1fcHJpbWUuYyB8IDggKysr
+KysrLS0KIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2RybV9wcmltZS5jIGIvZHJpdmVycy9ncHUvZHJt
+L2RybV9wcmltZS5jCmluZGV4IGNhZjY3NWUzZTY5Mi4uMzk3YjQ2YjMzNzM5IDEwMDY0NAotLS0g
+YS9kcml2ZXJzL2dwdS9kcm0vZHJtX3ByaW1lLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2RybV9w
+cmltZS5jCkBAIC00MDksNyArNDA5LDEwIEBAIHZvaWQgKmRybV9nZW1fZG1hYnVmX3ZtYXAoc3Ry
+dWN0IGRtYV9idWYgKmRtYV9idWYpCiAJc3RydWN0IGRybV9nZW1fb2JqZWN0ICpvYmogPSBkbWFf
+YnVmLT5wcml2OwogCXN0cnVjdCBkcm1fZGV2aWNlICpkZXYgPSBvYmotPmRldjsKIAotCXJldHVy
+biBkZXYtPmRyaXZlci0+Z2VtX3ByaW1lX3ZtYXAob2JqKTsKKwlpZiAoZGV2LT5kcml2ZXItPmdl
+bV9wcmltZV92bWFwKQorCQlyZXR1cm4gZGV2LT5kcml2ZXItPmdlbV9wcmltZV92bWFwKG9iaik7
+CisJZWxzZQorCQlyZXR1cm4gTlVMTDsKIH0KIEVYUE9SVF9TWU1CT0woZHJtX2dlbV9kbWFidWZf
+dm1hcCk7CiAKQEAgLTQyNiw3ICs0MjksOCBAQCB2b2lkIGRybV9nZW1fZG1hYnVmX3Z1bm1hcChz
+dHJ1Y3QgZG1hX2J1ZiAqZG1hX2J1Ziwgdm9pZCAqdmFkZHIpCiAJc3RydWN0IGRybV9nZW1fb2Jq
+ZWN0ICpvYmogPSBkbWFfYnVmLT5wcml2OwogCXN0cnVjdCBkcm1fZGV2aWNlICpkZXYgPSBvYmot
+PmRldjsKIAotCWRldi0+ZHJpdmVyLT5nZW1fcHJpbWVfdnVubWFwKG9iaiwgdmFkZHIpOworCWlm
+IChkZXYtPmRyaXZlci0+Z2VtX3ByaW1lX3Z1bm1hcCkKKwkJZGV2LT5kcml2ZXItPmdlbV9wcmlt
+ZV92dW5tYXAob2JqLCB2YWRkcik7CiB9CiBFWFBPUlRfU1lNQk9MKGRybV9nZW1fZG1hYnVmX3Z1
+bm1hcCk7CiAKLS0gCjIuMTcuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
