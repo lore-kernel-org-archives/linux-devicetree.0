@@ -1,32 +1,48 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 3/7] ARM: dts: sun8i: h2-plus: Sort dtb entries in
- Makefile
-Date: Tue, 24 Apr 2018 13:53:11 +0200
-Message-ID: <20180424115311.5s5p5ryyswq7xmat@flea>
+Subject: Re: [PATCH 4/7] ARM: dts: sun8i: h2+: Add Libre Computer Board
+ ALL-H3-CC H2+ ver.
+Date: Tue, 24 Apr 2018 13:54:18 +0200
+Message-ID: <20180424115418.lpv4drajf4t32xss@flea>
 References: <20180424113424.13196-1-wens@csie.org>
- <20180424113424.13196-4-wens@csie.org>
+ <20180424113424.13196-5-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="h55geail6mxujuov"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180424113424.13196-4-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============9164255474367297455=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180424113424.13196-5-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 
---h55geail6mxujuov
+--===============9164255474367297455==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dzgf7d4p5vzbjttm"
+Content-Disposition: inline
+
+
+--dzgf7d4p5vzbjttm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 24, 2018 at 07:34:20PM +0800, Chen-Yu Tsai wrote:
-> The dtb entry for the Banana Pi M2 Zero in the device tree makefile
-> somehow ended up in between two Orange Pi boards.
+On Tue, Apr 24, 2018 at 07:34:21PM +0800, Chen-Yu Tsai wrote:
+> This patch adds a device tree file for the H2+ version of the Libre
+> Computer Board ALL-H3-CC. It is the same board first introduced in
+> commit 6ca358645d4d ("ARM: dts: sun8i: h3: Add dts file for Libre
+> Computer Board ALL-H3-CC H3 ver."), with the H3 SoC replaced with
+> the H2+ SoC, and has only two 2Gb DDR3 chips instead of four.
 >=20
-> Move it so the list is properly sorted.
+> The device tree utilizes the common board design file for ALL-H3-CC,
+> providing just the model strings and SoC specifics.
 >=20
 > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
@@ -39,24 +55,38 @@ Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---h55geail6mxujuov
+--dzgf7d4p5vzbjttm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrfGqYACgkQ0rTAlCFN
-r3Q1jA/+J4xTm5B8V5zBadHxzetyfHtaQhX1C5aF6TxRUvYlxsovcCd51nMay0B/
-CKbwjAob9oL2NpN/9wQlrPID9pQKOeNS/Y3X4YANcDk6d0uQNzLydZ8Dq7aDHwaK
-WiHXgUk/yqzvI9q0JGS0YjpAPXbAby/jYj1thhsGs0LCLIeVuoPl+dgLSSIRw/Kp
-x6w7SfRYD51vyGmPHjeRYTpg2c3coqDGwbYXhYMmkp0mMglTmY55QbROnHoN9Ux1
-mqAVaXZW2q09ftC1OIbvMx/LiNUYzzlLJMw4Unr+S+gJ3KxSOrvUGLQUR9NAfN7b
-1qv6trROOE/fzVq5k8qvcRoKv9A5/L3mmoZ8MgP25t4XgLyopP553uvnHzbU9+O2
-TCrUxoeaUvkfPd/BDIqOJz03PrlpNkxl4kT0PHaAeHV1Pen3nnBc3356zUCctypL
-Cg5cJusE4wT//ehSPdoFicvOUx2UeZ284LKKlSt6Slm52raOVA5ns/J+nEJuml8i
-fr7SykL7kkqpGQ4bN+fX658wxMW3yQb+/Tp7xsDZ/UJf+G2hCjS6ct4PbfB3Lvfx
-995A1Awpgq4/zAFDX/z49fPK2ClbMrI2kx+eIrHOFIt5oEqwWAm+Fa7wqH50br37
-4bS+j6sB+S8Ff9+9Pv6S/y5vocW2K55twJwvbPJCobfSzs721D0=
-=6XcU
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrfGukACgkQ0rTAlCFN
+r3TUQhAAl9TdM3aK2eT+CyAkBdIJDTJwLFd7ecZi8f7ZRUENxH1ogWlToPKCvg76
+yIFqPlLd9ISJa7stJFsQzlVrBZIHBFCWaS3ZQg8NKJxtFQGo/gPF+WHwfbqCDO8l
+uTwQB9374kQYsb0z5qcCslT2I67MTakQMM4vyZVc0H1gDQmYXmwbtsIDfiOx543k
+Mlc5YxQ+3BSw23bW6CIB1YnLx72LIyPJn2tii6bNwobcp03l739igisr2qbwzJlw
+jcD5hEELjkeey9R6Jp8HDxg55nsU9ab1LGVVFRRoMS+ixirrnZ41KoUbtfAS5Kiz
+kPfxBpbw9FMp/zo16cSaPUgeRIoB56aL50rYjuRpPHr6pF+pL+CQqsAjox49fz19
+wuD2YfaqHj5wd/4BYDvPqMg/pnd6pdSJuHAKrfOFWJo8VT7nY5eVYF6elAe8UsJE
+/IPgnv7dl2AfMRBkvb6lDik82iaKoOirlgO4VeDvd2TfQUrM6+q2JD1PH+oKjT21
+wMgUwgzK6YMLx5JV6x3mcI4XcML9FFVd6zjbcP+hSXv4DykONhUeAsUSGZtzHVtn
+AWp9WOWLm3teH+7fWthY/34z1QCMOqDWxTTIRVDSWEafFhGkBESAzCu4kZp8poKn
+gCJX6RCRH3iJwN39JS/7HUS4zYcBL3L/PmRKw38BXm0alVQcZbk=
+=Q8X6
 -----END PGP SIGNATURE-----
 
---h55geail6mxujuov--
+--dzgf7d4p5vzbjttm--
+
+
+--===============9164255474367297455==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============9164255474367297455==--
