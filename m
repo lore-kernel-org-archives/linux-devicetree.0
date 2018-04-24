@@ -1,50 +1,32 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v5 01/23] soc: qcom dt-bindings: Add APR
-	bus bindings
-Date: Tue, 24 Apr 2018 16:59:07 +0100
-Message-ID: <0cb15e17-7169-cfee-c444-d14743797ed3@linaro.org>
-References: <20180418153157.1960-1-srinivas.kandagatla@linaro.org>
- <20180418153157.1960-2-srinivas.kandagatla@linaro.org>
- <20180424155226.fo6rgdea4kmqqjdy@rob-hp-laptop>
- <20180424155739.GC22073@sirena.org.uk>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v3 03/10] drivers/peci: Add support for PECI bus driver
+ core
+Date: Tue, 24 Apr 2018 19:01:57 +0300
+Message-ID: <1524585717.21176.504.camel@linux.intel.com>
+References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
+         <20180410183212.16787-4-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180424155739.GC22073@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, spatakok@qti.qualcomm.com, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, andy.gross@linaro.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180410183212.16787-4-jae.hyun.yoo@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van.o>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2018-04-10 at 11:32 -0700, Jae Hyun Yoo wrote:
+> This commit adds driver implementation for PECI bus core into linux
+> driver framework.
+> 
 
+All comments you got for patch 6 are applicable here.
 
-On 24/04/18 16:57, Mark Brown wrote:
-> On Tue, Apr 24, 2018 at 10:52:26AM -0500, Rob Herring wrote:
->> On Wed, Apr 18, 2018 at 04:31:35PM +0100, srinivas.kandagatla@linaro.org wrote:
->>> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> 
->>> This patch add dt bindings for Qualcomm APR (Asynchronous Packet Router)
->>> bus driver. This bus is used for communicating with DSP which provides
->>> audio and various other services to cpu.
-> 
->> This should probably go under bindings/sound/ as it is at least mostly
->> sound related.
-> 
-> AIUI the same interface is used for other DSP functionality - they're
-> upstreaming audio stuff right now but I believe there should be more to
-> come.
-> 
-That's correct, this is not just for audio, APR is used for other dsp 
-services too.
+And perhaps in the rest of the series.
 
---srini
+The rule of thumb: when you get even single comment in a certain place,
+re-check _entire_ series for the same / similar patterns!
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
