@@ -1,74 +1,43 @@
-From: Jan Kiszka <jan.kiszka@siemens.com>
-Subject: Re: [PATCH] of: overlay: Stop leaking resources on overlay removal
-Date: Tue, 24 Apr 2018 19:50:27 +0200
-Message-ID: <90e7da9d-d40a-17f1-e627-873f58a3dce5@siemens.com>
-References: <097f1b01-6cb4-8dcb-0498-7b4c59a7ea53@siemens.com>
- <7aca82c1-a02c-2f84-bc32-6e8a118ba601@gmail.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 0/7] gnss: add new GNSS subsystem
+Date: Tue, 24 Apr 2018 19:50:50 +0200
+Message-ID: <20180424175050.GG4615@localhost>
+References: <20180424163458.11947-1-johan@kernel.org>
+ <31CF06C6-D6ED-4930-8D81-12256A518059@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7aca82c1-a02c-2f84-bc32-6e8a118ba601@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <31CF06C6-D6ED-4930-8D81-12256A518059@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alan Tull <atull@kernel.org>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-24 19:44, Frank Rowand wrote:
-> On 04/24/18 09:19, Jan Kiszka wrote:
->> Only the overlay notifier callbacks have a chance to potentially get
->> hold of references to those two resources, but they do not store them.
->> So it is safe to stop the intentional leaking.
->>
->> See also https://lkml.org/lkml/2018/4/23/1063 and following.
->>
->> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
->> ---
->>
->> Ideally, we sort out any remaining worries during the 4.17-rc cycle.
->>
->>  drivers/of/overlay.c | 13 ++-----------
->>  1 file changed, 2 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
->> index b35fe88f1851..3553f1f57a62 100644
->> --- a/drivers/of/overlay.c
->> +++ b/drivers/of/overlay.c
->> @@ -671,17 +671,8 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
->>  		of_node_put(ovcs->fragments[i].overlay);
->>  	}
->>  	kfree(ovcs->fragments);
->> -
->> -	/*
->> -	 * TODO
->> -	 *
->> -	 * would like to: kfree(ovcs->overlay_tree);
->> -	 * but can not since drivers may have pointers into this data
->> -	 *
->> -	 * would like to: kfree(ovcs->fdt);
->> -	 * but can not since drivers may have pointers into this data
->> -	 */
->> -
->> +	kfree(ovcs->overlay_tree);
->> +	kfree(ovcs->fdt);
->>  	kfree(ovcs);
->>  }
->>  
->>
+On Tue, Apr 24, 2018 at 07:40:00PM +0200, H. Nikolaus Schaller wrote:
+> Hi Johan,
 > 
-> Nack.  It is premature to submit this while the conversation is
-> continuing in the other thread.
+> > Am 24.04.2018 um 18:34 schrieb Johan Hovold <johan@kernel.org>:
+
+> > As proof-of-concept I have implemented drivers for receivers based on
+> > two common GNSS chipsets (SiRFstar and u-blox), but due to lack of
+> > hardware these have so far only been tested using mockup devices and a
+> > USB-serial-based GPS device (using out-of-tree code). [ Let me know if
+> > you've got any evalutation kits to spare. ]
 > 
-> I'll continue the conversation in the other thread.
+> Ok, those drivers look nice on first glance.
 > 
+> BTW: I have refactored our w2sg00x4 driver into a gps-core (still creating
+> a /dev/GPS0) and a driver using a common API.
+> 
+> With that it should almost fit by coping some lines from your serdev based
+> device drivers.
 
-Well, at least the strongest argument has been resolved now, the
-notifier topic. Curious to learn what remains. As I noted, we should
-work hard to sort out the API regression prior to the release.
+I think it should be done the other way round (if I understand you
+correctly), that is, by adding support for configurations were WAKEUP is
+left not connected to the sirf driver instead. I had that use-case in
+mind when implementing the driver, and some ideas of how it should be
+done, but did not get around to actually implement it yet.
 
-Jan
-
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+Thanks,
+Johan
