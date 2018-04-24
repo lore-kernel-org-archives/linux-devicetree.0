@@ -1,77 +1,42 @@
-From: "Jingoo Han" <jingoohan1@gmail.com>
-Subject: Re: [PATCH v7 6/9] PCI: dwc: Define maximum number of vectors
-Date: Tue, 24 Apr 2018 10:39:20 -0400
-Message-ID: <000001d3dbda$0a135930$1e3a0b90$@gmail.com>
-References: <cover.1524577064.git.gustavo.pimentel@synopsys.com> <6b2c7ec1835cf422af5703aa14c99dbad8c6ffb8.1524577064.git.gustavo.pimentel@synopsys.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 3/4] clk: mediatek: add g3dsys support for MT2701 and
+ MT7623
+Date: Tue, 24 Apr 2018 09:40:09 -0500
+Message-ID: <20180424144009.b66sxo3okjvsr4yc@rob-hp-laptop>
+References: <cover.1524044917.git.sean.wang@mediatek.com>
+ <96dc02879c10388c2efa08b1cf33b77f938908ee.1524044917.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6b2c7ec1835cf422af5703aa14c99dbad8c6ffb8.1524577064.git.gustavo.pimentel@synopsys.com>
-Content-Language: en-us
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Gustavo Pimentel' <gustavo.pimentel@synopsys.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <96dc02879c10388c2efa08b1cf33b77f938908ee.1524044917.git.sean.wang@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: sean.wang@mediatek.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, April 24, 2018 9:45 AM, Gustavo Pimentel wrote:
-> 
-> Adds a callback that defines the maximum number of vectors that can be use
-> by the Root Complex.
-> 
-> Since this is a parameter associated to each SoC IP setting, makes sense
-> to
-> be configurable and easily visible to future modifications.
-> 
-> The designware IP supports a maximum of 256 vectors.
-> 
-> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Acked-by: Joao Pinto <jpinto@synopsys.com>
-
-Acked-by: Jingoo Han <jingoohan1@gmail.com>
-
-Best regards,
-Jingoo Han
-
-
-> ---
-> Change v1->v2:
->  - Nothing changed, just to follow the patch set version.
-> Change v2->v3:
->  - Nothing changed, just to follow the patch set version.
-> Changes v3->v4:
->  - Nothing changed, just to follow the patch set version.
-> Changes v4->v5:
->  - Nothing changed, just to follow the patch set version.
-> Changes v5->v6:
->  - Nothing changed, just to follow the patch set version.
-> Changes v6->v7:
->  - Nothing changed, just to follow the patch set version.
-> 
->  drivers/pci/dwc/pcie-designware-plat.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/pci/dwc/pcie-designware-plat.c
-> b/drivers/pci/dwc/pcie-designware-plat.c
-> index efc315c..5937fed 100644
-> --- a/drivers/pci/dwc/pcie-designware-plat.c
-> +++ b/drivers/pci/dwc/pcie-designware-plat.c
-> @@ -48,8 +48,14 @@ static int dw_plat_pcie_host_init(struct pcie_port *pp)
->  	return 0;
->  }
-> 
-> +static void dw_plat_set_num_vectors(struct pcie_port *pp)
-> +{
-> +	pp->num_vectors = MAX_MSI_IRQS;
-> +}
-> +
->  static const struct dw_pcie_host_ops dw_plat_pcie_host_ops = {
->  	.host_init = dw_plat_pcie_host_init,
-> +	.set_num_vectors = dw_plat_set_num_vectors,
->  };
-> 
->  static int dw_plat_pcie_establish_link(struct dw_pcie *pci)
-> --
-> 2.7.4
-> 
+T24gV2VkLCBBcHIgMTgsIDIwMTggYXQgMDY6MjQ6NTVQTSArMDgwMCwgc2Vhbi53YW5nQG1lZGlh
+dGVrLmNvbSB3cm90ZToKPiBGcm9tOiBTZWFuIFdhbmcgPHNlYW4ud2FuZ0BtZWRpYXRlay5jb20+
+Cj4gCj4gQWRkIGNsb2NrIGRyaXZlciBzdXBwb3J0IGZvciBnM2RzeXMgb24gTVQyNzAxIGFuZCBN
+VDc2MjMsIHdoaWNoIGlzCj4gcHJvdmlkaW5nIGVzc2VudGlhbCBjbG9jayBnYXRlIGFuZCByZXNl
+dCBjb250cm9sbGVyIHRvIE1hbGktNDUwLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFNlYW4gV2FuZyA8
+c2Vhbi53YW5nQG1lZGlhdGVrLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9jbGsvbWVkaWF0ZWsvS2Nv
+bmZpZyAgICAgICAgICAgICAgfCAgNiArKwo+ICBkcml2ZXJzL2Nsay9tZWRpYXRlay9NYWtlZmls
+ZSAgICAgICAgICAgICB8ICAxICsKPiAgZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10MjcwMS1n
+M2QuYyAgICAgfCA5NSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCgo+ICBpbmNsdWRl
+L2R0LWJpbmRpbmdzL2Nsb2NrL210MjcwMS1jbGsuaCAgICB8ICA0ICsrCj4gIGluY2x1ZGUvZHQt
+YmluZGluZ3MvcmVzZXQvbXQyNzAxLXJlc2V0cy5oIHwgIDMgKwoKVGhlc2UgYmVsb3cgaW4gdGhl
+IGJpbmRpbmcgcGF0Y2guCgo+ICA1IGZpbGVzIGNoYW5nZWQsIDEwOSBpbnNlcnRpb25zKCspCj4g
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQyNzAxLWczZC5j
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
