@@ -1,29 +1,22 @@
-Return-Path: <SRS0=UQVZ=HG=ragnatech.se=niklas.soderlund@kernel.org>
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Subject: [PATCH 0/2] thermal: rcar_gen3_thermal: add r8a77965 support
-Date: Tue, 17 Apr 2018 23:00:43 +0200
-Message-Id: <20180417210045.15798-1-niklas.soderlund@ragnatech.se>
+Return-Path: <SRS0=akpW=HN=verge.net.au=horms@kernel.org>
+Date: Tue, 24 Apr 2018 11:34:22 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/2] ARM: dts: r8a77470: Add SCIF DMA support
+Message-ID: <20180424093421.3ywtieymclehyx26@verge.net.au>
+References: <1524560164-30040-1-git-send-email-biju.das@bp.renesas.com>
+ <1524560164-30040-3-git-send-email-biju.das@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Rob Herring <robh+dt@kernel.org>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1524560164-30040-3-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+On Tue, Apr 24, 2018 at 09:56:04AM +0100, Biju Das wrote:
+> Add SCIF DMA support for R8A77470 SoC.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Hi,
-
-This series adds DT documentation and driver support to the 
-rcar-gen3-thermal driver for r8a77965.
-
-Niklas Söderlund (2):
-  dt-bindings: thermal: rcar-gen3-thermal: add r8a77965
-  thermal: rcar_gen3_thermal: add r8a77965 support
-
- .../devicetree/bindings/thermal/rcar-gen3-thermal.txt          | 3 ++-
- drivers/thermal/rcar_gen3_thermal.c                            | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
--- 
-2.17.0
+Thanks, applied.
