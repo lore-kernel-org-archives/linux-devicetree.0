@@ -1,75 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH net-next 1/3] net: phy: Add binding for vendor specific
- C45 MDIO address space
-Date: Tue, 24 Apr 2018 08:14:44 -0500
-Message-ID: <20180424131444.qqcizi2kkz6t4rtz@rob-hp-laptop>
-References: <20180417090233.21548-1-vicentiu.galanopulo@nxp.com>
- <20180417090233.21548-2-vicentiu.galanopulo@nxp.com>
- <bc00cc86-2293-0fd2-4e98-c516f59f97ce@gmail.com>
- <20180417182741.GC6688@lunn.ch>
- <3966b12c-5764-d19c-a14d-4618bf039ee5@gmail.com>
+Subject: Re: [PATCH v2] doc: usb: ci-hdrc-usb2: Add property "mux-controls"
+Date: Tue, 24 Apr 2018 08:59:32 -0500
+Message-ID: <20180424135932.hsua6kjas5b5drdy@rob-hp-laptop>
+References: <1523973206-2165-1-git-send-email-yossim@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3966b12c-5764-d19c-a14d-4618bf039ee5@gmail.com>
+In-Reply-To: <1523973206-2165-1-git-send-email-yossim@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, vicentiu.galanopulo@nxp.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, davem@davemloft.net, marcel@holtmann.org, devicetree@vger.kernel.org, alexandru.marginean@nxp.com, madalin.bucur@nxp.com
+To: Yossi Mansharoff <yossim@codeaurora.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, swboyd@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 17, 2018 at 11:29:27AM -0700, Florian Fainelli wrote:
-> On 04/17/2018 11:27 AM, Andrew Lunn wrote:
-> > On Tue, Apr 17, 2018 at 11:18:20AM -0700, Florian Fainelli wrote:
-> >> On 04/17/2018 02:02 AM, Vicentiu Galanopulo wrote:
-> >>> The extra property enables the discovery on the MDIO bus
-> >>> of the PHYs which have a vendor specific address space
-> >>> for accessing the C45 MDIO registers.
-> >>>
-> >>> Signed-off-by: Vicentiu Galanopulo <vicentiu.galanopulo@nxp.com>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/net/phy.txt | 6 ++++++
-> >>>  1 file changed, 6 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
-> >>> index d2169a5..82692e2 100644
-> >>> --- a/Documentation/devicetree/bindings/net/phy.txt
-> >>> +++ b/Documentation/devicetree/bindings/net/phy.txt
-> >>> @@ -61,6 +61,11 @@ Optional Properties:
-> >>>  - reset-deassert-us: Delay after the reset was deasserted in microseconds.
-> >>>    If this property is missing the delay will be skipped.
-> >>>  
-> >>> +- dev-addr: If set, it indicates the device address of the PHY to be used
-> >>> +  when accessing the C45 PHY registers over MDIO. It is used for vendor specific
-> >>> +  register space addresses that do no conform to standard address for the MDIO
-> >>> +  registers (e.g. MMD30)
-> >>
-> >> Rob made that comment earlier, and I have to ask again now, why don't we
-> >> have the Clause 45 PHY binding be modified such that you have a reg
-> >> property that has #address-size = 2? This should be entirely backwards
-> >> compatible, but it would allow you to specify that device address in a
-> >> more traditional way.
+On Tue, Apr 17, 2018 at 04:53:25PM +0300, Yossi Mansharoff wrote:
+> The chipidea usb controller may be connected, in some platforms,
+> to an external mux to toggle between different usb ports for
+> different roles (host and device).
+> 
+> The mux-controller property, if set, binds the chipidea usb
+> controller with a mux for this use.
+> 
+> Signed-off-by: Yossi Mansharoff <yossim@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-#address-size is not a valid property. I think #address-cells is what 
-was meant here. However, the statement is still not right either. The 
-number of cells is how many cells to encode an address, not how many 
-addresses you have.
-
-> > 
-> > Hi Florian
-> > 
-> > I think we might get into trouble when we have both c22 and c45 on the
-> > same bus. Two different reg formats. I would have to try it and see to
-> > be sure.
->
-> Hum indeed, we would no longer be able to mix and match on the same MDIO
-> bus, unless we give C22 PHYs a "fake" second cell. Disregard that idea
-> then, and let's stick with 'dev-addr'.
-
-The format would be the same (1 cell for an address), you'd just have 1 
-address for c22 and 2 addresses for c45 devices which is perfectly fine.
-
-However, as I mentioned on the previous version, I'm okay with dev-addr 
-given it seems to be a quirk that isn't always needed.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
