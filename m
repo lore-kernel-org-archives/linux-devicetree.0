@@ -1,89 +1,91 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v4 7/8] drm/i2c: tda998x: register as a drm bridge
-Date: Tue, 24 Apr 2018 09:08:33 +0100
-Message-ID: <20180424080833.GJ16141@n2100.armlinux.org.uk>
-References: <20180423072301.11962-1-peda@axentia.se>
- <20180423072301.11962-8-peda@axentia.se>
- <20180423160833.GF16141@n2100.armlinux.org.uk>
- <5d6866d0-75bc-4de8-9b87-4fee5430e9dd@axentia.se>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v10 04/10] ARM: dts: r7s72100: Add Capture Engine Unit
+ (CEU)
+Date: Tue, 24 Apr 2018 10:23:56 +0200
+Message-ID: <20180424082355.y2cnfkqa7bj4fpy4@verge.net.au>
+References: <1519235284-32286-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1519235284-32286-5-git-send-email-jacopo+renesas@jmondi.org>
+ <20180221182918.fbxnhdl4r4y3ejfj@verge.net.au>
+ <20180423152143.GH3999@w540>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5d6866d0-75bc-4de8-9b87-4fee5430e9dd@axentia.se>
+In-Reply-To: <20180423152143.GH3999@w540>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 24, 2018 at 08:58:42AM +0200, Peter Rosin wrote:
-> On 2018-04-23 18:08, Russell King - ARM Linux wrote:
-> > On Mon, Apr 23, 2018 at 09:23:00AM +0200, Peter Rosin wrote:
-> >>  static int tda998x_remove(struct i2c_client *client)
-> >>  {
-> >> -	component_del(&client->dev, &tda998x_ops);
-> >> +	struct device *dev = &client->dev;
-> >> +	struct tda998x_bridge *bridge = dev_get_drvdata(dev);
-> >> +
-> >> +	drm_bridge_remove(&bridge->bridge);
-> >> +	component_del(dev, &tda998x_ops);
-> >> +
-> > 
-> > I'd like to ask a rather fundamental question about DRM bridge support,
-> > because I suspect that there's a major fsckup here.
-> > 
-> > The above is the function that deals with the TDA998x device being
-> > unbound from the driver.  With the component API, this results in the
-> > DRM device correctly being torn down, because one of the hardware
-> > devices has gone.
-> > 
-> > With DRM bridge, the bridge is merely removed from the list of
-> > bridges:
-> > 
-> > void drm_bridge_remove(struct drm_bridge *bridge)
-> > {
-> >         mutex_lock(&bridge_lock);
-> >         list_del_init(&bridge->list);
-> >         mutex_unlock(&bridge_lock);
-> > }
-> > EXPORT_SYMBOL(drm_bridge_remove);
-> > 
-> > and the memory backing the "struct tda998x_bridge" (which contains
-> > the struct drm_bridge) will be freed by the devm subsystem.
-> > 
-> > However, there is no notification into the rest of the DRM subsystem
-> > that the device has gone away.  Worse, the memory that is still in
-> > use by DRM has now been freed, so further use of the DRM device
-> > results in a use-after-free bug.
-> > 
-> > This is really not good, and to me looks like a fundamental problem
-> > with the DRM bridge code.  I see nothing in the DRM bridge code that
-> > deals with the lifetime of a "DRM bridge" or indeed the lifetime of
-> > the actual device itself.
-> > 
-> > So, from what I can see, there seems to be a fundamental lifetime
-> > issue with the design of the DRM bridge code.  This needs to be
-> > fixed.
+On Mon, Apr 23, 2018 at 05:21:43PM +0200, jacopo mondi wrote:
+> Hi Simon,
 > 
-> Oh crap. A gigantic can of worms...
+> On Wed, Feb 21, 2018 at 07:29:18PM +0100, Simon Horman wrote:
+> > On Wed, Feb 21, 2018 at 06:47:58PM +0100, Jacopo Mondi wrote:
+> > > Add Capture Engine Unit (CEU) node to device tree.
+> > >
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> >
+> > This patch depends on the binding for "renesas,r7s72100-ceu".
+> > Please repost or otherwise ping me once that dependency has been accepted.
+> 
+> Bindings for the CEU interface went in v4.17-rc1.
+> 
+> Could you please resurect this patch?
 
-Yes, it's especially annoying for me, having put the effort in to
-the component helper to cover all these cases.
+Sure, I took the liberty of "rebasing" it to preserve the new node-order
+of r7s72100.dtsi. The result is as follows:
 
-> Would a patch (completely untested btw) along this line of thinking make
-> any difference whatsoever?
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH] ARM: dts: r7s72100: Add Capture Engine Unit (CEU)
 
-It looks interesting - from what I can see of the device links code,
-it would have the effect of unbinding the DRM device just before
-TDA998x is unbound, so that's an improvement.
+Add Capture Engine Unit (CEU) node to device tree.
 
-However, from what I can see, the link vanishes at that point (as
-DL_FLAG_AUTOREMOVE is set), and re-binding the TDA998x device results
-in nothing further happening - the link will be recreated, but there
-appears to be nothing that triggers the "consumer" to rebind at that
-point.  Maybe I've missed something?
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+[simon: rebased]
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ arch/arm/boot/dts/r7s72100.dtsi | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index ecf9516bcda8..4a1aade0e751 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -375,6 +375,15 @@
+ 			status = "disabled";
+ 		};
+ 
++		ceu: camera@e8210000 {
++			reg = <0xe8210000 0x3000>;
++			compatible = "renesas,r7s72100-ceu";
++			interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&mstp6_clks R7S72100_CLK_CEU>;
++			power-domains = <&cpg_clocks>;
++			status = "disabled";
++		};
++
+ 		wdt: watchdog@fcfe0000 {
+ 			compatible = "renesas,r7s72100-wdt", "renesas,rza-wdt";
+ 			reg = <0xfcfe0000 0x6>;
+@@ -429,9 +438,9 @@
+ 			#clock-cells = <1>;
+ 			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
+ 			reg = <0xfcfe042c 4>;
+-			clocks = <&p0_clk>;
+-			clock-indices = <R7S72100_CLK_RTC>;
+-			clock-output-names = "rtc";
++			clocks = <&b_clk>, <&p0_clk>;
++			clock-indices = <R7S72100_CLK_CEU R7S72100_CLK_RTC>;
++			clock-output-names = "ceu", "rtc";
+ 		};
+ 
+ 		mstp7_clks: mstp7_clks@fcfe0430 {
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+2.11.0
