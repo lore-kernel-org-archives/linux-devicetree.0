@@ -1,297 +1,149 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v2 1/5] dt-bindings: devfreq: rk3399_dmc: improve binding documentation.
-Date: Tue, 24 Apr 2018 10:37:38 +0200
-Message-ID: <20180424083742.14042-2-enric.balletbo@collabora.com>
-References: <20180424083742.14042-1-enric.balletbo@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180424083742.14042-1-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, heiko@sntech.de, linux-pm@vger.kernel.org, dbasehore@chromium.org, linux-kernel@vger.kernel.org, dianders@google.com, groeck@chromium.org, kernel@collabora.com, hl@rock-chips.com, Nick Milner <nick.milner@collabora.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Add dts file for the A20-linova1-7
+ HMI
+Date: Tue, 24 Apr 2018 10:41:37 +0200
+Message-ID: <20180424084137.7xfwji2gcibxavvt@flea>
+References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
+ <1521662593-25468-7-git-send-email-giulio.benetti@micronovasrl.com>
+ <20180322180508.my64gobhh5rc2x2m@flea>
+ <8ef3b259-03b4-6987-286e-36ff627a8b76@micronovasrl.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============0568642941=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <8ef3b259-03b4-6987-286e-36ff627a8b76@micronovasrl.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Nick Milner <nick.milner@collabora.com>
 
-There are several typos, references to non existent files, grammar and
-punctuation mistakes in the rk3399_dmc.txt binding. This patch tries
-to improve the binding documentation and fix these mistakes.
+--===============0568642941==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gdizi5czxofbgsf4"
+Content-Disposition: inline
 
-Signed-off-by: Nick Milner <nick.milner@collabora.com>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
----
 
-Changes in v2:
-- [1/6] Add Acked-by MyungJoo Ham.
-- [6/6] Removed this patch from this series.
+--gdizi5czxofbgsf4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- .../bindings/devfreq/rk3399_dmc.txt           | 207 +++++++++---------
- 1 file changed, 105 insertions(+), 102 deletions(-)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-index d6d2833482c9..d83ef821d282 100644
---- a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-+++ b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-@@ -1,155 +1,158 @@
--* Rockchip rk3399 DMC(Dynamic Memory Controller) device
-+* Rockchip rk3399 DMC (Dynamic Memory Controller) device
- 
- Required properties:
- - compatible:		 Must be "rockchip,rk3399-dmc".
- - devfreq-events:	 Node to get DDR loading, Refer to
--			 Documentation/devicetree/bindings/devfreq/
-+			 Documentation/devicetree/bindings/devfreq/event/
- 			 rockchip-dfi.txt
--- interrupts:		 The interrupt number to the CPU. The interrupt
--			 specifier format depends on the interrupt controller.
--			 It should be DCF interrupts, when DDR dvfs finish,
--			 it will happen.
-+- interrupts:		 The CPU interrupt number. The interrupt specifier
-+			 format depends on the interrupt controller.
-+			 It should be a DCF interrupt. When DDR DVFS finishes
-+			 a DCF interrupt is triggered.
- - clocks:		 Phandles for clock specified in "clock-names" property
- - clock-names :		 The name of clock used by the DFI, must be
- 			 "pclk_ddr_mon";
--- operating-points-v2:	 Refer to Documentation/devicetree/bindings/power/opp.txt
-+- operating-points-v2:	 Refer to Documentation/devicetree/bindings/opp/opp.txt
- 			 for details.
- - center-supply:	 DMC supply node.
- - status:		 Marks the node enabled/disabled.
- 
--Following properties are ddr timing:
-+Following properties relate to DDR timing:
- 
- - rockchip,dram_speed_bin :	  Value reference include/dt-bindings/clock/ddr.h,
--				  it select ddr3 cl-trp-trcd type, default value
--				  "DDR3_DEFAULT".it must selected according to
--				  "Speed Bin" in ddr3 datasheet, DO NOT use
--				  smaller "Speed Bin" than ddr3 exactly is.
--
--- rockchip,pd_idle :		  Config the PD_IDLE value, defined the power-down
--				  idle period, memories are places into power-down
--				  mode if bus is idle for PD_IDLE DFI clocks.
--
--- rockchip,sr_idle :		  Configure the SR_IDLE value, defined the
--				  selfrefresh idle period, memories are places
--				  into self-refresh mode if bus is idle for
--				  SR_IDLE*1024 DFI clocks (DFI clocks freq is
--				  half of dram's clocks), defaule value is "0".
--
--- rockchip,sr_mc_gate_idle :	  Defined the self-refresh with memory and
--				  controller clock gating idle period, memories
--				  are places into self-refresh mode and memory
--				  controller clock arg gating if bus is idle for
--				  sr_mc_gate_idle*1024 DFI clocks.
--
--- rockchip,srpd_lite_idle :	  Defined the self-refresh power down idle
--				  period, memories are places into self-refresh
--				  power down mode if bus is idle for
--				  srpd_lite_idle*1024 DFI clocks. This parameter
--				  is for LPDDR4 only.
--
--- rockchip,standby_idle :	  Defined the standby idle period, memories are
--				  places into self-refresh than controller, pi,
--				  phy and dram clock will gating if bus is idle
--				  for standby_idle * DFI clocks.
--
--- rockchip,dram_dll_disb_freq :  It's defined the DDR3 dll bypass frequency in
--				  MHz, when ddr freq less than DRAM_DLL_DISB_FREQ,
--				  ddr3 dll will bypssed note: if dll was bypassed,
--				  the odt also stop working.
--
--- rockchip,phy_dll_disb_freq :	  Defined the PHY dll bypass frequency in
--				  MHz (Mega Hz), when ddr freq less than
--				  DRAM_DLL_DISB_FREQ, phy dll will bypssed.
--				  note: phy dll and phy odt are independent.
--
--- rockchip,ddr3_odt_disb_freq :  When dram type is DDR3, this parameter defined
--				  the odt disable frequency in MHz (Mega Hz),
--				  when ddr frequency less then ddr3_odt_disb_freq,
--				  the odt on dram side and controller side are
-+				  it selects the DDR3 cl-trp-trcd type. It must be
-+				  set according to "Speed Bin" in DDR3 datasheet,
-+				  DO NOT use a smaller "Speed Bin" than specified
-+				  for the DDR3 being used.
-+
-+- rockchip,pd_idle :		  Configure the PD_IDLE value. Defines the
-+				  power-down idle period in which memories are
-+				  placed into power-down mode if bus is idle
-+				  for PD_IDLE DFI clock cycles.
-+
-+- rockchip,sr_idle :		  Configure the SR_IDLE value. Defines the
-+				  self-refresh idle period in which memories are
-+				  placed into self-refresh mode if bus is idle
-+				  for SR_IDLE * 1024 DFI clock cycles (DFI
-+				  clocks freq is half of DRAM clock), default
-+				  value is "0".
-+
-+- rockchip,sr_mc_gate_idle :	  Defines the memory self-refresh and controller
-+				  clock gating idle period. Memories are placed
-+				  into self-refresh mode and memory controller
-+				  clock arg gating started if bus is idle for
-+				  sr_mc_gate_idle*1024 DFI clock cycles.
-+
-+- rockchip,srpd_lite_idle :	  Defines the self-refresh power down idle
-+				  period in which memories are placed into
-+				  self-refresh power down mode if bus is idle
-+				  for srpd_lite_idle * 1024 DFI clock cycles.
-+				  This parameter is for LPDDR4 only.
-+
-+- rockchip,standby_idle :	  Defines the standby idle period in which
-+				  memories are placed into self-refresh mode.
-+				  The controller, pi, PHY and DRAM clock will
-+				  be gated if bus is idle for standby_idle * DFI
-+				  clock cycles.
-+
-+- rockchip,dram_dll_disb_freq :	  Defines the DDR3 DLL bypass frequency in MHz.
-+				  When DDR frequency is less than DRAM_DLL_DISB_FREQ,
-+				  DDR3 DLL will be bypassed. Note: if DLL was bypassed,
-+				  the odt will also stop working.
-+
-+- rockchip,phy_dll_disb_freq :	  Defines the PHY dll bypass frequency in
-+				  MHz (Mega Hz). When DDR frequency is less than
-+				  DRAM_DLL_DISB_FREQ, PHY DLL will be bypassed.
-+				  Note: PHY DLL and PHY ODT are independent.
-+
-+- rockchip,ddr3_odt_disb_freq :	  When the DRAM type is DDR3, this parameter defines
-+				  the ODT disable frequency in MHz (Mega Hz).
-+				  when the DDR frequency is  less then ddr3_odt_disb_freq,
-+				  the ODT on the DRAM side and controller side are
- 				  both disabled.
- 
--- rockchip,ddr3_drv :		  When dram type is DDR3, this parameter define
--				  the dram side driver stength in ohm, default
-+- rockchip,ddr3_drv :		  When the DRAM type is DDR3, this parameter defines
-+				  the DRAM side driver strength in ohms. Default
- 				  value is DDR3_DS_40ohm.
- 
--- rockchip,ddr3_odt :		  When dram type is DDR3, this parameter define
--				  the dram side ODT stength in ohm, default value
-+- rockchip,ddr3_odt :		  When the DRAM type is DDR3, this parameter defines
-+				  the DRAM side ODT strength in ohms. Default value
- 				  is DDR3_ODT_120ohm.
- 
--- rockchip,phy_ddr3_ca_drv :	  When dram type is DDR3, this parameter define
--				  the phy side CA line(incluing command line,
-+- rockchip,phy_ddr3_ca_drv :	  When the DRAM type is DDR3, this parameter defines
-+				  the phy side CA line (incluing command line,
- 				  address line and clock line) driver strength.
- 				  Default value is PHY_DRV_ODT_40.
- 
--- rockchip,phy_ddr3_dq_drv :	  When dram type is DDR3, this parameter define
--				  the phy side DQ line(incluing DQS/DQ/DM line)
--				  driver strength. default value is PHY_DRV_ODT_40.
-+- rockchip,phy_ddr3_dq_drv :	  When the DRAM type is DDR3, this parameter defines
-+				  the PHY side DQ line (including DQS/DQ/DM line)
-+				  driver strength. Default value is PHY_DRV_ODT_40.
- 
--- rockchip,phy_ddr3_odt : 	  When dram type is DDR3, this parameter define the
--				  phy side odt strength, default value is
-+- rockchip,phy_ddr3_odt : 	  When the DRAM type is DDR3, this parameter defines
-+				  the PHY side ODT strength. Default value is
- 				  PHY_DRV_ODT_240.
- 
--- rockchip,lpddr3_odt_disb_freq : When dram type is LPDDR3, this parameter defined
--				  then odt disable frequency in MHz (Mega Hz),
--				  when ddr frequency less then ddr3_odt_disb_freq,
--				  the odt on dram side and controller side are
-+- rockchip,lpddr3_odt_disb_freq : When the DRAM type is LPDDR3, this parameter defines
-+				  then ODT disable frequency in MHz (Mega Hz).
-+				  When DDR frequency is less then ddr3_odt_disb_freq,
-+				  the ODT on the DRAM side and controller side are
- 				  both disabled.
- 
--- rockchip,lpddr3_drv :	  When dram type is LPDDR3, this parameter define
--				  the dram side driver stength in ohm, default
-+- rockchip,lpddr3_drv :		  When the DRAM type is LPDDR3, this parameter defines
-+				  the DRAM side driver strength in ohms. Default
- 				  value is LP3_DS_34ohm.
- 
--- rockchip,lpddr3_odt :	  When dram type is LPDDR3, this parameter define
--				  the dram side ODT stength in ohm, default value
-+- rockchip,lpddr3_odt :		  When the DRAM type is LPDDR3, this parameter defines
-+				  the DRAM side ODT strength in ohms. Default value
- 				  is LP3_ODT_240ohm.
- 
--- rockchip,phy_lpddr3_ca_drv :	  When dram type is LPDDR3, this parameter define
--				  the phy side CA line(incluing command line,
-+- rockchip,phy_lpddr3_ca_drv :	  When the DRAM type is LPDDR3, this parameter defines
-+				  the PHY side CA line (including command line,
- 				  address line and clock line) driver strength.
--				  default value is PHY_DRV_ODT_40.
-+				  Default value is PHY_DRV_ODT_40.
- 
--- rockchip,phy_lpddr3_dq_drv :	  When dram type is LPDDR3, this parameter define
--				  the phy side DQ line(incluing DQS/DQ/DM line)
--				  driver strength. default value is
-+- rockchip,phy_lpddr3_dq_drv :	  When the DRAM type is LPDDR3, this parameter defines
-+				  the PHY side DQ line (including DQS/DQ/DM line)
-+				  driver strength. Default value is
- 				  PHY_DRV_ODT_40.
- 
- - rockchip,phy_lpddr3_odt : 	  When dram type is LPDDR3, this parameter define
- 				  the phy side odt strength, default value is
- 				  PHY_DRV_ODT_240.
- 
--- rockchip,lpddr4_odt_disb_freq : When dram type is LPDDR4, this parameter
--				  defined the odt disable frequency in
--				  MHz (Mega Hz), when ddr frequency less then
--				  ddr3_odt_disb_freq, the odt on dram side and
-+- rockchip,lpddr4_odt_disb_freq : When the DRAM type is LPDDR4, this parameter
-+				  defines the ODT disable frequency in
-+				  MHz (Mega Hz). When the DDR frequency is less then
-+				  ddr3_odt_disb_freq, the ODT on the DRAM side and
- 				  controller side are both disabled.
- 
--- rockchip,lpddr4_drv :	  When dram type is LPDDR4, this parameter define
--				  the dram side driver stength in ohm, default
-+- rockchip,lpddr4_drv :		  When the DRAM type is LPDDR4, this parameter defines
-+				  the DRAM side driver strength in ohms. Default
- 				  value is LP4_PDDS_60ohm.
- 
--- rockchip,lpddr4_dq_odt : 	  When dram type is LPDDR4, this parameter define
--				  the dram side ODT on dqs/dq line stength in ohm,
--				  default value is LP4_DQ_ODT_40ohm.
-+- rockchip,lpddr4_dq_odt : 	  When the DRAM type is LPDDR4, this parameter defines
-+				  the DRAM side ODT on DQS/DQ line strength in ohms.
-+				  Default value is LP4_DQ_ODT_40ohm.
- 
--- rockchip,lpddr4_ca_odt :	  When dram type is LPDDR4, this parameter define
--				  the dram side ODT on ca line stength in ohm,
--				  default value is LP4_CA_ODT_40ohm.
-+- rockchip,lpddr4_ca_odt :	  When the DRAM type is LPDDR4, this parameter defines
-+				  the DRAM side ODT on CA line strength in ohms.
-+				  Default value is LP4_CA_ODT_40ohm.
- 
--- rockchip,phy_lpddr4_ca_drv :	  When dram type is LPDDR4, this parameter define
--				  the phy side  CA line(incluing command address
--				  line) driver strength. default value is
-+- rockchip,phy_lpddr4_ca_drv :	  When the DRAM type is LPDDR4, this parameter defines
-+				  the PHY side CA line (including command address
-+				  line) driver strength. Default value is
- 				  PHY_DRV_ODT_40.
- 
--- rockchip,phy_lpddr4_ck_cs_drv : When dram type is LPDDR4, this parameter define
--				  the phy side clock line and cs line driver
--				  strength. default value is PHY_DRV_ODT_80.
-+- rockchip,phy_lpddr4_ck_cs_drv : When the DRAM type is LPDDR4, this parameter defines
-+				  the PHY side clock line and CS line driver
-+				  strength. Default value is PHY_DRV_ODT_80.
- 
--- rockchip,phy_lpddr4_dq_drv :	  When dram type is LPDDR4, this parameter define
--				  the phy side DQ line(incluing DQS/DQ/DM line)
--				  driver strength. default value is PHY_DRV_ODT_80.
-+- rockchip,phy_lpddr4_dq_drv :	  When the DRAM type is LPDDR4, this parameter defines
-+				  the PHY side DQ line (including DQS/DQ/DM line)
-+				  driver strength. Default value is PHY_DRV_ODT_80.
- 
--- rockchip,phy_lpddr4_odt :	  When dram type is LPDDR4, this parameter define
--				  the phy side odt strength, default value is
-+- rockchip,phy_lpddr4_odt :	  When the DRAM type is LPDDR4, this parameter defines
-+				  the PHY side ODT strength. Default value is
- 				  PHY_DRV_ODT_60.
- 
- Example:
--- 
-2.17.0
+On Mon, Apr 23, 2018 at 04:37:33PM +0200, Giulio Benetti wrote:
+> Il 22/03/2018 19:05, Maxime Ripard ha scritto:
+> > On Wed, Mar 21, 2018 at 09:03:13PM +0100, Giulio Benetti wrote:
+> > > The A20-Linova1-7 HMI, also called Q027_2_F which is printed on produ=
+ction
+> > > label, is an industrial Human Machine Interface.
+> > > It features:
+> > > - 512MB DDR RAM
+> > > - 1 Sd-card >=3D 4GB
+> > > - 1 Usb otg(programmable via software) with A-Usb Connector
+> > > - 1 Usb host
+> > > - 1 Buzzer
+> > > - 1 Input for LiPo
+> > > - 1 Relay to signal absence of power supply
+> > > - 1 External Rtc with 56 bytes of ram + CR2032 battery
+> > > - 1 7" 24-bits Tft 800x480 with PCap on
+> > > - 1 Mono audio 1-watt amplifier
+> > > - 1 RS485 port
+> > > - 1 Power On Line through +12Vdc reaching 57.600baud,
+> > >    from where it can be supplied and placed in a network of 50 units
+> > > - exposed jtag pins
+> > >=20
+> > > HMI is supplied from +12Vdc.
+> > > Ethernet is absent, so for debugging, need to enable rndis on Usb otg
+> > > port through an A-A usb cable.
+> > > It comes in different flavours for connector types and can be found w=
+ith
+> > > umounted features as requested by customers.
+> >=20
+> > So this is essentially the same board than in patch 6, but with a
+> > different screen?
+> >=20
+> > You should have a single DT then, and handle the two different panels
+> > using DT overlays.
+>=20
+> Ok for having different DT overlays.
+> But do I have to submit them as patches? Or keep them in my company's rep=
+o?
+> I ask you this because this involves sending also patches for displays
+> and other little modifications to mainline ex:
+> - rgb888 pins
+> - 2 simple-panels
+> - 1 uart iomux pins
+> etc.
+>=20
+> If I don't submit those overlays, the other patches wouldn't make sense
+> alone as I've seen, just like rgb888 pins.
+
+We don't have a repo for overlays yet
+
+> > > +&usb_otg {
+> > > +	dr_mode =3D "otg";
+> >=20
+> > You're saying that this is a USB-A connector? Then it's not OTG since
+> > it doesn't have an ID pin, this is an host.
+>=20
+> Right, with a special overlay I will activate Usb Device for RNDIS,
+> so modified as host
+
+That doesn't really make much sense. The USB OTG is wired only using a
+daughter board?
+
+
+> One last question:
+> now I have some patch already reviewed-by.
+> Do I have to re-submit entire patchset?
+
+Yes
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--gdizi5czxofbgsf4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlre7cEACgkQ0rTAlCFN
+r3RVkhAAk7jvGeipN7uTzO3GHHwIz7NmV7Dm4MuOuBcH5V+IviMUr5anTp/b8Isd
+MH2xmnHy/ZuUexS8U19mD0Tw746nRcT7hZxkbjUixJFn4EtZTf11GrFaNaYoOMoi
+H1CHLZdcKPGp4Z56v6lLIQK7RKiYnY2kYK3A25tFAv3tCFGG2PafFMesrkAHtqKg
+G3PlICbk7Ilz9FgFxRvcPlAvqRyjcuRCYuZXK+N6Lzp1e+zG8bke+63Cmmp/xTnC
+GcRdj4NbEucziVIs0oJY/k713m70rN+JVwdxyTigj7YD3QGWi55jLckAOQ0gLrTi
+cQH1yTMm68uhIDmf55llehXfeTnAzy6+lFtVvUDNJ19yw9W90M60F0SRFnFyNjqX
+EnhN0+/hbpDPTGjaXLZ4E9retaCHubiv0PjUbDr3/3yt9UcJoxO6Ez0TWpbpIhmL
+n7cqWW60qkonqA/hOK6v0vwUbya6QHLug95GtGeiN8KSqyWJ93XL6Am16AZDsPKS
+fLZ7zrupiwVHQV2xHgqFgCcSgYZvSk8nRi8DaGbMQZuHSgY+IrneMUXRy7oTt20z
+6AKe5oBhROjrEkKU8gLi+Rpcppi3xQmSbYS5uWWyCBsM8ePDIXtKqXeqZSpSdHQx
+ErVtb4C9M50uCVRGLiWxLvcVBWPdJ3M2dtAuAgxnI939bzolbyM=
+=gnYd
+-----END PGP SIGNATURE-----
+
+--gdizi5czxofbgsf4--
+
+--===============0568642941==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0568642941==--
