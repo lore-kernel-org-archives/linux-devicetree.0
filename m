@@ -1,125 +1,343 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v4 7/8] drm/i2c: tda998x: register as a drm bridge
-Date: Tue, 24 Apr 2018 08:58:42 +0200
-Message-ID: <5d6866d0-75bc-4de8-9b87-4fee5430e9dd@axentia.se>
-References: <20180423072301.11962-1-peda@axentia.se>
- <20180423072301.11962-8-peda@axentia.se>
- <20180423160833.GF16141@n2100.armlinux.org.uk>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH 5/8] media: Add LE version of RGB LVDS formats
+Date: Tue, 24 Apr 2018 09:16:22 +0200
+Message-ID: <20180424071622.GE17088@w540>
+References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1524130269-32688-6-git-send-email-jacopo+renesas@jmondi.org>
+ <1733883.PFymhGyeZa@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180423160833.GF16141@n2100.armlinux.org.uk>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============0254834895=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1733883.PFymhGyeZa@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, peda@axentia.se, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-23 18:08, Russell King - ARM Linux wrote:
-> On Mon, Apr 23, 2018 at 09:23:00AM +0200, Peter Rosin wrote:
->>  static int tda998x_remove(struct i2c_client *client)
->>  {
->> -	component_del(&client->dev, &tda998x_ops);
->> +	struct device *dev = &client->dev;
->> +	struct tda998x_bridge *bridge = dev_get_drvdata(dev);
->> +
->> +	drm_bridge_remove(&bridge->bridge);
->> +	component_del(dev, &tda998x_ops);
->> +
-> 
-> I'd like to ask a rather fundamental question about DRM bridge support,
-> because I suspect that there's a major fsckup here.
-> 
-> The above is the function that deals with the TDA998x device being
-> unbound from the driver.  With the component API, this results in the
-> DRM device correctly being torn down, because one of the hardware
-> devices has gone.
-> 
-> With DRM bridge, the bridge is merely removed from the list of
-> bridges:
-> 
-> void drm_bridge_remove(struct drm_bridge *bridge)
-> {
->         mutex_lock(&bridge_lock);
->         list_del_init(&bridge->list);
->         mutex_unlock(&bridge_lock);
-> }
-> EXPORT_SYMBOL(drm_bridge_remove);
-> 
-> and the memory backing the "struct tda998x_bridge" (which contains
-> the struct drm_bridge) will be freed by the devm subsystem.
-> 
-> However, there is no notification into the rest of the DRM subsystem
-> that the device has gone away.  Worse, the memory that is still in
-> use by DRM has now been freed, so further use of the DRM device
-> results in a use-after-free bug.
-> 
-> This is really not good, and to me looks like a fundamental problem
-> with the DRM bridge code.  I see nothing in the DRM bridge code that
-> deals with the lifetime of a "DRM bridge" or indeed the lifetime of
-> the actual device itself.
-> 
-> So, from what I can see, there seems to be a fundamental lifetime
-> issue with the design of the DRM bridge code.  This needs to be
-> fixed.
 
-Oh crap. A gigantic can of worms...
+--===============0254834895==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Lb0e7rgc7IsuDeGj"
+Content-Disposition: inline
 
-Would a patch (completely untested btw) along this line of thinking make
-any difference whatsoever?
 
-Yeah, I know, all other drm_bridges also need to fill in .owner, and
-the .of_node member could probably be ditched from struct drm_device
-etc, but this was just a quick sketch...
+--Lb0e7rgc7IsuDeGj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Cheers,
-Peter
+HI Laurent,
 
-diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-index 1638bfe9627c..3577e50cc6c0 100644
---- a/drivers/gpu/drm/drm_bridge.c
-+++ b/drivers/gpu/drm/drm_bridge.c
-@@ -138,6 +138,10 @@ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
- 	else
- 		encoder->bridge = bridge;
- 
-+	if (!device_link_add(encoder->dev->dev, bridge->owner,
-+			     DL_FLAG_AUTOREMOVE))
-+		return -EINVAL;
-+
- 	return 0;
- }
- EXPORT_SYMBOL(drm_bridge_attach);
-diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-index b8cb6237a38b..29eba4e9a39d 100644
---- a/drivers/gpu/drm/i2c/tda998x_drv.c
-+++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-@@ -1857,6 +1857,7 @@ tda998x_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	bridge->dev = dev;
- 	dev_set_drvdata(dev, bridge);
- 
-+	bridge->bridge.owner = dev;
- 	bridge->bridge.funcs = &tda998x_bridge_funcs;
- #ifdef CONFIG_OF
- 	bridge->bridge.of_node = dev->of_node;
-diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index 682d01ba920c..f0f8b2a85c28 100644
---- a/include/drm/drm_bridge.h
-+++ b/include/drm/drm_bridge.h
-@@ -224,6 +224,7 @@ struct drm_bridge_funcs {
- 
- /**
-  * struct drm_bridge - central DRM bridge control structure
-+ * @owner: device that owns the bridge
-  * @dev: DRM device this bridge belongs to
-  * @encoder: encoder to which this bridge is connected
-  * @next: the next bridge in the encoder chain
-@@ -233,6 +234,7 @@ struct drm_bridge_funcs {
-  * @driver_private: pointer to the bridge driver's internal context
-  */
- struct drm_bridge {
-+	struct device *owner;
- 	struct drm_device *dev;
- 	struct drm_encoder *encoder;
- 	struct drm_bridge *next;
+On Mon, Apr 23, 2018 at 04:06:01PM +0300, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> Thank you for the patch.
+>
+> On Thursday, 19 April 2018 12:31:06 EEST Jacopo Mondi wrote:
+> > Some LVDS controller can output swapped versions of LVDS RGB formats.
+> > Define and document them in the list of supported media bus formats
+>
+> I wouldn't introduce those new formats as we don't need them. As a general
+> rule we would like to have at least one user for any new format added to the
+> API.
+
+I was about to point you to patch [8/8], as the newly introduced
+formats allow replacing the DRM_BUS_FLAG_DATA_ flags, defined in
+drm_connector.h and which I struggled to find a more appropiate place
+where to move them. Or I either duplicate them for bridges, but I
+prefer not to, or we remove them, and defining some dedicated formats,
+seems more natural to me...
+
+I'll reply to your comment on [8/8] on the format names and other
+details.
+
+Thanks
+   j
+
+>
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  Documentation/media/uapi/v4l/subdev-formats.rst | 174 +++++++++++++++++++++
+> >  include/uapi/linux/media-bus-format.h           |   5 +-
+> >  2 files changed, 178 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/media/uapi/v4l/subdev-formats.rst
+> > b/Documentation/media/uapi/v4l/subdev-formats.rst index 9fcabe7..9a5263c
+> > 100644
+> > --- a/Documentation/media/uapi/v4l/subdev-formats.rst
+> > +++ b/Documentation/media/uapi/v4l/subdev-formats.rst
+> > @@ -1669,6 +1669,64 @@ JEIDA defined bit mapping will be named
+> >        - b\ :sub:`2`
+> >        - g\ :sub:`1`
+> >        - r\ :sub:`0`
+> > +    * .. _MEDIA-BUS-FMT-RGB666-1X7X3-SPWG_LE:
+> > +
+> > +      - MEDIA_BUS_FMT_RGB666_1X7X3_SPWG_LE
+> > +      - 0x101b
+> > +      - 0
+> > +      -
+> > +      -
+> > +      - b\ :sub:`2`
+> > +      - g\ :sub:`1`
+> > +      - r\ :sub:`0`
+> > +    * -
+> > +      -
+> > +      - 1
+> > +      -
+> > +      -
+> > +      - b\ :sub:`3`
+> > +      - g\ :sub:`2`
+> > +      - r\ :sub:`1`
+> > +    * -
+> > +      -
+> > +      - 2
+> > +      -
+> > +      -
+> > +      - b\ :sub:`4`
+> > +      - g\ :sub:`3`
+> > +      - r\ :sub:`2`
+> > +    * -
+> > +      -
+> > +      - 3
+> > +      -
+> > +      -
+> > +      - b\ :sub:`5`
+> > +      - g\ :sub:`4`
+> > +      - r\ :sub:`3`
+> > +    * -
+> > +      -
+> > +      - 4
+> > +      -
+> > +      -
+> > +      - d
+> > +      - g\ :sub:`5`
+> > +      - r\ :sub:`4`
+> > +    * -
+> > +      -
+> > +      - 5
+> > +      -
+> > +      -
+> > +      - d
+> > +      - b\ :sub:`0`
+> > +      - r\ :sub:`5`
+> > +    * -
+> > +      -
+> > +      - 6
+> > +      -
+> > +      -
+> > +      - d
+> > +      - b\ :sub:`1`
+> > +      - g\ :sub:`0`
+> >      * .. _MEDIA-BUS-FMT-RGB888-1X7X4-SPWG:
+> >
+> >        - MEDIA_BUS_FMT_RGB888_1X7X4_SPWG
+> > @@ -1727,6 +1785,64 @@ JEIDA defined bit mapping will be named
+> >        - b\ :sub:`2`
+> >        - g\ :sub:`1`
+> >        - r\ :sub:`0`
+> > +    * .. _MEDIA-BUS-FMT-RGB888-1X7X4-SPWG_LE:
+> > +
+> > +      - MEDIA_BUS_FMT_RGB888_1X7X4_SPWG_LE
+> > +      - 0x101c
+> > +      - 0
+> > +      -
+> > +      - r\ :sub:`6`
+> > +      - b\ :sub:`2`
+> > +      - g\ :sub:`1`
+> > +      - r\ :sub:`0`
+> > +    * -
+> > +      -
+> > +      - 1
+> > +      -
+> > +      - r\ :sub:`7`
+> > +      - b\ :sub:`3`
+> > +      - g\ :sub:`2`
+> > +      - r\ :sub:`1`
+> > +    * -
+> > +      -
+> > +      - 2
+> > +      -
+> > +      - g\ :sub:`6`
+> > +      - b\ :sub:`4`
+> > +      - g\ :sub:`3`
+> > +      - r\ :sub:`2`
+> > +    * -
+> > +      -
+> > +      - 3
+> > +      -
+> > +      - g\ :sub:`7`
+> > +      - b\ :sub:`5`
+> > +      - g\ :sub:`4`
+> > +      - r\ :sub:`3`
+> > +    * -
+> > +      -
+> > +      - 4
+> > +      -
+> > +      - b\ :sub:`6`
+> > +      - d
+> > +      - g\ :sub:`5`
+> > +      - r\ :sub:`4`
+> > +    * -
+> > +      -
+> > +      - 5
+> > +      -
+> > +      - b\ :sub:`7`
+> > +      - d
+> > +      - b\ :sub:`0`
+> > +      - r\ :sub:`5`
+> > +    * -
+> > +      -
+> > +      - 6
+> > +      -
+> > +      - d
+> > +      - d
+> > +      - b\ :sub:`1`
+> > +      - g\ :sub:`0`
+> >      * .. _MEDIA-BUS-FMT-RGB888-1X7X4-JEIDA:
+> >
+> >        - MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA
+> > @@ -1785,6 +1901,64 @@ JEIDA defined bit mapping will be named
+> >        - b\ :sub:`4`
+> >        - g\ :sub:`3`
+> >        - r\ :sub:`2`
+> > +    * .. _MEDIA-BUS-FMT-RGB888-1X7X4-JEIDA_LE:
+> > +
+> > +      - MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA_LE
+> > +      - 0x101d
+> > +      - 0
+> > +      -
+> > +      - r\ :sub:`0`
+> > +      - b\ :sub:`4`
+> > +      - g\ :sub:`3`
+> > +      - r\ :sub:`2`
+> > +    * -
+> > +      -
+> > +      - 1
+> > +      -
+> > +      - r\ :sub:`1`
+> > +      - b\ :sub:`5`
+> > +      - g\ :sub:`4`
+> > +      - r\ :sub:`3`
+> > +    * -
+> > +      -
+> > +      - 2
+> > +      -
+> > +      - g\ :sub:`0`
+> > +      - b\ :sub:`6`
+> > +      - g\ :sub:`5`
+> > +      - r\ :sub:`4`
+> > +    * -
+> > +      -
+> > +      - 3
+> > +      -
+> > +      - g\ :sub:`1`
+> > +      - b\ :sub:`7`
+> > +      - g\ :sub:`6`
+> > +      - r\ :sub:`5`
+> > +    * -
+> > +      -
+> > +      - 4
+> > +      -
+> > +      - b\ :sub:`0`
+> > +      - d
+> > +      - g\ :sub:`7`
+> > +      - r\ :sub:`6`
+> > +    * -
+> > +      -
+> > +      - 5
+> > +      -
+> > +      - b\ :sub:`1`
+> > +      - d
+> > +      - b\ :sub:`2`
+> > +      - r\ :sub:`7`
+> > +    * -
+> > +      -
+> > +      - 6
+> > +      -
+> > +      - d
+> > +      - d
+> > +      - b\ :sub:`3`
+> > +      - g\ :sub:`2`
+> >
+> >  .. raw:: latex
+> >
+> > diff --git a/include/uapi/linux/media-bus-format.h
+> > b/include/uapi/linux/media-bus-format.h index 9e35117..5bea7c0 100644
+> > --- a/include/uapi/linux/media-bus-format.h
+> > +++ b/include/uapi/linux/media-bus-format.h
+> > @@ -34,7 +34,7 @@
+> >
+> >  #define MEDIA_BUS_FMT_FIXED			0x0001
+> >
+> > -/* RGB - next is	0x101b */
+> > +/* RGB - next is	0x101f */
+> >  #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
+> >  #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
+> >  #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
+> > @@ -49,13 +49,16 @@
+> >  #define MEDIA_BUS_FMT_RBG888_1X24		0x100e
+> >  #define MEDIA_BUS_FMT_RGB666_1X24_CPADHI	0x1015
+> >  #define MEDIA_BUS_FMT_RGB666_1X7X3_SPWG		0x1010
+> > +#define MEDIA_BUS_FMT_RGB666_1X7X3_SPWG_LE	0x101b
+> >  #define MEDIA_BUS_FMT_BGR888_1X24		0x1013
+> >  #define MEDIA_BUS_FMT_GBR888_1X24		0x1014
+> >  #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
+> >  #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
+> >  #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
+> >  #define MEDIA_BUS_FMT_RGB888_1X7X4_SPWG		0x1011
+> > +#define MEDIA_BUS_FMT_RGB888_1X7X4_SPWG_LE	0x101c
+> >  #define MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA	0x1012
+> > +#define MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA_LE	0x101d
+> >  #define MEDIA_BUS_FMT_ARGB8888_1X32		0x100d
+> >  #define MEDIA_BUS_FMT_RGB888_1X32_PADHI		0x100f
+> >  #define MEDIA_BUS_FMT_RGB101010_1X30		0x1018
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
+>
+>
+
+--Lb0e7rgc7IsuDeGj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJa3tnGAAoJEHI0Bo8WoVY8NkUP/jbr7QVwPmgIzNo86QV+ptKD
+NvhDLZpNQSlbEYtUSPr0Eb67cF26O1U21Ezf2c0oEQc1QsrGtF5KgBqQHrlL87Yn
+ksAvgT9wZbwwR0L+MP4KO/nP+s/adiCf7/f79Okz0xWYivJ7uJv63+XImKtEW85K
+OUP7WKfnw8CjKVSwbIRmWthVl2K3NNZvrZzjfGFYwGWr9U8RmYTmRaP86Cku1UbA
+P/vCNm9fzECJXLzNsycIfLaeJ9nCtKn4wleI0+X+CXNq5LPZS8JLPnHqFzjE7eLb
+2GNNce01ZICrBn5SyjLJptk1rAq9ht7CIclkqoi7wuQKSirohyZCCtP768vh0njd
+CXDXYaPu80ZRUB0fcFcGZ6pKPMWXFnUqRvQyC3FAlXiShkX4qBNl6ghU5qI4YLk5
+4KtuDw3jALjKLiTf9wZ57Sxm0SekvjJBgzHse0++BrtkxWpgmkE+RfJBXOBC5npi
+1sU8SkZFIK1DzuMBZ/vR5MANME27p4RKn7+CTsSEEnlv4l309vzfcv86eCwS9F+a
+Xrba5tRfh+FwixDXcOxy0IDIfMCpCQBO+tYOgjEvcQW4kD/UwOLHZEHAdnZSMl8G
+ouanzzBuYhFL7Fdeq0wCsqQT45G8j6NsubR7bSAJsSC225OSVJtKPCLjTE/a9woz
+nN0j14ay7AszUdBYFUms
+=ToEU
+-----END PGP SIGNATURE-----
+
+--Lb0e7rgc7IsuDeGj--
+
+--===============0254834895==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0254834895==--
