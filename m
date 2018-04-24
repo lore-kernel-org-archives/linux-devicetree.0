@@ -1,36 +1,81 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH v3 03/10] drivers/peci: Add support for PECI bus driver
- core
-Date: Tue, 24 Apr 2018 09:29:48 -0700
-Message-ID: <af70513f-a827-9aaa-1acf-629ae1692d7c@linux.intel.com>
-References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
- <20180410183212.16787-4-jae.hyun.yoo@linux.intel.com>
- <1524585717.21176.504.camel@linux.intel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] net: phy: TLK10X initial driver submission
+Date: Tue, 24 Apr 2018 11:34:55 -0500
+Message-ID: <20180424163455.vmftcg5xbj6svtcu@rob-hp-laptop>
+References: <20180419082816.109338-1-mans.andersson@nibe.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524585717.21176.504.camel@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180419082816.109338-1-mans.andersson@nibe.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
+To: =?iso-8859-1?Q?M=E5ns?= Andersson <mans.andersson@nibe.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/24/2018 9:01 AM, Andy Shevchenko wrote:
-> On Tue, 2018-04-10 at 11:32 -0700, Jae Hyun Yoo wrote:
->> This commit adds driver implementation for PECI bus core into linux
->> driver framework.
->>
+On Thu, Apr 19, 2018 at 10:28:16AM +0200, Måns Andersson wrote:
+> From: Mans Andersson <mans.andersson@nibe.se>
 > 
-> All comments you got for patch 6 are applicable here.
+> Add suport for the TI TLK105 and TLK106 10/100Mbit ethernet phys.
 > 
-> And perhaps in the rest of the series.
+> In addition the TLK10X needs to be removed from DP83848 driver as the
+> power back off support is added here for this device.
 > 
-> The rule of thumb: when you get even single comment in a certain place,
-> re-check _entire_ series for the same / similar patterns!
-> 
+> Datasheet:
+> http://www.ti.com/lit/gpn/tlk106
+> ---
+>  .../devicetree/bindings/net/ti,tlk10x.txt          |  27 +++
 
-Thanks for your advice. I'll keep that in mind.
+Please split bindings to a separate patch.
 
-Jae
+>  drivers/net/phy/Kconfig                            |   5 +
+>  drivers/net/phy/Makefile                           |   1 +
+>  drivers/net/phy/dp83848.c                          |   3 -
+>  drivers/net/phy/tlk10x.c                           | 209 +++++++++++++++++++++
+>  5 files changed, 242 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/ti,tlk10x.txt
+>  create mode 100644 drivers/net/phy/tlk10x.c
+> 
+> diff --git a/Documentation/devicetree/bindings/net/ti,tlk10x.txt b/Documentation/devicetree/bindings/net/ti,tlk10x.txt
+> new file mode 100644
+> index 0000000..371d0d7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/ti,tlk10x.txt
+> @@ -0,0 +1,27 @@
+> +* Texas Instruments - TLK105 / TLK106 ethernet PHYs
+> +
+> +Required properties:
+> +	- reg - The ID number for the phy, usually a small integer
+
+Isn't this the MDIO bus address?
+
+This should have a compatible string too.
+
+> +
+> +Optional properties:
+> +	- ti,power-back-off - Power Back Off Level
+> +		Please refer to data sheet chapter 8.6 and TI Application
+> +		Note SLLA3228
+> +		0 - Normal Operation
+> +		1 - Level 1 (up to 140m cable between TLK link partners)
+> +		2 - Level 2 (up to 100m cable between TLK link partners)
+> +		3 - Level 3 (up to 80m cable between TLK link partners)
+> +
+> +Default child nodes are standard Ethernet PHY device
+> +nodes as described in Documentation/devicetree/bindings/net/phy.txt
+> +
+> +Example:
+> +
+> +	ethernet-phy@0 {
+> +		reg = <0>;
+> +		ti,power-back-off = <2>;
+> +	};
+> +
+> +Datasheets and documentation can be found at:
+> +http://www.ti.com/lit/gpn/tlk106
+> +http://www.ti.com/lit/an/slla328/slla328.pdf
+
+Move this to before the properties.
+
+Rob
