@@ -1,42 +1,61 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 1/7] ARM: dts: sun8i: h3: fix ALL-H3-CC H3 ver VCC-1V2 regulator voltage
-Date: Tue, 24 Apr 2018 19:34:18 +0800
-Message-ID: <20180424113424.13196-2-wens@csie.org>
+Subject: [PATCH 4/7] ARM: dts: sun8i: h2+: Add Libre Computer Board ALL-H3-CC H2+ ver.
+Date: Tue, 24 Apr 2018 19:34:21 +0800
+Message-ID: <20180424113424.13196-5-wens@csie.org>
 References: <20180424113424.13196-1-wens@csie.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180424113424.13196-1-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, stable@vger.kernel.org
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-The voltage of the VCC-1V2 regulator on the ALL-H3-CC H3 ver. should be
-1.2V, not the 3.3V currently defined in the device tree.
+This patch adds a device tree file for the H2+ version of the Libre
+Computer Board ALL-H3-CC. It is the same board first introduced in
+commit 6ca358645d4d ("ARM: dts: sun8i: h3: Add dts file for Libre
+Computer Board ALL-H3-CC H3 ver."), with the H3 SoC replaced with
+the H2+ SoC, and has only two 2Gb DDR3 chips instead of four.
 
-Fix the voltage in the device tree.
+The device tree utilizes the common board design file for ALL-H3-CC,
+providing just the model strings and SoC specifics.
 
-Fixes: 6ca358645d4d ("ARM: dts: sun8i: h3: Add dts file for Libre
-		      Computer Board ALL-H3-CC H3 ver.")
-Cc: <stable@vger.kernel.org> # 4.16.x
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/Makefile                          |  1 +
+ .../boot/dts/sun8i-h2-plus-libretech-all-h3-cc.dts  | 13 +++++++++++++
+ 2 files changed, 14 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-h2-plus-libretech-all-h3-cc.dts
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
-index 5971b8b0b768..db6b35bb65ff 100644
---- a/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
-@@ -62,8 +62,8 @@
- 	reg_vcc1v2: vcc1v2 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc1v2";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <1200000>;
-+		regulator-max-microvolt = <1200000>;
- 		regulator-always-on;
- 		regulator-boot-on;
- 		vin-supply = <&reg_vcc5v0>;
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 5c979ed6c77b..1064d3acb607 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -993,6 +993,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a83t-cubietruck-plus.dtb \
+ 	sun8i-a83t-tbs-a711.dtb \
+ 	sun8i-h2-plus-bananapi-m2-zero.dtb \
++	sun8i-h2-plus-libretech-all-h3-cc.dtb \
+ 	sun8i-h2-plus-orangepi-r1.dtb \
+ 	sun8i-h2-plus-orangepi-zero.dtb \
+ 	sun8i-h3-bananapi-m2-plus.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-h2-plus-libretech-all-h3-cc.dts b/arch/arm/boot/dts/sun8i-h2-plus-libretech-all-h3-cc.dts
+new file mode 100644
+index 000000000000..2e7e13ab7eec
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-h2-plus-libretech-all-h3-cc.dts
+@@ -0,0 +1,13 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (C) 2018 Chen-Yu Tsai <wens@csie.org>
++ */
++
++/dts-v1/;
++#include "sun8i-h3.dtsi"
++#include "sunxi-hx-libretech-all-h3-cc.dtsi"
++
++/ {
++	model = "Libre Computer Board ALL-H3-CC H2+";
++	compatible = "libretech,all-h3-cc-h2-plus", "allwinner,sun8i-h2-plus";
++};
 -- 
 2.17.0
