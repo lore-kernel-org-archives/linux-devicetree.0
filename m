@@ -1,74 +1,107 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [Patch v2 1/6] drm/omap: Add ability to filter out modes which
- can't be supported
-Date: Tue, 24 Apr 2018 22:08:29 +0300
-Message-ID: <2039005.2ZS85g3FTB@avalon>
-References: <20180326162128.8740-1-bparrot@ti.com> <1527419.mcdjVnGTTs@avalon>
- <f8e60ec4-20ec-4b7d-f102-bc9d7d50e37a@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2] arm64: dts: renesas: condor: add eMMC support
+Date: Tue, 24 Apr 2018 22:25:24 +0300
+Message-ID: <bfa0f1e9-f6e1-c4e2-9c9a-0d25d7f56ad1@cogentembedded.com>
+References: <611daf1f-42a2-d463-0814-ebf762871018@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <f8e60ec4-20ec-4b7d-f102-bc9d7d50e37a@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, Peter Ujfalusi <peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <611daf1f-42a2-d463-0814-ebf762871018@cogentembedded.com>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVG9taSwKCk9uIFRodXJzZGF5LCA1IEFwcmlsIDIwMTggMTM6MjE6MzAgRUVTVCBUb21pIFZh
-bGtlaW5lbiB3cm90ZToKPiBPbiAwNC8wNC8xOCAxNzoyMywgTGF1cmVudCBQaW5jaGFydCB3cm90
-ZToKPiA+Pj4+ICsJV0FSTihvdXRfd2lkdGggPiBkaXNwYy5mZWF0LT5vdmxfd2lkdGhfbWF4LAo+
-ID4+Pj4gKwkgICAgICJSZXF1ZXN0ZWQgT1ZMIHdpZHRoICglZCkgaXMgbGFyZ2VyIHRoYW4gY2Fu
-IGJlIHN1cHBvcnRlZAo+ID4+Pj4gKCVkKS5cbiIsCj4gPj4+PiArCSAgICAgb3V0X3dpZHRoLCBk
-aXNwYy5mZWF0LT5vdmxfd2lkdGhfbWF4KTsKPiA+Pj4gCj4gPj4+IFdoeSBkb24ndCB5b3UgcmV0
-dXJuIGFuIGVycm9yIGhlcmU/IEkgZG9uJ3Qgc2VlIGEgbmVlZCBmb3IgV0FSTiBoZXJlLgo+ID4+
-IAo+ID4+IFNvIGhlcmUgeW91IG1lYW4gcmVwbGFjZSB0aGUgV0FSTiB3aXRoIHNvbWV0aGluZyBs
-aWtlIHRoaXM6Cj4gPj4gCWlmIChvdXRfd2lkdGggPiBkaXNwYy5mZWF0LT5vdmxfd2lkdGhfbWF4
-KSB7Cj4gPj4gCQlEU1NFUlIoIlJlcXVlc3RlZCBPVkwgd2lkdGggKCVkKSBpcyBsYXJnZXIgdGhh
-biBjYW4gYmUgc3VwcG9ydGVkCj4gPj4gCQkoJWQpLlxuIiwKPiA+PiBvdXRfd2lkdGgsIGRpc3Bj
-LmZlYXQtPm92bF93aWR0aF9tYXgpOwo+ID4+ICAgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZB
-TDsKPiA+PiAJfQo+ID4gCj4gPiBDYW4gdGhpcyBoYXBwZW4gPyBJZiB3ZSByZWplY3QgaW52YWxp
-ZCBzZXR0aW5ncyBpbiBvbWFwZHJtIHdlIHNob3VsZCBuZXZlcgo+ID4gZ2V0IHRoZW0gaGVyZS4K
-PiAKPiBUaGF0J3MgdHJ1ZS4gQW5kIHdlIHNob3VsZCBjaGVjayB0aGVtIGluIHRoZSBwbGFuZSBh
-dG9taWMgY2hlY2sgKGJ1dCBkbwo+IHdlPykuCgpXZSBkb24ndCwgdGhhdCBzaG91bGQgYmUgYWRk
-ZWQuCgo+IEluIHRoYXQgY2FzZSBJIGRvbid0IG1pbmQgYSB3YXJuIHRoZXJlLCBidXQgeW91IHNo
-b3VsZCBzdGlsbCByZXR1cm4gYW4KPiBlcnJvciBpZiBpdCBoYXBwZW5zLCBpbnN0ZWFkIG9mIGNv
-bnRpbnVpbmcgd2l0aCBiYWQgY29uZmlnLgoKQnV0IHRoaXMgc2hvdWxkIHJlYWxseSBub3QgaGFw
-cGVuIGlmIHdlIGFkZCBhIGNoZWNrIHRvIHRoZSBDUlRDIAphdG9taWNfY2hlY2soKSBoYW5kbGVy
-LiBEbyB5b3UgZGlzdHJ1c3QgdGhlIERSTSBjb3JlIHRoYXQgbXVjaCA/IDotKQoKPiA+Pj4+ICsJ
-LyogQ2hlY2sgaWYgdGhlIGFkdmVydGlzZWQgd2lkdGggZXhjZWVkIHdoYXQgdGhlIHBpcGVsaW5l
-IGNhbiBkbyAqLwo+ID4+Pj4gKwlpZiAoIXIpIHsKPiA+Pj4+ICsJCXN0cnVjdCBvbWFwX2RybV9w
-cml2YXRlICpwcml2ID0gZGV2LT5kZXZfcHJpdmF0ZTsKPiA+Pj4+ICsJCXUxNiB3aWR0aCwgaGVp
-Z2h0Owo+ID4+Pj4gKwo+ID4+Pj4gKwkJcHJpdi0+ZGlzcGNfb3BzLT5vdmxfZ2V0X21heF9zaXpl
-KCZ3aWR0aCwgJmhlaWdodCk7Cj4gPj4+PiArCQlpZiAobW9kZS0+aGRpc3BsYXkgPiB3aWR0aCkK
-PiA+Pj4+ICsJCQlyID0gLUVJTlZBTDsKPiA+Pj4gCj4gPj4+IFlvdSBzaG91bGQgY2hlY2sgdGhl
-IGhlaWdodCBhbHNvLgo+ID4+IAo+ID4+IFllYWgsIEknbGwgZml4IHRoYXQuCj4gPiAKPiA+IFVu
-bGVzcyBJJ20gbWlzdGFrZW4gdGhlIHJlc3RyaWN0aW9uIGRvZXNuJ3QgY29tZSBmcm9tIHRoZSBv
-dXRwdXQgc2lkZSBvZgo+ID4gdGhlIGRpc3BsYXkgY29udHJvbGxlciBidXQgZnJvbSB0aGUgb3Zl
-cmxheXMgKHBsYW5lcyksIHJpZ2h0ID8gU2hvdWxkbid0Cj4gPiBpdCB0aGVuIGJlIGltcGxlbWVu
-dGVkIGluIHRoZSBkcm1fcGxhbmVfaGVscGVyX2Z1bmNzLmF0b21pY19jaGVjawo+ID4gb3BlcmF0
-aW9uID8KPiAKPiBZZXMsIGJ1dCBJIGRvbid0IHNvLiBJZiBvdXIgcGxhbmVzIGNhbiBzdXBwb3J0
-IHVwIHRvLCBzYXksIDEwMDAuIFRoZW4gd2UKPiBwbHVnIGluIGEgbW9uaXRvciB3aXRoIG5hdGl2
-ZSB3aWR0aCBvZiAxMTAwLCB3aGljaCBvbWFwZHJtIHdvdWxkIGFjY2VwdAo+IGhhcHBpbHkgYW5k
-IHRyeSB0byB1c2UgaXQgYnkgZGVmYXVsdC4gQnV0IHdlIGNhbid0IHNob3cgZmJkZXYgb3IgYW55
-Cj4gbm9ybWFsIHNldHVwIHRoZXJlLCBiZWNhdXNlIHRoZSBwbGFuZXMgd29uJ3Qgc3VwcG9ydCBp
-dC4gSG93IHdvdWxkIHdlCj4gbWFuYWdlIHRoYXQ/Cj4gCj4gV2hpbGUgbm90IHN0cmljdGx5IGNv
-cnJlY3QsIEkgdGhpbmsgaXQncyBmaW5lIHRvIHJlamVjdCB2aWRlb21vZGVzIHdoaWNoCj4gY2Fu
-J3QgYmUgc2hvd24gd2l0aCBhIG5vcm1hbCBmdWxsLXNjcmVlbiBwbGFuZS4KCkl0IGNvdWxkIGJl
-IGFyZ3VlZCB0aGF0IHN1Y2ggbW9kZXMgd291bGQgc3RpbGwgYmUgdXNlZnVsIGV2ZW4gaWYgcGxh
-bmVzIGNhbid0IApiZSBzaG93biBmdWxsLXNjcmVlbiwgb3IgdGhhdCB0d28gcGxhbmVzIGNvdWxk
-IGJlIHVzZWQgc2lkZSBieSBzaWRlIHRvIGFjaGlldmUgCmEgbGFyZ2VyIGZ1bGwtc2NyZWVuIGRp
-c3BsYXkgdGhhbiB3aGF0IHdvdWxkIGJlIHBvc3NpYmxlIHdpdGggYSBzaW5nbGUgcGxhbmUuIApJ
-J2xsIGxlYXZlIGl0IHVwIHRvIHlvdSB0byBkZWNpZGUgd2hldGhlciB3ZSBzaG91bGQgc3VwcG9y
-dCBzdWNoIHVzZSBjYXNlcy4KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Define the Condor board dependent part of the MMC0 (connected to eMMC chip)
+device node along with the necessary voltage regulators...
+
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+---
+This patch is against the 'renesas-devel-20180424-v4.17-rc2' tag of Simon
+Horman's 'renesas.git' repo.
+
+Changes in version 2:
+- renamed the pin groups and their labels, alos changing their order;
+- reordered this patch before the PCIe patch.
+
+ arch/arm64/boot/dts/renesas/r8a77980-condor.dts |   43 ++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
++++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+@@ -27,6 +27,24 @@
+ 		/* first 128MB is reserved for secure area. */
+ 		reg = <0 0x48000000 0 0x78000000>;
+ 	};
++
++	d3_3v: regulator-0 {
++		compatible = "regulator-fixed";
++		regulator-name = "D3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	vddq_vin01: regulator-1 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDQ_VIN01";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
+ };
+ 
+ &avb {
+@@ -52,12 +70,37 @@
+ 	clock-frequency = <32768>;
+ };
+ 
++&mmc0 {
++	pinctrl-0 = <&mmc_pins>;
++	pinctrl-1 = <&mmc_pins_uhs>;
++	pinctrl-names = "default", "state_uhs";
++
++	vmmc-supply = <&d3_3v>;
++	vqmmc-supply = <&vddq_vin01>;
++	mmc-hs200-1_8v;
++	bus-width = <8>;
++	non-removable;
++	status = "okay";
++};
++
+ &pfc {
+ 	avb_pins: avb {
+ 		groups = "avb_mdio", "avb_rgmii";
+ 		function = "avb";
+ 	};
+ 
++	mmc_pins: mmc {
++		groups = "mmc_data8", "mmc_ctrl", "mmc_ds";
++		function = "mmc";
++		power-source = <3300>;
++	};
++
++	mmc_pins_uhs: mmc_uhs {
++		groups = "mmc_data8", "mmc_ctrl", "mmc_ds";
++		function = "mmc";
++		power-source = <1800>;
++	};
++
+ 	scif0_pins: scif0 {
+ 		groups = "scif0_data";
+ 		function = "scif0";
