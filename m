@@ -1,132 +1,494 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v10 04/10] ARM: dts: r7s72100: Add Capture Engine Unit
- (CEU)
-Date: Tue, 24 Apr 2018 10:31:11 +0200
-Message-ID: <20180424083111.GG17088@w540>
-References: <1519235284-32286-1-git-send-email-jacopo+renesas@jmondi.org>
- <1519235284-32286-5-git-send-email-jacopo+renesas@jmondi.org>
- <20180221182918.fbxnhdl4r4y3ejfj@verge.net.au>
- <20180423152143.GH3999@w540>
- <20180424082355.y2cnfkqa7bj4fpy4@verge.net.au>
+From: =?iso-8859-1?Q?T=FCrk=2C_Jan?= <Jan.Tuerk@emtrion.de>
+Subject: AW: [PATCH v3 5/6] ARM: dts: Add support for emtrion emCON-MX6
+ series
+Date: Tue, 24 Apr 2018 10:32:07 +0200
+Message-ID: <95F51F4B902CAC40AF459205F6322F01B83109E5B1@BMK019S01.emtrion.local>
+References: <20171220134710.64479-2-jan.tuerk@emtrion.com>
+ <20180420125108.14197-1-jan.tuerk@emtrion.com>
+ <20180420125108.14197-6-jan.tuerk@emtrion.com>
+ <20180423084454.GZ25429@dragon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="O8XZ+2Hy8Kj8wLPZ"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180424082355.y2cnfkqa7bj4fpy4@verge.net.au>
+In-Reply-To: <20180423084454.GZ25429@dragon>
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: 'Shawn Guo' <shawnguo@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, LinuxArmKernelMailingListe <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---O8XZ+2Hy8Kj8wLPZ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Simon,
-
-On Tue, Apr 24, 2018 at 10:23:56AM +0200, Simon Horman wrote:
-> On Mon, Apr 23, 2018 at 05:21:43PM +0200, jacopo mondi wrote:
-> > Hi Simon,
+> -----Ursprüngliche Nachricht-----
+> Von: Shawn Guo Gesendet: Montag, 23. April 2018 10:45
+> Re: [PATCH v3 5/6] ARM: dts: Add support for emtrion emCON-MX6 series
+> 
+> On Fri, Apr 20, 2018 at 02:50:52PM +0200, jan.tuerk@emtrion.com wrote:
+> > From: Jan Tuerk <jan.tuerk@emtrion.com>
 > >
-> > On Wed, Feb 21, 2018 at 07:29:18PM +0100, Simon Horman wrote:
-> > > On Wed, Feb 21, 2018 at 06:47:58PM +0100, Jacopo Mondi wrote:
-> > > > Add Capture Engine Unit (CEU) node to device tree.
-> > > >
-> > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > > Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-> > >
-> > > This patch depends on the binding for "renesas,r7s72100-ceu".
-> > > Please repost or otherwise ping me once that dependency has been accepted.
+> > This patch adds support for the emtrion GmbH emCON-MX6 modules.
+> > They are available with imx.6 Solo, Dual-Lite, Dual and Quad equipped
+> > with Memory from 512MB to 2GB (configured by U-Boot).
 > >
-> > Bindings for the CEU interface went in v4.17-rc1.
+> > Our default developer-Kit ships with the Avari baseboard and the EDT
+> > ETM0700G0BDH6 Display (imx6[q|dl]-emcon-avari).
 > >
-> > Could you please resurect this patch?
->
-> Sure, I took the liberty of "rebasing" it to preserve the new node-order
-> of r7s72100.dtsi. The result is as follows:
+> > The devicetree is split into the common part providing all module
+> > components and the basic support for all SoC versions
+> > (imx6qdl-emcon.dtsi) and parts which are i.mx6 S|DL and D|Q relevant.
+> > Finally the support for the avari baseboard in the developer-kit
+> > configuration is provided by the emcon-avari dts files.
+> >
+> > Signed-off-by: Jan Tuerk <jan.tuerk@emtrion.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/emtrion.txt |  13 +
+> 
+> It's better to have a separate patch for bindings doc, which needs to be
+> acknowledged by DT maintainers.
 
-That's even better.
+I can change that, but nobody complained in the first 2 revisions of the patch. 
+Also I though having the documentation is required for merging new bindings?
 
-Thanks
-   j
+> 
+> >  arch/arm/boot/dts/Makefile                        |   2 +
+> >  arch/arm/boot/dts/imx6dl-emcon-avari.dts          | 224 ++++++
+> >  arch/arm/boot/dts/imx6dl-emcon.dtsi               |  27 +
+> >  arch/arm/boot/dts/imx6q-emcon-avari.dts           | 224 ++++++
+> >  arch/arm/boot/dts/imx6q-emcon.dtsi                |  27 +
+> >  arch/arm/boot/dts/imx6qdl-emcon.dtsi              | 838
+> ++++++++++++++++++++++
+> >  7 files changed, 1355 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/emtrion.txt
+> >  create mode 100644 arch/arm/boot/dts/imx6dl-emcon-avari.dts
+> >  create mode 100644 arch/arm/boot/dts/imx6dl-emcon.dtsi
+> >  create mode 100644 arch/arm/boot/dts/imx6q-emcon-avari.dts
+> >  create mode 100644 arch/arm/boot/dts/imx6q-emcon.dtsi
+> >  create mode 100644 arch/arm/boot/dts/imx6qdl-emcon.dtsi
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/emtrion.txt
+> > b/Documentation/devicetree/bindings/arm/emtrion.txt
+> > new file mode 100644
+> > index 000000000000..3ff6c6c2034d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/emtrion.txt
+> > @@ -0,0 +1,13 @@
+> > +Emtrion Devicetree Bindings
+> > +===========================
+> > +
+> > +emCON Series:
+[..]
+> > index 000000000000..2344fb9498e3
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx6dl-emcon-avari.dts
+> > @@ -0,0 +1,224 @@
+> > +// SPDX-License-Identifier: (GPL-2.0 or MIT)
+> > +/* Copyright (C) 2018 emtrion GmbH
+> > + * Author: Jan Tuerk  <jan.tuerk@emtrion.com>  */
+> 
+> /*
+>  * Copyright ...
+>  */
+Ack
+> > +
+> > +/dts-v1/;
+> > +#include "imx6dl.dtsi"
+> > +#include "imx6qdl-emcon.dtsi"
+> > +#include "imx6dl-emcon.dtsi" /*Include camera2 pinmux*/
+> 
+> /* bla bla */
+> 
+> > +
+> > +/ {
+> > +	model = "emtrion SoM emCON-MX6 Solo/Dual-Lite Avari";
+> > +	compatible = "emtrion,emcon-mx6-avari", "fsl,imx6dl";
+> > +
+> > +	aliases {
+> > +		mmc0 = &usdhc3;
+> > +		mmc2 = &usdhc1;
+> > +		mmc1 = &usdhc2;
+> > +		mmc3 = &usdhc4;
+> > +	};
+> > +
+> > +	chosen {
+> > +		stdout-path = <&uart1>;
+> > +	};
+> > +
+> > +	memory {
+> 
+> The unit-address is missing.
 
->
-> From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Subject: [PATCH] ARM: dts: r7s72100: Add Capture Engine Unit (CEU)
->
-> Add Capture Engine Unit (CEU) node to device tree.
->
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-> [simon: rebased]
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->  arch/arm/boot/dts/r7s72100.dtsi | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-> index ecf9516bcda8..4a1aade0e751 100644
-> --- a/arch/arm/boot/dts/r7s72100.dtsi
-> +++ b/arch/arm/boot/dts/r7s72100.dtsi
-> @@ -375,6 +375,15 @@
->  			status = "disabled";
->  		};
->
-> +		ceu: camera@e8210000 {
-> +			reg = <0xe8210000 0x3000>;
-> +			compatible = "renesas,r7s72100-ceu";
-> +			interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&mstp6_clks R7S72100_CLK_CEU>;
-> +			power-domains = <&cpg_clocks>;
-> +			status = "disabled";
-> +		};
+Ack
+
+> 
+> > +		reg = <0x10000000 0x40000000>;
+> > +	};
+> > +
+> > +	supplies {
+> > +		compatible = "simple-bus";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> 
+> DT maintainers do not like this fake container node.  Please put the
+> fixed regulator nodes directly under root with a unique name like below.
+
+Ok I'll change this
+> 
+> 	reg_xxx: regulator-xxx {
+> 		...
+> 	};
+> 
+> > +
+> > +		wallplug5p0: supply@0 {
+> > +			compatible = "regulator-fixed";
+> > +			reg = <0>;
+> > +			regulator-name = "WALL-PLUG";
+> > +			regulator-min-microvolt = <5000000>;
+> > +			regulator-max-microvolt = <5000000>;
+> > +			regulator-always-on;
+> > +			regulator-boot-on;
+> > +		};
+[...]
+> > +		reg_usb_otg: otgvbus@3 {
+> > +			compatible = "regulator-fixed";
+> > +			reg = <3>;
+> > +			vin-supply = <&wallplug5p0>;
+> > +			regulator-name = "OTG_VBUS";
+> > +			regulator-min-microvolt = <5000000>;
+> > +			regulator-max-microvolt = <5000000>;
+> > +			gpio = <&gpio1 8 GPIO_ACTIVE_LOW>;
+> > +			regulator-always-on;
+> > +		};
+> > +
+> > +	};
+> > +
+> > +
+> > +	sndosc: 12MHZosc {
+> 
+> 	clock-xxx {
+> 		...
+> 	};
+
+ok
+> 
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +		clock-frequency  = <12000000>;
+> > +	};
+> > +
+> > +	sound {
+> > +		compatible = "fsl,imx-audio-sgtl5000";
+> > +		model = "emCON-avari-sgtl5000";
+> > +		ssi-controller = <&ssi2>;
+> > +		audio-codec = <&sgtl5000>;
+> > +		audio-routing =
+> > +			"Headphone Jack", "HP_OUT";
+> > +		mux-int-port = <2>;
+> > +		mux-ext-port = <3>;
+> > +	};
+> > +
+> > +};
+> > +
+> > +
+> 
+> One newline is good enough.
+ack
+> 
+> > +&iomuxc {
+> > +	pinctrl-names = "default";
+> > +	/*Unused emCON-MX6 outputs on AVARI*/
+> > +	pinctrl-0 = <
+> > +				 &pinctrl_emcon_gpio1
+> &pinctrl_emcon_gpio2
+> > +				 &pinctrl_emcon_gpio3
+> &pinctrl_emcon_gpio5
+> > +				 &pinctrl_emcon_gpio6
+> &pinctrl_emcon_gpio7
+> > +				 &pinctrl_emcon_gpio8
+> &pinctrl_emcon_irq_a
+> > +				 &pinctrl_emcon_irq_b &pinctrl_emcon_irq_c
+> > +				 &pinctrl_emcon_irq_pwr &pinctrl_nor_flash
+> > +				 &pinctrl_usdhc2
+> > +				 &pinctrl_spdif_out     &pinctrl_spdif_in
+> > +				 &pinctrl_cpi1          &pinctrl_cpi2
+> > +				>;
+> 
+> Only pins without clear consumer should be put into hog group.  Also the
+> indent seems broken.
+
+Yes the consumer is currently "not-defined" on the Avari baseboard, as those pins are signals on the emCON Interface.
+I've added them there to force a basic initialization matching the Interfaces specified function blocks in the SoC.  
+I'll rework the indent as well.
+
+> 
+> > +};
+> > +
+> > +&audmux {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_audmux>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +
+> > +
+> 
+> One newline is good enough.  Also, please try to sort these labelled
+> nodes alphabetically.
+> 
+> > +&i2c3 {
+> > +	clock-frequency = <100000>;
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_i2c3>;
+> > +	status = "okay";
+> > +
+> > +	sgtl5000: audio-codec@a {
+> > +		compatible = "fsl,sgtl5000";
+> > +		reg = <0x0a>;
+> > +		clocks = <&sndosc>;
+> > +		VDDA-supply = <&base3p3>;
+> > +		VDDIO-supply = <&base3p3>;
+> 
+> #sound-dai-cells is missing.
+yes, I'll change that
+> 
+> > +	};
+> > +
+> > +	boardID: pca8754a@3a {
+> 
+> Please find a more generic node name for it.
+
+you mean boardID@3a?
+This chip identifies the baseboard type for the bootloader.
+
+> 
+> > +		compatible = "nxp,pca8574";
+> > +		reg = <0x3a>;
+> > +		gpio-controller;
+> > +		#gpio-cells = <1>;
+> > +	};
+> > +
+> > +	captouch: touchscreen@38 {
+> > +		compatible = "edt,edt-ft5406";
+> > +		reg = <0x38>;
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_irq_touch2 &pinctrl_emcon_gpio4>;
+> > +		interrupt-parent = <&gpio6>;
+> > +		interrupts = <31 IRQ_TYPE_EDGE_FALLING>;
+> > +		wake-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
+> > +		wakeup-source;
+> > +		status = "okay";
+> 
+> The "okay" status is only needed to flip the default "disabled" device.
+> 
+> > +	};
+[...]
+> +};
+> diff --git a/arch/arm/boot/dts/imx6q-emcon-avari.dts b/arch/arm/boot/dts/imx6q-emcon-avari.dts
+> new file mode 100644
+> index 000000000000..0c85b5ee011c
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6q-emcon-avari.dts
+There are so many things duplicated between imx6dl-emcon-avari.dts and
+imx6q-emcon-avari.dts.  Can you do something to avoid that?
+
+I could try to merge them into a "common", but it will be an additional file.
+
+> @@ -0,0 +1,224 @@
+> +// SPDX-License-Identifier: (GPL-2.0 or MIT)
+> +/* Copyright (C) 2018 emtrion GmbH
+> + * Author: Jan Tuerk  <jan.tuerk@emtrion.com>
+> + */
 > +
->  		wdt: watchdog@fcfe0000 {
->  			compatible = "renesas,r7s72100-wdt", "renesas,rza-wdt";
->  			reg = <0xfcfe0000 0x6>;
-> @@ -429,9 +438,9 @@
->  			#clock-cells = <1>;
->  			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
->  			reg = <0xfcfe042c 4>;
-> -			clocks = <&p0_clk>;
-> -			clock-indices = <R7S72100_CLK_RTC>;
-> -			clock-output-names = "rtc";
-> +			clocks = <&b_clk>, <&p0_clk>;
-> +			clock-indices = <R7S72100_CLK_CEU R7S72100_CLK_RTC>;
-> +			clock-output-names = "ceu", "rtc";
->  		};
->
->  		mstp7_clks: mstp7_clks@fcfe0430 {
-> --
-> 2.11.0
->
->
+> +/dts-v1/;
+> +#include "imx6q.dtsi"
+> +#include "imx6qdl-emcon.dtsi"
+> +#include "imx6q-emcon.dtsi" /*Include camera2 pinmux*/
+> +
+> +/ {
+> +	model = "emtrion SoM emCON-MX6 Dual/Quad on Avari";
+> +	compatible = "emtrion,emcon-mx6-avari", "fsl,imx6q";
+> +
+> +	aliases {
+> +		mmc0 = &usdhc3;
+> +		mmc2 = &usdhc1;
+> +		mmc1 = &usdhc2;
+> +		mmc3 = &usdhc4;
+> +	};
+[...]
+> > +};
+> > +
+> > +&ssi2 {
+> > +	pwm_fan: pwm-fan {
+> > +		compatible = "pwm-fan";
+> > +		cooling-min-state = <0>;
+> > +		cooling-max-state = <4>;
+> > +		#cooling-cells = <2>;
+> > +		pwms = <&pwm4 0 50000>;
+> > +		cooling-levels = <0 64 127 191 255>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> > +	rgb_encoder: disp0 {
+> 
+> s/disp0/display
+Ack
 
---O8XZ+2Hy8Kj8wLPZ
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> > +		compatible = "fsl,imx-parallel-display";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_rgb24_display>;
+> > +		status = "disabled";
+> > +
+> > +		port@0 {
+> > +			reg = <0>;
+> 
+> Have a newline between property list and child node.
+Ok
+> 
+> > +			rgb_encoder_in: endpoint {
+> > +				remote-endpoint = <&ipu1_di0_disp0>;
+> > +			};
+> > +		};
+> > +
+> > +		port@1 {
+> > +			reg = <1>;
+> > +			rgb_encoder_out: endpoint {
+> > +				remote-endpoint = <&rgb_panel_in>;
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > +	rgb_panel: panel {
+> > +		backlight = <&rgb_backlight>;
+> > +		power-supply = <&reg_parallel_disp>;
+> > +		port {
+> > +			rgb_panel_in: endpoint {
+> > +				remote-endpoint = <&rgb_encoder_out>;
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > +	rgb_backlight: rgb-backlight {
+> > +		compatible = "pwm-backlight";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_rgb_bl>;
+> > +		enable-gpios = <&gpio6 8 GPIO_ACTIVE_HIGH>;
+> > +		pwms = <&pwm3 0 5000000>;
+> > +		brightness-levels = <250 176 160 144 128 112
+> > +							96 80 64 48 32 16 8 1
+> > +							>;
+> 
+> Broken indent.
+ack
+> 
+> > +		default-brightness-level = <13>;
+> > +		status = "okay";
+> > +	};
+> > +
+> > +	lvds_backlight: lvds-backlight {
+> > +		compatible = "pwm-backlight";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_lvds_bl>;
+> > +		enable-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>;
+> > +		pwms = <&pwm1 0 50000>;
+> > +		brightness-levels = <0 4 8 16 32 64 80 96 112
+> > +							128 144 160 176 250
+> > +							>;
+> > +		default-brightness-level = <13>;
+> > +		status = "okay";
+> > +	};
+> > +};
+> > +
+> > +
+> > +&iomuxc {
+> > +
+> > +	pinctrl_secure: securegrp {
+> 
+> Unused?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+in this configuration, yes. 
+The imx6qdl-emcon.dtsi defines all pinctrl values for the Interfaces defined in the emCON specification.
 
-iQIcBAEBAgAGBQJa3utPAAoJEHI0Bo8WoVY83SwQAMcRemJH4whTol5SgaUhhiwt
-7vPzUri9leP+smhF8kzP/cmWuGEHIyQKHzqSivVBZrtRHyk2JZCGNMdp0M1lloCv
-SCVfyv6R/nnPVKdTqJNZYrTN1yJOcGXle271QLEEZUXkL1aDxy5K5Xb5qpSuwu89
-qH1mKj9K39/B/0lmlrn+ENWlVvzewAaZB+WZfFVU89i+4NncFLhx+6gOMceSF8oy
-I4PyfNOIEXXGmKiv7v8H0uHJf0yUTK0NgFLLnFrIwueogXuQTitV2dIdjDuF99SR
-yOR2XPE+h+Ws1BeqnWX81AdSbAeDj6uC+3VVkjiQ6uwXq6BsCmkyqRvY04xmOgNl
-JDwHUYlW/d3D/xs8zYVJ9GxRywKDW48t5kc6MFWxWEPg2DUYV2LrFiwjBGzkcJIv
-wctnUSf3/rh2nNAzeeESbgGvdqSM2iZuCA7PElFZZpudj+F6wcQtLZWoaLrzkdiN
-3pwLo63R67nRzGIvR2DA3xz3Y9rB58kCFHaOrebBSI//wWRBQgXaaruCm1ebYtXt
-3DkKM3uddKTWAkKcEtH8USq1GReGOwZ1CE9vP8zkgKNjoLjEFYHgdRWYKnn5/Fu1
-gDMKw6mStzZHNK/phxoDl1xUehaqH3eMp34fUN4dW6NTnxVYuWdYVx3TINacajjm
-UT3EmMoeafGOJen5gXDI
-=8F7o
------END PGP SIGNATURE-----
+> 
+> > +		fsl,pins = <
+> > +			MX6QDL_PAD_GPIO_18__GPIO7_IO13
+> 		0x1b0b1
+> > +		>;
+> > +	};
+> > +
+> > +	pinctrl_uart1: uart1grp {
+> > +		fsl,pins = <
+> > +			MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA
+> 	0x1b0b1
+> > +			MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA
+> 	0x1b0b1
+> > +		>;
+> > +	};
+> > +
+[...]
+> > +
+> > +	pinctrl_uart5: uart5grp {
+> > +		fsl,pins = <
+> > +			MX6QDL_PAD_KEY_COL1__UART5_TX_DATA
+> 	0x1b0b1
+> > +			MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA
+> 	0x1b0b1
+> > +		>;
+> > +	};
+> > +
+> > +	pinctrl_emcon_gpio1: emcongpio1 {
+> > +		fsl,pins = <
+> > +			MX6QDL_PAD_NANDF_D0__GPIO2_IO00
+> 		0x0b0b1
+> > +		>;
+> > +	};
+> 
+> Try to keep these pinctrl entries alphabetically sorted.
+If this helps to merge it, I'll change that
+> 
+> > +
+> > +	pinctrl_emcon_gpio2: emcongpio2 {
+> > +		fsl,pins = <
+> > +			MX6QDL_PAD_NANDF_D1__GPIO2_IO01
+> 		0x0b0b1
+> > +		>;
+> > +	};
+> > +
+[...]
+> > +
+> > +		wdt {
+> 
+> s/wdt/watchdog
+Ack.
 
---O8XZ+2Hy8Kj8wLPZ--
+> 
+> > +			compatible = "dlg,da9063-watchdog";
+> > +			timeout-sec = <0>;
+> > +		};
+> > +
+> > +		regulators {
+> > +			vddcore_reg: bcore1 {
+> > +				regulator-min-microvolt = <1100000>;
+> > +
+[...]
+> > +/*******Disabled HW following***********/
+> > +
+> > +
+> > +&weim {
+> > +	status = "disabled";
+> > +};
+> 
+> Isn't weim disabled by default?
+
+Yes, the patch was originally done for our internal "vendor" kernel, which was based on 4.9 where it was enabled by default.
+I remove the node, as it became obsolete now.
+> 
+> Shawn
+> 
+> > +
+> > +&snvs_rtc {
+> > +	status = "disabled";
+> > +};
+> > --
+> > 2.11.0
+> >
