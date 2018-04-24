@@ -1,157 +1,164 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH v2 1/3] mmc: dw_mmc-bluefield: Add driver extension
-Date: Tue, 24 Apr 2018 09:11:18 +0800
-Message-ID: <a59e321a-2498-d9c1-4a22-296ffa13417a@rock-chips.com>
-References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2 2/2] usb: dwc3: support clocks and resets for DWC3 core
+Date: Tue, 24 Apr 2018 10:17:12 +0900
+Message-ID: <CAK7LNATN+Dp3MRQbELzd4G+cy614dGDDTM_=0a-LB8QzWj7k9w@mail.gmail.com>
+References: <1524135818-14825-1-git-send-email-yamada.masahiro@socionext.com>
+ <1524135818-14825-3-git-send-email-yamada.masahiro@socionext.com> <CAFBinCDwbyovMZ-qAKaMiBfz_YKMwxC1c4MjfNyLAvnXEfXtMw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+In-Reply-To: <CAFBinCDwbyovMZ-qAKaMiBfz_YKMwxC1c4MjfNyLAvnXEfXtMw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liming Sun <lsun@mellanox.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, shawn.lin@rock-chips.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-usb@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh@kernel.org>, Roger Quadros <rogerq@ti.com>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, DTML <devicetree@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Liming,
+2018-04-24 2:44 GMT+09:00 Martin Blumenstingl
+<martin.blumenstingl@googlemail.com>:
+> Hello,
+>
+> On Thu, Apr 19, 2018 at 1:03 PM, Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>> Historically, the clocks and resets are handled on the glue layer
+>> side instead of the DWC3 core.  For simple cases, dwc3-of-simple.c
+>> takes care of arbitrary number of clocks and resets.  The DT node
+>> structure typically looks like as follows:
+>>
+>>   dwc3-glue {
+>>           compatible = "foo,dwc3";
+>>           clocks = ...;
+>>           resets = ...;
+>>           ...
+>>
+>>           dwc3 {
+>>                   compatible = "snps,dwc3";
+>>                   ...
+>>           };
+>>   }
+>>
+>> By supporting the clocks and the reset in the dwc3/core.c, it will
+>> be turned into a single node:
+>>
+>>   dwc3 {
+>>           compatible = "foo,dwc3", "snps,dwc3";
+>>           clocks = ...;
+>>           resets = ...;
+>>           ...
+>>   }
+>>
+>> This commit adds the binding of clocks and resets specific to this IP.
+>> The number of clocks should generally be the same across SoCs, it is
+>> just some SoCs either tie clocks together or do not provide software
+>> control of some of the clocks.
+>>
+>> I took the clock names from the Synopsys datasheet: "ref" (ref_clk),
+>> "bus_early" (bus_clk_early), and "suspend" (suspend_clk).
+> looking at the code: this could mean that dwc3-exynos.c can be removed
+> mid-term (assuming the PHY and regulator handling can be
+> moved/removed/changed)
 
-On 2018/4/23 23:32, Liming Sun wrote:
-> This commit adds extension to the dw_mmc driver for Mellanox BlueField
-> SoC. It updates the UHS_REG_EXT register to bring up the eMMC card on
-> this SoC.
-> 
-> Signed-off-by: Liming Sun <lsun@mellanox.com>
-> ---
->   drivers/mmc/host/Kconfig            |  9 +++++
->   drivers/mmc/host/Makefile           |  1 +
->   drivers/mmc/host/dw_mmc-bluefield.c | 72 +++++++++++++++++++++++++++++++++++++
->   3 files changed, 82 insertions(+)
->   create mode 100644 drivers/mmc/host/dw_mmc-bluefield.c
-> 
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 9589f9c..26ac6b5 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -717,6 +717,15 @@ config MMC_DW_K3
->   	  Synopsys DesignWare Memory Card Interface driver. Select this option
->   	  for platforms based on Hisilicon K3 SoC's.
->   
-> +config MMC_DW_BLUEFIELD
-> +	tristate "BlueField specific extensions for Synopsys DW Memory Card Interface"
-> +	depends on MMC_DW
-> +	select MMC_DW_PLTFM
-> +	help
-> +	  This selects support for Mellanox BlueField SoC specific extensions to
-> +	  the Synopsys DesignWare Memory Card Interface driver. Select this
-> +	  option for platforms based on Mellanox BlueField SoC's.
-> +
+That is a good news.
 
-It'd better to keep the order, so you could place it before
-MMC_DW_EXYNOS.
 
->   config MMC_DW_PCI
->   	tristate "Synopsys Designware MCI support on PCI bus"
->   	depends on MMC_DW && PCI
-> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-> index 6aead24..267b3f1 100644
-> --- a/drivers/mmc/host/Makefile
-> +++ b/drivers/mmc/host/Makefile
-> @@ -55,6 +55,7 @@ obj-$(CONFIG_MMC_DW_K3)		+= dw_mmc-k3.o
->   obj-$(CONFIG_MMC_DW_PCI)	+= dw_mmc-pci.o
->   obj-$(CONFIG_MMC_DW_ROCKCHIP)	+= dw_mmc-rockchip.o
->   obj-$(CONFIG_MMC_DW_ZX)		+= dw_mmc-zx.o
-> +obj-$(CONFIG_MMC_DW_BLUEFIELD)	+= dw_mmc-bluefield.o
 
-Ditto.
+> does the datasheet state anything about the clock speeds? from
+> Documentation/devicetree/bindings/usb/dwc3-xilinx.txt:
+> "bus_clk" Master/Core clock, have to be >= 125 MHz for SS operation
+> and >= 60MHz for HS operation
 
->   obj-$(CONFIG_MMC_SH_MMCIF)	+= sh_mmcif.o
->   obj-$(CONFIG_MMC_JZ4740)	+= jz4740_mmc.o
->   obj-$(CONFIG_MMC_VUB300)	+= vub300.o
-> diff --git a/drivers/mmc/host/dw_mmc-bluefield.c b/drivers/mmc/host/dw_mmc-bluefield.c
-> new file mode 100644
-> index 0000000..12067b1
-> --- /dev/null
-> +++ b/drivers/mmc/host/dw_mmc-bluefield.c
-> @@ -0,0 +1,72 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 Mellanox Technologies.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/io.h>
-> +#include <linux/irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/mmc/host.h>
-> +#include <linux/mmc/mmc.h>
-> +#include <linux/of.h>
-> +
 
-Ditto.
+Not sure.
+"xlnx,zynqmp-dwc3" is a member of dwc3-of-simple.c
+which just enables/disables clocks.
 
-> +#include "dw_mmc.h"
-> +#include "dw_mmc-pltfm.h"
-> +
-> +static void dw_mci_bluefield_set_ios(struct dw_mci *host, struct mmc_ios *ios)
-> +{
-> +	u32 regs;
-> +
-> +	/* Set drive=4 (bit 29:23) and sample=2 (bit 22:16) in UHS_REG_EXT. */
-> +	regs = mci_readl(host, UHS_REG_EXT);
-> +	regs = (regs & ~0x3F100000 & ~0x7F0000) | (4 << 23) | (2 << 16);
+That information is not important.
 
-GENMASK woule be more readable IMHO.
 
-> +	mci_writel(host, UHS_REG_EXT, regs);
-> +}
-> +
-> +static const struct dw_mci_drv_data bluefield_drv_data = {
-> +	.set_ios		= dw_mci_bluefield_set_ios
-> +};
-> +
-> +static const struct of_device_id dw_mci_bluefield_match[] = {
-> +	{ .compatible = "mellanox,bluefield-dw-mshc",
-> +		.data = &bluefield_drv_data },
+>> I found only one reset line in the datasheet, hence the reset-names
+>> property is omitted.
+> does the datasheet state whether this is a level or a pulsed reset line?
+> on Amlogic Meson GXL, GXM and AXG SoCs we use a pulsed (and shared)
+> reset line (see ff0a632f08759e "usb: dwc3: of-simple: add support for
+> shared and pulsed reset lines") because the reset line is shared
+> between various components (USB2 PHY, USB3 PHY, dwc3 controller, ...)
+> your current approach (having a vendor-specific "foo,dwc3" binding
+> along with the generic "snps,dwc3") would allow having
+> per-"of_device_id" settings which could indicate whether the reset
+> lines are level or pulsed reset if these are "implementation specific"
 
-Keep the indent.
 
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, dw_mci_bluefield_match);
-> +
-> +static int dw_mci_bluefield_probe(struct platform_device *pdev)
-> +{
-> +	const struct dw_mci_drv_data *drv_data = NULL;
-> +	const struct of_device_id *match;
-> +
-> +	if (pdev->dev.of_node) {
-> +		match = of_match_node(dw_mci_bluefield_match,
-> +				      pdev->dev.of_node);
-> +		drv_data = match->data;
-> +	}
-> +
-> +	return dw_mci_pltfm_register(pdev, drv_data);
-> +}
-> +
-> +static struct platform_driver dw_mci_bluefield_pltfm_driver = {
-> +	.probe		= dw_mci_bluefield_probe,
-> +	.remove		= dw_mci_pltfm_remove,
-> +	.driver		= {
-> +		.name		= "dwmmc_bluefield",
-> +		.of_match_table	= dw_mci_bluefield_match,
-> +		.pm		= &dw_mci_pltfm_pmops,
-> +	},
-> +};
-> +
-> +module_platform_driver(dw_mci_bluefield_pltfm_driver);
-> +
-> +MODULE_DESCRIPTION("BlueField DW Multimedia Card driver");
-> +MODULE_AUTHOR("Mellanox Technologies");
-> +MODULE_LICENSE("GPL v2");
-> 
+I guess your commit
+ff0a632f08759e31f45b06fee27bc71c826c6b11
+is wrong.
+
+
+About the clocks, Rob Herring pointed out:
+
+  However, this should be specific as to how many clocks and their
+  function. This should be readily available to someone with access to
+  Synopsys datasheet. The number of clocks should generally be the same
+  across SoCs, it is just some SoCs either tie clocks together or don't
+  provide s/w control of some of the clocks.
+
+
+
+The same applies to the reset control.
+The reset policy should be the same across SoCs
+since we are using the same IP (i.e. the same delivered RTL).
+
+
+You are using a pulse reset for DWC3
+just because the reset controller in your SoC
+is implemented like that.
+
+This is NOT because your DWC3 in your SoC is
+specially customized, right?
+
+You put a reset-provider matter to a reset-consumer.
+
+
+
+
+
+>> Supporting those clocks and resets is the requirement for new platforms.
+> just to confirm:
+> with this series your goal is to replace the wrapper node which is
+> needed due to dwc3-of-simple.c ?
+
+
+In my _hope_.
+
+But, I cannot do this by myself
+since I do not have such boards.
+
+Depends on how people make efforts to covert existing platforms.
+
+
+> would other drivers which currently create a wrapper node (like
+> dwc3-keystone.c) keep their wrapper node or do you have any plans for
+> removing it for the other "wrapper" drivers too?
+
+
+We need to take a close look per driver.
+
+Looking at the dwc3-keystone.c,
+it works like an interrupt controller with irq-domain hierarchy.
+If it is moved to the irqchip subsystem,
+dwc3-keystone.c could be removed.
+
+
+>> Enforcing the new binding breaks existing platforms since they specify
+>> clocks and resets in their glue layer node, but nothing in the core
+>> node.  I listed such exceptional cases in the DT binding.  The driver
+>> code is loosened up to accept no clock/reset.  This change is based
+>> on the discussion [1].
+> (snip)
+>
+> Regards
+> Martin
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
