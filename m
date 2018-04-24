@@ -1,77 +1,110 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH 2/7] dt-bindings: add generic gnss binding
-Date: Tue, 24 Apr 2018 18:34:53 +0200
-Message-ID: <20180424163458.11947-3-johan@kernel.org>
-References: <20180424163458.11947-1-johan@kernel.org>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 7/8] drm/i2c: tda998x: register as a drm bridge
+Date: Tue, 24 Apr 2018 18:06:25 +0100
+Message-ID: <20180424170625.GL16141@n2100.armlinux.org.uk>
+References: <20180423072301.11962-1-peda@axentia.se>
+ <20180423072301.11962-8-peda@axentia.se>
+ <20180423160833.GF16141@n2100.armlinux.org.uk>
+ <5d6866d0-75bc-4de8-9b87-4fee5430e9dd@axentia.se>
+ <20180424080833.GJ16141@n2100.armlinux.org.uk>
+ <8448e90a-4562-b564-c160-1b5c67e0f92f@axentia.se>
+ <0cbee3bd-8987-5f2f-519d-f8d1b426f2a3@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180424163458.11947-1-johan@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <0cbee3bd-8987-5f2f-519d-f8d1b426f2a3@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Describe generic properties for GNSS receivers.
+On Tue, Apr 24, 2018 at 07:04:16PM +0300, Jyri Sarha wrote:
+> On 24/04/18 13:14, Peter Rosin wrote:
+> > On 2018-04-24 10:08, Russell King - ARM Linux wrote:
+> >> On Tue, Apr 24, 2018 at 08:58:42AM +0200, Peter Rosin wrote:
+> >>> On 2018-04-23 18:08, Russell King - ARM Linux wrote:
+> >>>> On Mon, Apr 23, 2018 at 09:23:00AM +0200, Peter Rosin wrote:
+> >>>>>  static int tda998x_remove(struct i2c_client *client)
+> >>>>>  {
+> >>>>> -	component_del(&client->dev, &tda998x_ops);
+> >>>>> +	struct device *dev = &client->dev;
+> >>>>> +	struct tda998x_bridge *bridge = dev_get_drvdata(dev);
+> >>>>> +
+> >>>>> +	drm_bridge_remove(&bridge->bridge);
+> >>>>> +	component_del(dev, &tda998x_ops);
+> >>>>> +
+> >>>>
+> >>>> I'd like to ask a rather fundamental question about DRM bridge support,
+> >>>> because I suspect that there's a major fsckup here.
+> >>>>
+> >>>> The above is the function that deals with the TDA998x device being
+> >>>> unbound from the driver.  With the component API, this results in the
+> >>>> DRM device correctly being torn down, because one of the hardware
+> >>>> devices has gone.
+> >>>>
+> >>>> With DRM bridge, the bridge is merely removed from the list of
+> >>>> bridges:
+> >>>>
+> >>>> void drm_bridge_remove(struct drm_bridge *bridge)
+> >>>> {
+> >>>>         mutex_lock(&bridge_lock);
+> >>>>         list_del_init(&bridge->list);
+> >>>>         mutex_unlock(&bridge_lock);
+> >>>> }
+> >>>> EXPORT_SYMBOL(drm_bridge_remove);
+> >>>>
+> >>>> and the memory backing the "struct tda998x_bridge" (which contains
+> >>>> the struct drm_bridge) will be freed by the devm subsystem.
+> >>>>
+> >>>> However, there is no notification into the rest of the DRM subsystem
+> >>>> that the device has gone away.  Worse, the memory that is still in
+> >>>> use by DRM has now been freed, so further use of the DRM device
+> >>>> results in a use-after-free bug.
+> >>>>
+> >>>> This is really not good, and to me looks like a fundamental problem
+> >>>> with the DRM bridge code.  I see nothing in the DRM bridge code that
+> >>>> deals with the lifetime of a "DRM bridge" or indeed the lifetime of
+> >>>> the actual device itself.
+> >>>>
+> >>>> So, from what I can see, there seems to be a fundamental lifetime
+> >>>> issue with the design of the DRM bridge code.  This needs to be
+> >>>> fixed.
+> >>>
+> >>> Oh crap. A gigantic can of worms...
+> >>
+> >> Yes, it's especially annoying for me, having put the effort in to
+> >> the component helper to cover all these cases.
+> >>
+> >>> Would a patch (completely untested btw) along this line of thinking make
+> >>> any difference whatsoever?
+> >>
+> >> It looks interesting - from what I can see of the device links code,
+> >> it would have the effect of unbinding the DRM device just before
+> >> TDA998x is unbound, so that's an improvement.
+> >>
+> >> However, from what I can see, the link vanishes at that point (as
+> >> DL_FLAG_AUTOREMOVE is set), and re-binding the TDA998x device results
+> >> in nothing further happening - the link will be recreated, but there
+> >> appears to be nothing that triggers the "consumer" to rebind at that
+> >> point.  Maybe I've missed something?
+> > 
+> > Right, auto-remove is a no-go. So, improving on the previous...
+> > 
+> > (I think drm_panel might suffer from this issue too?)
+> 
+> Yes it does and I took a shot at trying to fix it at the end of the
+> previous merge window, but gave up as I run out of time. I re-spun the
+> work now after reading this thread. I add you and Russell to cc.
 
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- .../devicetree/bindings/gnss/gnss.txt         | 36 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gnss/gnss.txt
+Right, and these exact problems are what the component helper is
+there to sort out, in a subsystem independent way.
 
-diff --git a/Documentation/devicetree/bindings/gnss/gnss.txt b/Documentation/devicetree/bindings/gnss/gnss.txt
-new file mode 100644
-index 000000000000..bcdaca043eaa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gnss/gnss.txt
-@@ -0,0 +1,36 @@
-+GNSS Receiver DT binding
-+
-+This documents the binding structure and common properties for GNSS receiver
-+devices.
-+
-+A GNSS receiver node is a node named "gnss" and typically resides on a serial
-+bus (e.g. UART, I2C or SPI).
-+
-+Please refer to the following documents for generic properties:
-+
-+	Documentation/devicetree/bindings/serial/slave-device.txt
-+	Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+Required Properties:
-+
-+- compatible 	: A string reflecting the vendor and specific device the node
-+		  represents
-+
-+Optional Properties:
-+- enable-gpios	: GPIO used to power on (or off) the device
-+- timepulse-gpios	: Timepulse (e.g. 1PPS) GPIO
-+
-+Example:
-+
-+serial@1234 {
-+	compatible = "ns16550a";
-+
-+	gnss {
-+		compatible = "u-blox,neo-8";
-+
-+		vcc-supply = <&gnss_reg>;
-+		timepulse-gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
-+
-+		current-speed = <4800>;
-+	};
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index dc3df211c1a7..fa219e80a1f8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5965,6 +5965,7 @@ F:	include/uapi/linux/gigaset_dev.h
- GNSS SUBSYSTEM
- M:	Johan Hovold <johan@kernel.org>
- S:	Maintained
-+F:	Documentation/devicetree/bindings/gnss/
- F:	drivers/gnss/
- F:	include/linux/gnss.h
- 
+What is the problem with the component helper that people seem to
+be soo loathed to use it, instead preferring to come up with sub-
+standard and broken alternatives?
+
 -- 
-2.17.0
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
