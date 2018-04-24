@@ -1,100 +1,74 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4/5] ARM: dts: exynos: Bring order in fixed-regulators naming in Midas boards
-Date: Tue, 24 Apr 2018 19:46:01 +0200
-Message-ID: <20180424174602.3915-4-krzk@kernel.org>
-References: <20180424174602.3915-1-krzk@kernel.org>
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Subject: Re: [PATCH] of: overlay: Stop leaking resources on overlay removal
+Date: Tue, 24 Apr 2018 19:50:27 +0200
+Message-ID: <90e7da9d-d40a-17f1-e627-873f58a3dce5@siemens.com>
+References: <097f1b01-6cb4-8dcb-0498-7b4c59a7ea53@siemens.com>
+ <7aca82c1-a02c-2f84-bc32-6e8a118ba601@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180424174602.3915-1-krzk@kernel.org>
+In-Reply-To: <7aca82c1-a02c-2f84-bc32-6e8a118ba601@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alan Tull <atull@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-exynos4412-midas.dtsi is base for galaxy-s3.dtsi and n710x.dts.  All of
-them contain fixed regulators named "voltage-regulator-X".  Their
-indexes got mixed up while splitting common code in commit c769eaf7a85d
-("ARM: dts: exynos: Split Trats2 DTS in preparation for Midas boards").
+On 2018-04-24 19:44, Frank Rowand wrote:
+> On 04/24/18 09:19, Jan Kiszka wrote:
+>> Only the overlay notifier callbacks have a chance to potentially get
+>> hold of references to those two resources, but they do not store them.
+>> So it is safe to stop the intentional leaking.
+>>
+>> See also https://lkml.org/lkml/2018/4/23/1063 and following.
+>>
+>> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+>> ---
+>>
+>> Ideally, we sort out any remaining worries during the 4.17-rc cycle.
+>>
+>>  drivers/of/overlay.c | 13 ++-----------
+>>  1 file changed, 2 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>> index b35fe88f1851..3553f1f57a62 100644
+>> --- a/drivers/of/overlay.c
+>> +++ b/drivers/of/overlay.c
+>> @@ -671,17 +671,8 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
+>>  		of_node_put(ovcs->fragments[i].overlay);
+>>  	}
+>>  	kfree(ovcs->fragments);
+>> -
+>> -	/*
+>> -	 * TODO
+>> -	 *
+>> -	 * would like to: kfree(ovcs->overlay_tree);
+>> -	 * but can not since drivers may have pointers into this data
+>> -	 *
+>> -	 * would like to: kfree(ovcs->fdt);
+>> -	 * but can not since drivers may have pointers into this data
+>> -	 */
+>> -
+>> +	kfree(ovcs->overlay_tree);
+>> +	kfree(ovcs->fdt);
+>>  	kfree(ovcs);
+>>  }
+>>  
+>>
+> 
+> Nack.  It is premature to submit this while the conversation is
+> continuing in the other thread.
+> 
+> I'll continue the conversation in the other thread.
+> 
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi | 4 ++--
- arch/arm/boot/dts/exynos4412-midas.dtsi     | 8 ++++----
- arch/arm/boot/dts/exynos4412-n710x.dts      | 2 +-
- 3 files changed, 7 insertions(+), 7 deletions(-)
+Well, at least the strongest argument has been resolved now, the
+notifier topic. Curious to learn what remains. As I noted, we should
+work hard to sort out the API regression prior to the release.
 
-diff --git a/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi b/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
-index 31cd5f6fd83c..606946a264da 100644
---- a/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
-@@ -15,7 +15,7 @@
- 		i2c10 = &i2c_cm36651;
- 	};
- 
--	lcd_vdd3_reg: voltage-regulator-2 {
-+	lcd_vdd3_reg: voltage-regulator-6 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "LCD_VDD_2.2V";
- 		regulator-min-microvolt = <2200000>;
-@@ -24,7 +24,7 @@
- 		enable-active-high;
- 	};
- 
--	ps_als_reg: voltage-regulator-5 {
-+	ps_als_reg: voltage-regulator-7 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "LED_A_3.0V";
- 		regulator-min-microvolt = <3000000>;
-diff --git a/arch/arm/boot/dts/exynos4412-midas.dtsi b/arch/arm/boot/dts/exynos4412-midas.dtsi
-index 4b182e26cfc8..dc11ca1673e8 100644
---- a/arch/arm/boot/dts/exynos4412-midas.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-midas.dtsi
-@@ -55,7 +55,7 @@
- 		status = "disabled";
- 	};
- 
--	cam_af_reg: voltage-regulator-3 {
-+	cam_af_reg: voltage-regulator-2 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "CAM_AF";
- 		regulator-min-microvolt = <2800000>;
-@@ -64,7 +64,7 @@
- 		status = "disabled";
- 	};
- 
--	vsil12: voltage-regulator-6 {
-+	vsil12: voltage-regulator-3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VSIL_1.2V";
- 		regulator-min-microvolt = <1200000>;
-@@ -74,7 +74,7 @@
- 		vin-supply = <&buck7_reg>;
- 	};
- 
--	vcc33mhl: voltage-regulator-7 {
-+	vcc33mhl: voltage-regulator-4 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VCC_3.3_MHL";
- 		regulator-min-microvolt = <3300000>;
-@@ -83,7 +83,7 @@
- 		enable-active-high;
- 	};
- 
--	vcc18mhl: voltage-regulator-8 {
-+	vcc18mhl: voltage-regulator-5 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VCC_1.8_MHL";
- 		regulator-min-microvolt = <1800000>;
-diff --git a/arch/arm/boot/dts/exynos4412-n710x.dts b/arch/arm/boot/dts/exynos4412-n710x.dts
-index 36818b1697a4..fe2bfd76cc4e 100644
---- a/arch/arm/boot/dts/exynos4412-n710x.dts
-+++ b/arch/arm/boot/dts/exynos4412-n710x.dts
-@@ -13,7 +13,7 @@
- 
- 	/* bootargs are passed in by bootloader */
- 
--	cam_vdda_reg: voltage-regulator-9 {
-+	cam_vdda_reg: voltage-regulator-6 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "CAM_SENSOR_CORE_1.2V";
- 		regulator-min-microvolt = <1200000>;
+Jan
+
 -- 
-2.14.1
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
