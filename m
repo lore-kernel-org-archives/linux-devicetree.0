@@ -1,61 +1,66 @@
-From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH] ARM: dts: stm32: add USB Host (USBH) support to stm32mp157c
-Date: Tue, 24 Apr 2018 13:24:40 +0200
-Message-ID: <1524569080-22475-1-git-send-email-amelie.delaunay@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 0/7] ARM: dts: sunxi: Support ALL-H3-CC H2+/H5 variants
+Date: Tue, 24 Apr 2018 19:34:17 +0800
+Message-ID: <20180424113424.13196-1-wens@csie.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for USBH (USB Host) to STM32MP157C SoC.
-USBH is a USB Host controller supporting the standard registers used for
-full- and low-speed (OHCI controller) and high-speed (EHCI controller).
+Hi,
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+This series is adds support for the H2+ and H5 variants of the Libre
+Computer Project ALL-H3-CC board. The board uses the same board design
+with the H2+, H3, and H5 SoCs, with different memory capacities. The
+H3 version was supported in 4.16.
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index bc3eddc..cc06d6b 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -5,6 +5,7 @@
-  */
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/stm32mp1-clks.h>
-+#include <dt-bindings/reset/stm32mp1-resets.h>
- 
- / {
- 	#address-cells = <1>;
-@@ -167,6 +168,25 @@
- 			#reset-cells = <1>;
- 		};
- 
-+		usbh_ohci: usbh-ohci@5800c000 {
-+			compatible = "generic-ohci";
-+			reg = <0x5800c000 0x1000>;
-+			clocks = <&rcc USBH>;
-+			resets = <&rcc USBH_R>;
-+			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		usbh_ehci: usbh-ehci@5800d000 {
-+			compatible = "generic-ehci";
-+			reg = <0x5800d000 0x1000>;
-+			clocks = <&rcc USBH>;
-+			resets = <&rcc USBH_R>;
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-+			companion = <&usbh_ohci>;
-+			status = "disabled";
-+		};
-+
- 		usart1: serial@5c000000 {
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x5c000000 0x400>;
+The H5 version is mostly the same as Neil's. I had the patches around
+for a few days and was waiting for stuff to calm down for the H3/H5
+branch. These patches are properly rebased.
+
+Patch 1 fixes the regulator voltage specified for the VCC-1V2 regulator,
+which is a fixed regulator and should obviously be outputting 1.2 volts,
+not 3.3 volts.
+
+Patch 2 splits out the common board design of the ALL-H3-CC.
+
+Patch 3 cleans up the H2+ section of the ARM dts Makefile.
+
+Patch 4 adds a device tree for the H2+ variant of ALL-H3-CC.
+
+Patch 5 adds a cpu0 label for the first core on the H5 SoC.
+This is needed so we can share the ALL-H3-CC device tree, which
+already has DVFS enabled and fixed regulator set for the CPU domain.
+
+Patch 6 cleans up the H5 section of the arm64 allwinner dts Makefile.
+
+Patch 7 adds a device tree for the H5 variant of ALL-H3-CC.
+
+Please have a look.
+
+ChenYu
+
+Chen-Yu Tsai (7):
+  ARM: dts: sun8i: h3: fix ALL-H3-CC H3 ver VCC-1V2 regulator voltage
+  ARM: dts: sun8i: h3: Split out common board design for ALL-H3-CC
+  ARM: dts: sun8i: h2-plus: Sort dtb entries in Makefile
+  ARM: dts: sun8i: h2+: Add Libre Computer Board ALL-H3-CC H2+ ver.
+  arm64: dts: allwinner: h5: Add cpu0 label for first cpu
+  arm64: dts: allwinner: Sort dtb entries in Makefile
+  arm64: dts: allwinner: h5: Add Libre Computer Board ALL-H3-CC H5 ver.
+
+ arch/arm/boot/dts/Makefile                    |   3 +-
+ .../dts/sun8i-h2-plus-libretech-all-h3-cc.dts |  13 ++
+ .../boot/dts/sun8i-h3-libretech-all-h3-cc.dts | 213 +-----------------
+ ....dts => sunxi-hx-libretech-all-h3-cc.dtsi} |  15 +-
+ arch/arm64/boot/dts/allwinner/Makefile        |   5 +-
+ .../sun50i-h5-libretech-all-h3-cc.dts         |  14 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |   2 +-
+ 7 files changed, 40 insertions(+), 225 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-h2-plus-libretech-all-h3-cc.dts
+ copy arch/arm/boot/dts/{sun8i-h3-libretech-all-h3-cc.dts => sunxi-hx-libretech-all-h3-cc.dtsi} (93%)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-libretech-all-h3-cc.dts
+
 -- 
-2.7.4
+2.17.0
