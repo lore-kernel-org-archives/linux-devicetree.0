@@ -1,157 +1,70 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v6 03/17] media: rkisp1: Add user space ABI definitions
-Date: Tue, 24 Apr 2018 04:28:49 +0000
-Message-ID: <CAAFQd5APomi1tx0X=agbSQfsX3SLBwqsXyqGhWzS4mdDcS+N9g@mail.gmail.com>
-References: <20180308094807.9443-1-jacob-chen@iotwrt.com> <20180308094807.9443-4-jacob-chen@iotwrt.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH 1/4] ARM: dts: uniphier: add required clocks and resets to
+ Pro4 ethernet node
+Date: Tue, 24 Apr 2018 13:47:00 +0900
+Message-ID: <1524545223-5893-2-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1524545223-5893-1-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180308094807.9443-4-jacob-chen@iotwrt.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacob Chen <jacob-chen@iotwrt.com>, Shunqian Zheng <zhengsq@rock-chips.com>
-Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>, Eddie Cai <eddie.cai.linux@gmail.com>, Jeffy <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Chen Jacob <jacob2.chen@rock-chips.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1524545223-5893-1-git-send-email-hayashi.kunihiko@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 8, 2018 at 6:48 PM Jacob Chen <jacob-chen@iotwrt.com> wrote:
-[snip]
-> +/**
-> + * struct cifisp_lsc_config - Configuration used by Lens shading
-correction
-> + *
-> + * refer to REF_01 for details
-> + */
-> +struct cifisp_lsc_config {
-> +       __u32 r_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
-> +       __u32 gr_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
-> +       __u32 gb_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
-> +       __u32 b_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
-> +
-> +       __u32 x_grad_tbl[CIFISP_LSC_GRAD_TBL_SIZE];
-> +       __u32 y_grad_tbl[CIFISP_LSC_GRAD_TBL_SIZE];
-> +
-> +       __u32 x_size_tbl[CIFISP_LSC_SIZE_TBL_SIZE];
-> +       __u32 y_size_tbl[CIFISP_LSC_SIZE_TBL_SIZE];
+The GIO clock/reset, Another MAC clock, and the PHY clock are required
+for the ethernet of Pro4 SoC.
+And add clock-names and reset-names to the ethernet node of PXs2 since
+we need to distinguish clocks and resets now.
 
-Looking at the code, we only need 12 bits of each, so perhaps it could make
-sense to make those __u16? Also, the natural layout for these seems to be
-two-dimensional, i.e. [CIFISP_LSC_NUM_SECTORS][CIFISP_LSC_NUM_SECTORS]. I
-think it wouldn't be a problem to define it this way for UAPI too.
+Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+ arch/arm/boot/dts/uniphier-pro4.dtsi | 7 +++++--
+ arch/arm/boot/dts/uniphier-pxs2.dtsi | 2 ++
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-> +       __u16 config_width;
-> +       __u16 config_height;
-
-These 2 seem unused. Just making sure. If they are part of hardware LSC
-configuration, then we should keep them.
-
-[snip]
-> +struct cifisp_awb_meas_config {
-> +       /*
-> +        * Note: currently the h and v offsets are mapped to grid offsets
-> +        */
-
-Perhaps should be part of the kerneldoc comment above? Also, I don't seem
-to understand what this means.
-
-> +       struct cifisp_window awb_wnd;
-> +       __u32 awb_mode;
-> +       __u8 max_y;
-> +       __u8 min_y;
-> +       __u8 max_csum;
-> +       __u8 min_c;
-> +       __u8 frames;
-> +       __u8 awb_ref_cr;
-> +       __u8 awb_ref_cb;
-> +       __u8 enable_ymax_cmp;
-> +} __attribute__ ((packed));
-> +
-> +/**
-> + * struct cifisp_awb_gain_config - Configuration used by auto white
-balance gain
-> + *
-> + * out_data_x = ( AWB_GEAIN_X * in_data + 128) >> 8
-
-typo: AWB_GAIN?
-
-> + */
-> +struct cifisp_awb_gain_config {
-> +       __u16 gain_red;
-> +       __u16 gain_green_r;
-> +       __u16 gain_blue;
-> +       __u16 gain_green_b;
-> +} __attribute__ ((packed));
-> +
-> +/**
-> + * struct cifisp_flt_config - Configuration used by ISP filtering
-> + *
-> + * @mode: ISP_FILT_MODE register fields (from enum cifisp_flt_mode)
-> + * @grn_stage1: ISP_FILT_MODE register fields
-> + * @chr_h_mode: ISP_FILT_MODE register fields
-> + * @chr_v_mode: ISP_FILT_MODE register fields
-
-Missing documentation for remaining fields.
-
-> + *
-> + * refer to REF_01 for details.
-> + */
-> +
-> +struct cifisp_flt_config {
-> +       __u32 mode;
-> +       __u8 grn_stage1;
-> +       __u8 chr_h_mode;
-> +       __u8 chr_v_mode;
-
-Maybe we could move u8 below u32 to optimize the alignment?
-
-[snip]
-> +/**
-> + * struct cifisp_hst_config - Configuration used by Histogram
-> + *
-> + * @mode: histogram mode (from enum cifisp_histogram_mode)
-> + * @histogram_predivider: process every stepsize pixel, all other pixels
-are skipped
-> + * @meas_window: coordinates of the measure window
-> + * @hist_weight: weighting factor for sub-windows
-> + */
-> +struct cifisp_hst_config {
-> +       __u32 mode;
-> +       __u8 histogram_predivider;
-> +       struct cifisp_window meas_window;
-
-Perhaps could swap the two above for better alignment?
-
-> +       __u8 hist_weight[CIFISP_HISTOGRAM_WEIGHT_GRIDS_SIZE];
-> +} __attribute__ ((packed));
-> +
-> +/**
-> + * struct cifisp_aec_config - Configuration used by Auto Exposure Control
-> + *
-> + * @mode: Exposure measure mode (from enum cifisp_exp_meas_mode)
-> + * @autostop: stop mode (from enum cifisp_exp_ctrl_autostop)
-> + * @meas_window: coordinates of the measure window
-> + */
-> +struct cifisp_aec_config {
-> +       __u32 mode;
-> +       __u32 autostop;
-> +       struct cifisp_window meas_window;
-> +} __attribute__ ((packed));
-> +
-> +/**
-> + * struct cifisp_afc_config - Configuration used by Auto Focus Control
-> + *
-> + * @num_afm_win: max CIFISP_AFM_MAX_WINDOWS
-> + * @afm_win: coordinates of the meas window
-> + * @thres: threshold used for minimizing the influence of noise
-> + * @var_shift: the number of bits for the shift operation at the end of
-the calculation chain.
-> + */
-> +struct cifisp_afc_config {
-> +       __u8 num_afm_win;
-> +       struct cifisp_window afm_win[CIFISP_AFM_MAX_WINDOWS];
-> +       __u32 thres;
-> +       __u32 var_shift;
-
-Perhaps could put afm_win[] and then num_afm_win here, for better alignment?
-
-Best regards,
-Tomasz
+diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
+index 844124b..392d7dd 100644
+--- a/arch/arm/boot/dts/uniphier-pro4.dtsi
++++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
+@@ -371,8 +371,11 @@
+ 			interrupts = <0 66 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_ether_rgmii>;
+-			clocks = <&sys_clk 6>;
+-			resets = <&sys_rst 6>;
++			clock-names = "gio", "ether", "ether-gb", "ether-phy";
++			clocks = <&sys_clk 12>, <&sys_clk 6>, <&sys_clk 7>,
++				 <&sys_clk 10>;
++			reset-names = "gio", "ether";
++			resets = <&sys_rst 12>, <&sys_rst 6>;
+ 			phy-mode = "rgmii";
+ 			local-mac-address = [00 00 00 00 00 00];
+ 
+diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+index debcbd1..a1839db 100644
+--- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
++++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+@@ -506,7 +506,9 @@
+ 			interrupts = <0 66 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_ether_rgmii>;
++			clock-names = "ether";
+ 			clocks = <&sys_clk 6>;
++			reset-names = "ether";
+ 			resets = <&sys_rst 6>;
+ 			phy-mode = "rgmii";
+ 			local-mac-address = [00 00 00 00 00 00];
+-- 
+2.7.4
