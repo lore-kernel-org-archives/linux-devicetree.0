@@ -1,162 +1,403 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] net: phy: TLK10X initial driver submission
-Date: Tue, 24 Apr 2018 09:52:39 -0700
-Message-ID: <03ddc0d5-85ff-feeb-259a-65ae89893d4e@gmail.com>
-References: <20180419082816.109338-1-mans.andersson@nibe.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+From: Johan Hovold <johan@kernel.org>
+Subject: [PATCH 3/7] gnss: add generic serial driver
+Date: Tue, 24 Apr 2018 18:34:54 +0200
+Message-ID: <20180424163458.11947-4-johan@kernel.org>
+References: <20180424163458.11947-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419082816.109338-1-mans.andersson@nibe.se>
-Content-Language: en-US
+In-Reply-To: <20180424163458.11947-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?M=c3=a5ns_Andersson?= <mans.andersson@nibe.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Add a generic serial GNSS driver (library) which provides a common
+implementation for the gnss interface and power management (runtime and
+system suspend). This allows GNSS drivers for specific chip to be
+implemented by simply providing a set_power() callback to handle three
+states: ACTIVE, STANDBY and OFF.
 
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/gnss/Kconfig  |   7 +
+ drivers/gnss/Makefile |   3 +
+ drivers/gnss/serial.c | 288 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/gnss/serial.h |  47 +++++++
+ 4 files changed, 345 insertions(+)
+ create mode 100644 drivers/gnss/serial.c
+ create mode 100644 drivers/gnss/serial.h
 
-On 04/19/2018 01:28 AM, Måns Andersson wrote:
-> From: Mans Andersson <mans.andersson@nibe.se>
-> 
-> Add suport for the TI TLK105 and TLK106 10/100Mbit ethernet phys.
-> 
-> In addition the TLK10X needs to be removed from DP83848 driver as the
-> power back off support is added here for this device.
-
-I would not think this is a compelling enough reason, you could very
-well just adjust the dp83848.c driver just to account for these
-properties that you are introducing. More comments below.
-
-[snip]
-
-> +#define TLK10X_INT_EN_MASK		\
-> +	(TLK10X_MISR_ANC_INT_EN |	\
-> +	 TLK10X_MISR_DUP_INT_EN |	\
-> +	 TLK10X_MISR_SPD_INT_EN |	\
-> +	 TLK10X_MISR_LINK_INT_EN)
-> +
-> +struct tlk10x_private {
-> +	int pwrbo_level;
-
-unsigned int
-
-> +};
-> +
-> +static int tlk10x_read(struct phy_device *phydev, int reg)
-> +{
-> +	if (reg & ~0x1f) {
-> +		/* Extended register */
-> +		phy_write(phydev, TLK10X_REGCR, 0x001F);
-> +		phy_write(phydev, TLK10X_ADDAR, reg);
-> +		phy_write(phydev, TLK10X_REGCR, 0x401F);
-> +		reg = TLK10X_ADDAR;
-> +	}
-
-Humm, this looks a bit fragile, you would likely want to create separate
-helper functions for these extended registers and make sure you handle
-write failures as well. Also consider making use of the page helpers
-from include/linux/phy.h.
-
-> +
-> +	return phy_read(phydev, reg);
-> +}
-> +
-> +static int tlk10x_write(struct phy_device *phydev, int reg, int val)
-> +{
-> +	if (reg & ~0x1f) {
-> +		/* Extended register */
-> +		phy_write(phydev, TLK10X_REGCR, 0x001F);
-> +		phy_write(phydev, TLK10X_ADDAR, reg);
-> +		phy_write(phydev, TLK10X_REGCR, 0x401F);
-> +		reg = TLK10X_ADDAR;
-> +	}
-
-Same here.
-
-> +
-> +	return phy_write(phydev, reg, val);
-> +}
-> +
-> +#ifdef CONFIG_OF_MDIO
-> +static int tlk10x_of_init(struct phy_device *phydev)
-> +{
-> +	struct tlk10x_private *tlk10x = phydev->priv;
-> +	struct device *dev = &phydev->mdio.dev;
-> +	struct device_node *of_node = dev->of_node;
-> +	int ret;
-> +
-> +	if (!of_node)
-> +		return 0;
-> +
-> +	ret = of_property_read_u32(of_node, "ti,power-back-off",
-> +				   &tlk10x->pwrbo_level);
-> +	if (ret) {
-> +		dev_err(dev, "missing ti,power-back-off property");
-> +		tlk10x->pwrbo_level = 0;
-
-This should not be necessary, that should be the default with a zero
-initialized private data structure.
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +#else
-> +static int tlk10x_of_init(struct phy_device *phydev)
-> +{
-> +	return 0;
-> +}
-> +#endif /* CONFIG_OF_MDIO */
-> +
-> +static int tlk10x_config_init(struct phy_device *phydev)
-> +{
-> +	int ret, reg;
-> +	struct tlk10x_private *tlk10x;
-> +
-> +	ret = genphy_config_init(phydev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (!phydev->priv) {
-> +		tlk10x = devm_kzalloc(&phydev->mdio.dev, sizeof(*tlk10x),
-> +				      GFP_KERNEL);
-> +		if (!tlk10x)
-> +			return -ENOMEM;
-> +
-> +		phydev->priv = tlk10x;
-> +		ret = tlk10x_of_init(phydev);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		tlk10x = (struct tlk10x_private *)phydev->priv;
-> +	}
-
-You need to implement a probe() function that is responsible for
-allocation private memory instead of doing this check.
-
-> +
-> +	// Power back off
-> +	if (tlk10x->pwrbo_level < 0 || tlk10x->pwrbo_level > 3)
-> +		tlk10x->pwrbo_level = 0;
-
-How can you have pwrb_level < 0 when you use of_read_property_u32()?
-
-> +	reg = tlk10x_read(phydev, TLK10X_PWRBOCR);
-> +	reg = ((reg & ~TLK10X_PWRBOCR_MASK)
-> +		| (tlk10x->pwrbo_level << 6));
-
-One too many levels of parenthesis, the outer ones should not be necessary.
-
-> +	ret = tlk10x_write(phydev, TLK10X_PWRBOCR, reg);
-> +	if (ret < 0) {
-> +		dev_err(&phydev->mdio.dev,
-> +			"unable to set power back-off (err=%d)\n", ret);
-> +		return ret;
-> +	}
-> +	dev_info(&phydev->mdio.dev, "power back-off set to level %d\n",
-> +		 tlk10x->pwrbo_level);
-
-config_init() is called often, consider making this a debugging statement.
-
+diff --git a/drivers/gnss/Kconfig b/drivers/gnss/Kconfig
+index 103fcc70992e..f8ee54f99a8d 100644
+--- a/drivers/gnss/Kconfig
++++ b/drivers/gnss/Kconfig
+@@ -9,3 +9,10 @@ menuconfig GNSS
+ 
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called gnss.
++
++if GNSS
++
++config GNSS_SERIAL
++	tristate
++
++endif # GNSS
+diff --git a/drivers/gnss/Makefile b/drivers/gnss/Makefile
+index 1f7a7baab1d9..171aba71684d 100644
+--- a/drivers/gnss/Makefile
++++ b/drivers/gnss/Makefile
+@@ -5,3 +5,6 @@
+ 
+ obj-$(CONFIG_GNSS)			+= gnss.o
+ gnss-y := core.o
++
++obj-$(CONFIG_GNSS_SERIAL)		+= gnss-serial.o
++gnss-serial-y := serial.o
+diff --git a/drivers/gnss/serial.c b/drivers/gnss/serial.c
+new file mode 100644
+index 000000000000..06a4b511f380
+--- /dev/null
++++ b/drivers/gnss/serial.c
+@@ -0,0 +1,288 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Generic serial GNSS receiver driver
++ *
++ * Copyright (C) 2018 Johan Hovold <johan@kernel.org>
++ */
++
++#include <linux/errno.h>
++#include <linux/gnss.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/pm.h>
++#include <linux/pm_runtime.h>
++#include <linux/serdev.h>
++#include <linux/slab.h>
++
++#include "serial.h"
++
++static int gnss_serial_open(struct gnss_device *gdev)
++{
++	struct gnss_serial *gserial = gnss_get_drvdata(gdev);
++	struct serdev_device *serdev = gserial->serdev;
++	int ret;
++
++	ret = serdev_device_open(serdev);
++	if (ret)
++		return ret;
++
++	serdev_device_set_baudrate(serdev, gserial->speed);
++	serdev_device_set_flow_control(serdev, false);
++
++	ret = pm_runtime_get_sync(&serdev->dev);
++	if (ret < 0) {
++		pm_runtime_put_noidle(&serdev->dev);
++		goto err_close;
++	}
++
++	return 0;
++
++err_close:
++	serdev_device_close(serdev);
++
++	return ret;
++}
++
++static void gnss_serial_close(struct gnss_device *gdev)
++{
++	struct gnss_serial *gserial = gnss_get_drvdata(gdev);
++	struct serdev_device *serdev = gserial->serdev;
++
++	serdev_device_close(serdev);
++
++	pm_runtime_put(&serdev->dev);
++}
++
++static int gnss_serial_write_raw(struct gnss_device *gdev,
++		const unsigned char *buf, size_t count)
++{
++	struct gnss_serial *gserial = gnss_get_drvdata(gdev);
++	struct serdev_device *serdev = gserial->serdev;
++	int ret;
++
++	/* write is only buffered synchronously */
++	ret = serdev_device_write(serdev, buf, count, 0);
++	if (ret < 0)
++		return ret;
++
++	/* FIXME: determine if interrupted? */
++	serdev_device_wait_until_sent(serdev, 0);
++
++	return count;
++}
++
++static const struct gnss_operations gnss_serial_gnss_ops = {
++	.open		= gnss_serial_open,
++	.close		= gnss_serial_close,
++	.write_raw	= gnss_serial_write_raw,
++};
++
++static int gnss_serial_receive_buf(struct serdev_device *serdev,
++		const unsigned char *buf, size_t count)
++{
++	struct gnss_serial *gserial = serdev_device_get_drvdata(serdev);
++	struct gnss_device *gdev = gserial->gdev;
++
++	return gnss_insert_raw(gdev, buf, count);
++}
++
++static const struct serdev_device_ops gnss_serial_serdev_ops = {
++	.receive_buf	= gnss_serial_receive_buf,
++	.write_wakeup	= serdev_device_write_wakeup,
++};
++
++static int gnss_serial_set_power(struct gnss_serial *gserial,
++		enum gnss_serial_pm_state state)
++{
++	if (!gserial->ops || !gserial->ops->set_power)
++		return 0;
++
++	return gserial->ops->set_power(gserial, state);
++}
++
++/*
++ * FIXME: need to provide subdriver defaults or separate dt parsing from
++ * allocation.
++ */
++static int gnss_serial_parse_dt(struct serdev_device *serdev)
++{
++	struct gnss_serial *gserial = serdev_device_get_drvdata(serdev);
++	struct device_node *node = serdev->dev.of_node;
++	u32 speed = 4800;
++
++	of_property_read_u32(node, "current-speed", &speed);
++
++	gserial->speed = speed;
++
++	return 0;
++}
++
++struct gnss_serial *
++gnss_serial_allocate(struct serdev_device *serdev, size_t data_size)
++{
++	struct gnss_serial *gserial;
++	struct gnss_device *gdev;
++	int ret;
++
++	gserial = kzalloc(sizeof(*gserial) + data_size, GFP_KERNEL);
++	if (!gserial)
++		return ERR_PTR(-ENOMEM);
++
++	gdev = gnss_allocate_device(&serdev->dev);
++	if (!gdev) {
++		ret = -ENOMEM;
++		goto err_free_gserial;
++	}
++
++	gdev->ops = &gnss_serial_gnss_ops;
++	gnss_set_drvdata(gdev, gserial);
++
++	gserial->serdev = serdev;
++	gserial->gdev = gdev;
++
++	serdev_device_set_drvdata(serdev, gserial);
++	serdev_device_set_client_ops(serdev, &gnss_serial_serdev_ops);
++
++	ret = gnss_serial_parse_dt(serdev);
++	if (ret)
++		goto err_put_device;
++
++	return gserial;
++
++err_put_device:
++	gnss_put_device(gserial->gdev);
++err_free_gserial:
++	kfree(gserial);
++
++	return ERR_PTR(ret);
++}
++EXPORT_SYMBOL_GPL(gnss_serial_allocate);
++
++void gnss_serial_free(struct gnss_serial *gserial)
++{
++	gnss_put_device(gserial->gdev);
++	kfree(gserial);
++};
++EXPORT_SYMBOL_GPL(gnss_serial_free);
++
++int gnss_serial_register(struct gnss_serial *gserial)
++{
++	struct serdev_device *serdev = gserial->serdev;
++	int ret;
++
++	if (IS_ENABLED(CONFIG_PM)) {
++		pm_runtime_enable(&serdev->dev);
++	} else {
++		ret = gnss_serial_set_power(gserial, GNSS_SERIAL_ACTIVE);
++		if (ret < 0)
++			return ret;
++	}
++
++	ret = gnss_register_device(gserial->gdev);
++	if (ret)
++		goto err_disable_rpm;
++
++	return 0;
++
++err_disable_rpm:
++	if (IS_ENABLED(CONFIG_PM))
++		pm_runtime_disable(&serdev->dev);
++	else
++		gnss_serial_set_power(gserial, GNSS_SERIAL_OFF);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(gnss_serial_register);
++
++void gnss_serial_deregister(struct gnss_serial *gserial)
++{
++	struct serdev_device *serdev = gserial->serdev;
++
++	gnss_deregister_device(gserial->gdev);
++
++	if (IS_ENABLED(CONFIG_PM))
++		pm_runtime_disable(&serdev->dev);
++	else
++		gnss_serial_set_power(gserial, GNSS_SERIAL_OFF);
++}
++EXPORT_SYMBOL_GPL(gnss_serial_deregister);
++
++#ifdef CONFIG_PM
++static int gnss_serial_runtime_suspend(struct device *dev)
++{
++	struct gnss_serial *gserial = dev_get_drvdata(dev);
++
++	dev_dbg(dev, "%s\n", __func__);
++
++	return gnss_serial_set_power(gserial, GNSS_SERIAL_STANDBY);
++}
++
++static int gnss_serial_runtime_resume(struct device *dev)
++{
++	struct gnss_serial *gserial = dev_get_drvdata(dev);
++
++	dev_dbg(dev, "%s\n", __func__);
++
++	return gnss_serial_set_power(gserial, GNSS_SERIAL_ACTIVE);
++}
++#endif /* CONFIG_PM */
++
++static int gnss_serial_prepare(struct device *dev)
++{
++	dev_dbg(dev, "%s - pm_runtime_suspended = %d\n", __func__,
++			pm_runtime_suspended(dev));
++
++	if (pm_runtime_suspended(dev))
++		return 1;
++
++	return 0;
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int gnss_serial_suspend(struct device *dev)
++{
++	struct gnss_serial *gserial = dev_get_drvdata(dev);
++	int ret = 0;
++
++	dev_dbg(dev, "%s - pm_runtime_suspended = %d\n", __func__,
++			pm_runtime_suspended(dev));
++
++	/*
++	 * FIXME: serdev currently lacks support for managing the underlying
++	 * device's wakeup settings. A workaround would be to close the serdev
++	 * device here if it is open.
++	 */
++
++	if (!pm_runtime_suspended(dev))
++		ret = gnss_serial_set_power(gserial, GNSS_SERIAL_STANDBY);
++
++	return ret;
++}
++
++static int gnss_serial_resume(struct device *dev)
++{
++	struct gnss_serial *gserial = dev_get_drvdata(dev);
++	int ret = 0;
++
++	dev_dbg(dev, "%s - pm_runtime_suspended = %d\n", __func__,
++			pm_runtime_suspended(dev));
++
++	if (!pm_runtime_suspended(dev))
++		ret = gnss_serial_set_power(gserial, GNSS_SERIAL_ACTIVE);
++
++	return ret;
++}
++#endif /* CONFIG_PM_SLEEP */
++
++const struct dev_pm_ops gnss_serial_pm_ops = {
++	.prepare	= gnss_serial_prepare,
++	SET_SYSTEM_SLEEP_PM_OPS(gnss_serial_suspend, gnss_serial_resume)
++	SET_RUNTIME_PM_OPS(gnss_serial_runtime_suspend, gnss_serial_runtime_resume, NULL)
++};
++EXPORT_SYMBOL_GPL(gnss_serial_pm_ops);
++
++MODULE_AUTHOR("Johan Hovold <johan@kernel.org>");
++MODULE_DESCRIPTION("Generic serial GNSS receiver driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/gnss/serial.h b/drivers/gnss/serial.h
+new file mode 100644
+index 000000000000..01e7573bc473
+--- /dev/null
++++ b/drivers/gnss/serial.h
+@@ -0,0 +1,47 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Generic serial GNSS receiver driver
++ *
++ * Copyright (C) 2018 Johan Hovold <johan@kernel.org>
++ */
++
++#ifndef _LINUX_GNSS_SERIAL_H
++#define _LINUX_GNSS_SERIAL_H
++
++#include <asm/termbits.h>
++#include <linux/pm.h>
++
++struct gnss_serial {
++	struct serdev_device *serdev;
++	struct gnss_device *gdev;
++	speed_t	speed;
++	const struct gnss_serial_ops *ops;
++	unsigned long drvdata[0];
++};
++
++enum gnss_serial_pm_state {
++	GNSS_SERIAL_OFF,
++	GNSS_SERIAL_ACTIVE,
++	GNSS_SERIAL_STANDBY,
++};
++
++struct gnss_serial_ops {
++	int (*set_power)(struct gnss_serial *gserial,
++			enum gnss_serial_pm_state state);
++};
++
++extern const struct dev_pm_ops gnss_serial_pm_ops;
++
++struct gnss_serial *gnss_serial_allocate(struct serdev_device *gserial,
++		size_t data_size);
++void gnss_serial_free(struct gnss_serial *gserial);
++
++int gnss_serial_register(struct gnss_serial *gserial);
++void gnss_serial_deregister(struct gnss_serial *gserial);
++
++static inline void *gnss_serial_get_drvdata(struct gnss_serial *gserial)
++{
++	return &gserial[1];
++}
++
++#endif /* _LINUX_GNSS_SERIAL_H */
 -- 
-Florian
+2.17.0
