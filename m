@@ -1,101 +1,143 @@
-Return-Path: <SRS0=Tej7=GZ=bootlin.com=maxime.ripard@kernel.org>
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v8 0/2] media: v4l: Add support for the Cadence MIPI-CSI2 TX controller
-Date: Wed,  4 Apr 2018 14:20:23 +0200
-Message-Id: <20180404122025.8726-1-maxime.ripard@bootlin.com>
+Return-Path: <SRS0=M1TN=HN=ti.com=bparrot@kernel.org>
+Date: Tue, 24 Apr 2018 08:18:03 -0500
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [PATCH v11 3/4] dt-bindings: media: Add Cadence MIPI-CSI2 TX
+ Device Tree bindings
+Message-ID: <20180424131802.GH3629@ti.com>
+References: <20180424122700.5387-1-maxime.ripard@bootlin.com>
+ <20180424122700.5387-4-maxime.ripard@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+In-Reply-To: <20180424122700.5387-4-maxime.ripard@bootlin.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Sakari Ailus <sakari.ailus@linux.intel.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+Acked-by: Benoit Parrot <bparrot@ti.com>
 
-Here is an attempt at supporting the MIPI-CSI2 TX block from Cadence.
-
-This IP block is able to receive 4 video streams and stream them over
-a MIPI-CSI2 link using up to 4 lanes. Those streams are basically the
-interfaces to controllers generating some video signals, like a camera
-or a pattern generator.
-
-It is able to map input streams to CSI2 virtual channels and datatypes
-dynamically. The streaming devices choose their virtual channels
-through an additional signal that is transparent to the CSI2-TX. The
-datatypes however are yet another additional input signal, and can be
-mapped to any CSI2 datatypes.
-
-Since v4l2 doesn't really allow for that setup at the moment, this
-preliminary version is a rather dumb one in order to start the
-discussion on how to address this properly.
-
-Let me know what you think!
-Maxime
-
-Changes from v7:
-  - Removed unused headers
-  - Fixed a function prefix inconsistency
-  - Added Niklas' Reviewed-by
-
-Changes from v6:
-  - Added Niklas Reviewed-by on the bindings
-  - Added MODULE_LICENSE, MODULE_DESCRIPTION and MODULE_AUTHOR
-
-Changes from v5:
-  - Changed the return type to void for csi2tx_stop
-  - Checked for the pad index in get/set_pad_format
-  - Made a comment that the DPHY registers are for the DPHY *interface*
-    register
-
-Changes from v4:
-  - After playing a bit with the pad multiplexing patches, found that it
-    was making much more sense to have the subdev notifiers for the source
-    subdev rather for the sink that might even be outside of Linux control.
-    Removed the notifier for now.
-
-Changes from v3:
-  - Added a comment about entity links walk concurrency
-  - Changed the default resolution to 1280x720
-  - Changed usleep_range calls to udelay
-  - Reworked the reference counting mechanism to remove a race
-    condition by adding a mutex instead of an atomic count
-  - Changed the entity function to MEDIA_ENT_F_VID_IF_BRIDGE
-  - Changed the name of the reg variable in _get_resources to dev_cfg
-  - Removed the redundant error message in the devm_ioremap_resource
-    error path
-  - Moved the subdev s_stream call before enabling the TX bridge
-  - Changed some int types to unsigned
-  - Init'd the pad formats properly
-  - Fixed typo in the CSI2TX_LANES_MAX define name
-  - Added Sakari Acked-by
-
-Changes from v2:
-  - Use SPDX license header
-  - Use the lane mapping from DT
-
-Changes from v1:
-  - Add a subdev notifier and start our downstream subdevice in
-    s_stream  
-  - Based the decision to enable the stream or not on the link state
-    instead of whether a format was being set on the pad
-  - Put the controller back in reset when stopping the pipeline
-  - Clarified the enpoints number in the DT binding
-  - Added a default format for the pads
-  - Added some missing const
-  - Added more explicit comments
-  - Rebased on 4.15
-
-Maxime Ripard (2):
-  dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
-  v4l: cadence: Add Cadence MIPI-CSI2 TX driver
-
- .../devicetree/bindings/media/cdns,csi2tx.txt      |  98 ++++
- drivers/media/platform/cadence/Kconfig             |  11 +
- drivers/media/platform/cadence/Makefile            |   1 +
- drivers/media/platform/cadence/cdns-csi2tx.c       | 529 +++++++++++++++++++++
- 4 files changed, 639 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
- create mode 100644 drivers/media/platform/cadence/cdns-csi2tx.c
-
--- 
-2.14.3
+Maxime Ripard <maxime.ripard@bootlin.com> wrote on Tue [2018-Apr-24 14:26:59 +0200]:
+> The Cadence MIPI-CSI2 TX controller is a CSI2 bridge that supports up to 4
+> video streams and can output on up to 4 CSI-2 lanes, depending on the
+> hardware implementation.
+> 
+> It can operate with an external D-PHY, an internal one or no D-PHY at all
+> in some configurations.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Niklas S�derlund <niklas.soderlund+renesas@ragnatech.se>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  .../devicetree/bindings/media/cdns,csi2tx.txt | 98 +++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/cdns,csi2tx.txt b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+> new file mode 100644
+> index 000000000000..459c6e332f52
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+> @@ -0,0 +1,98 @@
+> +Cadence MIPI-CSI2 TX controller
+> +===============================
+> +
+> +The Cadence MIPI-CSI2 TX controller is a CSI-2 bridge supporting up to
+> +4 CSI lanes in output, and up to 4 different pixel streams in input.
+> +
+> +Required properties:
+> +  - compatible: must be set to "cdns,csi2tx"
+> +  - reg: base address and size of the memory mapped region
+> +  - clocks: phandles to the clocks driving the controller
+> +  - clock-names: must contain:
+> +    * esc_clk: escape mode clock
+> +    * p_clk: register bank clock
+> +    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
+> +                         implemented in hardware, between 0 and 3
+> +
+> +Optional properties
+> +  - phys: phandle to the D-PHY. If it is set, phy-names need to be set
+> +  - phy-names: must contain "dphy"
+> +
+> +Required subnodes:
+> +  - ports: A ports node with one port child node per device input and output
+> +           port, in accordance with the video interface bindings defined in
+> +           Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> +           port nodes are numbered as follows.
+> +
+> +           Port Description
+> +           -----------------------------
+> +           0    CSI-2 output
+> +           1    Stream 0 input
+> +           2    Stream 1 input
+> +           3    Stream 2 input
+> +           4    Stream 3 input
+> +
+> +           The stream input port nodes are optional if they are not
+> +           connected to anything at the hardware level or implemented
+> +           in the design. Since there is only one endpoint per port,
+> +           the endpoints are not numbered.
+> +
+> +Example:
+> +
+> +csi2tx: csi-bridge@0d0e1000 {
+> +	compatible = "cdns,csi2tx";
+> +	reg = <0x0d0e1000 0x1000>;
+> +	clocks = <&byteclock>, <&byteclock>,
+> +		 <&coreclock>, <&coreclock>,
+> +		 <&coreclock>, <&coreclock>;
+> +	clock-names = "p_clk", "esc_clk",
+> +		      "pixel_if0_clk", "pixel_if1_clk",
+> +		      "pixel_if2_clk", "pixel_if3_clk";
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			csi2tx_out: endpoint {
+> +				remote-endpoint = <&remote_in>;
+> +				clock-lanes = <0>;
+> +				data-lanes = <1 2>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			csi2tx_in_stream0: endpoint {
+> +				remote-endpoint = <&stream0_out>;
+> +			};
+> +		};
+> +
+> +		port@2 {
+> +			reg = <2>;
+> +
+> +			csi2tx_in_stream1: endpoint {
+> +				remote-endpoint = <&stream1_out>;
+> +			};
+> +		};
+> +
+> +		port@3 {
+> +			reg = <3>;
+> +
+> +			csi2tx_in_stream2: endpoint {
+> +				remote-endpoint = <&stream2_out>;
+> +			};
+> +		};
+> +
+> +		port@4 {
+> +			reg = <4>;
+> +
+> +			csi2tx_in_stream3: endpoint {
+> +				remote-endpoint = <&stream3_out>;
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.17.0
+> 
