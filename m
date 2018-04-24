@@ -1,98 +1,66 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v2 02/10] media-request: Add a request complete operation
- to allow m2m scheduling
-Date: Tue, 24 Apr 2018 11:28:32 +0300
-Message-ID: <20180424082831.zfgzuvnop6md4iyf@paasikivi.fi.intel.com>
-References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
- <20180419154124.17512-3-paul.kocialkowski@bootlin.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v5 12/44] clk: davinci: Add platform information for TI
+ DA850 PSC
+Date: Tue, 24 Apr 2018 13:58:33 +0530
+Message-ID: <aa1c2e6f-793c-1d9e-366a-3496f500f946@ti.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-13-git-send-email-david@lechnology.com>
+ <CAMRc=MfQuqTK+mDT0Gawa6J-3d1z6djLutaHREKfVm+3hATEqQ@mail.gmail.com>
+ <CAEG3pND6Cu0P_t3y_VM9Sm-GCb3yW0Pa8q4cRUOXYxa5=2nWUQ@mail.gmail.com>
+ <a4d84be0-e3d3-4e39-40f9-cae9006cb6ee@ti.com>
+ <CAMRc=Mc228JAxxBXcObmokh2h-toojG8OHrmbunm_ORqbGWUnA@mail.gmail.com>
+ <69bc0848-0698-b936-96a3-2257a5e27809@ti.com>
+ <CAMRc=MenWp=2dtOs1yafnHVkCxfT7SDS0fS2UxUd+U0s_UDwVw@mail.gmail.com>
+ <57f2182e-09b4-2cab-5602-9d0e029495be@ti.com>
+ <152303318048.143116.2883441215887455211@swboyd.mtv.corp.google.com>
+ <48c8531f-8cd9-a9f8-9c38-cbc4c921c4c9@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180419154124.17512-3-paul.kocialkowski@bootlin.com>
+In-Reply-To: <48c8531f-8cd9-a9f8-9c38-cbc4c921c4c9@lechnology.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Pawel Osciak <pawel@osciak.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <acourbot@chromium.org>, Tomasz Figa <tfiga@chromium.org>
+To: David Lechner <david@lechnology.com>, Stephen Boyd <sboyd@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+On Monday 23 April 2018 08:29 PM, David Lechner wrote:
+> On 04/06/2018 11:46 AM, Stephen Boyd wrote:
+>> Quoting Sekhar Nori (2018-04-06 02:37:03)
+>>>
+>>> Can you please check that and confirm there is no issue with genpd and
+>>> using CLK_OF_DECLARE() to initialize clocks?
+>>>
+>>> Unless you report an issue back, or Mike and Stephen have ideas about
+>>> how to handle the dependency between PSC/PLL derived timer clock
+>>> initialization and and timer_probe(), I think we need to move back to
+>>> using CLK_OF_DECLARE().
+>>
+>> In such a case, please use the hybrid approach where the clks required
+>> for the clockevent and/or clocksource are registered in the early
+>> CLK_OF_DECLARE path but the rest of the clks get registered with a
+>> proper platform device and driver. There are examples of this approach
+>> on other platforms already.
+>>
+> 
+> I looked at this a bit last week, but I didn't come up with any approach
+> that I was happy with. It seems like it would be nice to just register
+> the absolute minimum clocks needed. On DA8XX, that would just be the PLL0
+> AUXCLK. On most of the other SoCs, it would be the PLL AUXCLK plus one
+> LPSC clock. The AUXCLKs are easy because they are just a simple gate
+> from the oscillator. The LPSC clocks are a bit more tricky because they
+> have a complex sequence for turning on. Furthermore, on DM646X, we need
+> the whole PLL up to SYSCLK3 plus one LPSC clock, so things get a bit
+> messy there.
 
-On Thu, Apr 19, 2018 at 05:41:16PM +0200, Paul Kocialkowski wrote:
-> When using the request API in the context of a m2m driver, the
-> operations that come with a m2m run scheduling call in their
-> (m2m-specific) ioctl handler are delayed until the request is queued
-> (for instance, this includes queuing buffers and streamon).
-> 
-> Thus, the m2m run scheduling calls are not called in due time since the
-> request AP's internal plumbing will (rightfully) use the relevant core
-> functions directly instead of the ioctl handler.
-> 
-> This ends up in a situation where nothing happens if there is no
-> run-scheduling ioctl called after queuing the request.
-> 
-> In order to circumvent the issue, a new media operation is introduced,
-> called at the time of handling the media request queue ioctl. It gives
-> m2m drivers a chance to schedule a m2m device run at that time.
-> 
-> The existing req_queue operation cannot be used for this purpose, since
-> it is called with the request queue mutex held, that is eventually needed
-> in the device_run call to apply relevant controls.
+Things might change in the context of work being done here by Bartosz
+for converting clocks to early platform devices.
 
-Based on the description I'm not entirely sure what's the intent here.
+But, keeping that development aside for a moment: I think this means the
+PLLs and PSCs need to be CLK_OF_DECLARE(). What we can have as platform
+devices are clocks that are not in the path to get timer clock working
+(like CFGCHIP clocks).
 
-What would be the purpose for acquiring the request queue mutex during
-the execution of the request? It is only intended for serialising access to
-the request objects while the request is being validated and queued.
-
-If a driver does a significant amount of processing that is not related to
-managing the request as such, then one option could be to add a work queue
-for it.
-
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  drivers/media/media-request.c | 3 +++
->  include/media/media-device.h  | 2 ++
->  2 files changed, 5 insertions(+)
-> 
-> diff --git a/drivers/media/media-request.c b/drivers/media/media-request.c
-> index 415f7e31019d..28ac5ccfe6a2 100644
-> --- a/drivers/media/media-request.c
-> +++ b/drivers/media/media-request.c
-> @@ -157,6 +157,9 @@ static long media_request_ioctl_queue(struct media_request *req)
->  		media_request_get(req);
->  	}
->  
-> +	if (mdev->ops->req_complete)
-> +		mdev->ops->req_complete(req);
-> +
->  	return ret;
->  }
->  
-> diff --git a/include/media/media-device.h b/include/media/media-device.h
-> index 07e323c57202..c7dcf2079cc9 100644
-> --- a/include/media/media-device.h
-> +++ b/include/media/media-device.h
-> @@ -55,6 +55,7 @@ struct media_entity_notify {
->   * @req_alloc: Allocate a request
->   * @req_free: Free a request
->   * @req_queue: Queue a request
-> + * @req_complete: Complete a request
->   */
->  struct media_device_ops {
->  	int (*link_notify)(struct media_link *link, u32 flags,
-> @@ -62,6 +63,7 @@ struct media_device_ops {
->  	struct media_request *(*req_alloc)(struct media_device *mdev);
->  	void (*req_free)(struct media_request *req);
->  	int (*req_queue)(struct media_request *req);
-> +	void (*req_complete)(struct media_request *req);
->  };
->  
->  /**
-> -- 
-> 2.16.3
-> 
-
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Thanks,
+Sekhar
