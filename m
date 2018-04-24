@@ -1,7 +1,7 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH 6/7] dt-bindings: gnss: add sirfstar binding
-Date: Tue, 24 Apr 2018 18:34:57 +0200
-Message-ID: <20180424163458.11947-7-johan@kernel.org>
+Subject: [PATCH 5/7] gnss: add driver for u-blox receivers
+Date: Tue, 24 Apr 2018 18:34:56 +0200
+Message-ID: <20180424163458.11947-6-johan@kernel.org>
 References: <20180424163458.11947-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180424163458.11947-1-johan@kernel.org>
@@ -10,97 +10,196 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel
 Cc: Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add binding for SiRFstar-based GNSS receivers.
+Add driver for serial-connected u-blox GNSS receivers.
 
-Note that while four compatible-strings are initially added representing
-devices which differ in which I/O interfaces they support, they
-otherwise essentially share the same feature set.
+Note that the driver uses the generic GNSS serial implementation and
+therefore essentially only manages power abstracted into three power
+states: ACTIVE, STANDBY, and OFF.
 
-Pin and supply names (and some recommended timings) vary slightly, but
-the binding recommends using a common set of names.
+For u-blox receivers with a single supply and no enable-gpios, this
+simply means that the main supply is disabled in STANDBY and OFF.
 
-Note that the wakeup gpio is not intended to be as a wakeup source, but
-rather to detect the current power state of the device (active or
-hibernate).
+Note that timepulse-support is not yet implemented.
 
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- .../devicetree/bindings/gnss/sirfstar.txt     | 38 +++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt   |  3 ++
- 2 files changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gnss/sirfstar.txt
+ drivers/gnss/Kconfig  |  13 +++++
+ drivers/gnss/Makefile |   3 +
+ drivers/gnss/ubx.c    | 133 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 149 insertions(+)
+ create mode 100644 drivers/gnss/ubx.c
 
-diff --git a/Documentation/devicetree/bindings/gnss/sirfstar.txt b/Documentation/devicetree/bindings/gnss/sirfstar.txt
+diff --git a/drivers/gnss/Kconfig b/drivers/gnss/Kconfig
+index f8ee54f99a8d..784b8c0367d9 100644
+--- a/drivers/gnss/Kconfig
++++ b/drivers/gnss/Kconfig
+@@ -15,4 +15,17 @@ if GNSS
+ config GNSS_SERIAL
+ 	tristate
+ 
++config GNSS_UBX_SERIAL
++	tristate "u-blox GNSS receiver support"
++	depends on SERIAL_DEV_BUS
++	select GNSS_SERIAL
++	---help---
++	  Say Y here if you have a u-blox GNSS receiver which uses a serial
++	  interface.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called gnss-ubx.
++
++	  If unsure, say N.
++
+ endif # GNSS
+diff --git a/drivers/gnss/Makefile b/drivers/gnss/Makefile
+index 171aba71684d..d9295b20b7bc 100644
+--- a/drivers/gnss/Makefile
++++ b/drivers/gnss/Makefile
+@@ -8,3 +8,6 @@ gnss-y := core.o
+ 
+ obj-$(CONFIG_GNSS_SERIAL)		+= gnss-serial.o
+ gnss-serial-y := serial.o
++
++obj-$(CONFIG_GNSS_UBX_SERIAL)		+= gnss-ubx.o
++gnss-ubx-y := ubx.o
+diff --git a/drivers/gnss/ubx.c b/drivers/gnss/ubx.c
 new file mode 100644
-index 000000000000..5e6a02aec49a
+index 000000000000..2f2f00202b5b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gnss/sirfstar.txt
-@@ -0,0 +1,38 @@
-+SiRFstar-based GNSS Receiver DT binding
++++ b/drivers/gnss/ubx.c
+@@ -0,0 +1,133 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * u-blox GNSS receiver driver
++ *
++ * Copyright (C) 2018 Johan Hovold <johan@kernel.org>
++ */
 +
-+SiRFstar chipsets are used in GNSS-receiver modules produced by several
-+vendors and can use UART, SPI or I2C interfaces.
++#include <linux/errno.h>
++#include <linux/gnss.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/regulator/consumer.h>
++#include <linux/serdev.h>
 +
-+Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
-+properties.
++#include "serial.h"
 +
-+Required Properties:
-+
-+- compatible 	: Must be one of
-+
-+			"fastrax,uc430"
-+			"linx,r4"
-+			"wi2wi,w2sg0008i"
-+			"wi2wi,w2sg0084i"
-+
-+- vcc-supply	: Main voltage regulator (3V3_IN, VDD, VCC)
-+
-+Optional Properties:
-+
-+- enable-gpios	: GPIO used to power on and off device (ON_OFF)
-+- wakeup-gpios	: GPIO used to determine device power state (WAKEUP, RFPWRUP)
-+- timepulse-gpios	: Timepulse (e.g 1PPS) GPIO (1PPS, TM)
-+
-+Example:
-+
-+serial@1234 {
-+	compatible = "ns16550a";
-+
-+	gnss {
-+		compatible = "wi2wi,w2sg0084i";
-+
-+		vcc-supply = <&gnss_reg>;
-+		enable-gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
-+		wakeup-gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
-+	};
++struct ubx_data {
++	struct regulator *vcc;
 +};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 2128dfdf73f1..ddd81c82082d 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -120,6 +120,7 @@ excito	Excito
- ezchip	EZchip Semiconductor
- fairphone	Fairphone B.V.
- faraday	Faraday Technology Corporation
-+fastrax	Fastrax Oy
- fcs	Fairchild Semiconductor
- firefly	Firefly
- focaltech	FocalTech Systems Co.,Ltd
-@@ -197,6 +198,7 @@ licheepi	Lichee Pi
- linaro	Linaro Limited
- linksys	Belkin International, Inc. (Linksys)
- linux	Linux-specific binding
-+linx	Linx Technologies
- lltc	Linear Technology Corporation
- lsi	LSI Corp. (LSI Logic)
- lwn	Liebherr-Werk Nenzing GmbH
-@@ -390,6 +392,7 @@ vivante	Vivante Corporation
- vocore VoCore Studio
- voipac	Voipac Technologies s.r.o.
- vot	Vision Optical Technology Co., Ltd.
-+wi2wi	Wi2Wi
- wd	Western Digital Corp.
- wetek	WeTek Electronics, limited.
- wexler	Wexler
++
++static int ubx_set_active(struct gnss_serial *gserial)
++{
++	struct ubx_data *data = gnss_serial_get_drvdata(gserial);
++	int ret;
++
++	dev_dbg(&gserial->serdev->dev, "%s\n", __func__);
++
++	ret = regulator_enable(data->vcc);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int ubx_set_standby(struct gnss_serial *gserial)
++{
++	struct ubx_data *data = gnss_serial_get_drvdata(gserial);
++	int ret;
++
++	dev_dbg(&gserial->serdev->dev, "%s\n", __func__);
++
++	ret = regulator_disable(data->vcc);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int
++ubx_set_power(struct gnss_serial *gserial, enum gnss_serial_pm_state state)
++{
++	switch (state) {
++	case GNSS_SERIAL_ACTIVE:
++		return ubx_set_active(gserial);
++	case GNSS_SERIAL_OFF:
++	case GNSS_SERIAL_STANDBY:
++		return ubx_set_standby(gserial);
++	}
++
++	return -EINVAL;
++}
++
++const struct gnss_serial_ops ubx_gserial_ops = {
++	.set_power = ubx_set_power,
++};
++
++static int ubx_probe(struct serdev_device *serdev)
++{
++	struct gnss_serial *gserial;
++	struct ubx_data *data;
++	int ret;
++
++	gserial = gnss_serial_allocate(serdev, sizeof(*data));
++	if (IS_ERR(gserial)) {
++		ret = PTR_ERR(gserial);
++		return ret;
++	}
++
++	gserial->ops = &ubx_gserial_ops;
++
++	data = gnss_serial_get_drvdata(gserial);
++
++	data->vcc = devm_regulator_get(&serdev->dev, "vcc");
++	if (IS_ERR(data->vcc)) {
++		ret = PTR_ERR(data->vcc);
++		goto err_free_gserial;
++	}
++
++	ret = gnss_serial_register(gserial);
++	if (ret)
++		goto err_free_gserial;
++
++	return 0;
++
++err_free_gserial:
++	gnss_serial_free(gserial);
++
++	return ret;
++}
++
++static void ubx_remove(struct serdev_device *serdev)
++{
++	struct gnss_serial *gserial = serdev_device_get_drvdata(serdev);
++
++	gnss_serial_deregister(gserial);
++	gnss_serial_free(gserial);
++};
++
++#ifdef CONFIG_OF
++static const struct of_device_id ubx_of_match[] = {
++	{ .compatible = "u-blox,neo-8" },
++	{ .compatible = "u-blox,neo-m8" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, ubx_of_match);
++#endif
++
++static struct serdev_device_driver ubx_driver = {
++	.driver	= {
++		.name		= "gnss-ubx",
++		.of_match_table	= of_match_ptr(ubx_of_match),
++		.pm		= &gnss_serial_pm_ops,
++	},
++	.probe	= ubx_probe,
++	.remove	= ubx_remove,
++};
++module_serdev_device_driver(ubx_driver);
++
++MODULE_AUTHOR("Johan Hovold <johan@kernel.org>");
++MODULE_DESCRIPTION("u-blox GNSS receiver driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.17.0
