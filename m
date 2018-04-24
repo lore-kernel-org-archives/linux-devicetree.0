@@ -1,56 +1,78 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 09/10] drivers/hwmon: Add PECI hwmon client drivers
-Date: Tue, 24 Apr 2018 18:56:37 +0300
-Message-ID: <1524585397.21176.502.camel@linux.intel.com>
-References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
-         <20180410183212.16787-10-jae.hyun.yoo@linux.intel.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 01/23] soc: qcom dt-bindings: Add APR
+	bus bindings
+Date: Tue, 24 Apr 2018 16:57:39 +0100
+Message-ID: <20180424155739.GC22073@sirena.org.uk>
+References: <20180418153157.1960-1-srinivas.kandagatla@linaro.org>
+ <20180418153157.1960-2-srinivas.kandagatla@linaro.org>
+ <20180424155226.fo6rgdea4kmqqjdy@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180410183212.16787-10-jae.hyun.yoo@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van.o>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
+Content-Type: multipart/mixed; boundary="===============0202361661201014031=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180424155226.fo6rgdea4kmqqjdy@rob-hp-laptop>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, spatakok@qti.qualcomm.com, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, srinivas.kandagatla@linaro.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, andy.gross@linaro.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-04-10 at 11:32 -0700, Jae Hyun Yoo wrote:
 
->  drivers/hwmon/peci-cputemp.c  | 783
-> ++++++++++++++++++++++++++++++++++++++++++
->  drivers/hwmon/peci-dimmtemp.c | 432 +++++++++++++++++++++++
+--===============0202361661201014031==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hOcCNbCCxyk/YU74"
+Content-Disposition: inline
 
-Does it make sense one driver per patch?
 
-> +#define CLIENT_CPU_ID_MASK    0xf0ff0  /* Mask for Family / Model
-> info */
+--hOcCNbCCxyk/YU74
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +struct cpu_gen_info {
-> +	u32 type;
-> +	u32 cpu_id;
-> +	u32 core_max;
-> +};
-> 
+On Tue, Apr 24, 2018 at 10:52:26AM -0500, Rob Herring wrote:
+> On Wed, Apr 18, 2018 at 04:31:35PM +0100, srinivas.kandagatla@linaro.org =
+wrote:
+> > From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-> +static const struct cpu_gen_info cpu_gen_info_table[] = {
-> +	{ .type = CPU_GEN_HSX,
-> +	  .cpu_id = 0x306f0, /* Family code: 6, Model number: 63
-> (0x3f) */
-> +	  .core_max = CORE_MAX_ON_HSX },
-> +	{ .type = CPU_GEN_BRX,
-> +	  .cpu_id = 0x406f0, /* Family code: 6, Model number: 79
-> (0x4f) */
-> +	  .core_max = CORE_MAX_ON_BDX },
-> +	{ .type = CPU_GEN_SKX,
-> +	  .cpu_id = 0x50650, /* Family code: 6, Model number: 85
-> (0x55) */
-> +	  .core_max = CORE_MAX_ON_SKX },
-> +};
+> > This patch add dt bindings for Qualcomm APR (Asynchronous Packet Router)
+> > bus driver. This bus is used for communicating with DSP which provides
+> > audio and various other services to cpu.
 
-Are we talking about x86 CPU IDs here?
-If so, why x86 corresponding headers, including intel-family.h are not
-used?
+> This should probably go under bindings/sound/ as it is at least mostly=20
+> sound related.
 
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+AIUI the same interface is used for other DSP functionality - they're
+upstreaming audio stuff right now but I believe there should be more to
+come.
+
+--hOcCNbCCxyk/YU74
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrfU/MACgkQJNaLcl1U
+h9BC0wf/ZuE09XBVQEqxfEPat5gCr+fdUgRFbyuGvaqFOSgavwg45nQSvL4wSGKg
+J+oy/tW2YwfLfjJ6WpzMcjk7eo53iX9Y+aOxNLx7bgvlF/8TbiDtUz3VRZewMpws
+5Pr3kvcvh6matkh6P4L3C8j7jw5z5LuL/4j3H3MPD1fH4nihOeabqWEQq8pLVVSI
+CPMVxvhoFJdEtYwp8qe72NMchw0oLCwk4wjtTo708zPvqkn+/W/eb/T+eOrA4mkc
+UUw9HufLYc1P2rtQ08wJtEXFkqYjzU8zKr5SLigs/l3ECDgsEdcx3OwenWZ8jVD8
+gDEoP35iR4QGKRRwyXY+e/Hhnc9SOw==
+=WtTX
+-----END PGP SIGNATURE-----
+
+--hOcCNbCCxyk/YU74--
+
+--===============0202361661201014031==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0202361661201014031==--
