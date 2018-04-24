@@ -1,41 +1,64 @@
-From: Christophe Roullier <christophe.roullier@st.com>
-Subject: [PATCH  4/8] ARM: dts: stm32: Add syscfg on stm32mp1
-Date: Tue, 24 Apr 2018 17:01:56 +0200
-Message-ID: <1524582120-4451-5-git-send-email-christophe.roullier@st.com>
-References: <1524582120-4451-1-git-send-email-christophe.roullier@st.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [RESEND PATCH] ARM: dts: consistently use 'atmel' as at24
+ manufacturer in cyclone5
+Date: Tue, 24 Apr 2018 10:10:45 -0500
+Message-ID: <f7f749f6-3378-3ba8-a612-ff4ef89753ed@kernel.org>
+References: <20180417094513.7627-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1524582120-4451-1-git-send-email-christophe.roullier@st.com>
-Sender: netdev-owner@vger.kernel.org
-To: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, peppe.cavallaro@st.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, christophe.roullier@st.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180417094513.7627-1-brgl@bgdev.pl>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-System configuration controller is mainly used to manage
-the compensation cell and other IOs and system related
-settings.
 
-Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index bc3eddc..f98a0ae 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -167,6 +167,11 @@
- 			#reset-cells = <1>;
- 		};
- 
-+		syscfg: system-config@50020000 {
-+			compatible = "st,stm32-syscfg", "syscon";
-+			reg = <0x50020000 0x400>;
-+		};
-+
- 		usart1: serial@5c000000 {
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x5c000000 0x400>;
--- 
-1.9.1
+On 04/17/2018 04:45 AM, Bartosz Golaszewski wrote:
+> Using 'at' or 'at24' as the <manufacturer> part of the compatible
+> string is now deprecated. Use a correct value: 'atmel,<model>'.
+> 
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> ---
+>  arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+> index 2459d133f1be..f50b19447de6 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+> @@ -161,7 +161,7 @@
+>  	};
+>  
+>  	at24@50 {
+> -		compatible = "at24,24c01";
+> +		compatible = "atmel,24c01";
+>  		pagesize = <8>;
+>  		reg = <0x50>;
+>  	};
+> @@ -213,7 +213,7 @@
+>  			#size-cells = <0>;
+>  			reg = <6>;
+>  			eeprom@51 {
+> -				compatible = "at,24c01";
+> +				compatible = "atmel,24c01";
+>  				pagesize = <8>;
+>  				reg = <0x51>;
+>  			};
+> @@ -224,7 +224,7 @@
+>  			#size-cells = <0>;
+>  			reg = <7>;
+>  			eeprom@51 {
+> -				compatible = "at,24c01";
+> +				compatible = "atmel,24c01";
+>  				pagesize = <8>;
+>  				reg = <0x51>;
+>  			};
+> 
+
+Applied, thanks!
+
+Dinh
