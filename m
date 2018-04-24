@@ -1,33 +1,98 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH] net: phy: TLK10X initial driver submission
-Date: Tue, 24 Apr 2018 19:52:34 +0200
-Message-ID: <20180424175234.GC2360@lunn.ch>
-References: <20180419082816.109338-1-mans.andersson@nibe.se>
- <20180424163455.vmftcg5xbj6svtcu@rob-hp-laptop>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 00/11] platform: device tree support for early platform
+ drivers
+Date: Tue, 24 Apr 2018 18:55:45 +0100
+Message-ID: <20180424175544.uq7f5x63a5il36sh@lakrids.cambridge.arm.com>
+References: <20180424173051.15099-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180424163455.vmftcg5xbj6svtcu@rob-hp-laptop>
+In-Reply-To: <20180424173051.15099-1-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: =?iso-8859-1?Q?M=E5ns?= Andersson <mans.andersson@nibe.se>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@siemens.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-> > +Required properties:
-> > +	- reg - The ID number for the phy, usually a small integer
+Hi bartosz,
+
+On Tue, Apr 24, 2018 at 07:30:40PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Isn't this the MDIO bus address?
+> Device tree based systems often use OF_DECLARE() macros for devices
+> that need to be initialized early in the boot process such as clocks,
+> timers etc. However platform devices are more desirable.
+> 
+> This series aims at introducing support for early platform drivers for
+> OF-based systems.
+> 
+> The idea is to have a special compatible fallback string: "earlydev"
+> that similarily to "syscon" would be added to device nodes that need
+> early probing. We then need to call of_early_platform_populate() early
+> in the boot process to actually probe the registered devices.
+> 
+> I am aware that this new compatible does not strictly correspond with
+> the "hardware description only" rule of DT, but we already have many
+> functionalities that break this rule: syscon, gpio hogs etc.
 
-Hi Rob
+I don't think we need the "earlydev" string at all, and can still keep
+the rest of this infrastrcuture if it is helpful.
 
-Yes. This text has been take direct from the generic PHY binding.
- 
-> This should have a compatible string too.
+So while I'm certainly oppposed to the "earlydev" string, I think that
+the infrastrcuture could be useful.
 
-Please see Documentation/devicetree/bindings/net/phy.txt
+> The first user of this new functionality will be the DaVinci platform
+> for which we want to probe the pll, psc and timer drivers early in the
+> boot sequence but keep them implemented as platform drivers.
 
-compatible strings are optional. We know what device it is from its ID
-registers, which are in a well known location.
+Can we have early_paltform_driver() take a reference to the driver's
+of_match_table, and put that in a special section?
 
-	Andrew
+Then instead of looking for "earlydev", we look for any compatible
+string in that section. No magic string required in the DT, and we can
+always mess around with probe ordering in future.
+
+> In the future, if this series gets accepted, this could become and
+> alternative to TIMER_OF_DECLARE, CLK_OF_DECLARE etc. and could lead
+> to deprecating of those macros in favor of early platform drivers.
+
+IIRC we typically want to probe clocks before clocksources. Does using
+early platform drivers ensure the necessary ordering?
+
+Thanks,
+Mark.
+
+> Bartosz Golaszewski (11):
+>   platform: early: provide early_platform_add_device()
+>   platform: provide early_platform_driver_register_probe_all()
+>   platform: make support for early platform devices conditional
+>   of: platform: use pdev as name for vars of type struct platform_device
+>   platform: use a dedicated list_head for early devices
+>   of: provide for_each_compatible_child_node()
+>   dt-bindings: add bindings for early devices
+>   of: platform: provide of_early_platform_populate()
+>   platform: provide early_platform_driver()
+>   of: platform: provide of_early_platform_probe()
+>   misc: implement a dummy early platform driver
+> 
+>  Documentation/devicetree/bindings/early.txt |   7 +
+>  arch/sh/Kconfig                             |   1 +
+>  drivers/base/Kconfig                        |   4 +
+>  drivers/base/platform.c                     |  26 ++--
+>  drivers/misc/Kconfig                        |   8 ++
+>  drivers/misc/Makefile                       |   1 +
+>  drivers/misc/dummy-early.c                  |  40 ++++++
+>  drivers/of/device.c                         |  14 +-
+>  drivers/of/platform.c                       | 143 +++++++++++++++-----
+>  include/linux/device.h                      |   4 +
+>  include/linux/of.h                          |   3 +
+>  include/linux/of_device.h                   |   5 +
+>  include/linux/of_platform.h                 |  19 +++
+>  include/linux/platform_device.h             |  52 +++++++
+>  14 files changed, 279 insertions(+), 48 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/early.txt
+>  create mode 100644 drivers/misc/dummy-early.c
+> 
+> -- 
+> 2.17.0
+> 
