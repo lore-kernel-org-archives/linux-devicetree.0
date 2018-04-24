@@ -1,46 +1,35 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 5/5] usb: mtu3: make USB_MTU3_DUAL_ROLE depend on EXTCON but not USB_MTU3
-Date: Tue, 24 Apr 2018 10:52:50 +0800
-Message-ID: <9d0d09a973c6a7d76088f6cf557bb052d02dd440.1524537854.git.chunfeng.yun@mediatek.com>
-References: <3b0c7ca576fee8220d63c9914483b70b0fbc8783.1524537854.git.chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: "Ooi, Joyce" <joyce.ooi@intel.com>
+Subject: [PATCH] arm64: dts: stratix10: Change pad skew values for EMAC0 PHY driver
+Date: Tue, 24 Apr 2018 11:01:58 +0800
+Message-ID: <1524538918-21141-1-git-send-email-joyce.ooi@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3b0c7ca576fee8220d63c9914483b70b0fbc8783.1524537854.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ooi Joyce <joyce.ooi@intel.com>, See Chin Liang <chin.liang.see@intel.com>, Yves Vandervennet <yves.vandervennet@intel.com>, Ong Hean Loong <hean.loong.ong@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-In fact the driver depends on EXTCON only when it's configed as
-USB_MTU3_DUAL_ROLE, so make USB_MTU3_DUAL_ROLE depend on EXTCON but
-not USB_MTU3.
+The HPS EMAC0 drive strength is changed to 4mA because the initial 8mA
+drive strength has caused CE test to fail. This requires changes on the
+pad skew for EMAC0 PHY driver. Based on several measurements done, Tx
+clock does not require the extra 0.96ns delay.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Signed-off-by: Ooi, Joyce <joyce.ooi@intel.com>
 ---
- drivers/usb/mtu3/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../boot/dts/altera/socfpga_stratix10_socdk.dts    |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/usb/mtu3/Kconfig b/drivers/usb/mtu3/Kconfig
-index 25cd619..8daf277 100644
---- a/drivers/usb/mtu3/Kconfig
-+++ b/drivers/usb/mtu3/Kconfig
-@@ -2,7 +2,7 @@
- 
- config USB_MTU3
- 	tristate "MediaTek USB3 Dual Role controller"
--	depends on EXTCON && (USB || USB_GADGET) && HAS_DMA
-+	depends on (USB || USB_GADGET) && HAS_DMA
- 	depends on ARCH_MEDIATEK || COMPILE_TEST
- 	select USB_XHCI_MTK if USB_SUPPORT && USB_XHCI_HCD
- 	help
-@@ -40,6 +40,7 @@ config USB_MTU3_GADGET
- config USB_MTU3_DUAL_ROLE
- 	bool "Dual Role mode"
- 	depends on ((USB=y || USB=USB_MTU3) && (USB_GADGET=y || USB_GADGET=USB_MTU3))
-+	depends on (EXTCON=y || EXTCON=USB_MTU3)
- 	help
- 	  This is the default mode of working of MTU3 controller where
- 	  both host and gadget features are enabled.
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+index 0007564..8785f78 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+@@ -79,7 +79,7 @@
+ 			rxd2-skew-ps = <420>; /* 0ps */
+ 			rxd3-skew-ps = <420>; /* 0ps */
+ 			txen-skew-ps = <0>; /* -420ps */
+-			txc-skew-ps = <1860>; /* 960ps */
++			txc-skew-ps = <900>; /* 0ps */
+ 			rxdv-skew-ps = <420>; /* 0ps */
+ 			rxc-skew-ps = <1680>; /* 780ps */
+ 		};
 -- 
-1.9.1
+1.7.1
