@@ -1,55 +1,76 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 01/11] platform: early: provide early_platform_add_device()
-Date: Tue, 24 Apr 2018 19:30:41 +0200
-Message-ID: <20180424173051.15099-2-brgl@bgdev.pl>
-References: <20180424173051.15099-1-brgl@bgdev.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180424173051.15099-1-brgl@bgdev.pl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@siemens.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [RFT][PATCH] arm64: dts: exynos: Remove unneeded address space mapping for soc node
+Date: Tue, 24 Apr 2018 19:36:52 +0200
+Message-ID: <20180424173652.14735-1-krzk@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Remove the address space mapping between root and soc nodes to fix
+DTC warnings in Exynos5433 and Exynos7 like:
 
-Currently we only have early_platform_add_devices() which takes struct
-platform_device ** as argument, requiring the users to have an
-intermediate array of platform_device pointers even if we're only
-adding a single device. Provide a helper for adding a single device at
-a time.
+    arch/arm64/boot/dts/exynos/exynos5433-tm2.dtb:
+        Warning (unit_address_vs_reg): /soc: node has a reg or ranges property, but no unit name
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
 ---
- include/linux/platform_device.h | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
-index 49f634d96118..80942ed0f728 100644
---- a/include/linux/platform_device.h
-+++ b/include/linux/platform_device.h
-@@ -301,6 +301,11 @@ extern int early_platform_driver_register(struct early_platform_driver *epdrv,
- 					  char *buf);
- extern void early_platform_add_devices(struct platform_device **devs, int num);
+Not tested.
+---
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi | 6 +++---
+ arch/arm64/boot/dts/exynos/exynos7.dtsi    | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+index 828996a06610..ba8157ceaa56 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+@@ -18,8 +18,8 @@
  
-+static inline void early_platform_add_device(struct platform_device *pdev)
-+{
-+	early_platform_add_devices(&pdev, 1);
-+}
-+
- static inline int is_early_platform_device(struct platform_device *pdev)
- {
- 	return !pdev->dev.driver;
+ / {
+ 	compatible = "samsung,exynos5433";
+-	#address-cells = <2>;
+-	#size-cells = <2>;
++	#address-cells = <1>;
++	#size-cells = <1>;
+ 
+ 	interrupt-parent = <&gic>;
+ 
+@@ -235,7 +235,7 @@
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		ranges = <0x0 0x0 0x0 0x18000000>;
++		ranges;
+ 
+ 		arm_a53_pmu {
+ 			compatible = "arm,cortex-a53-pmu", "arm,armv8-pmuv3";
+diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+index 0b98d2334cad..93a84338938a 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+@@ -12,8 +12,8 @@
+ / {
+ 	compatible = "samsung,exynos7";
+ 	interrupt-parent = <&gic>;
+-	#address-cells = <2>;
+-	#size-cells = <2>;
++	#address-cells = <1>;
++	#size-cells = <1>;
+ 
+ 	aliases {
+ 		pinctrl0 = &pinctrl_alive;
+@@ -70,7 +70,7 @@
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		ranges = <0 0 0 0x18000000>;
++		ranges;
+ 
+ 		chipid@10000000 {
+ 			compatible = "samsung,exynos4210-chipid";
 -- 
-2.17.0
+2.14.1
