@@ -1,45 +1,49 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [RFC 03/13] bindings: display: Add compatible for A64 DE2 pipeline
-Date: Tue, 24 Apr 2018 19:04:15 +0530
-Message-ID: <20180424133425.24291-4-jagan@amarulasolutions.com>
-References: <20180424133425.24291-1-jagan@amarulasolutions.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180424133425.24291-1-jagan@amarulasolutions.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, Catalin Marinas <catalin.marinas@arm.com>, linux-sunxi@googlegroups.com, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Subject: [PATCH v7 0/9] Designware EP support and code clean up
+Date: Tue, 24 Apr 2018 14:44:37 +0100
+Message-ID: <cover.1524577064.git.gustavo.pimentel@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Allwinner A64 has DE2 pipeline similar to other Allwinner
-SOC's like A83T, H3/H5.
+The patch set was made against the Lorenzo's master branch.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 1 +
- 1 file changed, 1 insertion(+)
+Adds support Designware EP support.
 
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-index 3346c1e2a7a0..f0fd9274a25d 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-@@ -343,6 +343,7 @@ Required properties:
-     * allwinner,sun8i-h3-display-engine
-     * allwinner,sun8i-v3s-display-engine
-     * allwinner,sun9i-a80-display-engine
-+    * allwinner,sun50i-a64-display-engine
- 
-   - allwinner,pipelines: list of phandle to the display engine
-     frontends (DE 1.0) or mixers (DE 2.0) available.
+Increases the maximum number of interrupts allowed for Designware IP
+controller.
+
+Does a code cleanup on Designware driver:
+ - Replaces magic numbers without a easy meaning by a well known define
+   that helps the human compreension.
+ - Replaces a division by 2 by a simple right shift rotation of 1 bit.
+ - Fixes all first letter characters on comments and debug messages to
+   upper case to maintain coherency.
+
+Gustavo Pimentel (9):
+  bindings: PCI: designware: Example update
+  PCI: dwc: Add support for endpoint mode
+  PCI: endpoint: functions/pci-epf-test: Add second entry
+  bindings: PCI: designware: Add support for the EP in Designware driver
+  misc: pci_endpoint_test: Add designware EP entry
+  PCI: dwc: Define maximum number of vectors
+  PCI: dwc: Replace lower into upper case characters
+  PCI: dwc: Small computation improvement
+  PCI: dwc: Replace magic number by defines
+
+ .../PCI/endpoint/function/binding/pci-test.txt     |   2 +
+ .../devicetree/bindings/pci/designware-pcie.txt    |  24 +++-
+ drivers/misc/pci_endpoint_test.c                   |   1 +
+ drivers/pci/dwc/Kconfig                            |  41 ++++--
+ drivers/pci/dwc/pcie-designware-ep.c               |  16 +--
+ drivers/pci/dwc/pcie-designware-host.c             |  77 +++++-----
+ drivers/pci/dwc/pcie-designware-plat.c             | 155 +++++++++++++++++++--
+ drivers/pci/dwc/pcie-designware.c                  |  22 +--
+ drivers/pci/dwc/pcie-designware.h                  |   1 +
+ drivers/pci/endpoint/functions/pci-epf-test.c      |   8 ++
+ 10 files changed, 267 insertions(+), 80 deletions(-)
+
 -- 
-2.14.3
+2.7.4
