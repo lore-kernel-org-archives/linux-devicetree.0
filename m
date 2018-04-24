@@ -1,343 +1,58 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 5/8] media: Add LE version of RGB LVDS formats
-Date: Tue, 24 Apr 2018 09:16:22 +0200
-Message-ID: <20180424071622.GE17088@w540>
-References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524130269-32688-6-git-send-email-jacopo+renesas@jmondi.org>
- <1733883.PFymhGyeZa@avalon>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] dt-bindings: arm: consistently name r8a77965 as M3-N
+Date: Tue, 24 Apr 2018 09:16:17 +0200
+Message-ID: <CAMuHMdWZoXSJnuEiD4e9SpP+ASFgDCcwy16UFOeSEq5sNnsMSA@mail.gmail.com>
+References: <20180424055442.19710-1-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0254834895=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1733883.PFymhGyeZa@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, peda@axentia.se, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180424055442.19710-1-horms+renesas@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Simon,
 
---===============0254834895==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Lb0e7rgc7IsuDeGj"
-Content-Disposition: inline
-
-
---Lb0e7rgc7IsuDeGj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-HI Laurent,
-
-On Mon, Apr 23, 2018 at 04:06:01PM +0300, Laurent Pinchart wrote:
-> Hi Jacopo,
+On Tue, Apr 24, 2018 at 7:54 AM, Simon Horman
+<horms+renesas@verge.net.au> wrote:
+> There is an inconsistency between the use of M3N and M3-N.
+> This patch resolves this by consistently using the latter.
 >
-> Thank you for the patch.
->
-> On Thursday, 19 April 2018 12:31:06 EEST Jacopo Mondi wrote:
-> > Some LVDS controller can output swapped versions of LVDS RGB formats.
-> > Define and document them in the list of supported media bus formats
->
-> I wouldn't introduce those new formats as we don't need them. As a general
-> rule we would like to have at least one user for any new format added to the
-> API.
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-I was about to point you to patch [8/8], as the newly introduced
-formats allow replacing the DRM_BUS_FLAG_DATA_ flags, defined in
-drm_connector.h and which I struggled to find a more appropiate place
-where to move them. Or I either duplicate them for bridges, but I
-prefer not to, or we remove them, and defining some dedicated formats,
-seems more natural to me...
+Note that this is for a custom Salvator-X board where the M3-W SiP was
+replaced by an M3-N SiP.  So I have no idea what's on the sticker, if it was
+replaced at all, and thus kept the text from the BSP.
 
-I'll reply to your comment on [8/8] on the format names and other
-details.
+> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
+> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+> @@ -116,7 +116,7 @@ Boards:
+>      compatible = "renesas,salvator-x", "renesas,r8a7795"
+>    - Salvator-X (RTP0RC7796SIPB0011S)
+>      compatible = "renesas,salvator-x", "renesas,r8a7796"
+> -  - Salvator-X (RTP0RC7796SIPB0011S (M3N))
+> +  - Salvator-X (RTP0RC7796SIPB0011S (M3-N))
+>      compatible = "renesas,salvator-x", "renesas,r8a77965"
+>    - Salvator-XS (Salvator-X 2nd version, RTP0RC7795SIPB0012S)
+>      compatible = "renesas,salvator-xs", "renesas,r8a7795"
+\
+Gr{oetje,eeting}s,
 
-Thanks
-   j
+                        Geert
 
->
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  Documentation/media/uapi/v4l/subdev-formats.rst | 174 +++++++++++++++++++++
-> >  include/uapi/linux/media-bus-format.h           |   5 +-
-> >  2 files changed, 178 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/media/uapi/v4l/subdev-formats.rst
-> > b/Documentation/media/uapi/v4l/subdev-formats.rst index 9fcabe7..9a5263c
-> > 100644
-> > --- a/Documentation/media/uapi/v4l/subdev-formats.rst
-> > +++ b/Documentation/media/uapi/v4l/subdev-formats.rst
-> > @@ -1669,6 +1669,64 @@ JEIDA defined bit mapping will be named
-> >        - b\ :sub:`2`
-> >        - g\ :sub:`1`
-> >        - r\ :sub:`0`
-> > +    * .. _MEDIA-BUS-FMT-RGB666-1X7X3-SPWG_LE:
-> > +
-> > +      - MEDIA_BUS_FMT_RGB666_1X7X3_SPWG_LE
-> > +      - 0x101b
-> > +      - 0
-> > +      -
-> > +      -
-> > +      - b\ :sub:`2`
-> > +      - g\ :sub:`1`
-> > +      - r\ :sub:`0`
-> > +    * -
-> > +      -
-> > +      - 1
-> > +      -
-> > +      -
-> > +      - b\ :sub:`3`
-> > +      - g\ :sub:`2`
-> > +      - r\ :sub:`1`
-> > +    * -
-> > +      -
-> > +      - 2
-> > +      -
-> > +      -
-> > +      - b\ :sub:`4`
-> > +      - g\ :sub:`3`
-> > +      - r\ :sub:`2`
-> > +    * -
-> > +      -
-> > +      - 3
-> > +      -
-> > +      -
-> > +      - b\ :sub:`5`
-> > +      - g\ :sub:`4`
-> > +      - r\ :sub:`3`
-> > +    * -
-> > +      -
-> > +      - 4
-> > +      -
-> > +      -
-> > +      - d
-> > +      - g\ :sub:`5`
-> > +      - r\ :sub:`4`
-> > +    * -
-> > +      -
-> > +      - 5
-> > +      -
-> > +      -
-> > +      - d
-> > +      - b\ :sub:`0`
-> > +      - r\ :sub:`5`
-> > +    * -
-> > +      -
-> > +      - 6
-> > +      -
-> > +      -
-> > +      - d
-> > +      - b\ :sub:`1`
-> > +      - g\ :sub:`0`
-> >      * .. _MEDIA-BUS-FMT-RGB888-1X7X4-SPWG:
-> >
-> >        - MEDIA_BUS_FMT_RGB888_1X7X4_SPWG
-> > @@ -1727,6 +1785,64 @@ JEIDA defined bit mapping will be named
-> >        - b\ :sub:`2`
-> >        - g\ :sub:`1`
-> >        - r\ :sub:`0`
-> > +    * .. _MEDIA-BUS-FMT-RGB888-1X7X4-SPWG_LE:
-> > +
-> > +      - MEDIA_BUS_FMT_RGB888_1X7X4_SPWG_LE
-> > +      - 0x101c
-> > +      - 0
-> > +      -
-> > +      - r\ :sub:`6`
-> > +      - b\ :sub:`2`
-> > +      - g\ :sub:`1`
-> > +      - r\ :sub:`0`
-> > +    * -
-> > +      -
-> > +      - 1
-> > +      -
-> > +      - r\ :sub:`7`
-> > +      - b\ :sub:`3`
-> > +      - g\ :sub:`2`
-> > +      - r\ :sub:`1`
-> > +    * -
-> > +      -
-> > +      - 2
-> > +      -
-> > +      - g\ :sub:`6`
-> > +      - b\ :sub:`4`
-> > +      - g\ :sub:`3`
-> > +      - r\ :sub:`2`
-> > +    * -
-> > +      -
-> > +      - 3
-> > +      -
-> > +      - g\ :sub:`7`
-> > +      - b\ :sub:`5`
-> > +      - g\ :sub:`4`
-> > +      - r\ :sub:`3`
-> > +    * -
-> > +      -
-> > +      - 4
-> > +      -
-> > +      - b\ :sub:`6`
-> > +      - d
-> > +      - g\ :sub:`5`
-> > +      - r\ :sub:`4`
-> > +    * -
-> > +      -
-> > +      - 5
-> > +      -
-> > +      - b\ :sub:`7`
-> > +      - d
-> > +      - b\ :sub:`0`
-> > +      - r\ :sub:`5`
-> > +    * -
-> > +      -
-> > +      - 6
-> > +      -
-> > +      - d
-> > +      - d
-> > +      - b\ :sub:`1`
-> > +      - g\ :sub:`0`
-> >      * .. _MEDIA-BUS-FMT-RGB888-1X7X4-JEIDA:
-> >
-> >        - MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA
-> > @@ -1785,6 +1901,64 @@ JEIDA defined bit mapping will be named
-> >        - b\ :sub:`4`
-> >        - g\ :sub:`3`
-> >        - r\ :sub:`2`
-> > +    * .. _MEDIA-BUS-FMT-RGB888-1X7X4-JEIDA_LE:
-> > +
-> > +      - MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA_LE
-> > +      - 0x101d
-> > +      - 0
-> > +      -
-> > +      - r\ :sub:`0`
-> > +      - b\ :sub:`4`
-> > +      - g\ :sub:`3`
-> > +      - r\ :sub:`2`
-> > +    * -
-> > +      -
-> > +      - 1
-> > +      -
-> > +      - r\ :sub:`1`
-> > +      - b\ :sub:`5`
-> > +      - g\ :sub:`4`
-> > +      - r\ :sub:`3`
-> > +    * -
-> > +      -
-> > +      - 2
-> > +      -
-> > +      - g\ :sub:`0`
-> > +      - b\ :sub:`6`
-> > +      - g\ :sub:`5`
-> > +      - r\ :sub:`4`
-> > +    * -
-> > +      -
-> > +      - 3
-> > +      -
-> > +      - g\ :sub:`1`
-> > +      - b\ :sub:`7`
-> > +      - g\ :sub:`6`
-> > +      - r\ :sub:`5`
-> > +    * -
-> > +      -
-> > +      - 4
-> > +      -
-> > +      - b\ :sub:`0`
-> > +      - d
-> > +      - g\ :sub:`7`
-> > +      - r\ :sub:`6`
-> > +    * -
-> > +      -
-> > +      - 5
-> > +      -
-> > +      - b\ :sub:`1`
-> > +      - d
-> > +      - b\ :sub:`2`
-> > +      - r\ :sub:`7`
-> > +    * -
-> > +      -
-> > +      - 6
-> > +      -
-> > +      - d
-> > +      - d
-> > +      - b\ :sub:`3`
-> > +      - g\ :sub:`2`
-> >
-> >  .. raw:: latex
-> >
-> > diff --git a/include/uapi/linux/media-bus-format.h
-> > b/include/uapi/linux/media-bus-format.h index 9e35117..5bea7c0 100644
-> > --- a/include/uapi/linux/media-bus-format.h
-> > +++ b/include/uapi/linux/media-bus-format.h
-> > @@ -34,7 +34,7 @@
-> >
-> >  #define MEDIA_BUS_FMT_FIXED			0x0001
-> >
-> > -/* RGB - next is	0x101b */
-> > +/* RGB - next is	0x101f */
-> >  #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
-> >  #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
-> >  #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
-> > @@ -49,13 +49,16 @@
-> >  #define MEDIA_BUS_FMT_RBG888_1X24		0x100e
-> >  #define MEDIA_BUS_FMT_RGB666_1X24_CPADHI	0x1015
-> >  #define MEDIA_BUS_FMT_RGB666_1X7X3_SPWG		0x1010
-> > +#define MEDIA_BUS_FMT_RGB666_1X7X3_SPWG_LE	0x101b
-> >  #define MEDIA_BUS_FMT_BGR888_1X24		0x1013
-> >  #define MEDIA_BUS_FMT_GBR888_1X24		0x1014
-> >  #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
-> >  #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
-> >  #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
-> >  #define MEDIA_BUS_FMT_RGB888_1X7X4_SPWG		0x1011
-> > +#define MEDIA_BUS_FMT_RGB888_1X7X4_SPWG_LE	0x101c
-> >  #define MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA	0x1012
-> > +#define MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA_LE	0x101d
-> >  #define MEDIA_BUS_FMT_ARGB8888_1X32		0x100d
-> >  #define MEDIA_BUS_FMT_RGB888_1X32_PADHI		0x100f
-> >  #define MEDIA_BUS_FMT_RGB101010_1X30		0x1018
->
-> --
-> Regards,
->
-> Laurent Pinchart
->
->
->
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---Lb0e7rgc7IsuDeGj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJa3tnGAAoJEHI0Bo8WoVY8NkUP/jbr7QVwPmgIzNo86QV+ptKD
-NvhDLZpNQSlbEYtUSPr0Eb67cF26O1U21Ezf2c0oEQc1QsrGtF5KgBqQHrlL87Yn
-ksAvgT9wZbwwR0L+MP4KO/nP+s/adiCf7/f79Okz0xWYivJ7uJv63+XImKtEW85K
-OUP7WKfnw8CjKVSwbIRmWthVl2K3NNZvrZzjfGFYwGWr9U8RmYTmRaP86Cku1UbA
-P/vCNm9fzECJXLzNsycIfLaeJ9nCtKn4wleI0+X+CXNq5LPZS8JLPnHqFzjE7eLb
-2GNNce01ZICrBn5SyjLJptk1rAq9ht7CIclkqoi7wuQKSirohyZCCtP768vh0njd
-CXDXYaPu80ZRUB0fcFcGZ6pKPMWXFnUqRvQyC3FAlXiShkX4qBNl6ghU5qI4YLk5
-4KtuDw3jALjKLiTf9wZ57Sxm0SekvjJBgzHse0++BrtkxWpgmkE+RfJBXOBC5npi
-1sU8SkZFIK1DzuMBZ/vR5MANME27p4RKn7+CTsSEEnlv4l309vzfcv86eCwS9F+a
-Xrba5tRfh+FwixDXcOxy0IDIfMCpCQBO+tYOgjEvcQW4kD/UwOLHZEHAdnZSMl8G
-ouanzzBuYhFL7Fdeq0wCsqQT45G8j6NsubR7bSAJsSC225OSVJtKPCLjTE/a9woz
-nN0j14ay7AszUdBYFUms
-=ToEU
------END PGP SIGNATURE-----
-
---Lb0e7rgc7IsuDeGj--
-
---===============0254834895==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0254834895==--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
