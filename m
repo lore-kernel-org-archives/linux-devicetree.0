@@ -1,26 +1,57 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [RFC 05/10] i2c: s3c2410: Remove support for Exynos5440
-Date: Wed, 25 Apr 2018 14:56:48 +0200
-Message-ID: <fe4ac171-e7dd-a643-35b6-7beebee81bdb@samsung.com>
-References: <20180424203239.21885-1-krzk@kernel.org>
-        <CGME20180424203349epcas2p1a47060486c2e349b27fd0b2c4ea0394c@epcas2p1.samsung.com>
-        <20180424203239.21885-6-krzk@kernel.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v3 05/15] ARM: dts: dra76x-mmc-iodelay: Add a new pinctrl group for clk line without pullup
+Date: Wed, 25 Apr 2018 18:24:39 +0530
+Message-ID: <20180425125449.19755-6-kishon@ti.com>
+References: <20180425125449.19755-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180424203239.21885-6-krzk@kernel.org>
-Content-language: en-GB
+In-Reply-To: <20180425125449.19755-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org
-Cc: Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson=20?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, kishon@ti.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/24/2018 10:32 PM, Krzysztof Kozlowski wrote:
-> The Exynos5440 is not actively developed, there are no development
-> boards available and probably there are no real products with it.
-> Remove wide-tree support for Exynos5440.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+During a short period when the bus voltage is switched from 3.3v to 1.8v,
+(to enumerate UHS mode), the mmc module is disabled and the mmc IO lines
+are kept in a state according to the programmed pad mux pull type.
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+According to 4.2.4.2 Timing to Switch Signal Voltage in "SD Specifications
+Part 1 Physical Layer Specification Version 5.00 February 22, 2016", the
+host should hold CLK line low for at least 5ms.
+
+In order to keep the card line low during voltage switch, the pad mux of
+mmc1_clk line should be configured to pull down.
+
+Add a new pinctrl group for clock line without pullup to be used in boards
+where mmc1_clk line is not connected to an external pullup.
+
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi b/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
+index baba7b00eca7..b6327220a88e 100644
+--- a/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
++++ b/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
+@@ -38,6 +38,17 @@
+ 		>;
+ 	};
+ 
++	mmc1_pins_default_no_clk_pu: mmc1_pins_default_no_clk_pu {
++		pinctrl-single,pins = <
++			DRA7XX_CORE_IOPAD(0x3754, PIN_INPUT_PULLDOWN | MUX_MODE0) /* mmc1_clk.clk */
++			DRA7XX_CORE_IOPAD(0x3758, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_cmd.cmd */
++			DRA7XX_CORE_IOPAD(0x375c, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat0.dat0 */
++			DRA7XX_CORE_IOPAD(0x3760, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat1.dat1 */
++			DRA7XX_CORE_IOPAD(0x3764, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat2.dat2 */
++			DRA7XX_CORE_IOPAD(0x3768, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat3.dat3 */
++		>;
++	};
++
+ 	mmc1_pins_hs: mmc1_pins_hs {
+ 		pinctrl-single,pins = <
+ 			DRA7XX_CORE_IOPAD(0x3754, PIN_INPUT_PULLUP | MUX_VIRTUAL_MODE11 | MUX_MODE0) /* mmc1_clk.clk */
+-- 
+2.17.0
