@@ -1,85 +1,33 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings/display/bridge: sii902x: add optional
- power supplies
-Date: Wed, 25 Apr 2018 16:17:25 +0300
-Message-ID: <1559016.ZjzeSVB84W@avalon>
-References: <20180425075314.19137-1-philippe.cornu@st.com>
- <16954794.QiYqgNKfkn@avalon> <e18d1a3b-a2eb-74f2-ab88-7bf01af0754b@st.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [RFC 06/10] thermal: samsung: Remove support for Exynos5440
+Date: Wed, 25 Apr 2018 15:18:51 +0200
+Message-ID: <1951102.VLysaozMLK@amdc3058>
+References: <20180424203239.21885-1-krzk@kernel.org>
+        <CGME20180424203356epcas4p44b884a8d409d0faa188a0ecdf4945c11@epcas4p4.samsung.com>
+        <20180424203239.21885-7-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <e18d1a3b-a2eb-74f2-ab88-7bf01af0754b@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philippe CORNU <philippe.cornu@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Yannick FERTRE <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20180424203239.21885-7-krzk@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcGUsCgpPbiBXZWRuZXNkYXksIDI1IEFwcmlsIDIwMTggMTU6MjA6MDQgRUVTVCBQ
-aGlsaXBwZSBDT1JOVSB3cm90ZToKPiBPbiAwNC8yNS8yMDE4IDExOjAxIEFNLCBMYXVyZW50IFBp
-bmNoYXJ0IHdyb3RlOgo+ID4gT24gV2VkbmVzZGF5LCAyNSBBcHJpbCAyMDE4IDEwOjUzOjEzIEVF
-U1QgUGhpbGlwcGUgQ29ybnUgd3JvdGU6Cj4gPj4gQWRkIG9wdGlvbmFsIHBvd2VyIHN1cHBsaWVz
-IHVzaW5nIHRoZSBkZXNjcmlwdGlvbiBmb3VuZCBpbgo+ID4+ICJTaUk5MDIyQS9TaUk5MDI0QSBI
-RE1JIFRyYW5zbWl0dGVyIERhdGEgU2hlZXQgKEF1Z3VzdCAyMDE2KSIuCj4gPj4KPiA+PiBUaGVy
-ZSBpcyBhIHNpbmdsZSAxdjIgc3VwcGx5IHZvbHRhZ2UgbmFtZWQgdmNjMTIgZnJvbSB3aGljaCBj
-dmNjMTIKPiA+PiAoZGlnaXRhbCBjb3JlKSBhbmQgYXZjYzEyIChUTURTIGFuYWxvZykgYXJlIGRl
-cml2ZWQgYmVjYXVzZSBhY2NvcmRpbmcKPiA+PiB0byB0aGlzIGRhdGEgc2hlZXQ6Cj4gPj4gImN2
-Y2MxMiBhbmQgYXZjYzEyIGNhbiBiZSBkZXJpdmVkIGZyb20gdGhlIHNhbWUgcG93ZXIgc291cmNl
-Igo+ID4gCj4gPiBTaG91bGRuJ3QgdGhlIHBvd2VyIHN1cHBsaWVzIGJlIG1hbmRhdG9yeSwgYXMg
-ZXhwbGFpbmVkIGJ5IE1hcmsgaW4KPiA+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL2Fy
-Y2hpdmVzL2RyaS1kZXZlbC8yMDE4LUFwcmlsLzE3MjQwMC5odG1sCj4gPiA/IAo+IAo+IExhdXJl
-bnQsCj4gTWFueSB0aGFua3MgTGF1cmVudCBmb3IgeW91ciBjb21tZW50LCBJIHVuZGVyc3Rvb2Qg
-dGhlIG1lcmdlIG9mIHRoZSB0d28gCj4gMXYyIHBvd2VyIHN1cHBsaWVzIGJ1dCBtaXNzZWQgdGhl
-ICJtYW5kYXRvcnkiIHBhcnQuLi4gbWF5YmUgYmVjYXVzZSB0aGlzIAo+IHBhdGNoICh3aXRoIG9w
-dGlvbmFsIHBvd2VyIHN1cHBsaWVzKSBhbHJlYWR5IGdvdCB0aGUgcmV2aWV3ZWQtYnkgZnJvbSAK
-PiBSb2IsIEkgdGhvdWdodCB0aGUgZGlzY3Vzc2lvbiB0aHJlYWQgeW91IHBvaW50ZWQgb3V0IHdh
-cyBhcHBsaWNhYmxlIAo+ICJvbmx5IiB0byB0b3RhbGx5IG5ldyBkcml2ZXIgZG9jdW1lbnRhdGlv
-bi4KPiAKPiBTbywgb24gbXkgc2lkZSwgYXMgYSAibmV3IHVzZXIiIG9mIHNpaTkwMnggSUMsIG5v
-IHByb2JsZW0gdG8gcHV0IHRoZXNlIAo+IHBvd2VyIHN1cHBsaWVzIGFzIG1hbmRhdG9yeSBpbnN0
-ZWFkIG9mIG9wdGlvbmFsIHByb3BlcnRpZXMgYnV0IEkgd291bGQgCj4gbGlrZSB0byBiZSBzdXJl
-IHRoaXMgaXMgYXBwbGljYWJsZSB0byBib3RoIG9sZCBhbmQgbmV3IGJpbmRpbmdzIGRvYyA6ICkK
-CldlIG9idmlvdXNseSBuZWVkIHRvIHJldGFpbiBiYWNrd2FyZCBjb21wYXRpYmlsaXR5LCBzbyBv
-biB0aGUgZHJpdmVyIHNpZGUgeW91IApuZWVkIHRvIHRyZWF0IHRob3NlIHBvd2VyIHN1cHBsaWVz
-IGFzIG9wdGlvbmFsLiBGcm9tIGEgRFQgYmluZGluZ3MgcG9pbnQgb2YgCnZpZXcsIGhvd2V2ZXIs
-IEkgdGhpbmsgdGhleSBzaG91bGQgYmUgbWFuZGF0b3J5IGZvciBuZXcgRFQuCgo+IFJvYiwKPiBj
-b3VsZCB5b3UgcGxlYXNlIGNvbmZpcm0gdGhlc2UgcG93ZXIgc3VwcGx5IHByb3BlcnRpZXMgc2hv
-dWxkIGJlIAo+ICJtYW5kYXRvcnkiPwo+IGlmIHllcywgc2hvdWxkIHdlIHRoZW4gbW9kaWZ5IG90
-aGVyIG9wdGlvbmFsIHByb3BlcnRpZXMgbGlrZSB0aGUgCj4gcmVzZXQtZ3Bpb3MgdG9vIGluIHRo
-ZSBmdXR1cmU/CgpUaGUgR1BJT3MgcHJvcGVydGllcyBhcmUgZGlmZmVyZW50IGluIG15IG9waW5p
-b24sIGFzIHRoZXJlJ3Mgbm8gcmVxdWlyZW1lbnQgdG8gCmNvbm5lY3QgZm9yIGluc3RhbmNlIHRo
-ZSByZXNldCBwaW4gdG8gYSBHUElPIGNvbnRyb2xsYWJsZSBieSB0aGUgU29DLiBUaGUgcGluIApj
-b3VsZCBiZSBoYXJkd2lyZWQgdG8gVkNDLCBvciBjb25uZWN0ZWQgdG8gYSBzeXN0ZW0gcmVzZXQg
-dGhhdCBpcyAKYXV0b21hdGljYWxseSBtYW5hZ2VkIHdpdGhvdXQgU29DIGludGVydmVudGlvbi4g
-VGhlIHBvd2VyIHN1cHBsaWVzLCBob3dldmVyLCAKYXJlIG1hbmRhdG9yeSwgaW4gdGhlIHNlbnNl
-IHRoYXQgdGhlIGNoaXAgd2lsbCBub3Qgd29yayBpZiB5b3UgbGVhdmUgdGhlIHBvd2VyIApzdXBw
-bGllcyB1bmNvbm5lY3RlZC4KCj4gQmlnIHRoYW5rcyB0byBib3RoIG9mIHlvdSwKCllvdSdyZSB3
-ZWxjb21lICEKCj4gPj4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNv
-cm51QHN0LmNvbT4KPiA+PiAtLS0KPiA+PiAKPiA+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dCB8IDIgKysKPiA+PiAgIDEgZmls
-ZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKPiA+Pgo+ID4+IGRpZmYgLS1naXQKPiA+PiBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4
-dAo+ID4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
-L3NpaTkwMngudHh0IGluZGV4Cj4gPj4gNTZhM2U2OGNjYjgwLi45ZmI0MWZjOWFmNTEgMTAwNjQ0
-Cj4gPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
-ZGdlL3NpaTkwMngudHh0Cj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0Cj4gPj4gQEAgLTgsNiArOCw4IEBAIE9wdGlv
-bmFsIHByb3BlcnRpZXM6Cj4gPj4gICAJLSBpbnRlcnJ1cHRzLWV4dGVuZGVkIG9yIGludGVycnVw
-dC1wYXJlbnQgKyBpbnRlcnJ1cHRzOiBkZXNjcmliZQo+ID4+ICAgCSAgdGhlIGludGVycnVwdCBs
-aW5lIHVzZWQgdG8gaW5mb3JtIHRoZSBob3N0IGFib3V0IGhvdHBsdWcgZXZlbnRzLgo+ID4+ICAg
-CS0gcmVzZXQtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgUlNU
-X04gcGluLgo+ID4+ICsJLSBpb3ZjYy1zdXBwbHk6IEkvTyBzdXBwbHkgdm9sdGFnZSAoMS44ViBv
-ciAzLjNWLCBob3N0LWRlcGVuZGVudCkuCj4gPj4gKwktIHZjYzEyLXN1cHBseTogVE1EUyBhbmFs
-b2cgJiBkaWdpdGFsIGNvcmUgc3VwcGx5IHZvbHRhZ2UgKDEuMlYpLgo+ID4+Cj4gPj4gICBPcHRp
-b25hbCBzdWJub2RlczoKPiA+PiAgIAktIHZpZGVvIGlucHV0OiB0aGlzIHN1Ym5vZGUgY2FuIGNv
-bnRhaW4gYSB2aWRlbyBpbnB1dCBwb3J0IG5vZGUKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5j
-aGFydAoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tuesday, April 24, 2018 10:32:35 PM Krzysztof Kozlowski wrote:
+> The Exynos5440 is not actively developed, there are no development
+> boards available and probably there are no real products with it.
+> Remove wide-tree support for Exynos5440.
+
+Thanks for doing this.
+
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
