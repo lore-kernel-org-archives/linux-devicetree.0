@@ -1,25 +1,69 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/7] dt-bindings: add generic gnss binding
-Date: Wed, 25 Apr 2018 13:26:39 -0500
-Message-ID: <CAL_Jsq+schVAhTcK1DJgLuk42c23Ti4jsefkO_whyg7CeoOwHQ@mail.gmail.com>
-References: <20180424163458.11947-1-johan@kernel.org> <20180424163458.11947-3-johan@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: Lack of suspend/resume/shutdown ordering between GPIO providers
+ and consumers
+Date: Wed, 25 Apr 2018 11:29:40 -0700
+Message-ID: <206bea0c-dbba-1bc3-d13b-dbc41d12c08b@gmail.com>
+References: <dc0c15eb-3dab-f512-aed6-045528fcec2c@gmail.com>
+ <03711276-d854-7f87-f2e2-c64716b09dbe@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180424163458.11947-3-johan@kernel.org>
+In-Reply-To: <03711276-d854-7f87-f2e2-c64716b09dbe@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, jeffy.chen@rock-chips.com, enric.balletbo@collabora.com, josephl@nvidia.com, opendmb@gmail.com, rjw@rjwysocki.net
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 24, 2018 at 11:34 AM, Johan Hovold <johan@kernel.org> wrote:
-> Describe generic properties for GNSS receivers.
->
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-> ---
->  .../devicetree/bindings/gnss/gnss.txt         | 36 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gnss/gnss.txt
+On 04/25/2018 11:06 AM, Grygorii Strashko wrote:
+> 
+> 
+> On 04/24/2018 05:58 PM, Florian Fainelli wrote:
+>> Hi Linus, Rafael, all
+>>
+>> Our GPIO controller driver: gpio-brcmstb.c has a shutdown callback which
+>> gets invoked when the system is brought into poweroff aka S5. So far so
+>> good, except that we also wish to use gpio_keys.c as a possible wake-up
+>> source, so we may have a number of GPIO pins declared as gpio-keys that
+>> allow the system to wake-up from deep slumber.
+>>
+>> Recently we noticed that we could easily get into a state where
+>> gpio-brcmstb.c::brcmstb_gpio_shutdown() gets called first, and then
+>> gpio_keys.c::gpio_keys_suspend() gets called later, which is too late to
+>> have the enable_irq_wake() call do anything sensible since we have
+>> suspend its parent interrupt controller before. This is completely
+>> expected unfortunately because these two drivers are both platform
+>> device instances with no connection to one another except via Device
+>> Tree and the use of the GPIOLIB APIs.
+> 
+> You can take a look at device_link_add() and Co.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+OK, though that requires a struct device references, so while I could
+certainly resolve the device_node -> struct device that corresponds to
+the GPIO provider , that poses a number of issues:
+
+- not all struct device_node have a corresponding struct device
+reference (e.g: clock providers, interrupt controllers, and possibly
+other custom drivers), though in this case, they most likely do have one
+
+- resolving a struct device associated with a struct device_node is
+often done in a "bus" specific way, e.g: of_find_device_by_node(), so if
+the GPIO provider is e.g: i2c_device, pci_device etc. etc. this might
+not work that easily
+
+I think this is what Dmitry just indicated in his email as well.
+
+> 
+> But it's little bit unclear what exactly you have issue with:
+> - shutdown
+> - suspend
+> 
+> above are different (at least as it was before) and gpio-brcmstb.c
+>  brcmstb_gpio_shutdown() should not be called as part of suspend !?
+> may be you mean brcmstb_gpio_suspend?
+
+The issue exists with shutdown (through the use of "poweroff"), that is
+confirmed, but I cannot see how it does not exist with any suspend state
+as well, for the same reason that the ordering is not strictly enforced.
+--
+Florian
