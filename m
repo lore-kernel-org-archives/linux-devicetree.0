@@ -1,102 +1,273 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 6/6] arm64: dts: rockchip: Specify override mode for
- kevin panel
-Date: Tue, 24 Apr 2018 21:29:51 -0700
-Message-ID: <CAD=FV=W9LCeGAEuZDD9FUEKVMp8YUuCcW9uLcTZqTR1spA1gEA@mail.gmail.com>
-References: <20180208174855.55620-1-seanpaul@chromium.org>
- <20180208174855.55620-7-seanpaul@chromium.org>
- <CAD=FV=WGU+s015DQbNeWHkpqpHLFz+9AjHKAd0N3HWag0p5FWA@mail.gmail.com>
- <CAAEAJfAQMzUfM86o-xNoyBQzTiEMNH+W=9FyFpBy99nA3HrVgw@mail.gmail.com>
+From: Jan Kiszka <jan.kiszka@web.de>
+Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
+ unflattened to FDT
+Date: Wed, 25 Apr 2018 07:22:09 +0200
+Message-ID: <53ee2d0b-1867-5cad-667c-7f70085c645d@web.de>
+References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
+ <1520122673-11003-3-git-send-email-frowand.list@gmail.com>
+ <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
+ <7bbf615b-3cdd-6bb4-6918-33e48de4225d@gmail.com>
+ <a21dbee8-6e4e-9ceb-c798-dda43c2eae2d@web.de>
+ <d7e94a45-5d46-0491-e5dc-2b098a11c5b1@gmail.com>
+ <CAL_Jsq+MmUTMrd+jNqUB2=A-q3cCy7+QWOKG0iF6zM0hjCy3PQ@mail.gmail.com>
+ <e508f3de-f21b-2510-2c6a-b810073ba1a7@web.de>
+ <e06d1c0f-f60d-fc23-cd74-82f557dbc432@web.de>
+ <7bbb9472-9c96-6012-68e6-4ec2773c7732@gmail.com>
+ <4422f58a-ca7c-16e6-e0df-63faea50f553@web.de>
+ <3d7cb4d3-5070-e878-51d3-59f9772f756b@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAAEAJfAQMzUfM86o-xNoyBQzTiEMNH+W=9FyFpBy99nA3HrVgw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Emil Renner Berthing <kernel@esmil.dk>, Arnd Bergmann <arnd@arndb.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Catalin Marinas <catalin.marinas@arm.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.co.uk>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, hoegsberg@chromium.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <jailhouse-dev+bncBDDNLV6S7AOBBCFBQDLQKGQEYMSG7MI@googlegroups.com>
+Sender: jailhouse-dev@googlegroups.com
+In-Reply-To: <3d7cb4d3-5070-e878-51d3-59f9772f756b@gmail.com>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
+List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
+List-Archive: <https://groups.google.com/group/jailhouse-dev
+List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
+List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/group/jailhouse-dev/subscribe>
+To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alan Tull <atull@kernel.org>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jailhouse <jailhouse-dev@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUdWUsIEFwciAyNCwgMjAxOCBhdCA3OjMxIEFNLCBFemVxdWllbCBHYXJjaWEKPGV6
-ZXF1aWVsQHZhbmd1YXJkaWFzdXIuY29tLmFyPiB3cm90ZToKPiBIaSBEb3VnLCBTZWFuOgo+Cj4g
-SSB3b3VsZCBsaWtlIHRvIG1vdmUgdGhpcyBmb3J3YXJkLgo+Cj4gT24gMjYgRmVicnVhcnkgMjAx
-OCBhdCAxNToyMywgRG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPiB3cm90ZToK
-Pj4gSGksCj4+Cj4+IE9uIFRodSwgRmViIDgsIDIwMTggYXQgOTo0OCBBTSwgU2VhbiBQYXVsIDxz
-ZWFucGF1bEBjaHJvbWl1bS5vcmc+IHdyb3RlOgo+Pj4gVGhpcyBwYXRjaCBhZGRzIGFuIG92ZXJy
-aWRlIG1vZGUgZm9yIGtldmluIGRldmljZXMuIFRoZSBtb2RlIGluY3JlYXNlcwo+Pj4gYm90aCBi
-YWNrIHBvcmNoZXMgdG8gYWxsb3cgYSBwaXhlbCBjbG9jayBvZiAyNjY2NmtIeiBhcyBvcHBvc2Vk
-IHRvIHRoZQo+Pj4gJ3R5cGljYWwnIHZhbHVlIG9mIDI1Mjc1MGtIei4gVGhpcyBpcyBuZWVkZWQg
-dG8gYXZvaWQgaW50ZXJmZXJlbmNlIHdpdGgKPj4+IHRoZSB0b3VjaCBkaWdpdGl6ZXIgb24gdGhl
-c2UgbGFwdG9wcy4KPj4+Cj4+PiBDaGFuZ2VzIGluIHYyOgo+Pj4gIC0gV3JhcCB0aGUgdGltaW5n
-IGluIGRpc3BsYXktdGltaW5ncyBub2RlIHRvIG1hdGNoIGJpbmRpbmcgKFJvYi9UaGllcnJ5KQo+
-Pj4gQ2hhbmdlcyBpbiB2MzoKPj4+ICAtIFVud3JhcCB0aGUgdGltaW5nIGZyb20gZGlzcGxheS10
-aW1pbmdzIGFuZCByZW5hbWUgcGFuZWwtdGltaW5nIChSb2IpCj4+Pgo+Pj4gQ2M6IERvdWcgQW5k
-ZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KPj4+IENjOiBFcmljIEFuaG9sdCA8ZXJpY0Bh
-bmhvbHQubmV0Pgo+Pj4gQ2M6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4+PiBD
-YzogSmVmZnkgQ2hlbiA8amVmZnkuY2hlbkByb2NrLWNoaXBzLmNvbT4KPj4+IENjOiBSb2IgSGVy
-cmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPgo+Pj4gQ2M6IFN0w6lwaGFuZSBNYXJjaGVzaW4gPG1h
-cmNoZXVAY2hyb21pdW0ub3JnPgo+Pj4gQ2M6IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGlu
-Z0BnbWFpbC5jb20+Cj4+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4+IENjOiBk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4+PiBDYzogbGludXgtcm9ja2NoaXBAbGlz
-dHMuaW5mcmFkZWFkLm9yZwo+Pj4gU2lnbmVkLW9mZi1ieTogU2VhbiBQYXVsIDxzZWFucGF1bEBj
-aHJvbWl1bS5vcmc+Cj4+PiAtLS0KPj4+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3Jr
-MzM5OS1ncnUta2V2aW4uZHRzIHwgMTQgKysrKysrKysrKysrKysKPj4+ICAxIGZpbGUgY2hhbmdl
-ZCwgMTQgaW5zZXJ0aW9ucygrKQo+Pj4KPj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL3JvY2tjaGlwL3JrMzM5OS1ncnUta2V2aW4uZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9y
-b2NrY2hpcC9yazMzOTktZ3J1LWtldmluLmR0cwo+Pj4gaW5kZXggMTkxYTZiY2IxNzA0Li42NTg0
-MTFjZTM3ZWEgMTAwNjQ0Cj4+PiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3Jr
-MzM5OS1ncnUta2V2aW4uZHRzCj4+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlw
-L3JrMzM5OS1ncnUta2V2aW4uZHRzCj4+PiBAQCAtOTgsNiArOTgsMjAgQEAKPj4+ICAgICAgICAg
-ICAgICAgICBiYWNrbGlnaHQgPSA8JmJhY2tsaWdodD47Cj4+PiAgICAgICAgICAgICAgICAgcG93
-ZXItc3VwcGx5ID0gPCZwcDMzMDBfZGlzcD47Cj4+Pgo+Pj4gKyAgICAgICAgICAgICAgIHBhbmVs
-LXRpbWluZyB7Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICBjbG9jay1mcmVxdWVuY3kgPSA8
-MjY2NjA0NzIwPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGhhY3RpdmUgPSA8MjQwMD47
-Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICBoZnJvbnQtcG9yY2ggPSA8NDg+Owo+Pj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgaGJhY2stcG9yY2ggPSA8ODQ+Owo+Pj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgaHN5bmMtbGVuID0gPDMyPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-IGhzeW5jLWFjdGl2ZSA9IDwwPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHZhY3RpdmUg
-PSA8MTYwMD47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICB2ZnJvbnQtcG9yY2ggPSA8Mz47
-Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICB2YmFjay1wb3JjaCA9IDwxMjA+Owo+Pj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgdnN5bmMtbGVuID0gPDEwPjsKPj4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIHZzeW5jLWFjdGl2ZSA9IDwwPjsKPj4+ICsgICAgICAgICAgICAgICB9Owo+Pj4g
-Kwo+Pj4gICAgICAgICAgICAgICAgIHBvcnRzIHsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAg
-IHBhbmVsX2luX2VkcDogZW5kcG9pbnQgewo+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmVkcF9vdXRfcGFuZWw+Owo+Pgo+PiBLcmlzdGlhbiBi
-cm91Z2h0IGFuIG9sZCBidWcgdG8gbXkgYXR0ZW50aW9uCj4+IDxodHRwczovL2J1Z3MuY2hyb21p
-dW0ub3JnL3AvY2hyb21pdW0vaXNzdWVzL2RldGFpbD9pZD03NTAzNTQ+IGFuZCBpdAo+PiBtYWRl
-IG1lIHRoaW5rLiAgU2hvdWxkIHdlIHNvbWVob3cgYWRqdXN0IHRoZSBiaW5kaW5ncyBoZXJlIHRv
-IGFjY291bnQKPj4gZm9yIHRoZSBmYWN0IHRoYXQgYSBib2FyZCBtYXkgc291cmNlIHNldmVyYWwg
-ZGlmZmVyZW50IHBhbmVscz8KPj4KPj4gQUtBOiBvbiBzb21lIGJvYXJkcyBhbiBPRE0gbWF5IHdh
-bnQgdG8gc2Vjb25kIHNvdXJjZSAob3IgdGhpcmQgc291cmNlLAo+PiBvciAuLi4pIHRoZSBwYW5l
-bC4gIFRoZXknbGwgcmFuZG9tbHkgY29ubmVjdCBzZXZlcmFsIGRpZmZlcmVudCBwYW5lbHMKPj4g
-dG8gdGhlIGJvYXJkIGFuZCBzaGlwIHRoZSBib2FyZHMgb3V0LiAgVGhlIHBhbmVscyBhcmUgYWxs
-IGNvbXBhdGlibGUKPj4gZWxlY3RyaWNhbGx5IChzYW1lIHBvd2VyIHNlcXVlbmNpbmcpIGJ1dCBt
-aWdodCBuZWVkIHNsaWdodGx5IGRpZmZlcmVudAo+PiB0aW1pbmdzLiAgSW4gdGhpcyBwYXJ0aWN1
-bGFyIGNhc2UgdGhlcmUncyBubyBib2FyZC1sZXZlbCBzdHJhcHBpbmdzCj4+IGZvciB0aGUgZGlm
-ZmVyZW50IHBhbmVscy0taXQncyBhc3N1bWVkIHRoYXQgdGhlIEVESUQgb24gdGhlIHBhbmVscyBj
-YW4KPj4gYmUgdXNlZCB0byBkaXN0aW5ndWlzaCB0aGVtLgo+Pgo+PiBJbiB0aGF0IGNhc2UgaXQg
-c2VlbXMgbGlrZSBpdCB3b3VsZCBiZSBuaWNlIHRvIGFsbG93IHNwZWNpZnlpbmcgbW9yZQo+PiB0
-aGFuIG9uZSAicGFuZWwtdGltaW5nIiBub2Rlcy4gIE1heWJlIGtleWVkIG9mZiBzb21lIHR5cGUg
-b2YgSUQgdGhhdCdzCj4+IHByZXNlbnQgaW4gdGhlIEVESUQ/Cj4+Cj4+Cj4+IElzIHRoYXQgc29t
-ZXRoaW5nIHdlJ2Qgd2FudCB0byBhY2NvdW50IGZvciBiZWZvcmUgd2UgbGFuZCB0aGlzIHNlcmll
-cz8KPj4gIEl0IHNlZW1zIGxpa2UgaXQgd291bGQganVzdCBiZSBhZGRpbmcgYW4gZXh0cmEgbGV2
-ZWwgb2Ygbm9kZXM/Cj4+Cj4KPiBBRkFJQ1MsIHRoZXJlIGlzIG5vIEVESUQgd2l0aG91dCBhIERE
-QyBidXMsIHdoaWNoIHdlIGRvbid0Cj4gc2VlbSB0byBoYXZlIG9uIGdydSBwbGF0Zm9ybXMsIGRv
-IHdlPwoKSSdtIGZhaXJseSBjZXJ0YWluIHdlIGNhbiByZWFkIHRoZSBFRElEIG9uIGdydSBkZXZp
-Y2VzLiAgSSBzZWUgdGhlCiJhdXgiIGNoYW5uZWwgY29ubmVjdGVkIG9uIHRoZSBzY2hlbWF0aWNz
-LiAgVGhhdCdsbCBkbyBpdCwgcmlnaHQ/Ci4uLmFuZCBJIGNvdWxkIGhhdmUgc3dvcm4gdGhhdCBh
-dCBzb21lIHBvaW50IGluIHRpbWUgSSBjb3VsZCByZWFkIHRoZQpFRElEIGluIHRoZSBzb2Z0d2Fy
-ZS4gIE15IGtldmluIGRldmljZXMgYXJlIG5vdCBjb25uZWN0ZWQgZm9yCmRlYnVnZ2luZyBzbyBJ
-IGNhbid0IGNoZWNrIHJpZ2h0IG5vdywgYnV0IEknbSBwcmV0dHkgc3VyZSBJIHdhcyBhYmxlCnRv
-IHJlYWQgdGhlIEVESUQgaW4gdGhlIHBhc3QuLi4KCi1Eb3VnCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 2018-04-24 23:15, Frank Rowand wrote:
+> On 04/23/18 22:29, Jan Kiszka wrote:
+>> On 2018-04-24 00:38, Frank Rowand wrote:
+>>> Hi Jan,
+>>>
+>>> + Alan Tull for fpga perspective
+>>>
+>>> On 04/22/18 03:30, Jan Kiszka wrote:
+>>>> On 2018-04-11 07:42, Jan Kiszka wrote:
+>>>>> On 2018-04-05 23:12, Rob Herring wrote:
+>>>>>> On Thu, Apr 5, 2018 at 2:28 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>>>>>>> On 04/05/18 12:13, Jan Kiszka wrote:
+>>>>>>>> On 2018-04-05 20:59, Frank Rowand wrote:
+>>>>>>>>> Hi Jan,
+>>>>>>>>>
+>>>>>>>>> On 04/04/18 15:35, Jan Kiszka wrote:
+>>>>>>>>>> Hi Frank,
+>>>>>>>>>>
+>>>>>>>>>> On 2018-03-04 01:17, frowand.list@gmail.com wrote:
+>>>>>>>>>>> From: Frank Rowand <frank.rowand@sony.com>
+>>>>>>>>>>>
+>>>>>>>>>>> Move duplicating and unflattening of an overlay flattened devicetree
+>>>>>>>>>>> (FDT) into the overlay application code.  To accomplish this,
+>>>>>>>>>>> of_overlay_apply() is replaced by of_overlay_fdt_apply().
+>>>>>>>>>>>
+>>>>>>>>>>> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
+>>>>>>>>>>> code, which is thus responsible for freeing the duplicate FDT.  The
+>>>>>>>>>>> caller of of_overlay_fdt_apply() remains responsible for freeing the
+>>>>>>>>>>> original FDT.
+>>>>>>>>>>>
+>>>>>>>>>>> The unflattened devicetree now belongs to devicetree code, which is
+>>>>>>>>>>> thus responsible for freeing the unflattened devicetree.
+>>>>>>>>>>>
+>>>>>>>>>>> These ownership changes prevent early freeing of the duplicated FDT
+>>>>>>>>>>> or the unflattened devicetree, which could result in use after free
+>>>>>>>>>>> errors.
+>>>>>>>>>>>
+>>>>>>>>>>> of_overlay_fdt_apply() is a private function for the anticipated
+>>>>>>>>>>> overlay loader.
+>>>>>>>>>>
+>>>>>>>>>> We are using of_fdt_unflatten_tree + of_overlay_apply in the
+>>>>>>>>>> (out-of-tree) Jailhouse loader driver in order to register a virtual
+>>>>>>>>>> device during hypervisor activation with Linux. The DT overlay is
+>>>>>>>>>> created from a a template but modified prior to application to account
+>>>>>>>>>> for runtime-specific parameters. See [1] for the current implementation.
+>>>>>>>>>>
+>>>>>>>>>> I'm now wondering how to model that scenario best with the new API.
+>>>>>>>>>> Given that the loader lost ownership of the unflattened tree but the
+>>>>>>>>>> modification API exist only for the that DT state, I'm not yet seeing a
+>>>>>>>>>> clear solution. Should we apply the template in disabled form (status =
+>>>>>>>>>> "disabled"), modify it, and then activate it while it is already applied?
+>>>>>>>>>
+>>>>>>>>> Thank you for the pointer to the driver - that makes it much easier to
+>>>>>>>>> understand the use case and consider solutions.
+>>>>>>>>>
+>>>>>>>>> If you can make the changes directly on the FDT instead of on the
+>>>>>>>>> expanded devicetree, then you could move to the new API.
+>>>>>>>>
+>>>>>>>> Are there some examples/references on how to edit FDTs in-place in the
+>>>>>>>> kernel? I'd like to avoid writing the n-th FDT parser/generator.
+>>>>>>>
+>>>>>>> I don't know of any existing in-kernel edits of the FDT (but they might
+>>>>>>> exist).  The functions to access an FDT are in libfdt, which is in
+>>>>>>> scripts/dtc/libfdt/.
+>>>>>>
+>>>>>> Let's please not go down that route of doing FDT modifications. There
+>>>>>> is little reason to other than for early boot changes. And it is much
+>>>>>> easier to work on unflattened trees.
+>>>>>
+>>>>> I just briefly looked into libfdt, and it would have meant building it
+>>>>> into the module as there are no library functions exported by the kernel
+>>>>> either. Another reason to drop that.
+>>>>>
+>>>>> What's apparently working now is the pattern I initially suggested:
+>>>>> Register template with status = "disabled" as overlay, then prepare and
+>>>>> apply changeset that contains all needed modifications and sets the
+>>>>> status to "ok". I might be leaking additional resources, but to find
+>>>>> that out, I will now finally have to resolve clean unbinding of the
+>>>>> generic PCI host controller [1] first.
+>>>>
+>>>> static void free_overlay_changeset(struct overlay_changeset *ovcs)
+>>>> {
+>>>> 	[...]
+>>>> 	/*
+>>>> 	 * TODO
+>>>> 	 *
+>>>> 	 * would like to: kfree(ovcs->overlay_tree);
+>>>> 	 * but can not since drivers may have pointers into this data
+>>>> 	 *
+>>>> 	 * would like to: kfree(ovcs->fdt);
+>>>> 	 * but can not since drivers may have pointers into this data
+>>>> 	 */
+>>>>
+>>>> 	kfree(ovcs);
+>>>> }
+>>>>
+>>>> What's this? I have kmemleak now jumping at me over this. Who is suppose
+>>>> to plug these leaks? The caller of of_overlay_fdt_apply has no pointers
+>>>> to those objects. I would say that's a regression of the new API.
+>>>
+>>> The problem already existed but it was hidden.  We have never been able to
+>>> kfree() these object because we do not know if there are any pointers into
+>>> these objects.  The new API makes the problem visible to kmemleak.
+>>
+>> My old code didn't have the problem because there was no one steeling
+>> pointers to my overlay, and I was able to safely release all the
+>> resources that I or the core on my behalf allocated. In fact, I recently
+>> even dropped the duplication the fdt prior to unflattening it because I
+>> got its lifecycle under control (and both kmemleak as well as kasan
+>> confirmed this). I still consider this intentional leak a regression of
+>> the new API.
+> 
+> The API has to work for any user, not just your clean code.
+> 
+
+Please point us to code that does have a real problem. Is there any nice
+vendor tree, in addition to the known users? Or are we only speculating
+about how people might be (mis)using the API?
+
+> 
+>>> The reason that we do not know if there are any pointers into these objects
+>>> is that devicetree access APIs return pointers into the devicetree internal
+>>> data structures (that is, into the overlay unflattened devicetree).  If we
+>>> want to be able to do the kfree()s, we could change the devicetree access
+>>> APIs.
+>>>
+>>> The reason that pointers into the overlay flattened tree (ovcs->fdt) are
+>>> also exposed is that the overlay unflattened devicetree property values
+>>> are pointers into the overlay fdt.
+>>>
+>>> ** This paragraph becomes academic (and not needed) if the fix in the next
+>>> paragraph can be implemented. **
+>>> I _think_ that the fdt issue __for overlays__ can be fixed somewhat easily.
+>>> (I would want to read through the code again to make sure I'm not missing
+>>> any issues.)  If the of_fdt_unflatten_tree() called by of_overlay_fdt_apply()
+>>> was modified so that property values were copied into newly allocated memory
+>>> and the live tree property pointers were set to the copy instead of to
+>>> the value in the fdt, then I _think_ the fdt could be freed in
+>>> of_overlay_fdt_apply() after calling of_overlay_apply().  The code that
+>>
+>> I don't see yet how more duplicating of objects would help. Then we
+>> would not leak the fdt or the unflattened tree on overlay destruction
+>> but that duplicates, no?
+> 
+> Yes, we would leak the duplicates.  That is exactly what the existing
+> overlay remove code does.  My long term goal is to remove that leakage.
+> But that leakage can not be resolved until we can guarantee that there
+> are no pointers held to those duplicates.
+> 
+> I don't like adding this additional copy - I would much prefer to change
+> the overlay notify code as proposed below.
+> 
+
+Replacing one leak with another is no solution. And if it's additionally
+enforcing an API change, I would call it counterproductive.
+
+> 
+>>> frees a devicetree would also have to be aware of this change -- I'm not
+>>> sure if that leads to ugly complications or if it is easy.  The other
+>>> question to consider is whether to make the same change to
+>>> of_fdt_unflatten_tree() when it is called in early boot to unflatten
+>>> the base devicetree.  Doing so would increase the memory usage of the
+>>> live tree (we would not be able to free the base fdt after unflattening
+>>> it because we make the fdt visible in /sys/firmware/fdt -- though
+>>> _maybe_ that could be conditioned on CONFIG_KEXEC).
+>>>
+>>> But all of the complexity of that fix is _only_ because of_overlay_apply()
+>>> and of_overlay_remove() call overlay_notify(), passing in the overlay
+>>> unflattened devicetree (which has pointers into the overlay fdt). Pointers
+>>> into the overlay unflattened devicetree are then passed to the notifiers.
+>>> (Again, I may be missing some other place that the overlay unflattened
+>>> devicetree is made visible to other code -- a more thorough reading of
+>>> the code is needed.) If the notifiers could be modified to accept the
+>>> changeset list instead of of pointers to the fragments in the overlay
+>>> unflattened devicetree then there would be no possibility of the notifiers
+>>> keeping a pointer into the overlay fdt. I do not know if this is a
+>>
+>> But then again the convention has to be that those changeset pointers
+>> must not be kept - because the changeset is history after of_overlay_remove.
+> 
+> I don't trust convention.  The result is fragile code.
+> 
+
+Look, we are all programming in C here. There is no implicit reference
+counting, no garbage collecting, not strong typing, you-name-it. That
+doesn't leave you with many sharper weapons than well documented
+conventions.
+
+I'm rather concerned that you are over-designing an API that, due to its
+nature, cannot be made foolproof.
+
+> 
+>>> practical change for the notifiers -- there are no callers of
+>>> of_overlay_notifier_register() in the mainline kernel source. My
+>>> recollection is that the overlay notifiers were added for the fpga
+>>> subsystem.
+>>
+>> We have drivers/fpga/of-fpga-region.c in-tree, and that does not seem to
+> 
+> Thanks for finding that.  For some reason my 'git grep' did not find
+> that.  (I'll blame fat fingers or something...)
+> 
+> 
+>> store any pointers to objects, rather consumes them in-place. And I
+>> would consider it fair to impose such a limitation on the notifier
+>> interface.
+> 
+> How do you enforce that limitation?
+> 
+
+Primarily, code review. Of course, we can't help out-of-tree adventurers
+this way but, well, they prefer to travel alone anyway.
+
+And then there are also tools like kasan that can be very helpful
+revealing object lifecycle issues early.
+
+Jan
+
+> 
+>>> Why is overlay_notify() the only issue related to unknown users having
+>>> pointers into the overlay fdt?  The answer is that the overlay code
+>>> does not directly expose the overlay unflattened devicetree (and thus
+>>> indirectly the overlay fdt) to the live devicetree -- when the
+>>> overlay code creates the overlay changeset, it copies from the
+>>> overlay unflattened devicetree and overlay fdt and only exposes
+>>> pointers to the copies.
+>>>
+>>> And hopefully the issues with the overlay unflattened devicetree can
+>>> be resolved in the same way as for the overlay fdt.
+>>
+>> As noted above, I don't see there is a technical solution to this issue
+>> but it's rather a matter of convention: no overlay notifier callback is
+>> allowed to keep references to the passed tree content (unless it
+>> reference-counts some tree nodes) beyond the execution of the callback.
+>> With that in place, we can safely drop the backing memory IMHO.
+>>
+>> Jan
+>> .
+>>
+> 
