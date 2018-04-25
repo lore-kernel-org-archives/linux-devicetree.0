@@ -1,48 +1,72 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 0/7] gnss: add new GNSS subsystem
-Date: Wed, 25 Apr 2018 12:31:29 +0200
-Message-ID: <20180425103129.GO4615@localhost>
-References: <20180424163458.11947-1-johan@kernel.org>
- <20180425084819.GA13295@kroah.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [RFC 00/13] arm64: allwinner: Add A64 DE2 pipeline support
+Date: Wed, 25 Apr 2018 16:04:09 +0530
+Message-ID: <CAMty3ZCTtB__eWub2PbHK_DHSVQsf4V1eECX6bfwDq99pXaLJQ@mail.gmail.com>
+References: <20180424133425.24291-1-jagan@amarulasolutions.com> <4355590.Ql03JAEh1C@jernej-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180425084819.GA13295@kroah.com>
+In-Reply-To: <4355590.Ql03JAEh1C@jernej-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 25, 2018 at 10:48:19AM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Apr 24, 2018 at 06:34:51PM +0200, Johan Hovold wrote:
-> > This series adds a new subsystem for GNSS receivers (e.g. GPS
-> > receivers).
-> 
-> YEAH!!!!
-> 
-> Thanks so much for doing this, great work!
+On Tue, Apr 24, 2018 at 9:02 PM, Jernej =C5=A0krabec <jernej.skrabec@siol.n=
+et> wrote:
+> Hi,
+>
+> Dne torek, 24. april 2018 ob 15:34:12 CEST je Jagan Teki napisal(a):
+>> Allwinner A64 has display engine pipeline like other Allwinner SOC's
+>> A83T/H3/H5.
+>>
+>> A64 DE2 behaviour similar to Allwinner A83T where mixer0, connected to t=
+con0
+>> with RGB, LVDS MIPI-DSI and mixer1, connected to tcon1 with HDMI.
+>> This series merely concentrated on HDMI pipeline and rest will add
+>> eventually.
+>>
+>> patch 1: dt-bindings for a64 DE2 CCU
+>>
+>> patch 2: a64 DE2 CCU node addition
+>>
+>> patch 3: dt-bindings for a64 DE2 pipeline
+>>
+>> patch 4 - 5: dt-bindings for a64 mixer0 and tcon-lcd
+>>
+>> patch 6: a64 DE2 pipeline node addition
+>>
+>> patch 7 - 8: dt-bindings for a64 HDMI and HDMI PHY
+>>
+>> patch 9: a64 HDMI nodes addition
+>>
+>> patch 10 - 11: dt-bindings for a64 mixer1 and tcon-tv
+>>
+>> patch 12: a64 HDMI pipeline
+>>
+>> patch 13: enable HDMI out on bananpi-m64
+>>
+>> Tested HDMI on bananapi-m64 (along with DE2 SRAM C changes from [1]
+>> thread), able to detect the HDMI but, no penguins on screen.
+>>
+>> Request for any suggestions.
+>
+> You are mising sunxi-ng clock patches. PLL_VIDEO0 and PLL_VIDEO1 need fix=
+es by
+> setting minimum stable frequency. Please note that datasheet may have wro=
+ng
+> information. That was obvious in H3 case and I had to check minimum stabl=
+e
+> PLL_VIDEO frequency in BSP driver.
 
-Thanks!
+Can you point me the clock patches? I've phadled only CLK_PLL_VIDEO0
+on hdmi_phy So we need CLK_PLL_VIDEO1 as fourth clock?
 
-> > This all seems to work well-enough (e.g. with gpsd), but please let me
-> > know if I've overlooked something which would indeed require a TTY
-> > interface instead.
-> > 
-> > As proof-of-concept I have implemented drivers for receivers based on
-> > two common GNSS chipsets (SiRFstar and u-blox), but due to lack of
-> > hardware these have so far only been tested using mockup devices and a
-> > USB-serial-based GPS device (using out-of-tree code). [ Let me know if
-> > you've got any evalutation kits to spare. ]
-> > 
-> > Finally, note that documentation (including kerneldoc) remains to be
-> > written, but hopefully this will not hinder review given that the
-> > current interfaces are fairly self-describing.
-> 
-> Is this just a RFC, or a "here's a first cut at submitting this, review
-> it please!" submission?  I'm glad to review if you think it's worth it
-> at this point.
+Jagan.
 
-It's more than just an RFC, so thanks for starting to review it.
-
-Johan
+--=20
+Jagan Teki
+Senior Linux Kernel Engineer | Amarula Solutions
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
