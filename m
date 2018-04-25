@@ -1,98 +1,57 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Add dts file for the A20-linova1-7
- HMI
-Date: Wed, 25 Apr 2018 22:08:06 +0200
-Message-ID: <42feccc9-1d09-9ff2-3ccc-1dea63bacfb6@micronovasrl.com>
-References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
- <1521662593-25468-7-git-send-email-giulio.benetti@micronovasrl.com>
- <20180322180508.my64gobhh5rc2x2m@flea>
- <8ef3b259-03b4-6987-286e-36ff627a8b76@micronovasrl.com>
- <20180424084137.7xfwji2gcibxavvt@flea>
- <03a02abb-e95c-b4ec-748f-907c0af67969@micronovasrl.com>
- <20180425184016.xktppxw7egddr7li@flea>
+From: Jan Kiszka <jan.kiszka@web.de>
+Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
+ unflattened to FDT
+Date: Wed, 25 Apr 2018 22:09:38 +0200
+Message-ID: <f63f0277-4318-4a98-6ad4-157f7ef164ea@web.de>
+References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
+ <1520122673-11003-3-git-send-email-frowand.list@gmail.com>
+ <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
+ <7bbf615b-3cdd-6bb4-6918-33e48de4225d@gmail.com>
+ <a21dbee8-6e4e-9ceb-c798-dda43c2eae2d@web.de>
+ <d7e94a45-5d46-0491-e5dc-2b098a11c5b1@gmail.com>
+ <CAL_Jsq+MmUTMrd+jNqUB2=A-q3cCy7+QWOKG0iF6zM0hjCy3PQ@mail.gmail.com>
+ <e508f3de-f21b-2510-2c6a-b810073ba1a7@web.de>
+ <e06d1c0f-f60d-fc23-cd74-82f557dbc432@web.de>
+ <7bbb9472-9c96-6012-68e6-4ec2773c7732@gmail.com>
+ <4422f58a-ca7c-16e6-e0df-63faea50f553@web.de>
+ <3d7cb4d3-5070-e878-51d3-59f9772f756b@gmail.com>
+ <53ee2d0b-1867-5cad-667c-7f70085c645d@web.de>
+ <e2eb2c23-d580-8c46-5bdb-a142b3791301@gmail.com>
+ <c79a60b8-60a3-dd6e-76c3-d1fdfa003e49@gmail.com>
+ <3050f0c1-549e-d4b9-50b5-468c11effea9@web.de>
+ <CAMuHMdUNDcvKzOJ3JtWBQRVDF9d63K9Lot0-fKQcsaWTsadDvQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180425184016.xktppxw7egddr7li@flea>
-Content-Language: it
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <jailhouse-dev+bncBDDNLV6S7AOBBCGBQPLQKGQEG2WNHIY@googlegroups.com>
+Sender: jailhouse-dev@googlegroups.com
+In-Reply-To: <CAMuHMdUNDcvKzOJ3JtWBQRVDF9d63K9Lot0-fKQcsaWTsadDvQ@mail.gmail.com>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
+List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
+List-Archive: <https://groups.google.com/group/jailhouse-dev
+List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
+List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/group/jailhouse-dev/subscribe>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alan Tull <atull@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jailhouse <jailhouse-dev@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWF4aW1lLAoKSWwgMjUvMDQvMjAxOCAyMDo0MCwgTWF4aW1lIFJpcGFyZCBoYSBzY3JpdHRv
-Ogo+IEhpIEdpdWxpbywKPiAKPiBPbiBUdWUsIEFwciAyNCwgMjAxOCBhdCAwODozMTo0NFBNICsw
-MjAwLCBHaXVsaW8gQmVuZXR0aSB3cm90ZToKPj4gTGlOb3ZhMSBpcyBub3QgYSBib2FyZCB3aXRo
-IHZhcmlvdXMgaGVhZGVycyB0byBjb25uZWN0IG90aGVyIHBlcmlwaGVyYWxzCj4+IHN1Y2ggZGlz
-cGxheSwgcGNhcCBldGMuCj4+IEl0J3MgYW4gSE1JIHRoYXQgSSB3b3VsZCBjb25zaWRlciB0aGUg
-c2FtZSBhcyBhIFRhYmxldCwgYmVjYXVzZSBpdCBoYXMgYQo+PiBwbGFzdGljIGVuY2xvc3VyZSBh
-bHNvLgo+Pgo+PiBTbyBJIHdvdWxkIGxpa2UgdG8gdW5kZXJzdGFuZCBob3cgdG8gbWFuYWdlIGl0
-IGluIHRoZSBiZXN0IHdheS4KPj4gVHJ5IHRvIGNvbnNpZGVyIExpTm92YTEgYXMgYSBUYWJsZXQg
-c2VyaWVzLCB3aXRoIGZvbGxvd2luZyBsaXN0Ogo+PiBMaU5vdmExIDQuMyIgY3RwCj4+IExpTm92
-YTEgNyIgY3RwCj4+IExpTm92YTEgMTAuMSIgY3RwCj4+IExpTm92YTEgNC4zIiBydHAKPj4gTGlO
-b3ZhMSA3IiBydHAKPj4gTGlOb3ZhMSAxMC4xIiBydHAKPj4KPj4gRXZlcnkgb2YgdGhvc2UgaGFz
-IGEgc2xpZ2h0bHkgZGlmZmVyZW50IEJPTSwgc28gdGhleSBhcmUgNiBkaWZmZXJlbnQKPj4gYm9h
-cmRzIHdpdGggYSBjb21tb24gYmFzZSh1UCwgcmFtKS4gQW5kIHNhbWUgcGNiLgo+IAo+IFNvIHRo
-ZSBMaU5vdmExIGlzIGV4YWN0bHkgdGhlIHNhbWUgaW4gYWxsIHRoZXNlIHNldHVwcywgdGhlIG9u
-bHkKPiBkaWZmZXJlbmNlIGlzIHRoYXQgaXQgaGFzIGEgY29ubmVjdG9yIHRoYXQgeW91IGNvbm5l
-Y3QgYSBkaWZmZXJlbnQKPiBkaXNwbGF5IC8gdG91Y2hzY3JlZW4gdG8/Cj4gCj4gSWYgc28sIHRo
-YXQncyBkZWZpbml0ZWx5IGEgY2FzZSBmb3IgZGV2aWNlIHRyZWUgb3ZlcmxheXMuCgpZZXMgaXQg
-aXMgdGhhdCB3YXkuIFNvIEkgcHJvY2VlZCB3aXRoIGR0IG92ZXJsYXlzLgoKPiAKPj4gU28gSSBk
-b24ndCBrbm93IGlmIHN1Ym1pdCBvbmx5IHRoZSBjb21tb24gYmFzZSBhbmQgcHJvdmlkZQo+PiBz
-ZXBhcmF0ZWx5IG9uIG91ciBnaXRodWIgRFQtb3ZlcmxheXMsIG9yIHByb3ZpZGUgYXMgbWFueSBk
-dHMgcGF0Y2hlcwo+PiBhcyB0aGUgSE1JIG51bWJlciB3aXRoIGEgYmFzZSBkdHNpLgo+IAo+IFRo
-YXQncyByZWFsbHkgdXAgdG8geW91LCBidXQgdGhlIG92ZXJsYXlzIHdpbGwgbWFrZSB0aGlzIG11
-Y2ggc2ltcGxlcgo+IHRvIGhhbmRsZSBwcmVjaXNlbHkgYmVjYXVzZSBpdCB3aWxsIHJlZHVjZSB0
-aGUgYW1vdW50IG9mIGNvbWJpbmF0aW9ucwo+IHlvdSBoYXZlLgo+IAo+IFlvdSBjYW4gZXZlbiBy
-ZWR1Y2UgaXQgaW4geW91ciBjYXNlIHRvIDUgb2YgdGhlbSwgMyBmb3IgZWFjaCBwYW5lbCBhbmQK
-PiAyIGZvciBlYWNoIHRvdWNoc2NyZWVuLgoKQWgsIHRoYXQncyByaWdodCEgR29vZCBpZGVhLCBt
-b3JlICJlbmNhcHN1bGF0aW9uIi4KCj4gCj4+IEJhc2ljYWxseSBNaWNyb25vdmEgcHJvdmlkZXMg
-ZW50aXJlIHN5c3RlbSB3aXRob3V0IHRoZSBjYXBhYmlsaXR5IHRvIGhhY2sKPj4gaGFyZHdhcmUg
-YWRkaW5nIHNoaWVsZHMgb2YgdmFyaW91cyB0eXBlLgo+Pgo+PiBUaGVyZSBhcmUgYWxzbyBvdGhl
-ciAyIExpTm92YToKPj4gTGlOb3ZhMiBhbmQgTGlOb3ZhMwo+IAo+IFdoaWNoIFNvQ3MgYXJlIHRo
-ZXNlIGJvYXJkcyBiYXNlZCBvbj8KCkEyMCBvbiBhbGwgdGhyZWUuIFRoZXkgYXJlIHNsaWdodGx5
-IGJldHdlZW4gZWFjaCBvdGhlci4KU29tZSBSUzQ4NSBtb3JlLCAxIFVTQiBtb3JlIGV0Yy4KCj4g
-Cj4+IFNvIEkgdW5kZXJzdGFuZCB0aGF0IHRoaXMgY291bGQgbGVhZCB0byAxOCBkaWZmZXJlbnQg
-ZHRzIGZpbGVzIGFuZCAzCj4+IGR0c2kgZmlsZXMuCj4gCj4gWWVhaCwgSSdkIHJlYWxseSBsaWtl
-IHRvIGtlZXAgdGhpcyB1bmRlciBjb250cm9sIDopCgo6KQoKPiAKPj4gQnV0IHdpdGggVGFibGV0
-IGl0IHNob3VsZCBiZSB0aGUgc2FtZSB3YXkuICBGb3Igc3VyZSBwZW9wbGUgd291bGQgYmUKPj4g
-bW9yZSBpbnRlcmVzdGVkIG9uIGZhbW91cyB0YWJsZXRzIGluc3RlYWQgb2Ygb3VyIEhNSS4KPj4K
-Pj4gSW4gdGhlIGNhc2UgSSBuZWVkIHRvIHVzZSBkdC1vdmVybGF5cywgeW91IG1lYW4gLmR0byBm
-aWxlcyB3aXRoCj4+IGZyYWdtZW50cyBpbnNpZGUgbG9hZGVkIGJ5IHUtYm9vdCBvciBydW50aW1l
-LCByaWdodD8KPiAKPiBZb3UgZG9uJ3QgaGF2ZSB0byBoYW5kY29kZSB0aGUgZnJhZ21lbnRzIGFu
-eW1vcmUgd2l0aCB0aGUgbmV3IHN5bnRheCwKPiBhbmQgVS1Cb290IG1ha2VzIGl0IHJlYWxseSB0
-cml2aWFsIHRvIHVzZSBpZiB5b3UgdXNlIHRoZSBGSVQgaW1hZ2UKPiBmb3JtYXQgdG8gaGF2ZSBt
-dWx0aXBsZSBvdmVybGF5cyBidW5kbGVkIGluIHRoZSBzYW1lIGltYWdlLiBZb3UgY2FuCj4gY2hv
-b3NlIHRvIGFwcGx5IHRoZW0gZHluYW1pY2FsbHksIGZvciBleGFtcGxlIGJhc2VkIG9uIGFuIEVF
-UFJPTSBvcgo+IHNvbWUgb3RoZXIgbWV0cmljIHRvIHNlZSB3aGljaCBjb21iaW5hdGlvbiB5b3Ug
-aGF2ZS4KCkFoLCB0aGlzIGlzIGludGVyZXN0aW5nLiBJJ20gZ29pbmcgdG8gZXhwZXJpbWVudCB3
-aXRoIHRoYXQuCgo+IAo+Pj4+Pj4gKyZ1c2Jfb3RnIHsKPj4+Pj4+ICsJZHJfbW9kZSA9ICJvdGci
-Owo+Pj4+Pgo+Pj4+PiBZb3UncmUgc2F5aW5nIHRoYXQgdGhpcyBpcyBhIFVTQi1BIGNvbm5lY3Rv
-cj8gVGhlbiBpdCdzIG5vdCBPVEcgc2luY2UKPj4+Pj4gaXQgZG9lc24ndCBoYXZlIGFuIElEIHBp
-biwgdGhpcyBpcyBhbiBob3N0Lgo+Pj4+Cj4+Pj4gUmlnaHQsIHdpdGggYSBzcGVjaWFsIG92ZXJs
-YXkgSSB3aWxsIGFjdGl2YXRlIFVzYiBEZXZpY2UgZm9yIFJORElTLAo+Pj4+IHNvIG1vZGlmaWVk
-IGFzIGhvc3QKPj4+Cj4+PiBUaGF0IGRvZXNuJ3QgcmVhbGx5IG1ha2UgbXVjaCBzZW5zZS4gVGhl
-IFVTQiBPVEcgaXMgd2lyZWQgb25seSB1c2luZyBhCj4+PiBkYXVnaHRlciBib2FyZD8KPj4KPj4g
-TXkgZmF1bHQsIEkndmUgbWVhbnQgInBlcmlwaGVyYWwiIGluIG9uZSBjYXNlIGFuZCAiaG9zdCIg
-aW4gYW5vdGhlciBjYXNlLgo+PiBVc3VhbGx5ICJob3N0Ii4KPj4gQXJlIHRoZXJlIHByb2JsZW0g
-d2l0aCB0aGlzPwo+PiBUaGVyZSBpcyBubyBkYXVnaHRlciBib2FyZC4KPiAKPiBJZiB5b3UgaGF2
-ZSBhbiBJRCBwaW4gYW5kIHRoZSBhYmlsaXR5IHRvIGNvbnRyb2wgVkJVUywgdGhlbiB5b3UgZG9u
-J3QKPiBuZWVkIHRvIGNoYW5nZSB0aGUgZGV2aWNlIHRyZWUsIGl0J3MgZG9uZSBhdXRvbWF0aWNh
-bGx5IGF0IHJ1bnRpbWUgYnkKPiBMaW51eC4KClVuZm9ydGFuZXRlbHkgSSBkb24ndCBoYXZlIElE
-IHBpbiBhbmQgYSBjb21tb24gbW9zZmV0IHRvIGNvbnRyb2wgVkJVUy4KInBlcmlwaGVyYWwiIG1v
-ZGUgc2hvdWxkIGJlIHVzZWQgb25seSBpbiBkZWJ1ZyBtb2RlLApzbyByaWdodCBkdC1vdmVybGF5
-IGNhbiBiZSB3cml0dGVuIHRvIHNkLWNhcmQgYnkgb3Vyc2VsZiBvciBzb21lIG9mIG91ciAKY3Vz
-dG9tZXJzLgoKVGhhbmsgeW91IHZlcnkgbXVjaCBmb3IgYWxsIGNsYXJpZmljYXRpb25zIQoKR2l1
-bGlvLgoKPiAKPiBNYXhpbWUKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+On 2018-04-25 21:53, Geert Uytterhoeven wrote:
+> Hi Jan,
+> 
+> On Wed, Apr 25, 2018 at 9:40 PM, Jan Kiszka <jan.kiszka@web.de> wrote:
+>> What other pointers are we talking about?
+> 
+> There's also the issue that some data has been allocated using kmalloc(),
+> while others hasn't. The "other" pointers point to e.g. early bootmem or
+> memblock.
+
+Should not be an issue for overlays or of_changesets, should it?
+
+Yes, I've learned the hard way that it is a very bad idea to build
+changesets with properties that were not dynamically allocated. Maybe
+that is documented somewhere, how the ownership of those objects change
+after apply and how they may get handled later on. But now as I know,
+it's kind of consistent and rather easy to account for.
+
+Jan
