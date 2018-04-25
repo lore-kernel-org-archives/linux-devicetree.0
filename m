@@ -1,48 +1,84 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v5 21/23] ASoC: qdsp6: dt-bindings: Add
- apq8096 machine bindings
-Date: Wed, 25 Apr 2018 17:16:15 +0100
-Message-ID: <d243f265-a567-e8c5-56b0-ebffe5104a55@linaro.org>
-References: <20180418153157.1960-1-srinivas.kandagatla@linaro.org>
- <20180418153157.1960-22-srinivas.kandagatla@linaro.org>
- <20180424162517.msxscjfg36xc22mo@rob-hp-laptop>
- <655a593b-021c-3bf2-35c2-eb77cb0a4b95@linaro.org>
- <CAL_JsqJXpei5vFUKwrQGaV4q3Twkg=SKF=Cx_my7KaLmOc42NQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAL_JsqJXpei5vFUKwrQGaV4q3Twkg=SKF=Cx_my7KaLmOc42NQ@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Banajit Goswami <bgoswami@codeaurora.org>, rohkumar@qti.qualcomm.com, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Patrick Lai <plai@codeaurora.org>, spatakok@qti.qualcomm.com, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, David Brown <david.brown@linaro.org>, Mark Brown <broonie@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Todor Tomov <todor.tomov@linaro.org>
+Subject: [PATCH v4 1/2] dt-bindings: media: Binding document for OV7251 camera sensor
+Date: Wed, 25 Apr 2018 19:20:45 +0300
+Message-ID: <1524673246-14175-2-git-send-email-todor.tomov@linaro.org>
+References: <1524673246-14175-1-git-send-email-todor.tomov@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524673246-14175-1-git-send-email-todor.tomov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@iki.fi, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add the document for ov7251 device tree binding.
 
+CC: Rob Herring <robh@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: devicetree@vger.kernel.org
+Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/media/i2c/ov7251.txt       | 52 ++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7251.txt
 
-On 25/04/18 16:04, Rob Herring wrote:
->> I can list the values for the HDMI playback use-case, but the list would
->> grow as we start adding wcd9335 codec support.
-> If you don't have the values, then how does one validate a DT is correct?
-> 
-I can list all the sources and sinks wired on the board in next version.
-
-> Honestly, a single property like this seems insufficient to describe
-> audio routing.
-
-This is how all the audio drivers do routing in DT, non DT is also 
-pretty much inline with this.
-
-
---srini
-> 
->>>> +
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov7251.txt b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
+new file mode 100644
+index 0000000..8281151
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
+@@ -0,0 +1,52 @@
++* Omnivision 1/7.5-Inch B&W VGA CMOS Digital Image Sensor
++
++The Omnivision OV7251 is a 1/7.5-Inch CMOS active pixel digital image sensor
++with an active array size of 640H x 480V. It is programmable through a serial
++I2C interface.
++
++Required Properties:
++- compatible: Value should be "ovti,ov7251".
++- clocks: Reference to the xclk clock.
++- clock-names: Should be "xclk".
++- clock-frequency: Frequency of the xclk clock.
++- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
++  to the hardware pin XSHUTDOWN which is physically active low.
++- vdddo-supply: Chip digital IO regulator.
++- vdda-supply: Chip analog regulator.
++- vddd-supply: Chip digital core regulator.
++
++The device node shall contain one 'port' child node with a single 'endpoint'
++subnode for its digital output video port, in accordance with the video
++interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++
++	&i2c1 {
++		...
++
++		ov7251: camera-sensor@60 {
++			compatible = "ovti,ov7251";
++			reg = <0x60>;
++
++			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&camera_bw_default>;
++
++			clocks = <&clks 200>;
++			clock-names = "xclk";
++			clock-frequency = <24000000>;
++
++			vdddo-supply = <&camera_dovdd_1v8>;
++			vdda-supply = <&camera_avdd_2v8>;
++			vddd-supply = <&camera_dvdd_1v2>;
++
++			port {
++				ov7251_ep: endpoint {
++					clock-lanes = <1>;
++					data-lanes = <0>;
++					remote-endpoint = <&csi0_ep>;
++				};
++			};
++		};
++	};
+-- 
+2.7.4
