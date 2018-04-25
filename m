@@ -1,79 +1,175 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] regulator: add support for SY8106A regulator
-Date: Wed, 25 Apr 2018 18:55:10 +0800
-Message-ID: <15C93A9B-6EEB-49EB-A942-35F761E86569@aosc.io>
-References: <20180423144657.63264-1-icenowy@aosc.io> <20180423144657.63264-3-icenowy@aosc.io> <20180424170733.GD22073@sirena.org.uk> <C0C1F042-221A-420F-A8C1-5FADCFC687F1@aosc.io> <20180425105309.GC24769@sirena.org.uk>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 1/7] gnss: add GNSS receiver subsystem
+Date: Wed, 25 Apr 2018 12:56:45 +0200
+Message-ID: <20180425105645.GP4615@localhost>
+References: <20180424163458.11947-1-johan@kernel.org>
+ <20180424163458.11947-2-johan@kernel.org>
+ <20180425085649.GB13295@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBOV5QHLQKGQE32OWJ2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180425105309.GC24769-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180425085649.GB13295@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 25, 2018 at 10:56:49AM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Apr 24, 2018 at 06:34:52PM +0200, Johan Hovold wrote:
+> > +#define GNSS_MINORS	16
+> 
+> Why only 16?  Just have to start somewhere?
 
+Yeah, a mostly arbitrarily picked number. I figured only developers
+would have an interest in having even that many GNSS receivers in one
+system. But it can be raised, now or later.
 
-=E4=BA=8E 2018=E5=B9=B44=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=886:=
-53:09, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =E5=86=99=E5=88=B0:
->On Wed, Apr 25, 2018 at 07:41:35AM +0800, Icenowy Zheng wrote:
->> =E4=BA=8E 2018=E5=B9=B44=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=
-=881:07:33, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =E5=86=99=E5=88=B0:
->> >On Mon, Apr 23, 2018 at 10:46:56PM +0800, Icenowy Zheng wrote:
->
->> >> --- /dev/null
->> >> +++ b/drivers/regulator/sy8106a-regulator.c
->> >> @@ -0,0 +1,176 @@
->> >> +// SPDX-License-Identifier: GPL-2.0+
->> >> +/*
->> >> + * sy8106a-regulator.c - Regulator device driver for SY8106A
->
->> >Just make the entire thing a C++ comment so it looks consistent and
->> >joined up.
->
->> SPDX identifier is special -- it should be in a seperated
->> comment block.
->
->No, it just needs to be a C++ comment on the first line to ease machine
->parsing.  The rest of the file doesn't matter for that.
+> > +static int gnss_open(struct inode *inode, struct file *file)
+> > +{
+> > +	struct gnss_device *gdev;
+> > +	int ret = 0;
+> > +
+> > +	gdev = container_of(inode->i_cdev, struct gnss_device, cdev);
+> > +
+> > +	get_device(&gdev->dev);
+> > +
+> > +	nonseekable_open(inode, file);
+> > +	file->private_data = gdev;
+> > +
+> > +	down_write(&gdev->rwsem);
+> 
+> Just curious, why a rwsem?  They can be slower than a normal semaphore,
+> is this really a contentious lock?
 
-Okay. Thus I will use a seperate /* */ block for it in the
-next revision, to follow the rule.
+I use the rwsem to deal with hotplugging; the underlying device can go
+away at any time and the core makes sure that no further calls into the
+corresponding driver is made once all currently executing callbacks
+return.
 
->
->> >> +	if (reg & SY8106A_GO_BIT)
->> >> +		return reg & rdev->desc->vsel_mask;
->> >> +	else
->> >> +		return (chip->fixed_voltage - rdev->desc->min_uV) /
->> >> +		       rdev->desc->uV_step;
->
->> >You could use the standard get_voltage_sel() if you provide a
->mapping
->> >operation that set everything with _GO_BIT set to return the fixed
->> >voltage.  Though looking at this it seems that the fixed voltage
->will
->> >always be one that could be set via the register anyway so I'm
->> >wondering
->> >if the easiest thing here isn't to just have the driver turn off
->> >_GO_BIT
->
->> Do you mean "turn on" here?
->
->Yes.
+> > +	if (gdev->disconnected) {
+> > +		ret = -ENODEV;
+> > +		goto unlock;
+> > +	}
+> > +
+> > +	if (gdev->count++ == 0) {
+> > +		ret = gdev->ops->open(gdev);
+> > +		if (ret)
+> > +			gdev->count--;
+> 
+> Why do we care about the opens here?  Do you only want the "child
+> driver" to have open called once, like a tty driver?  Does it matter?
 
-Okay. I will do it in this way and drop custom get/set_voltage_sel.
+Exactly, core deals with the open counts so that the individual gnss
+drivers need not. Serdev, for example, blows up if you try to open the
+same device twice.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> Again, just curious.
+> 
+> > +	}
+> > +unlock:
+> > +	up_write(&gdev->rwsem);
+> > +
+> > +	if (ret)
+> > +		goto err_put_device;
+> > +
+> > +	return 0;
+> > +
+> > +err_put_device:
+> > +	put_device(&gdev->dev);
+> > +
+> > +	return ret;
+> 
+> Those last 9 lines can be rewritten as just:
+> 
+> 	if (!ret)
+> 		put_device(&gdev->dev);
+> 
+> 	return ret;
+
+Yeah, I usually prefer having an explicit return 0 in the success path
+and clearly separate the error paths even if it adds few extra lines.
+This case could become an exception though.
+
+> > +static ssize_t gnss_write(struct file *file, const char __user *buf,
+> > +		size_t count, loff_t *pos)
+> > +{
+> > +	struct gnss_device *gdev = file->private_data;
+> > +	size_t written = 0;
+> > +	int ret;
+> > +
+> > +	dev_dbg(&gdev->dev, "%s - count = %zu\n", __func__, count);
+> 
+> Nit, some of these initial dev_dbg() calls might be able to be removed,
+> as ftrace should handle the tracing code now, right?
+
+Right. The were probably mostly useful to me during development, and can
+be added back later if it turns out they have any further value.
+
+> > +static const struct file_operations gnss_fops = {
+> > +	.owner		= THIS_MODULE,
+> > +	.open		= gnss_open,
+> > +	.release	= gnss_release,
+> > +	.read		= gnss_read,
+> > +	.write		= gnss_write,
+> > +	.poll		= gnss_poll,
+> > +	.llseek		= no_llseek,
+> > +};
+
+> > +struct gnss_device *gnss_allocate_device(struct device *parent)
+> > +{
+> > +	struct gnss_device *gdev;
+> > +	struct device *dev;
+> > +	int id;
+> > +	int ret;
+> > +
+> > +	gdev = kzalloc(sizeof(*gdev), GFP_KERNEL);
+> > +	if (!gdev)
+> > +		return NULL;
+> > +
+> > +	id = ida_simple_get(&gnss_minors, 0, GNSS_MINORS, GFP_KERNEL);
+> > +	if (id < 0) {
+> > +		kfree(gdev);
+> > +		return ERR_PTR(id);
+> > +	}
+> > +
+> > +	gdev->id = id;
+> > +
+> > +	dev = &gdev->dev;
+> > +	device_initialize(dev);
+> > +	dev->devt = gnss_first + id;
+> > +	dev->class = gnss_class;
+> > +	dev->parent = parent;
+> > +	dev->release = gnss_device_release;
+> > +	dev_set_drvdata(dev, gdev);
+> > +	dev_set_name(dev, "gnss%d", id);
+> > +
+> > +	init_rwsem(&gdev->rwsem);
+> > +	mutex_init(&gdev->read_mutex);
+> > +	mutex_init(&gdev->write_mutex);
+> > +	init_waitqueue_head(&gdev->read_queue);
+> > +
+> > +	ret = kfifo_alloc(&gdev->read_fifo, GNSS_READ_FIFO_SIZE, GFP_KERNEL);
+> > +	if (ret)
+> > +		goto err_put_device;
+> > +
+> > +	gdev->write_buf = kzalloc(GNSS_WRITE_BUF_SIZE, GFP_KERNEL);
+> > +	if (!gdev->write_buf)
+> > +		goto err_put_device;
+> > +
+> > +	cdev_init(&gdev->cdev, &gnss_fops);
+> > +	gdev->cdev.owner = THIS_MODULE;
+> 
+> This protects this module from being unloaded, but how do you pass on
+> the module reference counts to the "child" gnss driver?  Am I just
+> missing that logic here somewhere?
+
+Due to the hotplug support mentioned above, I do not need to pin the
+"child" gnss driver modules. Their devices can go away at any time, be
+it due to hotplugging, driver unbind through sysfs, or module unload.
+
+> Anyway, minor things, this looks really clean, nice job.
+
+Thanks again!
+
+Johan
