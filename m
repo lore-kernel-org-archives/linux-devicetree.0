@@ -1,66 +1,73 @@
-From: Christophe ROULLIER <christophe.roullier@st.com>
-Subject: RE: [PATCH  1/8] net: ethernet: stmmac: add adaptation for
- stm32mp157c.
-Date: Wed, 25 Apr 2018 07:12:29 +0000
-Message-ID: <fa12bb221b1b4cf380812c0fed03f74d@SFHDAG5NODE3.st.com>
-References: <1524582120-4451-1-git-send-email-christophe.roullier@st.com>
- <1524582120-4451-2-git-send-email-christophe.roullier@st.com>
- <20180424153953.GB2360@lunn.ch>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 1/3] dt-bindings: iio: stm32-adc: add support for
+ STM32MP1.
+Date: Wed, 25 Apr 2018 09:22:02 +0200
+Message-ID: <ee92eb8d-9675-3c94-1c0d-f6e8f091d878@st.com>
+References: <1524065874-434-1-git-send-email-fabrice.gasnier@st.com>
+ <1524065874-434-2-git-send-email-fabrice.gasnier@st.com>
+ <20180424162721.qbfsc7j3syzzykeh@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180424153953.GB2360@lunn.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180424162721.qbfsc7j3syzzykeh@rob-hp-laptop>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Peppe CAVALLARO <peppe.cavallaro@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: jic23@kernel.org, alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, benjamin.gaignard@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+On 04/24/2018 06:27 PM, Rob Herring wrote:
+> On Wed, Apr 18, 2018 at 05:37:52PM +0200, Fabrice Gasnier wrote:
+>> Document support for STM32MP1 ADC. It's quite similar to STM32H7 ADC.
+>> Introduce "st,stm32mp1-adc" compatible to handle variants of this
+>> hardware such as vregready flag, interrupts, clock rate.
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>> ---
+>>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 6 +++++-
+>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>> index e8bb824..9994384 100644
+>> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>> @@ -24,8 +24,11 @@ Required properties:
+>>  - compatible: Should be one of:
+>>    "st,stm32f4-adc-core"
+>>    "st,stm32h7-adc-core"
+>> +  "st,stm32mp1-adc-core"
+>>  - reg: Offset and length of the ADC block register set.
+>> -- interrupts: Must contain the interrupt for ADC block.
+>> +- interrupts: One or more interrupts for ADC block. Some parts like stm32f4
+>> +  and stm32h7 share a common ADC interrupt line. stm32mp1 has separate
+>> +  lines for each ADC within ADC block.
+> 
+> How many interrupt lines is that?
 
-For moment, I've only tested with PHY RGMII, RMII, MII, GMII, I do not have other kind of PHY interface.
-Normally there is no impact in my glue, the value of syscfg register will be the same for RGMII/ID/TXID/RXID.
-Do you think that I should add these interfaces in my case ?
+Hi Rob, Jonathan,
 
-	case PHY_INTERFACE_MODE_RGMII:
-> +	case PHY_INTERFACE_MODE_RGMII_ID:
-> +	case PHY_INTERFACE_MODE_RGMII_RXID:
-> +	case PHY_INTERFACE_MODE_RGMII_TXID:
-		val = SYSCFG_PMCR_ETH_SEL_RGMII;
-		if (dwmac->int_phyclk)
-			val |= SYSCFG_PMCR_ETH_CLK_SEL;
-		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RGMII\n");
-		break;
+I should have mentioned this: stm32mp1 has two separate interrupt lines
+for each ADC within ADC block.
 
-Christophe.
+Do you wish I send a V2 for this ? Or a patch to fix this ?
 
------Original Message-----
-From: Andrew Lunn [mailto:andrew@lunn.ch] 
-Sent: mardi 24 avril 2018 17:40
-To: Christophe ROULLIER <christophe.roullier@st.com>
-Cc: mark.rutland@arm.com; mcoquelin.stm32@gmail.com; Alexandre TORGUE <alexandre.torgue@st.com>; Peppe CAVALLARO <peppe.cavallaro@st.com>; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; netdev@vger.kernel.org
-Subject: Re: [PATCH 1/8] net: ethernet: stmmac: add adaptation for stm32mp157c.
+Please let me know,
+BR,
+Fabrice
 
-On Tue, Apr 24, 2018 at 05:01:53PM +0200, Christophe Roullier wrote:
-
-> +	case PHY_INTERFACE_MODE_RGMII:
-> +		val = SYSCFG_PMCR_ETH_SEL_RGMII;
-> +		if (dwmac->int_phyclk)
-> +			val |= SYSCFG_PMCR_ETH_CLK_SEL;
-> +		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RGMII\n");
-> +		break;
-
-Hi Christophe
-
-What about PHY_INTERFACE_MODE_RGMII_ID, PHY_INTERFACE_MODE_RGMII_RXID and PHY_INTERFACE_MODE_RGMII_TXID.
-
-    Andrew
+> 
+>>  - clocks: Core can use up to two clocks, depending on part used:
+>>    - "adc" clock: for the analog circuitry, common to all ADCs.
+>>      It's required on stm32f4.
+>> @@ -53,6 +56,7 @@ Required properties:
+>>  - compatible: Should be one of:
+>>    "st,stm32f4-adc"
+>>    "st,stm32h7-adc"
+>> +  "st,stm32mp1-adc"
+>>  - reg: Offset of ADC instance in ADC block (e.g. may be 0x0, 0x100, 0x200).
+>>  - clocks: Input clock private to this ADC instance. It's required only on
+>>    stm32f4, that has per instance clock input for registers access.
+>> -- 
+>> 1.9.1
+>>
