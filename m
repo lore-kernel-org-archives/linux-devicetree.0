@@ -1,95 +1,28 @@
-Return-Path: <SRS0=UpLl=HG=ti.com=t-kristo@kernel.org>
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [RFC 12/13] ARM: dts: ti: add dra71-evm FIT description file
-Date: Tue, 17 Apr 2018 12:10:14 +0300
-Message-ID: <1523956215-28154-13-git-send-email-t-kristo@ti.com>
-In-Reply-To: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
-References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
+Return-Path: <SRS0=FSC8=HO=linaro.org=john.stultz@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com
-Cc: wmills@ti.com, tony@atomide.com, trini@konsulko.com, rmk@armlinux.org.uk
+In-Reply-To: <20180419143804.brdgezjaxqalarum@linaro.org>
+References: <20180419143804.brdgezjaxqalarum@linaro.org>
+From: John Stultz <john.stultz@linaro.org>
+Date: Wed, 25 Apr 2018 10:30:16 -0700
+Message-ID: <CALAqxLUcHtjEix9qcSU0yF-ymKBvk8f4DjUY=ci_Hq1++twktw@mail.gmail.com>
+Subject: Re: Revisiting Devicetree Overlay Manager
+Content-Type: text/plain; charset="UTF-8"
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Dmitry Shmidt <dimitrysh@google.com>, Nicolas Dechense <nicolas.dechesne@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Loic Poulain <loic.poulain@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add FIT image description file for dra71-evm, and the available
-configurations for it.
+On Thu, Apr 19, 2018 at 7:38 AM, Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+> Hello Everyone,
+>
+> I have just started working on the Devicetree Overlay Manager support in
+> kernel. The idea is to merge overlays at boot time specified via some
+> interface like kernel command line. The motivation for this work comes from
+> Overlay Manager [1] submitted by John last year. The mechanism which I have
+> been working on is an extension to John's work. It focusses on addressing
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- arch/arm/boot/dts/ti/dra71-evm.its | 62 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 arch/arm/boot/dts/ti/dra71-evm.its
+Just a quick correction here: I only submitted the work last year, the
+overlay manager work is all by Dmitry Shmidt.
 
-diff --git a/arch/arm/boot/dts/ti/dra71-evm.its b/arch/arm/boot/dts/ti/dra71-evm.its
-new file mode 100644
-index 0000000..8dc53cb
---- /dev/null
-+++ b/arch/arm/boot/dts/ti/dra71-evm.its
-@@ -0,0 +1,62 @@
-+/dts-v1/;
-+
-+/ {
-+	description = "DRA71x-evm";
-+	#address-cells = <1>;
-+
-+	images {
-+		kernel@1 {
-+			description = "Linux kernel";
-+			data = /incbin/("../../zImage");
-+			type = "kernel";
-+			arch = "arm";
-+			os = "linux";
-+			compression = "none";
-+			load = <0x82000000>;
-+			entry = <0x82000000>;
-+		};
-+		fdt@1 {
-+			description = "DRA71x-evm";
-+			data = /incbin/("dra71-evm.dtb");
-+			type = "flat_dt";
-+			arch = "arm";
-+			compression = "none";
-+			load = <0x83000000>;
-+		};
-+		fdt@2 {
-+			description = "DRA71x-evm LCD";
-+			data = /incbin/("dra71-evm-lcd-auo-g101evn01.0.dtbo");
-+			type = "flat_dt";
-+			arch = "arm";
-+			compression = "none";
-+			load = <0x83100000>;
-+		};
-+		fdt@3 {
-+			description = "DRA71x-evm NAND";
-+			data = /incbin/("dra71-evm-nand.dtbo");
-+			type = "flat_dt";
-+			arch = "arm";
-+			compression = "none";
-+			load = <0x83200000>;
-+		};
-+	};
-+
-+	configurations {
-+		default = "dra71-evm";
-+		dra71-evm {
-+			description = "DRA71x-evm";
-+			kernel = "kernel@1";
-+			fdt = "fdt@1";
-+		};
-+		dra71-evm-lcd-auo-g101evn01.0 {
-+			description = "DRA71x-evm with LCD overlay";
-+			kernel = "kernel@1";
-+			fdt = "fdt@1", "fdt@2";
-+		};
-+		dra71-evm-nand {
-+			description = "DRA71x-evm with NAND overlay";
-+			kernel = "kernel@1";
-+			fdt = "fdt@1", "fdt@3";
-+		};
-+	};
-+};
--- 
-1.9.1
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+thanks
+-john
