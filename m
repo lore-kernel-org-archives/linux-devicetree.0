@@ -1,87 +1,60 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings/display/bridge: sii902x: add optional
- power supplies
-Date: Thu, 26 Apr 2018 01:05:06 +0300
-Message-ID: <3518575.OAoTTXDygq@avalon>
-References: <20180425075314.19137-1-philippe.cornu@st.com>
- <1559016.ZjzeSVB84W@avalon> <20180425171123.xhyoay3nu463btoq@rob-hp-laptop>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcom: Add SDM845 SMEM nodes
+Date: Wed, 25 Apr 2018 15:06:26 -0700
+Message-ID: <20180425220626.GM2052@tuxbook-pro>
+References: <20180425144631.19731-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180425171123.xhyoay3nu463btoq@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, Philippe CORNU <philippe.cornu@st.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yannick FERTRE <yannick.fertre@st.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180425144631.19731-1-sibis@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gV2VkbmVzZGF5LCAyNSBBcHJpbCAyMDE4IDIwOjExOjIzIEVFU1QgUm9iIEhl
-cnJpbmcgd3JvdGU6Cj4gT24gV2VkLCBBcHIgMjUsIDIwMTggYXQgMDQ6MTc6MjVQTSArMDMwMCwg
-TGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiA+IE9uIFdlZG5lc2RheSwgMjUgQXByaWwgMjAxOCAx
-NToyMDowNCBFRVNUIFBoaWxpcHBlIENPUk5VIHdyb3RlOgo+ID4+IE9uIDA0LzI1LzIwMTggMTE6
-MDEgQU0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPj4+IE9uIFdlZG5lc2RheSwgMjUgQXBy
-aWwgMjAxOCAxMDo1MzoxMyBFRVNUIFBoaWxpcHBlIENvcm51IHdyb3RlOgo+ID4+Pj4gQWRkIG9w
-dGlvbmFsIHBvd2VyIHN1cHBsaWVzIHVzaW5nIHRoZSBkZXNjcmlwdGlvbiBmb3VuZCBpbgo+ID4+
-Pj4gIlNpSTkwMjJBL1NpSTkwMjRBIEhETUkgVHJhbnNtaXR0ZXIgRGF0YSBTaGVldCAoQXVndXN0
-IDIwMTYpIi4KPiA+Pj4+IAo+ID4+Pj4gVGhlcmUgaXMgYSBzaW5nbGUgMXYyIHN1cHBseSB2b2x0
-YWdlIG5hbWVkIHZjYzEyIGZyb20gd2hpY2ggY3ZjYzEyCj4gPj4+PiAoZGlnaXRhbCBjb3JlKSBh
-bmQgYXZjYzEyIChUTURTIGFuYWxvZykgYXJlIGRlcml2ZWQgYmVjYXVzZSBhY2NvcmRpbmcKPiA+
-Pj4+IHRvIHRoaXMgZGF0YSBzaGVldDoKPiA+Pj4+ICJjdmNjMTIgYW5kIGF2Y2MxMiBjYW4gYmUg
-ZGVyaXZlZCBmcm9tIHRoZSBzYW1lIHBvd2VyIHNvdXJjZSIKPiA+Pj4gCj4gPj4+IFNob3VsZG4n
-dCB0aGUgcG93ZXIgc3VwcGxpZXMgYmUgbWFuZGF0b3J5LCBhcyBleHBsYWluZWQgYnkgTWFyayBp
-bgo+ID4+PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwv
-MjAxOC1BcHJpbC8xNzI0MDAuaHRtbAo+ID4+PiA/Cj4gPj4gCj4gPj4gTGF1cmVudCwKPiA+PiBN
-YW55IHRoYW5rcyBMYXVyZW50IGZvciB5b3VyIGNvbW1lbnQsIEkgdW5kZXJzdG9vZCB0aGUgbWVy
-Z2Ugb2YgdGhlIHR3bwo+ID4+IDF2MiBwb3dlciBzdXBwbGllcyBidXQgbWlzc2VkIHRoZSAibWFu
-ZGF0b3J5IiBwYXJ0Li4uIG1heWJlIGJlY2F1c2UgdGhpcwo+ID4+IHBhdGNoICh3aXRoIG9wdGlv
-bmFsIHBvd2VyIHN1cHBsaWVzKSBhbHJlYWR5IGdvdCB0aGUgcmV2aWV3ZWQtYnkgZnJvbQo+ID4+
-IFJvYiwgSSB0aG91Z2h0IHRoZSBkaXNjdXNzaW9uIHRocmVhZCB5b3UgcG9pbnRlZCBvdXQgd2Fz
-IGFwcGxpY2FibGUKPiA+PiAib25seSIgdG8gdG90YWxseSBuZXcgZHJpdmVyIGRvY3VtZW50YXRp
-b24uCj4gPj4gCj4gPj4gU28sIG9uIG15IHNpZGUsIGFzIGEgIm5ldyB1c2VyIiBvZiBzaWk5MDJ4
-IElDLCBubyBwcm9ibGVtIHRvIHB1dCB0aGVzZQo+ID4+IHBvd2VyIHN1cHBsaWVzIGFzIG1hbmRh
-dG9yeSBpbnN0ZWFkIG9mIG9wdGlvbmFsIHByb3BlcnRpZXMgYnV0IEkgd291bGQKPiA+PiBsaWtl
-IHRvIGJlIHN1cmUgdGhpcyBpcyBhcHBsaWNhYmxlIHRvIGJvdGggb2xkIGFuZCBuZXcgYmluZGlu
-Z3MgZG9jIDogKQo+ID4gCj4gPiBXZSBvYnZpb3VzbHkgbmVlZCB0byByZXRhaW4gYmFja3dhcmQg
-Y29tcGF0aWJpbGl0eSwgc28gb24gdGhlIGRyaXZlciBzaWRlCj4gPiB5b3UgbmVlZCB0byB0cmVh
-dCB0aG9zZSBwb3dlciBzdXBwbGllcyBhcyBvcHRpb25hbC4gRnJvbSBhIERUIGJpbmRpbmdzCj4g
-PiBwb2ludCBvZiB2aWV3LCBob3dldmVyLCBJIHRoaW5rIHRoZXkgc2hvdWxkIGJlIG1hbmRhdG9y
-eSBmb3IgbmV3IERULgo+IAo+IFdlIGRvbid0IHJlYWxseSBoYXZlIGEgd2F5IHRvIGRlc2NyaWJl
-IHRoZXNlIDMgY29uZGl0aW9ucyAocmVxdWlyZWQgZm9yCj4gYWxsLCBvcHRpb25hbCBmb3IgYWxs
-LCBhbmQgcmVxdWlyZWQgZm9yIG5ldykuIFNvIGdlbmVyYWxseSB3ZSBtYWtlCj4gYWRkaXRpb25z
-IG9wdGlvbmFsLiBUaGUgZXhjZXB0aW9uIHNvbWV0aW1lcyBpcyBpZiB3ZSB1cGRhdGUgYWxsIHRo
-ZSBkdHMKPiBmaWxlcy4KCkNhbid0IHdlIGp1c3QgbWFrZSBpdCBtYW5kYXRvcnkgaW4gdGhlIGJp
-bmRpbmdzLCBhcyBsb25nIGFzIHdlIHRyZWF0IGl0IGFzIApvcHRpb25hbCBpbiBkcml2ZXJzID8K
-Cj4gPj4gUm9iLAo+ID4+IGNvdWxkIHlvdSBwbGVhc2UgY29uZmlybSB0aGVzZSBwb3dlciBzdXBw
-bHkgcHJvcGVydGllcyBzaG91bGQgYmUKPiA+PiAibWFuZGF0b3J5Ij8gaWYgeWVzLCBzaG91bGQg
-d2UgdGhlbiBtb2RpZnkgb3RoZXIgb3B0aW9uYWwgcHJvcGVydGllcyBsaWtlCj4gPj4gdGhlIHJl
-c2V0LWdwaW9zIHRvbyBpbiB0aGUgZnV0dXJlPwo+ID4gCj4gPiBUaGUgR1BJT3MgcHJvcGVydGll
-cyBhcmUgZGlmZmVyZW50IGluIG15IG9waW5pb24sIGFzIHRoZXJlJ3Mgbm8KPiA+IHJlcXVpcmVt
-ZW50IHRvIGNvbm5lY3QgZm9yIGluc3RhbmNlIHRoZSByZXNldCBwaW4gdG8gYSBHUElPIGNvbnRy
-b2xsYWJsZQo+ID4gYnkgdGhlIFNvQy4gVGhlIHBpbiBjb3VsZCBiZSBoYXJkd2lyZWQgdG8gVkND
-LCBvciBjb25uZWN0ZWQgdG8gYSBzeXN0ZW0KPiA+IHJlc2V0IHRoYXQgaXMgYXV0b21hdGljYWxs
-eSBtYW5hZ2VkIHdpdGhvdXQgU29DIGludGVydmVudGlvbi4gVGhlIHBvd2VyCj4gPiBzdXBwbGll
-cywgaG93ZXZlciwgYXJlIG1hbmRhdG9yeSwgaW4gdGhlIHNlbnNlIHRoYXQgdGhlIGNoaXAgd2ls
-bCBub3Qgd29yawo+ID4gaWYgeW91IGxlYXZlIHRoZSBwb3dlciBzdXBwbGllcyB1bmNvbm5lY3Rl
-ZC4KPiAKPiBEVCBvbmx5IG5lZWRzIHRvIGRlc2NyaWJlIHdoYXQgbWF0dGVycyB0byBzL3cuIElm
-IGEgcmVndWxhdG9yIGlzCj4gZml4ZWQgYW5kIHlvdSBkb24ndCBuZWVkIHRvIGtub3cgaXRzIHZv
-bHRhZ2UgKG9yIG90aGVyIHJlYWQtb25seQo+IHBhcmFtZXRlcnMpLCB0aGVuIHRoZXJlJ3Mgbm90
-IG11Y2ggcG9pbnQgaW4gcHV0dGluZyBpdCBpbiBEVC4KPiAKPiBJJ2QgcHJvYmFibHkgYmFzZSB0
-aGlzIG1vcmUgYXQgYSBwbGF0Zm9ybSBsZXZlbCBhbmQgeW91IGVpdGhlciB1c2UKPiByZWd1bGF0
-b3IgYmluZGluZyBvciB5b3UgZG9uJ3QuIEl0J3MgcGVyZmVjdGx5IHZhbGlkIHRoYXQgeW91IHdh
-bnQgdG8gZG8KPiB0aGluZ3MgbGlrZSByZWd1bGF0b3Igc2V0dXAsIHBpbiBjdHJsIGFuZCBtdXhp
-bmcgc2V0dXAsIGV0Yy4gYWxsIGluCj4gZmlybXdhcmUgYW5kIHRoZSBPUyBkb2Vzbid0IHRvdWNo
-IGFueSBvZiB0aGF0Lgo+IAo+IFRoYXQncyBhbGwgYSBiaWcgY2FuIG9mIHdvcm1zIHdoaWNoIHdl
-IHNob3VsZG4ndCBzb2x2ZSBvbiB0aGlzIDIgbGluZQo+IGNoYW5nZS4gSSB0aGluayB0aGlzIGNo
-YW5nZSBpcyBmaW5lIGFzLWlzLCBzbzoKPiAKPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJv
-YmhAa2VybmVsLm9yZz4KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Wed 25 Apr 07:46 PDT 2018, Sibi Sankar wrote:
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 9be763da0664..bea985045759 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -21,6 +21,27 @@
+>  		reg = <0 0x80000000 0 0>;
+>  	};
+>  
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		memory@85fc0000 {
+> +			reg = <0 0x85fc0000 0 0x40000>;
+
+The region 0x85fe0000 + 0x20000 seems to be command db, which should be
+described on its own. So please reduce the size to 0x20000.
+
+> +			no-map;
+> +		};
+> +
+> +		smem_mem: smem-mem@86000000 {
+
+smem_mem: memory@86000000 ?
+
+> +			reg = <0x0 0x86000000 0x0 0x200000>;
+> +			no-map;
+> +		};
+> +
+> +		memory@86000000 {
+
+memory@86200000
+
+> +			reg = <0 0x86200000 0 0x2d00000>;
+> +			no-map;
+> +		};
+> +	};
+> +
+
+The rest looks good.
+
+Regards,
+Bjorn
