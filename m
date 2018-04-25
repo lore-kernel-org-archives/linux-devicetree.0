@@ -1,91 +1,58 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH] arm64: dts: qcom: Add SDM845 SMEM nodes
-Date: Wed, 25 Apr 2018 20:16:31 +0530
-Message-ID: <20180425144631.19731-1-sibis@codeaurora.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 11/15] ARM: dts: dra7-evm: Add wilink8 wlan support
+Date: Wed, 25 Apr 2018 09:47:08 -0500
+Message-ID: <CAL_JsqKBXbcQxbN7z9j_DKgiaQg4buUa+08fg9zPELv-ucpRZA@mail.gmail.com>
+References: <20180425125449.19755-1-kishon@ti.com> <20180425125449.19755-12-kishon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180425125449.19755-12-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
-Cc: mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-soc@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>, Ido Yariv <ido@wizery.com>, Eyal Reizer <eyalr@ti.com>, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add all the necessary dt nodes to support SMEM driver
-on SDM845. It also adds the required memory carveouts
-so that the kernel does not access memory that is in
-use.
+On Wed, Apr 25, 2018 at 7:54 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> From: Hari Nagalla <hnagalla@ti.com>
+>
+> The wilink module is a combo wireless connectivity sdio
+> card based on Texas Instrument's wl18xx solution. It is a
+> 4-wire, 1.8V, embedded sdio wlan device with an external
+> irq line and is power-controlled by a gpio-based fixed
+> regulator.
+>
+> Add pinmux configuration and IODelay values for MMC4.
+> On dra7-evm, MMC4 is used for connecting to wilink module.
+>
+> IODelay data credits to :  Vishal Mahaveer <vishalm@ti.com>
+> and Sekhar Nori <nsekhar@ti.com>
+>
+> Signed-off-by: Ido Yariv <ido@wizery.com>
+> Signed-off-by: Eyal Reizer <eyalr@ti.com>
+> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  arch/arm/boot/dts/dra7-evm-common.dtsi | 15 +++++++++++++++
+>  arch/arm/boot/dts/dra7-evm.dts         | 25 +++++++++++++++++++++++++
+>  2 files changed, 40 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/dra7-evm-common.dtsi b/arch/arm/boot/dts/dra7-evm-common.dtsi
+> index 05a7b1a01bc3..3590c40fc112 100644
+> --- a/arch/arm/boot/dts/dra7-evm-common.dtsi
+> +++ b/arch/arm/boot/dts/dra7-evm-common.dtsi
+> @@ -260,3 +260,18 @@
+>  &pcie1_rc {
+>         status = "okay";
+>  };
+> +
+> +&mmc4 {
+> +       bus-width = <4>;
+> +       cap-power-off-card;
+> +       keep-power-in-suspend;
+> +       non-removable;
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +       wlcore: wlcore@2 {
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
-
-This patch depends on:
-https://patchwork.kernel.org/patch/10276419/
-https://patchwork.kernel.org/patch/10363361/
-
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 38 ++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 9be763da0664..bea985045759 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -21,6 +21,27 @@
- 		reg = <0 0x80000000 0 0>;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		memory@85fc0000 {
-+			reg = <0 0x85fc0000 0 0x40000>;
-+			no-map;
-+		};
-+
-+		smem_mem: smem-mem@86000000 {
-+			reg = <0x0 0x86000000 0x0 0x200000>;
-+			no-map;
-+		};
-+
-+		memory@86000000 {
-+			reg = <0 0x86200000 0 0x2d00000>;
-+			no-map;
-+		};
-+	};
-+
- 	cpus {
- 		#address-cells = <2>;
- 		#size-cells = <0>;
-@@ -147,6 +168,18 @@
- 		};
- 	};
- 
-+	tcsr_mutex: hwlock {
-+		compatible = "qcom,tcsr-mutex";
-+		syscon = <&tcsr_mutex_regs 0 0x1000>;
-+		#hwlock-cells = <1>;
-+	};
-+
-+	smem {
-+		compatible = "qcom,smem";
-+		memory-region = <&smem_mem>;
-+		hwlocks = <&tcsr_mutex 3>;
-+	};
-+
- 	psci {
- 		compatible = "arm,psci-1.0";
- 		method = "smc";
-@@ -339,6 +372,11 @@
- 			};
- 		};
- 
-+		tcsr_mutex_regs: syscon@1f40000 {
-+			compatible = "syscon";
-+			reg = <0x1f40000 0x40000>;
-+		};
-+
- 		apss_shared: mailbox@17990000 {
- 			compatible = "qcom,sdm845-apss-shared";
- 			reg = <0x17990000 0x1000>;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+wifi@2
