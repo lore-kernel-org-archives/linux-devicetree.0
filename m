@@ -1,73 +1,86 @@
-From: Johan Hovold <johan@kernel.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Subject: Re: [PATCH 0/7] gnss: add new GNSS subsystem
-Date: Wed, 25 Apr 2018 10:11:20 +0200
-Message-ID: <20180425081120.GL4615@localhost>
+Date: Wed, 25 Apr 2018 10:48:19 +0200
+Message-ID: <20180425084819.GA13295@kroah.com>
 References: <20180424163458.11947-1-johan@kernel.org>
- <31CF06C6-D6ED-4930-8D81-12256A518059@goldelico.com>
- <20180424175050.GG4615@localhost>
- <8F4FAF5B-AAA9-4D46-A022-99B96C74ABFA@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8F4FAF5B-AAA9-4D46-A022-99B96C74ABFA@goldelico.com>
+In-Reply-To: <20180424163458.11947-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 24, 2018 at 09:44:08PM +0200, H. Nikolaus Schaller wrote:
+On Tue, Apr 24, 2018 at 06:34:51PM +0200, Johan Hovold wrote:
+> This series adds a new subsystem for GNSS receivers (e.g. GPS
+> receivers).
 
-> > Am 24.04.2018 um 19:50 schrieb Johan Hovold <johan@kernel.org>:
+YEAH!!!!
 
-> > I think it should be done the other way round (if I understand you
-> > correctly), that is, by adding support for configurations were WAKEUP is
-> > left not connected to the sirf driver instead.
+Thanks so much for doing this, great work!
+
+> While GNSS receivers are typically accessed using a UART interface they
+> often also support other I/O interfaces such as I2C, SPI and USB, while
+> yet other devices use iomem or even some form of remote-processor
+> messaging (rpmsg).
+>     
+> The new GNSS subsystem abstracts the underlying interface and provides a
+> new "gnss" class type, which exposes a character-device interface (e.g.
+> /dev/gnss0) to user space. This allows GNSS receivers to have a
+> representation in the Linux device model, something which is important
+> not least for power management purposes and which also allows for easy
+> detection and (eventually) identification of GNSS devices.
 > 
-> Hm. Yes, the w2sg00x4 is a Sirf based chip.
+> Note that the character-device interface provides raw access to whatever
+> protocol the receiver is (currently) using, such as NMEA 0183, UBX or
+> SiRF Binary. These protocols are expected to be continued to be handled
+> by user space for the time being, even if some hybrid solutions are also
+> conceivable (e.g. to have kernel drivers issue management commands).
 > 
-> > I had that use-case in mind when implementing
+> This will still allow for better platform integration by allowing GNSS
+> devices and their resources (e.g. regulators and enable-gpios) to be
+> described by firmware and managed by kernel drivers rather than
+> platform-specific scripts and services.
+>     
+> While the current interface is kept minimal, it could be extended using
+> IOCTLs, sysfs or uevents as needs and proper abstraction levels are
+> identified and determined (e.g. for device and feature identification).
 > 
-> s/implementing/reinventing/
+> Another possible extension is to add generic 1PPS support.
 > 
-> > the driver, and some ideas of how it should be
-> > done, but did not get around to actually implement it yet.
+> I decided to go with a custom character-device interface rather than
+> pretend that these abstract GNSS devices are still TTY devices (e.g.
+> /dev/ttyGNSS0). Obviously, modifying line settings or reading modem
+> control signals does not make any sense for a device using, say, a
+> USB (not USB-serial) or iomem interface. This also means, however, that
+> user space would no longer be able to set the line speed to match a new
+> port configuration that can be set using the various GNSS protocols when
+> the underlying interface is indeed a UART; instead this would need to be
+> taken care of by the driver.
 > 
-> What do you need ideas for? We have that function working and
-> submitted year after year, but it was always rejected for API
-> reasons.
+> Also note that writes are always synchronous instead of requiring user
+> space to call tcdrain() after every command.
 > 
-> You could have simply reused what we have proposed [1] and just
-> adapt it to the new API instead of writing a new driver (which
-> is missing some features for us).
-
-Your code was broken or needed to be updated in several ways as I
-pointed out in the thread you refer to.
-
-It also did not support all those systems that use the same family of
-chips, but which has the WAKEUP signal connected.
-
-> "proof-of-concept" is misleading if you expect this to become
-> *the* Sirf driver and we are just invited to add some features
-> to that. Making our own work and proposals completely obsolete.
+> This all seems to work well-enough (e.g. with gpsd), but please let me
+> know if I've overlooked something which would indeed require a TTY
+> interface instead.
 > 
-> What I find really strange and foul play is that we are in the
-> review process and then comes a hidden counter-proposal by the
-> reviewer.
+> As proof-of-concept I have implemented drivers for receivers based on
+> two common GNSS chipsets (SiRFstar and u-blox), but due to lack of
+> hardware these have so far only been tested using mockup devices and a
+> USB-serial-based GPS device (using out-of-tree code). [ Let me know if
+> you've got any evalutation kits to spare. ]
+> 
+> Finally, note that documentation (including kerneldoc) remains to be
+> written, but hopefully this will not hinder review given that the
+> current interfaces are fairly self-describing.
 
-Dude, in the very same thread you refer to above, after being asked to
-reiterate your proposal to find and appropriate abstraction level you
-reply:
+Is this just a RFC, or a "here's a first cut at submitting this, review
+it please!" submission?  I'm glad to review if you think it's worth it
+at this point.
 
-	"Yes, please feel free to write patches that implement it that
-	way."
+thanks,
 
-Now I've done just that for you, and then you whine about that too.
-
-SiRF is a very common chip and I wanted to make sure that the common
-setup with WAKEUP connected was supported from the start. I'll get to
-your configuration in time too.
-
-Johan
-
-> [1]: https://patchwork.ozlabs.org/cover/843392/
+greg k-h
