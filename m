@@ -1,66 +1,35 @@
-From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [[RFC]DPU PATCH 4/4] dt-bindings: Add Innolux
- TV123WAM panel bindings
-Date: Wed, 25 Apr 2018 07:46:55 +0530
-Message-ID: <cb59510635f0e7c010588a4603ae3f0f@codeaurora.org>
-References: <1524054002-17869-1-git-send-email-spanda@codeaurora.org>
- <1524054002-17869-5-git-send-email-spanda@codeaurora.org>
- <20180424144322.ceyeiwe5apiyxacn@rob-hp-laptop>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC 03/10] cpufreq: exynos: Remove support for Exynos5440
+Date: Wed, 25 Apr 2018 08:18:24 +0530
+Message-ID: <20180425024824.7ej2sz5jlbiuqeqh@vireshk-i7>
+References: <20180424203239.21885-1-krzk@kernel.org>
+ <20180424203239.21885-4-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180424144322.ceyeiwe5apiyxacn@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180424203239.21885-4-krzk@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0wNC0yNCAyMDoxMywgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gV2VkLCBBcHIgMTgs
-IDIwMTggYXQgMDU6NTA6MDJQTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3cm90ZToKPj4gVGhlIElu
-bm9sdXggVFYxMjNXQU0gaXMgYSAxMi4zIiBlRFAgZGlzcGxheSBwYW5lbAo+PiB3aXRoIDIxNjB4
-MTQ0MCByZXNvbHV0aW9uLgo+IAo+IFdoeSBkb24ndCB5b3UganVzdCBzdWJtaXQgdGhpcyBmb3Ig
-dXBzdHJlYW0/ClNlYW4gUGF1bCBoYXMgc3VnZ2VzdGVkIHRvIHJldXNlIHNpbXBsZSBwYW5lbCBk
-cml2ZXIgaW5zdGVhZCBvZiBoYXZpbmcgYSAKbmV3IGRyaXZlciBhbHRvZ2V0aGVyLiBTbyBhbGwg
-dGhlc2UgZHQtYmluZGluZ3Mgd29udCBiZSBuZWVkZWQuCj4gCj4+IAo+PiBTaWduZWQtb2ZmLWJ5
-OiBTYW5kZWVwIFBhbmRhIDxzcGFuZGFAY29kZWF1cm9yYS5vcmc+Cj4+IC0tLQo+PiAgLi4uL2Jp
-bmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCxlZHAtMmstcGFuZWwudHh0IHwgMjEgCj4+ICsr
-KysrKysrKysrKysrKysrKysrKwo+PiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKykK
-Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCAKPj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCxlZHAtMmstcGFuZWwudHh0Cj4+IAo+PiBkaWZmIC0t
-Z2l0IAo+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
-L2lubm9sdXgsZWRwLTJrLXBhbmVsLnR4dCAKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGVkcC0yay1wYW5lbC50eHQKPj4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMC4uMTlmMjcxYwo+PiAtLS0gL2Rldi9udWxs
-Cj4+ICsrKyAKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
-YW5lbC9pbm5vbHV4LGVkcC0yay1wYW5lbC50eHQKPj4gQEAgLTAsMCArMSwyMSBAQAo+PiArSW5u
-b2x1eCBUVjEyM1dBTSAxMi4zIGluY2ggZURQIGRpc3BsYXkgcGFuZWwKPj4gKwo+PiArUmVxdWly
-ZWQgcHJvcGVydGllczoKPj4gKy0gcG93ZXItc3VwcGx5OiByZWd1bGF0b3IgdG8gcHJvdmlkZSB0
-aGUgc3VwcGx5IHZvbHRhZ2UKPj4gKy0gZW5hYmxlLWdwaW9zOiBHUElPIHBpbiB0byBlbmFibGUg
-b3IgZGlzYWJsZSB0aGUgcGFuZWwKPiAKPiBOZWVkIHRvIHN0YXRlIHRoZSBhY3RpdmUgc3RhdGUu
-Cj4gCj4+ICsKPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4+ICstIGJhY2tsaWdodDogcGhhbmRs
-ZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKPj4gKwo+PiAr
-RXhhbXBsZToKPj4gKwo+PiArCWVkcF9wYW5lbDogZWRwX3BhbmVsIHsKPiAKPiBwYW5lbCB7Cj4g
-Cj4+ICsJCWNvbXBhdGlibGUgPSAiaW5ub2x1eCwgZWRwXzJrX3BhbmVsIjsKPiAKPiBzcHVyaW91
-cyBzcGFjZSAgICAgICAgICAgICAgICAgICAgICAgIF4KPiAKPj4gKwkJcmVnID0gPDA+Owo+IAo+
-IE5vdCBkb2N1bWVudGVkLiBTaG91bGQgYmUgZHJvcHBlZC4KPiAKPj4gKwo+PiArCQllbmFibGUt
-Z3Bpb3MgPSA8Jm1zbWdwaW8gMzIgR1BJT19BQ1RJVkVfSElHSD47Cj4+ICsKPj4gKwkJcG93ZXIt
-c3VwcGx5ID0gPCZwbTg5MTZfbDg+Owo+PiArCj4gCj4gUmVtb3ZlIHRoZSBleHRyYSBibGFuayBs
-aW5lcy4KPiAKPj4gKwkJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+Owo+PiArCX07Cj4+IC0tCj4+
-IFRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUg
-Q29kZSBBdXJvcmEgCj4+IEZvcnVtLAo+PiBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2
-ZSBQcm9qZWN0Cj4+IAo+PiAtLQo+PiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2Vu
-ZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSIgCj4+IGluCj4+IHRoZSBib2R5IG9m
-IGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4+IE1vcmUgbWFqb3Jkb21v
-IGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbApfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFp
-bGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+On 24-04-18, 22:32, Krzysztof Kozlowski wrote:
+> The Exynos5440 is not actively developed, there are no development
+> boards available and probably there are no real products with it.
+> Remove wide-tree support for Exynos5440.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  .../bindings/cpufreq/cpufreq-exynos5440.txt        |  28 --
+>  drivers/cpufreq/Kconfig.arm                        |  14 -
+>  drivers/cpufreq/Makefile                           |   1 -
+>  drivers/cpufreq/exynos5440-cpufreq.c               | 452 ---------------------
+>  4 files changed, 495 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-exynos5440.txt
+>  delete mode 100644 drivers/cpufreq/exynos5440-cpufreq.c
+
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+-- 
+viresh
