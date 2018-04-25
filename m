@@ -1,115 +1,79 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [RFC 00/13] arm64: allwinner: Add A64 DE2 pipeline support
-Date: Wed, 25 Apr 2018 19:59:53 +0200
-Message-ID: <3749004.y60xFsjo5d@jernej-laptop>
-References: <20180424133425.24291-1-jagan@amarulasolutions.com> <4355590.Ql03JAEh1C@jernej-laptop> <CAMty3ZCTtB__eWub2PbHK_DHSVQsf4V1eECX6bfwDq99pXaLJQ@mail.gmail.com>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Letux-kernel] [PATCH v3 2/4] gpio: pca953x: add register definitions for pcal6524 and fix address calculation
+Date: Wed, 25 Apr 2018 20:05:36 +0200
+Message-ID: <65085C47-CDA8-4F8C-8307-C145F21F7D19@goldelico.com>
+References: <cover.1523376423.git.hns@goldelico.com> <0e9bea79eae7504e61fabdb4a0311f8fdc2f6b25.1523376423.git.hns@goldelico.com> <CAHp75VfYk1tSJ9PUshDvY2RaYrc+wR+hyrK8Ck1oQSUXPr-0fQ@mail.gmail.com> <EDF7FA02-C79C-4ADF-A10C-F8C4DBFE5158@goldelico.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBLMEQPLQKGQEN73PCXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAMty3ZCTtB__eWub2PbHK_DHSVQsf4V1eECX6bfwDq99pXaLJQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <EDF7FA02-C79C-4ADF-A10C-F8C4DBFE5158@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, kernel@pyra-handheld.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Andy,
 
-Dne sreda, 25. april 2018 ob 12:34:09 CEST je Jagan Teki napisal(a):
-> On Tue, Apr 24, 2018 at 9:02 PM, Jernej =C5=A0krabec <jernej.skrabec@siol=
-.net>=20
-wrote:
-> > Hi,
-> >=20
-> > Dne torek, 24. april 2018 ob 15:34:12 CEST je Jagan Teki napisal(a):
-> >> Allwinner A64 has display engine pipeline like other Allwinner SOC's
-> >> A83T/H3/H5.
-> >>=20
-> >> A64 DE2 behaviour similar to Allwinner A83T where mixer0, connected to
-> >> tcon0 with RGB, LVDS MIPI-DSI and mixer1, connected to tcon1 with HDMI=
-.
-> >> This series merely concentrated on HDMI pipeline and rest will add
-> >> eventually.
-> >>=20
-> >> patch 1: dt-bindings for a64 DE2 CCU
-> >>=20
-> >> patch 2: a64 DE2 CCU node addition
-> >>=20
-> >> patch 3: dt-bindings for a64 DE2 pipeline
-> >>=20
-> >> patch 4 - 5: dt-bindings for a64 mixer0 and tcon-lcd
-> >>=20
-> >> patch 6: a64 DE2 pipeline node addition
-> >>=20
-> >> patch 7 - 8: dt-bindings for a64 HDMI and HDMI PHY
-> >>=20
-> >> patch 9: a64 HDMI nodes addition
-> >>=20
-> >> patch 10 - 11: dt-bindings for a64 mixer1 and tcon-tv
-> >>=20
-> >> patch 12: a64 HDMI pipeline
-> >>=20
-> >> patch 13: enable HDMI out on bananpi-m64
-> >>=20
-> >> Tested HDMI on bananapi-m64 (along with DE2 SRAM C changes from [1]
-> >> thread), able to detect the HDMI but, no penguins on screen.
-> >>=20
-> >> Request for any suggestions.
-> >=20
-> > You are mising sunxi-ng clock patches. PLL_VIDEO0 and PLL_VIDEO1 need
-> > fixes by setting minimum stable frequency. Please note that datasheet m=
-ay
-> > have wrong information. That was obvious in H3 case and I had to check
-> > minimum stable PLL_VIDEO frequency in BSP driver.
+> Am 11.04.2018 um 07:00 schrieb H. Nikolaus Schaller =
+<hns@goldelico.com>:
 >=20
-> Can you point me the clock patches?=20
+> Hi Andy,
+>=20
+>> Am 10.04.2018 um 20:06 schrieb Andy Shevchenko =
+<andy.shevchenko@gmail.com>:
+>>=20
+>> On Tue, Apr 10, 2018 at 7:07 PM, H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>>> PCAL chips ("L" seems to stand for "latched") have additional
+>>> registers starting at address 0x40 to control the latches,
+>>> interrupt mask, pull-up and pull down etc.
+>>>=20
+>>> The constants are so far defined in a way that they fit for
+>>> the pcal9555a when shifted by the number of banks, i.e. multiplied
+>>> by 2.
+>>>=20
+>>> Now the pcal6524 has 3 banks which means the relative offset
+>>> must be multiplied by 4 which gives a wrong result if not done
+>>> carefully, since the base offset is already included in the offset.
+>>>=20
+>>> For the basic registers shared with all pca93xx/tca64xx chips
+>>> there is no such offset.
+>>>=20
+>>> Therefore, we add code to adjust the register number for exended
+>>> registers to the 24 bit accessor functions.
+>>>=20
+>>> And we add additional register offset constants (not yet used by
+>>> the driver code) which are specific to the pcal6524.
+>>>=20
+>>=20
+>> First of all, as I said, please split this to two patches. Don't mix =
+the things.
+>=20
+> Ok. Queued for v4.
+>=20
+>>=20
+>>=20
+>>> +       /* adjust register address for pcal6524 */
+>>> +       if (reg >=3D PCAL953X_OUT_STRENGTH)
+>>> +               reg -=3D PCAL953X_OUT_STRENGTH >> 1;
+>>> +
+>>=20
+>> Give me some days to think about it.
 
-Here is my A64 HDMI wip repo, which includes my clock changes:
-https://github.com/jernejsk/linux-1/tree/a64_hdmi_wip
+Any news on this?
 
-At some point HDMI output worked ok, I'm not sure in what state I left the=
-=20
-code.
+I am waiting for your advice before submitting v4 (with pending updates =
+for the other patches).
 
-> I've phadled only CLK_PLL_VIDEO0
-> on hdmi_phy So we need CLK_PLL_VIDEO1 as fourth clock?
+> No problem. I'll wait with v4.
+>=20
+> The only alternative I would see is to add new accessor function
+> pointers for the extended registers and have 0x00 based offsets,
+> but that is IMHO more ugly.
+>=20
+> BR and thanks,
+> Nikolaus
 
-I'm not sure what is the best way. I guess some research is needed. There i=
-s=20
-even the possibility that one bit (SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL) in hdm=
-i=20
-phy needs to be toggled depending on which clock is selected as HDMI source=
-. I=20
-never finished my research since I'm waiting to SRAM C claiming patches.
-
-At the end, HDMI driver should be tested by both, PLL_VIDEO0 and PLL_VIDEO1=
- as=20
-a HDMI clock source, otherwise there is no guarantee that we got binding=20
-right. A83T, H3 and H5 has only one possible HDMI parent clock, so it was m=
-uch=20
-easier in this regard.
-
-Unfortunately, BSP driver is not much of a help, since it was always=20
-distributed as a blob. Disassembly looks much like H3 driver, with few bits=
-=20
-added. However, BSP clocks are pretty much hardcoded so they don't tell all=
-=20
-the story.
-
-Best regards,
-Jernej
-
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+BR and thanks,
+Nikolaus
