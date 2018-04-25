@@ -1,87 +1,66 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
-Date: Tue, 24 Apr 2018 17:33:11 -0700
-Message-ID: <e7b7a2ce-9c5e-693b-34fc-db7a20e7b01b@gmail.com>
-References: <20180418222905.10414-1-robh@kernel.org>
- <e7a2f4ca-40c2-05ef-097c-2cecd31fb731@gmail.com>
- <CAL_JsqKVCdk8nFwmtfNt4mMOVYFVxefgafP6JtXThvFhROFB8w@mail.gmail.com>
+From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [[RFC]DPU PATCH 4/4] dt-bindings: Add Innolux
+ TV123WAM panel bindings
+Date: Wed, 25 Apr 2018 07:46:55 +0530
+Message-ID: <cb59510635f0e7c010588a4603ae3f0f@codeaurora.org>
+References: <1524054002-17869-1-git-send-email-spanda@codeaurora.org>
+ <1524054002-17869-5-git-send-email-spanda@codeaurora.org>
+ <20180424144322.ceyeiwe5apiyxacn@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKVCdk8nFwmtfNt4mMOVYFVxefgafP6JtXThvFhROFB8w@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180424144322.ceyeiwe5apiyxacn@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/20/18 18:28, Rob Herring wrote:
-> On Fri, Apr 20, 2018 at 4:00 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->> Hi Rob,
->>
->> Thanks for the example.  It was a good starting tutorial of sorts for me
->> to understand the format a bit.
->>
->>
->> On 04/18/18 15:29, Rob Herring wrote:
->>> The current DT binding documentation format of freeform text is painful
->>> to write, review, validate and maintain.
->>>
->>> This is just an example of what a binding in the schema format looks
->>> like. It's using jsonschema vocabulary in a YAML encoded document. Using
->>> jsonschema gives us access to existing tooling. A YAML encoding gives us
->>> something easy to edit.
->>>
->>> This example is just the tip of the iceberg, but it the part most
->>> developers writing bindings will interact with. Backing all this up
->>> are meta-schema (to validate the binding schemas), some DT core schema,
->>> YAML encoded DT output with dtc, and a small number of python scripts to
->>> run validation. The gory details including how to run end-to-end
->>> validation can be found here:
->>>
->>> https://www.spinics.net/lists/devicetree-spec/msg00649.html
->>>
->>> Signed-off-by: Rob Herring <robh@kernel.org>
->>> ---
->>> Cc list,
->>> You all review and/or write lots of binding documents. I'd like some feedback
->>> on the format.
->>>
->>> Thanks,
->>> Rob
->>>
->>>  .../devicetree/bindings/example-schema.yaml        | 149 +++++++++++++++++++++
->>>  1 file changed, 149 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/example-schema.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
->>> new file mode 100644
->>> index 000000000000..fe0a3bd1668e
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/example-schema.yaml
->>
->> I'm guessing by the path name that this is in the Linux kernel source tree.
-> 
-> Yes, well, my kernel tree. Most of the work still lives here:
-> 
-> https://github.com/robherring/yaml-bindings/
-> 
->>> @@ -0,0 +1,149 @@
->>> +# SPDX-License-Identifier: BSD-2-Clause
->>
->> If in the Linux kernel source tree, then allow gpl-v2 as a possible license.
-> 
-> Why? BSD is compatible. The license of the above repo is all BSD.
-
-I said __if__ in the Linux kernel source tree.  As my other comments
-indicated, I wasn't sure if this was intended to end up in the Linux
-kernel source tree.  __If__ in the Linux kernel source tree then it
-would be dual licensed, correct?  And thus the tag would reflect that?
-
-
-> Of course there's all the existing docs which default to GPLv2 and
-> we'll probably have to maintain that.
-> 
-
-< snip >
+T24gMjAxOC0wNC0yNCAyMDoxMywgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gV2VkLCBBcHIgMTgs
+IDIwMTggYXQgMDU6NTA6MDJQTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3cm90ZToKPj4gVGhlIElu
+bm9sdXggVFYxMjNXQU0gaXMgYSAxMi4zIiBlRFAgZGlzcGxheSBwYW5lbAo+PiB3aXRoIDIxNjB4
+MTQ0MCByZXNvbHV0aW9uLgo+IAo+IFdoeSBkb24ndCB5b3UganVzdCBzdWJtaXQgdGhpcyBmb3Ig
+dXBzdHJlYW0/ClNlYW4gUGF1bCBoYXMgc3VnZ2VzdGVkIHRvIHJldXNlIHNpbXBsZSBwYW5lbCBk
+cml2ZXIgaW5zdGVhZCBvZiBoYXZpbmcgYSAKbmV3IGRyaXZlciBhbHRvZ2V0aGVyLiBTbyBhbGwg
+dGhlc2UgZHQtYmluZGluZ3Mgd29udCBiZSBuZWVkZWQuCj4gCj4+IAo+PiBTaWduZWQtb2ZmLWJ5
+OiBTYW5kZWVwIFBhbmRhIDxzcGFuZGFAY29kZWF1cm9yYS5vcmc+Cj4+IC0tLQo+PiAgLi4uL2Jp
+bmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCxlZHAtMmstcGFuZWwudHh0IHwgMjEgCj4+ICsr
+KysrKysrKysrKysrKysrKysrKwo+PiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKykK
+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCAKPj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCxlZHAtMmstcGFuZWwudHh0Cj4+IAo+PiBkaWZmIC0t
+Z2l0IAo+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
+L2lubm9sdXgsZWRwLTJrLXBhbmVsLnR4dCAKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGVkcC0yay1wYW5lbC50eHQKPj4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMC4uMTlmMjcxYwo+PiAtLS0gL2Rldi9udWxs
+Cj4+ICsrKyAKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
+YW5lbC9pbm5vbHV4LGVkcC0yay1wYW5lbC50eHQKPj4gQEAgLTAsMCArMSwyMSBAQAo+PiArSW5u
+b2x1eCBUVjEyM1dBTSAxMi4zIGluY2ggZURQIGRpc3BsYXkgcGFuZWwKPj4gKwo+PiArUmVxdWly
+ZWQgcHJvcGVydGllczoKPj4gKy0gcG93ZXItc3VwcGx5OiByZWd1bGF0b3IgdG8gcHJvdmlkZSB0
+aGUgc3VwcGx5IHZvbHRhZ2UKPj4gKy0gZW5hYmxlLWdwaW9zOiBHUElPIHBpbiB0byBlbmFibGUg
+b3IgZGlzYWJsZSB0aGUgcGFuZWwKPiAKPiBOZWVkIHRvIHN0YXRlIHRoZSBhY3RpdmUgc3RhdGUu
+Cj4gCj4+ICsKPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4+ICstIGJhY2tsaWdodDogcGhhbmRs
+ZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKPj4gKwo+PiAr
+RXhhbXBsZToKPj4gKwo+PiArCWVkcF9wYW5lbDogZWRwX3BhbmVsIHsKPiAKPiBwYW5lbCB7Cj4g
+Cj4+ICsJCWNvbXBhdGlibGUgPSAiaW5ub2x1eCwgZWRwXzJrX3BhbmVsIjsKPiAKPiBzcHVyaW91
+cyBzcGFjZSAgICAgICAgICAgICAgICAgICAgICAgIF4KPiAKPj4gKwkJcmVnID0gPDA+Owo+IAo+
+IE5vdCBkb2N1bWVudGVkLiBTaG91bGQgYmUgZHJvcHBlZC4KPiAKPj4gKwo+PiArCQllbmFibGUt
+Z3Bpb3MgPSA8Jm1zbWdwaW8gMzIgR1BJT19BQ1RJVkVfSElHSD47Cj4+ICsKPj4gKwkJcG93ZXIt
+c3VwcGx5ID0gPCZwbTg5MTZfbDg+Owo+PiArCj4gCj4gUmVtb3ZlIHRoZSBleHRyYSBibGFuayBs
+aW5lcy4KPiAKPj4gKwkJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+Owo+PiArCX07Cj4+IC0tCj4+
+IFRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUg
+Q29kZSBBdXJvcmEgCj4+IEZvcnVtLAo+PiBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2
+ZSBQcm9qZWN0Cj4+IAo+PiAtLQo+PiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2Vu
+ZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSIgCj4+IGluCj4+IHRoZSBib2R5IG9m
+IGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4+IE1vcmUgbWFqb3Jkb21v
+IGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbApfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFp
+bGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
