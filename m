@@ -1,50 +1,122 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 1/7] gnss: add GNSS receiver subsystem
-Date: Wed, 25 Apr 2018 14:23:15 +0200
-Message-ID: <20180425122315.GS4615@localhost>
-References: <20180424163458.11947-1-johan@kernel.org>
- <20180424163458.11947-2-johan@kernel.org>
- <20180425085649.GB13295@kroah.com>
- <20180425105645.GP4615@localhost>
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: Re: [PATCH v3 6/6] arm64: dts: rockchip: Specify override mode for
+ kevin panel
+Date: Wed, 25 Apr 2018 09:36:26 -0300
+Message-ID: <CAAEAJfAgH_hw6yqbO__p=f2k-axBQXn141XiE-5j8mcmhRPWKg@mail.gmail.com>
+References: <20180208174855.55620-1-seanpaul@chromium.org>
+ <20180208174855.55620-7-seanpaul@chromium.org>
+ <CAD=FV=WGU+s015DQbNeWHkpqpHLFz+9AjHKAd0N3HWag0p5FWA@mail.gmail.com>
+ <CAAEAJfAQMzUfM86o-xNoyBQzTiEMNH+W=9FyFpBy99nA3HrVgw@mail.gmail.com>
+ <CAD=FV=W9LCeGAEuZDD9FUEKVMp8YUuCcW9uLcTZqTR1spA1gEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180425105645.GP4615@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAD=FV=W9LCeGAEuZDD9FUEKVMp8YUuCcW9uLcTZqTR1spA1gEA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Emil Renner Berthing <kernel@esmil.dk>, Arnd Bergmann <arnd@arndb.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Catalin Marinas <catalin.marinas@arm.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.co.uk>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, hoegsberg@chromium.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 25, 2018 at 12:56:45PM +0200, Johan Hovold wrote:
-> On Wed, Apr 25, 2018 at 10:56:49AM +0200, Greg Kroah-Hartman wrote:
-> > On Tue, Apr 24, 2018 at 06:34:52PM +0200, Johan Hovold wrote:
-
-> > > +static int gnss_open(struct inode *inode, struct file *file)
-> > > +{
-> > > +	struct gnss_device *gdev;
-> > > +	int ret = 0;
-> > > +
-> > > +	gdev = container_of(inode->i_cdev, struct gnss_device, cdev);
-> > > +
-> > > +	get_device(&gdev->dev);
-> > > +
-> > > +	nonseekable_open(inode, file);
-> > > +	file->private_data = gdev;
-> > > +
-> > > +	down_write(&gdev->rwsem);
-> > 
-> > Just curious, why a rwsem?  They can be slower than a normal semaphore,
-> > is this really a contentious lock?
-> 
-> I use the rwsem to deal with hotplugging; the underlying device can go
-> away at any time and the core makes sure that no further calls into the
-> corresponding driver is made once all currently executing callbacks
-> return.
-
-I just did find one access to the gnss ops which was unsafe however; the
-existence check for a write_raw callback in write() needs to be replaced
-by a device flag.
-
-Thanks,
-Johan
+T24gMjUgQXByaWwgMjAxOCBhdCAwMToyOSwgRG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21p
+dW0ub3JnPiB3cm90ZToKPiBIaSwKPgo+IE9uIFR1ZSwgQXByIDI0LCAyMDE4IGF0IDc6MzEgQU0s
+IEV6ZXF1aWVsIEdhcmNpYQo+IDxlemVxdWllbEB2YW5ndWFyZGlhc3VyLmNvbS5hcj4gd3JvdGU6
+Cj4+IEhpIERvdWcsIFNlYW46Cj4+Cj4+IEkgd291bGQgbGlrZSB0byBtb3ZlIHRoaXMgZm9yd2Fy
+ZC4KPj4KPj4gT24gMjYgRmVicnVhcnkgMjAxOCBhdCAxNToyMywgRG91ZyBBbmRlcnNvbiA8ZGlh
+bmRlcnNAY2hyb21pdW0ub3JnPiB3cm90ZToKPj4+IEhpLAo+Pj4KPj4+IE9uIFRodSwgRmViIDgs
+IDIwMTggYXQgOTo0OCBBTSwgU2VhbiBQYXVsIDxzZWFucGF1bEBjaHJvbWl1bS5vcmc+IHdyb3Rl
+Ogo+Pj4+IFRoaXMgcGF0Y2ggYWRkcyBhbiBvdmVycmlkZSBtb2RlIGZvciBrZXZpbiBkZXZpY2Vz
+LiBUaGUgbW9kZSBpbmNyZWFzZXMKPj4+PiBib3RoIGJhY2sgcG9yY2hlcyB0byBhbGxvdyBhIHBp
+eGVsIGNsb2NrIG9mIDI2NjY2a0h6IGFzIG9wcG9zZWQgdG8gdGhlCj4+Pj4gJ3R5cGljYWwnIHZh
+bHVlIG9mIDI1Mjc1MGtIei4gVGhpcyBpcyBuZWVkZWQgdG8gYXZvaWQgaW50ZXJmZXJlbmNlIHdp
+dGgKPj4+PiB0aGUgdG91Y2ggZGlnaXRpemVyIG9uIHRoZXNlIGxhcHRvcHMuCj4+Pj4KPj4+PiBD
+aGFuZ2VzIGluIHYyOgo+Pj4+ICAtIFdyYXAgdGhlIHRpbWluZyBpbiBkaXNwbGF5LXRpbWluZ3Mg
+bm9kZSB0byBtYXRjaCBiaW5kaW5nIChSb2IvVGhpZXJyeSkKPj4+PiBDaGFuZ2VzIGluIHYzOgo+
+Pj4+ICAtIFVud3JhcCB0aGUgdGltaW5nIGZyb20gZGlzcGxheS10aW1pbmdzIGFuZCByZW5hbWUg
+cGFuZWwtdGltaW5nIChSb2IpCj4+Pj4KPj4+PiBDYzogRG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNA
+Y2hyb21pdW0ub3JnPgo+Pj4+IENjOiBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0Pgo+Pj4+
+IENjOiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgo+Pj4+IENjOiBKZWZmeSBDaGVu
+IDxqZWZmeS5jaGVuQHJvY2stY2hpcHMuY29tPgo+Pj4+IENjOiBSb2IgSGVycmluZyA8cm9iaCtk
+dEBrZXJuZWwub3JnPgo+Pj4+IENjOiBTdMOpcGhhbmUgTWFyY2hlc2luIDxtYXJjaGV1QGNocm9t
+aXVtLm9yZz4KPj4+PiBDYzogVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNv
+bT4KPj4+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4+PiBDYzogZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+Pj4+IENjOiBsaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZy
+YWRlYWQub3JnCj4+Pj4gU2lnbmVkLW9mZi1ieTogU2VhbiBQYXVsIDxzZWFucGF1bEBjaHJvbWl1
+bS5vcmc+Cj4+Pj4gLS0tCj4+Pj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5
+LWdydS1rZXZpbi5kdHMgfCAxNCArKysrKysrKysrKysrKwo+Pj4+ICAxIGZpbGUgY2hhbmdlZCwg
+MTQgaW5zZXJ0aW9ucygrKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9k
+dHMvcm9ja2NoaXAvcmszMzk5LWdydS1rZXZpbi5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Jv
+Y2tjaGlwL3JrMzM5OS1ncnUta2V2aW4uZHRzCj4+Pj4gaW5kZXggMTkxYTZiY2IxNzA0Li42NTg0
+MTFjZTM3ZWEgMTAwNjQ0Cj4+Pj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9y
+azMzOTktZ3J1LWtldmluLmR0cwo+Pj4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2No
+aXAvcmszMzk5LWdydS1rZXZpbi5kdHMKPj4+PiBAQCAtOTgsNiArOTgsMjAgQEAKPj4+PiAgICAg
+ICAgICAgICAgICAgYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+Owo+Pj4+ICAgICAgICAgICAgICAg
+ICBwb3dlci1zdXBwbHkgPSA8JnBwMzMwMF9kaXNwPjsKPj4+Pgo+Pj4+ICsgICAgICAgICAgICAg
+ICBwYW5lbC10aW1pbmcgewo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLWZyZXF1
+ZW5jeSA9IDwyNjY2MDQ3MjA+Owo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGhhY3RpdmUg
+PSA8MjQwMD47Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgaGZyb250LXBvcmNoID0gPDQ4
+PjsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgICBoYmFjay1wb3JjaCA9IDw4ND47Cj4+Pj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgaHN5bmMtbGVuID0gPDMyPjsKPj4+PiArICAgICAgICAg
+ICAgICAgICAgICAgICBoc3luYy1hY3RpdmUgPSA8MD47Cj4+Pj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgdmFjdGl2ZSA9IDwxNjAwPjsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgICB2ZnJv
+bnQtcG9yY2ggPSA8Mz47Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgdmJhY2stcG9yY2gg
+PSA8MTIwPjsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgICB2c3luYy1sZW4gPSA8MTA+Owo+
+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHZzeW5jLWFjdGl2ZSA9IDwwPjsKPj4+PiArICAg
+ICAgICAgICAgICAgfTsKPj4+PiArCj4+Pj4gICAgICAgICAgICAgICAgIHBvcnRzIHsKPj4+PiAg
+ICAgICAgICAgICAgICAgICAgICAgICBwYW5lbF9pbl9lZHA6IGVuZHBvaW50IHsKPj4+PiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmZWRwX291dF9w
+YW5lbD47Cj4+Pgo+Pj4gS3Jpc3RpYW4gYnJvdWdodCBhbiBvbGQgYnVnIHRvIG15IGF0dGVudGlv
+bgo+Pj4gPGh0dHBzOi8vYnVncy5jaHJvbWl1bS5vcmcvcC9jaHJvbWl1bS9pc3N1ZXMvZGV0YWls
+P2lkPTc1MDM1ND4gYW5kIGl0Cj4+PiBtYWRlIG1lIHRoaW5rLiAgU2hvdWxkIHdlIHNvbWVob3cg
+YWRqdXN0IHRoZSBiaW5kaW5ncyBoZXJlIHRvIGFjY291bnQKPj4+IGZvciB0aGUgZmFjdCB0aGF0
+IGEgYm9hcmQgbWF5IHNvdXJjZSBzZXZlcmFsIGRpZmZlcmVudCBwYW5lbHM/Cj4+Pgo+Pj4gQUtB
+OiBvbiBzb21lIGJvYXJkcyBhbiBPRE0gbWF5IHdhbnQgdG8gc2Vjb25kIHNvdXJjZSAob3IgdGhp
+cmQgc291cmNlLAo+Pj4gb3IgLi4uKSB0aGUgcGFuZWwuICBUaGV5J2xsIHJhbmRvbWx5IGNvbm5l
+Y3Qgc2V2ZXJhbCBkaWZmZXJlbnQgcGFuZWxzCj4+PiB0byB0aGUgYm9hcmQgYW5kIHNoaXAgdGhl
+IGJvYXJkcyBvdXQuICBUaGUgcGFuZWxzIGFyZSBhbGwgY29tcGF0aWJsZQo+Pj4gZWxlY3RyaWNh
+bGx5IChzYW1lIHBvd2VyIHNlcXVlbmNpbmcpIGJ1dCBtaWdodCBuZWVkIHNsaWdodGx5IGRpZmZl
+cmVudAo+Pj4gdGltaW5ncy4gIEluIHRoaXMgcGFydGljdWxhciBjYXNlIHRoZXJlJ3Mgbm8gYm9h
+cmQtbGV2ZWwgc3RyYXBwaW5ncwo+Pj4gZm9yIHRoZSBkaWZmZXJlbnQgcGFuZWxzLS1pdCdzIGFz
+c3VtZWQgdGhhdCB0aGUgRURJRCBvbiB0aGUgcGFuZWxzIGNhbgo+Pj4gYmUgdXNlZCB0byBkaXN0
+aW5ndWlzaCB0aGVtLgo+Pj4KPj4+IEluIHRoYXQgY2FzZSBpdCBzZWVtcyBsaWtlIGl0IHdvdWxk
+IGJlIG5pY2UgdG8gYWxsb3cgc3BlY2lmeWluZyBtb3JlCj4+PiB0aGFuIG9uZSAicGFuZWwtdGlt
+aW5nIiBub2Rlcy4gIE1heWJlIGtleWVkIG9mZiBzb21lIHR5cGUgb2YgSUQgdGhhdCdzCj4+PiBw
+cmVzZW50IGluIHRoZSBFRElEPwo+Pj4KPj4+Cj4+PiBJcyB0aGF0IHNvbWV0aGluZyB3ZSdkIHdh
+bnQgdG8gYWNjb3VudCBmb3IgYmVmb3JlIHdlIGxhbmQgdGhpcyBzZXJpZXM/Cj4+PiAgSXQgc2Vl
+bXMgbGlrZSBpdCB3b3VsZCBqdXN0IGJlIGFkZGluZyBhbiBleHRyYSBsZXZlbCBvZiBub2Rlcz8K
+Pj4+Cj4+Cj4+IEFGQUlDUywgdGhlcmUgaXMgbm8gRURJRCB3aXRob3V0IGEgRERDIGJ1cywgd2hp
+Y2ggd2UgZG9uJ3QKPj4gc2VlbSB0byBoYXZlIG9uIGdydSBwbGF0Zm9ybXMsIGRvIHdlPwo+Cj4g
+SSdtIGZhaXJseSBjZXJ0YWluIHdlIGNhbiByZWFkIHRoZSBFRElEIG9uIGdydSBkZXZpY2VzLiAg
+SSBzZWUgdGhlCj4gImF1eCIgY2hhbm5lbCBjb25uZWN0ZWQgb24gdGhlIHNjaGVtYXRpY3MuICBU
+aGF0J2xsIGRvIGl0LCByaWdodD8KPiAuLi5hbmQgSSBjb3VsZCBoYXZlIHN3b3JuIHRoYXQgYXQg
+c29tZSBwb2ludCBpbiB0aW1lIEkgY291bGQgcmVhZCB0aGUKPiBFRElEIGluIHRoZSBzb2Z0d2Fy
+ZS4gIE15IGtldmluIGRldmljZXMgYXJlIG5vdCBjb25uZWN0ZWQgZm9yCj4gZGVidWdnaW5nIHNv
+IEkgY2FuJ3QgY2hlY2sgcmlnaHQgbm93LCBidXQgSSdtIHByZXR0eSBzdXJlIEkgd2FzIGFibGUK
+PiB0byByZWFkIHRoZSBFRElEIGluIHRoZSBwYXN0Li4uCj4KClJpZ2h0LgoKV2VsbCwgSSd2ZSBi
+ZWVuIHRyeWluZyB0byBnZXQgc29tZSBFRElEIHdpdGhvdXQgbXVjaCBzdWNjZXNzLgpQZXJoYXBz
+IEkgYW0gbWlzc2luZyBzb21ldGhpbmc/IFRoZSBJMkMgYXV4IGJ1cyBzZWVtcyBlbXB0eToKCnJv
+b3RAbGluYXJvLWRldmVsb3Blcjovc3lzL2NsYXNzL2kyYy1hZGFwdGVyL2kyYy0xMCMgY2F0IG5h
+bWUKRFAtQVVYCnJvb3RAbGluYXJvLWRldmVsb3Blcjovc3lzL2NsYXNzL2kyYy1hZGFwdGVyL2ky
+Yy0xMCMgaTJjZGV0ZWN0IC15IDEwCiAgICAgMCAgMSAgMiAgMyAgNCAgNSAgNiAgNyAgOCAgOSAg
+YSAgYiAgYyAgZCAgZSAgZgowMDogICAgICAgICAgLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0g
+LS0gLS0gLS0gLS0KMTA6IC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0t
+IC0tIC0tCjIwOiAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAt
+LQozMDogLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0KNDA6
+IC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tCjUwOiAtLSAt
+LSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLQo2MDogLS0gLS0gLS0g
+LS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0KNzA6IC0tIC0tIC0tIC0tIC0t
+IC0tIC0tIC0tCgpJbiBhbnkgY2FzZSwgcGVyaGFwcyBpdCdzIGJldHRlciB0byBub3Qgc3RhbGwg
+dGhpcyBzZXJpZXMKdXBzdHJlYW0gLSBhbmQgd29yayBvbiBzZWNvbmQgc291cmNpbmcgYXMgZm9s
+bG93IHVwCnBhdGNoZXM/CgpUaGFua3MsCi0tIApFemVxdWllbCBHYXJjw61hLCBWYW5ndWFyZGlh
+U3VyCnd3dy52YW5ndWFyZGlhc3VyLmNvbS5hcgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
