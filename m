@@ -1,209 +1,178 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH] ARM: BCM5301X: Fix NAND ECC parameters for Linksys
- Panamera
-Date: Wed, 25 Apr 2018 11:02:04 +0200
-Message-ID: <00df9ee9-2bd2-ad2b-fdf8-682efdb9a4d1@gmail.com>
-References: <20180310171244.70299-1-npcomplete13@gmail.com>
- <CACna6rz1TeRbPq-60HkHz9A0TDn+iXtmXniE6FCiANpUmV-qrw@mail.gmail.com>
- <20180311100313.znonhesgh462rz65@osboxes>
- <2ef6e4fc-cce7-372e-e35f-578fd6ada9ca@gmail.com>
- <20180313010210.ws4dugy3rrpqwzmk@osboxes>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v4 7/8] drm/i2c: tda998x: register as a drm bridge
+Date: Wed, 25 Apr 2018 11:09:25 +0200
+Message-ID: <bc00b6ca-38bd-bced-b86f-cbb49e5b0960@axentia.se>
+References: <20180423072301.11962-1-peda@axentia.se>
+ <20180423072301.11962-8-peda@axentia.se>
+ <20180423160833.GF16141@n2100.armlinux.org.uk>
+ <5d6866d0-75bc-4de8-9b87-4fee5430e9dd@axentia.se>
+ <20180424080833.GJ16141@n2100.armlinux.org.uk>
+ <8448e90a-4562-b564-c160-1b5c67e0f92f@axentia.se>
+ <0cbee3bd-8987-5f2f-519d-f8d1b426f2a3@ti.com>
+ <20180424170625.GL16141@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180313010210.ws4dugy3rrpqwzmk@osboxes>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180424170625.GL16141@n2100.armlinux.org.uk>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vivek Unune <npcomplete13@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>, Jyri Sarha <jsarha@ti.com>
+Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTMuMDMuMjAxOCAwMjowMiwgVml2ZWsgVW51bmUgd3JvdGU6Cj4gT24gTW9uLCBNYXIgMTIs
-IDIwMTggYXQgMDM6NTI6MjdQTSAtMDcwMCwgRmxvcmlhbiBGYWluZWxsaSB3cm90ZToKPj4gT24g
-MDMvMTEvMjAxOCAwMzowMyBBTSwgVml2ZWsgVW51bmUgd3JvdGU6Cj4+PiBIaSBSYWZhxYIsCj4+
-Pgo+Pj4gT24gU2F0LCBNYXIgMTAsIDIwMTggYXQgMTA6NDE6MDRQTSArMDEwMCwgUmFmYcWCIE1p
-xYJlY2tpIHdyb3RlOgo+Pj4+IE9uIDEwIE1hcmNoIDIwMTggYXQgMTg6MTIsIFZpdmVrIFVudW5l
-IDxucGNvbXBsZXRlMTNAZ21haWwuY29tPiB3cm90ZToKPj4+Pj4gVXNpbmcgQkNIOCBnaXZlcyBl
-Y2MgZXJyb3JzIGFuZCBtYWtlcyB0aGUgcm91dGVyIHVuc3VhYmxlLgo+Pj4+PiBTd2l0Y2hpbmcg
-dG8gQkNIMSBmaXhlcyB0aGVzZSBlcnJvcnMuCj4+Pj4KPj4+PiBDYW4geW91IHByb3ZpZGUgQ0ZF
-J3MgbG9nIG1lc3NhZ2VzIHN0YXJ0aW5nIHdpdGgKPj4+PiAiRGVjb21wcmVzc2luZy4uLmRvbmUi
-IGFuZCB1cCB0byB0aGUgIlByZXNzIEN0cmwrQyB0byBzdG9wIGluIENGRSIKPj4+PiBwbGVhc2U/
-IEknZCBsaWtlIHRvIHNlZSB3aGF0IE5BTkQgaW5mbyBDRkUgcHJpbnRzIHRoZXJlLgo+Pj4KPj4+
-IFNlZSBiZWxvdy4gSXQgZG9lcyBzYXkgQkNILTgsIGhvd2V2ZXIgSSBjYW4ndCBnZXQgaXQgdG8g
-d29yay4KPj4+Cj4+PiBDRkUgbG9nOgo+Pj4KPj4+IERlY29tcHJlc3NpbmcuLi5kb25lCj4+PiBG
-b3VuZCBhIFRvc2hpYmEgTkFORCBmbGFzaDoKPj4+IFRvdGFsIHNpemU6ICAxMjhNQgo+Pj4gQmxv
-Y2sgc2l6ZTogIDEyOEtCCj4+PiBQYWdlIFNpemU6ICAgMjA0OEIKPj4+IE9PQiBTaXplOiAgICA2
-NEIKPj4+IFNlY3RvciBzaXplOiA1MTJCCj4+PiBTcGFyZSBzaXplOiAgMTZCCj4+PiBFQ0MgbGV2
-ZWw6ICAgOCAoOC1iaXQpCj4+PiBEZXZpY2UgSUQ6IDB4OTggMHhmMSAweDgwIDB4MTUgMHhmMiAw
-eDE2Cj4+PiBmaW5kX2RldmluZm86IGRldmluZm8gYmxvY2sgZm91bmQgYXQgMHgwMDE4MDAwMCEK
-Pj4+Cj4+PiBQcmVzcyBDdHJsK0MgdG8gc3RvcCBpbiBDRkUKPj4KPj4gV2hhdCBraW5kIG9mIGVy
-cm9yIGFyZSB5b3UgZ2V0dGluZyBpbiBMaW51eCB3aXRoIEJDSC04Pwo+IAo+IFNlZSBiZWxvdzoK
-PiAKPiBbICAgMTIuOTQxODUwXSBHZW5lcmljIFBIWSBkc2EtMS4wOjAzOiBhdHRhY2hlZCBQSFkg
-ZHJpdmVyIFtHZW5lcmljIFBIWV0gKG1paV9idXM6cGh5X2FkZHI9ZHNhLTEuMDowMywgaXJxPVBP
-TEwpCj4gWyAgIDEyLjk5MTg1MV0gR2VuZXJpYyBQSFkgZHNhLTEuMDowNDogYXR0YWNoZWQgUEhZ
-IGRyaXZlciBbR2VuZXJpYyBQSFldIChtaWlfYnVzOnBoeV9hZGRyPWRzYS0xLjA6MDQsIGlycT1Q
-T0xMKQo+IFsgICAxMy4wMzI0MDRdIFVCSTogYXV0by1hdHRhY2ggbXRkNQo+IFsgICAxMy4wMzU3
-MzFdIHViaTA6IGF0dGFjaGluZyBtdGQ1Cj4gWyAgIDEzLjExNTcwMV0gdWJpMCB3YXJuaW5nOiAw
-eGMwMzdjOWU0OiBlcnJvciAtNzQgKEVDQyBlcnJvcikgd2hpbGUgcmVhZGluZyA2NCBieXRlcyBm
-cm9tIFBFQiAxMTM6MCwgcmVhZCBvbmx5IDY0IGJ5dGVzLCByZXRyeQo+IFsgICAxMy4xMjc2MzBd
-IHViaTAgd2FybmluZzogMHhjMDM3YzllNDogZXJyb3IgLTc0IChFQ0MgZXJyb3IpIHdoaWxlIHJl
-YWRpbmcgNjQgYnl0ZXMgZnJvbSBQRUIgMTEzOjAsIHJlYWQgb25seSA2NCBieXRlcywgcmV0cnkK
-PiBbICAgMTMuMTM5NTI0XSB1YmkwIHdhcm5pbmc6IDB4YzAzN2M5ZTQ6IGVycm9yIC03NCAoRUND
-IGVycm9yKSB3aGlsZSByZWFkaW5nIDY0IGJ5dGVzIGZyb20gUEVCIDExMzowLCByZWFkIG9ubHkg
-NjQgYnl0ZXMsIHJldHJ5Cj4gWyAgIDEzLjE1MTQxOV0gdWJpMCBlcnJvcjogMHhjMDM3Y2EwODog
-ZXJyb3IgLTc0IChFQ0MgZXJyb3IpIHdoaWxlIHJlYWRpbmcgNjQgYnl0ZXMgZnJvbSBQRUIgMTEz
-OjAsIHJlYWQgNjQgYnl0ZXMKPiBbICAgMTMuMTYxNDQ4XSBDUFU6IDEgUElEOiAxIENvbW06IHN3
-YXBwZXIvMCBOb3QgdGFpbnRlZCA0LjE0LjI1ICMwCj4gWyAgIDEzLjE2NzQ2MF0gSGFyZHdhcmUg
-bmFtZTogQkNNNTMwMVgKPiBbICAgMTMuMTcwOTUxXSBCYWNrdHJhY2U6Cj4gWyAgIDEzLjE3MzM5
-OF0gRnVuY3Rpb24gZW50ZXJlZCBhdCBbPGMwMTA1Y2NjPl0gZnJvbSBbPGMwMTA1ZmI0Pl0KPiBb
-ICAgMTMuMTc5MjQwXSAgcjc6MDAwMDAwMDAgcjY6NjAwMDAwMTMgcjU6MDAwMDAwMDAgcjQ6YzA4
-MWQ5ODgKPiBbICAgMTMuMTg0OTAzXSBGdW5jdGlvbiBlbnRlcmVkIGF0IFs8YzAxMDVmOWM+XSBm
-cm9tIFs8YzA0ZjI5YTg+XQo+IFsgICAxMy4xOTA3NDRdIEZ1bmN0aW9uIGVudGVyZWQgYXQgWzxj
-MDRmMjkxOD5dIGZyb20gWzxjMDM3Y2EwYz5dCj4gWyAgIDEzLjE5NjU4Nl0gIHI3OjAwMDAwMDAw
-IHI2OjAwMDAwMDQwIHI1OmM3OTU0MDAwIHI0OmZmZmZmZmI2Cj4gWyAgIDEzLjIwMjI1MV0gRnVu
-Y3Rpb24gZW50ZXJlZCBhdCBbPGMwMzdjN2RjPl0gZnJvbSBbPGMwMzdjZDFjPl0KPiBbICAgMTMu
-MjA4MDk1XSAgcjEwOjAwMDAwMDAwIHI5OjAwMDAwMDQwIHI4OjAwMDAwMDcxIHI3OmM3OTU0MDAw
-IHI2OmM3OTc5MDAwIHI1OmM3MDM2MTgwCj4gWyAgIDEzLjIxNTk0MV0gIHI0OmM3YjcyOTAwCj4g
-WyAgIDEzLjIxODQ3NV0gRnVuY3Rpb24gZW50ZXJlZCBhdCBbPGMwMzdjY2E0Pl0gZnJvbSBbPGMw
-MzgxYzVjPl0KPiBbICAgMTMuMjI0MzE4XSAgcjEwOjAwMDAwMDAwIHI5OmM3OTc5ODAwIHI4OmM3
-OTU0MDAwIHI3OmM3OTc5MDAwIHI2OjAwMDAwMDcxIHI1OmM3MDM2MTgwCj4gWyAgIDEzLjIzMjE1
-N10gIHI0OmM3YjcyOTAwCj4gWyAgIDEzLjIzNDY5MF0gRnVuY3Rpb24gZW50ZXJlZCBhdCBbPGMw
-MzgxYTg0Pl0gZnJvbSBbPGMwMzc2ZDc0Pl0KPiBbICAgMTMuMjQwNTM0XSAgcjEwOmM3OTU0MDQw
-IHI5OjAwMDAwODQwIHI4OmM3MDJlNDAwIHI3OjAwMDAwMDAwIHI2OmM3MDJlNDAwIHI1OmM3OTU0
-MDAwCj4gWyAgIDEzLjI0ODM4MV0gIHI0OmZmZmZmODAwCj4gWyAgIDEzLjI1MDkxNF0gRnVuY3Rp
-b24gZW50ZXJlZCBhdCBbPGMwMzc2NzIwPl0gZnJvbSBbPGMwNzE3YjljPl0KPiBbICAgMTMuMjU2
-NzU5XSAgcjEwOmMwODEzYTg4IHI5OmMwNjUxYzE4IHI4OmMwNjUxYmVjIHI3OmMwODRmZjQ4IHI2
-OmMwODFlNDQwIHI1OmM3ODIzZWE0Cj4gWyAgIDEzLjI2NDYwNV0gIHI0OmM3MDJlNDAwCj4gWyAg
-IDEzLjI2NzEzOV0gRnVuY3Rpb24gZW50ZXJlZCBhdCBbPGMwNzE3OTU0Pl0gZnJvbSBbPGMwMTAx
-YThjPl0KPiBbICAgMTMuMjcyOTgzXSAgcjEwOmMwNzJlODNjIHI5OmMwNzM2NmI4IHI4OmMwNzE3
-OTU0IHI3OmMwNzJlODM4IHI2OmMwODFlNDQwIHI1OjAwMDAwMDAwCj4gWyAgIDEzLjI4MDgzMF0g
-IHI0OmMwODAzYzA4Cj4gWyAgIDEzLjI4MzM2M10gRnVuY3Rpb24gZW50ZXJlZCBhdCBbPGMwMTAx
-OWRjPl0gZnJvbSBbPGMwNzAwZTM4Pl0KPiBbICAgMTMuMjg5MjA2XSAgcjk6YzA3MzY2Yjggcjg6
-YzA3MDA1OTQgcjc6YzA3MmU4MzggcjY6YzA4MWU0NDAgcjU6YzA4MWU0NDAgcjQ6MDAwMDAwMDgK
-PiBbICAgMTMuMjk2OTU4XSBGdW5jdGlvbiBlbnRlcmVkIGF0IFs8YzA3MDBjZjg+XSBmcm9tIFs8
-YzA1MDZhZGM+XQo+IFsgICAxMy4zMDI4MDJdICByMTA6MDAwMDAwMDAgcjk6MDAwMDAwMDAgcjg6
-MDAwMDAwMDAgcjc6MDAwMDAwMDAgcjY6MDAwMDAwMDAgcjU6YzA1MDZhY2MKPiBbICAgMTMuMzEw
-NjQxXSAgcjQ6MDAwMDAwMDAKPiBbICAgMTMuMzEzMTc1XSBGdW5jdGlvbiBlbnRlcmVkIGF0IFs8
-YzA1MDZhY2M+XSBmcm9tIFs8YzAxMDI3ODg+XQo+IFsgICAxMy4zMTkwMTVdICByNTpjMDUwNmFj
-YyByNDowMDAwMDAwMAo+IFsgICAxMy4zMjMyODldIHViaTAgd2FybmluZzogMHhjMDM3YzllNDog
-ZXJyb3IgLTc0IChFQ0MgZXJyb3IpIHdoaWxlIHJlYWRpbmcgNjQgYnl0ZXMgZnJvbSBQRUIgMTE0
-OjAsIHJlYWQgb25seSA2NCBieXRlcywgcmV0cnkKPiBbICAgMTMuMzM1MTc4XSB1YmkwIHdhcm5p
-bmc6IDB4YzAzN2M5ZTQ6IGVycm9yIC03NCAoRUNDIGVycm9yKSB3aGlsZSByZWFkaW5nIDY0IGJ5
-dGVzIGZyb20gUEVCIDExNDowLCByZWFkIG9ubHkgNjQgYnl0ZXMsIHJldHJ5Cj4gWyAgIDEzLjM0
-NzA2Nl0gdWJpMCB3YXJuaW5nOiAweGMwMzdjOWU0OiBlcnJvciAtNzQgKEVDQyBlcnJvcikgd2hp
-bGUgcmVhZGluZyA2NCBieXRlcyBmcm9tIFBFQiAxMTQ6MCwgcmVhZCBvbmx5IDY0IGJ5dGVzLCBy
-ZXRyeQo+IFsgICAxMy4zNTg5NTZdIHViaTAgZXJyb3I6IDB4YzAzN2NhMDg6IGVycm9yIC03NCAo
-RUNDIGVycm9yKSB3aGlsZSByZWFkaW5nIDY0IGJ5dGVzIGZyb20gUEVCIDExNDowLCByZWFkIDY0
-IGJ5dGVzCj4gWyAgIDEzLjM2ODk4OV0gQ1BVOiAxIFBJRDogMSBDb21tOiBzd2FwcGVyLzAgTm90
-IHRhaW50ZWQgNC4xNC4yNSAjMAo+IFsgICAxMy4zNzUwMDddIEhhcmR3YXJlIG5hbWU6IEJDTTUz
-MDFYCj4gWyAgIDEzLjM3ODQ5Nl0gQmFja3RyYWNlOgo+IFsgICAxMy4zODA5NDNdIEZ1bmN0aW9u
-IGVudGVyZWQgYXQgWzxjMDEwNWNjYz5dIGZyb20gWzxjMDEwNWZiND5dCj4gWyAgIDEzLjM4Njc4
-N10gIHI3OjAwMDAwMDAwIHI2OjYwMDAwMDEzIHI1OjAwMDAwMDAwIHI0OmMwODFkOTg4Cj4gWyAg
-IDEzLjM5MjQ1MF0gRnVuY3Rpb24gZW50ZXJlZCBhdCBbPGMwMTA1ZjljPl0gZnJvbSBbPGMwNGYy
-OWE4Pl0KPiBbICAgMTMuMzk4MjkxXSBGdW5jdGlvbiBlbnRlcmVkIGF0IFs8YzA0ZjI5MTg+XSBm
-cm9tIFs8YzAzN2NhMGM+XQo+IFsgICAxMy40MDQxMzNdICByNzowMDAwMDAwMCByNjowMDAwMDA0
-MCByNTpjNzk1NDAwMCByNDpmZmZmZmZiNgo+IFsgICAxMy40MDk3OTddIEZ1bmN0aW9uIGVudGVy
-ZWQgYXQgWzxjMDM3YzdkYz5dIGZyb20gWzxjMDM3Y2QxYz5dCj4gWyAgIDEzLjQxNTY0MV0gIHIx
-MDowMDAwMDAwMCByOTowMDAwMDA0MCByODowMDAwMDA3MiByNzpjNzk1NDAwMCByNjpjNzk3OTAw
-MCByNTpjNzAzNjE4MAo+IFsgICAxMy40MjM0ODhdICByNDpjN2I3MjkwMAo+IFsgICAxMy40MjYw
-MjFdIEZ1bmN0aW9uIGVudGVyZWQgYXQgWzxjMDM3Y2NhND5dIGZyb20gWzxjMDM4MWM1Yz5dCj4g
-WyAgIDEzLjQzMTg2NV0gIHIxMDowMDAwMDAwMCByOTpjNzk3OTgwMCByODpjNzk1NDAwMCByNzpj
-Nzk3OTAwMCByNjowMDAwMDA3MiByNTpjNzAzNjE4MAo+IFsgICAxMy40Mzk3MDRdICByNDpjN2I3
-MjkwMAo+IFsgICAxMy40NDIyMzddIEZ1bmN0aW9uIGVudGVyZWQgYXQgWzxjMDM4MWE4ND5dIGZy
-b20gWzxjMDM3NmQ3ND5dCj4gWyAgIDEzLjQ0ODA4MV0gIHIxMDpjNzk1NDA0MCByOTowMDAwMDg0
-MCByODpjNzAyZTQwMCByNzowMDAwMDAwMCByNjpjNzAyZTQwMCByNTpjNzk1NDAwMAo+IFsgICAx
-My40NTU5MjhdICByNDpmZmZmZjgwMAo+IFsgICAxMy40NTg0NjFdIEZ1bmN0aW9uIGVudGVyZWQg
-YXQgWzxjMDM3NjcyMD5dIGZyb20gWzxjMDcxN2I5Yz5dCj4gWyAgIDEzLjQ2NDMwNV0gIHIxMDpj
-MDgxM2E4OCByOTpjMDY1MWMxOCByODpjMDY1MWJlYyByNzpjMDg0ZmY0OCByNjpjMDgxZTQ0MCBy
-NTpjNzgyM2VhNAo+IFsgICAxMy40NzIxNTJdICByNDpjNzAyZTQwMAo+IFsgICAxMy40NzQ2ODVd
-IEZ1bmN0aW9uIGVudGVyZWQgYXQgWzxjMDcxNzk1ND5dIGZyb20gWzxjMDEwMWE4Yz5dCj4gWyAg
-IDEzLjQ4MDUyOV0gIHIxMDpjMDcyZTgzYyByOTpjMDczNjZiOCByODpjMDcxNzk1NCByNzpjMDcy
-ZTgzOCByNjpjMDgxZTQ0MCByNTowMDAwMDAwMAo+IFsgICAxMy40ODgzNzZdICByNDpjMDgwM2Mw
-OAo+IFsgICAxMy40OTA5MDldIEZ1bmN0aW9uIGVudGVyZWQgYXQgWzxjMDEwMTlkYz5dIGZyb20g
-WzxjMDcwMGUzOD5dCj4gWyAgIDEzLjQ5Njc1NF0gIHI5OmMwNzM2NmI4IHI4OmMwNzAwNTk0IHI3
-OmMwNzJlODM4IHI2OmMwODFlNDQwIHI1OmMwODFlNDQwIHI0OjAwMDAwMDA4Cj4gWyAgIDEzLjUw
-NDUxNF0gRnVuY3Rpb24gZW50ZXJlZCBhdCBbPGMwNzAwY2Y4Pl0gZnJvbSBbPGMwNTA2YWRjPl0K
-PiBbICAgMTMuNTEwMzU4XSAgcjEwOjAwMDAwMDAwIHI5OjAwMDAwMDAwIHI4OjAwMDAwMDAwIHI3
-OjAwMDAwMDAwIHI2OjAwMDAwMDAwIHI1OmMwNTA2YWNjCj4gWyAgIDEzLjUxODE5N10gIHI0OjAw
-MDAwMDAwCj4gWyAgIDEzLjUyMDczMF0gRnVuY3Rpb24gZW50ZXJlZCBhdCBbPGMwNTA2YWNjPl0g
-ZnJvbSBbPGMwMTAyNzg4Pl0KPiBbICAgMTMuNTI2NTcwXSAgcjU6YzA1MDZhY2MgcjQ6MDAwMDAw
-MDAKPiBbICAgMTMuNTMwODYzXSB1YmkwIHdhcm5pbmc6IDB4YzAzN2M5ZTQ6IGVycm9yIC03NCAo
-RUNDIGVycm9yKSB3aGlsZSByZWFkaW5nIDY0IGJ5dGVzIGZyb20gUEVCIDExNTowLCByZWFkIG9u
-bHkgNjQgYnl0ZXMsIHJldHJ5Cj4gWyAgIDEzLjU0Mjc2M10gdWJpMCB3YXJuaW5nOiAweGMwMzdj
-OWU0OiBlcnJvciAtNzQgKEVDQyBlcnJvcikgd2hpbGUgcmVhZGluZyA2NCBieXRlcyBmcm9tIFBF
-QiAxMTU6MCwgcmVhZCBvbmx5IDY0IGJ5dGVzLCByZXRyeQo+IFsgICAxMy41NTQ2NTldIHViaTAg
-d2FybmluZzogMHhjMDM3YzllNDogZXJyb3IgLTc0IChFQ0MgZXJyb3IpIHdoaWxlIHJlYWRpbmcg
-NjQgYnl0ZXMgZnJvbSBQRUIgMTE1OjAsIHJlYWQgb25seSA2NCBieXRlcywgcmV0cnkKPiBbICAg
-MTMuNTY2NTQ4XSB1YmkwIGVycm9yOiAweGMwMzdjYTA4OiBlcnJvciAtNzQgKEVDQyBlcnJvcikg
-d2hpbGUgcmVhZGluZyA2NCBieXRlcyBmcm9tIFBFQiAxMTU6MCwgcmVhZCA2NCBieXRlcwo+IFsg
-ICAxMy41NzY1NzRdIENQVTogMCBQSUQ6IDEgQ29tbTogc3dhcHBlci8wIE5vdCB0YWludGVkIDQu
-MTQuMjUgIzAKPiBbICAgMTMuNTgyNTg5XSBIYXJkd2FyZSBuYW1lOiBCQ001MzAxWAo+IFsgICAx
-My41ODYwNzhdIEJhY2t0cmFjZToKPiBbICAgMTMuNTg4NTI2XSBGdW5jdGlvbiBlbnRlcmVkIGF0
-IFs8YzAxMDVjY2M+XSBmcm9tIFs8YzAxMDVmYjQ+XQo+IFsgICAxMy41OTQzNjhdICByNzowMDAw
-MDAwMCByNjo2MDAwMDAxMyByNTowMDAwMDAwMCByNDpjMDgxZDk4OAo+IFsgICAxMy42MDAwMzJd
-IEZ1bmN0aW9uIGVudGVyZWQgYXQgWzxjMDEwNWY5Yz5dIGZyb20gWzxjMDRmMjlhOD5dCj4gWyAg
-IDEzLjYwNTg3Ml0gRnVuY3Rpb24gZW50ZXJlZCBhdCBbPGMwNGYyOTE4Pl0gZnJvbSBbPGMwMzdj
-YTBjPl0KPiBbICAgMTMuNjExNzE0XSAgcjc6MDAwMDAwMDAgcjY6MDAwMDAwNDAgcjU6Yzc5NTQw
-MDAgcjQ6ZmZmZmZmYjYKPiBbICAgMTMuNjE3Mzc4XSBGdW5jdGlvbiBlbnRlcmVkIGF0IFs8YzAz
-N2M3ZGM+XSBmcm9tIFs8YzAzN2NkMWM+XQo+IFsgICAxMy42MjMyMjNdICByMTA6MDAwMDAwMDAg
-cjk6MDAwMDAwNDAgcjg6MDAwMDAwNzMgcjc6Yzc5NTQwMDAgcjY6Yzc5NzkwMDAgcjU6YzcwMzYx
-ODAKPiBbICAgMTMuNjMxMDcxXSAgcjQ6YzdiNzI5MDAKPiBbICAgMTMuNjMzNjA0XSBGdW5jdGlv
-biBlbnRlcmVkIGF0IFs8YzAzN2NjYTQ+XSBmcm9tIFs8YzAzODFjNWM+XQo+IFsgICAxMy42Mzk0
-NDddICByMTA6MDAwMDAwMDAgcjk6Yzc5Nzk4MDAgcjg6Yzc5NTQwMDAgcjc6Yzc5NzkwMDAgcjY6
-MDAwMDAwNzMgcjU6YzcwMzYxODAKPiBbICAgMTMuNjQ3Mjg2XSAgcjQ6YzdiNzI5MDAKPiBbICAg
-MTMuNjQ5ODE5XSBGdW5jdGlvbiBlbnRlcmVkIGF0IFs8YzAzODFhODQ+XSBmcm9tIFs8YzAzNzZk
-NzQ+XQo+IFsgICAxMy42NTU2NjNdICByMTA6Yzc5NTQwNDAgcjk6MDAwMDA4NDAgcjg6YzcwMmU0
-MDAgcjc6MDAwMDAwMDAgcjY6YzcwMmU0MDAgcjU6Yzc5NTQwMDAKPiBbICAgMTMuNjYzNTEwXSAg
-cjQ6ZmZmZmY4MDAKPiBbICAgMTMuNjY2MDQyXSBGdW5jdGlvbiBlbnRlcmVkIGF0IFs8YzAzNzY3
-MjA+XSBmcm9tIFs8YzA3MTdiOWM+XQo+IFsgICAxMy42NzE4ODZdICByMTA6YzA4MTNhODggcjk6
-YzA2NTFjMTggcjg6YzA2NTFiZWMgcjc6YzA4NGZmNDggcjY6YzA4MWU0NDAgcjU6Yzc4MjNlYTQK
-PiBbICAgMTMuNjc5NzI1XSAgcjQ6YzcwMmU0MDAKPiBbICAgMTMuNjgyMjU4XSBGdW5jdGlvbiBl
-bnRlcmVkIGF0IFs8YzA3MTc5NTQ+XSBmcm9tIFs8YzAxMDFhOGM+XQo+IFsgICAxMy42ODgxMDNd
-ICByMTA6YzA3MmU4M2Mgcjk6YzA3MzY2Yjggcjg6YzA3MTc5NTQgcjc6YzA3MmU4MzggcjY6YzA4
-MWU0NDAgcjU6MDAwMDAwMDAKPiBbICAgMTMuNjk1OTQ5XSAgcjQ6YzA4MDNjMDgKPiBbICAgMTMu
-Njk4NDgyXSBGdW5jdGlvbiBlbnRlcmVkIGF0IFs8YzAxMDE5ZGM+XSBmcm9tIFs8YzA3MDBlMzg+
-XQo+IFsgICAxMy43MDQzMjddICByOTpjMDczNjZiOCByODpjMDcwMDU5NCByNzpjMDcyZTgzOCBy
-NjpjMDgxZTQ0MCByNTpjMDgxZTQ0MCByNDowMDAwMDAwOAo+IFsgICAxMy43MTIwODddIEZ1bmN0
-aW9uIGVudGVyZWQgYXQgWzxjMDcwMGNmOD5dIGZyb20gWzxjMDUwNmFkYz5dCj4gWyAgIDEzLjcx
-NzkzMF0gIHIxMDowMDAwMDAwMCByOTowMDAwMDAwMCByODowMDAwMDAwMCByNzowMDAwMDAwMCBy
-NjowMDAwMDAwMCByNTpjMDUwNmFjYwo+IFsgICAxMy43MjU3NjldICByNDowMDAwMDAwMAo+IFsg
-ICAxMy43MjgzMDNdIEZ1bmN0aW9uIGVudGVyZWQgYXQgWzxjMDUwNmFjYz5dIGZyb20gWzxjMDEw
-Mjc4OD5dCj4gWyAgIDEzLjczNDE0NF0gIHI1OmMwNTA2YWNjIHI0OjAwMDAwMDAwCj4gWyAgIDEz
-LjczODQyNV0gdWJpMCB3YXJuaW5nOiAweGMwMzdjOWU0OiBlcnJvciAtNzQgKEVDQyBlcnJvcikg
-d2hpbGUgcmVhZGluZyA2NCBieXRlcyBmcm9tIFBFQiAxMTY6MCwgcmVhZCBvbmx5IDY0IGJ5dGVz
-LCByZXRyeQo+IFsgICAxMy43NTAzMTldIHViaTAgd2FybmluZzogMHhjMDM3YzllNDogZXJyb3Ig
-LTc0IChFQ0MgZXJyb3IpIHdoaWxlIHJlYWRpbmcgNjQgYnl0ZXMgZnJvbSBQRUIgMTE2OjAsIHJl
-YWQgb25seSA2NCBieXRlcywgcmV0cnkKPiBbICAgMTMuNzYyMjEzXSB1YmkwIHdhcm5pbmc6IDB4
-YzAzN2M5ZTQ6IGVycm9yIC03NCAoRUNDIGVycm9yKSB3aGlsZSByZWFkaW5nIDY0IGJ5dGVzIGZy
-b20gUEVCIDExNjowLCByZWFkIG9ubHkgNjQgYnl0ZXMsIHJldHJ5Cj4gWyAgIDEzLjc3NDEwM10g
-dWJpMCBlcnJvcjogMHhjMDM3Y2EwODogZXJyb3IgLTc0IChFQ0MgZXJyb3IpIHdoaWxlIHJlYWRp
-bmcgNjQgYnl0ZXMgZnJvbSBQRUIgMTE2OjAsIHJlYWQgNjQgYnl0ZXMKPiBbICAgMTMuNzg0MTMw
-XSBDUFU6IDAgUElEOiAxIENvbW06IHN3YXBwZXIvMCBOb3QgdGFpbnRlZCA0LjE0LjI1ICMwCgpU
-aGlzIGlzIGV4cGVjdGVkIGlmIHlvdSBwcmV2aW91c2x5IHdlcmUgdXNpbmcgZmlybXdhcmUgcHJv
-Z3JhbW1pbmcgZmxhc2gKaW4gbm9uLUJDSDggbW9kZS4gVGhlIG1haW4gcmVhc29uIGZvciB3aGF0
-IHlvdSdyZSBzZWVpbmcgaXMgdGhhdCB3aGVuCmZsYXNoaW5nIGltYWdlIHdpdGggQ0ZFIGl0IGRv
-ZXNuJ3QgZXJhc2UgYWxsIE5BTkQgcGFnZXMuCgpJZiBwcmV2aW91c2x5IHlvdSB3ZXJlIHVzaW5n
-IGZpcm13YXJlIHByb2dyYW1taW5nIGZsYXNoIGluIEJDSDEgbW9kZSwgaXQKbWVhbnMgdGhhdCBh
-ZnRlciBmbGFzaGluZyBmaXJtd2FyZSB1c2luZyBCQ0g4IHlvdSdsbCBlbmQgdXAgd2l0aCBtZXNz
-IGluCkVDQy4KClBhcnQgb2YgTkFORCBmbGFzaCBwcm9ncmFtbWVkIGJ5IENGRSB3aWxsIHVzZSBC
-Q0g4LgpQYXJ0IG9mIE5BTkQgZmxhc2ggdGhhdCByZW1haW5lZCBmcm9tIHByZXZpb3VzIGZ3IHdp
-bGwgdXNlIEJDSDEuCkxpbnV4IHdpbGwgZmFpbCB0byByZWFkIHBhcnQgb2YgTkFORCBmbGFzaCBm
-cm9tIHByZXYgaW5zdGFsbGF0aW9uLgoKVGhlIGNsZWFuZXN0IHNvbHV0aW9uOiBlcmFzZSBhbGwg
-TkFORCBjb250ZW50IG9mIGZpcm13YXJlIHBhcnRpdGlvbgpiZWZvcmUgZmxhc2hpbmcgZmlybXdh
-cmUgdXNpbmcgQkNIOC4KClRoZSBlYXNpZXN0IHNvbHV0aW9uOiBpZ25vcmUgYWxsIHRoZXNlICJl
-cnJvciAtNzQgKEVDQyBlcnJvcikgd2hpbGUKcmVhZGluZyIgZXJyb3JzICh0aGV5IG1heSBsYXN0
-IGZvciBmZXcgbWludXRlcyEpLiBJIGJlbGlldmUgVUJJIHNob3VsZApzaW1wbHkgcmVjcmVhdGUg
-YWxsIHBhZ2VzIGl0IGNvdWxkbid0IGFjY2VzcyBhbmQgb25jZSB5b3Ugd2FpdCBsb25nCmVub3Vn
-aCwgYWxsIHlvdXIgTkFORCBmbGFzaCB3aWxsIGJlIHVzaW5nIEJDSDguCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On 2018-04-24 19:06, Russell King - ARM Linux wrote:
+> On Tue, Apr 24, 2018 at 07:04:16PM +0300, Jyri Sarha wrote:
+>> On 24/04/18 13:14, Peter Rosin wrote:
+>>> On 2018-04-24 10:08, Russell King - ARM Linux wrote:
+>>>> On Tue, Apr 24, 2018 at 08:58:42AM +0200, Peter Rosin wrote:
+>>>>> On 2018-04-23 18:08, Russell King - ARM Linux wrote:
+>>>>>> On Mon, Apr 23, 2018 at 09:23:00AM +0200, Peter Rosin wrote:
+>>>>>>>  static int tda998x_remove(struct i2c_client *client)
+>>>>>>>  {
+>>>>>>> -	component_del(&client->dev, &tda998x_ops);
+>>>>>>> +	struct device *dev = &client->dev;
+>>>>>>> +	struct tda998x_bridge *bridge = dev_get_drvdata(dev);
+>>>>>>> +
+>>>>>>> +	drm_bridge_remove(&bridge->bridge);
+>>>>>>> +	component_del(dev, &tda998x_ops);
+>>>>>>> +
+>>>>>>
+>>>>>> I'd like to ask a rather fundamental question about DRM bridge support,
+>>>>>> because I suspect that there's a major fsckup here.
+>>>>>>
+>>>>>> The above is the function that deals with the TDA998x device being
+>>>>>> unbound from the driver.  With the component API, this results in the
+>>>>>> DRM device correctly being torn down, because one of the hardware
+>>>>>> devices has gone.
+>>>>>>
+>>>>>> With DRM bridge, the bridge is merely removed from the list of
+>>>>>> bridges:
+>>>>>>
+>>>>>> void drm_bridge_remove(struct drm_bridge *bridge)
+>>>>>> {
+>>>>>>         mutex_lock(&bridge_lock);
+>>>>>>         list_del_init(&bridge->list);
+>>>>>>         mutex_unlock(&bridge_lock);
+>>>>>> }
+>>>>>> EXPORT_SYMBOL(drm_bridge_remove);
+>>>>>>
+>>>>>> and the memory backing the "struct tda998x_bridge" (which contains
+>>>>>> the struct drm_bridge) will be freed by the devm subsystem.
+>>>>>>
+>>>>>> However, there is no notification into the rest of the DRM subsystem
+>>>>>> that the device has gone away.  Worse, the memory that is still in
+>>>>>> use by DRM has now been freed, so further use of the DRM device
+>>>>>> results in a use-after-free bug.
+>>>>>>
+>>>>>> This is really not good, and to me looks like a fundamental problem
+>>>>>> with the DRM bridge code.  I see nothing in the DRM bridge code that
+>>>>>> deals with the lifetime of a "DRM bridge" or indeed the lifetime of
+>>>>>> the actual device itself.
+>>>>>>
+>>>>>> So, from what I can see, there seems to be a fundamental lifetime
+>>>>>> issue with the design of the DRM bridge code.  This needs to be
+>>>>>> fixed.
+>>>>>
+>>>>> Oh crap. A gigantic can of worms...
+>>>>
+>>>> Yes, it's especially annoying for me, having put the effort in to
+>>>> the component helper to cover all these cases.
+>>>>
+>>>>> Would a patch (completely untested btw) along this line of thinking make
+>>>>> any difference whatsoever?
+>>>>
+>>>> It looks interesting - from what I can see of the device links code,
+>>>> it would have the effect of unbinding the DRM device just before
+>>>> TDA998x is unbound, so that's an improvement.
+>>>>
+>>>> However, from what I can see, the link vanishes at that point (as
+>>>> DL_FLAG_AUTOREMOVE is set), and re-binding the TDA998x device results
+>>>> in nothing further happening - the link will be recreated, but there
+>>>> appears to be nothing that triggers the "consumer" to rebind at that
+>>>> point.  Maybe I've missed something?
+>>>
+>>> Right, auto-remove is a no-go. So, improving on the previous...
+>>>
+>>> (I think drm_panel might suffer from this issue too?)
+>>
+>> Yes it does and I took a shot at trying to fix it at the end of the
+>> previous merge window, but gave up as I run out of time. I re-spun the
+>> work now after reading this thread. I add you and Russell to cc.
+> 
+> Right, and these exact problems are what the component helper is
+> there to sort out, in a subsystem independent way.
+> 
+> What is the problem with the component helper that people seem to
+> be soo loathed to use it, instead preferring to come up with sub-
+> standard and broken alternatives?
+
+I think the answer to that is rather obvious. If you design with these
+components from the get-go, I see no problem with them, but it simply
+seems way easier to retrofit device-links. Just take a look at my
+untested patch and patch v3 2/2 from Jyri [1] for panels (that presumably
+fix the big issue, namely leaving wild pointers). They either don't touch
+neither suppliers nor consumers or are totally trivial (assigning a new
+.owner field in suppliers). Compare that with adding a couple of dozen
+boilerplate lines with hook functions etc to each and every drm_device,
+drm_panel and drm_bridge.
+
+Couple that with the fact that apparently the problem of unbinding
+and leaving wild pointers hasn't been all that prevalent, implying that
+the problem of rebinding can't be all that critical either.
+
+But what do I know?
+
+Cheers,
+Peter
+
+[1] I can't seem to find it in archives, so I'm including it here for
+reference. It's small enough.
+
+diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
+index 29d2c74..7474045 100644
+--- a/drivers/gpu/drm/drm_panel.c
++++ b/drivers/gpu/drm/drm_panel.c
+@@ -24,6 +24,7 @@
+ #include <linux/err.h>
+ #include <linux/module.h>
+ 
++#include <drm/drm_device.h>
+ #include <drm/drm_crtc.h>
+ #include <drm/drm_panel.h>
+ 
+@@ -101,6 +102,13 @@ int drm_panel_attach(struct drm_panel *panel, struct drm_connector *connector)
+ 	if (panel->connector)
+ 		return -EBUSY;
+ 
++	panel->link = device_link_add(connector->dev->dev, panel->dev, 0);
++	if (!panel->link) {
++		dev_err(panel->dev, "failed to link panel to %s\n",
++			dev_name(connector->dev->dev));
++		return -EINVAL;
++	}
++
+ 	panel->connector = connector;
+ 	panel->drm = connector->dev;
+ 
+@@ -123,6 +131,8 @@ EXPORT_SYMBOL(drm_panel_attach);
+  */
+ int drm_panel_detach(struct drm_panel *panel)
+ {
++	device_link_del(panel->link);
++
+ 	panel->connector = NULL;
+ 	panel->drm = NULL;
+ 
+diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
+index 14ac240..26a1b5f 100644
+--- a/include/drm/drm_panel.h
++++ b/include/drm/drm_panel.h
+@@ -89,6 +89,7 @@ struct drm_panel {
+ 	struct drm_device *drm;
+ 	struct drm_connector *connector;
+ 	struct device *dev;
++	struct device_link *link;
+ 
+ 	const struct drm_panel_funcs *funcs;
+ 
