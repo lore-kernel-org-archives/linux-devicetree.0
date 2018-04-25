@@ -1,91 +1,87 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] regulator: add support for SY8106A regulator
-Date: Wed, 25 Apr 2018 07:41:35 +0800
-Message-ID: <C0C1F042-221A-420F-A8C1-5FADCFC687F1@aosc.io>
-References: <20180423144657.63264-1-icenowy@aosc.io> <20180423144657.63264-3-icenowy@aosc.io> <20180424170733.GD22073@sirena.org.uk>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
+Date: Tue, 24 Apr 2018 17:33:11 -0700
+Message-ID: <e7b7a2ce-9c5e-693b-34fc-db7a20e7b01b@gmail.com>
+References: <20180418222905.10414-1-robh@kernel.org>
+ <e7a2f4ca-40c2-05ef-097c-2cecd31fb731@gmail.com>
+ <CAL_JsqKVCdk8nFwmtfNt4mMOVYFVxefgafP6JtXThvFhROFB8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBTMB77LAKGQEPJ4RDZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180424170733.GD22073-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKVCdk8nFwmtfNt4mMOVYFVxefgafP6JtXThvFhROFB8w@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 04/20/18 18:28, Rob Herring wrote:
+> On Fri, Apr 20, 2018 at 4:00 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>> Hi Rob,
+>>
+>> Thanks for the example.  It was a good starting tutorial of sorts for me
+>> to understand the format a bit.
+>>
+>>
+>> On 04/18/18 15:29, Rob Herring wrote:
+>>> The current DT binding documentation format of freeform text is painful
+>>> to write, review, validate and maintain.
+>>>
+>>> This is just an example of what a binding in the schema format looks
+>>> like. It's using jsonschema vocabulary in a YAML encoded document. Using
+>>> jsonschema gives us access to existing tooling. A YAML encoding gives us
+>>> something easy to edit.
+>>>
+>>> This example is just the tip of the iceberg, but it the part most
+>>> developers writing bindings will interact with. Backing all this up
+>>> are meta-schema (to validate the binding schemas), some DT core schema,
+>>> YAML encoded DT output with dtc, and a small number of python scripts to
+>>> run validation. The gory details including how to run end-to-end
+>>> validation can be found here:
+>>>
+>>> https://www.spinics.net/lists/devicetree-spec/msg00649.html
+>>>
+>>> Signed-off-by: Rob Herring <robh@kernel.org>
+>>> ---
+>>> Cc list,
+>>> You all review and/or write lots of binding documents. I'd like some feedback
+>>> on the format.
+>>>
+>>> Thanks,
+>>> Rob
+>>>
+>>>  .../devicetree/bindings/example-schema.yaml        | 149 +++++++++++++++++++++
+>>>  1 file changed, 149 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/example-schema.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
+>>> new file mode 100644
+>>> index 000000000000..fe0a3bd1668e
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/example-schema.yaml
+>>
+>> I'm guessing by the path name that this is in the Linux kernel source tree.
+> 
+> Yes, well, my kernel tree. Most of the work still lives here:
+> 
+> https://github.com/robherring/yaml-bindings/
+> 
+>>> @@ -0,0 +1,149 @@
+>>> +# SPDX-License-Identifier: BSD-2-Clause
+>>
+>> If in the Linux kernel source tree, then allow gpl-v2 as a possible license.
+> 
+> Why? BSD is compatible. The license of the above repo is all BSD.
+
+I said __if__ in the Linux kernel source tree.  As my other comments
+indicated, I wasn't sure if this was intended to end up in the Linux
+kernel source tree.  __If__ in the Linux kernel source tree then it
+would be dual licensed, correct?  And thus the tag would reflect that?
 
 
-=E4=BA=8E 2018=E5=B9=B44=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881:=
-07:33, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =E5=86=99=E5=88=B0:
->On Mon, Apr 23, 2018 at 10:46:56PM +0800, Icenowy Zheng wrote:
->
->> --- /dev/null
->> +++ b/drivers/regulator/sy8106a-regulator.c
->> @@ -0,0 +1,176 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * sy8106a-regulator.c - Regulator device driver for SY8106A
->
->Just make the entire thing a C++ comment so it looks consistent and
->joined up.
+> Of course there's all the existing docs which default to GPLv2 and
+> we'll probably have to maintain that.
+> 
 
-SPDX identifier is special -- it should be in a seperated
-comment block.
-
->
->> +static int sy8106a_set_voltage_sel(struct regulator_dev *rdev,
->unsigned int sel)
->> +{
->> +	/* We use our set_voltage_sel in order to avoid unnecessary I2C
->> +	 * chatter, because the regulator_get_voltage_sel_regmap using
->> +	 * apply_bit would perform 4 unnecessary transfers instead of one,
->> +	 * increasing the chance of error.
->> +	 */
->> +	return regmap_write(rdev->regmap, rdev->desc->vsel_reg,
->> +			    sel | SY8106A_GO_BIT);
->
->Why would it do these extra transfers?  Is this just the fact that you
->didn't set up a register cache (though the r/m/w cycle should only add
->the read)?  We could put some logic in the core regmap code to detect
->that an _update_bits() call is going to write to the whole register,
->though it'd be even easier to just let this register be cached.
->
->Generally if we can usefully optimize things we should do it at the
->framework level.
-
-Oh maybe the comment needs to be changed, but it's
-needed to enable it to change voltage, as it might be
-not enabled at boot.
-
->
->> +	if (reg & SY8106A_GO_BIT)
->> +		return reg & rdev->desc->vsel_mask;
->> +	else
->> +		return (chip->fixed_voltage - rdev->desc->min_uV) /
->> +		       rdev->desc->uV_step;
->
->You could use the standard get_voltage_sel() if you provide a mapping
->operation that set everything with _GO_BIT set to return the fixed
->voltage.  Though looking at this it seems that the fixed voltage will
->always be one that could be set via the register anyway so I'm
->wondering
->if the easiest thing here isn't to just have the driver turn off
->_GO_BIT
-
-Do you mean "turn on" here?
-
->during probe() and not worry about the special case at runtime.
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+< snip >
