@@ -1,84 +1,74 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: [PATCH v4 1/2] dt-bindings: media: Binding document for OV7251 camera sensor
-Date: Wed, 25 Apr 2018 19:20:45 +0300
-Message-ID: <1524673246-14175-2-git-send-email-todor.tomov@linaro.org>
-References: <1524673246-14175-1-git-send-email-todor.tomov@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524673246-14175-1-git-send-email-todor.tomov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@iki.fi, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 21/23] ASoC: qdsp6: dt-bindings: Add
+ apq8096 machine bindings
+Date: Wed, 25 Apr 2018 17:21:41 +0100
+Message-ID: <20180425162141.GG24769@sirena.org.uk>
+References: <20180418153157.1960-1-srinivas.kandagatla@linaro.org>
+ <20180418153157.1960-22-srinivas.kandagatla@linaro.org>
+ <20180424162517.msxscjfg36xc22mo@rob-hp-laptop>
+ <655a593b-021c-3bf2-35c2-eb77cb0a4b95@linaro.org>
+ <CAL_JsqJXpei5vFUKwrQGaV4q3Twkg=SKF=Cx_my7KaLmOc42NQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============4545431337761465758=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAL_JsqJXpei5vFUKwrQGaV4q3Twkg=SKF=Cx_my7KaLmOc42NQ@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Banajit Goswami <bgoswami@codeaurora.org>, rohkumar@qti.qualcomm.com, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Patrick Lai <plai@codeaurora.org>, spatakok@qti.qualcomm.com, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, David Brown <david.brown@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the document for ov7251 device tree binding.
 
-CC: Rob Herring <robh@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: devicetree@vger.kernel.org
-Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/media/i2c/ov7251.txt       | 52 ++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7251.txt
+--===============4545431337761465758==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kjpMrWxdCilgNbo1"
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov7251.txt b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
-new file mode 100644
-index 0000000..8281151
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
-@@ -0,0 +1,52 @@
-+* Omnivision 1/7.5-Inch B&W VGA CMOS Digital Image Sensor
-+
-+The Omnivision OV7251 is a 1/7.5-Inch CMOS active pixel digital image sensor
-+with an active array size of 640H x 480V. It is programmable through a serial
-+I2C interface.
-+
-+Required Properties:
-+- compatible: Value should be "ovti,ov7251".
-+- clocks: Reference to the xclk clock.
-+- clock-names: Should be "xclk".
-+- clock-frequency: Frequency of the xclk clock.
-+- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-+  to the hardware pin XSHUTDOWN which is physically active low.
-+- vdddo-supply: Chip digital IO regulator.
-+- vdda-supply: Chip analog regulator.
-+- vddd-supply: Chip digital core regulator.
-+
-+The device node shall contain one 'port' child node with a single 'endpoint'
-+subnode for its digital output video port, in accordance with the video
-+interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+
-+	&i2c1 {
-+		...
-+
-+		ov7251: camera-sensor@60 {
-+			compatible = "ovti,ov7251";
-+			reg = <0x60>;
-+
-+			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&camera_bw_default>;
-+
-+			clocks = <&clks 200>;
-+			clock-names = "xclk";
-+			clock-frequency = <24000000>;
-+
-+			vdddo-supply = <&camera_dovdd_1v8>;
-+			vdda-supply = <&camera_avdd_2v8>;
-+			vddd-supply = <&camera_dvdd_1v2>;
-+
-+			port {
-+				ov7251_ep: endpoint {
-+					clock-lanes = <1>;
-+					data-lanes = <0>;
-+					remote-endpoint = <&csi0_ep>;
-+				};
-+			};
-+		};
-+	};
--- 
-2.7.4
+
+--kjpMrWxdCilgNbo1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Apr 25, 2018 at 10:04:54AM -0500, Rob Herring wrote:
+> On Tue, Apr 24, 2018 at 11:49 AM, Srinivas Kandagatla
+
+> If you don't have the values, then how does one validate a DT is correct?
+
+> Honestly, a single property like this seems insufficient to describe
+> audio routing.
+
+It's perfectly fine, it's a list of source to sink mappings which can
+handle any set of N:M links.
+
+--kjpMrWxdCilgNbo1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrgqxQACgkQJNaLcl1U
+h9DELAf/bORYkD4n6wKwrpVkFfB9Xu31idq7TNuMrLMWf6VecnyTH8rYs9U556Ju
+sS21UxQb4ogZ3cVAT8gq1ZRWPDbovgrbkWoVpXo6CFYzEZQA3x1MUDCJbb4w4tvg
+DuN0TN1xlwIcdeKR+uGItmSepTcuqgCpCVklDTSPNr6yRMtfRHsAg3YBb8HCle0M
+kDUTxt6tJ0lHd9O+z8zLUOoYfZWyh74max9hD0GJ6wC/ACxw1k4t9u3c1wRLl2OB
+QWbwdukau5ZtSL38ZUQpW4w+bUpbn7aHQc/bb6z70+sPET/e3g/PPK+e8OZmAyAU
+9xKbQpMGVLKqPANICZl7GBFGzJ1+bg==
+=VFT4
+-----END PGP SIGNATURE-----
+
+--kjpMrWxdCilgNbo1--
+
+--===============4545431337761465758==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4545431337761465758==--
