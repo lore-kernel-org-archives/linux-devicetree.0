@@ -1,56 +1,47 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 3/8] ARM: dts: stm32: add ethernet pins to stm32mp157c
-Date: Wed, 25 Apr 2018 18:22:03 +0200
-Message-ID: <3b41ed0c-836b-6105-f625-d97e4512d0b2@st.com>
-References: <1524582120-4451-1-git-send-email-christophe.roullier@st.com>
- <1524582120-4451-4-git-send-email-christophe.roullier@st.com>
- <CAL_JsqL7bY=OSuzeVHH2UxxaBmCMzpFc8djnuZAY6VWcTgUmZw@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/3] dt-bindings: mailbox: Add APSS shared binding for
+ SDM845 SoCs
+Date: Wed, 25 Apr 2018 09:26:50 -0700
+Message-ID: <20180425162650.GG18510@minitux>
+References: <20180425143803.11260-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL7bY=OSuzeVHH2UxxaBmCMzpFc8djnuZAY6VWcTgUmZw@mail.gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Christophe Roullier <christophe.roullier@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180425143803.11260-1-sibis@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: andy.gross@linaro.org, mark.rutland@arm.com, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, jassisinghbrar@gmail.com, will.deacon@arm.com, catalin.marinas@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed 25 Apr 07:38 PDT 2018, Sibi Sankar wrote:
 
-On 04/25/2018 05:09 PM, Rob Herring wrote:
-> On Tue, Apr 24, 2018 at 10:01 AM, Christophe Roullier
-> <christophe.roullier@st.com> wrote:
->> Add ethernet pins on stm32mp157c.
->>
->> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
->> ---
->>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 46 +++++++++++++++++++++++++++++++
->>   1 file changed, 46 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
->> index 6f044100..86720a5 100644
->> --- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
->> +++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
->> @@ -158,6 +158,52 @@
->>                                          bias-disable;
->>                                  };
->>                          };
->> +
->> +                       ethernet0_rgmii_pins_a: rgmii@0 {
+> Include SDM845 APSS shared to the list of possible bindings
 > 
-> A unit-address without 'reg' property is not valid, so drop the '@0'.
->
-Thanks for the highlights. We could replace rgmii@0 by rgmii-0.
-If no objections, I will send a series to update all STM32 device tree 
-files (MCUs legacy). I will take care about it for future STM32 DT review.
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
-Thanks
-Alex
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-> Please build your dtb with W=1 or W=12 which will tell you this and
-> other errors.
+Regards,
+Bjorn
+
+> ---
+>  .../devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt        | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-
-> Rob
+> diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+> index 16964f0c1773..8ea0f12b8d0b 100644
+> --- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+> @@ -10,6 +10,7 @@ platforms.
+>  	Definition: must be one of:
+>  		    "qcom,msm8916-apcs-kpss-global",
+>  		    "qcom,msm8996-apcs-hmss-global"
+> +		    "qcom,sdm845-apss-shared"
+>  
+>  - reg:
+>  	Usage: required
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 > 
