@@ -1,68 +1,85 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v6 0/7] clk: meson-axg: Add AO Cloclk and Reset driver
-Date: Wed, 25 Apr 2018 15:05:12 +0200
-Message-ID: <1524661512.4026.67.camel@baylibre.com>
-References: <20180419135426.155794-1-yixun.lan@amlogic.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings/display/bridge: sii902x: add optional
+ power supplies
+Date: Wed, 25 Apr 2018 16:17:25 +0300
+Message-ID: <1559016.ZjzeSVB84W@avalon>
+References: <20180425075314.19137-1-philippe.cornu@st.com>
+ <16954794.QiYqgNKfkn@avalon> <e18d1a3b-a2eb-74f2-ab88-7bf01af0754b@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419135426.155794-1-yixun.lan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <e18d1a3b-a2eb-74f2-ab88-7bf01af0754b@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philippe CORNU <philippe.cornu@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Yannick FERTRE <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-04-19 at 21:54 +0800, Yixun Lan wrote:
->   This patch try to add AO clock and Reset driver for Amlogic's
-> Meson-AXG SoC.
->   Please note that patch 7 need to wait for the DTS changes[3] merged
-> into mainline first, otherwise it will break the serial console.
-> 
->  patch 2: factor the common code into a dedicated file
->  patch 3-5: add the aoclk driver for AXG SoC
->  patch 6-7: drop unnecessary clock flags
-> 
-> changes since v5 at [6]: 
->  - drop unnecessary header files
->  - add 'axg_aoclk' prefix to clk driver, make them more consistent
->  - add missing end new line..
-> 
-> changes since v4 at [5]: 
->  - fix return err
->  - introduce CONFIG_COMMON_CLK_MESON_AO
->  - format/style minor fix
-> 
-> changes since v3 at [4]: 
->  - add 'const' contraint to the read-only data
->  - switch to devm_of_clk_add_hw_provider API
->  - check return value of devm_reset_controller_register
-> 
-> changes since v2 at [2]: 
->  - rework meson_aoclkc_probe() which leverage the of_match_data
->  - merge patch 5-6 into this series
->  - seperate DTS patch, will send to Kevin Hilman independently
->  
-> changes since v1 at [0]: 
->  - rebase to clk-meson's branch 'next/drivers' [1]
->  - fix license, update to BSD-3-Clause
->  - drop un-used include header file
-> 
-> [0] https://lkml.kernel.org/r/20180209070026.193879-1-yixun.lan@amlogic.com
-> [1] git://github.com/BayLibre/clk-meson.git branch: next-drivers
-> [2] https://lkml.kernel.org/r/20180323143816.200573-1-yixun.lan@amlogic.com
-> [3] https://lkml.kernel.org/r/20180326081809.49493-4-yixun.lan@amlogic.com
-> [4] https://lkml.kernel.org/r/20180328025050.221585-1-yixun.lan@amlogic.com
-> [5] https://lkml.kernel.org/r/20180408031938.153474-1-yixun.lan@amlogic.com
-> [6] https://lkml.kernel.org/r/20180409143749.71197-1-yixun.lan@amlogic.com
-
-Yixun
-
-Please :
- - Fix checkpatch error in patch 5 
- - Collect Philip's Ack on patch 4
- - Remove the extra new lines at EOF in patch 2 (maybe others, I did not check
-them all) - 1 new line at the end of each file, not 2.
-
-Regards
-Jerome
+SGkgUGhpbGlwcGUsCgpPbiBXZWRuZXNkYXksIDI1IEFwcmlsIDIwMTggMTU6MjA6MDQgRUVTVCBQ
+aGlsaXBwZSBDT1JOVSB3cm90ZToKPiBPbiAwNC8yNS8yMDE4IDExOjAxIEFNLCBMYXVyZW50IFBp
+bmNoYXJ0IHdyb3RlOgo+ID4gT24gV2VkbmVzZGF5LCAyNSBBcHJpbCAyMDE4IDEwOjUzOjEzIEVF
+U1QgUGhpbGlwcGUgQ29ybnUgd3JvdGU6Cj4gPj4gQWRkIG9wdGlvbmFsIHBvd2VyIHN1cHBsaWVz
+IHVzaW5nIHRoZSBkZXNjcmlwdGlvbiBmb3VuZCBpbgo+ID4+ICJTaUk5MDIyQS9TaUk5MDI0QSBI
+RE1JIFRyYW5zbWl0dGVyIERhdGEgU2hlZXQgKEF1Z3VzdCAyMDE2KSIuCj4gPj4KPiA+PiBUaGVy
+ZSBpcyBhIHNpbmdsZSAxdjIgc3VwcGx5IHZvbHRhZ2UgbmFtZWQgdmNjMTIgZnJvbSB3aGljaCBj
+dmNjMTIKPiA+PiAoZGlnaXRhbCBjb3JlKSBhbmQgYXZjYzEyIChUTURTIGFuYWxvZykgYXJlIGRl
+cml2ZWQgYmVjYXVzZSBhY2NvcmRpbmcKPiA+PiB0byB0aGlzIGRhdGEgc2hlZXQ6Cj4gPj4gImN2
+Y2MxMiBhbmQgYXZjYzEyIGNhbiBiZSBkZXJpdmVkIGZyb20gdGhlIHNhbWUgcG93ZXIgc291cmNl
+Igo+ID4gCj4gPiBTaG91bGRuJ3QgdGhlIHBvd2VyIHN1cHBsaWVzIGJlIG1hbmRhdG9yeSwgYXMg
+ZXhwbGFpbmVkIGJ5IE1hcmsgaW4KPiA+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL2Fy
+Y2hpdmVzL2RyaS1kZXZlbC8yMDE4LUFwcmlsLzE3MjQwMC5odG1sCj4gPiA/IAo+IAo+IExhdXJl
+bnQsCj4gTWFueSB0aGFua3MgTGF1cmVudCBmb3IgeW91ciBjb21tZW50LCBJIHVuZGVyc3Rvb2Qg
+dGhlIG1lcmdlIG9mIHRoZSB0d28gCj4gMXYyIHBvd2VyIHN1cHBsaWVzIGJ1dCBtaXNzZWQgdGhl
+ICJtYW5kYXRvcnkiIHBhcnQuLi4gbWF5YmUgYmVjYXVzZSB0aGlzIAo+IHBhdGNoICh3aXRoIG9w
+dGlvbmFsIHBvd2VyIHN1cHBsaWVzKSBhbHJlYWR5IGdvdCB0aGUgcmV2aWV3ZWQtYnkgZnJvbSAK
+PiBSb2IsIEkgdGhvdWdodCB0aGUgZGlzY3Vzc2lvbiB0aHJlYWQgeW91IHBvaW50ZWQgb3V0IHdh
+cyBhcHBsaWNhYmxlIAo+ICJvbmx5IiB0byB0b3RhbGx5IG5ldyBkcml2ZXIgZG9jdW1lbnRhdGlv
+bi4KPiAKPiBTbywgb24gbXkgc2lkZSwgYXMgYSAibmV3IHVzZXIiIG9mIHNpaTkwMnggSUMsIG5v
+IHByb2JsZW0gdG8gcHV0IHRoZXNlIAo+IHBvd2VyIHN1cHBsaWVzIGFzIG1hbmRhdG9yeSBpbnN0
+ZWFkIG9mIG9wdGlvbmFsIHByb3BlcnRpZXMgYnV0IEkgd291bGQgCj4gbGlrZSB0byBiZSBzdXJl
+IHRoaXMgaXMgYXBwbGljYWJsZSB0byBib3RoIG9sZCBhbmQgbmV3IGJpbmRpbmdzIGRvYyA6ICkK
+CldlIG9idmlvdXNseSBuZWVkIHRvIHJldGFpbiBiYWNrd2FyZCBjb21wYXRpYmlsaXR5LCBzbyBv
+biB0aGUgZHJpdmVyIHNpZGUgeW91IApuZWVkIHRvIHRyZWF0IHRob3NlIHBvd2VyIHN1cHBsaWVz
+IGFzIG9wdGlvbmFsLiBGcm9tIGEgRFQgYmluZGluZ3MgcG9pbnQgb2YgCnZpZXcsIGhvd2V2ZXIs
+IEkgdGhpbmsgdGhleSBzaG91bGQgYmUgbWFuZGF0b3J5IGZvciBuZXcgRFQuCgo+IFJvYiwKPiBj
+b3VsZCB5b3UgcGxlYXNlIGNvbmZpcm0gdGhlc2UgcG93ZXIgc3VwcGx5IHByb3BlcnRpZXMgc2hv
+dWxkIGJlIAo+ICJtYW5kYXRvcnkiPwo+IGlmIHllcywgc2hvdWxkIHdlIHRoZW4gbW9kaWZ5IG90
+aGVyIG9wdGlvbmFsIHByb3BlcnRpZXMgbGlrZSB0aGUgCj4gcmVzZXQtZ3Bpb3MgdG9vIGluIHRo
+ZSBmdXR1cmU/CgpUaGUgR1BJT3MgcHJvcGVydGllcyBhcmUgZGlmZmVyZW50IGluIG15IG9waW5p
+b24sIGFzIHRoZXJlJ3Mgbm8gcmVxdWlyZW1lbnQgdG8gCmNvbm5lY3QgZm9yIGluc3RhbmNlIHRo
+ZSByZXNldCBwaW4gdG8gYSBHUElPIGNvbnRyb2xsYWJsZSBieSB0aGUgU29DLiBUaGUgcGluIApj
+b3VsZCBiZSBoYXJkd2lyZWQgdG8gVkNDLCBvciBjb25uZWN0ZWQgdG8gYSBzeXN0ZW0gcmVzZXQg
+dGhhdCBpcyAKYXV0b21hdGljYWxseSBtYW5hZ2VkIHdpdGhvdXQgU29DIGludGVydmVudGlvbi4g
+VGhlIHBvd2VyIHN1cHBsaWVzLCBob3dldmVyLCAKYXJlIG1hbmRhdG9yeSwgaW4gdGhlIHNlbnNl
+IHRoYXQgdGhlIGNoaXAgd2lsbCBub3Qgd29yayBpZiB5b3UgbGVhdmUgdGhlIHBvd2VyIApzdXBw
+bGllcyB1bmNvbm5lY3RlZC4KCj4gQmlnIHRoYW5rcyB0byBib3RoIG9mIHlvdSwKCllvdSdyZSB3
+ZWxjb21lICEKCj4gPj4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNv
+cm51QHN0LmNvbT4KPiA+PiAtLS0KPiA+PiAKPiA+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dCB8IDIgKysKPiA+PiAgIDEgZmls
+ZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKPiA+Pgo+ID4+IGRpZmYgLS1naXQKPiA+PiBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4
+dAo+ID4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
+L3NpaTkwMngudHh0IGluZGV4Cj4gPj4gNTZhM2U2OGNjYjgwLi45ZmI0MWZjOWFmNTEgMTAwNjQ0
+Cj4gPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
+ZGdlL3NpaTkwMngudHh0Cj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0Cj4gPj4gQEAgLTgsNiArOCw4IEBAIE9wdGlv
+bmFsIHByb3BlcnRpZXM6Cj4gPj4gICAJLSBpbnRlcnJ1cHRzLWV4dGVuZGVkIG9yIGludGVycnVw
+dC1wYXJlbnQgKyBpbnRlcnJ1cHRzOiBkZXNjcmliZQo+ID4+ICAgCSAgdGhlIGludGVycnVwdCBs
+aW5lIHVzZWQgdG8gaW5mb3JtIHRoZSBob3N0IGFib3V0IGhvdHBsdWcgZXZlbnRzLgo+ID4+ICAg
+CS0gcmVzZXQtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgUlNU
+X04gcGluLgo+ID4+ICsJLSBpb3ZjYy1zdXBwbHk6IEkvTyBzdXBwbHkgdm9sdGFnZSAoMS44ViBv
+ciAzLjNWLCBob3N0LWRlcGVuZGVudCkuCj4gPj4gKwktIHZjYzEyLXN1cHBseTogVE1EUyBhbmFs
+b2cgJiBkaWdpdGFsIGNvcmUgc3VwcGx5IHZvbHRhZ2UgKDEuMlYpLgo+ID4+Cj4gPj4gICBPcHRp
+b25hbCBzdWJub2RlczoKPiA+PiAgIAktIHZpZGVvIGlucHV0OiB0aGlzIHN1Ym5vZGUgY2FuIGNv
+bnRhaW4gYSB2aWRlbyBpbnB1dCBwb3J0IG5vZGUKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5j
+aGFydAoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
