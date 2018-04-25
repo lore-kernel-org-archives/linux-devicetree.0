@@ -1,67 +1,57 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 2/7] ARM: dts: sun8i: h3: Split out common board design
- for ALL-H3-CC
-Date: Wed, 25 Apr 2018 21:59:04 +0800
-Message-ID: <CAGb2v64A4m-ky=6LXsjHtETuMwFPbcP1AC4q9Fk7VUxYqJODBQ@mail.gmail.com>
-References: <20180424113424.13196-1-wens@csie.org> <20180424113424.13196-3-wens@csie.org>
- <20180424121353.zxujyehsw3er2xq6@flea> <CAGb2v65iwbmOvQ2YA0e4QyTzQVj=F+5n6cWt2q6K80Y2b_3q3g@mail.gmail.com>
- <20180424193754.jsuucbq57onhxhqe@flea> <CAGb2v64MwS+q87z9_UiKxVtgeAenA_9+QSS=cfF42PGy4PeJwQ@mail.gmail.com>
- <20180425123915.twp3m73o5xap3m6j@flea>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH 03/11] platform: make support for early platform devices
+ conditional
+Date: Wed, 25 Apr 2018 10:02:01 -0400
+Message-ID: <20180425140201.GE3094@brightrain.aerifal.cx>
+References: <20180424173051.15099-1-brgl@bgdev.pl>
+ <20180424173051.15099-4-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180425123915.twp3m73o5xap3m6j@flea>
+Content-Disposition: inline
+In-Reply-To: <20180424173051.15099-4-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@siemens.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 25, 2018 at 8:39 PM, Maxime Ripard
-<maxime.ripard@bootlin.com> wrote:
-> On Wed, Apr 25, 2018 at 11:19:20AM +0800, Chen-Yu Tsai wrote:
->> On Wed, Apr 25, 2018 at 3:37 AM, Maxime Ripard
->> <maxime.ripard@bootlin.com> wrote:
->> > On Tue, Apr 24, 2018 at 08:17:11PM +0800, Chen-Yu Tsai wrote:
->> >> On Tue, Apr 24, 2018 at 8:13 PM, Maxime Ripard
->> >> <maxime.ripard@bootlin.com> wrote:
->> >> > On Tue, Apr 24, 2018 at 07:34:19PM +0800, Chen-Yu Tsai wrote:
->> >> >> The Libre Computer Project ALL-H3-CC has three models, all using the
->> >> >> same board design, but with different pin compatible SoCs and amount of
->> >> >> DRAM.
->> >> >>
->> >> >> Currently only the H3 1GB DRAM variant is supported. To support the two
->> >> >> other variants, first split the original device tree into a common board
->> >> >> design part and an SoC specific part.
->> >> >>
->> >> >> The SoC part only defines which SoC is used and model name, and includes
->> >> >> the SoC specific dtsi file and the common design dtsi file.
->> >> >>
->> >> >> Also fix up the SPDX identifier line to use the correct comment style,
->> >> >> and place it on the first line.
->> >> >>
->> >> >> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->> >> >> ---
->> >> >>  .../boot/dts/sun8i-h3-libretech-all-h3-cc.dts | 213 +-----------------
->> >> >>  ....dts => sunxi-hx-libretech-all-h3-cc.dtsi} |  11 +-
->> >> >
->> >> > I think I prefer the name of Neil's DTSI better, and since pretty much
->> >> > the same patches (a couple of hours) before, we'll merge them (while
->> >> > merging the rest of your patches, obviously).
->> >> >
->> >> > Does that work for you?
->> >>
->> >> I would like for the regulator voltage fix to be merged before the split.
->> >> This will make it trivial to back port, instead of having to reverse the
->> >> split, and maybe failing.
->> >
->> > Yes, I was just talking about replacing your two redundant patches,
->> > but keeping the order you have.
->>
->> That works for me. Might require a little fixing up.
->> Let me know if you need help with that.
->
-> I did. You can double check if you want :)
+On Tue, Apr 24, 2018 at 07:30:43PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> We want to add support for device tree based early platform devices.
+> 
+> In order not to introduce additional bloat for all users when we extend
+> struct device to accomodate early platform DT support, let's make the
+> current machine code support conditional.
+> 
+> The only current user of the early platform infrastructure is SuperH so
+> make it select the appropriate Kconfig option.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  arch/sh/Kconfig                 |  1 +
+>  drivers/base/Kconfig            |  4 ++++
+>  drivers/base/platform.c         |  3 +++
+>  include/linux/platform_device.h | 32 ++++++++++++++++++++++++++++++++
+>  4 files changed, 40 insertions(+)
+> 
+> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+> index 97fe29316476..1b2c0b2ce402 100644
+> --- a/arch/sh/Kconfig
+> +++ b/arch/sh/Kconfig
+> @@ -50,6 +50,7 @@ config SUPERH
+>  	select HAVE_ARCH_AUDITSYSCALL
+>  	select HAVE_FUTEX_CMPXCHG if FUTEX
+>  	select HAVE_NMI
+> +	select EARLY_PLATFORM_DEVICES
+>  	help
+>  	  The SuperH is a RISC processor targeted for use in embedded systems
+>  	  and consumer electronics; it was also used in the Sega Dreamcast
 
-Looks good. Thanks!
+If SH is the only user and only intended user for this, don't add it.
+None of the devices using legacy board files full of platform device
+declarations are using device tree yet, and when we do convert them
+they should use device tree correctly, not with hacks designed around
+OS behavior rather than abstract hardware declaration.
 
-ChenYu
+Rich
