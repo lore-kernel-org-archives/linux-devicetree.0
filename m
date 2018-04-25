@@ -1,111 +1,94 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V4 4/6] ARM: dts: imx6sx-sabreauto: add fec support
-Date: Wed, 25 Apr 2018 13:36:09 +0800
-Message-ID: <1524634571-5914-4-git-send-email-Anson.Huang@nxp.com>
-References: <1524634571-5914-1-git-send-email-Anson.Huang@nxp.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [RFT][PATCH] arm64: dts: exynos: Remove unneeded address space
+ mapping for soc node
+Date: Wed, 25 Apr 2018 07:52:45 +0200
+Message-ID: <4ebc237b-b29a-0169-8d1b-8726b33bbf9c@samsung.com>
+References: <CGME20180424173731epcas2p15cddb6a4ea379f6d1736a93961a9c913@epcas2p1.samsung.com>
+        <20180424173652.14735-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524634571-5914-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20180424173652.14735-1-krzk@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add FEC support on i.MX6SX Sabre Auto board.
+Hi Krzysztof,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-no changes.
- arch/arm/boot/dts/imx6sx-sabreauto.dts | 69 ++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+On 2018-04-24 19:36, Krzysztof Kozlowski wrote:
+> Remove the address space mapping between root and soc nodes to fix
+> DTC warnings in Exynos5433 and Exynos7 like:
+>
+>      arch/arm64/boot/dts/exynos/exynos5433-tm2.dtb:
+>          Warning (unit_address_vs_reg): /soc: node has a reg or ranges property, but no unit name
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-index 812f40b..fdc642f 100644
---- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
-+++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-@@ -41,6 +41,39 @@
- 	clock-frequency = <24576000>;
- };
- 
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1_1>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ethphy1>;
-+	fsl,magic-packet;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+		};
-+
-+		ethphy1: ethernet-phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <1>;
-+		};
-+	};
-+};
-+
-+&fec2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet2_1>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ethphy0>;
-+	fsl,magic-packet;
-+	status = "okay";
-+};
-+
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
-@@ -75,6 +108,42 @@
- &iomuxc {
- 	imx6x-sabreauto {
- 
-+		pinctrl_enet1_1: enet1grp-1 {
-+			fsl,pins = <
-+				MX6SX_PAD_ENET1_MDIO__ENET1_MDIO        0xa0b1
-+				MX6SX_PAD_ENET1_MDC__ENET1_MDC          0xa0b1
-+				MX6SX_PAD_RGMII1_TXC__ENET1_RGMII_TXC   0xa0b9
-+				MX6SX_PAD_RGMII1_TD0__ENET1_TX_DATA_0   0xa0b1
-+				MX6SX_PAD_RGMII1_TD1__ENET1_TX_DATA_1   0xa0b1
-+				MX6SX_PAD_RGMII1_TD2__ENET1_TX_DATA_2   0xa0b1
-+				MX6SX_PAD_RGMII1_TD3__ENET1_TX_DATA_3   0xa0b1
-+				MX6SX_PAD_RGMII1_TX_CTL__ENET1_TX_EN    0xa0b1
-+				MX6SX_PAD_RGMII1_RXC__ENET1_RX_CLK      0x3081
-+				MX6SX_PAD_RGMII1_RD0__ENET1_RX_DATA_0   0x3081
-+				MX6SX_PAD_RGMII1_RD1__ENET1_RX_DATA_1   0x3081
-+				MX6SX_PAD_RGMII1_RD2__ENET1_RX_DATA_2   0x3081
-+				MX6SX_PAD_RGMII1_RD3__ENET1_RX_DATA_3   0x3081
-+				MX6SX_PAD_RGMII1_RX_CTL__ENET1_RX_EN    0x3081
-+			>;
-+		};
-+
-+		pinctrl_enet2_1: enet2grp-1 {
-+			fsl,pins = <
-+				MX6SX_PAD_RGMII2_TXC__ENET2_RGMII_TXC   0xa0b9
-+				MX6SX_PAD_RGMII2_TD0__ENET2_TX_DATA_0   0xa0b1
-+				MX6SX_PAD_RGMII2_TD1__ENET2_TX_DATA_1   0xa0b1
-+				MX6SX_PAD_RGMII2_TD2__ENET2_TX_DATA_2   0xa0b1
-+				MX6SX_PAD_RGMII2_TD3__ENET2_TX_DATA_3   0xa0b1
-+				MX6SX_PAD_RGMII2_TX_CTL__ENET2_TX_EN    0xa0b1
-+				MX6SX_PAD_RGMII2_RXC__ENET2_RX_CLK      0x3081
-+				MX6SX_PAD_RGMII2_RD0__ENET2_RX_DATA_0   0x3081
-+				MX6SX_PAD_RGMII2_RD1__ENET2_RX_DATA_1   0x3081
-+				MX6SX_PAD_RGMII2_RD2__ENET2_RX_DATA_2   0x3081
-+				MX6SX_PAD_RGMII2_RD3__ENET2_RX_DATA_3   0x3081
-+				MX6SX_PAD_RGMII2_RX_CTL__ENET2_RX_EN    0x3081
-+			>;
-+		};
-+
- 		pinctrl_i2c2_1: i2c2grp-1 {
- 			fsl,pins = <
- 				MX6SX_PAD_GPIO1_IO03__I2C2_SDA          0x4001b8b1
+Works fine on Samsung Exynos5433-based TM2e board.
+
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+
+> ---
+>
+> Not tested.
+> ---
+>   arch/arm64/boot/dts/exynos/exynos5433.dtsi | 6 +++---
+>   arch/arm64/boot/dts/exynos/exynos7.dtsi    | 6 +++---
+>   2 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> index 828996a06610..ba8157ceaa56 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> @@ -18,8 +18,8 @@
+>   
+>   / {
+>   	compatible = "samsung,exynos5433";
+> -	#address-cells = <2>;
+> -	#size-cells = <2>;
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+>   
+>   	interrupt-parent = <&gic>;
+>   
+> @@ -235,7 +235,7 @@
+>   		compatible = "simple-bus";
+>   		#address-cells = <1>;
+>   		#size-cells = <1>;
+> -		ranges = <0x0 0x0 0x0 0x18000000>;
+> +		ranges;
+>   
+>   		arm_a53_pmu {
+>   			compatible = "arm,cortex-a53-pmu", "arm,armv8-pmuv3";
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> index 0b98d2334cad..93a84338938a 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> @@ -12,8 +12,8 @@
+>   / {
+>   	compatible = "samsung,exynos7";
+>   	interrupt-parent = <&gic>;
+> -	#address-cells = <2>;
+> -	#size-cells = <2>;
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+>   
+>   	aliases {
+>   		pinctrl0 = &pinctrl_alive;
+> @@ -70,7 +70,7 @@
+>   		compatible = "simple-bus";
+>   		#address-cells = <1>;
+>   		#size-cells = <1>;
+> -		ranges = <0 0 0 0x18000000>;
+> +		ranges;
+>   
+>   		chipid@10000000 {
+>   			compatible = "samsung,exynos4210-chipid";
+
+Best regards
 -- 
-2.7.4
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
