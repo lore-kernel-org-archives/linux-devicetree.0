@@ -1,81 +1,310 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH] ARM: BCM5301X: Fix NAND ECC parameters for Linksys Panamera
-Date: Wed, 25 Apr 2018 10:51:33 +0200
-Message-ID: <CACna6rxW0QvQWO1Oq77YFH3ry7+ycwPD1yWrJEhMHMPj_Z_zNA@mail.gmail.com>
-References: <20180310171244.70299-1-npcomplete13@gmail.com>
- <CACna6rz1TeRbPq-60HkHz9A0TDn+iXtmXniE6FCiANpUmV-qrw@mail.gmail.com> <20180311100313.znonhesgh462rz65@osboxes>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 1/7] gnss: add GNSS receiver subsystem
+Date: Wed, 25 Apr 2018 10:56:49 +0200
+Message-ID: <20180425085649.GB13295@kroah.com>
+References: <20180424163458.11947-1-johan@kernel.org>
+ <20180424163458.11947-2-johan@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180311100313.znonhesgh462rz65@osboxes>
+Content-Disposition: inline
+In-Reply-To: <20180424163458.11947-2-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Unune <npcomplete13@gmail.com>
-Cc: florian.fainelli@broadcom.com, Hauke Mehrtens <hauke@hauke-m.de>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11 March 2018 at 11:03, Vivek Unune <npcomplete13@gmail.com> wrote:
-> Hi Rafa=C5=82,
->
-> On Sat, Mar 10, 2018 at 10:41:04PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote:
->> On 10 March 2018 at 18:12, Vivek Unune <npcomplete13@gmail.com> wrote:
->> > Using BCH8 gives ecc errors and makes the router unsuable.
->> > Switching to BCH1 fixes these errors.
->>
->> Can you provide CFE's log messages starting with
->> "Decompressing...done" and up to the "Press Ctrl+C to stop in CFE"
->> please? I'd like to see what NAND info CFE prints there.
->
-> See below. It does say BCH-8, however I can't get it to work.
->
-> CFE log:
->
-> Decompressing...done
-> Found a Toshiba NAND flash:
-> Total size:  128MB
-> Block size:  128KB
-> Page Size:   2048B
-> OOB Size:    64B
-> Sector size: 512B
-> Spare size:  16B
-> ECC level:   8 (8-bit)
-> Device ID: 0x98 0xf1 0x80 0x15 0xf2 0x16
-> find_devinfo: devinfo block found at 0x00180000!
->
-> Press Ctrl+C to stop in CFE
+On Tue, Apr 24, 2018 at 06:34:52PM +0200, Johan Hovold wrote:
+> +#define GNSS_MINORS	16
 
-This means that:
-1) Default mode for your NAND controller is BCH8 (setup at hw level)
-2) CFE uses BCH8 when programming flash with provided firmware
+Why only 16?  Just have to start somewhere?
 
-For maximum compatibility DTS should describe ECC as using BCH8 and
-Linux should use BCH8.
+> +static DEFINE_IDA(gnss_minors);
+> +static dev_t gnss_first;
+> +
+> +/* FIFO size must be a power of two */
+> +#define GNSS_READ_FIFO_SIZE	4096
+> +#define GNSS_WRITE_BUF_SIZE	1024
+> +
+> +#define to_gnss_device(d) container_of((d), struct gnss_device, dev)
+> +
+> +static int gnss_open(struct inode *inode, struct file *file)
+> +{
+> +	struct gnss_device *gdev;
+> +	int ret = 0;
+> +
+> +	gdev = container_of(inode->i_cdev, struct gnss_device, cdev);
+> +
+> +	get_device(&gdev->dev);
+> +
+> +	nonseekable_open(inode, file);
+> +	file->private_data = gdev;
+> +
+> +	down_write(&gdev->rwsem);
 
-I spent whole day yesterday experimenting with BCM47094 and NAND
-controller to understand your case better.
+Just curious, why a rwsem?  They can be slower than a normal semaphore,
+is this really a contentious lock?
 
-As crazy as it sounds, my NAND controller working in BCH4 mode is
-reading flash data programmed using BCH8 perfectly fine! I was testing
-& verifying that behavior multiple times for hours. It really works.
+> +	if (gdev->disconnected) {
+> +		ret = -ENODEV;
+> +		goto unlock;
+> +	}
+> +
+> +	if (gdev->count++ == 0) {
+> +		ret = gdev->ops->open(gdev);
+> +		if (ret)
+> +			gdev->count--;
 
-I noticed that on my BCM47094 board with CFE working in BCH8:
-1) Flashing firmware with CFE results in using BCH8 (expected)
-2) Linux with NAND controller in BCH4 can read flash data (unexpected!)
-3) Writing flash data results in using BCH4
+Why do we care about the opens here?  Do you only want the "child
+driver" to have open called once, like a tty driver?  Does it matter?
 
-Above write test proves that NAND controller is really setup into BCH4
-mode correctly. How is it possible it reads flash data programmed
-using BCH8 is out of my imagination.
+Again, just curious.
 
 
-Long story short I believe your patch is wrong. DTS should describe
-hardware and by default this board uses BCH8 (and so the bootloader).
-Current DTS is correct.
+> +	}
+> +unlock:
+> +	up_write(&gdev->rwsem);
+> +
+> +	if (ret)
+> +		goto err_put_device;
+> +
+> +	return 0;
+> +
+> +err_put_device:
+> +	put_device(&gdev->dev);
+> +
+> +	return ret;
 
+Those last 9 lines can be rewritten as just:
 
-As it happens your patch doesn't break anything directly because of
-unexpected NAND controller behavior. It's just a matter of "luck"
-though due to some weird hardware behavior.
+	if (!ret)
+		put_device(&gdev->dev);
 
---=20
-Rafa=C5=82
+	return ret;
+
+> +}
+> +
+> +static int gnss_release(struct inode *inode, struct file *file)
+> +{
+> +	struct gnss_device *gdev = file->private_data;
+> +
+> +	down_write(&gdev->rwsem);
+> +	if (gdev->disconnected)
+> +		goto unlock;
+> +
+> +	if (--gdev->count == 0) {
+> +		gdev->ops->close(gdev);
+> +		kfifo_reset(&gdev->read_fifo);
+> +	}
+> +unlock:
+> +	up_write(&gdev->rwsem);
+> +
+> +	put_device(&gdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t gnss_read(struct file *file, char __user *buf,
+> +		size_t count, loff_t *pos)
+> +{
+> +	struct gnss_device *gdev = file->private_data;
+> +	unsigned int copied;
+> +	int ret;
+> +
+> +	mutex_lock(&gdev->read_mutex);
+> +	while (kfifo_is_empty(&gdev->read_fifo)) {
+> +		mutex_unlock(&gdev->read_mutex);
+> +
+> +		if (gdev->disconnected)
+> +			return 0;
+> +
+> +		if (file->f_flags & O_NONBLOCK)
+> +			return -EAGAIN;
+> +
+> +		ret = wait_event_interruptible(gdev->read_queue,
+> +				gdev->disconnected ||
+> +				!kfifo_is_empty(&gdev->read_fifo));
+> +		if (ret)
+> +			return -ERESTARTSYS;
+> +
+> +		mutex_lock(&gdev->read_mutex);
+> +	}
+> +
+> +	ret = kfifo_to_user(&gdev->read_fifo, buf, count, &copied);
+> +	if (ret)
+> +		goto out_unlock;
+> +
+> +	ret = copied;
+> +
+> +	dev_dbg(&gdev->dev, "%s - count = %zu\n", __func__, copied);
+> +
+> +out_unlock:
+> +	mutex_unlock(&gdev->read_mutex);
+> +
+> +	return ret;
+> +}
+> +
+> +static ssize_t gnss_write(struct file *file, const char __user *buf,
+> +		size_t count, loff_t *pos)
+> +{
+> +	struct gnss_device *gdev = file->private_data;
+> +	size_t written = 0;
+> +	int ret;
+> +
+> +	dev_dbg(&gdev->dev, "%s - count = %zu\n", __func__, count);
+
+Nit, some of these initial dev_dbg() calls might be able to be removed,
+as ftrace should handle the tracing code now, right?
+
+> +
+> +	if (gdev->disconnected) {
+> +		dev_dbg(&gdev->dev, "%s - disconnected\n", __func__);
+> +		return -EIO;
+> +	}
+> +
+> +	if (!count)
+> +		return 0;
+> +
+> +	if (!gdev->ops->write_raw)
+> +		return -EIO;
+> +
+> +	/* Ignoring O_NONBLOCK, write_raw() is synchronous. */
+> +
+> +	ret = mutex_lock_interruptible(&gdev->write_mutex);
+> +	if (ret)
+> +		return -ERESTARTSYS;
+> +
+> +	for (;;) {
+> +		size_t n = count - written;
+> +
+> +		if (n > GNSS_WRITE_BUF_SIZE)
+> +			n = GNSS_WRITE_BUF_SIZE;
+> +
+> +		if (copy_from_user(gdev->write_buf, buf, n)) {
+> +			ret = -EFAULT;
+> +			goto out_unlock;
+> +		}
+> +
+> +		/*
+> +		 * Assumes write_raw can always accept GNSS_WRITE_BUF_SIZE
+> +		 * bytes.
+> +		 *
+> +		 * FIXME: revisit
+> +		 */
+> +		down_read(&gdev->rwsem);
+> +		if (!gdev->disconnected)
+> +			ret = gdev->ops->write_raw(gdev, gdev->write_buf, n);
+> +		else
+> +			ret = -EIO;
+> +		up_read(&gdev->rwsem);
+> +
+> +		if (ret < 0)
+> +			break;
+> +
+> +		written += ret;
+> +		buf += ret;
+> +
+> +		if (written == count)
+> +			break;
+> +	}
+> +
+> +	if (written)
+> +		ret = written;
+> +out_unlock:
+> +	mutex_unlock(&gdev->write_mutex);
+> +
+> +	return ret;
+> +}
+> +
+> +static __poll_t gnss_poll(struct file *file, poll_table *wait)
+> +{
+> +	struct gnss_device *gdev = file->private_data;
+> +	__poll_t mask = 0;
+> +
+> +	poll_wait(file, &gdev->read_queue, wait);
+> +
+> +	if (!kfifo_is_empty(&gdev->read_fifo))
+> +		mask |= EPOLLIN | EPOLLRDNORM;
+> +	if (gdev->disconnected)
+> +		mask |= EPOLLHUP;
+> +
+> +	dev_dbg(&gdev->dev, "%s - mask = 0x%04x\n", __func__, mask);
+> +
+> +	return mask;
+> +}
+> +
+> +static const struct file_operations gnss_fops = {
+> +	.owner		= THIS_MODULE,
+> +	.open		= gnss_open,
+> +	.release	= gnss_release,
+> +	.read		= gnss_read,
+> +	.write		= gnss_write,
+> +	.poll		= gnss_poll,
+> +	.llseek		= no_llseek,
+> +};
+> +
+> +static struct class *gnss_class;
+> +
+> +static void gnss_device_release(struct device *dev)
+> +{
+> +	struct gnss_device *gdev = to_gnss_device(dev);
+> +
+> +	dev_dbg(dev, "%s\n", __func__);
+> +
+> +	kfree(gdev->write_buf);
+> +	kfifo_free(&gdev->read_fifo);
+> +	ida_simple_remove(&gnss_minors, gdev->id);
+> +	kfree(gdev);
+> +}
+> +
+> +struct gnss_device *gnss_allocate_device(struct device *parent)
+> +{
+> +	struct gnss_device *gdev;
+> +	struct device *dev;
+> +	int id;
+> +	int ret;
+> +
+> +	gdev = kzalloc(sizeof(*gdev), GFP_KERNEL);
+> +	if (!gdev)
+> +		return NULL;
+> +
+> +	id = ida_simple_get(&gnss_minors, 0, GNSS_MINORS, GFP_KERNEL);
+> +	if (id < 0) {
+> +		kfree(gdev);
+> +		return ERR_PTR(id);
+> +	}
+> +
+> +	gdev->id = id;
+> +
+> +	dev = &gdev->dev;
+> +	device_initialize(dev);
+> +	dev->devt = gnss_first + id;
+> +	dev->class = gnss_class;
+> +	dev->parent = parent;
+> +	dev->release = gnss_device_release;
+> +	dev_set_drvdata(dev, gdev);
+> +	dev_set_name(dev, "gnss%d", id);
+> +
+> +	init_rwsem(&gdev->rwsem);
+> +	mutex_init(&gdev->read_mutex);
+> +	mutex_init(&gdev->write_mutex);
+> +	init_waitqueue_head(&gdev->read_queue);
+> +
+> +	ret = kfifo_alloc(&gdev->read_fifo, GNSS_READ_FIFO_SIZE, GFP_KERNEL);
+> +	if (ret)
+> +		goto err_put_device;
+> +
+> +	gdev->write_buf = kzalloc(GNSS_WRITE_BUF_SIZE, GFP_KERNEL);
+> +	if (!gdev->write_buf)
+> +		goto err_put_device;
+> +
+> +	cdev_init(&gdev->cdev, &gnss_fops);
+> +	gdev->cdev.owner = THIS_MODULE;
+
+This protects this module from being unloaded, but how do you pass on
+the module reference counts to the "child" gnss driver?  Am I just
+missing that logic here somewhere?
+
+Anyway, minor things, this looks really clean, nice job.
+
+greg k-h
