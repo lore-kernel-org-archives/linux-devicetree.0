@@ -1,41 +1,58 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 16/17] MAINTAINERS: update entry for ARM/Mediatek RTC DRIVER
-Date: Wed, 25 Apr 2018 17:32:42 +0800
-Message-ID: <39a73c162a637e1558e8c00a971db5db569397ff.1524646231.git.sean.wang@mediatek.com>
-References: <cover.1524646231.git.sean.wang@mediatek.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH 00/11] platform: device tree support for early platform drivers
+Date: Wed, 25 Apr 2018 11:33:42 +0200
+Message-ID: <CAMRc=Mcs4zR4oA3duX7z05x-5ZFfFteFx93Fm-s9gX+tU5vpsg@mail.gmail.com>
+References: <20180424173051.15099-1-brgl@bgdev.pl> <20180424175752.GC3094@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1524646231.git.sean.wang@mediatek.com>
+In-Reply-To: <20180424175752.GC3094@brightrain.aerifal.cx>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, matthias.bgg@gmail.com, eddie.huang@mediatek.com
-Cc: devicetree@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+To: Rich Felker <dalias@libc.org>
+Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@siemens.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+2018-04-24 19:57 GMT+02:00 Rich Felker <dalias@libc.org>:
+> On Tue, Apr 24, 2018 at 07:30:40PM +0200, Bartosz Golaszewski wrote:
+>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>
+>> Device tree based systems often use OF_DECLARE() macros for devices
+>> that need to be initialized early in the boot process such as clocks,
+>> timers etc. However platform devices are more desirable.
+>>
+>> This series aims at introducing support for early platform drivers for
+>> OF-based systems.
+>>
+>> The idea is to have a special compatible fallback string: "earlydev"
+>> that similarily to "syscon" would be added to device nodes that need
+>> early probing. We then need to call of_early_platform_populate() early
+>> in the boot process to actually probe the registered devices.
+>
+> This makes no sense to me. It's not the device tree that should
+> contain the knowledge that these need to be registered/probed early in
+> the boot. That need is a property of the operating system/device
+> drivers, and so the *drivers* should be the ones that contain the
+> knowledge.
+>
+>> I am aware that this new compatible does not strictly correspond with
+>> the "hardware description only" rule of DT, but we already have many
+>> functionalities that break this rule: syscon, gpio hogs etc.
+>>
+>> The first user of this new functionality will be the DaVinci platform
+>> for which we want to probe the pll, psc and timer drivers early in the
+>> boot sequence but keep them implemented as platform drivers.
+>>
+>> In the future, if this series gets accepted, this could become and
+>> alternative to TIMER_OF_DECLARE, CLK_OF_DECLARE etc. and could lead
+>> to deprecating of those macros in favor of early platform drivers.
+>
+> This seems completely unacceptable, in that it would render new
+> kernels unable to boot on existing device trees (which may be
+> hard-coded in rom on existing devices).
+>
 
-Add new files for new dt-bindings and a globally visible header file.
+Just ot make it clear: by deprecating I meant not accepting any new
+users, not blindly replacing the current ones.
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0a1410d..a7ef37f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1607,9 +1607,11 @@ M:	Sean Wang <sean.wang@mediatek.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
-+F:	Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
- F:	Documentation/devicetree/bindings/rtc/rtc-mt7622.txt
- F:	drivers/rtc/rtc-mt6397.c
- F:	drivers/rtc/rtc-mt7622.c
-+F:	include/linux/mfd/mt6397/rtc.h
- 
- ARM/Mediatek SoC support
- M:	Matthias Brugger <matthias.bgg@gmail.com>
--- 
-2.7.4
+Thanks,
+Bart
