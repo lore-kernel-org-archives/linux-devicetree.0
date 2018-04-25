@@ -1,81 +1,73 @@
-From: Philippe Cornu <philippe.cornu@st.com>
-Subject: [PATCH v2 2/2] drm/bridge: sii902x: add optional power supplies
-Date: Wed, 25 Apr 2018 09:53:14 +0200
-Message-ID: <20180425075314.19137-3-philippe.cornu@st.com>
-References: <20180425075314.19137-1-philippe.cornu@st.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 0/7] gnss: add new GNSS subsystem
+Date: Wed, 25 Apr 2018 10:11:20 +0200
+Message-ID: <20180425081120.GL4615@localhost>
+References: <20180424163458.11947-1-johan@kernel.org>
+ <31CF06C6-D6ED-4930-8D81-12256A518059@goldelico.com>
+ <20180424175050.GG4615@localhost>
+ <8F4FAF5B-AAA9-4D46-A022-99B96C74ABFA@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180425075314.19137-1-philippe.cornu@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Yannick Fertre <yannick.fertre@st.com>, Philippe Cornu <philippe.cornu@st.com>, Alexandre Torgue <alexandre.torgue@st.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8F4FAF5B-AAA9-4D46-A022-99B96C74ABFA@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSBvcHRpb25hbCBwb3dlciBzdXBwbGllcyB1c2luZyB0aGUgZGVzY3JpcHRpb24gZm91
-bmQgaW4KIlNpSTkwMjJBL1NpSTkwMjRBIEhETUkgVHJhbnNtaXR0ZXIgRGF0YSBTaGVldCAoQXVn
-dXN0IDIwMTYpIi4KClRoZSBzaWk5MDJ4IGlucHV0IElPcyBhcmUgbm90ICJpbyBzYWZlIiBzbyBp
-dCBpcyBpbXBvcnRhbnQgdG8KZW5hYmxlL2Rpc2FibGUgdm9sdGFnZSByZWd1bGF0b3JzIGR1cmlu
-ZyBwcm9iZS9yZW1vdmUgcGhhc2VzIHRvCmF2b2lkIGRhbWFnZXMuCgpTaWduZWQtb2ZmLWJ5OiBQ
-aGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPgotLS0KIGRyaXZlcnMvZ3B1L2Ry
-bS9icmlkZ2Uvc2lpOTAyeC5jIHwgMzggKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-Ky0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQoK
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jIGIvZHJpdmVycy9n
-cHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMKaW5kZXggNjAzNzNkN2ViMjIwLi5jMzY3ZDdiOTFhZGUg
-MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jCisrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jCkBAIC0yNCw2ICsyNCw3IEBACiAjaW5jbHVkZSA8
-bGludXgvaTJjLmg+CiAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+CiAjaW5jbHVkZSA8bGludXgv
-cmVnbWFwLmg+CisjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2NvbnN1bWVyLmg+CiAKICNpbmNs
-dWRlIDxkcm0vZHJtUC5oPgogI2luY2x1ZGUgPGRybS9kcm1fYXRvbWljX2hlbHBlci5oPgpAQCAt
-ODYsNiArODcsNyBAQCBzdHJ1Y3Qgc2lpOTAyeCB7CiAJc3RydWN0IGRybV9icmlkZ2UgYnJpZGdl
-OwogCXN0cnVjdCBkcm1fY29ubmVjdG9yIGNvbm5lY3RvcjsKIAlzdHJ1Y3QgZ3Bpb19kZXNjICpy
-ZXNldF9ncGlvOworCXN0cnVjdCByZWd1bGF0b3JfYnVsa19kYXRhIHN1cHBsaWVzWzJdOwogfTsK
-IAogc3RhdGljIGlubGluZSBzdHJ1Y3Qgc2lpOTAyeCAqYnJpZGdlX3RvX3NpaTkwMngoc3RydWN0
-IGRybV9icmlkZ2UgKmJyaWRnZSkKQEAgLTM5MiwyMyArMzk0LDQyIEBAIHN0YXRpYyBpbnQgc2lp
-OTAyeF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LAogCQlyZXR1cm4gUFRSX0VSUihz
-aWk5MDJ4LT5yZXNldF9ncGlvKTsKIAl9CiAKKwlzaWk5MDJ4LT5zdXBwbGllc1swXS5zdXBwbHkg
-PSAiaW92Y2MiOworCXNpaTkwMngtPnN1cHBsaWVzWzFdLnN1cHBseSA9ICJ2Y2MxMiI7CisJcmV0
-ID0gZGV2bV9yZWd1bGF0b3JfYnVsa19nZXQoZGV2LCBBUlJBWV9TSVpFKHNpaTkwMngtPnN1cHBs
-aWVzKSwKKwkJCQkgICAgICBzaWk5MDJ4LT5zdXBwbGllcyk7CisJaWYgKHJldCkgeworCQlkZXZf
-ZXJyKGRldiwgIkZhaWxlZCB0byBnZXQgcG93ZXIgc3VwcGxpZXM6ICVkXG4iLCByZXQpOworCQly
-ZXR1cm4gcmV0OworCX0KKworCXJldCA9IHJlZ3VsYXRvcl9idWxrX2VuYWJsZShBUlJBWV9TSVpF
-KHNpaTkwMngtPnN1cHBsaWVzKSwKKwkJCQkgICAgc2lpOTAyeC0+c3VwcGxpZXMpOworCWlmIChy
-ZXQpIHsKKwkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZW5hYmxlIHBvd2VyIHN1cHBsaWVzOiAl
-ZFxuIiwgcmV0KTsKKwkJcmV0dXJuIHJldDsKKwl9CisKKwl1c2xlZXBfcmFuZ2UoMTAwMDAsIDIw
-MDAwKTsKKwogCXNpaTkwMnhfcmVzZXQoc2lpOTAyeCk7CiAKIAlyZXQgPSByZWdtYXBfd3JpdGUo
-c2lpOTAyeC0+cmVnbWFwLCBTSUk5MDJYX1JFR19UUElfUlFCLCAweDApOwogCWlmIChyZXQpCi0J
-CXJldHVybiByZXQ7CisJCWdvdG8gZXJyX2Rpc2FibGVfcmVndWxhdG9yOwogCiAJcmV0ID0gcmVn
-bWFwX2J1bGtfcmVhZChzaWk5MDJ4LT5yZWdtYXAsIFNJSTkwMlhfUkVHX0NISVBJRCgwKSwKIAkJ
-CSAgICAgICAmY2hpcGlkLCA0KTsKIAlpZiAocmV0KSB7CiAJCWRldl9lcnIoZGV2LCAicmVnbWFw
-X3JlYWQgZmFpbGVkICVkXG4iLCByZXQpOwotCQlyZXR1cm4gcmV0OworCQlnb3RvIGVycl9kaXNh
-YmxlX3JlZ3VsYXRvcjsKIAl9CiAKIAlpZiAoY2hpcGlkWzBdICE9IDB4YjApIHsKIAkJZGV2X2Vy
-cihkZXYsICJJbnZhbGlkIGNoaXBpZDogJTAyeCAoZXhwZWN0aW5nIDB4YjApXG4iLAogCQkJY2hp
-cGlkWzBdKTsKLQkJcmV0dXJuIC1FSU5WQUw7CisJCXJldCA9IC1FSU5WQUw7CisJCWdvdG8gZXJy
-X2Rpc2FibGVfcmVndWxhdG9yOwogCX0KIAogCS8qIENsZWFyIGFsbCBwZW5kaW5nIGludGVycnVw
-dHMgKi8KQEAgLTQyNCw3ICs0NDUsNyBAQCBzdGF0aWMgaW50IHNpaTkwMnhfcHJvYmUoc3RydWN0
-IGkyY19jbGllbnQgKmNsaWVudCwKIAkJCQkJCUlSUUZfT05FU0hPVCwgZGV2X25hbWUoZGV2KSwK
-IAkJCQkJCXNpaTkwMngpOwogCQlpZiAocmV0KQotCQkJcmV0dXJuIHJldDsKKwkJCWdvdG8gZXJy
-X2Rpc2FibGVfcmVndWxhdG9yOwogCX0KIAogCXNpaTkwMngtPmJyaWRnZS5mdW5jcyA9ICZzaWk5
-MDJ4X2JyaWRnZV9mdW5jczsKQEAgLTQzNCw2ICs0NTUsMTIgQEAgc3RhdGljIGludCBzaWk5MDJ4
-X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsCiAJaTJjX3NldF9jbGllbnRkYXRhKGNs
-aWVudCwgc2lpOTAyeCk7CiAKIAlyZXR1cm4gMDsKKworZXJyX2Rpc2FibGVfcmVndWxhdG9yOgor
-CXJlZ3VsYXRvcl9idWxrX2Rpc2FibGUoQVJSQVlfU0laRShzaWk5MDJ4LT5zdXBwbGllcyksCisJ
-CQkgICAgICAgc2lpOTAyeC0+c3VwcGxpZXMpOworCisJcmV0dXJuIHJldDsKIH0KIAogc3RhdGlj
-IGludCBzaWk5MDJ4X3JlbW92ZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50KQpAQCAtNDQzLDYg
-KzQ3MCw5IEBAIHN0YXRpYyBpbnQgc2lpOTAyeF9yZW1vdmUoc3RydWN0IGkyY19jbGllbnQgKmNs
-aWVudCkKIAogCWRybV9icmlkZ2VfcmVtb3ZlKCZzaWk5MDJ4LT5icmlkZ2UpOwogCisJcmVndWxh
-dG9yX2J1bGtfZGlzYWJsZShBUlJBWV9TSVpFKHNpaTkwMngtPnN1cHBsaWVzKSwKKwkJCSAgICAg
-ICBzaWk5MDJ4LT5zdXBwbGllcyk7CisKIAlyZXR1cm4gMDsKIH0KIAotLSAKMi4xNS4xCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, Apr 24, 2018 at 09:44:08PM +0200, H. Nikolaus Schaller wrote:
+
+> > Am 24.04.2018 um 19:50 schrieb Johan Hovold <johan@kernel.org>:
+
+> > I think it should be done the other way round (if I understand you
+> > correctly), that is, by adding support for configurations were WAKEUP is
+> > left not connected to the sirf driver instead.
+> 
+> Hm. Yes, the w2sg00x4 is a Sirf based chip.
+> 
+> > I had that use-case in mind when implementing
+> 
+> s/implementing/reinventing/
+> 
+> > the driver, and some ideas of how it should be
+> > done, but did not get around to actually implement it yet.
+> 
+> What do you need ideas for? We have that function working and
+> submitted year after year, but it was always rejected for API
+> reasons.
+> 
+> You could have simply reused what we have proposed [1] and just
+> adapt it to the new API instead of writing a new driver (which
+> is missing some features for us).
+
+Your code was broken or needed to be updated in several ways as I
+pointed out in the thread you refer to.
+
+It also did not support all those systems that use the same family of
+chips, but which has the WAKEUP signal connected.
+
+> "proof-of-concept" is misleading if you expect this to become
+> *the* Sirf driver and we are just invited to add some features
+> to that. Making our own work and proposals completely obsolete.
+> 
+> What I find really strange and foul play is that we are in the
+> review process and then comes a hidden counter-proposal by the
+> reviewer.
+
+Dude, in the very same thread you refer to above, after being asked to
+reiterate your proposal to find and appropriate abstraction level you
+reply:
+
+	"Yes, please feel free to write patches that implement it that
+	way."
+
+Now I've done just that for you, and then you whine about that too.
+
+SiRF is a very common chip and I wanted to make sure that the common
+setup with WAKEUP connected was supported from the start. I'll get to
+your configuration in time too.
+
+Johan
+
+> [1]: https://patchwork.ozlabs.org/cover/843392/
