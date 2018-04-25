@@ -1,37 +1,60 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 3/7] gnss: add generic serial driver
-Date: Wed, 25 Apr 2018 13:05:11 +0200
-Message-ID: <20180425110511.GR4615@localhost>
-References: <20180424163458.11947-1-johan@kernel.org>
- <20180424163458.11947-4-johan@kernel.org>
- <20180425090031.GD13295@kroah.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 2/3] regulator: add support for SY8106A regulator
+Date: Wed, 25 Apr 2018 12:13:13 +0100
+Message-ID: <20180425111313.GD24769@sirena.org.uk>
+References: <20180423144657.63264-1-icenowy@aosc.io>
+ <20180423144657.63264-3-icenowy@aosc.io>
+ <20180424170733.GD22073@sirena.org.uk>
+ <C0C1F042-221A-420F-A8C1-5FADCFC687F1@aosc.io>
+ <20180425105309.GC24769@sirena.org.uk>
+ <15C93A9B-6EEB-49EB-A942-35F761E86569@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="RYJh/3oyKhIjGcML"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180425090031.GD13295@kroah.com>
+In-Reply-To: <15C93A9B-6EEB-49EB-A942-35F761E86569@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: linux-arm-kernel@lists.infradead.org, Ondrej Jirman <megous@megous.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-sunxi@googlegroups.com, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 25, 2018 at 11:00:31AM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Apr 24, 2018 at 06:34:54PM +0200, Johan Hovold wrote:
-> > +static inline void *gnss_serial_get_drvdata(struct gnss_serial *gserial)
-> > +{
-> > +	return &gserial[1];
-> > +}
-> 
-> Oh that's the best hack I have seen in a long time.  I need to remember
-> that one for next time.
-> 
-> Anyway, in reading this driver, I don't think the module reference
-> counting is being handled here, so you might want to add that to the
-> gnss core to keep things from going south if modules are unloaded.
 
-As I just mentioned in my reply to your comment about module references
-in core, I think I got this covered through the hotplug support. Devices
-can go away at anytime, including through a module unload.
+--RYJh/3oyKhIjGcML
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Johan
+On Wed, Apr 25, 2018 at 06:55:10PM +0800, Icenowy Zheng wrote:
+> =E4=BA=8E 2018=E5=B9=B44=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
+6:53:09, Mark Brown <broonie@kernel.org> =E5=86=99=E5=88=B0:
+
+> >> SPDX identifier is special -- it should be in a seperated
+> >> comment block.
+
+> >No, it just needs to be a C++ comment on the first line to ease machine
+> >parsing.  The rest of the file doesn't matter for that.
+
+> Okay. Thus I will use a seperate /* */ block for it in the
+> next revision, to follow the rule.
+
+Just make the whole copyright block a C++ comment.  It's much easier and
+even with a blank line between the SPDX line and the rest of it it'll
+still look messy and odd.
+
+--RYJh/3oyKhIjGcML
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrgYsgACgkQJNaLcl1U
+h9Ak3wf9GZtm/4mnEWPn9EQiK6adnyQX1tR7KYDwhWjs1mrQl1WZO7/1fF9GIu4v
+8w54QoveWz8Mj5ivVT1Z12qY4A+HM3R2Swi4HIHhvlixemolTuZ+74LUk+tdqW6B
+hmCSC/WGV7G8WhBJDSQDB3jNJ47rxCsxkbwhU8pjeu6RJDf3WuE9ebaFh6Q3oQkT
+PucMnQyogGuSFU+sTyIy1iVl98gXTuAyuEgNF2KTjdWPQTBssw0Pb2Uuz6JHeZr0
+QvwVVpdx5L1ga9yakqew1Ld/JfoU7rRGyYUy86ijK+JkFqWpIcfVeweNL1liMsmm
+iTX8Jlq6AuiaFhznDPuQLOIf4wmM1Q==
+=sftl
+-----END PGP SIGNATURE-----
+
+--RYJh/3oyKhIjGcML--
