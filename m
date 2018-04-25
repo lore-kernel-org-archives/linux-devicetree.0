@@ -1,86 +1,105 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings/display/bridge: sii902x: add optional
- power supplies
-Date: Wed, 25 Apr 2018 12:11:23 -0500
-Message-ID: <20180425171123.xhyoay3nu463btoq@rob-hp-laptop>
-References: <20180425075314.19137-1-philippe.cornu@st.com>
- <16954794.QiYqgNKfkn@avalon>
- <e18d1a3b-a2eb-74f2-ab88-7bf01af0754b@st.com>
- <1559016.ZjzeSVB84W@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1559016.ZjzeSVB84W@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, Philippe CORNU <philippe.cornu@st.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yannick FERTRE <yannick.fertre@st.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH 1/4] drm/panel: simple: Add support for Rocktech RK070ER9427 LCD panel
+Date: Wed, 25 Apr 2018 23:09:29 +0530
+Message-ID: <20180425173932.7213-1-jagan@amarulasolutions.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio maggi <fabio.mauri@bticino.it>, lamiaposta71@gmail.com, Andrea CORTESE <andrea.cortese@bticino.it>, "davide . bonfanti" <davide.bonfanti@bticino.it>, Shyam Saini <shyam.saini@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBcHIgMjUsIDIwMTggYXQgMDQ6MTc6MjVQTSArMDMwMCwgTGF1cmVudCBQaW5jaGFy
-dCB3cm90ZToKPiBIaSBQaGlsaXBwZSwKPiAKPiBPbiBXZWRuZXNkYXksIDI1IEFwcmlsIDIwMTgg
-MTU6MjA6MDQgRUVTVCBQaGlsaXBwZSBDT1JOVSB3cm90ZToKPiA+IE9uIDA0LzI1LzIwMTggMTE6
-MDEgQU0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiA+IE9uIFdlZG5lc2RheSwgMjUgQXBy
-aWwgMjAxOCAxMDo1MzoxMyBFRVNUIFBoaWxpcHBlIENvcm51IHdyb3RlOgo+ID4gPj4gQWRkIG9w
-dGlvbmFsIHBvd2VyIHN1cHBsaWVzIHVzaW5nIHRoZSBkZXNjcmlwdGlvbiBmb3VuZCBpbgo+ID4g
-Pj4gIlNpSTkwMjJBL1NpSTkwMjRBIEhETUkgVHJhbnNtaXR0ZXIgRGF0YSBTaGVldCAoQXVndXN0
-IDIwMTYpIi4KPiA+ID4+Cj4gPiA+PiBUaGVyZSBpcyBhIHNpbmdsZSAxdjIgc3VwcGx5IHZvbHRh
-Z2UgbmFtZWQgdmNjMTIgZnJvbSB3aGljaCBjdmNjMTIKPiA+ID4+IChkaWdpdGFsIGNvcmUpIGFu
-ZCBhdmNjMTIgKFRNRFMgYW5hbG9nKSBhcmUgZGVyaXZlZCBiZWNhdXNlIGFjY29yZGluZwo+ID4g
-Pj4gdG8gdGhpcyBkYXRhIHNoZWV0Ogo+ID4gPj4gImN2Y2MxMiBhbmQgYXZjYzEyIGNhbiBiZSBk
-ZXJpdmVkIGZyb20gdGhlIHNhbWUgcG93ZXIgc291cmNlIgo+ID4gPiAKPiA+ID4gU2hvdWxkbid0
-IHRoZSBwb3dlciBzdXBwbGllcyBiZSBtYW5kYXRvcnksIGFzIGV4cGxhaW5lZCBieSBNYXJrIGlu
-Cj4gPiA+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8y
-MDE4LUFwcmlsLzE3MjQwMC5odG1sCj4gPiA+ID8gCj4gPiAKPiA+IExhdXJlbnQsCj4gPiBNYW55
-IHRoYW5rcyBMYXVyZW50IGZvciB5b3VyIGNvbW1lbnQsIEkgdW5kZXJzdG9vZCB0aGUgbWVyZ2Ug
-b2YgdGhlIHR3byAKPiA+IDF2MiBwb3dlciBzdXBwbGllcyBidXQgbWlzc2VkIHRoZSAibWFuZGF0
-b3J5IiBwYXJ0Li4uIG1heWJlIGJlY2F1c2UgdGhpcyAKPiA+IHBhdGNoICh3aXRoIG9wdGlvbmFs
-IHBvd2VyIHN1cHBsaWVzKSBhbHJlYWR5IGdvdCB0aGUgcmV2aWV3ZWQtYnkgZnJvbSAKPiA+IFJv
-YiwgSSB0aG91Z2h0IHRoZSBkaXNjdXNzaW9uIHRocmVhZCB5b3UgcG9pbnRlZCBvdXQgd2FzIGFw
-cGxpY2FibGUgCj4gPiAib25seSIgdG8gdG90YWxseSBuZXcgZHJpdmVyIGRvY3VtZW50YXRpb24u
-Cj4gPiAKPiA+IFNvLCBvbiBteSBzaWRlLCBhcyBhICJuZXcgdXNlciIgb2Ygc2lpOTAyeCBJQywg
-bm8gcHJvYmxlbSB0byBwdXQgdGhlc2UgCj4gPiBwb3dlciBzdXBwbGllcyBhcyBtYW5kYXRvcnkg
-aW5zdGVhZCBvZiBvcHRpb25hbCBwcm9wZXJ0aWVzIGJ1dCBJIHdvdWxkIAo+ID4gbGlrZSB0byBi
-ZSBzdXJlIHRoaXMgaXMgYXBwbGljYWJsZSB0byBib3RoIG9sZCBhbmQgbmV3IGJpbmRpbmdzIGRv
-YyA6ICkKPiAKPiBXZSBvYnZpb3VzbHkgbmVlZCB0byByZXRhaW4gYmFja3dhcmQgY29tcGF0aWJp
-bGl0eSwgc28gb24gdGhlIGRyaXZlciBzaWRlIHlvdSAKPiBuZWVkIHRvIHRyZWF0IHRob3NlIHBv
-d2VyIHN1cHBsaWVzIGFzIG9wdGlvbmFsLiBGcm9tIGEgRFQgYmluZGluZ3MgcG9pbnQgb2YgCj4g
-dmlldywgaG93ZXZlciwgSSB0aGluayB0aGV5IHNob3VsZCBiZSBtYW5kYXRvcnkgZm9yIG5ldyBE
-VC4KCldlIGRvbid0IHJlYWxseSBoYXZlIGEgd2F5IHRvIGRlc2NyaWJlIHRoZXNlIDMgY29uZGl0
-aW9ucyAocmVxdWlyZWQgZm9yIAphbGwsIG9wdGlvbmFsIGZvciBhbGwsIGFuZCByZXF1aXJlZCBm
-b3IgbmV3KS4gU28gZ2VuZXJhbGx5IHdlIG1ha2UgCmFkZGl0aW9ucyBvcHRpb25hbC4gVGhlIGV4
-Y2VwdGlvbiBzb21ldGltZXMgaXMgaWYgd2UgdXBkYXRlIGFsbCB0aGUgZHRzIApmaWxlcy4KCj4g
-PiBSb2IsCj4gPiBjb3VsZCB5b3UgcGxlYXNlIGNvbmZpcm0gdGhlc2UgcG93ZXIgc3VwcGx5IHBy
-b3BlcnRpZXMgc2hvdWxkIGJlIAo+ID4gIm1hbmRhdG9yeSI/Cj4gPiBpZiB5ZXMsIHNob3VsZCB3
-ZSB0aGVuIG1vZGlmeSBvdGhlciBvcHRpb25hbCBwcm9wZXJ0aWVzIGxpa2UgdGhlIAo+ID4gcmVz
-ZXQtZ3Bpb3MgdG9vIGluIHRoZSBmdXR1cmU/Cj4gCj4gVGhlIEdQSU9zIHByb3BlcnRpZXMgYXJl
-IGRpZmZlcmVudCBpbiBteSBvcGluaW9uLCBhcyB0aGVyZSdzIG5vIHJlcXVpcmVtZW50IHRvIAo+
-IGNvbm5lY3QgZm9yIGluc3RhbmNlIHRoZSByZXNldCBwaW4gdG8gYSBHUElPIGNvbnRyb2xsYWJs
-ZSBieSB0aGUgU29DLiBUaGUgcGluIAo+IGNvdWxkIGJlIGhhcmR3aXJlZCB0byBWQ0MsIG9yIGNv
-bm5lY3RlZCB0byBhIHN5c3RlbSByZXNldCB0aGF0IGlzIAo+IGF1dG9tYXRpY2FsbHkgbWFuYWdl
-ZCB3aXRob3V0IFNvQyBpbnRlcnZlbnRpb24uIFRoZSBwb3dlciBzdXBwbGllcywgaG93ZXZlciwg
-Cj4gYXJlIG1hbmRhdG9yeSwgaW4gdGhlIHNlbnNlIHRoYXQgdGhlIGNoaXAgd2lsbCBub3Qgd29y
-ayBpZiB5b3UgbGVhdmUgdGhlIHBvd2VyIAo+IHN1cHBsaWVzIHVuY29ubmVjdGVkLgoKRFQgb25s
-eSBuZWVkcyB0byBkZXNjcmliZSB3aGF0IG1hdHRlcnMgdG8gcy93LiBJZiBhIHJlZ3VsYXRvciBp
-cyAKZml4ZWQgYW5kIHlvdSBkb24ndCBuZWVkIHRvIGtub3cgaXRzIHZvbHRhZ2UgKG9yIG90aGVy
-IHJlYWQtb25seSAKcGFyYW1ldGVycyksIHRoZW4gdGhlcmUncyBub3QgbXVjaCBwb2ludCBpbiBw
-dXR0aW5nIGl0IGluIERULiAKCkknZCBwcm9iYWJseSBiYXNlIHRoaXMgbW9yZSBhdCBhIHBsYXRm
-b3JtIGxldmVsIGFuZCB5b3UgZWl0aGVyIHVzZSAKcmVndWxhdG9yIGJpbmRpbmcgb3IgeW91IGRv
-bid0LiBJdCdzIHBlcmZlY3RseSB2YWxpZCB0aGF0IHlvdSB3YW50IHRvIGRvIAp0aGluZ3MgbGlr
-ZSByZWd1bGF0b3Igc2V0dXAsIHBpbiBjdHJsIGFuZCBtdXhpbmcgc2V0dXAsIGV0Yy4gYWxsIGlu
-IApmaXJtd2FyZSBhbmQgdGhlIE9TIGRvZXNuJ3QgdG91Y2ggYW55IG9mIHRoYXQuCgpUaGF0J3Mg
-YWxsIGEgYmlnIGNhbiBvZiB3b3JtcyB3aGljaCB3ZSBzaG91bGRuJ3Qgc29sdmUgb24gdGhpcyAy
-IGxpbmUgCmNoYW5nZS4gSSB0aGluayB0aGlzIGNoYW5nZSBpcyBmaW5lIGFzLWlzLCBzbzoKClJl
-dmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKUm9iCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+This adds support for the Rocktech Display Ltd. RK070ER9427
+800(RGB)x480 TFT LCD panel, which can be supported by the
+simple panel driver.
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ .../display/panel/rocktech,rk070er9427.txt         | 25 ++++++++++++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 33 ++++++++++++++++++++++
+ 2 files changed, 58 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,rk070er9427.txt
+
+diff --git a/Documentation/devicetree/bindings/display/panel/rocktech,rk070er9427.txt b/Documentation/devicetree/bindings/display/panel/rocktech,rk070er9427.txt
+new file mode 100644
+index 000000000000..eb1fb9f8d1f4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/rocktech,rk070er9427.txt
+@@ -0,0 +1,25 @@
++Rocktech Display Ltd. RK070ER9427 800(RGB)x480 TFT LCD panel
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
++
++Required properties:
++- compatible: should be "rocktech,rk070er9427"
++
++Optional properties:
++- backlight: phandle of the backlight device attached to the panel
++
++Optional nodes:
++- Video port for LCD panel input.
++
++Example:
++	panel {
++		compatible = "rocktech,rk070er9427";
++		backlight = <&backlight_lcd>;
++
++		port {
++			lcd_panel_in: endpoint {
++				remote-endpoint = <&lcd_display_out>;
++			};
++		};
++	};
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index cbf1ab404ee7..a6c633fd0559 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -745,6 +745,36 @@ static const struct panel_desc avic_tm070ddh03 = {
+ 	},
+ };
+ 
++static const struct display_timing rocktech_rk070er9427_timing = {
++	.pixelclock = { 26400000, 33300000, 46800000 },
++	.hactive = { 800, 800, 800 },
++	.hfront_porch = { 16, 210, 354 },
++	.hback_porch = { 46, 46, 46 },
++	.hsync_len = { 1, 1, 1 },
++	.vactive = { 480, 480, 480 },
++	.vfront_porch = { 7, 22, 147 },
++	.vback_porch = { 23, 23, 23 },
++	.vsync_len = { 1, 1, 1 },
++	.flags = DISPLAY_FLAGS_DE_HIGH,
++};
++
++static const struct panel_desc rocktech_rk070er9427 = {
++	.timings = &rocktech_rk070er9427_timing,
++	.num_timings = 1,
++	.bpc = 6,
++	.size = {
++		.width = 154,
++		.height = 86,
++	},
++	.delay = {
++		.prepare = 41,
++		.enable = 50,
++		.unprepare = 41,
++		.disable = 50,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
++};
++
+ static const struct drm_display_mode boe_nv101wxmn51_modes[] = {
+ 	{
+ 		.clock = 71900,
+@@ -2226,6 +2256,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "qiaodian,qd43003c0-40",
+ 		.data = &qd43003c0_40,
++	}, {
++		.compatible = "rocktech,rk070er9427",
++		.data = &rocktech_rk070er9427,
+ 	}, {
+ 		.compatible = "samsung,lsn122dl01-c01",
+ 		.data = &samsung_lsn122dl01_c01,
+-- 
+2.14.3
