@@ -1,112 +1,51 @@
-Return-Path: <SRS0=tKDt=HJ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH  3/4] ARM: dts: r8a77470: Add SCIF support
-Date: Fri, 20 Apr 2018 16:27:08 +0100
-Message-Id: <1524238029-55315-4-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1524238029-55315-1-git-send-email-biju.das@bp.renesas.com>
-References: <1524238029-55315-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=bHiT=HO=intel.com=andy.yeh@kernel.org>
+From: "Yeh, Andy" <andy.yeh@intel.com>
+Subject: RE: [RESEND PATCH v7 1/2] media: dt-bindings: Add bindings for
+ Dongwoon DW9807 voice coil
+Date: Wed, 25 Apr 2018 02:31:26 +0000
+Message-ID: <8E0971CCB6EA9D41AF58191A2D3978B61D572C15@PGSMSX111.gar.corp.intel.com>
+References: <1523375324-27856-1-git-send-email-andy.yeh@intel.com>
+ <1523375324-27856-2-git-send-email-andy.yeh@intel.com>
+ <20180413151042.lqovgxupubjbgrey@rob-hp-laptop>
+In-Reply-To: <20180413151042.lqovgxupubjbgrey@rob-hp-laptop>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tfiga@chromium.org" <tfiga@chromium.org>, "jacopo@jmondi.org" <jacopo@jmondi.org>, "Chiang, AlanX" <alanx.chiang@intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Describe SCIF ports in the R8A77470 device tree.
+Hi Rob,
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- arch/arm/boot/dts/r8a77470.dtsi | 69 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 67 insertions(+), 2 deletions(-)
+Apologize missed your comment before sent out v8. I will definitely add ack=
+s/reviewed-bys in next version.
 
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index 2f89f33..39549f2 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -190,19 +190,84 @@
- 			dma-channels = <15>;
- 		};
- 
-+		scif0: serial@e6e60000 {
-+			compatible = "renesas,scif-r8a77470",
-+				     "renesas,rcar-gen2-scif", "renesas,scif";
-+			reg = <0 0xe6e60000 0 0x40>;
-+			interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 721>,
-+				 <&cpg CPG_CORE 5>, <&scif_clk>;
-+			clock-names = "fck", "brg_int", "scif_clk";
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 721>;
-+			status = "disabled";
-+		};
-+
- 		scif1: serial@e6e68000 {
- 			compatible = "renesas,scif-r8a77470",
- 				     "renesas,rcar-gen2-scif", "renesas,scif";
- 			reg = <0 0xe6e68000 0 0x40>;
- 			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cpg CPG_MOD 720>,
--				 <&cpg CPG_CORE 6>, <&scif_clk>;
-+			clocks = <&cpg CPG_MOD 720>,
-+				 <&cpg CPG_CORE 5>, <&scif_clk>;
- 			clock-names = "fck", "brg_int", "scif_clk";
- 			power-domains = <&sysc 32>;
- 			resets = <&cpg 720>;
- 			status = "disabled";
- 		};
- 
-+		scif2: serial@e6e58000 {
-+			compatible = "renesas,scif-r8a77470",
-+				     "renesas,rcar-gen2-scif", "renesas,scif";
-+			reg = <0 0xe6e58000 0 0x40>;
-+			interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 719>,
-+				 <&cpg CPG_CORE 5>, <&scif_clk>;
-+			clock-names = "fck", "brg_int", "scif_clk";
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 719>;
-+			status = "disabled";
-+		};
-+
-+		scif3: serial@e6ea8000 {
-+			compatible = "renesas,scif-r8a77470",
-+				     "renesas,rcar-gen2-scif", "renesas,scif";
-+			reg = <0 0xe6ea8000 0 0x40>;
-+			interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 718>,
-+				 <&cpg CPG_CORE 5>, <&scif_clk>;
-+			clock-names = "fck", "brg_int", "scif_clk";
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 718>;
-+			status = "disabled";
-+		};
-+
-+		scif4: serial@e6ee0000 {
-+			compatible = "renesas,scif-r8a77470",
-+				     "renesas,rcar-gen2-scif", "renesas,scif";
-+			reg = <0 0xe6ee0000 0 0x40>;
-+			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 715>,
-+				 <&cpg CPG_CORE 5>, <&scif_clk>;
-+			clock-names = "fck", "brg_int", "scif_clk";
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 715>;
-+			status = "disabled";
-+		};
-+
-+		scif5: serial@e6ee8000 {
-+			compatible = "renesas,scif-r8a77470",
-+				     "renesas,rcar-gen2-scif", "renesas,scif";
-+			reg = <0 0xe6ee8000 0 0x40>;
-+			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 714>,
-+				 <&cpg CPG_CORE 5>, <&scif_clk>;
-+			clock-names = "fck", "brg_int", "scif_clk";
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 714>;
-+			status = "disabled";
-+		};
-+
- 		gic: interrupt-controller@f1001000 {
- 			compatible = "arm,gic-400";
- 			#interrupt-cells = <3>;
--- 
-2.7.4
+Regards, Andy
+
+-----Original Message-----
+From: Rob Herring [mailto:robh@kernel.org]=20
+Sent: Friday, April 13, 2018 11:11 PM
+To: Yeh, Andy <andy.yeh@intel.com>
+Cc: linux-media@vger.kernel.org; sakari.ailus@linux.intel.com; devicetree@v=
+ger.kernel.org; tfiga@chromium.org; jacopo@jmondi.org; Chiang, AlanX <alanx=
+.chiang@intel.com>
+Subject: Re: [RESEND PATCH v7 1/2] media: dt-bindings: Add bindings for Don=
+gwoon DW9807 voice coil
+
+On Tue, Apr 10, 2018 at 11:48:43PM +0800, Andy Yeh wrote:
+> From: Alan Chiang <alanx.chiang@intel.com>
+>=20
+> Dongwoon DW9807 is a voice coil lens driver.
+>=20
+> Signed-off-by: Andy Yeh <andy.yeh@intel.com>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt | 9 ++++=
++++++
+>  1 file changed, 9 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,=
+dw9807.txt
+
+Please add acks/reviewed-bys when posting new versions.
+
+Rob
