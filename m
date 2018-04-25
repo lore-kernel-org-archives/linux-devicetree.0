@@ -1,41 +1,91 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [[RFC]DPU PATCH 4/4] dt-bindings: Add Innolux
- TV123WAM panel bindings
-Date: Wed, 25 Apr 2018 09:40:40 -0500
-Message-ID: <CAL_JsqLP5PKDvugh+uuGMb_vimJbz-ufdUex2JQ1CO=MSO_e8A@mail.gmail.com>
-References: <1524054002-17869-1-git-send-email-spanda@codeaurora.org>
- <1524054002-17869-5-git-send-email-spanda@codeaurora.org>
- <20180424144322.ceyeiwe5apiyxacn@rob-hp-laptop>
- <cb59510635f0e7c010588a4603ae3f0f@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <cb59510635f0e7c010588a4603ae3f0f-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: Add SDM845 SMEM nodes
+Date: Wed, 25 Apr 2018 20:16:31 +0530
+Message-ID: <20180425144631.19731-1-sibis@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
+Cc: mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-soc@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMjQsIDIwMTggYXQgOToxNiBQTSwgIDxzcGFuZGFAY29kZWF1cm9yYS5vcmc+
-IHdyb3RlOgo+IE9uIDIwMTgtMDQtMjQgMjA6MTMsIFJvYiBIZXJyaW5nIHdyb3RlOgo+Pgo+PiBP
-biBXZWQsIEFwciAxOCwgMjAxOCBhdCAwNTo1MDowMlBNICswNTMwLCBTYW5kZWVwIFBhbmRhIHdy
-b3RlOgo+Pj4KPj4+IFRoZSBJbm5vbHV4IFRWMTIzV0FNIGlzIGEgMTIuMyIgZURQIGRpc3BsYXkg
-cGFuZWwKPj4+IHdpdGggMjE2MHgxNDQwIHJlc29sdXRpb24uCj4+Cj4+Cj4+IFdoeSBkb24ndCB5
-b3UganVzdCBzdWJtaXQgdGhpcyBmb3IgdXBzdHJlYW0/Cj4KPiBTZWFuIFBhdWwgaGFzIHN1Z2dl
-c3RlZCB0byByZXVzZSBzaW1wbGUgcGFuZWwgZHJpdmVyIGluc3RlYWQgb2YgaGF2aW5nIGEgbmV3
-Cj4gZHJpdmVyIGFsdG9nZXRoZXIuIFNvIGFsbCB0aGVzZSBkdC1iaW5kaW5ncyB3b250IGJlIG5l
-ZWRlZC4KClllcyBpdCB3aWxsIHVubGVzcyB0aGVyZSBpcyBhbHJlYWR5IGEgYmluZGluZyBmb3Ig
-dGhpcyBwYW5lbC4gVGhlCiJzaW1wbGUgcGFuZWwiIGlzIG5vdCBhIGJpbmRpbmcsIG9ubHkgYSBk
-cml2ZXIgd2hpY2ggbWF0Y2hlcyBvbiBkb3plbnMKb2YgZGlmZmVyZW50IHBhbmVscy4KX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxp
-bmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+Add all the necessary dt nodes to support SMEM driver
+on SDM845. It also adds the required memory carveouts
+so that the kernel does not access memory that is in
+use.
+
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+
+This patch depends on:
+https://patchwork.kernel.org/patch/10276419/
+https://patchwork.kernel.org/patch/10363361/
+
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 38 ++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 9be763da0664..bea985045759 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -21,6 +21,27 @@
+ 		reg = <0 0x80000000 0 0>;
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		memory@85fc0000 {
++			reg = <0 0x85fc0000 0 0x40000>;
++			no-map;
++		};
++
++		smem_mem: smem-mem@86000000 {
++			reg = <0x0 0x86000000 0x0 0x200000>;
++			no-map;
++		};
++
++		memory@86000000 {
++			reg = <0 0x86200000 0 0x2d00000>;
++			no-map;
++		};
++	};
++
+ 	cpus {
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
+@@ -147,6 +168,18 @@
+ 		};
+ 	};
+ 
++	tcsr_mutex: hwlock {
++		compatible = "qcom,tcsr-mutex";
++		syscon = <&tcsr_mutex_regs 0 0x1000>;
++		#hwlock-cells = <1>;
++	};
++
++	smem {
++		compatible = "qcom,smem";
++		memory-region = <&smem_mem>;
++		hwlocks = <&tcsr_mutex 3>;
++	};
++
+ 	psci {
+ 		compatible = "arm,psci-1.0";
+ 		method = "smc";
+@@ -339,6 +372,11 @@
+ 			};
+ 		};
+ 
++		tcsr_mutex_regs: syscon@1f40000 {
++			compatible = "syscon";
++			reg = <0x1f40000 0x40000>;
++		};
++
+ 		apss_shared: mailbox@17990000 {
+ 			compatible = "qcom,sdm845-apss-shared";
+ 			reg = <0x17990000 0x1000>;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
