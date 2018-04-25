@@ -1,107 +1,31 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 3/4] ARM: dts: i.MX6: imx6dl-mamoj: Add Wifi support
-Date: Wed, 25 Apr 2018 23:09:31 +0530
-Message-ID: <20180425173932.7213-3-jagan@amarulasolutions.com>
-References: <20180425173932.7213-1-jagan@amarulasolutions.com>
+From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH 0/3] K2G: mmc: Update mmc dt node to use sdhci-omap
+Date: Wed, 25 Apr 2018 10:40:07 -0700
+Message-ID: <fc5f3498-62fd-15d3-90df-206c51649cb4@oracle.com>
+References: <20180425132746.13911-1-kishon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180425173932.7213-1-jagan@amarulasolutions.com>
+In-Reply-To: <20180425132746.13911-1-kishon@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio maggi <fabio.mauri@bticino.it>, lamiaposta71@gmail.com, Andrea CORTESE <andrea.cortese@bticino.it>, "davide . bonfanti" <davide.bonfanti@bticino.it>, Shyam Saini <shyam.saini@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>, Simone CIANNI <simone.cianni@bticino.it>, Raffaele RECALCATI <raffaele.recalcati@bticino.it>
+To: Kishon Vijay Abraham I <kishon@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Add TI WL18XX Wifi for BTicino i.MX6DL board.
+On 4/25/2018 6:27 AM, Kishon Vijay Abraham I wrote:
+> Update mmc dt node to use sdhci-omap binding instead of omap_hsmmc
+> binding.
+> 
+> I've also updated keystone_defconfig to enable CONFIG_MMC_SDHCI_OMAP.
+> Everyone who use a custom .config should also enable
+> CONFIG_MMC_SDHCI_OMAP for MMC to work.
+> 
+> This series should be merged only after [1]
+> [1] -> https://marc.info/?l=linux-kernel&m=152465820531802&w=2
+> 
+Keep me posted once the dependency gets merged.
 
-Signed-off-by: Simone CIANNI <simone.cianni@bticino.it>
-Signed-off-by: Raffaele RECALCATI <raffaele.recalcati@bticino.it>
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- arch/arm/boot/dts/imx6dl-mamoj.dts | 53 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6dl-mamoj.dts b/arch/arm/boot/dts/imx6dl-mamoj.dts
-index ed9050c5dbcc..5034b086035f 100644
---- a/arch/arm/boot/dts/imx6dl-mamoj.dts
-+++ b/arch/arm/boot/dts/imx6dl-mamoj.dts
-@@ -133,6 +133,18 @@
- 		enable-active-high;
- 		vin-supply = <&reg_lcd_vgl>;
- 	};
-+
-+	reg_wl18xx_vmmc:  regulator-wl18xx-vmcc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vwl1807";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_wlan>;
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		gpio = <&gpio6 21 GPIO_ACTIVE_HIGH>;
-+		startup-delay-us = <70000>;
-+		enable-active-high;
-+	};
- };
- 
- &fec {
-@@ -285,6 +297,30 @@
- 	status = "okay";
- };
- 
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	bus-width = <4>;
-+	vmmc-supply = <&reg_wl18xx_vmmc>;
-+	no-1-8-v;
-+	non-removable;
-+	wakeup-source;
-+	keep-power-in-suspend;
-+	cap-power-off-card;
-+	max-frequency = <25000000>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1837";
-+		reg = <2>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <23 IRQ_TYPE_LEVEL_HIGH>;
-+		tcxo-clock-frequency = <26000000>;
-+	};
-+};
-+
- &usdhc3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc3>;
-@@ -392,6 +428,17 @@
- 		>;
- 	};
- 
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_CMD__SD1_CMD    0x17069
-+			MX6QDL_PAD_SD1_CLK__SD1_CLK    0x10079
-+			MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x17069
-+			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17069
-+			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17069
-+			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17069
-+		>;
-+	};
-+
- 	pinctrl_usdhc3: usdhc3grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_SD3_CMD__SD3_CMD	0x17059
-@@ -406,4 +453,10 @@
- 			MX6QDL_PAD_SD3_DAT7__SD3_DATA7	0x17059
- 		>;
- 	};
-+
-+	pinctrl_wlan: wlan {
-+		fsl,pins = <
-+			MX6QDL_PAD_RGMII_TD1__GPIO6_IO21	0x4001b0b0
-+		>;
-+	};
- };
--- 
-2.14.3
+Regards,
+Santosh
