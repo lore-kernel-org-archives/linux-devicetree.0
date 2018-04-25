@@ -1,48 +1,102 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 5/6] ASoC: mediatek: add MT7622 AFE compatible in documentation
-Date: Wed, 25 Apr 2018 12:19:58 +0800
-Message-ID: <43bf5fcef0edefef2524122e64400785243f4fdf.1524628914.git.ryder.lee@mediatek.com>
-References: <07e845c2e7eb06c5f284d1bae3acbccba42e48fa.1524628914.git.ryder.lee@mediatek.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 6/6] arm64: dts: rockchip: Specify override mode for
+ kevin panel
+Date: Tue, 24 Apr 2018 21:29:51 -0700
+Message-ID: <CAD=FV=W9LCeGAEuZDD9FUEKVMp8YUuCcW9uLcTZqTR1spA1gEA@mail.gmail.com>
+References: <20180208174855.55620-1-seanpaul@chromium.org>
+ <20180208174855.55620-7-seanpaul@chromium.org>
+ <CAD=FV=WGU+s015DQbNeWHkpqpHLFz+9AjHKAd0N3HWag0p5FWA@mail.gmail.com>
+ <CAAEAJfAQMzUfM86o-xNoyBQzTiEMNH+W=9FyFpBy99nA3HrVgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <07e845c2e7eb06c5f284d1bae3acbccba42e48fa.1524628914.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAAEAJfAQMzUfM86o-xNoyBQzTiEMNH+W=9FyFpBy99nA3HrVgw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Emil Renner Berthing <kernel@esmil.dk>, Arnd Bergmann <arnd@arndb.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Catalin Marinas <catalin.marinas@arm.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.co.uk>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, hoegsberg@chromium.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for MT7622 AFE which shares the same binding with MT2701.
-
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt b/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-index e2f7f49..560762e 100644
---- a/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-+++ b/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-@@ -1,7 +1,9 @@
- Mediatek AFE PCM controller for mt2701
- 
- Required properties:
--- compatible = "mediatek,mt2701-audio";
-+- compatible: should be one of the followings.
-+	      - "mediatek,mt2701-audio"
-+	      - "mediatek,mt7622-audio"
- - interrupts: should contain AFE and ASYS interrupts
- - interrupt-names: should be "afe" and "asys"
- - power-domains: should define the power domain
--- 
-1.9.1
+SGksCgpPbiBUdWUsIEFwciAyNCwgMjAxOCBhdCA3OjMxIEFNLCBFemVxdWllbCBHYXJjaWEKPGV6
+ZXF1aWVsQHZhbmd1YXJkaWFzdXIuY29tLmFyPiB3cm90ZToKPiBIaSBEb3VnLCBTZWFuOgo+Cj4g
+SSB3b3VsZCBsaWtlIHRvIG1vdmUgdGhpcyBmb3J3YXJkLgo+Cj4gT24gMjYgRmVicnVhcnkgMjAx
+OCBhdCAxNToyMywgRG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPiB3cm90ZToK
+Pj4gSGksCj4+Cj4+IE9uIFRodSwgRmViIDgsIDIwMTggYXQgOTo0OCBBTSwgU2VhbiBQYXVsIDxz
+ZWFucGF1bEBjaHJvbWl1bS5vcmc+IHdyb3RlOgo+Pj4gVGhpcyBwYXRjaCBhZGRzIGFuIG92ZXJy
+aWRlIG1vZGUgZm9yIGtldmluIGRldmljZXMuIFRoZSBtb2RlIGluY3JlYXNlcwo+Pj4gYm90aCBi
+YWNrIHBvcmNoZXMgdG8gYWxsb3cgYSBwaXhlbCBjbG9jayBvZiAyNjY2NmtIeiBhcyBvcHBvc2Vk
+IHRvIHRoZQo+Pj4gJ3R5cGljYWwnIHZhbHVlIG9mIDI1Mjc1MGtIei4gVGhpcyBpcyBuZWVkZWQg
+dG8gYXZvaWQgaW50ZXJmZXJlbmNlIHdpdGgKPj4+IHRoZSB0b3VjaCBkaWdpdGl6ZXIgb24gdGhl
+c2UgbGFwdG9wcy4KPj4+Cj4+PiBDaGFuZ2VzIGluIHYyOgo+Pj4gIC0gV3JhcCB0aGUgdGltaW5n
+IGluIGRpc3BsYXktdGltaW5ncyBub2RlIHRvIG1hdGNoIGJpbmRpbmcgKFJvYi9UaGllcnJ5KQo+
+Pj4gQ2hhbmdlcyBpbiB2MzoKPj4+ICAtIFVud3JhcCB0aGUgdGltaW5nIGZyb20gZGlzcGxheS10
+aW1pbmdzIGFuZCByZW5hbWUgcGFuZWwtdGltaW5nIChSb2IpCj4+Pgo+Pj4gQ2M6IERvdWcgQW5k
+ZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KPj4+IENjOiBFcmljIEFuaG9sdCA8ZXJpY0Bh
+bmhvbHQubmV0Pgo+Pj4gQ2M6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4+PiBD
+YzogSmVmZnkgQ2hlbiA8amVmZnkuY2hlbkByb2NrLWNoaXBzLmNvbT4KPj4+IENjOiBSb2IgSGVy
+cmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPgo+Pj4gQ2M6IFN0w6lwaGFuZSBNYXJjaGVzaW4gPG1h
+cmNoZXVAY2hyb21pdW0ub3JnPgo+Pj4gQ2M6IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGlu
+Z0BnbWFpbC5jb20+Cj4+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4+IENjOiBk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4+PiBDYzogbGludXgtcm9ja2NoaXBAbGlz
+dHMuaW5mcmFkZWFkLm9yZwo+Pj4gU2lnbmVkLW9mZi1ieTogU2VhbiBQYXVsIDxzZWFucGF1bEBj
+aHJvbWl1bS5vcmc+Cj4+PiAtLS0KPj4+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3Jr
+MzM5OS1ncnUta2V2aW4uZHRzIHwgMTQgKysrKysrKysrKysrKysKPj4+ICAxIGZpbGUgY2hhbmdl
+ZCwgMTQgaW5zZXJ0aW9ucygrKQo+Pj4KPj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL3JvY2tjaGlwL3JrMzM5OS1ncnUta2V2aW4uZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9y
+b2NrY2hpcC9yazMzOTktZ3J1LWtldmluLmR0cwo+Pj4gaW5kZXggMTkxYTZiY2IxNzA0Li42NTg0
+MTFjZTM3ZWEgMTAwNjQ0Cj4+PiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3Jr
+MzM5OS1ncnUta2V2aW4uZHRzCj4+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlw
+L3JrMzM5OS1ncnUta2V2aW4uZHRzCj4+PiBAQCAtOTgsNiArOTgsMjAgQEAKPj4+ICAgICAgICAg
+ICAgICAgICBiYWNrbGlnaHQgPSA8JmJhY2tsaWdodD47Cj4+PiAgICAgICAgICAgICAgICAgcG93
+ZXItc3VwcGx5ID0gPCZwcDMzMDBfZGlzcD47Cj4+Pgo+Pj4gKyAgICAgICAgICAgICAgIHBhbmVs
+LXRpbWluZyB7Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICBjbG9jay1mcmVxdWVuY3kgPSA8
+MjY2NjA0NzIwPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGhhY3RpdmUgPSA8MjQwMD47
+Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICBoZnJvbnQtcG9yY2ggPSA8NDg+Owo+Pj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgaGJhY2stcG9yY2ggPSA8ODQ+Owo+Pj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgaHN5bmMtbGVuID0gPDMyPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+IGhzeW5jLWFjdGl2ZSA9IDwwPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHZhY3RpdmUg
+PSA8MTYwMD47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICB2ZnJvbnQtcG9yY2ggPSA8Mz47
+Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICB2YmFjay1wb3JjaCA9IDwxMjA+Owo+Pj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgdnN5bmMtbGVuID0gPDEwPjsKPj4+ICsgICAgICAgICAgICAg
+ICAgICAgICAgIHZzeW5jLWFjdGl2ZSA9IDwwPjsKPj4+ICsgICAgICAgICAgICAgICB9Owo+Pj4g
+Kwo+Pj4gICAgICAgICAgICAgICAgIHBvcnRzIHsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAg
+IHBhbmVsX2luX2VkcDogZW5kcG9pbnQgewo+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmVkcF9vdXRfcGFuZWw+Owo+Pgo+PiBLcmlzdGlhbiBi
+cm91Z2h0IGFuIG9sZCBidWcgdG8gbXkgYXR0ZW50aW9uCj4+IDxodHRwczovL2J1Z3MuY2hyb21p
+dW0ub3JnL3AvY2hyb21pdW0vaXNzdWVzL2RldGFpbD9pZD03NTAzNTQ+IGFuZCBpdAo+PiBtYWRl
+IG1lIHRoaW5rLiAgU2hvdWxkIHdlIHNvbWVob3cgYWRqdXN0IHRoZSBiaW5kaW5ncyBoZXJlIHRv
+IGFjY291bnQKPj4gZm9yIHRoZSBmYWN0IHRoYXQgYSBib2FyZCBtYXkgc291cmNlIHNldmVyYWwg
+ZGlmZmVyZW50IHBhbmVscz8KPj4KPj4gQUtBOiBvbiBzb21lIGJvYXJkcyBhbiBPRE0gbWF5IHdh
+bnQgdG8gc2Vjb25kIHNvdXJjZSAob3IgdGhpcmQgc291cmNlLAo+PiBvciAuLi4pIHRoZSBwYW5l
+bC4gIFRoZXknbGwgcmFuZG9tbHkgY29ubmVjdCBzZXZlcmFsIGRpZmZlcmVudCBwYW5lbHMKPj4g
+dG8gdGhlIGJvYXJkIGFuZCBzaGlwIHRoZSBib2FyZHMgb3V0LiAgVGhlIHBhbmVscyBhcmUgYWxs
+IGNvbXBhdGlibGUKPj4gZWxlY3RyaWNhbGx5IChzYW1lIHBvd2VyIHNlcXVlbmNpbmcpIGJ1dCBt
+aWdodCBuZWVkIHNsaWdodGx5IGRpZmZlcmVudAo+PiB0aW1pbmdzLiAgSW4gdGhpcyBwYXJ0aWN1
+bGFyIGNhc2UgdGhlcmUncyBubyBib2FyZC1sZXZlbCBzdHJhcHBpbmdzCj4+IGZvciB0aGUgZGlm
+ZmVyZW50IHBhbmVscy0taXQncyBhc3N1bWVkIHRoYXQgdGhlIEVESUQgb24gdGhlIHBhbmVscyBj
+YW4KPj4gYmUgdXNlZCB0byBkaXN0aW5ndWlzaCB0aGVtLgo+Pgo+PiBJbiB0aGF0IGNhc2UgaXQg
+c2VlbXMgbGlrZSBpdCB3b3VsZCBiZSBuaWNlIHRvIGFsbG93IHNwZWNpZnlpbmcgbW9yZQo+PiB0
+aGFuIG9uZSAicGFuZWwtdGltaW5nIiBub2Rlcy4gIE1heWJlIGtleWVkIG9mZiBzb21lIHR5cGUg
+b2YgSUQgdGhhdCdzCj4+IHByZXNlbnQgaW4gdGhlIEVESUQ/Cj4+Cj4+Cj4+IElzIHRoYXQgc29t
+ZXRoaW5nIHdlJ2Qgd2FudCB0byBhY2NvdW50IGZvciBiZWZvcmUgd2UgbGFuZCB0aGlzIHNlcmll
+cz8KPj4gIEl0IHNlZW1zIGxpa2UgaXQgd291bGQganVzdCBiZSBhZGRpbmcgYW4gZXh0cmEgbGV2
+ZWwgb2Ygbm9kZXM/Cj4+Cj4KPiBBRkFJQ1MsIHRoZXJlIGlzIG5vIEVESUQgd2l0aG91dCBhIERE
+QyBidXMsIHdoaWNoIHdlIGRvbid0Cj4gc2VlbSB0byBoYXZlIG9uIGdydSBwbGF0Zm9ybXMsIGRv
+IHdlPwoKSSdtIGZhaXJseSBjZXJ0YWluIHdlIGNhbiByZWFkIHRoZSBFRElEIG9uIGdydSBkZXZp
+Y2VzLiAgSSBzZWUgdGhlCiJhdXgiIGNoYW5uZWwgY29ubmVjdGVkIG9uIHRoZSBzY2hlbWF0aWNz
+LiAgVGhhdCdsbCBkbyBpdCwgcmlnaHQ/Ci4uLmFuZCBJIGNvdWxkIGhhdmUgc3dvcm4gdGhhdCBh
+dCBzb21lIHBvaW50IGluIHRpbWUgSSBjb3VsZCByZWFkIHRoZQpFRElEIGluIHRoZSBzb2Z0d2Fy
+ZS4gIE15IGtldmluIGRldmljZXMgYXJlIG5vdCBjb25uZWN0ZWQgZm9yCmRlYnVnZ2luZyBzbyBJ
+IGNhbid0IGNoZWNrIHJpZ2h0IG5vdywgYnV0IEknbSBwcmV0dHkgc3VyZSBJIHdhcyBhYmxlCnRv
+IHJlYWQgdGhlIEVESUQgaW4gdGhlIHBhc3QuLi4KCi1Eb3VnCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
