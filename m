@@ -1,187 +1,126 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 15/17] power: reset: mt6323: add a driver for MT6323 power controller
-Date: Wed, 25 Apr 2018 17:32:41 +0800
-Message-ID: <51d4fbe0d6a22986ddd2df66c9db39aa1eaab74a.1524646231.git.sean.wang@mediatek.com>
-References: <cover.1524646231.git.sean.wang@mediatek.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v5 12/44] clk: davinci: Add platform information for TI
+ DA850 PSC
+Date: Wed, 25 Apr 2018 12:09:55 +0200
+Message-ID: <CAMRc=McpzVXy5BggV9t8UHJi4oO9_69_WKca+MzfsM-a+vCpPg@mail.gmail.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-13-git-send-email-david@lechnology.com> <CAMRc=MfQuqTK+mDT0Gawa6J-3d1z6djLutaHREKfVm+3hATEqQ@mail.gmail.com>
+ <CAEG3pND6Cu0P_t3y_VM9Sm-GCb3yW0Pa8q4cRUOXYxa5=2nWUQ@mail.gmail.com>
+ <a4d84be0-e3d3-4e39-40f9-cae9006cb6ee@ti.com> <CAMRc=Mc228JAxxBXcObmokh2h-toojG8OHrmbunm_ORqbGWUnA@mail.gmail.com>
+ <69bc0848-0698-b936-96a3-2257a5e27809@ti.com> <CAMRc=MenWp=2dtOs1yafnHVkCxfT7SDS0fS2UxUd+U0s_UDwVw@mail.gmail.com>
+ <57f2182e-09b4-2cab-5602-9d0e029495be@ti.com> <152303318048.143116.2883441215887455211@swboyd.mtv.corp.google.com>
+ <48c8531f-8cd9-a9f8-9c38-cbc4c921c4c9@lechnology.com> <aa1c2e6f-793c-1d9e-366a-3496f500f946@ti.com>
+ <d32a4cd5-4344-6e20-fdca-1ed830a52466@lechnology.com> <acce5103-6b72-ed67-7ac1-ffbbed268e9a@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1524646231.git.sean.wang@mediatek.com>
+In-Reply-To: <acce5103-6b72-ed67-7ac1-ffbbed268e9a@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, matthias.bgg@gmail.com, eddie.huang@mediatek.com
-Cc: devicetree@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: David Lechner <david@lechnology.com>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+2018-04-25 8:07 GMT+02:00 Sekhar Nori <nsekhar@ti.com>:
+> On Tuesday 24 April 2018 09:41 PM, David Lechner wrote:
+>> On 04/24/2018 03:28 AM, Sekhar Nori wrote:
+>>> On Monday 23 April 2018 08:29 PM, David Lechner wrote:
+>>>> On 04/06/2018 11:46 AM, Stephen Boyd wrote:
+>>>>> Quoting Sekhar Nori (2018-04-06 02:37:03)
+>>>>>>
+>>>>>> Can you please check that and confirm there is no issue with genpd and
+>>>>>> using CLK_OF_DECLARE() to initialize clocks?
+>>>>>>
+>>>>>> Unless you report an issue back, or Mike and Stephen have ideas about
+>>>>>> how to handle the dependency between PSC/PLL derived timer clock
+>>>>>> initialization and and timer_probe(), I think we need to move back to
+>>>>>> using CLK_OF_DECLARE().
+>>>>>
+>>>>> In such a case, please use the hybrid approach where the clks required
+>>>>> for the clockevent and/or clocksource are registered in the early
+>>>>> CLK_OF_DECLARE path but the rest of the clks get registered with a
+>>>>> proper platform device and driver. There are examples of this approach
+>>>>> on other platforms already.
+>>>>>
+>>>>
+>>>> I looked at this a bit last week, but I didn't come up with any approach
+>>>> that I was happy with. It seems like it would be nice to just register
+>>>> the absolute minimum clocks needed. On DA8XX, that would just be the
+>>>> PLL0
+>>>> AUXCLK. On most of the other SoCs, it would be the PLL AUXCLK plus one
+>>>> LPSC clock. The AUXCLKs are easy because they are just a simple gate
+>>>> from the oscillator. The LPSC clocks are a bit more tricky because they
+>>>> have a complex sequence for turning on. Furthermore, on DM646X, we need
+>>>> the whole PLL up to SYSCLK3 plus one LPSC clock, so things get a bit
+>>>> messy there.
+>>>
+>>> Things might change in the context of work being done here by Bartosz
+>>> for converting clocks to early platform devices.
+>>>
+>>> But, keeping that development aside for a moment: I think this means the
+>>> PLLs and PSCs need to be CLK_OF_DECLARE(). What we can have as platform
+>>> devices are clocks that are not in the path to get timer clock working
+>>> (like CFGCHIP clocks).
+>>
+>> CLK_OF_DECLARE() only matters on DA850. None of the other SoCs use device
+>
+> Thats true today, but lets not make the assumption that none of the
+> other DaVinci SoCs will gain DT support ever. We don't want churn in CCF
+> support once someone tries to add DT support for other platforms.
+>
+> I already have people using DM365 in mainline, for example.
+>
+>> tree. And on DA850, the timer0 clock is just the PLL0 AUXCLK, so PSCs can> still be platform devices there. And in fact, one of the PSC clocks on
+>> DA850 depends on async3, which is a CFGCHIP clock, so if we made the PSCs
+>> CLK_OF_DECLARE(), then we also have to make at least the async3 CFGCHIP
+>> clock CLK_OF_DECLARE(). But, like I said, I think that can be avoided by
+>> leaving the PSC clocks as a platform device on DA850 (and DA830).
+>
+> Okay, I did not realize that there is a dependency between CFGCHIP clk
+> and PSC too.
+>
+>> For everything else, we need the legacy board file equivalent of
+>> CLK_OF_DECLARE(), which is basically what I had here in v5 of the
+>> series.
+>
+> Yeah. I did not realize the dependency with timer when platform devices
+> were suggested. Sorry.
+>
+>>
+>> So, if we want this to keep moving before the if/when of Bartosz's
+>> early platform device stuff, I'm thinking that I will make the PLL
+>
+> After looking at feedback to Bartosz's series, and the fact that
+> previous attempts at doing the same thing were rejected, I think there
+> is benefit in keeping CCF support moving independent Bartosz's work.
+> Otherwise, we have no chance of getting anything merged for v4.18.
+>
 
-The power device is responsible for externally down or up the power
-of the remote MediaTek SoC through the tiny circuit BBPU inside PMIC RTC.
+It's true, that the feedback was not very positive, but I'm still
+thinking I can come up with something that would get accepted. Last
+time someone came up with the idea, the problem it was supposed to
+solve was different (dependencies between devices) and was eventually
+fixed with introduction of probe deferral.
 
-Though it's a part of RTC device, it would be better to be a standalone
-driver than to be a part of existent RTC driver so as to let us make
-concentration on works about power-controlling topic and to obtain
-improvements while the subsystem power/reset constantly growing.
+This time around we really want these devices probed early. The main
+concern was using a device tree compatible. If I can instead just
+early probe all devices whose drivers are registered as early without
+touching the device tree (as Frank Rowand suggested) then maybe the
+response of the community would be better.
 
-Currently, the most basic functionality supported is to just power off
-the system by writing to a special bit field in BBPU register after the
-system has reached pm_poweroff.
+Thanks,
+Bart
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
----
- drivers/power/reset/Kconfig           | 10 ++++
- drivers/power/reset/Makefile          |  1 +
- drivers/power/reset/mt6323-poweroff.c | 97 +++++++++++++++++++++++++++++++++++
- include/linux/mfd/mt6397/rtc.h        |  1 +
- 4 files changed, 109 insertions(+)
- create mode 100644 drivers/power/reset/mt6323-poweroff.c
-
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index df58fc8..7b49d71 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -128,6 +128,16 @@ config POWER_RESET_LTC2952
- 	  This driver supports an external powerdown trigger and board power
- 	  down via the LTC2952. Bindings are made in the device tree.
- 
-+config POWER_RESET_MT6323
-+	bool "MediaTek MT6323 power-off driver"
-+	depends on MFD_MT6397
-+	help
-+	  The power-off driver is responsible for externally shutdown down
-+	  the power of a remote MediaTek SoC MT6323 is connected to through
-+	  controlling a tiny circuit BBPU inside MT6323 RTC.
-+
-+	  Say Y if you have a board where MT6323 could be found.
-+
- config POWER_RESET_QNAP
- 	bool "QNAP power-off driver"
- 	depends on OF_GPIO && PLAT_ORION
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index 7778c74..8836172 100644
---- a/drivers/power/reset/Makefile
-+++ b/drivers/power/reset/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
- obj-$(CONFIG_POWER_RESET_GPIO_RESTART) += gpio-restart.o
- obj-$(CONFIG_POWER_RESET_HISI) += hisi-reboot.o
- obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
-+obj-$(CONFIG_POWER_RESET_MT6323) += mt6323-poweroff.o
- obj-$(CONFIG_POWER_RESET_OCELOT_RESET) += ocelot-reset.o
- obj-$(CONFIG_POWER_RESET_PIIX4_POWEROFF) += piix4-poweroff.o
- obj-$(CONFIG_POWER_RESET_LTC2952) += ltc2952-poweroff.o
-diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/mt6323-poweroff.c
-new file mode 100644
-index 0000000..c195766
---- /dev/null
-+++ b/drivers/power/reset/mt6323-poweroff.c
-@@ -0,0 +1,97 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Power off through MediaTek PMIC
-+ *
-+ * Copyright (C) 2018 MediaTek Inc.
-+ *
-+ * Author: Sean Wang <sean.wang@mediatek.com>
-+ *
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/mt6397/core.h>
-+#include <linux/mfd/mt6397/rtc.h>
-+
-+struct mt6323_pwrc {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	u32 base;
-+};
-+
-+static struct mt6323_pwrc *mt_pwrc;
-+
-+static void mt6323_do_pwroff(void)
-+{
-+	struct mt6323_pwrc *pwrc = mt_pwrc;
-+	unsigned int val;
-+	int ret;
-+
-+	regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
-+	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
-+
-+	ret = regmap_read_poll_timeout(pwrc->regmap,
-+				       pwrc->base + RTC_BBPU, val,
-+				       !(val & RTC_BBPU_CBUSY),
-+				       MTK_RTC_POLL_DELAY_US,
-+				       MTK_RTC_POLL_TIMEOUT);
-+	if (ret)
-+		dev_err(pwrc->dev, "failed to write BBPU: %d\n", ret);
-+
-+	/* Wait some time until system down, otherwise, notice with a warn */
-+	mdelay(1000);
-+
-+	WARN_ONCE(1, "Unable to power off system\n");
-+}
-+
-+static int mt6323_pwrc_probe(struct platform_device *pdev)
-+{
-+	struct mt6397_chip *mt6397_chip = dev_get_drvdata(pdev->dev.parent);
-+	struct mt6323_pwrc *pwrc;
-+	struct resource *res;
-+
-+	pwrc = devm_kzalloc(&pdev->dev, sizeof(*pwrc), GFP_KERNEL);
-+	if (!pwrc)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pwrc->base = res->start;
-+	pwrc->regmap = mt6397_chip->regmap;
-+	pwrc->dev = &pdev->dev;
-+	mt_pwrc = pwrc;
-+
-+	pm_power_off = &mt6323_do_pwroff;
-+
-+	return 0;
-+}
-+
-+static int mt6323_pwrc_remove(struct platform_device *pdev)
-+{
-+	if (pm_power_off == &mt6323_do_pwroff)
-+		pm_power_off = NULL;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id mt6323_pwrc_dt_match[] = {
-+	{ .compatible = "mediatek,mt6323-pwrc" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, mt6323_pwrc_dt_match);
-+
-+static struct platform_driver mt6323_pwrc_driver = {
-+	.probe		= mt6323_pwrc_probe,
-+	.remove		= mt6323_pwrc_remove,
-+	.driver		= {
-+		.name	= "mt6323-pwrc",
-+		.of_match_table = mt6323_pwrc_dt_match,
-+	},
-+};
-+
-+module_platform_driver(mt6323_pwrc_driver);
-+
-+MODULE_DESCRIPTION("Poweroff driver for MT6323 PMIC");
-+MODULE_AUTHOR("Sean Wang <sean.wang@mediatek.com>");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
-index 480977c..ac932c9 100644
---- a/include/linux/mfd/mt6397/rtc.h
-+++ b/include/linux/mfd/mt6397/rtc.h
-@@ -16,6 +16,7 @@
- 
- #define RTC_BBPU		0x0000
- #define RTC_BBPU_CBUSY		BIT(6)
-+#define RTC_BBPU_KEY            (0x43 << 8)
- 
- #define RTC_WRTGR		0x003c
- 
--- 
-2.7.4
+> Early initialization of clocks and dependency with timer is a pretty
+> common theme across SoCs. As and when a better way to support is found,
+> I am sure DaVinci can be converted over along with rest of the devices.
+>
+>> and PSC drivers loadable with or without a platform device and let
+>> each SoC pick which one it should use.
+>
+> This sounds flexible. We have to see how the patches look. But I would
+> caution against adding a lot of dead code. If there is no way some of
+> the clocks will be useful as platform device, I see no point of
+> supporting them as such just in anticipation.
+>
+> Thanks,
+> Sekhar
