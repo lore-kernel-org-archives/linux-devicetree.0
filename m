@@ -1,58 +1,28 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 1/2] dt-bindings: media: renesas-ceu: Add R-Mobile R8A7740
-Date: Wed, 25 Apr 2018 13:15:19 +0200
-Message-ID: <1524654920-18749-2-git-send-email-jacopo+renesas@jmondi.org>
-References: <1524654920-18749-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC 09/10] usb: host: exynos: Remove support for Exynos5440
+Date: Wed, 25 Apr 2018 14:04:07 +0200
+Message-ID: <20180425120407.GA6582@kroah.com>
+References: <20180424203239.21885-1-krzk@kernel.org>
+ <20180424203239.21885-10-krzk@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524654920-18749-1-git-send-email-jacopo+renesas@jmondi.org>
+Content-Disposition: inline
+In-Reply-To: <20180424203239.21885-10-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: geert@linux-m68k.org, horms@verge.net.au, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>linu
 List-Id: devicetree@vger.kernel.org
 
-Add R-Mobile A1 R8A7740 SoC to the list of compatible values for the CEU
-unit.
+On Tue, Apr 24, 2018 at 10:32:38PM +0200, Krzysztof Kozlowski wrote:
+> The Exynos5440 is not actively developed, there are no development
+> boards available and probably there are no real products with it.
+> Remove wide-tree support for Exynos5440.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/usb/host/ehci-exynos.c | 7 -------
+>  drivers/usb/host/ohci-exynos.c | 6 ------
+>  2 files changed, 13 deletions(-)
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- Documentation/devicetree/bindings/media/renesas,ceu.txt | 7 ++++---
- drivers/media/platform/renesas-ceu.c                    | 1 +
- 2 files changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt b/Documentation/devicetree/bindings/media/renesas,ceu.txt
-index 3fc66df..8a7a616 100644
---- a/Documentation/devicetree/bindings/media/renesas,ceu.txt
-+++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
-@@ -2,14 +2,15 @@ Renesas Capture Engine Unit (CEU)
- ----------------------------------------------
- 
- The Capture Engine Unit is the image capture interface found in the Renesas
--SH Mobile and RZ SoCs.
-+SH Mobile, R-Mobile and RZ SoCs.
- 
- The interface supports a single parallel input with data bus width of 8 or 16
- bits.
- 
- Required properties:
--- compatible: Shall be "renesas,r7s72100-ceu" for CEU units found in RZ/A1H
--  and RZ/A1M SoCs.
-+- compatible: Shall be one of the following values:
-+	"renesas,r7s72100-ceu" for CEU units found in RZ/A1H and RZ/A1M SoCs
-+	"renesas,r8a7740-ceu" for CEU units found in R-Mobile A1 R8A7740 SoCs
- - reg: Registers address base and size.
- - interrupts: The interrupt specifier.
- 
-diff --git a/drivers/media/platform/renesas-ceu.c b/drivers/media/platform/renesas-ceu.c
-index 6599dba..c964a56 100644
---- a/drivers/media/platform/renesas-ceu.c
-+++ b/drivers/media/platform/renesas-ceu.c
-@@ -1545,6 +1545,7 @@ static const struct ceu_data ceu_data_sh4 = {
- #if IS_ENABLED(CONFIG_OF)
- static const struct of_device_id ceu_of_match[] = {
- 	{ .compatible = "renesas,r7s72100-ceu", .data = &ceu_data_rz },
-+	{ .compatible = "renesas,r8a7740-ceu", .data = &ceu_data_rz },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, ceu_of_match);
--- 
-2.7.4
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
