@@ -1,33 +1,34 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [RFC 06/10] thermal: samsung: Remove support for Exynos5440
-Date: Wed, 25 Apr 2018 15:18:51 +0200
-Message-ID: <1951102.VLysaozMLK@amdc3058>
-References: <20180424203239.21885-1-krzk@kernel.org>
-        <CGME20180424203356epcas4p44b884a8d409d0faa188a0ecdf4945c11@epcas4p4.samsung.com>
-        <20180424203239.21885-7-krzk@kernel.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 0/3] K2G: mmc: Update mmc dt node to use sdhci-omap
+Date: Wed, 25 Apr 2018 18:57:43 +0530
+Message-ID: <20180425132746.13911-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180424203239.21885-7-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm
+To: Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kishon@ti.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, April 24, 2018 10:32:35 PM Krzysztof Kozlowski wrote:
-> The Exynos5440 is not actively developed, there are no development
-> boards available and probably there are no real products with it.
-> Remove wide-tree support for Exynos5440.
+Update mmc dt node to use sdhci-omap binding instead of omap_hsmmc
+binding.
 
-Thanks for doing this.
+I've also updated keystone_defconfig to enable CONFIG_MMC_SDHCI_OMAP.
+Everyone who use a custom .config should also enable
+CONFIG_MMC_SDHCI_OMAP for MMC to work.
 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+This series should be merged only after [1]
+[1] -> https://marc.info/?l=linux-kernel&m=152465820531802&w=2
 
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Kishon Vijay Abraham I (3):
+  ARM: dts: keystone-k2g-evm: Add "vqmmc-supply" property for mmc0/mmc1
+  ARM: dts: keystone-k2g-evm: Use sdhci-omap programming model
+  ARM: configs: keystone: Enable CONFIG_MMC_SDHCI_OMAP
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+ arch/arm/boot/dts/keystone-k2g-evm.dts | 10 ++++++++++
+ arch/arm/boot/dts/keystone-k2g.dtsi    | 12 ++++--------
+ arch/arm/configs/keystone_defconfig    |  3 +++
+ 3 files changed, 17 insertions(+), 8 deletions(-)
+
+-- 
+2.17.0
