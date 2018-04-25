@@ -1,144 +1,44 @@
-Return-Path: <SRS0=VPMM=HN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf0-f195.google.com ([209.85.192.195]:34109 "EHLO
-        mail-pf0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752262AbeDXO0a (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Apr 2018 10:26:30 -0400
-Received: by mail-pf0-f195.google.com with SMTP id a14so1897262pfi.1
-        for <devicetree@vger.kernel.org>; Tue, 24 Apr 2018 07:26:30 -0700 (PDT)
-From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Subject: [PATCH v7 1/3] PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver DT bindings
-Date: Tue, 24 Apr 2018 10:26:08 -0400
-Message-Id: <1524579968-4496-1-git-send-email-l.subrahmanya@mobiveil.co.in>
+Return-Path: <SRS0=4hkJ=HO=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga02.intel.com ([134.134.136.20]:37696 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750841AbeDYCET (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Apr 2018 22:04:19 -0400
+From: Andy Yeh <andy.yeh@intel.com>
+Subject: [RESEND PATCH v8 1/2] media: dt-bindings: Add bindings for Dongwoon DW9807 voice coil
+Date: Wed, 25 Apr 2018 10:12:07 +0800
+Message-Id: <1524622328-30493-2-git-send-email-andy.yeh@intel.com>
+In-Reply-To: <1524622328-30493-1-git-send-email-andy.yeh@intel.com>
+References: <1524622328-30493-1-git-send-email-andy.yeh@intel.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, marc.zyngier@arm.com
-Cc: mingkai.hu@nxp.com, peter.newton@nxp.com, minghuan.lian@nxp.com, rajesh.raina@nxp.com, rajan.kapoor@nxp.com, prabhjot.singh@nxp.com, Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>, devicetree@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: sakari.ailus@linux.intel.com, andy.yeh@intel.com, devicetree@vger.kernel.org, tfiga@chromium.org, jacopo@jmondi.org, Alan Chiang <alanx.chiang@intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the DT bindings for Mobiveil PCIe Host Bridge
-IP driver and updates the vendor prefixes file.
+From: Alan Chiang <alanx.chiang@intel.com>
 
-Signed-off-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+Dongwoon DW9807 is a voice coil lens driver.
+
+Signed-off-by: Andy Yeh <andy.yeh@intel.com>
 ---
- .../devicetree/bindings/pci/mobiveil-pcie.txt      | 73 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- MAINTAINERS                                        |  7 +++
- 3 files changed, 81 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+ Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
 
-diff --git a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
 new file mode 100644
-index 0000000..65038aa
+index 0000000..0a1a860
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-@@ -0,0 +1,73 @@
-+* Mobiveil AXI PCIe Root Port Bridge DT description
++++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+@@ -0,0 +1,9 @@
++Dongwoon Anatech DW9807 voice coil lens driver
 +
-+Mobiveil's GPEX 4.0 is a PCIe Gen4 root port bridge IP. This configurable IP
-+has up to 8 outbound and inbound windows for the address translation.
++DW9807 is a 10-bit DAC with current sink capability. It is intended for
++controlling voice coil lenses.
 +
-+Required properties:
-+- #address-cells: Address representation for root ports, set to <3>
-+- #size-cells: Size representation for root ports, set to <2>
-+- #interrupt-cells: specifies the number of cells needed to encode an
-+	interrupt source. The value must be 1.
-+- compatible: Should contain "mbvl,gpex40-pcie"
-+- reg: Should contain PCIe registers location and length
-+	"config_axi_slave": PCIe controller registers
-+	"csr_axi_slave"	  : Bridge config registers
-+	"gpio_slave"	  : GPIO registers to control slot power
-+	"apb_csr"	  : MSI registers
++Mandatory properties:
 +
-+- device_type: must be "pci"
-+- apio-wins : number of requested apio outbound windows
-+		default 2 outbound windows are configured -
-+		1. Config window
-+		2. Memory window
-+- ppio-wins : number of requested ppio inbound windows
-+		default 1 inbound memory window is configured.
-+- bus-range: PCI bus numbers covered
-+- interrupt-controller: identifies the node as an interrupt controller
-+- #interrupt-cells: specifies the number of cells needed to encode an
-+	interrupt source. The value must be 1.
-+- interrupt-parent : phandle to the interrupt controller that
-+		it is attached to, it should be set to gic to point to
-+		ARM's Generic Interrupt Controller node in system DT.
-+- interrupts: The interrupt line of the PCIe controller
-+		last cell of this field is set to 4 to
-+		denote it as IRQ_TYPE_LEVEL_HIGH type interrupt.
-+- interrupt-map-mask,
-+	interrupt-map: standard PCI properties to define the mapping of the
-+	PCI interface to interrupt numbers.
-+- ranges: ranges for the PCI memory regions (I/O space region is not
-+	supported by hardware)
-+	Please refer to the standard PCI bus binding document for a more
-+	detailed explanation
-+
-+
-+Example:
-+++++++++
-+	pcie0: pcie@a0000000 {
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		compatible = "mbvl,gpex40-pcie";
-+		reg =	<0xa0000000 0x00001000>,
-+			<0xb0000000 0x00010000>,
-+			<0xff000000 0x00200000>,
-+			<0xb0010000 0x00001000>;
-+		reg-names =	"config_axi_slave",
-+				"csr_axi_slave",
-+				"gpio_slave",
-+				"apb_csr";
-+		device_type = "pci";
-+		apio-wins = <2>;
-+		ppio-wins = <1>;
-+		bus-range = <0x00000000 0x000000ff>;
-+		interrupt-controller;
-+		interrupt-parent = <&gic>;
-+		#interrupt-cells = <1>;
-+		interrupts = < 0 89 4 >;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 0 &pci_express 0>,
-+				<0 0 0 1 &pci_express 1>,
-+				<0 0 0 2 &pci_express 2>,
-+				<0 0 0 3 &pci_express 3>;
-+		ranges = < 0x83000000 0 0x00000000 0xa8000000 0 0x8000000>;
-+
-+	};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 0994bdd..8263cc7 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -197,6 +197,7 @@ lwn	Liebherr-Werk Nenzing GmbH
- macnica	Macnica Americas
- marvell	Marvell Technology Group Ltd.
- maxim	Maxim Integrated Products
-+mbvl	Mobiveil Inc.
- mcube	mCube
- meas	Measurement Specialties
- mediatek	MediaTek Inc.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 44512c3..b295080 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9162,6 +9162,13 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
- S:	Maintained
- F:	drivers/media/dvb-frontends/mn88473*
- 
-+PCI DRIVER FOR MOBIVEIL PCIE IP
-+M:	Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-+L:	linux-pci@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-+F:	drivers/pci/host/pcie-mobiveil.c
-+
- MODULE SUPPORT
- M:	Jessica Yu <jeyu@kernel.org>
- M:	Rusty Russell <rusty@rustcorp.com.au>
++- compatible: "dongwoon,dw9807"
++- reg: I2C slave address
 -- 
-1.8.3.1
+2.7.4
 
