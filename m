@@ -1,52 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx6ull: add UART5 RTS input select register
-Date: Wed, 25 Apr 2018 10:22:34 -0500
-Message-ID: <20180425152234.xq2aq7c2732unfax@rob-hp-laptop>
-References: <1524136779-13246-1-git-send-email-stefan.wahren@i2se.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v5 21/23] ASoC: qdsp6: dt-bindings: Add
+ apq8096 machine bindings
+Date: Wed, 25 Apr 2018 17:16:15 +0100
+Message-ID: <d243f265-a567-e8c5-56b0-ebffe5104a55@linaro.org>
+References: <20180418153157.1960-1-srinivas.kandagatla@linaro.org>
+ <20180418153157.1960-22-srinivas.kandagatla@linaro.org>
+ <20180424162517.msxscjfg36xc22mo@rob-hp-laptop>
+ <655a593b-021c-3bf2-35c2-eb77cb0a4b95@linaro.org>
+ <CAL_JsqJXpei5vFUKwrQGaV4q3Twkg=SKF=Cx_my7KaLmOc42NQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1524136779-13246-1-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Greg Ungerer <gerg@linux-m68k.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAL_JsqJXpei5vFUKwrQGaV4q3Twkg=SKF=Cx_my7KaLmOc42NQ@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Banajit Goswami <bgoswami@codeaurora.org>, rohkumar@qti.qualcomm.com, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Patrick Lai <plai@codeaurora.org>, spatakok@qti.qualcomm.com, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, David Brown <david.brown@linaro.org>, Mark Brown <broonie@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBBcHIgMTksIDIwMTggYXQgMDE6MTk6MzlQTSArMDIwMCwgU3RlZmFuIFdhaHJlbiB3
-cm90ZToKPiBUaGUgaU1YNlVMTCBVQVJUNV9SVFNfQl9EQVRBX1NFTEVDVF9JTlBVVCBEQUlTWSBS
-ZWdpc3RlciBoYXMgc29tZSBkaWZmZXJlbnQKPiBiaXQgZGVmaW5pdGlvbnMgdG8gdGhhdCBzYW1l
-IHJlZ2lzdGVyIGluIHRoZSBpLk1YNlVMLgo+IAo+IFRoZSBiaXRzIGZvciB0aGUgaS5NWDZVTDoK
-PiAKPiAwMDAgQ1NJX0RBVEEwM19BTFQ4IOKAlCBTZWxlY3RpbmcgUGFkOiBDU0lfREFUQTAzIGZv
-ciBNb2RlOiBBTFQ4Cj4gMDAxIEdQSU8xX0lPMDhfQUxUOCDigJQgU2VsZWN0aW5nIFBhZDogR1BJ
-TzFfSU8wOCBmb3IgTW9kZTogQUxUOAo+IDAxMCBHUElPMV9JTzA5X0FMVDgg4oCUIFNlbGVjdGlu
-ZyBQYWQ6IEdQSU8xX0lPMDkgZm9yIE1vZGU6IEFMVDgKPiAwMTEgRU5FVDFfUlhfRU5fQUxUMSDi
-gJQgU2VsZWN0aW5nIFBhZDogRU5FVDFfUlhfRU4gZm9yIE1vZGU6IEFMVDEKPiAxMDAgRU5FVDFf
-VFhfREFUQTBfQUxUMSDigJQgU2VsZWN0aW5nIFBhZDogRU5FVDFfVFhfREFUQTAgZm9yIE1vZGU6
-IEFMVDEKPiAxMDEgQ1NJX0RBVEEwMl9BTFQ4IOKAlCBTZWxlY3RpbmcgUGFkOiBDU0lfREFUQTAy
-IGZvciBNb2RlOiBBTFQ4Cj4gCj4gQnV0IGZvciB0aGUgaS5NWDZVTEw6Cj4gCj4gMDAwIENTSV9E
-QVRBMDNfQUxUOCDigJQgU2VsZWN0aW5nIFBhZDogQ1NJX0RBVEEwMyBmb3IgTW9kZTogQUxUOAo+
-IDAwMSBHUElPMV9JTzA4X0FMVDgg4oCUIFNlbGVjdGluZyBQYWQ6IEdQSU8xX0lPMDggZm9yIE1v
-ZGU6IEFMVDgKPiAwMTAgR1BJTzFfSU8wOV9BTFQ4IOKAlCBTZWxlY3RpbmcgUGFkOiBHUElPMV9J
-TzA5IGZvciBNb2RlOiBBTFQ4Cj4gMDExIFVBUlQxX0NUU19CX0FMVDkg4oCUIFNlbGVjdGluZyBQ
-YWQ6IFVBUlQxX0NUU19CIGZvciBNb2RlOiBBTFQ5Cj4gMTAwIFVBUlQxX1JUU19CX0FMVDkg4oCU
-IFNlbGVjdGluZyBQYWQ6IFVBUlQxX1JUU19CIGZvciBNb2RlOiBBTFQ5Cj4gMTAxIEVORVQxX1JY
-X0VOX0FMVDEg4oCUIFNlbGVjdGluZyBQYWQ6IEVORVQxX1JYX0VOIGZvciBNb2RlOiBBTFQxCj4g
-MTEwIEVORVQxX1RYX0RBVEEwX0FMVDEg4oCUIFNlbGVjdGluZyBQYWQ6IEVORVQxX1RYX0RBVEEw
-IGZvciBNb2RlOiBBTFQxCj4gMTExIENTSV9EQVRBMDJfQUxUOCDigJQgU2VsZWN0aW5nIFBhZDog
-Q1NJX0RBVEEwMiBmb3IgTW9kZTogQUxUOAo+IAo+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBXYWhy
-ZW4gPHN0ZWZhbi53YWhyZW5AaTJzZS5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lt
-eDZ1bGwtcGluZnVuYy5oIHwgNSArKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25z
-KCspCgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+
+On 25/04/18 16:04, Rob Herring wrote:
+>> I can list the values for the HDMI playback use-case, but the list would
+>> grow as we start adding wcd9335 codec support.
+> If you don't have the values, then how does one validate a DT is correct?
+> 
+I can list all the sources and sinks wired on the board in next version.
+
+> Honestly, a single property like this seems insufficient to describe
+> audio routing.
+
+This is how all the audio drivers do routing in DT, non DT is also 
+pretty much inline with this.
+
+
+--srini
+> 
+>>>> +
