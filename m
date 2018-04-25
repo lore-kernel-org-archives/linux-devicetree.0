@@ -1,53 +1,66 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH] phy: phy-mtk-tphy: fix checkpatch.pl warning about SPDX_LICENSE_TAG
-Date: Wed, 25 Apr 2018 14:17:55 +0800
-Message-ID: <13d5ecd89f312af71dde347aadb18b65b1fac462.1524636174.git.chunfeng.yun@mediatek.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 0/7] gnss: add new GNSS subsystem
+Date: Wed, 25 Apr 2018 08:26:59 +0200
+Message-ID: <20180425062659.GA5352@amd>
+References: <20180424163458.11947-1-johan@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180424163458.11947-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use SPDX-License-Identifier tag instead of the GPL license text
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- drivers/phy/mediatek/Makefile       |  1 +
- drivers/phy/mediatek/phy-mtk-tphy.c | 10 +---------
- 2 files changed, 2 insertions(+), 9 deletions(-)
+--k1lZvvs/B4yU6o8G
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/phy/mediatek/Makefile b/drivers/phy/mediatek/Makefile
-index 763a92e..1bdab14 100644
---- a/drivers/phy/mediatek/Makefile
-+++ b/drivers/phy/mediatek/Makefile
-@@ -1,3 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0
- #
- # Makefile for the phy drivers.
- #
-diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
-index 38c281b..b962339 100644
---- a/drivers/phy/mediatek/phy-mtk-tphy.c
-+++ b/drivers/phy/mediatek/phy-mtk-tphy.c
-@@ -1,16 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (c) 2015 MediaTek Inc.
-  * Author: Chunfeng Yun <chunfeng.yun@mediatek.com>
-  *
-- * This software is licensed under the terms of the GNU General Public
-- * License version 2, as published by the Free Software Foundation, and
-- * may be copied, distributed, and modified under those terms.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-  */
- 
- #include <dt-bindings/phy/phy.h>
--- 
-1.9.1
+Hi!
+
+> This series adds a new subsystem for GNSS receivers (e.g. GPS
+> receivers).
+>=20
+> While GNSS receivers are typically accessed using a UART interface they
+> often also support other I/O interfaces such as I2C, SPI and USB, while
+> yet other devices use iomem or even some form of remote-processor
+> messaging (rpmsg).
+>    =20
+> The new GNSS subsystem abstracts the underlying interface and provides a
+> new "gnss" class type, which exposes a character-device interface (e.g.
+> /dev/gnss0) to user space. This allows GNSS receivers to have a
+> representation in the Linux device model, something which is important
+> not least for power management purposes and which also allows for easy
+> detection and (eventually) identification of GNSS devices.
+
+Actually... no, what you done is not GNSS subsystem. It is generic
+subsystem for a link + some controls, typically for power.
+
+Yes, that setup is common for GPS receivers, but it is there also for
+modems (droid 4: usb + gpios) and bluetooth dongles (n900: serial +
+gpios).
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--k1lZvvs/B4yU6o8G
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlrgH7MACgkQMOfwapXb+vJM3QCfaB/TsM5fW9gWR+P8iDcIFSo5
+9CAAn3AWDODk1U2XVOxgTGPJ/ruOiMyv
+=apkP
+-----END PGP SIGNATURE-----
+
+--k1lZvvs/B4yU6o8G--
