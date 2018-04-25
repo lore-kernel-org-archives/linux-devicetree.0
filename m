@@ -1,70 +1,86 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 1/7] clk: meson: clean-up meson clock configuration
-Date: Wed, 25 Apr 2018 18:32:58 +0200
-Message-ID: <20180425163304.10852-2-jbrunet@baylibre.com>
-References: <20180425163304.10852-1-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180425163304.10852-1-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings/display/bridge: sii902x: add optional
+ power supplies
+Date: Wed, 25 Apr 2018 12:11:23 -0500
+Message-ID: <20180425171123.xhyoay3nu463btoq@rob-hp-laptop>
+References: <20180425075314.19137-1-philippe.cornu@st.com>
+ <16954794.QiYqgNKfkn@avalon>
+ <e18d1a3b-a2eb-74f2-ab88-7bf01af0754b@st.com>
+ <1559016.ZjzeSVB84W@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1559016.ZjzeSVB84W@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, Philippe CORNU <philippe.cornu@st.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yannick FERTRE <yannick.fertre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Clean the dependencies in meson clock Kconfig.
-CLK_AMLOGIC should actually select CLK_REGMAP_MESON which it uses. Also,
-each platform should select CLK_AMLOGIC, so everything is properly turned
-on when the platform Kconfig enable each configuration flag
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- drivers/clk/meson/Kconfig | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
-index d5cbec522aec..87d69573e172 100644
---- a/drivers/clk/meson/Kconfig
-+++ b/drivers/clk/meson/Kconfig
-@@ -1,7 +1,7 @@
- config COMMON_CLK_AMLOGIC
- 	bool
--	depends on OF
- 	depends on ARCH_MESON || COMPILE_TEST
-+	select COMMON_CLK_REGMAP_MESON
- 
- config COMMON_CLK_REGMAP_MESON
- 	bool
-@@ -9,9 +9,8 @@ config COMMON_CLK_REGMAP_MESON
- 
- config COMMON_CLK_MESON8B
- 	bool
--	depends on COMMON_CLK_AMLOGIC
-+	select COMMON_CLK_AMLOGIC
- 	select RESET_CONTROLLER
--	select COMMON_CLK_REGMAP_MESON
- 	help
- 	  Support for the clock controller on AmLogic S802 (Meson8),
- 	  S805 (Meson8b) and S812 (Meson8m2) devices. Say Y if you
-@@ -19,9 +18,8 @@ config COMMON_CLK_MESON8B
- 
- config COMMON_CLK_GXBB
- 	bool
--	depends on COMMON_CLK_AMLOGIC
-+	select COMMON_CLK_AMLOGIC
- 	select RESET_CONTROLLER
--	select COMMON_CLK_REGMAP_MESON
- 	select MFD_SYSCON
- 	help
- 	  Support for the clock controller on AmLogic S905 devices, aka gxbb.
-@@ -29,9 +27,8 @@ config COMMON_CLK_GXBB
- 
- config COMMON_CLK_AXG
- 	bool
--	depends on COMMON_CLK_AMLOGIC
-+	select COMMON_CLK_AMLOGIC
- 	select RESET_CONTROLLER
--	select COMMON_CLK_REGMAP_MESON
- 	select MFD_SYSCON
- 	help
- 	  Support for the clock controller on AmLogic A113D devices, aka axg.
--- 
-2.14.3
+T24gV2VkLCBBcHIgMjUsIDIwMTggYXQgMDQ6MTc6MjVQTSArMDMwMCwgTGF1cmVudCBQaW5jaGFy
+dCB3cm90ZToKPiBIaSBQaGlsaXBwZSwKPiAKPiBPbiBXZWRuZXNkYXksIDI1IEFwcmlsIDIwMTgg
+MTU6MjA6MDQgRUVTVCBQaGlsaXBwZSBDT1JOVSB3cm90ZToKPiA+IE9uIDA0LzI1LzIwMTggMTE6
+MDEgQU0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiA+IE9uIFdlZG5lc2RheSwgMjUgQXBy
+aWwgMjAxOCAxMDo1MzoxMyBFRVNUIFBoaWxpcHBlIENvcm51IHdyb3RlOgo+ID4gPj4gQWRkIG9w
+dGlvbmFsIHBvd2VyIHN1cHBsaWVzIHVzaW5nIHRoZSBkZXNjcmlwdGlvbiBmb3VuZCBpbgo+ID4g
+Pj4gIlNpSTkwMjJBL1NpSTkwMjRBIEhETUkgVHJhbnNtaXR0ZXIgRGF0YSBTaGVldCAoQXVndXN0
+IDIwMTYpIi4KPiA+ID4+Cj4gPiA+PiBUaGVyZSBpcyBhIHNpbmdsZSAxdjIgc3VwcGx5IHZvbHRh
+Z2UgbmFtZWQgdmNjMTIgZnJvbSB3aGljaCBjdmNjMTIKPiA+ID4+IChkaWdpdGFsIGNvcmUpIGFu
+ZCBhdmNjMTIgKFRNRFMgYW5hbG9nKSBhcmUgZGVyaXZlZCBiZWNhdXNlIGFjY29yZGluZwo+ID4g
+Pj4gdG8gdGhpcyBkYXRhIHNoZWV0Ogo+ID4gPj4gImN2Y2MxMiBhbmQgYXZjYzEyIGNhbiBiZSBk
+ZXJpdmVkIGZyb20gdGhlIHNhbWUgcG93ZXIgc291cmNlIgo+ID4gPiAKPiA+ID4gU2hvdWxkbid0
+IHRoZSBwb3dlciBzdXBwbGllcyBiZSBtYW5kYXRvcnksIGFzIGV4cGxhaW5lZCBieSBNYXJrIGlu
+Cj4gPiA+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8y
+MDE4LUFwcmlsLzE3MjQwMC5odG1sCj4gPiA+ID8gCj4gPiAKPiA+IExhdXJlbnQsCj4gPiBNYW55
+IHRoYW5rcyBMYXVyZW50IGZvciB5b3VyIGNvbW1lbnQsIEkgdW5kZXJzdG9vZCB0aGUgbWVyZ2Ug
+b2YgdGhlIHR3byAKPiA+IDF2MiBwb3dlciBzdXBwbGllcyBidXQgbWlzc2VkIHRoZSAibWFuZGF0
+b3J5IiBwYXJ0Li4uIG1heWJlIGJlY2F1c2UgdGhpcyAKPiA+IHBhdGNoICh3aXRoIG9wdGlvbmFs
+IHBvd2VyIHN1cHBsaWVzKSBhbHJlYWR5IGdvdCB0aGUgcmV2aWV3ZWQtYnkgZnJvbSAKPiA+IFJv
+YiwgSSB0aG91Z2h0IHRoZSBkaXNjdXNzaW9uIHRocmVhZCB5b3UgcG9pbnRlZCBvdXQgd2FzIGFw
+cGxpY2FibGUgCj4gPiAib25seSIgdG8gdG90YWxseSBuZXcgZHJpdmVyIGRvY3VtZW50YXRpb24u
+Cj4gPiAKPiA+IFNvLCBvbiBteSBzaWRlLCBhcyBhICJuZXcgdXNlciIgb2Ygc2lpOTAyeCBJQywg
+bm8gcHJvYmxlbSB0byBwdXQgdGhlc2UgCj4gPiBwb3dlciBzdXBwbGllcyBhcyBtYW5kYXRvcnkg
+aW5zdGVhZCBvZiBvcHRpb25hbCBwcm9wZXJ0aWVzIGJ1dCBJIHdvdWxkIAo+ID4gbGlrZSB0byBi
+ZSBzdXJlIHRoaXMgaXMgYXBwbGljYWJsZSB0byBib3RoIG9sZCBhbmQgbmV3IGJpbmRpbmdzIGRv
+YyA6ICkKPiAKPiBXZSBvYnZpb3VzbHkgbmVlZCB0byByZXRhaW4gYmFja3dhcmQgY29tcGF0aWJp
+bGl0eSwgc28gb24gdGhlIGRyaXZlciBzaWRlIHlvdSAKPiBuZWVkIHRvIHRyZWF0IHRob3NlIHBv
+d2VyIHN1cHBsaWVzIGFzIG9wdGlvbmFsLiBGcm9tIGEgRFQgYmluZGluZ3MgcG9pbnQgb2YgCj4g
+dmlldywgaG93ZXZlciwgSSB0aGluayB0aGV5IHNob3VsZCBiZSBtYW5kYXRvcnkgZm9yIG5ldyBE
+VC4KCldlIGRvbid0IHJlYWxseSBoYXZlIGEgd2F5IHRvIGRlc2NyaWJlIHRoZXNlIDMgY29uZGl0
+aW9ucyAocmVxdWlyZWQgZm9yIAphbGwsIG9wdGlvbmFsIGZvciBhbGwsIGFuZCByZXF1aXJlZCBm
+b3IgbmV3KS4gU28gZ2VuZXJhbGx5IHdlIG1ha2UgCmFkZGl0aW9ucyBvcHRpb25hbC4gVGhlIGV4
+Y2VwdGlvbiBzb21ldGltZXMgaXMgaWYgd2UgdXBkYXRlIGFsbCB0aGUgZHRzIApmaWxlcy4KCj4g
+PiBSb2IsCj4gPiBjb3VsZCB5b3UgcGxlYXNlIGNvbmZpcm0gdGhlc2UgcG93ZXIgc3VwcGx5IHBy
+b3BlcnRpZXMgc2hvdWxkIGJlIAo+ID4gIm1hbmRhdG9yeSI/Cj4gPiBpZiB5ZXMsIHNob3VsZCB3
+ZSB0aGVuIG1vZGlmeSBvdGhlciBvcHRpb25hbCBwcm9wZXJ0aWVzIGxpa2UgdGhlIAo+ID4gcmVz
+ZXQtZ3Bpb3MgdG9vIGluIHRoZSBmdXR1cmU/Cj4gCj4gVGhlIEdQSU9zIHByb3BlcnRpZXMgYXJl
+IGRpZmZlcmVudCBpbiBteSBvcGluaW9uLCBhcyB0aGVyZSdzIG5vIHJlcXVpcmVtZW50IHRvIAo+
+IGNvbm5lY3QgZm9yIGluc3RhbmNlIHRoZSByZXNldCBwaW4gdG8gYSBHUElPIGNvbnRyb2xsYWJs
+ZSBieSB0aGUgU29DLiBUaGUgcGluIAo+IGNvdWxkIGJlIGhhcmR3aXJlZCB0byBWQ0MsIG9yIGNv
+bm5lY3RlZCB0byBhIHN5c3RlbSByZXNldCB0aGF0IGlzIAo+IGF1dG9tYXRpY2FsbHkgbWFuYWdl
+ZCB3aXRob3V0IFNvQyBpbnRlcnZlbnRpb24uIFRoZSBwb3dlciBzdXBwbGllcywgaG93ZXZlciwg
+Cj4gYXJlIG1hbmRhdG9yeSwgaW4gdGhlIHNlbnNlIHRoYXQgdGhlIGNoaXAgd2lsbCBub3Qgd29y
+ayBpZiB5b3UgbGVhdmUgdGhlIHBvd2VyIAo+IHN1cHBsaWVzIHVuY29ubmVjdGVkLgoKRFQgb25s
+eSBuZWVkcyB0byBkZXNjcmliZSB3aGF0IG1hdHRlcnMgdG8gcy93LiBJZiBhIHJlZ3VsYXRvciBp
+cyAKZml4ZWQgYW5kIHlvdSBkb24ndCBuZWVkIHRvIGtub3cgaXRzIHZvbHRhZ2UgKG9yIG90aGVy
+IHJlYWQtb25seSAKcGFyYW1ldGVycyksIHRoZW4gdGhlcmUncyBub3QgbXVjaCBwb2ludCBpbiBw
+dXR0aW5nIGl0IGluIERULiAKCkknZCBwcm9iYWJseSBiYXNlIHRoaXMgbW9yZSBhdCBhIHBsYXRm
+b3JtIGxldmVsIGFuZCB5b3UgZWl0aGVyIHVzZSAKcmVndWxhdG9yIGJpbmRpbmcgb3IgeW91IGRv
+bid0LiBJdCdzIHBlcmZlY3RseSB2YWxpZCB0aGF0IHlvdSB3YW50IHRvIGRvIAp0aGluZ3MgbGlr
+ZSByZWd1bGF0b3Igc2V0dXAsIHBpbiBjdHJsIGFuZCBtdXhpbmcgc2V0dXAsIGV0Yy4gYWxsIGlu
+IApmaXJtd2FyZSBhbmQgdGhlIE9TIGRvZXNuJ3QgdG91Y2ggYW55IG9mIHRoYXQuCgpUaGF0J3Mg
+YWxsIGEgYmlnIGNhbiBvZiB3b3JtcyB3aGljaCB3ZSBzaG91bGRuJ3Qgc29sdmUgb24gdGhpcyAy
+IGxpbmUgCmNoYW5nZS4gSSB0aGluayB0aGlzIGNoYW5nZSBpcyBmaW5lIGFzLWlzLCBzbzoKClJl
+dmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKUm9iCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
