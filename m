@@ -1,94 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 21/23] ASoC: qdsp6: dt-bindings: Add apq8096 machine bindings
-Date: Wed, 25 Apr 2018 10:04:54 -0500
-Message-ID: <CAL_JsqJXpei5vFUKwrQGaV4q3Twkg=SKF=Cx_my7KaLmOc42NQ@mail.gmail.com>
-References: <20180418153157.1960-1-srinivas.kandagatla@linaro.org>
- <20180418153157.1960-22-srinivas.kandagatla@linaro.org> <20180424162517.msxscjfg36xc22mo@rob-hp-laptop>
- <655a593b-021c-3bf2-35c2-eb77cb0a4b95@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v4 0/5] Add support for remoteproc modem-pil on SDM845 SoCs
+Date: Wed, 25 Apr 2018 20:38:38 +0530
+Message-ID: <20180425150843.26657-1-sibis@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <655a593b-021c-3bf2-35c2-eb77cb0a4b95@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Mark Brown <broonie@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Patrick Lai <plai@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, rohkumar@qti.qualcomm.com, spatakok@qti.qualcomm.com
+To: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sibis@codeaurora.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 24, 2018 at 11:49 AM, Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
-> Thanks for the review.
->
->
-> On 24/04/18 17:25, Rob Herring wrote:
->>
->> On Wed, Apr 18, 2018 at 04:31:55PM +0100, srinivas.kandagatla@linaro.org
->> wrote:
->>>
->>> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>>
->>> Add devicetree bindings documentation file for Qualcomm apq8096 sound
->>> card.
->>>
->>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>> ---
->>>   .../devicetree/bindings/sound/qcom,apq8096.txt     | 76
->>> ++++++++++++++++++++++
->>>   1 file changed, 76 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/sound/qcom,apq8096.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
->>> b/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
->>> new file mode 100644
->>> index 000000000000..37e23d926b95
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
->>> @@ -0,0 +1,76 @@
->>> +* Qualcomm Technologies APQ8096 ASoC sound card driver
->>> +
->>> +This binding describes the APQ8096 sound card, which uses qdsp for
->>> audio.
->>> +
->>> +- compatible:
->>> +       Usage: required
->>> +       Value type: <stringlist>
->>> +       Definition: must be "qcom,apq8096-sndcard"
->>> +
->>> +- qcom,audio-routing:
->>> +       Usage: Optional
->>> +       Value type: <stringlist>
->>> +       Definition:  A list of the connections between audio components.
->>> +                 Each entry is a pair of strings, the first being the
->>> +                 connection's sink, the second being the connection's
->>> +                 source. Valid names could be power supplies, MicBias
->>> +                 of codec and the jacks on the board:
->>
->>
->> Please list out valid values here.
->
->
-> I can list the values for the HDMI playback use-case, but the list would
-> grow as we start adding wcd9335 codec support.
+This patch series add support for remoteproc Q6v5 modem-pil on Qualcomm
+SDM845 SoC. The first patch adds AOSS (Always on subsystem) reset driver
+to provide for mss reset line. The last couple of patches add the resets
+sequence for Q6 on SDM845 and adds helper functions for arbitrary reset
+assert/deassert sequences.
 
-If you don't have the values, then how does one validate a DT is correct?
+V4:
+   Removed regmap depencencies from aoss reset driver
+   Separted apss shared mailbox into separate patch
+   Corrected all nits and replaced with author full name
 
-Honestly, a single property like this seems insufficient to describe
-audio routing.
+V3:
+   Removed syscon dependency for the aoss reset driver
+   Split dt-bindings and the aoss reset driver into separate patches
+   Corrected few typos and replaced misconfigured author name
 
->>> +
->>> += dailinks
->>> +Each subnode of sndcard represents either a dailink, and subnodes of
->>> each
->>> +dailinks would be cpu/codec/platform dais.
->>> +
->>> +- link-name:
->>
->>
->> Not a standard property, but I guess that sneaked in with the 8016
->> binding...
->
-> Yes, I followed 8016 bindings.
->
-> Am happy to prefix this with qcom if that makes more sense.
+V2:
+   Addressed reset-qcom-aoss review suggestions and reworked
+   re-ordering of the active clk and reset sequence in
+   qcom_q6v5_pil
 
-I'd just leave it to be consistent.
+Depends on:
+https://patchwork.kernel.org/patch/10363397/
+
+Sibi Sankar (5):
+  dt-bindings: reset: Add AOSS reset bindings for SDM845 SoCs
+  reset: qcom: AOSS (always on subsystem) reset controller
+  dt-bindings: remoteproc: Add Q6v5 Modem PIL binding for SDM845
+  remoteproc: qcom: Add support for mss remoteproc on SDM845
+  remoteproc: qcom: Always assert and deassert reset signals in SDM845
+
+ .../bindings/remoteproc/qcom,q6v5.txt         |   1 +
+ .../bindings/reset/qcom,aoss-reset.txt        |  52 +++++++
+ drivers/remoteproc/qcom_q6v5_pil.c            | 144 +++++++++++++++++-
+ drivers/reset/Kconfig                         |   9 ++
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-qcom-aoss.c               | 133 ++++++++++++++++
+ include/dt-bindings/reset/qcom,sdm845-aoss.h  |  17 +++
+ 7 files changed, 352 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+ create mode 100644 drivers/reset/reset-qcom-aoss.c
+ create mode 100644 include/dt-bindings/reset/qcom,sdm845-aoss.h
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
