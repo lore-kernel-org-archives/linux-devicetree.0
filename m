@@ -1,32 +1,57 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 3/7] gnss: add generic serial driver
-Date: Wed, 25 Apr 2018 11:00:31 +0200
-Message-ID: <20180425090031.GD13295@kroah.com>
-References: <20180424163458.11947-1-johan@kernel.org>
- <20180424163458.11947-4-johan@kernel.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings/display/bridge: sii902x: add optional
+ power supplies
+Date: Wed, 25 Apr 2018 12:01:35 +0300
+Message-ID: <16954794.QiYqgNKfkn@avalon>
+References: <20180425075314.19137-1-philippe.cornu@st.com>
+ <20180425075314.19137-2-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180424163458.11947-4-johan@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180425075314.19137-2-philippe.cornu@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philippe Cornu <philippe.cornu@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Yannick Fertre <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 24, 2018 at 06:34:54PM +0200, Johan Hovold wrote:
-> +static inline void *gnss_serial_get_drvdata(struct gnss_serial *gserial)
-> +{
-> +	return &gserial[1];
-> +}
-
-Oh that's the best hack I have seen in a long time.  I need to remember
-that one for next time.
-
-Anyway, in reading this driver, I don't think the module reference
-counting is being handled here, so you might want to add that to the
-gnss core to keep things from going south if modules are unloaded.
-
-thanks,
-
-greg k-h
+SGkgUGhpbGlwcGUsCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIFdlZG5lc2RheSwgMjUg
+QXByaWwgMjAxOCAxMDo1MzoxMyBFRVNUIFBoaWxpcHBlIENvcm51IHdyb3RlOgo+IEFkZCBvcHRp
+b25hbCBwb3dlciBzdXBwbGllcyB1c2luZyB0aGUgZGVzY3JpcHRpb24gZm91bmQgaW4KPiAiU2lJ
+OTAyMkEvU2lJOTAyNEEgSERNSSBUcmFuc21pdHRlciBEYXRhIFNoZWV0IChBdWd1c3QgMjAxNiki
+Lgo+IAo+IFRoZXJlIGlzIGEgc2luZ2xlIDF2MiBzdXBwbHkgdm9sdGFnZSBuYW1lZCB2Y2MxMiBm
+cm9tIHdoaWNoIGN2Y2MxMgo+IChkaWdpdGFsIGNvcmUpIGFuZCBhdmNjMTIgKFRNRFMgYW5hbG9n
+KSBhcmUgZGVyaXZlZCBiZWNhdXNlIGFjY29yZGluZwo+IHRvIHRoaXMgZGF0YSBzaGVldDoKPiAi
+Y3ZjYzEyIGFuZCBhdmNjMTIgY2FuIGJlIGRlcml2ZWQgZnJvbSB0aGUgc2FtZSBwb3dlciBzb3Vy
+Y2UiCgpTaG91bGRuJ3QgdGhlIHBvd2VyIHN1cHBsaWVzIGJlIG1hbmRhdG9yeSwgYXMgZXhwbGFp
+bmVkIGJ5IE1hcmsgaW4gaHR0cHM6Ly8KbGlzdHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2Ry
+aS1kZXZlbC8yMDE4LUFwcmlsLzE3MjQwMC5odG1sID8KCj4gU2lnbmVkLW9mZi1ieTogUGhpbGlw
+cGUgQ29ybnUgPHBoaWxpcHBlLmNvcm51QHN0LmNvbT4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0IHwgMiArKwo+ICAx
+IGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dAo+IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngu
+dHh0IGluZGV4Cj4gNTZhM2U2OGNjYjgwLi45ZmI0MWZjOWFmNTEgMTAwNjQ0Cj4gLS0tIGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0
+Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
+L3NpaTkwMngudHh0Cj4gQEAgLTgsNiArOCw4IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gIAkt
+IGludGVycnVwdHMtZXh0ZW5kZWQgb3IgaW50ZXJydXB0LXBhcmVudCArIGludGVycnVwdHM6IGRl
+c2NyaWJlCj4gIAkgIHRoZSBpbnRlcnJ1cHQgbGluZSB1c2VkIHRvIGluZm9ybSB0aGUgaG9zdCBh
+Ym91dCBob3RwbHVnIGV2ZW50cy4KPiAgCS0gcmVzZXQtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdw
+aW8gc3BlY2lmaWNhdGlvbiBmb3IgUlNUX04gcGluLgo+ICsJLSBpb3ZjYy1zdXBwbHk6IEkvTyBz
+dXBwbHkgdm9sdGFnZSAoMS44ViBvciAzLjNWLCBob3N0LWRlcGVuZGVudCkuCj4gKwktIHZjYzEy
+LXN1cHBseTogVE1EUyBhbmFsb2cgJiBkaWdpdGFsIGNvcmUgc3VwcGx5IHZvbHRhZ2UgKDEuMlYp
+Lgo+IAo+ICBPcHRpb25hbCBzdWJub2RlczoKPiAgCS0gdmlkZW8gaW5wdXQ6IHRoaXMgc3Vibm9k
+ZSBjYW4gY29udGFpbiBhIHZpZGVvIGlucHV0IHBvcnQgbm9kZQoKLS0gClJlZ2FyZHMsCgpMYXVy
+ZW50IFBpbmNoYXJ0CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
