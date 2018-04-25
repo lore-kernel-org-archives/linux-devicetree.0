@@ -1,53 +1,154 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 4/5] ARM: dts: imx6sx-sabreauto: add fec support
-Date: Wed, 25 Apr 2018 03:30:11 +0000
-Message-ID: <AM3PR04MB1315ED599A20F67BB9FEFEE1F58F0@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1524455219-6736-1-git-send-email-Anson.Huang@nxp.com>
- <1524455219-6736-4-git-send-email-Anson.Huang@nxp.com>
- <CAOMZO5CDAQtw7Q6NgSzKP4ogaqRaGSE0A+st1iqZ=cQsK49moQ@mail.gmail.com>
- <AM3PR04MB131566E1C8033D256686F192F5880@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5Dm=MFRoh=y54Qf2RrncWfQPTUJ2ZNfvYnUD=idp8RPNA@mail.gmail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH V3 1/4] ARM: dts: imx6sx-sabreauto: add PMIC support
+Date: Wed, 25 Apr 2018 11:30:30 +0800
+Message-ID: <1524627033-535-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5Dm=MFRoh=y54Qf2RrncWfQPTUJ2ZNfvYnUD=idp8RPNA@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIEZhYmlvDQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1A
-Z21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBBcHJpbCAyNCwgMjAxOCA4OjIzIFBNDQo+IFRv
-OiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IFNoYXduIEd1byA8c2hh
-d25ndW9Aa2VybmVsLm9yZz47IFNhc2NoYSBIYXVlcg0KPiA8a2VybmVsQHBlbmd1dHJvbml4LmRl
-PjsgRmFiaW8gRXN0ZXZhbSA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPjsgUm9iDQo+IEhlcnJpbmcg
-PHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+
-Ow0KPiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPjsgbW9kZXJhdGVkIGxpc3Q6QVJN
-L0ZSRUVTQ0FMRSBJTVggLyBNWEMNCj4gQVJNIEFSQ0hJVEVDVFVSRSA8bGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgb3BlbiBsaXN0Ok9QRU4NCj4gRklSTVdBUkUgQU5EIEZM
-QVRURU5FRCBERVZJQ0UgVFJFRSBCSU5ESU5HUw0KPiA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc+OyBsaW51eC1rZXJuZWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggNC81XSBBUk06IGR0czogaW14NnN4LXNhYnJlYXV0bzogYWRkIGZlYyBz
-dXBwb3J0DQo+IA0KPiBIaSBBbnNvbiwNCj4gDQo+IE9uIE1vbiwgQXByIDIzLCAyMDE4IGF0IDEx
-OjA5IFBNLCBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gd3JvdGU6DQo+IA0K
-PiA+IEFoLCB5ZXMsIHRoYW5rcyBmb3IgcG9pbnRpbmcgb3V0IHRoaXMgaXNzdWUsIEkganVzdCBy
-ZW1vdmVkIGl0IGFuZCB0aGUNCj4gPiBmdW5jdGlvbiBpcyBzdGlsbCB3b3JraW5nLCBhbHJlYWR5
-IHNlbnQgb3V0IFYyIHBhdGNoIHNldCwgdGhhbmtzLg0KPiANCj4gU28gbm93IG1heWJlIGl0IGlz
-IHdvcmtpbmcgb25seSBiZWNhdXNlIHRoZSBib290bG9hZGVyIGFjdGl2YXRlZCB0aGlzIEdQSU8s
-DQo+IHdoaWNoIGlzIG5vdCBnb29kLg0KPiANCj4gSSBkb24ndCBoYXZlIGFjY2VzcyB0byB0aGUg
-bXg2c3ggc2FicmVhdXRvIHNjaGVtYXRpY3MgdG8gdmVyaWZ5ICB3aGVyZQ0KPiAmbWF4NzMyMiAw
-IGNvbm5lY3RzIHRvLCBidXQgaXQgd291bGQgYmUgYmV0dGVyIHRvIG1ha2Ugc3VyZSB0aGF0IHlv
-dSBhY3RpdmF0ZQ0KPiB0aGlzIHBpbiBpbiBkdHMgaWYgaXQgaXMgbmVlZGVkIGZvciBFdGhlcm5l
-dCwgd2l0aG91dCByZWx5aW5nIG9uIHRoZSBib290bG9hZGVyLg0KDQpJdCBpcyB3b3JraW5nIGJ5
-IGRlZmF1bHQgaGFyZHdhcmUgc2V0dGluZ3MsIGJ1dCBJIGFncmVlIHdlIHNob3VsZCBkbyBpdCBp
-biBkdHMsDQpJIGZvdW5kIGl0IGhhcyBhIGxvdCBvZiBkZXBlbmRlbmN5IGlmIHdlIHdhbnQgdG8g
-ZW5hYmxlIHRoZSBncGlvIHJlc2V0IGZvciBGRUMxLA0KbWFueSBncGlvIHJlc2V0IHBhdGNoIG1p
-c3NlZCBpbiB1cHN0cmVhbSBrZXJuZWwsIG5lZWQgcGF0Y2ggd29yayBmb3IgTUFYNzMyMiBmaXJz
-dCwgc28NCkkgcGxhbiB0byByZW1vdmUgRkVDIHN1cHBvcnQgaW4gdGhpcyBwYXRjaCBzZXQsIGFu
-ZCB3aWxsIHVwc3RyZWFtIHRoZSBNQVg3MzIyDQpyZXNldCBwYXRjaCBmaXJzdCwgdGhlbiB3aWxs
-IGFkZCBGRUMgc3VwcG9ydCBhZnRlciBNQVg3MzIyIHBhdGNoIGRvbmUuIFdpbGwgc2VuZA0Kb3V0
-IFYzIHBhdGNoIHRvIGRyb3AgZmVjIHN1cHBvcnQgZm9yIG5vdywgdGhhbmtzLg0KDQpBbnNvbi4N
-Cg0KIA0KDQoNCg0K
+Add pfuze100 support on i.MX6SX Sabre Auto board.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+no changes since V2.
+ arch/arm/boot/dts/imx6sx-sabreauto.dts | 117 +++++++++++++++++++++++++++++++++
+ 1 file changed, 117 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+index 57d1ea0..2caca934 100644
+--- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
++++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+@@ -74,6 +74,14 @@
+ 
+ &iomuxc {
+ 	imx6x-sabreauto {
++
++		pinctrl_i2c2_1: i2c2grp-1 {
++			fsl,pins = <
++				MX6SX_PAD_GPIO1_IO03__I2C2_SDA          0x4001b8b1
++				MX6SX_PAD_GPIO1_IO02__I2C2_SCL          0x4001b8b1
++			>;
++		};
++
+ 		pinctrl_uart1: uart1grp {
+ 			fsl,pins = <
+ 				MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1
+@@ -148,3 +156,112 @@
+ 		};
+ 	};
+ };
++
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2_1>;
++	status = "okay";
++
++	pmic: pfuze100@08 {
++		compatible = "fsl,pfuze100";
++		reg = <0x08>;
++
++		regulators {
++			sw1a_reg: sw1ab {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			sw1c_reg: sw1c {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3a_reg: sw3a {
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3b_reg: sw3b {
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw4_reg: sw4 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			swbst_reg: swbst {
++				regulator-min-microvolt = <5000000>;
++				regulator-max-microvolt = <5150000>;
++			};
++
++			snvs_reg: vsnvs {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vref_reg: vrefddr {
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vgen1_reg: vgen1 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++				regulator-always-on;
++			};
++
++			vgen2_reg: vgen2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++			};
++
++			vgen3_reg: vgen3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen4_reg: vgen4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen5_reg: vgen5 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen6_reg: vgen6 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++		};
++	};
++};
+-- 
+2.7.4
