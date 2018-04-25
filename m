@@ -1,255 +1,84 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
- unflattened to FDT
-Date: Wed, 25 Apr 2018 11:40:48 -0700
-Message-ID: <cc66a8b3-9f26-166e-427b-b885a9009af7@gmail.com>
-References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
- <1520122673-11003-3-git-send-email-frowand.list@gmail.com>
- <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
- <7bbf615b-3cdd-6bb4-6918-33e48de4225d@gmail.com>
- <a21dbee8-6e4e-9ceb-c798-dda43c2eae2d@web.de>
- <d7e94a45-5d46-0491-e5dc-2b098a11c5b1@gmail.com>
- <CAL_Jsq+MmUTMrd+jNqUB2=A-q3cCy7+QWOKG0iF6zM0hjCy3PQ@mail.gmail.com>
- <e508f3de-f21b-2510-2c6a-b810073ba1a7@web.de>
- <e06d1c0f-f60d-fc23-cd74-82f557dbc432@web.de>
- <7bbb9472-9c96-6012-68e6-4ec2773c7732@gmail.com>
- <4483492d-37d2-63ad-6739-2cb297fa5058@gmail.com>
- <127c3c71-769e-32cf-72c1-6950382b8189@web.de>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: Lack of suspend/resume/shutdown ordering between GPIO providers
+ and consumers
+Date: Wed, 25 Apr 2018 13:47:22 -0500
+Message-ID: <bdbe6a56-6580-97b2-891f-ccb6c362d387@ti.com>
+References: <dc0c15eb-3dab-f512-aed6-045528fcec2c@gmail.com>
+ <03711276-d854-7f87-f2e2-c64716b09dbe@ti.com>
+ <206bea0c-dbba-1bc3-d13b-dbc41d12c08b@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <jailhouse-dev+bncBD3LJZVFUEJBBM4XQPLQKGQELVSZYAI@googlegroups.com>
-Sender: jailhouse-dev@googlegroups.com
-In-Reply-To: <127c3c71-769e-32cf-72c1-6950382b8189@web.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <206bea0c-dbba-1bc3-d13b-dbc41d12c08b@gmail.com>
 Content-Language: en-US
-List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
-List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
-List-Archive: <https://groups.google.com/group/jailhouse-dev
-List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
-List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
- <https://groups.google.com/group/jailhouse-dev/subscribe>
-To: Jan Kiszka <jan.kiszka@web.de>, Rob Herring <robh+dt@kernel.org>, Alan Tull <atull@kernel.org>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jailhouse <jailhouse-dev@googlegroups.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, jeffy.chen@rock-chips.com, enric.balletbo@collabora.com, josephl@nvidia.com, opendmb@gmail.com, rjw@rjwysocki.net
 List-Id: devicetree@vger.kernel.org
 
-On 04/24/18 22:23, Jan Kiszka wrote:
-> On 2018-04-24 22:56, Frank Rowand wrote:
->> Hi Alan,
->>
->> On 04/23/18 15:38, Frank Rowand wrote:
->>> Hi Jan,
->>>
->>> + Alan Tull for fpga perspective
->>>
->>> On 04/22/18 03:30, Jan Kiszka wrote:
->>>> On 2018-04-11 07:42, Jan Kiszka wrote:
->>>>> On 2018-04-05 23:12, Rob Herring wrote:
->>>>>> On Thu, Apr 5, 2018 at 2:28 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->>>>>>> On 04/05/18 12:13, Jan Kiszka wrote:
->>>>>>>> On 2018-04-05 20:59, Frank Rowand wrote:
->>>>>>>>> Hi Jan,
->>>>>>>>>
->>>>>>>>> On 04/04/18 15:35, Jan Kiszka wrote:
->>>>>>>>>> Hi Frank,
->>>>>>>>>>
->>>>>>>>>> On 2018-03-04 01:17, frowand.list@gmail.com wrote:
->>>>>>>>>>> From: Frank Rowand <frank.rowand@sony.com>
->>>>>>>>>>>
->>>>>>>>>>> Move duplicating and unflattening of an overlay flattened devicetree
->>>>>>>>>>> (FDT) into the overlay application code.  To accomplish this,
->>>>>>>>>>> of_overlay_apply() is replaced by of_overlay_fdt_apply().
->>>>>>>>>>>
->>>>>>>>>>> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
->>>>>>>>>>> code, which is thus responsible for freeing the duplicate FDT.  The
->>>>>>>>>>> caller of of_overlay_fdt_apply() remains responsible for freeing the
->>>>>>>>>>> original FDT.
->>>>>>>>>>>
->>>>>>>>>>> The unflattened devicetree now belongs to devicetree code, which is
->>>>>>>>>>> thus responsible for freeing the unflattened devicetree.
->>>>>>>>>>>
->>>>>>>>>>> These ownership changes prevent early freeing of the duplicated FDT
->>>>>>>>>>> or the unflattened devicetree, which could result in use after free
->>>>>>>>>>> errors.
->>>>>>>>>>>
->>>>>>>>>>> of_overlay_fdt_apply() is a private function for the anticipated
->>>>>>>>>>> overlay loader.
->>>>>>>>>>
->>>>>>>>>> We are using of_fdt_unflatten_tree + of_overlay_apply in the
->>>>>>>>>> (out-of-tree) Jailhouse loader driver in order to register a virtual
->>>>>>>>>> device during hypervisor activation with Linux. The DT overlay is
->>>>>>>>>> created from a a template but modified prior to application to account
->>>>>>>>>> for runtime-specific parameters. See [1] for the current implementation.
->>>>>>>>>>
->>>>>>>>>> I'm now wondering how to model that scenario best with the new API.
->>>>>>>>>> Given that the loader lost ownership of the unflattened tree but the
->>>>>>>>>> modification API exist only for the that DT state, I'm not yet seeing a
->>>>>>>>>> clear solution. Should we apply the template in disabled form (status =
->>>>>>>>>> "disabled"), modify it, and then activate it while it is already applied?
->>>>>>>>>
->>>>>>>>> Thank you for the pointer to the driver - that makes it much easier to
->>>>>>>>> understand the use case and consider solutions.
->>>>>>>>>
->>>>>>>>> If you can make the changes directly on the FDT instead of on the
->>>>>>>>> expanded devicetree, then you could move to the new API.
->>>>>>>>
->>>>>>>> Are there some examples/references on how to edit FDTs in-place in the
->>>>>>>> kernel? I'd like to avoid writing the n-th FDT parser/generator.
->>>>>>>
->>>>>>> I don't know of any existing in-kernel edits of the FDT (but they might
->>>>>>> exist).  The functions to access an FDT are in libfdt, which is in
->>>>>>> scripts/dtc/libfdt/.
->>>>>>
->>>>>> Let's please not go down that route of doing FDT modifications. There
->>>>>> is little reason to other than for early boot changes. And it is much
->>>>>> easier to work on unflattened trees.
->>>>>
->>>>> I just briefly looked into libfdt, and it would have meant building it
->>>>> into the module as there are no library functions exported by the kernel
->>>>> either. Another reason to drop that.
->>>>>
->>>>> What's apparently working now is the pattern I initially suggested:
->>>>> Register template with status = "disabled" as overlay, then prepare and
->>>>> apply changeset that contains all needed modifications and sets the
->>>>> status to "ok". I might be leaking additional resources, but to find
->>>>> that out, I will now finally have to resolve clean unbinding of the
->>>>> generic PCI host controller [1] first.
->>>>
->>>> static void free_overlay_changeset(struct overlay_changeset *ovcs)
->>>> {
->>>> 	[...]
->>>> 	/*
->>>> 	 * TODO
->>>> 	 *
->>>> 	 * would like to: kfree(ovcs->overlay_tree);
->>>> 	 * but can not since drivers may have pointers into this data
->>>> 	 *
->>>> 	 * would like to: kfree(ovcs->fdt);
->>>> 	 * but can not since drivers may have pointers into this data
->>>> 	 */
->>>>
->>>> 	kfree(ovcs);
->>>> }
->>>>
->>>> What's this? I have kmemleak now jumping at me over this. Who is suppose
->>>> to plug these leaks? The caller of of_overlay_fdt_apply has no pointers
->>>> to those objects. I would say that's a regression of the new API.
->>>
->>> The problem already existed but it was hidden.  We have never been able to
->>> kfree() these object because we do not know if there are any pointers into
->>> these objects.  The new API makes the problem visible to kmemleak.
->>>
->>> The reason that we do not know if there are any pointers into these objects
->>> is that devicetree access APIs return pointers into the devicetree internal
->>> data structures (that is, into the overlay unflattened devicetree).  If we
->>> want to be able to do the kfree()s, we could change the devicetree access
->>> APIs.
->>>
->>> The reason that pointers into the overlay flattened tree (ovcs->fdt) are
->>> also exposed is that the overlay unflattened devicetree property values
->>> are pointers into the overlay fdt.
->>>
->>> ** This paragraph becomes academic (and not needed) if the fix in the next
->>> paragraph can be implemented. **
->>> I _think_ that the fdt issue __for overlays__ can be fixed somewhat easily.
->>> (I would want to read through the code again to make sure I'm not missing
->>> any issues.)  If the of_fdt_unflatten_tree() called by of_overlay_fdt_apply()
->>> was modified so that property values were copied into newly allocated memory
->>> and the live tree property pointers were set to the copy instead of to
->>> the value in the fdt, then I _think_ the fdt could be freed in
->>> of_overlay_fdt_apply() after calling of_overlay_apply().  The code that
->>> frees a devicetree would also have to be aware of this change -- I'm not
->>> sure if that leads to ugly complications or if it is easy.  The other
->>> question to consider is whether to make the same change to
->>> of_fdt_unflatten_tree() when it is called in early boot to unflatten
->>> the base devicetree.  Doing so would increase the memory usage of the
->>> live tree (we would not be able to free the base fdt after unflattening
->>> it because we make the fdt visible in /sys/firmware/fdt -- though
->>> _maybe_ that could be conditioned on CONFIG_KEXEC).
->>
->> Question added below this paragraph.
+
+
+On 04/25/2018 01:29 PM, Florian Fainelli wrote:
+> On 04/25/2018 11:06 AM, Grygorii Strashko wrote:
 >>
 >>
->>> But all of the complexity of that fix is _only_ because of_overlay_apply()
->>> and of_overlay_remove() call overlay_notify(), passing in the overlay
->>> unflattened devicetree (which has pointers into the overlay fdt). Pointers
->>> into the overlay unflattened devicetree are then passed to the notifiers.
->>> (Again, I may be missing some other place that the overlay unflattened
->>> devicetree is made visible to other code -- a more thorough reading of
->>> the code is needed.) If the notifiers could be modified to accept the
->>> changeset list instead of of pointers to the fragments in the overlay
->>> unflattened devicetree then there would be no possibility of the notifiers
->>> keeping a pointer into the overlay fdt. I do not know if this is a
->>> practical change for the notifiers -- there are no callers of
->>> of_overlay_notifier_register() in the mainline kernel source. My
->>> recollection is that the overlay notifiers were added for the fpga
->>> subsystem.
+>> On 04/24/2018 05:58 PM, Florian Fainelli wrote:
+>>> Hi Linus, Rafael, all
+>>>
+>>> Our GPIO controller driver: gpio-brcmstb.c has a shutdown callback which
+>>> gets invoked when the system is brought into poweroff aka S5. So far so
+>>> good, except that we also wish to use gpio_keys.c as a possible wake-up
+>>> source, so we may have a number of GPIO pins declared as gpio-keys that
+>>> allow the system to wake-up from deep slumber.
+>>>
+>>> Recently we noticed that we could easily get into a state where
+>>> gpio-brcmstb.c::brcmstb_gpio_shutdown() gets called first, and then
+>>> gpio_keys.c::gpio_keys_suspend() gets called later, which is too late to
+>>> have the enable_irq_wake() call do anything sensible since we have
+>>> suspend its parent interrupt controller before. This is completely
+>>> expected unfortunately because these two drivers are both platform
+>>> device instances with no connection to one another except via Device
+>>> Tree and the use of the GPIOLIB APIs.
 >>
->> Can the fpga notifiers be changed to have the changeset as an input
->> instead of having the overlay devicetree fragment and target as an
->> input?
->>
->> The changeset lists nodes and properties to be added, but does not
->> expose any pointers to the overlay fdt or the overlay unflattened
->> devicetree.  This guarantees no leakage of pointers into the overlay
->> fdt or the overlay unflattened devicetree.  The changeset contains
->> pointers to copies of data, but those copies are never freed (and
->> thus they are yet another existing memory leak).
+>> You can take a look at device_link_add() and Co.
 > 
-> Also they are freed, of course: When the last reference to the node they
-> point to reaches 0 (e.g. triggered by of_changeset_destroy), that node
-> goes away and takes down remaining dead properties. I've ran through
-> this already. And I also made sure that my code is not triggering such
-> kind of leaks as well.
-
-mea culpa.  I go around in circles while trying to remember all the
-overlay related issues.  I needed to go back and read the code to
-refresh my memory.  Thanks for the prod to re-read the code.
-
-Yes, of_changeset_destroy() will lead to the kfree() of the node and
-it's properties _if_ the node reference count is correct.  So what I
-said about a memory leak was incorrect in a perfect world (and my
-memory was wrong).  However, this is not a perfect world and we know
-that the reference count on devicetree nodes is often incorrect due
-to bugs in common infrastructure and drivers.  This issue will not
-be resolved until we pull all reference count manipulation into the
-devicetree core.  The net result is that we should not expect
-overlay removal to correctly free all memory that was allocated
-when applying the overlay.
-
-I _think_ (but did not spend the time to verify) that there is a small
-corner case memory leak even if the reference count on devicetree
-nodes is correct.  If an overlay adds a property to an existing node
-then removing the overlay will not kfree() the property, and it
-will remain on the deadprops list.  There are some places that
-properties are removed from deadprops, but I don't think they fully
-resolve the issue.  Again, this is a corner case, and I am willing
-to document it as a limitation until it gets fixed.
-
-Then returning to me going around in circles... This thread led me to
-think that since since the overlay apply code copied data into never
-freed memory (false premise, as you pointed out) that we did not
-have to worry about drivers retaining pointers into overlay data
-after the overlay had been freed (with the one remaining exposure
-being via the overlay notifiers, which _might_ be easily resolved,
-pending Alan's analysis) -- this would have been great news for
-removing an issue for general use of overlays.
-
-But now we are back to the long-standing problem that we have no way
-of knowing whether there are any live pointers to the memory that is
-freed by of_changeset_destroy().  And I am not aware of any solution
-to this problem other than changing the devicetree access API so that
-it never returns any pointer into the live devicetree.
-
-The practical impact of all of this, is if we can change the overlay
-notifier parameters to include the overlay changeset instead of
-the overlay devicetree, then I think that of_overlay_apply() will
-be able to kfree() the overlay fdt and overlay devicetree.  And
-if not of_overlay_apply(), then free_overlay_changeset().
-
-
-> I agree that object management in dynamic OF code is hairy and easy to
-> get wrong, e.g. by passing in static objects that suddenly change
-> ownership, and the new owner expects dynamically allocated objects...
-> But that is not cured by leaking memory.
+> OK, though that requires a struct device references, so while I could
+> certainly resolve the device_node -> struct device that corresponds to
+> the GPIO provider , that poses a number of issues:
 > 
-> Jan
+> - not all struct device_node have a corresponding struct device
+> reference (e.g: clock providers, interrupt controllers, and possibly
+> other custom drivers), though in this case, they most likely do have one
 > 
+> - resolving a struct device associated with a struct device_node is
+> often done in a "bus" specific way, e.g: of_find_device_by_node(), so if
+> the GPIO provider is e.g: i2c_device, pci_device etc. etc. this might
+> not work that easily
+> 
+> I think this is what Dmitry just indicated in his email as well.
+> 
+>>
+>> But it's little bit unclear what exactly you have issue with:
+>> - shutdown
+>> - suspend
+>>
+>> above are different (at least as it was before) and gpio-brcmstb.c
+>>   brcmstb_gpio_shutdown() should not be called as part of suspend !?
+>> may be you mean brcmstb_gpio_suspend?
+> 
+> The issue exists with shutdown (through the use of "poweroff"), that is
+> confirmed, but I cannot see how it does not exist with any suspend state
+> as well, for the same reason that the ordering is not strictly enforced.
+
+Sry, but it still required some clarification :( - poweroff calls
+device_shutdown() which, in turn, should not call .suspend(), so
+how have you got both .shutdown() and .suspend() callbacks called during
+poweroff? Am I missing smth?
+
+Note. Suspend and shutdown uses different dev lists:
+- shutdown uses kset
+- suspend uses dpm_list
+
+-- 
+regards,
+-grygorii
