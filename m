@@ -1,69 +1,87 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: Lack of suspend/resume/shutdown ordering between GPIO providers
- and consumers
-Date: Wed, 25 Apr 2018 11:29:40 -0700
-Message-ID: <206bea0c-dbba-1bc3-d13b-dbc41d12c08b@gmail.com>
-References: <dc0c15eb-3dab-f512-aed6-045528fcec2c@gmail.com>
- <03711276-d854-7f87-f2e2-c64716b09dbe@ti.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Add dts file for the A20-linova1-7
+ HMI
+Date: Wed, 25 Apr 2018 20:40:16 +0200
+Message-ID: <20180425184016.xktppxw7egddr7li@flea>
+References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
+ <1521662593-25468-7-git-send-email-giulio.benetti@micronovasrl.com>
+ <20180322180508.my64gobhh5rc2x2m@flea>
+ <8ef3b259-03b4-6987-286e-36ff627a8b76@micronovasrl.com>
+ <20180424084137.7xfwji2gcibxavvt@flea>
+ <03a02abb-e95c-b4ec-748f-907c0af67969@micronovasrl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <03711276-d854-7f87-f2e2-c64716b09dbe@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, jeffy.chen@rock-chips.com, enric.balletbo@collabora.com, josephl@nvidia.com, opendmb@gmail.com, rjw@rjwysocki.net
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <03a02abb-e95c-b4ec-748f-907c0af67969@micronovasrl.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/25/2018 11:06 AM, Grygorii Strashko wrote:
-> 
-> 
-> On 04/24/2018 05:58 PM, Florian Fainelli wrote:
->> Hi Linus, Rafael, all
->>
->> Our GPIO controller driver: gpio-brcmstb.c has a shutdown callback which
->> gets invoked when the system is brought into poweroff aka S5. So far so
->> good, except that we also wish to use gpio_keys.c as a possible wake-up
->> source, so we may have a number of GPIO pins declared as gpio-keys that
->> allow the system to wake-up from deep slumber.
->>
->> Recently we noticed that we could easily get into a state where
->> gpio-brcmstb.c::brcmstb_gpio_shutdown() gets called first, and then
->> gpio_keys.c::gpio_keys_suspend() gets called later, which is too late to
->> have the enable_irq_wake() call do anything sensible since we have
->> suspend its parent interrupt controller before. This is completely
->> expected unfortunately because these two drivers are both platform
->> device instances with no connection to one another except via Device
->> Tree and the use of the GPIOLIB APIs.
-> 
-> You can take a look at device_link_add() and Co.
-
-OK, though that requires a struct device references, so while I could
-certainly resolve the device_node -> struct device that corresponds to
-the GPIO provider , that poses a number of issues:
-
-- not all struct device_node have a corresponding struct device
-reference (e.g: clock providers, interrupt controllers, and possibly
-other custom drivers), though in this case, they most likely do have one
-
-- resolving a struct device associated with a struct device_node is
-often done in a "bus" specific way, e.g: of_find_device_by_node(), so if
-the GPIO provider is e.g: i2c_device, pci_device etc. etc. this might
-not work that easily
-
-I think this is what Dmitry just indicated in his email as well.
-
-> 
-> But it's little bit unclear what exactly you have issue with:
-> - shutdown
-> - suspend
-> 
-> above are different (at least as it was before) and gpio-brcmstb.c
->  brcmstb_gpio_shutdown() should not be called as part of suspend !?
-> may be you mean brcmstb_gpio_suspend?
-
-The issue exists with shutdown (through the use of "poweroff"), that is
-confirmed, but I cannot see how it does not exist with any suspend state
-as well, for the same reason that the ordering is not strictly enforced.
---
-Florian
+SGkgR2l1bGlvLAoKT24gVHVlLCBBcHIgMjQsIDIwMTggYXQgMDg6MzE6NDRQTSArMDIwMCwgR2l1
+bGlvIEJlbmV0dGkgd3JvdGU6Cj4gTGlOb3ZhMSBpcyBub3QgYSBib2FyZCB3aXRoIHZhcmlvdXMg
+aGVhZGVycyB0byBjb25uZWN0IG90aGVyIHBlcmlwaGVyYWxzCj4gc3VjaCBkaXNwbGF5LCBwY2Fw
+IGV0Yy4KPiBJdCdzIGFuIEhNSSB0aGF0IEkgd291bGQgY29uc2lkZXIgdGhlIHNhbWUgYXMgYSBU
+YWJsZXQsIGJlY2F1c2UgaXQgaGFzIGEKPiBwbGFzdGljIGVuY2xvc3VyZSBhbHNvLgo+IAo+IFNv
+IEkgd291bGQgbGlrZSB0byB1bmRlcnN0YW5kIGhvdyB0byBtYW5hZ2UgaXQgaW4gdGhlIGJlc3Qg
+d2F5Lgo+IFRyeSB0byBjb25zaWRlciBMaU5vdmExIGFzIGEgVGFibGV0IHNlcmllcywgd2l0aCBm
+b2xsb3dpbmcgbGlzdDoKPiBMaU5vdmExIDQuMyIgY3RwCj4gTGlOb3ZhMSA3IiBjdHAKPiBMaU5v
+dmExIDEwLjEiIGN0cAo+IExpTm92YTEgNC4zIiBydHAKPiBMaU5vdmExIDciIHJ0cAo+IExpTm92
+YTEgMTAuMSIgcnRwCj4gCj4gRXZlcnkgb2YgdGhvc2UgaGFzIGEgc2xpZ2h0bHkgZGlmZmVyZW50
+IEJPTSwgc28gdGhleSBhcmUgNiBkaWZmZXJlbnQKPiBib2FyZHMgd2l0aCBhIGNvbW1vbiBiYXNl
+KHVQLCByYW0pLiBBbmQgc2FtZSBwY2IuCgpTbyB0aGUgTGlOb3ZhMSBpcyBleGFjdGx5IHRoZSBz
+YW1lIGluIGFsbCB0aGVzZSBzZXR1cHMsIHRoZSBvbmx5CmRpZmZlcmVuY2UgaXMgdGhhdCBpdCBo
+YXMgYSBjb25uZWN0b3IgdGhhdCB5b3UgY29ubmVjdCBhIGRpZmZlcmVudApkaXNwbGF5IC8gdG91
+Y2hzY3JlZW4gdG8/CgpJZiBzbywgdGhhdCdzIGRlZmluaXRlbHkgYSBjYXNlIGZvciBkZXZpY2Ug
+dHJlZSBvdmVybGF5cy4KCj4gU28gSSBkb24ndCBrbm93IGlmIHN1Ym1pdCBvbmx5IHRoZSBjb21t
+b24gYmFzZSBhbmQgcHJvdmlkZQo+IHNlcGFyYXRlbHkgb24gb3VyIGdpdGh1YiBEVC1vdmVybGF5
+cywgb3IgcHJvdmlkZSBhcyBtYW55IGR0cyBwYXRjaGVzCj4gYXMgdGhlIEhNSSBudW1iZXIgd2l0
+aCBhIGJhc2UgZHRzaS4KClRoYXQncyByZWFsbHkgdXAgdG8geW91LCBidXQgdGhlIG92ZXJsYXlz
+IHdpbGwgbWFrZSB0aGlzIG11Y2ggc2ltcGxlcgp0byBoYW5kbGUgcHJlY2lzZWx5IGJlY2F1c2Ug
+aXQgd2lsbCByZWR1Y2UgdGhlIGFtb3VudCBvZiBjb21iaW5hdGlvbnMKeW91IGhhdmUuCgpZb3Ug
+Y2FuIGV2ZW4gcmVkdWNlIGl0IGluIHlvdXIgY2FzZSB0byA1IG9mIHRoZW0sIDMgZm9yIGVhY2gg
+cGFuZWwgYW5kCjIgZm9yIGVhY2ggdG91Y2hzY3JlZW4uCgo+IEJhc2ljYWxseSBNaWNyb25vdmEg
+cHJvdmlkZXMgZW50aXJlIHN5c3RlbSB3aXRob3V0IHRoZSBjYXBhYmlsaXR5IHRvIGhhY2sKPiBo
+YXJkd2FyZSBhZGRpbmcgc2hpZWxkcyBvZiB2YXJpb3VzIHR5cGUuCj4gCj4gVGhlcmUgYXJlIGFs
+c28gb3RoZXIgMiBMaU5vdmE6Cj4gTGlOb3ZhMiBhbmQgTGlOb3ZhMwoKV2hpY2ggU29DcyBhcmUg
+dGhlc2UgYm9hcmRzIGJhc2VkIG9uPwoKPiBTbyBJIHVuZGVyc3RhbmQgdGhhdCB0aGlzIGNvdWxk
+IGxlYWQgdG8gMTggZGlmZmVyZW50IGR0cyBmaWxlcyBhbmQgMwo+IGR0c2kgZmlsZXMuCgpZZWFo
+LCBJJ2QgcmVhbGx5IGxpa2UgdG8ga2VlcCB0aGlzIHVuZGVyIGNvbnRyb2wgOikKCj4gQnV0IHdp
+dGggVGFibGV0IGl0IHNob3VsZCBiZSB0aGUgc2FtZSB3YXkuICBGb3Igc3VyZSBwZW9wbGUgd291
+bGQgYmUKPiBtb3JlIGludGVyZXN0ZWQgb24gZmFtb3VzIHRhYmxldHMgaW5zdGVhZCBvZiBvdXIg
+SE1JLgo+IAo+IEluIHRoZSBjYXNlIEkgbmVlZCB0byB1c2UgZHQtb3ZlcmxheXMsIHlvdSBtZWFu
+IC5kdG8gZmlsZXMgd2l0aAo+IGZyYWdtZW50cyBpbnNpZGUgbG9hZGVkIGJ5IHUtYm9vdCBvciBy
+dW50aW1lLCByaWdodD8KCllvdSBkb24ndCBoYXZlIHRvIGhhbmRjb2RlIHRoZSBmcmFnbWVudHMg
+YW55bW9yZSB3aXRoIHRoZSBuZXcgc3ludGF4LAphbmQgVS1Cb290IG1ha2VzIGl0IHJlYWxseSB0
+cml2aWFsIHRvIHVzZSBpZiB5b3UgdXNlIHRoZSBGSVQgaW1hZ2UKZm9ybWF0IHRvIGhhdmUgbXVs
+dGlwbGUgb3ZlcmxheXMgYnVuZGxlZCBpbiB0aGUgc2FtZSBpbWFnZS4gWW91IGNhbgpjaG9vc2Ug
+dG8gYXBwbHkgdGhlbSBkeW5hbWljYWxseSwgZm9yIGV4YW1wbGUgYmFzZWQgb24gYW4gRUVQUk9N
+IG9yCnNvbWUgb3RoZXIgbWV0cmljIHRvIHNlZSB3aGljaCBjb21iaW5hdGlvbiB5b3UgaGF2ZS4K
+Cj4gPiA+ID4gPiArJnVzYl9vdGcgewo+ID4gPiA+ID4gKwlkcl9tb2RlID0gIm90ZyI7Cj4gPiA+
+ID4gCj4gPiA+ID4gWW91J3JlIHNheWluZyB0aGF0IHRoaXMgaXMgYSBVU0ItQSBjb25uZWN0b3I/
+IFRoZW4gaXQncyBub3QgT1RHIHNpbmNlCj4gPiA+ID4gaXQgZG9lc24ndCBoYXZlIGFuIElEIHBp
+biwgdGhpcyBpcyBhbiBob3N0Lgo+ID4gPiAKPiA+ID4gUmlnaHQsIHdpdGggYSBzcGVjaWFsIG92
+ZXJsYXkgSSB3aWxsIGFjdGl2YXRlIFVzYiBEZXZpY2UgZm9yIFJORElTLAo+ID4gPiBzbyBtb2Rp
+ZmllZCBhcyBob3N0Cj4gPiAKPiA+IFRoYXQgZG9lc24ndCByZWFsbHkgbWFrZSBtdWNoIHNlbnNl
+LiBUaGUgVVNCIE9URyBpcyB3aXJlZCBvbmx5IHVzaW5nIGEKPiA+IGRhdWdodGVyIGJvYXJkPwo+
+IAo+IE15IGZhdWx0LCBJJ3ZlIG1lYW50ICJwZXJpcGhlcmFsIiBpbiBvbmUgY2FzZSBhbmQgImhv
+c3QiIGluIGFub3RoZXIgY2FzZS4KPiBVc3VhbGx5ICJob3N0Ii4KPiBBcmUgdGhlcmUgcHJvYmxl
+bSB3aXRoIHRoaXM/Cj4gVGhlcmUgaXMgbm8gZGF1Z2h0ZXIgYm9hcmQuCgpJZiB5b3UgaGF2ZSBh
+biBJRCBwaW4gYW5kIHRoZSBhYmlsaXR5IHRvIGNvbnRyb2wgVkJVUywgdGhlbiB5b3UgZG9uJ3QK
+bmVlZCB0byBjaGFuZ2UgdGhlIGRldmljZSB0cmVlLCBpdCdzIGRvbmUgYXV0b21hdGljYWxseSBh
+dCBydW50aW1lIGJ5CkxpbnV4LgoKTWF4aW1lCgotLSAKTWF4aW1lIFJpcGFyZCwgQm9vdGxpbiAo
+Zm9ybWVybHkgRnJlZSBFbGVjdHJvbnMpCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5l
+ZXJpbmcKaHR0cHM6Ly9ib290bGluLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
