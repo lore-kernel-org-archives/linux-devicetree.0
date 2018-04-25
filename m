@@ -1,32 +1,34 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC 01/11] Documentation: of: Add device-connection-id property
-Date: Wed, 18 Apr 2018 17:09:55 +0900
-Message-Id: <1524039005-30618-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com
-Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, p.zabel@pengutronix.de, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=4hkJ=HO=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga02.intel.com ([134.134.136.20]:37696 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750841AbeDYCEQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Apr 2018 22:04:16 -0400
+From: Andy Yeh <andy.yeh@intel.com>
+Subject: [RESEND PATCH v8 0/2] DW9807 DT binding and driver patches
+Date: Wed, 25 Apr 2018 10:12:06 +0800
+Message-Id: <1524622328-30493-1-git-send-email-andy.yeh@intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: sakari.ailus@linux.intel.com, andy.yeh@intel.com, devicetree@vger.kernel.org, tfiga@chromium.org, jacopo@jmondi.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds a new property for device connection framework.
+Hi Sakari and Tomasz,
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Documentation/devicetree/bindings/graph.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The two patches are the DT binding and driver for DW9807 VCM controller.
 
-diff --git a/Documentation/devicetree/bindings/graph.txt b/Documentation/devicetree/bindings/graph.txt
-index 0415e2c..fca0030 100644
---- a/Documentation/devicetree/bindings/graph.txt
-+++ b/Documentation/devicetree/bindings/graph.txt
-@@ -125,4 +125,4 @@ Optional endpoint properties
- ----------------------------
- 
- - remote-endpoint: phandle to an 'endpoint' subnode of a remote device node.
--
-+- device-connection-id: string for device connection.
+Alan Chiang (2):
+  media: dw9807: Add dw9807 vcm driver
+  media: dt-bindings: Add bindings for Dongwoon DW9807 voice coil
+
+ .../bindings/media/i2c/dongwoon,dw9807.txt         |   9 +
+ MAINTAINERS                                        |   7 +
+ drivers/media/i2c/Kconfig                          |  10 +
+ drivers/media/i2c/Makefile                         |   1 +
+ drivers/media/i2c/dw9807.c                         | 320 +++++++++++++++++++++
+ 5 files changed, 347 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+ create mode 100644 drivers/media/i2c/dw9807.c
+
 -- 
-1.9.1
+2.7.4
+
