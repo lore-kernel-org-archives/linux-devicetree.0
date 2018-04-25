@@ -1,75 +1,50 @@
-From: Philippe CORNU <philippe.cornu@st.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings/display/bridge: sii902x: add optional
- power supplies
-Date: Wed, 25 Apr 2018 12:20:04 +0000
-Message-ID: <e18d1a3b-a2eb-74f2-ab88-7bf01af0754b@st.com>
-References: <20180425075314.19137-1-philippe.cornu@st.com>
- <20180425075314.19137-2-philippe.cornu@st.com> <16954794.QiYqgNKfkn@avalon>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 1/7] gnss: add GNSS receiver subsystem
+Date: Wed, 25 Apr 2018 14:23:15 +0200
+Message-ID: <20180425122315.GS4615@localhost>
+References: <20180424163458.11947-1-johan@kernel.org>
+ <20180424163458.11947-2-johan@kernel.org>
+ <20180425085649.GB13295@kroah.com>
+ <20180425105645.GP4615@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <16954794.QiYqgNKfkn@avalon>
-Content-Language: en-US
-Content-ID: <C12508B95C0E4A4D9ADA223CB2F824DD@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Yannick FERTRE <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180425105645.GP4615@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCAmIFJvYiA6LSkNCg0KT24gMDQvMjUvMjAxOCAxMTowMSBBTSwgTGF1cmVudCBQ
-aW5jaGFydCB3cm90ZToNCj4gSGkgUGhpbGlwcGUsDQo+IA0KPiBUaGFuayB5b3UgZm9yIHRoZSBw
-YXRjaC4NCj4gDQo+IE9uIFdlZG5lc2RheSwgMjUgQXByaWwgMjAxOCAxMDo1MzoxMyBFRVNUIFBo
-aWxpcHBlIENvcm51IHdyb3RlOg0KPj4gQWRkIG9wdGlvbmFsIHBvd2VyIHN1cHBsaWVzIHVzaW5n
-IHRoZSBkZXNjcmlwdGlvbiBmb3VuZCBpbg0KPj4gIlNpSTkwMjJBL1NpSTkwMjRBIEhETUkgVHJh
-bnNtaXR0ZXIgRGF0YSBTaGVldCAoQXVndXN0IDIwMTYpIi4NCj4+DQo+PiBUaGVyZSBpcyBhIHNp
-bmdsZSAxdjIgc3VwcGx5IHZvbHRhZ2UgbmFtZWQgdmNjMTIgZnJvbSB3aGljaCBjdmNjMTINCj4+
-IChkaWdpdGFsIGNvcmUpIGFuZCBhdmNjMTIgKFRNRFMgYW5hbG9nKSBhcmUgZGVyaXZlZCBiZWNh
-dXNlIGFjY29yZGluZw0KPj4gdG8gdGhpcyBkYXRhIHNoZWV0Og0KPj4gImN2Y2MxMiBhbmQgYXZj
-YzEyIGNhbiBiZSBkZXJpdmVkIGZyb20gdGhlIHNhbWUgcG93ZXIgc291cmNlIg0KPiANCj4gU2hv
-dWxkbid0IHRoZSBwb3dlciBzdXBwbGllcyBiZSBtYW5kYXRvcnksIGFzIGV4cGxhaW5lZCBieSBN
-YXJrIGluIGh0dHBzOi8vDQo+IGxpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2
-ZWwvMjAxOC1BcHJpbC8xNzI0MDAuaHRtbCA/DQo+IA0KDQpMYXVyZW50LA0KTWFueSB0aGFua3Mg
-TGF1cmVudCBmb3IgeW91ciBjb21tZW50LCBJIHVuZGVyc3Rvb2QgdGhlIG1lcmdlIG9mIHRoZSB0
-d28gDQoxdjIgcG93ZXIgc3VwcGxpZXMgYnV0IG1pc3NlZCB0aGUgIm1hbmRhdG9yeSIgcGFydC4u
-LiBtYXliZSBiZWNhdXNlIHRoaXMgDQpwYXRjaCAod2l0aCBvcHRpb25hbCBwb3dlciBzdXBwbGll
-cykgYWxyZWFkeSBnb3QgdGhlIHJldmlld2VkLWJ5IGZyb20gDQpSb2IsIEkgdGhvdWdodCB0aGUg
-ZGlzY3Vzc2lvbiB0aHJlYWQgeW91IHBvaW50ZWQgb3V0IHdhcyBhcHBsaWNhYmxlIA0KIm9ubHki
-IHRvIHRvdGFsbHkgbmV3IGRyaXZlciBkb2N1bWVudGF0aW9uLg0KDQpTbywgb24gbXkgc2lkZSwg
-YXMgYSAibmV3IHVzZXIiIG9mIHNpaTkwMnggSUMsIG5vIHByb2JsZW0gdG8gcHV0IHRoZXNlIA0K
-cG93ZXIgc3VwcGxpZXMgYXMgbWFuZGF0b3J5IGluc3RlYWQgb2Ygb3B0aW9uYWwgcHJvcGVydGll
-cyBidXQgSSB3b3VsZCANCmxpa2UgdG8gYmUgc3VyZSB0aGlzIGlzIGFwcGxpY2FibGUgdG8gYm90
-aCBvbGQgYW5kIG5ldyBiaW5kaW5ncyBkb2MgOiApDQoNClJvYiwNCmNvdWxkIHlvdSBwbGVhc2Ug
-Y29uZmlybSB0aGVzZSBwb3dlciBzdXBwbHkgcHJvcGVydGllcyBzaG91bGQgYmUgDQoibWFuZGF0
-b3J5Ij8NCmlmIHllcywgc2hvdWxkIHdlIHRoZW4gbW9kaWZ5IG90aGVyIG9wdGlvbmFsIHByb3Bl
-cnRpZXMgbGlrZSB0aGUgDQpyZXNldC1ncGlvcyB0b28gaW4gdGhlIGZ1dHVyZT8NCg0KQmlnIHRo
-YW5rcyB0byBib3RoIG9mIHlvdSwNClBoaWxpcHBlIDotKQ0KDQo+PiBTaWduZWQtb2ZmLWJ5OiBQ
-aGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0KPj4gLS0tDQo+PiAgIERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dCB8
-IDIgKysNCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQ0KPj4NCj4+IGRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
-c2lpOTAyeC50eHQNCj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYnJpZGdlL3NpaTkwMngudHh0IGluZGV4DQo+PiA1NmEzZTY4Y2NiODAuLjlmYjQxZmM5YWY1
-MSAxMDA2NDQNCj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L2JyaWRnZS9zaWk5MDJ4LnR4dA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0DQo+PiBAQCAtOCw2ICs4LDggQEAg
-T3B0aW9uYWwgcHJvcGVydGllczoNCj4+ICAgCS0gaW50ZXJydXB0cy1leHRlbmRlZCBvciBpbnRl
-cnJ1cHQtcGFyZW50ICsgaW50ZXJydXB0czogZGVzY3JpYmUNCj4+ICAgCSAgdGhlIGludGVycnVw
-dCBsaW5lIHVzZWQgdG8gaW5mb3JtIHRoZSBob3N0IGFib3V0IGhvdHBsdWcgZXZlbnRzLg0KPj4g
-ICAJLSByZXNldC1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBS
-U1RfTiBwaW4uDQo+PiArCS0gaW92Y2Mtc3VwcGx5OiBJL08gc3VwcGx5IHZvbHRhZ2UgKDEuOFYg
-b3IgMy4zViwgaG9zdC1kZXBlbmRlbnQpLg0KPj4gKwktIHZjYzEyLXN1cHBseTogVE1EUyBhbmFs
-b2cgJiBkaWdpdGFsIGNvcmUgc3VwcGx5IHZvbHRhZ2UgKDEuMlYpLg0KPj4NCj4+ICAgT3B0aW9u
-YWwgc3Vibm9kZXM6DQo+PiAgIAktIHZpZGVvIGlucHV0OiB0aGlzIHN1Ym5vZGUgY2FuIGNvbnRh
-aW4gYSB2aWRlbyBpbnB1dCBwb3J0IG5vZGUNCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Apr 25, 2018 at 12:56:45PM +0200, Johan Hovold wrote:
+> On Wed, Apr 25, 2018 at 10:56:49AM +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Apr 24, 2018 at 06:34:52PM +0200, Johan Hovold wrote:
+
+> > > +static int gnss_open(struct inode *inode, struct file *file)
+> > > +{
+> > > +	struct gnss_device *gdev;
+> > > +	int ret = 0;
+> > > +
+> > > +	gdev = container_of(inode->i_cdev, struct gnss_device, cdev);
+> > > +
+> > > +	get_device(&gdev->dev);
+> > > +
+> > > +	nonseekable_open(inode, file);
+> > > +	file->private_data = gdev;
+> > > +
+> > > +	down_write(&gdev->rwsem);
+> > 
+> > Just curious, why a rwsem?  They can be slower than a normal semaphore,
+> > is this really a contentious lock?
+> 
+> I use the rwsem to deal with hotplugging; the underlying device can go
+> away at any time and the core makes sure that no further calls into the
+> corresponding driver is made once all currently executing callbacks
+> return.
+
+I just did find one access to the gnss ops which was unsafe however; the
+existence check for a write_raw callback in write() needs to be replaced
+by a device flag.
+
+Thanks,
+Johan
