@@ -1,125 +1,75 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v4 03/12] mmc: sdhci-omap: Workaround for Errata i843
-Date: Wed, 25 Apr 2018 17:39:28 +0530
-Message-ID: <20180425120937.29867-4-kishon@ti.com>
-References: <20180425120937.29867-1-kishon@ti.com>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings/display/bridge: sii902x: add optional
+ power supplies
+Date: Wed, 25 Apr 2018 12:20:04 +0000
+Message-ID: <e18d1a3b-a2eb-74f2-ab88-7bf01af0754b@st.com>
+References: <20180425075314.19137-1-philippe.cornu@st.com>
+ <20180425075314.19137-2-philippe.cornu@st.com> <16954794.QiYqgNKfkn@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180425120937.29867-1-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: kishon@ti.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <16954794.QiYqgNKfkn@avalon>
+Content-Language: en-US
+Content-ID: <C12508B95C0E4A4D9ADA223CB2F824DD@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Yannick FERTRE <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Errata i843 in AM572x Sitara Processors Silicon Revision 2.0, 1.1
-(SPRZ429L July 2014–Revised April 2018 [1]) mentions
-PG 1.0/1.1 silicon has limitations w.r.t frequencies at which MMC1/2/3
-can operate.
-
-Use soc_device_match() to identify rev 1.0/1.1 silicon and
-override mmc->f_max according to the errata workaround.
-"max-frequency" dt property cannot be used since the device
-tree is added for rev 2.0 silicon.
-
-soc_device_match() is also used in order to get the IODelay values
-for rev 1.0/1.1 silicon.
-
-[1] -> http://www.ti.com/lit/er/sprz429l/sprz429l.pdf
-
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
----
- drivers/mmc/host/sdhci-omap.c | 35 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-index 6e2cf4cfeec0..b4400be0606f 100644
---- a/drivers/mmc/host/sdhci-omap.c
-+++ b/drivers/mmc/host/sdhci-omap.c
-@@ -26,6 +26,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/regulator/consumer.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/sys_soc.h>
- 
- #include "sdhci-pltfm.h"
- 
-@@ -100,6 +101,7 @@ struct sdhci_omap_data {
- };
- 
- struct sdhci_omap_host {
-+	char			*version;
- 	void __iomem		*base;
- 	struct device		*dev;
- 	struct	regulator	*pbias;
-@@ -733,12 +735,21 @@ static struct pinctrl_state
- 				  u32 *caps, u32 capmask)
- {
- 	struct device *dev = omap_host->dev;
-+	char *version = omap_host->version;
- 	struct pinctrl_state *pinctrl_state = ERR_PTR(-ENODEV);
-+	char str[20];
- 
- 	if (!(*caps & capmask))
- 		goto ret;
- 
--	pinctrl_state = pinctrl_lookup_state(omap_host->pinctrl, mode);
-+	if (version) {
-+		snprintf(str, 20, "%s-%s", mode, version);
-+		pinctrl_state = pinctrl_lookup_state(omap_host->pinctrl, str);
-+	}
-+
-+	if (IS_ERR(pinctrl_state))
-+		pinctrl_state = pinctrl_lookup_state(omap_host->pinctrl, mode);
-+
- 	if (IS_ERR(pinctrl_state)) {
- 		dev_err(dev, "no pinctrl state for %s mode", mode);
- 		*caps &= ~capmask;
-@@ -830,6 +841,16 @@ static int sdhci_omap_config_iodelay_pinctrl_state(struct sdhci_omap_host
- 	return 0;
- }
- 
-+static const struct soc_device_attribute sdhci_omap_soc_devices[] = {
-+	{
-+		.machine = "DRA7[45]*",
-+		.revision = "ES1.[01]",
-+	},
-+	{
-+		/* sentinel */
-+	}
-+};
-+
- static int sdhci_omap_probe(struct platform_device *pdev)
- {
- 	int ret;
-@@ -841,6 +862,7 @@ static int sdhci_omap_probe(struct platform_device *pdev)
- 	struct mmc_host *mmc;
- 	const struct of_device_id *match;
- 	struct sdhci_omap_data *data;
-+	const struct soc_device_attribute *soc;
- 
- 	match = of_match_device(omap_sdhci_match, dev);
- 	if (!match)
-@@ -875,6 +897,17 @@ static int sdhci_omap_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_pltfm_free;
- 
-+	soc = soc_device_match(sdhci_omap_soc_devices);
-+	if (soc) {
-+		omap_host->version = "rev11";
-+		if (!strcmp(dev_name(dev), "4809c000.mmc"))
-+			mmc->f_max = 96000000;
-+		if (!strcmp(dev_name(dev), "480b4000.mmc"))
-+			mmc->f_max = 48000000;
-+		if (!strcmp(dev_name(dev), "480ad000.mmc"))
-+			mmc->f_max = 48000000;
-+	}
-+
- 	pltfm_host->clk = devm_clk_get(dev, "fck");
- 	if (IS_ERR(pltfm_host->clk)) {
- 		ret = PTR_ERR(pltfm_host->clk);
--- 
-2.17.0
+SGkgTGF1cmVudCAmIFJvYiA6LSkNCg0KT24gMDQvMjUvMjAxOCAxMTowMSBBTSwgTGF1cmVudCBQ
+aW5jaGFydCB3cm90ZToNCj4gSGkgUGhpbGlwcGUsDQo+IA0KPiBUaGFuayB5b3UgZm9yIHRoZSBw
+YXRjaC4NCj4gDQo+IE9uIFdlZG5lc2RheSwgMjUgQXByaWwgMjAxOCAxMDo1MzoxMyBFRVNUIFBo
+aWxpcHBlIENvcm51IHdyb3RlOg0KPj4gQWRkIG9wdGlvbmFsIHBvd2VyIHN1cHBsaWVzIHVzaW5n
+IHRoZSBkZXNjcmlwdGlvbiBmb3VuZCBpbg0KPj4gIlNpSTkwMjJBL1NpSTkwMjRBIEhETUkgVHJh
+bnNtaXR0ZXIgRGF0YSBTaGVldCAoQXVndXN0IDIwMTYpIi4NCj4+DQo+PiBUaGVyZSBpcyBhIHNp
+bmdsZSAxdjIgc3VwcGx5IHZvbHRhZ2UgbmFtZWQgdmNjMTIgZnJvbSB3aGljaCBjdmNjMTINCj4+
+IChkaWdpdGFsIGNvcmUpIGFuZCBhdmNjMTIgKFRNRFMgYW5hbG9nKSBhcmUgZGVyaXZlZCBiZWNh
+dXNlIGFjY29yZGluZw0KPj4gdG8gdGhpcyBkYXRhIHNoZWV0Og0KPj4gImN2Y2MxMiBhbmQgYXZj
+YzEyIGNhbiBiZSBkZXJpdmVkIGZyb20gdGhlIHNhbWUgcG93ZXIgc291cmNlIg0KPiANCj4gU2hv
+dWxkbid0IHRoZSBwb3dlciBzdXBwbGllcyBiZSBtYW5kYXRvcnksIGFzIGV4cGxhaW5lZCBieSBN
+YXJrIGluIGh0dHBzOi8vDQo+IGxpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2
+ZWwvMjAxOC1BcHJpbC8xNzI0MDAuaHRtbCA/DQo+IA0KDQpMYXVyZW50LA0KTWFueSB0aGFua3Mg
+TGF1cmVudCBmb3IgeW91ciBjb21tZW50LCBJIHVuZGVyc3Rvb2QgdGhlIG1lcmdlIG9mIHRoZSB0
+d28gDQoxdjIgcG93ZXIgc3VwcGxpZXMgYnV0IG1pc3NlZCB0aGUgIm1hbmRhdG9yeSIgcGFydC4u
+LiBtYXliZSBiZWNhdXNlIHRoaXMgDQpwYXRjaCAod2l0aCBvcHRpb25hbCBwb3dlciBzdXBwbGll
+cykgYWxyZWFkeSBnb3QgdGhlIHJldmlld2VkLWJ5IGZyb20gDQpSb2IsIEkgdGhvdWdodCB0aGUg
+ZGlzY3Vzc2lvbiB0aHJlYWQgeW91IHBvaW50ZWQgb3V0IHdhcyBhcHBsaWNhYmxlIA0KIm9ubHki
+IHRvIHRvdGFsbHkgbmV3IGRyaXZlciBkb2N1bWVudGF0aW9uLg0KDQpTbywgb24gbXkgc2lkZSwg
+YXMgYSAibmV3IHVzZXIiIG9mIHNpaTkwMnggSUMsIG5vIHByb2JsZW0gdG8gcHV0IHRoZXNlIA0K
+cG93ZXIgc3VwcGxpZXMgYXMgbWFuZGF0b3J5IGluc3RlYWQgb2Ygb3B0aW9uYWwgcHJvcGVydGll
+cyBidXQgSSB3b3VsZCANCmxpa2UgdG8gYmUgc3VyZSB0aGlzIGlzIGFwcGxpY2FibGUgdG8gYm90
+aCBvbGQgYW5kIG5ldyBiaW5kaW5ncyBkb2MgOiApDQoNClJvYiwNCmNvdWxkIHlvdSBwbGVhc2Ug
+Y29uZmlybSB0aGVzZSBwb3dlciBzdXBwbHkgcHJvcGVydGllcyBzaG91bGQgYmUgDQoibWFuZGF0
+b3J5Ij8NCmlmIHllcywgc2hvdWxkIHdlIHRoZW4gbW9kaWZ5IG90aGVyIG9wdGlvbmFsIHByb3Bl
+cnRpZXMgbGlrZSB0aGUgDQpyZXNldC1ncGlvcyB0b28gaW4gdGhlIGZ1dHVyZT8NCg0KQmlnIHRo
+YW5rcyB0byBib3RoIG9mIHlvdSwNClBoaWxpcHBlIDotKQ0KDQo+PiBTaWduZWQtb2ZmLWJ5OiBQ
+aGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0KPj4gLS0tDQo+PiAgIERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dCB8
+IDIgKysNCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQ0KPj4NCj4+IGRpZmYg
+LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
+c2lpOTAyeC50eHQNCj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvYnJpZGdlL3NpaTkwMngudHh0IGluZGV4DQo+PiA1NmEzZTY4Y2NiODAuLjlmYjQxZmM5YWY1
+MSAxMDA2NDQNCj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2JyaWRnZS9zaWk5MDJ4LnR4dA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0DQo+PiBAQCAtOCw2ICs4LDggQEAg
+T3B0aW9uYWwgcHJvcGVydGllczoNCj4+ICAgCS0gaW50ZXJydXB0cy1leHRlbmRlZCBvciBpbnRl
+cnJ1cHQtcGFyZW50ICsgaW50ZXJydXB0czogZGVzY3JpYmUNCj4+ICAgCSAgdGhlIGludGVycnVw
+dCBsaW5lIHVzZWQgdG8gaW5mb3JtIHRoZSBob3N0IGFib3V0IGhvdHBsdWcgZXZlbnRzLg0KPj4g
+ICAJLSByZXNldC1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBS
+U1RfTiBwaW4uDQo+PiArCS0gaW92Y2Mtc3VwcGx5OiBJL08gc3VwcGx5IHZvbHRhZ2UgKDEuOFYg
+b3IgMy4zViwgaG9zdC1kZXBlbmRlbnQpLg0KPj4gKwktIHZjYzEyLXN1cHBseTogVE1EUyBhbmFs
+b2cgJiBkaWdpdGFsIGNvcmUgc3VwcGx5IHZvbHRhZ2UgKDEuMlYpLg0KPj4NCj4+ICAgT3B0aW9u
+YWwgc3Vibm9kZXM6DQo+PiAgIAktIHZpZGVvIGlucHV0OiB0aGlzIHN1Ym5vZGUgY2FuIGNvbnRh
+aW4gYSB2aWRlbyBpbnB1dCBwb3J0IG5vZGUNCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
