@@ -1,122 +1,109 @@
-From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Subject: Re: [PATCH v3 6/6] arm64: dts: rockchip: Specify override mode for
- kevin panel
-Date: Wed, 25 Apr 2018 09:36:26 -0300
-Message-ID: <CAAEAJfAgH_hw6yqbO__p=f2k-axBQXn141XiE-5j8mcmhRPWKg@mail.gmail.com>
-References: <20180208174855.55620-1-seanpaul@chromium.org>
- <20180208174855.55620-7-seanpaul@chromium.org>
- <CAD=FV=WGU+s015DQbNeWHkpqpHLFz+9AjHKAd0N3HWag0p5FWA@mail.gmail.com>
- <CAAEAJfAQMzUfM86o-xNoyBQzTiEMNH+W=9FyFpBy99nA3HrVgw@mail.gmail.com>
- <CAD=FV=W9LCeGAEuZDD9FUEKVMp8YUuCcW9uLcTZqTR1spA1gEA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 2/7] ARM: dts: sun8i: h3: Split out common board design
+ for ALL-H3-CC
+Date: Wed, 25 Apr 2018 14:39:15 +0200
+Message-ID: <20180425123915.twp3m73o5xap3m6j@flea>
+References: <20180424113424.13196-1-wens@csie.org>
+ <20180424113424.13196-3-wens@csie.org>
+ <20180424121353.zxujyehsw3er2xq6@flea>
+ <CAGb2v65iwbmOvQ2YA0e4QyTzQVj=F+5n6cWt2q6K80Y2b_3q3g@mail.gmail.com>
+ <20180424193754.jsuucbq57onhxhqe@flea>
+ <CAGb2v64MwS+q87z9_UiKxVtgeAenA_9+QSS=cfF42PGy4PeJwQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAD=FV=W9LCeGAEuZDD9FUEKVMp8YUuCcW9uLcTZqTR1spA1gEA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Emil Renner Berthing <kernel@esmil.dk>, Arnd Bergmann <arnd@arndb.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Catalin Marinas <catalin.marinas@arm.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.co.uk>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, hoegsberg@chromium.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="shhnyvlfu32no7sr"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64MwS+q87z9_UiKxVtgeAenA_9+QSS=cfF42PGy4PeJwQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjUgQXByaWwgMjAxOCBhdCAwMToyOSwgRG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21p
-dW0ub3JnPiB3cm90ZToKPiBIaSwKPgo+IE9uIFR1ZSwgQXByIDI0LCAyMDE4IGF0IDc6MzEgQU0s
-IEV6ZXF1aWVsIEdhcmNpYQo+IDxlemVxdWllbEB2YW5ndWFyZGlhc3VyLmNvbS5hcj4gd3JvdGU6
-Cj4+IEhpIERvdWcsIFNlYW46Cj4+Cj4+IEkgd291bGQgbGlrZSB0byBtb3ZlIHRoaXMgZm9yd2Fy
-ZC4KPj4KPj4gT24gMjYgRmVicnVhcnkgMjAxOCBhdCAxNToyMywgRG91ZyBBbmRlcnNvbiA8ZGlh
-bmRlcnNAY2hyb21pdW0ub3JnPiB3cm90ZToKPj4+IEhpLAo+Pj4KPj4+IE9uIFRodSwgRmViIDgs
-IDIwMTggYXQgOTo0OCBBTSwgU2VhbiBQYXVsIDxzZWFucGF1bEBjaHJvbWl1bS5vcmc+IHdyb3Rl
-Ogo+Pj4+IFRoaXMgcGF0Y2ggYWRkcyBhbiBvdmVycmlkZSBtb2RlIGZvciBrZXZpbiBkZXZpY2Vz
-LiBUaGUgbW9kZSBpbmNyZWFzZXMKPj4+PiBib3RoIGJhY2sgcG9yY2hlcyB0byBhbGxvdyBhIHBp
-eGVsIGNsb2NrIG9mIDI2NjY2a0h6IGFzIG9wcG9zZWQgdG8gdGhlCj4+Pj4gJ3R5cGljYWwnIHZh
-bHVlIG9mIDI1Mjc1MGtIei4gVGhpcyBpcyBuZWVkZWQgdG8gYXZvaWQgaW50ZXJmZXJlbmNlIHdp
-dGgKPj4+PiB0aGUgdG91Y2ggZGlnaXRpemVyIG9uIHRoZXNlIGxhcHRvcHMuCj4+Pj4KPj4+PiBD
-aGFuZ2VzIGluIHYyOgo+Pj4+ICAtIFdyYXAgdGhlIHRpbWluZyBpbiBkaXNwbGF5LXRpbWluZ3Mg
-bm9kZSB0byBtYXRjaCBiaW5kaW5nIChSb2IvVGhpZXJyeSkKPj4+PiBDaGFuZ2VzIGluIHYzOgo+
-Pj4+ICAtIFVud3JhcCB0aGUgdGltaW5nIGZyb20gZGlzcGxheS10aW1pbmdzIGFuZCByZW5hbWUg
-cGFuZWwtdGltaW5nIChSb2IpCj4+Pj4KPj4+PiBDYzogRG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNA
-Y2hyb21pdW0ub3JnPgo+Pj4+IENjOiBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0Pgo+Pj4+
-IENjOiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgo+Pj4+IENjOiBKZWZmeSBDaGVu
-IDxqZWZmeS5jaGVuQHJvY2stY2hpcHMuY29tPgo+Pj4+IENjOiBSb2IgSGVycmluZyA8cm9iaCtk
-dEBrZXJuZWwub3JnPgo+Pj4+IENjOiBTdMOpcGhhbmUgTWFyY2hlc2luIDxtYXJjaGV1QGNocm9t
-aXVtLm9yZz4KPj4+PiBDYzogVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNv
-bT4KPj4+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4+PiBDYzogZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+Pj4+IENjOiBsaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZy
-YWRlYWQub3JnCj4+Pj4gU2lnbmVkLW9mZi1ieTogU2VhbiBQYXVsIDxzZWFucGF1bEBjaHJvbWl1
-bS5vcmc+Cj4+Pj4gLS0tCj4+Pj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5
-LWdydS1rZXZpbi5kdHMgfCAxNCArKysrKysrKysrKysrKwo+Pj4+ICAxIGZpbGUgY2hhbmdlZCwg
-MTQgaW5zZXJ0aW9ucygrKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9k
-dHMvcm9ja2NoaXAvcmszMzk5LWdydS1rZXZpbi5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Jv
-Y2tjaGlwL3JrMzM5OS1ncnUta2V2aW4uZHRzCj4+Pj4gaW5kZXggMTkxYTZiY2IxNzA0Li42NTg0
-MTFjZTM3ZWEgMTAwNjQ0Cj4+Pj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9y
-azMzOTktZ3J1LWtldmluLmR0cwo+Pj4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2No
-aXAvcmszMzk5LWdydS1rZXZpbi5kdHMKPj4+PiBAQCAtOTgsNiArOTgsMjAgQEAKPj4+PiAgICAg
-ICAgICAgICAgICAgYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+Owo+Pj4+ICAgICAgICAgICAgICAg
-ICBwb3dlci1zdXBwbHkgPSA8JnBwMzMwMF9kaXNwPjsKPj4+Pgo+Pj4+ICsgICAgICAgICAgICAg
-ICBwYW5lbC10aW1pbmcgewo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLWZyZXF1
-ZW5jeSA9IDwyNjY2MDQ3MjA+Owo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGhhY3RpdmUg
-PSA8MjQwMD47Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgaGZyb250LXBvcmNoID0gPDQ4
-PjsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgICBoYmFjay1wb3JjaCA9IDw4ND47Cj4+Pj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgaHN5bmMtbGVuID0gPDMyPjsKPj4+PiArICAgICAgICAg
-ICAgICAgICAgICAgICBoc3luYy1hY3RpdmUgPSA8MD47Cj4+Pj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgdmFjdGl2ZSA9IDwxNjAwPjsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgICB2ZnJv
-bnQtcG9yY2ggPSA8Mz47Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgdmJhY2stcG9yY2gg
-PSA8MTIwPjsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgICB2c3luYy1sZW4gPSA8MTA+Owo+
-Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHZzeW5jLWFjdGl2ZSA9IDwwPjsKPj4+PiArICAg
-ICAgICAgICAgICAgfTsKPj4+PiArCj4+Pj4gICAgICAgICAgICAgICAgIHBvcnRzIHsKPj4+PiAg
-ICAgICAgICAgICAgICAgICAgICAgICBwYW5lbF9pbl9lZHA6IGVuZHBvaW50IHsKPj4+PiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmZWRwX291dF9w
-YW5lbD47Cj4+Pgo+Pj4gS3Jpc3RpYW4gYnJvdWdodCBhbiBvbGQgYnVnIHRvIG15IGF0dGVudGlv
-bgo+Pj4gPGh0dHBzOi8vYnVncy5jaHJvbWl1bS5vcmcvcC9jaHJvbWl1bS9pc3N1ZXMvZGV0YWls
-P2lkPTc1MDM1ND4gYW5kIGl0Cj4+PiBtYWRlIG1lIHRoaW5rLiAgU2hvdWxkIHdlIHNvbWVob3cg
-YWRqdXN0IHRoZSBiaW5kaW5ncyBoZXJlIHRvIGFjY291bnQKPj4+IGZvciB0aGUgZmFjdCB0aGF0
-IGEgYm9hcmQgbWF5IHNvdXJjZSBzZXZlcmFsIGRpZmZlcmVudCBwYW5lbHM/Cj4+Pgo+Pj4gQUtB
-OiBvbiBzb21lIGJvYXJkcyBhbiBPRE0gbWF5IHdhbnQgdG8gc2Vjb25kIHNvdXJjZSAob3IgdGhp
-cmQgc291cmNlLAo+Pj4gb3IgLi4uKSB0aGUgcGFuZWwuICBUaGV5J2xsIHJhbmRvbWx5IGNvbm5l
-Y3Qgc2V2ZXJhbCBkaWZmZXJlbnQgcGFuZWxzCj4+PiB0byB0aGUgYm9hcmQgYW5kIHNoaXAgdGhl
-IGJvYXJkcyBvdXQuICBUaGUgcGFuZWxzIGFyZSBhbGwgY29tcGF0aWJsZQo+Pj4gZWxlY3RyaWNh
-bGx5IChzYW1lIHBvd2VyIHNlcXVlbmNpbmcpIGJ1dCBtaWdodCBuZWVkIHNsaWdodGx5IGRpZmZl
-cmVudAo+Pj4gdGltaW5ncy4gIEluIHRoaXMgcGFydGljdWxhciBjYXNlIHRoZXJlJ3Mgbm8gYm9h
-cmQtbGV2ZWwgc3RyYXBwaW5ncwo+Pj4gZm9yIHRoZSBkaWZmZXJlbnQgcGFuZWxzLS1pdCdzIGFz
-c3VtZWQgdGhhdCB0aGUgRURJRCBvbiB0aGUgcGFuZWxzIGNhbgo+Pj4gYmUgdXNlZCB0byBkaXN0
-aW5ndWlzaCB0aGVtLgo+Pj4KPj4+IEluIHRoYXQgY2FzZSBpdCBzZWVtcyBsaWtlIGl0IHdvdWxk
-IGJlIG5pY2UgdG8gYWxsb3cgc3BlY2lmeWluZyBtb3JlCj4+PiB0aGFuIG9uZSAicGFuZWwtdGlt
-aW5nIiBub2Rlcy4gIE1heWJlIGtleWVkIG9mZiBzb21lIHR5cGUgb2YgSUQgdGhhdCdzCj4+PiBw
-cmVzZW50IGluIHRoZSBFRElEPwo+Pj4KPj4+Cj4+PiBJcyB0aGF0IHNvbWV0aGluZyB3ZSdkIHdh
-bnQgdG8gYWNjb3VudCBmb3IgYmVmb3JlIHdlIGxhbmQgdGhpcyBzZXJpZXM/Cj4+PiAgSXQgc2Vl
-bXMgbGlrZSBpdCB3b3VsZCBqdXN0IGJlIGFkZGluZyBhbiBleHRyYSBsZXZlbCBvZiBub2Rlcz8K
-Pj4+Cj4+Cj4+IEFGQUlDUywgdGhlcmUgaXMgbm8gRURJRCB3aXRob3V0IGEgRERDIGJ1cywgd2hp
-Y2ggd2UgZG9uJ3QKPj4gc2VlbSB0byBoYXZlIG9uIGdydSBwbGF0Zm9ybXMsIGRvIHdlPwo+Cj4g
-SSdtIGZhaXJseSBjZXJ0YWluIHdlIGNhbiByZWFkIHRoZSBFRElEIG9uIGdydSBkZXZpY2VzLiAg
-SSBzZWUgdGhlCj4gImF1eCIgY2hhbm5lbCBjb25uZWN0ZWQgb24gdGhlIHNjaGVtYXRpY3MuICBU
-aGF0J2xsIGRvIGl0LCByaWdodD8KPiAuLi5hbmQgSSBjb3VsZCBoYXZlIHN3b3JuIHRoYXQgYXQg
-c29tZSBwb2ludCBpbiB0aW1lIEkgY291bGQgcmVhZCB0aGUKPiBFRElEIGluIHRoZSBzb2Z0d2Fy
-ZS4gIE15IGtldmluIGRldmljZXMgYXJlIG5vdCBjb25uZWN0ZWQgZm9yCj4gZGVidWdnaW5nIHNv
-IEkgY2FuJ3QgY2hlY2sgcmlnaHQgbm93LCBidXQgSSdtIHByZXR0eSBzdXJlIEkgd2FzIGFibGUK
-PiB0byByZWFkIHRoZSBFRElEIGluIHRoZSBwYXN0Li4uCj4KClJpZ2h0LgoKV2VsbCwgSSd2ZSBi
-ZWVuIHRyeWluZyB0byBnZXQgc29tZSBFRElEIHdpdGhvdXQgbXVjaCBzdWNjZXNzLgpQZXJoYXBz
-IEkgYW0gbWlzc2luZyBzb21ldGhpbmc/IFRoZSBJMkMgYXV4IGJ1cyBzZWVtcyBlbXB0eToKCnJv
-b3RAbGluYXJvLWRldmVsb3Blcjovc3lzL2NsYXNzL2kyYy1hZGFwdGVyL2kyYy0xMCMgY2F0IG5h
-bWUKRFAtQVVYCnJvb3RAbGluYXJvLWRldmVsb3Blcjovc3lzL2NsYXNzL2kyYy1hZGFwdGVyL2ky
-Yy0xMCMgaTJjZGV0ZWN0IC15IDEwCiAgICAgMCAgMSAgMiAgMyAgNCAgNSAgNiAgNyAgOCAgOSAg
-YSAgYiAgYyAgZCAgZSAgZgowMDogICAgICAgICAgLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0g
-LS0gLS0gLS0gLS0KMTA6IC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0t
-IC0tIC0tCjIwOiAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAt
-LQozMDogLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0KNDA6
-IC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tCjUwOiAtLSAt
-LSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLQo2MDogLS0gLS0gLS0g
-LS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0KNzA6IC0tIC0tIC0tIC0tIC0t
-IC0tIC0tIC0tCgpJbiBhbnkgY2FzZSwgcGVyaGFwcyBpdCdzIGJldHRlciB0byBub3Qgc3RhbGwg
-dGhpcyBzZXJpZXMKdXBzdHJlYW0gLSBhbmQgd29yayBvbiBzZWNvbmQgc291cmNpbmcgYXMgZm9s
-bG93IHVwCnBhdGNoZXM/CgpUaGFua3MsCi0tIApFemVxdWllbCBHYXJjw61hLCBWYW5ndWFyZGlh
-U3VyCnd3dy52YW5ndWFyZGlhc3VyLmNvbS5hcgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+
+--shhnyvlfu32no7sr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Apr 25, 2018 at 11:19:20AM +0800, Chen-Yu Tsai wrote:
+> On Wed, Apr 25, 2018 at 3:37 AM, Maxime Ripard
+> <maxime.ripard@bootlin.com> wrote:
+> > On Tue, Apr 24, 2018 at 08:17:11PM +0800, Chen-Yu Tsai wrote:
+> >> On Tue, Apr 24, 2018 at 8:13 PM, Maxime Ripard
+> >> <maxime.ripard@bootlin.com> wrote:
+> >> > On Tue, Apr 24, 2018 at 07:34:19PM +0800, Chen-Yu Tsai wrote:
+> >> >> The Libre Computer Project ALL-H3-CC has three models, all using the
+> >> >> same board design, but with different pin compatible SoCs and amoun=
+t of
+> >> >> DRAM.
+> >> >>
+> >> >> Currently only the H3 1GB DRAM variant is supported. To support the=
+ two
+> >> >> other variants, first split the original device tree into a common =
+board
+> >> >> design part and an SoC specific part.
+> >> >>
+> >> >> The SoC part only defines which SoC is used and model name, and inc=
+ludes
+> >> >> the SoC specific dtsi file and the common design dtsi file.
+> >> >>
+> >> >> Also fix up the SPDX identifier line to use the correct comment sty=
+le,
+> >> >> and place it on the first line.
+> >> >>
+> >> >> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> >> >> ---
+> >> >>  .../boot/dts/sun8i-h3-libretech-all-h3-cc.dts | 213 +-------------=
+----
+> >> >>  ....dts =3D> sunxi-hx-libretech-all-h3-cc.dtsi} |  11 +-
+> >> >
+> >> > I think I prefer the name of Neil's DTSI better, and since pretty mu=
+ch
+> >> > the same patches (a couple of hours) before, we'll merge them (while
+> >> > merging the rest of your patches, obviously).
+> >> >
+> >> > Does that work for you?
+> >>
+> >> I would like for the regulator voltage fix to be merged before the spl=
+it.
+> >> This will make it trivial to back port, instead of having to reverse t=
+he
+> >> split, and maybe failing.
+> >
+> > Yes, I was just talking about replacing your two redundant patches,
+> > but keeping the order you have.
+>=20
+> That works for me. Might require a little fixing up.
+> Let me know if you need help with that.
+
+I did. You can double check if you want :)
+
+maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--shhnyvlfu32no7sr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrgdvIACgkQ0rTAlCFN
+r3QNmg/+Nc8al3vygIu1hcUz9Oj5kIvz5x5IY3/FOaT8pWebw5+w6BrA2OOEhYBV
+xpFzJYYsjyvv0nerzXHSU2NLy9LGTCLUSwNfH5p9BUBf+MCOerpvzXkosTnNVhw7
+G5sFrJ//53a+qL/0E+98Ofg1bZ9CwVFyHWDY9gA4RRtUnFpAuK8WeDyew498WbvV
+ulrjE7yHkcvWBQIiSIqySY9I0zO2shya9i/HREsz2fEEIyBpu+fv1qDtUrXoK2sN
+dlVC2ehIH8pPhX2iJgmMnpnbU7/pXDB7u2HgqTSnZtT7TFyA+ACBr3cyOWfXSbmD
+3PGrd5ranvowg4QKWSqCNOTaXKPjlHVHDyoL91B/faqUBKZz8BhDLt4Ar7rP+TR1
+eHW01uEffMPh+hO7Oq1tT5uIOo34+MlKQVLBo1hPojfglA9F5H/tS4hEXXYY8fum
+twCBpbq712qUSDLYW+GFQD3hQi/ArbzVSAu0ZSNpOqydN519kcd9qew9lLURolcR
+/pVWh3wsEeODgeohyuu534E1m1g/AsD66lCO6o6WKT0L1+6QoFHtVokgEKN6+gGX
+3NYmNsDP5ggSCcW8XZkUwfoQBwqvuwmv33e2jRmQiSqy4w4J0eYKZ7y7A2SsMr+G
+DJAmXGQ7ToMlOlIAc/7rPtTR4k7BmnickwEzp7lAJbPBY2jwpPs=
+=1G4v
+-----END PGP SIGNATURE-----
+
+--shhnyvlfu32no7sr--
