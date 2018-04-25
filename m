@@ -1,34 +1,90 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [RFC 08/10] spi: s3c64xx: samsung: Remove support for Exynos5440
-Date: Wed, 25 Apr 2018 14:55:03 +0200
-Message-ID: <CAJKOXPcOCSKbRMEn738MwvS6f2DhxNPDb0BcNn0FY2Jqx1MtbQ@mail.gmail.com>
-References: <20180424203239.21885-1-krzk@kernel.org> <CGME20180424203409epcas2p45f55e5a5d211e78d4cadc3c4ffa5a9c0@epcas2p4.samsung.com>
- <20180424203239.21885-9-krzk@kernel.org> <066e917b-7207-9c10-4d6c-07273c6f49d9@samsung.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v3 00/15] dra7: mmc: Update mmc dt node to use sdhci-omap
+Date: Wed, 25 Apr 2018 18:24:34 +0530
+Message-ID: <20180425125449.19755-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <066e917b-7207-9c10-4d6c-07273c6f49d9@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson=20?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, kishon@ti.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 25, 2018 at 2:49 PM, Sylwester Nawrocki
-<s.nawrocki@samsung.com> wrote:
-> On 04/24/2018 10:32 PM, Krzysztof Kozlowski wrote:
->> The Exynos5440 is not actively developed, there are no development
->> boards available and probably there are no real products with it.
->> Remove wide-tree support for Exynos5440.
->>
->> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> It's good you didn't remove S3C64XX_SPI_QUIRK_POLL entirely as it will
-> be needed for Exynos5433 ISP SPI controllers.
+Previous version of the patch series was sent here
+https://lkml.org/lkml/2018/2/6/250
 
-Ah, actually I did not plan to skip it... I just missed it :).
-I should check affected drivers if this removal left any unused
-symbols (except the one mentioned).
+Most of the patches sent for v2 was merged. Remaining unmerged patches
+from v2 and a few additional patches are sent here.
 
-Thanks for hint!
+This series should be merged only after [1].
+[1] -> https://marc.info/?l=linux-kernel&m=152465820531802&w=2
 
-Krzysztof
+This series:
+ *) Adds wilink wlan support (Now all MMC instances in DRA7 will use
+    sdhci-omap)
+ *) Add a new pinctrl group for clk line without pullup required for
+    UHS cards to work reliably.
+ *) Update README to make sure users update .config file from 4.18
+    kernel.
+ *) Use sdhci-omap programming model.
+
+In the "Use sdhci-omap programming model" patch, "ti,omap4-hsmmc"
+compatible is removed. This is because if both "ti,dra7-sdhci" and
+"ti,omap4-hsmmc" is added and if there is probe deferral in sdhci_omap
+driver, the device is binding to omap_hsmmc driver.
+
+Once omap_hsmmc and sdhci_omap driver are feature identical,
+sdhci_omap driver will be made to support omap_hsmmc binding
+(including "ti,omap4-hsmmc" compatible) and omap_hsmmc driver will
+be removed. Till then dt nodes with "ti,omap4-hsmmc" compatible
+will use omap_hsmmc driver and "ti,dra7-sdhci" compatible will
+use sdhci_omap driver.
+
+Hari Nagalla (2):
+  ARM: dts: dra72-evm-common: Add wilink8 wlan support
+  ARM: dts: dra7-evm: Add wilink8 wlan support
+
+Kishon Vijay Abraham I (11):
+  ARM: dts: dra72-evm-common: Remove mmc specific pinmux
+  ARM: dts: dra71-evm: Add "vqmmc-supply" property for mmc2
+  ARM: dts: dra72x-mmc-iodelay: Add a new pinctrl group for clk line
+    without pullup
+  ARM: dts: dra74x-mmc-iodelay: Add a new pinctrl group for clk line
+    without pullup
+  ARM: dts: dra76x-mmc-iodelay: Add a new pinctrl group for clk line
+    without pullup
+  ARM: dts: am57xx-idk: Use pinctrl group from dra7xx-mmc-iodelay.dtsi
+    to select pulldown
+  ARM: dts: dra71-evm: Use pinctrl group from dra72x-mmc-iodelay.dtsi to
+    select pulldown
+  ARM: dts: dra7-evm: Model EVM_3V6 regulator
+  ARM: dts: dra7: Use sdhci-omap programming model
+  ARM: dts: dra7: Add high speed modes capability to MMC1/MMC2 dt node
+  Documentation: ARM: Add new MMC requirements for DRA7/K2G
+
+Sekhar Nori (1):
+  ARM: dts: am574x-idk: Add pinmux configuration for MMC
+
+Vishal Mahaveer (1):
+  ARM: dts: dra76-evm: Add wilink8 wlan support
+
+ Documentation/arm/OMAP/README                 |  4 ++
+ arch/arm/boot/dts/am571x-idk.dts              |  2 +-
+ arch/arm/boot/dts/am572x-idk.dts              |  2 +-
+ arch/arm/boot/dts/am574x-idk.dts              | 19 +++++
+ .../boot/dts/am57xx-beagle-x15-common.dtsi    |  4 +-
+ arch/arm/boot/dts/am57xx-beagle-x15.dts       |  1 +
+ arch/arm/boot/dts/am57xx-idk-common.dtsi      |  3 +-
+ arch/arm/boot/dts/dra7-evm-common.dtsi        | 15 ++++
+ arch/arm/boot/dts/dra7-evm.dts                | 68 ++++++++++++++++++
+ arch/arm/boot/dts/dra7.dtsi                   | 30 ++++----
+ arch/arm/boot/dts/dra71-evm.dts               | 16 +----
+ arch/arm/boot/dts/dra72-evm-common.dtsi       | 71 +++++++++++--------
+ arch/arm/boot/dts/dra72x-mmc-iodelay.dtsi     | 22 ++++++
+ arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi     | 11 +++
+ arch/arm/boot/dts/dra76-evm.dts               | 34 ++++++++-
+ arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi     | 11 +++
+ 16 files changed, 248 insertions(+), 65 deletions(-)
+
+-- 
+2.17.0
