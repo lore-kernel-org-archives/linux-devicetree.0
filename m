@@ -1,46 +1,27 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 04/15] ARM: dts: dra74x-mmc-iodelay: Add a new pinctrl
- group for clk line without pullup
-Date: Wed, 25 Apr 2018 06:35:29 -0700
-Message-ID: <20180425133529.GU5671@atomide.com>
-References: <20180425125449.19755-1-kishon@ti.com>
- <20180425125449.19755-5-kishon@ti.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 4/5] ARM: dts: imx6sx-sabreauto: add fec support
+Date: Wed, 25 Apr 2018 10:46:48 -0300
+Message-ID: <CAOMZO5AS=aH8p1+tmgJ4ooeqExNqOALh7vbPAsQdqdky8CkXyQ@mail.gmail.com>
+References: <1524455219-6736-1-git-send-email-Anson.Huang@nxp.com>
+ <1524455219-6736-4-git-send-email-Anson.Huang@nxp.com> <CAOMZO5CDAQtw7Q6NgSzKP4ogaqRaGSE0A+st1iqZ=cQsK49moQ@mail.gmail.com>
+ <AM3PR04MB131566E1C8033D256686F192F5880@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5Dm=MFRoh=y54Qf2RrncWfQPTUJ2ZNfvYnUD=idp8RPNA@mail.gmail.com>
+ <AM3PR04MB1315ED599A20F67BB9FEFEE1F58F0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <AM3PR04MB1315B04BE46755E3EB82E04CF58F0@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180425125449.19755-5-kishon@ti.com>
+In-Reply-To: <AM3PR04MB1315B04BE46755E3EB82E04CF58F0@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Kishon Vijay Abraham I <kishon@ti.com> [180425 12:57]:
-> --- a/arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi
-> +++ b/arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi
-> @@ -49,6 +49,17 @@
->  		>;
->  	};
->  
-> +	mmc1_pins_default_no_clk_pu: mmc1_pins_default_no_clk_pu {
-> +		pinctrl-single,pins = <
-> +			DRA7XX_CORE_IOPAD(0x3754, PIN_INPUT_PULLDOWN | MUX_MODE0) /* mmc1_clk.clk */
-> +			DRA7XX_CORE_IOPAD(0x3758, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_cmd.cmd */
-> +			DRA7XX_CORE_IOPAD(0x375c, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat0.dat0 */
-> +			DRA7XX_CORE_IOPAD(0x3760, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat1.dat1 */
-> +			DRA7XX_CORE_IOPAD(0x3764, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat2.dat2 */
-> +			DRA7XX_CORE_IOPAD(0x3768, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat3.dat3 */
-> +		>;
-> +	};
-> +
->  	mmc1_pins_sdr12: mmc1_pins_sdr12 {
->  		pinctrl-single,pins = <
->  			DRA7XX_CORE_IOPAD(0x3754, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_clk.clk */
-> -- 
+Hi Anson,
 
-If this data is the same for all of them, why don't you add something
-like dra7-iodelay.dtsi that can be included as needed?
+On Wed, Apr 25, 2018 at 2:36 AM, Anson Huang <anson.huang@nxp.com> wrote:
 
-Regards,
+> Sorry, I made a mistake here, the MAX7320 IO0 is for adjusting FEC1's voltage,
 
-Tony
+In this case you need to pass the 'phy-supply' property inside the fec
+node and add a regulator that is controlled via MAX7320 IO0 pin.
