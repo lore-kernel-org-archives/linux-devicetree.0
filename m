@@ -1,43 +1,30 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 2/2] ARM: dts: r8a7740: Add CEU0
-Date: Thu, 26 Apr 2018 20:24:43 +0200
-Message-ID: <1524767083-19862-3-git-send-email-jacopo+renesas@jmondi.org>
-References: <1524767083-19862-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH] Revert "ata: ahci-platform: add reset control support"
+Date: Thu, 26 Apr 2018 12:20:40 -0700
+Message-ID: <20180426192040.GT1911913@devbig577.frc2.facebook.com>
+References: <1523237554-7928-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <c8ec7474-7eb4-24cf-1f53-b4bcee5508dd@redhat.com>
+ <20180418083647.GA5503@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524767083-19862-1-git-send-email-jacopo+renesas@jmondi.org>
+Content-Disposition: inline
+In-Reply-To: <20180418083647.GA5503@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
-To: geert@linux-m68k.org, horms@verge.net.au, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-ide@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Describe CEU0 peripheral for Renesas R-Mobile A1 R8A7740 Soc.
+Hello,
 
-Reported-by: Geert Uytterhoeven <geert@glider.be>
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- arch/arm/boot/dts/r8a7740.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+On Wed, Apr 18, 2018 at 10:36:47AM +0200, Thierry Reding wrote:
+> I see that you've applied this to your for-next branch. However, this is
+> a fix that needs to go into v4.17 because that's where the regression
+> was introduced. Is there any way you can promote this to a fixes branch?
 
-diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-index afd3bc5..508d934 100644
---- a/arch/arm/boot/dts/r8a7740.dtsi
-+++ b/arch/arm/boot/dts/r8a7740.dtsi
-@@ -67,6 +67,16 @@
- 		power-domains = <&pd_d4>;
- 	};
- 
-+	ceu0: ceu@fe910000 {
-+		reg = <0xfe910000 0x3000>;
-+		compatible = "renesas,r8a7740-ceu";
-+		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp1_clks R8A7740_CLK_CEU20>;
-+		clock-names = "ceu20";
-+		power-domains = <&pd_a4r>;
-+		status = "disabled";
-+	};
-+
- 	cmt1: timer@e6138000 {
- 		compatible = "renesas,cmt-48-r8a7740", "renesas,cmt-48";
- 		reg = <0xe6138000 0x170>;
+It's in for-4.17-fixes.  I'll push it out early next week.
+
+Thanks.
+
 -- 
-2.7.4
+tejun
