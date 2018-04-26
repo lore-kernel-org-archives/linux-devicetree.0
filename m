@@ -1,45 +1,34 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH] ARM64: dts: meson: disable sd-uhs modes on the libretech-cc
-Date: Thu, 26 Apr 2018 12:50:46 +0200
-Message-ID: <20180426105046.14817-1-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 0/2] Use R8A77980 CPG core clock and SYSC power domain macros
+Date: Thu, 26 Apr 2018 13:40:53 +0300
+Message-ID: <ea6d3e8a-71a9-9998-f364-7dc82b97c2c0@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-There is a problem with the sd-uhs mode when doing a soft reboot.
-Switching back from 1.8v to 3.3v messes with the card, which no longer
-respond (timeout errors). According to the specification, we should
-perform a card reset (power cycling the card) but this is something we
-cannot control on this design.
+Hello!
 
-Then the only solution to restore the communication with the card is an
-"unplug-plug" which is not acceptable
+Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20180425-v4.17-rc2' tag. Now that the R8A77980 CPG core clock
+and SYSC power domain #define's have hit Linus' tree, we can replace the bare
+numbers (we had to use to avoid a cross tree dependencies) with these #define's,
+at last...
 
-Until we find a solution, if any, disable the sd-uhs modes on this design.
-For the people using uhs at the moment, there will a performance drop as
-a result.
+[1/2] arm64: dts: renesas: r8a77980: use CPG core clock macros
+[2/2] arm64: dts: renesas: r8a77978: use SYSC power domain macros
 
-Fixes: 3cde63ebc85c ("ARM64: dts: meson-gxl: libretech-cc: enable high speed modes")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-index 3e3eb31748a3..f63bceb88caa 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-@@ -234,9 +234,6 @@
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
--	sd-uhs-sdr12;
--	sd-uhs-sdr25;
--	sd-uhs-sdr50;
- 	max-frequency = <100000000>;
- 	disable-wp;
- 
--- 
-2.14.3
+WBR, Sergei
