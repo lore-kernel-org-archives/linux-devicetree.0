@@ -1,56 +1,39 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 4/5] ARM: dts: imx6sx-sabreauto: add fec support
-Date: Thu, 26 Apr 2018 14:28:35 -0300
-Message-ID: <CAOMZO5Df__UpcLXVUrW0sT24g=Kmu2132QeQSBE9aZrjcyqsCw@mail.gmail.com>
-References: <1524455219-6736-1-git-send-email-Anson.Huang@nxp.com>
- <1524455219-6736-4-git-send-email-Anson.Huang@nxp.com> <CAOMZO5CDAQtw7Q6NgSzKP4ogaqRaGSE0A+st1iqZ=cQsK49moQ@mail.gmail.com>
- <AM3PR04MB131566E1C8033D256686F192F5880@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5Dm=MFRoh=y54Qf2RrncWfQPTUJ2ZNfvYnUD=idp8RPNA@mail.gmail.com>
- <AM3PR04MB1315ED599A20F67BB9FEFEE1F58F0@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <AM3PR04MB1315B04BE46755E3EB82E04CF58F0@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5AS=aH8p1+tmgJ4ooeqExNqOALh7vbPAsQdqdky8CkXyQ@mail.gmail.com> <DB5PR04MB132072FEDCAFEDF6592C6A32F58E0@DB5PR04MB1320.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v4 4/7] gpio: pca953x: define masks for addressing common and extended registers
+Date: Thu, 26 Apr 2018 19:34:59 +0200
+Message-ID: <602635f43a68cac5cfb973528320f2304e10b178.1524764101.git.hns@goldelico.com>
+References: <cover.1524764101.git.hns@goldelico.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB5PR04MB132072FEDCAFEDF6592C6A32F58E0@DB5PR04MB1320.eurprd04.prod.outlook.com>
+In-Reply-To: <cover.1524764101.git.hns@goldelico.com>
+In-Reply-To: <cover.1524764101.git.hns@goldelico.com>
+References: <cover.1524764101.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Andy Duan <fugang.duan@nxp.com>
+To: galak@codeaurora.org, andy.shevchenko@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 3:57 AM, Anson Huang <anson.huang@nxp.com> wrote:
+These mask bits are to be used to map the extended register
+addreseses (which are defined for an unsupported 8-bit pcal chip)
+to 16 and 24 bit chips (pcal6524).
 
-> The 'phy-supply' is for enabling/disabling phy regulator, but here the MAX7322 IO0 is NOT for
-> enabling/disabling PHY regulator, it is for IO voltage switch between 1.5V and 1.8V, our ENET
-> IO can work with both 1.5V and 1.8V, so any config is OK for ENET function.
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ drivers/gpio/gpio-pca953x.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Thanks for the clarification.
-
-> The 1.5V/1.8V selection is a one time setting thing, that means we only need to
-> config it once during boot up, most of i.MX platforms does NOT provide such voltage
-> switch function for ENET IO, on this 6SX sabre auto board, it is more like a backup or
-> validation purpose. With default settings, ENET's function is NOT impacted at all.
->
-> I think we can add a gpio regulator for it and let the regulator initialization set the GPIO
-> Level for fec, such below, with " enable-active-high " present, GPIO will be at LOW and voltage
-> is 1.5V, without this property, GPIO will be HIGH and voltage will be 1.8V.
-> +               reg_fec: fec_io_supply {
-> +                       compatible = "regulator-gpio";
-> +                       regulator-name = "1.8V_1.5V_FEC";
-> +                       regulator-min-microvolt = <1500000>;
-> +                       regulator-max-microvolt = <1800000>;
-> +                       states = <1500000 0x0 1800000 0x1>;
-> +                       enable-gpio = <&max7322 0 GPIO_ACTIVE_HIGH>;
-> +                       vin-supply = <&sw2_reg>;
-> +                       enable-active-high;
-
-If there is no consumer for this regulator, the regulator API will disable it.
-
-It seems you need a 'regulator-always-on;'.
-
-
-> +               };
-> +
->
-> Anson.
->
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 2b667166e855..fc863faa3ce4 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -56,6 +56,9 @@
+ #define PCAL6524_DEBOUNCE	0x2d
+ 
+ #define PCA_GPIO_MASK		0x00FF
++#define PCAL_GPIO_MASK		GENMASK(4, 0)
++#define PCAL_PINCTRL_MASK	(~PCAL_GPIO_MASK)
++
+ #define PCA_INT			0x0100
+ #define PCA_PCAL		0x0200
+ #define PCA_LATCH_INT (PCA_PCAL | PCA_INT)
+-- 
+2.12.2
