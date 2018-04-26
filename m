@@ -1,55 +1,82 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 6/6] arm64: dts: rockchip: Specify override mode for
- kevin panel
-Date: Thu, 26 Apr 2018 08:29:17 -0700
-Message-ID: <CAD=FV=U-CL6msCicDhE28huONe0T_ChE+FKZ1CkEJOK=WKryGQ@mail.gmail.com>
-References: <20180208174855.55620-1-seanpaul@chromium.org>
- <20180208174855.55620-7-seanpaul@chromium.org>
- <CAD=FV=WGU+s015DQbNeWHkpqpHLFz+9AjHKAd0N3HWag0p5FWA@mail.gmail.com>
- <20180426120528.GA11985@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180426120528.GA11985@ulmo>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Arnd Bergmann <arnd@arndb.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, Will Deacon <will.deacon@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, hoegsberg@chromium.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Emil Renner Berthing <kernel@esmil.dk>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH RFC PoC 0/2] platform: different approach to early platform drivers
+Date: Thu, 26 Apr 2018 17:29:18 +0200
+Message-ID: <20180426152920.21569-1-brgl@bgdev.pl>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@siemens.com>, And
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUaHUsIEFwciAyNiwgMjAxOCBhdCA1OjA1IEFNLCBUaGllcnJ5IFJlZGluZwo8dGhp
-ZXJyeS5yZWRpbmdAZ21haWwuY29tPiB3cm90ZToKPiBJZiB5b3UndmUgZ290IGFuIEVESUQgeW91
-IHNob3VsZCBiZSByZWx5aW5nIG9uIHRoZSBFRElEIHRvIHByb3ZpZGUgdGhlCj4gdGltaW5ncy4g
-Tm8gbmVlZCB0byBoYXZlIGFueSB0aW1pbmdzIGluIHRoZSBEVCBpbiB0aGF0IGNhc2UuCgpUaGUg
-cHJvYmxlbSB0aGF0J3Mgc3BlY2lmaWNhbGx5IHRyeWluZyB0byBiZSBzb2x2ZWQgYnkgU2Vhbidz
-IHNlcmllcwppcyB3aGVuIHdlIGhhdmUgdG8gdXNlIHRpbWluZ3Mgb3RoZXIgdGhhbiB0aGUgb25l
-IHN1Z2dlc3RlZCBieSB0aGUKRURJRC4gIFNwZWNpZmljYWxseToKCiogT24gbWFueSBSb2NrY2hp
-cCBTb0NzIHRoZXJlIGlzIG9ubHkgb25lICJleHRyYSIgUExMIGF2YWlsYWJsZS4gIFRoaXMKZXh0
-cmEgUExMIGNhbiBvbmx5IGJlIHVzZWQgYnkgb25lIG9mIHRoZSB0d28gZGlzcGxheXMgKGVEUCBm
-b3IKaW50ZXJuYWwgcGFuZWwgb3IgSERNSS9EUCBmb3IgZXh0ZXJuYWwgZGlzcGxheSkuICBUaGUg
-b3RoZXIgZGlzcGxheQpoYXMgdG8gdXNlIG9uZSBvZiB0aGUgInNoYXJlZCIgUExMcyBpbiB0aGUg
-c3lzdGVtLiAgVGhlc2UgUExMcyBoYXZlCnRoZWlyIHJhdGUgc2V0IGF0IGJvb3QgYW5kIGFyZW4n
-dCBjaGFuZ2VkLgoKKiBJbiBvcmRlciB0byBwcm92aWRlIG1heGltdW0gZmxleGliaWxpdHkgdG8g
-Y29ubmVjdCBleHRlcm5hbApkaXNwbGF5cywgd2UgYWx3YXlzIHdhbnQgdGhlICJleHRyYSIgUExM
-IGRlZGljYXRlZCB0byB0aGUgZXh0ZXJuYWwKZGlzcGxheSBwb3J0LiAgVGhlbiB3ZSBjYW4gbWFr
-ZSBsb3RzIG9mIHBpeGVsIGNsb2Nrcy4KCiogV2Ugd29yayB3aXRoIGRldmljZSBhbmQgZGlzcGxh
-eSBtYW51ZmFjdHVyZXJzIHRvIGZpZ3VyZSBvdXQgYSBwaXhlbApjbG9jayB0aGF0IGlzIGFjaGll
-dmFibGUgd2l0aCB0aGUgc2hhcmVkIFBMTHMgYW5kIHRoYXQgaGFzIHZhbGlkCnRpbWluZ3MuICBU
-aGlzIGlzIHRoZSB0aGUgcGl4ZWwgY2xvY2sgdGhhdCB3YXMgdXNlZCB3aGVuIHRlc3RpbmcgRU1J
-LApldGMuICBJdCBpcyB0aGUgb25lIHRoYXQgc2hvdWxkIGJlIHVzZWQuCgoqIFBhbmVsIG1hbnVm
-YWN0dXJlcnMgYWdyZWVkIHRoYXQgdGhpcyBwaXhlbCBjbG9jayB3YXMgZ29vZCB0byB1c2UsCmJ1
-dCB3ZSBkaWRuJ3QgZ2V0IGFuIHVwZGF0ZWQgRURJRCB0aGF0IHN1Z2dlc3RlZCB0aGlzIG1vZGUu
-ICBJdCdzIG15CnVuZGVyc3RhbmRpbmcgdGhhdCBwYW5lbHMgd2VyZSBhbHJlYWR5IGF2YWlsYWJs
-ZSBhbmQgaXQgZGlkbid0IHJlYWxseQptYWtlIHNlbnNlIHRvIHByb2dyYW0gaW4gYW4gRURJRCB0
-byB3b3JrIGFyb3VuZCBhIGNlcnRhaW4gYm9hcmQuCgoKCi1Eb3VnCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+This is a follow to my series[1] the aim of which was to introduce device tree
+support for early platform devices.
+
+It was received rather negatively. Aside from using device tree to pass
+implementation specific details to the system, two important concerns were
+raised: no probe deferral support and the fact that currently the early devices
+never get converted to actual platform drivers. This series is a
+proof-of-concept that's trying to address those issues.
+
+The only user of the current version of early platform drivers is the SuperH
+architecture. If this series eventually gets merged, we could simply replace
+the other solution.
+
+The current implementation of early platform drivers is pretty much a hack
+built on top of the early_param mechanism. The devices only look like platform
+devices and use the same structures but never actually get registered with the
+driver model.
+
+The idea behind this series is to allow users to probe platform devices very
+early in the boot sequence and then switch the early devices to actual platform
+devices and the early drivers to platform drivers in during device_initcall.
+
+If any of the early registration functions is called after device_initcall,
+we'll just end up calling the normal platform_driver/device_register routines.
+
+The user can specify if he wants the device to be probed the second time after
+this conversion and the check if it's an early or a normal probe from the
+driver code.
+
+We also support a simple version of probe deferral: initially each new
+registered device is added to the head of the early devices list. If it matches
+an early driver, it will be probed. If probe return -EPROBE_DEFER, it will be
+moved to the tail of the list and reprobed the next time we match a device
+but after all other devices.
+
+This implementation has certain shortcomings that will be addressed if the
+feedback is at least somewhat positive. For instance: the driver registration
+happens in early_initcall(). This may be too late for certain clocksource or
+clk drivers. The solution for that would be defining a new section in which the
+init callbacks of the drivers would reside and let the architecture call the
+actual registration function whenever it's needed.
+
+I also need to figure out if any locking is needed.
+
+We don't support DT in this series either. The proposed approach would be to
+walk over the devices nodes early in the boot sequence and allocate and probe
+the matching early devices and then register them with the driver model later.
+
+[1] https://lkml.org/lkml/2018/4/24/937
+
+Bartosz Golaszewski (2):
+  earlydev: implement a new way to probe platform devices early
+  misc: implement a dummy early platform driver
+
+ drivers/base/Kconfig            |   3 +
+ drivers/base/Makefile           |   1 +
+ drivers/base/earlydev.c         | 175 ++++++++++++++++++++++++++++++++
+ drivers/base/platform.c         |  11 ++
+ drivers/misc/Kconfig            |   8 ++
+ drivers/misc/Makefile           |   1 +
+ drivers/misc/dummy-early.c      |  46 +++++++++
+ include/linux/earlydev.h        |  63 ++++++++++++
+ include/linux/platform_device.h |   4 +
+ 9 files changed, 312 insertions(+)
+ create mode 100644 drivers/base/earlydev.c
+ create mode 100644 drivers/misc/dummy-early.c
+ create mode 100644 include/linux/earlydev.h
+
+-- 
+2.17.0
