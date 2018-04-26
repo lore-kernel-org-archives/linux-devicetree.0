@@ -1,70 +1,78 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: mediatek: add MT7622 AFE compatible in documentation" to the asoc tree
-Date: Thu, 26 Apr 2018 15:19:24 +0100
-Message-ID: <E1fBhk4-00042f-DB@debutante>
-References: <43bf5fcef0edefef2524122e64400785243f4fdf.1524628914.git.ryder.lee@mediatek.com>
+From: Sibi S <sibis@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: qcom: Add SDM845 SMEM nodes
+Date: Thu, 26 Apr 2018 19:55:12 +0530
+Message-ID: <ade07b7f-4cc6-0a96-85f7-abb5b76ce80e@codeaurora.org>
+References: <20180425144631.19731-1-sibis@codeaurora.org>
+ <20180425220626.GM2052@tuxbook-pro>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <43bf5fcef0edefef2524122e64400785243f4fdf.1524628914.git.ryder.lee@mediatek.com>
+In-Reply-To: <20180425220626.GM2052@tuxbook-pro>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Garlic Tseng <garlic.tseng@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.orgalsa-devel@alsa-project.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi Bjorn,
 
-   ASoC: mediatek: add MT7622 AFE compatible in documentation
+Thanks for the review
 
-has been applied to the asoc tree at
+On 04/26/2018 03:36 AM, Bjorn Andersson wrote:
+> On Wed 25 Apr 07:46 PDT 2018, Sibi Sankar wrote:
+>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> index 9be763da0664..bea985045759 100644
+>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> @@ -21,6 +21,27 @@
+>>   		reg = <0 0x80000000 0 0>;
+>>   	};
+>>   
+>> +	reserved-memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		memory@85fc0000 {
+>> +			reg = <0 0x85fc0000 0 0x40000>;
+> 
+> The region 0x85fe0000 + 0x20000 seems to be command db, which should be
+> described on its own. So please reduce the size to 0x20000.
+> 
+>> +			no-map;
+>> +		};
+>> +
+>> +		smem_mem: smem-mem@86000000 {
+> 
+> smem_mem: memory@86000000 ?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+Should I update kernel docs as well to say all nodes should
+have memory has default name? Just followed what was done in
+msm8916 and msm8996.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> 
+>> +			reg = <0x0 0x86000000 0x0 0x200000>;
+>> +			no-map;
+>> +		};
+>> +
+>> +		memory@86000000 {
+> 
+> memory@86200000
+> 
+>> +			reg = <0 0x86200000 0 0x2d00000>;
+>> +			no-map;
+>> +		};
+>> +	};
+>> +
+> 
+> The rest looks good.
+> 
+> Regards,
+> Bjorn
+> 
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From eaeb4194de9c843742f421daa858f27e7c89a625 Mon Sep 17 00:00:00 2001
-From: Ryder Lee <ryder.lee@mediatek.com>
-Date: Wed, 25 Apr 2018 12:19:58 +0800
-Subject: [PATCH] ASoC: mediatek: add MT7622 AFE compatible in documentation
-
-Add support for MT7622 AFE which shares the same binding with MT2701.
-
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt b/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-index e2f7f4951215..560762e0a168 100644
---- a/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-+++ b/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-@@ -1,7 +1,9 @@
- Mediatek AFE PCM controller for mt2701
- 
- Required properties:
--- compatible = "mediatek,mt2701-audio";
-+- compatible: should be one of the followings.
-+	      - "mediatek,mt2701-audio"
-+	      - "mediatek,mt7622-audio"
- - interrupts: should contain AFE and ASYS interrupts
- - interrupt-names: should be "afe" and "asys"
- - power-domains: should define the power domain
 -- 
-2.17.0
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
