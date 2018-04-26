@@ -1,78 +1,57 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v4 01/12] mmc: sdhci-omap: Fix when capabilities are
- obtained from SDHCI_CAPABILITIES reg
-Date: Thu, 26 Apr 2018 10:57:33 +0300
-Message-ID: <e083256d-96f8-3f1e-76d1-8062dcfd1a21@intel.com>
-References: <20180425120937.29867-1-kishon@ti.com>
- <20180425120937.29867-2-kishon@ti.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [RFC 06/10] thermal: samsung: Remove support for Exynos5440
+Date: Thu, 26 Apr 2018 09:59:15 +0200
+Message-ID: <CAJKOXPc4oDAFThxVszOrCr+yEaK85W3AeYTcLFyGm0-6TLyZyw@mail.gmail.com>
+References: <20180424203239.21885-1-krzk@kernel.org> <CGME20180424203603epcas5p4cdd2039eabe7039e4daf286ed4c1ecc0@epcas5p4.samsung.com>
+ <20180424203239.21885-7-krzk@kernel.org> <5AE12E4A.90907@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180425120937.29867-2-kishon@ti.com>
-Content-Language: en-US
+In-Reply-To: <5AE12E4A.90907@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25/04/18 15:09, Kishon Vijay Abraham I wrote:
-> sdhci_omap_config_iodelay_pinctrl_state() requires caps and caps2 to be
-> initialized (speed mode capabilities like UHS/HS200) before it is
-> invoked. While mmc_of_parse() initializes caps/caps2 if capabilities is
-> populated in device tree, it will remain uninitialized for capabilities
-> obtained from SDHCI_CAPABILITIES register.
-> Fix sdhci_omap_config_iodelay_pinctrl_state() to be used even while
-> getting the capabilities from SDHCI_CAPABILITIES register by invoking
-> sdhci_setup_host() before sdhci_omap_config_iodelay_pinctrl_state().
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Acked-by: Tony Lindgren <tony@atomide.com>
+On Thu, Apr 26, 2018 at 3:41 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+> Hi Krzysztof,
+>
+> On 2018년 04월 25일 05:32, Krzysztof Kozlowski wrote:
+>> The Exynos5440 is not actively developed, there are no development
+>> boards available and probably there are no real products with it.
+>> Remove wide-tree support for Exynos5440.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> ---
+>>  .../devicetree/bindings/thermal/exynos-thermal.txt |  14 +-
+>>  drivers/thermal/samsung/exynos_tmu.c               | 155 +--------------------
+>>  drivers/thermal/samsung/exynos_tmu.h               |   1 -
+>>  3 files changed, 4 insertions(+), 166 deletions(-)
+>
+>
+> After applied this patch, I tested the build and found out
+> 'exynos5440' keyword. There is one comment including 'exynos5440' as following:
+>
+> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+> index f92f470bce21..cb525228cfe1 100644
+> --- a/drivers/thermal/samsung/exynos_tmu.c
+> +++ b/drivers/thermal/samsung/exynos_tmu.c
+> @@ -943,7 +943,7 @@ static void exynos4210_tmu_clear_irqs(struct exynos_tmu_data *data)
+>          * Exynos3250, Exynos4412, Exynos5250 and Exynos5260 incorrectly
+>          * states that INTCLEAR register has a different placing of bits
+>          * responsible for FALL IRQs than INTSTAT register.  Exynos5420
+> -        * and Exynos5440 documentation is correct (Exynos4210 doesn't
+> +        * documentation is correct (Exynos4210 doesn't
+>          * support FALL IRQs at all).
+>          */
+>         writel(val_irq, data->base + tmu_intclear);
+>
+> After removing it, looks good to me.
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Thanks, I left this comment intentionally as it has some meaning even
+when Exynos5440 is not supported.
 
-> ---
->  drivers/mmc/host/sdhci-omap.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-> index 1456abd5eeb9..9bb53702e0e5 100644
-> --- a/drivers/mmc/host/sdhci-omap.c
-> +++ b/drivers/mmc/host/sdhci-omap.c
-> @@ -916,10 +916,6 @@ static int sdhci_omap_probe(struct platform_device *pdev)
->  		goto err_put_sync;
->  	}
->  
-> -	ret = sdhci_omap_config_iodelay_pinctrl_state(omap_host);
-> -	if (ret)
-> -		goto err_put_sync;
-> -
->  	host->mmc_host_ops.get_ro = mmc_gpio_get_ro;
->  	host->mmc_host_ops.start_signal_voltage_switch =
->  					sdhci_omap_start_signal_voltage_switch;
-> @@ -930,12 +926,23 @@ static int sdhci_omap_probe(struct platform_device *pdev)
->  	sdhci_read_caps(host);
->  	host->caps |= SDHCI_CAN_DO_ADMA2;
->  
-> -	ret = sdhci_add_host(host);
-> +	ret = sdhci_setup_host(host);
->  	if (ret)
->  		goto err_put_sync;
->  
-> +	ret = sdhci_omap_config_iodelay_pinctrl_state(omap_host);
-> +	if (ret)
-> +		goto err_cleanup_host;
-> +
-> +	ret = __sdhci_add_host(host);
-> +	if (ret)
-> +		goto err_cleanup_host;
-> +
->  	return 0;
->  
-> +err_cleanup_host:
-> +	sdhci_cleanup_host(host);
-> +
->  err_put_sync:
->  	pm_runtime_put_sync(dev);
->  
-> 
+Best regards,
+Krzysztof
