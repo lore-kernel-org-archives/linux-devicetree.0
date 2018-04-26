@@ -1,44 +1,35 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/5] dt-bindings: pinctrl: document the STMFX pinctrl bindings
-Date: Thu, 26 Apr 2018 14:49:44 +0200
-Message-ID: <CACRpkdYOMjjYyWQz7PK34jqUK7z5-CmH1HY6un4k8nBn7Cq8ag@mail.gmail.com>
-References: <1523440025-18077-1-git-send-email-amelie.delaunay@st.com>
- <1523440025-18077-2-git-send-email-amelie.delaunay@st.com> <20180416181940.4b5z4svbde3ompij@rob-hp-laptop>
+Subject: Re: [PATCH v3] gpio: dwapb: Add support for 1 interrupt per port A GPIO
+Date: Thu, 26 Apr 2018 14:58:02 +0200
+Message-ID: <CACRpkdaCnJw2y42txr1vC_fdPKT4bfdG_rrpEhwdL8HQULT-YA@mail.gmail.com>
+References: <1523609472-4481-1-git-send-email-phil.edworthy@renesas.com>
+ <CAFHUOYziPaZC-Zcb7rXqC9p24H+CU4wK4NQShQkYLgH7c5mVwA@mail.gmail.com>
+ <TY1PR01MB1769DB39F986BEADEF61F8C9F5B30@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+ <CAFHUOYzPO+99HMLV7i1=ZoQG3vKRp2v5GzJdpW9yoWovx8D91Q@mail.gmail.com> <TY1PR01MB17691AADC510B417E3F6E49DF5B50@TY1PR01MB1769.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180416181940.4b5z4svbde3ompij@rob-hp-laptop>
+In-Reply-To: <TY1PR01MB17691AADC510B417E3F6E49DF5B50@TY1PR01MB1769.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Amelie Delaunay <amelie.delaunay@st.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Lee Jones <lee.jones@linaro.org>
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Hoan Tran <hotran@apm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 16, 2018 at 8:19 PM, Rob Herring <robh@kernel.org> wrote:
-> On Wed, Apr 11, 2018 at 11:47:01AM +0200, Amelie Delaunay wrote:
->> This patch adds documentation of device tree bindings for the
->> STMicroelectronics Multi-Function eXpander (STMFX) GPIO expander.
->>
->> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+On Thu, Apr 19, 2018 at 12:03 PM, Phil Edworthy
+<phil.edworthy@renesas.com> wrote:
 
->> +     stmfxpinctrl: stmfx@42 {
->> +             compatible = "st,stmfx-0300";
->> +             reg = <0x42>;
->> +             interrupt-parent = <&gpioi>;
->> +             interrupts = <8 IRQ_TYPE_EDGE_RISING>;
->> +             vdd-supply = <&v3v3>;
->> +             status = "okay";
->
-> Don't show status in examples.
->
->> +
->> +             stmfxgpio: gpio {
->
-> Why does this need to be a sub node? Are there functions beyond GPIO?
+> Since I've already got some reviewed-by and acks for v4, I'll leave it to Linus
+> to decide if he wants me to roll your changes into this patch or for you to
+> submit a separate patch.
 
-Amelie can answer to whether there are, I suspect there
-are and in the review of patch 2 I suggest a MFD parent
-and parent/child spawning of a MFD child for the GPIO
-and pin control device.
+Just
+- Add the reviewed-by and ACKs
+- Fold in Hoan's fix
+- Resend
+
+We are always a bit fuzzy around the edges with carrying ACKs etc
+forward for new revisions. Surely that is fine with this minor
+revision for ACPI.
 
 Yours,
 Linus Walleij
