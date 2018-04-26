@@ -1,138 +1,47 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v2 5/7] MIPS: mscc: Add switch to ocelot
-Date: Thu, 26 Apr 2018 22:51:13 +0200
-Message-ID: <20180426205113.GD23481@lunn.ch>
-References: <20180426195931.5393-1-alexandre.belloni@bootlin.com>
- <20180426195931.5393-6-alexandre.belloni@bootlin.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 08/17] arm64: dts: r8a77965: Provide sysc header definitions
+Date: Thu, 26 Apr 2018 23:53:57 +0300
+Message-ID: <2073410.9lt478HeGL@avalon>
+References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com> <20180426165346.494-9-kieran.bingham+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180426195931.5393-6-alexandre.belloni@bootlin.com>
+In-Reply-To: <20180426165346.494-9-kieran.bingham+renesas@ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, James Hogan <jhogan@kernel.org>
+To: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 09:59:29PM +0200, Alexandre Belloni wrote:
-> Ocelot has an integrated switch, add support for it.
-> 
-> Cc: James Hogan <jhogan@kernel.org>
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Hi Kieran,
+
+Thank you for the patch.
+
+On Thursday, 26 April 2018 19:53:37 EEST Kieran Bingham wrote:
+> Include the r8a77965-sysc header to provide power domain enumerations
+> and definitions.
+
+I think you can squash this with the first patch that will use the header.
+
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 > ---
->  arch/mips/boot/dts/mscc/ocelot.dtsi | 88 +++++++++++++++++++++++++++++
->  1 file changed, 88 insertions(+)
+>  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/dts/mscc/ocelot.dtsi
-> index dd239cab2f9d..4f33dbc67348 100644
-> --- a/arch/mips/boot/dts/mscc/ocelot.dtsi
-> +++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
-> @@ -91,6 +91,72 @@
->  			status = "disabled";
->  		};
->  
-> +		switch@1010000 {
-> +			compatible = "mscc,vsc7514-switch";
-> +			reg = <0x1010000 0x10000>,
-> +			      <0x1030000 0x10000>,
-> +			      <0x1080000 0x100>,
-> +			      <0x10d0000 0x10000>,
-> +			      <0x11e0000 0x100>,
-> +			      <0x11f0000 0x100>,
-> +			      <0x1200000 0x100>,
-> +			      <0x1210000 0x100>,
-> +			      <0x1220000 0x100>,
-> +			      <0x1230000 0x100>,
-> +			      <0x1240000 0x100>,
-> +			      <0x1250000 0x100>,
-> +			      <0x1260000 0x100>,
-> +			      <0x1270000 0x100>,
-> +			      <0x1280000 0x100>,
-> +			      <0x1800000 0x80000>,
-> +			      <0x1880000 0x10000>;
-> +			reg-names = "sys", "rew", "qs", "hsio", "port0",
-> +				    "port1", "port2", "port3", "port4", "port5",
-> +				    "port6", "port7", "port8", "port9", "port10",
-> +				    "qsys", "ana";
-> +			interrupts = <21 22>;
-> +			interrupt-names = "xtr", "inj";
-> +
-> +			ethernet-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port0: port@0 {
-> +					reg = <0>;
-> +				};
-> +				port1: port@1 {
-> +					reg = <1>;
-> +				};
-> +				port2: port@2 {
-> +					reg = <2>;
-> +				};
-> +				port3: port@3 {
-> +					reg = <3>;
-> +				};
-> +				port4: port@4 {
-> +					reg = <4>;
-> +				};
-> +				port5: port@5 {
-> +					reg = <5>;
-> +				};
-> +				port6: port@6 {
-> +					reg = <6>;
-> +				};
-> +				port7: port@7 {
-> +					reg = <7>;
-> +				};
-> +				port8: port@8 {
-> +					reg = <8>;
-> +				};
-> +				port9: port@9 {
-> +					reg = <9>;
-> +				};
-> +				port10: port@10 {
-> +					reg = <10>;
-> +				};
-> +			};
-> +		};
-> +
->  		reset@1070008 {
->  			compatible = "mscc,ocelot-chip-reset";
->  			reg = <0x1070008 0x4>;
-> @@ -113,5 +179,27 @@
->  				function = "uart2";
->  			};
->  		};
-> +
-> +		mdio0: mdio@107009c {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "mscc,ocelot-miim";
-> +			reg = <0x107009c 0x36>, <0x10700f0 0x8>;
-> +			interrupts = <14>;
-> +			status = "disabled";
-> +
-> +			phy0: ethernet-phy@0 {
-> +				reg = <0>;
-> +			};
-> +			phy1: ethernet-phy@1 {
-> +				reg = <1>;
-> +			};
-> +			phy2: ethernet-phy@2 {
-> +				reg = <2>;
-> +			};
-> +			phy3: ethernet-phy@3 {
-> +				reg = <3>;
-> +			};
+> diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+> b/arch/arm64/boot/dts/renesas/r8a77965.dtsi index
+> b12f41755aea..02de36b9e581 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+> @@ -10,6 +10,7 @@
+> 
+>  #include <dt-bindings/clock/renesas-cpg-mssr.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/power/r8a77965-sysc.h>
+> 
+>  #define CPG_AUDIO_CLK_I		10
 
-Hi Alexandre
+-- 
+Regards,
 
-These are internal PHYs? Is there an option to use external PHYs for
-the ports which have internal PHYs?
-
-I'm just wondering if they should be linked together by default. Or a
-comment added to the commit message about why they are not linked
-together here.
-
-	 Andrew
+Laurent Pinchart
