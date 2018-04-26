@@ -1,29 +1,56 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V4 3/6] ARM: dts: imx6sx-sabreauto: add IO expander
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V4 3/6] ARM: dts: imx6sx-sabreauto: add IO expander
  max7310 support
-Date: Thu, 26 Apr 2018 03:21:21 -0300
-Message-ID: <CAOMZO5AZLbUoL7FWgUFA7qc3q3wcz9UBLSQhMXXkUJeiRz8X4A@mail.gmail.com>
+Date: Thu, 26 Apr 2018 06:31:08 +0000
+Message-ID: <DB5PR04MB13205A0A7134C969748560B4F58E0@DB5PR04MB1320.eurprd04.prod.outlook.com>
 References: <1524634571-5914-1-git-send-email-Anson.Huang@nxp.com>
- <1524634571-5914-3-git-send-email-Anson.Huang@nxp.com> <CAOMZO5Dm6rcEe=zAJ9_nqKce3g2tdyWPqb=Uv-N5nfc_96jc-g@mail.gmail.com>
+ <1524634571-5914-3-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5Dm6rcEe=zAJ9_nqKce3g2tdyWPqb=Uv-N5nfc_96jc-g@mail.gmail.com>
  <AM3PR04MB13150654494B8D251988F76CF58E0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5AZLbUoL7FWgUFA7qc3q3wcz9UBLSQhMXXkUJeiRz8X4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM3PR04MB13150654494B8D251988F76CF58E0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+In-Reply-To: <CAOMZO5AZLbUoL7FWgUFA7qc3q3wcz9UBLSQhMXXkUJeiRz8X4A@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
+To: Fabio Estevam <festevam@gmail.com>
 Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 12:06 AM, Anson Huang <anson.huang@nxp.com> wrote:
-
-> MAX7310 pins are for PCIe, CAN, MLB. GPS etc., these modules are NOT enabled yet, so
-> I can NOT test it, I think we should add MAX7310 users when these modules are enabled,
-> ethernet PHY is NOT controlled by it.
-
-You said previously that MAX7310 also controls the Ethernet PHY. Is
-the vendor dts wrong then?
-
-If there are no MAX7310 users, why are you adding support for MAX7310 then?
-
-Confused.
+DQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
+Z2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1AZ21haWwuY29t
+XQ0KPiBTZW50OiBUaHVyc2RheSwgQXByaWwgMjYsIDIwMTggMjoyMSBQTQ0KPiBUbzogQW5zb24g
+SHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtl
+cm5lbC5vcmc+OyBTYXNjaGEgSGF1ZXINCj4gPGtlcm5lbEBwZW5ndXRyb25peC5kZT47IEZhYmlv
+IEVzdGV2YW0gPGZhYmlvLmVzdGV2YW1AbnhwLmNvbT47IFJvYg0KPiBIZXJyaW5nIDxyb2JoK2R0
+QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsNCj4gUnVz
+c2VsbCBLaW5nIC0gQVJNIExpbnV4IDxsaW51eEBhcm1saW51eC5vcmcudWs+OyBkbC1saW51eC1p
+bXgNCj4gPGxpbnV4LWlteEBueHAuY29tPjsgbW9kZXJhdGVkIGxpc3Q6QVJNL0ZSRUVTQ0FMRSBJ
+TVggLyBNWEMgQVJNDQo+IEFSQ0hJVEVDVFVSRSA8bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnPjsgb3BlbiBsaXN0Ok9QRU4NCj4gRklSTVdBUkUgQU5EIEZMQVRURU5FRCBERVZJ
+Q0UgVFJFRSBCSU5ESU5HUw0KPiA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBsaW51eC1r
+ZXJuZWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0ggVjQgMy82XSBBUk06IGR0czogaW14NnN4LXNhYnJlYXV0bzogYWRkIElPIGV4cGFuZGVyDQo+
+IG1heDczMTAgc3VwcG9ydA0KPiANCj4gT24gVGh1LCBBcHIgMjYsIDIwMTggYXQgMTI6MDYgQU0s
+IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiB3cm90ZToNCj4gDQo+ID4gTUFY
+NzMxMCBwaW5zIGFyZSBmb3IgUENJZSwgQ0FOLCBNTEIuIEdQUyBldGMuLCB0aGVzZSBtb2R1bGVz
+IGFyZSBOT1QNCj4gPiBlbmFibGVkIHlldCwgc28gSSBjYW4gTk9UIHRlc3QgaXQsIEkgdGhpbmsg
+d2Ugc2hvdWxkIGFkZCBNQVg3MzEwIHVzZXJzDQo+ID4gd2hlbiB0aGVzZSBtb2R1bGVzIGFyZSBl
+bmFibGVkLCBldGhlcm5ldCBQSFkgaXMgTk9UIGNvbnRyb2xsZWQgYnkgaXQuDQo+IA0KPiBZb3Ug
+c2FpZCBwcmV2aW91c2x5IHRoYXQgTUFYNzMxMCBhbHNvIGNvbnRyb2xzIHRoZSBFdGhlcm5ldCBQ
+SFkuIElzIHRoZSB2ZW5kb3INCj4gZHRzIHdyb25nIHRoZW4/DQo+IA0KPiBJZiB0aGVyZSBhcmUg
+bm8gTUFYNzMxMCB1c2Vycywgd2h5IGFyZSB5b3UgYWRkaW5nIHN1cHBvcnQgZm9yIE1BWDczMTAg
+dGhlbj8NCj4gDQo+IENvbmZ1c2VkLg0KDQpJIHNlYXJjaGVkIHRoZSBtYWlsIEkgc2VudCwgSSBj
+YW4gTk9UIGZvdW5kIHdoZXJlIEkgc2FpZCAiTUFYNzMxMCBjb250cm9scyB0aGUgZXRoZXJuZXQg
+cGh5Ii4uLi4NCg0KVGhlcmUgYXJlIE1BWDczMTAgdXNlcnMsIGl0IGlzIGp1c3QgYmVjYXVzZSBj
+dXJyZW50bHkgdGhvc2UgdXNlcnMgYXJlIE5PVCBlbmFibGVkLCBzbyBJIGNhbg0KTk9UIHZlcmlm
+eSB0aGVtLiBNQVg3MzEwIGlzIGFuIGluZGVwZW5kZW50IEkyQyBkZXZpY2UsIHdoeSB3ZSBjYW4g
+Tk9UIGVuYWJsZSBpdCBmaXJzdD8NCkkgdGVzdGVkIGl0IGZyb20gc3lzZnMgaW50ZXJmYWNlLCB3
+ZSBjYW4gY29udHJvbCB0aGUgTUFYNzMxMCdzIElPIG91dHB1dCB2aWEgZWNobyBkaWZmZXJlbnQg
+dmFsdWUNCnRvIEdQSU8gdmFsdWUsIHRoYXQgbWVhbnMgTUFYNzMxMCBpdHNlbGYgYXMgYW4gSU8g
+ZXhwYW5kZXIgY2hpcCBpcyB3b3JraW5nIGp1c3QgZmluZSwgc2ltaWxhciB3aXRoIFBNSUMsDQpp
+dCBpcyBhIEkyQyBkZXZpY2UsIGNhbiBiZSBlbmFibGVkIGluZGVwZW5kZW50bHksIHRoZW4gY29u
+c3VtZXJzIGNhbiBiZSBhZGRlZCBsYXRlciB3aGVuIHRoZXkgYXJlIGVuYWJsZWQuDQpKdXN0IG15
+IHBlcnNvbmFsIG9waW5pb24sIHRoYW5rcy4NCg0KQW5zb24uDQoNCg==
