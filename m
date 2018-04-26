@@ -1,65 +1,45 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v4 5/7] gpio: pca953x: fix address calculation for pcal6524
-Date: Thu, 26 Apr 2018 19:35:00 +0200
-Message-ID: <478f5d6b7fe3738dc631a0d848985bec5987465d.1524764101.git.hns@goldelico.com>
-References: <cover.1524764101.git.hns@goldelico.com>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
+ platform drivers
+Date: Thu, 26 Apr 2018 13:31:51 -0400
+Message-ID: <20180426173151.GJ3094@brightrain.aerifal.cx>
+References: <20180426152920.21569-1-brgl@bgdev.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1524764101.git.hns@goldelico.com>
-In-Reply-To: <cover.1524764101.git.hns@goldelico.com>
-References: <cover.1524764101.git.hns@goldelico.com>
+Content-Disposition: inline
+In-Reply-To: <20180426152920.21569-1-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: galak@codeaurora.org, andy.shevchenko@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@siemens.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The register constants are so far defined in a way that they fit
-for the pcal9555a when shifted by the number of banks, i.e. are
-multiplied by 2 in the accessor function.
+On Thu, Apr 26, 2018 at 05:29:18PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> This is a follow to my series[1] the aim of which was to introduce device tree
+> support for early platform devices.
+> 
+> It was received rather negatively. Aside from using device tree to pass
+> implementation specific details to the system, two important concerns were
+> raised: no probe deferral support and the fact that currently the early devices
+> never get converted to actual platform drivers. This series is a
+> proof-of-concept that's trying to address those issues.
+> 
+> The only user of the current version of early platform drivers is the SuperH
+> architecture. If this series eventually gets merged, we could simply replace
+> the other solution.
 
-Now, the pcal6524 has 3 banks which means the relative offset
-is multiplied by 4 for the standard registers.
+Looking at a quick output of:
 
-Simply applying the bit shift to the extended registers gives
-a wrong result, since the base offset is already included in
-the offset.
+	grep -r -A10 early_devices[[] arch/sh/kernel/
 
-Therefore, we add code to the 24 bit accessor functions to
-adjust the register number for these exended registers.
+it looks like all of the existing early platform devices are serial
+ports, clocks, and clocksources. The switch to device tree should pick
+them all up from CLK_OF_DECLARE, TIMER_OF_DECLARE, and
+EARLYCON_DECLARE. Until that's complete, the existing code works
+as-is. I don't see what problem you're trying to solve.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/gpio/gpio-pca953x.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+FYI I'm (sometimes-somewhat-absent) arch/sh co-maintainer.
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index fc863faa3ce4..4194495a7990 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -221,9 +221,11 @@ static int pca957x_write_regs_16(struct pca953x_chip *chip, int reg, u8 *val)
- static int pca953x_write_regs_24(struct pca953x_chip *chip, int reg, u8 *val)
- {
- 	int bank_shift = fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
-+	int addr = (reg & PCAL_GPIO_MASK) << bank_shift;
-+	int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
- 
- 	return i2c_smbus_write_i2c_block_data(chip->client,
--					      (reg << bank_shift) | REG_ADDR_AI,
-+					      pinctrl | addr | REG_ADDR_AI,
- 					      NBANK(chip), val);
- }
- 
-@@ -263,9 +265,11 @@ static int pca953x_read_regs_16(struct pca953x_chip *chip, int reg, u8 *val)
- static int pca953x_read_regs_24(struct pca953x_chip *chip, int reg, u8 *val)
- {
- 	int bank_shift = fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
-+	int addr = (reg & PCAL_GPIO_MASK) << bank_shift;
-+	int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
- 
- 	return i2c_smbus_read_i2c_block_data(chip->client,
--					     (reg << bank_shift) | REG_ADDR_AI,
-+					     pinctrl | addr | REG_ADDR_AI,
- 					     NBANK(chip), val);
- }
- 
--- 
-2.12.2
+Rich
