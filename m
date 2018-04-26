@@ -1,63 +1,132 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [[RFC]DPU PATCH 0/4] Add suppport for sn65dsi86 bridge chip and
- Innolux 2k edp panel driver
-Date: Thu, 26 Apr 2018 09:08:40 +0200
-Message-ID: <fc285ac1-75bc-4a6e-f2ed-f8394094451a@samsung.com>
-References: <CGME20180419072054epcas5p364c0eae57d11ff5ff22890223a79c271@epcas5p3.samsung.com>
- <1524054002-17869-1-git-send-email-spanda@codeaurora.org>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7740: Enable CEU0
+Date: Thu, 26 Apr 2018 09:26:09 +0200
+Message-ID: <20180426072609.GH17088@w540>
+References: <1524654920-18749-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1524654920-18749-3-git-send-email-jacopo+renesas@jmondi.org>
+ <20180426061124.hvgl3ijf6ulrdkmn@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1524054002-17869-1-git-send-email-spanda@codeaurora.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sandeep Panda <spanda@codeaurora.org>, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: hoegsberg@chromium.org, chandanu@codeaurora.org, ryadav@codeaurora.org, abhinavk@codeaurora.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Q6STzHxy03qt/hK9"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180426061124.hvgl3ijf6ulrdkmn@verge.net.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, geert@linux-m68k.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTguMDQuMjAxOCAxNDoxOSwgU2FuZGVlcCBQYW5kYSB3cm90ZToKPiBDaGFuZ2Vsb2c6Cj4K
-PiB2MyAtPiB2NDoKPiBDdXJyZW50IHBhdGNoc2V0IHNlcGFyYXRlcyBvdXQgZURQIHBhbmVsIHNw
-ZWNpZmljIHJlc291cmNlcyBmcm9tIHNuNjVkc2k4Ngo+IGJyaWRnZSBkcml2ZXIgYW5kIGNyZWF0
-ZXMgYSBzZXBhcmF0ZSBkcml2ZXIgZm9yIHRoZSBpbm5sb3V4IGVkcCBwYW5lbC4KPgo+IE5vdyBi
-cmlkZ2UgZHJpdmVyIGNoZWNrIGlmIGFueSBwYW5lbCBpcyBhdHRhY2hlZCBvciBub3QgdG8gZ2V0
-IHRoZSBzdXBwb3J0ZWQKPiBtb2Rlcy4gSWYgYW55IHBhbmVsIGlzIGF0dGFjaGVkIHRoZW4gcXVl
-cnkgZnJvbSBwYW5lbCBkcml2ZXIgdG8gZ2V0IHRoZSBtb2RlcywKPiBvciBlbHNlIHByb2JlIHRo
-ZSBwcm92aWRlZCBpMmMgYWRhcHRlciB0byByZWFkIHRoZSBtb2RlcyBmcm9tIEVESUQuCj4KPiBS
-ZW1vdmVkIGhhcmRjb2Rpbmcgb2YgYnJpZGdlIGluaXQgc2VxdWVuY2UuIFdpdGggdGhpcyBwYXRj
-aHNldCBicmlkZ2UgZHJpdmVyIG5vdwo+IHdpbGwgcHJvZ3JhbSB0aGUgaW5pdCBzZXF1ZW5jZSBi
-YXNlZCBvbiB0aGUgY3VycmVudCBtb2RlIHNldCBieSBkcm0gZnJhbWV3b3JrLgo+Cj4gQ3VycmVu
-dCBwYXRjaHNldCBpcyBub3QgdGVzdGVkIG9uIGFjdHVhbCBicmlkZ2UgY2hpcC9wYW5lbC4KCk9u
-ZSBtb3JlIHRoaW5nLCBjb3VsZCB5b3UgdXNlIHByb3BlciBwcmVmaXhlcyBpbiBzdWJqZWN0Ogot
-IG5vIGRvdWJsZSBicmFjZXMsCi0gcGF0Y2ggdmVyc2lvbiwKLSBubyBEUFUsCi0gUkZDIHVwIHRv
-IHlvdSwgYnV0IGluIGNhc2Ugb2YgZHJpdmVyIHdoaWNoIHlvdSB3YW50IHRvIGV2ZW50dWFsbHkK
-bWVyZ2UgaXQgc2VlbXMgdW5uZWNlc3NhcnkuCgpTbyBzdWJqZWN0IHNob3VsZCBsb29rIG1vcmUg
-b3IgbGVzcyBsaWtlOgpbUEFUQ0ggdjQgMC80XSBBZGQgc3VwcHBvcnQgZm9yIHNuNjVkc2k4NiBi
-cmlkZ2UgY2hpcCBhbmQgSW5ub2x1eCAyayBlZHAKcGFuZWwgZHJpdmVyCgpSZWdhcmRzCkFuZHJ6
-ZWoKCj4KPiBTYW5kZWVwIFBhbmRhICg0KToKPiAgIGRybS9icmlkZ2U6IGFkZCBzdXBwb3J0IGZv
-ciBzbjY1ZHNpODYgYnJpZGdlIGRyaXZlcgo+ICAgZHQtYmluZGluZ3M6IGRybS9icmlkZ2U6IERv
-Y3VtZW50IHNuNjVkc2k4NiBicmlkZ2UgYmluZGluZ3MKPiAgIGRybS9wYW5lbDogYWRkIElubm9s
-dXggVFYxMjNXQU0gZURQIHBhbmVsIGRyaXZlcgo+ICAgZHQtYmluZGluZ3M6IEFkZCBJbm5vbHV4
-IFRWMTIzV0FNIHBhbmVsIGJpbmRpbmdzCj4KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
-L3RpLHNuNjVkc2k4Ni50eHQgICAgICAgfCAgNjAgKysKPiAgLi4uL2Rpc3BsYXkvcGFuZWwvaW5u
-b2x1eCxlZHAtMmstcGFuZWwudHh0ICAgICAgICAgfCAgMjEgKwo+ICBkcml2ZXJzL2dwdS9kcm0v
-YnJpZGdlL3RpLXNuNjVkc2k4Ni5jICAgICAgICAgICAgICB8IDc0MiArKysrKysrKysrKysrKysr
-KysrKysKPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLWlubm9sdXgtdHYxMjN3YW0uYyAg
-ICAgfCAyOTkgKysrKysrKysrCj4gIDQgZmlsZXMgY2hhbmdlZCwgMTEyMiBpbnNlcnRpb25zKCsp
-Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCxlZHAt
-MmstcGFuZWwudHh0Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdl
-L3RpLXNuNjVkc2k4Ni5jCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcGFu
-ZWwvcGFuZWwtaW5ub2x1eC10djEyM3dhbS5jCj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+--Q6STzHxy03qt/hK9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Simon,
+
+On Thu, Apr 26, 2018 at 08:11:30AM +0200, Simon Horman wrote:
+> Thanks Jacopo,
+>
+> I'm very pleased to see this series.
+
+Credits to Geert that pointed out to me R-Mobile A1 comes with a CEU.
+I should mention him in next iteration actually, sorry about that.
+
+>
+> On Wed, Apr 25, 2018 at 01:15:20PM +0200, Jacopo Mondi wrote:
+> > Enable CEU0 peripheral for Renesas R-Mobile A1 R8A7740.
+>
+> Given 'status = "disabled"' below I think you
+> are describing but not enabling CEU0. Also in the subject.
+
+Right.
+
+>
+> Should we also describe CEU1?
+
+Armadillo board file only describe CEU0. If there are R-Mobile A1
+board files where I can steal informations from I can do that. If
+there's a public datasheet, that would be even better.
+>
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  arch/arm/boot/dts/r8a7740.dtsi | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+> > index afd3bc5..05ec41e 100644
+> > --- a/arch/arm/boot/dts/r8a7740.dtsi
+> > +++ b/arch/arm/boot/dts/r8a7740.dtsi
+> > @@ -67,6 +67,16 @@
+> >  		power-domains = <&pd_d4>;
+> >  	};
+> >
+> > +	ceu0: ceu@fe910000 {
+> > +		reg = <0xfe910000 0x100>;
+>
+> Should the size of the range be 0x3000 ?
+> That would seem to match my reading of table 32.3
+> and also be consistent with r7s72100.dtsi.
+
+I got this from
+
+static struct resource ceu0_resources[] = {
+	[0] = {
+		.name	= "CEU",
+		.start	= 0xfe910000,
+		.end	= 0xfe91009f,
+		.flags	= IORESOURCE_MEM,
+	},
+but I also noticed the r7s72100 one was bigger.
+I'm fine enlarging this, if that's what the manual reports too.
+
+> > +		compatible = "renesas,r8a7740-ceu";
+> > +		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>;
+> > +		clocks = <&mstp1_clks R8A7740_CLK_CEU20>;
+> > +		clock-names = "ceu20";
+> > +		power-domains = <&pd_a4mp>;
+>
+> My reading of table 1.7 is that the power domain should be A4R (&pd_a4r).
+
+Ah yes, my bad.
+
+The long time goal would be describe the camera module (mt9t112) which
+is installed on armadillo. Unfortunately that would probably require
+some more work on the CEU side.
+
+Thanks
+   j
+
+>
+> > +		status = "disabled";
+> > +	};
+> > +
+> >  	cmt1: timer@e6138000 {
+> >  		compatible = "renesas,cmt-48-r8a7740", "renesas,cmt-48";
+> >  		reg = <0xe6138000 0x170>;
+> > --
+> > 2.7.4
+> >
+
+--Q6STzHxy03qt/hK9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJa4X8RAAoJEHI0Bo8WoVY82XIP/RDgvPffkjSFo/rfbxZvVy8Z
+eKyaRX0oSCzIMcd4PrHfzcwvpvhJSLKkITMt8XyHWG2ce0Xy3eLJ1ttkSMN8zbdc
+DB5ieEu4/sksBo7lDPLIfp0cf6vNYIdghGPdluxefc/1LBOBrbxp78GJSEL43WYL
+Tz0W33yOCkQxC3l3z23QjP+oQH3lUkQWdtFVjKQUHM4KyguUHJ7V0WQs8oyI3Mos
+8EaOYHM/xZzXbnq1Uju1WsEAYb22//232iLZoT62AEpv0VcqZWgY4nbuDzzokuw0
+yFs7/nYndU5ZssfLOPmhYWwxHQ+2a//7NGLkR7UPpcbCC3bSuRCOHVPkBsIKoqPl
+ZPO3+Q0Al/HusBi7YdSBTZTVdILcgNYY+UstJWHE1j9W3RP4LKxl5I4ofO70fPxI
+ENVht5W1tSAcwjj+u0kN54dduZLHMP3t8V2PwlJR5KPEOrGdgLjuLdNy0HNTZeDE
+neUJMTEbFqgay0oli+VhsXmx332rWwGRkXHcbN2bzQPGmb209FXn+P7Bs+bbLeS7
+9zs3pkL7vAcrmpj6SBYlWqZrPUhfdZ9LRaxLMxkH6nbf2kaONnDt51tSl+bVpcvr
+giycfNoxiYAFDEJ+xDxciRcmQ8717BSfMg9hoG1jGBYQDvka4p0jjowm3si0ex/9
+sj6z720geab7BK5UUR/M
+=w6OS
+-----END PGP SIGNATURE-----
+
+--Q6STzHxy03qt/hK9--
