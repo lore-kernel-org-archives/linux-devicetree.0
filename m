@@ -1,204 +1,111 @@
-From: Hoan Tran <hotran@apm.com>
-Subject: Re: [PATCH v5] gpio: dwapb: Add support for 1 interrupt per port A GPIO
-Date: Thu, 26 Apr 2018 09:33:40 -0700
-Message-ID: <CAFHUOYxW6C9F-etiPSw5WBH7UDc6nia+5m9bqMND=SdfteJCPg@mail.gmail.com>
-References: <1524759587-7007-1-git-send-email-phil.edworthy@renesas.com>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] mmc: sunxi: add support for the MMC
+ controller on H6
+Date: Thu, 26 Apr 2018 17:45:24 +0100
+Message-ID: <f722ce51-2391-620c-df65-48f047b5f3d5@arm.com>
+References: <20180426140728.43155-1-icenowy@aosc.io>
+ <20180426140728.43155-2-icenowy@aosc.io>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524759587-7007-1-git-send-email-phil.edworthy@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, linux-gpio@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBNMERDLQKGQEDLCN43A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180426140728.43155-2-icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Language: en-GB
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: icenowy-h8G6r0blFSE@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Thu, Apr 26, 2018 at 9:19 AM, Phil Edworthy
-<phil.edworthy@renesas.com> wrote:
-> The DesignWare GPIO IP can be configured for either 1 interrupt or 1
-> per GPIO in port A, but the driver currently only supports 1 interrupt.
-> See the DesignWare DW_apb_gpio Databook description of the
-> 'GPIO_INTR_IO' parameter.
->
-> This change allows the driver to work with up to 32 interrupts, it will
-> get as many interrupts as specified in the DT 'interrupts' property.
-> It doesn't do anything clever with the different interrupts, it just calls
-> the same handler used for single interrupt hardware.
->
-> ACPI companion code provided by Hoan Tran <hotran@apm.com>. This was tested
-> on X-Gene by Hoan.
->
-> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
+On 26/04/18 15:07, Icenowy Zheng wrote:
+> The new Allwinner H6 SoC have 3 MMC controllers. The first and second
+> ones are similar to the ones on A64, but the third one adds EMCE
+> (Embedded Crypto Engine) support which does hardware transparent crypto
+> on the eMMC.
+> 
+> As we still do not have support for EMCE, and the support of it is
+> disabled by defualt, we just duplicate the A64 mmc configurations and
+> change the compatible string.
+
+So if the A64 MMC part is compatible, we should express it like this:
+
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > ---
-> One point to mention is that I have made it possible for users to have
-> unconncted interrupts by specifying holes in the list of interrupts. This is
-> done by supporting the interrupts-extended DT prop.
-> However, I have no use for this and had to hack some test case for this.
-> Perhaps the driver should support 1 interrupt or all GPIOa as interrupts?
->
-> v5:
->  - Rolled ACPI companion code provided by Hoan Tran into this patch.
-> v4:
->  - Use of_irq_get() instead of of_irq_parse_one()+irq_create_of_mapping()
-> v3:
->  - Rolled mfd: intel_quark_i2c_gpio fix into this patch to avoid bisect problems
-> v2:
->  - Replaced interrupt-mask DT prop with support for the interrupts-extended
->    prop. This means replacing the call to irq_of_parse_and_map() with calls
->    to of_irq_parse_one() and irq_create_of_mapping().
->
-> Note: There are a few *code* lines over 80 chars, but this is just guidance,
->    right? Especially as there are already some lines over 80 chars.
-> ---
->  .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |  9 ++++-
->  drivers/gpio/gpio-dwapb.c                          | 46 +++++++++++++++++-----
->  drivers/mfd/intel_quark_i2c_gpio.c                 |  3 +-
->  include/linux/platform_data/gpio-dwapb.h           |  3 +-
->  4 files changed, 48 insertions(+), 13 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-> index 4a75da7..3c1118b 100644
-> --- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-> +++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-> @@ -26,8 +26,13 @@ controller.
->    the second encodes the triger flags encoded as described in
->    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->  - interrupt-parent : The parent interrupt controller.
-> -- interrupts : The interrupt to the parent controller raised when GPIOs
-> -  generate the interrupts.
-> +- interrupts : The interrupts to the parent controller raised when GPIOs
-> +  generate the interrupts. If the controller provides one combined interrupt
-> +  for all GPIOs, specify a single interrupt. If the controller provides one
-> +  interrupt for each GPIO, provide a list of interrupts that correspond to each
-> +  of the GPIO pins. When specifying multiple interrupts, if any are unconnected,
-> +  use the interrupts-extended property to specify the interrupts and set the
-> +  interrupt controller handle for unused interrupts to 0.
->  - snps,nr-gpios : The number of pins in the port, a single cell.
->  - resets : Reset line for the controller.
->
-> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-> index 226977f..7dcd06b 100644
-> --- a/drivers/gpio/gpio-dwapb.c
-> +++ b/drivers/gpio/gpio-dwapb.c
-> @@ -441,14 +441,19 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
->         irq_gc->chip_types[1].handler = handle_edge_irq;
->
->         if (!pp->irq_shared) {
-> -               irq_set_chained_handler_and_data(pp->irq, dwapb_irq_handler,
-> -                                                gpio);
-> +               int i;
-> +
-> +               for (i = 0; i < pp->ngpio; i++) {
-> +                       if (pp->irq[i])
-> +                               irq_set_chained_handler_and_data(pp->irq[i],
-> +                                               dwapb_irq_handler, gpio);
-> +               }
->         } else {
->                 /*
->                  * Request a shared IRQ since where MFD would have devices
->                  * using the same irq pin
->                  */
-> -               err = devm_request_irq(gpio->dev, pp->irq,
-> +               err = devm_request_irq(gpio->dev, pp->irq[0],
->                                        dwapb_irq_handler_mfd,
->                                        IRQF_SHARED, "gpio-dwapb-mfd", gpio);
->                 if (err) {
-> @@ -524,7 +529,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
->         if (pp->idx == 0)
->                 port->gc.set_config = dwapb_gpio_set_config;
->
-> -       if (pp->irq)
-> +       if (pp->has_irq)
->                 dwapb_configure_irqs(gpio, port, pp);
->
->         err = gpiochip_add_data(&port->gc, port);
-> @@ -535,7 +540,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
->                 port->is_registered = true;
->
->         /* Add GPIO-signaled ACPI event support */
-> -       if (pp->irq)
-> +       if (pp->has_irq)
->                 acpi_gpiochip_request_interrupts(&port->gc);
->
->         return err;
-> @@ -601,13 +606,36 @@ dwapb_gpio_get_pdata(struct device *dev)
->                 if (dev->of_node && pp->idx == 0 &&
->                         fwnode_property_read_bool(fwnode,
->                                                   "interrupt-controller")) {
-> -                       pp->irq = irq_of_parse_and_map(to_of_node(fwnode), 0);
-> -                       if (!pp->irq)
-> +                       struct device_node *np = to_of_node(fwnode);
-> +                       unsigned int j;
-> +
-> +                       /*
-> +                        * The IP has configuration options to allow a single
-> +                        * combined interrupt or one per gpio. If one per gpio,
-> +                        * some might not be used.
-> +                        */
-> +                       for (j = 0; j < pp->ngpio; j++) {
-> +                               int irq = of_irq_get(np, j);
-> +                               if (irq < 0)
-> +                                       continue;
-> +
-> +                               pp->irq[j] = irq;
-> +                               pp->has_irq = true;
-> +                       }
-> +
-> +                       if (!pp->has_irq)
->                                 dev_warn(dev, "no irq for port%d\n", pp->idx);
->                 }
->
-> -               if (has_acpi_companion(dev) && pp->idx == 0)
-> -                       pp->irq = platform_get_irq(to_platform_device(dev), 0);
-> +               if (has_acpi_companion(dev) && pp->idx == 0) {
-> +                       unsigned int j;
-> +
-> +                       for (j = 0; j < pp->ngpio; j++) {
-> +                               pp->irq[j] = platform_get_irq(to_platform_device(dev), j);
-> +                               if (pp->irq[j])
-> +                                       pp->has_irq = true;
-> +                       }
-> +               }
->
->                 pp->irq_shared  = false;
->                 pp->gpio_base   = -1;
-> diff --git a/drivers/mfd/intel_quark_i2c_gpio.c b/drivers/mfd/intel_quark_i2c_gpio.c
-> index 90e35de..5bddb84 100644
-> --- a/drivers/mfd/intel_quark_i2c_gpio.c
-> +++ b/drivers/mfd/intel_quark_i2c_gpio.c
-> @@ -233,7 +233,8 @@ static int intel_quark_gpio_setup(struct pci_dev *pdev, struct mfd_cell *cell)
->         pdata->properties->idx          = 0;
->         pdata->properties->ngpio        = INTEL_QUARK_MFD_NGPIO;
->         pdata->properties->gpio_base    = INTEL_QUARK_MFD_GPIO_BASE;
-> -       pdata->properties->irq          = pdev->irq;
-> +       pdata->properties->irq[0]       = pdev->irq;
-> +       pdata->properties->has_irq      = true;
->         pdata->properties->irq_shared   = true;
->
->         cell->platform_data = pdata;
-> diff --git a/include/linux/platform_data/gpio-dwapb.h b/include/linux/platform_data/gpio-dwapb.h
-> index 2dc7f4a..5a52d69 100644
-> --- a/include/linux/platform_data/gpio-dwapb.h
-> +++ b/include/linux/platform_data/gpio-dwapb.h
-> @@ -19,7 +19,8 @@ struct dwapb_port_property {
->         unsigned int    idx;
->         unsigned int    ngpio;
->         unsigned int    gpio_base;
-> -       unsigned int    irq;
-> +       unsigned int    irq[32];
-> +       bool            has_irq;
->         bool            irq_shared;
+>  Documentation/devicetree/bindings/mmc/sunxi-mmc.txt |  2 ++
+>  drivers/mmc/host/sunxi-mmc.c                        | 16 ++++++++++++++++
+>  2 files changed, 18 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt b/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
+> index 132e0007d7d6..e6aa5c7a5e12 100644
+> --- a/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
+> @@ -16,6 +16,8 @@ Required properties:
+>     * "allwinner,sun9i-a80-mmc"
+>     * "allwinner,sun50i-a64-emmc"
+>     * "allwinner,sun50i-a64-mmc"
+> +   * "allwinner,sun50i-h6-emmc"
+> +   * "allwinner,sun50i-h6-mmc"
+
+This should be changed to:
+
+      * "allwinner,sun50i-h6-emmc", "allwinner,sun50i-a64-emmc"
+      * "allwinner,sun50i-h6-mmc", "allwinner,sun50i-a64-mmc"
+
+>   - reg : mmc controller base registers
+>   - clocks : a list with 4 phandle + clock specifier pairs
+>   - clock-names : must contain "ahb", "mmc", "output" and "sample"
+> diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
+> index 97c6b79b7d6f..05e2b5fd7aa4 100644
+> --- a/drivers/mmc/host/sunxi-mmc.c
+> +++ b/drivers/mmc/host/sunxi-mmc.c
+> @@ -1168,6 +1168,20 @@ static const struct sunxi_mmc_cfg sun50i_a64_emmc_cfg = {
+>  	.can_calibrate = true,
 >  };
->
+>  
+> +static const struct sunxi_mmc_cfg sun50i_h6_cfg = {
+> +	.idma_des_size_bits = 16,
+> +	.clk_delays = NULL,
+> +	.can_calibrate = true,
+> +	.mask_data0 = true,
+> +	.needs_new_timings = true,
+> +};
+> +
+> +static const struct sunxi_mmc_cfg sun50i_h6_emmc_cfg = {
+> +	.idma_des_size_bits = 13,
+> +	.clk_delays = NULL,
+> +	.can_calibrate = true,
+> +};
+> +
 
-Acked-by: Hoan Tran <hotran@apm.com>
+... and then we don't need those changes ...
 
-Thanks
-Hoan
+>  static const struct of_device_id sunxi_mmc_of_match[] = {
+>  	{ .compatible = "allwinner,sun4i-a10-mmc", .data = &sun4i_a10_cfg },
+>  	{ .compatible = "allwinner,sun5i-a13-mmc", .data = &sun5i_a13_cfg },
+> @@ -1176,6 +1190,8 @@ static const struct of_device_id sunxi_mmc_of_match[] = {
+>  	{ .compatible = "allwinner,sun9i-a80-mmc", .data = &sun9i_a80_cfg },
+>  	{ .compatible = "allwinner,sun50i-a64-mmc", .data = &sun50i_a64_cfg },
+>  	{ .compatible = "allwinner,sun50i-a64-emmc", .data = &sun50i_a64_emmc_cfg },
+> +	{ .compatible = "allwinner,sun50i-h6-mmc", .data = &sun50i_h6_cfg },
+> +	{ .compatible = "allwinner,sun50i-h6-emmc", .data = &sun50i_h6_emmc_cfg },
 
-> --
-> 2.7.4
->
+... and those, at least yet.
+Should we ever extend the driver to support the EMCE, we can add them at
+this occasion.
+
+So this patch would just add the compatible pairs to the binding doc.
+
+Cheers,
+Andre.
+
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, sunxi_mmc_of_match);
+> 
