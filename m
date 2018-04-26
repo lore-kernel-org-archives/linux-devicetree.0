@@ -1,225 +1,57 @@
-From: Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] resource: Use list_head to link sibling resource
-Date: Thu, 26 Apr 2018 09:18:37 +0800
-Message-ID: <20180426011837.GA79340@WeideMacBook-Pro.local>
-References: <20180419001848.3041-1-bhe@redhat.com>
- <20180419001848.3041-2-bhe@redhat.com>
-Reply-To: Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [RFC 06/10] thermal: samsung: Remove support for Exynos5440
+Date: Thu, 26 Apr 2018 10:41:30 +0900
+Message-ID: <5AE12E4A.90907__49249.4360114962$1524706825$gmane$org@samsung.com>
+References: <20180424203239.21885-1-krzk@kernel.org>
+ <CGME20180424203603epcas5p4cdd2039eabe7039e4daf286ed4c1ecc0@epcas5p4.samsung.com>
+ <20180424203239.21885-7-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180419001848.3041-2-bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Yaowei Bai <baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, "K. Y. Srinivasan" <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jonathan Derrick <jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20180424203239.21885-7-krzk@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devic
+Cc: Olof Johansson <olof@lixom.net>, Jaehoon Chung <jh80.chung@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 19, 2018 at 08:18:46AM +0800, Baoquan He wrote:
->The struct resource uses singly linked list to link siblings. It's not
->easy to do reverse iteration on sibling list. So replace it with list_head.
->
-
-Hi, Baoquan
-
-Besides changing the data structure, I have another proposal to do the reverse
-iteration. Which means it would not affect other users, if you just want a
-reverse iteration.
-
-BTW, I don't think Andrew suggest to use linked-list directly. What he wants
-is a better solution to your first proposal in
-https://patchwork.kernel.org/patch/10300819/.
-
-Below is my proposal of resource reverse iteration without changing current
-design.
-
->From 5d7145d44fe48b98572a03884fa3a3aa82e3cef9 Mon Sep 17 00:00:00 2001
-From: Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Sat, 24 Mar 2018 23:25:46 +0800
-Subject: [PATCH] kernel/resource: add walk_system_ram_res_rev()
-
-As discussed on https://patchwork.kernel.org/patch/10300819/, this patch
-comes up with a variant implementation of walk_system_ram_res_rev(), which
-uses iteration instead of allocating array to store those resources.
-
-Signed-off-by: Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- include/linux/ioport.h |   3 ++
- kernel/resource.c      | 113 +++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 116 insertions(+)
-
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index da0ebaec25f0..473f1d9cb97e 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -277,6 +277,9 @@ extern int
- walk_system_ram_res(u64 start, u64 end, void *arg,
- 		    int (*func)(struct resource *, void *));
- extern int
-+walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-+		    int (*func)(struct resource *, void *));
-+extern int
- walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start, u64 end,
- 		    void *arg, int (*func)(struct resource *, void *));
- 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 769109f20fb7..d4ec5fbc6875 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -73,6 +73,38 @@ static struct resource *next_resource(struct resource *p, bool sibling_only)
- 	return p->sibling;
- }
- 
-+static struct resource *prev_resource(struct resource *p, bool sibling_only)
-+{
-+	struct resource *prev;
-+	if (NULL == iomem_resource.child)
-+		return NULL;
-+
-+	if (p == NULL) {
-+		prev = iomem_resource.child;
-+		while (prev->sibling)
-+			prev = prev->sibling;
-+	} else {
-+		if (p->parent->child == p) {
-+			return p->parent;
-+		}
-+
-+		for (prev = p->parent->child; prev->sibling != p;
-+			prev = prev->sibling) {}
-+	}
-+
-+	/* Caller wants to traverse through siblings only */
-+	if (sibling_only)
-+		return prev;
-+
-+	for (;prev->child;) {
-+		prev = prev->child;
-+
-+		while (prev->sibling)
-+			prev = prev->sibling;
-+	}
-+	return prev;
-+}
-+
- static void *r_next(struct seq_file *m, void *v, loff_t *pos)
- {
- 	struct resource *p = v;
-@@ -401,6 +433,47 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
- 	return 0;
- }
- 
-+/*
-+ * Finds the highest iomem resource existing within [res->start.res->end).
-+ * The caller must specify res->start, res->end, res->flags, and optionally
-+ * desc.  If found, returns 0, res is overwritten, if not found, returns -1.
-+ * This function walks the whole tree and not just first level children until
-+ * and unless first_level_children_only is true.
-+ */
-+static int find_prev_iomem_res(struct resource *res, unsigned long desc,
-+			       bool first_level_children_only)
-+{
-+	struct resource *p;
-+
-+	BUG_ON(!res);
-+	BUG_ON(res->start >= res->end);
-+
-+	read_lock(&resource_lock);
-+
-+	for (p = prev_resource(NULL, first_level_children_only); p;
-+		p = prev_resource(p, first_level_children_only)) {
-+		if ((p->flags & res->flags) != res->flags)
-+			continue;
-+		if ((desc != IORES_DESC_NONE) && (desc != p->desc))
-+			continue;
-+		if (p->end < res->start || p->child == iomem_resource.child) {
-+			p = NULL;
-+			break;
-+		}
-+		if ((p->end >= res->start) && (p->start < res->end))
-+			break;
-+	}
-+
-+	read_unlock(&resource_lock);
-+	if (!p)
-+		return -1;
-+	/* copy data */
-+	resource_clip(res, p->start, p->end);
-+	res->flags = p->flags;
-+	res->desc = p->desc;
-+	return 0;
-+}
-+
- static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
- 				 bool first_level_children_only,
- 				 void *arg,
-@@ -422,6 +495,27 @@ static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
- 	return ret;
- }
- 
-+static int __walk_iomem_res_rev_desc(struct resource *res, unsigned long desc,
-+				 bool first_level_children_only,
-+				 void *arg,
-+				 int (*func)(struct resource *, void *))
-+{
-+	u64 orig_start = res->start;
-+	int ret = -1;
-+
-+	while ((res->start < res->end) &&
-+	       !find_prev_iomem_res(res, desc, first_level_children_only)) {
-+		ret = (*func)(res, arg);
-+		if (ret)
-+			break;
-+
-+		res->end = res->start?(res->start - 1):0;
-+		res->start = orig_start;
-+	}
-+
-+	return ret;
-+}
-+
- /*
-  * Walks through iomem resources and calls func() with matching resource
-  * ranges. This walks through whole tree and not just first level children.
-@@ -468,6 +562,25 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
- 				     arg, func);
- }
- 
-+/*
-+ * This function, being a variant of walk_system_ram_res(), calls the @func
-+ * callback against all memory ranges of type System RAM which are marked as
-+ * IORESOURCE_SYSTEM_RAM and IORESOUCE_BUSY in reversed order, i.e., from
-+ * higher to lower.
-+ */
-+int walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-+				int (*func)(struct resource *, void *))
-+{
-+	struct resource res;
-+
-+	res.start = start;
-+	res.end = end;
-+	res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-+
-+	return __walk_iomem_res_rev_desc(&res, IORES_DESC_NONE, true,
-+				     arg, func);
-+}
-+
- /*
-  * This function calls the @func callback against all memory ranges, which
-  * are ranges marked as IORESOURCE_MEM and IORESOUCE_BUSY.
--- 
-2.15.1
-
-
--- 
-Wei Yang
-Help you, Help me
+SGkgS3J6eXN6dG9mLAoKT24gMjAxOOuFhCAwNOyblCAyNeydvCAwNTozMiwgS3J6eXN6dG9mIEtv
+emxvd3NraSB3cm90ZToKPiBUaGUgRXh5bm9zNTQ0MCBpcyBub3QgYWN0aXZlbHkgZGV2ZWxvcGVk
+LCB0aGVyZSBhcmUgbm8gZGV2ZWxvcG1lbnQKPiBib2FyZHMgYXZhaWxhYmxlIGFuZCBwcm9iYWJs
+eSB0aGVyZSBhcmUgbm8gcmVhbCBwcm9kdWN0cyB3aXRoIGl0Lgo+IFJlbW92ZSB3aWRlLXRyZWUg
+c3VwcG9ydCBmb3IgRXh5bm9zNTQ0MC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBLcnp5c3p0b2YgS296
+bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3RoZXJtYWwvZXh5bm9zLXRoZXJtYWwudHh0IHwgIDE0ICstCj4gIGRyaXZlcnMvdGhlcm1hbC9z
+YW1zdW5nL2V4eW5vc190bXUuYyAgICAgICAgICAgICAgIHwgMTU1ICstLS0tLS0tLS0tLS0tLS0t
+LS0tLQo+ICBkcml2ZXJzL3RoZXJtYWwvc2Ftc3VuZy9leHlub3NfdG11LmggICAgICAgICAgICAg
+ICB8ICAgMSAtCj4gIDMgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAxNjYgZGVsZXRp
+b25zKC0pCgoKQWZ0ZXIgYXBwbGllZCB0aGlzIHBhdGNoLCBJIHRlc3RlZCB0aGUgYnVpbGQgYW5k
+IGZvdW5kIG91dAonZXh5bm9zNTQ0MCcga2V5d29yZC4gVGhlcmUgaXMgb25lIGNvbW1lbnQgaW5j
+bHVkaW5nICdleHlub3M1NDQwJyBhcyBmb2xsb3dpbmc6CgpkaWZmIC0tZ2l0IGEvZHJpdmVycy90
+aGVybWFsL3NhbXN1bmcvZXh5bm9zX3RtdS5jIGIvZHJpdmVycy90aGVybWFsL3NhbXN1bmcvZXh5
+bm9zX3RtdS5jCmluZGV4IGY5MmY0NzBiY2UyMS4uY2I1MjUyMjhjZmUxIDEwMDY0NAotLS0gYS9k
+cml2ZXJzL3RoZXJtYWwvc2Ftc3VuZy9leHlub3NfdG11LmMKKysrIGIvZHJpdmVycy90aGVybWFs
+L3NhbXN1bmcvZXh5bm9zX3RtdS5jCkBAIC05NDMsNyArOTQzLDcgQEAgc3RhdGljIHZvaWQgZXh5
+bm9zNDIxMF90bXVfY2xlYXJfaXJxcyhzdHJ1Y3QgZXh5bm9zX3RtdV9kYXRhICpkYXRhKQogICAg
+ICAgICAqIEV4eW5vczMyNTAsIEV4eW5vczQ0MTIsIEV4eW5vczUyNTAgYW5kIEV4eW5vczUyNjAg
+aW5jb3JyZWN0bHkKICAgICAgICAgKiBzdGF0ZXMgdGhhdCBJTlRDTEVBUiByZWdpc3RlciBoYXMg
+YSBkaWZmZXJlbnQgcGxhY2luZyBvZiBiaXRzCiAgICAgICAgICogcmVzcG9uc2libGUgZm9yIEZB
+TEwgSVJRcyB0aGFuIElOVFNUQVQgcmVnaXN0ZXIuICBFeHlub3M1NDIwCi0gICAgICAgICogYW5k
+IEV4eW5vczU0NDAgZG9jdW1lbnRhdGlvbiBpcyBjb3JyZWN0IChFeHlub3M0MjEwIGRvZXNuJ3QK
+KyAgICAgICAgKiBkb2N1bWVudGF0aW9uIGlzIGNvcnJlY3QgKEV4eW5vczQyMTAgZG9lc24ndAog
+ICAgICAgICAqIHN1cHBvcnQgRkFMTCBJUlFzIGF0IGFsbCkuCiAgICAgICAgICovCiAgICAgICAg
+d3JpdGVsKHZhbF9pcnEsIGRhdGEtPmJhc2UgKyB0bXVfaW50Y2xlYXIpOwoKQWZ0ZXIgcmVtb3Zp
+bmcgaXQsIGxvb2tzIGdvb2QgdG8gbWUuClJldmlld2VkLWJ5OiBDaGFud29vIENob2kgPGN3MDAu
+Y2hvaUBzYW1zdW5nLmNvbT4KCi0tIApCZXN0IFJlZ2FyZHMsCkNoYW53b28gQ2hvaQpTYW1zdW5n
+IEVsZWN0cm9uaWNzCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsCg==
