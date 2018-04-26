@@ -1,63 +1,33 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 16/17] arm64: dts: r8a77965-salvator-xs: Add DU external dot clocks
-Date: Fri, 27 Apr 2018 00:22:32 +0300
-Message-ID: <2242585.ilfyDprk4a@avalon>
-References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com> <20180426165346.494-17-kieran.bingham+renesas@ideasonboard.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 2/4] dt-bindings: move various RNG bindings to rng/ directory
+Date: Thu, 26 Apr 2018 16:27:42 -0500
+Message-ID: <20180426212744.28688-2-robh@kernel.org>
+References: <20180426212744.28688-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180426165346.494-17-kieran.bingham+renesas@ideasonboard.com>
+In-Reply-To: <20180426212744.28688-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc: linux-renesas-soc@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+To: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kieran,
+Bindings are supposed to be organized by device class/function. Move
+bindings for various RNGs to rng/ binding directory.
 
-Thank you for the patch.
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../{crypto/samsung,exynos-rng4.txt => rng/samsung,exynos4-rng.txt}       | 0
+ Documentation/devicetree/bindings/{ => rng}/sparc_sun_oracle_rng.txt      | 0
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/devicetree/bindings/{crypto/samsung,exynos-rng4.txt => rng/samsung,exynos4-rng.txt} (100%)
+ rename Documentation/devicetree/bindings/{ => rng}/sparc_sun_oracle_rng.txt (100%)
 
-On Thursday, 26 April 2018 19:53:45 EEST Kieran Bingham wrote:
-> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> 
-> The DU1 external dot clock is provided by the fixed frequency clock
-> generator X21, while the DU0 and DU3 clocks are provided by the
-> programmable Versaclock6 clock generator.
-> 
-> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> ---
->  arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
-> b/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts index
-> a83a00deed9e..2223cc2bd6bc 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
-> +++ b/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
-> @@ -19,3 +19,15 @@
->  		reg = <0x0 0x48000000 0x0 0x78000000>;
->  	};
->  };
-> +
-> +&du {
-> +	clocks = <&cpg CPG_MOD 724>,
-> +		 <&cpg CPG_MOD 723>,
-> +		 <&cpg CPG_MOD 721>,
-> +		 <&cpg CPG_MOD 727>,
-> +		 <&versaclock6 1>,
-> +		 <&x21_clk>,
-> +		 <&versaclock6 2>;
-> +	clock-names = "du.0", "du.1", "du.3", "lvds.0",
-> +		      "dclkin.0", "dclkin.1", "dclkin.3";
-
-There's no LVDS clock in the DU anymore, you can drop it.
-
-As for patch 14/17, I think you can squash this one with 17/17.
-
-> +};
-
+diff --git a/Documentation/devicetree/bindings/crypto/samsung,exynos-rng4.txt b/Documentation/devicetree/bindings/rng/samsung,exynos4-rng.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/crypto/samsung,exynos-rng4.txt
+rename to Documentation/devicetree/bindings/rng/samsung,exynos4-rng.txt
+diff --git a/Documentation/devicetree/bindings/sparc_sun_oracle_rng.txt b/Documentation/devicetree/bindings/rng/sparc_sun_oracle_rng.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/sparc_sun_oracle_rng.txt
+rename to Documentation/devicetree/bindings/rng/sparc_sun_oracle_rng.txt
 -- 
-Regards,
-
-Laurent Pinchart
+2.14.1
