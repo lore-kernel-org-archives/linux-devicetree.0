@@ -1,47 +1,51 @@
-Return-Path: <krzk@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFC 02/10] ata: ahci-platform: Remove support for Exynos5440
-Date: Tue, 24 Apr 2018 22:32:31 +0200
-Message-Id: <20180424203239.21885-3-krzk@kernel.org>
-In-Reply-To: <20180424203239.21885-1-krzk@kernel.org>
-References: <20180424203239.21885-1-krzk@kernel.org>
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Jaehoon Chung <jh80.chung@samsung.com>
+Return-Path: <SRS0=pgiu=HP=ideasonboard.com=laurent.pinchart@kernel.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] rcar-vin: remove generic gen3 compatible string
+Date: Fri, 27 Apr 2018 02:09:24 +0300
+Message-ID: <2062313.TSG5ePb3Hm@avalon>
+In-Reply-To: <20180424234321.22367-1-niklas.soderlund+renesas@ragnatech.se>
+References: <20180424234321.22367-1-niklas.soderlund+renesas@ragnatech.se>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+To: Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The Exynos5440 is not actively developed, there are no development
-boards available and probably there are no real products with it.
-Remove wide-tree support for Exynos5440.
+Hi Niklas,
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- Documentation/devicetree/bindings/ata/ahci-platform.txt | 1 -
- drivers/ata/ahci_platform.c                             | 1 -
- 2 files changed, 2 deletions(-)
+Thank you for the patch.
 
-diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-index c760ecb81381..663766685818 100644
---- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-+++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-@@ -17,7 +17,6 @@ Required properties:
-   - "marvell,armada-380-ahci"
-   - "marvell,armada-3700-ahci"
-   - "snps,dwc-ahci"
--  - "snps,exynos5440-ahci"
-   - "snps,spear-ahci"
-   - "generic-ahci"
- - interrupts        : <interrupt mapping for SATA IRQ>
-diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-index 99f9a895a459..564570ea3e27 100644
---- a/drivers/ata/ahci_platform.c
-+++ b/drivers/ata/ahci_platform.c
-@@ -75,7 +75,6 @@ static const struct of_device_id ahci_of_match[] = {
- 	{ .compatible = "generic-ahci", },
- 	/* Keep the following compatibles for device tree compatibility */
- 	{ .compatible = "snps,spear-ahci", },
--	{ .compatible = "snps,exynos5440-ahci", },
- 	{ .compatible = "ibm,476gtr-ahci", },
- 	{ .compatible = "snps,dwc-ahci", },
- 	{ .compatible = "hisilicon,hisi-ahci", },
--- 
-2.14.1
+On Wednesday, 25 April 2018 02:43:21 EEST Niklas S=F6derlund wrote:
+> The compatible string "renesas,rcar-gen3-vin" was added before the
+> Gen3 driver code was added but it's not possible to use. Each SoC in the
+> Gen3 series require SoC specific knowledge in the driver to function.
+> Remove it before it is added to any device tree descriptions.
+>=20
+> Signed-off-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.se>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  Documentation/devicetree/bindings/media/rcar_vin.txt | 1 -
+>  1 file changed, 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> b/Documentation/devicetree/bindings/media/rcar_vin.txt index
+> ba31431d4b1fbdbb..a19517e1c669eb35 100644
+> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> @@ -24,7 +24,6 @@ on Gen3 platforms to a CSI-2 receiver.
+>     - "renesas,vin-r8a77970" for the R8A77970 device
+>     - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 or RZ/G1 compatible
+>       device.
+> -   - "renesas,rcar-gen3-vin" for a generic R-Car Gen3 compatible device.
+>=20
+>     When compatible with the generic version nodes must list the
+>     SoC-specific version corresponding to the platform first
+
+
+=2D-=20
+Regards,
+
+Laurent Pinchart
