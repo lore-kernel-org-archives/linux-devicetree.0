@@ -1,85 +1,93 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 09/10] gpio: Add a driver for Cadence I3C GPIO expander
-Date: Thu, 26 Apr 2018 10:44:26 +0200
-Message-ID: <CACRpkdY_7mi8GPiopZ9Yg4Y0-AV_SriZe=1yN5is6eH6FUm6Qg@mail.gmail.com>
-References: <20180330074751.25987-1-boris.brezillon@bootlin.com> <20180330074751.25987-10-boris.brezillon@bootlin.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH v7 0/7] clk: meson-axg: Add AO Cloclk and Reset driver
+Date: Thu, 26 Apr 2018 16:44:30 +0800
+Message-ID: <20180426084437.192394-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180330074751.25987-10-boris.brezillon@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion>
+To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Yixun Lan <yixun.lan@amlogic.com>, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 30, 2018 at 9:47 AM, Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
+  This patch try to add AO clock and Reset driver for Amlogic's
+Meson-AXG SoC.
+  Please note that patch 7 need to wait for the DTS changes[3] merged
+into mainline first, otherwise it will break the serial console.
 
-> Add a driver for Cadence I3C GPIO expander.
->
-> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+ patch 2: factor the common code into a dedicated file
+ patch 3-5: add the aoclk driver for AXG SoC
+ patch 6-7: drop unnecessary clock flags
 
-This is pretty much OK, and I don't want to raise the bar
-even higher for you to get this code into the kernel, so:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+changes since v6 at [7]: 
+ - fix over 80 chars chechpatch error
+ - add Philip's Ack on patch 5
+ - drop extra end of newline
 
-The following is an observation for future improvement:
+changes since v5 at [6]: 
+ - drop unnecessary header files
+ - add 'axg_aoclk' prefix to clk driver, make them more consistent
+ - add missing end new line..
 
-> +static int cdns_i3c_gpio_read_reg(struct cdns_i3c_gpio *gpioc, u8 reg,
-> +                                 u8 *val)
-> +{
-> +       struct i3c_priv_xfer xfers[] = {
-> +               {
-> +                       .len = sizeof(reg),
-> +                       .data.out = &reg,
-> +               },
-> +               {
-> +                       .rnw = true,
-> +                       .len = sizeof(*val),
-> +                       .data.in = val,
-> +               },
-> +       };
-> +
-> +       return i3c_device_do_priv_xfers(gpioc->i3cdev, xfers,
-> +                                       ARRAY_SIZE(xfers));
-> +}
-> +
-> +static int cdns_i3c_gpio_write_reg(struct cdns_i3c_gpio *gpioc, u8 reg,
-> +                                  u8 val)
-> +{
-> +       struct i3c_priv_xfer xfers[] = {
-> +               {
-> +                       .len = sizeof(reg),
-> +                       .data.out = &reg,
-> +               },
-> +               {
-> +                       .len = sizeof(val),
-> +                       .data.out = &val,
-> +               },
-> +       };
-> +
-> +       return i3c_device_do_priv_xfers(gpioc->i3cdev, xfers,
-> +                                       ARRAY_SIZE(xfers));
-> +}
+changes since v4 at [5]: 
+ - fix return err
+ - introduce CONFIG_COMMON_CLK_MESON_AO
+ - format/style minor fix
 
-This is starting to resemble
-drivers/base/regmap/regmap-i2c.c
+changes since v3 at [4]: 
+ - add 'const' contraint to the read-only data
+ - switch to devm_of_clk_add_hw_provider API
+ - check return value of devm_reset_controller_register
 
-Maybe we should very quickly add regmap-i3c.c as this
-infrastructre has had a great positive effect on may kernel
-subsystems.
+changes since v2 at [2]: 
+ - rework meson_aoclkc_probe() which leverage the of_match_data
+ - merge patch 5-6 into this series
+ - seperate DTS patch, will send to Kevin Hilman independently
+ 
+changes since v1 at [0]: 
+ - rebase to clk-meson's branch 'next/drivers' [1]
+ - fix license, update to BSD-3-Clause
+ - drop un-used include header file
 
-> +static int cdns_i3c_gpio_get_direction(struct gpio_chip *g, unsigned offset)
-> +{
-> +       struct cdns_i3c_gpio *gpioc = gpioc_to_cdns_gpioc(g);
-> +
-> +       return gpioc->dir & BIT(offset);
+[0] https://lkml.kernel.org/r/20180209070026.193879-1-yixun.lan@amlogic.com
+[1] git://github.com/BayLibre/clk-meson.git branch: next-drivers
+[2] https://lkml.kernel.org/r/20180323143816.200573-1-yixun.lan@amlogic.com
+[3] https://lkml.kernel.org/r/20180326081809.49493-4-yixun.lan@amlogic.com
+[4] https://lkml.kernel.org/r/20180328025050.221585-1-yixun.lan@amlogic.com
+[5] https://lkml.kernel.org/r/20180408031938.153474-1-yixun.lan@amlogic.com
+[6] https://lkml.kernel.org/r/20180409143749.71197-1-yixun.lan@amlogic.com
+[7] https://lkml.kernel.org/r/20180419135426.155794-1-yixun.lan@amlogic.com
 
-I would:
 
-return !!(gpioc->dir & BIT(offset));
+Qiufang Dai (1):
+  clk: meson-axg: Add AO Clock and Reset controller driver
 
-So you clamp it to bit 0.
+Yixun Lan (6):
+  clk: meson: migrate to devm_of_clk_add_hw_provider API
+  clk: meson: aoclk: refactor common code into dedicated file
+  dt-bindings: clock: axg-aoclkc: New binding for Meson-AXG SoC
+  dt-bindings: clock: reset: Add AXG AO Clock and Reset Bindings
+  clk: meson: drop CLK_SET_RATE_PARENT flag
+  clk: meson: drop CLK_IGNORE_UNUSED flag
 
-Yours,
-Linus Walleij
+ .../bindings/clock/amlogic,gxbb-aoclkc.txt    |   1 +
+ drivers/clk/meson/Kconfig                     |   8 +
+ drivers/clk/meson/Makefile                    |   3 +-
+ drivers/clk/meson/axg-aoclk.c                 | 163 ++++++++++++++++++
+ drivers/clk/meson/axg-aoclk.h                 |  29 ++++
+ drivers/clk/meson/gxbb-aoclk.c                |  95 ++++------
+ drivers/clk/meson/gxbb-aoclk.h                |   5 +
+ drivers/clk/meson/meson-aoclk.c               |  81 +++++++++
+ drivers/clk/meson/meson-aoclk.h               |  34 ++++
+ include/dt-bindings/clock/axg-aoclkc.h        |  26 +++
+ include/dt-bindings/reset/axg-aoclkc.h        |  20 +++
+ 11 files changed, 401 insertions(+), 64 deletions(-)
+ create mode 100644 drivers/clk/meson/axg-aoclk.c
+ create mode 100644 drivers/clk/meson/axg-aoclk.h
+ create mode 100644 drivers/clk/meson/meson-aoclk.c
+ create mode 100644 drivers/clk/meson/meson-aoclk.h
+ create mode 100644 include/dt-bindings/clock/axg-aoclkc.h
+ create mode 100644 include/dt-bindings/reset/axg-aoclkc.h
+
+-- 
+2.17.0
