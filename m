@@ -1,66 +1,29 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] ARM: dts: r8a7740: Enable CEU0
-Date: Thu, 26 Apr 2018 08:11:30 +0200
-Message-ID: <20180426061124.hvgl3ijf6ulrdkmn@verge.net.au>
-References: <1524654920-18749-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524654920-18749-3-git-send-email-jacopo+renesas@jmondi.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V4 3/6] ARM: dts: imx6sx-sabreauto: add IO expander
+ max7310 support
+Date: Thu, 26 Apr 2018 03:21:21 -0300
+Message-ID: <CAOMZO5AZLbUoL7FWgUFA7qc3q3wcz9UBLSQhMXXkUJeiRz8X4A@mail.gmail.com>
+References: <1524634571-5914-1-git-send-email-Anson.Huang@nxp.com>
+ <1524634571-5914-3-git-send-email-Anson.Huang@nxp.com> <CAOMZO5Dm6rcEe=zAJ9_nqKce3g2tdyWPqb=Uv-N5nfc_96jc-g@mail.gmail.com>
+ <AM3PR04MB13150654494B8D251988F76CF58E0@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1524654920-18749-3-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <AM3PR04MB13150654494B8D251988F76CF58E0@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: geert@linux-m68k.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Jacopo,
+On Thu, Apr 26, 2018 at 12:06 AM, Anson Huang <anson.huang@nxp.com> wrote:
 
-I'm very pleased to see this series.
+> MAX7310 pins are for PCIe, CAN, MLB. GPS etc., these modules are NOT enabled yet, so
+> I can NOT test it, I think we should add MAX7310 users when these modules are enabled,
+> ethernet PHY is NOT controlled by it.
 
-On Wed, Apr 25, 2018 at 01:15:20PM +0200, Jacopo Mondi wrote:
-> Enable CEU0 peripheral for Renesas R-Mobile A1 R8A7740.
+You said previously that MAX7310 also controls the Ethernet PHY. Is
+the vendor dts wrong then?
 
-Given 'status = "disabled"' below I think you
-are describing but not enabling CEU0. Also in the subject.
+If there are no MAX7310 users, why are you adding support for MAX7310 then?
 
-Should we also describe CEU1?
-
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  arch/arm/boot/dts/r8a7740.dtsi | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-> index afd3bc5..05ec41e 100644
-> --- a/arch/arm/boot/dts/r8a7740.dtsi
-> +++ b/arch/arm/boot/dts/r8a7740.dtsi
-> @@ -67,6 +67,16 @@
->  		power-domains = <&pd_d4>;
->  	};
->  
-> +	ceu0: ceu@fe910000 {
-> +		reg = <0xfe910000 0x100>;
-
-Should the size of the range be 0x3000 ?
-That would seem to match my reading of table 32.3
-and also be consistent with r7s72100.dtsi.
-
-> +		compatible = "renesas,r8a7740-ceu";
-> +		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&mstp1_clks R8A7740_CLK_CEU20>;
-> +		clock-names = "ceu20";
-> +		power-domains = <&pd_a4mp>;
-
-My reading of table 1.7 is that the power domain should be A4R (&pd_a4r).
-
-> +		status = "disabled";
-> +	};
-> +
->  	cmt1: timer@e6138000 {
->  		compatible = "renesas,cmt-48-r8a7740", "renesas,cmt-48";
->  		reg = <0xe6138000 0x170>;
-> -- 
-> 2.7.4
-> 
+Confused.
