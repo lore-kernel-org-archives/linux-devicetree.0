@@ -1,136 +1,38 @@
-Return-Path: <SRS0=3WMa=HH=bootlin.com=maxime.ripard@kernel.org>
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v9 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
-Date: Wed, 18 Apr 2018 10:22:47 +0200
-Message-Id: <20180418082248.28406-2-maxime.ripard@bootlin.com>
-In-Reply-To: <20180418082248.28406-1-maxime.ripard@bootlin.com>
-References: <20180418082248.28406-1-maxime.ripard@bootlin.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Return-Path: <SRS0=j3wE=HP=samsung.com=cw00.choi@kernel.org>
+MIME-version: 1.0
+Content-transfer-encoding: 8BIT
+Content-type: text/plain; charset="UTF-8"
+Message-id: <5AE12829.4090607@samsung.com>
+Date: Thu, 26 Apr 2018 10:15:21 +0900
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [RFC 07/10] pinctrl: samsung: Remove support for Exynos5440
+In-reply-to: <20180424203239.21885-8-krzk@kernel.org>
+References: <20180424203239.21885-1-krzk@kernel.org>
+	<CGME20180424203539epcas2p4e099df5797adb9a49c0d49bbfc829543@epcas2p4.samsung.com>
+	<20180424203239.21885-8-krzk@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Jaehoon Chung <jh80.chung@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The Cadence MIPI-CSI2 TX controller is a CSI2 bridge that supports up to 4
-video streams and can output on up to 4 CSI-2 lanes, depending on the
-hardware implementation.
+Hi,
 
-It can operate with an external D-PHY, an internal one or no D-PHY at all
-in some configurations.
+On 2018년 04월 25일 05:32, Krzysztof Kozlowski wrote:
+> The Exynos5440 is not actively developed, there are no development
+> boards available and probably there are no real products with it.
+> Remove wide-tree support for Exynos5440.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/pinctrl/samsung/Kconfig              |   10 +-
+>  drivers/pinctrl/samsung/Makefile             |    1 -
+>  drivers/pinctrl/samsung/pinctrl-exynos5440.c | 1005 --------------------------
+>  3 files changed, 2 insertions(+), 1014 deletions(-)
+>  delete mode 100644 drivers/pinctrl/samsung/pinctrl-exynos5440.c
 
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- .../devicetree/bindings/media/cdns,csi2tx.txt | 98 +++++++++++++++++++
- 1 file changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+Looks good to me.
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-diff --git a/Documentation/devicetree/bindings/media/cdns,csi2tx.txt b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-new file mode 100644
-index 000000000000..459c6e332f52
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-@@ -0,0 +1,98 @@
-+Cadence MIPI-CSI2 TX controller
-+===============================
-+
-+The Cadence MIPI-CSI2 TX controller is a CSI-2 bridge supporting up to
-+4 CSI lanes in output, and up to 4 different pixel streams in input.
-+
-+Required properties:
-+  - compatible: must be set to "cdns,csi2tx"
-+  - reg: base address and size of the memory mapped region
-+  - clocks: phandles to the clocks driving the controller
-+  - clock-names: must contain:
-+    * esc_clk: escape mode clock
-+    * p_clk: register bank clock
-+    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
-+                         implemented in hardware, between 0 and 3
-+
-+Optional properties
-+  - phys: phandle to the D-PHY. If it is set, phy-names need to be set
-+  - phy-names: must contain "dphy"
-+
-+Required subnodes:
-+  - ports: A ports node with one port child node per device input and output
-+           port, in accordance with the video interface bindings defined in
-+           Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+           port nodes are numbered as follows.
-+
-+           Port Description
-+           -----------------------------
-+           0    CSI-2 output
-+           1    Stream 0 input
-+           2    Stream 1 input
-+           3    Stream 2 input
-+           4    Stream 3 input
-+
-+           The stream input port nodes are optional if they are not
-+           connected to anything at the hardware level or implemented
-+           in the design. Since there is only one endpoint per port,
-+           the endpoints are not numbered.
-+
-+Example:
-+
-+csi2tx: csi-bridge@0d0e1000 {
-+	compatible = "cdns,csi2tx";
-+	reg = <0x0d0e1000 0x1000>;
-+	clocks = <&byteclock>, <&byteclock>,
-+		 <&coreclock>, <&coreclock>,
-+		 <&coreclock>, <&coreclock>;
-+	clock-names = "p_clk", "esc_clk",
-+		      "pixel_if0_clk", "pixel_if1_clk",
-+		      "pixel_if2_clk", "pixel_if3_clk";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			csi2tx_out: endpoint {
-+				remote-endpoint = <&remote_in>;
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			csi2tx_in_stream0: endpoint {
-+				remote-endpoint = <&stream0_out>;
-+			};
-+		};
-+
-+		port@2 {
-+			reg = <2>;
-+
-+			csi2tx_in_stream1: endpoint {
-+				remote-endpoint = <&stream1_out>;
-+			};
-+		};
-+
-+		port@3 {
-+			reg = <3>;
-+
-+			csi2tx_in_stream2: endpoint {
-+				remote-endpoint = <&stream2_out>;
-+			};
-+		};
-+
-+		port@4 {
-+			reg = <4>;
-+
-+			csi2tx_in_stream3: endpoint {
-+				remote-endpoint = <&stream3_out>;
-+			};
-+		};
-+	};
-+};
 -- 
-2.17.0
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
