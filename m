@@ -1,52 +1,82 @@
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH] dt-bindings: staging: remove a couple of ADC bindings
-Date: Thu, 26 Apr 2018 21:42:05 +0200
-Message-ID: <20180426214205.22f1a543@windsurf>
-References: <20180426015754.26605-1-robh@kernel.org>
-        <20180426053255.75jg5bsdu4h624jo@vireshk-i7>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v5] drm/panel: simple: Add TFC S9700RTWV43TR-01B 800x480 panel
+ support
+Date: Thu, 26 Apr 2018 22:48:22 +0300
+Message-ID: <1524772102-3360-1-git-send-email-jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180426053255.75jg5bsdu4h624jo@vireshk-i7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roland Stigge <stigge@antcom.de>, Stefan Roese <sr@denx.de>, Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, thierry.reding@gmail.com
+Cc: devicetree@vger.kernel.org, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Thu, 26 Apr 2018 11:02:55 +0530, Viresh Kumar wrote:
-> @Thomas: Do you guys use this ?
-> 
-> On 25-04-18, 20:57, Rob Herring wrote:
-> > Remove LPC32xx and SPEAr ADC bindings in staging. They have not been
-> > touched since 2012.
-> > 
-> > Cc: Roland Stigge <stigge@antcom.de>
-> > Cc: Stefan Roese <sr@denx.de>
-> > Cc: Jonathan Cameron <jic23@kernel.org>
-> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> > Move these out of staging please or they are going to be removed.
-> > 
-> >  .../bindings/staging/iio/adc/lpc32xx-adc.txt       | 16 -------------
-> >  .../bindings/staging/iio/adc/spear-adc.txt         | 26 ----------------------
-> >  2 files changed, 42 deletions(-)
-
-We are using the spear-adc driver, which is out of staging
-in ./drivers/iio/adc/spear_adc.c. So rather than removing its DT binding
-entirely, it should be moved out of staging.
-
-I'm not using the LPC32xx ADC, but the IIO driver is also out of
-staging, so for the same reason, it would be strange to remove the DT
-binding.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+QWRkIHN1cHBvcnQgZm9yIFRocmVlIEZpdmUgZGlzcGxheXMgVEZDIFM5NzAwUlRXVjQzVFItMDFC
+IDgwMHg0ODAKcGFuZWwgd2l0aCByZXNpc3RpdmUgdG91Y2ggZm91bmQgb24gVEkncyBBTTMzNVgt
+RVZNLgoKU2lnbmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KUmV2aWV3ZWQt
+Ynk6IFRvbWkgVmFsa2VpbmVuIDx0b21pLnZhbGtlaW5lbkB0aS5jb20+CmNjOiBUaGllcnJ5IFJl
+ZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPgotLS0KVGhhbmtzIFRoaWVycnksIGZvciBy
+ZW1pbmRpbmcgbWUgYWJvdXQgdGhpcyEKCkNoYW5nZXMgc2luY2UgdjQ6Ci0gQWRkIHRmYyB0byB2
+ZW5kb3ItcHJlZml4ZXMudHh0CgogLi4uL2Rpc3BsYXkvcGFuZWwvdGZjLHM5NzAwcnR3djQzdHIt
+MDFiLnR4dCAgICAgICAgfCAxMCArKysrKysrKysKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Zl
+bmRvci1wcmVmaXhlcy50eHQgICAgICAgIHwgIDEgKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3Bh
+bmVsLXNpbXBsZS5jICAgICAgICAgICAgICAgfCAyNiArKysrKysrKysrKysrKysrKysrKysrCiAz
+IGZpbGVzIGNoYW5nZWQsIDM3IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC90ZmMsczk3MDBydHd2
+NDN0ci0wMWIudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvcGFuZWwvdGZjLHM5NzAwcnR3djQzdHItMDFiLnR4dCBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3RmYyxzOTcwMHJ0d3Y0M3RyLTAx
+Yi50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uMGIxY2M3MQotLS0gL2Rl
+di9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Bh
+bmVsL3RmYyxzOTcwMHJ0d3Y0M3RyLTAxYi50eHQKQEAgLTAsMCArMSwxMCBAQAorVEZDIFM5NzAw
+UlRXVjQzVFItMDFCIDciIFRocmVlIEZpdmUgQ29ycCA4MDB4NDgwIExDRCBwYW5lbCB3aXRoCity
+ZXNpc3RpdmUgdG91Y2gKKworVGhlIHBhbmVsIGlzIGZvdW5kIG9uIFRJIEFNMzM1eC1ldm0uCisK
+K1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAidGZjLFM5NzAw
+UlRXVjQzdHItMDFiIgorCitUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1w
+bGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCitpbiBzaW1wbGUtcGFuZWwudHh0
+IGluIHRoaXMgZGlyZWN0b3J5LgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dAppbmRleCAxMmU4YjNlLi40ZWMwZDZiIDEwMDY0
+NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVz
+LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZp
+eGVzLnR4dApAQCAtMzU2LDYgKzM1Niw3IEBAIHRlY2huZXhpb24JVGVjaE5leGlvbgogdGVjaG5v
+bG9naWMJVGVjaG5vbG9naWMgU3lzdGVtcwogdGVtcG8JVGVtcG8gU2VtaWNvbmR1Y3RvcgogdGVy
+YXNpYwlUZXJhc2ljIEluYy4KK3RmYwlUaHJlZSBGaXZlIENvcnAKIHRoaW5lCVRIaW5lIEVsZWN0
+cm9uaWNzLCBJbmMuCiB0aQlUZXhhcyBJbnN0cnVtZW50cwogdGlhbm1hCVRpYW5tYSBNaWNyby1l
+bGVjdHJvbmljcyBDby4sIEx0ZC4KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9w
+YW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwppbmRl
+eCBjYmYxYWI0Li5mMmQ5NjYxMSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3Bh
+bmVsLXNpbXBsZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwpA
+QCAtMTg5MSw2ICsxODkxLDI5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBzdGFy
+cnlfa3IxMjJlYTBzcmEgPSB7CiAJfSwKIH07CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rp
+c3BsYXlfbW9kZSB0ZmNfczk3MDBydHd2NDN0cl8wMWJfbW9kZSA9IHsKKwkuY2xvY2sgPSAzMDAw
+MCwKKwkuaGRpc3BsYXkgPSA4MDAsCisJLmhzeW5jX3N0YXJ0ID0gODAwICsgMzksCisJLmhzeW5j
+X2VuZCA9IDgwMCArIDM5ICsgNDcsCisJLmh0b3RhbCA9IDgwMCArIDM5ICsgNDcgKyAzOSwKKwku
+dmRpc3BsYXkgPSA0ODAsCisJLnZzeW5jX3N0YXJ0ID0gNDgwICsgMTMsCisJLnZzeW5jX2VuZCA9
+IDQ4MCArIDEzICsgMiwKKwkudnRvdGFsID0gNDgwICsgMTMgKyAyICsgMjksCisJLnZyZWZyZXNo
+ID0gNjIsCit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgdGZjX3M5NzAwcnR3
+djQzdHJfMDFiID0geworCS5tb2RlcyA9ICZ0ZmNfczk3MDBydHd2NDN0cl8wMWJfbW9kZSwKKwku
+bnVtX21vZGVzID0gMSwKKwkuYnBjID0gOCwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0gMTU1LAor
+CQkuaGVpZ2h0ID0gOTAsCisJfSwKK307CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZGlzcGxheV90
+aW1pbmcgdGlhbm1hX3RtMDcwamRoZzMwX3RpbWluZyA9IHsKIAkucGl4ZWxjbG9jayA9IHsgNjI2
+MDAwMDAsIDY4MjAwMDAwLCA3ODEwMDAwMCB9LAogCS5oYWN0aXZlID0geyAxMjgwLCAxMjgwLCAx
+MjgwIH0sCkBAIC0yMjUxLDYgKzIyNzQsOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2Rldmlj
+ZV9pZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0gewogCQkuY29tcGF0aWJsZSA9ICJzdGFycnksa3Ix
+MjJlYTBzcmEiLAogCQkuZGF0YSA9ICZzdGFycnlfa3IxMjJlYTBzcmEsCiAJfSwgeworCQkuY29t
+cGF0aWJsZSA9ICJ0ZmMsczk3MDBydHd2NDN0ci0wMWIiLAorCQkuZGF0YSA9ICZ0ZmNfczk3MDBy
+dHd2NDN0cl8wMWIsCisJfSwgewogCQkuY29tcGF0aWJsZSA9ICJ0aWFubWEsdG0wNzBqZGhnMzAi
+LAogCQkuZGF0YSA9ICZ0aWFubWFfdG0wNzBqZGhnMzAsCiAJfSwgewotLSAKVGV4YXMgSW5zdHJ1
+bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuIFktdHVu
+bnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtp
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
