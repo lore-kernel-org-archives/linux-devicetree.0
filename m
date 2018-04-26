@@ -1,299 +1,196 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH v5 2/2] drivers: soc: Add LLCC driver
-Date: Thu, 26 Apr 2018 18:32:16 +0000
-Message-ID: <CAE=gft6h6HJgXURYP2F7aMC35iOCQRq5bTzphS4PnTp56of40A@mail.gmail.com>
-References: <1524524972-12014-1-git-send-email-rishabhb@codeaurora.org> <1524524972-12014-3-git-send-email-rishabhb@codeaurora.org>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH 1/8] drm: bridge: Add support for static image formats
+Date: Thu, 26 Apr 2018 20:40:56 +0200
+Message-ID: <20180426184056.GQ4235@w540>
+References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1524130269-32688-2-git-send-email-jacopo+renesas@jmondi.org>
+ <3108314.q4SV6s3NXE@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524524972-12014-3-git-send-email-rishabhb@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: rishabhb@codeaurora.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@lists.infradead.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, kyan@codeaurora.org, ckadabi@codeaurora.org, robh@kernel.org
+Content-Type: multipart/mixed; boundary="===============1907005216=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <3108314.q4SV6s3NXE@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, peda@axentia.se, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rishabh,
 
-On Mon, Apr 23, 2018 at 4:11 PM Rishabh Bhatnagar <rishabhb@codeaurora.org>
-wrote:
+--===============1907005216==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XjbSsFHOHxvQpKib"
+Content-Disposition: inline
 
-> LLCC (Last Level Cache Controller) provides additional cache memory
-> in the system. LLCC is partitioned into multiple slices and each
-> slice gets its own priority, size, ID and other config parameters.
-> LLCC driver programs these parameters for each slice. Clients that
-> are assigned to use LLCC need to get information such size & ID of the
-> slice they get and activate or deactivate the slice as needed. LLCC driver
-> provides API for the clients to perform these operations.
 
-> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> ---
->   drivers/soc/qcom/Kconfig           |  17 ++
->   drivers/soc/qcom/Makefile          |   2 +
->   drivers/soc/qcom/llcc-sdm845.c     | 108 +++++++++++
->   drivers/soc/qcom/llcc-slice.c      | 380
-+++++++++++++++++++++++++++++++++++++
->   include/linux/soc/qcom/llcc-qcom.h | 167 ++++++++++++++++
->   5 files changed, 674 insertions(+)
->   create mode 100644 drivers/soc/qcom/llcc-sdm845.c
->   create mode 100644 drivers/soc/qcom/llcc-slice.c
->   create mode 100644 include/linux/soc/qcom/llcc-qcom.h
+--XjbSsFHOHxvQpKib
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-...
-> diff --git a/drivers/soc/qcom/llcc-slice.c b/drivers/soc/qcom/llcc-slice.c
-> new file mode 100644
-> index 0000000..fd2b607
-> --- /dev/null
-> +++ b/drivers/soc/qcom/llcc-slice.c
-> @@ -0,0 +1,380 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-> + *
-> + */
-> +
-> +#include <linux/bitmap.h>
-> +#include <linux/bitops.h>
-> +#include <linux/device.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +#include <linux/soc/qcom/llcc-qcom.h>
-> +
-> +#define ACTIVATE                      0x1
-> +#define DEACTIVATE                    0x2
-> +#define ACT_CTRL_OPCODE_ACTIVATE      0x1
-> +#define ACT_CTRL_OPCODE_DEACTIVATE    0x2
-> +#define ACT_CTRL_ACT_TRIG             0x1
-> +#define ACT_CTRL_OPCODE_SHIFT         0x1
-> +#define ATTR1_PROBE_TARGET_WAYS_SHIFT 0x2
-> +#define ATTR1_FIXED_SIZE_SHIFT        0x3
-> +#define ATTR1_PRIORITY_SHIFT          0x4
-> +#define ATTR1_MAX_CAP_SHIFT           0x10
-> +#define ATTR0_RES_WAYS_MASK           0x00000fff
-> +#define ATR0_BONUS_WAYS_MASK          0x0fff0000
+Hi Laurent,
 
-This looks like it's missing a t, eg ATTR0_BONUS_WAYS_MASK.
+On Mon, Apr 23, 2018 at 12:27:39PM +0300, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> Thank you for the patch.
+>
+> On Thursday, 19 April 2018 12:31:02 EEST Jacopo Mondi wrote:
+> > Add support for storing image format information in DRM bridges with
+> > associated helper function.
+> >
+> > This patch replicates for bridges what 'drm_display_info_set_bus_formats()'
+> > is for connectors.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  drivers/gpu/drm/drm_bridge.c | 30 ++++++++++++++++++++++++++++++
+> >  include/drm/drm_bridge.h     |  8 ++++++++
+> >  2 files changed, 38 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> > index 1638bfe..e2ad098 100644
+> > --- a/drivers/gpu/drm/drm_bridge.c
+> > +++ b/drivers/gpu/drm/drm_bridge.c
+> > @@ -157,6 +157,36 @@ void drm_bridge_detach(struct drm_bridge *bridge)
+> >  }
+> >
+> >  /**
+> > + * drm_bridge_set_bus_formats() - set bridge supported image formats
+> > + * @bridge: the bridge to set image formats in
+> > + * @formats: array of MEDIA_BUS_FMT\_ supported image formats
+>
+> Why the \ (here and below) ?
 
-> +#define ATTR0_BONUS_WAYS_SHIFT        0x10
-> +#define LLCC_STATUS_READ_DELAY 100
-> +
-> +#define CACHE_LINE_SIZE_SHIFT 6
-> +
-> +#define LLCC_COMMON_STATUS0            0x0003000c
-> +#define LLCC_LB_CNT_MASK               0xf0000000
-> +#define LLCC_LB_CNT_SHIFT              28
-> +
-> +#define MAX_CAP_TO_BYTES(n) (n * 1024)
-> +#define LLCC_TRP_ACT_CTRLn(n) (n * 0x1000)
-> +#define LLCC_TRP_STATUSn(n)   (4 + n * 0x1000)
-> +#define LLCC_TRP_ATTR0_CFGn(n) (0x21000 + 0x8 * n)
-> +#define LLCC_TRP_ATTR1_CFGn(n) (0x21004 + 0x8 * n)
-> +
-> +#define BANK_OFFSET_STRIDE     0x80000
-> +
-> +static const struct regmap_config llcc_regmap_config = {
-> +       .reg_bits = 32,
-> +       .reg_stride = 4,
-> +       .val_bits = 32,
-> +       .fast_io = true,
-> +};
-> +
-> +/* Get the slice entry by index */
-> +static struct llcc_slice_desc *llcc_slice_get_entry(struct device *dev,
-int n)
-> +{
-> +       struct of_phandle_args phargs;
-> +       struct llcc_drv_data *drv;
-> +       const struct llcc_slice_config *llcc_data_ptr;
-> +       struct llcc_slice_desc *desc;
-> +       struct platform_device *pdev;
-> +       u32 sz, count;
-> +
-> +       if (of_parse_phandle_with_args(dev->of_node, "cache-slices",
-> +                                      "#cache-cells", n, &phargs))
-> +               return ERR_PTR(-ENODEV);
-> +
-> +       pdev = of_find_device_by_node(phargs.np);
-> +       if (!pdev)
-> +               return ERR_PTR(-ENODEV);
-> +
-> +       drv = platform_get_drvdata(pdev);
-> +       if (!drv)
-> +               return ERR_PTR(-EFAULT);
+mmm, I can't tell where I made that up from... Will change with
+MEDIA_BUS_FMT_*
 
-EFAULT is a little weird here, right? Maybe EINVAL or ENODEV?
+>
+> > + * @num_formats: number of elements in the @formats array
+> > + *
+> > + * Store a list of supported image formats in a bridge.
+> > + * See MEDIA_BUS_FMT_* definitions in include/uapi/linux/media-bus-format.h
+> > for
+> > + * a full list of available formats.
+> > + */
+> > +int drm_bridge_set_bus_formats(struct drm_bridge *bridge, const u32
+> > *formats,
+> > +			       unsigned int num_formats)
+> > +{
+> > +	u32 *fmts;
+> > +
+> > +	if (!formats || !num_formats)
+> > +		return -EINVAL;
+> > +
+> > +	fmts = kmemdup(formats, sizeof(*formats) * num_formats, GFP_KERNEL);
+>
+> This memory will be leaked when the bridge is destroyed.
 
-> +
-> +       llcc_data_ptr = drv->cfg;
-> +       sz = drv->cfg_size;
-> +       count = 0;
-> +
-> +       while (llcc_data_ptr && count < sz) {
-> +               if (llcc_data_ptr->usecase_id == phargs.args[0])
-> +                       break;
-> +               llcc_data_ptr++;
-> +               count++;
-> +       }
-> +
-> +       if (llcc_data_ptr == NULL || count == sz)
-> +               return ERR_PTR(-ENODEV);
-> +
-> +       desc = devm_kzalloc(dev, sizeof(*desc), GFP_KERNEL);
-> +       if (!desc)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       desc->slice_id = llcc_data_ptr->slice_id;
-> +       desc->slice_size = llcc_data_ptr->max_cap;
-> +       desc->dev = &pdev->dev;
-> +
-> +       return desc;
-> +}
-> +
-> +/**
-> + * llcc_slice_getd - get llcc slice descriptor
-> + * @dev: Device pointer of the client
-> + * @name: Name of the use case
-> + *
-> + * A pointer to llcc slice descriptor will be returned on success and
-> + * and error pointer is returned on failure
-> + */
-> +struct llcc_slice_desc *llcc_slice_getd(struct device *dev, const char
-*name)
-> +{
-> +       struct device_node *np = dev->of_node;
-> +       int index = 0;
-> +       const char *slice_name;
-> +       struct property *prop;
-> +
-> +       if (!of_get_property(np, "cache-slice-names", NULL))
-> +               return ERR_PTR(-ENOENT);
-> +
-> +       of_property_for_each_string(np, "cache-slice-names", prop,
-slice_name) {
-> +               if (!strcmp(name, slice_name))
-> +                       break;
-> +               index++;
-> +       }
-> +       return llcc_slice_get_entry(dev, index);
-> +}
-> +EXPORT_SYMBOL_GPL(llcc_slice_getd);
-> +
-> +/**
-> + * llcc_slice_putd - llcc slice descritpor
-> + * @desc: Pointer to llcc slice descriptor
-> + */
-> +void llcc_slice_putd(struct llcc_slice_desc *desc)
-> +{
-> +       devm_kfree(desc->dev, desc);
-> +}
-> +EXPORT_SYMBOL_GPL(llcc_slice_putd);
-> +
-> +static int llcc_update_act_ctrl(struct llcc_drv_data *drv, u32 sid,
-> +                               u32 act_ctrl_reg_val, u32 status)
-> +{
-> +       u32 act_ctrl_reg;
-> +       u32 status_reg;
-> +       u32 slice_status;
-> +       int ret = 0;
-> +
-> +       act_ctrl_reg = drv->bcast_off + LLCC_TRP_ACT_CTRLn(sid);
-> +       status_reg = drv->bcast_off + LLCC_TRP_STATUSn(sid);
-> +
-> +       /* Set the ACTIVE trigger */
-> +       act_ctrl_reg_val |= ACT_CTRL_ACT_TRIG;
-> +       ret = regmap_write(drv->regmap, act_ctrl_reg, act_ctrl_reg_val);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* Clear the ACTIVE trigger */
-> +       act_ctrl_reg_val &= ~ACT_CTRL_ACT_TRIG;
-> +       ret = regmap_write(drv->regmap, act_ctrl_reg, act_ctrl_reg_val);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = regmap_read_poll_timeout(drv->regmap, status_reg,
-slice_status,
-> +                       !(slice_status & status), 0,
-LLCC_STATUS_READ_DELAY);
-> +       return ret;
-> +}
-> +
-> +/**
-> + * llcc_slice_activate - Activate the llcc slice
-> + * @desc: Pointer to llcc slice descriptor
-> + *
-> + * A value of zero will be returned on success and a negative errno will
-> + * be returned in error cases
-> + */
-> +int llcc_slice_activate(struct llcc_slice_desc *desc)
-> +{
-> +       int ret;
-> +       u32 act_ctrl_val;
-> +       struct llcc_drv_data *drv;
-> +
-> +       drv = dev_get_drvdata(desc->dev);
-> +       if (!drv)
-> +               return -EINVAL;
-> +
-> +       mutex_lock(&drv->lock);
-> +       if (test_bit(desc->slice_id, drv->bitmap)) {
-> +               mutex_unlock(&drv->lock);
-> +               return 0;
-> +       }
-> +
-> +       act_ctrl_val = ACT_CTRL_OPCODE_ACTIVATE << ACT_CTRL_OPCODE_SHIFT;
-> +
-> +       ret = llcc_update_act_ctrl(drv, desc->slice_id, act_ctrl_val,
-> +                                 DEACTIVATE);
-> +
-> +       __set_bit(desc->slice_id, drv->bitmap);
+Right. I'm afraid this may open a pandora box, but, ehm, where is the
+bridge objects lifetime managed? The best I can think of is to use the
+resource managed version of kmemdup, associating that memory to
+the drm_device device object. That means the memory will be freed at
+DRM pipeline teardown time only if I'm not wrong. Can a bridge be
+destroyed before that?
 
-If llcc_update_act_ctrl fails, your bitmap will become out of sync with
-reality, and future calls to llcc_slice activate will return immediately.
-Perhaps you should only set the bit if ret is zero.
+Thanks
+   j
 
-> +       mutex_unlock(&drv->lock);
-> +
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(llcc_slice_activate);
-> +
-> +/**
-> + * llcc_slice_deactivate - Deactivate the llcc slice
-> + * @desc: Pointer to llcc slice descriptor
-> + *
-> + * A value of zero will be returned on success and a negative errno will
-> + * be returned in error cases
-> + */
-> +int llcc_slice_deactivate(struct llcc_slice_desc *desc)
-> +{
-> +       u32 act_ctrl_val;
-> +       int ret;
-> +       struct llcc_drv_data *drv;
-> +
-> +       drv = dev_get_drvdata(desc->dev);
-> +       if (!drv)
-> +               return -EINVAL;
-> +
-> +       mutex_lock(&drv->lock);
-> +       if (!test_bit(desc->slice_id, drv->bitmap)) {
-> +               mutex_unlock(&drv->lock);
-> +               return 0;
-> +       }
-> +       act_ctrl_val = ACT_CTRL_OPCODE_DEACTIVATE <<
-ACT_CTRL_OPCODE_SHIFT;
-> +
-> +       ret = llcc_update_act_ctrl(drv, desc->slice_id, act_ctrl_val,
-> +                                 ACTIVATE);
-> +
-> +       __clear_bit(desc->slice_id, drv->bitmap);
+>
+> > +	if (!fmts)
+> > +		return -ENOMEM;
+> > +
+> > +	kfree(bridge->bus_formats);
+> > +	bridge->bus_formats = fmts;
+> > +	bridge->num_bus_formats = num_formats;
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL(drm_bridge_set_bus_formats);
+> > +
+> > +/**
+> >   * DOC: bridge callbacks
+> >   *
+> >   * The &drm_bridge_funcs ops are populated by the bridge driver. The DRM
+> > diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> > index 3270fec..6b3648c 100644
+> > --- a/include/drm/drm_bridge.h
+> > +++ b/include/drm/drm_bridge.h
+> > @@ -258,6 +258,9 @@ struct drm_bridge_timings {
+> >   * @encoder: encoder to which this bridge is connected
+> >   * @next: the next bridge in the encoder chain
+> >   * @of_node: device node pointer to the bridge
+> > + * @bus_formats: wire image formats. Array of @num_bus_formats
+> > MEDIA_BUS_FMT\_
+> > + * elements
+> > + * @num_bus_formats: size of @bus_formats array
+> >   * @list: to keep track of all added bridges
+> >   * @timings: the timing specification for the bridge, if any (may
+> >   * be NULL)
+> > @@ -271,6 +274,9 @@ struct drm_bridge {
+> >  #ifdef CONFIG_OF
+> >  	struct device_node *of_node;
+> >  #endif
+> > +	const u32 *bus_formats;
+> > +	unsigned int num_bus_formats;
+> > +
+> >  	struct list_head list;
+> >  	const struct drm_bridge_timings *timings;
+> >
+> > @@ -296,6 +302,8 @@ void drm_bridge_mode_set(struct drm_bridge *bridge,
+> >  			struct drm_display_mode *adjusted_mode);
+> >  void drm_bridge_pre_enable(struct drm_bridge *bridge);
+> >  void drm_bridge_enable(struct drm_bridge *bridge);
+> > +int drm_bridge_set_bus_formats(struct drm_bridge *bridge, const u32 *fmts,
+> > +			       unsigned int num_fmts);
+> >
+> >  #ifdef CONFIG_DRM_PANEL_BRIDGE
+> >  struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel,
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
+>
+>
 
-Conversely, only clear the bit if ret was zero.
+--XjbSsFHOHxvQpKib
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If you fix these issues, then feel free to add my Reviewed-by to the next
-spin of this patch.
--Evan
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJa4h03AAoJEHI0Bo8WoVY8q+wP/0ttfJ3DbbFi82FZvilz9zPE
+4fzTqr/SQyP7SixvfX8/P/f5bK2VB62pmUbDnUIO9PChMWYcaz0PYnVXKgnCpcpW
+TYPk5CKtnXLSbCC3B7Jl1/39Qy2I6ACgXuhDMtYe3z099mGDVImuSEB3ibMYrwCR
+GkcnC9Eqk9E9hPDsJTL3C4pzDlUxCLR+KXt21SnMlgy1jTuntjD56AeXl6FRDMnT
++mmWw8Cd9DXoSmDoVrxIACTzGlQypeDY+3YhTJXY0PlJ0LoG01YZDpjShq0qzFlU
+jcTbVItr5Sxe5SNIMEKyf6qVhd8d0oyax8HA4mp8YE63TCrqQY0EBbdvlacmCyMt
+IAS65gwn50NsgDoCU2cMRQ14TyYsi4zL7XVd1c/dznOYM05QrS5mb/AJhjTbGC90
+F1yxvZe3umv85HUGmTXN/OG4XIsyENtGY9cV6UT6eRXykdNx+cVWQb6qOdDV6n4p
+rDYKNq2S9df8NowfTsOFKB4BIQ243HvB8CklqxZhNHJX4rWuT1DEVDAZtCSkYhw7
+p6KCm7ohjphurt2ni15xdDTNnCdn9Ae86GI4u6Z4Og8cYlXgi/fCmfgGpb567Jia
+mWkwqV1c9CQSnQFl5g0T71kR9hiqBlZ5myhi7EUsY8BTjFew+PsrjUyPyzgEVbla
+GrTNopn4sckxVWJ1GAng
+=F88E
+-----END PGP SIGNATURE-----
+
+--XjbSsFHOHxvQpKib--
+
+--===============1907005216==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1907005216==--
