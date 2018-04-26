@@ -1,525 +1,215 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/3] power: supply: Add support for the Qualcomm Battery
- Monitoring System
-Date: Thu, 26 Apr 2018 11:21:34 -0700
-Message-ID: <20180426182134.GM18510@minitux>
-References: <20180407134712.23131-1-ctatlor97@gmail.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 0/7] gnss: add new GNSS subsystem
+Date: Thu, 26 Apr 2018 20:21:36 +0200
+Message-ID: <20180426182136.GX4615@localhost>
+References: <20180424163458.11947-1-johan@kernel.org>
+ <31CF06C6-D6ED-4930-8D81-12256A518059@goldelico.com>
+ <20180424175050.GG4615@localhost>
+ <8F4FAF5B-AAA9-4D46-A022-99B96C74ABFA@goldelico.com>
+ <20180425081120.GL4615@localhost>
+ <7A11E17A-64B7-4B39-87EC-D6A52773850B@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180407134712.23131-1-ctatlor97@gmail.com>
+In-Reply-To: <7A11E17A-64B7-4B39-87EC-D6A52773850B@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Craig Tatlor <ctatlor97@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat 07 Apr 10:57 PDT 2018, Craig Tatlor wrote:
+On Thu, Apr 26, 2018 at 12:10:02PM +0200, H. Nikolaus Schaller wrote:
 
-Looks pretty good, just some minor things inline.
+> > Am 25.04.2018 um 10:11 schrieb Johan Hovold <johan@kernel.org>:
+> > 
+> > On Tue, Apr 24, 2018 at 09:44:08PM +0200, H. Nikolaus Schaller wrote:
+> > 
+> >>> Am 24.04.2018 um 19:50 schrieb Johan Hovold <johan@kernel.org>:
 
-[..]
-> diff --git a/drivers/power/supply/qcom_bms.c b/drivers/power/supply/qcom_bms.c
-> new file mode 100644
-> index 000000000000..f31c99c03518
-> --- /dev/null
-> +++ b/drivers/power/supply/qcom_bms.c
-> @@ -0,0 +1,500 @@
-> +// SPDX-License-Identifier: GPL
-> +
-> +/*
-> + * Qualcomm Battery Monitoring System driver
-> + *
-> + * Copyright (C) 2018 Craig Tatlor <ctatlor97@gmail.com>
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/param.h>
+> >> You could have simply reused what we have proposed [1] and just
+> >> adapt it to the new API instead of writing a new driver (which
+> >> is missing some features for us).
+> > 
+> > Your code was broken or needed to be updated in several ways as I
+> > pointed out in the thread you refer to.
+> 
+> No, it was not broken (it is in daily use and no practical problems
+> are known), but surely does not cover some corner-cases (e.g. races).
 
-param.h unused?
+I'd certainly be sceptical about accepting code into the kernel from
+anyone who completely ignores locking and considers concurrency to be a
+corner case that he cannot be bothered with.
 
-> +#include <linux/platform_device.h>
-> +#include <linux/power_supply.h>
-> +#include <linux/slab.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/regmap.h>
-> +#include <linux/irq.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/iio/consumer.h>
-> +
-> +#define REG_BMS_OCV_FOR_SOC_DATA0	0x90
-> +#define REG_BMS_SHDW_CC_DATA0		0xA8
-> +#define REG_BMS_CC_DATA_CTL		0x42
-> +#define REG_BMS_CC_CLEAR_CTL		0x4
-> +
-> +#define BMS_HOLD_OREG_DATA		BIT(0)
-> +#define BMS_CLEAR_SHDW_CC		BIT(6)
-> +
-> +#define CC_36_BIT_MASK			0xFFFFFFFFFLL
+Sure, out-of-tree code is often sub-par, and that is partly why it
+remains out of tree.
 
-How about GENMASK_ULL() ? 
+> I said we should focus firstly on the "abstraction level". So I
+> postponed these code issues from discussion.
+> 
+> In the end you announced to provide a new kernel API which would
+> make most of the code (all tty stuff) and related problems go away
+> anyways.
+> 
+> Therefore I simply did wait for this API to come, before fixing the
+> remaining issues and submitting a new v6.
 
-> +#define SIGN_EXTEND_36_TO_64_MASK	(-1LL ^ CC_36_BIT_MASK)
-> +
-> +#define BMS_CC_READING_RESOLUTION_N	542535
-> +#define BMS_CC_READING_RESOLUTION_D	10000
-> +#define BMS_CC_READING_TICKS		56
-> +#define BMS_SLEEP_CLK_HZ		32764
-> +
-> +#define SECONDS_PER_HOUR		3600
-> +#define TEMPERATURE_COLS		5
-> +#define MAX_CAPACITY_ROWS		50
-> +
-> +/* lookup table for ocv -> capacity conversion */
-> +struct bms_ocv_lut {
-> +	int rows;
-> +	s8 temp_legend[TEMPERATURE_COLS];
-> +	u8 capacity_legend[MAX_CAPACITY_ROWS];
-> +	u16 lut[MAX_CAPACITY_ROWS][TEMPERATURE_COLS];
-> +};
-> +
-> +/* lookup table for battery temperature -> fcc conversion */
-> +struct bms_fcc_lut {
-> +	s8 temp_legend[TEMPERATURE_COLS];
-> +	u16 lut[TEMPERATURE_COLS];
-> +};
-> +
-> +struct bms_device_info {
-> +	struct device *dev;
-> +	struct regmap *regmap;
-> +	struct power_supply *bat;
+Yes, and that's perfectly reasonable, but I wouldn't want to base my
+work on something in that state.
 
-bat is local to bms_probe.
+> > It also did not support all those systems that use the same family of
+> > chips, but which has the WAKEUP signal connected.
+> 
+> That is simply wrong.
+> 
+> It supports them. It just does not make use of the WAKEUP signal, but
+> uses a different mechanism to detect the power state of the chip.
 
-> +	struct power_supply_desc bat_desc;
-> +	struct bms_ocv_lut ocv_lut;
-> +	struct bms_fcc_lut fcc_lut;
-> +	struct iio_channel *adc;
-> +	spinlock_t bms_output_lock;
-> +	int base_addr;
+Sure, but in a highly inefficient way since without WAKEUP you can
+never be certain that the device is in hibernate, but only assume so
+after a lengthy (as in seconds) timeout has passed without any I/O.
 
-u32, as you're passing a pointer to this into of_property_read_u32().
+> So our driver is more complete because it gracefully handles a
+> WAKEUP line (by ignoring it) while yours doesn't handle the opposite
+> case of a missing WAKEUP.
 
-> +
-> +	int ocv_thr_irq;
-> +	int ocv;
-> +};
-> +
-> +static s64 sign_extend_s36(uint64_t raw)
-> +{
-> +	raw = raw & CC_36_BIT_MASK;
+I never claimed to support your configuration from the start, but I kept
+it in mind while implementing the framework in order to facilitate for you.
 
-raw &= 
+Heck, besides getting the whole frame work implemented for you --
+thereby making this the closest to mainline support for your system that
+you've been over the course of the past five years or however long
+you've been at it -- there's now also an already integrated generic
+sirf driver with all the basics in place (including runtime PM, and not
+relying on legacy interfaces) that you can base your work off of.
 
-> +
-> +	return (raw >> 35) == 0LL ?
-> +		raw : (SIGN_EXTEND_36_TO_64_MASK | raw);
-> +}
-> +
-> +static unsigned int interpolate(int y0, int x0, int y1, int x1, int x)
-> +{
-> +	if (y0 == y1 || x == x0)
-> +		return y0;
-> +	if (x1 == x0 || x == x1)
-> +		return y1;
-> +
-> +	return y0 + ((y1 - y0) * (x - x0) / (x1 - x0));
-> +}
-> +
-> +static unsigned int between(int left, int right, int val)
+> >> "proof-of-concept" is misleading if you expect this to become
+> >> *the* Sirf driver and we are just invited to add some features
+> >> to that. Making our own work and proposals completely obsolete.
+> >> 
+> >> What I find really strange and foul play is that we are in the
+> >> review process and then comes a hidden counter-proposal by the
+> >> reviewer.
+> > 
+> > Dude, in the very same thread you refer to above, after being asked to
+> > reiterate your proposal to find and appropriate abstraction level you
+> > reply:
+> > 
+> > 	"Yes, please feel free to write patches that implement it that
+> > 	way."
+> 
+> When looking back, I understand that as that I suggested to add a "proper
+> abstraction level" (i.e. a gps framework) so that *we* can make use of
+> it.
 
-Return bool and use true/false instead.
+Yes, you clearly weren't interesting in doing that work yourself.
 
-> +{
-> +	if (left <= val && val <= right)
-> +		return 1;
-> +
-> +	return 0;
-> +}
-> +
-> +static unsigned int interpolate_capacity(int temp, u16 ocv,
-> +				struct bms_ocv_lut ocv_lut)
-> +{
-> +	unsigned int pcj_minus_one = 0, pcj = 0;
-> +	int i, j;
-> +
-> +	for (j = 0; j < TEMPERATURE_COLS; j++)
-> +		if (temp <= ocv_lut.temp_legend[j])
-> +			break;
-> +
-> +	if (ocv >= ocv_lut.lut[0][j])
-> +		return ocv_lut.capacity_legend[0];
-> +
-> +	if (ocv <= ocv_lut.lut[ocv_lut.rows - 1][j - 1])
-> +		return ocv_lut.capacity_legend[ocv_lut.rows - 1];
-> +
-> +	for (i = 0; i < ocv_lut.rows - 1; i++) {
-> +		if (pcj == 0 && between(ocv_lut.lut[i][j],
-> +					ocv_lut.lut[i+1][j], ocv))
-> +			pcj = interpolate(ocv_lut.capacity_legend[i],
-> +					  ocv_lut.lut[i][j],
-> +					  ocv_lut.capacity_legend[i + 1],
-> +					  ocv_lut.lut[i+1][j],
-> +					  ocv);
-> +
-> +		if (pcj_minus_one == 0 && between(ocv_lut.lut[i][j-1],
-> +						  ocv_lut.lut[i+1][j-1], ocv))
-> +			pcj_minus_one = interpolate(ocv_lut.capacity_legend[i],
-> +						    ocv_lut.lut[i][j-1],
-> +						    ocv_lut.capacity_legend[i + 1],
-> +						    ocv_lut.lut[i+1][j-1],
-> +						    ocv);
-> +
-> +		if (pcj && pcj_minus_one)
-> +			return interpolate(pcj_minus_one,
-> +					   ocv_lut.temp_legend[j-1],
-> +					   pcj,
-> +					   ocv_lut.temp_legend[j],
-> +					   temp);
-> +	}
+> I never meant that you should completely replace our driver by an
+> incomplete solution.
 
-How about finding the four indices first and then do the three
-interpolation steps after that?
+But surely you didn't expect your work not to require any kind of
+integration into a new framework.
 
-> +
-> +	if (pcj)
-> +		return pcj;
-> +
-> +	if (pcj_minus_one)
-> +		return pcj_minus_one;
+> > Now I've done just that for you, and then you whine about that too.
+> 
+> At the end of the thread (which I take as the result of v5 review) you said:
+> 
+> "Yeah, I think this is a dead end. We need some kind of gps framework
+> with drivers that can implement the device specific bits.
+> 
+> I may have some time to look at little closer at it this week."
+> 
+> And I answered and laid down my plans for a v6:
+> 
+> "Ok, that would be fine if we can get that!
+> 
+> For a minimal set of API I think something like this (following hci_dev) would suffice:
+> 
+> ...
+> 
+> If that would wrap all creation of some /dev/ttyGPS0 (or however it is called),
+> it would fit our needs for a driver and user-space for our system.
+> 
+> And I would be happy to get rid of creating and registering a /dev/ttyGPS0
+> in the w2sg0004 driver.
+> 
+> Then, the driver will not need to be touched if the GPS framework is improved
+> in some far future (e.g. to provide some additional ioctl for getting kalman-filtered
+> position+heading by doing sensor fusion with some iio-based accelerometer/gyro). 
+> 
+> So I am looking forward to some framework for review and integration testing."
+> 
+> I think it was clear and understandable what I expected (a new framework instead
+> of creating ttys in the driver) and what I did not (a replacement of our
+> w2sg0004 proposal with a variant with missing features).
 
-Do you need these special cases? Is it even possible that we get out
-above loop without pcj and pcj_minus_one assigned?
+Sounds like you think you've given me some kind of order that I had to
+fulfil. Sorry, but it doesn't work that way.
 
-> +
-> +	return 100;
-> +}
-> +
-> +static unsigned long interpolate_fcc(int temp, struct bms_fcc_lut fcc_lut)
+> The problem I have with this sort of review process is that I now have to
+> reintegrate the missing pieces of handling the non-WAKEUP case and LNA
+> control and rfkill into your code.
 
-Pass fcc_lut by reference, as it's "large".
+Yes, you're not getting everything for free.
 
-> +{
-> +	int i, fcc_mv;
-> +
-> +	for (i = 0; i < TEMPERATURE_COLS; i++)
-> +		if (temp <= fcc_lut.temp_legend[i])
-> +			break;
-> +
-> +	fcc_mv = interpolate(fcc_lut.lut[i - 1],
-> +			     fcc_lut.temp_legend[i - 1],
-> +			     fcc_lut.lut[i],
-> +			     fcc_lut.temp_legend[i],
-> +			     temp);
-> +
-> +	return fcc_mv * 10000;
+Besides, I have concerns about using rfkill for GNSS (which does not
+transmit any radio), and external LNA control is not something that is
+a chip feature but rather something that should be handled by the
+framework.
 
-What does this function return? Why do you multiply with 10k here? A
-comment would be nice.
+So this wouldn't be a simple code dump for you anyway.
 
-> +}
-> +
-> +static int bms_lock_output_data(struct bms_device_info *di)
-> +{
-> +	int ret;
-> +
-> +	ret = regmap_update_bits(di->regmap, di->base_addr +
-> +				 REG_BMS_CC_DATA_CTL,
-> +				 BMS_HOLD_OREG_DATA, BMS_HOLD_OREG_DATA);
-> +	if (ret < 0) {
-> +		dev_err(di->dev, "failed to lock bms output: %d", ret);
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * Sleep for 100 microseconds here to make sure there has
-> +	 * been at least three cycles of the sleep clock so that
-> +	 * the registers are correctly locked.
-> +	 */
-> +	udelay(100);
+> Instead of stripping down our code and adjusting to your API.
+> 
+> Alternatively I have to wait until you present some code of which you
+> think it works. Would you also test it? Probably no. Because of lack
+> of hardware.  So I have to test your new code in an area where I have
+> well-hung code being in daily use.
 
-usleep_range(100, 1000); as this is longer than 10us
+Of course I'll test it, but I can't say solving your problems for you
+again is at the top of my list, if it ever were.
 
-See Documentation/timers/timers-howto.txt
+> And your new code may still be incomplete wrt. what our driver
+> provides to users.
+> 
+> I hope that you understand that this is now more work for me in any
+> case...
 
-> +
-> +	return 0;
-> +}
-> +
-> +static int bms_unlock_output_data(struct bms_device_info *di)
-> +{
-> +	int ret;
-> +
-> +	ret = regmap_update_bits(di->regmap, di->base_addr +
-> +				 REG_BMS_CC_DATA_CTL,
-> +				 BMS_HOLD_OREG_DATA, 0);
-> +	if (ret < 0) {
-> +		dev_err(di->dev, "failed to unlock bms output: %d", ret);
-> +		return ret;
-> +	}
+I fail to see how not having to implement a GNSS framework can be
+considered more work for you.
 
-regmap_update_bits() returns 0 on success, so you can:
+> So in the end I will have:
+> * a new but still incomplete driver that is a regression compared to
+> our old driver
 
-ret = regmap_update_bits();
-if (ret)
-	dev_err();
+It's not a regression, the new mainline driver just wouldn't support
+your configuration yet.
 
-return ret;
+> * even more testing work in addition 5 years urging for acceptance
+> * no appreciation because you sign off and author everything
 
-> +
-> +	return 0;
-> +}
-> +
-> +static int bms_read_ocv(struct bms_device_info *di, int *ocv)
-> +{
-> +	unsigned long flags;
-> +	int ret;
-> +	u16 read_ocv;
-> +
-> +	spin_lock_irqsave(&di->bms_output_lock, flags);
-> +
-> +	ret = bms_lock_output_data(di);
-> +	if (ret < 0)
-> +		goto err_lock;
-> +
-> +	ret = regmap_bulk_read(di->regmap, di->base_addr +
-> +			       REG_BMS_OCV_FOR_SOC_DATA0, &read_ocv, 2);
-> +	if (ret < 0) {
-> +		dev_err(di->dev, "OCV read failed: %d", ret);
+You'd sign off on your own work (or was it really Neil Brown who
+implemented the driver that you've since been adapting?).
 
-Returning with spinlock and output lock held.
+There's still room for adding support for sirf configurations without
+WAKEUP, generic LNA support, and possibly rfkill.
 
-> +		return ret;
-> +	}
-> +
-> +	dev_dbg(di->dev, "read OCV value of: %d", read_ocv);
-> +	*ocv = read_ocv;
-> +
-> +	ret = bms_unlock_output_data(di);
-> +
-> +err_lock:
-> +	spin_unlock_irqrestore(&di->bms_output_lock, flags);
-> +
-> +	return ret;
-> +}
-> +
-> +static int bms_read_cc(struct bms_device_info *di, s64 *cc_uah)
-> +{
-> +	unsigned long flags;
-> +	int ret;
-> +	s64 cc_raw_s36, cc_raw, cc_uv, cc_pvh;
-> +
-> +	spin_lock_irqsave(&di->bms_output_lock, flags);
-> +
-> +	ret = bms_lock_output_data(di);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = regmap_bulk_read(di->regmap, di->base_addr +
-> +			       REG_BMS_SHDW_CC_DATA0,
-> +			       &cc_raw_s36, 5);
-> +	if (ret < 0) {
-> +		dev_err(di->dev, "coulomb counter read failed: %d", ret);
+> Is this a good deal or a reason to contribute to our common project?
+> 
+> If you want an example how to get rid of volunteers contributing, this may
+> be one...
 
-Returning with spinlock and output locked.
+Come on...
 
-> +		return ret;
-> +	}
-> +
-> +	ret = bms_unlock_output_data(di);
-> +	if (ret < 0)
+> > SiRF is a very common chip and I wanted to make sure that the common
+> > setup with WAKEUP connected was supported from the start. I'll get to
+> > your configuration in time too.
+> 
+> As said, our driver would also work if the WAKEUP line exists, and is
+> described in DT, but is broken.
+> 
+> So we will probably stay with our out-of the kernel driver for the
+> time being.
 
-Returning with spinlock held.
+Ok.
 
-> +		return ret;
-> +
-> +	spin_unlock_irqrestore(&di->bms_output_lock, flags);
-> +
-> +	cc_raw = sign_extend_s36(cc_raw_s36);
-> +
-> +	/* convert raw to uv */
-> +	cc_uv = div_s64(cc_raw * BMS_CC_READING_RESOLUTION_N,
-> +			BMS_CC_READING_RESOLUTION_D);
-> +
-> +	/* convert uv to pvh */
-> +	cc_pvh = div_s64(cc_uv * BMS_CC_READING_TICKS * 100000,
-> +			 BMS_SLEEP_CLK_HZ * SECONDS_PER_HOUR) * 10;
-> +
-> +	/* divide by impedance */
-> +	*cc_uah = div_s64(cc_pvh, 10000);
-> +
-> +	dev_dbg(di->dev, "read coulomb counter value of: %lld", *cc_uah);
-> +
-> +	return 0;
-> +}
-> +
-> +static void bms_reset_cc(struct bms_device_info *di)
-> +{
-> +	int ret;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&di->bms_output_lock, flags);
-> +
-> +	ret = regmap_update_bits(di->regmap, di->base_addr +
-> +				 REG_BMS_CC_CLEAR_CTL,
-> +				 BMS_CLEAR_SHDW_CC,
-> +				 BMS_CLEAR_SHDW_CC);
-> +	if (ret < 0) {
-> +		dev_err(di->dev, "coulomb counter reset failed: %d", ret);
-> +		goto err_lock;
-> +	}
-> +
-> +	/* wait two sleep cycles for cc to reset */
-> +	udelay(100);
-
-usleep_range(100, 1000);
-
-
-Perhaps you can make the irq handler threaded, so that you don't have to
-spend so long time with irqs disabled.
-
-> +
-> +	ret = regmap_update_bits(di->regmap, di->base_addr +
-> +				 REG_BMS_CC_CLEAR_CTL,
-> +				 BMS_CLEAR_SHDW_CC, 0);
-> +	if (ret < 0)
-> +		dev_err(di->dev, "coulomb counter re-enable failed: %d", ret);
-> +
-> +err_lock:
-> +	spin_unlock_irqrestore(&di->bms_output_lock, flags);
-> +}
-> +
-> +static int bms_calculate_capacity(struct bms_device_info *di, int *capacity)
-> +{
-> +	unsigned long ocv_capacity, fcc;
-> +	int ret, temp, temp_degc;
-> +	s64 cc, capacity_nodiv;
-> +
-> +	ret = iio_read_channel_raw(di->adc, &temp);
-> +	if (ret < 0) {
-> +		dev_err(di->dev, "failed to read temperature: %d", ret);
-> +		return ret;
-> +	}
-> +
-> +	temp_degc = (temp + 500) / 1000;
-> +
-> +	ret = bms_read_cc(di, &cc);
-> +	if (ret < 0) {
-> +		dev_err(di->dev, "failed to read coulomb counter: %d", ret);
-> +		return ret;
-> +	}
-> +
-> +	ocv_capacity = interpolate_capacity(temp_degc, (di->ocv + 5) / 10,
-> +					    di->ocv_lut);
-
-interpolate_capacity returns unsigned int, but ocv_capacity is unsigned
-long. Please pick one.
-
-> +	fcc = interpolate_fcc(temp_degc, di->fcc_lut);
-> +
-> +	capacity_nodiv = ((fcc * ocv_capacity) / 100 - cc) * 100;
-> +	*capacity = div64_ul(capacity_nodiv, fcc);
-> +
-> +	return 0;
-> +}
-> +
-> +
-> +
-
-Remove a few empty lines.
-
-> +/*
-> + * Return power_supply property
-> + */
-> +static int bms_get_property(struct power_supply *psy,
-> +				   enum power_supply_property psp,
-> +				   union power_supply_propval *val)
-> +{
-> +	struct bms_device_info *di = power_supply_get_drvdata(psy);
-> +	int ret;
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_CAPACITY:
-> +		ret = bms_calculate_capacity(di, &val->intval);
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-> +
-> +	if (val->intval == INT_MAX || val->intval == INT_MIN)
-> +		ret = -EINVAL;
-
-Can this happen?
-
-> +
-> +	return ret;
-> +}
-[..]
-> +static int bms_probe(struct platform_device *pdev)
-> +{
-> +	struct power_supply_config psy_cfg = {};
-> +	struct bms_device_info *di;
-> +	int ret;
-> +
-> +	di = devm_kzalloc(&pdev->dev, sizeof(*di), GFP_KERNEL);
-> +	if (!di)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, di);
-
-You don't use this, so no need to set it.
-
-> +
-[..]
-> +
-> +	spin_lock_init(&di->bms_output_lock);
-
-Initialize the spinlock before registering the irq handler, just in case
-it would fire immediately.
-
-> +
-> +	di->bat_desc.name = "bms";
-> +	di->bat_desc.type = POWER_SUPPLY_TYPE_BATTERY;
-> +	di->bat_desc.properties = bms_props;
-> +	di->bat_desc.num_properties = ARRAY_SIZE(bms_props);
-> +	di->bat_desc.get_property = bms_get_property;
-> +
-> +	psy_cfg.drv_data = di;
-> +	di->bat = devm_power_supply_register(di->dev, &di->bat_desc, &psy_cfg);
-
-Replace:
-
-> +	if (IS_ERR(di->bat))
-> +		return PTR_ERR(di->bat);
-> +
-> +	return 0;
-
-with:
-
-	return PTR_ERR_OR_ZERO(di->bat);
-
-> +}
-> +
-> +static const struct of_device_id bms_of_match[] = {
-> +	{.compatible = "qcom,pm8941-bms", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, bms_of_match);
-> +
-> +static struct platform_driver bms_driver = {
-> +	.probe = bms_probe,
-> +	.driver = {
-> +		.name = "qcom-bms",
-> +		.of_match_table = of_match_ptr(bms_of_match),
-> +	},
-> +};
-> +module_platform_driver(bms_driver);
-> +
-> +MODULE_AUTHOR("Craig Tatlor <ctatlor97@gmail.com>");
-> +MODULE_DESCRIPTION("Qualcomm BMS driver");
-> +MODULE_LICENSE("GPL");
-
-Regards,
-Bjorn
+Johan
