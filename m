@@ -1,176 +1,204 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH 04/11] irqchip: stm32: add suspend support
-Date: Thu, 26 Apr 2018 18:18:27 +0200
-Message-ID: <1524759514-12392-5-git-send-email-ludovic.Barre@st.com>
-References: <1524759514-12392-1-git-send-email-ludovic.Barre@st.com>
+From: Hoan Tran <hotran@apm.com>
+Subject: Re: [PATCH v5] gpio: dwapb: Add support for 1 interrupt per port A GPIO
+Date: Thu, 26 Apr 2018 09:33:40 -0700
+Message-ID: <CAFHUOYxW6C9F-etiPSw5WBH7UDc6nia+5m9bqMND=SdfteJCPg@mail.gmail.com>
+References: <1524759587-7007-1-git-send-email-phil.edworthy@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524759514-12392-1-git-send-email-ludovic.Barre@st.com>
+In-Reply-To: <1524759587-7007-1-git-send-email-phil.edworthy@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald BAEZA <gerald.baeza@st.com>, Loic PALLARDY <loic.pallardy@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, linux-gpio@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+Hi,
 
-This patch adds suspend feature.
--Use default irq_set_wake function to store wakeup request.
--Suspend function set wake_active into imr of each bank
- and save rising/falling trigger registers.
--Resume function restore the mask_cache interrupt into
- imr of each bank and restore rising/falling trigger registers.
+On Thu, Apr 26, 2018 at 9:19 AM, Phil Edworthy
+<phil.edworthy@renesas.com> wrote:
+> The DesignWare GPIO IP can be configured for either 1 interrupt or 1
+> per GPIO in port A, but the driver currently only supports 1 interrupt.
+> See the DesignWare DW_apb_gpio Databook description of the
+> 'GPIO_INTR_IO' parameter.
+>
+> This change allows the driver to work with up to 32 interrupts, it will
+> get as many interrupts as specified in the DT 'interrupts' property.
+> It doesn't do anything clever with the different interrupts, it just calls
+> the same handler used for single interrupt hardware.
+>
+> ACPI companion code provided by Hoan Tran <hotran@apm.com>. This was tested
+> on X-Gene by Hoan.
+>
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> ---
+> One point to mention is that I have made it possible for users to have
+> unconncted interrupts by specifying holes in the list of interrupts. This is
+> done by supporting the interrupts-extended DT prop.
+> However, I have no use for this and had to hack some test case for this.
+> Perhaps the driver should support 1 interrupt or all GPIOa as interrupts?
+>
+> v5:
+>  - Rolled ACPI companion code provided by Hoan Tran into this patch.
+> v4:
+>  - Use of_irq_get() instead of of_irq_parse_one()+irq_create_of_mapping()
+> v3:
+>  - Rolled mfd: intel_quark_i2c_gpio fix into this patch to avoid bisect problems
+> v2:
+>  - Replaced interrupt-mask DT prop with support for the interrupts-extended
+>    prop. This means replacing the call to irq_of_parse_and_map() with calls
+>    to of_irq_parse_one() and irq_create_of_mapping().
+>
+> Note: There are a few *code* lines over 80 chars, but this is just guidance,
+>    right? Especially as there are already some lines over 80 chars.
+> ---
+>  .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |  9 ++++-
+>  drivers/gpio/gpio-dwapb.c                          | 46 +++++++++++++++++-----
+>  drivers/mfd/intel_quark_i2c_gpio.c                 |  3 +-
+>  include/linux/platform_data/gpio-dwapb.h           |  3 +-
+>  4 files changed, 48 insertions(+), 13 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> index 4a75da7..3c1118b 100644
+> --- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> @@ -26,8 +26,13 @@ controller.
+>    the second encodes the triger flags encoded as described in
+>    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>  - interrupt-parent : The parent interrupt controller.
+> -- interrupts : The interrupt to the parent controller raised when GPIOs
+> -  generate the interrupts.
+> +- interrupts : The interrupts to the parent controller raised when GPIOs
+> +  generate the interrupts. If the controller provides one combined interrupt
+> +  for all GPIOs, specify a single interrupt. If the controller provides one
+> +  interrupt for each GPIO, provide a list of interrupts that correspond to each
+> +  of the GPIO pins. When specifying multiple interrupts, if any are unconnected,
+> +  use the interrupts-extended property to specify the interrupts and set the
+> +  interrupt controller handle for unused interrupts to 0.
+>  - snps,nr-gpios : The number of pins in the port, a single cell.
+>  - resets : Reset line for the controller.
+>
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index 226977f..7dcd06b 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -441,14 +441,19 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+>         irq_gc->chip_types[1].handler = handle_edge_irq;
+>
+>         if (!pp->irq_shared) {
+> -               irq_set_chained_handler_and_data(pp->irq, dwapb_irq_handler,
+> -                                                gpio);
+> +               int i;
+> +
+> +               for (i = 0; i < pp->ngpio; i++) {
+> +                       if (pp->irq[i])
+> +                               irq_set_chained_handler_and_data(pp->irq[i],
+> +                                               dwapb_irq_handler, gpio);
+> +               }
+>         } else {
+>                 /*
+>                  * Request a shared IRQ since where MFD would have devices
+>                  * using the same irq pin
+>                  */
+> -               err = devm_request_irq(gpio->dev, pp->irq,
+> +               err = devm_request_irq(gpio->dev, pp->irq[0],
+>                                        dwapb_irq_handler_mfd,
+>                                        IRQF_SHARED, "gpio-dwapb-mfd", gpio);
+>                 if (err) {
+> @@ -524,7 +529,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
+>         if (pp->idx == 0)
+>                 port->gc.set_config = dwapb_gpio_set_config;
+>
+> -       if (pp->irq)
+> +       if (pp->has_irq)
+>                 dwapb_configure_irqs(gpio, port, pp);
+>
+>         err = gpiochip_add_data(&port->gc, port);
+> @@ -535,7 +540,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
+>                 port->is_registered = true;
+>
+>         /* Add GPIO-signaled ACPI event support */
+> -       if (pp->irq)
+> +       if (pp->has_irq)
+>                 acpi_gpiochip_request_interrupts(&port->gc);
+>
+>         return err;
+> @@ -601,13 +606,36 @@ dwapb_gpio_get_pdata(struct device *dev)
+>                 if (dev->of_node && pp->idx == 0 &&
+>                         fwnode_property_read_bool(fwnode,
+>                                                   "interrupt-controller")) {
+> -                       pp->irq = irq_of_parse_and_map(to_of_node(fwnode), 0);
+> -                       if (!pp->irq)
+> +                       struct device_node *np = to_of_node(fwnode);
+> +                       unsigned int j;
+> +
+> +                       /*
+> +                        * The IP has configuration options to allow a single
+> +                        * combined interrupt or one per gpio. If one per gpio,
+> +                        * some might not be used.
+> +                        */
+> +                       for (j = 0; j < pp->ngpio; j++) {
+> +                               int irq = of_irq_get(np, j);
+> +                               if (irq < 0)
+> +                                       continue;
+> +
+> +                               pp->irq[j] = irq;
+> +                               pp->has_irq = true;
+> +                       }
+> +
+> +                       if (!pp->has_irq)
+>                                 dev_warn(dev, "no irq for port%d\n", pp->idx);
+>                 }
+>
+> -               if (has_acpi_companion(dev) && pp->idx == 0)
+> -                       pp->irq = platform_get_irq(to_platform_device(dev), 0);
+> +               if (has_acpi_companion(dev) && pp->idx == 0) {
+> +                       unsigned int j;
+> +
+> +                       for (j = 0; j < pp->ngpio; j++) {
+> +                               pp->irq[j] = platform_get_irq(to_platform_device(dev), j);
+> +                               if (pp->irq[j])
+> +                                       pp->has_irq = true;
+> +                       }
+> +               }
+>
+>                 pp->irq_shared  = false;
+>                 pp->gpio_base   = -1;
+> diff --git a/drivers/mfd/intel_quark_i2c_gpio.c b/drivers/mfd/intel_quark_i2c_gpio.c
+> index 90e35de..5bddb84 100644
+> --- a/drivers/mfd/intel_quark_i2c_gpio.c
+> +++ b/drivers/mfd/intel_quark_i2c_gpio.c
+> @@ -233,7 +233,8 @@ static int intel_quark_gpio_setup(struct pci_dev *pdev, struct mfd_cell *cell)
+>         pdata->properties->idx          = 0;
+>         pdata->properties->ngpio        = INTEL_QUARK_MFD_NGPIO;
+>         pdata->properties->gpio_base    = INTEL_QUARK_MFD_GPIO_BASE;
+> -       pdata->properties->irq          = pdev->irq;
+> +       pdata->properties->irq[0]       = pdev->irq;
+> +       pdata->properties->has_irq      = true;
+>         pdata->properties->irq_shared   = true;
+>
+>         cell->platform_data = pdata;
+> diff --git a/include/linux/platform_data/gpio-dwapb.h b/include/linux/platform_data/gpio-dwapb.h
+> index 2dc7f4a..5a52d69 100644
+> --- a/include/linux/platform_data/gpio-dwapb.h
+> +++ b/include/linux/platform_data/gpio-dwapb.h
+> @@ -19,7 +19,8 @@ struct dwapb_port_property {
+>         unsigned int    idx;
+>         unsigned int    ngpio;
+>         unsigned int    gpio_base;
+> -       unsigned int    irq;
+> +       unsigned int    irq[32];
+> +       bool            has_irq;
+>         bool            irq_shared;
+>  };
+>
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/irqchip/irq-stm32-exti.c | 69 ++++++++++++++++++++++++++++++----------
- 1 file changed, 52 insertions(+), 17 deletions(-)
+Acked-by: Hoan Tran <hotran@apm.com>
 
-diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-index 69a4453..1e09667 100644
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -29,6 +29,14 @@ struct stm32_exti_bank {
- 
- #define UNDEF_REG ~0
- 
-+struct stm32_exti_chip_data {
-+	const struct stm32_exti_bank *reg_bank;
-+	u32 rtsr_cache;
-+	u32 ftsr_cache;
-+};
-+
-+static struct stm32_exti_chip_data *stm32_exti_data;
-+
- static const struct stm32_exti_bank stm32f4xx_exti_b1 = {
- 	.imr_ofst	= 0x00,
- 	.emr_ofst	= 0x04,
-@@ -81,7 +89,8 @@ static const struct stm32_exti_bank *stm32h7xx_exti_banks[] = {
- 
- static unsigned long stm32_exti_pending(struct irq_chip_generic *gc)
- {
--	const struct stm32_exti_bank *stm32_bank = gc->private;
-+	struct stm32_exti_chip_data *chip_data = gc->private;
-+	const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
- 	unsigned long pending;
- 
- 	pending = irq_reg_readl(gc, stm32_bank->rpr_ofst);
-@@ -119,7 +128,8 @@ static void stm32_irq_handler(struct irq_desc *desc)
- static int stm32_irq_set_type(struct irq_data *data, unsigned int type)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
--	const struct stm32_exti_bank *stm32_bank = gc->private;
-+	struct stm32_exti_chip_data *chip_data = gc->private;
-+	const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
- 	int pin = data->hwirq % IRQS_PER_BANK;
- 	u32 rtsr, ftsr;
- 
-@@ -154,25 +164,36 @@ static int stm32_irq_set_type(struct irq_data *data, unsigned int type)
- 	return 0;
- }
- 
--static int stm32_irq_set_wake(struct irq_data *data, unsigned int on)
-+static void stm32_irq_suspend(struct irq_chip_generic *gc)
- {
--	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
--	const struct stm32_exti_bank *stm32_bank = gc->private;
--	int pin = data->hwirq % IRQS_PER_BANK;
--	u32 imr;
-+	struct stm32_exti_chip_data *chip_data = gc->private;
-+	const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
- 
- 	irq_gc_lock(gc);
- 
--	imr = irq_reg_readl(gc, stm32_bank->imr_ofst);
--	if (on)
--		imr |= BIT(pin);
--	else
--		imr &= ~BIT(pin);
--	irq_reg_writel(gc, imr, stm32_bank->imr_ofst);
-+	/* save rtsr, ftsr registers */
-+	chip_data->rtsr_cache = irq_reg_readl(gc, stm32_bank->rtsr_ofst);
-+	chip_data->ftsr_cache = irq_reg_readl(gc, stm32_bank->ftsr_ofst);
-+
-+	irq_reg_writel(gc, gc->wake_active, stm32_bank->imr_ofst);
- 
- 	irq_gc_unlock(gc);
-+}
- 
--	return 0;
-+static void stm32_irq_resume(struct irq_chip_generic *gc)
-+{
-+	struct stm32_exti_chip_data *chip_data = gc->private;
-+	const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
-+
-+	irq_gc_lock(gc);
-+
-+	/* restore rtsr, ftsr registers */
-+	irq_reg_writel(gc, chip_data->rtsr_cache, stm32_bank->rtsr_ofst);
-+	irq_reg_writel(gc, chip_data->ftsr_cache, stm32_bank->ftsr_ofst);
-+
-+	irq_reg_writel(gc, gc->mask_cache, stm32_bank->imr_ofst);
-+
-+	irq_gc_unlock(gc);
- }
- 
- static int stm32_exti_alloc(struct irq_domain *d, unsigned int virq,
-@@ -205,7 +226,8 @@ static const struct irq_domain_ops irq_exti_domain_ops = {
- static void stm32_irq_ack(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
--	const struct stm32_exti_bank *stm32_bank = gc->private;
-+	struct stm32_exti_chip_data *chip_data = gc->private;
-+	const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
- 
- 	irq_gc_lock(gc);
- 
-@@ -232,6 +254,11 @@ __init stm32_exti_init(const struct stm32_exti_bank **stm32_exti_banks,
- 		return -ENOMEM;
- 	}
- 
-+	stm32_exti_data = kcalloc(bank_nr, sizeof(*stm32_exti_data),
-+				  GFP_KERNEL);
-+	if (!stm32_exti_data)
-+		return -ENOMEM;
-+
- 	domain = irq_domain_add_linear(node, bank_nr * IRQS_PER_BANK,
- 				       &irq_exti_domain_ops, NULL);
- 	if (!domain) {
-@@ -251,8 +278,11 @@ __init stm32_exti_init(const struct stm32_exti_bank **stm32_exti_banks,
- 
- 	for (i = 0; i < bank_nr; i++) {
- 		const struct stm32_exti_bank *stm32_bank = stm32_exti_banks[i];
-+		struct stm32_exti_chip_data *chip_data = &stm32_exti_data[i];
- 		u32 irqs_mask;
- 
-+		chip_data->reg_bank = stm32_bank;
-+
- 		gc = irq_get_domain_generic_chip(domain, i * IRQS_PER_BANK);
- 
- 		gc->reg_base = base;
-@@ -261,9 +291,13 @@ __init stm32_exti_init(const struct stm32_exti_bank **stm32_exti_banks,
- 		gc->chip_types->chip.irq_mask = irq_gc_mask_clr_bit;
- 		gc->chip_types->chip.irq_unmask = irq_gc_mask_set_bit;
- 		gc->chip_types->chip.irq_set_type = stm32_irq_set_type;
--		gc->chip_types->chip.irq_set_wake = stm32_irq_set_wake;
-+		gc->chip_types->chip.irq_set_wake = irq_gc_set_wake;
-+		gc->suspend = stm32_irq_suspend;
-+		gc->resume = stm32_irq_resume;
-+		gc->wake_enabled = IRQ_MSK(IRQS_PER_BANK);
-+
- 		gc->chip_types->regs.mask = stm32_bank->imr_ofst;
--		gc->private = (void *)stm32_bank;
-+		gc->private = (void *)chip_data;
- 
- 		/* Determine number of irqs supported */
- 		writel_relaxed(~0UL, base + stm32_bank->rtsr_ofst);
-@@ -300,6 +334,7 @@ __init stm32_exti_init(const struct stm32_exti_bank **stm32_exti_banks,
- 	irq_domain_remove(domain);
- out_unmap:
- 	iounmap(base);
-+	kfree(stm32_exti_data);
- 	return ret;
- }
- 
--- 
-2.7.4
+Thanks
+Hoan
+
+> --
+> 2.7.4
+>
