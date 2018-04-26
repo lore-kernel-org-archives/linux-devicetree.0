@@ -1,30 +1,37 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH] Revert "ata: ahci-platform: add reset control support"
-Date: Thu, 26 Apr 2018 12:20:40 -0700
-Message-ID: <20180426192040.GT1911913@devbig577.frc2.facebook.com>
-References: <1523237554-7928-1-git-send-email-hayashi.kunihiko@socionext.com>
- <c8ec7474-7eb4-24cf-1f53-b4bcee5508dd@redhat.com>
- <20180418083647.GA5503@ulmo>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] DT: net: can: rcar_canfd: document R8A77970 bindings
+Date: Thu, 26 Apr 2018 22:41:14 +0300
+Message-ID: <7a3d170f-1d3a-a807-9256-15fe1a78ca4e@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180418083647.GA5503@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-ide@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Language: en-MW
+Sender: netdev-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Document the R-Car V3M (R8A77970) SoC support in the R-Car CAN-FD bindings.
 
-On Wed, Apr 18, 2018 at 10:36:47AM +0200, Thierry Reding wrote:
-> I see that you've applied this to your for-next branch. However, this is
-> a fix that needs to go into v4.17 because that's where the regression
-> was introduced. Is there any way you can promote this to a fixes branch?
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-It's in for-4.17-fixes.  I'll push it out early next week.
+---
+The patch is against the 'linux-can-next.git' repo but I wouldn't object if
+it's merged to the 'linux-can.git' repo instead. :-)
 
-Thanks.
+ Documentation/devicetree/bindings/net/can/rcar_canfd.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
--- 
-tejun
+Index: linux-can-next/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+===================================================================
+--- linux-can-next.orig/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
++++ linux-can-next/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+@@ -6,6 +6,7 @@ Required properties:
+   - "renesas,rcar-gen3-canfd" for R-Car Gen3 compatible controller.
+   - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
+   - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3) compatible controller.
++  - "renesas,r8a77970-canfd" for R8A77970 (R-Car V3M) compatible controller.
+ 
+   When compatible with the generic version, nodes must list the
+   SoC-specific version corresponding to the platform first, followed by the
