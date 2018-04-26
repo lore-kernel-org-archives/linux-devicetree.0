@@ -1,65 +1,117 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 02/17] dt-bindings: display: renesas: du: Document the
- R8A77965 bindings
-Date: Thu, 26 Apr 2018 23:10:40 +0300
-Message-ID: <69317997.GXJe2a7Jrz@avalon>
-References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
- <20180426165346.494-3-kieran.bingham+renesas@ideasonboard.com>
- <e94ae62f-30bb-5056-9646-03941d74ae75@ideasonboard.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v2] of: overlay: Stop leaking resources on overlay removal
+Date: Thu, 26 Apr 2018 13:20:43 -0700
+Message-ID: <bb034d02-6bff-6828-bbf6-021bf4d39a95@gmail.com>
+References: <e8704374-857c-d80e-e91c-89d59e1cffbe@siemens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <e94ae62f-30bb-5056-9646-03941d74ae75@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: kieran.bingham@ideasonboard.com
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, open list <linux-kernel@vger.kernel.org>, "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e8704374-857c-d80e-e91c-89d59e1cffbe@siemens.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jan Kiszka <jan.kiszka@siemens.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alan Tull <atull@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2llcmFuLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUaHVyc2RheSwgMjYgQXBy
-aWwgMjAxOCAxOTo1NzozMiBFRVNUIEtpZXJhbiBCaW5naGFtIHdyb3RlOgo+IEFoZW0gLSB0aGlz
-IG9uZSBzZWVtcyB0byBoYXZlIGxvc3QgaXQncyBjb21taXQgbWVzc2FnZS4KPiAKPiBBcG9sb2dp
-ZXMgOikKCkFwYXJ0IGZyb20gdGhhdCwgdGhpcyBsb29rcyBnb29kIHRvIG1lLgoKUmV2aWV3ZWQt
-Ynk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4K
-CmFuZCBhcHBsaWVkIHRvIG15IHRyZWUgd2l0aCB0aGUgY29tbWl0IG1lc3NhZ2UKCkRvY3VtZW50
-IHRoZSBNMy1OIChyOGE3Nzk2NSkgU29DIGluIHRoZSBSLUNhciBEVSBiaW5kaW5ncwoKTGV0IG1l
-IGtub3cgaWYgeW91IHdvdWxkIGxpa2UgYSBkaWZmZXJlbnQgbWVzc2FnZS4KCj4gT24gMjYvMDQv
-MTggMTc6NTMsIEtpZXJhbiBCaW5naGFtIHdyb3RlOgo+ID4gU2lnbmVkLW9mZi1ieTogS2llcmFu
-IEJpbmdoYW0gPGtpZXJhbi5iaW5naGFtK3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiA+IC0t
-LQo+ID4gCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVu
-ZXNhcyxkdS50eHQgfCAyICsrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQo+
-ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcmVuZXNhcyxkdS50eHQKPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgaW5kZXgKPiA+IGEzNmE2ZTdlZTU0Zi4uN2M2ODU0
-YmQwYTA0IDEwMDY0NAo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVzYXMsZHUudHh0Cj4gPiAKPiA+IEBAIC0xMyw2ICsxMyw3
-IEBAIFJlcXVpcmVkIFByb3BlcnRpZXM6Cj4gPiAgICAgIC0gInJlbmVzYXMsZHUtcjhhNzc5NCIg
-Zm9yIFI4QTc3OTQgKFItQ2FyIEUyKSBjb21wYXRpYmxlIERVCj4gPiAgICAgIC0gInJlbmVzYXMs
-ZHUtcjhhNzc5NSIgZm9yIFI4QTc3OTUgKFItQ2FyIEgzKSBjb21wYXRpYmxlIERVCj4gPiAgICAg
-IC0gInJlbmVzYXMsZHUtcjhhNzc5NiIgZm9yIFI4QTc3OTYgKFItQ2FyIE0zLVcpIGNvbXBhdGli
-bGUgRFUKPiA+ICsgICAgLSAicmVuZXNhcyxkdS1yOGE3Nzk2NSIgZm9yIFI4QTc3OTY1IChSLUNh
-ciBNMy1OKSBjb21wYXRpYmxlIERVCj4gPiAgICAgIC0gInJlbmVzYXMsZHUtcjhhNzc5NzAiIGZv
-ciBSOEE3Nzk3MCAoUi1DYXIgVjNNKSBjb21wYXRpYmxlIERVCj4gPiAgICAgIC0gInJlbmVzYXMs
-ZHUtcjhhNzc5OTUiIGZvciBSOEE3Nzk5NSAoUi1DYXIgRDMpIGNvbXBhdGlibGUgRFUKPiA+IAo+
-ID4gQEAgLTU5LDYgKzYwLDcgQEAgY29ycmVzcG9uZGluZyB0byBlYWNoIERVIG91dHB1dC4KPiA+
-IAo+ID4gICBSOEE3Nzk0IChSLUNhciBFMikgICAgIERQQUQgMCAgICAgICAgIERQQUQgMSAgICAg
-ICAgIC0gICAgICAgICAgICAgIC0KPiA+ICAgUjhBNzc5NSAoUi1DYXIgSDMpICAgICBEUEFEIDAg
-ICAgICAgICBIRE1JIDAgICAgICAgICBIRE1JIDEgICAgICAgICBMVkRTCj4gPiAgIDAKPiA+ICAg
-UjhBNzc5NiAoUi1DYXIgTTMtVykgICBEUEFEIDAgICAgICAgICBIRE1JIDAgICAgICAgICBMVkRT
-IDAgICAgICAgICAtCj4gPiArIFI4QTc3OTY1IChSLUNhciBNMy1OKSAgRFBBRCAwICAgICAgICAg
-SERNSSAwICAgICAgICAgTFZEUyAwICAgICAgICAgLQo+ID4gICBSOEE3Nzk3MCAoUi1DYXIgVjNN
-KSAgIERQQUQgMCAgICAgICAgIExWRFMgMCAgICAgICAgIC0gICAgICAgICAgICAgIC0KPiA+ICAg
-UjhBNzc5OTUgKFItQ2FyIEQzKSAgICBEUEFEIDAgICAgICAgICBMVkRTIDAgICAgICAgICBMVkRT
-IDEgICAgICAgICAtCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 04/26/18 04:00, Jan Kiszka wrote:
+> Only the overlay notifier callbacks have a chance to potentially get
+> hold of references to those two resources, but they are not supposed to
+> store them beyond OF_OVERLAY_POST_REMOVE.
+> 
+> Document the overlay notifier API, its constraint regarding pointer
+> lifetime, and then remove intentional leaks of ovcs->overlay_tree and
+> ovcs->fdt from free_overlay_changeset.
+> 
+> See also https://lkml.org/lkml/2018/4/23/1063 and following.
+> 
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> ---
+>  Documentation/devicetree/overlay-notes.txt |  8 ++++++++
+>  drivers/of/overlay.c                       | 30 +++++++++++++++++++++---------
+>  2 files changed, 29 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
+> index a4feb6dde8cd..725fb8d255c1 100644
+> --- a/Documentation/devicetree/overlay-notes.txt
+> +++ b/Documentation/devicetree/overlay-notes.txt
+> @@ -98,6 +98,14 @@ Finally, if you need to remove all overlays in one-go, just call
+>  of_overlay_remove_all() which will remove every single one in the correct
+>  order.
+>  
+> +In addition, there is the option to register notifiers that get called on
+> +overlay operations. See of_overlay_notifier_register/unregister and
+> +enum of_overlay_notify_action for details.
+> +
+> +Note that a notifier callback is not supposed to store pointers to a device
+> +tree node or its content beyond OF_OVERLAY_POST_REMOVE corresponding to the
+> +respective node it received.
+> +
+>  Overlay DTS Format
+>  ------------------
+>  
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index b35fe88f1851..7baa53e5b1d7 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -102,12 +102,28 @@ static DEFINE_IDR(ovcs_idr);
+>  
+>  static BLOCKING_NOTIFIER_HEAD(overlay_notify_chain);
+>  
+> +/**
+> + * of_overlay_notifier_register() - Register notifier for overlay operations
+> + * @nb:		Notifier block to register
+> + *
+> + * Register for notification on overlay operations on device tree nodes. The
+> + * reported actions definied by @of_reconfig_change. The notifier callback
+> + * furthermore receives a pointer to the affected device tree node.
+> + *
+> + * Note that a notifier callback is not supposed to store pointers to a device
+> + * tree node or its content beyond @OF_OVERLAY_POST_REMOVE corresponding to the
+> + * respective node it received.
+> + */
+>  int of_overlay_notifier_register(struct notifier_block *nb)
+>  {
+>  	return blocking_notifier_chain_register(&overlay_notify_chain, nb);
+>  }
+>  EXPORT_SYMBOL_GPL(of_overlay_notifier_register);
+>  
+> +/**
+> + * of_overlay_notifier_register() - Unregister notifier for overlay operations
+> + * @nb:		Notifier block to unregister
+> + */
+>  int of_overlay_notifier_unregister(struct notifier_block *nb)
+>  {
+>  	return blocking_notifier_chain_unregister(&overlay_notify_chain, nb);
+> @@ -671,17 +687,13 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
+>  		of_node_put(ovcs->fragments[i].overlay);
+>  	}
+>  	kfree(ovcs->fragments);
+> -
+>  	/*
+> -	 * TODO
+> -	 *
+> -	 * would like to: kfree(ovcs->overlay_tree);
+> -	 * but can not since drivers may have pointers into this data
+> -	 *
+> -	 * would like to: kfree(ovcs->fdt);
+> -	 * but can not since drivers may have pointers into this data
+> +	 * There should be no live pointers into ovcs->overlay_tree and
+> +	 * ovcs->fdt due to the policy that overlay notifiers are not allowed
+> +	 * to retain pointers into the overlay devicetree.
+>  	 */
+> -
+> +	kfree(ovcs->overlay_tree);
+> +	kfree(ovcs->fdt);
+>  	kfree(ovcs);
+>  }
+>  
+> 
+
+These added kfree()s are depending on good review of overlay notifier
+patches to prevent retaining pointers into this freed memory.  When
+this patch is accepted I will submit a patch to add a "K:" pattern
+line to the Overlay MAINTAINERS entry to catch when overlay notifiers
+are added.
+
+Reviewed-by: Frank Rowand <frowand.list@gmail.com>
