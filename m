@@ -1,37 +1,52 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] DT: net: can: rcar_canfd: document R8A77970 bindings
-Date: Thu, 26 Apr 2018 22:41:14 +0300
-Message-ID: <7a3d170f-1d3a-a807-9256-15fe1a78ca4e@cogentembedded.com>
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH] dt-bindings: staging: remove a couple of ADC bindings
+Date: Thu, 26 Apr 2018 21:42:05 +0200
+Message-ID: <20180426214205.22f1a543@windsurf>
+References: <20180426015754.26605-1-robh@kernel.org>
+        <20180426053255.75jg5bsdu4h624jo@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Language: en-MW
-Sender: netdev-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180426053255.75jg5bsdu4h624jo@vireshk-i7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roland Stigge <stigge@antcom.de>, Stefan Roese <sr@denx.de>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the R-Car V3M (R8A77970) SoC support in the R-Car CAN-FD bindings.
+Hello,
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+On Thu, 26 Apr 2018 11:02:55 +0530, Viresh Kumar wrote:
+> @Thomas: Do you guys use this ?
+> 
+> On 25-04-18, 20:57, Rob Herring wrote:
+> > Remove LPC32xx and SPEAr ADC bindings in staging. They have not been
+> > touched since 2012.
+> > 
+> > Cc: Roland Stigge <stigge@antcom.de>
+> > Cc: Stefan Roese <sr@denx.de>
+> > Cc: Jonathan Cameron <jic23@kernel.org>
+> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> > Move these out of staging please or they are going to be removed.
+> > 
+> >  .../bindings/staging/iio/adc/lpc32xx-adc.txt       | 16 -------------
+> >  .../bindings/staging/iio/adc/spear-adc.txt         | 26 ----------------------
+> >  2 files changed, 42 deletions(-)
 
----
-The patch is against the 'linux-can-next.git' repo but I wouldn't object if
-it's merged to the 'linux-can.git' repo instead. :-)
+We are using the spear-adc driver, which is out of staging
+in ./drivers/iio/adc/spear_adc.c. So rather than removing its DT binding
+entirely, it should be moved out of staging.
 
- Documentation/devicetree/bindings/net/can/rcar_canfd.txt |    1 +
- 1 file changed, 1 insertion(+)
+I'm not using the LPC32xx ADC, but the IIO driver is also out of
+staging, so for the same reason, it would be strange to remove the DT
+binding.
 
-Index: linux-can-next/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-===================================================================
---- linux-can-next.orig/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-+++ linux-can-next/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-@@ -6,6 +6,7 @@ Required properties:
-   - "renesas,rcar-gen3-canfd" for R-Car Gen3 compatible controller.
-   - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
-   - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3) compatible controller.
-+  - "renesas,r8a77970-canfd" for R8A77970 (R-Car V3M) compatible controller.
- 
-   When compatible with the generic version, nodes must list the
-   SoC-specific version corresponding to the platform first, followed by the
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
