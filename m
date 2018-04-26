@@ -1,36 +1,37 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 0/3] K2G: mmc: Update mmc dt node to use sdhci-omap
-Date: Thu, 26 Apr 2018 11:12:12 +0530
-Message-ID: <2d03fa36-5fa1-322c-cc82-2dc3749dcaa3@ti.com>
-References: <20180425132746.13911-1-kishon@ti.com>
- <fc5f3498-62fd-15d3-90df-206c51649cb4@oracle.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 2/3] edac: altera: Add support for Stratix10 SDRAM EDAC
+Date: Thu, 26 Apr 2018 08:08:15 +0200
+Message-ID: <20180426060815.GA7931@pd.tnic>
+References: <1524594959-5259-1-git-send-email-thor.thayer@linux.intel.com>
+ <1524594959-5259-3-git-send-email-thor.thayer@linux.intel.com>
+ <2d310ff0-fa0e-e432-ae11-ba34080b4f6e@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fc5f3498-62fd-15d3-90df-206c51649cb4@oracle.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <2d310ff0-fa0e-e432-ae11-ba34080b4f6e@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dinh Nguyen <dinguyen@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, thor.thayer@linux.intel.com, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 25, 2018 at 09:14:27PM -0500, Dinh Nguyen wrote:
+> Does it make sense to have the support for this in separate files?
 
+No. Per vendor or per uarch/processor type, standalone EDAC drivers are
+fine. But not per the RAS capability of a functional unit.
 
-On Wednesday 25 April 2018 11:10 PM, Santosh Shilimkar wrote:
-> On 4/25/2018 6:27 AM, Kishon Vijay Abraham I wrote:
->> Update mmc dt node to use sdhci-omap binding instead of omap_hsmmc
->> binding.
->>
->> I've also updated keystone_defconfig to enable CONFIG_MMC_SDHCI_OMAP.
->> Everyone who use a custom .config should also enable
->> CONFIG_MMC_SDHCI_OMAP for MMC to work.
->>
->> This series should be merged only after [1]
->> [1] -> https://marc.info/?l=linux-kernel&m=152465820531802&w=2
->>
-> Keep me posted once the dependency gets merged.
+-- 
+Regards/Gruss,
+    Boris.
 
-sure.
-
-Regards
-Kishon
+Good mailing practices for 400: avoid top-posting and trim the reply.
