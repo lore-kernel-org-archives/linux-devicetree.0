@@ -1,101 +1,55 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/3] Documentation: dt: socfpga: Add Stratix10 ECC Manager
- binding
-Date: Thu, 26 Apr 2018 10:06:37 -0500
-Message-ID: <CAL_JsqKSJ35Da9fDx0kzyC5Gi5ks8k_pDpnTF0beh7YV484o4w@mail.gmail.com>
-References: <1524594959-5259-1-git-send-email-thor.thayer@linux.intel.com>
- <1524594959-5259-2-git-send-email-thor.thayer@linux.intel.com>
- <6528e94e-85ea-8015-5a3b-4e8a9ecc8dbd@kernel.org>
- <e9606cfb-cee6-2e0c-cfe5-c91a537cb8a2@linux.intel.com>
- <64ecc830-3674-6bb4-c2f9-c24e576c08c0@linux.intel.com>
- <8f29ed5c-4e21-6200-23dc-4cadf86d2b96@kernel.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 6/6] arm64: dts: rockchip: Specify override mode for
+ kevin panel
+Date: Thu, 26 Apr 2018 08:29:17 -0700
+Message-ID: <CAD=FV=U-CL6msCicDhE28huONe0T_ChE+FKZ1CkEJOK=WKryGQ@mail.gmail.com>
+References: <20180208174855.55620-1-seanpaul@chromium.org>
+ <20180208174855.55620-7-seanpaul@chromium.org>
+ <CAD=FV=WGU+s015DQbNeWHkpqpHLFz+9AjHKAd0N3HWag0p5FWA@mail.gmail.com>
+ <20180426120528.GA11985@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8f29ed5c-4e21-6200-23dc-4cadf86d2b96@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, thor.thayer@linux.intel.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Borislav Petkov <bp@alien8.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180426120528.GA11985@ulmo>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Arnd Bergmann <arnd@arndb.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, Will Deacon <will.deacon@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, hoegsberg@chromium.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Emil Renner Berthing <kernel@esmil.dk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 10:01 AM, Dinh Nguyen <dinguyen@kernel.org> wrote:
->
->
-> On 04/26/2018 09:58 AM, Thor Thayer wrote:
->> On 04/26/2018 09:43 AM, Thor Thayer wrote:
->>> On 04/25/2018 09:16 PM, Dinh Nguyen wrote:
->>>>
->>>>
->>>> On 04/24/2018 01:35 PM, thor.thayer@linux.intel.com wrote:
->>>>> From: Thor Thayer <thor.thayer@linux.intel.com>
->>>>>
->>>>> Add the device tree bindings needed to support the Stratix10
->>>>> ECC Manager and SDRAM ECC to the existing bindings.
->>>>>
->>>>> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
->>>>> ---
->>>>>   .../bindings/arm/altera/socfpga-eccmgr.txt         | 47
->>>>> ++++++++++++++++++++++
->>>>>   1 file changed, 47 insertions(+)
->>>>>
->>>>> diff --git
->>>>> a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
->>>>> b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
->>>>> index 4a1714f96bab..fe48ad293a24 100644
->>>>> --- a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
->>>>> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
->>>>> @@ -231,3 +231,50 @@ Example:
->>>>>                        <48 IRQ_TYPE_LEVEL_HIGH>;
->>>>>           };
->>>>>       };
->>>>> +
->>>>> +Stratix10 SoCFPGA ECC Manager
->>>>> +The Stratix10 SoC ECC Manager handles the IRQs for each peripheral
->>>>> +in a shared register similar to the Arria10. However, ECC requires
->>>>> +access to registers that can only be read in EL3 with SMC calls.
->>>>> +Therefore the device tree is slightly different.
->>>>> +
->>>>> +Required Properties:
->>>>> +- compatible : Should be "altr,socfpga-s10-ecc-manager"
->>>>
->>>> Altera technically doesn't exist anymore, should this be
->>>> "intel,stratix10-ecc-manager"?
->>>>
->>> I was trying to be consistent with the older names but I agree with
->>> your argument. I will change this. Thanks
->>>
->> After looking at the Stratix10 device tree, there are only "altr," in
->> there. For instance the top node is:
->>
->> compatible = "altr,socfpga-stratix10";
->>
->> and even the directory that the device tree is in is named "altera"
->>
->> so I'll stick with the existing "altr," designation to be consistent.
->>
->
-> That's fine and I don't have any strong inclination for 1 way or
-> another. But it's not quite true that there are only "altr" in the dts file.
->
-> I did recently switch the clock manager to an intel designation. I
-> upstreamed the original stratix10 DTS file back in 2015, before Altera
-> was purchased by Intel.
->
-> My only argument is that if you're adding new support for devices, it
-> should be an intel binding.
-
-I think I would make the switch when you change it at the SoC level
-(for a new SoC). IOW, if the top level compatible is using 'intel',
-then use that for the device bindings otherwise stick with 'altr' for
-that SoC.
-
-Rob
+SGksCgpPbiBUaHUsIEFwciAyNiwgMjAxOCBhdCA1OjA1IEFNLCBUaGllcnJ5IFJlZGluZwo8dGhp
+ZXJyeS5yZWRpbmdAZ21haWwuY29tPiB3cm90ZToKPiBJZiB5b3UndmUgZ290IGFuIEVESUQgeW91
+IHNob3VsZCBiZSByZWx5aW5nIG9uIHRoZSBFRElEIHRvIHByb3ZpZGUgdGhlCj4gdGltaW5ncy4g
+Tm8gbmVlZCB0byBoYXZlIGFueSB0aW1pbmdzIGluIHRoZSBEVCBpbiB0aGF0IGNhc2UuCgpUaGUg
+cHJvYmxlbSB0aGF0J3Mgc3BlY2lmaWNhbGx5IHRyeWluZyB0byBiZSBzb2x2ZWQgYnkgU2Vhbidz
+IHNlcmllcwppcyB3aGVuIHdlIGhhdmUgdG8gdXNlIHRpbWluZ3Mgb3RoZXIgdGhhbiB0aGUgb25l
+IHN1Z2dlc3RlZCBieSB0aGUKRURJRC4gIFNwZWNpZmljYWxseToKCiogT24gbWFueSBSb2NrY2hp
+cCBTb0NzIHRoZXJlIGlzIG9ubHkgb25lICJleHRyYSIgUExMIGF2YWlsYWJsZS4gIFRoaXMKZXh0
+cmEgUExMIGNhbiBvbmx5IGJlIHVzZWQgYnkgb25lIG9mIHRoZSB0d28gZGlzcGxheXMgKGVEUCBm
+b3IKaW50ZXJuYWwgcGFuZWwgb3IgSERNSS9EUCBmb3IgZXh0ZXJuYWwgZGlzcGxheSkuICBUaGUg
+b3RoZXIgZGlzcGxheQpoYXMgdG8gdXNlIG9uZSBvZiB0aGUgInNoYXJlZCIgUExMcyBpbiB0aGUg
+c3lzdGVtLiAgVGhlc2UgUExMcyBoYXZlCnRoZWlyIHJhdGUgc2V0IGF0IGJvb3QgYW5kIGFyZW4n
+dCBjaGFuZ2VkLgoKKiBJbiBvcmRlciB0byBwcm92aWRlIG1heGltdW0gZmxleGliaWxpdHkgdG8g
+Y29ubmVjdCBleHRlcm5hbApkaXNwbGF5cywgd2UgYWx3YXlzIHdhbnQgdGhlICJleHRyYSIgUExM
+IGRlZGljYXRlZCB0byB0aGUgZXh0ZXJuYWwKZGlzcGxheSBwb3J0LiAgVGhlbiB3ZSBjYW4gbWFr
+ZSBsb3RzIG9mIHBpeGVsIGNsb2Nrcy4KCiogV2Ugd29yayB3aXRoIGRldmljZSBhbmQgZGlzcGxh
+eSBtYW51ZmFjdHVyZXJzIHRvIGZpZ3VyZSBvdXQgYSBwaXhlbApjbG9jayB0aGF0IGlzIGFjaGll
+dmFibGUgd2l0aCB0aGUgc2hhcmVkIFBMTHMgYW5kIHRoYXQgaGFzIHZhbGlkCnRpbWluZ3MuICBU
+aGlzIGlzIHRoZSB0aGUgcGl4ZWwgY2xvY2sgdGhhdCB3YXMgdXNlZCB3aGVuIHRlc3RpbmcgRU1J
+LApldGMuICBJdCBpcyB0aGUgb25lIHRoYXQgc2hvdWxkIGJlIHVzZWQuCgoqIFBhbmVsIG1hbnVm
+YWN0dXJlcnMgYWdyZWVkIHRoYXQgdGhpcyBwaXhlbCBjbG9jayB3YXMgZ29vZCB0byB1c2UsCmJ1
+dCB3ZSBkaWRuJ3QgZ2V0IGFuIHVwZGF0ZWQgRURJRCB0aGF0IHN1Z2dlc3RlZCB0aGlzIG1vZGUu
+ICBJdCdzIG15CnVuZGVyc3RhbmRpbmcgdGhhdCBwYW5lbHMgd2VyZSBhbHJlYWR5IGF2YWlsYWJs
+ZSBhbmQgaXQgZGlkbid0IHJlYWxseQptYWtlIHNlbnNlIHRvIHByb2dyYW0gaW4gYW4gRURJRCB0
+byB3b3JrIGFyb3VuZCBhIGNlcnRhaW4gYm9hcmQuCgoKCi1Eb3VnCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
