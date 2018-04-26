@@ -1,52 +1,28 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v6 02/24] soc: qcom: Add APR bus driver
-Date: Thu, 26 Apr 2018 13:05:39 +0100
-Message-ID: <35bf7a17-8d76-285f-987b-bf74e2b8e5b8@linaro.org>
-References: <20180426094606.4775-1-srinivas.kandagatla@linaro.org>
- <20180426094606.4775-3-srinivas.kandagatla@linaro.org>
- <20180426113911.GA21755@sirena.org.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 1/3] dt-bindings: pinctrl: bcm2835-gpio: Add generic
+ pinctrl support
+Date: Thu, 26 Apr 2018 14:21:20 +0200
+Message-ID: <CACRpkdZTA495jAOo4zPb6_Tp1Ng9f3M2LtA+ENgZigVE4ChaOQ@mail.gmail.com>
+References: <f500b25c-eea0-9f01-7d7b-5a9dd90c50fa@castello.eng.br>
+ <1523422726-7910-1-git-send-email-matheus@castello.eng.br> <1523422726-7910-2-git-send-email-matheus@castello.eng.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180426113911.GA21755@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, spatakok@qti.qualcomm.com, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, andy.gross@linaro.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1523422726-7910-2-git-send-email-matheus@castello.eng.br>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matheus Castello <matheus@castello.eng.br>
+Cc: Rob Herring <robh@kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 11, 2018 at 6:58 AM, Matheus Castello
+<matheus@castello.eng.br> wrote:
 
+> Added generic pin configuration and multiplexing support,
+> and should be preferred than brcm legacy one.
+>
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 
-On 26/04/18 12:39, Mark Brown wrote:
-> On Thu, Apr 26, 2018 at 10:45:44AM +0100, srinivas.kandagatla@linaro.org wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>
->> This patch adds support toi APR bus (Asynchronous Packet Router) driver.
->> ARP driver is made as a bus driver so that the apr devices can added removed
-> 
-> What is the plan for getting this patch merged?  I think the only review
-> I've seen from maintainers thus far has been from Rob on the DT binding.
-It was initially reviewed by Bjorn and Rohit. I requested Andy to have 
-quick look at this.
+Patch applied with Eric's and Rob's ACKs.
 
-I was hoping that APR driver would go via Andy's ARM patches. And the 
-rest via your tree.
-
-"depends on QCOM_APR" should prevent drivers from building without apr.
-
-> It's obviously going to be a dependency for everything else.
-> 
-> Also just saw ARP->APR there.
-I will fix that!
-> 
-
---srini
+Yours,
+Linus Walleij
