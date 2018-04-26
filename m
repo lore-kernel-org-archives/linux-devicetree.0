@@ -1,132 +1,122 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 2/2] ARM: dts: r8a7740: Enable CEU0
-Date: Thu, 26 Apr 2018 09:26:09 +0200
-Message-ID: <20180426072609.GH17088@w540>
-References: <1524654920-18749-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524654920-18749-3-git-send-email-jacopo+renesas@jmondi.org>
- <20180426061124.hvgl3ijf6ulrdkmn@verge.net.au>
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Subject: Re: [PATCH] of: overlay: Stop leaking resources on overlay removal
+Date: Thu, 26 Apr 2018 09:31:54 +0200
+Message-ID: <46dbbff8-79ee-d397-7f8e-791fb1bc594c@siemens.com>
+References: <097f1b01-6cb4-8dcb-0498-7b4c59a7ea53@siemens.com>
+ <7aca82c1-a02c-2f84-bc32-6e8a118ba601@gmail.com>
+ <90e7da9d-d40a-17f1-e627-873f58a3dce5@siemens.com>
+ <b813ac8f-a1e3-3e27-2e44-0a576e05d01c@gmail.com>
+ <17561711-94f7-b3d4-8f06-9cfa69daaf23@gmail.com>
+ <033fba6b-d93c-249c-d552-1f5336b34387@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Q6STzHxy03qt/hK9"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180426061124.hvgl3ijf6ulrdkmn@verge.net.au>
+In-Reply-To: <033fba6b-d93c-249c-d552-1f5336b34387@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, geert@linux-m68k.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alan Tull <atull@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 2018-04-26 02:44, Frank Rowand wrote:
+> On 04/25/18 17:32, Frank Rowand wrote:
+>> Hi Jan,
+>>
+>> On 04/24/18 13:58, Frank Rowand wrote:
+>>> On 04/24/18 10:50, Jan Kiszka wrote:
+>>>> On 2018-04-24 19:44, Frank Rowand wrote:
+>>>>> On 04/24/18 09:19, Jan Kiszka wrote:
+>>>>>> Only the overlay notifier callbacks have a chance to potentially get
+>>>>>> hold of references to those two resources, but they do not store them.
+>>>>>> So it is safe to stop the intentional leaking.
+>>>>>>
+>>>>>> See also https://lkml.org/lkml/2018/4/23/1063 and following.
+>>>>>>
+>>>>>> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+>>>>>> ---
+>>>>>>
+>>>>>> Ideally, we sort out any remaining worries during the 4.17-rc cycle.
+>>>>>>
+>>>>>>  drivers/of/overlay.c | 13 ++-----------
+>>>>>>  1 file changed, 2 insertions(+), 11 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>>>>>> index b35fe88f1851..3553f1f57a62 100644
+>>>>>> --- a/drivers/of/overlay.c
+>>>>>> +++ b/drivers/of/overlay.c
+>>>>>> @@ -671,17 +671,8 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
+>>>>>>  		of_node_put(ovcs->fragments[i].overlay);
+>>>>>>  	}
+>>>>>>  	kfree(ovcs->fragments);
+>>>>>> -
+>>>>>> -	/*
+>>>>>> -	 * TODO
+>>>>>> -	 *
+>>>>>> -	 * would like to: kfree(ovcs->overlay_tree);
+>>>>>> -	 * but can not since drivers may have pointers into this data
+>>>>>> -	 *
+>>>>>> -	 * would like to: kfree(ovcs->fdt);
+>>>>>> -	 * but can not since drivers may have pointers into this data
+>>>>>> -	 */
+>>>>>> -
+>>>>>> +	kfree(ovcs->overlay_tree);
+>>>>>> +	kfree(ovcs->fdt);
+>>>>>>  	kfree(ovcs);
+>>>>>>  }
+>>>>>>  
+>>>>>>
+>>>>>
+>>>>> Nack.  It is premature to submit this while the conversation is
+>>>>> continuing in the other thread.
+>>>>>
+>>>>> I'll continue the conversation in the other thread.
+>>>>>
+>>>>
+>>>> Well, at least the strongest argument has been resolved now, the
+>>>> notifier topic. Curious to learn what remains. As I noted, we should
+>>>> work hard to sort out the API regression prior to the release.
+>>>
+>>> Nope, the notifier discussion continues in the other thread.
+>>
+>> Thanks for your patience in the other thread.
+>>
+>> As I noted there, I am now willing to accept this patch with some
+>> small changes.  Please add a minimal section to
+>> Documentation/devicetree/overlay-notes.txt about overlay notifiers.
+>> The most important thing to note there is that the overlay notifiers
+>> are not allowed to retain any pointers into the overlay devicetree.
+> 
+> Please also add a function header comment to of_overlay_notifier_register()
+> in drivers/of/overlay.c that notes the restriction on the overlay notifier.
+> 
+> 
+>> Also, instead of removing the "TODO" comment in free_overlay_changeset(),
+>> change it to say something to the effect of "there should be no live pointers
+>> into ovcs->overlay_tree and ovcs->fdt due to the policy that overlay
+>> notifiers are not allowed to retain pointers into the overlay devicetree".
+>>
+>> I will also add myself to the OPEN FIRMWARE AND DEVICE TREE OVERLAYS
+>> entry of MAINTAINERS and add a keyword line to catch overlay notifiers.
+>>
+>> I am not happy about freeing the overlay devicetree and overlay fdt
+>> while overlay notifiers are able to retain pointers into the overlay
+>> devicetree and overlay fdt, but am willing to accept documentation and
+>> review as a partial protection until the devicetree access APIs can be
+>> modified to prevent the notifiers from accessing the pointers.  The
+>> volume of overlay notifier patches should be small enough to not be
+>> a review burden.
+>>
+>> -Frank
+>>
+>>
+> 
 
---Q6STzHxy03qt/hK9
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Thanks for reconsidering! I'll look into your change requests soon and
+come up with v2.
 
-Hi Simon,
+Jan
 
-On Thu, Apr 26, 2018 at 08:11:30AM +0200, Simon Horman wrote:
-> Thanks Jacopo,
->
-> I'm very pleased to see this series.
-
-Credits to Geert that pointed out to me R-Mobile A1 comes with a CEU.
-I should mention him in next iteration actually, sorry about that.
-
->
-> On Wed, Apr 25, 2018 at 01:15:20PM +0200, Jacopo Mondi wrote:
-> > Enable CEU0 peripheral for Renesas R-Mobile A1 R8A7740.
->
-> Given 'status = "disabled"' below I think you
-> are describing but not enabling CEU0. Also in the subject.
-
-Right.
-
->
-> Should we also describe CEU1?
-
-Armadillo board file only describe CEU0. If there are R-Mobile A1
-board files where I can steal informations from I can do that. If
-there's a public datasheet, that would be even better.
->
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  arch/arm/boot/dts/r8a7740.dtsi | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-> > index afd3bc5..05ec41e 100644
-> > --- a/arch/arm/boot/dts/r8a7740.dtsi
-> > +++ b/arch/arm/boot/dts/r8a7740.dtsi
-> > @@ -67,6 +67,16 @@
-> >  		power-domains = <&pd_d4>;
-> >  	};
-> >
-> > +	ceu0: ceu@fe910000 {
-> > +		reg = <0xfe910000 0x100>;
->
-> Should the size of the range be 0x3000 ?
-> That would seem to match my reading of table 32.3
-> and also be consistent with r7s72100.dtsi.
-
-I got this from
-
-static struct resource ceu0_resources[] = {
-	[0] = {
-		.name	= "CEU",
-		.start	= 0xfe910000,
-		.end	= 0xfe91009f,
-		.flags	= IORESOURCE_MEM,
-	},
-but I also noticed the r7s72100 one was bigger.
-I'm fine enlarging this, if that's what the manual reports too.
-
-> > +		compatible = "renesas,r8a7740-ceu";
-> > +		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>;
-> > +		clocks = <&mstp1_clks R8A7740_CLK_CEU20>;
-> > +		clock-names = "ceu20";
-> > +		power-domains = <&pd_a4mp>;
->
-> My reading of table 1.7 is that the power domain should be A4R (&pd_a4r).
-
-Ah yes, my bad.
-
-The long time goal would be describe the camera module (mt9t112) which
-is installed on armadillo. Unfortunately that would probably require
-some more work on the CEU side.
-
-Thanks
-   j
-
->
-> > +		status = "disabled";
-> > +	};
-> > +
-> >  	cmt1: timer@e6138000 {
-> >  		compatible = "renesas,cmt-48-r8a7740", "renesas,cmt-48";
-> >  		reg = <0xe6138000 0x170>;
-> > --
-> > 2.7.4
-> >
-
---Q6STzHxy03qt/hK9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJa4X8RAAoJEHI0Bo8WoVY82XIP/RDgvPffkjSFo/rfbxZvVy8Z
-eKyaRX0oSCzIMcd4PrHfzcwvpvhJSLKkITMt8XyHWG2ce0Xy3eLJ1ttkSMN8zbdc
-DB5ieEu4/sksBo7lDPLIfp0cf6vNYIdghGPdluxefc/1LBOBrbxp78GJSEL43WYL
-Tz0W33yOCkQxC3l3z23QjP+oQH3lUkQWdtFVjKQUHM4KyguUHJ7V0WQs8oyI3Mos
-8EaOYHM/xZzXbnq1Uju1WsEAYb22//232iLZoT62AEpv0VcqZWgY4nbuDzzokuw0
-yFs7/nYndU5ZssfLOPmhYWwxHQ+2a//7NGLkR7UPpcbCC3bSuRCOHVPkBsIKoqPl
-ZPO3+Q0Al/HusBi7YdSBTZTVdILcgNYY+UstJWHE1j9W3RP4LKxl5I4ofO70fPxI
-ENVht5W1tSAcwjj+u0kN54dduZLHMP3t8V2PwlJR5KPEOrGdgLjuLdNy0HNTZeDE
-neUJMTEbFqgay0oli+VhsXmx332rWwGRkXHcbN2bzQPGmb209FXn+P7Bs+bbLeS7
-9zs3pkL7vAcrmpj6SBYlWqZrPUhfdZ9LRaxLMxkH6nbf2kaONnDt51tSl+bVpcvr
-giycfNoxiYAFDEJ+xDxciRcmQ8717BSfMg9hoG1jGBYQDvka4p0jjowm3si0ex/9
-sj6z720geab7BK5UUR/M
-=w6OS
------END PGP SIGNATURE-----
-
---Q6STzHxy03qt/hK9--
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
