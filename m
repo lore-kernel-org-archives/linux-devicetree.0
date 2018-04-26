@@ -1,117 +1,32 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2] of: overlay: Stop leaking resources on overlay removal
-Date: Thu, 26 Apr 2018 13:20:43 -0700
-Message-ID: <bb034d02-6bff-6828-bbf6-021bf4d39a95@gmail.com>
-References: <e8704374-857c-d80e-e91c-89d59e1cffbe@siemens.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 0/2] Add R8A77970/Eagle CAN-FD support
+Date: Thu, 26 Apr 2018 23:26:46 +0300
+Message-ID: <4e5216bc-5f1b-ace4-1aea-02269cd206ac@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e8704374-857c-d80e-e91c-89d59e1cffbe@siemens.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jan Kiszka <jan.kiszka@siemens.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alan Tull <atull@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/26/18 04:00, Jan Kiszka wrote:
-> Only the overlay notifier callbacks have a chance to potentially get
-> hold of references to those two resources, but they are not supposed to
-> store them beyond OF_OVERLAY_POST_REMOVE.
-> 
-> Document the overlay notifier API, its constraint regarding pointer
-> lifetime, and then remove intentional leaks of ovcs->overlay_tree and
-> ovcs->fdt from free_overlay_changeset.
-> 
-> See also https://lkml.org/lkml/2018/4/23/1063 and following.
-> 
-> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-> ---
->  Documentation/devicetree/overlay-notes.txt |  8 ++++++++
->  drivers/of/overlay.c                       | 30 +++++++++++++++++++++---------
->  2 files changed, 29 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
-> index a4feb6dde8cd..725fb8d255c1 100644
-> --- a/Documentation/devicetree/overlay-notes.txt
-> +++ b/Documentation/devicetree/overlay-notes.txt
-> @@ -98,6 +98,14 @@ Finally, if you need to remove all overlays in one-go, just call
->  of_overlay_remove_all() which will remove every single one in the correct
->  order.
->  
-> +In addition, there is the option to register notifiers that get called on
-> +overlay operations. See of_overlay_notifier_register/unregister and
-> +enum of_overlay_notify_action for details.
-> +
-> +Note that a notifier callback is not supposed to store pointers to a device
-> +tree node or its content beyond OF_OVERLAY_POST_REMOVE corresponding to the
-> +respective node it received.
-> +
->  Overlay DTS Format
->  ------------------
->  
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index b35fe88f1851..7baa53e5b1d7 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -102,12 +102,28 @@ static DEFINE_IDR(ovcs_idr);
->  
->  static BLOCKING_NOTIFIER_HEAD(overlay_notify_chain);
->  
-> +/**
-> + * of_overlay_notifier_register() - Register notifier for overlay operations
-> + * @nb:		Notifier block to register
-> + *
-> + * Register for notification on overlay operations on device tree nodes. The
-> + * reported actions definied by @of_reconfig_change. The notifier callback
-> + * furthermore receives a pointer to the affected device tree node.
-> + *
-> + * Note that a notifier callback is not supposed to store pointers to a device
-> + * tree node or its content beyond @OF_OVERLAY_POST_REMOVE corresponding to the
-> + * respective node it received.
-> + */
->  int of_overlay_notifier_register(struct notifier_block *nb)
->  {
->  	return blocking_notifier_chain_register(&overlay_notify_chain, nb);
->  }
->  EXPORT_SYMBOL_GPL(of_overlay_notifier_register);
->  
-> +/**
-> + * of_overlay_notifier_register() - Unregister notifier for overlay operations
-> + * @nb:		Notifier block to unregister
-> + */
->  int of_overlay_notifier_unregister(struct notifier_block *nb)
->  {
->  	return blocking_notifier_chain_unregister(&overlay_notify_chain, nb);
-> @@ -671,17 +687,13 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
->  		of_node_put(ovcs->fragments[i].overlay);
->  	}
->  	kfree(ovcs->fragments);
-> -
->  	/*
-> -	 * TODO
-> -	 *
-> -	 * would like to: kfree(ovcs->overlay_tree);
-> -	 * but can not since drivers may have pointers into this data
-> -	 *
-> -	 * would like to: kfree(ovcs->fdt);
-> -	 * but can not since drivers may have pointers into this data
-> +	 * There should be no live pointers into ovcs->overlay_tree and
-> +	 * ovcs->fdt due to the policy that overlay notifiers are not allowed
-> +	 * to retain pointers into the overlay devicetree.
->  	 */
-> -
-> +	kfree(ovcs->overlay_tree);
-> +	kfree(ovcs->fdt);
->  	kfree(ovcs);
->  }
->  
-> 
+Hello!
 
-These added kfree()s are depending on good review of overlay notifier
-patches to prevent retaining pointers into this freed memory.  When
-this patch is accepted I will submit a patch to add a "K:" pattern
-line to the Overlay MAINTAINERS entry to catch when overlay notifiers
-are added.
+Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20180426-v4.17-rc2' tag. We're adding the R8A77970 CAN-FD
+device node and then enable single chnanel CAN-FD support on the Eagle board.
 
-Reviewed-by: Frank Rowand <frowand.list@gmail.com>
+[1/2] arm64: dts: renesas: r8a77970: add CAN-FD support
+[2/2] arm64: dts: renesas: eagle: add CAN-FD support
+
+WBR, Sergei
