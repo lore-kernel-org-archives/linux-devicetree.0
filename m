@@ -1,121 +1,103 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/4] dt-bindings: move various timer bindings to timer/ directory
-Date: Thu, 26 Apr 2018 16:27:41 -0500
-Message-ID: <20180426212744.28688-1-robh@kernel.org>
+From: Moritz Fischer <mdf@kernel.org>
+Subject: [RFC/PATCH] net: ethernet: nixge: Use of_get_mac_address()
+Date: Thu, 26 Apr 2018 14:57:42 -0700
+Message-ID: <20180426215742.18966-1-mdf@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, Moritz Fischer <mdf@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Bindings are supposed to be organized by device class/function. Move
-bindings for various timers to timer/ binding directory.
+Make nixge driver work with 'mac-address' property instead of
+'address' property. There are currently no in-tree users and
+the only users of this driver are devices that use overlays
+we control to instantiate the device together with the corresponding
+FPGA images.
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Moritz Fischer <mdf@kernel.org>
 ---
- Documentation/devicetree/bindings/arm/ux500/boards.txt                  | 2 +-
- Documentation/devicetree/bindings/pwm/pwm-omap-dmtimer.txt              | 2 +-
- .../devicetree/bindings/{nios2/timer.txt => timer/altr,timer-1.0.txt}   | 0
- .../bindings/{arm/arch_timer.txt => timer/arm,arch_timer.txt}           | 0
- .../bindings/{arm/armv7m_systick.txt => timer/arm,armv7m-systick.txt}   | 0
- .../bindings/{arm/global_timer.txt => timer/arm,global_timer.txt}       | 0
- Documentation/devicetree/bindings/{arm/twd.txt => timer/arm,twd.txt}    | 0
- .../devicetree/bindings/{powerpc/fsl/gtm.txt => timer/fsl,gtm.txt}      | 0
- .../bindings/{arm/mrvl/timer.txt => timer/mrvl,mmp-timer.txt}           | 0
- .../devicetree/bindings/{arm/msm/timer.txt => timer/qcom,msm-timer.txt} | 0
- .../bindings/{arm/spear-timer.txt => timer/st,spear-timer.txt}          | 0
- .../devicetree/bindings/{c6x/timer64.txt => timer/ti,c64x+timer64.txt}  | 0
- .../devicetree/bindings/{arm/omap/timer.txt => timer/ti,timer.txt}      | 0
- .../devicetree/bindings/{arm/vt8500 => timer}/via,vt8500-timer.txt      | 0
- 14 files changed, 2 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/{nios2/timer.txt => timer/altr,timer-1.0.txt} (100%)
- rename Documentation/devicetree/bindings/{arm/arch_timer.txt => timer/arm,arch_timer.txt} (100%)
- rename Documentation/devicetree/bindings/{arm/armv7m_systick.txt => timer/arm,armv7m-systick.txt} (100%)
- rename Documentation/devicetree/bindings/{arm/global_timer.txt => timer/arm,global_timer.txt} (100%)
- rename Documentation/devicetree/bindings/{arm/twd.txt => timer/arm,twd.txt} (100%)
- rename Documentation/devicetree/bindings/{powerpc/fsl/gtm.txt => timer/fsl,gtm.txt} (100%)
- rename Documentation/devicetree/bindings/{arm/mrvl/timer.txt => timer/mrvl,mmp-timer.txt} (100%)
- rename Documentation/devicetree/bindings/{arm/msm/timer.txt => timer/qcom,msm-timer.txt} (100%)
- rename Documentation/devicetree/bindings/{arm/spear-timer.txt => timer/st,spear-timer.txt} (100%)
- rename Documentation/devicetree/bindings/{c6x/timer64.txt => timer/ti,c64x+timer64.txt} (100%)
- rename Documentation/devicetree/bindings/{arm/omap/timer.txt => timer/ti,timer.txt} (100%)
- rename Documentation/devicetree/bindings/{arm/vt8500 => timer}/via,vt8500-timer.txt (100%)
 
-diff --git a/Documentation/devicetree/bindings/arm/ux500/boards.txt b/Documentation/devicetree/bindings/arm/ux500/boards.txt
-index 7334c24625fc..0fa429534f49 100644
---- a/Documentation/devicetree/bindings/arm/ux500/boards.txt
-+++ b/Documentation/devicetree/bindings/arm/ux500/boards.txt
-@@ -26,7 +26,7 @@ interrupt-controller:
- 	see binding for interrupt-controller/arm,gic.txt
+Hi David, Rob,
+
+with Mike's change that enable the generic 'mac-address'
+binding that I barely missed with the submission of this
+driver I was wondering if we can still change the binding.
+
+I'm aware that this generally is a nonono case, since the binding
+is considered API, but since there are no users outside of our
+devicetree overlays that we ship with our devices I thought I'd ask.
+
+If you don't think that's a good idea do you think supporting both
+would be worthwhile?
+
+Thanks,
+
+Moritz
+
+---
+ .../devicetree/bindings/net/nixge.txt         |  4 ++--
+ drivers/net/ethernet/ni/nixge.c               | 20 ++-----------------
+ 2 files changed, 4 insertions(+), 20 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/nixge.txt b/Documentation/devicetree/bindings/net/nixge.txt
+index e55af7f0881a..9bc1ecfb6762 100644
+--- a/Documentation/devicetree/bindings/net/nixge.txt
++++ b/Documentation/devicetree/bindings/net/nixge.txt
+@@ -8,7 +8,7 @@ Required properties:
+ - phy-mode: See ethernet.txt file in the same directory.
+ - phy-handle: See ethernet.txt file in the same directory.
+ - nvmem-cells: Phandle of nvmem cell containing the MAC address
+-- nvmem-cell-names: Should be "address"
++- nvmem-cell-names: Should be "mac-address"
  
- timer:
--	see binding for arm/twd.txt
-+	see binding for timer/arm,twd.txt
+ Examples (10G generic PHY):
+ 	nixge0: ethernet@40000000 {
+@@ -16,7 +16,7 @@ Examples (10G generic PHY):
+ 		reg = <0x40000000 0x6000>;
  
- clocks:
- 	see binding for clocks/ux500.txt
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-omap-dmtimer.txt b/Documentation/devicetree/bindings/pwm/pwm-omap-dmtimer.txt
-index 2e53324fb720..5ccfcc82da08 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-omap-dmtimer.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-omap-dmtimer.txt
-@@ -2,7 +2,7 @@
+ 		nvmem-cells = <&eth1_addr>;
+-		nvmem-cell-names = "address";
++		nvmem-cell-names = "mac-address";
  
- Required properties:
- - compatible: Shall contain "ti,omap-dmtimer-pwm".
--- ti,timers: phandle to PWM capable OMAP timer. See arm/omap/timer.txt for info
-+- ti,timers: phandle to PWM capable OMAP timer. See timer/ti,timer.txt for info
-   about these timers.
- - #pwm-cells: Should be 3. See pwm.txt in this directory for a description of
-   the cells format.
-diff --git a/Documentation/devicetree/bindings/nios2/timer.txt b/Documentation/devicetree/bindings/timer/altr,timer-1.0.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/nios2/timer.txt
-rename to Documentation/devicetree/bindings/timer/altr,timer-1.0.txt
-diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/timer/arm,arch_timer.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/arch_timer.txt
-rename to Documentation/devicetree/bindings/timer/arm,arch_timer.txt
-diff --git a/Documentation/devicetree/bindings/arm/armv7m_systick.txt b/Documentation/devicetree/bindings/timer/arm,armv7m-systick.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/armv7m_systick.txt
-rename to Documentation/devicetree/bindings/timer/arm,armv7m-systick.txt
-diff --git a/Documentation/devicetree/bindings/arm/global_timer.txt b/Documentation/devicetree/bindings/timer/arm,global_timer.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/global_timer.txt
-rename to Documentation/devicetree/bindings/timer/arm,global_timer.txt
-diff --git a/Documentation/devicetree/bindings/arm/twd.txt b/Documentation/devicetree/bindings/timer/arm,twd.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/twd.txt
-rename to Documentation/devicetree/bindings/timer/arm,twd.txt
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/gtm.txt b/Documentation/devicetree/bindings/timer/fsl,gtm.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/gtm.txt
-rename to Documentation/devicetree/bindings/timer/fsl,gtm.txt
-diff --git a/Documentation/devicetree/bindings/arm/mrvl/timer.txt b/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/mrvl/timer.txt
-rename to Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt
-diff --git a/Documentation/devicetree/bindings/arm/msm/timer.txt b/Documentation/devicetree/bindings/timer/qcom,msm-timer.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/msm/timer.txt
-rename to Documentation/devicetree/bindings/timer/qcom,msm-timer.txt
-diff --git a/Documentation/devicetree/bindings/arm/spear-timer.txt b/Documentation/devicetree/bindings/timer/st,spear-timer.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/spear-timer.txt
-rename to Documentation/devicetree/bindings/timer/st,spear-timer.txt
-diff --git a/Documentation/devicetree/bindings/c6x/timer64.txt b/Documentation/devicetree/bindings/timer/ti,c64x+timer64.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/c6x/timer64.txt
-rename to Documentation/devicetree/bindings/timer/ti,c64x+timer64.txt
-diff --git a/Documentation/devicetree/bindings/arm/omap/timer.txt b/Documentation/devicetree/bindings/timer/ti,timer.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/omap/timer.txt
-rename to Documentation/devicetree/bindings/timer/ti,timer.txt
-diff --git a/Documentation/devicetree/bindings/arm/vt8500/via,vt8500-timer.txt b/Documentation/devicetree/bindings/timer/via,vt8500-timer.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/vt8500/via,vt8500-timer.txt
-rename to Documentation/devicetree/bindings/timer/via,vt8500-timer.txt
+ 		interrupts = <0 29 IRQ_TYPE_LEVEL_HIGH>, <0 30 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-names = "rx", "tx";
+diff --git a/drivers/net/ethernet/ni/nixge.c b/drivers/net/ethernet/ni/nixge.c
+index 27364b7572fc..7918c7b7273b 100644
+--- a/drivers/net/ethernet/ni/nixge.c
++++ b/drivers/net/ethernet/ni/nixge.c
+@@ -1162,22 +1162,6 @@ static int nixge_mdio_setup(struct nixge_priv *priv, struct device_node *np)
+ 	return of_mdiobus_register(bus, np);
+ }
+ 
+-static void *nixge_get_nvmem_address(struct device *dev)
+-{
+-	struct nvmem_cell *cell;
+-	size_t cell_size;
+-	char *mac;
+-
+-	cell = nvmem_cell_get(dev, "address");
+-	if (IS_ERR(cell))
+-		return cell;
+-
+-	mac = nvmem_cell_read(cell, &cell_size);
+-	nvmem_cell_put(cell);
+-
+-	return mac;
+-}
+-
+ static int nixge_probe(struct platform_device *pdev)
+ {
+ 	struct nixge_priv *priv;
+@@ -1201,8 +1185,8 @@ static int nixge_probe(struct platform_device *pdev)
+ 	ndev->min_mtu = 64;
+ 	ndev->max_mtu = NIXGE_JUMBO_MTU;
+ 
+-	mac_addr = nixge_get_nvmem_address(&pdev->dev);
+-	if (mac_addr && is_valid_ether_addr(mac_addr))
++	mac_addr = of_get_mac_address(np);
++	if (mac_addr)
+ 		ether_addr_copy(ndev->dev_addr, mac_addr);
+ 	else
+ 		eth_hw_addr_random(ndev);
 -- 
-2.14.1
+2.17.0
