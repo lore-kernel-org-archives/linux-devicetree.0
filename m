@@ -1,68 +1,154 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 4/5] ARM: dts: imx6sx-sabreauto: add fec support
-Date: Thu, 26 Apr 2018 06:57:07 +0000
-Message-ID: <DB5PR04MB132072FEDCAFEDF6592C6A32F58E0@DB5PR04MB1320.eurprd04.prod.outlook.com>
-References: <1524455219-6736-1-git-send-email-Anson.Huang@nxp.com>
- <1524455219-6736-4-git-send-email-Anson.Huang@nxp.com>
- <CAOMZO5CDAQtw7Q6NgSzKP4ogaqRaGSE0A+st1iqZ=cQsK49moQ@mail.gmail.com>
- <AM3PR04MB131566E1C8033D256686F192F5880@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5Dm=MFRoh=y54Qf2RrncWfQPTUJ2ZNfvYnUD=idp8RPNA@mail.gmail.com>
- <AM3PR04MB1315ED599A20F67BB9FEFEE1F58F0@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <AM3PR04MB1315B04BE46755E3EB82E04CF58F0@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5AS=aH8p1+tmgJ4ooeqExNqOALh7vbPAsQdqdky8CkXyQ@mail.gmail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH V5 1/6] ARM: dts: imx6sx-sabreauto: add PMIC support
+Date: Thu, 26 Apr 2018 14:58:13 +0800
+Message-ID: <1524725898-27974-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5AS=aH8p1+tmgJ4ooeqExNqOALh7vbPAsQdqdky8CkXyQ@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Andy Duan <fugang.duan@nxp.com>
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIEZhYmlvDQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1A
-Z21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEFwcmlsIDI1LCAyMDE4IDk6NDcgUE0NCj4g
-VG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogU2hhd24gR3VvIDxz
-aGF3bmd1b0BrZXJuZWwub3JnPjsgU2FzY2hhIEhhdWVyDQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXgu
-ZGU+OyBGYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBSb2INCj4gSGVycmlu
-ZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNv
-bT47DQo+IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+OyBtb2RlcmF0ZWQgbGlzdDpB
-Uk0vRlJFRVNDQUxFIElNWCAvIE1YQw0KPiBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBvcGVuIGxpc3Q6T1BFTg0KPiBGSVJNV0FSRSBBTkQg
-RkxBVFRFTkVEIERFVklDRSBUUkVFIEJJTkRJTkdTDQo+IDxkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZz47IGxpbnV4LWtlcm5lbCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz4NCj4gU3Vi
-amVjdDogUmU6IFtQQVRDSCA0LzVdIEFSTTogZHRzOiBpbXg2c3gtc2FicmVhdXRvOiBhZGQgZmVj
-IHN1cHBvcnQNCj4gDQo+IEhpIEFuc29uLA0KPiANCj4gT24gV2VkLCBBcHIgMjUsIDIwMTggYXQg
-MjozNiBBTSwgQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IHdyb3RlOg0KPiAN
-Cj4gPiBTb3JyeSwgSSBtYWRlIGEgbWlzdGFrZSBoZXJlLCB0aGUgTUFYNzMyMCBJTzAgaXMgZm9y
-IGFkanVzdGluZyBGRUMxJ3MNCj4gPiB2b2x0YWdlLA0KPiANCj4gSW4gdGhpcyBjYXNlIHlvdSBu
-ZWVkIHRvIHBhc3MgdGhlICdwaHktc3VwcGx5JyBwcm9wZXJ0eSBpbnNpZGUgdGhlIGZlYyBub2Rl
-IGFuZA0KPiBhZGQgYSByZWd1bGF0b3IgdGhhdCBpcyBjb250cm9sbGVkIHZpYSBNQVg3MzIwIElP
-MCBwaW4uDQoNClRoZSAncGh5LXN1cHBseScgaXMgZm9yIGVuYWJsaW5nL2Rpc2FibGluZyBwaHkg
-cmVndWxhdG9yLCBidXQgaGVyZSB0aGUgTUFYNzMyMiBJTzAgaXMgTk9UIGZvcg0KZW5hYmxpbmcv
-ZGlzYWJsaW5nIFBIWSByZWd1bGF0b3IsIGl0IGlzIGZvciBJTyB2b2x0YWdlIHN3aXRjaCBiZXR3
-ZWVuIDEuNVYgYW5kIDEuOFYsIG91ciBFTkVUDQpJTyBjYW4gd29yayB3aXRoIGJvdGggMS41ViBh
-bmQgMS44Viwgc28gYW55IGNvbmZpZyBpcyBPSyBmb3IgRU5FVCBmdW5jdGlvbi4NCg0KVGhlIDEu
-NVYvMS44ViBzZWxlY3Rpb24gaXMgYSBvbmUgdGltZSBzZXR0aW5nIHRoaW5nLCB0aGF0IG1lYW5z
-IHdlIG9ubHkgbmVlZCB0bw0KY29uZmlnIGl0IG9uY2UgZHVyaW5nIGJvb3QgdXAsIG1vc3Qgb2Yg
-aS5NWCBwbGF0Zm9ybXMgZG9lcyBOT1QgcHJvdmlkZSBzdWNoIHZvbHRhZ2UNCnN3aXRjaCBmdW5j
-dGlvbiBmb3IgRU5FVCBJTywgb24gdGhpcyA2U1ggc2FicmUgYXV0byBib2FyZCwgaXQgaXMgbW9y
-ZSBsaWtlIGEgYmFja3VwIG9yDQp2YWxpZGF0aW9uIHB1cnBvc2UuIFdpdGggZGVmYXVsdCBzZXR0
-aW5ncywgRU5FVCdzIGZ1bmN0aW9uIGlzIE5PVCBpbXBhY3RlZCBhdCBhbGwuDQoNCkkgdGhpbmsg
-d2UgY2FuIGFkZCBhIGdwaW8gcmVndWxhdG9yIGZvciBpdCBhbmQgbGV0IHRoZSByZWd1bGF0b3Ig
-aW5pdGlhbGl6YXRpb24gc2V0IHRoZSBHUElPDQpMZXZlbCBmb3IgZmVjLCBzdWNoIGJlbG93LCB3
-aXRoICIgZW5hYmxlLWFjdGl2ZS1oaWdoICIgcHJlc2VudCwgR1BJTyB3aWxsIGJlIGF0IExPVyBh
-bmQgdm9sdGFnZQ0KaXMgMS41Viwgd2l0aG91dCB0aGlzIHByb3BlcnR5LCBHUElPIHdpbGwgYmUg
-SElHSCBhbmQgdm9sdGFnZSB3aWxsIGJlIDEuOFYuDQorICAgICAgICAgICAgICAgcmVnX2ZlYzog
-ZmVjX2lvX3N1cHBseSB7DQorICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJl
-Z3VsYXRvci1ncGlvIjsNCisgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1uYW1lID0g
-IjEuOFZfMS41Vl9GRUMiOw0KKyAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW1pbi1t
-aWNyb3ZvbHQgPSA8MTUwMDAwMD47DQorICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3It
-bWF4LW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsNCisgICAgICAgICAgICAgICAgICAgICAgIHN0YXRl
-cyA9IDwxNTAwMDAwIDB4MCAxODAwMDAwIDB4MT47DQorICAgICAgICAgICAgICAgICAgICAgICBl
-bmFibGUtZ3BpbyA9IDwmbWF4NzMyMiAwIEdQSU9fQUNUSVZFX0hJR0g+Ow0KKyAgICAgICAgICAg
-ICAgICAgICAgICAgdmluLXN1cHBseSA9IDwmc3cyX3JlZz47DQorICAgICAgICAgICAgICAgICAg
-ICAgICBlbmFibGUtYWN0aXZlLWhpZ2g7DQorICAgICAgICAgICAgICAgfTsNCisNCg0KQW5zb24u
-DQoNCg==
+Add pfuze100 support on i.MX6SX Sabre Auto board.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+no changes since V4.
+ arch/arm/boot/dts/imx6sx-sabreauto.dts | 117 +++++++++++++++++++++++++++++++++
+ 1 file changed, 117 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+index 57d1ea0..2caca934 100644
+--- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
++++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+@@ -74,6 +74,14 @@
+ 
+ &iomuxc {
+ 	imx6x-sabreauto {
++
++		pinctrl_i2c2_1: i2c2grp-1 {
++			fsl,pins = <
++				MX6SX_PAD_GPIO1_IO03__I2C2_SDA          0x4001b8b1
++				MX6SX_PAD_GPIO1_IO02__I2C2_SCL          0x4001b8b1
++			>;
++		};
++
+ 		pinctrl_uart1: uart1grp {
+ 			fsl,pins = <
+ 				MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1
+@@ -148,3 +156,112 @@
+ 		};
+ 	};
+ };
++
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2_1>;
++	status = "okay";
++
++	pmic: pfuze100@08 {
++		compatible = "fsl,pfuze100";
++		reg = <0x08>;
++
++		regulators {
++			sw1a_reg: sw1ab {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			sw1c_reg: sw1c {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3a_reg: sw3a {
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3b_reg: sw3b {
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw4_reg: sw4 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			swbst_reg: swbst {
++				regulator-min-microvolt = <5000000>;
++				regulator-max-microvolt = <5150000>;
++			};
++
++			snvs_reg: vsnvs {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vref_reg: vrefddr {
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vgen1_reg: vgen1 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++				regulator-always-on;
++			};
++
++			vgen2_reg: vgen2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++			};
++
++			vgen3_reg: vgen3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen4_reg: vgen4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen5_reg: vgen5 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen6_reg: vgen6 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++		};
++	};
++};
+-- 
+2.7.4
