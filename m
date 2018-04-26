@@ -1,106 +1,78 @@
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: allwinner: h6: enable MMC0/2 on
- Pine H64
-Date: Thu, 26 Apr 2018 17:46:26 +0100
-Message-ID: <03cc2e8c-4a35-3fb4-b408-fd8d4ba3e407@arm.com>
-References: <20180426140728.43155-1-icenowy@aosc.io>
- <20180426140728.43155-4-icenowy@aosc.io>
-Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH 01/17] dt-bindings: display: renesas: du: Increase indent in
+ output table
+Date: Thu, 26 Apr 2018 17:53:30 +0100
+Message-ID: <20180426165346.494-2-kieran.bingham+renesas@ideasonboard.com>
+References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRBA4FRDLQKGQEC33U4NQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180426140728.43155-4-icenowy-h8G6r0blFSE@public.gmane.org>
-Content-Language: en-GB
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-h8G6r0blFSE@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-renesas-soc@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, open list <linux-kernel@vger.kernel.org>, "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 26/04/18 15:07, Icenowy Zheng wrote:
-> The Pine H64 board have a MicroSD slot connected to MMC0 controller of
-> the H6 SoC and a eMMC slot connected to MMC2.
-> 
-> Enable them in the device tree.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts      | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> index d36de5eb81f3..78b1cd54687c 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> @@ -20,6 +20,38 @@
->  	chosen {
->  		stdout-path = "serial0:115200n8";
->  	};
-> +
-> +	reg_vcc3v3: vcc3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc3v3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	reg_vcc1v8: vcc1v8 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc1v8";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +	};
-> +};
-> +
-> +&mmc0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc0_pins>;
-> +	vmmc-supply = <&reg_vcc3v3>;
-
-So this is actually CLDO1 on the AXP, correct?
-
-
-> +	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
-> +	status = "okay";
-> +};
-> +
-> +&mmc2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc2_pins>;
-> +	vmmc-supply = <&reg_vcc3v3>;
-> +	vqmmc-supply = <&reg_vcc1v8>;
-
-And this is BLDO2?
-
-I am just asking because I want to avoid running into the same problem
-as with the A64 before: that future DTs become incompatible with older
-kernels, because we change the power supply to point to the AXP
-regulators, which this kernel does not support yet.
-
-It looks like there are more users of those power rails, so we could
-keep those supplies connected to these fixed regulators here, even with
-AXP-805 support in the kernel.
-
-Or we keep this back until we get proper AXP support in the kernel? I
-guess it's quite close to the existing PMICs, so it might be more a
-copy&paste exercise to support the AXP-805?
-
-But apart from this this looks correct to me.
-
-Cheers,
-Andre.
-
-> +	non-removable;
-> +	cap-mmc-hw-reset;
-> +	status = "okay";
->  };
->  
->  &uart0 {
-> 
+VGhlIERVIG91dHB1dCB0YWJsZSBsaXN0cyB0aGUgcG9ydCBjb21iaW5hdGlvbnMgZm9yIGVhY2gg
+c3VwcG9ydGVkIERVCnR5cGUuICBOZXdlciBtb2RlbHMgb2YgUi1DYXIgR2VuMyBwbGF0Zm9ybXMg
+aGF2ZSBhbiBpbmNyZWFzZWQgc3RyaW5nCmxlbmd0aC4KCkluY3JlYXNlIHRoZSB0YWJsZSBpbmRl
+bnRhdGlvbiBpbiBwcmVwYXJhdGlvbiBmb3Igc3VwcG9ydGluZyBuZXcgdGFyZ2V0CnR5cGVzLgoK
+U2lnbmVkLW9mZi1ieTogS2llcmFuIEJpbmdoYW0gPGtpZXJhbi5iaW5naGFtK3JlbmVzYXNAaWRl
+YXNvbmJvYXJkLmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dCAg
+ICAgICAgICAgfCAyNiArKysrKysrKystLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMTMgaW5z
+ZXJ0aW9ucygrKSwgMTMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAppbmRleCBjOWNkMTdm
+OTk3MDIuLmEzNmE2ZTdlZTU0ZiAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQKQEAgLTQ3LDIwICs0NywyMCBA
+QCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2dyYXBoLnR4dC4KIFRoZSBmb2xsb3dpbmcgdGFibGUgbGlzdHMgZm9yIGVhY2ggc3VwcG9ydGVk
+IG1vZGVsIHRoZSBwb3J0IG51bWJlcgogY29ycmVzcG9uZGluZyB0byBlYWNoIERVIG91dHB1dC4K
+IAotICAgICAgICAgICAgICAgICAgICAgIFBvcnQwICAgICAgICAgIFBvcnQxICAgICAgICAgIFBv
+cnQyICAgICAgICAgIFBvcnQzCisgICAgICAgICAgICAgICAgICAgICAgICBQb3J0MCAgICAgICAg
+ICBQb3J0MSAgICAgICAgICBQb3J0MiAgICAgICAgICBQb3J0MwogLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0KLSBSOEE3NzQzIChSWi9HMU0pICAgICBEUEFEIDAgICAgICAgICBMVkRTIDAgICAgICAgICAt
+ICAgICAgICAgICAgICAtCi0gUjhBNzc0NSAoUlovRzFFKSAgICAgRFBBRCAwICAgICAgICAgRFBB
+RCAxICAgICAgICAgLSAgICAgICAgICAgICAgLQotIFI4QTc3NzkgKFItQ2FyIEgxKSAgIERQQUQg
+MCAgICAgICAgIERQQUQgMSAgICAgICAgIC0gICAgICAgICAgICAgIC0KLSBSOEE3NzkwIChSLUNh
+ciBIMikgICBEUEFEIDAgICAgICAgICBMVkRTIDAgICAgICAgICBMVkRTIDEgICAgICAgICAtCi0g
+UjhBNzc5MSAoUi1DYXIgTTItVykgRFBBRCAwICAgICAgICAgTFZEUyAwICAgICAgICAgLSAgICAg
+ICAgICAgICAgLQotIFI4QTc3OTIgKFItQ2FyIFYySCkgIERQQUQgMCAgICAgICAgIERQQUQgMSAg
+ICAgICAgIC0gICAgICAgICAgICAgIC0KLSBSOEE3NzkzIChSLUNhciBNMi1OKSBEUEFEIDAgICAg
+ICAgICBMVkRTIDAgICAgICAgICAtICAgICAgICAgICAgICAtCi0gUjhBNzc5NCAoUi1DYXIgRTIp
+ICAgRFBBRCAwICAgICAgICAgRFBBRCAxICAgICAgICAgLSAgICAgICAgICAgICAgLQotIFI4QTc3
+OTUgKFItQ2FyIEgzKSAgIERQQUQgMCAgICAgICAgIEhETUkgMCAgICAgICAgIEhETUkgMSAgICAg
+ICAgIExWRFMgMAotIFI4QTc3OTYgKFItQ2FyIE0zLVcpIERQQUQgMCAgICAgICAgIEhETUkgMCAg
+ICAgICAgIExWRFMgMCAgICAgICAgIC0KLSBSOEE3Nzk3MCAoUi1DYXIgVjNNKSBEUEFEIDAgICAg
+ICAgICBMVkRTIDAgICAgICAgICAtICAgICAgICAgICAgICAtCi0gUjhBNzc5OTUgKFItQ2FyIEQz
+KSAgRFBBRCAwICAgICAgICAgTFZEUyAwICAgICAgICAgTFZEUyAxICAgICAgICAgLQorIFI4QTc3
+NDMgKFJaL0cxTSkgICAgICAgRFBBRCAwICAgICAgICAgTFZEUyAwICAgICAgICAgLSAgICAgICAg
+ICAgICAgLQorIFI4QTc3NDUgKFJaL0cxRSkgICAgICAgRFBBRCAwICAgICAgICAgRFBBRCAxICAg
+ICAgICAgLSAgICAgICAgICAgICAgLQorIFI4QTc3NzkgKFItQ2FyIEgxKSAgICAgRFBBRCAwICAg
+ICAgICAgRFBBRCAxICAgICAgICAgLSAgICAgICAgICAgICAgLQorIFI4QTc3OTAgKFItQ2FyIEgy
+KSAgICAgRFBBRCAwICAgICAgICAgTFZEUyAwICAgICAgICAgTFZEUyAxICAgICAgICAgLQorIFI4
+QTc3OTEgKFItQ2FyIE0yLVcpICAgRFBBRCAwICAgICAgICAgTFZEUyAwICAgICAgICAgLSAgICAg
+ICAgICAgICAgLQorIFI4QTc3OTIgKFItQ2FyIFYySCkgICAgRFBBRCAwICAgICAgICAgRFBBRCAx
+ICAgICAgICAgLSAgICAgICAgICAgICAgLQorIFI4QTc3OTMgKFItQ2FyIE0yLU4pICAgRFBBRCAw
+ICAgICAgICAgTFZEUyAwICAgICAgICAgLSAgICAgICAgICAgICAgLQorIFI4QTc3OTQgKFItQ2Fy
+IEUyKSAgICAgRFBBRCAwICAgICAgICAgRFBBRCAxICAgICAgICAgLSAgICAgICAgICAgICAgLQor
+IFI4QTc3OTUgKFItQ2FyIEgzKSAgICAgRFBBRCAwICAgICAgICAgSERNSSAwICAgICAgICAgSERN
+SSAxICAgICAgICAgTFZEUyAwCisgUjhBNzc5NiAoUi1DYXIgTTMtVykgICBEUEFEIDAgICAgICAg
+ICBIRE1JIDAgICAgICAgICBMVkRTIDAgICAgICAgICAtCisgUjhBNzc5NzAgKFItQ2FyIFYzTSkg
+ICBEUEFEIDAgICAgICAgICBMVkRTIDAgICAgICAgICAtICAgICAgICAgICAgICAtCisgUjhBNzc5
+OTUgKFItQ2FyIEQzKSAgICBEUEFEIDAgICAgICAgICBMVkRTIDAgICAgICAgICBMVkRTIDEgICAg
+ICAgICAtCiAKIAogRXhhbXBsZTogUjhBNzc5NSAoUi1DYXIgSDMpIEVTMi4wIERVCi0tIAoyLjE3
+LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
