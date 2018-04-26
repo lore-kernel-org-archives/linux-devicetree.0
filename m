@@ -1,60 +1,48 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 6/7] dt-bindings: gnss: add sirfstar binding
-Date: Thu, 26 Apr 2018 11:12:00 +0200
-Message-ID: <20180426091200.GV4615@localhost>
-References: <20180424163458.11947-1-johan@kernel.org>
- <20180424163458.11947-7-johan@kernel.org>
- <CAL_Jsq+nj9P5z=Ao=UbS-AKy+qeM98EFJiHmYgoniD_4N3Hr4w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v3 1/2] dt-bindings: input: Add Add Spreadtrum SC27xx vibrator documentation
+Date: Thu, 26 Apr 2018 17:12:33 +0800
+Message-ID: <e2f85ec0b1fb66baa41dd85bb31e8113e23c704b.1524733425.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+nj9P5z=Ao=UbS-AKy+qeM98EFJiHmYgoniD_4N3Hr4w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, baolin.wang@linaro.org, xiaotong.lu@spreadtrum.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 25, 2018 at 01:25:26PM -0500, Rob Herring wrote:
-> On Tue, Apr 24, 2018 at 11:34 AM, Johan Hovold <johan@kernel.org> wrote:
-> > Add binding for SiRFstar-based GNSS receivers.
-> >
-> > Note that while four compatible-strings are initially added representing
-> > devices which differ in which I/O interfaces they support, they
-> > otherwise essentially share the same feature set.
-> >
-> > Pin and supply names (and some recommended timings) vary slightly, but
-> > the binding recommends using a common set of names.
-> >
-> > Note that the wakeup gpio is not intended to be as a wakeup source, but
-> > rather to detect the current power state of the device (active or
-> > hibernate).
-> >
-> > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > ---
-> >  .../devicetree/bindings/gnss/sirfstar.txt     | 38 +++++++++++++++++++
-> >  .../devicetree/bindings/vendor-prefixes.txt   |  3 ++
-> >  2 files changed, 41 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/gnss/sirfstar.txt
-> 
-> One nit below, otherwise:
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+From: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
 
-> > @@ -390,6 +392,7 @@ vivante     Vivante Corporation
-> >  vocore VoCore Studio
-> >  voipac Voipac Technologies s.r.o.
-> >  vot    Vision Optical Technology Co., Ltd.
-> > +wi2wi  Wi2Wi
-> 
-> Wrong spot.
+This patch adds the binding documentation for Spreadtrum SC27xx series
+vibrator device.
 
-Duh. I had first misspelled this w2wi (which happens to be a different
-company), and then forgot to move the entry when I corrected my mistake.
+Signed-off-by: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+Changes since v2:
+ - No updates.
 
-> >  wd     Western Digital Corp.
-> >  wetek  WeTek Electronics, limited.
-> >  wexler Wexler
+Changes since v1:
+ - No updates.
+---
+ .../bindings/input/sprd,sc27xx-vibra.txt           |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt
 
-Thanks,
-Johan
+diff --git a/Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt b/Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt
+new file mode 100644
+index 0000000..92ead29
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt
+@@ -0,0 +1,12 @@
++Spreadtrum SC27xx PMIC Vibrator
++
++Required properties:
++- compatible: should be "sprd,sc27xx-vibrator".
++- reg: address of vibrator control register.
++
++Example :
++
++vibrator@eb4 {
++	compatible = "sprd,sc27xx-vibrator";
++	reg = <0xeb4>;
++};
+-- 
+1.7.9.5
