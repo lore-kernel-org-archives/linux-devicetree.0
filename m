@@ -1,139 +1,86 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCHv2 1/3] dt-bindings: misc: achc: Make ezport
- distinguishable
-Date: Thu, 26 Apr 2018 16:39:22 +0200
-Message-ID: <20180426143922.ri6jn5y4ulgxh3zn@earth.universe>
-References: <20180327135259.30890-1-sebastian.reichel@collabora.co.uk>
- <20180327135259.30890-2-sebastian.reichel@collabora.co.uk>
- <20180409185727.j4unhx5ig3fgm6ex@rob-hp-laptop>
- <20180409211337.goavadt6f22wtkbw@earth.universe>
- <CAL_JsqJfj_tvojYnGQhK1Pj88tUFMGX6cB1t0=U5-34XKaA+bw@mail.gmail.com>
+From: Thor Thayer <thor.thayer@linux.intel.com>
+Subject: Re: [PATCH 2/3] edac: altera: Add support for Stratix10 SDRAM EDAC
+Date: Thu, 26 Apr 2018 09:42:55 -0500
+Message-ID: <c66406a5-a73f-944c-ddc4-356795f8fdca@linux.intel.com>
+References: <1524594959-5259-1-git-send-email-thor.thayer@linux.intel.com>
+ <1524594959-5259-3-git-send-email-thor.thayer@linux.intel.com>
+ <2d310ff0-fa0e-e432-ae11-ba34080b4f6e@kernel.org>
+Reply-To: thor.thayer@linux.intel.com
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="l4rzgxzturmav4pm"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJfj_tvojYnGQhK1Pj88tUFMGX6cB1t0=U5-34XKaA+bw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2d310ff0-fa0e-e432-ae11-ba34080b4f6e@kernel.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dinh Nguyen <dinguyen@kernel.org>, bp@alien8.de, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 04/25/2018 09:14 PM, Dinh Nguyen wrote:
+> 
+> 
+> On 04/24/2018 01:35 PM, thor.thayer@linux.intel.com wrote:
+>> From: Thor Thayer <thor.thayer@linux.intel.com>
+>>
+>> Add support for SDRAM ECC on the Stratix10 platform to
+>> the EDAC device driver. Although Stratix10 is very similar
+>> to the Arria10, hypervisor support for Stratix10 SDRAM ECC
+>> requires the use of SMC calls to a higher priority
+>> exception level to handle some register reads/writes.
+>>
+>> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+>> ---
+>>   drivers/edac/Kconfig       |   2 +-
+>>   drivers/edac/altera_edac.c | 459 +++++++++++++++++++++++++++++++++++++++++++++
+>>   drivers/edac/altera_edac.h | 114 +++++++++++
+> 
+> Does it make sense to have the support for this in separate files?
+> 
+>>   3 files changed, 574 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+>> index 3c4017007647..3c66b02b2473 100644
+>> --- a/drivers/edac/Kconfig
+>> +++ b/drivers/edac/Kconfig
+>> @@ -379,7 +379,7 @@ config EDAC_THUNDERX
+>>   
+>>   config EDAC_ALTERA
+>>   	bool "Altera SOCFPGA ECC"
+>> -	depends on EDAC=y && ARCH_SOCFPGA
+>> +	depends on EDAC=y && (ARCH_SOCFPGA || ARM64)
+> 
+> Should the ARM64 dependency just be ARCH_STRATIX10?
+> 
+Yes, I will update this.
 
---l4rzgxzturmav4pm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>   	help
+>>   	  Support for error detection and correction on the
+>>   	  Altera SOCs. This must be selected for SDRAM ECC.
+>> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+>> index 11d6419788c2..7ed885379719 100644
+>> --- a/drivers/edac/altera_edac.c
+>> +++ b/drivers/edac/altera_edac.c
+>> @@ -1,4 +1,5 @@
+>>   /*
+>> + *  Copyright (C) 2017-2018, Intel Corporation
+> 
+> If you're updating the license header, would it make sense to convert to
+> SPDX?
+> 
+Yes, I can do that.
 
-Hi,
-
-On Fri, Apr 13, 2018 at 10:33:05AM -0500, Rob Herring wrote:
-> On Mon, Apr 9, 2018 at 4:13 PM, Sebastian Reichel
-> <sebastian.reichel@collabora.co.uk> wrote:
-> > Hi,
-> >
-> > On Mon, Apr 09, 2018 at 01:57:27PM -0500, Rob Herring wrote:
-> >> On Tue, Mar 27, 2018 at 03:52:57PM +0200, Sebastian Reichel wrote:
-> >> > This updates the GE ACHC binding, so that different compatible
-> >> > strings are used for the programming interface, which is the
-> >> > ezport interface from NXP MK20FN1M0VMD12 and the microcontroller's
-> >> > normal SPI interface.
-> >> >
-> >> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> >> > ---
-> >> >  Documentation/devicetree/bindings/misc/ge-achc.txt | 19 +++++++++++=
-+++++---
-> >> >  1 file changed, 16 insertions(+), 3 deletions(-)
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/misc/ge-achc.txt b/Do=
-cumentation/devicetree/bindings/misc/ge-achc.txt
-> >> > index 77df94d7a32f..6c6bd6568504 100644
-> >> > --- a/Documentation/devicetree/bindings/misc/ge-achc.txt
-> >> > +++ b/Documentation/devicetree/bindings/misc/ge-achc.txt
-> >> > @@ -7,7 +7,13 @@ Note: This device does not expose the peripherals a=
-s USB devices.
-> >> >
-> >> >  Required properties:
-> >> >
-> >> > -- compatible : Should be "ge,achc"
-> >> > +- compatible : Should be
-> >> > +  "ge,achc" (normal interface)
-> >> > +  "ge,achc-ezport" (flashing interface)
-> >> > +
-> >> > +Required properties (flashing interface only):
-> >> > +
-> >> > +- reset-gpios: GPIO Specifier for the reset GPIO
-> >>
-> >> Does the reset only affect the flashing interface and are the data pins
-> >> shared? If not for both, then I think the correct thing to do here is
-> >> just extend reg to support multiple values to represent multiple chip
-> >> selects.
-> >
-> > reset affects the whole chip and the same spi data/clock pins are
-> > being used, so extending reg should work. The flashing cannot happen
-> > with the same speed, though. I'm currently encoding this by using
-> > different "spi-max-frequency" properties. I suppose I could limit
-> > it in the driver instead. I tried to come up with an example for
-> > your suggestion. Is this what you had in mind?
->=20
-> If the max frequency is the device max, then that should be in the
-> driver. spi-max-frequency should really only be needed if the
-> frequency is less than the max of either the host or device.
-
-Right.
-
-> > &spi_controller {
-> >     achc@multiple {
->=20
-> @0
->=20
-> unit addresses are the 1st address.
-
-Ok.
-
-> >         /* 0 =3D flashing interface, 1 =3D normal interface */
-> >         reg =3D <0>, <1>;
->=20
-> You may want to put the normal interface first as that is the primary
-> interface and would still work assuming the OS ignored extra entries.
->=20
-> >         compatible =3D "ge,achc";
-> >         reset-gpios =3D <&gpio42 23 ACTIVE_LOW>;
-> >         spi-max-frequency =3D <42>; /* max speed for normal operation */
->=20
-> 42 Hz?
-
-This was just a random number as example.
-
-I had a look at implementing this and the Linux SPI core does not
-expect any devices with multiple chip selects. I can try to
-implement it, but I think it makes sense to gather some feedback
-=66rom Mark first (added to Cc).
-
-@Mark
-Patch Series: https://lwn.net/Articles/750177/
-Binding Discussion: https://patchwork.kernel.org/patch/10310109/
-
--- Sebastian
-
---l4rzgxzturmav4pm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlrh5JcACgkQ2O7X88g7
-+poBoQ//UU2nGexBiZ0ZgR4KRn1t8zFnluqeeeYRCQ3Sd2SoOfBNeQRSOtPntXVn
-EKM3eqlLjb4RzUL9/msMt/tzNPBRB7A/5v6Yo6A/Ck8aIUZBuCOirax4GGPuiJ7T
-jMfI5vt7uVJGezeCjFLxWtUdt54Fk+3riZLvetcCTv2yfpbXGXkSb2kqsf4ltpcn
-d2LAoomp9Tl/DsIr6pes383Og5AoRNsNR2nyqEwX8q3JlubrDwcYxXT5fvNIcQ2B
-Q50/TjDsxesnkmMc0Qsr6Hx6TPTSZGb0RldmsHwpe6L7aslkVxNrBbJHYuS175jD
-ySbZ9WhCzr+1hvx/VKQrVEPkD333rD3vriGZMnxnDOcFfeG9K9s5a2PZlCRz/2UF
-GQlBoceAH4cd7Q5ll1q3mxTAGRn5s4GgXOObAr+GuHQ2+nJSKNO8D+QzjUEMMSxs
-i/Livc/DSCZHlQayfRcZ+cXqFwMwKuQosEitSDMCiWYVg1Wq6clwIlUsMn3qBaf8
-MOOHj5mb/ldtPTFtIVj9WAhfr0Vp+HJP+EcdALpQK1d+SdO15Z1WF61W1erboTGf
-Pdt6kfe83FMT5ulJ/l8qrmlIrN2CTCfR6vs0ydsZe8+08JGzxh1Mb2VGj+CgWENl
-R/hBTDnkIyboAVqGrvB+TSyJg6xZWJf1tp+EmlCOEn6fqSniDZk=
-=pFVz
------END PGP SIGNATURE-----
-
---l4rzgxzturmav4pm--
+> Dinh
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-edac" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
