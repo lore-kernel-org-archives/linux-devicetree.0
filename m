@@ -1,57 +1,85 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH net-next v2 1/7] dt-bindings: net: add DT bindings for Microsemi MIIM
-Date: Thu, 26 Apr 2018 21:59:25 +0200
-Message-ID: <20180426195931.5393-2-alexandre.belloni@bootlin.com>
-References: <20180426195931.5393-1-alexandre.belloni@bootlin.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180426195931.5393-1-alexandre.belloni@bootlin.com>
-Sender: netdev-owner@vger.kernel.org
-To: "David S . Miller" <davem@davemloft.net>
-Cc: Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 01/17] dt-bindings: display: renesas: du: Increase indent
+ in output table
+Date: Thu, 26 Apr 2018 23:08:11 +0300
+Message-ID: <2616564.acR4Iy4qTH@avalon>
+References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
+ <20180426165346.494-2-kieran.bingham+renesas@ideasonboard.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180426165346.494-2-kieran.bingham+renesas@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, open list <linux-kernel@vger.kernel.org>, "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DT bindings for the Microsemi MII Management Controller found on Microsemi
-SoCs
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- .../devicetree/bindings/net/mscc-miim.txt     | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/mscc-miim.txt
-
-diff --git a/Documentation/devicetree/bindings/net/mscc-miim.txt b/Documentation/devicetree/bindings/net/mscc-miim.txt
-new file mode 100644
-index 000000000000..7104679cf59d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/mscc-miim.txt
-@@ -0,0 +1,26 @@
-+Microsemi MII Management Controller (MIIM) / MDIO
-+=================================================
-+
-+Properties:
-+- compatible: must be "mscc,ocelot-miim"
-+- reg: The base address of the MDIO bus controller register bank. Optionally, a
-+  second register bank can be defined if there is an associated reset register
-+  for internal PHYs
-+- #address-cells: Must be <1>.
-+- #size-cells: Must be <0>.  MDIO addresses have no size component.
-+- interrupts: interrupt specifier (refer to the interrupt binding)
-+
-+Typically an MDIO bus might have several children.
-+
-+Example:
-+	mdio@107009c {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "mscc,ocelot-miim";
-+		reg = <0x107009c 0x36>, <0x10700f0 0x8>;
-+		interrupts = <14>;
-+
-+		phy0: ethernet-phy@0 {
-+			reg = <0>;
-+		};
-+	};
--- 
-2.17.0
+SGkgS2llcmFuLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUaHVyc2RheSwgMjYgQXBy
+aWwgMjAxOCAxOTo1MzozMCBFRVNUIEtpZXJhbiBCaW5naGFtIHdyb3RlOgo+IFRoZSBEVSBvdXRw
+dXQgdGFibGUgbGlzdHMgdGhlIHBvcnQgY29tYmluYXRpb25zIGZvciBlYWNoIHN1cHBvcnRlZCBE
+VQo+IHR5cGUuICBOZXdlciBtb2RlbHMgb2YgUi1DYXIgR2VuMyBwbGF0Zm9ybXMgaGF2ZSBhbiBp
+bmNyZWFzZWQgc3RyaW5nCj4gbGVuZ3RoLgo+IAo+IEluY3JlYXNlIHRoZSB0YWJsZSBpbmRlbnRh
+dGlvbiBpbiBwcmVwYXJhdGlvbiBmb3Igc3VwcG9ydGluZyBuZXcgdGFyZ2V0Cj4gdHlwZXMuCj4g
+Cj4gU2lnbmVkLW9mZi1ieTogS2llcmFuIEJpbmdoYW0gPGtpZXJhbi5iaW5naGFtK3JlbmVzYXNA
+aWRlYXNvbmJvYXJkLmNvbT4KClJldmlld2VkLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50
+LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+CgphbmQgYXBwbGllZCB0byBteSB0cmVlLgoKPiAt
+LS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgICAgICAgICAgIHwgMjYg
+KysrKysrKysrLS0tLS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwg
+MTMgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVzYXMsZHUudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dCBpbmRleAo+IGM5Y2QxN2Y5OTcw
+Mi4uYTM2YTZlN2VlNTRmIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3JlbmVzYXMsZHUudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQKPiBAQCAtNDcsMjAgKzQ3LDIw
+IEBAIGJpbmRpbmdzIHNwZWNpZmllZCBpbgo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9ncmFwaC50eHQuIFRoZSBmb2xsb3dpbmcgdGFibGUgbGlzdHMgZm9yCj4gZWFjaCBzdXBw
+b3J0ZWQgbW9kZWwgdGhlIHBvcnQgbnVtYmVyIGNvcnJlc3BvbmRpbmcgdG8gZWFjaCBEVSBvdXRw
+dXQuCj4gCj4gLSAgICAgICAgICAgICAgICAgICAgICBQb3J0MCAgICAgICAgICBQb3J0MSAgICAg
+ICAgICBQb3J0MiAgICAgICAgICBQb3J0Mwo+ICsgICAgICAgICAgICAgICAgICAgICAgICBQb3J0
+MCAgICAgICAgICBQb3J0MSAgICAgICAgICBQb3J0MiAgICAgICAgICBQb3J0Mwo+ICAtLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0KPiAtLSAtIFI4QTc3NDMgKFJaL0cxTSkgICAgIERQQUQgMCAgICAgICAgIExW
+RFMgMCAgICAgICAgIC0gICAgICAgICAgICAgIC0gLQo+IFI4QTc3NDUgKFJaL0cxRSkgICAgIERQ
+QUQgMCAgICAgICAgIERQQUQgMSAgICAgICAgIC0gICAgICAgICAgICAgIC0gLQo+IFI4QTc3Nzkg
+KFItQ2FyIEgxKSAgIERQQUQgMCAgICAgICAgIERQQUQgMSAgICAgICAgIC0gICAgICAgICAgICAg
+IC0gLQo+IFI4QTc3OTAgKFItQ2FyIEgyKSAgIERQQUQgMCAgICAgICAgIExWRFMgMCAgICAgICAg
+IExWRFMgMSAgICAgICAgIC0gLQo+IFI4QTc3OTEgKFItQ2FyIE0yLVcpIERQQUQgMCAgICAgICAg
+IExWRFMgMCAgICAgICAgIC0gICAgICAgICAgICAgIC0gLQo+IFI4QTc3OTIgKFItQ2FyIFYySCkg
+IERQQUQgMCAgICAgICAgIERQQUQgMSAgICAgICAgIC0gICAgICAgICAgICAgIC0gLQo+IFI4QTc3
+OTMgKFItQ2FyIE0yLU4pIERQQUQgMCAgICAgICAgIExWRFMgMCAgICAgICAgIC0gICAgICAgICAg
+ICAgIC0gLQo+IFI4QTc3OTQgKFItQ2FyIEUyKSAgIERQQUQgMCAgICAgICAgIERQQUQgMSAgICAg
+ICAgIC0gICAgICAgICAgICAgIC0gLQo+IFI4QTc3OTUgKFItQ2FyIEgzKSAgIERQQUQgMCAgICAg
+ICAgIEhETUkgMCAgICAgICAgIEhETUkgMSAgICAgICAgIExWRFMgMCAtCj4gUjhBNzc5NiAoUi1D
+YXIgTTMtVykgRFBBRCAwICAgICAgICAgSERNSSAwICAgICAgICAgTFZEUyAwICAgICAgICAgLSAt
+Cj4gUjhBNzc5NzAgKFItQ2FyIFYzTSkgRFBBRCAwICAgICAgICAgTFZEUyAwICAgICAgICAgLSAg
+ICAgICAgICAgICAgLSAtCj4gUjhBNzc5OTUgKFItQ2FyIEQzKSAgRFBBRCAwICAgICAgICAgTFZE
+UyAwICAgICAgICAgTFZEUyAxICAgICAgICAgLSArCj4gUjhBNzc0MyAoUlovRzFNKSAgICAgICBE
+UEFEIDAgICAgICAgICBMVkRTIDAgICAgICAgICAtICAgICAgICAgICAgICAtICsKPiBSOEE3NzQ1
+IChSWi9HMUUpICAgICAgIERQQUQgMCAgICAgICAgIERQQUQgMSAgICAgICAgIC0gICAgICAgICAg
+ICAgIC0gKwo+IFI4QTc3NzkgKFItQ2FyIEgxKSAgICAgRFBBRCAwICAgICAgICAgRFBBRCAxICAg
+ICAgICAgLSAgICAgICAgICAgICAgLSArCj4gUjhBNzc5MCAoUi1DYXIgSDIpICAgICBEUEFEIDAg
+ICAgICAgICBMVkRTIDAgICAgICAgICBMVkRTIDEgICAgICAgICAtICsKPiBSOEE3NzkxIChSLUNh
+ciBNMi1XKSAgIERQQUQgMCAgICAgICAgIExWRFMgMCAgICAgICAgIC0gICAgICAgICAgICAgIC0g
+Kwo+IFI4QTc3OTIgKFItQ2FyIFYySCkgICAgRFBBRCAwICAgICAgICAgRFBBRCAxICAgICAgICAg
+LSAgICAgICAgICAgICAgLSArCj4gUjhBNzc5MyAoUi1DYXIgTTItTikgICBEUEFEIDAgICAgICAg
+ICBMVkRTIDAgICAgICAgICAtICAgICAgICAgICAgICAtICsKPiBSOEE3Nzk0IChSLUNhciBFMikg
+ICAgIERQQUQgMCAgICAgICAgIERQQUQgMSAgICAgICAgIC0gICAgICAgICAgICAgIC0gKwo+IFI4
+QTc3OTUgKFItQ2FyIEgzKSAgICAgRFBBRCAwICAgICAgICAgSERNSSAwICAgICAgICAgSERNSSAx
+ICAgICAgICAgTFZEUyAwCj4gKyBSOEE3Nzk2IChSLUNhciBNMy1XKSAgIERQQUQgMCAgICAgICAg
+IEhETUkgMCAgICAgICAgIExWRFMgMCAgICAgICAgIC0gKwo+IFI4QTc3OTcwIChSLUNhciBWM00p
+ICAgRFBBRCAwICAgICAgICAgTFZEUyAwICAgICAgICAgLSAgICAgICAgICAgICAgLSArCj4gUjhB
+Nzc5OTUgKFItQ2FyIEQzKSAgICBEUEFEIDAgICAgICAgICBMVkRTIDAgICAgICAgICBMVkRTIDEg
+ICAgICAgICAtCj4gCj4gCj4gIEV4YW1wbGU6IFI4QTc3OTUgKFItQ2FyIEgzKSBFUzIuMCBEVQoK
+Ci0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
