@@ -1,37 +1,66 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 2/3] edac: altera: Add support for Stratix10 SDRAM EDAC
-Date: Thu, 26 Apr 2018 08:08:15 +0200
-Message-ID: <20180426060815.GA7931@pd.tnic>
-References: <1524594959-5259-1-git-send-email-thor.thayer@linux.intel.com>
- <1524594959-5259-3-git-send-email-thor.thayer@linux.intel.com>
- <2d310ff0-fa0e-e432-ae11-ba34080b4f6e@kernel.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7740: Enable CEU0
+Date: Thu, 26 Apr 2018 08:11:30 +0200
+Message-ID: <20180426061124.hvgl3ijf6ulrdkmn@verge.net.au>
+References: <1524654920-18749-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1524654920-18749-3-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2d310ff0-fa0e-e432-ae11-ba34080b4f6e@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, thor.thayer@linux.intel.com, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+In-Reply-To: <1524654920-18749-3-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: geert@linux-m68k.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 25, 2018 at 09:14:27PM -0500, Dinh Nguyen wrote:
-> Does it make sense to have the support for this in separate files?
+Thanks Jacopo,
 
-No. Per vendor or per uarch/processor type, standalone EDAC drivers are
-fine. But not per the RAS capability of a functional unit.
+I'm very pleased to see this series.
 
--- 
-Regards/Gruss,
-    Boris.
+On Wed, Apr 25, 2018 at 01:15:20PM +0200, Jacopo Mondi wrote:
+> Enable CEU0 peripheral for Renesas R-Mobile A1 R8A7740.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Given 'status = "disabled"' below I think you
+are describing but not enabling CEU0. Also in the subject.
+
+Should we also describe CEU1?
+
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  arch/arm/boot/dts/r8a7740.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+> index afd3bc5..05ec41e 100644
+> --- a/arch/arm/boot/dts/r8a7740.dtsi
+> +++ b/arch/arm/boot/dts/r8a7740.dtsi
+> @@ -67,6 +67,16 @@
+>  		power-domains = <&pd_d4>;
+>  	};
+>  
+> +	ceu0: ceu@fe910000 {
+> +		reg = <0xfe910000 0x100>;
+
+Should the size of the range be 0x3000 ?
+That would seem to match my reading of table 32.3
+and also be consistent with r7s72100.dtsi.
+
+> +		compatible = "renesas,r8a7740-ceu";
+> +		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&mstp1_clks R8A7740_CLK_CEU20>;
+> +		clock-names = "ceu20";
+> +		power-domains = <&pd_a4mp>;
+
+My reading of table 1.7 is that the power domain should be A4R (&pd_a4r).
+
+> +		status = "disabled";
+> +	};
+> +
+>  	cmt1: timer@e6138000 {
+>  		compatible = "renesas,cmt-48-r8a7740", "renesas,cmt-48";
+>  		reg = <0xe6138000 0x170>;
+> -- 
+> 2.7.4
+> 
