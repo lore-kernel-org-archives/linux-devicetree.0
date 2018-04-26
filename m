@@ -1,96 +1,65 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] ARM: dts: r8a7740: Enable CEU0
-Date: Thu, 26 Apr 2018 10:53:00 +0200
-Message-ID: <20180426085259.lqxr4emk75oz7vug@verge.net.au>
-References: <1524654920-18749-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524654920-18749-3-git-send-email-jacopo+renesas@jmondi.org>
- <20180426061124.hvgl3ijf6ulrdkmn@verge.net.au>
- <20180426072609.GH17088@w540>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v4 05/12] mmc: sdhci: Disable HS200/HS400 mode if
+ controller can't support 1.8v
+Date: Thu, 26 Apr 2018 11:55:20 +0300
+Message-ID: <6bdf4feb-bc12-3779-3de6-e08af1d4f518@intel.com>
+References: <20180425120937.29867-1-kishon@ti.com>
+ <20180425120937.29867-6-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180426072609.GH17088@w540>
+In-Reply-To: <20180425120937.29867-6-kishon@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, geert@linux-m68k.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 09:26:09AM +0200, jacopo mondi wrote:
-> Hi Simon,
+On 25/04/18 15:09, Kishon Vijay Abraham I wrote:
+> Though MMC controller can indicate HS200/HS400 mode capability (by
+> using "mmc-hs200-1_8v"/"mmc-hs400-1_8v" dt property), if the IO lines
+> in the board is connected to 3.3v supply, HS200/HS400 mode cannot be
+> supported. Such boards have "no-1-8-v" property in their dts file.
+> Disable HS200/HS400 mode for boards which have "no-1-8-v" set.
 > 
-> On Thu, Apr 26, 2018 at 08:11:30AM +0200, Simon Horman wrote:
-> > Thanks Jacopo,
-> >
-> > I'm very pleased to see this series.
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Acked-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  drivers/mmc/host/sdhci.c | 1 +
+>  include/linux/mmc/host.h | 1 +
+>  2 files changed, 2 insertions(+)
 > 
-> Credits to Geert that pointed out to me R-Mobile A1 comes with a CEU.
-> I should mention him in next iteration actually, sorry about that.
-> 
-> >
-> > On Wed, Apr 25, 2018 at 01:15:20PM +0200, Jacopo Mondi wrote:
-> > > Enable CEU0 peripheral for Renesas R-Mobile A1 R8A7740.
-> >
-> > Given 'status = "disabled"' below I think you
-> > are describing but not enabling CEU0. Also in the subject.
-> 
-> Right.
-> 
-> >
-> > Should we also describe CEU1?
-> 
-> Armadillo board file only describe CEU0. If there are R-Mobile A1
-> board files where I can steal informations from I can do that. If
-> there's a public datasheet, that would be even better.
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 2ededa7f43df..b5f047b5f3ae 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -3672,6 +3672,7 @@ int sdhci_setup_host(struct sdhci_host *host)
+>  	if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V) {
+>  		host->caps1 &= ~(SDHCI_SUPPORT_SDR104 | SDHCI_SUPPORT_SDR50 |
+>  				 SDHCI_SUPPORT_DDR50);
+> +		mmc->caps2 &= ~MMC_CAP2_HSX00_1_8V;
 
-I have the datasheet, so perhaps I can add CEU1 after you have added CEU0.
+Seems weird for sdhci to clear flags it never set.  Also couldn't we
+reasonably expect dt properties to be consistent?  Is this really about
+setting SDHCI_QUIRK2_NO_1_8_V in your driver and expecting it to override
+other dt properties?  Although that still begs the question why anyone would
+set dt properties that the hardware doesn't support?  I guess you should
+also clear MMC_CAP2_HS400_ES.
 
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > ---
-> > >  arch/arm/boot/dts/r8a7740.dtsi | 10 ++++++++++
-> > >  1 file changed, 10 insertions(+)
-> > >
-> > > diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-> > > index afd3bc5..05ec41e 100644
-> > > --- a/arch/arm/boot/dts/r8a7740.dtsi
-> > > +++ b/arch/arm/boot/dts/r8a7740.dtsi
-> > > @@ -67,6 +67,16 @@
-> > >  		power-domains = <&pd_d4>;
-> > >  	};
-> > >
-> > > +	ceu0: ceu@fe910000 {
-> > > +		reg = <0xfe910000 0x100>;
-> >
-> > Should the size of the range be 0x3000 ?
-> > That would seem to match my reading of table 32.3
-> > and also be consistent with r7s72100.dtsi.
+>  	}
+>  
+>  	/* Any UHS-I mode in caps implies SDR12 and SDR25 support. */
+> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+> index 7c6eaf63f5ce..58832451767b 100644
+> --- a/include/linux/mmc/host.h
+> +++ b/include/linux/mmc/host.h
+> @@ -345,6 +345,7 @@ struct mmc_host {
+>  #define MMC_CAP2_HS400_1_2V	(1 << 16)	/* Can support HS400 1.2V */
+>  #define MMC_CAP2_HS400		(MMC_CAP2_HS400_1_8V | \
+>  				 MMC_CAP2_HS400_1_2V)
+> +#define MMC_CAP2_HSX00_1_8V	(MMC_CAP2_HS200_1_8V_SDR | MMC_CAP2_HS400_1_8V)
+>  #define MMC_CAP2_HSX00_1_2V	(MMC_CAP2_HS200_1_2V_SDR | MMC_CAP2_HS400_1_2V)
+>  #define MMC_CAP2_SDIO_IRQ_NOTHREAD (1 << 17)
+>  #define MMC_CAP2_NO_WRITE_PROTECT (1 << 18)	/* No physical write protect pin, assume that card is always read-write */
 > 
-> I got this from
-> 
-> static struct resource ceu0_resources[] = {
-> 	[0] = {
-> 		.name	= "CEU",
-> 		.start	= 0xfe910000,
-> 		.end	= 0xfe91009f,
-> 		.flags	= IORESOURCE_MEM,
-> 	},
-> but I also noticed the r7s72100 one was bigger.
-> I'm fine enlarging this, if that's what the manual reports too.
-
-I think that would be best.
-
-> > > +		compatible = "renesas,r8a7740-ceu";
-> > > +		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>;
-> > > +		clocks = <&mstp1_clks R8A7740_CLK_CEU20>;
-> > > +		clock-names = "ceu20";
-> > > +		power-domains = <&pd_a4mp>;
-> >
-> > My reading of table 1.7 is that the power domain should be A4R (&pd_a4r).
-> 
-> Ah yes, my bad.
-> 
-> The long time goal would be describe the camera module (mt9t112) which
-> is installed on armadillo. Unfortunately that would probably require
-> some more work on the CEU side.
-
-Thanks, understood.
