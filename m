@@ -1,283 +1,85 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH] ARM64: dts: meson-axg: add tdm pins
-Date: Thu, 26 Apr 2018 10:36:28 +0200
-Message-ID: <49f6e142-f958-c86a-e951-a3eb7aa4e720@baylibre.com>
-References: <20180417064035.28776-1-jbrunet@baylibre.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 09/10] gpio: Add a driver for Cadence I3C GPIO expander
+Date: Thu, 26 Apr 2018 10:44:26 +0200
+Message-ID: <CACRpkdY_7mi8GPiopZ9Yg4Y0-AV_SriZe=1yN5is6eH6FUm6Qg@mail.gmail.com>
+References: <20180330074751.25987-1-boris.brezillon@bootlin.com> <20180330074751.25987-10-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180417064035.28776-1-jbrunet@baylibre.com>
-Content-Language: en-US
+In-Reply-To: <20180330074751.25987-10-boris.brezillon@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion>
 List-Id: devicetree@vger.kernel.org
 
-On 17/04/2018 08:40, Jerome Brunet wrote:
-> Add tdm pins to amlogic's A113 device tree
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 245 +++++++++++++++++++++++++++++
->  1 file changed, 245 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> index b58808eb3cc8..74013965e86a 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> @@ -660,6 +660,251 @@
->  						function = "uart_ao_b_z";
->  					};
->  				};
-> +
-> +				mclk_b_pins: mclk_b {
-> +					mux {
-> +						groups = "mclk_b";
-> +						function = "mclk_b";
-> +					};
-> +				};
-> +
-> +				mclk_c_pins: mclk_c {
-> +					mux {
-> +						groups = "mclk_c";
-> +						function = "mclk_c";
-> +					};
-> +				};
-> +
-> +				tdma_sclk_pins: tdma_sclk {
-> +					mux {
-> +						groups = "tdma_sclk";
-> +						function = "tdma";
-> +					};
-> +				};
-> +
-> +				tdma_sclk_slv_pins: tdma_sclk_slv {
-> +					mux {
-> +						groups = "tdma_sclk_slv";
-> +						function = "tdma";
-> +					};
-> +				};
-> +
-> +				tdma_fs_pins: tdma_fs {
-> +					mux {
-> +						groups = "tdma_fs";
-> +						function = "tdma";
-> +					};
-> +				};
-> +
-> +				tdma_fs_slv_pins: tdma_fs_slv {
-> +					mux {
-> +						groups = "tdma_fs_slv";
-> +						function = "tdma";
-> +					};
-> +				};
-> +
-> +				tdma_din0_pins: tdma_din0 {
-> +					mux {
-> +						groups = "tdma_din0";
-> +						function = "tdma";
-> +					};
-> +				};
-> +
-> +				tdma_dout0_x14_pins: tdma_dout0_x14 {
-> +					mux {
-> +						groups = "tdma_dout0_x14";
-> +						function = "tdma";
-> +					};
-> +				};
-> +
-> +				tdma_dout0_x15_pins: tdma_dout0_x15 {
-> +					mux {
-> +						groups = "tdma_dout0_x15";
-> +						function = "tdma";
-> +					};
-> +				};
-> +
-> +				tdma_dout1_pins: tdma_dout1 {
-> +					mux {
-> +						groups = "tdma_dout1";
-> +						function = "tdma";
-> +					};
-> +				};
-> +
-> +				tdma_din1_pins: tdma_din1 {
-> +					mux {
-> +						groups = "tdma_din1";
-> +						function = "tdma";
-> +					};
-> +				};
-> +
-> +				tdmb_sclk_pins: tdmb_sclk {
-> +					mux {
-> +						groups = "tdmb_sclk";
-> +						function = "tdmb";
-> +					};
-> +				};
-> +
-> +				tdmb_sclk_slv_pins: tdmb_sclk_slv {
-> +					mux {
-> +						groups = "tdmb_sclk_slv";
-> +						function = "tdmb";
-> +					};
-> +				};
-> +
-> +				tdmb_fs_pins: tdmb_fs {
-> +					mux {
-> +						groups = "tdmb_fs";
-> +						function = "tdmb";
-> +					};
-> +				};
-> +
-> +				tdmb_fs_slv_pins: tdmb_fs_slv {
-> +					mux {
-> +						groups = "tdmb_fs_slv";
-> +						function = "tdmb";
-> +					};
-> +				};
-> +
-> +				tdmb_din0_pins: tdmb_din0 {
-> +					mux {
-> +						groups = "tdmb_din0";
-> +						function = "tdmb";
-> +					};
-> +				};
-> +
-> +				tdmb_dout0_pins: tdmb_dout0 {
-> +					mux {
-> +						groups = "tdmb_dout0";
-> +						function = "tdmb";
-> +					};
-> +				};
-> +
-> +				tdmb_din1_pins: tdmb_din1 {
-> +					mux {
-> +						groups = "tdmb_din1";
-> +						function = "tdmb";
-> +					};
-> +				};
-> +
-> +				tdmb_dout1_pins: tdmb_dout1 {
-> +					mux {
-> +						groups = "tdmb_dout1";
-> +						function = "tdmb";
-> +					};
-> +				};
-> +
-> +				tdmb_din2_pins: tdmb_din2 {
-> +					mux {
-> +						groups = "tdmb_din2";
-> +						function = "tdmb";
-> +					};
-> +				};
-> +
-> +				tdmb_dout2_pins: tdmb_dout2 {
-> +					mux {
-> +						groups = "tdmb_dout2";
-> +						function = "tdmb";
-> +					};
-> +				};
-> +
-> +				tdmb_din3_pins: tdmb_din3 {
-> +					mux {
-> +						groups = "tdmb_din3";
-> +						function = "tdmb";
-> +					};
-> +				};
-> +
-> +				tdmb_dout3_pins: tdmb_dout3 {
-> +					mux {
-> +						groups = "tdmb_dout3";
-> +						function = "tdmb";
-> +					};
-> +				};
-> +
-> +				tdmc_sclk_pins: tdmc_sclk {
-> +					mux {
-> +						groups = "tdmc_sclk";
-> +						function = "tdmc";
-> +					};
-> +				};
-> +
-> +				tdmc_sclk_slv_pins: tdmc_sclk_slv {
-> +					mux {
-> +						groups = "tdmc_sclk_slv";
-> +						function = "tdmc";
-> +					};
-> +				};
-> +
-> +				tdmc_fs_pins: tdmc_fs {
-> +					mux {
-> +						groups = "tdmc_fs";
-> +						function = "tdmc";
-> +					};
-> +				};
-> +
-> +				tdmc_fs_slv_pins: tdmc_fs_slv {
-> +					mux {
-> +						groups = "tdmc_fs_slv";
-> +						function = "tdmc";
-> +					};
-> +				};
-> +
-> +				tdmc_din0_pins: tdmc_din0 {
-> +					mux {
-> +						groups = "tdmc_din0";
-> +						function = "tdmc";
-> +					};
-> +				};
-> +
-> +				tdmc_dout0_pins: tdmc_dout0 {
-> +					mux {
-> +						groups = "tdmc_dout0";
-> +						function = "tdmc";
-> +					};
-> +				};
-> +
-> +				tdmc_din1_pins: tdmc_din1 {
-> +					mux {
-> +						groups = "tdmc_din1";
-> +						function = "tdmc";
-> +					};
-> +				};
-> +
-> +				tdmc_dout1_pins: tdmc_dout1 {
-> +					mux {
-> +						groups = "tdmc_dout1";
-> +						function = "tdmc";
-> +					};
-> +				};
-> +
-> +				tdmc_din2_pins: tdmc_din2 {
-> +					mux {
-> +						groups = "tdmc_din2";
-> +						function = "tdmc";
-> +					};
-> +				};
-> +
-> +				tdmc_dout2_pins: tdmc_dout2 {
-> +					mux {
-> +						groups = "tdmc_dout2";
-> +						function = "tdmc";
-> +					};
-> +				};
-> +
-> +				tdmc_din3_pins: tdmc_din3 {
-> +					mux {
-> +						groups = "tdmc_din3";
-> +						function = "tdmc";
-> +					};
-> +				};
-> +
-> +				tdmc_dout3_pins: tdmc_dout3 {
-> +					mux {
-> +						groups = "tdmc_dout3";
-> +						function = "tdmc";
-> +					};
-> +				};
->  			};
->  		};
->  
-> 
+On Fri, Mar 30, 2018 at 9:47 AM, Boris Brezillon
+<boris.brezillon@bootlin.com> wrote:
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> Add a driver for Cadence I3C GPIO expander.
+>
+> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+
+This is pretty much OK, and I don't want to raise the bar
+even higher for you to get this code into the kernel, so:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+The following is an observation for future improvement:
+
+> +static int cdns_i3c_gpio_read_reg(struct cdns_i3c_gpio *gpioc, u8 reg,
+> +                                 u8 *val)
+> +{
+> +       struct i3c_priv_xfer xfers[] = {
+> +               {
+> +                       .len = sizeof(reg),
+> +                       .data.out = &reg,
+> +               },
+> +               {
+> +                       .rnw = true,
+> +                       .len = sizeof(*val),
+> +                       .data.in = val,
+> +               },
+> +       };
+> +
+> +       return i3c_device_do_priv_xfers(gpioc->i3cdev, xfers,
+> +                                       ARRAY_SIZE(xfers));
+> +}
+> +
+> +static int cdns_i3c_gpio_write_reg(struct cdns_i3c_gpio *gpioc, u8 reg,
+> +                                  u8 val)
+> +{
+> +       struct i3c_priv_xfer xfers[] = {
+> +               {
+> +                       .len = sizeof(reg),
+> +                       .data.out = &reg,
+> +               },
+> +               {
+> +                       .len = sizeof(val),
+> +                       .data.out = &val,
+> +               },
+> +       };
+> +
+> +       return i3c_device_do_priv_xfers(gpioc->i3cdev, xfers,
+> +                                       ARRAY_SIZE(xfers));
+> +}
+
+This is starting to resemble
+drivers/base/regmap/regmap-i2c.c
+
+Maybe we should very quickly add regmap-i3c.c as this
+infrastructre has had a great positive effect on may kernel
+subsystems.
+
+> +static int cdns_i3c_gpio_get_direction(struct gpio_chip *g, unsigned offset)
+> +{
+> +       struct cdns_i3c_gpio *gpioc = gpioc_to_cdns_gpioc(g);
+> +
+> +       return gpioc->dir & BIT(offset);
+
+I would:
+
+return !!(gpioc->dir & BIT(offset));
+
+So you clamp it to bit 0.
+
+Yours,
+Linus Walleij
