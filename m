@@ -1,42 +1,24 @@
-From: Chris Lew <clew@codeaurora.org>
-Subject: [PATCH v3 4/6] rpmsg: Guard against null endpoint ops in destroy
-Date: Thu, 26 Apr 2018 15:59:03 -0700
-Message-ID: <1524783545-21951-5-git-send-email-clew@codeaurora.org>
-References: <1524783545-21951-1-git-send-email-clew@codeaurora.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH] mmc: meson-gx: add device reset
+Date: Thu, 26 Apr 2018 16:35:34 -0700
+Message-ID: <7ha7tp35ix.fsf@baylibre.com>
+References: <20180426103817.12675-1-jbrunet@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524783545-21951-1-git-send-email-clew@codeaurora.org>
+In-Reply-To: <20180426103817.12675-1-jbrunet@baylibre.com> (Jerome Brunet's
+        message of "Thu, 26 Apr 2018 12:38:17 +0200")
 Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, clew@codeaurora.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Carlo Caione <carlo@caione.org>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In RPMSG GLINK the chrdev device will allocate an ept as part of the
-rpdev creation. This device will not register endpoint ops even though
-it has an allocated ept. Protect against the case where the device is
-being destroyed.
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-Signed-off-by: Chris Lew <clew@codeaurora.org>
----
+> Trigger the reset line of the mmc controller while probing, if available
+> The reset should be optional for now, at least until all related DT node
+> have the reset property
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 
-Changes since v1:
-- New change
-
- drivers/rpmsg/rpmsg_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-index 920a02f0462c..7bfe36afccc5 100644
---- a/drivers/rpmsg/rpmsg_core.c
-+++ b/drivers/rpmsg/rpmsg_core.c
-@@ -88,7 +88,7 @@ struct rpmsg_endpoint *rpmsg_create_ept(struct rpmsg_device *rpdev,
-  */
- void rpmsg_destroy_ept(struct rpmsg_endpoint *ept)
- {
--	if (ept)
-+	if (ept && ept->ops)
- 		ept->ops->destroy_ept(ept);
- }
- EXPORT_SYMBOL(rpmsg_destroy_ept);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
