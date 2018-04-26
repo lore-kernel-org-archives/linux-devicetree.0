@@ -1,52 +1,36 @@
 From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: [PATCH 02/17] dt-bindings: display: renesas: du: Document the
- R8A77965 bindings
-Date: Thu, 26 Apr 2018 17:53:31 +0100
-Message-ID: <20180426165346.494-3-kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH 08/17] arm64: dts: r8a77965: Provide sysc header definitions
+Date: Thu, 26 Apr 2018 17:53:37 +0100
+Message-ID: <20180426165346.494-9-kieran.bingham+renesas@ideasonboard.com>
 References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-renesas-soc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, open list <linux-kernel@vger.kernel.org>, "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT
+        AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogS2llcmFuIEJpbmdoYW0gPGtpZXJhbi5iaW5naGFtK3JlbmVzYXNAaWRl
-YXNvbmJvYXJkLmNvbT4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9yZW5lc2FzLGR1LnR4dCB8IDIgKysKIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
-KykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9yZW5lc2FzLGR1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L3JlbmVzYXMsZHUudHh0CmluZGV4IGEzNmE2ZTdlZTU0Zi4uN2M2ODU0YmQwYTA0IDEwMDY0
-NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2Fz
-LGR1LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9y
-ZW5lc2FzLGR1LnR4dApAQCAtMTMsNiArMTMsNyBAQCBSZXF1aXJlZCBQcm9wZXJ0aWVzOgogICAg
-IC0gInJlbmVzYXMsZHUtcjhhNzc5NCIgZm9yIFI4QTc3OTQgKFItQ2FyIEUyKSBjb21wYXRpYmxl
-IERVCiAgICAgLSAicmVuZXNhcyxkdS1yOGE3Nzk1IiBmb3IgUjhBNzc5NSAoUi1DYXIgSDMpIGNv
-bXBhdGlibGUgRFUKICAgICAtICJyZW5lc2FzLGR1LXI4YTc3OTYiIGZvciBSOEE3Nzk2IChSLUNh
-ciBNMy1XKSBjb21wYXRpYmxlIERVCisgICAgLSAicmVuZXNhcyxkdS1yOGE3Nzk2NSIgZm9yIFI4
-QTc3OTY1IChSLUNhciBNMy1OKSBjb21wYXRpYmxlIERVCiAgICAgLSAicmVuZXNhcyxkdS1yOGE3
-Nzk3MCIgZm9yIFI4QTc3OTcwIChSLUNhciBWM00pIGNvbXBhdGlibGUgRFUKICAgICAtICJyZW5l
-c2FzLGR1LXI4YTc3OTk1IiBmb3IgUjhBNzc5OTUgKFItQ2FyIEQzKSBjb21wYXRpYmxlIERVCiAK
-QEAgLTU5LDYgKzYwLDcgQEAgY29ycmVzcG9uZGluZyB0byBlYWNoIERVIG91dHB1dC4KICBSOEE3
-Nzk0IChSLUNhciBFMikgICAgIERQQUQgMCAgICAgICAgIERQQUQgMSAgICAgICAgIC0gICAgICAg
-ICAgICAgIC0KICBSOEE3Nzk1IChSLUNhciBIMykgICAgIERQQUQgMCAgICAgICAgIEhETUkgMCAg
-ICAgICAgIEhETUkgMSAgICAgICAgIExWRFMgMAogIFI4QTc3OTYgKFItQ2FyIE0zLVcpICAgRFBB
-RCAwICAgICAgICAgSERNSSAwICAgICAgICAgTFZEUyAwICAgICAgICAgLQorIFI4QTc3OTY1IChS
-LUNhciBNMy1OKSAgRFBBRCAwICAgICAgICAgSERNSSAwICAgICAgICAgTFZEUyAwICAgICAgICAg
-LQogIFI4QTc3OTcwIChSLUNhciBWM00pICAgRFBBRCAwICAgICAgICAgTFZEUyAwICAgICAgICAg
-LSAgICAgICAgICAgICAgLQogIFI4QTc3OTk1IChSLUNhciBEMykgICAgRFBBRCAwICAgICAgICAg
-TFZEUyAwICAgICAgICAgTFZEUyAxICAgICAgICAgLQogCi0tIAoyLjE3LjAKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Include the r8a77965-sysc header to provide power domain enumerations
+and definitions.
+
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+---
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index b12f41755aea..02de36b9e581 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -10,6 +10,7 @@
+ 
+ #include <dt-bindings/clock/renesas-cpg-mssr.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/power/r8a77965-sysc.h>
+ 
+ #define CPG_AUDIO_CLK_I		10
+ 
+-- 
+2.17.0
