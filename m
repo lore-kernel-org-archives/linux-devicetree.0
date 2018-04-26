@@ -1,85 +1,43 @@
-Return-Path: <SRS0=z9yY=HS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf0-f195.google.com ([209.85.192.195]:42280 "EHLO
-        mail-pf0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753910AbeD2RNl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Apr 2018 13:13:41 -0400
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v4 03/14] media: ov772x: allow i2c controllers without I2C_FUNC_PROTOCOL_MANGLING
-Date: Mon, 30 Apr 2018 02:13:02 +0900
-Message-Id: <1525021993-17789-4-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
-References: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Wolfram Sang <wsa@the-dreams.de>
+Return-Path: <SRS0=j3wE=HP=samsung.com=cw00.choi@kernel.org>
+MIME-version: 1.0
+Content-transfer-encoding: 8BIT
+Content-type: text/plain; charset="UTF-8"
+Message-id: <5AE125C2.70105@samsung.com>
+Date: Thu, 26 Apr 2018 10:05:06 +0900
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [RFC 03/10] cpufreq: exynos: Remove support for Exynos5440
+In-reply-to: <20180424203239.21885-4-krzk@kernel.org>
+References: <20180424203239.21885-1-krzk@kernel.org>
+	<CGME20180424203335epcas5p3bfd2172f68574b67818c1d2bc74041bb@epcas5p3.samsung.com>
+	<20180424203239.21885-4-krzk@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Jaehoon Chung <jh80.chung@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The ov772x driver only works when the i2c controller have
-I2C_FUNC_PROTOCOL_MANGLING.  However, many i2c controller drivers don't
-support it.
+Hi Krzysztof,
 
-The reason that the ov772x requires I2C_FUNC_PROTOCOL_MANGLING is that
-it doesn't support repeated starts.
+On 2018년 04월 25일 05:32, Krzysztof Kozlowski wrote:
+> The Exynos5440 is not actively developed, there are no development
+> boards available and probably there are no real products with it.
+> Remove wide-tree support for Exynos5440.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  .../bindings/cpufreq/cpufreq-exynos5440.txt        |  28 --
+>  drivers/cpufreq/Kconfig.arm                        |  14 -
+>  drivers/cpufreq/Makefile                           |   1 -
+>  drivers/cpufreq/exynos5440-cpufreq.c               | 452 ---------------------
+>  4 files changed, 495 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-exynos5440.txt
+>  delete mode 100644 drivers/cpufreq/exynos5440-cpufreq.c
+> 
 
-This changes the reading ov772x register method so that it doesn't
-require I2C_FUNC_PROTOCOL_MANGLING by calling two separated i2c messages.
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* v4
-- No changes
+[snip]
 
- drivers/media/i2c/ov772x.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index e255070..b6223bf 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -542,9 +542,19 @@ static struct ov772x_priv *to_ov772x(struct v4l2_subdev *sd)
- 	return container_of(sd, struct ov772x_priv, subdev);
- }
- 
--static inline int ov772x_read(struct i2c_client *client, u8 addr)
-+static int ov772x_read(struct i2c_client *client, u8 addr)
- {
--	return i2c_smbus_read_byte_data(client, addr);
-+	int ret;
-+	u8 val;
-+
-+	ret = i2c_master_send(client, &addr, 1);
-+	if (ret < 0)
-+		return ret;
-+	ret = i2c_master_recv(client, &val, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	return val;
- }
- 
- static inline int ov772x_write(struct i2c_client *client, u8 addr, u8 value)
-@@ -1255,13 +1265,11 @@ static int ov772x_probe(struct i2c_client *client,
- 		return -EINVAL;
- 	}
- 
--	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA |
--					      I2C_FUNC_PROTOCOL_MANGLING)) {
-+	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
- 		dev_err(&adapter->dev,
--			"I2C-Adapter doesn't support SMBUS_BYTE_DATA or PROTOCOL_MANGLING\n");
-+			"I2C-Adapter doesn't support SMBUS_BYTE_DATA\n");
- 		return -EIO;
- 	}
--	client->flags |= I2C_CLIENT_SCCB;
- 
- 	priv = devm_kzalloc(&client->dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
 -- 
-2.7.4
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
