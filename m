@@ -1,110 +1,80 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: overlay: Stop leaking resources on overlay removal
-Date: Wed, 25 Apr 2018 17:44:39 -0700
-Message-ID: <033fba6b-d93c-249c-d552-1f5336b34387@gmail.com>
-References: <097f1b01-6cb4-8dcb-0498-7b4c59a7ea53@siemens.com>
- <7aca82c1-a02c-2f84-bc32-6e8a118ba601@gmail.com>
- <90e7da9d-d40a-17f1-e627-873f58a3dce5@siemens.com>
- <b813ac8f-a1e3-3e27-2e44-0a576e05d01c@gmail.com>
- <17561711-94f7-b3d4-8f06-9cfa69daaf23@gmail.com>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [[RFC]DPU PATCH 2/4] dt-bindings: drm/bridge:
+ Document sn65dsi86 bridge bindings
+Date: Wed, 25 Apr 2018 20:46:13 -0400
+Message-ID: <CAF6AEGuWo9U5OU5nKSSwzRV_FWszTj_8S3Hns9hFHWBPsepnVw@mail.gmail.com>
+References: <1524160568-27583-1-git-send-email-spanda@codeaurora.org>
+ <1524160568-27583-3-git-send-email-spanda@codeaurora.org>
+ <152469995691.46528.3834882157254635250@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <17561711-94f7-b3d4-8f06-9cfa69daaf23@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jan Kiszka <jan.kiszka@siemens.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alan Tull <atull@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <152469995691.46528.3834882157254635250-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/25/18 17:32, Frank Rowand wrote:
-> Hi Jan,
-> 
-> On 04/24/18 13:58, Frank Rowand wrote:
->> On 04/24/18 10:50, Jan Kiszka wrote:
->>> On 2018-04-24 19:44, Frank Rowand wrote:
->>>> On 04/24/18 09:19, Jan Kiszka wrote:
->>>>> Only the overlay notifier callbacks have a chance to potentially get
->>>>> hold of references to those two resources, but they do not store them.
->>>>> So it is safe to stop the intentional leaking.
->>>>>
->>>>> See also https://lkml.org/lkml/2018/4/23/1063 and following.
->>>>>
->>>>> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
->>>>> ---
->>>>>
->>>>> Ideally, we sort out any remaining worries during the 4.17-rc cycle.
->>>>>
->>>>>  drivers/of/overlay.c | 13 ++-----------
->>>>>  1 file changed, 2 insertions(+), 11 deletions(-)
->>>>>
->>>>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
->>>>> index b35fe88f1851..3553f1f57a62 100644
->>>>> --- a/drivers/of/overlay.c
->>>>> +++ b/drivers/of/overlay.c
->>>>> @@ -671,17 +671,8 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
->>>>>  		of_node_put(ovcs->fragments[i].overlay);
->>>>>  	}
->>>>>  	kfree(ovcs->fragments);
->>>>> -
->>>>> -	/*
->>>>> -	 * TODO
->>>>> -	 *
->>>>> -	 * would like to: kfree(ovcs->overlay_tree);
->>>>> -	 * but can not since drivers may have pointers into this data
->>>>> -	 *
->>>>> -	 * would like to: kfree(ovcs->fdt);
->>>>> -	 * but can not since drivers may have pointers into this data
->>>>> -	 */
->>>>> -
->>>>> +	kfree(ovcs->overlay_tree);
->>>>> +	kfree(ovcs->fdt);
->>>>>  	kfree(ovcs);
->>>>>  }
->>>>>  
->>>>>
->>>>
->>>> Nack.  It is premature to submit this while the conversation is
->>>> continuing in the other thread.
->>>>
->>>> I'll continue the conversation in the other thread.
->>>>
->>>
->>> Well, at least the strongest argument has been resolved now, the
->>> notifier topic. Curious to learn what remains. As I noted, we should
->>> work hard to sort out the API regression prior to the release.
->>
->> Nope, the notifier discussion continues in the other thread.
-> 
-> Thanks for your patience in the other thread.
-> 
-> As I noted there, I am now willing to accept this patch with some
-> small changes.  Please add a minimal section to
-> Documentation/devicetree/overlay-notes.txt about overlay notifiers.
-> The most important thing to note there is that the overlay notifiers
-> are not allowed to retain any pointers into the overlay devicetree.
-
-Please also add a function header comment to of_overlay_notifier_register()
-in drivers/of/overlay.c that notes the restriction on the overlay notifier.
-
-
-> Also, instead of removing the "TODO" comment in free_overlay_changeset(),
-> change it to say something to the effect of "there should be no live pointers
-> into ovcs->overlay_tree and ovcs->fdt due to the policy that overlay
-> notifiers are not allowed to retain pointers into the overlay devicetree".
-> 
-> I will also add myself to the OPEN FIRMWARE AND DEVICE TREE OVERLAYS
-> entry of MAINTAINERS and add a keyword line to catch overlay notifiers.
-> 
-> I am not happy about freeing the overlay devicetree and overlay fdt
-> while overlay notifiers are able to retain pointers into the overlay
-> devicetree and overlay fdt, but am willing to accept documentation and
-> review as a partial protection until the devicetree access APIs can be
-> modified to prevent the notifiers from accessing the pointers.  The
-> volume of overlay notifier patches should be small enough to not be
-> a review burden.
-> 
-> -Frank
-> 
-> 
+T24gV2VkLCBBcHIgMjUsIDIwMTggYXQgNzo0NSBQTSwgU3RlcGhlbiBCb3lkIDxzd2JveWRAY2hy
+b21pdW0ub3JnPiB3cm90ZToKPiBRdW90aW5nIFNhbmRlZXAgUGFuZGEgKDIwMTgtMDQtMTkgMTA6
+NTY6MDYpCj4+IERvY3VtZW50IHRoZSBiaW5kaW5ncyB1c2VkIGZvciB0aGUgc242NWRzaTg2IERT
+SSB0byBlRFAgYnJpZGdlLgo+Pgo+PiBDaGFuZ2VzIGluIHYxOgo+PiAgLSBSZXBocmFzZSB0aGUg
+ZHQtYmluZGluZyBkZXNjcmlwdGlvbnMgdG8gYmUgbW9yZSBpbmxpbmUgd2l0aCBleGlzdGluZwo+
+PiAgICBiaW5kaW5ncyAoQW5kcnplaiBIYWpkYSkuCj4+ICAtIEFkZCBtaXNzaW5nIGR0LWJpbmRp
+bmcgdGhhdCBhcmUgcGFyc2VkIGJ5IGNvcnJlc3BvbmRpbmcgZHJpdmVyCj4+ICAgIChBbmRyemVq
+IEhhamRhKS4KPj4KPj4gQ2hhbmdlcyBpbiB2MjoKPj4gIC0gUmVtb3ZlZCBlZHAgcGFuZWwgc3Bl
+Y2lmaWMgZHQtYmluZGluZyBlbnRyaWVzLiBPbmx5IGtlZXAgYnJpZGdlCj4+ICAgIHNwZWNpZmlj
+IGVudHJpZXMgKFNlYW4gUGF1bCkuCj4+ICAtIFJlbW92ZSBjdXN0b20tbW9kZXMgZHQgZW50cnkg
+c2luY2UgaXRzIHVzYWdlIGlzIHJlbW92ZWQgZnJvbSBkcml2ZXIgYWxzbyAoU2VhbiBQYXVsKS4K
+Pj4gIC0gUmVtb3ZlIGlzLXBsdWdnYWJsZSBkdCBlbnRyeSBzaW5jZSB0aGlzIHdpbGwgbm90IGJl
+IG5lZWRlZCBhbnltb3JlIChTZWFuIFBhdWwpLgo+Pgo+PiBDaGFuZ2VzIGluIHYzOgo+PiAgLSBS
+ZW1vdmVkIGlycS1ncGlvIGR0IGVudHJ5IGFuZCBpbnN0ZWFkIHBvcHVsYXRlIGlzIGFuIGludGVy
+cnVwdAo+PiAgICBwcm9wZXJ0eSAoUm9iIEhlcnJpbmcpLgo+Cj4gVGhlc2UgY2hhbmdlbG9ncyB1
+c3VhbGx5IGdvIGJlbG93IHRoZSB0cmlwbGUgZGFzaCwgYnV0IG1heWJlIGRybSBpcwo+IGRpZmZl
+cmVudCBhbmQgd2FudHMgdGhlbT8KCnllYWgsIGRybSBnZW5lcmFsbHkgd2FudHMgdGhlbSBpbiB0
+aGUgY29tbWl0IG1zZyByYXRoZXIgdGhhbiBiZWxvdyB0aGUKdHJpcGxlLWRhc2gsIGFsdGhvdWdo
+IEkgZ3Vlc3MgZm9yIGJpbmRpbmdzIGRvY3MgaXQgc2hvdWxkIGZvbGxvdyB0aGUKcnVsZXMgZm9y
+IHRoYXQgdHJlZS4uIEkgdXN1YWxseSBqdXN0IGZpeCB1cCB0aGVzZSBzb3J0IG9mIHRoaW5ncyBh
+cyBJCmFwcGx5IHBhdGNoZXMsIGJ1dCBub3Qgc3VyZSB3aGF0IG90aGVyIG1haW50YWluZXJzIHBy
+ZWZlcgoKQlIsCi1SCgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBTYW5kZWVwIFBhbmRhIDxzcGFuZGFA
+Y29kZWF1cm9yYS5vcmc+Cj4+IC0tLQo+PiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rp
+LHNuNjVkc2k4Ni50eHQgICAgICAgfCA2MSArKysrKysrKysrKysrKysrKysrKysrCj4+ICAxIGZp
+bGUgY2hhbmdlZCwgNjEgaW5zZXJ0aW9ucygrKQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYu
+dHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0Cj4+IG5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLjQxMmM0YTIKPj4gLS0tIC9kZXYvbnVsbAo+PiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGks
+c242NWRzaTg2LnR4dAo+PiBAQCAtMCwwICsxLDYxIEBACj4+ICtTTjY1RFNJODYgRFNJIHRvIGVE
+UCBicmlkZ2UgY2hpcAo+PiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4gKwo+
+PiArVGhpcyBpcyB0aGUgYmluZGluZyBmb3IgVGV4YXMgSW5zdHJ1bWVudHMgU042NURTSTg2IGJy
+aWRnZS4KPgo+IENhbiB5b3UgYWRkIGEgbGluayB0byB0aGUgZGF0YXNoZWV0IGhlcmUgcGxlYXNl
+Pwo+Cj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICstIGNvbXBhdGlibGU6IE11c3Qg
+YmUgInRpLHNuNjVkc2k4NiIKPj4gKy0gcmVnOiBpMmMgYWRkcmVzcyBvZiB0aGUgY2hpcCwgMHgy
+ZCBhcyBwZXIgZGF0YXNoZWV0Cj4+ICstIGVuYWJsZS1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3Bp
+byBzcGVjaWZpY2F0aW9ucyBmb3IgYnJpZGdlX2VuIHBpbgo+PiArCj4+ICstIHZjY2lvLXN1cHBs
+eTogQSAxLjhWIHN1cHBseSB0aGF0IHBvd2VycyB1cCB0aGUgZGlnaXRhbCBJT3MuCj4+ICstIHZj
+Y2Etc3VwcGx5OiBBIDEuMlYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBhbmFsb2cgY2lyY3Vp
+dHMuCj4KPiBDYW4geW91IGFkZCB2cGxsIGFuZCB2Y2MgZnJvbSB0aGUgZGF0YXNoZWV0IGFzIHdl
+bGw/Cj4KPiBBbHNvIHJlZmNsayB3b3VsZCBiZSBnb29kIHRvIGhhdmUganVzdCBpbiBjYXNlIGl0
+J3MgcHJlc2VudCAoc28KPiBvcHRpb25hbD8pLCBhbmQgaHBkIHNob3VsZCBiZSBhbm90aGVyIGdw
+aW8gcHJvcGVydHkgKGNvdWxkIGJlIG9wdGlvbmFsIEkKPiBzdXBwb3NlKS4KPgo+IEl0IGFsc28g
+bG9va3MgbGlrZSB0aGlzIGNoaXAgaGFzIGEgZ3BpbyBjb250cm9sbGVyIG9uIGl0LCBzbyBpdCB3
+b3VsZAo+IG5lZWQgdG8gaGF2ZSBhIGdwaW8tY29udHJvbGxlciBwcm9wZXJ0eSBhbmQgI2dwaW8t
+Y2VsbHMuIEFuZCBvbmUgb2YKPiB0aG9zZSBHUElPcyBkb2VzIFBXTSwgc28gaXQgd291bGQgbmVl
+ZCAjcHdtLWNlbGxzIGFzIHdlbGwuIEknbSBub3QKPiBzYXlpbmcgdGhlIGNvZGUgbmVlZHMgdG8g
+YmUgd3JpdHRlbiB5ZXQsIGJ1dCBhdCBsZWFzdCB0aGUgYmluZGluZyB3b3VsZAo+IG5lZWQgdG8g
+c3BlY2lmeSB0aGVzZSB0aGluZ3MuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2ZyZWVkcmVubwo=
