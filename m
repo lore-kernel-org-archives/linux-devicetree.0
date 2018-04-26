@@ -1,68 +1,80 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [dragonboard] [PATCH 1/1] dts: qcom: db820c: Add gpio-line-names
- property
-Date: Thu, 26 Apr 2018 19:01:45 +0530
-Message-ID: <20180426133145.24dfnfarnuunf2wy@mani>
-References: <20180414031811.11351-1-manivannan.sadhasivam@linaro.org>
- <20180414031811.11351-2-manivannan.sadhasivam@linaro.org>
- <9acdd412-9b6d-ec63-c5ca-c5fa8d98d489@linaro.org>
- <20180416100306.5f6bzkzlsx3ufvw7@mani>
- <CACRpkdZxwz5=oTxGWBgVHfy-D9s-f03qqjypUeJj6GrpXQcEcQ@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 5/6] ARM: dts: Add support for emtrion emCON-MX6 series
+Date: Thu, 26 Apr 2018 08:46:14 -0500
+Message-ID: <CAL_JsqJ8TO+FadZraUNcCH6swTmwpWjdP5jV2JcoJT1Uf5Sw8g@mail.gmail.com>
+References: <20171220134710.64479-2-jan.tuerk@emtrion.com>
+ <20180420125108.14197-1-jan.tuerk@emtrion.com>
+ <20180420125108.14197-6-jan.tuerk@emtrion.com> <20180423084454.GZ25429@dragon>
+ <95F51F4B902CAC40AF459205F6322F01B83109E5B1@BMK019S01.emtrion.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZxwz5=oTxGWBgVHfy-D9s-f03qqjypUeJj6GrpXQcEcQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Todor Tomov <todor.tomov@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dragonboard@lists.96boards.org, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <95F51F4B902CAC40AF459205F6322F01B83109E5B1@BMK019S01.emtrion.local>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?B?VMO8cmssIEphbg==?= <Jan.Tuerk@emtrion.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Russell King <linux@armlinux.org.uk>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, LinuxArmKernelMailingListe <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On Thu, Apr 26, 2018 at 03:23:57PM +0200, Linus Walleij wrote:
-> On Mon, Apr 16, 2018 at 12:03 PM, Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> > On Mon, Apr 16, 2018 at 11:48:59AM +0300, Todor Tomov wrote:
-> 
-> >> > + * When the 96Board naming of a line and the schematic name of
-> >> > + * the same line are in conflict, the 96Board specification
-> >> > + * takes precedence, which means that the external UART on the
-> >> > + * LSEC is named UART0 while the schematic and SoC names this
-> >> > + * UART3. This is only for the informational lines i.e. "[FOO]",
-> >>
-> >> It seems to me that this can lead to some confusion for cases when
-> >> some schematic names have 96board names and others don't. (An
-> >> example below.) However I don't really see any better way to do
-> >> it. I'm wondering whether adding the schematic name in
-> >> the comment (for gpios which are named with 96board names)
-> >> can help a little. What do you think? Or any other idea?
-> >>
-> >
-> > Specifying the schematic names in comments is a good idea!
-> >
-> > Linus: Do you have any suggestion here?
-> 
-> Go for this.
-> 
-
-Thanks!
-
-> Generally ask the question: what does the user need?
-> 
-> In this case, especially userspace libraries like mriaa (right name?)
-
-MRAA :)
-
-> should be able to work out-of-the-box without knowing what
-> board it is but know it has a 96board connector.
->
-
-I have sent out v2, incorporating the review comments from Todor.
-Can you please review it?
-
-Thanks,
-Mani
-
-> Yours,
-> Linus Walleij
+T24gVHVlLCBBcHIgMjQsIDIwMTggYXQgMzozMiBBTSwgVMO8cmssIEphbiA8SmFuLlR1ZXJrQGVt
+dHJpb24uZGU+IHdyb3RlOgo+PiAtLS0tLVVyc3Byw7xuZ2xpY2hlIE5hY2hyaWNodC0tLS0tCj4+
+IFZvbjogU2hhd24gR3VvIEdlc2VuZGV0OiBNb250YWcsIDIzLiBBcHJpbCAyMDE4IDEwOjQ1Cj4+
+IFJlOiBbUEFUQ0ggdjMgNS82XSBBUk06IGR0czogQWRkIHN1cHBvcnQgZm9yIGVtdHJpb24gZW1D
+T04tTVg2IHNlcmllcwo+Pgo+PiBPbiBGcmksIEFwciAyMCwgMjAxOCBhdCAwMjo1MDo1MlBNICsw
+MjAwLCBqYW4udHVlcmtAZW10cmlvbi5jb20gd3JvdGU6Cj4+ID4gRnJvbTogSmFuIFR1ZXJrIDxq
+YW4udHVlcmtAZW10cmlvbi5jb20+Cj4+ID4KPj4gPiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBm
+b3IgdGhlIGVtdHJpb24gR21iSCBlbUNPTi1NWDYgbW9kdWxlcy4KPj4gPiBUaGV5IGFyZSBhdmFp
+bGFibGUgd2l0aCBpbXguNiBTb2xvLCBEdWFsLUxpdGUsIER1YWwgYW5kIFF1YWQgZXF1aXBwZWQK
+Pj4gPiB3aXRoIE1lbW9yeSBmcm9tIDUxMk1CIHRvIDJHQiAoY29uZmlndXJlZCBieSBVLUJvb3Qp
+Lgo+PiA+Cj4+ID4gT3VyIGRlZmF1bHQgZGV2ZWxvcGVyLUtpdCBzaGlwcyB3aXRoIHRoZSBBdmFy
+aSBiYXNlYm9hcmQgYW5kIHRoZSBFRFQKPj4gPiBFVE0wNzAwRzBCREg2IERpc3BsYXkgKGlteDZb
+cXxkbF0tZW1jb24tYXZhcmkpLgo+PiA+Cj4+ID4gVGhlIGRldmljZXRyZWUgaXMgc3BsaXQgaW50
+byB0aGUgY29tbW9uIHBhcnQgcHJvdmlkaW5nIGFsbCBtb2R1bGUKPj4gPiBjb21wb25lbnRzIGFu
+ZCB0aGUgYmFzaWMgc3VwcG9ydCBmb3IgYWxsIFNvQyB2ZXJzaW9ucwo+PiA+IChpbXg2cWRsLWVt
+Y29uLmR0c2kpIGFuZCBwYXJ0cyB3aGljaCBhcmUgaS5teDYgU3xETCBhbmQgRHxRIHJlbGV2YW50
+Lgo+PiA+IEZpbmFsbHkgdGhlIHN1cHBvcnQgZm9yIHRoZSBhdmFyaSBiYXNlYm9hcmQgaW4gdGhl
+IGRldmVsb3Blci1raXQKPj4gPiBjb25maWd1cmF0aW9uIGlzIHByb3ZpZGVkIGJ5IHRoZSBlbWNv
+bi1hdmFyaSBkdHMgZmlsZXMuCj4+ID4KPj4gPiBTaWduZWQtb2ZmLWJ5OiBKYW4gVHVlcmsgPGph
+bi50dWVya0BlbXRyaW9uLmNvbT4KPj4gPiAtLS0KPj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2FybS9lbXRyaW9uLnR4dCB8ICAxMyArCj4+Cj4+IEl0J3MgYmV0dGVyIHRv
+IGhhdmUgYSBzZXBhcmF0ZSBwYXRjaCBmb3IgYmluZGluZ3MgZG9jLCB3aGljaCBuZWVkcyB0byBi
+ZQo+PiBhY2tub3dsZWRnZWQgYnkgRFQgbWFpbnRhaW5lcnMuCj4KPiBJIGNhbiBjaGFuZ2UgdGhh
+dCwgYnV0IG5vYm9keSBjb21wbGFpbmVkIGluIHRoZSBmaXJzdCAyIHJldmlzaW9ucyBvZiB0aGUg
+cGF0Y2guCgpXZWxsLCBzb21ldGltZXMgSSBmb3JnZXQgdG8gbWVudGlvbiB3aGF0IGlzIHN0ZXAg
+MSBpbgpEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3VibWl0dGluZy1wYXRjaGVz
+LnR4dC4KCj4gQWxzbyBJIHRob3VnaCBoYXZpbmcgdGhlIGRvY3VtZW50YXRpb24gaXMgcmVxdWly
+ZWQgZm9yIG1lcmdpbmcgbmV3IGJpbmRpbmdzPwoKWWVzLCBzbyBiaW5kaW5nIHBhdGNoZXMgY29t
+ZSBmaXJzdCAoc3RlcCAzKS4KCj4+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlICAgICAg
+ICAgICAgICAgICAgICAgICAgfCAgIDIgKwo+PiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2ZGwt
+ZW1jb24tYXZhcmkuZHRzICAgICAgICAgIHwgMjI0ICsrKysrKwo+PiA+ICBhcmNoL2FybS9ib290
+L2R0cy9pbXg2ZGwtZW1jb24uZHRzaSAgICAgICAgICAgICAgIHwgIDI3ICsKPj4gPiAgYXJjaC9h
+cm0vYm9vdC9kdHMvaW14NnEtZW1jb24tYXZhcmkuZHRzICAgICAgICAgICB8IDIyNCArKysrKysK
+Pj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEtZW1jb24uZHRzaSAgICAgICAgICAgICAgICB8
+ICAyNyArCj4+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtZW1jb24uZHRzaSAgICAgICAg
+ICAgICAgfCA4MzgKPj4gKysrKysrKysrKysrKysrKysrKysrKwo+PiA+ICA3IGZpbGVzIGNoYW5n
+ZWQsIDEzNTUgaW5zZXJ0aW9ucygrKQo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9lbXRyaW9uLnR4dAo+PiA+ICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLWVtY29uLWF2YXJpLmR0cwo+PiA+ICBj
+cmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLWVtY29uLmR0c2kKPj4g
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLWVtY29uLWF2YXJp
+LmR0cwo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEtZW1j
+b24uZHRzaQo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFk
+bC1lbWNvbi5kdHNpCgpbLi4uXQoKPj4gPiArICAgfTsKPj4gPiArCj4+ID4gKyAgIGJvYXJkSUQ6
+IHBjYTg3NTRhQDNhIHsKPj4KPj4gUGxlYXNlIGZpbmQgYSBtb3JlIGdlbmVyaWMgbm9kZSBuYW1l
+IGZvciBpdC4KPgo+IHlvdSBtZWFuIGJvYXJkSURAM2E/CgpOby4gImdwaW9AM2EiIGFzIGl0IGlz
+IGEgZ3BpbyBjb250cm9sbGVyLgoKPiBUaGlzIGNoaXAgaWRlbnRpZmllcyB0aGUgYmFzZWJvYXJk
+IHR5cGUgZm9yIHRoZSBib290bG9hZGVyLgo+Cj4+Cj4+ID4gKyAgICAgICAgICAgY29tcGF0aWJs
+ZSA9ICJueHAscGNhODU3NCI7Cj4+ID4gKyAgICAgICAgICAgcmVnID0gPDB4M2E+Owo+PiA+ICsg
+ICAgICAgICAgIGdwaW8tY29udHJvbGxlcjsKPj4gPiArICAgICAgICAgICAjZ3Bpby1jZWxscyA9
+IDwxPjsKPj4gPiArICAgfTsKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
