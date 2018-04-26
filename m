@@ -1,94 +1,36 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH] dt-bindings: staging: remove a couple of ADC bindings
-Date: Thu, 26 Apr 2018 11:02:55 +0530
-Message-ID: <20180426053255.75jg5bsdu4h624jo@vireshk-i7>
-References: <20180426015754.26605-1-robh@kernel.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 0/3] K2G: mmc: Update mmc dt node to use sdhci-omap
+Date: Thu, 26 Apr 2018 11:12:12 +0530
+Message-ID: <2d03fa36-5fa1-322c-cc82-2dc3749dcaa3@ti.com>
+References: <20180425132746.13911-1-kishon@ti.com>
+ <fc5f3498-62fd-15d3-90df-206c51649cb4@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180426015754.26605-1-robh@kernel.org>
+In-Reply-To: <fc5f3498-62fd-15d3-90df-206c51649cb4@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, thomas.petazzoni@bootlin.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roland Stigge <stigge@antcom.de>, Stefan Roese <sr@denx.de>, Jonathan Cameron <jic23@kernel.org>
+To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-@Thomas: Do you guys use this ?
 
-On 25-04-18, 20:57, Rob Herring wrote:
-> Remove LPC32xx and SPEAr ADC bindings in staging. They have not been
-> touched since 2012.
-> 
-> Cc: Roland Stigge <stigge@antcom.de>
-> Cc: Stefan Roese <sr@denx.de>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Move these out of staging please or they are going to be removed.
-> 
->  .../bindings/staging/iio/adc/lpc32xx-adc.txt       | 16 -------------
->  .../bindings/staging/iio/adc/spear-adc.txt         | 26 ----------------------
->  2 files changed, 42 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/staging/iio/adc/lpc32xx-adc.txt
->  delete mode 100644 Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/lpc32xx-adc.txt b/Documentation/devicetree/bindings/staging/iio/adc/lpc32xx-adc.txt
-> deleted file mode 100644
-> index b3629d3a9adf..000000000000
-> --- a/Documentation/devicetree/bindings/staging/iio/adc/lpc32xx-adc.txt
-> +++ /dev/null
-> @@ -1,16 +0,0 @@
-> -* NXP LPC32xx SoC ADC controller
-> -
-> -Required properties:
-> -- compatible: must be "nxp,lpc3220-adc"
-> -- reg: physical base address of the controller and length of memory mapped
-> -  region.
-> -- interrupts: The ADC interrupt
-> -
-> -Example:
-> -
-> -	adc@40048000 {
-> -		compatible = "nxp,lpc3220-adc";
-> -		reg = <0x40048000 0x1000>;
-> -		interrupt-parent = <&mic>;
-> -		interrupts = <39 0>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt b/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-> deleted file mode 100644
-> index 02ea23a63f20..000000000000
-> --- a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-> +++ /dev/null
-> @@ -1,26 +0,0 @@
-> -* ST SPEAr ADC device driver
-> -
-> -Required properties:
-> -- compatible: Should be "st,spear600-adc"
-> -- reg: Address and length of the register set for the device
-> -- interrupt-parent: Should be the phandle for the interrupt controller
-> -  that services interrupts for this device
-> -- interrupts: Should contain the ADC interrupt
-> -- sampling-frequency: Default sampling frequency
-> -
-> -Optional properties:
-> -- vref-external: External voltage reference in milli-volts. If omitted
-> -  the internal voltage reference will be used.
-> -- average-samples: Number of samples to generate an average value. If
-> -  omitted, single data conversion will be used.
-> -
-> -Examples:
-> -
-> -	adc: adc@d8200000 {
-> -		compatible = "st,spear600-adc";
-> -		reg = <0xd8200000 0x1000>;
-> -		interrupt-parent = <&vic1>;
-> -		interrupts = <6>;
-> -		sampling-frequency = <5000000>;
-> -		vref-external = <2500>;	/* 2.5V VRef */
-> -	};
-> -- 
-> 2.14.1
 
--- 
-viresh
+On Wednesday 25 April 2018 11:10 PM, Santosh Shilimkar wrote:
+> On 4/25/2018 6:27 AM, Kishon Vijay Abraham I wrote:
+>> Update mmc dt node to use sdhci-omap binding instead of omap_hsmmc
+>> binding.
+>>
+>> I've also updated keystone_defconfig to enable CONFIG_MMC_SDHCI_OMAP.
+>> Everyone who use a custom .config should also enable
+>> CONFIG_MMC_SDHCI_OMAP for MMC to work.
+>>
+>> This series should be merged only after [1]
+>> [1] -> https://marc.info/?l=linux-kernel&m=152465820531802&w=2
+>>
+> Keep me posted once the dependency gets merged.
+
+sure.
+
+Regards
+Kishon
