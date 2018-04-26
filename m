@@ -1,58 +1,48 @@
 From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: Re: [PATCH 02/17] dt-bindings: display: renesas: du: Document the
- R8A77965 bindings
-Date: Thu, 26 Apr 2018 17:57:32 +0100
-Message-ID: <e94ae62f-30bb-5056-9646-03941d74ae75@ideasonboard.com>
+Subject: [PATCH 14/17] arm64: dts: r8a77965-salvator-x: Add DU external dot clocks
+Date: Thu, 26 Apr 2018 17:53:43 +0100
+Message-ID: <20180426165346.494-15-kieran.bingham+renesas@ideasonboard.com>
 References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
- <20180426165346.494-3-kieran.bingham+renesas@ideasonboard.com>
-Reply-To: kieran.bingham@ideasonboard.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180426165346.494-3-kieran.bingham+renesas@ideasonboard.com>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-renesas-soc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, open list <linux-kernel@vger.kernel.org>, "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT
+        AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-QWhlbSAtIHRoaXMgb25lIHNlZW1zIHRvIGhhdmUgbG9zdCBpdCdzIGNvbW1pdCBtZXNzYWdlLgoK
-QXBvbG9naWVzIDopCgotLQpLaWVyYW4KCgpPbiAyNi8wNC8xOCAxNzo1MywgS2llcmFuIEJpbmdo
-YW0gd3JvdGU6Cj4gU2lnbmVkLW9mZi1ieTogS2llcmFuIEJpbmdoYW0gPGtpZXJhbi5iaW5naGFt
-K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgfCAyICsrCj4gIDEgZmlsZSBjaGFu
-Z2VkLCAyIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAo+IGluZGV4IGEzNmE2ZTdl
-ZTU0Zi4uN2M2ODU0YmQwYTA0IDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVzYXMsZHUudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQKPiBAQCAtMTMsNiArMTMs
-NyBAQCBSZXF1aXJlZCBQcm9wZXJ0aWVzOgo+ICAgICAgLSAicmVuZXNhcyxkdS1yOGE3Nzk0IiBm
-b3IgUjhBNzc5NCAoUi1DYXIgRTIpIGNvbXBhdGlibGUgRFUKPiAgICAgIC0gInJlbmVzYXMsZHUt
-cjhhNzc5NSIgZm9yIFI4QTc3OTUgKFItQ2FyIEgzKSBjb21wYXRpYmxlIERVCj4gICAgICAtICJy
-ZW5lc2FzLGR1LXI4YTc3OTYiIGZvciBSOEE3Nzk2IChSLUNhciBNMy1XKSBjb21wYXRpYmxlIERV
-Cj4gKyAgICAtICJyZW5lc2FzLGR1LXI4YTc3OTY1IiBmb3IgUjhBNzc5NjUgKFItQ2FyIE0zLU4p
-IGNvbXBhdGlibGUgRFUKPiAgICAgIC0gInJlbmVzYXMsZHUtcjhhNzc5NzAiIGZvciBSOEE3Nzk3
-MCAoUi1DYXIgVjNNKSBjb21wYXRpYmxlIERVCj4gICAgICAtICJyZW5lc2FzLGR1LXI4YTc3OTk1
-IiBmb3IgUjhBNzc5OTUgKFItQ2FyIEQzKSBjb21wYXRpYmxlIERVCj4gIAo+IEBAIC01OSw2ICs2
-MCw3IEBAIGNvcnJlc3BvbmRpbmcgdG8gZWFjaCBEVSBvdXRwdXQuCj4gICBSOEE3Nzk0IChSLUNh
-ciBFMikgICAgIERQQUQgMCAgICAgICAgIERQQUQgMSAgICAgICAgIC0gICAgICAgICAgICAgIC0K
-PiAgIFI4QTc3OTUgKFItQ2FyIEgzKSAgICAgRFBBRCAwICAgICAgICAgSERNSSAwICAgICAgICAg
-SERNSSAxICAgICAgICAgTFZEUyAwCj4gICBSOEE3Nzk2IChSLUNhciBNMy1XKSAgIERQQUQgMCAg
-ICAgICAgIEhETUkgMCAgICAgICAgIExWRFMgMCAgICAgICAgIC0KPiArIFI4QTc3OTY1IChSLUNh
-ciBNMy1OKSAgRFBBRCAwICAgICAgICAgSERNSSAwICAgICAgICAgTFZEUyAwICAgICAgICAgLQo+
-ICAgUjhBNzc5NzAgKFItQ2FyIFYzTSkgICBEUEFEIDAgICAgICAgICBMVkRTIDAgICAgICAgICAt
-ICAgICAgICAgICAgICAtCj4gICBSOEE3Nzk5NSAoUi1DYXIgRDMpICAgIERQQUQgMCAgICAgICAg
-IExWRFMgMCAgICAgICAgIExWRFMgMSAgICAgICAgIC0KPiAgCj4gCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+
+The DU1 external dot clock is provided by the fixed frequency clock
+generator X21, while the DU0 and DU3 clocks are provided by the
+programmable Versaclock5 clock generator.
+
+Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+---
+ arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
+index 75d890d91df9..a2b8fb20fef8 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
+@@ -19,3 +19,15 @@
+ 		reg = <0x0 0x48000000 0x0 0x78000000>;
+ 	};
+ };
++
++&du {
++	clocks = <&cpg CPG_MOD 724>,
++		 <&cpg CPG_MOD 723>,
++		 <&cpg CPG_MOD 721>,
++		 <&cpg CPG_MOD 727>,
++		 <&versaclock5 1>,
++		 <&x21_clk>,
++		 <&versaclock5 2>;
++	clock-names = "du.0", "du.1", "du.3", "lvds.0",
++		      "dclkin.0", "dclkin.1", "dclkin.3";
++};
+-- 
+2.17.0
