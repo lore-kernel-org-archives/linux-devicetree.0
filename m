@@ -1,17 +1,18 @@
 From: Thor Thayer <thor.thayer@linux.intel.com>
 Subject: Re: [PATCH 1/3] Documentation: dt: socfpga: Add Stratix10 ECC Manager
  binding
-Date: Thu, 26 Apr 2018 09:43:54 -0500
-Message-ID: <e9606cfb-cee6-2e0c-cfe5-c91a537cb8a2@linux.intel.com>
+Date: Thu, 26 Apr 2018 09:58:47 -0500
+Message-ID: <64ecc830-3674-6bb4-c2f9-c24e576c08c0@linux.intel.com>
 References: <1524594959-5259-1-git-send-email-thor.thayer@linux.intel.com>
  <1524594959-5259-2-git-send-email-thor.thayer@linux.intel.com>
  <6528e94e-85ea-8015-5a3b-4e8a9ecc8dbd@kernel.org>
+ <e9606cfb-cee6-2e0c-cfe5-c91a537cb8a2@linux.intel.com>
 Reply-To: thor.thayer@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6528e94e-85ea-8015-5a3b-4e8a9ecc8dbd@kernel.org>
+In-Reply-To: <e9606cfb-cee6-2e0c-cfe5-c91a537cb8a2@linux.intel.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -26,47 +27,49 @@ To: Dinh Nguyen <dinguyen@kernel.org>, bp@alien8.de, mchehab@kernel.org, robh+dt
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/25/2018 09:16 PM, Dinh Nguyen wrote:
-> 
-> 
-> On 04/24/2018 01:35 PM, thor.thayer@linux.intel.com wrote:
->> From: Thor Thayer <thor.thayer@linux.intel.com>
->>
->> Add the device tree bindings needed to support the Stratix10
->> ECC Manager and SDRAM ECC to the existing bindings.
->>
->> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
->> ---
->>   .../bindings/arm/altera/socfpga-eccmgr.txt         | 47 ++++++++++++++++++++++
->>   1 file changed, 47 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
->> index 4a1714f96bab..fe48ad293a24 100644
->> --- a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
->> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
->> @@ -231,3 +231,50 @@ Example:
->>   				     <48 IRQ_TYPE_LEVEL_HIGH>;
->>   		};
->>   	};
->> +
->> +Stratix10 SoCFPGA ECC Manager
->> +The Stratix10 SoC ECC Manager handles the IRQs for each peripheral
->> +in a shared register similar to the Arria10. However, ECC requires
->> +access to registers that can only be read in EL3 with SMC calls.
->> +Therefore the device tree is slightly different.
->> +
->> +Required Properties:
->> +- compatible : Should be "altr,socfpga-s10-ecc-manager"
-> 
-> Altera technically doesn't exist anymore, should this be
-> "intel,stratix10-ecc-manager"?
-> 
-I was trying to be consistent with the older names but I agree with your 
-argument. I will change this. Thanks
-
-> Dinh
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-edac" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+T24gMDQvMjYvMjAxOCAwOTo0MyBBTSwgVGhvciBUaGF5ZXIgd3JvdGU6Cj4gT24gMDQvMjUvMjAx
+OCAwOToxNiBQTSwgRGluaCBOZ3V5ZW4gd3JvdGU6Cj4+Cj4+Cj4+IE9uIDA0LzI0LzIwMTggMDE6
+MzUgUE0sIHRob3IudGhheWVyQGxpbnV4LmludGVsLmNvbSB3cm90ZToKPj4+IEZyb206IFRob3Ig
+VGhheWVyIDx0aG9yLnRoYXllckBsaW51eC5pbnRlbC5jb20+Cj4+Pgo+Pj4gQWRkIHRoZSBkZXZp
+Y2UgdHJlZSBiaW5kaW5ncyBuZWVkZWQgdG8gc3VwcG9ydCB0aGUgU3RyYXRpeDEwCj4+PiBFQ0Mg
+TWFuYWdlciBhbmQgU0RSQU0gRUNDIHRvIHRoZSBleGlzdGluZyBiaW5kaW5ncy4KPj4+Cj4+PiBT
+aWduZWQtb2ZmLWJ5OiBUaG9yIFRoYXllciA8dGhvci50aGF5ZXJAbGludXguaW50ZWwuY29tPgo+
+Pj4gLS0tCj4+PiDCoCAuLi4vYmluZGluZ3MvYXJtL2FsdGVyYS9zb2NmcGdhLWVjY21nci50eHTC
+oMKgwqDCoMKgwqDCoMKgIHwgNDcgCj4+PiArKysrKysrKysrKysrKysrKysrKysrCj4+PiDCoCAx
+IGZpbGUgY2hhbmdlZCwgNDcgaW5zZXJ0aW9ucygrKQo+Pj4KPj4+IGRpZmYgLS1naXQgCj4+PiBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYWx0ZXJhL3NvY2ZwZ2EtZWNj
+bWdyLnR4dCAKPj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9hbHRl
+cmEvc29jZnBnYS1lY2NtZ3IudHh0Cj4+PiBpbmRleCA0YTE3MTRmOTZiYWIuLmZlNDhhZDI5M2Ey
+NCAxMDA2NDQKPj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0v
+YWx0ZXJhL3NvY2ZwZ2EtZWNjbWdyLnR4dAo+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2FybS9hbHRlcmEvc29jZnBnYS1lY2NtZ3IudHh0Cj4+PiBAQCAtMjMxLDMg
+KzIzMSw1MCBAQCBFeGFtcGxlOgo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgPDQ4IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+Pj4gwqDCoMKgwqDCoMKgwqDC
+oMKgIH07Cj4+PiDCoMKgwqDCoMKgIH07Cj4+PiArCj4+PiArU3RyYXRpeDEwIFNvQ0ZQR0EgRUND
+IE1hbmFnZXIKPj4+ICtUaGUgU3RyYXRpeDEwIFNvQyBFQ0MgTWFuYWdlciBoYW5kbGVzIHRoZSBJ
+UlFzIGZvciBlYWNoIHBlcmlwaGVyYWwKPj4+ICtpbiBhIHNoYXJlZCByZWdpc3RlciBzaW1pbGFy
+IHRvIHRoZSBBcnJpYTEwLiBIb3dldmVyLCBFQ0MgcmVxdWlyZXMKPj4+ICthY2Nlc3MgdG8gcmVn
+aXN0ZXJzIHRoYXQgY2FuIG9ubHkgYmUgcmVhZCBpbiBFTDMgd2l0aCBTTUMgY2FsbHMuCj4+PiAr
+VGhlcmVmb3JlIHRoZSBkZXZpY2UgdHJlZSBpcyBzbGlnaHRseSBkaWZmZXJlbnQuCj4+PiArCj4+
+PiArUmVxdWlyZWQgUHJvcGVydGllczoKPj4+ICstIGNvbXBhdGlibGUgOiBTaG91bGQgYmUgImFs
+dHIsc29jZnBnYS1zMTAtZWNjLW1hbmFnZXIiCj4+Cj4+IEFsdGVyYSB0ZWNobmljYWxseSBkb2Vz
+bid0IGV4aXN0IGFueW1vcmUsIHNob3VsZCB0aGlzIGJlCj4+ICJpbnRlbCxzdHJhdGl4MTAtZWNj
+LW1hbmFnZXIiPwo+Pgo+IEkgd2FzIHRyeWluZyB0byBiZSBjb25zaXN0ZW50IHdpdGggdGhlIG9s
+ZGVyIG5hbWVzIGJ1dCBJIGFncmVlIHdpdGggeW91ciAKPiBhcmd1bWVudC4gSSB3aWxsIGNoYW5n
+ZSB0aGlzLiBUaGFua3MKPiAKQWZ0ZXIgbG9va2luZyBhdCB0aGUgU3RyYXRpeDEwIGRldmljZSB0
+cmVlLCB0aGVyZSBhcmUgb25seSAiYWx0ciwiIGluIAp0aGVyZS4gRm9yIGluc3RhbmNlIHRoZSB0
+b3Agbm9kZSBpczoKCmNvbXBhdGlibGUgPSAiYWx0cixzb2NmcGdhLXN0cmF0aXgxMCI7CgphbmQg
+ZXZlbiB0aGUgZGlyZWN0b3J5IHRoYXQgdGhlIGRldmljZSB0cmVlIGlzIGluIGlzIG5hbWVkICJh
+bHRlcmEiCgpzbyBJJ2xsIHN0aWNrIHdpdGggdGhlIGV4aXN0aW5nICJhbHRyLCIgZGVzaWduYXRp
+b24gdG8gYmUgY29uc2lzdGVudC4KClRoYW5rcywKClRob3IKCj4+IERpbmgKPj4gLS0gCj4+IFRv
+IHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBs
+aW51eC1lZGFjIiBpbgo+PiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIu
+a2VybmVsLm9yZwo+PiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0wqAgaHR0cDovL3ZnZXIua2VybmVs
+Lm9yZy9tYWpvcmRvbW8taW5mby5odG1sCj4+Cj4gCj4gLS0gCj4gVG8gdW5zdWJzY3JpYmUgZnJv
+bSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LWVkYWMiIGluCj4g
+dGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3Jl
+IG1ham9yZG9tbyBpbmZvIGF0wqAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5m
+by5odG1sCj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+bGludXgtYXJtLWtlcm5lbAo=
