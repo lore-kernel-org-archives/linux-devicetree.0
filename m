@@ -1,7 +1,7 @@
 From: Chris Lew <clew@codeaurora.org>
-Subject: [PATCH v3 2/6] rpmsg: glink: Store edge name for glink device
-Date: Thu, 26 Apr 2018 15:59:01 -0700
-Message-ID: <1524783545-21951-3-git-send-email-clew@codeaurora.org>
+Subject: [PATCH v3 6/6] rpmsg: glink: Expose rpmsg name attr for glink
+Date: Thu, 26 Apr 2018 15:59:05 -0700
+Message-ID: <1524783545-21951-7-git-send-email-clew@codeaurora.org>
 References: <1524783545-21951-1-git-send-email-clew@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1524783545-21951-1-git-send-email-clew@codeaurora.org>
@@ -10,43 +10,58 @@ To: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, r
 Cc: aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, clew@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Channels may need to identify the edge their channel was probed for.
-Store the edge name by reading the label property from device tree or
-default to the node name.
+Expose the name field as an attr so clients listening to uevents for
+rpmsg can identify the edge the events correspond to.
 
 Signed-off-by: Chris Lew <clew@codeaurora.org>
 ---
 
-Changes since v1:
-- None
+Changes since v2:
+- Remove const on attribute struct
 
- drivers/rpmsg/qcom_glink_native.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Changes since v1:
+- Add const to attribute struct
+- Get name from glink channel
+
+ drivers/rpmsg/qcom_glink_native.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-index 768ef542a841..c3f548e2ff20 100644
+index 1418926f6110..c2983a53058f 100644
 --- a/drivers/rpmsg/qcom_glink_native.c
 +++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -101,6 +101,8 @@ struct glink_core_rx_intent {
- struct qcom_glink {
- 	struct device *dev;
+@@ -1552,6 +1552,22 @@ static void qcom_glink_work(struct work_struct *work)
+ 	}
+ }
  
-+	const char *name;
++static ssize_t rpmsg_name_show(struct device *dev,
++			       struct device_attribute *attr, char *buf)
++{
++	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
++	struct glink_channel *channel = to_glink_channel(rpdev->ept);
 +
- 	struct mbox_client mbox_client;
- 	struct mbox_chan *mbox_chan;
- 
-@@ -1580,6 +1582,10 @@ struct qcom_glink *qcom_glink_native_probe(struct device *dev,
- 	idr_init(&glink->lcids);
- 	idr_init(&glink->rcids);
- 
-+	ret = of_property_read_string(dev->of_node, "label", &glink->name);
-+	if (ret < 0)
-+		glink->name = dev->of_node->name;
++	return snprintf(buf, RPMSG_NAME_SIZE, "%s\n", channel->glink->name);
++}
++static DEVICE_ATTR_RO(rpmsg_name);
 +
- 	glink->mbox_client.dev = dev;
- 	glink->mbox_client.knows_txdone = true;
- 	glink->mbox_chan = mbox_request_channel(&glink->mbox_client, 0);
++static struct attribute *qcom_glink_attrs[] = {
++	&dev_attr_rpmsg_name.attr,
++	NULL
++};
++ATTRIBUTE_GROUPS(qcom_glink);
++
+ static void qcom_glink_device_release(struct device *dev)
+ {
+ 	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
+@@ -1601,6 +1617,8 @@ struct qcom_glink *qcom_glink_native_probe(struct device *dev,
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	glink->dev = dev;
++	glink->dev->groups = qcom_glink_groups;
++
+ 	glink->tx_pipe = tx;
+ 	glink->rx_pipe = rx;
+ 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
