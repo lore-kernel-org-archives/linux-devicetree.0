@@ -1,181 +1,107 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/2] arm64: dts: renesas: r8a77980: use SYSC power domain
- macros
-Date: Thu, 26 Apr 2018 13:45:21 +0300
-Message-ID: <df17ca8f-7942-3cdb-04d5-5d73e0259be5@cogentembedded.com>
-References: <ea6d3e8a-71a9-9998-f364-7dc82b97c2c0@cogentembedded.com>
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Subject: [PATCH v2] of: overlay: Stop leaking resources on overlay removal
+Date: Thu, 26 Apr 2018 13:00:30 +0200
+Message-ID: <e8704374-857c-d80e-e91c-89d59e1cffbe@siemens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <ea6d3e8a-71a9-9998-f364-7dc82b97c2c0@cogentembedded.com>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alan Tull <atull@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that the commit 7755b40d07a8 ("dt-bindings: power: add R8A77980 SYSC
-power domain definitions") has hit Linus' tree, we can replace  the bare
-numbers (we had to use to avoid a cross tree dependency) with these macro
-definitions...
+Only the overlay notifier callbacks have a chance to potentially get
+hold of references to those two resources, but they are not supposed to
+store them beyond OF_OVERLAY_POST_REMOVE.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Document the overlay notifier API, its constraint regarding pointer
+lifetime, and then remove intentional leaks of ovcs->overlay_tree and
+ovcs->fdt from free_overlay_changeset.
 
+See also https://lkml.org/lkml/2018/4/23/1063 and following.
+
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 ---
- arch/arm64/boot/dts/renesas/r8a77980.dtsi |   31 +++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ Documentation/devicetree/overlay-notes.txt |  8 ++++++++
+ drivers/of/overlay.c                       | 30 +++++++++++++++++++++---------
+ 2 files changed, 29 insertions(+), 9 deletions(-)
 
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-@@ -9,6 +9,7 @@
- #include <dt-bindings/clock/r8a77980-cpg-mssr.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/power/r8a77980-sysc.h>
+diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
+index a4feb6dde8cd..725fb8d255c1 100644
+--- a/Documentation/devicetree/overlay-notes.txt
++++ b/Documentation/devicetree/overlay-notes.txt
+@@ -98,6 +98,14 @@ Finally, if you need to remove all overlays in one-go, just call
+ of_overlay_remove_all() which will remove every single one in the correct
+ order.
  
- / {
- 	compatible = "renesas,r8a77980";
-@@ -24,14 +25,14 @@
- 			compatible = "arm,cortex-a53", "arm,armv8";
- 			reg = <0>;
- 			clocks = <&cpg CPG_CORE R8A77980_CLK_Z2>;
--			power-domains = <&sysc 5>;
-+			power-domains = <&sysc R8A77980_PD_CA53_CPU0>;
- 			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
- 		};
++In addition, there is the option to register notifiers that get called on
++overlay operations. See of_overlay_notifier_register/unregister and
++enum of_overlay_notify_action for details.
++
++Note that a notifier callback is not supposed to store pointers to a device
++tree node or its content beyond OF_OVERLAY_POST_REMOVE corresponding to the
++respective node it received.
++
+ Overlay DTS Format
+ ------------------
  
- 		L2_CA53: cache-controller {
- 			compatible = "cache";
--			power-domains = <&sysc 21>;
-+			power-domains = <&sysc R8A77980_PD_CA53_SCU>;
- 			cache-unified;
- 			cache-level = <2>;
- 		};
-@@ -110,7 +111,7 @@
- 			dmas = <&dmac1 0x31>, <&dmac1 0x30>,
- 			       <&dmac2 0x31>, <&dmac2 0x30>;
- 			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			resets = <&cpg 520>;
- 			status = "disabled";
- 		};
-@@ -128,7 +129,7 @@
- 			dmas = <&dmac1 0x33>, <&dmac1 0x32>,
- 			       <&dmac2 0x33>, <&dmac2 0x32>;
- 			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			resets = <&cpg 519>;
- 			status = "disabled";
- 		};
-@@ -146,7 +147,7 @@
- 			dmas = <&dmac1 0x35>, <&dmac1 0x34>,
- 			       <&dmac2 0x35>, <&dmac2 0x34>;
- 			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			resets = <&cpg 518>;
- 			status = "disabled";
- 		};
-@@ -164,7 +165,7 @@
- 			dmas = <&dmac1 0x37>, <&dmac1 0x36>,
- 			       <&dmac2 0x37>, <&dmac2 0x36>;
- 			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			resets = <&cpg 517>;
- 			status = "disabled";
- 		};
-@@ -206,7 +207,7 @@
- 					  "ch20", "ch21", "ch22", "ch23",
- 					  "ch24";
- 			clocks = <&cpg CPG_MOD 812>;
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			resets = <&cpg 812>;
- 			phy-mode = "rgmii";
- 			#address-cells = <1>;
-@@ -226,7 +227,7 @@
- 			dmas = <&dmac1 0x51>, <&dmac1 0x50>,
- 			       <&dmac2 0x51>, <&dmac2 0x50>;
- 			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			resets = <&cpg 207>;
- 			status = "disabled";
- 		};
-@@ -244,7 +245,7 @@
- 			dmas = <&dmac1 0x53>, <&dmac1 0x52>,
- 			       <&dmac2 0x53>, <&dmac2 0x52>;
- 			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			resets = <&cpg 206>;
- 			status = "disabled";
- 		};
-@@ -262,7 +263,7 @@
- 			dmas = <&dmac1 0x57>, <&dmac1 0x56>,
- 			       <&dmac2 0x57>, <&dmac2 0x56>;
- 			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			resets = <&cpg 204>;
- 			status = "disabled";
- 		};
-@@ -280,7 +281,7 @@
- 			dmas = <&dmac1 0x59>, <&dmac1 0x58>,
- 			       <&dmac2 0x59>, <&dmac2 0x58>;
- 			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			resets = <&cpg 203>;
- 			status = "disabled";
- 		};
-@@ -313,7 +314,7 @@
- 					  "ch12", "ch13", "ch14", "ch15";
- 			clocks = <&cpg CPG_MOD 218>;
- 			clock-names = "fck";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			resets = <&cpg 218>;
- 			#dma-cells = <1>;
- 			dma-channels = <16>;
-@@ -347,7 +348,7 @@
- 					  "ch12", "ch13", "ch14", "ch15";
- 			clocks = <&cpg CPG_MOD 217>;
- 			clock-names = "fck";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			resets = <&cpg 217>;
- 			#dma-cells = <1>;
- 			dma-channels = <16>;
-@@ -359,7 +360,7 @@
- 			reg = <0 0xee140000 0 0x2000>;
- 			interrupts = <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 314>;
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			resets = <&cpg 314>;
- 			max-frequency = <200000000>;
- 			status = "disabled";
-@@ -378,7 +379,7 @@
- 				      IRQ_TYPE_LEVEL_HIGH)>;
- 			clocks = <&cpg CPG_MOD 408>;
- 			clock-names = "clk";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			resets = <&cpg 408>;
- 		};
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index b35fe88f1851..7baa53e5b1d7 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -102,12 +102,28 @@ static DEFINE_IDR(ovcs_idr);
+ 
+ static BLOCKING_NOTIFIER_HEAD(overlay_notify_chain);
+ 
++/**
++ * of_overlay_notifier_register() - Register notifier for overlay operations
++ * @nb:		Notifier block to register
++ *
++ * Register for notification on overlay operations on device tree nodes. The
++ * reported actions definied by @of_reconfig_change. The notifier callback
++ * furthermore receives a pointer to the affected device tree node.
++ *
++ * Note that a notifier callback is not supposed to store pointers to a device
++ * tree node or its content beyond @OF_OVERLAY_POST_REMOVE corresponding to the
++ * respective node it received.
++ */
+ int of_overlay_notifier_register(struct notifier_block *nb)
+ {
+ 	return blocking_notifier_chain_register(&overlay_notify_chain, nb);
+ }
+ EXPORT_SYMBOL_GPL(of_overlay_notifier_register);
+ 
++/**
++ * of_overlay_notifier_register() - Unregister notifier for overlay operations
++ * @nb:		Notifier block to unregister
++ */
+ int of_overlay_notifier_unregister(struct notifier_block *nb)
+ {
+ 	return blocking_notifier_chain_unregister(&overlay_notify_chain, nb);
+@@ -671,17 +687,13 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
+ 		of_node_put(ovcs->fragments[i].overlay);
+ 	}
+ 	kfree(ovcs->fragments);
+-
+ 	/*
+-	 * TODO
+-	 *
+-	 * would like to: kfree(ovcs->overlay_tree);
+-	 * but can not since drivers may have pointers into this data
+-	 *
+-	 * would like to: kfree(ovcs->fdt);
+-	 * but can not since drivers may have pointers into this data
++	 * There should be no live pointers into ovcs->overlay_tree and
++	 * ovcs->fdt due to the policy that overlay notifiers are not allowed
++	 * to retain pointers into the overlay devicetree.
+ 	 */
+-
++	kfree(ovcs->overlay_tree);
++	kfree(ovcs->fdt);
+ 	kfree(ovcs);
+ }
+ 
+-- 
+2.13.6
