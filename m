@@ -1,35 +1,45 @@
-Return-Path: <SRS0=w2p0=HQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37974 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753569AbeD0WC3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Apr 2018 18:02:29 -0400
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: [PATCH v3 0/6] arm: dts: r8a77965 DU enablement
-Date: Fri, 27 Apr 2018 23:02:14 +0100
-Message-Id: <20180427220220.31286-1-kieran.bingham+renesas@ideasonboard.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Return-Path: <SRS0=j3wE=HP=samsung.com=cw00.choi@kernel.org>
+MIME-version: 1.0
+Content-transfer-encoding: 8BIT
+Content-type: text/plain; charset="UTF-8"
+Message-id: <5AE12441.2090506@samsung.com>
+Date: Thu, 26 Apr 2018 09:58:41 +0900
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [RFC 04/10] clk: samsung: Remove support for Exynos5440
+In-reply-to: <20180424203239.21885-5-krzk@kernel.org>
+References: <20180424203239.21885-1-krzk@kernel.org>
+	<CGME20180424203341epcas5p3a6db7d58b0ce8940d03711823fbf6e41@epcas5p3.samsung.com>
+	<20180424203239.21885-5-krzk@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Jaehoon Chung <jh80.chung@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Provide the required DT updates to enable the DU and, VGA and HDMI
-outputs on the M3-N Salvator-X(S) platforms.
+Hi Krzysztof,
 
-Driver updates and binding updates are sent separately.
+On 2018년 04월 25일 05:32, Krzysztof Kozlowski wrote:
+> The Exynos5440 is not actively developed, there are no development
+> boards available and probably there are no real products with it.
+> Remove wide-tree support for Exynos5440.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  .../devicetree/bindings/clock/exynos5440-clock.txt |  28 ----
+>  drivers/clk/samsung/Makefile                       |   1 -
+>  drivers/clk/samsung/clk-exynos5440.c               | 167 ---------------------
+>  include/dt-bindings/clock/exynos5440.h             |  44 ------
+>  4 files changed, 240 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/exynos5440-clock.txt
+>  delete mode 100644 drivers/clk/samsung/clk-exynos5440.c
+>  delete mode 100644 include/dt-bindings/clock/exynos5440.h
+> 
 
-Kieran Bingham (6):
-  arm64: dts: r8a77965: Add FCPF and FCPV instances
-  arm64: dts: r8a77965: Add VSP instances
-  arm64: dts: r8a77965: Populate the DU instance placeholder
-  arm64: dts: r8a77965: Add HDMI encoder instance
-  arm64: dts: r8a77965-salvator-x: Enable DU external clocks and HDMI
-  arm64: dts: r8a77965-salvator-xs: Enable DU external clocks and HDMI
+Looks good to me. Thanks.
 
- .../boot/dts/renesas/r8a77965-salvator-x.dts  |  28 ++++
- .../boot/dts/renesas/r8a77965-salvator-xs.dts |  28 ++++
- arch/arm64/boot/dts/renesas/r8a77965.dtsi     | 131 +++++++++++++++++-
- 3 files changed, 183 insertions(+), 4 deletions(-)
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+[snip]
 
 -- 
-2.17.0
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
