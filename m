@@ -1,35 +1,52 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v9 7/9] pinctrl: madera: Add DT bindings for Cirrus Logic
- Madera codecs
-Date: Fri, 27 Apr 2018 00:58:51 +0200
-Message-ID: <CACRpkdYjkcjvNyxcLFezSMQ9f9ERNTCcaNv2PYqn8WLgayjJvg@mail.gmail.com>
-References: <20180313131904.13700-1-rf@opensource.cirrus.com>
- <20180313131904.13700-8-rf@opensource.cirrus.com> <CACRpkdZspUbmCk7OwA-rva6zd89TZXt45t5mFes0feuRyOUp9w@mail.gmail.com>
- <bc752fb8-8f2f-70bc-e786-221eb39c618b@opensource.cirrus.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Chris Lew <clew@codeaurora.org>
+Subject: [PATCH v3 2/6] rpmsg: glink: Store edge name for glink device
+Date: Thu, 26 Apr 2018 15:59:01 -0700
+Message-ID: <1524783545-21951-3-git-send-email-clew@codeaurora.org>
+References: <1524783545-21951-1-git-send-email-clew@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bc752fb8-8f2f-70bc-e786-221eb39c618b@opensource.cirrus.com>
+In-Reply-To: <1524783545-21951-1-git-send-email-clew@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, patches@opensource.cirrus.com, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, clew@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 17, 2018 at 10:53 AM, Richard Fitzgerald
-<rf@opensource.cirrus.com> wrote:
+Channels may need to identify the edge their channel was probed for.
+Store the edge name by reading the label property from device tree or
+default to the node name.
 
-> What is your opinion of the i.MX6 pinctrl failure after my bugfix patch
-> for the hogs?
+Signed-off-by: Chris Lew <clew@codeaurora.org>
+---
 
-Don't know yet. I will answer to that patch, when I get to it.
+Changes since v1:
+- None
 
-> If you would want to revert my patch I would need to change this pinctrl
-> driver so it has its own child node as a workaround to the hog bug.
->
-> Or do you think it is more likely a bug in the i.MX6 pinctrl driver?
+ drivers/rpmsg/qcom_glink_native.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-No idea yet. I bet you folks have battled it out and know it better
-than me already.
-
-Yours,
-Linus Walleij
+diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+index 768ef542a841..c3f548e2ff20 100644
+--- a/drivers/rpmsg/qcom_glink_native.c
++++ b/drivers/rpmsg/qcom_glink_native.c
+@@ -101,6 +101,8 @@ struct glink_core_rx_intent {
+ struct qcom_glink {
+ 	struct device *dev;
+ 
++	const char *name;
++
+ 	struct mbox_client mbox_client;
+ 	struct mbox_chan *mbox_chan;
+ 
+@@ -1580,6 +1582,10 @@ struct qcom_glink *qcom_glink_native_probe(struct device *dev,
+ 	idr_init(&glink->lcids);
+ 	idr_init(&glink->rcids);
+ 
++	ret = of_property_read_string(dev->of_node, "label", &glink->name);
++	if (ret < 0)
++		glink->name = dev->of_node->name;
++
+ 	glink->mbox_client.dev = dev;
+ 	glink->mbox_client.knows_txdone = true;
+ 	glink->mbox_chan = mbox_request_channel(&glink->mbox_client, 0);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
