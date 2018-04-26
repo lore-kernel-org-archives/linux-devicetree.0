@@ -1,61 +1,40 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: [PATCH] clk:aspeed: Fix reset bits for PCI/VGA and PECI
-Date: Thu, 26 Apr 2018 10:22:32 -0700
-Message-ID: <20180426172232.12535-1-jae.hyun.yoo@linux.intel.com>
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, stable <stable@vger.kernel.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V4 3/6] ARM: dts: imx6sx-sabreauto: add IO expander
+ max7310 support
+Date: Thu, 26 Apr 2018 14:24:26 -0300
+Message-ID: <CAOMZO5DWeYCbWn9LEi1e+tc4gZsjBBpXtiwzmwLbYp=E4TERrg@mail.gmail.com>
+References: <1524634571-5914-1-git-send-email-Anson.Huang@nxp.com>
+ <1524634571-5914-3-git-send-email-Anson.Huang@nxp.com> <CAOMZO5Dm6rcEe=zAJ9_nqKce3g2tdyWPqb=Uv-N5nfc_96jc-g@mail.gmail.com>
+ <AM3PR04MB13150654494B8D251988F76CF58E0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5AZLbUoL7FWgUFA7qc3q3wcz9UBLSQhMXXkUJeiRz8X4A@mail.gmail.com> <DB5PR04MB13205A0A7134C969748560B4F58E0@DB5PR04MB1320.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <DB5PR04MB13205A0A7134C969748560B4F58E0@DB5PR04MB1320.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit fixes incorrect setting of reset bits for PCI/VGA and
-PECI modules.
+On Thu, Apr 26, 2018 at 3:31 AM, Anson Huang <anson.huang@nxp.com> wrote:
 
-1. Reset bit for PCI/VGA is 8.
-2. PECI reset bit is missing so added bit 10 as its reset bit.
+> I searched the mail I sent, I can NOT found where I said "MAX7310 controls the ethernet phy"....
 
-Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Fixes: 15ed8ce5f84e ("clk: aspeed: Register gated clocks")
-Cc: stable <stable@vger.kernel.org>
----
- drivers/clk/clk-aspeed.c                 | 4 ++--
- include/dt-bindings/clock/aspeed-clock.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Initially you passed:  pinctrl-assert-gpios = <&max7322 0
+GPIO_ACTIVE_HIGH> inside the fec1 node.
 
-diff --git a/drivers/clk/clk-aspeed.c b/drivers/clk/clk-aspeed.c
-index 5eb50c31e455..2c23e7d7ba28 100644
---- a/drivers/clk/clk-aspeed.c
-+++ b/drivers/clk/clk-aspeed.c
-@@ -88,7 +88,7 @@ static const struct aspeed_gate_data aspeed_gates[] = {
- 	[ASPEED_CLK_GATE_GCLK] =	{  1,  7, "gclk-gate",		NULL,	0 }, /* 2D engine */
- 	[ASPEED_CLK_GATE_MCLK] =	{  2, -1, "mclk-gate",		"mpll",	CLK_IS_CRITICAL }, /* SDRAM */
- 	[ASPEED_CLK_GATE_VCLK] =	{  3,  6, "vclk-gate",		NULL,	0 }, /* Video Capture */
--	[ASPEED_CLK_GATE_BCLK] =	{  4, 10, "bclk-gate",		"bclk",	0 }, /* PCIe/PCI */
-+	[ASPEED_CLK_GATE_BCLK] =	{  4,  8, "bclk-gate",		"bclk",	0 }, /* PCIe/PCI */
- 	[ASPEED_CLK_GATE_DCLK] =	{  5, -1, "dclk-gate",		NULL,	0 }, /* DAC */
- 	[ASPEED_CLK_GATE_REFCLK] =	{  6, -1, "refclk-gate",	"clkin", CLK_IS_CRITICAL },
- 	[ASPEED_CLK_GATE_USBPORT2CLK] =	{  7,  3, "usb-port2-gate",	NULL,	0 }, /* USB2.0 Host port 2 */
-@@ -297,7 +297,7 @@ static const u8 aspeed_resets[] = {
- 	[ASPEED_RESET_JTAG_MASTER] = 22,
- 	[ASPEED_RESET_MIC]	= 18,
- 	[ASPEED_RESET_PWM]	=  9,
--	[ASPEED_RESET_PCIVGA]	=  8,
-+	[ASPEED_RESET_PECI]	= 10,
- 	[ASPEED_RESET_I2C]	=  2,
- 	[ASPEED_RESET_AHB]	=  1,
- };
-diff --git a/include/dt-bindings/clock/aspeed-clock.h b/include/dt-bindings/clock/aspeed-clock.h
-index d3558d897a4d..8d69b9134bef 100644
---- a/include/dt-bindings/clock/aspeed-clock.h
-+++ b/include/dt-bindings/clock/aspeed-clock.h
-@@ -45,7 +45,7 @@
- #define ASPEED_RESET_JTAG_MASTER	3
- #define ASPEED_RESET_MIC		4
- #define ASPEED_RESET_PWM		5
--#define ASPEED_RESET_PCIVGA		6
-+#define ASPEED_RESET_PECI		6
- #define ASPEED_RESET_I2C		7
- #define ASPEED_RESET_AHB		8
- 
--- 
-2.17.0
+Then I explained that 'pinctrl-assert-gpios' is not a valid property
+in mainline. It only exists in NXP vendor tree.
+
+Then you explained:
+
+"Sorry, I made a mistake here, the MAX7320 IO0 is for adjusting FEC1's voltage"
+
+> There are MAX7310 users, it is just because currently those users are NOT enabled, so I can
+> NOT verify them. MAX7310 is an independent I2C device, why we can NOT enable it first?
+> I tested it from sysfs interface, we can control the MAX7310's IO output via echo different value
+> to GPIO value, that means MAX7310 itself as an IO expander chip is working just fine, similar with PMIC,
+> it is a I2C device, can be enabled independently, then consumers can be added later when they are enabled.
+> Just my personal opinion, thanks.
+
+Right, but if FEC needs max7322 IO0 at level 1 then better describe it in dts.
