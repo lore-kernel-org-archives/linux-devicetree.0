@@ -1,153 +1,55 @@
-MIME-Version: 1.0
-In-Reply-To: <147e8ae7-3682-2350-394a-828c096f5ee3@xilinx.com>
-References: <cover.1524751696.git.michal.simek@xilinx.com>
-	<6045807691c310ccdd57ab16524b7525f26a1dc1.1524751696.git.michal.simek@xilinx.com>
-	<CAL_Jsq+69p1GstFua1-27LGv9MKT8dtbd1ytcq+GuvQ=VcEHKg@mail.gmail.com>
-	<ba081812-f532-5ebd-b052-cdeb1f02bff1@xilinx.com>
-	<CAL_Jsq+3WnGNM0ip_v75s8f5-Wq_9ht19-T-MHyhKjzcU6jtdg@mail.gmail.com>
-	<147e8ae7-3682-2350-394a-828c096f5ee3@xilinx.com>
-Date: Fri, 27 Apr 2018 10:05:19 -0500
-Message-ID: <CAL_JsqKZ6qrdTZE3zpocc=x77Z5T93yxxs9uNVHVa5OyzmGOJA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] of: base: Introduce of_alias_check_id() to check
- alias IDs
-From: Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Alexander Graf <agraf@suse.de>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+Return-Path: <SRS0=j3wE=HP=samsung.com=cw00.choi@kernel.org>
+MIME-version: 1.0
+Content-transfer-encoding: 8BIT
+Content-type: text/plain; charset="UTF-8"
+Message-id: <5AE12E4A.90907@samsung.com>
+Date: Thu, 26 Apr 2018 10:41:30 +0900
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [RFC 06/10] thermal: samsung: Remove support for Exynos5440
+In-reply-to: <20180424203239.21885-7-krzk@kernel.org>
+References: <20180424203239.21885-1-krzk@kernel.org>
+	<CGME20180424203603epcas5p4cdd2039eabe7039e4daf286ed4c1ecc0@epcas5p4.samsung.com>
+	<20180424203239.21885-7-krzk@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Jaehoon Chung <jh80.chung@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Apr 27, 2018 at 9:14 AM, Michal Simek <michal.simek@xilinx.com> wrote:
-> On 27.4.2018 15:02, Rob Herring wrote:
->> On Fri, Apr 27, 2018 at 1:10 AM, Michal Simek <michal.simek@xilinx.com> wrote:
->>> On 27.4.2018 04:39, Rob Herring wrote:
->>>> On Thu, Apr 26, 2018 at 9:08 AM, Michal Simek <michal.simek@xilinx.com> wrote:
->>>>> The function travers the lookup table to check if the request alias
->>>>> id is compatible with the device driver match structure.
->>>>> This function will be used by serial drivers to check if requested alias
->>>>> is allocated or free to use.
->>>>>
->>>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->>>>> ---
->>>>>
->>>>>  drivers/of/base.c  | 49 ++++++++++++++++++++++++++++++++++++++++++++++
->>>>>  include/linux/of.h |  2 ++
->>>>>  2 files changed, 51 insertions(+)
->>>>>
->>>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
->>>>> index 848f549164cd..382de01acc72 100644
->>>>> --- a/drivers/of/base.c
->>>>> +++ b/drivers/of/base.c
->>>>> @@ -1892,6 +1892,55 @@ int of_alias_get_id(struct device_node *np, const char *stem)
->>>>>  }
->>>>>  EXPORT_SYMBOL_GPL(of_alias_get_id);
->>>>>
->>>>> +/**
->>>>> + * of_alias_check_id - Check alias id for the give compatibility
->>>>> + * @matches:   Array of of device match structures to search in
->>>>> + * @stem:      Alias stem of the given device_node
->>>>> + * @id:                Alias ID for checking
->>>>> + *
->>>>> + * The function travers the lookup table to check if the request alias id
->>>>> + * is compatible with the device driver match structure
->>>>> + *
->>>>> + * Return true if ID is allocated, return false if not
->>>>> + */
->>>>> +bool of_alias_check_id(const struct of_device_id *matches, const char *stem,
->>>>> +                      int id)
->>>>
->>>> Wouldn't it be simpler to just return a bitmap of all allocated ids
->>>> that match rather than trying to build that up 1 bit at a time?
->>>
->>> Is alias list stable or can dt overlay change it?
->>
->> Stable. If you use an id and then an overlay adds that id as an alias,
->> what should the kernel do? The only choice is ignore the suggestion.
->
-> I didn't play with that for a while but on fpga case you have for
-> example serial0/serial1 fixed to hard IPs/PS part and then you add 20
-> uartlites or 16550 IPs to PL via overlays and you want to make sure
-> proper order for user application.
-> It means it is not rewriting current but adding new one exactly how you
-> should do that when fixed and fpga parts are together.
+Hi Krzysztof,
 
-For that to work, it requires knowing the maximum alias number (without alias being present) and allocating dynamic minors above that max alias number.
-
->>> What should be the expected flow? Find out maximum number of aliases of
->>> the same kind and allocate bitmap and return it with length.
->>
->> I think we can assume <32 so just return a bitmap in a unsigned long
->> or u32. Use that to initialize a bitmap in the driver. For un-aliased
->> devices, find the first unset bit, use that id and set the bit.
->
-> Ok if this is in driver field can be allocated in the driver and passed
-> also maximum len. It should be better then expecting maximum of 32
-> devices which ends with max serial31 alias.
->
-> Or at least expect u64 with max serial63.
-
-Sure, 64 should be enough for anyone (TM).
-
->>> Anyway if you look at that patches I sent then I call in the driver
->>> of_alias_get_highest_id("serial") which doesn't take care if alias match
->>> with actual driver. It means having information about max alias ID which
->>> match actual driver that would be helpful but I am not quite sure what
->>> should be the flow.
->>
->> I'm a bit confused as to why you use of_alias_get_highest_id and
->> of_alias_check_id. of_alias_get_highest_id is really intended if  you
->> want to start dynamic allocations above all the alias ids.
->
-> I need to get maximum number of ports for passing it to
-> uart_register_driver which is called only once.
-> And using of_alias_get_highest_id() return me reasonable number for all
-> listed serial ports.
-> It is not correct because some IPs don't need to be listed in that list
-> but it is reasonable expectation for this RFC.
-> Even alias bitfield won't help with getting correct number.
->
-> The best will be to get number of devices which match that driver
-> because they don't need to be listed in aliases list.
-
-of_for_each_compatible()
+On 2018년 04월 25일 05:32, Krzysztof Kozlowski wrote:
+> The Exynos5440 is not actively developed, there are no development
+> boards available and probably there are no real products with it.
+> Remove wide-tree support for Exynos5440.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  .../devicetree/bindings/thermal/exynos-thermal.txt |  14 +-
+>  drivers/thermal/samsung/exynos_tmu.c               | 155 +--------------------
+>  drivers/thermal/samsung/exynos_tmu.h               |   1 -
+>  3 files changed, 4 insertions(+), 166 deletions(-)
 
 
-> You get 20 of devices and will allocate space for 20. If there is alias
-> below 20 you will use numbers. If there is alias >= 20 it will be
-> ignored in probe and number will be assigned based on empty position.
->
-> But this is also no covering overlay cases where others devices can be
-> added at run time.
->
->
->> I guess the need to match devices is based on each serial driver
->> having it's own major and /dev name. IMO, we should get rid of those
->> and every serial driver use ttySn (with the exception of things like
->> USB serial). Then you'd just need to find all serial aliases. But you
->> can support both with this function. Just return a bitmap of all
->> aliases if match is NULL.
->
-> This will break a lot of things which are stable today.
->
->
->>> Any link to similar function would be good to understand how the flow is
->>> supposed to work.
->>
->> I don't think there's a good model. The pl011 code looks broken to me.
->
-> yes, it is broken.
->
->> The warning about devices with and without aliases should be fixed.
->
-> The same solution which
->
->> That is perfectly valid and should be supported. You should really
->> only need an alias for your console.
->
-> Having aliases is quite good in case of multiple the same uarts where if
-> you have more then 2 it is hard to find out which one is the one
-> connected to certain devices.
-> With uartlite or ns16550 and PL where you can have unlimited number of
-> devices this is really must to be able to work with this system.
->
-> Thanks,
-> Michal
+After applied this patch, I tested the build and found out
+'exynos5440' keyword. There is one comment including 'exynos5440' as following:
+
+diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+index f92f470bce21..cb525228cfe1 100644
+--- a/drivers/thermal/samsung/exynos_tmu.c
++++ b/drivers/thermal/samsung/exynos_tmu.c
+@@ -943,7 +943,7 @@ static void exynos4210_tmu_clear_irqs(struct exynos_tmu_data *data)
+         * Exynos3250, Exynos4412, Exynos5250 and Exynos5260 incorrectly
+         * states that INTCLEAR register has a different placing of bits
+         * responsible for FALL IRQs than INTSTAT register.  Exynos5420
+-        * and Exynos5440 documentation is correct (Exynos4210 doesn't
++        * documentation is correct (Exynos4210 doesn't
+         * support FALL IRQs at all).
+         */
+        writel(val_irq, data->base + tmu_intclear);
+
+After removing it, looks good to me.
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
