@@ -1,112 +1,260 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/8] drm: bridge: Add support for static image formats
-Date: Thu, 26 Apr 2018 22:57:11 +0300
-Message-ID: <4630637.CPzkxH2bjR@avalon>
-References: <1524130269-32688-1-git-send-email-jacopo+renesas@jmondi.org>
- <3108314.q4SV6s3NXE@avalon> <20180426184056.GQ4235@w540>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180426184056.GQ4235@w540>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, peda@axentia.se, linux-media@vger.kernel.org
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH net-next v2 2/7] net: mscc: Add MDIO driver
+Date: Thu, 26 Apr 2018 21:59:26 +0200
+Message-ID: <20180426195931.5393-3-alexandre.belloni@bootlin.com>
+References: <20180426195931.5393-1-alexandre.belloni@bootlin.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180426195931.5393-1-alexandre.belloni@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "David S . Miller" <davem@davemloft.net>
+Cc: Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKT24gVGh1cnNkYXksIDI2IEFwcmlsIDIwMTggMjE6NDA6NTYgRUVTVCBqYWNv
-cG8gbW9uZGkgd3JvdGU6Cj4gT24gTW9uLCBBcHIgMjMsIDIwMTggYXQgMTI6Mjc6MzlQTSArMDMw
-MCwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiA+IE9uIFRodXJzZGF5LCAxOSBBcHJpbCAyMDE4
-IDEyOjMxOjAyIEVFU1QgSmFjb3BvIE1vbmRpIHdyb3RlOgo+ID4+IEFkZCBzdXBwb3J0IGZvciBz
-dG9yaW5nIGltYWdlIGZvcm1hdCBpbmZvcm1hdGlvbiBpbiBEUk0gYnJpZGdlcyB3aXRoCj4gPj4g
-YXNzb2NpYXRlZCBoZWxwZXIgZnVuY3Rpb24uCj4gPj4gCj4gPj4gVGhpcyBwYXRjaCByZXBsaWNh
-dGVzIGZvciBicmlkZ2VzIHdoYXQKPiA+PiAnZHJtX2Rpc3BsYXlfaW5mb19zZXRfYnVzX2Zvcm1h
-dHMoKScKPiA+PiBpcyBmb3IgY29ubmVjdG9ycy4KPiA+PiAKPiA+PiBTaWduZWQtb2ZmLWJ5OiBK
-YWNvcG8gTW9uZGkgPGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+Cj4gPj4gLS0tCj4gPj4gIGRy
-aXZlcnMvZ3B1L2RybS9kcm1fYnJpZGdlLmMgfCAzMCArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysKPiA+PiAgaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oICAgICB8ICA4ICsrKysrKysrCj4g
-Pj4gIDIgZmlsZXMgY2hhbmdlZCwgMzggaW5zZXJ0aW9ucygrKQo+ID4+IAo+ID4+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2JyaWRnZS5jIGIvZHJpdmVycy9ncHUvZHJtL2RybV9i
-cmlkZ2UuYwo+ID4+IGluZGV4IDE2MzhiZmUuLmUyYWQwOTggMTAwNjQ0Cj4gPj4gLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL2RybV9icmlkZ2UuYwo+ID4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1f
-YnJpZGdlLmMKPiA+PiBAQCAtMTU3LDYgKzE1NywzNiBAQCB2b2lkIGRybV9icmlkZ2VfZGV0YWNo
-KHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpCj4gPj4gIH0KPiA+PiAgCj4gPj4gIC8qKgo+ID4+
-ICsgKiBkcm1fYnJpZGdlX3NldF9idXNfZm9ybWF0cygpIC0gc2V0IGJyaWRnZSBzdXBwb3J0ZWQg
-aW1hZ2UgZm9ybWF0cwo+ID4+ICsgKiBAYnJpZGdlOiB0aGUgYnJpZGdlIHRvIHNldCBpbWFnZSBm
-b3JtYXRzIGluCj4gPj4gKyAqIEBmb3JtYXRzOiBhcnJheSBvZiBNRURJQV9CVVNfRk1UXF8gc3Vw
-cG9ydGVkIGltYWdlIGZvcm1hdHMKPiA+IAo+ID4gV2h5IHRoZSBcIChoZXJlIGFuZCBiZWxvdykg
-Pwo+IAo+IG1tbSwgSSBjYW4ndCB0ZWxsIHdoZXJlIEkgbWFkZSB0aGF0IHVwIGZyb20uLi4gV2ls
-bCBjaGFuZ2Ugd2l0aAo+IE1FRElBX0JVU19GTVRfKgo+IAo+ID4+ICsgKiBAbnVtX2Zvcm1hdHM6
-IG51bWJlciBvZiBlbGVtZW50cyBpbiB0aGUgQGZvcm1hdHMgYXJyYXkKPiA+PiArICoKPiA+PiAr
-ICogU3RvcmUgYSBsaXN0IG9mIHN1cHBvcnRlZCBpbWFnZSBmb3JtYXRzIGluIGEgYnJpZGdlLgo+
-ID4+ICsgKiBTZWUgTUVESUFfQlVTX0ZNVF8qIGRlZmluaXRpb25zIGluCj4gPj4gaW5jbHVkZS91
-YXBpL2xpbnV4L21lZGlhLWJ1cy1mb3JtYXQuaCBmb3IKPiA+PiArICogYSBmdWxsIGxpc3Qgb2Yg
-YXZhaWxhYmxlIGZvcm1hdHMuCj4gPj4gKyAqLwo+ID4+ICtpbnQgZHJtX2JyaWRnZV9zZXRfYnVz
-X2Zvcm1hdHMoc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSwgY29uc3QgdTMyCj4gPj4gKmZvcm1h
-dHMsCj4gPj4gKwkJCSAgICAgICB1bnNpZ25lZCBpbnQgbnVtX2Zvcm1hdHMpCj4gPj4gK3sKPiA+
-PiArCXUzMiAqZm10czsKPiA+PiArCj4gPj4gKwlpZiAoIWZvcm1hdHMgfHwgIW51bV9mb3JtYXRz
-KQo+ID4+ICsJCXJldHVybiAtRUlOVkFMOwo+ID4+ICsKPiA+PiArCWZtdHMgPSBrbWVtZHVwKGZv
-cm1hdHMsIHNpemVvZigqZm9ybWF0cykgKiBudW1fZm9ybWF0cywgR0ZQX0tFUk5FTCk7Cj4gPiAK
-PiA+IFRoaXMgbWVtb3J5IHdpbGwgYmUgbGVha2VkIHdoZW4gdGhlIGJyaWRnZSBpcyBkZXN0cm95
-ZWQuCj4gCj4gUmlnaHQuIEknbSBhZnJhaWQgdGhpcyBtYXkgb3BlbiBhIHBhbmRvcmEgYm94LCBi
-dXQsIGVobSwgd2hlcmUgaXMgdGhlCj4gYnJpZGdlIG9iamVjdHMgbGlmZXRpbWUgbWFuYWdlZD8g
-VGhlIGJlc3QgSSBjYW4gdGhpbmsgb2YgaXMgdG8gdXNlIHRoZQo+IHJlc291cmNlIG1hbmFnZWQg
-dmVyc2lvbiBvZiBrbWVtZHVwLCBhc3NvY2lhdGluZyB0aGF0IG1lbW9yeSB0bwo+IHRoZSBkcm1f
-ZGV2aWNlIGRldmljZSBvYmplY3QuIFRoYXQgbWVhbnMgdGhlIG1lbW9yeSB3aWxsIGJlIGZyZWVk
-IGF0Cj4gRFJNIHBpcGVsaW5lIHRlYXJkb3duIHRpbWUgb25seSBpZiBJJ20gbm90IHdyb25nLiBD
-YW4gYSBicmlkZ2UgYmUKPiBkZXN0cm95ZWQgYmVmb3JlIHRoYXQ/CgpUaGUgbGlmZXRpbWUgb2Yg
-dGhlIGJyaWRnZSBpcyBpbmRlcGVuZGVudCBmcm9tIHRoZSBsaWZldGltZSBvZiB0aGUgZHJtX2Rl
-dmljZSwgCnNvIHRoYXQgd29uJ3Qgd29yay4gSXQgbG9va3MgbGlrZSB3ZSBuZWVkIHRvIGFkZCBh
-IGJyaWRnZSBjbGVhbnVwIG9wZXJhdGlvbiAKOi0vIFlvdSdyZSByaWdodCwgaXQgb3BlbnMgcGFu
-ZG9yYSdzIGJveC4KCk15IHJlY29tbWVuZGF0aW9uIGlzIHRvIGFkZCBhIC5yZWxlYXNlKCkgb3Bl
-cmF0aW9uIHRvIHRoZSBicmlkZ2Ugb3BzIApzdHJ1Y3R1cmUsIGFuZCB0byBpbXBsZW1lbnQgYSBk
-cm1fYnJpZGdlX2NsZWFudXAoKSBmdW5jdGlvbiB0aGF0IGZyZWVzIHRoZSAKYnVzX2Zvcm1hdHMg
-bWVtb3J5LiBUaGVuLCBhIGRybV9icmlkZ2VfcmVsZWFzZSgpIGZ1bmN0aW9uIGNhbiB3cmFwIHRo
-ZSAKcmVsZWFzZSgpIG9wcywgYW5kIHRoYXQgc2hvdWxkIGJlIGNhbGxlZCBmcm9tIHRoZSBicmlk
-Z2UgZHJpdmVyIC5yZW1vdmUoKSAKaGFuZGxlci4gT3IgZXZlbiBidXR0ZXIsIGNhbGwgdGhlIGRy
-bV9icmlkZ2VfcmVsZWFzZSgpIGZ1bmN0aW9uIApkcm1fYnJpZGdlX3B1dCgpLCB0byBwYXZlIHRo
-ZSB3YXkgZm9yIGEgcmVmZXJlbmNlLWNvdW50LWJhc2VkIGltcGxlbWVudGF0aW9uLgoKPiA+PiAr
-CWlmICghZm10cykKPiA+PiArCQlyZXR1cm4gLUVOT01FTTsKPiA+PiArCj4gPj4gKwlrZnJlZShi
-cmlkZ2UtPmJ1c19mb3JtYXRzKTsKPiA+PiArCWJyaWRnZS0+YnVzX2Zvcm1hdHMgPSBmbXRzOwo+
-ID4+ICsJYnJpZGdlLT5udW1fYnVzX2Zvcm1hdHMgPSBudW1fZm9ybWF0czsKPiA+PiArCj4gPj4g
-KwlyZXR1cm4gMDsKPiA+PiArfQo+ID4+ICtFWFBPUlRfU1lNQk9MKGRybV9icmlkZ2Vfc2V0X2J1
-c19mb3JtYXRzKTsKPiA+PiArCj4gPj4gKy8qKgo+ID4+ICAgKiBET0M6IGJyaWRnZSBjYWxsYmFj
-a3MKPiA+PiAgICoKPiA+PiAgICogVGhlICZkcm1fYnJpZGdlX2Z1bmNzIG9wcyBhcmUgcG9wdWxh
-dGVkIGJ5IHRoZSBicmlkZ2UgZHJpdmVyLiBUaGUKPiA+PiAgIERSTQo+ID4+IGRpZmYgLS1naXQg
-YS9pbmNsdWRlL2RybS9kcm1fYnJpZGdlLmggYi9pbmNsdWRlL2RybS9kcm1fYnJpZGdlLmgKPiA+
-PiBpbmRleCAzMjcwZmVjLi42YjM2NDhjIDEwMDY0NAo+ID4+IC0tLSBhL2luY2x1ZGUvZHJtL2Ry
-bV9icmlkZ2UuaAo+ID4+ICsrKyBiL2luY2x1ZGUvZHJtL2RybV9icmlkZ2UuaAo+ID4+IEBAIC0y
-NTgsNiArMjU4LDkgQEAgc3RydWN0IGRybV9icmlkZ2VfdGltaW5ncyB7Cj4gPj4gICAqIEBlbmNv
-ZGVyOiBlbmNvZGVyIHRvIHdoaWNoIHRoaXMgYnJpZGdlIGlzIGNvbm5lY3RlZAo+ID4+ICAgKiBA
-bmV4dDogdGhlIG5leHQgYnJpZGdlIGluIHRoZSBlbmNvZGVyIGNoYWluCj4gPj4gICAqIEBvZl9u
-b2RlOiBkZXZpY2Ugbm9kZSBwb2ludGVyIHRvIHRoZSBicmlkZ2UKPiA+PiArICogQGJ1c19mb3Jt
-YXRzOiB3aXJlIGltYWdlIGZvcm1hdHMuIEFycmF5IG9mIEBudW1fYnVzX2Zvcm1hdHMKPiA+PiBN
-RURJQV9CVVNfRk1UXF8KPiA+PiArICogZWxlbWVudHMKPiA+PiArICogQG51bV9idXNfZm9ybWF0
-czogc2l6ZSBvZiBAYnVzX2Zvcm1hdHMgYXJyYXkKPiA+PiAgICogQGxpc3Q6IHRvIGtlZXAgdHJh
-Y2sgb2YgYWxsIGFkZGVkIGJyaWRnZXMKPiA+PiAgICogQHRpbWluZ3M6IHRoZSB0aW1pbmcgc3Bl
-Y2lmaWNhdGlvbiBmb3IgdGhlIGJyaWRnZSwgaWYgYW55IChtYXkKPiA+PiAgICogYmUgTlVMTCkK
-PiA+PiBAQCAtMjcxLDYgKzI3NCw5IEBAIHN0cnVjdCBkcm1fYnJpZGdlIHsKPiA+PiAgI2lmZGVm
-IENPTkZJR19PRgo+ID4+ICAJc3RydWN0IGRldmljZV9ub2RlICpvZl9ub2RlOwo+ID4+ICAjZW5k
-aWYKPiA+PiArCWNvbnN0IHUzMiAqYnVzX2Zvcm1hdHM7Cj4gPj4gKwl1bnNpZ25lZCBpbnQgbnVt
-X2J1c19mb3JtYXRzOwo+ID4+ICsKPiA+PiAgCXN0cnVjdCBsaXN0X2hlYWQgbGlzdDsKPiA+PiAg
-CWNvbnN0IHN0cnVjdCBkcm1fYnJpZGdlX3RpbWluZ3MgKnRpbWluZ3M7Cj4gPj4gCj4gPj4gQEAg
-LTI5Niw2ICszMDIsOCBAQCB2b2lkIGRybV9icmlkZ2VfbW9kZV9zZXQoc3RydWN0IGRybV9icmlk
-Z2UgKmJyaWRnZSwKPiA+PiAgCQkJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKmFkanVzdGVkX21v
-ZGUpOwo+ID4+ICB2b2lkIGRybV9icmlkZ2VfcHJlX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAq
-YnJpZGdlKTsKPiA+PiAgdm9pZCBkcm1fYnJpZGdlX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAq
-YnJpZGdlKTsKPiA+PiAraW50IGRybV9icmlkZ2Vfc2V0X2J1c19mb3JtYXRzKHN0cnVjdCBkcm1f
-YnJpZGdlICpicmlkZ2UsIGNvbnN0IHUzMgo+ID4+ICpmbXRzLAo+ID4+ICsJCQkgICAgICAgdW5z
-aWduZWQgaW50IG51bV9mbXRzKTsKPiA+PiAKPiA+PiAgI2lmZGVmIENPTkZJR19EUk1fUEFORUxf
-QlJJREdFCj4gPj4gIHN0cnVjdCBkcm1fYnJpZGdlICpkcm1fcGFuZWxfYnJpZGdlX2FkZChzdHJ1
-Y3QgZHJtX3BhbmVsICpwYW5lbCwKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Add a driver for the Microsemi MII Management controller (MIIM) found on
+Microsemi SoCs.
+On Ocelot, there are two controllers, one is connected to the internal
+PHYs, the other one can communicate with external PHYs.
+
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/net/phy/Kconfig          |   7 ++
+ drivers/net/phy/Makefile         |   1 +
+ drivers/net/phy/mdio-mscc-miim.c | 197 +++++++++++++++++++++++++++++++
+ 3 files changed, 205 insertions(+)
+ create mode 100644 drivers/net/phy/mdio-mscc-miim.c
+
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index bdfbabb86ee0..c67a72d23157 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -123,6 +123,13 @@ config MDIO_MOXART
+ 	  This driver supports the MDIO interface found in the network
+ 	  interface units of the MOXA ART SoC
+ 
++config MDIO_MSCC_MIIM
++	tristate "Microsemi MIIM interface support"
++	depends on HAS_IOMEM
++	help
++	  This driver supports the MIIM (MDIO) interface found in the network
++	  switches of the Microsemi SoCs
++
+ config MDIO_OCTEON
+ 	tristate "Octeon and some ThunderX SOCs MDIO buses"
+ 	depends on 64BIT
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index 01acbcb2c798..7c0ef479ffc4 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -34,6 +34,7 @@ obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
+ obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
+ obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
+ obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
++obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
+ obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
+ obj-$(CONFIG_MDIO_SUN4I)	+= mdio-sun4i.o
+ obj-$(CONFIG_MDIO_THUNDER)	+= mdio-thunder.o
+diff --git a/drivers/net/phy/mdio-mscc-miim.c b/drivers/net/phy/mdio-mscc-miim.c
+new file mode 100644
+index 000000000000..8c689ccfdbca
+--- /dev/null
++++ b/drivers/net/phy/mdio-mscc-miim.c
+@@ -0,0 +1,197 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Driver for the MDIO interface of Microsemi network switches.
++ *
++ * Author: Alexandre Belloni <alexandre.belloni@bootlin.com>
++ * Copyright (c) 2017 Microsemi Corporation
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/phy.h>
++#include <linux/platform_device.h>
++#include <linux/bitops.h>
++#include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/of_mdio.h>
++
++#define MSCC_MIIM_REG_STATUS		0x0
++#define		MSCC_MIIM_STATUS_STAT_BUSY	BIT(3)
++#define MSCC_MIIM_REG_CMD		0x8
++#define		MSCC_MIIM_CMD_OPR_WRITE		BIT(1)
++#define		MSCC_MIIM_CMD_OPR_READ		BIT(2)
++#define		MSCC_MIIM_CMD_WRDATA_SHIFT	4
++#define		MSCC_MIIM_CMD_REGAD_SHIFT	20
++#define		MSCC_MIIM_CMD_PHYAD_SHIFT	25
++#define		MSCC_MIIM_CMD_VLD		BIT(31)
++#define MSCC_MIIM_REG_DATA		0xC
++#define		MSCC_MIIM_DATA_ERROR		(BIT(16) | BIT(17))
++
++#define MSCC_PHY_REG_PHY_CFG	0x0
++#define		PHY_CFG_PHY_ENA		(BIT(0) | BIT(1) | BIT(2) | BIT(3))
++#define		PHY_CFG_PHY_COMMON_RESET BIT(4)
++#define		PHY_CFG_PHY_RESET	(BIT(5) | BIT(6) | BIT(7) | BIT(8))
++#define MSCC_PHY_REG_PHY_STATUS	0x4
++
++struct mscc_miim_dev {
++	void __iomem *regs;
++	void __iomem *phy_regs;
++};
++
++static int mscc_miim_wait_ready(struct mii_bus *bus)
++{
++	struct mscc_miim_dev *miim = bus->priv;
++	u32 val;
++
++	readl_poll_timeout(miim->regs + MSCC_MIIM_REG_STATUS, val,
++			   !(val & MSCC_MIIM_STATUS_STAT_BUSY), 100, 250000);
++	if (val & MSCC_MIIM_STATUS_STAT_BUSY)
++		return -ETIMEDOUT;
++
++	return 0;
++}
++
++static int mscc_miim_read(struct mii_bus *bus, int mii_id, int regnum)
++{
++	struct mscc_miim_dev *miim = bus->priv;
++	u32 val;
++	int ret;
++
++	ret = mscc_miim_wait_ready(bus);
++	if (ret)
++		goto out;
++
++	writel(MSCC_MIIM_CMD_VLD | (mii_id << MSCC_MIIM_CMD_PHYAD_SHIFT) |
++	       (regnum << MSCC_MIIM_CMD_REGAD_SHIFT) | MSCC_MIIM_CMD_OPR_READ,
++	       miim->regs + MSCC_MIIM_REG_CMD);
++
++	ret = mscc_miim_wait_ready(bus);
++	if (ret)
++		goto out;
++
++	val = readl(miim->regs + MSCC_MIIM_REG_DATA);
++	if (val & MSCC_MIIM_DATA_ERROR) {
++		ret = -EIO;
++		goto out;
++	}
++
++	ret = val & 0xFFFF;
++out:
++	return ret;
++}
++
++static int mscc_miim_write(struct mii_bus *bus, int mii_id,
++			   int regnum, u16 value)
++{
++	struct mscc_miim_dev *miim = bus->priv;
++	int ret;
++
++	ret = mscc_miim_wait_ready(bus);
++	if (ret < 0)
++		goto out;
++
++	writel(MSCC_MIIM_CMD_VLD | (mii_id << MSCC_MIIM_CMD_PHYAD_SHIFT) |
++	       (regnum << MSCC_MIIM_CMD_REGAD_SHIFT) |
++	       (value << MSCC_MIIM_CMD_WRDATA_SHIFT) |
++	       MSCC_MIIM_CMD_OPR_WRITE,
++	       miim->regs + MSCC_MIIM_REG_CMD);
++
++out:
++	return ret;
++}
++
++static int mscc_miim_reset(struct mii_bus *bus)
++{
++	struct mscc_miim_dev *miim = bus->priv;
++
++	if (miim->phy_regs) {
++		writel(0, miim->phy_regs + MSCC_PHY_REG_PHY_CFG);
++		writel(0x1ff, miim->phy_regs + MSCC_PHY_REG_PHY_CFG);
++		mdelay(500);
++	}
++
++	return 0;
++}
++
++static int mscc_miim_probe(struct platform_device *pdev)
++{
++	struct resource *res;
++	struct mii_bus *bus;
++	struct mscc_miim_dev *dev;
++	int ret;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res)
++		return -ENODEV;
++
++	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*dev));
++	if (!bus)
++		return -ENOMEM;
++
++	bus->name = "mscc_miim";
++	bus->read = mscc_miim_read;
++	bus->write = mscc_miim_write;
++	bus->reset = mscc_miim_reset;
++	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
++	bus->parent = &pdev->dev;
++
++	dev = bus->priv;
++	dev->regs = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(dev->regs)) {
++		dev_err(&pdev->dev, "Unable to map MIIM registers\n");
++		return PTR_ERR(dev->regs);
++	}
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	if (res) {
++		dev->phy_regs = devm_ioremap_resource(&pdev->dev, res);
++		if (IS_ERR(dev->phy_regs)) {
++			dev_err(&pdev->dev, "Unable to map internal phy registers\n");
++			return PTR_ERR(dev->phy_regs);
++		}
++	}
++
++	if (pdev->dev.of_node)
++		ret = of_mdiobus_register(bus, pdev->dev.of_node);
++	else
++		ret = mdiobus_register(bus);
++
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Cannot register MDIO bus (%d)\n", ret);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, bus);
++
++	return 0;
++}
++
++static int mscc_miim_remove(struct platform_device *pdev)
++{
++	struct mii_bus *bus = platform_get_drvdata(pdev);
++
++	mdiobus_unregister(bus);
++
++	return 0;
++}
++
++static const struct of_device_id mscc_miim_match[] = {
++	{ .compatible = "mscc,ocelot-miim" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, mscc_miim_match);
++
++static struct platform_driver mscc_miim_driver = {
++	.probe = mscc_miim_probe,
++	.remove = mscc_miim_remove,
++	.driver = {
++		.name = "mscc-miim",
++		.of_match_table = mscc_miim_match,
++	},
++};
++
++module_platform_driver(mscc_miim_driver);
++
++MODULE_DESCRIPTION("Microsemi MIIM driver");
++MODULE_AUTHOR("Alexandre Belloni <alexandre.belloni@bootlin.com>");
++MODULE_LICENSE("Dual MIT/GPL");
+-- 
+2.17.0
