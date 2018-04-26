@@ -1,35 +1,48 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3] gpio: dwapb: Add support for 1 interrupt per port A GPIO
-Date: Thu, 26 Apr 2018 14:58:02 +0200
-Message-ID: <CACRpkdaCnJw2y42txr1vC_fdPKT4bfdG_rrpEhwdL8HQULT-YA@mail.gmail.com>
-References: <1523609472-4481-1-git-send-email-phil.edworthy@renesas.com>
- <CAFHUOYziPaZC-Zcb7rXqC9p24H+CU4wK4NQShQkYLgH7c5mVwA@mail.gmail.com>
- <TY1PR01MB1769DB39F986BEADEF61F8C9F5B30@TY1PR01MB1769.jpnprd01.prod.outlook.com>
- <CAFHUOYzPO+99HMLV7i1=ZoQG3vKRp2v5GzJdpW9yoWovx8D91Q@mail.gmail.com> <TY1PR01MB17691AADC510B417E3F6E49DF5B50@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+Subject: Re: [dragonboard] [PATCH 1/1] dts: qcom: db820c: Add gpio-line-names property
+Date: Thu, 26 Apr 2018 15:23:57 +0200
+Message-ID: <CACRpkdZxwz5=oTxGWBgVHfy-D9s-f03qqjypUeJj6GrpXQcEcQ@mail.gmail.com>
+References: <20180414031811.11351-1-manivannan.sadhasivam@linaro.org>
+ <20180414031811.11351-2-manivannan.sadhasivam@linaro.org> <9acdd412-9b6d-ec63-c5ca-c5fa8d98d489@linaro.org>
+ <20180416100306.5f6bzkzlsx3ufvw7@mani>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <TY1PR01MB17691AADC510B417E3F6E49DF5B50@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+In-Reply-To: <20180416100306.5f6bzkzlsx3ufvw7@mani>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Hoan Tran <hotran@apm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Todor Tomov <todor.tomov@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dragonboard@lists.96boards.org, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 19, 2018 at 12:03 PM, Phil Edworthy
-<phil.edworthy@renesas.com> wrote:
+On Mon, Apr 16, 2018 at 12:03 PM, Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+> On Mon, Apr 16, 2018 at 11:48:59AM +0300, Todor Tomov wrote:
 
-> Since I've already got some reviewed-by and acks for v4, I'll leave it to Linus
-> to decide if he wants me to roll your changes into this patch or for you to
-> submit a separate patch.
+>> > + * When the 96Board naming of a line and the schematic name of
+>> > + * the same line are in conflict, the 96Board specification
+>> > + * takes precedence, which means that the external UART on the
+>> > + * LSEC is named UART0 while the schematic and SoC names this
+>> > + * UART3. This is only for the informational lines i.e. "[FOO]",
+>>
+>> It seems to me that this can lead to some confusion for cases when
+>> some schematic names have 96board names and others don't. (An
+>> example below.) However I don't really see any better way to do
+>> it. I'm wondering whether adding the schematic name in
+>> the comment (for gpios which are named with 96board names)
+>> can help a little. What do you think? Or any other idea?
+>>
+>
+> Specifying the schematic names in comments is a good idea!
+>
+> Linus: Do you have any suggestion here?
 
-Just
-- Add the reviewed-by and ACKs
-- Fold in Hoan's fix
-- Resend
+Go for this.
 
-We are always a bit fuzzy around the edges with carrying ACKs etc
-forward for new revisions. Surely that is fine with this minor
-revision for ACPI.
+Generally ask the question: what does the user need?
+
+In this case, especially userspace libraries like mriaa (right name?)
+should be able to work out-of-the-box without knowing what
+board it is but know it has a 96board connector.
 
 Yours,
 Linus Walleij
