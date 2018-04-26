@@ -1,7 +1,7 @@
 From: Chris Lew <clew@codeaurora.org>
-Subject: [PATCH v2 2/6] rpmsg: glink: Store edge name for glink device
-Date: Wed, 25 Apr 2018 19:07:48 -0700
-Message-ID: <1524708472-18263-3-git-send-email-clew@codeaurora.org>
+Subject: [PATCH v2 3/6] rpmsg: glink: Use complete_all for open states
+Date: Wed, 25 Apr 2018 19:07:49 -0700
+Message-ID: <1524708472-18263-4-git-send-email-clew@codeaurora.org>
 References: <1524708472-18263-1-git-send-email-clew@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1524708472-18263-1-git-send-email-clew@codeaurora.org>
@@ -10,43 +10,41 @@ To: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, r
 Cc: aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, clew@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Channels may need to identify the edge their channel was probed for.
-Store the edge name by reading the label property from device tree or
-default to the node name.
+The open_req and open_ack completion variables are the state variables
+to represet a remote channel as open. Use complete_all so there are no
+races with waiters and using completion_done.
 
 Signed-off-by: Chris Lew <clew@codeaurora.org>
 ---
 
 Changes since v1:
-- None
+- New change
 
- drivers/rpmsg/qcom_glink_native.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/rpmsg/qcom_glink_native.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-index 768ef542a841..c3f548e2ff20 100644
+index c3f548e2ff20..120d6b9bb9f3 100644
 --- a/drivers/rpmsg/qcom_glink_native.c
 +++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -101,6 +101,8 @@ struct glink_core_rx_intent {
- struct qcom_glink {
- 	struct device *dev;
+@@ -957,7 +957,7 @@ static int qcom_glink_rx_open_ack(struct qcom_glink *glink, unsigned int lcid)
+ 		return -EINVAL;
+ 	}
  
-+	const char *name;
-+
- 	struct mbox_client mbox_client;
- 	struct mbox_chan *mbox_chan;
+-	complete(&channel->open_ack);
++	complete_all(&channel->open_ack);
  
-@@ -1580,6 +1582,10 @@ struct qcom_glink *qcom_glink_native_probe(struct device *dev,
- 	idr_init(&glink->lcids);
- 	idr_init(&glink->rcids);
+ 	return 0;
+ }
+@@ -1401,7 +1401,7 @@ static int qcom_glink_rx_open(struct qcom_glink *glink, unsigned int rcid,
+ 	channel->rcid = ret;
+ 	spin_unlock_irqrestore(&glink->idr_lock, flags);
  
-+	ret = of_property_read_string(dev->of_node, "label", &glink->name);
-+	if (ret < 0)
-+		glink->name = dev->of_node->name;
-+
- 	glink->mbox_client.dev = dev;
- 	glink->mbox_client.knows_txdone = true;
- 	glink->mbox_chan = mbox_request_channel(&glink->mbox_client, 0);
+-	complete(&channel->open_req);
++	complete_all(&channel->open_req);
+ 
+ 	if (create_device) {
+ 		rpdev = kzalloc(sizeof(*rpdev), GFP_KERNEL);
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
