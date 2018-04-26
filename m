@@ -1,56 +1,39 @@
 From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: [PATCH 15/17] arm64: dts: r8a77965-salvator-x: Enable HDMI output
-Date: Thu, 26 Apr 2018 17:53:44 +0100
-Message-ID: <20180426165346.494-16-kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH 09/17] arm64: dts: r8a77965: Use the correct CPG header
+Date: Thu, 26 Apr 2018 17:53:38 +0100
+Message-ID: <20180426165346.494-10-kieran.bingham+renesas@ideasonboard.com>
 References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-renesas-soc@vger.kernel.org
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT
         AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+The SoC dtsi includes the generic renesas-cpg-mssr header, which does
+not contain all of the relevant SoC specific definitions.
 
-Enable the HDMI encoder for the M3N Salvator-X board and hook it up to
-the HDMI connector.
+Adapt this to be the r8a77965 specific header.
 
-Based on a similar patches of the the Salvator-X board
-on the R8A7796 SoC device tree
-by Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
 Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 ---
- .../boot/dts/renesas/r8a77965-salvator-x.dts    | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
-index a2b8fb20fef8..11e8d43e9e11 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
-@@ -31,3 +31,20 @@
- 	clock-names = "du.0", "du.1", "du.3", "lvds.0",
- 		      "dclkin.0", "dclkin.1", "dclkin.3";
- };
-+
-+&hdmi0 {
-+	status = "okay";
-+
-+	ports {
-+		port@1 {
-+			reg = <1>;
-+			rcar_dw_hdmi0_out: endpoint {
-+				remote-endpoint = <&hdmi0_con>;
-+			};
-+		};
-+	};
-+};
-+
-+&hdmi0_con {
-+	remote-endpoint = <&rcar_dw_hdmi0_out>;
-+};
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index 02de36b9e581..894903a59bdc 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -8,7 +8,7 @@
+  * Copyright (C) 2016 Renesas Electronics Corp.
+  */
+ 
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
++#include <dt-bindings/clock/r8a77965-cpg-mssr.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/power/r8a77965-sysc.h>
+ 
 -- 
 2.17.0
