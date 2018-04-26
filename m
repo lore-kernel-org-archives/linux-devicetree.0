@@ -1,52 +1,39 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V4 3/6] ARM: dts: imx6sx-sabreauto: add IO expander
- max7310 support
-Date: Thu, 26 Apr 2018 03:06:15 +0000
-Message-ID: <AM3PR04MB13150654494B8D251988F76CF58E0@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1524634571-5914-1-git-send-email-Anson.Huang@nxp.com>
- <1524634571-5914-3-git-send-email-Anson.Huang@nxp.com>
- <CAOMZO5Dm6rcEe=zAJ9_nqKce3g2tdyWPqb=Uv-N5nfc_96jc-g@mail.gmail.com>
+From: KaiChieh Chuang <kaichieh.chuang@mediatek.com>
+Subject: [PATCH 0/2] ASoC: add mt6351 codec driver
+Date: Thu, 26 Apr 2018 11:07:30 +0800
+Message-ID: <20180426030732.5887-1-kaichieh.chuang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5Dm6rcEe=zAJ9_nqKce3g2tdyWPqb=Uv-N5nfc_96jc-g@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, ryder.lee@mediatek.com, wsd_upstream@mediatek.com, chipeng.chang@mediatek.com, garlic.tseng@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, kaichieh.chuang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-SGksIEZhYmlvDQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1A
-Z21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgQXByaWwgMjYsIDIwMTggNTo0NiBBTQ0KPiBU
-bzogQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiBTaGF3biBHdW8gPHNo
-YXduZ3VvQGtlcm5lbC5vcmc+OyBTYXNjaGEgSGF1ZXINCj4gPGtlcm5lbEBwZW5ndXRyb25peC5k
-ZT47IEZhYmlvIEVzdGV2YW0gPGZhYmlvLmVzdGV2YW1AbnhwLmNvbT47IFJvYg0KPiBIZXJyaW5n
-IDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29t
-PjsNCj4gUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IDxsaW51eEBhcm1saW51eC5vcmcudWs+OyBk
-bC1saW51eC1pbXgNCj4gPGxpbnV4LWlteEBueHAuY29tPjsgbW9kZXJhdGVkIGxpc3Q6QVJNL0ZS
-RUVTQ0FMRSBJTVggLyBNWEMgQVJNDQo+IEFSQ0hJVEVDVFVSRSA8bGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnPjsgb3BlbiBsaXN0Ok9QRU4NCj4gRklSTVdBUkUgQU5EIEZMQVRU
-RU5FRCBERVZJQ0UgVFJFRSBCSU5ESU5HUw0KPiA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+
-OyBsaW51eC1rZXJuZWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6
-IFJlOiBbUEFUQ0ggVjQgMy82XSBBUk06IGR0czogaW14NnN4LXNhYnJlYXV0bzogYWRkIElPIGV4
-cGFuZGVyDQo+IG1heDczMTAgc3VwcG9ydA0KPiANCj4gT24gV2VkLCBBcHIgMjUsIDIwMTggYXQg
-MjozNiBBTSwgQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+IHdyb3RlOg0KPiAN
-Cj4gPiArJmkyYzMgew0KPiA+ICsgICAgICAgY2xvY2stZnJlcXVlbmN5ID0gPDEwMDAwMD47DQo+
-ID4gKyAgICAgICBwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiA+ICsgICAgICAgcGluY3Ry
-bC0wID0gPCZwaW5jdHJsX2kyYzNfMj47DQo+ID4gKyAgICAgICBzdGF0dXMgPSAib2theSI7DQo+
-ID4gKw0KPiA+ICsgICAgICAgbWF4NzMxMF9hOiBncGlvQDMwIHsNCj4gPiArICAgICAgICAgICAg
-ICAgY29tcGF0aWJsZSA9ICJtYXhpbSxtYXg3MzEwIjsNCj4gPiArICAgICAgICAgICAgICAgcmVn
-ID0gPDB4MzA+Ow0KPiA+ICsgICAgICAgICAgICAgICBncGlvLWNvbnRyb2xsZXI7DQo+ID4gKyAg
-ICAgICAgICAgICAgICNncGlvLWNlbGxzID0gPDI+Ow0KPiA+ICsgICAgICAgfTsNCj4gPiArDQo+
-ID4gKyAgICAgICBtYXg3MzEwX2I6IGdwaW9AMzIgew0KPiA+ICsgICAgICAgICAgICAgICBjb21w
-YXRpYmxlID0gIm1heGltLG1heDczMTAiOw0KPiA+ICsgICAgICAgICAgICAgICByZWcgPSA8MHgz
-Mj47DQo+ID4gKyAgICAgICAgICAgICAgIGdwaW8tY29udHJvbGxlcjsNCj4gPiArICAgICAgICAg
-ICAgICAgI2dwaW8tY2VsbHMgPSA8Mj47DQo+ID4gKyAgICAgICB9Ow0KPiANCj4gUGxlYXNlIGFs
-c28gYWRkIHRoZSB1c2VycyBmb3IgdGhlIE1BWDczMTAgcGlucywgc3VjaCBhcyBFdGhlcm5ldCBQ
-SFkuDQogDQpNQVg3MzEwIHBpbnMgYXJlIGZvciBQQ0llLCBDQU4sIE1MQi4gR1BTIGV0Yy4sIHRo
-ZXNlIG1vZHVsZXMgYXJlIE5PVCBlbmFibGVkIHlldCwgc28NCkkgY2FuIE5PVCB0ZXN0IGl0LCBJ
-IHRoaW5rIHdlIHNob3VsZCBhZGQgTUFYNzMxMCB1c2VycyB3aGVuIHRoZXNlIG1vZHVsZXMgYXJl
-IGVuYWJsZWQsDQpldGhlcm5ldCBQSFkgaXMgTk9UIGNvbnRyb2xsZWQgYnkgaXQuDQoNCkFuc29u
-Lg0K
+This patch adds the MediaTek MT6351 codec driver.
+
+KaiChieh Chuang (2):
+  ASoC: add documents for mt6351
+  ASoC: add mt6351 codec driver
+
+ Documentation/devicetree/bindings/sound/mt6351.txt |   16 +
+ sound/soc/codecs/Kconfig                           |    4 +
+ sound/soc/codecs/Makefile                          |    2 +
+ sound/soc/codecs/mt6351.c                          | 1506 ++++++++++++++++++++
+ sound/soc/codecs/mt6351.h                          |  105 ++
+ 5 files changed, 1633 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/mt6351.txt
+ create mode 100644 sound/soc/codecs/mt6351.c
+ create mode 100644 sound/soc/codecs/mt6351.h
+
+-- 
+2.12.5
