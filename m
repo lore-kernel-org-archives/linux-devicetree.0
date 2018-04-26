@@ -1,24 +1,38 @@
-Return-Path: <robherring2@gmail.com>
-Date: Fri, 27 Apr 2018 16:53:17 -0500
-From: Rob Herring <robh@kernel.org>
+Return-Path: <SRS0=7G3g=HP=baylibre.com=narmstrong@kernel.org>
 Subject: Re: [PATCH] dt-bindings: meson-uart: DT fix
  s/clocks-names/clock-names/
-Message-ID: <20180427215317.u4ueypn5vhm5xmcw@rob-hp-laptop>
 References: <1524468760-22912-1-git-send-email-geert+renesas@glider.be>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Message-ID: <8ca5eed0-8dd6-b411-32a6-d63c62ff9e04@baylibre.com>
+Date: Thu, 26 Apr 2018 10:40:56 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <1524468760-22912-1-git-send-email-geert+renesas@glider.be>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Apr 23, 2018 at 09:32:40AM +0200, Geert Uytterhoeven wrote:
+On 23/04/2018 09:32, Geert Uytterhoeven wrote:
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
 >  Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt b/Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
+> index 8ff65fa632fdedd7..c06c045126fc9070 100644
+> --- a/Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
+> +++ b/Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
+> @@ -21,7 +21,7 @@ Required properties:
+>  - interrupts : identifier to the device interrupt
+>  - clocks : a list of phandle + clock-specifier pairs, one for each
+>  	   entry in clock names.
+> -- clocks-names :
+> +- clock-names :
+>     * "xtal" for external xtal clock identifier
+>     * "pclk" for the bus core clock, either the clk81 clock or the gate clock
+>     * "baud" for the source of the baudrate generator, can be either the xtal
+> 
 
-As this is only binding change, I've applied it.
-
-Rob
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
