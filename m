@@ -1,71 +1,68 @@
-From: Chen Zhong <chen.zhong@mediatek.com>
-Subject: Re: [GIT PULL] Immutable branch between MFD, Input and RTC due for
- the v4.18 merge window
-Date: Thu, 26 Apr 2018 14:53:37 +0800
-Message-ID: <1524725617.31521.0.camel@mhfsdcap03>
-References: <1508937364-30054-1-git-send-email-chen.zhong@mediatek.com>
-         <20180416141809.34l2ofmeljqvyicm@dell>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 4/5] ARM: dts: imx6sx-sabreauto: add fec support
+Date: Thu, 26 Apr 2018 06:57:07 +0000
+Message-ID: <DB5PR04MB132072FEDCAFEDF6592C6A32F58E0@DB5PR04MB1320.eurprd04.prod.outlook.com>
+References: <1524455219-6736-1-git-send-email-Anson.Huang@nxp.com>
+ <1524455219-6736-4-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5CDAQtw7Q6NgSzKP4ogaqRaGSE0A+st1iqZ=cQsK49moQ@mail.gmail.com>
+ <AM3PR04MB131566E1C8033D256686F192F5880@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5Dm=MFRoh=y54Qf2RrncWfQPTUJ2ZNfvYnUD=idp8RPNA@mail.gmail.com>
+ <AM3PR04MB1315ED599A20F67BB9FEFEE1F58F0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <AM3PR04MB1315B04BE46755E3EB82E04CF58F0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5AS=aH8p1+tmgJ4ooeqExNqOALh7vbPAsQdqdky8CkXyQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180416141809.34l2ofmeljqvyicm@dell>
+In-Reply-To: <CAOMZO5AS=aH8p1+tmgJ4ooeqExNqOALh7vbPAsQdqdky8CkXyQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Linus Walleij <linus.walleij@linaro.org>, Beomho Seo <beomho.seo@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Jaechul Lee <jcsing.lee@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Andy Duan <fugang.duan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-04-16 at 15:18 +0100, Lee Jones wrote:
-> Enjoy!
-> 
-> The following changes since commit 60cc43fc888428bb2f18f08997432d426a243338:
-> 
->   Linux 4.17-rc1 (2018-04-15 18:24:20 -0700)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-input-rtc-v4.18
-> 
-> for you to fetch changes up to 55d1d1547ab5e52269988af5e7c553796ff68e97:
-> 
->   mfd: mt6397: Add PMIC keys support to MT6397 driver (2018-04-16 15:16:11 +0100)
-> 
-> ----------------------------------------------------------------
-> Immutable branch between MFD, Input and RTC due for the v4.18 merge window
-> 
-> ----------------------------------------------------------------
-> Chen Zhong (5):
->       mfd: mt6397: Create irq mappings in mfd core driver
->       dt-bindings: input: Add document bindings for mtk-pmic-keys
->       dt-bindings: mfd: Add bindings for the keys as subnode of PMIC
->       input: Add MediaTek PMIC keys support
->       mfd: mt6397: Add PMIC keys support to MT6397 driver
-> 
->  .../devicetree/bindings/input/mtk-pmic-keys.txt    |  43 +++
->  Documentation/devicetree/bindings/mfd/mt6397.txt   |   6 +
->  drivers/input/keyboard/Kconfig                     |   9 +
->  drivers/input/keyboard/Makefile                    |   1 +
->  drivers/input/keyboard/mtk-pmic-keys.c             | 339 +++++++++++++++++++++
->  drivers/mfd/mt6397-core.c                          |  26 +-
->  drivers/rtc/rtc-mt6397.c                           |   7 +-
->  7 files changed, 424 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
->  create mode 100644 drivers/input/keyboard/mtk-pmic-keys.c
-> 
-
-Hi Lee,
-
-I’m sorry that I found this patch
-https://patchwork.kernel.org/patch/10026705/
-
-is missing in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git
-ib-mfd-input-rtc-v4.18
-
-Could you please take this patch up?
-
-Thanks.
-
-Best regards,
-Chen Zhong
+SGksIEZhYmlvDQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1A
+Z21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEFwcmlsIDI1LCAyMDE4IDk6NDcgUE0NCj4g
+VG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogU2hhd24gR3VvIDxz
+aGF3bmd1b0BrZXJuZWwub3JnPjsgU2FzY2hhIEhhdWVyDQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXgu
+ZGU+OyBGYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBSb2INCj4gSGVycmlu
+ZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNv
+bT47DQo+IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+OyBtb2RlcmF0ZWQgbGlzdDpB
+Uk0vRlJFRVNDQUxFIElNWCAvIE1YQw0KPiBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0ta2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBvcGVuIGxpc3Q6T1BFTg0KPiBGSVJNV0FSRSBBTkQg
+RkxBVFRFTkVEIERFVklDRSBUUkVFIEJJTkRJTkdTDQo+IDxkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZz47IGxpbnV4LWtlcm5lbCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz4NCj4gU3Vi
+amVjdDogUmU6IFtQQVRDSCA0LzVdIEFSTTogZHRzOiBpbXg2c3gtc2FicmVhdXRvOiBhZGQgZmVj
+IHN1cHBvcnQNCj4gDQo+IEhpIEFuc29uLA0KPiANCj4gT24gV2VkLCBBcHIgMjUsIDIwMTggYXQg
+MjozNiBBTSwgQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IHdyb3RlOg0KPiAN
+Cj4gPiBTb3JyeSwgSSBtYWRlIGEgbWlzdGFrZSBoZXJlLCB0aGUgTUFYNzMyMCBJTzAgaXMgZm9y
+IGFkanVzdGluZyBGRUMxJ3MNCj4gPiB2b2x0YWdlLA0KPiANCj4gSW4gdGhpcyBjYXNlIHlvdSBu
+ZWVkIHRvIHBhc3MgdGhlICdwaHktc3VwcGx5JyBwcm9wZXJ0eSBpbnNpZGUgdGhlIGZlYyBub2Rl
+IGFuZA0KPiBhZGQgYSByZWd1bGF0b3IgdGhhdCBpcyBjb250cm9sbGVkIHZpYSBNQVg3MzIwIElP
+MCBwaW4uDQoNClRoZSAncGh5LXN1cHBseScgaXMgZm9yIGVuYWJsaW5nL2Rpc2FibGluZyBwaHkg
+cmVndWxhdG9yLCBidXQgaGVyZSB0aGUgTUFYNzMyMiBJTzAgaXMgTk9UIGZvcg0KZW5hYmxpbmcv
+ZGlzYWJsaW5nIFBIWSByZWd1bGF0b3IsIGl0IGlzIGZvciBJTyB2b2x0YWdlIHN3aXRjaCBiZXR3
+ZWVuIDEuNVYgYW5kIDEuOFYsIG91ciBFTkVUDQpJTyBjYW4gd29yayB3aXRoIGJvdGggMS41ViBh
+bmQgMS44Viwgc28gYW55IGNvbmZpZyBpcyBPSyBmb3IgRU5FVCBmdW5jdGlvbi4NCg0KVGhlIDEu
+NVYvMS44ViBzZWxlY3Rpb24gaXMgYSBvbmUgdGltZSBzZXR0aW5nIHRoaW5nLCB0aGF0IG1lYW5z
+IHdlIG9ubHkgbmVlZCB0bw0KY29uZmlnIGl0IG9uY2UgZHVyaW5nIGJvb3QgdXAsIG1vc3Qgb2Yg
+aS5NWCBwbGF0Zm9ybXMgZG9lcyBOT1QgcHJvdmlkZSBzdWNoIHZvbHRhZ2UNCnN3aXRjaCBmdW5j
+dGlvbiBmb3IgRU5FVCBJTywgb24gdGhpcyA2U1ggc2FicmUgYXV0byBib2FyZCwgaXQgaXMgbW9y
+ZSBsaWtlIGEgYmFja3VwIG9yDQp2YWxpZGF0aW9uIHB1cnBvc2UuIFdpdGggZGVmYXVsdCBzZXR0
+aW5ncywgRU5FVCdzIGZ1bmN0aW9uIGlzIE5PVCBpbXBhY3RlZCBhdCBhbGwuDQoNCkkgdGhpbmsg
+d2UgY2FuIGFkZCBhIGdwaW8gcmVndWxhdG9yIGZvciBpdCBhbmQgbGV0IHRoZSByZWd1bGF0b3Ig
+aW5pdGlhbGl6YXRpb24gc2V0IHRoZSBHUElPDQpMZXZlbCBmb3IgZmVjLCBzdWNoIGJlbG93LCB3
+aXRoICIgZW5hYmxlLWFjdGl2ZS1oaWdoICIgcHJlc2VudCwgR1BJTyB3aWxsIGJlIGF0IExPVyBh
+bmQgdm9sdGFnZQ0KaXMgMS41Viwgd2l0aG91dCB0aGlzIHByb3BlcnR5LCBHUElPIHdpbGwgYmUg
+SElHSCBhbmQgdm9sdGFnZSB3aWxsIGJlIDEuOFYuDQorICAgICAgICAgICAgICAgcmVnX2ZlYzog
+ZmVjX2lvX3N1cHBseSB7DQorICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJl
+Z3VsYXRvci1ncGlvIjsNCisgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1uYW1lID0g
+IjEuOFZfMS41Vl9GRUMiOw0KKyAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW1pbi1t
+aWNyb3ZvbHQgPSA8MTUwMDAwMD47DQorICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3It
+bWF4LW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsNCisgICAgICAgICAgICAgICAgICAgICAgIHN0YXRl
+cyA9IDwxNTAwMDAwIDB4MCAxODAwMDAwIDB4MT47DQorICAgICAgICAgICAgICAgICAgICAgICBl
+bmFibGUtZ3BpbyA9IDwmbWF4NzMyMiAwIEdQSU9fQUNUSVZFX0hJR0g+Ow0KKyAgICAgICAgICAg
+ICAgICAgICAgICAgdmluLXN1cHBseSA9IDwmc3cyX3JlZz47DQorICAgICAgICAgICAgICAgICAg
+ICAgICBlbmFibGUtYWN0aXZlLWhpZ2g7DQorICAgICAgICAgICAgICAgfTsNCisNCg0KQW5zb24u
+DQoNCg==
