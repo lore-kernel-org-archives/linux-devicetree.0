@@ -1,121 +1,132 @@
-Return-Path: <SRS0=hkU0=HL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf0-f194.google.com ([209.85.192.194]:39617 "EHLO
-        mail-pf0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754289AbeDVP46 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Apr 2018 11:56:58 -0400
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v3 07/11] media: ov772x: handle nested s_power() calls
-Date: Mon, 23 Apr 2018 00:56:13 +0900
-Message-Id: <1524412577-14419-8-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
-References: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC v2 5/6] usb: gadget: udc: renesas_usb3: add support for a usb role switch
+Date: Thu, 26 Apr 2018 20:26:45 +0900
+Message-Id: <1524742006-17984-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1524742006-17984-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1524742006-17984-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Depending on the v4l2 driver, calling s_power() could be nested.  So the
-actual transitions between power saving mode and normal operation mode
-should only happen at the first power on and the last power off.
+This patch adds support for a usb role switch driver. And then,
+this driver uses the usb role switch APIs instead of hardware
+access to initialize usb host side at specific timings.
 
-This adds an s_power() nesting counter and updates the power state if the
-counter is modified from 0 to != 0 or from != 0 to 0.
-
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
-* v3
-- Rename mutex name from power_lock to lock
-- Add warning for duplicated s_power call
+ drivers/usb/gadget/udc/Kconfig        |  1 +
+ drivers/usb/gadget/udc/renesas_usb3.c | 34 ++++++++++++++++++++++++++++------
+ 2 files changed, 29 insertions(+), 6 deletions(-)
 
- drivers/media/i2c/ov772x.c | 34 ++++++++++++++++++++++++++++++----
- 1 file changed, 30 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 95c1c95d..8c0b850 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -424,6 +424,9 @@ struct ov772x_priv {
- 	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
- 	unsigned short                    band_filter;
- 	unsigned int			  fps;
-+	/* lock to protect power_count */
-+	struct mutex			  lock;
-+	int				  power_count;
- #ifdef CONFIG_MEDIA_CONTROLLER
- 	struct media_pad pad;
- #endif
-@@ -871,9 +874,26 @@ static int ov772x_power_off(struct ov772x_priv *priv)
- static int ov772x_s_power(struct v4l2_subdev *sd, int on)
+diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
+index 0875d38..7e4a5dd 100644
+--- a/drivers/usb/gadget/udc/Kconfig
++++ b/drivers/usb/gadget/udc/Kconfig
+@@ -193,6 +193,7 @@ config USB_RENESAS_USB3
+ 	tristate 'Renesas USB3.0 Peripheral controller'
+ 	depends on ARCH_RENESAS || COMPILE_TEST
+ 	depends on EXTCON && HAS_DMA
++	select USB_ROLE_SWITCH
+ 	help
+ 	   Renesas USB3.0 Peripheral controller is a USB peripheral controller
+ 	   that supports super, high, and full speed USB 3.0 data transfers.
+diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
+index 409cde4..5b7b1ce 100644
+--- a/drivers/usb/gadget/udc/renesas_usb3.c
++++ b/drivers/usb/gadget/udc/renesas_usb3.c
+@@ -23,6 +23,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/usb/ch9.h>
+ #include <linux/usb/gadget.h>
++#include <linux/usb/role.h>
+ 
+ /* register definitions */
+ #define USB3_AXI_INT_STA	0x008
+@@ -330,6 +331,7 @@ struct renesas_usb3 {
+ 
+ 	struct usb_gadget gadget;
+ 	struct usb_gadget_driver *driver;
++	struct usb_role_switch *role_sw;	/* Optional */
+ 	struct extcon_dev *extcon;
+ 	struct work_struct extcon_work;
+ 	struct phy *phy;
+@@ -454,7 +456,11 @@ static void usb3_disable_pipe_irq(struct renesas_usb3 *usb3, int num)
+ 
+ static bool usb3_is_host(struct renesas_usb3 *usb3)
  {
- 	struct ov772x_priv *priv = to_ov772x(sd);
-+	int ret = 0;
-+
-+	mutex_lock(&priv->lock);
-+
-+	/* If the power count is modified from 0 to != 0 or from != 0 to 0,
-+	 * update the power state.
-+	 */
-+	if (priv->power_count == !on)
-+		ret = on ? ov772x_power_on(priv) : ov772x_power_off(priv);
-+
-+	if (!ret) {
-+		/* Update the power count. */
-+		priv->power_count += on ? 1 : -1;
-+		WARN(priv->power_count < 0, "Unbalanced power count\n");
-+		WARN(priv->power_count > 1, "Duplicated s_power call\n");
-+	}
-+
-+	mutex_unlock(&priv->lock);
- 
--	return on ? ov772x_power_on(priv) :
--		    ov772x_power_off(priv);
-+	return ret;
+-	return !(usb3_read(usb3, USB3_DRD_CON) & DRD_CON_PERI_CON);
++	if (usb3->role_sw)
++		return usb_role_switch_get_role(usb3->role_sw) ==
++						USB_ROLE_HOST ? true : false;
++	else
++		return !(usb3_read(usb3, USB3_DRD_CON) & DRD_CON_PERI_CON);
  }
  
- static const struct ov772x_win_size *ov772x_select_win(u32 width, u32 height)
-@@ -1303,6 +1323,7 @@ static int ov772x_probe(struct i2c_client *client,
- 		return -ENOMEM;
+ static void usb3_init_axi_bridge(struct renesas_usb3 *usb3)
+@@ -645,10 +651,16 @@ static void usb3_check_vbus(struct renesas_usb3 *usb3)
  
- 	priv->info = client->dev.platform_data;
-+	mutex_init(&priv->lock);
- 
- 	v4l2_i2c_subdev_init(&priv->subdev, client, &ov772x_subdev_ops);
- 	v4l2_ctrl_handler_init(&priv->hdl, 3);
-@@ -1313,8 +1334,10 @@ static int ov772x_probe(struct i2c_client *client,
- 	v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
- 			  V4L2_CID_BAND_STOP_FILTER, 0, 256, 1, 0);
- 	priv->subdev.ctrl_handler = &priv->hdl;
--	if (priv->hdl.error)
--		return priv->hdl.error;
-+	if (priv->hdl.error) {
-+		ret = priv->hdl.error;
-+		goto error_mutex_destroy;
+ static void usb3_set_mode(struct renesas_usb3 *usb3, bool host)
+ {
+-	if (host)
+-		usb3_clear_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
+-	else
+-		usb3_set_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
++	if (usb3->role_sw) {
++		enum usb_role role = host ? USB_ROLE_HOST : USB_ROLE_DEVICE;
++
++		usb_role_switch_set_role(usb3->role_sw, role);
++	} else {
++		if (host)
++			usb3_clear_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
++		else
++			usb3_set_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
 +	}
- 
- 	priv->clk = clk_get(&client->dev, "xclk");
- 	if (IS_ERR(priv->clk)) {
-@@ -1362,6 +1385,8 @@ static int ov772x_probe(struct i2c_client *client,
- 	clk_put(priv->clk);
- error_ctrl_free:
- 	v4l2_ctrl_handler_free(&priv->hdl);
-+error_mutex_destroy:
-+	mutex_destroy(&priv->lock);
- 
- 	return ret;
  }
-@@ -1376,6 +1401,7 @@ static int ov772x_remove(struct i2c_client *client)
- 		gpiod_put(priv->pwdn_gpio);
- 	v4l2_async_unregister_subdev(&priv->subdev);
- 	v4l2_ctrl_handler_free(&priv->hdl);
-+	mutex_destroy(&priv->lock);
+ 
+ static void usb3_vbus_out(struct renesas_usb3 *usb3, bool enable)
+@@ -663,8 +675,8 @@ static void usb3_mode_config(struct renesas_usb3 *usb3, bool host, bool a_dev)
+ {
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&usb3->lock, flags);
+ 	usb3_set_mode(usb3, host);
++	spin_lock_irqsave(&usb3->lock, flags);
+ 	usb3_vbus_out(usb3, a_dev);
+ 	/* for A-Peripheral or forced B-device mode */
+ 	if ((!host && a_dev) ||
+@@ -2238,6 +2250,10 @@ static int renesas_usb3_start(struct usb_gadget *gadget,
+ 	/* hook up the driver */
+ 	usb3->driver = driver;
+ 
++	usb3->role_sw = usb_role_switch_get_by_graph(usb3_to_dev(usb3), 0, 0);
++	if (IS_ERR_OR_NULL(usb3->role_sw))
++		usb3->role_sw = NULL;
++
+ 	if (usb3->phy)
+ 		phy_init(usb3->phy);
+ 
+@@ -2260,6 +2276,8 @@ static int renesas_usb3_stop(struct usb_gadget *gadget)
+ 	if (usb3->phy)
+ 		phy_exit(usb3->phy);
+ 
++	usb_role_switch_put(usb3->role_sw);
++
+ 	pm_runtime_put(usb3_to_dev(usb3));
  
  	return 0;
- }
+@@ -2632,6 +2650,10 @@ static int renesas_usb3_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto err_add_udc;
+ 
++	ret = devm_of_platform_populate(&pdev->dev);
++	if (ret < 0)
++		goto err_dev_create;
++
+ 	ret = device_create_file(&pdev->dev, &dev_attr_role);
+ 	if (ret < 0)
+ 		goto err_dev_create;
 -- 
-2.7.4
-
+1.9.1
