@@ -1,113 +1,56 @@
 From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: [PATCH 11/17] arm64: dts: r8a77965: Add VSP instances
-Date: Thu, 26 Apr 2018 17:53:40 +0100
-Message-ID: <20180426165346.494-12-kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH 17/17] arm64: dts: r8a77965-salvator-xs: Enable HDMI output
+Date: Thu, 26 Apr 2018 17:53:46 +0100
+Message-ID: <20180426165346.494-18-kieran.bingham+renesas@ideasonboard.com>
 References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-renesas-soc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Simon Horman <horms@verge.net.au>, Catalin Marinas <catalin.marinas@arm.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, open list <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM64 PORT AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT
+        AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The r8a77965 has 4 VSP instances.
+From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
 
-Based on a similar patch of the R8A7796 device tree
-by Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>.
+This patch enables the HDMI encoder for the Salvator-X 2nd version board
+on the R8A77965 SoC and hook it up to the HDMI connector.
+
+Based on code of the Salvator-X 2nd version board
+on the R8A7796 SoC device tree
+by Geert Uytterhoeven <geert+renesas@glider.be>
 
 Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-[Kieran: Rebased to top of tree, fixed sort orders]
 Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 ---
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 44 +++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ .../boot/dts/renesas/r8a77965-salvator-xs.dts   | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index 1f44ed7c1b1c..e92e6b03333a 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -1009,6 +1009,17 @@
- 			resets = <&cpg 615>;
- 		};
- 
-+		vspb: vsp@fe960000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfe960000 0 0x8000>;
-+			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 626>;
-+			power-domains = <&sysc R8A77965_PD_A3VP>;
-+			resets = <&cpg 626>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
+index 2223cc2bd6bc..dcf1849f1a67 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
+@@ -31,3 +31,20 @@
+ 	clock-names = "du.0", "du.1", "du.3", "lvds.0",
+ 		      "dclkin.0", "dclkin.1", "dclkin.3";
+ };
 +
-+			renesas,fcp = <&fcpvb0>;
++&hdmi0 {
++	status = "okay";
++
++	ports {
++		port@1 {
++			reg = <1>;
++			rcar_dw_hdmi0_out: endpoint {
++				remote-endpoint = <&hdmi0_con>;
++			};
 +		};
++	};
++};
 +
- 		fcpvb0: fcp@fe96f000 {
- 			compatible = "renesas,fcpv";
- 			reg = <0 0xfe96f000 0 0x200>;
-@@ -1017,6 +1028,17 @@
- 			resets = <&cpg 607>;
- 		};
- 
-+		vspi0: vsp@fe9a0000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfe9a0000 0 0x8000>;
-+			interrupts = <GIC_SPI 444 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 631>;
-+			power-domains = <&sysc R8A77965_PD_A3VP>;
-+			resets = <&cpg 631>;
-+
-+			renesas,fcp = <&fcpvi0>;
-+		};
-+
- 		fcpvi0: fcp@fe9af000 {
- 			compatible = "renesas,fcpv";
- 			reg = <0 0xfe9af000 0 0x200>;
-@@ -1025,6 +1047,17 @@
- 			resets = <&cpg 611>;
- 		};
- 
-+		vspd0: vsp@fea20000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfea20000 0 0x4000>;
-+			interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 623>;
-+			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-+			resets = <&cpg 623>;
-+
-+			renesas,fcp = <&fcpvd0>;
-+		};
-+
- 		fcpvd0: fcp@fea27000 {
- 			compatible = "renesas,fcpv";
- 			reg = <0 0xfea27000 0 0x200>;
-@@ -1033,6 +1066,17 @@
- 			resets = <&cpg 603>;
- 		};
- 
-+		vspd1: vsp@fea28000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfea28000 0 0x4000>;
-+			interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 622>;
-+			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-+			resets = <&cpg 622>;
-+
-+			renesas,fcp = <&fcpvd1>;
-+		};
-+
- 		fcpvd1: fcp@fea2f000 {
- 			compatible = "renesas,fcpv";
- 			reg = <0 0xfea2f000 0 0x200>;
++&hdmi0_con {
++	remote-endpoint = <&rcar_dw_hdmi0_out>;
++};
 -- 
 2.17.0
