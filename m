@@ -1,83 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: staging: remove a couple of ADC bindings
-Date: Wed, 25 Apr 2018 20:57:54 -0500
-Message-ID: <20180426015754.26605-1-robh@kernel.org>
+From: Chris Lew <clew@codeaurora.org>
+Subject: [PATCH v2 0/6] Add chrdev and name query support for GLINK
+Date: Wed, 25 Apr 2018 19:07:46 -0700
+Message-ID: <1524708472-18263-1-git-send-email-clew@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Roland Stigge <stigge@antcom.de>, Stefan Roese <sr@denx.de>, Jonathan Cameron <jic23@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
+To: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, clew@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Remove LPC32xx and SPEAr ADC bindings in staging. They have not been
-touched since 2012.
+Add support for the GLINK rpmsg transport to register a rpmsg chrdev.
+This will create the rpmsg_ctrl nodes for userspace clients to open 
+rpmsg epts. Create a label property that will help userspace clients
+distinguish between the different GLINK links. The rpmsg chrdev 
+allocation is done by allocating a local channel which also allocates
+an ept. We need to add some guards against edge cases for this chrdev
+because it will never fully open.
 
-Cc: Roland Stigge <stigge@antcom.de>
-Cc: Stefan Roese <sr@denx.de>
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-Move these out of staging please or they are going to be removed.
+Changes since v1:
+- Add explanation to dt-bindings commit message
+- Add patch complete_all the open_req/ack variables
+- Add patch to prevent null pointer dereference in chrdev channel release
+- Change chrdev allocation to use glink channel allocation
+- Change glink attr struct to const
 
- .../bindings/staging/iio/adc/lpc32xx-adc.txt       | 16 -------------
- .../bindings/staging/iio/adc/spear-adc.txt         | 26 ----------------------
- 2 files changed, 42 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/staging/iio/adc/lpc32xx-adc.txt
- delete mode 100644 Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
+Chris Lew (6):
+  dt-bindings: soc: qcom: Add label for GLINK bindings
+  rpmsg: glink: Store edge name for glink device
+  rpmsg: glink: Use complete_all for open states
+  rpmsg: Guard against null endpoint ops in destroy
+  rpmsg: glink: Add support for rpmsg glink chrdev
+  rpmsg: glink: Expose rpmsg name attr for glink
 
-diff --git a/Documentation/devicetree/bindings/staging/iio/adc/lpc32xx-adc.txt b/Documentation/devicetree/bindings/staging/iio/adc/lpc32xx-adc.txt
-deleted file mode 100644
-index b3629d3a9adf..000000000000
---- a/Documentation/devicetree/bindings/staging/iio/adc/lpc32xx-adc.txt
-+++ /dev/null
-@@ -1,16 +0,0 @@
--* NXP LPC32xx SoC ADC controller
--
--Required properties:
--- compatible: must be "nxp,lpc3220-adc"
--- reg: physical base address of the controller and length of memory mapped
--  region.
--- interrupts: The ADC interrupt
--
--Example:
--
--	adc@40048000 {
--		compatible = "nxp,lpc3220-adc";
--		reg = <0x40048000 0x1000>;
--		interrupt-parent = <&mic>;
--		interrupts = <39 0>;
--	};
-diff --git a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt b/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-deleted file mode 100644
-index 02ea23a63f20..000000000000
---- a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-+++ /dev/null
-@@ -1,26 +0,0 @@
--* ST SPEAr ADC device driver
--
--Required properties:
--- compatible: Should be "st,spear600-adc"
--- reg: Address and length of the register set for the device
--- interrupt-parent: Should be the phandle for the interrupt controller
--  that services interrupts for this device
--- interrupts: Should contain the ADC interrupt
--- sampling-frequency: Default sampling frequency
--
--Optional properties:
--- vref-external: External voltage reference in milli-volts. If omitted
--  the internal voltage reference will be used.
--- average-samples: Number of samples to generate an average value. If
--  omitted, single data conversion will be used.
--
--Examples:
--
--	adc: adc@d8200000 {
--		compatible = "st,spear600-adc";
--		reg = <0xd8200000 0x1000>;
--		interrupt-parent = <&vic1>;
--		interrupts = <6>;
--		sampling-frequency = <5000000>;
--		vref-external = <2500>;	/* 2.5V VRef */
--	};
+ .../devicetree/bindings/soc/qcom/qcom,glink.txt    |  5 ++
+ drivers/rpmsg/qcom_glink_native.c                  | 68 +++++++++++++++++++++-
+ drivers/rpmsg/rpmsg_core.c                         |  2 +-
+ 3 files changed, 71 insertions(+), 4 deletions(-)
+
 -- 
-2.14.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
