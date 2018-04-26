@@ -1,67 +1,106 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v4 05/12] mmc: sdhci: Disable HS200/HS400 mode if
- controller can't support 1.8v
-Date: Thu, 26 Apr 2018 13:40:01 +0300
-Message-ID: <b8e326e1-cf24-63ca-0b9c-82e7efe61884@intel.com>
-References: <20180425120937.29867-1-kishon@ti.com>
- <20180425120937.29867-6-kishon@ti.com>
- <6bdf4feb-bc12-3779-3de6-e08af1d4f518@intel.com>
- <7b877764-22f3-e13b-a8da-1e0b997b4b74@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] ARM64: dts: meson: add MMC resets
+Date: Thu, 26 Apr 2018 12:41:19 +0200
+Message-ID: <20180426104119.13659-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7b877764-22f3-e13b-a8da-1e0b997b4b74@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>
+To: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/04/18 13:08, Kishon Vijay Abraham I wrote:
-> Hi Adrian,
-> 
-> On Thursday 26 April 2018 02:25 PM, Adrian Hunter wrote:
->> On 25/04/18 15:09, Kishon Vijay Abraham I wrote:
->>> Though MMC controller can indicate HS200/HS400 mode capability (by
->>> using "mmc-hs200-1_8v"/"mmc-hs400-1_8v" dt property), if the IO lines
->>> in the board is connected to 3.3v supply, HS200/HS400 mode cannot be
->>> supported. Such boards have "no-1-8-v" property in their dts file.
->>> Disable HS200/HS400 mode for boards which have "no-1-8-v" set.
->>>
->>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>> Acked-by: Tony Lindgren <tony@atomide.com>
->>> ---
->>>  drivers/mmc/host/sdhci.c | 1 +
->>>  include/linux/mmc/host.h | 1 +
->>>  2 files changed, 2 insertions(+)
->>>
->>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->>> index 2ededa7f43df..b5f047b5f3ae 100644
->>> --- a/drivers/mmc/host/sdhci.c
->>> +++ b/drivers/mmc/host/sdhci.c
->>> @@ -3672,6 +3672,7 @@ int sdhci_setup_host(struct sdhci_host *host)
->>>  	if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V) {
->>>  		host->caps1 &= ~(SDHCI_SUPPORT_SDR104 | SDHCI_SUPPORT_SDR50 |
->>>  				 SDHCI_SUPPORT_DDR50);
->>> +		mmc->caps2 &= ~MMC_CAP2_HSX00_1_8V;
->>
->> Seems weird for sdhci to clear flags it never set.  Also couldn't we
->> reasonably expect dt properties to be consistent?  Is this really about
->> setting SDHCI_QUIRK2_NO_1_8_V in your driver and expecting it to override
->> other dt properties?  Although that still begs the question why anyone would
->> set dt properties that the hardware doesn't support?  I guess you should
->> also clear MMC_CAP2_HS400_ES.
-> 
-> The SoC might support a specific mode like HS200. So the SoC specific dtsi file
-> might have dt properties for HS200 mode set. But the board which uses the SoC
-> might be modeled in a way a particular mode cannot be used (like IO lines not
-> connected to 1.8v). One option is to use /delete-property/ in the board dts
-> file. But since "no-1-8-v" property already indicates HS200 mode cannot be
-> supported, having a /delete-property/ might be redundant.
-> 
-> I can reset caps2 in sdhci-omap after invoking mmc_of_parse if you feel that
-> makes more sense.
+Add reset lines to the mmc controllers of the meson gx and axg SoCs
 
-Just add the explanation to the commit message, add a comment to the code,
-and also clear MMC_CAP_1_8V_DDR and MMC_CAP2_HS400_ES and MMC_CAP_UHS_*.
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 3 +++
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 3 +++
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 5 ++++-
+ 3 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index 854d5b25effd..56c84afb2802 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/axg-clkc.h>
+ #include <dt-bindings/gpio/meson-axg-gpio.h>
++#include <dt-bindings/reset/amlogic,meson-axg-reset.h>
+ 
+ / {
+ 	compatible = "amlogic,meson-axg";
+@@ -130,6 +131,7 @@
+ 					<&clkc CLKID_SD_EMMC_B_CLK0>,
+ 					<&clkc CLKID_FCLK_DIV2>;
+ 				clock-names = "core", "clkin0", "clkin1";
++				resets = <&reset RESET_SD_EMMC_B>;
+ 			};
+ 
+ 			sd_emmc_c: mmc@7000 {
+@@ -141,6 +143,7 @@
+ 					<&clkc CLKID_SD_EMMC_C_CLK0>,
+ 					<&clkc CLKID_FCLK_DIV2>;
+ 				clock-names = "core", "clkin0", "clkin1";
++				resets = <&reset RESET_SD_EMMC_C>;
+ 			};
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index c3b8e0d3fbc9..1cbb0829b15d 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -715,6 +715,7 @@
+ 		 <&clkc CLKID_SD_EMMC_A_CLK0>,
+ 		 <&clkc CLKID_FCLK_DIV2>;
+ 	clock-names = "core", "clkin0", "clkin1";
++	resets = <&reset RESET_SD_EMMC_A>;
+ };
+ 
+ &sd_emmc_b {
+@@ -722,6 +723,7 @@
+ 		 <&clkc CLKID_SD_EMMC_B_CLK0>,
+ 		 <&clkc CLKID_FCLK_DIV2>;
+ 	clock-names = "core", "clkin0", "clkin1";
++	resets = <&reset RESET_SD_EMMC_B>;
+ };
+ 
+ &sd_emmc_c {
+@@ -729,6 +731,7 @@
+ 		 <&clkc CLKID_SD_EMMC_C_CLK0>,
+ 		 <&clkc CLKID_FCLK_DIV2>;
+ 	clock-names = "core", "clkin0", "clkin1";
++	resets = <&reset RESET_SD_EMMC_C>;
+ };
+ 
+ &spicc {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index 00b5bbd0b3e1..6e4a07112ed8 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -724,13 +724,15 @@
+ 		 <&clkc CLKID_SD_EMMC_A_CLK0>,
+ 		 <&clkc CLKID_FCLK_DIV2>;
+ 	clock-names = "core", "clkin0", "clkin1";
++	resets = <&reset RESET_SD_EMMC_A>;
+ };
+ 
+ &sd_emmc_b {
+ 	clocks = <&clkc CLKID_SD_EMMC_B>,
+ 		 <&clkc CLKID_SD_EMMC_B_CLK0>,
+ 		 <&clkc CLKID_FCLK_DIV2>;
+-       clock-names = "core", "clkin0", "clkin1";
++	clock-names = "core", "clkin0", "clkin1";
++	resets = <&reset RESET_SD_EMMC_B>;
+ };
+ 
+ &sd_emmc_c {
+@@ -738,6 +740,7 @@
+ 		 <&clkc CLKID_SD_EMMC_C_CLK0>,
+ 		 <&clkc CLKID_FCLK_DIV2>;
+ 	clock-names = "core", "clkin0", "clkin1";
++	resets = <&reset RESET_SD_EMMC_C>;
+ };
+ 
+ &spicc {
+-- 
+2.14.3
