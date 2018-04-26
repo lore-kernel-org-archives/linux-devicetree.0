@@ -1,45 +1,44 @@
 From: Chris Lew <clew@codeaurora.org>
-Subject: [PATCH v3 1/6] dt-bindings: soc: qcom: Add label for GLINK bindings
-Date: Thu, 26 Apr 2018 15:59:00 -0700
-Message-ID: <1524783545-21951-2-git-send-email-clew@codeaurora.org>
-References: <1524783545-21951-1-git-send-email-clew@codeaurora.org>
+Subject: [PATCH v3 0/6] Add chrdev and name query support for GLINK
+Date: Thu, 26 Apr 2018 15:58:59 -0700
+Message-ID: <1524783545-21951-1-git-send-email-clew@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524783545-21951-1-git-send-email-clew@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, clew@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-There are GLINK clients who open the same channel on multiple GLINK
-links. These clients need a way to distinguish which remoteproc they
-are communicating to. Add a label property to identify the edge this
-node represents.
+Add support for the GLINK rpmsg transport to register a rpmsg chrdev.
+This will create the rpmsg_ctrl nodes for userspace clients to open 
+rpmsg epts. Create a label property that will help userspace clients
+distinguish between the different GLINK links. The rpmsg chrdev 
+allocation is done by allocating a local channel which also allocates
+an ept. We need to add some guards against edge cases for this chrdev
+because it will never fully open.
 
-Signed-off-by: Chris Lew <clew@codeaurora.org>
----
+Changes since v2:
+- Revert change to make glink attribute table const
 
 Changes since v1:
-- Add explanation for label in commit message
+- Add explanation to dt-bindings commit message
+- Add patch complete_all the open_req/ack variables
+- Add patch to prevent null pointer dereference in chrdev channel release
+- Change chrdev allocation to use glink channel allocation
+- Change glink attr struct to const
 
- Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+Chris Lew (6):
+  dt-bindings: soc: qcom: Add label for GLINK bindings
+  rpmsg: glink: Store edge name for glink device
+  rpmsg: glink: Use complete_all for open states
+  rpmsg: Guard against null endpoint ops in destroy
+  rpmsg: glink: Add support for rpmsg glink chrdev
+  rpmsg: glink: Expose rpmsg name attr for glink
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-index 9663cab52246..0b8cc533ca83 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-@@ -10,6 +10,11 @@ edge.
- 	Value type: <stringlist>
- 	Definition: must be "qcom,glink-rpm"
- 
-+- label:
-+	Usage: optional
-+	Value type: <string>
-+	Definition: should specify the subsystem name this edge corresponds to.
-+
- - interrupts:
- 	Usage: required
- 	Value type: <prop-encoded-array>
+ .../devicetree/bindings/soc/qcom/qcom,glink.txt    |  5 ++
+ drivers/rpmsg/qcom_glink_native.c                  | 68 +++++++++++++++++++++-
+ drivers/rpmsg/rpmsg_core.c                         |  2 +-
+ 3 files changed, 71 insertions(+), 4 deletions(-)
+
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
