@@ -1,122 +1,64 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH] ARM: tegra: fix ulpi regression on tegra20
-Date: Thu, 26 Apr 2018 14:39:29 +0300
-Message-ID: <20180426113929.GH6835@tbergstrom-lnx.Nvidia.com>
-References: <20180219151252.29289-1-marcel@ziswiler.com>
- <6600596.BijQW1iq1K@ax5200p>
- <4f2ac009-8618-4b4d-e137-a5fd4907a56f@gmail.com>
- <1524521136.4493.70.camel@toradex.com>
- <c0cb2620-91b5-8043-bb74-306dca0331eb@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/3] dt-bindings: power: supply: qcom_bms: Add bindings
+Date: Thu, 26 Apr 2018 13:39:50 +0200
+Message-ID: <CACRpkdZ4VO_9eNvJdznoqd0cdV2qCbnFjjhQOtZKgpxFES1-VQ@mail.gmail.com>
+References: <20180407134712.23131-1-ctatlor97@gmail.com> <20180407134712.23131-2-ctatlor97@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c0cb2620-91b5-8043-bb74-306dca0331eb@gmail.com>
+In-Reply-To: <20180407134712.23131-2-ctatlor97@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, "marvin24@gmx.de" <marvin24@gmx.de>, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 24, 2018 at 05:38:41PM +0300, Dmitry Osipenko wrote:
-> Hi Marcel,
-> 
-> On 24.04.2018 01:05, Marcel Ziswiler wrote:
-> > Hi Dmitry
-> > 
-> > On Fri, 2018-04-20 at 13:50 +0300, Dmitry Osipenko wrote:
-> >> ...
-> >> I managed to find CDEV clocks in TRM this time.
-> > 
-> > And where exactly in which TRM? In all my attempts at finding anything
-> > CDEV2 is just a pad group which includes the DAP_MCLK2 pad in question. 
-> 
-> That's the DEV2 clock you're talking about below.
-> 
-> >> Seems assigning CDEV2 clock to
-> >> "ulpi-link" was correct
-> > 
-> > Sorry, but I do really not see how you can get to any such conclusion.
-> > 
-> > Whatever that CDEV2 clock exactly is. Its offset 93 points towards the
-> > CLK_RST_CONTROLLER_CLK_OUT_ENB_U_0 register which has CLK_ENB_DEV2_OUT
-> > at bit position 29 reading "Enable clock to DEV2 pad". While the TRM
-> > misses further documenting what exactly that DEV2 pad should be I guess
-> > it may point towards our suspected DAP_MCLK2. So for some reason
-> > besides PLL_P_OUT4 which is what that pad is actually muxed to also
-> > some additional DEV2 pad clock needs enabling. In addition there would
-> > be a CLK_RST_CONTROLLER_MISC_CLK_ENB_0 register where one could also
-> > specify a DEV2_OSC_DIV_SEL but I would assume that one only applies if
-> > the pad in question being muxed to OSC which is not the case at least
-> > in all device trees I have looked at.
-> > 
-> >> and both CDEV2 and PLL_P_OUT4 should be enabled,
-> > 
-> > Agreed, basically the DAP_MCLK2 pad seems gated by an additional enable
-> > called CLK_ENB_DEV2_OUT.
-> > 
-> >> CDEV2
-> >> should gate the PLL_P_OUT4 that feeds USB HW and PLL_P_OUT4 should be
-> >> always-enabled because it is enabled by init_table, but apparently it
-> >> is getting
-> >> disabled erroneously.
-> > 
-> > At least that was the case back when I had trouble getting ULPI to work
-> > on T20. Strangely latest -next right now does no longer seem to suffer
-> > from that same issue even if my patch is reverted but as mentioned
-> > before nobody stops the required PLL_P_OUT4 which is what is actually
-> > driving DAP_MCLK2 to not be changed behind the scenes breaking the
-> > whole thing again.
-> > 
-> >> Marcel, could you please revert your patch, add
-> >> "trace_event=clk_enable,clk_disable,clk_set_parent tp_printk" to
-> >> kernels cmdline
-> >> and post the log?
-> > 
-> > Yes, the only difference in those traces is whether or not that non-
-> > existent CDEV2 clock is enabled or not:
-> > 
-> > [    1.897521] clk_enable: cdev2_fixed
-> > [    1.901008] clk_enable: cdev2
-> > 
-> > I also do have an explanation why it kept working in my case. Probably
-> > the boot ROM or U-Boot is already setting that bit.
-> > 
-> >> It looks like there is some clk framework bug,
-> > 
-> > My conclusion is that there should be a DAP_MCLK2 clock which is gated
-> > by that CLK_ENB_DEV2_OUT but really outputs a T20 internal clock
-> > according to its pin muxing which if set to OSC may be further divided
-> > down by DEV2_OSC_DIV_SEL.
-> 
-> Could be that DEV2_OSC_DIV_SEL is only relevant when DAP_MCLK2 is mux'ed to OSC.
-> Maybe Peter could clarify everything.
-> 
+On Sat, Apr 7, 2018 at 3:46 PM, Craig Tatlor <ctatlor97@gmail.com> wrote:
 
-Yes. This looks likely. Problem here is that the source selection for cdev1
-and cdev2 is done via pinmuxing rather than via a regular mux control in CAR.
-So probably the "OSC" input is not really OSC but the output of the divider
-configured in CLK_RST_CONTROLLER_MISC_CLK_ENB_0.
+This is very interesting bindings!
 
-Possible solutions I see are:
+> Add bindings for the Qualcomm battery measurement system.
+>
+> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
 
-1) make the tegra20 pinctrl driver a clock provider for the cdev1 and cdev2
-   clocks. We would then need to introduce 2 new clocks cdev1_mux and
-   cdev2_mux which represent pinmuxes. cdev1 and cdev2 would use those as
-   a parent. cdev1_fixed and cdev2_fixed would need to be renamed to refelect
-   the settings in CLK_RST_CONTROLLER_MISC_CLK_ENB_0 and can be inputs for
-   cdev1_mux and cdev2_mux
+Please expand on acronyms as requested by Rob.
 
-2) read the pinmux configuration for cdev1 and cdev2 at boot. this would
-   require mapping the apbmisc aperture in the clock driver, but we already
-   map the PMC aperture, so there's a precedent for mappings outside CAR.
-   Then define the cdev1 and cdev2 parent accordingly. Also cdev1_fixed and
-   cdev2_fixed could be defined as the divided version of OSC according to
-   the settings in CLK_RST_CONTROLLER_MISC_CLK_ENB_0. Limitation of this
-   approach is that we assume these settings are never changed at runtime.
-   This seems acceptable to me though. Or do we know of a use case where the
-   setting is changed at runtime?
+> +Required properties:
+> +- compatible:               Should contain "qcom,pm8941-bms".
+> +- reg:                      Specifies the SPMI address and length of the
+> +                           controller's registers.
+> +- interrupts:               OCV threshold interrupt.
+> +- io-channels:              Should contain IIO channel specifier for the
+> +                           ADC channel that reports battery temperature.
+> +- io-channel-names:         Should contain "temp".
 
-Solution 1 is nicer, but would require backwards-incompatible changes to the
-DT bindings.
+These are fine (and good) as bindings go.
 
-Peter.
+> +- qcom,fcc-temp-legend:     An array containing the temperature, in degC,
+> +                           for each column of the FCC lookup table.
+> +- qcom,fcc-lut:             An array of FCC values in mah, one entry for each
+> +                           temperature defined in in qcom,fcc-temp-legend.
+> +- qcom,ocv-temp-legend:     An array containing the temperature, in degC,
+> +                           for each column of the OCV lookup table.
+> +- qcom,ocv-capacity-legend: An array containing the capacity for each
+> +                           row of the OCV lookup table.
+> +- qcom,ocv-lut:             An array of OCV values in mV, one entry for each
+> +                           capacity defined in qcom,ocv-capacity-legend.
+
+I wonder if these are really Qualcomm-specific.
+
+Can't we just cut the "qcom,*" prefix from all and simply define
+these lookup tables in a way (with units) that makes sense to all
+kinds of battery capacities?
+
+Maybe spell them out though and avoid the abbreviations.
+
+Just put those in the already existing
+Documentation/devicetree/bindings/power/supply/battery.txt
+so others can reuse them from there.
+
+You will see that those bindings does not abbreviate but
+spells out the natural sciences definitions to it's a bliss to
+read for everyone.
+
+Yours,
+Linus Walleij
