@@ -1,99 +1,78 @@
 Return-Path: <>
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 1/2] clk: renesas: Add r8a77990 CPG Core Clock Definitions
-Date: Fri, 20 Apr 2018 21:27:43 +0900
-Message-Id: <1524227264-24896-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1524227264-24896-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1524227264-24896-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC v2 3/6] usb: common: roles: add a new API to find the graph
+Date: Thu, 26 Apr 2018 20:26:43 +0900
+Message-Id: <1524742006-17984-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1524742006-17984-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1524742006-17984-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, geert+renesas@glider.be, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+This patch adds a new API "usb_role_switch_get_by_graph()" to find
+device connection by using graph.
 
-This patch adds all R-Car E3 Clock Pulse Generator Core Clock Outputs.
-
-Note that internal CPG clocks (S0, S1, S2, S3, SDSRC) are not included,
-as they are used as internal clock sources only, and never referenced
-from DT.
-
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-[shimoda: add SPDX-License-Identifier]
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- include/dt-bindings/clock/r8a77990-cpg-mssr.h | 62 +++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 include/dt-bindings/clock/r8a77990-cpg-mssr.h
+ drivers/usb/common/roles.c | 30 ++++++++++++++++++++++++++++++
+ include/linux/usb/role.h   |  2 ++
+ 2 files changed, 32 insertions(+)
 
-diff --git a/include/dt-bindings/clock/r8a77990-cpg-mssr.h b/include/dt-bindings/clock/r8a77990-cpg-mssr.h
-new file mode 100644
-index 0000000..2418e39
---- /dev/null
-+++ b/include/dt-bindings/clock/r8a77990-cpg-mssr.h
-@@ -0,0 +1,62 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2018 Renesas Electronics Corp.
+diff --git a/drivers/usb/common/roles.c b/drivers/usb/common/roles.c
+index 15cc76e..9fa26c1 100644
+--- a/drivers/usb/common/roles.c
++++ b/drivers/usb/common/roles.c
+@@ -114,6 +114,36 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(usb_role_switch_get);
+ 
++static int by_graph_match(struct device *dev, void *parent)
++{
++	return dev->parent == parent;
++}
++
++/**
++ * usb_role_switch_get_by_graph - Find USB role switch linked with the caller
++ * @dev: The caller device
++ * @port: identifier of the @dev port node
++ * @endpoint: identifier of the @dev endpoint node
++ *
++ * Finds and returns role switch linked with @dev, port and endpoint.
++ * The reference count for the found switch is incremented.
 + */
-+#ifndef __DT_BINDINGS_CLOCK_R8A77990_CPG_MSSR_H__
-+#define __DT_BINDINGS_CLOCK_R8A77990_CPG_MSSR_H__
++struct usb_role_switch *usb_role_switch_get_by_graph(struct device *dev,
++						     u32 port, u32 endpoint)
++{
++	struct device *conn;
++	struct device *sw;
 +
-+#include <dt-bindings/clock/renesas-cpg-mssr.h>
++	conn = device_connection_find_by_graph(dev, port, endpoint);
++	if (IS_ERR_OR_NULL(conn))
++		return ERR_PTR(-EPROBE_DEFER);
 +
-+/* r8a77990 CPG Core Clocks */
-+#define R8A77990_CLK_Z2			0
-+#define R8A77990_CLK_ZR			1
-+#define R8A77990_CLK_ZG			2
-+#define R8A77990_CLK_ZTR		3
-+#define R8A77990_CLK_ZT			4
-+#define R8A77990_CLK_ZX			5
-+#define R8A77990_CLK_S0D1		6
-+#define R8A77990_CLK_S0D3		7
-+#define R8A77990_CLK_S0D6		8
-+#define R8A77990_CLK_S0D12		9
-+#define R8A77990_CLK_S0D24		10
-+#define R8A77990_CLK_S1D1		11
-+#define R8A77990_CLK_S1D2		12
-+#define R8A77990_CLK_S1D4		13
-+#define R8A77990_CLK_S2D1		14
-+#define R8A77990_CLK_S2D2		15
-+#define R8A77990_CLK_S2D4		16
-+#define R8A77990_CLK_S3D1		17
-+#define R8A77990_CLK_S3D2		18
-+#define R8A77990_CLK_S3D4		19
-+#define R8A77990_CLK_S0D6C		20
-+#define R8A77990_CLK_S3D1C		21
-+#define R8A77990_CLK_S3D2C		22
-+#define R8A77990_CLK_S3D4C		23
-+#define R8A77990_CLK_LB			24
-+#define R8A77990_CLK_CL			25
-+#define R8A77990_CLK_ZB3		26
-+#define R8A77990_CLK_ZB3D2		27
-+#define R8A77990_CLK_CR			28
-+#define R8A77990_CLK_CRD2		29
-+#define R8A77990_CLK_SD0H		30
-+#define R8A77990_CLK_SD0		31
-+#define R8A77990_CLK_SD1H		32
-+#define R8A77990_CLK_SD1		33
-+#define R8A77990_CLK_SD3H		34
-+#define R8A77990_CLK_SD3		35
-+#define R8A77990_CLK_RPC		36
-+#define R8A77990_CLK_RPCD2		37
-+#define R8A77990_CLK_ZA2		38
-+#define R8A77990_CLK_ZA8		39
-+#define R8A77990_CLK_Z2D		40
-+#define R8A77990_CLK_CANFD		41
-+#define R8A77990_CLK_MSO		42
-+#define R8A77990_CLK_R			43
-+#define R8A77990_CLK_OSC		44
-+#define R8A77990_CLK_LV0		45
-+#define R8A77990_CLK_LV1		46
-+#define R8A77990_CLK_CSI0		47
-+#define R8A77990_CLK_CP			49
-+#define R8A77990_CLK_CPEX		50
++	sw = device_find_child(conn, conn, by_graph_match);
 +
-+#endif /* __DT_BINDINGS_CLOCK_R8A77990_CPG_MSSR_H__ */
++	return !IS_ERR(sw) ? to_role_switch(sw) : ERR_PTR(-EPROBE_DEFER);
++}
++EXPORT_SYMBOL_GPL(usb_role_switch_get_by_graph);
++
+ /**
+  * usb_role_switch_put - Release handle to a switch
+  * @sw: USB Role Switch
+diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+index edc51be..6573fdd 100644
+--- a/include/linux/usb/role.h
++++ b/include/linux/usb/role.h
+@@ -43,6 +43,8 @@ struct usb_role_switch_desc {
+ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
+ enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
+ struct usb_role_switch *usb_role_switch_get(struct device *dev);
++struct usb_role_switch *usb_role_switch_get_by_graph(struct device *dev,
++						     u32 port, u32 endpoint);
+ void usb_role_switch_put(struct usb_role_switch *sw);
+ 
+ struct usb_role_switch *
 -- 
 1.9.1
