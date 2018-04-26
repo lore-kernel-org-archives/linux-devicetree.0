@@ -1,56 +1,53 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V4 3/6] ARM: dts: imx6sx-sabreauto: add IO expander
- max7310 support
-Date: Thu, 26 Apr 2018 06:31:08 +0000
-Message-ID: <DB5PR04MB13205A0A7134C969748560B4F58E0@DB5PR04MB1320.eurprd04.prod.outlook.com>
-References: <1524634571-5914-1-git-send-email-Anson.Huang@nxp.com>
- <1524634571-5914-3-git-send-email-Anson.Huang@nxp.com>
- <CAOMZO5Dm6rcEe=zAJ9_nqKce3g2tdyWPqb=Uv-N5nfc_96jc-g@mail.gmail.com>
- <AM3PR04MB13150654494B8D251988F76CF58E0@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5AZLbUoL7FWgUFA7qc3q3wcz9UBLSQhMXXkUJeiRz8X4A@mail.gmail.com>
+From: "Jonas Mark (BT-FIR/ENG1)" <Mark.Jonas@de.bosch.com>
+Subject: AW: [PATCH v2] Input: add bu21029 touch driver
+Date: Thu, 26 Apr 2018 06:40:10 +0000
+Message-ID: <04ff5fe9c5c3449b887eb9b269be1038@de.bosch.com>
+References: <1521651874-15379-1-git-send-email-mark.jonas@de.bosch.com>
+ <1523897378-23207-1-git-send-email-mark.jonas@de.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5AZLbUoL7FWgUFA7qc3q3wcz9UBLSQhMXXkUJeiRz8X4A@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1523897378-23207-1-git-send-email-mark.jonas@de.bosch.com>
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "hs@denx.de" <hs@denx.de>, "ZHU Yi (BT-FIR/ENG1-Zhu)" <Yi.Zhu5@cn.bosch.com>, "Jonas Mark (BT-FIR/ENG1)" <Mark.Jonas@de.bosch.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
-Z2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1AZ21haWwuY29t
-XQ0KPiBTZW50OiBUaHVyc2RheSwgQXByaWwgMjYsIDIwMTggMjoyMSBQTQ0KPiBUbzogQW5zb24g
-SHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtl
-cm5lbC5vcmc+OyBTYXNjaGEgSGF1ZXINCj4gPGtlcm5lbEBwZW5ndXRyb25peC5kZT47IEZhYmlv
-IEVzdGV2YW0gPGZhYmlvLmVzdGV2YW1AbnhwLmNvbT47IFJvYg0KPiBIZXJyaW5nIDxyb2JoK2R0
-QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsNCj4gUnVz
-c2VsbCBLaW5nIC0gQVJNIExpbnV4IDxsaW51eEBhcm1saW51eC5vcmcudWs+OyBkbC1saW51eC1p
-bXgNCj4gPGxpbnV4LWlteEBueHAuY29tPjsgbW9kZXJhdGVkIGxpc3Q6QVJNL0ZSRUVTQ0FMRSBJ
-TVggLyBNWEMgQVJNDQo+IEFSQ0hJVEVDVFVSRSA8bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnPjsgb3BlbiBsaXN0Ok9QRU4NCj4gRklSTVdBUkUgQU5EIEZMQVRURU5FRCBERVZJ
-Q0UgVFJFRSBCSU5ESU5HUw0KPiA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBsaW51eC1r
-ZXJuZWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFU
-Q0ggVjQgMy82XSBBUk06IGR0czogaW14NnN4LXNhYnJlYXV0bzogYWRkIElPIGV4cGFuZGVyDQo+
-IG1heDczMTAgc3VwcG9ydA0KPiANCj4gT24gVGh1LCBBcHIgMjYsIDIwMTggYXQgMTI6MDYgQU0s
-IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiB3cm90ZToNCj4gDQo+ID4gTUFY
-NzMxMCBwaW5zIGFyZSBmb3IgUENJZSwgQ0FOLCBNTEIuIEdQUyBldGMuLCB0aGVzZSBtb2R1bGVz
-IGFyZSBOT1QNCj4gPiBlbmFibGVkIHlldCwgc28gSSBjYW4gTk9UIHRlc3QgaXQsIEkgdGhpbmsg
-d2Ugc2hvdWxkIGFkZCBNQVg3MzEwIHVzZXJzDQo+ID4gd2hlbiB0aGVzZSBtb2R1bGVzIGFyZSBl
-bmFibGVkLCBldGhlcm5ldCBQSFkgaXMgTk9UIGNvbnRyb2xsZWQgYnkgaXQuDQo+IA0KPiBZb3Ug
-c2FpZCBwcmV2aW91c2x5IHRoYXQgTUFYNzMxMCBhbHNvIGNvbnRyb2xzIHRoZSBFdGhlcm5ldCBQ
-SFkuIElzIHRoZSB2ZW5kb3INCj4gZHRzIHdyb25nIHRoZW4/DQo+IA0KPiBJZiB0aGVyZSBhcmUg
-bm8gTUFYNzMxMCB1c2Vycywgd2h5IGFyZSB5b3UgYWRkaW5nIHN1cHBvcnQgZm9yIE1BWDczMTAg
-dGhlbj8NCj4gDQo+IENvbmZ1c2VkLg0KDQpJIHNlYXJjaGVkIHRoZSBtYWlsIEkgc2VudCwgSSBj
-YW4gTk9UIGZvdW5kIHdoZXJlIEkgc2FpZCAiTUFYNzMxMCBjb250cm9scyB0aGUgZXRoZXJuZXQg
-cGh5Ii4uLi4NCg0KVGhlcmUgYXJlIE1BWDczMTAgdXNlcnMsIGl0IGlzIGp1c3QgYmVjYXVzZSBj
-dXJyZW50bHkgdGhvc2UgdXNlcnMgYXJlIE5PVCBlbmFibGVkLCBzbyBJIGNhbg0KTk9UIHZlcmlm
-eSB0aGVtLiBNQVg3MzEwIGlzIGFuIGluZGVwZW5kZW50IEkyQyBkZXZpY2UsIHdoeSB3ZSBjYW4g
-Tk9UIGVuYWJsZSBpdCBmaXJzdD8NCkkgdGVzdGVkIGl0IGZyb20gc3lzZnMgaW50ZXJmYWNlLCB3
-ZSBjYW4gY29udHJvbCB0aGUgTUFYNzMxMCdzIElPIG91dHB1dCB2aWEgZWNobyBkaWZmZXJlbnQg
-dmFsdWUNCnRvIEdQSU8gdmFsdWUsIHRoYXQgbWVhbnMgTUFYNzMxMCBpdHNlbGYgYXMgYW4gSU8g
-ZXhwYW5kZXIgY2hpcCBpcyB3b3JraW5nIGp1c3QgZmluZSwgc2ltaWxhciB3aXRoIFBNSUMsDQpp
-dCBpcyBhIEkyQyBkZXZpY2UsIGNhbiBiZSBlbmFibGVkIGluZGVwZW5kZW50bHksIHRoZW4gY29u
-c3VtZXJzIGNhbiBiZSBhZGRlZCBsYXRlciB3aGVuIHRoZXkgYXJlIGVuYWJsZWQuDQpKdXN0IG15
-IHBlcnNvbmFsIG9waW5pb24sIHRoYW5rcy4NCg0KQW5zb24uDQoNCg==
+Hello,
+
+> Betreff: [PATCH v2] Input: add bu21029 touch driver
+>=20
+> From: Zhu Yi <yi.zhu5@cn.bosch.com>
+>=20
+> Add Rohm BU21029 resistive touch panel controller support with I2C
+> interface.
+>=20
+> Signed-off-by: Zhu Yi <yi.zhu5@cn.bosch.com>
+> Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
+> Reviewed-by: Heiko Schocher <hs@denx.de>
+> ---
+> Changes in v2:
+>  - make ABS_PRESSURE proportionally rising with finger pressure
+>  - fix race between interrupt and timer during shutdown
+>  - use infrastructure from include/linux/input/touchscreen.h
+>  - add SPDX tag for the driver
+>  - improve binding documentation
+>  - fix multi-line comments
+
+In the mean time I received a Reviewed-by from Rob Herring.
+
+How shall I proceed? I am convinced that we did all the requested
+changes and published them 2018-04-16 in the cited patch above.=20
+
+Greetings,
+Mark Jonas
+
+Building Technologies, Panel Software Fire (BT-FIR/ENG1)=20
+Bosch Sicherheitssysteme GmbH | Postfach 11 11 | 85626 Grasbrunn | GERMANY =
+| www.boschsecurity.com
+
+Sitz: Stuttgart, Registergericht: Amtsgericht Stuttgart HRB 23118=20
+Aufsichtsratsvorsitzender: Stefan Hartung; Gesch=E4ftsf=FChrung: Gert van I=
+peren, Andreas Bartz, Thomas Quante, Bernhard Schuster
