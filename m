@@ -1,124 +1,70 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 11/17] arm64: dts: r8a77965: Add VSP instances
-Date: Fri, 27 Apr 2018 00:11:05 +0300
-Message-ID: <1787243.JuNJAuBqMb@avalon>
-References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com> <20180426165346.494-12-kieran.bingham+renesas@ideasonboard.com>
+Subject: Re: [PATCH 12/17] arm64: dts: r8a77965: Populate the DU instance placeholder
+Date: Fri, 27 Apr 2018 00:15:07 +0300
+Message-ID: <1778997.DCq8dSVpMV@avalon>
+References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com> <20180426165346.494-13-kieran.bingham+renesas@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180426165346.494-12-kieran.bingham+renesas@ideasonboard.com>
+In-Reply-To: <20180426165346.494-13-kieran.bingham+renesas@ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc: linux-renesas-soc@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Kieran,
 
 Thank you for the patch.
 
-On Thursday, 26 April 2018 19:53:40 EEST Kieran Bingham wrote:
-> The r8a77965 has 4 VSP instances.
+On Thursday, 26 April 2018 19:53:41 EEST Kieran Bingham wrote:
+> The DU entity node has been previously added but only as a placeholder.
+> Populate the node with the properties to use the device.
 > 
-> Based on a similar patch of the R8A7796 device tree
-> by Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>.
-> 
-> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> [Kieran: Rebased to top of tree, fixed sort orders]
 > Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 > ---
->  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 44 +++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
+>  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
 > 
 > diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
 > b/arch/arm64/boot/dts/renesas/r8a77965.dtsi index
-> 1f44ed7c1b1c..e92e6b03333a 100644
+> e92e6b03333a..8a40bba53027 100644
 > --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
 > +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-> @@ -1009,6 +1009,17 @@
->  			resets = <&cpg 615>;
+> @@ -1106,9 +1106,21 @@
 >  		};
 > 
-> +		vspb: vsp@fe960000 {
-> +			compatible = "renesas,vsp2";
-> +			reg = <0 0xfe960000 0 0x8000>;
-> +			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 626>;
-> +			power-domains = <&sysc R8A77965_PD_A3VP>;
-> +			resets = <&cpg 626>;
-> +
-> +			renesas,fcp = <&fcpvb0>;
-> +		};
-> +
->  		fcpvb0: fcp@fe96f000 {
->  			compatible = "renesas,fcpv";
->  			reg = <0 0xfe96f000 0 0x200>;
-> @@ -1017,6 +1028,17 @@
->  			resets = <&cpg 607>;
->  		};
-> 
-> +		vspi0: vsp@fe9a0000 {
-> +			compatible = "renesas,vsp2";
-> +			reg = <0 0xfe9a0000 0 0x8000>;
-> +			interrupts = <GIC_SPI 444 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 631>;
-> +			power-domains = <&sysc R8A77965_PD_A3VP>;
-> +			resets = <&cpg 631>;
-> +
-> +			renesas,fcp = <&fcpvi0>;
-> +		};
-> +
->  		fcpvi0: fcp@fe9af000 {
->  			compatible = "renesas,fcpv";
->  			reg = <0 0xfe9af000 0 0x200>;
-> @@ -1025,6 +1047,17 @@
->  			resets = <&cpg 611>;
->  		};
-> 
-> +		vspd0: vsp@fea20000 {
-> +			compatible = "renesas,vsp2";
-> +			reg = <0 0xfea20000 0 0x4000>;
+>  		du: display@feb00000 {
+> +			compatible = "renesas,du-r8a77965";
+>  			reg = <0 0xfeb00000 0 0x80000>,
+>  			      <0 0xfeb90000 0 0x14>;
+> -			/* placeholder */
+> +			reg-names = "du", "lvds.0";
 
-RFP2 has a CLUT so the register range needs to be extended. I'd recommend 
-covering the entire space (0x8000) even if no LUT or CLU module is present.
+The LVDS encoder has been split to a separate node in current bindings. You 
+can remove the reg-names property and the second reg entry.
 
-> +			interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 623>;
-> +			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-> +			resets = <&cpg 623>;
-> +
-> +			renesas,fcp = <&fcpvd0>;
-> +		};
-> +
->  		fcpvd0: fcp@fea27000 {
->  			compatible = "renesas,fcpv";
->  			reg = <0 0xfea27000 0 0x200>;
-> @@ -1033,6 +1066,17 @@
->  			resets = <&cpg 603>;
->  		};
-> 
-> +		vspd1: vsp@fea28000 {
-> +			compatible = "renesas,vsp2";
-> +			reg = <0 0xfea28000 0 0x4000>;
+> +			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 724>,
+> +				 <&cpg CPG_MOD 723>,
+> +				 <&cpg CPG_MOD 721>,
+> +				 <&cpg CPG_MOD 727>;
+> +			clock-names = "du.0", "du.1", "du.3", "lvds.0";
 
-Same here.
+And you can remove the LVDS clock as well (from both clocks and clock-names).
 
 With this fixed,
 
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-> +			interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 622>;
-> +			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-> +			resets = <&cpg 622>;
+> +			status = "disabled";
 > +
-> +			renesas,fcp = <&fcpvd1>;
-> +		};
-> +
->  		fcpvd1: fcp@fea2f000 {
->  			compatible = "renesas,fcpv";
->  			reg = <0 0xfea2f000 0 0x200>;
-
+> +			vsps = <&vspd0 0 &vspd1 0 &vspd0 1>;
+> 
+>  			ports {
+>  				#address-cells = <1>;
 
 -- 
 Regards,
