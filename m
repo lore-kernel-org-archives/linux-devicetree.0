@@ -1,180 +1,96 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 3/7] clk: meson: add triple phase clock driver
-Date: Thu, 26 Apr 2018 10:50:59 +0200
-Message-ID: <1696abba-abc2-ebbb-0d57-9fe252411b4a@baylibre.com>
-References: <20180425163304.10852-1-jbrunet@baylibre.com>
- <20180425163304.10852-4-jbrunet@baylibre.com>
- <bc770c22-f0b9-ed1f-bba7-631b9cd42436@baylibre.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7740: Enable CEU0
+Date: Thu, 26 Apr 2018 10:53:00 +0200
+Message-ID: <20180426085259.lqxr4emk75oz7vug@verge.net.au>
+References: <1524654920-18749-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1524654920-18749-3-git-send-email-jacopo+renesas@jmondi.org>
+ <20180426061124.hvgl3ijf6ulrdkmn@verge.net.au>
+ <20180426072609.GH17088@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bc770c22-f0b9-ed1f-bba7-631b9cd42436@baylibre.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180426072609.GH17088@w540>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, geert@linux-m68k.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/04/2018 10:47, Neil Armstrong wrote:
-> On 25/04/2018 18:33, Jerome Brunet wrote:
->> Add a driver to control the output of the sample clock generator found
->> in the axg audio clock controller.
->>
->> The goal of this driver is to coherently control the phase provided to
->> the different element using the sample clock generator. This simplify
->> the usage of the sample clock generator a lot, without comprising the
->> ability of the SoC.
->>
->> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
->> ---
->>  drivers/clk/meson/Kconfig        |  5 +++
->>  drivers/clk/meson/Makefile       |  1 +
->>  drivers/clk/meson/clk-triphase.c | 68 ++++++++++++++++++++++++++++++++++++++++
->>  drivers/clk/meson/clkc-audio.h   | 20 ++++++++++++
->>  4 files changed, 94 insertions(+)
->>  create mode 100644 drivers/clk/meson/clk-triphase.c
->>  create mode 100644 drivers/clk/meson/clkc-audio.h
->>
->> diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
->> index 87d69573e172..7f7fd6fb3809 100644
->> --- a/drivers/clk/meson/Kconfig
->> +++ b/drivers/clk/meson/Kconfig
->> @@ -3,6 +3,11 @@ config COMMON_CLK_AMLOGIC
->>  	depends on ARCH_MESON || COMPILE_TEST
->>  	select COMMON_CLK_REGMAP_MESON
->>  
->> +config COMMON_CLK_AMLOGIC_AUDIO
->> +	bool
->> +	depends on ARCH_MESON || COMPILE_TEST
->> +	select COMMON_CLK_AMLOGIC
->> +
->>  config COMMON_CLK_REGMAP_MESON
->>  	bool
->>  	select REGMAP
->> diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
->> index 352fb848c406..64bb917fe1f0 100644
->> --- a/drivers/clk/meson/Makefile
->> +++ b/drivers/clk/meson/Makefile
->> @@ -4,6 +4,7 @@
->>  
->>  obj-$(CONFIG_COMMON_CLK_AMLOGIC) += clk-pll.o clk-mpll.o clk-audio-divider.o
->>  obj-$(CONFIG_COMMON_CLK_AMLOGIC) += clk-phase.o
->> +obj-$(CONFIG_COMMON_CLK_AMLOGIC_AUDIO)	+= clk-triphase.o
->>  obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
->>  obj-$(CONFIG_COMMON_CLK_GXBB)	 += gxbb.o gxbb-aoclk.o gxbb-aoclk-32k.o
->>  obj-$(CONFIG_COMMON_CLK_AXG)	 += axg.o
->> diff --git a/drivers/clk/meson/clk-triphase.c b/drivers/clk/meson/clk-triphase.c
->> new file mode 100644
->> index 000000000000..9508c03c73c1
->> --- /dev/null
->> +++ b/drivers/clk/meson/clk-triphase.c
->> @@ -0,0 +1,68 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +/*
->> + * Copyright (c) 2018 BayLibre, SAS.
->> + * Author: Jerome Brunet <jbrunet@baylibre.com>
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include "clkc-audio.h"
->> +
->> +/*
->> + * This is a special clock for the audio controller.
->> + * The phase of mst_sclk clock output can be controlled independently
->> + * for the outside world (ph0), the tdmout (ph1) and tdmin (ph2).
->> + * Controlling these 3 phases as just one makes things simpler and
->> + * give the same clock view to all the element on the i2s bus.
->> + * If necessary, we can still control the phase in the tdm block
->> + * which makes these independent control redundant.
->> + */
->> +static inline struct meson_clk_triphase_data *
->> +meson_clk_triphase_data(struct clk_regmap *clk)
->> +{
->> +	return (struct meson_clk_triphase_data *)clk->data;
->> +}
->> +
->> +static void meson_clk_triphase_sync(struct clk_hw *hw)
->> +{
->> +	struct clk_regmap *clk = to_clk_regmap(hw);
->> +	struct meson_clk_triphase_data *tph = meson_clk_triphase_data(clk);
->> +	unsigned int val;
->> +
->> +	/* Get phase 0 and sync it to phase 1 and 2 */
->> +	val = meson_parm_read(clk->map, &tph->ph0);
->> +	meson_parm_write(clk->map, &tph->ph1, val);
->> +	meson_parm_write(clk->map, &tph->ph2, val);
->> +}
->> +
->> +static int meson_clk_triphase_get_phase(struct clk_hw *hw)
->> +{
->> +	struct clk_regmap *clk = to_clk_regmap(hw);
->> +	struct meson_clk_triphase_data *tph = meson_clk_triphase_data(clk);
->> +	unsigned int val;
->> +
->> +	/* Phase are in sync, reading phase 0 is enough */
->> +	val = meson_parm_read(clk->map, &tph->ph0);
->> +
->> +	return meson_clk_degrees_from_val(val, tph->ph0.width);
->> +}
->> +
->> +static int meson_clk_triphase_set_phase(struct clk_hw *hw, int degrees)
->> +{
->> +	struct clk_regmap *clk = to_clk_regmap(hw);
->> +	struct meson_clk_triphase_data *tph = meson_clk_triphase_data(clk);
->> +	unsigned int val;
->> +
->> +	val = meson_clk_degrees_to_val(degrees, tph->ph0.width);
->> +	meson_parm_write(clk->map, &tph->ph0, val);
->> +	meson_parm_write(clk->map, &tph->ph1, val);
->> +	meson_parm_write(clk->map, &tph->ph2, val);
->> +
->> +	return 0;
->> +}
->> +
->> +const struct clk_ops meson_clk_triphase_ops = {
->> +	.init		= meson_clk_triphase_sync,
->> +	.get_phase	= meson_clk_triphase_get_phase,
->> +	.set_phase	= meson_clk_triphase_set_phase,
->> +};
->> +EXPORT_SYMBOL_GPL(meson_clk_triphase_ops);
->> diff --git a/drivers/clk/meson/clkc-audio.h b/drivers/clk/meson/clkc-audio.h
->> new file mode 100644
->> index 000000000000..286ff1201258
->> --- /dev/null
->> +++ b/drivers/clk/meson/clkc-audio.h
->> @@ -0,0 +1,20 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
+On Thu, Apr 26, 2018 at 09:26:09AM +0200, jacopo mondi wrote:
+> Hi Simon,
 > 
-> // SPDX-License-Identifier: GPL-2.0
+> On Thu, Apr 26, 2018 at 08:11:30AM +0200, Simon Horman wrote:
+> > Thanks Jacopo,
+> >
+> > I'm very pleased to see this series.
 > 
-> Checkpatch should have warned about this !
+> Credits to Geert that pointed out to me R-Mobile A1 comes with a CEU.
+> I should mention him in next iteration actually, sorry about that.
+> 
+> >
+> > On Wed, Apr 25, 2018 at 01:15:20PM +0200, Jacopo Mondi wrote:
+> > > Enable CEU0 peripheral for Renesas R-Mobile A1 R8A7740.
+> >
+> > Given 'status = "disabled"' below I think you
+> > are describing but not enabling CEU0. Also in the subject.
+> 
+> Right.
+> 
+> >
+> > Should we also describe CEU1?
+> 
+> Armadillo board file only describe CEU0. If there are R-Mobile A1
+> board files where I can steal informations from I can do that. If
+> there's a public datasheet, that would be even better.
 
-My bad, I wasn't totally aware there is an exception in headers...
+I have the datasheet, so perhaps I can add CEU1 after you have added CEU0.
 
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > ---
+> > >  arch/arm/boot/dts/r8a7740.dtsi | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > >
+> > > diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+> > > index afd3bc5..05ec41e 100644
+> > > --- a/arch/arm/boot/dts/r8a7740.dtsi
+> > > +++ b/arch/arm/boot/dts/r8a7740.dtsi
+> > > @@ -67,6 +67,16 @@
+> > >  		power-domains = <&pd_d4>;
+> > >  	};
+> > >
+> > > +	ceu0: ceu@fe910000 {
+> > > +		reg = <0xfe910000 0x100>;
+> >
+> > Should the size of the range be 0x3000 ?
+> > That would seem to match my reading of table 32.3
+> > and also be consistent with r7s72100.dtsi.
 > 
->> +/*
->> + * Copyright (c) 2018 BayLibre, SAS.
->> + * Author: Jerome Brunet <jbrunet@baylibre.com>
->> + */
->> +
->> +#ifndef __MESON_CLKC_AUDIO_H
->> +#define __MESON_CLKC_AUDIO_H
->> +
->> +#include "clkc.h"
->> +
->> +struct meson_clk_triphase_data {
->> +	struct parm ph0;
->> +	struct parm ph1;
->> +	struct parm ph2;
->> +};
->> +
->> +extern const struct clk_ops meson_clk_triphase_ops;
->> +
->> +#endif /* __MESON_CLKC_AUDIO_H */
->>
+> I got this from
 > 
-> Apart that :
+> static struct resource ceu0_resources[] = {
+> 	[0] = {
+> 		.name	= "CEU",
+> 		.start	= 0xfe910000,
+> 		.end	= 0xfe91009f,
+> 		.flags	= IORESOURCE_MEM,
+> 	},
+> but I also noticed the r7s72100 one was bigger.
+> I'm fine enlarging this, if that's what the manual reports too.
+
+I think that would be best.
+
+> > > +		compatible = "renesas,r8a7740-ceu";
+> > > +		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>;
+> > > +		clocks = <&mstp1_clks R8A7740_CLK_CEU20>;
+> > > +		clock-names = "ceu20";
+> > > +		power-domains = <&pd_a4mp>;
+> >
+> > My reading of table 1.7 is that the power domain should be A4R (&pd_a4r).
 > 
-> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+> Ah yes, my bad.
 > 
+> The long time goal would be describe the camera module (mt9t112) which
+> is installed on armadillo. Unfortunately that would probably require
+> some more work on the CEU side.
+
+Thanks, understood.
