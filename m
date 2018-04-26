@@ -1,80 +1,79 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 5/6] ARM: dts: Add support for emtrion emCON-MX6 series
-Date: Thu, 26 Apr 2018 08:46:14 -0500
-Message-ID: <CAL_JsqJ8TO+FadZraUNcCH6swTmwpWjdP5jV2JcoJT1Uf5Sw8g@mail.gmail.com>
-References: <20171220134710.64479-2-jan.tuerk@emtrion.com>
- <20180420125108.14197-1-jan.tuerk@emtrion.com>
- <20180420125108.14197-6-jan.tuerk@emtrion.com> <20180423084454.GZ25429@dragon>
- <95F51F4B902CAC40AF459205F6322F01B83109E5B1@BMK019S01.emtrion.local>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] mmc: meson-gx: add device reset
+Date: Thu, 26 Apr 2018 15:54:48 +0200
+Message-ID: <CAPDyKFooqSGrgKqKxTTRBYbi6s-199GhRNhQvVD0wzWWK3UG=Q@mail.gmail.com>
+References: <20180426103817.12675-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <95F51F4B902CAC40AF459205F6322F01B83109E5B1@BMK019S01.emtrion.local>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?B?VMO8cmssIEphbg==?= <Jan.Tuerk@emtrion.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Russell King <linux@armlinux.org.uk>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, LinuxArmKernelMailingListe <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180426103817.12675-1-jbrunet@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMjQsIDIwMTggYXQgMzozMiBBTSwgVMO8cmssIEphbiA8SmFuLlR1ZXJrQGVt
-dHJpb24uZGU+IHdyb3RlOgo+PiAtLS0tLVVyc3Byw7xuZ2xpY2hlIE5hY2hyaWNodC0tLS0tCj4+
-IFZvbjogU2hhd24gR3VvIEdlc2VuZGV0OiBNb250YWcsIDIzLiBBcHJpbCAyMDE4IDEwOjQ1Cj4+
-IFJlOiBbUEFUQ0ggdjMgNS82XSBBUk06IGR0czogQWRkIHN1cHBvcnQgZm9yIGVtdHJpb24gZW1D
-T04tTVg2IHNlcmllcwo+Pgo+PiBPbiBGcmksIEFwciAyMCwgMjAxOCBhdCAwMjo1MDo1MlBNICsw
-MjAwLCBqYW4udHVlcmtAZW10cmlvbi5jb20gd3JvdGU6Cj4+ID4gRnJvbTogSmFuIFR1ZXJrIDxq
-YW4udHVlcmtAZW10cmlvbi5jb20+Cj4+ID4KPj4gPiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBm
-b3IgdGhlIGVtdHJpb24gR21iSCBlbUNPTi1NWDYgbW9kdWxlcy4KPj4gPiBUaGV5IGFyZSBhdmFp
-bGFibGUgd2l0aCBpbXguNiBTb2xvLCBEdWFsLUxpdGUsIER1YWwgYW5kIFF1YWQgZXF1aXBwZWQK
-Pj4gPiB3aXRoIE1lbW9yeSBmcm9tIDUxMk1CIHRvIDJHQiAoY29uZmlndXJlZCBieSBVLUJvb3Qp
-Lgo+PiA+Cj4+ID4gT3VyIGRlZmF1bHQgZGV2ZWxvcGVyLUtpdCBzaGlwcyB3aXRoIHRoZSBBdmFy
-aSBiYXNlYm9hcmQgYW5kIHRoZSBFRFQKPj4gPiBFVE0wNzAwRzBCREg2IERpc3BsYXkgKGlteDZb
-cXxkbF0tZW1jb24tYXZhcmkpLgo+PiA+Cj4+ID4gVGhlIGRldmljZXRyZWUgaXMgc3BsaXQgaW50
-byB0aGUgY29tbW9uIHBhcnQgcHJvdmlkaW5nIGFsbCBtb2R1bGUKPj4gPiBjb21wb25lbnRzIGFu
-ZCB0aGUgYmFzaWMgc3VwcG9ydCBmb3IgYWxsIFNvQyB2ZXJzaW9ucwo+PiA+IChpbXg2cWRsLWVt
-Y29uLmR0c2kpIGFuZCBwYXJ0cyB3aGljaCBhcmUgaS5teDYgU3xETCBhbmQgRHxRIHJlbGV2YW50
-Lgo+PiA+IEZpbmFsbHkgdGhlIHN1cHBvcnQgZm9yIHRoZSBhdmFyaSBiYXNlYm9hcmQgaW4gdGhl
-IGRldmVsb3Blci1raXQKPj4gPiBjb25maWd1cmF0aW9uIGlzIHByb3ZpZGVkIGJ5IHRoZSBlbWNv
-bi1hdmFyaSBkdHMgZmlsZXMuCj4+ID4KPj4gPiBTaWduZWQtb2ZmLWJ5OiBKYW4gVHVlcmsgPGph
-bi50dWVya0BlbXRyaW9uLmNvbT4KPj4gPiAtLS0KPj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2FybS9lbXRyaW9uLnR4dCB8ICAxMyArCj4+Cj4+IEl0J3MgYmV0dGVyIHRv
-IGhhdmUgYSBzZXBhcmF0ZSBwYXRjaCBmb3IgYmluZGluZ3MgZG9jLCB3aGljaCBuZWVkcyB0byBi
-ZQo+PiBhY2tub3dsZWRnZWQgYnkgRFQgbWFpbnRhaW5lcnMuCj4KPiBJIGNhbiBjaGFuZ2UgdGhh
-dCwgYnV0IG5vYm9keSBjb21wbGFpbmVkIGluIHRoZSBmaXJzdCAyIHJldmlzaW9ucyBvZiB0aGUg
-cGF0Y2guCgpXZWxsLCBzb21ldGltZXMgSSBmb3JnZXQgdG8gbWVudGlvbiB3aGF0IGlzIHN0ZXAg
-MSBpbgpEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3VibWl0dGluZy1wYXRjaGVz
-LnR4dC4KCj4gQWxzbyBJIHRob3VnaCBoYXZpbmcgdGhlIGRvY3VtZW50YXRpb24gaXMgcmVxdWly
-ZWQgZm9yIG1lcmdpbmcgbmV3IGJpbmRpbmdzPwoKWWVzLCBzbyBiaW5kaW5nIHBhdGNoZXMgY29t
-ZSBmaXJzdCAoc3RlcCAzKS4KCj4+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlICAgICAg
-ICAgICAgICAgICAgICAgICAgfCAgIDIgKwo+PiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2ZGwt
-ZW1jb24tYXZhcmkuZHRzICAgICAgICAgIHwgMjI0ICsrKysrKwo+PiA+ICBhcmNoL2FybS9ib290
-L2R0cy9pbXg2ZGwtZW1jb24uZHRzaSAgICAgICAgICAgICAgIHwgIDI3ICsKPj4gPiAgYXJjaC9h
-cm0vYm9vdC9kdHMvaW14NnEtZW1jb24tYXZhcmkuZHRzICAgICAgICAgICB8IDIyNCArKysrKysK
-Pj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEtZW1jb24uZHRzaSAgICAgICAgICAgICAgICB8
-ICAyNyArCj4+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtZW1jb24uZHRzaSAgICAgICAg
-ICAgICAgfCA4MzgKPj4gKysrKysrKysrKysrKysrKysrKysrKwo+PiA+ICA3IGZpbGVzIGNoYW5n
-ZWQsIDEzNTUgaW5zZXJ0aW9ucygrKQo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9lbXRyaW9uLnR4dAo+PiA+ICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLWVtY29uLWF2YXJpLmR0cwo+PiA+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLWVtY29uLmR0c2kKPj4g
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLWVtY29uLWF2YXJp
-LmR0cwo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEtZW1j
-b24uZHRzaQo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFk
-bC1lbWNvbi5kdHNpCgpbLi4uXQoKPj4gPiArICAgfTsKPj4gPiArCj4+ID4gKyAgIGJvYXJkSUQ6
-IHBjYTg3NTRhQDNhIHsKPj4KPj4gUGxlYXNlIGZpbmQgYSBtb3JlIGdlbmVyaWMgbm9kZSBuYW1l
-IGZvciBpdC4KPgo+IHlvdSBtZWFuIGJvYXJkSURAM2E/CgpOby4gImdwaW9AM2EiIGFzIGl0IGlz
-IGEgZ3BpbyBjb250cm9sbGVyLgoKPiBUaGlzIGNoaXAgaWRlbnRpZmllcyB0aGUgYmFzZWJvYXJk
-IHR5cGUgZm9yIHRoZSBib290bG9hZGVyLgo+Cj4+Cj4+ID4gKyAgICAgICAgICAgY29tcGF0aWJs
-ZSA9ICJueHAscGNhODU3NCI7Cj4+ID4gKyAgICAgICAgICAgcmVnID0gPDB4M2E+Owo+PiA+ICsg
-ICAgICAgICAgIGdwaW8tY29udHJvbGxlcjsKPj4gPiArICAgICAgICAgICAjZ3Bpby1jZWxscyA9
-IDwxPjsKPj4gPiArICAgfTsKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On 26 April 2018 at 12:38, Jerome Brunet <jbrunet@baylibre.com> wrote:
+> Trigger the reset line of the mmc controller while probing, if available
+> The reset should be optional for now, at least until all related DT node
+> have the reset property
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt | 2 ++
+
+Please move DT doc changes into separate patches. And make the DT
+maintainers are in to field as well.
+
+Otherwise, this looks good to me.
+
+Kind regards
+Uffe
+
+>  drivers/mmc/host/meson-gx-mmc.c                            | 6 ++++++
+>  2 files changed, 8 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+> index 5add8d7d855f..ba434375e7f2 100644
+> --- a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+> +++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+> @@ -20,6 +20,7 @@ Required properties:
+>         "clkin1" - Other parent clock of internal mux
+>    The driver has an internal mux clock which switches between clkin0 and clkin1 depending on the
+>    clock rate requested by the MMC core.
+> +- reset      : phandle of the internal reset line
+>
+>  Example:
+>
+> @@ -30,4 +31,5 @@ Example:
+>                 clocks = <&clkc CLKID_SD_EMMC_A>, <&xtal>, <&clkc CLKID_FCLK_DIV2>;
+>                 clock-names = "core", "clkin0", "clkin1";
+>                 pinctrl-0 = <&emmc_pins>;
+> +               resets = <&reset RESET_SD_EMMC_A>;
+>         };
+> diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
+> index 55bbd67177df..9d214622c8cf 100644
+> --- a/drivers/mmc/host/meson-gx-mmc.c
+> +++ b/drivers/mmc/host/meson-gx-mmc.c
+> @@ -35,6 +35,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/clk-provider.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/reset.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/pinctrl/consumer.h>
+> @@ -1212,6 +1213,11 @@ static int meson_mmc_probe(struct platform_device *pdev)
+>                 goto free_host;
+>         }
+>
+> +       ret = device_reset_optional(&pdev->dev);
+> +       if (ret)
+> +               if (ret != -EPROBE_DEFER)
+> +                       dev_err(&pdev->dev, "device reset failed: %d\n", ret);
+> +
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>         host->regs = devm_ioremap_resource(&pdev->dev, res);
+>         if (IS_ERR(host->regs)) {
+> --
+> 2.14.3
+>
