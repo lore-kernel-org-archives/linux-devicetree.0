@@ -1,63 +1,59 @@
-From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [[RFC]DPU PATCH 2/4] dt-bindings: drm/bridge:
- Document sn65dsi86 bridge bindings
-Date: Fri, 27 Apr 2018 12:32:05 +0530
-Message-ID: <0522b749900b3a54508abef6bd15252f@codeaurora.org>
-References: <1524160568-27583-1-git-send-email-spanda@codeaurora.org>
- <1524160568-27583-3-git-send-email-spanda@codeaurora.org>
- <152469995691.46528.3834882157254635250@swboyd.mtv.corp.google.com>
- <CAF6AEGuWo9U5OU5nKSSwzRV_FWszTj_8S3Hns9hFHWBPsepnVw@mail.gmail.com>
- <20180427031331.sl62t5ir24dxmtxm@rob-hp-laptop>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx6sx-sabreauto: add debug LED support
+Date: Fri, 27 Apr 2018 14:58:08 +0800
+Message-ID: <1524812288-799-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180427031331.sl62t5ir24dxmtxm@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0wNC0yNyAwODo0MywgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gV2VkLCBBcHIgMjUs
-IDIwMTggYXQgMDg6NDY6MTNQTSAtMDQwMCwgUm9iIENsYXJrIHdyb3RlOgo+PiBPbiBXZWQsIEFw
-ciAyNSwgMjAxOCBhdCA3OjQ1IFBNLCBTdGVwaGVuIEJveWQgPHN3Ym95ZEBjaHJvbWl1bS5vcmc+
-IAo+PiB3cm90ZToKPj4gPiBRdW90aW5nIFNhbmRlZXAgUGFuZGEgKDIwMTgtMDQtMTkgMTA6NTY6
-MDYpCj4+ID4+IERvY3VtZW50IHRoZSBiaW5kaW5ncyB1c2VkIGZvciB0aGUgc242NWRzaTg2IERT
-SSB0byBlRFAgYnJpZGdlLgo+PiA+Pgo+PiA+PiBDaGFuZ2VzIGluIHYxOgo+PiA+PiAgLSBSZXBo
-cmFzZSB0aGUgZHQtYmluZGluZyBkZXNjcmlwdGlvbnMgdG8gYmUgbW9yZSBpbmxpbmUgd2l0aCBl
-eGlzdGluZwo+PiA+PiAgICBiaW5kaW5ncyAoQW5kcnplaiBIYWpkYSkuCj4+ID4+ICAtIEFkZCBt
-aXNzaW5nIGR0LWJpbmRpbmcgdGhhdCBhcmUgcGFyc2VkIGJ5IGNvcnJlc3BvbmRpbmcgZHJpdmVy
-Cj4+ID4+ICAgIChBbmRyemVqIEhhamRhKS4KPj4gPj4KPj4gPj4gQ2hhbmdlcyBpbiB2MjoKPj4g
-Pj4gIC0gUmVtb3ZlZCBlZHAgcGFuZWwgc3BlY2lmaWMgZHQtYmluZGluZyBlbnRyaWVzLiBPbmx5
-IGtlZXAgYnJpZGdlCj4+ID4+ICAgIHNwZWNpZmljIGVudHJpZXMgKFNlYW4gUGF1bCkuCj4+ID4+
-ICAtIFJlbW92ZSBjdXN0b20tbW9kZXMgZHQgZW50cnkgc2luY2UgaXRzIHVzYWdlIGlzIHJlbW92
-ZWQgZnJvbSBkcml2ZXIgYWxzbyAoU2VhbiBQYXVsKS4KPj4gPj4gIC0gUmVtb3ZlIGlzLXBsdWdn
-YWJsZSBkdCBlbnRyeSBzaW5jZSB0aGlzIHdpbGwgbm90IGJlIG5lZWRlZCBhbnltb3JlIChTZWFu
-IFBhdWwpLgo+PiA+Pgo+PiA+PiBDaGFuZ2VzIGluIHYzOgo+PiA+PiAgLSBSZW1vdmVkIGlycS1n
-cGlvIGR0IGVudHJ5IGFuZCBpbnN0ZWFkIHBvcHVsYXRlIGlzIGFuIGludGVycnVwdAo+PiA+PiAg
-ICBwcm9wZXJ0eSAoUm9iIEhlcnJpbmcpLgo+PiA+Cj4+ID4gVGhlc2UgY2hhbmdlbG9ncyB1c3Vh
-bGx5IGdvIGJlbG93IHRoZSB0cmlwbGUgZGFzaCwgYnV0IG1heWJlIGRybSBpcwo+PiA+IGRpZmZl
-cmVudCBhbmQgd2FudHMgdGhlbT8KPj4gCj4+IHllYWgsIGRybSBnZW5lcmFsbHkgd2FudHMgdGhl
-bSBpbiB0aGUgY29tbWl0IG1zZyByYXRoZXIgdGhhbiBiZWxvdyB0aGUKPj4gdHJpcGxlLWRhc2gs
-IGFsdGhvdWdoIEkgZ3Vlc3MgZm9yIGJpbmRpbmdzIGRvY3MgaXQgc2hvdWxkIGZvbGxvdyB0aGUK
-Pj4gcnVsZXMgZm9yIHRoYXQgdHJlZS4uIEkgdXN1YWxseSBqdXN0IGZpeCB1cCB0aGVzZSBzb3J0
-IG9mIHRoaW5ncyBhcyBJCj4+IGFwcGx5IHBhdGNoZXMsIGJ1dCBub3Qgc3VyZSB3aGF0IG90aGVy
-IG1haW50YWluZXJzIHByZWZlcgo+IAo+IFdlbGwsIHRoZXNlIERQVSBwYXRjaGVzIGFyZW4ndCB0
-YXJnZXRlZCBmb3IgdXBzdHJlYW0gc28gd2hvIGNhcmVzLgoKVGhpcyBjaGFuZ2UgaXMgaW5kZXBl
-bmRlbnQgb2Ygb3RoZXIgRFBVIHBhdGNoZXMuIFdlIGFyZSBwbGFubmluZyB0byAKdXBzdHJlYW0g
-dGhlc2UgYnJpZGdlIGFuZCBwYW5lbCBjaGFuZ2VzLgpJIHdpbGwgdXBsb2FkIHRoZSBuZXh0IHBh
-dGNoc2V0IGRyb3BwaW5nIHRoZSBEUFUgdGFnIHRvIGF2b2lkIGFueSAKY29uZnVzaW9uLgo+IAo+
-IE1hbnkgcGF0Y2ggcmV2aXNpb24gY2hhbmdlbG9ncyBJIHNlZSBhcmUgY3JhcCB3aXRoIHN0YXRl
-bWVudHMgbGlrZQo+ICJpbXBsZW1lbnQgY2hhbmdlcyByZXF1ZXN0ZWQgYnkgPz8iLiBCdXQgaW4g
-dGhpcyBjYXNlLCB0aGUgY2hhbmdlbG9nIGlzCj4gcmVhbGx5IGdvb2QuCj4gCj4gUm9iCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWls
-aW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+There is a debug LED(D11) connected to GPIO1_IO24, add
+support for it.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+this patch is based on patch series (ARM: dts: imx6sx-sabreauto: add wdog external reset support).
+ arch/arm/boot/dts/imx6sx-sabreauto.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+index eb1452c..6b94f24 100644
+--- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
++++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+@@ -18,6 +18,18 @@
+ 		reg = <0x80000000 0x80000000>;
+ 	};
+ 
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_led>;
++
++		user {
++			label = "debug";
++			gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++	};
++
+ 	regulators {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -119,6 +131,12 @@
+ &iomuxc {
+ 	imx6x-sabreauto {
+ 
++		pinctrl_led: ledgrp {
++			fsl,pins = <
++				MX6SX_PAD_CSI_PIXCLK__GPIO1_IO_24 0x17059
++			>;
++		};
++
+ 		pinctrl_enet1_1: enet1grp-1 {
+ 			fsl,pins = <
+ 				MX6SX_PAD_ENET1_MDIO__ENET1_MDIO        0xa0b1
+-- 
+2.7.4
