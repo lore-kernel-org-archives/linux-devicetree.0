@@ -1,136 +1,86 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v9_00=2F27=5D_ARM=3A_davinci=3A_convert_to_common?=
-        =?UTF-8?Q?_clock_framework=E2=80=8B?=
-Date: Fri, 27 Apr 2018 14:04:19 +0200
-Message-ID: <CAMpxmJUCOHqds-zVz736fma7EDZ_o6PpbHMwtFF8wRXJMHCqzA@mail.gmail.com>
-References: <20180427001745.4116-1-david@lechnology.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v4 00/14] dra7: mmc: Update mmc dt node to use sdhci-omap
+Date: Fri, 27 Apr 2018 17:38:51 +0530
+Message-ID: <20180427120905.3665-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427001745.4116-1-david@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>
-Cc: linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, LKML <linux-kernel@vger.kernel.org>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-2018-04-27 2:17 GMT+02:00 David Lechner <david@lechnology.com>:
-> This series converts mach-davinci to use the common clock framework.
->
-> The series works like this, the first 3 patches fix some issues with the clock
-> drivers that have already been accepted into the mainline kernel.
->
-> Then, starting with "ARM: davinci: pass clock as parameter to
-> davinci_timer_init()", we get the mach code ready for the switch by adding the
-> code needed for the new clock drivers and adding #ifndef CONFIG_COMMON_CLK
-> around the legacy clocks so that we can switch easily between the old and the
-> new.
->
-> "ARM: davinci: switch to common clock framework" actually flips the switch
-> to start using the new clock drivers. Then the next 8 patches remove all
-> of the old clock code.
->
-> The final four patches add device tree clock support to the one SoC that
-> supports it.
->
-> This series has been tested on TI OMAP-L138 LCDK (both device tree and legacy
-> board file).
->
->
-> Changes:
->
-> v9 changes (also see individual patches for details):
-> - Rebased on linux-davnci/master (f5e3203bb775)
-> - Dropped drivers/clk patches that landed in v4.17
-> - New drivers/clk patches for early boot special case
-> - New patch for ti,davinci-timer device tree bindings
-> - Updated mach/davinci patches to register clocks in early boot when needed
->
-> v8 changes (also see individual patches for details):
-> - Rebased on linux-davinci/master
-> - Dropped use of __init and __initconst attributes in clk drivers
-> - Add clkdev lookups for PLL SYSCLKs
-> - Fix genpd clock reference counting issue
-> - Fix PSC clock driver loading order issue
-> - Fix typo in device tree and add more power-domains properties
->
-> v7 changes (also see individual patches for details):
-> - Rebased on linux-davinci/master (v4.16-rc)
-> - Convert clock drivers to platform devices
-> - New patch "ARM: davinci: pass clock as parameter to davinci_timer_init()"
-> - Fix issues with lcdk and aemif clock lookups and power domains
-> - Fixed other minor issues brought up in v6 review
->
-> v6 changes (also see individual patches for details):
-> - All of the device tree bindings are changed
-> - All of the clock drivers are changed significantly
-> - Fixed issues brought up during review of v5
-> - "ARM: davinci: move davinci_clk_init() to init_time" is removed from this
->   series and submitted separately
->
-> v5 changes:
-> - Basically, this is an entirely new series
-> - Patches are broken up into bite-sized pieces
-> - Converted PSC clock driver to use regmap
-> - Restored "force" flag for certain DA850 clocks
-> - Added device tree bindings
-> - Moved more of the clock init to drivers/clk
-> - Fixed frequency scaling (maybe*)
->
-> * I have frequency scaling using cpufreq-dt, so I know the clocks are doing
->   what they need to do to make this work, but I haven't figured out how to
->   test davinci-cpufreq driver yet. (Patches to make cpufreq-dt work will be
->   sent separately after this series has landed.)
->
->
-> Dependencies:
->
-> Only one dependency didn't land in v4.17. It is just a runtime dependency for
-> the LCDK board to make the display work.
->
-> - "drm/tilcdc: Fix setting clock divider for omap-l138"[1]
->
-> [1]: https://patchwork.freedesktop.org/patch/210696/
->
-> You can find a working branch with everything included (plus a few extras, like
-> cpufreq-dt) in the "common-clk-v8" branch of https://github.com/dlech/ev3dev-kernel.git.
->
->
-> Testing/debugging for the uninitiated:
->
-> I only have one device to test with, which is based on da850, so I will
-> have to rely on others to do some testing here. Since we are dealing with
-> clocks, if something isn't working, you most likely won't see output on
-> the serial port. To figure out what is going on, you need to enable...
->
->         CONFIG_DEBUG_LL=y
->         CONFIG_EARLY_PRINTK=y
->
-> and add "earlyprintk clk_ignore_unused" to the kernel command line options.
-> You may need to select a different UART for this depending on your board. I
-> think UART1 is the default in the kernel configuration.
->
-> On da850 devices comment out the lines:
->
->         else
->                 clk_set_parent(clk, parent->clk);
->
-> in da850.c or, if using device tree, comment out the lines:
->
->         assigned-clocks = <&async3_clk>;
->         assigned-clock-parents = <&pll1_sysclk 2>;
->
-> in da850.dtsi when doing earlyprintk, otherwise the UART1 and UART2 clock
-> source will change during boot and cause garbled output after a point.
->
->
+Changes from v3:
+*) Added dra7-mmc-iodelay.dtsi to add a new pinctrl group for clk line
+   without pullup to be used for dra71-evm and am57xx-idk.
+*) Rename wlcore node name to wifi
 
-Hi David, Sekhar,
+This series should be merged only after [1].
+[1] -> https://marc.info/?l=linux-omap&m=152482966225758&w=2
 
-Patches 3-5 from the reset series[1] should go in before this series
-or we'll be getting WARN's from the common clock framework core about
-unprepared clocks on boards using the remoteproc driver.
+This series:
+ *) Adds wilink wlan support (Now all MMC instances in DRA7 will use
+    sdhci-omap)
+ *) Add a new pinctrl group for clk line without pullup required for
+    UHS cards to work reliably.
+ *) Update README to make sure users update .config file from 4.18
+    kernel.
+ *) Use sdhci-omap programming model.
 
-Thanks,
-Bartosz
+In the "Use sdhci-omap programming model" patch, "ti,omap4-hsmmc"
+compatible is removed. This is because if both "ti,dra7-sdhci" and
+"ti,omap4-hsmmc" is added and if there is probe deferral in sdhci_omap
+driver, the device is binding to omap_hsmmc driver.
 
-[1] https://lkml.org/lkml/2018/4/17/1000
+Once omap_hsmmc and sdhci_omap driver are feature identical,
+sdhci_omap driver will be made to support omap_hsmmc binding
+(including "ti,omap4-hsmmc" compatible) and omap_hsmmc driver will
+be removed. Till then dt nodes with "ti,omap4-hsmmc" compatible
+will use omap_hsmmc driver and "ti,dra7-sdhci" compatible will
+use sdhci_omap driver.
+
+Hari Nagalla (2):
+  ARM: dts: dra72-evm-common: Add wilink8 wlan support
+  ARM: dts: dra7-evm: Add wilink8 wlan support
+
+Kishon Vijay Abraham I (10):
+  ARM: dts: dra72-evm-common: Remove mmc specific pinmux
+  ARM: dts: dra71-evm: Add "vqmmc-supply" property for mmc2
+  ARM: dts: dra7-mmc-iodelay: Add a new pinctrl group for clk line
+    without pullup
+  ARM: dts: am57xx-idk: Use pinctrl group from dra7-mmc-iodelay.dtsi to
+    select pulldown
+  ARM: dts: dra71-evm: Use pinctrl group from dra7-mmc-iodelay.dtsi to
+    select pulldown
+  ARM: dts: am57xx-beagle-x15/am57xx-idk: Fix pinctrl-names
+  ARM: dts: dra7-evm: Model EVM_3V6 regulator
+  ARM: dts: dra7: Use sdhci-omap programming model
+  ARM: dts: dra7: Add high speed modes capability to MMC1/MMC2 dt node
+  Documentation: ARM: Add new MMC requirements for DRA7/K2G
+
+Sekhar Nori (1):
+  ARM: dts: am574x-idk: Add pinmux configuration for MMC
+
+Vishal Mahaveer (1):
+  ARM: dts: dra76-evm: Add wilink8 wlan support
+
+ Documentation/arm/OMAP/README                 |  4 ++
+ arch/arm/boot/dts/am571x-idk.dts              |  5 +-
+ arch/arm/boot/dts/am572x-idk.dts              |  5 +-
+ arch/arm/boot/dts/am574x-idk.dts              | 20 ++++++
+ .../boot/dts/am57xx-beagle-x15-common.dtsi    |  4 +-
+ arch/arm/boot/dts/am57xx-beagle-x15.dts       |  3 +-
+ arch/arm/boot/dts/am57xx-idk-common.dtsi      | 14 +---
+ arch/arm/boot/dts/dra7-evm-common.dtsi        | 15 ++++
+ arch/arm/boot/dts/dra7-evm.dts                | 68 ++++++++++++++++++
+ arch/arm/boot/dts/dra7-mmc-iodelay.dtsi       | 19 +++++
+ arch/arm/boot/dts/dra7.dtsi                   | 32 ++++-----
+ arch/arm/boot/dts/dra71-evm.dts               | 17 +----
+ arch/arm/boot/dts/dra72-evm-common.dtsi       | 71 +++++++++++--------
+ arch/arm/boot/dts/dra72x-mmc-iodelay.dtsi     | 11 +++
+ arch/arm/boot/dts/dra76-evm.dts               | 34 ++++++++-
+ 15 files changed, 243 insertions(+), 79 deletions(-)
+ create mode 100644 arch/arm/boot/dts/dra7-mmc-iodelay.dtsi
+
+-- 
+2.17.0
