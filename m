@@ -1,145 +1,164 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH 1/3] mmc: sunxi: add support for the MMC
- controller on H6
-Date: Fri, 27 Apr 2018 16:38:29 +0800
-Message-ID: <EECAFDD1-FEAC-42DF-BB17-F11C1C8612DE@aosc.io>
-References: <20180426140728.43155-1-icenowy@aosc.io> <20180426140728.43155-2-icenowy@aosc.io> <f722ce51-2391-620c-df65-48f047b5f3d5@arm.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: Re: [PATCH 02/17] dt-bindings: display: renesas: du: Document the
+ R8A77965 bindings
+Date: Fri, 27 Apr 2018 09:40:11 +0100
+Message-ID: <366c0a0f-f179-7796-fc06-94b3d949fc7f@ideasonboard.com>
+References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
+ <20180426165346.494-3-kieran.bingham+renesas@ideasonboard.com>
+ <e94ae62f-30bb-5056-9646-03941d74ae75@ideasonboard.com>
+ <69317997.GXJe2a7Jrz@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBI6DRPLQKGQEOIPGODA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <f722ce51-2391-620c-df65-48f047b5f3d5-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0822818070=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <69317997.GXJe2a7Jrz@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, open list <linux-kernel@vger.kernel.org>, "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--===============0822818070==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="CKxIVZoB72RoTArDOvlPH2QMEqNAZ6hDL"
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--CKxIVZoB72RoTArDOvlPH2QMEqNAZ6hDL
+Content-Type: multipart/mixed; boundary="pLp2pVKpxOWVRmxM8HJns8ahRdgVMottG";
+ protected-headers="v1"
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-renesas-soc@vger.kernel.org, David Airlie <airlied@linux.ie>,
+ Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Message-ID: <366c0a0f-f179-7796-fc06-94b3d949fc7f@ideasonboard.com>
+Subject: Re: [PATCH 02/17] dt-bindings: display: renesas: du: Document the
+ R8A77965 bindings
+References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
+ <20180426165346.494-3-kieran.bingham+renesas@ideasonboard.com>
+ <e94ae62f-30bb-5056-9646-03941d74ae75@ideasonboard.com>
+ <69317997.GXJe2a7Jrz@avalon>
+In-Reply-To: <69317997.GXJe2a7Jrz@avalon>
+
+--pLp2pVKpxOWVRmxM8HJns8ahRdgVMottG
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+
+Hi Laurent,
+
+On 26/04/18 21:10, Laurent Pinchart wrote:
+> Hi Kieran,
+>=20
+> Thank you for the patch.
+>=20
+> On Thursday, 26 April 2018 19:57:32 EEST Kieran Bingham wrote:
+>> Ahem - this one seems to have lost it's commit message.
+>>
+>> Apologies :)
+>=20
+> Apart from that, this looks good to me.
+>=20
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>=20
+> and applied to my tree with the commit message
+>=20
+> Document the M3-N (r8a77965) SoC in the R-Car DU bindings
+>=20
+
+That's perfect, thanks - and saves me sending a v1.1
+
+Regards
+
+Kieran
+
+> Let me know if you would like a different message.
+>=20
+>> On 26/04/18 17:53, Kieran Bingham wrote:
+>>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.co=
+m>
+>>> ---
+>>>
+>>>  Documentation/devicetree/bindings/display/renesas,du.txt | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt=
+
+>>> b/Documentation/devicetree/bindings/display/renesas,du.txt index
+>>> a36a6e7ee54f..7c6854bd0a04 100644
+>>> --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+>>> +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+>>>
+>>> @@ -13,6 +13,7 @@ Required Properties:
+>>>      - "renesas,du-r8a7794" for R8A7794 (R-Car E2) compatible DU
+>>>      - "renesas,du-r8a7795" for R8A7795 (R-Car H3) compatible DU
+>>>      - "renesas,du-r8a7796" for R8A7796 (R-Car M3-W) compatible DU
+>>> +    - "renesas,du-r8a77965" for R8A77965 (R-Car M3-N) compatible DU
+>>>      - "renesas,du-r8a77970" for R8A77970 (R-Car V3M) compatible DU
+>>>      - "renesas,du-r8a77995" for R8A77995 (R-Car D3) compatible DU
+>>>
+>>> @@ -59,6 +60,7 @@ corresponding to each DU output.
+>>>
+>>>   R8A7794 (R-Car E2)     DPAD 0         DPAD 1         -             =
+ -
+>>>   R8A7795 (R-Car H3)     DPAD 0         HDMI 0         HDMI 1        =
+ LVDS
+>>>   0
+>>>   R8A7796 (R-Car M3-W)   DPAD 0         HDMI 0         LVDS 0        =
+ -
+>>> + R8A77965 (R-Car M3-N)  DPAD 0         HDMI 0         LVDS 0        =
+ -
+>>>   R8A77970 (R-Car V3M)   DPAD 0         LVDS 0         -             =
+ -
+>>>   R8A77995 (R-Car D3)    DPAD 0         LVDS 0         LVDS 1        =
+ -
+>=20
 
 
-=E4=BA=8E 2018=E5=B9=B44=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=8812=
-:45:24, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> =E5=86=99=E5=88=B0:
->Hi,
->
->On 26/04/18 15:07, Icenowy Zheng wrote:
->> The new Allwinner H6 SoC have 3 MMC controllers. The first and second
->> ones are similar to the ones on A64, but the third one adds EMCE
->> (Embedded Crypto Engine) support which does hardware transparent
->crypto
->> on the eMMC.
->>=20
->> As we still do not have support for EMCE, and the support of it is
->> disabled by defualt, we just duplicate the A64 mmc configurations and
->> change the compatible string.
->
->So if the A64 MMC part is compatible, we should express it like this:
->
->> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mmc/sunxi-mmc.txt |  2 ++
->>  drivers/mmc/host/sunxi-mmc.c                        | 16
->++++++++++++++++
->>  2 files changed, 18 insertions(+)
->>=20
->> diff --git a/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
->b/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
->> index 132e0007d7d6..e6aa5c7a5e12 100644
->> --- a/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
->> +++ b/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
->> @@ -16,6 +16,8 @@ Required properties:
->>     * "allwinner,sun9i-a80-mmc"
->>     * "allwinner,sun50i-a64-emmc"
->>     * "allwinner,sun50i-a64-mmc"
->> +   * "allwinner,sun50i-h6-emmc"
->> +   * "allwinner,sun50i-h6-mmc"
->
->This should be changed to:
->
->      * "allwinner,sun50i-h6-emmc", "allwinner,sun50i-a64-emmc"
->      * "allwinner,sun50i-h6-mmc", "allwinner,sun50i-a64-mmc"
+--pLp2pVKpxOWVRmxM8HJns8ahRdgVMottG--
 
-This list shouldn't list pairs, and as I said in the reply,
-these pairs are not valid.
+--CKxIVZoB72RoTArDOvlPH2QMEqNAZ6hDL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
->
->>   - reg : mmc controller base registers
->>   - clocks : a list with 4 phandle + clock specifier pairs
->>   - clock-names : must contain "ahb", "mmc", "output" and "sample"
->> diff --git a/drivers/mmc/host/sunxi-mmc.c
->b/drivers/mmc/host/sunxi-mmc.c
->> index 97c6b79b7d6f..05e2b5fd7aa4 100644
->> --- a/drivers/mmc/host/sunxi-mmc.c
->> +++ b/drivers/mmc/host/sunxi-mmc.c
->> @@ -1168,6 +1168,20 @@ static const struct sunxi_mmc_cfg
->sun50i_a64_emmc_cfg =3D {
->>  	.can_calibrate =3D true,
->>  };
->> =20
->> +static const struct sunxi_mmc_cfg sun50i_h6_cfg =3D {
->> +	.idma_des_size_bits =3D 16,
->> +	.clk_delays =3D NULL,
->> +	.can_calibrate =3D true,
->> +	.mask_data0 =3D true,
->> +	.needs_new_timings =3D true,
->> +};
->> +
->> +static const struct sunxi_mmc_cfg sun50i_h6_emmc_cfg =3D {
->> +	.idma_des_size_bits =3D 13,
->> +	.clk_delays =3D NULL,
->> +	.can_calibrate =3D true,
->> +};
->> +
->
->... and then we don't need those changes ...
->
->>  static const struct of_device_id sunxi_mmc_of_match[] =3D {
->>  	{ .compatible =3D "allwinner,sun4i-a10-mmc", .data =3D &sun4i_a10_cfg
->},
->>  	{ .compatible =3D "allwinner,sun5i-a13-mmc", .data =3D &sun5i_a13_cfg
->},
->> @@ -1176,6 +1190,8 @@ static const struct of_device_id
->sunxi_mmc_of_match[] =3D {
->>  	{ .compatible =3D "allwinner,sun9i-a80-mmc", .data =3D &sun9i_a80_cfg
->},
->>  	{ .compatible =3D "allwinner,sun50i-a64-mmc", .data =3D &sun50i_a64_cf=
-g
->},
->>  	{ .compatible =3D "allwinner,sun50i-a64-emmc", .data =3D
->&sun50i_a64_emmc_cfg },
->> +	{ .compatible =3D "allwinner,sun50i-h6-mmc", .data =3D &sun50i_h6_cfg
->},
->> +	{ .compatible =3D "allwinner,sun50i-h6-emmc", .data =3D
->&sun50i_h6_emmc_cfg },
->
->... and those, at least yet.
->Should we ever extend the driver to support the EMCE, we can add them
->at
->this occasion.
->
->So this patch would just add the compatible pairs to the binding doc.
->
->Cheers,
->Andre.
->
->>  	{ /* sentinel */ }
->>  };
->>  MODULE_DEVICE_TABLE(of, sunxi_mmc_of_match);
->>=20
->
->_______________________________________________
->linux-arm-kernel mailing list
->linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-----BEGIN PGP SIGNATURE-----
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+iQIzBAEBCgAdFiEEkC3XmD+9KP3jctR6oR5GchCkYf0FAlri4esACgkQoR5GchCk
+Yf00AQ//X+oc+ghTn1uTwxozzYplHfGDBCbJkcparx4gxwS+gzbeIL8AIg3CcKWq
+8nY1xMv380KKRemJIjQaAxvIpgAljTy1BUqGf+n7M12fKJcn4jmX3d6g2l4HZbcf
+WgzsUB34QVtiMQRKHs52U5AkOAXo5L3fBqgL8nN0yWpQ+I5HTciZDY/S/LLIPpFB
+HfNJsMdDo53d9OAwWQ9funTH6/c7uP1qwzNy3g7ZV1YfkMGmrkZG++rzJ7w51dDw
+tRh6yl/BzVePvuBMwFQYO8FXKmeaHH4gPS5alvzVRmZf1GGyb50DretF4/6zV/rb
+XO+leHtGkQ8NBx1DGhVNd2YSRjM3wG8VaCk4KsYzJf0r9it1pekqVijoMhv9zGQ8
+yllfndPITV2zcncxweMNoQcCZAMpt6S/gMzsbfL4JyVIupVrKiPUioxivFW/ja38
+j61fETqw9TYl0wgL/U/lJ+ynFBwwD1PrQLv/DHiLvzqh4CLNX8D84u3gkWjcWiYW
+5bIPrYJ6uiNz/CCbA0H7yXYkrUq/ZvJgof9PRvlV50mm/WsRYaxtOtz84NNmw8it
+9IIPVKgyGGdMSHsQarPWn/cQ3xiBYnzPYcEjR1hSaodZ8cJwT1/LizAPV8YfSSdD
+trrdbbGaN77wtxoxC80dGn0se7/QzXWt/MxzN13DRq2OrHtKV2M=
+=EFgz
+-----END PGP SIGNATURE-----
+
+--CKxIVZoB72RoTArDOvlPH2QMEqNAZ6hDL--
+
+--===============0822818070==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0822818070==--
