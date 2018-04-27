@@ -1,87 +1,65 @@
 From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: [PATCH v2 09/11] arm64: dts: r8a77965: Add HDMI encoder instance
-Date: Fri, 27 Apr 2018 17:57:20 +0100
-Message-ID: <20180427165722.19445-10-kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH v2 06/11] arm64: dts: r8a77965: Add FCPF and FCPV instances
+Date: Fri, 27 Apr 2018 17:57:17 +0100
+Message-ID: <20180427165722.19445-7-kieran.bingham+renesas@ideasonboard.com>
 References: <20180427165722.19445-1-kieran.bingham+renesas@ideasonboard.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <20180427165722.19445-1-kieran.bingham+renesas@ideasonboard.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org
-Cc: Takeshi Kihara <takeshi.kihara.df@renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT
-        AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Will Deacon <will.deacon@arm.com>, "moderated list:ARM64 PORT AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the HDMI encoder to the R8A77965 DT in disabled state.
-
-Based on a similar patch of the R8A7796 device tree
-by Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>.
-
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-[Kieran: Rebase to top of tree]
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
-v2:
- - Provide correct CPC MSSR header
----
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 30 ++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index a35ea2f32da2..b46af2744135 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -8,7 +8,7 @@
-  * Copyright (C) 2016 Renesas Electronics Corp.
-  */
- 
--#include <dt-bindings/clock/renesas-cpg-mssr.h>
-+#include <dt-bindings/clock/r8a77965-cpg-mssr.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/power/r8a77965-sysc.h>
- 
-@@ -1105,6 +1105,33 @@
- 			};
- 		};
- 
-+		hdmi0: hdmi@fead0000 {
-+			compatible = "renesas,r8a77965-hdmi",
-+				     "renesas,rcar-gen3-hdmi";
-+			reg = <0 0xfead0000 0 0x10000>;
-+			interrupts = <GIC_SPI 389 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 729>,
-+				 <&cpg CPG_CORE R8A77965_CLK_HDMI>;
-+			clock-names = "iahb", "isfr";
-+			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-+			resets = <&cpg 729>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				port@0 {
-+					reg = <0>;
-+					dw_hdmi0_in: endpoint {
-+						remote-endpoint = <&du_out_hdmi0>;
-+					};
-+				};
-+				port@1 {
-+					reg = <1>;
-+				};
-+			};
-+		};
-+
- 		du: display@feb00000 {
- 			compatible = "renesas,du-r8a77965";
- 			reg = <0 0xfeb00000 0 0x80000>;
-@@ -1132,6 +1159,7 @@
- 				port@1 {
- 					reg = <1>;
- 					du_out_hdmi0: endpoint {
-+						remote-endpoint = <&dw_hdmi0_in>;
- 					};
- 				};
- 				port@2 {
--- 
-2.17.0
+VGhlIEZDUHMgaGFuZGxlIHRoZSBpbnRlcmZhY2UgYmV0d2VlbiB2YXJpb3VzIElQIGNvcmVzIGFu
+ZCBtZW1vcnkuIEFkZAp0aGUgaW5zdGFuY2VzIHJlbGF0ZWQgdG8gdGhlIEZEUHMgYW5kIFZTUDJz
+LgoKQmFzZWQgb24gYSBzaW1pbGFyIHBhdGNoIG9mIHRoZSBSOEE3Nzk2IGRldmljZSB0cmVlCmJ5
+IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQu
+Y29tPi4KClNpZ25lZC1vZmYtYnk6IFRha2VzaGkgS2loYXJhIDx0YWtlc2hpLmtpaGFyYS5kZkBy
+ZW5lc2FzLmNvbT4KW0tpZXJhbjogUmViYXNlIHRvIHRvcCBvZiB0cmVlXQpTaWduZWQtb2ZmLWJ5
+OiBLaWVyYW4gQmluZ2hhbSA8a2llcmFuLmJpbmdoYW0rcmVuZXNhc0BpZGVhc29uYm9hcmQuY29t
+PgpSZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29u
+Ym9hcmQuY29tPgotLS0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk2NS5kdHNp
+IHwgNDEgKysrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA0MSBpbnNlcnRp
+b25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTY1
+LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NjUuZHRzaQppbmRleCBi
+MTJmNDE3NTVhZWEuLjc0YTdhZTRlYmNjYyAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9ib290L2R0
+cy9yZW5lc2FzL3I4YTc3OTY1LmR0c2kKKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2Fz
+L3I4YTc3OTY1LmR0c2kKQEAgLTEwLDYgKzEwLDcgQEAKIAogI2luY2x1ZGUgPGR0LWJpbmRpbmdz
+L2Nsb2NrL3JlbmVzYXMtY3BnLW1zc3IuaD4KICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1
+cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+CisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcG93ZXIvcjhh
+Nzc5NjUtc3lzYy5oPgogCiAjZGVmaW5lIENQR19BVURJT19DTEtfSQkJMTAKIApAQCAtMTAwMCw2
+ICsxMDAxLDQ2IEBACiAJCQkvKiBwbGFjZWhvbGRlciAqLwogCQl9OwogCisJCWZjcGYwOiBmY3BA
+ZmU5NTAwMDAgeworCQkJY29tcGF0aWJsZSA9ICJyZW5lc2FzLGZjcGYiOworCQkJcmVnID0gPDAg
+MHhmZTk1MDAwMCAwIDB4MjAwPjsKKwkJCWNsb2NrcyA9IDwmY3BnIENQR19NT0QgNjE1PjsKKwkJ
+CXBvd2VyLWRvbWFpbnMgPSA8JnN5c2MgUjhBNzc5NjVfUERfQTNWUD47CisJCQlyZXNldHMgPSA8
+JmNwZyA2MTU+OworCQl9OworCisJCWZjcHZiMDogZmNwQGZlOTZmMDAwIHsKKwkJCWNvbXBhdGli
+bGUgPSAicmVuZXNhcyxmY3B2IjsKKwkJCXJlZyA9IDwwIDB4ZmU5NmYwMDAgMCAweDIwMD47CisJ
+CQljbG9ja3MgPSA8JmNwZyBDUEdfTU9EIDYwNz47CisJCQlwb3dlci1kb21haW5zID0gPCZzeXNj
+IFI4QTc3OTY1X1BEX0EzVlA+OworCQkJcmVzZXRzID0gPCZjcGcgNjA3PjsKKwkJfTsKKworCQlm
+Y3B2aTA6IGZjcEBmZTlhZjAwMCB7CisJCQljb21wYXRpYmxlID0gInJlbmVzYXMsZmNwdiI7CisJ
+CQlyZWcgPSA8MCAweGZlOWFmMDAwIDAgMHgyMDA+OworCQkJY2xvY2tzID0gPCZjcGcgQ1BHX01P
+RCA2MTE+OworCQkJcG93ZXItZG9tYWlucyA9IDwmc3lzYyBSOEE3Nzk2NV9QRF9BM1ZQPjsKKwkJ
+CXJlc2V0cyA9IDwmY3BnIDYxMT47CisJCX07CisKKwkJZmNwdmQwOiBmY3BAZmVhMjcwMDAgewor
+CQkJY29tcGF0aWJsZSA9ICJyZW5lc2FzLGZjcHYiOworCQkJcmVnID0gPDAgMHhmZWEyNzAwMCAw
+IDB4MjAwPjsKKwkJCWNsb2NrcyA9IDwmY3BnIENQR19NT0QgNjAzPjsKKwkJCXBvd2VyLWRvbWFp
+bnMgPSA8JnN5c2MgUjhBNzc5NjVfUERfQUxXQVlTX09OPjsKKwkJCXJlc2V0cyA9IDwmY3BnIDYw
+Mz47CisJCX07CisKKwkJZmNwdmQxOiBmY3BAZmVhMmYwMDAgeworCQkJY29tcGF0aWJsZSA9ICJy
+ZW5lc2FzLGZjcHYiOworCQkJcmVnID0gPDAgMHhmZWEyZjAwMCAwIDB4MjAwPjsKKwkJCWNsb2Nr
+cyA9IDwmY3BnIENQR19NT0QgNjAyPjsKKwkJCXBvd2VyLWRvbWFpbnMgPSA8JnN5c2MgUjhBNzc5
+NjVfUERfQUxXQVlTX09OPjsKKwkJCXJlc2V0cyA9IDwmY3BnIDYwMj47CisJCX07CisKIAkJY3Np
+MjA6IGNzaTJAZmVhODAwMDAgewogCQkJcmVnID0gPDAgMHhmZWE4MDAwMCAwIDB4MTAwMDA+Owog
+CQkJLyogcGxhY2Vob2xkZXIgKi8KLS0gCjIuMTcuMAoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
