@@ -1,59 +1,34 @@
-From: rishabhb@codeaurora.org
-Subject: Re: [PATCH v5 1/2] dt-bindings: Documentation for qcom, llcc
-Date: Fri, 27 Apr 2018 15:57:02 -0700
-Message-ID: <b458e2bf5b23a4af996e80d81ceabaa4@codeaurora.org>
-References: <1524524972-12014-1-git-send-email-rishabhb@codeaurora.org>
- <1524524972-12014-2-git-send-email-rishabhb@codeaurora.org>
- <20180427142144.tvy5xamuwz6jnxk5@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+From: "Wesley W. Terpstra" <wesley@sifive.com>
+Subject: [PATCH 2/3] dt-bindings: Add "sifive" vendor prefix
+Date: Fri, 27 Apr 2018 15:59:57 -0700
+Message-ID: <1524869998-2805-3-git-send-email-wesley@sifive.com>
+References: <1524869998-2805-1-git-send-email-wesley@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427142144.tvy5xamuwz6jnxk5@rob-hp-laptop>
+In-Reply-To: <1524869998-2805-1-git-send-email-wesley@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@lists.infradead.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, kyan@codeaurora.org, ckadabi@codeaurora.org, evgreen@chromium.org
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, David Lechner <david@lechnology.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, SZ Lin <sz.lin@moxa.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: "Wesley W. Terpstra" <wesley@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-27 07:21, Rob Herring wrote:
-> On Mon, Apr 23, 2018 at 04:09:31PM -0700, Rishabh Bhatnagar wrote:
->> Documentation for last level cache controller device tree bindings,
->> client bindings usage examples.
->> 
->> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
->> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
->> ---
->>  .../devicetree/bindings/arm/msm/qcom,llcc.txt      | 60 
->> ++++++++++++++++++++++
->>  1 file changed, 60 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-> 
-> My comments on v4 still apply.
-> 
-> Rob
+This adds a vendor prefix "sifive" for SiFive, Inc.
+We make chips.
 
-Hi Rob,
-Reposting our replies to your comments on v4:
+Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-This is partially true, a bunch of SoCs would support this design but
-clients IDs are not expected to change. So Ideally client drivers could
-hard code these IDs.
-
-However I have other concerns of moving the client Ids in the driver.
-The way the APIs implemented today are as follows:
-#1. Client calls into system cache driver to get cache slice handle
-with the usecase Id as input.
-#2. System cache driver gets the phandle of system cache instance from
-the client device to obtain the private data.
-#3. Based on the usecase Id perform look up in the private data to get
-cache slice handle.
-#4. Return the cache slice handle to client
-
-If we don't have the connection between client & system cache then the
-  private data needs to declared as static global in the system cache 
-driver,
-that limits us to have just once instance of system cache block.
-
-Please let us know what you think.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ae850d6..c98faf7 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -315,6 +315,7 @@ sgx	SGX Sensortech
+ sharp	Sharp Corporation
+ shimafuji	Shimafuji Electric, Inc.
+ si-en	Si-En Technology Ltd.
++sifive	SiFive, Inc.
+ sigma	Sigma Designs, Inc.
+ sii	Seiko Instruments, Inc.
+ sil	Silicon Image
+-- 
+2.7.4
