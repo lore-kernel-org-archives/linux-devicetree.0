@@ -1,47 +1,108 @@
-Return-Path: <SRS0=tneY=G2=arm.com=marc.zyngier@kernel.org>
-Subject: Re: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a77470
- support
-References: <1522318628-52821-1-git-send-email-biju.das@bp.renesas.com>
-From: Marc Zyngier <marc.zyngier@arm.com>
-Message-ID: <45271088-4b7f-d714-d868-417a4c328fd4@arm.com>
-Date: Thu, 5 Apr 2018 10:40:52 +0100
-MIME-Version: 1.0
-In-Reply-To: <1522318628-52821-1-git-send-email-biju.das@bp.renesas.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-To: Biju Das <biju.das@bp.renesas.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=w2p0=HQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from perceval.ideasonboard.com ([213.167.242.64]:37990 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753569AbeD0WCa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Apr 2018 18:02:30 -0400
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH v3 2/6] arm64: dts: r8a77965: Add VSP instances
+Date: Fri, 27 Apr 2018 23:02:16 +0100
+Message-Id: <20180427220220.31286-3-kieran.bingham+renesas@ideasonboard.com>
+In-Reply-To: <20180427220220.31286-1-kieran.bingham+renesas@ideasonboard.com>
+References: <20180427220220.31286-1-kieran.bingham+renesas@ideasonboard.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 29/03/18 11:17, Biju Das wrote:
-> Renesas RZ/G SoC have the R-Car gen2 compatible IRQC interrupt
-> controllers. Document RZ/G1C (also known as R8A77470) SoC bindings.
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-> index 20f121d..1d5891a 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-> @@ -7,6 +7,7 @@ Required properties:
->      - "renesas,irqc-r8a73a4" (R-Mobile APE6)
->      - "renesas,irqc-r8a7743" (RZ/G1M)
->      - "renesas,irqc-r8a7745" (RZ/G1E)
-> +    - "renesas,irqc-r8a77470" (RZ/G1C)
->      - "renesas,irqc-r8a7790" (R-Car H2)
->      - "renesas,irqc-r8a7791" (R-Car M2-W)
->      - "renesas,irqc-r8a7792" (R-Car V2H)
-> 
+The r8a77965 has 4 VSP instances.
 
-Queued with Simon and Geert's RB tags.
+Based on a similar patch of the R8A7796 device tree
+by Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>.
 
-Thanks,
+Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+[Kieran: Rebased to top of tree, fixed sort orders]
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 44 +++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-	M.
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index 74a7ae4ebccc..362eddc6b3d1 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -1009,6 +1009,17 @@
+ 			resets = <&cpg 615>;
+ 		};
+ 
++		vspb: vsp@fe960000 {
++			compatible = "renesas,vsp2";
++			reg = <0 0xfe960000 0 0x8000>;
++			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 626>;
++			power-domains = <&sysc R8A77965_PD_A3VP>;
++			resets = <&cpg 626>;
++
++			renesas,fcp = <&fcpvb0>;
++		};
++
+ 		fcpvb0: fcp@fe96f000 {
+ 			compatible = "renesas,fcpv";
+ 			reg = <0 0xfe96f000 0 0x200>;
+@@ -1017,6 +1028,17 @@
+ 			resets = <&cpg 607>;
+ 		};
+ 
++		vspi0: vsp@fe9a0000 {
++			compatible = "renesas,vsp2";
++			reg = <0 0xfe9a0000 0 0x8000>;
++			interrupts = <GIC_SPI 444 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 631>;
++			power-domains = <&sysc R8A77965_PD_A3VP>;
++			resets = <&cpg 631>;
++
++			renesas,fcp = <&fcpvi0>;
++		};
++
+ 		fcpvi0: fcp@fe9af000 {
+ 			compatible = "renesas,fcpv";
+ 			reg = <0 0xfe9af000 0 0x200>;
+@@ -1025,6 +1047,17 @@
+ 			resets = <&cpg 611>;
+ 		};
+ 
++		vspd0: vsp@fea20000 {
++			compatible = "renesas,vsp2";
++			reg = <0 0xfea20000 0 0x8000>;
++			interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 623>;
++			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
++			resets = <&cpg 623>;
++
++			renesas,fcp = <&fcpvd0>;
++		};
++
+ 		fcpvd0: fcp@fea27000 {
+ 			compatible = "renesas,fcpv";
+ 			reg = <0 0xfea27000 0 0x200>;
+@@ -1033,6 +1066,17 @@
+ 			resets = <&cpg 603>;
+ 		};
+ 
++		vspd1: vsp@fea28000 {
++			compatible = "renesas,vsp2";
++			reg = <0 0xfea28000 0 0x8000>;
++			interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 622>;
++			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
++			resets = <&cpg 622>;
++
++			renesas,fcp = <&fcpvd1>;
++		};
++
+ 		fcpvd1: fcp@fea2f000 {
+ 			compatible = "renesas,fcpv";
+ 			reg = <0 0xfea2f000 0 0x200>;
 -- 
-Jazz is not dead. It just smells funny...
+2.17.0
+
