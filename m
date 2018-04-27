@@ -1,89 +1,73 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: nvmem: Add binding for RAVE SP EEPROM driver
-Date: Fri, 27 Apr 2018 12:38:09 -0700
-Message-ID: <CAHQ1cqER1JWAEYydH5xWGwGiPOrM9sz_6EghxW34jgq5vzRzUQ@mail.gmail.com>
-References: <20180411015948.19562-1-andrew.smirnov@gmail.com>
- <20180411015948.19562-2-andrew.smirnov@gmail.com> <20180416150507.2wm4s7opgr242v6a@rob-hp-laptop>
- <CAHQ1cqFep9Xs3_hsz1EiDwu8mcDDzbFs4H-kLnKkj=iokX=fCg@mail.gmail.com> <CAL_JsqLWmF-xrf5vDALuG3Geq-XHB2-W5Z6XWvHs=PeZ==Bm+w@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/3] Documentation: bluefield-dw-mshc: add DT
+ description
+Date: Fri, 27 Apr 2018 14:50:49 -0500
+Message-ID: <20180427195049.ycjmhes4qj4n3myq@rob-hp-laptop>
+References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+ <7505274f8d82642fd08e874160acd45be2418673.1524497286.git.lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLWmF-xrf5vDALuG3Geq-XHB2-W5Z6XWvHs=PeZ==Bm+w@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <7505274f8d82642fd08e874160acd45be2418673.1524497286.git.lsun@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Aleksander Morgado <aleksander@aleksander.es>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Liming Sun <lsun@mellanox.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 27, 2018 at 11:43 AM, Rob Herring <robh@kernel.org> wrote:
-> On Fri, Apr 27, 2018 at 1:05 AM, Andrey Smirnov
-> <andrew.smirnov@gmail.com> wrote:
->> On Mon, Apr 16, 2018 at 8:05 AM, Rob Herring <robh@kernel.org> wrote:
->>> On Tue, Apr 10, 2018 at 06:59:47PM -0700, Andrey Smirnov wrote:
->>>> Add Device Tree bindings for RAVE SP EEPROM driver - an MFD cell of
->>>> parent RAVE SP driver (documented in
->>>> Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
->>>>
->>>> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>>> Cc: linux-kernel@vger.kernel.org
->>>> Cc: Chris Healy <cphealy@gmail.com>
->>>> Cc: Lucas Stach <l.stach@pengutronix.de>
->>>> Cc: Aleksander Morgado <aleksander@aleksander.es>
->>>> Cc: Rob Herring <robh+dt@kernel.org>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: devicetree@vger.kernel.org
->>>> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
->>>> ---
->>>>  .../bindings/nvmem/zii,rave-sp-eeprom.txt          | 29 ++++++++++++++++++++++
->>>>  1 file changed, 29 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
->>>> new file mode 100644
->>>> index 000000000000..a4e838c30b67
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
->>>> @@ -0,0 +1,29 @@
->>>> +Zodiac Inflight Innovations RAVE EEPROM Bindings
->>>> +
->>>> +RAVE SP EEPROM device is a "MFD cell" device exposing physical EEPROM
->>>> +attached to RAVE Supervisory Processor. It is expected that its Device
->>>> +Tree node is specified as a child of the node corresponding to the
->>>> +parent RAVE SP device (as documented in
->>>> +Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
->>>> +
->>>> +Required properties:
->>>> +
->>>> +- compatible: Should be "zii,rave-sp-eeprom"
->>>
->>> Need to state somewhere this follows the bindings/nvmem/nvmem.txt
->>> binding.
->>>
->>
->> OK, will fix in v3.
->>
->>>> +
->>>> +Example:
->>>> +
->>>> +     rave-sp {
->>>> +             compatible = "zii,rave-sp-rdu1";
->>>> +             current-speed = <38400>;
->>>> +
->>>> +             main-eeprom {
->>>
->>> eeprom@a4
->>
->> Any chance I can keep it as is? I am asking because this node name is
->> used by the driver as device name which is how it also appears in
->> sysfs. Reason for that being that "main-eeprom" and "dds-eeprom"
->> (second EEPROM in the system) are easier to rembmer and tell apart
->> than "eeprom@a4" and "eeprom@a5". Granted, I can divorce naming scheme
->> in the driver from device node name, but then I'd have to keep a
->> "address -> deivce name" lookup table which I was hoping to avoid.
->
-> It generates a dtc warning if you don't fix it.
->
+On Mon, Apr 23, 2018 at 11:32:21AM -0400, Liming Sun wrote:
+> This commit adds "mellanox,bluefield-dw-mshc" for dwmmc driver
+> extension on Mellanox BlueField SoC platform.
 
-Understood. Will fix in v3.
+"dt-bindings: mmc: " is preferred subject prefix.
 
-Thanks,
-Andrey Smirnov
+> 
+> Signed-off-by: Liming Sun <lsun@mellanox.com>
+> ---
+>  .../devicetree/bindings/mmc/bluefield-dw-mshc.txt  | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt
+> new file mode 100644
+> index 0000000..ee0dd61
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt
+> @@ -0,0 +1,29 @@
+> +* Mellanox Bluefield SoC specific extensions to the Synopsys Designware
+> +  Mobile Storage Host Controller
+> +
+> +Read synopsys-dw-mshc.txt for more details
+> +
+> +The Synopsys designware mobile storage host controller is used to interface
+> +a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
+> +differences between the core Synopsys dw mshc controller properties described
+> +by synopsys-dw-mshc.txt and the properties used by the Mellanox Bluefield SoC
+> +specific extensions to the Synopsys Designware Mobile Storage Host Controller.
+> +
+> +Required Properties:
+> +
+> +* compatible: should be one of the following.
+> +  - "mellanox,bluefield-dw-mshc": for controllers with Mellanox Bluefield SoC
+> +    specific extensions.
+> +
+> +Example:
+> +
+> +	/* Mellanox Bluefield SoC MMC */
+> +	dwmmc0@4,0 {
+
+mmc@...
+
+Doesn't look like a correct unit-address either.
+
+> +		compatible = "mellanox,bluefield-dw-mshc";
+> +		reg = <4 0x8000 0x400>;
+> +		interrupts = <32>;
+> +		fifo-depth = <0x100>;
+> +		clock-frequency = <24000000>;
+> +		bus-width = <8>;
+> +		cap-mmc-highspeed;
+> +	};
+> -- 
+> 1.8.3.1
+> 
