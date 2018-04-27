@@ -1,55 +1,84 @@
-From: <jan.tuerk@emtrion.com>
-Subject: [PATCH v4 7/7] ARM: imx_v6_v7_defconfig: Enable DA0963 PMIC support.
-Date: Fri, 27 Apr 2018 15:24:42 +0200
-Message-ID: <20180427132445.3458-8-jan.tuerk@emtrion.com>
-References: <20180420125108.14197-1-jan.tuerk@emtrion.com>
- <20180427132445.3458-1-jan.tuerk@emtrion.com>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [Patch v2 2/6] dt-bindings: display/ti: Move common dispc
+ bindings to omap-dss.txt
+Date: Fri, 27 Apr 2018 08:26:19 -0500
+Message-ID: <20180427132619.GA28125@ti.com>
+References: <20180326162128.8740-1-bparrot@ti.com>
+ <20180326162128.8740-3-bparrot@ti.com> <2666897.Gcu4TnYl7p@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427132445.3458-1-jan.tuerk@emtrion.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, "GitAuthor: Jan Tuerk" <jan.tuerk@emtrion.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <2666897.Gcu4TnYl7p@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jan Tuerk <jan.tuerk@emtrion.com>
-
-All recent emtrion modules based on i.mx6 make use of the DA0963.
-Therefore enable it with the following defaults:
-	- CONFIG_MFD_DA9063=y
-	- CONFIG_REGULATOR_DA9063=y
-	- CONFIG_DA9063_WATCHDOG=m
-MFD and REGULATOR are built-in to have it at Kernel boot-time.
-The WATCHDOG is optional and could be loaded from userspace.
-
-Signed-off-by: Jan Tuerk <jan.tuerk@emtrion.com>
----
- arch/arm/configs/imx_v6_v7_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 3a308437b088..691d431250d4 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -214,9 +214,11 @@ CONFIG_CPU_THERMAL=y
- CONFIG_IMX_THERMAL=y
- CONFIG_WATCHDOG=y
- CONFIG_DA9062_WATCHDOG=y
-+CONFIG_DA9063_WATCHDOG=m
- CONFIG_IMX2_WDT=y
- CONFIG_MFD_DA9052_I2C=y
- CONFIG_MFD_DA9062=y
-+CONFIG_MFD_DA9063=y
- CONFIG_MFD_MC13XXX_SPI=y
- CONFIG_MFD_MC13XXX_I2C=y
- CONFIG_MFD_STMPE=y
-@@ -225,6 +227,7 @@ CONFIG_REGULATOR_FIXED_VOLTAGE=y
- CONFIG_REGULATOR_ANATOP=y
- CONFIG_REGULATOR_DA9052=y
- CONFIG_REGULATOR_DA9062=y
-+CONFIG_REGULATOR_DA9063=y
- CONFIG_REGULATOR_GPIO=y
- CONFIG_REGULATOR_MC13783=y
- CONFIG_REGULATOR_MC13892=y
--- 
-2.11.0
+TGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPiB3cm90
+ZSBvbiBXZWQgWzIwMTgtQXByLTA0IDE3OjI5OjU5ICswMzAwXToKPiBIaSBCZW5vaXQsCj4gCj4g
+VGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCj4gCj4gT24gTW9uZGF5LCAyNiBNYXJjaCAyMDE4IDE5
+OjIxOjI0IEVFU1QgQmVub2l0IFBhcnJvdCB3cm90ZToKPiA+IEFkZCBjb21tb24gRElTUEMgYmlu
+ZGluZ3MgaW50byB0aGUgdG9wIGxldmVsIGJpbmRpbmdzIGZpbGUuCj4gPiBNb3ZlIGNvbW1vbiBi
+aW5kaW5ncyBoZXJlIGluc3RlYWQgb2YgaGF2aW5nIG11bHRpcGxlIGNvcGllcyBvZgo+ID4gdGhl
+IHNhbWUgaW5mb3JtYXRpb24gaW4gYWxsIG9mIHRoZSB2YXJpYW50IHNwZWNpZmljIGZpbGVzLgo+
+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBCZW5vaXQgUGFycm90IDxicGFycm90QHRpLmNvbT4KPiA+
+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+ID4gLS0tCj4gPiAg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksZHJhNy1kc3Mu
+dHh0ICB8IDUgLS0tLS0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS90aS90aSxvbWFwLWRzcy50eHQgIHwgNyArKysrKysrCj4gPiAgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDItZHNzLnR4dCB8IDQgLS0tLQo+
+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAz
+LWRzcy50eHQgfCA0IC0tLS0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS90aS90aSxvbWFwNC1kc3MudHh0IHwgNCAtLS0tCj4gPiAgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDUtZHNzLnR4dCB8IDQgLS0tLQo+
+ID4gIDYgZmlsZXMgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCAyMSBkZWxldGlvbnMoLSkKPiA+
+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L3RpL3RpLGRyYTctZHNzLnR4dAo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS90aS90aSxkcmE3LWRzcy50eHQgaW5kZXgKPiA+IDkxMjc5ZjEwNjBmZS4u
+YzMwZjllYzE4OWVkIDEwMDY0NAo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvdGkvdGksZHJhNy1kc3MudHh0Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxkcmE3LWRzcy50eHQKPiA+IEBAIC00
+NywxMSArNDcsNiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gIC0gY2xvY2tzOiBoYW5kbGUg
+dG8gZmNsawo+ID4gIC0gY2xvY2stbmFtZXM6ICJmY2siCj4gPiAKPiA+IC1PcHRpb25hbCBwcm9w
+ZXJ0aWVzOgo+ID4gLS0gbWF4LW1lbW9yeS1iYW5kd2lkdGg6IElucHV0IG1lbW9yeSAoZnJvbSBt
+YWluIG1lbW9yeSB0byBkaXNwYykgYmFuZHdpZHRoCj4gPiBsaW1pdCAtCQkJaW4gYnl0ZXMgcGVy
+IHNlY29uZAo+ID4gLQo+ID4gLQo+ID4gIEhETUkKPiA+ICAtLS0tCj4gPiAKPiA+IGRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFw
+LWRzcy50eHQKPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+dGkvdGksb21hcC1kc3MudHh0IGluZGV4Cj4gPiBlMWVmMjk1NjkzMzguLjI0OWU1ODhkNzg2NSAx
+MDA2NDQKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3RpL3RpLG9tYXAtZHNzLnR4dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0Cj4gPiBAQCAtMjEsNiArMjEsMTMgQEAg
+YSBSR0IgcGl4ZWwgc3RyZWFtIHRvIGVuY29kZXJzLgo+ID4gIFRoZSBlbmNvZGVyIG1vZHVsZXMg
+ZW5jb2RlIHRoZSByZWNlaXZlZCBSR0IgcGl4ZWwgc3RyZWFtIHRvIGEgdmlkZW8gb3V0cHV0Cj4g
+PiBsaWtlIEhETUksIE1JUEkgRFBJLCBldGMuCj4gPiAKPiA+ICtESVNQQwo+ID4gKy0tLS0tCj4g
+PiArCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICstIG1heC1tZW1vcnktYmFuZHdpZHRo
+OiBJbnB1dCBtZW1vcnkgKGZyb20gbWFpbiBtZW1vcnkgdG8gZGlzcGMpIGJhbmR3aWR0aAo+ID4g
+bGltaXQKPiA+ICsJCQlpbiBieXRlcyBwZXIgc2Vjb25kCj4gPiArCj4gCj4gSSBsaWtlIHRoZSBp
+ZGVhLCBidXQgSSB0aGluayB5b3UgbmVlZCB0byBleHBhbmQgdGhlIGRlc2NyaXB0aW9uIGEgYml0
+LiAKPiB0aSxvbWFwLWRzcy50eHQgc2hvdWxkIGV4cGxhaW4gaG93IGVhY2ggbW9kdWxlIHNob3Vs
+ZCBiZSByZXByZXNlbnRlZCBieSBhIAo+IGNoaWxkIERUIG5vZGUgaW4gdGhlIERTUyBEVCBub2Rl
+LCBhbmQgdGhpcyBzZWN0aW9uIHNob3VsZCBicmllZmx5IGV4cGxhaW4gd2hhdCAKPiB0aGUgRElT
+UEMgaXMgKHlvdSBjYW4gc2ltcGx5IG1vdmUgdGhlIDR0aCBwYXJhZ3JhcGggb2YgdGhlIGZpbGUg
+aGVyZSkgYW5kIHRoYXQgCj4gaXQgZGVzY3JpYmVzIGNvbW1vbiBwcm9wZXJ0aWVzLgoKWWVzLCBJ
+J2xsIGRvIHRoYXQgaW4gdGhlIG5leHQgcmV2aXNpb24uCiAgCj4gWW91IGNvdWxkIGFsc28gbW92
+ZSB0aGUgZGVzY3JpcHRpb24gb2Ygb3RoZXIgCj4gRElTUEMgcHJvcGVydGllcyBoZXJlLgoKSSBo
+YWQgZG9uZSB0aGF0IG9yaWdpbmFsbHkgYnV0IFRvbWkgcG9pbnRlZCBvdXQgdGhhdCBtb3N0IG9m
+IHRoZSBvdGhlcgpwcm9wZXJ0aWVzIGFyZSBub3QgY29tbW9uIHdpdGggYWxsIG9mIHRoZSBwbGF0
+Zm9ybSB2YXJpYW50cywgc29tZSB3b3VsZApoYXZlIG11bHRpcGxlIGNsb2NrcyBvciByZWdpc3Rl
+cnMgYmxvY2sgb3Igbm8gaHdtb2QgY29tcG9uZW50cy4gSSB0aG91Z2h0Cml0IHdvdWxkIG1vcmUg
+Y29uZnVzaW5nIHRvIGhhdmUgc29tZSBvZiB0aG9zZSB2YXJpYW50IHNwZWNpZmljICJyZXF1aXJl
+ZCIKcHJvcGVydGllcyBiZSBzaG93biBoZXJlIGFzIG9wdGlvbmFsLgoKQmVub2l0Cl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
