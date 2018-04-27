@@ -1,88 +1,85 @@
-From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH 3/4] dt-bindings: arm: fsl: add scu binding doc
-Date: Sat, 28 Apr 2018 02:46:15 +0800
-Message-ID: <1524854776-14863-4-git-send-email-aisheng.dong@nxp.com>
-References: <1524854776-14863-1-git-send-email-aisheng.dong@nxp.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
+ platform drivers
+Date: Fri, 27 Apr 2018 21:08:53 +0200
+Message-ID: <CAK8P3a17xU5m+_X-qWQK+LZq-bt3NnuVCgwzg+C2yYsVrdFhWw@mail.gmail.com>
+References: <20180426152920.21569-1-brgl@bgdev.pl> <20180426173151.GJ3094@brightrain.aerifal.cx>
+ <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com> <CAK8P3a0oCH7zyBs8nQd4p+xLrFwDQiJsaKKCF1m04nyXsZxk=g@mail.gmail.com>
+ <CAMpxmJUR+31axmAe2TNq00aUg40bnC=5k=2cVX019Vncr7cRkw@mail.gmail.com>
+ <CAK8P3a2xtTLx-VHVWok-b19=o1z5FbTNcaWq7Y_HSdaH6pWnZg@mail.gmail.com>
+ <CAMRc=MdomjLCq-bJyktaToH00kNQAuTLgkSFRrY9Jmre8McT3A@mail.gmail.com>
+ <CAK8P3a0tMp2QURp-9WuHehqE0b6-BO1wJ38siTdxhxgwCb-ERw@mail.gmail.com>
+ <CAMpxmJVkRDLkpcgzhMb41z=Tp6zvszLd0vqfdTtZBNGT6Trtqw@mail.gmail.com>
+ <CAK8P3a22DKpqMGdjYoBzKfNHc2GvAbvaZowZpz=SFeQHVSWjsg@mail.gmail.com> <CAMpxmJUovyhsiHByA3MZX5H6AcU4k9shX45Z60NpDkOFTxg_eQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1524854776-14863-1-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, dongas86@gmail.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMpxmJUovyhsiHByA3MZX5H6AcU4k9shX45Z60NpDkOFTxg_eQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, David Lechner <david@lechnology.com>, Rich Felker <dalias@libc.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@siemens.com>
 List-Id: devicetree@vger.kernel.org
 
-The System Controller Firmware (SCFW) is a low-level system function
-which runs on a dedicated Cortex-M core to provide power, clock, and
-resource management. It exists on some i.MX8 processors. e.g. i.MX8QM
-(QM, QP), and i.MX8QX (QXP, DX).
+On Fri, Apr 27, 2018 at 6:05 PM, Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> 2018-04-27 16:48 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+>> On Fri, Apr 27, 2018 at 4:05 PM, Bartosz Golaszewski
+>
+> So speaking in pseudo-C we basically have two ways for an imaginary
+> future timer driver:
+>
+> int foo_probe(struct platform_device *pdev)
+> {
+>     struct clk *clk;
+>
+>     if (probing_early(pdev)) {
+>         clk = devm_clk_get(dev, "earlyclock");
+>
+>        /* Do early stuff. */
+>         return 0;
+>     }
+>
+>     /* Do late stuff. */
+>
+>     return 0;
+> }
+>
+>     --- vs ---
+>
+> int foo_probe(struct platform_device *pdev)
+> {
+>     /* Do late stuff. */
+>
+>     return 0;
+> }
+>
+> static int foo_init(struct device_node *np)
+> {
+>     struct clk *clk;
+>     struct device *dev = device_from_device_node(np);
+>
+>     /* Do early stuff. */
+>     clk = devm_clk_get(dev, "earlyclock");
+>
+>     return 0;
+> }
+>
+> TIMER_OF_DECLARE(foo, "bar,foo", foo_init);
+>
+> I still believe the first approach is easier to implement and has the
+> added benefit of supporting board files.
 
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
- .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+Right. I still like the second approach better, since it avoids
+multiplexing two very different code paths into a single
+function, and because it's closer to what everyone is used
+to at the moment.
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-new file mode 100644
-index 0000000..3b51d82
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -0,0 +1,40 @@
-+NXP i.MX System Controller Firmware (SCFW)
-+--------------------------------------------------------------------
-+
-+The System Controller Firmware (SCFW) is a low-level system function
-+which runs on a dedicated Cortex-M core to provide power, clock, and
-+resource management. It exists on some i.MX8 processors. e.g. i.MX8QM
-+(QM, QP), and i.MX8QX (QXP, DX).
-+
-+The AP communicates with the SC using a multi-ported MU module found
-+in the LSIO subsystem. The current definition of this MU module provides
-+5 remote AP connections to the SC to support up to 5 execution environments
-+(TZ, HV, standard Linux, etc.). The SC side of this MU module interfaces
-+with the LSIO DSC IP bus. The SC firmware will communicate with this MU
-+using the MSI bus.
-+
-+System Controller Device Node:
-+=============================
-+
-+Required properties:
-+-------------------
-+- compatible: should be "fsl,imx8qxp-scu" or "fsl,imx8qm-scu"
-+- fsl,mu: a phandle to the Message Unit used by SCU. Should be
-+	  one of LSIO MU0~M4 for imx8qxp and imx8qm. Users need
-+	  to make sure not use the one which is conflict with
-+	  other execution environments. e.g. ATF.
-+
-+Examples:
-+--------
-+lsio_mu0: mu@5d1b0000 {
-+	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
-+	reg = <0x0 0x5d1b0000 0x0 0x10000>;
-+	interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
-+	status = "okay";
-+};
-+
-+scu {
-+	compatible = "fsl,imx8qxp-scu";
-+	fsl,mu = <&lsio_mu0>;
-+	status = "okay";
-+};
--- 
-2.7.4
+Prototyping both is probably helpful to get a better idea
+of the actual complexity this introduces.
+
+> I'll give it a thought and will be back at it next week.
+
+Ok. I'll be on vacation for three weeks so I wont' be able
+to reply on the new patches.
+
+       Arnd
