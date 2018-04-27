@@ -1,8 +1,8 @@
 From: Rob Herring <robh@kernel.org>
 Subject: Re: [PATCH v3 5/9] staging: iio: ad2s1200: Add documentation for
  device tree binding
-Date: Fri, 27 Apr 2018 09:48:20 -0500
-Message-ID: <20180427144820.jfvypgk6tfp2syty@rob-hp-laptop>
+Date: Fri, 27 Apr 2018 09:49:20 -0500
+Message-ID: <20180427144920.yadjdnhx2z2sxsig@rob-hp-laptop>
 References: <cover.1524432236.git.davidjulianveenstra@gmail.com>
  <0aa68c6684c2b45dd0af398c166d6b36c18be1af.1524432236.git.davidjulianveenstra@gmail.com>
 Mime-Version: 1.0
@@ -32,6 +32,10 @@ On Mon, Apr 23, 2018 at 12:03:47AM +0200, David Veenstra wrote:
 > Changes in v3:
 >  - Documentation is added to Documentation/devicetree/bindings/iio/resolver
 >    instead of staging directory.
+
+Also, update the subject. This is not part of staging. "dt-bindings: iio: .." 
+is the preferred subject prefix.
+
 >  - Add mention to ad2s1205 device.
 > 
 >  .../devicetree/bindings/iio/resolver/ad2s1200.txt        | 16 ++++++++++++++++
@@ -51,18 +55,10 @@ On Mon, Apr 23, 2018 at 12:03:47AM +0200, David Veenstra wrote:
 > + - reg : the SPI chip select number of the device
 > + - sample-gpios : The GPIO pin connected to the SAMPLE line of the AD2S1200
 > + - rdvel-gpios : The GPIO pin connected to the RDVEL line of the AD2S1200
-
-Are these gpios something that would be common to resolvers (whatever 
-that is) or specific to this chip. For the latter, you need vendor 
-prefixes.
-
 > +
 > +Example:
 > +
 > +	resolver {
-
-Missing unit address.
-
 > +		compatible = "adi,ad2s1200";
 > +		reg = <4>;
 > +		sample-gpios = <&gpio 5 GPIO_ACTIVE_HIGH>;
