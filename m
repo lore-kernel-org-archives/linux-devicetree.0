@@ -1,59 +1,77 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH net-next v2 5/7] MIPS: mscc: Add switch to ocelot
-Date: Fri, 27 Apr 2018 09:40:58 +0200
-Message-ID: <20180427074058.GW4813@piout.net>
-References: <20180426195931.5393-1-alexandre.belloni@bootlin.com>
- <20180426195931.5393-6-alexandre.belloni@bootlin.com>
- <20180426205113.GD23481@lunn.ch>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
+ platform drivers
+Date: Fri, 27 Apr 2018 09:52:51 +0200
+Message-ID: <CAK8P3a0oCH7zyBs8nQd4p+xLrFwDQiJsaKKCF1m04nyXsZxk=g@mail.gmail.com>
+References: <20180426152920.21569-1-brgl@bgdev.pl> <20180426173151.GJ3094@brightrain.aerifal.cx>
+ <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180426205113.GD23481@lunn.ch>
+In-Reply-To: <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, James Hogan <jhogan@kernel.org>
+To: David Lechner <david@lechnology.com>
+Cc: Rich Felker <dalias@libc.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@siemens.com>, Andy Shevchenko <andy.shevchenko@gm>
 List-Id: devicetree@vger.kernel.org
 
-On 26/04/2018 22:51:13+0200, Andrew Lunn wrote:
-> > +
-> > +		mdio0: mdio@107009c {
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +			compatible = "mscc,ocelot-miim";
-> > +			reg = <0x107009c 0x36>, <0x10700f0 0x8>;
-> > +			interrupts = <14>;
-> > +			status = "disabled";
-> > +
-> > +			phy0: ethernet-phy@0 {
-> > +				reg = <0>;
-> > +			};
-> > +			phy1: ethernet-phy@1 {
-> > +				reg = <1>;
-> > +			};
-> > +			phy2: ethernet-phy@2 {
-> > +				reg = <2>;
-> > +			};
-> > +			phy3: ethernet-phy@3 {
-> > +				reg = <3>;
-> > +			};
-> 
-> Hi Alexandre
-> 
-> These are internal PHYs? Is there an option to use external PHYs for
-> the ports which have internal PHYs?
-> 
-> I'm just wondering if they should be linked together by default. Or a
-> comment added to the commit message about why they are not linked
-> together here.
-> 
+On Fri, Apr 27, 2018 at 4:28 AM, David Lechner <david@lechnology.com> wrote:
+> On 04/26/2018 12:31 PM, Rich Felker wrote:
+>>
+>> On Thu, Apr 26, 2018 at 05:29:18PM +0200, Bartosz Golaszewski wrote:
+>>>
+>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>
+>>> This is a follow to my series[1] the aim of which was to introduce device
+>>> tree
+>>> support for early platform devices.
+>>>
+>>> It was received rather negatively. Aside from using device tree to pass
+>>> implementation specific details to the system, two important concerns
+>>> were
+>>> raised: no probe deferral support and the fact that currently the early
+>>> devices
+>>> never get converted to actual platform drivers. This series is a
+>>> proof-of-concept that's trying to address those issues.
+>>>
+>>> The only user of the current version of early platform drivers is the
+>>> SuperH
+>>> architecture. If this series eventually gets merged, we could simply
+>>> replace
+>>> the other solution.
+>>
+>>
+>> Looking at a quick output of:
+>>
+>>         grep -r -A10 early_devices[[] arch/sh/kernel/
+>>
+>> it looks like all of the existing early platform devices are serial
+>> ports, clocks, and clocksources. The switch to device tree should pick
+>> them all up from CLK_OF_DECLARE, TIMER_OF_DECLARE, and
+>> EARLYCON_DECLARE. Until that's complete, the existing code works
+>> as-is. I don't see what problem you're trying to solve.
+>
+>
+> The problem for us is that clk maintainers don't want new drivers to use
+> CLK_OF_DECLARE and instead use platform devices. I have just written such
+> a new driver that is shared by 6 different SoCs. For some combinations of
+> SoCs and clocks, using a platform device is fine but on others we need to
+> register early, so the drivers now have to handle both cases, which is
+> kind of messy and fragile. If there is a generic way to register platform
+> devices early, then the code is simplified because we only have to handle
+> one method of registering the clocks instead of two.
 
-They are dual media ports so they are not necessarily using the
-integrated PHY but can use SerDEs1G lanes.
+The early_platform code is certainly not a way to make things simpler,
+it just adds one more way of doing the same thing that OF_CLK_DECLARE
+already does. We removed the last early_platform users on ARM a few
+years ago, and I would hope to leave it like that.
 
-I'll add that to the commit message.
+I haven't seen the discussion about your clock drivers, but I know that
+usually only a very small subset of the clocks on an SoC are needed
+that 'early', and you should use a regular platform driver for the rest.
 
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Can you elaborate on which devices need to access your clocks before
+you are able to initialize the clk driver through the regular platform_driver
+framework? Do any of these need complex interactions with the clk
+subsystem, or do you just need to ensure they are turned on?
+
+     Arnd
