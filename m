@@ -1,108 +1,71 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 1/4] drm/panel: simple: Add support for Rocktech RK070ER9427 LCD panel
-Date: Fri, 27 Apr 2018 18:40:40 +0530
-Message-ID: <20180427131040.28775-1-jagan@amarulasolutions.com>
+From: <jan.tuerk@emtrion.com>
+Subject: [PATCH v4 0/7] Add basic support for emtrion emCON-MX6 modules
+Date: Fri, 27 Apr 2018 15:24:35 +0200
+Message-ID: <20180427132445.3458-1-jan.tuerk@emtrion.com>
+References: <20180420125108.14197-1-jan.tuerk@emtrion.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180420125108.14197-1-jan.tuerk@emtrion.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio maggi <fabio.mauri@bticino.it>, lamiaposta71@gmail.com, Andrea CORTESE <andrea.cortese@bticino.it>, "davide . bonfanti" <davide.bonfanti@bticino.it>, Shyam Saini <shyam.saini@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, "GitAuthor: Jan Tuerk" <jan.tuerk@emtrion.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the Rocktech Display Ltd. RK070ER9427
-800(RGB)x480 TFT LCD panel, which can be supported by the
-simple panel driver.
+From: Jan Tuerk <jan.tuerk@emtrion.com>
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v2:
-- included drm drm panel maintainers
+Changes for v4:
+  - re-arrange the Patch-series to match the DT-submitting-patches
+  - Additional patch for the Documentation of the new DT-bindings
 
- .../display/panel/rocktech,rk070er9427.txt         | 25 ++++++++++++++++
- drivers/gpu/drm/panel/panel-simple.c               | 33 ++++++++++++++++++++++
- 2 files changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,rk070er9427.txt
+[PATCH v4 1/7] dt-bindings: display: Document the EDT et* displays in one file.
+  - no change (re-arranged 3/6 => 1/7)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/rocktech,rk070er9427.txt b/Documentation/devicetree/bindings/display/panel/rocktech,rk070er9427.txt
-new file mode 100644
-index 000000000000..eb1fb9f8d1f4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/rocktech,rk070er9427.txt
-@@ -0,0 +1,25 @@
-+Rocktech Display Ltd. RK070ER9427 800(RGB)x480 TFT LCD panel
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-+
-+Required properties:
-+- compatible: should be "rocktech,rk070er9427"
-+
-+Optional properties:
-+- backlight: phandle of the backlight device attached to the panel
-+
-+Optional nodes:
-+- Video port for LCD panel input.
-+
-+Example:
-+	panel {
-+		compatible = "rocktech,rk070er9427";
-+		backlight = <&backlight_lcd>;
-+
-+		port {
-+			lcd_panel_in: endpoint {
-+				remote-endpoint = <&lcd_display_out>;
-+			};
-+		};
-+	};
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index cbf1ab404ee7..a6c633fd0559 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -745,6 +745,36 @@ static const struct panel_desc avic_tm070ddh03 = {
- 	},
- };
- 
-+static const struct display_timing rocktech_rk070er9427_timing = {
-+	.pixelclock = { 26400000, 33300000, 46800000 },
-+	.hactive = { 800, 800, 800 },
-+	.hfront_porch = { 16, 210, 354 },
-+	.hback_porch = { 46, 46, 46 },
-+	.hsync_len = { 1, 1, 1 },
-+	.vactive = { 480, 480, 480 },
-+	.vfront_porch = { 7, 22, 147 },
-+	.vback_porch = { 23, 23, 23 },
-+	.vsync_len = { 1, 1, 1 },
-+	.flags = DISPLAY_FLAGS_DE_HIGH,
-+};
-+
-+static const struct panel_desc rocktech_rk070er9427 = {
-+	.timings = &rocktech_rk070er9427_timing,
-+	.num_timings = 1,
-+	.bpc = 6,
-+	.size = {
-+		.width = 154,
-+		.height = 86,
-+	},
-+	.delay = {
-+		.prepare = 41,
-+		.enable = 50,
-+		.unprepare = 41,
-+		.disable = 50,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-+};
-+
- static const struct drm_display_mode boe_nv101wxmn51_modes[] = {
- 	{
- 		.clock = 71900,
-@@ -2226,6 +2256,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "qiaodian,qd43003c0-40",
- 		.data = &qd43003c0_40,
-+	}, {
-+		.compatible = "rocktech,rk070er9427",
-+		.data = &rocktech_rk070er9427,
- 	}, {
- 		.compatible = "samsung,lsn122dl01-c01",
- 		.data = &samsung_lsn122dl01_c01,
+[PATCH v4 2/7] drm/panel: Add support for the EDT ETM0700G0BDH6
+  - no change (re-arranged 1/6 => 2/7)
+
+[PATCH v4 3/7] drm/panel: Add support for the EDT ETM0700G0EDH6
+  - no change (re-arranged 2/6 => 3/7)
+
+[PATCH v4 4/7] ARM: dts: imx: Add an cpu0 label for imx6dl devices.
+  - no change
+
+[PATCH v4 5/7] dt-bindings: arm: Document emtrion emCON-MX6 bindings
+  - separate patch for the emtrion emCON-MX6 DT-bindings
+
+[PATCH v4 6/7] ARM: dts: Add support for emtrion emCON-MX6 series
+  - alphabetically sort the DT
+  - moved duplicated Avari baseboard code into separate file.
+
+[PATCH v4 7/7] ARM: imx_v6_v7_defconfig: Enable DA0963 PMIC support.
+  - unchaged
+
+ Documentation/devicetree/bindings/arm/emtrion.txt  |  13 +
+ .../bindings/display/panel/edt,et-series.txt       |  39 +
+ .../bindings/display/panel/edt,et057090dhu.txt     |   7 -
+ .../bindings/display/panel/edt,et070080dh6.txt     |  10 -
+ .../bindings/display/panel/edt,etm0700g0dh6.txt    |  10 -
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/imx6dl-emcon-avari.dts           |  17 +
+ arch/arm/boot/dts/imx6dl-emcon.dtsi                |  28 +
+ arch/arm/boot/dts/imx6dl.dtsi                      |   2 +-
+ arch/arm/boot/dts/imx6q-emcon-avari.dts            |  17 +
+ arch/arm/boot/dts/imx6q-emcon.dtsi                 |  28 +
+ arch/arm/boot/dts/imx6qdl-emcon-avari.dtsi         | 208 ++++++
+ arch/arm/boot/dts/imx6qdl-emcon.dtsi               | 826 +++++++++++++++++++++
+ arch/arm/configs/imx_v6_v7_defconfig               |   3 +
+ drivers/gpu/drm/panel/panel-simple.c               |  18 +
+ 15 files changed, 1200 insertions(+), 28 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/emtrion.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/edt,et-series.txt
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/edt,et057090dhu.txt
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/edt,et070080dh6.txt
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/edt,etm0700g0dh6.txt
+ create mode 100644 arch/arm/boot/dts/imx6dl-emcon-avari.dts
+ create mode 100644 arch/arm/boot/dts/imx6dl-emcon.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6q-emcon-avari.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-emcon.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6qdl-emcon-avari.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6qdl-emcon.dtsi
+
 -- 
-2.14.3
+2.11.0
