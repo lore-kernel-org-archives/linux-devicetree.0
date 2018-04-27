@@ -1,66 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 01/17] dt-bindings: power: reset: mt6323: add bindings
- for MT6323 power controller
-Date: Fri, 27 Apr 2018 15:02:25 -0500
-Message-ID: <20180427200225.lq63ex7eiukc6egl@rob-hp-laptop>
-References: <cover.1524646231.git.sean.wang@mediatek.com>
- <0b3123e42c8a47e3fa8b21aa2e139e6d3dc69f41.1524646231.git.sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: media: renesas-ceu: Add R-Mobile
+ R8A7740
+Date: Fri, 27 Apr 2018 15:06:46 -0500
+Message-ID: <20180427200646.fdvswcnvglkx4j7u@rob-hp-laptop>
+References: <1524767083-19862-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1524767083-19862-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <0b3123e42c8a47e3fa8b21aa2e139e6d3dc69f41.1524646231.git.sean.wang@mediatek.com>
+In-Reply-To: <1524767083-19862-2-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: mark.rutland@arm.com, sre@kernel.org, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, matthias.bgg@gmail.com, eddie.huang@mediatek.com, devicetree@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: geert@linux-m68k.org, horms@verge.net.au, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 25, 2018 at 05:32:27PM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On Thu, Apr 26, 2018 at 08:24:42PM +0200, Jacopo Mondi wrote:
+> Add R-Mobile A1 R8A7740 SoC to the list of compatible values for the CEU
+> unit.
 > 
-> Adding device-tree binding for the power controller which is a tiny
-> circuit block present as a part of MT6323 PMIC and is responsible for
-> externally powering off or on a remote SoC the PMIC is connected to.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > ---
->  .../bindings/power/reset/mt6323-poweroff.txt         | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-> new file mode 100644
-> index 0000000..6f7c590
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-> @@ -0,0 +1,20 @@
-> +Device Tree Bindings for Power Controller on MediaTek PMIC
-> +
-> +The power controller which could be found on PMIC is responsible for externally
-> +powering off or on the remote MediaTek SoC through the circuit BBPU.
-> +
-> +Required properties:
-> +- compatible: Should be one of follows
-> +	"mediatek,mt6323-pwrc": for MT6323 PMIC
-> +
-> +Example:
-> +
-> +	pmic {
-> +		compatible = "mediatek,mt6323";
-> +
-> +		...
-> +
-> +		power-controller {
-> +			compatible = "mediatek,mt6323-pwrc";
+>  Documentation/devicetree/bindings/media/renesas,ceu.txt | 7 ++++---
+>  drivers/media/platform/renesas-ceu.c                    | 1 +
+>  2 files changed, 5 insertions(+), 3 deletions(-)
 
-Why do you need this in DT? It doesn't define any resources. The parent 
-can just as well register a reset or poweroff handler.
-
-Rob
-
-> +		};
-> +	}
-> -- 
-> 2.7.4
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
