@@ -1,36 +1,122 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/6 v3] Docs: dt: add fsl-mc iommu-map device-tree binding
-Date: Fri, 27 Apr 2018 12:20:16 -0500
-Message-ID: <20180427172016.phpsjiique25impv@rob-hp-laptop>
-References: <1524824826-29473-1-git-send-email-nipun.gupta@nxp.com>
-	<1524824826-29473-2-git-send-email-nipun.gupta@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1524824826-29473-2-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: tas6424: Add support for the standby pin" to the asoc tree
+Date: Fri, 27 Apr 2018 19:24:19 +0100
+Message-ID: <E1fC82d-0004JA-E2@debutante>
+References: <1524837349-16350-2-git-send-email-jjhiblot@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524837349-16350-2-git-send-email-jjhiblot@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, afd@ti.com, dannenberg@ti.comalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 27, 2018 at 03:57:01PM +0530, Nipun Gupta wrote:
-> The existing IOMMU bindings cannot be used to specify the relationship
-> between fsl-mc devices and IOMMUs. This patch adds a generic binding for
-> mapping fsl-mc devices to IOMMUs, using iommu-map property.
-> 
-> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-> ---
->  .../devicetree/bindings/misc/fsl,qoriq-mc.txt      | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
+The patch
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+   ASoC: tas6424: Add support for the standby pin
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From e3976aa6fb409aea3cea812f6a0beebb545e5996 Mon Sep 17 00:00:00 2001
+From: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Date: Fri, 27 Apr 2018 15:55:47 +0200
+Subject: [PATCH] ASoC: tas6424: Add support for the standby pin
+
+The standby pin can be connected to a GPIO. In that case we have to drive
+it to the correct values for the TAS6424 to operate properly.
+
+Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../devicetree/bindings/sound/ti,tas6424.txt  |  1 +
+ sound/soc/codecs/tas6424.c                    | 22 +++++++++++++++++++
+ 2 files changed, 23 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/ti,tas6424.txt b/Documentation/devicetree/bindings/sound/ti,tas6424.txt
+index 1c4ada0eef4e..df71e414dc5b 100644
+--- a/Documentation/devicetree/bindings/sound/ti,tas6424.txt
++++ b/Documentation/devicetree/bindings/sound/ti,tas6424.txt
+@@ -6,6 +6,7 @@ Required properties:
+ 	- compatible: "ti,tas6424" - TAS6424
+ 	- reg: I2C slave address
+ 	- sound-dai-cells: must be equal to 0
++	- standby-gpios: GPIO used to shut the TAS6424 down.
+ 
+ Example:
+ 
+diff --git a/sound/soc/codecs/tas6424.c b/sound/soc/codecs/tas6424.c
+index 4f3a16c520a2..5abb17f8d3dd 100644
+--- a/sound/soc/codecs/tas6424.c
++++ b/sound/soc/codecs/tas6424.c
+@@ -16,6 +16,7 @@
+ #include <linux/slab.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ 
+ #include <sound/pcm.h>
+ #include <sound/pcm_params.h>
+@@ -43,6 +44,7 @@ struct tas6424_data {
+ 	unsigned int last_fault1;
+ 	unsigned int last_fault2;
+ 	unsigned int last_warn;
++	struct gpio_desc *standby_gpio;
+ };
+ 
+ /*
+@@ -627,6 +629,22 @@ static int tas6424_i2c_probe(struct i2c_client *client,
+ 		return ret;
+ 	}
+ 
++	/*
++	 * Get control of the standby pin and set it LOW to take the codec
++	 * out of the stand-by mode.
++	 * Note: The actual pin polarity is taken care of in the GPIO lib
++	 * according the polarity specified in the DTS.
++	 */
++	tas6424->standby_gpio = devm_gpiod_get_optional(dev, "standby",
++						      GPIOD_OUT_LOW);
++	if (IS_ERR(tas6424->standby_gpio)) {
++		if (PTR_ERR(tas6424->standby_gpio) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++		dev_info(dev, "failed to get standby GPIO: %ld\n",
++			PTR_ERR(tas6424->standby_gpio));
++		tas6424->standby_gpio = NULL;
++	}
++
+ 	for (i = 0; i < ARRAY_SIZE(tas6424->supplies); i++)
+ 		tas6424->supplies[i].supply = tas6424_supply_names[i];
+ 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(tas6424->supplies),
+@@ -671,6 +689,10 @@ static int tas6424_i2c_remove(struct i2c_client *client)
+ 
+ 	cancel_delayed_work_sync(&tas6424->fault_check_work);
+ 
++	/* put the codec in stand-by */
++	if (tas6424->standby_gpio)
++		gpiod_set_value_cansleep(tas6424->standby_gpio, 1);
++
+ 	ret = regulator_bulk_disable(ARRAY_SIZE(tas6424->supplies),
+ 				     tas6424->supplies);
+ 	if (ret < 0) {
+-- 
+2.17.0
