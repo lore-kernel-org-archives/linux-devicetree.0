@@ -1,16 +1,16 @@
 From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: Re: [PATCH 15/17] arm64: dts: r8a77965-salvator-x: Enable HDMI output
-Date: Fri, 27 Apr 2018 17:22:06 +0100
-Message-ID: <5af7b6a6-8a40-880d-3346-8c90bd700957@ideasonboard.com>
+Subject: Re: [PATCH 11/17] arm64: dts: r8a77965: Add VSP instances
+Date: Fri, 27 Apr 2018 17:33:46 +0100
+Message-ID: <81161c97-2be8-2b5a-14a2-3db8709f5ff7@ideasonboard.com>
 References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
- <20180426165346.494-16-kieran.bingham+renesas@ideasonboard.com>
- <2345148.J1marZVneP@avalon>
+ <20180426165346.494-12-kieran.bingham+renesas@ideasonboard.com>
+ <1787243.JuNJAuBqMb@avalon>
 Reply-To: kieran.bingham@ideasonboard.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2345148.J1marZVneP@avalon>
+In-Reply-To: <1787243.JuNJAuBqMb@avalon>
 Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
@@ -19,64 +19,126 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Laurent,
 
-On 26/04/18 22:21, Laurent Pinchart wrote:
+On 26/04/18 22:11, Laurent Pinchart wrote:
 > Hi Kieran,
 > 
 > Thank you for the patch.
 > 
-> On Thursday, 26 April 2018 19:53:44 EEST Kieran Bingham wrote:
->> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> On Thursday, 26 April 2018 19:53:40 EEST Kieran Bingham wrote:
+>> The r8a77965 has 4 VSP instances.
 >>
->> Enable the HDMI encoder for the M3N Salvator-X board and hook it up to
->> the HDMI connector.
+>> Based on a similar patch of the R8A7796 device tree
+>> by Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>.
 >>
->> Based on a similar patches of the the Salvator-X board
->> on the R8A7796 SoC device tree
->> by Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+>> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>> [Kieran: Rebased to top of tree, fixed sort orders]
+>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>> ---
+>>  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 44 +++++++++++++++++++++++
+>>  1 file changed, 44 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+>> b/arch/arm64/boot/dts/renesas/r8a77965.dtsi index
+>> 1f44ed7c1b1c..e92e6b03333a 100644
+>> --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+>> +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+>> @@ -1009,6 +1009,17 @@
+>>  			resets = <&cpg 615>;
+>>  		};
+>>
+>> +		vspb: vsp@fe960000 {
+>> +			compatible = "renesas,vsp2";
+>> +			reg = <0 0xfe960000 0 0x8000>;
+>> +			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&cpg CPG_MOD 626>;
+>> +			power-domains = <&sysc R8A77965_PD_A3VP>;
+>> +			resets = <&cpg 626>;
+>> +
+>> +			renesas,fcp = <&fcpvb0>;
+>> +		};
+>> +
+>>  		fcpvb0: fcp@fe96f000 {
+>>  			compatible = "renesas,fcpv";
+>>  			reg = <0 0xfe96f000 0 0x200>;
+>> @@ -1017,6 +1028,17 @@
+>>  			resets = <&cpg 607>;
+>>  		};
+>>
+>> +		vspi0: vsp@fe9a0000 {
+>> +			compatible = "renesas,vsp2";
+>> +			reg = <0 0xfe9a0000 0 0x8000>;
+>> +			interrupts = <GIC_SPI 444 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&cpg CPG_MOD 631>;
+>> +			power-domains = <&sysc R8A77965_PD_A3VP>;
+>> +			resets = <&cpg 631>;
+>> +
+>> +			renesas,fcp = <&fcpvi0>;
+>> +		};
+>> +
+>>  		fcpvi0: fcp@fe9af000 {
+>>  			compatible = "renesas,fcpv";
+>>  			reg = <0 0xfe9af000 0 0x200>;
+>> @@ -1025,6 +1047,17 @@
+>>  			resets = <&cpg 611>;
+>>  		};
+>>
+>> +		vspd0: vsp@fea20000 {
+>> +			compatible = "renesas,vsp2";
+>> +			reg = <0 0xfea20000 0 0x4000>;
+> 
+> RFP2 has a CLUT so the register range needs to be extended. I'd recommend 
+> covering the entire space (0x8000) even if no LUT or CLU module is present.
+
+Ah yes, of course.
+Updated.
+
+> 
+>> +			interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&cpg CPG_MOD 623>;
+>> +			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
+>> +			resets = <&cpg 623>;
+>> +
+>> +			renesas,fcp = <&fcpvd0>;
+>> +		};
+>> +
+>>  		fcpvd0: fcp@fea27000 {
+>>  			compatible = "renesas,fcpv";
+>>  			reg = <0 0xfea27000 0 0x200>;
+>> @@ -1033,6 +1066,17 @@
+>>  			resets = <&cpg 603>;
+>>  		};
+>>
+>> +		vspd1: vsp@fea28000 {
+>> +			compatible = "renesas,vsp2";
+>> +			reg = <0 0xfea28000 0 0x4000>;
+> 
+> Same here.
+> 
+
+And here...
+
+
+> With this fixed,
 > 
 > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Thanks, collected.
+Collected.
+
+--
+Kieran
+
 
 > 
-> How about adding the VGA output too ? I think you can add both VGA and HDMI in 
-> a single patch that enables display in one go for the board. Same comment for 
-> the Salvator-XS.
-
-I believe the VGA output is handled by the salvator-common.dtsi, and thus
-doesn't need to be included in this patch.
-
-> 
->> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
->> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
->> ---
->>  .../boot/dts/renesas/r8a77965-salvator-x.dts    | 17 +++++++++++++++++
->>  1 file changed, 17 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
->> b/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts index
->> a2b8fb20fef8..11e8d43e9e11 100644
->> --- a/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
->> +++ b/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
->> @@ -31,3 +31,20 @@
->>  	clock-names = "du.0", "du.1", "du.3", "lvds.0",
->>  		      "dclkin.0", "dclkin.1", "dclkin.3";
->>  };
+>> +			interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&cpg CPG_MOD 622>;
+>> +			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
+>> +			resets = <&cpg 622>;
 >> +
->> +&hdmi0 {
->> +	status = "okay";
->> +
->> +	ports {
->> +		port@1 {
->> +			reg = <1>;
->> +			rcar_dw_hdmi0_out: endpoint {
->> +				remote-endpoint = <&hdmi0_con>;
->> +			};
+>> +			renesas,fcp = <&fcpvd1>;
 >> +		};
->> +	};
->> +};
 >> +
->> +&hdmi0_con {
->> +	remote-endpoint = <&rcar_dw_hdmi0_out>;
->> +};
+>>  		fcpvd1: fcp@fea2f000 {
+>>  			compatible = "renesas,fcpv";
+>>  			reg = <0 0xfea2f000 0 0x200>;
+> 
 > 
