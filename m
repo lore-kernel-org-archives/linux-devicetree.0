@@ -1,54 +1,49 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 1/6] dt-bindings: gpu: mali-utgard: add mediatek,mt7623-mali compatible
-Date: Fri, 27 Apr 2018 16:14:42 +0800
-Message-ID: <7ab060c2e9ef2b220fc62913b8936b706dfaf202.1524816502.git.sean.wang@mediatek.com>
+Subject: [PATCH v2 4/6] dt-bindings: reset: mediatek: add entry for Mali-450
+ node to refer
+Date: Fri, 27 Apr 2018 16:14:45 +0800
+Message-ID: <d9f327fa30c987ac9cf3a349551bbaa037d1b24a.1524816502.git.sean.wang@mediatek.com>
 References: <cover.1524816502.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.1524816502.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: sboyd@codeaurora.org, mturquette@baylibre.com, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, p.zabel@pengutronix.de
-Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Cc: devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-The MediaTek MT7623 SoC contains a Mali-450, so add a compatible for it
-and define its own vendor-specific properties.
+Just add binding for a required reset referenced by Mali-450 on MT7623
+or MT2701 SoC.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ include/dt-bindings/reset/mt2701-resets.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-index 99d1c0a..656068f 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-@@ -19,6 +19,7 @@ Required properties:
-       + rockchip,rk3228-mali
-       + rockchip,rk3328-mali
-       + stericsson,db8500-mali
-+      + mediatek,mt7623-mali
+diff --git a/include/dt-bindings/reset/mt2701-resets.h b/include/dt-bindings/reset/mt2701-resets.h
+index 21deb54..50b7f06 100644
+--- a/include/dt-bindings/reset/mt2701-resets.h
++++ b/include/dt-bindings/reset/mt2701-resets.h
+@@ -87,4 +87,7 @@
+ #define MT2701_ETHSYS_GMAC_RST			23
+ #define MT2701_ETHSYS_PPE_RST			31
  
-   - reg: Physical base address and length of the GPU registers
- 
-@@ -89,6 +90,14 @@ to specify one more vendor-specific compatible, among:
-       * interrupt-names and interrupts:
-         + combined: combined interrupt of all of the above lines
- 
-+  - mediatek,mt7623-mali
-+     Required properties:
-+      * resets: phandle to the reset line for the GPU
-+      * mediatek,larb: phandle pointed to the local arbiter used to control the
-+	access to external memory on the SoC.
-+	see Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
-+	for details
++/* G3DSYS resets */
++#define MT2701_G3DSYS_CORE_RST			0
 +
- Example:
- 
- mali: gpu@1c40000 {
+ #endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT2701 */
 -- 
 2.7.4
