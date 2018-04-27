@@ -1,50 +1,32 @@
-Return-Path: <SRS0=Fqr3=HL=googlemail.com=martin.blumenstingl@kernel.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 2/3] pinctrl: meson: meson8: add support for the Meson8m2 SoC
-Date: Sun, 22 Apr 2018 12:53:29 +0200
-Message-Id: <20180422105330.4712-3-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20180422105330.4712-1-martin.blumenstingl@googlemail.com>
+Return-Path: <SRS0=9V9S=HQ=baylibre.com=khilman@kernel.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 0/3] pinctrl: meson: add support for the Meson8m2 SoC
 References: <20180422105330.4712-1-martin.blumenstingl@googlemail.com>
-To: linus.walleij@linaro.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
-Cc: mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Fri, 27 Apr 2018 12:11:32 -0700
+In-Reply-To: <20180422105330.4712-1-martin.blumenstingl@googlemail.com>
+	(Martin Blumenstingl's message of "Sun, 22 Apr 2018 12:53:27 +0200")
+Message-ID: <7h36zg1n2z.fsf@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, mark.rutland@arm.com, carlo@caione.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add Meson8m2 support to the existing Meson8 pinctrl driver. Since there
-are only very few changes (Meson8m2 has an extra signal on 10 CBUS pins,
-no other differences were found so far).
-Add the new compatible strings for Meson8m2 to the existing Meson8
-driver so we don't have to duplicate the whole driver.
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/pinctrl/meson/pinctrl-meson8.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+> The Meson8m2 SoC is a variant of Meson8 with some updates from Meson8b
+> (such as the Gigabit capable DesignWare MAC).
+> It is mostly pin compatible with Meson8, only 10 (existing) CBUS pins
+> get an additional function. Four of these are Ethernet RXD2, RXD3, TXD2
+> and TXD3 (GPIOZ_0..GPIOZ_3) which are required when the board uses an
+> RGMII PHY. GPIODV_24 and GPIODV_25 provide "VGA" support on Meson8,
+> which doesn't seem to be supported on Meson8m2 anymore.
+> The other 4 are GPIOH_9 (reg 3 bit 19), CARD_4 (reg 8 bit 8),
+> CARD_5 (reg 8 bit 7) and GPIOY_3 (reg 3 bit 11). Their function is
+> currently unknown.
+>
+> The AOBUS pins seem to be identical on Meson8 and Meson8m2. However,
+> since there's no official documentation I decided to add a new compatible
+> string.
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson8.c b/drivers/pinctrl/meson/pinctrl-meson8.c
-index 49c7ce03547b..086082aeb796 100644
---- a/drivers/pinctrl/meson/pinctrl-meson8.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson8.c
-@@ -1,5 +1,5 @@
- /*
-- * Pin controller and GPIO driver for Amlogic Meson8.
-+ * Pin controller and GPIO driver for Amlogic Meson8 and Meson8m2.
-  *
-  * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
-  *
-@@ -1080,6 +1080,14 @@ static const struct of_device_id meson8_pinctrl_dt_match[] = {
- 		.compatible = "amlogic,meson8-aobus-pinctrl",
- 		.data = &meson8_aobus_pinctrl_data,
- 	},
-+	{
-+		.compatible = "amlogic,meson8m2-cbus-pinctrl",
-+		.data = &meson8_cbus_pinctrl_data,
-+	},
-+	{
-+		.compatible = "amlogic,meson8m2-aobus-pinctrl",
-+		.data = &meson8_aobus_pinctrl_data,
-+	},
- 	{ },
- };
- 
--- 
-2.17.0
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
