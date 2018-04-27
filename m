@@ -1,33 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] rpmsg: qcom_smd: Access APCS through mailbox framework
-Date: Fri, 27 Apr 2018 08:37:27 -0500
-Message-ID: <20180427133727.gr5turvdfycgmbzm@rob-hp-laptop>
-References: <20180420011757.22389-1-bjorn.andersson@linaro.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH net-next v2 4/7] net: mscc: Add initial Ocelot switch
+ support
+Date: Fri, 27 Apr 2018 15:44:00 +0200
+Message-ID: <20180427134400.GA4813@piout.net>
+References: <20180426195931.5393-1-alexandre.belloni@bootlin.com>
+ <20180426195931.5393-5-alexandre.belloni@bootlin.com>
+ <20180426210915.GE23481@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180420011757.22389-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20180426210915.GE23481@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 19, 2018 at 06:17:57PM -0700, Bjorn Andersson wrote:
-> Attempt to acquire the APCS IPC through the mailbox framework and fall
-> back to the old syscon based approach, to allow us to move away from
-> using the syscon.
+On 26/04/2018 23:09:15+0200, Andrew Lunn wrote:
+> > +/* Checks if the net_device instance given to us originate from our driver. */
+> > +static bool ocelot_netdevice_dev_check(const struct net_device *dev)
+> > +{
+> > +	return dev->netdev_ops == &ocelot_port_netdev_ops;
+> > +}
 > 
-> Reviewed-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+> This is probably O.K. now, but when you add support for controlling
+> the switch over PCIe, i think it breaks. A board could have two
+> switches...
 > 
-> Changes since v2:
-> - Added comment about mbox_send_message() return value.
+> It might be possible to do something with dev->parent. All ports of a
+> switch should have the same parent.
 > 
->  .../devicetree/bindings/soc/qcom/qcom,smd.txt      |  8 ++-
->  drivers/rpmsg/Kconfig                              |  1 +
->  drivers/rpmsg/qcom_smd.c                           | 67 ++++++++++++++++------
->  3 files changed, 56 insertions(+), 20 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Actually, that is fine because it simply ensures netdev_priv(dev); is a
+struct ocelot_port.
+
+Later on, we get ocelot_port->ocelot and do the right thing.
+
+The only thing that would not be working when having multiple of those
+switches on the same platform would be having interfaces from different
+switches in the same bridge. Anyway, this is definitively not something
+we want because of the limited bandwidth of the CPU port.
+
+
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
