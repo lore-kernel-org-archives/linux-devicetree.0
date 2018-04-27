@@ -1,71 +1,175 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v6 02/24] soc: qcom: Add APR bus driver
-Date: Fri, 27 Apr 2018 12:06:12 +0100
-Message-ID: <20180427110612.GD6872@sirena.org.uk>
-References: <20180426094606.4775-1-srinivas.kandagatla@linaro.org>
- <20180426094606.4775-3-srinivas.kandagatla@linaro.org>
- <20180426113911.GA21755@sirena.org.uk>
- <20180426211740.GC25699@hector.attlocal.net>
+From: Sibi S <sibis@codeaurora.org>
+Subject: Re: [PATCH v4 2/5] reset: qcom: AOSS (always on subsystem) reset
+ controller
+Date: Fri, 27 Apr 2018 16:45:12 +0530
+Message-ID: <ce0d4222-ae39-56f0-a99c-49b7ac8fde05@codeaurora.org>
+References: <20180425150843.26657-1-sibis@codeaurora.org>
+ <20180425150843.26657-3-sibis@codeaurora.org>
+ <1524825675.17614.6.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6025764011509479448=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180426211740.GC25699@hector.attlocal.net>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, robh+dt@kernel.org, srinivas.kandagatla@linaro.org, spatakok@qti.qualcomm.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524825675.17614.6.camel@pengutronix.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Philipp,
 
---===============6025764011509479448==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fXStkuK2IQBfcDe+"
-Content-Disposition: inline
+Thanks for the review.
 
+On 04/27/2018 04:11 PM, Philipp Zabel wrote:
+> On Wed, 2018-04-25 at 20:38 +0530, Sibi Sankar wrote:
+>> Add reset controller driver for Qualcomm SDM845 SoC to
+>> control reset signals provided by AOSS for Modem, Venus
+>> ADSP, GPU, Camera, Wireless, Display subsystem
+>>
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>   drivers/reset/Kconfig           |   9 +++
+>>   drivers/reset/Makefile          |   1 +
+>>   drivers/reset/reset-qcom-aoss.c | 133 ++++++++++++++++++++++++++++++++
+>>   3 files changed, 143 insertions(+)
+>>   create mode 100644 drivers/reset/reset-qcom-aoss.c
+>>
+>> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+>> index c0b292be1b72..756ad2b27d0f 100644
+>> --- a/drivers/reset/Kconfig
+>> +++ b/drivers/reset/Kconfig
+>> @@ -82,6 +82,15 @@ config RESET_PISTACHIO
+>>   	help
+>>   	  This enables the reset driver for ImgTec Pistachio SoCs.
+>>   
+>> +config RESET_QCOM_AOSS
+>> +	bool "Qcom AOSS Reset Driver"
+>> +	depends on ARCH_QCOM || COMPILE_TEST
+>> +	help
+>> +	  This enables the AOSS (always on subsystem) reset driver
+>> +	  for Qualcomm SDM845 SoCs. Say Y if you want to control
+>> +	  reset signals provided by AOSS for Modem, Venus, ADSP,
+>> +	  GPU, Camera, Wireless, Display subsystem. Otherwise, say N.
+>> +
+>>   config RESET_SIMPLE
+>>   	bool "Simple Reset Controller Driver" if COMPILE_TEST
+>>   	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
+>> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+>> index c1261dcfe9ad..6881e4d287f0 100644
+>> --- a/drivers/reset/Makefile
+>> +++ b/drivers/reset/Makefile
+>> @@ -14,6 +14,7 @@ obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
+>>   obj-$(CONFIG_RESET_MESON) += reset-meson.o
+>>   obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
+>>   obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
+>> +obj-$(CONFIG_RESET_QCOM_AOSS) += reset-qcom-aoss.o
+>>   obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
+>>   obj-$(CONFIG_RESET_STM32MP157) += reset-stm32mp1.o
+>>   obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
+>> diff --git a/drivers/reset/reset-qcom-aoss.c b/drivers/reset/reset-qcom-aoss.c
+>> new file mode 100644
+>> index 000000000000..3b0bbb387f7b
+>> --- /dev/null
+>> +++ b/drivers/reset/reset-qcom-aoss.c
+>> @@ -0,0 +1,133 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2018 The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/reset-controller.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/io.h>
+>> +#include <linux/of_device.h>
+>> +#include <dt-bindings/reset/qcom,sdm845-aoss.h>
+>> +
+>> +struct qcom_aoss_reset_map {
+>> +	unsigned int reg;
+>> +};
+>> +
+>> +struct qcom_aoss_desc {
+>> +	const struct qcom_aoss_reset_map *resets;
+>> +	size_t num_resets;
+>> +};
+>> +
+>> +struct qcom_aoss_reset_data {
+>> +	struct reset_controller_dev rcdev;
+>> +	void __iomem *base;
+>> +	const struct qcom_aoss_desc *desc;
+>> +};
+>> +
+>> +static const struct qcom_aoss_reset_map sdm845_aoss_resets[] = {
+>> +	[AOSS_CC_MSS_RESTART] = {0x0},
+>> +	[AOSS_CC_CAMSS_RESTART] = {0x1000},
+>> +	[AOSS_CC_VENUS_RESTART] = {0x2000},
+>> +	[AOSS_CC_GPU_RESTART] = {0x3000},
+>> +	[AOSS_CC_DISPSS_RESTART] = {0x4000},
+>> +	[AOSS_CC_WCSS_RESTART] = {0x10000},
+>> +	[AOSS_CC_LPASS_RESTART] = {0x20000},
+>> +};
+>> +
+>> +static const struct qcom_aoss_desc sdm845_aoss_desc = {
+>> +	.resets = sdm845_aoss_resets,
+>> +	.num_resets = ARRAY_SIZE(sdm845_aoss_resets),
+>> +};
+>> +
+>> +static inline struct qcom_aoss_reset_data *to_qcom_aoss_reset_data(
+>> +				struct reset_controller_dev *rcdev)
+>> +{
+>> +	return container_of(rcdev, struct qcom_aoss_reset_data, rcdev);
+>> +}
+>> +
+>> +static int qcom_aoss_control_assert(struct reset_controller_dev *rcdev,
+>> +				    unsigned long idx)
+>> +{
+>> +	struct qcom_aoss_reset_data *data = to_qcom_aoss_reset_data(rcdev);
+>> +	const struct qcom_aoss_reset_map *map = &data->desc->resets[idx];
+>> +
+>> +	writel(1, data->base + map->reg);
+>> +	/* Wait 6 32kHz sleep cycles for reset */
+>> +	usleep_range(200, 210);
+>> +	return 0;
+>> +}
+>> +
+>> +static int qcom_aoss_control_deassert(struct reset_controller_dev *rcdev,
+>> +				      unsigned long idx)
+>> +{
+>> +	struct qcom_aoss_reset_data *data = to_qcom_aoss_reset_data(rcdev);
+>> +	const struct qcom_aoss_reset_map *map = &data->desc->resets[idx];
+>> +
+>> +	writel(0, data->base + map->reg);
+>> +	/* Wait 6 32kHz sleep cycles for reset */
+>> +	usleep_range(200, 210);
+> 
+> 6 32 kHz cycles are about 188 µs (184 µs for 32.768 kHz).
+> Just out of curiosity, is the minimum increased to 200 µs on purpose, or
+> to have a nice round number? The maximum seems oddly small, unless it is
+> essential to wait less than 7 cycles.
+> 
 
---fXStkuK2IQBfcDe+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+anything above 188 µs should be fine 200 µs is just a round number.
 
-On Thu, Apr 26, 2018 at 04:17:40PM -0500, Andy Gross wrote:
+no it is not essential to wait less than 7 cycles so I can increase
+the max limit to 300 µs.
 
-> I just acked this, so it'd be great if you took it along with the others.  If
-> you don't want to do that, I can just pull it in with my pull requests.
+> The driver looks good to me now. I plan to apply patches 1 and 2 with
+> Rob's ack.
+> Is it ok to merge them independently from the remoteproc driver, or is
+> there a dependency?
+>
 
-> Up to you,
+Yes it should be fine to merge them independently. I can add a dt entry
+to the dtsi and separate the 2 patches from the remoteproc patches if
+that helps ?
 
-That's fine, I'm happy to take it - I just wanted to work out what was
-going on.
+> regards
+> Philipp
+> 
 
---fXStkuK2IQBfcDe+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrjBCMACgkQJNaLcl1U
-h9AaSgf9F1GOLrMf39dFFBWFnDM7HginCwTVyqz9rxLCJbOd1cU/32DztQembUnH
-haj5X7AC14see7qqLNMfL3t0UAjFkqYVIyapxHTfWTSCyjWUDqWbwSF1Nn+7SkYN
-giikT0zMJugfrvEUdRnY35AObZLKpEjQM4XlJ8Wf710pMoQ2/voosVXwZUhvyWa7
-Z80OzB/kaHPLlXoMWaKLBj+kHkkhWsgsP38Ppby6KawEUJWExVuDmCvwmJoVrDWC
-kYEjpSEeR2mfT0eMkBWvhtAkOtXTMM324EfUbbIFo7DSUASLgUFRP74b//SWjHJP
-B1BY7wyfwZ9Ma0mFkkHDTWL4NzY0Pg==
-=aRHi
------END PGP SIGNATURE-----
-
---fXStkuK2IQBfcDe+--
-
---===============6025764011509479448==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6025764011509479448==--
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
