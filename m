@@ -1,30 +1,57 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: Documentation for qcom, llcc
-Date: Fri, 27 Apr 2018 09:21:44 -0500
-Message-ID: <20180427142144.tvy5xamuwz6jnxk5@rob-hp-laptop>
-References: <1524524972-12014-1-git-send-email-rishabhb@codeaurora.org>
- <1524524972-12014-2-git-send-email-rishabhb@codeaurora.org>
+Subject: Re: [PATCH v5] drm/panel: simple: Add TFC S9700RTWV43TR-01B 800x480
+ panel support
+Date: Fri, 27 Apr 2018 09:25:26 -0500
+Message-ID: <20180427142526.g3kdkn2vthnquedn@rob-hp-laptop>
+References: <1524772102-3360-1-git-send-email-jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1524524972-12014-2-git-send-email-rishabhb@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@lists.infradead.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, kyan@codeaurora.org, ckadabi@codeaurora.org, evgreen@chromium.org
+In-Reply-To: <1524772102-3360-1-git-send-email-jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: tomi.valkeinen@ti.com, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 23, 2018 at 04:09:31PM -0700, Rishabh Bhatnagar wrote:
-> Documentation for last level cache controller device tree bindings,
-> client bindings usage examples.
-> 
-> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> ---
->  .../devicetree/bindings/arm/msm/qcom,llcc.txt      | 60 ++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-
-My comments on v4 still apply.
-
-Rob
+T24gVGh1LCBBcHIgMjYsIDIwMTggYXQgMTA6NDg6MjJQTSArMDMwMCwgSnlyaSBTYXJoYSB3cm90
+ZToKPiBBZGQgc3VwcG9ydCBmb3IgVGhyZWUgRml2ZSBkaXNwbGF5cyBURkMgUzk3MDBSVFdWNDNU
+Ui0wMUIgODAweDQ4MAo+IHBhbmVsIHdpdGggcmVzaXN0aXZlIHRvdWNoIGZvdW5kIG9uIFRJJ3Mg
+QU0zMzVYLUVWTS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2FyaGFAdGkuY29t
+Pgo+IFJldmlld2VkLWJ5OiBUb21pIFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPgo+
+IGNjOiBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPgo+IC0tLQo+IFRo
+YW5rcyBUaGllcnJ5LCBmb3IgcmVtaW5kaW5nIG1lIGFib3V0IHRoaXMhCj4gCj4gQ2hhbmdlcyBz
+aW5jZSB2NDoKPiAtIEFkZCB0ZmMgdG8gdmVuZG9yLXByZWZpeGVzLnR4dAo+IAo+ICAuLi4vZGlz
+cGxheS9wYW5lbC90ZmMsczk3MDBydHd2NDN0ci0wMWIudHh0ICAgICAgICB8IDEwICsrKysrKysr
+Kwo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgICAgICB8
+ICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgICAg
+ICAgfCAyNiArKysrKysrKysrKysrKysrKysrKysrCj4gIDMgZmlsZXMgY2hhbmdlZCwgMzcgaW5z
+ZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdGZjLHM5NzAwcnR3djQzdHItMDFiLnR4dAo+IAo+IGRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
+bC90ZmMsczk3MDBydHd2NDN0ci0wMWIudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvcGFuZWwvdGZjLHM5NzAwcnR3djQzdHItMDFiLnR4dAo+IG5ldyBmaWxl
+IG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uMGIxY2M3MQo+IC0tLSAvZGV2L251bGwKPiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC90ZmMs
+czk3MDBydHd2NDN0ci0wMWIudHh0Cj4gQEAgLTAsMCArMSwxMCBAQAo+ICtURkMgUzk3MDBSVFdW
+NDNUUi0wMUIgNyIgVGhyZWUgRml2ZSBDb3JwIDgwMHg0ODAgTENEIHBhbmVsIHdpdGgKPiArcmVz
+aXN0aXZlIHRvdWNoCj4gKwo+ICtUaGUgcGFuZWwgaXMgZm91bmQgb24gVEkgQU0zMzV4LWV2bS4K
+PiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJ0
+ZmMsUzk3MDBSVFdWNDN0ci0wMWIiCj4gKwo+ICtUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3
+aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCj4gK2luIHNp
+bXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCgpZb3UgbmVlZCB0byBzdGF0ZSB3aGF0
+IHByb3BlcnRpZXMgZnJvbSB0aGlzIGFwcGx5LiBGb3IgZXhhbXBsZSwgSSBkb24ndCAKa25vdyBp
+ZiBwb3dlci1zdXBwbHkgaXMgbm90IHVzZWQsIHVzZWQsIG9yIHlvdSBtYWRlIGEgbWlzdGFrZSBh
+bmQgdGhlIApwYW5lbCBoYXMgbW9yZSB0aGFuIG9uZSBzdXBwbHkuCgpSb2IKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
