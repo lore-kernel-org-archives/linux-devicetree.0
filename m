@@ -1,253 +1,209 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v9 03/27] clk: davinci: psc: allow for dev == NULL
-Date: Thu, 26 Apr 2018 19:17:21 -0500
-Message-ID: <20180427001745.4116-4-david@lechnology.com>
+Subject: [PATCH v9 11/27] ARM: davinci: da8xx: add new USB PHY clock init using common clock framework
+Date: Thu, 26 Apr 2018 19:17:29 -0500
+Message-ID: <20180427001745.4116-12-david@lechnology.com>
 References: <20180427001745.4116-1-david@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180427001745.4116-1-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-On some davinci SoCs, we need to register the PSC clocks during early
-boot because they are needed for clocksource/clockevent. These changes
-allow for dev == NULL because in this case, we won't have a platform
-device for the clocks.
+This adds the new USB PHY clock init in mach-davinci/usb-da8xx.c using
+the new common clock framework drivers.
+
+The #ifdefs are needed to prevent compile errors until the entire
+ARCH_DAVINCI is converted.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
 v9 changes:
-- new patch in v9
+- none
+
+v8 changes:
+- rebased on "ARM: davinci: DA8XX: fix oops in USB PHY driver due to stack
+  allocated platform platform_data"
+
+v7 changes:
+- register platform device instead of registering clocks directly
+- USB PHY clocks now treated as single device instead of registering them
+  separately
+
+v6 changes:
+- rename stuff to match changes in "clk: davinci: New driver for TI DA8XX USB
+  PHY clocks"
+- take advantage of syscon lookup changes in "mfd: syscon: Add syscon_register()
+  function"
 
 
- drivers/clk/davinci/psc-dm355.c  |  2 +-
- drivers/clk/davinci/psc-dm365.c  |  2 +-
- drivers/clk/davinci/psc-dm644x.c |  2 +-
- drivers/clk/davinci/psc-dm646x.c |  2 +-
- drivers/clk/davinci/psc.c        | 70 ++++++++++++++++++++++++++++----
- include/linux/clk/davinci.h      |  5 +++
- 6 files changed, 72 insertions(+), 11 deletions(-)
+ arch/arm/mach-davinci/board-da830-evm.c     |  8 ++++++-
+ arch/arm/mach-davinci/board-omapl138-hawk.c |  9 +++++--
+ arch/arm/mach-davinci/da8xx-dt.c            |  8 ++++++-
+ arch/arm/mach-davinci/include/mach/da8xx.h  |  1 +
+ arch/arm/mach-davinci/usb-da8xx.c           | 26 +++++++++++++++++++--
+ 5 files changed, 46 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/davinci/psc-dm355.c b/drivers/clk/davinci/psc-dm355.c
-index 6995ecea2677..001288dfdfb1 100644
---- a/drivers/clk/davinci/psc-dm355.c
-+++ b/drivers/clk/davinci/psc-dm355.c
-@@ -68,7 +68,7 @@ static const struct davinci_lpsc_clk_info dm355_psc_info[] = {
- 	{ }
- };
- 
--static int dm355_psc_init(struct device *dev, void __iomem *base)
-+int dm355_psc_init(struct device *dev, void __iomem *base)
+diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
+index 3973124e5f1d..6e77c458ec8e 100644
+--- a/arch/arm/mach-davinci/board-da830-evm.c
++++ b/arch/arm/mach-davinci/board-da830-evm.c
+@@ -110,6 +110,12 @@ static __init void da830_evm_usb_init(void)
  {
- 	return davinci_psc_register_clocks(dev, dm355_psc_info, 42, base);
- }
-diff --git a/drivers/clk/davinci/psc-dm365.c b/drivers/clk/davinci/psc-dm365.c
-index 3ad915f37376..5b5b55b0b59a 100644
---- a/drivers/clk/davinci/psc-dm365.c
-+++ b/drivers/clk/davinci/psc-dm365.c
-@@ -73,7 +73,7 @@ static const struct davinci_lpsc_clk_info dm365_psc_info[] = {
- 	{ }
- };
- 
--static int dm365_psc_init(struct device *dev, void __iomem *base)
-+int dm365_psc_init(struct device *dev, void __iomem *base)
- {
- 	return davinci_psc_register_clocks(dev, dm365_psc_info, 52, base);
- }
-diff --git a/drivers/clk/davinci/psc-dm644x.c b/drivers/clk/davinci/psc-dm644x.c
-index c22367baa46f..74668931be48 100644
---- a/drivers/clk/davinci/psc-dm644x.c
-+++ b/drivers/clk/davinci/psc-dm644x.c
-@@ -63,7 +63,7 @@ static const struct davinci_lpsc_clk_info dm644x_psc_info[] = {
- 	{ }
- };
- 
--static int dm644x_psc_init(struct device *dev, void __iomem *base)
-+int dm644x_psc_init(struct device *dev, void __iomem *base)
- {
- 	return davinci_psc_register_clocks(dev, dm644x_psc_info, 41, base);
- }
-diff --git a/drivers/clk/davinci/psc-dm646x.c b/drivers/clk/davinci/psc-dm646x.c
-index 468ef86ea40b..22473affa7cf 100644
---- a/drivers/clk/davinci/psc-dm646x.c
-+++ b/drivers/clk/davinci/psc-dm646x.c
-@@ -58,7 +58,7 @@ static const struct davinci_lpsc_clk_info dm646x_psc_info[] = {
- 	{ }
- };
- 
--static int dm646x_psc_init(struct device *dev, void __iomem *base)
-+int dm646x_psc_init(struct device *dev, void __iomem *base)
- {
- 	return davinci_psc_register_clocks(dev, dm646x_psc_info, 46, base);
- }
-diff --git a/drivers/clk/davinci/psc.c b/drivers/clk/davinci/psc.c
-index ce170e600f09..1d4bcdd6bba0 100644
---- a/drivers/clk/davinci/psc.c
-+++ b/drivers/clk/davinci/psc.c
-@@ -63,7 +63,7 @@ struct davinci_psc_data {
- 
- /**
-  * struct davinci_lpsc_clk - LPSC clock structure
-- * @dev: the device that provides this LPSC
-+ * @dev: the device that provides this LPSC or NULL
-  * @hw: clk_hw for the LPSC
-  * @pm_domain: power domain for the LPSC
-  * @genpd_clk: clock reference owned by @pm_domain
-@@ -86,6 +86,50 @@ struct davinci_lpsc_clk {
- #define to_davinci_psc_data(x) container_of(x, struct davinci_psc_data, x)
- #define to_davinci_lpsc_clk(x) container_of(x, struct davinci_lpsc_clk, x)
- 
-+static inline void *_devm_kzalloc(struct device *dev, size_t size, gfp_t flags)
-+{
-+	if (dev)
-+		return devm_kzalloc(dev, size, flags);
-+
-+	return kzalloc(size, flags);
-+}
-+
-+static inline void *_devm_kcalloc(struct device *dev, size_t n, size_t size,
-+				  gfp_t flags)
-+{
-+	if (dev)
-+		return devm_kcalloc(dev, n, size, flags);
-+
-+	return kcalloc(n, size, flags);
-+}
-+
-+static inline void *_devm_kmalloc_array(struct device *dev, size_t n,
-+					size_t size, gfp_t flags)
-+{
-+	if (dev)
-+		return devm_kmalloc_array(dev, n, size, flags);
-+
-+	return kmalloc_array(n, size, flags);
-+}
-+
-+static inline int _devm_clk_hw_register(struct device *dev, struct clk_hw *hw)
-+{
-+	if (dev)
-+		return devm_clk_hw_register(dev, hw);
-+
-+	return clk_hw_register(NULL, hw);
-+}
-+
-+static inline struct regmap
-+*_devm_regmap_init_mmio(struct device *dev, void __iomem *regs,
-+			const struct regmap_config *config)
-+{
-+	if (dev)
-+		return devm_regmap_init_mmio(dev, regs, config);
-+
-+	return regmap_init_mmio(NULL, regs, config);
-+}
-+
- /**
-  * best_dev_name - get the "best" device name.
-  * @dev: the device
-@@ -221,6 +265,7 @@ static void davinci_psc_genpd_detach_dev(struct generic_pm_domain *pm_domain,
- 
- /**
-  * davinci_lpsc_clk_register - register LPSC clock
-+ * @dev: the clocks's device or NULL
-  * @name: name of this clock
-  * @parent_name: name of clock's parent
-  * @regmap: PSC MMIO region
-@@ -238,7 +283,7 @@ davinci_lpsc_clk_register(struct device *dev, const char *name,
  	int ret;
- 	bool is_on;
  
--	lpsc = devm_kzalloc(dev, sizeof(*lpsc), GFP_KERNEL);
-+	lpsc = _devm_kzalloc(dev, sizeof(*lpsc), GFP_KERNEL);
- 	if (!lpsc)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -261,10 +306,14 @@ davinci_lpsc_clk_register(struct device *dev, const char *name,
- 	lpsc->pd = pd;
- 	lpsc->flags = flags;
- 
--	ret = devm_clk_hw_register(dev, &lpsc->hw);
-+	ret = _devm_clk_hw_register(dev, &lpsc->hw);
- 	if (ret < 0)
- 		return ERR_PTR(ret);
- 
-+	/* for now, genpd is only registered when using device-tree */
-+	if (!dev || !dev->of_node)
-+		return lpsc;
-+
- 	/* genpd attach needs a way to look up this clock */
- 	ret = clk_hw_register_clkdev(&lpsc->hw, name, best_dev_name(dev));
- 
-@@ -378,11 +427,11 @@ __davinci_psc_register_clocks(struct device *dev,
- 	struct regmap *regmap;
- 	int i, ret;
- 
--	psc = devm_kzalloc(dev, sizeof(*psc), GFP_KERNEL);
-+	psc = _devm_kzalloc(dev, sizeof(*psc), GFP_KERNEL);
- 	if (!psc)
- 		return ERR_PTR(-ENOMEM);
- 
--	clks = devm_kmalloc_array(dev, num_clks, sizeof(*clks), GFP_KERNEL);
-+	clks = _devm_kmalloc_array(dev, num_clks, sizeof(*clks), GFP_KERNEL);
- 	if (!clks)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -396,14 +445,14 @@ __davinci_psc_register_clocks(struct device *dev,
- 	for (i = 0; i < num_clks; i++)
- 		clks[i] = ERR_PTR(-ENOENT);
- 
--	pm_domains = devm_kcalloc(dev, num_clks, sizeof(*pm_domains), GFP_KERNEL);
-+	pm_domains = _devm_kcalloc(dev, num_clks, sizeof(*pm_domains), GFP_KERNEL);
- 	if (!pm_domains)
- 		return ERR_PTR(-ENOMEM);
- 
- 	psc->pm_data.domains = pm_domains;
- 	psc->pm_data.num_domains = num_clks;
- 
--	regmap = devm_regmap_init_mmio(dev, base, &davinci_psc_regmap_config);
-+	regmap = _devm_regmap_init_mmio(dev, base, &davinci_psc_regmap_config);
- 	if (IS_ERR(regmap))
- 		return ERR_CAST(regmap);
- 
-@@ -423,6 +472,13 @@ __davinci_psc_register_clocks(struct device *dev,
- 		pm_domains[info->md] = &lpsc->pm_domain;
++#ifdef CONFIG_COMMON_CLK
++	ret = da8xx_register_usb_phy_clocks();
++	if (ret)
++		pr_warn("%s: USB PHY CLK registration failed: %d\n",
++			__func__, ret);
++#else
+ 	/* USB_REFCLKIN is not used. */
+ 	ret = da8xx_register_usb20_phy_clk(false);
+ 	if (ret)
+@@ -120,7 +126,7 @@ static __init void da830_evm_usb_init(void)
+ 	if (ret)
+ 		pr_warn("%s: USB 1.1 PHY CLK registration failed: %d\n",
+ 			__func__, ret);
+-
++#endif
+ 	ret = da8xx_register_usb_phy();
+ 	if (ret)
+ 		pr_warn("%s: USB PHY registration failed: %d\n",
+diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
+index eb09e333b6cd..6a866d29b114 100644
+--- a/arch/arm/mach-davinci/board-omapl138-hawk.c
++++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
+@@ -231,7 +231,12 @@ static __init void omapl138_hawk_usb_init(void)
+ 		pr_warn("%s: USB 1.1 PinMux setup failed: %d\n", __func__, ret);
+ 		return;
  	}
+-
++#ifdef CONFIG_COMMON_CLK
++	ret = da8xx_register_usb_phy_clocks();
++	if (ret)
++		pr_warn("%s: USB PHY CLK registration failed: %d\n",
++			__func__, ret);
++#else
+ 	ret = da8xx_register_usb20_phy_clk(false);
+ 	if (ret)
+ 		pr_warn("%s: USB 2.0 PHY CLK registration failed: %d\n",
+@@ -241,7 +246,7 @@ static __init void omapl138_hawk_usb_init(void)
+ 	if (ret)
+ 		pr_warn("%s: USB 1.1 PHY CLK registration failed: %d\n",
+ 			__func__, ret);
+-
++#endif
+ 	ret = da8xx_register_usb_phy();
+ 	if (ret)
+ 		pr_warn("%s: USB PHY registration failed: %d\n",
+diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+index 91dd9cb6d113..c4edf051ef9b 100644
+--- a/arch/arm/mach-davinci/da8xx-dt.c
++++ b/arch/arm/mach-davinci/da8xx-dt.c
+@@ -69,6 +69,12 @@ static void __init da850_init_machine(void)
  
-+	/*
-+	 * for now, a reset controller is only registered when there is a device
-+	 * to associate it with.
-+	 */
-+	if (!dev)
-+		return psc;
-+
- 	psc->rcdev.ops = &davinci_psc_reset_ops;
- 	psc->rcdev.owner = THIS_MODULE;
- 	psc->rcdev.dev = dev;
-diff --git a/include/linux/clk/davinci.h b/include/linux/clk/davinci.h
-index 1298cca509ac..b32dd3f53ecc 100644
---- a/include/linux/clk/davinci.h
-+++ b/include/linux/clk/davinci.h
-@@ -21,4 +21,9 @@ int dm365_pll2_init(struct device *dev, void __iomem *base, struct regmap *cfgch
- int dm644x_pll1_init(struct device *dev, void __iomem *base, struct regmap *cfgchip);
- int dm646x_pll1_init(struct device *dev, void __iomem *base, struct regmap *cfgchip);
+ 	da850_register_clocks();
  
-+int dm355_psc_init(struct device *dev, void __iomem *base);
-+int dm365_psc_init(struct device *dev, void __iomem *base);
-+int dm644x_psc_init(struct device *dev, void __iomem *base);
-+int dm646x_psc_init(struct device *dev, void __iomem *base);
++#ifdef CONFIG_COMMON_CLK
++	ret = da8xx_register_usb_phy_clocks();
++	if (ret)
++		pr_warn("%s: USB PHY CLK registration failed: %d\n",
++			__func__, ret);
++#else
+ 	ret = da8xx_register_usb20_phy_clk(false);
+ 	if (ret)
+ 		pr_warn("%s: registering USB 2.0 PHY clock failed: %d",
+@@ -77,7 +83,7 @@ static void __init da850_init_machine(void)
+ 	if (ret)
+ 		pr_warn("%s: registering USB 1.1 PHY clock failed: %d",
+ 			__func__, ret);
+-
++#endif
+ 	ret = da850_register_sata_refclk(sata_refclkpn);
+ 	if (ret)
+ 		pr_warn("%s: registering SATA REFCLK failed: %d",
+diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
+index 612e45437cec..5d7b1de9aa7e 100644
+--- a/arch/arm/mach-davinci/include/mach/da8xx.h
++++ b/arch/arm/mach-davinci/include/mach/da8xx.h
+@@ -106,6 +106,7 @@ int da8xx_register_usb11(struct da8xx_ohci_root_hub *pdata);
+ int da8xx_register_usb_refclkin(int rate);
+ int da8xx_register_usb20_phy_clk(bool use_usb_refclkin);
+ int da8xx_register_usb11_phy_clk(bool use_usb_refclkin);
++int da8xx_register_usb_phy_clocks(void);
+ int da850_register_sata_refclk(int rate);
+ int da8xx_register_emac(void);
+ int da8xx_register_uio_pruss(void);
+diff --git a/arch/arm/mach-davinci/usb-da8xx.c b/arch/arm/mach-davinci/usb-da8xx.c
+index 50445f0e98de..c8d2f3075e69 100644
+--- a/arch/arm/mach-davinci/usb-da8xx.c
++++ b/arch/arm/mach-davinci/usb-da8xx.c
+@@ -2,29 +2,35 @@
+ /*
+  * DA8xx USB
+  */
+-#include <linux/clk.h>
++#include <linux/clk-provider.h>
+ #include <linux/delay.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/init.h>
+ #include <linux/mfd/da8xx-cfgchip.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/phy/phy.h>
++#include <linux/platform_data/clk-da8xx-cfgchip.h>
+ #include <linux/platform_data/phy-da8xx-usb.h>
+ #include <linux/platform_data/usb-davinci.h>
+ #include <linux/platform_device.h>
+ #include <linux/usb/musb.h>
+ 
+-#include <mach/clock.h>
+ #include <mach/common.h>
+ #include <mach/cputype.h>
+ #include <mach/da8xx.h>
+ #include <mach/irqs.h>
+ 
++#ifndef CONFIG_COMMON_CLK
++#include <mach/clock.h>
+ #include "clock.h"
++#endif
+ 
+ #define DA8XX_USB0_BASE		0x01e00000
+ #define DA8XX_USB1_BASE		0x01e25000
+ 
++#ifndef CONFIG_COMMON_CLK
+ static struct clk *usb20_clk;
++#endif
+ 
+ static struct da8xx_usb_phy_platform_data da8xx_usb_phy_pdata;
+ 
+@@ -134,6 +140,7 @@ int __init da8xx_register_usb11(struct da8xx_ohci_root_hub *pdata)
+ 	return platform_device_register(&da8xx_usb11_device);
+ }
+ 
++#ifndef CONFIG_COMMON_CLK
+ static struct clk usb_refclkin = {
+ 	.name		= "usb_refclkin",
+ 	.set_rate	= davinci_simple_set_rate,
+@@ -360,3 +367,18 @@ int __init da8xx_register_usb11_phy_clk(bool use_usb_refclkin)
+ 
+ 	return ret;
+ }
++#endif
++static struct platform_device da8xx_usb_phy_clks_device = {
++	.name		= "da830-usb-phy-clks",
++	.id		= -1,
++};
 +
- #endif /* __LINUX_CLK_DAVINCI_PLL_H___ */
++int __init da8xx_register_usb_phy_clocks(void)
++{
++	struct da8xx_cfgchip_clk_platform_data pdata;
++
++	pdata.cfgchip = da8xx_get_cfgchip();
++	da8xx_usb_phy_clks_device.dev.platform_data = &pdata;
++
++	return platform_device_register(&da8xx_usb_phy_clks_device);
++}
 -- 
 2.17.0
