@@ -1,113 +1,59 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
- platform drivers
-Date: Fri, 27 Apr 2018 13:53:16 +0200
-Message-ID: <CAMRc=MdomjLCq-bJyktaToH00kNQAuTLgkSFRrY9Jmre8McT3A@mail.gmail.com>
-References: <20180426152920.21569-1-brgl@bgdev.pl> <20180426173151.GJ3094@brightrain.aerifal.cx>
- <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com> <CAK8P3a0oCH7zyBs8nQd4p+xLrFwDQiJsaKKCF1m04nyXsZxk=g@mail.gmail.com>
- <CAMpxmJUR+31axmAe2TNq00aUg40bnC=5k=2cVX019Vncr7cRkw@mail.gmail.com> <CAK8P3a2xtTLx-VHVWok-b19=o1z5FbTNcaWq7Y_HSdaH6pWnZg@mail.gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 2/5] reset: qcom: AOSS (always on subsystem) reset
+ controller
+Date: Fri, 27 Apr 2018 13:54:10 +0200
+Message-ID: <1524830050.17614.9.camel@pengutronix.de>
+References: <20180425150843.26657-1-sibis@codeaurora.org>
+         <20180425150843.26657-3-sibis@codeaurora.org>
+         <1524825675.17614.6.camel@pengutronix.de>
+         <ce0d4222-ae39-56f0-a99c-49b7ac8fde05@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a2xtTLx-VHVWok-b19=o1z5FbTNcaWq7Y_HSdaH6pWnZg@mail.gmail.com>
+In-Reply-To: <ce0d4222-ae39-56f0-a99c-49b7ac8fde05@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, David Lechner <david@lechnology.com>, Rich Felker <dalias@libc.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka>
+To: Sibi S <sibis@codeaurora.org>, bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-2018-04-27 12:18 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
-> On Fri, Apr 27, 2018 at 10:57 AM, Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
->> 2018-04-27 9:52 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
->>> On Fri, Apr 27, 2018 at 4:28 AM, David Lechner <david@lechnology.com> wrote:
->>>> On 04/26/2018 12:31 PM, Rich Felker wrote:
->>
->> We have platforms out there which still use both board files and
->> device tree. They are still comercially supported and are not going
->> anywhere anytime soon. Some of these platforms are being actively
->> maintained and cleaned-up. An example is the DaVinci platform: David
->> has recently converted all the SoCs and boards to using the common
->> clock framework. I'm cleaning up some other parts too.
->>
->> The problem with the legacy board code is that a lot of things that
->> should be platform drivers ended up in arch/arm/mach-*. We're now
->> slowly moving this code to drivers/ but some initialization code
->> (timers, critical clocks, irqs) needs to be called early in the boot
->> sequence.
->
-> Right, and that's very good work.
->
->> When you're saying that we already have all the OF_DECLARE macros, it
->> seems to me that you're forgetting that we also want to keep
->> supporting the board files. So without the early platform drivers we
->> need to use a mix of OF_DECLARE and handcrafted initialization in
->> arch/arm/mach-* since we can't call platform_device_register() that
->> early. This blocks us from completely moving the should-be-driver code
->> to drivers/, because these drivers *need* to support both cases.
->
-> The OF_DECLARE_* functions were initially added as a way to
-> remove board files that just consist of callbacks into early
-> initialization for some subsystems. As long as you still have
-> board files and you are looking for a way to reuse code between
-> OF_DECLARE_* functions and board files, why not just leave
-> those functions globally visible and call them from the non-DT
-> board files?
->
->> The main problem with OF_DECLARE is that although we have
->> corresponding device nodes, we never actually register any real linux
->> devices. If we add to this the fact that current early platform
->> drivers implementation is broken (for reasons I mentioned in the cover
->> letter) the support gets really messy, since we can have up to three
->> entry points to the driver's code. Other issues come to mind as well:
->> if we're using OF_DECLARE we can't benefit from devm* routines.
->
-> Right, the devm_* problem has come up before.
->
->> My aim is to provide a clean, robust and generic way of probing
->> certain devices early and then converting them to actual platform
->> devices when we're advanced enough into the boot sequence. If we
->> merged such a framework, we could work towards removing both the
->> previous early platform devices (in favor of the new mechanism) and
->> maybe even deprecating and replacing OF_DECLARE(), since we could
->> simply early probe the DT drivers. Personally I see OF_DECLARE as a
->> bigger hack than early devices.
->>
->> My patch tries to address exactly the use cases we're facing - for
->> example by providing means to probe devices twice (early and late) and
->> to check the state we're at in order for users to be able to just do
->> the critical initialization early on and then continue with regular
->> stuff later.
->
-> Maybe the problem is reusing the name and some of the code from
-> an existing functionality that we've been trying to get rid of.
->
+Hi Sibi,
 
-I'm not reusing the name - in fact I set the prefix to earlydev_
-exactly in order to not confuse anyone. I'm also not reusing any code
-in the second series.
+On Fri, 2018-04-27 at 16:45 +0530, Sibi S wrote:
+[...]
+> > > +	/* Wait 6 32kHz sleep cycles for reset */
+> > > +	usleep_range(200, 210);
+> > 
+> > 6 32 kHz cycles are about 188 µs (184 µs for 32.768 kHz).
+> > Just out of curiosity, is the minimum increased to 200 µs on purpose, or
+> > to have a nice round number? The maximum seems oddly small, unless it is
+> > essential to wait less than 7 cycles.
+> 
+> anything above 188 µs should be fine 200 µs is just a round number.
+> 
+> no it is not essential to wait less than 7 cycles so I can increase
+> the max limit to 300 µs.
 
-> If what you want to do is completely different from the existing
-> early_platform implementation, how about starting by moving that
-> out of drivers/base/platform.c into something under arch/sh/
-> and renaming it to something with an sh_ prefix.
->
+Ok, thanks for the info.
 
-Yes, this is a good idea, but what about the sh-specific drivers that
-rely on it? Is including headers from arch/ in driver code still an
-accepted practice?
+> > The driver looks good to me now. I plan to apply patches 1 and 2 with
+> > Rob's ack.
+> > Is it ok to merge them independently from the remoteproc driver, or is
+> > there a dependency?
+> 
+> Yes it should be fine to merge them independently. I can add a dt entry
+> to the dtsi and separate the 2 patches from the remoteproc patches if
+> that helps ?
 
-> Let's just leave the non-DT part out of it by making it sh specific.
-> Then we can come up with improvements to the current
-> platform_device handling for DT based platforms that you can
-> use on DT-based davinci to replace what currently happens on
-> board-file based davinci systems, without mixing up those
-> two code paths too much in the base driver support.
->
+I plan to just pick up the reset DT binding documentation patch (1/5)
+and the reset driver patch (2/5) then, whether they are sent separately
+or as part of the larger remoteproc series does not matter to me.
 
-I don't see why we wouldn't want to unify these two cases. The best
-solution to me seems having only one entry point into the driver code
-- the probe() function stored in platform_driver - whether we're
-probing it from DT, platform data, ACPI or early boot code.
+The dtsi patch would have to go through the arm/qualcomm tree.
+I can put the reset patches onto a separate branch that could be pulled
+into the qcom tree ahead of the dtsi change, or you could send the dtsi
+change with numbers at first, and only replace them with the header
+defines after patch 1 is merged through the reset tree.
 
-Best regards,
-Bartosz Golaszewski
+regards
+Philipp
