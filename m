@@ -1,175 +1,37 @@
-From: Sibi S <sibis@codeaurora.org>
-Subject: Re: [PATCH v4 2/5] reset: qcom: AOSS (always on subsystem) reset
- controller
-Date: Fri, 27 Apr 2018 16:45:12 +0530
-Message-ID: <ce0d4222-ae39-56f0-a99c-49b7ac8fde05@codeaurora.org>
-References: <20180425150843.26657-1-sibis@codeaurora.org>
- <20180425150843.26657-3-sibis@codeaurora.org>
- <1524825675.17614.6.camel@pengutronix.de>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 0/2] Add R8A77970/Eagle CAN-FD support
+Date: Fri, 27 Apr 2018 14:19:09 +0300
+Message-ID: <894de81f-024c-7b1c-7aca-bc7b3b193173@cogentembedded.com>
+References: <4e5216bc-5f1b-ace4-1aea-02269cd206ac@cogentembedded.com>
+ <TY2PR01MB19620E4689C0B881B540E4D4C38D0@TY2PR01MB1962.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524825675.17614.6.camel@pengutronix.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <TY2PR01MB19620E4689C0B881B540E4D4C38D0@TY2PR01MB1962.jpnprd01.prod.outlook.com>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+Hello!
 
-Thanks for the review.
+On 04/27/2018 12:46 PM, Ramesh Shanmugasundaram wrote:
 
-On 04/27/2018 04:11 PM, Philipp Zabel wrote:
-> On Wed, 2018-04-25 at 20:38 +0530, Sibi Sankar wrote:
->> Add reset controller driver for Qualcomm SDM845 SoC to
->> control reset signals provided by AOSS for Modem, Venus
->> ADSP, GPU, Camera, Wireless, Display subsystem
->>
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>   drivers/reset/Kconfig           |   9 +++
->>   drivers/reset/Makefile          |   1 +
->>   drivers/reset/reset-qcom-aoss.c | 133 ++++++++++++++++++++++++++++++++
->>   3 files changed, 143 insertions(+)
->>   create mode 100644 drivers/reset/reset-qcom-aoss.c
->>
->> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
->> index c0b292be1b72..756ad2b27d0f 100644
->> --- a/drivers/reset/Kconfig
->> +++ b/drivers/reset/Kconfig
->> @@ -82,6 +82,15 @@ config RESET_PISTACHIO
->>   	help
->>   	  This enables the reset driver for ImgTec Pistachio SoCs.
->>   
->> +config RESET_QCOM_AOSS
->> +	bool "Qcom AOSS Reset Driver"
->> +	depends on ARCH_QCOM || COMPILE_TEST
->> +	help
->> +	  This enables the AOSS (always on subsystem) reset driver
->> +	  for Qualcomm SDM845 SoCs. Say Y if you want to control
->> +	  reset signals provided by AOSS for Modem, Venus, ADSP,
->> +	  GPU, Camera, Wireless, Display subsystem. Otherwise, say N.
->> +
->>   config RESET_SIMPLE
->>   	bool "Simple Reset Controller Driver" if COMPILE_TEST
->>   	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
->> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
->> index c1261dcfe9ad..6881e4d287f0 100644
->> --- a/drivers/reset/Makefile
->> +++ b/drivers/reset/Makefile
->> @@ -14,6 +14,7 @@ obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
->>   obj-$(CONFIG_RESET_MESON) += reset-meson.o
->>   obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
->>   obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
->> +obj-$(CONFIG_RESET_QCOM_AOSS) += reset-qcom-aoss.o
->>   obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
->>   obj-$(CONFIG_RESET_STM32MP157) += reset-stm32mp1.o
->>   obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
->> diff --git a/drivers/reset/reset-qcom-aoss.c b/drivers/reset/reset-qcom-aoss.c
->> new file mode 100644
->> index 000000000000..3b0bbb387f7b
->> --- /dev/null
->> +++ b/drivers/reset/reset-qcom-aoss.c
->> @@ -0,0 +1,133 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2018 The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/reset-controller.h>
->> +#include <linux/delay.h>
->> +#include <linux/io.h>
->> +#include <linux/of_device.h>
->> +#include <dt-bindings/reset/qcom,sdm845-aoss.h>
->> +
->> +struct qcom_aoss_reset_map {
->> +	unsigned int reg;
->> +};
->> +
->> +struct qcom_aoss_desc {
->> +	const struct qcom_aoss_reset_map *resets;
->> +	size_t num_resets;
->> +};
->> +
->> +struct qcom_aoss_reset_data {
->> +	struct reset_controller_dev rcdev;
->> +	void __iomem *base;
->> +	const struct qcom_aoss_desc *desc;
->> +};
->> +
->> +static const struct qcom_aoss_reset_map sdm845_aoss_resets[] = {
->> +	[AOSS_CC_MSS_RESTART] = {0x0},
->> +	[AOSS_CC_CAMSS_RESTART] = {0x1000},
->> +	[AOSS_CC_VENUS_RESTART] = {0x2000},
->> +	[AOSS_CC_GPU_RESTART] = {0x3000},
->> +	[AOSS_CC_DISPSS_RESTART] = {0x4000},
->> +	[AOSS_CC_WCSS_RESTART] = {0x10000},
->> +	[AOSS_CC_LPASS_RESTART] = {0x20000},
->> +};
->> +
->> +static const struct qcom_aoss_desc sdm845_aoss_desc = {
->> +	.resets = sdm845_aoss_resets,
->> +	.num_resets = ARRAY_SIZE(sdm845_aoss_resets),
->> +};
->> +
->> +static inline struct qcom_aoss_reset_data *to_qcom_aoss_reset_data(
->> +				struct reset_controller_dev *rcdev)
->> +{
->> +	return container_of(rcdev, struct qcom_aoss_reset_data, rcdev);
->> +}
->> +
->> +static int qcom_aoss_control_assert(struct reset_controller_dev *rcdev,
->> +				    unsigned long idx)
->> +{
->> +	struct qcom_aoss_reset_data *data = to_qcom_aoss_reset_data(rcdev);
->> +	const struct qcom_aoss_reset_map *map = &data->desc->resets[idx];
->> +
->> +	writel(1, data->base + map->reg);
->> +	/* Wait 6 32kHz sleep cycles for reset */
->> +	usleep_range(200, 210);
->> +	return 0;
->> +}
->> +
->> +static int qcom_aoss_control_deassert(struct reset_controller_dev *rcdev,
->> +				      unsigned long idx)
->> +{
->> +	struct qcom_aoss_reset_data *data = to_qcom_aoss_reset_data(rcdev);
->> +	const struct qcom_aoss_reset_map *map = &data->desc->resets[idx];
->> +
->> +	writel(0, data->base + map->reg);
->> +	/* Wait 6 32kHz sleep cycles for reset */
->> +	usleep_range(200, 210);
-> 
-> 6 32 kHz cycles are about 188 µs (184 µs for 32.768 kHz).
-> Just out of curiosity, is the minimum increased to 200 µs on purpose, or
-> to have a nice round number? The maximum seems oddly small, unless it is
-> essential to wait less than 7 cycles.
-> 
+> Thank you for your patch. 
+> Could you also update the dt bindings please? A separate patch or part of this series.
 
-anything above 188 µs should be fine 200 µs is just a round number.
+   I'd posted it just before these patches, see:
 
-no it is not essential to wait less than 7 cycles so I can increase
-the max limit to 300 µs.
+https://patchwork.kernel.org/patch/10366727/
 
-> The driver looks good to me now. I plan to apply patches 1 and 2 with
-> Rob's ack.
-> Is it ok to merge them independently from the remoteproc driver, or is
-> there a dependency?
->
-
-Yes it should be fine to merge them independently. I can add a dt entry
-to the dtsi and separate the 2 patches from the remoteproc patches if
-that helps ?
-
-> regards
-> Philipp
-> 
-
--- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+MBR, Sergei
