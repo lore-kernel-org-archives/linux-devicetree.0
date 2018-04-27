@@ -1,41 +1,68 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH 1/4] regulator: max8998: Fix platform data retrieval.
-Date: Fri, 27 Apr 2018 18:02:59 +0200
-Message-ID: <1524844982-4714-2-git-send-email-pawel.mikolaj.chmiel@gmail.com>
-References: <1524844982-4714-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2 2/2] usb: dwc3: support clocks and resets for DWC3 core
+Date: Sat, 28 Apr 2018 01:20:12 +0900
+Message-ID: <CAK7LNATtOxUjfoqmgAu-X_OYihKkMMRVLaYimEY0bRogOoHRZQ@mail.gmail.com>
+References: <1524135818-14825-1-git-send-email-yamada.masahiro@socionext.com>
+ <1524135818-14825-3-git-send-email-yamada.masahiro@socionext.com> <20180425152114.pzklc5uqva3nil5v@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524844982-4714-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+In-Reply-To: <20180425152114.pzklc5uqva3nil5v@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-usb@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, Roger Quadros <rogerq@ti.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, DTML <devicetree@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Since the max8998 MFD driver supports instantiation by DT, platform data
-retrieval is handled in MFD probe and cell drivers should get use
-the pdata field of max8998_dev struct to obtain them.
+Hi Rob,
 
-Fixes: ee999fb3f17f ("mfd: max8998: Add support for Device Tree")
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
----
- drivers/regulator/max8998.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/max8998.c b/drivers/regulator/max8998.c
-index 3027e7ce100b..6a2b61c012b5 100644
---- a/drivers/regulator/max8998.c
-+++ b/drivers/regulator/max8998.c
-@@ -309,8 +309,7 @@ static int max8998_set_voltage_buck_sel(struct regulator_dev *rdev,
- 					unsigned selector)
- {
- 	struct max8998_data *max8998 = rdev_get_drvdata(rdev);
--	struct max8998_platform_data *pdata =
--		dev_get_platdata(max8998->iodev->dev);
-+	struct max8998_platform_data *pdata = max8998->iodev->pdata;
- 	struct i2c_client *i2c = max8998->iodev->i2c;
- 	int buck = rdev_get_id(rdev);
- 	int reg, shift = 0, mask, ret, j;
+2018-04-26 0:21 GMT+09:00 Rob Herring <robh@kernel.org>:
+
+>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+>> index 0dbd308..feb1cc33 100644
+>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>> @@ -7,6 +7,27 @@ Required properties:
+>>   - compatible: must be "snps,dwc3"
+>>   - reg : Address and length of the register set for the device
+>>   - interrupts: Interrupts used by the dwc3 controller.
+>> + - clock-names: should contain "ref", "bus_early", "suspend"
+>> + - clocks: list of phandle and clock specifier pairs corresponding to
+>> +           entries in the clock-names property.
+>> + - resets: a single pair of phandle and reset specifier
+>
+> This should be optional as some SoCs don't have separate, s/w controlled
+> resets of modules.
+
+OK.  I will move resets to optional property.
+
+
+Please let ask a question.
+
+
+The number of clocks should be the same across SoCs.
+(Even if there is no s/w control for clocks,
+we should input something such as clk-fixed-rate.)
+
+On the other hand, the number of resets can be different
+across SoCs.  If there is no s/w control for resets,
+we can make it optional.   (optional = 1 or 0 reset)
+
+Is this what you mean?
+
+If we had something like reset-nop (or reset-dummy)
+in case no s/w control, we would be able to input something.
+I am not sure if this is the right thing, though.
+
+
+
+
+> Otherise, for the DT binding:
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+>
+
+
 -- 
-2.7.4
+Best Regards
+Masahiro Yamada
