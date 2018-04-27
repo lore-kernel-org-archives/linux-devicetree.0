@@ -1,52 +1,95 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] dt-bindings: drm/bridge: Document
- sn65dsi86 bridge bindings
-Date: Fri, 27 Apr 2018 07:37:08 -0500
-Message-ID: <CAL_JsqL1CwPDBmJCqBVMK_4tJqeXLHcv1zj54hXjAzW7UrkUoA@mail.gmail.com>
-References: <1524821982-2778-1-git-send-email-spanda@codeaurora.org>
- <1524821982-2778-3-git-send-email-spanda@codeaurora.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
+ platform drivers
+Date: Fri, 27 Apr 2018 14:40:34 +0200
+Message-ID: <CAK8P3a0tMp2QURp-9WuHehqE0b6-BO1wJ38siTdxhxgwCb-ERw@mail.gmail.com>
+References: <20180426152920.21569-1-brgl@bgdev.pl> <20180426173151.GJ3094@brightrain.aerifal.cx>
+ <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com> <CAK8P3a0oCH7zyBs8nQd4p+xLrFwDQiJsaKKCF1m04nyXsZxk=g@mail.gmail.com>
+ <CAMpxmJUR+31axmAe2TNq00aUg40bnC=5k=2cVX019Vncr7cRkw@mail.gmail.com>
+ <CAK8P3a2xtTLx-VHVWok-b19=o1z5FbTNcaWq7Y_HSdaH6pWnZg@mail.gmail.com> <CAMRc=MdomjLCq-bJyktaToH00kNQAuTLgkSFRrY9Jmre8McT3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1524821982-2778-3-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMRc=MdomjLCq-bJyktaToH00kNQAuTLgkSFRrY9Jmre8McT3A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, David Lechner <david@lechnology.com>, Rich Felker <dalias@libc.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBBcHIgMjcsIDIwMTggYXQgNDozOSBBTSwgU2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNv
-ZGVhdXJvcmEub3JnPiB3cm90ZToKPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBmb3IgdGhl
-IHNuNjVkc2k4NiBEU0kgdG8gZURQIGJyaWRnZS4KPgo+IENoYW5nZXMgaW4gdjE6Cj4gIC0gUmVw
-aHJhc2UgdGhlIGR0LWJpbmRpbmcgZGVzY3JpcHRpb25zIHRvIGJlIG1vcmUgaW5saW5lIHdpdGgg
-ZXhpc3RpbmcKPiAgICBiaW5kaW5ncyAoQW5kcnplaiBIYWpkYSkuCj4gIC0gQWRkIG1pc3Npbmcg
-ZHQtYmluZGluZyB0aGF0IGFyZSBwYXJzZWQgYnkgY29ycmVzcG9uZGluZyBkcml2ZXIKPiAgICAo
-QW5kcnplaiBIYWpkYSkuCj4KPiBDaGFuZ2VzIGluIHYyOgo+ICAtIFJlbW92ZSBlZHAgcGFuZWwg
-c3BlY2lmaWMgZHQtYmluZGluZyBlbnRyaWVzLiBPbmx5IGtlZXAgYnJpZGdlCj4gICAgc3BlY2lm
-aWMgZW50cmllcyAoU2VhbiBQYXVsKS4KPiAgLSBSZW1vdmUgY3VzdG9tLW1vZGVzIGR0IGVudHJ5
-IHNpbmNlIGl0cyB1c2FnZSBpcyByZW1vdmVkIGZyb20gZHJpdmVyIGFsc28gKFNlYW4gUGF1bCku
-Cj4gIC0gUmVtb3ZlIGlzLXBsdWdnYWJsZSBkdCBlbnRyeSBzaW5jZSB0aGlzIHdpbGwgbm90IGJl
-IG5lZWRlZCBhbnltb3JlIChTZWFuIFBhdWwpLgo+Cj4gQ2hhbmdlcyBpbiB2MzoKPiAgLSBSZW1v
-dmUgaXJxLWdwaW8gZHQgZW50cnkgYW5kIGluc3RlYWQgcG9wdWxhdGUgaXMgYW4gaW50ZXJydXB0
-Cj4gICAgcHJvcGVydHkgKFJvYiBIZXJyaW5nKS4KPgo+IENoYW5nZXMgaW4gdjQ6Cj4gIC0gQWRk
-IGxpbmsgdG8gYnJpZGdlIGNoaXAgZGF0YXNoZWV0IChTdGVwaGVuIEJveWQpCj4gIC0gQWRkIHZw
-bGwgYW5kIHZjYyByZWd1bGF0b3Igc3VwcGx5IGJpbmRpbmdzIChTdGVwaGVuIEJveWQpCj4gIC0g
-QWRkIHJlZiBjbGsgb3B0aW9uYWwgZHQgYmluZGluZyAoU3RlcGhlbiBCb3lkKQo+ICAtIEFkZCBn
-cGlvLWNvbnRyb2xsZXIgb3B0aW9uYWwgZHQgYmluZGluZyAoU3RlcGhlbiBCb3lkKQo+Cj4gU2ln
-bmVkLW9mZi1ieTogU2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+
-ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dCAgICAgICB8IDc2
-ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDc2IGluc2VydGlvbnMo
-KykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0CgpSZXZpZXdlZC1ieTogUm9iIEhlcnJp
-bmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZnJlZWRyZW5vCg==
+On Fri, Apr 27, 2018 at 1:53 PM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> 2018-04-27 12:18 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+>> On Fri, Apr 27, 2018 at 10:57 AM, Bartosz Golaszewski
+>> <bgolaszewski@baylibre.com> wrote:
+>>> 2018-04-27 9:52 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+>>>> On Fri, Apr 27, 2018 at 4:28 AM, David Lechner <david@lechnology.com> wrote:
+>>> My patch tries to address exactly the use cases we're facing - for
+>>> example by providing means to probe devices twice (early and late) and
+>>> to check the state we're at in order for users to be able to just do
+>>> the critical initialization early on and then continue with regular
+>>> stuff later.
+>>
+>> Maybe the problem is reusing the name and some of the code from
+>> an existing functionality that we've been trying to get rid of.
+>>
+>
+> I'm not reusing the name - in fact I set the prefix to earlydev_
+> exactly in order to not confuse anyone. I'm also not reusing any code
+> in the second series.
+
+Ok.
+
+>> If what you want to do is completely different from the existing
+>> early_platform implementation, how about starting by moving that
+>> out of drivers/base/platform.c into something under arch/sh/
+>> and renaming it to something with an sh_ prefix.
+>>
+>
+> Yes, this is a good idea, but what about the sh-specific drivers that
+> rely on it? Is including headers from arch/ in driver code still an
+> accepted practice?
+
+I think it's fine here, since we're just move it out of the way and
+there are only very few drivers using it:
+
+drivers/clocksource/sh_cmt.c:early_platform_init("earlytimer",
+&sh_cmt_device_driver);
+drivers/clocksource/sh_mtu2.c:early_platform_init("earlytimer",
+&sh_mtu2_device_driver);
+drivers/clocksource/sh_tmu.c:early_platform_init("earlytimer",
+&sh_tmu_device_driver);
+drivers/clocksource/timer-ti-dm.c:early_platform_init("earlytimer",
+&omap_dm_timer_driver);
+drivers/tty/serial/sh-sci.c:early_platform_init_buffer("earlyprintk",
+&sci_driver,
+
+For timer-ti-dm, it seems like a leftover from old times that can
+be removed. The other four are shared between arch/sh and
+arch/arm/mach-shmobile and already have some #ifdef
+to handle those two cases.
+
+>> Let's just leave the non-DT part out of it by making it sh specific.
+>> Then we can come up with improvements to the current
+>> platform_device handling for DT based platforms that you can
+>> use on DT-based davinci to replace what currently happens on
+>> board-file based davinci systems, without mixing up those
+>> two code paths too much in the base driver support.
+>
+> I don't see why we wouldn't want to unify these two cases. The best
+> solution to me seems having only one entry point into the driver code
+> - the probe() function stored in platform_driver - whether we're
+> probing it from DT, platform data, ACPI or early boot code.
+
+I'd rather keep those separate and would prefer not to have
+that many different ways of getting there instead. DT and
+board files can already share most of the code through the
+use of platform_device, especially when you start using
+device properties instead of platform_data, and the other
+two are rare corner cases and ideally left that way.
+
+The early boot code is always special and instead of making
+it easier to use, we should focus on using it as little as
+possible: every line of code that we call before even
+initializing timers and consoles means it gets harder to
+debug when something goes wrong.
+
+      Arnd
