@@ -1,92 +1,49 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v6 04/24] ASoC: qdsp6: dt-bindings: Add q6afe dt bindings
-Date: Fri, 27 Apr 2018 15:58:02 +0100
-Message-ID: <dd30b0ed-d958-9bf8-13cf-55d100b645ab@linaro.org>
-References: <20180426094606.4775-1-srinivas.kandagatla@linaro.org>
- <20180426094606.4775-5-srinivas.kandagatla@linaro.org>
- <20180427141323.2ykh676xpdf7b6bl@rob-hp-laptop>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH RFC PoC 1/2] earlydev: implement a new way to probe
+ platform devices early
+Date: Fri, 27 Apr 2018 17:13:20 +0200
+Message-ID: <CAK8P3a13wiATdYDGXnmEMfpoKzXqWA-umKLgO7hFaJj3MF4w1Q@mail.gmail.com>
+References: <20180426152920.21569-1-brgl@bgdev.pl>
+ <20180426152920.21569-2-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427141323.2ykh676xpdf7b6bl@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, gregkh@linuxfoundation.org, david.brown@linaro.org, mark.rutland@arm.com, lgirdwood@gmail.com, plai@codeaurora.org, tiwai@suse.com, perex@perex.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com, spatakok@qti.qualcomm.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180426152920.21569-2-brgl@bgdev.pl>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rich Felker <dalias@libc.org>, Jan Kiszka <jan.kiszka@siemens.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Kevin Hilman <khilman@kernel.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michal Suchanek <msuchanek@suse.de>, DTML <devicetree@vger.kernel.org>, David Lechner <david@lechnology.com>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Arend van Spriel <aspriel@gmail.com>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxf>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review.
+On Thu, Apr 26, 2018 at 5:29 PM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-On 27/04/18 15:13, Rob Herring wrote:
-> On Thu, Apr 26, 2018 at 10:45:46AM +0100, srinivas.kandagatla@linaro.org wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>
->> This patch add DT bindings for AFE (Audio Frontend) DSP module.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> Reviewed-and-tested-by: Rohit kumar <rohitkr@codeaurora.org>
->> ---
->>   .../devicetree/bindings/sound/qcom,q6afe.txt       | 88 ++++++++++++++++++++++
->>   include/dt-bindings/sound/qcom,q6afe.h             | 31 ++++++++
->>   2 files changed, 119 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6afe.txt
->>   create mode 100644 include/dt-bindings/sound/qcom,q6afe.h
->>
->> diff --git a/Documentation/devicetree/bindings/sound/qcom,q6afe.txt b/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
->> new file mode 100644
->> index 000000000000..05208a63dd3c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
->> @@ -0,0 +1,88 @@
->> +Qualcomm Audio Front End (Q6AFE) binding
->> +
->> +AFE is one of the APR audio service on Q6DSP
->> +Please refer to qcom,apr.txt for details of the common apr service bindings
->> +used by all apr services.
->> +
->> +- but must contain the following property:
->> +
->> +- compatible:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: must be "qcom,q6afe-v<MAJOR-NUMBER>.<MINOR-NUMBER>"
->> +		  Or "qcom,q6afe" where the version number can be queried
->> +		  from DSP.
->> +		  example "qcom,q6afe"
-> 
-> reg too.
+> +/*
+> + * REVISIT: early_initcall may be still too late for some timers and critical
+> + * clocks. We should probably have a separate section with callbacks that can
+> + * be invoked at each architecture's discretion.
+> + */
+> +#define earlydev_platform_driver(_drv)                                 \
+> +       static int _drv##_register(void)                                \
+> +       {                                                               \
+> +               earlydev_driver_register(&(_drv));                      \
+> +               return 0;                                               \
+> +       }                                                               \
+> +       early_initcall(_drv##_register)
+> +
+> +#endif /* __EARLYDEV_H__ */
 
-I did not want to repeat what is already mandated for apr children in 
-qcom,apr.txt
-So skipped repeating reg property in here.
+No full review, just one comment: this would really need to fit into the
+existing callbacks for clk, timer, earlycon etc that we use with OF_DECLARE.
+A lot of code makes assumptions about the order in which they are
+called, and the current early_platform infrastructure does the same
+thing using its "earlyprintk" and "earlytimer" classes.
 
-> 
->> +
->> += AFE DAIs (Digial Audio Interface)
->> +"dais" subnode of the AFE node represents dai specific configuration
->> +
->> +- #sound-dai-cells
->> +	Usage: required
->> +	Value type: <u32>
->> +	Definition: Must be 1
->> +
->> +- reg
-> 
-> It's not clear here these are in a grandchild node.
-> 
-Every afe port/dai has some board specifics, to allow that we need dai 
-specific child nodes.
-
->> +	Usage: required
->> +	Value type: <u32>
->> +	Definition: Must be dai id
->> +
->> +- qcom,sd-lines
->> +	Usage: required for mi2s interface
->> +	Value type: <prop-encoded-array>
->> +	Definition: Must be list of serial data lines used by this dai.
->> +	should be one or more of the 1-4 sd lines.
-
-
---srini
+       Arnd
