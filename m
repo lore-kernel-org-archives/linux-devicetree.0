@@ -1,68 +1,38 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v7 0/7] clk: meson-axg: Add AO Cloclk and Reset driver
-Date: Fri, 27 Apr 2018 11:49:35 -0700
-Message-ID: <7hsh7g1o3k.fsf@baylibre.com>
-References: <20180426084437.192394-1-yixun.lan@amlogic.com>
-        <1524820841.4026.112.camel@baylibre.com>
-        <fbd24a73-6793-76be-3ca5-04cbac5db198@amlogic.com>
-        <1524823154.4026.123.camel@baylibre.com>
-        <ab754711-f727-133c-7bc3-a9f3243c2278@amlogic.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] DT: net: can: rcar_canfd: document R8A77980 bindings
+Date: Fri, 27 Apr 2018 21:53:33 +0300
+Message-ID: <556f1f23-19bc-e7bd-47b1-f22e086e2b69@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ab754711-f727-133c-7bc3-a9f3243c2278@amlogic.com> (Yixun Lan's
-        message of "Fri, 27 Apr 2018 20:33:42 +0800")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Language: en-MW
+Sender: netdev-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yixun,
+Document the R-Car V3H (R8A77980) SoC support in the R-Car CAN-FD bindings.
 
-Yixun Lan <yixun.lan@amlogic.com> writes:
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-> On 04/27/2018 05:59 PM, Jerome Brunet wrote:
+---
+The patch is against the 'linux-can-next.git' repo plus the R8A77970 bindings
+patch posted yesterday. Although I wouldn't object if they're both merged to
+the 'linux-can.git' repo instead. :-)
 
-[...]
+ Documentation/devicetree/bindings/net/can/rcar_canfd.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
->> 
->> Looks to be the problem indeed. But it is still an issue with how your patchset
->> in organized.
->> 
->> I can't merge this until Kevin merges the patch above, which he can't merge
->> until there is the clkc_ao support in axg, which is given by this series.
->> 
->> 1# You should remove the axg part of the patch above. Kevin will be able to
->> merge it w/o any dependencies. (BTW, the patch is broken for axg because 1) you
->> did not include the dt-binding header for the clkc_ao in axg and 2) the clkc_ao
->> does not exist at this stage)
->> 2# I can then safely merge this series - w/o breaking gxbb and gxl.
->> 3# Finally you'll have to make a DT change for the axg, enabling the clkc_ao and
->> changes the uart clocks at the same time.
->> 
->
->   I didn't make myself clear in previous email
->
->   I mean, could you merge patch 1-6, just exclude the patch 7
-> then kevin can merge the DT part (there are three patches) [1]
-> after the DT patches merged, then you can take this patch 7
-> This way, it won't break gxl or any other SoCs
->
->   I'm sending patch 7 along with this series, it would be better if I
-> give a warning about it.
-
-Your proposal requires extra work from a couple different maintainers to
-track all the dependencies, and is very error prone.  Sometimes
-maintainers may do this for you if they have time and are feeling
-generous, but you will have much more success if you can ease the
-process.
-
-Jerome has provided lots of guidance throughout this series and just
-above has provided you with a very good proposal above which minimizes
-the dependencies, and provides the changes in the right order.
-
-Please follow Jerome's suggestion,
-
-Thanks,
-
-Kevin
+Index: linux-can-next/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+===================================================================
+--- linux-can-next.orig/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
++++ linux-can-next/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+@@ -7,6 +7,7 @@ Required properties:
+   - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
+   - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3) compatible controller.
+   - "renesas,r8a77970-canfd" for R8A77970 (R-Car V3M) compatible controller.
++  - "renesas,r8a77980-canfd" for R8A77980 (R-Car V3H) compatible controller.
+ 
+   When compatible with the generic version, nodes must list the
+   SoC-specific version corresponding to the platform first, followed by the
