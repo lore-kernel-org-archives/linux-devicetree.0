@@ -1,66 +1,33 @@
-From: <jan.tuerk@emtrion.com>
-Subject: [PATCH v4 2/7] drm/panel: Add support for the EDT ETM0700G0BDH6
-Date: Fri, 27 Apr 2018 15:24:37 +0200
-Message-ID: <20180427132445.3458-3-jan.tuerk@emtrion.com>
-References: <20180420125108.14197-1-jan.tuerk@emtrion.com>
- <20180427132445.3458-1-jan.tuerk@emtrion.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] rpmsg: qcom_smd: Access APCS through mailbox framework
+Date: Fri, 27 Apr 2018 08:37:27 -0500
+Message-ID: <20180427133727.gr5turvdfycgmbzm@rob-hp-laptop>
+References: <20180420011757.22389-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427132445.3458-1-jan.tuerk@emtrion.com>
+Content-Disposition: inline
+In-Reply-To: <20180420011757.22389-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, "GitAuthor: Jan Tuerk" <jan.tuerk@emtrion.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jan Tuerk <jan.tuerk@emtrion.com>
+On Thu, Apr 19, 2018 at 06:17:57PM -0700, Bjorn Andersson wrote:
+> Attempt to acquire the APCS IPC through the mailbox framework and fall
+> back to the old syscon based approach, to allow us to move away from
+> using the syscon.
+> 
+> Reviewed-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v2:
+> - Added comment about mbox_send_message() return value.
+> 
+>  .../devicetree/bindings/soc/qcom/qcom,smd.txt      |  8 ++-
+>  drivers/rpmsg/Kconfig                              |  1 +
+>  drivers/rpmsg/qcom_smd.c                           | 67 ++++++++++++++++------
+>  3 files changed, 56 insertions(+), 20 deletions(-)
 
-The Emerging Display Technology ETM0700G0BDH6 is exactly
-the same display as the ETM0700G0DH6, exept the pixelclock
-polarity. Therefore re-use the ETM0700G0DH6 modes. It is
-used by default on emtrion Avari based development kits.
-
-Signed-off-by: Jan Tuerk <jan.tuerk@emtrion.com>
----
-Changes for v4:
-  - re-arrange the Patch-series to match the DT-submitting-patches
-  - Additional patch for the Documentation of the new DT-bindings
-  - no change (re-arranged 1/6 => 2/7)
-
- drivers/gpu/drm/panel/panel-simple.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index cbf1ab404ee7..8b7feb2888f2 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -909,6 +909,18 @@ static const struct panel_desc edt_etm0700g0dh6 = {
- 	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_NEGEDGE,
- };
- 
-+static const struct panel_desc edt_etm0700g0bdh6 = {
-+	.modes = &edt_etm0700g0dh6_mode,
-+	.num_modes = 1,
-+	.bpc = 6,
-+	.size = {
-+		.width = 152,
-+		.height = 91,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
-+};
-+
- static const struct drm_display_mode foxlink_fl500wvr00_a0t_mode = {
- 	.clock = 32260,
- 	.hdisplay = 800,
-@@ -2134,6 +2146,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "edt,etm0700g0dh6",
- 		.data = &edt_etm0700g0dh6,
- 	}, {
-+		.compatible = "edt,etm0700g0bdh6",
-+		.data = &edt_etm0700g0bdh6,
-+	}, {
- 		.compatible = "foxlink,fl500wvr00-a0t",
- 		.data = &foxlink_fl500wvr00_a0t,
- 	}, {
--- 
-2.11.0
+Reviewed-by: Rob Herring <robh@kernel.org>
