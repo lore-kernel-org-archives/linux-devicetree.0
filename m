@@ -1,95 +1,73 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
- platform drivers
-Date: Fri, 27 Apr 2018 16:48:00 +0200
-Message-ID: <CAK8P3a22DKpqMGdjYoBzKfNHc2GvAbvaZowZpz=SFeQHVSWjsg@mail.gmail.com>
-References: <20180426152920.21569-1-brgl@bgdev.pl> <20180426173151.GJ3094@brightrain.aerifal.cx>
- <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com> <CAK8P3a0oCH7zyBs8nQd4p+xLrFwDQiJsaKKCF1m04nyXsZxk=g@mail.gmail.com>
- <CAMpxmJUR+31axmAe2TNq00aUg40bnC=5k=2cVX019Vncr7cRkw@mail.gmail.com>
- <CAK8P3a2xtTLx-VHVWok-b19=o1z5FbTNcaWq7Y_HSdaH6pWnZg@mail.gmail.com>
- <CAMRc=MdomjLCq-bJyktaToH00kNQAuTLgkSFRrY9Jmre8McT3A@mail.gmail.com>
- <CAK8P3a0tMp2QURp-9WuHehqE0b6-BO1wJ38siTdxhxgwCb-ERw@mail.gmail.com> <CAMpxmJVkRDLkpcgzhMb41z=Tp6zvszLd0vqfdTtZBNGT6Trtqw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 5/9] staging: iio: ad2s1200: Add documentation for
+ device tree binding
+Date: Fri, 27 Apr 2018 09:48:20 -0500
+Message-ID: <20180427144820.jfvypgk6tfp2syty@rob-hp-laptop>
+References: <cover.1524432236.git.davidjulianveenstra@gmail.com>
+ <0aa68c6684c2b45dd0af398c166d6b36c18be1af.1524432236.git.davidjulianveenstra@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMpxmJVkRDLkpcgzhMb41z=Tp6zvszLd0vqfdTtZBNGT6Trtqw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, David Lechner <david@lechnology.com>, Rich Felker <dalias@libc.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@siemens.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <0aa68c6684c2b45dd0af398c166d6b36c18be1af.1524432236.git.davidjulianveenstra@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: David Veenstra <davidjulianveenstra@gmail.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, daniel.baluta@nxp.com, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 27, 2018 at 4:05 PM, Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> 2018-04-27 14:40 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+On Mon, Apr 23, 2018 at 12:03:47AM +0200, David Veenstra wrote:
+> Add documentation for the added device tree bindings.
+> 
+> Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
+> ---
+> Changes in v3:
+>  - Documentation is added to Documentation/devicetree/bindings/iio/resolver
+>    instead of staging directory.
+>  - Add mention to ad2s1205 device.
+> 
+>  .../devicetree/bindings/iio/resolver/ad2s1200.txt        | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+> new file mode 100644
+> index 000000000000..46b51db38368
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+> @@ -0,0 +1,16 @@
+> +Analog Devices AD2S1200 and AD2S1205 Resolver-to-Digital Converter
+> +
+> +Required properties:
+> + - compatible : should be "adi,ad2s1200" or "adi,ad2s1205"
+> + - reg : the SPI chip select number of the device
+> + - sample-gpios : The GPIO pin connected to the SAMPLE line of the AD2S1200
+> + - rdvel-gpios : The GPIO pin connected to the RDVEL line of the AD2S1200
 
->> For timer-ti-dm, it seems like a leftover from old times that can
->> be removed. The other four are shared between arch/sh and
->> arch/arm/mach-shmobile and already have some #ifdef
->> to handle those two cases.
->>
->
-> I'm also seeing that we also call early_platform_cleanup() from
-> platform_bus_init(). Any ideas for this one?
+Are these gpios something that would be common to resolvers (whatever 
+that is) or specific to this chip. For the latter, you need vendor 
+prefixes.
 
-My first idea would be to call it immediately after registering all
-devices and drivers. It looks like it's only needed to make all
-devm_ allocations persistent by removing them from the list,
-so we have to call early_platform_cleanup() before getting
-to the real platform code, but it could be done much earlier
-if we want to, at least after both setup_arch() and sh_late_time_init()
-are complete.
+> +
+> +Example:
+> +
+> +	resolver {
 
->> I'd rather keep those separate and would prefer not to have
->> that many different ways of getting there instead. DT and
->> board files can already share most of the code through the
->> use of platform_device, especially when you start using
->> device properties instead of platform_data, and the other
->> two are rare corner cases and ideally left that way.
->>
->> The early boot code is always special and instead of making
->> it easier to use, we should focus on using it as little as
->> possible: every line of code that we call before even
->> initializing timers and consoles means it gets harder to
->> debug when something goes wrong.
->>
->
-> I'm afraid I don't quite understand your reasoning. I fully agree that
-> devices that need to be initialized that early are a rare corner case.
-> We should limit any such uses to the absolute minimum. But when we do
-> need to go this way, we should do it right. Having a unified mechanism
-> for early devices will allow maintainers to enforce good practices
-> (using resources for register mapping, devres, reusing driver code for
-> reading/writing to registers). Having initialization code in machine
-> code will make everybody use different APIs and duplicate solutions. I
-> normally assume that code consolidation is always good.
->
-> If we add a way for DT-based platform devices to be probed early - it
-> would be based on platform device/driver structures anyway. Why would
-> we even want to not convert the board code into a simple call to
-> early_platform_device_register() if we'll already offer this API for
-> device tree?
+Missing unit address.
 
-I think we first need to define what we really want to achieve here.
-It sounds like you still want to recreate a lot of what early_platform
-devices do, but it seems more important to me to add the missing
-functionality to the OF_DECLARE infrastructure. The most
-important pieces that seem to be missing are solved by finding
-a way to provide a platform_device pointer with the following
-properties:
-
-- allow being passed into dev_print()
-- allow using the pointer as a token for devres unwinding
-- access to device_private data that remains persistent
-  until real a platform_driver gets loaded
-
-That can probably be done as an extension to the current
-infrastructure.
-
-However, I'd be very cautious about the resource portion:
-filling the platform resources (registers, irqs, ...) the way
-we do for regular devices is much harder and can introduce
-additional (or circular) dependencies on other devices.
-OTOH, not using those resources means you have a hard
-time passing information from board files.
-
-          Arnd
+> +		compatible = "adi,ad2s1200";
+> +		reg = <4>;
+> +		sample-gpios = <&gpio 5 GPIO_ACTIVE_HIGH>;
+> +		rdvel-gpios = <&gpio 6 GPIO_ACTIVE_HIGH>;
+> +	};
+> -- 
+> 2.16.2
+> 
