@@ -1,105 +1,161 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v7 0/7] clk: meson-axg: Add AO Cloclk and Reset driver
-Date: Fri, 27 Apr 2018 11:20:41 +0200
-Message-ID: <1524820841.4026.112.camel@baylibre.com>
-References: <20180426084437.192394-1-yixun.lan@amlogic.com>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] mmc: sunxi: add support for the MMC
+ controller on H6
+Date: Fri, 27 Apr 2018 10:23:35 +0100
+Message-ID: <fbc00944-71f3-fb38-e4c9-582bc2ff3dc9@arm.com>
+References: <20180426140728.43155-1-icenowy@aosc.io>
+ <20180426140728.43155-2-icenowy@aosc.io>
+ <f722ce51-2391-620c-df65-48f047b5f3d5@arm.com>
+ <EECAFDD1-FEAC-42DF-BB17-F11C1C8612DE@aosc.io>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180426084437.192394-1-yixun.lan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBJ6YRPLQKGQEBC5NX3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <EECAFDD1-FEAC-42DF-BB17-F11C1C8612DE-h8G6r0blFSE@public.gmane.org>
+Content-Language: en-GB
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-04-26 at 16:44 +0800, Yixun Lan wrote:
->   This patch try to add AO clock and Reset driver for Amlogic's
-> Meson-AXG SoC.
->   Please note that patch 7 need to wait for the DTS changes[3] merged
-> into mainline first, otherwise it will break the serial console.
-> 
->  patch 2: factor the common code into a dedicated file
->  patch 3-5: add the aoclk driver for AXG SoC
->  patch 6-7: drop unnecessary clock flags
-> 
-> changes since v6 at [7]: 
->  - fix over 80 chars chechpatch error
->  - add Philip's Ack on patch 5
->  - drop extra end of newline
-> 
-> changes since v5 at [6]: 
->  - drop unnecessary header files
->  - add 'axg_aoclk' prefix to clk driver, make them more consistent
->  - add missing end new line..
-> 
-> changes since v4 at [5]: 
->  - fix return err
->  - introduce CONFIG_COMMON_CLK_MESON_AO
->  - format/style minor fix
-> 
-> changes since v3 at [4]: 
->  - add 'const' contraint to the read-only data
->  - switch to devm_of_clk_add_hw_provider API
->  - check return value of devm_reset_controller_register
-> 
-> changes since v2 at [2]: 
->  - rework meson_aoclkc_probe() which leverage the of_match_data
->  - merge patch 5-6 into this series
->  - seperate DTS patch, will send to Kevin Hilman independently
->  
-> changes since v1 at [0]: 
->  - rebase to clk-meson's branch 'next/drivers' [1]
->  - fix license, update to BSD-3-Clause
->  - drop un-used include header file
-> 
-> [0] https://lkml.kernel.org/r/20180209070026.193879-1-yixun.lan@amlogic.com
-> [1] git://github.com/BayLibre/clk-meson.git branch: next-drivers
-> [2] https://lkml.kernel.org/r/20180323143816.200573-1-yixun.lan@amlogic.com
-> [3] https://lkml.kernel.org/r/20180326081809.49493-4-yixun.lan@amlogic.com
-> [4] https://lkml.kernel.org/r/20180328025050.221585-1-yixun.lan@amlogic.com
-> [5] https://lkml.kernel.org/r/20180408031938.153474-1-yixun.lan@amlogic.com
-> [6] https://lkml.kernel.org/r/20180409143749.71197-1-yixun.lan@amlogic.com
-> [7] https://lkml.kernel.org/r/20180419135426.155794-1-yixun.lan@amlogic.com
+Hi,
 
-Yixun,
+On 27/04/18 09:38, Icenowy Zheng wrote:
+>=20
+>=20
+> =E4=BA=8E 2018=E5=B9=B44=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
+12:45:24, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> =E5=86=99=E5=88=B0:
+>> Hi,
+>>
+>> On 26/04/18 15:07, Icenowy Zheng wrote:
+>>> The new Allwinner H6 SoC have 3 MMC controllers. The first and second
+>>> ones are similar to the ones on A64, but the third one adds EMCE
+>>> (Embedded Crypto Engine) support which does hardware transparent
+>> crypto
+>>> on the eMMC.
+>>>
+>>> As we still do not have support for EMCE, and the support of it is
+>>> disabled by defualt, we just duplicate the A64 mmc configurations and
+>>> change the compatible string.
+>>
+>> So if the A64 MMC part is compatible, we should express it like this:
+>>
+>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/mmc/sunxi-mmc.txt |  2 ++
+>>>  drivers/mmc/host/sunxi-mmc.c                        | 16
+>> ++++++++++++++++
+>>>  2 files changed, 18 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
+>> b/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
+>>> index 132e0007d7d6..e6aa5c7a5e12 100644
+>>> --- a/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
+>>> +++ b/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
+>>> @@ -16,6 +16,8 @@ Required properties:
+>>>     * "allwinner,sun9i-a80-mmc"
+>>>     * "allwinner,sun50i-a64-emmc"
+>>>     * "allwinner,sun50i-a64-mmc"
+>>> +   * "allwinner,sun50i-h6-emmc"
+>>> +   * "allwinner,sun50i-h6-mmc"
+>>
+>> This should be changed to:
+>>
+>>      * "allwinner,sun50i-h6-emmc", "allwinner,sun50i-a64-emmc"
+>>      * "allwinner,sun50i-h6-mmc", "allwinner,sun50i-a64-mmc"
+>=20
+> This list shouldn't list pairs,
 
-Your series looks mostly Ok to me, apart from the problem reported by Philipp.
+It should, as this is what Rob suggested the other day:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2018-March/564752.htm=
+l
 
-However, once applied, if the clkc ao controller is enabled, both gxl and axg
-fail to complete the boot. Could you please explain how this was tested ??
+Cheers,
+Andre.
 
-Not merging it until we get to the bottom of this.
+> and as I said in the reply,
+> these pairs are not valid.
+>=20
+>>
+>>>   - reg : mmc controller base registers
+>>>   - clocks : a list with 4 phandle + clock specifier pairs
+>>>   - clock-names : must contain "ahb", "mmc", "output" and "sample"
+>>> diff --git a/drivers/mmc/host/sunxi-mmc.c
+>> b/drivers/mmc/host/sunxi-mmc.c
+>>> index 97c6b79b7d6f..05e2b5fd7aa4 100644
+>>> --- a/drivers/mmc/host/sunxi-mmc.c
+>>> +++ b/drivers/mmc/host/sunxi-mmc.c
+>>> @@ -1168,6 +1168,20 @@ static const struct sunxi_mmc_cfg
+>> sun50i_a64_emmc_cfg =3D {
+>>>  	.can_calibrate =3D true,
+>>>  };
+>>> =20
+>>> +static const struct sunxi_mmc_cfg sun50i_h6_cfg =3D {
+>>> +	.idma_des_size_bits =3D 16,
+>>> +	.clk_delays =3D NULL,
+>>> +	.can_calibrate =3D true,
+>>> +	.mask_data0 =3D true,
+>>> +	.needs_new_timings =3D true,
+>>> +};
+>>> +
+>>> +static const struct sunxi_mmc_cfg sun50i_h6_emmc_cfg =3D {
+>>> +	.idma_des_size_bits =3D 13,
+>>> +	.clk_delays =3D NULL,
+>>> +	.can_calibrate =3D true,
+>>> +};
+>>> +
+>>
+>> ... and then we don't need those changes ...
+>>
+>>>  static const struct of_device_id sunxi_mmc_of_match[] =3D {
+>>>  	{ .compatible =3D "allwinner,sun4i-a10-mmc", .data =3D &sun4i_a10_cfg
+>> },
+>>>  	{ .compatible =3D "allwinner,sun5i-a13-mmc", .data =3D &sun5i_a13_cfg
+>> },
+>>> @@ -1176,6 +1190,8 @@ static const struct of_device_id
+>> sunxi_mmc_of_match[] =3D {
+>>>  	{ .compatible =3D "allwinner,sun9i-a80-mmc", .data =3D &sun9i_a80_cfg
+>> },
+>>>  	{ .compatible =3D "allwinner,sun50i-a64-mmc", .data =3D &sun50i_a64_c=
+fg
+>> },
+>>>  	{ .compatible =3D "allwinner,sun50i-a64-emmc", .data =3D
+>> &sun50i_a64_emmc_cfg },
+>>> +	{ .compatible =3D "allwinner,sun50i-h6-mmc", .data =3D &sun50i_h6_cfg
+>> },
+>>> +	{ .compatible =3D "allwinner,sun50i-h6-emmc", .data =3D
+>> &sun50i_h6_emmc_cfg },
+>>
+>> ... and those, at least yet.
+>> Should we ever extend the driver to support the EMCE, we can add them
+>> at
+>> this occasion.
+>>
+>> So this patch would just add the compatible pairs to the binding doc.
+>>
+>> Cheers,
+>> Andre.
+>>
+>>>  	{ /* sentinel */ }
+>>>  };
+>>>  MODULE_DEVICE_TABLE(of, sunxi_mmc_of_match);
+>>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-> 
-> 
-> Qiufang Dai (1):
->   clk: meson-axg: Add AO Clock and Reset controller driver
-> 
-> Yixun Lan (6):
->   clk: meson: migrate to devm_of_clk_add_hw_provider API
->   clk: meson: aoclk: refactor common code into dedicated file
->   dt-bindings: clock: axg-aoclkc: New binding for Meson-AXG SoC
->   dt-bindings: clock: reset: Add AXG AO Clock and Reset Bindings
->   clk: meson: drop CLK_SET_RATE_PARENT flag
->   clk: meson: drop CLK_IGNORE_UNUSED flag
-> 
->  .../bindings/clock/amlogic,gxbb-aoclkc.txt    |   1 +
->  drivers/clk/meson/Kconfig                     |   8 +
->  drivers/clk/meson/Makefile                    |   3 +-
->  drivers/clk/meson/axg-aoclk.c                 | 163 ++++++++++++++++++
->  drivers/clk/meson/axg-aoclk.h                 |  29 ++++
->  drivers/clk/meson/gxbb-aoclk.c                |  95 ++++------
->  drivers/clk/meson/gxbb-aoclk.h                |   5 +
->  drivers/clk/meson/meson-aoclk.c               |  81 +++++++++
->  drivers/clk/meson/meson-aoclk.h               |  34 ++++
->  include/dt-bindings/clock/axg-aoclkc.h        |  26 +++
->  include/dt-bindings/reset/axg-aoclkc.h        |  20 +++
->  11 files changed, 401 insertions(+), 64 deletions(-)
->  create mode 100644 drivers/clk/meson/axg-aoclk.c
->  create mode 100644 drivers/clk/meson/axg-aoclk.h
->  create mode 100644 drivers/clk/meson/meson-aoclk.c
->  create mode 100644 drivers/clk/meson/meson-aoclk.h
->  create mode 100644 include/dt-bindings/clock/axg-aoclkc.h
->  create mode 100644 include/dt-bindings/reset/axg-aoclkc.h
-> 
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
