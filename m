@@ -1,55 +1,163 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 01/11] dt-bindings: display: renesas: Add R-Car M3-N
- HDMI TX DT bindings
-Date: Sat, 28 Apr 2018 00:17:48 +0300
-Message-ID: <6846570.vn03TlgmMA@avalon>
-References: <20180427165722.19445-1-kieran.bingham+renesas@ideasonboard.com>
- <20180427165722.19445-2-kieran.bingham+renesas@ideasonboard.com>
+From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/3] arm64: allwinner: h6: add device tree
+ nodes for MMC controllers
+Date: Fri, 27 Apr 2018 22:25:49 +0100
+Message-ID: <8259b2d9-be02-68fb-90bb-bd0ebdee0b05@arm.com>
+References: <20180426140728.43155-1-icenowy@aosc.io>
+ <20180426140728.43155-3-icenowy@aosc.io>
+ <9571735d-929f-a2ef-ed97-dc9193420b73@arm.com>
+ <77DF7884-8DA8-4ED5-BB51-941CFDE4A123@aosc.io>
+ <0ae1b6ce-c1cf-61e8-e09b-abec47b089b2@arm.com>
+ <6EBD7D16-E985-4345-B2C2-D0CE7B32F8C5@aosc.io>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180427165722.19445-2-kieran.bingham+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, open list <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBYVKR3LQKGQEY7FEFOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <6EBD7D16-E985-4345-B2C2-D0CE7B32F8C5-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2llcmFuLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBGcmlkYXksIDI3IEFwcmls
-IDIwMTggMTk6NTc6MTIgRUVTVCBLaWVyYW4gQmluZ2hhbSB3cm90ZToKPiBUaGUgTTMtTiBIRE1J
-IFRYIGNvbnRyb2xsZXIgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBNMy1XIGFuZCBIMy4gTm8KPiBl
-eHRlbnNpb24gdG8gdGhlIERUIGJpbmRpbmdzIGFyZSBuZWVkZWQuCj4gCj4gQWRkIGFuIFNvQy1z
-cGVjaWZpYyBjb21wYXRpYmxlIHN0cmluZyBpbiBjYXNlIGRpZmZlcmVuY2VzIGJldHdlZW4gdGhl
-IElQCj4gdmVyc2lvbnMgYXJlIGZvdW5kIGxhdGVyIGFuZCByZXF1aXJlIG1vZGVsLXNwZWNpZmlj
-IGhhbmRsaW5nLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEtpZXJhbiBCaW5naGFtIDxraWVyYW4uYmlu
-Z2hhbStyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+CgpSZXZpZXdlZC1ieTogTGF1cmVudCBQaW5j
-aGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgoKYW5kIGFwcGxpZWQgdG8g
-bXkgdHJlZS4KCj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
-L3JlbmVzYXMsZHctaGRtaS50eHQgICAgICAgfCAxICsKPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5z
-ZXJ0aW9uKCspCj4gCj4gZGlmZiAtLWdpdAo+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsZHctaGRtaS50eHQKPiBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGR3LWhkbWkudHh0
-Cj4gaW5kZXggM2E3MmExMDNhMThhLi5hNDFkMjgwYzNmOWYgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsZHctaGRt
-aS50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
-cmlkZ2UvcmVuZXNhcyxkdy1oZG1pLnR4dAo+IEBAIC0xNCw2ICsxNCw3IEBAIFJlcXVpcmVkIHBy
-b3BlcnRpZXM6Cj4gIC0gY29tcGF0aWJsZSA6IFNoYWxsIGNvbnRhaW4gb25lIG9yIG1vcmUgb2YK
-PiAgICAtICJyZW5lc2FzLHI4YTc3OTUtaGRtaSIgZm9yIFI4QTc3OTUgKFItQ2FyIEgzKSBjb21w
-YXRpYmxlIEhETUkgVFgKPiAgICAtICJyZW5lc2FzLHI4YTc3OTYtaGRtaSIgZm9yIFI4QTc3OTYg
-KFItQ2FyIE0zLVcpIGNvbXBhdGlibGUgSERNSSBUWAo+ICsgIC0gInJlbmVzYXMscjhhNzc5NjUt
-aGRtaSIgZm9yIFI4QTc3OTY1IChSLUNhciBNMy1OKSBjb21wYXRpYmxlIEhETUkgVFgKPiAgICAt
-ICJyZW5lc2FzLHJjYXItZ2VuMy1oZG1pIiBmb3IgdGhlIGdlbmVyaWMgUi1DYXIgR2VuMyBjb21w
-YXRpYmxlIEhETUkgVFgKPiAKPiAgICAgIFdoZW4gY29tcGF0aWJsZSB3aXRoIGdlbmVyaWMgdmVy
-c2lvbnMsIG5vZGVzIG11c3QgbGlzdCB0aGUgU29DLXNwZWNpZmljCgoKLS0gClJlZ2FyZHMsCgpM
-YXVyZW50IFBpbmNoYXJ0CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+On 27/04/18 10:23, Icenowy Zheng wrote:
+>=20
+>=20
+> =E4=BA=8E 2018=E5=B9=B44=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
+5:18:23, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> =E5=86=99=E5=88=B0:
+>> Hi,
+>>
+>> On 27/04/18 09:36, Icenowy Zheng wrote:
+>>>
+>>>
+>>> =E4=BA=8E 2018=E5=B9=B44=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=
+=8812:45:38, Andre Przywara
+>> <andre.przywara-5wv7dgnIgG8@public.gmane.org> =E5=86=99=E5=88=B0:
+>>>> Hi,
+>>>>
+>>>> On 26/04/18 15:07, Icenowy Zheng wrote:
+>>>>> The Allwinner H6 SoC have 3 MMC controllers.
+>>>>>
+>>>>> Add device tree nodes for them.
+>>>>>
+>>>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>>>> ---
+>>>>>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 56
+>>>> ++++++++++++++++++++++++++++
+>>>>>  1 file changed, 56 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+>>>> b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+>>>>> index 4debc3962830..3cbfc035c979 100644
+>>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+>>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+>>>>> @@ -124,12 +124,68 @@
+>>>>>  			interrupt-controller;
+>>>>>  			#interrupt-cells =3D <3>;
+>>>>> =20
+>>>>> +			mmc0_pins: mmc0-pins {
+>>>>> +				pins =3D "PF0", "PF1", "PF2", "PF3",
+>>>>> +				       "PF4", "PF5";
+>>>>> +				function =3D "mmc0";
+>>>>> +				drive-strength =3D <30>;
+>>>>> +				bias-pull-up;
+>>>>> +			};
+>>>>> +
+>>>>> +			mmc2_pins: mmc2-pins {
+>>>>> +				pins =3D "PC1", "PC4", "PC5", "PC6",
+>>>>> +				       "PC7", "PC8", "PC9", "PC10",
+>>>>> +				       "PC11", "PC12", "PC13", "PC14";
+>>>>> +				function =3D "mmc2";
+>>>>> +				drive-strength =3D <30>;
+>>>>> +				bias-pull-up;
+>>>>> +			};
+>>>>> +
+>>>>>  			uart0_ph_pins: uart0-ph {
+>>>>>  				pins =3D "PH0", "PH1";
+>>>>>  				function =3D "uart0";
+>>>>>  			};
+>>>>>  		};
+>>>>> =20
+>>>>> +		mmc0: mmc@4020000 {
+>>>>> +			compatible =3D "allwinner,sun50i-h6-mmc";
+>>>>
+>>>> This should be:
+>>>> 			compatible =3D "allwinner,sun50i-h6-mmc",
+>>>> 				     "allwinner,sun50i-a64-mmc";
+>>>
+>>> I'm intended to not add A64 compatible, as
+>>> H6 is a quite new design
+>>> (new process) and there might be different behavior, even on mmc0/1.
+>>
+>> But as your patch proves, it is fully backwards compatible: An A64
+>> driver works with this device.
+>=20
+> No, my patch only proves "the current A64 driver works
+> with this device", not "Any A64 driver works with device", as
+> the current driver doesn't fully use the capability provided
+> by A64 MMC cobtrollers.
+
+Good point, but I still believe every A64 driver would be capable of
+driving an H6 MMC controller, ....
+
+>> And this is what this compatible string list says: If your system does
+>> not have a specific H6 driver, you can use an A64 driver.
+>> You might not get all the (potentially) new features, but it covers
+>> everything the A64 has.
+>>
+>> And a new silicon process doesn't matter here, since the software
+>> interface is unchanged. *If* we find bugs, we can add quirks matching
+>=20
+> I think there's timing parameters for higher speed bins which
+> are different among chips. As we have currently no support
+> for speed bins higher than DDR50, they're not added yet.
+
+True, but what are those differences? I compared the A64 and H6 manuals
+side by side, the differences I found are:
+SMHC_FIFOTH[+0x40]:
+	BSIZE_OF_TRANS[30:28]:
+	- H6 supports 16 transfers for SMHC0 also.
+	other parameters:
+	- H6 recommends better values for SMHC0 also
+SMHC_CSDC[+0x54]:
+	- H6 doesn't mention restriction to SMHC2
+	(though this might be a mistake)
+SMHC_NTSR_REG[+0x5C]:
+	- H6 defines fields for bits[24:8]
+SMHC_EMCE[+0x64] and SMHC_EMCE_DBG[+0x68]:
+	- H6 adds, for EMCE support
+EMMC_DDR_SBIT_DET_REG[0x10c]:
+	- A64 doesn't mention restriction to SMHC2,
+	  but I believe this is a mistake
+SMHC_EMCE_BMn[0x150 + 0x4 * 0..31]
+	- H6 adds, for EMCE support
+
+All those pieces are only *additions* to the H6 over the A64, so don't
+affect backwards compatibility.
+
+>> on
+>> the H6 compatible string - that's why we put it here already, despite
+>> having a matching string in the kernel at the moment.
+>=20
+> Device tree is not driver data but hardware description, so
+> it should follow "how the device is formed" rather than
+> "how the device works".
+
+True, but as shown above, the compatibility is really at the device level.
+Unless you have any other information ...
+
+Cheers,
+Andre.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
