@@ -1,50 +1,86 @@
-Return-Path: <SRS0=pAuD=GY=gmail.com=ykaneko0929@kernel.org>
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Subject: [PATCH/RFT v3 2/3] dt-bindings: thermal: rcar-thermal: add R8A77995 support
-Date: Tue,  3 Apr 2018 21:43:04 +0900
-Message-Id: <1522759385-17661-3-git-send-email-ykaneko0929@gmail.com>
-In-Reply-To: <1522759385-17661-1-git-send-email-ykaneko0929@gmail.com>
-References: <1522759385-17661-1-git-send-email-ykaneko0929@gmail.com>
-To: linux-renesas-soc@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <robherring2@gmail.com>
+Date: Fri, 27 Apr 2018 15:05:59 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH/RFC v2 1/6] dt-bindings: usb: add Renesas R-Car USB 3.0
+ role switch
+Message-ID: <20180427200559.5kxgetsjzpjlrm2m@rob-hp-laptop>
+References: <1524742006-17984-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1524742006-17984-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1524742006-17984-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+On Thu, Apr 26, 2018 at 08:26:41PM +0900, Yoshihiro Shimoda wrote:
+> This patch adds a new documentation for Renesas R-Car USB 3.0 role
+> switch that can change the USB 3.0 role to either host or peripheral
+> by a hardware register that is included in USB3.0 peripheral module.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  .../bindings/usb/renesas,rcar-usb3-role-sw.txt     | 47 ++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/renesas,rcar-usb3-role-sw.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/renesas,rcar-usb3-role-sw.txt b/Documentation/devicetree/bindings/usb/renesas,rcar-usb3-role-sw.txt
+> new file mode 100644
+> index 0000000..e074c03
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/renesas,rcar-usb3-role-sw.txt
+> @@ -0,0 +1,47 @@
+> +Renesas Electronics R-Car USB 3.0 role switch
+> +
+> +A renesas_usb3's node can contain this node.
+> +
+> +Required properties:
+> + - compatible: Must contain "renesas,rcar-usb3-role-switch".
+> +
+> +Required nodes:
+> + - The connection to a usb3.0 host node needs by using OF graph bindings.
+> +  - port@0 = USB 3.0 host port
+> +  - port@1 = USB 3.0 peripheral port
+> +
+> +Example of R-Car H3 ES2.0:
+> +	usb3_peri0: usb@ee020000 {
+> +		compatible = "renesas,r8a7795-usb3-peri",
+> +			     "renesas,rcar-gen3-usb3-peri";
+> +		reg = <0 0xee020000 0 0x400>;
+> +		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cpg CPG_MOD 328>;
+> +		power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> +		resets = <&cpg 328>;
+> +
+> +		usb3-role-sw {
+> +			compatible = "renesas,rcar-usb3-role-switch";
 
-diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-index 349e635..5ab5fcd 100644
---- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-@@ -3,7 +3,8 @@
- Required properties:
- - compatible		: "renesas,thermal-<soctype>",
- 			   "renesas,rcar-gen2-thermal" (with thermal-zone) or
--			   "renesas,rcar-thermal" (without thermal-zone) as fallback.
-+			   "renesas,rcar-thermal" (without thermal-zone) as
-+                           fallback except R-Car D3.
- 			  Examples with soctypes are:
- 			    - "renesas,thermal-r8a73a4" (R-Mobile APE6)
- 			    - "renesas,thermal-r8a7743" (RZ/G1M)
-@@ -12,13 +13,15 @@ Required properties:
- 			    - "renesas,thermal-r8a7791" (R-Car M2-W)
- 			    - "renesas,thermal-r8a7792" (R-Car V2H)
- 			    - "renesas,thermal-r8a7793" (R-Car M2-N)
-+			    - "renesas,thermal-r8a77995" (R-Car D3)
- - reg			: Address range of the thermal registers.
- 			  The 1st reg will be recognized as common register
- 			  if it has "interrupts".
- 
- Option properties:
- 
--- interrupts		: use interrupt
-+- interrupts		: use interrupt.
-+                          Should contain 3 interrupts for R-Car D3.
- 
- Example (non interrupt support):
- 
--- 
-1.9.1
+You don't define any h/w resources. How is this device accessed?
+
+
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +
+> +					usb3_host_sw: endpoint {
+> +						remote-endpoint = <&usb3_host_ep>;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +
+> +					usb3_peri_sw: endpoint {
+> +						remote-endpoint = <&usb3_peri_ep>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +	};
+> -- 
+> 1.9.1
+> 
