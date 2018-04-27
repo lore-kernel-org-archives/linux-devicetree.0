@@ -1,63 +1,90 @@
-Return-Path: <SRS0=Fqr3=HL=googlemail.com=martin.blumenstingl@kernel.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 3/3] pinctrl: meson: meson8: add the RGMII RXD2/RXD3 and TXD2/TXD3 signals
-Date: Sun, 22 Apr 2018 12:53:30 +0200
-Message-Id: <20180422105330.4712-4-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20180422105330.4712-1-martin.blumenstingl@googlemail.com>
-References: <20180422105330.4712-1-martin.blumenstingl@googlemail.com>
-To: linus.walleij@linaro.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
-Cc: mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Return-Path: <SRS0=w2p0=HQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from perceval.ideasonboard.com ([213.167.242.64]:37990 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1759332AbeD0WCb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Apr 2018 18:02:31 -0400
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH v3 4/6] arm64: dts: r8a77965: Add HDMI encoder instance
+Date: Fri, 27 Apr 2018 23:02:18 +0100
+Message-Id: <20180427220220.31286-5-kieran.bingham+renesas@ideasonboard.com>
+In-Reply-To: <20180427220220.31286-1-kieran.bingham+renesas@ideasonboard.com>
+References: <20180427220220.31286-1-kieran.bingham+renesas@ideasonboard.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-These are only available on the Meson8m2 SoC (which uses the same
-DesignWare Ethernet MAC as Meson8b).
-The "eth_tx_clk_50m" signal either provides a 50MHz clock for the RMII
-PHYs or the RGMII TX clock (as far as we know the frequency is
-controlled by the PRG_ETHERNET registers in the Ethernet MAC "glue" IP
-block).
+Add the HDMI encoder to the R8A77965 DT in disabled state.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Based on a similar patch of the R8A7796 device tree
+by Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>.
+
+Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+[Kieran: Rebase to top of tree]
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
- drivers/pinctrl/meson/pinctrl-meson8.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+v2:
+ - Provide correct CPC MSSR header
+---
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 30 ++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson8.c b/drivers/pinctrl/meson/pinctrl-meson8.c
-index 086082aeb796..c6d79315218f 100644
---- a/drivers/pinctrl/meson/pinctrl-meson8.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson8.c
-@@ -299,6 +299,10 @@ static const unsigned int spi_mosi_1_pins[]	= { GPIOZ_12 };
- static const unsigned int spi_miso_1_pins[]	= { GPIOZ_13 };
- static const unsigned int spi_ss2_1_pins[]	= { GPIOZ_14 };
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index a35ea2f32da2..b46af2744135 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -8,7 +8,7 @@
+  * Copyright (C) 2016 Renesas Electronics Corp.
+  */
  
-+static const unsigned int eth_txd3_pins[]	= { GPIOZ_0 };
-+static const unsigned int eth_txd2_pins[]	= { GPIOZ_1 };
-+static const unsigned int eth_rxd3_pins[]	= { GPIOZ_2 };
-+static const unsigned int eth_rxd2_pins[]	= { GPIOZ_3 };
- static const unsigned int eth_tx_clk_50m_pins[]	= { GPIOZ_4 };
- static const unsigned int eth_tx_en_pins[]	= { GPIOZ_5 };
- static const unsigned int eth_txd1_pins[]	= { GPIOZ_6 };
-@@ -650,6 +654,12 @@ static struct meson_pmx_group meson8_cbus_groups[] = {
- 	GROUP(eth_mdio,		6,	6),
- 	GROUP(eth_mdc,		6,	5),
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
++#include <dt-bindings/clock/r8a77965-cpg-mssr.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/power/r8a77965-sysc.h>
  
-+	/* NOTE: the following four groups are only available on Meson8m2: */
-+	GROUP(eth_rxd2,		6,	3),
-+	GROUP(eth_rxd3,		6,	2),
-+	GROUP(eth_txd2,		6,	1),
-+	GROUP(eth_txd3,		6,	0),
+@@ -1105,6 +1105,33 @@
+ 			};
+ 		};
+ 
++		hdmi0: hdmi@fead0000 {
++			compatible = "renesas,r8a77965-hdmi",
++				     "renesas,rcar-gen3-hdmi";
++			reg = <0 0xfead0000 0 0x10000>;
++			interrupts = <GIC_SPI 389 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 729>,
++				 <&cpg CPG_CORE R8A77965_CLK_HDMI>;
++			clock-names = "iahb", "isfr";
++			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
++			resets = <&cpg 729>;
++			status = "disabled";
 +
- 	GROUP(i2c_sda_a0,	5,	31),
- 	GROUP(i2c_sck_a0,	5,	30),
- 
-@@ -877,7 +887,8 @@ static const char * const spi_groups[] = {
- static const char * const ethernet_groups[] = {
- 	"eth_tx_clk_50m", "eth_tx_en", "eth_txd1",
- 	"eth_txd0", "eth_rx_clk_in", "eth_rx_dv",
--	"eth_rxd1", "eth_rxd0", "eth_mdio", "eth_mdc"
-+	"eth_rxd1", "eth_rxd0", "eth_mdio", "eth_mdc", "eth_rxd2",
-+	"eth_rxd3", "eth_txd2", "eth_txd3"
- };
- 
- static const char * const i2c_a_groups[] = {
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				port@0 {
++					reg = <0>;
++					dw_hdmi0_in: endpoint {
++						remote-endpoint = <&du_out_hdmi0>;
++					};
++				};
++				port@1 {
++					reg = <1>;
++				};
++			};
++		};
++
+ 		du: display@feb00000 {
+ 			compatible = "renesas,du-r8a77965";
+ 			reg = <0 0xfeb00000 0 0x80000>;
+@@ -1132,6 +1159,7 @@
+ 				port@1 {
+ 					reg = <1>;
+ 					du_out_hdmi0: endpoint {
++						remote-endpoint = <&dw_hdmi0_in>;
+ 					};
+ 				};
+ 				port@2 {
 -- 
 2.17.0
+
