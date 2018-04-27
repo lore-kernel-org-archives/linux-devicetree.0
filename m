@@ -1,35 +1,74 @@
-Return-Path: <SRS0=pQuZ=HM=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from andre.telenet-ops.be ([195.130.132.53]:60100 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754067AbeDWHcp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Apr 2018 03:32:45 -0400
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: meson-uart: DT fix s/clocks-names/clock-names/
-Date: Mon, 23 Apr 2018 09:32:40 +0200
-Message-Id: <1524468760-22912-1-git-send-email-geert+renesas@glider.be>
+Return-Path: <SRS0=w2p0=HQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from perceval.ideasonboard.com ([213.167.242.64]:37990 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753569AbeD0WCd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Apr 2018 18:02:33 -0400
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH v3 6/6] arm64: dts: r8a77965-salvator-xs: Enable DU external clocks and HDMI
+Date: Fri, 27 Apr 2018 23:02:20 +0100
+Message-Id: <20180427220220.31286-7-kieran.bingham+renesas@ideasonboard.com>
+In-Reply-To: <20180427220220.31286-1-kieran.bingham+renesas@ideasonboard.com>
+References: <20180427220220.31286-1-kieran.bingham+renesas@ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The DU1 external dot clock is provided by the fixed frequency clock
+generator X21, while the DU0 and DU3 clocks are provided by the
+programmable Versaclock6 clock generator.
 
-diff --git a/Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt b/Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
-index 8ff65fa632fdedd7..c06c045126fc9070 100644
---- a/Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
-+++ b/Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
-@@ -21,7 +21,7 @@ Required properties:
- - interrupts : identifier to the device interrupt
- - clocks : a list of phandle + clock-specifier pairs, one for each
- 	   entry in clock names.
--- clocks-names :
-+- clock-names :
-    * "xtal" for external xtal clock identifier
-    * "pclk" for the bus core clock, either the clk81 clock or the gate clock
-    * "baud" for the source of the baudrate generator, can be either the xtal
+Enable the clocks, and the HDMI encoder for the M3-N Salvator-XS, and
+hook it up to the HDMI connector
+
+Based on patches from Takeshi Kihara <takeshi.kihara.df@renesas.com>
+
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+---
+v3:
+ - Remove LVDS references
+---
+ .../boot/dts/renesas/r8a77965-salvator-xs.dts | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
+index a83a00deed9e..9de4e3db1621 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
+@@ -19,3 +19,31 @@
+ 		reg = <0x0 0x48000000 0x0 0x78000000>;
+ 	};
+ };
++
++&du {
++	clocks = <&cpg CPG_MOD 724>,
++		 <&cpg CPG_MOD 723>,
++		 <&cpg CPG_MOD 721>,
++		 <&versaclock6 1>,
++		 <&x21_clk>,
++		 <&versaclock6 2>;
++	clock-names = "du.0", "du.1", "du.3",
++		      "dclkin.0", "dclkin.1", "dclkin.3";
++};
++
++&hdmi0 {
++	status = "okay";
++
++	ports {
++		port@1 {
++			reg = <1>;
++			rcar_dw_hdmi0_out: endpoint {
++				remote-endpoint = <&hdmi0_con>;
++			};
++		};
++	};
++};
++
++&hdmi0_con {
++	remote-endpoint = <&rcar_dw_hdmi0_out>;
++};
 -- 
-2.7.4
+2.17.0
 
