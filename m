@@ -1,68 +1,89 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/2] arm64: dts: renesas: condor: add CAN-FD support
-Date: Fri, 27 Apr 2018 22:14:26 +0300
-Message-ID: <76764cb2-c392-7892-bbd3-95734fbc07cc@cogentembedded.com>
-References: <c184f961-2f98-532f-ed02-6f3751256d9c@cogentembedded.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: nvmem: Add binding for RAVE SP EEPROM driver
+Date: Fri, 27 Apr 2018 12:38:09 -0700
+Message-ID: <CAHQ1cqER1JWAEYydH5xWGwGiPOrM9sz_6EghxW34jgq5vzRzUQ@mail.gmail.com>
+References: <20180411015948.19562-1-andrew.smirnov@gmail.com>
+ <20180411015948.19562-2-andrew.smirnov@gmail.com> <20180416150507.2wm4s7opgr242v6a@rob-hp-laptop>
+ <CAHQ1cqFep9Xs3_hsz1EiDwu8mcDDzbFs4H-kLnKkj=iokX=fCg@mail.gmail.com> <CAL_JsqLWmF-xrf5vDALuG3Geq-XHB2-W5Z6XWvHs=PeZ==Bm+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <c184f961-2f98-532f-ed02-6f3751256d9c@cogentembedded.com>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLWmF-xrf5vDALuG3Geq-XHB2-W5Z6XWvHs=PeZ==Bm+w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Aleksander Morgado <aleksander@aleksander.es>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the Condor board dependent part of the CAN-FD device node.
+On Fri, Apr 27, 2018 at 11:43 AM, Rob Herring <robh@kernel.org> wrote:
+> On Fri, Apr 27, 2018 at 1:05 AM, Andrey Smirnov
+> <andrew.smirnov@gmail.com> wrote:
+>> On Mon, Apr 16, 2018 at 8:05 AM, Rob Herring <robh@kernel.org> wrote:
+>>> On Tue, Apr 10, 2018 at 06:59:47PM -0700, Andrey Smirnov wrote:
+>>>> Add Device Tree bindings for RAVE SP EEPROM driver - an MFD cell of
+>>>> parent RAVE SP driver (documented in
+>>>> Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
+>>>>
+>>>> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>>> Cc: linux-kernel@vger.kernel.org
+>>>> Cc: Chris Healy <cphealy@gmail.com>
+>>>> Cc: Lucas Stach <l.stach@pengutronix.de>
+>>>> Cc: Aleksander Morgado <aleksander@aleksander.es>
+>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>> Cc: devicetree@vger.kernel.org
+>>>> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+>>>> ---
+>>>>  .../bindings/nvmem/zii,rave-sp-eeprom.txt          | 29 ++++++++++++++++++++++
+>>>>  1 file changed, 29 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
+>>>> new file mode 100644
+>>>> index 000000000000..a4e838c30b67
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
+>>>> @@ -0,0 +1,29 @@
+>>>> +Zodiac Inflight Innovations RAVE EEPROM Bindings
+>>>> +
+>>>> +RAVE SP EEPROM device is a "MFD cell" device exposing physical EEPROM
+>>>> +attached to RAVE Supervisory Processor. It is expected that its Device
+>>>> +Tree node is specified as a child of the node corresponding to the
+>>>> +parent RAVE SP device (as documented in
+>>>> +Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
+>>>> +
+>>>> +Required properties:
+>>>> +
+>>>> +- compatible: Should be "zii,rave-sp-eeprom"
+>>>
+>>> Need to state somewhere this follows the bindings/nvmem/nvmem.txt
+>>> binding.
+>>>
+>>
+>> OK, will fix in v3.
+>>
+>>>> +
+>>>> +Example:
+>>>> +
+>>>> +     rave-sp {
+>>>> +             compatible = "zii,rave-sp-rdu1";
+>>>> +             current-speed = <38400>;
+>>>> +
+>>>> +             main-eeprom {
+>>>
+>>> eeprom@a4
+>>
+>> Any chance I can keep it as is? I am asking because this node name is
+>> used by the driver as device name which is how it also appears in
+>> sysfs. Reason for that being that "main-eeprom" and "dds-eeprom"
+>> (second EEPROM in the system) are easier to rembmer and tell apart
+>> than "eeprom@a4" and "eeprom@a5". Granted, I can divorce naming scheme
+>> in the driver from device node name, but then I'd have to keep a
+>> "address -> deivce name" lookup table which I was hoping to avoid.
+>
+> It generates a dtc warning if you don't fix it.
+>
 
-Based on the original (and large) patch by Vladimir Barinov.
+Understood. Will fix in v3.
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
- arch/arm64/boot/dts/renesas/r8a77980-condor.dts |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-@@ -62,6 +62,16 @@
- 	};
- };
- 
-+&canfd {
-+	pinctrl-0 = <&canfd0_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	channel0 {
-+		status = "okay";
-+	};
-+};
-+
- &extal_clk {
- 	clock-frequency = <16666666>;
- };
-@@ -89,6 +99,11 @@
- 		function = "avb";
- 	};
- 
-+	canfd0_pins: canfd0 {
-+		groups = "canfd0_data_a";
-+		function = "canfd0";
-+	};
-+
- 	mmc_pins: mmc {
- 		groups = "mmc_data8", "mmc_ctrl", "mmc_ds";
- 		function = "mmc";
+Thanks,
+Andrey Smirnov
