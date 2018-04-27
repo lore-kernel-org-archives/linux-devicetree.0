@@ -1,106 +1,149 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
- platform drivers
-Date: Fri, 27 Apr 2018 13:59:39 +0530
-Message-ID: <6194511c-b649-8c02-7db0-3514bfb292f5@ti.com>
-References: <20180426152920.21569-1-brgl@bgdev.pl>
- <20180426173151.GJ3094@brightrain.aerifal.cx>
- <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com>
- <CAK8P3a0oCH7zyBs8nQd4p+xLrFwDQiJsaKKCF1m04nyXsZxk=g@mail.gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH 2/3] arm64: allwinner: h6: add device tree
+ nodes for MMC controllers
+Date: Fri, 27 Apr 2018 16:36:26 +0800
+Message-ID: <77DF7884-8DA8-4ED5-BB51-941CFDE4A123@aosc.io>
+References: <20180426140728.43155-1-icenowy@aosc.io> <20180426140728.43155-3-icenowy@aosc.io> <9571735d-929f-a2ef-ed97-dc9193420b73@arm.com>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK8P3a0oCH7zyBs8nQd4p+xLrFwDQiJsaKKCF1m04nyXsZxk=g@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rich Felker <dalias@libc.org>, Jan Kiszka <jan.kiszka@siemens.com>, Michael Turquette <mturquette@baylibre.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michal Suchanek <msuchanek@suse.de>, DTML <devicetree@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Arend van Spriel <aspriel@gmail.com>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dmitry
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBKOCRPLQKGQEIZNMBWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <9571735d-929f-a2ef-ed97-dc9193420b73-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
 
-On Friday 27 April 2018 01:22 PM, Arnd Bergmann wrote:
-> On Fri, Apr 27, 2018 at 4:28 AM, David Lechner <david@lechnology.com> wrote:
->> On 04/26/2018 12:31 PM, Rich Felker wrote:
->>>
->>> On Thu, Apr 26, 2018 at 05:29:18PM +0200, Bartosz Golaszewski wrote:
->>>>
->>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>>
->>>> This is a follow to my series[1] the aim of which was to introduce device
->>>> tree
->>>> support for early platform devices.
->>>>
->>>> It was received rather negatively. Aside from using device tree to pass
->>>> implementation specific details to the system, two important concerns
->>>> were
->>>> raised: no probe deferral support and the fact that currently the early
->>>> devices
->>>> never get converted to actual platform drivers. This series is a
->>>> proof-of-concept that's trying to address those issues.
->>>>
->>>> The only user of the current version of early platform drivers is the
->>>> SuperH
->>>> architecture. If this series eventually gets merged, we could simply
->>>> replace
->>>> the other solution.
->>>
->>>
->>> Looking at a quick output of:
->>>
->>>         grep -r -A10 early_devices[[] arch/sh/kernel/
->>>
->>> it looks like all of the existing early platform devices are serial
->>> ports, clocks, and clocksources. The switch to device tree should pick
->>> them all up from CLK_OF_DECLARE, TIMER_OF_DECLARE, and
->>> EARLYCON_DECLARE. Until that's complete, the existing code works
->>> as-is. I don't see what problem you're trying to solve.
->>
->>
->> The problem for us is that clk maintainers don't want new drivers to use
->> CLK_OF_DECLARE and instead use platform devices. I have just written such
->> a new driver that is shared by 6 different SoCs. For some combinations of
->> SoCs and clocks, using a platform device is fine but on others we need to
->> register early, so the drivers now have to handle both cases, which is
->> kind of messy and fragile. If there is a generic way to register platform
->> devices early, then the code is simplified because we only have to handle
->> one method of registering the clocks instead of two.
-> 
-> The early_platform code is certainly not a way to make things simpler,
-> it just adds one more way of doing the same thing that OF_CLK_DECLARE
-> already does. We removed the last early_platform users on ARM a few
-> years ago, and I would hope to leave it like that.
-> 
-> I haven't seen the discussion about your clock drivers, but I know that
-> usually only a very small subset of the clocks on an SoC are needed
-> that 'early', and you should use a regular platform driver for the rest.
 
-Its true that the subset is small, but they are either PLL bypass clocks
-or clocks derived out of the main clock gate controller on the Soc
-(DaVinci PSC). So we need some non-platform-device based initialization
-support in the two main clock drivers used on mach-davinci anyway.
+=E4=BA=8E 2018=E5=B9=B44=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=8812=
+:45:38, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> =E5=86=99=E5=88=B0:
+>Hi,
+>
+>On 26/04/18 15:07, Icenowy Zheng wrote:
+>> The Allwinner H6 SoC have 3 MMC controllers.
+>>=20
+>> Add device tree nodes for them.
+>>=20
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 56
+>++++++++++++++++++++++++++++
+>>  1 file changed, 56 insertions(+)
+>>=20
+>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+>b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+>> index 4debc3962830..3cbfc035c979 100644
+>> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+>> @@ -124,12 +124,68 @@
+>>  			interrupt-controller;
+>>  			#interrupt-cells =3D <3>;
+>> =20
+>> +			mmc0_pins: mmc0-pins {
+>> +				pins =3D "PF0", "PF1", "PF2", "PF3",
+>> +				       "PF4", "PF5";
+>> +				function =3D "mmc0";
+>> +				drive-strength =3D <30>;
+>> +				bias-pull-up;
+>> +			};
+>> +
+>> +			mmc2_pins: mmc2-pins {
+>> +				pins =3D "PC1", "PC4", "PC5", "PC6",
+>> +				       "PC7", "PC8", "PC9", "PC10",
+>> +				       "PC11", "PC12", "PC13", "PC14";
+>> +				function =3D "mmc2";
+>> +				drive-strength =3D <30>;
+>> +				bias-pull-up;
+>> +			};
+>> +
+>>  			uart0_ph_pins: uart0-ph {
+>>  				pins =3D "PH0", "PH1";
+>>  				function =3D "uart0";
+>>  			};
+>>  		};
+>> =20
+>> +		mmc0: mmc@4020000 {
+>> +			compatible =3D "allwinner,sun50i-h6-mmc";
+>
+>This should be:
+>			compatible =3D "allwinner,sun50i-h6-mmc",
+>				     "allwinner,sun50i-a64-mmc";
 
-> Can you elaborate on which devices need to access your clocks before
-> you are able to initialize the clk driver through the regular platform_driver
-> framework? Do any of these need complex interactions with the clk
-> subsystem, or do you just need to ensure they are turned on?
+I'm intended to not add A64 compatible, as
+H6 is a quite new design
+(new process) and there might be different behavior, even on mmc0/1.
 
-Its just the timer IP. There is no complex interaction, just need to
-ensure that the clock is registered with the framework and also switched
-on when there is a gate clock.
+>
+>> +			reg =3D <0x04020000 0x1000>;
+>> +			clocks =3D <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
+>> +			clock-names =3D "ahb", "mmc";
+>> +			resets =3D <&ccu RST_BUS_MMC0>;
+>> +			reset-names =3D "ahb";
+>> +			interrupts =3D <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+>> +			status =3D "disabled";
+>> +			#address-cells =3D <1>;
+>> +			#size-cells =3D <0>;
+>> +		};
+>> +
+>> +		mmc1: mmc@4021000 {
+>> +			compatible =3D "allwinner,sun50i-h6-mmc";
+>
+>same here
+>
+>> +			reg =3D <0x04021000 0x1000>;
+>> +			clocks =3D <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
+>> +			clock-names =3D "ahb", "mmc";
+>> +			resets =3D <&ccu RST_BUS_MMC1>;
+>> +			reset-names =3D "ahb";
+>> +			interrupts =3D <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+>> +			status =3D "disabled";
+>> +			#address-cells =3D <1>;
+>> +			#size-cells =3D <0>;
+>> +		};
+>> +
+>> +		mmc2: mmc@4022000 {
+>> +			compatible =3D "allwinner,sun50i-h6-emmc";
+>
+>and here:
+>			compatible =3D "allwinner,sun50i-h6-emmc",
+>				     "allwinner,sun50i-a64-emmc";
 
-The latest attempt by David for this was posted last night here:
+MMC2 on H6 has EMCE capability, so surely there should
+only be H6 compatible, and no A64 one.
 
-https://lkml.org/lkml/2018/4/26/1093
+>
+>The rest looks correct to me.
+>
+>Cheers,
+>Andre.
+>
+>> +			reg =3D <0x04022000 0x1000>;
+>> +			clocks =3D <&ccu CLK_BUS_MMC2>, <&ccu CLK_MMC2>;
+>> +			clock-names =3D "ahb", "mmc";
+>> +			resets =3D <&ccu RST_BUS_MMC2>;
+>> +			reset-names =3D "ahb";
+>> +			interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+>> +			status =3D "disabled";
+>> +			#address-cells =3D <1>;
+>> +			#size-cells =3D <0>;
+>> +		};
+>> +
+>>  		uart0: serial@5000000 {
+>>  			compatible =3D "snps,dw-apb-uart";
+>>  			reg =3D <0x05000000 0x400>;
+>>=20
 
-Thanks,
-Sekhar
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
