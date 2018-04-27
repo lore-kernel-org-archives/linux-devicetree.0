@@ -1,46 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: staging: remove a couple of ADC bindings
-Date: Thu, 26 Apr 2018 21:13:17 -0500
-Message-ID: <CAL_JsqJw4-bgQOXG3_0poC5Uy8kB5Bg4mns=Uhne=LONvTX15g@mail.gmail.com>
-References: <20180426015754.26605-1-robh@kernel.org> <20180426053255.75jg5bsdu4h624jo@vireshk-i7>
- <20180426214205.22f1a543@windsurf>
+Subject: Re: [PATCH v2] of: overlay: Stop leaking resources on overlay removal
+Date: Thu, 26 Apr 2018 21:19:33 -0500
+Message-ID: <20180427021933.vkdmzid4ated6whe@rob-hp-laptop>
+References: <e8704374-857c-d80e-e91c-89d59e1cffbe@siemens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180426214205.22f1a543@windsurf>
+Content-Disposition: inline
+In-Reply-To: <e8704374-857c-d80e-e91c-89d59e1cffbe@siemens.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Roland Stigge <stigge@antcom.de>, Stefan Roese <sr@denx.de>, Jonathan Cameron <jic23@kernel.org>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alan Tull <atull@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 2:42 PM, Thomas Petazzoni
-<thomas.petazzoni@bootlin.com> wrote:
-> Hello,
->
-> On Thu, 26 Apr 2018 11:02:55 +0530, Viresh Kumar wrote:
->> @Thomas: Do you guys use this ?
->>
->> On 25-04-18, 20:57, Rob Herring wrote:
->> > Remove LPC32xx and SPEAr ADC bindings in staging. They have not been
->> > touched since 2012.
->> >
->> > Cc: Roland Stigge <stigge@antcom.de>
->> > Cc: Stefan Roese <sr@denx.de>
->> > Cc: Jonathan Cameron <jic23@kernel.org>
->> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
->> > Signed-off-by: Rob Herring <robh@kernel.org>
->> > ---
->> > Move these out of staging please or they are going to be removed.
->> >
->> >  .../bindings/staging/iio/adc/lpc32xx-adc.txt       | 16 -------------
->> >  .../bindings/staging/iio/adc/spear-adc.txt         | 26 ----------------------
->> >  2 files changed, 42 deletions(-)
->
-> We are using the spear-adc driver, which is out of staging
-> in ./drivers/iio/adc/spear_adc.c. So rather than removing its DT binding
-> entirely, it should be moved out of staging.
+On Thu, Apr 26, 2018 at 01:00:30PM +0200, Jan Kiszka wrote:
+> Only the overlay notifier callbacks have a chance to potentially get
+> hold of references to those two resources, but they are not supposed to
+> store them beyond OF_OVERLAY_POST_REMOVE.
+> 
+> Document the overlay notifier API, its constraint regarding pointer
+> lifetime, and then remove intentional leaks of ovcs->overlay_tree and
+> ovcs->fdt from free_overlay_changeset.
+> 
+> See also https://lkml.org/lkml/2018/4/23/1063 and following.
+> 
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> ---
+>  Documentation/devicetree/overlay-notes.txt |  8 ++++++++
+>  drivers/of/overlay.c                       | 30 +++++++++++++++++++++---------
+>  2 files changed, 29 insertions(+), 9 deletions(-)
 
-Except I have comments on the spear binding and it's fair game to
-change it being in staging, right?
+Applied, thanks.
 
 Rob
