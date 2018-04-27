@@ -1,58 +1,58 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
- platform drivers
-Date: Thu, 26 Apr 2018 22:54:21 -0400
-Message-ID: <20180427025421.GN3094@brightrain.aerifal.cx>
-References: <20180426152920.21569-1-brgl@bgdev.pl>
- <20180426173151.GJ3094@brightrain.aerifal.cx>
- <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [[RFC]DPU PATCH 2/4] dt-bindings: drm/bridge:
+ Document sn65dsi86 bridge bindings
+Date: Thu, 26 Apr 2018 22:13:31 -0500
+Message-ID: <20180427031331.sl62t5ir24dxmtxm@rob-hp-laptop>
+References: <1524160568-27583-1-git-send-email-spanda@codeaurora.org>
+ <1524160568-27583-3-git-send-email-spanda@codeaurora.org>
+ <152469995691.46528.3834882157254635250@swboyd.mtv.corp.google.com>
+ <CAF6AEGuWo9U5OU5nKSSwzRV_FWszTj_8S3Hns9hFHWBPsepnVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@siemens.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
+In-Reply-To: <CAF6AEGuWo9U5OU5nKSSwzRV_FWszTj_8S3Hns9hFHWBPsepnVw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 09:28:39PM -0500, David Lechner wrote:
-> On 04/26/2018 12:31 PM, Rich Felker wrote:
-> >On Thu, Apr 26, 2018 at 05:29:18PM +0200, Bartosz Golaszewski wrote:
-> >>From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>
-> >>This is a follow to my series[1] the aim of which was to introduce device tree
-> >>support for early platform devices.
-> >>
-> >>It was received rather negatively. Aside from using device tree to pass
-> >>implementation specific details to the system, two important concerns were
-> >>raised: no probe deferral support and the fact that currently the early devices
-> >>never get converted to actual platform drivers. This series is a
-> >>proof-of-concept that's trying to address those issues.
-> >>
-> >>The only user of the current version of early platform drivers is the SuperH
-> >>architecture. If this series eventually gets merged, we could simply replace
-> >>the other solution.
-> >
-> >Looking at a quick output of:
-> >
-> >	grep -r -A10 early_devices[[] arch/sh/kernel/
-> >
-> >it looks like all of the existing early platform devices are serial
-> >ports, clocks, and clocksources. The switch to device tree should pick
-> >them all up from CLK_OF_DECLARE, TIMER_OF_DECLARE, and
-> >EARLYCON_DECLARE. Until that's complete, the existing code works
-> >as-is. I don't see what problem you're trying to solve.
-> 
-> The problem for us is that clk maintainers don't want new drivers to use
-> CLK_OF_DECLARE and instead use platform devices. I have just written such
-> a new driver that is shared by 6 different SoCs. For some combinations of
-> SoCs and clocks, using a platform device is fine but on others we need to
-> register early, so the drivers now have to handle both cases, which is
-> kind of messy and fragile. If there is a generic way to register platform
-> devices early, then the code is simplified because we only have to handle
-> one method of registering the clocks instead of two.
-
-Can you get them to explain why? This sounds wrong.
-
-Rich
+T24gV2VkLCBBcHIgMjUsIDIwMTggYXQgMDg6NDY6MTNQTSAtMDQwMCwgUm9iIENsYXJrIHdyb3Rl
+Ogo+IE9uIFdlZCwgQXByIDI1LCAyMDE4IGF0IDc6NDUgUE0sIFN0ZXBoZW4gQm95ZCA8c3dib3lk
+QGNocm9taXVtLm9yZz4gd3JvdGU6Cj4gPiBRdW90aW5nIFNhbmRlZXAgUGFuZGEgKDIwMTgtMDQt
+MTkgMTA6NTY6MDYpCj4gPj4gRG9jdW1lbnQgdGhlIGJpbmRpbmdzIHVzZWQgZm9yIHRoZSBzbjY1
+ZHNpODYgRFNJIHRvIGVEUCBicmlkZ2UuCj4gPj4KPiA+PiBDaGFuZ2VzIGluIHYxOgo+ID4+ICAt
+IFJlcGhyYXNlIHRoZSBkdC1iaW5kaW5nIGRlc2NyaXB0aW9ucyB0byBiZSBtb3JlIGlubGluZSB3
+aXRoIGV4aXN0aW5nCj4gPj4gICAgYmluZGluZ3MgKEFuZHJ6ZWogSGFqZGEpLgo+ID4+ICAtIEFk
+ZCBtaXNzaW5nIGR0LWJpbmRpbmcgdGhhdCBhcmUgcGFyc2VkIGJ5IGNvcnJlc3BvbmRpbmcgZHJp
+dmVyCj4gPj4gICAgKEFuZHJ6ZWogSGFqZGEpLgo+ID4+Cj4gPj4gQ2hhbmdlcyBpbiB2MjoKPiA+
+PiAgLSBSZW1vdmVkIGVkcCBwYW5lbCBzcGVjaWZpYyBkdC1iaW5kaW5nIGVudHJpZXMuIE9ubHkg
+a2VlcCBicmlkZ2UKPiA+PiAgICBzcGVjaWZpYyBlbnRyaWVzIChTZWFuIFBhdWwpLgo+ID4+ICAt
+IFJlbW92ZSBjdXN0b20tbW9kZXMgZHQgZW50cnkgc2luY2UgaXRzIHVzYWdlIGlzIHJlbW92ZWQg
+ZnJvbSBkcml2ZXIgYWxzbyAoU2VhbiBQYXVsKS4KPiA+PiAgLSBSZW1vdmUgaXMtcGx1Z2dhYmxl
+IGR0IGVudHJ5IHNpbmNlIHRoaXMgd2lsbCBub3QgYmUgbmVlZGVkIGFueW1vcmUgKFNlYW4gUGF1
+bCkuCj4gPj4KPiA+PiBDaGFuZ2VzIGluIHYzOgo+ID4+ICAtIFJlbW92ZWQgaXJxLWdwaW8gZHQg
+ZW50cnkgYW5kIGluc3RlYWQgcG9wdWxhdGUgaXMgYW4gaW50ZXJydXB0Cj4gPj4gICAgcHJvcGVy
+dHkgKFJvYiBIZXJyaW5nKS4KPiA+Cj4gPiBUaGVzZSBjaGFuZ2Vsb2dzIHVzdWFsbHkgZ28gYmVs
+b3cgdGhlIHRyaXBsZSBkYXNoLCBidXQgbWF5YmUgZHJtIGlzCj4gPiBkaWZmZXJlbnQgYW5kIHdh
+bnRzIHRoZW0/Cj4gCj4geWVhaCwgZHJtIGdlbmVyYWxseSB3YW50cyB0aGVtIGluIHRoZSBjb21t
+aXQgbXNnIHJhdGhlciB0aGFuIGJlbG93IHRoZQo+IHRyaXBsZS1kYXNoLCBhbHRob3VnaCBJIGd1
+ZXNzIGZvciBiaW5kaW5ncyBkb2NzIGl0IHNob3VsZCBmb2xsb3cgdGhlCj4gcnVsZXMgZm9yIHRo
+YXQgdHJlZS4uIEkgdXN1YWxseSBqdXN0IGZpeCB1cCB0aGVzZSBzb3J0IG9mIHRoaW5ncyBhcyBJ
+Cj4gYXBwbHkgcGF0Y2hlcywgYnV0IG5vdCBzdXJlIHdoYXQgb3RoZXIgbWFpbnRhaW5lcnMgcHJl
+ZmVyCgpXZWxsLCB0aGVzZSBEUFUgcGF0Y2hlcyBhcmVuJ3QgdGFyZ2V0ZWQgZm9yIHVwc3RyZWFt
+IHNvIHdobyBjYXJlcy4KCk1hbnkgcGF0Y2ggcmV2aXNpb24gY2hhbmdlbG9ncyBJIHNlZSBhcmUg
+Y3JhcCB3aXRoIHN0YXRlbWVudHMgbGlrZSAKImltcGxlbWVudCBjaGFuZ2VzIHJlcXVlc3RlZCBi
+eSA/PyIuIEJ1dCBpbiB0aGlzIGNhc2UsIHRoZSBjaGFuZ2Vsb2cgaXMgCnJlYWxseSBnb29kLgoK
+Um9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVk
+cmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
