@@ -1,56 +1,95 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 5/7] dt-bindings: arm: Document emtrion emCON-MX6
- bindings
-Date: Fri, 27 Apr 2018 09:45:33 -0500
-Message-ID: <20180427144533.5amxarufzc2borzh@rob-hp-laptop>
-References: <20180420125108.14197-1-jan.tuerk@emtrion.com>
- <20180427132445.3458-1-jan.tuerk@emtrion.com>
- <20180427132445.3458-6-jan.tuerk@emtrion.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
+ platform drivers
+Date: Fri, 27 Apr 2018 16:48:00 +0200
+Message-ID: <CAK8P3a22DKpqMGdjYoBzKfNHc2GvAbvaZowZpz=SFeQHVSWjsg@mail.gmail.com>
+References: <20180426152920.21569-1-brgl@bgdev.pl> <20180426173151.GJ3094@brightrain.aerifal.cx>
+ <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com> <CAK8P3a0oCH7zyBs8nQd4p+xLrFwDQiJsaKKCF1m04nyXsZxk=g@mail.gmail.com>
+ <CAMpxmJUR+31axmAe2TNq00aUg40bnC=5k=2cVX019Vncr7cRkw@mail.gmail.com>
+ <CAK8P3a2xtTLx-VHVWok-b19=o1z5FbTNcaWq7Y_HSdaH6pWnZg@mail.gmail.com>
+ <CAMRc=MdomjLCq-bJyktaToH00kNQAuTLgkSFRrY9Jmre8McT3A@mail.gmail.com>
+ <CAK8P3a0tMp2QURp-9WuHehqE0b6-BO1wJ38siTdxhxgwCb-ERw@mail.gmail.com> <CAMpxmJVkRDLkpcgzhMb41z=Tp6zvszLd0vqfdTtZBNGT6Trtqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180427132445.3458-6-jan.tuerk@emtrion.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: jan.tuerk@emtrion.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMpxmJVkRDLkpcgzhMb41z=Tp6zvszLd0vqfdTtZBNGT6Trtqw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, David Lechner <david@lechnology.com>, Rich Felker <dalias@libc.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@siemens.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBBcHIgMjcsIDIwMTggYXQgMDM6MjQ6NDBQTSArMDIwMCwgamFuLnR1ZXJrQGVtdHJp
-b24uY29tIHdyb3RlOgo+IEZyb206IEphbiBUdWVyayA8amFuLnR1ZXJrQGVtdHJpb24uY29tPgo+
-IAo+IERvY3VtZW50IHRoZSBjb21wYXRpYmxlIHN0cmluZ3MgZm9yIGVtdHJpb24gZW1DT04tTVg2
-IFNvTSdzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEphbiBUdWVyayA8amFuLnR1ZXJrQGVtdHJpb24u
-Y29tPgo+IC0tLQo+IEZvciB2NDoKPiAgLSBzZXBhcmF0ZSBwYXRjaCBmb3IgdGhlIGVtdHJpb24g
-ZW1DT04tTVg2IERULWJpbmRpbmdzCj4gCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9hcm0vZW10cmlvbi50eHQgfCAxMyArKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2Vk
-LCAxMyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvYXJtL2VtdHJpb24udHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZW10cmlvbi50eHQgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2VtdHJpb24udHh0Cj4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjNmZjZjNmMyMDM0ZAo+IC0tLSAvZGV2L251bGwK
-PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2VtdHJpb24udHh0
-Cj4gQEAgLTAsMCArMSwxMyBAQAo+ICtFbXRyaW9uIERldmljZXRyZWUgQmluZGluZ3MKPiArPT09
-PT09PT09PT09PT09PT09PT09PT09PT09Cj4gKwo+ICtlbUNPTiBTZXJpZXM6Cj4gKy0tLS0tLS0t
-LS0tLS0KPiArCj4gK1JlcXVpcmVkIHJvb3Qgbm9kZSBwcm9wZXJ0aWVzCj4gKwktIGNvbXBhdGli
-bGU6Cj4gKwktICJlbXRyaW9uLGVtY29uLW14NiIsICJmc2wsaW14NnEiLCAiZnNsLGlteDZkbCI7
-IDogZW1DT04tTVg2IEdlbmVyaWMgU29NCgpZb3UgY2FuJ3QgaGF2ZSBib3RoIGEgNlEgYW5kIDZE
-TCBwcmVzZW50IGFuZCBJIGRvbid0IHRoaW5rIDZRIGlzIGEgCnBlcmZlY3Qgc3VwZXJzZXQgb2Yg
-NkRMLgoKPiArCS0gImVtdHJpb24sZW1jb24tbXg2IiwgImZzbCxpbXg2cSI7IAkJOiBlbUNPTi1N
-WDZEIG9yIGVtQ09OLU1YNlEgU29NCj4gKwktICJlbXRyaW9uLGVtY29uLW14Ni1hdmFyaSIsICJm
-c2wsaW14NnEiOwk6IGVtQ09OLU1YNkQgb3IgZW1DT04tTVg2USBTb00gb24gQXZhcmkgQmFzZQo+
-ICsJLSAiZW10cmlvbixlbWNvbi1teDYiLCAiZnNsLGlteDZkbCI7IAkJOiBlbUNPTi1NWDZTIG9y
-IGVtQ09OLU1YNkRMIFNvTQo+ICsJLSAiZW10cmlvbixlbWNvbi1teDYtYXZhcmkiLCAiZnNsLGlt
-eDZkbCI7CTogZW1DT04tTVg2UyBvciBlbUNPTi1NWDZETCBTb00gb24gQXZhcmkgQmFzZQo+IC0t
-IAo+IDIuMTEuMAo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+On Fri, Apr 27, 2018 at 4:05 PM, Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> 2018-04-27 14:40 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+
+>> For timer-ti-dm, it seems like a leftover from old times that can
+>> be removed. The other four are shared between arch/sh and
+>> arch/arm/mach-shmobile and already have some #ifdef
+>> to handle those two cases.
+>>
+>
+> I'm also seeing that we also call early_platform_cleanup() from
+> platform_bus_init(). Any ideas for this one?
+
+My first idea would be to call it immediately after registering all
+devices and drivers. It looks like it's only needed to make all
+devm_ allocations persistent by removing them from the list,
+so we have to call early_platform_cleanup() before getting
+to the real platform code, but it could be done much earlier
+if we want to, at least after both setup_arch() and sh_late_time_init()
+are complete.
+
+>> I'd rather keep those separate and would prefer not to have
+>> that many different ways of getting there instead. DT and
+>> board files can already share most of the code through the
+>> use of platform_device, especially when you start using
+>> device properties instead of platform_data, and the other
+>> two are rare corner cases and ideally left that way.
+>>
+>> The early boot code is always special and instead of making
+>> it easier to use, we should focus on using it as little as
+>> possible: every line of code that we call before even
+>> initializing timers and consoles means it gets harder to
+>> debug when something goes wrong.
+>>
+>
+> I'm afraid I don't quite understand your reasoning. I fully agree that
+> devices that need to be initialized that early are a rare corner case.
+> We should limit any such uses to the absolute minimum. But when we do
+> need to go this way, we should do it right. Having a unified mechanism
+> for early devices will allow maintainers to enforce good practices
+> (using resources for register mapping, devres, reusing driver code for
+> reading/writing to registers). Having initialization code in machine
+> code will make everybody use different APIs and duplicate solutions. I
+> normally assume that code consolidation is always good.
+>
+> If we add a way for DT-based platform devices to be probed early - it
+> would be based on platform device/driver structures anyway. Why would
+> we even want to not convert the board code into a simple call to
+> early_platform_device_register() if we'll already offer this API for
+> device tree?
+
+I think we first need to define what we really want to achieve here.
+It sounds like you still want to recreate a lot of what early_platform
+devices do, but it seems more important to me to add the missing
+functionality to the OF_DECLARE infrastructure. The most
+important pieces that seem to be missing are solved by finding
+a way to provide a platform_device pointer with the following
+properties:
+
+- allow being passed into dev_print()
+- allow using the pointer as a token for devres unwinding
+- access to device_private data that remains persistent
+  until real a platform_driver gets loaded
+
+That can probably be done as an extension to the current
+infrastructure.
+
+However, I'd be very cautious about the resource portion:
+filling the platform resources (registers, irqs, ...) the way
+we do for regular devices is much harder and can introduce
+additional (or circular) dependencies on other devices.
+OTOH, not using those resources means you have a hard
+time passing information from board files.
+
+          Arnd
