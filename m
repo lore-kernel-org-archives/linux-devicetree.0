@@ -1,80 +1,68 @@
-From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH 2/4] dt-bindings: arm: fsl: add mu binding doc
-Date: Sat, 28 Apr 2018 02:46:14 +0800
-Message-ID: <1524854776-14863-3-git-send-email-aisheng.dong@nxp.com>
-References: <1524854776-14863-1-git-send-email-aisheng.dong@nxp.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v7 0/7] clk: meson-axg: Add AO Cloclk and Reset driver
+Date: Fri, 27 Apr 2018 11:49:35 -0700
+Message-ID: <7hsh7g1o3k.fsf@baylibre.com>
+References: <20180426084437.192394-1-yixun.lan@amlogic.com>
+        <1524820841.4026.112.camel@baylibre.com>
+        <fbd24a73-6793-76be-3ca5-04cbac5db198@amlogic.com>
+        <1524823154.4026.123.camel@baylibre.com>
+        <ab754711-f727-133c-7bc3-a9f3243c2278@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1524854776-14863-1-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, dongas86@gmail.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ab754711-f727-133c-7bc3-a9f3243c2278@amlogic.com> (Yixun Lan's
+        message of "Fri, 27 Apr 2018 20:33:42 +0800")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Messaging Unit module enables two processors within
-the SoC to communicate and coordinate by passing messages
-(e.g. data, status and control) through the MU interface.
+Hi Yixun,
 
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
- .../devicetree/bindings/arm/freescale/fsl,mu.txt   | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
+Yixun Lan <yixun.lan@amlogic.com> writes:
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
-new file mode 100644
-index 0000000..a7ceb1f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
-@@ -0,0 +1,33 @@
-+NXP i.MX Messaging Unit (MU)
-+--------------------------------------------------------------------
-+
-+The Messaging Unit module enables two processors within the SoC to
-+communicate and coordinate by passing messages (e.g. data, status
-+and control) through the MU interface. The MU also provides the ability
-+for one processor to signal the other processor using interrupts.
-+
-+Because the MU manages the messaging between processors, the MU uses
-+different clocks (from each side of the different peripheral buses).
-+Therefore, the MU must synchronize the accesses from one side to the
-+other. The MU accomplishes synchronization using two sets of matching
-+registers (Processor A-facing, Processor Bfacing).
-+
-+Messaging Unit Device Node:
-+=============================
-+
-+Required properties:
-+-------------------
-+- compatible :	should be "fsl,<chip>-mu", the supported chips include
-+		imx6sx, imx7d, imx7ulp, imx8qxp, imx8qm, imx8mq.
-+- reg :		Should contain the registers location and length
-+- interrupts :	Interrupt number. The interrupt specifier format depends
-+		on the interrupt controller parent.
-+
-+Examples:
-+--------
-+lsio_mu0: mu@5d1b0000 {
-+	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
-+	reg = <0x0 0x5d1b0000 0x0 0x10000>;
-+	interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
-+	status = "okay";
-+};
--- 
-2.7.4
+> On 04/27/2018 05:59 PM, Jerome Brunet wrote:
+
+[...]
+
+>> 
+>> Looks to be the problem indeed. But it is still an issue with how your patchset
+>> in organized.
+>> 
+>> I can't merge this until Kevin merges the patch above, which he can't merge
+>> until there is the clkc_ao support in axg, which is given by this series.
+>> 
+>> 1# You should remove the axg part of the patch above. Kevin will be able to
+>> merge it w/o any dependencies. (BTW, the patch is broken for axg because 1) you
+>> did not include the dt-binding header for the clkc_ao in axg and 2) the clkc_ao
+>> does not exist at this stage)
+>> 2# I can then safely merge this series - w/o breaking gxbb and gxl.
+>> 3# Finally you'll have to make a DT change for the axg, enabling the clkc_ao and
+>> changes the uart clocks at the same time.
+>> 
+>
+>   I didn't make myself clear in previous email
+>
+>   I mean, could you merge patch 1-6, just exclude the patch 7
+> then kevin can merge the DT part (there are three patches) [1]
+> after the DT patches merged, then you can take this patch 7
+> This way, it won't break gxl or any other SoCs
+>
+>   I'm sending patch 7 along with this series, it would be better if I
+> give a warning about it.
+
+Your proposal requires extra work from a couple different maintainers to
+track all the dependencies, and is very error prone.  Sometimes
+maintainers may do this for you if they have time and are feeling
+generous, but you will have much more success if you can ease the
+process.
+
+Jerome has provided lots of guidance throughout this series and just
+above has provided you with a very good proposal above which minimizes
+the dependencies, and provides the changes in the right order.
+
+Please follow Jerome's suggestion,
+
+Thanks,
+
+Kevin
