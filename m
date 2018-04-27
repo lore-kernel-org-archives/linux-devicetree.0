@@ -1,7 +1,7 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v9 13/27] ARM: davinci: remove CONFIG_DAVINCI_RESET_CLOCKS
-Date: Thu, 26 Apr 2018 19:17:31 -0500
-Message-ID: <20180427001745.4116-14-david@lechnology.com>
+Subject: [PATCH v9 12/27] ARM: davinci: da8xx: add new sata_refclk init using common clock framework
+Date: Thu, 26 Apr 2018 19:17:30 -0500
+Message-ID: <20180427001745.4116-13-david@lechnology.com>
 References: <20180427001745.4116-1-david@lechnology.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180427001745.4116-1-david@lechnology.com>
@@ -10,9 +10,13 @@ To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@list
 Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-The common clock framework will take care of disabling unused clocks when
-we switch from the legacy davinci clocks and having this enabled will
-cause compile errors after we switch, so remove it now.
+This adds the new SATA REFCLK clock init in mach-davinci/devices-da8xx.c
+using the new common clock framework drivers.
+
+The #ifdefs are needed to prevent compile errors until the entire
+ARCH_DAVINCI is converted.
+
+Also, the #includes are sorted since we are adding some here.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 Reviewed-by: Sekhar Nori <nsekhar@ti.com>
@@ -31,60 +35,79 @@ v6 changes:
 - none
 
 
- arch/arm/mach-davinci/Kconfig               | 12 ------------
- arch/arm/mach-davinci/common.c              |  1 -
- arch/arm/mach-davinci/include/mach/common.h |  6 ------
- 3 files changed, 19 deletions(-)
+ arch/arm/mach-davinci/devices-da8xx.c | 36 ++++++++++++++++++++-------
+ 1 file changed, 27 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
-index 05c3eecf47cb..ba9912b4dfab 100644
---- a/arch/arm/mach-davinci/Kconfig
-+++ b/arch/arm/mach-davinci/Kconfig
-@@ -231,18 +231,6 @@ config DAVINCI_MUX_WARNINGS
- 	  to change the pin multiplexing setup. When there are no warnings
- 	  printed, it's safe to deselect DAVINCI_MUX for your product.
+diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
+index 78390c64e6ca..73de449bbc68 100644
+--- a/arch/arm/mach-davinci/devices-da8xx.c
++++ b/arch/arm/mach-davinci/devices-da8xx.c
+@@ -10,25 +10,30 @@
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  */
+-#include <linux/init.h>
+-#include <linux/platform_device.h>
+-#include <linux/dma-contiguous.h>
+-#include <linux/serial_8250.h>
+ #include <linux/ahci_platform.h>
++#include <linux/clk-provider.h>
+ #include <linux/clk.h>
+-#include <linux/reboot.h>
++#include <linux/clkdev.h>
++#include <linux/dma-contiguous.h>
+ #include <linux/dmaengine.h>
++#include <linux/init.h>
++#include <linux/platform_device.h>
++#include <linux/reboot.h>
++#include <linux/serial_8250.h>
  
--config DAVINCI_RESET_CLOCKS
--	bool "Reset unused clocks during boot"
--	depends on ARCH_DAVINCI
--	help
--	  Say Y if you want to reset unused clocks during boot.
--	  This option saves power, but assumes all drivers are
--	  using the clock framework. Broken drivers that do not
--	  yet use clock framework may not work with this option.
--	  If you are booting from another operating system, you
--	  probably do not want this option enabled until your
--	  device drivers work properly.
--
- endmenu
+-#include <mach/cputype.h>
+ #include <mach/common.h>
+-#include <mach/time.h>
++#include <mach/cputype.h>
+ #include <mach/da8xx.h>
+-#include <mach/clock.h>
++#include <mach/time.h>
++
++#include "asp.h"
+ #include "cpuidle.h"
+ #include "sram.h"
  
- endif
-diff --git a/arch/arm/mach-davinci/common.c b/arch/arm/mach-davinci/common.c
-index bcb6a7ba84e9..e03f95ccd95c 100644
---- a/arch/arm/mach-davinci/common.c
-+++ b/arch/arm/mach-davinci/common.c
-@@ -118,5 +118,4 @@ void __init davinci_common_init(const struct davinci_soc_info *soc_info)
- void __init davinci_init_late(void)
- {
- 	davinci_cpufreq_init();
--	davinci_clk_disable_unused();
++#ifndef CONFIG_COMMON_CLK
++#include <mach/clock.h>
+ #include "clock.h"
+-#include "asp.h"
++#endif
+ 
+ #define DA8XX_TPCC_BASE			0x01c00000
+ #define DA8XX_TPTC0_BASE		0x01c08000
+@@ -1040,6 +1045,7 @@ int __init da8xx_register_spi_bus(int instance, unsigned num_chipselect)
  }
-diff --git a/arch/arm/mach-davinci/include/mach/common.h b/arch/arm/mach-davinci/include/mach/common.h
-index 5f45d0ac66a8..ded8f5f42725 100644
---- a/arch/arm/mach-davinci/include/mach/common.h
-+++ b/arch/arm/mach-davinci/include/mach/common.h
-@@ -83,12 +83,6 @@ extern void davinci_common_init(const struct davinci_soc_info *soc_info);
- extern void davinci_init_ide(void);
- void davinci_init_late(void);
  
--#ifdef CONFIG_DAVINCI_RESET_CLOCKS
--int davinci_clk_disable_unused(void);
--#else
--static inline int davinci_clk_disable_unused(void) { return 0; }
--#endif
--
- #ifdef CONFIG_CPU_FREQ
- int davinci_cpufreq_init(void);
- #else
+ #ifdef CONFIG_ARCH_DAVINCI_DA850
++#ifndef CONFIG_COMMON_CLK
+ static struct clk sata_refclk = {
+ 	.name		= "sata_refclk",
+ 	.set_rate	= davinci_simple_set_rate,
+@@ -1061,6 +1067,18 @@ int __init da850_register_sata_refclk(int rate)
+ 
+ 	return 0;
+ }
++#else
++int __init da850_register_sata_refclk(int rate)
++{
++	struct clk *clk;
++
++	clk = clk_register_fixed_rate(NULL, "sata_refclk", NULL, 0, rate);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	return clk_register_clkdev(clk, "refclk", "ahci_da850");
++}
++#endif
+ 
+ static struct resource da850_sata_resources[] = {
+ 	{
 -- 
 2.17.0
