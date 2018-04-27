@@ -1,27 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/6] dt-bindings: soc: qcom: Add label for GLINK
- bindings
-Date: Fri, 27 Apr 2018 12:05:39 -0500
-Message-ID: <20180427170539.657wlerutkudfy2m@rob-hp-laptop>
-References: <1524783545-21951-1-git-send-email-clew@codeaurora.org>
- <1524783545-21951-2-git-send-email-clew@codeaurora.org>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [[RFC]DPU PATCH 2/4] dt-bindings: drm/bridge:
+ Document sn65dsi86 bridge bindings
+Date: Fri, 27 Apr 2018 13:07:43 -0400
+Message-ID: <CAF6AEGueS0ArgoHozBbRs9kj+26=0dZv2GXvtM4CCPjKmQ3M1A@mail.gmail.com>
+References: <1524160568-27583-1-git-send-email-spanda@codeaurora.org>
+ <1524160568-27583-3-git-send-email-spanda@codeaurora.org>
+ <152469995691.46528.3834882157254635250@swboyd.mtv.corp.google.com>
+ <CAF6AEGuWo9U5OU5nKSSwzRV_FWszTj_8S3Hns9hFHWBPsepnVw@mail.gmail.com>
+ <20180427031331.sl62t5ir24dxmtxm@rob-hp-laptop>
+ <0522b749900b3a54508abef6bd15252f@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1524783545-21951-2-git-send-email-clew@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Lew <clew@codeaurora.org>
-Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <0522b749900b3a54508abef6bd15252f-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 03:59:00PM -0700, Chris Lew wrote:
-> There are GLINK clients who open the same channel on multiple GLINK
-> links. These clients need a way to distinguish which remoteproc they
-> are communicating to. Add a label property to identify the edge this
-> node represents.
-
-Isn't there a better way? "label" is really intended for things that 
-would be printed on a sticker to be read by a human.
-
-Rob
+T24gRnJpLCBBcHIgMjcsIDIwMTggYXQgMzowMiBBTSwgIDxzcGFuZGFAY29kZWF1cm9yYS5vcmc+
+IHdyb3RlOgo+IE9uIDIwMTgtMDQtMjcgMDg6NDMsIFJvYiBIZXJyaW5nIHdyb3RlOgo+Pgo+PiBP
+biBXZWQsIEFwciAyNSwgMjAxOCBhdCAwODo0NjoxM1BNIC0wNDAwLCBSb2IgQ2xhcmsgd3JvdGU6
+Cj4+Pgo+Pj4gT24gV2VkLCBBcHIgMjUsIDIwMTggYXQgNzo0NSBQTSwgU3RlcGhlbiBCb3lkIDxz
+d2JveWRAY2hyb21pdW0ub3JnPgo+Pj4gd3JvdGU6Cj4+PiA+IFF1b3RpbmcgU2FuZGVlcCBQYW5k
+YSAoMjAxOC0wNC0xOSAxMDo1NjowNikKPj4+ID4+IERvY3VtZW50IHRoZSBiaW5kaW5ncyB1c2Vk
+IGZvciB0aGUgc242NWRzaTg2IERTSSB0byBlRFAgYnJpZGdlLgo+Pj4gPj4KPj4+ID4+IENoYW5n
+ZXMgaW4gdjE6Cj4+PiA+PiAgLSBSZXBocmFzZSB0aGUgZHQtYmluZGluZyBkZXNjcmlwdGlvbnMg
+dG8gYmUgbW9yZSBpbmxpbmUgd2l0aAo+Pj4gPj4gZXhpc3RpbmcKPj4+ID4+ICAgIGJpbmRpbmdz
+IChBbmRyemVqIEhhamRhKS4KPj4+ID4+ICAtIEFkZCBtaXNzaW5nIGR0LWJpbmRpbmcgdGhhdCBh
+cmUgcGFyc2VkIGJ5IGNvcnJlc3BvbmRpbmcgZHJpdmVyCj4+PiA+PiAgICAoQW5kcnplaiBIYWpk
+YSkuCj4+PiA+Pgo+Pj4gPj4gQ2hhbmdlcyBpbiB2MjoKPj4+ID4+ICAtIFJlbW92ZWQgZWRwIHBh
+bmVsIHNwZWNpZmljIGR0LWJpbmRpbmcgZW50cmllcy4gT25seSBrZWVwIGJyaWRnZQo+Pj4gPj4g
+ICAgc3BlY2lmaWMgZW50cmllcyAoU2VhbiBQYXVsKS4KPj4+ID4+ICAtIFJlbW92ZSBjdXN0b20t
+bW9kZXMgZHQgZW50cnkgc2luY2UgaXRzIHVzYWdlIGlzIHJlbW92ZWQgZnJvbSBkcml2ZXIKPj4+
+ID4+IGFsc28gKFNlYW4gUGF1bCkuCj4+PiA+PiAgLSBSZW1vdmUgaXMtcGx1Z2dhYmxlIGR0IGVu
+dHJ5IHNpbmNlIHRoaXMgd2lsbCBub3QgYmUgbmVlZGVkIGFueW1vcmUKPj4+ID4+IChTZWFuIFBh
+dWwpLgo+Pj4gPj4KPj4+ID4+IENoYW5nZXMgaW4gdjM6Cj4+PiA+PiAgLSBSZW1vdmVkIGlycS1n
+cGlvIGR0IGVudHJ5IGFuZCBpbnN0ZWFkIHBvcHVsYXRlIGlzIGFuIGludGVycnVwdAo+Pj4gPj4g
+ICAgcHJvcGVydHkgKFJvYiBIZXJyaW5nKS4KPj4+ID4KPj4+ID4gVGhlc2UgY2hhbmdlbG9ncyB1
+c3VhbGx5IGdvIGJlbG93IHRoZSB0cmlwbGUgZGFzaCwgYnV0IG1heWJlIGRybSBpcwo+Pj4gPiBk
+aWZmZXJlbnQgYW5kIHdhbnRzIHRoZW0/Cj4+Pgo+Pj4geWVhaCwgZHJtIGdlbmVyYWxseSB3YW50
+cyB0aGVtIGluIHRoZSBjb21taXQgbXNnIHJhdGhlciB0aGFuIGJlbG93IHRoZQo+Pj4gdHJpcGxl
+LWRhc2gsIGFsdGhvdWdoIEkgZ3Vlc3MgZm9yIGJpbmRpbmdzIGRvY3MgaXQgc2hvdWxkIGZvbGxv
+dyB0aGUKPj4+IHJ1bGVzIGZvciB0aGF0IHRyZWUuLiBJIHVzdWFsbHkganVzdCBmaXggdXAgdGhl
+c2Ugc29ydCBvZiB0aGluZ3MgYXMgSQo+Pj4gYXBwbHkgcGF0Y2hlcywgYnV0IG5vdCBzdXJlIHdo
+YXQgb3RoZXIgbWFpbnRhaW5lcnMgcHJlZmVyCj4+Cj4+Cj4+IFdlbGwsIHRoZXNlIERQVSBwYXRj
+aGVzIGFyZW4ndCB0YXJnZXRlZCBmb3IgdXBzdHJlYW0gc28gd2hvIGNhcmVzLgo+Cj4KPiBUaGlz
+IGNoYW5nZSBpcyBpbmRlcGVuZGVudCBvZiBvdGhlciBEUFUgcGF0Y2hlcy4gV2UgYXJlIHBsYW5u
+aW5nIHRvIHVwc3RyZWFtCj4gdGhlc2UgYnJpZGdlIGFuZCBwYW5lbCBjaGFuZ2VzLgo+IEkgd2ls
+bCB1cGxvYWQgdGhlIG5leHQgcGF0Y2hzZXQgZHJvcHBpbmcgdGhlIERQVSB0YWcgdG8gYXZvaWQg
+YW55IGNvbmZ1c2lvbi4KPgoKamZ3aXcsIHByb2JhYmx5IGEgZ29vZCBpZGVhIG5vdCB0byB1c2Ug
+dGhlICdEUFUnIHRhZyBmb3IgYW55dGhpbmcgdGhhdAppc24ndCBkZXBlbmRlbnQgb24gdGhlIERQ
+VSBwYXRjaGVzZXQsIHRvIHJlZHVjZSBjb25mdXNpb24KCkJSLAotUgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZy
+ZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
