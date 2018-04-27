@@ -1,32 +1,67 @@
-From: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
-Subject: Re: [PATCH 0/6 v3] Support for fsl-mc bus and its devices in SMMU
-Date: Fri, 27 Apr 2018 17:52:03 +0200
-Message-ID: <20180427155203.GA9201@lst.de>
-References: <1524824826-29473-1-git-send-email-nipun.gupta@nxp.com>
+From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH 4/4] dt-bindings: mfd: max8998: Add charger subnode binding
+Date: Fri, 27 Apr 2018 18:03:02 +0200
+Message-ID: <1524844982-4714-5-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+References: <1524844982-4714-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1524824826-29473-1-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524844982-4714-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 27, 2018 at 03:57:00PM +0530, Nipun Gupta wrote:
-> This patchset defines IOMMU DT binding for fsl-mc bus and adds
-> support in SMMU for fsl-mc bus.
-> 
-> This patch series is dependent on patset:
-> https://patchwork.kernel.org/patch/10317337/
+This patch adds devicetree bindings documentation for
+battery charging controller as the subnode of MAX8998 PMIC.
+It's based on current behavior of driver.
 
-Which still needs to be resent against 4.17-rc..
+Fixes: ee999fb3f17f ("mfd: max8998: Add support for Device Tree")
+Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+---
+ Documentation/devicetree/bindings/mfd/max8998.txt | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Documentation/devicetree/bindings/mfd/max8998.txt
+index 23a3650ff2a2..f95610afb57f 100644
+--- a/Documentation/devicetree/bindings/mfd/max8998.txt
++++ b/Documentation/devicetree/bindings/mfd/max8998.txt
+@@ -50,6 +50,21 @@ Additional properties required if max8998,pmic-buck2-dvs-gpio is defined:
+ - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in microvolts
+   for buck2 regulator that can be selected using dvs gpio.
+ 
++Charger: Configuration for battery charging controller should be added
++inside a child node named 'charger'.
++  Required properties:
++  - max8998,charge-eoc: Setup "End of Charge". If value equals 0,
++    remain value set from bootloader or default value will be used.
++    Valid values: 0, 10 - 45
++
++  - max8998,charge-restart: Setup "Charge Restart Level". If value equals 0,
++    remain value set from bootloader or default value will be used.
++    Valid values: -1, 0, 100, 150, 200
++
++  - max8998,charge-timeout: Setup "Charge Full Timeout". If value equals 0,
++    remain value set from bootloader or default value will be used.
++    Valid values: -1, 0, 5, 6, 7
++
+ Regulators: All the regulators of MAX8998 to be instantiated shall be
+ listed in a child node named 'regulators'. Each regulator is represented
+ by a child node of the 'regulators' node.
+@@ -99,6 +114,13 @@ Example:
+ 		max8998,pmic-buck2-dvs-gpio = <&gpx0 0 3 0 0>; /* SET3 */
+ 		max8998,pmic-buck2-dvs-voltage = <1350000>, <1300000>;
+ 
++		/* Charger configuration */
++		charger {
++			max8998,charge-eoc = <0>;
++			max8998,charge-restart = <(-1)>;
++			max8998,charge-timeout = <7>;
++		};
++
+ 		/* Regulators to instantiate */
+ 		regulators {
+ 			ldo2_reg: LDO2 {
+-- 
+2.7.4
