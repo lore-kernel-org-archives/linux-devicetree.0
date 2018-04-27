@@ -1,38 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 22/24] ASoC: qdsp6: dt-bindings: Add
- apq8096 machine bindings
-Date: Fri, 27 Apr 2018 09:18:42 -0500
-Message-ID: <20180427141842.fdwhbmexf6ppfnvj@rob-hp-laptop>
-References: <20180426094606.4775-1-srinivas.kandagatla@linaro.org>
- <20180426094606.4775-23-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: Documentation for qcom, llcc
+Date: Fri, 27 Apr 2018 09:21:44 -0500
+Message-ID: <20180427142144.tvy5xamuwz6jnxk5@rob-hp-laptop>
+References: <1524524972-12014-1-git-send-email-rishabhb@codeaurora.org>
+ <1524524972-12014-2-git-send-email-rishabhb@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180426094606.4775-23-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: srinivas.kandagatla@linaro.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, spatakok@qti.qualcomm.com, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, andy.gross@linaro.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1524524972-12014-2-git-send-email-rishabhb@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@lists.infradead.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, kyan@codeaurora.org, ckadabi@codeaurora.org, evgreen@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 10:46:04AM +0100, srinivas.kandagatla@linaro.org wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Mon, Apr 23, 2018 at 04:09:31PM -0700, Rishabh Bhatnagar wrote:
+> Documentation for last level cache controller device tree bindings,
+> client bindings usage examples.
 > 
-> Add devicetree bindings documentation file for Qualcomm apq8096 sound card.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
 > ---
->  .../devicetree/bindings/sound/qcom,apq8096.txt     | 109 +++++++++++++++++++++
->  1 file changed, 109 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+>  .../devicetree/bindings/arm/msm/qcom,llcc.txt      | 60 ++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+My comments on v4 still apply.
+
+Rob
