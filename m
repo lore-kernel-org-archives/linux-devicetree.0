@@ -1,116 +1,96 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v9 02/27] clk: davinci: da850-pll: change PLL0 to
- CLK_OF_DECLARE
-Date: Thu, 26 Apr 2018 19:17:20 -0500
-Message-ID: <20180427001745.4116-3-david@lechnology.com>
+Subject: [PATCH v9 25/27] ARM: davinci: add device tree support to timer
+Date: Thu, 26 Apr 2018 19:17:43 -0500
+Message-ID: <20180427001745.4116-26-david@lechnology.com>
 References: <20180427001745.4116-1-david@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180427001745.4116-1-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-PLL0 on davinci/da850-type device needs to be registered early in boot
-because it is needed for clocksource/clockevent. Change the driver
-to use CLK_OF_DECLARE for this special case.
+This adds device tree support to the davinci timer so that when clocks
+are moved to device tree, the timer will still work.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
 v9 changes:
-- new patch in v9
+- none (there were supposed to be changed, but apparently they got squashed
+  into the next commit - will fix on the next round)
 
+v8 changes:
+- none
 
- drivers/clk/davinci/pll-da850.c | 26 ++++++++++++++++++++++----
- drivers/clk/davinci/pll.c       |  4 +++-
- drivers/clk/davinci/pll.h       |  2 +-
- 3 files changed, 26 insertions(+), 6 deletions(-)
+v7 changes:
+- rebased
+- add davinci prefix to commit message
 
-diff --git a/drivers/clk/davinci/pll-da850.c b/drivers/clk/davinci/pll-da850.c
-index 00a6ece7b524..743527de1da2 100644
---- a/drivers/clk/davinci/pll-da850.c
-+++ b/drivers/clk/davinci/pll-da850.c
-@@ -12,6 +12,8 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/mfd/da8xx-cfgchip.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_address.h>
- #include <linux/of.h>
- #include <linux/types.h>
+v6 changes:
+- rebased
+
+ arch/arm/mach-davinci/Kconfig |  1 +
+ arch/arm/mach-davinci/time.c  | 31 +++++++++++++++++++++++++++++++
+ 2 files changed, 32 insertions(+)
+
+diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
+index ba9912b4dfab..da8a039d65f9 100644
+--- a/arch/arm/mach-davinci/Kconfig
++++ b/arch/arm/mach-davinci/Kconfig
+@@ -59,6 +59,7 @@ config MACH_DA8XX_DT
+ 	default y
+ 	depends on ARCH_DAVINCI_DA850
+ 	select PINCTRL
++	select TIMER_OF
+ 	help
+ 	  Say y here to include support for TI DaVinci DA850 based using
+ 	  Flattened Device Tree. More information at Documentation/devicetree
+diff --git a/arch/arm/mach-davinci/time.c b/arch/arm/mach-davinci/time.c
+index 7ea3db0ff062..7a8c6fada644 100644
+--- a/arch/arm/mach-davinci/time.c
++++ b/arch/arm/mach-davinci/time.c
+@@ -17,6 +17,7 @@
+ #include <linux/io.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/sched_clock.h>
  
-@@ -135,11 +137,27 @@ static const struct davinci_pll_sysclk_info *da850_pll0_sysclk_info[] = {
- 	NULL
- };
- 
--int of_da850_pll0_init(struct device *dev, void __iomem *base, struct regmap *cfgchip)
-+void of_da850_pll0_init(struct device_node *node)
- {
--	return of_davinci_pll_init(dev, dev->of_node, &da850_pll0_info,
--				   &da850_pll0_obsclk_info,
--				   da850_pll0_sysclk_info, 7, base, cfgchip);
-+	void __iomem *base;
-+	struct regmap *cfgchip;
+@@ -397,3 +398,33 @@ void __init davinci_timer_init(struct clk *timer_clk)
+ 	for (i=0; i< ARRAY_SIZE(timers); i++)
+ 		timer32_config(&timers[i]);
+ }
 +
-+	base = of_iomap(node, 0);
-+	if (!base) {
-+		pr_err("%s: ioremap failed\n", __func__);
-+		return;
++static int __init of_davinci_timer_init(struct device_node *np)
++{
++	struct clk *clk;
++
++	clk = of_clk_get(np, 0);
++	if (IS_ERR(clk)) {
++		struct of_phandle_args clkspec;
++
++		/*
++		 * Fall back to using ref_clk if the actual clock is not
++		 * available. This currently always happens because platform
++		 * clocks (i.e PLLs and PSCs) are registered as platform
++		 * devices and therefore are not available at this point in
++		 * the boot process.
++		 */
++		clkspec.np = of_find_node_by_name(NULL, "ref_clk");
++		if (IS_ERR(clkspec.np)) {
++			pr_err("%s: No clock available for timer!\n", __func__);
++			return PTR_ERR(clkspec.np);
++		}
++		clk = of_clk_get_from_provider(&clkspec);
++		of_node_put(clkspec.np);
 +	}
 +
-+	cfgchip = syscon_regmap_lookup_by_compatible("ti,da830-cfgchip");
-+	if (IS_ERR(cfgchip)) {
-+		pr_warn("%s: failed to get cfgchip (%ld)\n", __func__,
-+			PTR_ERR(cfgchip));
-+		cfgchip = NULL;
-+	}
++	davinci_timer_init(clk);
 +
-+	of_davinci_pll_init(NULL, node, &da850_pll0_info,
-+			    &da850_pll0_obsclk_info,
-+			    da850_pll0_sysclk_info, 7, base, cfgchip);
- }
- 
- static const struct davinci_pll_clk_info da850_pll1_info = {
-diff --git a/drivers/clk/davinci/pll.c b/drivers/clk/davinci/pll.c
-index 7c4d808b8fdb..7d55e7470005 100644
---- a/drivers/clk/davinci/pll.c
-+++ b/drivers/clk/davinci/pll.c
-@@ -794,8 +794,10 @@ static struct davinci_pll_platform_data *davinci_pll_get_pdata(struct device *de
- 	return pdata;
- }
- 
-+/* needed in early boot for clocksource/clockevent */
-+CLK_OF_DECLARE(da850_pll0, "ti,da850-pll0", of_da850_pll0_init);
-+
- static const struct of_device_id davinci_pll_of_match[] = {
--	{ .compatible = "ti,da850-pll0", .data = of_da850_pll0_init },
- 	{ .compatible = "ti,da850-pll1", .data = of_da850_pll1_init },
- 	{ }
- };
-diff --git a/drivers/clk/davinci/pll.h b/drivers/clk/davinci/pll.h
-index 92a0978a7d29..5fe59ca45638 100644
---- a/drivers/clk/davinci/pll.h
-+++ b/drivers/clk/davinci/pll.h
-@@ -126,7 +126,7 @@ int da830_pll_init(struct device *dev, void __iomem *base, struct regmap *cfgchi
- 
- int da850_pll0_init(struct device *dev, void __iomem *base, struct regmap *cfgchip);
- int da850_pll1_init(struct device *dev, void __iomem *base, struct regmap *cfgchip);
--int of_da850_pll0_init(struct device *dev, void __iomem *base, struct regmap *cfgchip);
-+void of_da850_pll0_init(struct device_node *node);
- int of_da850_pll1_init(struct device *dev, void __iomem *base, struct regmap *cfgchip);
- 
- int dm355_pll1_init(struct device *dev, void __iomem *base, struct regmap *cfgchip);
++	return 0;
++}
++TIMER_OF_DECLARE(davinci_timer, "ti,davinci-timer", of_davinci_timer_init);
 -- 
 2.17.0
