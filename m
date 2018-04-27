@@ -1,82 +1,75 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v2 6/6] rpmsg: glink: Expose rpmsg name attr for glink
-Date: Fri, 27 Apr 2018 09:24:21 +0800
-Message-ID: <201804270908.gvoFdL1v%fengguang.wu@intel.com>
-References: <1524708472-18263-7-git-send-email-clew@codeaurora.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V4 3/6] ARM: dts: imx6sx-sabreauto: add IO expander
+ max7310 support
+Date: Fri, 27 Apr 2018 01:33:00 +0000
+Message-ID: <AM3PR04MB1315E21D05BC3EA5F9E6D2EAF58D0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+References: <1524634571-5914-1-git-send-email-Anson.Huang@nxp.com>
+ <1524634571-5914-3-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5Dm6rcEe=zAJ9_nqKce3g2tdyWPqb=Uv-N5nfc_96jc-g@mail.gmail.com>
+ <AM3PR04MB13150654494B8D251988F76CF58E0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5AZLbUoL7FWgUFA7qc3q3wcz9UBLSQhMXXkUJeiRz8X4A@mail.gmail.com>
+ <DB5PR04MB13205A0A7134C969748560B4F58E0@DB5PR04MB1320.eurprd04.prod.outlook.com>
+ <CAOMZO5DWeYCbWn9LEi1e+tc4gZsjBBpXtiwzmwLbYp=E4TERrg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1524708472-18263-7-git-send-email-clew@codeaurora.org>
+In-Reply-To: <CAOMZO5DWeYCbWn9LEi1e+tc4gZsjBBpXtiwzmwLbYp=E4TERrg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, clew@codeaurora.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
-
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on v4.17-rc2 next-20180426]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Chris-Lew/Add-chrdev-and-name-query-support-for-GLINK/20180427-023202
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
-
-
-sparse warnings: (new ones prefixed by >>)
-
-   drivers/rpmsg/qcom_glink_native.c:624:16: sparse: incorrect type in assignment (different base types) @@    expected unsigned short [unsigned] [usertype] id @@    got  short [unsigned] [usertype] id @@
-   drivers/rpmsg/qcom_glink_native.c:624:16:    expected unsigned short [unsigned] [usertype] id
-   drivers/rpmsg/qcom_glink_native.c:624:16:    got restricted __le16 [usertype] <noident>
-   drivers/rpmsg/qcom_glink_native.c:625:18: sparse: incorrect type in assignment (different base types) @@    expected unsigned short [unsigned] [usertype] lcid @@    got  short [unsigned] [usertype] lcid @@
-   drivers/rpmsg/qcom_glink_native.c:625:18:    expected unsigned short [unsigned] [usertype] lcid
-   drivers/rpmsg/qcom_glink_native.c:625:18:    got restricted __le16 [usertype] <noident>
-   drivers/rpmsg/qcom_glink_native.c:626:19: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [unsigned] [usertype] count @@    got ed int [unsigned] [usertype] count @@
-   drivers/rpmsg/qcom_glink_native.c:626:19:    expected unsigned int [unsigned] [usertype] count
-   drivers/rpmsg/qcom_glink_native.c:626:19:    got restricted __le32 [usertype] <noident>
-   drivers/rpmsg/qcom_glink_native.c:627:18: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [unsigned] [usertype] size @@    got ed int [unsigned] [usertype] size @@
-   drivers/rpmsg/qcom_glink_native.c:627:18:    expected unsigned int [unsigned] [usertype] size
-   drivers/rpmsg/qcom_glink_native.c:627:18:    got restricted __le32 [usertype] <noident>
-   drivers/rpmsg/qcom_glink_native.c:628:18: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [unsigned] [usertype] liid @@    got ed int [unsigned] [usertype] liid @@
-   drivers/rpmsg/qcom_glink_native.c:628:18:    expected unsigned int [unsigned] [usertype] liid
-   drivers/rpmsg/qcom_glink_native.c:628:18:    got restricted __le32 [usertype] <noident>
->> drivers/rpmsg/qcom_glink_native.c:1569:1: sparse: incorrect type in initializer (different modifiers) @@    expected struct attribute **attrs @@    got structstruct attribute **attrs @@
-   drivers/rpmsg/qcom_glink_native.c:1569:1:    expected struct attribute **attrs
-   drivers/rpmsg/qcom_glink_native.c:1569:1:    got struct attribute const **<noident>
-   In file included from include/linux/kobject.h:20:0,
-                    from include/linux/irqdesc.h:6,
-                    from include/linux/irq.h:517,
-                    from arch/x86/include/asm/hardirq.h:6,
-                    from include/linux/hardirq.h:9,
-                    from include/linux/interrupt.h:11,
-                    from drivers/rpmsg/qcom_glink_native.c:15:
-   drivers/rpmsg/qcom_glink_native.c:1569:18: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
-    ATTRIBUTE_GROUPS(qcom_glink);
-                     ^
-   include/linux/sysfs.h:154:11: note: in definition of macro 'ATTRIBUTE_GROUPS'
-     .attrs = _name##_attrs,     31-           ^~~~~
-   drivers/rpmsg/qcom_glink_native.c:1569:18: note: (near initialization for 'qcom_glink_group.attrs')
-    ATTRIBUTE_GROUPS(qcom_glink);
-                     ^
-   include/linux/sysfs.h:154:11: note: in definition of macro 'ATTRIBUTE_GROUPS'
-     .attrs = _name##_attrs,     37-           ^~~~~
-   cc1: some warnings being treated as errors
-
-vim +1569 drivers/rpmsg/qcom_glink_native.c
-
-  1564	
-  1565	static const struct attribute *qcom_glink_attrs[] = {
-  1566		&dev_attr_rpmsg_name.attr,
-  1567		NULL
-  1568	};
-> 1569	ATTRIBUTE_GROUPS(qcom_glink);
-  1570	
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+DQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
+Z2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1AZ21haWwuY29t
+XQ0KPiBTZW50OiBGcmlkYXksIEFwcmlsIDI3LCAyMDE4IDE6MjQgQU0NCj4gVG86IEFuc29uIEh1
+YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJu
+ZWwub3JnPjsgU2FzY2hhIEhhdWVyDQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBGYWJpbyBF
+c3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBSb2INCj4gSGVycmluZyA8cm9iaCtkdEBr
+ZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47DQo+IFJ1c3Nl
+bGwgS2luZyAtIEFSTSBMaW51eCA8bGludXhAYXJtbGludXgub3JnLnVrPjsgZGwtbGludXgtaW14
+DQo+IDxsaW51eC1pbXhAbnhwLmNvbT47IG1vZGVyYXRlZCBsaXN0OkFSTS9GUkVFU0NBTEUgSU1Y
+IC8gTVhDIEFSTQ0KPiBBUkNISVRFQ1RVUkUgPGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZz47IG9wZW4gbGlzdDpPUEVODQo+IEZJUk1XQVJFIEFORCBGTEFUVEVORUQgREVWSUNF
+IFRSRUUgQklORElOR1MNCj4gPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgbGludXgta2Vy
+bmVsIDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENI
+IFY0IDMvNl0gQVJNOiBkdHM6IGlteDZzeC1zYWJyZWF1dG86IGFkZCBJTyBleHBhbmRlcg0KPiBt
+YXg3MzEwIHN1cHBvcnQNCj4gDQo+IE9uIFRodSwgQXByIDI2LCAyMDE4IGF0IDM6MzEgQU0sIEFu
+c29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiB3cm90ZToNCj4gDQo+ID4gSSBzZWFy
+Y2hlZCB0aGUgbWFpbCBJIHNlbnQsIEkgY2FuIE5PVCBmb3VuZCB3aGVyZSBJIHNhaWQgIk1BWDcz
+MTAgY29udHJvbHMNCj4gdGhlIGV0aGVybmV0IHBoeSIuLi4uDQo+IA0KPiBJbml0aWFsbHkgeW91
+IHBhc3NlZDogIHBpbmN0cmwtYXNzZXJ0LWdwaW9zID0gPCZtYXg3MzIyIDAgR1BJT19BQ1RJVkVf
+SElHSD4NCj4gaW5zaWRlIHRoZSBmZWMxIG5vZGUuDQo+IA0KPiBUaGVuIEkgZXhwbGFpbmVkIHRo
+YXQgJ3BpbmN0cmwtYXNzZXJ0LWdwaW9zJyBpcyBub3QgYSB2YWxpZCBwcm9wZXJ0eSBpbiBtYWlu
+bGluZS4gSXQNCj4gb25seSBleGlzdHMgaW4gTlhQIHZlbmRvciB0cmVlLg0KPiANCj4gVGhlbiB5
+b3UgZXhwbGFpbmVkOg0KPiANCj4gIlNvcnJ5LCBJIG1hZGUgYSBtaXN0YWtlIGhlcmUsIHRoZSBN
+QVg3MzIwIElPMCBpcyBmb3IgYWRqdXN0aW5nIEZFQzEncyB2b2x0YWdlIg0KDQpUaGUgJyBwaW5j
+dHJsLWFzc2VydC1ncGlvcyAnIGlzIE9OTFkgaW4gTlhQIGxvY2FsIHRyZWUsIEZFQyBvd25lciBh
+ZGRlZCBpdCBiZWNhdXNlIGhlDQp3YW50cyB0byBzZXQgdGhpcyBHUElPIE9OQ0UgZHVyaW5nIGtl
+cm5lbCBib290IHVwLCBidXQgdXBzdHJlYW0ga2VybmVsIGRvZXMgTk9UDQpzdXBwb3J0IHRoZSBw
+aW5jdHJsLWFzc2VydC1ncGlvLCBzbyB3ZSBoYXZlIHRvIGRyb3AgaXQsIHRoZSBNQVg3MzIyIElP
+MCBpcyBmb3IgYWRqdXN0aW5nDQpGRUMncyB2b2x0YWdlLCBJIG1lYW50IGZvciBGRUMgSU8ncyB2
+b2x0YWdlLCAxLjVWIG9yIDEuOFYuIElmIEkgbWFkZSBhbnkgY29uZnVzZSwgSSBhbQ0Kc29ycnkg
+Zm9yIHRoYXQsIEkgdGhpbmsgaXQgc2hvdWxkIGJlIGNsZWFyIG5vdywgYWxsIHdlIHdhbnQvbmVl
+ZCBpcyB0byBzZXQgdGhpcyBHUElPIE9OQ0UNCnRvIGdldCB0aGUgSU8gdm9sdGFnZSB3ZSB3YW50
+Lg0KDQo+IA0KPiA+IFRoZXJlIGFyZSBNQVg3MzEwIHVzZXJzLCBpdCBpcyBqdXN0IGJlY2F1c2Ug
+Y3VycmVudGx5IHRob3NlIHVzZXJzIGFyZQ0KPiA+IE5PVCBlbmFibGVkLCBzbyBJIGNhbiBOT1Qg
+dmVyaWZ5IHRoZW0uIE1BWDczMTAgaXMgYW4gaW5kZXBlbmRlbnQgSTJDDQo+IGRldmljZSwgd2h5
+IHdlIGNhbiBOT1QgZW5hYmxlIGl0IGZpcnN0Pw0KPiA+IEkgdGVzdGVkIGl0IGZyb20gc3lzZnMg
+aW50ZXJmYWNlLCB3ZSBjYW4gY29udHJvbCB0aGUgTUFYNzMxMCdzIElPDQo+ID4gb3V0cHV0IHZp
+YSBlY2hvIGRpZmZlcmVudCB2YWx1ZSB0byBHUElPIHZhbHVlLCB0aGF0IG1lYW5zIE1BWDczMTAN
+Cj4gPiBpdHNlbGYgYXMgYW4gSU8gZXhwYW5kZXIgY2hpcCBpcyB3b3JraW5nIGp1c3QgZmluZSwg
+c2ltaWxhciB3aXRoIFBNSUMsIGl0IGlzIGEgSTJDDQo+IGRldmljZSwgY2FuIGJlIGVuYWJsZWQg
+aW5kZXBlbmRlbnRseSwgdGhlbiBjb25zdW1lcnMgY2FuIGJlIGFkZGVkIGxhdGVyIHdoZW4NCj4g
+dGhleSBhcmUgZW5hYmxlZC4NCj4gPiBKdXN0IG15IHBlcnNvbmFsIG9waW5pb24sIHRoYW5rcy4N
+Cj4gDQo+IFJpZ2h0LCBidXQgaWYgRkVDIG5lZWRzIG1heDczMjIgSU8wIGF0IGxldmVsIDEgdGhl
+biBiZXR0ZXIgZGVzY3JpYmUgaXQgaW4gZHRzLg0KIA0KQWdyZWUsIHNpbmNlIGN1cnJlbnRseSBv
+dXIgRkVDIGRyaXZlciBkb2VzIE5PVCBzdXBwb3J0IGFkanVzdGluZyBzdWNoIElPIHZvbHRhZ2Ug
+aW4gZHJpdmVyLCANCmFuZCB0aGVyZSBpcyBOTyBzdWNoIHJlcXVpcmVtZW50IG9mIHJ1bnRpbWUg
+c3dpdGNoaW5nIElPIHZvbHRhZ2UgZm9yIEZFQywgc28gSSB0aGluayBpdA0Kc2hvdWxkIGJlIGdv
+b2QgaGVyZSwganVzdCB1c2UgdGhlIGRlZmF1bHQgc2V0dGluZ3Mgb2YgTUFYNzMyMiBJTzAgZGVz
+Y3JpYmVkIGluICdyZWdfZmVjJywNCmlmIHRoZXJlIGlzIGFueSBmdXJ0aGVyIHJlcXVpcmVtZW50
+IG9mIHJ1bnRpbWUgYWRqdXN0aW5nIEZFQyBJTyB2b2x0YWdlLCBJIHRoaW5rIEZFQyBkcml2ZXIN
+Cm5lZWRzIHRvIGFkZCBzdWNoIHN1cHBvcnQsIGFuZCB0aGVyZSB3aWxsIGJlIG5ldyBwYXRjaCBm
+b3IgaXQuDQoNClRoYW5rcy4NCg0KQW5zb24uICANCg0K
