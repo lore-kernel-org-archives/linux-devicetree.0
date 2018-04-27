@@ -1,37 +1,55 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 18/27] dt-bindings: cp110: update documentation since DT
- de-duplication
-Date: Fri, 27 Apr 2018 16:08:15 -0500
-Message-ID: <20180427210815.nimaezoi66awszat@rob-hp-laptop>
-References: <20180421151255.29929-1-miquel.raynal@bootlin.com>
- <20180421151255.29929-19-miquel.raynal@bootlin.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 01/11] dt-bindings: display: renesas: Add R-Car M3-N
+ HDMI TX DT bindings
+Date: Sat, 28 Apr 2018 00:17:48 +0300
+Message-ID: <6846570.vn03TlgmMA@avalon>
+References: <20180427165722.19445-1-kieran.bingham+renesas@ideasonboard.com>
+ <20180427165722.19445-2-kieran.bingham+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180421151255.29929-19-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180427165722.19445-2-kieran.bingham+renesas@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, open list <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 21, 2018 at 05:12:46PM +0200, Miquel Raynal wrote:
-> CP110 master/slave DT files have been merged in a DT de-duplication work
-> merged in v4.16. Update the syscon documentation accordingly to match
-> the current state of the DT nodes.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  .../bindings/arm/marvell/cp110-system-controller.txt           | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-
-Acked-by: Rob Herring <robh@kernel.org>
+SGkgS2llcmFuLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBGcmlkYXksIDI3IEFwcmls
+IDIwMTggMTk6NTc6MTIgRUVTVCBLaWVyYW4gQmluZ2hhbSB3cm90ZToKPiBUaGUgTTMtTiBIRE1J
+IFRYIGNvbnRyb2xsZXIgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBNMy1XIGFuZCBIMy4gTm8KPiBl
+eHRlbnNpb24gdG8gdGhlIERUIGJpbmRpbmdzIGFyZSBuZWVkZWQuCj4gCj4gQWRkIGFuIFNvQy1z
+cGVjaWZpYyBjb21wYXRpYmxlIHN0cmluZyBpbiBjYXNlIGRpZmZlcmVuY2VzIGJldHdlZW4gdGhl
+IElQCj4gdmVyc2lvbnMgYXJlIGZvdW5kIGxhdGVyIGFuZCByZXF1aXJlIG1vZGVsLXNwZWNpZmlj
+IGhhbmRsaW5nLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEtpZXJhbiBCaW5naGFtIDxraWVyYW4uYmlu
+Z2hhbStyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+CgpSZXZpZXdlZC1ieTogTGF1cmVudCBQaW5j
+aGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgoKYW5kIGFwcGxpZWQgdG8g
+bXkgdHJlZS4KCj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
+L3JlbmVzYXMsZHctaGRtaS50eHQgICAgICAgfCAxICsKPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5z
+ZXJ0aW9uKCspCj4gCj4gZGlmZiAtLWdpdAo+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsZHctaGRtaS50eHQKPiBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGR3LWhkbWkudHh0
+Cj4gaW5kZXggM2E3MmExMDNhMThhLi5hNDFkMjgwYzNmOWYgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsZHctaGRt
+aS50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
+cmlkZ2UvcmVuZXNhcyxkdy1oZG1pLnR4dAo+IEBAIC0xNCw2ICsxNCw3IEBAIFJlcXVpcmVkIHBy
+b3BlcnRpZXM6Cj4gIC0gY29tcGF0aWJsZSA6IFNoYWxsIGNvbnRhaW4gb25lIG9yIG1vcmUgb2YK
+PiAgICAtICJyZW5lc2FzLHI4YTc3OTUtaGRtaSIgZm9yIFI4QTc3OTUgKFItQ2FyIEgzKSBjb21w
+YXRpYmxlIEhETUkgVFgKPiAgICAtICJyZW5lc2FzLHI4YTc3OTYtaGRtaSIgZm9yIFI4QTc3OTYg
+KFItQ2FyIE0zLVcpIGNvbXBhdGlibGUgSERNSSBUWAo+ICsgIC0gInJlbmVzYXMscjhhNzc5NjUt
+aGRtaSIgZm9yIFI4QTc3OTY1IChSLUNhciBNMy1OKSBjb21wYXRpYmxlIEhETUkgVFgKPiAgICAt
+ICJyZW5lc2FzLHJjYXItZ2VuMy1oZG1pIiBmb3IgdGhlIGdlbmVyaWMgUi1DYXIgR2VuMyBjb21w
+YXRpYmxlIEhETUkgVFgKPiAKPiAgICAgIFdoZW4gY29tcGF0aWJsZSB3aXRoIGdlbmVyaWMgdmVy
+c2lvbnMsIG5vZGVzIG11c3QgbGlzdCB0aGUgU29DLXNwZWNpZmljCgoKLS0gClJlZ2FyZHMsCgpM
+YXVyZW50IFBpbmNoYXJ0CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
