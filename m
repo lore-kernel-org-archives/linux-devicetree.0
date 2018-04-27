@@ -1,61 +1,166 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v4 03/14] ARM: dts: dra7-mmc-iodelay: Add a new pinctrl group for clk line without pullup
-Date: Fri, 27 Apr 2018 17:38:54 +0530
-Message-ID: <20180427120905.3665-4-kishon@ti.com>
-References: <20180427120905.3665-1-kishon@ti.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH v7 0/7] clk: meson-axg: Add AO Cloclk and Reset driver
+Date: Fri, 27 Apr 2018 20:33:42 +0800
+Message-ID: <ab754711-f727-133c-7bc3-a9f3243c2278@amlogic.com>
+References: <20180426084437.192394-1-yixun.lan@amlogic.com>
+ <1524820841.4026.112.camel@baylibre.com>
+ <fbd24a73-6793-76be-3ca5-04cbac5db198@amlogic.com>
+ <1524823154.4026.123.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427120905.3665-1-kishon@ti.com>
+In-Reply-To: <1524823154.4026.123.camel@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, kishon@ti.com
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: yixun.lan@amlogic.com, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-During a short period when the bus voltage is switched from 3.3v to 1.8v,
-(to enumerate UHS mode), the mmc module is disabled and the mmc IO lines
-are kept in a state according to the programmed pad mux pull type.
+Hi Jerome:
 
-According to 4.2.4.2 Timing to Switch Signal Voltage in "SD Specifications
-Part 1 Physical Layer Specification Version 5.00 February 22, 2016", the
-host should hold CLK low for at least 5ms.
 
-In order to keep the card line low during voltage switch, the pad mux of
-mmc1_clk line should be configured to pull down.
+On 04/27/2018 05:59 PM, Jerome Brunet wrote:
+> On Fri, 2018-04-27 at 17:31 +0800, Yixun Lan wrote:
+>> hi Jerome:
+>>
+>>
+>> On 04/27/18 17:20, Jerome Brunet wrote:
+>>> On Thu, 2018-04-26 at 16:44 +0800, Yixun Lan wrote:
+>>>>   This patch try to add AO clock and Reset driver for Amlogic's
+>>>> Meson-AXG SoC.
+>>>>   Please note that patch 7 need to wait for the DTS changes[3] merged
+>>>> into mainline first, otherwise it will break the serial console.
+>>>>
+>>>>  patch 2: factor the common code into a dedicated file
+>>>>  patch 3-5: add the aoclk driver for AXG SoC
+>>>>  patch 6-7: drop unnecessary clock flags
+>>>>
+>>>> changes since v6 at [7]: 
+>>>>  - fix over 80 chars chechpatch error
+>>>>  - add Philip's Ack on patch 5
+>>>>  - drop extra end of newline
+>>>>
+>>>> changes since v5 at [6]: 
+>>>>  - drop unnecessary header files
+>>>>  - add 'axg_aoclk' prefix to clk driver, make them more consistent
+>>>>  - add missing end new line..
+>>>>
+>>>> changes since v4 at [5]: 
+>>>>  - fix return err
+>>>>  - introduce CONFIG_COMMON_CLK_MESON_AO
+>>>>  - format/style minor fix
+>>>>
+>>>> changes since v3 at [4]: 
+>>>>  - add 'const' contraint to the read-only data
+>>>>  - switch to devm_of_clk_add_hw_provider API
+>>>>  - check return value of devm_reset_controller_register
+>>>>
+>>>> changes since v2 at [2]: 
+>>>>  - rework meson_aoclkc_probe() which leverage the of_match_data
+>>>>  - merge patch 5-6 into this series
+>>>>  - seperate DTS patch, will send to Kevin Hilman independently
+>>>>  
+>>>> changes since v1 at [0]: 
+>>>>  - rebase to clk-meson's branch 'next/drivers' [1]
+>>>>  - fix license, update to BSD-3-Clause
+>>>>  - drop un-used include header file
+>>>>
+>>>> [0] https://lkml.kernel.org/r/20180209070026.193879-1-yixun.lan@amlogic.com
+>>>> [1] git://github.com/BayLibre/clk-meson.git branch: next-drivers
+>>>> [2] https://lkml.kernel.org/r/20180323143816.200573-1-yixun.lan@amlogic.com
+>>>> [3] https://lkml.kernel.org/r/20180326081809.49493-4-yixun.lan@amlogic.com
+>>>> [4] https://lkml.kernel.org/r/20180328025050.221585-1-yixun.lan@amlogic.com
+>>>> [5] https://lkml.kernel.org/r/20180408031938.153474-1-yixun.lan@amlogic.com
+>>>> [6] https://lkml.kernel.org/r/20180409143749.71197-1-yixun.lan@amlogic.com
+>>>> [7] https://lkml.kernel.org/r/20180419135426.155794-1-yixun.lan@amlogic.com
+>>>
+>>> Yixun,
+>>>
+>>> Your series looks mostly Ok to me, apart from the problem reported by Philipp.
+>>>
+>>> However, once applied, if the clkc ao controller is enabled, both gxl and axg
+>>> fail to complete the boot. Could you please explain how this was tested ??
+>>>
+>>
+>> isn't this caused by the patch 7?
+>>  [PATCH v7 7/7] clk: meson: drop CLK_IGNORE_UNUSED flag
+>>
+>>
+>> you need to also apply this DT patch which I've sent[1]:
+>>  [PATCH v3 3/3] ARM64: dts: meson: fix clock source of the pclk for UART_AO
+>>
+>> could you exclude the patch 7 for now until Kevin merged the DT part?
+>>
+>> [1] https://lkml.kernel.org/r/20180328030130.240336-4-yixun.lan@amlogic.com
+> 
+> Looks to be the problem indeed. But it is still an issue with how your patchset
+> in organized.
+> 
+> I can't merge this until Kevin merges the patch above, which he can't merge
+> until there is the clkc_ao support in axg, which is given by this series.
+> 
+> 1# You should remove the axg part of the patch above. Kevin will be able to
+> merge it w/o any dependencies. (BTW, the patch is broken for axg because 1) you
+> did not include the dt-binding header for the clkc_ao in axg and 2) the clkc_ao
+> does not exist at this stage)
+> 2# I can then safely merge this series - w/o breaking gxbb and gxl.
+> 3# Finally you'll have to make a DT change for the axg, enabling the clkc_ao and
+> changes the uart clocks at the same time.
+> 
 
-Add a new pinctrl group for clock line without pullup to be used in boards
-where mmc1_clk line is not connected to an external pullup.
+  I didn't make myself clear in previous email
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/dra7-mmc-iodelay.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 arch/arm/boot/dts/dra7-mmc-iodelay.dtsi
+  I mean, could you merge patch 1-6, just exclude the patch 7
+then kevin can merge the DT part (there are three patches) [1]
+after the DT patches merged, then you can take this patch 7
+This way, it won't break gxl or any other SoCs
 
-diff --git a/arch/arm/boot/dts/dra7-mmc-iodelay.dtsi b/arch/arm/boot/dts/dra7-mmc-iodelay.dtsi
-new file mode 100644
-index 000000000000..aa0947266526
---- /dev/null
-+++ b/arch/arm/boot/dts/dra7-mmc-iodelay.dtsi
-@@ -0,0 +1,19 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * MMC IOdelay values for TI's DRA7xx SoCs.
-+ * Copyright (C) 2018 Texas Instruments
-+ * Author: Kishon Vijay Abraham I <kishon@ti.com>
-+ */
-+
-+&dra7_pmx_core {
-+	mmc1_pins_default_no_clk_pu: mmc1_pins_default_no_clk_pu {
-+		pinctrl-single,pins = <
-+			DRA7XX_CORE_IOPAD(0x3754, PIN_INPUT_PULLDOWN | MUX_MODE0) /* mmc1_clk.clk */
-+			DRA7XX_CORE_IOPAD(0x3758, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_cmd.cmd */
-+			DRA7XX_CORE_IOPAD(0x375c, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat0.dat0 */
-+			DRA7XX_CORE_IOPAD(0x3760, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat1.dat1 */
-+			DRA7XX_CORE_IOPAD(0x3764, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat2.dat2 */
-+			DRA7XX_CORE_IOPAD(0x3768, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat3.dat3 */
-+		>;
-+	};
-+};
--- 
-2.17.0
+  I'm sending patch 7 along with this series, it would be better if I
+give a warning about it.
+
+[1] https://lkml.kernel.org/r20180328030130.240336-1-yixun.lan@amlogic.com
+
+>>
+>>
+>>> Not merging it until we get to the bottom of this.
+>>>
+>>>>
+>>>>
+>>>> Qiufang Dai (1):
+>>>>   clk: meson-axg: Add AO Clock and Reset controller driver
+>>>>
+>>>> Yixun Lan (6):
+>>>>   clk: meson: migrate to devm_of_clk_add_hw_provider API
+>>>>   clk: meson: aoclk: refactor common code into dedicated file
+>>>>   dt-bindings: clock: axg-aoclkc: New binding for Meson-AXG SoC
+>>>>   dt-bindings: clock: reset: Add AXG AO Clock and Reset Bindings
+>>>>   clk: meson: drop CLK_SET_RATE_PARENT flag
+>>>>   clk: meson: drop CLK_IGNORE_UNUSED flag
+>>>>
+>>>>  .../bindings/clock/amlogic,gxbb-aoclkc.txt    |   1 +
+>>>>  drivers/clk/meson/Kconfig                     |   8 +
+>>>>  drivers/clk/meson/Makefile                    |   3 +-
+>>>>  drivers/clk/meson/axg-aoclk.c                 | 163 ++++++++++++++++++
+>>>>  drivers/clk/meson/axg-aoclk.h                 |  29 ++++
+>>>>  drivers/clk/meson/gxbb-aoclk.c                |  95 ++++------
+>>>>  drivers/clk/meson/gxbb-aoclk.h                |   5 +
+>>>>  drivers/clk/meson/meson-aoclk.c               |  81 +++++++++
+>>>>  drivers/clk/meson/meson-aoclk.h               |  34 ++++
+>>>>  include/dt-bindings/clock/axg-aoclkc.h        |  26 +++
+>>>>  include/dt-bindings/reset/axg-aoclkc.h        |  20 +++
+>>>>  11 files changed, 401 insertions(+), 64 deletions(-)
+>>>>  create mode 100644 drivers/clk/meson/axg-aoclk.c
+>>>>  create mode 100644 drivers/clk/meson/axg-aoclk.h
+>>>>  create mode 100644 drivers/clk/meson/meson-aoclk.c
+>>>>  create mode 100644 drivers/clk/meson/meson-aoclk.h
+>>>>  create mode 100644 include/dt-bindings/clock/axg-aoclkc.h
+>>>>  create mode 100644 include/dt-bindings/reset/axg-aoclkc.h
+>>>>
+>>>
+>>> .
+>>>
+>>
+>>
+> 
+> .
+> 
