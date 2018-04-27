@@ -1,35 +1,59 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] of: overlay: Stop leaking resources on overlay removal
-Date: Thu, 26 Apr 2018 21:19:33 -0500
-Message-ID: <20180427021933.vkdmzid4ated6whe@rob-hp-laptop>
-References: <e8704374-857c-d80e-e91c-89d59e1cffbe@siemens.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
+ platform drivers
+Date: Thu, 26 Apr 2018 21:28:39 -0500
+Message-ID: <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com>
+References: <20180426152920.21569-1-brgl@bgdev.pl>
+ <20180426173151.GJ3094@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e8704374-857c-d80e-e91c-89d59e1cffbe@siemens.com>
+In-Reply-To: <20180426173151.GJ3094@brightrain.aerifal.cx>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alan Tull <atull@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+To: Rich Felker <dalias@libc.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@siemens.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 01:00:30PM +0200, Jan Kiszka wrote:
-> Only the overlay notifier callbacks have a chance to potentially get
-> hold of references to those two resources, but they are not supposed to
-> store them beyond OF_OVERLAY_POST_REMOVE.
+On 04/26/2018 12:31 PM, Rich Felker wrote:
+> On Thu, Apr 26, 2018 at 05:29:18PM +0200, Bartosz Golaszewski wrote:
+>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>
+>> This is a follow to my series[1] the aim of which was to introduce device tree
+>> support for early platform devices.
+>>
+>> It was received rather negatively. Aside from using device tree to pass
+>> implementation specific details to the system, two important concerns were
+>> raised: no probe deferral support and the fact that currently the early devices
+>> never get converted to actual platform drivers. This series is a
+>> proof-of-concept that's trying to address those issues.
+>>
+>> The only user of the current version of early platform drivers is the SuperH
+>> architecture. If this series eventually gets merged, we could simply replace
+>> the other solution.
 > 
-> Document the overlay notifier API, its constraint regarding pointer
-> lifetime, and then remove intentional leaks of ovcs->overlay_tree and
-> ovcs->fdt from free_overlay_changeset.
+> Looking at a quick output of:
 > 
-> See also https://lkml.org/lkml/2018/4/23/1063 and following.
+> 	grep -r -A10 early_devices[[] arch/sh/kernel/
 > 
-> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-> ---
->  Documentation/devicetree/overlay-notes.txt |  8 ++++++++
->  drivers/of/overlay.c                       | 30 +++++++++++++++++++++---------
->  2 files changed, 29 insertions(+), 9 deletions(-)
+> it looks like all of the existing early platform devices are serial
+> ports, clocks, and clocksources. The switch to device tree should pick
+> them all up from CLK_OF_DECLARE, TIMER_OF_DECLARE, and
+> EARLYCON_DECLARE. Until that's complete, the existing code works
+> as-is. I don't see what problem you're trying to solve.
 
-Applied, thanks.
+The problem for us is that clk maintainers don't want new drivers to use
+CLK_OF_DECLARE and instead use platform devices. I have just written such
+a new driver that is shared by 6 different SoCs. For some combinations of
+SoCs and clocks, using a platform device is fine but on others we need to
+register early, so the drivers now have to handle both cases, which is
+kind of messy and fragile. If there is a generic way to register platform
+devices early, then the code is simplified because we only have to handle
+one method of registering the clocks instead of two.
 
-Rob
+> 
+> FYI I'm (sometimes-somewhat-absent) arch/sh co-maintainer.
+> 
+> Rich
+> 
