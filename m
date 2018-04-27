@@ -1,79 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 24/27] dt-bindings: timer: new bindings for TI DaVinci
- timer
-Date: Fri, 27 Apr 2018 09:05:22 -0500
-Message-ID: <20180427140522.npmhjamhwxgp7y73@rob-hp-laptop>
-References: <20180427001745.4116-1-david@lechnology.com>
- <20180427001745.4116-25-david@lechnology.com>
+Subject: Re: [PATCH v6 01/24] soc: qcom dt-bindings: Add APR
+	bus bindings
+Date: Fri, 27 Apr 2018 09:07:38 -0500
+Message-ID: <20180427140738.lpoi7ow7bgzjrumf@rob-hp-laptop>
+References: <20180426094606.4775-1-srinivas.kandagatla@linaro.org>
+ <20180426094606.4775-2-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20180427001745.4116-25-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180426094606.4775-2-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: srinivas.kandagatla@linaro.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, spatakok@qti.qualcomm.com, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, andy.gross@linaro.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 07:17:42PM -0500, David Lechner wrote:
-> This adds new device tree bindings for the timer IP block of TI
-> DaVinci-like SoCs.
+On Thu, Apr 26, 2018 at 10:45:43AM +0100, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > 
-> Signed-off-by: David Lechner <david@lechnology.com>
+> This patch add dt bindings for Qualcomm APR (Asynchronous Packet Router)
+> bus driver. This bus is used for communicating with DSP which provides
+> audio and various other services to cpu.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
-> 
-> v9 changes:
-> - new patch in v9
-> 
-> 
->  .../bindings/timer/ti,davinci-timer.txt       | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/ti,davinci-timer.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/ti,davinci-timer.txt b/Documentation/devicetree/bindings/timer/ti,davinci-timer.txt
-> new file mode 100644
-> index 000000000000..2091eca46981
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/ti,davinci-timer.txt
-> @@ -0,0 +1,24 @@
-> +* Device tree bindings for Texas Instruments DaVinci timer
-> +
-> +This document provides bindings for the 64-bit timer in the DaVinci
-> +architecture devices. The timer can be configured as a general-purpose 64-bit
-> +timer, dual general-purpose 32-bit timers. When configured as dual 32-bit
-> +timers, each half can operate in conjunction (chain mode) or independently
-> +(unchained mode) of each other.
-> +
-> +It is global timer is a free running up-counter and can generate interrupt
+>  .../devicetree/bindings/soc/qcom/qcom,apr.txt      | 84 ++++++++++++++++++++++
+>  include/dt-bindings/soc/qcom,apr.h                 | 28 ++++++++
+>  2 files changed, 112 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+>  create mode 100644 include/dt-bindings/soc/qcom,apr.h
 
-Doesn't make sense, too many 'is'.
-
-There's no interrupt property listed.
-
-> +when the counter reaches preset counter values.
-> +
-> +Required properties:
-> +
-> +- compatible : should be "ti,davinci-timer".
-> +- reg : specifies base physical address and count of the registers.
-> +- clocks : the clock feeding the timer clock.
-> +
-> +Example:
-> +
-> +	clocksource: timer@20000 {
-> +		compatible = "ti,davinci-timer";
-> +		reg = <0x20000 0x1000>;
-> +		clocks = <&pll0_auxclk>;
-> +	};
-> -- 
-> 2.17.0
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
