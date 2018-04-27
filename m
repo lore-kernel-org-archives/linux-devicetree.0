@@ -1,61 +1,95 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v4 09/15] memory: tegra: Squash tegra20-mc into common
- tegra-mc driver
-Date: Fri, 27 Apr 2018 13:13:47 +0300
-Message-ID: <882f14b8-78c8-95bb-326e-3917c9736faf@gmail.com>
-References: <cover.1523301400.git.digetx@gmail.com>
- <675f74f82378b5f7d8f61d35e929614a0e156141.1523301400.git.digetx@gmail.com>
- <20180427093435.GB30388@ulmo>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
+ platform drivers
+Date: Fri, 27 Apr 2018 12:18:09 +0200
+Message-ID: <CAK8P3a2xtTLx-VHVWok-b19=o1z5FbTNcaWq7Y_HSdaH6pWnZg@mail.gmail.com>
+References: <20180426152920.21569-1-brgl@bgdev.pl> <20180426173151.GJ3094@brightrain.aerifal.cx>
+ <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com> <CAK8P3a0oCH7zyBs8nQd4p+xLrFwDQiJsaKKCF1m04nyXsZxk=g@mail.gmail.com>
+ <CAMpxmJUR+31axmAe2TNq00aUg40bnC=5k=2cVX019Vncr7cRkw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427093435.GB30388@ulmo>
-Content-Language: en-US
+In-Reply-To: <CAMpxmJUR+31axmAe2TNq00aUg40bnC=5k=2cVX019Vncr7cRkw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: David Lechner <david@lechnology.com>, Rich Felker <dalias@libc.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@sie>
 List-Id: devicetree@vger.kernel.org
 
-On 27.04.2018 12:34, Thierry Reding wrote:
-> On Mon, Apr 09, 2018 at 10:28:31PM +0300, Dmitry Osipenko wrote:
-> [...]
->> diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
-> [...]
->> +#define MC_GART_ERROR_REQ		0x30
->> +#define MC_DECERR_EMEM_OTHERS_STATUS	0x58
->> +#define MC_SECURITY_VIOLATION_STATUS	0x74
-> [...]
->> diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
-> [...]
->> @@ -21,19 +21,30 @@
->>  #define MC_INT_INVALID_SMMU_PAGE (1 << 10)
->>  #define MC_INT_ARBITRATION_EMEM (1 << 9)
->>  #define MC_INT_SECURITY_VIOLATION (1 << 8)
->> +#define MC_INT_INVALID_GART_PAGE (1 << 7)
->>  #define MC_INT_DECERR_EMEM (1 << 6)
->>  
->>  static inline u32 mc_readl(struct tegra_mc *mc, unsigned long offset)
->>  {
->> +	if (mc->regs2 && offset >= 0x24)
->> +		return readl(mc->regs2 + offset - 0x3c);
-> 
-> I'm still not sure how this is supposed to work. If we pass in
-> MC_GART_ERROR_REQ as offset into mc_readl(), then the condition above
-> will be true (0x30 >= 0x24) but then the new offset will be computed
-> and we end up with:
-> 
-> 	return readl(mc->regs2 + 0x30 - 0x3c);
-> 
-> which means we'll be adding a negative offset (or rather a very large
-> offset because it will wrap around).
+On Fri, Apr 27, 2018 at 10:57 AM, Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> 2018-04-27 9:52 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+>> On Fri, Apr 27, 2018 at 4:28 AM, David Lechner <david@lechnology.com> wrote:
+>>> On 04/26/2018 12:31 PM, Rich Felker wrote:
+>
+> We have platforms out there which still use both board files and
+> device tree. They are still comercially supported and are not going
+> anywhere anytime soon. Some of these platforms are being actively
+> maintained and cleaned-up. An example is the DaVinci platform: David
+> has recently converted all the SoCs and boards to using the common
+> clock framework. I'm cleaning up some other parts too.
+>
+> The problem with the legacy board code is that a lot of things that
+> should be platform drivers ended up in arch/arm/mach-*. We're now
+> slowly moving this code to drivers/ but some initialization code
+> (timers, critical clocks, irqs) needs to be called early in the boot
+> sequence.
 
-Indeed! Thank you for pointing at it again, now I see the issue. It probably
-works because actual registers mapping is aligned to page(?) size and adding the
-large offset with wraparound is equal to subtraction.
+Right, and that's very good work.
 
-That register belongs to the GART and we can't simply move interrupt handling to
-the GART driver because status register is within the MC in device tree. We can
-omit reading of MC_GART_ERROR_REQ and simply report GART page fault for the
-starter and then reorganize drivers by making MC driver MFD and GART its
-sub-device, what do you think?
+> When you're saying that we already have all the OF_DECLARE macros, it
+> seems to me that you're forgetting that we also want to keep
+> supporting the board files. So without the early platform drivers we
+> need to use a mix of OF_DECLARE and handcrafted initialization in
+> arch/arm/mach-* since we can't call platform_device_register() that
+> early. This blocks us from completely moving the should-be-driver code
+> to drivers/, because these drivers *need* to support both cases.
+
+The OF_DECLARE_* functions were initially added as a way to
+remove board files that just consist of callbacks into early
+initialization for some subsystems. As long as you still have
+board files and you are looking for a way to reuse code between
+OF_DECLARE_* functions and board files, why not just leave
+those functions globally visible and call them from the non-DT
+board files?
+
+> The main problem with OF_DECLARE is that although we have
+> corresponding device nodes, we never actually register any real linux
+> devices. If we add to this the fact that current early platform
+> drivers implementation is broken (for reasons I mentioned in the cover
+> letter) the support gets really messy, since we can have up to three
+> entry points to the driver's code. Other issues come to mind as well:
+> if we're using OF_DECLARE we can't benefit from devm* routines.
+
+Right, the devm_* problem has come up before.
+
+> My aim is to provide a clean, robust and generic way of probing
+> certain devices early and then converting them to actual platform
+> devices when we're advanced enough into the boot sequence. If we
+> merged such a framework, we could work towards removing both the
+> previous early platform devices (in favor of the new mechanism) and
+> maybe even deprecating and replacing OF_DECLARE(), since we could
+> simply early probe the DT drivers. Personally I see OF_DECLARE as a
+> bigger hack than early devices.
+>
+> My patch tries to address exactly the use cases we're facing - for
+> example by providing means to probe devices twice (early and late) and
+> to check the state we're at in order for users to be able to just do
+> the critical initialization early on and then continue with regular
+> stuff later.
+
+Maybe the problem is reusing the name and some of the code from
+an existing functionality that we've been trying to get rid of.
+
+If what you want to do is completely different from the existing
+early_platform implementation, how about starting by moving that
+out of drivers/base/platform.c into something under arch/sh/
+and renaming it to something with an sh_ prefix.
+
+Let's just leave the non-DT part out of it by making it sh specific.
+Then we can come up with improvements to the current
+platform_device handling for DT based platforms that you can
+use on DT-based davinci to replace what currently happens on
+board-file based davinci systems, without mixing up those
+two code paths too much in the base driver support.
+
+       Arnd
