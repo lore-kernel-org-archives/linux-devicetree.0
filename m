@@ -1,119 +1,107 @@
-Return-Path: <SRS0=+3ec=G7=goldelico.com=hns@kernel.org>
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v3 2/4] gpio: pca953x: add register definitions for pcal6524 and fix address calculation
-Date: Tue, 10 Apr 2018 18:07:02 +0200
-Message-Id: <0e9bea79eae7504e61fabdb4a0311f8fdc2f6b25.1523376423.git.hns@goldelico.com>
-In-Reply-To: <cover.1523376423.git.hns@goldelico.com>
-References: <cover.1523376423.git.hns@goldelico.com>
-In-Reply-To: <cover.1523376423.git.hns@goldelico.com>
-References: <cover.1523376423.git.hns@goldelico.com>
-To: galak@codeaurora.org, andy.shevchenko@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
+Return-Path: <SRS0=KY0l=HQ=gmail.com=akinobu.mita@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <2634517.9A5lBSedep@avalon>
+References: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
+ <2085532.oxbmo4GB4v@avalon> <CAC5umyhR=VKxhtQwegceczvQyjpV5zaJ-E8+RscTuveS=9Em+g@mail.gmail.com>
+ <2634517.9A5lBSedep@avalon>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Date: Sat, 28 Apr 2018 02:15:49 +0900
+Message-ID: <CAC5umyi0Z-CtcpP9Td=yfOqMkQm+SJLD9taJ6Ma5y+9f5JK8UQ@mail.gmail.com>
+Subject: Re: [PATCH v3 01/11] media: dt-bindings: ov772x: add device tree binding
+Content-Type: text/plain; charset="UTF-8"
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-PCAL chips ("L" seems to stand for "latched") have additional
-registers starting at address 0x40 to control the latches,
-interrupt mask, pull-up and pull down etc.
+2018-04-27 6:34 GMT+09:00 Laurent Pinchart <laurent.pinchart@ideasonboard.com>:
+> Hi Mita-san,
+>
+> On Thursday, 26 April 2018 19:17:55 EEST Akinobu Mita wrote:
+>> 2018-04-26 7:40 GMT+09:00 Laurent Pinchart:
+>> > On Wednesday, 25 April 2018 19:19:11 EEST Akinobu Mita wrote:
+>> >> 2018-04-24 0:54 GMT+09:00 Akinobu Mita <akinobu.mita@gmail.com>:
+>> >> > 2018-04-23 18:17 GMT+09:00 Laurent Pinchart:
+>> >> >> On Sunday, 22 April 2018 18:56:07 EEST Akinobu Mita wrote:
+>> >> >>> This adds a device tree binding documentation for OV7720/OV7725
+>> >> >>> sensor.
+>> >> >>>
+>> >> >>> Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>> >> >>> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>> >> >>> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+>> >> >>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> >> >>> Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+>> >> >>> Cc: Rob Herring <robh+dt@kernel.org>
+>> >> >>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> >> >>> Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+>> >> >>> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+>> >> >>> ---
+>> >> >>> * v3
+>> >> >>> - Add Reviewed-by: lines
+>> >> >>>
+>> >> >>>  .../devicetree/bindings/media/i2c/ov772x.txt       | 42
+>> >> >>>  +++++++++++++++
+>> >> >>>  MAINTAINERS                                        |  1 +
+>> >> >>>  2 files changed, 43 insertions(+)
+>> >> >>>  create mode 100644
+>> >> >>>  Documentation/devicetree/bindings/media/i2c/ov772x.txt
+>> >> >>>
+>> >> >>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+>> >> >>> b/Documentation/devicetree/bindings/media/i2c/ov772x.txt new file
+>> >> >>> mode
+>> >> >>> 100644
+>> >> >>> index 0000000..b045503
+>> >> >>> --- /dev/null
+>> >> >>> +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+>> >> >>> @@ -0,0 +1,42 @@
+>> >> >>> +* Omnivision OV7720/OV7725 CMOS sensor
+>> >> >>> +
+>> >> >>> +The Omnivision OV7720/OV7725 sensor supports multiple resolutions
+>> >> >>> output,
+>> >> >>> +such as VGA, QVGA, and any size scaling down from CIF to 40x30. It
+>> >> >>> also
+>> >> >>> can +support the YUV422, RGB565/555/444, GRB422 or raw RGB output
+>> >> >>> formats. +
+>> >> >>> +Required Properties:
+>> >> >>> +- compatible: shall be one of
+>> >> >>> +     "ovti,ov7720"
+>> >> >>> +     "ovti,ov7725"
+>> >> >>> +- clocks: reference to the xclk input clock.
+>> >> >>> +- clock-names: shall be "xclk".
+>> >> >>
+>> >> >> As there's a single clock we could omit clock-names, couldn't we ?
+>> >> >
+>> >> > Sounds good.
+>> >> >
+>> >> > I'll prepare another patch that replaces the clock consumer ID argument
+>> >> > of clk_get() from "xclk" to NULL, and remove the above line in this
+>> >> > bindings.
+>> >>
+>> >> I thought it's easy to do.  However, there is a non-DT user
+>> >> (arch/sh/boards/mach-migor/setup.c) that defines a clock with "xclk" ID.
+>> >>
+>> >> This can be resolved by retrying clk_get() with NULL if no entry
+>> >> with "xclk".  But should we do so or leave as is?
+>> >
+>> > How about patching the board code to register the clock alias with
+>> >
+>> >         clk_add_alias(NULL, "0-0021", "video_clk", NULL);
+>>
+>> Sounds good.
+>>
+>> But I'm a bit worried about whether clk_add_alias() can be called with
+>> alias == NULL.  I couldn't find such use case.
+>
+> There aren't many occurrences, but
+>
+> $ find . -type f -exec grep -l 'clk_add_alias(NULL' {} \;
+> /drivers/clk/ti/clk.c
+> /drivers/clk/ti/fixed-factor.c
+> /drivers/clk/ti/clk-dra7-atl.c
+> /drivers/clk/ti/composite.c
+>
+> A quick code analysis also shows me that this should be supported.
 
-The constants are so far defined in a way that they fit for
-the pcal9555a when shifted by the number of banks, i.e. multiplied
-by 2.
+This hits ti_clk_add_alias() only.  The function name is very similar,
+but the first argument is struct device *.
 
-Now the pcal6524 has 3 banks which means the relative offset
-must be multiplied by 4 which gives a wrong result if not done
-carefully, since the base offset is already included in the offset.
-
-For the basic registers shared with all pca93xx/tca64xx chips
-there is no such offset.
-
-Therefore, we add code to adjust the register number for exended
-registers to the 24 bit accessor functions.
-
-And we add additional register offset constants (not yet used by
-the driver code) which are specific to the pcal6524.
-
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/gpio/gpio-pca953x.c | 50 ++++++++++++++++++++++++++++++---------------
- 1 file changed, 34 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 4a075619b93e..022307d328ff 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -25,25 +25,35 @@
- 
- #include <asm/unaligned.h>
- 
--#define PCA953X_INPUT		0
--#define PCA953X_OUTPUT		1
--#define PCA953X_INVERT		2
--#define PCA953X_DIRECTION	3
-+#define PCA953X_INPUT		0x0
-+#define PCA953X_OUTPUT		0x1
-+#define PCA953X_INVERT		0x2
-+#define PCA953X_DIRECTION	0x3
- 
- #define REG_ADDR_AI		0x80
- 
--#define PCA957X_IN		0
--#define PCA957X_INVRT		1
--#define PCA957X_BKEN		2
--#define PCA957X_PUPD		3
--#define PCA957X_CFG		4
--#define PCA957X_OUT		5
--#define PCA957X_MSK		6
--#define PCA957X_INTS		7
--
--#define PCAL953X_IN_LATCH	34
--#define PCAL953X_INT_MASK	37
--#define PCAL953X_INT_STAT	38
-+#define PCA957X_IN		0x00
-+#define PCA957X_INVRT		0x01
-+#define PCA957X_BKEN		0x02
-+#define PCA957X_PUPD		0x03
-+#define PCA957X_CFG		0x04
-+#define PCA957X_OUT		0x05
-+#define PCA957X_MSK		0x06
-+#define PCA957X_INTS		0x07
-+
-+#define PCAL953X_OUT_STRENGTH	0x20
-+#define PCAL953X_IN_LATCH	0x22
-+#define PCAL953X_PULL_EN	0x23
-+#define PCAL953X_PULL_SEL	0x24
-+#define PCAL953X_INT_MASK	0x25
-+#define PCAL953X_INT_STAT	0x26
-+#define PCAL953X_OUT_CONF	0x27
-+
-+#define PCAL6524_INT_EDGE	0x28
-+#define PCAL6524_INT_CLR	0x2a
-+#define PCAL6524_IN_STATUS	0x2b
-+#define PCAL6524_OUT_INDCONF	0x2c
-+#define PCAL6524_DEBOUNCE	0x2d
- 
- #define PCA_GPIO_MASK		0x00FF
- #define PCA_INT			0x0100
-@@ -208,6 +218,10 @@ static int pca953x_write_regs_24(struct pca953x_chip *chip, int reg, u8 *val)
- {
- 	int bank_shift = fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
- 
-+	/* adjust register address for pcal6524 */
-+	if (reg >= PCAL953X_OUT_STRENGTH)
-+		reg -= PCAL953X_OUT_STRENGTH >> 1;
-+
- 	return i2c_smbus_write_i2c_block_data(chip->client,
- 					      (reg << bank_shift) | REG_ADDR_AI,
- 					      NBANK(chip), val);
-@@ -250,6 +264,10 @@ static int pca953x_read_regs_24(struct pca953x_chip *chip, int reg, u8 *val)
- {
- 	int bank_shift = fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
- 
-+	/* adjust register address for pcal6524 */
-+	if (reg >= PCAL953X_OUT_STRENGTH)
-+		reg -= PCAL953X_OUT_STRENGTH >> 1;
-+
- 	return i2c_smbus_read_i2c_block_data(chip->client,
- 					     (reg << bank_shift) | REG_ADDR_AI,
- 					     NBANK(chip), val);
--- 
-2.12.2
+Anyway, I'll add the change you suggested as Jacopo tested it.
