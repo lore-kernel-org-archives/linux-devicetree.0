@@ -1,239 +1,88 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 08/15] media: dt-bindings: add bindings for i.MX7
- media driver
-Date: Fri, 27 Apr 2018 14:06:06 -0500
-Message-ID: <20180427190606.ngpootnfzsjwg6ya@rob-hp-laptop>
-References: <20180423134750.30403-1-rui.silva@linaro.org>
- <20180423134750.30403-9-rui.silva@linaro.org>
+From: Dong Aisheng <aisheng.dong@nxp.com>
+Subject: [PATCH 3/4] dt-bindings: arm: fsl: add scu binding doc
+Date: Sat, 28 Apr 2018 02:46:15 +0800
+Message-ID: <1524854776-14863-4-git-send-email-aisheng.dong@nxp.com>
+References: <1524854776-14863-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20180423134750.30403-9-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1524854776-14863-1-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, dongas86@gmail.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 23, 2018 at 02:47:43PM +0100, Rui Miguel Silva wrote:
-> Add bindings documentation for i.MX7 media drivers.
-> 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> ---
->  .../devicetree/bindings/media/imx7.txt        | 158 ++++++++++++++++++
->  1 file changed, 158 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/imx7.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/imx7.txt b/Documentation/devicetree/bindings/media/imx7.txt
-> new file mode 100644
-> index 000000000000..7e058ea25102
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/imx7.txt
-> @@ -0,0 +1,158 @@
-> +Freescale i.MX7 Media Video Device
-> +==================================
-> +
-> +Video Media Controller node
-> +---------------------------
-> +
-> +This is the media controller node for video capture support. It is a
-> +virtual device that lists the camera serial interface nodes that the
-> +media device will control.
-> +
-> +Required properties:
-> +- compatible : "fsl,imx7-capture-subsystem";
-> +- ports      : Should contain a list of phandles pointing to camera
-> +		sensor interface port of CSI
-> +
-> +example:
-> +
-> +capture-subsystem {
-> +	compatible = "fsl,imx7-capture-subsystem";
-> +	ports = <&csi>;
+The System Controller Firmware (SCFW) is a low-level system function
+which runs on a dedicated Cortex-M core to provide power, clock, and
+resource management. It exists on some i.MX8 processors. e.g. i.MX8QM
+(QM, QP), and i.MX8QX (QXP, DX).
 
-Why do you need this node? Just have the driver match on the CSI node.
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
 
-> +};
-> +
-> +
-> +mipi_csi2 node
-> +--------------
-> +
-> +This is the device node for the MIPI CSI-2 receiver core in i.MX7 SoC. It is
-> +compatible with previous version of Samsung D-phy.
-
-Compatible with Samsung?
-
-> +
-> +Required properties:
-> +
-> +- compatible    : "fsl,imx7-mipi-csi2";
-> +- reg           : base address and length of the register set for the device;
-> +- interrupts    : should contain MIPI CSIS interrupt;
-> +- clocks        : list of clock specifiers, see
-> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
-> +- clock-names   : must contain "mipi" and "phy" entries, matching entries in the
-> +                  clock property;
-> +- power-domains : a phandle to the power domain, see
-> +          Documentation/devicetree/bindings/power/power_domain.txt for details.
-> +- reset-names   : should include following entry "mrst";
-> +- resets        : a list of phandle, should contain reset entry of
-> +                  reset-names;
-> +- phy-supply    : from the generic phy bindings, a phandle to a regulator that
-> +	          provides power to VBUS;
-
-VBUS? Copy-n-paste from USB something?
-
-> +- bus-width     : maximum number of data lanes supported (SoC specific);
-
-Don't we have a standard lanes property for CSI (or DSI)? bus-width is 
-for parallel buses and goes in endpoint nodes. (But maybe it got used 
-here too).
-
-> +
-> +Optional properties:
-> +
-> +- clock-frequency : The IP's main (system bus) clock frequency in Hz, default
-> +		    value when this property is not specified is 166 MHz;
-> +
-> +port node
-> +---------
-> +
-> +- reg		  : (required) can take the values 0 or 1, where 0 is the
-> +                     related sink port and port 1 should be the source one;
-> +
-> +endpoint node
-> +-------------
-> +
-> +- data-lanes    : (required) an array specifying active physical MIPI-CSI2
-> +		    data input lanes and their mapping to logical lanes; the
-> +		    array's content is unused, only its length is meaningful;
-
-Ah yes, like this. :) So why do you need bus-width too?
-
-> +
-> +- csis-hs-settle : (optional) differential receiver (HS-RX) settle time;
-
-units?
-
-> +- csis-clk-settle : (optional) D-PHY control register;
-> +- csis-wclk     : CSI-2 wrapper clock selection. If this property is present
-> +		  external clock from CMU will be used, or the bus clock if
-> +		  if it's not specified.
-
-boolean?
-
-These 3 need vendor properties.
-
-> +
-> +example:
-> +
-> +	mipi_csi: mipi-csi@30750000 {
-> +                clock-frequency = <166000000>;
-> +                status = "okay";
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +		compatible = "fsl,imx7-mipi-csi2";
-> +		reg = <0x30750000 0x10000>;
-> +		interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&clks IMX7D_MIPI_CSI_ROOT_CLK>,
-> +				<&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
-> +		clock-names = "mipi", "phy";
-> +		power-domains = <&pgc_mipi_phy>;
-> +		phy-supply = <&reg_1p0d>;
-> +		resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
-> +		reset-names = "mrst";
-> +		bus-width = <4>;
-> +		status = "disabled";
-> +
-> +                port@0 {
-> +                        reg = <0>;
-> +
-> +                        mipi_from_sensor: endpoint {
-> +                                remote-endpoint = <&ov2680_to_mipi>;
-> +                                data-lanes = <1>;
-> +                                csis-hs-settle = <3>;
-> +                                csis-clk-settle = <0>;
-> +                                csis-wclk;
-> +                        };
-> +                };
-> +
-> +                port@1 {
-> +                        reg = <1>;
-> +
-> +                        mipi_vc0_to_csi_mux: endpoint {
-> +                                remote-endpoint = <&csi_mux_from_mipi_vc0>;
-> +                        };
-> +                };
-> +	};
-> +
-> +
-> +csi node
-> +--------
-> +
-> +This is device node for the CMOS Sensor Interface (CSI) which enables the chip
-> +to connect directly to external CMOS image sensors.
-> +
-> +Required properties:
-> +
-> +- compatible    : "fsl,imx7-csi";
-> +- reg           : base address and length of the register set for the device;
-> +- interrupts    : should contain CSI interrupt;
-> +- clocks        : list of clock specifiers, see
-> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
-> +- clock-names   : must contain "axi", "mclk" and "dcic" entries, matching
-> +                 entries in the clock property;
-> +
-> +port node
-> +---------
-> +
-> +- reg		  : (required) should be 0 for the sink port;
-> +
-> +example:
-> +
-> +		csi: csi@30710000 {
-> +                        #address-cells = <1>;
-> +                        #size-cells = <0>;
-
-Something wrong with indentation here.
-
-> +
-> +			compatible = "fsl,imx7-csi";
-> +			reg = <0x30710000 0x10000>;
-> +			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clks IMX7D_CLK_DUMMY>,
-> +					<&clks IMX7D_CSI_MCLK_ROOT_CLK>,
-> +					<&clks IMX7D_CLK_DUMMY>;
-> +			clock-names = "axi", "mclk", "dcic";
-> +			status = "disabled";
-
-Don't show status in examples.
-
-> +
-> +                        port@0 {
-
-And the indentation here...
-
-
-Same issues in the 1st example, too.
-
-> +                                reg = <0>;
-> +
-> +                                csi_from_csi_mux: endpoint {
-> +                                        remote-endpoint = <&csi_mux_to_csi>;
-> +                                };
-> +                        };
-> +		};
-> -- 
-> 2.17.0
-> 
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+new file mode 100644
+index 0000000..3b51d82
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -0,0 +1,40 @@
++NXP i.MX System Controller Firmware (SCFW)
++--------------------------------------------------------------------
++
++The System Controller Firmware (SCFW) is a low-level system function
++which runs on a dedicated Cortex-M core to provide power, clock, and
++resource management. It exists on some i.MX8 processors. e.g. i.MX8QM
++(QM, QP), and i.MX8QX (QXP, DX).
++
++The AP communicates with the SC using a multi-ported MU module found
++in the LSIO subsystem. The current definition of this MU module provides
++5 remote AP connections to the SC to support up to 5 execution environments
++(TZ, HV, standard Linux, etc.). The SC side of this MU module interfaces
++with the LSIO DSC IP bus. The SC firmware will communicate with this MU
++using the MSI bus.
++
++System Controller Device Node:
++=============================
++
++Required properties:
++-------------------
++- compatible: should be "fsl,imx8qxp-scu" or "fsl,imx8qm-scu"
++- fsl,mu: a phandle to the Message Unit used by SCU. Should be
++	  one of LSIO MU0~M4 for imx8qxp and imx8qm. Users need
++	  to make sure not use the one which is conflict with
++	  other execution environments. e.g. ATF.
++
++Examples:
++--------
++lsio_mu0: mu@5d1b0000 {
++	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
++	reg = <0x0 0x5d1b0000 0x0 0x10000>;
++	interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
++	status = "okay";
++};
++
++scu {
++	compatible = "fsl,imx8qxp-scu";
++	fsl,mu = <&lsio_mu0>;
++	status = "okay";
++};
+-- 
+2.7.4
