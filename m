@@ -1,95 +1,75 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
- platform drivers
-Date: Fri, 27 Apr 2018 12:18:09 +0200
-Message-ID: <CAK8P3a2xtTLx-VHVWok-b19=o1z5FbTNcaWq7Y_HSdaH6pWnZg@mail.gmail.com>
-References: <20180426152920.21569-1-brgl@bgdev.pl> <20180426173151.GJ3094@brightrain.aerifal.cx>
- <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com> <CAK8P3a0oCH7zyBs8nQd4p+xLrFwDQiJsaKKCF1m04nyXsZxk=g@mail.gmail.com>
- <CAMpxmJUR+31axmAe2TNq00aUg40bnC=5k=2cVX019Vncr7cRkw@mail.gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 1/5] dt-bindings: reset: Add AOSS reset bindings for
+ SDM845 SoCs
+Date: Fri, 27 Apr 2018 12:24:10 +0200
+Message-ID: <1524824650.17614.4.camel@pengutronix.de>
+References: <20180425150843.26657-1-sibis@codeaurora.org>
+         <20180425150843.26657-2-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMpxmJUR+31axmAe2TNq00aUg40bnC=5k=2cVX019Vncr7cRkw@mail.gmail.com>
+In-Reply-To: <20180425150843.26657-2-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: David Lechner <david@lechnology.com>, Rich Felker <dalias@libc.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@sie>
+To: Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 27, 2018 at 10:57 AM, Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> 2018-04-27 9:52 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
->> On Fri, Apr 27, 2018 at 4:28 AM, David Lechner <david@lechnology.com> wrote:
->>> On 04/26/2018 12:31 PM, Rich Felker wrote:
->
-> We have platforms out there which still use both board files and
-> device tree. They are still comercially supported and are not going
-> anywhere anytime soon. Some of these platforms are being actively
-> maintained and cleaned-up. An example is the DaVinci platform: David
-> has recently converted all the SoCs and boards to using the common
-> clock framework. I'm cleaning up some other parts too.
->
-> The problem with the legacy board code is that a lot of things that
-> should be platform drivers ended up in arch/arm/mach-*. We're now
-> slowly moving this code to drivers/ but some initialization code
-> (timers, critical clocks, irqs) needs to be called early in the boot
-> sequence.
+Hi Sibi,
 
-Right, and that's very good work.
+On Wed, 2018-04-25 at 20:38 +0530, Sibi Sankar wrote:
+> Add SDM845 AOSS (always on subsystem) reset controller binding
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  .../bindings/reset/qcom,aoss-reset.txt        | 52 +++++++++++++++++++
+>  include/dt-bindings/reset/qcom,sdm845-aoss.h  | 17 ++++++
+>  2 files changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>  create mode 100644 include/dt-bindings/reset/qcom,sdm845-aoss.h
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+> new file mode 100644
+> index 000000000000..e5201de9a314
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+> @@ -0,0 +1,52 @@
+> +Qualcomm AOSS Reset Controller
+> +======================================
+> +
+> +This binding describes a reset-controller found on AOSS (always on subsystem)
+> +for Qualcomm SDM845 SoCs.
+> +
+> +Required properties:
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be:
+> +		    "qcom,sdm845-aoss-reset"
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: must specify the base address and size of the register
+> +	            space.
+> +
+> +- #reset-cells:
+> +	Usage: required
+> +	Value type: <uint>
+> +	Definition: must be 1; cell entry represents the reset index.
+> +
+> +Example:
+> +
+> +aoss_reset: qcom,reset-controller@b2e0100 {
 
-> When you're saying that we already have all the OF_DECLARE macros, it
-> seems to me that you're forgetting that we also want to keep
-> supporting the board files. So without the early platform drivers we
-> need to use a mix of OF_DECLARE and handcrafted initialization in
-> arch/arm/mach-* since we can't call platform_device_register() that
-> early. This blocks us from completely moving the should-be-driver code
-> to drivers/, because these drivers *need* to support both cases.
+The node name should be "reset-controller", not "qcom,reset-controller"
 
-The OF_DECLARE_* functions were initially added as a way to
-remove board files that just consist of callbacks into early
-initialization for some subsystems. As long as you still have
-board files and you are looking for a way to reuse code between
-OF_DECLARE_* functions and board files, why not just leave
-those functions globally visible and call them from the non-DT
-board files?
+> +	compatible = "qcom,sdm845-aoss-reset";
+> +	reg = <0xc2b0000 0x21000>;
 
-> The main problem with OF_DECLARE is that although we have
-> corresponding device nodes, we never actually register any real linux
-> devices. If we add to this the fact that current early platform
-> drivers implementation is broken (for reasons I mentioned in the cover
-> letter) the support gets really messy, since we can have up to three
-> entry points to the driver's code. Other issues come to mind as well:
-> if we're using OF_DECLARE we can't benefit from devm* routines.
+The address here should match the address part of the node name above.
 
-Right, the devm_* problem has come up before.
+Apart from those two nitpicks, the binding looks good to me.
 
-> My aim is to provide a clean, robust and generic way of probing
-> certain devices early and then converting them to actual platform
-> devices when we're advanced enough into the boot sequence. If we
-> merged such a framework, we could work towards removing both the
-> previous early platform devices (in favor of the new mechanism) and
-> maybe even deprecating and replacing OF_DECLARE(), since we could
-> simply early probe the DT drivers. Personally I see OF_DECLARE as a
-> bigger hack than early devices.
->
-> My patch tries to address exactly the use cases we're facing - for
-> example by providing means to probe devices twice (early and late) and
-> to check the state we're at in order for users to be able to just do
-> the critical initialization early on and then continue with regular
-> stuff later.
-
-Maybe the problem is reusing the name and some of the code from
-an existing functionality that we've been trying to get rid of.
-
-If what you want to do is completely different from the existing
-early_platform implementation, how about starting by moving that
-out of drivers/base/platform.c into something under arch/sh/
-and renaming it to something with an sh_ prefix.
-
-Let's just leave the non-DT part out of it by making it sh specific.
-Then we can come up with improvements to the current
-platform_device handling for DT based platforms that you can
-use on DT-based davinci to replace what currently happens on
-board-file based davinci systems, without mixing up those
-two code paths too much in the base driver support.
-
-       Arnd
+regards
+Philipp
