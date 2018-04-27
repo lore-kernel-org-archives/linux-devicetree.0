@@ -1,29 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH net-next v2 3/7] dt-bindings: net: add DT bindings for
- Microsemi Ocelot Switch
-Date: Fri, 27 Apr 2018 15:10:03 -0500
-Message-ID: <20180427201003.j6gn4ljse4mree36@rob-hp-laptop>
-References: <20180426195931.5393-1-alexandre.belloni@bootlin.com>
- <20180426195931.5393-4-alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 2/6] dt-bindings: clock: mediatek: add g3dsys bindings
+Date: Fri, 27 Apr 2018 15:10:54 -0500
+Message-ID: <20180427201054.fghwgp4l4yvfs6n6@rob-hp-laptop>
+References: <cover.1524816502.git.sean.wang@mediatek.com>
+ <665c38d5803573aa9a01471253f406301b1123a1.1524816502.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180426195931.5393-4-alexandre.belloni@bootlin.com>
+In-Reply-To: <665c38d5803573aa9a01471253f406301b1123a1.1524816502.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, James Hogan <jhogan@kernel.org>
+To: sean.wang@mediatek.com
+Cc: sboyd@codeaurora.org, mturquette@baylibre.com, matthias.bgg@gmail.com, mark.rutland@arm.com, p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 09:59:27PM +0200, Alexandre Belloni wrote:
-> DT bindings for the Ethernet switch found on Microsemi Ocelot platforms.
+On Fri, Apr 27, 2018 at 04:14:43PM +0800, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
 > 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: James Hogan <jhogan@kernel.org>
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Add bindings to g3dsys providing necessary clock and reset control to
+> Mali-450.
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 > ---
->  .../devicetree/bindings/net/mscc-ocelot.txt   | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/mscc-ocelot.txt
+>  .../bindings/arm/mediatek/mediatek,g3dsys.txt      | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,g3dsys.txt
 
 Reviewed-by: Rob Herring <robh@kernel.org>
