@@ -1,40 +1,77 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] arm64: dts: uniphier: stabilize ethernet of LD20
- reference boar
-Date: Fri, 27 Apr 2018 13:27:35 +0900
-Message-ID: <CAK7LNAS6gc1CwvzQTUu+eC9vPO4R1tKtoEzOT-1anHAPEt=cmg@mail.gmail.com>
-References: <1524803118-32570-1-git-send-email-yamada.masahiro@socionext.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [RFC] ARM: DTS: da850-evm: Refactor device tree layout
+Date: Fri, 27 Apr 2018 10:27:10 +0530
+Message-ID: <790e7323-f2a9-df64-aec5-965452df1bba@ti.com>
+References: <20180427023549.13678-1-aford173@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524803118-32570-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180427023549.13678-1-aford173@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Adam Ford <aford173@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2018-04-27 13:25 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
-> Currently, the ethernet RGMII mode on the LD20 reference board is
-> unstable.
->
-> The default drive-strength of ethernet TX pins is too strong because
-> there is no dumping resistor on the TX lines on the board.
->
-> Weaken the drive-strength to make the ethernet more stable.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+Hi Adam,
 
+On Friday 27 April 2018 08:05 AM, Adam Ford wrote:
+> Many of the items in the device tree are already defined or partially
+> defined, so let's remove the redundancies and reduce the whitespace.
 
-To myself:
+The patch is fine (and welcome, but for one nit below), but the
+description needs to be better.
 
-Fix the typo in the subject
+The main redundancy I can see is that node labels (like serial0, serial1
+etc) are being redefined. So can you be clear on that. Also, the phandle
+way of extending nodes is more "modern" (I dont quite recall if it was
+common place back when the file was added in 2012).
 
-  boar  ->  board
+Also, I would not call it "Refactor device tree layout" in subject. "use
+phandles to extend nodes" is more apt.
 
+> +
+> +&pmx_core {
+> +	status = "okay";
+> +
+> +	mcasp0_pins: pinmux_mcasp0_pins {
+> +		pinctrl-single,bits = <
+> +			/*
+> +			 * AHCLKX, ACLKX, AFSX, AHCLKR, ACLKR,
+> +			 * AFSR, AMUTE
+> +			 */
+> +			0x00 0x11111111 0xffffffff
+> +			/* AXR11, AXR12 */
+> +			0x04 0x00011000 0x000ff000
+> +		>;
+> +	};
+> +	nand_pins: nand_pins {
+> +		pinctrl-single,bits = <
+> +			/* EMA_WAIT[0], EMA_OE, EMA_WE, EMA_CS[4], EMA_CS[3] */
+> +			0x1c 0x10110110  0xf0ff0ff0
+> +			/*
+> +			 * EMA_D[0], EMA_D[1], EMA_D[2],
+> +			 * EMA_D[3], EMA_D[4], EMA_D[5],
+> +			 * EMA_D[6], EMA_D[7]
+> +			 */
+> +			0x24 0x11111111  0xffffffff
+> +			/* EMA_A[1], EMA_A[2] */
+> +			0x30 0x01100000  0x0ff00000
+> +		>;
+> +	};
+> +};
 
+Can you add an empty line after each node. This will make it consistent
+with how its done in da850-lcdk.dts and da850-lego-ev3.dts
 
-
--- 
-Best Regards
-Masahiro Yamada
+Thanks,
+Sekhar
