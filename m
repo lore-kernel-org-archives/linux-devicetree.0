@@ -1,145 +1,108 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v7 0/7] clk: meson-axg: Add AO Cloclk and Reset driver
-Date: Fri, 27 Apr 2018 11:59:14 +0200
-Message-ID: <1524823154.4026.123.camel@baylibre.com>
-References: <20180426084437.192394-1-yixun.lan@amlogic.com>
-         <1524820841.4026.112.camel@baylibre.com>
-         <fbd24a73-6793-76be-3ca5-04cbac5db198@amlogic.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: move various timer bindings to timer/
+ directory
+Date: Fri, 27 Apr 2018 12:13:36 +0200
+Message-ID: <20180427101336.GS30388@ulmo>
+References: <20180426212744.28688-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ShzQXCswyqjgWi6k"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fbd24a73-6793-76be-3ca5-04cbac5db198@amlogic.com>
+Content-Disposition: inline
+In-Reply-To: <20180426212744.28688-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-04-27 at 17:31 +0800, Yixun Lan wrote:
-> hi Jerome:
-> 
-> 
-> On 04/27/18 17:20, Jerome Brunet wrote:
-> > On Thu, 2018-04-26 at 16:44 +0800, Yixun Lan wrote:
-> > >   This patch try to add AO clock and Reset driver for Amlogic's
-> > > Meson-AXG SoC.
-> > >   Please note that patch 7 need to wait for the DTS changes[3] merged
-> > > into mainline first, otherwise it will break the serial console.
-> > > 
-> > >  patch 2: factor the common code into a dedicated file
-> > >  patch 3-5: add the aoclk driver for AXG SoC
-> > >  patch 6-7: drop unnecessary clock flags
-> > > 
-> > > changes since v6 at [7]: 
-> > >  - fix over 80 chars chechpatch error
-> > >  - add Philip's Ack on patch 5
-> > >  - drop extra end of newline
-> > > 
-> > > changes since v5 at [6]: 
-> > >  - drop unnecessary header files
-> > >  - add 'axg_aoclk' prefix to clk driver, make them more consistent
-> > >  - add missing end new line..
-> > > 
-> > > changes since v4 at [5]: 
-> > >  - fix return err
-> > >  - introduce CONFIG_COMMON_CLK_MESON_AO
-> > >  - format/style minor fix
-> > > 
-> > > changes since v3 at [4]: 
-> > >  - add 'const' contraint to the read-only data
-> > >  - switch to devm_of_clk_add_hw_provider API
-> > >  - check return value of devm_reset_controller_register
-> > > 
-> > > changes since v2 at [2]: 
-> > >  - rework meson_aoclkc_probe() which leverage the of_match_data
-> > >  - merge patch 5-6 into this series
-> > >  - seperate DTS patch, will send to Kevin Hilman independently
-> > >  
-> > > changes since v1 at [0]: 
-> > >  - rebase to clk-meson's branch 'next/drivers' [1]
-> > >  - fix license, update to BSD-3-Clause
-> > >  - drop un-used include header file
-> > > 
-> > > [0] https://lkml.kernel.org/r/20180209070026.193879-1-yixun.lan@amlogic.com
-> > > [1] git://github.com/BayLibre/clk-meson.git branch: next-drivers
-> > > [2] https://lkml.kernel.org/r/20180323143816.200573-1-yixun.lan@amlogic.com
-> > > [3] https://lkml.kernel.org/r/20180326081809.49493-4-yixun.lan@amlogic.com
-> > > [4] https://lkml.kernel.org/r/20180328025050.221585-1-yixun.lan@amlogic.com
-> > > [5] https://lkml.kernel.org/r/20180408031938.153474-1-yixun.lan@amlogic.com
-> > > [6] https://lkml.kernel.org/r/20180409143749.71197-1-yixun.lan@amlogic.com
-> > > [7] https://lkml.kernel.org/r/20180419135426.155794-1-yixun.lan@amlogic.com
-> > 
-> > Yixun,
-> > 
-> > Your series looks mostly Ok to me, apart from the problem reported by Philipp.
-> > 
-> > However, once applied, if the clkc ao controller is enabled, both gxl and axg
-> > fail to complete the boot. Could you please explain how this was tested ??
-> > 
-> 
-> isn't this caused by the patch 7?
->  [PATCH v7 7/7] clk: meson: drop CLK_IGNORE_UNUSED flag
-> 
-> 
-> you need to also apply this DT patch which I've sent[1]:
->  [PATCH v3 3/3] ARM64: dts: meson: fix clock source of the pclk for UART_AO
-> 
-> could you exclude the patch 7 for now until Kevin merged the DT part?
-> 
-> [1] https://lkml.kernel.org/r/20180328030130.240336-4-yixun.lan@amlogic.com
 
-Looks to be the problem indeed. But it is still an issue with how your patchset
-in organized.
+--ShzQXCswyqjgWi6k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I can't merge this until Kevin merges the patch above, which he can't merge
-until there is the clkc_ao support in axg, which is given by this series.
+On Thu, Apr 26, 2018 at 04:27:41PM -0500, Rob Herring wrote:
+> Bindings are supposed to be organized by device class/function. Move
+> bindings for various timers to timer/ binding directory.
+>=20
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/arm/ux500/boards.txt                  =
+| 2 +-
+>  Documentation/devicetree/bindings/pwm/pwm-omap-dmtimer.txt              =
+| 2 +-
+>  .../devicetree/bindings/{nios2/timer.txt =3D> timer/altr,timer-1.0.txt} =
+  | 0
+>  .../bindings/{arm/arch_timer.txt =3D> timer/arm,arch_timer.txt}         =
+  | 0
+>  .../bindings/{arm/armv7m_systick.txt =3D> timer/arm,armv7m-systick.txt} =
+  | 0
+>  .../bindings/{arm/global_timer.txt =3D> timer/arm,global_timer.txt}     =
+  | 0
+>  Documentation/devicetree/bindings/{arm/twd.txt =3D> timer/arm,twd.txt}  =
+  | 0
+>  .../devicetree/bindings/{powerpc/fsl/gtm.txt =3D> timer/fsl,gtm.txt}    =
+  | 0
+>  .../bindings/{arm/mrvl/timer.txt =3D> timer/mrvl,mmp-timer.txt}         =
+  | 0
+>  .../devicetree/bindings/{arm/msm/timer.txt =3D> timer/qcom,msm-timer.txt=
+} | 0
+>  .../bindings/{arm/spear-timer.txt =3D> timer/st,spear-timer.txt}        =
+  | 0
+>  .../devicetree/bindings/{c6x/timer64.txt =3D> timer/ti,c64x+timer64.txt}=
+  | 0
+>  .../devicetree/bindings/{arm/omap/timer.txt =3D> timer/ti,timer.txt}    =
+  | 0
+>  .../devicetree/bindings/{arm/vt8500 =3D> timer}/via,vt8500-timer.txt    =
+  | 0
+>  14 files changed, 2 insertions(+), 2 deletions(-)
+>  rename Documentation/devicetree/bindings/{nios2/timer.txt =3D> timer/alt=
+r,timer-1.0.txt} (100%)
+>  rename Documentation/devicetree/bindings/{arm/arch_timer.txt =3D> timer/=
+arm,arch_timer.txt} (100%)
+>  rename Documentation/devicetree/bindings/{arm/armv7m_systick.txt =3D> ti=
+mer/arm,armv7m-systick.txt} (100%)
+>  rename Documentation/devicetree/bindings/{arm/global_timer.txt =3D> time=
+r/arm,global_timer.txt} (100%)
+>  rename Documentation/devicetree/bindings/{arm/twd.txt =3D> timer/arm,twd=
+=2Etxt} (100%)
+>  rename Documentation/devicetree/bindings/{powerpc/fsl/gtm.txt =3D> timer=
+/fsl,gtm.txt} (100%)
+>  rename Documentation/devicetree/bindings/{arm/mrvl/timer.txt =3D> timer/=
+mrvl,mmp-timer.txt} (100%)
+>  rename Documentation/devicetree/bindings/{arm/msm/timer.txt =3D> timer/q=
+com,msm-timer.txt} (100%)
+>  rename Documentation/devicetree/bindings/{arm/spear-timer.txt =3D> timer=
+/st,spear-timer.txt} (100%)
+>  rename Documentation/devicetree/bindings/{c6x/timer64.txt =3D> timer/ti,=
+c64x+timer64.txt} (100%)
+>  rename Documentation/devicetree/bindings/{arm/omap/timer.txt =3D> timer/=
+ti,timer.txt} (100%)
+>  rename Documentation/devicetree/bindings/{arm/vt8500 =3D> timer}/via,vt8=
+500-timer.txt (100%)
 
-1# You should remove the axg part of the patch above. Kevin will be able to
-merge it w/o any dependencies. (BTW, the patch is broken for axg because 1) you
-did not include the dt-binding header for the clkc_ao in axg and 2) the clkc_ao
-does not exist at this stage)
-2# I can then safely merge this series - w/o breaking gxbb and gxl.
-3# Finally you'll have to make a DT change for the axg, enabling the clkc_ao and
-changes the uart clocks at the same time.
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-> 
-> 
-> > Not merging it until we get to the bottom of this.
-> > 
-> > > 
-> > > 
-> > > Qiufang Dai (1):
-> > >   clk: meson-axg: Add AO Clock and Reset controller driver
-> > > 
-> > > Yixun Lan (6):
-> > >   clk: meson: migrate to devm_of_clk_add_hw_provider API
-> > >   clk: meson: aoclk: refactor common code into dedicated file
-> > >   dt-bindings: clock: axg-aoclkc: New binding for Meson-AXG SoC
-> > >   dt-bindings: clock: reset: Add AXG AO Clock and Reset Bindings
-> > >   clk: meson: drop CLK_SET_RATE_PARENT flag
-> > >   clk: meson: drop CLK_IGNORE_UNUSED flag
-> > > 
-> > >  .../bindings/clock/amlogic,gxbb-aoclkc.txt    |   1 +
-> > >  drivers/clk/meson/Kconfig                     |   8 +
-> > >  drivers/clk/meson/Makefile                    |   3 +-
-> > >  drivers/clk/meson/axg-aoclk.c                 | 163 ++++++++++++++++++
-> > >  drivers/clk/meson/axg-aoclk.h                 |  29 ++++
-> > >  drivers/clk/meson/gxbb-aoclk.c                |  95 ++++------
-> > >  drivers/clk/meson/gxbb-aoclk.h                |   5 +
-> > >  drivers/clk/meson/meson-aoclk.c               |  81 +++++++++
-> > >  drivers/clk/meson/meson-aoclk.h               |  34 ++++
-> > >  include/dt-bindings/clock/axg-aoclkc.h        |  26 +++
-> > >  include/dt-bindings/reset/axg-aoclkc.h        |  20 +++
-> > >  11 files changed, 401 insertions(+), 64 deletions(-)
-> > >  create mode 100644 drivers/clk/meson/axg-aoclk.c
-> > >  create mode 100644 drivers/clk/meson/axg-aoclk.h
-> > >  create mode 100644 drivers/clk/meson/meson-aoclk.c
-> > >  create mode 100644 drivers/clk/meson/meson-aoclk.h
-> > >  create mode 100644 include/dt-bindings/clock/axg-aoclkc.h
-> > >  create mode 100644 include/dt-bindings/reset/axg-aoclkc.h
-> > > 
-> > 
-> > .
-> > 
-> 
-> 
+--ShzQXCswyqjgWi6k
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlri99AACgkQ3SOs138+
+s6FPgA/+KmO8rLO8DeVz4hTVQkSZMT9oBjUgYDb3soPHKT7eZ51YG86cCxit9ldL
+j3LYcaW6U8BYN5h93VPG+IF3w9BAaV6oBiB+NxxcPb0vJU94G/vxOCz2qMgVPm5k
+XOjfMJ5Ve2T/5EBEFXbTcczqomVZI3B1XMFTkmXDimQVwMVvcD4ZKaLDdTBM2Z2f
+6adf2FNcCmKt12NbJwjyp6VaplyIQ9o93InkWKD/lcNSmqIwoODzCYiCdZXNyj+Z
+S6suOXT7t+2TUcOBnd2weskRrqZjLV5/o4ziVN5T3XCamwFioIF9/YR4Zy0SzzXb
+5a8nv3ucCTV5iFc0sUD8syZKAe5amTmiNTK9dtkeElD0xCIqtyOb3dKGfJgHcDGQ
+/CncFgkFD/0ST6OUK4L+JfEN2PGfSO3ABJWaTCDHtbtW1knSAOvbNjzrpNjsknFa
+eD7E/BIjyFmJpJRKOtKlMNvWWB20xHwxmb5xWMebkInUEw9jc6FoGdwpD0ayeXuZ
+CaKBrgJCByhQFL9UFTrwdsZfU+xM5EYm+WgRmmimGbQnezF+NbgJkJYh8bTMqotY
+iPVS55J6CvMUfbGqD22zmOwhLpqNzBl3iHm8lO8edeg+pK2muC70ZvkKgWq4qo00
+ghJqLDZPctoRq8U0W683oQzHqt7PGPmnXUnPRj8OhxOU11lnYUo=
+=r08i
+-----END PGP SIGNATURE-----
+
+--ShzQXCswyqjgWi6k--
