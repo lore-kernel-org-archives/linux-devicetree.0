@@ -1,215 +1,124 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v9 07/27] ARM: davinci: dm355: add new clock init using common
- clock framework
-Date: Thu, 26 Apr 2018 19:17:25 -0500
-Message-ID: <20180427001745.4116-8-david@lechnology.com>
+Subject: [PATCH v9 15/27] ARM: davinci: switch to common clock framework
+Date: Thu, 26 Apr 2018 19:17:33 -0500
+Message-ID: <20180427001745.4116-16-david@lechnology.com>
 References: <20180427001745.4116-1-david@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180427001745.4116-1-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the new board-specific clock init in mach-davinci/dm355.c
-using the new common clock framework drivers.
+This switches ARCH_DAVINCI to use the common clock framework. The legacy
+clock code in arch/arm/mach-davinci/ is no longer used. New drivers in
+drivers/clk/davinci/ are used instead.
 
-The #ifdefs are needed to prevent compile errors until the entire
-ARCH_DAVINCI is converted.
-
-Also clean up the #includes since we are adding some here.
+A few macros had to be moved to prevent compilation errors.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
 v9 changes:
-- register PLL1 and PSC in dm355_init_time() instead of as platform device so
-  that we get the correct timer0 clock for davinci_timer_init()
-- Fixed size of PLL memory block
+- none
 
 v8 changes:
 - none
 
 v7 changes:
-- add clock platform device declarations
-- register platform devices instead of registering clocks directly
-- add davinci prefix to commit description
+- s/compile/compilation and space instead of tab
+- add PM_GENERIC_DOMAINS dependencies
 
 v6 changes:
-- add blank lines between function calls
+- clean up indent on Common objects section
 
 
- arch/arm/mach-davinci/board-dm355-evm.c     |  2 +
- arch/arm/mach-davinci/board-dm355-leopard.c |  2 +
- arch/arm/mach-davinci/davinci.h             |  1 +
- arch/arm/mach-davinci/dm355.c               | 69 +++++++++++++++++----
- 4 files changed, 62 insertions(+), 12 deletions(-)
+ arch/arm/Kconfig                | 5 ++++-
+ arch/arm/mach-davinci/Makefile  | 4 ++--
+ arch/arm/mach-davinci/clock.h   | 4 ----
+ arch/arm/mach-davinci/davinci.h | 4 ++++
+ arch/arm/mach-davinci/psc.h     | 2 --
+ 5 files changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/board-dm355-evm.c b/arch/arm/mach-davinci/board-dm355-evm.c
-index cb30637d9eaf..ea03ddcd35f5 100644
---- a/arch/arm/mach-davinci/board-dm355-evm.c
-+++ b/arch/arm/mach-davinci/board-dm355-evm.c
-@@ -384,6 +384,8 @@ static __init void dm355_evm_init(void)
- 	struct clk *aemif;
- 	int ret;
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index a7f8e7f4b88f..a57ad13810c8 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -609,13 +609,16 @@ config ARCH_S3C24XX
+ config ARCH_DAVINCI
+ 	bool "TI DaVinci"
+ 	select ARCH_HAS_HOLES_MEMORYMODEL
+-	select CLKDEV_LOOKUP
++	select COMMON_CLK
+ 	select CPU_ARM926T
+ 	select GENERIC_ALLOCATOR
+ 	select GENERIC_CLOCKEVENTS
+ 	select GENERIC_IRQ_CHIP
+ 	select GPIOLIB
+ 	select HAVE_IDE
++	select PM_GENERIC_DOMAINS if PM
++	select PM_GENERIC_DOMAINS_OF if PM && OF
++	select RESET_CONTROLLER
+ 	select USE_OF
+ 	select ZONE_DMA
+ 	help
+diff --git a/arch/arm/mach-davinci/Makefile b/arch/arm/mach-davinci/Makefile
+index 4e8178050027..8725d8bea567 100644
+--- a/arch/arm/mach-davinci/Makefile
++++ b/arch/arm/mach-davinci/Makefile
+@@ -5,8 +5,8 @@
+ #
  
-+	dm355_register_clocks();
-+
- 	ret = dm355_gpio_register();
- 	if (ret)
- 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
-diff --git a/arch/arm/mach-davinci/board-dm355-leopard.c b/arch/arm/mach-davinci/board-dm355-leopard.c
-index 59743bd76793..09f82160bbed 100644
---- a/arch/arm/mach-davinci/board-dm355-leopard.c
-+++ b/arch/arm/mach-davinci/board-dm355-leopard.c
-@@ -233,6 +233,8 @@ static __init void dm355_leopard_init(void)
- 	struct clk *aemif;
- 	int ret;
+ # Common objects
+-obj-y 			:= time.o clock.o serial.o psc.o \
+-			   usb.o common.o sram.o aemif.o
++obj-y 					:= time.o serial.o usb.o \
++					   common.o sram.o aemif.o
  
-+	dm355_register_clocks();
-+
- 	ret = dm355_gpio_register();
- 	if (ret)
- 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
+ obj-$(CONFIG_DAVINCI_MUX)		+= mux.o
+ 
+diff --git a/arch/arm/mach-davinci/clock.h b/arch/arm/mach-davinci/clock.h
+index d7894d5aaa25..2d058568e004 100644
+--- a/arch/arm/mach-davinci/clock.h
++++ b/arch/arm/mach-davinci/clock.h
+@@ -12,10 +12,6 @@
+ #ifndef __ARCH_ARM_DAVINCI_CLOCK_H
+ #define __ARCH_ARM_DAVINCI_CLOCK_H
+ 
+-#define DAVINCI_PLL1_BASE 0x01c40800
+-#define DAVINCI_PLL2_BASE 0x01c40c00
+-#define MAX_PLL 2
+-
+ /* PLL/Reset register offsets */
+ #define PLLCTL          0x100
+ #define PLLCTL_PLLEN    BIT(0)
 diff --git a/arch/arm/mach-davinci/davinci.h b/arch/arm/mach-davinci/davinci.h
-index 376cdd51ce9d..c2c634b6578e 100644
+index fa99197d36f9..db4c95ef4d5c 100644
 --- a/arch/arm/mach-davinci/davinci.h
 +++ b/arch/arm/mach-davinci/davinci.h
-@@ -84,6 +84,7 @@ int davinci_init_wdt(void);
- /* DM355 function declarations */
- void dm355_init(void);
- void dm355_init_time(void);
-+void dm355_register_clocks(void);
- void dm355_init_spi0(unsigned chipselect_mask,
- 		const struct spi_board_info *info, unsigned len);
- void dm355_init_asp1(u32 evt_enable);
-diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
-index 0da7516018ca..14014b942e8a 100644
---- a/arch/arm/mach-davinci/dm355.c
-+++ b/arch/arm/mach-davinci/dm355.c
-@@ -8,31 +8,37 @@
-  * is licensed "as is" without any warranty of any kind, whether express
-  * or implied.
-  */
--#include <linux/init.h>
--#include <linux/clk.h>
--#include <linux/serial_8250.h>
--#include <linux/platform_device.h>
+@@ -35,6 +35,10 @@
+ #include <media/davinci/vpbe.h>
+ #include <media/davinci/vpbe_osd.h>
+ 
++#define DAVINCI_PLL1_BASE		0x01c40800
++#define DAVINCI_PLL2_BASE		0x01c40c00
++#define DAVINCI_PWR_SLEEP_CNTRL_BASE	0x01c41000
 +
-+#include <linux/clk-provider.h>
-+#include <linux/clk/davinci.h>
-+#include <linux/clkdev.h>
- #include <linux/dma-mapping.h>
- #include <linux/dmaengine.h>
--#include <linux/spi/spi.h>
-+#include <linux/init.h>
- #include <linux/platform_data/edma.h>
- #include <linux/platform_data/gpio-davinci.h>
- #include <linux/platform_data/spi-davinci.h>
-+#include <linux/platform_device.h>
-+#include <linux/serial_8250.h>
-+#include <linux/spi/spi.h>
+ #define DAVINCI_SYSTEM_MODULE_BASE	0x01c40000
+ #define SYSMOD_VDAC_CONFIG		0x2c
+ #define SYSMOD_VIDCLKCTL		0x38
+diff --git a/arch/arm/mach-davinci/psc.h b/arch/arm/mach-davinci/psc.h
+index 8af9f09fc10c..b58707cf7033 100644
+--- a/arch/arm/mach-davinci/psc.h
++++ b/arch/arm/mach-davinci/psc.h
+@@ -27,8 +27,6 @@
+ #ifndef __ASM_ARCH_PSC_H
+ #define __ASM_ARCH_PSC_H
  
- #include <asm/mach/map.h>
- 
-+#include <mach/common.h>
- #include <mach/cputype.h>
--#include "psc.h"
--#include <mach/mux.h>
- #include <mach/irqs.h>
--#include <mach/time.h>
-+#include <mach/mux.h>
- #include <mach/serial.h>
--#include <mach/common.h>
-+#include <mach/time.h>
- 
-+#include "asp.h"
- #include "davinci.h"
--#include "clock.h"
- #include "mux.h"
--#include "asp.h"
-+
-+#ifndef CONFIG_COMMON_CLK
-+#include "clock.h"
-+#include "psc.h"
-+#endif
- 
- #define DM355_UART2_BASE	(IO_PHYS + 0x206000)
- #define DM355_OSD_BASE		(IO_PHYS + 0x70200)
-@@ -43,6 +49,7 @@
-  */
- #define DM355_REF_FREQ		24000000	/* 24 or 36 MHz */
- 
-+#ifndef CONFIG_COMMON_CLK
- static struct pll_data pll1_data = {
- 	.num       = 1,
- 	.phys_base = DAVINCI_PLL1_BASE,
-@@ -382,7 +389,7 @@ static struct clk_lookup dm355_clks[] = {
- 	CLK(NULL, "usb", &usb_clk),
- 	CLK(NULL, NULL, NULL),
- };
+-#define	DAVINCI_PWR_SLEEP_CNTRL_BASE	0x01C41000
 -
-+#endif
- /*----------------------------------------------------------------------*/
- 
- static u64 dm355_spi0_dma_mask = DMA_BIT_MASK(32);
-@@ -1046,8 +1053,46 @@ void __init dm355_init(void)
- 
- void __init dm355_init_time(void)
- {
-+#ifdef CONFIG_COMMON_CLK
-+	void __iomem *pll1, *psc;
-+	struct clk *clk;
-+
-+	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DM355_REF_FREQ);
-+
-+	pll1 = ioremap(DAVINCI_PLL1_BASE, SZ_1K);
-+	dm355_pll1_init(NULL, pll1, NULL);
-+
-+	psc = ioremap(DAVINCI_PWR_SLEEP_CNTRL_BASE, SZ_4K);
-+	dm355_psc_init(NULL, psc);
-+
-+	clk = clk_get(NULL, "timer0");
-+
-+	davinci_timer_init(clk);
-+#else
- 	davinci_clk_init(dm355_clks);
- 	davinci_timer_init(&timer0_clk);
-+#endif
-+}
-+
-+static struct resource dm355_pll2_resources[] = {
-+	{
-+		.start	= DAVINCI_PLL2_BASE,
-+		.end	= DAVINCI_PLL2_BASE + SZ_1K - 1,
-+		.flags	= IORESOURCE_MEM,
-+	},
-+};
-+
-+static struct platform_device dm355_pll2_device = {
-+	.name		= "dm355-pll2",
-+	.id		= -1,
-+	.resource	= dm355_pll2_resources,
-+	.num_resources	= ARRAY_SIZE(dm355_pll2_resources),
-+};
-+
-+void __init dm355_register_clocks(void)
-+{
-+	/* PLL1 and PSC are registered in dm355_init_time() */
-+	platform_device_register(&dm355_pll2_device);
- }
- 
- int __init dm355_init_video(struct vpfe_config *vpfe_cfg,
+ /* Power and Sleep Controller (PSC) Domains */
+ #define DAVINCI_GPSC_ARMDOMAIN		0
+ #define DAVINCI_GPSC_DSPDOMAIN		1
 -- 
 2.17.0
