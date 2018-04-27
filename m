@@ -1,108 +1,61 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: move various timer bindings to timer/
- directory
-Date: Fri, 27 Apr 2018 12:13:36 +0200
-Message-ID: <20180427101336.GS30388@ulmo>
-References: <20180426212744.28688-1-robh@kernel.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v4 09/15] memory: tegra: Squash tegra20-mc into common
+ tegra-mc driver
+Date: Fri, 27 Apr 2018 13:13:47 +0300
+Message-ID: <882f14b8-78c8-95bb-326e-3917c9736faf@gmail.com>
+References: <cover.1523301400.git.digetx@gmail.com>
+ <675f74f82378b5f7d8f61d35e929614a0e156141.1523301400.git.digetx@gmail.com>
+ <20180427093435.GB30388@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ShzQXCswyqjgWi6k"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180426212744.28688-1-robh@kernel.org>
+In-Reply-To: <20180427093435.GB30388@ulmo>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 27.04.2018 12:34, Thierry Reding wrote:
+> On Mon, Apr 09, 2018 at 10:28:31PM +0300, Dmitry Osipenko wrote:
+> [...]
+>> diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+> [...]
+>> +#define MC_GART_ERROR_REQ		0x30
+>> +#define MC_DECERR_EMEM_OTHERS_STATUS	0x58
+>> +#define MC_SECURITY_VIOLATION_STATUS	0x74
+> [...]
+>> diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
+> [...]
+>> @@ -21,19 +21,30 @@
+>>  #define MC_INT_INVALID_SMMU_PAGE (1 << 10)
+>>  #define MC_INT_ARBITRATION_EMEM (1 << 9)
+>>  #define MC_INT_SECURITY_VIOLATION (1 << 8)
+>> +#define MC_INT_INVALID_GART_PAGE (1 << 7)
+>>  #define MC_INT_DECERR_EMEM (1 << 6)
+>>  
+>>  static inline u32 mc_readl(struct tegra_mc *mc, unsigned long offset)
+>>  {
+>> +	if (mc->regs2 && offset >= 0x24)
+>> +		return readl(mc->regs2 + offset - 0x3c);
+> 
+> I'm still not sure how this is supposed to work. If we pass in
+> MC_GART_ERROR_REQ as offset into mc_readl(), then the condition above
+> will be true (0x30 >= 0x24) but then the new offset will be computed
+> and we end up with:
+> 
+> 	return readl(mc->regs2 + 0x30 - 0x3c);
+> 
+> which means we'll be adding a negative offset (or rather a very large
+> offset because it will wrap around).
 
---ShzQXCswyqjgWi6k
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Indeed! Thank you for pointing at it again, now I see the issue. It probably
+works because actual registers mapping is aligned to page(?) size and adding the
+large offset with wraparound is equal to subtraction.
 
-On Thu, Apr 26, 2018 at 04:27:41PM -0500, Rob Herring wrote:
-> Bindings are supposed to be organized by device class/function. Move
-> bindings for various timers to timer/ binding directory.
->=20
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/arm/ux500/boards.txt                  =
-| 2 +-
->  Documentation/devicetree/bindings/pwm/pwm-omap-dmtimer.txt              =
-| 2 +-
->  .../devicetree/bindings/{nios2/timer.txt =3D> timer/altr,timer-1.0.txt} =
-  | 0
->  .../bindings/{arm/arch_timer.txt =3D> timer/arm,arch_timer.txt}         =
-  | 0
->  .../bindings/{arm/armv7m_systick.txt =3D> timer/arm,armv7m-systick.txt} =
-  | 0
->  .../bindings/{arm/global_timer.txt =3D> timer/arm,global_timer.txt}     =
-  | 0
->  Documentation/devicetree/bindings/{arm/twd.txt =3D> timer/arm,twd.txt}  =
-  | 0
->  .../devicetree/bindings/{powerpc/fsl/gtm.txt =3D> timer/fsl,gtm.txt}    =
-  | 0
->  .../bindings/{arm/mrvl/timer.txt =3D> timer/mrvl,mmp-timer.txt}         =
-  | 0
->  .../devicetree/bindings/{arm/msm/timer.txt =3D> timer/qcom,msm-timer.txt=
-} | 0
->  .../bindings/{arm/spear-timer.txt =3D> timer/st,spear-timer.txt}        =
-  | 0
->  .../devicetree/bindings/{c6x/timer64.txt =3D> timer/ti,c64x+timer64.txt}=
-  | 0
->  .../devicetree/bindings/{arm/omap/timer.txt =3D> timer/ti,timer.txt}    =
-  | 0
->  .../devicetree/bindings/{arm/vt8500 =3D> timer}/via,vt8500-timer.txt    =
-  | 0
->  14 files changed, 2 insertions(+), 2 deletions(-)
->  rename Documentation/devicetree/bindings/{nios2/timer.txt =3D> timer/alt=
-r,timer-1.0.txt} (100%)
->  rename Documentation/devicetree/bindings/{arm/arch_timer.txt =3D> timer/=
-arm,arch_timer.txt} (100%)
->  rename Documentation/devicetree/bindings/{arm/armv7m_systick.txt =3D> ti=
-mer/arm,armv7m-systick.txt} (100%)
->  rename Documentation/devicetree/bindings/{arm/global_timer.txt =3D> time=
-r/arm,global_timer.txt} (100%)
->  rename Documentation/devicetree/bindings/{arm/twd.txt =3D> timer/arm,twd=
-=2Etxt} (100%)
->  rename Documentation/devicetree/bindings/{powerpc/fsl/gtm.txt =3D> timer=
-/fsl,gtm.txt} (100%)
->  rename Documentation/devicetree/bindings/{arm/mrvl/timer.txt =3D> timer/=
-mrvl,mmp-timer.txt} (100%)
->  rename Documentation/devicetree/bindings/{arm/msm/timer.txt =3D> timer/q=
-com,msm-timer.txt} (100%)
->  rename Documentation/devicetree/bindings/{arm/spear-timer.txt =3D> timer=
-/st,spear-timer.txt} (100%)
->  rename Documentation/devicetree/bindings/{c6x/timer64.txt =3D> timer/ti,=
-c64x+timer64.txt} (100%)
->  rename Documentation/devicetree/bindings/{arm/omap/timer.txt =3D> timer/=
-ti,timer.txt} (100%)
->  rename Documentation/devicetree/bindings/{arm/vt8500 =3D> timer}/via,vt8=
-500-timer.txt (100%)
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---ShzQXCswyqjgWi6k
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlri99AACgkQ3SOs138+
-s6FPgA/+KmO8rLO8DeVz4hTVQkSZMT9oBjUgYDb3soPHKT7eZ51YG86cCxit9ldL
-j3LYcaW6U8BYN5h93VPG+IF3w9BAaV6oBiB+NxxcPb0vJU94G/vxOCz2qMgVPm5k
-XOjfMJ5Ve2T/5EBEFXbTcczqomVZI3B1XMFTkmXDimQVwMVvcD4ZKaLDdTBM2Z2f
-6adf2FNcCmKt12NbJwjyp6VaplyIQ9o93InkWKD/lcNSmqIwoODzCYiCdZXNyj+Z
-S6suOXT7t+2TUcOBnd2weskRrqZjLV5/o4ziVN5T3XCamwFioIF9/YR4Zy0SzzXb
-5a8nv3ucCTV5iFc0sUD8syZKAe5amTmiNTK9dtkeElD0xCIqtyOb3dKGfJgHcDGQ
-/CncFgkFD/0ST6OUK4L+JfEN2PGfSO3ABJWaTCDHtbtW1knSAOvbNjzrpNjsknFa
-eD7E/BIjyFmJpJRKOtKlMNvWWB20xHwxmb5xWMebkInUEw9jc6FoGdwpD0ayeXuZ
-CaKBrgJCByhQFL9UFTrwdsZfU+xM5EYm+WgRmmimGbQnezF+NbgJkJYh8bTMqotY
-iPVS55J6CvMUfbGqD22zmOwhLpqNzBl3iHm8lO8edeg+pK2muC70ZvkKgWq4qo00
-ghJqLDZPctoRq8U0W683oQzHqt7PGPmnXUnPRj8OhxOU11lnYUo=
-=r08i
------END PGP SIGNATURE-----
-
---ShzQXCswyqjgWi6k--
+That register belongs to the GART and we can't simply move interrupt handling to
+the GART driver because status register is within the MC in device tree. We can
+omit reading of MC_GART_ERROR_REQ and simply report GART page fault for the
+starter and then reorganize drivers by making MC driver MFD and GART its
+sub-device, what do you think?
