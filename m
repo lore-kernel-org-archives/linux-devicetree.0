@@ -1,77 +1,63 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
- platform drivers
-Date: Fri, 27 Apr 2018 09:52:51 +0200
-Message-ID: <CAK8P3a0oCH7zyBs8nQd4p+xLrFwDQiJsaKKCF1m04nyXsZxk=g@mail.gmail.com>
-References: <20180426152920.21569-1-brgl@bgdev.pl> <20180426173151.GJ3094@brightrain.aerifal.cx>
- <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v2 2/6] dt-bindings: clock: mediatek: add g3dsys bindings
+Date: Fri, 27 Apr 2018 16:14:43 +0800
+Message-ID: <665c38d5803573aa9a01471253f406301b1123a1.1524816502.git.sean.wang@mediatek.com>
+References: <cover.1524816502.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com>
+In-Reply-To: <cover.1524816502.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Rich Felker <dalias@libc.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@siemens.com>, Andy Shevchenko <andy.shevchenko@gm>
+To: sboyd@codeaurora.org, mturquette@baylibre.com, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, p.zabel@pengutronix.de
+Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 27, 2018 at 4:28 AM, David Lechner <david@lechnology.com> wrote:
-> On 04/26/2018 12:31 PM, Rich Felker wrote:
->>
->> On Thu, Apr 26, 2018 at 05:29:18PM +0200, Bartosz Golaszewski wrote:
->>>
->>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>
->>> This is a follow to my series[1] the aim of which was to introduce device
->>> tree
->>> support for early platform devices.
->>>
->>> It was received rather negatively. Aside from using device tree to pass
->>> implementation specific details to the system, two important concerns
->>> were
->>> raised: no probe deferral support and the fact that currently the early
->>> devices
->>> never get converted to actual platform drivers. This series is a
->>> proof-of-concept that's trying to address those issues.
->>>
->>> The only user of the current version of early platform drivers is the
->>> SuperH
->>> architecture. If this series eventually gets merged, we could simply
->>> replace
->>> the other solution.
->>
->>
->> Looking at a quick output of:
->>
->>         grep -r -A10 early_devices[[] arch/sh/kernel/
->>
->> it looks like all of the existing early platform devices are serial
->> ports, clocks, and clocksources. The switch to device tree should pick
->> them all up from CLK_OF_DECLARE, TIMER_OF_DECLARE, and
->> EARLYCON_DECLARE. Until that's complete, the existing code works
->> as-is. I don't see what problem you're trying to solve.
->
->
-> The problem for us is that clk maintainers don't want new drivers to use
-> CLK_OF_DECLARE and instead use platform devices. I have just written such
-> a new driver that is shared by 6 different SoCs. For some combinations of
-> SoCs and clocks, using a platform device is fine but on others we need to
-> register early, so the drivers now have to handle both cases, which is
-> kind of messy and fragile. If there is a generic way to register platform
-> devices early, then the code is simplified because we only have to handle
-> one method of registering the clocks instead of two.
+From: Sean Wang <sean.wang@mediatek.com>
 
-The early_platform code is certainly not a way to make things simpler,
-it just adds one more way of doing the same thing that OF_CLK_DECLARE
-already does. We removed the last early_platform users on ARM a few
-years ago, and I would hope to leave it like that.
+Add bindings to g3dsys providing necessary clock and reset control to
+Mali-450.
 
-I haven't seen the discussion about your clock drivers, but I know that
-usually only a very small subset of the clocks on an SoC are needed
-that 'early', and you should use a regular platform driver for the rest.
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ .../bindings/arm/mediatek/mediatek,g3dsys.txt      | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,g3dsys.txt
 
-Can you elaborate on which devices need to access your clocks before
-you are able to initialize the clk driver through the regular platform_driver
-framework? Do any of these need complex interactions with the clk
-subsystem, or do you just need to ensure they are turned on?
-
-     Arnd
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,g3dsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,g3dsys.txt
+new file mode 100644
+index 0000000..7de43bf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,g3dsys.txt
+@@ -0,0 +1,30 @@
++MediaTek g3dsys controller
++============================
++
++The MediaTek g3dsys controller provides various clocks and reset controller to
++the GPU.
++
++Required Properties:
++
++- compatible: Should be:
++	- "mediatek,mt2701-g3dsys", "syscon":
++		for MT2701 SoC
++	- "mediatek,mt7623-g3dsys", "mediatek,mt2701-g3dsys", "syscon":
++		for MT7623 SoC
++- #clock-cells: Must be 1
++- #reset-cells: Must be 1
++
++The g3dsys controller uses the common clk binding from
++Documentation/devicetree/bindings/clock/clock-bindings.txt
++The available clocks are defined in dt-bindings/clock/mt*-clk.h.
++
++Example:
++
++g3dsys: clock-controller@13000000 {
++	compatible = "mediatek,mt7623-g3dsys",
++		     "mediatek,mt2701-g3dsys",
++		     "syscon";
++	reg = <0 0x13000000 0 0x200>;
++	#clock-cells = <1>;
++	#reset-cells = <1>;
++};
+-- 
+2.7.4
