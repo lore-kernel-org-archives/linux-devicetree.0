@@ -1,126 +1,79 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: Re: [PATCH v7 0/7] clk: meson-axg: Add AO Cloclk and Reset driver
-Date: Fri, 27 Apr 2018 17:31:44 +0800
-Message-ID: <fbd24a73-6793-76be-3ca5-04cbac5db198@amlogic.com>
-References: <20180426084437.192394-1-yixun.lan@amlogic.com>
- <1524820841.4026.112.camel@baylibre.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v4 09/15] memory: tegra: Squash tegra20-mc into common
+ tegra-mc driver
+Date: Fri, 27 Apr 2018 11:34:35 +0200
+Message-ID: <20180427093435.GB30388@ulmo>
+References: <cover.1523301400.git.digetx@gmail.com>
+ <675f74f82378b5f7d8f61d35e929614a0e156141.1523301400.git.digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="24zk1gE8NUlDmwG9"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524820841.4026.112.camel@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <675f74f82378b5f7d8f61d35e929614a0e156141.1523301400.git.digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: yixun.lan@amlogic.com, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-hi Jerome:
 
+--24zk1gE8NUlDmwG9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 04/27/18 17:20, Jerome Brunet wrote:
-> On Thu, 2018-04-26 at 16:44 +0800, Yixun Lan wrote:
->>   This patch try to add AO clock and Reset driver for Amlogic's
->> Meson-AXG SoC.
->>   Please note that patch 7 need to wait for the DTS changes[3] merged
->> into mainline first, otherwise it will break the serial console.
->>
->>  patch 2: factor the common code into a dedicated file
->>  patch 3-5: add the aoclk driver for AXG SoC
->>  patch 6-7: drop unnecessary clock flags
->>
->> changes since v6 at [7]: 
->>  - fix over 80 chars chechpatch error
->>  - add Philip's Ack on patch 5
->>  - drop extra end of newline
->>
->> changes since v5 at [6]: 
->>  - drop unnecessary header files
->>  - add 'axg_aoclk' prefix to clk driver, make them more consistent
->>  - add missing end new line..
->>
->> changes since v4 at [5]: 
->>  - fix return err
->>  - introduce CONFIG_COMMON_CLK_MESON_AO
->>  - format/style minor fix
->>
->> changes since v3 at [4]: 
->>  - add 'const' contraint to the read-only data
->>  - switch to devm_of_clk_add_hw_provider API
->>  - check return value of devm_reset_controller_register
->>
->> changes since v2 at [2]: 
->>  - rework meson_aoclkc_probe() which leverage the of_match_data
->>  - merge patch 5-6 into this series
->>  - seperate DTS patch, will send to Kevin Hilman independently
->>  
->> changes since v1 at [0]: 
->>  - rebase to clk-meson's branch 'next/drivers' [1]
->>  - fix license, update to BSD-3-Clause
->>  - drop un-used include header file
->>
->> [0] https://lkml.kernel.org/r/20180209070026.193879-1-yixun.lan@amlogic.com
->> [1] git://github.com/BayLibre/clk-meson.git branch: next-drivers
->> [2] https://lkml.kernel.org/r/20180323143816.200573-1-yixun.lan@amlogic.com
->> [3] https://lkml.kernel.org/r/20180326081809.49493-4-yixun.lan@amlogic.com
->> [4] https://lkml.kernel.org/r/20180328025050.221585-1-yixun.lan@amlogic.com
->> [5] https://lkml.kernel.org/r/20180408031938.153474-1-yixun.lan@amlogic.com
->> [6] https://lkml.kernel.org/r/20180409143749.71197-1-yixun.lan@amlogic.com
->> [7] https://lkml.kernel.org/r/20180419135426.155794-1-yixun.lan@amlogic.com
-> 
-> Yixun,
-> 
-> Your series looks mostly Ok to me, apart from the problem reported by Philipp.
-> 
-> However, once applied, if the clkc ao controller is enabled, both gxl and axg
-> fail to complete the boot. Could you please explain how this was tested ??
-> 
+On Mon, Apr 09, 2018 at 10:28:31PM +0300, Dmitry Osipenko wrote:
+[...]
+> diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+[...]
+> +#define MC_GART_ERROR_REQ		0x30
+> +#define MC_DECERR_EMEM_OTHERS_STATUS	0x58
+> +#define MC_SECURITY_VIOLATION_STATUS	0x74
+[...]
+> diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
+[...]
+> @@ -21,19 +21,30 @@
+>  #define MC_INT_INVALID_SMMU_PAGE (1 << 10)
+>  #define MC_INT_ARBITRATION_EMEM (1 << 9)
+>  #define MC_INT_SECURITY_VIOLATION (1 << 8)
+> +#define MC_INT_INVALID_GART_PAGE (1 << 7)
+>  #define MC_INT_DECERR_EMEM (1 << 6)
+> =20
+>  static inline u32 mc_readl(struct tegra_mc *mc, unsigned long offset)
+>  {
+> +	if (mc->regs2 && offset >=3D 0x24)
+> +		return readl(mc->regs2 + offset - 0x3c);
 
-isn't this caused by the patch 7?
- [PATCH v7 7/7] clk: meson: drop CLK_IGNORE_UNUSED flag
+I'm still not sure how this is supposed to work. If we pass in
+MC_GART_ERROR_REQ as offset into mc_readl(), then the condition above
+will be true (0x30 >=3D 0x24) but then the new offset will be computed
+and we end up with:
 
+	return readl(mc->regs2 + 0x30 - 0x3c);
 
-you need to also apply this DT patch which I've sent[1]:
- [PATCH v3 3/3] ARM64: dts: meson: fix clock source of the pclk for UART_AO
+which means we'll be adding a negative offset (or rather a very large
+offset because it will wrap around).
 
-could you exclude the patch 7 for now until Kevin merged the DT part?
+Thierry
 
-[1] https://lkml.kernel.org/r/20180328030130.240336-4-yixun.lan@amlogic.com
+--24zk1gE8NUlDmwG9
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-> Not merging it until we get to the bottom of this.
-> 
->>
->>
->> Qiufang Dai (1):
->>   clk: meson-axg: Add AO Clock and Reset controller driver
->>
->> Yixun Lan (6):
->>   clk: meson: migrate to devm_of_clk_add_hw_provider API
->>   clk: meson: aoclk: refactor common code into dedicated file
->>   dt-bindings: clock: axg-aoclkc: New binding for Meson-AXG SoC
->>   dt-bindings: clock: reset: Add AXG AO Clock and Reset Bindings
->>   clk: meson: drop CLK_SET_RATE_PARENT flag
->>   clk: meson: drop CLK_IGNORE_UNUSED flag
->>
->>  .../bindings/clock/amlogic,gxbb-aoclkc.txt    |   1 +
->>  drivers/clk/meson/Kconfig                     |   8 +
->>  drivers/clk/meson/Makefile                    |   3 +-
->>  drivers/clk/meson/axg-aoclk.c                 | 163 ++++++++++++++++++
->>  drivers/clk/meson/axg-aoclk.h                 |  29 ++++
->>  drivers/clk/meson/gxbb-aoclk.c                |  95 ++++------
->>  drivers/clk/meson/gxbb-aoclk.h                |   5 +
->>  drivers/clk/meson/meson-aoclk.c               |  81 +++++++++
->>  drivers/clk/meson/meson-aoclk.h               |  34 ++++
->>  include/dt-bindings/clock/axg-aoclkc.h        |  26 +++
->>  include/dt-bindings/reset/axg-aoclkc.h        |  20 +++
->>  11 files changed, 401 insertions(+), 64 deletions(-)
->>  create mode 100644 drivers/clk/meson/axg-aoclk.c
->>  create mode 100644 drivers/clk/meson/axg-aoclk.h
->>  create mode 100644 drivers/clk/meson/meson-aoclk.c
->>  create mode 100644 drivers/clk/meson/meson-aoclk.h
->>  create mode 100644 include/dt-bindings/clock/axg-aoclkc.h
->>  create mode 100644 include/dt-bindings/reset/axg-aoclkc.h
->>
-> 
-> .
-> 
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlri7qsACgkQ3SOs138+
+s6Huow/+Lubm4qV0XNorEeW/fNQLPsFNooMAMtEn9uM/bKtDbNAWeQwFc//pw9ji
+gTCNgLBHhGxgZp9Y8woT0itfLBN2J9N3uSR3of2i8hMek0NuNtHWj7fa8oFZ4C49
+7V2j2jKooTxCP5p+9ONUSoDOEpbYpgvQmXkZEt37AnY7ntiEeFzAHcn6WbA72wIS
+eiFzWe0JqD1dqNGDvA0Odo2v3/GIOG0/jsdySvPPc5db0G+kpTVIjVJENGYvNcli
+mOxlT0FVLQ00cNUZDxKOuj0N/FiZjwrbVq0paMoez2VAghIa7MoSZsONgSB1oD9e
+RCMOsC3dosHzRSrmES0lVo7gCb5xobKbO6ztM6I5jXbtYiphJ4NfkB0+viJ65fBh
+zsSABXJF6Kfb4GbZCQBLC6Nru10+jJh6hZH5LfUrbBRdnY43Ic3bXuSPj+HoTz+B
+JHspvdmXrn1OZCek+sLOsPwMt9hdqk0lil0ruVCrSvUyRpCCEWsYBG5A8asX9XiL
+cZ+wI7prBvfyNQnrDGpdtuBL/CrpsKwrKTrGPjFvQrHdVM+EWBtR2oLxauu8dXNj
+o4r8CayWUIBK4yjELKJWdsqxTuGLz+QekprzkdV5j+I3fpjAkD1pTcMcvqfqWKJ7
+0bfRyFyQ0DSoF39vReNBcShyNSPe5HErwnQGFCOZx6XxfdUNJxk=
+=UQSC
+-----END PGP SIGNATURE-----
+
+--24zk1gE8NUlDmwG9--
