@@ -1,97 +1,59 @@
-From: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v2 3/3] ASoC: tas6424: Allow disabling auto diagnostics for faster power-on
-Date: Fri, 27 Apr 2018 15:55:49 +0200
-Message-ID: <1524837349-16350-4-git-send-email-jjhiblot@ti.com>
-References: <1524837349-16350-1-git-send-email-jjhiblot@ti.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 15/74] OF: Prevent unaligned access in of_alias_scan()
+Date: Fri, 27 Apr 2018 15:58:05 +0200
+Message-ID: <20180427135710.534544535@linuxfoundation.org>
+References: <20180427135709.899303463@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524837349-16350-1-git-send-email-jjhiblot@ti.com>
+In-Reply-To: <20180427135709.899303463@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com
-Cc: dannenberg@ti.com, afd@ti.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@ti.com>
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Paul Burton <paul.burton@imgtec.com>, Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Amit Pundir <amit.pundir@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The TAS6424 incorporates both DC-load and AC-load diagnostics which are
-used to determine the status of the load. The DC diagnostics runs when any
-channel is directed to leave the Hi-Z state and enter the MUTE or PLAY
-state.
-The DC diagnostics are turned on by default but, if a fast startup without
-diagnostics is required, the diagnostics can be disabled using a dedicated
-ALSA control.
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+------------------
+
+From: Paul Burton <paul.burton@imgtec.com>
+
+commit de96ec2a77c6d06a423c2c495bb4a2f4299f3d9e upstream.
+
+When allocating a struct alias_prop, of_alias_scan() only requested that
+it be aligned on a 4 byte boundary. The struct contains pointers which
+leads to us attempting 64 bit writes on 64 bit systems, and if the CPU
+doesn't support unaligned memory accesses then this causes problems -
+for example on some MIPS64r2 CPUs including the "mips64r2-generic" QEMU
+emulated CPU it will trigger an address error exception.
+
+Fix this by requesting alignment for the struct alias_prop allocation
+matching that which the compiler expects, using the __alignof__ keyword.
+
+Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mips@linux-mips.org
+Patchwork: https://patchwork.linux-mips.org/patch/14306/
+Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
+Cc: Amit Pundir <amit.pundir@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/soc/codecs/tas6424.c | 19 +++++++++++++++++--
- sound/soc/codecs/tas6424.h |  4 ++++
- 2 files changed, 21 insertions(+), 2 deletions(-)
+ drivers/of/base.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/tas6424.c b/sound/soc/codecs/tas6424.c
-index 89fd0c1..8eb4842 100644
---- a/sound/soc/codecs/tas6424.c
-+++ b/sound/soc/codecs/tas6424.c
-@@ -55,6 +55,13 @@ struct tas6424_data {
-  */
- static DECLARE_TLV_DB_SCALE(dac_tlv, -10350, 50, 0);
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -2109,7 +2109,7 @@ void of_alias_scan(void * (*dt_alloc)(u6
+ 			continue;
  
-+
-+static const char * const diags_enum_texts[] = {"OFF", "ON"};
-+static unsigned int diags_enum_values[] = {1, 0};
-+SOC_VALUE_ENUM_SINGLE_DECL(diags_enum, TAS6424_DC_DIAG_CTRL1,
-+			   TAS6424_LDGBYPASS_SHIFT, TAS6424_LDGBYPASS_MASK,
-+			   diags_enum_texts, diags_enum_values);
-+
- static const struct snd_kcontrol_new tas6424_snd_controls[] = {
- 	SOC_SINGLE_TLV("Speaker Driver CH1 Playback Volume",
- 		       TAS6424_CH1_VOL_CTRL, 0, 0xff, 0, dac_tlv),
-@@ -64,6 +71,7 @@ static const struct snd_kcontrol_new tas6424_snd_controls[] = {
- 		       TAS6424_CH3_VOL_CTRL, 0, 0xff, 0, dac_tlv),
- 	SOC_SINGLE_TLV("Speaker Driver CH4 Playback Volume",
- 		       TAS6424_CH4_VOL_CTRL, 0, 0xff, 0, dac_tlv),
-+	SOC_ENUM("Auto Diagnostics", diags_enum),
- };
- 
- static int tas6424_dac_event(struct snd_soc_dapm_widget *w,
-@@ -297,6 +305,11 @@ static int tas6424_power_on(struct snd_soc_component *component)
- 	struct tas6424_data *tas6424 = snd_soc_component_get_drvdata(component);
- 	int ret;
- 	u8 chan_states;
-+	int no_auto_diags = 0;
-+	unsigned int reg_val;
-+
-+	if (!regmap_read(tas6424->regmap, TAS6424_DC_DIAG_CTRL1, &reg_val))
-+		no_auto_diags = reg_val & TAS6424_LDGBYPASS_MASK;
- 
- 	ret = regulator_bulk_enable(ARRAY_SIZE(tas6424->supplies),
- 				    tas6424->supplies);
-@@ -327,9 +340,11 @@ static int tas6424_power_on(struct snd_soc_component *component)
- 	snd_soc_component_write(component, TAS6424_CH_STATE_CTRL, chan_states);
- 
- 	/* any time we come out of HIZ, the output channels automatically run DC
--	 * load diagnostics, wait here until this completes
-+	 * load diagnostics if autodiagnotics are enabled. wait here until this
-+	 * completes.
- 	 */
--	msleep(230);
-+	if (!no_auto_diags)
-+		msleep(230);
- 
- 	return 0;
- }
-diff --git a/sound/soc/codecs/tas6424.h b/sound/soc/codecs/tas6424.h
-index 4305883..b5958c4 100644
---- a/sound/soc/codecs/tas6424.h
-+++ b/sound/soc/codecs/tas6424.h
-@@ -111,6 +111,10 @@
- 					 TAS6424_CH3_STATE_DIAG | \
- 					 TAS6424_CH4_STATE_DIAG)
- 
-+/* TAS6424_DC_DIAG_CTRL1 */
-+#define TAS6424_LDGBYPASS_SHIFT		0
-+#define TAS6424_LDGBYPASS_MASK		BIT(TAS6424_LDGBYPASS_SHIFT)
-+
- /* TAS6424_GLOB_FAULT1_REG */
- #define TAS6424_FAULT_CLOCK		BIT(4)
- #define TAS6424_FAULT_PVDD_OV		BIT(3)
--- 
-2.7.4
+ 		/* Allocate an alias_prop with enough space for the stem */
+-		ap = dt_alloc(sizeof(*ap) + len + 1, 4);
++		ap = dt_alloc(sizeof(*ap) + len + 1, __alignof__(*ap));
+ 		if (!ap)
+ 			continue;
+ 		memset(ap, 0, sizeof(*ap) + len + 1);
