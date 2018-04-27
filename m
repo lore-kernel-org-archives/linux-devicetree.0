@@ -1,37 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 08/10] dt-bindings: media: Document
- bindings for the Sunxi-Cedrus VPU driver
-Date: Thu, 26 Apr 2018 22:06:43 -0500
-Message-ID: <20180427030643.wyvawlj6aqhjuadz@rob-hp-laptop>
-References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
- <20180419154536.17846-4-paul.kocialkowski@bootlin.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
+ platform drivers
+Date: Thu, 26 Apr 2018 22:54:21 -0400
+Message-ID: <20180427025421.GN3094@brightrain.aerifal.cx>
+References: <20180426152920.21569-1-brgl@bgdev.pl>
+ <20180426173151.GJ3094@brightrain.aerifal.cx>
+ <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBRFHRLLQKGQEUF7KYHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180419154536.17846-4-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@siemens.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 19, 2018 at 05:45:34PM +0200, Paul Kocialkowski wrote:
-> This adds a device-tree binding document that specifies the properties
-> used by the Sunxi-Cedurs VPU driver, as well as examples.
+On Thu, Apr 26, 2018 at 09:28:39PM -0500, David Lechner wrote:
+> On 04/26/2018 12:31 PM, Rich Felker wrote:
+> >On Thu, Apr 26, 2018 at 05:29:18PM +0200, Bartosz Golaszewski wrote:
+> >>From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >>
+> >>This is a follow to my series[1] the aim of which was to introduce device tree
+> >>support for early platform devices.
+> >>
+> >>It was received rather negatively. Aside from using device tree to pass
+> >>implementation specific details to the system, two important concerns were
+> >>raised: no probe deferral support and the fact that currently the early devices
+> >>never get converted to actual platform drivers. This series is a
+> >>proof-of-concept that's trying to address those issues.
+> >>
+> >>The only user of the current version of early platform drivers is the SuperH
+> >>architecture. If this series eventually gets merged, we could simply replace
+> >>the other solution.
+> >
+> >Looking at a quick output of:
+> >
+> >	grep -r -A10 early_devices[[] arch/sh/kernel/
+> >
+> >it looks like all of the existing early platform devices are serial
+> >ports, clocks, and clocksources. The switch to device tree should pick
+> >them all up from CLK_OF_DECLARE, TIMER_OF_DECLARE, and
+> >EARLYCON_DECLARE. Until that's complete, the existing code works
+> >as-is. I don't see what problem you're trying to solve.
 > 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/sunxi-cedrus.txt     | 50 ++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+> The problem for us is that clk maintainers don't want new drivers to use
+> CLK_OF_DECLARE and instead use platform devices. I have just written such
+> a new driver that is shared by 6 different SoCs. For some combinations of
+> SoCs and clocks, using a platform device is fine but on others we need to
+> register early, so the drivers now have to handle both cases, which is
+> kind of messy and fragile. If there is a generic way to register platform
+> devices early, then the code is simplified because we only have to handle
+> one method of registering the clocks instead of two.
 
-Other than the one nit about the node name,
+Can you get them to explain why? This sounds wrong.
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Rich
