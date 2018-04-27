@@ -1,175 +1,60 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm64: allwinner: h6: add device tree
- nodes for MMC controllers
-Date: Fri, 27 Apr 2018 17:23:46 +0800
-Message-ID: <6EBD7D16-E985-4345-B2C2-D0CE7B32F8C5@aosc.io>
-References: <20180426140728.43155-1-icenowy@aosc.io> <20180426140728.43155-3-icenowy@aosc.io> <9571735d-929f-a2ef-ed97-dc9193420b73@arm.com> <77DF7884-8DA8-4ED5-BB51-941CFDE4A123@aosc.io> <0ae1b6ce-c1cf-61e8-e09b-abec47b089b2@arm.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] Revert "ata: ahci-platform: add reset control support"
+Date: Fri, 27 Apr 2018 11:28:56 +0200
+Message-ID: <20180427092856.GA30388@ulmo>
+References: <1523237554-7928-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <c8ec7474-7eb4-24cf-1f53-b4bcee5508dd@redhat.com>
+ <20180418083647.GA5503@ulmo>
+ <20180426192040.GT1911913@devbig577.frc2.facebook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBQOYRPLQKGQEJ4S37XI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <0ae1b6ce-c1cf-61e8-e09b-abec47b089b2-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: andre.przywara-5wv7dgnIgG8@public.gmane.orgAndre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="h31gzZEtNLTqOjlF"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180426192040.GT1911913@devbig577.frc2.facebook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: linux-ide@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--h31gzZEtNLTqOjlF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-=E4=BA=8E 2018=E5=B9=B44=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=885:=
-18:23, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> =E5=86=99=E5=88=B0:
->Hi,
->
->On 27/04/18 09:36, Icenowy Zheng wrote:
->>=20
->>=20
->> =E4=BA=8E 2018=E5=B9=B44=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=
-=8812:45:38, Andre Przywara
-><andre.przywara-5wv7dgnIgG8@public.gmane.org> =E5=86=99=E5=88=B0:
->>> Hi,
->>>
->>> On 26/04/18 15:07, Icenowy Zheng wrote:
->>>> The Allwinner H6 SoC have 3 MMC controllers.
->>>>
->>>> Add device tree nodes for them.
->>>>
->>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>>> ---
->>>>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 56
->>> ++++++++++++++++++++++++++++
->>>>  1 file changed, 56 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
->>> b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
->>>> index 4debc3962830..3cbfc035c979 100644
->>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
->>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
->>>> @@ -124,12 +124,68 @@
->>>>  			interrupt-controller;
->>>>  			#interrupt-cells =3D <3>;
->>>> =20
->>>> +			mmc0_pins: mmc0-pins {
->>>> +				pins =3D "PF0", "PF1", "PF2", "PF3",
->>>> +				       "PF4", "PF5";
->>>> +				function =3D "mmc0";
->>>> +				drive-strength =3D <30>;
->>>> +				bias-pull-up;
->>>> +			};
->>>> +
->>>> +			mmc2_pins: mmc2-pins {
->>>> +				pins =3D "PC1", "PC4", "PC5", "PC6",
->>>> +				       "PC7", "PC8", "PC9", "PC10",
->>>> +				       "PC11", "PC12", "PC13", "PC14";
->>>> +				function =3D "mmc2";
->>>> +				drive-strength =3D <30>;
->>>> +				bias-pull-up;
->>>> +			};
->>>> +
->>>>  			uart0_ph_pins: uart0-ph {
->>>>  				pins =3D "PH0", "PH1";
->>>>  				function =3D "uart0";
->>>>  			};
->>>>  		};
->>>> =20
->>>> +		mmc0: mmc@4020000 {
->>>> +			compatible =3D "allwinner,sun50i-h6-mmc";
->>>
->>> This should be:
->>> 			compatible =3D "allwinner,sun50i-h6-mmc",
->>> 				     "allwinner,sun50i-a64-mmc";
->>=20
->> I'm intended to not add A64 compatible, as
->> H6 is a quite new design
->> (new process) and there might be different behavior, even on mmc0/1.
->
->But as your patch proves, it is fully backwards compatible: An A64
->driver works with this device.
+On Thu, Apr 26, 2018 at 12:20:40PM -0700, Tejun Heo wrote:
+> Hello,
+>=20
+> On Wed, Apr 18, 2018 at 10:36:47AM +0200, Thierry Reding wrote:
+> > I see that you've applied this to your for-next branch. However, this is
+> > a fix that needs to go into v4.17 because that's where the regression
+> > was introduced. Is there any way you can promote this to a fixes branch?
+>=20
+> It's in for-4.17-fixes.  I'll push it out early next week.
 
-No, my patch only proves "the current A64 driver works
-with this device", not "Any A64 driver works with device", as
-the current driver doesn't fully use the capability provided
-by A64 MMC cobtrollers.
+Great, thanks!
 
->And this is what this compatible string list says: If your system does
->not have a specific H6 driver, you can use an A64 driver.
->You might not get all the (potentially) new features, but it covers
->everything the A64 has.
->
->And a new silicon process doesn't matter here, since the software
->interface is unchanged. *If* we find bugs, we can add quirks matching
+Thierry
 
-I think there's timing parameters for higher speed bins which
-are different among chips. As we have currently no support
-for speed bins higher than DDR50, they're not added yet.
+--h31gzZEtNLTqOjlF
+Content-Type: application/pgp-signature; name="signature.asc"
 
->on
->the H6 compatible string - that's why we put it here already, despite
->having a matching string in the kernel at the moment.
+-----BEGIN PGP SIGNATURE-----
 
-Device tree is not driver data but hardware description, so
-it should follow "how the device is formed" rather than
-"how the device works".
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlri7VQACgkQ3SOs138+
+s6FdOw/9H8ua3amf4gF4ALR4Ye9RLllwoIHD/LF43KfvhDk2K6G+MimAmsTY3DT2
+1aaDw3h2AMpLd/0WcBlGQaMHv/myHGaoiTDC+hF0ll4uRrQORYi8EwUygVOVBk9+
+ETmPKaQYmmf6/qd1zOFx7tdCxKQA4R+ot66rbG7iznR+Simeq04gQVSVH5AERz7J
+JIakdSVdumWqwuoDZHIOXwbPuo79CmMzEtpUs8FrQA3GHv6uVombsVrT1So6lKpx
+81bAMZexdzxKUOSutZF4vDv8DLjaDW5nBqDd92U7ncVIYjUAbxFu5AlfwYCRQSV1
+ECtlcBKLhgirb82CLhuMs2NbtpiwLYC0amPYmeVJt8gAdb5hG2Ljzqx81KehtKC7
+0nKkGcUiQiRsDlThbhJcEgonLuvJBmgXyboowIKZDEANRMXT6omCMvPX2Wko84Md
+b5sxZ+3uzKyUhBYH2VL9FrXxXKLrkrZsCwTc03IeBWcPEkUwUYi08oirrFBasDlw
+f+sYq2rZCgd/JcsO/GvQPzKKiE1zd2EY0Zz8BLjBTTg64pXl3stip2gaxXZxNwHY
+51GNVkjfO/c0jffs3w7Z2DkFtSj2iB/RvJZT7aSMAc4NKdekHIr7grQoZ+b1fan5
+t2ZZihHAg5i0oURWQs/wLTUyv7XkUk8Urc7v5L5I521MUQs0Log=
+=wrNj
+-----END PGP SIGNATURE-----
 
->
->>>> +			reg =3D <0x04020000 0x1000>;
->>>> +			clocks =3D <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
->>>> +			clock-names =3D "ahb", "mmc";
->>>> +			resets =3D <&ccu RST_BUS_MMC0>;
->>>> +			reset-names =3D "ahb";
->>>> +			interrupts =3D <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
->>>> +			status =3D "disabled";
->>>> +			#address-cells =3D <1>;
->>>> +			#size-cells =3D <0>;
->>>> +		};
->>>> +
->>>> +		mmc1: mmc@4021000 {
->>>> +			compatible =3D "allwinner,sun50i-h6-mmc";
->>>
->>> same here
->>>
->>>> +			reg =3D <0x04021000 0x1000>;
->>>> +			clocks =3D <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
->>>> +			clock-names =3D "ahb", "mmc";
->>>> +			resets =3D <&ccu RST_BUS_MMC1>;
->>>> +			reset-names =3D "ahb";
->>>> +			interrupts =3D <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
->>>> +			status =3D "disabled";
->>>> +			#address-cells =3D <1>;
->>>> +			#size-cells =3D <0>;
->>>> +		};
->>>> +
->>>> +		mmc2: mmc@4022000 {
->>>> +			compatible =3D "allwinner,sun50i-h6-emmc";
->>>
->>> and here:
->>> 			compatible =3D "allwinner,sun50i-h6-emmc",
->>> 				     "allwinner,sun50i-a64-emmc";
->>=20
->> MMC2 on H6 has EMCE capability, so surely there should
->> only be H6 compatible, and no A64 one.
->
->Same as above, the A64 eMMC is a subset of the H6 eMMC, so the A64 eMMC
->driver can drive the H6 as well. And again your code proves that,
->because it behaves exactly the same as for the A64.
->In case we ever get support for the EMCE, we add the new compatible
->string to the driver and tie it to the new feature. So newer kernels
->can
->use this feature, older kernel will just not, but can happily use the
->eMMC anyway.
->
->Cheers,
->Andre.
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+--h31gzZEtNLTqOjlF--
