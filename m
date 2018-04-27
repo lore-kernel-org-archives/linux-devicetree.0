@@ -1,66 +1,56 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [[RFC]DPU PATCH 2/4] dt-bindings: drm/bridge:
- Document sn65dsi86 bridge bindings
-Date: Fri, 27 Apr 2018 13:07:43 -0400
-Message-ID: <CAF6AEGueS0ArgoHozBbRs9kj+26=0dZv2GXvtM4CCPjKmQ3M1A@mail.gmail.com>
-References: <1524160568-27583-1-git-send-email-spanda@codeaurora.org>
- <1524160568-27583-3-git-send-email-spanda@codeaurora.org>
- <152469995691.46528.3834882157254635250@swboyd.mtv.corp.google.com>
- <CAF6AEGuWo9U5OU5nKSSwzRV_FWszTj_8S3Hns9hFHWBPsepnVw@mail.gmail.com>
- <20180427031331.sl62t5ir24dxmtxm@rob-hp-laptop>
- <0522b749900b3a54508abef6bd15252f@codeaurora.org>
+From: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v3 1/2] dma-mapping: move dma configuration to bus
+	infrastructure
+Date: Fri, 27 Apr 2018 17:10:48 +0000
+Message-ID: <HE1PR0401MB24259708C02B6AD57C11A18EE68D0@HE1PR0401MB2425.eurprd04.prod.outlook.com>
+References: <1520868292-2479-1-git-send-email-nipun.gupta@nxp.com>
+	<1522396485-10248-1-git-send-email-nipun.gupta@nxp.com>
+	<20180423125638.GB8824@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <0522b749900b3a54508abef6bd15252f-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180423125638.GB8824-jcswGhMUV9g@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+Cc: "zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msuchanek-l3A5Bk7waGM@public.gmane.org" <msuchanek-l3A5Bk7waGM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel@l>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBBcHIgMjcsIDIwMTggYXQgMzowMiBBTSwgIDxzcGFuZGFAY29kZWF1cm9yYS5vcmc+
-IHdyb3RlOgo+IE9uIDIwMTgtMDQtMjcgMDg6NDMsIFJvYiBIZXJyaW5nIHdyb3RlOgo+Pgo+PiBP
-biBXZWQsIEFwciAyNSwgMjAxOCBhdCAwODo0NjoxM1BNIC0wNDAwLCBSb2IgQ2xhcmsgd3JvdGU6
-Cj4+Pgo+Pj4gT24gV2VkLCBBcHIgMjUsIDIwMTggYXQgNzo0NSBQTSwgU3RlcGhlbiBCb3lkIDxz
-d2JveWRAY2hyb21pdW0ub3JnPgo+Pj4gd3JvdGU6Cj4+PiA+IFF1b3RpbmcgU2FuZGVlcCBQYW5k
-YSAoMjAxOC0wNC0xOSAxMDo1NjowNikKPj4+ID4+IERvY3VtZW50IHRoZSBiaW5kaW5ncyB1c2Vk
-IGZvciB0aGUgc242NWRzaTg2IERTSSB0byBlRFAgYnJpZGdlLgo+Pj4gPj4KPj4+ID4+IENoYW5n
-ZXMgaW4gdjE6Cj4+PiA+PiAgLSBSZXBocmFzZSB0aGUgZHQtYmluZGluZyBkZXNjcmlwdGlvbnMg
-dG8gYmUgbW9yZSBpbmxpbmUgd2l0aAo+Pj4gPj4gZXhpc3RpbmcKPj4+ID4+ICAgIGJpbmRpbmdz
-IChBbmRyemVqIEhhamRhKS4KPj4+ID4+ICAtIEFkZCBtaXNzaW5nIGR0LWJpbmRpbmcgdGhhdCBh
-cmUgcGFyc2VkIGJ5IGNvcnJlc3BvbmRpbmcgZHJpdmVyCj4+PiA+PiAgICAoQW5kcnplaiBIYWpk
-YSkuCj4+PiA+Pgo+Pj4gPj4gQ2hhbmdlcyBpbiB2MjoKPj4+ID4+ICAtIFJlbW92ZWQgZWRwIHBh
-bmVsIHNwZWNpZmljIGR0LWJpbmRpbmcgZW50cmllcy4gT25seSBrZWVwIGJyaWRnZQo+Pj4gPj4g
-ICAgc3BlY2lmaWMgZW50cmllcyAoU2VhbiBQYXVsKS4KPj4+ID4+ICAtIFJlbW92ZSBjdXN0b20t
-bW9kZXMgZHQgZW50cnkgc2luY2UgaXRzIHVzYWdlIGlzIHJlbW92ZWQgZnJvbSBkcml2ZXIKPj4+
-ID4+IGFsc28gKFNlYW4gUGF1bCkuCj4+PiA+PiAgLSBSZW1vdmUgaXMtcGx1Z2dhYmxlIGR0IGVu
-dHJ5IHNpbmNlIHRoaXMgd2lsbCBub3QgYmUgbmVlZGVkIGFueW1vcmUKPj4+ID4+IChTZWFuIFBh
-dWwpLgo+Pj4gPj4KPj4+ID4+IENoYW5nZXMgaW4gdjM6Cj4+PiA+PiAgLSBSZW1vdmVkIGlycS1n
-cGlvIGR0IGVudHJ5IGFuZCBpbnN0ZWFkIHBvcHVsYXRlIGlzIGFuIGludGVycnVwdAo+Pj4gPj4g
-ICAgcHJvcGVydHkgKFJvYiBIZXJyaW5nKS4KPj4+ID4KPj4+ID4gVGhlc2UgY2hhbmdlbG9ncyB1
-c3VhbGx5IGdvIGJlbG93IHRoZSB0cmlwbGUgZGFzaCwgYnV0IG1heWJlIGRybSBpcwo+Pj4gPiBk
-aWZmZXJlbnQgYW5kIHdhbnRzIHRoZW0/Cj4+Pgo+Pj4geWVhaCwgZHJtIGdlbmVyYWxseSB3YW50
-cyB0aGVtIGluIHRoZSBjb21taXQgbXNnIHJhdGhlciB0aGFuIGJlbG93IHRoZQo+Pj4gdHJpcGxl
-LWRhc2gsIGFsdGhvdWdoIEkgZ3Vlc3MgZm9yIGJpbmRpbmdzIGRvY3MgaXQgc2hvdWxkIGZvbGxv
-dyB0aGUKPj4+IHJ1bGVzIGZvciB0aGF0IHRyZWUuLiBJIHVzdWFsbHkganVzdCBmaXggdXAgdGhl
-c2Ugc29ydCBvZiB0aGluZ3MgYXMgSQo+Pj4gYXBwbHkgcGF0Y2hlcywgYnV0IG5vdCBzdXJlIHdo
-YXQgb3RoZXIgbWFpbnRhaW5lcnMgcHJlZmVyCj4+Cj4+Cj4+IFdlbGwsIHRoZXNlIERQVSBwYXRj
-aGVzIGFyZW4ndCB0YXJnZXRlZCBmb3IgdXBzdHJlYW0gc28gd2hvIGNhcmVzLgo+Cj4KPiBUaGlz
-IGNoYW5nZSBpcyBpbmRlcGVuZGVudCBvZiBvdGhlciBEUFUgcGF0Y2hlcy4gV2UgYXJlIHBsYW5u
-aW5nIHRvIHVwc3RyZWFtCj4gdGhlc2UgYnJpZGdlIGFuZCBwYW5lbCBjaGFuZ2VzLgo+IEkgd2ls
-bCB1cGxvYWQgdGhlIG5leHQgcGF0Y2hzZXQgZHJvcHBpbmcgdGhlIERQVSB0YWcgdG8gYXZvaWQg
-YW55IGNvbmZ1c2lvbi4KPgoKamZ3aXcsIHByb2JhYmx5IGEgZ29vZCBpZGVhIG5vdCB0byB1c2Ug
-dGhlICdEUFUnIHRhZyBmb3IgYW55dGhpbmcgdGhhdAppc24ndCBkZXBlbmRlbnQgb24gdGhlIERQ
-VSBwYXRjaGVzZXQsIHRvIHJlZHVjZSBjb25mdXNpb24KCkJSLAotUgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZy
-ZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+
+
+> -----Original Message-----
+> From: Christoph Hellwig [mailto:hch-jcswGhMUV9g@public.gmane.org]
+> Sent: Monday, April 23, 2018 6:27 PM
+> To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+> Cc: robin.murphy-5wv7dgnIgG8@public.gmane.org; hch-jcswGhMUV9g@public.gmane.org; linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org;
+> gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org;
+> bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org; zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org;
+> david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org;
+> thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
+> jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org; rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org;
+> dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; msuchanek-l3A5Bk7waGM@public.gmane.org; linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; linux-
+> wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+> soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; dri-
+> devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org; linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Bharat Bhushan
+> <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>; Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>
+> Subject: Re: [PATCH v3 1/2] dma-mapping: move dma configuration to bus
+> infrastructure
+> 
+> Can you resend your changes against Linux 4.17-rc2?  There are a lot
+> of conflicts as-is.
+
+Sure.. I will send it soon..
+
+Regards,
+Nipun
