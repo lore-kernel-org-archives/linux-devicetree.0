@@ -1,69 +1,39 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 11/15] ARM: dts: dra7-evm: Add wilink8 wlan support
-Date: Fri, 27 Apr 2018 16:50:28 +0530
-Message-ID: <b3e16fc6-e620-29a4-71e7-5abe9a6da4d8@ti.com>
-References: <20180425125449.19755-1-kishon@ti.com>
- <20180425125449.19755-12-kishon@ti.com>
- <CAL_JsqKBXbcQxbN7z9j_DKgiaQg4buUa+08fg9zPELv-ucpRZA@mail.gmail.com>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: RE: [PATCH 0/2] Add R8A77970/Eagle CAN-FD support
+Date: Fri, 27 Apr 2018 11:29:29 +0000
+Message-ID: <TY2PR01MB1962B04B7DEBB17DCD77B3C0C38D0@TY2PR01MB1962.jpnprd01.prod.outlook.com>
+References: <4e5216bc-5f1b-ace4-1aea-02269cd206ac@cogentembedded.com>
+ <TY2PR01MB19620E4689C0B881B540E4D4C38D0@TY2PR01MB1962.jpnprd01.prod.outlook.com>
+ <894de81f-024c-7b1c-7aca-bc7b3b193173@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKBXbcQxbN7z9j_DKgiaQg4buUa+08fg9zPELv-ucpRZA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>, Ido Yariv <ido@wizery.com>, Eyal Reizer <eyalr@ti.com>, Sekhar Nori <nsekhar@ti.com>
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <894de81f-024c-7b1c-7aca-bc7b3b193173@cogentembedded.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Wednesday 25 April 2018 08:17 PM, Rob Herring wrote:
-> On Wed, Apr 25, 2018 at 7:54 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->> From: Hari Nagalla <hnagalla@ti.com>
->>
->> The wilink module is a combo wireless connectivity sdio
->> card based on Texas Instrument's wl18xx solution. It is a
->> 4-wire, 1.8V, embedded sdio wlan device with an external
->> irq line and is power-controlled by a gpio-based fixed
->> regulator.
->>
->> Add pinmux configuration and IODelay values for MMC4.
->> On dra7-evm, MMC4 is used for connecting to wilink module.
->>
->> IODelay data credits to :  Vishal Mahaveer <vishalm@ti.com>
->> and Sekhar Nori <nsekhar@ti.com>
->>
->> Signed-off-by: Ido Yariv <ido@wizery.com>
->> Signed-off-by: Eyal Reizer <eyalr@ti.com>
->> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
->> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  arch/arm/boot/dts/dra7-evm-common.dtsi | 15 +++++++++++++++
->>  arch/arm/boot/dts/dra7-evm.dts         | 25 +++++++++++++++++++++++++
->>  2 files changed, 40 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/dra7-evm-common.dtsi b/arch/arm/boot/dts/dra7-evm-common.dtsi
->> index 05a7b1a01bc3..3590c40fc112 100644
->> --- a/arch/arm/boot/dts/dra7-evm-common.dtsi
->> +++ b/arch/arm/boot/dts/dra7-evm-common.dtsi
->> @@ -260,3 +260,18 @@
->>  &pcie1_rc {
->>         status = "okay";
->>  };
->> +
->> +&mmc4 {
->> +       bus-width = <4>;
->> +       cap-power-off-card;
->> +       keep-power-in-suspend;
->> +       non-removable;
->> +       #address-cells = <1>;
->> +       #size-cells = <0>;
->> +       wlcore: wlcore@2 {
-> 
-> wifi@2
-
-sure, I'll fix it in the next revision.
-
-Thanks
-Kishon
+SGVsbG8gU2VyZ2VpLA0KDQpUaGFua3MuIEkgZGlkIHNlYXJjaCBteSBEVCBmb2xkZXIgYmVmb3Jl
+IHJlc3BvbnNlIGJ1dCBpdCBpcyBxdWV1ZWQgdW5kZXIgZGlmZmVyZW50IGZvbGRlciDimLkNClNv
+cnJ5IGZvciB0aGUgbm9pc2UuDQoNClRoYW5rcywNClJhbWVzaA0KDQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggMC8yXSBBZGQgUjhBNzc5NzAvRWFnbGUgQ0FOLUZEIHN1cHBvcnQNCj4gDQo+IEhlbGxv
+IQ0KPiANCj4gT24gMDQvMjcvMjAxOCAxMjo0NiBQTSwgUmFtZXNoIFNoYW5tdWdhc3VuZGFyYW0g
+d3JvdGU6DQo+IA0KPiA+IFRoYW5rIHlvdSBmb3IgeW91ciBwYXRjaC4NCj4gPiBDb3VsZCB5b3Ug
+YWxzbyB1cGRhdGUgdGhlIGR0IGJpbmRpbmdzIHBsZWFzZT8gQSBzZXBhcmF0ZSBwYXRjaCBvciBw
+YXJ0DQo+IG9mIHRoaXMgc2VyaWVzLg0KPiANCj4gICAgSSdkIHBvc3RlZCBpdCBqdXN0IGJlZm9y
+ZSB0aGVzZSBwYXRjaGVzLCBzZWU6DQo+IA0KPiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3Jn
+L3BhdGNoLzEwMzY2NzI3Lw0KPiANCj4gTUJSLCBTZXJnZWkNCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
