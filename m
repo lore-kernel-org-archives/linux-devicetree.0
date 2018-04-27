@@ -1,115 +1,46 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v4 11/15] memory: tegra: Add Tegra210 memory controller
- hot resets
-Date: Fri, 27 Apr 2018 11:39:27 +0200
-Message-ID: <20180427093927.GK30388@ulmo>
-References: <cover.1523301400.git.digetx@gmail.com>
- <f064d034477537bfb5473c1277da07d772b0d4b5.1523301400.git.digetx@gmail.com>
+From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v4 0/3] Add suppport for sn65dsi86 bridge chip
+ and Innolux 2k edp panel
+Date: Fri, 27 Apr 2018 15:09:39 +0530
+Message-ID: <1524821982-2778-1-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3MHXEHrrXKLGx71o"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f064d034477537bfb5473c1277da07d772b0d4b5.1523301400.git.digetx@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---3MHXEHrrXKLGx71o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Apr 13, 2018 at 02:33:50PM +0300, Dmitry Osipenko wrote:
-> From: Thierry Reding <treding@nvidia.com>
->=20
-> Define the table of memory controller hot resets for Tegra210.
->=20
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  drivers/memory/tegra/tegra210.c | 45 +++++++++++++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->=20
-> diff --git a/drivers/memory/tegra/tegra210.c b/drivers/memory/tegra/tegra=
-210.c
-> index b729f49ffc8f..d00a77160407 100644
-> --- a/drivers/memory/tegra/tegra210.c
-> +++ b/drivers/memory/tegra/tegra210.c
-> @@ -1080,6 +1080,48 @@ static const struct tegra_smmu_soc tegra210_smmu_s=
-oc =3D {
->  	.num_asids =3D 128,
->  };
-> =20
-> +#define TEGRA210_MC_RESET(_name, _control, _status, _bit)	\
-> +	{							\
-> +		.name =3D #_name,					\
-> +		.id =3D TEGRA210_MC_RESET_##_name,		\
-> +		.control =3D _control,				\
-> +		.status =3D _status,				\
-> +		.bit =3D _bit,					\
-> +	}
-> +
-> +static const struct tegra_mc_reset tegra210_mc_resets[] =3D {
-> +	TEGRA210_MC_RESET(AFI,       0x200, 0x204,  0),
-> +	TEGRA210_MC_RESET(AVPC,      0x200, 0x204,  1),
-> +	TEGRA210_MC_RESET(DC,        0x200, 0x204,  2),
-> +	TEGRA210_MC_RESET(DCB,       0x200, 0x204,  3),
-> +	TEGRA210_MC_RESET(HC,        0x200, 0x204,  6),
-> +	TEGRA210_MC_RESET(HDA,       0x200, 0x204,  7),
-> +	TEGRA210_MC_RESET(ISP2,      0x200, 0x204,  8),
-> +	TEGRA210_MC_RESET(MPCORE,    0x200, 0x204,  9),
-> +	TEGRA210_MC_RESET(NVENC,     0x200, 0x204, 11),
-> +	TEGRA210_MC_RESET(PPCS,      0x200, 0x204, 14),
-> +	TEGRA210_MC_RESET(SATA,      0x200, 0x204, 15),
-> +	TEGRA210_MC_RESET(VI,        0x200, 0x204, 17),
-> +	TEGRA210_MC_RESET(VIC,       0x200, 0x204, 18),
-> +	TEGRA210_MC_RESET(XUSB_HOST, 0x200, 0x204, 19),
-> +	TEGRA210_MC_RESET(XUSB_DEV,  0x200, 0x204, 20),
-> +	TEGRA210_MC_RESET(A9AVP,     0x200, 0x204, 21),
-> +	TEGRA210_MC_RESET(TSEC,      0x200, 0x204, 22),
-> +	TEGRA210_MC_RESET(SDMMC1,    0x200, 0x204, 29),
-> +	TEGRA210_MC_RESET(SDMMC2,    0x200, 0x204, 30),
-> +	TEGRA210_MC_RESET(SDMMC3,    0x200, 0x204, 31),
-> +	TEGRA210_MC_RESET(SDMMC4,    0x970, 0x974,  0),
-> +	TEGRA210_MC_RESET(ISP2B,     0x970, 0x974,  1),
-> +	TEGRA210_MC_RESET(GPU,       0x970, 0x974,  2),
-> +	TEGRA210_MC_RESET(NVDEC,     0x970, 0x974,  5),
-> +	TEGRA210_MC_RESET(APE,       0x970, 0x974,  6),
-> +	TEGRA210_MC_RESET(SE,        0x970, 0x974,  7),
-> +	TEGRA210_MC_RESET(NVJPG,     0x970, 0x974,  8),
-> +	TEGRA210_MC_RESET(AXIAP,     0x970, 0x974, 11),
-> +	TEGRA210_MC_RESET(ETR,       0x970, 0x974, 12),
-> +	TEGRA210_MC_RESET(TSECB,     0x970, 0x974, 13),
-> +};
-
-Isn't this missing an include for the definitions? There is an include
-for dt-bindings/memory/tegra20-mc.h for the Tegra20 driver, but none of
-the others have it.
-
-No need to respin, though, I can add that when applying.
-
-Thierry
-
---3MHXEHrrXKLGx71o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlri788ACgkQ3SOs138+
-s6G6BA//eg7x2FvSKYaYvi4HQQ7vWXbiTkJY5qutkBBHP50gRA8bb2bUgh4mdMUd
-ABBex8TFR6glG0zsrWHdK58uKzw8dj3FfHlfW0L/GgsIFWN+PnEHuEsC/yCoBhkt
-9WmgcR7y3tpt4W/WAyNhsIDmNzHkh/uch31VcQFBHSSgZBHqKgMr/jYllxHj0/T1
-0m24rk6O8gJ2NoubCqZq+Yi//48olEAkvC6cwyvKVr/XQXeC6r8h3yzhp9dt1wUk
-jVAVBGahk6U337XtXyvSdtAklS+0R54aiax3p10ucfYD+pBinp0RjYX894Qu6xwX
-yqXK9CScqgjy0jPBr/TCzBqatLEmHx+JWDJ7x+hIJ2UrNuaJ6XCjb8bmc1hiukEn
-D/YSe76wCFE88z9o0HyPZuNiSkBozXrvaInudljIx5UxbIJeMqWYdie4U3vrDMRS
-ZM4xSscFUf5aZ0MaQXT6V2OsWMM1dgpIiQ6IsEzOTTIeBmGD8n1yL47lyuzAufrs
-oZClfgAEUnU6MUZ5zn3W1hQUhTUGOx3WbdnmrvDmnUwwm3VPmE6WClyy65SJI6yE
-uvWcaeF4gSxUvx2vuHDsOhv4whFOVhLGOfjK3nThzfpXJphzpSXkZFblUtvWtf0q
-qZasnGx2eyfypwWA90h9d4KchbyDIT/oLrOR4CTSkLWSTquXhp8=
-=jjsR
------END PGP SIGNATURE-----
-
---3MHXEHrrXKLGx71o--
+Q2hhbmdlcyBpbiBjdXJyZW50IHBhdGNoc2V0OgogLSBSZXVzZSBzaW1wbGUgcGFuZWwgZHJpdmVy
+IGZvciB0aGUgMmsgZURQIGRpc3BsYXkgcGFuZWwuCiAtIFVwZGF0ZSBicmlkZ2UgY2hpcCBlbmFi
+bGUvZGlzYWJsZSBzZXF1ZW5jZS4KIC0gVXBkYXRlIGJyaWRnZSBjaGlwIGR0LWJpbmRpbmdzLgog
+LSBBZGQgS2NvbmZpZyBhbmQgTWFrZWZpbGUgdG8gYnJpZGdlIGRyaXZlciBjaGFuZ2UuCgpTYW5k
+ZWVwIFBhbmRhICgzKToKICBkcm0vYnJpZGdlOiBhZGQgc3VwcG9ydCBmb3Igc242NWRzaTg2IGJy
+aWRnZSBkcml2ZXIKICBkdC1iaW5kaW5nczogZHJtL2JyaWRnZTogRG9jdW1lbnQgc242NWRzaTg2
+IGJyaWRnZSBiaW5kaW5ncwogIGRybS9wYW5lbDogYWRkIHN1cHBvcnQgZm9yIElubm9sdXggVFYx
+MjNXQU0gcGFuZWwKCiAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4
+dCAgICAgICB8ICA3NiArKysKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsdHYx
+MjN3YW0udHh0ICAgIHwgICA3ICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZyAgICAg
+ICAgICAgICAgICAgICAgIHwgICA5ICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUg
+ICAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGktc242
+NWRzaTg2LmMgICAgICAgICAgICAgIHwgNzIxICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVy
+cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgICAgICAgfCAgMjcgKwogNiBm
+aWxlcyBjaGFuZ2VkLCA4NDEgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYu
+dHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXNuNjVkc2k4Ni5jCgotLSAKVGhlIFF1YWxjb21tIElu
+bm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1
+bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlz
+dApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
