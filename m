@@ -1,110 +1,63 @@
-From: Thierry Escande <thierry.escande@linaro.org>
-Subject: [PATCH] arm64: dts: msm8996: fix gic_irq_domain_translate warnings
-Date: Fri, 27 Apr 2018 08:10:28 +0200
-Message-ID: <20180427061028.13192-1-thierry.escande@linaro.org>
+From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [[RFC]DPU PATCH 2/4] dt-bindings: drm/bridge:
+ Document sn65dsi86 bridge bindings
+Date: Fri, 27 Apr 2018 12:32:05 +0530
+Message-ID: <0522b749900b3a54508abef6bd15252f@codeaurora.org>
+References: <1524160568-27583-1-git-send-email-spanda@codeaurora.org>
+ <1524160568-27583-3-git-send-email-spanda@codeaurora.org>
+ <152469995691.46528.3834882157254635250@swboyd.mtv.corp.google.com>
+ <CAF6AEGuWo9U5OU5nKSSwzRV_FWszTj_8S3Hns9hFHWBPsepnVw@mail.gmail.com>
+ <20180427031331.sl62t5ir24dxmtxm@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset = "utf-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Transfert-Encoding: 8bit
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180427031331.sl62t5ir24dxmtxm@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Remove the usage of IRQ_TYPE_NONE to fix loud warnings from
-patch (83a86fbb5b56b "irqchip/gic: Loudly complain about
-the use of IRQ_TYPE_NONE").
-
-Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 410ae787ebb4..1aaf1fa2604e 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -437,7 +437,7 @@
- 		blsp2_i2c0: i2c@75b5000 {
- 			compatible = "qcom,i2c-qup-v2.2.1";
- 			reg = <0x075b5000 0x1000>;
--			interrupts = <GIC_SPI 101 0>;
-+			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&gcc GCC_BLSP2_AHB_CLK>,
- 				<&gcc GCC_BLSP2_QUP1_I2C_APPS_CLK>;
- 			clock-names = "iface", "core";
-@@ -468,7 +468,7 @@
- 		blsp2_i2c1: i2c@75b6000 {
- 			compatible = "qcom,i2c-qup-v2.2.1";
- 			reg = <0x075b6000 0x1000>;
--			interrupts = <GIC_SPI 102 0>;
-+			interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&gcc GCC_BLSP2_AHB_CLK>,
- 				<&gcc GCC_BLSP2_QUP2_I2C_APPS_CLK>;
- 			clock-names = "iface", "core";
-@@ -493,7 +493,7 @@
- 		blsp1_i2c2: i2c@7577000 {
- 			compatible = "qcom,i2c-qup-v2.2.1";
- 			reg = <0x07577000 0x1000>;
--			interrupts = <GIC_SPI 97 0>;
-+			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
- 				<&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>;
- 			clock-names = "iface", "core";
-@@ -526,7 +526,8 @@
- 			 reg = <0x74a4900 0x314>, <0x74a4000 0x800>;
- 			 reg-names = "hc_mem", "core_mem";
- 
--			 interrupts = <0 125 0>, <0 221 0>;
-+			 interrupts = <0 125 IRQ_TYPE_LEVEL_HIGH>,
-+				      <0 221 IRQ_TYPE_LEVEL_HIGH>;
- 			 interrupt-names = "hc_irq", "pwr_irq";
- 
- 			 clock-names = "iface", "core", "xo";
-@@ -809,7 +810,7 @@
- 			dwc3@7600000 {
- 				compatible = "snps,dwc3";
- 				reg = <0x7600000 0xcc00>;
--				interrupts = <0 138 0>;
-+				interrupts = <0 138 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&hsusb_phy2>;
- 				phy-names = "usb2-phy";
- 			};
-@@ -838,7 +839,7 @@
- 			dwc3@6a00000 {
- 				compatible = "snps,dwc3";
- 				reg = <0x6a00000 0xcc00>;
--				interrupts = <0 131 0>;
-+				interrupts = <0 131 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&hsusb_phy1>, <&ssusb_phy_0>;
- 				phy-names = "usb2-phy", "usb3-phy";
- 			};
-@@ -872,7 +873,7 @@
- 				ranges = <0x01000000 0x0 0x0c200000 0x0c200000 0x0 0x100000>,
- 					<0x02000000 0x0 0x0c300000 0x0c300000 0x0 0xd00000>;
- 
--				interrupts = <GIC_SPI 405 IRQ_TYPE_NONE>;
-+				interrupts = <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>;
- 				interrupt-names = "msi";
- 				#interrupt-cells = <1>;
- 				interrupt-map-mask = <0 0 0 0x7>;
-@@ -927,7 +928,7 @@
- 				ranges = <0x01000000 0x0 0x0d200000 0x0d200000 0x0 0x100000>,
- 					<0x02000000 0x0 0x0d300000 0x0d300000 0x0 0xd00000>;
- 
--				interrupts = <GIC_SPI 413 IRQ_TYPE_NONE>;
-+				interrupts = <GIC_SPI 413 IRQ_TYPE_LEVEL_HIGH>;
- 				interrupt-names = "msi";
- 				#interrupt-cells = <1>;
- 				interrupt-map-mask = <0 0 0 0x7>;
-@@ -980,7 +981,7 @@
- 
- 				device_type = "pci";
- 
--				interrupts = <GIC_SPI 421 IRQ_TYPE_NONE>;
-+				interrupts = <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH>;
- 				interrupt-names = "msi";
- 				#interrupt-cells = <1>;
- 				interrupt-map-mask = <0 0 0 0x7>;
--- 
-2.14.1
+T24gMjAxOC0wNC0yNyAwODo0MywgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gV2VkLCBBcHIgMjUs
+IDIwMTggYXQgMDg6NDY6MTNQTSAtMDQwMCwgUm9iIENsYXJrIHdyb3RlOgo+PiBPbiBXZWQsIEFw
+ciAyNSwgMjAxOCBhdCA3OjQ1IFBNLCBTdGVwaGVuIEJveWQgPHN3Ym95ZEBjaHJvbWl1bS5vcmc+
+IAo+PiB3cm90ZToKPj4gPiBRdW90aW5nIFNhbmRlZXAgUGFuZGEgKDIwMTgtMDQtMTkgMTA6NTY6
+MDYpCj4+ID4+IERvY3VtZW50IHRoZSBiaW5kaW5ncyB1c2VkIGZvciB0aGUgc242NWRzaTg2IERT
+SSB0byBlRFAgYnJpZGdlLgo+PiA+Pgo+PiA+PiBDaGFuZ2VzIGluIHYxOgo+PiA+PiAgLSBSZXBo
+cmFzZSB0aGUgZHQtYmluZGluZyBkZXNjcmlwdGlvbnMgdG8gYmUgbW9yZSBpbmxpbmUgd2l0aCBl
+eGlzdGluZwo+PiA+PiAgICBiaW5kaW5ncyAoQW5kcnplaiBIYWpkYSkuCj4+ID4+ICAtIEFkZCBt
+aXNzaW5nIGR0LWJpbmRpbmcgdGhhdCBhcmUgcGFyc2VkIGJ5IGNvcnJlc3BvbmRpbmcgZHJpdmVy
+Cj4+ID4+ICAgIChBbmRyemVqIEhhamRhKS4KPj4gPj4KPj4gPj4gQ2hhbmdlcyBpbiB2MjoKPj4g
+Pj4gIC0gUmVtb3ZlZCBlZHAgcGFuZWwgc3BlY2lmaWMgZHQtYmluZGluZyBlbnRyaWVzLiBPbmx5
+IGtlZXAgYnJpZGdlCj4+ID4+ICAgIHNwZWNpZmljIGVudHJpZXMgKFNlYW4gUGF1bCkuCj4+ID4+
+ICAtIFJlbW92ZSBjdXN0b20tbW9kZXMgZHQgZW50cnkgc2luY2UgaXRzIHVzYWdlIGlzIHJlbW92
+ZWQgZnJvbSBkcml2ZXIgYWxzbyAoU2VhbiBQYXVsKS4KPj4gPj4gIC0gUmVtb3ZlIGlzLXBsdWdn
+YWJsZSBkdCBlbnRyeSBzaW5jZSB0aGlzIHdpbGwgbm90IGJlIG5lZWRlZCBhbnltb3JlIChTZWFu
+IFBhdWwpLgo+PiA+Pgo+PiA+PiBDaGFuZ2VzIGluIHYzOgo+PiA+PiAgLSBSZW1vdmVkIGlycS1n
+cGlvIGR0IGVudHJ5IGFuZCBpbnN0ZWFkIHBvcHVsYXRlIGlzIGFuIGludGVycnVwdAo+PiA+PiAg
+ICBwcm9wZXJ0eSAoUm9iIEhlcnJpbmcpLgo+PiA+Cj4+ID4gVGhlc2UgY2hhbmdlbG9ncyB1c3Vh
+bGx5IGdvIGJlbG93IHRoZSB0cmlwbGUgZGFzaCwgYnV0IG1heWJlIGRybSBpcwo+PiA+IGRpZmZl
+cmVudCBhbmQgd2FudHMgdGhlbT8KPj4gCj4+IHllYWgsIGRybSBnZW5lcmFsbHkgd2FudHMgdGhl
+bSBpbiB0aGUgY29tbWl0IG1zZyByYXRoZXIgdGhhbiBiZWxvdyB0aGUKPj4gdHJpcGxlLWRhc2gs
+IGFsdGhvdWdoIEkgZ3Vlc3MgZm9yIGJpbmRpbmdzIGRvY3MgaXQgc2hvdWxkIGZvbGxvdyB0aGUK
+Pj4gcnVsZXMgZm9yIHRoYXQgdHJlZS4uIEkgdXN1YWxseSBqdXN0IGZpeCB1cCB0aGVzZSBzb3J0
+IG9mIHRoaW5ncyBhcyBJCj4+IGFwcGx5IHBhdGNoZXMsIGJ1dCBub3Qgc3VyZSB3aGF0IG90aGVy
+IG1haW50YWluZXJzIHByZWZlcgo+IAo+IFdlbGwsIHRoZXNlIERQVSBwYXRjaGVzIGFyZW4ndCB0
+YXJnZXRlZCBmb3IgdXBzdHJlYW0gc28gd2hvIGNhcmVzLgoKVGhpcyBjaGFuZ2UgaXMgaW5kZXBl
+bmRlbnQgb2Ygb3RoZXIgRFBVIHBhdGNoZXMuIFdlIGFyZSBwbGFubmluZyB0byAKdXBzdHJlYW0g
+dGhlc2UgYnJpZGdlIGFuZCBwYW5lbCBjaGFuZ2VzLgpJIHdpbGwgdXBsb2FkIHRoZSBuZXh0IHBh
+dGNoc2V0IGRyb3BwaW5nIHRoZSBEUFUgdGFnIHRvIGF2b2lkIGFueSAKY29uZnVzaW9uLgo+IAo+
+IE1hbnkgcGF0Y2ggcmV2aXNpb24gY2hhbmdlbG9ncyBJIHNlZSBhcmUgY3JhcCB3aXRoIHN0YXRl
+bWVudHMgbGlrZQo+ICJpbXBsZW1lbnQgY2hhbmdlcyByZXF1ZXN0ZWQgYnkgPz8iLiBCdXQgaW4g
+dGhpcyBjYXNlLCB0aGUgY2hhbmdlbG9nIGlzCj4gcmVhbGx5IGdvb2QuCj4gCj4gUm9iCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWls
+aW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
