@@ -1,95 +1,94 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
- platform drivers
-Date: Fri, 27 Apr 2018 14:40:34 +0200
-Message-ID: <CAK8P3a0tMp2QURp-9WuHehqE0b6-BO1wJ38siTdxhxgwCb-ERw@mail.gmail.com>
-References: <20180426152920.21569-1-brgl@bgdev.pl> <20180426173151.GJ3094@brightrain.aerifal.cx>
- <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com> <CAK8P3a0oCH7zyBs8nQd4p+xLrFwDQiJsaKKCF1m04nyXsZxk=g@mail.gmail.com>
- <CAMpxmJUR+31axmAe2TNq00aUg40bnC=5k=2cVX019Vncr7cRkw@mail.gmail.com>
- <CAK8P3a2xtTLx-VHVWok-b19=o1z5FbTNcaWq7Y_HSdaH6pWnZg@mail.gmail.com> <CAMRc=MdomjLCq-bJyktaToH00kNQAuTLgkSFRrY9Jmre8McT3A@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC PATCH 1/3] of: base: Introduce of_alias_check_id() to check
+ alias IDs
+Date: Fri, 27 Apr 2018 08:02:55 -0500
+Message-ID: <CAL_Jsq+3WnGNM0ip_v75s8f5-Wq_9ht19-T-MHyhKjzcU6jtdg@mail.gmail.com>
+References: <cover.1524751696.git.michal.simek@xilinx.com> <6045807691c310ccdd57ab16524b7525f26a1dc1.1524751696.git.michal.simek@xilinx.com>
+ <CAL_Jsq+69p1GstFua1-27LGv9MKT8dtbd1ytcq+GuvQ=VcEHKg@mail.gmail.com> <ba081812-f532-5ebd-b052-cdeb1f02bff1@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=MdomjLCq-bJyktaToH00kNQAuTLgkSFRrY9Jmre8McT3A@mail.gmail.com>
+In-Reply-To: <ba081812-f532-5ebd-b052-cdeb1f02bff1@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, David Lechner <david@lechnology.com>, Rich Felker <dalias@libc.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka>
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Alexander Graf <agraf@suse.de>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 27, 2018 at 1:53 PM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> 2018-04-27 12:18 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
->> On Fri, Apr 27, 2018 at 10:57 AM, Bartosz Golaszewski
->> <bgolaszewski@baylibre.com> wrote:
->>> 2018-04-27 9:52 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
->>>> On Fri, Apr 27, 2018 at 4:28 AM, David Lechner <david@lechnology.com> wrote:
->>> My patch tries to address exactly the use cases we're facing - for
->>> example by providing means to probe devices twice (early and late) and
->>> to check the state we're at in order for users to be able to just do
->>> the critical initialization early on and then continue with regular
->>> stuff later.
+On Fri, Apr 27, 2018 at 1:10 AM, Michal Simek <michal.simek@xilinx.com> wrote:
+> On 27.4.2018 04:39, Rob Herring wrote:
+>> On Thu, Apr 26, 2018 at 9:08 AM, Michal Simek <michal.simek@xilinx.com> wrote:
+>>> The function travers the lookup table to check if the request alias
+>>> id is compatible with the device driver match structure.
+>>> This function will be used by serial drivers to check if requested alias
+>>> is allocated or free to use.
+>>>
+>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>>> ---
+>>>
+>>>  drivers/of/base.c  | 49 ++++++++++++++++++++++++++++++++++++++++++++++
+>>>  include/linux/of.h |  2 ++
+>>>  2 files changed, 51 insertions(+)
+>>>
+>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>>> index 848f549164cd..382de01acc72 100644
+>>> --- a/drivers/of/base.c
+>>> +++ b/drivers/of/base.c
+>>> @@ -1892,6 +1892,55 @@ int of_alias_get_id(struct device_node *np, const char *stem)
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(of_alias_get_id);
+>>>
+>>> +/**
+>>> + * of_alias_check_id - Check alias id for the give compatibility
+>>> + * @matches:   Array of of device match structures to search in
+>>> + * @stem:      Alias stem of the given device_node
+>>> + * @id:                Alias ID for checking
+>>> + *
+>>> + * The function travers the lookup table to check if the request alias id
+>>> + * is compatible with the device driver match structure
+>>> + *
+>>> + * Return true if ID is allocated, return false if not
+>>> + */
+>>> +bool of_alias_check_id(const struct of_device_id *matches, const char *stem,
+>>> +                      int id)
 >>
->> Maybe the problem is reusing the name and some of the code from
->> an existing functionality that we've been trying to get rid of.
->>
+>> Wouldn't it be simpler to just return a bitmap of all allocated ids
+>> that match rather than trying to build that up 1 bit at a time?
 >
-> I'm not reusing the name - in fact I set the prefix to earlydev_
-> exactly in order to not confuse anyone. I'm also not reusing any code
-> in the second series.
+> Is alias list stable or can dt overlay change it?
 
-Ok.
+Stable. If you use an id and then an overlay adds that id as an alias,
+what should the kernel do? The only choice is ignore the suggestion.
 
->> If what you want to do is completely different from the existing
->> early_platform implementation, how about starting by moving that
->> out of drivers/base/platform.c into something under arch/sh/
->> and renaming it to something with an sh_ prefix.
->>
->
-> Yes, this is a good idea, but what about the sh-specific drivers that
-> rely on it? Is including headers from arch/ in driver code still an
-> accepted practice?
+> What should be the expected flow? Find out maximum number of aliases of
+> the same kind and allocate bitmap and return it with length.
 
-I think it's fine here, since we're just move it out of the way and
-there are only very few drivers using it:
+I think we can assume <32 so just return a bitmap in a unsigned long
+or u32. Use that to initialize a bitmap in the driver. For un-aliased
+devices, find the first unset bit, use that id and set the bit.
 
-drivers/clocksource/sh_cmt.c:early_platform_init("earlytimer",
-&sh_cmt_device_driver);
-drivers/clocksource/sh_mtu2.c:early_platform_init("earlytimer",
-&sh_mtu2_device_driver);
-drivers/clocksource/sh_tmu.c:early_platform_init("earlytimer",
-&sh_tmu_device_driver);
-drivers/clocksource/timer-ti-dm.c:early_platform_init("earlytimer",
-&omap_dm_timer_driver);
-drivers/tty/serial/sh-sci.c:early_platform_init_buffer("earlyprintk",
-&sci_driver,
+> Anyway if you look at that patches I sent then I call in the driver
+> of_alias_get_highest_id("serial") which doesn't take care if alias match
+> with actual driver. It means having information about max alias ID which
+> match actual driver that would be helpful but I am not quite sure what
+> should be the flow.
 
-For timer-ti-dm, it seems like a leftover from old times that can
-be removed. The other four are shared between arch/sh and
-arch/arm/mach-shmobile and already have some #ifdef
-to handle those two cases.
+I'm a bit confused as to why you use of_alias_get_highest_id and
+of_alias_check_id. of_alias_get_highest_id is really intended if  you
+want to start dynamic allocations above all the alias ids.
 
->> Let's just leave the non-DT part out of it by making it sh specific.
->> Then we can come up with improvements to the current
->> platform_device handling for DT based platforms that you can
->> use on DT-based davinci to replace what currently happens on
->> board-file based davinci systems, without mixing up those
->> two code paths too much in the base driver support.
->
-> I don't see why we wouldn't want to unify these two cases. The best
-> solution to me seems having only one entry point into the driver code
-> - the probe() function stored in platform_driver - whether we're
-> probing it from DT, platform data, ACPI or early boot code.
+I guess the need to match devices is based on each serial driver
+having it's own major and /dev name. IMO, we should get rid of those
+and every serial driver use ttySn (with the exception of things like
+USB serial). Then you'd just need to find all serial aliases. But you
+can support both with this function. Just return a bitmap of all
+aliases if match is NULL.
 
-I'd rather keep those separate and would prefer not to have
-that many different ways of getting there instead. DT and
-board files can already share most of the code through the
-use of platform_device, especially when you start using
-device properties instead of platform_data, and the other
-two are rare corner cases and ideally left that way.
+> Any link to similar function would be good to understand how the flow is
+> supposed to work.
 
-The early boot code is always special and instead of making
-it easier to use, we should focus on using it as little as
-possible: every line of code that we call before even
-initializing timers and consoles means it gets harder to
-debug when something goes wrong.
+I don't think there's a good model. The pl011 code looks broken to me.
+The warning about devices with and without aliases should be fixed.
+That is perfectly valid and should be supported. You should really
+only need an alias for your console.
 
-      Arnd
+Rob
