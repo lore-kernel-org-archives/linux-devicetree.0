@@ -1,96 +1,39 @@
-From: Vivek Unune <npcomplete13@gmail.com>
-Subject: Re: [PATCH] ARM: BCM5301X: Fix NAND ECC parameters for Linksys
- Panamera
-Date: Fri, 27 Apr 2018 10:05:42 -0400
-Message-ID: <20180427140542.c3t5taztkciimfny@osboxes>
-References: <20180310171244.70299-1-npcomplete13@gmail.com>
- <CACna6rz1TeRbPq-60HkHz9A0TDn+iXtmXniE6FCiANpUmV-qrw@mail.gmail.com>
- <20180311100313.znonhesgh462rz65@osboxes>
- <2ef6e4fc-cce7-372e-e35f-578fd6ada9ca@gmail.com>
- <20180313010210.ws4dugy3rrpqwzmk@osboxes>
- <00df9ee9-2bd2-ad2b-fdf8-682efdb9a4d1@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 03/24] ASoC: qdsp6: dt-bindings: Add
+	q6core dt bindings
+Date: Fri, 27 Apr 2018 09:10:34 -0500
+Message-ID: <20180427141034.qsk5o2erd5x6cm2f@rob-hp-laptop>
+References: <20180426094606.4775-1-srinivas.kandagatla@linaro.org>
+ <20180426094606.4775-4-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <00df9ee9-2bd2-ad2b-fdf8-682efdb9a4d1@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20180426094606.4775-4-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: srinivas.kandagatla@linaro.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, spatakok@qti.qualcomm.com, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, andy.gross@linaro.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBcHIgMjUsIDIwMTggYXQgMTE6MDI6MDRBTSArMDIwMCwgUmFmYcWCIE1pxYJlY2tp
-IHdyb3RlOgo+ID4gWyAgIDEzLjUzMDg2M10gdWJpMCB3YXJuaW5nOiAweGMwMzdjOWU0OiBlcnJv
-ciAtNzQgKEVDQyBlcnJvcikgd2hpbGUgcmVhZGluZyA2NCBieXRlcyBmcm9tIFBFQiAxMTU6MCwg
-cmVhZCBvbmx5IDY0IGJ5dGVzLCByZXRyeQo+ID4gWyAgIDEzLjU0Mjc2M10gdWJpMCB3YXJuaW5n
-OiAweGMwMzdjOWU0OiBlcnJvciAtNzQgKEVDQyBlcnJvcikgd2hpbGUgcmVhZGluZyA2NCBieXRl
-cyBmcm9tIFBFQiAxMTU6MCwgcmVhZCBvbmx5IDY0IGJ5dGVzLCByZXRyeQo+ID4gWyAgIDEzLjU1
-NDY1OV0gdWJpMCB3YXJuaW5nOiAweGMwMzdjOWU0OiBlcnJvciAtNzQgKEVDQyBlcnJvcikgd2hp
-bGUgcmVhZGluZyA2NCBieXRlcyBmcm9tIFBFQiAxMTU6MCwgcmVhZCBvbmx5IDY0IGJ5dGVzLCBy
-ZXRyeQo+ID4gWyAgIDEzLjU2NjU0OF0gdWJpMCBlcnJvcjogMHhjMDM3Y2EwODogZXJyb3IgLTc0
-IChFQ0MgZXJyb3IpIHdoaWxlIHJlYWRpbmcgNjQgYnl0ZXMgZnJvbSBQRUIgMTE1OjAsIHJlYWQg
-NjQgYnl0ZXMKPiA+IFsgICAxMy41NzY1NzRdIENQVTogMCBQSUQ6IDEgQ29tbTogc3dhcHBlci8w
-IE5vdCB0YWludGVkIDQuMTQuMjUgIzAKPiA+IFsgICAxMy41ODI1ODldIEhhcmR3YXJlIG5hbWU6
-IEJDTTUzMDFYCj4gPiBbICAgMTMuNTg2MDc4XSBCYWNrdHJhY2U6Cj4gPiBbICAgMTMuNTg4NTI2
-XSBGdW5jdGlvbiBlbnRlcmVkIGF0IFs8YzAxMDVjY2M+XSBmcm9tIFs8YzAxMDVmYjQ+XQo+ID4g
-WyAgIDEzLjU5NDM2OF0gIHI3OjAwMDAwMDAwIHI2OjYwMDAwMDEzIHI1OjAwMDAwMDAwIHI0OmMw
-ODFkOTg4Cj4gPiBbICAgMTMuNjAwMDMyXSBGdW5jdGlvbiBlbnRlcmVkIGF0IFs8YzAxMDVmOWM+
-XSBmcm9tIFs8YzA0ZjI5YTg+XQo+ID4gWyAgIDEzLjYwNTg3Ml0gRnVuY3Rpb24gZW50ZXJlZCBh
-dCBbPGMwNGYyOTE4Pl0gZnJvbSBbPGMwMzdjYTBjPl0KPiA+IFsgICAxMy42MTE3MTRdICByNzow
-MDAwMDAwMCByNjowMDAwMDA0MCByNTpjNzk1NDAwMCByNDpmZmZmZmZiNgo+ID4gWyAgIDEzLjYx
-NzM3OF0gRnVuY3Rpb24gZW50ZXJlZCBhdCBbPGMwMzdjN2RjPl0gZnJvbSBbPGMwMzdjZDFjPl0K
-PiA+IFsgICAxMy42MjMyMjNdICByMTA6MDAwMDAwMDAgcjk6MDAwMDAwNDAgcjg6MDAwMDAwNzMg
-cjc6Yzc5NTQwMDAgcjY6Yzc5NzkwMDAgcjU6YzcwMzYxODAKPiA+IFsgICAxMy42MzEwNzFdICBy
-NDpjN2I3MjkwMAo+ID4gWyAgIDEzLjYzMzYwNF0gRnVuY3Rpb24gZW50ZXJlZCBhdCBbPGMwMzdj
-Y2E0Pl0gZnJvbSBbPGMwMzgxYzVjPl0KPiA+IFsgICAxMy42Mzk0NDddICByMTA6MDAwMDAwMDAg
-cjk6Yzc5Nzk4MDAgcjg6Yzc5NTQwMDAgcjc6Yzc5NzkwMDAgcjY6MDAwMDAwNzMgcjU6YzcwMzYx
-ODAKPiA+IFsgICAxMy42NDcyODZdICByNDpjN2I3MjkwMAo+ID4gWyAgIDEzLjY0OTgxOV0gRnVu
-Y3Rpb24gZW50ZXJlZCBhdCBbPGMwMzgxYTg0Pl0gZnJvbSBbPGMwMzc2ZDc0Pl0KPiA+IFsgICAx
-My42NTU2NjNdICByMTA6Yzc5NTQwNDAgcjk6MDAwMDA4NDAgcjg6YzcwMmU0MDAgcjc6MDAwMDAw
-MDAgcjY6YzcwMmU0MDAgcjU6Yzc5NTQwMDAKPiA+IFsgICAxMy42NjM1MTBdICByNDpmZmZmZjgw
-MAo+ID4gWyAgIDEzLjY2NjA0Ml0gRnVuY3Rpb24gZW50ZXJlZCBhdCBbPGMwMzc2NzIwPl0gZnJv
-bSBbPGMwNzE3YjljPl0KPiA+IFsgICAxMy42NzE4ODZdICByMTA6YzA4MTNhODggcjk6YzA2NTFj
-MTggcjg6YzA2NTFiZWMgcjc6YzA4NGZmNDggcjY6YzA4MWU0NDAgcjU6Yzc4MjNlYTQKPiA+IFsg
-ICAxMy42Nzk3MjVdICByNDpjNzAyZTQwMAo+ID4gWyAgIDEzLjY4MjI1OF0gRnVuY3Rpb24gZW50
-ZXJlZCBhdCBbPGMwNzE3OTU0Pl0gZnJvbSBbPGMwMTAxYThjPl0KPiA+IFsgICAxMy42ODgxMDNd
-ICByMTA6YzA3MmU4M2Mgcjk6YzA3MzY2Yjggcjg6YzA3MTc5NTQgcjc6YzA3MmU4MzggcjY6YzA4
-MWU0NDAgcjU6MDAwMDAwMDAKPiA+IFsgICAxMy42OTU5NDldICByNDpjMDgwM2MwOAo+ID4gWyAg
-IDEzLjY5ODQ4Ml0gRnVuY3Rpb24gZW50ZXJlZCBhdCBbPGMwMTAxOWRjPl0gZnJvbSBbPGMwNzAw
-ZTM4Pl0KPiA+IFsgICAxMy43MDQzMjddICByOTpjMDczNjZiOCByODpjMDcwMDU5NCByNzpjMDcy
-ZTgzOCByNjpjMDgxZTQ0MCByNTpjMDgxZTQ0MCByNDowMDAwMDAwOAo+ID4gWyAgIDEzLjcxMjA4
-N10gRnVuY3Rpb24gZW50ZXJlZCBhdCBbPGMwNzAwY2Y4Pl0gZnJvbSBbPGMwNTA2YWRjPl0KPiA+
-IFsgICAxMy43MTc5MzBdICByMTA6MDAwMDAwMDAgcjk6MDAwMDAwMDAgcjg6MDAwMDAwMDAgcjc6
-MDAwMDAwMDAgcjY6MDAwMDAwMDAgcjU6YzA1MDZhY2MKPiA+IFsgICAxMy43MjU3NjldICByNDow
-MDAwMDAwMAo+ID4gWyAgIDEzLjcyODMwM10gRnVuY3Rpb24gZW50ZXJlZCBhdCBbPGMwNTA2YWNj
-Pl0gZnJvbSBbPGMwMTAyNzg4Pl0KPiA+IFsgICAxMy43MzQxNDRdICByNTpjMDUwNmFjYyByNDow
-MDAwMDAwMAo+IAo+IFRoaXMgaXMgZXhwZWN0ZWQgaWYgeW91IHByZXZpb3VzbHkgd2VyZSB1c2lu
-ZyBmaXJtd2FyZSBwcm9ncmFtbWluZyBmbGFzaAo+IGluIG5vbi1CQ0g4IG1vZGUuIFRoZSBtYWlu
-IHJlYXNvbiBmb3Igd2hhdCB5b3UncmUgc2VlaW5nIGlzIHRoYXQgd2hlbgo+IGZsYXNoaW5nIGlt
-YWdlIHdpdGggQ0ZFIGl0IGRvZXNuJ3QgZXJhc2UgYWxsIE5BTkQgcGFnZXMuCj4gCj4gSWYgcHJl
-dmlvdXNseSB5b3Ugd2VyZSB1c2luZyBmaXJtd2FyZSBwcm9ncmFtbWluZyBmbGFzaCBpbiBCQ0gx
-IG1vZGUsIGl0Cj4gbWVhbnMgdGhhdCBhZnRlciBmbGFzaGluZyBmaXJtd2FyZSB1c2luZyBCQ0g4
-IHlvdSdsbCBlbmQgdXAgd2l0aCBtZXNzIGluCj4gRUNDLgo+IAo+IFBhcnQgb2YgTkFORCBmbGFz
-aCBwcm9ncmFtbWVkIGJ5IENGRSB3aWxsIHVzZSBCQ0g4Lgo+IFBhcnQgb2YgTkFORCBmbGFzaCB0
-aGF0IHJlbWFpbmVkIGZyb20gcHJldmlvdXMgZncgd2lsbCB1c2UgQkNIMS4KPiBMaW51eCB3aWxs
-IGZhaWwgdG8gcmVhZCBwYXJ0IG9mIE5BTkQgZmxhc2ggZnJvbSBwcmV2IGluc3RhbGxhdGlvbi4K
-PiAKPiBUaGUgY2xlYW5lc3Qgc29sdXRpb246IGVyYXNlIGFsbCBOQU5EIGNvbnRlbnQgb2YgZmly
-bXdhcmUgcGFydGl0aW9uCj4gYmVmb3JlIGZsYXNoaW5nIGZpcm13YXJlIHVzaW5nIEJDSDguCj4g
-Cj4gVGhlIGVhc2llc3Qgc29sdXRpb246IGlnbm9yZSBhbGwgdGhlc2UgImVycm9yIC03NCAoRUND
-IGVycm9yKSB3aGlsZQo+IHJlYWRpbmciIGVycm9ycyAodGhleSBtYXkgbGFzdCBmb3IgZmV3IG1p
-bnV0ZXMhKS4gSSBiZWxpZXZlIFVCSSBzaG91bGQKPiBzaW1wbHkgcmVjcmVhdGUgYWxsIHBhZ2Vz
-IGl0IGNvdWxkbid0IGFjY2VzcyBhbmQgb25jZSB5b3Ugd2FpdCBsb25nCj4gZW5vdWdoLCBhbGwg
-eW91ciBOQU5EIGZsYXNoIHdpbGwgYmUgdXNpbmcgQkNIOC4KCkxldCBtZSBidWlsZCB0aGUgZmly
-bXdhcmUgd2l0aCBCQ0gtOCBhbmQgd2FpdCBpdCBvdXQuIEknbGwgcmVwb3J0IGJhY2sgbXkKcmVz
-dWx0cy4KClRoYW5rcywKClZpdmVrCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Thu, Apr 26, 2018 at 10:45:45AM +0100, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> 
+> This patch add DT bindings for Q6CORE DSP module.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Reviewed-and-tested-by: Rohit kumar <rohitkr@codeaurora.org>
+> ---
+>  .../devicetree/bindings/sound/qcom,q6core.txt       | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6core.txt
+
+Reviewed-by: Rob Herring <robh@kernel.org>
