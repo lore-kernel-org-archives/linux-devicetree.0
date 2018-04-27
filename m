@@ -1,73 +1,45 @@
-From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v4 3/3] drm/panel: add support for Innolux
- TV123WAM panel
-Date: Fri, 27 Apr 2018 15:09:42 +0530
-Message-ID: <1524821982-2778-4-git-send-email-spanda@codeaurora.org>
-References: <1524821982-2778-1-git-send-email-spanda@codeaurora.org>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: RE: [PATCH 0/2] Add R8A77970/Eagle CAN-FD support
+Date: Fri, 27 Apr 2018 09:46:19 +0000
+Message-ID: <TY2PR01MB19620E4689C0B881B540E4D4C38D0@TY2PR01MB1962.jpnprd01.prod.outlook.com>
+References: <4e5216bc-5f1b-ace4-1aea-02269cd206ac@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1524821982-2778-1-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4e5216bc-5f1b-ace4-1aea-02269cd206ac@cogentembedded.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SW5ub2x1eCBUVjEyM1dBTSBpcyBhIDEyLjMiIGVEUCBkaXNwbGF5IHBhbmVsIHdpdGgKMjE2MHgx
-NDQwIHJlc29sdXRpb24sIHdoaWNoIGNhbiBiZSBzdXBwb3J0ZWQgYnkgc2ltcGxlCnBhbmVsIGRy
-aXZlci4KCkNoYW5nZXMgaW4gdjE6CiAtIE1ha2UgdXNlIG9mIHNpbXBsZSBwYW5lbCBkcml2ZXIg
-aW5zdGVhZCBvZiBjcmVhdGluZwogICBhIG5ldyBkcml2ZXIgZm9yIHRoaXMgcGFuZWwgKFNlYW4g
-UGF1bCkuCiAtIENvbWJpbmUgZHQtYmluZGluZyBhbmQgZHJpdmVyIGNoYW5nZXMgaW50byBvbmUg
-cGF0Y2gKICAgYXMgZG9uZSBieSBvdGhlciBleGlzdGluZyBwYW5lbCBzdXBwb3J0IGNoYW5nZXMu
-CgpTaWduZWQtb2ZmLWJ5OiBTYW5kZWVwIFBhbmRhIDxzcGFuZGFAY29kZWF1cm9yYS5vcmc+Ci0t
-LQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQgICAgfCAg
-NyArKysrKysKIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAg
-ICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCAzNCBpbnNl
-cnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKCmRpZmYgLS1naXQgYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2
-MTIzd2FtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Bh
-bmVsL2lubm9sdXgsdHYxMjN3YW0udHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAw
-MDAuLmMxMmU3MTQKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2FtLnR4dApAQCAtMCwwICsxLDcg
-QEAKK0lubm9sdXggVFYxMjNXQU0gMTIuMyBpbmNoIGVEUCAySyBkaXNwbGF5IHBhbmVsCisKK1Jl
-cXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiaW5ub2x1eCx0djEy
-M3dhbSIKKworVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVs
-IGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAoraW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlz
-IGRpcmVjdG9yeS4KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1w
-bGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwppbmRleCAyMzRhZjgx
-Li41MmJiY2ZiIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxl
-LmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCkBAIC0xOTM5LDYg
-KzE5MzksMzAgQEAgc3RhdGljIHZvaWQgcGFuZWxfc2ltcGxlX3NodXRkb3duKHN0cnVjdCBkZXZp
-Y2UgKmRldikKIAkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4XzFYMjQsCiB9Owog
-CitzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgaW5ub2x1eF90djEyM3dhbV9t
-b2RlID0geworCS5jbG9jayA9IDIwNjAxNiwKKwkuaGRpc3BsYXkgPSAyMTYwLAorCS5oc3luY19z
-dGFydCA9IDIxNjAgKyA0OCwKKwkuaHN5bmNfZW5kID0gMjE2MCArIDQ4ICsgMzIsCisJLmh0b3Rh
-bCA9IDIxNjAgKyA0OCArIDMyICsgODAsCisJLnZkaXNwbGF5ID0gMTQ0MCwKKwkudnN5bmNfc3Rh
-cnQgPSAxNDQwICsgMywKKwkudnN5bmNfZW5kID0gMTQ0MCArIDMgKyAxMCwKKwkudnRvdGFsID0g
-MTQ0MCArIDMgKyAxMCArIDI3LAorCS52cmVmcmVzaCA9IDYwLAorCS5mbGFncyA9IERSTV9NT0RF
-X0ZMQUdfUEhTWU5DIHwgRFJNX01PREVfRkxBR19QVlNZTkMsCit9OworCitzdGF0aWMgY29uc3Qg
-c3RydWN0IHBhbmVsX2Rlc2MgaW5ub2x1eF90djEyM3dhbSA9IHsKKwkubW9kZXMgPSAmaW5ub2x1
-eF90djEyM3dhbV9tb2RlLAorCS5udW1fbW9kZXMgPSAxLAorCS5icGMgPSA4LAorCS5zaXplID0g
-eworCQkud2lkdGggPSAyNTksCisJCS5oZWlnaHQgPSAxNzMsCisJfSwKK307CisKIHN0YXRpYyBj
-b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJewogCQku
-Y29tcGF0aWJsZSA9ICJhbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgiLApAQCAtMjE0Miw2ICsy
-MTY2LDkgQEAgc3RhdGljIHZvaWQgcGFuZWxfc2ltcGxlX3NodXRkb3duKHN0cnVjdCBkZXZpY2Ug
-KmRldikKIAkJLmNvbXBhdGlibGUgPSAid2luc3Rhcix3ZjM1bHRpYWNkIiwKIAkJLmRhdGEgPSAm
-d2luc3Rhcl93ZjM1bHRpYWNkLAogCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAiaW5ub2x1eCx0djEy
-M3dhbSIsCisJCS5kYXRhID0gJmlubm9sdXhfdHYxMjN3YW0sCisJfSwgewogCQkvKiBzZW50aW5l
-bCAqLwogCX0KIH07Ci0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMg
-YSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29s
-bGFib3JhdGl2ZSBQcm9qZWN0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9m
-cmVlZHJlbm8K
+Hi Sergei,
+
+Thank you for your patch. 
+Could you also update the dt bindings please? A separate patch or part of this series.
+
+> Subject: [PATCH 0/2] Add R8A77970/Eagle CAN-FD support
+> 
+> Hello!
+> 
+> Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+> 'renesas-devel-20180426-v4.17-rc2' tag. We're adding the R8A77970 CAN-FD
+> device node and then enable single chnanel CAN-FD support on the Eagle
+> board.
+> 
+> [1/2] arm64: dts: renesas: r8a77970: add CAN-FD support
+> [2/2] arm64: dts: renesas: eagle: add CAN-FD support
+> 
+> WBR, Sergei
+
+Thanks,
+Ramesh
