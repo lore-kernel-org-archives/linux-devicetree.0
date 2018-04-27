@@ -1,29 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: iio: afe: add binding for
- current-sense-amplifier
-Date: Fri, 27 Apr 2018 09:30:25 -0500
-Message-ID: <20180427143025.v2pbl6ejikjhsoyh@rob-hp-laptop>
-References: <20180423210809.29586-1-peda@axentia.se>
- <20180423210809.29586-4-peda@axentia.se>
+Subject: Re: [PATCH v4 3/5] dt-bindings: remoteproc: Add Q6v5 Modem PIL
+ binding for SDM845
+Date: Fri, 27 Apr 2018 09:32:49 -0500
+Message-ID: <20180427143249.pti7rbcildf5772h@rob-hp-laptop>
+References: <20180425150843.26657-1-sibis@codeaurora.org>
+ <20180425150843.26657-4-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180423210809.29586-4-peda@axentia.se>
+In-Reply-To: <20180425150843.26657-4-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "Andrew F . Davis" <afd@ti.com>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 23, 2018 at 11:08:08PM +0200, Peter Rosin wrote:
-> Similar to current sense shunts, but an amplifier enables the use
-> of a smaller sense resistance.
+On Wed, Apr 25, 2018 at 08:38:41PM +0530, Sibi Sankar wrote:
+> Add new compatible string for Qualcomm SDM845 SoCs
 > 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  .../bindings/iio/afe/current-sense-amplifier.txt   | 26 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/afe/current-sense-amplifier.txt
+>  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
