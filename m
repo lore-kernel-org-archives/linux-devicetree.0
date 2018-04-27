@@ -1,61 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: Add a new binding for Broadcom V3D
- 3.x and newer GPUs.
-Date: Fri, 27 Apr 2018 14:53:19 -0500
-Message-ID: <20180427195318.s5bzwplylk3uwou4@rob-hp-laptop>
-References: <20180424004610.4637-1-eric@anholt.net>
- <20180424004610.4637-3-eric@anholt.net>
+Subject: Re: [PATCH v2 1/5] dt-bindings: devfreq: rk3399_dmc: improve binding
+ documentation.
+Date: Fri, 27 Apr 2018 14:55:49 -0500
+Message-ID: <20180427195549.mk7zklh4nfli3qj2@rob-hp-laptop>
+References: <20180424083742.14042-1-enric.balletbo@collabora.com>
+ <20180424083742.14042-2-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180424004610.4637-3-eric@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+In-Reply-To: <20180424083742.14042-2-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, heiko@sntech.de, linux-pm@vger.kernel.org, dbasehore@chromium.org, linux-kernel@vger.kernel.org, dianders@google.com, groeck@chromium.org, kernel@collabora.com, hl@rock-chips.com, Nick Milner <nick.milner@collabora.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBcHIgMjMsIDIwMTggYXQgMDU6NDY6MDlQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
-dGU6Cj4gVGhlc2UgT3BlbkdMIEVTIEdQVXMgYXJlIHByZXNlbnQgaW4gdGhlIDcyNjggYW5kIDcy
-Nzggc2V0IHRvcCBib3gKPiBjaGlwcy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9sdCA8
-ZXJpY0BhbmhvbHQubmV0Pgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmNtLGJjbS12
-M2QudHh0ICAgICAgICAgfCAyOCArKysrKysrKysrKysrKysrKysrCgpEb2VzIHRoaXMgaGF2ZSBk
-aXNwbGF5IGgvdz8gSWYgbm90IGJpbmRpbmdzL2dwdS8gd291bGQgYmUgbW9yZSAKYXBwcm9wcmlh
-dGUuCgo+ICAxIGZpbGUgY2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20t
-djNkLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9icmNtLGJjbS12M2QudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdjNkLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4g
-aW5kZXggMDAwMDAwMDAwMDAwLi4xYzgxNDcxNGRlMGUKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdjNkLnR4
-dAo+IEBAIC0wLDAgKzEsMjggQEAKPiArQnJvYWRjb20gVjNEIEdQVQo+ICsKPiArT25seSB0aGUg
-QnJvYWRjb20gVjNEIDMueCBhbmQgbmV3ZXIgR1BVcyBhcmUgY292ZXJlZCBieSB0aGlzIGJpbmRp
-bmcuCj4gK0ZvciBWM0QgMi54LCBzZWUgYnJjbSxiY20tdmM0LnR4dC4KPiArCj4gK1JlcXVpcmVk
-IHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZToJU2hvdWxkIGJlICJicmNtLDcyNjgtdjNkIiBv
-ciAiYnJjbSw3Mjc4LXYzZCIKPiArLSByZWc6CQlQaHlzaWNhbCBiYXNlIGFkZHJlc3NlcyBhbmQg
-bGVuZ3RocyBvZiB0aGUgcmVnaXN0ZXIgYXJlYXMKPiArLSByZWctbmFtZXM6CU5hbWVzIGZvciB0
-aGUgcmVnaXN0ZXIgYXJlYXMuICBUaGUgImh1YiIsICJicmlkZ2UiLCBhbmQgImNvcmUwIgo+ICsJ
-CSAgcmVnaXN0ZXIgYXJlYXMgYXJlIGFsd2F5cyByZXF1aXJlZC4gIFRoZSAiZ2NhIiByZWdpc3Rl
-ciBhcmVhCj4gKwkJICBpcyByZXF1aXJlZCBpZiB0aGUgR0NBIGNhY2hlIGNvbnRyb2xsZXIgaXMg
-cHJlc2VudC4KPiArLSBpbnRlcnJ1cHRzOglUaGUgaW50ZXJydXB0IG51bWJlcnMuICBUaGUgZmly
-c3QgaW50ZXJydXB0IGlzIGZvciB0aGUgaHViLAo+ICsJCSAgd2hpbGUgdGhlIGZvbGxvd2luZyBp
-bmVycnVwdHMgYXJlIGZvciB0aGUgY29yZXMuCgp0eXBvCgo+ICsJCSAgU2VlIGJpbmRpbmdzL2lu
-dGVycnVwdC1jb250cm9sbGVyL2ludGVycnVwdHMudHh0Cj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0
-aWVzOgo+ICstIGNsb2NrczoJVGhlIGNvcmUgY2xvY2sgdGhlIHVuaXQgcnVucyBvbgo+ICsKPiAr
-djNkIHsKPiArCWNvbXBhdGlibGUgPSAiYnJjbSw3MjY4LXYzZCI7Cj4gKwlyZWcgPSA8MHhmMTIw
-NDAwMCAweDEwMD4sCj4gKwkgICAgICA8MHhmMTIwMDAwMCAweDQwMDA+LAo+ICsJICAgICAgPDB4
-ZjEyMDgwMDAgMHg0MDAwPiwKPiArCSAgICAgIDwweGYxMjA0MTAwIDB4MTAwPjsKPiArCXJlZy1u
-YW1lcyA9ICJicmlkZ2UiLCAiaHViIiwgImNvcmUwIiwgImdjYSI7Cj4gKwlpbnRlcnJ1cHRzID0g
-PDAgNzggND4sCj4gKwkJICAgICA8MCA3NyA0PjsKPiArfTsKPiAtLSAKPiAyLjE3LjAKPiAKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Apr 24, 2018 at 10:37:38AM +0200, Enric Balletbo i Serra wrote:
+> From: Nick Milner <nick.milner@collabora.com>
+> 
+> There are several typos, references to non existent files, grammar and
+> punctuation mistakes in the rk3399_dmc.txt binding. This patch tries
+> to improve the binding documentation and fix these mistakes.
+> 
+> Signed-off-by: Nick Milner <nick.milner@collabora.com>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+> ---
+> 
+> Changes in v2:
+> - [1/6] Add Acked-by MyungJoo Ham.
+> - [6/6] Removed this patch from this series.
+> 
+>  .../bindings/devfreq/rk3399_dmc.txt           | 207 +++++++++---------
+>  1 file changed, 105 insertions(+), 102 deletions(-)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
