@@ -1,91 +1,78 @@
-From: Sibi S <sibis@codeaurora.org>
-Subject: Re: [PATCH v4 1/5] dt-bindings: reset: Add AOSS reset bindings for
- SDM845 SoCs
-Date: Fri, 27 Apr 2018 16:15:06 +0530
-Message-ID: <9e5ed0e1-e397-68f4-281b-6df09c8c125e@codeaurora.org>
-References: <20180425150843.26657-1-sibis@codeaurora.org>
- <20180425150843.26657-2-sibis@codeaurora.org>
- <1524824650.17614.4.camel@pengutronix.de>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v4 09/15] memory: tegra: Squash tegra20-mc into common
+ tegra-mc driver
+Date: Fri, 27 Apr 2018 13:56:55 +0300
+Message-ID: <103e449b-8ac9-c70b-4d85-638ba4a4a73a@gmail.com>
+References: <cover.1523301400.git.digetx@gmail.com>
+ <675f74f82378b5f7d8f61d35e929614a0e156141.1523301400.git.digetx@gmail.com>
+ <20180427093435.GB30388@ulmo>
+ <882f14b8-78c8-95bb-326e-3917c9736faf@gmail.com>
+ <20180427102456.GA17137@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524824650.17614.4.camel@pengutronix.de>
+In-Reply-To: <20180427102456.GA17137@ulmo>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
-
-Thanks for the review
-
-On 04/27/2018 03:54 PM, Philipp Zabel wrote:
-> Hi Sibi,
-> 
-> On Wed, 2018-04-25 at 20:38 +0530, Sibi Sankar wrote:
->> Add SDM845 AOSS (always on subsystem) reset controller binding
+On 27.04.2018 13:24, Thierry Reding wrote:
+> On Fri, Apr 27, 2018 at 01:13:47PM +0300, Dmitry Osipenko wrote:
+>> On 27.04.2018 12:34, Thierry Reding wrote:
+>>> On Mon, Apr 09, 2018 at 10:28:31PM +0300, Dmitry Osipenko wrote:
+>>> [...]
+>>>> diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+>>> [...]
+>>>> +#define MC_GART_ERROR_REQ		0x30
+>>>> +#define MC_DECERR_EMEM_OTHERS_STATUS	0x58
+>>>> +#define MC_SECURITY_VIOLATION_STATUS	0x74
+>>> [...]
+>>>> diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
+>>> [...]
+>>>> @@ -21,19 +21,30 @@
+>>>>  #define MC_INT_INVALID_SMMU_PAGE (1 << 10)
+>>>>  #define MC_INT_ARBITRATION_EMEM (1 << 9)
+>>>>  #define MC_INT_SECURITY_VIOLATION (1 << 8)
+>>>> +#define MC_INT_INVALID_GART_PAGE (1 << 7)
+>>>>  #define MC_INT_DECERR_EMEM (1 << 6)
+>>>>  
+>>>>  static inline u32 mc_readl(struct tegra_mc *mc, unsigned long offset)
+>>>>  {
+>>>> +	if (mc->regs2 && offset >= 0x24)
+>>>> +		return readl(mc->regs2 + offset - 0x3c);
+>>>
+>>> I'm still not sure how this is supposed to work. If we pass in
+>>> MC_GART_ERROR_REQ as offset into mc_readl(), then the condition above
+>>> will be true (0x30 >= 0x24) but then the new offset will be computed
+>>> and we end up with:
+>>>
+>>> 	return readl(mc->regs2 + 0x30 - 0x3c);
+>>>
+>>> which means we'll be adding a negative offset (or rather a very large
+>>> offset because it will wrap around).
 >>
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>   .../bindings/reset/qcom,aoss-reset.txt        | 52 +++++++++++++++++++
->>   include/dt-bindings/reset/qcom,sdm845-aoss.h  | 17 ++++++
->>   2 files changed, 69 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->>   create mode 100644 include/dt-bindings/reset/qcom,sdm845-aoss.h
+>> Indeed! Thank you for pointing at it again, now I see the issue. It probably
+>> works because actual registers mapping is aligned to page(?) size and adding the
+>> large offset with wraparound is equal to subtraction.
 >>
->> diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->> new file mode 100644
->> index 000000000000..e5201de9a314
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->> @@ -0,0 +1,52 @@
->> +Qualcomm AOSS Reset Controller
->> +======================================
->> +
->> +This binding describes a reset-controller found on AOSS (always on subsystem)
->> +for Qualcomm SDM845 SoCs.
->> +
->> +Required properties:
->> +- compatible:
->> +	Usage: required
->> +	Value type: <string>
->> +	Definition: must be:
->> +		    "qcom,sdm845-aoss-reset"
->> +
->> +- reg:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: must specify the base address and size of the register
->> +	            space.
->> +
->> +- #reset-cells:
->> +	Usage: required
->> +	Value type: <uint>
->> +	Definition: must be 1; cell entry represents the reset index.
->> +
->> +Example:
->> +
->> +aoss_reset: qcom,reset-controller@b2e0100 {
+>> That register belongs to the GART and we can't simply move interrupt handling to
+>> the GART driver because status register is within the MC in device tree. We can
+>> omit reading of MC_GART_ERROR_REQ and simply report GART page fault for the
+>> starter and then reorganize drivers by making MC driver MFD and GART its
+>> sub-device, what do you think?
 > 
-> The node name should be "reset-controller", not "qcom,reset-controller"
-> 
->> +	compatible = "qcom,sdm845-aoss-reset";
->> +	reg = <0xc2b0000 0x21000>;
-> 
-> The address here should match the address part of the node name above.
-> 
+> Sounds like a good idea. Can you send a fix on top of this that I can
+> squash into this when applying?
 
-sure will change them
+Sure.
 
-> Apart from those two nitpicks, the binding looks good to me.
->
-> regards
-> Philipp
-> 
+> As for integrating GART with MC, I'd prefer something that doesn't use
+> MFD but rather does something similar to what we have for the SMMU. I
+> think that's simpler to do and has less boilerplate. I think it's also
+> warranted because the MC and GART are very tightly coupled, so an MFD
+> would be slightly over-engineered, in my opinion.
 
--- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Okay, I'll recap how SMMU is integrated with MC and then come up with something.
