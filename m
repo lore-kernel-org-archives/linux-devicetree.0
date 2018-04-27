@@ -1,66 +1,114 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 0/6] add Mali-450 support to MT7623 SoC
-Date: Fri, 27 Apr 2018 16:14:41 +0800
-Message-ID: <cover.1524816502.git.sean.wang@mediatek.com>
+From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Subject: Re: [PATCH v7 06/11] ARM: sunxi: Add initialization of CNTVOFF
+Date: Fri, 27 Apr 2018 10:25:28 +0200
+Message-ID: <20180427102528.04b8e5c1@dell-desktop.home>
+References: <20180420211022.11759-1-mylene.josserand@bootlin.com>
+        <20180420211022.11759-7-mylene.josserand@bootlin.com>
+        <20180423081609.dirsitco3aeaqztx@flea>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180423081609.dirsitco3aeaqztx@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sboyd@codeaurora.org, mturquette@baylibre.com, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, p.zabel@pengutronix.de
-Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+Hello Maxime,
 
-v2:
-   changes from v1 to v2:
- 	- Add Reviewed-by tag from v1 result
- 	- Split out the changes for dt-bindings .h from the changes for driver
- 	- Fix up the typo in g3dsys dt-bindings documentation
-v1:
+Thanks for your review.
 
-Hi,
+On Mon, 23 Apr 2018 10:16:09 +0200
+Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 
-The series adds a required resource setup to allow Mali-450 to work on
-MT7623. This also can benefits other MediaTek SoCs having Mali-450 device.
+> On Fri, Apr 20, 2018 at 11:10:17PM +0200, Mylène Josserand wrote:
+> > Add the initialization of CNTVOFF for sun8i-a83t.
+> > 
+> > For boot CPU, create a new machine that handles this
+> > function's call in an "init_early" callback. We need to initialize
+> > CNTVOFF before the arch timer's initialization otherwise, it will
+> > not be taken into account and fails to boot correctly.
+> > Because of that, this function can't be called in SMP's early_initcall
+> > function which is called after timer's init.
+> > 
+> > For secondary CPUs, add this function into secondary_startup
+> > assembly entry.
+> > 
+> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> > ---
+> >  arch/arm/mach-sunxi/headsmp.S |  1 +
+> >  arch/arm/mach-sunxi/sunxi.c   | 20 +++++++++++++++++++-
+> >  2 files changed, 20 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/headsmp.S
+> > index 37dc772701f3..32d76be98541 100644
+> > --- a/arch/arm/mach-sunxi/headsmp.S
+> > +++ b/arch/arm/mach-sunxi/headsmp.S
+> > @@ -71,6 +71,7 @@ ENDPROC(sunxi_mc_smp_cluster_cache_enable)
+> >  
+> >  ENTRY(sunxi_mc_smp_secondary_startup)
+> >  	bl	sunxi_mc_smp_cluster_cache_enable
+> > +	bl	secure_cntvoff_init
+> >  	b	secondary_startup
+> >  ENDPROC(sunxi_mc_smp_secondary_startup)
+> >  
+> > diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
+> > index 5e9602ce1573..ddc439f6269b 100644
+> > --- a/arch/arm/mach-sunxi/sunxi.c
+> > +++ b/arch/arm/mach-sunxi/sunxi.c
+> > @@ -16,6 +16,7 @@
+> >  #include <linux/platform_device.h>
+> >  
+> >  #include <asm/mach/arch.h>
+> > +#include <asm/secure_cntvoff.h>
+> >  
+> >  static const char * const sunxi_board_dt_compat[] = {
+> >  	"allwinner,sun4i-a10",
+> > @@ -62,7 +63,6 @@ MACHINE_END
+> >  static const char * const sun8i_board_dt_compat[] = {
+> >  	"allwinner,sun8i-a23",
+> >  	"allwinner,sun8i-a33",
+> > -	"allwinner,sun8i-a83t",
+> >  	"allwinner,sun8i-h2-plus",
+> >  	"allwinner,sun8i-h3",
+> >  	"allwinner,sun8i-r40",
+> > @@ -75,6 +75,24 @@ DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i Family")
+> >  	.dt_compat	= sun8i_board_dt_compat,
+> >  MACHINE_END
+> >  
+> > +void __init sun8i_cntvoff_init(void)
+> > +{
+> > +#ifdef CONFIG_SMP
+> > +	secure_cntvoff_init();
+> > +#endif
+> > +}
+> > +
+> > +static const char * const sun8i_cntvoff_board_dt_compat[] = {
+> > +	"allwinner,sun8i-a83t",
+> > +	NULL,
+> > +};
+> > +
+> > +DT_MACHINE_START(SUN8I_CNTVOFF_DT, "Allwinner sun8i-a83t board")  
+> 
+> This name still doesn't really make much sense. It's an A83t, that's
+> it.
 
-In order to prove the setup is proper, I also have added mediatek port to
-linux-lima at [1] and make a few of tests along with off-screen rendering
-[2][3][4][5][6][7] through mesa-lima [8]. All work correctly.
+True, I forgot this one, sorry.
 
-[1] https://github.com/objelf/linux-lima/tree/mediatek-lima-4.16-rc5
-[2] simple triangle: https://github.com/yuq/gfx/tree/master/gbm-surface
-[3] vertex shader uniform: https://github.com/yuq/gfx/tree/master/gbm-surface-move
-[4] multi varying: https://github.com/yuq/gfx/tree/master/gbm-surface-color
-[5] multi draw: https://github.com/yuq/gfx/tree/master/gbm-surface-draw
-[6] FBO: https://github.com/yuq/gfx/tree/master/gbm-surface-fbo
-[7] kmscube: https://github.com/yuq/kmscube
-[8] https://github.com/yuq/mesa-lima
+> 
+> Apart from the other minor comment I had, and once that name has been
+> fixed:
+> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> 
+> Maxime
+> 
 
-Hope these patches can help people working on BPI-R2.
+Thank you!
 
-	Sean
-
-Sean Wang (6):
-  dt-bindings: gpu: mali-utgard: add mediatek,mt7623-mali compatible
-  dt-bindings: clock: mediatek: add g3dsys bindings
-  dt-bindings: clock: mediatek: add entry for Mali-450 node to refer
-  dt-bindings: reset: mediatek: add entry for Mali-450 node to refer
-  clk: mediatek: add g3dsys support for MT2701 and MT7623
-  arm: dts: mt7623: add Mali-450 and related device nodes
-
- .../bindings/arm/mediatek/mediatek,g3dsys.txt      | 30 +++++++
- .../devicetree/bindings/gpu/arm,mali-utgard.txt    |  9 ++
- arch/arm/boot/dts/mt7623.dtsi                      | 70 ++++++++++++++++
- arch/arm/boot/dts/mt7623a.dtsi                     |  4 +
- drivers/clk/mediatek/Kconfig                       |  6 ++
- drivers/clk/mediatek/Makefile                      |  1 +
- drivers/clk/mediatek/clk-mt2701-g3d.c              | 95 ++++++++++++++++++++++
- include/dt-bindings/clock/mt2701-clk.h             |  4 +
- include/dt-bindings/reset/mt2701-resets.h          |  3 +
- 9 files changed, 222 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,g3dsys.txt
- create mode 100644 drivers/clk/mediatek/clk-mt2701-g3d.c
+Best regards,
 
 -- 
-2.7.4
+Mylène Josserand, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
