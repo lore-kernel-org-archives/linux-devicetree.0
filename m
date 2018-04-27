@@ -1,152 +1,115 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [RFC PATCH 1/3] of: base: Introduce of_alias_check_id() to check
- alias IDs
-Date: Fri, 27 Apr 2018 16:14:38 +0200
-Message-ID: <147e8ae7-3682-2350-394a-828c096f5ee3@xilinx.com>
-References: <cover.1524751696.git.michal.simek@xilinx.com>
- <6045807691c310ccdd57ab16524b7525f26a1dc1.1524751696.git.michal.simek@xilinx.com>
- <CAL_Jsq+69p1GstFua1-27LGv9MKT8dtbd1ytcq+GuvQ=VcEHKg@mail.gmail.com>
- <ba081812-f532-5ebd-b052-cdeb1f02bff1@xilinx.com>
- <CAL_Jsq+3WnGNM0ip_v75s8f5-Wq_9ht19-T-MHyhKjzcU6jtdg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 06/24] ASoC: qdsp6: dt-bindings: Add
+	q6asm dt bindings
+Date: Fri, 27 Apr 2018 09:17:26 -0500
+Message-ID: <20180427141726.f2wrdhm7qwl6de2l@rob-hp-laptop>
+References: <20180426094606.4775-1-srinivas.kandagatla@linaro.org>
+ <20180426094606.4775-7-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+3WnGNM0ip_v75s8f5-Wq_9ht19-T-MHyhKjzcU6jtdg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Alexander Graf <agraf@suse.de>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20180426094606.4775-7-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: srinivas.kandagatla@linaro.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, spatakok@qti.qualcomm.com, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, andy.gross@linaro.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 27.4.2018 15:02, Rob Herring wrote:
-> On Fri, Apr 27, 2018 at 1:10 AM, Michal Simek <michal.simek@xilinx.com> wrote:
->> On 27.4.2018 04:39, Rob Herring wrote:
->>> On Thu, Apr 26, 2018 at 9:08 AM, Michal Simek <michal.simek@xilinx.com> wrote:
->>>> The function travers the lookup table to check if the request alias
->>>> id is compatible with the device driver match structure.
->>>> This function will be used by serial drivers to check if requested alias
->>>> is allocated or free to use.
->>>>
->>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->>>> ---
->>>>
->>>>  drivers/of/base.c  | 49 ++++++++++++++++++++++++++++++++++++++++++++++
->>>>  include/linux/of.h |  2 ++
->>>>  2 files changed, 51 insertions(+)
->>>>
->>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
->>>> index 848f549164cd..382de01acc72 100644
->>>> --- a/drivers/of/base.c
->>>> +++ b/drivers/of/base.c
->>>> @@ -1892,6 +1892,55 @@ int of_alias_get_id(struct device_node *np, const char *stem)
->>>>  }
->>>>  EXPORT_SYMBOL_GPL(of_alias_get_id);
->>>>
->>>> +/**
->>>> + * of_alias_check_id - Check alias id for the give compatibility
->>>> + * @matches:   Array of of device match structures to search in
->>>> + * @stem:      Alias stem of the given device_node
->>>> + * @id:                Alias ID for checking
->>>> + *
->>>> + * The function travers the lookup table to check if the request alias id
->>>> + * is compatible with the device driver match structure
->>>> + *
->>>> + * Return true if ID is allocated, return false if not
->>>> + */
->>>> +bool of_alias_check_id(const struct of_device_id *matches, const char *stem,
->>>> +                      int id)
->>>
->>> Wouldn't it be simpler to just return a bitmap of all allocated ids
->>> that match rather than trying to build that up 1 bit at a time?
->>
->> Is alias list stable or can dt overlay change it?
+On Thu, Apr 26, 2018 at 10:45:48AM +0100, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > 
-> Stable. If you use an id and then an overlay adds that id as an alias,
-> what should the kernel do? The only choice is ignore the suggestion.
-
-I didn't play with that for a while but on fpga case you have for
-example serial0/serial1 fixed to hard IPs/PS part and then you add 20
-uartlites or 16550 IPs to PL via overlays and you want to make sure
-proper order for user application.
-It means it is not rewriting current but adding new one exactly how you
-should do that when fixed and fpga parts are together.
-
-
+> This patch add DT bindings for ASM (Audio Stream Manager) DSP module.
 > 
->> What should be the expected flow? Find out maximum number of aliases of
->> the same kind and allocate bitmap and return it with length.
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Reviewed-and-tested-by: Rohit kumar <rohitkr@codeaurora.org>
+> ---
+>  .../devicetree/bindings/sound/qcom,q6asm.txt       | 33 ++++++++++++++++++++++
+>  include/dt-bindings/sound/qcom,q6asm.h             | 22 +++++++++++++++
+>  2 files changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6asm.txt
+>  create mode 100644 include/dt-bindings/sound/qcom,q6asm.h
 > 
-> I think we can assume <32 so just return a bitmap in a unsigned long
-> or u32. Use that to initialize a bitmap in the driver. For un-aliased
-> devices, find the first unset bit, use that id and set the bit.
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,q6asm.txt b/Documentation/devicetree/bindings/sound/qcom,q6asm.txt
+> new file mode 100644
+> index 000000000000..2178eb91146f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/qcom,q6asm.txt
+> @@ -0,0 +1,33 @@
+> +Qualcomm Audio Stream Manager (Q6ASM) binding
+> +
+> +Q6ASM is one of the APR audio service on Q6DSP.
+> +Please refer to qcom,apr.txt for details of the common apr service bindings
+> +used by the apr service device.
+> +
+> +- but must contain the following property:
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be "qcom,q6asm-v<MAJOR-NUMBER>.<MINOR-NUMBER>".
+> +		    Or "qcom,q6asm" where the version number can be queried
+> +		    from DSP.
+> +		    example "qcom,q6asm-v2.0"
+> +
+> += ASM DAIs (Digial Audio Interface)
+> +"dais" subnode of the ASM node represents dai specific configuration
+> +
+> +- #sound-dai-cells
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Must be 1
+> +
+> += EXAMPLE
+> +
+> +q6asm@7 {
+> +	compatible = "qcom,q6asm";
+> +	reg = <APR_SVC_ASM>;
+> +	q6asmdai: dais {
+> +		#sound-dai-cells = <1>;
+> +	};
+> +};
+> diff --git a/include/dt-bindings/sound/qcom,q6asm.h b/include/dt-bindings/sound/qcom,q6asm.h
+> new file mode 100644
+> index 000000000000..1eb77d87c2e8
+> --- /dev/null
+> +++ b/include/dt-bindings/sound/qcom,q6asm.h
+> @@ -0,0 +1,22 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __DT_BINDINGS_Q6_ASM_H__
+> +#define __DT_BINDINGS_Q6_ASM_H__
+> +
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA1	0
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA2	1
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA3	2
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA4	3
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA5	4
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA6	5
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA7	6
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA8	7
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA9	8
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA10	9
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA11	10
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA12	11
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA13	12
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA14	13
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA15	14
+> +#define	MSM_FRONTEND_DAI_MULTIMEDIA16	15
 
-Ok if this is in driver field can be allocated in the driver and passed
-also maximum len. It should be better then expecting maximum of 32
-devices which ends with max serial31 alias.
+Do you plan to add more? I find the defines here fairly pointless. 
+Nothing says cell values need to be 0 based, so you could just use 1-16 
+directly.
 
-Or at least expect u64 with max serial63.
+In any case,
 
+Reviewed-by: Rob Herring <robh@kernel.org>
 
->> Anyway if you look at that patches I sent then I call in the driver
->> of_alias_get_highest_id("serial") which doesn't take care if alias match
->> with actual driver. It means having information about max alias ID which
->> match actual driver that would be helpful but I am not quite sure what
->> should be the flow.
-> 
-> I'm a bit confused as to why you use of_alias_get_highest_id and
-> of_alias_check_id. of_alias_get_highest_id is really intended if  you
-> want to start dynamic allocations above all the alias ids.
-
-I need to get maximum number of ports for passing it to
-uart_register_driver which is called only once.
-And using of_alias_get_highest_id() return me reasonable number for all
-listed serial ports.
-It is not correct because some IPs don't need to be listed in that list
-but it is reasonable expectation for this RFC.
-Even alias bitfield won't help with getting correct number.
-
-
-The best will be to get number of devices which match that driver
-because they don't need to be listed in aliases list.
-
-You get 20 of devices and will allocate space for 20. If there is alias
-below 20 you will use numbers. If there is alias >= 20 it will be
-ignored in probe and number will be assigned based on empty position.
-
-But this is also no covering overlay cases where others devices can be
-added at run time.
-
-
-> I guess the need to match devices is based on each serial driver
-> having it's own major and /dev name. IMO, we should get rid of those
-> and every serial driver use ttySn (with the exception of things like
-> USB serial). Then you'd just need to find all serial aliases. But you
-> can support both with this function. Just return a bitmap of all
-> aliases if match is NULL.
-
-This will break a lot of things which are stable today.
-
-
->> Any link to similar function would be good to understand how the flow is
->> supposed to work.
-> 
-> I don't think there's a good model. The pl011 code looks broken to me.
-
-yes, it is broken.
-
-> The warning about devices with and without aliases should be fixed.
-
-The same solution which
-
-> That is perfectly valid and should be supported. You should really
-> only need an alias for your console.
-
-Having aliases is quite good in case of multiple the same uarts where if
-you have more then 2 it is hard to find out which one is the one
-connected to certain devices.
-With uartlite or ns16550 and PL where you can have unlimited number of
-devices this is really must to be able to work with this system.
-
-Thanks,
-Michal
+Rob
