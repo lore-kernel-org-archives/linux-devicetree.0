@@ -1,49 +1,73 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH RFC PoC 1/2] earlydev: implement a new way to probe
- platform devices early
-Date: Fri, 27 Apr 2018 17:13:20 +0200
-Message-ID: <CAK8P3a13wiATdYDGXnmEMfpoKzXqWA-umKLgO7hFaJj3MF4w1Q@mail.gmail.com>
-References: <20180426152920.21569-1-brgl@bgdev.pl>
- <20180426152920.21569-2-brgl@bgdev.pl>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 3/3] ASoC: tas6424: Allow disabling auto
+ diagnostics for faster power-on
+Date: Fri, 27 Apr 2018 16:30:21 +0100
+Message-ID: <20180427153021.GE6872@sirena.org.uk>
+References: <1524837349-16350-1-git-send-email-jjhiblot@ti.com>
+ <1524837349-16350-4-git-send-email-jjhiblot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180426152920.21569-2-brgl@bgdev.pl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rich Felker <dalias@libc.org>, Jan Kiszka <jan.kiszka@siemens.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Kevin Hilman <khilman@kernel.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michal Suchanek <msuchanek@suse.de>, DTML <devicetree@vger.kernel.org>, David Lechner <david@lechnology.com>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Arend van Spriel <aspriel@gmail.com>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxf>
+Content-Type: multipart/mixed; boundary="===============6709871785514105668=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1524837349-16350-4-git-send-email-jjhiblot@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, afd@ti.com, robh+dt@kernel.org, dannenberg@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 5:29 PM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> +/*
-> + * REVISIT: early_initcall may be still too late for some timers and critical
-> + * clocks. We should probably have a separate section with callbacks that can
-> + * be invoked at each architecture's discretion.
-> + */
-> +#define earlydev_platform_driver(_drv)                                 \
-> +       static int _drv##_register(void)                                \
-> +       {                                                               \
-> +               earlydev_driver_register(&(_drv));                      \
-> +               return 0;                                               \
-> +       }                                                               \
-> +       early_initcall(_drv##_register)
+--===============6709871785514105668==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Oiv9uiLrevHtW1RS"
+Content-Disposition: inline
+
+
+--Oiv9uiLrevHtW1RS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Apr 27, 2018 at 03:55:49PM +0200, Jean-Jacques Hiblot wrote:
+
+> +static const char * const diags_enum_texts[] = {"OFF", "ON"};
+> +static unsigned int diags_enum_values[] = {1, 0};
+> +SOC_VALUE_ENUM_SINGLE_DECL(diags_enum, TAS6424_DC_DIAG_CTRL1,
+> +			   TAS6424_LDGBYPASS_SHIFT, TAS6424_LDGBYPASS_MASK,
+> +			   diags_enum_texts, diags_enum_values);
 > +
-> +#endif /* __EARLYDEV_H__ */
 
-No full review, just one comment: this would really need to fit into the
-existing callbacks for clk, timer, earlycon etc that we use with OF_DECLARE.
-A lot of code makes assumptions about the order in which they are
-called, and the current early_platform infrastructure does the same
-thing using its "earlyprintk" and "earlytimer" classes.
+This just just an on/off switch so it should be represented as a
+standard _SINGLE() control with " Switch" at the end of the name so
+userspace knows what to do with it.
 
-       Arnd
+--Oiv9uiLrevHtW1RS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrjQg0ACgkQJNaLcl1U
+h9B3BQf9G8mc2VxRhn8o5ZTSsYg3S9EJadQ1MvSluxiVPchmaCMOK6ubLlJO1oAQ
+DFiElg3t0AZd+8Omo42op3mcadKYH7pskELHvBa65AkT/9ZSW5kSII2AA+FVJxPb
+dmjdv36qXEvpUrKsA1jLn8yG5b4TU7dQ962kNg7ONO4IgolrC2u93e7WSJvfB61k
+0bsmACPMOwDr+meF/cnG2uF1vXRmoE70uWgvKvemTmbKugRevRVSt9UNj/v6xBQG
+o3He3kv1KRO7/n5G+xATph5ZxKc89kAUydV5hG0nTaMPF33BXXKhlOLHCuSM2ump
+zCD8ONrDK7J8qXieQjzVBQjg8FvhQA==
+=tWnr
+-----END PGP SIGNATURE-----
+
+--Oiv9uiLrevHtW1RS--
+
+--===============6709871785514105668==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6709871785514105668==--
