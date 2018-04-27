@@ -1,68 +1,82 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2 2/2] usb: dwc3: support clocks and resets for DWC3 core
-Date: Sat, 28 Apr 2018 01:20:12 +0900
-Message-ID: <CAK7LNATtOxUjfoqmgAu-X_OYihKkMMRVLaYimEY0bRogOoHRZQ@mail.gmail.com>
-References: <1524135818-14825-1-git-send-email-yamada.masahiro@socionext.com>
- <1524135818-14825-3-git-send-email-yamada.masahiro@socionext.com> <20180425152114.pzklc5uqva3nil5v@rob-hp-laptop>
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Subject: Re: [PATCH 15/17] arm64: dts: r8a77965-salvator-x: Enable HDMI output
+Date: Fri, 27 Apr 2018 17:22:06 +0100
+Message-ID: <5af7b6a6-8a40-880d-3346-8c90bd700957@ideasonboard.com>
+References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com>
+ <20180426165346.494-16-kieran.bingham+renesas@ideasonboard.com>
+ <2345148.J1marZVneP@avalon>
+Reply-To: kieran.bingham@ideasonboard.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180425152114.pzklc5uqva3nil5v@rob-hp-laptop>
+In-Reply-To: <2345148.J1marZVneP@avalon>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-usb@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, Roger Quadros <rogerq@ti.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, DTML <devicetree@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-renesas-soc@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Laurent,
 
+On 26/04/18 22:21, Laurent Pinchart wrote:
+> Hi Kieran,
+> 
+> Thank you for the patch.
+> 
+> On Thursday, 26 April 2018 19:53:44 EEST Kieran Bingham wrote:
+>> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>>
+>> Enable the HDMI encoder for the M3N Salvator-X board and hook it up to
+>> the HDMI connector.
+>>
+>> Based on a similar patches of the the Salvator-X board
+>> on the R8A7796 SoC device tree
+>> by Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-2018-04-26 0:21 GMT+09:00 Rob Herring <robh@kernel.org>:
+Thanks, collected.
 
->> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
->> index 0dbd308..feb1cc33 100644
->> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
->> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
->> @@ -7,6 +7,27 @@ Required properties:
->>   - compatible: must be "snps,dwc3"
->>   - reg : Address and length of the register set for the device
->>   - interrupts: Interrupts used by the dwc3 controller.
->> + - clock-names: should contain "ref", "bus_early", "suspend"
->> + - clocks: list of phandle and clock specifier pairs corresponding to
->> +           entries in the clock-names property.
->> + - resets: a single pair of phandle and reset specifier
->
-> This should be optional as some SoCs don't have separate, s/w controlled
-> resets of modules.
+> 
+> How about adding the VGA output too ? I think you can add both VGA and HDMI in 
+> a single patch that enables display in one go for the board. Same comment for 
+> the Salvator-XS.
 
-OK.  I will move resets to optional property.
+I believe the VGA output is handled by the salvator-common.dtsi, and thus
+doesn't need to be included in this patch.
 
-
-Please let ask a question.
-
-
-The number of clocks should be the same across SoCs.
-(Even if there is no s/w control for clocks,
-we should input something such as clk-fixed-rate.)
-
-On the other hand, the number of resets can be different
-across SoCs.  If there is no s/w control for resets,
-we can make it optional.   (optional = 1 or 0 reset)
-
-Is this what you mean?
-
-If we had something like reset-nop (or reset-dummy)
-in case no s/w control, we would be able to input something.
-I am not sure if this is the right thing, though.
-
-
-
-
-> Otherise, for the DT binding:
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+> 
+>> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>> ---
+>>  .../boot/dts/renesas/r8a77965-salvator-x.dts    | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
+>> b/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts index
+>> a2b8fb20fef8..11e8d43e9e11 100644
+>> --- a/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
+>> +++ b/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
+>> @@ -31,3 +31,20 @@
+>>  	clock-names = "du.0", "du.1", "du.3", "lvds.0",
+>>  		      "dclkin.0", "dclkin.1", "dclkin.3";
+>>  };
+>> +
+>> +&hdmi0 {
+>> +	status = "okay";
+>> +
+>> +	ports {
+>> +		port@1 {
+>> +			reg = <1>;
+>> +			rcar_dw_hdmi0_out: endpoint {
+>> +				remote-endpoint = <&hdmi0_con>;
+>> +			};
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&hdmi0_con {
+>> +	remote-endpoint = <&rcar_dw_hdmi0_out>;
+>> +};
+> 
