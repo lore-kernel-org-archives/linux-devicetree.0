@@ -1,59 +1,80 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v4 2/5] reset: qcom: AOSS (always on subsystem) reset
- controller
-Date: Fri, 27 Apr 2018 13:54:10 +0200
-Message-ID: <1524830050.17614.9.camel@pengutronix.de>
-References: <20180425150843.26657-1-sibis@codeaurora.org>
-         <20180425150843.26657-3-sibis@codeaurora.org>
-         <1524825675.17614.6.camel@pengutronix.de>
-         <ce0d4222-ae39-56f0-a99c-49b7ac8fde05@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Subject: [PATCH v8 1/9] bindings: PCI: designware: Example update
+Date: Fri, 27 Apr 2018 12:59:56 +0100
+Message-ID: <daccd2d9da8f4467680649b4226be7be711f32e8.1524829928.git.gustavo.pimentel@synopsys.com>
+References: <cover.1524829928.git.gustavo.pimentel@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ce0d4222-ae39-56f0-a99c-49b7ac8fde05@codeaurora.org>
+In-Reply-To: <cover.1524829928.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <cover.1524829928.git.gustavo.pimentel@synopsys.com>
+References: <cover.1524829928.git.gustavo.pimentel@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi S <sibis@codeaurora.org>, bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sibi,
+Replace "ctrlreg" reg-name by "dbi" to be coherent with similar drivers,
+however it still be compatible with any previous DT that uses the old
+reg-name.
 
-On Fri, 2018-04-27 at 16:45 +0530, Sibi S wrote:
-[...]
-> > > +	/* Wait 6 32kHz sleep cycles for reset */
-> > > +	usleep_range(200, 210);
-> > 
-> > 6 32 kHz cycles are about 188 µs (184 µs for 32.768 kHz).
-> > Just out of curiosity, is the minimum increased to 200 µs on purpose, or
-> > to have a nice round number? The maximum seems oddly small, unless it is
-> > essential to wait less than 7 cycles.
-> 
-> anything above 188 µs should be fine 200 µs is just a round number.
-> 
-> no it is not essential to wait less than 7 cycles so I can increase
-> the max limit to 300 µs.
+Replace the PCIe base address example by a real PCIe base address in use.
 
-Ok, thanks for the info.
+Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes v1->v2:
+ - Removed any iATU reference or changes to avoid confusion.
+ - Add "snps,dw-pcie" compatible string following Kishon's suggestion.
+Changes v2->v3:
+ - Nothing changed, just to follow the patch set version.
+Changes v3->v4:
+ - Reverted "snps,dw-pcie-rc" compatible string requested by Rob Herring.
+Changes v4->v5:
+ - Nothing changed, just to follow the patch set version.
+Changes v5->v6:
+ - Nothing changed, just to follow the patch set version.
+Changes v6->v7:
+ - Nothing changed, just to follow the patch set version.
+Changes v7->v8:
+ - Patch description rework for an imperative verbal mode.
 
-> > The driver looks good to me now. I plan to apply patches 1 and 2 with
-> > Rob's ack.
-> > Is it ok to merge them independently from the remoteproc driver, or is
-> > there a dependency?
-> 
-> Yes it should be fine to merge them independently. I can add a dt entry
-> to the dtsi and separate the 2 patches from the remoteproc patches if
-> that helps ?
+ Documentation/devicetree/bindings/pci/designware-pcie.txt | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-I plan to just pick up the reset DT binding documentation patch (1/5)
-and the reset driver patch (2/5) then, whether they are sent separately
-or as part of the larger remoteproc series does not matter to me.
-
-The dtsi patch would have to go through the arm/qualcomm tree.
-I can put the reset patches onto a separate branch that could be pulled
-into the qcom tree ahead of the dtsi change, or you could send the dtsi
-change with numbers at first, and only replace them with the header
-defines after patch 1 is merged through the reset tree.
-
-regards
-Philipp
+diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+index 1da7ade..7f9804d 100644
+--- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+@@ -1,7 +1,8 @@
+ * Synopsys DesignWare PCIe interface
+ 
+ Required properties:
+-- compatible: should contain "snps,dw-pcie" to identify the core.
++- compatible:
++	"snps,dw-pcie" for RC mode;
+ - reg: Should contain the configuration address space.
+ - reg-names: Must be "config" for the PCIe configuration space.
+     (The old way of getting the configuration address space from "ranges"
+@@ -41,11 +42,11 @@ EP mode:
+ 
+ Example configuration:
+ 
+-	pcie: pcie@dffff000 {
++	pcie: pcie@dfc00000 {
+ 		compatible = "snps,dw-pcie";
+-		reg = <0xdffff000 0x1000>, /* Controller registers */
+-		      <0xd0000000 0x2000>; /* PCI config space */
+-		reg-names = "ctrlreg", "config";
++		reg = <0xdfc00000 0x0001000>, /* IP registers */
++		      <0xd0000000 0x0002000>; /* Configuration space */
++		reg-names = "dbi", "config";
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+ 		device_type = "pci";
+@@ -54,5 +55,4 @@ Example configuration:
+ 		interrupts = <25>, <24>;
+ 		#interrupt-cells = <1>;
+ 		num-lanes = <1>;
+-		num-viewport = <3>;
+ 	};
+-- 
+2.7.4
