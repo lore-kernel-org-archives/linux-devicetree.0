@@ -1,38 +1,54 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH] ARM64: dts: meson: disable sd-uhs modes on the libretech-cc
-Date: Fri, 27 Apr 2018 12:15:39 -0700
-Message-ID: <7hvacczcis.fsf@baylibre.com>
-References: <20180426105046.14817-1-jbrunet@baylibre.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v6 04/24] ASoC: qdsp6: dt-bindings: Add q6afe dt bindings
+Date: Fri, 27 Apr 2018 20:16:57 +0100
+Message-ID: <16204d76-c3f9-a185-6e1d-34d86dc40688@linaro.org>
+References: <20180426094606.4775-1-srinivas.kandagatla@linaro.org>
+ <20180426094606.4775-5-srinivas.kandagatla@linaro.org>
+ <20180427141323.2ykh676xpdf7b6bl@rob-hp-laptop>
+ <dd30b0ed-d958-9bf8-13cf-55d100b645ab@linaro.org>
+ <CAL_JsqLLqr87F53rbR+DU9Qj9=9SWWrw45TWZaG6f_gnYfPNgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180426105046.14817-1-jbrunet@baylibre.com> (Jerome Brunet's
-        message of "Thu, 26 Apr 2018 12:50:46 +0200")
+In-Reply-To: <CAL_JsqLLqr87F53rbR+DU9Qj9=9SWWrw45TWZaG6f_gnYfPNgw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Mark Brown <broonie@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Banajit Goswami <bgoswami@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Patrick Lai <plai@codeaurora.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, rohkumar@qti.qualcomm.com, spatakok@qti.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
 
-> There is a problem with the sd-uhs mode when doing a soft reboot.
-> Switching back from 1.8v to 3.3v messes with the card, which no longer
-> respond (timeout errors). According to the specification, we should
-> perform a card reset (power cycling the card) but this is something we
-> cannot control on this design.
+
+On 27/04/18 19:32, Rob Herring wrote:
+>>>> +
+>>>> += AFE DAIs (Digial Audio Interface)
+>>>> +"dais" subnode of the AFE node represents dai specific configuration
+>>>> +
+>>>> +- #sound-dai-cells
+>>>> +       Usage: required
+>>>> +       Value type: <u32>
+>>>> +       Definition: Must be 1
+>>>> +
+>>>> +- reg
+>>>
+>>> It's not clear here these are in a grandchild node.
+>>>
+>> Every afe port/dai has some board specifics, to allow that we need dai
+>> specific child nodes.
+> Yes, but what I mean is #sound-dai-cells is a property of the dais
+> node, but reg and qcom,sd-lines are properties of child nodes under
+> the dais node. It is evident in the example, but not without the
+> example. >
+> Also, anywhere with reg needs #address-cells and #size-cells in the parent node.
 >
-> Then the only solution to restore the communication with the card is an
-> "unplug-plug" which is not acceptable
->
-> Until we find a solution, if any, disable the sd-uhs modes on this design.
-> For the people using uhs at the moment, there will a performance drop as
-> a result.
->
-> Fixes: 3cde63ebc85c ("ARM64: dts: meson-gxl: libretech-cc: enable high speed modes")
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Yep, #address-cells and #size-cells are missing, Will add them along 
+with some notes.
 
-Applied to v4.17/fixes, and adding a Cc to stable.
+thanks,
+srini
 
-Thanks,
 
-Kevin
+
+
+> Rob
