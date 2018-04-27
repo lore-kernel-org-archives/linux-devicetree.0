@@ -1,84 +1,80 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: nvmem: Add binding for RAVE SP EEPROM driver
-Date: Fri, 27 Apr 2018 13:43:45 -0500
-Message-ID: <CAL_JsqLWmF-xrf5vDALuG3Geq-XHB2-W5Z6XWvHs=PeZ==Bm+w@mail.gmail.com>
-References: <20180411015948.19562-1-andrew.smirnov@gmail.com>
- <20180411015948.19562-2-andrew.smirnov@gmail.com> <20180416150507.2wm4s7opgr242v6a@rob-hp-laptop>
- <CAHQ1cqFep9Xs3_hsz1EiDwu8mcDDzbFs4H-kLnKkj=iokX=fCg@mail.gmail.com>
+From: Dong Aisheng <aisheng.dong@nxp.com>
+Subject: [PATCH 2/4] dt-bindings: arm: fsl: add mu binding doc
+Date: Sat, 28 Apr 2018 02:46:14 +0800
+Message-ID: <1524854776-14863-3-git-send-email-aisheng.dong@nxp.com>
+References: <1524854776-14863-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHQ1cqFep9Xs3_hsz1EiDwu8mcDDzbFs4H-kLnKkj=iokX=fCg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Aleksander Morgado <aleksander@aleksander.es>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1524854776-14863-1-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, dongas86@gmail.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 27, 2018 at 1:05 AM, Andrey Smirnov
-<andrew.smirnov@gmail.com> wrote:
-> On Mon, Apr 16, 2018 at 8:05 AM, Rob Herring <robh@kernel.org> wrote:
->> On Tue, Apr 10, 2018 at 06:59:47PM -0700, Andrey Smirnov wrote:
->>> Add Device Tree bindings for RAVE SP EEPROM driver - an MFD cell of
->>> parent RAVE SP driver (documented in
->>> Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
->>>
->>> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>> Cc: linux-kernel@vger.kernel.org
->>> Cc: Chris Healy <cphealy@gmail.com>
->>> Cc: Lucas Stach <l.stach@pengutronix.de>
->>> Cc: Aleksander Morgado <aleksander@aleksander.es>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: devicetree@vger.kernel.org
->>> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
->>> ---
->>>  .../bindings/nvmem/zii,rave-sp-eeprom.txt          | 29 ++++++++++++++++++++++
->>>  1 file changed, 29 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
->>> new file mode 100644
->>> index 000000000000..a4e838c30b67
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
->>> @@ -0,0 +1,29 @@
->>> +Zodiac Inflight Innovations RAVE EEPROM Bindings
->>> +
->>> +RAVE SP EEPROM device is a "MFD cell" device exposing physical EEPROM
->>> +attached to RAVE Supervisory Processor. It is expected that its Device
->>> +Tree node is specified as a child of the node corresponding to the
->>> +parent RAVE SP device (as documented in
->>> +Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
->>> +
->>> +Required properties:
->>> +
->>> +- compatible: Should be "zii,rave-sp-eeprom"
->>
->> Need to state somewhere this follows the bindings/nvmem/nvmem.txt
->> binding.
->>
->
-> OK, will fix in v3.
->
->>> +
->>> +Example:
->>> +
->>> +     rave-sp {
->>> +             compatible = "zii,rave-sp-rdu1";
->>> +             current-speed = <38400>;
->>> +
->>> +             main-eeprom {
->>
->> eeprom@a4
->
-> Any chance I can keep it as is? I am asking because this node name is
-> used by the driver as device name which is how it also appears in
-> sysfs. Reason for that being that "main-eeprom" and "dds-eeprom"
-> (second EEPROM in the system) are easier to rembmer and tell apart
-> than "eeprom@a4" and "eeprom@a5". Granted, I can divorce naming scheme
-> in the driver from device node name, but then I'd have to keep a
-> "address -> deivce name" lookup table which I was hoping to avoid.
+The Messaging Unit module enables two processors within
+the SoC to communicate and coordinate by passing messages
+(e.g. data, status and control) through the MU interface.
 
-It generates a dtc warning if you don't fix it.
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+ .../devicetree/bindings/arm/freescale/fsl,mu.txt   | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
 
-Rob
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
+new file mode 100644
+index 0000000..a7ceb1f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
+@@ -0,0 +1,33 @@
++NXP i.MX Messaging Unit (MU)
++--------------------------------------------------------------------
++
++The Messaging Unit module enables two processors within the SoC to
++communicate and coordinate by passing messages (e.g. data, status
++and control) through the MU interface. The MU also provides the ability
++for one processor to signal the other processor using interrupts.
++
++Because the MU manages the messaging between processors, the MU uses
++different clocks (from each side of the different peripheral buses).
++Therefore, the MU must synchronize the accesses from one side to the
++other. The MU accomplishes synchronization using two sets of matching
++registers (Processor A-facing, Processor Bfacing).
++
++Messaging Unit Device Node:
++=============================
++
++Required properties:
++-------------------
++- compatible :	should be "fsl,<chip>-mu", the supported chips include
++		imx6sx, imx7d, imx7ulp, imx8qxp, imx8qm, imx8mq.
++- reg :		Should contain the registers location and length
++- interrupts :	Interrupt number. The interrupt specifier format depends
++		on the interrupt controller parent.
++
++Examples:
++--------
++lsio_mu0: mu@5d1b0000 {
++	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
++	reg = <0x0 0x5d1b0000 0x0 0x10000>;
++	interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
++	status = "okay";
++};
+-- 
+2.7.4
