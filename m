@@ -1,88 +1,74 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: nvmem: Add binding for RAVE SP EEPROM driver
-Date: Thu, 26 Apr 2018 23:05:18 -0700
-Message-ID: <CAHQ1cqFep9Xs3_hsz1EiDwu8mcDDzbFs4H-kLnKkj=iokX=fCg@mail.gmail.com>
-References: <20180411015948.19562-1-andrew.smirnov@gmail.com>
- <20180411015948.19562-2-andrew.smirnov@gmail.com> <20180416150507.2wm4s7opgr242v6a@rob-hp-laptop>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [RFC PATCH 1/3] of: base: Introduce of_alias_check_id() to check
+ alias IDs
+Date: Fri, 27 Apr 2018 08:10:11 +0200
+Message-ID: <ba081812-f532-5ebd-b052-cdeb1f02bff1@xilinx.com>
+References: <cover.1524751696.git.michal.simek@xilinx.com>
+ <6045807691c310ccdd57ab16524b7525f26a1dc1.1524751696.git.michal.simek@xilinx.com>
+ <CAL_Jsq+69p1GstFua1-27LGv9MKT8dtbd1ytcq+GuvQ=VcEHKg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180416150507.2wm4s7opgr242v6a@rob-hp-laptop>
+In-Reply-To: <CAL_Jsq+69p1GstFua1-27LGv9MKT8dtbd1ytcq+GuvQ=VcEHKg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Aleksander Morgado <aleksander@aleksander.es>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Alexander Graf <agraf@suse.de>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 16, 2018 at 8:05 AM, Rob Herring <robh@kernel.org> wrote:
-> On Tue, Apr 10, 2018 at 06:59:47PM -0700, Andrey Smirnov wrote:
->> Add Device Tree bindings for RAVE SP EEPROM driver - an MFD cell of
->> parent RAVE SP driver (documented in
->> Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
+On 27.4.2018 04:39, Rob Herring wrote:
+> On Thu, Apr 26, 2018 at 9:08 AM, Michal Simek <michal.simek@xilinx.com> wrote:
+>> The function travers the lookup table to check if the request alias
+>> id is compatible with the device driver match structure.
+>> This function will be used by serial drivers to check if requested alias
+>> is allocated or free to use.
 >>
->> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> Cc: linux-kernel@vger.kernel.org
->> Cc: Chris Healy <cphealy@gmail.com>
->> Cc: Lucas Stach <l.stach@pengutronix.de>
->> Cc: Aleksander Morgado <aleksander@aleksander.es>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 >> ---
->>  .../bindings/nvmem/zii,rave-sp-eeprom.txt          | 29 ++++++++++++++++++++++
->>  1 file changed, 29 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
->> new file mode 100644
->> index 000000000000..a4e838c30b67
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
->> @@ -0,0 +1,29 @@
->> +Zodiac Inflight Innovations RAVE EEPROM Bindings
->> +
->> +RAVE SP EEPROM device is a "MFD cell" device exposing physical EEPROM
->> +attached to RAVE Supervisory Processor. It is expected that its Device
->> +Tree node is specified as a child of the node corresponding to the
->> +parent RAVE SP device (as documented in
->> +Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
->> +
->> +Required properties:
->> +
->> +- compatible: Should be "zii,rave-sp-eeprom"
->
-> Need to state somewhere this follows the bindings/nvmem/nvmem.txt
-> binding.
->
+>>  drivers/of/base.c  | 49 ++++++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/of.h |  2 ++
+>>  2 files changed, 51 insertions(+)
+>>
+>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>> index 848f549164cd..382de01acc72 100644
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -1892,6 +1892,55 @@ int of_alias_get_id(struct device_node *np, const char *stem)
+>>  }
+>>  EXPORT_SYMBOL_GPL(of_alias_get_id);
+>>
+>> +/**
+>> + * of_alias_check_id - Check alias id for the give compatibility
+>> + * @matches:   Array of of device match structures to search in
+>> + * @stem:      Alias stem of the given device_node
+>> + * @id:                Alias ID for checking
+>> + *
+>> + * The function travers the lookup table to check if the request alias id
+>> + * is compatible with the device driver match structure
+>> + *
+>> + * Return true if ID is allocated, return false if not
+>> + */
+>> +bool of_alias_check_id(const struct of_device_id *matches, const char *stem,
+>> +                      int id)
+> 
+> Wouldn't it be simpler to just return a bitmap of all allocated ids
+> that match rather than trying to build that up 1 bit at a time?
 
-OK, will fix in v3.
+Is alias list stable or can dt overlay change it?
 
->> +
->> +Example:
->> +
->> +     rave-sp {
->> +             compatible = "zii,rave-sp-rdu1";
->> +             current-speed = <38400>;
->> +
->> +             main-eeprom {
->
-> eeprom@a4
+What should be the expected flow? Find out maximum number of aliases of
+the same kind and allocate bitmap and return it with length.
 
-Any chance I can keep it as is? I am asking because this node name is
-used by the driver as device name which is how it also appears in
-sysfs. Reason for that being that "main-eeprom" and "dds-eeprom"
-(second EEPROM in the system) are easier to rembmer and tell apart
-than "eeprom@a4" and "eeprom@a5". Granted, I can divorce naming scheme
-in the driver from device node name, but then I'd have to keep a
-"address -> deivce name" lookup table which I was hoping to avoid.
+Anyway if you look at that patches I sent then I call in the driver
+of_alias_get_highest_id("serial") which doesn't take care if alias match
+with actual driver. It means having information about max alias ID which
+match actual driver that would be helpful but I am not quite sure what
+should be the flow.
 
->
->> +                     compatible = "zii,rave-sp-eeprom";
->> +                     reg = <0xA4 0x4000>;
->
-> lowercase hex please.
-
-OK, will do in v3.
+Any link to similar function would be good to understand how the flow is
+supposed to work.
 
 Thanks,
-Andrey Smirnov
+Michal
