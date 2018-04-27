@@ -1,190 +1,59 @@
-Return-Path: <SRS0=hkU0=HL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pg0-f65.google.com ([74.125.83.65]:40871 "EHLO
-        mail-pg0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754602AbeDVP4z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Apr 2018 11:56:55 -0400
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v3 06/11] media: ov772x: support device tree probing
-Date: Mon, 23 Apr 2018 00:56:12 +0900
-Message-Id: <1524412577-14419-7-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
-References: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
+Return-Path: <SRS0=w2p0=HQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from perceval.ideasonboard.com ([213.167.242.64]:37996 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1759215AbeD0WCb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Apr 2018 18:02:31 -0400
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH v3 3/6] arm64: dts: r8a77965: Populate the DU instance placeholder
+Date: Fri, 27 Apr 2018 23:02:17 +0100
+Message-Id: <20180427220220.31286-4-kieran.bingham+renesas@ideasonboard.com>
+In-Reply-To: <20180427220220.31286-1-kieran.bingham+renesas@ideasonboard.com>
+References: <20180427220220.31286-1-kieran.bingham+renesas@ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+To: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The ov772x driver currently only supports legacy platform data probe.
-This change enables device tree probing.
+The DU entity node has been previously added but only as a placeholder.
+Populate the node with the properties to use the device.
 
-Note that the platform data probe can select auto or manual edge control
-mode, but the device tree probling can only select auto edge control mode
-for now.
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
-* v3
-- Add a Reviewed-by: line
-- Return without resetting if ov772x_edgectrl() failed
-- Update the error message for missing platform data
+v2:
+ - Remove LVDS references from DU
+---
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
- drivers/media/i2c/ov772x.c | 64 ++++++++++++++++++++++++++++++++--------------
- 1 file changed, 45 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 8cac206..95c1c95d 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -749,13 +749,13 @@ static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
- 	case V4L2_CID_VFLIP:
- 		val = ctrl->val ? VFLIP_IMG : 0x00;
- 		priv->flag_vflip = ctrl->val;
--		if (priv->info->flags & OV772X_FLAG_VFLIP)
-+		if (priv->info && (priv->info->flags & OV772X_FLAG_VFLIP))
- 			val ^= VFLIP_IMG;
- 		return ov772x_mask_set(client, COM3, VFLIP_IMG, val);
- 	case V4L2_CID_HFLIP:
- 		val = ctrl->val ? HFLIP_IMG : 0x00;
- 		priv->flag_hflip = ctrl->val;
--		if (priv->info->flags & OV772X_FLAG_HFLIP)
-+		if (priv->info && (priv->info->flags & OV772X_FLAG_HFLIP))
- 			val ^= HFLIP_IMG;
- 		return ov772x_mask_set(client, COM3, HFLIP_IMG, val);
- 	case V4L2_CID_BAND_STOP_FILTER:
-@@ -914,19 +914,14 @@ static void ov772x_select_params(const struct v4l2_mbus_framefmt *mf,
- 	*win = ov772x_select_win(mf->width, mf->height);
- }
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index 362eddc6b3d1..a35ea2f32da2 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -1106,9 +1106,19 @@
+ 		};
  
--static int ov772x_set_params(struct ov772x_priv *priv,
--			     const struct ov772x_color_format *cfmt,
--			     const struct ov772x_win_size *win)
-+static int ov772x_edgectrl(struct ov772x_priv *priv)
- {
- 	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
--	struct v4l2_fract tpf;
- 	int ret;
--	u8  val;
- 
--	/* Reset hardware. */
--	ov772x_reset(client);
-+	if (!priv->info)
-+		return 0;
- 
--	/* Edge Ctrl. */
- 	if (priv->info->edgectrl.strength & OV772X_MANUAL_EDGE_CTRL) {
- 		/*
- 		 * Manual Edge Control Mode.
-@@ -937,19 +932,19 @@ static int ov772x_set_params(struct ov772x_priv *priv,
- 
- 		ret = ov772x_mask_set(client, DSPAUTO, EDGE_ACTRL, 0x00);
- 		if (ret < 0)
--			goto ov772x_set_fmt_error;
-+			return ret;
- 
- 		ret = ov772x_mask_set(client,
- 				      EDGE_TRSHLD, OV772X_EDGE_THRESHOLD_MASK,
- 				      priv->info->edgectrl.threshold);
- 		if (ret < 0)
--			goto ov772x_set_fmt_error;
-+			return ret;
- 
- 		ret = ov772x_mask_set(client,
- 				      EDGE_STRNGT, OV772X_EDGE_STRENGTH_MASK,
- 				      priv->info->edgectrl.strength);
- 		if (ret < 0)
--			goto ov772x_set_fmt_error;
-+			return ret;
- 
- 	} else if (priv->info->edgectrl.upper > priv->info->edgectrl.lower) {
- 		/*
-@@ -961,15 +956,35 @@ static int ov772x_set_params(struct ov772x_priv *priv,
- 				      EDGE_UPPER, OV772X_EDGE_UPPER_MASK,
- 				      priv->info->edgectrl.upper);
- 		if (ret < 0)
--			goto ov772x_set_fmt_error;
-+			return ret;
- 
- 		ret = ov772x_mask_set(client,
- 				      EDGE_LOWER, OV772X_EDGE_LOWER_MASK,
- 				      priv->info->edgectrl.lower);
- 		if (ret < 0)
--			goto ov772x_set_fmt_error;
-+			return ret;
- 	}
- 
-+	return 0;
-+}
+ 		du: display@feb00000 {
+-			reg = <0 0xfeb00000 0 0x80000>,
+-			      <0 0xfeb90000 0 0x14>;
+-			/* placeholder */
++			compatible = "renesas,du-r8a77965";
++			reg = <0 0xfeb00000 0 0x80000>;
++			reg-names = "du";
++			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 724>,
++				 <&cpg CPG_MOD 723>,
++				 <&cpg CPG_MOD 721>;
++			clock-names = "du.0", "du.1", "du.3";
++			status = "disabled";
 +
-+static int ov772x_set_params(struct ov772x_priv *priv,
-+			     const struct ov772x_color_format *cfmt,
-+			     const struct ov772x_win_size *win)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
-+	struct v4l2_fract tpf;
-+	int ret;
-+	u8  val;
-+
-+	/* Reset hardware. */
-+	ov772x_reset(client);
-+
-+	/* Edge Ctrl. */
-+	ret =  ov772x_edgectrl(priv);
-+	if (ret < 0)
-+		return ret;
-+
- 	/* Format and window size. */
- 	ret = ov772x_write(client, HSTART, win->rect.left >> 2);
- 	if (ret < 0)
-@@ -1020,9 +1035,9 @@ static int ov772x_set_params(struct ov772x_priv *priv,
++			vsps = <&vspd0 0 &vspd1 0 &vspd0 1>;
  
- 	/* Set COM3. */
- 	val = cfmt->com3;
--	if (priv->info->flags & OV772X_FLAG_VFLIP)
-+	if (priv->info && (priv->info->flags & OV772X_FLAG_VFLIP))
- 		val |= VFLIP_IMG;
--	if (priv->info->flags & OV772X_FLAG_HFLIP)
-+	if (priv->info && (priv->info->flags & OV772X_FLAG_HFLIP))
- 		val |= HFLIP_IMG;
- 	if (priv->flag_vflip)
- 		val ^= VFLIP_IMG;
-@@ -1271,8 +1286,9 @@ static int ov772x_probe(struct i2c_client *client,
- 	struct i2c_adapter	*adapter = client->adapter;
- 	int			ret;
- 
--	if (!client->dev.platform_data) {
--		dev_err(&client->dev, "Missing ov772x platform data\n");
-+	if (!client->dev.of_node && !client->dev.platform_data) {
-+		dev_err(&client->dev,
-+			"Missing ov772x platform data for non-DT device\n");
- 		return -EINVAL;
- 	}
- 
-@@ -1370,9 +1386,19 @@ static const struct i2c_device_id ov772x_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, ov772x_id);
- 
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id ov772x_of_match[] = {
-+	{ .compatible = "ovti,ov7725", },
-+	{ .compatible = "ovti,ov7720", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, ov772x_of_match);
-+#endif
-+
- static struct i2c_driver ov772x_i2c_driver = {
- 	.driver = {
- 		.name = "ov772x",
-+		.of_match_table = of_match_ptr(ov772x_of_match),
- 	},
- 	.probe    = ov772x_probe,
- 	.remove   = ov772x_remove,
+ 			ports {
+ 				#address-cells = <1>;
 -- 
-2.7.4
+2.17.0
 
