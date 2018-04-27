@@ -1,60 +1,72 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] Revert "ata: ahci-platform: add reset control support"
-Date: Fri, 27 Apr 2018 11:28:56 +0200
-Message-ID: <20180427092856.GA30388@ulmo>
-References: <1523237554-7928-1-git-send-email-hayashi.kunihiko@socionext.com>
- <c8ec7474-7eb4-24cf-1f53-b4bcee5508dd@redhat.com>
- <20180418083647.GA5503@ulmo>
- <20180426192040.GT1911913@devbig577.frc2.facebook.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: [PATCH] ARM: dts: berlin2q: add interrupt-affinity to pmu node
+Date: Fri, 27 Apr 2018 17:28:32 +0800
+Message-ID: <20180427172832.48840c3c@xhacker.debian>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="h31gzZEtNLTqOjlF"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180426192040.GT1911913@devbig577.frc2.facebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: linux-ide@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add interrupt-affinity property to fix below warning:
+[    0.429642] CPU PMU: Failed to parse /soc/pmu/interrupt-affinity[0]
 
---h31gzZEtNLTqOjlF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+ arch/arm/boot/dts/berlin2q.dtsi | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-On Thu, Apr 26, 2018 at 12:20:40PM -0700, Tejun Heo wrote:
-> Hello,
->=20
-> On Wed, Apr 18, 2018 at 10:36:47AM +0200, Thierry Reding wrote:
-> > I see that you've applied this to your for-next branch. However, this is
-> > a fix that needs to go into v4.17 because that's where the regression
-> > was introduced. Is there any way you can promote this to a fixes branch?
->=20
-> It's in for-4.17-fixes.  I'll push it out early next week.
-
-Great, thanks!
-
-Thierry
-
---h31gzZEtNLTqOjlF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlri7VQACgkQ3SOs138+
-s6FdOw/9H8ua3amf4gF4ALR4Ye9RLllwoIHD/LF43KfvhDk2K6G+MimAmsTY3DT2
-1aaDw3h2AMpLd/0WcBlGQaMHv/myHGaoiTDC+hF0ll4uRrQORYi8EwUygVOVBk9+
-ETmPKaQYmmf6/qd1zOFx7tdCxKQA4R+ot66rbG7iznR+Simeq04gQVSVH5AERz7J
-JIakdSVdumWqwuoDZHIOXwbPuo79CmMzEtpUs8FrQA3GHv6uVombsVrT1So6lKpx
-81bAMZexdzxKUOSutZF4vDv8DLjaDW5nBqDd92U7ncVIYjUAbxFu5AlfwYCRQSV1
-ECtlcBKLhgirb82CLhuMs2NbtpiwLYC0amPYmeVJt8gAdb5hG2Ljzqx81KehtKC7
-0nKkGcUiQiRsDlThbhJcEgonLuvJBmgXyboowIKZDEANRMXT6omCMvPX2Wko84Md
-b5sxZ+3uzKyUhBYH2VL9FrXxXKLrkrZsCwTc03IeBWcPEkUwUYi08oirrFBasDlw
-f+sYq2rZCgd/JcsO/GvQPzKKiE1zd2EY0Zz8BLjBTTg64pXl3stip2gaxXZxNwHY
-51GNVkjfO/c0jffs3w7Z2DkFtSj2iB/RvJZT7aSMAc4NKdekHIr7grQoZ+b1fan5
-t2ZZihHAg5i0oURWQs/wLTUyv7XkUk8Urc7v5L5I521MUQs0Log=
-=wrNj
------END PGP SIGNATURE-----
-
---h31gzZEtNLTqOjlF--
+diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+index bf3a6c9a1d34..e23c49ae3ec2 100644
+--- a/arch/arm/boot/dts/berlin2q.dtsi
++++ b/arch/arm/boot/dts/berlin2q.dtsi
+@@ -53,7 +53,7 @@
+ 		#size-cells = <0>;
+ 		enable-method = "marvell,berlin-smp";
+ 
+-		cpu@0 {
++		cpu0: cpu@0 {
+ 			compatible = "arm,cortex-a9";
+ 			device_type = "cpu";
+ 			next-level-cache = <&l2>;
+@@ -71,21 +71,21 @@
+ 			>;
+ 		};
+ 
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a9";
+ 			device_type = "cpu";
+ 			next-level-cache = <&l2>;
+ 			reg = <1>;
+ 		};
+ 
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a9";
+ 			device_type = "cpu";
+ 			next-level-cache = <&l2>;
+ 			reg = <2>;
+ 		};
+ 
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a9";
+ 			device_type = "cpu";
+ 			next-level-cache = <&l2>;
+@@ -113,6 +113,10 @@
+ 				     <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-affinity = <&cpu0>,
++					     <&cpu1>,
++					     <&cpu2>,
++					     <&cpu3>;
+ 		};
+ 
+ 		sdhci0: sdhci@ab0000 {
+-- 
+2.17.0
