@@ -1,59 +1,119 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 15/74] OF: Prevent unaligned access in of_alias_scan()
-Date: Fri, 27 Apr 2018 15:58:05 +0200
-Message-ID: <20180427135710.534544535@linuxfoundation.org>
-References: <20180427135709.899303463@linuxfoundation.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
+ platform drivers
+Date: Fri, 27 Apr 2018 16:05:39 +0200
+Message-ID: <CAMpxmJVkRDLkpcgzhMb41z=Tp6zvszLd0vqfdTtZBNGT6Trtqw@mail.gmail.com>
+References: <20180426152920.21569-1-brgl@bgdev.pl> <20180426173151.GJ3094@brightrain.aerifal.cx>
+ <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com> <CAK8P3a0oCH7zyBs8nQd4p+xLrFwDQiJsaKKCF1m04nyXsZxk=g@mail.gmail.com>
+ <CAMpxmJUR+31axmAe2TNq00aUg40bnC=5k=2cVX019Vncr7cRkw@mail.gmail.com>
+ <CAK8P3a2xtTLx-VHVWok-b19=o1z5FbTNcaWq7Y_HSdaH6pWnZg@mail.gmail.com>
+ <CAMRc=MdomjLCq-bJyktaToH00kNQAuTLgkSFRrY9Jmre8McT3A@mail.gmail.com> <CAK8P3a0tMp2QURp-9WuHehqE0b6-BO1wJ38siTdxhxgwCb-ERw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427135709.899303463@linuxfoundation.org>
+In-Reply-To: <CAK8P3a0tMp2QURp-9WuHehqE0b6-BO1wJ38siTdxhxgwCb-ERw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Paul Burton <paul.burton@imgtec.com>, Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Amit Pundir <amit.pundir@linaro.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, David Lechner <david@lechnology.com>, Rich Felker <dalias@libc.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Frank Rowand <frowand.list@gmail.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arend van Spriel <aspriel@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Michal Suchanek <msuchanek@suse.de>, Jan Kiszka <jan.kiszka@siemens.com>
 List-Id: devicetree@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+2018-04-27 14:40 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+> On Fri, Apr 27, 2018 at 1:53 PM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>> 2018-04-27 12:18 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+>>> On Fri, Apr 27, 2018 at 10:57 AM, Bartosz Golaszewski
+>>> <bgolaszewski@baylibre.com> wrote:
+>>>> 2018-04-27 9:52 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+>>>>> On Fri, Apr 27, 2018 at 4:28 AM, David Lechner <david@lechnology.com> wrote:
+>>>> My patch tries to address exactly the use cases we're facing - for
+>>>> example by providing means to probe devices twice (early and late) and
+>>>> to check the state we're at in order for users to be able to just do
+>>>> the critical initialization early on and then continue with regular
+>>>> stuff later.
+>>>
+>>> Maybe the problem is reusing the name and some of the code from
+>>> an existing functionality that we've been trying to get rid of.
+>>>
+>>
+>> I'm not reusing the name - in fact I set the prefix to earlydev_
+>> exactly in order to not confuse anyone. I'm also not reusing any code
+>> in the second series.
+>
+> Ok.
+>
+>>> If what you want to do is completely different from the existing
+>>> early_platform implementation, how about starting by moving that
+>>> out of drivers/base/platform.c into something under arch/sh/
+>>> and renaming it to something with an sh_ prefix.
+>>>
+>>
+>> Yes, this is a good idea, but what about the sh-specific drivers that
+>> rely on it? Is including headers from arch/ in driver code still an
+>> accepted practice?
+>
+> I think it's fine here, since we're just move it out of the way and
+> there are only very few drivers using it:
+>
+> drivers/clocksource/sh_cmt.c:early_platform_init("earlytimer",
+> &sh_cmt_device_driver);
+> drivers/clocksource/sh_mtu2.c:early_platform_init("earlytimer",
+> &sh_mtu2_device_driver);
+> drivers/clocksource/sh_tmu.c:early_platform_init("earlytimer",
+> &sh_tmu_device_driver);
+> drivers/clocksource/timer-ti-dm.c:early_platform_init("earlytimer",
+> &omap_dm_timer_driver);
+> drivers/tty/serial/sh-sci.c:early_platform_init_buffer("earlyprintk",
+> &sci_driver,
+>
+> For timer-ti-dm, it seems like a leftover from old times that can
+> be removed. The other four are shared between arch/sh and
+> arch/arm/mach-shmobile and already have some #ifdef
+> to handle those two cases.
+>
 
-------------------
+I'm also seeing that we also call early_platform_cleanup() from
+platform_bus_init(). Any ideas for this one?
 
-From: Paul Burton <paul.burton@imgtec.com>
+>>> Let's just leave the non-DT part out of it by making it sh specific.
+>>> Then we can come up with improvements to the current
+>>> platform_device handling for DT based platforms that you can
+>>> use on DT-based davinci to replace what currently happens on
+>>> board-file based davinci systems, without mixing up those
+>>> two code paths too much in the base driver support.
+>>
+>> I don't see why we wouldn't want to unify these two cases. The best
+>> solution to me seems having only one entry point into the driver code
+>> - the probe() function stored in platform_driver - whether we're
+>> probing it from DT, platform data, ACPI or early boot code.
+>
+> I'd rather keep those separate and would prefer not to have
+> that many different ways of getting there instead. DT and
+> board files can already share most of the code through the
+> use of platform_device, especially when you start using
+> device properties instead of platform_data, and the other
+> two are rare corner cases and ideally left that way.
+>
+> The early boot code is always special and instead of making
+> it easier to use, we should focus on using it as little as
+> possible: every line of code that we call before even
+> initializing timers and consoles means it gets harder to
+> debug when something goes wrong.
+>
 
-commit de96ec2a77c6d06a423c2c495bb4a2f4299f3d9e upstream.
+I'm afraid I don't quite understand your reasoning. I fully agree that
+devices that need to be initialized that early are a rare corner case.
+We should limit any such uses to the absolute minimum. But when we do
+need to go this way, we should do it right. Having a unified mechanism
+for early devices will allow maintainers to enforce good practices
+(using resources for register mapping, devres, reusing driver code for
+reading/writing to registers). Having initialization code in machine
+code will make everybody use different APIs and duplicate solutions. I
+normally assume that code consolidation is always good.
 
-When allocating a struct alias_prop, of_alias_scan() only requested that
-it be aligned on a 4 byte boundary. The struct contains pointers which
-leads to us attempting 64 bit writes on 64 bit systems, and if the CPU
-doesn't support unaligned memory accesses then this causes problems -
-for example on some MIPS64r2 CPUs including the "mips64r2-generic" QEMU
-emulated CPU it will trigger an address error exception.
+If we add a way for DT-based platform devices to be probed early - it
+would be based on platform device/driver structures anyway. Why would
+we even want to not convert the board code into a simple call to
+early_platform_device_register() if we'll already offer this API for
+device tree?
 
-Fix this by requesting alignment for the struct alias_prop allocation
-matching that which the compiler expects, using the __alignof__ keyword.
-
-Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mips@linux-mips.org
-Patchwork: https://patchwork.linux-mips.org/patch/14306/
-Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
-Cc: Amit Pundir <amit.pundir@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/of/base.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2109,7 +2109,7 @@ void of_alias_scan(void * (*dt_alloc)(u6
- 			continue;
- 
- 		/* Allocate an alias_prop with enough space for the stem */
--		ap = dt_alloc(sizeof(*ap) + len + 1, 4);
-+		ap = dt_alloc(sizeof(*ap) + len + 1, __alignof__(*ap));
- 		if (!ap)
- 			continue;
- 		memset(ap, 0, sizeof(*ap) + len + 1);
+Best regards,
+Bartosz Golaszewski
