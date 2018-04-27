@@ -1,74 +1,110 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [RFC PATCH 1/3] of: base: Introduce of_alias_check_id() to check
- alias IDs
-Date: Fri, 27 Apr 2018 08:10:11 +0200
-Message-ID: <ba081812-f532-5ebd-b052-cdeb1f02bff1@xilinx.com>
-References: <cover.1524751696.git.michal.simek@xilinx.com>
- <6045807691c310ccdd57ab16524b7525f26a1dc1.1524751696.git.michal.simek@xilinx.com>
- <CAL_Jsq+69p1GstFua1-27LGv9MKT8dtbd1ytcq+GuvQ=VcEHKg@mail.gmail.com>
+From: Thierry Escande <thierry.escande@linaro.org>
+Subject: [PATCH] arm64: dts: msm8996: fix gic_irq_domain_translate warnings
+Date: Fri, 27 Apr 2018 08:10:28 +0200
+Message-ID: <20180427061028.13192-1-thierry.escande@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset = "utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+69p1GstFua1-27LGv9MKT8dtbd1ytcq+GuvQ=VcEHKg@mail.gmail.com>
-Content-Language: en-US
+Content-Transfert-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Alexander Graf <agraf@suse.de>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 27.4.2018 04:39, Rob Herring wrote:
-> On Thu, Apr 26, 2018 at 9:08 AM, Michal Simek <michal.simek@xilinx.com> wrote:
->> The function travers the lookup table to check if the request alias
->> id is compatible with the device driver match structure.
->> This function will be used by serial drivers to check if requested alias
->> is allocated or free to use.
->>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> ---
->>
->>  drivers/of/base.c  | 49 ++++++++++++++++++++++++++++++++++++++++++++++
->>  include/linux/of.h |  2 ++
->>  2 files changed, 51 insertions(+)
->>
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index 848f549164cd..382de01acc72 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -1892,6 +1892,55 @@ int of_alias_get_id(struct device_node *np, const char *stem)
->>  }
->>  EXPORT_SYMBOL_GPL(of_alias_get_id);
->>
->> +/**
->> + * of_alias_check_id - Check alias id for the give compatibility
->> + * @matches:   Array of of device match structures to search in
->> + * @stem:      Alias stem of the given device_node
->> + * @id:                Alias ID for checking
->> + *
->> + * The function travers the lookup table to check if the request alias id
->> + * is compatible with the device driver match structure
->> + *
->> + * Return true if ID is allocated, return false if not
->> + */
->> +bool of_alias_check_id(const struct of_device_id *matches, const char *stem,
->> +                      int id)
-> 
-> Wouldn't it be simpler to just return a bitmap of all allocated ids
-> that match rather than trying to build that up 1 bit at a time?
+Remove the usage of IRQ_TYPE_NONE to fix loud warnings from
+patch (83a86fbb5b56b "irqchip/gic: Loudly complain about
+the use of IRQ_TYPE_NONE").
 
-Is alias list stable or can dt overlay change it?
+Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-What should be the expected flow? Find out maximum number of aliases of
-the same kind and allocate bitmap and return it with length.
-
-Anyway if you look at that patches I sent then I call in the driver
-of_alias_get_highest_id("serial") which doesn't take care if alias match
-with actual driver. It means having information about max alias ID which
-match actual driver that would be helpful but I am not quite sure what
-should be the flow.
-
-Any link to similar function would be good to understand how the flow is
-supposed to work.
-
-Thanks,
-Michal
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 410ae787ebb4..1aaf1fa2604e 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -437,7 +437,7 @@
+ 		blsp2_i2c0: i2c@75b5000 {
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+ 			reg = <0x075b5000 0x1000>;
+-			interrupts = <GIC_SPI 101 0>;
++			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP2_AHB_CLK>,
+ 				<&gcc GCC_BLSP2_QUP1_I2C_APPS_CLK>;
+ 			clock-names = "iface", "core";
+@@ -468,7 +468,7 @@
+ 		blsp2_i2c1: i2c@75b6000 {
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+ 			reg = <0x075b6000 0x1000>;
+-			interrupts = <GIC_SPI 102 0>;
++			interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP2_AHB_CLK>,
+ 				<&gcc GCC_BLSP2_QUP2_I2C_APPS_CLK>;
+ 			clock-names = "iface", "core";
+@@ -493,7 +493,7 @@
+ 		blsp1_i2c2: i2c@7577000 {
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+ 			reg = <0x07577000 0x1000>;
+-			interrupts = <GIC_SPI 97 0>;
++			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+ 				<&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>;
+ 			clock-names = "iface", "core";
+@@ -526,7 +526,8 @@
+ 			 reg = <0x74a4900 0x314>, <0x74a4000 0x800>;
+ 			 reg-names = "hc_mem", "core_mem";
+ 
+-			 interrupts = <0 125 0>, <0 221 0>;
++			 interrupts = <0 125 IRQ_TYPE_LEVEL_HIGH>,
++				      <0 221 IRQ_TYPE_LEVEL_HIGH>;
+ 			 interrupt-names = "hc_irq", "pwr_irq";
+ 
+ 			 clock-names = "iface", "core", "xo";
+@@ -809,7 +810,7 @@
+ 			dwc3@7600000 {
+ 				compatible = "snps,dwc3";
+ 				reg = <0x7600000 0xcc00>;
+-				interrupts = <0 138 0>;
++				interrupts = <0 138 IRQ_TYPE_LEVEL_HIGH>;
+ 				phys = <&hsusb_phy2>;
+ 				phy-names = "usb2-phy";
+ 			};
+@@ -838,7 +839,7 @@
+ 			dwc3@6a00000 {
+ 				compatible = "snps,dwc3";
+ 				reg = <0x6a00000 0xcc00>;
+-				interrupts = <0 131 0>;
++				interrupts = <0 131 IRQ_TYPE_LEVEL_HIGH>;
+ 				phys = <&hsusb_phy1>, <&ssusb_phy_0>;
+ 				phy-names = "usb2-phy", "usb3-phy";
+ 			};
+@@ -872,7 +873,7 @@
+ 				ranges = <0x01000000 0x0 0x0c200000 0x0c200000 0x0 0x100000>,
+ 					<0x02000000 0x0 0x0c300000 0x0c300000 0x0 0xd00000>;
+ 
+-				interrupts = <GIC_SPI 405 IRQ_TYPE_NONE>;
++				interrupts = <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>;
+ 				interrupt-names = "msi";
+ 				#interrupt-cells = <1>;
+ 				interrupt-map-mask = <0 0 0 0x7>;
+@@ -927,7 +928,7 @@
+ 				ranges = <0x01000000 0x0 0x0d200000 0x0d200000 0x0 0x100000>,
+ 					<0x02000000 0x0 0x0d300000 0x0d300000 0x0 0xd00000>;
+ 
+-				interrupts = <GIC_SPI 413 IRQ_TYPE_NONE>;
++				interrupts = <GIC_SPI 413 IRQ_TYPE_LEVEL_HIGH>;
+ 				interrupt-names = "msi";
+ 				#interrupt-cells = <1>;
+ 				interrupt-map-mask = <0 0 0 0x7>;
+@@ -980,7 +981,7 @@
+ 
+ 				device_type = "pci";
+ 
+-				interrupts = <GIC_SPI 421 IRQ_TYPE_NONE>;
++				interrupts = <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH>;
+ 				interrupt-names = "msi";
+ 				#interrupt-cells = <1>;
+ 				interrupt-map-mask = <0 0 0 0x7>;
+-- 
+2.14.1
