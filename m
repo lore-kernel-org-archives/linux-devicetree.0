@@ -1,284 +1,271 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v6 02/24] soc: qcom: Add APR bus driver
-Date: Fri, 27 Apr 2018 21:51:55 -0700
-Message-ID: <20180428045155.GA491@tuxbook-pro>
-References: <20180426094606.4775-1-srinivas.kandagatla@linaro.org>
- <20180426094606.4775-3-srinivas.kandagatla@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Subject: [PATCH v2 2/2] arm64: dts: qcom: msm8998: Add rpm and regulators for MTP
+Date: Fri, 27 Apr 2018 22:42:48 -0700
+Message-ID: <20180428054248.22387-2-bjorn.andersson@linaro.org>
+References: <20180428054248.22387-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180426094606.4775-3-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20180428054248.22387-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org
-Cc: andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, bgoswami@codeaurora.org, gregkh@linuxfoundation.org, david.brown@linaro.org, mark.rutland@arm.com, lgirdwood@gmail.com, plai@codeaurora.org, tiwai@suse.com, perex@perex.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com, spatakok@qti.qualcomm.com
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 26 Apr 02:45 PDT 2018, Srinivas Kandagatla wrote:
-> diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
-[..]
-> +int apr_send_pkt(struct apr_device *adev, void *buf)
+This adds the rpm and rpm regulators to the msm8998 platform and mtp.
 
-Sorry, but I think we have discussed this before?
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 142 ++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8998.dtsi     |  83 +++++++++++++++++
+ 2 files changed, 225 insertions(+)
 
-"buf" isn't some random buffer to be sent, it is a apr_hdr followed by
-some data. As such I think you should make this type struct apr_hdr *,
-or if you think that doesn't imply there's payload make a type apr_pkt
-that has a payload[] at the end.
-
-It will make it obvious for both future readers and the compiler what
-kind of data we're passing here.
-
-
-This comment also applies to functions calling functions that calls
-apr_send_pkt() as they too lug around a void *.
-
-> +{
-> +	struct apr *apr = dev_get_drvdata(adev->dev.parent);
-> +	struct apr_hdr *hdr;
-> +	unsigned long flags;
-> +	int ret;
-> +
-> +	spin_lock_irqsave(&adev->lock, flags);
-> +
-> +	hdr = (struct apr_hdr *)buf;
-> +	hdr->src_domain = APR_DOMAIN_APPS;
-> +	hdr->src_svc = adev->svc_id;
-> +	hdr->dest_domain = adev->domain_id;
-> +	hdr->dest_svc = adev->svc_id;
-> +
-> +	ret = rpmsg_trysend(apr->ch, buf, hdr->pkt_size);
-> +	if (ret) {
-> +		dev_err(&adev->dev, "Unable to send APR pkt %d\n",
-> +			hdr->pkt_size);
-
-Afaict all callers of this function will print an error message,
-sometimes on more than one level in the stack. And if some code path
-does retry sending you will get a printout for each attempt, even though
-the caller is fine with it.
-
-I would recommend unlocking the spinlock and then do:
-
-	return ret ? : hdr->pkt_size;
-
-> +	} else {
-> +		ret = hdr->pkt_size;
-> +	}
-> +
-> +	spin_unlock_irqrestore(&adev->lock, flags);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(apr_send_pkt);
-> +
-> +static void apr_dev_release(struct device *dev)
-> +{
-> +	struct apr_device *adev = to_apr_device(dev);
-> +
-> +	kfree(adev);
-> +}
-> +
-> +static int apr_callback(struct rpmsg_device *rpdev, void *buf,
-> +				  int len, void *priv, u32 addr)
-> +{
-> +	struct apr *apr = dev_get_drvdata(&rpdev->dev);
-> +	struct apr_client_message data;
-> +	struct apr_device *p, *c_svc = NULL;
-> +	struct apr_driver *adrv = NULL;
-> +	struct apr_hdr *hdr;
-> +	unsigned long flags;
-> +	uint16_t hdr_size;
-> +	uint16_t msg_type;
-> +	uint16_t ver;
-> +	uint16_t svc;
-> +
-> +	if (len <= APR_HDR_SIZE) {
-> +		dev_err(apr->dev, "APR: Improper apr pkt received:%p %d\n",
-> +			buf, len);
-> +		return -EINVAL;
-> +	}
-> +
-> +	hdr = buf;
-> +	ver = APR_HDR_FIELD_VER(hdr->hdr_field);
-> +	if (ver > APR_PKT_VER + 1)
-> +		return -EINVAL;
-> +
-> +	hdr_size = APR_HDR_FIELD_SIZE_BYTES(hdr->hdr_field);
-> +	if (hdr_size < APR_HDR_SIZE) {
-> +		dev_err(apr->dev, "APR: Wrong hdr size:%d\n", hdr_size);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (hdr->pkt_size < APR_HDR_SIZE) {
-
-I think it would be nice to make sure that hdr->pkt_size is < len as
-well, to reject messages that larger than the incoming buffer.
-
-The pkt_size should be in the ballpark of len, could this check be
-changed to hdr->pkt_size != len?
-
-> +		dev_err(apr->dev, "APR: Wrong paket size\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	msg_type = APR_HDR_FIELD_MT(hdr->hdr_field);
-> +	if (msg_type >= APR_MSG_TYPE_MAX && msg_type != APR_BASIC_RSP_RESULT) {
-> +		dev_err(apr->dev, "APR: Wrong message type: %d\n", msg_type);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (hdr->src_domain >= APR_DOMAIN_MAX ||
-> +			hdr->dest_domain >= APR_DOMAIN_MAX ||
-> +			hdr->src_svc >= APR_SVC_MAX ||
-> +			hdr->dest_svc >= APR_SVC_MAX) {
-> +		dev_err(apr->dev, "APR: Wrong APR header\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	svc = hdr->dest_svc;
-> +	spin_lock_irqsave(&apr->svcs_lock, flags);
-> +	list_for_each_entry(p, &apr->svcs, node) {
-
-Rather than doing a O(n) search for the svc with svc_id you could use a
-idr or a radix_tree to keep the id -> svc mapping.
-
-> +		if (svc == p->svc_id) {
-> +			c_svc = p;
-> +			if (c_svc->dev.driver)
-> +				adrv = to_apr_driver(c_svc->dev.driver);
-> +			break;
-> +		}
-> +	}
-> +	spin_unlock_irqrestore(&apr->svcs_lock, flags);
-> +
-> +	if (!adrv) {
-> +		dev_err(apr->dev, "APR: service is not registered\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	data.payload_size = hdr->pkt_size - hdr_size;
-> +	data.opcode = hdr->opcode;
-> +	data.src_port = hdr->src_port;
-> +	data.dest_port = hdr->dest_port;
-> +	data.token = hdr->token;
-> +	data.msg_type = msg_type;
-> +
-> +	if (data.payload_size > 0)
-> +		data.payload = buf + hdr_size;
-> +
-
-Making a verbatim copy of parts of the hdr and then passing that to the
-APR devices creates an asymmetry in the send/callback API, without a
-whole lot of benefits. I would prefer that you introduce the apr_pkt, as
-described above, and once you have validated the size et al and found
-the service you just pass it along.
-
-> +	adrv->callback(c_svc, &data);
-> +
-> +	return 0;
-> +}
-[..]
-> +static int apr_uevent(struct device *dev, struct kobj_uevent_env *env)
-> +{
-> +	struct apr_device *adev = to_apr_device(dev);
-> +	int ret;
-> +
-> +	ret = of_device_uevent_modalias(dev, env);
-> +	if (ret != -ENODEV)
-> +		return ret;
-> +
-> +	return add_uevent_var(env, "MODALIAS= apr:%s", adev->name);
-
-No space between '=' and "apr".
-
-> +}
-> +
-> +struct bus_type aprbus = {
-> +	.name		= "aprbus",
-
-Most busses doesn't have "bus" in the name.
-
-> +	.match		= apr_device_match,
-> +	.probe		= apr_device_probe,
-> +	.uevent		= apr_uevent,
-> +	.remove		= apr_device_remove,
-> +};
-> +EXPORT_SYMBOL_GPL(aprbus);
-> +
-> +static int apr_add_device(struct device *dev, struct device_node *np,
-> +			  const struct apr_device_id *id)
-> +{
-> +	struct apr *apr = dev_get_drvdata(dev);
-> +	struct apr_device *adev = NULL;
-> +
-> +	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
-> +	if (!adev)
-> +		return -ENOMEM;
-> +
-> +	spin_lock_init(&adev->lock);
-> +
-> +	adev->svc_id = id->svc_id;
-> +	adev->domain_id = id->domain_id;
-> +	adev->version = id->svc_version;
-> +	if (np)
-> +		strncpy(adev->name, np->name, APR_NAME_SIZE);
-> +	else
-> +		strncpy(adev->name, id->name, APR_NAME_SIZE);
-> +
-> +	dev_set_name(&adev->dev, "aprsvc:%s:%x:%x", adev->name,
-> +		     id->domain_id, id->svc_id);
-> +
-> +	adev->dev.bus = &aprbus;
-> +	adev->dev.parent = dev;
-> +	adev->dev.of_node = np;
-> +	adev->dev.release = apr_dev_release;
-> +	adev->dev.driver = NULL;
-> +
-> +	spin_lock(&apr->svcs_lock);
-> +	list_add_tail(&adev->node, &apr->svcs);
-> +	spin_unlock(&apr->svcs_lock);
-> +
-> +	dev_info(dev, "Adding APR dev: %s\n", dev_name(&adev->dev));
-> +
-> +	return device_register(&adev->dev);
-
-If this fails you must call put_device(&adev->dev);
-
-> +}
-> +
-> +static void of_register_apr_devices(struct device *dev)
-> +{
-> +	struct apr *apr = dev_get_drvdata(dev);
-> +	struct device_node *node;
-> +
-> +	for_each_child_of_node(dev->of_node, node) {
-> +		struct apr_device_id id = { {0} };
-> +
-> +		if (of_property_read_u32(node, "reg", &id.svc_id))
-> +			continue;
-> +
-> +		id.domain_id = apr->dest_domain_id;
-> +
-> +		if (apr_add_device(dev, node, &id))
-> +			dev_err(dev, "Failed to add arp %d svc\n", id.svc_id);
-> +	}
-> +}
-[..]
-> +
-> +static int __init apr_init(void)
-> +{
-> +	int ret;
-> +
-> +	ret = bus_register(&aprbus);
-> +	if (!ret)
-> +		ret = register_rpmsg_driver(&apr_driver);
-
-bus_unregister() if ret here.
-
-> +
-> +	return ret;
-> +}
-> +
-
-Regards,
-Bjorn
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index e30c95f63a05..4780751b560e 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -18,3 +18,145 @@
+ 		status = "okay";
+ 	};
+ };
++
++&rpm_glink {
++	rpm_requests {
++		pm8998-regulators {
++			s2 {
++				regulator-min-microvolt = <1128000>;
++				regulator-max-microvolt = <1128000>;
++			};
++			s3 {
++				regulator-min-microvolt = <1352000>;
++				regulator-max-microvolt = <1352000>;
++			};
++			s4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++			};
++			s5 {
++				regulator-min-microvolt = <1904000>;
++				regulator-max-microvolt = <2040000>;
++			};
++			s7 {
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1028000>;
++			};
++			s8 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <800000>;
++			};
++			l1 {
++				regulator-min-microvolt = <880000>;
++				regulator-max-microvolt = <880000>;
++			};
++			l2 {
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++			};
++			l3 {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++			};
++			l5 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <800000>;
++			};
++			l6 {
++				regulator-min-microvolt = <1808000>;
++				regulator-max-microvolt = <1808000>;
++			};
++			l7 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++			};
++			l8 {
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++			};
++			l9 {
++				regulator-min-microvolt = <1808000>;
++				regulator-max-microvolt = <2960000>;
++			};
++			l10 {
++				regulator-min-microvolt = <1808000>;
++				regulator-max-microvolt = <2960000>;
++			};
++			l11 {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++			};
++			l12 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++			};
++			l13 {
++				regulator-min-microvolt = <1808000>;
++				regulator-max-microvolt = <2960000>;
++			};
++			l14 {
++				regulator-min-microvolt = <1880000>;
++				regulator-max-microvolt = <1880000>;
++			};
++			l15 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++			};
++			l16 {
++				regulator-min-microvolt = <2704000>;
++				regulator-max-microvolt = <2704000>;
++			};
++			l17 {
++				regulator-min-microvolt = <1304000>;
++				regulator-max-microvolt = <1304000>;
++			};
++			l18 {
++				regulator-min-microvolt = <2704000>;
++				regulator-max-microvolt = <2704000>;
++			};
++			l19 {
++				regulator-min-microvolt = <3008000>;
++				regulator-max-microvolt = <3008000>;
++			};
++			l20 {
++				regulator-min-microvolt = <2960000>;
++				regulator-max-microvolt = <2960000>;
++			};
++			l21 {
++				regulator-min-microvolt = <2960000>;
++				regulator-max-microvolt = <2960000>;
++			};
++			l22 {
++				regulator-min-microvolt = <2864000>;
++				regulator-max-microvolt = <2864000>;
++			};
++			l23 {
++				regulator-min-microvolt = <3312000>;
++				regulator-max-microvolt = <3312000>;
++			};
++			l24 {
++				regulator-min-microvolt = <3088000>;
++				regulator-max-microvolt = <3088000>;
++			};
++			l25 {
++				regulator-min-microvolt = <3104000>;
++				regulator-max-microvolt = <3312000>;
++			};
++			l26 {
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++			};
++			l28 {
++				regulator-min-microvolt = <3008000>;
++				regulator-max-microvolt = <3008000>;
++			};
++		};
++
++		pmi8998-regulators {
++			bob {
++				regulator-min-microvolt = <3312000>;
++				regulator-max-microvolt = <3600000>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index d6665e4f801f..ccbf6347aacb 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -220,6 +220,16 @@
+ 		method = "smc";
+ 	};
+ 
++	rpm_glink: rpm-glink {
++		compatible = "qcom,glink-rpm";
++
++		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
++
++		qcom,rpm-msg-ram = <&rpm_msg_ram>;
++
++		mboxes = <&apcs_glb 0>;
++	};
++
+ 	soc: soc {};
+ };
+ 
+@@ -337,4 +347,77 @@
+ 		#interrupt-cells = <4>;
+ 		cell-index = <0>;
+ 	};
++
++	rpm_msg_ram: memory@68000 {
++		compatible = "qcom,rpm-msg-ram";
++		reg = <0x778000 0x7000>;
++	};
++
++	apcs_glb: mailbox@9820000 {
++		compatible = "qcom,msm8998-apcs-hmss-global";
++		reg = <0x17911000 0x1000>;
++
++		#mbox-cells = <1>;
++	};
++};
++
++&rpm_glink {
++	rpm_requests {
++		compatible = "qcom,rpm-msm8998";
++		qcom,glink-channels = "rpm_requests";
++
++		pm8998-regulators {
++			compatible = "qcom,rpm-pm8998-regulators";
++
++			pm8998_s1: s1 {};
++			pm8998_s2: s2 {};
++			pm8998_s3: s3 {};
++			pm8998_s4: s4 {};
++			pm8998_s5: s5 {};
++			pm8998_s6: s6 {};
++			pm8998_s7: s7 {};
++			pm8998_s8: s8 {};
++			pm8998_s9: s9 {};
++			pm8998_s10: s10 {};
++			pm8998_s11: s11 {};
++			pm8998_s12: s12 {};
++			pm8998_s13: s13 {};
++			pm8998_l1: l1 {};
++			pm8998_l2: l2 {};
++			pm8998_l3: l3 {};
++			pm8998_l4: l4 {};
++			pm8998_l5: l5 {};
++			pm8998_l6: l6 {};
++			pm8998_l7: l7 {};
++			pm8998_l8: l8 {};
++			pm8998_l9: l9 {};
++			pm8998_l10: l10 {};
++			pm8998_l11: l11 {};
++			pm8998_l12: l12 {};
++			pm8998_l13: l13 {};
++			pm8998_l14: l14 {};
++			pm8998_l15: l15 {};
++			pm8998_l16: l16 {};
++			pm8998_l17: l17 {};
++			pm8998_l18: l18 {};
++			pm8998_l19: l19 {};
++			pm8998_l20: l20 {};
++			pm8998_l21: l21 {};
++			pm8998_l22: l22 {};
++			pm8998_l23: l23 {};
++			pm8998_l24: l24 {};
++			pm8998_l25: l25 {};
++			pm8998_l26: l26 {};
++			pm8998_l27: l27 {};
++			pm8998_l28: l28 {};
++			pm8998_lvs1: lvs1 {};
++			pm8998_lvs2: lvs2 {};
++		};
++
++		pmi8998-regulators {
++			compatible = "qcom,rpm-pmi8998-regulators";
++
++			pmi8998_bob: bob {};
++		};
++	};
+ };
+-- 
+2.16.2
