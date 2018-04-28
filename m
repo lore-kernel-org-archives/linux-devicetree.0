@@ -1,103 +1,89 @@
-Return-Path: <SRS0=1SUd=HL=solid-run.com=jon@kernel.org>
+Return-Path: <SRS0=xn/B=HR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:42872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1757639AbeD1QEJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 28 Apr 2018 12:04:09 -0400
+Date: Sat, 28 Apr 2018 17:04:05 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH] iio: potentiostat: lmp91000: add LMP91002 support
+Message-ID: <20180428170405.105c8e9a@archlinux>
+In-Reply-To: <CAJCx=gkUUo70O7c14orRr=tUSeQDNRq1PRX1mSQL6u3YP1G+kQ@mail.gmail.com>
+References: <20180427021505.29526-1-matt.ranostay@konsulko.com>
+        <CAJCx=gkUUo70O7c14orRr=tUSeQDNRq1PRX1mSQL6u3YP1G+kQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20180422142151.17910-1-contact@paulk.fr> <20180422143911.GB16141@n2100.armlinux.org.uk>
-In-Reply-To: <20180422143911.GB16141@n2100.armlinux.org.uk>
-From: Jon Nettleton <jon@solid-run.com>
-Date: Sun, 22 Apr 2018 15:02:17 +0000
-Message-ID: <CABdtJHuE05ea1EPSR916vSEz6gtCirLF77c_PW2N2ofGnzN-bw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-cubox-i: Move card-detect GPIO to 1.5
- SOM devices only
-Content-Type: multipart/alternative; boundary="000000000000a91109056a7135be"
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Paul Kocialkowski <contact@paulk.fr>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Matt Ranostay <matt.ranostay@konsulko.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---000000000000a91109056a7135be
-Content-Type: text/plain; charset="UTF-8"
+On Thu, 26 Apr 2018 19:17:09 -0700
+Matt Ranostay <matt.ranostay@konsulko.com> wrote:
 
-On Sun, Apr 22, 2018 at 4:39 PM Russell King - ARM Linux <
-linux@armlinux.org.uk> wrote:
+> On Thu, Apr 26, 2018 at 7:15 PM, Matt Ranostay
+> <matt.ranostay@konsulko.com> wrote:
+> > LMP91002 is register compatible so add devicetree and i2c client ids
+> >
+> > Cc: device-tree@vger.kernel.org  
+> 
+> *sigh* should be devicetree@vger.kernel.org ... adding correct CC
+> 
+> > Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
+> > ---
+> >  Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt | 7 ++++---
+> >  drivers/iio/potentiostat/lmp91000.c                             | 2 ++
+> >  2 files changed, 6 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt b/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt
+> > index b9b621e94cd7..d51639f0ebbf 100644
+> > --- a/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt
+> > +++ b/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt
+> > @@ -1,10 +1,11 @@
+> > -* Texas Instruments LMP91000 potentiostat
+> > +* Texas Instruments LMP91000 series of potentiostats
+> >
+> > -http://www.ti.com/lit/ds/symlink/lmp91000.pdf
+> > +LMP91000: http://www.ti.com/lit/ds/symlink/lmp91000.pdf
+> > +LMP91002: http://www.ti.com/lit/ds/symlink/lmp91002.pdf
+> >
+> >  Required properties:
+> >
+> > -  - compatible: should be "ti,lmp91000"
+> > +  - compatible: should be "ti,lmp91000" or "ti,lmp91002"
+Please put each entry on a new line. Reduces churn going forward.
 
-> On Sun, Apr 22, 2018 at 04:21:51PM +0200, Paul Kocialkowski wrote:
-> > The Solid-Run CuBox-i lower board used in the first generation of
-> > CuBox-i devices feature a hinged micro SD card slot, that does not have
-> > card-detect capability. Since the card-detect GPIO was specified in the
-> > common cubox-i dtsi, it is moved to each device using the 1.5 SOM and is
-> > thus removed from the imx6q-cubox-i dts.
->
-> This seems incorrect.
->
-> The 1.5 SOM is a relatively recent thing, and I have one of the first
-> Cubox-i's that were produced which is not hinged, and does not have a
-> 1.5 SOM.  There is _no_ correlation between the 1.5 SOM and the SD
-> card slot.
->
-> Talking to folk at SolidRun, we're all confused about your assertions.
->
-> We're also confused about "hinged micro SD card slot" - Cubox-i's
-> come with either a push-push slot or a static (push-in, pull-out) slot.
-> (Prototypes were the latter.)
->
-> Maybe someone's modified yours?
->
->
->
-Regardless of the physical mechanics of the device, the CD-GPIO is a
-mechanism of the carrier and not the SOM. I have one of the few Cubox-i's
-that have been physically modified to work with the rev 1.5 som and have no
-issues (the heat spreader needs additional cutouts).  Now if you are still
-using the old 2013 u-boot then there is possibly confusion between the eMMC
-and SDHC slots which can cause strangeness.  Please use the 2018.01 branch
-on our github and that will handle this properly.
+Thanks,
 
-This is not a device-tree nor kernel issue, so NAK.
+Jonathan
 
--Jon
+> >    - reg: the I2C address of the device
+> >    - io-channels: the phandle of the iio provider
+> >
+> > diff --git a/drivers/iio/potentiostat/lmp91000.c b/drivers/iio/potentiostat/lmp91000.c
+> > index 85714055cc74..90e895adf997 100644
+> > --- a/drivers/iio/potentiostat/lmp91000.c
+> > +++ b/drivers/iio/potentiostat/lmp91000.c
+> > @@ -411,12 +411,14 @@ static int lmp91000_remove(struct i2c_client *client)
+> >
+> >  static const struct of_device_id lmp91000_of_match[] = {
+> >         { .compatible = "ti,lmp91000", },
+> > +       { .compatible = "ti,lmp91002", },
+> >         { },
+> >  };
+> >  MODULE_DEVICE_TABLE(of, lmp91000_of_match);
+> >
+> >  static const struct i2c_device_id lmp91000_id[] = {
+> >         { "lmp91000", 0 },
+> > +       { "lmp91002", 0 },
+> >         {}
+> >  };
+> >  MODULE_DEVICE_TABLE(i2c, lmp91000_id);
+> > --
+> > 2.14.1
+> >  
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
---000000000000a91109056a7135be
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr">On Sun, Apr 22=
-, 2018 at 4:39 PM Russell King - ARM Linux &lt;<a href=3D"mailto:linux@arml=
-inux.org.uk">linux@armlinux.org.uk</a>&gt; wrote:<br></div><blockquote clas=
-s=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;pad=
-ding-left:1ex">On Sun, Apr 22, 2018 at 04:21:51PM +0200, Paul Kocialkowski =
-wrote:<br>
-&gt; The Solid-Run CuBox-i lower board used in the first generation of<br>
-&gt; CuBox-i devices feature a hinged micro SD card slot, that does not hav=
-e<br>
-&gt; card-detect capability. Since the card-detect GPIO was specified in th=
-e<br>
-&gt; common cubox-i dtsi, it is moved to each device using the 1.5 SOM and =
-is<br>
-&gt; thus removed from the imx6q-cubox-i dts.<br>
-<br>
-This seems incorrect.<br>
-<br>
-The 1.5 SOM is a relatively recent thing, and I have one of the first<br>
-Cubox-i&#39;s that were produced which is not hinged, and does not have a<b=
-r>
-1.5 SOM.=C2=A0 There is _no_ correlation between the 1.5 SOM and the SD<br>
-card slot.<br>
-<br>
-Talking to folk at SolidRun, we&#39;re all confused about your assertions.<=
-br>
-<br>
-We&#39;re also confused about &quot;hinged micro SD card slot&quot; - Cubox=
--i&#39;s<br>
-come with either a push-push slot or a static (push-in, pull-out) slot.<br>
-(Prototypes were the latter.)<br>
-<br>
-Maybe someone&#39;s modified yours?<br>
-<br><br></blockquote><div><br></div><div>Regardless of the physical mechani=
-cs of the device, the CD-GPIO is a mechanism of the carrier and not the SOM=
-. I have one of the few Cubox-i&#39;s that have been physically modified to=
- work with the rev 1.5 som and have no issues (the heat spreader needs addi=
-tional cutouts).=C2=A0 Now if you are still using the old 2013 u-boot then =
-there is possibly confusion between the eMMC and SDHC slots which can cause=
- strangeness.=C2=A0 Please use the 2018.01 branch on our github and that wi=
-ll handle this properly.</div><div><br></div><div>This is not a device-tree=
- nor kernel issue, so NAK.</div><div><br></div><div>-Jon</div></div></div>
-
---000000000000a91109056a7135be--
