@@ -1,96 +1,88 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: iio: stm32-adc: add support for STM32MP1.
-Date: Sat, 28 Apr 2018 16:18:22 +0100
-Message-ID: <20180428161822.6100bb07@archlinux>
-References: <1524065874-434-1-git-send-email-fabrice.gasnier@st.com>
- <1524065874-434-2-git-send-email-fabrice.gasnier@st.com>
- <20180424162721.qbfsc7j3syzzykeh@rob-hp-laptop>
- <ee92eb8d-9675-3c94-1c0d-f6e8f091d878@st.com>
+Subject: Re: [PATCH v3 5/9] staging: iio: ad2s1200: Add documentation for
+ device tree binding
+Date: Sat, 28 Apr 2018 16:27:58 +0100
+Message-ID: <20180428162758.2a49130c@archlinux>
+References: <cover.1524432236.git.davidjulianveenstra@gmail.com>
+ <0aa68c6684c2b45dd0af398c166d6b36c18be1af.1524432236.git.davidjulianveenstra@gmail.com>
+ <20180427144820.jfvypgk6tfp2syty@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <ee92eb8d-9675-3c94-1c0d-f6e8f091d878@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: mark.rutland@arm.com, Rob Herring <robh@kernel.org>, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linux-arm-kernel@lists.infradead.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20180427144820.jfvypgk6tfp2syty@rob-hp-laptop>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, daniel.baluta@nxp.com, David Veenstra <davidjulianveenstra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 Apr 2018 09:22:02 +0200
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+On Fri, 27 Apr 2018 09:48:20 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-> On 04/24/2018 06:27 PM, Rob Herring wrote:
-> > On Wed, Apr 18, 2018 at 05:37:52PM +0200, Fabrice Gasnier wrote:  
-> >> Document support for STM32MP1 ADC. It's quite similar to STM32H7 ADC.
-> >> Introduce "st,stm32mp1-adc" compatible to handle variants of this
-> >> hardware such as vregready flag, interrupts, clock rate.
-> >>
-> >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> >> ---
-> >>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 6 +++++-
-> >>  1 file changed, 5 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-> >> index e8bb824..9994384 100644
-> >> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-> >> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-> >> @@ -24,8 +24,11 @@ Required properties:
-> >>  - compatible: Should be one of:
-> >>    "st,stm32f4-adc-core"
-> >>    "st,stm32h7-adc-core"
-> >> +  "st,stm32mp1-adc-core"
-> >>  - reg: Offset and length of the ADC block register set.
-> >> -- interrupts: Must contain the interrupt for ADC block.
-> >> +- interrupts: One or more interrupts for ADC block. Some parts like stm32f4
-> >> +  and stm32h7 share a common ADC interrupt line. stm32mp1 has separate
-> >> +  lines for each ADC within ADC block.  
+> On Mon, Apr 23, 2018 at 12:03:47AM +0200, David Veenstra wrote:
+> > Add documentation for the added device tree bindings.
 > > 
-> > How many interrupt lines is that?  
+> > Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
+> > ---
+> > Changes in v3:
+> >  - Documentation is added to Documentation/devicetree/bindings/iio/resolver
+> >    instead of staging directory.
+> >  - Add mention to ad2s1205 device.
+> > 
+> >  .../devicetree/bindings/iio/resolver/ad2s1200.txt        | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+> > new file mode 100644
+> > index 000000000000..46b51db38368
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+> > @@ -0,0 +1,16 @@
+> > +Analog Devices AD2S1200 and AD2S1205 Resolver-to-Digital Converter
+> > +
+> > +Required properties:
+> > + - compatible : should be "adi,ad2s1200" or "adi,ad2s1205"
+> > + - reg : the SPI chip select number of the device
+> > + - sample-gpios : The GPIO pin connected to the SAMPLE line of the AD2S1200
+> > + - rdvel-gpios : The GPIO pin connected to the RDVEL line of the AD2S1200  
 > 
-> Hi Rob, Jonathan,
-> 
-> I should have mentioned this: stm32mp1 has two separate interrupt lines
-> for each ADC within ADC block.
-> 
-> Do you wish I send a V2 for this ? Or a patch to fix this ?
-Hmm. I haven't pushed this out as non rebasing so I'll revert this
-and the associated support so you can clean this corner up.
+> Are these gpios something that would be common to resolvers (whatever 
+> that is) or specific to this chip. For the latter, you need vendor 
+> prefixes.
 
-So please send a V2.
+They are pretty chip specific I think, so prefixes needed.
 
-Thanks,
+I'd not really registered that gpios should be vendor prefixed for some reason
+(kind of obvious now you mention it).  We have only a few from a quick grep
+of the bindings for IIO devices (there are loads elsewhere that aren't and
+are clearly very much part specific).  Ah well, will try and do better moving
+forward on this!
 
 Jonathan
 
+
 > 
-> Please let me know,
-> BR,
-> Fabrice
+> > +
+> > +Example:
+> > +
+> > +	resolver {  
 > 
+> Missing unit address.
+> 
+> > +		compatible = "adi,ad2s1200";
+> > +		reg = <4>;
+> > +		sample-gpios = <&gpio 5 GPIO_ACTIVE_HIGH>;
+> > +		rdvel-gpios = <&gpio 6 GPIO_ACTIVE_HIGH>;
+> > +	};
+> > -- 
+> > 2.16.2
 > >   
-> >>  - clocks: Core can use up to two clocks, depending on part used:
-> >>    - "adc" clock: for the analog circuitry, common to all ADCs.
-> >>      It's required on stm32f4.
-> >> @@ -53,6 +56,7 @@ Required properties:
-> >>  - compatible: Should be one of:
-> >>    "st,stm32f4-adc"
-> >>    "st,stm32h7-adc"
-> >> +  "st,stm32mp1-adc"
-> >>  - reg: Offset of ADC instance in ADC block (e.g. may be 0x0, 0x100, 0x200).
-> >>  - clocks: Input clock private to this ADC instance. It's required only on
-> >>    stm32f4, that has per instance clock input for registers access.
-> >> -- 
-> >> 1.9.1
-> >>  
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
