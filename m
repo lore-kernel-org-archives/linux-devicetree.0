@@ -1,7 +1,7 @@
 From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v5 5/7] gpio: pca953x: fix address calculation for pcal6524
-Date: Sat, 28 Apr 2018 18:31:35 +0200
-Message-ID: <aaac818909d71523726094b1dfacc03e756874e9.1524933096.git.hns@goldelico.com>
+Subject: [PATCH v5 4/7] gpio: pca953x: define masks for addressing common and extended registers
+Date: Sat, 28 Apr 2018 18:31:34 +0200
+Message-ID: <3df974ea890116d759844e56362dc0786388869a.1524933096.git.hns@goldelico.com>
 References: <cover.1524933096.git.hns@goldelico.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1524933096.git.hns@goldelico.com>
@@ -12,54 +12,28 @@ To: galak@codeaurora.org, andy.shevchenko@gmail.com, Rob Herring <robh+dt@kernel
 Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-The register constants are so far defined in a way that they fit
-for the pcal9555a when shifted by the number of banks, i.e. are
-multiplied by 2 in the accessor function.
-
-Now, the pcal6524 has 3 banks which means the relative offset
-is multiplied by 4 for the standard registers.
-
-Simply applying the bit shift to the extended registers gives
-a wrong result, since the base offset is already included in
-the offset.
-
-Therefore, we add code to the 24 bit accessor functions to
-adjust the register number for these exended registers.
+These mask bits are to be used to map the extended register
+addreseses (which are defined for an unsupported 8-bit pcal chip)
+to 16 and 24 bit chips (pcal6524).
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- drivers/gpio/gpio-pca953x.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-pca953x.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index fc863faa3ce4..4194495a7990 100644
+index 2b667166e855..fc863faa3ce4 100644
 --- a/drivers/gpio/gpio-pca953x.c
 +++ b/drivers/gpio/gpio-pca953x.c
-@@ -221,9 +221,11 @@ static int pca957x_write_regs_16(struct pca953x_chip *chip, int reg, u8 *val)
- static int pca953x_write_regs_24(struct pca953x_chip *chip, int reg, u8 *val)
- {
- 	int bank_shift = fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
-+	int addr = (reg & PCAL_GPIO_MASK) << bank_shift;
-+	int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
+@@ -56,6 +56,9 @@
+ #define PCAL6524_DEBOUNCE	0x2d
  
- 	return i2c_smbus_write_i2c_block_data(chip->client,
--					      (reg << bank_shift) | REG_ADDR_AI,
-+					      pinctrl | addr | REG_ADDR_AI,
- 					      NBANK(chip), val);
- }
- 
-@@ -263,9 +265,11 @@ static int pca953x_read_regs_16(struct pca953x_chip *chip, int reg, u8 *val)
- static int pca953x_read_regs_24(struct pca953x_chip *chip, int reg, u8 *val)
- {
- 	int bank_shift = fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
-+	int addr = (reg & PCAL_GPIO_MASK) << bank_shift;
-+	int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
- 
- 	return i2c_smbus_read_i2c_block_data(chip->client,
--					     (reg << bank_shift) | REG_ADDR_AI,
-+					     pinctrl | addr | REG_ADDR_AI,
- 					     NBANK(chip), val);
- }
- 
+ #define PCA_GPIO_MASK		0x00FF
++#define PCAL_GPIO_MASK		GENMASK(4, 0)
++#define PCAL_PINCTRL_MASK	(~PCAL_GPIO_MASK)
++
+ #define PCA_INT			0x0100
+ #define PCA_PCAL		0x0200
+ #define PCA_LATCH_INT (PCA_PCAL | PCA_INT)
 -- 
 2.12.2
