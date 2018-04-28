@@ -1,120 +1,144 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH 1/5] dt-bindings: allow dwmac-sun8i to
- use other devices' exported regmap
-Date: Sat, 28 Apr 2018 21:42:30 +0800
-Message-ID: <CAGb2v64LcyfffBFfrnUd5XOyA1POphMMgEXLoTiTQAc9tjpzgw@mail.gmail.com>
-References: <20180411141641.14675-1-icenowy@aosc.io> <20180411141641.14675-2-icenowy@aosc.io>
- <20180416184745.tqxyvojtcbage4fu@rob-hp-laptop> <04C9F795-2680-4220-A39A-7B7D5FD74C4A@aosc.io>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 2/2] usb: dwc3: support clocks and resets for DWC3 core
+Date: Sat, 28 Apr 2018 16:20:56 +0200
+Message-ID: <CAFBinCCWeTUCK=tN4PfKqNuX2yWQuSVkXuzcKfV476uO88032Q@mail.gmail.com>
+References: <1524135818-14825-1-git-send-email-yamada.masahiro@socionext.com>
+ <1524135818-14825-3-git-send-email-yamada.masahiro@socionext.com>
+ <CAFBinCDwbyovMZ-qAKaMiBfz_YKMwxC1c4MjfNyLAvnXEfXtMw@mail.gmail.com> <CAK7LNASCLJWWwsDy7zj1uQNcb8pp8ivcAA=Y_oOUOsFMN+YpSA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBX7USHLQKGQE3OQGIVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <04C9F795-2680-4220-A39A-7B7D5FD74C4A-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNASCLJWWwsDy7zj1uQNcb8pp8ivcAA=Y_oOUOsFMN+YpSA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, yixun.lan@amlogic.com
+Cc: linux-usb@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh@kernel.org>, Roger Quadros <rogerq@ti.com>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, DTML <devicetree@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+(adding Yixun from Amlogic to this mail)
 
-On Tue, Apr 17, 2018 at 7:17 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+On Sat, Apr 28, 2018 at 4:41 AM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> Hi Martin,
 >
 >
-> =E4=BA=8E 2018=E5=B9=B44=E6=9C=8817=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
-2:47:45, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =E5=86=99=E5=88=B0:
->>On Wed, Apr 11, 2018 at 10:16:37PM +0800, Icenowy Zheng wrote:
->>> On some Allwinner SoCs the EMAC clock register needed by dwmac-sun8i
->>is
->>> in another device's memory space. In this situation dwmac-sun8i can
->>use
->>> a regmap exported by the other device with only the EMAC clock
->>register.
+> 2018-04-24 2:44 GMT+09:00 Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com>:
+>> Hello,
 >>
->>If this is a clock, then why not use the clock binding?
->
-> EMAC clock register is only the datasheet name. It contains
-> MII mode selection and delay chain configuration.
-
-As Icenowy already mentioned, this is likely a misnomer.
-
-The register contains controls on how to route the TX and RX clock
-lines, and also what interface mode to use. The former includes things
-like the delays mentioned in the device tree binding, and also whether
-to invert the signals or not. The latter influences whether the TXC
-line is an input or an output (or maybe what decoding module to send
-all the signals to). On the H3/H5, it even contains controls for the
-embedded PHY.
-
-The settings only make sense to the MAC. To expose it as a generic
-clock line would not be a good fit. You can look at what we did for
-sun7i-a20-gmac, which is not pretty. All other DWMAC platforms that
-were introduced after sun7i-a20-gmac also use a syscon, instead of
-clocks, even though they probably cover the same set of RXC/TXC
-controls.
-
-ChenYu
-
+>> On Thu, Apr 19, 2018 at 1:03 PM, Masahiro Yamada
+>> <yamada.masahiro@socionext.com> wrote:
+>>> Historically, the clocks and resets are handled on the glue layer
+>>> side instead of the DWC3 core.  For simple cases, dwc3-of-simple.c
+>>> takes care of arbitrary number of clocks and resets.  The DT node
+>>> structure typically looks like as follows:
+>>>
+>>>   dwc3-glue {
+>>>           compatible = "foo,dwc3";
+>>>           clocks = ...;
+>>>           resets = ...;
+>>>           ...
+>>>
+>>>           dwc3 {
+>>>                   compatible = "snps,dwc3";
+>>>                   ...
+>>>           };
+>>>   }
+>>>
+>>> By supporting the clocks and the reset in the dwc3/core.c, it will
+>>> be turned into a single node:
+>>>
+>>>   dwc3 {
+>>>           compatible = "foo,dwc3", "snps,dwc3";
+>>>           clocks = ...;
+>>>           resets = ...;
+>>>           ...
+>>>   }
+>>>
+>>> This commit adds the binding of clocks and resets specific to this IP.
+>>> The number of clocks should generally be the same across SoCs, it is
+>>> just some SoCs either tie clocks together or do not provide software
+>>> control of some of the clocks.
+>>>
+>>> I took the clock names from the Synopsys datasheet: "ref" (ref_clk),
+>>> "bus_early" (bus_clk_early), and "suspend" (suspend_clk).
+>> looking at the code: this could mean that dwc3-exynos.c can be removed
+>> mid-term (assuming the PHY and regulator handling can be
+>> moved/removed/changed)
 >>
->>>
->>> Document this situation in the dwmac-sun8i device tree binding
->>> documentation.
->>>
->>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/net/dwmac-sun8i.txt | 5 +++--
->>>  1 file changed, 3 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
->>b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
->>> index 3d6d5fa0c4d5..0c5f63a80617 100644
->>> --- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
->>> +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
->>> @@ -20,8 +20,9 @@ Required properties:
->>>  - phy-handle: See ethernet.txt
->>>  - #address-cells: shall be 1
->>>  - #size-cells: shall be 0
->>> -- syscon: A phandle to the syscon of the SoC with one of the
->>following
->>> - compatible string:
->>> +- syscon: A phandle to a device which exports the EMAC clock
->>register as a
->>> + regmap or to the syscon of the SoC with one of the following
->>compatible
->>> + string:
->>>    - allwinner,sun8i-h3-system-controller
->>>    - allwinner,sun8i-v3s-system-controller
->>>    - allwinner,sun50i-a64-system-controller
->>> --
->>> 2.15.1
->>>
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe devicetree"
->>in
->>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> does the datasheet state anything about the clock speeds? from
+>> Documentation/devicetree/bindings/usb/dwc3-xilinx.txt:
+>> "bus_clk" Master/Core clock, have to be >= 125 MHz for SS operation
+>> and >= 60MHz for HS operation
 >>
->>_______________________________________________
->>linux-arm-kernel mailing list
->>linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>> I found only one reset line in the datasheet, hence the reset-names
+>>> property is omitted.
+>> does the datasheet state whether this is a level or a pulsed reset line?
+>> on Amlogic Meson GXL, GXM and AXG SoCs we use a pulsed (and shared)
+>> reset line (see ff0a632f08759e "usb: dwc3: of-simple: add support for
+>> shared and pulsed reset lines") because the reset line is shared
+>> between various components (USB2 PHY, USB3 PHY, dwc3 controller, ...)
+>> your current approach (having a vendor-specific "foo,dwc3" binding
+>> along with the generic "snps,dwc3") would allow having
+>> per-"of_device_id" settings which could indicate whether the reset
+>> lines are level or pulsed reset if these are "implementation specific"
 >
-> --
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+> Let me ask a question about your reset controller.
+> (drivers/reset/reset-meson.c)
+>
+> All reset ID supports .reset, .assert, .deassert
+> Is this correct?
+as far as I know: yes (though I have only ever verified this with the
+Ethernet controller's reset line)
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+>
+> I believe you and I use the same DWC3 core IP.
+this is possible - but I am not sure since I don't have access to
+Amlogic's internal resources where this should be documented (my
+knowledge mostly comes from reading Amlogic's out-of-tree kernel code
+and porting that to mainline)
+
+>
+> I suspect the difference is in the reset controller side.
+>
+> In my case, the reset line is asserted by default.
+> (that is, all FFs in the RTL are put into the initial state
+> on power-on)
+> That's why only reset_deassert() will work for me, I think.
+>
+> What about your case?  Is the reset line in deassert state on power-on?
+> Then, the reset must be explicitly pulsed to put FFs into
+> the initial state.  Is this correct?
+let me give you a bit of context first:
+the Amlogic Meson AXG, GXL and GXM SoCs have one reset line for "USB
+components". this is shared among:
+- the dwc3 controller
+- (depending on the SoC) 2 or 3 USB2 PHYs
+- a USB3 PHY
+- some OTG detection logic within the registers of the USB3 PHY
+
+(there is also a gate clock which is assigned to the same components)
+
+based on my tests I believe that the reset line is "de-asserted" (=
+USB components are working) by default.
+asserting that reset line should stop the state machine of all USB
+components. de-asserting it again should bring all USB components into
+a defined state.
+(I'm not sure though if these are HW defaults or if there's some logic
+in the bootrom / early stage [pre u-boot] bootloaders)
+
+that said, the "reset" framework currently cannot handle level resets
+with shared reset lines which are de-asserted by default.
+to bring the USB components into a defined state I would have to use
+reset_control_assert() first, then reset_control_deassert(). the reset
+framework reports an error in this case: [0]
+using a reset pulse however works in any case, the reset framework
+ensures that it's only executed once for all shared reset lines (our
+reset controller hardware probably asserts and de-asserts the reset
+line internally - this is just speculation though)
+
+
+Regards
+Martin
+
+
+[0] https://elixir.bootlin.com/linux/v4.17-rc2/source/drivers/reset/core.c#L317
