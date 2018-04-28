@@ -1,54 +1,120 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC 05/10] i2c: s3c2410: Remove support for Exynos5440
-Date: Sat, 28 Apr 2018 14:44:07 +0200
-Message-ID: <20180428124407.bpc47bo7ojebahpz@ninjato>
-References: <20180424203239.21885-1-krzk@kernel.org>
- <20180424203239.21885-6-krzk@kernel.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH 1/5] dt-bindings: allow dwmac-sun8i to
+ use other devices' exported regmap
+Date: Sat, 28 Apr 2018 21:42:30 +0800
+Message-ID: <CAGb2v64LcyfffBFfrnUd5XOyA1POphMMgEXLoTiTQAc9tjpzgw@mail.gmail.com>
+References: <20180411141641.14675-1-icenowy@aosc.io> <20180411141641.14675-2-icenowy@aosc.io>
+ <20180416184745.tqxyvojtcbage4fu@rob-hp-laptop> <04C9F795-2680-4220-A39A-7B7D5FD74C4A@aosc.io>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2ub5o5uu6wk62jsg"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180424203239.21885-6-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBX7USHLQKGQE3OQGIVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <04C9F795-2680-4220-A39A-7B7D5FD74C4A-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
---2ub5o5uu6wk62jsg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 17, 2018 at 7:17 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+>
+>
+> =E4=BA=8E 2018=E5=B9=B44=E6=9C=8817=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
+2:47:45, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =E5=86=99=E5=88=B0:
+>>On Wed, Apr 11, 2018 at 10:16:37PM +0800, Icenowy Zheng wrote:
+>>> On some Allwinner SoCs the EMAC clock register needed by dwmac-sun8i
+>>is
+>>> in another device's memory space. In this situation dwmac-sun8i can
+>>use
+>>> a regmap exported by the other device with only the EMAC clock
+>>register.
+>>
+>>If this is a clock, then why not use the clock binding?
+>
+> EMAC clock register is only the datasheet name. It contains
+> MII mode selection and delay chain configuration.
 
-On Tue, Apr 24, 2018 at 10:32:34PM +0200, Krzysztof Kozlowski wrote:
-> The Exynos5440 is not actively developed, there are no development
-> boards available and probably there are no real products with it.
-> Remove wide-tree support for Exynos5440.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+As Icenowy already mentioned, this is likely a misnomer.
 
-Applied to for-next, thanks!
+The register contains controls on how to route the TX and RX clock
+lines, and also what interface mode to use. The former includes things
+like the delays mentioned in the device tree binding, and also whether
+to invert the signals or not. The latter influences whether the TXC
+line is an input or an output (or maybe what decoding module to send
+all the signals to). On the H3/H5, it even contains controls for the
+embedded PHY.
 
+The settings only make sense to the MAC. To expose it as a generic
+clock line would not be a good fit. You can look at what we did for
+sun7i-a20-gmac, which is not pretty. All other DWMAC platforms that
+were introduced after sun7i-a20-gmac also use a syscon, instead of
+clocks, even though they probably cover the same set of RXC/TXC
+controls.
 
---2ub5o5uu6wk62jsg
-Content-Type: application/pgp-signature; name="signature.asc"
+ChenYu
 
------BEGIN PGP SIGNATURE-----
+>>
+>>>
+>>> Document this situation in the dwmac-sun8i device tree binding
+>>> documentation.
+>>>
+>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/net/dwmac-sun8i.txt | 5 +++--
+>>>  1 file changed, 3 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+>>b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+>>> index 3d6d5fa0c4d5..0c5f63a80617 100644
+>>> --- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+>>> +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+>>> @@ -20,8 +20,9 @@ Required properties:
+>>>  - phy-handle: See ethernet.txt
+>>>  - #address-cells: shall be 1
+>>>  - #size-cells: shall be 0
+>>> -- syscon: A phandle to the syscon of the SoC with one of the
+>>following
+>>> - compatible string:
+>>> +- syscon: A phandle to a device which exports the EMAC clock
+>>register as a
+>>> + regmap or to the syscon of the SoC with one of the following
+>>compatible
+>>> + string:
+>>>    - allwinner,sun8i-h3-system-controller
+>>>    - allwinner,sun8i-v3s-system-controller
+>>>    - allwinner,sun50i-a64-system-controller
+>>> --
+>>> 2.15.1
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe devicetree"
+>>in
+>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>>_______________________________________________
+>>linux-arm-kernel mailing list
+>>linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlrkbJcACgkQFA3kzBSg
-KbY0oBAAp5AZ22Iwc3g476LI/homGu6AP+TvzJ14ZHvvKXmBhKLST+eTqjibgy8y
-ezyaVsMGoTAqZXpFAoPhMWB/ktsDNOM6QhshTyAR5EI634GhnTZ8j5quAXYwgPsL
-Iugkw/DxGYGz+0iaPwvd7L4OnCHpufRomudIkx7wO5IObmbuFIAYiAvZIp6873Hq
-UFWUlW4k67D+BcoYc+uVcvTteewzffXS/qyRim6TF4Xg2FKTPp9KRUjmL86xLHvl
-FXDKa4djARTZz+HD0aQ27aOuv+g7yxLS9mfL4wSckymohGCtmDhHI6xdw3hyCDwM
-yPElg4JICJDm4EuDjzYdYrcZlFjsXeuHN3RGaJfIRFnIhwC/CxiUnwtMosGCuWSK
-BDU+esBF7qEXxherzLPJEJVPYW1z3XqLphkxoJ8Ma/9DpLDmItGythWIuMblLHWP
-jWpb3DOgATifO3ZLkyNEp/6m4GMEZN29Xc81BLRgy+NMzaNPofgSflzW1QAHz8H8
-qMtjIHp9zH9h4jn7LoUng1AsEBs4AW/xv5Bul8l4FhrfjSpzTCfb1+kF7QKAr8IW
-0xuLrzW3GSd1/WC7BTnQMDD41d8sgd8YL8RyfFBYsst0L0TXvhgWLCLt7M40X42q
-pUXIKPw/t0MR4uIsD8nQ9ZnWhb4chO2pzGSMabmZQDLeZQvGRBI=
-=ObTl
------END PGP SIGNATURE-----
-
---2ub5o5uu6wk62jsg--
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
