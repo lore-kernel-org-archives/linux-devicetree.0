@@ -1,17 +1,16 @@
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 13/17] dt-bindings/interrupt-controller: update Marvell
- ICU bindings
-Date: Sat, 28 Apr 2018 12:50:31 +0200
-Message-ID: <20180428125031.6f46c448@windsurf>
-References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
- <20180421135537.24716-14-miquel.raynal@bootlin.com>
- <20180427204723.hz2ef5f7fhaid3aj@rob-hp-laptop>
- <20180428124204.3f305405@xps13>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 17/27] dt-bindings: ap806: add the thermal node in the
+ syscon file
+Date: Sat, 28 Apr 2018 13:07:14 +0200
+Message-ID: <20180428130714.3ee3883b@xps13>
+References: <20180421151255.29929-1-miquel.raynal@bootlin.com>
+ <20180421151255.29929-18-miquel.raynal@bootlin.com>
+ <20180427210722.obyujepjvqc5hwcd@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180428124204.3f305405@xps13>
+In-Reply-To: <20180427210722.obyujepjvqc5hwcd@rob-hp-laptop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,38 +20,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Sat, 28 Apr 2018 12:42:04 +0200, Miquel Raynal wrote:
-
-> On Fri, 27 Apr 2018 15:47:23 -0500, Rob Herring <robh@kernel.org> wrote:
-> 
-> > On Sat, Apr 21, 2018 at 03:55:33PM +0200, Miquel Raynal wrote:  
-> > > Change the documentation to reflect the new bindings used for Marvell
-> > > ICU. This involves describing each interrupt group as a subnode of the
-> > > ICU node. Each of them having their own compatible.    
-> > 
-> > Why?
-> > 
-> > This breaks compatibility.  
-> 
-> It does indeed.
-
-Well, yes and no: your driver supports both the old and new binding, so
-the compatibility is not broken. So, yes the binding is changed in an
-incompatible way, but the driver continues to support the old binding.
-
-Perhaps the binding documentation should continue to document the
-legacy binding, mark it as still supported but deprecated.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+SGkgUm9iLAoKT24gRnJpLCAyNyBBcHIgMjAxOCAxNjowNzoyMiAtMDUwMCwgUm9iIEhlcnJpbmcg
+PHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cgo+IE9uIFNhdCwgQXByIDIxLCAyMDE4IGF0IDA1OjEy
+OjQ1UE0gKzAyMDAsIE1pcXVlbCBSYXluYWwgd3JvdGU6Cj4gPiBFeHBsYWluIHRoZSB0aGVybWFs
+IGJpbmRpbmdzIG5vdyB0aGF0IHRoZSB0aGVybWFsIElQIGlzIGRlc2NyaWJlZCBiZWluZwo+ID4g
+aW5zaWRlIG9mIGEgc3lzdGVtIGNvbnRyb2xsZXIuIEFkZCBhIHJlZmVyZW5jZSB0byB0aGUgdGhl
+cm1hbC16b25lIG5vZGUuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBSYXluYWwgPG1p
+cXVlbC5yYXluYWxAYm9vdGxpbi5jb20+Cj4gPiAtLS0KPiA+ICAuLi4vYXJtL21hcnZlbGwvYXA4
+MDYtc3lzdGVtLWNvbnRyb2xsZXIudHh0ICAgICAgICB8IDQzICsrKysrKysrKysrKysrKysrKysr
+KysKPiA+ICAxIGZpbGUgY2hhbmdlZCwgNDMgaW5zZXJ0aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0t
+Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tYXJ2ZWxsL2FwODA2
+LXN5c3RlbS1jb250cm9sbGVyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9hcm0vbWFydmVsbC9hcDgwNi1zeXN0ZW0tY29udHJvbGxlci50eHQKPiA+IGluZGV4IGE4NTZl
+YjlhNGUwNS4uYzk1ZjNhYzVjNzI4IDEwMDY0NAo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2FybS9tYXJ2ZWxsL2FwODA2LXN5c3RlbS1jb250cm9sbGVyLnR4dAo+
+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tYXJ2ZWxsL2Fw
+ODA2LXN5c3RlbS1jb250cm9sbGVyLnR4dAo+ID4gQEAgLTExLDYgKzExLDkgQEAgRm9yIHRoZSB0
+b3AgbGV2ZWwgbm9kZToKPiA+ICAgLSBjb21wYXRpYmxlOiBtdXN0IGJlOiAic3lzY29uIiwgInNp
+bXBsZS1tZmQiOwo+ID4gICAtIHJlZzogcmVnaXN0ZXIgYXJlYSBvZiB0aGUgQVA4MDYgc3lzdGVt
+IGNvbnRyb2xsZXIKPiA+ICAKPiA+ICtTWVNURU0gQ09OVFJPTExFUiAwCj4gPiArPT09PT09PT09
+PT09PT09PT09PQo+ID4gKwo+ID4gIENsb2NrczoKPiA+ICAtLS0tLS0tCj4gPiAgCj4gPiBAQCAt
+OTgsMyArMTAxLDQzIEBAIGFwX3N5c2Nvbjogc3lzdGVtLWNvbnRyb2xsZXJANmY0MDAwIHsKPiA+
+ICAJCWdwaW8tcmFuZ2VzID0gPCZhcF9waW5jdHJsIDAgMCAxOT47Cj4gPiAgCX07Cj4gPiAgfTsK
+PiA+ICsKPiA+ICtTWVNURU0gQ09OVFJPTExFUiAxCj4gPiArPT09PT09PT09PT09PT09PT09PQo+
+ID4gKwo+ID4gK1RoZXJtYWw6Cj4gPiArLS0tLS0tLS0KPiA+ICsKPiA+ICtGb3IgY29tbW9uIGJp
+bmRpbmcgcGFydCBhbmQgdXNhZ2UsIHJlZmVyIHRvCj4gPiArRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3RoZXJtYWwvdGhlcm1hbC50eHQKPiA+ICsKPiA+ICtUaGUgdGhlcm1hbCBJ
+UCBjYW4gcHJvYmUgdGhlIHRlbXBlcmF0dXJlIGFsbCBhcm91bmQgdGhlIHByb2Nlc3Nvci4gSXQK
+PiA+ICttYXkgZmVhdHVyZSBzZXZlcmFsIGNoYW5uZWxzLCBlYWNoIG9mIHRoZW0gd2lyZWQgdG8g
+b25lIHNlbnNvci4KPiA+ICsKPiA+ICtJdCBpcyBwb3NzaWJsZSB0byBzZXR1cCBhbiBvdmVyaGVh
+dCBpbnRlcnJ1cHQgYnkgZ2l2aW5nIGF0IGxlYXN0IG9uZQo+ID4gK2NyaXRpY2FsIHBvaW50IHRv
+IGFueSBzdWJub2RlIG9mIHRoZSB0aGVybWFsLXpvbmUgbm9kZS4KPiA+ICsKPiA+ICtSZXF1aXJl
+ZCBwcm9wZXJ0aWVzOgo+ID4gKy0gY29tcGF0aWJsZTogIm1hcnZlbGwsYXJtYWRhLWFwODA2LXRo
+ZXJtYWwiCj4gPiArCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICstIGludGVycnVwdC1w
+YXJlbnQvaW50ZXJydXB0czogb3ZlcmhlYXQgaW50ZXJydXB0IGhhbmRsZS4gU2hvdWxkIHBvaW50
+IHRvCj4gPiArICBsaW5lIDE4IG9mIHRoZSBTRUkgaXJxY2hpcC4KPiA+ICsgIFNlZSBpbnRlcnJ1
+cHQtY29udHJvbGxlci9pbnRlcnJ1cHRzLnR4dAo+ID4gKy0gI3RoZXJtYWwtc2Vuc29yLWNlbGxz
+OiBzaGFsbCBiZSA8MT4gd2hlbiB0aGVybWFsLXpvbmVzIHN1Ym5vZGVzIHJlZmVyCj4gPiArICB0
+byB0aGlzIElQIGFuZCByZXByZXNlbnRzIHRoZSBjaGFubmVsIElELiBUaGVyZSBpcyBvbmUgc2Vu
+c29yIHBlcgo+ID4gKyAgY2hhbm5lbC4gTyByZWZlcnMgdG8gdGhlIHRoZXJtYWwgSVAgaW50ZXJu
+YWwgY2hhbm5lbCwgd2hpbGUgcG9zaXRpdmUKPiA+ICsgIElEcyByZWZlciB0byBlYWNoIENQVS4K
+PiA+ICsKPiA+ICtFeGFtcGxlOgo+ID4gK2FwX3N5c2NvbjE6IHN5c3RlbS1jb250cm9sbGVyQDZm
+ODAwMCB7Cj4gPiArCWNvbXBhdGlibGUgPSAic3lzY29uIiwgInNpbXBsZS1tZmQiOwo+ID4gKwly
+ZWcgPSA8MHg2ZjgwMDAgMHgxMDAwPjsKPiA+ICsKPiA+ICsJYXBfdGhlcm1hbDogYXAtdGhlcm1h
+bCB7Cj4gPiArCQljb21wYXRpYmxlID0gIm1hcnZlbGwsYXJtYWRhLWFwODA2LXRoZXJtYWwiOyAg
+Cj4gCj4gSXMgdGhlcmUgYSByZWdpc3RlciByYW5nZSBhc3NvY2lhdGVkIHdpdGggdGhlIHRoZXJt
+YWwgZnVuY3Rpb25zPwoKWWVzLCBJIHdpbGwgYWRkIGl0LgoKVGhhbmtzLApNaXF1w6hsCgo+IAo+
+ID4gKwkJaW50ZXJydXB0LXBhcmVudCA9IDwmc2VpPjsKPiA+ICsJCWludGVycnVwdHMgPSA8MTg+
+Owo+ID4gKwkJI3RoZXJtYWwtc2Vuc29yLWNlbGxzID0gPDE+Owo+ID4gKwl9Owo+ID4gK307Cj4g
+PiAtLSAKPiA+IDIuMTQuMQo+ID4gICAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
