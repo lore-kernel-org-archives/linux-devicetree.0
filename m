@@ -1,41 +1,107 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v5 3/7] gpio: pca953x: add more register definitions for pcal6524
-Date: Sat, 28 Apr 2018 18:31:33 +0200
-Message-ID: <3cb7c78f496ec9933288b7aac7b4ee9c55d9037d.1524933096.git.hns@goldelico.com>
-References: <cover.1524933096.git.hns@goldelico.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: iio: afe: add binding for
+ current-sense-shunt
+Date: Sat, 28 Apr 2018 17:59:09 +0100
+Message-ID: <20180428175909.512410d9@archlinux>
+References: <20180423210809.29586-1-peda@axentia.se>
+        <20180423210809.29586-2-peda@axentia.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1524933096.git.hns@goldelico.com>
-In-Reply-To: <cover.1524933096.git.hns@goldelico.com>
-References: <cover.1524933096.git.hns@goldelico.com>
+In-Reply-To: <20180423210809.29586-2-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: galak@codeaurora.org, andy.shevchenko@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "Andrew F . Davis" <afd@ti.com>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The pcal6524 has another set of registers to fine control
-the interrupt handling.
+On Mon, 23 Apr 2018 23:08:06 +0200
+Peter Rosin <peda@axentia.se> wrote:
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/gpio/gpio-pca953x.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> An ADC is often used to measure other quantities indirectly. This
+> binding describe one cases, a current through a shunt resistor
+> measured by the voltage over it.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+One small whitespace issue inline that git am pointed out.
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index fecd0e0aba93..2b667166e855 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -49,6 +49,12 @@
- #define PCAL953X_INT_STAT	0x26
- #define PCAL953X_OUT_CONF	0x27
- 
-+#define PCAL6524_INT_EDGE	0x28
-+#define PCAL6524_INT_CLR	0x2a
-+#define PCAL6524_IN_STATUS	0x2b
-+#define PCAL6524_OUT_INDCONF	0x2c
-+#define PCAL6524_DEBOUNCE	0x2d
-+
- #define PCA_GPIO_MASK		0x00FF
- #define PCA_INT			0x0100
- #define PCA_PCAL		0x0200
--- 
-2.12.2
+I fixed it.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  .../bindings/iio/afe/current-sense-shunt.txt       | 41 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  6 ++++
+>  2 files changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/afe/current-sense-shunt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/afe/current-sense-shunt.txt b/Documentation/devicetree/bindings/iio/afe/current-sense-shunt.txt
+> new file mode 100644
+> index 000000000000..4d842aa85040
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/afe/current-sense-shunt.txt
+> @@ -0,0 +1,41 @@
+> +Current Sense Shunt
+> +===================
+> +
+> +When an io-channel measures the voltage over a current sense shunt,
+> +the interesting mesaurement is almost always the current through the
+> +shunt, not the voltage over it. This binding describes such a current
+> +sense circuit.
+> +
+> +Required properties:
+> +- compatible : "current-sense-shunt"
+> +- io-channels : Channel node of a voltage io-channel.
+> +- shunt-resistor-micro-ohms : The shunt resistance in microohms.
+> +
+> +Example:
+> +The system current is measured by measuring the voltage over a
+> +3.3 ohms shunt resistor.
+> +
+> +sysi {
+> +	compatible = "current-sense-shunt";
+> +	io-channels = <&tiadc 0>;
+> +
+> +	/* Divide the voltage by 3300000/1000000 (or 3.3) for the current. */
+> +	shunt-resistor-micro-ohms = <3300000>;
+> +};
+> +
+> +&i2c {
+> +	tiadc: adc@48 {
+> +		compatible = "ti,ads1015";
+> +	      	reg = <0x48>;
+
+The line above has some stray spaces - cleaned up.
+
+> +		#io-channel-cells = <1>;
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		channel@0 { /* IN0,IN1 differential */
+> +			reg = <0>;
+> +			ti,gain = <1>;
+> +			ti,datarate = <4>;
+> +		};
+> +	};
+> +};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 36a28e979e9a..0f7bec878919 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6889,6 +6889,12 @@ F:	drivers/staging/iio/
+>  F:	include/linux/iio/
+>  F:	tools/iio/
+>  
+> +IIO UNIT CONVERTER
+> +M:	Peter Rosin <peda@axentia.se>
+> +L:	linux-iio@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/iio/afe/current-sense-shunt.txt
+> +
+>  IKANOS/ADI EAGLE ADSL USB DRIVER
+>  M:	Matthieu Castet <castet.matthieu@free.fr>
+>  M:	Stanislaw Gruszka <stf_xl@wp.pl>
