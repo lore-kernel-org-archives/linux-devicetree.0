@@ -1,51 +1,106 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 0/7] Add basic support for emtrion emCON-MX6 modules
-Date: Sat, 28 Apr 2018 10:34:46 +0800
-Message-ID: <20180428023445.GA3693@dragon>
-References: <20180420125108.14197-1-jan.tuerk@emtrion.com>
- <20180427132445.3458-1-jan.tuerk@emtrion.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2 2/2] usb: dwc3: support clocks and resets for DWC3 core
+Date: Sat, 28 Apr 2018 11:41:03 +0900
+Message-ID: <CAK7LNASCLJWWwsDy7zj1uQNcb8pp8ivcAA=Y_oOUOsFMN+YpSA@mail.gmail.com>
+References: <1524135818-14825-1-git-send-email-yamada.masahiro@socionext.com>
+ <1524135818-14825-3-git-send-email-yamada.masahiro@socionext.com> <CAFBinCDwbyovMZ-qAKaMiBfz_YKMwxC1c4MjfNyLAvnXEfXtMw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180427132445.3458-1-jan.tuerk@emtrion.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: jan.tuerk@emtrion.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCDwbyovMZ-qAKaMiBfz_YKMwxC1c4MjfNyLAvnXEfXtMw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-usb@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh@kernel.org>, Roger Quadros <rogerq@ti.com>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, DTML <devicetree@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBBcHIgMjcsIDIwMTggYXQgMDM6MjQ6MzVQTSArMDIwMCwgamFuLnR1ZXJrQGVtdHJp
-b24uY29tIHdyb3RlOgo+IEZyb206IEphbiBUdWVyayA8amFuLnR1ZXJrQGVtdHJpb24uY29tPgo+
-IAo+IENoYW5nZXMgZm9yIHY0Ogo+ICAgLSByZS1hcnJhbmdlIHRoZSBQYXRjaC1zZXJpZXMgdG8g
-bWF0Y2ggdGhlIERULXN1Ym1pdHRpbmctcGF0Y2hlcwo+ICAgLSBBZGRpdGlvbmFsIHBhdGNoIGZv
-ciB0aGUgRG9jdW1lbnRhdGlvbiBvZiB0aGUgbmV3IERULWJpbmRpbmdzCj4gCj4gW1BBVENIIHY0
-IDEvN10gZHQtYmluZGluZ3M6IGRpc3BsYXk6IERvY3VtZW50IHRoZSBFRFQgZXQqIGRpc3BsYXlz
-IGluIG9uZSBmaWxlLgo+ICAgLSBubyBjaGFuZ2UgKHJlLWFycmFuZ2VkIDMvNiA9PiAxLzcpCj4g
-Cj4gW1BBVENIIHY0IDIvN10gZHJtL3BhbmVsOiBBZGQgc3VwcG9ydCBmb3IgdGhlIEVEVCBFVE0w
-NzAwRzBCREg2Cj4gICAtIG5vIGNoYW5nZSAocmUtYXJyYW5nZWQgMS82ID0+IDIvNykKPiAKPiBb
-UEFUQ0ggdjQgMy83XSBkcm0vcGFuZWw6IEFkZCBzdXBwb3J0IGZvciB0aGUgRURUIEVUTTA3MDBH
-MEVESDYKPiAgIC0gbm8gY2hhbmdlIChyZS1hcnJhbmdlZCAyLzYgPT4gMy83KQoKUGxlYXNlIHNw
-bGl0IHRoZSBzZXJpZXMgaW50byB0d28sIERSTSBkcml2ZXIgKGFib3ZlKSBhbmQgcGxhdGZvcm0g
-cGFydAooYmVsb3cpLCB0byBhdm9pZCBwb3N0aW5nIG9uZSBwYXJ0IG92ZXIgYW5kIG92ZXIgYWdh
-aW4gd2l0aCB6ZXJvCmNoYW5nZXMsIGJ1dCBvbmx5IGJlY2F1c2UgdGhlIG90aGVyIHBhcnQgbmVl
-ZHMgdXBkYXRlLgoKU2hhd24KCj4gCj4gW1BBVENIIHY0IDQvN10gQVJNOiBkdHM6IGlteDogQWRk
-IGFuIGNwdTAgbGFiZWwgZm9yIGlteDZkbCBkZXZpY2VzLgo+ICAgLSBubyBjaGFuZ2UKPiAKPiBb
-UEFUQ0ggdjQgNS83XSBkdC1iaW5kaW5nczogYXJtOiBEb2N1bWVudCBlbXRyaW9uIGVtQ09OLU1Y
-NiBiaW5kaW5ncwo+ICAgLSBzZXBhcmF0ZSBwYXRjaCBmb3IgdGhlIGVtdHJpb24gZW1DT04tTVg2
-IERULWJpbmRpbmdzCj4gCj4gW1BBVENIIHY0IDYvN10gQVJNOiBkdHM6IEFkZCBzdXBwb3J0IGZv
-ciBlbXRyaW9uIGVtQ09OLU1YNiBzZXJpZXMKPiAgIC0gYWxwaGFiZXRpY2FsbHkgc29ydCB0aGUg
-RFQKPiAgIC0gbW92ZWQgZHVwbGljYXRlZCBBdmFyaSBiYXNlYm9hcmQgY29kZSBpbnRvIHNlcGFy
-YXRlIGZpbGUuCj4gCj4gW1BBVENIIHY0IDcvN10gQVJNOiBpbXhfdjZfdjdfZGVmY29uZmlnOiBF
-bmFibGUgREEwOTYzIFBNSUMgc3VwcG9ydC4KPiAgIC0gdW5jaGFnZWQKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Martin,
+
+
+2018-04-24 2:44 GMT+09:00 Martin Blumenstingl
+<martin.blumenstingl@googlemail.com>:
+> Hello,
+>
+> On Thu, Apr 19, 2018 at 1:03 PM, Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>> Historically, the clocks and resets are handled on the glue layer
+>> side instead of the DWC3 core.  For simple cases, dwc3-of-simple.c
+>> takes care of arbitrary number of clocks and resets.  The DT node
+>> structure typically looks like as follows:
+>>
+>>   dwc3-glue {
+>>           compatible = "foo,dwc3";
+>>           clocks = ...;
+>>           resets = ...;
+>>           ...
+>>
+>>           dwc3 {
+>>                   compatible = "snps,dwc3";
+>>                   ...
+>>           };
+>>   }
+>>
+>> By supporting the clocks and the reset in the dwc3/core.c, it will
+>> be turned into a single node:
+>>
+>>   dwc3 {
+>>           compatible = "foo,dwc3", "snps,dwc3";
+>>           clocks = ...;
+>>           resets = ...;
+>>           ...
+>>   }
+>>
+>> This commit adds the binding of clocks and resets specific to this IP.
+>> The number of clocks should generally be the same across SoCs, it is
+>> just some SoCs either tie clocks together or do not provide software
+>> control of some of the clocks.
+>>
+>> I took the clock names from the Synopsys datasheet: "ref" (ref_clk),
+>> "bus_early" (bus_clk_early), and "suspend" (suspend_clk).
+> looking at the code: this could mean that dwc3-exynos.c can be removed
+> mid-term (assuming the PHY and regulator handling can be
+> moved/removed/changed)
+>
+> does the datasheet state anything about the clock speeds? from
+> Documentation/devicetree/bindings/usb/dwc3-xilinx.txt:
+> "bus_clk" Master/Core clock, have to be >= 125 MHz for SS operation
+> and >= 60MHz for HS operation
+>
+>> I found only one reset line in the datasheet, hence the reset-names
+>> property is omitted.
+> does the datasheet state whether this is a level or a pulsed reset line?
+> on Amlogic Meson GXL, GXM and AXG SoCs we use a pulsed (and shared)
+> reset line (see ff0a632f08759e "usb: dwc3: of-simple: add support for
+> shared and pulsed reset lines") because the reset line is shared
+> between various components (USB2 PHY, USB3 PHY, dwc3 controller, ...)
+> your current approach (having a vendor-specific "foo,dwc3" binding
+> along with the generic "snps,dwc3") would allow having
+> per-"of_device_id" settings which could indicate whether the reset
+> lines are level or pulsed reset if these are "implementation specific"
+
+Let me ask a question about your reset controller.
+(drivers/reset/reset-meson.c)
+
+All reset ID supports .reset, .assert, .deassert
+Is this correct?
+
+
+I believe you and I use the same DWC3 core IP.
+
+
+I suspect the difference is in the reset controller side.
+
+In my case, the reset line is asserted by default.
+(that is, all FFs in the RTL are put into the initial state
+on power-on)
+That's why only reset_deassert() will work for me, I think.
+
+What about your case?  Is the reset line in deassert state on power-on?
+Then, the reset must be explicitly pulsed to put FFs into
+the initial state.  Is this correct?
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
