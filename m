@@ -1,15 +1,16 @@
-From: Jonathan Cameron <jic23@kernel.org>
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
 Subject: Re: [PATCH v3 6/9] staging: iio: ad2s1200: Add scaling factor for
  angular velocity channel
-Date: Sat, 28 Apr 2018 18:23:44 +0100
-Message-ID: <20180428182344.59fec23e@archlinux>
+Date: Sat, 28 Apr 2018 18:35:14 +0100
+Message-ID: <20180428183514.08ab2a6c@archlinux>
 References: <cover.1524432236.git.davidjulianveenstra@gmail.com>
  <803058d8b119451a193c556866ffbb291ec83bcb.1524432236.git.davidjulianveenstra@gmail.com>
+ <20180428182344.59fec23e@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <803058d8b119451a193c556866ffbb291ec83bcb.1524432236.git.davidjulianveenstra@gmail.com>
+In-Reply-To: <20180428182344.59fec23e@archlinux>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -23,125 +24,98 @@ To: David Veenstra <davidjulianveenstra@gmail.com>
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, daniel.baluta@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 23 Apr 2018 00:03:59 +0200
-David Veenstra <davidjulianveenstra@gmail.com> wrote:
-
-> The sysfs iio ABI states radians per second is expected as the unit for
-> angular velocity, but the 12-bit angular velocity register has rps
-Really small point, but rps is a bit ambiguous given we are
-talking about converting to radian's per second ;)
-
-revs is the 'common' name for what it currently is I think.
-
-Otherwise this looks good.
-
-Jonathan
-
-
-> as its unit. So a scaling factor of approximately 2 * Pi is
-> added to the angular velocity channel.
-> 
-> Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
-> ---
-> Changes in v3:
->  - A decimal approximation of the scale is used, instead
->    of a fractional approximation.
->  - Remove unneeded explanation of iio_convert_raw_to_processed.
-> 
->  drivers/staging/iio/resolver/ad2s1200.c | 71 +++++++++++++++++++++------------
->  1 file changed, 45 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/staging/iio/resolver/ad2s1200.c b/drivers/staging/iio/resolver/ad2s1200.c
-> index 3c7163610ff6..3e1696e52c38 100644
-> --- a/drivers/staging/iio/resolver/ad2s1200.c
-> +++ b/drivers/staging/iio/resolver/ad2s1200.c
-> @@ -57,37 +57,55 @@ static int ad2s1200_read_raw(struct iio_dev *indio_dev,
->  	struct ad2s1200_state *st = iio_priv(indio_dev);
->  	int ret = 0;
->  
-> -	mutex_lock(&st->lock);
-> -	gpiod_set_value(st->sample, 0);
-> -
-> -	/* delay (6 * AD2S1200_TSCLK + 20) nano seconds */
-> -	udelay(1);
-> -	gpiod_set_value(st->sample, 1);
-> -	gpiod_set_value(st->rdvel, !!(chan->type == IIO_ANGL));
-> -
-> -	ret = spi_read(st->sdev, &st->rx, 2);
-> -	if (ret < 0) {
-> +	switch (m) {
-> +	case IIO_CHAN_INFO_SCALE:
-> +		switch (chan->type) {
-> +		case IIO_ANGL_VEL:
-> +			/* 2 * Pi ~= 6.283185 */
-> +			*val = 6;
-> +			*val2 = 283185;
-> +			return IIO_VAL_INT_PLUS_MICRO;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +	case IIO_CHAN_INFO_RAW:
-> +		mutex_lock(&st->lock);
-> +		gpiod_set_value(st->sample, 0);
-> +
-> +		/* delay (6 * AD2S1200_TSCLK + 20) nano seconds */
-> +		udelay(1);
-> +		gpiod_set_value(st->sample, 1);
-> +		gpiod_set_value(st->rdvel, !!(chan->type == IIO_ANGL));
-> +
-> +		ret = spi_read(st->sdev, &st->rx, 2);
-> +		if (ret < 0) {
-> +			mutex_unlock(&st->lock);
-> +			return ret;
-> +		}
-> +
-> +		switch (chan->type) {
-> +		case IIO_ANGL:
-> +			*val = be16_to_cpup(&st->rx) >> 4;
-> +			break;
-> +		case IIO_ANGL_VEL:
-> +			*val = sign_extend32(be16_to_cpup(&st->rx) >> 4, 11);
-> +			break;
-> +		default:
-> +			mutex_unlock(&st->lock);
-> +			return -EINVAL;
-> +		}
-> +
-> +		/* delay (2 * AD2S1200_TSCLK + 20) ns for sample pulse */
-> +		udelay(1);
->  		mutex_unlock(&st->lock);
-> -		return ret;
-> -	}
->  
-> -	switch (chan->type) {
-> -	case IIO_ANGL:
-> -		*val = be16_to_cpup(&st->rx) >> 4;
-> -		break;
-> -	case IIO_ANGL_VEL:
-> -		*val = sign_extend32(be16_to_cpup(&st->rx) >> 4, 11);
-> -		break;
-> +		return IIO_VAL_INT;
->  	default:
-> -		mutex_unlock(&st->lock);
-> -		return -EINVAL;
-> +		break;
->  	}
->  
-> -	/* delay (2 * AD2S1200_TSCLK + 20) ns for sample pulse */
-> -	udelay(1);
-> -	mutex_unlock(&st->lock);
-> -
-> -	return IIO_VAL_INT;
-> +	return -EINVAL;
->  }
->  
->  static const struct iio_chan_spec ad2s1200_channels[] = {
-> @@ -101,6 +119,7 @@ static const struct iio_chan_spec ad2s1200_channels[] = {
->  		.indexed = 1,
->  		.channel = 0,
->  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
->  	}
->  };
->  
+T24gU2F0LCAyOCBBcHIgMjAxOCAxODoyMzo0NCArMDEwMApKb25hdGhhbiBDYW1lcm9uIDxqaWMy
+M0BrZXJuZWwub3JnPiB3cm90ZToKCj4gT24gTW9uLCAyMyBBcHIgMjAxOCAwMDowMzo1OSArMDIw
+MAo+IERhdmlkIFZlZW5zdHJhIDxkYXZpZGp1bGlhbnZlZW5zdHJhQGdtYWlsLmNvbT4gd3JvdGU6
+Cj4gCj4gPiBUaGUgc3lzZnMgaWlvIEFCSSBzdGF0ZXMgcmFkaWFucyBwZXIgc2Vjb25kIGlzIGV4
+cGVjdGVkIGFzIHRoZSB1bml0IGZvcgo+ID4gYW5ndWxhciB2ZWxvY2l0eSwgYnV0IHRoZSAxMi1i
+aXQgYW5ndWxhciB2ZWxvY2l0eSByZWdpc3RlciBoYXMgcnBzICAKPiBSZWFsbHkgc21hbGwgcG9p
+bnQsIGJ1dCBycHMgaXMgYSBiaXQgYW1iaWd1b3VzIGdpdmVuIHdlIGFyZQo+IHRhbGtpbmcgYWJv
+dXQgY29udmVydGluZyB0byByYWRpYW4ncyBwZXIgc2Vjb25kIDspCj4gCj4gcmV2cyBpcyB0aGUg
+J2NvbW1vbicgbmFtZSBmb3Igd2hhdCBpdCBjdXJyZW50bHkgaXMgSSB0aGluay4KPiAKPiBPdGhl
+cndpc2UgdGhpcyBsb29rcyBnb29kLgpBY3R1YWxseSwgSSBjYW4ndCBpbW1lZGlhdGVseSB0ZWxs
+IGZyb20gdGhlIGRhdGFzaGVldCB3aGF0IHRoZSBzY2FsaW5nIGlzLi4uCgoiQml0IDE1IHRocm91
+Z2ggYml0IDQgY29ycmVzcG9uZCB0byB0aGUgYW5ndWxhcgppbmZvcm1hdGlvbi4gVGhlIGFuZ3Vs
+YXIgcG9zaXRpb24gZGF0YSBmb3JtYXQgaXMgdW5zaWduZWQKYmluYXJ5LCB3aXRoIGFsbCB6ZXJv
+cyBjb3JyZXNwb25kaW5nIHRvIDAgZGVncmVlcyBhbmQgYWxsIG9uZXMKY29ycmVzcG9uZGluZyB0
+byAzNjAgZGVncmVlcyDigJNsIExTQi4gVGhlIGFuZ3VsYXIgdmVsb2NpdHkgZGF0YQpmb3JtYXQg
+aW5zdGVhZCBpcyB0d29zIGNvbXBsZW1lbnQgYmluYXJ5LCB3aXRoIHRoZSBNU0IKcmVwcmVzZW50
+aW5nIHRoZSByb3RhdGlvbiBkaXJlY3Rpb24iCgpFYXJsaWVyIHdhcyBhbHNvIGhhZDoKCiJEYXRh
+IEZvcm1hdApUaGUgZGlnaXRhbCBhbmdsZSBzaWduYWwgcmVwcmVzZW50cyB0aGUgYWJzb2x1dGUg
+cG9zaXRpb24gb2YgdGhlCnJlc29sdmVyIHNoYWZ0IGFzIGEgMTItYml0IHVuc2lnbmVkIGJpbmFy
+eSB3b3JkLiBUaGUgZGlnaXRhbAp2ZWxvY2l0eSBzaWduYWwgaXMgYSAxMi1iaXQgdHdvcyBjb21w
+bGVtZW50IHdvcmQsIHdoaWNoCnJlcHJlc2VudHMgdGhlIHZlbG9jaXR5IG9mIHRoZSByZXNvbHZl
+ciBzaGFmdCByb3RhdGluZyBpbiBlaXRoZXIgYQpjbG9ja3dpc2Ugb3IgYSBjb3VudGVyY2xvY2t3
+aXNlIGRpcmVjdGlvbi4iCgpTbyBmb3IgcG9zaXRpb24gdGhlIDEyIGJpdHMgY29ycmVzcG9uZCB0
+byAwIHRvIDM2MCAtIDM2MC8oMl4xMikKaGVuY2UgX1NDQUxFIGlzIDM2MC8oMl4xMikKCkJ1dCBJ
+J20gbm90IHNlZWluZyBhbnkgaGludCB3aGF0c29ldmVyIG9uIHRoZSBzY2FsaW5nIGZvciB0aGUK
+cm90YXRpb25hbCB2ZWxvY2l0eS4uLgoKQW0gSSBtaXNzaW5nIGl0IHNvbWV3aGVyZT8gIHlvdSBt
+aWdodCBiZSByaWdodCBpbiBob3cgeW91IGhhdmUKcmVhZCBpdCBnaXZlbiBpdCB3aWxsIHRyYWNr
+IHVwIHRvIDEwMDBycHMgYW5kIHdlIGFyZSAyIGRpcmVjdGlvbmFsCnNvIC0yMDQ4IHRvIDIwNDcg
+c28gbm90IGEgaHVnZSBhbW91bnQgb2Ygd2FzdGVkIHNwYWNlLgoKRmFpbGluZyBhbnkgb3RoZXIg
+ZXZpZGVuY2UgSSdsbCBnbyB3aXRoIHdoYXQgeW91IGhhdmUgdW50aWwgd2UKY2FuIHRlc3QgdGhp
+cywgYnV0IHRoZSBkYXRhc2hlZXQgY291bGQgYmUgY2xlYXJlciEKCkpvbmF0aGFuCj4gCj4gSm9u
+YXRoYW4KPiAKPiAKPiA+IGFzIGl0cyB1bml0LiBTbyBhIHNjYWxpbmcgZmFjdG9yIG9mIGFwcHJv
+eGltYXRlbHkgMiAqIFBpIGlzCj4gPiBhZGRlZCB0byB0aGUgYW5ndWxhciB2ZWxvY2l0eSBjaGFu
+bmVsLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBWZWVuc3RyYSA8ZGF2aWRqdWxpYW52
+ZWVuc3RyYUBnbWFpbC5jb20+Cj4gPiAtLS0KPiA+IENoYW5nZXMgaW4gdjM6Cj4gPiAgLSBBIGRl
+Y2ltYWwgYXBwcm94aW1hdGlvbiBvZiB0aGUgc2NhbGUgaXMgdXNlZCwgaW5zdGVhZAo+ID4gICAg
+b2YgYSBmcmFjdGlvbmFsIGFwcHJveGltYXRpb24uCj4gPiAgLSBSZW1vdmUgdW5uZWVkZWQgZXhw
+bGFuYXRpb24gb2YgaWlvX2NvbnZlcnRfcmF3X3RvX3Byb2Nlc3NlZC4KPiA+IAo+ID4gIGRyaXZl
+cnMvc3RhZ2luZy9paW8vcmVzb2x2ZXIvYWQyczEyMDAuYyB8IDcxICsrKysrKysrKysrKysrKysr
+KysrKy0tLS0tLS0tLS0tLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0NSBpbnNlcnRpb25zKCspLCAy
+NiBkZWxldGlvbnMoLSkKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy9paW8v
+cmVzb2x2ZXIvYWQyczEyMDAuYyBiL2RyaXZlcnMvc3RhZ2luZy9paW8vcmVzb2x2ZXIvYWQyczEy
+MDAuYwo+ID4gaW5kZXggM2M3MTYzNjEwZmY2Li4zZTE2OTZlNTJjMzggMTAwNjQ0Cj4gPiAtLS0g
+YS9kcml2ZXJzL3N0YWdpbmcvaWlvL3Jlc29sdmVyL2FkMnMxMjAwLmMKPiA+ICsrKyBiL2RyaXZl
+cnMvc3RhZ2luZy9paW8vcmVzb2x2ZXIvYWQyczEyMDAuYwo+ID4gQEAgLTU3LDM3ICs1Nyw1NSBA
+QCBzdGF0aWMgaW50IGFkMnMxMjAwX3JlYWRfcmF3KHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYs
+Cj4gPiAgCXN0cnVjdCBhZDJzMTIwMF9zdGF0ZSAqc3QgPSBpaW9fcHJpdihpbmRpb19kZXYpOwo+
+ID4gIAlpbnQgcmV0ID0gMDsKPiA+ICAKPiA+IC0JbXV0ZXhfbG9jaygmc3QtPmxvY2spOwo+ID4g
+LQlncGlvZF9zZXRfdmFsdWUoc3QtPnNhbXBsZSwgMCk7Cj4gPiAtCj4gPiAtCS8qIGRlbGF5ICg2
+ICogQUQyUzEyMDBfVFNDTEsgKyAyMCkgbmFubyBzZWNvbmRzICovCj4gPiAtCXVkZWxheSgxKTsK
+PiA+IC0JZ3Bpb2Rfc2V0X3ZhbHVlKHN0LT5zYW1wbGUsIDEpOwo+ID4gLQlncGlvZF9zZXRfdmFs
+dWUoc3QtPnJkdmVsLCAhIShjaGFuLT50eXBlID09IElJT19BTkdMKSk7Cj4gPiAtCj4gPiAtCXJl
+dCA9IHNwaV9yZWFkKHN0LT5zZGV2LCAmc3QtPnJ4LCAyKTsKPiA+IC0JaWYgKHJldCA8IDApIHsK
+PiA+ICsJc3dpdGNoIChtKSB7Cj4gPiArCWNhc2UgSUlPX0NIQU5fSU5GT19TQ0FMRToKPiA+ICsJ
+CXN3aXRjaCAoY2hhbi0+dHlwZSkgewo+ID4gKwkJY2FzZSBJSU9fQU5HTF9WRUw6Cj4gPiArCQkJ
+LyogMiAqIFBpIH49IDYuMjgzMTg1ICovCj4gPiArCQkJKnZhbCA9IDY7Cj4gPiArCQkJKnZhbDIg
+PSAyODMxODU7Cj4gPiArCQkJcmV0dXJuIElJT19WQUxfSU5UX1BMVVNfTUlDUk87Cj4gPiArCQlk
+ZWZhdWx0Ogo+ID4gKwkJCXJldHVybiAtRUlOVkFMOwo+ID4gKwkJfQo+ID4gKwkJYnJlYWs7Cj4g
+PiArCWNhc2UgSUlPX0NIQU5fSU5GT19SQVc6Cj4gPiArCQltdXRleF9sb2NrKCZzdC0+bG9jayk7
+Cj4gPiArCQlncGlvZF9zZXRfdmFsdWUoc3QtPnNhbXBsZSwgMCk7Cj4gPiArCj4gPiArCQkvKiBk
+ZWxheSAoNiAqIEFEMlMxMjAwX1RTQ0xLICsgMjApIG5hbm8gc2Vjb25kcyAqLwo+ID4gKwkJdWRl
+bGF5KDEpOwo+ID4gKwkJZ3Bpb2Rfc2V0X3ZhbHVlKHN0LT5zYW1wbGUsIDEpOwo+ID4gKwkJZ3Bp
+b2Rfc2V0X3ZhbHVlKHN0LT5yZHZlbCwgISEoY2hhbi0+dHlwZSA9PSBJSU9fQU5HTCkpOwo+ID4g
+Kwo+ID4gKwkJcmV0ID0gc3BpX3JlYWQoc3QtPnNkZXYsICZzdC0+cngsIDIpOwo+ID4gKwkJaWYg
+KHJldCA8IDApIHsKPiA+ICsJCQltdXRleF91bmxvY2soJnN0LT5sb2NrKTsKPiA+ICsJCQlyZXR1
+cm4gcmV0Owo+ID4gKwkJfQo+ID4gKwo+ID4gKwkJc3dpdGNoIChjaGFuLT50eXBlKSB7Cj4gPiAr
+CQljYXNlIElJT19BTkdMOgo+ID4gKwkJCSp2YWwgPSBiZTE2X3RvX2NwdXAoJnN0LT5yeCkgPj4g
+NDsKPiA+ICsJCQlicmVhazsKPiA+ICsJCWNhc2UgSUlPX0FOR0xfVkVMOgo+ID4gKwkJCSp2YWwg
+PSBzaWduX2V4dGVuZDMyKGJlMTZfdG9fY3B1cCgmc3QtPnJ4KSA+PiA0LCAxMSk7Cj4gPiArCQkJ
+YnJlYWs7Cj4gPiArCQlkZWZhdWx0Ogo+ID4gKwkJCW11dGV4X3VubG9jaygmc3QtPmxvY2spOwo+
+ID4gKwkJCXJldHVybiAtRUlOVkFMOwo+ID4gKwkJfQo+ID4gKwo+ID4gKwkJLyogZGVsYXkgKDIg
+KiBBRDJTMTIwMF9UU0NMSyArIDIwKSBucyBmb3Igc2FtcGxlIHB1bHNlICovCj4gPiArCQl1ZGVs
+YXkoMSk7Cj4gPiAgCQltdXRleF91bmxvY2soJnN0LT5sb2NrKTsKPiA+IC0JCXJldHVybiByZXQ7
+Cj4gPiAtCX0KPiA+ICAKPiA+IC0Jc3dpdGNoIChjaGFuLT50eXBlKSB7Cj4gPiAtCWNhc2UgSUlP
+X0FOR0w6Cj4gPiAtCQkqdmFsID0gYmUxNl90b19jcHVwKCZzdC0+cngpID4+IDQ7Cj4gPiAtCQli
+cmVhazsKPiA+IC0JY2FzZSBJSU9fQU5HTF9WRUw6Cj4gPiAtCQkqdmFsID0gc2lnbl9leHRlbmQz
+MihiZTE2X3RvX2NwdXAoJnN0LT5yeCkgPj4gNCwgMTEpOwo+ID4gLQkJYnJlYWs7Cj4gPiArCQly
+ZXR1cm4gSUlPX1ZBTF9JTlQ7Cj4gPiAgCWRlZmF1bHQ6Cj4gPiAtCQltdXRleF91bmxvY2soJnN0
+LT5sb2NrKTsKPiA+IC0JCXJldHVybiAtRUlOVkFMOwo+ID4gKwkJYnJlYWs7Cj4gPiAgCX0KPiA+
+ICAKPiA+IC0JLyogZGVsYXkgKDIgKiBBRDJTMTIwMF9UU0NMSyArIDIwKSBucyBmb3Igc2FtcGxl
+IHB1bHNlICovCj4gPiAtCXVkZWxheSgxKTsKPiA+IC0JbXV0ZXhfdW5sb2NrKCZzdC0+bG9jayk7
+Cj4gPiAtCj4gPiAtCXJldHVybiBJSU9fVkFMX0lOVDsKPiA+ICsJcmV0dXJuIC1FSU5WQUw7Cj4g
+PiAgfQo+ID4gIAo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgaWlvX2NoYW5fc3BlYyBhZDJzMTIw
+MF9jaGFubmVsc1tdID0gewo+ID4gQEAgLTEwMSw2ICsxMTksNyBAQCBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IGlpb19jaGFuX3NwZWMgYWQyczEyMDBfY2hhbm5lbHNbXSA9IHsKPiA+ICAJCS5pbmRleGVk
+ID0gMSwKPiA+ICAJCS5jaGFubmVsID0gMCwKPiA+ICAJCS5pbmZvX21hc2tfc2VwYXJhdGUgPSBC
+SVQoSUlPX0NIQU5fSU5GT19SQVcpLAo+ID4gKwkJLmluZm9fbWFza19zaGFyZWRfYnlfdHlwZSA9
+IEJJVChJSU9fQ0hBTl9JTkZPX1NDQUxFKSwKPiA+ICAJfQo+ID4gIH07Cj4gPiAgICAKPiAKPiAt
+LQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNj
+cmliZSBsaW51eC1paW8iIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2
+Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJu
+ZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnBy
+b2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
