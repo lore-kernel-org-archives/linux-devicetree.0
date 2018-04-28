@@ -1,7 +1,7 @@
 From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v5 1/7] gpio: pca953x: convert register constants to hex
-Date: Sat, 28 Apr 2018 18:31:31 +0200
-Message-ID: <56bf53debf69534a452538e689dc15f94aea31a4.1524933096.git.hns@goldelico.com>
+Subject: [PATCH v5 5/7] gpio: pca953x: fix address calculation for pcal6524
+Date: Sat, 28 Apr 2018 18:31:35 +0200
+Message-ID: <aaac818909d71523726094b1dfacc03e756874e9.1524933096.git.hns@goldelico.com>
 References: <cover.1524933096.git.hns@goldelico.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1524933096.git.hns@goldelico.com>
@@ -12,58 +12,54 @@ To: galak@codeaurora.org, andy.shevchenko@gmail.com, Rob Herring <robh+dt@kernel
 Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-which makes it easier to match them with the data sheets.
+The register constants are so far defined in a way that they fit
+for the pcal9555a when shifted by the number of banks, i.e. are
+multiplied by 2 in the accessor function.
+
+Now, the pcal6524 has 3 banks which means the relative offset
+is multiplied by 4 for the standard registers.
+
+Simply applying the bit shift to the extended registers gives
+a wrong result, since the base offset is already included in
+the offset.
+
+Therefore, we add code to the 24 bit accessor functions to
+adjust the register number for these exended registers.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- drivers/gpio/gpio-pca953x.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ drivers/gpio/gpio-pca953x.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index d02964983b5b..508d0f6dceb7 100644
+index fc863faa3ce4..4194495a7990 100644
 --- a/drivers/gpio/gpio-pca953x.c
 +++ b/drivers/gpio/gpio-pca953x.c
-@@ -25,25 +25,25 @@
+@@ -221,9 +221,11 @@ static int pca957x_write_regs_16(struct pca953x_chip *chip, int reg, u8 *val)
+ static int pca953x_write_regs_24(struct pca953x_chip *chip, int reg, u8 *val)
+ {
+ 	int bank_shift = fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
++	int addr = (reg & PCAL_GPIO_MASK) << bank_shift;
++	int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
  
- #include <asm/unaligned.h>
+ 	return i2c_smbus_write_i2c_block_data(chip->client,
+-					      (reg << bank_shift) | REG_ADDR_AI,
++					      pinctrl | addr | REG_ADDR_AI,
+ 					      NBANK(chip), val);
+ }
  
--#define PCA953X_INPUT		0
--#define PCA953X_OUTPUT		1
--#define PCA953X_INVERT		2
--#define PCA953X_DIRECTION	3
-+#define PCA953X_INPUT		0x00
-+#define PCA953X_OUTPUT		0x01
-+#define PCA953X_INVERT		0x02
-+#define PCA953X_DIRECTION	0x03
+@@ -263,9 +265,11 @@ static int pca953x_read_regs_16(struct pca953x_chip *chip, int reg, u8 *val)
+ static int pca953x_read_regs_24(struct pca953x_chip *chip, int reg, u8 *val)
+ {
+ 	int bank_shift = fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
++	int addr = (reg & PCAL_GPIO_MASK) << bank_shift;
++	int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
  
- #define REG_ADDR_AI		0x80
+ 	return i2c_smbus_read_i2c_block_data(chip->client,
+-					     (reg << bank_shift) | REG_ADDR_AI,
++					     pinctrl | addr | REG_ADDR_AI,
+ 					     NBANK(chip), val);
+ }
  
--#define PCA957X_IN		0
--#define PCA957X_INVRT		1
--#define PCA957X_BKEN		2
--#define PCA957X_PUPD		3
--#define PCA957X_CFG		4
--#define PCA957X_OUT		5
--#define PCA957X_MSK		6
--#define PCA957X_INTS		7
--
--#define PCAL953X_IN_LATCH	34
--#define PCAL953X_INT_MASK	37
--#define PCAL953X_INT_STAT	38
-+#define PCA957X_IN		0x00
-+#define PCA957X_INVRT		0x01
-+#define PCA957X_BKEN		0x02
-+#define PCA957X_PUPD		0x03
-+#define PCA957X_CFG		0x04
-+#define PCA957X_OUT		0x05
-+#define PCA957X_MSK		0x06
-+#define PCA957X_INTS		0x07
-+
-+#define PCAL953X_IN_LATCH	0x22
-+#define PCAL953X_INT_MASK	0x25
-+#define PCAL953X_INT_STAT	0x26
- 
- #define PCA_GPIO_MASK		0x00FF
- #define PCA_INT			0x0100
 -- 
 2.12.2
