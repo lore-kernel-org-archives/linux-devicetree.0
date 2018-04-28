@@ -1,78 +1,323 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 17/27] dt-bindings: ap806: add the thermal node in the
- syscon file
-Date: Sat, 28 Apr 2018 13:07:14 +0200
-Message-ID: <20180428130714.3ee3883b@xps13>
-References: <20180421151255.29929-1-miquel.raynal@bootlin.com>
- <20180421151255.29929-18-miquel.raynal@bootlin.com>
- <20180427210722.obyujepjvqc5hwcd@rob-hp-laptop>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v6 02/24] soc: qcom: Add APR bus driver
+Date: Sat, 28 Apr 2018 12:12:51 +0100
+Message-ID: <a5304418-1ce3-32b2-577d-0aab9160b7b0@linaro.org>
+References: <20180426094606.4775-1-srinivas.kandagatla@linaro.org>
+ <20180426094606.4775-3-srinivas.kandagatla@linaro.org>
+ <20180428045155.GA491@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180427210722.obyujepjvqc5hwcd@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180428045155.GA491@tuxbook-pro>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, spatakok@qti.qualcomm.com, lgirdwood@gmail.com, robh+dt@kernel.org, tiwai@suse.com, david.brown@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, andy.gross@linaro.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gRnJpLCAyNyBBcHIgMjAxOCAxNjowNzoyMiAtMDUwMCwgUm9iIEhlcnJpbmcg
-PHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cgo+IE9uIFNhdCwgQXByIDIxLCAyMDE4IGF0IDA1OjEy
-OjQ1UE0gKzAyMDAsIE1pcXVlbCBSYXluYWwgd3JvdGU6Cj4gPiBFeHBsYWluIHRoZSB0aGVybWFs
-IGJpbmRpbmdzIG5vdyB0aGF0IHRoZSB0aGVybWFsIElQIGlzIGRlc2NyaWJlZCBiZWluZwo+ID4g
-aW5zaWRlIG9mIGEgc3lzdGVtIGNvbnRyb2xsZXIuIEFkZCBhIHJlZmVyZW5jZSB0byB0aGUgdGhl
-cm1hbC16b25lIG5vZGUuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBSYXluYWwgPG1p
-cXVlbC5yYXluYWxAYm9vdGxpbi5jb20+Cj4gPiAtLS0KPiA+ICAuLi4vYXJtL21hcnZlbGwvYXA4
-MDYtc3lzdGVtLWNvbnRyb2xsZXIudHh0ICAgICAgICB8IDQzICsrKysrKysrKysrKysrKysrKysr
-KysKPiA+ICAxIGZpbGUgY2hhbmdlZCwgNDMgaW5zZXJ0aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0t
-Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tYXJ2ZWxsL2FwODA2
-LXN5c3RlbS1jb250cm9sbGVyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9hcm0vbWFydmVsbC9hcDgwNi1zeXN0ZW0tY29udHJvbGxlci50eHQKPiA+IGluZGV4IGE4NTZl
-YjlhNGUwNS4uYzk1ZjNhYzVjNzI4IDEwMDY0NAo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2FybS9tYXJ2ZWxsL2FwODA2LXN5c3RlbS1jb250cm9sbGVyLnR4dAo+
-ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tYXJ2ZWxsL2Fw
-ODA2LXN5c3RlbS1jb250cm9sbGVyLnR4dAo+ID4gQEAgLTExLDYgKzExLDkgQEAgRm9yIHRoZSB0
-b3AgbGV2ZWwgbm9kZToKPiA+ICAgLSBjb21wYXRpYmxlOiBtdXN0IGJlOiAic3lzY29uIiwgInNp
-bXBsZS1tZmQiOwo+ID4gICAtIHJlZzogcmVnaXN0ZXIgYXJlYSBvZiB0aGUgQVA4MDYgc3lzdGVt
-IGNvbnRyb2xsZXIKPiA+ICAKPiA+ICtTWVNURU0gQ09OVFJPTExFUiAwCj4gPiArPT09PT09PT09
-PT09PT09PT09PQo+ID4gKwo+ID4gIENsb2NrczoKPiA+ICAtLS0tLS0tCj4gPiAgCj4gPiBAQCAt
-OTgsMyArMTAxLDQzIEBAIGFwX3N5c2Nvbjogc3lzdGVtLWNvbnRyb2xsZXJANmY0MDAwIHsKPiA+
-ICAJCWdwaW8tcmFuZ2VzID0gPCZhcF9waW5jdHJsIDAgMCAxOT47Cj4gPiAgCX07Cj4gPiAgfTsK
-PiA+ICsKPiA+ICtTWVNURU0gQ09OVFJPTExFUiAxCj4gPiArPT09PT09PT09PT09PT09PT09PQo+
-ID4gKwo+ID4gK1RoZXJtYWw6Cj4gPiArLS0tLS0tLS0KPiA+ICsKPiA+ICtGb3IgY29tbW9uIGJp
-bmRpbmcgcGFydCBhbmQgdXNhZ2UsIHJlZmVyIHRvCj4gPiArRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3RoZXJtYWwvdGhlcm1hbC50eHQKPiA+ICsKPiA+ICtUaGUgdGhlcm1hbCBJ
-UCBjYW4gcHJvYmUgdGhlIHRlbXBlcmF0dXJlIGFsbCBhcm91bmQgdGhlIHByb2Nlc3Nvci4gSXQK
-PiA+ICttYXkgZmVhdHVyZSBzZXZlcmFsIGNoYW5uZWxzLCBlYWNoIG9mIHRoZW0gd2lyZWQgdG8g
-b25lIHNlbnNvci4KPiA+ICsKPiA+ICtJdCBpcyBwb3NzaWJsZSB0byBzZXR1cCBhbiBvdmVyaGVh
-dCBpbnRlcnJ1cHQgYnkgZ2l2aW5nIGF0IGxlYXN0IG9uZQo+ID4gK2NyaXRpY2FsIHBvaW50IHRv
-IGFueSBzdWJub2RlIG9mIHRoZSB0aGVybWFsLXpvbmUgbm9kZS4KPiA+ICsKPiA+ICtSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOgo+ID4gKy0gY29tcGF0aWJsZTogIm1hcnZlbGwsYXJtYWRhLWFwODA2LXRo
-ZXJtYWwiCj4gPiArCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICstIGludGVycnVwdC1w
-YXJlbnQvaW50ZXJydXB0czogb3ZlcmhlYXQgaW50ZXJydXB0IGhhbmRsZS4gU2hvdWxkIHBvaW50
-IHRvCj4gPiArICBsaW5lIDE4IG9mIHRoZSBTRUkgaXJxY2hpcC4KPiA+ICsgIFNlZSBpbnRlcnJ1
-cHQtY29udHJvbGxlci9pbnRlcnJ1cHRzLnR4dAo+ID4gKy0gI3RoZXJtYWwtc2Vuc29yLWNlbGxz
-OiBzaGFsbCBiZSA8MT4gd2hlbiB0aGVybWFsLXpvbmVzIHN1Ym5vZGVzIHJlZmVyCj4gPiArICB0
-byB0aGlzIElQIGFuZCByZXByZXNlbnRzIHRoZSBjaGFubmVsIElELiBUaGVyZSBpcyBvbmUgc2Vu
-c29yIHBlcgo+ID4gKyAgY2hhbm5lbC4gTyByZWZlcnMgdG8gdGhlIHRoZXJtYWwgSVAgaW50ZXJu
-YWwgY2hhbm5lbCwgd2hpbGUgcG9zaXRpdmUKPiA+ICsgIElEcyByZWZlciB0byBlYWNoIENQVS4K
-PiA+ICsKPiA+ICtFeGFtcGxlOgo+ID4gK2FwX3N5c2NvbjE6IHN5c3RlbS1jb250cm9sbGVyQDZm
-ODAwMCB7Cj4gPiArCWNvbXBhdGlibGUgPSAic3lzY29uIiwgInNpbXBsZS1tZmQiOwo+ID4gKwly
-ZWcgPSA8MHg2ZjgwMDAgMHgxMDAwPjsKPiA+ICsKPiA+ICsJYXBfdGhlcm1hbDogYXAtdGhlcm1h
-bCB7Cj4gPiArCQljb21wYXRpYmxlID0gIm1hcnZlbGwsYXJtYWRhLWFwODA2LXRoZXJtYWwiOyAg
-Cj4gCj4gSXMgdGhlcmUgYSByZWdpc3RlciByYW5nZSBhc3NvY2lhdGVkIHdpdGggdGhlIHRoZXJt
-YWwgZnVuY3Rpb25zPwoKWWVzLCBJIHdpbGwgYWRkIGl0LgoKVGhhbmtzLApNaXF1w6hsCgo+IAo+
-ID4gKwkJaW50ZXJydXB0LXBhcmVudCA9IDwmc2VpPjsKPiA+ICsJCWludGVycnVwdHMgPSA8MTg+
-Owo+ID4gKwkJI3RoZXJtYWwtc2Vuc29yLWNlbGxzID0gPDE+Owo+ID4gKwl9Owo+ID4gK307Cj4g
-PiAtLSAKPiA+IDIuMTQuMQo+ID4gICAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Thanks Bjorn for the review comments.
+
+On 28/04/18 05:51, Bjorn Andersson wrote:
+> On Thu 26 Apr 02:45 PDT 2018, Srinivas Kandagatla wrote:
+>> diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
+> [..]
+>> +int apr_send_pkt(struct apr_device *adev, void *buf)
+> 
+> Sorry, but I think we have discussed this before?
+> 
+Yes, I did mention that I would give it a try and see, This change was 
+pretty intrusive when I last looked at this.
+
+I agree with you on asymmetry! I will change this and add struc apr_pkt 
+which would apr_hdr followed by payload. This should also work for 
+callback as well.
+
+> "buf" isn't some random buffer to be sent, it is a apr_hdr followed by
+> some data. As such I think you should make this type struct apr_hdr *,
+> or if you think that doesn't imply there's payload make a type apr_pkt
+> that has a payload[] at the end.
+> 
+> It will make it obvious for both future readers and the compiler what
+> kind of data we're passing here.
+> 
+> 
+> This comment also applies to functions calling functions that calls
+> apr_send_pkt() as they too lug around a void *.
+> 
+>> +{
+>> +	struct apr *apr = dev_get_drvdata(adev->dev.parent);
+>> +	struct apr_hdr *hdr;
+>> +	unsigned long flags;
+>> +	int ret;
+>> +
+>> +	spin_lock_irqsave(&adev->lock, flags);
+>> +
+>> +	hdr = (struct apr_hdr *)buf;
+>> +	hdr->src_domain = APR_DOMAIN_APPS;
+>> +	hdr->src_svc = adev->svc_id;
+>> +	hdr->dest_domain = adev->domain_id;
+>> +	hdr->dest_svc = adev->svc_id;
+>> +
+>> +	ret = rpmsg_trysend(apr->ch, buf, hdr->pkt_size);
+>> +	if (ret) {
+>> +		dev_err(&adev->dev, "Unable to send APR pkt %d\n",
+>> +			hdr->pkt_size);
+> 
+> Afaict all callers of this function will print an error message,
+> sometimes on more than one level in the stack. And if some code path
+> does retry sending you will get a printout for each attempt, even though
+> the caller is fine with it.
+> 
+> I would recommend unlocking the spinlock and then do:
+
+I can do that !!
+
+> 
+> 	return ret ? : hdr->pkt_size;
+> 
+>> +	} else {
+>> +		ret = hdr->pkt_size;
+>> +	}
+>> +
+>> +	spin_unlock_irqrestore(&adev->lock, flags);
+>> +
+>> +	return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(apr_send_pkt);
+>> +
+
+>> +
+>> +static int apr_callback(struct rpmsg_device *rpdev, void *buf,
+>> +				  int len, void *priv, u32 addr)
+>> +{
+>> +	struct apr *apr = dev_get_drvdata(&rpdev->dev);
+>> +	struct apr_client_message data;
+>> +	struct apr_device *p, *c_svc = NULL;
+>> +	struct apr_driver *adrv = NULL;
+>> +	struct apr_hdr *hdr;
+>> +	unsigned long flags;
+>> +	uint16_t hdr_size;
+>> +	uint16_t msg_type;
+>> +	uint16_t ver;
+>> +	uint16_t svc;
+>> +
+>> +	if (len <= APR_HDR_SIZE) {
+>> +		dev_err(apr->dev, "APR: Improper apr pkt received:%p %d\n",
+>> +			buf, len);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	hdr = buf;
+>> +	ver = APR_HDR_FIELD_VER(hdr->hdr_field);
+>> +	if (ver > APR_PKT_VER + 1)
+>> +		return -EINVAL;
+>> +
+>> +	hdr_size = APR_HDR_FIELD_SIZE_BYTES(hdr->hdr_field);
+>> +	if (hdr_size < APR_HDR_SIZE) {
+>> +		dev_err(apr->dev, "APR: Wrong hdr size:%d\n", hdr_size);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (hdr->pkt_size < APR_HDR_SIZE) {
+> 
+> I think it would be nice to make sure that hdr->pkt_size is < len as
+> well, to reject messages that larger than the incoming buffer.
+> 
+> The pkt_size should be in the ballpark of len, could this check be
+> changed to hdr->pkt_size != len?
+
+Yep, It makes sense, I can add that check here.
+
+> 
+>> +		dev_err(apr->dev, "APR: Wrong paket size\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	msg_type = APR_HDR_FIELD_MT(hdr->hdr_field);
+>> +	if (msg_type >= APR_MSG_TYPE_MAX && msg_type != APR_BASIC_RSP_RESULT) {
+>> +		dev_err(apr->dev, "APR: Wrong message type: %d\n", msg_type);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (hdr->src_domain >= APR_DOMAIN_MAX ||
+>> +			hdr->dest_domain >= APR_DOMAIN_MAX ||
+>> +			hdr->src_svc >= APR_SVC_MAX ||
+>> +			hdr->dest_svc >= APR_SVC_MAX) {
+>> +		dev_err(apr->dev, "APR: Wrong APR header\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	svc = hdr->dest_svc;
+>> +	spin_lock_irqsave(&apr->svcs_lock, flags);
+>> +	list_for_each_entry(p, &apr->svcs, node) {
+> 
+> Rather than doing a O(n) search for the svc with svc_id you could use a
+> idr or a radix_tree to keep the id -> svc mapping.
+
+Am not 100% sure idr is correct thing here, as the svc_ids are static 
+and the list we are talking here in worst case would be max of 13 
+entires, in audio case it is just 4 services.
+I think using radix_tree would be over do.
+
+> 
+>> +		if (svc == p->svc_id) {
+>> +			c_svc = p;
+>> +			if (c_svc->dev.driver)
+>> +				adrv = to_apr_driver(c_svc->dev.driver);
+>> +			break;
+>> +		}
+>> +	}
+>> +	spin_unlock_irqrestore(&apr->svcs_lock, flags);
+>> +
+>> +	if (!adrv) {
+>> +		dev_err(apr->dev, "APR: service is not registered\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	data.payload_size = hdr->pkt_size - hdr_size;
+>> +	data.opcode = hdr->opcode;
+>> +	data.src_port = hdr->src_port;
+>> +	data.dest_port = hdr->dest_port;
+>> +	data.token = hdr->token;
+>> +	data.msg_type = msg_type;
+>> +
+>> +	if (data.payload_size > 0)
+>> +		data.payload = buf + hdr_size;
+>> +
+> 
+> Making a verbatim copy of parts of the hdr and then passing that to the
+> APR devices creates an asymmetry in the send/callback API, without a
+> whole lot of benefits. I would prefer that you introduce the apr_pkt, as
+> described above, and once you have validated the size et al and found
+> the service you just pass it along.
+Okay, this would be a big rework, I will do it in next version.
+
+> 
+>> +	adrv->callback(c_svc, &data);
+>> +
+>> +	return 0;
+>> +}
+> [..]
+>> +static int apr_uevent(struct device *dev, struct kobj_uevent_env *env)
+>> +{
+>> +	struct apr_device *adev = to_apr_device(dev);
+>> +	int ret;
+>> +
+>> +	ret = of_device_uevent_modalias(dev, env);
+>> +	if (ret != -ENODEV)
+>> +		return ret;
+>> +
+>> +	return add_uevent_var(env, "MODALIAS= apr:%s", adev->name);
+> 
+> No space between '=' and "apr".
+>
+Yep.
+
+>> +}
+>> +
+>> +struct bus_type aprbus = {
+>> +	.name		= "aprbus",
+> 
+> Most busses doesn't have "bus" in the name.
+> 
+Yep, just "apr" make sense.
+
+>> +	.match		= apr_device_match,
+>> +	.probe		= apr_device_probe,
+>> +	.uevent		= apr_uevent,
+>> +	.remove		= apr_device_remove,
+>> +};
+>> +EXPORT_SYMBOL_GPL(aprbus);
+>> +
+>> +static int apr_add_device(struct device *dev, struct device_node *np,
+>> +			  const struct apr_device_id *id)
+>> +{
+>> +	struct apr *apr = dev_get_drvdata(dev);
+>> +	struct apr_device *adev = NULL;
+>> +
+>> +	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
+>> +	if (!adev)
+>> +		return -ENOMEM;
+>> +
+>> +	spin_lock_init(&adev->lock);
+>> +
+>> +	adev->svc_id = id->svc_id;
+>> +	adev->domain_id = id->domain_id;
+>> +	adev->version = id->svc_version;
+>> +	if (np)
+>> +		strncpy(adev->name, np->name, APR_NAME_SIZE);
+>> +	else
+>> +		strncpy(adev->name, id->name, APR_NAME_SIZE);
+>> +
+>> +	dev_set_name(&adev->dev, "aprsvc:%s:%x:%x", adev->name,
+>> +		     id->domain_id, id->svc_id);
+>> +
+>> +	adev->dev.bus = &aprbus;
+>> +	adev->dev.parent = dev;
+>> +	adev->dev.of_node = np;
+>> +	adev->dev.release = apr_dev_release;
+>> +	adev->dev.driver = NULL;
+>> +
+>> +	spin_lock(&apr->svcs_lock);
+>> +	list_add_tail(&adev->node, &apr->svcs);
+>> +	spin_unlock(&apr->svcs_lock);
+>> +
+>> +	dev_info(dev, "Adding APR dev: %s\n", dev_name(&adev->dev));
+>> +
+>> +	return device_register(&adev->dev);
+> 
+> If this fails you must call put_device(&adev->dev);
+> 
+Agree!!
+>> +}
+>> +
+>> +static void of_register_apr_devices(struct device *dev)
+>> +{
+>> +	struct apr *apr = dev_get_drvdata(dev);
+>> +	struct device_node *node;
+>> +
+>> +	for_each_child_of_node(dev->of_node, node) {
+>> +		struct apr_device_id id = { {0} };
+>> +
+>> +		if (of_property_read_u32(node, "reg", &id.svc_id))
+>> +			continue;
+>> +
+>> +		id.domain_id = apr->dest_domain_id;
+>> +
+>> +		if (apr_add_device(dev, node, &id))
+>> +			dev_err(dev, "Failed to add arp %d svc\n", id.svc_id);
+>> +	}
+>> +}
+> [..]
+>> +
+>> +static int __init apr_init(void)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = bus_register(&aprbus);
+>> +	if (!ret)
+>> +		ret = register_rpmsg_driver(&apr_driver);
+> 
+> bus_unregister() if ret here.
+> 
+Yep.
+
+Thanks,
+srini
+>> +
+>> +	return ret;
+>> +}
+>> +
+> 
+> Regards,
+> Bjorn
+> 
