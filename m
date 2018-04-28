@@ -1,38 +1,54 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 2/3] dt-bindings: Add "sifive" vendor prefix
-Date: Sat, 28 Apr 2018 13:21:15 +0200
-Message-ID: <72c263ef-09c3-a05f-3c16-1bc8df667d38@suse.de>
-References: <1524869998-2805-1-git-send-email-wesley@sifive.com>
- <1524869998-2805-3-git-send-email-wesley@sifive.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RFC 05/10] i2c: s3c2410: Remove support for Exynos5440
+Date: Sat, 28 Apr 2018 14:44:07 +0200
+Message-ID: <20180428124407.bpc47bo7ojebahpz@ninjato>
+References: <20180424203239.21885-1-krzk@kernel.org>
+ <20180424203239.21885-6-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2ub5o5uu6wk62jsg"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524869998-2805-3-git-send-email-wesley@sifive.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180424203239.21885-6-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Wesley W. Terpstra" <wesley@sifive.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, David Lechner <david@lechnology.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, SZ Lin <sz.lin@moxa.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg
 List-Id: devicetree@vger.kernel.org
 
-Am 28.04.2018 um 00:59 schrieb Wesley W. Terpstra:
-> This adds a vendor prefix "sifive" for SiFive, Inc.
-> We make chips.
-> 
-> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
 
-Reviewed-by: Andreas Färber <afaerber@suse.de>
+--2ub5o5uu6wk62jsg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-but please reorder the patches, so that the prefix definition comes
-before its first use in the pwm binding.
+On Tue, Apr 24, 2018 at 10:32:34PM +0200, Krzysztof Kozlowski wrote:
+> The Exynos5440 is not actively developed, there are no development
+> boards available and probably there are no real products with it.
+> Remove wide-tree support for Exynos5440.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Regards,
-Andreas
+Applied to for-next, thanks!
 
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+
+--2ub5o5uu6wk62jsg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlrkbJcACgkQFA3kzBSg
+KbY0oBAAp5AZ22Iwc3g476LI/homGu6AP+TvzJ14ZHvvKXmBhKLST+eTqjibgy8y
+ezyaVsMGoTAqZXpFAoPhMWB/ktsDNOM6QhshTyAR5EI634GhnTZ8j5quAXYwgPsL
+Iugkw/DxGYGz+0iaPwvd7L4OnCHpufRomudIkx7wO5IObmbuFIAYiAvZIp6873Hq
+UFWUlW4k67D+BcoYc+uVcvTteewzffXS/qyRim6TF4Xg2FKTPp9KRUjmL86xLHvl
+FXDKa4djARTZz+HD0aQ27aOuv+g7yxLS9mfL4wSckymohGCtmDhHI6xdw3hyCDwM
+yPElg4JICJDm4EuDjzYdYrcZlFjsXeuHN3RGaJfIRFnIhwC/CxiUnwtMosGCuWSK
+BDU+esBF7qEXxherzLPJEJVPYW1z3XqLphkxoJ8Ma/9DpLDmItGythWIuMblLHWP
+jWpb3DOgATifO3ZLkyNEp/6m4GMEZN29Xc81BLRgy+NMzaNPofgSflzW1QAHz8H8
+qMtjIHp9zH9h4jn7LoUng1AsEBs4AW/xv5Bul8l4FhrfjSpzTCfb1+kF7QKAr8IW
+0xuLrzW3GSd1/WC7BTnQMDD41d8sgd8YL8RyfFBYsst0L0TXvhgWLCLt7M40X42q
+pUXIKPw/t0MR4uIsD8nQ9ZnWhb4chO2pzGSMabmZQDLeZQvGRBI=
+=ObTl
+-----END PGP SIGNATURE-----
+
+--2ub5o5uu6wk62jsg--
