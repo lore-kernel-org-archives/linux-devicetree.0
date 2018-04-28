@@ -1,16 +1,17 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 14/17] dt-bindings/interrupt-controller: add description
- for Marvell SEI node
-Date: Sat, 28 Apr 2018 12:48:27 +0200
-Message-ID: <20180428124827.3992b1ee@xps13>
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 13/17] dt-bindings/interrupt-controller: update Marvell
+ ICU bindings
+Date: Sat, 28 Apr 2018 12:50:31 +0200
+Message-ID: <20180428125031.6f46c448@windsurf>
 References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
- <20180421135537.24716-15-miquel.raynal@bootlin.com>
- <20180427205032.6u5zzf7265wpgppg@rob-hp-laptop>
+ <20180421135537.24716-14-miquel.raynal@bootlin.com>
+ <20180427204723.hz2ef5f7fhaid3aj@rob-hp-laptop>
+ <20180428124204.3f305405@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180427205032.6u5zzf7265wpgppg@rob-hp-laptop>
+In-Reply-To: <20180428124204.3f305405@xps13>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,81 +21,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gRnJpLCAyNyBBcHIgMjAxOCAxNTo1MDozMiAtMDUwMCwgUm9iIEhlcnJpbmcg
-PHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cgo+IE9uIFNhdCwgQXByIDIxLCAyMDE4IGF0IDAzOjU1
-OjM0UE0gKzAyMDAsIE1pcXVlbCBSYXluYWwgd3JvdGU6Cj4gPiBEZXNjcmliZSB0aGUgU0VJIChT
-eXN0ZW0gRXJyb3IgSW50ZXJydXB0KSBjb250cm9sbGVyIGRyaXZlci4gVGhlCj4gPiBjb250cm9s
-bGVyIGlzIHBhcnQgb2YgdGhlIEdJQy4gSXQgYWdncmVnYXRlcyB0d28gdHlwZXMgb2YgaW50ZXJy
-dXB0cywKPiA+IHdpcmVkIGFuZCBNU0lzIGZyb20gcmVzcGVjdGl2ZWx5IHRoZSBBUCBhbmQgdGhl
-IENQcywgaW50byBhIHNpbmdsZSBTUEkKPiA+IGludGVycnVwdC4KPiA+IAo+ID4gU3VnZ2VzdGVk
-LWJ5OiBIYWltIEJvb3QgPGhheWltQG1hcnZlbGwuY29tPgo+ID4gU2lnbmVkLW9mZi1ieTogTWlx
-dWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4KPiA+IC0tLQo+ID4gIC4uLi9i
-aW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9tYXJ2ZWxsLHNlaS50eHQgIHwgNTQgKysrKysr
-KysrKysrKysrKysrKysrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1NCBpbnNlcnRpb25zKCspCj4g
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9p
-bnRlcnJ1cHQtY29udHJvbGxlci9tYXJ2ZWxsLHNlaS50eHQKPiA+IAo+ID4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9t
-YXJ2ZWxsLHNlaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJy
-dXB0LWNvbnRyb2xsZXIvbWFydmVsbCxzZWkudHh0Cj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+
-ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5hMjQ2ZDU5NTUyYjEKPiA+IC0tLSAvZGV2L251bGwKPiA+
-ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJv
-bGxlci9tYXJ2ZWxsLHNlaS50eHQKPiA+IEBAIC0wLDAgKzEsNTQgQEAKPiA+ICtNYXJ2ZWxsIFNF
-SSAoU3lzdGVtIEVycm9yIEludGVycnVwdCkgQ29udHJvbGxlcgo+ID4gKy0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gPiArCj4gPiArTWFydmVsbCBTRUkg
-KFN5c3RlbSBFcnJvciBJbnRlcnJ1cHQpIGNvbnRyb2xsZXIgaXMgYW4gaW50ZXJydXB0IGFnZ3Jl
-Z2F0b3IuCj4gPiArSXQgcmVjZWl2ZXMgaW50ZXJydXB0cyBmcm9tIHNldmVyYWwgc291cmNlcyBh
-bmQgYWdncmVnYXRlcyB0aGVtIHRvIGEgc2luZ2xlCj4gPiAraW50ZXJydXB0IGxpbmUgKGFuIFNQ
-SSkgb24gdGhlIHByaW1hcnkgaW50ZXJydXB0IGNvbnRyb2xsZXIuCj4gPiArCj4gPiArVGhlIElS
-USBjaGlwIGNhbiBoYW5kbGUgdXAgdG8gNjQgU0VJcywgYSBzZXQgY29tZXMgZnJvbSB0aGUgQVAg
-YW5kIGlzCj4gPiArd2lyZWQgd2hpbGUgYSBzZWNvbmQgc2V0IGNvbWVzIGZyb20gdGhlIENQcyBi
-eSB0aGUgbWVhbiBvZiBNU0lzLiBFYWNoCj4gPiArJ2RvbWFpbicgaXMgcmVwcmVzZW50ZWQgYXMg
-YSBzdWJub2RlLgo+ID4gKwo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiArCj4gPiArLSBj
-b21wYXRpYmxlOiBzaG91bGQgYmUgIm1hcnZlbGwsYXJtYWRhLThrLXNlaSIuCj4gPiArLSByZWc6
-IFNFSSByZWdpc3RlcnMgbG9jYXRpb24gYW5kIGxlbmd0aC4KPiA+ICstIGludGVycnVwdHM6IGlk
-ZW50aWZpZXMgdGhlIHBhcmVudCBJUlEgdGhhdCB3aWxsIGJlIHRyaWdnZXJlZC4KPiA+ICstICNh
-ZGRyZXNzLWNlbGxzOiBzaG91bGQgYmUgJzEnLCByZXByZXNlbnRzIHRoZSBwb3NpdGlvbiBvZiB0
-aGUgZmlyc3QKPiA+ICsgICAgICAgICAgICAgICAgICBJUlEgb2YgYSBnaXZlbiB0eXBlIGluIHRo
-ZSBTRUkgcmFuZ2UuCj4gPiArLSAjc2l6ZS1jZWxsczogc2hvdWxkIGJlICcxJywgcmVwcmVzZW50
-cyB0aGUgbnVtYmVyIG9mIGEgZ2l2ZW4gdHlwZSBvZgo+ID4gKyAgICAgICAgICAgICAgIElSUXMu
-Cj4gPiArCj4gPiArQ2hpbGQgbm9kZSAnc2VpLXdpcmVkLWNvbnRyb2xsZXInIHJlcXVpcmVkIHBy
-b3BlcnRpZXM6Cj4gPiArCj4gPiArLSByZWc6IHRoZSByYW5nZSBvZiB3aXJlZCBpbnRlcnJ1cHRz
-Lgo+ID4gKy0gI2ludGVycnVwdC1jZWxsczogbnVtYmVyIG9mIGNlbGxzIHRvIGRlZmluZSBhbiBT
-RUkgd2lyZWQgaW50ZXJydXB0Cj4gPiArICAgICAgICAgICAgICAgICAgICBjb21pbmcgZnJvbSB0
-aGUgQVAsIHNob3VsZCBiZSAxLiBUaGUgY2VsbCBpcyB0aGUgSVJRCj4gPiArICAgICAgICAgICAg
-ICAgICAgICBudW1iZXIuCj4gPiArLSBpbnRlcnJ1cHQtY29udHJvbGxlcjogaWRlbnRpZmllcyB0
-aGUgbm9kZSBhcyBhbiBpbnRlcnJ1cHQgY29udHJvbGxlci4KPiA+ICsKPiA+ICtDaGlsZCBub2Rl
-ICdzZWktbXNpLWNvbnRyb2xsZXInIHJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiArCj4gPiArLSBy
-ZWc6IHRoZSByYW5nZSBvZiBub24td2lyZWQgaW50ZXJydXB0cyB0cmlnZ2VyZWQgYnkgd2F5IG9m
-IE1TSXMuCj4gPiArLSBtc2ktY29udHJvbGxlcjogaWRlbnRpZmllcyB0aGUgbm9kZSBhcyBhbiBN
-U0kgY29udHJvbGxlci4KPiA+ICsKPiA+ICtFeGFtcGxlOgo+ID4gKwo+ID4gKyAgICAgICAgc2Vp
-OiBzZWlAM2YwMjAwIHsKPiA+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gIm1hcnZlbGws
-YXJtYWRhLThrLXNlaSI7Cj4gPiArICAgICAgICAgICAgICAgcmVnID0gPDB4M2YwMjAwIDB4NDA+
-Owo+ID4gKyAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAwIElSUV9UWVBFX0xF
-VkVMX0hJR0g+Owo+ID4gKyAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4g
-KyAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDE+Owo+ID4gKwo+ID4gKyAgICAgICAgICAg
-ICAgIHNlaV93aXJlZF9jb250cm9sbGVyOiBzZWktd2lyZWQtY29udHJvbGxlckAwIHsKPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwIDIxPjsgIAo+IAo+IFVzaW5nIGludGVycnVw
-dCBudW1iZXJzIGluIHJlZyBpcyBzdHJhbmdlLgoKSSB0aG91Z2h0IHRoZSByZWcgcHJvcGVydHkg
-d2FzIHRoZSBvbmUgdG8gY2hvb3NlIGhlcmUsIEkgY2FuIG9mIGNvdXJzZQpjaGFuZ2UgaXQsIHdo
-YXQgd291bGQgeW91IHN1Z2dlc3Q/Cgo+IAo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI2lu
-dGVycnVwdC1jZWxscyA9IDwxPjsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVw
-dC1jb250cm9sbGVyOwo+ID4gKyAgICAgICAgICAgICAgIH07Cj4gPiArCj4gPiArICAgICAgICAg
-ICAgICAgc2VpX21zaV9jb250cm9sbGVyOiBzZWktbXNpLWNvbnRyb2xsZXJAMjEgewo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDIxIDQzPjsKPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIG1zaS1jb250cm9sbGVyOyAgCj4gCj4gQ2FuJ3QgdGhlIHBhcmVudCBiZSBib3RoIGFu
-IGludGVycnVwdC1jb250cm9sbGVyIGFuZCBtc2ktY29udHJvbGxlcj8KCldlIG5lZWQgdG8ga25v
-dyB3aGljaCBvbmUgYWdncmVnYXRlcyBpbnRlcnJ1cHRzLCB3aGljaCBvbmUgcmVjZWl2ZXMKTVNJ
-cyBhbmQgbW9zdCBpbXBvcnRhbnRseSB3aGljaCBpbnRlcnJ1cHQgaXMgd2hhdCAod2l0aGluIHRo
-ZSA2NAp0aGF0IGFyZSBoYW5kbGVkIGJ5IHRoZSBTRUkpLgoKSSB0aG91Z2h0IGl0IHdvdWxkIGRl
-c2NyaWJlIHRoZSBoYXJkd2FyZSBwcmV0dHkgd2VsbCwgZG8geW91IHRoaW5rIHRvCmFub3RoZXIg
-c29sdXRpb24/CiAKPiAKPiA+ICsgICAgICAgICAgICAgICB9Owo+ID4gKyAgICAgICB9Owo+ID4g
-LS0gCj4gPiAyLjE0LjEKPiA+ICAgCgpUaGFua3MsCk1pcXXDqGwKCi0tIApNaXF1ZWwgUmF5bmFs
-LCBCb290bGluIChmb3JtZXJseSBGcmVlIEVsZWN0cm9ucykKRW1iZWRkZWQgTGludXggYW5kIEtl
-cm5lbCBlbmdpbmVlcmluZwpodHRwczovL2Jvb3RsaW4uY29tCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
-dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hello,
+
+On Sat, 28 Apr 2018 12:42:04 +0200, Miquel Raynal wrote:
+
+> On Fri, 27 Apr 2018 15:47:23 -0500, Rob Herring <robh@kernel.org> wrote:
+> 
+> > On Sat, Apr 21, 2018 at 03:55:33PM +0200, Miquel Raynal wrote:  
+> > > Change the documentation to reflect the new bindings used for Marvell
+> > > ICU. This involves describing each interrupt group as a subnode of the
+> > > ICU node. Each of them having their own compatible.    
+> > 
+> > Why?
+> > 
+> > This breaks compatibility.  
+> 
+> It does indeed.
+
+Well, yes and no: your driver supports both the old and new binding, so
+the compatibility is not broken. So, yes the binding is changed in an
+incompatible way, but the driver continues to support the old binding.
+
+Perhaps the binding documentation should continue to document the
+legacy binding, mark it as still supported but deprecated.
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
