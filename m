@@ -1,88 +1,86 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 5/9] staging: iio: ad2s1200: Add documentation for
- device tree binding
-Date: Sat, 28 Apr 2018 16:27:58 +0100
-Message-ID: <20180428162758.2a49130c@archlinux>
-References: <cover.1524432236.git.davidjulianveenstra@gmail.com>
- <0aa68c6684c2b45dd0af398c166d6b36c18be1af.1524432236.git.davidjulianveenstra@gmail.com>
- <20180427144820.jfvypgk6tfp2syty@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v4 1/7] gpio: pca953x: convert register constants to hex
+Date: Sat, 28 Apr 2018 18:30:03 +0200
+Message-ID: <A499CDE2-0DCD-4189-808B-EAAF6C03F9F4@goldelico.com>
+References: <cover.1524764101.git.hns@goldelico.com> <cover.1524764101.git.hns@goldelico.com> <ee6da590a6053f190393d5e64d06b44fab886ecd.1524764101.git.hns@goldelico.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180427144820.jfvypgk6tfp2syty@rob-hp-laptop>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rob Herring <robh@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, daniel.baluta@nxp.com, David Veenstra <davidjulianveenstra@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ee6da590a6053f190393d5e64d06b44fab886ecd.1524764101.git.hns@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: galak@codeaurora.org, andy.shevchenko@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 27 Apr 2018 09:48:20 -0500
-Rob Herring <robh@kernel.org> wrote:
 
-> On Mon, Apr 23, 2018 at 12:03:47AM +0200, David Veenstra wrote:
-> > Add documentation for the added device tree bindings.
-> > 
-> > Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
-> > ---
-> > Changes in v3:
-> >  - Documentation is added to Documentation/devicetree/bindings/iio/resolver
-> >    instead of staging directory.
-> >  - Add mention to ad2s1205 device.
-> > 
-> >  .../devicetree/bindings/iio/resolver/ad2s1200.txt        | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
-> > new file mode 100644
-> > index 000000000000..46b51db38368
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
-> > @@ -0,0 +1,16 @@
-> > +Analog Devices AD2S1200 and AD2S1205 Resolver-to-Digital Converter
-> > +
-> > +Required properties:
-> > + - compatible : should be "adi,ad2s1200" or "adi,ad2s1205"
-> > + - reg : the SPI chip select number of the device
-> > + - sample-gpios : The GPIO pin connected to the SAMPLE line of the AD2S1200
-> > + - rdvel-gpios : The GPIO pin connected to the RDVEL line of the AD2S1200  
+> Am 26.04.2018 um 19:34 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
 > 
-> Are these gpios something that would be common to resolvers (whatever 
-> that is) or specific to this chip. For the latter, you need vendor 
-> prefixes.
+> which makes it easier to match them with the data sheets.
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+> drivers/gpio/gpio-pca953x.c | 32 ++++++++++++++++----------------
+> 1 file changed, 16 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index d02964983b5b..bd0593afdae3 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -25,25 +25,25 @@
+> 
+> #include <asm/unaligned.h>
+> 
+> -#define PCA953X_INPUT		0
+> -#define PCA953X_OUTPUT		1
+> -#define PCA953X_INVERT		2
+> -#define PCA953X_DIRECTION	3
+> +#define PCA953X_INPUT		0x00
+> +#define PCA953X_OUTPUT		0x01
+> +#define PCA953X_INVERT		0x02
+> +#define PCA953X_DIRECTION	0x03
+> 
+> #define REG_ADDR_AI		0x80
+> 
+> -#define PCA957X_IN		0
+> -#define PCA957X_INVRT		1
+> -#define PCA957X_BKEN		2
+> -#define PCA957X_PUPD		3
+> -#define PCA957X_CFG		4
+> -#define PCA957X_OUT		5
+> -#define PCA957X_MSK		6
+> -#define PCA957X_INTS		7
+> -
+> -#define PCAL953X_IN_LATCH	34
+> -#define PCAL953X_INT_MASK	37
+> -#define PCAL953X_INT_STAT	38
+> +#define PCA957X_IN		0x00
+> +#define PCA957X_INVRT		0x01
+> +#define PCA957X_BKEN		0x02
+> +#define PCA957X_PUPD		0x03
+> +#define PCA957X_CFG		0x04
+> +#define PCA957X_OUT		0x05
+> +#define PCA957X_MSK		0x06
+> +#define PCA957X_INTS		0x07
+> +
+> +#define PCAL953X_IN_LATCH	0x22
+> +#define PCAL953X_PULL_EN	0x23
+> +#define PCAL953X_PULL_SEL	0x24
 
-They are pretty chip specific I think, so prefixes needed.
+oops, just spotted a bug above.
 
-I'd not really registered that gpios should be vendor prefixed for some reason
-(kind of obvious now you mention it).  We have only a few from a quick grep
-of the bindings for IIO devices (there are loads elsewhere that aren't and
-are clearly very much part specific).  Ah well, will try and do better moving
-forward on this!
+Here, we should update the registers PCAL953X_INT_MASK and
+PCAL953X_INT_STAT. And add PCAL953X_PULL_EN and PCAL953X_PULL_SEL
+in the next patch.
 
-Jonathan
-
+Sorry. I will send an update for the patch set.
 
 > 
-> > +
-> > +Example:
-> > +
-> > +	resolver {  
+> #define PCA_GPIO_MASK		0x00FF
+> #define PCA_INT			0x0100
+> -- 
+> 2.12.2
 > 
-> Missing unit address.
-> 
-> > +		compatible = "adi,ad2s1200";
-> > +		reg = <4>;
-> > +		sample-gpios = <&gpio 5 GPIO_ACTIVE_HIGH>;
-> > +		rdvel-gpios = <&gpio 6 GPIO_ACTIVE_HIGH>;
-> > +	};
-> > -- 
-> > 2.16.2
-> >   
+
+BR,
+Nikolaus
