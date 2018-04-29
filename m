@@ -1,75 +1,78 @@
-From: Jon Nettleton <jon@solid-run.com>
+From: Paul Kocialkowski <contact@paulk.fr>
 Subject: Re: [PATCH] ARM: dts: imx6qdl-cubox-i: Move card-detect GPIO to 1.5
  SOM devices only
-Date: Sun, 29 Apr 2018 16:09:31 +0200
-Message-ID: <CABdtJHun8DWbr-bUgwQEK61UXMLh5pPkwvUTF+KxhHmJaXEr-A@mail.gmail.com>
-References: <20180422142151.17910-1-contact@paulk.fr> <20180422143911.GB16141@n2100.armlinux.org.uk>
- <8012696a7bf0132dd2361a896bf0abfbe8a3084e.camel@paulk.fr> <d167cc6987fdb7f04493c634873d430dcd216887.camel@paulk.fr>
+Date: Sun, 29 Apr 2018 17:37:32 +0200
+Message-ID: <b7aca3a0e1f90e5048c5ca81c42bf41b318b260b.camel@paulk.fr>
+References: <20180422142151.17910-1-contact@paulk.fr>
+         <20180422143911.GB16141@n2100.armlinux.org.uk>
+         <8012696a7bf0132dd2361a896bf0abfbe8a3084e.camel@paulk.fr>
+         <d167cc6987fdb7f04493c634873d430dcd216887.camel@paulk.fr>
+         <CABdtJHun8DWbr-bUgwQEK61UXMLh5pPkwvUTF+KxhHmJaXEr-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-XSX1RzpL/GNuv6bJDJFk"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d167cc6987fdb7f04493c634873d430dcd216887.camel@paulk.fr>
+In-Reply-To: <CABdtJHun8DWbr-bUgwQEK61UXMLh5pPkwvUTF+KxhHmJaXEr-A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <contact@paulk.fr>
+To: Jon Nettleton <jon@solid-run.com>
 Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 29, 2018 at 3:47 PM, Paul Kocialkowski <contact@paulk.fr> wrote=
-:
-> Hi,
->
-> Le dimanche 22 avril 2018 =C3=A0 19:22 +0200, Paul Kocialkowski a =C3=A9c=
-rit :
->> Are all CuBox-i units that have ever been sold supposed to have a
->> connector with a CD line? I find it hard to believe that it's broken
->> specifically on mine.
->
-> Do you have a clue whether there should, in fact, be a CD line on all
-> CuBox-i models out there? Although you seemed to imply that my device
-> might be broken, I am still confused about whether this issue concerns
-> my device only or a specific revision of the CuBox-i.
->
->> If that's really needed, I could open up the device, check whether the
->> R8 pull is in place and check the voltage there.
->
-> In case there is a doubt, I will proceed with opening the device so we
-> can have a clear idea, but I'd rather avoid it as much as possible.
->
-> Cheers,
->
-> --
-> Paul Kocialkowski,
->
-> developer of free digital technology and hardware support.
->
-> Website: https://www.paulk.fr/
-> Coding blog: https://code.paulk.fr/
-> Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
 
-Paul,
+--=-XSX1RzpL/GNuv6bJDJFk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-You can see on our schematics that the hinged sdhc card slot is an
-assembly option and not the default.
-https://wiki.solid-run.com/lib/exe/fetch.php?media=3Dimx6:cubox-i:schematic=
-s-rev-1.1:cubox-i-lower.pdf
+Hi,
 
-You have either an initial early developer unit (pre-production) that
-was assembled like this for testing, or a unit that someone
-specifically ordered assembled this way.  You can see from the
-schematic that this option does not have a CD-pin because it is meant
-to be a more permanent storage option.
+Le dimanche 29 avril 2018 =C3=A0 16:09 +0200, Jon Nettleton a =C3=A9crit :
+> You have either an initial early developer unit (pre-production) that
+> was assembled like this for testing, or a unit that someone
+> specifically ordered assembled this way.  You can see from the
+> schematic that this option does not have a CD-pin because it is meant
+> to be a more permanent storage option.
 
-That being said, this is not a default option and therefore should not
-be merged into the mainline device-tree.  Our soms and carriers are
-designed to be very flexible regarding the assembly options and we try
-to mainline device-tree files that represent the most common assembly
-options.  Once there is a common accepted mainlining for device-tree
-fragments for overlays, that would be the proper place to make this
-change.  Although in this case you would also need a custom u-boot so
-it is probably best to just handle the change there.  If you would
-like touch base with me off list and I can point you at the required
-u-boot changes.
+It turns out that the card-detection mechanism was somewhat broken on my
+device (which does have a regular push slot). It would report card-
+detect only when the card was not fully inserted, and stop asserting
+card-detect when it was pushed fully.
 
-Thanks,
-Jon
+I used a fitting tweezer to move the mechanical parts around and got it
+to also detect the card when it is pushed all the way.
+
+So no change is necessary after all, it was just my device that needed
+fixing.
+
+Thanks for the helpful answers!
+
+--=20
+Paul Kocialkowski,
+
+developer of free digital technology and hardware support.
+
+Website: https://www.paulk.fr/
+Coding blog: https://code.paulk.fr/
+Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+--=-XSX1RzpL/GNuv6bJDJFk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlrl5rwACgkQhP3B6o/u
+lQwAbw/7Bzj6Jh6/I1RzqllJIIA8adB4sSHO/zK3B22fF3nCjqH3Cgct4FkI0m5B
+Sy8sLagBySzdaCxbO8MS9LlqTGq5nJi2TG8N7WDEgHyBUKJZEH2syi7r9k5BURfZ
+oAi68v9sfHQGfvwf+1qGmYIdyhfhMo1MEJxAeJP2NKqy0t/Gg8L6rWo3WE6dwdeD
+7T/dagRIVFRTrvynfgER24nFDkQaiP5fYfyXqZ10m18obLVp+5VaXF/2lNnGcuJQ
+huld+EEU/lfU/N1gg1I2DIG2mkG7LMgGMNWZzQ8CXi9oqeXA+VhPwmM/2MAZDlVF
+uk/j9qfdIJbqGmACiBWL1jboeflGou451WLcLm/zCj7UpGfhUb1eXW23Mziqk7RR
+WhYfT/of83OSRroqiSLmt+tfF7D+EdTg1bQibNCCEib5NiO6WUn4d9Gxaq2rb/Bn
+aRvXRj1h4EiVv7FZC7FwPROPuVuK0B4JH+Aol8YOUk8HMbHBe65CHzihgV0851qJ
+B08yjBRuYICRmRDMn3w6OGsnGWLk85PKBd9x0SC3P77+M1GxaSy5faDXrW8ziWpL
+tSemOKUopQ0/qRwaVn4T2wRYLUKZBCRMbejMxKkEknDVPvqNprPwXwScZgj4vtD0
+CDBW6G1xKLpR/srEPo5BmfVsHE+24FLFu6/V2sfb4z0L3X5Q4/I=
+=1KCD
+-----END PGP SIGNATURE-----
+
+--=-XSX1RzpL/GNuv6bJDJFk--
