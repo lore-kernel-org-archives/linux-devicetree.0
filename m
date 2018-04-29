@@ -1,42 +1,57 @@
-Return-Path: <SRS0=UpLl=HG=ti.com=t-kristo@kernel.org>
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [RFC 01/13] ARM: dts: allow building .dtb files under platform subdirs
-Date: Tue, 17 Apr 2018 12:10:03 +0300
-Message-ID: <1523956215-28154-2-git-send-email-t-kristo@ti.com>
-In-Reply-To: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
-References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com
-Cc: wmills@ti.com, tony@atomide.com, trini@konsulko.com, rmk@armlinux.org.uk
+Return-Path: <SRS0=z9yY=HS=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf0-f193.google.com ([209.85.192.193]:36388 "EHLO
+        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753559AbeD2RNi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Apr 2018 13:13:38 -0400
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v4 02/14] media: ov772x: correct setting of banding filter
+Date: Mon, 30 Apr 2018 02:13:01 +0900
+Message-Id: <1525021993-17789-3-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
+References: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support to base ARM makefile for building .dtb files under platform
-specific subdirs (e.g. arch/arm/boot/dts/ti for TI SoCs.)
+The banding filter ON/OFF is controlled via bit 5 of COM8 register.  It
+is attempted to be enabled in ov772x_set_params() by the following line.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
+	ret = ov772x_mask_set(client, COM8, BNDF_ON_OFF, 1);
+
+But this unexpectedly results disabling the banding filter, because the
+mask and set bits are exclusive.
+
+On the other hand, ov772x_s_ctrl() correctly sets the bit by:
+
+	ret = ov772x_mask_set(client, COM8, BNDF_ON_OFF, BNDF_ON_OFF);
+
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
- arch/arm/Makefile | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+* v4
+- New patch
 
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index e4e537f..f6c90bc 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -343,8 +343,10 @@ $(BOOT_TARGETS): vmlinux
- $(INSTALL_TARGETS):
- 	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $@
+ drivers/media/i2c/ov772x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+index b62860c..e255070 100644
+--- a/drivers/media/i2c/ov772x.c
++++ b/drivers/media/i2c/ov772x.c
+@@ -1035,7 +1035,7 @@ static int ov772x_set_params(struct ov772x_priv *priv,
  
-+%.dtb: dtbdir=$(patsubst %/,%,$(patsubst %./,%,$(boot)/dts/$(dir $@)))
-+
- %.dtb: | scripts
--	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
-+	$(Q)$(MAKE) $(build)=$(dtbdir) MACHINE=$(MACHINE) $(boot)/dts/$@
- 
- PHONY += dtbs dtbs_install
- 
+ 	/* Set COM8. */
+ 	if (priv->band_filter) {
+-		ret = ov772x_mask_set(client, COM8, BNDF_ON_OFF, 1);
++		ret = ov772x_mask_set(client, COM8, BNDF_ON_OFF, BNDF_ON_OFF);
+ 		if (!ret)
+ 			ret = ov772x_mask_set(client, BDBASE,
+ 					      0xff, 256 - priv->band_filter);
 -- 
-1.9.1
+2.7.4
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
