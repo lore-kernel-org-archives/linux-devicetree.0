@@ -1,92 +1,85 @@
-Return-Path: <SRS0=w2p0=HQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37982 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1759215AbeD0WC3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Apr 2018 18:02:29 -0400
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: [PATCH v3 1/6] arm64: dts: r8a77965: Add FCPF and FCPV instances
-Date: Fri, 27 Apr 2018 23:02:15 +0100
-Message-Id: <20180427220220.31286-2-kieran.bingham+renesas@ideasonboard.com>
-In-Reply-To: <20180427220220.31286-1-kieran.bingham+renesas@ideasonboard.com>
-References: <20180427220220.31286-1-kieran.bingham+renesas@ideasonboard.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Return-Path: <SRS0=d2rx=HS=gmail.com=akinobu.mita@kernel.org>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v4 00/14] media: ov772x: support media controller, device tree probing, etc.
+Date: Mon, 30 Apr 2018 02:12:59 +0900
+Message-Id: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa@the-dreams.de>
 List-ID: <devicetree@vger.kernel.org>
 
-The FCPs handle the interface between various IP cores and memory. Add
-the instances related to the FDPs and VSP2s.
+This patchset includes support media controller, sub-device interface,
+device tree probing and other miscellanuous changes for ov772x driver.
 
-Based on a similar patch of the R8A7796 device tree
-by Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>.
+* v4 (thanks to Laurent Pinchart)
+- Add Reviewed-by: lines
+- Correct setting of banding filter (New)
+- Omit consumer ID when getting clock reference (New)
+- Use v4l2_ctrl to get current control value (New)
+- Correctly restore the controls changed under power saving mode
 
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-[Kieran: Rebase to top of tree]
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 41 +++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+* v3 (thanks to Sakari Ailus and Jacopo Mondi)
+- Reorder the patches
+- Add Reviewed-by: lines
+- Remove I2C_CLIENT_SCCB flag set as it isn't needed anymore
+- Fix typo in the commit log
+- Return without resetting if ov772x_edgectrl() failed
+- Update the error message for missing platform data
+- Rename mutex name from power_lock to lock
+- Add warning for duplicated s_power call
+- Add newlines before labels
+- Remove __v4l2_ctrl_handler_setup in s_power() as it causes duplicated
+  register settings
+- Make set_fmt() return -EBUSY while streaming (New)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index b12f41755aea..74a7ae4ebccc 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -10,6 +10,7 @@
- 
- #include <dt-bindings/clock/renesas-cpg-mssr.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/power/r8a77965-sysc.h>
- 
- #define CPG_AUDIO_CLK_I		10
- 
-@@ -1000,6 +1001,46 @@
- 			/* placeholder */
- 		};
- 
-+		fcpf0: fcp@fe950000 {
-+			compatible = "renesas,fcpf";
-+			reg = <0 0xfe950000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 615>;
-+			power-domains = <&sysc R8A77965_PD_A3VP>;
-+			resets = <&cpg 615>;
-+		};
-+
-+		fcpvb0: fcp@fe96f000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfe96f000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 607>;
-+			power-domains = <&sysc R8A77965_PD_A3VP>;
-+			resets = <&cpg 607>;
-+		};
-+
-+		fcpvi0: fcp@fe9af000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfe9af000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 611>;
-+			power-domains = <&sysc R8A77965_PD_A3VP>;
-+			resets = <&cpg 611>;
-+		};
-+
-+		fcpvd0: fcp@fea27000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfea27000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 603>;
-+			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-+			resets = <&cpg 603>;
-+		};
-+
-+		fcpvd1: fcp@fea2f000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfea2f000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 602>;
-+			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-+			resets = <&cpg 602>;
-+		};
-+
- 		csi20: csi2@fea80000 {
- 			reg = <0 0xfea80000 0 0x10000>;
- 			/* placeholder */
+* v2 (thanks to Jacopo Mondi)
+- Replace the implementation of ov772x_read() instead of adding an
+  alternative method
+- Assign the ov772x_read() return value to pid and ver directly
+- Do the same for MIDH and MIDL
+- Move video_probe() before the entity initialization and remove the #ifdef
+  around the media_entity_cleanup()
+- Use generic names for reset and powerdown gpios (New)
+- Add "dt-bindings:" in the subject
+- Add a brief description of the sensor
+- Update the GPIO names
+- Indicate the GPIO active level
+- Add missing NULL checks for priv->info
+- Leave the check for the missing platform data if legacy platform data
+  probe is used.
+- Handle nested s_power() calls (New)
+- Reconstruct s_frame_interval() (New)
+- Avoid accessing registers
+
+Akinobu Mita (14):
+  media: dt-bindings: ov772x: add device tree binding
+  media: ov772x: correct setting of banding filter
+  media: ov772x: allow i2c controllers without
+    I2C_FUNC_PROTOCOL_MANGLING
+  media: ov772x: add checks for register read errors
+  media: ov772x: add media controller support
+  media: ov772x: use generic names for reset and powerdown gpios
+  media: ov772x: omit consumer ID when getting clock reference
+  media: ov772x: support device tree probing
+  media: ov772x: handle nested s_power() calls
+  media: ov772x: reconstruct s_frame_interval()
+  media: ov772x: use v4l2_ctrl to get current control value
+  media: ov772x: avoid accessing registers under power saving mode
+  media: ov772x: make set_fmt() return -EBUSY while streaming
+  media: ov772x: create subdevice device node
+
+ .../devicetree/bindings/media/i2c/ov772x.txt       |  40 +++
+ MAINTAINERS                                        |   1 +
+ arch/sh/boards/mach-migor/setup.c                  |   7 +-
+ drivers/media/i2c/ov772x.c                         | 351 +++++++++++++++------
+ 4 files changed, 302 insertions(+), 97 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.txt
+
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>
 -- 
-2.17.0
-
+2.7.4
