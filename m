@@ -1,132 +1,188 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC 09/11] usb: gadget: udc: renesas_usb3: add support for a usb role switch
-Date: Wed, 18 Apr 2018 17:10:03 +0900
-Message-Id: <1524039005-30618-10-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com
-Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, p.zabel@pengutronix.de, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=z9yY=HS=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf0-f194.google.com ([209.85.192.194]:33814 "EHLO
+        mail-pf0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753989AbeD2RN4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Apr 2018 13:13:56 -0400
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v4 08/14] media: ov772x: support device tree probing
+Date: Mon, 30 Apr 2018 02:13:07 +0900
+Message-Id: <1525021993-17789-9-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
+References: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds support for a usb role switch driver. And then,
-this driver uses the usb role switch APIs instead of hardware
-access to initialize usb host side at specific timings.
+The ov772x driver currently only supports legacy platform data probe.
+This change enables device tree probing.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Note that the platform data probe can select auto or manual edge control
+mode, but the device tree probling can only select auto edge control mode
+for now.
+
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
- drivers/usb/gadget/udc/Kconfig        |  1 +
- drivers/usb/gadget/udc/renesas_usb3.c | 34 ++++++++++++++++++++++++++++------
- 2 files changed, 29 insertions(+), 6 deletions(-)
+* v4
+- No changes
 
-diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
-index 0875d38..7e4a5dd 100644
---- a/drivers/usb/gadget/udc/Kconfig
-+++ b/drivers/usb/gadget/udc/Kconfig
-@@ -193,6 +193,7 @@ config USB_RENESAS_USB3
- 	tristate 'Renesas USB3.0 Peripheral controller'
- 	depends on ARCH_RENESAS || COMPILE_TEST
- 	depends on EXTCON && HAS_DMA
-+	select USB_ROLE_SWITCH
- 	help
- 	   Renesas USB3.0 Peripheral controller is a USB peripheral controller
- 	   that supports super, high, and full speed USB 3.0 data transfers.
-diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
-index 409cde4..38dd759 100644
---- a/drivers/usb/gadget/udc/renesas_usb3.c
-+++ b/drivers/usb/gadget/udc/renesas_usb3.c
-@@ -23,6 +23,7 @@
- #include <linux/uaccess.h>
- #include <linux/usb/ch9.h>
- #include <linux/usb/gadget.h>
-+#include <linux/usb/role.h>
- 
- /* register definitions */
- #define USB3_AXI_INT_STA	0x008
-@@ -330,6 +331,7 @@ struct renesas_usb3 {
- 
- 	struct usb_gadget gadget;
- 	struct usb_gadget_driver *driver;
-+	struct usb_role_switch *role_sw;	/* Optional */
- 	struct extcon_dev *extcon;
- 	struct work_struct extcon_work;
- 	struct phy *phy;
-@@ -454,7 +456,11 @@ static void usb3_disable_pipe_irq(struct renesas_usb3 *usb3, int num)
- 
- static bool usb3_is_host(struct renesas_usb3 *usb3)
- {
--	return !(usb3_read(usb3, USB3_DRD_CON) & DRD_CON_PERI_CON);
-+	if (usb3->role_sw)
-+		return usb_role_switch_get_role(usb3->role_sw) ==
-+						USB_ROLE_HOST ? true : false;
-+	else
-+		return !(usb3_read(usb3, USB3_DRD_CON) & DRD_CON_PERI_CON);
+ drivers/media/i2c/ov772x.c | 64 ++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 45 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+index f939e28..621149a 100644
+--- a/drivers/media/i2c/ov772x.c
++++ b/drivers/media/i2c/ov772x.c
+@@ -749,13 +749,13 @@ static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
+ 	case V4L2_CID_VFLIP:
+ 		val = ctrl->val ? VFLIP_IMG : 0x00;
+ 		priv->flag_vflip = ctrl->val;
+-		if (priv->info->flags & OV772X_FLAG_VFLIP)
++		if (priv->info && (priv->info->flags & OV772X_FLAG_VFLIP))
+ 			val ^= VFLIP_IMG;
+ 		return ov772x_mask_set(client, COM3, VFLIP_IMG, val);
+ 	case V4L2_CID_HFLIP:
+ 		val = ctrl->val ? HFLIP_IMG : 0x00;
+ 		priv->flag_hflip = ctrl->val;
+-		if (priv->info->flags & OV772X_FLAG_HFLIP)
++		if (priv->info && (priv->info->flags & OV772X_FLAG_HFLIP))
+ 			val ^= HFLIP_IMG;
+ 		return ov772x_mask_set(client, COM3, HFLIP_IMG, val);
+ 	case V4L2_CID_BAND_STOP_FILTER:
+@@ -914,19 +914,14 @@ static void ov772x_select_params(const struct v4l2_mbus_framefmt *mf,
+ 	*win = ov772x_select_win(mf->width, mf->height);
  }
  
- static void usb3_init_axi_bridge(struct renesas_usb3 *usb3)
-@@ -645,10 +651,16 @@ static void usb3_check_vbus(struct renesas_usb3 *usb3)
- 
- static void usb3_set_mode(struct renesas_usb3 *usb3, bool host)
+-static int ov772x_set_params(struct ov772x_priv *priv,
+-			     const struct ov772x_color_format *cfmt,
+-			     const struct ov772x_win_size *win)
++static int ov772x_edgectrl(struct ov772x_priv *priv)
  {
--	if (host)
--		usb3_clear_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
--	else
--		usb3_set_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
-+	if (usb3->role_sw) {
-+		enum usb_role role = host ? USB_ROLE_HOST : USB_ROLE_DEVICE;
+ 	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
+-	struct v4l2_fract tpf;
+ 	int ret;
+-	u8  val;
+ 
+-	/* Reset hardware. */
+-	ov772x_reset(client);
++	if (!priv->info)
++		return 0;
+ 
+-	/* Edge Ctrl. */
+ 	if (priv->info->edgectrl.strength & OV772X_MANUAL_EDGE_CTRL) {
+ 		/*
+ 		 * Manual Edge Control Mode.
+@@ -937,19 +932,19 @@ static int ov772x_set_params(struct ov772x_priv *priv,
+ 
+ 		ret = ov772x_mask_set(client, DSPAUTO, EDGE_ACTRL, 0x00);
+ 		if (ret < 0)
+-			goto ov772x_set_fmt_error;
++			return ret;
+ 
+ 		ret = ov772x_mask_set(client,
+ 				      EDGE_TRSHLD, OV772X_EDGE_THRESHOLD_MASK,
+ 				      priv->info->edgectrl.threshold);
+ 		if (ret < 0)
+-			goto ov772x_set_fmt_error;
++			return ret;
+ 
+ 		ret = ov772x_mask_set(client,
+ 				      EDGE_STRNGT, OV772X_EDGE_STRENGTH_MASK,
+ 				      priv->info->edgectrl.strength);
+ 		if (ret < 0)
+-			goto ov772x_set_fmt_error;
++			return ret;
+ 
+ 	} else if (priv->info->edgectrl.upper > priv->info->edgectrl.lower) {
+ 		/*
+@@ -961,15 +956,35 @@ static int ov772x_set_params(struct ov772x_priv *priv,
+ 				      EDGE_UPPER, OV772X_EDGE_UPPER_MASK,
+ 				      priv->info->edgectrl.upper);
+ 		if (ret < 0)
+-			goto ov772x_set_fmt_error;
++			return ret;
+ 
+ 		ret = ov772x_mask_set(client,
+ 				      EDGE_LOWER, OV772X_EDGE_LOWER_MASK,
+ 				      priv->info->edgectrl.lower);
+ 		if (ret < 0)
+-			goto ov772x_set_fmt_error;
++			return ret;
+ 	}
+ 
++	return 0;
++}
 +
-+		usb_role_switch_set_role(usb3->role_sw, role);
-+	} else {
-+		if (host)
-+			usb3_clear_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
-+		else
-+			usb3_set_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
-+	}
- }
- 
- static void usb3_vbus_out(struct renesas_usb3 *usb3, bool enable)
-@@ -663,8 +675,8 @@ static void usb3_mode_config(struct renesas_usb3 *usb3, bool host, bool a_dev)
- {
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&usb3->lock, flags);
- 	usb3_set_mode(usb3, host);
-+	spin_lock_irqsave(&usb3->lock, flags);
- 	usb3_vbus_out(usb3, a_dev);
- 	/* for A-Peripheral or forced B-device mode */
- 	if ((!host && a_dev) ||
-@@ -2238,6 +2250,10 @@ static int renesas_usb3_start(struct usb_gadget *gadget,
- 	/* hook up the driver */
- 	usb3->driver = driver;
- 
-+	usb3->role_sw = usb_role_switch_get(usb3_to_dev(usb3));
-+	if (IS_ERR_OR_NULL(usb3->role_sw))
-+		usb3->role_sw = NULL;
++static int ov772x_set_params(struct ov772x_priv *priv,
++			     const struct ov772x_color_format *cfmt,
++			     const struct ov772x_win_size *win)
++{
++	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
++	struct v4l2_fract tpf;
++	int ret;
++	u8  val;
 +
- 	if (usb3->phy)
- 		phy_init(usb3->phy);
- 
-@@ -2260,6 +2276,8 @@ static int renesas_usb3_stop(struct usb_gadget *gadget)
- 	if (usb3->phy)
- 		phy_exit(usb3->phy);
- 
-+	usb_role_switch_put(usb3->role_sw);
++	/* Reset hardware. */
++	ov772x_reset(client);
 +
- 	pm_runtime_put(usb3_to_dev(usb3));
- 
- 	return 0;
-@@ -2632,6 +2650,10 @@ static int renesas_usb3_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto err_add_udc;
- 
-+	ret = devm_of_platform_populate(&pdev->dev);
++	/* Edge Ctrl. */
++	ret =  ov772x_edgectrl(priv);
 +	if (ret < 0)
-+		goto err_dev_create;
++		return ret;
 +
- 	ret = device_create_file(&pdev->dev, &dev_attr_role);
+ 	/* Format and window size. */
+ 	ret = ov772x_write(client, HSTART, win->rect.left >> 2);
  	if (ret < 0)
- 		goto err_dev_create;
+@@ -1020,9 +1035,9 @@ static int ov772x_set_params(struct ov772x_priv *priv,
+ 
+ 	/* Set COM3. */
+ 	val = cfmt->com3;
+-	if (priv->info->flags & OV772X_FLAG_VFLIP)
++	if (priv->info && (priv->info->flags & OV772X_FLAG_VFLIP))
+ 		val |= VFLIP_IMG;
+-	if (priv->info->flags & OV772X_FLAG_HFLIP)
++	if (priv->info && (priv->info->flags & OV772X_FLAG_HFLIP))
+ 		val |= HFLIP_IMG;
+ 	if (priv->flag_vflip)
+ 		val ^= VFLIP_IMG;
+@@ -1271,8 +1286,9 @@ static int ov772x_probe(struct i2c_client *client,
+ 	struct i2c_adapter	*adapter = client->adapter;
+ 	int			ret;
+ 
+-	if (!client->dev.platform_data) {
+-		dev_err(&client->dev, "Missing ov772x platform data\n");
++	if (!client->dev.of_node && !client->dev.platform_data) {
++		dev_err(&client->dev,
++			"Missing ov772x platform data for non-DT device\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -1370,9 +1386,19 @@ static const struct i2c_device_id ov772x_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, ov772x_id);
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id ov772x_of_match[] = {
++	{ .compatible = "ovti,ov7725", },
++	{ .compatible = "ovti,ov7720", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, ov772x_of_match);
++#endif
++
+ static struct i2c_driver ov772x_i2c_driver = {
+ 	.driver = {
+ 		.name = "ov772x",
++		.of_match_table = of_match_ptr(ov772x_of_match),
+ 	},
+ 	.probe    = ov772x_probe,
+ 	.remove   = ov772x_remove,
 -- 
-1.9.1
+2.7.4
+
