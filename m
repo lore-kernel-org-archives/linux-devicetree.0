@@ -1,78 +1,39 @@
-From: Paul Kocialkowski <contact@paulk.fr>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-cubox-i: Move card-detect GPIO to 1.5
- SOM devices only
-Date: Sun, 29 Apr 2018 17:37:32 +0200
-Message-ID: <b7aca3a0e1f90e5048c5ca81c42bf41b318b260b.camel@paulk.fr>
-References: <20180422142151.17910-1-contact@paulk.fr>
-         <20180422143911.GB16141@n2100.armlinux.org.uk>
-         <8012696a7bf0132dd2361a896bf0abfbe8a3084e.camel@paulk.fr>
-         <d167cc6987fdb7f04493c634873d430dcd216887.camel@paulk.fr>
-         <CABdtJHun8DWbr-bUgwQEK61UXMLh5pPkwvUTF+KxhHmJaXEr-A@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [RFT][PATCH] arm64: dts: exynos: Remove unneeded address space
+ mapping for soc node
+Date: Sun, 29 Apr 2018 19:26:41 +0200
+Message-ID: <20180429172641.d3hiwr5omrmmo5eh@kozik-lap>
+References: <CGME20180424173731epcas2p15cddb6a4ea379f6d1736a93961a9c913@epcas2p1.samsung.com>
+ <20180424173652.14735-1-krzk@kernel.org>
+ <4ebc237b-b29a-0169-8d1b-8726b33bbf9c@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-XSX1RzpL/GNuv6bJDJFk"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABdtJHun8DWbr-bUgwQEK61UXMLh5pPkwvUTF+KxhHmJaXEr-A@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <4ebc237b-b29a-0169-8d1b-8726b33bbf9c@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Nettleton <jon@solid-run.com>
-Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 25, 2018 at 07:52:45AM +0200, Marek Szyprowski wrote:
+> Hi Krzysztof,
+> 
+> On 2018-04-24 19:36, Krzysztof Kozlowski wrote:
+> > Remove the address space mapping between root and soc nodes to fix
+> > DTC warnings in Exynos5433 and Exynos7 like:
+> >
+> >      arch/arm64/boot/dts/exynos/exynos5433-tm2.dtb:
+> >          Warning (unit_address_vs_reg): /soc: node has a reg or ranges property, but no unit name
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> Works fine on Samsung Exynos5433-based TM2e board.
+> 
+> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
---=-XSX1RzpL/GNuv6bJDJFk
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thanks for testing! Applied.
 
-Hi,
 
-Le dimanche 29 avril 2018 =C3=A0 16:09 +0200, Jon Nettleton a =C3=A9crit :
-> You have either an initial early developer unit (pre-production) that
-> was assembled like this for testing, or a unit that someone
-> specifically ordered assembled this way.  You can see from the
-> schematic that this option does not have a CD-pin because it is meant
-> to be a more permanent storage option.
-
-It turns out that the card-detection mechanism was somewhat broken on my
-device (which does have a regular push slot). It would report card-
-detect only when the card was not fully inserted, and stop asserting
-card-detect when it was pushed fully.
-
-I used a fitting tweezer to move the mechanical parts around and got it
-to also detect the card when it is pushed all the way.
-
-So no change is necessary after all, it was just my device that needed
-fixing.
-
-Thanks for the helpful answers!
-
---=20
-Paul Kocialkowski,
-
-developer of free digital technology and hardware support.
-
-Website: https://www.paulk.fr/
-Coding blog: https://code.paulk.fr/
-Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
---=-XSX1RzpL/GNuv6bJDJFk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlrl5rwACgkQhP3B6o/u
-lQwAbw/7Bzj6Jh6/I1RzqllJIIA8adB4sSHO/zK3B22fF3nCjqH3Cgct4FkI0m5B
-Sy8sLagBySzdaCxbO8MS9LlqTGq5nJi2TG8N7WDEgHyBUKJZEH2syi7r9k5BURfZ
-oAi68v9sfHQGfvwf+1qGmYIdyhfhMo1MEJxAeJP2NKqy0t/Gg8L6rWo3WE6dwdeD
-7T/dagRIVFRTrvynfgER24nFDkQaiP5fYfyXqZ10m18obLVp+5VaXF/2lNnGcuJQ
-huld+EEU/lfU/N1gg1I2DIG2mkG7LMgGMNWZzQ8CXi9oqeXA+VhPwmM/2MAZDlVF
-uk/j9qfdIJbqGmACiBWL1jboeflGou451WLcLm/zCj7UpGfhUb1eXW23Mziqk7RR
-WhYfT/of83OSRroqiSLmt+tfF7D+EdTg1bQibNCCEib5NiO6WUn4d9Gxaq2rb/Bn
-aRvXRj1h4EiVv7FZC7FwPROPuVuK0B4JH+Aol8YOUk8HMbHBe65CHzihgV0851qJ
-B08yjBRuYICRmRDMn3w6OGsnGWLk85PKBd9x0SC3P77+M1GxaSy5faDXrW8ziWpL
-tSemOKUopQ0/qRwaVn4T2wRYLUKZBCRMbejMxKkEknDVPvqNprPwXwScZgj4vtD0
-CDBW6G1xKLpR/srEPo5BmfVsHE+24FLFu6/V2sfb4z0L3X5Q4/I=
-=1KCD
------END PGP SIGNATURE-----
-
---=-XSX1RzpL/GNuv6bJDJFk--
+Best regards,
+Krzysztof
