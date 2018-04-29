@@ -1,46 +1,93 @@
-Return-Path: <SRS0=lLp7=HL=gmail.com=brandon.maier@kernel.org>
-From: Brandon Maier <brandon.maier@gmail.com>
-Subject: [PATCH 1/2] dt-bindings: net: gmii2rgmii: Fix typos
-Date: Sat, 21 Apr 2018 23:01:31 -0500
-Message-Id: <20180422040132.1389-1-brandon.maier@gmail.com>
-To: robh+dt@kernel.org
-Cc: mark.rutland@arm.com, michal.simek@xilinx.com, devicetree@vger.kernel.org, Brandon Maier <brandon.maier@gmail.com>
+Return-Path: <SRS0=d2rx=HS=gmail.com=akinobu.mita@kernel.org>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v4 01/14] media: dt-bindings: ov772x: add device tree binding
+Date: Mon, 30 Apr 2018 02:13:00 +0900
+Message-Id: <1525021993-17789-2-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
+References: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The wording of 'provides the RGMII' is unclear, and should be 'is a
-converter' to be consistent with the rest of this Doc. Also fix up
-assorted spelling and capitalization typos.
+This adds a device tree binding documentation for OV7720/OV7725 sensor.
 
-Signed-off-by: Brandon Maier <brandon.maier@gmail.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
- Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+* v4
+- Add Reviewed-by: line
+- Omit clock-names property
 
-diff --git a/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt b/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
-index 038dda48b8e6..b2258ce5004d 100644
---- a/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
-+++ b/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
-@@ -2,15 +2,15 @@ XILINX GMIITORGMII Converter Driver Device Tree Bindings
- --------------------------------------------------------
+ .../devicetree/bindings/media/i2c/ov772x.txt       | 40 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.txt
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.txt b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+new file mode 100644
+index 0000000..0b3ede5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+@@ -0,0 +1,40 @@
++* Omnivision OV7720/OV7725 CMOS sensor
++
++The Omnivision OV7720/OV7725 sensor supports multiple resolutions output,
++such as VGA, QVGA, and any size scaling down from CIF to 40x30. It also can
++support the YUV422, RGB565/555/444, GRB422 or raw RGB output formats.
++
++Required Properties:
++- compatible: shall be one of
++	"ovti,ov7720"
++	"ovti,ov7725"
++- clocks: reference to the xclk input clock.
++
++Optional Properties:
++- reset-gpios: reference to the GPIO connected to the RSTB pin which is
++  active low, if any.
++- powerdown-gpios: reference to the GPIO connected to the PWDN pin which is
++  active high, if any.
++
++The device node shall contain one 'port' child node with one child 'endpoint'
++subnode for its digital output video port, in accordance with the video
++interface bindings defined in Documentation/devicetree/bindings/media/
++video-interfaces.txt.
++
++Example:
++
++&i2c0 {
++	ov772x: camera@21 {
++		compatible = "ovti,ov7725";
++		reg = <0x21>;
++		reset-gpios = <&axi_gpio_0 0 GPIO_ACTIVE_LOW>;
++		powerdown-gpios = <&axi_gpio_0 1 GPIO_ACTIVE_LOW>;
++		clocks = <&xclk>;
++
++		port {
++			ov772x_0: endpoint {
++				remote-endpoint = <&vcap1_in0>;
++			};
++		};
++	};
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index db2bc3f..f39d78b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10363,6 +10363,7 @@ T:	git git://linuxtv.org/media_tree.git
+ S:	Odd fixes
+ F:	drivers/media/i2c/ov772x.c
+ F:	include/media/i2c/ov772x.h
++F:	Documentation/devicetree/bindings/media/i2c/ov772x.txt
  
- The Gigabit Media Independent Interface (GMII) to Reduced Gigabit Media
--Independent Interface (RGMII) core provides the RGMII between RGMII-compliant
--Ethernet physical media devices (PHY) and the Gigabit Ethernet controller.
-+Independent Interface (RGMII) core is a converter between RGMII-compliant
-+Ethernet physical media devices (PHY) and GMII Ethernet controllers.
- This core can be used in all three modes of operation(10/100/1000 Mb/s).
- The Management Data Input/Output (MDIO) interface is used to configure the
--Speed of operation. This core can switch dynamically between the three
--Different speed modes by configuring the conveter register through mdio write.
-+speed of operation. This core can switch dynamically between the three
-+different speed modes by configuring the converter register through mdio writes.
- 
--This converter sits between the ethernet MAC and the external phy.
--MAC <==> GMII2RGMII <==> RGMII_PHY
-+This converter sits between the ethernet MAC and the external PHY.
-+GMII_MAC <==> GMII2RGMII <==> RGMII_PHY
- 
- For more details about mdio please refer phy.txt file in the same directory.
- 
+ OMNIVISION OV7740 SENSOR DRIVER
+ M:	Wenyou Yang <wenyou.yang@microchip.com>
 -- 
-2.11.0
+2.7.4
