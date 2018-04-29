@@ -1,74 +1,85 @@
-Return-Path: <SRS0=w2p0=HQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37996 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1759341AbeD0WCc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Apr 2018 18:02:32 -0400
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: [PATCH v3 5/6] arm64: dts: r8a77965-salvator-x: Enable DU external clocks and HDMI
-Date: Fri, 27 Apr 2018 23:02:19 +0100
-Message-Id: <20180427220220.31286-6-kieran.bingham+renesas@ideasonboard.com>
-In-Reply-To: <20180427220220.31286-1-kieran.bingham+renesas@ideasonboard.com>
-References: <20180427220220.31286-1-kieran.bingham+renesas@ideasonboard.com>
+Return-Path: <SRS0=z9yY=HS=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf0-f194.google.com ([209.85.192.194]:40733 "EHLO
+        mail-pf0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753963AbeD2RNr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Apr 2018 13:13:47 -0400
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v4 05/14] media: ov772x: add media controller support
+Date: Mon, 30 Apr 2018 02:13:04 +0900
+Message-Id: <1525021993-17789-6-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
+References: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The DU1 external dot clock is provided by the fixed frequency clock
-generator X21, while the DU0 and DU3 clocks are provided by the
-programmable Versaclock5 clock generator.
+Create a source pad and set the media controller type to the sensor.
 
-Enable the clocks, and the HDMI encoder for the M3-N Salvator-X board
-and hook it up to the HDMI connector.
-
-Based on patches from Takeshi Kihara <takeshi.kihara.df@renesas.com>
-
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
-v2:
- - Remove LVDS clocks from DU node
- - Merge DU Clocks and HDMI enablement
----
- .../boot/dts/renesas/r8a77965-salvator-x.dts  | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
+* v4
+- No changes
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
-index 75d890d91df9..340a3c72b65a 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
-@@ -19,3 +19,31 @@
- 		reg = <0x0 0x48000000 0x0 0x78000000>;
- 	};
+ drivers/media/i2c/ov772x.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+index 3fdbe64..bb5327f 100644
+--- a/drivers/media/i2c/ov772x.c
++++ b/drivers/media/i2c/ov772x.c
+@@ -424,6 +424,9 @@ struct ov772x_priv {
+ 	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
+ 	unsigned short                    band_filter;
+ 	unsigned int			  fps;
++#ifdef CONFIG_MEDIA_CONTROLLER
++	struct media_pad pad;
++#endif
  };
+ 
+ /*
+@@ -1316,16 +1319,26 @@ static int ov772x_probe(struct i2c_client *client,
+ 	if (ret < 0)
+ 		goto error_gpio_put;
+ 
++#ifdef CONFIG_MEDIA_CONTROLLER
++	priv->pad.flags = MEDIA_PAD_FL_SOURCE;
++	priv->subdev.entity.function = MEDIA_ENT_F_CAM_SENSOR;
++	ret = media_entity_pads_init(&priv->subdev.entity, 1, &priv->pad);
++	if (ret < 0)
++		goto error_gpio_put;
++#endif
 +
-+&du {
-+	clocks = <&cpg CPG_MOD 724>,
-+		 <&cpg CPG_MOD 723>,
-+		 <&cpg CPG_MOD 721>,
-+		 <&versaclock5 1>,
-+		 <&x21_clk>,
-+		 <&versaclock5 2>;
-+	clock-names = "du.0", "du.1", "du.3",
-+		      "dclkin.0", "dclkin.1", "dclkin.3";
-+};
-+
-+&hdmi0 {
-+	status = "okay";
-+
-+	ports {
-+		port@1 {
-+			reg = <1>;
-+			rcar_dw_hdmi0_out: endpoint {
-+				remote-endpoint = <&hdmi0_con>;
-+			};
-+		};
-+	};
-+};
-+
-+&hdmi0_con {
-+	remote-endpoint = <&rcar_dw_hdmi0_out>;
-+};
+ 	priv->cfmt = &ov772x_cfmts[0];
+ 	priv->win = &ov772x_win_sizes[0];
+ 	priv->fps = 15;
+ 
+ 	ret = v4l2_async_register_subdev(&priv->subdev);
+ 	if (ret)
+-		goto error_gpio_put;
++		goto error_entity_cleanup;
+ 
+ 	return 0;
+ 
++error_entity_cleanup:
++	media_entity_cleanup(&priv->subdev.entity);
+ error_gpio_put:
+ 	if (priv->pwdn_gpio)
+ 		gpiod_put(priv->pwdn_gpio);
+@@ -1341,6 +1354,7 @@ static int ov772x_remove(struct i2c_client *client)
+ {
+ 	struct ov772x_priv *priv = to_ov772x(i2c_get_clientdata(client));
+ 
++	media_entity_cleanup(&priv->subdev.entity);
+ 	clk_put(priv->clk);
+ 	if (priv->pwdn_gpio)
+ 		gpiod_put(priv->pwdn_gpio);
 -- 
-2.17.0
+2.7.4
 
