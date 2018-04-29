@@ -1,84 +1,121 @@
-Return-Path: <SRS0=hkU0=HL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pg0-f67.google.com ([74.125.83.67]:37936 "EHLO
+Return-Path: <SRS0=z9yY=HS=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pg0-f67.google.com ([74.125.83.67]:41733 "EHLO
         mail-pg0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754289AbeDVP4o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Apr 2018 11:56:44 -0400
+        with ESMTP id S1754033AbeD2RN7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Apr 2018 13:13:59 -0400
 From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v3 02/11] media: ov772x: allow i2c controllers without I2C_FUNC_PROTOCOL_MANGLING
-Date: Mon, 23 Apr 2018 00:56:08 +0900
-Message-Id: <1524412577-14419-3-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
-References: <1524412577-14419-1-git-send-email-akinobu.mita@gmail.com>
+Subject: [PATCH v4 09/14] media: ov772x: handle nested s_power() calls
+Date: Mon, 30 Apr 2018 02:13:08 +0900
+Message-Id: <1525021993-17789-10-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
+References: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
 Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The ov772x driver only works when the i2c controller have
-I2C_FUNC_PROTOCOL_MANGLING.  However, many i2c controller drivers don't
-support it.
+Depending on the v4l2 driver, calling s_power() could be nested.  So the
+actual transitions between power saving mode and normal operation mode
+should only happen at the first power on and the last power off.
 
-The reason that the ov772x requires I2C_FUNC_PROTOCOL_MANGLING is that
-it doesn't support repeated starts.
-
-This changes the reading ov772x register method so that it doesn't
-require I2C_FUNC_PROTOCOL_MANGLING by calling two separated i2c messages.
+This adds an s_power() nesting counter and updates the power state if the
+counter is modified from 0 to != 0 or from != 0 to 0.
 
 Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: Hans Verkuil <hans.verkuil@cisco.com>
 Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
 Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
 Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
-* v3
-- Remove I2C_CLIENT_SCCB flag set as it isn't needed anymore
+* v4
+- Add Reviewed-by: line
 
- drivers/media/i2c/ov772x.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ drivers/media/i2c/ov772x.c | 34 ++++++++++++++++++++++++++++++----
+ 1 file changed, 30 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index b62860c..2ae730f 100644
+index 621149a..edc013d 100644
 --- a/drivers/media/i2c/ov772x.c
 +++ b/drivers/media/i2c/ov772x.c
-@@ -542,9 +542,19 @@ static struct ov772x_priv *to_ov772x(struct v4l2_subdev *sd)
- 	return container_of(sd, struct ov772x_priv, subdev);
- }
- 
--static inline int ov772x_read(struct i2c_client *client, u8 addr)
-+static int ov772x_read(struct i2c_client *client, u8 addr)
+@@ -424,6 +424,9 @@ struct ov772x_priv {
+ 	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
+ 	unsigned short                    band_filter;
+ 	unsigned int			  fps;
++	/* lock to protect power_count */
++	struct mutex			  lock;
++	int				  power_count;
+ #ifdef CONFIG_MEDIA_CONTROLLER
+ 	struct media_pad pad;
+ #endif
+@@ -871,9 +874,26 @@ static int ov772x_power_off(struct ov772x_priv *priv)
+ static int ov772x_s_power(struct v4l2_subdev *sd, int on)
  {
--	return i2c_smbus_read_byte_data(client, addr);
-+	int ret;
-+	u8 val;
+ 	struct ov772x_priv *priv = to_ov772x(sd);
++	int ret = 0;
 +
-+	ret = i2c_master_send(client, &addr, 1);
-+	if (ret < 0)
-+		return ret;
-+	ret = i2c_master_recv(client, &val, 1);
-+	if (ret < 0)
-+		return ret;
++	mutex_lock(&priv->lock);
 +
-+	return val;
++	/* If the power count is modified from 0 to != 0 or from != 0 to 0,
++	 * update the power state.
++	 */
++	if (priv->power_count == !on)
++		ret = on ? ov772x_power_on(priv) : ov772x_power_off(priv);
++
++	if (!ret) {
++		/* Update the power count. */
++		priv->power_count += on ? 1 : -1;
++		WARN(priv->power_count < 0, "Unbalanced power count\n");
++		WARN(priv->power_count > 1, "Duplicated s_power call\n");
++	}
++
++	mutex_unlock(&priv->lock);
+ 
+-	return on ? ov772x_power_on(priv) :
+-		    ov772x_power_off(priv);
++	return ret;
  }
  
- static inline int ov772x_write(struct i2c_client *client, u8 addr, u8 value)
-@@ -1255,13 +1265,11 @@ static int ov772x_probe(struct i2c_client *client,
- 		return -EINVAL;
- 	}
+ static const struct ov772x_win_size *ov772x_select_win(u32 width, u32 height)
+@@ -1303,6 +1323,7 @@ static int ov772x_probe(struct i2c_client *client,
+ 		return -ENOMEM;
  
--	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA |
--					      I2C_FUNC_PROTOCOL_MANGLING)) {
-+	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
- 		dev_err(&adapter->dev,
--			"I2C-Adapter doesn't support SMBUS_BYTE_DATA or PROTOCOL_MANGLING\n");
-+			"I2C-Adapter doesn't support SMBUS_BYTE_DATA\n");
- 		return -EIO;
- 	}
--	client->flags |= I2C_CLIENT_SCCB;
+ 	priv->info = client->dev.platform_data;
++	mutex_init(&priv->lock);
  
- 	priv = devm_kzalloc(&client->dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
+ 	v4l2_i2c_subdev_init(&priv->subdev, client, &ov772x_subdev_ops);
+ 	v4l2_ctrl_handler_init(&priv->hdl, 3);
+@@ -1313,8 +1334,10 @@ static int ov772x_probe(struct i2c_client *client,
+ 	v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
+ 			  V4L2_CID_BAND_STOP_FILTER, 0, 256, 1, 0);
+ 	priv->subdev.ctrl_handler = &priv->hdl;
+-	if (priv->hdl.error)
+-		return priv->hdl.error;
++	if (priv->hdl.error) {
++		ret = priv->hdl.error;
++		goto error_mutex_destroy;
++	}
+ 
+ 	priv->clk = clk_get(&client->dev, NULL);
+ 	if (IS_ERR(priv->clk)) {
+@@ -1362,6 +1385,8 @@ static int ov772x_probe(struct i2c_client *client,
+ 	clk_put(priv->clk);
+ error_ctrl_free:
+ 	v4l2_ctrl_handler_free(&priv->hdl);
++error_mutex_destroy:
++	mutex_destroy(&priv->lock);
+ 
+ 	return ret;
+ }
+@@ -1376,6 +1401,7 @@ static int ov772x_remove(struct i2c_client *client)
+ 		gpiod_put(priv->pwdn_gpio);
+ 	v4l2_async_unregister_subdev(&priv->subdev);
+ 	v4l2_ctrl_handler_free(&priv->hdl);
++	mutex_destroy(&priv->lock);
+ 
+ 	return 0;
+ }
 -- 
 2.7.4
 
