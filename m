@@ -1,231 +1,369 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v9_00=2F27=5D_ARM=3A_davinci=3A_convert_to_common?=
-        =?UTF-8?Q?_clock_framework=E2=80=8B?=
-Date: Mon, 30 Apr 2018 22:35:18 +0200
-Message-ID: <CAMpxmJVYfJ34CzMjYwiJjHGDVypDDMSD6AsZHUdmG-rMBdNWgQ@mail.gmail.com>
-References: <20180427001745.4116-1-david@lechnology.com>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/6] iommu: of: make of_pci_map_rid() available for
+	other devices too
+Date: Mon, 30 Apr 2018 15:56:49 -0500
+Message-ID: <20180430205649.GD95643@bhelgaas-glaptop.roam.corp.google.com>
+References: <1524824826-29473-1-git-send-email-nipun.gupta@nxp.com>
+	<1525069641-8523-1-git-send-email-nipun.gupta@nxp.com>
+	<1525069641-8523-3-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427001745.4116-1-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, David Lechner <david@lechnology.com>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1525069641-8523-3-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2018-04-27 2:17 GMT+02:00 David Lechner <david@lechnology.com>:
-> This series converts mach-davinci to use the common clock framework.
->
-> The series works like this, the first 3 patches fix some issues with the clock
-> drivers that have already been accepted into the mainline kernel.
->
-> Then, starting with "ARM: davinci: pass clock as parameter to
-> davinci_timer_init()", we get the mach code ready for the switch by adding the
-> code needed for the new clock drivers and adding #ifndef CONFIG_COMMON_CLK
-> around the legacy clocks so that we can switch easily between the old and the
-> new.
->
-> "ARM: davinci: switch to common clock framework" actually flips the switch
-> to start using the new clock drivers. Then the next 8 patches remove all
-> of the old clock code.
->
-> The final four patches add device tree clock support to the one SoC that
-> supports it.
->
-> This series has been tested on TI OMAP-L138 LCDK (both device tree and legacy
-> board file).
->
->
-> Changes:
->
-> v9 changes (also see individual patches for details):
-> - Rebased on linux-davnci/master (f5e3203bb775)
-> - Dropped drivers/clk patches that landed in v4.17
-> - New drivers/clk patches for early boot special case
-> - New patch for ti,davinci-timer device tree bindings
-> - Updated mach/davinci patches to register clocks in early boot when needed
->
-> v8 changes (also see individual patches for details):
-> - Rebased on linux-davinci/master
-> - Dropped use of __init and __initconst attributes in clk drivers
-> - Add clkdev lookups for PLL SYSCLKs
-> - Fix genpd clock reference counting issue
-> - Fix PSC clock driver loading order issue
-> - Fix typo in device tree and add more power-domains properties
->
-> v7 changes (also see individual patches for details):
-> - Rebased on linux-davinci/master (v4.16-rc)
-> - Convert clock drivers to platform devices
-> - New patch "ARM: davinci: pass clock as parameter to davinci_timer_init()"
-> - Fix issues with lcdk and aemif clock lookups and power domains
-> - Fixed other minor issues brought up in v6 review
->
-> v6 changes (also see individual patches for details):
-> - All of the device tree bindings are changed
-> - All of the clock drivers are changed significantly
-> - Fixed issues brought up during review of v5
-> - "ARM: davinci: move davinci_clk_init() to init_time" is removed from this
->   series and submitted separately
->
-> v5 changes:
-> - Basically, this is an entirely new series
-> - Patches are broken up into bite-sized pieces
-> - Converted PSC clock driver to use regmap
-> - Restored "force" flag for certain DA850 clocks
-> - Added device tree bindings
-> - Moved more of the clock init to drivers/clk
-> - Fixed frequency scaling (maybe*)
->
-> * I have frequency scaling using cpufreq-dt, so I know the clocks are doing
->   what they need to do to make this work, but I haven't figured out how to
->   test davinci-cpufreq driver yet. (Patches to make cpufreq-dt work will be
->   sent separately after this series has landed.)
->
->
-> Dependencies:
->
-> Only one dependency didn't land in v4.17. It is just a runtime dependency for
-> the LCDK board to make the display work.
->
-> - "drm/tilcdc: Fix setting clock divider for omap-l138"[1]
->
-> [1]: https://patchwork.freedesktop.org/patch/210696/
->
-> You can find a working branch with everything included (plus a few extras, like
-> cpufreq-dt) in the "common-clk-v8" branch of https://github.com/dlech/ev3dev-kernel.git.
->
->
-> Testing/debugging for the uninitiated:
->
-> I only have one device to test with, which is based on da850, so I will
-> have to rely on others to do some testing here. Since we are dealing with
-> clocks, if something isn't working, you most likely won't see output on
-> the serial port. To figure out what is going on, you need to enable...
->
->         CONFIG_DEBUG_LL=y
->         CONFIG_EARLY_PRINTK=y
->
-> and add "earlyprintk clk_ignore_unused" to the kernel command line options.
-> You may need to select a different UART for this depending on your board. I
-> think UART1 is the default in the kernel configuration.
->
-> On da850 devices comment out the lines:
->
->         else
->                 clk_set_parent(clk, parent->clk);
->
-> in da850.c or, if using device tree, comment out the lines:
->
->         assigned-clocks = <&async3_clk>;
->         assigned-clock-parents = <&pll1_sysclk 2>;
->
-> in da850.dtsi when doing earlyprintk, otherwise the UART1 and UART2 clock
-> source will change during boot and cause garbled output after a point.
->
->
-> David Lechner (27):
->   clk: davinci: pll: allow dev == NULL
->   clk: davinci: da850-pll: change PLL0 to CLK_OF_DECLARE
->   clk: davinci: psc: allow for dev == NULL
->   ARM: davinci: pass clock as parameter to davinci_timer_init()
->   ARM: davinci: da830: add new clock init using common clock framework
->   ARM: davinci: da850: add new clock init using common clock framework
->   ARM: davinci: dm355: add new clock init using common clock framework
->   ARM: davinci: dm365: add new clock init using common clock framework
->   ARM: davinci: dm644x: add new clock init using common clock framework
->   ARM: davinci: dm646x: add new clock init using common clock framework
->   ARM: davinci: da8xx: add new USB PHY clock init using common clock
->     framework
->   ARM: davinci: da8xx: add new sata_refclk init using common clock
->     framework
->   ARM: davinci: remove CONFIG_DAVINCI_RESET_CLOCKS
->   ARM: davinci_all_defconfig: remove CONFIG_DAVINCI_RESET_CLOCKS
->   ARM: davinci: switch to common clock framework
->   ARM: davinci: da830: Remove legacy clock init
->   ARM: davinci: da850: Remove legacy clock init
->   ARM: davinci: dm355: Remove legacy clock init
->   ARM: davinci: dm365: Remove legacy clock init
->   ARM: davinci: dm644x: Remove legacy clock init
->   ARM: davinci: dm646x: Remove legacy clock init
->   ARM: davinci: da8xx: Remove legacy USB and SATA clock init
->   ARM: davinci: remove legacy clocks
->   dt-bindings: timer: new bindings for TI DaVinci timer
->   ARM: davinci: add device tree support to timer
->   ARM: davinci: da8xx-dt: switch to device tree clocks
->   ARM: dts: da850: Add clocks
->
->  .../bindings/timer/ti,davinci-timer.txt       |  24 +
->  arch/arm/Kconfig                              |   5 +-
->  arch/arm/boot/dts/da850-enbw-cmc.dts          |   4 +
->  arch/arm/boot/dts/da850-evm.dts               |   4 +
->  arch/arm/boot/dts/da850-lcdk.dts              |   9 +
->  arch/arm/boot/dts/da850-lego-ev3.dts          |   4 +
->  arch/arm/boot/dts/da850.dtsi                  | 166 ++++
->  arch/arm/configs/davinci_all_defconfig        |   1 -
->  arch/arm/mach-davinci/Kconfig                 |  13 +-
->  arch/arm/mach-davinci/Makefile                |   4 +-
->  arch/arm/mach-davinci/board-da830-evm.c       |  12 +-
->  arch/arm/mach-davinci/board-da850-evm.c       |   2 +
->  arch/arm/mach-davinci/board-dm355-evm.c       |   2 +
->  arch/arm/mach-davinci/board-dm355-leopard.c   |   2 +
->  arch/arm/mach-davinci/board-dm365-evm.c       |   2 +
->  arch/arm/mach-davinci/board-dm644x-evm.c      |   2 +
->  arch/arm/mach-davinci/board-dm646x-evm.c      |   2 +
->  arch/arm/mach-davinci/board-mityomapl138.c    |   2 +
->  arch/arm/mach-davinci/board-neuros-osd2.c     |   2 +
->  arch/arm/mach-davinci/board-omapl138-hawk.c   |  11 +-
->  arch/arm/mach-davinci/board-sffsdr.c          |   2 +
->  arch/arm/mach-davinci/clock.c                 | 745 -----------------
->  arch/arm/mach-davinci/clock.h                 |  76 --
->  arch/arm/mach-davinci/common.c                |   3 -
->  arch/arm/mach-davinci/da830.c                 | 462 ++---------
->  arch/arm/mach-davinci/da850.c                 | 778 +++---------------
->  arch/arm/mach-davinci/da8xx-dt.c              |  60 --
->  arch/arm/mach-davinci/davinci.h               |   8 +
->  arch/arm/mach-davinci/devices-da8xx.c         |  43 +-
->  arch/arm/mach-davinci/devices.c               |   1 -
->  arch/arm/mach-davinci/dm355.c                 | 406 ++-------
->  arch/arm/mach-davinci/dm365.c                 | 485 +----------
->  arch/arm/mach-davinci/dm644x.c                | 344 +-------
->  arch/arm/mach-davinci/dm646x.c                | 372 +--------
->  arch/arm/mach-davinci/include/mach/clock.h    |   3 -
->  arch/arm/mach-davinci/include/mach/common.h   |  11 +-
->  arch/arm/mach-davinci/include/mach/da8xx.h    |   6 +-
->  arch/arm/mach-davinci/pm_domain.c             |   5 +
->  arch/arm/mach-davinci/psc.c                   | 137 ---
->  arch/arm/mach-davinci/psc.h                   |  12 -
->  arch/arm/mach-davinci/time.c                  |  39 +-
->  arch/arm/mach-davinci/usb-da8xx.c             | 242 +-----
->  drivers/clk/davinci/pll-da830.c               |   4 +-
->  drivers/clk/davinci/pll-da850.c               |  41 +-
->  drivers/clk/davinci/pll-dm355.c               |   8 +-
->  drivers/clk/davinci/pll-dm365.c               |   8 +-
->  drivers/clk/davinci/pll-dm644x.c              |   8 +-
->  drivers/clk/davinci/pll-dm646x.c              |   8 +-
->  drivers/clk/davinci/pll.c                     | 134 +--
->  drivers/clk/davinci/pll.h                     |  35 +-
->  drivers/clk/davinci/psc-dm355.c               |   2 +-
->  drivers/clk/davinci/psc-dm365.c               |   2 +-
->  drivers/clk/davinci/psc-dm644x.c              |   2 +-
->  drivers/clk/davinci/psc-dm646x.c              |   2 +-
->  drivers/clk/davinci/psc.c                     |  70 +-
->  include/linux/clk/davinci.h                   |  29 +
->  56 files changed, 924 insertions(+), 3942 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/timer/ti,davinci-timer.txt
->  delete mode 100644 arch/arm/mach-davinci/clock.c
->  delete mode 100644 arch/arm/mach-davinci/psc.c
->  create mode 100644 include/linux/clk/davinci.h
->
-> --
-> 2.17.0
->
+On Mon, Apr 30, 2018 at 11:57:17AM +0530, Nipun Gupta wrote:
+> iommu-map property is also used by devices with fsl-mc. This
+> patch moves the of_pci_map_rid to generic location, so that it
+> can be used by other busses too.
+> 
+> 'of_pci_map_rid' is renamed here to 'of_map_rid' and there is no
+> functional change done in the API.
+> 
+> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
 
-Hi Arnd,
+Acked-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 
-I know you're on vacation, but I thought I'd Cc you on this thread to
-show you what kind of workarounds we need without unifying the early
-probing mechanisms. This is a very good example of the problem we're
-trying to solve.
-
-Best regards,
-Bartosz Golaszewski
+> ---
+>  drivers/iommu/of_iommu.c |   5 +--
+>  drivers/of/base.c        | 102 +++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/of/irq.c         |   5 +--
+>  drivers/pci/of.c         | 101 ----------------------------------------------
+>  include/linux/of.h       |  11 +++++
+>  include/linux/of_pci.h   |  10 -----
+>  6 files changed, 117 insertions(+), 117 deletions(-)
+> 
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index 5c36a8b..811e160 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -149,9 +149,8 @@ static int of_pci_iommu_init(struct pci_dev *pdev, u16 alias, void *data)
+>  	struct of_phandle_args iommu_spec = { .args_count = 1 };
+>  	int err;
+>  
+> -	err = of_pci_map_rid(info->np, alias, "iommu-map",
+> -			     "iommu-map-mask", &iommu_spec.np,
+> -			     iommu_spec.args);
+> +	err = of_map_rid(info->np, alias, "iommu-map", "iommu-map-mask",
+> +			 &iommu_spec.np, iommu_spec.args);
+>  	if (err)
+>  		return err == -ENODEV ? NO_IOMMU : err;
+>  
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 848f549..c7aac81 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1995,3 +1995,105 @@ int of_find_last_cache_level(unsigned int cpu)
+>  
+>  	return cache_level;
+>  }
+> +
+> +/**
+> + * of_map_rid - Translate a requester ID through a downstream mapping.
+> + * @np: root complex device node.
+> + * @rid: device requester ID to map.
+> + * @map_name: property name of the map to use.
+> + * @map_mask_name: optional property name of the mask to use.
+> + * @target: optional pointer to a target device node.
+> + * @id_out: optional pointer to receive the translated ID.
+> + *
+> + * Given a device requester ID, look up the appropriate implementation-defined
+> + * platform ID and/or the target device which receives transactions on that
+> + * ID, as per the "iommu-map" and "msi-map" bindings. Either of @target or
+> + * @id_out may be NULL if only the other is required. If @target points to
+> + * a non-NULL device node pointer, only entries targeting that node will be
+> + * matched; if it points to a NULL value, it will receive the device node of
+> + * the first matching target phandle, with a reference held.
+> + *
+> + * Return: 0 on success or a standard error code on failure.
+> + */
+> +int of_map_rid(struct device_node *np, u32 rid,
+> +	       const char *map_name, const char *map_mask_name,
+> +	       struct device_node **target, u32 *id_out)
+> +{
+> +	u32 map_mask, masked_rid;
+> +	int map_len;
+> +	const __be32 *map = NULL;
+> +
+> +	if (!np || !map_name || (!target && !id_out))
+> +		return -EINVAL;
+> +
+> +	map = of_get_property(np, map_name, &map_len);
+> +	if (!map) {
+> +		if (target)
+> +			return -ENODEV;
+> +		/* Otherwise, no map implies no translation */
+> +		*id_out = rid;
+> +		return 0;
+> +	}
+> +
+> +	if (!map_len || map_len % (4 * sizeof(*map))) {
+> +		pr_err("%pOF: Error: Bad %s length: %d\n", np,
+> +			map_name, map_len);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* The default is to select all bits. */
+> +	map_mask = 0xffffffff;
+> +
+> +	/*
+> +	 * Can be overridden by "{iommu,msi}-map-mask" property.
+> +	 * If of_property_read_u32() fails, the default is used.
+> +	 */
+> +	if (map_mask_name)
+> +		of_property_read_u32(np, map_mask_name, &map_mask);
+> +
+> +	masked_rid = map_mask & rid;
+> +	for ( ; map_len > 0; map_len -= 4 * sizeof(*map), map += 4) {
+> +		struct device_node *phandle_node;
+> +		u32 rid_base = be32_to_cpup(map + 0);
+> +		u32 phandle = be32_to_cpup(map + 1);
+> +		u32 out_base = be32_to_cpup(map + 2);
+> +		u32 rid_len = be32_to_cpup(map + 3);
+> +
+> +		if (rid_base & ~map_mask) {
+> +			pr_err("%pOF: Invalid %s translation - %s-mask (0x%x) ignores rid-base (0x%x)\n",
+> +				np, map_name, map_name,
+> +				map_mask, rid_base);
+> +			return -EFAULT;
+> +		}
+> +
+> +		if (masked_rid < rid_base || masked_rid >= rid_base + rid_len)
+> +			continue;
+> +
+> +		phandle_node = of_find_node_by_phandle(phandle);
+> +		if (!phandle_node)
+> +			return -ENODEV;
+> +
+> +		if (target) {
+> +			if (*target)
+> +				of_node_put(phandle_node);
+> +			else
+> +				*target = phandle_node;
+> +
+> +			if (*target != phandle_node)
+> +				continue;
+> +		}
+> +
+> +		if (id_out)
+> +			*id_out = masked_rid - rid_base + out_base;
+> +
+> +		pr_debug("%pOF: %s, using mask %08x, rid-base: %08x, out-base: %08x, length: %08x, rid: %08x -> %08x\n",
+> +			np, map_name, map_mask, rid_base, out_base,
+> +			rid_len, rid, masked_rid - rid_base + out_base);
+> +		return 0;
+> +	}
+> +
+> +	pr_err("%pOF: Invalid %s translation - no match for rid 0x%x on %pOF\n",
+> +		np, map_name, rid, target && *target ? *target : NULL);
+> +	return -EFAULT;
+> +}
+> +EXPORT_SYMBOL_GPL(of_map_rid);
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index 02ad93a..e1f6f39 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -22,7 +22,6 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_irq.h>
+> -#include <linux/of_pci.h>
+>  #include <linux/string.h>
+>  #include <linux/slab.h>
+>  
+> @@ -588,8 +587,8 @@ static u32 __of_msi_map_rid(struct device *dev, struct device_node **np,
+>  	 * "msi-map" property.
+>  	 */
+>  	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent)
+> -		if (!of_pci_map_rid(parent_dev->of_node, rid_in, "msi-map",
+> -				    "msi-map-mask", np, &rid_out))
+> +		if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
+> +				"msi-map-mask", np, &rid_out))
+>  			break;
+>  	return rid_out;
+>  }
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index a28355c..d2cebbe 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -362,107 +362,6 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+>  EXPORT_SYMBOL_GPL(of_pci_get_host_bridge_resources);
+>  #endif /* CONFIG_OF_ADDRESS */
+>  
+> -/**
+> - * of_pci_map_rid - Translate a requester ID through a downstream mapping.
+> - * @np: root complex device node.
+> - * @rid: PCI requester ID to map.
+> - * @map_name: property name of the map to use.
+> - * @map_mask_name: optional property name of the mask to use.
+> - * @target: optional pointer to a target device node.
+> - * @id_out: optional pointer to receive the translated ID.
+> - *
+> - * Given a PCI requester ID, look up the appropriate implementation-defined
+> - * platform ID and/or the target device which receives transactions on that
+> - * ID, as per the "iommu-map" and "msi-map" bindings. Either of @target or
+> - * @id_out may be NULL if only the other is required. If @target points to
+> - * a non-NULL device node pointer, only entries targeting that node will be
+> - * matched; if it points to a NULL value, it will receive the device node of
+> - * the first matching target phandle, with a reference held.
+> - *
+> - * Return: 0 on success or a standard error code on failure.
+> - */
+> -int of_pci_map_rid(struct device_node *np, u32 rid,
+> -		   const char *map_name, const char *map_mask_name,
+> -		   struct device_node **target, u32 *id_out)
+> -{
+> -	u32 map_mask, masked_rid;
+> -	int map_len;
+> -	const __be32 *map = NULL;
+> -
+> -	if (!np || !map_name || (!target && !id_out))
+> -		return -EINVAL;
+> -
+> -	map = of_get_property(np, map_name, &map_len);
+> -	if (!map) {
+> -		if (target)
+> -			return -ENODEV;
+> -		/* Otherwise, no map implies no translation */
+> -		*id_out = rid;
+> -		return 0;
+> -	}
+> -
+> -	if (!map_len || map_len % (4 * sizeof(*map))) {
+> -		pr_err("%pOF: Error: Bad %s length: %d\n", np,
+> -			map_name, map_len);
+> -		return -EINVAL;
+> -	}
+> -
+> -	/* The default is to select all bits. */
+> -	map_mask = 0xffffffff;
+> -
+> -	/*
+> -	 * Can be overridden by "{iommu,msi}-map-mask" property.
+> -	 * If of_property_read_u32() fails, the default is used.
+> -	 */
+> -	if (map_mask_name)
+> -		of_property_read_u32(np, map_mask_name, &map_mask);
+> -
+> -	masked_rid = map_mask & rid;
+> -	for ( ; map_len > 0; map_len -= 4 * sizeof(*map), map += 4) {
+> -		struct device_node *phandle_node;
+> -		u32 rid_base = be32_to_cpup(map + 0);
+> -		u32 phandle = be32_to_cpup(map + 1);
+> -		u32 out_base = be32_to_cpup(map + 2);
+> -		u32 rid_len = be32_to_cpup(map + 3);
+> -
+> -		if (rid_base & ~map_mask) {
+> -			pr_err("%pOF: Invalid %s translation - %s-mask (0x%x) ignores rid-base (0x%x)\n",
+> -				np, map_name, map_name,
+> -				map_mask, rid_base);
+> -			return -EFAULT;
+> -		}
+> -
+> -		if (masked_rid < rid_base || masked_rid >= rid_base + rid_len)
+> -			continue;
+> -
+> -		phandle_node = of_find_node_by_phandle(phandle);
+> -		if (!phandle_node)
+> -			return -ENODEV;
+> -
+> -		if (target) {
+> -			if (*target)
+> -				of_node_put(phandle_node);
+> -			else
+> -				*target = phandle_node;
+> -
+> -			if (*target != phandle_node)
+> -				continue;
+> -		}
+> -
+> -		if (id_out)
+> -			*id_out = masked_rid - rid_base + out_base;
+> -
+> -		pr_debug("%pOF: %s, using mask %08x, rid-base: %08x, out-base: %08x, length: %08x, rid: %08x -> %08x\n",
+> -			np, map_name, map_mask, rid_base, out_base,
+> -			rid_len, rid, masked_rid - rid_base + out_base);
+> -		return 0;
+> -	}
+> -
+> -	pr_err("%pOF: Invalid %s translation - no match for rid 0x%x on %pOF\n",
+> -		np, map_name, rid, target && *target ? *target : NULL);
+> -	return -EFAULT;
+> -}
+> -
+>  #if IS_ENABLED(CONFIG_OF_IRQ)
+>  /**
+>   * of_irq_parse_pci - Resolve the interrupt for a PCI device
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 4d25e4f..f4251c3 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -545,6 +545,10 @@ const __be32 *of_prop_next_u32(struct property *prop, const __be32 *cur,
+>  
+>  extern int of_cpu_node_to_id(struct device_node *np);
+>  
+> +int of_map_rid(struct device_node *np, u32 rid,
+> +	       const char *map_name, const char *map_mask_name,
+> +	       struct device_node **target, u32 *id_out);
+> +
+>  #else /* CONFIG_OF */
+>  
+>  static inline void of_core_init(void)
+> @@ -931,6 +935,13 @@ static inline int of_cpu_node_to_id(struct device_node *np)
+>  	return -ENODEV;
+>  }
+>  
+> +static inline int of_map_rid(struct device_node *np, u32 rid,
+> +			     const char *map_name, const char *map_mask_name,
+> +			     struct device_node **target, u32 *id_out)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+>  #define of_match_ptr(_ptr)	NULL
+>  #define of_match_node(_matches, _node)	NULL
+>  #endif /* CONFIG_OF */
+> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+> index 091033a..a23b44a 100644
+> --- a/include/linux/of_pci.h
+> +++ b/include/linux/of_pci.h
+> @@ -17,9 +17,6 @@ struct device_node *of_pci_find_child_device(struct device_node *parent,
+>  int of_get_pci_domain_nr(struct device_node *node);
+>  int of_pci_get_max_link_speed(struct device_node *node);
+>  void of_pci_check_probe_only(void);
+> -int of_pci_map_rid(struct device_node *np, u32 rid,
+> -		   const char *map_name, const char *map_mask_name,
+> -		   struct device_node **target, u32 *id_out);
+>  #else
+>  static inline struct device_node *of_pci_find_child_device(struct device_node *parent,
+>  					     unsigned int devfn)
+> @@ -44,13 +41,6 @@ static inline int of_pci_get_devfn(struct device_node *np)
+>  	return -1;
+>  }
+>  
+> -static inline int of_pci_map_rid(struct device_node *np, u32 rid,
+> -			const char *map_name, const char *map_mask_name,
+> -			struct device_node **target, u32 *id_out)
+> -{
+> -	return -EINVAL;
+> -}
+> -
+>  static inline int
+>  of_pci_get_max_link_speed(struct device_node *node)
+>  {
+> -- 
+> 1.9.1
+> 
