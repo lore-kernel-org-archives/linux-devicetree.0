@@ -1,79 +1,66 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 4/4] dt-bindings: mfd: max8998: Add charger subnode
- binding
-Date: Mon, 30 Apr 2018 13:30:36 +0100
-Message-ID: <20180430123036.GH5147@dell>
-References: <1524844982-4714-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
- <1524844982-4714-5-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH 02/17] arm64: dts: marvell: fix CP110 ICU node size
+Date: Mon, 30 Apr 2018 14:38:35 +0200
+Message-ID: <87r2mwc1is.fsf@bootlin.com>
+References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
+ <20180421135537.24716-3-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1524844982-4714-5-git-send-email-pawel.mikolaj.chmiel@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180421135537.24716-3-miquel.raynal@bootlin.com> (Miquel
+ Raynal's message of "Sat, 21 Apr 2018 15:55:22 +0200")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Hanna Hawa <hannah@marvell.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 27 Apr 2018, Paweł Chmiel wrote:
+Hi Miquel,
+ 
+ On sam., avril 21 2018, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-> This patch adds devicetree bindings documentation for
-> battery charging controller as the subnode of MAX8998 PMIC.
-> It's based on current behavior of driver.
-> 
-> Fixes: ee999fb3f17f ("mfd: max8998: Add support for Device Tree")
+> ICU size in CP110 is not 0x10 but at least 0x440 bytes long (from the
+> specification).
+>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-Why is this here?  This patch doesn't look like a fix to me.
+This patch looks like a fix, could you resubmit it with the approriate
+flags?
 
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Thanks,
+
+Gregory
+
 > ---
->  Documentation/devicetree/bindings/mfd/max8998.txt | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Documentation/devicetree/bindings/mfd/max8998.txt
-> index 23a3650ff2a2..f95610afb57f 100644
-> --- a/Documentation/devicetree/bindings/mfd/max8998.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
-> @@ -50,6 +50,21 @@ Additional properties required if max8998,pmic-buck2-dvs-gpio is defined:
->  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in microvolts
->    for buck2 regulator that can be selected using dvs gpio.
+>  arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+> index 48cad7919efa..9fa41c54f69c 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+> @@ -146,7 +146,7 @@
 >  
-> +Charger: Configuration for battery charging controller should be added
-> +inside a child node named 'charger'.
-> +  Required properties:
-> +  - max8998,charge-eoc: Setup "End of Charge". If value equals 0,
-> +    remain value set from bootloader or default value will be used.
-> +    Valid values: 0, 10 - 45
-> +
-> +  - max8998,charge-restart: Setup "Charge Restart Level". If value equals 0,
-> +    remain value set from bootloader or default value will be used.
-> +    Valid values: -1, 0, 100, 150, 200
-> +
-> +  - max8998,charge-timeout: Setup "Charge Full Timeout". If value equals 0,
-> +    remain value set from bootloader or default value will be used.
-> +    Valid values: -1, 0, 5, 6, 7
-> +
->  Regulators: All the regulators of MAX8998 to be instantiated shall be
->  listed in a child node named 'regulators'. Each regulator is represented
->  by a child node of the 'regulators' node.
-> @@ -99,6 +114,13 @@ Example:
->  		max8998,pmic-buck2-dvs-gpio = <&gpx0 0 3 0 0>; /* SET3 */
->  		max8998,pmic-buck2-dvs-voltage = <1350000>, <1300000>;
->  
-> +		/* Charger configuration */
-> +		charger {
-> +			max8998,charge-eoc = <0>;
-> +			max8998,charge-restart = <(-1)>;
-> +			max8998,charge-timeout = <7>;
-> +		};
-> +
->  		/* Regulators to instantiate */
->  		regulators {
->  			ldo2_reg: LDO2 {
+>  		CP110_LABEL(icu): interrupt-controller@1e0000 {
+>  			compatible = "marvell,cp110-icu";
+> -			reg = <0x1e0000 0x10>;
+> +			reg = <0x1e0000 0x440>;
+>  			#interrupt-cells = <3>;
+>  			interrupt-controller;
+>  			msi-parent = <&gicp>;
+> -- 
+> 2.14.1
+>
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Gregory Clement, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
