@@ -1,297 +1,227 @@
-Return-Path: <krzk@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFC 04/10] clk: samsung: Remove support for Exynos5440
-Date: Tue, 24 Apr 2018 22:32:33 +0200
-Message-Id: <20180424203239.21885-5-krzk@kernel.org>
-In-Reply-To: <20180424203239.21885-1-krzk@kernel.org>
-References: <20180424203239.21885-1-krzk@kernel.org>
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Jaehoon Chung <jh80.chung@samsung.com>
+Return-Path: <SRS0=tqbs=HT=mediatek.com=argus.lin@kernel.org>
+Message-ID: <1525074821.22276.6.camel@mtkswgap22>
+Subject: Re: [PATCH V3 3/4] soc: mediatek: pwrap: add mt6351 for mt6797 SoCs
+From: Argus Lin <argus.lin@mediatek.com>
+Date: Mon, 30 Apr 2018 15:53:41 +0800
+In-Reply-To: <427130f0-9f7e-22cc-3679-2a8d22124515@gmail.com>
+References: <20180323083238.13569-1-argus.lin@mediatek.com>
+	 <20180323083238.13569-4-argus.lin@mediatek.com>
+	 <427130f0-9f7e-22cc-3679-2a8d22124515@gmail.com>
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_002_132607140.343035543"
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chenglin Xu <chenglin.xu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-The Exynos5440 is not actively developed, there are no development
-boards available and probably there are no real products with it.
-Remove wide-tree support for Exynos5440.
+--__=_Part_Boundary_002_132607140.343035543
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_003_1180414754.902915675"
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- .../devicetree/bindings/clock/exynos5440-clock.txt |  28 ----
- drivers/clk/samsung/Makefile                       |   1 -
- drivers/clk/samsung/clk-exynos5440.c               | 167 ---------------------
- include/dt-bindings/clock/exynos5440.h             |  44 ------
- 4 files changed, 240 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/exynos5440-clock.txt
- delete mode 100644 drivers/clk/samsung/clk-exynos5440.c
- delete mode 100644 include/dt-bindings/clock/exynos5440.h
+--__=_Part_Boundary_003_1180414754.902915675
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-diff --git a/Documentation/devicetree/bindings/clock/exynos5440-clock.txt b/Documentation/devicetree/bindings/clock/exynos5440-clock.txt
-deleted file mode 100644
-index c7d227c31e95..000000000000
---- a/Documentation/devicetree/bindings/clock/exynos5440-clock.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--* Samsung Exynos5440 Clock Controller
--
--The Exynos5440 clock controller generates and supplies clock to various
--controllers within the Exynos5440 SoC.
--
--Required Properties:
--
--- compatible: should be "samsung,exynos5440-clock".
--
--- reg: physical base address of the controller and length of memory mapped
--  region.
--
--- #clock-cells: should be 1.
--
--Each clock is assigned an identifier and client nodes can use this identifier
--to specify the clock which they consume.
--
--All available clocks are defined as preprocessor macros in
--dt-bindings/clock/exynos5440.h header and can be used in device
--tree sources.
--
--Example: An example of a clock controller node is listed below.
--
--	clock: clock-controller@10010000 {
--		compatible = "samsung,exynos5440-clock";
--		reg = <0x160000 0x10000>;
--		#clock-cells = <1>;
--	};
-diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefile
-index 513826393158..1a4e6b787978 100644
---- a/drivers/clk/samsung/Makefile
-+++ b/drivers/clk/samsung/Makefile
-@@ -14,7 +14,6 @@ obj-$(CONFIG_SOC_EXYNOS5410)	+= clk-exynos5410.o
- obj-$(CONFIG_SOC_EXYNOS5420)	+= clk-exynos5420.o
- obj-$(CONFIG_SOC_EXYNOS5420)	+= clk-exynos5-subcmu.o
- obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+= clk-exynos5433.o
--obj-$(CONFIG_SOC_EXYNOS5440)	+= clk-exynos5440.o
- obj-$(CONFIG_EXYNOS_AUDSS_CLK_CON) += clk-exynos-audss.o
- obj-$(CONFIG_ARCH_EXYNOS)	+= clk-exynos-clkout.o
- obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+= clk-exynos7.o
-diff --git a/drivers/clk/samsung/clk-exynos5440.c b/drivers/clk/samsung/clk-exynos5440.c
-deleted file mode 100644
-index b08bd54c5e76..000000000000
---- a/drivers/clk/samsung/clk-exynos5440.c
-+++ /dev/null
-@@ -1,167 +0,0 @@
--/*
-- * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-- * Author: Thomas Abraham <thomas.ab@samsung.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * Common Clock Framework support for Exynos5440 SoC.
--*/
--
--#include <dt-bindings/clock/exynos5440.h>
--#include <linux/clk-provider.h>
--#include <linux/of.h>
--#include <linux/of_address.h>
--#include <linux/notifier.h>
--#include <linux/reboot.h>
--
--#include "clk.h"
--#include "clk-pll.h"
--
--#define CLKEN_OV_VAL		0xf8
--#define CPU_CLK_STATUS		0xfc
--#define MISC_DOUT1		0x558
--
--static void __iomem *reg_base;
--
--/* parent clock name list */
--PNAME(mout_armclk_p)	= { "cplla", "cpllb" };
--PNAME(mout_spi_p)	= { "div125", "div200" };
--
--/* fixed rate clocks generated outside the soc */
--static struct samsung_fixed_rate_clock exynos5440_fixed_rate_ext_clks[] __initdata = {
--	FRATE(0, "xtal", NULL, 0, 0),
--};
--
--/* fixed rate clocks */
--static const struct samsung_fixed_rate_clock exynos5440_fixed_rate_clks[] __initconst = {
--	FRATE(0, "ppll", NULL, 0, 1000000000),
--	FRATE(0, "usb_phy0", NULL, 0, 60000000),
--	FRATE(0, "usb_phy1", NULL, 0, 60000000),
--	FRATE(0, "usb_ohci12", NULL, 0, 12000000),
--	FRATE(0, "usb_ohci48", NULL, 0, 48000000),
--};
--
--/* fixed factor clocks */
--static const struct samsung_fixed_factor_clock exynos5440_fixed_factor_clks[] __initconst = {
--	FFACTOR(0, "div250", "ppll", 1, 4, 0),
--	FFACTOR(0, "div200", "ppll", 1, 5, 0),
--	FFACTOR(0, "div125", "div250", 1, 2, 0),
--};
--
--/* mux clocks */
--static const struct samsung_mux_clock exynos5440_mux_clks[] __initconst = {
--	MUX(0, "mout_spi", mout_spi_p, MISC_DOUT1, 5, 1),
--	MUX(CLK_ARM_CLK, "arm_clk", mout_armclk_p, CPU_CLK_STATUS, 0, 1),
--};
--
--/* divider clocks */
--static const struct samsung_div_clock exynos5440_div_clks[] __initconst = {
--	DIV(CLK_SPI_BAUD, "div_spi", "mout_spi", MISC_DOUT1, 3, 2),
--};
--
--/* gate clocks */
--static const struct samsung_gate_clock exynos5440_gate_clks[] __initconst = {
--	GATE(CLK_PB0_250, "pb0_250", "div250", CLKEN_OV_VAL, 3, 0, 0),
--	GATE(CLK_PR0_250, "pr0_250", "div250", CLKEN_OV_VAL, 4, 0, 0),
--	GATE(CLK_PR1_250, "pr1_250", "div250", CLKEN_OV_VAL, 5, 0, 0),
--	GATE(CLK_B_250, "b_250", "div250", CLKEN_OV_VAL, 9, 0, 0),
--	GATE(CLK_B_125, "b_125", "div125", CLKEN_OV_VAL, 10, 0, 0),
--	GATE(CLK_B_200, "b_200", "div200", CLKEN_OV_VAL, 11, 0, 0),
--	GATE(CLK_SATA, "sata", "div200", CLKEN_OV_VAL, 12, 0, 0),
--	GATE(CLK_USB, "usb", "div200", CLKEN_OV_VAL, 13, 0, 0),
--	GATE(CLK_GMAC0, "gmac0", "div200", CLKEN_OV_VAL, 14, 0, 0),
--	GATE(CLK_CS250, "cs250", "div250", CLKEN_OV_VAL, 19, 0, 0),
--	GATE(CLK_PB0_250_O, "pb0_250_o", "pb0_250", CLKEN_OV_VAL, 3, 0, 0),
--	GATE(CLK_PR0_250_O, "pr0_250_o", "pr0_250", CLKEN_OV_VAL, 4, 0, 0),
--	GATE(CLK_PR1_250_O, "pr1_250_o", "pr1_250", CLKEN_OV_VAL, 5, 0, 0),
--	GATE(CLK_B_250_O, "b_250_o", "b_250", CLKEN_OV_VAL, 9, 0, 0),
--	GATE(CLK_B_125_O, "b_125_o", "b_125", CLKEN_OV_VAL, 10, 0, 0),
--	GATE(CLK_B_200_O, "b_200_o", "b_200", CLKEN_OV_VAL, 11, 0, 0),
--	GATE(CLK_SATA_O, "sata_o", "sata", CLKEN_OV_VAL, 12, 0, 0),
--	GATE(CLK_USB_O, "usb_o", "usb", CLKEN_OV_VAL, 13, 0, 0),
--	GATE(CLK_GMAC0_O, "gmac0_o", "gmac", CLKEN_OV_VAL, 14, 0, 0),
--	GATE(CLK_CS250_O, "cs250_o", "cs250", CLKEN_OV_VAL, 19, 0, 0),
--};
--
--static const struct of_device_id ext_clk_match[] __initconst = {
--	{ .compatible = "samsung,clock-xtal", .data = (void *)0, },
--	{},
--};
--
--static int exynos5440_clk_restart_notify(struct notifier_block *this,
--		unsigned long code, void *unused)
--{
--	u32 val, status;
--
--	status = readl_relaxed(reg_base + 0xbc);
--	val = readl_relaxed(reg_base + 0xcc);
--	val = (val & 0xffff0000) | (status & 0xffff);
--	writel_relaxed(val, reg_base + 0xcc);
--
--	return NOTIFY_DONE;
--}
--
--/*
-- * Exynos5440 Clock restart notifier, handles restart functionality
-- */
--static struct notifier_block exynos5440_clk_restart_handler = {
--	.notifier_call = exynos5440_clk_restart_notify,
--	.priority = 128,
--};
--
--static const struct samsung_pll_clock exynos5440_plls[] __initconst = {
--	PLL(pll_2550x, CLK_CPLLA, "cplla", "xtal", 0, 0x4c, NULL),
--	PLL(pll_2550x, CLK_CPLLB, "cpllb", "xtal", 0, 0x50, NULL),
--};
--
--/*
-- * Clock aliases for legacy clkdev look-up.
-- */
--static const struct samsung_clock_alias exynos5440_aliases[] __initconst = {
--	ALIAS(CLK_ARM_CLK, NULL, "armclk"),
--};
--
--/* register exynos5440 clocks */
--static void __init exynos5440_clk_init(struct device_node *np)
--{
--	struct samsung_clk_provider *ctx;
--
--	reg_base = of_iomap(np, 0);
--	if (!reg_base) {
--		pr_err("%s: failed to map clock controller registers,"
--			" aborting clock initialization\n", __func__);
--		return;
--	}
--
--	ctx = samsung_clk_init(np, reg_base, CLK_NR_CLKS);
--
--	samsung_clk_of_register_fixed_ext(ctx, exynos5440_fixed_rate_ext_clks,
--		ARRAY_SIZE(exynos5440_fixed_rate_ext_clks), ext_clk_match);
--
--	samsung_clk_register_pll(ctx, exynos5440_plls,
--			ARRAY_SIZE(exynos5440_plls), ctx->reg_base);
--
--	samsung_clk_register_fixed_rate(ctx, exynos5440_fixed_rate_clks,
--			ARRAY_SIZE(exynos5440_fixed_rate_clks));
--	samsung_clk_register_fixed_factor(ctx, exynos5440_fixed_factor_clks,
--			ARRAY_SIZE(exynos5440_fixed_factor_clks));
--	samsung_clk_register_mux(ctx, exynos5440_mux_clks,
--			ARRAY_SIZE(exynos5440_mux_clks));
--	samsung_clk_register_div(ctx, exynos5440_div_clks,
--			ARRAY_SIZE(exynos5440_div_clks));
--	samsung_clk_register_gate(ctx, exynos5440_gate_clks,
--			ARRAY_SIZE(exynos5440_gate_clks));
--	samsung_clk_register_alias(ctx, exynos5440_aliases,
--						ARRAY_SIZE(exynos5440_aliases));
--
--	samsung_clk_of_add_provider(np, ctx);
--
--	if (register_restart_handler(&exynos5440_clk_restart_handler))
--		pr_warn("exynos5440 clock can't register restart handler\n");
--
--	pr_info("Exynos5440: arm_clk = %ldHz\n", _get_rate("arm_clk"));
--	pr_info("exynos5440 clock initialization complete\n");
--}
--CLK_OF_DECLARE(exynos5440_clk, "samsung,exynos5440-clock", exynos5440_clk_init);
-diff --git a/include/dt-bindings/clock/exynos5440.h b/include/dt-bindings/clock/exynos5440.h
-deleted file mode 100644
-index 842cdc0adff1..000000000000
---- a/include/dt-bindings/clock/exynos5440.h
-+++ /dev/null
-@@ -1,44 +0,0 @@
--/*
-- * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-- * Author: Andrzej Hajda <a.hajda@samsung.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * Device Tree binding constants for Exynos5440 clock controller.
--*/
--
--#ifndef _DT_BINDINGS_CLOCK_EXYNOS_5440_H
--#define _DT_BINDINGS_CLOCK_EXYNOS_5440_H
--
--#define CLK_XTAL		1
--#define CLK_ARM_CLK		2
--#define CLK_CPLLA		3
--#define CLK_CPLLB		4
--#define CLK_SPI_BAUD		16
--#define CLK_PB0_250		17
--#define CLK_PR0_250		18
--#define CLK_PR1_250		19
--#define CLK_B_250		20
--#define CLK_B_125		21
--#define CLK_B_200		22
--#define CLK_SATA		23
--#define CLK_USB			24
--#define CLK_GMAC0		25
--#define CLK_CS250		26
--#define CLK_PB0_250_O		27
--#define CLK_PR0_250_O		28
--#define CLK_PR1_250_O		29
--#define CLK_B_250_O		30
--#define CLK_B_125_O		31
--#define CLK_B_200_O		32
--#define CLK_SATA_O		33
--#define CLK_USB_O		34
--#define CLK_GMAC0_O		35
--#define CLK_CS250_O		36
--
--/* must be greater than maximal clock id */
--#define CLK_NR_CLKS		37
--
--#endif /* _DT_BINDINGS_CLOCK_EXYNOS_5440_H */
--- 
-2.14.1
+PHByZT4NCk9uJiMzMjtUdWUsJiMzMjsyMDE4LTA0LTE3JiMzMjthdCYjMzI7MjM6MTAmIzMyOysw
+MjAwLCYjMzI7TWF0dGhpYXMmIzMyO0JydWdnZXImIzMyO3dyb3RlOg0KJmd0OyYjMzI7UGxlYXNl
+JiMzMjt1cGRhdGUmIzMyO3RoZSYjMzI7c3ViamVjdCYjMzI7bGluZSwmIzMyO3dlJiMzMjtkb24m
+IzM5O3QmIzMyO2FkZCYjMzI7bXQ1Nzk3JiMzMjtoZXJlLg0KDQpEZWFyJiMzMjttYXR0aGlhczoN
+CkkmIzMyO2NhbiYjMzk7dCYjMzI7ZmluZCYjMzI7d2hlcmUmIzMyO0kmIzMyO3dyb3RlJiMzMjtt
+dDU3OTcmIzMyO2F0JiMzMjt0aGlzJiMzMjtwYXRjaC4NCiZndDsmIzMyOw0KJmd0OyYjMzI7TW9y
+ZSYjMzI7Y29tbWVudHMmIzMyO2JlbG93Lg0KJmd0OyYjMzI7DQomZ3Q7JiMzMjtPbiYjMzI7MDMv
+MjMvMjAxOCYjMzI7MDk6MzImIzMyO0FNLCYjMzI7YXJndXMubGluQG1lZGlhdGVrLmNvbSYjMzI7
+d3JvdGU6DQomZ3Q7JiMzMjsmZ3Q7JiMzMjtGcm9tOiYjMzI7QXJndXMmIzMyO0xpbiYjMzI7Jmx0
+O2FyZ3VzLmxpbkBtZWRpYXRlay5jb20mZ3Q7DQomZ3Q7JiMzMjsmZ3Q7JiMzMjsNCiZndDsmIzMy
+OyZndDsmIzMyO210NjM1MSYjMzI7aXMmIzMyO2EmIzMyO25ldyYjMzI7cG93ZXImIzMyO21hbmFn
+ZW1lbnQmIzMyO0lDJiMzMjthbmQmIzMyO2l0JiMzMjtpcw0KJmd0OyYjMzI7Jmd0OyYjMzI7dXNl
+ZCYjMzI7Zm9yJiMzMjttdDY3OTcmIzMyO1NvQ3MuJiMzMjtXZSYjMzI7bmVlZCYjMzI7dG8mIzMy
+O2FkZCYjMzI7bXQ2MzUxX3JlZ3MmIzMyO2Zvcg0KJmd0OyYjMzI7Jmd0OyYjMzI7cG1pYyYjMzI7
+cmVnaXN0ZXImIzMyO21hcHBpbmcmIzMyO2FuZCYjMzI7cG1pY19tdDYzNTEmIzMyO2Zvcg0KJmd0
+OyYjMzI7Jmd0OyYjMzI7cmVnaXN0ZXImIzMyO2FjY2Vzc2luZyYjMzI7YnkmIzMyO3JlZ21hcC4N
+CiZndDsmIzMyOyZndDsmIzMyOw0KJmd0OyYjMzI7Jmd0OyYjMzI7U2lnbmVkLW9mZi1ieTomIzMy
+O0FyZ3VzJiMzMjtMaW4mIzMyOyZsdDthcmd1cy5saW5AbWVkaWF0ZWsuY29tJmd0Ow0KJmd0OyYj
+MzI7Jmd0OyYjMzI7LS0tDQomZ3Q7JiMzMjsmZ3Q7JiMzMjsmIzMyO2RyaXZlcnMvc29jL21lZGlh
+dGVrL210ay1wbWljLXdyYXAuYyYjMzI7fCYjMzI7MzEmIzMyOysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrLS0NCiZndDsmIzMyOyZndDsmIzMyOyYjMzI7MSYjMzI7ZmlsZSYjMzI7Y2hhbmdl
+ZCwmIzMyOzI5JiMzMjtpbnNlcnRpb25zKCspLCYjMzI7MiYjMzI7ZGVsZXRpb25zKC0pDQomZ3Q7
+JiMzMjsmZ3Q7JiMzMjsNCiZndDsmIzMyOyZndDsmIzMyO2RpZmYmIzMyOy0tZ2l0JiMzMjthL2Ry
+aXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYyYjMzI7Yi9kcml2ZXJzL3NvYy9tZWRp
+YXRlay9tdGstcG1pYy13cmFwLmMNCiZndDsmIzMyOyZndDsmIzMyO2luZGV4JiMzMjtkMGEwYTNk
+N2U4OGQuLmQ4MWE1ODVmYWRmNSYjMzI7MTAwNjQ0DQomZ3Q7JiMzMjsmZ3Q7JiMzMjstLS0mIzMy
+O2EvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQomZ3Q7JiMzMjsmZ3Q7JiMz
+MjsrKysmIzMyO2IvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQomZ3Q7JiMz
+MjsmZ3Q7JiMzMjtAQCYjMzI7LTE1Myw2JiMzMjsrMTUzLDIxJiMzMjtAQCYjMzI7c3RhdGljJiMz
+Mjtjb25zdCYjMzI7dTMyJiMzMjttdDYzOTdfcmVnc1tdJiMzMjs9JiMzMjt7DQomZ3Q7JiMzMjsm
+Z3Q7JiMzMjsmIzMyO1tQV1JBUF9ERVdfQ0lQSEVSX1NXUlNUXSYjMzI7PTB4YmMyNCwNCiZndDsm
+IzMyOyZndDsmIzMyOyYjMzI7fTsNCiZndDsmIzMyOyZndDsmIzMyOyYjMzI7DQomZ3Q7JiMzMjsm
+Z3Q7JiMzMjsrc3RhdGljJiMzMjtjb25zdCYjMzI7dTMyJiMzMjttdDYzNTFfcmVnc1tdJiMzMjs9
+JiMzMjt7DQomZ3Q7JiMzMjsmZ3Q7JiMzMjsrW1BXUkFQX0RFV19ESU9fRU5dJiMzMjs9MHgwMkYy
+LA0KJmd0OyYjMzI7Jmd0OyYjMzI7K1tQV1JBUF9ERVdfUkVBRF9URVNUXSYjMzI7PTB4MDJGNCwN
+CiZndDsmIzMyOyZndDsmIzMyOytbUFdSQVBfREVXX1dSSVRFX1RFU1RdJiMzMjs9MHgwMkY2LA0K
+Jmd0OyYjMzI7Jmd0OyYjMzI7K1tQV1JBUF9ERVdfQ1JDX0VOXSYjMzI7PTB4MDJGQSwNCiZndDsm
+IzMyOyZndDsmIzMyOytbUFdSQVBfREVXX0NSQ19WQUxdJiMzMjs9MHgwMkZDLA0KJmd0OyYjMzI7
+Jmd0OyYjMzI7K1tQV1JBUF9ERVdfQ0lQSEVSX0tFWV9TRUxdJiMzMjs9MHgwMzAwLA0KJmd0OyYj
+MzI7Jmd0OyYjMzI7K1tQV1JBUF9ERVdfQ0lQSEVSX0lWX1NFTF0mIzMyOz0weDAzMDIsDQomZ3Q7
+JiMzMjsmZ3Q7JiMzMjsrW1BXUkFQX0RFV19DSVBIRVJfRU5dJiMzMjs9MHgwMzA0LA0KJmd0OyYj
+MzI7Jmd0OyYjMzI7K1tQV1JBUF9ERVdfQ0lQSEVSX1JEWV0mIzMyOz0weDAzMDYsDQomZ3Q7JiMz
+MjsmZ3Q7JiMzMjsrW1BXUkFQX0RFV19DSVBIRVJfTU9ERV0mIzMyOz0weDAzMDgsDQomZ3Q7JiMz
+MjsmZ3Q7JiMzMjsrW1BXUkFQX0RFV19DSVBIRVJfU1dSU1RdJiMzMjs9MHgwMzBBLA0KJmd0OyYj
+MzI7Jmd0OyYjMzI7K1tQV1JBUF9ERVdfUkRETVlfTk9dJiMzMjs9MHgwMzBDLA0KJmd0OyYjMzI7
+Jmd0OyYjMzI7K307DQomZ3Q7JiMzMjsmZ3Q7JiMzMjsrDQomZ3Q7JiMzMjsmZ3Q7JiMzMjsmIzMy
+O2VudW0mIzMyO3B3cmFwX3JlZ3MmIzMyO3sNCiZndDsmIzMyOyZndDsmIzMyOyYjMzI7UFdSQVBf
+TVVYX1NFTCwNCiZndDsmIzMyOyZndDsmIzMyOyYjMzI7UFdSQVBfV1JBUF9FTiwNCiZndDsmIzMy
+OyZndDsmIzMyO0BAJiMzMjstNzIxLDYmIzMyOys3MzYsNyYjMzI7QEAmIzMyO3N0YXRpYyYjMzI7
+aW50JiMzMjttdDgxMzVfcmVnc1tdJiMzMjs9JiMzMjt7DQomZ3Q7JiMzMjsmZ3Q7JiMzMjsmIzMy
+Ow0KJmd0OyYjMzI7Jmd0OyYjMzI7JiMzMjtlbnVtJiMzMjtwbWljX3R5cGUmIzMyO3sNCiZndDsm
+IzMyOyZndDsmIzMyOyYjMzI7UE1JQ19NVDYzMjMsDQomZ3Q7JiMzMjsmZ3Q7JiMzMjsrUE1JQ19N
+VDYzNTEsDQomZ3Q7JiMzMjsmZ3Q7JiMzMjsmIzMyO1BNSUNfTVQ2MzgwLA0KJmd0OyYjMzI7Jmd0
+OyYjMzI7JiMzMjtQTUlDX01UNjM5NywNCiZndDsmIzMyOyZndDsmIzMyOyYjMzI7fTsNCiZndDsm
+IzMyOyZndDsmIzMyO0BAJiMzMjstMTE3OSw4JiMzMjsrMTE5NSw2JiMzMjtAQCYjMzI7c3RhdGlj
+JiMzMjtpbnQmIzMyO3B3cmFwX2luaXRfY2lwaGVyKHN0cnVjdCYjMzI7cG1pY193cmFwcGVyJiMz
+Mjsqd3JwKQ0KJmd0OyYjMzI7Jmd0OyYjMzI7JiMzMjtwd3JhcF93cml0ZSh3cnAsJiMzMjt3cnAt
+Jmd0O3NsYXZlLSZndDtkZXdfcmVnc1tQV1JBUF9ERVdfQ0lQSEVSX1NXUlNUXSwmIzMyOzB4MCk7
+DQomZ3Q7JiMzMjsmZ3Q7JiMzMjsmIzMyO3B3cmFwX3dyaXRlKHdycCwmIzMyO3dycC0mZ3Q7c2xh
+dmUtJmd0O2Rld19yZWdzW1BXUkFQX0RFV19DSVBIRVJfS0VZX1NFTF0sJiMzMjsweDEpOw0KJmd0
+OyYjMzI7Jmd0OyYjMzI7JiMzMjtwd3JhcF93cml0ZSh3cnAsJiMzMjt3cnAtJmd0O3NsYXZlLSZn
+dDtkZXdfcmVnc1tQV1JBUF9ERVdfQ0lQSEVSX0lWX1NFTF0sJiMzMjsweDIpOw0KJmd0OyYjMzI7
+Jmd0OyYjMzI7LXB3cmFwX3dyaXRlKHdycCwmIzMyO3dycC0mZ3Q7c2xhdmUtJmd0O2Rld19yZWdz
+W1BXUkFQX0RFV19DSVBIRVJfTE9BRF0sJiMzMjsweDEpOw0KJmd0OyYjMzI7Jmd0OyYjMzI7LXB3
+cmFwX3dyaXRlKHdycCwmIzMyO3dycC0mZ3Q7c2xhdmUtJmd0O2Rld19yZWdzW1BXUkFQX0RFV19D
+SVBIRVJfU1RBUlRdLCYjMzI7MHgxKTsNCiZndDsmIzMyOw0KJmd0OyYjMzI7VGhhdCYjMzI7bWln
+aHQmIzMyO2JyZWFrJiMzMjt0aGUmIzMyO2RyaXZlciYjMzI7Zm9yJiMzMjtvdGhlciYjMzI7ZGV2
+aWNlcy4mIzMyO1lvdSYjMzI7Y2FuJiMzOTt0JiMzMjtqdXN0JiMzMjtkZWxldGUmIzMyO3RoZXNl
+JiMzMjtsaW5lcw0KJmd0OyYjMzI7d2l0aG91dCYjMzI7ZXhwbGFuYXRpb24uJiMzMjtJZiYjMzI7
+eW91JiMzMjt0aGluayYjMzI7dGhlc2UmIzMyO2xpbmVzJiMzMjthcmUmIzMyO25vdCYjMzI7bmVl
+ZGVkLCYjMzI7dGhlbiYjMzI7cGxlYXNlJiMzMjtwdXQNCiZndDsmIzMyO3RoZSYjMzI7ZGVsZXRp
+b24mIzMyO2luJiMzMjthbm90aGVyJiMzMjtwYXRjaCYjMzI7ZXhwbGFpbmluZyYjMzI7d2h5Lg0K
+Jmd0OyYjMzI7DQoNCkRlYXImIzMyO21hdHRoaWFzOg0KSXQmIzMyO2lzJiMzMjtyZWFsbHkmIzMy
+O2EmIzMyO2J1ZyYjMzI7aGVyZS4mIzMyO0JlbG93JiMzMjtpcyYjMzI7dGhlJiMzMjtjb21tZW50
+JiMzMjtmcm9tJiMzMjt5b3UmIzMyO2J5JiMzMjtwYXRjaCYjMzI7VjEuDQpUaGUmIzMyO3JlZ2lz
+dGVyJiMzMjtvZiYjMzI7UFdSQVBfREVXX0NJUEhFUl9MT0FEJiMzMjthbmQmIzMyO1BXUkFQX0RF
+V19DSVBIRVJfU1RBUlQmIzMyO29ubHkNCmV4aXN0JiMzMjthdCYjMzI7bXQ2Mzk3Lg0KQnV0JiMz
+MjtJJiMzMjt0aGluayYjMzI7SSYjMzI7Y2FuJiMzMjtzdGlsbCYjMzI7c2VwYXJhdGUmIzMyO3Ro
+b3NlJiMzMjtsaW5lcyYjMzI7dG8mIzMyO2Fub3RoZXImIzMyO3BhdGNoJiMzMjthbmQNCmRlY2xh
+cmUmIzMyO3RoZSYjMzI7cmVhc29uLg0KJmd0OyYjMzI7JiMzMjsmIzMyOyYjMzI7JiMzMjsmIzMy
+OyYjMzI7fQ0KJmd0OyYjMzI7JiMzMjsNCiZndDsmIzMyOyYjMzI7JiMzMjsmIzMyOyYjMzI7JiMz
+MjsmIzMyOy8qJiMzMjtDb25maWcmIzMyO2NpcGhlciYjMzI7bW9kZSYjMzI7QFBNSUMmIzMyOyov
+DQomZ3Q7JiMzMjtAQCYjMzI7LTEwODAsOCYjMzI7KzExNTgsNiYjMzI7QEAmIzMyO3N0YXRpYyYj
+MzI7aW50JiMzMjtwd3JhcF9pbml0X2NpcGhlcihzdHJ1Y3QmIzMyO3BtaWNfd3JhcHBlcg0KKndy
+cCkNCiZndDsmIzMyOyYjMzI7JiMzMjsmIzMyOyYjMzI7JiMzMjsmIzMyO3B3cmFwX3dyaXRlKHdy
+cCwmIzMyO3dycC0mZ3Q7c2xhdmUtJmd0O2Rld19yZWdzW1BXUkFQX0RFV19DSVBIRVJfU1dSU1Rd
+LA0KMHgwKTsNCiZndDsmIzMyOyYjMzI7JiMzMjsmIzMyOyYjMzI7JiMzMjsmIzMyO3B3cmFwX3dy
+aXRlKHdycCwmIzMyO3dycC0mZ3Q7c2xhdmUtJmd0O2Rld19yZWdzW1BXUkFQX0RFV19DSVBIRVJf
+S0VZX1NFTF0sDQoweDEpOw0KJmd0OyYjMzI7JiMzMjsmIzMyOyYjMzI7JiMzMjsmIzMyOyYjMzI7
+cHdyYXBfd3JpdGUod3JwLCYjMzI7d3JwLSZndDtzbGF2ZS0mZ3Q7ZGV3X3JlZ3NbUFdSQVBfREVX
+X0NJUEhFUl9JVl9TRUxdLA0KMHgyKTsNCiZndDsmIzMyOy0mIzMyOyYjMzI7JiMzMjsmIzMyOyYj
+MzI7cHdyYXBfd3JpdGUod3JwLCYjMzI7d3JwLSZndDtzbGF2ZS0mZ3Q7ZGV3X3JlZ3NbUFdSQVBf
+REVXX0NJUEhFUl9MT0FEXSwNCjB4MSk7DQomZ3Q7JiMzMjstJiMzMjsmIzMyOyYjMzI7JiMzMjsm
+IzMyO3B3cmFwX3dyaXRlKHdycCwmIzMyO3dycC0mZ3Q7c2xhdmUtJmd0O2Rld19yZWdzW1BXUkFQ
+X0RFV19DSVBIRVJfU1RBUlRdLA0KMHgxKTsNCiZndDsmIzMyOyYjMzI7DQoNCk9rLCYjMzI7aXQm
+IzMyO2xvb2tzJiMzMjtsaWtlJiMzMjt0aGVzZSYjMzI7dHdvJiMzMjtsaW5lcyYjMzI7YXJlJiMz
+MjthY3R1YWxseSYjMzI7YSYjMzI7YnVnLCYjMzI7d2hpY2gmIzMyO3Nob3VsZG4mIzM5O3QmIzMy
+O2JlDQpoZXJlLg0KQWRkaW5nJiMzMjtKb2huLCYjMzI7YXMmIzMyO2hlJiMzMjthZGRlZCYjMzI7
+dGhlc2UmIzMyO2NhbGxzJiMzMjt0d2ljZSYjMzI7aW4NCjVhZTQ4MDQwYWE0NyYjMzI7KCZxdW90
+O3NvYzomIzMyO21lZGlhdGVrOiYjMzI7UE1JQyYjMzI7d3JhcDomIzMyO2FkZCYjMzI7bXQ2MzIz
+JiMzMjtzbGF2ZSYjMzI7c3VwcG9ydCZxdW90OykNCg0KQEpvaG4sJiMzMjt0aGlzJiMzMjtpcyYj
+MzI7YW4mIzMyO292ZXJzaWdodCYjMzI7aW4mIzMyO3lvdXImIzMyO2NvbW1pdCwmIzMyO3JpZ2h0
+JiM2MzsNCg0KSWYmIzMyO3NvLCYjMzI7d2UmIzMyO3Nob3VsZCYjMzI7Zml4JiMzMjt0aGlzJiMz
+MjtpbiYjMzI7YSYjMzI7c2VwYXJhdGUmIzMyO3BhdGNoLCYjMzI7Y29uY2VybmluZyYjMzI7dG8m
+IzMyO3NlbmQmIzMyO2l0JiMzMjt0bw0Kc3RhYmxlDQphcyYjMzI7d2VsbC4NCg0KJmd0OyYjMzI7
+T3RoZXImIzMyO3RoZW4mIzMyO3RoZXNlJiMzMjt0d28mIzMyO2NvbW1lbnRzLCYjMzI7cGF0Y2gm
+IzMyO2xvb2tzJiMzMjtmaW5lLg0KJmd0OyYjMzI7DQomZ3Q7JiMzMjtSZWdhcmRzLA0KJmd0OyYj
+MzI7TWF0dGhpYXMNCg0KDQo8L3ByZT48IS0tdHlwZTp0ZXh0LS0+PCEtLXstLT48cHJlPioqKioq
+KioqKioqKiogRW1haWwgQ29uZmlkZW50aWFsaXR5IE5vdGljZQ0KICoqKioqKioqKioqKioqKioq
+KioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGlu
+Y2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5IGJlIGNvbmZpZGVudGlhbCwgcHJvcHJpZXRh
+cnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhlbXB0IGZyb20gZGlzY2xvc3VyZSB1bmRl
+ciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVuZGVkIHRvIGJlIA0KY29udmV5ZWQgb25seSB0
+byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFueSB1c2UsIGRpc3NlbWluYXRpb24sIA0K
+ZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWluaW5nIG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1h
+aWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50cykgYnkgdW5pbnRlbmRlZCByZWNpcGllbnQo
+cykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5IA0KYmUgdW5sYXdmdWwuIElmIHlvdSBh
+cmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUtbWFpbCwgb3IgYmVsaWV2ZQ0K
+IA0KdGhhdCB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5v
+dGlmeSB0aGUgc2VuZGVyIA0KaW1tZWRpYXRlbHkgKGJ5IHJlcGx5aW5nIHRvIHRoaXMgZS1tYWls
+KSwgZGVsZXRlIGFueSBhbmQgYWxsIGNvcGllcyBvZiANCnRoaXMgZS1tYWlsIChpbmNsdWRpbmcg
+YW55IGF0dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVtLCBhbmQgZG8gbm90DQpkaXNjbG9zZSB0
+aGUgY29udGVudCBvZiB0aGlzIGUtbWFpbCB0byBhbnkgb3RoZXIgcGVyc29uLiBUaGFuaw0KIHlv
+dSE8L3ByZT48IS0tfS0tPg==
+
+--__=_Part_Boundary_003_1180414754.902915675
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+T24gVHVlLCAyMDE4LTA0LTE3IGF0IDIzOjEwICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiBQbGVhc2UgdXBkYXRlIHRoZSBzdWJqZWN0IGxpbmUsIHdlIGRvbid0IGFkZCBtdDU3OTcg
+aGVyZS4NCg0KRGVhciBtYXR0aGlhczoNCkkgY2FuJ3QgZmluZCB3aGVyZSBJIHdyb3RlIG10NTc5
+NyBhdCB0aGlzIHBhdGNoLg0KPiANCj4gTW9yZSBjb21tZW50cyBiZWxvdy4NCj4gDQo+IE9uIDAz
+LzIzLzIwMTggMDk6MzIgQU0sIGFyZ3VzLmxpbkBtZWRpYXRlay5jb20gd3JvdGU6DQo+ID4gRnJv
+bTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KPiA+IA0KPiA+IG10NjM1MSBp
+cyBhIG5ldyBwb3dlciBtYW5hZ2VtZW50IElDIGFuZCBpdCBpcw0KPiA+IHVzZWQgZm9yIG10Njc5
+NyBTb0NzLiBXZSBuZWVkIHRvIGFkZCBtdDYzNTFfcmVncyBmb3INCj4gPiBwbWljIHJlZ2lzdGVy
+IG1hcHBpbmcgYW5kIHBtaWNfbXQ2MzUxIGZvcg0KPiA+IHJlZ2lzdGVyIGFjY2Vzc2luZyBieSBy
+ZWdtYXAuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVk
+aWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13
+cmFwLmMgfCAzMSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tDQo+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCAyOSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMgYi9kcml2ZXJzL3Nv
+Yy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMNCj4gPiBpbmRleCBkMGEwYTNkN2U4OGQuLmQ4MWE1
+ODVmYWRmNSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13
+cmFwLmMNCj4gPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMNCj4g
+PiBAQCAtMTUzLDYgKzE1MywyMSBAQCBzdGF0aWMgY29uc3QgdTMyIG10NjM5N19yZWdzW10gPSB7
+DQo+ID4gIAlbUFdSQVBfREVXX0NJUEhFUl9TV1JTVF0gPQkweGJjMjQsDQo+ID4gIH07DQo+ID4g
+IA0KPiA+ICtzdGF0aWMgY29uc3QgdTMyIG10NjM1MV9yZWdzW10gPSB7DQo+ID4gKwlbUFdSQVBf
+REVXX0RJT19FTl0gPQkJMHgwMkYyLA0KPiA+ICsJW1BXUkFQX0RFV19SRUFEX1RFU1RdID0JCTB4
+MDJGNCwNCj4gPiArCVtQV1JBUF9ERVdfV1JJVEVfVEVTVF0gPQkweDAyRjYsDQo+ID4gKwlbUFdS
+QVBfREVXX0NSQ19FTl0gPQkJMHgwMkZBLA0KPiA+ICsJW1BXUkFQX0RFV19DUkNfVkFMXSA9CQkw
+eDAyRkMsDQo+ID4gKwlbUFdSQVBfREVXX0NJUEhFUl9LRVlfU0VMXSA9CTB4MDMwMCwNCj4gPiAr
+CVtQV1JBUF9ERVdfQ0lQSEVSX0lWX1NFTF0gPQkweDAzMDIsDQo+ID4gKwlbUFdSQVBfREVXX0NJ
+UEhFUl9FTl0gPQkJMHgwMzA0LA0KPiA+ICsJW1BXUkFQX0RFV19DSVBIRVJfUkRZXSA9CTB4MDMw
+NiwNCj4gPiArCVtQV1JBUF9ERVdfQ0lQSEVSX01PREVdID0JMHgwMzA4LA0KPiA+ICsJW1BXUkFQ
+X0RFV19DSVBIRVJfU1dSU1RdID0JMHgwMzBBLA0KPiA+ICsJW1BXUkFQX0RFV19SRERNWV9OT10g
+PQkJMHgwMzBDLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAgZW51bSBwd3JhcF9yZWdzIHsNCj4gPiAg
+CVBXUkFQX01VWF9TRUwsDQo+ID4gIAlQV1JBUF9XUkFQX0VOLA0KPiA+IEBAIC03MjEsNiArNzM2
+LDcgQEAgc3RhdGljIGludCBtdDgxMzVfcmVnc1tdID0gew0KPiA+ICANCj4gPiAgZW51bSBwbWlj
+X3R5cGUgew0KPiA+ICAJUE1JQ19NVDYzMjMsDQo+ID4gKwlQTUlDX01UNjM1MSwNCj4gPiAgCVBN
+SUNfTVQ2MzgwLA0KPiA+ICAJUE1JQ19NVDYzOTcsDQo+ID4gIH07DQo+ID4gQEAgLTExNzksOCAr
+MTE5NSw2IEBAIHN0YXRpYyBpbnQgcHdyYXBfaW5pdF9jaXBoZXIoc3RydWN0IHBtaWNfd3JhcHBl
+ciAqd3JwKQ0KPiA+ICAJcHdyYXBfd3JpdGUod3JwLCB3cnAtPnNsYXZlLT5kZXdfcmVnc1tQV1JB
+UF9ERVdfQ0lQSEVSX1NXUlNUXSwgMHgwKTsNCj4gPiAgCXB3cmFwX3dyaXRlKHdycCwgd3JwLT5z
+bGF2ZS0+ZGV3X3JlZ3NbUFdSQVBfREVXX0NJUEhFUl9LRVlfU0VMXSwgMHgxKTsNCj4gPiAgCXB3
+cmFwX3dyaXRlKHdycCwgd3JwLT5zbGF2ZS0+ZGV3X3JlZ3NbUFdSQVBfREVXX0NJUEhFUl9JVl9T
+RUxdLCAweDIpOw0KPiA+IC0JcHdyYXBfd3JpdGUod3JwLCB3cnAtPnNsYXZlLT5kZXdfcmVnc1tQ
+V1JBUF9ERVdfQ0lQSEVSX0xPQURdLCAweDEpOw0KPiA+IC0JcHdyYXBfd3JpdGUod3JwLCB3cnAt
+PnNsYXZlLT5kZXdfcmVnc1tQV1JBUF9ERVdfQ0lQSEVSX1NUQVJUXSwgMHgxKTsNCj4gDQo+IFRo
+YXQgbWlnaHQgYnJlYWsgdGhlIGRyaXZlciBmb3Igb3RoZXIgZGV2aWNlcy4gWW91IGNhbid0IGp1
+c3QgZGVsZXRlIHRoZXNlIGxpbmVzDQo+IHdpdGhvdXQgZXhwbGFuYXRpb24uIElmIHlvdSB0aGlu
+ayB0aGVzZSBsaW5lcyBhcmUgbm90IG5lZWRlZCwgdGhlbiBwbGVhc2UgcHV0DQo+IHRoZSBkZWxl
+dGlvbiBpbiBhbm90aGVyIHBhdGNoIGV4cGxhaW5pbmcgd2h5Lg0KPiANCg0KRGVhciBtYXR0aGlh
+czoNCkl0IGlzIHJlYWxseSBhIGJ1ZyBoZXJlLiBCZWxvdyBpcyB0aGUgY29tbWVudCBmcm9tIHlv
+dSBieSBwYXRjaCBWMS4NClRoZSByZWdpc3RlciBvZiBQV1JBUF9ERVdfQ0lQSEVSX0xPQUQgYW5k
+IFBXUkFQX0RFV19DSVBIRVJfU1RBUlQgb25seQ0KZXhpc3QgYXQgbXQ2Mzk3Lg0KQnV0IEkgdGhp
+bmsgSSBjYW4gc3RpbGwgc2VwYXJhdGUgdGhvc2UgbGluZXMgdG8gYW5vdGhlciBwYXRjaCBhbmQN
+CmRlY2xhcmUgdGhlIHJlYXNvbi4NCj4gICAgICAgfQ0KPiAgDQo+ICAgICAgIC8qIENvbmZpZyBj
+aXBoZXIgbW9kZSBAUE1JQyAqLw0KPiBAQCAtMTA4MCw4ICsxMTU4LDYgQEAgc3RhdGljIGludCBw
+d3JhcF9pbml0X2NpcGhlcihzdHJ1Y3QgcG1pY193cmFwcGVyDQoqd3JwKQ0KPiAgICAgICBwd3Jh
+cF93cml0ZSh3cnAsIHdycC0+c2xhdmUtPmRld19yZWdzW1BXUkFQX0RFV19DSVBIRVJfU1dSU1Rd
+LA0KMHgwKTsNCj4gICAgICAgcHdyYXBfd3JpdGUod3JwLCB3cnAtPnNsYXZlLT5kZXdfcmVnc1tQ
+V1JBUF9ERVdfQ0lQSEVSX0tFWV9TRUxdLA0KMHgxKTsNCj4gICAgICAgcHdyYXBfd3JpdGUod3Jw
+LCB3cnAtPnNsYXZlLT5kZXdfcmVnc1tQV1JBUF9ERVdfQ0lQSEVSX0lWX1NFTF0sDQoweDIpOw0K
+PiAtICAgICBwd3JhcF93cml0ZSh3cnAsIHdycC0+c2xhdmUtPmRld19yZWdzW1BXUkFQX0RFV19D
+SVBIRVJfTE9BRF0sDQoweDEpOw0KPiAtICAgICBwd3JhcF93cml0ZSh3cnAsIHdycC0+c2xhdmUt
+PmRld19yZWdzW1BXUkFQX0RFV19DSVBIRVJfU1RBUlRdLA0KMHgxKTsNCj4gIA0KDQpPaywgaXQg
+bG9va3MgbGlrZSB0aGVzZSB0d28gbGluZXMgYXJlIGFjdHVhbGx5IGEgYnVnLCB3aGljaCBzaG91
+bGRuJ3QgYmUNCmhlcmUuDQpBZGRpbmcgSm9obiwgYXMgaGUgYWRkZWQgdGhlc2UgY2FsbHMgdHdp
+Y2UgaW4NCjVhZTQ4MDQwYWE0NyAoInNvYzogbWVkaWF0ZWs6IFBNSUMgd3JhcDogYWRkIG10NjMy
+MyBzbGF2ZSBzdXBwb3J0IikNCg0KQEpvaG4sIHRoaXMgaXMgYW4gb3ZlcnNpZ2h0IGluIHlvdXIg
+Y29tbWl0LCByaWdodD8NCg0KSWYgc28sIHdlIHNob3VsZCBmaXggdGhpcyBpbiBhIHNlcGFyYXRl
+IHBhdGNoLCBjb25jZXJuaW5nIHRvIHNlbmQgaXQgdG8NCnN0YWJsZQ0KYXMgd2VsbC4NCg0KPiBP
+dGhlciB0aGVuIHRoZXNlIHR3byBjb21tZW50cywgcGF0Y2ggbG9va3MgZmluZS4NCj4gDQo+IFJl
+Z2FyZHMsDQo+IE1hdHRoaWFzDQoNCg==
+
+--__=_Part_Boundary_003_1180414754.902915675--
+
+--__=_Part_Boundary_002_132607140.343035543--
