@@ -1,103 +1,88 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v2 2/3] Documentation: bluefield-dw-mshc: add DT
- description
-Date: Mon, 30 Apr 2018 14:57:28 +0000
-Message-ID: <AM2PR05MB075369C92FE1416271895F51A1820@AM2PR05MB0753.eurprd05.prod.outlook.com>
-References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
- <7505274f8d82642fd08e874160acd45be2418673.1524497286.git.lsun@mellanox.com>
- <20180427195049.ycjmhes4qj4n3myq@rob-hp-laptop>
+From: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Subject: Re: [PATCH 4/4] dt-bindings: mfd: max8998: Add charger subnode binding
+Date: Mon, 30 Apr 2018 16:59:48 +0200
+Message-ID: <2163655.V5BWH1NDss@acerlaptop>
+References: <1524844982-4714-1-git-send-email-pawel.mikolaj.chmiel@gmail.com> <1524844982-4714-5-git-send-email-pawel.mikolaj.chmiel@gmail.com> <20180430123036.GH5147@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427195049.ycjmhes4qj4n3myq@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <20180430123036.GH5147@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks. Updated in v3 2/3.
+On Monday, April 30, 2018 1:30:36 PM CEST Lee Jones wrote:
+> On Fri, 27 Apr 2018, Pawe=C5=82 Chmiel wrote:
+>=20
+> > This patch adds devicetree bindings documentation for
+> > battery charging controller as the subnode of MAX8998 PMIC.
+> > It's based on current behavior of driver.
+> >=20
+> > Fixes: ee999fb3f17f ("mfd: max8998: Add support for Device Tree")
+>=20
+> Why is this here?  This patch doesn't look like a fix to me.
+Hi
+I though that if previous patch, which is adding missing device tree parsin=
+g into charger driver,
+has fixes tag, this patch (which is documenting it), should also contain th=
+at tag.
+If it shouldn't be here, i can fix this in v2.
 
-- Liming
-
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Friday, April 27, 2018 3:51 PM
-> To: Liming Sun <lsun@mellanox.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>; Mark Rutland
-> <mark.rutland@arm.com>; Jaehoon Chung <jh80.chung@samsung.com>;
-> Catalin Marinas <catalin.marinas@arm.com>; Will Deacon
-> <will.deacon@arm.com>; linux-mmc@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v2 2/3] Documentation: bluefield-dw-mshc: add DT
-> description
+Thanks for feedback (this is my second patchset for Linux Kernel)
 >=20
-> On Mon, Apr 23, 2018 at 11:32:21AM -0400, Liming Sun wrote:
-> > This commit adds "mellanox,bluefield-dw-mshc" for dwmmc driver
-> > extension on Mellanox BlueField SoC platform.
->=20
-> "dt-bindings: mmc: " is preferred subject prefix.
->=20
-> >
-> > Signed-off-by: Liming Sun <lsun@mellanox.com>
+> > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
 > > ---
-> >  .../devicetree/bindings/mmc/bluefield-dw-mshc.txt  | 29
-> ++++++++++++++++++++++
-> >  1 file changed, 29 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mmc/bluefield-
-> dw-mshc.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/mmc/bluefield-dw-
-> mshc.txt b/Documentation/devicetree/bindings/mmc/bluefield-dw-
-> mshc.txt
-> > new file mode 100644
-> > index 0000000..ee0dd61
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt
-> > @@ -0,0 +1,29 @@
-> > +* Mellanox Bluefield SoC specific extensions to the Synopsys Designwar=
-e
-> > +  Mobile Storage Host Controller
+> >  Documentation/devicetree/bindings/mfd/max8998.txt | 22 +++++++++++++++=
++++++++
+> >  1 file changed, 22 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Docume=
+ntation/devicetree/bindings/mfd/max8998.txt
+> > index 23a3650ff2a2..f95610afb57f 100644
+> > --- a/Documentation/devicetree/bindings/mfd/max8998.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
+> > @@ -50,6 +50,21 @@ Additional properties required if max8998,pmic-buck2=
+=2Ddvs-gpio is defined:
+> >  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in micr=
+ovolts
+> >    for buck2 regulator that can be selected using dvs gpio.
+> > =20
+> > +Charger: Configuration for battery charging controller should be added
+> > +inside a child node named 'charger'.
+> > +  Required properties:
+> > +  - max8998,charge-eoc: Setup "End of Charge". If value equals 0,
+> > +    remain value set from bootloader or default value will be used.
+> > +    Valid values: 0, 10 - 45
 > > +
-> > +Read synopsys-dw-mshc.txt for more details
+> > +  - max8998,charge-restart: Setup "Charge Restart Level". If value equ=
+als 0,
+> > +    remain value set from bootloader or default value will be used.
+> > +    Valid values: -1, 0, 100, 150, 200
 > > +
-> > +The Synopsys designware mobile storage host controller is used to
-> interface
-> > +a SoC with storage medium such as eMMC or SD/MMC cards. This file
-> documents
-> > +differences between the core Synopsys dw mshc controller properties
-> described
-> > +by synopsys-dw-mshc.txt and the properties used by the Mellanox
-> Bluefield SoC
-> > +specific extensions to the Synopsys Designware Mobile Storage Host
-> Controller.
+> > +  - max8998,charge-timeout: Setup "Charge Full Timeout". If value equa=
+ls 0,
+> > +    remain value set from bootloader or default value will be used.
+> > +    Valid values: -1, 0, 5, 6, 7
 > > +
-> > +Required Properties:
+> >  Regulators: All the regulators of MAX8998 to be instantiated shall be
+> >  listed in a child node named 'regulators'. Each regulator is represent=
+ed
+> >  by a child node of the 'regulators' node.
+> > @@ -99,6 +114,13 @@ Example:
+> >  		max8998,pmic-buck2-dvs-gpio =3D <&gpx0 0 3 0 0>; /* SET3 */
+> >  		max8998,pmic-buck2-dvs-voltage =3D <1350000>, <1300000>;
+> > =20
+> > +		/* Charger configuration */
+> > +		charger {
+> > +			max8998,charge-eoc =3D <0>;
+> > +			max8998,charge-restart =3D <(-1)>;
+> > +			max8998,charge-timeout =3D <7>;
+> > +		};
 > > +
-> > +* compatible: should be one of the following.
-> > +  - "mellanox,bluefield-dw-mshc": for controllers with Mellanox Bluefi=
-eld
-> SoC
-> > +    specific extensions.
-> > +
-> > +Example:
-> > +
-> > +	/* Mellanox Bluefield SoC MMC */
-> > +	dwmmc0@4,0 {
+> >  		/* Regulators to instantiate */
+> >  		regulators {
+> >  			ldo2_reg: LDO2 {
 >=20
-> mmc@...
 >=20
-> Doesn't look like a correct unit-address either.
->=20
-> > +		compatible =3D "mellanox,bluefield-dw-mshc";
-> > +		reg =3D <4 0x8000 0x400>;
-> > +		interrupts =3D <32>;
-> > +		fifo-depth =3D <0x100>;
-> > +		clock-frequency =3D <24000000>;
-> > +		bus-width =3D <8>;
-> > +		cap-mmc-highspeed;
-> > +	};
-> > --
-> > 1.8.3.1
-> >
