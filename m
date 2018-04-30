@@ -1,94 +1,175 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: added new pwm-sifive driver
- documentation
-Date: Mon, 30 Apr 2018 11:42:05 +0200
-Message-ID: <20180430094205.GB2476@ulmo>
-References: <1524869998-2805-1-git-send-email-wesley@sifive.com>
- <1524869998-2805-2-git-send-email-wesley@sifive.com>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm64: allwinner: h6: enable MMC0/2 on
+ Pine H64
+Date: Mon, 30 Apr 2018 10:47:35 +0100
+Message-ID: <45956397-a593-e51e-8637-655178c5901c@arm.com>
+References: <20180426140728.43155-1-icenowy@aosc.io>
+ <20180426140728.43155-4-icenowy@aosc.io>
+ <03cc2e8c-4a35-3fb4-b408-fd8d4ba3e407@arm.com>
+ <83EDF187-5EB2-4FEB-99BC-9D5B728D3A45@aosc.io>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="neYutvxvOLaeuPCA"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1524869998-2805-2-git-send-email-wesley@sifive.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Wesley W. Terpstra" <wesley@sifive.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>, David Lechner <david@lechnology.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, SZ Lin <sz.lin@moxa.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBSGMTPLQKGQECTDMSXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <83EDF187-5EB2-4FEB-99BC-9D5B728D3A45-h8G6r0blFSE@public.gmane.org>
+Content-Language: en-GB
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Icenowy,
 
---neYutvxvOLaeuPCA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Apr 27, 2018 at 03:59:56PM -0700, Wesley W. Terpstra wrote:
-> Document new PWM device tree bindings for SiFive SoCs.
+On 27/04/18 08:12, Icenowy Zheng wrote:
 >=20
-> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-sifive.txt         | 28 ++++++++++++++++=
-++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
 >=20
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt b/Docum=
-entation/devicetree/bindings/pwm/pwm-sifive.txt
-> new file mode 100644
-> index 0000000..7cea20d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
-> @@ -0,0 +1,28 @@
-> +SiFive PWM controller
-> +
-> +Unlike most other PWM controllers, the SiFive PWM controller currently o=
-nly
-> +supports one period for all channels in the PWM. This is set globally in=
- DTS.
-> +The period also has significant restrictions on the values it can achiev=
-e,
-> +which the driver rounds to the nearest achievable frequency.
-> +
-> +Required properties:
-> +- compatible: should be "sifive,pwm0"
-> +- reg: physical base address and length of the controller's registers
-> +- clocks: The frequency the controller runs at
+> =E4=BA=8E 2018=E5=B9=B44=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
+12:46:26, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> =E5=86=99=E5=88=B0:
+>> Hi,
+>>
+>> On 26/04/18 15:07, Icenowy Zheng wrote:
+>>> The Pine H64 board have a MicroSD slot connected to MMC0 controller
+>> of
+>>> the H6 SoC and a eMMC slot connected to MMC2.
+>>>
+>>> Enable them in the device tree.
+>>>
+>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>> ---
+>>>  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts      | 32
+>> ++++++++++++++++++++++
+>>>  1 file changed, 32 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+>> b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+>>> index d36de5eb81f3..78b1cd54687c 100644
+>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+>>> @@ -20,6 +20,38 @@
+>>>  	chosen {
+>>>  		stdout-path =3D "serial0:115200n8";
+>>>  	};
+>>> +
+>>> +	reg_vcc3v3: vcc3v3 {
+>>> +		compatible =3D "regulator-fixed";
+>>> +		regulator-name =3D "vcc3v3";
+>>> +		regulator-min-microvolt =3D <3300000>;
+>>> +		regulator-max-microvolt =3D <3300000>;
+>>> +	};
+>>> +
+>>> +	reg_vcc1v8: vcc1v8 {
+>>> +		compatible =3D "regulator-fixed";
+>>> +		regulator-name =3D "vcc1v8";
+>>> +		regulator-min-microvolt =3D <1800000>;
+>>> +		regulator-max-microvolt =3D <1800000>;
+>>> +	};
+>>> +};
+>>> +
+>>> +&mmc0 {
+>>> +	pinctrl-names =3D "default";
+>>> +	pinctrl-0 =3D <&mmc0_pins>;
+>>> +	vmmc-supply =3D <&reg_vcc3v3>;
+>>
+>> So this is actually CLDO1 on the AXP, correct?
+>=20
+> I remember it's coupled between two LDOs, to provide enough power.
+>=20
+>>
+>>
+>>> +	cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
+>>> +	status =3D "okay";
+>>> +};
+>>> +
+>>> +&mmc2 {
+>>> +	pinctrl-names =3D "default";
+>>> +	pinctrl-0 =3D <&mmc2_pins>;
+>>> +	vmmc-supply =3D <&reg_vcc3v3>;
+>>> +	vqmmc-supply =3D <&reg_vcc1v8>;
+>>
+>> And this is BLDO2?
+>=20
+> Yes.
+>=20
+>>
+>> I am just asking because I want to avoid running into the same problem
+>> as with the A64 before: that future DTs become incompatible with older
+>> kernels, because we change the power supply to point to the AXP
+>> regulators, which this kernel does not support yet.
+>=20
+> The answer is just not to keep this compatibility, as it's not
+> supported option to update DT without updating kernel.
 
-That's not quite correct. According to the example below, this is a
-phandle to the clock that drives the PWM at a given frequency.
+Well, I recognise that statement.. ;-) and I understand that it's far
+easier to handle it this way. But:
+- Which .dtb are we going to write into the SPI flash? An older one,
+which covers all kernels, but lacks features? Or a newer one, which
+limits the bootable kernels to recent versions?
+- Which DT are we going to give to EFI applications?
+- Which DT are the BSDs suspected to take? They don't ship their own DTs
+(which is good!).
 
-> +- #pwm-cells: Should be 2.
-> +  The first cell is the PWM channel number
-> +  The second cell is the PWM polarity
-> +- sifive,approx-period: the driver will get as close to this period as i=
-t can
-> +- interrupts: one interrupt per PWM channel (currently unused in the dri=
-ver)
+So I understand that "shipping the DT with the kernel" is the old
+(embedded!) way of doing things, but I really believe we should stop
+relying on this and try to come up with backwards compatible DTs, which
+live in the firmware and get updated there. Because this is what the
+distros seem to expect from ARM64 boards these days.
 
-Those parentheses provide information that doesn't belong in tha DT
-bindings. What you this binding is used in a different operating system
-that does use the interrupts?
+> P.S. I think the DT will update twice on the kernel side, the
+> first time keep reg_vcc3v3 (as it's coupled) but use real
+> regulator for reg_vcc1v8, the second time use the real
+> coupled regulator for reg_vcc3v3.
+>=20
+>>
+>> It looks like there are more users of those power rails, so we could
+>> keep those supplies connected to these fixed regulators here, even with
+>> AXP-805 support in the kernel.
+>=20
+> It's not a good choice.
+>=20
+>>
+>> Or we keep this back until we get proper AXP support in the kernel? I
+>> guess it's quite close to the existing PMICs, so it might be more a
+>> copy&paste exercise to support the AXP-805?
+>=20
+> It's not a reason to keep it back.
 
-Thierry
+So I compared the manuals of the AXP806 and the AXP805, the register
+interface looks identical to me. I only have a (somewhat) Chinese
+version of the AXP806 manual, so couldn't really find the difference
+between the two. Do you know more about it? Is it just maybe the
+packaging and the electrical properties (like max current supported)?
 
---neYutvxvOLaeuPCA
-Content-Type: application/pgp-signature; name="signature.asc"
+If the I2C register interface is really the same, we could just add the
+DT nodes for the regulator and be done.
 
------BEGIN PGP SIGNATURE-----
+Cheers,
+Andre.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlrm5O0ACgkQ3SOs138+
-s6FyGg//SX9MDuJif7abi9OkZBNe2kKW0wG9ntRgxAIKzfedO89Gn6gpFD1QnaA/
-xaFKn0WecfU2D6xqMk4Np91woUEjgdYmlkPwE43+owy+cA6wbkhhfoWMJYKF/1/a
-50j1aCgesMlCah6r44ByAee/eFW7D6oldmIgrXq3RDG76eCU4/xpaXsC3bn1aE0x
-cmCD20+DSAGsvAuJVTa+ZGK4kGjQdMBcuyyYjoygW3zR9s+foJmX+ppcug/AgBhz
-gaYRypGynVgn4kxqCZsgN+tiYSTziRAEdbxsRJgGiHpA4IoAM0VoaBRqnt7xM/Dj
-G7DaBi6Y19UVlorahX5rHCo4V7G1CurPATaFxybIECeiDTM1sDGCV8sc1nnvvJLS
-RPPzsayWHm5ldYTvk7BK7cH2jJU/T3wnmUvqXrGWfndX6RvkQ6sghcqpAc04iVYQ
-xTdbXbdiEfs8CIg4M+KJ2hvWQHCBGbZ8OOX+1mbynm/X+X8Y3zZeQDP9fnbjnB4Q
-Uw/TLXN5ifGD180UjyZZlaSfww9UQ9VbSSiRe1BlaqW2//TW2Cr/p99JerrYp3W6
-DMGo9eSBQtXnZ9bWFDz8o/Pc16UjV7vUvq02y6VgNzBckeXdH+CUHMu1j4Oj83Mr
-yyxEQMIsoafArrlvF4ZzG5z0zj8IFGtvmYJtpoInBawzLN5lEjc=
-=F978
------END PGP SIGNATURE-----
+>=20
+>>
+>> But apart from this this looks correct to me.
+>>
+>> Cheers,
+>> Andre.
+>>
+>>> +	non-removable;
+>>> +	cap-mmc-hw-reset;
+>>> +	status =3D "okay";
+>>>  };
+>>> =20
+>>>  &uart0 {
+>>>
 
---neYutvxvOLaeuPCA--
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
