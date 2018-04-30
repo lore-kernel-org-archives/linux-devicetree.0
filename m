@@ -1,613 +1,144 @@
-Return-Path: <krzk@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFC 01/10] ARM: dts: exynos: Remove Exynos5440
-Date: Tue, 24 Apr 2018 22:32:30 +0200
-Message-Id: <20180424203239.21885-2-krzk@kernel.org>
-In-Reply-To: <20180424203239.21885-1-krzk@kernel.org>
-References: <20180424203239.21885-1-krzk@kernel.org>
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Jaehoon Chung <jh80.chung@samsung.com>
+MIME-Version: 1.0
+In-Reply-To: <e2039dc5-92ec-d3a1-bc4f-6565a8c901ac@suse.de>
+References: <cover.1524751696.git.michal.simek@xilinx.com>
+	<6045807691c310ccdd57ab16524b7525f26a1dc1.1524751696.git.michal.simek@xilinx.com>
+	<CAL_Jsq+69p1GstFua1-27LGv9MKT8dtbd1ytcq+GuvQ=VcEHKg@mail.gmail.com>
+	<ba081812-f532-5ebd-b052-cdeb1f02bff1@xilinx.com>
+	<CAL_Jsq+3WnGNM0ip_v75s8f5-Wq_9ht19-T-MHyhKjzcU6jtdg@mail.gmail.com>
+	<147e8ae7-3682-2350-394a-828c096f5ee3@xilinx.com>
+	<e2039dc5-92ec-d3a1-bc4f-6565a8c901ac@suse.de>
+Date: Mon, 30 Apr 2018 08:44:08 -0500
+Message-ID: <CAL_Jsq+cP_50F4oMuG0tBdxKNJYQYMw0_xY0WKfkCG528rghaA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] of: base: Introduce of_alias_check_id() to check
+ alias IDs
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Alexander Graf <agraf@suse.de>
+Cc: Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The Exynos5440 (quad-core A15 with GMAC, PCIe, SATA) was targeting
-server platforms but it did not make it to the market really.  There are
-no development boards with it and probably there are no real products
-neither.  The development for Exynos5440 ended in 2013 and since then
-the platform is in maintenance mode.
+On Fri, Apr 27, 2018 at 4:58 PM, Alexander Graf <agraf@suse.de> wrote:
+>
+>
+> On 27.04.18 16:14, Michal Simek wrote:
+>> On 27.4.2018 15:02, Rob Herring wrote:
+>>> On Fri, Apr 27, 2018 at 1:10 AM, Michal Simek <michal.simek@xilinx.com> wrote:
+>>>> On 27.4.2018 04:39, Rob Herring wrote:
+>>>>> On Thu, Apr 26, 2018 at 9:08 AM, Michal Simek <michal.simek@xilinx.com> wrote:
+>>>>>> The function travers the lookup table to check if the request alias
+>>>>>> id is compatible with the device driver match structure.
+>>>>>> This function will be used by serial drivers to check if requested alias
+>>>>>> is allocated or free to use.
+>>>>>>
+>>>>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>>>>>> ---
+>>>>>>
+>>>>>>  drivers/of/base.c  | 49 ++++++++++++++++++++++++++++++++++++++++++++++
+>>>>>>  include/linux/of.h |  2 ++
+>>>>>>  2 files changed, 51 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>>>>>> index 848f549164cd..382de01acc72 100644
+>>>>>> --- a/drivers/of/base.c
+>>>>>> +++ b/drivers/of/base.c
+>>>>>> @@ -1892,6 +1892,55 @@ int of_alias_get_id(struct device_node *np, const char *stem)
+>>>>>>  }
+>>>>>>  EXPORT_SYMBOL_GPL(of_alias_get_id);
+>>>>>>
+>>>>>> +/**
+>>>>>> + * of_alias_check_id - Check alias id for the give compatibility
+>>>>>> + * @matches:   Array of of device match structures to search in
+>>>>>> + * @stem:      Alias stem of the given device_node
+>>>>>> + * @id:                Alias ID for checking
+>>>>>> + *
+>>>>>> + * The function travers the lookup table to check if the request alias id
+>>>>>> + * is compatible with the device driver match structure
+>>>>>> + *
+>>>>>> + * Return true if ID is allocated, return false if not
+>>>>>> + */
+>>>>>> +bool of_alias_check_id(const struct of_device_id *matches, const char *stem,
+>>>>>> +                      int id)
+>>>>>
+>>>>> Wouldn't it be simpler to just return a bitmap of all allocated ids
+>>>>> that match rather than trying to build that up 1 bit at a time?
+>>>>
+>>>> Is alias list stable or can dt overlay change it?
+>>>
+>>> Stable. If you use an id and then an overlay adds that id as an alias,
+>>> what should the kernel do? The only choice is ignore the suggestion.
+>>
+>> I didn't play with that for a while but on fpga case you have for
+>> example serial0/serial1 fixed to hard IPs/PS part and then you add 20
+>> uartlites or 16550 IPs to PL via overlays and you want to make sure
+>> proper order for user application.
+>> It means it is not rewriting current but adding new one exactly how you
+>> should do that when fixed and fpga parts are together.
+>>
+>>
+>>>
+>>>> What should be the expected flow? Find out maximum number of aliases of
+>>>> the same kind and allocate bitmap and return it with length.
+>>>
+>>> I think we can assume <32 so just return a bitmap in a unsigned long
+>>> or u32. Use that to initialize a bitmap in the driver. For un-aliased
+>>> devices, find the first unset bit, use that id and set the bit.
+>>
+>> Ok if this is in driver field can be allocated in the driver and passed
+>> also maximum len. It should be better then expecting maximum of 32
+>> devices which ends with max serial31 alias.
+>>
+>> Or at least expect u64 with max serial63.
+>>
+>>
+>>>> Anyway if you look at that patches I sent then I call in the driver
+>>>> of_alias_get_highest_id("serial") which doesn't take care if alias match
+>>>> with actual driver. It means having information about max alias ID which
+>>>> match actual driver that would be helpful but I am not quite sure what
+>>>> should be the flow.
+>>>
+>>> I'm a bit confused as to why you use of_alias_get_highest_id and
+>>> of_alias_check_id. of_alias_get_highest_id is really intended if  you
+>>> want to start dynamic allocations above all the alias ids.
+>>
+>> I need to get maximum number of ports for passing it to
+>> uart_register_driver which is called only once.
+>> And using of_alias_get_highest_id() return me reasonable number for all
+>> listed serial ports.
+>> It is not correct because some IPs don't need to be listed in that list
+>> but it is reasonable expectation for this RFC.
+>> Even alias bitfield won't help with getting correct number.
+>>
+>>
+>> The best will be to get number of devices which match that driver
+>> because they don't need to be listed in aliases list.
+>>
+>> You get 20 of devices and will allocate space for 20. If there is alias
+>> below 20 you will use numbers. If there is alias >= 20 it will be
+>> ignored in probe and number will be assigned based on empty position.
+>>
+>> But this is also no covering overlay cases where others devices can be
+>> added at run time.
+>>
+>>
+>>> I guess the need to match devices is based on each serial driver
+>>> having it's own major and /dev name. IMO, we should get rid of those
+>>> and every serial driver use ttySn (with the exception of things like
+>>> USB serial). Then you'd just need to find all serial aliases. But you
+>>> can support both with this function. Just return a bitmap of all
+>>> aliases if match is NULL.
+>>
+>> This will break a lot of things which are stable today.
+>
+> What if ttySn were simply symlinks and no driver spawns any device of
+> that name? So the normal NS16550 UART driver would get a new name, but
+> ttyS0 we could still match for everywhere regardless.
 
-Remove all Device Tree sources for Exynos5440, as first step of removal
-of the platform to simplify the code and drivers.
+I'd always figured we'd make the old names symlinks to the new names.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- .../bindings/arm/samsung/samsung-boards.txt        |   2 -
- arch/arm/boot/dts/Makefile                         |   2 -
- arch/arm/boot/dts/exynos5440-sd5v1.dts             |  42 ---
- arch/arm/boot/dts/exynos5440-ssdk5440.dts          |  81 -----
- arch/arm/boot/dts/exynos5440-tmu-sensor-conf.dtsi  |  20 --
- arch/arm/boot/dts/exynos5440-trip-points.dtsi      |  21 --
- arch/arm/boot/dts/exynos5440.dtsi                  | 355 ---------------------
- 7 files changed, 523 deletions(-)
- delete mode 100644 arch/arm/boot/dts/exynos5440-sd5v1.dts
- delete mode 100644 arch/arm/boot/dts/exynos5440-ssdk5440.dts
- delete mode 100644 arch/arm/boot/dts/exynos5440-tmu-sensor-conf.dtsi
- delete mode 100644 arch/arm/boot/dts/exynos5440-trip-points.dtsi
- delete mode 100644 arch/arm/boot/dts/exynos5440.dtsi
+> In that layer we could then do the alias mapping and simply honor the
+> numbers given by DT.
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-index 14510b215480..bdadc3da9556 100644
---- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-+++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-@@ -21,8 +21,6 @@ Required root node properties:
- 	- "samsung,smdk5420"	- for Exynos5420-based Samsung SMDK5420 eval board.
- 	- "samsung,tm2"		- for Exynos5433-based Samsung TM2 board.
- 	- "samsung,tm2e"	- for Exynos5433-based Samsung TM2E board.
--	- "samsung,sd5v1"	- for Exynos5440-based Samsung board.
--	- "samsung,ssdk5440"	- for Exynos5440-based Samsung board.
- 
- * Other companies Exynos SoC based
-   * FriendlyARM
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9ea57f8ebc4e..bf098f59fd0a 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -191,8 +191,6 @@ dtb-$(CONFIG_ARCH_EXYNOS5) += \
- 	exynos5422-odroidxu3.dtb \
- 	exynos5422-odroidxu3-lite.dtb \
- 	exynos5422-odroidxu4.dtb \
--	exynos5440-sd5v1.dtb \
--	exynos5440-ssdk5440.dtb \
- 	exynos5800-peach-pi.dtb
- dtb-$(CONFIG_ARCH_GEMINI) += \
- 	gemini-dlink-dir-685.dtb \
-diff --git a/arch/arm/boot/dts/exynos5440-sd5v1.dts b/arch/arm/boot/dts/exynos5440-sd5v1.dts
-deleted file mode 100644
-index c4b8392d1ae1..000000000000
---- a/arch/arm/boot/dts/exynos5440-sd5v1.dts
-+++ /dev/null
-@@ -1,42 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * SAMSUNG SD5v1 board device tree source
-- *
-- * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-- *		http://www.samsung.com
-- */
--
--/dts-v1/;
--#include "exynos5440.dtsi"
--
--/ {
--	model = "SAMSUNG SD5v1 board based on EXYNOS5440";
--	compatible = "samsung,sd5v1", "samsung,exynos5440", "samsung,exynos5";
--
--	chosen {
--		bootargs = "root=/dev/sda2 rw rootwait ignore_loglevel earlyprintk no_console_suspend mem=2048M@0x80000000 mem=6144M@0x100000000 console=ttySAC0,115200";
--	};
--
--	/* FIXME: set reg property with correct start address and size */
--	memory@0 {
--		device_type = "memory";
--		reg = <0 0>;
--	};
--
--	fixed-rate-clocks {
--		xtal {
--			compatible = "samsung,clock-xtal";
--			clock-frequency = <50000000>;
--		};
--	};
--
--	spi {
--		status = "disabled";
--	};
--
--};
--
--&gmac {
--	fixed_phy;
--	phy_addr = <1>;
--};
-diff --git a/arch/arm/boot/dts/exynos5440-ssdk5440.dts b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
-deleted file mode 100644
-index a33c4fc29ae5..000000000000
---- a/arch/arm/boot/dts/exynos5440-ssdk5440.dts
-+++ /dev/null
-@@ -1,81 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * SAMSUNG SSDK5440 board device tree source
-- *
-- * Copyright (c) 2012 Samsung Electronics Co., Ltd.
-- *		http://www.samsung.com
-- */
--
--/dts-v1/;
--#include "exynos5440.dtsi"
--#include <dt-bindings/gpio/gpio.h>
--
--/ {
--	model = "SAMSUNG SSDK5440 board based on EXYNOS5440";
--	compatible = "samsung,ssdk5440", "samsung,exynos5440", "samsung,exynos5";
--
--	chosen {
--		bootargs = "root=/dev/sda2 rw rootwait ignore_loglevel earlyprintk no_console_suspend mem=2048M@0x80000000 mem=6144M@0x100000000 console=ttySAC0,115200";
--	};
--
--	/* FIXME: set reg property with correct start address and size */
--	memory@0 {
--		device_type = "memory";
--		reg = <0 0>;
--	};
--
--	fixed-rate-clocks {
--		xtal {
--			compatible = "samsung,clock-xtal";
--			clock-frequency = <50000000>;
--		};
--	};
--};
--
--&pcie_0 {
--	reset-gpio = <&pin_ctrl 5 GPIO_ACTIVE_HIGH>;
--	status = "okay";
--};
--
--&pcie_1 {
--	reset-gpio = <&pin_ctrl 22 GPIO_ACTIVE_HIGH>;
--	status = "okay";
--};
--
--&spi_0 {
--	flash: w25q128@0 {
--		#address-cells = <1>;
--		#size-cells = <1>;
--		compatible = "winbond,w25q128";
--		spi-max-frequency = <15625000>;
--		reg = <0>;
--		controller-data {
--			samsung,spi-feedback-delay = <0>;
--		};
--
--		partition@0 {
--			label = "BootLoader";
--			reg = <0x60000 0x80000>;
--			read-only;
--		};
--
--		partition@e0000 {
--			label = "Recovery-Kernel";
--			reg = <0xe0000 0x300000>;
--			read-only;
--		};
--
--		partition@3e0000 {
--			label = "CRAM-FS";
--			reg = <0x3e0000 0x700000>;
--			read-only;
--		};
--
--		partition@ae0000 {
--			label = "User-Data";
--			reg = <0xae0000 0x520000>;
--		};
--
--	};
--
--};
-diff --git a/arch/arm/boot/dts/exynos5440-tmu-sensor-conf.dtsi b/arch/arm/boot/dts/exynos5440-tmu-sensor-conf.dtsi
-deleted file mode 100644
-index 0421c3d42905..000000000000
---- a/arch/arm/boot/dts/exynos5440-tmu-sensor-conf.dtsi
-+++ /dev/null
-@@ -1,20 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * Device tree sources for Exynos5440 TMU sensor configuration
-- *
-- * Copyright (c) 2014 Lukasz Majewski <l.majewski@samsung.com>
-- */
--
--#include <dt-bindings/thermal/thermal_exynos.h>
--
--#thermal-sensor-cells = <0>;
--samsung,tmu_gain = <5>;
--samsung,tmu_reference_voltage = <16>;
--samsung,tmu_noise_cancel_mode = <4>;
--samsung,tmu_efuse_value = <0x5d2d>;
--samsung,tmu_min_efuse_value = <16>;
--samsung,tmu_max_efuse_value = <76>;
--samsung,tmu_first_point_trim = <25>;
--samsung,tmu_second_point_trim = <70>;
--samsung,tmu_default_temp_offset = <25>;
--samsung,tmu_cal_type = <TYPE_ONE_POINT_TRIMMING>;
-diff --git a/arch/arm/boot/dts/exynos5440-trip-points.dtsi b/arch/arm/boot/dts/exynos5440-trip-points.dtsi
-deleted file mode 100644
-index a2b04fed7d0b..000000000000
---- a/arch/arm/boot/dts/exynos5440-trip-points.dtsi
-+++ /dev/null
-@@ -1,21 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * Device tree sources for default Exynos5440 thermal zone definition
-- *
-- * Copyright (c) 2014 Lukasz Majewski <l.majewski@samsung.com>
-- */
--
--polling-delay-passive = <0>;
--polling-delay = <0>;
--trips {
--	cpu-alert-0 {
--		temperature = <100000>; /* millicelsius */
--		hysteresis = <0>; /* millicelsius */
--		type = "active";
--	};
--	cpu-crit-0 {
--		temperature = <105000>; /* millicelsius */
--		hysteresis = <0>; /* millicelsius */
--		type = "critical";
--	};
--};
-diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-deleted file mode 100644
-index f3abecc44657..000000000000
---- a/arch/arm/boot/dts/exynos5440.dtsi
-+++ /dev/null
-@@ -1,355 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * SAMSUNG EXYNOS5440 SoC device tree source
-- *
-- * Copyright (c) 2012 Samsung Electronics Co., Ltd.
-- *		http://www.samsung.com
-- */
--
--#include <dt-bindings/clock/exynos5440.h>
--#include <dt-bindings/interrupt-controller/arm-gic.h>
--#include <dt-bindings/interrupt-controller/irq.h>
--
--/ {
--	compatible = "samsung,exynos5440", "samsung,exynos5";
--
--	interrupt-parent = <&gic>;
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	aliases {
--		serial0 = &serial_0;
--		serial1 = &serial_1;
--		spi0 = &spi_0;
--		tmuctrl0 = &tmuctrl_0;
--		tmuctrl1 = &tmuctrl_1;
--		tmuctrl2 = &tmuctrl_2;
--	};
--
--	cpus {
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		cpu@0 {
--			device_type = "cpu";
--			compatible = "arm,cortex-a15";
--			reg = <0>;
--		};
--		cpu@1 {
--			device_type = "cpu";
--			compatible = "arm,cortex-a15";
--			reg = <1>;
--		};
--		cpu@2 {
--			device_type = "cpu";
--			compatible = "arm,cortex-a15";
--			reg = <2>;
--		};
--		cpu@3 {
--			device_type = "cpu";
--			compatible = "arm,cortex-a15";
--			reg = <3>;
--		};
--	};
--
--	soc: soc {
--		compatible = "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges;
--
--		clock: clock-controller@160000 {
--			compatible = "samsung,exynos5440-clock";
--			reg = <0x160000 0x1000>;
--			#clock-cells = <1>;
--		};
--
--		gic: interrupt-controller@2e0000 {
--			compatible = "arm,cortex-a15-gic";
--			#interrupt-cells = <3>;
--			interrupt-controller;
--			reg =	<0x2E1000 0x1000>,
--				<0x2E2000 0x2000>,
--				<0x2E4000 0x2000>,
--				<0x2E6000 0x2000>;
--			interrupts = <GIC_PPI 9
--					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
--		};
--
--
--		arm-pmu {
--			compatible = "arm,cortex-a15-pmu", "arm,cortex-a9-pmu";
--			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
--		};
--
--		timer {
--			compatible = "arm,cortex-a15-timer",
--				     "arm,armv7-timer";
--			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
--				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
--				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
--				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
--			clock-frequency = <50000000>;
--		};
--
--		cpufreq@160000 {
--			compatible = "samsung,exynos5440-cpufreq";
--			reg = <0x160000 0x1000>;
--			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
--			operating-points = <
--					/* KHz	  uV */
--					1500000 1100000
--					1400000 1075000
--					1300000 1050000
--					1200000 1025000
--					1100000 1000000
--					1000000 975000
--					900000  950000
--					800000  925000
--			>;
--		};
--
--		serial_0: serial@b0000 {
--			compatible = "samsung,exynos4210-uart";
--			reg = <0xB0000 0x1000>;
--			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clock CLK_B_125>, <&clock CLK_B_125>;
--			clock-names = "uart", "clk_uart_baud0";
--		};
--
--		serial_1: serial@c0000 {
--			compatible = "samsung,exynos4210-uart";
--			reg = <0xC0000 0x1000>;
--			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clock CLK_B_125>, <&clock CLK_B_125>;
--			clock-names = "uart", "clk_uart_baud0";
--		};
--
--		spi_0: spi@d0000 {
--			compatible = "samsung,exynos5440-spi";
--			reg = <0xD0000 0x100>;
--			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			samsung,spi-src-clk = <0>;
--			num-cs = <1>;
--			clocks = <&clock CLK_B_125>, <&clock CLK_SPI_BAUD>;
--			clock-names = "spi", "spi_busclk0";
--		};
--
--		pin_ctrl: pinctrl@e0000 {
--			compatible = "samsung,exynos5440-pinctrl";
--			reg = <0xE0000 0x1000>;
--			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-controller;
--			#interrupt-cells = <2>;
--			#gpio-cells = <2>;
--
--			fan: fan {
--				samsung,exynos5440-pin-function = <1>;
--			};
--
--			hdd_led0: hdd_led0 {
--				samsung,exynos5440-pin-function = <2>;
--			};
--
--			hdd_led1: hdd_led1 {
--				samsung,exynos5440-pin-function = <3>;
--			};
--
--			uart1: uart1 {
--				samsung,exynos5440-pin-function = <4>;
--			};
--		};
--
--		i2c@f0000 {
--			compatible = "samsung,exynos5440-i2c";
--			reg = <0xF0000 0x1000>;
--			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			clocks = <&clock CLK_B_125>;
--			clock-names = "i2c";
--		};
--
--		i2c@100000 {
--			compatible = "samsung,exynos5440-i2c";
--			reg = <0x100000 0x1000>;
--			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			clocks = <&clock CLK_B_125>;
--			clock-names = "i2c";
--		};
--
--		watchdog@110000 {
--			compatible = "samsung,s3c6410-wdt";
--			reg = <0x110000 0x1000>;
--			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clock CLK_B_125>;
--			clock-names = "watchdog";
--		};
--
--		gmac: ethernet@230000 {
--			compatible = "snps,dwmac-3.70a", "snps,dwmac";
--			reg = <0x00230000 0x8000>;
--			interrupt-parent = <&gic>;
--			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "macirq";
--			phy-mode = "sgmii";
--			clocks = <&clock CLK_GMAC0>;
--			clock-names = "stmmaceth";
--		};
--
--		amba {
--			#address-cells = <1>;
--			#size-cells = <1>;
--			compatible = "simple-bus";
--			interrupt-parent = <&gic>;
--			ranges;
--		};
--
--		rtc@130000 {
--			compatible = "samsung,s3c6410-rtc";
--			reg = <0x130000 0x1000>;
--			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clock CLK_B_125>;
--			clock-names = "rtc";
--		};
--
--		tmuctrl_0: tmuctrl@160118 {
--			compatible = "samsung,exynos5440-tmu";
--			reg = <0x160118 0x230>, <0x160368 0x10>;
--			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clock CLK_B_125>;
--			clock-names = "tmu_apbif";
--			#include "exynos5440-tmu-sensor-conf.dtsi"
--		};
--
--		tmuctrl_1: tmuctrl@16011c {
--			compatible = "samsung,exynos5440-tmu";
--			reg = <0x16011C 0x230>, <0x160368 0x10>;
--			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clock CLK_B_125>;
--			clock-names = "tmu_apbif";
--			#include "exynos5440-tmu-sensor-conf.dtsi"
--		};
--
--		tmuctrl_2: tmuctrl@160120 {
--			compatible = "samsung,exynos5440-tmu";
--			reg = <0x160120 0x230>, <0x160368 0x10>;
--			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clock CLK_B_125>;
--			clock-names = "tmu_apbif";
--			#include "exynos5440-tmu-sensor-conf.dtsi"
--		};
--
--		sata@210000 {
--			compatible = "snps,exynos5440-ahci";
--			reg = <0x210000 0x10000>;
--			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clock CLK_SATA>;
--			clock-names = "sata";
--		};
--
--		ohci@220000 {
--			compatible = "samsung,exynos5440-ohci";
--			reg = <0x220000 0x1000>;
--			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clock CLK_USB>;
--			clock-names = "usbhost";
--		};
--
--		ehci@221000 {
--			compatible = "samsung,exynos5440-ehci";
--			reg = <0x221000 0x1000>;
--			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clock CLK_USB>;
--			clock-names = "usbhost";
--		};
--
--		pcie_phy0: pcie-phy@270000 {
--			#phy-cells = <0>;
--			compatible = "samsung,exynos5440-pcie-phy";
--			reg = <0x270000 0x1000>, <0x271000 0x40>;
--		};
--
--		pcie_phy1: pcie-phy@272000 {
--			#phy-cells = <0>;
--			compatible = "samsung,exynos5440-pcie-phy";
--			reg = <0x272000 0x1000>, <0x271040 0x40>;
--		};
--
--		pcie_0: pcie@290000 {
--			compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
--			reg = <0x290000 0x1000>, <0x40000000 0x1000>;
--			reg-names = "elbi", "config";
--			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clock CLK_PR0_250_O>, <&clock CLK_PB0_250_O>;
--			clock-names = "pcie", "pcie_bus";
--			#address-cells = <3>;
--			#size-cells = <2>;
--			device_type = "pci";
--			phys = <&pcie_phy0>;
--			ranges = <0x81000000 0 0	  0x40001000 0 0x00010000   /* downstream I/O */
--				  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>; /* non-prefetchable memory */
--			bus-range = <0x00 0xff>;
--			#interrupt-cells = <1>;
--			interrupt-map-mask = <0 0 0 0>;
--			interrupt-map = <0x0 0 &gic 53>;
--			num-lanes = <4>;
--			status = "disabled";
--		};
--
--		pcie_1: pcie@2a0000 {
--			compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
--			reg = <0x2a0000 0x1000>, <0x60000000 0x1000>;
--			reg-names = "elbi", "config";
--			interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clock CLK_PR1_250_O>, <&clock CLK_PB0_250_O>;
--			clock-names = "pcie", "pcie_bus";
--			#address-cells = <3>;
--			#size-cells = <2>;
--			device_type = "pci";
--			phys = <&pcie_phy1>;
--			ranges = <0x81000000 0 0	  0x60001000 0 0x00010000   /* downstream I/O */
--				  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>; /* non-prefetchable memory */
--			bus-range = <0x00 0xff>;
--			#interrupt-cells = <1>;
--			interrupt-map-mask = <0 0 0 0>;
--			interrupt-map = <0x0 0 &gic 56>;
--			num-lanes = <4>;
--			status = "disabled";
--		};
--	};
--
--	thermal-zones {
--		cpu0_thermal: cpu0-thermal {
--			thermal-sensors = <&tmuctrl_0>;
--			#include "exynos5440-trip-points.dtsi"
--		};
--		cpu1_thermal: cpu1-thermal {
--		       thermal-sensors = <&tmuctrl_1>;
--		       #include "exynos5440-trip-points.dtsi"
--		};
--		cpu2_thermal: cpu2-thermal {
--		       thermal-sensors = <&tmuctrl_2>;
--		       #include "exynos5440-trip-points.dtsi"
--		};
--	};
--};
--- 
-2.14.1
+Is that really necessary? 
+>
+>
+> Alex
