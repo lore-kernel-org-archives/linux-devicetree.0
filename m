@@ -1,38 +1,74 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 10/11] arm64: dts: r8a77965-salvator-x: Enable DU
- external clocks and HDMI
-Date: Mon, 30 Apr 2018 09:34:00 +0200
-Message-ID: <20180430073400.6prb2uvb6esslzqb@verge.net.au>
-References: <20180427165722.19445-1-kieran.bingham+renesas@ideasonboard.com>
- <20180427165722.19445-11-kieran.bingham+renesas@ideasonboard.com>
- <3691864.jEUybrQDu7@avalon>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 01/17] dt-bindings: power: reset: mt6323: add
+ bindings for MT6323 power controller
+Date: Mon, 30 Apr 2018 15:34:23 +0800
+Message-ID: <1525073663.12322.219.camel@mtkswgap22>
+References: <cover.1524646231.git.sean.wang@mediatek.com>
+         <0b3123e42c8a47e3fa8b21aa2e139e6d3dc69f41.1524646231.git.sean.wang@mediatek.com>
+         <20180427200225.lq63ex7eiukc6egl@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3691864.jEUybrQDu7@avalon>
+In-Reply-To: <20180427200225.lq63ex7eiukc6egl@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, sre@kernel.org, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, matthias.bgg@gmail.com, eddie.huang@mediatek.com, devicetree@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 28, 2018 at 12:34:26AM +0300, Laurent Pinchart wrote:
-> Hi Kieran,
-> 
-> Thank you for the patch.
-> 
-> On Friday, 27 April 2018 19:57:21 EEST Kieran Bingham wrote:
-> > The DU1 external dot clock is provided by the fixed frequency clock
-> > generator X21, while the DU0 and DU3 clocks are provided by the
-> > programmable Versaclock5 clock generator.
+On Fri, 2018-04-27 at 15:02 -0500, Rob Herring wrote:
+> On Wed, Apr 25, 2018 at 05:32:27PM +0800, sean.wang@mediatek.com wrote:
+> > From: Sean Wang <sean.wang@mediatek.com>
 > > 
-> > Enable the clocks, and the HDMI encoder for the M3-N Salvator-X board
-> > and hook it up to the HDMI connector.
+> > Adding device-tree binding for the power controller which is a tiny
+> > circuit block present as a part of MT6323 PMIC and is responsible for
+> > externally powering off or on a remote SoC the PMIC is connected to.
 > > 
-> > Based on patches from Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > ---
+> >  .../bindings/power/reset/mt6323-poweroff.txt         | 20 ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
 > > 
-> > Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> > diff --git a/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+> > new file mode 100644
+> > index 0000000..6f7c590
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+> > @@ -0,0 +1,20 @@
+> > +Device Tree Bindings for Power Controller on MediaTek PMIC
+> > +
+> > +The power controller which could be found on PMIC is responsible for externally
+> > +powering off or on the remote MediaTek SoC through the circuit BBPU.
+> > +
+> > +Required properties:
+> > +- compatible: Should be one of follows
+> > +	"mediatek,mt6323-pwrc": for MT6323 PMIC
+> > +
+> > +Example:
+> > +
+> > +	pmic {
+> > +		compatible = "mediatek,mt6323";
+> > +
+> > +		...
+> > +
+> > +		power-controller {
+> > +			compatible = "mediatek,mt6323-pwrc";
 > 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Why do you need this in DT? It doesn't define any resources. The parent 
+> can just as well register a reset or poweroff handler.
+> 
+> Rob
+> 
 
-Thanks, applied.
+Yes, those binding can be removed. 
+
+I tend to use platform_device_register_data embedded in mfd driver
+to probe the existent poweroff driver in the next version.
+
+> > +		};
+> > +	}
+> > -- 
+> > 2.7.4
+> > 
