@@ -1,84 +1,72 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: input: Add Add Spreadtrum SC27xx
- vibrator documentation
-Date: Mon, 30 Apr 2018 16:06:18 +0800
-Message-ID: <CAMz4kuJfjMkGSOU_E6eO0TV3mK7UZhfA0yQPqYa6Ffa0K+xp8Q@mail.gmail.com>
-References: <e2f85ec0b1fb66baa41dd85bb31e8113e23c704b.1524733425.git.baolin.wang@linaro.org>
- <20180427145116.rhjs5vqg6czdexee@rob-hp-laptop>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v4 09/15] memory: tegra: Squash tegra20-mc into common
+ tegra-mc driver
+Date: Mon, 30 Apr 2018 10:07:45 +0200
+Message-ID: <20180430080745.GA2484@ulmo>
+References: <cover.1523301400.git.digetx@gmail.com>
+ <675f74f82378b5f7d8f61d35e929614a0e156141.1523301400.git.digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427145116.rhjs5vqg6czdexee@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <675f74f82378b5f7d8f61d35e929614a0e156141.1523301400.git.digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, xiaotong.lu@spreadtrum.com
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 27 April 2018 at 22:51, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Apr 26, 2018 at 05:12:33PM +0800, Baolin Wang wrote:
->> From: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
->>
->> This patch adds the binding documentation for Spreadtrum SC27xx series
->> vibrator device.
->>
->> Signed-off-by: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
->> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->> ---
->> Changes since v2:
->>  - No updates.
->>
->> Changes since v1:
->>  - No updates.
->> ---
->>  .../bindings/input/sprd,sc27xx-vibra.txt           |   12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt
->>
->> diff --git a/Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt b/Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt
->> new file mode 100644
->> index 0000000..92ead29
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt
->> @@ -0,0 +1,12 @@
->> +Spreadtrum SC27xx PMIC Vibrator
->> +
->> +Required properties:
->> +- compatible: should be "sprd,sc27xx-vibrator".
->> +- reg: address of vibrator control register.
->> +
->> +Example :
->> +
->> +vibrator@eb4 {
->> +     compatible = "sprd,sc27xx-vibrator";
->> +     reg = <0xeb4>;
->
-> What bus is this on? A mmio bus needs a length. Is this part of some
-> other block?
->
+--EeQfGwPcQSOJBaQU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It's on one PMIC bus mapped by regmap-spi. Will add the PMIC part in
-next version:
+On Mon, Apr 09, 2018 at 10:28:31PM +0300, Dmitry Osipenko wrote:
+> Tegra30+ has some minor differences in registers / bits layout compared
+> to Tegra20. Let's squash Tegra20 driver into the common tegra-mc driver
+> in a preparation for the upcoming MC hot reset controls implementation,
+> avoiding code duplication.
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/memory/Kconfig         |  10 --
+>  drivers/memory/Makefile        |   1 -
+>  drivers/memory/tegra/Makefile  |   1 +
+>  drivers/memory/tegra/mc.c      | 120 +++++++++++++++++--
+>  drivers/memory/tegra/mc.h      |  11 ++
+>  drivers/memory/tegra/tegra20.c | 178 +++++++++++++++++++++++++++++
+>  drivers/memory/tegra20-mc.c    | 254 -----------------------------------=
+------
+>  include/soc/tegra/mc.h         |   2 +-
+>  8 files changed, 299 insertions(+), 278 deletions(-)
+>  create mode 100644 drivers/memory/tegra/tegra20.c
+>  delete mode 100644 drivers/memory/tegra20-mc.c
 
-sc2731_pmic: pmic@0 {
-        compatible = "sprd,sc2731";
-        reg = <0>;
-        spi-max-frequency = <26000000>;
-        interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-        interrupt-controller;
-        #interrupt-cells = <2>;
-        #address-cells = <1>;
-        #size-cells = <0>;
+I've applied this now and squashed in patch "memory: tegra: Remove
+handling of MC_GART_ERROR_REQ on Tegra20".
 
-        vibrator@eb4 {
-                compatible = "sprd,sc27xx-vibrator";
-                reg = <0xeb4>;
-        };
-};
+Thanks,
+Thierry
 
-Is that OK for you? Thanks.
+--EeQfGwPcQSOJBaQU
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Baolin.wang
-Best Regards
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlrmzs8ACgkQ3SOs138+
+s6FuzRAApQnPwRJPJTDj4CPHW1c40336Q79dx5RPPDNoyugQoWk+YgqT7JT3bpV7
+ZULc2dDSXd+UScWI1TZoM6sqW5HvdzTb5sCZ5740M296CrcsCPs/PE6behseQSJV
+FL6uOxI3MUK4gC13K28ABZsz8aGCiWFAgOqJKPcR6nFKEsCUb6kYNKhMPKk55lml
+gzLaz/eRTA0oBEiAjDJX+L0EfKvffXCNUaesvYd9453y15PYHXoqBDdJ+T9vQQhk
+Fz860qU5pUllv+lemFsxsXftSCK8n0Ex+LVOwWF24gyMWY5h2KbngkDXQeytlzIJ
+B83EKrevhsa9a4znaj2cMB6VCV15NTkHa9ZHNuR8ltxXelvk0qIeECHnWictdFD9
+IX/JzzXdJ5V4FOeSp3hk982lIfmnrDkPKkpWZN2Byx0jQW0Z/N/QTdvb3aGlN/yR
+wwF6Hwa3RPEV+pjmWqx7krxWyWou1Jnt75VdXXTtPq8u07SbyZD1z6ibylap+HS+
+ALhkgqvL+L9v62VroQAeGg691eJqvUBGZYITs6v7OiDMmS1riMNCRL85vrQrYoYt
+VfmEjpCA93HnbIQTiokC+DFjtjeDoE98qiS5f+8GqBK9A/M7ZWa62ipZUvHe+Q+S
+TRv+xPASZ1eu9sydfQBNe2ygnqybgu7idMcVJibN/XkKy5HhJkg=
+=CcR0
+-----END PGP SIGNATURE-----
+
+--EeQfGwPcQSOJBaQU--
