@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Subject: Re: [PATCH 06/17] irqchip/irq-mvebu-icu: switch to regmap
-Date: Mon, 30 Apr 2018 15:53:52 +0200
-Message-ID: <20180430155352.1b24d1d8@windsurf>
+Date: Mon, 30 Apr 2018 15:58:32 +0200
+Message-ID: <20180430155832.62510f26@windsurf>
 References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
  <20180421135537.24716-7-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
@@ -25,21 +25,40 @@ List-Id: devicetree@vger.kernel.org
 Hello,
 
 On Sat, 21 Apr 2018 15:55:26 +0200, Miquel Raynal wrote:
-> The ICU DT nodes have now the 'syscon' compatible, we can switch to
 
-have now -> now have
+> +	icu->regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, NULL);
+> +	if (IS_ERR(icu->regmap))
+> +		return PTR_ERR(icu->regmap);
+> +
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	icu->base = devm_ioremap_resource(&pdev->dev, res);
+> -	if (IS_ERR(icu->base)) {
+> -		dev_err(&pdev->dev, "Failed to map icu base address.\n");
+> -		return PTR_ERR(icu->base);
+> -	}
+> +	if (!res)
+> +		return -ENODEV;
 
-> regmap before splitting the code to support multiple platform devices to
-> be probed (one for the ICU, one per interrupt group).
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Another issue with relying on the "syscon" compatible string: your ICU
+driver now *requires* that the DT has the "syscon" compatible string.
+Otherwise, no regmap is created, and your
+syscon_regmap_lookup_by_phandle() call will fail.
 
-As I explained in the review of PATCH 03/17, I think we could simply
-create the regmap in the ->probe() of the parent device, instead of
-using the "syscon" property, which is mainly useful when there is no
-parent device.
+In fact, there is a very good hint that something is wrong in terms of
+backward compatibility: your patch
 
-The rest of the conversion to regmap looks good otherwise.
+  arm64: dts: marvell: add syscon compatible to CP110 ICU node
+
+comes early in the series, separated from other DT changes. It should
+come at the end of the series, with the rest of the DT changes. By
+doing this, you could test your series with the driver changes, but not
+the DT changes, and would have realized that the driver change in this
+patch (PATCH 06/17) breaks DT backward compatibility.
+
+This is IMO another good reason to not use the "syscon" property, but
+simply have the driver initialize the regmap by itself. This will work
+even with old DTs, as it will become just an internal implementation
+detail of the driver.
 
 Best regards,
 
