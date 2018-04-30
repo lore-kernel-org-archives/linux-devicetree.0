@@ -1,201 +1,50 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH 3/5] arm64: dts: imx: add imx8qxp support
-Date: Mon, 30 Apr 2018 08:50:01 +0000
-Message-ID: <AM0PR04MB4211B138590F1729C638CB7F80820@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1524855977-15719-1-git-send-email-aisheng.dong@nxp.com>
- <1524855977-15719-4-git-send-email-aisheng.dong@nxp.com>
- <20180430055429.zkyhn7w7ppnqs2pp@salmiak>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v4 03/10] i3c: Add sysfs ABI spec
+Date: Mon, 30 Apr 2018 11:10:14 +0200
+Message-ID: <20180430111014.49083a77@bbrezillon>
+References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
+        <20180330074751.25987-4-boris.brezillon@bootlin.com>
+        <20180429133700.GD28913@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180430055429.zkyhn7w7ppnqs2pp@salmiak>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180429133700.GD28913@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>devi
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Hi Greg,
 
-Thanks for the review.
+On Sun, 29 Apr 2018 15:37:00 +0200
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-> -----Original Message-----
-> From: Mark Rutland [mailto:mark.rutland@arm.com]
-> Sent: Monday, April 30, 2018 1:55 PM
-> To: A.s. Dong <aisheng.dong@nxp.com>
-> Cc: linux-arm-kernel@lists.infradead.org; dongas86@gmail.com;
-> kernel@pengutronix.de; shawnguo@kernel.org; Fabio Estevam
-> <fabio.estevam@nxp.com>; robh+dt@kernel.org; catalin.marinas@arm.com;
-> will.deacon@arm.com; dl-linux-imx <linux-imx@nxp.com>;
-> devicetree@vger.kernel.org
-> Subject: Re: [PATCH 3/5] arm64: dts: imx: add imx8qxp support
-> 
-> Hi,
-> 
-> On Sat, Apr 28, 2018 at 03:06:15AM +0800, Dong Aisheng wrote:
-> > +/{
-> > +	cpus {
-> > +		#address-cells = <2>;
-> > +		#size-cells = <0>;
-> > +
-> > +		/* We have 1 clusters having 4 Cortex-A35 cores */
-> 
-> > +	};
-> > +
-> > +	pmu {
-> > +		compatible = "arm,armv8-pmuv3";
-> > +		interrupts = <GIC_PPI 7
-> > +			(GIC_CPU_MASK_SIMPLE(6) |
-> IRQ_TYPE_LEVEL_HIGH)>;
-> > +		interrupt-affinity = <&A35_0>, <&A35_1>, <&A35_2>,
-> <&A35_3>;
-> > +	};
-> 
-> If using a PPI and all cores are identical, interrupt-affinity isn't necessary.
-> 
-> I note you're using GICv3, whihch doesn't encode a cpumask in its PPI
-> specifier. All instances of GIC_CPU_MASK_SIMPLE should go from dts{i,} files
-> for this platform.
-> 
-
-You're right.
-Thanks for the reminder.
-
-> > +
-> > +	psci {
-> > +		compatible = "arm,psci-1.0";
-> > +		method = "smc";
-> > +		cpu_suspend   = <0xc4000001>;
-> > +		cpu_off	      = <0xc4000002>;
-> > +		cpu_on	      = <0xc4000003>;
-> 
-> You can drop the cpu_* function IDs if you only have "arm,psci-1.0" in the
-> compatible list. These IDs (and more) are implied by PSCI 1.0+.
-> 
-
-That's true. Will remove them.
-
-> > +	};
-> > +};
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-imx8qxp-mek.dts
-> > b/arch/arm64/boot/dts/freescale/fsl-imx8qxp-mek.dts
+> On Fri, Mar 30, 2018 at 09:47:44AM +0200, Boris Brezillon wrote:
+> > Document sysfs files/directories/symlinks exposed by the I3C subsystem.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> > ---
+> > Changes in v2:
+> > - new patch
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-i3c | 95 +++++++++++++++++++++++++++++++++
+> >  1 file changed, 95 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-i3c
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-i3c b/Documentation/ABI/testing/sysfs-bus-i3c
 > > new file mode 100644
-> > index 0000000..920018e
+> > index 000000000000..5e88cc093e0e
 > > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-imx8qxp-mek.dts
-> > @@ -0,0 +1,138 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright 2017~2018 NXP
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "fsl-imx8qxp.dtsi"
-> > +
-> > +/ {
-> > +	model = "Freescale i.MX8QXP MEK";
-> > +	compatible = "fsl,imx8qxp-mek", "fsl,imx8qxp";
-> > +
-> > +	chosen {
-> > +		stdout-path = &dma_lpuart0;
-> > +	};
+> > +++ b/Documentation/ABI/testing/sysfs-bus-i3c
+> > @@ -0,0 +1,95 @@
+> > +What:		/sys/bus/i3c/devices/i3c-<bus-id>
+> > +KernelVersion:  4.16  
 > 
-> No baud-rate configuration?
-> 
+> Wrong kernel versions :)
 
-We use the default one configured by bootloader.
-Or should I be better to specify it?
+I'll fix that.
 
-> [...]
-> 
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-imx8qxp.dtsi
-> > b/arch/arm64/boot/dts/freescale/fsl-imx8qxp.dtsi
-> > new file mode 100644
-> > index 0000000..d7cc836
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-imx8qxp.dtsi
-> > @@ -0,0 +1,794 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright (C) 2016 Freescale Semiconductor, Inc.
-> > + * Copyright 2017~2018 NXP
-> > + *	Dong Aisheng <aisheng.dong@nxp.com>
-> > + */
-> > +
-> > +#include <dt-bindings/clock/imx8qxp-clock.h>
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/pinctrl/pads-imx8qxp.h>
-> > +#include <dt-bindings/power/imx-rsrc.h>
-> > +
-> > +#include "fsl-imx8-ca35.dtsi"
-> > +
-> > +/ {
-> > +	compatible = "fsl,imx8qxp";
-> > +	interrupt-parent = <&gic>;
-> > +	#address-cells = <2>;
-> > +	#size-cells = <2>;
-> > +
-> > +	aliases {
-> > +		serial0 = &dma_lpuart0;
-> > +		mmc0 = &usdhc1;
-> > +		mmc1 = &usdhc2;
-> > +		mmc2 = &usdhc3;
-> > +	};
-> > +
-> > +	memory@80000000 {
-> > +		device_type = "memory";
-> > +		reg = <0x00000000 0x80000000 0 0x40000000>;
-> > +	};
-> > +
-> > +	gic: interrupt-controller@51a00000 {
-> > +		compatible = "arm,gic-v3";
-> > +		reg = <0x0 0x51a00000 0 0x10000>, /* GIC Dist */
-> > +		      <0x0 0x51b00000 0 0xC0000>; /* GICR (RD_base +
-> SGI_base) */
-> > +		#interrupt-cells = <3>;
-> > +		interrupt-controller;
-> > +		interrupts = <GIC_PPI 9
-> > +			(GIC_CPU_MASK_SIMPLE(6) |
-> IRQ_TYPE_LEVEL_HIGH)>;
-> 
-> As above, GIC_CPU_MASK_SIMPLE does not apply to GICv3, and should go.
-> 
-> > +	};
-> > +
-> > +	timer {
-> > +		compatible = "arm,armv8-timer";
-> > +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) |
-> IRQ_TYPE_LEVEL_LOW)>, /* Physical Secure */
-> > +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) |
-> IRQ_TYPE_LEVEL_LOW)>, /* Physical Non-Secure */
-> > +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) |
-> IRQ_TYPE_LEVEL_LOW)>, /* Virtual */
-> > +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) |
-> IRQ_TYPE_LEVEL_LOW)>;
-> > +/* Hypervisor */
-> 
-> ... likewise.
-> 
-> > +		clock-frequency = <8000000>;
-> 
-> Your firmware should be configuring CNTFRQ, so this clock-frequency
-> property should go.
-> 
+Thanks,
 
-Correct. Will delete it.
-
-Regards
-Dong Aisheng
-
-> Thanks,
-> Mark.
+Boris
