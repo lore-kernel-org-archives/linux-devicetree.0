@@ -1,116 +1,43 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH 2/2] ARM: dts: stm32: add flash nor support on stm32mp157c eval board
-Date: Mon, 30 Apr 2018 09:11:21 +0200
-Message-ID: <1525072281-17472-3-git-send-email-ludovic.Barre@st.com>
-References: <1525072281-17472-1-git-send-email-ludovic.Barre@st.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] DT: net: can: rcar_canfd: document R8A77970 bindings
+Date: Mon, 30 Apr 2018 09:19:50 +0200
+Message-ID: <20180430071949.hg6vw2hre6j22mel@verge.net.au>
+References: <7a3d170f-1d3a-a807-9256-15fe1a78ca4e@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525072281-17472-1-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7a3d170f-1d3a-a807-9256-15fe1a78ca4e@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+On Thu, Apr 26, 2018 at 10:41:14PM +0300, Sergei Shtylyov wrote:
+> Document the R-Car V3M (R8A77970) SoC support in the R-Car CAN-FD bindings.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-This patch adds flash nor on qspi. Each flash is
-connected in quad mode and has its own chip select.
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 45 +++++++++++++++++++++++++++++++
- arch/arm/boot/dts/stm32mp157c-ev1.dts     | 25 +++++++++++++++++
- 2 files changed, 70 insertions(+)
-
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-index 6f044100..9d4c553 100644
---- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -146,6 +146,51 @@
- 				gpio-ranges = <&pinctrl 0 160 8>;
- 			};
- 
-+			qspi_clk_pins_a: qspi-clk-0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('F', 10, AF9)>; /* QSPI_CLK */
-+					bias-disable;
-+					drive-push-pull;
-+					slew-rate = <3>;
-+				};
-+			};
-+
-+			qspi_bk1_pins_a: qspi-bk1-0 {
-+				pins1 {
-+					pinmux = <STM32_PINMUX('F', 8, AF10)>, /* QSPI_BK1_IO0 */
-+						 <STM32_PINMUX('F', 9, AF10)>, /* QSPI_BK1_IO1 */
-+						 <STM32_PINMUX('F', 7, AF9)>, /* QSPI_BK1_IO2 */
-+						 <STM32_PINMUX('F', 6, AF9)>; /* QSPI_BK1_IO3 */
-+					bias-disable;
-+					drive-push-pull;
-+					slew-rate = <3>;
-+				};
-+				pins2 {
-+					pinmux = <STM32_PINMUX('B', 6, AF10)>; /* QSPI_BK1_NCS */
-+					bias-pull-up;
-+					drive-push-pull;
-+					slew-rate = <3>;
-+				};
-+			};
-+
-+			qspi_bk2_pins_a: qspi-bk2-0 {
-+				pins1 {
-+					pinmux = <STM32_PINMUX('H', 2, AF9)>, /* QSPI_BK2_IO0 */
-+						 <STM32_PINMUX('H', 3, AF9)>, /* QSPI_BK2_IO1 */
-+						 <STM32_PINMUX('G', 10, AF11)>, /* QSPI_BK2_IO2 */
-+						 <STM32_PINMUX('G', 7, AF11)>; /* QSPI_BK2_IO3 */
-+					bias-disable;
-+					drive-push-pull;
-+					slew-rate = <3>;
-+				};
-+				pins2 {
-+					pinmux = <STM32_PINMUX('C', 0, AF10)>; /* QSPI_BK2_NCS */
-+					bias-pull-up;
-+					drive-push-pull;
-+					slew-rate = <3>;
-+				};
-+			};
-+
- 			uart4_pins_a: uart4@0 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
-diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-index 57e6dbc..96c2aee 100644
---- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-@@ -19,3 +19,28 @@
- 		serial0 = &uart4;
- 	};
- };
-+
-+&qspi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&qspi_clk_pins_a &qspi_bk1_pins_a &qspi_bk2_pins_a>;
-+	reg = <0x58003000 0x1000>, <0x70000000 0x4000000>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	flash0: mx66l51235l@0 {
-+		reg = <0>;
-+		spi-rx-bus-width = <4>;
-+		spi-max-frequency = <108000000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
-+
-+	flash1: mx66l51235l@1 {
-+		reg = <1>;
-+		spi-rx-bus-width = <4>;
-+		spi-max-frequency = <108000000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
-+};
--- 
-2.7.4
+> 
+> ---
+> The patch is against the 'linux-can-next.git' repo but I wouldn't object if
+> it's merged to the 'linux-can.git' repo instead. :-)
+> 
+>  Documentation/devicetree/bindings/net/can/rcar_canfd.txt |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> Index: linux-can-next/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> ===================================================================
+> --- linux-can-next.orig/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> +++ linux-can-next/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> @@ -6,6 +6,7 @@ Required properties:
+>    - "renesas,rcar-gen3-canfd" for R-Car Gen3 compatible controller.
+>    - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
+>    - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3) compatible controller.
+> +  - "renesas,r8a77970-canfd" for R8A77970 (R-Car V3M) compatible controller.
+>  
+>    When compatible with the generic version, nodes must list the
+>    SoC-specific version corresponding to the platform first, followed by the
+> 
