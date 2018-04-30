@@ -1,133 +1,30 @@
-Return-Path: <SRS0=z9yY=HS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pg0-f66.google.com ([74.125.83.66]:35051 "EHLO
-        mail-pg0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754033AbeD2ROF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Apr 2018 13:14:05 -0400
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v4 11/14] media: ov772x: use v4l2_ctrl to get current control value
-Date: Mon, 30 Apr 2018 02:13:10 +0900
-Message-Id: <1525021993-17789-12-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
-References: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Return-Path: <SRS0=nV3H=HT=linaro.org=linus.walleij@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <20180422105330.4712-2-martin.blumenstingl@googlemail.com>
+References: <20180422105330.4712-1-martin.blumenstingl@googlemail.com> <20180422105330.4712-2-martin.blumenstingl@googlemail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 30 Apr 2018 10:52:46 +0200
+Message-ID: <CACRpkdZt7kj0FBRfBqgmxYVMt4yiBPyVsvVdgyzgJGiiErdB=A@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: meson: add support for the
+ Meson8m2 SoC
+Content-Type: text/plain; charset="UTF-8"
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The ov772x driver provides three V4L2 controls and the current value of
-each control is saved as a variable in the private data structure.
+On Sun, Apr 22, 2018 at 12:53 PM, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
 
-We don't need to keep track of the current value by ourself, if we use
-v4l2_ctrl returned from v4l2_ctrl_new_std() instead.
+> The Meson8m2 SoC is a variant of Meson8 with some updates from Meson8b
+> (such as the Gigabit capable DesignWare MAC).
+> It is mostly pin compatible with Meson8, only 10 (existing) CBUS pins
+> get an additional function (four of these are Ethernet RXD2, RXD3, TXD2
+> and TXD3 which are required when the board uses an RGMII PHY).
+> The AOBUS pins seem to be identical on Meson8 and Meson8m2.
+>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-This is a preparatory change to avoid accessing registers under power
-saving mode.  This simplifies s_ctrl() by making it just return without
-saving the current control value in private area when it is called under
-power saving mode.
+Patch applied with Rob's and Kevin's ACKs.
 
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* v4
-- New patch
-
- drivers/media/i2c/ov772x.c | 34 +++++++++++++++++-----------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 7ea157e..3e6ca98 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -419,10 +419,10 @@ struct ov772x_priv {
- 	struct gpio_desc		 *rstb_gpio;
- 	const struct ov772x_color_format *cfmt;
- 	const struct ov772x_win_size     *win;
--	unsigned short                    flag_vflip:1;
--	unsigned short                    flag_hflip:1;
-+	struct v4l2_ctrl		 *vflip_ctrl;
-+	struct v4l2_ctrl		 *hflip_ctrl;
- 	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
--	unsigned short                    band_filter;
-+	struct v4l2_ctrl		 *band_filter_ctrl;
- 	unsigned int			  fps;
- 	/* lock to protect power_count */
- 	struct mutex			  lock;
-@@ -768,13 +768,11 @@ static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
- 	switch (ctrl->id) {
- 	case V4L2_CID_VFLIP:
- 		val = ctrl->val ? VFLIP_IMG : 0x00;
--		priv->flag_vflip = ctrl->val;
- 		if (priv->info && (priv->info->flags & OV772X_FLAG_VFLIP))
- 			val ^= VFLIP_IMG;
- 		return ov772x_mask_set(client, COM3, VFLIP_IMG, val);
- 	case V4L2_CID_HFLIP:
- 		val = ctrl->val ? HFLIP_IMG : 0x00;
--		priv->flag_hflip = ctrl->val;
- 		if (priv->info && (priv->info->flags & OV772X_FLAG_HFLIP))
- 			val ^= HFLIP_IMG;
- 		return ov772x_mask_set(client, COM3, HFLIP_IMG, val);
-@@ -794,8 +792,7 @@ static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
- 				ret = ov772x_mask_set(client, BDBASE,
- 						      0xff, val);
- 		}
--		if (!ret)
--			priv->band_filter = ctrl->val;
-+
- 		return ret;
- 	}
- 
-@@ -1075,9 +1072,9 @@ static int ov772x_set_params(struct ov772x_priv *priv,
- 		val |= VFLIP_IMG;
- 	if (priv->info && (priv->info->flags & OV772X_FLAG_HFLIP))
- 		val |= HFLIP_IMG;
--	if (priv->flag_vflip)
-+	if (priv->vflip_ctrl->val)
- 		val ^= VFLIP_IMG;
--	if (priv->flag_hflip)
-+	if (priv->hflip_ctrl->val)
- 		val ^= HFLIP_IMG;
- 
- 	ret = ov772x_mask_set(client,
-@@ -1096,11 +1093,13 @@ static int ov772x_set_params(struct ov772x_priv *priv,
- 		goto ov772x_set_fmt_error;
- 
- 	/* Set COM8. */
--	if (priv->band_filter) {
-+	if (priv->band_filter_ctrl->val) {
-+		unsigned short band_filter = priv->band_filter_ctrl->val;
-+
- 		ret = ov772x_mask_set(client, COM8, BNDF_ON_OFF, BNDF_ON_OFF);
- 		if (!ret)
- 			ret = ov772x_mask_set(client, BDBASE,
--					      0xff, 256 - priv->band_filter);
-+					      0xff, 256 - band_filter);
- 		if (ret < 0)
- 			goto ov772x_set_fmt_error;
- 	}
-@@ -1341,12 +1340,13 @@ static int ov772x_probe(struct i2c_client *client,
- 
- 	v4l2_i2c_subdev_init(&priv->subdev, client, &ov772x_subdev_ops);
- 	v4l2_ctrl_handler_init(&priv->hdl, 3);
--	v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
--			  V4L2_CID_VFLIP, 0, 1, 1, 0);
--	v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
--			  V4L2_CID_HFLIP, 0, 1, 1, 0);
--	v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
--			  V4L2_CID_BAND_STOP_FILTER, 0, 256, 1, 0);
-+	priv->vflip_ctrl = v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
-+					     V4L2_CID_VFLIP, 0, 1, 1, 0);
-+	priv->hflip_ctrl = v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
-+					     V4L2_CID_HFLIP, 0, 1, 1, 0);
-+	priv->band_filter_ctrl = v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
-+						   V4L2_CID_BAND_STOP_FILTER,
-+						   0, 256, 1, 0);
- 	priv->subdev.ctrl_handler = &priv->hdl;
- 	if (priv->hdl.error) {
- 		ret = priv->hdl.error;
--- 
-2.7.4
-
+Yours,
+Linus Walleij
