@@ -1,94 +1,69 @@
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 14/17] dt-bindings/interrupt-controller: add description
- for Marvell SEI node
-Date: Mon, 30 Apr 2018 16:24:16 +0200
-Message-ID: <20180430162416.7b8f2e9c@windsurf>
-References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
- <20180421135537.24716-15-miquel.raynal@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: Documentation for qcom, llcc
+Date: Mon, 30 Apr 2018 09:33:25 -0500
+Message-ID: <CAL_JsqJEQU-BysQ7LmQRJ5ySPpUXYCMPAQ1JqeboGoQL-SyAqg@mail.gmail.com>
+References: <1524524972-12014-1-git-send-email-rishabhb@codeaurora.org>
+ <1524524972-12014-2-git-send-email-rishabhb@codeaurora.org>
+ <20180427142144.tvy5xamuwz6jnxk5@rob-hp-laptop> <b458e2bf5b23a4af996e80d81ceabaa4@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180421135537.24716-15-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b458e2bf5b23a4af996e80d81ceabaa4@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Trilok Soni <tsoni@codeaurora.org>, Kyle Yan <kyan@codeaurora.org>, ckadabi@codeaurora.org, Evan Green <evgreen@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gTWlxdcOobCwKClRpdGxlIHNob3VsZCByYXRoZXIgYmU6ICJhZGQgRFQgYmluZGluZyBk
-b2N1bWVudGF0aW9uIGZvciB0aGUgTWFydmVsbApTRUkgY29udHJvbGxlciIgb3Igc29tZXRoaW5n
-IGxpa2UgdGhhdC4gVGFsa2luZyBhYm91dCAibm9kZSIgaXMgYSBiaXQKd2VpcmQgaGVyZS4KCk9u
-IFNhdCwgMjEgQXByIDIwMTggMTU6NTU6MzQgKzAyMDAsIE1pcXVlbCBSYXluYWwgd3JvdGU6Cj4g
-RGVzY3JpYmUgdGhlIFNFSSAoU3lzdGVtIEVycm9yIEludGVycnVwdCkgY29udHJvbGxlciBkcml2
-ZXIuCgpBcyBzb29uIGFzIHlvdSBzYXkgImRyaXZlciIgaW4gYSBEVCBiaW5kaW5nIGRvY3VtZW50
-YXRpb24sIHlvdSdyZSBvbgp0aGUgd3JvbmcgdHJhY2suIEEgYmluZGluZyBkb2N1bWVudGF0aW9u
-IG5ldmVyIGRlc2NyaWJlcyBhIGRyaXZlciwgYnV0CmEgcGllY2Ugb2YgaGFyZHdhcmUuCgo+IFRo
-ZSBjb250cm9sbGVyIGlzIHBhcnQgb2YgdGhlIEdJQy4KCkkgZG9uJ3QgdGhpbmsgd2Ugc2hvdWxk
-IHN0YXRlIHRoYXQsIGVzcGVjaWFsbHkgc2luY2UgaXQncyBub3QgcGFydCBvZgp0aGUgR0lDIHNo
-aXBwZWQgYnkgQVJNIGFzIGZhciBhcyBJIGtub3csIGFuZCB3ZSByZXByZXNlbnQgaXQgYXMgYQpz
-ZXBhcmF0ZSBEZXZpY2UgVHJlZSBub2Rlcy4KCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9tYXJ2ZWxsLHNlaS50eHQg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIv
-bWFydmVsbCxzZWkudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAw
-MDAuLmEyNDZkNTk1NTJiMQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvbWFydmVsbCxzZWkudHh0Cj4g
-QEAgLTAsMCArMSw1NCBAQAo+ICtNYXJ2ZWxsIFNFSSAoU3lzdGVtIEVycm9yIEludGVycnVwdCkg
-Q29udHJvbGxlcgo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLQo+ICsKPiArTWFydmVsbCBTRUkgKFN5c3RlbSBFcnJvciBJbnRlcnJ1cHQpIGNvbnRyb2xs
-ZXIgaXMgYW4gaW50ZXJydXB0IGFnZ3JlZ2F0b3IuCj4gK0l0IHJlY2VpdmVzIGludGVycnVwdHMg
-ZnJvbSBzZXZlcmFsIHNvdXJjZXMgYW5kIGFnZ3JlZ2F0ZXMgdGhlbSB0byBhIHNpbmdsZQo+ICtp
-bnRlcnJ1cHQgbGluZSAoYW4gU1BJKSBvbiB0aGUgcHJpbWFyeSBpbnRlcnJ1cHQgY29udHJvbGxl
-ci4KClJhdGhlciB0aGFuIHByaW1hcnksIEkgd291bGQgdXNlICJwYXJlbnQiIGhlcmUuCgo+ICtU
-aGUgSVJRIGNoaXAgY2FuIGhhbmRsZSB1cCB0byA2NCBTRUlzLCBhIHNldCBjb21lcyBmcm9tIHRo
-ZSBBUCBhbmQgaXMKCiJJUlEgY2hpcCIgaXMgYSBMaW51eCBjb25jZXB0LCBJIHdvdWxkIHN0aWNr
-IHRvICJUaGlzIGludGVycnVwdApjb250cm9sbGVyIGNhbiBoYW5kbGUgdXAgLi4uIgoKPiArd2ly
-ZWQgd2hpbGUgYSBzZWNvbmQgc2V0IGNvbWVzIGZyb20gdGhlIENQcyBieSB0aGUgbWVhbiBvZiBN
-U0lzLiBFYWNoCj4gKydkb21haW4nIGlzIHJlcHJlc2VudGVkIGFzIGEgc3Vibm9kZS4KPiArCj4g
-K1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKwo+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAibWFy
-dmVsbCxhcm1hZGEtOGstc2VpIi4KPiArLSByZWc6IFNFSSByZWdpc3RlcnMgbG9jYXRpb24gYW5k
-IGxlbmd0aC4KPiArLSBpbnRlcnJ1cHRzOiBpZGVudGlmaWVzIHRoZSBwYXJlbnQgSVJRIHRoYXQg
-d2lsbCBiZSB0cmlnZ2VyZWQuCj4gKy0gI2FkZHJlc3MtY2VsbHM6IHNob3VsZCBiZSAnMScsIHJl
-cHJlc2VudHMgdGhlIHBvc2l0aW9uIG9mIHRoZSBmaXJzdAo+ICsgICAgICAgICAgICAgICAgICBJ
-UlEgb2YgYSBnaXZlbiB0eXBlIGluIHRoZSBTRUkgcmFuZ2UuCj4gKy0gI3NpemUtY2VsbHM6IHNo
-b3VsZCBiZSAnMScsIHJlcHJlc2VudHMgdGhlIG51bWJlciBvZiBhIGdpdmVuIHR5cGUgb2YKPiAr
-ICAgICAgICAgICAgICAgSVJRcy4KCldoYXQgaXMgdGhlICJnaXZlbiB0eXBlIiA/Cgo+ICtDaGls
-ZCBub2RlICdzZWktd2lyZWQtY29udHJvbGxlcicgcmVxdWlyZWQgcHJvcGVydGllczoKPiArCj4g
-Ky0gcmVnOiB0aGUgcmFuZ2Ugb2Ygd2lyZWQgaW50ZXJydXB0cy4KPiArLSAjaW50ZXJydXB0LWNl
-bGxzOiBudW1iZXIgb2YgY2VsbHMgdG8gZGVmaW5lIGFuIFNFSSB3aXJlZCBpbnRlcnJ1cHQKPiAr
-ICAgICAgICAgICAgICAgICAgICBjb21pbmcgZnJvbSB0aGUgQVAsIHNob3VsZCBiZSAxLiBUaGUg
-Y2VsbCBpcyB0aGUgSVJRCj4gKyAgICAgICAgICAgICAgICAgICAgbnVtYmVyLgo+ICstIGludGVy
-cnVwdC1jb250cm9sbGVyOiBpZGVudGlmaWVzIHRoZSBub2RlIGFzIGFuIGludGVycnVwdCBjb250
-cm9sbGVyLgo+ICsKPiArQ2hpbGQgbm9kZSAnc2VpLW1zaS1jb250cm9sbGVyJyByZXF1aXJlZCBw
-cm9wZXJ0aWVzOgo+ICsKPiArLSByZWc6IHRoZSByYW5nZSBvZiBub24td2lyZWQgaW50ZXJydXB0
-cyB0cmlnZ2VyZWQgYnkgd2F5IG9mIE1TSXMuCj4gKy0gbXNpLWNvbnRyb2xsZXI6IGlkZW50aWZp
-ZXMgdGhlIG5vZGUgYXMgYW4gTVNJIGNvbnRyb2xsZXIuCj4gKwo+ICtFeGFtcGxlOgo+ICsKPiAr
-ICAgICAgICBzZWk6IHNlaUAzZjAyMDAgewo+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0g
-Im1hcnZlbGwsYXJtYWRhLThrLXNlaSI7Cj4gKyAgICAgICAgICAgICAgIHJlZyA9IDwweDNmMDIw
-MCAweDQwPjsKPiArICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDAgSVJRX1RZ
-UEVfTEVWRUxfSElHSD47Cj4gKyAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+
-ICsgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwxPjsKPiArCj4gKyAgICAgICAgICAgICAg
-IHNlaV93aXJlZF9jb250cm9sbGVyOiBzZWktd2lyZWQtY29udHJvbGxlckAwIHsKPiArICAgICAg
-ICAgICAgICAgICAgICAgICByZWcgPSA8MCAyMT47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-I2ludGVycnVwdC1jZWxscyA9IDwxPjsKPiArICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1
-cHQtY29udHJvbGxlcjsKPiArICAgICAgICAgICAgICAgfTsKPiArCj4gKyAgICAgICAgICAgICAg
-IHNlaV9tc2lfY29udHJvbGxlcjogc2VpLW1zaS1jb250cm9sbGVyQDIxIHsKPiArICAgICAgICAg
-ICAgICAgICAgICAgICByZWcgPSA8MjEgNDM+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIG1z
-aS1jb250cm9sbGVyOwo+ICsgICAgICAgICAgICAgICB9OwoKQXMgUm9iIGFza2VkLCBJJ20gbm90
-IHN1cmUgd2UgbmVlZCBzdWJub2RlcyBoZXJlLiBEaWQgeW91IGNoZWNrIGlmIGl0CmlzIHdhcyBk
-b2FibGUgdG8gaGF2ZSBhIHNpbmdsZSBub2RlIHdoaWNoIGlzIGJvdGggYW4KaW50ZXJydXB0LWNv
-bnRyb2xsZXIgYW5kIGEgbXNpLWNvbnRyb2xsZXIgPwoKQW5kIGluZGVlZCwgYXMgUm9iIHNhaWQs
-IHVzaW5nIHJlZyB0byBlbmNvZGUgaW50ZXJydXB0IHJhbmdlcyBkb2Vzbid0Cmxvb2sgZ29vZC4K
-CkJlc3QgcmVnYXJkcywKClRob21hcwotLSAKVGhvbWFzIFBldGF6em9uaSwgQ1RPLCBCb290bGlu
-IChmb3JtZXJseSBGcmVlIEVsZWN0cm9ucykKRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdp
-bmVlcmluZwpodHRwczovL2Jvb3RsaW4uY29tCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Fri, Apr 27, 2018 at 5:57 PM,  <rishabhb@codeaurora.org> wrote:
+> On 2018-04-27 07:21, Rob Herring wrote:
+>>
+>> On Mon, Apr 23, 2018 at 04:09:31PM -0700, Rishabh Bhatnagar wrote:
+>>>
+>>> Documentation for last level cache controller device tree bindings,
+>>> client bindings usage examples.
+>>>
+>>> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
+>>> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+>>> ---
+>>>  .../devicetree/bindings/arm/msm/qcom,llcc.txt      | 60
+>>> ++++++++++++++++++++++
+>>>  1 file changed, 60 insertions(+)
+>>>  create mode 100644
+>>> Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>>
+>>
+>> My comments on v4 still apply.
+>>
+>> Rob
+>
+>
+> Hi Rob,
+> Reposting our replies to your comments on v4:
+>
+> This is partially true, a bunch of SoCs would support this design but
+> clients IDs are not expected to change. So Ideally client drivers could
+> hard code these IDs.
+>
+> However I have other concerns of moving the client Ids in the driver.
+> The way the APIs implemented today are as follows:
+> #1. Client calls into system cache driver to get cache slice handle
+> with the usecase Id as input.
+> #2. System cache driver gets the phandle of system cache instance from
+> the client device to obtain the private data.
+> #3. Based on the usecase Id perform look up in the private data to get
+> cache slice handle.
+> #4. Return the cache slice handle to client
+>
+> If we don't have the connection between client & system cache then the
+>  private data needs to declared as static global in the system cache driver,
+> that limits us to have just once instance of system cache block.
+
+How many instances do you have?
+
+It is easier to put the data into the kernel and move it to DT later
+than vice-versa. I don't think it is a good idea to do a custom
+binding here and one that only addresses caches and nothing else in
+the interconnect. So either we define an extensible and future-proof
+binding or put the data into the kernel for now.
+
+Rob
