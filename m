@@ -1,78 +1,157 @@
-From: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 2/6 v3] iommu: of: make of_pci_map_rid() available for
-	other devices too
-Date: Mon, 30 Apr 2018 03:27:16 +0000
-Message-ID: <DB6PR0401MB2424DEAB9AE3C3A78ED348C5E6820@DB6PR0401MB2424.eurprd04.prod.outlook.com>
-References: <1524824826-29473-1-git-send-email-nipun.gupta@nxp.com>
-	<1524824826-29473-3-git-send-email-nipun.gupta@nxp.com>
-	<20180427171537.lvzygghnuolk6cnh@rob-hp-laptop>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 3/5] arm64: dts: imx: add imx8qxp support
+Date: Mon, 30 Apr 2018 06:54:39 +0100
+Message-ID: <20180430055429.zkyhn7w7ppnqs2pp@salmiak>
+References: <1524855977-15719-1-git-send-email-aisheng.dong@nxp.com>
+ <1524855977-15719-4-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180427171537.lvzygghnuolk6cnh@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "hch-jcswGhMUV9g@public.gmane.org" <hch-jcswGhMUV9g@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1524855977-15719-4-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: devicetree@vger.kernel.org, dongas86@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On Sat, Apr 28, 2018 at 03:06:15AM +0800, Dong Aisheng wrote:
+> +/{
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		/* We have 1 clusters having 4 Cortex-A35 cores */
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Friday, April 27, 2018 10:46 PM
-> To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-> Cc: robin.murphy-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> catalin.marinas-5wv7dgnIgG8@public.gmane.org; hch-jcswGhMUV9g@public.gmane.org; gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org;
-> joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org; m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org; shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
-> frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
-> foundation.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-
-> pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Bharat Bhushan <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>;
-> stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; Laurentiu Tudor <laurentiu.tudor-3arQi8VN3Tc@public.gmane.org>; Leo Li
-> <leoyang.li-3arQi8VN3Tc@public.gmane.org>
-> Subject: Re: [PATCH 2/6 v3] iommu: of: make of_pci_map_rid() available for
-> other devices too
-> 
-> On Fri, Apr 27, 2018 at 03:57:02PM +0530, Nipun Gupta wrote:
-> > iommu-map property is also used by devices with fsl-mc. This
-> > patch moves the of_pci_map_rid to generic location, so that it
-> > can be used by other busses too.
-> >
-> > 'of_pci_map_rid' is renamed here to 'of_map_rid' and there is no
-> > functional change done in the API.
-> >
-> > Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-> > ---
-> >  drivers/iommu/of_iommu.c   |   6 +--
-> >  drivers/of/address.c       | 102
-> +++++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/of/irq.c           |   7 ++--
-> >  drivers/pci/of.c           | 101 --------------------------------------------
-> >  include/linux/of_address.h |  11 +++++
-> >  include/linux/of_pci.h     |  10 -----
-> >  6 files changed, 120 insertions(+), 117 deletions(-)
-> 
-> of/address.c isn't really the best fit either, though I don't have a
-> better suggestion.
-> 
-> I'm guessing this breaks on Sparc which doesn't build of/address.c.
-> I guess move it to base.c and of.h if that is the case.
+> +	};
+> +
+> +	pmu {
+> +		compatible = "arm,armv8-pmuv3";
+> +		interrupts = <GIC_PPI 7
+> +			(GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
+> +		interrupt-affinity = <&A35_0>, <&A35_1>, <&A35_2>, <&A35_3>;
+> +	};
 
-Sure, that makes sense. Thank you for the suggestion !!
-I'll spin off new version with this change.
+If using a PPI and all cores are identical, interrupt-affinity isn't necessary.
 
-Regards,
-Nipun
+I note you're using GICv3, whihch doesn't encode a cpumask in its PPI
+specifier. All instances of GIC_CPU_MASK_SIMPLE should go from dts{i,} files
+for this platform.
 
-> 
-> Rob
+> +
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +		cpu_suspend   = <0xc4000001>;
+> +		cpu_off	      = <0xc4000002>;
+> +		cpu_on	      = <0xc4000003>;
+
+You can drop the cpu_* function IDs if you only have "arm,psci-1.0" in the
+compatible list. These IDs (and more) are implied by PSCI 1.0+.
+
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/fsl-imx8qxp-mek.dts
+> new file mode 100644
+> index 0000000..920018e
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/fsl-imx8qxp-mek.dts
+> @@ -0,0 +1,138 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2017~2018 NXP
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "fsl-imx8qxp.dtsi"
+> +
+> +/ {
+> +	model = "Freescale i.MX8QXP MEK";
+> +	compatible = "fsl,imx8qxp-mek", "fsl,imx8qxp";
+> +
+> +	chosen {
+> +		stdout-path = &dma_lpuart0;
+> +	};
+
+No baud-rate configuration?
+
+[...]
+
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/fsl-imx8qxp.dtsi
+> new file mode 100644
+> index 0000000..d7cc836
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/fsl-imx8qxp.dtsi
+> @@ -0,0 +1,794 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2016 Freescale Semiconductor, Inc.
+> + * Copyright 2017~2018 NXP
+> + *	Dong Aisheng <aisheng.dong@nxp.com>
+> + */
+> +
+> +#include <dt-bindings/clock/imx8qxp-clock.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/pinctrl/pads-imx8qxp.h>
+> +#include <dt-bindings/power/imx-rsrc.h>
+> +
+> +#include "fsl-imx8-ca35.dtsi"
+> +
+> +/ {
+> +	compatible = "fsl,imx8qxp";
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	aliases {
+> +		serial0 = &dma_lpuart0;
+> +		mmc0 = &usdhc1;
+> +		mmc1 = &usdhc2;
+> +		mmc2 = &usdhc3;
+> +	};
+> +
+> +	memory@80000000 {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x80000000 0 0x40000000>;
+> +	};
+> +
+> +	gic: interrupt-controller@51a00000 {
+> +		compatible = "arm,gic-v3";
+> +		reg = <0x0 0x51a00000 0 0x10000>, /* GIC Dist */
+> +		      <0x0 0x51b00000 0 0xC0000>; /* GICR (RD_base + SGI_base) */
+> +		#interrupt-cells = <3>;
+> +		interrupt-controller;
+> +		interrupts = <GIC_PPI 9
+> +			(GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
+
+As above, GIC_CPU_MASK_SIMPLE does not apply to GICv3, and should go.
+
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>, /* Physical Secure */
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>, /* Physical Non-Secure */
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>, /* Virtual */
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>; /* Hypervisor */
+
+... likewise.
+
+> +		clock-frequency = <8000000>;
+
+Your firmware should be configuring CNTFRQ, so this clock-frequency property
+should go.
+
+Thanks,
+Mark.
