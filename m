@@ -1,58 +1,109 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH] ARM64: dts: meson-axg: enable AP6255 wifi module
-Date: Mon, 30 Apr 2018 08:35:47 -0700
-Message-ID: <CAOi56cXKmv_Us1wDcMOYbdjFzZcLVu_t210Yrv891wKi22hV8A@mail.gmail.com>
-References: <20180423145729.14368-1-yixun.lan@amlogic.com> <7h7eos1n68.fsf@baylibre.com>
- <30de15b8-4cc4-7f97-d134-7af75cb6ace1@amlogic.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Amit Nischal <anischal@codeaurora.org>
+Subject: [PATCH v6 0/3] Misc patches to support clocks for SDM845
+Date: Mon, 30 Apr 2018 21:50:07 +0530
+Message-ID: <1525105210-8689-1-git-send-email-anischal@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <30de15b8-4cc4-7f97-d134-7af75cb6ace1@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic <linux-amlogic@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Amit Nischal <anischal@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 27, 2018 at 6:56 PM, Yixun Lan <yixun.lan@amlogic.com> wrote:
-> On 04/28/18 03:09, Kevin Hilman wrote:
->> Yixun Lan <yixun.lan@amlogic.com> writes:
->>
->>> The Meson-AXG S400 board is shipped with AP6255 wifi module,
->>> which is actually using the brcmfmac 43455 driver.
->>>
->>> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
->>> ---
->>>  .../arm64/boot/dts/amlogic/meson-axg-s400.dts | 44 ++++++++++++++++++-
->>>  1 file changed, 43 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
->>> index f67d4e47e641..b3e1bdca32bb 100644
->>> --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
->>> +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
->>> @@ -51,7 +51,16 @@
->>>
->>>      sdio_pwrseq: sdio-pwrseq {
->>>              compatible = "mmc-pwrseq-simple";
->>> -            reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
->>> +            reset-gpios = <&gpio GPIOX_7 GPIO_ACTIVE_LOW>;
->>
->> You didn't mention this GPIO change in the changelog.  Is it
->> intentional?
->
-> Yes, the 'sdio_pwrseq' is used by wifi driver till now
-> previous the reset-gpio is wrongly configured (copy & paste error),
-> according to the schematics, it's GPIOX_7 which need to be fixed here.
->
-> to be clean, in s400 board
->  GPIOX_6 is WIFI_WAKE_HOST pin
->  GPIOX_7 is WIFI_PWREN pin
->
-> do you want me to put a note into the commit message? and resend this patch?
+Changes in v6:
+1. Adressed review comments for v3 and v4 version of GCC driver for SDM845.
+   https://lkml.org/lkml/2018/4/16/1129.
+2. Add support for new flag 'BRANCH_NO_DELAY' for branch clocks.
+3. Addressed review comments for v5 version of rcg2_shared_ops patch.
+   https://lkml.org/lkml/2018/4/19/86
+4. The GCC clock driver(patch 3) depends upon the below patches related to
+   GDSC operation and RPMh clock driver, which are under review.
+   https://lkml.org/lkml/2018/4/27/110
+   https://lkml.org/lkml/2018/4/24/390
 
-OK, thanks for the explanation.
+Changes in v5:
+1. Adressed review comments for v3 and v4 version of GCC driver for SDM845
+   https://lkml.org/lkml/2018/4/16/1129
+2. Removed bi_tcxo clock being modelled from the GCC driver, as RPMH clock
+   driver would provide the same. https://lkml.org/lkml/2018/4/13/685
+3. The GCC clock driver(patch 2) depends upon the below patches related to
+   GDSC operation and RPMh clock driver, which are under review.
+   https://lkml.org/lkml/2018/4/2/143
+   https://lkml.org/lkml/2018/4/13/685
 
-I'd prefer the GPIO pin fix as a separate, standalone patch.
+Changes in v4:
+1. Adressed review comments for v2 version of GCC driver for SDM845
+   https://lkml.org/lkml/2018/4/9/55.
+2. The GCC clock driver(patch 3) depends upon the below patches
+   related to GDSC operation and are under review.
 
-Thanks,
+   https://lkml.org/lkml/2018/4/2/142
 
-Kevin
+Changes in v3:
+1. Adressed review comments given for v2 series.
+2. The GCC clock driver(patch 3) depends upon the below patches related
+   to GDSC operation and are under review.
+
+   https://lkml.org/lkml/2018/4/2/142
+
+Changes in v2:
+Fixup for recalc_rate ops for clk_rcg2_shared_ops:
+There could be few scenarios where shared clocks are configured
+at rate other than CXO by boot. In those cases there would be a
+mismatch between the rate calculated by the recalc shared ops
+and the actual HW register configuration. Fix the same by adding
+an additional check to read current src from CFG register and
+make a decision based on that.
+
+Changes in v1:
+https://lkml.org/lkml/2018/1/31/209
+
+This patch series does the miscellaneous changes to support
+clock nodes for SDM845. Below are the major changes for
+which the existing code does not have support.
+
+1. Clear hardware clock control bit of RCGs where HW clock
+   control bit is set by default so that software can control
+   those root clocks.
+2. Introduces clk_rcg2_shared_ops to support clock controller
+   drivers for SDM845. With new shared ops, RCGs with shared
+   branches will be configured to a safe source in disable
+   path and actual RCG update configuration will be done in
+   enable path instead of doing config update in set_rate.
+   In set_rate(), just cache the rate instead of doing actual
+   configuration update. Also each RCG in clock controller
+   driver will have their own safe configuration frequency
+   table to switch to safe frequency.
+3. Add support for controlling Fabia PLL for which the support
+   is not available in existing alpha PLL code.
+4. Add Global Clock controller (GCC) driver for SDM845. This
+   should allow most non-multimedia device drivers to probe
+   and control their clocks.
+
+[v1] : https://lkml.org/lkml/2018/1/31/209
+[v2] : https://lkml.org/lkml/2018/3/8/495
+[v3] : https://www.spinics.net/lists/linux-arm-msm/msg35009.html
+[v4] : https://lkml.org/lkml/2018/4/9/79
+[v5] : https://lkml.org/lkml/2018/4/18/367
+
+Amit Nischal (2):
+  clk: qcom: Configure the RCGs to a safe source as needed
+  clk: qcom: Add support for BRANCH_NO_DELAY flag for branch clocks
+
+Taniya Das (1):
+  clk: qcom: Add Global Clock controller (GCC) driver for SDM845
+
+ .../devicetree/bindings/clock/qcom,gcc.txt         |    1 +
+ drivers/clk/qcom/Kconfig                           |   10 +-
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/clk-branch.c                      |    7 +-
+ drivers/clk/qcom/clk-branch.h                      |    1 +
+ drivers/clk/qcom/clk-rcg.h                         |    7 +-
+ drivers/clk/qcom/clk-rcg2.c                        |  207 +-
+ drivers/clk/qcom/gcc-sdm845.c                      | 3480 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-sdm845.h        |  239 ++
+ 9 files changed, 3940 insertions(+), 13 deletions(-)
+ create mode 100644 drivers/clk/qcom/gcc-sdm845.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-sdm845.h
+
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
