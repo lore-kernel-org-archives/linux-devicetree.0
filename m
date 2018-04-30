@@ -1,126 +1,95 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 14/17] dt-bindings/interrupt-controller: add description
- for Marvell SEI node
-Date: Mon, 30 Apr 2018 09:09:10 -0500
-Message-ID: <CAL_JsqJ51riH+9Any7Bc6DN0Dx+WJdDAvOQ1gJCXTTUW0EUWsQ@mail.gmail.com>
-References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
- <20180421135537.24716-15-miquel.raynal@bootlin.com>
- <20180427205032.6u5zzf7265wpgppg@rob-hp-laptop>
- <20180428124827.3992b1ee@xps13>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v8 3/9] PCI: endpoint: functions/pci-epf-test: Add second
+ entry
+Date: Mon, 30 Apr 2018 15:22:13 +0100
+Message-ID: <20180430142213.GC32033@e107981-ln.cambridge.arm.com>
+References: <cover.1524829928.git.gustavo.pimentel@synopsys.com>
+ <c2b6cb8de2502e1b5352be3b6d687b1cb4b7033a.1524829928.git.gustavo.pimentel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180428124827.3992b1ee@xps13>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c2b6cb8de2502e1b5352be3b6d687b1cb4b7033a.1524829928.git.gustavo.pimentel@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: bhelgaas@google.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 28, 2018 at 5:48 AM, Miquel Raynal
-<miquel.raynal@bootlin.com> wrote:
-> Hi Rob,
->
-> On Fri, 27 Apr 2018 15:50:32 -0500, Rob Herring <robh@kernel.org> wrote:
->
->> On Sat, Apr 21, 2018 at 03:55:34PM +0200, Miquel Raynal wrote:
->> > Describe the SEI (System Error Interrupt) controller driver. The
->> > controller is part of the GIC. It aggregates two types of interrupts,
->> > wired and MSIs from respectively the AP and the CPs, into a single SPI
->> > interrupt.
->> >
->> > Suggested-by: Haim Boot <hayim@marvell.com>
->> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
->> > ---
->> >  .../bindings/interrupt-controller/marvell,sei.txt  | 54 ++++++++++++++++++++++
->> >  1 file changed, 54 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt
->> > new file mode 100644
->> > index 000000000000..a246d59552b1
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt
->> > @@ -0,0 +1,54 @@
->> > +Marvell SEI (System Error Interrupt) Controller
->> > +-----------------------------------------------
->> > +
->> > +Marvell SEI (System Error Interrupt) controller is an interrupt aggregator.
->> > +It receives interrupts from several sources and aggregates them to a single
->> > +interrupt line (an SPI) on the primary interrupt controller.
->> > +
->> > +The IRQ chip can handle up to 64 SEIs, a set comes from the AP and is
->> > +wired while a second set comes from the CPs by the mean of MSIs. Each
->> > +'domain' is represented as a subnode.
->> > +
->> > +Required properties:
->> > +
->> > +- compatible: should be "marvell,armada-8k-sei".
->> > +- reg: SEI registers location and length.
->> > +- interrupts: identifies the parent IRQ that will be triggered.
->> > +- #address-cells: should be '1', represents the position of the first
->> > +                  IRQ of a given type in the SEI range.
->> > +- #size-cells: should be '1', represents the number of a given type of
->> > +               IRQs.
->> > +
->> > +Child node 'sei-wired-controller' required properties:
->> > +
->> > +- reg: the range of wired interrupts.
->> > +- #interrupt-cells: number of cells to define an SEI wired interrupt
->> > +                    coming from the AP, should be 1. The cell is the IRQ
->> > +                    number.
->> > +- interrupt-controller: identifies the node as an interrupt controller.
->> > +
->> > +Child node 'sei-msi-controller' required properties:
->> > +
->> > +- reg: the range of non-wired interrupts triggered by way of MSIs.
->> > +- msi-controller: identifies the node as an MSI controller.
->> > +
->> > +Example:
->> > +
->> > +        sei: sei@3f0200 {
->> > +               compatible = "marvell,armada-8k-sei";
->> > +               reg = <0x3f0200 0x40>;
->> > +               interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
->> > +               #address-cells = <1>;
->> > +               #size-cells = <1>;
->> > +
->> > +               sei_wired_controller: sei-wired-controller@0 {
->> > +                       reg = <0 21>;
->>
->> Using interrupt numbers in reg is strange.
->
-> I thought the reg property was the one to choose here, I can of course
-> change it, what would you suggest?
->
->>
->> > +                       #interrupt-cells = <1>;
->> > +                       interrupt-controller;
->> > +               };
->> > +
->> > +               sei_msi_controller: sei-msi-controller@21 {
->> > +                       reg = <21 43>;
->> > +                       msi-controller;
->>
->> Can't the parent be both an interrupt-controller and msi-controller?
->
-> We need to know which one aggregates interrupts, which one receives
-> MSIs and most importantly which interrupt is what (within the 64
-> that are handled by the SEI).
+On Fri, Apr 27, 2018 at 12:59:58PM +0100, Gustavo Pimentel wrote:
+> Add a seconds entry on the pci_epf_test_ids structure that disables the
 
-You mean that 0-20 are wired and 21-63 are msi? "marvell,msi-base =
-<21>;" in the parent would be sufficient for that though you may want
-something more flexible to have multiple ranges.
+"Add a second entry..."
 
-It looks like there may already be similar bindings. See
-'msi-available-ranges" and "{al,arm},msi-base-spi".
+> linkup_notifier parameter on driver for the DesignWare EP.
+> 
+> Allow DesignWare EPs that doesn't have linkup notification signal to work
+> with pcitest.
+> 
+> Update the binding documentation accordingly.
+> 
+> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+> Change v2->v3:
+>  - Added second entry in pci_epf_test_ids structure.
+>  - Remove test_reg_bar field assignment on second entry.
+> Changes v3->v4:
+>  - Nothing changed, just to follow the patch set version.
+> Changes v4->v5:
+>  - Changed pci_epf_test_cfg2 to pci_epf_test_designware.
+> Changes v5->v6:
+>  - Changed name field from pci_epf_test_designware to pci_epf_test_dw.
+> Changes v6->v7:
+>  - Changed variable name from data_cfg2 to data_linkup_notifier_disabled.
+> Changes v7->v8:
+>  - Patch description rework for an imperative verbal mode.
+> 
+>  Documentation/PCI/endpoint/function/binding/pci-test.txt | 2 ++
+>  drivers/pci/endpoint/functions/pci-epf-test.c            | 8 ++++++++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.txt b/Documentation/PCI/endpoint/function/binding/pci-test.txt
+> index 3b68b95..dc39f47 100644
+> --- a/Documentation/PCI/endpoint/function/binding/pci-test.txt
+> +++ b/Documentation/PCI/endpoint/function/binding/pci-test.txt
+> @@ -1,6 +1,8 @@
+>  PCI TEST ENDPOINT FUNCTION
+>  
+>  name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
+> +name: Should be "pci_epf_test_dw" to bind to the pci_epf_test driver
+> +      with a custom configuration for the designware EP.
+>  
+>  Configurable Fields:
+>  vendorid	 : should be 0x104c
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 7cef851..4ab463b 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -459,10 +459,18 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>  	return 0;
+>  }
+>  
+> +static const struct pci_epf_test_data data_linkup_notifier_disabled = {
+> +	.linkup_notifier = false
+> +};
+> +
+>  static const struct pci_epf_device_id pci_epf_test_ids[] = {
+>  	{
+>  		.name = "pci_epf_test",
+>  	},
+> +	{
+> +		.name = "pci_epf_test_dw",
+> +		.driver_data = (kernel_ulong_t)&data_linkup_notifier_disabled,
 
-Rob
+You have not answered my question on this though:
+
+https://marc.info/?l=linux-pci&m=152476180723047&w=2
+
+> +	},
+>  	{},
+>  };
+>  
+> -- 
+> 2.7.4
+> 
+> 
