@@ -1,130 +1,144 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC 04/11] of: platform: add device connection parsing
-Date: Wed, 18 Apr 2018 17:09:58 +0900
-Message-Id: <1524039005-30618-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com
-Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, p.zabel@pengutronix.de, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=Qj9C=HT=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pg0-f67.google.com ([74.125.83.67]:44324 "EHLO
+        mail-pg0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750803AbeD3EkF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Apr 2018 00:40:05 -0400
+Received: by mail-pg0-f67.google.com with SMTP id 82-v6so5497510pge.11
+        for <devicetree@vger.kernel.org>; Sun, 29 Apr 2018 21:40:04 -0700 (PDT)
+From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Subject: [PATCH v9 1/3] PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver DT bindings
+Date: Mon, 30 Apr 2018 00:39:56 -0400
+Message-Id: <1525063196-8567-1-git-send-email-l.subrahmanya@mobiveil.co.in>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, marc.zyngier@arm.com
+Cc: mingkai.hu@nxp.com, peter.newton@nxp.com, minghuan.lian@nxp.com, rajesh.raina@nxp.com, rajan.kapoor@nxp.com, prabhjot.singh@nxp.com, Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds device connection parsing in of_platform_populate().
+This patch adds the DT bindings for Mobiveil PCIe Host Bridge
+IP driver and updates the vendor prefixes file.
 
-TODO:
- - How to free the devcon memories?
- - How to remove the devcon instances?
-
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Acked-by: Rob Herring <robh@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-pci@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 ---
- drivers/of/platform.c | 66 +++++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of.h    |  1 +
- 2 files changed, 67 insertions(+)
+ .../devicetree/bindings/pci/mobiveil-pcie.txt      | 73 ++++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ MAINTAINERS                                        |  7 +++
+ 3 files changed, 81 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index c00d81d..41c018d 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -17,6 +17,7 @@
- #include <linux/slab.h>
- #include <linux/of_address.h>
- #include <linux/of_device.h>
-+#include <linux/of_graph.h>
- #include <linux/of_iommu.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
-@@ -326,6 +327,63 @@ static const struct of_dev_auxdata *of_dev_lookup(const struct of_dev_auxdata *l
- 	return NULL;
- }
+diff --git a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+new file mode 100644
+index 0000000..65038aa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+@@ -0,0 +1,73 @@
++* Mobiveil AXI PCIe Root Port Bridge DT description
++
++Mobiveil's GPEX 4.0 is a PCIe Gen4 root port bridge IP. This configurable IP
++has up to 8 outbound and inbound windows for the address translation.
++
++Required properties:
++- #address-cells: Address representation for root ports, set to <3>
++- #size-cells: Size representation for root ports, set to <2>
++- #interrupt-cells: specifies the number of cells needed to encode an
++	interrupt source. The value must be 1.
++- compatible: Should contain "mbvl,gpex40-pcie"
++- reg: Should contain PCIe registers location and length
++	"config_axi_slave": PCIe controller registers
++	"csr_axi_slave"	  : Bridge config registers
++	"gpio_slave"	  : GPIO registers to control slot power
++	"apb_csr"	  : MSI registers
++
++- device_type: must be "pci"
++- apio-wins : number of requested apio outbound windows
++		default 2 outbound windows are configured -
++		1. Config window
++		2. Memory window
++- ppio-wins : number of requested ppio inbound windows
++		default 1 inbound memory window is configured.
++- bus-range: PCI bus numbers covered
++- interrupt-controller: identifies the node as an interrupt controller
++- #interrupt-cells: specifies the number of cells needed to encode an
++	interrupt source. The value must be 1.
++- interrupt-parent : phandle to the interrupt controller that
++		it is attached to, it should be set to gic to point to
++		ARM's Generic Interrupt Controller node in system DT.
++- interrupts: The interrupt line of the PCIe controller
++		last cell of this field is set to 4 to
++		denote it as IRQ_TYPE_LEVEL_HIGH type interrupt.
++- interrupt-map-mask,
++	interrupt-map: standard PCI properties to define the mapping of the
++	PCI interface to interrupt numbers.
++- ranges: ranges for the PCI memory regions (I/O space region is not
++	supported by hardware)
++	Please refer to the standard PCI bus binding document for a more
++	detailed explanation
++
++
++Example:
++++++++++
++	pcie0: pcie@a0000000 {
++		#address-cells = <3>;
++		#size-cells = <2>;
++		compatible = "mbvl,gpex40-pcie";
++		reg =	<0xa0000000 0x00001000>,
++			<0xb0000000 0x00010000>,
++			<0xff000000 0x00200000>,
++			<0xb0010000 0x00001000>;
++		reg-names =	"config_axi_slave",
++				"csr_axi_slave",
++				"gpio_slave",
++				"apb_csr";
++		device_type = "pci";
++		apio-wins = <2>;
++		ppio-wins = <1>;
++		bus-range = <0x00000000 0x000000ff>;
++		interrupt-controller;
++		interrupt-parent = <&gic>;
++		#interrupt-cells = <1>;
++		interrupts = < 0 89 4 >;
++		interrupt-map-mask = <0 0 0 7>;
++		interrupt-map = <0 0 0 0 &pci_express 0>,
++				<0 0 0 1 &pci_express 1>,
++				<0 0 0 2 &pci_express 2>,
++				<0 0 0 3 &pci_express 3>;
++		ranges = < 0x83000000 0 0x00000000 0xa8000000 0 0x8000000>;
++
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 0994bdd..8263cc7 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -197,6 +197,7 @@ lwn	Liebherr-Werk Nenzing GmbH
+ macnica	Macnica Americas
+ marvell	Marvell Technology Group Ltd.
+ maxim	Maxim Integrated Products
++mbvl	Mobiveil Inc.
+ mcube	mCube
+ meas	Measurement Specialties
+ mediatek	MediaTek Inc.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 44512c3..b295080 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9162,6 +9162,13 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
+ S:	Maintained
+ F:	drivers/media/dvb-frontends/mn88473*
  
-+static int of_parse_device_connection(struct device_node *np)
-+{
-+	struct device_node *child_ep, *parent, *remote_parent;
-+	struct platform_device *pdev, *remote_pdev;
-+	struct device_connection *devcon = NULL;
-+	const char *id;
++PCI DRIVER FOR MOBIVEIL PCIE IP
++M:	Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
++L:	linux-pci@vger.kernel.org
++S:	Supported
++F:	Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
++F:	drivers/pci/host/pcie-mobiveil.c
 +
-+	if (of_node_check_flag(np, OF_DEVICE_CONNECTED)) {
-+		pr_debug("%s() - skipping %pOF, already device connected\n",
-+			__func__, np);
-+		return 0;
-+	}
-+
-+	of_node_set_flag(np, OF_DEVICE_CONNECTED);
-+
-+	for_each_endpoint_of_node(np, child_ep) {
-+		if (of_property_read_string(child_ep, "device-connection-id",
-+					    &id) < 0)
-+			continue;
-+
-+		remote_parent = of_graph_get_remote_port_parent(child_ep);
-+		if (!remote_parent)
-+			return 0;
-+
-+		parent = of_graph_get_port_parent(child_ep);
-+		if (!parent)
-+			return 0;
-+
-+		pdev = of_find_device_by_node(parent);
-+		if (!pdev)
-+			return 0;
-+
-+		/*
-+		 * WARN_ON in really_probe() may happen if devm_kzalloc is
-+		 * used. TODO: How to free this?
-+		 */
-+		devcon = kzalloc(sizeof(*devcon), GFP_KERNEL);
-+		if (!devcon)
-+			return -ENOMEM;
-+
-+		devcon->id = id;
-+		remote_pdev = of_find_device_by_node(remote_parent);
-+		if (!remote_pdev) {
-+			kfree(devcon);
-+			return 0;
-+		}
-+
-+		devcon->endpoint[0] = dev_name(&pdev->dev);
-+		devcon->endpoint[1] = dev_name(&remote_pdev->dev);
-+
-+		/* TODO: How to remove the connection? */
-+		device_connection_add(devcon);
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * of_platform_bus_create() - Create a device for a node and its children.
-  * @bus: device node of the bus to instantiate
-@@ -477,6 +535,14 @@ int of_platform_populate(struct device_node *root,
- 	}
- 	of_node_set_flag(root, OF_POPULATED_BUS);
- 
-+	for_each_child_of_node(root, child) {
-+		rc = of_parse_device_connection(child);
-+		if (rc) {
-+			of_node_put(child);
-+			break;
-+		}
-+	}
-+
- 	of_node_put(root);
- 	return rc;
- }
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 4d25e4f..30aa103 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -143,6 +143,7 @@ static inline void of_node_put(struct device_node *node) { }
- #define OF_DETACHED	2 /* node has been detached from the device tree */
- #define OF_POPULATED	3 /* device already created for the node */
- #define OF_POPULATED_BUS	4 /* of_platform_populate recursed to children of this node */
-+#define OF_DEVICE_CONNECTED	5 /* checked devcon on of_platform_populate */
- 
- #define OF_BAD_ADDR	((u64)-1)
- 
+ MODULE SUPPORT
+ M:	Jessica Yu <jeyu@kernel.org>
+ M:	Rusty Russell <rusty@rustcorp.com.au>
 -- 
-1.9.1
+1.8.3.1
+
