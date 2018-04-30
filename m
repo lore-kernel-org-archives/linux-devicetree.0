@@ -1,43 +1,30 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] DT: net: can: rcar_canfd: document R8A77970 bindings
-Date: Mon, 30 Apr 2018 09:19:50 +0200
-Message-ID: <20180430071949.hg6vw2hre6j22mel@verge.net.au>
-References: <7a3d170f-1d3a-a807-9256-15fe1a78ca4e@cogentembedded.com>
+Subject: Re: [PATCH v2 06/11] arm64: dts: r8a77965: Add FCPF and FCPV
+ instances
+Date: Mon, 30 Apr 2018 09:27:37 +0200
+Message-ID: <20180430072736.64txva3xad7ocaqi@verge.net.au>
+References: <20180427165722.19445-1-kieran.bingham+renesas@ideasonboard.com>
+ <20180427165722.19445-7-kieran.bingham+renesas@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <7a3d170f-1d3a-a807-9256-15fe1a78ca4e@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <20180427165722.19445-7-kieran.bingham+renesas@ideasonboard.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc: linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 10:41:14PM +0300, Sergei Shtylyov wrote:
-> Document the R-Car V3M (R8A77970) SoC support in the R-Car CAN-FD bindings.
+On Fri, Apr 27, 2018 at 05:57:17PM +0100, Kieran Bingham wrote:
+> The FCPs handle the interface between various IP cores and memory. Add
+> the instances related to the FDPs and VSP2s.
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Based on a similar patch of the R8A7796 device tree
+> by Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>.
+> 
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> [Kieran: Rebase to top of tree]
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-
-> 
-> ---
-> The patch is against the 'linux-can-next.git' repo but I wouldn't object if
-> it's merged to the 'linux-can.git' repo instead. :-)
-> 
->  Documentation/devicetree/bindings/net/can/rcar_canfd.txt |    1 +
->  1 file changed, 1 insertion(+)
-> 
-> Index: linux-can-next/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> ===================================================================
-> --- linux-can-next.orig/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> +++ linux-can-next/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> @@ -6,6 +6,7 @@ Required properties:
->    - "renesas,rcar-gen3-canfd" for R-Car Gen3 compatible controller.
->    - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
->    - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3) compatible controller.
-> +  - "renesas,r8a77970-canfd" for R8A77970 (R-Car V3M) compatible controller.
->  
->    When compatible with the generic version, nodes must list the
->    SoC-specific version corresponding to the platform first, followed by the
-> 
+Thanks, applied.
