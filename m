@@ -1,74 +1,44 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v2 01/17] dt-bindings: power: reset: mt6323: add
- bindings for MT6323 power controller
-Date: Mon, 30 Apr 2018 15:34:23 +0800
-Message-ID: <1525073663.12322.219.camel@mtkswgap22>
-References: <cover.1524646231.git.sean.wang@mediatek.com>
-         <0b3123e42c8a47e3fa8b21aa2e139e6d3dc69f41.1524646231.git.sean.wang@mediatek.com>
-         <20180427200225.lq63ex7eiukc6egl@rob-hp-laptop>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] DT: net: can: rcar_canfd: document R8A77980 bindings
+Date: Mon, 30 Apr 2018 09:37:22 +0200
+Message-ID: <20180430073722.tbrd5y3bs5hpq724@verge.net.au>
+References: <556f1f23-19bc-e7bd-47b1-f22e086e2b69@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427200225.lq63ex7eiukc6egl@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, sre@kernel.org, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, matthias.bgg@gmail.com, eddie.huang@mediatek.com, devicetree@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <556f1f23-19bc-e7bd-47b1-f22e086e2b69@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-04-27 at 15:02 -0500, Rob Herring wrote:
-> On Wed, Apr 25, 2018 at 05:32:27PM +0800, sean.wang@mediatek.com wrote:
-> > From: Sean Wang <sean.wang@mediatek.com>
-> > 
-> > Adding device-tree binding for the power controller which is a tiny
-> > circuit block present as a part of MT6323 PMIC and is responsible for
-> > externally powering off or on a remote SoC the PMIC is connected to.
-> > 
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> > ---
-> >  .../bindings/power/reset/mt6323-poweroff.txt         | 20 ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-> > new file mode 100644
-> > index 0000000..6f7c590
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-> > @@ -0,0 +1,20 @@
-> > +Device Tree Bindings for Power Controller on MediaTek PMIC
-> > +
-> > +The power controller which could be found on PMIC is responsible for externally
-> > +powering off or on the remote MediaTek SoC through the circuit BBPU.
-> > +
-> > +Required properties:
-> > +- compatible: Should be one of follows
-> > +	"mediatek,mt6323-pwrc": for MT6323 PMIC
-> > +
-> > +Example:
-> > +
-> > +	pmic {
-> > +		compatible = "mediatek,mt6323";
-> > +
-> > +		...
-> > +
-> > +		power-controller {
-> > +			compatible = "mediatek,mt6323-pwrc";
+On Fri, Apr 27, 2018 at 09:53:33PM +0300, Sergei Shtylyov wrote:
+> Document the R-Car V3H (R8A77980) SoC support in the R-Car CAN-FD bindings.
 > 
-> Why do you need this in DT? It doesn't define any resources. The parent 
-> can just as well register a reset or poweroff handler.
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 > 
-> Rob
+> ---
+> The patch is against the 'linux-can-next.git' repo plus the R8A77970 bindings
+> patch posted yesterday. Although I wouldn't object if they're both merged to
+> the 'linux-can.git' repo instead. :-)
 > 
+>  Documentation/devicetree/bindings/net/can/rcar_canfd.txt |    1 +
+>  1 file changed, 1 insertion(+)
 
-Yes, those binding can be removed. 
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-I tend to use platform_device_register_data embedded in mfd driver
-to probe the existent poweroff driver in the next version.
-
-> > +		};
-> > +	}
-> > -- 
-> > 2.7.4
-> > 
+> 
+> Index: linux-can-next/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> ===================================================================
+> --- linux-can-next.orig/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> +++ linux-can-next/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> @@ -7,6 +7,7 @@ Required properties:
+>    - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
+>    - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3) compatible controller.
+>    - "renesas,r8a77970-canfd" for R8A77970 (R-Car V3M) compatible controller.
+> +  - "renesas,r8a77980-canfd" for R8A77980 (R-Car V3H) compatible controller.
+>  
+>    When compatible with the generic version, nodes must list the
+>    SoC-specific version corresponding to the platform first, followed by the
+> 
