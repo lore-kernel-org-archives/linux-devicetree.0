@@ -1,14 +1,15 @@
 From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 02/17] arm64: dts: marvell: fix CP110 ICU node size
-Date: Mon, 30 Apr 2018 15:44:37 +0200
-Message-ID: <20180430154437.59025f2e@windsurf>
+Subject: Re: [PATCH 03/17] arm64: dts: marvell: add syscon compatible to
+ CP110 ICU node
+Date: Mon, 30 Apr 2018 15:45:51 +0200
+Message-ID: <20180430154551.616cba0f@windsurf>
 References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
- <20180421135537.24716-3-miquel.raynal@bootlin.com>
+ <20180421135537.24716-4-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180421135537.24716-3-miquel.raynal@bootlin.com>
+In-Reply-To: <20180421135537.24716-4-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,13 +25,19 @@ List-Id: devicetree@vger.kernel.org
 
 Hello,
 
-On Sat, 21 Apr 2018 15:55:22 +0200, Miquel Raynal wrote:
-> ICU size in CP110 is not 0x10 but at least 0x440 bytes long (from the
-> specification).
+On Sat, 21 Apr 2018 15:55:23 +0200, Miquel Raynal wrote:
+> Prepare the migration to new bindings where the ICU node has several
+> subnodes: one per interrupt group (NSR, SEI, REI, etc). The code for
+> each node will share the same set of registers. Turning the ICU node
+> into a syscon is a clean solution to handle that.
 > 
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+In fact, I am wondering if this is really necessary. Can't we instead
+just create the regmap() for the ICU MMIO region in the ->probe() of
+the parent ICU device ?
+
+Best regards,
 
 Thomas
 -- 
