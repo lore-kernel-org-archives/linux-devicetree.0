@@ -1,71 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: mmc: Add binding for BlueField SoC
-Date: Tue, 1 May 2018 07:48:00 -0500
-Message-ID: <20180501124800.GA6206@rob-hp-laptop>
-References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
- <1525099868-45094-2-git-send-email-lsun@mellanox.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: nvmem: Add binding for RAVE SP
+ EEPROM driver
+Date: Tue, 1 May 2018 07:50:33 -0500
+Message-ID: <20180501125033.GA8090@rob-hp-laptop>
+References: <20180501052952.26765-1-andrew.smirnov@gmail.com>
+ <20180501052952.26765-2-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1525099868-45094-2-git-send-email-lsun@mellanox.com>
+In-Reply-To: <20180501052952.26765-2-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liming Sun <lsun@mellanox.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Aleksander Morgado <aleksander@aleksander.es>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 30, 2018 at 10:51:07AM -0400, Liming Sun wrote:
-> This commit adds "mellanox,bluefield-dw-mshc" for dwmmc driver
-> extension on Mellanox BlueField SoC platform.
+On Mon, Apr 30, 2018 at 10:29:51PM -0700, Andrey Smirnov wrote:
+> Add Device Tree bindings for RAVE SP EEPROM driver - an MFD cell of
+> parent RAVE SP driver (documented in
+> Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
 > 
-> Signed-off-by: Liming Sun <lsun@mellanox.com>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Aleksander Morgado <aleksander@aleksander.es>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 > ---
->  .../devicetree/bindings/mmc/bluefield-dw-mshc.txt  | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt
-> new file mode 100644
-> index 0000000..ee0dd61
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt
-> @@ -0,0 +1,29 @@
-> +* Mellanox Bluefield SoC specific extensions to the Synopsys Designware
-> +  Mobile Storage Host Controller
-> +
-> +Read synopsys-dw-mshc.txt for more details
-> +
-> +The Synopsys designware mobile storage host controller is used to interface
-> +a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
-> +differences between the core Synopsys dw mshc controller properties described
-> +by synopsys-dw-mshc.txt and the properties used by the Mellanox Bluefield SoC
-> +specific extensions to the Synopsys Designware Mobile Storage Host Controller.
-> +
-> +Required Properties:
-> +
-> +* compatible: should be one of the following.
-> +  - "mellanox,bluefield-dw-mshc": for controllers with Mellanox Bluefield SoC
-> +    specific extensions.
-> +
-> +Example:
-> +
-> +	/* Mellanox Bluefield SoC MMC */
-> +	dwmmc0@4,0 {
+>  .../bindings/nvmem/zii,rave-sp-eeprom.txt          | 40 ++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
 
-Still the same issues.
-
-mmc@...
-
-And the unit-address looks wrong.
-
-> +		compatible = "mellanox,bluefield-dw-mshc";
-> +		reg = <4 0x8000 0x400>;
-> +		interrupts = <32>;
-> +		fifo-depth = <0x100>;
-> +		clock-frequency = <24000000>;
-> +		bus-width = <8>;
-> +		cap-mmc-highspeed;
-> +	};
-> -- 
-> 1.8.3.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
