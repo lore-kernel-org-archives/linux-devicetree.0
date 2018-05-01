@@ -1,65 +1,60 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/2] regulator: add QCOM RPMh regulator driver
-Date: Wed, 2 May 2018 06:02:58 +0900
-Message-ID: <20180501210258.GG2714@sirena.org.uk>
-References: <cover.1523673467.git.collinsd@codeaurora.org>
- <4b45f41996ea3344340e44fab2dc9e487572e209.1523673467.git.collinsd@codeaurora.org>
- <CAD=FV=XKYCDtF93RtYi+dokR2BcT-z6Ex3UjgJ0ia_kF=847eA@mail.gmail.com>
- <4e3353fe-ebb5-46bb-aa58-49ad04c4d9db@codeaurora.org>
- <CAD=FV=W28_exRv+H0MJvPnHWGEeUG=SMKr=UqEKpBzkH44Fzmg@mail.gmail.com>
- <132ab845-52d6-6192-4d8c-5a9c95410688@codeaurora.org>
- <20180424174507.GI22073@sirena.org.uk>
- <20a8f736-2687-f14f-eaa1-2b2c06eed629@codeaurora.org>
- <20180425103136.GB24769@sirena.org.uk>
- <f98416ac-230c-0362-ed50-a7f92ff283d7@codeaurora.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [v5 1/2] dt-bindings: clock: Introduce QCOM RPMh clock bindings
+Date: Tue, 01 May 2018 14:10:27 -0700
+Message-ID: <152520902751.138124.3904360654314728163@swboyd.mtv.corp.google.com>
+References: <1525164093-16645-1-git-send-email-tdas@codeaurora.org>
+ <1525164093-16645-2-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iAL9S67WQOXgEPD9"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f98416ac-230c-0362-ed50-a7f92ff283d7@codeaurora.org>
+In-Reply-To: <1525164093-16645-2-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Doug Anderson <dianders@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Quoting Taniya Das (2018-05-01 01:41:32)
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+> new file mode 100644
+> index 0000000..ecc1dbe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+> @@ -0,0 +1,32 @@
+> +Qualcomm Technologies, Inc. RPMh Clocks
+> +-------------------------------------------------------
+> +
+> +Resource Power Manager Hardened (RPMh) manages shared resources on
+> +some Qualcomm Technologies Inc. SoCs. It accepts clock requests from
+> +other hardware subsystems via RSC to control clocks.
+> +
+> +Required properties :
+> +- compatible : shall contain "qcom,sdm845-rpmh-clk"
+> +
+> +- #clock-cells : must contain 1
+> +
+> +Optional properties :
+> +- assigned-clk-divs : property should contain a list of divs for each clock in
+> +                       the clk-output-names property. In case divs are not
+> +                       provided the clock rate would be same as parent rate.
+> +- clk-output-names :  a list of strings of clock output signal for the divs to
+> +                        be applied.
+> +
+> +Example :
+> +
+> +#include <dt-bindings/clock/qcom,rpmh.h>
+> +
+> +       &apps_rsc {
+> +               rpmhcc: clock-controller {
+> +                       compatible = "qcom,sdm845-rpmh-clk";
+> +                       #clock-cells = <1>;
+> +                       assigned-clk-divs = <2 2 2>;
 
---iAL9S67WQOXgEPD9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This property shouldn't need to exist. Instead, add a fixed div-2 clock
+to the DTS file (I guess in the SoC file) to divide the crystal
+frequency into the rate you want (19.2 MHz in this case).
 
-On Wed, Apr 25, 2018 at 02:04:56PM -0700, David Collins wrote:
+> +                       clk-output-names = "bi_tcxo", "lnbb_clk2",
+> +                                               "lnbb_clk3";
 
-> > Using -EAGAIN for "I can't ever read the configuration from this
-> > regulator" doesn't seem right - it's not like any number of retries
-> > will ever manage to read the value back.
-
-> In this case, the _regulator_get_voltage() call can succeed, but only
-> after a voltage is explicitly requested from the framework side.  The
-
-...
-
-> Do you still have reservations about using -EAGAIN for this purpose?  If
-> so, which error code would you suggest using?
-
-Yes, that's clearly a problem - -EAGAIN is more for situations where you
-can just immediately retry like signal interruptions.  If the caller
-repetedly sits and tries to read the voltage it'll never succeed unless
-something else comes along and sets something.
-
---iAL9S67WQOXgEPD9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlro1gEACgkQJNaLcl1U
-h9BGTQf8D2BYeALtbrEIcuMc/85tjolOzrgVsLBNiv0aNRFbRasEaxXKT8H/rLrs
-s4tWN/IWo6XGvvyuOum/AdBrQZQj8ds+bIjY/RqSwnrZo2ao/zB4aOmpcJUeNl5I
-mivV6GJCDiAVmyCnmadAs4Rw2pCtPwIx00lYwxE/Gs34OT6gMBo+PZsMIO3aiUwi
-QyH7vAgdAL9rphGa7QL6AYI01/SKZDzE6UvVYJYtX/6vrtPZG315N4PiMT+/wcqs
-XrQ1Yka8uyErp/wPOW30zlJc1O4rPw1CiktxDqnNlI2BLdpsdoLDNDfim31lNw7i
-PyAoFSHGC/7OAJ8sSl8TwFAAhYg47g==
-=KPy2
------END PGP SIGNATURE-----
-
---iAL9S67WQOXgEPD9--
+We don't need this either.
