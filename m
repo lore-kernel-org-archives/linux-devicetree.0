@@ -1,105 +1,88 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2] arm64: dts: qcom: Add SDM845 SMEM nodes
-Date: Mon, 30 Apr 2018 17:20:10 -0700
-Message-ID: <20180501002009.GP18510@minitux>
-References: <20180430144428.3288-1-sibis@codeaurora.org>
+From: rishabhb@codeaurora.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: Documentation for qcom, llcc
+Date: Mon, 30 Apr 2018 17:37:49 -0700
+Message-ID: <4b47ff9a5aa1b51a2810aff6203878f9@codeaurora.org>
+References: <1524524972-12014-1-git-send-email-rishabhb@codeaurora.org>
+ <1524524972-12014-2-git-send-email-rishabhb@codeaurora.org>
+ <20180427142144.tvy5xamuwz6jnxk5@rob-hp-laptop>
+ <b458e2bf5b23a4af996e80d81ceabaa4@codeaurora.org>
+ <CAL_JsqJEQU-BysQ7LmQRJ5ySPpUXYCMPAQ1JqeboGoQL-SyAqg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180430144428.3288-1-sibis@codeaurora.org>
+In-Reply-To: <CAL_JsqJEQU-BysQ7LmQRJ5ySPpUXYCMPAQ1JqeboGoQL-SyAqg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-soc@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm@lists.infradead.org, linux-kernel@vger.kernel.org, Trilok Soni <tsoni@codeaurora.org>, Kyle Yan <kyan@codeaurora.org>, ckadabi@codeaurora.org, Evan Green <evgreen@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 30 Apr 07:44 PDT 2018, Sibi Sankar wrote:
-
-> Add all the necessary dt nodes to support SMEM driver
-> on SDM845. It also adds the required memory carveouts
-> so that the kernel does not access memory that is in
-> use.
+On 2018-04-30 07:33, Rob Herring wrote:
+> On Fri, Apr 27, 2018 at 5:57 PM,  <rishabhb@codeaurora.org> wrote:
+>> On 2018-04-27 07:21, Rob Herring wrote:
+>>> 
+>>> On Mon, Apr 23, 2018 at 04:09:31PM -0700, Rishabh Bhatnagar wrote:
+>>>> 
+>>>> Documentation for last level cache controller device tree bindings,
+>>>> client bindings usage examples.
+>>>> 
+>>>> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
+>>>> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+>>>> ---
+>>>>  .../devicetree/bindings/arm/msm/qcom,llcc.txt      | 60
+>>>> ++++++++++++++++++++++
+>>>>  1 file changed, 60 insertions(+)
+>>>>  create mode 100644
+>>>> Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>>> 
+>>> 
+>>> My comments on v4 still apply.
+>>> 
+>>> Rob
+>> 
+>> 
+>> Hi Rob,
+>> Reposting our replies to your comments on v4:
+>> 
+>> This is partially true, a bunch of SoCs would support this design but
+>> clients IDs are not expected to change. So Ideally client drivers 
+>> could
+>> hard code these IDs.
+>> 
+>> However I have other concerns of moving the client Ids in the driver.
+>> The way the APIs implemented today are as follows:
+>> #1. Client calls into system cache driver to get cache slice handle
+>> with the usecase Id as input.
+>> #2. System cache driver gets the phandle of system cache instance from
+>> the client device to obtain the private data.
+>> #3. Based on the usecase Id perform look up in the private data to get
+>> cache slice handle.
+>> #4. Return the cache slice handle to client
+>> 
+>> If we don't have the connection between client & system cache then the
+>>  private data needs to declared as static global in the system cache 
+>> driver,
+>> that limits us to have just once instance of system cache block.
 > 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> ---
+> How many instances do you have?
 > 
-> This patch depends on:
-> https://patchwork.kernel.org/patch/10276419/
-> https://patchwork.kernel.org/patch/10363361/
+> It is easier to put the data into the kernel and move it to DT later
+> than vice-versa. I don't think it is a good idea to do a custom
+> binding here and one that only addresses caches and nothing else in
+> the interconnect. So either we define an extensible and future-proof
+> binding or put the data into the kernel for now.
 > 
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 38 ++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 9be763da0664..55e7d7e23b10 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -21,6 +21,27 @@
->  		reg = <0 0x80000000 0 0>;
->  	};
->  
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		memory@85fc0000 {
-> +			reg = <0 0x85fc0000 0 0x20000>;
-> +			no-map;
-> +		};
-> +
-> +		smem_mem: memory@86000000 {
-> +			reg = <0x0 0x86000000 0x0 0x200000>;
-> +			no-map;
-> +		};
-> +
-> +		memory@86200000 {
-> +			reg = <0 0x86200000 0 0x2d00000>;
-> +			no-map;
-> +		};
-> +	};
-> +
->  	cpus {
->  		#address-cells = <2>;
->  		#size-cells = <0>;
-> @@ -147,6 +168,18 @@
->  		};
->  	};
->  
-> +	tcsr_mutex: hwlock {
-> +		compatible = "qcom,tcsr-mutex";
-> +		syscon = <&tcsr_mutex_regs 0 0x1000>;
-> +		#hwlock-cells = <1>;
-> +	};
-> +
-> +	smem {
-> +		compatible = "qcom,smem";
-> +		memory-region = <&smem_mem>;
-> +		hwlocks = <&tcsr_mutex 3>;
-> +	};
-> +
->  	psci {
->  		compatible = "arm,psci-1.0";
->  		method = "smc";
-> @@ -339,6 +372,11 @@
->  			};
->  		};
->  
-> +		tcsr_mutex_regs: syscon@1f40000 {
-> +			compatible = "syscon";
-> +			reg = <0x1f40000 0x40000>;
-> +		};
-> +
->  		apss_shared: mailbox@17990000 {
->  			compatible = "qcom,sdm845-apss-shared";
->  			reg = <0x17990000 0x1000>;
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+> Rob
+Hi rob,
+Currently we have only instance but how do you propose we handle 
+multiple
+instances in future?
+Currently we do a lookup in the private data of the driver to get the 
+slice
+handle but, if we were to remove the client connection we will have to 
+make
+lookup table as global and we can't have more than one instance.
+Also, can you suggest any extensible interconnect binding that we can 
+refer
+to?
