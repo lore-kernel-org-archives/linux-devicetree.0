@@ -1,90 +1,47 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] Input: atmel_mxt_ts - add missing compatible strings to
- OF device table
-Date: Tue, 1 May 2018 11:48:53 -0700
-Message-ID: <20180501184853.GB52077@dtor-ws>
-References: <20180410095340.24074-1-javierm@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCH 2/2] ARM64: dts: meson: update maximum frequency for sdcard to 200MHz
+Date: Wed,  2 May 2018 00:29:02 +0530
+Message-ID: <20180501185902.3556-2-linux.amoon@gmail.com>
+References: <20180501185902.3556-1-linux.amoon@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180410095340.24074-1-javierm@redhat.com>
+In-Reply-To: <20180501185902.3556-1-linux.amoon@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javierm@redhat.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Nick Dyer <nick@shmanahar.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Anand Moon <linux.amoon@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2018 at 11:53:40AM +0200, Javier Martinez Canillas wrote:
-> Commit af503716ac14 ("i2c: core: report OF style module alias for devices
-> registered via OF") fixed how the I2C core reports the module alias when
-> devices are registered via OF.
-> 
-> But the atmel_mxt_ts driver only has an "atmel,maxtouch" compatible in its
-> OF device ID table, so if a Device Tree is using a different one, autoload
-> won't be working for the module (the matching works because the I2C device
-> ID table is used as a fallback).
-> 
-> So add compatible strings for each of the entries in the I2C device table.
-> 
-> Fixes: af503716ac14 ("i2c: core: report OF style module alias for devices registered via OF")
-> Reported-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-> ---
-> 
->  Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 6 +++++-
->  drivers/input/touchscreen/atmel_mxt_ts.c                   | 4 ++++
->  2 files changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-> index 23e3abc3fdef..cd43fb8bc2ce 100644
-> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-> @@ -1,8 +1,12 @@
->  Atmel maXTouch touchscreen/touchpad
->  
->  Required properties:
-> -- compatible:
-> +- compatible: Must be one of the following
-> +    atmel,qt602240_ts
-> +    atmel,atmel_mxt_ts
-> +    atmel,atmel_mxt_tp
->      atmel,maxtouch
-> +    atmel,mXT224
+update the maximum frequency of the sdcard to 200Mhz
+to support high speed read/write with uhs mode.
 
-I do not think we should document ad-hoc compatible strings that were
-introduced by various vendors as the documented ones, so I'd rather
-dropped this chunk and leave only "atmel,maxtouch" as compatible that
-everyone should be using.
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+odroid@odroid64:~$ sudo cat /sys/kernel/debug/mmc1/ios
+[sudo] password for odroid:
+clock:          200000000 Hz
+actual clock:   200000000 Hz
+vdd:            21 (3.3 ~ 3.4 V)
+bus mode:       2 (push-pull)
+chip select:    0 (don't care)
+power mode:     2 (on)
+bus width:      2 (4 bits)
+timing spec:    6 (sd uhs SDR104)
+signal voltage: 1 (1.80 V)
+driver type:    0 (driver type B)
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The changes to the driver to support the existing DTSes can of course be
-applied.
-
-Rob, any objections?
-
->  
->  - reg: The I2C address of the device
->  
-> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-> index 7659bc48f1db..e8ef83f168d6 100644
-> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
-> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-> @@ -3238,7 +3238,11 @@ static int __maybe_unused mxt_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(mxt_pm_ops, mxt_suspend, mxt_resume);
->  
->  static const struct of_device_id mxt_of_match[] = {
-> +	{ .compatible = "atmel,qt602240_ts", },
-> +	{ .compatible = "atmel,atmel_mxt_ts", },
-> +	{ .compatible = "atmel,atmel_mxt_tp", },
->  	{ .compatible = "atmel,maxtouch", },
-> +	{ .compatible = "atmel,mXT224", },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, mxt_of_match);
-> -- 
-> 2.14.3
-> 
-
-Thanks.
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index c90f8b46c60c..ab868eaddb46 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -256,7 +256,7 @@
+ 
+ 	bus-width = <4>;
+ 	cap-sd-highspeed;
+-	max-frequency = <100000000>;
++	max-frequency = <200000000>;
+ 	disable-wp;
+ 	sd-uhs-sdr12;
+ 	sd-uhs-sdr25;
 -- 
-Dmitry
+2.17.0
