@@ -1,42 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 09/16] bus: ti-sysc: Add handling for clkctrl opt clocks
-Date: Tue, 1 May 2018 08:39:06 -0500
-Message-ID: <20180501133906.GA18650@rob-hp-laptop>
-References: <20180423174549.57412-1-tony@atomide.com>
- <20180423174549.57412-10-tony@atomide.com>
+Subject: Re: [PATCH] dt-bindings: arm: consistently name r8a77965 as M3-N
+Date: Tue, 1 May 2018 08:41:03 -0500
+Message-ID: <20180501134103.GA29214@rob-hp-laptop>
+References: <20180424055442.19710-1-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180423174549.57412-10-tony@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nishanth Menon <nm@ti.com>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+In-Reply-To: <20180424055442.19710-1-horms+renesas@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 23, 2018 at 10:45:42AM -0700, Tony Lindgren wrote:
-> There can be up to eight optional device functional gate gate clocks for
-> each clkctrl instance in clkctrl register bits 8 to 15. Some of them are
-> only needed for module level reset while others may always be needed
-> during use. Let's add support for those and update the binding doc
-> accordingly.
+On Tue, Apr 24, 2018 at 07:54:42AM +0200, Simon Horman wrote:
+> There is an inconsistency between the use of M3N and M3-N.
+> This patch resolves this by consistently using the latter.
 > 
-> Note that the optional clkctrl mux and divider clocks starting at bit 20
-> can be directly mapped to the child devices, and ti-sysc does not need to
-> manage those.
-> 
-> And as GPIOs need the optional clocks for reset, we can now add it with
-> SYSC_QUIRK_OPT_CLKS_IN_RESET.
-> 
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Tero Kristo <t-kristo@ti.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 > ---
->  .../devicetree/bindings/bus/ti-sysc.txt       |   6 +-
+> Based on renesas-devel-20180423-v4.17-rc2
+> ---
+>  Documentation/devicetree/bindings/arm/shmobile.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-
->  drivers/bus/ti-sysc.c                         | 140 ++++++++++++++----
->  2 files changed, 120 insertions(+), 26 deletions(-)
