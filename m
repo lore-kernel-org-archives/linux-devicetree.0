@@ -1,57 +1,93 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [v5 2/2] clk: qcom: clk-rpmh: Add QCOM RPMh clock driver
-Date: Tue, 1 May 2018 21:03:42 +0530
-Message-ID: <cbd9d87c-93ed-a004-487d-4014ac7a93b2@codeaurora.org>
-References: <1525164093-16645-1-git-send-email-tdas@codeaurora.org>
- <1525164093-16645-3-git-send-email-tdas@codeaurora.org>
- <20180501124333.GA32660@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 11/12] dt-bindings: clock: add imx8qxp clock binding doc
+Date: Tue, 1 May 2018 10:37:27 -0500
+Message-ID: <20180501153727.GA21845@rob-hp-laptop>
+References: <1524855403-15301-1-git-send-email-aisheng.dong@nxp.com>
+ <1524855403-15301-12-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501124333.GA32660@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1524855403-15301-12-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 5/1/2018 6:13 PM, Rob Herring wrote:
-> On Tue, May 01, 2018 at 02:11:33PM +0530, Taniya Das wrote:
->> Add the RPMh clock driver to control the RPMh managed clock resources on
->> some of the Qualcomm Technologies, Inc. SoCs.
->>
->> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
->> Signed-off-by: Taniya Das <tdas@codeaurora.org>
->> ---
->>   drivers/clk/qcom/Kconfig              |   9 +
->>   drivers/clk/qcom/Makefile             |   1 +
->>   drivers/clk/qcom/clk-rpmh.c           | 387 ++++++++++++++++++++++++++++++++++
->>   include/dt-bindings/clock/qcom,rpmh.h |   2 -
->>   4 files changed, 397 insertions(+), 2 deletions(-)
->>   create mode 100644 drivers/clk/qcom/clk-rpmh.c
+On Sat, Apr 28, 2018 at 02:56:42AM +0800, Dong Aisheng wrote:
+> Add imx8qxp clock binding doc.
 > 
->> diff --git a/include/dt-bindings/clock/qcom,rpmh.h b/include/dt-bindings/clock/qcom,rpmh.h
->> index 36caab2..f48fbd6 100644
->> --- a/include/dt-bindings/clock/qcom,rpmh.h
->> +++ b/include/dt-bindings/clock/qcom,rpmh.h
->> @@ -18,7 +18,5 @@
->>   #define RPMH_RF_CLK2_A				9
->>   #define RPMH_RF_CLK3				10
->>   #define RPMH_RF_CLK3_A				11
->> -#define RPMH_RF_CLK4				12
->> -#define RPMH_RF_CLK4_A				13
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+>  .../devicetree/bindings/clock/imx8qxp-clk.txt      |  39 +++
+>  include/dt-bindings/clock/imx8qxp-clock.h          | 362 +++++++++++++++++++++
+>  2 files changed, 401 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/imx8qxp-clk.txt
+>  create mode 100644 include/dt-bindings/clock/imx8qxp-clock.h
 > 
-> Did you mean to have this or squash into previous patch?
-> 
+> diff --git a/Documentation/devicetree/bindings/clock/imx8qxp-clk.txt b/Documentation/devicetree/bindings/clock/imx8qxp-clk.txt
+> new file mode 100644
+> index 0000000..5e365d7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/imx8qxp-clk.txt
+> @@ -0,0 +1,39 @@
+> +NXP i.MX8QXP Clocks Based on SCFW
+> +--------------------------------------------------------------------
+> +
+> +Some i.MX SoCs contain a system controller that is responsible for
+> +providing clock control service for the IPs. Communication between
+> +the host processor running an OS and the system controller happens
+> +through a SCU protocol [1].
+> +
+> +[1] Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> +
+> +Required properties:
+> +
+> +- compatible:	Should be "fsl,imx8qxp-clock".
+> +- #clock-cells:	Should be <1>.
 
-Thanks, my mistake. It was meant to be squashed in the previous patch. I 
-would take care of it in the next series.
+There's no reason for this node. Just make the parent (SCU) a clock 
+provider.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+> +
+> +The clock consumer should specify the desired clock by having the clock
+> +ID in its "clocks" phandle cell.
+> +See include/dt-bindings/clock/imx8qxp-clock.h
+> +for the full list of i.MX8QXP clock IDs.
+> +
+> +Examples:
+> +
+> +#include <dt-bindings/clock/imx8qxp-clock.h>
+> +
+> +clk: clk {
+> +	compatible = "fsl,imx8qxp-clk";
+> +	#clock-cells = <1>;
+> +};
+> +
+> +i2c0: i2c@5a800000 {
+> +	compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> +	reg = <0x0 0x5a800000 0x0 0x4000>;
+> +	interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
+> +	interrupt-parent = <&gic>;
+> +	clocks = <&clk IMX8QXP_I2C0_CLK>,
+> +		 <&clk IMX8QXP_I2C0_IPG_CLK>;
+> +	clock-names = "per", "ipg";
+> +	...
+> +};
