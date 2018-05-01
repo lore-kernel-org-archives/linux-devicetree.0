@@ -1,45 +1,68 @@
-Return-Path: <SRS0=Az2M=HN=rock-chips.com=shawn.lin@kernel.org>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v4 1/2] Documentation: mmc: add optional cd-debounce-delay-ms
-Date: Tue, 24 Apr 2018 08:42:56 +0800
-Message-Id: <1524530577-183915-1-git-send-email-shawn.lin@rock-chips.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+Return-Path: <SRS0=F5di=HU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-ua0-f193.google.com ([209.85.217.193]:41826 "EHLO
+        mail-ua0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751451AbeEADkp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Apr 2018 23:40:45 -0400
+Received: by mail-ua0-f193.google.com with SMTP id a3so6770724uad.8
+        for <devicetree@vger.kernel.org>; Mon, 30 Apr 2018 20:40:44 -0700 (PDT)
+Received: from mail-vk0-f52.google.com (mail-vk0-f52.google.com. [209.85.213.52])
+        by smtp.gmail.com with ESMTPSA id m19-v6sm2903329vkm.53.2018.04.30.20.40.43
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Apr 2018 20:40:43 -0700 (PDT)
+Received: by mail-vk0-f52.google.com with SMTP id q189-v6so6401916vkb.0
+        for <devicetree@vger.kernel.org>; Mon, 30 Apr 2018 20:40:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <1524622328-30493-1-git-send-email-andy.yeh@intel.com> <1524622328-30493-3-git-send-email-andy.yeh@intel.com>
+In-Reply-To: <1524622328-30493-3-git-send-email-andy.yeh@intel.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Date: Tue, 01 May 2018 03:40:32 +0000
+Message-ID: <CAAFQd5CbJQm4-DyR4fieBAAa9JDrDtmvc9gtwOXU3rXzbZ3njQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH v8 2/2] media: dw9807: Add dw9807 vcm driver
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: "Yeh, Andy" <andy.yeh@intel.com>
+Cc: Linux Media Mailing List <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, devicetree@vger.kernel.org, jacopo@jmondi.org, Alan Chiang <alanx.chiang@intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-cd-gpios uses a fixed delay, 200ms, before detecting card after the card
-is inserted. 200ms doesn't work for some platforms, so some host drivers
-added their own properties for parsing that from DT, for instance,
-dw_mmc and pxamci. That being said, it should also be tunable when using
-cd-gpios.
+Hi Andy,
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+On Wed, Apr 25, 2018 at 11:04 AM Andy Yeh <andy.yeh@intel.com> wrote:
 
----
+> From: Alan Chiang <alanx.chiang@intel.com>
 
-Changes in v4:
-- rename to cd-debounce-delay-ms suggested by Ulf
+> DW9807 is a 10 bit DAC from Dongwoon, designed for linear
+> control of voice coil motor.
 
-Changes in v3:
-- fix misleading typo in commit msg
+> This driver creates a V4L2 subdevice and
+> provides control to set the desired focus.
 
-Changes in v2: None
+> Signed-off-by: Andy Yeh <andy.yeh@intel.com>
+> ---
+> since v1:
+> - changed author.
+> since v2:
+> - addressed outstanding comments.
+> - enabled sequential write to update 2 registers in a single transaction.
+> since v3:
+> - addressed comments for v3.
+> - Remove redundant codes and declare some variables as constant variable.
+> - separate DT binding to another patch
+> since v4:
+> - sent patchset included DT binding with cover page
+> since v6:
+> - change the return code of i2c_check
+> - fix long cols exceed 80 chars
+> - remove #define DW9807_NAME since only used once
+> since v7:
+> - Remove some redundant type cast
+> - Modify to meet the coding style
+> - Replace a while loop by readx_poll_timeout function
+> - Return the i2c error directly
 
- Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-index 467cd7b..dbe23b1 100644
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -19,6 +19,8 @@ Optional properties:
- - wp-gpios: Specify GPIOs for write protection, see gpio binding
- - cd-inverted: when present, polarity on the CD line is inverted. See the note
-   below for the case, when a GPIO is used for the CD line
-+- cd-debounce-delay-ms: Set delay time before detecting card after card insert interrupt.
-+  It's only valid when cd-gpios is present.
- - wp-inverted: when present, polarity on the WP line is inverted. See the note
-   below for the case, when a GPIO is used for the WP line
- - disable-wp: When set no physical WP line is present. This property should
--- 
-1.9.1
+Thanks for addressing the comments.
+
+Best regards,
+Tomasz
