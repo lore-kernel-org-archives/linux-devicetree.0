@@ -1,40 +1,44 @@
-Return-Path: <SRS0=qEOi=H5=cogentembedded.com=sergei.shtylyov@kernel.org>
-Subject: [PATCH 1/2] dt-bindings: arm: document Renesas V3HSK board bindings
-References: <3923fc5f-103c-94c9-57ba-cb29e8c55d05@cogentembedded.com>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <24039c74-d6d3-cac3-6c68-5dcd88ef8ecc@cogentembedded.com>
-Date: Thu, 10 May 2018 21:09:40 +0300
+Return-Path: <SRS0=miFn=HU=gmail.com=brandon.maier@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <3923fc5f-103c-94c9-57ba-cb29e8c55d05@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+References: <20180422040132.1389-1-brandon.maier@gmail.com>
+ <20180422040132.1389-2-brandon.maier@gmail.com> <20180427211355.lkuadz7elfz6prws@rob-hp-laptop>
+ <CADwxmTn3fS50oAvqEj947RC5Hnq0q6666_CGvWU7KMmtOc=fvw@mail.gmail.com> <20180501131648.GA4135@rob-hp-laptop>
+In-Reply-To: <20180501131648.GA4135@rob-hp-laptop>
+From: Brandon Maier <brandon.maier@gmail.com>
+Date: Tue, 01 May 2018 15:08:03 +0000
+Message-ID: <CADwxmTmsbr1pjNARrPG-j+svDSBALQ2iQwf3O6nroBCukX++Zw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: net: gmii2rgmii: Clarify proper usage
+Content-Type: text/plain; charset="UTF-8"
+To: robh@kernel.org
+Cc: mark.rutland@arm.com, michal.simek@xilinx.com, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Document the V3H Starter Kit device tree bindings, listing it as
-a supported board.
+On Tue, May 1, 2018 at 8:16 AM Rob Herring <robh@kernel.org> wrote:
+...
+> You don't need both properties. If the ethernet driver needs the phy,
+> then it can decend into the child nodes to find it.
 
-This allows to use checkpatch.pl to validate .dts files referring to
-the V3HSK board.
+Ah, in the scenario I hit, the phy was on a separate mdio bus. So the
+phy-handle was necessary. Is it common behavior for an Ethernet
+controller to attach to the first phy on its own mdio bus? That wasn't
+clear to me looking at the documentation, and is where I messed up
+and attached the Ethernet to the gmiitorgmii phy.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+  I could refactor the example to more closely resemble my scenario, e.g.
 
----
- Documentation/devicetree/bindings/arm/shmobile.txt |    2 ++
- 1 file changed, 2 insertions(+)
+ethernet0 {
+   mdio {
+      phy: ethernet-phy@0 {
+        ...
+      }
+      gmiitorgmii@8 {
+         ...
+       }
+   }
+}
+ethernet1 {
+    phy-handle = <&phy>;
+}
 
-Index: renesas/Documentation/devicetree/bindings/arm/shmobile.txt
-===================================================================
---- renesas.orig/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ renesas/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -132,6 +132,8 @@ Boards:
-     compatible = "renesas,sk-rzg1m", "renesas,r8a7743"
-   - Stout (ADAS Starterkit, Y-R-CAR-ADAS-SKH2-BOARD)
-     compatible = "renesas,stout", "renesas,r8a7790"
-+  - V3HSK (Y-ASK-RCAR-V3H-WS10)
-+    compatible = "renesas,v3hsk", "renesas,r8a77980"
-   - V3MSK (Y-ASK-RCAR-V3M-WS10)
-     compatible = "renesas,v3msk", "renesas,r8a77970"
-   - Wheat (RTP0RC7792ASKB0000JE)
+But that would make the example too specific. So I'm inclined
+to resubmit with just the added description, and drop the example changes.
