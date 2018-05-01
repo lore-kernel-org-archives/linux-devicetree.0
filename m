@@ -1,60 +1,78 @@
-From: Matheus Castello <matheus@castello.eng.br>
-Subject: Re: [PATCH v7 0/3] bcm2835: Add generic pinctrl support
-Date: Mon, 30 Apr 2018 20:42:12 -0400
-Message-ID: <1525135334-28506-1-git-send-email-matheus@castello.eng.br>
-References: <1525030092-3643-3-git-send-email-matheus@castello.eng.br>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v3 1/2] dt-bindings: nvmem: Add binding for RAVE SP EEPROM driver
+Date: Mon, 30 Apr 2018 22:29:51 -0700
+Message-ID: <20180501052952.26765-2-andrew.smirnov@gmail.com>
+References: <20180501052952.26765-1-andrew.smirnov@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525030092-3643-3-git-send-email-matheus@castello.eng.br>
+In-Reply-To: <20180501052952.26765-1-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, stefan.wahren@i2se.com, eric@anholt.net
-Cc: swarren@wwwdotorg.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Matheus Castello <matheus@castello.eng.br>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Aleksander Morgado <aleksander@aleksander.es>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for generic binding for pinctrl bcm2835 driver,
-and add the code for set output buffer of a pin using the output-low and
-output-high generic properties.
+Add Device Tree bindings for RAVE SP EEPROM driver - an MFD cell of
+parent RAVE SP driver (documented in
+Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
 
-Tested on Raspberry Pi Zero W, based on bcm2835 SoC.
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Aleksander Morgado <aleksander@aleksander.es>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+---
+ .../bindings/nvmem/zii,rave-sp-eeprom.txt          | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
 
-Changes since v6:
-- I was dumb and calculate the PIN_CONFIG_END (x7f) +1 (x80) and hard coded it.
-Fix it using recommended define from pinconf-generic.h PIN_CONFIG_END + 1
-- In v6 I did not keep the review tags
-
-Changes since v5:
-(Suggested by Stefan Wahren)
-- Fix checkpatch warnings
-- Use PIN_CONFIG_END+1 for bcm2835_pinconf_param for our pull legacy
-configuration
-(Suggested by Linus Walleij)
-- Only resend patch 2+3
-- Add Stephen Warren for subsequent postings
-
-Changes since v4:
-(Suggested by Rob Herring)
-- Change dt-bindings docs driver reference to hardware in case the BCM2835
-pin configuration and multiplexing
-
-Changes since v3:
-(Suggested by Stefan Wahren)
-- Change dt-bindings docs patch order and subject
-
-Changes since v2:
-(Suggested by Eric Anholt)
-- Remove PACK and UNPACK macros
-- Use pinconf_to_config_* functions
-(Suggested by Stefan Wahren)
-- Fold Kconfig changes with the driver changes in a single patch
-- Add devicetree bindings documentations about generic properties support
-- Add devicetree bindings maintainers
-
-Matheus Castello (2):
-  pinctrl: bcm2835: Add support for generic pinctrl binding
-  pinctrl: bcm2835: Add support for output-low output-high properties
-
- drivers/pinctrl/bcm/Kconfig           |   1 +
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 100 +++++++++++++++++++++-------------
- 2 files changed, 64 insertions(+), 37 deletions(-)
-
---
-2.7.4
+diff --git a/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
+new file mode 100644
+index 000000000000..d5e22fc67d66
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
+@@ -0,0 +1,40 @@
++Zodiac Inflight Innovations RAVE EEPROM Bindings
++
++RAVE SP EEPROM device is a "MFD cell" device exposing physical EEPROM
++attached to RAVE Supervisory Processor. It is expected that its Device
++Tree node is specified as a child of the node corresponding to the
++parent RAVE SP device (as documented in
++Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
++
++Required properties:
++
++- compatible: Should be "zii,rave-sp-eeprom"
++
++Optional properties:
++
++- zii,eeprom-name: Unique EEPROM identifier describing its function in the
++  system. Will be used as created NVMEM deivce's name.
++
++Data cells:
++
++Data cells are child nodes of eerpom node, bindings for which are
++documented in Documentation/bindings/nvmem/nvmem.txt
++
++Example:
++
++	rave-sp {
++		compatible = "zii,rave-sp-rdu1";
++		current-speed = <38400>;
++
++		eeprom@a4 {
++			compatible = "zii,rave-sp-eeprom";
++			reg = <0xa4 0x4000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			zii,eeprom-name = "main-eeprom";
++
++			wdt_timeout: wdt-timeout@81 {
++				reg = <0x81 2>;
++			};
++		};
++	}
+-- 
+2.14.3
