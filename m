@@ -1,54 +1,45 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/21] dt-bindings: clock: Add compatible
- for A64 DE2 CCU
-Date: Tue, 1 May 2018 11:34:14 -0500
-Message-ID: <CAL_Jsq+0KhCWc-8cpTX=OtGapM+4YdymHDndY6AgGfq3z+mqhg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 04/21] bindings: display: Add compatible for A64 DE2
+ pipeline
+Date: Tue, 1 May 2018 11:34:51 -0500
+Message-ID: <CAL_JsqJ6PmWJZPjdhHTSMEkKdCiORXKcz3AMch=Nx2Z5FeC3_Q@mail.gmail.com>
 References: <20180430114058.5061-1-jagan@amarulasolutions.com>
- <20180430114058.5061-2-jagan@amarulasolutions.com> <20180501161618.GA32350@rob-hp-laptop>
- <CAGb2v64ZTQ0jAaSpDXtV58c-EE2FMMbVASLLjxjGkWM3iJTMHg@mail.gmail.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+ <20180430114058.5061-5-jagan@amarulasolutions.com>
+ <20180501161723.GA376@rob-hp-laptop>
+ <CAGb2v66bx2TguLjnMi2R0KFU4=aYC8xveexybnWdWPDd+xwOvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBHFOULLQKGQEE5FCESA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v64ZTQ0jAaSpDXtV58c-EE2FMMbVASLLjxjGkWM3iJTMHg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAGb2v66bx2TguLjnMi2R0KFU4=aYC8xveexybnWdWPDd+xwOvg@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Stephen Boyd <sboyd@kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Jagan Teki <jagan@amarulasolutions.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 1, 2018 at 11:19 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> On Wed, May 2, 2018 at 12:16 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Mon, Apr 30, 2018 at 05:10:38PM +0530, Jagan Teki wrote:
->>> Allwinner A64 has DE2 CCU which is similar to H3/H5 SoC.
->>>
->>> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/clock/sun8i-de2.txt | 1 +
->>>  1 file changed, 1 insertion(+)
->>
->> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
-> Hi Rob,
->
-> Do we need to add this if it's just a soc-specific compatible
-> we add in the device tree to future proof things in case we
-> discover quirks later on?
-
-Yes, but the fallbacks should be documented too as I found in the rest
-of the series.
-
-> AFAIK we haven't been doing this, and this is likely to create
-> some confusion, because they aren't actually mentioned anywhere
-> in the driver.
-
-The binding doc needs to written such that compatible can be validated
-to contain the correct set of strings. We can't do that now with free
-form text, but when we move to a schema we will.
-
-Rob
+T24gVHVlLCBNYXkgMSwgMjAxOCBhdCAxMTozMSBBTSwgQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUu
+b3JnPiB3cm90ZToKPiBPbiBXZWQsIE1heSAyLCAyMDE4IGF0IDEyOjE3IEFNLCBSb2IgSGVycmlu
+ZyA8cm9iaEBrZXJuZWwub3JnPiB3cm90ZToKPj4gT24gTW9uLCBBcHIgMzAsIDIwMTggYXQgMDU6
+MTA6NDFQTSArMDUzMCwgSmFnYW4gVGVraSB3cm90ZToKPj4+IEFsbHdpbm5lciBBNjQgaGFzIERF
+MiBwaXBlbGluZSBzaW1pbGFyIHRvIG90aGVyIEFsbHdpbm5lcgo+Pj4gU09DJ3MgbGlrZSBBODNU
+LCBIMy9INS4KPj4KPj4gJ2R0LWJpbmRpbmdzOiAnIGZvciB0aGUgc3ViamVjdCBwcmVmaXguCj4+
+Cj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogSmFnYW4gVGVraSA8amFnYW5AYW1hcnVsYXNvbHV0aW9u
+cy5jb20+Cj4+PiAtLS0KPj4+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9zdW54aS9zdW40aS1kcm0udHh0IHwgMSArCj4+PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5z
+ZXJ0aW9uKCspCj4+Cj4+IE90aGVyd2lzZSwKPj4KPj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5n
+IDxyb2JoQGtlcm5lbC5vcmc+Cj4KPiBXb3VsZCBpdCBtYWtlIHNlbnNlIHRvIHB1dCBhbGwgdGhl
+IGRpc3BsYXkgY29tcG9uZW50IHJlbGF0ZWQgY29tcGF0aWJsZQo+IHN0cmluZyBhZGRpdGlvbnMg
+aW4gdGhlIHNhbWUgcGF0Y2g/IGkuZS4gIkFkZCBjb21wYXRpYmxlIHN0cmluZ3MgZm9yIGFsbAo+
+IGRvY3VtZW50ZWQgZGlzcGxheSBjb21wb25lbnQgYmxvY2tzIi4gTUlQSS1EU0kgaXMgbWlzc2lu
+ZywgYnV0IGl0J3Mgbm90Cj4gZG9jdW1lbnRlZC4KClRoYXQncyBmaW5lIGJ5IG1lLgoKUm9iCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
