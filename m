@@ -1,96 +1,108 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH net-next v2 02/15] clk: sunxi-ng: r40: export a regmap to
- access the GMAC register
-Date: Wed,  2 May 2018 00:12:14 +0800
-Message-ID: <20180501161227.2110-3-wens@csie.org>
-References: <20180501161227.2110-1-wens@csie.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 04/25] arm: exynos/s3c: dts: Remove leading 0x and 0s
+ from bindings notation
+Date: Tue, 1 May 2018 18:15:46 +0200
+Message-ID: <20180501161546.6w3fkenk7q6s4kqe@kozik-lap>
+References: <20171215124630.30082-1-malat@debian.org>
+ <CAJKOXPdkYLisej5965rh2SbOjbFms-RK2VnXt=L==MW_JcA+OA@mail.gmail.com>
+ <CA+7wUsxp_n6V--PE9PQSsT1xu3b0HJn5gWBhnp=ngRNqBSVvFg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180501161227.2110-1-wens@csie.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CA+7wUsxp_n6V--PE9PQSsT1xu3b0HJn5gWBhnp=ngRNqBSVvFg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Malaterre <malat@debian.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+On Mon, Dec 18, 2017 at 11:17:24AM +0100, Mathieu Malaterre wrote:
+> On Mon, Dec 18, 2017 at 10:40 AM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > On Fri, Dec 15, 2017 at 1:46 PM, Mathieu Malaterre <malat@debian.org> wrote:
+> >> Improve the DTS files by removing all the leading "0x" and zeros to fix the
+> >> following dtc warnings:
+> >>
+> >> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+> >>
+> >> and
+> >>
+> >> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+> >>
+> >> Converted using the following command:
+> >>
+> >> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
+> >>
+> >> For simplicity, two sed expressions were used to solve each warnings separately.
+> >>
+> >> To make the regex expression more robust a few other issues were resolved,
+> >> namely setting unit-address to lower case, and adding a whitespace before the
+> >> the opening curly brace:
+> >>
+> >> https://elinux.org/Device_Tree_Linux#Linux_conventions
+> >>
+> >> This will solve as a side effect warning:
+> >>
+> >> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+> >>
+> >> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+> >>
+> >> Reported-by: David Daney <ddaney@caviumnetworks.com>
+> >> Suggested-by: Rob Herring <robh@kernel.org>
+> >> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >
+> > Ack was for different patchset, touching only three files...
+> 
+> So sorry, when I read your email:
+> 
+> https://lkml.org/lkml/2017/12/15/152
+> 
+> I assumed you meant for all the Exynos* and S3C* DTS files, but I did
+> not check carefully which files were touched originally.
+> 
+> >> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> >> ---
+> >>  arch/arm/boot/dts/exynos3250.dtsi             | 34 ++++++------
+> >>  arch/arm/boot/dts/exynos4.dtsi                | 56 +++++++++----------
+> >>  arch/arm/boot/dts/exynos4210.dtsi             |  8 +--
+> >>  arch/arm/boot/dts/exynos4412-pinctrl.dtsi     |  2 +-
+> >>  arch/arm/boot/dts/exynos4412.dtsi             | 22 ++++----
+> >>  arch/arm/boot/dts/exynos5.dtsi                | 22 ++++----
+> >>  arch/arm/boot/dts/exynos5250.dtsi             | 64 +++++++++++-----------
+> >>  arch/arm/boot/dts/exynos5260.dtsi             | 26 ++++-----
+> >>  arch/arm/boot/dts/exynos5420.dtsi             | 78 +++++++++++++--------------
+> >>  arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  2 +-
+> >>  arch/arm/boot/dts/exynos5440.dtsi             | 14 ++---
+> >>  arch/arm/boot/dts/s3c2416.dtsi                |  8 +--
+> >>  12 files changed, 168 insertions(+), 168 deletions(-)
+> >>
+> >> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+> >> index 2bd3872221a1..8d47571b3984 100644
+> >> --- a/arch/arm/boot/dts/exynos3250.dtsi
+> >> +++ b/arch/arm/boot/dts/exynos3250.dtsi
+> >> @@ -164,31 +164,31 @@
+> >>                         syscon = <&pmu_system_controller>;
+> >>                 };
+> >>
+> >> -               pd_cam: cam-power-domain@10023C00 {
+> >> +               pd_cam: cam-power-domain@10023c00 {
+> >
+> > This is not related to this patch and it was not present in the
+> > version I acked. I also already fixed this here:
+> > https://patchwork.kernel.org/patch/10113323/
+> >
+> > There is no changelog explaining the difference in patches. Original
+> > patch was okay, why changing it?
+> 
+> Accept my sincere apologizes I really messed this series. I discover
+> my original ARM patch did not apply lower case to all unit-address
+> equally, so I added at last minute a sed expression to make all
+> unit-address lower case.
+> 
+> I guess you can just drop this one for now.
 
-There's a GMAC configuration register, which exists on A64/A83T/H3/H5 in
-the syscon part, in the CCU of R40 SoC.
+Hi Mathieu,
 
-Export a regmap of the CCU.
+Do you plan to resend this in its original form (removing 0)?
 
-Read access is not restricted to all registers, but only the GMAC
-register is allowed to be written.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- drivers/clk/sunxi-ng/ccu-sun8i-r40.c | 33 ++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
-
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r40.c b/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
-index c3aa839a453d..65ba6455feb7 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
-@@ -1251,9 +1251,37 @@ static struct ccu_mux_nb sun8i_r40_cpu_nb = {
- 	.bypass_index	= 1, /* index of 24 MHz oscillator */
- };
- 
-+/*
-+ * Add a regmap for the GMAC driver (dwmac-sun8i) to access the
-+ * GMAC configuration register.
-+ * Only this register is allowed to be written, in order to
-+ * prevent overriding critical clock configuration.
-+ */
-+
-+#define SUN8I_R40_GMAC_CFG_REG 0x164
-+static bool sun8i_r40_ccu_regmap_accessible_reg(struct device *dev,
-+						unsigned int reg)
-+{
-+	if (reg == SUN8I_R40_GMAC_CFG_REG)
-+		return true;
-+	return false;
-+}
-+
-+static struct regmap_config sun8i_r40_ccu_regmap_config = {
-+	.reg_bits	= 32,
-+	.val_bits	= 32,
-+	.reg_stride	= 4,
-+	.max_register	= 0x320, /* PLL_LOCK_CTRL_REG */
-+
-+	/* other devices have no business accessing other registers */
-+	.readable_reg	= sun8i_r40_ccu_regmap_accessible_reg,
-+	.writeable_reg	= sun8i_r40_ccu_regmap_accessible_reg,
-+};
-+
- static int sun8i_r40_ccu_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
-+	struct regmap *regmap;
- 	void __iomem *reg;
- 	u32 val;
- 	int ret;
-@@ -1278,6 +1306,11 @@ static int sun8i_r40_ccu_probe(struct platform_device *pdev)
- 	val &= ~GENMASK(25, 20);
- 	writel(val, reg + SUN8I_R40_USB_CLK_REG);
- 
-+	regmap = devm_regmap_init_mmio(&pdev->dev, reg,
-+				       &sun8i_r40_ccu_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
- 	ret = sunxi_ccu_probe(pdev->dev.of_node, reg, &sun8i_r40_ccu_desc);
- 	if (ret)
- 		return ret;
--- 
-2.17.0
+Best regards,
+Krzysztof
