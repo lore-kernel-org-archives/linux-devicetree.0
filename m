@@ -1,60 +1,124 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: added new pwm-sifive driver
- documentation
-Date: Tue, 1 May 2018 11:11:25 -0500
-Message-ID: <20180501161125.GA14380@rob-hp-laptop>
-References: <1524869998-2805-1-git-send-email-wesley@sifive.com>
- <1524869998-2805-2-git-send-email-wesley@sifive.com>
- <20180429055417.GA10221@mithrandir>
- <CAMgXwTgN26aKaSuVdSj2TDUgbR7bAmy4TdtOuKj_QC0kNNbphg@mail.gmail.com>
- <60772240-3c75-7814-9237-d60916a8ceca@suse.de>
- <CAMgXwThYN1E=awkd8yF2aNN+QOLwHkx=UyWqGrOnMxv5jyVj5g@mail.gmail.com>
- <20180430081946.GH2484@ulmo>
- <61f24d16-5095-76e4-845e-2434029fe1f0@suse.de>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH net-next v2 11/15] ARM: dts: sun8i: r40: bananapi-m2-ultra:
+ Sort device node dereferences
+Date: Wed,  2 May 2018 00:12:23 +0800
+Message-ID: <20180501161227.2110-12-wens@csie.org>
+References: <20180501161227.2110-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <61f24d16-5095-76e4-845e-2434029fe1f0@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Wesley Terpstra <wesley@sifive.com>, Mark Rutland <mark.rutland@arm.com>, Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>, David Lechner <david@lechnology.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, SZ Lin <sz.lin@moxa.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180501161227.2110-1-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 30, 2018 at 12:45:20PM +0200, Andreas Färber wrote:
-> Am 30.04.2018 um 10:19 schrieb Thierry Reding:
-> > On Sun, Apr 29, 2018 at 02:08:07PM -0700, Wesley Terpstra wrote:
-> >> On Sun, Apr 29, 2018 at 2:01 PM, Andreas Färber <afaerber@suse.de> wrote:
-> >>> "pwm0" sounds like a zero-indexed instance of some pwm block. If 0 is
-> >>> the version here, I'd suggest to make it "pwm-0" for example - you might
-> >>> want to take a look at the Xilinx bindings, which use a strict x.yy suffix.
-> >>
-> >> That's fine. I'll change it to pwm-0.00 in the next patch series.
-> > 
-> > This should match the version that you use. If you're internal
-> > versioning uses single digits, or a single version number, then I think
-> > there's no need to use 0.00, because that would just be confusing.
-> > However I think it'd be good to make sure it is discernible as a version
-> > number. Perhaps something like sifive,pwm-v0. That seems to be a fairly
-> > common scheme.
-> 
-> Yes. My point was not to adopt another vendor's versioning scheme but to
-> adopt _some_ consistent scheme and document it, e.g., in a sifive.txt
-> similar to xilinx.txt:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/xilinx.txt
-> 
-> It should be made clear what in the compatible string the version is
-> (thus my proposal of using a dash as separator), and there you may want
-> to document how to map between IP/documentation and compatibles for any
-> new bindings.
+The device nodes dereference (&foo) usages should be sorted by the label
+names, barring any parsing order issues such as the #include statement
+for the PMIC's .dtsi file that must come after the PMIC.
 
-Yes. And using versions in compatible strings is only accepted when 
-there is a well defined versioning process. FPGAs tend to be the main 
-case as most SoC vendors don't have rigorous versioning processes. I 
-guess it makes sense for SiFive from the little I know about them. What 
-doesn't make sense or get accepted is software folks just making up v1, 
-v2, v3, etc.
+Move the mmc and ohci blocks in front of the PMIC's regulator blocks.
 
-Rob
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  | 69 ++++++++++---------
+ 1 file changed, 35 insertions(+), 34 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+index 27d9ccd0ef2f..c6da21e43572 100644
+--- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
++++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+@@ -114,6 +114,41 @@
+ 
+ #include "axp22x.dtsi"
+ 
++&mmc0 {
++	vmmc-supply = <&reg_dcdc1>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 13 GPIO_ACTIVE_HIGH>; /* PH13 */
++	cd-inverted;
++	status = "okay";
++};
++
++&mmc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pg_pins>;
++	vmmc-supply = <&reg_dldo2>;
++	vqmmc-supply = <&reg_dldo1>;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
++};
++
++&mmc2 {
++	vmmc-supply = <&reg_dcdc1>;
++	vqmmc-supply = <&reg_dcdc1>;
++	bus-width = <8>;
++	non-removable;
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&ohci2 {
++	status = "okay";
++};
++
+ &reg_aldo3 {
+ 	regulator-always-on;
+ 	regulator-min-microvolt = <2700000>;
+@@ -161,40 +196,6 @@
+ 	regulator-name = "vcc-wifi";
+ };
+ 
+-&mmc0 {
+-	vmmc-supply = <&reg_dcdc1>;
+-	bus-width = <4>;
+-	cd-gpios = <&pio 7 13 GPIO_ACTIVE_LOW>; /* PH13 */
+-	status = "okay";
+-};
+-
+-&mmc1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&mmc1_pg_pins>;
+-	vmmc-supply = <&reg_dldo2>;
+-	vqmmc-supply = <&reg_dldo1>;
+-	mmc-pwrseq = <&wifi_pwrseq>;
+-	bus-width = <4>;
+-	non-removable;
+-	status = "okay";
+-};
+-
+-&mmc2 {
+-	vmmc-supply = <&reg_dcdc1>;
+-	vqmmc-supply = <&reg_dcdc1>;
+-	bus-width = <8>;
+-	non-removable;
+-	status = "okay";
+-};
+-
+-&ohci1 {
+-	status = "okay";
+-};
+-
+-&ohci2 {
+-	status = "okay";
+-};
+-
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
+-- 
+2.17.0
