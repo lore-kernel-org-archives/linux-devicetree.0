@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-Subject: [PATCH v8 07/12] ARM: sunxi: Add initialization of CNTVOFF
-Date: Tue,  1 May 2018 14:31:26 +0200
-Message-ID: <20180501123131.7738-8-mylene.josserand@bootlin.com>
+Subject: [PATCH v8 09/12] ARM: sun9i: smp: Add is_a83t field
+Date: Tue,  1 May 2018 14:31:28 +0200
+Message-ID: <20180501123131.7738-10-mylene.josserand@bootlin.com>
 References: <20180501123131.7738-1-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,81 +13,45 @@ To: linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, marc.zyngie
 Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mylene.josserand@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-Add the initialization of CNTVOFF for sun8i-a83t.
+To prepare the support of sun8i-a83t, add a field in the smp_data
+structure to know if we are on sun9i-a80 or sun8i-a83t.
 
-For boot CPU, create a new machine that handles this
-function's call in an "init_early" callback. We need to initialize
-CNTVOFF before the arch timer's initialization otherwise, it will
-not be taken into account and fails to boot correctly.
-Because of that, this function can't be called in SMP's early_initcall
-function which is called after timer's init.
-
-For secondary CPUs, add this function into secondary_startup
-assembly entry.
+Add also a global variable to retrieve which architecture we are
+having.
 
 Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- arch/arm/mach-sunxi/headsmp.S |  1 +
- arch/arm/mach-sunxi/sunxi.c   | 20 +++++++++++++++++++-
- 2 files changed, 20 insertions(+), 1 deletion(-)
+ arch/arm/mach-sunxi/mc_smp.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/headsmp.S
-index 37dc772701f3..32d76be98541 100644
---- a/arch/arm/mach-sunxi/headsmp.S
-+++ b/arch/arm/mach-sunxi/headsmp.S
-@@ -71,6 +71,7 @@ ENDPROC(sunxi_mc_smp_cluster_cache_enable)
+diff --git a/arch/arm/mach-sunxi/mc_smp.c b/arch/arm/mach-sunxi/mc_smp.c
+index 03f021d0c73e..fc10e3a3268f 100644
+--- a/arch/arm/mach-sunxi/mc_smp.c
++++ b/arch/arm/mach-sunxi/mc_smp.c
+@@ -74,6 +74,7 @@ static void __iomem *sram_b_smp_base;
  
- ENTRY(sunxi_mc_smp_secondary_startup)
- 	bl	sunxi_mc_smp_cluster_cache_enable
-+	bl	secure_cntvoff_init
- 	b	secondary_startup
- ENDPROC(sunxi_mc_smp_secondary_startup)
+ extern void sunxi_mc_smp_secondary_startup(void);
+ extern void sunxi_mc_smp_resume(void);
++static bool is_a83t;
  
-diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-index 5e9602ce1573..2770a31a9278 100644
---- a/arch/arm/mach-sunxi/sunxi.c
-+++ b/arch/arm/mach-sunxi/sunxi.c
-@@ -16,6 +16,7 @@
- #include <linux/platform_device.h>
+ static bool sunxi_core_is_cortex_a15(unsigned int core, unsigned int cluster)
+ {
+@@ -624,6 +625,7 @@ struct sunxi_mc_smp_nodes {
+ struct sunxi_mc_smp_data {
+ 	const char *enable_method;
+ 	int (*get_smp_nodes)(struct sunxi_mc_smp_nodes *nodes);
++	bool is_a83t;
+ };
  
- #include <asm/mach/arch.h>
-+#include <asm/secure_cntvoff.h>
+ static void __init sunxi_mc_smp_put_nodes(struct sunxi_mc_smp_nodes *nodes)
+@@ -697,6 +699,8 @@ static int __init sunxi_mc_smp_init(void)
+ 			break;
+ 	}
  
- static const char * const sunxi_board_dt_compat[] = {
- 	"allwinner,sun4i-a10",
-@@ -62,7 +63,6 @@ MACHINE_END
- static const char * const sun8i_board_dt_compat[] = {
- 	"allwinner,sun8i-a23",
- 	"allwinner,sun8i-a33",
--	"allwinner,sun8i-a83t",
- 	"allwinner,sun8i-h2-plus",
- 	"allwinner,sun8i-h3",
- 	"allwinner,sun8i-r40",
-@@ -75,6 +75,24 @@ DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i Family")
- 	.dt_compat	= sun8i_board_dt_compat,
- MACHINE_END
- 
-+void __init sun8i_a83t_cntvoff_init(void)
-+{
-+#ifdef CONFIG_SMP
-+	secure_cntvoff_init();
-+#endif
-+}
++	is_a83t = sunxi_mc_smp_data[i].is_a83t;
 +
-+static const char * const sun8i_a83t_cntvoff_board_dt_compat[] = {
-+	"allwinner,sun8i-a83t",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(SUN8I_CNTVOFF_DT, "Allwinner sun8i-a83t board")
-+	.init_early	= sun8i_a83t_cntvoff_init,
-+	.init_time	= sun6i_timer_init,
-+	.dt_compat	= sun8i_a83t_cntvoff_board_dt_compat,
-+MACHINE_END
-+
- static const char * const sun9i_board_dt_compat[] = {
- 	"allwinner,sun9i-a80",
- 	NULL,
+ 	of_node_put(node);
+ 	if (ret)
+ 		return -ENODEV;
 -- 
 2.11.0
