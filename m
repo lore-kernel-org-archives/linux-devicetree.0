@@ -1,83 +1,138 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode for
- the cells list
-Date: Tue, 1 May 2018 17:49:03 +0100
-Message-ID: <d30656d6-f17e-6ed0-251f-2b59d02cd202@linaro.org>
-References: <1521933899-362-1-git-send-email-albeu@free.fr>
- <1521933899-362-2-git-send-email-albeu@free.fr>
- <344e0087-7410-aebb-8a66-c6976064df10@linaro.org>
- <20180417165420.423a691b@avionic-0020>
- <8c4b48ad-e99e-030a-a4ee-b6df0fa59c79@linaro.org>
- <20180417180040.04f53495@avionic-0020> <20180418134119.2e587621@avionic-0020>
- <9f7d2987-b33e-79b5-ae58-2985fd7334e4@linaro.org>
- <20180418143243.3c23493c@avionic-0020>
- <e34619a4-e9b6-9945-a1cc-a3680aac6819@linaro.org>
- <20180418153440.187ed16e@avionic-0020>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Liming Sun <lsun@mellanox.com>
+Subject: [PATCH v5 1/3] mmc: dw_mmc-bluefield: Add driver extension
+Date: Tue,  1 May 2018 14:19:45 -0400
+Message-ID: <1525198787-46403-1-git-send-email-lsun@mellanox.com>
+References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180418153440.187ed16e@avionic-0020>
-Content-Language: en-US
+In-Reply-To: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alban <albeu@free.fr>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Liming Sun <lsun@mellanox.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This commit adds extension to the dw_mmc driver for Mellanox BlueField
+SoC. It updates the UHS_REG_EXT register to bring up the eMMC card on
+this SoC.
 
+Cc: stable@kernel.org
+Signed-off-by: Liming Sun <lsun@mellanox.com>
+Reviewed-by: David Woods <dwoods@mellanox.com>
+---
+ drivers/mmc/host/Kconfig            |  9 +++++
+ drivers/mmc/host/Makefile           |  1 +
+ drivers/mmc/host/dw_mmc-bluefield.c | 72 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 82 insertions(+)
+ create mode 100644 drivers/mmc/host/dw_mmc-bluefield.c
 
-On 18/04/18 14:34, Alban wrote:
-> On Wed, 18 Apr 2018 13:53:56 +0100
-> Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
-> 
->> On 18/04/18 13:32, Alban wrote:
->>>> I was also suggesting you to use nvmem-cell subnode, but make it a
->>>> proper nvmem provider device, rather than reusing its parent device.
->>>>
->>>> You would end up some thing like this in dt.
->>>>
->>>> flash@0 {
->>>> 	#address-cells = <1>;
->>>> 	#size-cells = <1>;
->>>> 	compatible = "s25sl064a";
->>>> 	reg = <0>;
->>>>
->>>> 	nvmem-cells {
->>>> 		compatible = "mtd-nvmem";
->>>> 		#address-cells = <1>;
->>>> 		#size-cells = <1>;
->>>>
->>>> 		calibration: calib@404 {
->>>> 			reg = <0x404 0x10>;
->>>> 		};
->>>> 	};
->>>> };
->>> But the root cause is in the nvmem binding, this conflict could exists
->> No, the root cause is because of passing wrong device instance to nvmem
->> core. And trying to workaround is the actual issue.
-> 
-> The data is stored on the MTD, so the nvmem provider is the MTD device.
-> I don't think it is a good idea to have a virtual device in the DT to
-> accommodate the nvmem API.
-> 
-Yep, I agree! this is same issue if we make nvmem-cells a child of nvmem 
-provider too.
-
-However, I would like to see this moving forward.
-
-I can think of one possible solution here, which is, adding 
-"nvmem-mtd-cell" or "nvmem-cell" compatible string to each cell. The 
-problem you mentioned regarding #address-cells and #size-cells with 
-provider need to be addressed in nvmem core.
-
-Currently nvmem core only support offsets of 32 bits, if you are 
-expecting a 64 bit offsets then we should add that as a feature to nvmem 
-core.
-
-nvmem core as it is today should work fine with 32 bit offsets for mtd 
-cases.
-
-what do you think?
-
-thanks,
-srini
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index 9589f9c..26ac6b5 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -717,6 +717,15 @@ config MMC_DW_K3
+ 	  Synopsys DesignWare Memory Card Interface driver. Select this option
+ 	  for platforms based on Hisilicon K3 SoC's.
+ 
++config MMC_DW_BLUEFIELD
++	tristate "BlueField specific extensions for Synopsys DW Memory Card Interface"
++	depends on MMC_DW
++	select MMC_DW_PLTFM
++	help
++	  This selects support for Mellanox BlueField SoC specific extensions to
++	  the Synopsys DesignWare Memory Card Interface driver. Select this
++	  option for platforms based on Mellanox BlueField SoC's.
++
+ config MMC_DW_PCI
+ 	tristate "Synopsys Designware MCI support on PCI bus"
+ 	depends on MMC_DW && PCI
+diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+index 6aead24..267b3f1 100644
+--- a/drivers/mmc/host/Makefile
++++ b/drivers/mmc/host/Makefile
+@@ -55,6 +55,7 @@ obj-$(CONFIG_MMC_DW_K3)		+= dw_mmc-k3.o
+ obj-$(CONFIG_MMC_DW_PCI)	+= dw_mmc-pci.o
+ obj-$(CONFIG_MMC_DW_ROCKCHIP)	+= dw_mmc-rockchip.o
+ obj-$(CONFIG_MMC_DW_ZX)		+= dw_mmc-zx.o
++obj-$(CONFIG_MMC_DW_BLUEFIELD)	+= dw_mmc-bluefield.o
+ obj-$(CONFIG_MMC_SH_MMCIF)	+= sh_mmcif.o
+ obj-$(CONFIG_MMC_JZ4740)	+= jz4740_mmc.o
+ obj-$(CONFIG_MMC_VUB300)	+= vub300.o
+diff --git a/drivers/mmc/host/dw_mmc-bluefield.c b/drivers/mmc/host/dw_mmc-bluefield.c
+new file mode 100644
+index 0000000..12067b1
+--- /dev/null
++++ b/drivers/mmc/host/dw_mmc-bluefield.c
+@@ -0,0 +1,72 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2018 Mellanox Technologies.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/module.h>
++#include <linux/io.h>
++#include <linux/irq.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/mmc/host.h>
++#include <linux/mmc/mmc.h>
++#include <linux/of.h>
++
++#include "dw_mmc.h"
++#include "dw_mmc-pltfm.h"
++
++static void dw_mci_bluefield_set_ios(struct dw_mci *host, struct mmc_ios *ios)
++{
++	u32 regs;
++
++	/* Set drive=4 (bit 29:23) and sample=2 (bit 22:16) in UHS_REG_EXT. */
++	regs = mci_readl(host, UHS_REG_EXT);
++	regs = (regs & ~0x3F100000 & ~0x7F0000) | (4 << 23) | (2 << 16);
++	mci_writel(host, UHS_REG_EXT, regs);
++}
++
++static const struct dw_mci_drv_data bluefield_drv_data = {
++	.set_ios		= dw_mci_bluefield_set_ios
++};
++
++static const struct of_device_id dw_mci_bluefield_match[] = {
++	{ .compatible = "mellanox,bluefield-dw-mshc",
++		.data = &bluefield_drv_data },
++	{},
++};
++MODULE_DEVICE_TABLE(of, dw_mci_bluefield_match);
++
++static int dw_mci_bluefield_probe(struct platform_device *pdev)
++{
++	const struct dw_mci_drv_data *drv_data = NULL;
++	const struct of_device_id *match;
++
++	if (pdev->dev.of_node) {
++		match = of_match_node(dw_mci_bluefield_match,
++				      pdev->dev.of_node);
++		drv_data = match->data;
++	}
++
++	return dw_mci_pltfm_register(pdev, drv_data);
++}
++
++static struct platform_driver dw_mci_bluefield_pltfm_driver = {
++	.probe		= dw_mci_bluefield_probe,
++	.remove		= dw_mci_pltfm_remove,
++	.driver		= {
++		.name		= "dwmmc_bluefield",
++		.of_match_table	= dw_mci_bluefield_match,
++		.pm		= &dw_mci_pltfm_pmops,
++	},
++};
++
++module_platform_driver(dw_mci_bluefield_pltfm_driver);
++
++MODULE_DESCRIPTION("BlueField DW Multimedia Card driver");
++MODULE_AUTHOR("Mellanox Technologies");
++MODULE_LICENSE("GPL v2");
+-- 
+1.8.3.1
