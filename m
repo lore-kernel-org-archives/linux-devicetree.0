@@ -1,124 +1,188 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v7 3/9] PCI: endpoint: functions/pci-epf-test: Add second
- entry
-Date: Tue, 1 May 2018 12:54:17 +0100
-Message-ID: <20180501115417.GD19391@e107981-ln.cambridge.arm.com>
-References: <cover.1524577064.git.gustavo.pimentel@synopsys.com>
- <c6cfd167838ae8e226dee0820983efe918fa4e1f.1524577064.git.gustavo.pimentel@synopsys.com>
- <20180426165605.GA6370@e107981-ln.cambridge.arm.com>
- <b65caf2e-b002-f591-6215-ff2241b2dfb8@ti.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v7 00/24] ASoC: qcom: Add support to QDSP based
+	Audio
+Date: Tue,  1 May 2018 13:07:56 +0100
+Message-ID: <20180501120820.11016-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b65caf2e-b002-f591-6215-ff2241b2dfb8@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, bhelgaas@google.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, bgoswami@codeaurora.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 01, 2018 at 03:37:47PM +0530, Kishon Vijay Abraham I wrote:
-> Hi Lorenzo,
-> 
-> On Thursday 26 April 2018 10:26 PM, Lorenzo Pieralisi wrote:
-> > On Tue, Apr 24, 2018 at 02:44:40PM +0100, Gustavo Pimentel wrote:
-> >> Adds a seconds entry on the pci_epf_test_ids structure that disables the
-> > 
-> > "Add a second entry to..."
-> > 
-> >> linkup_notifier parameter on driver for the designware EP.
-> >>
-> >> This allows designware EPs that doesn't have linkup notification signal
-> >> to work with pcitest.
-> >>
-> >> Updates the binding documentation accordingly.
-> > 
-> > Valid for all the series: use imperative sentences.
-> > 
-> > eg:
-> > 
-> > "Update the binding documentation accordingly".
-> > 
-> > not
-> > 
-> > "Updates the binding documentation accordingly".
-> > 
-> >> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> >> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> >> ---
-> >> Change v2->v3:
-> >>  - Added second entry in pci_epf_test_ids structure.
-> >>  - Remove test_reg_bar field assignment on second entry.
-> >> Changes v3->v4:
-> >>  - Nothing changed, just to follow the patch set version.
-> >> Changes v4->v5:
-> >>  - Changed pci_epf_test_cfg2 to pci_epf_test_designware.
-> >> Changes v5->v6:
-> >>  - Changed name field from pci_epf_test_designware to pci_epf_test_dw.
-> >> Changes v6->v7:
-> >>  - Changed variable name from data_cfg2 to data_linkup_notifier_disabled.
-> >>
-> >>  Documentation/PCI/endpoint/function/binding/pci-test.txt | 2 ++
-> >>  drivers/pci/endpoint/functions/pci-epf-test.c            | 8 ++++++++
-> >>  2 files changed, 10 insertions(+)
-> >>
-> >> diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.txt b/Documentation/PCI/endpoint/function/binding/pci-test.txt
-> >> index 3b68b95..dc39f47 100644
-> >> --- a/Documentation/PCI/endpoint/function/binding/pci-test.txt
-> >> +++ b/Documentation/PCI/endpoint/function/binding/pci-test.txt
-> >> @@ -1,6 +1,8 @@
-> >>  PCI TEST ENDPOINT FUNCTION
-> >>  
-> >>  name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
-> >> +name: Should be "pci_epf_test_dw" to bind to the pci_epf_test driver
-> >> +      with a custom configuration for the designware EP.
-> > 
-> > The link between the "name" and the device created is quite obscure and
-> > reading pci-test-howto.txt certainly does not clarify it.
-> > 
-> > In pci-test-howto.txt an explanation should be added to the configs
-> > device creation paragraph to clarify it.
-> > 
-> >>  Configurable Fields:
-> >>  vendorid	 : should be 0x104c
-> >> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> >> index 7cef851..4ab463b 100644
-> >> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> >> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> >> @@ -459,10 +459,18 @@ static int pci_epf_test_bind(struct pci_epf *epf)
-> >>  	return 0;
-> >>  }
-> >>  
-> >> +static const struct pci_epf_test_data data_linkup_notifier_disabled = {
-> >> +	.linkup_notifier = false
-> >> +};
-> >> +
-> >>  static const struct pci_epf_device_id pci_epf_test_ids[] = {
-> >>  	{
-> >>  		.name = "pci_epf_test",
-> >>  	},
-> >> +	{
-> >> +		.name = "pci_epf_test_dw",
-> >> +		.driver_data = (kernel_ulong_t)&data_linkup_notifier_disabled,
-> >> +	},
-> >>  	{},
-> > 
-> > Should not this be a property derived from the controller compatible
-> > property instead of the test device name written in configfs ?
-> 
-> pci_epf_test is an independent driver on its own that operates in a layer above
-> the controller driver. So it does not get the controller compatible (which is
-> used in controller drivers like pcie-designware-plat.c). pci_epf_test uses
-> "pci_epf_device_id" which is _similar_ to "of_device_id" used by platform drivers.
+Thankyou everyone for providing feedback and testing v6 patchset.
+This patchset aims to provide a basic version of QCOM DSP based
+audio support which is available in downstream andriod kernels.
+This patchset support audio playback on HDMI-RX, MI2S, SLIMBus and
+will add support to other features as we move on.
 
-I understand that, the problem is that the independent driver depends on
-features of the related controller driver as this patch shows. This
-patch basically says that if you use a specific path in configfs (that
-includes pci_epf_test_dw) your device has specific HW features (eg
-linkup notifier above), that obviously depends on the platform HW not on
-the string you use in configfs.
+QDSP has both static and dynamic modules. static modules like AFE
+(Audio FrontEnd), ADM (Audio Device Manager), ASM(Audio Stream Manager)
+and CORE to provide this audio services.
+All these services use APR (Asynchronous Packet Router) protocol
+via smd/glink transport to communicate with Application processor.
+More details on each module is availble in there respective patch.
 
-What I am questioning is a) if I understand this right and b) whether
-this is the right approach.
+This patchset is tested on DB820c, with HDMI audio playback, MI2S on
+DB410c on top of mainline, Also tested SLIMBus analog audio using
+wcd9355 with an additional patches. Patches are also tested on
+SDM845 by Rohit.
 
-Lorenzo
+Here is my test branch incase someone want to try these patches
+https://git.linaro.org/people/srinivas.kandagatla/linux.git/log/?h=v4.17-qdsp6
+
+Here is block diagram to give a quick overview of the components
+
+
+  +---------+          +---------+         +---------+   
+  |  q6asm  |          |q6routing|         | q6afe   | 
+  |   dais  | <------> |  mixers | <-----> |  dais   |  
+  +---------+          +---------+         +---------+   
+      ^                     ^                   ^
+      |                     |                   |
+      |  +------------------+----------------+  |       
+      |  |                  |                |  |       
+      v  v                  v                v  v       
+  +---------+          +---------+         +---------+ 
+  |   q6ASM |          |  q6ADM  |         |   q6AFE |  
+  +---------+          +---------+         +---------+  
+      ^                     ^                   ^          ^
+      |                     |                   | CPU Side |
+------+---------------------+-------------------+--------
+      |                     |                   |
+      |                     |APR(smd/glink)     | 
+      |                     |                   |
+      |  +------------------+----------------+  |
+      |  |                  |                |  |
++-----+--+-----------------------------------+--+-------
+      |  |                  |                |  | QDSP Side |
+      v  v                  v                v  v           v
+ +---------+          +---------+         +---------+
+ |   ASM   | <------> |   ADM   | <-----> |   AFE   |
+ +---------+          +---------+         +---------+
+                                               ^
+                                               | 
+                           +-------------------+
+                           |
+---------------------------+--------------------------
+                           |            Audio I/O |
+                           v                      v
+    +--------------------------------------------------+
+    |                Audio devices                     |
+    | CODEC | HDMI-TX | PCM  | SLIMBUS | I2S |MI2S |...|
+    |                                                  |
+    +--------------------------------------------------+
+
+
+Changes since v6 (https://lkml.org/lkml/2018/4/26/264)
+- Added relevant acks and reviewed-by tags.
+- Update apr_pkt_send and callbacks to take structures
+ instead of void * suggested by Bjorn
+- Updated q6afe bindings to explain clearly on grandchild
+ dai node bindings, suggested by Rob H.
+- Fixed few typos in APR commit msg spotted by Mark B.
+- rebased patchset on top of
+https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/?h=for-next
+
+Srinivas Kandagatla (24):
+  soc: qcom dt-bindings: Add APR bus bindings
+  soc: qcom: Add APR bus driver
+  ASoC: qdsp6: dt-bindings: Add q6core dt bindings
+  ASoC: qdsp6: dt-bindings: Add q6afe dt bindings
+  ASoC: qdsp6: dt-bindings: Add q6adm dt bindings
+  ASoC: qdsp6: dt-bindings: Add q6asm dt bindings
+  ASoC: qdsp6: q6common: Add qdsp6 helper functions
+  ASoC: qdsp6: q6core: Add q6core driver
+  ASoC: qdsp6: q6afe: Add q6afe driver
+  ASoC: qdsp6: qdafe: Add SLIMBus port Support
+  ASoC: qdsp6: q6afe: Add support to MI2S ports
+  ASoC: qdsp6: q6afe: Add support to MI2S sysclks
+  ASoC: qdsp6: q6adm: Add q6adm driver
+  ASoC: qdsp6: q6asm: Add q6asm driver
+  ASoC: qdsp6: q6asm: Add support to memory map and unmap
+  ASoC: qdsp6: q6asm: Add support to audio stream apis
+  ASoC: qdsp6: q6routing: Add q6routing driver
+  ASoC: qdsp6: q6routing: Add support to all SLIMBus Mixers
+  ASoC: qdsp6: q6routing: Add support to MI2S Mixers
+  ASoC: qdsp6: q6afe: Add q6afe dai driver
+  ASoC: qdsp6: q6asm: Add q6asm dai driver
+  ASoC: qdsp6: dt-bindings: Add apq8096 machine bindings
+  ASoC: qcom: apq8096: Add db820c machine driver
+  MAINTAINERS: Add myself as co-maintainer of qcom audio
+
+ .../devicetree/bindings/soc/qcom/qcom,apr.txt      |   84 ++
+ .../devicetree/bindings/sound/qcom,apq8096.txt     |  109 ++
+ .../devicetree/bindings/sound/qcom,q6adm.txt       |   33 +
+ .../devicetree/bindings/sound/qcom,q6afe.txt       |  104 ++
+ .../devicetree/bindings/sound/qcom,q6asm.txt       |   33 +
+ .../devicetree/bindings/sound/qcom,q6core.txt      |   21 +
+ MAINTAINERS                                        |    1 +
+ drivers/soc/qcom/Kconfig                           |    9 +
+ drivers/soc/qcom/Makefile                          |    1 +
+ drivers/soc/qcom/apr.c                             |  378 ++++++
+ include/dt-bindings/soc/qcom,apr.h                 |   28 +
+ include/dt-bindings/sound/qcom,q6afe.h             |   31 +
+ include/dt-bindings/sound/qcom,q6asm.h             |   22 +
+ include/linux/mod_devicetable.h                    |   11 +
+ include/linux/soc/qcom/apr.h                       |  128 ++
+ sound/soc/qcom/Kconfig                             |   50 +
+ sound/soc/qcom/Makefile                            |    5 +
+ sound/soc/qcom/apq8096.c                           |  238 ++++
+ sound/soc/qcom/qdsp6/Makefile                      |    8 +
+ sound/soc/qcom/qdsp6/q6adm.c                       |  636 +++++++++
+ sound/soc/qcom/qdsp6/q6adm.h                       |   25 +
+ sound/soc/qcom/qdsp6/q6afe-dai.c                   |  752 +++++++++++
+ sound/soc/qcom/qdsp6/q6afe.c                       | 1046 +++++++++++++++
+ sound/soc/qcom/qdsp6/q6afe.h                       |  193 +++
+ sound/soc/qcom/qdsp6/q6asm-dai.c                   |  628 +++++++++
+ sound/soc/qcom/qdsp6/q6asm.c                       | 1401 ++++++++++++++++++++
+ sound/soc/qcom/qdsp6/q6asm.h                       |   69 +
+ sound/soc/qcom/qdsp6/q6core.c                      |  380 ++++++
+ sound/soc/qcom/qdsp6/q6core.h                      |   15 +
+ sound/soc/qcom/qdsp6/q6dsp-common.c                |   66 +
+ sound/soc/qcom/qdsp6/q6dsp-common.h                |   24 +
+ sound/soc/qcom/qdsp6/q6dsp-errno.h                 |   51 +
+ sound/soc/qcom/qdsp6/q6routing.c                   |  983 ++++++++++++++
+ sound/soc/qcom/qdsp6/q6routing.h                   |    9 +
+ 34 files changed, 7572 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6adm.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6afe.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6asm.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6core.txt
+ create mode 100644 drivers/soc/qcom/apr.c
+ create mode 100644 include/dt-bindings/soc/qcom,apr.h
+ create mode 100644 include/dt-bindings/sound/qcom,q6afe.h
+ create mode 100644 include/dt-bindings/sound/qcom,q6asm.h
+ create mode 100644 include/linux/soc/qcom/apr.h
+ create mode 100644 sound/soc/qcom/apq8096.c
+ create mode 100644 sound/soc/qcom/qdsp6/Makefile
+ create mode 100644 sound/soc/qcom/qdsp6/q6adm.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6adm.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6afe-dai.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6afe.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6afe.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6asm-dai.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6asm.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6asm.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6core.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6core.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6dsp-common.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6dsp-common.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6dsp-errno.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6routing.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6routing.h
+
+-- 
+2.16.2
