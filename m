@@ -1,47 +1,39 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] mmc: meson-gx: add device reset
-Date: Tue, 1 May 2018 09:43:58 -0500
-Message-ID: <20180501144358.GA31556@rob-hp-laptop>
-References: <20180426103817.12675-1-jbrunet@baylibre.com>
+Subject: Re: [PATCH] thermal: samsung: Remove support for Exynos5440
+Date: Tue, 1 May 2018 09:45:16 -0500
+Message-ID: <20180501144516.GA519@rob-hp-laptop>
+References: <20180424203239.21885-1-krzk@kernel.org>
+ <20180424203239.21885-7-krzk@kernel.org>
+ <1951102.VLysaozMLK@amdc3058>
+ <CGME20180426112113eucas1p1b5bf6f093442154e29f5541b4aba6b00@eucas1p1.samsung.com>
+ <2734003.UHSMxVLybj@amdc3058>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180426103817.12675-1-jbrunet@baylibre.com>
+In-Reply-To: <2734003.UHSMxVLybj@amdc3058>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 12:38:17PM +0200, Jerome Brunet wrote:
-> Trigger the reset line of the mmc controller while probing, if available
-> The reset should be optional for now, at least until all related DT node
-> have the reset property
+On Thu, Apr 26, 2018 at 01:21:12PM +0200, Bartlomiej Zolnierkiewicz wrote:
+> From: Krzysztof Kozlowski <krzk@kernel.org>
+> Subject: [PATCH] thermal: samsung: Remove support for Exynos5440
 > 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> The Exynos5440 is not actively developed, there are no development
+> boards available and probably there are no real products with it.
+> Remove wide-tree support for Exynos5440.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> [b.zolnierkie: ported over driver changes]
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 > ---
->  Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt | 2 ++
->  drivers/mmc/host/meson-gx-mmc.c                            | 6 ++++++
->  2 files changed, 8 insertions(+)
+> Eduardo, here is a version which applies on top of pending Exynos
+> thermal changes (https://lkml.org/lkml/2018/4/16/256).
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-> index 5add8d7d855f..ba434375e7f2 100644
-> --- a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-> +++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-> @@ -20,6 +20,7 @@ Required properties:
->  	"clkin1" - Other parent clock of internal mux
->    The driver has an internal mux clock which switches between clkin0 and clkin1 depending on the
->    clock rate requested by the MMC core.
-> +- reset      : phandle of the internal reset line
+>  Documentation/devicetree/bindings/thermal/exynos-thermal.txt |   14 
+>  drivers/thermal/samsung/exynos_tmu.c                         |  161 -----------
+>  2 files changed, 4 insertions(+), 171 deletions(-)
 
-resets
-
->  
->  Example:
->  
-> @@ -30,4 +31,5 @@ Example:
->  		clocks = <&clkc CLKID_SD_EMMC_A>, <&xtal>, <&clkc CLKID_FCLK_DIV2>;
->  		clock-names = "core", "clkin0", "clkin1";
->  		pinctrl-0 = <&emmc_pins>;
-> +		resets = <&reset RESET_SD_EMMC_A>;
->  	};
+Reviewed-by: Rob Herring <robh@kernel.org>
