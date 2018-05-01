@@ -1,39 +1,90 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: [PATCH v5 3/3] arm64: defconfig: Enable dw_mmc-bluefield driver
-Date: Tue,  1 May 2018 14:19:47 -0400
-Message-ID: <1525198787-46403-3-git-send-email-lsun@mellanox.com>
-References: <1525198787-46403-1-git-send-email-lsun@mellanox.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] Input: atmel_mxt_ts - add missing compatible strings to
+ OF device table
+Date: Tue, 1 May 2018 11:48:53 -0700
+Message-ID: <20180501184853.GB52077@dtor-ws>
+References: <20180410095340.24074-1-javierm@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525198787-46403-1-git-send-email-lsun@mellanox.com>
-In-Reply-To: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
-References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+Content-Disposition: inline
+In-Reply-To: <20180410095340.24074-1-javierm@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Liming Sun <lsun@mellanox.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@kernel.org
+To: Javier Martinez Canillas <javierm@redhat.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Nick Dyer <nick@shmanahar.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch updates arm64 defconfig to enable dw_mmc-bluefield,
-which is a driver extension of Synopsys Designware MMC for the
-Mellanox BlueField Soc.
+On Tue, Apr 10, 2018 at 11:53:40AM +0200, Javier Martinez Canillas wrote:
+> Commit af503716ac14 ("i2c: core: report OF style module alias for devices
+> registered via OF") fixed how the I2C core reports the module alias when
+> devices are registered via OF.
+> 
+> But the atmel_mxt_ts driver only has an "atmel,maxtouch" compatible in its
+> OF device ID table, so if a Device Tree is using a different one, autoload
+> won't be working for the module (the matching works because the I2C device
+> ID table is used as a fallback).
+> 
+> So add compatible strings for each of the entries in the I2C device table.
+> 
+> Fixes: af503716ac14 ("i2c: core: report OF style module alias for devices registered via OF")
+> Reported-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+> ---
+> 
+>  Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 6 +++++-
+>  drivers/input/touchscreen/atmel_mxt_ts.c                   | 4 ++++
+>  2 files changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+> index 23e3abc3fdef..cd43fb8bc2ce 100644
+> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+> @@ -1,8 +1,12 @@
+>  Atmel maXTouch touchscreen/touchpad
+>  
+>  Required properties:
+> -- compatible:
+> +- compatible: Must be one of the following
+> +    atmel,qt602240_ts
+> +    atmel,atmel_mxt_ts
+> +    atmel,atmel_mxt_tp
+>      atmel,maxtouch
+> +    atmel,mXT224
 
-Cc: stable@kernel.org
-Signed-off-by: Liming Sun <lsun@mellanox.com>
-Reviewed-by: David Woods <dwoods@mellanox.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+I do not think we should document ad-hoc compatible strings that were
+introduced by various vendors as the documented ones, so I'd rather
+dropped this chunk and leave only "atmel,maxtouch" as compatible that
+everyone should be using.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index ecf6137..43464ab 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -487,6 +487,7 @@ CONFIG_MMC_DW=y
- CONFIG_MMC_DW_EXYNOS=y
- CONFIG_MMC_DW_K3=y
- CONFIG_MMC_DW_ROCKCHIP=y
-+CONFIG_MMC_DW_BLUEFIELD=y
- CONFIG_MMC_SUNXI=y
- CONFIG_MMC_BCM2835=y
- CONFIG_MMC_SDHCI_XENON=y
+The changes to the driver to support the existing DTSes can of course be
+applied.
+
+Rob, any objections?
+
+>  
+>  - reg: The I2C address of the device
+>  
+> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+> index 7659bc48f1db..e8ef83f168d6 100644
+> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> @@ -3238,7 +3238,11 @@ static int __maybe_unused mxt_resume(struct device *dev)
+>  static SIMPLE_DEV_PM_OPS(mxt_pm_ops, mxt_suspend, mxt_resume);
+>  
+>  static const struct of_device_id mxt_of_match[] = {
+> +	{ .compatible = "atmel,qt602240_ts", },
+> +	{ .compatible = "atmel,atmel_mxt_ts", },
+> +	{ .compatible = "atmel,atmel_mxt_tp", },
+>  	{ .compatible = "atmel,maxtouch", },
+> +	{ .compatible = "atmel,mXT224", },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, mxt_of_match);
+> -- 
+> 2.14.3
+> 
+
+Thanks.
+
 -- 
-1.8.3.1
+Dmitry
