@@ -1,45 +1,27 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] Input: atmel_mxt_ts - add missing compatible strings
- to OF device table
-Date: Tue, 1 May 2018 16:33:07 -0500
-Message-ID: <CAL_JsqKs7Jb0yCM+mUHwqRfrhzCPar1rHq4J+cCyxne=rVoV3g@mail.gmail.com>
-References: <20180410095340.24074-1-javierm@redhat.com> <20180501184853.GB52077@dtor-ws>
- <CAL_JsqJ-UTGrPm2tiS1yVFweWB_LH2JSBpOpMtogTYFi7pCsGA@mail.gmail.com> <20180501205713.GA130399@dtor-ws>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 2/2] clk: qcom: Add video clock controller driver for SDM845
+Date: Tue, 01 May 2018 14:41:17 -0700
+Message-ID: <152521087780.138124.7623601052057968460@swboyd.mtv.corp.google.com>
+References: <1524576771-31096-1-git-send-email-anischal@codeaurora.org>
+ <1524576771-31096-3-git-send-email-anischal@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501205713.GA130399@dtor-ws>
+In-Reply-To: <1524576771-31096-3-git-send-email-anischal@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Javier Martinez Canillas <javierm@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-input@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Nick Dyer <nick@shmanahar.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Amit Nischal <anischal@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 1, 2018 at 3:57 PM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> From: Javier Martinez Canillas <javierm@redhat.com>
->
-> Commit af503716ac14 ("i2c: core: report OF style module alias for devices
-> registered via OF") fixed how the I2C core reports the module alias when
-> devices are registered via OF.
->
-> But the atmel_mxt_ts driver only has an "atmel,maxtouch" compatible in its
-> OF device ID table, so if a Device Tree is using a different one, autoload
-> won't be working for the module (the matching works because the I2C device
-> ID table is used as a fallback).
->
-> So add compatible strings for each of the entries in the I2C device table.
->
-> Fixes: af503716ac14 ("i2c: core: report OF style module alias for devices registered via OF")
-> Reported-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> [dtor: document which compatibles are deprecated and should not be used]
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  .../devicetree/bindings/input/atmel,maxtouch.txt   |    7 +++++++
->  drivers/input/touchscreen/atmel_mxt_ts.c           |    5 +++++
->  2 files changed, 12 insertions(+)
+Quoting Amit Nischal (2018-04-24 06:32:51)
+> Add support for the video clock controller found on SDM845
+> based devices. This would allow video drivers to probe and
+> control their clocks.
+> 
+> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Driver looks small and good. Only concern is that there aren't resets
+defined, but the binding says there are resets. Will you add them?
 
-Someone is going to make the dts updates, right?
+I'm going to wait for the respin on the dts binding anyway.
