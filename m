@@ -1,27 +1,134 @@
-From: Palmer Dabbelt <palmer@sifive.com>
-Subject: Re: [PATCH 2/3] dt-bindings: Add "sifive" vendor prefix
-Date: Tue, 01 May 2018 09:32:43 -0700 (PDT)
-Message-ID: <mhng-4b69ea58-ea7d-458d-888d-de39bf0bd58b@palmer-si-x1c4>
-References: <20180501161439.GA28644@rob-hp-laptop>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501161439.GA28644@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org
-Cc: Wesley Terpstra <wesley@sifive.com>, afaerber@suse.de, thierry.reding@gmail.com, mark.rutland@arm.com, noralf@tronnes.org, david@lechnology.com, alexandre.belloni@free-electrons.com, sz.lin@moxa.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH net-next v2 00/15] ARM: sun8i: r40: Add Ethernet support
+Date: Wed, 2 May 2018 00:33:45 +0800
+Message-ID: <CAGb2v67HFb6eLBS4_9s_wJ5uWFeQdUtwn_NMJnm59UUDFBDJUA@mail.gmail.com>
+References: <20180501161227.2110-1-wens@csie.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180501161227.2110-1-wens@csie.org>
+Sender: netdev-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 01 May 2018 09:14:39 PDT (-0700), robh@kernel.org wrote:
-> On Sat, Apr 28, 2018 at 10:37:56PM +0000, Wesley Terpstra wrote:
->> Will do, thanks!
+On Wed, May 2, 2018 at 12:12 AM, Chen-Yu Tsai <wens@csie.org> wrote:
+> Hi everyone,
 >
-> Don't top post to lists.
+> This is v2 of my R40 Ethernet support series.
 >
-> I've applied this. I assume you'll have things other than the PWM...
+> Changes since v1:
+>
+>   - Default to fetching regmap from device pointed to by syscon phandle,
+>     and falling back to syscon API if that fails.
+>
+>   - Dropped .syscon_from_dev field in device data as a result of the
+>     previous change.
+>
+>   - Added a large comment block explaining the first change.
+>
+>   - Simplified description of syscon property in sun8i-dwmac binding.
+>
+>   - Regmap now only exposes the EMAC/GMAC register, but retains the
+>     offset within its address space.
+>
+>   - Added patches for A64, which reuse the same sun8i-dwmac changes.
+>
+> This series adds support for the DWMAC based Ethernet controller found
+> on the Allwinner R40 SoC. The controller is either a DWMAC clone or
+> DWMAC core with its registers rearranged. This is already supported by
+> the dwmac-sun8i driver. The glue layer control registers, unlike other
+> sun8i family SoCs, is not in the system controller region, but in the
+> clock control unit, like with the older A20 and A31 SoCs.
+>
+> While we reuse the bindings for dwmac-sun8i using a syscon phandle
+> reference, we need some custom plumbing for the clock driver to export
+> a regmap that only allows access to the GMAC register to the dwmac-sun8i
+> driver. An alternative would be to allow drivers to register custom
+> syscon devices with their own regmap and locking.
+>
+> Patch 1 converts the CLK_OF_DECLARE style clock driver to a platform
+> one, so the regmap introduced later has a struct device to tie to.
+>
+> Patch 2 adds a regmap that is exported by the clock driver for the
+> dwmac-sun8i driver to use.
+>
+> Patches 3, 4, and 5 clean up the dwmac-sun8i binding.
+>
+> Patch 6 adds device tree binding for Allwinner R40's Ethernet
+> controller.
+>
+> Patch 7 converts regmap access of the syscon region in the dwmac-sun8i
+> driver to regmap_field, in anticipation of different field widths on
+> the R40.
+>
+> Patch 8 introduces custom plumbing in the dwmac-sun8i driver to fetch
+> a regmap from another device, by looking up said device via a phandle,
+> then getting the regmap associated with that device.
+>
+> Patch 9 adds support for different or absent TX/RX delay chain ranges
+> to the dwmac-sun8i driver.
+>
+> Patch 10 adds support for the R40's ethernet controller.
 
-Thanks!
+I should've mentioned that patches 3 ~ 10, and only these, should go
+through net-next. sunxi will handle the remaining clk, device tree, and
+soc driver patches.
 
-We have a handful of out-of-tree drivers for our current SOC (UART, GPIO, two 
-clocks, SPI, I2C) that we plan on submitting upstream as time permits.
+Thanks
+ChenYu
+
+> Patch 11 cleans up the Bananapi M2 Ultra device tree file.
+>
+> Patch 12 adds a GMAC device node and RGMII mode pinmux setting for the
+> R40.
+>
+> Patch 13 enables Ethernet on the Bananapi M2 Ultra.
+>
+> Patches 14 and 15 are for the A64. They convert the existing syscon
+> device to an SRAM controller device that exports a regmap. The needed
+> driver changes are in patch 14, and the device tree changes are in
+> patch 15.
+>
+>
+> Please have a look.
+>
+> Regards
+> ChenYu
+>
+> Chen-Yu Tsai (11):
+>   dt-bindings: net: dwmac-sun8i: Clean up clock delay chain descriptions
+>   dt-bindings: net: dwmac-sun8i: Sort syscon compatibles by alphabetical
+>     order
+>   dt-bindings: net: dwmac-sun8i: simplify description of syscon property
+>   dt-bindings: net: dwmac-sun8i: Add binding for GMAC on Allwinner R40
+>     SoC
+>   net: stmmac: dwmac-sun8i: Use regmap_field for syscon register access
+>   net: stmmac: dwmac-sun8i: Allow getting syscon regmap from external
+>     device
+>   net: stmmac: dwmac-sun8i: Support different ranges for TX/RX delay
+>     chains
+>   net: stmmac: dwmac-sun8i: Add support for GMAC on Allwinner R40 SoC
+>   ARM: dts: sun8i: r40: bananapi-m2-ultra: Sort device node dereferences
+>   ARM: dts: sun8i: r40: Add device node and RGMII pinmux node for GMAC
+>   ARM: dts: sun8i: r40: bananapi-m2-ultra: Enable GMAC ethernet
+>     controller
+>
+> Icenowy Zheng (4):
+>   clk: sunxi-ng: r40: rewrite init code to a platform driver
+>   clk: sunxi-ng: r40: export a regmap to access the GMAC register
+>   soc: sunxi: export a regmap for EMAC clock reg on A64
+>   arm64: dts: allwinner: a64: add SRAM controller device tree node
+>
+>  .../devicetree/bindings/net/dwmac-sun8i.txt   |  21 +--
+>  .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  |  99 ++++++++-----
+>  arch/arm/boot/dts/sun8i-r40.dtsi              |  34 +++++
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  23 ++-
+>  drivers/clk/sunxi-ng/ccu-sun8i-r40.c          |  72 +++++++--
+>  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 139 +++++++++++++++---
+>  drivers/soc/sunxi/sunxi_sram.c                |  57 ++++++-
+>  7 files changed, 364 insertions(+), 81 deletions(-)
+>
+> --
+> 2.17.0
+>
