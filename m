@@ -1,95 +1,45 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [RFC PATCH] driver core: make deferring probe forever optional
-Date: Tue,  1 May 2018 16:31:14 -0500
-Message-ID: <20180501213114.20183-1-robh@kernel.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2] Input: atmel_mxt_ts - add missing compatible strings
+ to OF device table
+Date: Tue, 1 May 2018 16:33:07 -0500
+Message-ID: <CAL_JsqKs7Jb0yCM+mUHwqRfrhzCPar1rHq4J+cCyxne=rVoV3g@mail.gmail.com>
+References: <20180410095340.24074-1-javierm@redhat.com> <20180501184853.GB52077@dtor-ws>
+ <CAL_JsqJ-UTGrPm2tiS1yVFweWB_LH2JSBpOpMtogTYFi7pCsGA@mail.gmail.com> <20180501205713.GA130399@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Unsubscribe: <https://lists.linaro.org/mailman/options/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/boot-architecture/>
-List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linaro.org/mailman/listinfo/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Sender: "boot-architecture" <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180501205713.GA130399@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Javier Martinez Canillas <javierm@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-input@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Nick Dyer <nick@shmanahar.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-RGVmZXJyZWQgcHJvYmUgd2lsbCBjdXJyZW50bHkgd2FpdCBmb3JldmVyIG9uIGRlcGVuZGVudCBk
-ZXZpY2VzIHRvIHByb2JlLApidXQgc29tZXRpbWVzIGEgZHJpdmVyIHdpbGwgbmV2ZXIgZXhpc3Qu
-IEl0J3MgYWxzbyBub3QgYWx3YXlzIGNyaXRpY2FsIGZvcgphIGRyaXZlciB0byBleGlzdC4gUGxh
-dGZvcm1zIGNhbiByZWx5IG9uIGRlZmF1bHQgY29uZmlndXJhdGlvbiBmcm9tIHRoZQpib290bG9h
-ZGVyIG9yIHJlc2V0IGRlZmF1bHRzIGZvciB0aGluZ3Mgc3VjaCBhcyBwaW5jdHJsIGFuZCBwb3dl
-ciBkb21haW5zLgpUaGlzIGlzIG9mdGVuIHRoZSBjYXNlIHdpdGggaW5pdGlhbCBwbGF0Zm9ybSBz
-dXBwb3J0IHVudGlsIHZhcmlvdXMgZHJpdmVycwpnZXQgZW5hYmxlZC4gVGhlcmUncyBhdCBsZWFz
-dCAyIHNjZW5hcmlvcyB3aGVyZSBkZWZlcnJlZCBwcm9iZSBjYW4gcmVuZGVyCmEgcGxhdGZvcm0g
-YnJva2VuLiBCb3RoIGludm9sdmUgdXNpbmcgYSBEVCB3aGljaCBoYXMgbW9yZSBkZXZpY2VzIGFu
-ZApkZXBlbmRlbmNpZXMgdGhhbiB0aGUga2VybmVsIHN1cHBvcnRzLiBUaGUgMXN0IGNhc2UgaXMg
-YSBkcml2ZXIgbWF5IGJlCmRpc2FibGVkIGluIHRoZSBrZXJuZWwgY29uZmlnLiBUaGUgMm5kIGNh
-c2UgaXMgdGhlIGtlcm5lbCB2ZXJzaW9uIG1heQpzaW1wbHkgbm90IGhhdmUgdGhlIGRlcGVuZGVu
-dCBkcml2ZXIuIFRoaXMgY2FuIGhhcHBlbiBpZiB1c2luZyBhIG5ld2VyIERUCihwcm92aWRlZCBi
-eSBmaXJtd2FyZSBwZXJoYXBzKSB3aXRoIGEgc3RhYmxlIGtlcm5lbCB2ZXJzaW9uLgoKVW5mb3J0
-dW5hdGVseSwgdGhpcyBjaGFuZ2UgYnJlYWtzIHdpdGggbW9kdWxlcyBhcyB3ZSBoYXZlIG5vIHdh
-eSBvZgprbm93aW5nIHdoZW4gbW9kdWxlcyBhcmUgZG9uZSBsb2FkaW5nLiBPbmUgcG9zc2liaWxp
-dHkgaXMgdG8gbWFrZSB0aGlzCm9wdCBpbiBvciBvdXQgYmFzZWQgb24gY29tcGF0aWJsZSBzdHJp
-bmdzIHJhdGhlciB0aGFuIGF0IGEgc3Vic3lzdGVtIGxldmVsLgpJZGVhbGx5IHRoaXMgaW5mb3Jt
-YXRpb24gY291bGQgYmUgZXh0cmFjdGVkIGF1dG9tYXRpY2FsbHkgc29tZWhvdy4gT1RPSCwKbWF5
-YmUgdGhlIGxpc3RzIGFyZSBwcmV0dHkgc21hbGwuIFRoZXJlJ3Mgb25seSBhIGhhbmRmdWwgb2Yg
-c3Vic3lzdGVtcwp0aGF0IGNhbiBiZSBvcHRpb25hbCwgYW5kIHRoZW4gb25seSBzbyBtYW55IGRy
-aXZlcnMgaW4gdGhvc2UgdGhhdCBjYW4gYmUKbW9kdWxlcyAoYXQgbGVhc3QgZm9yIHBpbmN0cmws
-IG1hbnkgZHJpdmVycyBhcmUgYnVpbHQtaW4gb25seSkuCgpDYzogQWxleGFuZGVyIEdyYWYgPGFn
-cmFmQHN1c2UuZGU+ClNpZ25lZC1vZmYtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+
-Ci0tLQpUaGlzIHBhdGNoIGNhbWUgb3V0IG9mIGEgZGlzY3Vzc2lvbiBvbiB0aGUgQVJNIGJvb3Qt
-YXJjaGl0ZWN0dXJlIApsaXN0WzFdIGFib3V0IERUIGZvcndhcmRzIGFuZCBiYWNrd2FyZHMgY29t
-cGF0aWJpbGl0eSBpc3N1ZXMuIFRoZXJlIGFyZSAKaXNzdWVzIHdpdGggbmV3ZXIgRFRzIGJyZWFr
-aW5nIG9uIG9sZGVyLCBzdGFibGUga2VybmVscy4gU29tZSBvZiB0aGVzZSAKYXJlIGRpZmZpY3Vs
-dCB0byBzb2x2ZSwgYnV0IGNhc2VzIG9mIG9wdGlvbmFsIGRldmljZXMgbm90IGhhdmluZyAKa2Vy
-bmVsIHN1cHBvcnQgc2hvdWxkIGJlIHNvbHZhYmxlLgoKSSB0ZXN0ZWQgdGhpcyBvbiBhIFJQaTMg
-QiB3aXRoIHRoZSBwaW5jdHJsIGRyaXZlciBmb3JjZWQgb2ZmLiBXaXRoIHRoaXMgCmNoYW5nZSwg
-dGhlIE1NQy9TRCBhbmQgVUFSVCBkcml2ZXJzIGNhbiBmdW5jdGlvbiB3aXRob3V0IHRoZSBwaW5j
-dHJsIApkcml2ZXIuCgpSb2IKClsxXSBodHRwczovL2xpc3RzLmxpbmFyby5vcmcvcGlwZXJtYWls
-L2Jvb3QtYXJjaGl0ZWN0dXJlLzIwMTgtQXByaWwvMDAwNDY2Lmh0bWwKCiBkcml2ZXJzL2Jhc2Uv
-ZGQuYyAgICAgICAgICAgIHwgMTYgKysrKysrKysrKysrKysrKwogZHJpdmVycy9waW5jdHJsL2Rl
-dmljZXRyZWUuYyB8ICAyICstCiBpbmNsdWRlL2xpbnV4L2RldmljZS5oICAgICAgIHwgIDIgKysK
-IDMgZmlsZXMgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvYmFzZS9kZC5jIGIvZHJpdmVycy9iYXNlL2RkLmMKaW5kZXggYzlmNTQw
-ODk0MjliLi41ODQ4ODA4YjlkN2EgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvYmFzZS9kZC5jCisrKyBi
-L2RyaXZlcnMvYmFzZS9kZC5jCkBAIC0yMjYsNiArMjI2LDE1IEBAIHZvaWQgZGV2aWNlX3VuYmxv
-Y2tfcHJvYmluZyh2b2lkKQogCWRyaXZlcl9kZWZlcnJlZF9wcm9iZV90cmlnZ2VyKCk7CiB9CiAK
-KworaW50IGRyaXZlcl9kZWZlcnJlZF9wcm9iZV9vcHRpb25hbCh2b2lkKQoreworCWlmIChpbml0
-Y2FsbHNfZG9uZSkKKwkJcmV0dXJuIC1FTk9ERVY7CisKKwlyZXR1cm4gLUVQUk9CRV9ERUZFUjsK
-K30KKwogLyoqCiAgKiBkZWZlcnJlZF9wcm9iZV9pbml0Y2FsbCgpIC0gRW5hYmxlIHByb2Jpbmcg
-b2YgZGVmZXJyZWQgZGV2aWNlcwogICoKQEAgLTI0MCw2ICsyNDksMTMgQEAgc3RhdGljIGludCBk
-ZWZlcnJlZF9wcm9iZV9pbml0Y2FsbCh2b2lkKQogCS8qIFNvcnQgYXMgbWFueSBkZXBlbmRlbmNp
-ZXMgYXMgcG9zc2libGUgYmVmb3JlIGV4aXRpbmcgaW5pdGNhbGxzICovCiAJZmx1c2hfd29yaygm
-ZGVmZXJyZWRfcHJvYmVfd29yayk7CiAJaW5pdGNhbGxzX2RvbmUgPSB0cnVlOworCisJLyoKKwkg
-KiBUcmlnZ2VyIGRlZmVycmVkIHByb2JlIGFnYWluLCB0aGlzIHRpbWUgd2Ugd29uJ3QgZGVmZXIg
-YW55dGhpbmcKKwkgKiB0aGF0IGlzIG9wdGlvbmFsCisJICovCisJZHJpdmVyX2RlZmVycmVkX3By
-b2JlX3RyaWdnZXIoKTsKKwlmbHVzaF93b3JrKCZkZWZlcnJlZF9wcm9iZV93b3JrKTsKIAlyZXR1
-cm4gMDsKIH0KIGxhdGVfaW5pdGNhbGwoZGVmZXJyZWRfcHJvYmVfaW5pdGNhbGwpOwpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9waW5jdHJsL2RldmljZXRyZWUuYyBiL2RyaXZlcnMvcGluY3RybC9kZXZp
-Y2V0cmVlLmMKaW5kZXggYjYwMTAzOWQ2YzY5Li4wOTZlNTJhNWM1MDYgMTAwNjQ0Ci0tLSBhL2Ry
-aXZlcnMvcGluY3RybC9kZXZpY2V0cmVlLmMKKysrIGIvZHJpdmVycy9waW5jdHJsL2RldmljZXRy
-ZWUuYwpAQCAtMTIwLDcgKzEyMCw3IEBAIHN0YXRpYyBpbnQgZHRfdG9fbWFwX29uZV9jb25maWco
-c3RydWN0IHBpbmN0cmwgKnAsCiAJCQkJbnBfY29uZmlnKTsKIAkJCW9mX25vZGVfcHV0KG5wX3Bj
-dGxkZXYpOwogCQkJLyogT0sgbGV0J3MganVzdCBhc3N1bWUgdGhpcyB3aWxsIGFwcGVhciBsYXRl
-ciB0aGVuICovCi0JCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsKKwkJCXJldHVybiBkcml2ZXJfZGVm
-ZXJyZWRfcHJvYmVfb3B0aW9uYWwoKTsKIAkJfQogCQkvKiBJZiB3ZSdyZSBjcmVhdGluZyBhIGhv
-ZyB3ZSBjYW4gdXNlIHRoZSBwYXNzZWQgcGN0bGRldiAqLwogCQlpZiAocGN0bGRldiAmJiAobnBf
-cGN0bGRldiA9PSBwLT5kZXYtPm9mX25vZGUpKQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9k
-ZXZpY2UuaCBiL2luY2x1ZGUvbGludXgvZGV2aWNlLmgKaW5kZXggMDA1OWI5OWUxZjI1Li44ZGU5
-MjA0NDJiYzEgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvZGV2aWNlLmgKKysrIGIvaW5jbHVk
-ZS9saW51eC9kZXZpY2UuaApAQCAtMzMyLDYgKzMzMiw4IEBAIHN0cnVjdCBkZXZpY2UgKmRyaXZl
-cl9maW5kX2RldmljZShzdHJ1Y3QgZGV2aWNlX2RyaXZlciAqZHJ2LAogCQkJCSAgc3RydWN0IGRl
-dmljZSAqc3RhcnQsIHZvaWQgKmRhdGEsCiAJCQkJICBpbnQgKCptYXRjaCkoc3RydWN0IGRldmlj
-ZSAqZGV2LCB2b2lkICpkYXRhKSk7CiAKK2ludCBkcml2ZXJfZGVmZXJyZWRfcHJvYmVfb3B0aW9u
-YWwodm9pZCk7CisKIC8qKgogICogc3RydWN0IHN1YnN5c19pbnRlcmZhY2UgLSBpbnRlcmZhY2Vz
-IHRvIGRldmljZSBmdW5jdGlvbnMKICAqIEBuYW1lOiAgICAgICBuYW1lIG9mIHRoZSBkZXZpY2Ug
-ZnVuY3Rpb24KLS0gCjIuMTcuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KYm9vdC1hcmNoaXRlY3R1cmUgbWFpbGluZyBsaXN0CmJvb3QtYXJjaGl0ZWN0
-dXJlQGxpc3RzLmxpbmFyby5vcmcKaHR0cHM6Ly9saXN0cy5saW5hcm8ub3JnL21haWxtYW4vbGlz
-dGluZm8vYm9vdC1hcmNoaXRlY3R1cmUK
+On Tue, May 1, 2018 at 3:57 PM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> From: Javier Martinez Canillas <javierm@redhat.com>
+>
+> Commit af503716ac14 ("i2c: core: report OF style module alias for devices
+> registered via OF") fixed how the I2C core reports the module alias when
+> devices are registered via OF.
+>
+> But the atmel_mxt_ts driver only has an "atmel,maxtouch" compatible in its
+> OF device ID table, so if a Device Tree is using a different one, autoload
+> won't be working for the module (the matching works because the I2C device
+> ID table is used as a fallback).
+>
+> So add compatible strings for each of the entries in the I2C device table.
+>
+> Fixes: af503716ac14 ("i2c: core: report OF style module alias for devices registered via OF")
+> Reported-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> [dtor: document which compatibles are deprecated and should not be used]
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  .../devicetree/bindings/input/atmel,maxtouch.txt   |    7 +++++++
+>  drivers/input/touchscreen/atmel_mxt_ts.c           |    5 +++++
+>  2 files changed, 12 insertions(+)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+Someone is going to make the dts updates, right?
