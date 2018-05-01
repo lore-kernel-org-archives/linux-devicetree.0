@@ -1,111 +1,68 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 6/7] clk: meson: axg: document bindings for the audio
- clock controller
-Date: Tue, 1 May 2018 09:37:15 -0500
-Message-ID: <20180501143715.GA20023@rob-hp-laptop>
-References: <20180425163304.10852-1-jbrunet@baylibre.com>
- <20180425163304.10852-7-jbrunet@baylibre.com>
+Subject: Re: [PATCH 1/2] ASoC: add documents for mt6351
+Date: Tue, 1 May 2018 09:42:36 -0500
+Message-ID: <20180501144236.GA26497@rob-hp-laptop>
+References: <20180426030732.5887-1-kaichieh.chuang@mediatek.com>
+ <20180426030732.5887-2-kaichieh.chuang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20180425163304.10852-7-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180426030732.5887-2-kaichieh.chuang@mediatek.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: KaiChieh Chuang <kaichieh.chuang@mediatek.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, ryder.lee@mediatek.com, wsd_upstream@mediatek.com, chipeng.chang@mediatek.com, garlic.tseng@mediatek.com, broonie@kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 25, 2018 at 06:33:03PM +0200, Jerome Brunet wrote:
-> Add documentation for the device tree bindings of the audio clock
-> controller of the A113 based SoCs
-> 
+On Thu, Apr 26, 2018 at 11:07:31AM +0800, KaiChieh Chuang wrote:
+> Signed-off-by: KaiChieh Chuang <kaichieh.chuang@mediatek.com>
 
-The preferred subject prefix for bindings is 'dt/bindings: clock: ...'
+Needs a commit msg and 'binding' would be more informative than 
+'documents' in the subject.
 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->  .../bindings/clock/amlogic,axg-audio-clkc.txt      | 56 ++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
+>  Documentation/devicetree/bindings/sound/mt6351.txt | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/mt6351.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
+> diff --git a/Documentation/devicetree/bindings/sound/mt6351.txt b/Documentation/devicetree/bindings/sound/mt6351.txt
 > new file mode 100644
-> index 000000000000..1b989ceda567
+> index 000000000000..7fb2cb99245e
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
-> @@ -0,0 +1,56 @@
-> +* Amlogic AXG Audio Clock Controllers
+> +++ b/Documentation/devicetree/bindings/sound/mt6351.txt
+> @@ -0,0 +1,16 @@
+> +Mediatek MT6351 Audio Codec
 > +
-> +The Amlogic AXG audio clock controller generates and supplies clock to the
-> +other elements of the audio subsystem, such as fifos, i2s, spdif and pdm
-> +devices.
+> +The communication between MT6351 and SoC is through Mediatek PMIC wrapper.
+> +For more detail, please visit Mediatek PMIC wrapper documentation.
+
+Add the path to the doc file.
+
+What's a wrapper? Is this a block within the PMIC or ?
+
 > +
-> +Required Properties:
+> +Must be a child node of PMIC wrapper.
 > +
-> +- compatible	: should be "amlogic,axg-audio-clkc" for the A113X and A113D
-> +- reg		: physical base address of the clock controller and length of
-> +		  memory mapped region.
-> +- clocks	: a list of phandle + clock-specifier pairs for the clocks listed
-> +		  in clock-names.
-> +- clock-names	: must contain the following:
-> +		  * "pclk" - Main peripheral bus clock
-> +		  may contain the following:
-> +		  * "mst_in[0-7]" - 8 input plls to generate clock signals
-
-Unless the sources don't exist, then you should always have the clocks. 
-It should not be based on whether you are using them or not.
-
-> +		  * "slv_sclk[0-9]" - 10 slave bit clocks provided by external
-> +				      components.
-> +		  * "slv_lrclk[0-9]" - 10 slave sample clocks provided by external
-> +				       components.
-
-I'm guessing these may come from pins that aren't connected, so being 
-optional is fine.
-
-> +- reset		: phandle of the internal reset line
-
-resets
-
-> +- #clock-cells	: should be 1.
+> +Required properties:
 > +
-> +Each clock is assigned an identifier and client nodes can use this identifier
-> +to specify the clock which they consume. All available clocks are defined as
-> +preprocessor macros in the dt-bindings/clock/axg-audio-clkc.h header and can be
-> +used in device tree sources.
+> +- compatible : "mediatek,mt6351-sound".
 > +
 > +Example:
 > +
-> +clkc_audio: clock-controller {
-
-Needs a unit address.
-
-> +	compatible = "amlogic,axg-audio-clkc";
-> +	reg = <0x0 0x0 0x0 0xb4>;
-> +	#clock-cells = <1>;
-> +
-> +	clocks = <&clkc CLKID_AUDIO>,
-> +		 <&clkc CLKID_MPLL0>,
-> +		 <&clkc CLKID_MPLL1>,
-> +		 <&clkc CLKID_MPLL2>,
-> +		 <&clkc CLKID_MPLL3>,
-> +		 <&clkc CLKID_HIFI_PLL>,
-> +		 <&clkc CLKID_FCLK_DIV3>,
-> +		 <&clkc CLKID_FCLK_DIV4>,
-> +		 <&clkc CLKID_GP0_PLL>;
-> +	clock-names = "pclk",
-> +		      "mst_in0",
-> +		      "mst_in1",
-> +		      "mst_in2",
-> +		      "mst_in3",
-> +		      "mst_in4",
-> +		      "mst_in5",
-> +		      "mst_in6",
-> +		      "mst_in7";
-> +	resets = <&reset RESET_AUDIO>;
+> +mt6351_snd {
+> +	compatible = "mediatek,mt6351-sound";
 > +};
 > -- 
-> 2.14.3
+> 2.12.5
 > 
 > --
 > To unsubscribe from this list: send the line "unsubscribe devicetree" in
