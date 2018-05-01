@@ -1,32 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC 03/10] cpufreq: exynos: Remove support for Exynos5440
-Date: Tue, 1 May 2018 09:08:40 -0500
-Message-ID: <20180501140840.GA27306@rob-hp-laptop>
-References: <20180424203239.21885-1-krzk@kernel.org>
- <20180424203239.21885-4-krzk@kernel.org>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v9 04/27] ARM: davinci: pass clock as parameter to
+ davinci_timer_init()
+Date: Tue, 1 May 2018 19:39:56 +0530
+Message-ID: <29a9a03c-93f5-dddf-2a6e-da7fd83e0c4f@ti.com>
+References: <20180427001745.4116-1-david@lechnology.com>
+ <20180427001745.4116-5-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180424203239.21885-4-krzk@kernel.org>
+In-Reply-To: <20180427001745.4116-5-david@lechnology.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfounda>
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 24, 2018 at 10:32:32PM +0200, Krzysztof Kozlowski wrote:
-> The Exynos5440 is not actively developed, there are no development
-> boards available and probably there are no real products with it.
-> Remove wide-tree support for Exynos5440.
+On Friday 27 April 2018 05:47 AM, David Lechner wrote:
+> This changes davinci_timer_init() so that we pass the clock as a
+> parameter instead of using clk_get(). This is done in preparation
+> for converting to the common clock framework.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  .../bindings/cpufreq/cpufreq-exynos5440.txt        |  28 --
->  drivers/cpufreq/Kconfig.arm                        |  14 -
->  drivers/cpufreq/Makefile                           |   1 -
->  drivers/cpufreq/exynos5440-cpufreq.c               | 452 ---------------------
->  4 files changed, 495 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-exynos5440.txt
->  delete mode 100644 drivers/cpufreq/exynos5440-cpufreq.c
+> It removes the requirement that we have to have a clock with con_id
+> of "timer0", which will be good for DT bindings since clock-names =
+> "timer0" doesn't really make sense.
+> 
+> Also, drop use of extern in header file since we are touching the
+> definition.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Sekhar Nori <nsekhar@ti.com>
+
+Thanks,
+Sekhar
