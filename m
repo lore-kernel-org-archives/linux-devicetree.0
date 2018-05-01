@@ -1,174 +1,79 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: RE: [PATCH] irqchip: Add support for Renesas RZ/N1 GPIO interrupt
- multiplexer
-Date: Tue, 1 May 2018 13:54:02 +0000
-Message-ID: <TY1PR01MB176998F43462BA754D67E635F5810@TY1PR01MB1769.jpnprd01.prod.outlook.com>
-References: <1524490386-1544-1-git-send-email-phil.edworthy@renesas.com>
- <20180501132844.GA8298@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH  2/8] dt-bindings: stm32-dwmac: add support of MPU
+ families
+Date: Tue, 1 May 2018 08:58:48 -0500
+Message-ID: <20180501135848.GA12597@rob-hp-laptop>
+References: <1524582120-4451-1-git-send-email-christophe.roullier@st.com>
+ <1524582120-4451-3-git-send-email-christophe.roullier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501132844.GA8298@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michel Pollet <michel.pollet@bp.renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1524582120-4451-3-git-send-email-christophe.roullier@st.com>
+Sender: netdev-owner@vger.kernel.org
+To: Christophe Roullier <christophe.roullier@st.com>
+Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, peppe.cavallaro@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Tue, Apr 24, 2018 at 05:01:54PM +0200, Christophe Roullier wrote:
+> Add description for Ethernet MPU families fields
+> 
+> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+> ---
+>  Documentation/devicetree/bindings/net/stm32-dwmac.txt | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+> index 489dbcb..e9d1c4a 100644
+> --- a/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+> @@ -6,14 +6,26 @@ Please see stmmac.txt for the other unchanged properties.
+>  The device node has following properties.
+>  
+>  Required properties:
+> -- compatible:  Should be "st,stm32-dwmac" to select glue, and
+> +- compatible:  For MCU family should be "st,stm32-dwmac" to select glue, and
+>  	       "snps,dwmac-3.50a" to select IP version.
+> +	       For MPU family should be "st,stm32mp1-dwmac" to select
+> +	       glue, and "snps,dwmac-4.20a" to select IP version.
+>  - clocks: Must contain a phandle for each entry in clock-names.
+>  - clock-names: Should be "stmmaceth" for the host clock.
+>  	       Should be "mac-clk-tx" for the MAC TX clock.
+>  	       Should be "mac-clk-rx" for the MAC RX clock.
+> +	       For MPU family "ethstp" for power mode clock.
+> +	       For MPU family need also "syscfg-clk" for SYSCFG clock.
 
-On 01 May 2018 14:29 Rob Herring wrote:
-> On Mon, Apr 23, 2018 at 02:33:06PM +0100, Phil Edworthy wrote:
-> > On RZ/N1 devices, there are 3 Synopsys DesignWare GPIO blocks each
-> > configured to have 32 interrupt outputs, so we have a total of 96 GPIO
-> > interrupts. All of these are passed to the GPIO IRQ Muxer, which
-> > selects
-> > 8 of the GPIO interrupts to pass onto the GIC. The interrupt signals
-> > aren't latched, so there is nothing to do in this driver when an
-> > interrupt is received, other than tell the corresponding GPIO block.
-> >
-> > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> > ---
-> >  .../interrupt-controller/renesas,rzn1-mux.txt      |  85 ++++++++++
->=20
-> Please split bindings to a separate patch.
-Will do.
+These are in addition or instead of the first 3 clocks.
 
-> >  drivers/irqchip/Kconfig                            |  10 ++
-> >  drivers/irqchip/Makefile                           |   1 +
-> >  drivers/irqchip/irq-rzn1-irq-mux.c                 | 178
-> +++++++++++++++++++++
-> >  4 files changed, 274 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mu
-> > x.txt  create mode 100644 drivers/irqchip/irq-rzn1-irq-mux.c
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-
-> > mux.txt
-> > b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-
-> > mux.txt
-> > new file mode 100644
-> > index 0000000..f28a365
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,r
-> > +++ zn1-mux.txt
-> > @@ -0,0 +1,85 @@
-> > +* Renesas RZ/N1 GPIO Interrupt Multiplexer
-> > +
-> > +On Renesas RZ/N1 devices, there are 3 Synopsys DesignWare GPIO blocks
-> > +each configured to have 32 interrupt outputs, so we have a total of
-> > +96 GPIO interrupts. All of these are passed to the GPIO IRQ Muxer,
-> > +which selects
-> > +8 of the GPIO interrupts to pass onto the GIC.
-> > +
-> > +A single node in the device tree is used to describe the GPIO IRQ Muxe=
-r.
-> > +
-> > +Required properties:
-> > +- compatible: the SoC specific name, i.e. "renesas,r9a06g032-gpioirq"
-> > +   or "renesas,r9a06g033-gpioirq" followed by the SoC family name, i.e=
-.
-> > +   "renesas,rzn1-gpioirq".
-> > +- interrupt-controller: Identifies the node as an interrupt controller=
-.
-> > +- #interrupt-cells: should be <1>. The meaning of the cells is the inp=
-ut
-> > +   interrupt index, 0 to 95.
-> > +- reg: Base address and size of GPIO IRQ Muxer registers.
-> > +- interrupts: The list of interrupts generated by the muxer which are =
-then
-> > +   connected to a parent interrupt controller. The format of the inter=
-rupt
-> > +   specifier depends in the interrupt parent controller.
-> > +- gpioirq-#N: One property for each interrupt output from the GPIO IRQ
-> Muxer
-> > +   that specifies the input interrupt to use, #N is from 0 to 7.
->=20
-> Why do you need this in DT? Can't the driver handle this dynamically?
-> When you request an interrupt on a GPIO line, then connect that GPIO line
-> to a free IRQ line.
-On the SoC that has this block, there is another CPU that runs firmware.
-It's likely that the firmware will use some of these GPIO interrupts and
-so we don't want them to move around. The firmware runs before Linux is
-up, and luckily setting up the registers again won't affect the interrupts.
+> +- interrupt-names: Should contain a list of interrupt names corresponding to
+> +           the interrupts in the interrupts property, if available.
 
-> If you really need this in DT, then interrupt-map can be used here.
-Ok
+You need to list the names. Seems unrelated to MPU support.
 
-> > +
-> > +Optional properties:
-> > +- interrupt-parent: pHandle of the parent interrupt controller, if not
-> > +   inherited from the parent node.
-> > +
-> > +
-> > +Example:
-> > +
-> > +	The following is an example for the RZ/N1D SoC.
-> > +
-> > +	gpioirq: gpioirq@51000480 {
-> > +		compatible =3D "renesas,r9a06g032-gpioirq",
-> > +				"renesas,rzn1-gpioirq";
-> > +		reg =3D <0x51000480 0x20>;
-> > +		interrupts =3D
-> > +			<GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-> > +			<GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-> > +			<GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-> > +			<GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-> > +			<GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
-> > +			<GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
-> > +			<GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-> > +			<GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-> > +		interrupt-controller;
-> > +		#interrupt-cells =3D <1>;
-> > +		status =3D "disabled";
->=20
-> Don't show status in examples.
-Ok
+>  - st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
+> -	      encompases the glue register, and the offset of the control register.
+> +	       encompases the glue register, and the offset of the control register.
+> +
+> +Optional properties:
+> +- clock-names:     For MPU family "mac-clk-ck" for PHY without quartz
 
-> > +	};
-> > +
-> > +	gpio0: gpio@5000b000 {
-> > +		compatible =3D "snps,dw-apb-gpio";
-> > +		reg =3D <0x5000b000 0x80>;
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <0>;
-> > +		clock-names =3D "bus";
-> > +		clocks =3D <&hclk_gpio0>;
-> > +		status =3D "disabled";
-> > +
-> > +		gpio0a: gpio-controller@0 {
-> > +			compatible =3D "snps,dw-apb-gpio-port";
-> > +			bank-name =3D "gpio0a";
-> > +			gpio-controller;
-> > +			#gpio-cells =3D <2>;
-> > +			snps,nr-gpios =3D <32>;
-> > +			reg =3D <0>;
-> > +
-> > +			interrupt-controller;
-> > +			interrupt-parent =3D <&gpioirq>;
-> > +			interrupts =3D   < 0  1  2  3  4  5  6  7
-> > +					 8  9 10 11 12 13 14 15
-> > +					16 17 18 19 20 21 22 23
-> > +					24 25 26 27 28 29 30 31 >;
-> > +			#interrupt-cells =3D <2>;
-> > +		};
-> > +	};
-> > +
-> > +
-> > +	The following is an example for a board using this.
->=20
-> Don't show the soc/board split. This is convention, but not part of the
-> binding.
-Ok
+The clock is always connected whether you use it or not, right? So it 
+shouldn't be optional based on use.
 
-> > +
-> > +	&gpioirq {
-> > +		status =3D "okay";
-> > +		gpioirq-0 =3D <24>;	/* gpio0a 24 */
-> > +		gpioirq-4 =3D <3>;	/* gpio0a 3 */
-> > +	};
+> +- st,int-phyclk :  valid only where PHY do not have quartz and need to be clock
+> +	           by RCC
 
-Thanks for your comments,
-Phil
+Boolean?
+
+
+> +
+>  Example:
+>  
+>  	ethernet@40028000 {
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
