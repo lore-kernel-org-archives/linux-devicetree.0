@@ -1,55 +1,44 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2] Input: atmel_mxt_ts - add missing compatible strings
- to OF device table
-Date: Tue, 1 May 2018 15:49:20 -0700
-Message-ID: <20180501224920.GB130399@dtor-ws>
-References: <20180410095340.24074-1-javierm@redhat.com>
- <20180501184853.GB52077@dtor-ws>
- <CAL_JsqJ-UTGrPm2tiS1yVFweWB_LH2JSBpOpMtogTYFi7pCsGA@mail.gmail.com>
- <20180501205713.GA130399@dtor-ws>
- <CAL_JsqKs7Jb0yCM+mUHwqRfrhzCPar1rHq4J+cCyxne=rVoV3g@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v6 02/10] dt-bindings: introduce RPMH RSC bindings for
+ Qualcomm SoCs
+Date: Tue, 1 May 2018 16:45:25 -0700
+Message-ID: <CAD=FV=WfC5x12kFd7Uw8DTR=OFx4HFJhJrd-sDZ5EJgkWL3tQw@mail.gmail.com>
+References: <20180419221635.17849-1-ilina@codeaurora.org> <20180419221635.17849-3-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKs7Jb0yCM+mUHwqRfrhzCPar1rHq4J+cCyxne=rVoV3g@mail.gmail.com>
+In-Reply-To: <20180419221635.17849-3-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Javier Martinez Canillas <javierm@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-input@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Nick Dyer <nick@shmanahar.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 01, 2018 at 04:33:07PM -0500, Rob Herring wrote:
-> On Tue, May 1, 2018 at 3:57 PM, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> > From: Javier Martinez Canillas <javierm@redhat.com>
-> >
-> > Commit af503716ac14 ("i2c: core: report OF style module alias for devices
-> > registered via OF") fixed how the I2C core reports the module alias when
-> > devices are registered via OF.
-> >
-> > But the atmel_mxt_ts driver only has an "atmel,maxtouch" compatible in its
-> > OF device ID table, so if a Device Tree is using a different one, autoload
-> > won't be working for the module (the matching works because the I2C device
-> > ID table is used as a fallback).
-> >
-> > So add compatible strings for each of the entries in the I2C device table.
-> >
-> > Fixes: af503716ac14 ("i2c: core: report OF style module alias for devices registered via OF")
-> > Reported-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-> > Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > [dtor: document which compatibles are deprecated and should not be used]
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > ---
-> >  .../devicetree/bindings/input/atmel,maxtouch.txt   |    7 +++++++
-> >  drivers/input/touchscreen/atmel_mxt_ts.c           |    5 +++++
-> >  2 files changed, 12 insertions(+)
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> Someone is going to make the dts updates, right?
+Hi,
 
-I sent out 2 patches...
+On Thu, Apr 19, 2018 at 3:16 PM, Lina Iyer <ilina@codeaurora.org> wrote:
+> +TCS-OFFSET: 0xD00
+> +
+> +       apps_rsc: rsc@179e000 {
 
--- 
-Dmitry
+This label is wrong in two ways:
+
+1. I believe it's supposed to be the first reg listed, so 179c0000
+
+2. There's only 3 0's at the end.
+
+Thus, it should be:
+
+apps_rsc: rsc@179c0000
+
+> +               label = "apps_rsc";
+> +               compatible = "qcom,rpmh-rsc";
+> +               reg = <0x179c0000 0x10000>, <0x179d0000 0x10000>,
+> +                     <0x179e0000 0x10000>, <0xd00 0>;
+> +               reg-names = "drv-0", "drv-1", "drv-2", "tcs-offset";
+> +               interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+> +               qcom,drv-id = <2>;
+> +               qcom,tcs-config = <SLEEP_TCS   3>,
+> +                                 <WAKE_TCS    3>,
+> +                                 <ACTIVE_TCS  2>,
+> +                                 <CONTROL_TCS 1>;
+> +       };
