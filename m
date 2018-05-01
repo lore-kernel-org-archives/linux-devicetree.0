@@ -1,27 +1,25 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/2] clk: qcom: Add video clock controller driver for SDM845
-Date: Tue, 01 May 2018 14:41:17 -0700
-Message-ID: <152521087780.138124.7623601052057968460@swboyd.mtv.corp.google.com>
-References: <1524576771-31096-1-git-send-email-anischal@codeaurora.org>
- <1524576771-31096-3-git-send-email-anischal@codeaurora.org>
+Subject: Re: [RFC 04/10] clk: samsung: Remove support for Exynos5440
+Date: Tue, 01 May 2018 15:01:12 -0700
+Message-ID: <152521207260.138124.8854083284582052993@swboyd.mtv.corp.google.com>
+References: <20180424203239.21885-1-krzk@kernel.org>
+ <20180424203239.21885-5-krzk@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524576771-31096-3-git-send-email-anischal@codeaurora.org>
+In-Reply-To: <20180424203239.21885-5-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Amit Nischal <anischal@codeaurora.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Alan Stern <stern@rowland.harvard.edu>, Andi Shyti <andi@etezian.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tejun Heo <tj@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Amit Nischal (2018-04-24 06:32:51)
-> Add support for the video clock controller found on SDM845
-> based devices. This would allow video drivers to probe and
-> control their clocks.
+Quoting Krzysztof Kozlowski (2018-04-24 13:32:33)
+> The Exynos5440 is not actively developed, there are no development
+> boards available and probably there are no real products with it.
+> Remove wide-tree support for Exynos5440.
 > 
-> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
 
-Driver looks small and good. Only concern is that there aren't resets
-defined, but the binding says there are resets. Will you add them?
-
-I'm going to wait for the respin on the dts binding anyway.
+Acked-by: Stephen Boyd <sboyd@kernel.org>
