@@ -1,39 +1,44 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 04/24] ASoC: qdsp6: dt-bindings: Add
-	q6afe dt bindings
-Date: Tue, 1 May 2018 07:37:18 -0500
-Message-ID: <20180501123718.GA25915@rob-hp-laptop>
-References: <20180501120820.11016-1-srinivas.kandagatla@linaro.org>
- <20180501120820.11016-5-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v6 3/3] clk: qcom: Add Global Clock controller (GCC)
+ driver for SDM845
+Date: Tue, 1 May 2018 07:39:48 -0500
+Message-ID: <20180501123948.GA28494@rob-hp-laptop>
+References: <1525105210-8689-1-git-send-email-anischal@codeaurora.org>
+ <1525105210-8689-4-git-send-email-anischal@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180501120820.11016-5-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, spatakok@qti.qualcomm.com, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, andy.gross@linaro.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1525105210-8689-4-git-send-email-anischal@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amit Nischal <anischal@codeaurora.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 01, 2018 at 01:08:00PM +0100, Srinivas Kandagatla wrote:
-> This patch add DT bindings for AFE (Audio Frontend) DSP module.
+On Mon, Apr 30, 2018 at 09:50:10PM +0530, Amit Nischal wrote:
+> From: Taniya Das <tdas@codeaurora.org>
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Reviewed-and-tested-by: Rohit kumar <rohitkr@codeaurora.org>
+> Add support for the global clock controller found on SDM845
+> based devices. This should allow most non-multimedia device
+> drivers to probe and control their clocks.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
 > ---
->  .../devicetree/bindings/sound/qcom,q6afe.txt       | 104 +++++++++++++++++++++
->  include/dt-bindings/sound/qcom,q6afe.h             |  31 ++++++
->  2 files changed, 135 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6afe.txt
->  create mode 100644 include/dt-bindings/sound/qcom,q6afe.h
+>  .../devicetree/bindings/clock/qcom,gcc.txt         |    1 +
+>  drivers/clk/qcom/Kconfig                           |   10 +-
+>  drivers/clk/qcom/Makefile                          |    1 +
+>  drivers/clk/qcom/gcc-sdm845.c                      | 3480 ++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-sdm845.h        |  239 ++
+>  5 files changed, 3727 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/clk/qcom/gcc-sdm845.c
+>  create mode 100644 include/dt-bindings/clock/qcom,gcc-sdm845.h
+
+For the DT bits:
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
+In the future please split bindings and binding headers to separate 
+patch.
+
+Rob
