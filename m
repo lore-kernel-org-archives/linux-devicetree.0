@@ -1,28 +1,27 @@
-MIME-Version: 1.0
-In-Reply-To: <20180427091814.25940-1-thierry.reding@gmail.com>
-References: <20180427091814.25940-1-thierry.reding@gmail.com>
-Date: Tue, 1 May 2018 11:30:55 -0500
-Message-ID: <CAL_Jsq+xMyFW_EztT0k4Ljvx6yYRByoAQg7Mjd1N8_jJ6rGfaA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Relocate Tegra20 memory controller bindings
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 1 May 2018 09:11:30 -0500
 From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Dmitry Osipenko <digetx@gmail.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] rcar-vin: remove generic gen3 compatible string
+Message-ID: <20180501141130.GA29499@rob-hp-laptop>
+References: <20180424234321.22367-1-niklas.soderlund+renesas@ragnatech.se>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20180424234321.22367-1-niklas.soderlund+renesas@ragnatech.se>
+To: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Apr 27, 2018 at 4:18 AM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> From: Thierry Reding <treding@nvidia.com>
->
-> Move the device tree bindings for the Tegra20 memory controller to the
-> same location as the Tegra30 (and later) memory controller bindings.
->
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+On Wed, Apr 25, 2018 at 01:43:21AM +0200, Niklas S�derlund wrote:
+> The compatible string "renesas,rcar-gen3-vin" was added before the
+> Gen3 driver code was added but it's not possible to use. Each SoC in the
+> Gen3 series require SoC specific knowledge in the driver to function.
+> Remove it before it is added to any device tree descriptions.
+> 
+> Signed-off-by: Niklas S�derlund <niklas.soderlund+renesas@ragnatech.se>
 > ---
->  .../{arm/tegra => memory-controllers}/nvidia,tegra20-mc.txt       | 0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename Documentation/devicetree/bindings/{arm/tegra => memory-controllers}/nvidia,tegra20-mc.txt (100%)
+>  Documentation/devicetree/bindings/media/rcar_vin.txt | 1 -
+>  1 file changed, 1 deletion(-)
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
