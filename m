@@ -1,70 +1,88 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] ASoC: add documents for mt6351
-Date: Tue, 1 May 2018 09:42:36 -0500
-Message-ID: <20180501144236.GA26497@rob-hp-laptop>
-References: <20180426030732.5887-1-kaichieh.chuang@mediatek.com>
- <20180426030732.5887-2-kaichieh.chuang@mediatek.com>
+From: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Subject: Re: [PATCH 4/4] dt-bindings: mfd: max8998: Add charger subnode binding
+Date: Tue, 01 May 2018 16:43:07 +0200
+Message-ID: <2089055.mctyXeETjz@acerlaptop>
+References: <1524844982-4714-1-git-send-email-pawel.mikolaj.chmiel@gmail.com> <1524844982-4714-5-git-send-email-pawel.mikolaj.chmiel@gmail.com> <20180501124540.3icpjevaxp44ew2e@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20180426030732.5887-2-kaichieh.chuang@mediatek.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: KaiChieh Chuang <kaichieh.chuang@mediatek.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, ryder.lee@mediatek.com, wsd_upstream@mediatek.com, chipeng.chang@mediatek.com, garlic.tseng@mediatek.com, broonie@kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180501124540.3icpjevaxp44ew2e@earth.universe>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 11:07:31AM +0800, KaiChieh Chuang wrote:
-> Signed-off-by: KaiChieh Chuang <kaichieh.chuang@mediatek.com>
+On Tuesday, May 1, 2018 2:45:40 PM CEST Sebastian Reichel wrote:
+> Hi,
+>=20
+> On Fri, Apr 27, 2018 at 06:03:02PM +0200, Pawe=C5=82 Chmiel wrote:
+> > This patch adds devicetree bindings documentation for
+> > battery charging controller as the subnode of MAX8998 PMIC.
+> > It's based on current behavior of driver.
+> >=20
+> > Fixes: ee999fb3f17f ("mfd: max8998: Add support for Device Tree")
+> > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/max8998.txt | 22 +++++++++++++++=
++++++++
+> >  1 file changed, 22 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Docume=
+ntation/devicetree/bindings/mfd/max8998.txt
+> > index 23a3650ff2a2..f95610afb57f 100644
+> > --- a/Documentation/devicetree/bindings/mfd/max8998.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
+> > @@ -50,6 +50,21 @@ Additional properties required if max8998,pmic-buck2=
+=2Ddvs-gpio is defined:
+> >  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in micr=
+ovolts
+> >    for buck2 regulator that can be selected using dvs gpio.
+> > =20
+> > +Charger: Configuration for battery charging controller should be added
+> > +inside a child node named 'charger'.
+> > +  Required properties:
+> > +  - max8998,charge-eoc: Setup "End of Charge". If value equals 0,
+> > +    remain value set from bootloader or default value will be used.
+> > +    Valid values: 0, 10 - 45
+> > +
+> > +  - max8998,charge-restart: Setup "Charge Restart Level". If value equ=
+als 0,
+> > +    remain value set from bootloader or default value will be used.
+> > +    Valid values: -1, 0, 100, 150, 200
+> > +
+> > +  - max8998,charge-timeout: Setup "Charge Full Timeout". If value equa=
+ls 0,
+> > +    remain value set from bootloader or default value will be used.
+> > +    Valid values: -1, 0, 5, 6, 7
+>=20
+> What are those values? seconds?
+>=20
+Honestly i don't know. I've just documented values accepted currently by ch=
+arger driver,
+so we can use it from devicetree.
+I couldn't find any max8998 datasheet with this information (units, possibl=
+e values etc for those properties).
 
-Needs a commit msg and 'binding' would be more informative than 
-'documents' in the subject.
+If this is not acceptable, i can drop this patch.
 
-> ---
->  Documentation/devicetree/bindings/sound/mt6351.txt | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/mt6351.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/mt6351.txt b/Documentation/devicetree/bindings/sound/mt6351.txt
-> new file mode 100644
-> index 000000000000..7fb2cb99245e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/mt6351.txt
-> @@ -0,0 +1,16 @@
-> +Mediatek MT6351 Audio Codec
-> +
-> +The communication between MT6351 and SoC is through Mediatek PMIC wrapper.
-> +For more detail, please visit Mediatek PMIC wrapper documentation.
-
-Add the path to the doc file.
-
-What's a wrapper? Is this a block within the PMIC or ?
-
-> +
-> +Must be a child node of PMIC wrapper.
-> +
-> +Required properties:
-> +
-> +- compatible : "mediatek,mt6351-sound".
-> +
-> +Example:
-> +
-> +mt6351_snd {
-> +	compatible = "mediatek,mt6351-sound";
-> +};
-> -- 
-> 2.12.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +
+> >  Regulators: All the regulators of MAX8998 to be instantiated shall be
+> >  listed in a child node named 'regulators'. Each regulator is represent=
+ed
+> >  by a child node of the 'regulators' node.
+> > @@ -99,6 +114,13 @@ Example:
+> >  		max8998,pmic-buck2-dvs-gpio =3D <&gpx0 0 3 0 0>; /* SET3 */
+> >  		max8998,pmic-buck2-dvs-voltage =3D <1350000>, <1300000>;
+> > =20
+> > +		/* Charger configuration */
+> > +		charger {
+> > +			max8998,charge-eoc =3D <0>;
+> > +			max8998,charge-restart =3D <(-1)>;
+> > +			max8998,charge-timeout =3D <7>;
+> > +		};
+> > +
+> >  		/* Regulators to instantiate */
+> >  		regulators {
+> >  			ldo2_reg: LDO2 {
+>=20
