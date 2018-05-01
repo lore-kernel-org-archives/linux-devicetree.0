@@ -1,37 +1,45 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: nvmem: Add binding for RAVE SP
- EEPROM driver
-Date: Tue, 1 May 2018 07:50:33 -0500
-Message-ID: <20180501125033.GA8090@rob-hp-laptop>
-References: <20180501052952.26765-1-andrew.smirnov@gmail.com>
- <20180501052952.26765-2-andrew.smirnov@gmail.com>
+Subject: Re: [PATCHv2 1/3] Documentation: dt: socfpga: Add Stratix10 ECC
+ Manager binding
+Date: Tue, 1 May 2018 07:54:42 -0500
+Message-ID: <20180501125442.GA12012@rob-hp-laptop>
+References: <1524854238-19394-1-git-send-email-thor.thayer@linux.intel.com>
+ <1524854238-19394-2-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180501052952.26765-2-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Aleksander Morgado <aleksander@aleksander.es>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+In-Reply-To: <1524854238-19394-2-git-send-email-thor.thayer@linux.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: thor.thayer@linux.intel.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, bp@alien8.de, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 30, 2018 at 10:29:51PM -0700, Andrey Smirnov wrote:
-> Add Device Tree bindings for RAVE SP EEPROM driver - an MFD cell of
-> parent RAVE SP driver (documented in
-> Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
+On Fri, Apr 27, 2018 at 01:37:16PM -0500, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
 > 
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Aleksander Morgado <aleksander@aleksander.es>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Add the device tree bindings needed to support the Stratix10
+> ECC Manager and SDRAM ECC.
+> 
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 > ---
->  .../bindings/nvmem/zii,rave-sp-eeprom.txt          | 40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
+> v2  Remove unused System Manager syscon.
+>     Remove unused SDRAM ECC register defines.
+>     Remove unused address, size and range from bindings.
+> ---
+>  .../bindings/arm/altera/socfpga-eccmgr.txt         | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+
+This should move to bindings/edac/. Can you do that as a follow-up 
+patch?
 
 Reviewed-by: Rob Herring <robh@kernel.org>
