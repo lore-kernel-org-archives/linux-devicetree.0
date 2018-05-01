@@ -1,89 +1,113 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v2 10/27] dts: bindings: Restrict coresight tmc-etr scatter-gather mode
-Date: Tue,  1 May 2018 10:10:40 +0100
-Message-ID: <1525165857-11096-11-git-send-email-suzuki.poulose@arm.com>
-References: <1525165857-11096-1-git-send-email-suzuki.poulose@arm.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v7 3/9] PCI: endpoint: functions/pci-epf-test: Add second
+ entry
+Date: Tue, 1 May 2018 15:37:47 +0530
+Message-ID: <b65caf2e-b002-f591-6215-ff2241b2dfb8@ti.com>
+References: <cover.1524577064.git.gustavo.pimentel@synopsys.com>
+ <c6cfd167838ae8e226dee0820983efe918fa4e1f.1524577064.git.gustavo.pimentel@synopsys.com>
+ <20180426165605.GA6370@e107981-ln.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525165857-11096-1-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <20180426165605.GA6370@e107981-ln.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org, robert.walker@arm.com, mark.rutland@arm.com, will.deacon@arm.com, robin.murphy@arm.com, sudeep.holla@arm.com, frowand.list@gmail.com, robh@kernel.org, john.horley@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>, Mathieu Poirier <matheiu.poirier@linaro.org>, devicetree@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: bhelgaas@google.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-We are about to add the support for ETR builtin scatter-gather mode
-for dealing with large amount of trace buffers. However, on some of
-the platforms, using the ETR SG mode can lock up the system due to
-the way the ETR is connected to the memory subsystem.
+Hi Lorenzo,
 
-In SG mode, the ETR performs READ from the scatter-gather table to
-fetch the next page and regular WRITE of trace data. If the READ
-operation doesn't complete(due to the memory subsystem issues,
-which we have seen on a couple of platforms) the trace WRITE
-cannot proceed leading to issues. So, we by default do not
-use the SG mode, unless it is known to be safe on the platform.
-We define a DT property for the TMC node to specify whether we
-have a proper SG mode.
+On Thursday 26 April 2018 10:26 PM, Lorenzo Pieralisi wrote:
+> On Tue, Apr 24, 2018 at 02:44:40PM +0100, Gustavo Pimentel wrote:
+>> Adds a seconds entry on the pci_epf_test_ids structure that disables the
+> 
+> "Add a second entry to..."
+> 
+>> linkup_notifier parameter on driver for the designware EP.
+>>
+>> This allows designware EPs that doesn't have linkup notification signal
+>> to work with pcitest.
+>>
+>> Updates the binding documentation accordingly.
+> 
+> Valid for all the series: use imperative sentences.
+> 
+> eg:
+> 
+> "Update the binding documentation accordingly".
+> 
+> not
+> 
+> "Updates the binding documentation accordingly".
+> 
+>> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>> Change v2->v3:
+>>  - Added second entry in pci_epf_test_ids structure.
+>>  - Remove test_reg_bar field assignment on second entry.
+>> Changes v3->v4:
+>>  - Nothing changed, just to follow the patch set version.
+>> Changes v4->v5:
+>>  - Changed pci_epf_test_cfg2 to pci_epf_test_designware.
+>> Changes v5->v6:
+>>  - Changed name field from pci_epf_test_designware to pci_epf_test_dw.
+>> Changes v6->v7:
+>>  - Changed variable name from data_cfg2 to data_linkup_notifier_disabled.
+>>
+>>  Documentation/PCI/endpoint/function/binding/pci-test.txt | 2 ++
+>>  drivers/pci/endpoint/functions/pci-epf-test.c            | 8 ++++++++
+>>  2 files changed, 10 insertions(+)
+>>
+>> diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.txt b/Documentation/PCI/endpoint/function/binding/pci-test.txt
+>> index 3b68b95..dc39f47 100644
+>> --- a/Documentation/PCI/endpoint/function/binding/pci-test.txt
+>> +++ b/Documentation/PCI/endpoint/function/binding/pci-test.txt
+>> @@ -1,6 +1,8 @@
+>>  PCI TEST ENDPOINT FUNCTION
+>>  
+>>  name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
+>> +name: Should be "pci_epf_test_dw" to bind to the pci_epf_test driver
+>> +      with a custom configuration for the designware EP.
+> 
+> The link between the "name" and the device created is quite obscure and
+> reading pci-test-howto.txt certainly does not clarify it.
+> 
+> In pci-test-howto.txt an explanation should be added to the configs
+> device creation paragraph to clarify it.
+> 
+>>  Configurable Fields:
+>>  vendorid	 : should be 0x104c
+>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> index 7cef851..4ab463b 100644
+>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> @@ -459,10 +459,18 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>  	return 0;
+>>  }
+>>  
+>> +static const struct pci_epf_test_data data_linkup_notifier_disabled = {
+>> +	.linkup_notifier = false
+>> +};
+>> +
+>>  static const struct pci_epf_device_id pci_epf_test_ids[] = {
+>>  	{
+>>  		.name = "pci_epf_test",
+>>  	},
+>> +	{
+>> +		.name = "pci_epf_test_dw",
+>> +		.driver_data = (kernel_ulong_t)&data_linkup_notifier_disabled,
+>> +	},
+>>  	{},
+> 
+> Should not this be a property derived from the controller compatible
+> property instead of the test device name written in configfs ?
 
-Cc: Mathieu Poirier <matheiu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: John Horley <john.horley@arm.com>
-Cc: Robert Walker <robert.walker@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: frowand.list@gmail.com
-Cc: Rob Herring <robh@kernel.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- Documentation/devicetree/bindings/arm/coresight.txt | 3 +++
- drivers/hwtracing/coresight/coresight-tmc.c         | 8 +++++++-
- 2 files changed, 10 insertions(+), 1 deletion(-)
+pci_epf_test is an independent driver on its own that operates in a layer above
+the controller driver. So it does not get the controller compatible (which is
+used in controller drivers like pcie-designware-plat.c). pci_epf_test uses
+"pci_epf_device_id" which is _similar_ to "of_device_id" used by platform drivers.
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index cdd84d0..7c0c8f0 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -88,6 +88,9 @@ its hardware characteristcs.
- 	* arm,buffer-size: size of contiguous buffer space for TMC ETR
- 	 (embedded trace router)
- 
-+	* scatter-gather: boolean. Indicates that the TMC-ETR can safely
-+	  use the SG mode on this system.
-+
- * Optional property for CATU :
- 	* interrupts : Exactly one SPI may be listed for reporting the address
- 	  error
-diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
-index 7a4e84f..e38379c 100644
---- a/drivers/hwtracing/coresight/coresight-tmc.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc.c
-@@ -20,6 +20,7 @@
- #include <linux/err.h>
- #include <linux/fs.h>
- #include <linux/miscdevice.h>
-+#include <linux/property.h>
- #include <linux/uaccess.h>
- #include <linux/slab.h>
- #include <linux/dma-mapping.h>
-@@ -304,6 +305,11 @@ const struct attribute_group *coresight_tmc_groups[] = {
- 	NULL,
- };
- 
-+static inline bool tmc_etr_can_use_sg(struct tmc_drvdata *drvdata)
-+{
-+	return fwnode_property_present(drvdata->dev->fwnode, "scatter-gather");
-+}
-+
- /* Detect and initialise the capabilities of a TMC ETR */
- static int tmc_etr_setup_caps(struct tmc_drvdata *drvdata,
- 			     u32 devid, void *dev_caps)
-@@ -313,7 +319,7 @@ static int tmc_etr_setup_caps(struct tmc_drvdata *drvdata,
- 	/* Set the unadvertised capabilities */
- 	tmc_etr_init_caps(drvdata, (u32)(unsigned long)dev_caps);
- 
--	if (!(devid & TMC_DEVID_NOSCAT))
-+	if (!(devid & TMC_DEVID_NOSCAT) && tmc_etr_can_use_sg(drvdata))
- 		tmc_etr_set_cap(drvdata, TMC_ETR_SG);
- 
- 	/* Check if the AXI address width is available */
--- 
-2.7.4
+Thanks
+Kishon
