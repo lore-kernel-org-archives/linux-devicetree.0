@@ -1,48 +1,85 @@
-From: Tali Perry <tali.perry1@gmail.com>
-Subject: [PATCH v1 0/1] clk: npcm750: fix base address and of_clk_get_by_name
-Date: Tue,  1 May 2018 10:23:26 +0300
-Message-ID: <1525159407-31708-1-git-send-email-tali.perry1@gmail.com>
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v4 02/13] dt-bindings: usb: add documentation for typec
+ port controller(TCPCI)
+Date: Tue, 1 May 2018 07:54:45 +0000
+Message-ID: <VI1PR0402MB39179D3B502AC11BA099CA8D89810@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
+ <1522253178-32414-3-git-send-email-jun.li@nxp.com>
+ <dd2ec510-d696-340f-eb0f-7655c08275ae@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sboyd@kernel.org, brendanhiggins@google.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, weiyongjunl@huawei.com, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com
-Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>, Wei Yongjun <weiyongjun1@huawei.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <dd2ec510-d696-340f-eb0f-7655c08275ae@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Mats Karrman <mats.dev.list@gmail.com>
+Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, Peter Chen <peter.chen@nxp.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>
 List-Id: devicetree@vger.kernel.org
 
-
-Nuvoton NPCM7XX Clock Controller
-fix base address and of_clk_get_by_name error handling.
-    Also update error messages to be more informative.
-    
-    In case clk_base allocation is erronoeous the return value is null.
-    Also fix handling of of_clk_get_by_name returns an error. 
-    Print a better error message pointing to the dt-binding documention.
-
-
-Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-
-Tali Perry (2):
-
----
-
-Tali Perry (1):
-  clk: npcm750: fix base address and of_clk_get_by_name error handling.
-    Also update error messages to be more informative
-
- drivers/clk/clk-npcm7xx.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
-
--- 
-2.14.1
+SGksDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hdHMgS2Fycm1hbiBb
+bWFpbHRvOm1hdHMuZGV2Lmxpc3RAZ21haWwuY29tXQ0KPiBTZW50OiAyMDE45bm0NOaciDMw5pel
+IDE1OjQxDQo+IFRvOiBKdW4gTGkgPGp1bi5saUBueHAuY29tPg0KPiBDYzogcm9iaCtkdEBrZXJu
+ZWwub3JnOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsNCj4gaGVpa2tpLmtyb2dlcnVzQGxp
+bnV4LmludGVsLmNvbTsgbGludXhAcm9lY2stdXMubmV0OyBhLmhhamRhQHNhbXN1bmcuY29tOw0K
+PiBzaHVmYW5fbGVlQHJpY2h0ZWsuY29tOyBQZXRlciBDaGVuIDxwZXRlci5jaGVuQG54cC5jb20+
+Ow0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtdXNiQHZnZXIua2VybmVsLm9y
+ZzsgZGwtbGludXgtaW14DQo+IDxsaW51eC1pbXhAbnhwLmNvbT47IGRldmVsQGRyaXZlcmRldi5v
+c3Vvc2wub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMDIvMTNdIGR0LWJpbmRpbmdzOiB1
+c2I6IGFkZCBkb2N1bWVudGF0aW9uIGZvciB0eXBlYw0KPiBwb3J0IGNvbnRyb2xsZXIoVENQQ0kp
+DQo+IA0KPiBIaSBMaSBKdW4sDQo+IA0KPiBBcmUgeW91IHdvcmtpbmcgb24gYW4gdXBkYXRlZCB2
+ZXJzaW9uIG9mIHRoaXMgcGF0Y2ggc2VyaWVzPw0KPiBJJ20gcG9uZGVyaW5nIG90aGVyIGNoYW5n
+ZXMgdGhhdCBidWlsZHMgb24gdGhlc2UgcGF0Y2hlcyAodGhlIGRvY3VtZW50YXRpb24NCj4gYW5k
+IHRoZSBmd25vZGUgYWRkZWQgdG8gdGhlIHRjcGNfZGV2IGFuZCB0Y3BtIHByaW1hcmlseSkuDQoN
+CkkgYW0gb24gYSB2YWNhdGlvbiBhbmQgd2lsbCBiZSBiYWNrIHRvbW9ycm93LCBJIHdpbGwgcG9z
+dCBhIG5ldyB2ZXJzaW9uIHNvb24uDQoNCj4gDQo+IEJ0dywgdGhlcmUgaXMgYSBzZW1pLWNvbG9u
+IG1pc3NpbmcgaW4geW91ciBleGFtcGxlIGJlbG93Lg0KDQpUaGFua3MsIEkgd2lsbCBhZGQgaXQu
+DQoNCkxpIEp1bg0KPiANCj4gQlIgLy8gTWF0cw0KPiANCj4gT24gMjAxOC0wMy0yOCAxODowNiwg
+TGkgSnVuIHdyb3RlOg0KPiANCj4gPiBUQ1BDSSBzdGFuZHMgZm9yIHR5cGVjIHBvcnQgY29udHJv
+bGxlciBpbnRlcmZhY2UsIGl0cyBpbXBsZW1lbnRhdGlvbg0KPiA+IGhhcyBmdWxsIHR5cGVjIHBv
+cnQgY29udHJvbCB3aXRoIHBvd2VyIGRlbGl2ZXJ5IHN1cHBvcnQsIGl0J3MgYQ0KPiA+IHN0YW5k
+YXJkIGkyYyBzbGF2ZSB3aXRoIEdQSU8gaW5wdXQgYXMgaXJxIGludGVyZmFjZSwgZGV0YWlsIHNl
+ZSBzcGVjDQo+ID4gIlVuaXZlcnNhbCBTZXJpYWwgQnVzIFR5cGUtQyBQb3J0IENvbnRyb2xsZXIg
+SW50ZXJmYWNlIFNwZWNpZmljYXRpb24NCj4gPiBSZXZpc2lvbiAxLjAsIFZlcnNpb24gMS4xIg0K
+PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNvbT4NCj4gPiAtLS0N
+Cj4gPiAgIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi90eXBlYy10Y3BjaS50eHQgICAgICAg
+IHwgMzMNCj4gKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDMz
+IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvdXNiL3R5cGVjLXRjcGNpLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi90eXBlYy10Y3BjaS50eHQNCj4gPiBuZXcgZmlsZSBtb2Rl
+IDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLjdhN2E4ZTANCj4gPiAtLS0gL2Rldi9udWxsDQo+
+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi90eXBlYy10Y3Bj
+aS50eHQNCj4gPiBAQCAtMCwwICsxLDMzIEBADQo+ID4gK1RDUENJKFR5cGVjIHBvcnQgY290cm9s
+bGVyIGludGVyZmFjZSkgYmluZGluZw0KPiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0NCj4gPiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4g
+Ky0gY29tcGF0aWJsZTogICAgICAgc2hvdWxkIGJlICJ1c2ItdGNwY2ksY2hpcC1zcGVjaWZpYy1z
+dHJpbmciLg0KPiA+ICstIHJlZzogICAgICAgICAgICAgIHRoZSBpMmMgc2xhdmUgYWRkcmVzcyBv
+ZiB0eXBlYyBwb3J0IGNvbnRyb2xsZXIgZGV2aWNlLg0KPiA+ICstIGludGVycnVwdC1wYXJlbnQ6
+IHRoZSBwaGFuZGxlIHRvIHRoZSBpbnRlcnJ1cHQgY29udHJvbGxlciB3aGljaCBwcm92aWRlcw0K
+PiA+ICsgICAgICAgICAgICAgICAgICAgIHRoZSBpbnRlcnJ1cHQuDQo+ID4gKy0gaW50ZXJydXB0
+czogICAgICAgaW50ZXJydXB0IHNwZWNpZmljYXRpb24gZm9yIHRjcGNpIGFsZXJ0Lg0KPiA+ICsN
+Cj4gPiArUmVxdWlyZWQgc3ViLW5vZGU6DQo+ID4gKy0gY29ubmVjdG9yOiBUaGUgInVzYi1jLWNv
+bm5lY3RvciIgYXR0YWNoZWQgdG8gdGhlIHRjcGNpIGNoaXAsIHRoZQ0KPiA+ICtiaW5kaW5ncw0K
+PiA+ICsgIG9mIGNvbm5lY3RvciBub2RlIGFyZSBzcGVjaWZpZWQgaW4NCj4gPiArICBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY29ubmVjdG9yL3VzYi1jb25uZWN0b3IudHh0DQo+
+ID4gKw0KPiA+ICtFeGFtcGxlOg0KPiA+ICsNCj4gPiArcHRuNTExMEA1MCB7DQo+ID4gKwljb21w
+YXRpYmxlID0gInVzYi10Y3BjaSxwdG41MTEwIjsNCj4gPiArCXJlZyA9IDwweDUwPjsNCj4gPiAr
+CWludGVycnVwdC1wYXJlbnQgPSA8JmdwaW8zPjsNCj4gPiArCWludGVycnVwdHMgPSA8MyBJUlFf
+VFlQRV9MRVZFTF9MT1c+Ow0KPiA+ICsNCj4gPiArCXVzYl9jb246IGNvbm5lY3RvciB7DQo+ID4g
+KwkJY29tcGF0aWJsZSA9ICJ1c2ItYy1jb25uZWN0b3IiOw0KPiA+ICsJCWxhYmVsID0gIlVTQi1D
+IjsNCj4gPiArCQlwb3J0LXR5cGUgPSAiZHVhbCI7DQo+ID4gKwkJdHJ5LXBvd2VyLXJvbGUgPSAi
+c2luayINCj4gDQo+IEhlcmUhDQo+IA0KPiA+ICsJCXNvdXJjZS1wZG9zID0gPDB4MzgwMTkwYzg+
+Ow0KPiA+ICsJCXNpbmstcGRvcyA9IDwweDM4MDE5MGM4IDB4MzgwMmQwYzg+Ow0KPiA+ICsJCW9w
+LXNpbmstbWljcm93YXR0LWhvdXJzID0gPDkwMDAwMDA+Ow0KPiA+ICsJfTsNCj4gPiArfTsNCj4g
+Pg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwg
+bWFpbGluZyBsaXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRl
+di5saW51eGRyaXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVs
+Cg==
