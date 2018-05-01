@@ -1,42 +1,46 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [v5 2/2] clk: qcom: clk-rpmh: Add QCOM RPMh clock driver
-Date: Tue, 1 May 2018 07:43:33 -0500
-Message-ID: <20180501124333.GA32660@rob-hp-laptop>
-References: <1525164093-16645-1-git-send-email-tdas@codeaurora.org>
- <1525164093-16645-3-git-send-email-tdas@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/6] iommu: of: make of_pci_map_rid() available for
+	other devices too
+Date: Tue, 1 May 2018 07:44:49 -0500
+Message-ID: <20180501124449.GA3009@rob-hp-laptop>
+References: <1524824826-29473-1-git-send-email-nipun.gupta@nxp.com>
+	<1525069641-8523-1-git-send-email-nipun.gupta@nxp.com>
+	<1525069641-8523-3-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1525164093-16645-3-git-send-email-tdas@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1525069641-8523-3-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 01, 2018 at 02:11:33PM +0530, Taniya Das wrote:
-> Add the RPMh clock driver to control the RPMh managed clock resources on
-> some of the Qualcomm Technologies, Inc. SoCs.
+On Mon, Apr 30, 2018 at 11:57:17AM +0530, Nipun Gupta wrote:
+> iommu-map property is also used by devices with fsl-mc. This
+> patch moves the of_pci_map_rid to generic location, so that it
+> can be used by other busses too.
 > 
-> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> 'of_pci_map_rid' is renamed here to 'of_map_rid' and there is no
+> functional change done in the API.
+> 
+> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
 > ---
->  drivers/clk/qcom/Kconfig              |   9 +
->  drivers/clk/qcom/Makefile             |   1 +
->  drivers/clk/qcom/clk-rpmh.c           | 387 ++++++++++++++++++++++++++++++++++
->  include/dt-bindings/clock/qcom,rpmh.h |   2 -
->  4 files changed, 397 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/clk/qcom/clk-rpmh.c
+>  drivers/iommu/of_iommu.c |   5 +--
+>  drivers/of/base.c        | 102 +++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/of/irq.c         |   5 +--
+>  drivers/pci/of.c         | 101 ----------------------------------------------
+>  include/linux/of.h       |  11 +++++
+>  include/linux/of_pci.h   |  10 -----
+>  6 files changed, 117 insertions(+), 117 deletions(-)
 
-> diff --git a/include/dt-bindings/clock/qcom,rpmh.h b/include/dt-bindings/clock/qcom,rpmh.h
-> index 36caab2..f48fbd6 100644
-> --- a/include/dt-bindings/clock/qcom,rpmh.h
-> +++ b/include/dt-bindings/clock/qcom,rpmh.h
-> @@ -18,7 +18,5 @@
->  #define RPMH_RF_CLK2_A				9
->  #define RPMH_RF_CLK3				10
->  #define RPMH_RF_CLK3_A				11
-> -#define RPMH_RF_CLK4				12
-> -#define RPMH_RF_CLK4_A				13
-
-Did you mean to have this or squash into previous patch?
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
