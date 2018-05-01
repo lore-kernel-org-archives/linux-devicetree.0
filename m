@@ -1,80 +1,70 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] Input: atmel_mxt_ts - add missing compatible strings to
- OF device table
-Date: Tue, 1 May 2018 14:42:08 -0500
-Message-ID: <CAL_JsqJ-UTGrPm2tiS1yVFweWB_LH2JSBpOpMtogTYFi7pCsGA@mail.gmail.com>
-References: <20180410095340.24074-1-javierm@redhat.com> <20180501184853.GB52077@dtor-ws>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 0/3] ASoc: TAS6424: Add support for mute, standby,
+ and faster power on
+Date: Wed, 2 May 2018 05:42:40 +0900
+Message-ID: <20180501204239.GC2714@sirena.org.uk>
+References: <1525077018-15863-1-git-send-email-jjhiblot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501184853.GB52077@dtor-ws>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Javier Martinez Canillas <javierm@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-input@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Nick Dyer <nick@shmanahar.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============1158229332812794907=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1525077018-15863-1-git-send-email-jjhiblot@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, afd@ti.com, robh+dt@kernel.org, dannenberg@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 1, 2018 at 1:48 PM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On Tue, Apr 10, 2018 at 11:53:40AM +0200, Javier Martinez Canillas wrote:
->> Commit af503716ac14 ("i2c: core: report OF style module alias for devices
->> registered via OF") fixed how the I2C core reports the module alias when
->> devices are registered via OF.
->>
->> But the atmel_mxt_ts driver only has an "atmel,maxtouch" compatible in its
->> OF device ID table, so if a Device Tree is using a different one, autoload
->> won't be working for the module (the matching works because the I2C device
->> ID table is used as a fallback).
->>
->> So add compatible strings for each of the entries in the I2C device table.
->>
->> Fixes: af503716ac14 ("i2c: core: report OF style module alias for devices registered via OF")
->> Reported-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
->> ---
->>
->>  Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 6 +++++-
->>  drivers/input/touchscreen/atmel_mxt_ts.c                   | 4 ++++
->>  2 files changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->> index 23e3abc3fdef..cd43fb8bc2ce 100644
->> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->> @@ -1,8 +1,12 @@
->>  Atmel maXTouch touchscreen/touchpad
->>
->>  Required properties:
->> -- compatible:
->> +- compatible: Must be one of the following
->> +    atmel,qt602240_ts
->> +    atmel,atmel_mxt_ts
->> +    atmel,atmel_mxt_tp
->>      atmel,maxtouch
->> +    atmel,mXT224
->
-> I do not think we should document ad-hoc compatible strings that were
-> introduced by various vendors as the documented ones, so I'd rather
-> dropped this chunk and leave only "atmel,maxtouch" as compatible that
-> everyone should be using.
->
-> The changes to the driver to support the existing DTSes can of course be
-> applied.
->
-> Rob, any objections?
 
-I'd prefer we list them in the binding as deprecated. Then we document
-somewhere besides this thread to not use them.
+--===============1158229332812794907==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="QRj9sO5tAVLaXnSD"
+Content-Disposition: inline
 
-And there are 3 dts changes needed as well:
 
-$ git grep atmel,mXT224
-$ git grep atmel,qt6
-$ git grep atmel,atmel_mxt
-arch/arm/boot/dts/at91-sama5d4ek.dts:
- compatible = "atmel,atmel_mxt_ts";
-arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts:
-compatible = "atmel,atmel_mxt_tp";
-arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts:
-compatible = "atmel,atmel_mxt_ts";
+--QRj9sO5tAVLaXnSD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Rob
+On Mon, Apr 30, 2018 at 10:30:15AM +0200, Jean-Jacques Hiblot wrote:
+> mute and standby pins are available on the codec. If they are connected, they
+> should be managed by the driver, instead of relying on gpio hogs or on the
+> initial state of the GPIOs.
+
+Please do not submit new versions of already applied patches, please
+submit incremental updates to the existing code.  Modifying existing
+commits creates problems for other users building on top of those
+commits so it's best practice to only change pubished git commits if
+absolutely essential.
+
+--QRj9sO5tAVLaXnSD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlro0T8ACgkQJNaLcl1U
+h9Ad/Qf/emHR5/nYvWAYhMpBMTXLXgR75j75hZWawgl1qYSox9lMkg7whJUj1aEr
+tclFJY8ur33dFsJf5qoozovVfA3ZahUDQ87uniegKZ1bWnHR5DSJl23ioF5yRCjP
++xPZOvtrm13GUzUQWzbcfajnrY77HhHiNJmf7xrRdsyQfk0Chb8/VyQqe0NQ5lgw
+gvg/F4eEBHhK1PSbKGmzHfInaN+56bxujDHaXwqJirOq+NuziCdx1CNgQOobvs8h
+2cG08PsgGCIa88kYHhQq/dBDLd4qOoyYV65VtlCRtN4xuD7kjW1+SmF61ZDySF1K
+b+vBQsu7xFGtXRpqrIusLJHVPYVQCQ==
+=Yom0
+-----END PGP SIGNATURE-----
+
+--QRj9sO5tAVLaXnSD--
+
+--===============1158229332812794907==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1158229332812794907==--
