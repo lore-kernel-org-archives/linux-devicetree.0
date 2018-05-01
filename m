@@ -1,50 +1,110 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/3] ARM: dra762: hwmod: Add MCAN support
-Date: Tue, 1 May 2018 08:26:15 -0700
-Message-ID: <20180501152615.GB98604@atomide.com>
-References: <1523181542-3770-1-git-send-email-faiz_abbas@ti.com>
- <1523181542-3770-2-git-send-email-faiz_abbas@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/4] dt-bindings: arm: fsl: add mu binding doc
+Date: Tue, 1 May 2018 10:25:47 -0500
+Message-ID: <20180501152547.GA6565@rob-hp-laptop>
+References: <1524854776-14863-1-git-send-email-aisheng.dong@nxp.com>
+ <1524854776-14863-3-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1523181542-3770-2-git-send-email-faiz_abbas@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, paul@pwsan.com, lokeshvutla@ti.com, linux@armlinux.org.uk
+In-Reply-To: <1524854776-14863-3-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dongas86@gmail.com, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-* Faiz Abbas <faiz_abbas@ti.com> [180408 09:59]:
-> From: Lokesh Vutla <lokeshvutla@ti.com>
+On Sat, Apr 28, 2018 at 02:46:14AM +0800, Dong Aisheng wrote:
+> The Messaging Unit module enables two processors within
+> the SoC to communicate and coordinate by passing messages
+> (e.g. data, status and control) through the MU interface.
 > 
-> Add MCAN hwmod data and register it for dra762 silicons.
-> 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 > ---
->  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 32 +++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+>  .../devicetree/bindings/arm/freescale/fsl,mu.txt   | 33 ++++++++++++++++++++++
+
+bindings/mailbox/ ?
+
+Why aren't you using the mailbox binding?
+
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
 > 
-> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> index 62352d1..a2cd7f8 100644
-> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> @@ -1356,6 +1356,29 @@ static struct omap_hwmod dra7xx_mailbox13_hwmod = {
->  };
->  
->  /*
-> + * 'mcan' class
-> + *
-> + */
-> +static struct omap_hwmod_class dra76x_mcan_hwmod_class = {
-> +	.name	= "mcan",
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
+> new file mode 100644
+> index 0000000..a7ceb1f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
+> @@ -0,0 +1,33 @@
+> +NXP i.MX Messaging Unit (MU)
+> +--------------------------------------------------------------------
+> +
+> +The Messaging Unit module enables two processors within the SoC to
+> +communicate and coordinate by passing messages (e.g. data, status
+> +and control) through the MU interface. The MU also provides the ability
+> +for one processor to signal the other processor using interrupts.
+> +
+> +Because the MU manages the messaging between processors, the MU uses
+> +different clocks (from each side of the different peripheral buses).
+> +Therefore, the MU must synchronize the accesses from one side to the
+> +other. The MU accomplishes synchronization using two sets of matching
+> +registers (Processor A-facing, Processor Bfacing).
+
+B-facing
+
+> +
+> +Messaging Unit Device Node:
+> +=============================
+> +
+> +Required properties:
+> +-------------------
+> +- compatible :	should be "fsl,<chip>-mu", the supported chips include
+> +		imx6sx, imx7d, imx7ulp, imx8qxp, imx8qm, imx8mq.
+
+'qm' and 'mq' are really both parts?
+
+> +- reg :		Should contain the registers location and length
+> +- interrupts :	Interrupt number. The interrupt specifier format depends
+> +		on the interrupt controller parent.
+> +
+> +Examples:
+> +--------
+> +lsio_mu0: mu@5d1b0000 {
+> +	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+
+It is not clear from the definition above that fsl,imx6sx-mu is a 
+fallback. Is that true for all the other chips too?
+
+> +	reg = <0x0 0x5d1b0000 0x0 0x10000>;
+
+Really has 64KB of registers? You are just wasting virtual address space 
+which is scarce on 32-bit processors with GBs of RAM.
+
+> +	interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+> +	status = "okay";
+
+Don't show status in examples.
+
 > +};
-
-Looks like you're missing the related struct omap_hwmod_class_sysconfig
-entry for this with the rev and sysconfig registers.
-
-Regards,
-
-Tony
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
