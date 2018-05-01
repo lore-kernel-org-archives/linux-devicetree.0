@@ -1,63 +1,142 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 10/27] dts: bindings: Restrict coresight tmc-etr
- scatter-gather mode
-Date: Tue, 1 May 2018 08:13:00 -0500
-Message-ID: <20180501131300.GA31425@rob-hp-laptop>
-References: <1525165857-11096-1-git-send-email-suzuki.poulose@arm.com>
- <1525165857-11096-11-git-send-email-suzuki.poulose@arm.com>
+Subject: Re: [PATCH] irqchip: Add support for Renesas RZ/N1 GPIO interrupt
+ multiplexer
+Date: Tue, 1 May 2018 08:28:44 -0500
+Message-ID: <20180501132844.GA8298@rob-hp-laptop>
+References: <1524490386-1544-1-git-send-email-phil.edworthy@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1525165857-11096-11-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <1524490386-1544-1-git-send-email-phil.edworthy@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org, robert.walker@arm.com, mark.rutland@arm.com, will.deacon@arm.com, robin.murphy@arm.com, sudeep.holla@arm.com, frowand.list@gmail.com, john.horley@arm.com, Mathieu Poirier <matheiu.poirier@linaro.org>, devicetree@vger.kernel.org
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 01, 2018 at 10:10:40AM +0100, Suzuki K Poulose wrote:
-> We are about to add the support for ETR builtin scatter-gather mode
-> for dealing with large amount of trace buffers. However, on some of
-> the platforms, using the ETR SG mode can lock up the system due to
-> the way the ETR is connected to the memory subsystem.
+On Mon, Apr 23, 2018 at 02:33:06PM +0100, Phil Edworthy wrote:
+> On RZ/N1 devices, there are 3 Synopsys DesignWare GPIO blocks each
+> configured to have 32 interrupt outputs, so we have a total of 96 GPIO
+> interrupts. All of these are passed to the GPIO IRQ Muxer, which selects
+> 8 of the GPIO interrupts to pass onto the GIC. The interrupt signals
+> aren't latched, so there is nothing to do in this driver when an interrupt
+> is received, other than tell the corresponding GPIO block.
 > 
-> In SG mode, the ETR performs READ from the scatter-gather table to
-> fetch the next page and regular WRITE of trace data. If the READ
-> operation doesn't complete(due to the memory subsystem issues,
-> which we have seen on a couple of platforms) the trace WRITE
-> cannot proceed leading to issues. So, we by default do not
-> use the SG mode, unless it is known to be safe on the platform.
-> We define a DT property for the TMC node to specify whether we
-> have a proper SG mode.
-> 
-> Cc: Mathieu Poirier <matheiu.poirier@linaro.org>
-> Cc: Mike Leach <mike.leach@linaro.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: John Horley <john.horley@arm.com>
-> Cc: Robert Walker <robert.walker@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: frowand.list@gmail.com
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
 > ---
->  Documentation/devicetree/bindings/arm/coresight.txt | 3 +++
->  drivers/hwtracing/coresight/coresight-tmc.c         | 8 +++++++-
->  2 files changed, 10 insertions(+), 1 deletion(-)
+>  .../interrupt-controller/renesas,rzn1-mux.txt      |  85 ++++++++++
+
+Please split bindings to a separate patch.
+
+>  drivers/irqchip/Kconfig                            |  10 ++
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-rzn1-irq-mux.c                 | 178 +++++++++++++++++++++
+>  4 files changed, 274 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
+>  create mode 100644 drivers/irqchip/irq-rzn1-irq-mux.c
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index cdd84d0..7c0c8f0 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -88,6 +88,9 @@ its hardware characteristcs.
->  	* arm,buffer-size: size of contiguous buffer space for TMC ETR
->  	 (embedded trace router)
->  
-> +	* scatter-gather: boolean. Indicates that the TMC-ETR can safely
-> +	  use the SG mode on this system.
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
+> new file mode 100644
+> index 0000000..f28a365
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
+> @@ -0,0 +1,85 @@
+> +* Renesas RZ/N1 GPIO Interrupt Multiplexer
 > +
+> +On Renesas RZ/N1 devices, there are 3 Synopsys DesignWare GPIO blocks each
+> +configured to have 32 interrupt outputs, so we have a total of 96 GPIO
+> +interrupts. All of these are passed to the GPIO IRQ Muxer, which selects
+> +8 of the GPIO interrupts to pass onto the GIC.
+> +
+> +A single node in the device tree is used to describe the GPIO IRQ Muxer.
+> +
+> +Required properties:
+> +- compatible: the SoC specific name, i.e. "renesas,r9a06g032-gpioirq"
+> +   or "renesas,r9a06g033-gpioirq" followed by the SoC family name, i.e.
+> +   "renesas,rzn1-gpioirq".
+> +- interrupt-controller: Identifies the node as an interrupt controller.
+> +- #interrupt-cells: should be <1>. The meaning of the cells is the input
+> +   interrupt index, 0 to 95.
+> +- reg: Base address and size of GPIO IRQ Muxer registers.
+> +- interrupts: The list of interrupts generated by the muxer which are then
+> +   connected to a parent interrupt controller. The format of the interrupt
+> +   specifier depends in the interrupt parent controller.
+> +- gpioirq-#N: One property for each interrupt output from the GPIO IRQ Muxer
+> +   that specifies the input interrupt to use, #N is from 0 to 7.
 
-Needs a vendor prefix.
+Why do you need this in DT? Can't the driver handle this dynamically? 
+When you request an interrupt on a GPIO line, then connect that GPIO 
+line to a free IRQ line. 
 
->  * Optional property for CATU :
->  	* interrupts : Exactly one SPI may be listed for reporting the address
->  	  error
+If you really need this in DT, then interrupt-map can be used here.
+
+> +
+> +Optional properties:
+> +- interrupt-parent: pHandle of the parent interrupt controller, if not
+> +   inherited from the parent node.
+> +
+> +
+> +Example:
+> +
+> +	The following is an example for the RZ/N1D SoC.
+> +
+> +	gpioirq: gpioirq@51000480 {
+> +		compatible = "renesas,r9a06g032-gpioirq",
+> +				"renesas,rzn1-gpioirq";
+> +		reg = <0x51000480 0x20>;
+> +		interrupts =
+> +			<GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
+> +			<GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
+> +			<GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
+> +			<GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
+> +			<GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
+> +			<GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
+> +			<GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
+> +			<GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +		status = "disabled";
+
+Don't show status in examples.
+
+> +	};
+> +
+> +	gpio0: gpio@5000b000 {
+> +		compatible = "snps,dw-apb-gpio";
+> +		reg = <0x5000b000 0x80>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		clock-names = "bus";
+> +		clocks = <&hclk_gpio0>;
+> +		status = "disabled";
+> +
+> +		gpio0a: gpio-controller@0 {
+> +			compatible = "snps,dw-apb-gpio-port";
+> +			bank-name = "gpio0a";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			snps,nr-gpios = <32>;
+> +			reg = <0>;
+> +
+> +			interrupt-controller;
+> +			interrupt-parent = <&gpioirq>;
+> +			interrupts =   < 0  1  2  3  4  5  6  7
+> +					 8  9 10 11 12 13 14 15
+> +					16 17 18 19 20 21 22 23
+> +					24 25 26 27 28 29 30 31 >;
+> +			#interrupt-cells = <2>;
+> +		};
+> +	};
+> +
+> +
+> +	The following is an example for a board using this.
+
+Don't show the soc/board split. This is convention, but not part of the 
+binding.
+
+> +
+> +	&gpioirq {
+> +		status = "okay";
+> +		gpioirq-0 = <24>;	/* gpio0a 24 */
+> +		gpioirq-4 = <3>;	/* gpio0a 3 */
+> +	};
