@@ -1,50 +1,103 @@
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v4 01/13] dt-bindings: connector: add properties for typec
-Date: Tue, 1 May 2018 07:57:47 +0000
-Message-ID: <VI1PR0402MB39172598EFBD55753FE14B9C89810@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
- <1522253178-32414-2-git-send-email-jun.li@nxp.com>
- <20180430112354.GA12870@kuha.fi.intel.com>
+From: Tali Perry <tali.perry1@gmail.com>
+Subject: [PATCH v1 1/1] clk: npcm750: fix base address and of_clk_get_by_name
+ error handling. Also update error messages to be more informative
+Date: Tue,  1 May 2018 10:23:27 +0300
+Message-ID: <1525159407-31708-2-git-send-email-tali.perry1@gmail.com>
+References: <1525159407-31708-1-git-send-email-tali.perry1@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180430112354.GA12870@kuha.fi.intel.com>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, Peter Chen <peter.chen@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1525159407-31708-1-git-send-email-tali.perry1@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sboyd@kernel.org, brendanhiggins@google.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, weiyongjunl@huawei.com, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com
+Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>, Wei Yongjun <weiyongjun1@huawei.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGVpa2tpIEtyb2dlcnVz
-IFttYWlsdG86aGVpa2tpLmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbV0NCj4gU2VudDogMjAxOMTq
-NNTCMzDI1SAxOToyNA0KPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT4NCj4gQ2M6IHJvYmgr
-ZHRAa2VybmVsLm9yZzsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IGxpbnV4QHJvZWNrLXVz
-Lm5ldDsNCj4gYS5oYWpkYUBzYW1zdW5nLmNvbTsgc2h1ZmFuX2xlZUByaWNodGVrLmNvbTsgUGV0
-ZXIgQ2hlbg0KPiA8cGV0ZXIuY2hlbkBueHAuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7DQo+IGxpbnV4LXVzYkB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14
-QG54cC5jb20+Ow0KPiBkZXZlbEBkcml2ZXJkZXYub3N1b3NsLm9yZw0KPiBTdWJqZWN0OiBSZTog
-W1BBVENIIHY0IDAxLzEzXSBkdC1iaW5kaW5nczogY29ubmVjdG9yOiBhZGQgcHJvcGVydGllcyBm
-b3IgdHlwZWMNCj4gDQo+IEhpLA0KPiANCj4gT24gVGh1LCBNYXIgMjksIDIwMTggYXQgMTI6MDY6
-MDZBTSArMDgwMCwgTGkgSnVuIHdyb3RlOg0KPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciB1
-c2ItYy1jb25uZWN0b3I6DQo+ID4gKy0gcG93ZXItdHlwZTogc2hvdWxkIGJlIG9uZSBvZiAic291
-cmNlIiwgInNpbmsiIG9yICJkdWFsIihEUlApIGlmIHR5cGVjDQo+ID4gKyAgY29ubmVjdG9yIGhh
-cyBwb3dlciBzdXBwb3J0Lg0KPiA+ICstIHRyeS1wb3dlci1yb2xlOiBwcmVmZXJyZWQgcG93ZXIg
-cm9sZSBpZiAiZHVhbCIoRFJQKSBjYW4gc3VwcG9ydCBUcnkuU05LDQo+ID4gKyAgb3IgVHJ5LlNS
-Qywgc2hvdWxkIGJlICJzaW5rIiBmb3IgVHJ5LlNOSyBvciAic291cmNlIiBmb3IgVHJ5LlNSQy4N
-Cj4gPiArLSBkYXRhLXR5cGU6IHNob3VsZCBiZSBvbmUgb2YgImhvc3QiLCAiZGV2aWNlIiwgImR1
-YWwiKERSRCkgaWYgdHlwZWMNCj4gPiArICBjb25uZWN0b3Igc3VwcG9ydHMgVVNCIGRhdGEuDQo+
-IA0KPiBQbGVhc2UgdXNlICJwb3dlci1yb2xlIiBhbmQgImRhdGEtcm9sZSIuDQoNCk9LLiBJIHdp
-bGwgdXBkYXRlIHRoZXNlIDIgcHJvcGVydHkgbmFtZXMgYXMgeW91IHN1Z2dlc3RlZC4NCg0KTGkg
-SnVuDQo+IA0KPiANCj4gVGhhbmtzLA0KPiANCj4gLS0NCj4gaGVpa2tpDQpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2
-ZWxAbGludXhkcml2ZXJwcm9qZWN0Lm9yZwpodHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJv
-amVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcml2ZXJkZXYtZGV2ZWwK
+
+Nuvoton NPCM7XX Clock Controller
+fix base address and of_clk_get_by_name error handling.
+    Also update error messages to be more informative.
+    
+    In case clk_base allocation is erronoeous the return value is null.
+    Also fix handling of of_clk_get_by_name returns an error. 
+    Print a better error message pointing to the dt-binding documention.
+
+
+Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+
+Tali Perry (2):
+ 
+---
+ drivers/clk/clk-npcm7xx.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/clk/clk-npcm7xx.c b/drivers/clk/clk-npcm7xx.c
+index 7e4964b9e5c8..6ff97f79fcd7 100644
+--- a/drivers/clk/clk-npcm7xx.c
++++ b/drivers/clk/clk-npcm7xx.c
+@@ -583,7 +583,7 @@ static void __init npcm7xx_clk_init(struct device_node *clk_np)
+ 
+ 
+ 	clk_base = ioremap(res.start, resource_size(&res));
+-	if (IS_ERR(clk_base))
++	if (!clk_base)
+ 		goto npcm7xx_init_error;
+ 
+ 
+@@ -604,24 +604,27 @@ static void __init npcm7xx_clk_init(struct device_node *clk_np)
+ 
+ 	/* Read fixed clocks. These 3 clocks must be defined in DT */
+ 	clk = of_clk_get_by_name(clk_np, NPCM7XX_CLK_S_REFCLK);
+-	if (!IS_ERR(clk)) {
+-		pr_err("failed to find external REFCLK: %ld\n",
++	if (IS_ERR(clk)) {
++		pr_err("failed to find external REFCLK on device tree, err=%ld\n",
+ 			PTR_ERR(clk));
+ 		clk_put(clk);
++		goto npcm7xx_init_fail_no_clk_on_dt;
+ 	}
+ 
+ 	clk = of_clk_get_by_name(clk_np, NPCM7XX_CLK_S_SYSBYPCK);
+-	if (!IS_ERR(clk)) {
+-		pr_err("failed to find external SYSBYPCK: %ld\n",
++	if (IS_ERR(clk)) {
++		pr_err("failed to find external SYSBYPCK on device tree, err=%ld\n",
+ 			PTR_ERR(clk));
+ 		clk_put(clk);
++		goto npcm7xx_init_fail_no_clk_on_dt;
+ 	}
+ 
+ 	clk = of_clk_get_by_name(clk_np, NPCM7XX_CLK_S_MCBYPCK);
+-	if (!IS_ERR(clk)) {
+-		pr_err("failed to find external MCBYPCK: %ld\n",
++	if (IS_ERR(clk)) {
++		pr_err("failed to find external MCBYPCK on device tree, err=%ld\n",
+ 			PTR_ERR(clk));
+ 		clk_put(clk);
++		goto npcm7xx_init_fail_no_clk_on_dt;
+ 	}
+ 
+ 	/* Register plls */
+@@ -705,6 +708,9 @@ static void __init npcm7xx_clk_init(struct device_node *clk_np)
+ 
+ 	return;
+ 
++npcm7xx_init_fail_no_clk_on_dt:
++	pr_err("see Documentation/devicetree/bindings/clock/"
++					"nuvoton,npcm750-clk.txt  for details\n");
+ npcm7xx_init_fail:
+ 	if (npcm7xx_clk_data->num)
+ 		kfree(npcm7xx_clk_data->hws);
+-- 
+2.14.1
