@@ -1,46 +1,111 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/6] iommu: of: make of_pci_map_rid() available for
-	other devices too
-Date: Tue, 1 May 2018 07:44:49 -0500
-Message-ID: <20180501124449.GA3009@rob-hp-laptop>
-References: <1524824826-29473-1-git-send-email-nipun.gupta@nxp.com>
-	<1525069641-8523-1-git-send-email-nipun.gupta@nxp.com>
-	<1525069641-8523-3-git-send-email-nipun.gupta@nxp.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 4/4] dt-bindings: mfd: max8998: Add charger subnode
+ binding
+Date: Tue, 1 May 2018 14:45:40 +0200
+Message-ID: <20180501124540.3icpjevaxp44ew2e@earth.universe>
+References: <1524844982-4714-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+ <1524844982-4714-5-git-send-email-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wwovjhgx53obeehm"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1525069641-8523-3-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1524844982-4714-5-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 30, 2018 at 11:57:17AM +0530, Nipun Gupta wrote:
-> iommu-map property is also used by devices with fsl-mc. This
-> patch moves the of_pci_map_rid to generic location, so that it
-> can be used by other busses too.
-> 
-> 'of_pci_map_rid' is renamed here to 'of_map_rid' and there is no
-> functional change done in the API.
-> 
-> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-> ---
->  drivers/iommu/of_iommu.c |   5 +--
->  drivers/of/base.c        | 102 +++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/of/irq.c         |   5 +--
->  drivers/pci/of.c         | 101 ----------------------------------------------
->  include/linux/of.h       |  11 +++++
->  include/linux/of_pci.h   |  10 -----
->  6 files changed, 117 insertions(+), 117 deletions(-)
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--wwovjhgx53obeehm
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Fri, Apr 27, 2018 at 06:03:02PM +0200, Pawe=C5=82 Chmiel wrote:
+> This patch adds devicetree bindings documentation for
+> battery charging controller as the subnode of MAX8998 PMIC.
+> It's based on current behavior of driver.
+>=20
+> Fixes: ee999fb3f17f ("mfd: max8998: Add support for Device Tree")
+> Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/max8998.txt | 22 +++++++++++++++++=
++++++
+>  1 file changed, 22 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Document=
+ation/devicetree/bindings/mfd/max8998.txt
+> index 23a3650ff2a2..f95610afb57f 100644
+> --- a/Documentation/devicetree/bindings/mfd/max8998.txt
+> +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
+> @@ -50,6 +50,21 @@ Additional properties required if max8998,pmic-buck2-d=
+vs-gpio is defined:
+>  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in microv=
+olts
+>    for buck2 regulator that can be selected using dvs gpio.
+> =20
+> +Charger: Configuration for battery charging controller should be added
+> +inside a child node named 'charger'.
+> +  Required properties:
+> +  - max8998,charge-eoc: Setup "End of Charge". If value equals 0,
+> +    remain value set from bootloader or default value will be used.
+> +    Valid values: 0, 10 - 45
+> +
+> +  - max8998,charge-restart: Setup "Charge Restart Level". If value equal=
+s 0,
+> +    remain value set from bootloader or default value will be used.
+> +    Valid values: -1, 0, 100, 150, 200
+> +
+> +  - max8998,charge-timeout: Setup "Charge Full Timeout". If value equals=
+ 0,
+> +    remain value set from bootloader or default value will be used.
+> +    Valid values: -1, 0, 5, 6, 7
+
+What are those values? seconds?
+
+> +
+>  Regulators: All the regulators of MAX8998 to be instantiated shall be
+>  listed in a child node named 'regulators'. Each regulator is represented
+>  by a child node of the 'regulators' node.
+> @@ -99,6 +114,13 @@ Example:
+>  		max8998,pmic-buck2-dvs-gpio =3D <&gpx0 0 3 0 0>; /* SET3 */
+>  		max8998,pmic-buck2-dvs-voltage =3D <1350000>, <1300000>;
+> =20
+> +		/* Charger configuration */
+> +		charger {
+> +			max8998,charge-eoc =3D <0>;
+> +			max8998,charge-restart =3D <(-1)>;
+> +			max8998,charge-timeout =3D <7>;
+> +		};
+> +
+>  		/* Regulators to instantiate */
+>  		regulators {
+>  			ldo2_reg: LDO2 {
+> --=20
+> 2.7.4
+>=20
+
+--wwovjhgx53obeehm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlroYXQACgkQ2O7X88g7
++pr1AQ/6A1S8l6YS2U74zbBTOpiO3Lt1Q0OYZf8fWH4OQP8W2BXR35/Ew35A0ggD
+gZpd2Zd5gZfm2AEzn6HNeTnDKl1Af0cZwF2ZkP6KM39f4Xm/F1EUytiCLgIZV6RW
+fR0ibhuVNgWybwv5VkPz+dQt7sPWBidz9Ekvsf5xo2OauV394Xo1Q29RtopfytSn
+FtjQrU++yQ7qals/RlNf6RTd5O6CAnGlkG52JtftIG7tDH4ArH0zng7JVXv75nxh
+j09+TtkUbVqpaAQon0Y2tB7FSrfHI4znxIC20MyZv9hukP2cPtk4Xh3OnQ+i+0pe
+p9scjUPRQ0x1ZYMIy/APIlTSC4985aJNV2D6JvJPpwWvgZeoDqlHjT7FTpu3cu0D
+yQdFWDAuexYmdLPdhCTx/7+3Kekjm1+LV3k9eR5gWFvyI5OyLpJtu+EwO4LC6N44
+q16q+hCzw/Uy7UL1lCtixfqJALiR1h3weFhxUQlp9rJ1o8X8iesI0bKL+twJMB6u
+2el4m8Tq5jboH5Uy2IgZve1HW7EcTFqOYjqJupda1ohrNIpLMrVawe7Dl5Ij2F9z
+u8H4zBlXBzfzRiSX6Rg/LaasLT8b5aV79CiKj39Z5A/QObiVQUWECvkzla2uMp+H
+hNSdnD1+8ZqjnamMJ2c2LRP3i9njdDclyWPOSdtZ2g9opAIL+o0=
+=ryrZ
+-----END PGP SIGNATURE-----
+
+--wwovjhgx53obeehm--
