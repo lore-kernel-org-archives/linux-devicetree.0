@@ -1,81 +1,73 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 07/11] irqchip: stm32: add stm32mp1 support with
- hierarchy domain
-Date: Tue, 1 May 2018 09:56:11 -0500
-Message-ID: <20180501145611.GA6842@rob-hp-laptop>
-References: <1524759514-12392-1-git-send-email-ludovic.Barre@st.com>
- <1524759514-12392-8-git-send-email-ludovic.Barre@st.com>
+Subject: Re: [PATCH] clk:aspeed: Fix reset bits for PCI/VGA and PECI
+Date: Tue, 1 May 2018 10:02:36 -0500
+Message-ID: <20180501150236.GA15330@rob-hp-laptop>
+References: <20180426172232.12535-1-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1524759514-12392-8-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald BAEZA <gerald.baeza@st.com>, Loic PALLARDY <loic.pallardy@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <20180426172232.12535-1-jae.hyun.yoo@linux.intel.com>
+Sender: stable-owner@vger.kernel.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 06:18:30PM +0200, Ludovic Barre wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
+On Thu, Apr 26, 2018 at 10:22:32AM -0700, Jae Hyun Yoo wrote:
+> This commit fixes incorrect setting of reset bits for PCI/VGA and
+> PECI modules.
 > 
-> Exti controller has been differently integrated on stm32mp1 SoC.
-> A parent irq has only one external interrupt. A hierachy domain could
-> be used. Handlers are call by parent, each parent interrupt could be
-> masked and unmasked according to the needs.
+> 1. Reset bit for PCI/VGA is 8.
+> 2. PECI reset bit is missing so added bit 10 as its reset bit.
 > 
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+> Fixes: 15ed8ce5f84e ("clk: aspeed: Register gated clocks")
+> Cc: stable <stable@vger.kernel.org>
 > ---
->  .../interrupt-controller/st,stm32-exti.txt         |   3 +
->  drivers/irqchip/irq-stm32-exti.c                   | 322 +++++++++++++++++++++
->  2 files changed, 325 insertions(+)
+>  drivers/clk/clk-aspeed.c                 | 4 ++--
+>  include/dt-bindings/clock/aspeed-clock.h | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
-> index edf03f0..136bd61 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
-> @@ -5,11 +5,14 @@ Required properties:
->  - compatible: Should be:
->      "st,stm32-exti"
->      "st,stm32h7-exti"
-> +    "st,stm32mp1-exti"
->  - reg: Specifies base physical address and size of the registers
->  - interrupt-controller: Indentifies the node as an interrupt controller
->  - #interrupt-cells: Specifies the number of cells to encode an interrupt
->    specifier, shall be 2
->  - interrupts: interrupts references to primary interrupt controller
-> +  (only needed for exti controller with multiple exti under
-> +  same parent interrupt: st,stm32-exti and st,stm32h7-exti")
+> diff --git a/drivers/clk/clk-aspeed.c b/drivers/clk/clk-aspeed.c
+> index 5eb50c31e455..2c23e7d7ba28 100644
+> --- a/drivers/clk/clk-aspeed.c
+> +++ b/drivers/clk/clk-aspeed.c
+> @@ -88,7 +88,7 @@ static const struct aspeed_gate_data aspeed_gates[] = {
+>  	[ASPEED_CLK_GATE_GCLK] =	{  1,  7, "gclk-gate",		NULL,	0 }, /* 2D engine */
+>  	[ASPEED_CLK_GATE_MCLK] =	{  2, -1, "mclk-gate",		"mpll",	CLK_IS_CRITICAL }, /* SDRAM */
+>  	[ASPEED_CLK_GATE_VCLK] =	{  3,  6, "vclk-gate",		NULL,	0 }, /* Video Capture */
+> -	[ASPEED_CLK_GATE_BCLK] =	{  4, 10, "bclk-gate",		"bclk",	0 }, /* PCIe/PCI */
+> +	[ASPEED_CLK_GATE_BCLK] =	{  4,  8, "bclk-gate",		"bclk",	0 }, /* PCIe/PCI */
+>  	[ASPEED_CLK_GATE_DCLK] =	{  5, -1, "dclk-gate",		NULL,	0 }, /* DAC */
+>  	[ASPEED_CLK_GATE_REFCLK] =	{  6, -1, "refclk-gate",	"clkin", CLK_IS_CRITICAL },
+>  	[ASPEED_CLK_GATE_USBPORT2CLK] =	{  7,  3, "usb-port2-gate",	NULL,	0 }, /* USB2.0 Host port 2 */
+> @@ -297,7 +297,7 @@ static const u8 aspeed_resets[] = {
+>  	[ASPEED_RESET_JTAG_MASTER] = 22,
+>  	[ASPEED_RESET_MIC]	= 18,
+>  	[ASPEED_RESET_PWM]	=  9,
+> -	[ASPEED_RESET_PCIVGA]	=  8,
+> +	[ASPEED_RESET_PECI]	= 10,
+>  	[ASPEED_RESET_I2C]	=  2,
+>  	[ASPEED_RESET_AHB]	=  1,
+>  };
+> diff --git a/include/dt-bindings/clock/aspeed-clock.h b/include/dt-bindings/clock/aspeed-clock.h
+> index d3558d897a4d..8d69b9134bef 100644
+> --- a/include/dt-bindings/clock/aspeed-clock.h
+> +++ b/include/dt-bindings/clock/aspeed-clock.h
+> @@ -45,7 +45,7 @@
+>  #define ASPEED_RESET_JTAG_MASTER	3
+>  #define ASPEED_RESET_MIC		4
+>  #define ASPEED_RESET_PWM		5
+> -#define ASPEED_RESET_PCIVGA		6
+> +#define ASPEED_RESET_PECI		6
+
+You can't really be changing these as they represent an ABI.
+
+Is there no PCIVGA reset?
+
+>  #define ASPEED_RESET_I2C		7
+>  #define ASPEED_RESET_AHB		8
 >  
->  Example:
->  
-> diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-> index b38c655..ebf7146 100644
-> --- a/drivers/irqchip/irq-stm32-exti.c
-> +++ b/drivers/irqchip/irq-stm32-exti.c
-
-[...]
-
-> +static const struct stm32_desc_irq stm32mp1_desc_irq[] = {
-> +	{ .exti = 1, .irq_parent = 7 },
-> +	{ .exti = 2, .irq_parent = 8 },
-> +	{ .exti = 3, .irq_parent = 9 },
-> +	{ .exti = 4, .irq_parent = 10 },
-> +	{ .exti = 5, .irq_parent = 23 },
-> +	{ .exti = 6, .irq_parent = 64 },
-> +	{ .exti = 7, .irq_parent = 65 },
-> +	{ .exti = 8, .irq_parent = 66 },
-> +	{ .exti = 9, .irq_parent = 67 },
-> +	{ .exti = 10, .irq_parent = 40 },
-> +	{ .exti = 11, .irq_parent = 42 },
-> +	{ .exti = 12, .irq_parent = 76 },
-> +	{ .exti = 13, .irq_parent = 77 },
-> +	{ .exti = 14, .irq_parent = 121 },
-> +	{ .exti = 15, .irq_parent = 127 },
-> +	{ .exti = 16, .irq_parent = 1 },
-> +	{ .exti = 65, .irq_parent = 144 },
-> +	{ .exti = 68, .irq_parent = 143 },
-> +	{ .exti = 73, .irq_parent = 129 },
-> +};
-
-You can use an interrupt-map property rather than put this into the 
-driver.
+> -- 
+> 2.17.0
+> 
