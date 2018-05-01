@@ -1,100 +1,57 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH net-next v2 08/15] net: stmmac: dwmac-sun8i: Allow getting syscon regmap from external device
-Date: Wed,  2 May 2018 00:12:20 +0800
-Message-ID: <20180501161227.2110-9-wens@csie.org>
-References: <20180501161227.2110-1-wens@csie.org>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180501161227.2110-1-wens@csie.org>
-Sender: netdev-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, Icenowy Zheng <icenowy@aosc.io>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 03/21] clk: sunxi-ng: Enable DE2_CCU for
+ Allwinner 64-bit SoCs
+Date: Wed, 2 May 2018 00:23:38 +0800
+Message-ID: <CAGb2v66MKooAAroCzYdsXZDY0Oh66Dydpy59xj80QfiY+5mz_A@mail.gmail.com>
+References: <20180430114058.5061-1-jagan@amarulasolutions.com> <20180430114058.5061-4-jagan@amarulasolutions.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBIVJULLQKGQE3MPYI3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180430114058.5061-4-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On the Allwinner R40 SoC, the "GMAC clock" register is in the CCU
-address space. Using a standard syscon to access it provides no
-coordination with the CCU driver for register access. Neither does
-it prevent this and other drivers from accessing other, maybe critical,
-clock control registers. On other SoCs, the register is in the "system
-control" address space, which might also contain controls for mapping
-SRAM to devices or the CPU. This hardware has the same issues.
+On Mon, Apr 30, 2018 at 7:40 PM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> Allwinner 64-bit SoC like H5/A64 has DE2 CCU so enable them
+> as default.
+>
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+>  drivers/clk/sunxi-ng/Kconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
+> index 79dfd296c3d1..1fffd3bf6ff3 100644
+> --- a/drivers/clk/sunxi-ng/Kconfig
+> +++ b/drivers/clk/sunxi-ng/Kconfig
+> @@ -58,6 +58,8 @@ config SUN8I_V3S_CCU
+>
+>  config SUN8I_DE2_CCU
+>         bool "Support for the Allwinner SoCs DE2 CCU"
+> +       default ARM64 && ARCH_SUNXI
+> +       depends on (DRM_SUN4I && (ARM64 && ARCH_SUNXI)) || COMPILE_TEST
 
-Instead, for these types of setups, we let the device containing the
-control register create a regmap tied to it. We can then get the device
-from the existing syscon phandle, and retrieve the regmap with
-dev_get_regmap().
+There is no reason to depend on DRM_SUN4I. There is no compile dependency.
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 50 ++++++++++++++++++-
- 1 file changed, 49 insertions(+), 1 deletion(-)
+Also, this is needed on SUN8I as well, pretty much anything with DE 2.0.
+So you shouldn't limit it to ARM64. That pretty much breaks things for
+people with A83T's or H3's. In fact you should enable it by default for
+these as well.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index bbc051474806..79e104a20e20 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -983,6 +983,34 @@ static struct mac_device_info *sun8i_dwmac_setup(void *ppriv)
- 	return mac;
- }
- 
-+static struct regmap *sun8i_dwmac_get_syscon_from_dev(struct device_node *node)
-+{
-+	struct device_node *syscon_node;
-+	struct platform_device *syscon_pdev;
-+	struct regmap *regmap = NULL;
-+
-+	syscon_node = of_parse_phandle(node, "syscon", 0);
-+	if (!syscon_node)
-+		return ERR_PTR(-ENODEV);
-+
-+	syscon_pdev = of_find_device_by_node(syscon_node);
-+	if (!syscon_pdev) {
-+		/* platform device might not be probed yet */
-+		regmap = ERR_PTR(-EPROBE_DEFER);
-+		goto out_put_node;
-+	}
-+
-+	/* If no regmap is found then the other device driver is at fault */
-+	regmap = dev_get_regmap(&syscon_pdev->dev, NULL);
-+	if (!regmap)
-+		regmap = ERR_PTR(-EINVAL);
-+
-+	platform_device_put(syscon_pdev);
-+out_put_node:
-+	of_node_put(syscon_node);
-+	return regmap;
-+}
-+
- static int sun8i_dwmac_probe(struct platform_device *pdev)
- {
- 	struct plat_stmmacenet_data *plat_dat;
-@@ -1027,7 +1055,27 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
- 		gmac->regulator = NULL;
- 	}
- 
--	regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "syscon");
-+	/* The "GMAC clock control" register might be located in the
-+	 * CCU address range (on the R40), or the system control address
-+	 * range (on most other sun8i and later SoCs).
-+	 *
-+	 * The former controls most if not all clocks in the SoC. The
-+	 * latter has an SoC identification register, and on some SoCs,
-+	 * controls to map device specific SRAM to either the intended
-+	 * peripheral, or the CPU address space.
-+	 *
-+	 * In either case, there should be a coordinated and restricted
-+	 * method of accessing the register needed here. This is done by
-+	 * having the device export a custom regmap, instead of a generic
-+	 * syscon, which grants all access to all registers.
-+	 *
-+	 * To support old device trees, we fall back to using the syscon
-+	 * interface if possible.
-+	 */
-+	regmap = sun8i_dwmac_get_syscon_from_dev(pdev->dev.of_node);
-+	if (IS_ERR(regmap))
-+		regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-+							 "syscon");
- 	if (IS_ERR(regmap)) {
- 		ret = PTR_ERR(regmap);
- 		dev_err(&pdev->dev, "Unable to map syscon: %d\n", ret);
--- 
-2.17.0
+ChenYu
+
+>
+>  config SUN8I_R40_CCU
+>         bool "Support for the Allwinner R40 CCU"
+> --
+> 2.14.3
+>
