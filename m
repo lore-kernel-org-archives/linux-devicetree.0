@@ -1,101 +1,80 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v4 2/3] dt-bindings: mmc: Add binding for BlueField SoC
-Date: Tue, 1 May 2018 19:10:22 +0000
-Message-ID: <AM2PR05MB0753E1D0ADA97E687EDD59C6A1810@AM2PR05MB0753.eurprd05.prod.outlook.com>
-References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
- <1525185155-24469-2-git-send-email-lsun@mellanox.com>
- <20180501162446.GA10012@rob-hp-laptop>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] Input: atmel_mxt_ts - add missing compatible strings to
+ OF device table
+Date: Tue, 1 May 2018 14:42:08 -0500
+Message-ID: <CAL_JsqJ-UTGrPm2tiS1yVFweWB_LH2JSBpOpMtogTYFi7pCsGA@mail.gmail.com>
+References: <20180410095340.24074-1-javierm@redhat.com> <20180501184853.GB52077@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501162446.GA10012@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <20180501184853.GB52077@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Javier Martinez Canillas <javierm@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-input@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Nick Dyer <nick@shmanahar.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks! Updated in v5 2/3.
+On Tue, May 1, 2018 at 1:48 PM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Tue, Apr 10, 2018 at 11:53:40AM +0200, Javier Martinez Canillas wrote:
+>> Commit af503716ac14 ("i2c: core: report OF style module alias for devices
+>> registered via OF") fixed how the I2C core reports the module alias when
+>> devices are registered via OF.
+>>
+>> But the atmel_mxt_ts driver only has an "atmel,maxtouch" compatible in its
+>> OF device ID table, so if a Device Tree is using a different one, autoload
+>> won't be working for the module (the matching works because the I2C device
+>> ID table is used as a fallback).
+>>
+>> So add compatible strings for each of the entries in the I2C device table.
+>>
+>> Fixes: af503716ac14 ("i2c: core: report OF style module alias for devices registered via OF")
+>> Reported-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+>> ---
+>>
+>>  Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 6 +++++-
+>>  drivers/input/touchscreen/atmel_mxt_ts.c                   | 4 ++++
+>>  2 files changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>> index 23e3abc3fdef..cd43fb8bc2ce 100644
+>> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>> @@ -1,8 +1,12 @@
+>>  Atmel maXTouch touchscreen/touchpad
+>>
+>>  Required properties:
+>> -- compatible:
+>> +- compatible: Must be one of the following
+>> +    atmel,qt602240_ts
+>> +    atmel,atmel_mxt_ts
+>> +    atmel,atmel_mxt_tp
+>>      atmel,maxtouch
+>> +    atmel,mXT224
+>
+> I do not think we should document ad-hoc compatible strings that were
+> introduced by various vendors as the documented ones, so I'd rather
+> dropped this chunk and leave only "atmel,maxtouch" as compatible that
+> everyone should be using.
+>
+> The changes to the driver to support the existing DTSes can of course be
+> applied.
+>
+> Rob, any objections?
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Tuesday, May 1, 2018 12:25 PM
-> To: Liming Sun <lsun@mellanox.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>; Mark Rutland
-> <mark.rutland@arm.com>; Jaehoon Chung <jh80.chung@samsung.com>;
-> Catalin Marinas <catalin.marinas@arm.com>; Will Deacon
-> <will.deacon@arm.com>; linux-mmc@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v4 2/3] dt-bindings: mmc: Add binding for BlueField S=
-oC
->=20
-> On Tue, May 01, 2018 at 10:32:34AM -0400, Liming Sun wrote:
-> > This commit adds "mellanox,bluefield-dw-mshc" for dwmmc driver
-> > extension on Mellanox BlueField SoC platform.
-> >
-> > Signed-off-by: Liming Sun <lsun@mellanox.com>
-> > ---
-> >  .../devicetree/bindings/mmc/bluefield-dw-mshc.txt  | 29
-> ++++++++++++++++++++++
-> >  1 file changed, 29 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mmc/bluefield-
-> dw-mshc.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/mmc/bluefield-dw-
-> mshc.txt b/Documentation/devicetree/bindings/mmc/bluefield-dw-
-> mshc.txt
-> > new file mode 100644
-> > index 0000000..75bd844d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt
-> > @@ -0,0 +1,29 @@
-> > +* Mellanox Bluefield SoC specific extensions to the Synopsys Designwar=
-e
-> > +  Mobile Storage Host Controller
-> > +
-> > +Read synopsys-dw-mshc.txt for more details
-> > +
-> > +The Synopsys designware mobile storage host controller is used to
-> interface
-> > +a SoC with storage medium such as eMMC or SD/MMC cards. This file
-> documents
-> > +differences between the core Synopsys dw mshc controller properties
-> described
-> > +by synopsys-dw-mshc.txt and the properties used by the Mellanox
-> Bluefield SoC
-> > +specific extensions to the Synopsys Designware Mobile Storage Host
-> Controller.
-> > +
-> > +Required Properties:
-> > +
-> > +* compatible: should be one of the following.
-> > +  - "mellanox,bluefield-dw-mshc": for controllers with Mellanox Bluefi=
-eld
-> SoC
-> > +    specific extensions.
-> > +
-> > +Example:
-> > +
-> > +	/* Mellanox Bluefield SoC MMC */
-> > +	mmc@0x6008000 {
->=20
-> Drop the '0x'.
->=20
-> Building your dtb with 'W=3D1' will warn on this.
->=20
-> With that,
->=20
-> Reviewed-by: Rob Herring <robh@kernel.org>
->=20
-> > +		compatible =3D "mellanox,bluefield-dw-mshc";
-> > +		reg =3D <0x6008000 0x400>;
-> > +		interrupts =3D <32>;
-> > +		fifo-depth =3D <0x100>;
-> > +		clock-frequency =3D <24000000>;
-> > +		bus-width =3D <8>;
-> > +		cap-mmc-highspeed;
-> > +	};
-> > --
-> > 1.8.3.1
-> >
+I'd prefer we list them in the binding as deprecated. Then we document
+somewhere besides this thread to not use them.
+
+And there are 3 dts changes needed as well:
+
+$ git grep atmel,mXT224
+$ git grep atmel,qt6
+$ git grep atmel,atmel_mxt
+arch/arm/boot/dts/at91-sama5d4ek.dts:
+ compatible = "atmel,atmel_mxt_ts";
+arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts:
+compatible = "atmel,atmel_mxt_tp";
+arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts:
+compatible = "atmel,atmel_mxt_ts";
+
+Rob
