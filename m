@@ -1,41 +1,60 @@
 From: Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v7 3/3] pinctrl: bcm2835: Add support for output-low output-high properties
-Date: Mon, 30 Apr 2018 20:42:14 -0400
-Message-ID: <1525135334-28506-3-git-send-email-matheus@castello.eng.br>
+Subject: Re: [PATCH v7 0/3] bcm2835: Add generic pinctrl support
+Date: Mon, 30 Apr 2018 20:42:12 -0400
+Message-ID: <1525135334-28506-1-git-send-email-matheus@castello.eng.br>
 References: <1525030092-3643-3-git-send-email-matheus@castello.eng.br>
- <1525135334-28506-1-git-send-email-matheus@castello.eng.br>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525135334-28506-1-git-send-email-matheus@castello.eng.br>
+In-Reply-To: <1525030092-3643-3-git-send-email-matheus@castello.eng.br>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linus.walleij@linaro.org, stefan.wahren@i2se.com, eric@anholt.net
 Cc: swarren@wwwdotorg.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Matheus Castello <matheus@castello.eng.br>
 List-Id: devicetree@vger.kernel.org
 
-Properties to set initial value of pin output buffer.
-This can be useful for configure hardware in overlay files, and in early
-boot for checking it states in QA sanity tests.
+This series adds support for generic binding for pinctrl bcm2835 driver,
+and add the code for set output buffer of a pin using the output-low and
+output-high generic properties.
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-Reviewed-by: Eric Anholt <eric@anholt.net>
----
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Tested on Raspberry Pi Zero W, based on bcm2835 SoC.
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index a0b1f5f..136ccaf 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -965,6 +965,11 @@ static int bcm2835_pinconf_set(struct pinctrl_dev *pctldev,
- 			bcm2835_pull_config_set(pc, pin, BCM2835_PUD_UP);
- 			break;
- 
-+		/* Set output-high or output-low */
-+		case PIN_CONFIG_OUTPUT:
-+			bcm2835_gpio_set_bit(pc, arg ? GPSET0 : GPCLR0, pin);
-+			break;
-+
- 		default:
- 			return -EINVAL;
- 
--- 
+Changes since v6:
+- I was dumb and calculate the PIN_CONFIG_END (x7f) +1 (x80) and hard coded it.
+Fix it using recommended define from pinconf-generic.h PIN_CONFIG_END + 1
+- In v6 I did not keep the review tags
+
+Changes since v5:
+(Suggested by Stefan Wahren)
+- Fix checkpatch warnings
+- Use PIN_CONFIG_END+1 for bcm2835_pinconf_param for our pull legacy
+configuration
+(Suggested by Linus Walleij)
+- Only resend patch 2+3
+- Add Stephen Warren for subsequent postings
+
+Changes since v4:
+(Suggested by Rob Herring)
+- Change dt-bindings docs driver reference to hardware in case the BCM2835
+pin configuration and multiplexing
+
+Changes since v3:
+(Suggested by Stefan Wahren)
+- Change dt-bindings docs patch order and subject
+
+Changes since v2:
+(Suggested by Eric Anholt)
+- Remove PACK and UNPACK macros
+- Use pinconf_to_config_* functions
+(Suggested by Stefan Wahren)
+- Fold Kconfig changes with the driver changes in a single patch
+- Add devicetree bindings documentations about generic properties support
+- Add devicetree bindings maintainers
+
+Matheus Castello (2):
+  pinctrl: bcm2835: Add support for generic pinctrl binding
+  pinctrl: bcm2835: Add support for output-low output-high properties
+
+ drivers/pinctrl/bcm/Kconfig           |   1 +
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 100 +++++++++++++++++++++-------------
+ 2 files changed, 64 insertions(+), 37 deletions(-)
+
+--
 2.7.4
