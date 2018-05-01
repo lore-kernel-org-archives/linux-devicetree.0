@@ -1,94 +1,43 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 09/21] arm64: dts: allwinner: a64: Add HDMI support
-Date: Tue, 1 May 2018 11:20:50 -0500
-Message-ID: <20180501162050.GA4310@rob-hp-laptop>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 10/21] drm/sun4i: Enable DesignWare HDMI for Allwinner
+ 64-bit SoCs
+Date: Wed, 2 May 2018 00:20:48 +0800
+Message-ID: <CAGb2v67_WjVOfz0maTU7K9WWEChGjQoYqpc=xZkmy4W64+9DLw@mail.gmail.com>
 References: <20180430114058.5061-1-jagan@amarulasolutions.com>
- <20180430114058.5061-10-jagan@amarulasolutions.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+ <20180430114058.5061-11-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBZFHULLQKGQEV4VGPDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180430114058.5061-10-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180430114058.5061-11-jagan@amarulasolutions.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Stephen Boyd <sboyd@kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 30, 2018 at 05:10:46PM +0530, Jagan Teki wrote:
-> HDMI on Allwinner A64 has similar behavior like H3/H5, so
-> reuse the same dts node details for A64.
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 28 +++++++++++++++++++++++++++
->  include/dt-bindings/clock/sun50i-a64-ccu.h    |  2 ++
->  2 files changed, 30 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index 67b80bbe5bf5..da9128ae836d 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -644,6 +644,34 @@
->  			#interrupt-cells = <3>;
->  		};
->  
-> +		hdmi: hdmi@1ee0000 {
-> +			compatible = "allwinner,sun50i-a64-dw-hdmi",
-> +				     "allwinner,sun8i-a83t-dw-hdmi";
-> +			reg = <0x01ee0000 0x10000>;
-> +			reg-io-width = <1>;
-> +			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI_DDC>,
-> +				 <&ccu CLK_HDMI>;
-> +			clock-names = "iahb", "isfr", "tmds";
-> +			resets = <&ccu RST_BUS_HDMI1>;
-> +			reset-names = "ctrl";
-> +			phys = <&hdmi_phy>;
-> +			phy-names = "hdmi-phy";
-> +			status = "disabled";
-> +		};
-> +
-> +		hdmi_phy: hdmi-phy@1ef0000 {
-> +			compatible = "allwinner,sun50i-a64-hdmi-phy",
-> +				     "allwinner,sun8i-h3-hdmi-phy";
-> +			reg = <0x01ef0000 0x10000>;
-> +			clocks = <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI_DDC>,
-> +				 <&ccu CLK_PLL_VIDEO1>;
-> +			clock-names = "bus", "mod", "pll-0";
-> +			resets = <&ccu RST_BUS_HDMI0>;
-> +			reset-names = "phy";
-> +			#phy-cells = <0>;
-
-HDMI is disabled by default, but the phy is not?
-
-> +		};
-> +
->  		rtc: rtc@1f00000 {
->  			compatible = "allwinner,sun6i-a31-rtc";
->  			reg = <0x01f00000 0x54>;
-> diff --git a/include/dt-bindings/clock/sun50i-a64-ccu.h b/include/dt-bindings/clock/sun50i-a64-ccu.h
-> index d66432c6e675..41c09df797ef 100644
-> --- a/include/dt-bindings/clock/sun50i-a64-ccu.h
-> +++ b/include/dt-bindings/clock/sun50i-a64-ccu.h
-> @@ -45,6 +45,8 @@
->  
->  #define CLK_PLL_PERIPH0		11
->  
-> +#define CLK_PLL_VIDEO1		15
-> +
-
-This belongs in the clock binding patch.
-
->  #define CLK_BUS_MIPI_DSI	28
->  #define CLK_BUS_CE		29
->  #define CLK_BUS_DMA		30
-> -- 
-> 2.14.3
-> 
+T24gTW9uLCBBcHIgMzAsIDIwMTggYXQgNzo0MCBQTSwgSmFnYW4gVGVraSA8amFnYW5AYW1hcnVs
+YXNvbHV0aW9ucy5jb20+IHdyb3RlOgo+IEFsbHdpbm5lciA2NC1iaXQgU29DIGxpa2UgSDUvQTY0
+IGhhcyBEZXNpZ25XYXJlIEhETUkgc28KPiBlbmFibGUgdGhlbSBhcyBkZWZhdWx0LgoKU2hvdWxk
+IHdlIG5vdCBhbHNvIGVuYWJsZSBpdCBieSBkZWZhdWx0IGZvciBTVU44SSAoQTgzVCwgSDMsIFI0
+MD8sIGV0Yy4pCgo+IFNpZ25lZC1vZmYtYnk6IEphZ2FuIFRla2kgPGphZ2FuQGFtYXJ1bGFzb2x1
+dGlvbnMuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvS2NvbmZpZyB8IDEgKwo+
+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L2dwdS9kcm0vc3VuNGkvS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9LY29uZmlnCj4g
+aW5kZXggZWVlNmJjMGVhZjk3Li42MDQ2OGE3NzlhNjMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL3N1bjRpL0tjb25maWcKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvS2NvbmZp
+Zwo+IEBAIC00Miw2ICs0Miw3IEBAIGNvbmZpZyBEUk1fU1VONElfQkFDS0VORAo+Cj4gIGNvbmZp
+ZyBEUk1fU1VOOElfRFdfSERNSQo+ICAgICAgICAgdHJpc3RhdGUgIlN1cHBvcnQgZm9yIEFsbHdp
+bm5lciB2ZXJzaW9uIG9mIERlc2lnbldhcmUgSERNSSIKPiArICAgICAgIGRlZmF1bHQgQVJNNjQg
+JiYgQVJDSF9TVU5YSQo+ICAgICAgICAgZGVwZW5kcyBvbiBEUk1fU1VONEkKPiAgICAgICAgIHNl
+bGVjdCBEUk1fRFdfSERNSQo+ICAgICAgICAgaGVscAo+IC0tCj4gMi4xNC4zCj4KX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
