@@ -1,120 +1,43 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
-Date: Tue, 1 May 2018 09:05:42 -0500
-Message-ID: <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
-References: <20180424163458.11947-1-johan@kernel.org> <20180424163458.11947-5-johan@kernel.org>
- <CAL_Jsq+mCp=geT8t_j+0fuTxAB7C9RYn6pESRpLc2GH273fM1Q@mail.gmail.com> <20180426091018.GU4615@localhost>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC 01/10] ARM: dts: exynos: Remove Exynos5440
+Date: Tue, 1 May 2018 09:07:25 -0500
+Message-ID: <20180501140725.GA25487@rob-hp-laptop>
+References: <20180424203239.21885-1-krzk@kernel.org>
+ <20180424203239.21885-2-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180426091018.GU4615@localhost>
+Content-Disposition: inline
+In-Reply-To: <20180424203239.21885-2-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tejun Heo <tj@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfounda>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 4:10 AM, Johan Hovold <johan@kernel.org> wrote:
-> On Wed, Apr 25, 2018 at 01:16:58PM -0500, Rob Herring wrote:
->> On Tue, Apr 24, 2018 at 11:34 AM, Johan Hovold <johan@kernel.org> wrote:
->> > Add binding for u-blox GNSS receivers.
->> >
->> > Note that the u-blox product names encodes form factor (e.g. "neo"),
->> > chipset (e.g. "8") and variant (e.g. "q"), but that only formfactor and
->> > chipset is used for the compatible strings (for now).
->> >
->> > Signed-off-by: Johan Hovold <johan@kernel.org>
->> > ---
->> >  .../devicetree/bindings/gnss/u-blox.txt       | 31 +++++++++++++++++++
->> >  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
->> >  2 files changed, 32 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/gnss/u-blox.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/gnss/u-blox.txt b/Documentation/devicetree/bindings/gnss/u-blox.txt
->> > new file mode 100644
->> > index 000000000000..bb54b83a177f
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/gnss/u-blox.txt
->> > @@ -0,0 +1,31 @@
->> > +u-blox GNSS Receiver DT binding
->> > +
->> > +The u-blox GNSS receivers can use UART, DDC (I2C), SPI and USB interfaces.
->> > +
->> > +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
->> > +properties.
->> > +
->> > +Required Properties:
->> > +
->> > +- compatible   : Must be one of
->> > +
->> > +                       "u-blox,neo-8"
->> > +                       "u-blox,neo-m8"
->> > +
->> > +- vcc-supply   : Main voltage regulator (VCC)
->>
->> What about V_BCKP?
->
-> That's the backup supply for for the RTC and batter-backed RAM. In
-> configurations where a battery is not used it should be connected to
-> VCC.
->
-> How would you model that? I can enable a vbckp regulator at probe, but
-> what if someone then accurately describes the corresponding pin as being
-> connected to VCC?
+On Tue, Apr 24, 2018 at 10:32:30PM +0200, Krzysztof Kozlowski wrote:
+> The Exynos5440 (quad-core A15 with GMAC, PCIe, SATA) was targeting
+> server platforms but it did not make it to the market really.  There are
+> no development boards with it and probably there are no real products
+> neither.  The development for Exynos5440 ended in 2013 and since then
+> the platform is in maintenance mode.
+> 
+> Remove all Device Tree sources for Exynos5440, as first step of removal
+> of the platform to simplify the code and drivers.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  .../bindings/arm/samsung/samsung-boards.txt        |   2 -
+>  arch/arm/boot/dts/Makefile                         |   2 -
+>  arch/arm/boot/dts/exynos5440-sd5v1.dts             |  42 ---
+>  arch/arm/boot/dts/exynos5440-ssdk5440.dts          |  81 -----
+>  arch/arm/boot/dts/exynos5440-tmu-sensor-conf.dtsi  |  20 --
+>  arch/arm/boot/dts/exynos5440-trip-points.dtsi      |  21 --
+>  arch/arm/boot/dts/exynos5440.dtsi                  | 355 ---------------------
+>  7 files changed, 523 deletions(-)
+>  delete mode 100644 arch/arm/boot/dts/exynos5440-sd5v1.dts
+>  delete mode 100644 arch/arm/boot/dts/exynos5440-ssdk5440.dts
+>  delete mode 100644 arch/arm/boot/dts/exynos5440-tmu-sensor-conf.dtsi
+>  delete mode 100644 arch/arm/boot/dts/exynos5440-trip-points.dtsi
+>  delete mode 100644 arch/arm/boot/dts/exynos5440.dtsi
 
-You mean how to model a battery? It would just be a 'regulator'
-because the regulator binding covers any supply really.
-
-Then you just set both rails to the same supply phandle.
-
-> I guess we can check if the regulators are identical,
-> and then just have the driver ignore V_BKUP. Knowing whether there is
-> a (hopefully charged) battery connected could be useful.
-
-Regulators are ref counted, so just enable it twice. Or the driver can
-just ignore it until it supports battery backup.
-
-> I can't seem to find any other bindings that describe battery supplies,
-> but I'll add it here.
-
-There must be some. But then the battery and charger bindings are not
-in the best shape.
-
->> > +
->> > +Optional Properties:
->>
->> reg is required if using I2C, SPI, or USB.
->
-> I'll add that (even if there is no driver support for these yet).
->
->> Datasheet also shows an interrupt pin.
->
-> Not used currently, but I'll add it to the binding as well.
->
->> > +
->> > +- timepulse-gpios      : Timepulse (e.g. 1PPS) GPIO (TIMEPULSE)
->>
->> Why the 3rd "TIMEPULSE"?
->
-> That's the pin name, which in this case is identical to the property
-> name, so I'll drop it here.
-
-Then what is the 2nd "Timepulse"?
-
-Maybe just a "pin name: X" prefix so it is clear.
-
-> Take a look at the sirf binding; vendors use different names for their
-> timepulse pins and in that case I added the actual pin names (1PPS, TM)
-> in parenthesis after the description.
->
-> Note that I mentioned "timepulse-gpios" in the generic binding with the
-> intent of trying to enforce a generic name for pins with such a
-> function (similarly for "enable-gpios", which I guess is already
-> established).
-
-Yes, I think that's good.
-
-Though with the enable-gpios I was debating the name for sirfstar a
-bit because it isn't the normal drive it active to enable, but rather
-a pulse to enable or disable.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
