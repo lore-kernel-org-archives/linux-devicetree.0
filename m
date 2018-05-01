@@ -1,111 +1,71 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 4/4] dt-bindings: mfd: max8998: Add charger subnode
- binding
-Date: Tue, 1 May 2018 14:45:40 +0200
-Message-ID: <20180501124540.3icpjevaxp44ew2e@earth.universe>
-References: <1524844982-4714-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
- <1524844982-4714-5-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: mmc: Add binding for BlueField SoC
+Date: Tue, 1 May 2018 07:48:00 -0500
+Message-ID: <20180501124800.GA6206@rob-hp-laptop>
+References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+ <1525099868-45094-2-git-send-email-lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wwovjhgx53obeehm"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1524844982-4714-5-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+In-Reply-To: <1525099868-45094-2-git-send-email-lsun@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+To: Liming Sun <lsun@mellanox.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---wwovjhgx53obeehm
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Fri, Apr 27, 2018 at 06:03:02PM +0200, Pawe=C5=82 Chmiel wrote:
-> This patch adds devicetree bindings documentation for
-> battery charging controller as the subnode of MAX8998 PMIC.
-> It's based on current behavior of driver.
->=20
-> Fixes: ee999fb3f17f ("mfd: max8998: Add support for Device Tree")
-> Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+On Mon, Apr 30, 2018 at 10:51:07AM -0400, Liming Sun wrote:
+> This commit adds "mellanox,bluefield-dw-mshc" for dwmmc driver
+> extension on Mellanox BlueField SoC platform.
+> 
+> Signed-off-by: Liming Sun <lsun@mellanox.com>
 > ---
->  Documentation/devicetree/bindings/mfd/max8998.txt | 22 +++++++++++++++++=
-+++++
->  1 file changed, 22 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Document=
-ation/devicetree/bindings/mfd/max8998.txt
-> index 23a3650ff2a2..f95610afb57f 100644
-> --- a/Documentation/devicetree/bindings/mfd/max8998.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
-> @@ -50,6 +50,21 @@ Additional properties required if max8998,pmic-buck2-d=
-vs-gpio is defined:
->  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in microv=
-olts
->    for buck2 regulator that can be selected using dvs gpio.
-> =20
-> +Charger: Configuration for battery charging controller should be added
-> +inside a child node named 'charger'.
-> +  Required properties:
-> +  - max8998,charge-eoc: Setup "End of Charge". If value equals 0,
-> +    remain value set from bootloader or default value will be used.
-> +    Valid values: 0, 10 - 45
+>  .../devicetree/bindings/mmc/bluefield-dw-mshc.txt  | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt
+> new file mode 100644
+> index 0000000..ee0dd61
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt
+> @@ -0,0 +1,29 @@
+> +* Mellanox Bluefield SoC specific extensions to the Synopsys Designware
+> +  Mobile Storage Host Controller
 > +
-> +  - max8998,charge-restart: Setup "Charge Restart Level". If value equal=
-s 0,
-> +    remain value set from bootloader or default value will be used.
-> +    Valid values: -1, 0, 100, 150, 200
+> +Read synopsys-dw-mshc.txt for more details
 > +
-> +  - max8998,charge-timeout: Setup "Charge Full Timeout". If value equals=
- 0,
-> +    remain value set from bootloader or default value will be used.
-> +    Valid values: -1, 0, 5, 6, 7
-
-What are those values? seconds?
-
+> +The Synopsys designware mobile storage host controller is used to interface
+> +a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
+> +differences between the core Synopsys dw mshc controller properties described
+> +by synopsys-dw-mshc.txt and the properties used by the Mellanox Bluefield SoC
+> +specific extensions to the Synopsys Designware Mobile Storage Host Controller.
 > +
->  Regulators: All the regulators of MAX8998 to be instantiated shall be
->  listed in a child node named 'regulators'. Each regulator is represented
->  by a child node of the 'regulators' node.
-> @@ -99,6 +114,13 @@ Example:
->  		max8998,pmic-buck2-dvs-gpio =3D <&gpx0 0 3 0 0>; /* SET3 */
->  		max8998,pmic-buck2-dvs-voltage =3D <1350000>, <1300000>;
-> =20
-> +		/* Charger configuration */
-> +		charger {
-> +			max8998,charge-eoc =3D <0>;
-> +			max8998,charge-restart =3D <(-1)>;
-> +			max8998,charge-timeout =3D <7>;
-> +		};
+> +Required Properties:
 > +
->  		/* Regulators to instantiate */
->  		regulators {
->  			ldo2_reg: LDO2 {
-> --=20
-> 2.7.4
->=20
+> +* compatible: should be one of the following.
+> +  - "mellanox,bluefield-dw-mshc": for controllers with Mellanox Bluefield SoC
+> +    specific extensions.
+> +
+> +Example:
+> +
+> +	/* Mellanox Bluefield SoC MMC */
+> +	dwmmc0@4,0 {
 
---wwovjhgx53obeehm
-Content-Type: application/pgp-signature; name="signature.asc"
+Still the same issues.
 
------BEGIN PGP SIGNATURE-----
+mmc@...
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlroYXQACgkQ2O7X88g7
-+pr1AQ/6A1S8l6YS2U74zbBTOpiO3Lt1Q0OYZf8fWH4OQP8W2BXR35/Ew35A0ggD
-gZpd2Zd5gZfm2AEzn6HNeTnDKl1Af0cZwF2ZkP6KM39f4Xm/F1EUytiCLgIZV6RW
-fR0ibhuVNgWybwv5VkPz+dQt7sPWBidz9Ekvsf5xo2OauV394Xo1Q29RtopfytSn
-FtjQrU++yQ7qals/RlNf6RTd5O6CAnGlkG52JtftIG7tDH4ArH0zng7JVXv75nxh
-j09+TtkUbVqpaAQon0Y2tB7FSrfHI4znxIC20MyZv9hukP2cPtk4Xh3OnQ+i+0pe
-p9scjUPRQ0x1ZYMIy/APIlTSC4985aJNV2D6JvJPpwWvgZeoDqlHjT7FTpu3cu0D
-yQdFWDAuexYmdLPdhCTx/7+3Kekjm1+LV3k9eR5gWFvyI5OyLpJtu+EwO4LC6N44
-q16q+hCzw/Uy7UL1lCtixfqJALiR1h3weFhxUQlp9rJ1o8X8iesI0bKL+twJMB6u
-2el4m8Tq5jboH5Uy2IgZve1HW7EcTFqOYjqJupda1ohrNIpLMrVawe7Dl5Ij2F9z
-u8H4zBlXBzfzRiSX6Rg/LaasLT8b5aV79CiKj39Z5A/QObiVQUWECvkzla2uMp+H
-hNSdnD1+8ZqjnamMJ2c2LRP3i9njdDclyWPOSdtZ2g9opAIL+o0=
-=ryrZ
------END PGP SIGNATURE-----
+And the unit-address looks wrong.
 
---wwovjhgx53obeehm--
+> +		compatible = "mellanox,bluefield-dw-mshc";
+> +		reg = <4 0x8000 0x400>;
+> +		interrupts = <32>;
+> +		fifo-depth = <0x100>;
+> +		clock-frequency = <24000000>;
+> +		bus-width = <8>;
+> +		cap-mmc-highspeed;
+> +	};
+> -- 
+> 1.8.3.1
+> 
