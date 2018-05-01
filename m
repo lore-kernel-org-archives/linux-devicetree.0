@@ -1,185 +1,82 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH net-next v2 07/15] net: stmmac: dwmac-sun8i: Use regmap_field for syscon register access
-Date: Wed,  2 May 2018 00:12:19 +0800
-Message-ID: <20180501161227.2110-8-wens@csie.org>
+Subject: [PATCH net-next v2 10/15] net: stmmac: dwmac-sun8i: Add support for
+ GMAC on Allwinner R40 SoC
+Date: Wed,  2 May 2018 00:12:22 +0800
+Message-ID: <20180501161227.2110-11-wens@csie.org>
 References: <20180501161227.2110-1-wens@csie.org>
-Return-path: <netdev-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180501161227.2110-1-wens@csie.org>
-Sender: netdev-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, Icenowy Zheng <icenowy@aosc.io>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On the Allwinner R40, the "GMAC clock" register is located in the CCU
-block, at a different register address than the other SoCs that have
-it in the "system control" block.
+The Allwinner R40 SoC has the EMAC controller supported by dwmac-sun8i.
+It is named "GMAC", while EMAC refers to the 10/100 Mbps Ethernet
+controller supported by sun4i-emac. The controller is the same, but
+the R40 has the glue layer controls in the clock control unit (CCU),
+with a reduced RX delay chain, and no TX delay chain.
 
-This patch converts the use of regmap to regmap_field for mapping and
-accessing the syscon register, so we can have the register address in
-the variants data, and not in the actual register manipulation code.
-
-This patch only converts regmap_read() and regmap_write() calls to
-regmap_field_read() and regmap_field_write() calls. There are some
-places where it might make sense to switch to regmap_field_update_bits(),
-but this is not done here to keep the patch simple.
+This patch adds support for it using the framework laid out by previous
+patches to map the differences.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 42 ++++++++++++++-----
- 1 file changed, 31 insertions(+), 11 deletions(-)
+ .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c   | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index a3fa65b1ca8e..bbc051474806 100644
+index 4f5612a3c855..2f7f0915f071 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -42,6 +42,7 @@
-  *				This value is used for disabling properly EMAC
-  *				and used as a good starting value in case of the
-  *				boot process(uboot) leave some stuff.
-+ * @syscon_field		reg_field for the syscon's gmac register
-  * @soc_has_internal_phy:	Does the MAC embed an internal PHY
-  * @support_mii:		Does the MAC handle MII
-  * @support_rmii:		Does the MAC handle RMII
-@@ -49,6 +50,7 @@
-  */
- struct emac_variant {
- 	u32 default_syscon_value;
-+	const struct reg_field *syscon_field;
- 	bool soc_has_internal_phy;
- 	bool support_mii;
- 	bool support_rmii;
-@@ -71,13 +73,21 @@ struct sunxi_priv_data {
- 	struct regulator *regulator;
- 	struct reset_control *rst_ephy;
- 	const struct emac_variant *variant;
--	struct regmap *regmap;
-+	struct regmap_field *regmap_field;
- 	bool internal_phy_powered;
- 	void *mux_handle;
+@@ -93,6 +93,13 @@ static const struct reg_field sun8i_syscon_reg_field = {
+ 	.msb = 31,
  };
  
-+/* EMAC clock register @ 0x30 in the "system control" address range */
-+static const struct reg_field sun8i_syscon_reg_field = {
-+	.reg = 0x30,
++/* EMAC clock register @ 0x164 in the CCU address range */
++static const struct reg_field sun8i_ccu_reg_field = {
++	.reg = 0x164,
 +	.lsb = 0,
 +	.msb = 31,
 +};
 +
  static const struct emac_variant emac_variant_h3 = {
  	.default_syscon_value = 0x58000,
-+	.syscon_field = &sun8i_syscon_reg_field,
- 	.soc_has_internal_phy = true,
- 	.support_mii = true,
- 	.support_rmii = true,
-@@ -86,12 +96,14 @@ static const struct emac_variant emac_variant_h3 = {
- 
- static const struct emac_variant emac_variant_v3s = {
- 	.default_syscon_value = 0x38000,
-+	.syscon_field = &sun8i_syscon_reg_field,
- 	.soc_has_internal_phy = true,
- 	.support_mii = true
+ 	.syscon_field = &sun8i_syscon_reg_field,
+@@ -121,6 +128,14 @@ static const struct emac_variant emac_variant_a83t = {
+ 	.tx_delay_max = 7,
  };
  
- static const struct emac_variant emac_variant_a83t = {
- 	.default_syscon_value = 0,
-+	.syscon_field = &sun8i_syscon_reg_field,
- 	.soc_has_internal_phy = false,
- 	.support_mii = true,
- 	.support_rgmii = true
-@@ -99,6 +111,7 @@ static const struct emac_variant emac_variant_a83t = {
- 
++static const struct emac_variant emac_variant_r40 = {
++	.default_syscon_value = 0,
++	.syscon_field = &sun8i_ccu_reg_field,
++	.support_mii = true,
++	.support_rgmii = true,
++	.rx_delay_max = 7,
++};
++
  static const struct emac_variant emac_variant_a64 = {
  	.default_syscon_value = 0,
-+	.syscon_field = &sun8i_syscon_reg_field,
- 	.soc_has_internal_phy = false,
- 	.support_mii = true,
- 	.support_rmii = true,
-@@ -216,7 +229,6 @@ static const struct emac_variant emac_variant_a64 = {
- #define SYSCON_ETCS_MII		0x0
- #define SYSCON_ETCS_EXT_GMII	0x1
- #define SYSCON_ETCS_INT_GMII	0x2
--#define SYSCON_EMAC_REG		0x30
- 
- /* sun8i_dwmac_dma_reset() - reset the EMAC
-  * Called from stmmac via stmmac_dma_ops->reset
-@@ -745,7 +757,7 @@ static int mdio_mux_syscon_switch_fn(int current_child, int desired_child,
- 	bool need_power_ephy = false;
- 
- 	if (current_child ^ desired_child) {
--		regmap_read(gmac->regmap, SYSCON_EMAC_REG, &reg);
-+		regmap_field_read(gmac->regmap_field, &reg);
- 		switch (desired_child) {
- 		case DWMAC_SUN8I_MDIO_MUX_INTERNAL_ID:
- 			dev_info(priv->device, "Switch mux to internal PHY");
-@@ -763,7 +775,7 @@ static int mdio_mux_syscon_switch_fn(int current_child, int desired_child,
- 				desired_child);
- 			return -EINVAL;
- 		}
--		regmap_write(gmac->regmap, SYSCON_EMAC_REG, val);
-+		regmap_field_write(gmac->regmap_field, val);
- 		if (need_power_ephy) {
- 			ret = sun8i_dwmac_power_internal_phy(priv);
- 			if (ret)
-@@ -801,7 +813,7 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
- 	int ret;
- 	u32 reg, val;
- 
--	regmap_read(gmac->regmap, SYSCON_EMAC_REG, &val);
-+	regmap_field_read(gmac->regmap_field, &val);
- 	reg = gmac->variant->default_syscon_value;
- 	if (reg != val)
- 		dev_warn(priv->device,
-@@ -883,7 +895,7 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
- 		return -EINVAL;
- 	}
- 
--	regmap_write(gmac->regmap, SYSCON_EMAC_REG, reg);
-+	regmap_field_write(gmac->regmap_field, reg);
- 
- 	return 0;
- }
-@@ -892,7 +904,7 @@ static void sun8i_dwmac_unset_syscon(struct sunxi_priv_data *gmac)
- {
- 	u32 reg = gmac->variant->default_syscon_value;
- 
--	regmap_write(gmac->regmap, SYSCON_EMAC_REG, reg);
-+	regmap_field_write(gmac->regmap_field, reg);
- }
- 
- static void sun8i_dwmac_exit(struct platform_device *pdev, void *priv)
-@@ -980,6 +992,7 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
- 	int ret;
- 	struct stmmac_priv *priv;
- 	struct net_device *ndev;
-+	struct regmap *regmap;
- 
- 	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
- 	if (ret)
-@@ -1014,14 +1027,21 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
- 		gmac->regulator = NULL;
- 	}
- 
--	gmac->regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
--						       "syscon");
--	if (IS_ERR(gmac->regmap)) {
--		ret = PTR_ERR(gmac->regmap);
-+	regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "syscon");
-+	if (IS_ERR(regmap)) {
-+		ret = PTR_ERR(regmap);
- 		dev_err(&pdev->dev, "Unable to map syscon: %d\n", ret);
- 		return ret;
- 	}
- 
-+	gmac->regmap_field = devm_regmap_field_alloc(dev, regmap,
-+						     *gmac->variant->syscon_field);
-+	if (IS_ERR(gmac->regmap_field)) {
-+		ret = PTR_ERR(gmac->regmap_field);
-+		dev_err(dev, "Unable to map syscon register: %d\n", ret);
-+		return ret;
-+	}
-+
- 	plat_dat->interface = of_get_phy_mode(dev->of_node);
- 
- 	/* platform data specifying hardware features and callbacks.
+ 	.syscon_field = &sun8i_syscon_reg_field,
+@@ -1160,6 +1175,8 @@ static const struct of_device_id sun8i_dwmac_match[] = {
+ 		.data = &emac_variant_v3s },
+ 	{ .compatible = "allwinner,sun8i-a83t-emac",
+ 		.data = &emac_variant_a83t },
++	{ .compatible = "allwinner,sun8i-r40-gmac",
++		.data = &emac_variant_r40 },
+ 	{ .compatible = "allwinner,sun50i-a64-emac",
+ 		.data = &emac_variant_a64 },
+ 	{ }
 -- 
 2.17.0
