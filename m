@@ -1,45 +1,83 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 04/21] bindings: display: Add compatible for A64 DE2
- pipeline
-Date: Tue, 1 May 2018 11:34:51 -0500
-Message-ID: <CAL_JsqJ6PmWJZPjdhHTSMEkKdCiORXKcz3AMch=Nx2Z5FeC3_Q@mail.gmail.com>
-References: <20180430114058.5061-1-jagan@amarulasolutions.com>
- <20180430114058.5061-5-jagan@amarulasolutions.com>
- <20180501161723.GA376@rob-hp-laptop>
- <CAGb2v66bx2TguLjnMi2R0KFU4=aYC8xveexybnWdWPDd+xwOvg@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode for
+ the cells list
+Date: Tue, 1 May 2018 17:49:03 +0100
+Message-ID: <d30656d6-f17e-6ed0-251f-2b59d02cd202@linaro.org>
+References: <1521933899-362-1-git-send-email-albeu@free.fr>
+ <1521933899-362-2-git-send-email-albeu@free.fr>
+ <344e0087-7410-aebb-8a66-c6976064df10@linaro.org>
+ <20180417165420.423a691b@avionic-0020>
+ <8c4b48ad-e99e-030a-a4ee-b6df0fa59c79@linaro.org>
+ <20180417180040.04f53495@avionic-0020> <20180418134119.2e587621@avionic-0020>
+ <9f7d2987-b33e-79b5-ae58-2985fd7334e4@linaro.org>
+ <20180418143243.3c23493c@avionic-0020>
+ <e34619a4-e9b6-9945-a1cc-a3680aac6819@linaro.org>
+ <20180418153440.187ed16e@avionic-0020>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAGb2v66bx2TguLjnMi2R0KFU4=aYC8xveexybnWdWPDd+xwOvg@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Stephen Boyd <sboyd@kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Jagan Teki <jagan@amarulasolutions.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180418153440.187ed16e@avionic-0020>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alban <albeu@free.fr>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXkgMSwgMjAxOCBhdCAxMTozMSBBTSwgQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUu
-b3JnPiB3cm90ZToKPiBPbiBXZWQsIE1heSAyLCAyMDE4IGF0IDEyOjE3IEFNLCBSb2IgSGVycmlu
-ZyA8cm9iaEBrZXJuZWwub3JnPiB3cm90ZToKPj4gT24gTW9uLCBBcHIgMzAsIDIwMTggYXQgMDU6
-MTA6NDFQTSArMDUzMCwgSmFnYW4gVGVraSB3cm90ZToKPj4+IEFsbHdpbm5lciBBNjQgaGFzIERF
-MiBwaXBlbGluZSBzaW1pbGFyIHRvIG90aGVyIEFsbHdpbm5lcgo+Pj4gU09DJ3MgbGlrZSBBODNU
-LCBIMy9INS4KPj4KPj4gJ2R0LWJpbmRpbmdzOiAnIGZvciB0aGUgc3ViamVjdCBwcmVmaXguCj4+
-Cj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogSmFnYW4gVGVraSA8amFnYW5AYW1hcnVsYXNvbHV0aW9u
-cy5jb20+Cj4+PiAtLS0KPj4+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9zdW54aS9zdW40aS1kcm0udHh0IHwgMSArCj4+PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5z
-ZXJ0aW9uKCspCj4+Cj4+IE90aGVyd2lzZSwKPj4KPj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5n
-IDxyb2JoQGtlcm5lbC5vcmc+Cj4KPiBXb3VsZCBpdCBtYWtlIHNlbnNlIHRvIHB1dCBhbGwgdGhl
-IGRpc3BsYXkgY29tcG9uZW50IHJlbGF0ZWQgY29tcGF0aWJsZQo+IHN0cmluZyBhZGRpdGlvbnMg
-aW4gdGhlIHNhbWUgcGF0Y2g/IGkuZS4gIkFkZCBjb21wYXRpYmxlIHN0cmluZ3MgZm9yIGFsbAo+
-IGRvY3VtZW50ZWQgZGlzcGxheSBjb21wb25lbnQgYmxvY2tzIi4gTUlQSS1EU0kgaXMgbWlzc2lu
-ZywgYnV0IGl0J3Mgbm90Cj4gZG9jdW1lbnRlZC4KClRoYXQncyBmaW5lIGJ5IG1lLgoKUm9iCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+
+On 18/04/18 14:34, Alban wrote:
+> On Wed, 18 Apr 2018 13:53:56 +0100
+> Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
+> 
+>> On 18/04/18 13:32, Alban wrote:
+>>>> I was also suggesting you to use nvmem-cell subnode, but make it a
+>>>> proper nvmem provider device, rather than reusing its parent device.
+>>>>
+>>>> You would end up some thing like this in dt.
+>>>>
+>>>> flash@0 {
+>>>> 	#address-cells = <1>;
+>>>> 	#size-cells = <1>;
+>>>> 	compatible = "s25sl064a";
+>>>> 	reg = <0>;
+>>>>
+>>>> 	nvmem-cells {
+>>>> 		compatible = "mtd-nvmem";
+>>>> 		#address-cells = <1>;
+>>>> 		#size-cells = <1>;
+>>>>
+>>>> 		calibration: calib@404 {
+>>>> 			reg = <0x404 0x10>;
+>>>> 		};
+>>>> 	};
+>>>> };
+>>> But the root cause is in the nvmem binding, this conflict could exists
+>> No, the root cause is because of passing wrong device instance to nvmem
+>> core. And trying to workaround is the actual issue.
+> 
+> The data is stored on the MTD, so the nvmem provider is the MTD device.
+> I don't think it is a good idea to have a virtual device in the DT to
+> accommodate the nvmem API.
+> 
+Yep, I agree! this is same issue if we make nvmem-cells a child of nvmem 
+provider too.
+
+However, I would like to see this moving forward.
+
+I can think of one possible solution here, which is, adding 
+"nvmem-mtd-cell" or "nvmem-cell" compatible string to each cell. The 
+problem you mentioned regarding #address-cells and #size-cells with 
+provider need to be addressed in nvmem core.
+
+Currently nvmem core only support offsets of 32 bits, if you are 
+expecting a 64 bit offsets then we should add that as a feature to nvmem 
+core.
+
+nvmem core as it is today should work fine with 32 bit offsets for mtd 
+cases.
+
+what do you think?
+
+thanks,
+srini
