@@ -1,50 +1,86 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx6ull: add UART5 RTS input select register
-Date: Wed, 2 May 2018 17:01:11 +0800
-Message-ID: <20180502090110.GI3443@dragon>
-References: <1524136779-13246-1-git-send-email-stefan.wahren@i2se.com>
+From: Laurentiu Tudor <laurentiu.tudor-3arQi8VN3Tc@public.gmane.org>
+Subject: Re: [PATCH v4 6/6] arm64: dts: ls208xa: comply with the iommu map
+	binding for fsl_mc
+Date: Wed, 2 May 2018 09:14:18 +0000
+Message-ID: <5AE98169.7060102@nxp.com>
+References: <1524824826-29473-1-git-send-email-nipun.gupta@nxp.com>
+	<1525069641-8523-1-git-send-email-nipun.gupta@nxp.com>
+	<1525069641-8523-7-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1524136779-13246-1-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Greg Ungerer <gerg@linux-m68k.org>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1525069641-8523-7-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Content-Language: en-US
+Content-ID: <0CEE781F71EAB84AA64ED4307E463E0C-jdb/QiT5osKcE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>, "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "hch-jcswGhMUV9g@public.gmane.org" <hch-jcswGhMUV9g@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBBcHIgMTksIDIwMTggYXQgMDE6MTk6MzlQTSArMDIwMCwgU3RlZmFuIFdhaHJlbiB3
-cm90ZToKPiBUaGUgaU1YNlVMTCBVQVJUNV9SVFNfQl9EQVRBX1NFTEVDVF9JTlBVVCBEQUlTWSBS
-ZWdpc3RlciBoYXMgc29tZSBkaWZmZXJlbnQKPiBiaXQgZGVmaW5pdGlvbnMgdG8gdGhhdCBzYW1l
-IHJlZ2lzdGVyIGluIHRoZSBpLk1YNlVMLgo+IAo+IFRoZSBiaXRzIGZvciB0aGUgaS5NWDZVTDoK
-PiAKPiAwMDAgQ1NJX0RBVEEwM19BTFQ4IOKAlCBTZWxlY3RpbmcgUGFkOiBDU0lfREFUQTAzIGZv
-ciBNb2RlOiBBTFQ4Cj4gMDAxIEdQSU8xX0lPMDhfQUxUOCDigJQgU2VsZWN0aW5nIFBhZDogR1BJ
-TzFfSU8wOCBmb3IgTW9kZTogQUxUOAo+IDAxMCBHUElPMV9JTzA5X0FMVDgg4oCUIFNlbGVjdGlu
-ZyBQYWQ6IEdQSU8xX0lPMDkgZm9yIE1vZGU6IEFMVDgKPiAwMTEgRU5FVDFfUlhfRU5fQUxUMSDi
-gJQgU2VsZWN0aW5nIFBhZDogRU5FVDFfUlhfRU4gZm9yIE1vZGU6IEFMVDEKPiAxMDAgRU5FVDFf
-VFhfREFUQTBfQUxUMSDigJQgU2VsZWN0aW5nIFBhZDogRU5FVDFfVFhfREFUQTAgZm9yIE1vZGU6
-IEFMVDEKPiAxMDEgQ1NJX0RBVEEwMl9BTFQ4IOKAlCBTZWxlY3RpbmcgUGFkOiBDU0lfREFUQTAy
-IGZvciBNb2RlOiBBTFQ4Cj4gCj4gQnV0IGZvciB0aGUgaS5NWDZVTEw6Cj4gCj4gMDAwIENTSV9E
-QVRBMDNfQUxUOCDigJQgU2VsZWN0aW5nIFBhZDogQ1NJX0RBVEEwMyBmb3IgTW9kZTogQUxUOAo+
-IDAwMSBHUElPMV9JTzA4X0FMVDgg4oCUIFNlbGVjdGluZyBQYWQ6IEdQSU8xX0lPMDggZm9yIE1v
-ZGU6IEFMVDgKPiAwMTAgR1BJTzFfSU8wOV9BTFQ4IOKAlCBTZWxlY3RpbmcgUGFkOiBHUElPMV9J
-TzA5IGZvciBNb2RlOiBBTFQ4Cj4gMDExIFVBUlQxX0NUU19CX0FMVDkg4oCUIFNlbGVjdGluZyBQ
-YWQ6IFVBUlQxX0NUU19CIGZvciBNb2RlOiBBTFQ5Cj4gMTAwIFVBUlQxX1JUU19CX0FMVDkg4oCU
-IFNlbGVjdGluZyBQYWQ6IFVBUlQxX1JUU19CIGZvciBNb2RlOiBBTFQ5Cj4gMTAxIEVORVQxX1JY
-X0VOX0FMVDEg4oCUIFNlbGVjdGluZyBQYWQ6IEVORVQxX1JYX0VOIGZvciBNb2RlOiBBTFQxCj4g
-MTEwIEVORVQxX1RYX0RBVEEwX0FMVDEg4oCUIFNlbGVjdGluZyBQYWQ6IEVORVQxX1RYX0RBVEEw
-IGZvciBNb2RlOiBBTFQxCj4gMTExIENTSV9EQVRBMDJfQUxUOCDigJQgU2VsZWN0aW5nIFBhZDog
-Q1NJX0RBVEEwMiBmb3IgTW9kZTogQUxUOAo+IAo+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBXYWhy
-ZW4gPHN0ZWZhbi53YWhyZW5AaTJzZS5jb20+CgpBcHBsaWVkLCB0aGFua3MuCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Nipun,
+
+On 04/30/2018 09:27 AM, Nipun Gupta wrote:
+> fsl-mc bus support the new iommu-map property. Comply to this binding
+> for fsl_mc bus.
+>
+> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+
+This looks good to me, so:
+
+Reviewed-By: Laurentiu Tudor <laurentiu.tudor-3arQi8VN3Tc@public.gmane.org>
+
+---
+Best Regards, Laurentiu
+
+> ---
+>   arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> index 137ef4d..6010505 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> @@ -184,6 +184,7 @@
+>   		#address-cells = <2>;
+>   		#size-cells = <2>;
+>   		ranges;
+> +		dma-ranges = <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
+>
+>   		clockgen: clocking@1300000 {
+>   			compatible = "fsl,ls2080a-clockgen";
+> @@ -357,6 +358,8 @@
+>   			reg = <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
+>   			      <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
+>   			msi-parent = <&its>;
+> +			iommu-map = <0 &smmu 0 0>;	/* This is fixed-up by u-boot */
+> +			dma-coherent;
+>   			#address-cells = <3>;
+>   			#size-cells = <1>;
+>
+> @@ -460,6 +463,8 @@
+>   			compatible = "arm,mmu-500";
+>   			reg = <0 0x5000000 0 0x800000>;
+>   			#global-interrupts = <12>;
+> +			#iommu-cells = <1>;
+> +			stream-match-mask = <0x7C00>;
+>   			interrupts = <0 13 4>, /* global secure fault */
+>   				     <0 14 4>, /* combined secure interrupt */
+>   				     <0 15 4>, /* global non-secure fault */
+> @@ -502,7 +507,6 @@
+>   				     <0 204 4>, <0 205 4>,
+>   				     <0 206 4>, <0 207 4>,
+>   				     <0 208 4>, <0 209 4>;
+> -			mmu-masters = <&fsl_mc 0x300 0>;
+>   		};
+>
+>   		dspi: dspi@2100000 {
+>
