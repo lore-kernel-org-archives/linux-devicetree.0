@@ -1,81 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH] driver core: make deferring probe forever optional
-Date: Wed, 2 May 2018 09:48:52 -0500
-Message-ID: <CAL_JsqJvMyrKS4LsRC6fDus24Yg8U+VcrbNNvxtOXmKbrc8RAA@mail.gmail.com>
-References: <20180501213114.20183-1-robh@kernel.org> <f808a652-2454-941c-2fd1-60776fb353f6@arm.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] arm: dts: am437x-sk-evm: add wilink8 support
+Date: Wed, 2 May 2018 07:51:00 -0700
+Message-ID: <20180502145100.GK98604@atomide.com>
+References: <1525159453-32489-1-git-send-email-eyalr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f808a652-2454-941c-2fd1-60776fb353f6@arm.com>
+Content-Disposition: inline
+In-Reply-To: <1525159453-32489-1-git-send-email-eyalr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Grant Likely <grant.likely@arm.com>, Mark Brown <broonie@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Eyal Reizer <eyalreizer@gmail.com>
+Cc: bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Eyal Reizer <eyalr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 2, 2018 at 6:40 AM, Robin Murphy <robin.murphy@arm.com> wrote:
-> On 01/05/18 22:31, Rob Herring wrote:
->>
->> Deferred probe will currently wait forever on dependent devices to probe,
->> but sometimes a driver will never exist. It's also not always critical for
->> a driver to exist. Platforms can rely on default configuration from the
->> bootloader or reset defaults for things such as pinctrl and power domains.
->> This is often the case with initial platform support until various drivers
->> get enabled. There's at least 2 scenarios where deferred probe can render
->> a platform broken. Both involve using a DT which has more devices and
->> dependencies than the kernel supports. The 1st case is a driver may be
->> disabled in the kernel config. The 2nd case is the kernel version may
->> simply not have the dependent driver. This can happen if using a newer DT
->> (provided by firmware perhaps) with a stable kernel version.
->>
->> Unfortunately, this change breaks with modules as we have no way of
->> knowing when modules are done loading. One possibility is to make this
->> opt in or out based on compatible strings rather than at a subsystem
->> level.
->> Ideally this information could be extracted automatically somehow. OTOH,
->> maybe the lists are pretty small. There's only a handful of subsystems
->> that can be optional, and then only so many drivers in those that can be
->> modules (at least for pinctrl, many drivers are built-in only).
->
->
-> Ooh, this is exactly what I wanted for of_iommu_xlate(), and would be much
-> nicer than the current bodge using system_state that I ended up with. The
-> context there is very similar - if the device has a parent IOMMU then we
-> want to wait for that to probe first if possible, but with a deadline such
-> that if it doesn't show up then we can go ahead and make progress without it
-> (on the assumption that DMA ops can fall back to CMA). The modules problem
-> doesn't currently apply to IOMMU drivers either, although we do use a
-> special of_device_id table for detecting built-in drivers via
-> OF_IOMMU_DECLARE() to avoid deferring at all when we know it would be
-> pointless - a more generic solution for that could certainly be useful too.
+* Eyal Reizer <eyalreizer@gmail.com> [180501 00:26]:
+> enable mmc3 used for wlan and uart1 used for bluetooth
+> configure the gpios used for wlan and bluetooth controls
+> add fixed voltage regulator used for wlan power control
+...
+>  / {
+>  	model = "TI AM437x SK EVM";
+> @@ -158,6 +159,22 @@
+>  			};
+>  		};
+>  	};
+> +
+> +	vmmcwl_fixed: fixedregulator-mmcwl {
+> +		/*
+> +		 * WL_EN is not SDIO standard compliant. It is an out of band
+> +		 * signal and hard to be dealt with in a standard way by the
+> +		 * SDIO core driver.
+> +		 * So modelling the WL_EN line as a regulator was a natural
+> +		 * choice as the MMC core already deals with MMC supplies.
+> +		 */
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vmmcwl_fixed";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		gpio = <&gpio4 8 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+>  };
 
-Ah, so you kept the IOMMU_OF_DECLARE() but it does nothing but define
-a table. We already have the driver match table which should pretty
-much be the same data, so it would be better if we could use that if
-possible. If we used MODULE_DEVICE_TABLE somehow, we could avoid
-modifying lots of drivers. Though many built-in only drivers omit
-that. The other problem is it would become a large set of tables to
-search thru because it is global. That would probably end up slower
-than just deferring. So we need something like
-<subsystem>_DEVICE_TABLE() to have per subsystem tables. Then this
-function in this patch would need to be told which table to use.
-However, this is all really just an optimization to avoid deferring at
-all and could be addressed later. Is there any data on how much time
-you save avoiding deferring? This has come up in the past and I don't
-think it is much.
+Interesting that it needs much longer delay here compared to the
+earlier?
 
-I've also been thinking about if we could use MODULE_DEVICE_TABLE to
-provide a list compatible strings from modules as a whitelist of
-devices to keep deferring probe on. That would require building
-modules to build the kernel which I don't think would work. I think my
-conclusion is that the cases we care about may be short enough to just
-manually maintain such a list.
+BTW, I do have a patch in work to add pwrseq support for wlcore that
+allows leaving out the regulator here. It still needs a bit more
+work though.
 
->
-> I agree with Greg that the naming here is a bit tricky - FWIW my initial
-> thought would be something like driver_defer_until_init(), which is still
-> clunky but at least imperative.
+And I also have a series in work to make wlcore use runtime PM that
+needs even more work, just FYI to avoid any duplicate work.
 
-Yeah, I didn't give it much thought as I expected more comments on the
-general idea... Maybe my poor naming is a good diversion. :)
+Hmm you don't happen to have a patch series somewhere making
+wlcore use the SDIO dat lien interrupt?
 
-Rob
+I think we should use that when idle rather than the (edge) gpio
+interrupt as the SDIO dat interrupt is level sensitive and wired
+to the always on gpio bank for most SDIO controller instances.
+On runtime PM wakeup, there's no status anywhere to been with the
+GPIO edge interrupt.
+
+Regards,
+
+Tony
