@@ -1,44 +1,110 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] mmc: sunxi: add support for the MMC
- controller on H6
-Date: Wed, 2 May 2018 14:54:58 +0200
-Message-ID: <CAPDyKFr1CRS7W5gYntbo_KhkvoCB00xzfF4jyUOmtkG1z2g2xg@mail.gmail.com>
-References: <20180426140728.43155-1-icenowy@aosc.io> <20180426140728.43155-2-icenowy@aosc.io>
-Reply-To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH] iio: adc: stm32-dfsdm: Add support for stm32mp1
+Date: Wed, 2 May 2018 15:05:23 +0200
+Message-ID: <1525266323-4922-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDF57NG2XIHRBI7KU3LQKGQEQLVG5VI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180426140728.43155-2-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jic23@kernel.org, robh+dt@kernel.org, alexandre.torgue@st.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, mcoquelin.stm32@gmail.com, linux-iio@vger.kernel.org, arnaud.pouliquen@st.com, linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 26 April 2018 at 16:07, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> The new Allwinner H6 SoC have 3 MMC controllers. The first and second
-> ones are similar to the ones on A64, but the third one adds EMCE
-> (Embedded Crypto Engine) support which does hardware transparent crypto
-> on the eMMC.
->
-> As we still do not have support for EMCE, and the support of it is
-> disabled by defualt, we just duplicate the A64 mmc configurations and
-> change the compatible string.
->
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mmc/sunxi-mmc.txt |  2 ++
+Add support for DFSDM (Digital Filter For Sigma Delta Modulators)
+to STM32MP1. This variant is close to STM32H7 DFSDM, it implements
+6 filter instances. Registers map is also increased.
 
-DT doc changes in separate patches please!
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ .../bindings/iio/adc/st,stm32-dfsdm-adc.txt         |  7 +++++--
+ drivers/iio/adc/stm32-dfsdm-core.c                  | 21 +++++++++++++++++++++
+ 2 files changed, 26 insertions(+), 2 deletions(-)
 
->  drivers/mmc/host/sunxi-mmc.c                        | 16 ++++++++++++++++
->  2 files changed, 18 insertions(+)
->
-
-Kind regards
-Uffe
+diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
+index ed7520d..75ba25d 100644
+--- a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
+@@ -8,14 +8,16 @@ It is mainly targeted for:
+ - PDM microphones (audio digital microphone)
+ 
+ It features up to 8 serial digital interfaces (SPI or Manchester) and
+-up to 4 filters on stm32h7.
++up to 4 filters on stm32h7 or 6 filters on stm32mp1.
+ 
+ Each child node match with a filter instance.
+ 
+ Contents of a STM32 DFSDM root node:
+ ------------------------------------
+ Required properties:
+-- compatible: Should be "st,stm32h7-dfsdm".
++- compatible: Should be one of:
++  "st,stm32h7-dfsdm"
++  "st,stm32mp1-dfsdm"
+ - reg: Offset and length of the DFSDM block register set.
+ - clocks: IP and serial interfaces clocking. Should be set according
+ 		to rcc clock ID and "clock-names".
+@@ -45,6 +47,7 @@ Required properties:
+ 	"st,stm32-dfsdm-adc" for sigma delta ADCs
+ 	"st,stm32-dfsdm-dmic" for audio digital microphone.
+ - reg: Specifies the DFSDM filter instance used.
++	Valid values are from 0 to 3 on stm32h7, 0 to 5 on stm32mp1.
+ - interrupts: IRQ lines connected to each DFSDM filter instance.
+ - st,adc-channels:	List of single-ended channels muxed for this ADC.
+ 			valid values:
+diff --git a/drivers/iio/adc/stm32-dfsdm-core.c b/drivers/iio/adc/stm32-dfsdm-core.c
+index e50efdc..d924e6c 100644
+--- a/drivers/iio/adc/stm32-dfsdm-core.c
++++ b/drivers/iio/adc/stm32-dfsdm-core.c
+@@ -25,6 +25,8 @@ struct stm32_dfsdm_dev_data {
+ 
+ #define STM32H7_DFSDM_NUM_FILTERS	4
+ #define STM32H7_DFSDM_NUM_CHANNELS	8
++#define STM32MP1_DFSDM_NUM_FILTERS	6
++#define STM32MP1_DFSDM_NUM_CHANNELS	8
+ 
+ static bool stm32_dfsdm_volatile_reg(struct device *dev, unsigned int reg)
+ {
+@@ -61,6 +63,21 @@ static bool stm32_dfsdm_volatile_reg(struct device *dev, unsigned int reg)
+ 	.regmap_cfg = &stm32h7_dfsdm_regmap_cfg,
+ };
+ 
++static const struct regmap_config stm32mp1_dfsdm_regmap_cfg = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = sizeof(u32),
++	.max_register = 0x7fc,
++	.volatile_reg = stm32_dfsdm_volatile_reg,
++	.fast_io = true,
++};
++
++static const struct stm32_dfsdm_dev_data stm32mp1_dfsdm_data = {
++	.num_filters = STM32MP1_DFSDM_NUM_FILTERS,
++	.num_channels = STM32MP1_DFSDM_NUM_CHANNELS,
++	.regmap_cfg = &stm32mp1_dfsdm_regmap_cfg,
++};
++
+ struct dfsdm_priv {
+ 	struct platform_device *pdev; /* platform device */
+ 
+@@ -243,6 +260,10 @@ static int stm32_dfsdm_parse_of(struct platform_device *pdev,
+ 		.compatible = "st,stm32h7-dfsdm",
+ 		.data = &stm32h7_dfsdm_data,
+ 	},
++	{
++		.compatible = "st,stm32mp1-dfsdm",
++		.data = &stm32mp1_dfsdm_data,
++	},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, stm32_dfsdm_of_match);
+-- 
+1.9.1
