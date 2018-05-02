@@ -1,76 +1,41 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH] ARM: dts: stm32: Fix DTC warnings for stm32mp157
-Date: Wed, 2 May 2018 09:51:38 +0200
-Message-ID: <1525247498-12834-1-git-send-email-alexandre.torgue@st.com>
+From: "Nischal, Amit" <anischal@codeaurora.org>
+Subject: Re: [PATCH 2/2] clk: qcom: Add video clock controller driver for
+ SDM845
+Date: Wed, 2 May 2018 13:26:35 +0530
+Message-ID: <d311e4d7-7ba8-0b26-93c7-5ee06db466ef@codeaurora.org>
+References: <1524576771-31096-1-git-send-email-anischal@codeaurora.org>
+ <1524576771-31096-3-git-send-email-anischal@codeaurora.org>
+ <152521087780.138124.7623601052057968460@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <152521087780.138124.7623601052057968460@swboyd.mtv.corp.google.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Fix DTC warnings for stm32mp157:
 
-Warning (unit_address_vs_reg): /soc/pin-controller: node has a reg or ranges property, but no unit name
-Warning (unit_address_vs_reg): /soc/pin-controller/uart4@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /soc/pin-controller-z: node has a reg or ranges property, but no unit name
-Warning (unit_address_vs_reg): /memory: node has a reg or ranges property, but no unit name
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-index 6f044100..8534371 100644
---- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -7,7 +7,7 @@
- 
- / {
- 	soc {
--		pinctrl: pin-controller {
-+		pinctrl: pin-controller@50002000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			compatible = "st,stm32mp157-pinctrl";
-@@ -146,7 +146,7 @@
- 				gpio-ranges = <&pinctrl 0 160 8>;
- 			};
- 
--			uart4_pins_a: uart4@0 {
-+			uart4_pins_a: uart4-0 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
- 					bias-disable;
-@@ -160,7 +160,7 @@
- 			};
- 		};
- 
--		pinctrl_z: pin-controller-z {
-+		pinctrl_z: pin-controller-z@54004000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			compatible = "st,stm32mp157-z-pinctrl";
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index 9f90337a..86ede40 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -16,7 +16,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@c0000000 {
- 		reg = <0xC0000000 0x40000000>;
- 	};
- 
--- 
-2.7.4
+On 5/2/2018 3:11 AM, Stephen Boyd wrote:
+> Quoting Amit Nischal (2018-04-24 06:32:51)
+>> Add support for the video clock controller found on SDM845
+>> based devices. This would allow video drivers to probe and
+>> control their clocks.
+>>
+>> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
+> Driver looks small and good. Only concern is that there aren't resets
+> defined, but the binding says there are resets. Will you add them?
+Thanks for the review.
+As of now, there are no resets defined for VIDEOCC. So I will move
+the #reset-cells tooptional property in the dt-binding.
+Same will be updated in the next patch series.
+>
+> I'm going to wait for the respin on the dts binding anyway.
+Yes, I will send the next patch series soon.
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-clk" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
