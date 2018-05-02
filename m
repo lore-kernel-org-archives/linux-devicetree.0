@@ -1,39 +1,56 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v5 00/14] mmc: sdhci-omap: Add UHS/HS200 mode support
-Date: Wed, 2 May 2018 07:55:51 -0700
-Message-ID: <20180502145551.GL98604@atomide.com>
-References: <20180427114723.2687-1-kishon@ti.com>
- <CAPDyKFqb=Dyi=UMZBLKcrBbmaWbGEjf-Vp5vQ0b7_F__+YnXHQ@mail.gmail.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH v6 02/10] dt-bindings: introduce RPMH RSC bindings for
+ Qualcomm SoCs
+Date: Wed, 2 May 2018 08:56:42 -0600
+Message-ID: <20180502145642.GA21162@codeaurora.org>
+References: <20180419221635.17849-1-ilina@codeaurora.org>
+ <20180419221635.17849-3-ilina@codeaurora.org>
+ <CAD=FV=WfC5x12kFd7Uw8DTR=OFx4HFJhJrd-sDZ5EJgkWL3tQw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFqb=Dyi=UMZBLKcrBbmaWbGEjf-Vp5vQ0b7_F__+YnXHQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=WfC5x12kFd7Uw8DTR=OFx4HFJhJrd-sDZ5EJgkWL3tQw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Ulf Hansson <ulf.hansson@linaro.org> [180502 13:17]:
-> On 27 April 2018 at 13:47, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> > Add UHS/HS200 mode support in sdhci-omap. The programming sequence
-> > for voltage switching, tuning is followed from AM572x TRM
-> > http://www.ti.com/lit/ug/spruhz6j/spruhz6j.pdf
-> > (Similar to all AM57x/DRA7x SoCs). The patch series also implements
-> > workaround for errata published in
-> > http://www.ti.com/lit/er/sprz429l/sprz429l.pdf
-> >
-> > patches are created on top of
-> > git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git next
-> >
-> > The patches along with dt has also been pushed to
-> > https://github.com/kishon/linux-wip.git sdhci_uhs_v5
-> 
-> Thanks, applied for next!
+On Tue, May 01 2018 at 17:45 -0600, Doug Anderson wrote:
+>Hi,
+>
+>On Thu, Apr 19, 2018 at 3:16 PM, Lina Iyer <ilina@codeaurora.org> wrote:
+>> +TCS-OFFSET: 0xD00
+>> +
+>> +       apps_rsc: rsc@179e000 {
+>
+>This label is wrong in two ways:
+>
+>1. I believe it's supposed to be the first reg listed, so 179c0000
+>
+>2. There's only 3 0's at the end.
+>
+>Thus, it should be:
+>
+>apps_rsc: rsc@179c0000
+>
+Ok. Will fix.
 
-OK. Ulf, can I use some commit id from your next as a base for
-the related dts changes?
+I did not hear back on this idea. Does this binding work for everyone
+else?
 
-Regards,
+Thanks,
+Lina
 
-Tony
+>> +               label = "apps_rsc";
+>> +               compatible = "qcom,rpmh-rsc";
+>> +               reg = <0x179c0000 0x10000>, <0x179d0000 0x10000>,
+>> +                     <0x179e0000 0x10000>, <0xd00 0>;
+>> +               reg-names = "drv-0", "drv-1", "drv-2", "tcs-offset";
+>> +               interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+>> +               qcom,drv-id = <2>;
+>> +               qcom,tcs-config = <SLEEP_TCS   3>,
+>> +                                 <WAKE_TCS    3>,
+>> +                                 <ACTIVE_TCS  2>,
+>> +                                 <CONTROL_TCS 1>;
+>> +       };
