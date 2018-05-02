@@ -1,92 +1,191 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Add dts file for the A20-linova1-7
- HMI
-Date: Wed, 2 May 2018 18:41:34 +0200
-Message-ID: <839d2560-0250-9b3a-8019-4e83d9e931e2@micronovasrl.com>
-References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
- <1521662593-25468-7-git-send-email-giulio.benetti@micronovasrl.com>
- <20180322180508.my64gobhh5rc2x2m@flea>
- <8ef3b259-03b4-6987-286e-36ff627a8b76@micronovasrl.com>
- <20180424084137.7xfwji2gcibxavvt@flea>
- <03a02abb-e95c-b4ec-748f-907c0af67969@micronovasrl.com>
- <20180425184016.xktppxw7egddr7li@flea>
- <42feccc9-1d09-9ff2-3ccc-1dea63bacfb6@micronovasrl.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v7 3/9] PCI: endpoint: functions/pci-epf-test: Add second
+ entry
+Date: Wed, 2 May 2018 17:51:44 +0100
+Message-ID: <20180502165144.GB4871@e107981-ln.cambridge.arm.com>
+References: <cover.1524577064.git.gustavo.pimentel@synopsys.com>
+ <c6cfd167838ae8e226dee0820983efe918fa4e1f.1524577064.git.gustavo.pimentel@synopsys.com>
+ <20180426165605.GA6370@e107981-ln.cambridge.arm.com>
+ <b65caf2e-b002-f591-6215-ff2241b2dfb8@ti.com>
+ <20180501115417.GD19391@e107981-ln.cambridge.arm.com>
+ <5d625d04-38fe-7d5a-67fc-5ea92039474c@ti.com>
+ <20180501142607.GA21911@e107981-ln.cambridge.arm.com>
+ <bfaebf3c-2175-f4b2-89c5-336ff9396ed0@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <42feccc9-1d09-9ff2-3ccc-1dea63bacfb6@micronovasrl.com>
-Content-Language: it
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <bfaebf3c-2175-f4b2-89c5-336ff9396ed0@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWF4aW1lLAoKPj4gWW91IGRvbid0IGhhdmUgdG8gaGFuZGNvZGUgdGhlIGZyYWdtZW50cyBh
-bnltb3JlIHdpdGggdGhlIG5ldyBzeW50YXgsCj4+IGFuZCBVLUJvb3QgbWFrZXMgaXQgcmVhbGx5
-IHRyaXZpYWwgdG8gdXNlIGlmIHlvdSB1c2UgdGhlIEZJVCBpbWFnZQo+PiBmb3JtYXQgdG8gaGF2
-ZSBtdWx0aXBsZSBvdmVybGF5cyBidW5kbGVkIGluIHRoZSBzYW1lIGltYWdlLiBZb3UgY2FuCj4+
-IGNob29zZSB0byBhcHBseSB0aGVtIGR5bmFtaWNhbGx5LCBmb3IgZXhhbXBsZSBiYXNlZCBvbiBh
-biBFRVBST00gb3IKPj4gc29tZSBvdGhlciBtZXRyaWMgdG8gc2VlIHdoaWNoIGNvbWJpbmF0aW9u
-IHlvdSBoYXZlLgo+IAo+IEFoLCB0aGlzIGlzIGludGVyZXN0aW5nLiBJJ20gZ29pbmcgdG8gZXhw
-ZXJpbWVudCB3aXRoIHRoYXQuCj4gCgpJJ20gc3RydWdnbGluZyBhZ2FpbnN0IHRoaXMsIEkgZG9u
-J3QgcmVhbGx5IGtub3cgaG93IHRvIHByb2NlZWQsCmV4Y2VwdCBrZWVwaW5nIG1vbm9saXRoaWMg
-ZHRzIGZpbGVzIGluY2x1ZGluZyBvdGhlciBkdHNpIGZpbGVzLgoKQWJvdXQgZHQtb3ZlcmxheXMg
-SSd2ZSB0cmllZCB0byBsb29rIGFyb3VuZCBsb3Qgb2YgdGltZSwKYnV0IHRoZSBvbmx5IHRoaW5n
-IEkndmUgZm91bmQgaXMgdGhpczoKaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4
-L2tlcm5lbC9naXQvZ2VlcnQvcmVuZXNhcy1kcml2ZXJzLmdpdC90cmVlL2FyY2gvYXJtL2Jvb3Qv
-ZHRzP2g9dG9waWMvcmVuZXNhcy1vdmVybGF5cwoKd2hlcmUgdGhleSB1c2UgLmR0c28gdGFnZ2lu
-ZyB0aGVtIGFzICIvcGx1Z2luLzsiCmFuZCBjb21waWxlIGFsbCAuZHRzbyBmb3VuZCBpbiBkdHMg
-Zm9sZGVyLgpUaGVuIHRoZXkgb2J0YWluIC5kdGJvIGZpbGVzIHRoYXQgc2hvdWxkIGJlIHRoZSBk
-dC1vdmVybGF5cyB3ZSBoYXZlIApzcG9rZW4gYWJvdXQgcmlnaHQ/CgpXaGF0IEkgY2FuJ3QgdW5k
-ZXJzdGFuZCBpcyBpZiB0aGVyZSdzIGEgcmVhbCBzdGFuZGFyZCBhdCB0aGlzIHRpbWUgdG8gCmZv
-bGxvdywgYmVjYXVzZSBvbiByZW5lc2FzLWRyaXZlciB0aGV5IHVzZSB0aGVpciB3YXkgdG8gaGFu
-ZGxlIGFsbCAuZHRzbyAKZmlsZXMsIGJ1dCBvbiBtYWlubGluZSB0aGVyZSBzZWVtcyB0byBiZSBu
-b3RoaW5nIGFib3V0IHRoYXQuCgpTbyBhdCB0aGUgbW9tZW50IEknbSB0cnlpbmcgdG8gY29tcGls
-ZSBkdHMgdGFnZ2VkIGFzIC9wbHVnaW4vOwpidXQgZHRjIGdpdmVzIG1lIGEgbG90IG9mIHdhcm5p
-bmdzLgoKZHRzOgoiCi9kdHMtdjEvOwovcGx1Z2luLzsKCiNpbmNsdWRlIDxkdC1iaW5kaW5ncy9n
-cGlvL2dwaW8uaD4KI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2ly
-cS5oPgoKJmkyYzIgewoJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKCXBpbmN0cmwtMCA9IDwm
-aTJjMl9waW5zX2E+OwoJc3RhdHVzID0gIm9rYXkiOwoKCWZ0NXggewoJCWNvbXBhdGlibGUgPSAi
-ZWR0LGVkdC1mdDUzMDYiOwoJCXJlZyA9IDwweDM4PjsKCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZw
-aW8+OwoJCWludGVycnVwdHMgPSA8NyAyIElSUV9UWVBFX0VER0VfRkFMTElORz47IC8qIFBIMiAq
-LwoJCXJlc2V0LWdwaW9zID0gPCZwaW8gNyAzIEdQSU9fQUNUSVZFX0xPVz47IC8qIFBIMyAqLwoJ
-CXRvdWNoc2NyZWVuLXNpemUteCA9IDw0ODA+OwoJCXRvdWNoc2NyZWVuLXNpemUteSA9IDwyNzI+
-OwoJfTsKfTsKIgoKQnVpbGQgb3V0cHV0IGlzc3VpbmcgbWFrZSBBUkNIPWFybSBDUk9TU19DT01Q
-SUxFPWFybS1saW51eC0gYWFhLmR0YiAoSSAKdXNlIGFhYS5kdHMgYXMgc291cmNlKToKIgphcmNo
-L2FybS9ib290L2R0cy9hYWEuZHRiOiBXYXJuaW5nIChyZWdfZm9ybWF0KTogCi9mcmFnbWVudEAw
-L19fb3ZlcmxheV9fL2Z0NXg6cmVnOiBwcm9wZXJ0eSBoYXMgaW52YWxpZCBsZW5ndGggKDQgYnl0
-ZXMpIAooI2FkZHJlc3MtY2VsbHMgPT0gMiwgI3NpemUtY2VsbHMgPT0gMSkKYXJjaC9hcm0vYm9v
-dC9kdHMvYWFhLmR0YjogV2FybmluZyAocGNpX2RldmljZV9idXNfbnVtKTogRmFpbGVkIApwcmVy
-ZXF1aXNpdGUgJ3JlZ19mb3JtYXQnCmFyY2gvYXJtL2Jvb3QvZHRzL2FhYS5kdGI6IFdhcm5pbmcg
-KHNpbXBsZV9idXNfcmVnKTogRmFpbGVkIHByZXJlcXVpc2l0ZSAKJ3JlZ19mb3JtYXQnCmFyY2gv
-YXJtL2Jvb3QvZHRzL2FhYS5kdGI6IFdhcm5pbmcgKGF2b2lkX2RlZmF1bHRfYWRkcl9zaXplKTog
-Ci9mcmFnbWVudEAwL19fb3ZlcmxheV9fL2Z0NXg6IFJlbHlpbmcgb24gZGVmYXVsdCAjYWRkcmVz
-cy1jZWxscyB2YWx1ZQphcmNoL2FybS9ib290L2R0cy9hYWEuZHRiOiBXYXJuaW5nIChhdm9pZF9k
-ZWZhdWx0X2FkZHJfc2l6ZSk6IAovZnJhZ21lbnRAMC9fX292ZXJsYXlfXy9mdDV4OiBSZWx5aW5n
-IG9uIGRlZmF1bHQgI3NpemUtY2VsbHMgdmFsdWUKIgoKVGhlbiBpbiB1Ym9vdCBJJ20gdHJ5aW5n
-IHRvIGRvIGFzIGZvbGxvd3M6CiMgZmR0IGFkZHIgMHg0MzAwMDAwMCAod2hlcmUgZHRiIGlzKQoj
-IGZkdCByZXNpemUgODE5MgojIGZkdCBhcHBseSAweDQzMGMwMDAwICh3aGVyZSBkdGJvIGlzKQpC
-dXQgaXQgZ2l2ZXMgbWUgImxpYmZkdCBmZHRfY2hlY2tfaGVhZGVyKCk6IEZEVF9FUlJfQkFETUFH
-SUMiCihJIHdhcyBleHBlY3Rpbmcgc29tZSBlcnJvcikKCklzIHRoZXJlIGFueXdoZXJlIGEgZ3Vp
-ZGUgZm9yIHRoaXM/CklzIHRoaXMgd2hhdCB5b3UndmUgbWVhbnQgYmVmb3JlPwpVc2luZyBGSVQg
-Zm9yIG15IHVzZSBpcyBub3QgdGhlIGJlc3QsIHNvIEkgd291bGQgbGlrZSB0byBoYXZlIG1hbnkg
-Cm92ZXJsYXlzIGluIC9ib290IGZvbGRlciBhbmQgdXNlIGRpZmZlcmVudCBib290LnNjciBkZXBl
-bmRpbmcgb24gaGFyZHdhcmUuCgpDYW4geW91IHBvaW50IG1lIHRvIHNvbWV3aGVyZSBvciBzb21l
-dGhpbmc/CkkgZG9uJ3QgcmVhbGx5IGtub3cgd2hlcmUgdG8gYmVhdCBteSBoZWFkIQoKVGhhbmtz
-IGluIGFkdmFuY2UuCgotLSAKR2l1bGlvIEJlbmV0dGkKQ1RPCgpNSUNST05PVkEgU1JMClNlZGU6
-IFZpYSBBLiBOaWVkZGEgMyAtIDM1MDEwIFZpZ29uemEgKFBEKQpUZWwuIDA0OS84OTMxNTYzIC0g
-RmF4IDA0OS84OTMxMzQ2CkNvZC5GaXNjYWxlIC0gUC5JVkEgMDI2NjM0MjAyODUKQ2FwaXRhbGUg
-U29jaWFsZSDigqwgMjYuMDAwIGkudi4KSXNjcml0dGEgYWwgUmVnLiBJbXByZXNlIGRpIFBhZG92
-YSBOLiAwMjY2MzQyMDI4NQpOdW1lcm8gUi5FLkEuIDI1ODY0MgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Wed, May 02, 2018 at 11:39:00AM +0100, Gustavo Pimentel wrote:
+> Hi Lorenzo,
+> 
+> On 01/05/2018 15:26, Lorenzo Pieralisi wrote:
+> > On Tue, May 01, 2018 at 05:53:59PM +0530, Kishon Vijay Abraham I wrote:
+> >> Hi Lorenzo,
+> >>
+> >> On Tuesday 01 May 2018 05:24 PM, Lorenzo Pieralisi wrote:
+> >>> On Tue, May 01, 2018 at 03:37:47PM +0530, Kishon Vijay Abraham I wrote:
+> >>>> Hi Lorenzo,
+> >>>>
+> >>>> On Thursday 26 April 2018 10:26 PM, Lorenzo Pieralisi wrote:
+> >>>>> On Tue, Apr 24, 2018 at 02:44:40PM +0100, Gustavo Pimentel wrote:
+> >>>>>> Adds a seconds entry on the pci_epf_test_ids structure that disables the
+> >>>>>
+> >>>>> "Add a second entry to..."
+> >>>>>
+> >>>>>> linkup_notifier parameter on driver for the designware EP.
+> >>>>>>
+> >>>>>> This allows designware EPs that doesn't have linkup notification signal
+> >>>>>> to work with pcitest.
+> >>>>>>
+> >>>>>> Updates the binding documentation accordingly.
+> >>>>>
+> >>>>> Valid for all the series: use imperative sentences.
+> >>>>>
+> >>>>> eg:
+> >>>>>
+> >>>>> "Update the binding documentation accordingly".
+> >>>>>
+> >>>>> not
+> >>>>>
+> >>>>> "Updates the binding documentation accordingly".
+> >>>>>
+> >>>>>> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> >>>>>> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >>>>>> ---
+> >>>>>> Change v2->v3:
+> >>>>>>  - Added second entry in pci_epf_test_ids structure.
+> >>>>>>  - Remove test_reg_bar field assignment on second entry.
+> >>>>>> Changes v3->v4:
+> >>>>>>  - Nothing changed, just to follow the patch set version.
+> >>>>>> Changes v4->v5:
+> >>>>>>  - Changed pci_epf_test_cfg2 to pci_epf_test_designware.
+> >>>>>> Changes v5->v6:
+> >>>>>>  - Changed name field from pci_epf_test_designware to pci_epf_test_dw.
+> >>>>>> Changes v6->v7:
+> >>>>>>  - Changed variable name from data_cfg2 to data_linkup_notifier_disabled.
+> >>>>>>
+> >>>>>>  Documentation/PCI/endpoint/function/binding/pci-test.txt | 2 ++
+> >>>>>>  drivers/pci/endpoint/functions/pci-epf-test.c            | 8 ++++++++
+> >>>>>>  2 files changed, 10 insertions(+)
+> >>>>>>
+> >>>>>> diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.txt b/Documentation/PCI/endpoint/function/binding/pci-test.txt
+> >>>>>> index 3b68b95..dc39f47 100644
+> >>>>>> --- a/Documentation/PCI/endpoint/function/binding/pci-test.txt
+> >>>>>> +++ b/Documentation/PCI/endpoint/function/binding/pci-test.txt
+> >>>>>> @@ -1,6 +1,8 @@
+> >>>>>>  PCI TEST ENDPOINT FUNCTION
+> >>>>>>  
+> >>>>>>  name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
+> >>>>>> +name: Should be "pci_epf_test_dw" to bind to the pci_epf_test driver
+> >>>>>> +      with a custom configuration for the designware EP.
+> >>>>>
+> >>>>> The link between the "name" and the device created is quite obscure and
+> >>>>> reading pci-test-howto.txt certainly does not clarify it.
+> >>>>>
+> >>>>> In pci-test-howto.txt an explanation should be added to the configs
+> >>>>> device creation paragraph to clarify it.
+> >>>>>
+> >>>>>>  Configurable Fields:
+> >>>>>>  vendorid	 : should be 0x104c
+> >>>>>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> >>>>>> index 7cef851..4ab463b 100644
+> >>>>>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> >>>>>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> >>>>>> @@ -459,10 +459,18 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+> >>>>>>  	return 0;
+> >>>>>>  }
+> >>>>>>  
+> >>>>>> +static const struct pci_epf_test_data data_linkup_notifier_disabled = {
+> >>>>>> +	.linkup_notifier = false
+> >>>>>> +};
+> >>>>>> +
+> >>>>>>  static const struct pci_epf_device_id pci_epf_test_ids[] = {
+> >>>>>>  	{
+> >>>>>>  		.name = "pci_epf_test",
+> >>>>>>  	},
+> >>>>>> +	{
+> >>>>>> +		.name = "pci_epf_test_dw",
+> >>>>>> +		.driver_data = (kernel_ulong_t)&data_linkup_notifier_disabled,
+> >>>>>> +	},
+> >>>>>>  	{},
+> >>>>>
+> >>>>> Should not this be a property derived from the controller compatible
+> >>>>> property instead of the test device name written in configfs ?
+> >>>>
+> >>>> pci_epf_test is an independent driver on its own that operates in a layer above
+> >>>> the controller driver. So it does not get the controller compatible (which is
+> >>>> used in controller drivers like pcie-designware-plat.c). pci_epf_test uses
+> >>>> "pci_epf_device_id" which is _similar_ to "of_device_id" used by platform drivers.
+> >>>
+> >>> I understand that, the problem is that the independent driver depends on
+> >>> features of the related controller driver as this patch shows. This
+> >>> patch basically says that if you use a specific path in configfs (that
+> >>> includes pci_epf_test_dw) your device has specific HW features (eg
+> >>> linkup notifier above), that obviously depends on the platform HW not on
+> >>> the string you use in configfs.
+> >>>
+> >>> What I am questioning is a) if I understand this right and b) whether
+> >>> this is the right approach.
+> >>
+> >> Your understanding is right. Ideally pci-epf-test driver shouldn't have any HW
+> >> specific configuration. But different HW have different configurations and
+> >> pci-epf-test should be informed of the configuration the HW supports.
+> > 
+> > I am honestly very confused. First off, I do not understand what this
+> > patch really does (or better what DW can't do so that it needs a
+> > specific configfs string and therefore a specific configuration).
+> > 
+> > What's the purpose of the linkup notifier ? What does it mean that
+> > the DW HW can't handle it ?
+> > 
+> > Are we referring to the pci_epf_linkup() function ?
+> > 
+> > If it is a HW configuration (ie the DW HW does not have a signal to
+> > report that the link is up ?) its enablement must depend on HW
+> > controller properties not configfs entries, I do not like what this
+> > patch does (probably because I am confused and I do not understand it).
+> > 
+> > Please let me know your thoughts on this, thanks.
+> 
+> On my setup, the EP is unable generate a signal which is responsible
+> for notify that the link is established, being therefore necessary to
+> emulate it, this is done by setting the linkup_notifier variable to
+> false.
+
+What I do not understand is why the workqueue notification can't be called
+irrespective of the linkup notifier value from pci_epf_test_bind(),
+what's the point in calling it earlier with pci_epf_linkup() (or the
+other way around why is it safe to call it a bind() time if there
+is no notification available - which is the DW case).
+
+[...]
+
+> Since the linkup notifier and BAR index (where auxiliary registers are
+> located) may be configurable and is something platform dependent,
+> perhaps the configuration of this variables should be done by module
+> parameter and not by configfs, leaving this configuration
+> responsibility in charge of each platform.
+
+They are platform dependent because they depend on the EP controller.
+That's why I said that those are EP controller parameters. I do not
+think they are module parameters either - they should be part of HW
+description in firmware.
+
+Lorenzo
+
+> I think this option is also a good alternative, simple and clean. What
+> do you think?
+> 
+> >>
+> >> Thanks
+> >> Kishon
+> 
+> Regards,
+> Gustavo
+> 
