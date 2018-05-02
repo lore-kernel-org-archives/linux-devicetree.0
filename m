@@ -1,129 +1,125 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v6 3/3] clk: qcom: Add Global Clock controller (GCC) driver for
- SDM845
-Date: Wed, 02 May 2018 00:23:29 -0700
-Message-ID: <152524580953.138124.2159165461856101134@swboyd.mtv.corp.google.com>
-References: <1525105210-8689-1-git-send-email-anischal@codeaurora.org>
- <1525105210-8689-4-git-send-email-anischal@codeaurora.org>
+From: Amit Nischal <anischal@codeaurora.org>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: Introduce QCOM Video clock
+ bindings
+Date: Wed, 02 May 2018 13:15:12 +0530
+Message-ID: <55ef90a4034f5c7e94274c1ea02d3af1@codeaurora.org>
+References: <1524576771-31096-1-git-send-email-anischal@codeaurora.org>
+ <1524576771-31096-2-git-send-email-anischal@codeaurora.org>
+ <20180501135054.GA373@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525105210-8689-4-git-send-email-anischal@codeaurora.org>
+In-Reply-To: <20180501135054.GA373@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Amit Nischal <anischal@codeaurora.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Amit Nischal (2018-04-30 09:20:10)
-> ---
->  .../devicetree/bindings/clock/qcom,gcc.txt         |    1 +
->  drivers/clk/qcom/Kconfig                           |   10 +-
->  drivers/clk/qcom/Makefile                          |    1 +
->  drivers/clk/qcom/gcc-sdm845.c                      | 3480 ++++++++++++++=
-++++++
->  include/dt-bindings/clock/qcom,gcc-sdm845.h        |  239 ++
+On 2018-05-01 19:20, Rob Herring wrote:
+> On Tue, Apr 24, 2018 at 07:02:50PM +0530, Amit Nischal wrote:
+>> Add device tree bindings for video clock controller for Qualcomm
+>> Technology Inc's SoCs.
+>> 
+>> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/clock/qcom,videocc.txt     | 18 
+>> ++++++++++++++++
+>>  include/dt-bindings/clock/qcom,videocc-sdm845.h    | 25 
+>> ++++++++++++++++++++++
+>>  2 files changed, 43 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/clock/qcom,videocc.txt
+>>  create mode 100644 include/dt-bindings/clock/qcom,videocc-sdm845.h
+>> 
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,videocc.txt 
+>> b/Documentation/devicetree/bindings/clock/qcom,videocc.txt
+>> new file mode 100644
+>> index 0000000..1c23b41
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,videocc.txt
+>> @@ -0,0 +1,18 @@
+>> +Qualcomm Video Clock & Reset Controller Binding
+>> +-----------------------------------------------
+>> +
+>> +Required properties :
+>> +- compatible : shall contain "qcom,videocc-sdm845"
+> 
+> '<vendor>,<soc>-<block>' is the preferred order.
+> 
+> Every single QCom binding... Can someone spread the word in QCom.
 
-Do the split that Rob suggests please, given that you're resending. And
-also include his reviewed-by tag.
+Thanks for the review. I will make the suggested change in the next
+series.
 
->  5 files changed, 3727 insertions(+), 4 deletions(-)
->  create mode 100644 drivers/clk/qcom/gcc-sdm845.c
->  create mode 100644 include/dt-bindings/clock/qcom,gcc-sdm845.h
-> =
+> 
+>> +- reg : shall contain base register location and length
+>> +- #clock-cells : shall contain 1
+>> +- #reset-cells : shall contain 1
+>> +- #power-domain-cells : shall contain 1
+> 
+> No header definitions for resets and power-domain? There's no
+> requirement to have headers, but the binding should be complete even if
+> you don't have a driver yet.
 
-> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> index e42e1af..3298beb 100644
-> --- a/drivers/clk/qcom/Kconfig
-> +++ b/drivers/clk/qcom/Kconfig
-> @@ -218,13 +218,15 @@ config MSM_MMCC_8996
->           Say Y if you want to support multimedia devices such as display,
->           graphics, video encode/decode, camera, etc.
-> =
+Will do the required changes in the next patch series.
+> 
+>> +
+>> +Example:
+>> +	videocc: qcom,videocc@ab00000 {
+> 
+> clock-controller@...
 
-> -config MSM_GCC_8998
-> -       tristate "MSM8998 Global Clock Controller"
-> +config SDM_GCC_845
-> +       tristate "SDM845 Global Clock Controller"
-> +       select QCOM_GDSC
->         depends on COMMON_CLK_QCOM
->         help
-> -         Support for the global clock controller on msm8998 devices.
-> +         Support for the global clock controller on Qualcomm Technologie=
-s, Inc
-> +         sdm845 devices.
->           Say Y if you want to use peripheral devices such as UART, SPI,
-> -         i2c, USB, UFS, SD/eMMC, PCIe, etc.
-> +         I2C, USB, UFS, SDDC, PCIe, etc.
+Will be fixed in the next patch series.
 
-This is all wrong.
-
-> =
-
->  config SPMI_PMIC_CLKDIV
->         tristate "SPMI PMIC clkdiv Support"
-> diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
-> new file mode 100644
-> index 0000000..6484cba
-> --- /dev/null
-> +++ b/drivers/clk/qcom/gcc-sdm845.c
-> @@ -0,0 +1,3480 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
-> +
-[...]
-> +                       .name =3D "gcc_disp_axi_clk",
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_branch gcc_disp_gpll0_clk_src =3D {
-> +       .halt_reg =3D 0x52004,
-> +       .halt_check =3D BRANCH_HALT_DELAY,
-
-What about this one? It's not a phy so I'm confused again why we're
-unable to check the halt bit. To be clear(er), I don't see why we ever
-want to have HALT_DELAY used. Hopefully we can remove that flag.
-
-From=20what I recall, the flag is there for clks that don't toggle their
-status bit at all, but that we know take a few cycles to ungate the
-upstream clk. So we threw a delay into the code to make sure that when
-clk_enable() returned, a driver wouldn't try to use hardware before the
-clk was actually on. But these cases should pretty much never happen,
-hence all the pushback against this flag.
-
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x52004,
-> +               .enable_mask =3D BIT(18),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_disp_gpll0_clk_src",
-> +                       .parent_names =3D (const char *[]){
-> +                               "gpll0",
-> +                       },
-> +                       .num_parents =3D 1,
-[...]
-> +               .enable_reg =3D 0x7508c,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_ufs_card_phy_aux_clk",
-> +                       .parent_names =3D (const char *[]){
-> +                               "gcc_ufs_card_phy_aux_clk_src",
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT,
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_branch gcc_ufs_card_rx_symbol_0_clk =3D {
-> +       .halt_reg =3D 0x75018,
-> +       .halt_check =3D BRANCH_HALT_DELAY,
-
-There are still HALT_DELAY flags for UFS though? Why?
-
-Also, are you going to send DFS support for the QUP clks? I would like
-to see that code merged soon.
+> 
+>> +		compatible = "qcom,videocc-sdm845";
+>> +		reg = <0xab00000 0x10000>;
+>> +		#clock-cells = <1>;
+>> +		#reset-cells = <1>;
+>> +		#power-domain-cells = <1>;
+>> +	};
+>> diff --git a/include/dt-bindings/clock/qcom,videocc-sdm845.h 
+>> b/include/dt-bindings/clock/qcom,videocc-sdm845.h
+>> new file mode 100644
+>> index 0000000..f5f7599
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/qcom,videocc-sdm845.h
+>> @@ -0,0 +1,25 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/* Copyright (c) 2016-2018, The Linux Foundation. All rights 
+>> reserved. */
+>> +
+>> +#ifndef _DT_BINDINGS_CLK_MSM_VIDEO_CC_SDM845_H
+>> +#define _DT_BINDINGS_CLK_MSM_VIDEO_CC_SDM845_H
+>> +
+>> +#define VIDEO_CC_APB_CLK			0
+>> +#define VIDEO_CC_AT_CLK				1
+>> +#define VIDEO_CC_QDSS_TRIG_CLK			2
+>> +#define VIDEO_CC_QDSS_TSCTR_DIV8_CLK		3
+>> +#define VIDEO_CC_VCODEC0_AXI_CLK		4
+>> +#define VIDEO_CC_VCODEC0_CORE_CLK		5
+>> +#define VIDEO_CC_VCODEC1_AXI_CLK		6
+>> +#define VIDEO_CC_VCODEC1_CORE_CLK		7
+>> +#define VIDEO_CC_VENUS_AHB_CLK			8
+>> +#define VIDEO_CC_VENUS_CLK_SRC			9
+>> +#define VIDEO_CC_VENUS_CTL_AXI_CLK		10
+>> +#define VIDEO_CC_VENUS_CTL_CORE_CLK		11
+>> +#define VIDEO_PLL0				12
+>> +
+>> +#define VENUS_GDSC				0
+>> +#define VCODEC0_GDSC				1
+>> +#define VCODEC1_GDSC				2
+>> +
+>> +#endif
+>> --
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+>> member
+>> of Code Aurora Forum, hosted by The Linux Foundation
+>> 
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" 
+>> in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
