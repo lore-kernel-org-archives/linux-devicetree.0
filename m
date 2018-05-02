@@ -1,72 +1,42 @@
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 09/17] irqchip/irq-mvebu-icu: support ICU subnodes
-Date: Wed, 2 May 2018 10:13:00 +0200
-Message-ID: <20180502101300.49cc3623@windsurf.home>
-References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
- <20180421135537.24716-10-miquel.raynal@bootlin.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 0/4] Add STM32 timers to stm32mp157c
+Date: Wed, 2 May 2018 10:13:30 +0200
+Message-ID: <4173223f-3790-2f53-8ed7-3d7fdecc0e76@st.com>
+References: <1523972730-29240-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180421135537.24716-10-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1523972730-29240-1-git-send-email-fabrice.gasnier@st.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>, robh+dt@kernel.org
+Cc: mcoquelin.stm32@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gTWlxdcOobCwKCk9uIFNhdCwgMjEgQXByIDIwMTggMTU6NTU6MjkgKzAyMDAsIE1pcXVl
-bCBSYXluYWwgd3JvdGU6Cj4gSW50cm9kdWNlIG5ldyBiaW5kaW5ncyBmb3IgdGhlIElDVS4KClBl
-cmhhcHMgdGhpcyBzaG91bGQgZXhwbGFpbiAqd2h5KiB3ZSBuZWVkIG5ldyBiaW5kaW5ncy4KCj4g
-RWFjaCBEVCBzdWJub2RlIG9mIHRoZSBJQ1UgcmVwcmVzZW50cyBhIHR5cGUgb2YgaW50ZXJydXB0
-IHRoYXQgc2hvdWxkCj4gYmUgaGFuZGxlZCBzZXBhcmF0ZWx5LiBBZGQgdGhlIHBvc3NpYmlsaXR5
-IGZvciB0aGUgSUNVIHRvIGhhdmUgc3Vibm9kZXMKPiBhbmQgcHJvYmUgZWFjaCBvZiB0aGVtIGF1
-dG9tYXRpY2FsbHkgd2l0aCBkZXZtX3BsYXRmb3JtX3BvcHVsYXRlKCkuIElmCj4gdGhlIG5vZGUg
-YXMgbm8gY2hpbGQsIHRoZSBwcm9iZSBmdW5jdGlvbiBmb3IgTlNScyB3aWxsIHN0aWxsIGJlIGNh
-bGxlZAo+ICdtYW51YWxseScuCgogLi4uIGluIG9yZGVyIHRvIHByZXNlcnZlIGJhY2t3YXJkIGNv
-bXBhdGliaWxpdHkgd2l0aCBEZXZpY2UgVHJlZXMKIHVzaW5nIHRoZSBvbGQgYmluZGluZy4KCj4g
-K3N0YXRpYyBzdHJ1Y3QgbXZlYnVfaWN1ICptdmVidV9kZXZfZ2V0X2RydmRhdGEoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqcGRldikKClRoZSBmdW5jdGlvbiBzaG91bGQgYmUgcHJlZml4ZWQgYnkg
-bXZlYnVfaWN1Xywgbm90IGp1c3QgbXZlYnVfLgoKPiArewo+ICsJc3RydWN0IG12ZWJ1X2ljdSAq
-aWN1Owo+ICsKPiArCWljdSA9IGRldl9nZXRfZHJ2ZGF0YSgmcGRldi0+ZGV2KTsKPiArCWlmIChp
-Y3UpIHsKPiArCQkvKiBMZWdhY3kgYmluZGluZ3M6IGdldCB0aGUgZGV2aWNlIGRhdGEgKi8KCkkg
-ZmluZCB0aGlzIGNvbW1lbnQgd2VpcmQsIGJlY2F1c2UgaXQgZG9lc24ndCBkb2N1bWVudCB3aGF0
-IHRoZSB0ZXN0Cmp1c3QgYmVsb3cgaXMgZG9pbmcuCgo+ICsJCWlmICghaWN1LT5sZWdhY3lfYmlu
-ZGluZ3MpCj4gKwkJCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOwo+ICsJfSBlbHNlIHsKPiArCQkv
-KiBOZXcgYmluZGluZ3M6IGdldCB0aGUgcGFyZW50IGRldmljZSAoSUNVKSBkYXRhICovCj4gKwkJ
-aWN1ID0gZGV2X2dldF9kcnZkYXRhKHBkZXYtPmRldi5wYXJlbnQpOwo+ICsJCWlmICghaWN1KQo+
-ICsJCQlyZXR1cm4gRVJSX1BUUigtRU5PREVWKTsKPiArCQlpZiAoaWN1LT5sZWdhY3lfYmluZGlu
-Z3MpCj4gKwkJCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOwo+ICsJfQoKCj4gQEAgLTE0NCw3ICsx
-NzAsMTAgQEAgbXZlYnVfaWN1X2lycV9kb21haW5fYWxsb2Moc3RydWN0IGlycV9kb21haW4gKmRv
-bWFpbiwgdW5zaWduZWQgaW50IHZpcnEsCj4gIAkJZ290byBmcmVlX2lycWQ7Cj4gIAl9Cj4gIAo+
-IC0JaWN1X2lycWQtPmljdV9ncm91cCA9IGZ3c3BlYy0+cGFyYW1bMF07Cj4gKwlpZiAoaWN1LT5s
-ZWdhY3lfYmluZGluZ3MpCj4gKwkJaWN1X2lycWQtPmljdV9ncm91cCA9IGZ3c3BlYy0+cGFyYW1b
-MF07Cj4gKwllbHNlCj4gKwkJaWN1X2lycWQtPmljdV9ncm91cCA9IElDVV9HUlBfTlNSOwoKSW4g
-cHJhY3RpY2UgaGVyZSBmd3NwZWMtPnBhcmFtWzBdIGlzIGFsd2F5cyBnb2luZyB0byBiZSBlcXVh
-bCB0bwpJQ1VfR1JQX05TUiwgYnV0IE9LLCB0aGUgdGVzdCBtYWtlcyBzZW5zZSBhcyBpbiBhIGZ1
-dHVyZSBjb21taXQsIHRoZQoiZWxzZSIgY2FzZSB3aWxsIGJlIGNoYW5nZWQgdG8gc3VwcG9ydCBT
-RUlzLgoKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbXZlYnVfaWN1X25zcl9v
-Zl9tYXRjaFtdID0gewo+ICsJeyAuY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLGNwMTEwLWljdS1uc3Ii
-LCB9LAo+ICsJe30sCj4gK307Cj4gKwo+ICtzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBt
-dmVidV9pY3VfbnNyX2RyaXZlciA9IHsKPiArCS5wcm9iZSAgPSBtdmVidV9pY3VfbnNyX3Byb2Jl
-LAo+ICsJLmRyaXZlciA9IHsKPiArCQkubmFtZSA9ICJtdmVidS1pY3UtbnNyIiwKPiArCQkub2Zf
-bWF0Y2hfdGFibGUgPSBtdmVidV9pY3VfbnNyX29mX21hdGNoLAo+ICsJfSwKPiArfTsKPiArYnVp
-bHRpbl9wbGF0Zm9ybV9kcml2ZXIobXZlYnVfaWN1X25zcl9kcml2ZXIpOwoKSSdtIG5vdCBzdXJl
-IHdoeSB5b3UgY2FsbCB0aGlzIGljdV9uc3IgaGVyZSwgYW5kIGNoYW5nZSBpdCBsYXRlciB0bwpp
-Y3Vfc3Vic2V0LiBXb3VsZG4ndCBpdCBtYWtlIHNlbnNlIHRvIGNhbGwgaXQgcmlnaHQgYXdheSB3
-aXRoIHRoZSBmaW5hbApuYW1lID8gTm90ZSB0aGF0IHRoaXMgaXMgbm90IGEgdmVyeSBzdHJvbmcg
-cmVxdWVzdCB0byBjaGFuZ2UgdGhpcwphc3BlY3QsIEknbSBmaW5lIHdpdGggaG93IGl0J3MgZG9u
-ZSB0b2RheSwgaXQncyBqdXN0IHRoYXQgSSB3b3VsZCBoYXZlCmRvbmUgaXQgZGlmZmVyZW50bHku
-CgpPdGhlciB0aGFuIHRoYXQsIGxvb2tzIGdvb2QgdG8gbWUuCgpUaG9tYXMKLS0gClRob21hcyBQ
-ZXRhenpvbmksIENUTywgQm9vdGxpbiAoZm9ybWVybHkgRnJlZSBFbGVjdHJvbnMpCkVtYmVkZGVk
-IExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cHM6Ly9ib290bGluLmNvbQoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
-bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Fabrice,
+
+On 04/17/2018 03:45 PM, Fabrice Gasnier wrote:
+> This series adds support for STM32 timers to stm32mp157c. These
+> timers can act PWM, trigger and/or encoder.
+> Populate stm32mp157c SOC and ed1/ev1 boards.
+> 
+> Fabrice Gasnier (4):
+>    ARM: dts: stm32: add timers support to stm32mp157c
+>    ARM: dts: stm32: add PWM pins used on stm32mp157c-ev1 board
+>    ARM: dts: stm32: add PWM and triggers on stm32mp157c-ev1 board
+>    ARM: dts: stm32: enable timer trigger 6 on stm32mp157c-ed1
+> 
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi |  27 +++
+>   arch/arm/boot/dts/stm32mp157c-ed1.dts     |   7 +
+>   arch/arm/boot/dts/stm32mp157c-ev1.dts     |  36 ++++
+>   arch/arm/boot/dts/stm32mp157c.dtsi        | 283 ++++++++++++++++++++++++++++++
+>   4 files changed, 353 insertions(+)
+> 
+
+Series applied on stm32-next.
+Note that I modified pinctrl patch to fix DTC warnings when make W=12 is 
+used.
+
+Regards
+Alex
