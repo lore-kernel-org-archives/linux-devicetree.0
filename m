@@ -1,32 +1,92 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/2] regulator: dt-bindings: add QCOM RPMh regulator bindings
-Date: Wed, 2 May 2018 09:37:15 -0700
-Message-ID: <CAD=FV=UDUKg58xe+3C5QUbFwFkO8d3c_tzxmfPDzdv1KXZ3W9g@mail.gmail.com>
-References: <cover.1523673467.git.collinsd@codeaurora.org> <39b676d2ba7dac2436196cc5a090c6f151498dc8.1523673467.git.collinsd@codeaurora.org>
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Add dts file for the A20-linova1-7
+ HMI
+Date: Wed, 2 May 2018 18:41:34 +0200
+Message-ID: <839d2560-0250-9b3a-8019-4e83d9e931e2@micronovasrl.com>
+References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
+ <1521662593-25468-7-git-send-email-giulio.benetti@micronovasrl.com>
+ <20180322180508.my64gobhh5rc2x2m@flea>
+ <8ef3b259-03b4-6987-286e-36ff627a8b76@micronovasrl.com>
+ <20180424084137.7xfwji2gcibxavvt@flea>
+ <03a02abb-e95c-b4ec-748f-907c0af67969@micronovasrl.com>
+ <20180425184016.xktppxw7egddr7li@flea>
+ <42feccc9-1d09-9ff2-3ccc-1dea63bacfb6@micronovasrl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <39b676d2ba7dac2436196cc5a090c6f151498dc8.1523673467.git.collinsd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <42feccc9-1d09-9ff2-3ccc-1dea63bacfb6@micronovasrl.com>
+Content-Language: it
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, Apr 13, 2018 at 7:50 PM, David Collins <collinsd@codeaurora.org> wrote:
-> +- vdd_l26-supply
-> +- vdd_lvs1_lvs2-supply
-> +- vdd_lvs1_lvs2-supply
-> +       Usage:      optional (PM8998 only)
-> +       Value type: <phandle>
-> +       Definition: phandle of the parent supply regulator of one or more of the
-> +                   regulators for this PMIC.
-
-One small additional nit here is that "vdd_lvs1_lvs2-supply" is listed twice.
-
-Also on the schematics (and in the PM8998 datasheet) I have this is
-"VIN_LVS_1_2".  It seems like you should be consistent here and call
-this "vin-lvs-1-2-supply".
-
--Doug
+SGkgTWF4aW1lLAoKPj4gWW91IGRvbid0IGhhdmUgdG8gaGFuZGNvZGUgdGhlIGZyYWdtZW50cyBh
+bnltb3JlIHdpdGggdGhlIG5ldyBzeW50YXgsCj4+IGFuZCBVLUJvb3QgbWFrZXMgaXQgcmVhbGx5
+IHRyaXZpYWwgdG8gdXNlIGlmIHlvdSB1c2UgdGhlIEZJVCBpbWFnZQo+PiBmb3JtYXQgdG8gaGF2
+ZSBtdWx0aXBsZSBvdmVybGF5cyBidW5kbGVkIGluIHRoZSBzYW1lIGltYWdlLiBZb3UgY2FuCj4+
+IGNob29zZSB0byBhcHBseSB0aGVtIGR5bmFtaWNhbGx5LCBmb3IgZXhhbXBsZSBiYXNlZCBvbiBh
+biBFRVBST00gb3IKPj4gc29tZSBvdGhlciBtZXRyaWMgdG8gc2VlIHdoaWNoIGNvbWJpbmF0aW9u
+IHlvdSBoYXZlLgo+IAo+IEFoLCB0aGlzIGlzIGludGVyZXN0aW5nLiBJJ20gZ29pbmcgdG8gZXhw
+ZXJpbWVudCB3aXRoIHRoYXQuCj4gCgpJJ20gc3RydWdnbGluZyBhZ2FpbnN0IHRoaXMsIEkgZG9u
+J3QgcmVhbGx5IGtub3cgaG93IHRvIHByb2NlZWQsCmV4Y2VwdCBrZWVwaW5nIG1vbm9saXRoaWMg
+ZHRzIGZpbGVzIGluY2x1ZGluZyBvdGhlciBkdHNpIGZpbGVzLgoKQWJvdXQgZHQtb3ZlcmxheXMg
+SSd2ZSB0cmllZCB0byBsb29rIGFyb3VuZCBsb3Qgb2YgdGltZSwKYnV0IHRoZSBvbmx5IHRoaW5n
+IEkndmUgZm91bmQgaXMgdGhpczoKaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4
+L2tlcm5lbC9naXQvZ2VlcnQvcmVuZXNhcy1kcml2ZXJzLmdpdC90cmVlL2FyY2gvYXJtL2Jvb3Qv
+ZHRzP2g9dG9waWMvcmVuZXNhcy1vdmVybGF5cwoKd2hlcmUgdGhleSB1c2UgLmR0c28gdGFnZ2lu
+ZyB0aGVtIGFzICIvcGx1Z2luLzsiCmFuZCBjb21waWxlIGFsbCAuZHRzbyBmb3VuZCBpbiBkdHMg
+Zm9sZGVyLgpUaGVuIHRoZXkgb2J0YWluIC5kdGJvIGZpbGVzIHRoYXQgc2hvdWxkIGJlIHRoZSBk
+dC1vdmVybGF5cyB3ZSBoYXZlIApzcG9rZW4gYWJvdXQgcmlnaHQ/CgpXaGF0IEkgY2FuJ3QgdW5k
+ZXJzdGFuZCBpcyBpZiB0aGVyZSdzIGEgcmVhbCBzdGFuZGFyZCBhdCB0aGlzIHRpbWUgdG8gCmZv
+bGxvdywgYmVjYXVzZSBvbiByZW5lc2FzLWRyaXZlciB0aGV5IHVzZSB0aGVpciB3YXkgdG8gaGFu
+ZGxlIGFsbCAuZHRzbyAKZmlsZXMsIGJ1dCBvbiBtYWlubGluZSB0aGVyZSBzZWVtcyB0byBiZSBu
+b3RoaW5nIGFib3V0IHRoYXQuCgpTbyBhdCB0aGUgbW9tZW50IEknbSB0cnlpbmcgdG8gY29tcGls
+ZSBkdHMgdGFnZ2VkIGFzIC9wbHVnaW4vOwpidXQgZHRjIGdpdmVzIG1lIGEgbG90IG9mIHdhcm5p
+bmdzLgoKZHRzOgoiCi9kdHMtdjEvOwovcGx1Z2luLzsKCiNpbmNsdWRlIDxkdC1iaW5kaW5ncy9n
+cGlvL2dwaW8uaD4KI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2ly
+cS5oPgoKJmkyYzIgewoJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKCXBpbmN0cmwtMCA9IDwm
+aTJjMl9waW5zX2E+OwoJc3RhdHVzID0gIm9rYXkiOwoKCWZ0NXggewoJCWNvbXBhdGlibGUgPSAi
+ZWR0LGVkdC1mdDUzMDYiOwoJCXJlZyA9IDwweDM4PjsKCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZw
+aW8+OwoJCWludGVycnVwdHMgPSA8NyAyIElSUV9UWVBFX0VER0VfRkFMTElORz47IC8qIFBIMiAq
+LwoJCXJlc2V0LWdwaW9zID0gPCZwaW8gNyAzIEdQSU9fQUNUSVZFX0xPVz47IC8qIFBIMyAqLwoJ
+CXRvdWNoc2NyZWVuLXNpemUteCA9IDw0ODA+OwoJCXRvdWNoc2NyZWVuLXNpemUteSA9IDwyNzI+
+OwoJfTsKfTsKIgoKQnVpbGQgb3V0cHV0IGlzc3VpbmcgbWFrZSBBUkNIPWFybSBDUk9TU19DT01Q
+SUxFPWFybS1saW51eC0gYWFhLmR0YiAoSSAKdXNlIGFhYS5kdHMgYXMgc291cmNlKToKIgphcmNo
+L2FybS9ib290L2R0cy9hYWEuZHRiOiBXYXJuaW5nIChyZWdfZm9ybWF0KTogCi9mcmFnbWVudEAw
+L19fb3ZlcmxheV9fL2Z0NXg6cmVnOiBwcm9wZXJ0eSBoYXMgaW52YWxpZCBsZW5ndGggKDQgYnl0
+ZXMpIAooI2FkZHJlc3MtY2VsbHMgPT0gMiwgI3NpemUtY2VsbHMgPT0gMSkKYXJjaC9hcm0vYm9v
+dC9kdHMvYWFhLmR0YjogV2FybmluZyAocGNpX2RldmljZV9idXNfbnVtKTogRmFpbGVkIApwcmVy
+ZXF1aXNpdGUgJ3JlZ19mb3JtYXQnCmFyY2gvYXJtL2Jvb3QvZHRzL2FhYS5kdGI6IFdhcm5pbmcg
+KHNpbXBsZV9idXNfcmVnKTogRmFpbGVkIHByZXJlcXVpc2l0ZSAKJ3JlZ19mb3JtYXQnCmFyY2gv
+YXJtL2Jvb3QvZHRzL2FhYS5kdGI6IFdhcm5pbmcgKGF2b2lkX2RlZmF1bHRfYWRkcl9zaXplKTog
+Ci9mcmFnbWVudEAwL19fb3ZlcmxheV9fL2Z0NXg6IFJlbHlpbmcgb24gZGVmYXVsdCAjYWRkcmVz
+cy1jZWxscyB2YWx1ZQphcmNoL2FybS9ib290L2R0cy9hYWEuZHRiOiBXYXJuaW5nIChhdm9pZF9k
+ZWZhdWx0X2FkZHJfc2l6ZSk6IAovZnJhZ21lbnRAMC9fX292ZXJsYXlfXy9mdDV4OiBSZWx5aW5n
+IG9uIGRlZmF1bHQgI3NpemUtY2VsbHMgdmFsdWUKIgoKVGhlbiBpbiB1Ym9vdCBJJ20gdHJ5aW5n
+IHRvIGRvIGFzIGZvbGxvd3M6CiMgZmR0IGFkZHIgMHg0MzAwMDAwMCAod2hlcmUgZHRiIGlzKQoj
+IGZkdCByZXNpemUgODE5MgojIGZkdCBhcHBseSAweDQzMGMwMDAwICh3aGVyZSBkdGJvIGlzKQpC
+dXQgaXQgZ2l2ZXMgbWUgImxpYmZkdCBmZHRfY2hlY2tfaGVhZGVyKCk6IEZEVF9FUlJfQkFETUFH
+SUMiCihJIHdhcyBleHBlY3Rpbmcgc29tZSBlcnJvcikKCklzIHRoZXJlIGFueXdoZXJlIGEgZ3Vp
+ZGUgZm9yIHRoaXM/CklzIHRoaXMgd2hhdCB5b3UndmUgbWVhbnQgYmVmb3JlPwpVc2luZyBGSVQg
+Zm9yIG15IHVzZSBpcyBub3QgdGhlIGJlc3QsIHNvIEkgd291bGQgbGlrZSB0byBoYXZlIG1hbnkg
+Cm92ZXJsYXlzIGluIC9ib290IGZvbGRlciBhbmQgdXNlIGRpZmZlcmVudCBib290LnNjciBkZXBl
+bmRpbmcgb24gaGFyZHdhcmUuCgpDYW4geW91IHBvaW50IG1lIHRvIHNvbWV3aGVyZSBvciBzb21l
+dGhpbmc/CkkgZG9uJ3QgcmVhbGx5IGtub3cgd2hlcmUgdG8gYmVhdCBteSBoZWFkIQoKVGhhbmtz
+IGluIGFkdmFuY2UuCgotLSAKR2l1bGlvIEJlbmV0dGkKQ1RPCgpNSUNST05PVkEgU1JMClNlZGU6
+IFZpYSBBLiBOaWVkZGEgMyAtIDM1MDEwIFZpZ29uemEgKFBEKQpUZWwuIDA0OS84OTMxNTYzIC0g
+RmF4IDA0OS84OTMxMzQ2CkNvZC5GaXNjYWxlIC0gUC5JVkEgMDI2NjM0MjAyODUKQ2FwaXRhbGUg
+U29jaWFsZSDigqwgMjYuMDAwIGkudi4KSXNjcml0dGEgYWwgUmVnLiBJbXByZXNlIGRpIFBhZG92
+YSBOLiAwMjY2MzQyMDI4NQpOdW1lcm8gUi5FLkEuIDI1ODY0MgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
