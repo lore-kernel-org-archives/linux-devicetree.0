@@ -1,102 +1,77 @@
 From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v5 5/7] gpio: pca953x: fix address calculation for pcal6524
-Date: Wed, 2 May 2018 14:35:24 +0200
-Message-ID: <4F016FCD-04B0-4EE1-A9F4-5A182DD437EF@goldelico.com>
-References: <cover.1524933096.git.hns@goldelico.com> <aaac818909d71523726094b1dfacc03e756874e9.1524933096.git.hns@goldelico.com> <CAHp75VfD4gYesEw2n4JMycmr=qcAtqSkAAjwCViJZRYC6kVUVg@mail.gmail.com>
+Subject: Re: [PATCH v5 4/7] gpio: pca953x: define masks for addressing common and extended registers
+Date: Wed, 2 May 2018 14:36:54 +0200
+Message-ID: <FA9DBCAF-2EA5-4317-BBA3-E2D6A9EAC5D4@goldelico.com>
+References: <cover.1524933096.git.hns@goldelico.com> <3df974ea890116d759844e56362dc0786388869a.1524933096.git.hns@goldelico.com> <CAHp75Ve37aARbNZ8qu5W9C-fFG5Kf9GRE_VR4aRLFpX61zviyg@mail.gmail.com>
 Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfD4gYesEw2n4JMycmr=qcAtqSkAAjwCViJZRYC6kVUVg@mail.gmail.com>
+In-Reply-To: <CAHp75Ve37aARbNZ8qu5W9C-fFG5Kf9GRE_VR4aRLFpX61zviyg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
 
-> Am 02.05.2018 um 14:28 schrieb Andy Shevchenko =
+> Am 02.05.2018 um 14:29 schrieb Andy Shevchenko =
 <andy.shevchenko@gmail.com>:
 >=20
 > On Sat, Apr 28, 2018 at 7:31 PM, H. Nikolaus Schaller =
 <hns@goldelico.com> wrote:
->> The register constants are so far defined in a way that they fit
->> for the pcal9555a when shifted by the number of banks, i.e. are
->> multiplied by 2 in the accessor function.
+>> These mask bits are to be used to map the extended register
+>> addreseses (which are defined for an unsupported 8-bit pcal chip)
+>> to 16 and 24 bit chips (pcal6524).
 >>=20
->> Now, the pcal6524 has 3 banks which means the relative offset
->> is multiplied by 4 for the standard registers.
->>=20
->> Simply applying the bit shift to the extended registers gives
->> a wrong result, since the base offset is already included in
->> the offset.
->>=20
->> Therefore, we add code to the 24 bit accessor functions to
->> adjust the register number for these exended registers.
->>=20
->=20
-> Suggested-by ?
-
-Detecting that we need to adjust the registers generally was from me,
-but your suggestion of an improved formula should of course be mentioned
-and appreciated!
-
-I'll think about a good formulation for v6.
-
-BR and thanks,
-Nikolaus
-
->=20
 >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 >> ---
->> drivers/gpio/gpio-pca953x.c | 8 ++++++--
->> 1 file changed, 6 insertions(+), 2 deletions(-)
+>> drivers/gpio/gpio-pca953x.c | 3 +++
+>> 1 file changed, 3 insertions(+)
 >>=20
 >> diff --git a/drivers/gpio/gpio-pca953x.c =
 b/drivers/gpio/gpio-pca953x.c
->> index fc863faa3ce4..4194495a7990 100644
+>> index 2b667166e855..fc863faa3ce4 100644
 >> --- a/drivers/gpio/gpio-pca953x.c
 >> +++ b/drivers/gpio/gpio-pca953x.c
->> @@ -221,9 +221,11 @@ static int pca957x_write_regs_16(struct =
-pca953x_chip *chip, int reg, u8 *val)
->> static int pca953x_write_regs_24(struct pca953x_chip *chip, int reg, =
-u8 *val)
->> {
->>        int bank_shift =3D fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
->> +       int addr =3D (reg & PCAL_GPIO_MASK) << bank_shift;
->> +       int pinctrl =3D (reg & PCAL_PINCTRL_MASK) << 1;
+>> @@ -56,6 +56,9 @@
+>> #define PCAL6524_DEBOUNCE      0x2d
 >>=20
->>        return i2c_smbus_write_i2c_block_data(chip->client,
->> -                                             (reg << bank_shift) | =
-REG_ADDR_AI,
->> +                                             pinctrl | addr | =
-REG_ADDR_AI,
->>                                              NBANK(chip), val);
->> }
->>=20
->> @@ -263,9 +265,11 @@ static int pca953x_read_regs_16(struct =
-pca953x_chip *chip, int reg, u8 *val)
->> static int pca953x_read_regs_24(struct pca953x_chip *chip, int reg, =
-u8 *val)
->> {
->>        int bank_shift =3D fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
->> +       int addr =3D (reg & PCAL_GPIO_MASK) << bank_shift;
->> +       int pinctrl =3D (reg & PCAL_PINCTRL_MASK) << 1;
->>=20
->>        return i2c_smbus_read_i2c_block_data(chip->client,
->> -                                            (reg << bank_shift) | =
-REG_ADDR_AI,
->> +                                            pinctrl | addr | =
-REG_ADDR_AI,
->>                                             NBANK(chip), val);
->> }
->>=20
+>> #define PCA_GPIO_MASK          0x00FF
+>=20
+> + empty line (the above is about contents, not addresses)
+
+ok.
+
+>=20
+>> +#define PCAL_GPIO_MASK         GENMASK(4, 0)
+>> +#define PCAL_PINCTRL_MASK      (~PCAL_GPIO_MASK)
+>=20
+> I'm not sure which would be better here
+>=20
+> 1) to follow existing style
+> 0x1F
+> 0xE0
+
+I have also thought about this.
+
+>=20
+> 2) to use GENMASK() in both definitions
+>=20
+> 3) as it in this patch.
+>=20
+>=20
+> Whatever Linus prefers.
+
+Ok, waiting for his suggestion.
+
+>=20
+>> +
+>> #define PCA_INT                        0x0100
+>> #define PCA_PCAL               0x0200
+>> #define PCA_LATCH_INT (PCA_PCAL | PCA_INT)
 >> --
 >> 2.12.2
 >>=20
->=20
->=20
->=20
-> --=20
-> With Best Regards,
-> Andy Shevchenko
+
+BR and thanks,
+Nikolaus
