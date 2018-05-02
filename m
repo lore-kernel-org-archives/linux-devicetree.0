@@ -1,416 +1,283 @@
-From: Honghui Zhang <honghui.zhang@mediatek.com>
-Subject: Re: [PATCH 2/2] PCI: mediatek: Using chained IRQ to setup IRQ handle
-Date: Wed, 2 May 2018 17:41:04 +0800
-Message-ID: <1525254064.22948.11.camel@mhfsdcap03>
-References: <1524201910-22836-1-git-send-email-honghui.zhang@mediatek.com>
-         <1524201910-22836-3-git-send-email-honghui.zhang@mediatek.com>
-         <a2f7e70a-fdef-d925-8838-be3051c2e96d@arm.com>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm64: allwinner: h6: enable MMC0/2 on
+ Pine H64
+Date: Wed, 2 May 2018 12:01:18 +0100
+Message-ID: <add8a505-9daa-43d6-eada-b5925d58f1a1@arm.com>
+References: <20180426140728.43155-1-icenowy@aosc.io>
+ <20180426140728.43155-4-icenowy@aosc.io>
+ <03cc2e8c-4a35-3fb4-b408-fd8d4ba3e407@arm.com>
+ <83EDF187-5EB2-4FEB-99BC-9D5B728D3A45@aosc.io>
+ <45956397-a593-e51e-8637-655178c5901c@arm.com>
+ <CDCEAF85-ACD3-4884-8727-3AB1BFF670FE@aosc.io>
+ <c70beee6-3524-a322-9668-45cb27fc365c@arm.com>
+ <CAGb2v6783ERJHPd5ov3Ebf+V5LNm+bL=ypAgetPLigSyW6_niQ@mail.gmail.com>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a2f7e70a-fdef-d925-8838-be3051c2e96d@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBF5VU3LQKGQEBJASCSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v6783ERJHPd5ov3Ebf+V5LNm+bL=ypAgetPLigSyW6_niQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-GB
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-04-30 at 12:03 +0100, Marc Zyngier wrote:
-> Hi Zhang,
-> 
-> On 20/04/18 06:25, honghui.zhang@mediatek.com wrote:
-> > From: Honghui Zhang <honghui.zhang@mediatek.com>
-> > 
-> > Using irq_chip solution to setup IRQs for the consistent with IRQ framework.
-> > 
-> > Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-> > ---
-> >  drivers/pci/host/pcie-mediatek.c | 192 +++++++++++++++++++++------------------
-> >  1 file changed, 105 insertions(+), 87 deletions(-)
-> > 
-> > diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-> > index c3dc549..1d9c6f1 100644
-> > --- a/drivers/pci/host/pcie-mediatek.c
-> > +++ b/drivers/pci/host/pcie-mediatek.c
-> > @@ -11,8 +11,10 @@
-> >  #include <linux/delay.h>
-> >  #include <linux/iopoll.h>
-> >  #include <linux/irq.h>
-> > +#include <linux/irqchip/chained_irq.h>
-> >  #include <linux/irqdomain.h>
-> >  #include <linux/kernel.h>
-> > +#include <linux/msi.h>
-> >  #include <linux/of_address.h>
-> >  #include <linux/of_pci.h>
-> >  #include <linux/of_platform.h>
-> > @@ -130,14 +132,12 @@ struct mtk_pcie_port;
-> >  /**
-> >   * struct mtk_pcie_soc - differentiate between host generations
-> >   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-> > - * @has_msi: whether this host supports MSI interrupts or not
-> >   * @ops: pointer to configuration access functions
-> >   * @startup: pointer to controller setting functions
-> >   * @setup_irq: pointer to initialize IRQ functions
-> >   */
-> >  struct mtk_pcie_soc {
-> >  	bool need_fix_class_id;
-> > -	bool has_msi;
-> >  	struct pci_ops *ops;
-> >  	int (*startup)(struct mtk_pcie_port *port);
-> >  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-> > @@ -161,7 +161,9 @@ struct mtk_pcie_soc {
-> >   * @lane: lane count
-> >   * @slot: port slot
-> >   * @irq_domain: legacy INTx IRQ domain
-> > + * @inner_domain: inner IRQ domain
-> >   * @msi_domain: MSI IRQ domain
-> > + * @lock: protect the msi_irq_in_use bitmap
-> >   * @msi_irq_in_use: bit map for assigned MSI IRQ
-> >   */
-> >  struct mtk_pcie_port {
-> > @@ -179,7 +181,9 @@ struct mtk_pcie_port {
-> >  	u32 lane;
-> >  	u32 slot;
-> >  	struct irq_domain *irq_domain;
-> > +	struct irq_domain *inner_domain;
-> >  	struct irq_domain *msi_domain;
-> > +	struct mutex lock;
-> >  	DECLARE_BITMAP(msi_irq_in_use, MTK_MSI_IRQS_NUM);
-> >  };
-> >  
-> > @@ -446,103 +450,122 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
-> >  	return 0;
-> >  }
-> >  
-> > -static int mtk_pcie_msi_alloc(struct mtk_pcie_port *port)
-> > +static void mtk_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-> >  {
-> > -	int msi;
-> > +	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(data);
-> > +	phys_addr_t addr;
-> >  
-> > -	msi = find_first_zero_bit(port->msi_irq_in_use, MTK_MSI_IRQS_NUM);
-> > -	if (msi < MTK_MSI_IRQS_NUM)
-> > -		set_bit(msi, port->msi_irq_in_use);
-> > -	else
-> > -		return -ENOSPC;
-> > +	/* MT2712/MT7622 only support 32-bit MSI addresses */
-> > +	addr = virt_to_phys(port->base + PCIE_MSI_VECTOR);
-> > +	msg->address_hi = 0;
-> > +	msg->address_lo = lower_32_bits(addr);
-> >  
-> > -	return msi;
-> > +	msg->data = data->hwirq;
-> > +
-> > +	dev_dbg(port->pcie->dev, "msi#%d address_hi %#x address_lo %#x\n",
-> > +		(int)data->hwirq, msg->address_hi, msg->address_lo);
-> >  }
-> >  
-> > -static void mtk_pcie_msi_free(struct mtk_pcie_port *port, unsigned long hwirq)
-> > +static int mtk_msi_set_affinity(struct irq_data *irq_data,
-> > +				   const struct cpumask *mask, bool force)
-> >  {
-> > -	clear_bit(hwirq, port->msi_irq_in_use);
-> > +	return -EINVAL;
-> >  }
-> >  
-> > -static int mtk_pcie_msi_setup_irq(struct msi_controller *chip,
-> > -				  struct pci_dev *pdev, struct msi_desc *desc)
-> > -{
-> > -	struct mtk_pcie_port *port;
-> > -	struct msi_msg msg;
-> > -	unsigned int irq;
-> > -	int hwirq;
-> > -	phys_addr_t msg_addr;
-> > +static struct irq_chip mtk_msi_bottom_irq_chip = {
-> > +	.name			= "MTK MSI",
-> > +	.irq_compose_msi_msg	= mtk_compose_msi_msg,
-> > +	.irq_set_affinity	= mtk_msi_set_affinity,
-> > +	.irq_mask		= pci_msi_mask_irq,
-> > +	.irq_unmask	= pci_msi_unmask_irq,
-> > +};
-> >  
-> > -	port = mtk_pcie_find_port(pdev->bus, pdev->devfn);
-> > -	if (!port)
-> > -		return -EINVAL;
-> > +static int mtk_pcie_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> > +				     unsigned int nr_irqs, void *args)
-> > +{
-> > +	struct mtk_pcie_port *port = domain->host_data;
-> > +	unsigned long bit;
-> >  
-> > -	hwirq = mtk_pcie_msi_alloc(port);
-> > -	if (hwirq < 0)
-> > -		return hwirq;
-> > +	WARN_ON(nr_irqs != 1);
-> > +	mutex_lock(&port->lock);
-> >  
-> > -	irq = irq_create_mapping(port->msi_domain, hwirq);
-> > -	if (!irq) {
-> > -		mtk_pcie_msi_free(port, hwirq);
-> > -		return -EINVAL;
-> > +	bit = find_first_zero_bit(port->msi_irq_in_use, MTK_MSI_IRQS_NUM);
-> > +	if (bit >= MTK_MSI_IRQS_NUM) {
-> > +		mutex_unlock(&port->lock);
-> > +		return -ENOSPC;
-> >  	}
-> >  
-> > -	chip->dev = &pdev->dev;
-> > -
-> > -	irq_set_msi_desc(irq, desc);
-> > +	__set_bit(bit, port->msi_irq_in_use);
-> >  
-> > -	/* MT2712/MT7622 only support 32-bit MSI addresses */
-> > -	msg_addr = virt_to_phys(port->base + PCIE_MSI_VECTOR);
-> > -	msg.address_hi = 0;
-> > -	msg.address_lo = lower_32_bits(msg_addr);
-> > -	msg.data = hwirq;
-> > +	mutex_unlock(&port->lock);
-> >  
-> > -	pci_write_msi_msg(irq, &msg);
-> > +	irq_domain_set_info(domain, virq, bit, &mtk_msi_bottom_irq_chip,
-> > +			    domain->host_data, handle_simple_irq,
-> 
-> Why don't you handle the interrupt as an edge interrupt
-> (handle_edge_irq)? That's what it really is, and the fact that you use
-> "handle_simple_irq" makes me think that wou're papering over some other
-> issue (see below).
+Hi,
 
-Hi, Marc,
+On 01/05/18 16:52, Chen-Yu Tsai wrote:
+> On Mon, Apr 30, 2018 at 6:44 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> =
+wrote:
+>> Hi,
+>>
+>> On 30/04/18 10:51, Icenowy Zheng wrote:
+>>>
+>>>
+>>> =E4=BA=8E 2018=E5=B9=B44=E6=9C=8830=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
+=885:47:35, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> =E5=86=99=E5=88=B0:
+>>>> Hi Icenowy,
+>>>>
+>>>> On 27/04/18 08:12, Icenowy Zheng wrote:
+>>>>>
+>>>>>
+>>>>> =E4=BA=8E 2018=E5=B9=B44=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=
+=8D=8812:46:26, Andre Przywara
+>>>> <andre.przywara-5wv7dgnIgG8@public.gmane.org> =E5=86=99=E5=88=B0:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 26/04/18 15:07, Icenowy Zheng wrote:
+>>>>>>> The Pine H64 board have a MicroSD slot connected to MMC0 controller
+>>>>>> of
+>>>>>>> the H6 SoC and a eMMC slot connected to MMC2.
+>>>>>>>
+>>>>>>> Enable them in the device tree.
+>>>>>>>
+>>>>>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>>>>>> ---
+>>>>>>>  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts      | 32
+>>>>>> ++++++++++++++++++++++
+>>>>>>>  1 file changed, 32 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+>>>>>> b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+>>>>>>> index d36de5eb81f3..78b1cd54687c 100644
+>>>>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+>>>>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+>>>>>>> @@ -20,6 +20,38 @@
+>>>>>>>   chosen {
+>>>>>>>           stdout-path =3D "serial0:115200n8";
+>>>>>>>   };
+>>>>>>> +
+>>>>>>> + reg_vcc3v3: vcc3v3 {
+>>>>>>> +         compatible =3D "regulator-fixed";
+>>>>>>> +         regulator-name =3D "vcc3v3";
+>>>>>>> +         regulator-min-microvolt =3D <3300000>;
+>>>>>>> +         regulator-max-microvolt =3D <3300000>;
+>>>>>>> + };
+>>>>>>> +
+>>>>>>> + reg_vcc1v8: vcc1v8 {
+>>>>>>> +         compatible =3D "regulator-fixed";
+>>>>>>> +         regulator-name =3D "vcc1v8";
+>>>>>>> +         regulator-min-microvolt =3D <1800000>;
+>>>>>>> +         regulator-max-microvolt =3D <1800000>;
+>>>>>>> + };
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +&mmc0 {
+>>>>>>> + pinctrl-names =3D "default";
+>>>>>>> + pinctrl-0 =3D <&mmc0_pins>;
+>>>>>>> + vmmc-supply =3D <&reg_vcc3v3>;
+>>>>>>
+>>>>>> So this is actually CLDO1 on the AXP, correct?
+>>>>>
+>>>>> I remember it's coupled between two LDOs, to provide enough power.
+>>>>>
+>>>>>>
+>>>>>>
+>>>>>>> + cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
+>>>>>>> + status =3D "okay";
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +&mmc2 {
+>>>>>>> + pinctrl-names =3D "default";
+>>>>>>> + pinctrl-0 =3D <&mmc2_pins>;
+>>>>>>> + vmmc-supply =3D <&reg_vcc3v3>;
+>>>>>>> + vqmmc-supply =3D <&reg_vcc1v8>;
+>>>>>>
+>>>>>> And this is BLDO2?
+>>>>>
+>>>>> Yes.
+>>>>>
+>>>>>>
+>>>>>> I am just asking because I want to avoid running into the same
+>>>> problem
+>>>>>> as with the A64 before: that future DTs become incompatible with
+>>>> older
+>>>>>> kernels, because we change the power supply to point to the AXP
+>>>>>> regulators, which this kernel does not support yet.
+>>>>>
+>>>>> The answer is just not to keep this compatibility, as it's not
+>>>>> supported option to update DT without updating kernel.
+>>>>
+>>>> Well, I recognise that statement.. ;-) and I understand that it's far
+>>>> easier to handle it this way. But:
+>>>> - Which .dtb are we going to write into the SPI flash? An older one,
+>>>> which covers all kernels, but lacks features? Or a newer one, which
+>>>> limits the bootable kernels to recent versions?
+>>>> - Which DT are we going to give to EFI applications?
+>>>> - Which DT are the BSDs suspected to take? They don't ship their own
+>>>> DTs
+>>>> (which is good!).
+>>>>
+>>>> So I understand that "shipping the DT with the kernel" is the old
+>>>> (embedded!) way of doing things, but I really believe we should stop
+>>>> relying on this and try to come up with backwards compatible DTs, whic=
+h
+>>>> live in the firmware and get updated there. Because this is what the
+>>>> distros seem to expect from ARM64 boards these days.
+>>>
+>>> I think in this way we should change the way to submit
+>>> patches -- let DT binding patch be merged when it's ready,
+>>> and do not wait for driver.
+>>
+>> Yes, I agree. Ideally we would look at the hardware description, create
+>> a binding just based on that and submit it.
+>>
+>> Then the actual DTs and the drivers (for Linux, U-Boot, *BSD,
+>> you-name-it) could be done independently from each other.
+>>
+>> I think we should really aim for that. The only question is whether this
+>> is really practical, since the documentation is sometimes lacking and we
+>> may discover missing properties during driver development.
+>> So when we meanwhile do hand-in-hand development, we should make sure we
+>> don't break anything in the future.
+>=20
+> We could do that, but for critical regulators it's a bit tricky. Like the
+> issue with vmmc and vqmmc, where the driver for the regulator is missing,
+> leading to an unusable system.
 
-Thanks very much for your comments.
+Yes, that was my original point. We can already anticipate that we will
+break forward compatibility, so we can try to do something about that
+now to avoid that, either by staying with fixed regulators, or by adding
+the PMIC early.
 
-I guess the MSI irq is more like a level IRQ instead of edge IRQ.
-When a MSI IRQ arrived, the corresponding bit of MSI status register
-will be asserted and stay asserted until it's been cleared by software.
+>>>>> P.S. I think the DT will update twice on the kernel side, the
+>>>>> first time keep reg_vcc3v3 (as it's coupled) but use real
+>>>>> regulator for reg_vcc1v8, the second time use the real
+>>>>> coupled regulator for reg_vcc3v3.
+>>>>>
+>>>>>>
+>>>>>> It looks like there are more users of those power rails, so we could
+>>>>>> keep those supplies connected to these fixed regulators here, even
+>>>> with
+>>>>>> AXP-805 support in the kernel.
+>>>>>
+>>>>> It's not a good choice.
+>>>>>
+>>>>>>
+>>>>>> Or we keep this back until we get proper AXP support in the kernel?
+>>>> I
+>>>>>> guess it's quite close to the existing PMICs, so it might be more a
+>>>>>> copy&paste exercise to support the AXP-805?
+>>>>>
+>>>>> It's not a reason to keep it back.
+>>>>
+>>>> So I compared the manuals of the AXP806 and the AXP805, the register
+>>>> interface looks identical to me. I only have a (somewhat) Chinese
+>>>> version of the AXP806 manual, so couldn't really find the difference
+>>>> between the two. Do you know more about it? Is it just maybe the
+>>>> packaging and the electrical properties (like max current supported)?
+>>>>
+>>>> If the I2C register interface is really the same, we could just add th=
+e
+>>>> DT nodes for the regulator and be done.
+>>>
+>>> They're the same. My following patchset adds AXP805
+>>> compatible just to use AXP806 code. I have asked Wink
+>>> and the answer is that they have only preset difference.
+>>
+>> Ah, thanks for that, that's good info!
+>> So in this case we don't even need to add the compatible name to the
+>> driver, just add it to the binding doc and create (or copy) the DT
+>> snippets. See last week's discussion ;-)
+>=20
+> We need to add the compatible to the I2C side of the AXP driver.
 
-I will try to using handle_level_irq and add some callbacks of irq_ack
-in the next version.
+Why? If it's really 100% compatible, we just add it to the binding doc
+and use compatible =3D "x-powers,axp805", "x-powers,axp806"; in the DT.
+That would immediately enable other OSes, for instance.
 
-thanks.
+> Also the property for "standalone mode".
 
-> 
-> > +			    NULL, NULL);
-> >  
-> >  	return 0;
-> >  }
-> >  
-> > -static void mtk_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
-> > +static void mtk_pcie_irq_domain_free(struct irq_domain *domain,
-> > +				     unsigned int virq, unsigned int nr_irqs)
-> >  {
-> > -	struct pci_dev *pdev = to_pci_dev(chip->dev);
-> > -	struct irq_data *d = irq_get_irq_data(irq);
-> > -	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-> > -	struct mtk_pcie_port *port;
-> > +	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-> > +	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(d);
-> >  
-> > -	port = mtk_pcie_find_port(pdev->bus, pdev->devfn);
-> > -	if (!port)
-> > -		return;
-> > +	mutex_lock(&port->lock);
-> > +
-> > +	if (!test_bit(d->hwirq, port->msi_irq_in_use))
-> > +		dev_err(port->pcie->dev, "trying to free unused MSI#%lu\n",
-> > +			d->hwirq);
-> > +	else
-> > +		__clear_bit(d->hwirq, port->msi_irq_in_use);
-> >  
-> > -	irq_dispose_mapping(irq);
-> > -	mtk_pcie_msi_free(port, hwirq);
-> > +	mutex_unlock(&port->lock);
-> > +
-> > +	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
-> >  }
-> >  
-> > -static struct msi_controller mtk_pcie_msi_chip = {
-> > -	.setup_irq = mtk_pcie_msi_setup_irq,
-> > -	.teardown_irq = mtk_msi_teardown_irq,
-> > +static const struct irq_domain_ops msi_domain_ops = {
-> > +	.alloc	= mtk_pcie_irq_domain_alloc,
-> > +	.free	= mtk_pcie_irq_domain_free,
-> >  };
-> >  
-> >  static struct irq_chip mtk_msi_irq_chip = {
-> >  	.name = "MTK PCIe MSI",
-> > -	.irq_enable = pci_msi_unmask_irq,
-> > -	.irq_disable = pci_msi_mask_irq,
-> >  	.irq_mask = pci_msi_mask_irq,
-> >  	.irq_unmask = pci_msi_unmask_irq,
-> >  };
-> >  
-> > -static int mtk_pcie_msi_map(struct irq_domain *domain, unsigned int irq,
-> > -			    irq_hw_number_t hwirq)
-> > +static struct msi_domain_info mtk_msi_domain_info = {
-> > +	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-> > +		   MSI_FLAG_PCI_MSIX),
-> > +	.chip	= &mtk_msi_irq_chip,
-> > +};
-> > +
-> > +static int mtk_pcie_allocate_msi_domains(struct mtk_pcie_port *port)
-> >  {
-> > -	irq_set_chip_and_handler(irq, &mtk_msi_irq_chip, handle_simple_irq);
-> > -	irq_set_chip_data(irq, domain->host_data);
-> > +	struct fwnode_handle *fwnode = of_node_to_fwnode(port->pcie->dev->of_node);
-> > +
-> > +	mutex_init(&port->lock);
-> > +
-> > +	port->inner_domain = irq_domain_create_linear(fwnode, MTK_MSI_IRQS_NUM,
-> > +						      &msi_domain_ops, port);
-> > +	if (!port->inner_domain) {
-> > +		dev_err(port->pcie->dev, "failed to create IRQ domain\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	port->msi_domain = pci_msi_create_irq_domain(fwnode, &mtk_msi_domain_info,
-> > +						     port->inner_domain);
-> > +	if (!port->msi_domain) {
-> > +		dev_err(port->pcie->dev, "failed to create MSI domain\n");
-> > +		irq_domain_remove(port->inner_domain);
-> > +		return -ENOMEM;
-> > +	}
-> >  
-> >  	return 0;
-> >  }
-> >  
-> > -static const struct irq_domain_ops msi_domain_ops = {
-> > -	.map = mtk_pcie_msi_map,
-> > -};
-> > -
-> >  static void mtk_pcie_enable_msi(struct mtk_pcie_port *port)
-> >  {
-> >  	u32 val;
-> > @@ -575,6 +598,7 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
-> >  {
-> >  	struct device *dev = port->pcie->dev;
-> >  	struct device_node *pcie_intc_node;
-> > +	int ret;
-> >  
-> >  	/* Setup INTx */
-> >  	pcie_intc_node = of_get_next_child(node, NULL);
-> > @@ -591,27 +615,28 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
-> >  	}
-> >  
-> >  	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> > -		port->msi_domain = irq_domain_add_linear(node, MTK_MSI_IRQS_NUM,
-> > -							 &msi_domain_ops,
-> > -							 &mtk_pcie_msi_chip);
-> > -		if (!port->msi_domain) {
-> > -			dev_err(dev, "failed to create MSI IRQ domain\n");
-> > -			return -ENODEV;
-> > -		}
-> > +		ret = mtk_pcie_allocate_msi_domains(port);
-> > +		if (ret)
-> > +			return ret;
-> > +
-> >  		mtk_pcie_enable_msi(port);
-> >  	}
-> >  
-> >  	return 0;
-> >  }
-> >  
-> > -static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
-> > +static void mtk_pcie_intr_handler(struct irq_desc *desc)
-> >  {
-> > -	struct mtk_pcie_port *port = (struct mtk_pcie_port *)data;
-> > +	struct mtk_pcie_port *port = irq_desc_get_handler_data(desc);
-> > +	struct irq_chip *irqchip = irq_desc_get_chip(desc);
-> >  	unsigned long status;
-> >  	u32 virq;
-> >  	u32 bit = INTX_SHIFT;
-> >  
-> > -	while ((status = readl(port->base + PCIE_INT_STATUS)) & INTX_MASK) {
-> > +	chained_irq_enter(irqchip, desc);
-> > +
-> > +	status = readl(port->base + PCIE_INT_STATUS);
-> > +	if (status & INTX_MASK) {
-> >  		for_each_set_bit_from(bit, &status, PCI_NUM_INTX + INTX_SHIFT) {
-> >  			/* Clear the INTx */
-> >  			writel(1 << bit, port->base + PCIE_INT_STATUS);
-> > @@ -622,14 +647,14 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
-> >  	}
-> >  
-> >  	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> > -		while ((status = readl(port->base + PCIE_INT_STATUS)) & MSI_STATUS) {
-> > +		if (status & MSI_STATUS) {
-> >  			unsigned long imsi_status;
-> >  
-> >  			while ((imsi_status = readl(port->base + PCIE_IMSI_STATUS))) {
-> >  				for_each_set_bit(bit, &imsi_status, MTK_MSI_IRQS_NUM) {
-> >  					/* Clear the MSI */
-> >  					writel(1 << bit, port->base + PCIE_IMSI_STATUS);
-> 
-> This write suspiciously looks like an "ack" operation on the controller.
-> Why isn't it part of the irqchip as a first class method?
-> 
-> > -					virq = irq_find_mapping(port->msi_domain, bit);
-> > +					virq = irq_find_mapping(port->inner_domain, bit);
-> >  					generic_handle_irq(virq);
-> >  				}
-> >  			}
-> > @@ -638,7 +663,9 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
-> >  		}
-> >  	}
-> >  
-> > -	return IRQ_HANDLED;
-> > +	chained_irq_exit(irqchip, desc);
-> > +
-> > +	return;
-> >  }
-> >  
-> >  static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
-> > @@ -649,20 +676,15 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
-> >  	struct platform_device *pdev = to_platform_device(dev);
-> >  	int err, irq;
-> >  
-> > -	irq = platform_get_irq(pdev, port->slot);
-> > -	err = devm_request_irq(dev, irq, mtk_pcie_intr_handler,
-> > -			       IRQF_SHARED, "mtk-pcie", port);
-> > -	if (err) {
-> > -		dev_err(dev, "unable to request IRQ %d\n", irq);
-> > -		return err;
-> > -	}
-> > -
-> >  	err = mtk_pcie_init_irq_domain(port, node);
-> >  	if (err) {
-> >  		dev_err(dev, "failed to init PCIe IRQ domain\n");
-> >  		return err;
-> >  	}
-> >  
-> > +	irq = platform_get_irq(pdev, port->slot);
-> > +	irq_set_chained_handler_and_data(irq, mtk_pcie_intr_handler, port);
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > @@ -1096,8 +1118,6 @@ static int mtk_pcie_register_host(struct pci_host_bridge *host)
-> >  	host->map_irq = of_irq_parse_and_map_pci;
-> >  	host->swizzle_irq = pci_common_swizzle;
-> >  	host->sysdata = pcie;
-> > -	if (IS_ENABLED(CONFIG_PCI_MSI) && pcie->soc->has_msi)
-> > -		host->msi = &mtk_pcie_msi_chip;
-> >  
-> >  	err = pci_scan_root_bus_bridge(host);
-> >  	if (err < 0)
-> > @@ -1159,7 +1179,6 @@ static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
-> >  };
-> >  
-> >  static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
-> > -	.has_msi = true,
-> >  	.ops = &mtk_pcie_ops_v2,
-> >  	.startup = mtk_pcie_startup_port_v2,
-> >  	.setup_irq = mtk_pcie_setup_irq,
-> > @@ -1167,7 +1186,6 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
-> >  
-> >  static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
-> >  	.need_fix_class_id = true,
-> > -	.has_msi = true,
-> >  	.ops = &mtk_pcie_ops_v2,
-> >  	.startup = mtk_pcie_startup_port_v2,
-> >  	.setup_irq = mtk_pcie_setup_irq,
-> > 
-> 
-> Thanks,
-> 
-> 	M.
+Are you referring to what the manual refers to as "self-work" mode?
+In this case I don't see why we need a property: this mode is set up on
+the board side by leaving the MODESET pin floating. And it can be
+queried by checking bits[7:6] of REG 00, so doesn't need a DT property.
+If we care about this mode (do we?), we can check for this in the driver.
+
+(Curious if you meant something else ...)
+
+Cheers,
+Andre.
+
+
+> I believe I already touched on this
+> before in another discussion with Icenowy.
+>=20
+>> And we could aim to merge this together with the MMC driver, so that
+>> there would be no regression.
+>> Isn't that doable? I am happy to review patches on short notice (if you
+>> have them already, otherwise I am happy to make them).
+>>
+>> So in summary it looks like all changes could be purely binding doc/DT
+>> changes, so any 4.17 kernel would work already, when presented with the
+>> right DT.
+>=20
+> No it won't. See above about the I2C driver.
+>=20
+> ChenYu
+>=20
+>>
+>> Cheers,
+>> Andre.
+>>
+>>
+>>>
+>>>>
+>>>> Cheers,
+>>>> Andre.
+>>>>
+>>>>>
+>>>>>>
+>>>>>> But apart from this this looks correct to me.
+>>>>>>
+>>>>>> Cheers,
+>>>>>> Andre.
+>>>>>>
+>>>>>>> + non-removable;
+>>>>>>> + cap-mmc-hw-reset;
+>>>>>>> + status =3D "okay";
+>>>>>>>  };
+>>>>>>>
+>>>>>>>  &uart0 {
+>>>>>>>
+>>
+>> --
+>> You received this message because you are subscribed to the Google Group=
+s "linux-sunxi" group.
+>> To unsubscribe from this group and stop receiving emails from it, send a=
+n email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+>> For more options, visit https://groups.google.com/d/optout.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
