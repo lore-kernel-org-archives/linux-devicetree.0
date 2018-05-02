@@ -1,28 +1,81 @@
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: Re: [PATCH V2 6/8] net: stmmac: add dwmac-4.20a compatible
-Date: Wed, 2 May 2018 15:41:09 +0100
-Message-ID: <cb027f0e-7209-0035-84a9-b5d7a4ec9595@synopsys.com>
-References: <1525270723-18241-1-git-send-email-christophe.roullier@st.com>
- <1525270723-18241-7-git-send-email-christophe.roullier@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH] driver core: make deferring probe forever optional
+Date: Wed, 2 May 2018 09:48:52 -0500
+Message-ID: <CAL_JsqJvMyrKS4LsRC6fDus24Yg8U+VcrbNNvxtOXmKbrc8RAA@mail.gmail.com>
+References: <20180501213114.20183-1-robh@kernel.org> <f808a652-2454-941c-2fd1-60776fb353f6@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1525270723-18241-7-git-send-email-christophe.roullier@st.com>
-Sender: netdev-owner@vger.kernel.org
-To: Christophe Roullier <christophe.roullier@st.com>, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, peppe.cavallaro@st.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, andrew@lunn.ch
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f808a652-2454-941c-2fd1-60776fb353f6@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Grant Likely <grant.likely@arm.com>, Mark Brown <broonie@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Christophe,
-
-On 02-05-2018 15:18, Christophe Roullier wrote:
-> Manage dwmac-4.20a version from synopsys
+On Wed, May 2, 2018 at 6:40 AM, Robin Murphy <robin.murphy@arm.com> wrote:
+> On 01/05/18 22:31, Rob Herring wrote:
+>>
+>> Deferred probe will currently wait forever on dependent devices to probe,
+>> but sometimes a driver will never exist. It's also not always critical for
+>> a driver to exist. Platforms can rely on default configuration from the
+>> bootloader or reset defaults for things such as pinctrl and power domains.
+>> This is often the case with initial platform support until various drivers
+>> get enabled. There's at least 2 scenarios where deferred probe can render
+>> a platform broken. Both involve using a DT which has more devices and
+>> dependencies than the kernel supports. The 1st case is a driver may be
+>> disabled in the kernel config. The 2nd case is the kernel version may
+>> simply not have the dependent driver. This can happen if using a newer DT
+>> (provided by firmware perhaps) with a stable kernel version.
+>>
+>> Unfortunately, this change breaks with modules as we have no way of
+>> knowing when modules are done loading. One possibility is to make this
+>> opt in or out based on compatible strings rather than at a subsystem
+>> level.
+>> Ideally this information could be extracted automatically somehow. OTOH,
+>> maybe the lists are pretty small. There's only a handful of subsystems
+>> that can be optional, and then only so many drivers in those that can be
+>> modules (at least for pinctrl, many drivers are built-in only).
 >
 >
+> Ooh, this is exactly what I wanted for of_iommu_xlate(), and would be much
+> nicer than the current bodge using system_state that I ended up with. The
+> context there is very similar - if the device has a parent IOMMU then we
+> want to wait for that to probe first if possible, but with a deadline such
+> that if it doesn't show up then we can go ahead and make progress without it
+> (on the assumption that DMA ops can fall back to CMA). The modules problem
+> doesn't currently apply to IOMMU drivers either, although we do use a
+> special of_device_id table for detecting built-in drivers via
+> OF_IOMMU_DECLARE() to avoid deferring at all when we know it would be
+> pointless - a more generic solution for that could certainly be useful too.
 
-Just being curious: Can you tell me which HW features do you have
-on your NIC?
+Ah, so you kept the IOMMU_OF_DECLARE() but it does nothing but define
+a table. We already have the driver match table which should pretty
+much be the same data, so it would be better if we could use that if
+possible. If we used MODULE_DEVICE_TABLE somehow, we could avoid
+modifying lots of drivers. Though many built-in only drivers omit
+that. The other problem is it would become a large set of tables to
+search thru because it is global. That would probably end up slower
+than just deferring. So we need something like
+<subsystem>_DEVICE_TABLE() to have per subsystem tables. Then this
+function in this patch would need to be told which table to use.
+However, this is all really just an optimization to avoid deferring at
+all and could be addressed later. Is there any data on how much time
+you save avoiding deferring? This has come up in the past and I don't
+think it is much.
 
-Thanks and Best Regards,
-Jose Miguel Abreu
+I've also been thinking about if we could use MODULE_DEVICE_TABLE to
+provide a list compatible strings from modules as a whitelist of
+devices to keep deferring probe on. That would require building
+modules to build the kernel which I don't think would work. I think my
+conclusion is that the cases we care about may be short enough to just
+manually maintain such a list.
+
+>
+> I agree with Greg that the naming here is a bit tricky - FWIW my initial
+> thought would be something like driver_defer_until_init(), which is still
+> clunky but at least imperative.
+
+Yeah, I didn't give it much thought as I expected more comments on the
+general idea... Maybe my poor naming is a good diversion. :)
+
+Rob
