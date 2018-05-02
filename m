@@ -1,68 +1,76 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: Add DAC support to stm32mp157c
-Date: Wed, 2 May 2018 14:27:00 +0200
-Message-ID: <6e39a154-219e-96d1-f91e-e2e0990d8f0f@st.com>
-References: <1524066391-843-1-git-send-email-fabrice.gasnier@st.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 5/7] gpio: pca953x: fix address calculation for pcal6524
+Date: Wed, 2 May 2018 15:28:11 +0300
+Message-ID: <CAHp75VfD4gYesEw2n4JMycmr=qcAtqSkAAjwCViJZRYC6kVUVg@mail.gmail.com>
+References: <cover.1524933096.git.hns@goldelico.com> <aaac818909d71523726094b1dfacc03e756874e9.1524933096.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524066391-843-1-git-send-email-fabrice.gasnier@st.com>
-Content-Language: en-US
+In-Reply-To: <aaac818909d71523726094b1dfacc03e756874e9.1524933096.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>, robh+dt@kernel.org
-Cc: mcoquelin.stm32@gmail.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrice
+On Sat, Apr 28, 2018 at 7:31 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> The register constants are so far defined in a way that they fit
+> for the pcal9555a when shifted by the number of banks, i.e. are
+> multiplied by 2 in the accessor function.
+>
+> Now, the pcal6524 has 3 banks which means the relative offset
+> is multiplied by 4 for the standard registers.
+>
+> Simply applying the bit shift to the extended registers gives
+> a wrong result, since the base offset is already included in
+> the offset.
+>
+> Therefore, we add code to the 24 bit accessor functions to
+> adjust the register number for these exended registers.
+>
 
-On 04/18/2018 05:46 PM, Fabrice Gasnier wrote:
-> Add support for DAC (Digital to Analog Converter) to STM32MP157C.
-> STM32MP157C DAC has two output channels.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Suggested-by ?
+
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > ---
->   arch/arm/boot/dts/stm32mp157c.dtsi | 24 ++++++++++++++++++++++++
->   1 file changed, 24 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-> index bc3eddc..fd44b4d 100644
-> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-> @@ -136,6 +136,30 @@
->   			status = "disabled";
->   		};
->   
-> +		dac: dac@40017000 {
-> +			compatible = "st,stm32h7-dac-core";
-> +			reg = <0x40017000 0x400>;
-> +			clocks = <&rcc DAC12>;
-> +			clock-names = "pclk";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +
-> +			dac1: dac@1 {
-> +				compatible = "st,stm32-dac";
-> +				#io-channels-cells = <1>;
-> +				reg = <1>;
-> +				status = "disabled";
-> +			};
-> +
-> +			dac2: dac@2 {
-> +				compatible = "st,stm32-dac";
-> +				#io-channels-cells = <1>;
-> +				reg = <2>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
->   		uart7: serial@40018000 {
->   			compatible = "st,stm32h7-uart";
->   			reg = <0x40018000 0x400>;
-> 
+>  drivers/gpio/gpio-pca953x.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index fc863faa3ce4..4194495a7990 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -221,9 +221,11 @@ static int pca957x_write_regs_16(struct pca953x_chip *chip, int reg, u8 *val)
+>  static int pca953x_write_regs_24(struct pca953x_chip *chip, int reg, u8 *val)
+>  {
+>         int bank_shift = fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
+> +       int addr = (reg & PCAL_GPIO_MASK) << bank_shift;
+> +       int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
+>
+>         return i2c_smbus_write_i2c_block_data(chip->client,
+> -                                             (reg << bank_shift) | REG_ADDR_AI,
+> +                                             pinctrl | addr | REG_ADDR_AI,
+>                                               NBANK(chip), val);
+>  }
+>
+> @@ -263,9 +265,11 @@ static int pca953x_read_regs_16(struct pca953x_chip *chip, int reg, u8 *val)
+>  static int pca953x_read_regs_24(struct pca953x_chip *chip, int reg, u8 *val)
+>  {
+>         int bank_shift = fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
+> +       int addr = (reg & PCAL_GPIO_MASK) << bank_shift;
+> +       int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
+>
+>         return i2c_smbus_read_i2c_block_data(chip->client,
+> -                                            (reg << bank_shift) | REG_ADDR_AI,
+> +                                            pinctrl | addr | REG_ADDR_AI,
+>                                              NBANK(chip), val);
+>  }
+>
+> --
+> 2.12.2
+>
 
-Applied on stm32-next.
 
-Thanks.
-Alex
+
+-- 
+With Best Regards,
+Andy Shevchenko
