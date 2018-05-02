@@ -1,77 +1,72 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v5 4/7] gpio: pca953x: define masks for addressing common and extended registers
-Date: Wed, 2 May 2018 14:36:54 +0200
-Message-ID: <FA9DBCAF-2EA5-4317-BBA3-E2D6A9EAC5D4@goldelico.com>
-References: <cover.1524933096.git.hns@goldelico.com> <3df974ea890116d759844e56362dc0786388869a.1524933096.git.hns@goldelico.com> <CAHp75Ve37aARbNZ8qu5W9C-fFG5Kf9GRE_VR4aRLFpX61zviyg@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Ve37aARbNZ8qu5W9C-fFG5Kf9GRE_VR4aRLFpX61zviyg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 08/21] bindings: display: Add compatible for
+ A64 HDMI PHY
+Date: Wed, 2 May 2018 07:37:55 -0500
+Message-ID: <CAL_JsqK4rUB0M1Ta-HR9Yk+7-VzUhCodBbTfBFo3PcJWHFRVSg@mail.gmail.com>
+References: <20180430114058.5061-1-jagan@amarulasolutions.com>
+ <20180430114058.5061-9-jagan@amarulasolutions.com> <20180501161909.GA1728@rob-hp-laptop>
+ <CAMty3ZBBo41Odbife0WtPG__3qWaHZtkqUfOLTmqhzc_of+iYw@mail.gmail.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBOPCU3LQKGQEUC3E36A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAMty3ZBBo41Odbife0WtPG__3qWaHZtkqUfOLTmqhzc_of+iYw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, May 2, 2018 at 1:27 AM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> Hi Rob,
+>
+> On Tue, May 1, 2018 at 9:49 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>
+>> On Mon, Apr 30, 2018 at 05:10:45PM +0530, Jagan Teki wrote:
+>> > HDMI PHY on Allwinner A64 has similar like H3/H5.
+>> >
+>> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>> > ---
+>> >  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 1 +
+>> >  1 file changed, 1 insertion(+)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+>> > index 9ea4353caadd..7dcd1d64dfe4 100644
+>> > --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+>> > +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+>> > @@ -104,6 +104,7 @@ Required properties:
+>> >    - compatible: value must be one of:
+>> >      * allwinner,sun8i-a83t-hdmi-phy
+>> >      * allwinner,sun8i-h3-hdmi-phy
+>> > +    * allwinner,sun50i-a64-hdmi-phy
+>>
+>> This should be one valid combination per line. The dts shows that the h3
+>> string is a fallback which should be captured in the binding doc.
+>
+> The fallback compatible "allwinner,sun8i-h3-hdmi-phy" is already
+> documented above, what we need to capture here? or did I miss anything
+> here?
 
-> Am 02.05.2018 um 14:29 schrieb Andy Shevchenko =
-<andy.shevchenko@gmail.com>:
->=20
-> On Sat, Apr 28, 2018 at 7:31 PM, H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->> These mask bits are to be used to map the extended register
->> addreseses (which are defined for an unsupported 8-bit pcal chip)
->> to 16 and 24 bit chips (pcal6524).
->>=20
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> drivers/gpio/gpio-pca953x.c | 3 +++
->> 1 file changed, 3 insertions(+)
->>=20
->> diff --git a/drivers/gpio/gpio-pca953x.c =
-b/drivers/gpio/gpio-pca953x.c
->> index 2b667166e855..fc863faa3ce4 100644
->> --- a/drivers/gpio/gpio-pca953x.c
->> +++ b/drivers/gpio/gpio-pca953x.c
->> @@ -56,6 +56,9 @@
->> #define PCAL6524_DEBOUNCE      0x2d
->>=20
->> #define PCA_GPIO_MASK          0x00FF
->=20
-> + empty line (the above is about contents, not addresses)
+The documentation should make it clear which of these is valid in a dts:
 
-ok.
+"allwinner,sun50i-a64-hdmi-phy", "allwinner,sun8i-h3-hdmi-phy"
 
->=20
->> +#define PCAL_GPIO_MASK         GENMASK(4, 0)
->> +#define PCAL_PINCTRL_MASK      (~PCAL_GPIO_MASK)
->=20
-> I'm not sure which would be better here
->=20
-> 1) to follow existing style
-> 0x1F
-> 0xE0
+or:
 
-I have also thought about this.
+"allwinner,sun50i-a64-hdmi-phy"
 
->=20
-> 2) to use GENMASK() in both definitions
->=20
-> 3) as it in this patch.
->=20
->=20
-> Whatever Linus prefers.
 
-Ok, waiting for his suggestion.
+IOW, your list should look like this:
 
->=20
->> +
->> #define PCA_INT                        0x0100
->> #define PCA_PCAL               0x0200
->> #define PCA_LATCH_INT (PCA_PCAL | PCA_INT)
->> --
->> 2.12.2
->>=20
+* "allwinner,sun8i-a83t-hdmi-phy", "allwinner,sun8i-h3-hdmi-phy"
+* "allwinner,sun50i-a64-hdmi-phy", "allwinner,sun8i-h3-hdmi-phy"
+* "allwinner,sun8i-h3-hdmi-phy"
 
-BR and thanks,
-Nikolaus
+Depending on whether the a83t is also compatible with h3.
+
+Rob
