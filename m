@@ -1,138 +1,101 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [RFC PATCH] driver core: make deferring probe forever optional
-Date: Wed, 2 May 2018 12:40:35 +0100
-Message-ID: <f808a652-2454-941c-2fd1-60776fb353f6@arm.com>
-References: <20180501213114.20183-1-robh@kernel.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 15/21] drm: sun4i: add support for HVCC
+ regulator for DWC HDMI glue
+Date: Wed, 2 May 2018 13:48:43 +0200
+Message-ID: <20180502114843.ou4qczp5eaigrdfo@flea>
+References: <20180430114058.5061-1-jagan@amarulasolutions.com>
+ <20180430114058.5061-16-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501213114.20183-1-robh@kernel.org>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: boot-architecture@lists.linaro.org, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Grant Likely <grant.likely@arm.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2qato2boi6jl56g2"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBJ6LU3LQKGQESDYGXKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180430114058.5061-16-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/05/18 22:31, Rob Herring wrote:
-> Deferred probe will currently wait forever on dependent devices to probe,
-> but sometimes a driver will never exist. It's also not always critical for
-> a driver to exist. Platforms can rely on default configuration from the
-> bootloader or reset defaults for things such as pinctrl and power domains.
-> This is often the case with initial platform support until various drivers
-> get enabled. There's at least 2 scenarios where deferred probe can render
-> a platform broken. Both involve using a DT which has more devices and
-> dependencies than the kernel supports. The 1st case is a driver may be
-> disabled in the kernel config. The 2nd case is the kernel version may
-> simply not have the dependent driver. This can happen if using a newer DT
-> (provided by firmware perhaps) with a stable kernel version.
+
+--2qato2boi6jl56g2
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Mon, Apr 30, 2018 at 05:10:52PM +0530, Jagan Teki wrote:
+> From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > 
-> Unfortunately, this change breaks with modules as we have no way of
-> knowing when modules are done loading. One possibility is to make this
-> opt in or out based on compatible strings rather than at a subsystem level.
-> Ideally this information could be extracted automatically somehow. OTOH,
-> maybe the lists are pretty small. There's only a handful of subsystems
-> that can be optional, and then only so many drivers in those that can be
-> modules (at least for pinctrl, many drivers are built-in only).
-
-Ooh, this is exactly what I wanted for of_iommu_xlate(), and would be 
-much nicer than the current bodge using system_state that I ended up 
-with. The context there is very similar - if the device has a parent 
-IOMMU then we want to wait for that to probe first if possible, but with 
-a deadline such that if it doesn't show up then we can go ahead and make 
-progress without it (on the assumption that DMA ops can fall back to 
-CMA). The modules problem doesn't currently apply to IOMMU drivers 
-either, although we do use a special of_device_id table for detecting 
-built-in drivers via OF_IOMMU_DECLARE() to avoid deferring at all when 
-we know it would be pointless - a more generic solution for that could 
-certainly be useful too.
-
-I agree with Greg that the naming here is a bit tricky - FWIW my initial 
-thought would be something like driver_defer_until_init(), which is 
-still clunky but at least imperative.
-
-Robin.
-
-> Cc: Alexander Graf <agraf@suse.de>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Allwinner SoCs with DWC HDMI controller have a "HVCC" power pin for the
+> HDMI part, and on some boards it's connected to a dedicated regulator
+> rather than the main 3.3v.
+> 
+> Add support for optional HVCC regulator. For boards that doesn't use a
+> dedicated regulator to power it, the default dummy regulator is used.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 > ---
-> This patch came out of a discussion on the ARM boot-architecture
-> list[1] about DT forwards and backwards compatibility issues. There are
-> issues with newer DTs breaking on older, stable kernels. Some of these
-> are difficult to solve, but cases of optional devices not having
-> kernel support should be solvable.
+>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 14 ++++++++++++++
+>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  2 ++
+>  2 files changed, 16 insertions(+)
 > 
-> I tested this on a RPi3 B with the pinctrl driver forced off. With this
-> change, the MMC/SD and UART drivers can function without the pinctrl
-> driver.
-> 
-> Rob
-> 
-> [1] https://lists.linaro.org/pipermail/boot-architecture/2018-April/000466.html
-> 
->   drivers/base/dd.c            | 16 ++++++++++++++++
->   drivers/pinctrl/devicetree.c |  2 +-
->   include/linux/device.h       |  2 ++
->   3 files changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index c9f54089429b..5848808b9d7a 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -226,6 +226,15 @@ void device_unblock_probing(void)
->   	driver_deferred_probe_trigger();
->   }
->   
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> index 9f40a44b456b..7c33faff7ad4 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> @@ -73,6 +73,12 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+>  	if (encoder->possible_crtcs == 0)
+>  		return -EPROBE_DEFER;
+>  
+> +	hdmi->vcc_hdmi = devm_regulator_get(dev, "hvcc");
+> +	if (IS_ERR(hdmi->vcc_hdmi)) {
+> +		dev_err(dev, "Could not get HDMI power supply\n");
+> +		return PTR_ERR(hdmi->vcc_hdmi);
+> +	}
 > +
-> +int driver_deferred_probe_optional(void)
-> +{
-> +	if (initcalls_done)
-> +		return -ENODEV;
+
+You're not making it optional here, unlike what your commit log
+says. Not that I'm fine with both, but we need to be consistent :)
+
+>  	hdmi->rst_ctrl = devm_reset_control_get(dev, "ctrl");
+>  	if (IS_ERR(hdmi->rst_ctrl)) {
+>  		dev_err(dev, "Could not get ctrl reset control\n");
+> @@ -91,6 +97,12 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+>  		return ret;
+>  	}
+>  
+> +	ret = regulator_enable(hdmi->vcc_hdmi);
+> +	if (ret) {
+> +		dev_err(dev, "Cannot enable HDMI power supply\n");
+> +		goto err_disable_vcc;
+> +	}
 > +
-> +	return -EPROBE_DEFER;
-> +}
-> +
->   /**
->    * deferred_probe_initcall() - Enable probing of deferred devices
->    *
-> @@ -240,6 +249,13 @@ static int deferred_probe_initcall(void)
->   	/* Sort as many dependencies as possible before exiting initcalls */
->   	flush_work(&deferred_probe_work);
->   	initcalls_done = true;
-> +
-> +	/*
-> +	 * Trigger deferred probe again, this time we won't defer anything
-> +	 * that is optional
-> +	 */
-> +	driver_deferred_probe_trigger();
-> +	flush_work(&deferred_probe_work);
->   	return 0;
->   }
->   late_initcall(deferred_probe_initcall);
-> diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-> index b601039d6c69..096e52a5c506 100644
-> --- a/drivers/pinctrl/devicetree.c
-> +++ b/drivers/pinctrl/devicetree.c
-> @@ -120,7 +120,7 @@ static int dt_to_map_one_config(struct pinctrl *p,
->   				np_config);
->   			of_node_put(np_pctldev);
->   			/* OK let's just assume this will appear later then */
-> -			return -EPROBE_DEFER;
-> +			return driver_deferred_probe_optional();
->   		}
->   		/* If we're creating a hog we can use the passed pctldev */
->   		if (pctldev && (np_pctldev == p->dev->of_node))
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 0059b99e1f25..8de920442bc1 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -332,6 +332,8 @@ struct device *driver_find_device(struct device_driver *drv,
->   				  struct device *start, void *data,
->   				  int (*match)(struct device *dev, void *data));
->   
-> +int driver_deferred_probe_optional(void);
-> +
->   /**
->    * struct subsys_interface - interfaces to device functions
->    * @name:       name of the device function
-> 
+>  	ret = clk_prepare_enable(hdmi->clk_tmds);
+>  	if (ret) {
+>  		dev_err(dev, "Could not enable tmds clock\n");
+> @@ -143,6 +155,8 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+>  	clk_disable_unprepare(hdmi->clk_tmds);
+>  err_assert_ctrl_reset:
+>  	reset_control_assert(hdmi->rst_ctrl);
+> +err_disable_vcc:
+> +	regulator_disable(hdmi->vcc_hdmi);
+
+
+The err_disable_vcc label will disable the regulator, but if there's
+an error in regulator_enable, it will disable it while it wasn't
+enabled in the first place, which is not really something we want to
+do.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--2qato2boi6jl56g2--
