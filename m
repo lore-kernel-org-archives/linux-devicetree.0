@@ -1,32 +1,36 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v8 09/12] ARM: sun9i: smp: Add is_a83t field
-Date: Wed, 2 May 2018 15:09:08 +0200
-Message-ID: <20180502130908.nuykfypradbmggs5@flea>
+Subject: Re: [PATCH v8 10/12] ARM: sun8i: smp: Add support for A83T
+Date: Wed, 2 May 2018 15:14:31 +0200
+Message-ID: <20180502131431.j7jaz74ko5ueotwn@flea>
 References: <20180501123131.7738-1-mylene.josserand@bootlin.com>
- <20180501123131.7738-10-mylene.josserand@bootlin.com>
+ <20180501123131.7738-11-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zkxm64ha7pf6swcd"
+        protocol="application/pgp-signature"; boundary="v3li36dd5jhn3acu"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180501123131.7738-10-mylene.josserand@bootlin.com>
+In-Reply-To: <20180501123131.7738-11-mylene.josserand@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>
 Cc: linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---zkxm64ha7pf6swcd
+--v3li36dd5jhn3acu
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 01, 2018 at 02:31:28PM +0200, Myl=E8ne Josserand wrote:
-> To prepare the support of sun8i-a83t, add a field in the smp_data
-> structure to know if we are on sun9i-a80 or sun8i-a83t.
+On Tue, May 01, 2018 at 02:31:29PM +0200, Myl=E8ne Josserand wrote:
+> Add the support for A83T.
 >=20
-> Add also a global variable to retrieve which architecture we are
-> having.
+> A83T SoC has an additional register than A80 to handle CPU configurations:
+> R_CPUS_CFG. Information about the register comes from Allwinner's BSP
+> driver.
+> An important difference is the Power Off Gating register for clusters
+> which is BIT(4) in case of SUN9I-A80 and BIT(0) in case of SUN8I-A83T.
+> There is also a bit swap between sun8i-a83t and sun9i-a80 that must be
+> handled.
 >=20
 > Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
 
@@ -39,24 +43,24 @@ Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---zkxm64ha7pf6swcd
+--v3li36dd5jhn3acu
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrpuHMACgkQ0rTAlCFN
-r3QJLQ/7BZLYOy+KhTa4nm4lR1xhZ6Wsd/n1GY5dtM0m5HKWDfSsMpXEq4xjZCmL
-Kgcd8Iz1LBMQhyVO978ZztaHiEzDCiq8O1FXd0f6kQNThnTf4KDBkZyrJFOrTeL/
-bIVjg+9eLo8kzz/BAcE9v7ys5JIgbK4lVhHaU1YZPVNQcSbLRlFg/sa/6UBmVWO7
-7cp5CVrkNBwRoInC/C6ZMpKtstyyucttBoUx1doR7qkNBiDKyzBju02E0St+HtVi
-MIPeEzBHSYxZTzKYzsATXdRIKN7UpToApuhWkQI7E3V4TFw4XCGvV3HIKbkNeiZi
-7Wp3hui/L8XXPmpfQFNcKd4FkyalukAL1nZN7DoxfG1FwAcCw0lhTE5a6SZmjn61
-Losgn/LtfK4FlIFdWhykK/qXsOEfoKl7wQjwiAXffyeJAmHvqxiZtbyrYGgBxm1Y
-UDAJshu1x7uxSBc9PHzo2h7vpR1M5hZnOpZlwwmQFiIODyhbkpcLR6145xayykbu
-5Fy83F1MU+2FTA86QJPDuwlsMDLIMWDOE2uk4gYSCULcZtSURyIAInSad/FoieZq
-miJyXqLkrb882Rcul/yybRhEopc2/jpbkD7w4HWJt65u8ofOmpspmXqE5ksHPlS+
-yik+SQjl+E/IWYDen8OCxFLaywuFm3Nt5qpos9K3nzOHiDSV7wM=
-=G4h2
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrpubYACgkQ0rTAlCFN
+r3Qqlg//YFe09MMg2NNFb3wlQITSJ7vYVeBfO9MheU8Nf4Zf0wit7OR9f9d1hPxr
+iqlgfBIoXdj3nrdukW4pR+sHBYxhzpICIw79tcFvlhUv+1TzndVdWQf7TYtScvfF
+9cpjv3+kJcytQH+is9+r+KhrQbYTjNNKf1oXOYZupXOEL9KJmeZeRqjyj+AffF+x
+f6K9eQPedtSLrD4QCpoYhn+kLAP+8VN4aun3RymwwDgenKQiOVmME7AYNyeSlW0M
+XqV3xeP4xCGDTYaWh/Q3En6fE28ss0Jwrekzl2e9JU8U88kF606p6i0D2yM8LcHR
+vPIjGSmGdC850pZ3+87b1OlyP5gU4ehHCWO9YvUE5OTm83+Dlbd1aqWOuGcSqGx1
+3goL7QTOEKunZgP/J3GiR88Wwqi4aXC4atlpg3TBewMN1fnR1CxXCjBO1qTYG1ZH
+wfBuNpDs+01dhD5aMX2mgGBQfZz/vD/KNFBS6+ZQeEAl5wJHHk+M95UIGYpezY0L
+PMyqfWhwQN1XSgXFK5d4SiyrRhGUya22C8a9QgZrOPnhVgPfOTHSmjdSiAtpxXyw
+LP/Jh0FL+F8L4qQO3YusZzIBB5zCjcRdqF9oupQuK9GS/NuTmeIwzsxGMewuu2Ew
+V6rwoCoj+H9ONd1e/2rhLJtmFq/AGS4CKyUfpnIZbtoRDdPBj2I=
+=JGi0
 -----END PGP SIGNATURE-----
 
---zkxm64ha7pf6swcd--
+--v3li36dd5jhn3acu--
