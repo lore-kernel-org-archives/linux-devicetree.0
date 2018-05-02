@@ -1,59 +1,71 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 4/7] gpio: pca953x: define masks for addressing common
- and extended registers
-Date: Wed, 2 May 2018 15:29:29 +0300
-Message-ID: <CAHp75Ve37aARbNZ8qu5W9C-fFG5Kf9GRE_VR4aRLFpX61zviyg@mail.gmail.com>
-References: <cover.1524933096.git.hns@goldelico.com> <3df974ea890116d759844e56362dc0786388869a.1524933096.git.hns@goldelico.com>
+Subject: Re: [PATCH v5 0/7] pcal6524 extensions and fixes for pca953x driver
+Date: Wed, 2 May 2018 15:32:07 +0300
+Message-ID: <CAHp75VfA84FWyymRz6_53soEoLNAPP9YpsR3Vzkf6EJWLLTw=g@mail.gmail.com>
+References: <cover.1524933096.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3df974ea890116d759844e56362dc0786388869a.1524933096.git.hns@goldelico.com>
+In-Reply-To: <cover.1524933096.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "H. Nikolaus Schaller" <hns@goldelico.com>
 Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
 On Sat, Apr 28, 2018 at 7:31 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> These mask bits are to be used to map the extended register
-> addreseses (which are defined for an unsupported 8-bit pcal chip)
-> to 16 and 24 bit chips (pcal6524).
+> V5:
+> * fix wrong split up between patches 1/7and 2/7.
 >
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  drivers/gpio/gpio-pca953x.c | 3 +++
->  1 file changed, 3 insertions(+)
+> 2018-04-26 19:35:07: V4:
+> * introduced PCA_LATCH_INT constant to make of_table more
+>   readable (suggested by Andy Shevchenko)
+> * converted all register constants to hex in a separate
+>   patch (suggested by Andy Shevchenko)
+> * separated additional pcal953x and pcal6524 register
+>   definitions into separate patches (suggested by Andy Shevchenko)
+> * made special pcal6524 address adjustment more readable
+>   (suggested by Andy Shevchenko)
+> * moved gpio-controller and interrupt-controller to the
+>   "required" section (reviewed by Rob Herring)
 >
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index 2b667166e855..fc863faa3ce4 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -56,6 +56,9 @@
->  #define PCAL6524_DEBOUNCE      0x2d
+> 2018-04-10 18:07:07: V3:
+> * add Reported-by: and Reviewed-by:
+> * fix wording for bindings description and example
+> * convert all register offsets to hex
+> * omit the LEVEL-IRQ RFC/hack commit
 >
->  #define PCA_GPIO_MASK          0x00FF
+> 2018-04-04 21:00:27: V2:
+> * added PCA_PCAL flags if matched through of-table
+> * fix address calculation for extended PCAL6524 registers
+> * hack to map LEVEL_LOW to EDGE_FALLING to be able to
+>   test in combination with ts3a227e driver
+> * improve description of bindings for optional vcc-supply
+>   and interrupt-controller;
+>
+> 2018-03-10 09:32:53: no initial description
+>
 
-+ empty line (the above is about contents, not addresses)
+After addressing comments for two patches,
 
-> +#define PCAL_GPIO_MASK         GENMASK(4, 0)
-> +#define PCAL_PINCTRL_MASK      (~PCAL_GPIO_MASK)
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-I'm not sure which would be better here
+for patches 1-5.
 
-1) to follow existing style
-0x1F
-0xE0
-
-2) to use GENMASK() in both definitions
-
-3) as it in this patch.
-
-
-Whatever Linus prefers.
-
-> +
->  #define PCA_INT                        0x0100
->  #define PCA_PCAL               0x0200
->  #define PCA_LATCH_INT (PCA_PCAL | PCA_INT)
+> H. Nikolaus Schaller (7):
+>   gpio: pca953x: convert register constants to hex
+>   gpio: pca953x: add more register definitions for pcal953x
+>   gpio: pca953x: add more register definitions for pcal6524
+>   gpio: pca953x: define masks for addressing common and extended
+>     registers
+>   gpio: pca953x: fix address calculation for pcal6524
+>   DTS: Bindings: pca953x add an optional vcc-supply property
+>   DTS: Bindings: pca953x: add example how to use interrupt-controller
+>     and gpio-controller
+>
+>  .../devicetree/bindings/gpio/gpio-pca953x.txt      | 34 ++++++++++++++
+>  drivers/gpio/gpio-pca953x.c                        | 53 ++++++++++++++--------
+>  2 files changed, 69 insertions(+), 18 deletions(-)
+>
 > --
 > 2.12.2
 >
