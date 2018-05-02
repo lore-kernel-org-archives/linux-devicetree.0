@@ -1,73 +1,383 @@
-From: Hyun Kwon <hyun.kwon@xilinx.com>
-Subject: [PATCH v7 0/5] Xilinx ZynqMP DisplayPort KMS driver
-Date: Tue, 1 May 2018 17:31:41 -0700
-Message-ID: <1525221106-32269-1-git-send-email-hyun.kwon@xilinx.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v6 2/7] PCI: rockchip: Split out common function to parse
+ DT
+Date: Wed, 2 May 2018 08:57:43 +0800
+Message-ID: <0fd4a946-b9f1-5921-7815-5667a923e71c@rock-chips.com>
+References: <1524796697-160764-1-git-send-email-shawn.lin@rock-chips.com>
+ <1524796751-161084-1-git-send-email-shawn.lin@rock-chips.com>
+ <20180430145132.GD32033@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Daniel Vetter <daniel.vetter@intel.com>, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, Hyun Kwon <hyun.kwon@xilinx.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180430145132.GD32033-4tUPXFaYRHv6sAKXYmQ0tx/iLCjYCKR+VpNB7YpNyf8@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKCk9uIHRvcCBvZiBhZGRyZXNzaW5nIHlvdXIgY29tbWVudHMgaW4gdjYsIEkn
-dmUgaW5jb3Jwb3JhdGVkIHNvbWUKcmVsYXRpdmVseSBzbWFsbCBmaXhlcyBpbiB2Ny4gSSdtIG1h
-aW5seSB3YWl0aW5nIGZvciB5b3VyIGZlZWRiYWNrCmJlZm9yZSBjb21taXR0aW5nIHRoaXMgc2Vy
-aWVzLCB1bmxlc3MgdGhlcmUncyBhbnkgYWRkaXRpb25hbCByZXZpZXcKY29tbWVudHMuIFBsZWFz
-ZSB0YWtlIGEgbG9vay4KClRoYW5rcywKLWh5dW4KCkh5dW4gS3dvbiAoNSk6CiAgZHJtOiB4bG54
-OiBYaWxpbnggRFJNIEtNUyBtb2R1bGUKICBkdC1iaW5kaW5nczogZGlzcGxheTogeGxueDogQWRk
-IFp5bnFNUCBEUCBzdWJzeXN0ZW0gYmluZGluZ3MKICBkcm06IHhsbng6IERSTSBLTVMgZHJpdmVy
-IGZvciBYaWxpbnggWnlucU1QIERQIHN1YnN5c3RlbSBkaXNwbGF5CiAgZHJtOiB4bG54OiBEUk0g
-S01TIGRyaXZlciBmb3IgWGlsaW54IFp5bnFNUCBEaXNwbGF5UG9ydAogIGRybTogeGxueDogWnlu
-cU1QIERQIHN1YnN5c3RlbSBEUk0gS01TIGRyaXZlcgoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3hs
-bngveGxueCx6eW5xbXAtZHBzdWIudHh0ICAgIHwgICA3NyArCiBNQUlOVEFJTkVSUyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDkgKwogZHJpdmVycy9ncHUvZHJt
-L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAyICsKIGRyaXZlcnMvZ3B1
-L2RybS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMSArCiBkcml2ZXJz
-L2dwdS9kcm0veGxueC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICB8ICAgMjMgKwogZHJp
-dmVycy9ncHUvZHJtL3hsbngvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgfCAgICA1ICsK
-IGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfY3J0Yy5jICAgICAgICAgICAgICAgICAgIHwgIDE0
-MiArCiBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2NydGMuaCAgICAgICAgICAgICAgICAgICB8
-ICAgODMgKwogZHJpdmVycy9ncHUvZHJtL3hsbngveGxueF9kcnYuYyAgICAgICAgICAgICAgICAg
-ICAgfCAgNDMzICsrKwogZHJpdmVycy9ncHUvZHJtL3hsbngveGxueF9kcnYuaCAgICAgICAgICAg
-ICAgICAgICAgfCAgIDIzICsKIGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfZmIuYyAgICAgICAg
-ICAgICAgICAgICAgIHwgIDI0OSArKwogZHJpdmVycy9ncHUvZHJtL3hsbngveGxueF9mYi5oICAg
-ICAgICAgICAgICAgICAgICAgfCAgIDI3ICsKIGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfZ2Vt
-LmMgICAgICAgICAgICAgICAgICAgIHwgICAzNiArCiBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54
-X2dlbS5oICAgICAgICAgICAgICAgICAgICB8ICAgMjEgKwogZHJpdmVycy9ncHUvZHJtL3hsbngv
-enlucW1wX2Rpc3AuYyAgICAgICAgICAgICAgICAgfCAyNzU1ICsrKysrKysrKysrKysrKysrKysr
-CiBkcml2ZXJzL2dwdS9kcm0veGxueC96eW5xbXBfZGlzcC5oICAgICAgICAgICAgICAgICB8ICAg
-MjkgKwogZHJpdmVycy9ncHUvZHJtL3hsbngvenlucW1wX2RwLmMgICAgICAgICAgICAgICAgICAg
-fCAxNzMzICsrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3hsbngvenlucW1wX2RwLmggICAg
-ICAgICAgICAgICAgICAgfCAgIDMwICsKIGRyaXZlcnMvZ3B1L2RybS94bG54L3p5bnFtcF9kcHN1
-Yi5jICAgICAgICAgICAgICAgIHwgIDE1MiArKwogZHJpdmVycy9ncHUvZHJtL3hsbngvenlucW1w
-X2Rwc3ViLmggICAgICAgICAgICAgICAgfCAgIDIzICsKIDIwIGZpbGVzIGNoYW5nZWQsIDU4NTMg
-aW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3hsbngveGxueCx6eW5xbXAtZHBzdWIudHh0CiBjcmVhdGUgbW9k
-ZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3hsbngvS2NvbmZpZwogY3JlYXRlIG1vZGUgMTAwNjQ0
-IGRyaXZlcnMvZ3B1L2RybS94bG54L01ha2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9ncHUvZHJtL3hsbngveGxueF9jcnRjLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0veGxueC94bG54X2NydGMuaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
-bS94bG54L3hsbnhfZHJ2LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0veGxu
-eC94bG54X2Rydi5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3hsbngveGxu
-eF9mYi5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3hsbngveGxueF9mYi5o
-CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3hsbngveGxueF9nZW0uYwogY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfZ2VtLmgKIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0veGxueC96eW5xbXBfZGlzcC5jCiBjcmVhdGUgbW9k
-ZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3hsbngvenlucW1wX2Rpc3AuaAogY3JlYXRlIG1vZGUg
-MTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS94bG54L3p5bnFtcF9kcC5jCiBjcmVhdGUgbW9kZSAxMDA2
-NDQgZHJpdmVycy9ncHUvZHJtL3hsbngvenlucW1wX2RwLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL2dwdS9kcm0veGxueC96eW5xbXBfZHBzdWIuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
-aXZlcnMvZ3B1L2RybS94bG54L3p5bnFtcF9kcHN1Yi5oCgotLSAKMi43LjQKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Lorenzo,
+
+On 2018/4/30 22:51, Lorenzo Pieralisi wrote:
+> On Fri, Apr 27, 2018 at 10:39:11AM +0800, Shawn Lin wrote:
+>> Most of the DT properties are used for both of host and
+>> EP drivrs, so this patch spilt them out to new function,
+>> rockchip_pcie_parse_dt in pcie-rockchip.c and rename the
+>> original function to rockchip_pcie_parse_host_dt to avoid
+>> confusion. No functional changed intended.
+> 
+> If you read this commit log again you would notice that there
+> are typos and the formatting is non-compliant with:
+> 
+> https://marc.info/?l=linux-pci&m=150905742808166&w=2
+> 
+> I am fine with updating commit logs myself, that's not a problem, but I
+> wanted to make clear that you can easily spot these issues for future
+> postings too ;-)
+> 
+
+My bad. Will be more careful for future postings. :)
+
+> Lorenzo
+> 
+>> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> Tested-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>>
+>> Changes in v6: None
+>> Changes in v5: None
+>> Changes in v4: None
+>>
+>>   drivers/pci/host/pcie-rockchip-host.c | 119 ++-----------------------------
+>>   drivers/pci/host/pcie-rockchip.c      | 129 ++++++++++++++++++++++++++++++++++
+>>   drivers/pci/host/pcie-rockchip.h      |   2 +
+>>   3 files changed, 136 insertions(+), 114 deletions(-)
+>>
+>> diff --git a/drivers/pci/host/pcie-rockchip-host.c b/drivers/pci/host/pcie-rockchip-host.c
+>> index fae9ecc..cf97130 100644
+>> --- a/drivers/pci/host/pcie-rockchip-host.c
+>> +++ b/drivers/pci/host/pcie-rockchip-host.c
+>> @@ -705,130 +705,20 @@ static int rockchip_pcie_setup_irq(struct rockchip_pcie *rockchip)
+>>   }
+>>   
+>>   /**
+>> - * rockchip_pcie_parse_dt - Parse Device Tree
+>> + * rockchip_pcie_parse_host_dt - Parse Device Tree
+>>    * @rockchip: PCIe port information
+>>    *
+>>    * Return: '0' on success and error value on failure
+>>    */
+>> -static int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+>> +static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
+>>   {
+>>   	struct device *dev = rockchip->dev;
+>> -	struct platform_device *pdev = to_platform_device(dev);
+>> -	struct device_node *node = dev->of_node;
+>> -	struct resource *regs;
+>>   	int err;
+>>   
+>> -	regs = platform_get_resource_byname(pdev,
+>> -					    IORESOURCE_MEM,
+>> -					    "axi-base");
+>> -	rockchip->reg_base = devm_pci_remap_cfg_resource(dev, regs);
+>> -	if (IS_ERR(rockchip->reg_base))
+>> -		return PTR_ERR(rockchip->reg_base);
+>> -
+>> -	regs = platform_get_resource_byname(pdev,
+>> -					    IORESOURCE_MEM,
+>> -					    "apb-base");
+>> -	rockchip->apb_base = devm_ioremap_resource(dev, regs);
+>> -	if (IS_ERR(rockchip->apb_base))
+>> -		return PTR_ERR(rockchip->apb_base);
+>> -
+>> -	err = rockchip_pcie_get_phys(rockchip);
+>> +	err = rockchip_pcie_parse_dt(rockchip);
+>>   	if (err)
+>>   		return err;
+>>   
+>> -	rockchip->lanes = 1;
+>> -	err = of_property_read_u32(node, "num-lanes", &rockchip->lanes);
+>> -	if (!err && (rockchip->lanes == 0 ||
+>> -		     rockchip->lanes == 3 ||
+>> -		     rockchip->lanes > 4)) {
+>> -		dev_warn(dev, "invalid num-lanes, default to use one lane\n");
+>> -		rockchip->lanes = 1;
+>> -	}
+>> -
+>> -	rockchip->link_gen = of_pci_get_max_link_speed(node);
+>> -	if (rockchip->link_gen < 0 || rockchip->link_gen > 2)
+>> -		rockchip->link_gen = 2;
+>> -
+>> -	rockchip->core_rst = devm_reset_control_get_exclusive(dev, "core");
+>> -	if (IS_ERR(rockchip->core_rst)) {
+>> -		if (PTR_ERR(rockchip->core_rst) != -EPROBE_DEFER)
+>> -			dev_err(dev, "missing core reset property in node\n");
+>> -		return PTR_ERR(rockchip->core_rst);
+>> -	}
+>> -
+>> -	rockchip->mgmt_rst = devm_reset_control_get_exclusive(dev, "mgmt");
+>> -	if (IS_ERR(rockchip->mgmt_rst)) {
+>> -		if (PTR_ERR(rockchip->mgmt_rst) != -EPROBE_DEFER)
+>> -			dev_err(dev, "missing mgmt reset property in node\n");
+>> -		return PTR_ERR(rockchip->mgmt_rst);
+>> -	}
+>> -
+>> -	rockchip->mgmt_sticky_rst = devm_reset_control_get_exclusive(dev,
+>> -								     "mgmt-sticky");
+>> -	if (IS_ERR(rockchip->mgmt_sticky_rst)) {
+>> -		if (PTR_ERR(rockchip->mgmt_sticky_rst) != -EPROBE_DEFER)
+>> -			dev_err(dev, "missing mgmt-sticky reset property in node\n");
+>> -		return PTR_ERR(rockchip->mgmt_sticky_rst);
+>> -	}
+>> -
+>> -	rockchip->pipe_rst = devm_reset_control_get_exclusive(dev, "pipe");
+>> -	if (IS_ERR(rockchip->pipe_rst)) {
+>> -		if (PTR_ERR(rockchip->pipe_rst) != -EPROBE_DEFER)
+>> -			dev_err(dev, "missing pipe reset property in node\n");
+>> -		return PTR_ERR(rockchip->pipe_rst);
+>> -	}
+>> -
+>> -	rockchip->pm_rst = devm_reset_control_get_exclusive(dev, "pm");
+>> -	if (IS_ERR(rockchip->pm_rst)) {
+>> -		if (PTR_ERR(rockchip->pm_rst) != -EPROBE_DEFER)
+>> -			dev_err(dev, "missing pm reset property in node\n");
+>> -		return PTR_ERR(rockchip->pm_rst);
+>> -	}
+>> -
+>> -	rockchip->pclk_rst = devm_reset_control_get_exclusive(dev, "pclk");
+>> -	if (IS_ERR(rockchip->pclk_rst)) {
+>> -		if (PTR_ERR(rockchip->pclk_rst) != -EPROBE_DEFER)
+>> -			dev_err(dev, "missing pclk reset property in node\n");
+>> -		return PTR_ERR(rockchip->pclk_rst);
+>> -	}
+>> -
+>> -	rockchip->aclk_rst = devm_reset_control_get_exclusive(dev, "aclk");
+>> -	if (IS_ERR(rockchip->aclk_rst)) {
+>> -		if (PTR_ERR(rockchip->aclk_rst) != -EPROBE_DEFER)
+>> -			dev_err(dev, "missing aclk reset property in node\n");
+>> -		return PTR_ERR(rockchip->aclk_rst);
+>> -	}
+>> -
+>> -	rockchip->ep_gpio = devm_gpiod_get(dev, "ep", GPIOD_OUT_HIGH);
+>> -	if (IS_ERR(rockchip->ep_gpio)) {
+>> -		dev_err(dev, "missing ep-gpios property in node\n");
+>> -		return PTR_ERR(rockchip->ep_gpio);
+>> -	}
+>> -
+>> -	rockchip->aclk_pcie = devm_clk_get(dev, "aclk");
+>> -	if (IS_ERR(rockchip->aclk_pcie)) {
+>> -		dev_err(dev, "aclk clock not found\n");
+>> -		return PTR_ERR(rockchip->aclk_pcie);
+>> -	}
+>> -
+>> -	rockchip->aclk_perf_pcie = devm_clk_get(dev, "aclk-perf");
+>> -	if (IS_ERR(rockchip->aclk_perf_pcie)) {
+>> -		dev_err(dev, "aclk_perf clock not found\n");
+>> -		return PTR_ERR(rockchip->aclk_perf_pcie);
+>> -	}
+>> -
+>> -	rockchip->hclk_pcie = devm_clk_get(dev, "hclk");
+>> -	if (IS_ERR(rockchip->hclk_pcie)) {
+>> -		dev_err(dev, "hclk clock not found\n");
+>> -		return PTR_ERR(rockchip->hclk_pcie);
+>> -	}
+>> -
+>> -	rockchip->clk_pcie_pm = devm_clk_get(dev, "pm");
+>> -	if (IS_ERR(rockchip->clk_pcie_pm)) {
+>> -		dev_err(dev, "pm clock not found\n");
+>> -		return PTR_ERR(rockchip->clk_pcie_pm);
+>> -	}
+>> -
+>>   	err = rockchip_pcie_setup_irq(rockchip);
+>>   	if (err)
+>>   		return err;
+>> @@ -1195,8 +1085,9 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+>>   
+>>   	platform_set_drvdata(pdev, rockchip);
+>>   	rockchip->dev = dev;
+>> +	rockchip->is_rc = true;
+>>   
+>> -	err = rockchip_pcie_parse_dt(rockchip);
+>> +	err = rockchip_pcie_parse_host_dt(rockchip);
+>>   	if (err)
+>>   		return err;
+>>   
+>> diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
+>> index 3d46da9..bcc222b 100644
+>> --- a/drivers/pci/host/pcie-rockchip.c
+>> +++ b/drivers/pci/host/pcie-rockchip.c
+>> @@ -12,10 +12,139 @@
+>>    */
+>>   
+>>   #include <linux/clk.h>
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/of_pci.h>
+>>   #include <linux/phy/phy.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/reset.h>
+>>   
+>>   #include "pcie-rockchip.h"
+>>   
+>> +int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+>> +{
+>> +	struct device *dev = rockchip->dev;
+>> +	struct platform_device *pdev = to_platform_device(dev);
+>> +	struct device_node *node = dev->of_node;
+>> +	struct resource *regs;
+>> +	int err;
+>> +
+>> +	regs = platform_get_resource_byname(pdev,
+>> +					    IORESOURCE_MEM,
+>> +					    "axi-base");
+>> +	rockchip->reg_base = devm_pci_remap_cfg_resource(dev, regs);
+>> +	if (IS_ERR(rockchip->reg_base))
+>> +		return PTR_ERR(rockchip->reg_base);
+>> +
+>> +	regs = platform_get_resource_byname(pdev,
+>> +					    IORESOURCE_MEM,
+>> +					    "apb-base");
+>> +	rockchip->apb_base = devm_ioremap_resource(dev, regs);
+>> +	if (IS_ERR(rockchip->apb_base))
+>> +		return PTR_ERR(rockchip->apb_base);
+>> +
+>> +	err = rockchip_pcie_get_phys(rockchip);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	rockchip->lanes = 1;
+>> +	err = of_property_read_u32(node, "num-lanes", &rockchip->lanes);
+>> +	if (!err && (rockchip->lanes == 0 ||
+>> +		     rockchip->lanes == 3 ||
+>> +		     rockchip->lanes > 4)) {
+>> +		dev_warn(dev, "invalid num-lanes, default to use one lane\n");
+>> +		rockchip->lanes = 1;
+>> +	}
+>> +
+>> +	rockchip->link_gen = of_pci_get_max_link_speed(node);
+>> +	if (rockchip->link_gen < 0 || rockchip->link_gen > 2)
+>> +		rockchip->link_gen = 2;
+>> +
+>> +	rockchip->core_rst = devm_reset_control_get_exclusive(dev, "core");
+>> +	if (IS_ERR(rockchip->core_rst)) {
+>> +		if (PTR_ERR(rockchip->core_rst) != -EPROBE_DEFER)
+>> +			dev_err(dev, "missing core reset property in node\n");
+>> +		return PTR_ERR(rockchip->core_rst);
+>> +	}
+>> +
+>> +	rockchip->mgmt_rst = devm_reset_control_get_exclusive(dev, "mgmt");
+>> +	if (IS_ERR(rockchip->mgmt_rst)) {
+>> +		if (PTR_ERR(rockchip->mgmt_rst) != -EPROBE_DEFER)
+>> +			dev_err(dev, "missing mgmt reset property in node\n");
+>> +		return PTR_ERR(rockchip->mgmt_rst);
+>> +	}
+>> +
+>> +	rockchip->mgmt_sticky_rst = devm_reset_control_get_exclusive(dev,
+>> +								     "mgmt-sticky");
+>> +	if (IS_ERR(rockchip->mgmt_sticky_rst)) {
+>> +		if (PTR_ERR(rockchip->mgmt_sticky_rst) != -EPROBE_DEFER)
+>> +			dev_err(dev, "missing mgmt-sticky reset property in node\n");
+>> +		return PTR_ERR(rockchip->mgmt_sticky_rst);
+>> +	}
+>> +
+>> +	rockchip->pipe_rst = devm_reset_control_get_exclusive(dev, "pipe");
+>> +	if (IS_ERR(rockchip->pipe_rst)) {
+>> +		if (PTR_ERR(rockchip->pipe_rst) != -EPROBE_DEFER)
+>> +			dev_err(dev, "missing pipe reset property in node\n");
+>> +		return PTR_ERR(rockchip->pipe_rst);
+>> +	}
+>> +
+>> +	rockchip->pm_rst = devm_reset_control_get_exclusive(dev, "pm");
+>> +	if (IS_ERR(rockchip->pm_rst)) {
+>> +		if (PTR_ERR(rockchip->pm_rst) != -EPROBE_DEFER)
+>> +			dev_err(dev, "missing pm reset property in node\n");
+>> +		return PTR_ERR(rockchip->pm_rst);
+>> +	}
+>> +
+>> +	rockchip->pclk_rst = devm_reset_control_get_exclusive(dev, "pclk");
+>> +	if (IS_ERR(rockchip->pclk_rst)) {
+>> +		if (PTR_ERR(rockchip->pclk_rst) != -EPROBE_DEFER)
+>> +			dev_err(dev, "missing pclk reset property in node\n");
+>> +		return PTR_ERR(rockchip->pclk_rst);
+>> +	}
+>> +
+>> +	rockchip->aclk_rst = devm_reset_control_get_exclusive(dev, "aclk");
+>> +	if (IS_ERR(rockchip->aclk_rst)) {
+>> +		if (PTR_ERR(rockchip->aclk_rst) != -EPROBE_DEFER)
+>> +			dev_err(dev, "missing aclk reset property in node\n");
+>> +		return PTR_ERR(rockchip->aclk_rst);
+>> +	}
+>> +
+>> +	if (rockchip->is_rc) {
+>> +		rockchip->ep_gpio = devm_gpiod_get(dev, "ep", GPIOD_OUT_HIGH);
+>> +		if (IS_ERR(rockchip->ep_gpio)) {
+>> +			dev_err(dev, "missing ep-gpios property in node\n");
+>> +			return PTR_ERR(rockchip->ep_gpio);
+>> +		}
+>> +	}
+>> +
+>> +	rockchip->aclk_pcie = devm_clk_get(dev, "aclk");
+>> +	if (IS_ERR(rockchip->aclk_pcie)) {
+>> +		dev_err(dev, "aclk clock not found\n");
+>> +		return PTR_ERR(rockchip->aclk_pcie);
+>> +	}
+>> +
+>> +	rockchip->aclk_perf_pcie = devm_clk_get(dev, "aclk-perf");
+>> +	if (IS_ERR(rockchip->aclk_perf_pcie)) {
+>> +		dev_err(dev, "aclk_perf clock not found\n");
+>> +		return PTR_ERR(rockchip->aclk_perf_pcie);
+>> +	}
+>> +
+>> +	rockchip->hclk_pcie = devm_clk_get(dev, "hclk");
+>> +	if (IS_ERR(rockchip->hclk_pcie)) {
+>> +		dev_err(dev, "hclk clock not found\n");
+>> +		return PTR_ERR(rockchip->hclk_pcie);
+>> +	}
+>> +
+>> +	rockchip->clk_pcie_pm = devm_clk_get(dev, "pm");
+>> +	if (IS_ERR(rockchip->clk_pcie_pm)) {
+>> +		dev_err(dev, "pm clock not found\n");
+>> +		return PTR_ERR(rockchip->clk_pcie_pm);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(rockchip_pcie_parse_dt);
+>> +
+>>   int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip)
+>>   {
+>>   	struct device *dev = rockchip->dev;
+>> diff --git a/drivers/pci/host/pcie-rockchip.h b/drivers/pci/host/pcie-rockchip.h
+>> index d27941e..473e74f 100644
+>> --- a/drivers/pci/host/pcie-rockchip.h
+>> +++ b/drivers/pci/host/pcie-rockchip.h
+>> @@ -222,6 +222,7 @@ struct rockchip_pcie {
+>>   	u32     mem_size;
+>>   	phys_addr_t msg_bus_addr;
+>>   	phys_addr_t mem_bus_addr;
+>> +	bool is_rc;
+>>   };
+>>   
+>>   static u32 rockchip_pcie_read(struct rockchip_pcie *rockchip, u32 reg)
+>> @@ -235,6 +236,7 @@ static void rockchip_pcie_write(struct rockchip_pcie *rockchip, u32 val,
+>>   	writel(val, rockchip->apb_base + reg);
+>>   }
+>>   
+>> +int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip);
+>>   int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip);
+>>   void rockchip_pcie_deinit_phys(struct rockchip_pcie *rockchip);
+>>   int rockchip_pcie_enable_clocks(struct rockchip_pcie *rockchip);
+>> -- 
+>> 1.9.1
+>>
+>>
+> 
+> 
+> 
