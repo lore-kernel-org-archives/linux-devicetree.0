@@ -1,43 +1,39 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Relicense most DTS files to the GPL
- 2.0+ / MIT
-Date: Wed, 2 May 2018 07:25:44 -0700
-Message-ID: <20180502142544.GB10928@kroah.com>
-References: <20180502141102.31769-1-zajec5@gmail.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v1 0/2] Add MDMA Support on STM32MP157C
+Date: Wed, 2 May 2018 16:25:06 +0200
+Message-ID: <0bcb0bea-cdc1-483e-4396-517d33e9e69f@st.com>
+References: <1524215707-14642-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180502141102.31769-1-zajec5@gmail.com>
+In-Reply-To: <1524215707-14642-1-git-send-email-pierre-yves.mordret@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Dan Haab <dhaab@luxul.com>, Dan Haab <riproute@gmail.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, "Luis R . Rodriguez" <mcgrof@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 02, 2018 at 04:11:02PM +0200, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal@milecki.pl>
-> 
-> These files were created and ever touched by a group of three people
-> only: Dan, Hauke and me. They were licensed under GNU/GPL or ISC.
-> 
-> Introducing and discussing SPDX-License-Identifier resulted in a
-> conclusion that ISC is a not recommended license (see also a
-> license-rules.rst). Moveover an old e-mail from Alan Cox was pointed
-> which explained that dual licensing is a safer solution than depending
-> on a common compatibility belief.
-> 
-> This commit switches most of BCM5301X DTS files to dual licensing using:
-> 1) GPL 2.0+ to make sure they are compatible with Linux kernel
-> 2) MIT to allow sharing with more permissive projects
-> Both licenses belong to the preferred ones (see LICENSES/preferred/).
-> 
-> An attempt to relicense remaining files will be made separately and will
-> require approve from more/other developers.
-> 
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+Hi,
 
-Many thanks for doing this, it makes the license "confusion" a bit less
-now :)
+On 04/20/2018 11:15 AM, Pierre-Yves MORDRET wrote:
+> This patch adds MDMA support on STM32MP157C with configs and device tree.
+> ---
+>    Version history:
+>       v1:
+>          * Initial
+> ---
+> 
+> Pierre-Yves MORDRET (2):
+>    ARM: configs: stm32: Add MDMA support on STM32MP157C
+>    ARM: dts: stm32: Add MDMA support on STM32MP157C
+> 
+>   arch/arm/boot/dts/stm32mp157c.dtsi | 10 ++++++++++
+>   arch/arm/mach-stm32/Kconfig        |  1 +
+>   2 files changed, 11 insertions(+)
+> 
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Series applied on stm32-next.
+As said before I modified commit header for mach-stm32/Kconfig patch.
+
+Regards
+Alex
