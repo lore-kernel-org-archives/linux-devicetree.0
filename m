@@ -1,46 +1,29 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: add reset binding on stm32mp157c
-Date: Wed, 2 May 2018 14:19:25 +0200
-Message-ID: <a49de02e-5ea3-0ac7-9ae0-75add5806c6a@st.com>
-References: <1524215347-10600-1-git-send-email-gabriel.fernandez@st.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/4] dt-bindings: move various timer bindings to timer/ directory
+Date: Wed, 2 May 2018 14:20:50 +0200
+Message-ID: <CACRpkdZVT1wRaEmBAD1m-BMMZSEYxyU0jpAfMPmiT8H0TyMVDw@mail.gmail.com>
+References: <20180426212744.28688-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524215347-10600-1-git-send-email-gabriel.fernandez@st.com>
-Content-Language: en-US
+In-Reply-To: <20180426212744.28688-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gabriel.fernandez@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gabriel,
+On Thu, Apr 26, 2018 at 11:27 PM, Rob Herring <robh@kernel.org> wrote:
 
-On 04/20/2018 11:09 AM, gabriel.fernandez@st.com wrote:
-> From: Gabriel Fernandez <gabriel.fernandez@st.com>
-> 
-> This patch adds reset binding file.
-> 
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-> ---
->   arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-> index bc3eddc..7e91fd6 100644
-> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-> @@ -5,6 +5,7 @@
->    */
->   #include <dt-bindings/interrupt-controller/arm-gic.h>
->   #include <dt-bindings/clock/stm32mp1-clks.h>
-> +#include <dt-bindings/reset/stm32mp1-resets.h>
->   
->   / {
->   	#address-cells = <1>;
-> 
+> Bindings are supposed to be organized by device class/function. Move
+> bindings for various timers to timer/ binding directory.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Applied on stm32-next.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Thanks.
-Alex
+Thank you for bringing some order.
+
+Yours,
+Linus Walleij
