@@ -1,105 +1,73 @@
-From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
-Subject: Re: [PATCH v8 07/12] ARM: sunxi: Add initialization of CNTVOFF
-Date: Wed, 2 May 2018 15:28:37 +0200
-Message-ID: <20180502152837.379c376a@dell-desktop.home>
-References: <20180501123131.7738-1-mylene.josserand@bootlin.com>
-        <20180501123131.7738-8-mylene.josserand@bootlin.com>
-        <20180502130842.pecjwahxrvx5addq@flea>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v5] drm/panel: simple: Add TFC S9700RTWV43TR-01B 800x480
+ panel support
+Date: Wed, 2 May 2018 16:35:15 +0300
+Message-ID: <e9be8ced-95f5-ee62-6f5e-cccfd7307e3d@ti.com>
+References: <1524772102-3360-1-git-send-email-jsarha@ti.com>
+ <20180427142526.g3kdkn2vthnquedn@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180502130842.pecjwahxrvx5addq@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180427142526.g3kdkn2vthnquedn@rob-hp-laptop>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: tomi.valkeinen@ti.com, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-On Wed, 2 May 2018 15:08:42 +0200
-Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-
-> On Tue, May 01, 2018 at 02:31:26PM +0200, Mylène Josserand wrote:
-> > Add the initialization of CNTVOFF for sun8i-a83t.
-> > 
-> > For boot CPU, create a new machine that handles this
-> > function's call in an "init_early" callback. We need to initialize
-> > CNTVOFF before the arch timer's initialization otherwise, it will
-> > not be taken into account and fails to boot correctly.
-> > Because of that, this function can't be called in SMP's early_initcall
-> > function which is called after timer's init.
-> > 
-> > For secondary CPUs, add this function into secondary_startup
-> > assembly entry.
-> > 
-> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
-> > Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > ---
-> >  arch/arm/mach-sunxi/headsmp.S |  1 +
-> >  arch/arm/mach-sunxi/sunxi.c   | 20 +++++++++++++++++++-
-> >  2 files changed, 20 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/headsmp.S
-> > index 37dc772701f3..32d76be98541 100644
-> > --- a/arch/arm/mach-sunxi/headsmp.S
-> > +++ b/arch/arm/mach-sunxi/headsmp.S
-> > @@ -71,6 +71,7 @@ ENDPROC(sunxi_mc_smp_cluster_cache_enable)
-> >  
-> >  ENTRY(sunxi_mc_smp_secondary_startup)
-> >  	bl	sunxi_mc_smp_cluster_cache_enable
-> > +	bl	secure_cntvoff_init
-> >  	b	secondary_startup
-> >  ENDPROC(sunxi_mc_smp_secondary_startup)
-> >  
-> > diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-> > index 5e9602ce1573..2770a31a9278 100644
-> > --- a/arch/arm/mach-sunxi/sunxi.c
-> > +++ b/arch/arm/mach-sunxi/sunxi.c
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/platform_device.h>
-> >  
-> >  #include <asm/mach/arch.h>
-> > +#include <asm/secure_cntvoff.h>
-> >  
-> >  static const char * const sunxi_board_dt_compat[] = {
-> >  	"allwinner,sun4i-a10",
-> > @@ -62,7 +63,6 @@ MACHINE_END
-> >  static const char * const sun8i_board_dt_compat[] = {
-> >  	"allwinner,sun8i-a23",
-> >  	"allwinner,sun8i-a33",
-> > -	"allwinner,sun8i-a83t",
-> >  	"allwinner,sun8i-h2-plus",
-> >  	"allwinner,sun8i-h3",
-> >  	"allwinner,sun8i-r40",
-> > @@ -75,6 +75,24 @@ DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i Family")
-> >  	.dt_compat	= sun8i_board_dt_compat,
-> >  MACHINE_END
-> >  
-> > +void __init sun8i_a83t_cntvoff_init(void)
-> > +{
-> > +#ifdef CONFIG_SMP
-> > +	secure_cntvoff_init();
-> > +#endif
-> > +}
-> > +
-> > +static const char * const sun8i_a83t_cntvoff_board_dt_compat[] = {
-> > +	"allwinner,sun8i-a83t",
-> > +	NULL,
-> > +};
-> > +
-> > +DT_MACHINE_START(SUN8I_CNTVOFF_DT, "Allwinner sun8i-a83t board")  
-> 
-> I put my Acked-by on the condition that you would fix this. And you
-> still didn't.
-
-Grrr, stupid me.
-I modified the names of functions but I forgot the machine. Sorry
-about that.
-
-Best regards,
-
--- 
-Mylène Josserand, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
+T24gMDQvMjcvMTggMTc6MjUsIFJvYiBIZXJyaW5nIHdyb3RlOgo+IE9uIFRodSwgQXByIDI2LCAy
+MDE4IGF0IDEwOjQ4OjIyUE0gKzAzMDAsIEp5cmkgU2FyaGEgd3JvdGU6Cj4+IEFkZCBzdXBwb3J0
+IGZvciBUaHJlZSBGaXZlIGRpc3BsYXlzIFRGQyBTOTcwMFJUV1Y0M1RSLTAxQiA4MDB4NDgwCj4+
+IHBhbmVsIHdpdGggcmVzaXN0aXZlIHRvdWNoIGZvdW5kIG9uIFRJJ3MgQU0zMzVYLUVWTS4KPj4K
+Pj4gU2lnbmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KPj4gUmV2aWV3ZWQt
+Ynk6IFRvbWkgVmFsa2VpbmVuIDx0b21pLnZhbGtlaW5lbkB0aS5jb20+Cj4+IGNjOiBUaGllcnJ5
+IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPgo+PiAtLS0KPj4gVGhhbmtzIFRoaWVy
+cnksIGZvciByZW1pbmRpbmcgbWUgYWJvdXQgdGhpcyEKPj4KPj4gQ2hhbmdlcyBzaW5jZSB2NDoK
+Pj4gLSBBZGQgdGZjIHRvIHZlbmRvci1wcmVmaXhlcy50eHQKPj4KPj4gIC4uLi9kaXNwbGF5L3Bh
+bmVsL3RmYyxzOTcwMHJ0d3Y0M3RyLTAxYi50eHQgICAgICAgIHwgMTAgKysrKysrKysrCj4+ICAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgICAgICB8ICAxICsK
+Pj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwg
+MjYgKysrKysrKysrKysrKysrKysrKysrKwo+PiAgMyBmaWxlcyBjaGFuZ2VkLCAzNyBpbnNlcnRp
+b25zKCspCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvcGFuZWwvdGZjLHM5NzAwcnR3djQzdHItMDFiLnR4dAo+Pgo+PiBkaWZm
+IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
+dGZjLHM5NzAwcnR3djQzdHItMDFiLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L3BhbmVsL3RmYyxzOTcwMHJ0d3Y0M3RyLTAxYi50eHQKPj4gbmV3IGZpbGUg
+bW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMC4uMGIxY2M3MQo+PiAtLS0gL2Rldi9udWxsCj4+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Rm
+YyxzOTcwMHJ0d3Y0M3RyLTAxYi50eHQKPj4gQEAgLTAsMCArMSwxMCBAQAo+PiArVEZDIFM5NzAw
+UlRXVjQzVFItMDFCIDciIFRocmVlIEZpdmUgQ29ycCA4MDB4NDgwIExDRCBwYW5lbCB3aXRoCj4+
+ICtyZXNpc3RpdmUgdG91Y2gKPj4gKwo+PiArVGhlIHBhbmVsIGlzIGZvdW5kIG9uIFRJIEFNMzM1
+eC1ldm0uCj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICstIGNvbXBhdGlibGU6IHNo
+b3VsZCBiZSAidGZjLFM5NzAwUlRXVjQzdHItMDFiIgo+PiArCj4+ICtUaGlzIGJpbmRpbmcgaXMg
+Y29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lm
+aWVkCj4+ICtpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5Lgo+IAo+IFlvdSBu
+ZWVkIHRvIHN0YXRlIHdoYXQgcHJvcGVydGllcyBmcm9tIHRoaXMgYXBwbHkuIEZvciBleGFtcGxl
+LCBJIGRvbid0IAo+IGtub3cgaWYgcG93ZXItc3VwcGx5IGlzIG5vdCB1c2VkLCB1c2VkLCBvciB5
+b3UgbWFkZSBhIG1pc3Rha2UgYW5kIHRoZSAKPiBwYW5lbCBoYXMgbW9yZSB0aGFuIG9uZSBzdXBw
+bHkuCj4gCgpUaGUgaW1wbGVtZW50YXRpb24gaXMgdGhlIHNhbWUgYXMgd2l0aCB0aGUgb3RoZXIg
+cGFuZWxzIHN1cHBvcnRlZCBieSB0aGUKc2ltcGxlIHBhbmVsIGRyaXZlci4gU28gYWxsIHRoZSBw
+cm9wZXJ0aWVzIGFyZSBzdXBwb3J0ZWQuIEhvd2V2ZXIsIHRoZQoicG93ZXIiIHJlZ3VsYXRvciBp
+cyB0YWtlbiB3aXRoIGRldm1fcmVndWxhdG9yX2dldCgpLCB3aGljaCB3aWxsIHN1cHBseQphIGR1
+bW15IHJlZ3VsYXRvciBpbiBjYXNlIHRoZXJlIGlzIG5vIHJlZ3VsYXRvciBpbiB0aGUgZGV2aWNl
+IG5vZGUuCgpTbyB0aGUgcG93ZXIgcHJvcGVydHkgaXMgaW4gZmFjdCBvcHRpb25hbC4gU2hvdWxk
+IHRoZSBzaW1wbGUtcGFuZWwKYmluZGluZyBiZSB1cGRhdGVkPwoKSW4gQU0zMzV4LWV2bSwgdGhh
+dCBoYXMgdGhlIHBhbmVsIGluIHF1ZXN0aW9uLCB0aGVyZSBpcyBubyByZWd1bGF0b3IgdG8KY29u
+dHJvbCBhbmQgdGhlIHBhbmVsIGlzIHBvd2VyZWQgYWxsIHRoZSB0aW1lIHdoZW4gdGhlIGJvYXJk
+IGlzIG9uLiBCdXQKZm9yIHN1cmUgdGhlcmUgY2FuIGJlIGEgYm9hcmQgZGVzaWduIHRoYXQgaGFz
+IGEgcmVndWxhdG9yIHRvIGNvbnRyb2wKcG93ZXIgc3VwcGx5IGZvciB0aGUgZGlzcGxheS4gVGhl
+IHBhbmVsIG5lZWQgcG93ZXIgYWZ0ZXIgYWxsLgoKQlIsCkp5cmkKCi0tIApUZXhhcyBJbnN0cnVt
+ZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4KWS10dW5u
+dXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
