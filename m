@@ -1,15 +1,15 @@
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 10/17] irqchip/irq-mvebu-sei: add new driver for Marvell
- SEI
-Date: Wed, 2 May 2018 11:17:44 +0200
-Message-ID: <20180502111744.5391afff@windsurf.home>
-References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
- <20180421135537.24716-11-miquel.raynal@bootlin.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v5 2/6] mfd: stm32-timers: add support for dmas
+Date: Wed, 2 May 2018 11:20:18 +0200
+Message-ID: <04b630f0-46c2-b63a-3b1f-f3e28d199d91@st.com>
+References: <1523972313-28765-1-git-send-email-fabrice.gasnier@st.com>
+ <1523972313-28765-3-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180421135537.24716-11-miquel.raynal@bootlin.com>
+In-Reply-To: <1523972313-28765-3-git-send-email-fabrice.gasnier@st.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,265 +19,400 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: lee.jones@linaro.org
+Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@linaro.org, dan.carpenter@oracle.com, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgpPbiBTYXQsIDIxIEFwciAyMDE4IDE1OjU1OjMwICswMjAwLCBNaXF1ZWwgUmF5bmFs
-IHdyb3RlOgoKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pcnFjaGlwL01ha2VmaWxlIGIvZHJpdmVy
-cy9pcnFjaGlwL01ha2VmaWxlCj4gaW5kZXggNWVkNDY1YWIxYzc2Li42YjViNzVjYjQ2OTQgMTAw
-NjQ0Cj4gLS0tIGEvZHJpdmVycy9pcnFjaGlwL01ha2VmaWxlCj4gKysrIGIvZHJpdmVycy9pcnFj
-aGlwL01ha2VmaWxlCj4gQEAgLTczLDYgKzczLDcgQEAgb2JqLSQoQ09ORklHX0lNWF9HUENWMikJ
-CQkrPSBpcnEtaW14LWdwY3YyLm8KPiAgb2JqLSQoQ09ORklHX1BJQzMyX0VWSUMpCQkrPSBpcnEt
-cGljMzItZXZpYy5vCj4gIG9iai0kKENPTkZJR19NU0NDX09DRUxPVF9JUlEpCQkrPSBpcnEtbXNj
-Yy1vY2Vsb3Qubwo+ICBvYmotJChDT05GSUdfTVZFQlVfR0lDUCkJCSs9IGlycS1tdmVidS1naWNw
-Lm8KPiArb2JqLSQoQ09ORklHX01WRUJVX1NFSSkJCQkrPSBpcnEtbXZlYnUtc2VpLm8KPiAgb2Jq
-LSQoQ09ORklHX01WRUJVX0lDVSkJCQkrPSBpcnEtbXZlYnUtaWN1Lm8KPiAgb2JqLSQoQ09ORklH
-X01WRUJVX09ETUkpCQkrPSBpcnEtbXZlYnUtb2RtaS5vCj4gIG9iai0kKENPTkZJR19NVkVCVV9Q
-SUMpCQkJKz0gaXJxLW12ZWJ1LXBpYy5vCgpBbHBoYWJldGljIG9yZGVyaW5nIHdvdWxkIHB1dCBT
-RUkgYWZ0ZXIgUElDIEkgZ3Vlc3MgOikKCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaXJxY2hpcC9p
-cnEtbXZlYnUtc2VpLmMgYi9kcml2ZXJzL2lycWNoaXAvaXJxLW12ZWJ1LXNlaS5jCj4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjVjMTJjNzRlM2YwOQo+IC0tLSAv
-ZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2lycWNoaXAvaXJxLW12ZWJ1LXNlaS5jCj4gQEAgLTAs
-MCArMSw0NDkgQEAKPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAgT1IgWDEx
-CgpMaWNlbnNlIGZvciBjb2RlIGlzIEdQTC0yLjAgb25seS4gV2UgdXNlIEdQTC0yLjAgT1IgWDEx
-IGZvciBEZXZpY2UKVHJlZXMuCgo+ICsjZGVmaW5lIHByX2ZtdChmbXQpICJtdmVidS1zZWk6ICIg
-Zm10Cj4gKwo+ICsjaW5jbHVkZSA8bGludXgvaXJxLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9pbnRl
-cnJ1cHQuaD4KPiArI2luY2x1ZGUgPGxpbnV4L2lycWNoaXAvY2hhaW5lZF9pcnEuaD4KPiArI2lu
-Y2x1ZGUgPGxpbnV4L2lycWRvbWFpbi5oPgo+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+Cj4g
-KyNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZl9pcnEu
-aD4KPiArI2luY2x1ZGUgPGxpbnV4L29mX3BsYXRmb3JtLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9t
-c2kuaD4KPiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgo+ICsjaW5jbHVkZSA8
-bGludXgvaXJxY2hpcC5oPgo+ICsKPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1j
-b250cm9sbGVyL2FybS1naWMuaD4KPiArCj4gKyNkZWZpbmUgR0lDUF9TRVRfU0VJX09GRlNFVAkw
-eDMwCj4gKyNkZWZpbmUgR0lDUF9DTFJfU0VJX09GRlNFVAlHSUNQX1NFVF9TRUlfT0ZGU0VUCgpX
-aHkgZG8geW91IGhhdmUgdGhpcyBjb25jZXB0IG9mIHNldC9jbHIgaWYgdGhlcmUgaXMgb25seSBv
-bmUgcmVnaXN0ZXIgPwpJIGFzc3VtZSB0aGF0IGlmIHRoZXJlIGlzIG9ubHkgYSAic2V0IiByZWdp
-c3RlciwgaXQgbWVhbnMgdGhhdCBTRUkKaW50ZXJydXB0cyBjYW4gb25seSBiZSBlZGdlIHRyaWdn
-ZXJlZCwgY29udHJhcnkgdG8gTlNSIGludGVycnVwdHMsCndoaWNoIGhhdmUgc2VwYXJhdGUgc2V0
-L2NsciB0byBzdXBwb3J0IGxldmVsLXRyaWdnZXJlZCBpbnRlcnJ1cHRzLgoKSGF2aW5nIG9ubHkg
-YSAic2V0IiBvZmZzZXQgbWVhbnMgdGhhdCB3ZSBjYW4gcmVseSBvbiB0aGUgZXhpc3RpbmcKInN0
-cnVjdCBtc2lfbXNnIiB0byBjb252ZXkgYm90aCB0aGUgTVNJIGRvb3JiZWxsIGFkZHJlc3MgYW5k
-IHBheWxvYWQsCmFuZCB3ZSBkb24ndCBuZWVkIHRoZSBtdmVidV9naWNwX2dldF9kb29yYmVsbHMo
-KSBoYWNrLgoKPiArLyogQ2F1c2UgcmVnaXN0ZXIgKi8KPiArI2RlZmluZSBHSUNQX1NFQ1IoaWR4
-KQkJKDB4MCAgKyAoaWR4ICogMHg0KSkKPiArLyogTWFzayByZWdpc3RlciAqLwo+ICsjZGVmaW5l
-IEdJQ1BfU0VNUihpZHgpCQkoMHgyMCArIChpZHggKiAweDQpKQoKTWlub3Igbml0OiBvcmRlciBy
-ZWdpc3RlciBkZWZpbml0aW9ucyBieSBvcmRlciBvZiBpbmNyZWFzaW5nIG9mZnNldCwKaS5lIHRo
-ZSBHSUNQX1NFVF9TRUlfT0ZGU0VUIHNob3VsZCBiZSBkZWZpbmVkIGhlcmUuCgo+ICsjZGVmaW5l
-IFNFSV9JUlFfTkJfUEVSX1JFRwkzMgo+ICsjZGVmaW5lIFNFSV9JUlFfUkVHX05CCQkyCgpzL05C
-L0NPVU5ULwoKPiArI2RlZmluZSBTRUlfSVJRX05CCQkoU0VJX0lSUV9OQl9QRVJfUkVHICogU0VJ
-X0lSUV9SRUdfTkIpCgpEaXR0by4KCj4gKyNkZWZpbmUgU0VJX0lSUV9SRUdfSURYKGlycV9pZCkJ
-KGlycV9pZCAvIFNFSV9JUlFfTkJfUEVSX1JFRykKPiArI2RlZmluZSBTRUlfSVJRX1JFR19CSVQo
-aXJxX2lkKQkoaXJxX2lkICUgU0VJX0lSUV9OQl9QRVJfUkVHKQo+ICsKPiArc3RydWN0IG12ZWJ1
-X3NlaV9pbnRlcnJ1cHRfcmFuZ2Ugewo+ICsJdTMyIGZpcnN0Owo+ICsJdTMyIG51bWJlcjsKPiAr
-fTsKPiArCj4gK3N0cnVjdCBtdmVidV9zZWkgewo+ICsJc3RydWN0IGRldmljZSAqZGV2Owo+ICsJ
-dm9pZCBfX2lvbWVtICpiYXNlOwo+ICsJc3RydWN0IHJlc291cmNlICpyZXM7Cj4gKwlzdHJ1Y3Qg
-aXJxX2RvbWFpbiAqYXBfZG9tYWluOwo+ICsJc3RydWN0IGlycV9kb21haW4gKmNwX2RvbWFpbjsK
-PiArCXN0cnVjdCBtdmVidV9zZWlfaW50ZXJydXB0X3JhbmdlIGFwX2ludGVycnVwdHM7Cj4gKwlz
-dHJ1Y3QgbXZlYnVfc2VpX2ludGVycnVwdF9yYW5nZSBjcF9pbnRlcnJ1cHRzOwo+ICsJLyogTG9j
-ayBvbiBNU0kgYWxsb2NhdGlvbnMvcmVsZWFzZXMgKi8KPiArCXNwaW5sb2NrX3QgY3BfbXNpX2xv
-Y2s7Cj4gKwlERUNMQVJFX0JJVE1BUChjcF9tc2lfYml0bWFwLCBTRUlfSVJRX05CKTsKPiArfTsK
-PiArCj4gK3N0YXRpYyBpbnQgbXZlYnVfc2VpX2RvbWFpbl90b19zZWlfaXJxKHN0cnVjdCBtdmVi
-dV9zZWkgKnNlaSwKPiArCQkJCSAgICAgICBzdHJ1Y3QgaXJxX2RvbWFpbiAqZG9tYWluLAo+ICsJ
-CQkJICAgICAgIGlycV9od19udW1iZXJfdCBod2lycSkKPiArewo+ICsJaWYgKGRvbWFpbiA9PSBz
-ZWktPmFwX2RvbWFpbikKPiArCQlyZXR1cm4gc2VpLT5hcF9pbnRlcnJ1cHRzLmZpcnN0ICsgaHdp
-cnE7Cj4gKwllbHNlCj4gKwkJcmV0dXJuIHNlaS0+Y3BfaW50ZXJydXB0cy5maXJzdCArIGh3aXJx
-OwoKSSBhbSBub3QgZW50aXJlbHkgY2xlYXIgd2hldGhlciB3ZSBuZWVkIHN1Ym5vZGVzIG9yIG5v
-dCBpbiB0aGlzCmJpbmRpbmcsIGJ1dCBJIGd1ZXNzIHdlIGRvIGJlY2F1c2Ugd2UgaGF2ZSBvbmUg
-c3Vic2V0IG9mIHRoZSBpbnRlcnJ1cHRzCnRoYXQgYXJlIHdpcmVkIGludGVycnVwdHMsIGFuZCBh
-bm90aGVyIHBhcnQgdGhhdCBhcmUgTVNJIHRyaWdnZXJlZC4KClBlcmhhcHMgdGhpcyBpcyBvbmUg
-YXNwZWN0IG9uIHdoaWNoIE1hcmMgWnluZ2llciBjYW4gY29tbWVudCA/Cgo+ICtzdGF0aWMgdm9p
-ZCBtdmVidV9zZWlfcmVzZXQoc3RydWN0IG12ZWJ1X3NlaSAqc2VpKQo+ICt7Cj4gKwl1MzIgcmVn
-X2lkeDsKPiArCj4gKwlmb3IgKHJlZ19pZHggPSAwOyByZWdfaWR4IDwgU0VJX0lSUV9SRUdfTkI7
-IHJlZ19pZHgrKykgewo+ICsJCS8qIENsZWFyIGFsbCBjYXVzZSBiaXRzICovCj4gKwkJd3JpdGVs
-KDB4RkZGRkZGRkYsIHNlaS0+YmFzZSArIEdJQ1BfU0VDUihyZWdfaWR4KSk7Cj4gKwkJLyogRW5h
-YmxlIGFsbCBpbnRlcnJ1cHRzICovCj4gKwkJd3JpdGVsKDAsIHNlaS0+YmFzZSArIEdJQ1BfU0VN
-UihyZWdfaWR4KSk7CgpFbmFibGluZyBpbnRlcnJ1cHRzIGJ5IGRlZmF1bHQgPyBUaGlzIGxvb2tz
-IHdlaXJkLiBUaGV5IHNob3VsZCBvbmx5IGJlCmVuYWJsZWQuLi4gd2hlbiBlbmFibGVkLgoKPiAr
-aW50IG12ZWJ1X3NlaV9nZXRfZG9vcmJlbGxzKHN0cnVjdCBkZXZpY2Vfbm9kZSAqZG4sIHBoeXNf
-YWRkcl90ICpzZXQsCj4gKwkJCSAgICBwaHlzX2FkZHJfdCAqY2xyKQo+ICt7Cj4gKwlzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlICpwZGV2Owo+ICsJc3RydWN0IG12ZWJ1X3NlaSAqc2VpOwo+ICsKPiAr
-CXBkZXYgPSBvZl9maW5kX2RldmljZV9ieV9ub2RlKGRuLT5wYXJlbnQpOwo+ICsJaWYgKCFwZGV2
-KQo+ICsJCXJldHVybiAtRU5PREVWOwo+ICsKPiArCXNlaSA9IHBsYXRmb3JtX2dldF9kcnZkYXRh
-KHBkZXYpOwo+ICsJaWYgKCFzZWkpCj4gKwkJcmV0dXJuIC1FTk9ERVY7Cj4gKwo+ICsJKnNldCA9
-IChwaHlzX2FkZHJfdCkoc2VpLT5yZXMtPnN0YXJ0ICsgR0lDUF9TRVRfU0VJX09GRlNFVCk7Cj4g
-KwkqY2xyID0gKHBoeXNfYWRkcl90KShzZWktPnJlcy0+c3RhcnQgKyBHSUNQX0NMUl9TRUlfT0ZG
-U0VUKTsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQoKQXMgSSBzYWlkIGFib3ZlLCBJIGJlbGlldmUg
-dGhpcyBoYWNrIGlzIG5vdCBuZWVkZWQsIGJlY2F1c2UgU0VJcyBhcmUKZWRnZS10cmlnZ2VyZWQs
-IGFuZCB3ZSBoYXZlIGEgc2luZ2xlIFNFVF9TRUlfT0ZGU0VUIE1TSSBkb29yYmVsbAphZGRyZXNz
-IHRvIGNvbnZleSwgd2hpY2ggbWFrZXMgInN0cnVjdCBtc2lfbXNnIiBhcyBpdCBpcyB0b2RheQpz
-dWZmaWNpZW50LgoKPiArc3RhdGljIHZvaWQgbXZlYnVfc2VpX21hc2tfaXJxKHN0cnVjdCBpcnFf
-ZGF0YSAqZCkKPiArewo+ICsJc3RydWN0IG12ZWJ1X3NlaSAqc2VpID0gaXJxX2RhdGFfZ2V0X2ly
-cV9jaGlwX2RhdGEoZCk7Cj4gKwl1MzIgcmVnX2lkeCA9IFNFSV9JUlFfUkVHX0lEWChkLT5od2ly
-cSk7CgpUaGlzIGRvZXNuJ3QgbG9vayByaWdodC4gVGhlIGQtPmh3aXJxIGlzIHJlbGF0aXZlIHRv
-IHRoZSBiZWdpbm5pbmcgb2YKdGhlIGRvbWFpbiwgd2hpbGUgeW91IHNob3VsZCB1c2Ugc2VpX2ly
-cSBoZXJlLiBGb3IgZXhhbXBsZSwgdGhlIFNFSQpuwrAzMiAoZmlyc3QgaW50ZXJydXB0IGluIHRo
-ZSBzZWNvbmQgcmVnaXN0ZXIpIHdpbGwgaGF2ZSBkLT5od2lycSA9IDExLApiZWNhdXNlIGl0IGlz
-IHRoZSAxMXRoIFNFSSBpbnRlcnJ1cHQgZm9yIHRoZSBDUC4gU28gaGVyZSwgeW91IHdpbGwKY29u
-Y2x1ZGUgdGhhdCByZWdfaWR4ID0gMCwgd2hpbGUgaXQgc2hvdWxkIGJlIHJlZ19pZHggPSAxLgoK
-PiArCXUzMiBzZWlfaXJxID0gbXZlYnVfc2VpX2RvbWFpbl90b19zZWlfaXJxKHNlaSwgZC0+ZG9t
-YWluLCBkLT5od2lycSk7Cj4gKwl1MzIgaXJxX21hc2sgPSBCSVQoU0VJX0lSUV9SRUdfQklUKHNl
-aV9pcnEpKTsKPiArCXUzMiByZWc7Cj4gKwo+ICsJLyogMSBkaXNhYmxlcyB0aGUgaW50ZXJydXB0
-ICovCj4gKwlyZWcgPSAgcmVhZGwoc2VpLT5iYXNlICsgR0lDUF9TRU1SKHJlZ19pZHgpKTsKPiAr
-CXdyaXRlbChyZWcgfCBpcnFfbWFzaywgc2VpLT5iYXNlICsgR0lDUF9TRU1SKHJlZ19pZHgpKTsK
-ClBlcnNvbmFsIHRhc3RlIGhlcmUsIGJ1dCBJIHByZWZlcjoKCglyZWcgPSAgcmVhZGwoc2VpLT5i
-YXNlICsgR0lDUF9TRU1SKHJlZ19pZHgpKTsKCXJlZyB8PSBCSVQoU0VJX0lSUV9SRUdfQklUKHNl
-aV9pcnEpKTsKCXdyaXRlbChyZWcsIHNlaS0+YmFzZSArIEdJQ1BfU0VNUihyZWdfaWR4KSk7Cgo+
-ICtzdGF0aWMgdm9pZCBtdmVidV9zZWlfdW5tYXNrX2lycShzdHJ1Y3QgaXJxX2RhdGEgKmQpCj4g
-K3sKPiArCXN0cnVjdCBtdmVidV9zZWkgKnNlaSA9IGlycV9kYXRhX2dldF9pcnFfY2hpcF9kYXRh
-KGQpOwo+ICsJdTMyIHJlZ19pZHggPSBTRUlfSVJRX1JFR19JRFgoZC0+aHdpcnEpOwoKU2FtZSBt
-aXN0YWtlIGFzIGFib3ZlIEkgYmVsaWV2ZS4KCj4gKwl1MzIgc2VpX2lycSA9IG12ZWJ1X3NlaV9k
-b21haW5fdG9fc2VpX2lycShzZWksIGQtPmRvbWFpbiwgZC0+aHdpcnEpOwo+ICsJdTMyIGlycV9t
-YXNrID0gQklUKFNFSV9JUlFfUkVHX0JJVChzZWlfaXJxKSk7Cj4gKwl1MzIgcmVnOwo+ICsKPiAr
-CS8qIDAgZW5hYmxlcyB0aGUgaW50ZXJydXB0ICovCj4gKwlyZWcgPSByZWFkbChzZWktPmJhc2Ug
-KyBHSUNQX1NFTVIocmVnX2lkeCkpOwo+ICsJd3JpdGVsKHJlZyAmIH5pcnFfbWFzaywgc2VpLT5i
-YXNlICsgR0lDUF9TRU1SKHJlZ19pZHgpKTsKCkFuZCBzYW1lIG5pdHBpY2sgY29tbWVudCA6LSkK
-Cj4gK3N0YXRpYyBpbnQgbXZlYnVfc2VpX2lycV9kb21haW5fYWxsb2Moc3RydWN0IGlycV9kb21h
-aW4gKmRvbWFpbiwKPiArCQkJCSAgICAgIHVuc2lnbmVkIGludCB2aXJxLCB1bnNpZ25lZCBpbnQg
-bnJfaXJxcywKPiArCQkJCSAgICAgIHZvaWQgKmFyZ3MpCgpJIHRoaW5rIHRoZSBjb2Rpbmcgc3R5
-bGUgc2F5cyB0aGF0IGFyZ3VtZW50cyBzaG91bGQgYmUgYWxpZ25lZCwgbm8gPwoKPiArewo+ICsJ
-c3RydWN0IG12ZWJ1X3NlaSAqc2VpID0gZG9tYWluLT5ob3N0X2RhdGE7Cj4gKwlzdHJ1Y3QgaXJx
-X2Z3c3BlYyAqZndzcGVjID0gYXJnczsKPiArCXN0cnVjdCBpcnFfY2hpcCAqaXJxX2NoaXA7Cj4g
-KwlpbnQgc2VpX2h3aXJxLCBod2lycTsKPiArCWludCByZXQ7Cj4gKwo+ICsJLyogU29mdHdhcmUg
-b25seSBzdXBwb3J0cyBzaW5nbGUgYWxsb2NhdGlvbnMgZm9yIG5vdyAqLwo+ICsJaWYgKG5yX2ly
-cXMgIT0gMSkKPiArCQlyZXR1cm4gLUVOT1RTVVBQOwo+ICsKPiArCWlmIChkb21haW4gPT0gc2Vp
-LT5hcF9kb21haW4pIHsKPiArCQlpcnFfY2hpcCA9ICZtdmVidV9zZWlfYXBfd2lyZWRfaXJxX2No
-aXA7Cj4gKwkJaHdpcnEgPSBmd3NwZWMtPnBhcmFtWzBdOwo+ICsJfSBlbHNlIHsKPiArCQlpcnFf
-Y2hpcCA9ICZtdmVidV9zZWlfY3BfbXNpX2lycV9jaGlwOwo+ICsJCXNwaW5fbG9jaygmc2VpLT5j
-cF9tc2lfbG9jayk7Cj4gKwkJaHdpcnEgPSBiaXRtYXBfZmluZF9mcmVlX3JlZ2lvbihzZWktPmNw
-X21zaV9iaXRtYXAsIFNFSV9JUlFfTkIsCj4gKwkJCQkJCTApOwo+ICsJCXNwaW5fdW5sb2NrKCZz
-ZWktPmNwX21zaV9sb2NrKTsKPiArCQlpZiAoaHdpcnEgPCAwKQo+ICsJCQlyZXR1cm4gLUVOT1NQ
-QzsKPiArCX0KPiArCj4gKwlzZWlfaHdpcnEgPSBtdmVidV9zZWlfZG9tYWluX3RvX3NlaV9pcnEo
-c2VpLCBkb21haW4sIGh3aXJxKTsKPiArCj4gKwlmd3NwZWMtPmZ3bm9kZSA9IGRvbWFpbi0+cGFy
-ZW50LT5md25vZGU7Cj4gKwlmd3NwZWMtPnBhcmFtX2NvdW50ID0gMzsKPiArCWZ3c3BlYy0+cGFy
-YW1bMF0gPSBHSUNfU1BJOwo+ICsJZndzcGVjLT5wYXJhbVsxXSA9IHNlaV9od2lycTsKPiArCWZ3
-c3BlYy0+cGFyYW1bMl0gPSBJUlFfVFlQRV9FREdFX1JJU0lORzsKCk1heWJlIGl0J3MgbWUgYmVp
-bmcgY29uZnVzZWQsIGJ1dCBJIHRob3VnaHQgYWxsIFNFSSBpbnRlcnJ1cHRzIHdlcmUKbXV4ZWQg
-dG9nZXRoZXIgdG8gYSBzaW5nbGUgU1BJIGZvciB0aGUgcGFyZW50IEdJQy4gQnV0IGhlcmUsIHlv
-dQphbGxvY2F0ZSBkaWZmZXJlbnQgU1BJcyBhdCB0aGUgR0lDIGxldmVsLiBJbnR1aXRpdmVseSwg
-dGhpcyBkb2Vzbid0Cmxvb2sgZ29vZC4gSGF2ZW4ndCB5b3UgY29weS9wYXN0ZWQgdG9vIG11Y2gg
-ZnJvbSB0aGUgZ2ljcCBkcml2ZXIsIHdoZXJlCndlIGhhdmUgYSAxOjEgbWFwcGluZyBiZXR3ZWVu
-IGludGVycnVwdHMgY29taW5nIGludG8gdGhlIEdJQ1AgYW5kCmludGVycnVwdHMgc2lnbmFsZWQg
-YnkgdGhlIEdJQ1AgdG8gdGhlIEdJQywgd2hpbGUgaGVyZSB3ZSBoYXZlIGEgTjoxCm1hcHBpbmcs
-IHdpdGggTiBpbnRlcnJ1cHRzIGNvbWluZyBpbnRvIHRoZSBHSUNQX1NFSSwgYW5kIG9ubHkgb25l
-CmludGVycnVwdCBsZWF2aW5nIHRoZSBHSUNQX1NFSSB0byB0aGUgR0lDID8KCj4gK3N0YXRpYyBj
-b25zdCBzdHJ1Y3QgaXJxX2RvbWFpbl9vcHMgbXZlYnVfc2VpX2FwX2RvbWFpbl9vcHMgPSB7Cj4g
-KwkueGxhdGUgPSBpcnFfZG9tYWluX3hsYXRlX29uZWNlbGwsCj4gKwkuYWxsb2MgPSBtdmVidV9z
-ZWlfaXJxX2RvbWFpbl9hbGxvYywKPiArCS5mcmVlID0gbXZlYnVfc2VpX2lycV9kb21haW5fZnJl
-ZSwKPiArfTsKPiArCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgaXJxX2RvbWFpbl9vcHMgbXZlYnVf
-c2VpX2NwX2RvbWFpbl9vcHMgPSB7Cj4gKwkueGxhdGUgPSBpcnFfZG9tYWluX3hsYXRlX3R3b2Nl
-bGwsCj4gKwkuYWxsb2MgPSBtdmVidV9zZWlfaXJxX2RvbWFpbl9hbGxvYywKPiArCS5mcmVlID0g
-bXZlYnVfc2VpX2lycV9kb21haW5fZnJlZSwKPiArfTsKCldoeSBkbyB5b3UgbmVlZCB0d28gY2Vs
-bHMgZm9yIHRoZSBpbnRlcnJ1cHRzIGNvbWluZyBmcm9tIHRoZSBDUCBhbmQKb25seSBvbmUgY2Vs
-bCBmb3IgdGhlIGludGVycnVwdHMgY29taW5nIGZyb20gdGhlIEFQID8KCkZvciB0aGVybWFsIGlu
-IHRoZSBBUCwgeW91IGRvOgoKKwkJCQkJaW50ZXJydXB0LXBhcmVudCA9IDwmc2VpX3dpcmVkX2Nv
-bnRyb2xsZXI+OworCQkJCQlpbnRlcnJ1cHRzID0gPDE4PjsKCmkuZSwgeW91IGRvbid0IHNwZWNp
-ZnkgYW4gaW50ZXJydXB0IHR5cGUuIEZvciB0aGVybWFsIGluIHRoZSBDUCwgeW91IGRvOgoKKwkJ
-CQlpbnRlcnJ1cHRzLWV4dGVuZGVkID0KKwkJCQkJPCZDUDExMF9MQUJFTChpY3Vfc2VpKSAxMTYg
-SVJRX1RZUEVfTEVWRUxfSElHSD47CgpoZXJlIHlvdSBzcGVjaWZ5IGFuIGludGVycnVwdCB0eXBl
-LiBJJ20gbm90IHN1cmUgd2h5IHlvdSBoYXZlIHRoaXMKZGlmZmVyZW5jZS4gRXZlbiBtb3JlIHNv
-IGJlY2F1c2UgSSB0aGluayBhIFNFSSBsZXZlbCBpbnRlcnJ1cHQgaXMgbm90CnBvc3NpYmxlLCBz
-aW5jZSB5b3Ugb25seSBoYXZlIGEgIlNFVCIgcmVnaXN0ZXIgYW5kIG5vICJDTFIiIHJlZ2lzdGVy
-LgoKU29tZSBndWlkYW5jZSBmcm9tIE1hcmMgaGVyZSBtaWdodCBiZSB1c2VmdWwgcGVyaGFwcy4K
-Cgo+ICtzdGF0aWMgaW50IG12ZWJ1X3NlaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpw
-ZGV2KQo+ICt7Cj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUgPSBwZGV2LT5kZXYub2Zfbm9k
-ZSwgKnBhcmVudCwgKmNoaWxkOwo+ICsJc3RydWN0IGlycV9kb21haW4gKnBhcmVudF9kb21haW4s
-ICpwbGF0X2RvbWFpbjsKPiArCXN0cnVjdCBtdmVidV9zZWkgKnNlaTsKPiArCWNvbnN0IF9fYmUz
-MiAqcHJvcGVydHk7Cj4gKwl1MzIgdG9wX2xldmVsX3NwaSwgc2l6ZTsKPiArCWludCByZXQ7Cj4g
-Kwo+ICsJc2VpID0gZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqc2VpKSwgR0ZQX0tF
-Uk5FTCk7Cj4gKwlpZiAoIXNlaSkKPiArCQlyZXR1cm4gLUVOT01FTTsKPiArCj4gKwlzZWktPmRl
-diA9ICZwZGV2LT5kZXY7Cj4gKwo+ICsJc3Bpbl9sb2NrX2luaXQoJnNlaS0+Y3BfbXNpX2xvY2sp
-Owo+ICsKPiArCXNlaS0+cmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VS
-Q0VfTUVNLCAwKTsKPiArCWlmICghc2VpLT5yZXMpIHsKPiArCQlkZXZfZXJyKHNlaS0+ZGV2LCAi
-RmFpbGVkIHRvIHJldHJpZXZlIFNFSSByZXNvdXJjZVxuIik7Cj4gKwkJcmV0dXJuIC1FTk9ERVY7
-Cj4gKwl9Cj4gKwo+ICsJc2VpLT5iYXNlID0gZGV2bV9pb3JlbWFwKHNlaS0+ZGV2LCBzZWktPnJl
-cy0+c3RhcnQsCj4gKwkJCQkgcmVzb3VyY2Vfc2l6ZShzZWktPnJlcykpOwo+ICsJaWYgKCFzZWkt
-PmJhc2UpIHsKPiArCQlkZXZfZXJyKHNlaS0+ZGV2LCAiRmFpbGVkIHRvIHJlbWFwIFNFSSByZXNv
-dXJjZVxuIik7Cj4gKwkJcmV0dXJuIC1FTk9ERVY7Cj4gKwl9CgpVc2UgZGV2bV9pb3JlbWFwX3Jl
-c291cmNlKCkgaGVyZSwgYW5kIHJlbW92ZSB0aGUgZXJyb3IgaGFuZGxpbmcgb2YKcGxhdGZvcm1f
-Z2V0X3Jlc291cmNlKCksIGJlY2F1c2UgaXQncyBhbHJlYWR5IHRha2VuIGNhcmUgb2YgYnkKZGV2
-bV9pb3JlbWFwX3Jlc291cmNlKCkuCgo+ICsJLyoKPiArCSAqIFJlc2VydmUgdGhlIHNpbmdsZSAo
-dG9wLWxldmVsKSBwYXJlbnQgU1BJIElSUSBmcm9tIHdoaWNoIGFsbCB0aGUKPiArCSAqIGludGVy
-cnVwdHMgaGFuZGxlZCBieSB0aGlzIGRyaXZlciB3aWxsIGJlIHNpZ25hbGVkLgo+ICsJICovCj4g
-Kwl0b3BfbGV2ZWxfc3BpID0gaXJxX29mX3BhcnNlX2FuZF9tYXAobm9kZSwgMCk7Cj4gKwlpZiAo
-dG9wX2xldmVsX3NwaSA8PSAwKSB7Cj4gKwkJZGV2X2VycihzZWktPmRldiwgIkZhaWxlZCB0byBy
-ZXRyaWV2ZSB0b3AtbGV2ZWwgU1BJIElSUVxuIik7Cj4gKwkJcmV0dXJuIC1FTk9ERVY7Cj4gKwl9
-CgpSYXRoZXIgdGhhbiB0b3BfbGV2ZWxfc3BpLCBzb21ldGhpbmcgbGlrZSBwYXJlbnRfaXJxIHdv
-dWxkIG1ha2UgbW9yZQpzZW5zZSB0byBtZS4KCj4gKwlpcnFfc2V0X2NoYWluZWRfaGFuZGxlcih0
-b3BfbGV2ZWxfc3BpLCBtdmVidV9zZWlfaGFuZGxlX2Nhc2NhZGVfaXJxKTsKPiArCWlycV9zZXRf
-aGFuZGxlcl9kYXRhKHRvcF9sZXZlbF9zcGksIHNlaSk7Cj4gKwo+ICsJLyoKPiArCSAqIFNFSXMg
-aW4gdGhlIHJhbmdlIFsgMDsgMjBdIGFyZSB3aXJlZCBhbmQgY29tZSBmcm9tIHRoZSBBUC4KPiAr
-CSAqIFNFSXMgaW4gdGhlIHJhbmdlIFsyMTsgNjNdIGFyZSBDUCBTRUkgYW5kIGFyZSB0cmlnZ2Vy
-ZWQgdGhyb3VnaCBNU0lzLgo+ICsJICoKPiArCSAqIEVhY2ggU0VJICdkb21haW4nIGlzIHJlcHJl
-c2VudGVkIGFzIGEgc3Vibm9kZS4KPiArCSAqLwo+ICsKPiArCS8qIEdldCBhIHJlZmVyZW5jZSB0
-byB0aGUgcGFyZW50IGRvbWFpbiB0byBjcmVhdGUgYSBoaWVyYXJjaHkgKi8KPiArCXBhcmVudCA9
-IG9mX2lycV9maW5kX3BhcmVudChub2RlKTsKPiArCWlmICghcGFyZW50KSB7Cj4gKwkJZGV2X2Vy
-cihzZWktPmRldiwgIkZhaWxlZCB0byBmaW5kIHBhcmVudCBJUlEgbm9kZVxuIik7Cj4gKwkJcmV0
-ID0gLUVOT0RFVjsKPiArCQlnb3RvIGRpc3Bvc2VfaXJxOwo+ICsJfQo+ICsKPiArCXBhcmVudF9k
-b21haW4gPSBpcnFfZmluZF9ob3N0KHBhcmVudCk7Cj4gKwlpZiAoIXBhcmVudF9kb21haW4pIHsK
-PiArCQlkZXZfZXJyKHNlaS0+ZGV2LCAiRmFpbGVkIHRvIGZpbmQgcGFyZW50IElSUSBkb21haW5c
-biIpOwo+ICsJCXJldCA9IC1FTk9ERVY7Cj4gKwkJZ290byBkaXNwb3NlX2lycTsKPiArCX0KPiAr
-Cj4gKwkvKiBDcmVhdGUgdGhlICd3aXJlZCcgaGllcmFyY2h5ICovCj4gKwljaGlsZCA9IG9mX2Zp
-bmRfbm9kZV9ieV9uYW1lKG5vZGUsICJzZWktd2lyZWQtY29udHJvbGxlciIpOwo+ICsJaWYgKCFj
-aGlsZCkgewo+ICsJCWRldl9lcnIoc2VpLT5kZXYsICJNaXNzaW5nICdzZWktd2lyZWQtY29udHJv
-bGxlcicgc3Vibm9kZVxuIik7Cj4gKwkJcmV0ID0gLUVOT0RFVjsKPiArCQlnb3RvIGRpc3Bvc2Vf
-aXJxOwo+ICsJfQoKRG9uJ3QgZm9yZ2V0IHRvIG9mX25vZGVfcHV0KGNoaWxkKSBvbmNlIHlvdSdy
-ZSBkb25lIHVzaW5nIHRoaXMgRFQgbm9kZQpyZWZlcmVuY2UuCgo+ICsKPiArCXByb3BlcnR5ID0g
-b2ZfZ2V0X3Byb3BlcnR5KGNoaWxkLCAicmVnIiwgJnNpemUpOwo+ICsJaWYgKCFwcm9wZXJ0eSB8
-fCBzaXplICE9ICgyICogc2l6ZW9mKHUzMikpKSB7Cj4gKwkJZGV2X2VycihzZWktPmRldiwgIk1p
-c3Npbmcgc3Vibm9kZSAncmVnJyBwcm9wZXJ0eVxuIik7Cj4gKwkJcmV0ID0gLUVOT0RFVjsKPiAr
-CQlnb3RvIGRpc3Bvc2VfaXJxOwo+ICsJfQoKQXMgUm9iIHNhaWQsIEkgZG9uJ3QgdGhpbmsgdGhl
-ICJyZWciIHByb3BlcnR5IGlzIGFwcHJvcHJpYXRlIGZvciB0aGlzCnVzYWdlLgoKPiArCXNlaS0+
-YXBfaW50ZXJydXB0cy5maXJzdCA9IGJlMzJfdG9fY3B1KHByb3BlcnR5WzBdKTsKPiArCXNlaS0+
-YXBfaW50ZXJydXB0cy5udW1iZXIgPSBiZTMyX3RvX2NwdShwcm9wZXJ0eVsxXSk7Cj4gKwlzZWkt
-PmFwX2RvbWFpbiA9IGlycV9kb21haW5fY3JlYXRlX2hpZXJhcmNoeShwYXJlbnRfZG9tYWluLCAw
-LAo+ICsJCQkJCQkgICAgIHNlaS0+YXBfaW50ZXJydXB0cy5udW1iZXIsCj4gKwkJCQkJCSAgICAg
-b2Zfbm9kZV90b19md25vZGUoY2hpbGQpLAo+ICsJCQkJCQkgICAgICZtdmVidV9zZWlfYXBfZG9t
-YWluX29wcywKPiArCQkJCQkJICAgICBzZWkpOwo+ICsJaWYgKCFzZWktPmFwX2RvbWFpbikgewo+
-ICsJCWRldl9lcnIoc2VpLT5kZXYsICJGYWlsZWQgdG8gY3JlYXRlIEFQIElSUSBkb21haW5cbiIp
-Owo+ICsJCXJldCA9IC1FTk9NRU07Cj4gKwkJZ290byBkaXNwb3NlX2lycTsKPiArCX0KPiArCj4g
-KwkvKiBDcmVhdGUgdGhlICdNU0knIGhpZXJhcmNoeSAqLwo+ICsJY2hpbGQgPSBvZl9maW5kX25v
-ZGVfYnlfbmFtZShub2RlLCAic2VpLW1zaS1jb250cm9sbGVyIik7Cj4gKwlpZiAoIWNoaWxkKSB7
-Cj4gKwkJZGV2X2VycihzZWktPmRldiwgIk1pc3NpbmcgJ3NlaS1tc2ktY29udHJvbGxlcicgc3Vi
-bm9kZVxuIik7Cj4gKwkJcmV0ID0gLUVOT0RFVjsKPiArCQlnb3RvIHJlbW92ZV9hcF9kb21haW47
-Cj4gKwl9CgpEaXR0bzogbWlzc2luZyBvZl9ub2RlX3B1dChjaGlsZCkgc29tZXdoZXJlIGJlbG93
-IHRvIGJhbGFuY2UKb2ZfZmluZF9ub2RlX2J5X25hbWUoKS4KCj4gKwlwcm9wZXJ0eSA9IG9mX2dl
-dF9wcm9wZXJ0eShjaGlsZCwgInJlZyIsICZzaXplKTsKPiArCWlmICghcHJvcGVydHkgfHwgc2l6
-ZSAhPSAoMiAqIHNpemVvZih1MzIpKSkgewo+ICsJCWRldl9lcnIoc2VpLT5kZXYsICJNaXNzaW5n
-IHN1Ym5vZGUgJ3JlZycgcHJvcGVydHlcbiIpOwo+ICsJCXJldCA9IC1FTk9ERVY7Cj4gKwkJZ290
-byByZW1vdmVfYXBfZG9tYWluOwo+ICsJfQo+ICsKPiArCXNlaS0+Y3BfaW50ZXJydXB0cy5maXJz
-dCA9IGJlMzJfdG9fY3B1KHByb3BlcnR5WzBdKTsKPiArCXNlaS0+Y3BfaW50ZXJydXB0cy5udW1i
-ZXIgPSBiZTMyX3RvX2NwdShwcm9wZXJ0eVsxXSk7Cj4gKwlzZWktPmNwX2RvbWFpbiA9IGlycV9k
-b21haW5fY3JlYXRlX2hpZXJhcmNoeShwYXJlbnRfZG9tYWluLCAwLAo+ICsJCQkJCQkgICAgIHNl
-aS0+Y3BfaW50ZXJydXB0cy5udW1iZXIsCj4gKwkJCQkJCSAgICAgb2Zfbm9kZV90b19md25vZGUo
-Y2hpbGQpLAo+ICsJCQkJCQkgICAgICZtdmVidV9zZWlfY3BfZG9tYWluX29wcywKPiArCQkJCQkJ
-ICAgICBzZWkpOwo+ICsJaWYgKCFzZWktPmNwX2RvbWFpbikgewo+ICsJCXByX2VycigiRmFpbGVk
-IHRvIGNyZWF0ZSBDUHMgSVJRIGRvbWFpblxuIik7Cj4gKwkJcmV0ID0gLUVOT01FTTsKPiArCQln
-b3RvIHJlbW92ZV9hcF9kb21haW47Cj4gKwl9Cj4gKwo+ICsJcGxhdF9kb21haW4gPSBwbGF0Zm9y
-bV9tc2lfY3JlYXRlX2lycV9kb21haW4ob2Zfbm9kZV90b19md25vZGUoY2hpbGQpLAo+ICsJCQkJ
-CQkgICAgICZtdmVidV9zZWlfbXNpX2RvbWFpbl9pbmZvLAo+ICsJCQkJCQkgICAgIHNlaS0+Y3Bf
-ZG9tYWluKTsKPiArCWlmICghcGxhdF9kb21haW4pIHsKPiArCQlwcl9lcnIoIkZhaWxlZCB0byBj
-cmVhdGUgQ1BzIE1TSSBkb21haW5cbiIpOwo+ICsJCXJldCA9IC1FTk9NRU07Cj4gKwkJZ290byBy
-ZW1vdmVfY3BfZG9tYWluOwo+ICsJfQoKCgo+ICsKPiArCXBsYXRmb3JtX3NldF9kcnZkYXRhKHBk
-ZXYsIHNlaSk7Cj4gKwo+ICsJbXZlYnVfc2VpX3Jlc2V0KHNlaSk7CgpQbGVhc2UgZG8gdGhlIHJl
-c2V0ICpiZWZvcmUqIHJlZ2lzdGVyaW5nIHRoZSBJUlEgZG9tYWlucywgaXQncyBtb3JlCmxvZ2lj
-YWwgdG8gaGF2ZSB0aGUgSFcgcmVhZHkgYW5kIHRoZW4gZXhwb3NlIGl0IHRvIExpbnV4IHJhdGhl
-ciB0aGFuCnRoZSBvcHBvc2l0ZS4KCkl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZSB0aGUgcmV2aWV3
-IGZyb20gTWFyYyBvbiB0aGlzIGRyaXZlciwKZXNwZWNpYWxseSBvbiB3aGV0aGVyIHRoZSBTRUkg
-aXMgcHJvcGVybHkgbW9kZWxlZCBpbiB0ZXJtcyBvZiBJUlEKZG9tYWluczsKCj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUtc2VpLmggYi9kcml2ZXJzL2lycWNoaXAvaXJx
-LW12ZWJ1LXNlaS5oCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAu
-LmYwYzEyYTQ0MTkyMwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2lycWNoaXAvaXJx
-LW12ZWJ1LXNlaS5oCj4gQEAgLTAsMCArMSwxMiBAQAo+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRp
-ZmllcjogR1BMLTIuMCAqLwo+ICsjaWZuZGVmIF9fTVZFQlVfU0VJX0hfXwo+ICsjZGVmaW5lIF9f
-TVZFQlVfU0VJX0hfXwo+ICsKPiArI2luY2x1ZGUgPGxpbnV4L3R5cGVzLmg+Cj4gKwo+ICtzdHJ1
-Y3QgZGV2aWNlX25vZGU7Cj4gKwo+ICtpbnQgbXZlYnVfc2VpX2dldF9kb29yYmVsbHMoc3RydWN0
-IGRldmljZV9ub2RlICpkbiwgcGh5c19hZGRyX3QgKnNldCwKPiArCQkJICAgIHBoeXNfYWRkcl90
-ICpjbHIpOwo+ICsKPiArI2VuZGlmIC8qIF9fTVZFQlVfU0VJX0hfXyAqLwoKVGhpcyBoZWFkZXIg
-ZmlsZSBjYW4gYmUgcmVtb3ZlZCBpZiB5b3UgZHJvcCBtdmVidV9zZWlfZ2V0X2Rvb3JiZWxscygp
-LAphcyBzdWdnZXN0ZWQgYWJvdmUuCgpCZXN0IHJlZ2FyZHMsCgpUaG9tYXMKLS0gClRob21hcyBQ
-ZXRhenpvbmksIENUTywgQm9vdGxpbiAoZm9ybWVybHkgRnJlZSBFbGVjdHJvbnMpCkVtYmVkZGVk
-IExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cHM6Ly9ib290bGluLmNvbQoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
-bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On 04/17/2018 03:38 PM, Fabrice Gasnier wrote:
+> STM32 Timers can support up to 7 DMA requests:
+> - 4 channels, update, compare and trigger.
+> Optionally request part, or all DMAs from stm32-timers MFD core.
+> 
+> Also add routine to implement burst reads using DMA from timer registers.
+> This is exported. So, it can be used by child drivers, PWM capture
+> for instance (but not limited to).
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> ---
+> Changes in v5:
+> - fix warning on dma_mapping_error() that doesn't return an error code.
+> - move stm32_timers_dma struct to header file as discussed with Lee.
+>   This allows to remove alloc for this struct in stm32_timers_dma_probe.
+
+Hi Lee,
+
+Gentle reminder to review changes I've made in v5, following our
+discussions.
+
+Thanks in advance,
+Best Regards,
+Fabrice
+
+> 
+> Changes in v4:
+> - Lee's comments: Add kerneldoc header, better format comments.
+> 
+> Changes in v3:
+> - Basically Lee's comments:
+> - rather create a struct stm32_timers_dma, and place a reference to it
+>   in existing ddata (instead of adding priv struct).
+> - rather use a struct device in exported routine prototype, and use
+>   standard helpers instead of ddata. Get rid of to_stm32_timers_priv().
+> - simplify error handling in probe (remove a goto)
+> - comment on devm_of_platform_*populate() usage.
+> 
+> Changes in v2:
+> - Abstract DMA handling from child driver: move it to MFD core
+> - Add comments on optional dma support
+> ---
+>  drivers/mfd/stm32-timers.c       | 201 ++++++++++++++++++++++++++++++++++++++-
+>  include/linux/mfd/stm32-timers.h |  46 +++++++++
+>  2 files changed, 245 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mfd/stm32-timers.c b/drivers/mfd/stm32-timers.c
+> index 1d347e5..efcd4b9 100644
+> --- a/drivers/mfd/stm32-timers.c
+> +++ b/drivers/mfd/stm32-timers.c
+> @@ -4,16 +4,156 @@
+>   * Author: Benjamin Gaignard <benjamin.gaignard@st.com>
+>   */
+>  
+> +#include <linux/bitfield.h>
+>  #include <linux/mfd/stm32-timers.h>
+>  #include <linux/module.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/reset.h>
+>  
+> +#define STM32_TIMERS_MAX_REGISTERS	0x3fc
+> +
+> +/* DIER register DMA enable bits */
+> +static const u32 stm32_timers_dier_dmaen[STM32_TIMERS_MAX_DMAS] = {
+> +	TIM_DIER_CC1DE,
+> +	TIM_DIER_CC2DE,
+> +	TIM_DIER_CC3DE,
+> +	TIM_DIER_CC4DE,
+> +	TIM_DIER_UIE,
+> +	TIM_DIER_TDE,
+> +	TIM_DIER_COMDE
+> +};
+> +
+> +static void stm32_timers_dma_done(void *p)
+> +{
+> +	struct stm32_timers_dma *dma = p;
+> +	struct dma_tx_state state;
+> +	enum dma_status status;
+> +
+> +	status = dmaengine_tx_status(dma->chan, dma->chan->cookie, &state);
+> +	if (status == DMA_COMPLETE)
+> +		complete(&dma->completion);
+> +}
+> +
+> +/**
+> + * stm32_timers_dma_burst_read - Read from timers registers using DMA.
+> + *
+> + * Read from STM32 timers registers using DMA on a single event.
+> + * @dev: reference to stm32_timers MFD device
+> + * @buf: DMA'able destination buffer
+> + * @id: stm32_timers_dmas event identifier (ch[1..4], up, trig or com)
+> + * @reg: registers start offset for DMA to read from (like CCRx for capture)
+> + * @num_reg: number of registers to read upon each DMA request, starting @reg.
+> + * @bursts: number of bursts to read (e.g. like two for pwm period capture)
+> + * @tmo_ms: timeout (milliseconds)
+> + */
+> +int stm32_timers_dma_burst_read(struct device *dev, u32 *buf,
+> +				enum stm32_timers_dmas id, u32 reg,
+> +				unsigned int num_reg, unsigned int bursts,
+> +				unsigned long tmo_ms)
+> +{
+> +	struct stm32_timers *ddata = dev_get_drvdata(dev);
+> +	unsigned long timeout = msecs_to_jiffies(tmo_ms);
+> +	struct regmap *regmap = ddata->regmap;
+> +	struct stm32_timers_dma *dma = &ddata->dma;
+> +	size_t len = num_reg * bursts * sizeof(u32);
+> +	struct dma_async_tx_descriptor *desc;
+> +	struct dma_slave_config config;
+> +	dma_cookie_t cookie;
+> +	dma_addr_t dma_buf;
+> +	u32 dbl, dba;
+> +	long err;
+> +	int ret;
+> +
+> +	/* Sanity check */
+> +	if (id < STM32_TIMERS_DMA_CH1 || id >= STM32_TIMERS_MAX_DMAS)
+> +		return -EINVAL;
+> +
+> +	if (!num_reg || !bursts || reg > STM32_TIMERS_MAX_REGISTERS ||
+> +	    (reg + num_reg * sizeof(u32)) > STM32_TIMERS_MAX_REGISTERS)
+> +		return -EINVAL;
+> +
+> +	if (!dma->chans[id])
+> +		return -ENODEV;
+> +	mutex_lock(&dma->lock);
+> +
+> +	/* Select DMA channel in use */
+> +	dma->chan = dma->chans[id];
+> +	dma_buf = dma_map_single(dev, buf, len, DMA_FROM_DEVICE);
+> +	if (dma_mapping_error(dev, dma_buf)) {
+> +		ret = -ENOMEM;
+> +		goto unlock;
+> +	}
+> +
+> +	/* Prepare DMA read from timer registers, using DMA burst mode */
+> +	memset(&config, 0, sizeof(config));
+> +	config.src_addr = (dma_addr_t)dma->phys_base + TIM_DMAR;
+> +	config.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> +	ret = dmaengine_slave_config(dma->chan, &config);
+> +	if (ret)
+> +		goto unmap;
+> +
+> +	desc = dmaengine_prep_slave_single(dma->chan, dma_buf, len,
+> +					   DMA_DEV_TO_MEM, DMA_PREP_INTERRUPT);
+> +	if (!desc) {
+> +		ret = -EBUSY;
+> +		goto unmap;
+> +	}
+> +
+> +	desc->callback = stm32_timers_dma_done;
+> +	desc->callback_param = dma;
+> +	cookie = dmaengine_submit(desc);
+> +	ret = dma_submit_error(cookie);
+> +	if (ret)
+> +		goto dma_term;
+> +
+> +	reinit_completion(&dma->completion);
+> +	dma_async_issue_pending(dma->chan);
+> +
+> +	/* Setup and enable timer DMA burst mode */
+> +	dbl = FIELD_PREP(TIM_DCR_DBL, bursts - 1);
+> +	dba = FIELD_PREP(TIM_DCR_DBA, reg >> 2);
+> +	ret = regmap_write(regmap, TIM_DCR, dbl | dba);
+> +	if (ret)
+> +		goto dma_term;
+> +
+> +	/* Clear pending flags before enabling DMA request */
+> +	ret = regmap_write(regmap, TIM_SR, 0);
+> +	if (ret)
+> +		goto dcr_clr;
+> +
+> +	ret = regmap_update_bits(regmap, TIM_DIER, stm32_timers_dier_dmaen[id],
+> +				 stm32_timers_dier_dmaen[id]);
+> +	if (ret)
+> +		goto dcr_clr;
+> +
+> +	err = wait_for_completion_interruptible_timeout(&dma->completion,
+> +							timeout);
+> +	if (err == 0)
+> +		ret = -ETIMEDOUT;
+> +	else if (err < 0)
+> +		ret = err;
+> +
+> +	regmap_update_bits(regmap, TIM_DIER, stm32_timers_dier_dmaen[id], 0);
+> +	regmap_write(regmap, TIM_SR, 0);
+> +dcr_clr:
+> +	regmap_write(regmap, TIM_DCR, 0);
+> +dma_term:
+> +	dmaengine_terminate_all(dma->chan);
+> +unmap:
+> +	dma_unmap_single(dev, dma_buf, len, DMA_FROM_DEVICE);
+> +unlock:
+> +	dma->chan = NULL;
+> +	mutex_unlock(&dma->lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(stm32_timers_dma_burst_read);
+> +
+>  static const struct regmap_config stm32_timers_regmap_cfg = {
+>  	.reg_bits = 32,
+>  	.val_bits = 32,
+>  	.reg_stride = sizeof(u32),
+> -	.max_register = 0x3fc,
+> +	.max_register = STM32_TIMERS_MAX_REGISTERS,
+>  };
+>  
+>  static void stm32_timers_get_arr_size(struct stm32_timers *ddata)
+> @@ -27,12 +167,45 @@ static void stm32_timers_get_arr_size(struct stm32_timers *ddata)
+>  	regmap_write(ddata->regmap, TIM_ARR, 0x0);
+>  }
+>  
+> +static void stm32_timers_dma_probe(struct device *dev,
+> +				   struct stm32_timers *ddata)
+> +{
+> +	int i;
+> +	char name[4];
+> +
+> +	init_completion(&ddata->dma.completion);
+> +	mutex_init(&ddata->dma.lock);
+> +
+> +	/* Optional DMA support: get valid DMA channel(s) or NULL */
+> +	for (i = STM32_TIMERS_DMA_CH1; i <= STM32_TIMERS_DMA_CH4; i++) {
+> +		snprintf(name, ARRAY_SIZE(name), "ch%1d", i + 1);
+> +		ddata->dma.chans[i] = dma_request_slave_channel(dev, name);
+> +	}
+> +	ddata->dma.chans[STM32_TIMERS_DMA_UP] =
+> +		dma_request_slave_channel(dev, "up");
+> +	ddata->dma.chans[STM32_TIMERS_DMA_TRIG] =
+> +		dma_request_slave_channel(dev, "trig");
+> +	ddata->dma.chans[STM32_TIMERS_DMA_COM] =
+> +		dma_request_slave_channel(dev, "com");
+> +}
+> +
+> +static void stm32_timers_dma_remove(struct device *dev,
+> +				    struct stm32_timers *ddata)
+> +{
+> +	int i;
+> +
+> +	for (i = STM32_TIMERS_DMA_CH1; i < STM32_TIMERS_MAX_DMAS; i++)
+> +		if (ddata->dma.chans[i])
+> +			dma_release_channel(ddata->dma.chans[i]);
+> +}
+> +
+>  static int stm32_timers_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct stm32_timers *ddata;
+>  	struct resource *res;
+>  	void __iomem *mmio;
+> +	int ret;
+>  
+>  	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
+>  	if (!ddata)
+> @@ -43,6 +216,9 @@ static int stm32_timers_probe(struct platform_device *pdev)
+>  	if (IS_ERR(mmio))
+>  		return PTR_ERR(mmio);
+>  
+> +	/* Timer physical addr for DMA */
+> +	ddata->dma.phys_base = res->start;
+> +
+>  	ddata->regmap = devm_regmap_init_mmio_clk(dev, "int", mmio,
+>  						  &stm32_timers_regmap_cfg);
+>  	if (IS_ERR(ddata->regmap))
+> @@ -54,9 +230,29 @@ static int stm32_timers_probe(struct platform_device *pdev)
+>  
+>  	stm32_timers_get_arr_size(ddata);
+>  
+> +	stm32_timers_dma_probe(dev, ddata);
+> +
+>  	platform_set_drvdata(pdev, ddata);
+>  
+> -	return devm_of_platform_populate(&pdev->dev);
+> +	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+> +	if (ret)
+> +		stm32_timers_dma_remove(dev, ddata);
+> +
+> +	return ret;
+> +}
+> +
+> +static int stm32_timers_remove(struct platform_device *pdev)
+> +{
+> +	struct stm32_timers *ddata = platform_get_drvdata(pdev);
+> +
+> +	/*
+> +	 * Don't use devm_ here: enfore of_platform_depopulate() happens before
+> +	 * DMA are released, to avoid race on DMA.
+> +	 */
+> +	of_platform_depopulate(&pdev->dev);
+> +	stm32_timers_dma_remove(&pdev->dev, ddata);
+> +
+> +	return 0;
+>  }
+>  
+>  static const struct of_device_id stm32_timers_of_match[] = {
+> @@ -67,6 +263,7 @@ static int stm32_timers_probe(struct platform_device *pdev)
+>  
+>  static struct platform_driver stm32_timers_driver = {
+>  	.probe = stm32_timers_probe,
+> +	.remove = stm32_timers_remove,
+>  	.driver	= {
+>  		.name = "stm32-timers",
+>  		.of_match_table = stm32_timers_of_match,
+> diff --git a/include/linux/mfd/stm32-timers.h b/include/linux/mfd/stm32-timers.h
+> index 2aadab6..9596d5c 100644
+> --- a/include/linux/mfd/stm32-timers.h
+> +++ b/include/linux/mfd/stm32-timers.h
+> @@ -8,6 +8,8 @@
+>  #define _LINUX_STM32_GPTIMER_H_
+>  
+>  #include <linux/clk.h>
+> +#include <linux/dmaengine.h>
+> +#include <linux/dma-mapping.h>
+>  #include <linux/regmap.h>
+>  
+>  #define TIM_CR1		0x00	/* Control Register 1      */
+> @@ -27,6 +29,8 @@
+>  #define TIM_CCR3	0x3C	/* Capt/Comp Register 3    */
+>  #define TIM_CCR4	0x40	/* Capt/Comp Register 4    */
+>  #define TIM_BDTR	0x44	/* Break and Dead-Time Reg */
+> +#define TIM_DCR		0x48	/* DMA control register    */
+> +#define TIM_DMAR	0x4C	/* DMA register for transfer */
+>  
+>  #define TIM_CR1_CEN	BIT(0)	/* Counter Enable	   */
+>  #define TIM_CR1_DIR	BIT(4)  /* Counter Direction	   */
+> @@ -36,6 +40,13 @@
+>  #define TIM_SMCR_SMS	(BIT(0) | BIT(1) | BIT(2)) /* Slave mode selection */
+>  #define TIM_SMCR_TS	(BIT(4) | BIT(5) | BIT(6)) /* Trigger selection */
+>  #define TIM_DIER_UIE	BIT(0)	/* Update interrupt	   */
+> +#define TIM_DIER_UDE	BIT(8)  /* Update DMA request Enable */
+> +#define TIM_DIER_CC1DE	BIT(9)  /* CC1 DMA request Enable  */
+> +#define TIM_DIER_CC2DE	BIT(10) /* CC2 DMA request Enable  */
+> +#define TIM_DIER_CC3DE	BIT(11) /* CC3 DMA request Enable  */
+> +#define TIM_DIER_CC4DE	BIT(12) /* CC4 DMA request Enable  */
+> +#define TIM_DIER_COMDE	BIT(13) /* COM DMA request Enable  */
+> +#define TIM_DIER_TDE	BIT(14) /* Trigger DMA request Enable */
+>  #define TIM_SR_UIF	BIT(0)	/* Update interrupt flag   */
+>  #define TIM_EGR_UG	BIT(0)	/* Update Generation       */
+>  #define TIM_CCMR_PE	BIT(3)	/* Channel Preload Enable  */
+> @@ -56,6 +67,8 @@
+>  #define TIM_BDTR_BK2F	(BIT(20) | BIT(21) | BIT(22) | BIT(23))
+>  #define TIM_BDTR_BK2E	BIT(24) /* Break 2 input enable	   */
+>  #define TIM_BDTR_BK2P	BIT(25) /* Break 2 input polarity  */
+> +#define TIM_DCR_DBA	GENMASK(4, 0)	/* DMA base addr */
+> +#define TIM_DCR_DBL	GENMASK(12, 8)	/* DMA burst len */
+>  
+>  #define MAX_TIM_PSC		0xFFFF
+>  #define TIM_CR2_MMS_SHIFT	4
+> @@ -65,9 +78,42 @@
+>  #define TIM_BDTR_BKF_SHIFT	16
+>  #define TIM_BDTR_BK2F_SHIFT	20
+>  
+> +enum stm32_timers_dmas {
+> +	STM32_TIMERS_DMA_CH1,
+> +	STM32_TIMERS_DMA_CH2,
+> +	STM32_TIMERS_DMA_CH3,
+> +	STM32_TIMERS_DMA_CH4,
+> +	STM32_TIMERS_DMA_UP,
+> +	STM32_TIMERS_DMA_TRIG,
+> +	STM32_TIMERS_DMA_COM,
+> +	STM32_TIMERS_MAX_DMAS,
+> +};
+> +
+> +/**
+> + * struct stm32_timers_dma - STM32 timer DMA handling.
+> + * @completion:		end of DMA transfer completion
+> + * @phys_base:		control registers physical base address
+> + * @lock:		protect DMA access
+> + * @chan:		DMA channel in use
+> + * @chans:		DMA channels available for this timer instance
+> + */
+> +struct stm32_timers_dma {
+> +	struct completion completion;
+> +	phys_addr_t phys_base;
+> +	struct mutex lock;
+> +	struct dma_chan *chan;
+> +	struct dma_chan *chans[STM32_TIMERS_MAX_DMAS];
+> +};
+> +
+>  struct stm32_timers {
+>  	struct clk *clk;
+>  	struct regmap *regmap;
+>  	u32 max_arr;
+> +	struct stm32_timers_dma dma; /* Only to be used by the parent */
+>  };
+> +
+> +int stm32_timers_dma_burst_read(struct device *dev, u32 *buf,
+> +				enum stm32_timers_dmas id, u32 reg,
+> +				unsigned int num_reg, unsigned int bursts,
+> +				unsigned long tmo_ms);
+>  #endif
+> 
