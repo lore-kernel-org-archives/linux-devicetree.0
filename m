@@ -1,64 +1,188 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 3/4] drm/panel: add Innolux TV123WAM
- panel driver support
-Date: Wed, 2 May 2018 15:05:56 -0400
-Message-ID: <20180502190556.GS73214@art_vandelay>
-References: <1525235522-8954-1-git-send-email-spanda@codeaurora.org>
- <1525235522-8954-4-git-send-email-spanda@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1525235522-8954-4-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH v7 02/10] dt-bindings: introduce RPMH RSC bindings for Qualcomm SoCs
+Date: Wed,  2 May 2018 13:37:41 -0600
+Message-ID: <20180502193749.31004-3-ilina@codeaurora.org>
+References: <20180502193749.31004-1-ilina@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180502193749.31004-1-ilina@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMDIsIDIwMTggYXQgMTA6MDI6MDFBTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
-cm90ZToKPiBBZGQgc3VwcG9ydCBmb3IgSW5ub2x1eCBUVjEyM1dBTSwgd2hpY2ggaXMgYSAxMi4z
-IiBlRFAKPiBkaXNwbGF5IHBhbmVsIHdpdGggMjE2MHgxNDQwIHJlc29sdXRpb24uCj4gCj4gU2ln
-bmVkLW9mZi1ieTogU2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+
-ICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgfCAyNyArKysrKysrKysrKysr
-KysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKykKPiAKPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVy
-cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gaW5kZXggMjM0YWY4MS4uNTJiYmNmYiAx
-MDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPiArKysg
-Yi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPiBAQCAtMTkzOSw2ICsxOTM5
-LDMwIEBAIHN0YXRpYyB2b2lkIHBhbmVsX3NpbXBsZV9zaHV0ZG93bihzdHJ1Y3QgZGV2aWNlICpk
-ZXYpCj4gIAkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4XzFYMjQsCj4gIH07Cj4g
-IAo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgaW5ub2x1eF90djEyM3dh
-bV9tb2RlID0gewo+ICsJLmNsb2NrID0gMjA2MDE2LAo+ICsJLmhkaXNwbGF5ID0gMjE2MCwKPiAr
-CS5oc3luY19zdGFydCA9IDIxNjAgKyA0OCwKPiArCS5oc3luY19lbmQgPSAyMTYwICsgNDggKyAz
-MiwKPiArCS5odG90YWwgPSAyMTYwICsgNDggKyAzMiArIDgwLAo+ICsJLnZkaXNwbGF5ID0gMTQ0
-MCwKPiArCS52c3luY19zdGFydCA9IDE0NDAgKyAzLAo+ICsJLnZzeW5jX2VuZCA9IDE0NDAgKyAz
-ICsgMTAsCj4gKwkudnRvdGFsID0gMTQ0MCArIDMgKyAxMCArIDI3LAo+ICsJLnZyZWZyZXNoID0g
-NjAsCj4gKwkuZmxhZ3MgPSBEUk1fTU9ERV9GTEFHX1BIU1lOQyB8IERSTV9NT0RFX0ZMQUdfUFZT
-WU5DLAo+ICt9Owo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGlubm9sdXhf
-dHYxMjN3YW0gPSB7Cj4gKwkubW9kZXMgPSAmaW5ub2x1eF90djEyM3dhbV9tb2RlLAo+ICsJLm51
-bV9tb2RlcyA9IDEsCj4gKwkuYnBjID0gOCwKPiArCS5zaXplID0gewo+ICsJCS53aWR0aCA9IDI1
-OSwKPiArCQkuaGVpZ2h0ID0gMTczLAo+ICsJfSwKPiArfTsKPiArCj4gIHN0YXRpYyBjb25zdCBz
-dHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7Cj4gIAl7Cj4gIAkJLmNv
-bXBhdGlibGUgPSAiYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoIiwKPiBAQCAtMjE0Miw2ICsy
-MTY2LDkgQEAgc3RhdGljIHZvaWQgcGFuZWxfc2ltcGxlX3NodXRkb3duKHN0cnVjdCBkZXZpY2Ug
-KmRldikKPiAgCQkuY29tcGF0aWJsZSA9ICJ3aW5zdGFyLHdmMzVsdGlhY2QiLAo+ICAJCS5kYXRh
-ID0gJndpbnN0YXJfd2YzNWx0aWFjZCwKPiAgCX0sIHsKPiArCQkuY29tcGF0aWJsZSA9ICJpbm5v
-bHV4LHR2MTIzd2FtIiwKPiArCQkuZGF0YSA9ICZpbm5vbHV4X3R2MTIzd2FtLAo+ICsJfSwgewoK
-VGhlc2UgYXJlIGFscGhhYmV0aWNhbGx5IG9yZGVyZWQsIGFzIGFyZSB0aGUgZHJtX2Rpc3BsYXlf
-bW9kZS9wYW5lbF9kZXNjCnN0cnVjdHMuCgpTZWFuCgo+ICAJCS8qIHNlbnRpbmVsICovCj4gIAl9
-Cj4gIH07Cj4gLS0gCj4gVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEg
-bWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKPiBhIExpbnV4IEZvdW5kYXRpb24gQ29s
-bGFib3JhdGl2ZSBQcm9qZWN0Cj4gCgotLSAKU2VhbiBQYXVsLCBTb2Z0d2FyZSBFbmdpbmVlciwg
-R29vZ2xlIC8gQ2hyb21pdW0gT1MKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZnJlZWRyZW5vCg==
+Add device binding documentation for Qualcomm Technology Inc's RPMH RSC
+driver. The driver is used for communicating resource state requests for
+shared resources.
+
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes in v7:
+	- Fix example
+
+Changes in v6:
+	- Address comments from Stephen Boyd
+
+Changes in v3:
+	- Move to soc/qcom
+	- Amend text per Stephen's suggestions
+
+Changes in v2:
+	- Amend text to describe the registers in reg property
+	- Add reg-names for the registers
+	- Update examples to use GIC_SPI in interrupts instead of 0
+	- Rephrase incorrect description
+
+Changes in v3:
+	- Fix unwanted capitalization
+	- Remove clients from the examples, this doc does not describe
+	  them
+	- Rephrase introductory paragraph
+	- Remove hardware specifics from DT bindings
+---
+ .../devicetree/bindings/soc/qcom/rpmh-rsc.txt | 132 ++++++++++++++++++
+ 1 file changed, 132 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+
+diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+new file mode 100644
+index 000000000000..950d56325284
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+@@ -0,0 +1,132 @@
++RPMH RSC:
++------------
++
++Resource Power Manager Hardened (RPMH) is the mechanism for communicating with
++the hardened resource accelerators on Qualcomm SoCs. Requests to the resources
++can be written to the Trigger Command Set (TCS)  registers and using a (addr,
++val) pair and triggered. Messages in the TCS are then sent in sequence over an
++internal bus.
++
++The hardware block (Direct Resource Voter or DRV) is a part of the h/w entity
++(Resource State Coordinator a.k.a RSC) that can handle multiple sleep and
++active/wake resource requests. Multiple such DRVs can exist in a SoC and can
++be written to from Linux. The structure of each DRV follows the same template
++with a few variations that are captured by the properties here.
++
++A TCS may be triggered from Linux or triggered by the F/W after all the CPUs
++have powered off to facilitate idle power saving. TCS could be classified as -
++
++	SLEEP   /* Triggered by F/W */
++	WAKE    /* Triggered by F/W */
++	ACTIVE  /* Triggered by Linux */
++	CONTROL /* Triggered by F/W */
++
++The order in which they are described in the DT, should match the hardware
++configuration.
++
++Requests can be made for the state of a resource, when the subsystem is active
++or idle. When all subsystems like Modem, GPU, CPU are idle, the resource state
++will be an aggregate of the sleep votes from each of those subsystems. Clients
++may request a sleep value for their shared resources in addition to the active
++mode requests.
++
++Properties:
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: Should be "qcom,rpmh-rsc".
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: The first register specifies the base address of the
++		    DRV(s). The number of DRVs in the dependent on the RSC.
++	            The tcs-offset specifies the start address of the
++	            TCS in the DRVs.
++
++- reg-names:
++	Usage: required
++	Value type: <string>
++	Definition: Maps the register specified in the reg property. Must be
++	            "drv-0", "drv-1", "drv-2" etc and "tcs-offset". The
++
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-interrupt>
++	Definition: The interrupt that trips when a message complete/response
++	           is received for this DRV from the accelerators.
++
++- qcom,drv-id:
++	Usage: required
++	Value type: <u32>
++	Definition: The id of the DRV in the RSC block that will be used by
++		    this controller.
++
++- qcom,tcs-config:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: The tuple defining the configuration of TCS.
++	            Must have 2 cells which describe each TCS type.
++	            <type number_of_tcs>.
++	            The order of the TCS must match the hardware
++	            configuration.
++	- Cell #1 (TCS Type): TCS types to be specified -
++	            SLEEP_TCS
++	            WAKE_TCS
++	            ACTIVE_TCS
++	            CONTROL_TCS
++	- Cell #2 (Number of TCS): <u32>
++
++- label:
++	Usage: optional
++	Value type: <string>
++	Definition: Name for the RSC. The name would be used in trace logs.
++
++Drivers that want to use the RSC to communicate with RPMH must specify their
++bindings as child nodes of the RSC controllers they wish to communicate with.
++
++Example 1:
++
++For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
++register offsets for DRV2 start at 0D00, the register calculations are like
++this -
++DRV0: 0x179C0000
++DRV2: 0x179C0000 + 0x10000 = 0x179D0000
++DRV2: 0x179C0000 + 0x10000 * 2 = 0x179E0000
++TCS-OFFSET: 0xD00
++
++	apps_rsc: rsc@179c0000 {
++		label = "apps_rsc";
++		compatible = "qcom,rpmh-rsc";
++		reg = <0x179c0000 0x10000>, <0x179d0000 0x10000>,
++		      <0x179e0000 0x10000>, <0xd00 0>;
++		reg-names = "drv-0", "drv-1", "drv-2", "tcs-offset";
++		interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++		qcom,drv-id = <2>;
++		qcom,tcs-config = <SLEEP_TCS   3>,
++				  <WAKE_TCS    3>,
++				  <ACTIVE_TCS  2>,
++				  <CONTROL_TCS 1>;
++	};
++
++Example 2:
++
++For a TCS whose RSC base address is 0xAF20000 and is at DRV id of 0, the
++register offsets for DRV0 start at 01C00, the register calculations are like
++this -
++DRV0: 0xAF20000
++TCS-OFFSET: 0x1C00
++
++	disp_rsc: rsc@af20000 {
++		label = "disp_rsc";
++		compatible = "qcom,rpmh-rsc";
++		reg = <0xaf20000 0x10000>, <0x1c00 0>;
++		reg-names = "drv-0", "tcs-offset";
++		interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>;
++		qcom,drv-id = <0>;
++		qcom,tcs-config = <SLEEP_TCS   1>,
++				  <WAKE_TCS    1>,
++				  <ACTIVE_TCS  0>,
++				  <CONTROL_TCS 0>;
++	};
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
