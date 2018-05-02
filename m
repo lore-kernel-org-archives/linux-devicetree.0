@@ -1,72 +1,81 @@
-Return-Path: <SRS0=cv1X=H3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pg0-f68.google.com ([74.125.83.68]:40461 "EHLO
-        mail-pg0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752854AbeEHFd7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 8 May 2018 01:33:59 -0400
-Received: by mail-pg0-f68.google.com with SMTP id l2-v6so20658170pgc.7
-        for <devicetree@vger.kernel.org>; Mon, 07 May 2018 22:33:59 -0700 (PDT)
-From: Matt Ranostay <matt.ranostay@konsulko.com>
-Subject: [PATCH v2] iio: potentiostat: lmp91000: add LMP91002 support
-Date: Mon,  7 May 2018 22:34:01 -0700
-Message-Id: <20180508053401.32485-1-matt.ranostay@konsulko.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org
-Cc: jic23@kernel.org, Matt Ranostay <matt.ranostay@konsulko.com>, devicetree@vger.kernel.org
+Return-Path: <SRS0=COmU=HV=mediatek.com=argus.lin@kernel.org>
+From: <argus.lin@mediatek.com>
+Subject: [PATCH V4 1/8] dt-bindings: pwrap: mediatek: add MT6351 PMIC support for MT6797
+Date: Wed, 2 May 2018 17:21:05 +0800
+Message-ID: <20180502092112.3991-2-argus.lin@mediatek.com>
+In-Reply-To: <20180502092112.3991-1-argus.lin@mediatek.com>
+References: <20180502092112.3991-1-argus.lin@mediatek.com>
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_009_1224695024.115612798"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, "Sean Wang  <sean.wang@mediatek.com>, <wsd_upstream@mediatek.com>," <henryc.chen@mediatek.com>, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-LMP91002 is register compatible so add devicetree and i2c client ids
+--__=_Part_Boundary_009_1224695024.115612798
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_001_675320667.1852188850"
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
----
+--__=_Part_Boundary_001_675320667.1852188850
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-Changes from v1:
-* Split out compatible options in multiple lines for the lmp91000.txt documentation
+PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
+V2UgYWRkIE1UNjM1MSBQTUlDIHN1cHBvcnQgZm9yIE1UNjc5NyBTb0NzLg0KDQpTaWduZWQtb2Zm
+LWJ5OiBBcmd1cyBMaW4gJmx0O2FyZ3VzLmxpbkBtZWRpYXRlay5jb20mZ3Q7DQotLS0NCiBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCB8IDEg
+Kw0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KaW5k
+ZXggYmY4MGUzZjk2ZjhjLi5mOTk4N2MzMGYwZDUgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQNCkBAIC0x
+OSw2ICsxOSw3IEBAIElQIFBhaXJpbmcNCiBSZXF1aXJlZCBwcm9wZXJ0aWVzIGluIHB3cmFwIGRl
+dmljZSBub2RlLg0KIC0gY29tcGF0aWJsZToNCiAJJnF1b3Q7bWVkaWF0ZWssbXQyNzAxLXB3cmFw
+JnF1b3Q7IGZvciBNVDI3MDEvNzYyMyBTb0NzDQorCSZxdW90O21lZGlhdGVrLG10Njc5Ny1wd3Jh
+cCZxdW90OyBmb3IgTVQ2Nzk3IFNvQ3MNCiAJJnF1b3Q7bWVkaWF0ZWssbXQ3NjIyLXB3cmFwJnF1
+b3Q7IGZvciBNVDc2MjIgU29Dcw0KIAkmcXVvdDttZWRpYXRlayxtdDgxMzUtcHdyYXAmcXVvdDsg
+Zm9yIE1UODEzNSBTb0NzDQogCSZxdW90O21lZGlhdGVrLG10ODE3My1wd3JhcCZxdW90OyBmb3Ig
+TVQ4MTczIFNvQ3MNCi0tIA0KMi4xMi41DQoNCjwvcHJlPjwhLS10eXBlOnRleHQtLT48IS0tey0t
+PjxwcmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxpdHkgTm90aWNlICoqKioqKioq
+KioqKioqKioqKioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZS1tYWlsIG1l
+c3NhZ2UgKGluY2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5IGJlIGNvbmZpZGVudGlhbCwg
+cHJvcHJpZXRhcnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhlbXB0IGZyb20gZGlzY2xv
+c3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVuZGVkIHRvIGJlIA0KY29udmV5
+ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFueSB1c2UsIGRpc3NlbWlu
+YXRpb24sIA0KZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWluaW5nIG9yIGNvcHlpbmcgb2Yg
+dGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50cykgYnkgdW5pbnRlbmRlZCBy
+ZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5IA0KYmUgdW5sYXdmdWwu
+IElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUtbWFpbCwgb3Ig
+YmVsaWV2ZSANCnRoYXQgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBs
+ZWFzZSBub3RpZnkgdGhlIHNlbmRlciANCmltbWVkaWF0ZWx5IChieSByZXBseWluZyB0byB0aGlz
+IGUtbWFpbCksIGRlbGV0ZSBhbnkgYW5kIGFsbCBjb3BpZXMgb2YgDQp0aGlzIGUtbWFpbCAoaW5j
+bHVkaW5nIGFueSBhdHRhY2htZW50cykgZnJvbSB5b3VyIHN5c3RlbSwgYW5kIGRvIG5vdA0KZGlz
+Y2xvc2UgdGhlIGNvbnRlbnQgb2YgdGhpcyBlLW1haWwgdG8gYW55IG90aGVyIHBlcnNvbi4gVGhh
+bmsgeW91ITwvcHJlPjwhLS19LS0+
 
- Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt | 9 ++++++---
- drivers/iio/potentiostat/lmp91000.c                             | 2 ++
- 2 files changed, 8 insertions(+), 3 deletions(-)
+--__=_Part_Boundary_001_675320667.1852188850
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
-diff --git a/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt b/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt
-index b9b621e94cd7..e6d0c2eb345c 100644
---- a/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt
-+++ b/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt
-@@ -1,10 +1,13 @@
--* Texas Instruments LMP91000 potentiostat
-+* Texas Instruments LMP91000 series of potentiostats
- 
--http://www.ti.com/lit/ds/symlink/lmp91000.pdf
-+LMP91000: http://www.ti.com/lit/ds/symlink/lmp91000.pdf
-+LMP91002: http://www.ti.com/lit/ds/symlink/lmp91002.pdf
- 
- Required properties:
- 
--  - compatible: should be "ti,lmp91000"
-+  - compatible: should be one of the following:
-+                 "ti,lmp91000"
-+                 "ti,lmp91002"
-   - reg: the I2C address of the device
-   - io-channels: the phandle of the iio provider
- 
-diff --git a/drivers/iio/potentiostat/lmp91000.c b/drivers/iio/potentiostat/lmp91000.c
-index 85714055cc74..90e895adf997 100644
---- a/drivers/iio/potentiostat/lmp91000.c
-+++ b/drivers/iio/potentiostat/lmp91000.c
-@@ -411,12 +411,14 @@ static int lmp91000_remove(struct i2c_client *client)
- 
- static const struct of_device_id lmp91000_of_match[] = {
- 	{ .compatible = "ti,lmp91000", },
-+	{ .compatible = "ti,lmp91002", },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, lmp91000_of_match);
- 
- static const struct i2c_device_id lmp91000_id[] = {
- 	{ "lmp91000", 0 },
-+	{ "lmp91002", 0 },
- 	{}
- };
- MODULE_DEVICE_TABLE(i2c, lmp91000_id);
--- 
-2.14.1
+RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQpXZSBhZGQgTVQ2MzUx
+IFBNSUMgc3VwcG9ydCBmb3IgTVQ2Nzk3IFNvQ3MuDQoNClNpZ25lZC1vZmYtYnk6IEFyZ3VzIExp
+biA8YXJndXMubGluQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0IHwgMSArDQogMSBmaWxlIGNoYW5nZWQs
+IDEgaW5zZXJ0aW9uKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0DQppbmRleCBiZjgwZTNmOTZmOGMuLmY5
+OTg3YzMwZjBkNSAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KQEAgLTE5LDYgKzE5LDcgQEAgSVAgUGFp
+cmluZw0KIFJlcXVpcmVkIHByb3BlcnRpZXMgaW4gcHdyYXAgZGV2aWNlIG5vZGUuDQogLSBjb21w
+YXRpYmxlOg0KIAkibWVkaWF0ZWssbXQyNzAxLXB3cmFwIiBmb3IgTVQyNzAxLzc2MjMgU29Dcw0K
+KwkibWVkaWF0ZWssbXQ2Nzk3LXB3cmFwIiBmb3IgTVQ2Nzk3IFNvQ3MNCiAJIm1lZGlhdGVrLG10
+NzYyMi1wd3JhcCIgZm9yIE1UNzYyMiBTb0NzDQogCSJtZWRpYXRlayxtdDgxMzUtcHdyYXAiIGZv
+ciBNVDgxMzUgU29Dcw0KIAkibWVkaWF0ZWssbXQ4MTczLXB3cmFwIiBmb3IgTVQ4MTczIFNvQ3MN
+Ci0tIA0KMi4xMi41DQo=
 
+--__=_Part_Boundary_001_675320667.1852188850--
+
+--__=_Part_Boundary_009_1224695024.115612798--
