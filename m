@@ -1,144 +1,70 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
-Date: Wed, 2 May 2018 08:16:11 -0500
-Message-ID: <CAL_JsqLMtqS3X_2WiPQVoNovQAVTuXGH+XbN30DA5_moca3Kpw@mail.gmail.com>
-References: <20180424163458.11947-1-johan@kernel.org> <20180424163458.11947-5-johan@kernel.org>
- <CAL_Jsq+mCp=geT8t_j+0fuTxAB7C9RYn6pESRpLc2GH273fM1Q@mail.gmail.com>
- <20180426091018.GU4615@localhost> <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
- <20180502081637.GE2285@localhost>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v8 12/12] ARM: shmobile: Convert file to use cntvoff
+Date: Wed, 2 May 2018 15:18:06 +0200
+Message-ID: <20180502131806.5aybrfzll7wdoybv@flea>
+References: <20180501123131.7738-1-mylene.josserand@bootlin.com>
+ <20180501123131.7738-13-mylene.josserand@bootlin.com>
+ <20180502063639.qa7bzqxzrejd4kh2@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4xs6p73yn657oz5w"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180502081637.GE2285@localhost>
+Content-Disposition: inline
+In-Reply-To: <20180502063639.qa7bzqxzrejd4kh2@verge.net.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>, linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, geert@linux-m68k.org, magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 2, 2018 at 3:16 AM, Johan Hovold <johan@kernel.org> wrote:
-> On Tue, May 01, 2018 at 09:05:42AM -0500, Rob Herring wrote:
->> On Thu, Apr 26, 2018 at 4:10 AM, Johan Hovold <johan@kernel.org> wrote:
->> > On Wed, Apr 25, 2018 at 01:16:58PM -0500, Rob Herring wrote:
->> >> On Tue, Apr 24, 2018 at 11:34 AM, Johan Hovold <johan@kernel.org> wrote:
->> >> > Add binding for u-blox GNSS receivers.
->> >> >
->> >> > Note that the u-blox product names encodes form factor (e.g. "neo"),
->> >> > chipset (e.g. "8") and variant (e.g. "q"), but that only formfactor and
->> >> > chipset is used for the compatible strings (for now).
->> >> >
->> >> > Signed-off-by: Johan Hovold <johan@kernel.org>
->> >> > ---
->> >> >  .../devicetree/bindings/gnss/u-blox.txt       | 31 +++++++++++++++++++
->> >> >  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
->> >> >  2 files changed, 32 insertions(+)
->> >> >  create mode 100644 Documentation/devicetree/bindings/gnss/u-blox.txt
->> >> >
->> >> > diff --git a/Documentation/devicetree/bindings/gnss/u-blox.txt b/Documentation/devicetree/bindings/gnss/u-blox.txt
->> >> > new file mode 100644
->> >> > index 000000000000..bb54b83a177f
->> >> > --- /dev/null
->> >> > +++ b/Documentation/devicetree/bindings/gnss/u-blox.txt
->> >> > @@ -0,0 +1,31 @@
->> >> > +u-blox GNSS Receiver DT binding
->> >> > +
->> >> > +The u-blox GNSS receivers can use UART, DDC (I2C), SPI and USB interfaces.
->> >> > +
->> >> > +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
->> >> > +properties.
->> >> > +
->> >> > +Required Properties:
->> >> > +
->> >> > +- compatible   : Must be one of
->> >> > +
->> >> > +                       "u-blox,neo-8"
->> >> > +                       "u-blox,neo-m8"
->> >> > +
->> >> > +- vcc-supply   : Main voltage regulator (VCC)
->> >>
->> >> What about V_BCKP?
->> >
->> > That's the backup supply for for the RTC and batter-backed RAM. In
->> > configurations where a battery is not used it should be connected to
->> > VCC.
->> >
->> > How would you model that? I can enable a vbckp regulator at probe, but
->> > what if someone then accurately describes the corresponding pin as being
->> > connected to VCC?
->>
->> You mean how to model a battery? It would just be a 'regulator'
->> because the regulator binding covers any supply really.
->>
->> Then you just set both rails to the same supply phandle.
->
-> Yes, but...
->
->> > I guess we can check if the regulators are identical,
->> > and then just have the driver ignore V_BKUP. Knowing whether there is
->> > a (hopefully charged) battery connected could be useful.
->>
->> Regulators are ref counted, so just enable it twice. Or the driver can
->> just ignore it until it supports battery backup.
->
-> ...my point was that in case there's no backup battery, you don't want
-> to enable vcc (via v_bckp) at probe (and instead have the device cold
-> boot whenever it's used).
 
-Wouldn't that result in very long acquisition times? I guess I was
-thinking Vcc would be always on when running and V_bckp was just for
-suspend.
+--4xs6p73yn657oz5w
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Hence, the driver would need to check if the v_bckp-supply is identical
-> to vcc and not enable the former at probe in that case (i.e. similar to
-> if no v_bckp had been specified and we considered it optional).
+Hi Simon,
 
-I guess if that's the intended operation, then making it optional is fine.
+On Wed, May 02, 2018 at 08:36:39AM +0200, Simon Horman wrote:
+> On Tue, May 01, 2018 at 02:31:31PM +0200, Myl=E8ne Josserand wrote:
+> > Now that a common function is available for CNTVOFF's
+> > initialization, let's convert shmobile-apmu code to use
+> > this function.
+> >=20
+> > Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>=20
+> Acked-by: Simon Horman <horms+renesas@verge.net.au>
 
-Rob
+For the sake of bisectability (and to ease the merge), is it ok if we
+take it through the sunxi (and then arm-soc) tree?
 
->
->> >> > +- timepulse-gpios      : Timepulse (e.g. 1PPS) GPIO (TIMEPULSE)
->> >>
->> >> Why the 3rd "TIMEPULSE"?
->> >
->> > That's the pin name, which in this case is identical to the property
->> > name, so I'll drop it here.
->>
->> Then what is the 2nd "Timepulse"?
->
-> That's the generic function name.
->
->> Maybe just a "pin name: X" prefix so it is clear.
->
-> For u-blox devices, where property-, function- and pin name coincide, I
-> could just change this to:
->
-> +- timepulse-gpios      : Timepulse GPIO
->
-> and then for the sirfstar binding, which will be used by devices from
-> multiple vendors which have decided to name their pins differently, I
-> can add a "pin name: " prefix for clarity?
+Thanks!
+Maxime
 
-Sounds good.
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
->> > Take a look at the sirf binding; vendors use different names for their
->> > timepulse pins and in that case I added the actual pin names (1PPS, TM)
->> > in parenthesis after the description.
->> >
->> > Note that I mentioned "timepulse-gpios" in the generic binding with the
->> > intent of trying to enforce a generic name for pins with such a
->> > function (similarly for "enable-gpios", which I guess is already
->> > established).
->>
->> Yes, I think that's good.
->>
->> Though with the enable-gpios I was debating the name for sirfstar a
->> bit because it isn't the normal drive it active to enable, but rather
->> a pulse to enable or disable.
->
-> I had some concerns along those lines as well, and if you agree I'll
-> change the property name to on_off-gpios (or onoff-gpios) which matches
-> the vendor data sheets for this pin, and which I think would be better.
+--4xs6p73yn657oz5w
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Okay, just add a vendor prefix. And note that using '_' is discouraged.
+-----BEGIN PGP SIGNATURE-----
 
-Rob
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrpuo0ACgkQ0rTAlCFN
+r3RLxRAAiejDwvQhxN6ZNXNcWXeZNjXK6qY5g0tdhuHV1m2aKLSubfFaKevK3+QD
+CnVkkZJDRY59PY+HIOwedNEQcuKpP/aSH6ZmuKj/oHR0F8RSGqyw8iiDZQnf+EHm
+PJ2x6PnNIym8Y0EWFAMDLk9LIOm0/hbXdQ4+Bvm3zoclmSJfHpwdjiYItRQqi/he
+jqAiG0v/nWMdGiq2UCzOTCcQYof404bga917zlGd3SUckPysAbqX8I6fv/JcO9pF
+je6pWHhDYPIUVUOFIRuHei15amPiVh2CoFEfGn5x6S6weso2K1jh2CxDUSHHojA6
+iNIbKesq1YTpbvUThfNRVOlh0BNEkaYRKSMhMU1dLVxcwcF1VdhASf5veRw07yTL
+orjBadmCDOA1AUf49luDkJi7O/T+oJhF7dwIp/5sb4YzSIXCVbM/81b8V/b5lEzr
+McUKH8iO2Me96t3Z18FxFx3sJoajP4wtEWQaSuiKEkCYRvx7MRBUyrWbV7tC0UdG
+Vg+ei3bjYwB/VipVbA4+tDEwXKVKFJqeYFO9k20scgw387r1I+lIGazh9w9j2zzr
+38lMJytJgl3pQs7XbUR7msZFAz0Y8AeWE8C8BwaZJL3ucj/GdHFGX6fg8KcjdHrs
+nTgZNKJco23MyzRSn+OSd/NcdsoyDou8NoDtPwS4eJ5vuYWgImI=
+=djhr
+-----END PGP SIGNATURE-----
+
+--4xs6p73yn657oz5w--
