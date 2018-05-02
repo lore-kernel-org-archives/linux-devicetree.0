@@ -1,133 +1,152 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
-Date: Wed, 2 May 2018 10:16:37 +0200
-Message-ID: <20180502081637.GE2285@localhost>
-References: <20180424163458.11947-1-johan@kernel.org>
- <20180424163458.11947-5-johan@kernel.org>
- <CAL_Jsq+mCp=geT8t_j+0fuTxAB7C9RYn6pESRpLc2GH273fM1Q@mail.gmail.com>
- <20180426091018.GU4615@localhost>
- <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v5 1/3] mmc: dw_mmc-bluefield: Add driver extension
+Date: Wed, 2 May 2018 17:16:55 +0900
+Message-ID: <90076dd0-1e6a-3678-5357-98f84a03a46a@samsung.com>
+References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+        <CGME20180501182919epcas2p368101c944e8e4bcdb19a1863fc8d469d@epcas2p3.samsung.com>
+        <1525198787-46403-1-git-send-email-lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
+In-Reply-To: <1525198787-46403-1-git-send-email-lsun@mellanox.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Liming Sun <lsun@mellanox.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 01, 2018 at 09:05:42AM -0500, Rob Herring wrote:
-> On Thu, Apr 26, 2018 at 4:10 AM, Johan Hovold <johan@kernel.org> wrote:
-> > On Wed, Apr 25, 2018 at 01:16:58PM -0500, Rob Herring wrote:
-> >> On Tue, Apr 24, 2018 at 11:34 AM, Johan Hovold <johan@kernel.org> wrote:
-> >> > Add binding for u-blox GNSS receivers.
-> >> >
-> >> > Note that the u-blox product names encodes form factor (e.g. "neo"),
-> >> > chipset (e.g. "8") and variant (e.g. "q"), but that only formfactor and
-> >> > chipset is used for the compatible strings (for now).
-> >> >
-> >> > Signed-off-by: Johan Hovold <johan@kernel.org>
-> >> > ---
-> >> >  .../devicetree/bindings/gnss/u-blox.txt       | 31 +++++++++++++++++++
-> >> >  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
-> >> >  2 files changed, 32 insertions(+)
-> >> >  create mode 100644 Documentation/devicetree/bindings/gnss/u-blox.txt
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/gnss/u-blox.txt b/Documentation/devicetree/bindings/gnss/u-blox.txt
-> >> > new file mode 100644
-> >> > index 000000000000..bb54b83a177f
-> >> > --- /dev/null
-> >> > +++ b/Documentation/devicetree/bindings/gnss/u-blox.txt
-> >> > @@ -0,0 +1,31 @@
-> >> > +u-blox GNSS Receiver DT binding
-> >> > +
-> >> > +The u-blox GNSS receivers can use UART, DDC (I2C), SPI and USB interfaces.
-> >> > +
-> >> > +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
-> >> > +properties.
-> >> > +
-> >> > +Required Properties:
-> >> > +
-> >> > +- compatible   : Must be one of
-> >> > +
-> >> > +                       "u-blox,neo-8"
-> >> > +                       "u-blox,neo-m8"
-> >> > +
-> >> > +- vcc-supply   : Main voltage regulator (VCC)
-> >>
-> >> What about V_BCKP?
-> >
-> > That's the backup supply for for the RTC and batter-backed RAM. In
-> > configurations where a battery is not used it should be connected to
-> > VCC.
-> >
-> > How would you model that? I can enable a vbckp regulator at probe, but
-> > what if someone then accurately describes the corresponding pin as being
-> > connected to VCC?
+Hi,
+
+On 05/02/2018 03:19 AM, Liming Sun wrote:
+> This commit adds extension to the dw_mmc driver for Mellanox BlueField
+> SoC. It updates the UHS_REG_EXT register to bring up the eMMC card on
+> this SoC.
+
+Could you heck Shawn's comments? And add the minor comment.
+
 > 
-> You mean how to model a battery? It would just be a 'regulator'
-> because the regulator binding covers any supply really.
+> Cc: stable@kernel.org
+> Signed-off-by: Liming Sun <lsun@mellanox.com>
+> Reviewed-by: David Woods <dwoods@mellanox.com>
+> ---
+>  drivers/mmc/host/Kconfig            |  9 +++++
+>  drivers/mmc/host/Makefile           |  1 +
+>  drivers/mmc/host/dw_mmc-bluefield.c | 72 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 82 insertions(+)
+>  create mode 100644 drivers/mmc/host/dw_mmc-bluefield.c
 > 
-> Then you just set both rails to the same supply phandle.
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 9589f9c..26ac6b5 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -717,6 +717,15 @@ config MMC_DW_K3
+>  	  Synopsys DesignWare Memory Card Interface driver. Select this option
+>  	  for platforms based on Hisilicon K3 SoC's.
+>  
+> +config MMC_DW_BLUEFIELD
+> +	tristate "BlueField specific extensions for Synopsys DW Memory Card Interface"
+> +	depends on MMC_DW
+> +	select MMC_DW_PLTFM
+> +	help
+> +	  This selects support for Mellanox BlueField SoC specific extensions to
+> +	  the Synopsys DesignWare Memory Card Interface driver. Select this
+> +	  option for platforms based on Mellanox BlueField SoC's.
+> +
+>  config MMC_DW_PCI
+>  	tristate "Synopsys Designware MCI support on PCI bus"
+>  	depends on MMC_DW && PCI
+> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+> index 6aead24..267b3f1 100644
+> --- a/drivers/mmc/host/Makefile
+> +++ b/drivers/mmc/host/Makefile
+> @@ -55,6 +55,7 @@ obj-$(CONFIG_MMC_DW_K3)		+= dw_mmc-k3.o
+>  obj-$(CONFIG_MMC_DW_PCI)	+= dw_mmc-pci.o
+>  obj-$(CONFIG_MMC_DW_ROCKCHIP)	+= dw_mmc-rockchip.o
+>  obj-$(CONFIG_MMC_DW_ZX)		+= dw_mmc-zx.o
+> +obj-$(CONFIG_MMC_DW_BLUEFIELD)	+= dw_mmc-bluefield.o
+>  obj-$(CONFIG_MMC_SH_MMCIF)	+= sh_mmcif.o
+>  obj-$(CONFIG_MMC_JZ4740)	+= jz4740_mmc.o
+>  obj-$(CONFIG_MMC_VUB300)	+= vub300.o
+> diff --git a/drivers/mmc/host/dw_mmc-bluefield.c b/drivers/mmc/host/dw_mmc-bluefield.c
+> new file mode 100644
+> index 0000000..12067b1
+> --- /dev/null
+> +++ b/drivers/mmc/host/dw_mmc-bluefield.c
+> @@ -0,0 +1,72 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2018 Mellanox Technologies.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/mmc/host.h>
+> +#include <linux/mmc/mmc.h>
+> +#include <linux/of.h>
+> +
+> +#include "dw_mmc.h"
+> +#include "dw_mmc-pltfm.h"
+> +
+> +static void dw_mci_bluefield_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+> +{
+> +	u32 regs;
+> +
+> +	/* Set drive=4 (bit 29:23) and sample=2 (bit 22:16) in UHS_REG_EXT. */
+> +	regs = mci_readl(host, UHS_REG_EXT);
+> +	regs = (regs & ~0x3F100000 & ~0x7F0000) | (4 << 23) | (2 << 16);
 
-Yes, but...
+I want to use the macro. Not (4 << 23)..
 
-> > I guess we can check if the regulators are identical,
-> > and then just have the driver ignore V_BKUP. Knowing whether there is
-> > a (hopefully charged) battery connected could be useful.
+> +	mci_writel(host, UHS_REG_EXT, regs);
+> +}
+> +
+> +static const struct dw_mci_drv_data bluefield_drv_data = {
+> +	.set_ios		= dw_mci_bluefield_set_ios
+> +};
+> +
+> +static const struct of_device_id dw_mci_bluefield_match[] = {
+> +	{ .compatible = "mellanox,bluefield-dw-mshc",
+> +		.data = &bluefield_drv_data },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, dw_mci_bluefield_match);
+> +
+> +static int dw_mci_bluefield_probe(struct platform_device *pdev)
+> +{
+> +	const struct dw_mci_drv_data *drv_data = NULL;
+> +	const struct of_device_id *match;
+> +
+> +	if (pdev->dev.of_node) {
+> +		match = of_match_node(dw_mci_bluefield_match,
+> +				      pdev->dev.of_node);
+> +		drv_data = match->data;
+> +	}
+> +
+> +	return dw_mci_pltfm_register(pdev, drv_data);
+> +}
+> +
+> +static struct platform_driver dw_mci_bluefield_pltfm_driver = {
+> +	.probe		= dw_mci_bluefield_probe,
+> +	.remove		= dw_mci_pltfm_remove,
+> +	.driver		= {
+> +		.name		= "dwmmc_bluefield",
+> +		.of_match_table	= dw_mci_bluefield_match,
+> +		.pm		= &dw_mci_pltfm_pmops,
+> +	},
+> +};
+> +
+> +module_platform_driver(dw_mci_bluefield_pltfm_driver);
+> +
+> +MODULE_DESCRIPTION("BlueField DW Multimedia Card driver");
+> +MODULE_AUTHOR("Mellanox Technologies");
+> +MODULE_LICENSE("GPL v2");
 > 
-> Regulators are ref counted, so just enable it twice. Or the driver can
-> just ignore it until it supports battery backup.
-
-...my point was that in case there's no backup battery, you don't want
-to enable vcc (via v_bckp) at probe (and instead have the device cold
-boot whenever it's used).
-
-Hence, the driver would need to check if the v_bckp-supply is identical
-to vcc and not enable the former at probe in that case (i.e. similar to
-if no v_bckp had been specified and we considered it optional).
-
-> >> > +- timepulse-gpios      : Timepulse (e.g. 1PPS) GPIO (TIMEPULSE)
-> >>
-> >> Why the 3rd "TIMEPULSE"?
-> >
-> > That's the pin name, which in this case is identical to the property
-> > name, so I'll drop it here.
-> 
-> Then what is the 2nd "Timepulse"?
-
-That's the generic function name.
-
-> Maybe just a "pin name: X" prefix so it is clear.
-
-For u-blox devices, where property-, function- and pin name coincide, I
-could just change this to:
-
-+- timepulse-gpios      : Timepulse GPIO
-
-and then for the sirfstar binding, which will be used by devices from
-multiple vendors which have decided to name their pins differently, I
-can add a "pin name: " prefix for clarity?
-
-> > Take a look at the sirf binding; vendors use different names for their
-> > timepulse pins and in that case I added the actual pin names (1PPS, TM)
-> > in parenthesis after the description.
-> >
-> > Note that I mentioned "timepulse-gpios" in the generic binding with the
-> > intent of trying to enforce a generic name for pins with such a
-> > function (similarly for "enable-gpios", which I guess is already
-> > established).
-> 
-> Yes, I think that's good.
-> 
-> Though with the enable-gpios I was debating the name for sirfstar a
-> bit because it isn't the normal drive it active to enable, but rather
-> a pulse to enable or disable.
-
-I had some concerns along those lines as well, and if you agree I'll
-change the property name to on_off-gpios (or onoff-gpios) which matches
-the vendor data sheets for this pin, and which I think would be better.
-
-Thanks,
-Johan
