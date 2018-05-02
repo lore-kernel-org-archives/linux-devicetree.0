@@ -1,14 +1,14 @@
 From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 07/17] irqchip/irq-mvebu-icu: make irq_domain local
-Date: Wed, 2 May 2018 10:02:17 +0200
-Message-ID: <20180502100217.432badb7@windsurf.home>
+Subject: Re: [PATCH 08/17] irqchip/irq-mvebu-icu: disociate ICU and NSR
+Date: Wed, 2 May 2018 10:03:38 +0200
+Message-ID: <20180502100338.18817df0@windsurf.home>
 References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
- <20180421135537.24716-8-miquel.raynal@bootlin.com>
+ <20180421135537.24716-9-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180421135537.24716-8-miquel.raynal@bootlin.com>
+In-Reply-To: <20180421135537.24716-9-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,13 +24,19 @@ List-Id: devicetree@vger.kernel.org
 
 Hello,
 
-On Sat, 21 Apr 2018 15:55:27 +0200, Miquel Raynal wrote:
-> Make the current MSI irq_domain local to ease the split between ICU
-> platform device code and NSR platform device code.
+On Sat, 21 Apr 2018 15:55:28 +0200, Miquel Raynal wrote:
+> NSR (non-secure interrupts) are handled in the ICU driver like if there
+> was only this type of interrupt in the ICU. Change this behavior to
+> prepare the introduction of SEI (System Error Interrupts) support by
+> moving the NSR code in a separate function. This is done under the form
+> of a 'probe' function to ease future migration to NSR/SEI being platform
+> devices part of the ICU.
 > 
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
 Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+
+Thanks!
 
 Thomas
 -- 
