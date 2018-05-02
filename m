@@ -1,60 +1,110 @@
-From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v5 4/4] dt-bindings: drm/panel: Document Innolux
- TV123WAM panel bindings
-Date: Wed,  2 May 2018 10:02:02 +0530
-Message-ID: <1525235522-8954-5-git-send-email-spanda@codeaurora.org>
-References: <1525235522-8954-1-git-send-email-spanda@codeaurora.org>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v9 24/27] dt-bindings: timer: new bindings for TI DaVinci
+ timer
+Date: Wed, 2 May 2018 10:33:30 +0530
+Message-ID: <5d60bf07-0b86-f971-3d84-2e0bf4599891@ti.com>
+References: <20180427001745.4116-1-david@lechnology.com>
+ <20180427001745.4116-25-david@lechnology.com>
+ <20180427140522.npmhjamhwxgp7y73@rob-hp-laptop>
+ <7cea07f1-e174-8496-a27a-01f0e3082054@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1525235522-8954-1-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7cea07f1-e174-8496-a27a-01f0e3082054@lechnology.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, Rob Herring <robh@kernel.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SW5ub2x1eCBUVjEyM1dBTSBpcyBhIDEyLjMiIGVEUCBkaXNwbGF5IHBhbmVsIHdpdGgKMjE2MHgx
-NDQwIHJlc29sdXRpb24sIHdoaWNoIGNhbiBiZSBzdXBwb3J0ZWQgYnkgc2ltcGxlCnBhbmVsIGRy
-aXZlci4KCkNoYW5nZXMgaW4gdjE6CiAtIE1ha2UgdXNlIG9mIHNpbXBsZSBwYW5lbCBkcml2ZXIg
-aW5zdGVhZCBvZiBjcmVhdGluZwogICBhIG5ldyBkcml2ZXIgZm9yIHRoaXMgcGFuZWwgKFNlYW4g
-UGF1bCkuCiAtIENvbWJpbmUgZHQtYmluZGluZyBhbmQgZHJpdmVyIGNoYW5nZXMgaW50byBvbmUg
-cGF0Y2gKICAgYXMgZG9uZSBieSBvdGhlciBleGlzdGluZyBwYW5lbCBzdXBwb3J0IGNoYW5nZXMu
-CgpDaGFuZ2VzIGluIHYyOgogLSBTZXBhcmF0ZSBkcml2ZXIgY2hhbmdlIGZyb20gZHQtYmluZGlu
-ZyBkb2N1bWVudGF0aW9uIChSb2IgSGVycmluZykuCiAtIEFkZCB0aGUgcHJvcGVydGllcyBmcm9t
-IHNpbXBsZS1wYW5lbCBiaW5kaW5nIHRoYXQgYXJlIGFwcGxpY2FibGUgdG8KICAgdGhpcyBwYW5l
-bCAoUm9iIEhlcnJpbmcpLgoKU2lnbmVkLW9mZi1ieTogU2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNv
-ZGVhdXJvcmEub3JnPgotLS0KIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsdHYx
-MjN3YW0udHh0ICAgICAgfCAyMCArKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQs
-IDIwIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2FtLnR4dAoKZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lu
-bm9sdXgsdHYxMjN3YW0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5k
-ZXggMDAwMDAwMC4uYTliMzUyNgotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsdHYxMjN3YW0udHh0CkBAIC0w
-LDAgKzEsMjAgQEAKK0lubm9sdXggVFYxMjNXQU0gMTIuMyBpbmNoIGVEUCAySyBkaXNwbGF5IHBh
-bmVsCisKK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBi
-aW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBk
-aXJlY3RvcnkuCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IHNob3VsZCBi
-ZSAiaW5ub2x1eCx0djEyM3dhbSIKKy0gcG93ZXItc3VwcGx5OiByZWd1bGF0b3IgdG8gcHJvdmlk
-ZSB0aGUgc3VwcGx5IHZvbHRhZ2UKKworT3B0aW9uYWwgcHJvcGVydGllczoKKy0gZW5hYmxlLWdw
-aW9zOiBHUElPIHBpbiB0byBlbmFibGUgb3IgZGlzYWJsZSB0aGUgcGFuZWwKKy0gYmFja2xpZ2h0
-OiBwaGFuZGxlIG9mIHRoZSBiYWNrbGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5lbAor
-CitFeGFtcGxlOgorCXBhbmVsX2VkcDogcGFuZWwtZWRwIHsKKwkJY29tcGF0aWJsZSA9ICJpbm5v
-bHV4LHR2MTIzd2FtIjsKKwkJZW5hYmxlLWdwaW9zID0gPCZtc21ncGlvIDMxIEdQSU9fQUNUSVZF
-X0xPVz47CisJCXBvd2VyLXN1cHBseSA9IDwmcG04OTE2X2wyPjsKKwkJYmFja2xpZ2h0ID0gPCZi
-YWNrbGlnaHQ+OworCX07Ci0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4g
-aXMgYSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24g
-Q29sbGFib3JhdGl2ZSBQcm9qZWN0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9mcmVlZHJlbm8K
+On Wednesday 02 May 2018 07:22 AM, David Lechner wrote:
+> Sekhar,
+> 
+> On 04/27/2018 09:05 AM, Rob Herring wrote:
+>> On Thu, Apr 26, 2018 at 07:17:42PM -0500, David Lechner wrote:
+>>> This adds new device tree bindings for the timer IP block of TI
+>>> DaVinci-like SoCs.
+>>>
+>>> Signed-off-by: David Lechner <david@lechnology.com>
+>>> ---
+>>>
+>>> v9 changes:
+>>> - new patch in v9
+>>>
+>>>
+>>>   .../bindings/timer/ti,davinci-timer.txt       | 24 +++++++++++++++++++
+>>>   1 file changed, 24 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/timer/ti,davinci-timer.txt
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/timer/ti,davinci-timer.txt
+>>> b/Documentation/devicetree/bindings/timer/ti,davinci-timer.txt
+>>> new file mode 100644
+>>> index 000000000000..2091eca46981
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/timer/ti,davinci-timer.txt
+>>> @@ -0,0 +1,24 @@
+>>> +* Device tree bindings for Texas Instruments DaVinci timer
+>>> +
+>>> +This document provides bindings for the 64-bit timer in the DaVinci
+>>> +architecture devices. The timer can be configured as a
+>>> general-purpose 64-bit
+>>> +timer, dual general-purpose 32-bit timers. When configured as dual
+>>> 32-bit
+>>> +timers, each half can operate in conjunction (chain mode) or
+>>> independently
+>>> +(unchained mode) of each other.
+>>> +
+>>> +It is global timer is a free running up-counter and can generate
+>>> interrupt
+>>
+>> Doesn't make sense, too many 'is'.
+>>
+>> There's no interrupt property listed.
+>>
+>>> +when the counter reaches preset counter values.
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible : should be "ti,davinci-timer".
+>>> +- reg : specifies base physical address and count of the registers.
+>>> +- clocks : the clock feeding the timer clock.
+>>> +
+>>> +Example:
+>>> +
+>>> +    clocksource: timer@20000 {
+>>> +        compatible = "ti,davinci-timer";
+>>> +        reg = <0x20000 0x1000>;
+>>> +        clocks = <&pll0_auxclk>;
+>>> +    };
+>>> -- 
+>>> 2.17.0
+>>>
+> 
+> What do you think about trying to reuse the keystone timer here instead of
+> introducing our own binding? I assume it is basically the same since the
+> watchdog timer is shared already between davinci and keystone.
+
+When we move to using timer support to drivers/clocksource, surely we
+should look at reusing the keystone timer. But even then, I think having
+a separate binding document for DaVinci is not illegal. Since we are not
+at a stage where we re-use Keystone driver, I prefer the binding to be
+separate as well.
+
+The timer IP on DA830/DA850 is not the same as that available on
+Keystone and older DaVinci devices. There are additional compare
+registers (starting at 0x60) on DA830/DA850 devices which allow the same
+timer to be used for both clocksource and clockevent. We use that
+facility on DA830 today because there was a shortage of timers on that
+device and majority of timers had to be dedicated for DSP use.
+
+So, I think its safer to introduce a "ti,da830-timer" compatible for
+DA830 and DA850 timers.
+
+On interrupts question, yes, we dont use interrupt number from DT today.
+But defining an interrupt property that looks correct is fine, I think.
+
+Thanks,
+Sekhar
