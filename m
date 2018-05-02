@@ -1,110 +1,43 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v9 24/27] dt-bindings: timer: new bindings for TI DaVinci
- timer
-Date: Wed, 2 May 2018 10:33:30 +0530
-Message-ID: <5d60bf07-0b86-f971-3d84-2e0bf4599891@ti.com>
-References: <20180427001745.4116-1-david@lechnology.com>
- <20180427001745.4116-25-david@lechnology.com>
- <20180427140522.npmhjamhwxgp7y73@rob-hp-laptop>
- <7cea07f1-e174-8496-a27a-01f0e3082054@lechnology.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH 08/21] bindings: display: Add compatible for A64 HDMI PHY
+Date: Wed, 2 May 2018 11:57:22 +0530
+Message-ID: <CAMty3ZBBo41Odbife0WtPG__3qWaHZtkqUfOLTmqhzc_of+iYw@mail.gmail.com>
+References: <20180430114058.5061-1-jagan@amarulasolutions.com>
+ <20180430114058.5061-9-jagan@amarulasolutions.com> <20180501161909.GA1728@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7cea07f1-e174-8496-a27a-01f0e3082054@lechnology.com>
-Content-Language: en-US
+In-Reply-To: <20180501161909.GA1728@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, Rob Herring <robh@kernel.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 02 May 2018 07:22 AM, David Lechner wrote:
-> Sekhar,
-> 
-> On 04/27/2018 09:05 AM, Rob Herring wrote:
->> On Thu, Apr 26, 2018 at 07:17:42PM -0500, David Lechner wrote:
->>> This adds new device tree bindings for the timer IP block of TI
->>> DaVinci-like SoCs.
->>>
->>> Signed-off-by: David Lechner <david@lechnology.com>
->>> ---
->>>
->>> v9 changes:
->>> - new patch in v9
->>>
->>>
->>>   .../bindings/timer/ti,davinci-timer.txt       | 24 +++++++++++++++++++
->>>   1 file changed, 24 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/timer/ti,davinci-timer.txt
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/timer/ti,davinci-timer.txt
->>> b/Documentation/devicetree/bindings/timer/ti,davinci-timer.txt
->>> new file mode 100644
->>> index 000000000000..2091eca46981
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/timer/ti,davinci-timer.txt
->>> @@ -0,0 +1,24 @@
->>> +* Device tree bindings for Texas Instruments DaVinci timer
->>> +
->>> +This document provides bindings for the 64-bit timer in the DaVinci
->>> +architecture devices. The timer can be configured as a
->>> general-purpose 64-bit
->>> +timer, dual general-purpose 32-bit timers. When configured as dual
->>> 32-bit
->>> +timers, each half can operate in conjunction (chain mode) or
->>> independently
->>> +(unchained mode) of each other.
->>> +
->>> +It is global timer is a free running up-counter and can generate
->>> interrupt
->>
->> Doesn't make sense, too many 'is'.
->>
->> There's no interrupt property listed.
->>
->>> +when the counter reaches preset counter values.
->>> +
->>> +Required properties:
->>> +
->>> +- compatible : should be "ti,davinci-timer".
->>> +- reg : specifies base physical address and count of the registers.
->>> +- clocks : the clock feeding the timer clock.
->>> +
->>> +Example:
->>> +
->>> +    clocksource: timer@20000 {
->>> +        compatible = "ti,davinci-timer";
->>> +        reg = <0x20000 0x1000>;
->>> +        clocks = <&pll0_auxclk>;
->>> +    };
->>> -- 
->>> 2.17.0
->>>
-> 
-> What do you think about trying to reuse the keystone timer here instead of
-> introducing our own binding? I assume it is basically the same since the
-> watchdog timer is shared already between davinci and keystone.
+Hi Rob,
 
-When we move to using timer support to drivers/clocksource, surely we
-should look at reusing the keystone timer. But even then, I think having
-a separate binding document for DaVinci is not illegal. Since we are not
-at a stage where we re-use Keystone driver, I prefer the binding to be
-separate as well.
+On Tue, May 1, 2018 at 9:49 PM, Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Apr 30, 2018 at 05:10:45PM +0530, Jagan Teki wrote:
+> > HDMI PHY on Allwinner A64 has similar like H3/H5.
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> >  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > index 9ea4353caadd..7dcd1d64dfe4 100644
+> > --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > @@ -104,6 +104,7 @@ Required properties:
+> >    - compatible: value must be one of:
+> >      * allwinner,sun8i-a83t-hdmi-phy
+> >      * allwinner,sun8i-h3-hdmi-phy
+> > +    * allwinner,sun50i-a64-hdmi-phy
+>
+> This should be one valid combination per line. The dts shows that the h3
+> string is a fallback which should be captured in the binding doc.
 
-The timer IP on DA830/DA850 is not the same as that available on
-Keystone and older DaVinci devices. There are additional compare
-registers (starting at 0x60) on DA830/DA850 devices which allow the same
-timer to be used for both clocksource and clockevent. We use that
-facility on DA830 today because there was a shortage of timers on that
-device and majority of timers had to be dedicated for DSP use.
-
-So, I think its safer to introduce a "ti,da830-timer" compatible for
-DA830 and DA850 timers.
-
-On interrupts question, yes, we dont use interrupt number from DT today.
-But defining an interrupt property that looks correct is fine, I think.
-
-Thanks,
-Sekhar
+The fallback compatible "allwinner,sun8i-h3-hdmi-phy" is already
+documented above, what we need to capture here? or did I miss anything
+here?
