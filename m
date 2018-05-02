@@ -1,79 +1,50 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 01/12] dt-bindings: cpufreq: mediatek: use - instead of
- _ in examples
-Date: Wed, 2 May 2018 10:59:09 +0200
-Message-ID: <1da10bfb-5d96-5a69-252e-2efacf120fdf@gmail.com>
-References: <cover.1523434757.git.sean.wang@mediatek.com>
- <1b9604aa3d3c68be68caf8af32fa4130f57743d6.1523434758.git.sean.wang@mediatek.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx6ull: add UART5 RTS input select register
+Date: Wed, 2 May 2018 17:01:11 +0800
+Message-ID: <20180502090110.GI3443@dragon>
+References: <1524136779-13246-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1b9604aa3d3c68be68caf8af32fa4130f57743d6.1523434758.git.sean.wang@mediatek.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1524136779-13246-1-git-send-email-stefan.wahren@i2se.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Greg Ungerer <gerg@linux-m68k.org>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 04/11/2018 10:53 AM, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> It should be good that no use "_" is in examples. Consequently,
-> those nodes in certain files which have an inappropriate name containing
-> "_" are all being replaced with "-".
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-pm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-Rafael, will you take this through your tree?
-
-Regards,
-Matthias
-
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-> index d36f07e..38cfbb5 100644
-> --- a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-> @@ -26,7 +26,7 @@ Optional properties:
->  
->  Example 1 (MT7623 SoC):
->  
-> -	cpu_opp_table: opp_table {
-> +	cpu_opp_table: opp-table {
->  		compatible = "operating-points-v2";
->  		opp-shared;
->  
-> @@ -86,7 +86,7 @@ Example 1 (MT7623 SoC):
->  	};
->  
->  Example 2 (MT8173 SoC):
-> -	cpu_opp_table_a: opp_table_a {
-> +	cpu_opp_table_a: opp-table-a {
->  		compatible = "operating-points-v2";
->  		opp-shared;
->  
-> @@ -131,7 +131,7 @@ Example 2 (MT8173 SoC):
->  		};
->  	};
->  
-> -	cpu_opp_table_b: opp_table_b {
-> +	cpu_opp_table_b: opp-table-b {
->  		compatible = "operating-points-v2";
->  		opp-shared;
->  
-> 
+T24gVGh1LCBBcHIgMTksIDIwMTggYXQgMDE6MTk6MzlQTSArMDIwMCwgU3RlZmFuIFdhaHJlbiB3
+cm90ZToKPiBUaGUgaU1YNlVMTCBVQVJUNV9SVFNfQl9EQVRBX1NFTEVDVF9JTlBVVCBEQUlTWSBS
+ZWdpc3RlciBoYXMgc29tZSBkaWZmZXJlbnQKPiBiaXQgZGVmaW5pdGlvbnMgdG8gdGhhdCBzYW1l
+IHJlZ2lzdGVyIGluIHRoZSBpLk1YNlVMLgo+IAo+IFRoZSBiaXRzIGZvciB0aGUgaS5NWDZVTDoK
+PiAKPiAwMDAgQ1NJX0RBVEEwM19BTFQ4IOKAlCBTZWxlY3RpbmcgUGFkOiBDU0lfREFUQTAzIGZv
+ciBNb2RlOiBBTFQ4Cj4gMDAxIEdQSU8xX0lPMDhfQUxUOCDigJQgU2VsZWN0aW5nIFBhZDogR1BJ
+TzFfSU8wOCBmb3IgTW9kZTogQUxUOAo+IDAxMCBHUElPMV9JTzA5X0FMVDgg4oCUIFNlbGVjdGlu
+ZyBQYWQ6IEdQSU8xX0lPMDkgZm9yIE1vZGU6IEFMVDgKPiAwMTEgRU5FVDFfUlhfRU5fQUxUMSDi
+gJQgU2VsZWN0aW5nIFBhZDogRU5FVDFfUlhfRU4gZm9yIE1vZGU6IEFMVDEKPiAxMDAgRU5FVDFf
+VFhfREFUQTBfQUxUMSDigJQgU2VsZWN0aW5nIFBhZDogRU5FVDFfVFhfREFUQTAgZm9yIE1vZGU6
+IEFMVDEKPiAxMDEgQ1NJX0RBVEEwMl9BTFQ4IOKAlCBTZWxlY3RpbmcgUGFkOiBDU0lfREFUQTAy
+IGZvciBNb2RlOiBBTFQ4Cj4gCj4gQnV0IGZvciB0aGUgaS5NWDZVTEw6Cj4gCj4gMDAwIENTSV9E
+QVRBMDNfQUxUOCDigJQgU2VsZWN0aW5nIFBhZDogQ1NJX0RBVEEwMyBmb3IgTW9kZTogQUxUOAo+
+IDAwMSBHUElPMV9JTzA4X0FMVDgg4oCUIFNlbGVjdGluZyBQYWQ6IEdQSU8xX0lPMDggZm9yIE1v
+ZGU6IEFMVDgKPiAwMTAgR1BJTzFfSU8wOV9BTFQ4IOKAlCBTZWxlY3RpbmcgUGFkOiBHUElPMV9J
+TzA5IGZvciBNb2RlOiBBTFQ4Cj4gMDExIFVBUlQxX0NUU19CX0FMVDkg4oCUIFNlbGVjdGluZyBQ
+YWQ6IFVBUlQxX0NUU19CIGZvciBNb2RlOiBBTFQ5Cj4gMTAwIFVBUlQxX1JUU19CX0FMVDkg4oCU
+IFNlbGVjdGluZyBQYWQ6IFVBUlQxX1JUU19CIGZvciBNb2RlOiBBTFQ5Cj4gMTAxIEVORVQxX1JY
+X0VOX0FMVDEg4oCUIFNlbGVjdGluZyBQYWQ6IEVORVQxX1JYX0VOIGZvciBNb2RlOiBBTFQxCj4g
+MTEwIEVORVQxX1RYX0RBVEEwX0FMVDEg4oCUIFNlbGVjdGluZyBQYWQ6IEVORVQxX1RYX0RBVEEw
+IGZvciBNb2RlOiBBTFQxCj4gMTExIENTSV9EQVRBMDJfQUxUOCDigJQgU2VsZWN0aW5nIFBhZDog
+Q1NJX0RBVEEwMiBmb3IgTW9kZTogQUxUOAo+IAo+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBXYWhy
+ZW4gPHN0ZWZhbi53YWhyZW5AaTJzZS5jb20+CgpBcHBsaWVkLCB0aGFua3MuCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
