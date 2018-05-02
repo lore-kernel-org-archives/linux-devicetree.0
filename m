@@ -1,47 +1,32 @@
-From: Javier Martinez Canillas <javierm@redhat.com>
-Subject: Re: [PATCH v2] Input: atmel_mxt_ts - add missing compatible strings
- to OF device table
-Date: Wed, 2 May 2018 20:36:43 +0200
-Message-ID: <79d51c87-65c8-8cb6-039c-933b114e86cb@redhat.com>
-References: <20180410095340.24074-1-javierm@redhat.com>
- <20180501184853.GB52077@dtor-ws>
- <CAL_JsqJ-UTGrPm2tiS1yVFweWB_LH2JSBpOpMtogTYFi7pCsGA@mail.gmail.com>
- <20180501205713.GA130399@dtor-ws>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 2/2] clk: qcom: Add video clock controller driver for SDM845
+Date: Wed, 02 May 2018 11:47:07 -0700
+Message-ID: <152528682776.138124.2183943878215041610@swboyd.mtv.corp.google.com>
+References: <1524576771-31096-1-git-send-email-anischal@codeaurora.org>
+ <1524576771-31096-3-git-send-email-anischal@codeaurora.org>
+ <152521087780.138124.7623601052057968460@swboyd.mtv.corp.google.com>
+ <d311e4d7-7ba8-0b26-93c7-5ee06db466ef@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501205713.GA130399@dtor-ws>
-Content-Language: en-US
+In-Reply-To: <d311e4d7-7ba8-0b26-93c7-5ee06db466ef@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-input@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Nick Dyer <nick@shmanahar.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: "Nischal, Amit" <anischal@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+Quoting Nischal, Amit (2018-05-02 00:56:35)
+> =
 
-On 05/01/2018 10:57 PM, Dmitry Torokhov wrote:
-> From: Javier Martinez Canillas <javierm@redhat.com>
-> 
-> Commit af503716ac14 ("i2c: core: report OF style module alias for devices
-> registered via OF") fixed how the I2C core reports the module alias when
-> devices are registered via OF.
-> 
-> But the atmel_mxt_ts driver only has an "atmel,maxtouch" compatible in its
-> OF device ID table, so if a Device Tree is using a different one, autoload
-> won't be working for the module (the matching works because the I2C device
-> ID table is used as a fallback).
-> 
-> So add compatible strings for each of the entries in the I2C device table.
-> 
-> Fixes: af503716ac14 ("i2c: core: report OF style module alias for devices registered via OF")
-> Reported-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> [dtor: document which compatibles are deprecated and should not be used]
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> =
 
-Thanks for taking care of this. Yes, I should had added as deprecated indeed.
+> Thanks for the review.
+> As of now, there are no resets defined for VIDEOCC. So I will move
+> the #reset-cells tooptional property in the dt-binding.
+> Same will be updated in the next patch series.
 
-Best regards,
-Javier
+Please don't make it optional. It should be required in the binding,
+because there are resets in the hardware. If you don't want to add them
+into the driver, that's ok, but it isn't really that hard to add them so
+why not add them?
