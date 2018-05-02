@@ -1,77 +1,102 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 0/7] pcal6524 extensions and fixes for pca953x driver
-Date: Wed, 2 May 2018 15:32:07 +0300
-Message-ID: <CAHp75VfA84FWyymRz6_53soEoLNAPP9YpsR3Vzkf6EJWLLTw=g@mail.gmail.com>
-References: <cover.1524933096.git.hns@goldelico.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v5 5/7] gpio: pca953x: fix address calculation for pcal6524
+Date: Wed, 2 May 2018 14:35:24 +0200
+Message-ID: <4F016FCD-04B0-4EE1-A9F4-5A182DD437EF@goldelico.com>
+References: <cover.1524933096.git.hns@goldelico.com> <aaac818909d71523726094b1dfacc03e756874e9.1524933096.git.hns@goldelico.com> <CAHp75VfD4gYesEw2n4JMycmr=qcAtqSkAAjwCViJZRYC6kVUVg@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1524933096.git.hns@goldelico.com>
+In-Reply-To: <CAHp75VfD4gYesEw2n4JMycmr=qcAtqSkAAjwCViJZRYC6kVUVg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 28, 2018 at 7:31 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> V5:
-> * fix wrong split up between patches 1/7and 2/7.
->
-> 2018-04-26 19:35:07: V4:
-> * introduced PCA_LATCH_INT constant to make of_table more
->   readable (suggested by Andy Shevchenko)
-> * converted all register constants to hex in a separate
->   patch (suggested by Andy Shevchenko)
-> * separated additional pcal953x and pcal6524 register
->   definitions into separate patches (suggested by Andy Shevchenko)
-> * made special pcal6524 address adjustment more readable
->   (suggested by Andy Shevchenko)
-> * moved gpio-controller and interrupt-controller to the
->   "required" section (reviewed by Rob Herring)
->
-> 2018-04-10 18:07:07: V3:
-> * add Reported-by: and Reviewed-by:
-> * fix wording for bindings description and example
-> * convert all register offsets to hex
-> * omit the LEVEL-IRQ RFC/hack commit
->
-> 2018-04-04 21:00:27: V2:
-> * added PCA_PCAL flags if matched through of-table
-> * fix address calculation for extended PCAL6524 registers
-> * hack to map LEVEL_LOW to EDGE_FALLING to be able to
->   test in combination with ts3a227e driver
-> * improve description of bindings for optional vcc-supply
->   and interrupt-controller;
->
-> 2018-03-10 09:32:53: no initial description
->
+Hi Andy,
 
-After addressing comments for two patches,
+> Am 02.05.2018 um 14:28 schrieb Andy Shevchenko =
+<andy.shevchenko@gmail.com>:
+>=20
+> On Sat, Apr 28, 2018 at 7:31 PM, H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>> The register constants are so far defined in a way that they fit
+>> for the pcal9555a when shifted by the number of banks, i.e. are
+>> multiplied by 2 in the accessor function.
+>>=20
+>> Now, the pcal6524 has 3 banks which means the relative offset
+>> is multiplied by 4 for the standard registers.
+>>=20
+>> Simply applying the bit shift to the extended registers gives
+>> a wrong result, since the base offset is already included in
+>> the offset.
+>>=20
+>> Therefore, we add code to the 24 bit accessor functions to
+>> adjust the register number for these exended registers.
+>>=20
+>=20
+> Suggested-by ?
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Detecting that we need to adjust the registers generally was from me,
+but your suggestion of an improved formula should of course be mentioned
+and appreciated!
 
-for patches 1-5.
+I'll think about a good formulation for v6.
 
-> H. Nikolaus Schaller (7):
->   gpio: pca953x: convert register constants to hex
->   gpio: pca953x: add more register definitions for pcal953x
->   gpio: pca953x: add more register definitions for pcal6524
->   gpio: pca953x: define masks for addressing common and extended
->     registers
->   gpio: pca953x: fix address calculation for pcal6524
->   DTS: Bindings: pca953x add an optional vcc-supply property
->   DTS: Bindings: pca953x: add example how to use interrupt-controller
->     and gpio-controller
->
->  .../devicetree/bindings/gpio/gpio-pca953x.txt      | 34 ++++++++++++++
->  drivers/gpio/gpio-pca953x.c                        | 53 ++++++++++++++--------
->  2 files changed, 69 insertions(+), 18 deletions(-)
->
-> --
-> 2.12.2
->
+BR and thanks,
+Nikolaus
 
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+>=20
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> drivers/gpio/gpio-pca953x.c | 8 ++++++--
+>> 1 file changed, 6 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/drivers/gpio/gpio-pca953x.c =
+b/drivers/gpio/gpio-pca953x.c
+>> index fc863faa3ce4..4194495a7990 100644
+>> --- a/drivers/gpio/gpio-pca953x.c
+>> +++ b/drivers/gpio/gpio-pca953x.c
+>> @@ -221,9 +221,11 @@ static int pca957x_write_regs_16(struct =
+pca953x_chip *chip, int reg, u8 *val)
+>> static int pca953x_write_regs_24(struct pca953x_chip *chip, int reg, =
+u8 *val)
+>> {
+>>        int bank_shift =3D fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
+>> +       int addr =3D (reg & PCAL_GPIO_MASK) << bank_shift;
+>> +       int pinctrl =3D (reg & PCAL_PINCTRL_MASK) << 1;
+>>=20
+>>        return i2c_smbus_write_i2c_block_data(chip->client,
+>> -                                             (reg << bank_shift) | =
+REG_ADDR_AI,
+>> +                                             pinctrl | addr | =
+REG_ADDR_AI,
+>>                                              NBANK(chip), val);
+>> }
+>>=20
+>> @@ -263,9 +265,11 @@ static int pca953x_read_regs_16(struct =
+pca953x_chip *chip, int reg, u8 *val)
+>> static int pca953x_read_regs_24(struct pca953x_chip *chip, int reg, =
+u8 *val)
+>> {
+>>        int bank_shift =3D fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
+>> +       int addr =3D (reg & PCAL_GPIO_MASK) << bank_shift;
+>> +       int pinctrl =3D (reg & PCAL_PINCTRL_MASK) << 1;
+>>=20
+>>        return i2c_smbus_read_i2c_block_data(chip->client,
+>> -                                            (reg << bank_shift) | =
+REG_ADDR_AI,
+>> +                                            pinctrl | addr | =
+REG_ADDR_AI,
+>>                                             NBANK(chip), val);
+>> }
+>>=20
+>> --
+>> 2.12.2
+>>=20
+>=20
+>=20
+>=20
+> --=20
+> With Best Regards,
+> Andy Shevchenko
