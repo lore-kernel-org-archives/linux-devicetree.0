@@ -1,87 +1,94 @@
-Return-Path: <SRS0=vUYB=HX=bootlin.com=maxime.ripard@kernel.org>
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v12 0/4] media: v4l: Add support for the Cadence MIPI-CSI2 TX controller
-Date: Fri,  4 May 2018 16:08:06 +0200
-Message-Id: <20180504140810.29497-1-maxime.ripard@bootlin.com>
+Return-Path: <SRS0=COmU=HV=mediatek.com=argus.lin@kernel.org>
+From: <argus.lin@mediatek.com>
+Subject: [PATCH V4 8/8] arm64: dts: mt6797: add pwrap support for mt6797
+Date: Wed, 2 May 2018 17:21:12 +0800
+Message-ID: <20180502092112.3991-9-argus.lin@mediatek.com>
+In-Reply-To: <20180502092112.3991-1-argus.lin@mediatek.com>
+References: <20180502092112.3991-1-argus.lin@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_005_1851075112.2049781665"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+--__=_Part_Boundary_005_1851075112.2049781665
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_006_366195353.1691438948"
 
-Here is a hopefully final attempt at supporting the MIPI-CSI2 RX and
-TX blocks from Cadence.
+--__=_Part_Boundary_006_366195353.1691438948
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-This is a merged serie of the CSI2-RX and CSI2-TX series I've been
-sending for a while now and gathered a significant amount of
-Reviewed-by/Acked-by. The merge has been done thanks to Sakari's
-suggestion to ease the merge and the dependency between the two
-drivers on the MAINTAINERS/Kconfig/Makefile sides.
+PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
+bXQ2Nzk3IGlzIGEgaGlnaGx5IGludGVncmF0ZWQgU29DcywgYW5kIGl0IHVzZXMNCm10NjM1MSBh
+cyBQb3dlciBNYW5hZ2VtZW50IElDLg0KV2UgbmVlZCB0byBhZGQgcHdyYXAgZGV2aWNlIHRvIGNv
+bW11bmljYXRlIHdpdGgNCm10NjM1MSBieSBTUEkuDQpUaGUgYmFzZSBhZGRyZXNzIG9mIHB3cmFw
+IGlzIDB4MTAwMGQwMDAsIGFuZCBJUlENCm51bWJlciBpcyAxNzguIEl0IGFsc28gdXNpbmcgZml4
+ZWQgMjZNaHogY2xvY2sNCmFzIFNQSSBDTEsuDQoNClNpZ25lZC1vZmYtYnk6IEFyZ3VzIExpbiAm
+bHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCi0tLQ0KIGFyY2gvYXJtNjQvYm9vdC9kdHMv
+bWVkaWF0ZWsvbXQ2Nzk3LmR0c2kgfCAxNCArKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2Vk
+LCAxNCBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21l
+ZGlhdGVrL210Njc5Ny5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3OTcu
+ZHRzaQ0KaW5kZXggNGJlYWE3MTEwN2Q3Li40ODU1NDZlZmM5YmYgMTAwNjQ0DQotLS0gYS9hcmNo
+L2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQorKysgYi9hcmNoL2FybTY0L2Jv
+b3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQpAQCAtMTYxLDYgKzE2MSwyMCBAQA0KIAkJICAg
+ICAgJmx0OzAgMHgxMDIyMDY5MCAwIDB4MTAmZ3Q7Ow0KIAl9Ow0KIA0KKwlwd3JhcDogcHdyYXBA
+MTAwMGQwMDAgew0KKwkJY29tcGF0aWJsZSA9ICZxdW90O21lZGlhdGVrLG10Njc5Ny1wd3JhcCZx
+dW90OzsNCisJCXJlZyA9ICZsdDswIDB4MTAwMGQwMDAgMCAweDEwMDAmZ3Q7Ow0KKwkJcmVnLW5h
+bWVzID0gJnF1b3Q7cHdyYXAmcXVvdDs7DQorCQlpbnRlcnJ1cHRzID0gJmx0O0dJQ19TUEkgMTc4
+IElSUV9UWVBFX0xFVkVMX0hJR0gmZ3Q7Ow0KKwkJY2xvY2tzID0gJmx0OyZhbXA7Y2xrMjZtJmd0
+OywgJmx0OyZhbXA7Y2xrMjZtJmd0OzsNCisJCWNsb2NrLW5hbWVzID0gJnF1b3Q7c3BpJnF1b3Q7
+LCAmcXVvdDt3cmFwJnF1b3Q7Ow0KKw0KKwkJcG1pYzogbXQ2MzUxIHsNCisJCQljb21wYXRpYmxl
+ID0gJnF1b3Q7bWVkaWF0ZWssbXQ2MzUxJnF1b3Q7Ow0KKwkJCWludGVycnVwdC1jb250cm9sbGVy
+Ow0KKwkJfTsNCisJfTsNCisNCiAJdWFydDA6IHNlcmlhbEAxMTAwMjAwMCB7DQogCQljb21wYXRp
+YmxlID0gJnF1b3Q7bWVkaWF0ZWssbXQ2Nzk3LXVhcnQmcXVvdDssDQogCQkJICAgICAmcXVvdDtt
+ZWRpYXRlayxtdDY1NzctdWFydCZxdW90OzsNCi0tIA0KMi4xMi41DQoNCjwvcHJlPjwhLS10eXBl
+OnRleHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxpdHkg
+Tm90aWNlICoqKioqKioqKioqKioqKioqKioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGlu
+IHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5IGJl
+IGNvbmZpZGVudGlhbCwgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhl
+bXB0IGZyb20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVuZGVk
+IHRvIGJlIA0KY29udmV5ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFu
+eSB1c2UsIGRpc3NlbWluYXRpb24sIA0KZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWluaW5n
+IG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50cykg
+YnkgdW5pbnRlbmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5
+IA0KYmUgdW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0
+aGlzIGUtbWFpbCwgb3IgYmVsaWV2ZSANCnRoYXQgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1h
+aWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciANCmltbWVkaWF0ZWx5IChieSBy
+ZXBseWluZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBhbnkgYW5kIGFsbCBjb3BpZXMgb2YgDQp0
+aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2htZW50cykgZnJvbSB5b3VyIHN5c3RlbSwg
+YW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQgb2YgdGhpcyBlLW1haWwgdG8gYW55IG90
+aGVyIHBlcnNvbi4gVGhhbmsgeW91ITwvcHJlPjwhLS19LS0+
 
-The CSI2-RX has not received any comment on its previous iteration,
-and CSI2-TX received some minor comments from Sakari that have been
-fixed in this series. You can have a look at the Changelog below if
-needed.
+--__=_Part_Boundary_006_366195353.1691438948
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
-The TX controller is able to receive 4 video streams and stream them over a
-MIPI-CSI2 link using up to 4 lanes. Those streams are basically the
-interfaces to controllers generating some video signals, like a camera
-or a pattern generator.
+RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQptdDY3OTcgaXMgYSBo
+aWdobHkgaW50ZWdyYXRlZCBTb0NzLCBhbmQgaXQgdXNlcw0KbXQ2MzUxIGFzIFBvd2VyIE1hbmFn
+ZW1lbnQgSUMuDQpXZSBuZWVkIHRvIGFkZCBwd3JhcCBkZXZpY2UgdG8gY29tbXVuaWNhdGUgd2l0
+aA0KbXQ2MzUxIGJ5IFNQSS4NClRoZSBiYXNlIGFkZHJlc3Mgb2YgcHdyYXAgaXMgMHgxMDAwZDAw
+MCwgYW5kIElSUQ0KbnVtYmVyIGlzIDE3OC4gSXQgYWxzbyB1c2luZyBmaXhlZCAyNk1oeiBjbG9j
+aw0KYXMgU1BJIENMSy4NCg0KU2lnbmVkLW9mZi1ieTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVk
+aWF0ZWsuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3OTcuZHRz
+aSB8IDE0ICsrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKykN
+Cg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzk3LmR0c2kg
+Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQppbmRleCA0YmVhYTcx
+MTA3ZDcuLjQ4NTU0NmVmYzliZiAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVk
+aWF0ZWsvbXQ2Nzk3LmR0c2kNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2
+Nzk3LmR0c2kNCkBAIC0xNjEsNiArMTYxLDIwIEBADQogCQkgICAgICA8MCAweDEwMjIwNjkwIDAg
+MHgxMD47DQogCX07DQogDQorCXB3cmFwOiBwd3JhcEAxMDAwZDAwMCB7DQorCQljb21wYXRpYmxl
+ID0gIm1lZGlhdGVrLG10Njc5Ny1wd3JhcCI7DQorCQlyZWcgPSA8MCAweDEwMDBkMDAwIDAgMHgx
+MDAwPjsNCisJCXJlZy1uYW1lcyA9ICJwd3JhcCI7DQorCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
+MTc4IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KKwkJY2xvY2tzID0gPCZjbGsyNm0+LCA8JmNsazI2
+bT47DQorCQljbG9jay1uYW1lcyA9ICJzcGkiLCAid3JhcCI7DQorDQorCQlwbWljOiBtdDYzNTEg
+ew0KKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2MzUxIjsNCisJCQlpbnRlcnJ1cHQtY29u
+dHJvbGxlcjsNCisJCX07DQorCX07DQorDQogCXVhcnQwOiBzZXJpYWxAMTEwMDIwMDAgew0KIAkJ
+Y29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3OTctdWFydCIsDQogCQkJICAgICAibWVkaWF0ZWss
+bXQ2NTc3LXVhcnQiOw0KLS0gDQoyLjEyLjUNCg==
 
-The RX controller is able to receive CSI data over up to 4 lanes, and
-split it to over 4 streams. Those streams are basically the interfaces
-to the video grabbers that will perform the capture.
+--__=_Part_Boundary_006_366195353.1691438948--
 
-TX is then able to map input streams to CSI2 virtual channels and
-datatypes dynamically. The streaming devices choose their virtual
-channels through an additional signal that is transparent to the
-CSI2-TX. The datatypes however are yet another additional input
-signal, and can be mapped to any CSI2 datatypes. RX can do the
-opposite, being able to take virtual channel / datatypes and route
-them to proper pixel interfaces on demand.
-
-Since v4l2 doesn't really allow for that setup at the moment, this
-preliminary version is a rather dumb one in order to start the
-discussion on how to address this properly.
-
-Let me know what you think!
-Maxime
-
-Changes from v11:
-  - Added Makefile license
-  - Added Benoit's Acked-by
-  - Ignored the CSI2-RX return code on stop, and just log an error
-    instead
-
-Changes from CSI2-TX v10:
-  - Reword the source pad exception comment
-  - Handle the V4L2_SUBDEV_FORMAT_TRY case for get_fmt / set_fmt
-
-Maxime Ripard (4):
-  dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
-  v4l: cadence: Add Cadence MIPI-CSI2 RX driver
-  dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
-  v4l: cadence: Add Cadence MIPI-CSI2 TX driver
-
- .../devicetree/bindings/media/cdns,csi2rx.txt | 100 ++++
- .../devicetree/bindings/media/cdns,csi2tx.txt |  98 +++
- MAINTAINERS                                   |   7 +
- drivers/media/platform/Kconfig                |   1 +
- drivers/media/platform/Makefile               |   1 +
- drivers/media/platform/cadence/Kconfig        |  34 ++
- drivers/media/platform/cadence/Makefile       |   4 +
- drivers/media/platform/cadence/cdns-csi2rx.c  | 498 ++++++++++++++++
- drivers/media/platform/cadence/cdns-csi2tx.c  | 563 ++++++++++++++++++
- 9 files changed, 1306 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2rx.txt
- create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
- create mode 100644 drivers/media/platform/cadence/Kconfig
- create mode 100644 drivers/media/platform/cadence/Makefile
- create mode 100644 drivers/media/platform/cadence/cdns-csi2rx.c
- create mode 100644 drivers/media/platform/cadence/cdns-csi2tx.c
-
--- 
-2.17.0
+--__=_Part_Boundary_005_1851075112.2049781665--
