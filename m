@@ -1,25 +1,22 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V3 2/2] ARM: dts: imx6sx-sabreauto: add external 24MHz
- clock source
-Date: Wed, 2 May 2018 21:19:36 +0800
-Message-ID: <20180502131934.GK3443@dragon>
-References: <1524209891-14146-1-git-send-email-Anson.Huang@nxp.com>
- <1524209891-14146-2-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH] ARM: dts: imx53-ppd: Use IRQ_TYPE_* constants
+Date: Wed, 2 May 2018 21:22:18 +0800
+Message-ID: <20180502132216.GL3443@dragon>
+References: <20180420154553.18070-1-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1524209891-14146-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20180420154553.18070-1-sebastian.reichel@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, shengjiu.wang@nxp.com, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 20, 2018 at 03:38:11PM +0800, Anson Huang wrote:
-> On i.MX6SX SabreAuto board, there is external 24MHz clock
-> source for analog clock2, add this clock source to clock tree
-> and remove "clocks" container for all input clocks.
+On Fri, Apr 20, 2018 at 05:45:53PM +0200, Sebastian Reichel wrote:
+> Replace magic numbers with IRQ_TYPE_* constants to improve
+> DT readability.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 
 Applied, thanks.
