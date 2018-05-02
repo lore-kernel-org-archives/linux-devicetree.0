@@ -1,78 +1,36 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCH v2 4/5] dt-bindings: devfreq: rk3399_dmc: remove
- interrupts as is not required.
-Date: Wed, 2 May 2018 18:11:16 +0200
-Message-ID: <66622ef7-6b8a-c524-1f6e-e71ccbc72011@collabora.com>
-References: <20180424083742.14042-1-enric.balletbo@collabora.com>
- <20180424083742.14042-5-enric.balletbo@collabora.com>
- <20180427200029.elq3drn46nkwbvf2@rob-hp-laptop>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v1 0/2] Add ltdc & dsi support on stm32mp157c
+Date: Wed, 2 May 2018 18:23:05 +0200
+Message-ID: <f4f45fc9-df55-c094-8b63-35efb31a4069@st.com>
+References: <1524556488-5404-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427200029.elq3drn46nkwbvf2@rob-hp-laptop>
-Content-Language: en-GB
+In-Reply-To: <1524556488-5404-1-git-send-email-yannick.fertre@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, heiko@sntech.de, linux-pm@vger.kernel.org, dbasehore@chromium.org, linux-kernel@vger.kernel.org, dianders@google.com, groeck@chromium.org, kernel@collabora.com, hl@rock-chips.com, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>
+To: yannick fertre <yannick.fertre@st.com>, Philippe Cornu <philippe.cornu@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Loic Pallardy <loic.pallardy@st.com>, Gerald Baeza <gerald.baeza@st.com>, Patrice Chotard <patrice.chotard@st.com>, Kamel Kholti <kamel.kholti@st.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+hi
 
-Thanks for the review.
-
-On 27/04/18 22:00, Rob Herring wrote:
-> On Tue, Apr 24, 2018 at 10:37:41AM +0200, Enric Balletbo i Serra wrote:
->> In ATF we already wait for DDR dvfs finish, so don't need to do this in
->> kernel, so remove the interrupts properties as is not longer required.
+On 04/24/2018 09:54 AM, yannick fertre wrote:
+> This patch-set adds display controller & DSI controller support to
+> stm32mp157c SOC.
 > 
-> If the hardware has an interrupt, then the DT should have one. The 
-> partitioning with ATF shouldn't matter.
+> Version 1:
+> - Initial commit
 > 
-> Now, if you want to make ATF remove the interrupt, then maybe that is 
-> okay. But it's not clear to me why you'd expose some of the h/w and not 
-> all.
+> yannick fertre (2):
+>    ARM: dts: stm32: add ltdc support on stm32mp157c
+>    ARM: dts: stm32: add dsi support on stm32mp157c
 > 
+>   arch/arm/boot/dts/stm32mp157c.dtsi | 22 ++++++++++++++++++++++
+>   1 file changed, 22 insertions(+)
+> 
+Series applied on stm32-next.
 
-Ok, sounds good if I move interrupts to be optional then?
-
-Best regards,
- Enric
-
->>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->>
->> Changes in v2:
->> - [4/6] Add Reviewed-by Chanwoo Choi.
->>
->>  Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt | 5 -----
->>  1 file changed, 5 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
->> index 834637c7bae7..e7f0ef9548b7 100644
->> --- a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
->> +++ b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
->> @@ -5,10 +5,6 @@ Required properties:
->>  - devfreq-events:	 Node to get DDR loading, Refer to
->>  			 Documentation/devicetree/bindings/devfreq/event/
->>  			 rockchip-dfi.txt
->> -- interrupts:		 The CPU interrupt number. The interrupt specifier
->> -			 format depends on the interrupt controller.
->> -			 It should be a DCF interrupt. When DDR DVFS finishes
->> -			 a DCF interrupt is triggered.
->>  - clocks:		 Phandles for clock specified in "clock-names" property
->>  - clock-names :		 The name of clock used by the DFI, must be
->>  			 "pclk_ddr_mon";
->> @@ -172,7 +168,6 @@ Example:
->>  	dmc: dmc {
->>  		compatible = "rockchip,rk3399-dmc";
->>  		devfreq-events = <&dfi>;
->> -		interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
->>  		clocks = <&cru SCLK_DDRCLK>;
->>  		clock-names = "dmc_clk";
->>  		operating-points-v2 = <&dmc_opp_table>;
->> -- 
->> 2.17.0
->>
+Regards
+Alex
