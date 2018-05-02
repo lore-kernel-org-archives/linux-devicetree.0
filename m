@@ -1,29 +1,37 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 3/5] soc: rockchip: power-domain: Use
- of_clk_get_parent_count() instead of open coding
-Date: Wed, 02 May 2018 08:38:46 -0700
-Message-ID: <152527552692.138124.9472680209483820124@swboyd.mtv.corp.google.com>
-References: <1524063005-1716-1-git-send-email-geert+renesas@glider.be>
- <1524063005-1716-4-git-send-email-geert+renesas@glider.be>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 0/4] ARM: dts: Add cryptographic support for stm32mp157c
+Date: Wed, 2 May 2018 17:50:07 +0200
+Message-ID: <27c3293a-bfbf-6410-68da-6750371e79e6@st.com>
+References: <20180423151947.2526-1-lionel.debieve@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524063005-1716-4-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <20180423151947.2526-1-lionel.debieve@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Lionel Debieve <lionel.debieve@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Geert Uytterhoeven (2018-04-18 07:50:03)
-> As of_clk_get_parent_count() returns zero on failure, while
-> of_count_phandle_with_args() might return a negative error code, this
-> also fixes the issue of possibly using a negative number in the
-> allocation below.
-> =
+Hi Lionel,
 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> ---
+On 04/23/2018 05:19 PM, Lionel Debieve wrote:
+> Patches serie add support or RNG, CRYP and CRC IPs for stm32mp157c SoC
+> and add RNG default support for ev1 board.
+> 
+> Lionel Debieve (4):
+>    ARM: dts: stm32: Add RNG support on stm32mp157c
+>    ARM: dts: stm32: Enable RNG for stm32mp157c-ed1
+>    ARM: dts: stm32: Add CRYP support on stm32mp157c
+>    ARM: dts: stm32: Add CRC support on stm32mp157c
+> 
+>   arch/arm/boot/dts/stm32mp157c-ed1.dts |  4 ++++
+>   arch/arm/boot/dts/stm32mp157c.dtsi    | 25 +++++++++++++++++++++++++
+>   2 files changed, 29 insertions(+)
+> 
 
-Applied to clk-next
+Series applied on stm32-next.
+
+Regards
+Alex
