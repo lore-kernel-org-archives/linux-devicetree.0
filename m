@@ -1,67 +1,49 @@
 Return-Path: <SRS0=QbTR=HV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:24540 "EHLO mga01.intel.com"
+Received: from mga01.intel.com ([192.55.52.88]:64682 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751339AbeEBVgi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 2 May 2018 17:36:38 -0400
-Date: Thu, 3 May 2018 00:36:38 +0300
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [RESEND PATCH v9 1/2] media: dt-bindings: Add bindings for
- Dongwoon DW9807 voice coil
-Message-ID: <20180502213637.ycvksj33edrkprpn@kekkonen.localdomain>
+        id S1751729AbeEBPps (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 2 May 2018 11:45:48 -0400
+From: Andy Yeh <andy.yeh@intel.com>
+Subject: [RESEND PATCH v9 1/2] media: dt-bindings: Add bindings for Dongwoon DW9807 voice coil
+Date: Wed,  2 May 2018 23:53:47 +0800
+Message-Id: <1525276428-17379-2-git-send-email-andy.yeh@intel.com>
+In-Reply-To: <1525276428-17379-1-git-send-email-andy.yeh@intel.com>
 References: <1525276428-17379-1-git-send-email-andy.yeh@intel.com>
- <1525276428-17379-2-git-send-email-andy.yeh@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1525276428-17379-2-git-send-email-andy.yeh@intel.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Andy Yeh <andy.yeh@intel.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, tfiga@chromium.org, jacopo@jmondi.org, Alan Chiang <alanx.chiang@intel.com>
+To: linux-media@vger.kernel.org
+Cc: sakari.ailus@linux.intel.com, andy.yeh@intel.com, devicetree@vger.kernel.org, tfiga@chromium.org, jacopo@jmondi.org, Alan Chiang <alanx.chiang@intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, May 02, 2018 at 11:53:47PM +0800, Andy Yeh wrote:
-> From: Alan Chiang <alanx.chiang@intel.com>
-> 
-> Dongwoon DW9807 is a voice coil lens driver.
-> 
-> Signed-off-by: Andy Yeh <andy.yeh@intel.com>
-> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-> Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+From: Alan Chiang <alanx.chiang@intel.com>
 
-I don't remember seeing these two on the first patch nor giving mine. For
-what it's worth, I've applied v8 to my tree here:
+Dongwoon DW9807 is a voice coil lens driver.
 
-<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=for-4.18-3>
+Signed-off-by: Andy Yeh <andy.yeh@intel.com>
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+Acked-by: Rob Herring <robh@kernel.org>
 
-I.e. there's no need to resend the same patch to just add the regular
-acked-by or reviewed-by tags. "RESEND" in the subject suggests you're
-sending exactly the same patch, and in that case the version would be
-unchanged as well.
+---
+ Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
-> ---
->  Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
-> new file mode 100644
-> index 0000000..0a1a860
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
-> @@ -0,0 +1,9 @@
-> +Dongwoon Anatech DW9807 voice coil lens driver
-> +
-> +DW9807 is a 10-bit DAC with current sink capability. It is intended for
-> +controlling voice coil lenses.
-> +
-> +Mandatory properties:
-> +
-> +- compatible: "dongwoon,dw9807"
-> +- reg: I2C slave address
-
+diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+new file mode 100644
+index 0000000..0a1a860
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+@@ -0,0 +1,9 @@
++Dongwoon Anatech DW9807 voice coil lens driver
++
++DW9807 is a 10-bit DAC with current sink capability. It is intended for
++controlling voice coil lenses.
++
++Mandatory properties:
++
++- compatible: "dongwoon,dw9807"
++- reg: I2C slave address
 -- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+2.7.4
+
