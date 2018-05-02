@@ -1,121 +1,131 @@
-Return-Path: <SRS0=jfmr=HZ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193]:41128 "EHLO
-        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751777AbeEFOUL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 6 May 2018 10:20:11 -0400
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v5 09/14] media: ov772x: handle nested s_power() calls
-Date: Sun,  6 May 2018 23:19:24 +0900
-Message-Id: <1525616369-8843-10-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
-References: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Return-Path: <SRS0=COmU=HV=mediatek.com=argus.lin@kernel.org>
+From: <argus.lin@mediatek.com>
+Subject: [PATCH V4 7/8] soc: mediatek: pwrap: add mt6351 for mt6797 SoCs
+Date: Wed, 2 May 2018 17:21:11 +0800
+Message-ID: <20180502092112.3991-8-argus.lin@mediatek.com>
+In-Reply-To: <20180502092112.3991-1-argus.lin@mediatek.com>
+References: <20180502092112.3991-1-argus.lin@mediatek.com>
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_001_1145140192.1023605711"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-Depending on the v4l2 driver, calling s_power() could be nested.  So the
-actual transitions between power saving mode and normal operation mode
-should only happen at the first power on and the last power off.
+--__=_Part_Boundary_001_1145140192.1023605711
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_002_1453069988.1123629566"
 
-This adds an s_power() nesting counter and updates the power state if the
-counter is modified from 0 to != 0 or from != 0 to 0.
+--__=_Part_Boundary_002_1453069988.1123629566
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* v5
-- No changes
+PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
+bXQ2MzUxIGlzIGEgbmV3IHBvd2VyIG1hbmFnZW1lbnQgSUMgYW5kIGl0IGlzDQp1c2VkIGZvciBt
+dDY3OTcgU29Dcy4gV2UgbmVlZCB0byBhZGQgbXQ2MzUxX3JlZ3MgZm9yDQpwbWljIHJlZ2lzdGVy
+IG1hcHBpbmcgYW5kIHBtaWNfbXQ2MzUxIGZvcg0KcmVnaXN0ZXIgYWNjZXNzaW5nIGJ5IHJlZ21h
+cC4NCg0KU2lnbmVkLW9mZi1ieTogQXJndXMgTGluICZsdDthcmd1cy5saW5AbWVkaWF0ZWsuY29t
+Jmd0Ow0KLS0tDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jIHwgMjkgKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgMjkgaW5zZXJ0aW9u
+cygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5j
+IGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQppbmRleCAyODViZmE3NjI0
+OWYuLjI2MDc2OTAwZWVlMCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1w
+bWljLXdyYXAuYw0KKysrIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQpA
+QCAtMTUyLDYgKzE1MiwyMSBAQCBzdGF0aWMgY29uc3QgdTMyIG10NjM5N19yZWdzW10gPSB7DQog
+CVtQV1JBUF9ERVdfQ0lQSEVSX1NXUlNUXSA9CTB4YmMyNCwNCiB9Ow0KIA0KK3N0YXRpYyBjb25z
+dCB1MzIgbXQ2MzUxX3JlZ3NbXSA9IHsNCisJW1BXUkFQX0RFV19ESU9fRU5dID0JCTB4MDJGMiwN
+CisJW1BXUkFQX0RFV19SRUFEX1RFU1RdID0JCTB4MDJGNCwNCisJW1BXUkFQX0RFV19XUklURV9U
+RVNUXSA9CTB4MDJGNiwNCisJW1BXUkFQX0RFV19DUkNfRU5dID0JCTB4MDJGQSwNCisJW1BXUkFQ
+X0RFV19DUkNfVkFMXSA9CQkweDAyRkMsDQorCVtQV1JBUF9ERVdfQ0lQSEVSX0tFWV9TRUxdID0J
+MHgwMzAwLA0KKwlbUFdSQVBfREVXX0NJUEhFUl9JVl9TRUxdID0JMHgwMzAyLA0KKwlbUFdSQVBf
+REVXX0NJUEhFUl9FTl0gPQkJMHgwMzA0LA0KKwlbUFdSQVBfREVXX0NJUEhFUl9SRFldID0JMHgw
+MzA2LA0KKwlbUFdSQVBfREVXX0NJUEhFUl9NT0RFXSA9CTB4MDMwOCwNCisJW1BXUkFQX0RFV19D
+SVBIRVJfU1dSU1RdID0JMHgwMzBBLA0KKwlbUFdSQVBfREVXX1JERE1ZX05PXSA9CQkweDAzMEMs
+DQorfTsNCisNCiBlbnVtIHB3cmFwX3JlZ3Mgew0KIAlQV1JBUF9NVVhfU0VMLA0KIAlQV1JBUF9X
+UkFQX0VOLA0KQEAgLTY4NCw2ICs2OTksNyBAQCBzdGF0aWMgaW50IG10ODEzNV9yZWdzW10gPSB7
+DQogDQogZW51bSBwbWljX3R5cGUgew0KIAlQTUlDX01UNjMyMywNCisJUE1JQ19NVDYzNTEsDQog
+CVBNSUNfTVQ2MzgwLA0KIAlQTUlDX01UNjM5NywNCiB9Ow0KQEAgLTExNTAsNiArMTE2Niw3IEBA
+IHN0YXRpYyBpbnQgcHdyYXBfaW5pdF9jaXBoZXIoc3RydWN0IHBtaWNfd3JhcHBlciAqd3JwKQ0K
+IAkJCSAgICAweDEpOw0KIAkJYnJlYWs7DQogCWNhc2UgUE1JQ19NVDYzMjM6DQorCWNhc2UgUE1J
+Q19NVDYzNTE6DQogCQlwd3JhcF93cml0ZSh3cnAsIHdycC0mZ3Q7c2xhdmUtJmd0O2Rld19yZWdz
+W1BXUkFQX0RFV19DSVBIRVJfRU5dLA0KIAkJCSAgICAweDEpOw0KIAkJYnJlYWs7DQpAQCAtMTQz
+NSw2ICsxNDUyLDE1IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcHdyYXBfc2x2X3R5cGUgcG1pY19t
+dDYzOTcgPSB7DQogCS5wd3JhcF93cml0ZSA9IHB3cmFwX3dyaXRlMTYsDQogfTsNCiANCitzdGF0
+aWMgY29uc3Qgc3RydWN0IHB3cmFwX3Nsdl90eXBlIHBtaWNfbXQ2MzUxID0gew0KKwkuZGV3X3Jl
+Z3MgPSBtdDYzNTFfcmVncywNCisJLnR5cGUgPSBQTUlDX01UNjM1MSwNCisJLnJlZ21hcCA9ICZh
+bXA7cHdyYXBfcmVnbWFwX2NvbmZpZzE2LA0KKwkuY2FwcyA9IDAsDQorCS5wd3JhcF9yZWFkID0g
+cHdyYXBfcmVhZDE2LA0KKwkucHdyYXBfd3JpdGUgPSBwd3JhcF93cml0ZTE2LA0KK307DQorDQog
+c3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgb2Zfc2xhdmVfbWF0Y2hfdGJsW10gPSB7
+DQogCXsNCiAJCS5jb21wYXRpYmxlID0gJnF1b3Q7bWVkaWF0ZWssbXQ2MzIzJnF1b3Q7LA0KQEAg
+LTE0NDksNiArMTQ3NSw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG9mX3Ns
+YXZlX21hdGNoX3RibFtdID0gew0KIAkJLmNvbXBhdGlibGUgPSAmcXVvdDttZWRpYXRlayxtdDYz
+OTcmcXVvdDssDQogCQkuZGF0YSA9ICZhbXA7cG1pY19tdDYzOTcsDQogCX0sIHsNCisJCS5jb21w
+YXRpYmxlID0gJnF1b3Q7bWVkaWF0ZWssbXQ2MzUxJnF1b3Q7LA0KKwkJLmRhdGEgPSAmYW1wO3Bt
+aWNfbXQ2MzUxLA0KKwl9LCB7DQogCQkvKiBzZW50aW5lbCAqLw0KIAl9DQogfTsNCi0tIA0KMi4x
+Mi41DQoNCjwvcHJlPjwhLS10eXBlOnRleHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioqKiBF
+bWFpbCBDb25maWRlbnRpYWxpdHkgTm90aWNlICoqKioqKioqKioqKioqKioqKioqDQpUaGUgaW5m
+b3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkg
+DQphdHRhY2htZW50cykgbWF5IGJlIGNvbmZpZGVudGlhbCwgcHJvcHJpZXRhcnksIHByaXZpbGVn
+ZWQsIG9yIG90aGVyd2lzZQ0KZXhlbXB0IGZyb20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxl
+IGxhd3MuIEl0IGlzIGludGVuZGVkIHRvIGJlIA0KY29udmV5ZWQgb25seSB0byB0aGUgZGVzaWdu
+YXRlZCByZWNpcGllbnQocykuIEFueSB1c2UsIGRpc3NlbWluYXRpb24sIA0KZGlzdHJpYnV0aW9u
+LCBwcmludGluZywgcmV0YWluaW5nIG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1ZGlu
+ZyBpdHMgDQphdHRhY2htZW50cykgYnkgdW5pbnRlbmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0
+bHkgcHJvaGliaXRlZCBhbmQgbWF5IA0KYmUgdW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFuIGlu
+dGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUtbWFpbCwgb3IgYmVsaWV2ZSANCnRoYXQgeW91IGhh
+dmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRl
+ciANCmltbWVkaWF0ZWx5IChieSByZXBseWluZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBhbnkg
+YW5kIGFsbCBjb3BpZXMgb2YgDQp0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2htZW50
+cykgZnJvbSB5b3VyIHN5c3RlbSwgYW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQgb2Yg
+dGhpcyBlLW1haWwgdG8gYW55IG90aGVyIHBlcnNvbi4gVGhhbmsgeW91ITwvcHJlPjwhLS19LS0+
 
- drivers/media/i2c/ov772x.c | 34 ++++++++++++++++++++++++++++++----
- 1 file changed, 30 insertions(+), 4 deletions(-)
+--__=_Part_Boundary_002_1453069988.1123629566
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 2b02411..6c0c792 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -424,6 +424,9 @@ struct ov772x_priv {
- 	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
- 	unsigned short                    band_filter;
- 	unsigned int			  fps;
-+	/* lock to protect power_count */
-+	struct mutex			  lock;
-+	int				  power_count;
- #ifdef CONFIG_MEDIA_CONTROLLER
- 	struct media_pad pad;
- #endif
-@@ -871,9 +874,26 @@ static int ov772x_power_off(struct ov772x_priv *priv)
- static int ov772x_s_power(struct v4l2_subdev *sd, int on)
- {
- 	struct ov772x_priv *priv = to_ov772x(sd);
-+	int ret = 0;
-+
-+	mutex_lock(&priv->lock);
-+
-+	/* If the power count is modified from 0 to != 0 or from != 0 to 0,
-+	 * update the power state.
-+	 */
-+	if (priv->power_count == !on)
-+		ret = on ? ov772x_power_on(priv) : ov772x_power_off(priv);
-+
-+	if (!ret) {
-+		/* Update the power count. */
-+		priv->power_count += on ? 1 : -1;
-+		WARN(priv->power_count < 0, "Unbalanced power count\n");
-+		WARN(priv->power_count > 1, "Duplicated s_power call\n");
-+	}
-+
-+	mutex_unlock(&priv->lock);
- 
--	return on ? ov772x_power_on(priv) :
--		    ov772x_power_off(priv);
-+	return ret;
- }
- 
- static const struct ov772x_win_size *ov772x_select_win(u32 width, u32 height)
-@@ -1303,6 +1323,7 @@ static int ov772x_probe(struct i2c_client *client,
- 		return -ENOMEM;
- 
- 	priv->info = client->dev.platform_data;
-+	mutex_init(&priv->lock);
- 
- 	v4l2_i2c_subdev_init(&priv->subdev, client, &ov772x_subdev_ops);
- 	v4l2_ctrl_handler_init(&priv->hdl, 3);
-@@ -1313,8 +1334,10 @@ static int ov772x_probe(struct i2c_client *client,
- 	v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
- 			  V4L2_CID_BAND_STOP_FILTER, 0, 256, 1, 0);
- 	priv->subdev.ctrl_handler = &priv->hdl;
--	if (priv->hdl.error)
--		return priv->hdl.error;
-+	if (priv->hdl.error) {
-+		ret = priv->hdl.error;
-+		goto error_mutex_destroy;
-+	}
- 
- 	priv->clk = clk_get(&client->dev, NULL);
- 	if (IS_ERR(priv->clk)) {
-@@ -1362,6 +1385,8 @@ static int ov772x_probe(struct i2c_client *client,
- 	clk_put(priv->clk);
- error_ctrl_free:
- 	v4l2_ctrl_handler_free(&priv->hdl);
-+error_mutex_destroy:
-+	mutex_destroy(&priv->lock);
- 
- 	return ret;
- }
-@@ -1376,6 +1401,7 @@ static int ov772x_remove(struct i2c_client *client)
- 		gpiod_put(priv->pwdn_gpio);
- 	v4l2_async_unregister_subdev(&priv->subdev);
- 	v4l2_ctrl_handler_free(&priv->hdl);
-+	mutex_destroy(&priv->lock);
- 
- 	return 0;
- }
--- 
-2.7.4
+RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQptdDYzNTEgaXMgYSBu
+ZXcgcG93ZXIgbWFuYWdlbWVudCBJQyBhbmQgaXQgaXMNCnVzZWQgZm9yIG10Njc5NyBTb0NzLiBX
+ZSBuZWVkIHRvIGFkZCBtdDYzNTFfcmVncyBmb3INCnBtaWMgcmVnaXN0ZXIgbWFwcGluZyBhbmQg
+cG1pY19tdDYzNTEgZm9yDQpyZWdpc3RlciBhY2Nlc3NpbmcgYnkgcmVnbWFwLg0KDQpTaWduZWQt
+b2ZmLWJ5OiBBcmd1cyBMaW4gPGFyZ3VzLmxpbkBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJz
+L3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMgfCAyOSArKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAyOSBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQg
+YS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMgYi9kcml2ZXJzL3NvYy9tZWRp
+YXRlay9tdGstcG1pYy13cmFwLmMNCmluZGV4IDI4NWJmYTc2MjQ5Zi4uMjYwNzY5MDBlZWUwIDEw
+MDY0NA0KLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQorKysgYi9k
+cml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMNCkBAIC0xNTIsNiArMTUyLDIxIEBA
+IHN0YXRpYyBjb25zdCB1MzIgbXQ2Mzk3X3JlZ3NbXSA9IHsNCiAJW1BXUkFQX0RFV19DSVBIRVJf
+U1dSU1RdID0JMHhiYzI0LA0KIH07DQogDQorc3RhdGljIGNvbnN0IHUzMiBtdDYzNTFfcmVnc1td
+ID0gew0KKwlbUFdSQVBfREVXX0RJT19FTl0gPQkJMHgwMkYyLA0KKwlbUFdSQVBfREVXX1JFQURf
+VEVTVF0gPQkJMHgwMkY0LA0KKwlbUFdSQVBfREVXX1dSSVRFX1RFU1RdID0JMHgwMkY2LA0KKwlb
+UFdSQVBfREVXX0NSQ19FTl0gPQkJMHgwMkZBLA0KKwlbUFdSQVBfREVXX0NSQ19WQUxdID0JCTB4
+MDJGQywNCisJW1BXUkFQX0RFV19DSVBIRVJfS0VZX1NFTF0gPQkweDAzMDAsDQorCVtQV1JBUF9E
+RVdfQ0lQSEVSX0lWX1NFTF0gPQkweDAzMDIsDQorCVtQV1JBUF9ERVdfQ0lQSEVSX0VOXSA9CQkw
+eDAzMDQsDQorCVtQV1JBUF9ERVdfQ0lQSEVSX1JEWV0gPQkweDAzMDYsDQorCVtQV1JBUF9ERVdf
+Q0lQSEVSX01PREVdID0JMHgwMzA4LA0KKwlbUFdSQVBfREVXX0NJUEhFUl9TV1JTVF0gPQkweDAz
+MEEsDQorCVtQV1JBUF9ERVdfUkRETVlfTk9dID0JCTB4MDMwQywNCit9Ow0KKw0KIGVudW0gcHdy
+YXBfcmVncyB7DQogCVBXUkFQX01VWF9TRUwsDQogCVBXUkFQX1dSQVBfRU4sDQpAQCAtNjg0LDYg
+KzY5OSw3IEBAIHN0YXRpYyBpbnQgbXQ4MTM1X3JlZ3NbXSA9IHsNCiANCiBlbnVtIHBtaWNfdHlw
+ZSB7DQogCVBNSUNfTVQ2MzIzLA0KKwlQTUlDX01UNjM1MSwNCiAJUE1JQ19NVDYzODAsDQogCVBN
+SUNfTVQ2Mzk3LA0KIH07DQpAQCAtMTE1MCw2ICsxMTY2LDcgQEAgc3RhdGljIGludCBwd3JhcF9p
+bml0X2NpcGhlcihzdHJ1Y3QgcG1pY193cmFwcGVyICp3cnApDQogCQkJICAgIDB4MSk7DQogCQli
+cmVhazsNCiAJY2FzZSBQTUlDX01UNjMyMzoNCisJY2FzZSBQTUlDX01UNjM1MToNCiAJCXB3cmFw
+X3dyaXRlKHdycCwgd3JwLT5zbGF2ZS0+ZGV3X3JlZ3NbUFdSQVBfREVXX0NJUEhFUl9FTl0sDQog
+CQkJICAgIDB4MSk7DQogCQlicmVhazsNCkBAIC0xNDM1LDYgKzE0NTIsMTUgQEAgc3RhdGljIGNv
+bnN0IHN0cnVjdCBwd3JhcF9zbHZfdHlwZSBwbWljX210NjM5NyA9IHsNCiAJLnB3cmFwX3dyaXRl
+ID0gcHdyYXBfd3JpdGUxNiwNCiB9Ow0KIA0KK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcHdyYXBfc2x2
+X3R5cGUgcG1pY19tdDYzNTEgPSB7DQorCS5kZXdfcmVncyA9IG10NjM1MV9yZWdzLA0KKwkudHlw
+ZSA9IFBNSUNfTVQ2MzUxLA0KKwkucmVnbWFwID0gJnB3cmFwX3JlZ21hcF9jb25maWcxNiwNCisJ
+LmNhcHMgPSAwLA0KKwkucHdyYXBfcmVhZCA9IHB3cmFwX3JlYWQxNiwNCisJLnB3cmFwX3dyaXRl
+ID0gcHdyYXBfd3JpdGUxNiwNCit9Ow0KKw0KIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNl
+X2lkIG9mX3NsYXZlX21hdGNoX3RibFtdID0gew0KIAl7DQogCQkuY29tcGF0aWJsZSA9ICJtZWRp
+YXRlayxtdDYzMjMiLA0KQEAgLTE0NDksNiArMTQ3NSw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+b2ZfZGV2aWNlX2lkIG9mX3NsYXZlX21hdGNoX3RibFtdID0gew0KIAkJLmNvbXBhdGlibGUgPSAi
+bWVkaWF0ZWssbXQ2Mzk3IiwNCiAJCS5kYXRhID0gJnBtaWNfbXQ2Mzk3LA0KIAl9LCB7DQorCQku
+Y29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDYzNTEiLA0KKwkJLmRhdGEgPSAmcG1pY19tdDYzNTEs
+DQorCX0sIHsNCiAJCS8qIHNlbnRpbmVsICovDQogCX0NCiB9Ow0KLS0gDQoyLjEyLjUNCg==
 
+--__=_Part_Boundary_002_1453069988.1123629566--
+
+--__=_Part_Boundary_001_1145140192.1023605711--
