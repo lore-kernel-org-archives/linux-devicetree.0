@@ -1,112 +1,133 @@
-From: Christophe ROULLIER <christophe.roullier@st.com>
-Subject: RE: [PATCH  2/8] dt-bindings: stm32-dwmac: add support of MPU
- families
-Date: Wed, 2 May 2018 08:15:07 +0000
-Message-ID: <8e49db87619b4577863b3d677ab71dd6@SFHDAG5NODE3.st.com>
-References: <1524582120-4451-1-git-send-email-christophe.roullier@st.com>
- <1524582120-4451-3-git-send-email-christophe.roullier@st.com>
- <20180501135848.GA12597@rob-hp-laptop>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
+Date: Wed, 2 May 2018 10:16:37 +0200
+Message-ID: <20180502081637.GE2285@localhost>
+References: <20180424163458.11947-1-johan@kernel.org>
+ <20180424163458.11947-5-johan@kernel.org>
+ <CAL_Jsq+mCp=geT8t_j+0fuTxAB7C9RYn6pESRpLc2GH273fM1Q@mail.gmail.com>
+ <20180426091018.GU4615@localhost>
+ <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180501135848.GA12597@rob-hp-laptop>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Peppe CAVALLARO <peppe.cavallaro@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-My answers below under "CRO"
-
-Thanks.
-Christophe
-
------Original Message-----
-From: Rob Herring [mailto:robh@kernel.org] 
-Sent: mardi 1 mai 2018 15:59
-To: Christophe ROULLIER <christophe.roullier@st.com>
-Cc: mark.rutland@arm.com; mcoquelin.stm32@gmail.com; Alexandre TORGUE <alexandre.torgue@st.com>; Peppe CAVALLARO <peppe.cavallaro@st.com>; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; netdev@vger.kernel.org
-Subject: Re: [PATCH 2/8] dt-bindings: stm32-dwmac: add support of MPU families
-
-On Tue, Apr 24, 2018 at 05:01:54PM +0200, Christophe Roullier wrote:
-> Add description for Ethernet MPU families fields
+On Tue, May 01, 2018 at 09:05:42AM -0500, Rob Herring wrote:
+> On Thu, Apr 26, 2018 at 4:10 AM, Johan Hovold <johan@kernel.org> wrote:
+> > On Wed, Apr 25, 2018 at 01:16:58PM -0500, Rob Herring wrote:
+> >> On Tue, Apr 24, 2018 at 11:34 AM, Johan Hovold <johan@kernel.org> wrote:
+> >> > Add binding for u-blox GNSS receivers.
+> >> >
+> >> > Note that the u-blox product names encodes form factor (e.g. "neo"),
+> >> > chipset (e.g. "8") and variant (e.g. "q"), but that only formfactor and
+> >> > chipset is used for the compatible strings (for now).
+> >> >
+> >> > Signed-off-by: Johan Hovold <johan@kernel.org>
+> >> > ---
+> >> >  .../devicetree/bindings/gnss/u-blox.txt       | 31 +++++++++++++++++++
+> >> >  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+> >> >  2 files changed, 32 insertions(+)
+> >> >  create mode 100644 Documentation/devicetree/bindings/gnss/u-blox.txt
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/gnss/u-blox.txt b/Documentation/devicetree/bindings/gnss/u-blox.txt
+> >> > new file mode 100644
+> >> > index 000000000000..bb54b83a177f
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/gnss/u-blox.txt
+> >> > @@ -0,0 +1,31 @@
+> >> > +u-blox GNSS Receiver DT binding
+> >> > +
+> >> > +The u-blox GNSS receivers can use UART, DDC (I2C), SPI and USB interfaces.
+> >> > +
+> >> > +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
+> >> > +properties.
+> >> > +
+> >> > +Required Properties:
+> >> > +
+> >> > +- compatible   : Must be one of
+> >> > +
+> >> > +                       "u-blox,neo-8"
+> >> > +                       "u-blox,neo-m8"
+> >> > +
+> >> > +- vcc-supply   : Main voltage regulator (VCC)
+> >>
+> >> What about V_BCKP?
+> >
+> > That's the backup supply for for the RTC and batter-backed RAM. In
+> > configurations where a battery is not used it should be connected to
+> > VCC.
+> >
+> > How would you model that? I can enable a vbckp regulator at probe, but
+> > what if someone then accurately describes the corresponding pin as being
+> > connected to VCC?
 > 
-> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
-> ---
->  Documentation/devicetree/bindings/net/stm32-dwmac.txt | 16 
-> ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
+> You mean how to model a battery? It would just be a 'regulator'
+> because the regulator binding covers any supply really.
 > 
-> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt 
-> b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-> index 489dbcb..e9d1c4a 100644
-> --- a/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-> @@ -6,14 +6,26 @@ Please see stmmac.txt for the other unchanged properties.
->  The device node has following properties.
->  
->  Required properties:
-> -- compatible:  Should be "st,stm32-dwmac" to select glue, and
-> +- compatible:  For MCU family should be "st,stm32-dwmac" to select 
-> +glue, and
->  	       "snps,dwmac-3.50a" to select IP version.
-> +	       For MPU family should be "st,stm32mp1-dwmac" to select
-> +	       glue, and "snps,dwmac-4.20a" to select IP version.
->  - clocks: Must contain a phandle for each entry in clock-names.
->  - clock-names: Should be "stmmaceth" for the host clock.
->  	       Should be "mac-clk-tx" for the MAC TX clock.
->  	       Should be "mac-clk-rx" for the MAC RX clock.
-> +	       For MPU family "ethstp" for power mode clock.
-> +	       For MPU family need also "syscfg-clk" for SYSCFG clock.
+> Then you just set both rails to the same supply phandle.
 
-These are in addition or instead of the first 3 clocks.
-CRO: This is in addition of the first 3 clocks, I will modified my comment:
->>  - clock-names: Should be "stmmaceth" for the host clock.
->>  	       Should be "mac-clk-tx" for the MAC TX clock.
->>  	       Should be "mac-clk-rx" for the MAC RX clock.
->> +	       For MPU family need to add also "ethstp" for power mode clock and,
->> +	                                                                   "syscfg-clk" for SYSCFG clock.
+Yes, but...
 
-> +- interrupt-names: Should contain a list of interrupt names corresponding to
-> +           the interrupts in the interrupts property, if available.
-
-You need to list the names. Seems unrelated to MPU support.
-CRO: 		   
-> +- interrupt-names: Should contain a list of interrupt names corresponding to
-> +           the interrupts in the interrupts property, if available.
-        + Should be "macirq" for the main MAC IT
-        + Should be "eth_wake_irq" for the IT which wake up system
-
->  - st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
-> -	      encompases the glue register, and the offset of the control register.
-> +	       encompases the glue register, and the offset of the control register.
-> +
-> +Optional properties:
-> +- clock-names:     For MPU family "mac-clk-ck" for PHY without quartz
-
-The clock is always connected whether you use it or not, right? So it shouldn't be optional based on use.
-CRO: Yes the clock is always connected but it is not necessary to enable it if you have phy with quartz (it will not use)
-So it is optional.
-
-> +- st,int-phyclk :  valid only where PHY do not have quartz and need to be clock
-> +	           by RCC
-
-Boolean?
-CRO: Yes
-> +- st,int-phyclk (boolean) :  valid only where PHY do not have quartz and need to be clock
-
-Is it ok ?
-
-> +
->  Example:
->  
->  	ethernet@40028000 {
-> --
-> 1.9.1
+> > I guess we can check if the regulators are identical,
+> > and then just have the driver ignore V_BKUP. Knowing whether there is
+> > a (hopefully charged) battery connected could be useful.
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" 
-> in the body of a message to majordomo@vger.kernel.org More majordomo 
-> info at  http://vger.kernel.org/majordomo-info.html
+> Regulators are ref counted, so just enable it twice. Or the driver can
+> just ignore it until it supports battery backup.
+
+...my point was that in case there's no backup battery, you don't want
+to enable vcc (via v_bckp) at probe (and instead have the device cold
+boot whenever it's used).
+
+Hence, the driver would need to check if the v_bckp-supply is identical
+to vcc and not enable the former at probe in that case (i.e. similar to
+if no v_bckp had been specified and we considered it optional).
+
+> >> > +- timepulse-gpios      : Timepulse (e.g. 1PPS) GPIO (TIMEPULSE)
+> >>
+> >> Why the 3rd "TIMEPULSE"?
+> >
+> > That's the pin name, which in this case is identical to the property
+> > name, so I'll drop it here.
+> 
+> Then what is the 2nd "Timepulse"?
+
+That's the generic function name.
+
+> Maybe just a "pin name: X" prefix so it is clear.
+
+For u-blox devices, where property-, function- and pin name coincide, I
+could just change this to:
+
++- timepulse-gpios      : Timepulse GPIO
+
+and then for the sirfstar binding, which will be used by devices from
+multiple vendors which have decided to name their pins differently, I
+can add a "pin name: " prefix for clarity?
+
+> > Take a look at the sirf binding; vendors use different names for their
+> > timepulse pins and in that case I added the actual pin names (1PPS, TM)
+> > in parenthesis after the description.
+> >
+> > Note that I mentioned "timepulse-gpios" in the generic binding with the
+> > intent of trying to enforce a generic name for pins with such a
+> > function (similarly for "enable-gpios", which I guess is already
+> > established).
+> 
+> Yes, I think that's good.
+> 
+> Though with the enable-gpios I was debating the name for sirfstar a
+> bit because it isn't the normal drive it active to enable, but rather
+> a pulse to enable or disable.
+
+I had some concerns along those lines as well, and if you agree I'll
+change the property name to on_off-gpios (or onoff-gpios) which matches
+the vendor data sheets for this pin, and which I think would be better.
+
+Thanks,
+Johan
