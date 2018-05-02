@@ -1,95 +1,95 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: allwinner: h6: enable MMC0/2 on
- Pine H64
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77980: add CAN-FD support
 Date: Wed, 2 May 2018 11:36:01 +0200
-Message-ID: <20180502093601.fvkacdv62aqxshbr@flea>
-References: <20180426140728.43155-1-icenowy@aosc.io>
- <20180426140728.43155-4-icenowy@aosc.io>
- <03cc2e8c-4a35-3fb4-b408-fd8d4ba3e407@arm.com>
- <83EDF187-5EB2-4FEB-99BC-9D5B728D3A45@aosc.io>
- <45956397-a593-e51e-8637-655178c5901c@arm.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+Message-ID: <20180502093601.6wokrocz4knh33ds@verge.net.au>
+References: <c184f961-2f98-532f-ed02-6f3751256d9c@cogentembedded.com>
+ <f07c00b3-228c-e0d2-f7fe-38b8e9f25a4d@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hitkphtdp4xe2f6f"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDENU3LQKGQEPZTZ6AQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <45956397-a593-e51e-8637-655178c5901c-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <f07c00b3-228c-e0d2-f7fe-38b8e9f25a4d@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---hitkphtdp4xe2f6f
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Mon, Apr 30, 2018 at 10:47:35AM +0100, Andre Przywara wrote:
-> >> I am just asking because I want to avoid running into the same problem
-> >> as with the A64 before: that future DTs become incompatible with older
-> >> kernels, because we change the power supply to point to the AXP
-> >> regulators, which this kernel does not support yet.
-> > 
-> > The answer is just not to keep this compatibility, as it's not
-> > supported option to update DT without updating kernel.
+On Fri, Apr 27, 2018 at 10:12:51PM +0300, Sergei Shtylyov wrote:
+> Define the generic R8A77980 part of the CAN-FD device node.
 > 
-> Well, I recognise that statement.. ;-) and I understand that it's far
-> easier to handle it this way. But:
-> - Which .dtb are we going to write into the SPI flash? An older one,
-> which covers all kernels, but lacks features? Or a newer one, which
-> limits the bootable kernels to recent versions?
-> - Which DT are we going to give to EFI applications?
-> - Which DT are the BSDs suspected to take? They don't ship their own DTs
-> (which is good!).
+> Based on the original (and large) patch by Vladimir Barinov.
 > 
-> So I understand that "shipping the DT with the kernel" is the old
-> (embedded!) way of doing things, but I really believe we should stop
-> relying on this and try to come up with backwards compatible DTs, which
-> live in the firmware and get updated there. Because this is what the
-> distros seem to expect from ARM64 boards these days.
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-You're not talking about backward compatibility, you're talking about
-forward compatibility. All the changes in this patch and the one
-predicted by Icenowy are backward compatible.
+Thanks applied with the minor update noted below.
 
-> >> It looks like there are more users of those power rails, so we could
-> >> keep those supplies connected to these fixed regulators here, even with
-> >> AXP-805 support in the kernel.
-> > 
-> > It's not a good choice.
-> > 
-> >>
-> >> Or we keep this back until we get proper AXP support in the kernel? I
-> >> guess it's quite close to the existing PMICs, so it might be more a
-> >> copy&paste exercise to support the AXP-805?
-> > 
-> > It's not a reason to keep it back.
 > 
-> So I compared the manuals of the AXP806 and the AXP805, the register
-> interface looks identical to me. I only have a (somewhat) Chinese
-> version of the AXP806 manual, so couldn't really find the difference
-> between the two. Do you know more about it? Is it just maybe the
-> packaging and the electrical properties (like max current supported)?
->
-> If the I2C register interface is really the same, we could just add the
-> DT nodes for the regulator and be done.
+> ---
+>  arch/arm64/boot/dts/renesas/r8a77980.dtsi |   31 ++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+> 
+> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> @@ -38,6 +38,13 @@
+>  		};
+>  	};
+>  
+> +	/* External CAN clock - to be overridden by boards that provide it */
+> +	can_clk: can {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <0>;
+> +	};
+> +
+>  	extal_clk: extal {
+>  		compatible = "fixed-clock";
+>  		#clock-cells = <0>;
+> @@ -170,6 +177,30 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		canfd: can@e66c0000 {
+> +			compatible = "renesas,r8a77980-canfd",
+> +				     "renesas,rcar-gen3-canfd";
+> +			reg = <0 0xe66c0000 0 0x8000>;
+> +			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 914>,
+> +			         <&cpg CPG_CORE R8A77980_CLK_CANFD>,
 
-And that argument is only valid if you 100% trust the fact that both
-datasheet are complete and accurate.
+checkpatch tells me that line above uses spaces for indentation where
+a tab could be used. I fixed that up when applying the patch.
 
-And experience show that you can't.
+> +				 <&can_clk>;
 
-Maxime
-
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---hitkphtdp4xe2f6f--
+> +			clock-names = "fck", "canfd", "can_clk";
+> +			assigned-clocks = <&cpg CPG_CORE R8A77980_CLK_CANFD>;
+> +			assigned-clock-rates = <40000000>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			status = "disabled";
+> +
+> +			channel0 {
+> +				status = "disabled";
+> +			};
+> +
+> +			channel1 {
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+>  		avb: ethernet@e6800000 {
+>  			compatible = "renesas,etheravb-r8a77980",
+>  				     "renesas,etheravb-rcar-gen3";
+> 
