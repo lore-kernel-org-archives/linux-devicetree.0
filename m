@@ -1,55 +1,122 @@
-Return-Path: <SRS0=gzwM=HX=linuxtv.org=mchehab@kernel.org>
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Date: Fri, 04 May 2018 10:34:22 +0000
-Subject: [git:media_tree/master] media: dt-bindings: Add bindings for panasonic,amg88xx
-Reply-to: linux-media@vger.kernel.org
-Message-Id: <E1fEaes-0003q2-6E@www.linuxtv.org>
-To: linuxtv-commits@linuxtv.org
-Cc: Hans Verkuil <hansverk@cisco.com>, devicetree@vger.kernel.org, Matt Ranostay <matt.ranostay@konsulko.com>, Rob Herring <robh@kernel.org>
+Return-Path: <SRS0=COmU=HV=mediatek.com=argus.lin@kernel.org>
+From: <argus.lin@mediatek.com>
+Subject: [PATCH V4 4/8] soc: mediatek: pwrap: add int1_en_all flag
+Date: Wed, 2 May 2018 17:21:08 +0800
+Message-ID: <20180502092112.3991-5-argus.lin@mediatek.com>
+In-Reply-To: <20180502092112.3991-1-argus.lin@mediatek.com>
+References: <20180502092112.3991-1-argus.lin@mediatek.com>
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_004_864314571.613696300"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-This is an automatic generated email to let you know that the following patch were queued:
+--__=_Part_Boundary_004_864314571.613696300
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_005_574804347.341949974"
 
-Subject: media: dt-bindings: Add bindings for panasonic,amg88xx
-Author:  Matt Ranostay <matt.ranostay@konsulko.com>
-Date:    Fri Apr 6 18:52:30 2018 -0400
+--__=_Part_Boundary_005_574804347.341949974
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-Define the device tree bindings for the panasonic,amg88xx i2c
-video driver.
+PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
+TVQ2Nzk3IHN1cHBvcnQgaW50MV9lbiBmbGFnIGZvciBzdGFydmF0aW9uDQphbmQgY21kX21pc3Mg
+ZXhjZXB0aW9uIGludGVycnVwdC4gV2UgYWRkDQphIG5ldyBmbGFnIGludDFfZW5fYWxsIHRvIGNo
+ZWNrIGlmIHdlIG5lZWQNCnRvIGVuYWJsZSBpbnRlcnJ1cHQgc291cmNlIG9yIG5vdC4NCg0KU2ln
+bmVkLW9mZi1ieTogQXJndXMgTGluICZsdDthcmd1cy5saW5AbWVkaWF0ZWsuY29tJmd0Ow0KLS0t
+DQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jIHwgNSArKysrKw0KIDEgZmls
+ZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21l
+ZGlhdGVrL210ay1wbWljLXdyYXAuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdy
+YXAuYw0KaW5kZXggOTExYTg1MDhmMzlmLi5hNjM2NmYxNDdiNzkgMTAwNjQ0DQotLS0gYS9kcml2
+ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMNCisrKyBiL2RyaXZlcnMvc29jL21lZGlh
+dGVrL210ay1wbWljLXdyYXAuYw0KQEAgLTY4Nyw2ICs2ODcsNyBAQCBzdHJ1Y3QgcG1pY193cmFw
+cGVyX3R5cGUgew0KIAllbnVtIHB3cmFwX3R5cGUgdHlwZTsNCiAJdTMyIGFyYl9lbl9hbGw7DQog
+CXUzMiBpbnRfZW5fYWxsOw0KKwl1MzIgaW50MV9lbl9hbGw7DQogCXUzMiBzcGlfdzsNCiAJdTMy
+IHdkdF9zcmM7DQogCS8qIEZsYWdzIGluZGljYXRpbmcgdGhlIGNhcGFiaWxpdHkgZm9yIHRoZSB0
+YXJnZXQgcHdyYXAgKi8NCkBAIC0xMzk4LDYgKzEzOTksNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0
+IHBtaWNfd3JhcHBlcl90eXBlIHB3cmFwX210MjcwMSA9IHsNCiAJLnR5cGUgPSBQV1JBUF9NVDI3
+MDEsDQogCS5hcmJfZW5fYWxsID0gMHgzZiwNCiAJLmludF9lbl9hbGwgPSB+KHUzMikoQklUKDMx
+KSB8IEJJVCgyKSksDQorCS5pbnQxX2VuX2FsbCA9IDAsDQogCS5zcGlfdyA9IFBXUkFQX01BTl9D
+TURfU1BJX1dSSVRFX05FVywNCiAJLndkdF9zcmMgPSBQV1JBUF9XRFRfU1JDX01BU0tfQUxMLA0K
+IAkuY2FwcyA9IFBXUkFQX0NBUF9SRVNFVCB8IFBXUkFQX0NBUF9EQ00sDQpAQCAtMTQxMCw2ICsx
+NDEyLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwbWljX3dyYXBwZXJfdHlwZSBwd3JhcF9tdDc2
+MjIgPSB7DQogCS50eXBlID0gUFdSQVBfTVQ3NjIyLA0KIAkuYXJiX2VuX2FsbCA9IDB4ZmYsDQog
+CS5pbnRfZW5fYWxsID0gfih1MzIpQklUKDMxKSwNCisJLmludDFfZW5fYWxsID0gMCwNCiAJLnNw
+aV93ID0gUFdSQVBfTUFOX0NNRF9TUElfV1JJVEUsDQogCS53ZHRfc3JjID0gUFdSQVBfV0RUX1NS
+Q19NQVNLX0FMTCwNCiAJLmNhcHMgPSBQV1JBUF9DQVBfUkVTRVQgfCBQV1JBUF9DQVBfRENNLA0K
+QEAgLTE0MjIsNiArMTQyNSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcG1pY193cmFwcGVyX3R5
+cGUgcHdyYXBfbXQ4MTM1ID0gew0KIAkudHlwZSA9IFBXUkFQX01UODEzNSwNCiAJLmFyYl9lbl9h
+bGwgPSAweDFmZiwNCiAJLmludF9lbl9hbGwgPSB+KHUzMikoQklUKDMxKSB8IEJJVCgxKSksDQor
+CS5pbnQxX2VuX2FsbCA9IDAsDQogCS5zcGlfdyA9IFBXUkFQX01BTl9DTURfU1BJX1dSSVRFLA0K
+IAkud2R0X3NyYyA9IFBXUkFQX1dEVF9TUkNfTUFTS19BTEwsDQogCS5jYXBzID0gUFdSQVBfQ0FQ
+X0JSSURHRSB8IFBXUkFQX0NBUF9SRVNFVCB8IFBXUkFQX0NBUF9EQ00sDQpAQCAtMTQzNCw2ICsx
+NDM4LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwbWljX3dyYXBwZXJfdHlwZSBwd3JhcF9tdDgx
+NzMgPSB7DQogCS50eXBlID0gUFdSQVBfTVQ4MTczLA0KIAkuYXJiX2VuX2FsbCA9IDB4M2YsDQog
+CS5pbnRfZW5fYWxsID0gfih1MzIpKEJJVCgzMSkgfCBCSVQoMSkpLA0KKwkuaW50MV9lbl9hbGwg
+PSAwLA0KIAkuc3BpX3cgPSBQV1JBUF9NQU5fQ01EX1NQSV9XUklURSwNCiAJLndkdF9zcmMgPSBQ
+V1JBUF9XRFRfU1JDX01BU0tfTk9fU1RBVVBELA0KIAkuY2FwcyA9IFBXUkFQX0NBUF9SRVNFVCB8
+IFBXUkFQX0NBUF9EQ00sDQotLSANCjIuMTIuNQ0KDQo8L3ByZT48IS0tdHlwZTp0ZXh0LS0+PCEt
+LXstLT48cHJlPioqKioqKioqKioqKiogRW1haWwgQ29uZmlkZW50aWFsaXR5IE5vdGljZSAqKioq
+KioqKioqKioqKioqKioqKg0KVGhlIGluZm9ybWF0aW9uIGNvbnRhaW5lZCBpbiB0aGlzIGUtbWFp
+bCBtZXNzYWdlIChpbmNsdWRpbmcgYW55IA0KYXR0YWNobWVudHMpIG1heSBiZSBjb25maWRlbnRp
+YWwsIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2VkLCBvciBvdGhlcndpc2UNCmV4ZW1wdCBmcm9tIGRp
+c2Nsb3N1cmUgdW5kZXIgYXBwbGljYWJsZSBsYXdzLiBJdCBpcyBpbnRlbmRlZCB0byBiZSANCmNv
+bnZleWVkIG9ubHkgdG8gdGhlIGRlc2lnbmF0ZWQgcmVjaXBpZW50KHMpLiBBbnkgdXNlLCBkaXNz
+ZW1pbmF0aW9uLCANCmRpc3RyaWJ1dGlvbiwgcHJpbnRpbmcsIHJldGFpbmluZyBvciBjb3B5aW5n
+IG9mIHRoaXMgZS1tYWlsIChpbmNsdWRpbmcgaXRzIA0KYXR0YWNobWVudHMpIGJ5IHVuaW50ZW5k
+ZWQgcmVjaXBpZW50KHMpIGlzIHN0cmljdGx5IHByb2hpYml0ZWQgYW5kIG1heSANCmJlIHVubGF3
+ZnVsLiBJZiB5b3UgYXJlIG5vdCBhbiBpbnRlbmRlZCByZWNpcGllbnQgb2YgdGhpcyBlLW1haWws
+IG9yIGJlbGlldmUgDQp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWlsIGluIGVycm9y
+LCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQppbW1lZGlhdGVseSAoYnkgcmVwbHlpbmcgdG8g
+dGhpcyBlLW1haWwpLCBkZWxldGUgYW55IGFuZCBhbGwgY29waWVzIG9mIA0KdGhpcyBlLW1haWwg
+KGluY2x1ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBzeXN0ZW0sIGFuZCBkbyBub3QN
+CmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBvdGhlciBwZXJzb24u
+IFRoYW5rIHlvdSE8L3ByZT48IS0tfS0tPg==
 
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
-Signed-off-by: Hans Verkuil <hansverk@cisco.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+--__=_Part_Boundary_005_574804347.341949974
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
- .../bindings/media/i2c/panasonic,amg88xx.txt          | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQpNVDY3OTcgc3VwcG9y
+dCBpbnQxX2VuIGZsYWcgZm9yIHN0YXJ2YXRpb24NCmFuZCBjbWRfbWlzcyBleGNlcHRpb24gaW50
+ZXJydXB0LiBXZSBhZGQNCmEgbmV3IGZsYWcgaW50MV9lbl9hbGwgdG8gY2hlY2sgaWYgd2UgbmVl
+ZA0KdG8gZW5hYmxlIGludGVycnVwdCBzb3VyY2Ugb3Igbm90Lg0KDQpTaWduZWQtb2ZmLWJ5OiBB
+cmd1cyBMaW4gPGFyZ3VzLmxpbkBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL3NvYy9tZWRp
+YXRlay9tdGstcG1pYy13cmFwLmMgfCA1ICsrKysrDQogMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0
+aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3Jh
+cC5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQppbmRleCA5MTFhODUw
+OGYzOWYuLmE2MzY2ZjE0N2I3OSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210
+ay1wbWljLXdyYXAuYw0KKysrIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5j
+DQpAQCAtNjg3LDYgKzY4Nyw3IEBAIHN0cnVjdCBwbWljX3dyYXBwZXJfdHlwZSB7DQogCWVudW0g
+cHdyYXBfdHlwZSB0eXBlOw0KIAl1MzIgYXJiX2VuX2FsbDsNCiAJdTMyIGludF9lbl9hbGw7DQor
+CXUzMiBpbnQxX2VuX2FsbDsNCiAJdTMyIHNwaV93Ow0KIAl1MzIgd2R0X3NyYzsNCiAJLyogRmxh
+Z3MgaW5kaWNhdGluZyB0aGUgY2FwYWJpbGl0eSBmb3IgdGhlIHRhcmdldCBwd3JhcCAqLw0KQEAg
+LTEzOTgsNiArMTM5OSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcG1pY193cmFwcGVyX3R5cGUg
+cHdyYXBfbXQyNzAxID0gew0KIAkudHlwZSA9IFBXUkFQX01UMjcwMSwNCiAJLmFyYl9lbl9hbGwg
+PSAweDNmLA0KIAkuaW50X2VuX2FsbCA9IH4odTMyKShCSVQoMzEpIHwgQklUKDIpKSwNCisJLmlu
+dDFfZW5fYWxsID0gMCwNCiAJLnNwaV93ID0gUFdSQVBfTUFOX0NNRF9TUElfV1JJVEVfTkVXLA0K
+IAkud2R0X3NyYyA9IFBXUkFQX1dEVF9TUkNfTUFTS19BTEwsDQogCS5jYXBzID0gUFdSQVBfQ0FQ
+X1JFU0VUIHwgUFdSQVBfQ0FQX0RDTSwNCkBAIC0xNDEwLDYgKzE0MTIsNyBAQCBzdGF0aWMgY29u
+c3Qgc3RydWN0IHBtaWNfd3JhcHBlcl90eXBlIHB3cmFwX210NzYyMiA9IHsNCiAJLnR5cGUgPSBQ
+V1JBUF9NVDc2MjIsDQogCS5hcmJfZW5fYWxsID0gMHhmZiwNCiAJLmludF9lbl9hbGwgPSB+KHUz
+MilCSVQoMzEpLA0KKwkuaW50MV9lbl9hbGwgPSAwLA0KIAkuc3BpX3cgPSBQV1JBUF9NQU5fQ01E
+X1NQSV9XUklURSwNCiAJLndkdF9zcmMgPSBQV1JBUF9XRFRfU1JDX01BU0tfQUxMLA0KIAkuY2Fw
+cyA9IFBXUkFQX0NBUF9SRVNFVCB8IFBXUkFQX0NBUF9EQ00sDQpAQCAtMTQyMiw2ICsxNDI1LDcg
+QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwbWljX3dyYXBwZXJfdHlwZSBwd3JhcF9tdDgxMzUgPSB7
+DQogCS50eXBlID0gUFdSQVBfTVQ4MTM1LA0KIAkuYXJiX2VuX2FsbCA9IDB4MWZmLA0KIAkuaW50
+X2VuX2FsbCA9IH4odTMyKShCSVQoMzEpIHwgQklUKDEpKSwNCisJLmludDFfZW5fYWxsID0gMCwN
+CiAJLnNwaV93ID0gUFdSQVBfTUFOX0NNRF9TUElfV1JJVEUsDQogCS53ZHRfc3JjID0gUFdSQVBf
+V0RUX1NSQ19NQVNLX0FMTCwNCiAJLmNhcHMgPSBQV1JBUF9DQVBfQlJJREdFIHwgUFdSQVBfQ0FQ
+X1JFU0VUIHwgUFdSQVBfQ0FQX0RDTSwNCkBAIC0xNDM0LDYgKzE0MzgsNyBAQCBzdGF0aWMgY29u
+c3Qgc3RydWN0IHBtaWNfd3JhcHBlcl90eXBlIHB3cmFwX210ODE3MyA9IHsNCiAJLnR5cGUgPSBQ
+V1JBUF9NVDgxNzMsDQogCS5hcmJfZW5fYWxsID0gMHgzZiwNCiAJLmludF9lbl9hbGwgPSB+KHUz
+MikoQklUKDMxKSB8IEJJVCgxKSksDQorCS5pbnQxX2VuX2FsbCA9IDAsDQogCS5zcGlfdyA9IFBX
+UkFQX01BTl9DTURfU1BJX1dSSVRFLA0KIAkud2R0X3NyYyA9IFBXUkFQX1dEVF9TUkNfTUFTS19O
+T19TVEFVUEQsDQogCS5jYXBzID0gUFdSQVBfQ0FQX1JFU0VUIHwgUFdSQVBfQ0FQX0RDTSwNCi0t
+IA0KMi4xMi41DQo=
 
----
+--__=_Part_Boundary_005_574804347.341949974--
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/panasonic,amg88xx.txt b/Documentation/devicetree/bindings/media/i2c/panasonic,amg88xx.txt
-new file mode 100644
-index 000000000000..4a3181a3dd7e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/panasonic,amg88xx.txt
-@@ -0,0 +1,19 @@
-+* Panasonic AMG88xx
-+
-+The Panasonic family of AMG88xx Grid-Eye sensors allow recording
-+8x8 10Hz video which consists of thermal datapoints
-+
-+Required Properties:
-+ - compatible : Must be "panasonic,amg88xx"
-+ - reg : i2c address of the device
-+
-+Example:
-+
-+	i2c0@1c22000 {
-+		...
-+		amg88xx@69 {
-+			compatible = "panasonic,amg88xx";
-+			reg = <0x69>;
-+		};
-+		...
-+	};
+--__=_Part_Boundary_004_864314571.613696300--
