@@ -1,7 +1,7 @@
 From: Christophe Roullier <christophe.roullier@st.com>
-Subject: [PATCH V2 8/8] dt-bindings: stm32: add compatible for syscon
-Date: Wed, 2 May 2018 16:18:43 +0200
-Message-ID: <1525270723-18241-9-git-send-email-christophe.roullier@st.com>
+Subject: [PATCH V2 2/8] dt-bindings: stm32-dwmac: add support of MPU families
+Date: Wed, 2 May 2018 16:18:37 +0200
+Message-ID: <1525270723-18241-3-git-send-email-christophe.roullier@st.com>
 References: <1525270723-18241-1-git-send-email-christophe.roullier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,24 +12,47 @@ To: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, pe
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, christophe.roullier@st.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-This patch describes syscon DT bindings.
+Add description for Ethernet MPU families fields
 
 Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 ---
- Documentation/devicetree/bindings/arm/stm32.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/net/stm32-dwmac.txt | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/stm32.txt b/Documentation/devicetree/bindings/arm/stm32.txt
-index 6808ed9..06e3834 100644
---- a/Documentation/devicetree/bindings/arm/stm32.txt
-+++ b/Documentation/devicetree/bindings/arm/stm32.txt
-@@ -8,3 +8,7 @@ using one of the following compatible strings:
-   st,stm32f746
-   st,stm32h743
-   st,stm32mp157
+diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+index 489dbcb..1341012 100644
+--- a/Documentation/devicetree/bindings/net/stm32-dwmac.txt
++++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+@@ -6,14 +6,28 @@ Please see stmmac.txt for the other unchanged properties.
+ The device node has following properties.
+ 
+ Required properties:
+-- compatible:  Should be "st,stm32-dwmac" to select glue, and
++- compatible:  For MCU family should be "st,stm32-dwmac" to select glue, and
+ 	       "snps,dwmac-3.50a" to select IP version.
++	       For MPU family should be "st,stm32mp1-dwmac" to select
++	       glue, and "snps,dwmac-4.20a" to select IP version.
+ - clocks: Must contain a phandle for each entry in clock-names.
+ - clock-names: Should be "stmmaceth" for the host clock.
+ 	       Should be "mac-clk-tx" for the MAC TX clock.
+ 	       Should be "mac-clk-rx" for the MAC RX clock.
++	       For MPU family need to add also "ethstp" for power mode clock and,
++	                                       "syscfg-clk" for SYSCFG clock.
++- interrupt-names: Should contain a list of interrupt names corresponding to
++           the interrupts in the interrupts property, if available.
++		   Should be "macirq" for the main MAC IRQ
++		   Should be "eth_wake_irq" for the IT which wake up system
+ - st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
+-	      encompases the glue register, and the offset of the control register.
++	       encompases the glue register, and the offset of the control register.
 +
-+Required nodes:
-+- syscon: the soc bus node must have a system controller node pointing to the
-+  global control registers, with the compatible string "syscon";
++Optional properties:
++- clock-names:     For MPU family "mac-clk-ck" for PHY without quartz
++- st,int-phyclk (boolean) :  valid only where PHY do not have quartz and need to be clock
++	           by RCC
++
+ Example:
+ 
+ 	ethernet@40028000 {
 -- 
 1.9.1
