@@ -1,33 +1,66 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v2 0/3] Add support for STM32MP1 ADC
-Date: Wed, 2 May 2018 09:44:48 +0200
-Message-ID: <1525247091-18143-1-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH v2 3/3] ARM: dts: stm32: Add ADC support to stm32mp157c
+Date: Wed, 2 May 2018 09:44:51 +0200
+Message-ID: <1525247091-18143-4-git-send-email-fabrice.gasnier@st.com>
+References: <1525247091-18143-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1525247091-18143-1-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: jic23@kernel.org, robh+dt@kernel.org, alexandre.torgue@st.com
 Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, fabrice.gasnier@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, benjamin.gaignard@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for STM32MP1 Analog to Digital Converter variant.
-It's quite similar to STM32H7 ADC and re-use most of existing driver.
+stm32mp157c has an ADC block with two physical ADCs.
 
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
-Changes in v2:
-- Update dt-bindings following Rob's remark: STM32MP1 ADC has two
-  interrupt lines
+ arch/arm/boot/dts/stm32mp157c.dtsi | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-Fabrice Gasnier (3):
-  dt-bindings: iio: stm32-adc: add support for STM32MP1
-  iio: adc: stm32-adc: add support for STM32MP1
-  ARM: dts: stm32: Add ADC support to stm32mp157c
-
- .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |  6 +-
- arch/arm/boot/dts/stm32mp157c.dtsi                 | 32 +++++++++++
- drivers/iio/adc/stm32-adc-core.c                   | 66 ++++++++++++++++------
- drivers/iio/adc/stm32-adc.c                        | 47 +++++++++++++--
- 4 files changed, 128 insertions(+), 23 deletions(-)
-
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index bc3eddc..7758a90 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -160,6 +160,38 @@
+ 			status = "disabled";
+ 		};
+ 
++		adc: adc@48003000 {
++			compatible = "st,stm32mp1-adc-core";
++			reg = <0x48003000 0x400>;
++			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&rcc ADC12>, <&rcc ADC12_K>;
++			clock-names = "bus", "adc";
++			interrupt-controller;
++			#interrupt-cells = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++
++			adc1: adc@0 {
++				compatible = "st,stm32mp1-adc";
++				#io-channel-cells = <1>;
++				reg = <0x0>;
++				interrupt-parent = <&adc>;
++				interrupts = <0>;
++				status = "disabled";
++			};
++
++			adc2: adc@100 {
++				compatible = "st,stm32mp1-adc";
++				#io-channel-cells = <1>;
++				reg = <0x100>;
++				interrupt-parent = <&adc>;
++				interrupts = <1>;
++				status = "disabled";
++			};
++		};
++
+ 		rcc: rcc@50000000 {
+ 			compatible = "st,stm32mp1-rcc", "syscon";
+ 			reg = <0x50000000 0x1000>;
 -- 
 1.9.1
