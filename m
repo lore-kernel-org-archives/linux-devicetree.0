@@ -1,7 +1,7 @@
 From: Manu Gautam <mgautam@codeaurora.org>
 Subject: [PATCH v5 0/7] phy: qcom: Updates for USB PHYs on SDM845
-Date: Thu,  3 May 2018 02:30:06 +0530
-Message-ID: <1525294813-15225-1-git-send-email-mgautam@codeaurora.org>
+Date: Thu,  3 May 2018 02:36:07 +0530
+Message-ID: <1525295174-15995-1-git-send-email-mgautam@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kishon Vijay Abraham I <kishon@ti.com>, robh@kernel.org, sboyd@kernel.org
