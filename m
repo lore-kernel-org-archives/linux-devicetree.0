@@ -1,7 +1,7 @@
 From: Stephen Boyd <sboyd@kernel.org>
 Subject: Re: [PATCH 2/2] clk: qcom: clk-rpmh: Add QCOM RPMh clock driver
-Date: Wed, 02 May 2018 08:27:08 -0700
-Message-ID: <152527482828.138124.7114901348273696817@swboyd.mtv.corp.google.com>
+Date: Wed, 02 May 2018 08:30:04 -0700
+Message-ID: <152527500426.138124.18419525952886399750@swboyd.mtv.corp.google.com>
 References: <1525258277-3478-1-git-send-email-tdas@codeaurora.org>
  <1525258277-3478-3-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
@@ -15,43 +15,47 @@ Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Ra
 List-Id: devicetree@vger.kernel.org
 
 Quoting Taniya Das (2018-05-02 03:51:17)
+> +               ret =3D devm_clk_hw_register(&pdev->dev, hw_clks[i]);
+> +               if (ret) {
+> +                       dev_err(&pdev->dev, "failed to register %s\n",
+> +                                       hw_clks[i]->init->name);
+> +                       goto err;
+> +               }
 > +
-> +static DEFINE_MUTEX(rpmh_clk_lock);
+> +               rpmh_clk->dev =3D &pdev->dev;
+> +       }
 > +
-> +#define __DEFINE_CLK_RPMH(_platform, _name, _name_active, _res_name,   \
-> +                         _res_en_offset, _res_on)                      \
-> +       static struct clk_rpmh _platform##_##_name_active;              \
-> +       static struct clk_rpmh _platform##_##_name =3D {                 =
- \
-> +               .res_name =3D _res_name,                                 =
- \
-> +               .res_addr =3D _res_en_offset,                            =
- \
-> +               .res_on_val =3D _res_on,                                 =
- \
-> +               .peer =3D &_platform##_##_name_active,                   =
- \
-> +               .valid_state_mask =3D (BIT(RPMH_WAKE_ONLY_STATE) |       =
- \
-> +                                     BIT(RPMH_ACTIVE_ONLY_STATE) |     \
-> +                                     BIT(RPMH_SLEEP_STATE)),           \
-> +               .hw.init =3D &(struct clk_init_data){                    =
- \
-> +                       .ops =3D &clk_rpmh_ops,                          =
- \
-> +                       .name =3D #_name,                                =
- \
-> +                       .parent_names =3D (const char *[]){ "xo_board",  =
- \
-> +                                               "xo_board_div" },       \
+> +       ret =3D devm_of_clk_add_hw_provider(&pdev->dev, of_clk_rpmh_hw_ge=
+t,
+> +                                     (void *) desc);
 
-The rpmh clks that do a div 2 can have a recalc_rate function that
-returns the xo_board clk rate divided by 2 all the time. That may be
-easier to do. Keep xo_board as parent, but then specify if it does div-2
-or div-1 in the SoC specific listing. Then DT can only show 38.4 MHz.
-The div 2 part is inside the SoC anyway so this seems more accurate too.
+Drop the void cast.
 
-> +                       .num_parents =3D 2,                              =
- \
-> +               },                                                      \
-> +       };                                                              \
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Failed to add clock provider\n");
+> +               goto err;
+> +       }
+> +
+> +       dev_dbg(&pdev->dev, "Registered RPMh clocks\n");
+> +
+> +       return 0;
+> +err:
+> +       if (rpmh_client)
+> +               rpmh_release(rpmh_client);
+> +
+> +       return ret;
+> +}
+> +
+> +static int clk_rpmh_remove(struct platform_device *pdev)
+> +{
+> +       const struct clk_rpmh_desc *desc =3D
+> +                       of_device_get_match_data(&pdev->dev);
+> +       struct clk_hw **hw_clks =3D desc->clks;
+> +       struct clk_rpmh *rpmh_clk =3D to_clk_rpmh(hw_clks[0]);
+> +
+> +       rpmh_release(rpmh_clk->rpmh_client);
+> +
+> +       return 0;
+> +}
+
+I'll review Lina's series again. Still hoping to drop the client thing.
