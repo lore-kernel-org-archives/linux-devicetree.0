@@ -1,172 +1,48 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH 2/2] arm64: dts: mt7622: add audio related device nodes
-Date: Wed, 2 May 2018 11:53:58 +0800
-Message-ID: <1525233238.14792.14.camel@mtkswgap22>
-References: <d208e8cf93f18b97ee9cf24cdd0220aa44188b8b.1525231985.git.sean.wang@mediatek.com>
-         <e48bc87f54d7f2e06664ee358822aa9a9e34256b.1525231985.git.sean.wang@mediatek.com>
+From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v5 0/4] Add suppport for sn65dsi86 bridge chip
+ and Innolux 2k edp panel
+Date: Wed,  2 May 2018 10:01:58 +0530
+Message-ID: <1525235522-8954-1-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e48bc87f54d7f2e06664ee358822aa9a9e34256b.1525231985.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: matthias.bgg@gmail.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Matthias
-
-On Wed, 2018-05-02 at 11:41 +0800, sean.wang@mediatek.com wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
-> 
-> Add audio device nodes and its proper setup for all used pins
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 11 +++-
->  arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 89 ++++++++++++++++++++++++++++
->  2 files changed, 98 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-> index 45d8655..b783764 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-> @@ -18,7 +18,7 @@
->  	compatible = "mediatek,mt7622-rfb1", "mediatek,mt7622";
->  
->  	chosen {
-> -		bootargs = "console=ttyS0,115200n1";
-> +		bootargs = "console=ttyS0,115200n1 swiotlb=512";
->  	};
->  
->  	cpus {
-> @@ -163,10 +163,17 @@
->  	i2s1_pins: i2s1-pins {
->  		mux {
->  			function = "i2s";
-> -			groups =  "i2s_out_bclk_ws_mclk",
-> +			groups =  "i2s_out_mclk_bclk_ws",
-
-The old one ("i2s_out_bclk_ws_mclk") should be the indecisive value when
-I initially worked on the pinctrl device.
-
-It has to be corrected with "i2s_out_mclk_bclk_ws" to comply with the
-final dt-bindings.
-
->  				  "i2s1_in_data",
->  				  "i2s1_out_data";
->  		};
-> +
-> +		conf {
-> +			pins = "I2S1_IN", "I2S1_OUT", "I2S_BCLK",
-> +			       "I2S_WS", "I2S_MCLK";
-> +			drive-strength = <12>;
-> +			bias-pull-down;
-> +		};
->  	};
->  
->  	irrx_pins: irrx-pins {
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> index 6bbabb6..9213c96 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> @@ -527,6 +527,95 @@
->  		status = "disabled";
->  	};
->  
-> +	audsys: clock-controller@11220000 {
-> +		compatible = "mediatek,mt7622-audsys", "syscon";
-> +		reg = <0 0x11220000 0 0x2000>;
-> +		#clock-cells = <1>;
-
-The binding have been through broonie/sound.git around a week ago
-
-> +
-> +		afe: audio-controller {
-> +			compatible = "mediatek,mt7622-audio";
-> +			interrupts =  <GIC_SPI 144 IRQ_TYPE_LEVEL_LOW>,
-> +				      <GIC_SPI 145 IRQ_TYPE_LEVEL_LOW>;
-> +			interrupt-names	= "afe", "asys";
-> +
-> +			clocks = <&infracfg CLK_INFRA_AUDIO_PD>,
-> +				 <&topckgen CLK_TOP_AUD1_SEL>,
-> +				 <&topckgen CLK_TOP_AUD2_SEL>,
-> +				 <&topckgen CLK_TOP_A1SYS_HP_DIV_PD>,
-> +				 <&topckgen CLK_TOP_A2SYS_HP_DIV_PD>,
-> +				 <&topckgen CLK_TOP_I2S0_MCK_SEL>,
-> +				 <&topckgen CLK_TOP_I2S1_MCK_SEL>,
-> +				 <&topckgen CLK_TOP_I2S2_MCK_SEL>,
-> +				 <&topckgen CLK_TOP_I2S3_MCK_SEL>,
-> +				 <&topckgen CLK_TOP_I2S0_MCK_DIV>,
-> +				 <&topckgen CLK_TOP_I2S1_MCK_DIV>,
-> +				 <&topckgen CLK_TOP_I2S2_MCK_DIV>,
-> +				 <&topckgen CLK_TOP_I2S3_MCK_DIV>,
-> +				 <&topckgen CLK_TOP_I2S0_MCK_DIV_PD>,
-> +				 <&topckgen CLK_TOP_I2S1_MCK_DIV_PD>,
-> +				 <&topckgen CLK_TOP_I2S2_MCK_DIV_PD>,
-> +				 <&topckgen CLK_TOP_I2S3_MCK_DIV_PD>,
-> +				 <&audsys CLK_AUDIO_I2SO1>,
-> +				 <&audsys CLK_AUDIO_I2SO2>,
-> +				 <&audsys CLK_AUDIO_I2SO3>,
-> +				 <&audsys CLK_AUDIO_I2SO4>,
-> +				 <&audsys CLK_AUDIO_I2SIN1>,
-> +				 <&audsys CLK_AUDIO_I2SIN2>,
-> +				 <&audsys CLK_AUDIO_I2SIN3>,
-> +				 <&audsys CLK_AUDIO_I2SIN4>,
-> +				 <&audsys CLK_AUDIO_ASRCO1>,
-> +				 <&audsys CLK_AUDIO_ASRCO2>,
-> +				 <&audsys CLK_AUDIO_ASRCO3>,
-> +				 <&audsys CLK_AUDIO_ASRCO4>,
-> +				 <&audsys CLK_AUDIO_AFE>,
-> +				 <&audsys CLK_AUDIO_AFE_CONN>,
-> +				 <&audsys CLK_AUDIO_A1SYS>,
-> +				 <&audsys CLK_AUDIO_A2SYS>;
-> +
-> +			clock-names = "infra_sys_audio_clk",
-> +				      "top_audio_mux1_sel",
-> +				      "top_audio_mux2_sel",
-> +				      "top_audio_a1sys_hp",
-> +				      "top_audio_a2sys_hp",
-> +				      "i2s0_src_sel",
-> +				      "i2s1_src_sel",
-> +				      "i2s2_src_sel",
-> +				      "i2s3_src_sel",
-> +				      "i2s0_src_div",
-> +				      "i2s1_src_div",
-> +				      "i2s2_src_div",
-> +				      "i2s3_src_div",
-> +				      "i2s0_mclk_en",
-> +				      "i2s1_mclk_en",
-> +				      "i2s2_mclk_en",
-> +				      "i2s3_mclk_en",
-> +				      "i2so0_hop_ck",
-> +				      "i2so1_hop_ck",
-> +				      "i2so2_hop_ck",
-> +				      "i2so3_hop_ck",
-> +				      "i2si0_hop_ck",
-> +				      "i2si1_hop_ck",
-> +				      "i2si2_hop_ck",
-> +				      "i2si3_hop_ck",
-> +				      "asrc0_out_ck",
-> +				      "asrc1_out_ck",
-> +				      "asrc2_out_ck",
-> +				      "asrc3_out_ck",
-> +				      "audio_afe_pd",
-> +				      "audio_afe_conn_pd",
-> +				      "audio_a1sys_pd",
-> +				      "audio_a2sys_pd";
-> +
-> +			assigned-clocks = <&topckgen CLK_TOP_A1SYS_HP_SEL>,
-> +					  <&topckgen CLK_TOP_A2SYS_HP_SEL>,
-> +					  <&topckgen CLK_TOP_A1SYS_HP_DIV>,
-> +					  <&topckgen CLK_TOP_A2SYS_HP_DIV>;
-> +			assigned-clock-parents = <&topckgen CLK_TOP_AUD1PLL>,
-> +						 <&topckgen CLK_TOP_AUD2PLL>;
-> +			assigned-clock-rates = <0>, <0>, <49152000>, <45158400>;
-> +		};
-> +	};
-> +
->  	mmc0: mmc@11230000 {
->  		compatible = "mediatek,mt7622-mmc";
->  		reg = <0 0x11230000 0 0x1000>;
+Q2hhbmdlcyBpbiBjdXJyZW50IHBhdGNoc2V0OgogLSBTZXBhcmF0ZSBwYW5lbCBkcml2ZXIgY2hh
+bmdlIGZyb20gZHQtYmluZGluZyBkb2N1bWVudGF0aW9uLgogLSBBZGQgdGhlIHByb3BlcnRpZXMg
+ZnJvbSBzaW1wbGUtcGFuZWwgYmluZGluZyB0aGF0IGFyZSBhcHBsaWNhYmxlCiAgIHRvIHRoaXMg
+ZWRwIHBhbmVsIGR0LWJpbmRpbmcuCiAtIEZpeCB0aGUgd2FybmluZ3MgaW4gYnJpZGdlIGRyaXZl
+ciwgcmVwb3J0ZWQgYnkgS2J1aWxkIHRlc3Qgcm9ib3QuCgpTYW5kZWVwIFBhbmRhICg0KToKICBk
+cm0vYnJpZGdlOiBhZGQgc3VwcG9ydCBmb3Igc242NWRzaTg2IGJyaWRnZSBkcml2ZXIKICBkdC1i
+aW5kaW5nczogZHJtL2JyaWRnZTogRG9jdW1lbnQgc242NWRzaTg2IGJyaWRnZSBiaW5kaW5ncwog
+IGRybS9wYW5lbDogYWRkIElubm9sdXggVFYxMjNXQU0gcGFuZWwgZHJpdmVyIHN1cHBvcnQKICBk
+dC1iaW5kaW5nczogZHJtL3BhbmVsOiBEb2N1bWVudCBJbm5vbHV4IFRWMTIzV0FNIHBhbmVsIGJp
+bmRpbmdzCgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQgICAg
+ICAgfCAgNzYgKysrCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2Ft
+LnR4dCAgICB8ICAyMCArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAgICAg
+ICAgICAgICAgICB8ICAgOSArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAgICAg
+ICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXNuNjVkc2k4
+Ni5jICAgICAgICAgICAgICB8IDcyNSArKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1
+L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwgIDI3ICsKIDYgZmlsZXMg
+Y2hhbmdlZCwgODU4IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L3BhbmVsL2lubm9sdXgsdHYxMjN3YW0udHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9ncHUvZHJtL2JyaWRnZS90aS1zbjY1ZHNpODYuYwoKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0
+aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCmEg
+TGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJl
+ZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
