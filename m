@@ -1,149 +1,144 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH v5 1/3] mmc: dw_mmc-bluefield: Add driver extension
-Date: Wed, 2 May 2018 09:02:03 +0800
-Message-ID: <c95b926f-2129-c6de-7112-728eea9c7a3a@rock-chips.com>
-References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
- <1525198787-46403-1-git-send-email-lsun@mellanox.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v9 01/27] clk: davinci: pll: allow dev == NULL
+Date: Tue, 1 May 2018 20:44:47 -0500
+Message-ID: <5177c1e3-9004-0d6e-6707-caf3c7efc884@lechnology.com>
+References: <20180427001745.4116-1-david@lechnology.com>
+ <20180427001745.4116-2-david@lechnology.com>
+ <7f968fd3-eb0e-37ba-9f2d-2b948640ef73@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525198787-46403-1-git-send-email-lsun@mellanox.com>
+In-Reply-To: <7f968fd3-eb0e-37ba-9f2d-2b948640ef73@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liming Sun <lsun@mellanox.com>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, shawn.lin@rock-chips.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018/5/2 2:19, Liming Sun wrote:
-> This commit adds extension to the dw_mmc driver for Mellanox BlueField
-> SoC. It updates the UHS_REG_EXT register to bring up the eMMC card on
-> this SoC.
+On 05/01/2018 08:27 AM, Sekhar Nori wrote:
+> On Friday 27 April 2018 05:47 AM, David Lechner wrote:
+>> This modifies the TI DaVinci PLL clock driver to allow for the case
+>> when dev == NULL. On some (most) SoCs that use this driver, the PLL
+>> clock needs to be registered during early boot because it is used
+>> for clocksource/clockevent and there will be no platform device available.
+>>
+>> Signed-off-by: David Lechner <david@lechnology.com>
 > 
-> Cc: stable@kernel.org
-
-Why?
-
-> Signed-off-by: Liming Sun <lsun@mellanox.com>
-> Reviewed-by: David Woods <dwoods@mellanox.com>
-> ---
->   drivers/mmc/host/Kconfig            |  9 +++++
->   drivers/mmc/host/Makefile           |  1 +
->   drivers/mmc/host/dw_mmc-bluefield.c | 72 +++++++++++++++++++++++++++++++++++++
->   3 files changed, 82 insertions(+)
->   create mode 100644 drivers/mmc/host/dw_mmc-bluefield.c
+>> diff --git a/drivers/clk/davinci/pll.c b/drivers/clk/davinci/pll.c
+>> index 23a24c944f1d..7c4d808b8fdb 100644
+>> --- a/drivers/clk/davinci/pll.c
+>> +++ b/drivers/clk/davinci/pll.c
+>> @@ -111,6 +111,31 @@ struct davinci_pll_clk {
+>>   #define to_davinci_pll_clk(_hw) \
+>>   	container_of((_hw), struct davinci_pll_clk, hw)
+>>   
+>> +static inline void *_devm_kzalloc(struct device *dev, size_t size, gfp_t flags)
+>> +{
+>> +	if (dev)
+>> +		return devm_kzalloc(dev, size, flags);
+>> +
+>> +	return kzalloc(size, flags);
 > 
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 9589f9c..26ac6b5 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -717,6 +717,15 @@ config MMC_DW_K3
->   	  Synopsys DesignWare Memory Card Interface driver. Select this option
->   	  for platforms based on Hisilicon K3 SoC's.
->   
-> +config MMC_DW_BLUEFIELD
+> I would shift to using kzalloc() only. The utility of devm_kzalloc() is
+> gone if you cannot always rely on it since you have to handle the free
+> for the other case. Same thing for other devres APIs below.
+> 
 
-And did you have feedback of my comment in V2£¿
-http://lists-archives.com/linux-kernel/29104830-mmc-dw_mmc-bluefield-add-driver-extension.html
+I omitted the usual unwinding on failure since if a non-platform-device
+clock fails to init, then Linux won't boot anyway. I left the devm stuff
+in there since there is one case where this driver is still used as a
+platform device, thinking that there could be an EPROBE_DEFER. However
+I think all uses of these inline functions are after the last possible
+EPROBE_DEFER, so doing as you suggest is probably just fine.
 
-> +	tristate "BlueField specific extensions for Synopsys DW Memory Card Interface"
-> +	depends on MMC_DW
-> +	select MMC_DW_PLTFM
-> +	help
-> +	  This selects support for Mellanox BlueField SoC specific extensions to
-> +	  the Synopsys DesignWare Memory Card Interface driver. Select this
-> +	  option for platforms based on Mellanox BlueField SoC's.
-> +
->   config MMC_DW_PCI
->   	tristate "Synopsys Designware MCI support on PCI bus"
->   	depends on MMC_DW && PCI
-> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-> index 6aead24..267b3f1 100644
-> --- a/drivers/mmc/host/Makefile
-> +++ b/drivers/mmc/host/Makefile
-> @@ -55,6 +55,7 @@ obj-$(CONFIG_MMC_DW_K3)		+= dw_mmc-k3.o
->   obj-$(CONFIG_MMC_DW_PCI)	+= dw_mmc-pci.o
->   obj-$(CONFIG_MMC_DW_ROCKCHIP)	+= dw_mmc-rockchip.o
->   obj-$(CONFIG_MMC_DW_ZX)		+= dw_mmc-zx.o
-> +obj-$(CONFIG_MMC_DW_BLUEFIELD)	+= dw_mmc-bluefield.o
->   obj-$(CONFIG_MMC_SH_MMCIF)	+= sh_mmcif.o
->   obj-$(CONFIG_MMC_JZ4740)	+= jz4740_mmc.o
->   obj-$(CONFIG_MMC_VUB300)	+= vub300.o
-> diff --git a/drivers/mmc/host/dw_mmc-bluefield.c b/drivers/mmc/host/dw_mmc-bluefield.c
-> new file mode 100644
-> index 0000000..12067b1
-> --- /dev/null
-> +++ b/drivers/mmc/host/dw_mmc-bluefield.c
-> @@ -0,0 +1,72 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 Mellanox Technologies.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/io.h>
-> +#include <linux/irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/mmc/host.h>
-> +#include <linux/mmc/mmc.h>
-> +#include <linux/of.h>
-> +
-> +#include "dw_mmc.h"
-> +#include "dw_mmc-pltfm.h"
-> +
-> +static void dw_mci_bluefield_set_ios(struct dw_mci *host, struct mmc_ios *ios)
-> +{
-> +	u32 regs;
-> +
-> +	/* Set drive=4 (bit 29:23) and sample=2 (bit 22:16) in UHS_REG_EXT. */
-> +	regs = mci_readl(host, UHS_REG_EXT);
-> +	regs = (regs & ~0x3F100000 & ~0x7F0000) | (4 << 23) | (2 << 16);
-> +	mci_writel(host, UHS_REG_EXT, regs);
-> +}
-> +
-> +static const struct dw_mci_drv_data bluefield_drv_data = {
-> +	.set_ios		= dw_mci_bluefield_set_ios
-> +};
-> +
-> +static const struct of_device_id dw_mci_bluefield_match[] = {
-> +	{ .compatible = "mellanox,bluefield-dw-mshc",
-> +		.data = &bluefield_drv_data },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, dw_mci_bluefield_match);
-> +
-> +static int dw_mci_bluefield_probe(struct platform_device *pdev)
-> +{
-> +	const struct dw_mci_drv_data *drv_data = NULL;
-> +	const struct of_device_id *match;
-> +
-> +	if (pdev->dev.of_node) {
-> +		match = of_match_node(dw_mci_bluefield_match,
-> +				      pdev->dev.of_node);
-> +		drv_data = match->data;
-> +	}
-> +
-> +	return dw_mci_pltfm_register(pdev, drv_data);
-> +}
-> +
-> +static struct platform_driver dw_mci_bluefield_pltfm_driver = {
-> +	.probe		= dw_mci_bluefield_probe,
-> +	.remove		= dw_mci_pltfm_remove,
-> +	.driver		= {
-> +		.name		= "dwmmc_bluefield",
-> +		.of_match_table	= dw_mci_bluefield_match,
-> +		.pm		= &dw_mci_pltfm_pmops,
-> +	},
-> +};
-> +
-> +module_platform_driver(dw_mci_bluefield_pltfm_driver);
-> +
-> +MODULE_DESCRIPTION("BlueField DW Multimedia Card driver");
-> +MODULE_AUTHOR("Mellanox Technologies");
-> +MODULE_LICENSE("GPL v2");
+
+>> +}
+>> +
+>> +static inline void *_devm_kmalloc_array(struct device *dev, size_t n,
+>> +					size_t size, gfp_t flags)
+>> +{
+>> +	if (dev)
+>> +		return devm_kmalloc_array(dev, n, size, flags);
+>> +
+>> +	return kmalloc_array(n, size, flags);
+>> +}
+>> +
+>> +static inline struct clk *_devm_clk_register(struct device *dev, struct clk_hw *hw)
+>> +{
+>> +	if (dev)
+>> +		return devm_clk_register(dev, hw);
+>> +
+>> +	return clk_register(NULL, hw);
+>> +}
+>> +
+> 
+> 
+>> diff --git a/drivers/clk/davinci/pll.h b/drivers/clk/davinci/pll.h
+>> index b1b6fb23f972..92a0978a7d29 100644
+>> --- a/drivers/clk/davinci/pll.h
+>> +++ b/drivers/clk/davinci/pll.h
+>> @@ -11,6 +11,7 @@
+>>   #include <linux/bitops.h>
+>>   #include <linux/clk-provider.h>
+>>   #include <linux/of.h>
+>> +#include <linux/regmap.h>
+>>   #include <linux/types.h>
+>>   
+>>   #define PLL_HAS_CLKMODE			BIT(0) /* PLL has PLLCTL[CLKMODE] */
+>> @@ -94,7 +95,8 @@ struct davinci_pll_obsclk_info {
+>>   struct clk *davinci_pll_clk_register(struct device *dev,
+>>   				     const struct davinci_pll_clk_info *info,
+>>   				     const char *parent_name,
+>> -				     void __iomem *base);
+>> +				     void __iomem *base,
+>> +				     struct regmap *cfgchip);
+>>   struct clk *davinci_pll_auxclk_register(struct device *dev,
+>>   					const char *name,
+>>   					void __iomem *base);
+>> @@ -110,32 +112,33 @@ davinci_pll_sysclk_register(struct device *dev,
+>>   			    const struct davinci_pll_sysclk_info *info,
+>>   			    void __iomem *base);
+>>   
+>> -int of_davinci_pll_init(struct device *dev,
+>> +int of_davinci_pll_init(struct device *dev, struct device_node *node,
+>>   			const struct davinci_pll_clk_info *info,
+>>   			const struct davinci_pll_obsclk_info *obsclk_info,
+>>   			const struct davinci_pll_sysclk_info **div_info,
+>>   			u8 max_sysclk_id,
+>> -			void __iomem *base);
+>> +			void __iomem *base,
+>> +			struct regmap *cfgchip);
+>>   
+>>   /* Platform-specific callbacks */
+>>   
+>> -int da830_pll_init(struct device *dev, void __iomem *base);
+>> +int da830_pll_init(struct device *dev, void __iomem *base, struct regmap *cfgchip);
+>>   
+>> -int da850_pll0_init(struct device *dev, void __iomem *base);
+>> -int da850_pll1_init(struct device *dev, void __iomem *base);
+>> -int of_da850_pll0_init(struct device *dev, void __iomem *base);
+>> -int of_da850_pll1_init(struct device *dev, void __iomem *base);
+>> +int da850_pll0_init(struct device *dev, void __iomem *base, struct regmap *cfgchip);
+> 
+> Having this declared both here and in include/linux/clk/davinci.h is
+> strange. Can we include that file directly where its needed?
+> 
+
+Sure thing. There are a number of duplicates that can be eliminated.
+
+>> diff --git a/include/linux/clk/davinci.h b/include/linux/clk/davinci.h
+>> new file mode 100644
+>> index 000000000000..1298cca509ac
+>> --- /dev/null
+>> +++ b/include/linux/clk/davinci.h
+>> @@ -0,0 +1,24 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Clock driver for TI Davinci PSC controllers
+> 
+> PSC/PLL controllers.
+> 
+> Thanks,
+> Sekhar
 > 
