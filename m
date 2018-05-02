@@ -1,43 +1,27 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH 08/21] bindings: display: Add compatible for A64 HDMI PHY
-Date: Wed, 2 May 2018 11:57:22 +0530
-Message-ID: <CAMty3ZBBo41Odbife0WtPG__3qWaHZtkqUfOLTmqhzc_of+iYw@mail.gmail.com>
-References: <20180430114058.5061-1-jagan@amarulasolutions.com>
- <20180430114058.5061-9-jagan@amarulasolutions.com> <20180501161909.GA1728@rob-hp-laptop>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v8 12/12] ARM: shmobile: Convert file to use cntvoff
+Date: Wed, 2 May 2018 08:36:39 +0200
+Message-ID: <20180502063639.qa7bzqxzrejd4kh2@verge.net.au>
+References: <20180501123131.7738-1-mylene.josserand@bootlin.com>
+ <20180501123131.7738-13-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501161909.GA1728@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20180501123131.7738-13-mylene.josserand@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+To: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>
+Cc: linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, geert@linux-m68k.org, magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Tue, May 01, 2018 at 02:31:31PM +0200, Mylène Josserand wrote:
+> Now that a common function is available for CNTVOFF's
+> initialization, let's convert shmobile-apmu code to use
+> this function.
+> 
+> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On Tue, May 1, 2018 at 9:49 PM, Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Apr 30, 2018 at 05:10:45PM +0530, Jagan Teki wrote:
-> > HDMI PHY on Allwinner A64 has similar like H3/H5.
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> >  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> > index 9ea4353caadd..7dcd1d64dfe4 100644
-> > --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> > +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> > @@ -104,6 +104,7 @@ Required properties:
-> >    - compatible: value must be one of:
-> >      * allwinner,sun8i-a83t-hdmi-phy
-> >      * allwinner,sun8i-h3-hdmi-phy
-> > +    * allwinner,sun50i-a64-hdmi-phy
->
-> This should be one valid combination per line. The dts shows that the h3
-> string is a fallback which should be captured in the binding doc.
-
-The fallback compatible "allwinner,sun8i-h3-hdmi-phy" is already
-documented above, what we need to capture here? or did I miss anything
-here?
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
