@@ -1,35 +1,62 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH] dt-bindings: Add vendor prefix for Avnet, Inc.
-Date: Wed,  2 May 2018 10:17:57 +0200
-Message-ID: <d860eb7551e343fa59b77fd3e144a633186a8378.1525249073.git.michal.simek@xilinx.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH] arm: dts: am437x-sk-evm: add wilink8 support
+Date: Wed, 2 May 2018 14:00:52 +0530
+Message-ID: <abebf4a1-11d6-413b-a3c0-4f46ac6fc485@ti.com>
+References: <1525159453-32489-1-git-send-email-eyalr@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1525159453-32489-1-git-send-email-eyalr@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, Thierry Reding <treding@nvidia.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, SZ Lin <sz.lin@moxa.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To: Eyal Reizer <eyalreizer@gmail.com>, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Eyal Reizer <eyalr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-"Avnet, Inc. is one of the world's largest distributors of electronic
-components and embedded solutions." - Wikipedia.org
+On Tuesday 01 May 2018 12:54 PM, Eyal Reizer wrote:
+> enable mmc3 used for wlan and uart1 used for bluetooth
+> configure the gpios used for wlan and bluetooth controls
+> add fixed voltage regulator used for wlan power control
+> 
+> Signed-off-by: Eyal Reizer <eyalr@ti.com>
 
-Website: www.avnet.com
+ARM should be capitalized in subject line.
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+> +
+> +&mmc3 {
+> +	status = "okay";
+> +	/*
+> +	 * these are on the crossbar and are outlined in the
+> +	 * xbar-event-map element
+> +	 */
+> +	dmas = <&edma_xbar 30 0 1>,
+> +		<&edma_xbar 31 0 2>;
+> +	dma-names = "tx", "rx";
+> +	vmmc-supply = <&vmmcwl_fixed>;
+> +	bus-width = <4>;
+> +	pinctrl-names = "default", "sleep";
+> +	pinctrl-0 = <&mmc3_pins_default>;
+> +	pinctrl-1 = <&mmc3_pins_sleep>;
+> +	cap-power-off-card;
+> +	keep-power-in-suspend;
+> +	ti,non-removable;
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	wlcore: wlcore@0 {
 
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+wlcore@2
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index b5f978a4cac6..60272bbdbe09 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -47,6 +47,7 @@ auvidea Auvidea GmbH
- avago	Avago Technologies
- avia	avia semiconductor
- avic	Shanghai AVIC Optoelectronics Co., Ltd.
-+avnet	Avnet, Inc.
- axentia	Axentia Technologies AB
- axis	Axis Communications AB
- bananapi BIPAI KEJI LIMITED
--- 
-2.17.0
+> +		compatible = "ti,wl1835";
+> +		pinctrl-names = "default", "sleep";
+> +		pinctrl-0 = <&wlan_pins_default>;
+> +		pinctrl-1 = <&wlan_pins_sleep>;
+> +		reg = <2>;
+> +		interrupt-parent = <&gpio4>;
+> +		interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +};
+
+Thanks,
+Sekhar
