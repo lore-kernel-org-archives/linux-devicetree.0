@@ -1,54 +1,144 @@
-From: Alexander Graf <agraf@suse.de>
-Subject: Re: [RFC PATCH] driver core: make deferring probe forever optional
-Date: Wed, 2 May 2018 15:16:16 +0200
-Message-ID: <e7755330-bb6f-ad3a-fb82-7fc85a4cfac3@suse.de>
-References: <20180501213114.20183-1-robh@kernel.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
+Date: Wed, 2 May 2018 08:16:11 -0500
+Message-ID: <CAL_JsqLMtqS3X_2WiPQVoNovQAVTuXGH+XbN30DA5_moca3Kpw@mail.gmail.com>
+References: <20180424163458.11947-1-johan@kernel.org> <20180424163458.11947-5-johan@kernel.org>
+ <CAL_Jsq+mCp=geT8t_j+0fuTxAB7C9RYn6pESRpLc2GH273fM1Q@mail.gmail.com>
+ <20180426091018.GU4615@localhost> <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
+ <20180502081637.GE2285@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501213114.20183-1-robh@kernel.org>
-Content-Language: en-US
+In-Reply-To: <20180502081637.GE2285@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@kernel.org>, boot-architecture@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/01/2018 11:31 PM, Rob Herring wrote:
-> Deferred probe will currently wait forever on dependent devices to probe,
-> but sometimes a driver will never exist. It's also not always critical for
-> a driver to exist. Platforms can rely on default configuration from the
-> bootloader or reset defaults for things such as pinctrl and power domains.
-> This is often the case with initial platform support until various drivers
-> get enabled. There's at least 2 scenarios where deferred probe can render
-> a platform broken. Both involve using a DT which has more devices and
-> dependencies than the kernel supports. The 1st case is a driver may be
-> disabled in the kernel config. The 2nd case is the kernel version may
-> simply not have the dependent driver. This can happen if using a newer DT
-> (provided by firmware perhaps) with a stable kernel version.
+On Wed, May 2, 2018 at 3:16 AM, Johan Hovold <johan@kernel.org> wrote:
+> On Tue, May 01, 2018 at 09:05:42AM -0500, Rob Herring wrote:
+>> On Thu, Apr 26, 2018 at 4:10 AM, Johan Hovold <johan@kernel.org> wrote:
+>> > On Wed, Apr 25, 2018 at 01:16:58PM -0500, Rob Herring wrote:
+>> >> On Tue, Apr 24, 2018 at 11:34 AM, Johan Hovold <johan@kernel.org> wrote:
+>> >> > Add binding for u-blox GNSS receivers.
+>> >> >
+>> >> > Note that the u-blox product names encodes form factor (e.g. "neo"),
+>> >> > chipset (e.g. "8") and variant (e.g. "q"), but that only formfactor and
+>> >> > chipset is used for the compatible strings (for now).
+>> >> >
+>> >> > Signed-off-by: Johan Hovold <johan@kernel.org>
+>> >> > ---
+>> >> >  .../devicetree/bindings/gnss/u-blox.txt       | 31 +++++++++++++++++++
+>> >> >  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+>> >> >  2 files changed, 32 insertions(+)
+>> >> >  create mode 100644 Documentation/devicetree/bindings/gnss/u-blox.txt
+>> >> >
+>> >> > diff --git a/Documentation/devicetree/bindings/gnss/u-blox.txt b/Documentation/devicetree/bindings/gnss/u-blox.txt
+>> >> > new file mode 100644
+>> >> > index 000000000000..bb54b83a177f
+>> >> > --- /dev/null
+>> >> > +++ b/Documentation/devicetree/bindings/gnss/u-blox.txt
+>> >> > @@ -0,0 +1,31 @@
+>> >> > +u-blox GNSS Receiver DT binding
+>> >> > +
+>> >> > +The u-blox GNSS receivers can use UART, DDC (I2C), SPI and USB interfaces.
+>> >> > +
+>> >> > +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
+>> >> > +properties.
+>> >> > +
+>> >> > +Required Properties:
+>> >> > +
+>> >> > +- compatible   : Must be one of
+>> >> > +
+>> >> > +                       "u-blox,neo-8"
+>> >> > +                       "u-blox,neo-m8"
+>> >> > +
+>> >> > +- vcc-supply   : Main voltage regulator (VCC)
+>> >>
+>> >> What about V_BCKP?
+>> >
+>> > That's the backup supply for for the RTC and batter-backed RAM. In
+>> > configurations where a battery is not used it should be connected to
+>> > VCC.
+>> >
+>> > How would you model that? I can enable a vbckp regulator at probe, but
+>> > what if someone then accurately describes the corresponding pin as being
+>> > connected to VCC?
+>>
+>> You mean how to model a battery? It would just be a 'regulator'
+>> because the regulator binding covers any supply really.
+>>
+>> Then you just set both rails to the same supply phandle.
 >
-> Unfortunately, this change breaks with modules as we have no way of
-> knowing when modules are done loading. One possibility is to make this
-> opt in or out based on compatible strings rather than at a subsystem level.
-> Ideally this information could be extracted automatically somehow. OTOH,
-> maybe the lists are pretty small. There's only a handful of subsystems
-> that can be optional, and then only so many drivers in those that can be
-> modules (at least for pinctrl, many drivers are built-in only).
+> Yes, but...
 >
-> Cc: Alexander Graf <agraf@suse.de>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> This patch came out of a discussion on the ARM boot-architecture
-> list[1] about DT forwards and backwards compatibility issues. There are
-> issues with newer DTs breaking on older, stable kernels. Some of these
-> are difficult to solve, but cases of optional devices not having
-> kernel support should be solvable.
+>> > I guess we can check if the regulators are identical,
+>> > and then just have the driver ignore V_BKUP. Knowing whether there is
+>> > a (hopefully charged) battery connected could be useful.
+>>
+>> Regulators are ref counted, so just enable it twice. Or the driver can
+>> just ignore it until it supports battery backup.
+>
+> ...my point was that in case there's no backup battery, you don't want
+> to enable vcc (via v_bckp) at probe (and instead have the device cold
+> boot whenever it's used).
 
-I think this is a reasonable approach. Maybe this should be a CONFIG 
-option that disallows pinctrl drivers (and power domain later) to be =m? 
-Then by default we could force those drivers to be compiled in, but if 
-you really wanted to do kernel modules for pinctrl/pd you'd consciously 
-potentially lose forward compatibility.
+Wouldn't that result in very long acquisition times? I guess I was
+thinking Vcc would be always on when running and V_bckp was just for
+suspend.
 
+> Hence, the driver would need to check if the v_bckp-supply is identical
+> to vcc and not enable the former at probe in that case (i.e. similar to
+> if no v_bckp had been specified and we considered it optional).
 
-Alex
+I guess if that's the intended operation, then making it optional is fine.
+
+Rob
+
+>
+>> >> > +- timepulse-gpios      : Timepulse (e.g. 1PPS) GPIO (TIMEPULSE)
+>> >>
+>> >> Why the 3rd "TIMEPULSE"?
+>> >
+>> > That's the pin name, which in this case is identical to the property
+>> > name, so I'll drop it here.
+>>
+>> Then what is the 2nd "Timepulse"?
+>
+> That's the generic function name.
+>
+>> Maybe just a "pin name: X" prefix so it is clear.
+>
+> For u-blox devices, where property-, function- and pin name coincide, I
+> could just change this to:
+>
+> +- timepulse-gpios      : Timepulse GPIO
+>
+> and then for the sirfstar binding, which will be used by devices from
+> multiple vendors which have decided to name their pins differently, I
+> can add a "pin name: " prefix for clarity?
+
+Sounds good.
+
+>> > Take a look at the sirf binding; vendors use different names for their
+>> > timepulse pins and in that case I added the actual pin names (1PPS, TM)
+>> > in parenthesis after the description.
+>> >
+>> > Note that I mentioned "timepulse-gpios" in the generic binding with the
+>> > intent of trying to enforce a generic name for pins with such a
+>> > function (similarly for "enable-gpios", which I guess is already
+>> > established).
+>>
+>> Yes, I think that's good.
+>>
+>> Though with the enable-gpios I was debating the name for sirfstar a
+>> bit because it isn't the normal drive it active to enable, but rather
+>> a pulse to enable or disable.
+>
+> I had some concerns along those lines as well, and if you agree I'll
+> change the property name to on_off-gpios (or onoff-gpios) which matches
+> the vendor data sheets for this pin, and which I think would be better.
+
+Okay, just add a vendor prefix. And note that using '_' is discouraged.
+
+Rob
