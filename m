@@ -1,383 +1,149 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v6 2/7] PCI: rockchip: Split out common function to parse
- DT
-Date: Wed, 2 May 2018 08:57:43 +0800
-Message-ID: <0fd4a946-b9f1-5921-7815-5667a923e71c@rock-chips.com>
-References: <1524796697-160764-1-git-send-email-shawn.lin@rock-chips.com>
- <1524796751-161084-1-git-send-email-shawn.lin@rock-chips.com>
- <20180430145132.GD32033@e107981-ln.cambridge.arm.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v5 1/3] mmc: dw_mmc-bluefield: Add driver extension
+Date: Wed, 2 May 2018 09:02:03 +0800
+Message-ID: <c95b926f-2129-c6de-7112-728eea9c7a3a@rock-chips.com>
+References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+ <1525198787-46403-1-git-send-email-lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180430145132.GD32033-4tUPXFaYRHv6sAKXYmQ0tx/iLCjYCKR+VpNB7YpNyf8@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1525198787-46403-1-git-send-email-lsun@mellanox.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liming Sun <lsun@mellanox.com>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, shawn.lin@rock-chips.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+On 2018/5/2 2:19, Liming Sun wrote:
+> This commit adds extension to the dw_mmc driver for Mellanox BlueField
+> SoC. It updates the UHS_REG_EXT register to bring up the eMMC card on
+> this SoC.
+> 
+> Cc: stable@kernel.org
 
-On 2018/4/30 22:51, Lorenzo Pieralisi wrote:
-> On Fri, Apr 27, 2018 at 10:39:11AM +0800, Shawn Lin wrote:
->> Most of the DT properties are used for both of host and
->> EP drivrs, so this patch spilt them out to new function,
->> rockchip_pcie_parse_dt in pcie-rockchip.c and rename the
->> original function to rockchip_pcie_parse_host_dt to avoid
->> confusion. No functional changed intended.
-> 
-> If you read this commit log again you would notice that there
-> are typos and the formatting is non-compliant with:
-> 
-> https://marc.info/?l=linux-pci&m=150905742808166&w=2
-> 
-> I am fine with updating commit logs myself, that's not a problem, but I
-> wanted to make clear that you can easily spot these issues for future
-> postings too ;-)
-> 
+Why?
 
-My bad. Will be more careful for future postings. :)
+> Signed-off-by: Liming Sun <lsun@mellanox.com>
+> Reviewed-by: David Woods <dwoods@mellanox.com>
+> ---
+>   drivers/mmc/host/Kconfig            |  9 +++++
+>   drivers/mmc/host/Makefile           |  1 +
+>   drivers/mmc/host/dw_mmc-bluefield.c | 72 +++++++++++++++++++++++++++++++++++++
+>   3 files changed, 82 insertions(+)
+>   create mode 100644 drivers/mmc/host/dw_mmc-bluefield.c
+> 
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 9589f9c..26ac6b5 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -717,6 +717,15 @@ config MMC_DW_K3
+>   	  Synopsys DesignWare Memory Card Interface driver. Select this option
+>   	  for platforms based on Hisilicon K3 SoC's.
+>   
+> +config MMC_DW_BLUEFIELD
 
-> Lorenzo
-> 
->> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> Tested-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>
->> Changes in v6: None
->> Changes in v5: None
->> Changes in v4: None
->>
->>   drivers/pci/host/pcie-rockchip-host.c | 119 ++-----------------------------
->>   drivers/pci/host/pcie-rockchip.c      | 129 ++++++++++++++++++++++++++++++++++
->>   drivers/pci/host/pcie-rockchip.h      |   2 +
->>   3 files changed, 136 insertions(+), 114 deletions(-)
->>
->> diff --git a/drivers/pci/host/pcie-rockchip-host.c b/drivers/pci/host/pcie-rockchip-host.c
->> index fae9ecc..cf97130 100644
->> --- a/drivers/pci/host/pcie-rockchip-host.c
->> +++ b/drivers/pci/host/pcie-rockchip-host.c
->> @@ -705,130 +705,20 @@ static int rockchip_pcie_setup_irq(struct rockchip_pcie *rockchip)
->>   }
->>   
->>   /**
->> - * rockchip_pcie_parse_dt - Parse Device Tree
->> + * rockchip_pcie_parse_host_dt - Parse Device Tree
->>    * @rockchip: PCIe port information
->>    *
->>    * Return: '0' on success and error value on failure
->>    */
->> -static int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
->> +static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
->>   {
->>   	struct device *dev = rockchip->dev;
->> -	struct platform_device *pdev = to_platform_device(dev);
->> -	struct device_node *node = dev->of_node;
->> -	struct resource *regs;
->>   	int err;
->>   
->> -	regs = platform_get_resource_byname(pdev,
->> -					    IORESOURCE_MEM,
->> -					    "axi-base");
->> -	rockchip->reg_base = devm_pci_remap_cfg_resource(dev, regs);
->> -	if (IS_ERR(rockchip->reg_base))
->> -		return PTR_ERR(rockchip->reg_base);
->> -
->> -	regs = platform_get_resource_byname(pdev,
->> -					    IORESOURCE_MEM,
->> -					    "apb-base");
->> -	rockchip->apb_base = devm_ioremap_resource(dev, regs);
->> -	if (IS_ERR(rockchip->apb_base))
->> -		return PTR_ERR(rockchip->apb_base);
->> -
->> -	err = rockchip_pcie_get_phys(rockchip);
->> +	err = rockchip_pcie_parse_dt(rockchip);
->>   	if (err)
->>   		return err;
->>   
->> -	rockchip->lanes = 1;
->> -	err = of_property_read_u32(node, "num-lanes", &rockchip->lanes);
->> -	if (!err && (rockchip->lanes == 0 ||
->> -		     rockchip->lanes == 3 ||
->> -		     rockchip->lanes > 4)) {
->> -		dev_warn(dev, "invalid num-lanes, default to use one lane\n");
->> -		rockchip->lanes = 1;
->> -	}
->> -
->> -	rockchip->link_gen = of_pci_get_max_link_speed(node);
->> -	if (rockchip->link_gen < 0 || rockchip->link_gen > 2)
->> -		rockchip->link_gen = 2;
->> -
->> -	rockchip->core_rst = devm_reset_control_get_exclusive(dev, "core");
->> -	if (IS_ERR(rockchip->core_rst)) {
->> -		if (PTR_ERR(rockchip->core_rst) != -EPROBE_DEFER)
->> -			dev_err(dev, "missing core reset property in node\n");
->> -		return PTR_ERR(rockchip->core_rst);
->> -	}
->> -
->> -	rockchip->mgmt_rst = devm_reset_control_get_exclusive(dev, "mgmt");
->> -	if (IS_ERR(rockchip->mgmt_rst)) {
->> -		if (PTR_ERR(rockchip->mgmt_rst) != -EPROBE_DEFER)
->> -			dev_err(dev, "missing mgmt reset property in node\n");
->> -		return PTR_ERR(rockchip->mgmt_rst);
->> -	}
->> -
->> -	rockchip->mgmt_sticky_rst = devm_reset_control_get_exclusive(dev,
->> -								     "mgmt-sticky");
->> -	if (IS_ERR(rockchip->mgmt_sticky_rst)) {
->> -		if (PTR_ERR(rockchip->mgmt_sticky_rst) != -EPROBE_DEFER)
->> -			dev_err(dev, "missing mgmt-sticky reset property in node\n");
->> -		return PTR_ERR(rockchip->mgmt_sticky_rst);
->> -	}
->> -
->> -	rockchip->pipe_rst = devm_reset_control_get_exclusive(dev, "pipe");
->> -	if (IS_ERR(rockchip->pipe_rst)) {
->> -		if (PTR_ERR(rockchip->pipe_rst) != -EPROBE_DEFER)
->> -			dev_err(dev, "missing pipe reset property in node\n");
->> -		return PTR_ERR(rockchip->pipe_rst);
->> -	}
->> -
->> -	rockchip->pm_rst = devm_reset_control_get_exclusive(dev, "pm");
->> -	if (IS_ERR(rockchip->pm_rst)) {
->> -		if (PTR_ERR(rockchip->pm_rst) != -EPROBE_DEFER)
->> -			dev_err(dev, "missing pm reset property in node\n");
->> -		return PTR_ERR(rockchip->pm_rst);
->> -	}
->> -
->> -	rockchip->pclk_rst = devm_reset_control_get_exclusive(dev, "pclk");
->> -	if (IS_ERR(rockchip->pclk_rst)) {
->> -		if (PTR_ERR(rockchip->pclk_rst) != -EPROBE_DEFER)
->> -			dev_err(dev, "missing pclk reset property in node\n");
->> -		return PTR_ERR(rockchip->pclk_rst);
->> -	}
->> -
->> -	rockchip->aclk_rst = devm_reset_control_get_exclusive(dev, "aclk");
->> -	if (IS_ERR(rockchip->aclk_rst)) {
->> -		if (PTR_ERR(rockchip->aclk_rst) != -EPROBE_DEFER)
->> -			dev_err(dev, "missing aclk reset property in node\n");
->> -		return PTR_ERR(rockchip->aclk_rst);
->> -	}
->> -
->> -	rockchip->ep_gpio = devm_gpiod_get(dev, "ep", GPIOD_OUT_HIGH);
->> -	if (IS_ERR(rockchip->ep_gpio)) {
->> -		dev_err(dev, "missing ep-gpios property in node\n");
->> -		return PTR_ERR(rockchip->ep_gpio);
->> -	}
->> -
->> -	rockchip->aclk_pcie = devm_clk_get(dev, "aclk");
->> -	if (IS_ERR(rockchip->aclk_pcie)) {
->> -		dev_err(dev, "aclk clock not found\n");
->> -		return PTR_ERR(rockchip->aclk_pcie);
->> -	}
->> -
->> -	rockchip->aclk_perf_pcie = devm_clk_get(dev, "aclk-perf");
->> -	if (IS_ERR(rockchip->aclk_perf_pcie)) {
->> -		dev_err(dev, "aclk_perf clock not found\n");
->> -		return PTR_ERR(rockchip->aclk_perf_pcie);
->> -	}
->> -
->> -	rockchip->hclk_pcie = devm_clk_get(dev, "hclk");
->> -	if (IS_ERR(rockchip->hclk_pcie)) {
->> -		dev_err(dev, "hclk clock not found\n");
->> -		return PTR_ERR(rockchip->hclk_pcie);
->> -	}
->> -
->> -	rockchip->clk_pcie_pm = devm_clk_get(dev, "pm");
->> -	if (IS_ERR(rockchip->clk_pcie_pm)) {
->> -		dev_err(dev, "pm clock not found\n");
->> -		return PTR_ERR(rockchip->clk_pcie_pm);
->> -	}
->> -
->>   	err = rockchip_pcie_setup_irq(rockchip);
->>   	if (err)
->>   		return err;
->> @@ -1195,8 +1085,9 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
->>   
->>   	platform_set_drvdata(pdev, rockchip);
->>   	rockchip->dev = dev;
->> +	rockchip->is_rc = true;
->>   
->> -	err = rockchip_pcie_parse_dt(rockchip);
->> +	err = rockchip_pcie_parse_host_dt(rockchip);
->>   	if (err)
->>   		return err;
->>   
->> diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
->> index 3d46da9..bcc222b 100644
->> --- a/drivers/pci/host/pcie-rockchip.c
->> +++ b/drivers/pci/host/pcie-rockchip.c
->> @@ -12,10 +12,139 @@
->>    */
->>   
->>   #include <linux/clk.h>
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/of_pci.h>
->>   #include <linux/phy/phy.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/reset.h>
->>   
->>   #include "pcie-rockchip.h"
->>   
->> +int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
->> +{
->> +	struct device *dev = rockchip->dev;
->> +	struct platform_device *pdev = to_platform_device(dev);
->> +	struct device_node *node = dev->of_node;
->> +	struct resource *regs;
->> +	int err;
->> +
->> +	regs = platform_get_resource_byname(pdev,
->> +					    IORESOURCE_MEM,
->> +					    "axi-base");
->> +	rockchip->reg_base = devm_pci_remap_cfg_resource(dev, regs);
->> +	if (IS_ERR(rockchip->reg_base))
->> +		return PTR_ERR(rockchip->reg_base);
->> +
->> +	regs = platform_get_resource_byname(pdev,
->> +					    IORESOURCE_MEM,
->> +					    "apb-base");
->> +	rockchip->apb_base = devm_ioremap_resource(dev, regs);
->> +	if (IS_ERR(rockchip->apb_base))
->> +		return PTR_ERR(rockchip->apb_base);
->> +
->> +	err = rockchip_pcie_get_phys(rockchip);
->> +	if (err)
->> +		return err;
->> +
->> +	rockchip->lanes = 1;
->> +	err = of_property_read_u32(node, "num-lanes", &rockchip->lanes);
->> +	if (!err && (rockchip->lanes == 0 ||
->> +		     rockchip->lanes == 3 ||
->> +		     rockchip->lanes > 4)) {
->> +		dev_warn(dev, "invalid num-lanes, default to use one lane\n");
->> +		rockchip->lanes = 1;
->> +	}
->> +
->> +	rockchip->link_gen = of_pci_get_max_link_speed(node);
->> +	if (rockchip->link_gen < 0 || rockchip->link_gen > 2)
->> +		rockchip->link_gen = 2;
->> +
->> +	rockchip->core_rst = devm_reset_control_get_exclusive(dev, "core");
->> +	if (IS_ERR(rockchip->core_rst)) {
->> +		if (PTR_ERR(rockchip->core_rst) != -EPROBE_DEFER)
->> +			dev_err(dev, "missing core reset property in node\n");
->> +		return PTR_ERR(rockchip->core_rst);
->> +	}
->> +
->> +	rockchip->mgmt_rst = devm_reset_control_get_exclusive(dev, "mgmt");
->> +	if (IS_ERR(rockchip->mgmt_rst)) {
->> +		if (PTR_ERR(rockchip->mgmt_rst) != -EPROBE_DEFER)
->> +			dev_err(dev, "missing mgmt reset property in node\n");
->> +		return PTR_ERR(rockchip->mgmt_rst);
->> +	}
->> +
->> +	rockchip->mgmt_sticky_rst = devm_reset_control_get_exclusive(dev,
->> +								     "mgmt-sticky");
->> +	if (IS_ERR(rockchip->mgmt_sticky_rst)) {
->> +		if (PTR_ERR(rockchip->mgmt_sticky_rst) != -EPROBE_DEFER)
->> +			dev_err(dev, "missing mgmt-sticky reset property in node\n");
->> +		return PTR_ERR(rockchip->mgmt_sticky_rst);
->> +	}
->> +
->> +	rockchip->pipe_rst = devm_reset_control_get_exclusive(dev, "pipe");
->> +	if (IS_ERR(rockchip->pipe_rst)) {
->> +		if (PTR_ERR(rockchip->pipe_rst) != -EPROBE_DEFER)
->> +			dev_err(dev, "missing pipe reset property in node\n");
->> +		return PTR_ERR(rockchip->pipe_rst);
->> +	}
->> +
->> +	rockchip->pm_rst = devm_reset_control_get_exclusive(dev, "pm");
->> +	if (IS_ERR(rockchip->pm_rst)) {
->> +		if (PTR_ERR(rockchip->pm_rst) != -EPROBE_DEFER)
->> +			dev_err(dev, "missing pm reset property in node\n");
->> +		return PTR_ERR(rockchip->pm_rst);
->> +	}
->> +
->> +	rockchip->pclk_rst = devm_reset_control_get_exclusive(dev, "pclk");
->> +	if (IS_ERR(rockchip->pclk_rst)) {
->> +		if (PTR_ERR(rockchip->pclk_rst) != -EPROBE_DEFER)
->> +			dev_err(dev, "missing pclk reset property in node\n");
->> +		return PTR_ERR(rockchip->pclk_rst);
->> +	}
->> +
->> +	rockchip->aclk_rst = devm_reset_control_get_exclusive(dev, "aclk");
->> +	if (IS_ERR(rockchip->aclk_rst)) {
->> +		if (PTR_ERR(rockchip->aclk_rst) != -EPROBE_DEFER)
->> +			dev_err(dev, "missing aclk reset property in node\n");
->> +		return PTR_ERR(rockchip->aclk_rst);
->> +	}
->> +
->> +	if (rockchip->is_rc) {
->> +		rockchip->ep_gpio = devm_gpiod_get(dev, "ep", GPIOD_OUT_HIGH);
->> +		if (IS_ERR(rockchip->ep_gpio)) {
->> +			dev_err(dev, "missing ep-gpios property in node\n");
->> +			return PTR_ERR(rockchip->ep_gpio);
->> +		}
->> +	}
->> +
->> +	rockchip->aclk_pcie = devm_clk_get(dev, "aclk");
->> +	if (IS_ERR(rockchip->aclk_pcie)) {
->> +		dev_err(dev, "aclk clock not found\n");
->> +		return PTR_ERR(rockchip->aclk_pcie);
->> +	}
->> +
->> +	rockchip->aclk_perf_pcie = devm_clk_get(dev, "aclk-perf");
->> +	if (IS_ERR(rockchip->aclk_perf_pcie)) {
->> +		dev_err(dev, "aclk_perf clock not found\n");
->> +		return PTR_ERR(rockchip->aclk_perf_pcie);
->> +	}
->> +
->> +	rockchip->hclk_pcie = devm_clk_get(dev, "hclk");
->> +	if (IS_ERR(rockchip->hclk_pcie)) {
->> +		dev_err(dev, "hclk clock not found\n");
->> +		return PTR_ERR(rockchip->hclk_pcie);
->> +	}
->> +
->> +	rockchip->clk_pcie_pm = devm_clk_get(dev, "pm");
->> +	if (IS_ERR(rockchip->clk_pcie_pm)) {
->> +		dev_err(dev, "pm clock not found\n");
->> +		return PTR_ERR(rockchip->clk_pcie_pm);
->> +	}
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(rockchip_pcie_parse_dt);
->> +
->>   int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip)
->>   {
->>   	struct device *dev = rockchip->dev;
->> diff --git a/drivers/pci/host/pcie-rockchip.h b/drivers/pci/host/pcie-rockchip.h
->> index d27941e..473e74f 100644
->> --- a/drivers/pci/host/pcie-rockchip.h
->> +++ b/drivers/pci/host/pcie-rockchip.h
->> @@ -222,6 +222,7 @@ struct rockchip_pcie {
->>   	u32     mem_size;
->>   	phys_addr_t msg_bus_addr;
->>   	phys_addr_t mem_bus_addr;
->> +	bool is_rc;
->>   };
->>   
->>   static u32 rockchip_pcie_read(struct rockchip_pcie *rockchip, u32 reg)
->> @@ -235,6 +236,7 @@ static void rockchip_pcie_write(struct rockchip_pcie *rockchip, u32 val,
->>   	writel(val, rockchip->apb_base + reg);
->>   }
->>   
->> +int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip);
->>   int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip);
->>   void rockchip_pcie_deinit_phys(struct rockchip_pcie *rockchip);
->>   int rockchip_pcie_enable_clocks(struct rockchip_pcie *rockchip);
->> -- 
->> 1.9.1
->>
->>
-> 
-> 
+And did you have feedback of my comment in V2£¿
+http://lists-archives.com/linux-kernel/29104830-mmc-dw_mmc-bluefield-add-driver-extension.html
+
+> +	tristate "BlueField specific extensions for Synopsys DW Memory Card Interface"
+> +	depends on MMC_DW
+> +	select MMC_DW_PLTFM
+> +	help
+> +	  This selects support for Mellanox BlueField SoC specific extensions to
+> +	  the Synopsys DesignWare Memory Card Interface driver. Select this
+> +	  option for platforms based on Mellanox BlueField SoC's.
+> +
+>   config MMC_DW_PCI
+>   	tristate "Synopsys Designware MCI support on PCI bus"
+>   	depends on MMC_DW && PCI
+> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+> index 6aead24..267b3f1 100644
+> --- a/drivers/mmc/host/Makefile
+> +++ b/drivers/mmc/host/Makefile
+> @@ -55,6 +55,7 @@ obj-$(CONFIG_MMC_DW_K3)		+= dw_mmc-k3.o
+>   obj-$(CONFIG_MMC_DW_PCI)	+= dw_mmc-pci.o
+>   obj-$(CONFIG_MMC_DW_ROCKCHIP)	+= dw_mmc-rockchip.o
+>   obj-$(CONFIG_MMC_DW_ZX)		+= dw_mmc-zx.o
+> +obj-$(CONFIG_MMC_DW_BLUEFIELD)	+= dw_mmc-bluefield.o
+>   obj-$(CONFIG_MMC_SH_MMCIF)	+= sh_mmcif.o
+>   obj-$(CONFIG_MMC_JZ4740)	+= jz4740_mmc.o
+>   obj-$(CONFIG_MMC_VUB300)	+= vub300.o
+> diff --git a/drivers/mmc/host/dw_mmc-bluefield.c b/drivers/mmc/host/dw_mmc-bluefield.c
+> new file mode 100644
+> index 0000000..12067b1
+> --- /dev/null
+> +++ b/drivers/mmc/host/dw_mmc-bluefield.c
+> @@ -0,0 +1,72 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2018 Mellanox Technologies.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/mmc/host.h>
+> +#include <linux/mmc/mmc.h>
+> +#include <linux/of.h>
+> +
+> +#include "dw_mmc.h"
+> +#include "dw_mmc-pltfm.h"
+> +
+> +static void dw_mci_bluefield_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+> +{
+> +	u32 regs;
+> +
+> +	/* Set drive=4 (bit 29:23) and sample=2 (bit 22:16) in UHS_REG_EXT. */
+> +	regs = mci_readl(host, UHS_REG_EXT);
+> +	regs = (regs & ~0x3F100000 & ~0x7F0000) | (4 << 23) | (2 << 16);
+> +	mci_writel(host, UHS_REG_EXT, regs);
+> +}
+> +
+> +static const struct dw_mci_drv_data bluefield_drv_data = {
+> +	.set_ios		= dw_mci_bluefield_set_ios
+> +};
+> +
+> +static const struct of_device_id dw_mci_bluefield_match[] = {
+> +	{ .compatible = "mellanox,bluefield-dw-mshc",
+> +		.data = &bluefield_drv_data },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, dw_mci_bluefield_match);
+> +
+> +static int dw_mci_bluefield_probe(struct platform_device *pdev)
+> +{
+> +	const struct dw_mci_drv_data *drv_data = NULL;
+> +	const struct of_device_id *match;
+> +
+> +	if (pdev->dev.of_node) {
+> +		match = of_match_node(dw_mci_bluefield_match,
+> +				      pdev->dev.of_node);
+> +		drv_data = match->data;
+> +	}
+> +
+> +	return dw_mci_pltfm_register(pdev, drv_data);
+> +}
+> +
+> +static struct platform_driver dw_mci_bluefield_pltfm_driver = {
+> +	.probe		= dw_mci_bluefield_probe,
+> +	.remove		= dw_mci_pltfm_remove,
+> +	.driver		= {
+> +		.name		= "dwmmc_bluefield",
+> +		.of_match_table	= dw_mci_bluefield_match,
+> +		.pm		= &dw_mci_pltfm_pmops,
+> +	},
+> +};
+> +
+> +module_platform_driver(dw_mci_bluefield_pltfm_driver);
+> +
+> +MODULE_DESCRIPTION("BlueField DW Multimedia Card driver");
+> +MODULE_AUTHOR("Mellanox Technologies");
+> +MODULE_LICENSE("GPL v2");
 > 
