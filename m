@@ -1,60 +1,46 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] ARM: sun8i: v3s: fix spelling mistake: "disbaled" ->
- "disabled"
-Date: Wed, 2 May 2018 14:11:13 +0200
-Message-ID: <20180502121113.tc3i6apns3ix3dk7@flea>
-References: <20180429121056.10501-1-colin.king@canonical.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH] ARM: dts: stm32: add reset binding on stm32mp157c
+Date: Wed, 2 May 2018 14:19:25 +0200
+Message-ID: <a49de02e-5ea3-0ac7-9ae0-75add5806c6a@st.com>
+References: <1524215347-10600-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ubsxiafi7ruexbwi"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180429121056.10501-1-colin.king@canonical.com>
+In-Reply-To: <1524215347-10600-1-git-send-email-gabriel.fernandez@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Colin King <colin.king@canonical.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+To: gabriel.fernandez@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Gabriel,
 
---ubsxiafi7ruexbwi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 04/20/2018 11:09 AM, gabriel.fernandez@st.com wrote:
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+> 
+> This patch adds reset binding file.
+> 
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> ---
+>   arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+> index bc3eddc..7e91fd6 100644
+> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+> @@ -5,6 +5,7 @@
+>    */
+>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>   #include <dt-bindings/clock/stm32mp1-clks.h>
+> +#include <dt-bindings/reset/stm32mp1-resets.h>
+>   
+>   / {
+>   	#address-cells = <1>;
+> 
 
-1;5201;0c
-On Sun, Apr 29, 2018 at 01:10:56PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->=20
-> Trivial fix to spelling mistake in status text string
->=20
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Applied on stm32-next.
 
-Applied, thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ubsxiafi7ruexbwi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrpquAACgkQ0rTAlCFN
-r3TgHw//d12O1dj3vxpgPA9CQ3fC3Vt3JUskqjp2yRoBt97lFO5IuaFUlqzmOTMM
-Kb76/FxXK9byDW/8k8W1TCyIdrI4KncnsVULcS0K8grmu1z4t04MasSXL65xTGwd
-7NyGS1BZOJXZMBAtU1tVPd+0ZSEDe40Ef07zqOEKPT9QA/EoQn+65GzlG8BaiHEK
-y28UCxK9OqKFlskOumF2XDDskqSUeTkaJ5eWN08ZPqpB2qj3Pj8ECXMgUf0BYVqL
-KN5pK+OLkacvj1tVxMUCoDrs6VMZNQcLubkd3+aLEL6Okb6dQfTRwqwVZq9Ks913
-zVgLx3Xvu95AEpDRDVW/VP/aoyVsr4F1RMtLg9Vvkg8zfH91O7lROUhyebFZzwwp
-POx9a+bmQ6UN56qs3pOrSz8sMCAtuWQ8wyDDCq9IhOxX6lsbScLk2E2R7/DnD8aZ
-4JSkxmkndApAnBO+vnKVBJiicVmUaEj5OQiJgMlB62peJYwXo+r381elcclm9PzL
-4IyfYaNS0awoxibLtg9aN2irGI/QmSxb1ZL3z8gpY7DfTyWHPrDjIdvZA+TrHKuK
-s/VIn3hz0MqiEjOfXL4NlC/mp05tBGXfE6p7Q6UGr0tMs+F9l1HE2Np/8E4crP2e
-jKurppKWu44d5JZmOhTDrYjgUDBEQTvxVP+WqhXext7YiQKnGI4=
-=w9x1
------END PGP SIGNATURE-----
-
---ubsxiafi7ruexbwi--
+Thanks.
+Alex
