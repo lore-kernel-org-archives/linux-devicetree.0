@@ -1,69 +1,178 @@
-From: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] dt-bindings: drm/bridge: Document
- sn65dsi86 bridge bindings
-Date: Wed, 02 May 2018 10:01:12 -0700
-Message-ID: <152528047237.138124.6199225836688931193@swboyd.mtv.corp.google.com>
-References: <1525235522-8954-1-git-send-email-spanda@codeaurora.org>
- <1525235522-8954-3-git-send-email-spanda@codeaurora.org>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 2/4] dt-bindings: arm: fsl: add mu binding doc
+Date: Wed, 2 May 2018 17:29:00 +0000
+Message-ID: <AM0PR04MB4211D063192A35AC7727ADAA80800@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1524854776-14863-1-git-send-email-aisheng.dong@nxp.com>
+ <1524854776-14863-3-git-send-email-aisheng.dong@nxp.com>
+ <20180501152547.GA6565@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1525235522-8954-3-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180501152547.GA6565@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBTYW5kZWVwIFBhbmRhICgyMDE4LTA1LTAxIDIxOjMyOjAwKQo+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242
-NWRzaTg2LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
-aWRnZS90aSxzbjY1ZHNpODYudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAw
-MDAwLi4wZDA0MmNlCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0Cj4gQEAgLTAsMCAr
-MSw3NiBAQAo+ICtTTjY1RFNJODYgRFNJIHRvIGVEUCBicmlkZ2UgY2hpcAo+ICstLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArVGhpcyBpcyB0aGUgYmluZGluZyBmb3IgVGV4
-YXMgSW5zdHJ1bWVudHMgU042NURTSTg2IGJyaWRnZS4KPiAraHR0cDovL3d3dy50aS5jb20vZ2Vu
-ZXJhbC9kb2NzL2xpdC9nZXRsaXRlcmF0dXJlLnRzcD9nZW5lcmljUGFydE51bWJlcj1zbjY1ZHNp
-ODYmZmlsZVR5cGU9cGRmCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGli
-bGU6IE11c3QgYmUgInRpLHNuNjVkc2k4NiIKPiArLSByZWc6IGkyYyBhZGRyZXNzIG9mIHRoZSBj
-aGlwLCAweDJkIGFzIHBlciBkYXRhc2hlZXQKPiArLSBlbmFibGUtZ3Bpb3M6IE9GIGRldmljZS10
-cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgYnJpZGdlX2VuIHBpbgo+ICsKPiArLSB2Y2Npby1z
-dXBwbHk6IEEgMS44ViBzdXBwbHkgdGhhdCBwb3dlcnMgdXAgdGhlIGRpZ2l0YWwgSU9zLgo+ICst
-IHZwbGwtc3VwcGx5OiBBIDEuOFYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBkaXNwbGF5cG9y
-dCBQTEwuCj4gKy0gdmNjYS1zdXBwbHk6IEEgMS4yViBzdXBwbHkgdGhhdCBwb3dlcnMgdXAgdGhl
-IGFuYWxvZyBjaXJjdWl0cy4KPiArLSB2Y2Mtc3VwcGx5OiBBIDEuMlYgc3VwcGx5IHRoYXQgcG93
-ZXJzIHVwIHRoZSBkaWdpdGFsIGNvcmUuCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICst
-IGludGVycnVwdHM6IFNwZWNpZmllciBmb3IgdGhlIFNONjVEU0k4NiBpbnRlcnJ1cHQgbGluZS4K
-PiArLSBocGQtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbnMgZm9yIEhQ
-RCBwaW4uCj4gKwo+ICstIHJlZmNsay1mcmVxLWtoejogVmFsdWUgc3BlY2lmeWluZyB0aGUgZnJl
-cXVlbmN5IG9mIHJlZmVyZW5jZSBjbG9jayBpbiBLSHogdW5pdC4KClBsZWFzZSB1c2UgdGhlIGNs
-b2NrcyBwcm9wZXJ0eSBpbnN0ZWFkLiBXZSBtYXkgbmVlZCB0byB0dXJuIHRoZSBjbGsgb24KZmly
-c3QgYmVmb3JlIHRoaXMgY2FuIHdvcmsgc28gdGhlIGRyaXZlciB3b3VsZCB1c2UgdGhlIGNsayBm
-cmFtZXdvcmsgKGF0CmxlYXN0IGluIGxpbnV4KS4gY2xvY2stbmFtZXMgY291bGQgaGF2ZSAncmVm
-Y2xrJyBiZWNhdXNlIHRoYXQncyB0aGUgcGluCm5hbWUuCgpJcyB0aGVyZSBhIHdheSBpbiBEUk0g
-dG8gZmlndXJlIG91dCB0aGUgZnJlcXVlbmN5IG9mIHRoZSBjbG9jayBmcmVxdWVuY3kKZm9yIERB
-Q1AvTj8gSXQgbG9va3MgbGlrZSBpZiByZWZjbGsgaXMgZ3JvdW5kZWQsIHRoZW4gdGhlIERBQ1Av
-TiBwaW5zCmZyb20gdGhlIERTSSBzaWRlIHNob3VsZCBiZSBvbmUgb2YgYSBzZXQgb2YgZnJlcXVl
-bmNpZXMsIHNvIEknbSBqdXN0CmN1cmlvdXMgaG93IHRoYXQgd2lsbCB3b3JrIGFuZCBpZiB0aGUg
-YmluZGluZyB3b3VsZCBuZWVkIHRvIGJlIHVwZGF0ZWQKdG8gaW5kaWNhdGUgd2hhdCB0aGUgZnJl
-cXVlbmN5IG9mIHRoZSBEU0kgY2xvY2sgbGFuZSBpcywgb3IgaWYgRFJNIGNhbgp0ZWxsIHRoaXMg
-ZHJpdmVyIHRocm91Z2ggdGhlIHBvcnQvZ3JhcGggc3R1ZmYgc29tZWhvdy4KCj4gKwo+ICstIGdw
-aW8tY29udHJvbGxlcjogTWFya3MgdGhlIGRldmljZSBoYXMgYSBHUElPIGNvbnRyb2xsZXIuCj4g
-Ky0gI2dwaW8tY2VsbHM6IE51bWJlciBvZiBHUElPIGNlbGxzLiBSZWZlciB0byBiaW5kaW5nIGRv
-Y3VtZW50ICJncGlvL2dwaW8udHh0IgoKV2hhdCdzIHRoZSBudW1iZXI/IDI/Cgo+ICstICNwd20t
-Y2VsbHMgOiBOdW1iZXIgb2YgY2VsbHMgdXNlZCB0byBzcGVjaWZ5IGEgUFdNLiBTZWUgcHdtLnR4
-dCBpbiB0aGlzIGRpcmVjdG9yeQo+ICsgICAgICAgICAgICAgIGZvciBhIGRlc2NyaXB0aW9uIG9m
-IHRoZSBjZWxsIGZvcm1hdHMuCgpXaGF0J3MgdGhlIG51bWJlcj8gMT8gVGhlcmUncyBhIHB3bS50
-eHQgaW4gdGhpcyBkaXJlY3Rvcnk/CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9mcmVlZHJlbm8K
+Hi Rob,
+
+Thanks for the review.
+
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Tuesday, May 1, 2018 11:26 PM
+> To: A.s. Dong <aisheng.dong@nxp.com>
+> Cc: linux-arm-kernel@lists.infradead.org; dongas86@gmail.com;
+> kernel@pengutronix.de; shawnguo@kernel.org; Fabio Estevam
+> <fabio.estevam@nxp.com>; dl-linux-imx <linux-imx@nxp.com>; Mark
+> Rutland <mark.rutland@arm.com>; devicetree@vger.kernel.org
+> Subject: Re: [PATCH 2/4] dt-bindings: arm: fsl: add mu binding doc
+> 
+> On Sat, Apr 28, 2018 at 02:46:14AM +0800, Dong Aisheng wrote:
+> > The Messaging Unit module enables two processors within the SoC to
+> > communicate and coordinate by passing messages (e.g. data, status and
+> > control) through the MU interface.
+> >
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > ---
+> >  .../devicetree/bindings/arm/freescale/fsl,mu.txt   | 33
+> ++++++++++++++++++++++
+> 
+> bindings/mailbox/ ?
+> 
+> Why aren't you using the mailbox binding?
+> 
+
+It's mainly because MU is not implemented as a mailbox driver,
+Instead, they're provided in library calls to gain higher efficiency.
+
+For this case, do i still need to change to mailbox binding?
+
+BTW i.MX MU has only one channel. But the binding doc claims
+#mbox-cells must be at least 1. That means the index cells is meaningless
+to i.MX MUs.
+(Probably mailbox binding could be extended to cover this case?
+ E.g. #mbox-cells = <0>)
+
+> >  1 file changed, 33 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
+> > b/Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
+> > new file mode 100644
+> > index 0000000..a7ceb1f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
+> > @@ -0,0 +1,33 @@
+> > +NXP i.MX Messaging Unit (MU)
+> > +--------------------------------------------------------------------
+> > +
+> > +The Messaging Unit module enables two processors within the SoC to
+> > +communicate and coordinate by passing messages (e.g. data, status and
+> > +control) through the MU interface. The MU also provides the ability
+> > +for one processor to signal the other processor using interrupts.
+> > +
+> > +Because the MU manages the messaging between processors, the MU
+> uses
+> > +different clocks (from each side of the different peripheral buses).
+> > +Therefore, the MU must synchronize the accesses from one side to the
+> > +other. The MU accomplishes synchronization using two sets of matching
+> > +registers (Processor A-facing, Processor Bfacing).
+> 
+> B-facing
+> 
+
+Got it
+
+> > +
+> > +Messaging Unit Device Node:
+> > +=============================
+> > +
+> > +Required properties:
+> > +-------------------
+> > +- compatible :	should be "fsl,<chip>-mu", the supported chips
+> include
+> > +		imx6sx, imx7d, imx7ulp, imx8qxp, imx8qm, imx8mq.
+> 
+> 'qm' and 'mq' are really both parts?
+> 
+
+Yes, they're two SoCs.
+
+> > +- reg :		Should contain the registers location and length
+> > +- interrupts :	Interrupt number. The interrupt specifier format
+> depends
+> > +		on the interrupt controller parent.
+> > +
+> > +Examples:
+> > +--------
+> > +lsio_mu0: mu@5d1b0000 {
+> > +	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+> 
+> It is not clear from the definition above that fsl,imx6sx-mu is a fallback. Is that
+> true for all the other chips too?
+> 
+
+Mx6sx is the first one introducing MU while all others chips are almost using the
+same one except MX7ULP with a bit differences.
+
+> > +	reg = <0x0 0x5d1b0000 0x0 0x10000>;
+> 
+> Really has 64KB of registers? You are just wasting virtual address space which
+> is scarce on 32-bit processors with GBs of RAM.
+> 
+
+For 32-bit processors, it's 16KB.
+For 64-bit processors, yes, according to RM, it's 64KB one slot in the memory
+map chapter. But actually It has only 10 registers for user to access,
+do you think we need to reduce to the real register size?
+
+> > +	interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+> > +	status = "okay";
+> 
+> Don't show status in examples.
+> 
+
+Got it.
+
+Regards
+Dong Aisheng
+
+> > +};
+> > --
+> > 2.7.4
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree"
+> > in the body of a message to majordomo@vger.kernel.org More
+> majordomo
+> > info at
+> >
+> https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fvger
+> > .kernel.org%2Fmajordomo-
+> info.html&data=02%7C01%7Caisheng.dong%40nxp.co
+> >
+> m%7C94ea748130d84ea27d0e08d5af77d20a%7C686ea1d3bc2b4c6fa92cd99c5
+> c30163
+> >
+> 5%7C0%7C0%7C636607851512054847&sdata=%2BFi05UUHdS77rlQpcFqqxg2Z
+> VDx60ci
+> > Zemf%2BM4lHlpg%3D&reserved=0
