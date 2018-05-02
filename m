@@ -1,40 +1,43 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v1 0/4] Add DMAv2 and DMAMUX Support on STM32MP157C
-Date: Wed, 2 May 2018 16:24:23 +0200
-Message-ID: <e720dec2-2ea8-c0ba-cfc9-b8c001c06328@st.com>
-References: <1524215681-14555-1-git-send-email-pierre-yves.mordret@st.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Relicense most DTS files to the GPL
+ 2.0+ / MIT
+Date: Wed, 2 May 2018 07:25:44 -0700
+Message-ID: <20180502142544.GB10928@kroah.com>
+References: <20180502141102.31769-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524215681-14555-1-git-send-email-pierre-yves.mordret@st.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180502141102.31769-1-zajec5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Dan Haab <dhaab@luxul.com>, Dan Haab <riproute@gmail.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, "Luis R . Rodriguez" <mcgrof@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Wed, May 02, 2018 at 04:11:02PM +0200, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal@milecki.pl>
+> 
+> These files were created and ever touched by a group of three people
+> only: Dan, Hauke and me. They were licensed under GNU/GPL or ISC.
+> 
+> Introducing and discussing SPDX-License-Identifier resulted in a
+> conclusion that ISC is a not recommended license (see also a
+> license-rules.rst). Moveover an old e-mail from Alan Cox was pointed
+> which explained that dual licensing is a safer solution than depending
+> on a common compatibility belief.
+> 
+> This commit switches most of BCM5301X DTS files to dual licensing using:
+> 1) GPL 2.0+ to make sure they are compatible with Linux kernel
+> 2) MIT to allow sharing with more permissive projects
+> Both licenses belong to the preferred ones (see LICENSES/preferred/).
+> 
+> An attempt to relicense remaining files will be made separately and will
+> require approve from more/other developers.
+> 
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
 
-On 04/20/2018 11:14 AM, Pierre-Yves MORDRET wrote:
-> This patch adds DMAv2 and DMAMUX support on STM32MP157C with configs and device tree.
-> ---
->    Version history:
->       v1:
->          * Initial
-> ---
-> 
-> Pierre-Yves MORDRET (4):
->    ARM: configs: stm32: Add DMAv2 support on STM32MP157C machine
->    ARM: configs: stm32: Add DMAMUX support on STM32MP157C
->    ARM: dts: stm32: Add DMAv2 support on STM32MP157C
->    ARM: dts: stm32: Add DMAMUX support on STM32MP157C
-> 
->   arch/arm/boot/dts/stm32mp157c.dtsi | 44 ++++++++++++++++++++++++++++++++++++++
->   arch/arm/mach-stm32/Kconfig        |  2 ++
->   2 files changed, 46 insertions(+)
-> 
-Series applied on stm32-next. As said before I modified commit header 
-for mach-stm32/Kconfig patch.
+Many thanks for doing this, it makes the license "confusion" a bit less
+now :)
 
-Regards
-Alex
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
