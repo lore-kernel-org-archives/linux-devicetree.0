@@ -1,115 +1,92 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH net-next v2 15/15] arm64: dts: allwinner: a64: add SRAM
- controller device tree node
-Date: Wed, 2 May 2018 13:54:37 +0200
-Message-ID: <20180502115437.zlu2rafrguufutvp@flea>
-References: <20180501161227.2110-1-wens@csie.org>
- <20180501161227.2110-16-wens@csie.org>
- <20180502095118.rqnfwy576xh6ercm@flea>
- <CAGb2v67pvL58Pes1ZFDZtPu_nL2+m6dgf_XOOymG9nVAkXVpEw@mail.gmail.com>
- <29E5670C-9D17-4EC1-AAAC-0CF33DD0534C@aosc.io>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [linux-sunxi] Re: [PATCH 02/21] arm64: dts: allwinner: a64: Add DE2 CCU
+Date: Wed, 02 May 2018 19:55:25 +0800
+Message-ID: <918A5AB7-E83F-40BD-9C4C-772230F798CF@aosc.io>
+References: <20180430114058.5061-1-jagan@amarulasolutions.com> <20180430114058.5061-3-jagan@amarulasolutions.com> <20180502113250.5i2eyzv237t5oyl6@flea> <DF02AB5F-D4A5-4198-B455-FEE880CF83CE@aosc.io> <CAD6G_RQ3HmHBjwcUoCCth5TwVy5ygx_KwRmRjrkpwoOpvy7vvQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="psuzaxnmxte5uamb"
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <29E5670C-9D17-4EC1-AAAC-0CF33DD0534C@aosc.io>
-Sender: netdev-owner@vger.kernel.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: linux-arm-kernel@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, netdev <netdev@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, Mark Brown <broonie@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD6G_RQ3HmHBjwcUoCCth5TwVy5ygx_KwRmRjrkpwoOpvy7vvQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, Jagan Teki <jagannadh.teki@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, Maxime Ripard <maxime.ripard@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Will Deacon <will.deacon@arm.com>, Stephen Boyd <sboyd@kernel.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---psuzaxnmxte5uamb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 02, 2018 at 06:19:51PM +0800, Icenowy Zheng wrote:
->=20
->=20
-> =E4=BA=8E 2018=E5=B9=B45=E6=9C=882=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=885=
-:53:21, Chen-Yu Tsai <wens@csie.org> =E5=86=99=E5=88=B0:
-> >On Wed, May 2, 2018 at 5:51 PM, Maxime Ripard
-> ><maxime.ripard@bootlin.com> wrote:
-> >> Hi,
-> >>
-> >> On Wed, May 02, 2018 at 12:12:27AM +0800, Chen-Yu Tsai wrote:
-> >>> From: Icenowy Zheng <icenowy@aosc.io>
-> >>>
-> >>> Allwinner A64 has a SRAM controller, and in the device tree
-> >currently
-> >>> we have a syscon node to enable EMAC driver to access the EMAC clock
-> >>> register. As SRAM controller driver can now export regmap for this
-> >>> register, replace the syscon node to the SRAM controller device
-> >node,
-> >>> and let EMAC driver to acquire its EMAC clock regmap.
-> >>>
-> >>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> >>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> >>> ---
-> >>>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 23
-> >+++++++++++++++----
-> >>>  1 file changed, 19 insertions(+), 4 deletions(-)
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >>> index 1b2ef28c42bd..1c37659d9d41 100644
-> >>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >>> @@ -168,10 +168,25 @@
-> >>>               #size-cells =3D <1>;
-> >>>               ranges;
-> >>>
-> >>> -             syscon: syscon@1c00000 {
-> >>> -                     compatible =3D
-> >"allwinner,sun50i-a64-system-controller",
-> >>> -                             "syscon";
-> >>> +             sram_controller: sram-controller@1c00000 {
-> >>> +                     compatible =3D
-> >"allwinner,sun50i-a64-sram-controller";
-> >>
-> >> I don't think there's anything preventing us from keeping the
-> >> -system-controller compatible. It's what was in the DT before, and
-> >> it's how it's called in the datasheet.
-> >
-> >I actually meant to ask you about this. The -system-controller
-> >compatible matches the datasheet better. Maybe we should just
-> >switch to that one?
->=20
-> No, if we do the switch the system-controller compatible,
-> the device will be probed on the same memory region with
-> a syscon on old DTs.
+于 2018年5月2日 GMT+08:00 下午7:50:19, Jagan Teki <jagannadh.teki@gmail.com> 写到:
+>On Wed, May 2, 2018 at 5:04 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
+>>
+>>
+>> 于 2018年5月2日 GMT+08:00 下午7:32:50, Maxime Ripard
+><maxime.ripard@bootlin.com> 写到:
+>>>On Mon, Apr 30, 2018 at 05:10:39PM +0530, Jagan Teki wrote:
+>>>> DE2 in A64 has clock control unit and behavior is
+>>>> same like H3/H5, so reuse the same in A64.
+>>>>
+>>>> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+>>>> ---
+>>>>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 15 +++++++++++++++
+>>>>  1 file changed, 15 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>>>b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>>>> index 1b2ef28c42bd..67b80bbe5bf5 100644
+>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>>>> @@ -43,9 +43,11 @@
+>>>>   */
+>>>>
+>>>>  #include <dt-bindings/clock/sun50i-a64-ccu.h>
+>>>> +#include <dt-bindings/clock/sun8i-de2.h>
+>>>>  #include <dt-bindings/clock/sun8i-r-ccu.h>
+>>>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>>>  #include <dt-bindings/reset/sun50i-a64-ccu.h>
+>>>> +#include <dt-bindings/reset/sun8i-de2.h>
+>>>>
+>>>>  / {
+>>>>      interrupt-parent = <&gic>;
+>>>> @@ -168,6 +170,19 @@
+>>>>              #size-cells = <1>;
+>>>>              ranges;
+>>>>
+>>>> +            display_clocks: clock@1000000 {
+>>>> +                    compatible = "allwinner,sun50i-a64-de2-clk",
+>>>> +                                 "allwinner,sun50i-h5-de2-clk";
+>>>
+>>>The A64 was released before the H5, so that should be the other way
+>>>around.
+>>>
+>>>> +                    reg = <0x01000000 0x100000>;
+>>>> +                    clocks = <&ccu CLK_DE>,
+>>>> +                             <&ccu CLK_BUS_DE>;
+>>>> +                    clock-names = "mod",
+>>>> +                                  "bus";
+>>>> +                    resets = <&ccu RST_BUS_DE>;
+>>>> +                    #clock-cells = <1>;
+>>>> +                    #reset-cells = <1>;
+>>>> +            };
+>>>> +
+>>>
+>>>So it turns out we don't need the SRAM to access the CCU driver?
+>>
+>> As now U-Boot claims SRAM, people may forget thus :-(
+>
+>I've sent few mails about how we represent de2 with sram_c [1] but
+>none response after. Can I get further inputs so-that we can include
+>sram_c in proper manner.
 
-The device hasn't magically changed either. Maybe we just need to add
-a check to make sure we don't have the syscon compatible in the SRAM
-driver probe so that the double driver issue doesn't happen?
+Please wait for the SRAMC driver sent by Chen-Yu (and commited
+by me) and the DE2 bus driver pending for the SRAMC part.
 
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---psuzaxnmxte5uamb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrppvwACgkQ0rTAlCFN
-r3QyzQ//S9u4EmsjmDeyVXJX1lMLvYsjPV3y2NdBHOFqBRpv5sNHoUsewYV/3P93
-HvGaGNuq8HOTx4kZLolVDxC+y+NSCEOf/TNyEhHBABrQQHaScZo+YJ499fWf8rCj
-26KFMksUY8QbaX6gJNdcpKLn53CnbtiZ2xj/aqbiBkNsTDBMvs5ss6z/3WqLlt6T
-2MZUEDU4uWaM/cMKwi+xf2ALg1tmP3NVFGvNN4Tlw5f/Lo8Aec9MVv2jlfMTwMIH
-5GvDz2nwE98KHfVqRh2ss+26jvxtFH9dmV1SJWy4IQyBp0OFNvMZrpTkCIaVkfrP
-8EBuXR4MU+fJekpdxI+KsrXWOkKYoVcAPdDZmKF0Nv9SP9ny67RhC+TsXx8RWzwu
-n1W2jr7raEBqsECvmOFDcUFl4Zo5ARsEpiqobuzF7EzCQO+4H5bJN5R3P7QM3Xoh
-kLyXUb1afZCETZ/bc9zhnTlgjTtwPOTjBybCqPEU/jYVqchoOL13yWapRL9peWiA
-1grfQwRF7PJ1BoBHrpKTjwpe2jCzSqdS98/Za6BRKa0aDWrpZKDuY4Qr1SUy4Ok3
-h6isrD0tL+pGB8UrZxpa64W3XdagnhOdAS/isCieNt6t9e5dZOymiPGnMdKYs2fk
-g/6zS2i1nFJ5U9pvDejL2OBBjUvcyAb/J8AspEbO1rSWjNl7eMA=
-=hbOZ
------END PGP SIGNATURE-----
-
---psuzaxnmxte5uamb--
+>
+>[1] https://patchwork.kernel.org/patch/10289737/
+>
+>Jagan.
+>
+>_______________________________________________
+>linux-arm-kernel mailing list
+>linux-arm-kernel@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
