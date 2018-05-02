@@ -1,90 +1,32 @@
-Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr10049.outbound.protection.outlook.com ([40.107.1.49]:21440
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751747AbeECAld (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 2 May 2018 20:41:33 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v5 04/14] usb: typec: add fwnode to tcpc
-Date: Thu,  3 May 2018 08:24:44 +0800
-Message-Id: <1525307094-27402-5-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
-References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Return-Path: <SRS0=QbTR=HV=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:35800 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1750970AbeEBVbR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 2 May 2018 17:31:17 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 0/2] Add a property to tell camera sensor orientation, support it in smiapp
+Date: Thu,  3 May 2018 00:31:13 +0300
+Message-Id: <20180502213115.24000-1-sakari.ailus@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: jun.li@nxp.com, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, andy.yeh@intel.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add fwnode handle to get the fwnode so we can get typec configs
-it contains.
+Hi,
 
-Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- drivers/staging/typec/tcpci.c | 7 +++++++
- drivers/usb/typec/tcpm.c      | 1 +
- include/linux/usb/tcpm.h      | 2 ++
- 3 files changed, 10 insertions(+)
+The two patches add an "upside-down" property to the video bindings and
+support for the property in the smiapp driver.
 
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index 741a80a..01d14fb 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -10,6 +10,7 @@
- #include <linux/module.h>
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
-+#include <linux/property.h>
- #include <linux/regmap.h>
- #include <linux/usb/pd.h>
- #include <linux/usb/tcpm.h>
-@@ -474,6 +475,12 @@ static int tcpci_parse_config(struct tcpci *tcpci)
- 
- 	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
- 	tcpci->tcpc.config = &tcpci_tcpc_config;
-+	tcpci->tcpc.fwnode = device_get_named_child_node(tcpci->dev,
-+							 "connector");
-+	if (!tcpci->tcpc.fwnode) {
-+		dev_err(tcpci->dev, "Can't find connector node.\n");
-+		return -EINVAL;
-+	}
- 
- 	return 0;
- }
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index 7ee417a..80b2303 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -4579,6 +4579,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- 	else
- 		port->try_role = TYPEC_NO_PREFERRED_ROLE;
- 
-+	port->typec_caps.fwnode = tcpc->fwnode;
- 	port->typec_caps.prefer_role = tcpc->config->default_role;
- 	port->typec_caps.type = tcpc->config->type;
- 	port->typec_caps.data = tcpc->config->data;
-diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
-index b231b93..193920a 100644
---- a/include/linux/usb/tcpm.h
-+++ b/include/linux/usb/tcpm.h
-@@ -110,6 +110,7 @@ enum tcpc_mux_mode {
- /**
-  * struct tcpc_dev - Port configuration and callback functions
-  * @config:	Pointer to port configuration
-+ * @fwnode:	Pointer to port fwnode
-  * @get_vbus:	Called to read current VBUS state
-  * @get_current_limit:
-  *		Optional; called by the tcpm core when configured as a snk
-@@ -138,6 +139,7 @@ enum tcpc_mux_mode {
-  */
- struct tcpc_dev {
- 	const struct tcpc_config *config;
-+	struct fwnode_handle *fwnode;
- 
- 	int (*init)(struct tcpc_dev *dev);
- 	int (*get_vbus)(struct tcpc_dev *dev);
+Sakari Ailus (2):
+  dt-bindings: media: Add "upside-down" property to tell sensor
+    orientation
+  smiapp: Support the "upside-down" property
+
+ Documentation/devicetree/bindings/media/i2c/nokia,smia.txt   | 2 ++
+ Documentation/devicetree/bindings/media/video-interfaces.txt | 3 +++
+ drivers/media/i2c/smiapp/smiapp-core.c                       | 3 +++
+ 3 files changed, 8 insertions(+)
+
 -- 
-2.7.4
+2.11.0
 
