@@ -1,54 +1,56 @@
-Return-Path: <SRS0=LUPS=H2=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH 1/4] media: ov2680: dt: add voltage supplies as required
-Date: Mon,  7 May 2018 16:56:52 +0100
-Message-Id: <20180507155655.1555-2-rui.silva@linaro.org>
-In-Reply-To: <20180507155655.1555-1-rui.silva@linaro.org>
-References: <20180507155655.1555-1-rui.silva@linaro.org>
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl, Rob Herring <robh+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>
+Return-Path: <SRS0=QbTR=HV=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:35804 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1751294AbeEBVbR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 2 May 2018 17:31:17 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 2/2] smiapp: Support the "upside-down" property
+Date: Thu,  3 May 2018 00:31:15 +0300
+Message-Id: <20180502213115.24000-3-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180502213115.24000-1-sakari.ailus@linux.intel.com>
+References: <20180502213115.24000-1-sakari.ailus@linux.intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, andy.yeh@intel.com
 List-ID: <devicetree@vger.kernel.org>
 
-The ov2680 needs to control 3 regulators for the voltage supplies and that was
-missing by the first description, added their description and example here.
+Use the "upside-down" property to tell that the sensor is mounted upside
+down. This reverses the behaviour of the VFLIP and HFLIP controls as well
+as the pixel order.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- Documentation/devicetree/bindings/media/i2c/ov2680.txt | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/media/i2c/nokia,smia.txt | 2 ++
+ drivers/media/i2c/smiapp/smiapp-core.c                     | 3 +++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov2680.txt b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
-index 0e29f1a113c0..e5d8f130309d 100644
---- a/Documentation/devicetree/bindings/media/i2c/ov2680.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
-@@ -4,6 +4,9 @@ Required Properties:
- - compatible: should be "ovti,ov2680".
- - clocks: reference to the xvclk input clock.
- - clock-names: should be "xvclk".
-+- DOVDD-supply: Digital I/O voltage supply.
-+- DVDD-supply: Digital core voltage supply.
-+- AVDD-supply: Analog voltage supply.
+diff --git a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+index 33f10a94c381..c824cd7025b3 100644
+--- a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
++++ b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+@@ -29,6 +29,8 @@ Optional properties
+ - reset-gpios: XSHUTDOWN GPIO
+ - flash-leds: See ../video-interfaces.txt
+ - lens-focus: See ../video-interfaces.txt
++- upside-down: A boolean property. Tells that the sensor is mounted upside
++  down.
  
- Optional Properties:
- - powerdown-gpios: reference to the GPIO connected to the powerdown pin,
-@@ -18,7 +21,7 @@ Endpoint node required properties for CSI-2 connection are:
- - remote-endpoint: a phandle to the bus receiver's endpoint node.
- - clock-lanes: should be set to <0> (clock lane on hardware lane 0).
- - data-lanes: should be set to <1> (one CSI-2 lane supported).
-- 
+ 
+ Endpoint node mandatory properties
+diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
+index 3b7ace395ee6..5bc91b5a5998 100644
+--- a/drivers/media/i2c/smiapp/smiapp-core.c
++++ b/drivers/media/i2c/smiapp/smiapp-core.c
+@@ -2801,6 +2801,9 @@ static struct smiapp_hwconfig *smiapp_get_hwconfig(struct device *dev)
+ 
+ 	dev_dbg(dev, "lanes %u\n", hwcfg->lanes);
+ 
++	if (fwnode_property_read_bool(fwnode, "upside-down"))
++		hwcfg->module_board_orient = SMIAPP_MODULE_BOARD_ORIENT_180;
 +
- Example:
+ 	/* NVM size is not mandatory */
+ 	fwnode_property_read_u32(fwnode, "nokia,nvm-size", &hwcfg->nvm_size);
  
- &i2c2 {
-@@ -28,6 +31,9 @@ Example:
- 		clocks = <&osc>;
- 		clock-names = "xvclk";
- 		powerdown-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
-+		DOVDD-supply = <&sw2_reg>;
-+		DVDD-supply = <&sw2_reg>;
-+		AVDD-supply = <&reg_peri_3p15v>;
- 
- 		port {
- 			ov2680_mipi_ep: endpoint {
 -- 
-2.17.0
+2.11.0
+
