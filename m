@@ -1,25 +1,69 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: use canonical compatible for touchpad/touchscreen
-Date: Wed, 2 May 2018 09:53:00 -0700
-Message-ID: <CA+ASDXOFEQwfis9ziXcG1BTH2muWPTZh-fZX9xPU4KgyNeWCPA@mail.gmail.com>
-References: <20180501224628.GA150745@dtor-ws>
+From: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] dt-bindings: drm/bridge: Document
+ sn65dsi86 bridge bindings
+Date: Wed, 02 May 2018 10:01:12 -0700
+Message-ID: <152528047237.138124.6199225836688931193@swboyd.mtv.corp.google.com>
+References: <1525235522-8954-1-git-send-email-spanda@codeaurora.org>
+ <1525235522-8954-3-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501224628.GA150745@dtor-ws>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Kaehlcke <mka@chromium.org>, Emil Renner Berthing <kernel@esmil.dk>, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1525235522-8954-3-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 1, 2018 at 3:46 PM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> "atmel,atmel_mxt_tp" and "atmel,atmel_mxt_ts" are ChromeOS inventions,
-> let's replace them with canonical compatible string "atmel,maxtouch".
->
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-I guess the other IDs are in the driver just for non-DT usage? Anyway,
-seems fine:
-
-Reviewed-by: Brian Norris <briannorris@chromium.org>
+UXVvdGluZyBTYW5kZWVwIFBhbmRhICgyMDE4LTA1LTAxIDIxOjMyOjAwKQo+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242
+NWRzaTg2LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
+aWRnZS90aSxzbjY1ZHNpODYudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAw
+MDAwLi4wZDA0MmNlCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0Cj4gQEAgLTAsMCAr
+MSw3NiBAQAo+ICtTTjY1RFNJODYgRFNJIHRvIGVEUCBicmlkZ2UgY2hpcAo+ICstLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArVGhpcyBpcyB0aGUgYmluZGluZyBmb3IgVGV4
+YXMgSW5zdHJ1bWVudHMgU042NURTSTg2IGJyaWRnZS4KPiAraHR0cDovL3d3dy50aS5jb20vZ2Vu
+ZXJhbC9kb2NzL2xpdC9nZXRsaXRlcmF0dXJlLnRzcD9nZW5lcmljUGFydE51bWJlcj1zbjY1ZHNp
+ODYmZmlsZVR5cGU9cGRmCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGli
+bGU6IE11c3QgYmUgInRpLHNuNjVkc2k4NiIKPiArLSByZWc6IGkyYyBhZGRyZXNzIG9mIHRoZSBj
+aGlwLCAweDJkIGFzIHBlciBkYXRhc2hlZXQKPiArLSBlbmFibGUtZ3Bpb3M6IE9GIGRldmljZS10
+cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgYnJpZGdlX2VuIHBpbgo+ICsKPiArLSB2Y2Npby1z
+dXBwbHk6IEEgMS44ViBzdXBwbHkgdGhhdCBwb3dlcnMgdXAgdGhlIGRpZ2l0YWwgSU9zLgo+ICst
+IHZwbGwtc3VwcGx5OiBBIDEuOFYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBkaXNwbGF5cG9y
+dCBQTEwuCj4gKy0gdmNjYS1zdXBwbHk6IEEgMS4yViBzdXBwbHkgdGhhdCBwb3dlcnMgdXAgdGhl
+IGFuYWxvZyBjaXJjdWl0cy4KPiArLSB2Y2Mtc3VwcGx5OiBBIDEuMlYgc3VwcGx5IHRoYXQgcG93
+ZXJzIHVwIHRoZSBkaWdpdGFsIGNvcmUuCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICst
+IGludGVycnVwdHM6IFNwZWNpZmllciBmb3IgdGhlIFNONjVEU0k4NiBpbnRlcnJ1cHQgbGluZS4K
+PiArLSBocGQtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbnMgZm9yIEhQ
+RCBwaW4uCj4gKwo+ICstIHJlZmNsay1mcmVxLWtoejogVmFsdWUgc3BlY2lmeWluZyB0aGUgZnJl
+cXVlbmN5IG9mIHJlZmVyZW5jZSBjbG9jayBpbiBLSHogdW5pdC4KClBsZWFzZSB1c2UgdGhlIGNs
+b2NrcyBwcm9wZXJ0eSBpbnN0ZWFkLiBXZSBtYXkgbmVlZCB0byB0dXJuIHRoZSBjbGsgb24KZmly
+c3QgYmVmb3JlIHRoaXMgY2FuIHdvcmsgc28gdGhlIGRyaXZlciB3b3VsZCB1c2UgdGhlIGNsayBm
+cmFtZXdvcmsgKGF0CmxlYXN0IGluIGxpbnV4KS4gY2xvY2stbmFtZXMgY291bGQgaGF2ZSAncmVm
+Y2xrJyBiZWNhdXNlIHRoYXQncyB0aGUgcGluCm5hbWUuCgpJcyB0aGVyZSBhIHdheSBpbiBEUk0g
+dG8gZmlndXJlIG91dCB0aGUgZnJlcXVlbmN5IG9mIHRoZSBjbG9jayBmcmVxdWVuY3kKZm9yIERB
+Q1AvTj8gSXQgbG9va3MgbGlrZSBpZiByZWZjbGsgaXMgZ3JvdW5kZWQsIHRoZW4gdGhlIERBQ1Av
+TiBwaW5zCmZyb20gdGhlIERTSSBzaWRlIHNob3VsZCBiZSBvbmUgb2YgYSBzZXQgb2YgZnJlcXVl
+bmNpZXMsIHNvIEknbSBqdXN0CmN1cmlvdXMgaG93IHRoYXQgd2lsbCB3b3JrIGFuZCBpZiB0aGUg
+YmluZGluZyB3b3VsZCBuZWVkIHRvIGJlIHVwZGF0ZWQKdG8gaW5kaWNhdGUgd2hhdCB0aGUgZnJl
+cXVlbmN5IG9mIHRoZSBEU0kgY2xvY2sgbGFuZSBpcywgb3IgaWYgRFJNIGNhbgp0ZWxsIHRoaXMg
+ZHJpdmVyIHRocm91Z2ggdGhlIHBvcnQvZ3JhcGggc3R1ZmYgc29tZWhvdy4KCj4gKwo+ICstIGdw
+aW8tY29udHJvbGxlcjogTWFya3MgdGhlIGRldmljZSBoYXMgYSBHUElPIGNvbnRyb2xsZXIuCj4g
+Ky0gI2dwaW8tY2VsbHM6IE51bWJlciBvZiBHUElPIGNlbGxzLiBSZWZlciB0byBiaW5kaW5nIGRv
+Y3VtZW50ICJncGlvL2dwaW8udHh0IgoKV2hhdCdzIHRoZSBudW1iZXI/IDI/Cgo+ICstICNwd20t
+Y2VsbHMgOiBOdW1iZXIgb2YgY2VsbHMgdXNlZCB0byBzcGVjaWZ5IGEgUFdNLiBTZWUgcHdtLnR4
+dCBpbiB0aGlzIGRpcmVjdG9yeQo+ICsgICAgICAgICAgICAgIGZvciBhIGRlc2NyaXB0aW9uIG9m
+IHRoZSBjZWxsIGZvcm1hdHMuCgpXaGF0J3MgdGhlIG51bWJlcj8gMT8gVGhlcmUncyBhIHB3bS50
+eHQgaW4gdGhpcyBkaXJlY3Rvcnk/CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9mcmVlZHJlbm8K
