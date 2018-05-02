@@ -1,65 +1,85 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: [PATCH v5 1/7] clk: msm8996-gcc: Mark halt check as no-op for USB/PCIE pipe_clk
-Date: Thu,  3 May 2018 02:36:08 +0530
-Message-ID: <1525295174-15995-2-git-send-email-mgautam@codeaurora.org>
-References: <1525295174-15995-1-git-send-email-mgautam@codeaurora.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH RFC PoC 0/2] platform: different approach to early
+ platform drivers
+Date: Wed, 2 May 2018 23:11:14 +0200
+Message-ID: <CAMuHMdU7b86fWAFaK6LQ0gHukJebc4fegUetHPCvu7ujdjSfRw@mail.gmail.com>
+References: <20180426152920.21569-1-brgl@bgdev.pl> <20180426173151.GJ3094@brightrain.aerifal.cx>
+ <6d1f9114-f1d1-961f-4f36-74adff059dc3@lechnology.com> <CAK8P3a0oCH7zyBs8nQd4p+xLrFwDQiJsaKKCF1m04nyXsZxk=g@mail.gmail.com>
+ <CAMpxmJUR+31axmAe2TNq00aUg40bnC=5k=2cVX019Vncr7cRkw@mail.gmail.com>
+ <CAK8P3a2xtTLx-VHVWok-b19=o1z5FbTNcaWq7Y_HSdaH6pWnZg@mail.gmail.com>
+ <CAMRc=MdomjLCq-bJyktaToH00kNQAuTLgkSFRrY9Jmre8McT3A@mail.gmail.com> <CAK8P3a0tMp2QURp-9WuHehqE0b6-BO1wJ38siTdxhxgwCb-ERw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525295174-15995-1-git-send-email-mgautam@codeaurora.org>
+In-Reply-To: <CAK8P3a0tMp2QURp-9WuHehqE0b6-BO1wJ38siTdxhxgwCb-ERw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, robh@kernel.org, sboyd@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, evgreen@chromium.org, Vivek Gautam <vivek.gautam@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Mark Rutland <mark.rutland@arm.com>, Rich Felker <dalias@libc.org>, Jan Kiszka <jan.kiszka@siemens.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Kevin Hilman <khilman@kernel.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michal Suchanek <msuchanek@suse.de>, DTML <devicetree@vger.kernel.org>, David Lechner <david@lechnology.com>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@k>
 List-Id: devicetree@vger.kernel.org
 
-The USB and PCIE pipe clocks are sourced from external clocks
-inside the QMP USB/PCIE PHYs. Enabling or disabling of PIPE RCG
-clocks is dependent on PHY initialization sequence hence
-update halt_check to BRANCH_HALT_SKIP for these clocks so
-that clock status bit is not polled when enabling or disabling
-the clocks. It allows to simplify PHY client driver code which
-is both user and source of the pipe_clk and avoid error logging
-related status check on clk_disable/enable.
+On Fri, Apr 27, 2018 at 2:40 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Fri, Apr 27, 2018 at 1:53 PM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>> 2018-04-27 12:18 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+>>> On Fri, Apr 27, 2018 at 10:57 AM, Bartosz Golaszewski
+>>> <bgolaszewski@baylibre.com> wrote:
+>>>> 2018-04-27 9:52 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+>>>>> On Fri, Apr 27, 2018 at 4:28 AM, David Lechner <david@lechnology.com> wrote:
+>>>> My patch tries to address exactly the use cases we're facing - for
+>>>> example by providing means to probe devices twice (early and late) and
+>>>> to check the state we're at in order for users to be able to just do
+>>>> the critical initialization early on and then continue with regular
+>>>> stuff later.
+>>>
+>>> Maybe the problem is reusing the name and some of the code from
+>>> an existing functionality that we've been trying to get rid of.
+>>>
+>>
+>> I'm not reusing the name - in fact I set the prefix to earlydev_
+>> exactly in order to not confuse anyone. I'm also not reusing any code
+>> in the second series.
+>
+> Ok.
+>
+>>> If what you want to do is completely different from the existing
+>>> early_platform implementation, how about starting by moving that
+>>> out of drivers/base/platform.c into something under arch/sh/
+>>> and renaming it to something with an sh_ prefix.
+>>>
+>>
+>> Yes, this is a good idea, but what about the sh-specific drivers that
+>> rely on it? Is including headers from arch/ in driver code still an
+>> accepted practice?
+>
+> I think it's fine here, since we're just move it out of the way and
+> there are only very few drivers using it:
+>
+> drivers/clocksource/sh_cmt.c:early_platform_init("earlytimer",
+> &sh_cmt_device_driver);
+> drivers/clocksource/sh_mtu2.c:early_platform_init("earlytimer",
+> &sh_mtu2_device_driver);
+> drivers/clocksource/sh_tmu.c:early_platform_init("earlytimer",
+> &sh_tmu_device_driver);
+> drivers/clocksource/timer-ti-dm.c:early_platform_init("earlytimer",
+> &omap_dm_timer_driver);
+> drivers/tty/serial/sh-sci.c:early_platform_init_buffer("earlyprintk",
+> &sci_driver,
+>
+> For timer-ti-dm, it seems like a leftover from old times that can
+> be removed. The other four are shared between arch/sh and
+> arch/arm/mach-shmobile and already have some #ifdef
+> to handle those two cases.
 
-Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
----
- drivers/clk/qcom/gcc-msm8996.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Sh-sci is also used on arm64, for R-Car Gen3 SoCs.
+While the latter has CMT and TMU hardware blocks, so far we haven't enabled
+support for it yet (just using the ARM arch timer is too convenient? ;-)
 
-diff --git a/drivers/clk/qcom/gcc-msm8996.c b/drivers/clk/qcom/gcc-msm8996.c
-index 3d64529..b73e7f1 100644
---- a/drivers/clk/qcom/gcc-msm8996.c
-+++ b/drivers/clk/qcom/gcc-msm8996.c
-@@ -1418,6 +1418,7 @@ enum {
- 
- static struct clk_branch gcc_usb3_phy_pipe_clk = {
- 	.halt_reg = 0x50004,
-+	.halt_check = BRANCH_HALT_SKIP,
- 	.clkr = {
- 		.enable_reg = 0x50004,
- 		.enable_mask = BIT(0),
-@@ -2472,6 +2473,7 @@ enum {
- 
- static struct clk_branch gcc_pcie_0_pipe_clk = {
- 	.halt_reg = 0x6b018,
-+	.halt_check = BRANCH_HALT_SKIP,
- 	.clkr = {
- 		.enable_reg = 0x6b018,
- 		.enable_mask = BIT(0),
-@@ -2547,6 +2549,7 @@ enum {
- 
- static struct clk_branch gcc_pcie_1_pipe_clk = {
- 	.halt_reg = 0x6d018,
-+	.halt_check = BRANCH_HALT_SKIP,
- 	.clkr = {
- 		.enable_reg = 0x6d018,
- 		.enable_mask = BIT(0),
-@@ -2622,6 +2625,7 @@ enum {
- 
- static struct clk_branch gcc_pcie_2_pipe_clk = {
- 	.halt_reg = 0x6e018,
-+	.halt_check = BRANCH_HALT_SKIP,
- 	.clkr = {
- 		.enable_reg = 0x6e018,
- 		.enable_mask = BIT(0),
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
