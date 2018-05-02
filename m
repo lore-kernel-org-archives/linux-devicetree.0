@@ -1,56 +1,63 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v9 03/27] clk: davinci: psc: allow for dev == NULL
-Date: Wed, 2 May 2018 20:38:06 +0530
-Message-ID: <3cec9c1f-48fd-1c16-b642-eb93e41446fc@ti.com>
-References: <20180427001745.4116-1-david@lechnology.com>
- <20180427001745.4116-4-david@lechnology.com>
- <8940259b-5811-ce9f-8262-17d39ca0a46f@ti.com>
- <94d4cfc5-0ea7-e642-c7e3-8d549bdef8ce@lechnology.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: Introduce QCOM RPMh clock bindings
+Date: Wed, 02 May 2018 08:10:52 -0700
+Message-ID: <152527385298.138124.8046800128520264876@swboyd.mtv.corp.google.com>
+References: <1525258277-3478-1-git-send-email-tdas@codeaurora.org>
+ <1525258277-3478-2-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <94d4cfc5-0ea7-e642-c7e3-8d549bdef8ce@lechnology.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1525258277-3478-2-git-send-email-tdas@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkbmVzZGF5IDAyIE1heSAyMDE4IDA3OjE5IEFNLCBEYXZpZCBMZWNobmVyIHdyb3RlOgo+
-IE9uIDA1LzAxLzIwMTggMDk6MDIgQU0sIFNla2hhciBOb3JpIHdyb3RlOgo+PiBPbiBGcmlkYXkg
-MjcgQXByaWwgMjAxOCAwNTo0NyBBTSwgRGF2aWQgTGVjaG5lciB3cm90ZToKPj4+ICtzdGF0aWMg
-aW5saW5lIHZvaWQgKl9kZXZtX2t6YWxsb2Moc3RydWN0IGRldmljZSAqZGV2LCBzaXplX3Qgc2l6
-ZSwKPj4+IGdmcF90IGZsYWdzKQo+Pj4gK3sKPj4+ICvCoMKgwqAgaWYgKGRldikKPj4+ICvCoMKg
-wqDCoMKgwqDCoCByZXR1cm4gZGV2bV9remFsbG9jKGRldiwgc2l6ZSwgZmxhZ3MpOwo+Pj4gKwo+
-Pj4gK8KgwqDCoCByZXR1cm4ga3phbGxvYyhzaXplLCBmbGFncyk7Cj4+PiArfQo+Pgo+PiBJIGhh
-dmUgdGhlIHNhbWUgcXVlc3Rpb24gb24gdGhlIHV0aWxpdHkgb2YgdGhpcy4gQSBtZW1vcnkgYWxs
-b2NhdGlvbgo+PiBlcnJvciBzbyBlYXJseSBvbiBpcyBub3QgZ29pbmcgdG8gcmVzdWx0IGluIGEg
-Ym9vdGFibGUgc3lzdGVtIGFueXdheS4KPj4gU28sIEkgd29uZGVyIGlmIGl0cyBiZXR0ZXIgdG8g
-anVzdCBCVUcoKSBpbiBzdWNoIGNhc2VzLiBUaGF0IHdpbGwKPj4gYWN0dWFsbHkgaGVscCBmYXN0
-ZXIgZGVidWcgdGhhbiByZXR1cm5pbmcgYW4gZXJyb3IgYmFjay4gSSBrbm93IHRoZSBwdXNoCj4+
-IGJhY2sgb24gdXNpbmcgQlVHKCksIGJ1dCBjbG9jayBkcml2ZXJzIGFyZSBzcGVjaWFsLCBhbmQg
-SSB0aGluayB0aGF0cwo+PiB3aHkgaXRzIHNlZW1zIHRvIGJlIHVzZWQgcXVpdGUgYSBiaXQgYWxy
-ZWFkeS4KPj4KPiAKPiBTYW1lIHJlcGx5IGhlcmUgYXMgd2VsbC4gT24gREE4NTAvREE4MzAsIHlv
-dSBtaWdodCBub3QgZ2V0IGEgY29uc29sZSwKPiBidXQgeW91IHdpbGwgImJvb3QiIGV2ZW4gaWYg
-b25lIG9mIHRoZSBQU0MgZGV2aWNlcyBmYWlscyB0aG91Z2guCgpXYXMgbm90IHRoaW5raW5nIG9m
-IGZhaWx1cmUgdG8gYm9vdCBkdWUgdG8gY2xvY2tzIGJlaW5nIGRpc2FibGVkLCBidXQKdGhlIGZh
-Y3QgdGhhdCB5b3UgYXJlIG5vdCBhYmxlIHRvIGFsbG9jYXRlIGEgc21hbGwgYW1vdW50IG9mIG1l
-bW9yeSBzbwplYXJseSBpbiBib290IHByb2Nlc3MuIFRoZSBjaGFuY2VzIG9mIHN1Y2Nlc3NmdWwg
-Ym9vdCBhZnRlciBtZW1vcnkKYWxsb2NhdGlvbiBmYWlsdXJlcyBsaWtlIHRoYXQgYXJlIGNsb3Nl
-IHRvIHplcm8uCgo+IFdBUk4oKSBpcyBwcm9iYWJseSBqdXN0IGFzIGdvb2QgYXMgQlVHKCkgaW4g
-dGhpcyBjYXNlIHRvby4KCk9rYXksIGJ1dCB3aXRoIFdBUk4oKSB5b3Ugd291bGQgY29udGludWUg
-dG8gcHJvY2VlZCB0byB0cnkgdG8gYm9vdCB3aGljaAppcyBub3QgZ29pbmcgdG8gYmUgbXVjaCBm
-cnVpdGZ1bCAoYW5kIG1pZ2h0IGFjdHVhbGx5IG11ZGRsZSB0aGUgZmlyc3QKZmFpbHVyZSkuIEJ1
-dCB1cCB0byB5b3Ugb24gdGhpcy4KClRoYW5rcywKU2VraGFyCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
-dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Quoting Taniya Das (2018-05-02 03:51:16)
+> Add RPMh clock device bindings for Qualcomm Technology Inc's SoCs. These
+> devices would be used for communicating resource state requests to control
+> the clocks managed by RPMh.
+> =
+
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+When you change things you shouldn't keep around reviewed-by tags if it
+significantly changes..
+
+> +Example :
+> +
+> +#include <dt-bindings/clock/qcom,rpmh.h>
+> +
+> +       &apps_rsc {
+> +               rpmhcc: clock-controller {
+> +                       compatible =3D "qcom,sdm845-rpmh-clk";
+> +                       #clock-cells =3D <1>;
+> +                       assigned-clocks =3D <&clock_rpmh RPMH_CXO_CLK>,
+> +                                       <&clock_rpmh RPMH_CXO_CLK_A>,
+> +                                       <&clock_rpmh RPMH_LN_BB_CLK2>,
+> +                                       <&clock_rpmh RPMH_LN_BB_CLK2_A>,
+> +                                       <&clock_rpmh RPMH_LN_BB_CLK3>,
+> +                                       <&clock_rpmh RPMH_LN_BB_CLK3_A>;
+> +                       assigned-clock-parents =3D <&xo_board_div>,
+> +                                               <&xo_board_div>,
+> +                                               <&xo_board_div>,
+> +                                               <&xo_board_div>,
+> +                                               <&xo_board_div>,
+> +                                               <&xo_board_div>,
+
+There's only one parent, so assigned-clock-parents doesn't really make
+sense. If anything, we would have 'clocks =3D ' here and specify the xo
+board clk and the div 2 clk that live in DT. But I already merged this
+binding, two patchsets ago. Please look in clk-next.
+
+> +               };
+> +#define RPMH_RF_CLK2                           8
+> +#define RPMH_RF_CLK2_A                         9
+> +#define RPMH_RF_CLK3                           10
+> +#define RPMH_RF_CLK3_A                         11
+> +
+
+Ok. I dropped CLK4* from the previous patch you sent and dropped Amit's
+signed-off-by.
