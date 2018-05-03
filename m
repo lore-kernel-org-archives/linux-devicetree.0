@@ -1,15 +1,15 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 04/15] clk: imx7d: reset parent for mipi csi root
-Date: Thu, 3 May 2018 10:27:16 +0800
-Message-ID: <20180503022714.GO3443@dragon>
+Subject: Re: [PATCH v2 07/15] ARM: dts: increase default cma size to 40MB
+Date: Thu, 3 May 2018 10:40:12 +0800
+Message-ID: <20180503024011.GP3443@dragon>
 References: <20180423134750.30403-1-rui.silva@linaro.org>
- <20180423134750.30403-5-rui.silva@linaro.org>
+ <20180423134750.30403-8-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <20180423134750.30403-5-rui.silva@linaro.org>
+In-Reply-To: <20180423134750.30403-8-rui.silva@linaro.org>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -20,44 +20,52 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: Rui Miguel Silva <rui.silva@linaro.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 23, 2018 at 02:47:39PM +0100, Rui Miguel Silva wrote:
-> To guarantee that we do not get Overflow in image FIFO the outer bandwidth has
-> to be faster than inputer bandwidth. For that it must be possible to set a
-> faster frequency clock. So set new parent to sys_pfd3 clock for the mipi csi
-> block.
+On Mon, Apr 23, 2018 at 02:47:42PM +0100, Rui Miguel Silva wrote:
+> To support camera in i.MX7 the cma heap is used to allocate frame buffers. The
+> default size of CMA is 16MB which is not enough for higher resolutions (ex:
+> 1600x1200).
 > 
-> Cc: linux-clk@vger.kernel.org
+> So, increase the default CMA size to 40MB.
+> 
 > Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+
+CMA size can be adjusted by kernel cmdline.  I'm not sure it's necessary
+to make it fixed in DT.
+
+Shawn
+
 > ---
->  drivers/clk/imx/clk-imx7d.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  arch/arm/boot/dts/imx7s.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
-> index f7f4db2e6fa6..9a1a18ceb132 100644
-> --- a/drivers/clk/imx/clk-imx7d.c
-> +++ b/drivers/clk/imx/clk-imx7d.c
-> @@ -891,6 +891,9 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
->  	clk_set_parent(clks[IMX7D_PLL_AUDIO_MAIN_BYPASS], clks[IMX7D_PLL_AUDIO_MAIN]);
->  	clk_set_parent(clks[IMX7D_PLL_VIDEO_MAIN_BYPASS], clks[IMX7D_PLL_VIDEO_MAIN]);
+> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+> index 4d42335c0dee..142ea709d296 100644
+> --- a/arch/arm/boot/dts/imx7s.dtsi
+> +++ b/arch/arm/boot/dts/imx7s.dtsi
+> @@ -182,6 +182,20 @@
+>  			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+>  	};
 >  
-> +	clk_set_parent(clks[IMX7D_MIPI_CSI_ROOT_SRC],
-> +		       clks[IMX7D_PLL_SYS_PFD3_CLK]);
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
 > +
-
-For i.MX clock driver, we intentionally ignore line over 80 columns
-warning to make the file easier for read.  So I would suggest you keep
-it on a single line to stay consistent with other clk_set_parent() calls.
-
-Other than that,
-
-Acked-by: Shawn Guo <shawnguo@kernel.org>
-
->  	/* use old gpt clk setting, gpt1 root clk must be twice as gpt counter freq */
->  	clk_set_parent(clks[IMX7D_GPT1_ROOT_SRC], clks[IMX7D_OSC_24M_CLK]);
->  
+> +		/* global autoconfigured region for contiguous allocations */
+> +		linux,cma {
+> +			compatible = "shared-dma-pool";
+> +			reusable;
+> +			size = <0x2800000>;
+> +			linux,cma-default;
+> +		};
+> +	};
+> +
+>  	soc {
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
 > -- 
 > 2.17.0
 > 
