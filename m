@@ -1,67 +1,81 @@
-From: =?iso-8859-1?Q?T=FCrk=2C_Jan?= <Jan.Tuerk@emtrion.de>
-Subject: AW: [PATCH v4 0/7] Add basic support for emtrion emCON-MX6 modules
-Date: Thu, 3 May 2018 12:01:38 +0200
-Message-ID: <95F51F4B902CAC40AF459205F6322F01B83109E5C4@BMK019S01.emtrion.local>
-References: <20180420125108.14197-1-jan.tuerk@emtrion.com>
- <20180427132445.3458-1-jan.tuerk@emtrion.com> <20180428023445.GA3693@dragon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+From: Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V2 1/5] backlight: qcom-wled: Rename pm8941-wled.c to qcom-wled.c
+Date: Thu,  3 May 2018 15:42:28 +0530
+Message-ID: <1525342352-25072-2-git-send-email-kgunda@codeaurora.org>
+References: <1525342352-25072-1-git-send-email-kgunda@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180428023445.GA3693@dragon>
-Content-Language: de-DE
+In-Reply-To: <1525342352-25072-1-git-send-email-kgunda@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Shawn Guo' <shawnguo@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, LinuxArmKernelMailingListe <linux-arm-kernel@lists.infradead.org>
+To: bjorn.andersson@linaro.org, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, Kiran Gunda <kgunda@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+pm8941-wled.c driver is supporting the WLED peripheral
+on pm8941. Rename it to qcom-wled.c so that it can support
+WLED on multiple PMICs.
 
+Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+---
+ .../bindings/leds/backlight/{pm8941-wled.txt => qcom-wled.txt}    | 2 +-
+ drivers/video/backlight/Kconfig                                   | 8 ++++----
+ drivers/video/backlight/Makefile                                  | 2 +-
+ drivers/video/backlight/{pm8941-wled.c => qcom-wled.c}            | 0
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+ rename Documentation/devicetree/bindings/leds/backlight/{pm8941-wled.txt => qcom-wled.txt} (95%)
+ rename drivers/video/backlight/{pm8941-wled.c => qcom-wled.c} (100%)
 
-> -----Ursprüngliche Nachricht-----
-> Von: Shawn Guo [mailto:shawnguo@kernel.org]
-> Gesendet: Samstag, 28. April 2018 04:35
-> An: Türk, Jan
-> Cc: Rob Herring; Mark Rutland; Thierry Reding; David Airlie; Sascha Hauer;
-> Pengutronix Kernel Team; Fabio Estevam; Russell King;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; dri-
-> devel@lists.freedesktop.org; LinuxArmKernelMailingListe
-> Betreff: Re: [PATCH v4 0/7] Add basic support for emtrion emCON-MX6
-> modules
-> 
-> On Fri, Apr 27, 2018 at 03:24:35PM +0200, jan.tuerk@emtrion.com wrote:
-> > From: Jan Tuerk <jan.tuerk@emtrion.com>
-> >
-> > Changes for v4:
-> >   - re-arrange the Patch-series to match the DT-submitting-patches
-> >   - Additional patch for the Documentation of the new DT-bindings
-> >
-> > [PATCH v4 1/7] dt-bindings: display: Document the EDT et* displays in one
-> file.
-> >   - no change (re-arranged 3/6 => 1/7)
-> >
-> > [PATCH v4 2/7] drm/panel: Add support for the EDT ETM0700G0BDH6
-> >   - no change (re-arranged 1/6 => 2/7)
-> >
-> > [PATCH v4 3/7] drm/panel: Add support for the EDT ETM0700G0EDH6
-> >   - no change (re-arranged 2/6 => 3/7)
-> 
-> Please split the series into two, DRM driver (above) and platform part
-> (below), to avoid posting one part over and over again with zero changes,
-> but only because the other part needs update.
-> 
-> Shawn
-Ok I'll split them. 
-> 
-> >
-> > [PATCH v4 4/7] ARM: dts: imx: Add an cpu0 label for imx6dl devices.
-> >   - no change
-> >
-> > [PATCH v4 5/7] dt-bindings: arm: Document emtrion emCON-MX6 bindings
-> >   - separate patch for the emtrion emCON-MX6 DT-bindings
-> >
-> > [PATCH v4 6/7] ARM: dts: Add support for emtrion emCON-MX6 series
-> >   - alphabetically sort the DT
-> >   - moved duplicated Avari baseboard code into separate file.
-> >
-> > [PATCH v4 7/7] ARM: imx_v6_v7_defconfig: Enable DA0963 PMIC support.
-> >   - unchaged
+diff --git a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+similarity index 95%
+rename from Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
+rename to Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+index e5b294d..fb39e32 100644
+--- a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
++++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+@@ -1,4 +1,4 @@
+-Binding for Qualcomm PM8941 WLED driver
++Binding for Qualcomm Technologies, Inc. WLED driver
+ 
+ Required properties:
+ - compatible: should be "qcom,pm8941-wled"
+diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+index 4e1d2ad..8c095e3 100644
+--- a/drivers/video/backlight/Kconfig
++++ b/drivers/video/backlight/Kconfig
+@@ -299,12 +299,12 @@ config BACKLIGHT_TOSA
+ 	  If you have an Sharp SL-6000 Zaurus say Y to enable a driver
+ 	  for its backlight
+ 
+-config BACKLIGHT_PM8941_WLED
+-	tristate "Qualcomm PM8941 WLED Driver"
++config BACKLIGHT_QCOM_WLED
++	tristate "Qualcomm PMIC WLED Driver"
+ 	select REGMAP
+ 	help
+-	  If you have the Qualcomm PM8941, say Y to enable a driver for the
+-	  WLED block.
++	  If you have the Qualcomm PMIC, say Y to enable a driver for the
++	  WLED block. Currently it supports PM8941 and PMI8998.
+ 
+ config BACKLIGHT_SAHARA
+ 	tristate "Tabletkiosk Sahara Touch-iT Backlight Driver"
+diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
+index 5e28f01..6fd76ef 100644
+--- a/drivers/video/backlight/Makefile
++++ b/drivers/video/backlight/Makefile
+@@ -49,8 +49,8 @@ obj-$(CONFIG_BACKLIGHT_OMAP1)		+= omap1_bl.o
+ obj-$(CONFIG_BACKLIGHT_OT200)		+= ot200_bl.o
+ obj-$(CONFIG_BACKLIGHT_PANDORA)		+= pandora_bl.o
+ obj-$(CONFIG_BACKLIGHT_PCF50633)	+= pcf50633-backlight.o
+-obj-$(CONFIG_BACKLIGHT_PM8941_WLED)	+= pm8941-wled.o
+ obj-$(CONFIG_BACKLIGHT_PWM)		+= pwm_bl.o
++obj-$(CONFIG_BACKLIGHT_QCOM_WLED)	+= qcom-wled.o
+ obj-$(CONFIG_BACKLIGHT_SAHARA)		+= kb3886_bl.o
+ obj-$(CONFIG_BACKLIGHT_SKY81452)	+= sky81452-backlight.o
+ obj-$(CONFIG_BACKLIGHT_TOSA)		+= tosa_bl.o
+diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/qcom-wled.c
+similarity index 100%
+rename from drivers/video/backlight/pm8941-wled.c
+rename to drivers/video/backlight/qcom-wled.c
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
