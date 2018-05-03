@@ -1,54 +1,101 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v4 00/14] dra7: mmc: Update mmc dt node to use sdhci-omap
-Date: Thu, 3 May 2018 10:40:19 -0700
-Message-ID: <20180503174019.GX98604@atomide.com>
-References: <20180427120905.3665-1-kishon@ti.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v2 05/27] dts: bindings: Document device tree binding for CATU
+Date: Thu, 3 May 2018 11:42:56 -0600
+Message-ID: <CANLsYkwzD0gpAo9be5ii4=+tn8GOL6psHcRA24=EMq=MRAzBoQ@mail.gmail.com>
+References: <1525165857-11096-1-git-send-email-suzuki.poulose@arm.com>
+ <1525165857-11096-6-git-send-email-suzuki.poulose@arm.com> <20180501131057.GA15706@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180427120905.3665-1-kishon@ti.com>
+In-Reply-To: <20180501131057.GA15706@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Robert Walker <robert.walker@arm.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Frank Rowand <frowand.list@gmail.com>, John Horley <john.horley@arm.com>, devicetree@vger.kernel.org, Mathieu Poirier <mathieu.poirier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-* Kishon Vijay Abraham I <kishon@ti.com> [180427 05:11]:
-> Changes from v3:
-> *) Added dra7-mmc-iodelay.dtsi to add a new pinctrl group for clk line
->    without pullup to be used for dra71-evm and am57xx-idk.
-> *) Rename wlcore node name to wifi
-> 
-> This series should be merged only after [1].
-> [1] -> https://marc.info/?l=linux-omap&m=152482966225758&w=2
-> 
-> This series:
->  *) Adds wilink wlan support (Now all MMC instances in DRA7 will use
->     sdhci-omap)
->  *) Add a new pinctrl group for clk line without pullup required for
->     UHS cards to work reliably.
->  *) Update README to make sure users update .config file from 4.18
->     kernel.
->  *) Use sdhci-omap programming model.
+On 1 May 2018 at 07:10, Rob Herring <robh@kernel.org> wrote:
+> On Tue, May 01, 2018 at 10:10:35AM +0100, Suzuki K Poulose wrote:
+>> Document CATU device-tree bindings. CATU augments the TMC-ETR
+>> by providing an improved Scatter Gather mechanism for streaming
+>> trace data to non-contiguous system RAM pages.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: frowand.list@gmail.com
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Mathieu Poirier <mathieu.poirier@arm.com>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> ---
+>>  .../devicetree/bindings/arm/coresight.txt          | 52 ++++++++++++++++++++++
+>>  1 file changed, 52 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+>> index 15ac8e8..cdd84d0 100644
+>> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+>> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+>> @@ -39,6 +39,8 @@ its hardware characteristcs.
+>>
+>>               - System Trace Macrocell:
+>>                       "arm,coresight-stm", "arm,primecell"; [1]
+>> +             - Coresight Address Translation Unit (CATU)
+>> +                     "arm, coresight-catu", "arm,primecell";
+>
+> spurious space               ^
+>
+>>
+>>       * reg: physical base address and length of the register
+>>         set(s) of the component.
+>> @@ -86,6 +88,9 @@ its hardware characteristcs.
+>>       * arm,buffer-size: size of contiguous buffer space for TMC ETR
+>>        (embedded trace router)
+>>
+>> +* Optional property for CATU :
+>> +     * interrupts : Exactly one SPI may be listed for reporting the address
+>> +       error
+>
+> Somewhere you need to define the ports for the CATU.
+>
+>>
+>>  Example:
+>>
+>> @@ -118,6 +123,35 @@ Example:
+>>               };
+>>       };
+>>
+>> +     etr@20070000 {
+>> +             compatible = "arm,coresight-tmc", "arm,primecell";
+>> +             reg = <0 0x20070000 0 0x1000>;
+>> +
+>> +             clocks = <&oscclk6a>;
+>> +             clock-names = "apb_pclk";
+>> +             ports {
+>> +                     #address-cells = <1>;
+>> +                     #size-cells = <0>;
+>> +
+>> +                     /* input port */
+>> +                     port@0 {
+>> +                             reg =  <0>;
+>> +                             etr_in_port: endpoint {
+>> +                                     slave-mode;
+>> +                                     remote-endpoint = <&replicator2_out_port0>;
+>> +                             };
+>> +                     };
+>> +
+>> +                     /* CATU link represented by output port */
+>> +                     port@1 {
+>> +                             reg = <0>;
+>
+> While common in the Coresight bindings, having unit-address and reg not
+> match is an error. Mathieu and I discussed this a bit as dtc now warns
+> on these.
+>
+> Either reg should be 1 here, or 'ports' needs to be split into input and
+> output ports. My preference would be the former, but Mathieu objected to
+> this not reflecting the the h/w numbering.
 
-Applying this series into omap-for-v4.18/dt-sdhci on top of the
-immutable branch from Ulf.
+Suzuki, as we discuss this is related to your work on revamping CS
+bindings for ACPI.  Until that gets done and to move forward with this
+set I suggest you abide to Rob's request.
 
-> In the "Use sdhci-omap programming model" patch, "ti,omap4-hsmmc"
-> compatible is removed. This is because if both "ti,dra7-sdhci" and
-> "ti,omap4-hsmmc" is added and if there is probe deferral in sdhci_omap
-> driver, the device is binding to omap_hsmmc driver.
-> 
-> Once omap_hsmmc and sdhci_omap driver are feature identical,
-> sdhci_omap driver will be made to support omap_hsmmc binding
-> (including "ti,omap4-hsmmc" compatible) and omap_hsmmc driver will
-> be removed. Till then dt nodes with "ti,omap4-hsmmc" compatible
-> will use omap_hsmmc driver and "ti,dra7-sdhci" compatible will
-> use sdhci_omap driver.
-
-Great that sounds good to me :) This way we can test and enable
-it one SoC at a time.
-
-Regards,
-
-Tony
+>
+> Rob
