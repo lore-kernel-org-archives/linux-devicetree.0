@@ -1,48 +1,81 @@
 From: Amit Nischal <anischal@codeaurora.org>
-Subject: [PATCH v1 0/2] Add QCOM video clock controller driver
-Date: Thu,  3 May 2018 18:05:23 +0530
-Message-ID: <1525350925-16006-1-git-send-email-anischal@codeaurora.org>
+Subject: [PATCH v1 1/2] dt-bindings: clock: Introduce QCOM Video clock controller bindings
+Date: Thu,  3 May 2018 18:05:24 +0530
+Message-ID: <1525350925-16006-2-git-send-email-anischal@codeaurora.org>
+References: <1525350925-16006-1-git-send-email-anischal@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1525350925-16006-1-git-send-email-anischal@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>
 Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Amit Nischal <anischal@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Changes in v1:
-   https://lkml.org/lkml/2018/4/24/545
-Addressed below review comments given by Rob
-- Change the compatible property as per '<vendor>,<soc>-<block>' format.
-- Add header definitions for resets and power-domain cells.
+Add device tree bindings for video clock controller for Qualcomm
+Technology Inc's SoCs.
 
-This patch series adds a driver and device tree documentation binding
-for the video clock controller on some Qualcomm Technologies, Inc, SoCs
-such as SDM845. This would allow video drivers to probe and control their
-clocks.
-
-The video clock driver depends upon the RPMh driver[1], command DB driver[2],
-RPMh clock driver[3], rcg2 shared ops[4] and GCC clock driver[5] changes
-which are undergoing review.
-
-[1]: https://lkml.org/lkml/2018/4/19/914
-[2]: https://lkml.org/lkml/2018/4/5/451
-[3]: https://lkml.org/lkml/2018/4/24/390
-[4]: https://lkml.org/lkml/2018/4/18/367
-[5]: https://lkml.org/lkml/2018/4/30/533
-
-Amit Nischal (2):
-  dt-bindings: clock: Introduce QCOM Video clock controller bindings
-  clk: qcom: Add video clock controller driver for SDM845
-
- .../devicetree/bindings/clock/qcom,videocc.txt     |  18 ++
- drivers/clk/qcom/Kconfig                           |  11 +
- drivers/clk/qcom/Makefile                          |   1 +
- drivers/clk/qcom/videocc-sdm845.c                  | 358 +++++++++++++++++++++
- include/dt-bindings/clock/qcom,videocc-sdm845.h    |  25 ++
- 5 files changed, 413 insertions(+)
+Signed-off-by: Amit Nischal <anischal@codeaurora.org>
+---
+ .../devicetree/bindings/clock/qcom,videocc.txt     | 18 ++++++++++++++++
+ include/dt-bindings/clock/qcom,videocc-sdm845.h    | 25 ++++++++++++++++++++++
+ 2 files changed, 43 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/clock/qcom,videocc.txt
- create mode 100644 drivers/clk/qcom/videocc-sdm845.c
  create mode 100644 include/dt-bindings/clock/qcom,videocc-sdm845.h
 
+diff --git a/Documentation/devicetree/bindings/clock/qcom,videocc.txt b/Documentation/devicetree/bindings/clock/qcom,videocc.txt
+new file mode 100644
+index 0000000..600eda2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,videocc.txt
+@@ -0,0 +1,18 @@
++Qualcomm Video Clock & Reset Controller Binding
++-----------------------------------------------
++
++Required properties :
++- compatible : shall contain "qcom,sdm845-videocc"
++- reg : shall contain base register location and length
++- #clock-cells : from common clock binding, shall contain 1.
++- #reset-cells : from common reset binding, shall contain 1.
++- #power-domain-cells : from generic power domain binding, shall contain 1.
++
++Example:
++	videocc: clock-controller@ab00000 {
++		compatible = "qcom,sdm845-videocc";
++		reg = <0xab00000 0x10000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++		#power-domain-cells = <1>;
++	};
+diff --git a/include/dt-bindings/clock/qcom,videocc-sdm845.h b/include/dt-bindings/clock/qcom,videocc-sdm845.h
+new file mode 100644
+index 0000000..48f6a9e
+--- /dev/null
++++ b/include/dt-bindings/clock/qcom,videocc-sdm845.h
+@@ -0,0 +1,25 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (c) 2018, The Linux Foundation. All rights reserved. */
++
++#ifndef _DT_BINDINGS_CLK_MSM_VIDEO_CC_SDM845_H
++#define _DT_BINDINGS_CLK_MSM_VIDEO_CC_SDM845_H
++
++#define VIDEO_CC_APB_CLK			0
++#define VIDEO_CC_AT_CLK				1
++#define VIDEO_CC_QDSS_TRIG_CLK			2
++#define VIDEO_CC_QDSS_TSCTR_DIV8_CLK		3
++#define VIDEO_CC_VCODEC0_AXI_CLK		4
++#define VIDEO_CC_VCODEC0_CORE_CLK		5
++#define VIDEO_CC_VCODEC1_AXI_CLK		6
++#define VIDEO_CC_VCODEC1_CORE_CLK		7
++#define VIDEO_CC_VENUS_AHB_CLK			8
++#define VIDEO_CC_VENUS_CLK_SRC			9
++#define VIDEO_CC_VENUS_CTL_AXI_CLK		10
++#define VIDEO_CC_VENUS_CTL_CORE_CLK		11
++#define VIDEO_PLL0				12
++
++#define VENUS_GDSC				0
++#define VCODEC0_GDSC				1
++#define VCODEC1_GDSC				2
++
++#endif
 --
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
