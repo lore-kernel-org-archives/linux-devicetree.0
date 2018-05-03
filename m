@@ -1,61 +1,63 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH V4 8/8] arm64: dts: mt6797: add pwrap support for mt6797
-Date: Thu, 3 May 2018 10:22:44 +0800
-Message-ID: <1525314164.14792.43.camel@mtkswgap22>
-References: <20180502092112.3991-1-argus.lin@mediatek.com>
-         <20180502092112.3991-9-argus.lin@mediatek.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 04/15] clk: imx7d: reset parent for mipi csi root
+Date: Thu, 3 May 2018 10:27:16 +0800
+Message-ID: <20180503022714.GO3443@dragon>
+References: <20180423134750.30403-1-rui.silva@linaro.org>
+ <20180423134750.30403-5-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180502092112.3991-9-argus.lin@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: argus.lin@mediatek.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chenglin Xu <chenglin.xu@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <20180423134750.30403-5-rui.silva@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-05-02 at 17:21 +0800, argus.lin@mediatek.com wrote:
-> From: Argus Lin <argus.lin@mediatek.com>
+On Mon, Apr 23, 2018 at 02:47:39PM +0100, Rui Miguel Silva wrote:
+> To guarantee that we do not get Overflow in image FIFO the outer bandwidth has
+> to be faster than inputer bandwidth. For that it must be possible to set a
+> faster frequency clock. So set new parent to sys_pfd3 clock for the mipi csi
+> block.
 > 
-> mt6797 is a highly integrated SoCs, and it uses
-> mt6351 as Power Management IC.
-> We need to add pwrap device to communicate with
-> mt6351 by SPI.
-> The base address of pwrap is 0x1000d000, and IRQ
-> number is 178. It also using fixed 26Mhz clock
-> as SPI CLK.
-> 
-> Signed-off-by: Argus Lin <argus.lin@mediatek.com>
+> Cc: linux-clk@vger.kernel.org
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 > ---
->  arch/arm64/boot/dts/mediatek/mt6797.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  drivers/clk/imx/clk-imx7d.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> index 4beaa71107d7..485546efc9bf 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> @@ -161,6 +161,20 @@
->  		      <0 0x10220690 0 0x10>;
->  	};
+> diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
+> index f7f4db2e6fa6..9a1a18ceb132 100644
+> --- a/drivers/clk/imx/clk-imx7d.c
+> +++ b/drivers/clk/imx/clk-imx7d.c
+> @@ -891,6 +891,9 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
+>  	clk_set_parent(clks[IMX7D_PLL_AUDIO_MAIN_BYPASS], clks[IMX7D_PLL_AUDIO_MAIN]);
+>  	clk_set_parent(clks[IMX7D_PLL_VIDEO_MAIN_BYPASS], clks[IMX7D_PLL_VIDEO_MAIN]);
 >  
-> +	pwrap: pwrap@1000d000 {
-> +		compatible = "mediatek,mt6797-pwrap";
-> +		reg = <0 0x1000d000 0 0x1000>;
-> +		reg-names = "pwrap";
-> +		interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&clk26m>, <&clk26m>;
-> +		clock-names = "spi", "wrap";
+> +	clk_set_parent(clks[IMX7D_MIPI_CSI_ROOT_SRC],
+> +		       clks[IMX7D_PLL_SYS_PFD3_CLK]);
 > +
-> +		pmic: mt6351 {
-> +			compatible = "mediatek,mt6351";
-> +			interrupt-controller;
 
-the child node can't be added until MT6351 support is added to
-dt-binding
+For i.MX clock driver, we intentionally ignore line over 80 columns
+warning to make the file easier for read.  So I would suggest you keep
+it on a single line to stay consistent with other clk_set_parent() calls.
 
-> +		};
-> +	};
-> +
->  	uart0: serial@11002000 {
->  		compatible = "mediatek,mt6797-uart",
->  			     "mediatek,mt6577-uart";
+Other than that,
+
+Acked-by: Shawn Guo <shawnguo@kernel.org>
+
+>  	/* use old gpt clk setting, gpt1 root clk must be twice as gpt counter freq */
+>  	clk_set_parent(clks[IMX7D_GPT1_ROOT_SRC], clks[IMX7D_OSC_24M_CLK]);
+>  
+> -- 
+> 2.17.0
+> 
