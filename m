@@ -1,47 +1,275 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v4 2/2] drivers: remove force dma flag from buses
-Date: Thu, 3 May 2018 22:06:22 +0530
-Message-ID: <20180503163622.GA6014@localhost>
-References: <1520868292-2479-1-git-send-email-nipun.gupta@nxp.com>
- <1524883919-29484-1-git-send-email-nipun.gupta@nxp.com>
- <1524883919-29484-2-git-send-email-nipun.gupta@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2] arm: exynos/s3c: dts: Remove leading 0x and 0s from
+ bindings notation
+Date: Thu, 3 May 2018 18:35:02 +0200
+Message-ID: <20180503163502.vh56ggagsirklpfe@kozik-lap>
+References: <20171215124630.30082-1-malat@debian.org>
+ <20180502201153.7459-1-malat@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1524883919-29484-2-git-send-email-nipun.gupta@nxp.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Nipun Gupta <nipun.gupta@nxp.com>
-Cc: zajec5@gmail.com, linux-pci@vger.kernel.org, jarkko.sakkinen@linux.intel.com, david.brown@linaro.org, thierry.reding@gmail.com, frowand.list@gmail.com, hch@lst.de, m.szyprowski@samsung.com, bharat.bhushan@nxp.com, rafael.j.wysocki@intel.com, linux@armlinux.org.uk, andy.gross@linaro.org, msuchanek@suse.de, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org, johan@kernel.org, robh+dt@kernel.org, dri-devel@lists.freedesktop.org, bhelgaas@google.com, dan.j.williams@intel.com, linux-soc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, leoyang.li@nxp.com, iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org, robin.murphy@arm.com
+In-Reply-To: <20180502201153.7459-1-malat@debian.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Malaterre <malat@debian.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBBcHIgMjgsIDIwMTggYXQgMDg6MjE6NTlBTSArMDUzMCwgTmlwdW4gR3VwdGEgd3Jv
-dGU6Cj4gV2l0aCBlYWNoIGJ1cyBpbXBsZW1lbnRpbmcgaXRzIG93biBETUEgY29uZmlndXJhdGlv
-biBjYWxsYmFjaywKPiB0aGVyZSBpcyBubyBuZWVkIGZvciBidXMgdG8gZXhwbGljaXRseSBoYXZl
-IGZvcmNlX2RtYSBpbiBpdHMKPiBnbG9iYWwgc3RydWN0dXJlLiBUaGlzIHBhdGNoIG1vZGlmaWVz
-IG9mX2RtYV9jb25maWd1cmUgQVBJIHRvCj4gYWNjZXB0IGFuIGlucHV0IHBhcmFtZXRlciB3aGlj
-aCBzcGVjaWZpZXMgaWYgaW1wbGljaXQgRE1BCj4gY29uZmlndXJhdGlvbiBpcyByZXF1aXJlZCBl
-dmVuIHdoZW4gaXQgaXMgbm90IGRlc2NyaWJlZCBieSB0aGUKPiBmaXJtd2FyZS4KPiAKPiBTaWdu
-ZWQtb2ZmLWJ5OiBOaXB1biBHdXB0YSA8bmlwdW4uZ3VwdGFAbnhwLmNvbT4KPiBBY2tlZC1ieTog
-Qmpvcm4gSGVsZ2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT4gICMgUENJIHBhcnRzCj4gLS0tCj4g
-Q2hhbmdlcyBpbiB2MjoKPiAgIC0gVGhpcyBpcyBhIG5ldyBjaGFuZ2Ugc3VnZ2VzdGVkIGJ5IFJv
-YmluIGFuZCBDaHJpc3RvcGgKPiAgICAgYW5kIGlzIGFkZGVkIHRvIHRoZSBzZXJpZXMuCj4gCj4g
-Q2hhbmdlcyBpbiB2MzoKPiAgIC0gUmViYXNlIGFuZCBjaGFuZ2VzIGNvcnJlc3BvbmRpbmcgdG8g
-dGhlIGNoYW5nZXMgaW4gcGF0Y2ggMS8yCj4gCj4gQ2hhbmdlcyBpbiB2NDoKPiAgIC0gUmViYXNl
-ZCBvbiB0b3Agb2YgNC4xNy1yYzIKPiAKPiAgZHJpdmVycy9hbWJhL2J1cy5jICAgICAgICAgICAg
-fCAxIC0KPiAgZHJpdmVycy9iYXNlL3BsYXRmb3JtLmMgICAgICAgfCAzICstLQo+ICBkcml2ZXJz
-L2JjbWEvbWFpbi5jICAgICAgICAgICB8IDIgKy0KPiAgZHJpdmVycy9kbWEvcWNvbS9oaWRtYV9t
-Z210LmMgfCAyICstCgpUaGlzIG9uZToKQWNrZWQtYnk6IFZpbm9kIEtvdWwgPHZrb3VsQGtlcm5l
-bC5vcmc+CgotLSAKflZpbm9kCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+On Wed, May 02, 2018 at 10:11:52PM +0200, Mathieu Malaterre wrote:
+> Improve the DTS files by removing all the leading "0x" and zeros to fix the
+> following dtc warnings:
+> 
+> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+> 
+> and
+> 
+> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+
+... and dropped because apparently it does not work in all cases:
+
+arch/arm/boot/dts/exynos5422-odroidhc1.dtb: Warning (unit_address_format): /firmware@02073000: unit name should not have leading 0s
+
+Can you check why these were not fixed?
+
+Best regards,
+Krzysztof
+
+> 
+> Converted using the following command:
+> 
+> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed  -i -e "s/@\([0-9a-fA-FxX\.;:#]\+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0\+\(.*\) {/@0\1 {/g" {} +
+> 
+> For simplicity, two sed expressions were used to solve each warnings separately.
+> 
+> To make the regex expression more robust a few other issues were resolved,
+> namely setting unit-address to lower case, and adding a whitespace before the
+> the opening curly brace:
+> 
+> https://elinux.org/Device_Tree_Linux#Linux_conventions
+> 
+> This will solve as a side effect warning:
+> 
+> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+> 
+> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+> 
+> Reported-by: David Daney <ddaney@caviumnetworks.com>
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> ---
+> v2: intermediate patch contained unrelated changes. restrict to S3 and Exynos*
+> 
+>  arch/arm/boot/dts/exynos5420.dtsi | 36 ++++++++++++++++++------------------
+>  arch/arm/boot/dts/s3c2416.dtsi    |  8 ++++----
+>  2 files changed, 22 insertions(+), 22 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index 2f3cb2a97f71..633952a96427 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -761,7 +761,7 @@
+>  			#include "exynos5420-tmu-sensor-conf.dtsi"
+>  		};
+>  
+> -		sysmmu_g2dr: sysmmu@0x10A60000 {
+> +		sysmmu_g2dr: sysmmu@10a60000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x10A60000 0x1000>;
+>  			interrupt-parent = <&combiner>;
+> @@ -771,7 +771,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_g2dw: sysmmu@0x10A70000 {
+> +		sysmmu_g2dw: sysmmu@10a70000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x10A70000 0x1000>;
+>  			interrupt-parent = <&combiner>;
+> @@ -781,7 +781,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_tv: sysmmu@0x14650000 {
+> +		sysmmu_tv: sysmmu@14650000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x14650000 0x1000>;
+>  			interrupt-parent = <&combiner>;
+> @@ -792,7 +792,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_gscl0: sysmmu@0x13E80000 {
+> +		sysmmu_gscl0: sysmmu@13e80000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x13E80000 0x1000>;
+>  			interrupt-parent = <&combiner>;
+> @@ -803,7 +803,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_gscl1: sysmmu@0x13E90000 {
+> +		sysmmu_gscl1: sysmmu@13e90000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x13E90000 0x1000>;
+>  			interrupt-parent = <&combiner>;
+> @@ -814,7 +814,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_scaler0r: sysmmu@0x12880000 {
+> +		sysmmu_scaler0r: sysmmu@12880000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x12880000 0x1000>;
+>  			interrupt-parent = <&combiner>;
+> @@ -824,7 +824,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_scaler1r: sysmmu@0x12890000 {
+> +		sysmmu_scaler1r: sysmmu@12890000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x12890000 0x1000>;
+>  			interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -833,7 +833,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_scaler2r: sysmmu@0x128A0000 {
+> +		sysmmu_scaler2r: sysmmu@128a0000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x128A0000 0x1000>;
+>  			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -842,7 +842,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_scaler0w: sysmmu@0x128C0000 {
+> +		sysmmu_scaler0w: sysmmu@128c0000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x128C0000 0x1000>;
+>  			interrupt-parent = <&combiner>;
+> @@ -852,7 +852,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_scaler1w: sysmmu@0x128D0000 {
+> +		sysmmu_scaler1w: sysmmu@128d0000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x128D0000 0x1000>;
+>  			interrupt-parent = <&combiner>;
+> @@ -862,7 +862,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_scaler2w: sysmmu@0x128E0000 {
+> +		sysmmu_scaler2w: sysmmu@128e0000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x128E0000 0x1000>;
+>  			interrupt-parent = <&combiner>;
+> @@ -872,7 +872,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_rotator: sysmmu@0x11D40000 {
+> +		sysmmu_rotator: sysmmu@11d40000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x11D40000 0x1000>;
+>  			interrupt-parent = <&combiner>;
+> @@ -882,7 +882,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_jpeg0: sysmmu@0x11F10000 {
+> +		sysmmu_jpeg0: sysmmu@11f10000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x11F10000 0x1000>;
+>  			interrupt-parent = <&combiner>;
+> @@ -892,7 +892,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_jpeg1: sysmmu@0x11F20000 {
+> +		sysmmu_jpeg1: sysmmu@11f20000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x11F20000 0x1000>;
+>  			interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -901,7 +901,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_mfc_l: sysmmu@0x11200000 {
+> +		sysmmu_mfc_l: sysmmu@11200000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x11200000 0x1000>;
+>  			interrupt-parent = <&combiner>;
+> @@ -912,7 +912,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_mfc_r: sysmmu@0x11210000 {
+> +		sysmmu_mfc_r: sysmmu@11210000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x11210000 0x1000>;
+>  			interrupt-parent = <&combiner>;
+> @@ -923,7 +923,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_fimd1_0: sysmmu@0x14640000 {
+> +		sysmmu_fimd1_0: sysmmu@14640000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x14640000 0x1000>;
+>  			interrupt-parent = <&combiner>;
+> @@ -934,7 +934,7 @@
+>  			#iommu-cells = <0>;
+>  		};
+>  
+> -		sysmmu_fimd1_1: sysmmu@0x14680000 {
+> +		sysmmu_fimd1_1: sysmmu@14680000 {
+>  			compatible = "samsung,exynos-sysmmu";
+>  			reg = <0x14680000 0x1000>;
+>  			interrupt-parent = <&combiner>;
+> diff --git a/arch/arm/boot/dts/s3c2416.dtsi b/arch/arm/boot/dts/s3c2416.dtsi
+> index 3c7385cab248..46cf85f3c18b 100644
+> --- a/arch/arm/boot/dts/s3c2416.dtsi
+> +++ b/arch/arm/boot/dts/s3c2416.dtsi
+> @@ -30,7 +30,7 @@
+>  		compatible = "samsung,s3c2416-irq";
+>  	};
+>  
+> -	clocks: clock-controller@0x4c000000 {
+> +	clocks: clock-controller@4c000000 {
+>  		compatible = "samsung,s3c2416-clock";
+>  		reg = <0x4c000000 0x40>;
+>  		#clock-cells = <1>;
+> @@ -69,7 +69,7 @@
+>  				<&clocks SCLK_UART>;
+>  	};
+>  
+> -	uart_3: serial@5000C000 {
+> +	uart_3: serial@5000c000 {
+>  		compatible = "samsung,s3c2440-uart";
+>  		reg = <0x5000C000 0x4000>;
+>  		interrupts = <1 18 24 4>, <1 18 25 4>;
+> @@ -80,7 +80,7 @@
+>  		status = "disabled";
+>  	};
+>  
+> -	sdhci_1: sdhci@4AC00000 {
+> +	sdhci_1: sdhci@4ac00000 {
+>  		compatible = "samsung,s3c6410-sdhci";
+>  		reg = <0x4AC00000 0x100>;
+>  		interrupts = <0 0 21 3>;
+> @@ -91,7 +91,7 @@
+>  		status = "disabled";
+>  	};
+>  
+> -	sdhci_0: sdhci@4A800000 {
+> +	sdhci_0: sdhci@4a800000 {
+>  		compatible = "samsung,s3c6410-sdhci";
+>  		reg = <0x4A800000 0x100>;
+>  		interrupts = <0 0 20 3>;
+> -- 
+> 2.11.0
+> 
