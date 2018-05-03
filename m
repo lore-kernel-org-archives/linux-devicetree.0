@@ -1,46 +1,42 @@
-From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH 0/3] K2G: mmc: Update mmc dt node to use sdhci-omap
-Date: Thu, 3 May 2018 11:52:34 -0700
-Message-ID: <de0bd46a-21d4-14de-9695-9b0f3996dacb@oracle.com>
-References: <20180425132746.13911-1-kishon@ti.com>
- <fc5f3498-62fd-15d3-90df-206c51649cb4@oracle.com>
- <0481f6f0-539e-4809-63cd-1134367a7b78@ti.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3] arm: exynos/s3c: dts: Remove leading 0x and 0s from
+ bindings notation
+Date: Thu, 3 May 2018 20:53:42 +0200
+Message-ID: <20180503185342.zawmhazzvkkdc3ja@kozik-lap>
+References: <20180502201153.7459-1-malat@debian.org>
+ <20180503184454.19131-1-malat@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0481f6f0-539e-4809-63cd-1134367a7b78@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180503184454.19131-1-malat@debian.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>
+To: Mathieu Malaterre <malat@debian.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/3/18 4:57 AM, Kishon Vijay Abraham I wrote:
-> Hi Santosh,
+On Thu, May 03, 2018 at 08:44:53PM +0200, Mathieu Malaterre wrote:
+> Improve the DTS files by removing all the leading "0x" and zeros to fix the
+> following dtc warnings:
 > 
-> On Wednesday 25 April 2018 11:10 PM, Santosh Shilimkar wrote:
->> On 4/25/2018 6:27 AM, Kishon Vijay Abraham I wrote:
->>> Update mmc dt node to use sdhci-omap binding instead of omap_hsmmc
->>> binding.
->>>
->>> I've also updated keystone_defconfig to enable CONFIG_MMC_SDHCI_OMAP.
->>> Everyone who use a custom .config should also enable
->>> CONFIG_MMC_SDHCI_OMAP for MMC to work.
->>>
->>> This series should be merged only after [1]
->>> [1] -> https://marc.info/?l=linux-kernel&m=152465820531802&w=2
->>>
->> Keep me posted once the dependency gets merged.
+> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
 > 
-> Ulf has merged the sdhci part and has shared an immutable branch
+> and
 > 
-> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git sdhci_omap
-> with his signed tag sdhci-omap-v4.17-rc3.
+> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
 > 
-> Can you use it as a base for merging this series?
+> Converted using the following command:
 > 
-How about I apply only DTS patches and exlude config file update ?
-You can send the config patch after the merge window. Are the DTS
-changes also going to break anything without basing of this sdhci
-branch ?
+> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed  -i -e "s/@\([0-9a-fA-FxX\.;:#]\+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0\+\(.*\) {/@\1 {/g" {} +
+
+The firmware node is fixed but in my case the command is doing much
+more:
+
+-			smp-sysram@0 {
++			smp-sysram@ {
+
+-			port@0 {
++			port@ {
+
+Best regards,
+Krzysztof
