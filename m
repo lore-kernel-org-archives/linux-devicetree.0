@@ -1,69 +1,59 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v2 10/27] dts: bindings: Restrict coresight tmc-etr
- scatter-gather mode
-Date: Thu, 3 May 2018 14:32:40 -0600
-Message-ID: <CANLsYkwozU7QC5EeEy46KrEd4X7J9S69SiNg8-GhSSuMkhQrBw@mail.gmail.com>
-References: <1525165857-11096-1-git-send-email-suzuki.poulose@arm.com>
- <1525165857-11096-11-git-send-email-suzuki.poulose@arm.com> <20180501131300.GA31425@rob-hp-laptop>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 3/4] dt-bindings: rtc: update stm32-rtc documentation for
+ st,syscfg property
+Date: Thu, 3 May 2018 22:53:51 +0200
+Message-ID: <20180503205351.GE10960@piout.net>
+References: <1524144103-21432-1-git-send-email-amelie.delaunay@st.com>
+ <1524144103-21432-4-git-send-email-amelie.delaunay@st.com>
+ <20180427025803.mn32y5xle2p6knn6@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501131300.GA31425@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20180427025803.mn32y5xle2p6knn6@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Robert Walker <robert.walker@arm.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Frank Rowand <frowand.list@gmail.com>, John Horley <john.horley@arm.com>, Mathieu Poirier <matheiu.poirier@linaro.org>, devicetree@vger.kernel.org
+Cc: Amelie Delaunay <amelie.delaunay@st.com>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 1 May 2018 at 07:13, Rob Herring <robh@kernel.org> wrote:
-> On Tue, May 01, 2018 at 10:10:40AM +0100, Suzuki K Poulose wrote:
->> We are about to add the support for ETR builtin scatter-gather mode
->> for dealing with large amount of trace buffers. However, on some of
->> the platforms, using the ETR SG mode can lock up the system due to
->> the way the ETR is connected to the memory subsystem.
->>
->> In SG mode, the ETR performs READ from the scatter-gather table to
->> fetch the next page and regular WRITE of trace data. If the READ
->> operation doesn't complete(due to the memory subsystem issues,
->> which we have seen on a couple of platforms) the trace WRITE
->> cannot proceed leading to issues. So, we by default do not
->> use the SG mode, unless it is known to be safe on the platform.
->> We define a DT property for the TMC node to specify whether we
->> have a proper SG mode.
->>
->> Cc: Mathieu Poirier <matheiu.poirier@linaro.org>
->> Cc: Mike Leach <mike.leach@linaro.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: John Horley <john.horley@arm.com>
->> Cc: Robert Walker <robert.walker@arm.com>
->> Cc: devicetree@vger.kernel.org
->> Cc: frowand.list@gmail.com
->> Cc: Rob Herring <robh@kernel.org>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>  Documentation/devicetree/bindings/arm/coresight.txt | 3 +++
->>  drivers/hwtracing/coresight/coresight-tmc.c         | 8 +++++++-
->>  2 files changed, 10 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
->> index cdd84d0..7c0c8f0 100644
->> --- a/Documentation/devicetree/bindings/arm/coresight.txt
->> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
->> @@ -88,6 +88,9 @@ its hardware characteristcs.
->>       * arm,buffer-size: size of contiguous buffer space for TMC ETR
->>        (embedded trace router)
->>
->> +     * scatter-gather: boolean. Indicates that the TMC-ETR can safely
->> +       use the SG mode on this system.
->> +
->
-> Needs a vendor prefix.
->
+Amelie,
 
-Thinking further on this, do we need to make it device specific as
-well - something like "arm,etr-scatter-gather"?  That way we don't
-have to redefine "scatter-gather" for other ARM devices if they happen
-to need the same property but for different reasons.
+On 26/04/2018 21:58:03-0500, Rob Herring wrote:
+> On Thu, Apr 19, 2018 at 03:21:42PM +0200, Amelie Delaunay wrote:
+> > RTC driver should not be aware of the PWR registers offset and bits
+> > position. Furthermore, we can imagine that Disable Backup Protection (DBP)
+> > relative register and bit mask could change depending on the SoC. So this
+> > patch moves st,syscfg property from single pwrcfg phandle to pwrcfg
+> > phandle/offset/mask triplet.
+> > 
+> > Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> > ---
+> >  Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt | 10 ++++++----
+> >  1 file changed, 6 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+> > index a66692a..00f8b5d 100644
+> > --- a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+> > +++ b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+> > @@ -14,8 +14,10 @@ Required properties:
+> >      It is required only on stm32h7.
+> >  - interrupt-parent: phandle for the interrupt controller.
+> >  - interrupts: rtc alarm interrupt.
+> > -- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup domain
+> > -  (RTC registers) write protection.
+> > +- st,syscfg: phandle/offset/mask triplet. The phandle to pwrcfg used to
+> > +  access control register at offset, and change the dbp (Disable Backup
+> > +  Protection) bit represented by the mask, mandatory to disable/enable backup
+> > +  domain (RTC registers) write protection.
+> 
+> It's fine to add this, but you are breaking compatibility in the driver 
+> with existing DTBs by requiring these new fields.
+> 
 
->>  * Optional property for CATU :
->>       * interrupts : Exactly one SPI may be listed for reporting the address
->>         error
+I'm fine with that change but I would like confirmation that this has
+been well thought. Maybe Maxime or Alexandre could give their ack.
+
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
