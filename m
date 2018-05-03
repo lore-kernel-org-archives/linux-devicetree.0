@@ -1,264 +1,227 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH V4 5/8] soc: mediatek: pwrap: add pwrap for mt6797 SoCs
-Date: Thu, 3 May 2018 12:01:07 +0800
-Message-ID: <1525320067.14792.95.camel@mtkswgap22>
-References: <20180502092112.3991-1-argus.lin@mediatek.com>
-         <20180502092112.3991-6-argus.lin@mediatek.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v7 3/9] PCI: endpoint: functions/pci-epf-test: Add second
+ entry
+Date: Thu, 3 May 2018 12:03:15 +0530
+Message-ID: <cf2772d5-26c0-b0e3-1e5b-ace91c1ea105@ti.com>
+References: <cover.1524577064.git.gustavo.pimentel@synopsys.com>
+ <c6cfd167838ae8e226dee0820983efe918fa4e1f.1524577064.git.gustavo.pimentel@synopsys.com>
+ <20180426165605.GA6370@e107981-ln.cambridge.arm.com>
+ <b65caf2e-b002-f591-6215-ff2241b2dfb8@ti.com>
+ <20180501115417.GD19391@e107981-ln.cambridge.arm.com>
+ <5d625d04-38fe-7d5a-67fc-5ea92039474c@ti.com>
+ <20180501142607.GA21911@e107981-ln.cambridge.arm.com>
+ <bfaebf3c-2175-f4b2-89c5-336ff9396ed0@synopsys.com>
+ <20180502165144.GB4871@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180502092112.3991-6-argus.lin@mediatek.com>
+In-Reply-To: <20180502165144.GB4871@e107981-ln.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: argus.lin@mediatek.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chenglin Xu <chenglin.xu@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Argus
+Hi Lorenzo,
 
-On Wed, 2018-05-02 at 17:21 +0800, argus.lin@mediatek.com wrote:
-> From: Argus Lin <argus.lin@mediatek.com>
+On Wednesday 02 May 2018 10:21 PM, Lorenzo Pieralisi wrote:
+> On Wed, May 02, 2018 at 11:39:00AM +0100, Gustavo Pimentel wrote:
+>> Hi Lorenzo,
+>>
+>> On 01/05/2018 15:26, Lorenzo Pieralisi wrote:
+>>> On Tue, May 01, 2018 at 05:53:59PM +0530, Kishon Vijay Abraham I wrote:
+>>>> Hi Lorenzo,
+>>>>
+>>>> On Tuesday 01 May 2018 05:24 PM, Lorenzo Pieralisi wrote:
+>>>>> On Tue, May 01, 2018 at 03:37:47PM +0530, Kishon Vijay Abraham I wrote:
+>>>>>> Hi Lorenzo,
+>>>>>>
+>>>>>> On Thursday 26 April 2018 10:26 PM, Lorenzo Pieralisi wrote:
+>>>>>>> On Tue, Apr 24, 2018 at 02:44:40PM +0100, Gustavo Pimentel wrote:
+>>>>>>>> Adds a seconds entry on the pci_epf_test_ids structure that disables the
+>>>>>>>
+>>>>>>> "Add a second entry to..."
+>>>>>>>
+>>>>>>>> linkup_notifier parameter on driver for the designware EP.
+>>>>>>>>
+>>>>>>>> This allows designware EPs that doesn't have linkup notification signal
+>>>>>>>> to work with pcitest.
+>>>>>>>>
+>>>>>>>> Updates the binding documentation accordingly.
+>>>>>>>
+>>>>>>> Valid for all the series: use imperative sentences.
+>>>>>>>
+>>>>>>> eg:
+>>>>>>>
+>>>>>>> "Update the binding documentation accordingly".
+>>>>>>>
+>>>>>>> not
+>>>>>>>
+>>>>>>> "Updates the binding documentation accordingly".
+>>>>>>>
+>>>>>>>> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>>>>>>> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>>>>>> ---
+>>>>>>>> Change v2->v3:
+>>>>>>>>  - Added second entry in pci_epf_test_ids structure.
+>>>>>>>>  - Remove test_reg_bar field assignment on second entry.
+>>>>>>>> Changes v3->v4:
+>>>>>>>>  - Nothing changed, just to follow the patch set version.
+>>>>>>>> Changes v4->v5:
+>>>>>>>>  - Changed pci_epf_test_cfg2 to pci_epf_test_designware.
+>>>>>>>> Changes v5->v6:
+>>>>>>>>  - Changed name field from pci_epf_test_designware to pci_epf_test_dw.
+>>>>>>>> Changes v6->v7:
+>>>>>>>>  - Changed variable name from data_cfg2 to data_linkup_notifier_disabled.
+>>>>>>>>
+>>>>>>>>  Documentation/PCI/endpoint/function/binding/pci-test.txt | 2 ++
+>>>>>>>>  drivers/pci/endpoint/functions/pci-epf-test.c            | 8 ++++++++
+>>>>>>>>  2 files changed, 10 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.txt b/Documentation/PCI/endpoint/function/binding/pci-test.txt
+>>>>>>>> index 3b68b95..dc39f47 100644
+>>>>>>>> --- a/Documentation/PCI/endpoint/function/binding/pci-test.txt
+>>>>>>>> +++ b/Documentation/PCI/endpoint/function/binding/pci-test.txt
+>>>>>>>> @@ -1,6 +1,8 @@
+>>>>>>>>  PCI TEST ENDPOINT FUNCTION
+>>>>>>>>  
+>>>>>>>>  name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
+>>>>>>>> +name: Should be "pci_epf_test_dw" to bind to the pci_epf_test driver
+>>>>>>>> +      with a custom configuration for the designware EP.
+>>>>>>>
+>>>>>>> The link between the "name" and the device created is quite obscure and
+>>>>>>> reading pci-test-howto.txt certainly does not clarify it.
+>>>>>>>
+>>>>>>> In pci-test-howto.txt an explanation should be added to the configs
+>>>>>>> device creation paragraph to clarify it.
+>>>>>>>
+>>>>>>>>  Configurable Fields:
+>>>>>>>>  vendorid	 : should be 0x104c
+>>>>>>>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+>>>>>>>> index 7cef851..4ab463b 100644
+>>>>>>>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>>>>>>>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>>>>>>>> @@ -459,10 +459,18 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>>>>>>>  	return 0;
+>>>>>>>>  }
+>>>>>>>>  
+>>>>>>>> +static const struct pci_epf_test_data data_linkup_notifier_disabled = {
+>>>>>>>> +	.linkup_notifier = false
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>>  static const struct pci_epf_device_id pci_epf_test_ids[] = {
+>>>>>>>>  	{
+>>>>>>>>  		.name = "pci_epf_test",
+>>>>>>>>  	},
+>>>>>>>> +	{
+>>>>>>>> +		.name = "pci_epf_test_dw",
+>>>>>>>> +		.driver_data = (kernel_ulong_t)&data_linkup_notifier_disabled,
+>>>>>>>> +	},
+>>>>>>>>  	{},
+>>>>>>>
+>>>>>>> Should not this be a property derived from the controller compatible
+>>>>>>> property instead of the test device name written in configfs ?
+>>>>>>
+>>>>>> pci_epf_test is an independent driver on its own that operates in a layer above
+>>>>>> the controller driver. So it does not get the controller compatible (which is
+>>>>>> used in controller drivers like pcie-designware-plat.c). pci_epf_test uses
+>>>>>> "pci_epf_device_id" which is _similar_ to "of_device_id" used by platform drivers.
+>>>>>
+>>>>> I understand that, the problem is that the independent driver depends on
+>>>>> features of the related controller driver as this patch shows. This
+>>>>> patch basically says that if you use a specific path in configfs (that
+>>>>> includes pci_epf_test_dw) your device has specific HW features (eg
+>>>>> linkup notifier above), that obviously depends on the platform HW not on
+>>>>> the string you use in configfs.
+>>>>>
+>>>>> What I am questioning is a) if I understand this right and b) whether
+>>>>> this is the right approach.
+>>>>
+>>>> Your understanding is right. Ideally pci-epf-test driver shouldn't have any HW
+>>>> specific configuration. But different HW have different configurations and
+>>>> pci-epf-test should be informed of the configuration the HW supports.
+>>>
+>>> I am honestly very confused. First off, I do not understand what this
+>>> patch really does (or better what DW can't do so that it needs a
+>>> specific configfs string and therefore a specific configuration).
+>>>
+>>> What's the purpose of the linkup notifier ? What does it mean that
+>>> the DW HW can't handle it ?
+>>>
+>>> Are we referring to the pci_epf_linkup() function ?
+>>>
+>>> If it is a HW configuration (ie the DW HW does not have a signal to
+>>> report that the link is up ?) its enablement must depend on HW
+>>> controller properties not configfs entries, I do not like what this
+>>> patch does (probably because I am confused and I do not understand it).
+>>>
+>>> Please let me know your thoughts on this, thanks.
+>>
+>> On my setup, the EP is unable generate a signal which is responsible
+>> for notify that the link is established, being therefore necessary to
+>> emulate it, this is done by setting the linkup_notifier variable to
+>> false.
 > 
-> mt6797 is a highly integrated SoCs, it uses mt6351 for power
-> management. We need to add pwrap support to access mt6351.
-> Pwrap of mt6797 support new feature include starvation and channel
-> request exception interrupt, dynamic starvation priority
-> adjustment mechanism.
+> What I do not understand is why the workqueue notification can't be called
+> irrespective of the linkup notifier value from pci_epf_test_bind(),
+> what's the point in calling it earlier with pci_epf_linkup() (or the
+> other way around why is it safe to call it a bind() time if there
+> is no notification available - which is the DW case).
 
-suggest line wrapping closely at 75 columns
-
+The linkup notifier is used just to prevent the system from wasting cpu cycles.
+Without linkup notifier, pci_epf_test will start checking for commands from
+host after the pci_epf_test is bound to the EP controller (bind() callback)
+though the host can issue commands only when after the link is up. So for
+platforms which supports linkup notification, it's better we poll command
+register only after link is established.
 > 
-> Signed-off-by: Argus Lin <argus.lin@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-pmic-wrap.c | 110 ++++++++++++++++++++++++++++++++---
->  1 file changed, 102 insertions(+), 8 deletions(-)
+> [...]
 > 
-> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> index a6366f147b79..0d4a2dae6912 100644
-> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> @@ -284,6 +284,12 @@ enum pwrap_regs {
->  	PWRAP_DVFS_WDATA7,
->  	PWRAP_SPMINF_STA,
->  	PWRAP_CIPHER_EN,
-> +
-> +	/* MT6797 series regs */
-> +	PWRAP_INT1_EN,
-> +	PWRAP_INT1_FLG_RAW,
-> +	PWRAP_INT1_FLG,
-> +	PWRAP_INT1_CLR,
->  };
->  
->  static int mt2701_regs[] = {
-> @@ -372,6 +378,43 @@ static int mt2701_regs[] = {
->  	[PWRAP_ADC_RDATA_ADDR2] =	0x154,
->  };
->  
-> +static int mt6797_regs[] = {
-> +	[PWRAP_MUX_SEL] =		0x0,
-> +	[PWRAP_WRAP_EN] =		0x4,
-> +	[PWRAP_DIO_EN] =		0x8,
-> +	[PWRAP_SIDLY] =			0xC,
-> +	[PWRAP_RDDMY] =			0x10,
-> +	[PWRAP_CSHEXT_WRITE] =		0x18,
-> +	[PWRAP_CSHEXT_READ] =		0x1C,
-> +	[PWRAP_CSLEXT_START] =		0x20,
-> +	[PWRAP_CSLEXT_END] =		0x24,
-> +	[PWRAP_STAUPD_PRD] =		0x28,
-> +	[PWRAP_HARB_HPRIO] =		0x50,
-> +	[PWRAP_HIPRIO_ARB_EN] =		0x54,
-> +	[PWRAP_MAN_EN] =		0x60,
-> +	[PWRAP_MAN_CMD] =		0x64,
-> +	[PWRAP_WACS0_EN] =		0x70,
-> +	[PWRAP_WACS1_EN] =		0x84,
-> +	[PWRAP_WACS2_EN] =		0x98,
-> +	[PWRAP_INIT_DONE2] =		0x9C,
-> +	[PWRAP_WACS2_CMD] =		0xA0,
-> +	[PWRAP_WACS2_RDATA] =		0xA4,
-> +	[PWRAP_WACS2_VLDCLR] =		0xA8,
-> +	[PWRAP_INT_EN] =		0xC0,
-> +	[PWRAP_INT_FLG_RAW] =		0xC4,
-> +	[PWRAP_INT_FLG] =		0xC8,
-> +	[PWRAP_INT_CLR] =		0xCC,
-> +	[PWRAP_INT1_EN] =		0xD0,
-> +	[PWRAP_INT1_FLG_RAW] =		0xD4,
-> +	[PWRAP_INT1_FLG] =		0xD8,
-> +	[PWRAP_INT1_CLR] =		0xDC,
-> +	[PWRAP_TIMER_EN] =		0xF4,
-> +	[PWRAP_WDT_UNIT] =		0xFC,
-> +	[PWRAP_WDT_SRC_EN] =		0x100,
-> +	[PWRAP_DCM_EN] =		0x1CC,
-> +	[PWRAP_DCM_DBC_PRD] =		0x1D4,
-> +};
-> +
+>> Since the linkup notifier and BAR index (where auxiliary registers are
+>> located) may be configurable and is something platform dependent,
+>> perhaps the configuration of this variables should be done by module
+>> parameter and not by configfs, leaving this configuration
+>> responsibility in charge of each platform.
+> 
+> They are platform dependent because they depend on the EP controller.
+> That's why I said that those are EP controller parameters. I do not
+> think they are module parameters either - they should be part of HW
+> description in firmware.
 
-trim unused registers if any
+The problem is because pci-epf-test cannot be described in HW. pci-epf-test is
+also not automatically bound to the EP controller but is bound by the user like
+below
+ln -s functions/pci_epf_test/func1 controllers/51000000.pcie_ep/
 
->  static int mt7622_regs[] = {
->  	[PWRAP_MUX_SEL] =		0x0,
->  	[PWRAP_WRAP_EN] =		0x4,
-> @@ -647,6 +690,7 @@ enum pmic_type {
->  
->  enum pwrap_type {
->  	PWRAP_MT2701,
-> +	PWRAP_MT6797,
->  	PWRAP_MT7622,
->  	PWRAP_MT8135,
->  	PWRAP_MT8173,
-> @@ -1006,6 +1050,12 @@ static void pwrap_init_chip_select_ext(struct pmic_wrapper *wrp, u8 hext_write,
->  static int pwrap_common_init_reg_clock(struct pmic_wrapper *wrp)
->  {
->  	switch (wrp->master->type) {
-> +	case PWRAP_MT6797:
-> +		pwrap_writel(wrp, 0x8, PWRAP_RDDMY);
-> +		pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_RDDMY_NO],
-> +			    0x8);
-> +		pwrap_init_chip_select_ext(wrp, 0x88, 0x55, 3, 0);
-> +		break;
+So given that user anyways has to bind the epf device to the controller, based
+on the platform the user can use a different configfs entry like below
+ln -s functions/pci_epf_test_dw/func1 controllers/51000000.pcie_ep/ or
+ln -s functions/pci_epf_test_k2g/func1 controllers/21800000.pcie-ep/
 
-the setup for timing is much similar to mt2701 + mt6323
+If the epf can be described in dt, then something like below can be done
+pcie1_ep: pcie_ep@51000000 {
+	compatible = "ti,dra7-pcie-ep";
+	interrupts = <0 232 0x4>;
+	num-lanes = <1>;
+	num-ib-windows = <4>;
+	num-ob-windows = <16>;
+	phys = <&pcie1_phy>;
+	phy-names = "pcie-phy0";
+	pci_epf_test: pci_epf_test@0 {
+		name = "pci_epf_test_dw";
+		<other properties>;
+	}
+};
 
-so we can merge the both logic into one, and then hope to eliminate specific pwrap_mt2701_init_reg_clock totally
+With this pci-dra7xx.c driver should create pci_epf_device using
+pci_epf_create("pci_epf_test_dw");
 
->  	case PWRAP_MT8173:
->  		pwrap_init_chip_select_ext(wrp, 0, 4, 2, 2);
->  		break;
-> @@ -1076,11 +1126,14 @@ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
->  		break;
->  	case PWRAP_MT2701:
->  	case PWRAP_MT8173:
-> +	case PWRAP_MT6797:
+Then the driver_data corresponding to "pci_epf_test_dw" will select linkup
+notifier or BAR index etc.
 
-need to be listed in alphabetical order
+Having different pci_epf_device_id entries and corresponding driver_data for
+each entry seems fine to me (as done in this patch). We use configfs only since
+pci_epf_test cannot be described in dt.
 
->  		pwrap_writel(wrp, 1, PWRAP_CIPHER_EN);
->  		break;
->  	case PWRAP_MT7622:
->  		pwrap_writel(wrp, 0, PWRAP_CIPHER_EN);
->  		break;
-> +	default:
-> +		break;
->  	}
->  
->  	/* Config cipher mode @PMIC */
-> @@ -1325,6 +1378,15 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
->  
->  	pwrap_writel(wrp, 0xffffffff, PWRAP_INT_CLR);
->  
-> +	/* If we support INT1 interrupt, we also need to clear it */
-> +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_INT1_EN)) {
-> +		rdata = pwrap_readl(wrp, PWRAP_INT1_FLG);
-> +
-> +		dev_err(wrp->dev, "unexpected interrupt int1=0x%x\n", rdata);
-> +
-> +		pwrap_writel(wrp, rdata, PWRAP_INT1_CLR);
-> +	}
-> +
-
-it seems no required to add PWRAP_CAP_INT1_EN:
-
-the CAP is not to take any action for any INTs raised, instead, it can be disabled at initial.
-
->  	return IRQ_HANDLED;
->  }
->  
-> @@ -1446,6 +1508,19 @@ static const struct pmic_wrapper_type pwrap_mt8173 = {
->  	.init_soc_specific = pwrap_mt8173_init_soc_specific,
->  };
->  
-> +static const struct pmic_wrapper_type pwrap_mt6797 = {
-> +	.regs = mt6797_regs,
-> +	.type = PWRAP_MT6797,
-> +	.arb_en_all = 0x01fff,
-> +	.int_en_all = 0xffffffc6,
-> +	.int1_en_all = 0x0001ffff,
-> +	.spi_w = PWRAP_MAN_CMD_SPI_WRITE,
-> +	.wdt_src = PWRAP_WDT_SRC_MASK_ALL,
-> +	.caps = PWRAP_CAP_DCM | PWRAP_CAP_INT1_EN,
-> +	.init_reg_clock = pwrap_common_init_reg_clock,
-> +	.init_soc_specific = NULL,
-> +};
-> +
->  static const struct of_device_id of_pwrap_match_tbl[] = {
->  	{
->  		.compatible = "mediatek,mt2701-pwrap",
-> @@ -1460,6 +1535,9 @@ static const struct of_device_id of_pwrap_match_tbl[] = {
->  		.compatible = "mediatek,mt8173-pwrap",
->  		.data = &pwrap_mt8173,
->  	}, {
-> +		.compatible = "mediatek,mt6797-pwrap",
-> +		.data = &pwrap_mt6797,
-
-each entry needs to be sorted in alphabetical order
-
-> +	}, {
->  		/* sentinel */
->  	}
->  };
-> @@ -1503,11 +1581,13 @@ static int pwrap_probe(struct platform_device *pdev)
->  	if (IS_ERR(wrp->base))
->  		return PTR_ERR(wrp->base);
->  
-> -	wrp->rstc = devm_reset_control_get(wrp->dev, "pwrap");
-> -	if (IS_ERR(wrp->rstc)) {
-> -		ret = PTR_ERR(wrp->rstc);
-> -		dev_dbg(wrp->dev, "cannot get pwrap reset: %d\n", ret);
-> -		return ret;
-> +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_RESET)) {
-> +		wrp->rstc = devm_reset_control_get(wrp->dev, "pwrap");
-
-there should be a reset bit present for pwrap on infrasys.
-
-the specific condition can be dropped when the reset cell is exported from infrasys and then the device has a reference to it.
-
-> +		if (IS_ERR(wrp->rstc)) {
-> +			ret = PTR_ERR(wrp->rstc);
-> +			dev_dbg(wrp->dev, "cannot get pwrap reset: %d\n", ret);
-> +			return ret;
-> +		}
->  	}
->  
->  	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_BRIDGE)) {
-> @@ -1549,9 +1629,17 @@ static int pwrap_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto err_out1;
->  
-> -	/* Enable internal dynamic clock */
-> -	pwrap_writel(wrp, 1, PWRAP_DCM_EN);
-> -	pwrap_writel(wrp, 0, PWRAP_DCM_DBC_PRD);
-> +	/*
-> +	 * add dcm capability check
-> +	 */
-> +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_DCM)) {
-
-the specific condition can be dropped since so far all devices the driver can support are owning PWRAP_CAP_DCM
-
-> +		if (wrp->master->type == PWRAP_MT6797)
-> +			pwrap_writel(wrp, 3, PWRAP_DCM_EN);
-
-the setup for MT6797 can be moved into .init_soc_specific callback ?
-
-> +		else
-> +			pwrap_writel(wrp, 1, PWRAP_DCM_EN);
-> +
-> +		pwrap_writel(wrp, 0, PWRAP_DCM_DBC_PRD);
-> +	}
->  
->  	/*
->  	 * The PMIC could already be initialized by the bootloader.
-> @@ -1580,6 +1668,12 @@ static int pwrap_probe(struct platform_device *pdev)
->  	pwrap_writel(wrp, wrp->master->wdt_src, PWRAP_WDT_SRC_EN);
->  	pwrap_writel(wrp, 0x1, PWRAP_TIMER_EN);
->  	pwrap_writel(wrp, wrp->master->int_en_all, PWRAP_INT_EN);
-> +	/*
-> +	 * We add INT1 interrupt to handle starvation and request exception
-> +	 * If we support it, we should enable them here.
-> +	 */
-> +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_INT1_EN))
-> +		pwrap_writel(wrp, wrp->master->int1_en_all, PWRAP_INT1_EN);
->  
-
-if there is no explicitly enabling on INT1, then ISR handling for INT1 is also unnecessary
-
->  	irq = platform_get_irq(pdev, 0);
->  	ret = devm_request_irq(wrp->dev, irq, pwrap_interrupt,
+Thanks
+Kishon
