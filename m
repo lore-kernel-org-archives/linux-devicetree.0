@@ -1,64 +1,48 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: [PATCH v2 03/14] dt-bindings: qcom_nandc: make nand-ecc-strength
- optional
-Date: Thu,  3 May 2018 17:50:30 +0530
-Message-ID: <1525350041-22995-4-git-send-email-absahu@codeaurora.org>
-References: <1525350041-22995-1-git-send-email-absahu@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1525350041-22995-1-git-send-email-absahu@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, Richard Weinberger <richard@nod.at>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Abhishek Sahu <absahu@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Andy Gross <andy.gross@linaro.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+From: Amit Nischal <anischal@codeaurora.org>
+Subject: [PATCH v1 0/2] Add QCOM video clock controller driver
+Date: Thu,  3 May 2018 18:05:23 +0530
+Message-ID: <1525350925-16006-1-git-send-email-anischal@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Amit Nischal <anischal@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Now, nand-ecc-strength is optional. If specified in DT, then
-controller will use this ECC strength otherwise ECC strength will
-be calculated according to chip requirement and available OOB size.
+Changes in v1:
+   https://lkml.org/lkml/2018/4/24/545
+Addressed below review comments given by Rob
+- Change the compatible property as per '<vendor>,<soc>-<block>' format.
+- Add header definitions for resets and power-domain cells.
 
-Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
----
-* Changes from v1:
+This patch series adds a driver and device tree documentation binding
+for the video clock controller on some Qualcomm Technologies, Inc, SoCs
+such as SDM845. This would allow video drivers to probe and control their
+clocks.
 
-  NEW PATCH
+The video clock driver depends upon the RPMh driver[1], command DB driver[2],
+RPMh clock driver[3], rcg2 shared ops[4] and GCC clock driver[5] changes
+which are undergoing review.
 
- Documentation/devicetree/bindings/mtd/qcom_nandc.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+[1]: https://lkml.org/lkml/2018/4/19/914
+[2]: https://lkml.org/lkml/2018/4/5/451
+[3]: https://lkml.org/lkml/2018/4/24/390
+[4]: https://lkml.org/lkml/2018/4/18/367
+[5]: https://lkml.org/lkml/2018/4/30/533
 
-diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-index 73d336be..f246aa0 100644
---- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-+++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-@@ -45,11 +45,13 @@ Required properties:
- 			number (e.g., 0, 1, 2, etc.)
- - #address-cells:	see partition.txt
- - #size-cells:		see partition.txt
--- nand-ecc-strength:	see nand.txt
- - nand-ecc-step-size:	must be 512. see nand.txt for more details.
- 
- Optional properties:
- - nand-bus-width:	see nand.txt
-+- nand-ecc-strength:	see nand.txt. If not specified, then ECC strength will
-+			be used according to chip requirement and available
-+			OOB size.
- 
- Each nandcs device node may optionally contain a 'partitions' sub-node, which
- further contains sub-nodes describing the flash partition mapping. See
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc.
-is a member of Code Aurora Forum, hosted by The Linux Foundation
+Amit Nischal (2):
+  dt-bindings: clock: Introduce QCOM Video clock controller bindings
+  clk: qcom: Add video clock controller driver for SDM845
 
+ .../devicetree/bindings/clock/qcom,videocc.txt     |  18 ++
+ drivers/clk/qcom/Kconfig                           |  11 +
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/videocc-sdm845.c                  | 358 +++++++++++++++++++++
+ include/dt-bindings/clock/qcom,videocc-sdm845.h    |  25 ++
+ 5 files changed, 413 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,videocc.txt
+ create mode 100644 drivers/clk/qcom/videocc-sdm845.c
+ create mode 100644 include/dt-bindings/clock/qcom,videocc-sdm845.h
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
