@@ -1,82 +1,192 @@
-From: "Reizer, Eyal" <eyalr@ti.com>
-Subject: RE: [EXTERNAL] Re: [PATCH] arm: dts: am437x-sk-evm: add wilink8
-   support
-Date: Thu, 3 May 2018 06:41:19 +0000
-Message-ID: <5cc906da15da45ab96e06957f878b65b@ti.com>
-References: <1525159453-32489-1-git-send-email-eyalr@ti.com>
- <20180502145100.GK98604@atomide.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v5 1/3] mmc: dw_mmc-bluefield: Add driver extension
+Date: Thu, 3 May 2018 15:25:09 +0800
+Message-ID: <485d5c78-e16f-5034-9314-9e17e48d3570@rock-chips.com>
+References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+ <1525198787-46403-1-git-send-email-lsun@mellanox.com>
+ <c95b926f-2129-c6de-7112-728eea9c7a3a@rock-chips.com>
+ <AM2PR05MB0753973D8C92F831D48DA19CA1800@AM2PR05MB0753.eurprd05.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180502145100.GK98604@atomide.com>
-Content-Language: en-US
+In-Reply-To: <AM2PR05MB0753973D8C92F831D48DA19CA1800@AM2PR05MB0753.eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Eyal Reizer <eyalreizer@gmail.com>
-Cc: "bcousson@baylibre.com" <bcousson@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Liming Sun <lsun@mellanox.com>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: shawn.lin@rock-chips.com, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
->=20
-> * Eyal Reizer <eyalreizer@gmail.com> [180501 00:26]:
-> > enable mmc3 used for wlan and uart1 used for bluetooth
-> > configure the gpios used for wlan and bluetooth controls
-> > add fixed voltage regulator used for wlan power control
-> ...
-> >  / {
-> >  	model =3D "TI AM437x SK EVM";
-> > @@ -158,6 +159,22 @@
-> >  			};
-> >  		};
-> >  	};
-> > +
-> > +	vmmcwl_fixed: fixedregulator-mmcwl {
-> > +		/*
-> > +		 * WL_EN is not SDIO standard compliant. It is an out of band
-> > +		 * signal and hard to be dealt with in a standard way by the
-> > +		 * SDIO core driver.
-> > +		 * So modelling the WL_EN line as a regulator was a natural
-> > +		 * choice as the MMC core already deals with MMC supplies.
-> > +		 */
-> > +		compatible =3D "regulator-fixed";
-> > +		regulator-name =3D "vmmcwl_fixed";
-> > +		regulator-min-microvolt =3D <1800000>;
-> > +		regulator-max-microvolt =3D <1800000>;
-> > +		gpio =3D <&gpio4 8 GPIO_ACTIVE_HIGH>;
-> > +		enable-active-high;
-> > +	};
-> >  };
->=20
-> Interesting that it needs much longer delay here compared to the
-> earlier?
 
-Where do you see a delay in here?
-There is no startup-delay-us value used in this patch.
+On 2018/5/2 20:45, Liming Sun wrote:
+> Please see response inline.
+> 
+> Thanks,
+> Liming
+> 
+>> -----Original Message-----
+>> From: Shawn Lin [mailto:shawn.lin@rock-chips.com]
+>> Sent: Tuesday, May 1, 2018 9:02 PM
+>> To: Liming Sun <lsun@mellanox.com>; Mark Rutland
+>> <mark.rutland@arm.com>; Jaehoon Chung <jh80.chung@samsung.com>;
+>> Catalin Marinas <catalin.marinas@arm.com>; Will Deacon
+>> <will.deacon@arm.com>
+>> Cc: Ulf Hansson <ulf.hansson@linaro.org>; Rob Herring
+>> <robh+dt@kernel.org>; shawn.lin@rock-chips.com; linux-
+>> mmc@vger.kernel.org; devicetree@vger.kernel.org; linux-
+>> kernel@vger.kernel.org; stable@kernel.org
+>> Subject: Re: [PATCH v5 1/3] mmc: dw_mmc-bluefield: Add driver extension
+>>
+>> On 2018/5/2 2:19, Liming Sun wrote:
+>>> This commit adds extension to the dw_mmc driver for Mellanox BlueField
+>>> SoC. It updates the UHS_REG_EXT register to bring up the eMMC card on
+>>> this SoC.
+>>>
+>>> Cc: stable@kernel.org
+>>
+>> Why?
+> 
+> [Liming] This is recommended value from HW team. Without this setting, the eMMC
+> controller and cards can be found in Linux, but not stable. Writing to it could caused
+> CRC error.
 
->=20
-> BTW, I do have a patch in work to add pwrseq support for wlcore that
-> allows leaving out the regulator here. It still needs a bit more
-> work though.
->=20
-> And I also have a series in work to make wlcore use runtime PM that
-> needs even more work, just FYI to avoid any duplicate work.
->=20
-> Hmm you don't happen to have a patch series somewhere making
-> wlcore use the SDIO dat lien interrupt?
-wilink has always used out of band interrupt (using wlan_irq gpio).
-in-band interrupts was not supported.
-See section 10.5.2 in this the wl18xx hardware integration guide:
-http://www.ti.com/lit/ug/swru437/swru437.pdf
+Well, I refered to the "Cc: stable@kernel.org" in the commit msg.
 
->=20
-> I think we should use that when idle rather than the (edge) gpio
-> interrupt as the SDIO dat interrupt is level sensitive and wired
-> to the always on gpio bank for most SDIO controller instances.
-> On runtime PM wakeup, there's no status anywhere to been with the
-> GPIO edge interrupt.
->=20
-I agree that it would have been better, especially for cases such as wake=20
-On wlan, but again, in-band interrupt was something that was talked=20
-about way back but it was never implemented.
-
-Best Regards,
-Eyal
+> 
+>>
+>>> Signed-off-by: Liming Sun <lsun@mellanox.com>
+>>> Reviewed-by: David Woods <dwoods@mellanox.com>
+>>> ---
+>>>    drivers/mmc/host/Kconfig            |  9 +++++
+>>>    drivers/mmc/host/Makefile           |  1 +
+>>>    drivers/mmc/host/dw_mmc-bluefield.c | 72
+>> +++++++++++++++++++++++++++++++++++++
+>>>    3 files changed, 82 insertions(+)
+>>>    create mode 100644 drivers/mmc/host/dw_mmc-bluefield.c
+>>>
+>>> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+>>> index 9589f9c..26ac6b5 100644
+>>> --- a/drivers/mmc/host/Kconfig
+>>> +++ b/drivers/mmc/host/Kconfig
+>>> @@ -717,6 +717,15 @@ config MMC_DW_K3
+>>>    	  Synopsys DesignWare Memory Card Interface driver. Select this
+>> option
+>>>    	  for platforms based on Hisilicon K3 SoC's.
+>>>
+>>> +config MMC_DW_BLUEFIELD
+>>
+>> And did you have feedback of my comment in V2？
+>> http://lists-archives.com/linux-kernel/29104830-mmc-dw_mmc-bluefield-
+>> add-driver-extension.html
+>>
+>>> +	tristate "BlueField specific extensions for Synopsys DW Memory Card
+>> Interface"
+>>> +	depends on MMC_DW
+>>> +	select MMC_DW_PLTFM
+>>> +	help
+>>> +	  This selects support for Mellanox BlueField SoC specific extensions
+>> to
+>>> +	  the Synopsys DesignWare Memory Card Interface driver. Select this
+>>> +	  option for platforms based on Mellanox BlueField SoC's.
+>>> +
+>>>    config MMC_DW_PCI
+>>>    	tristate "Synopsys Designware MCI support on PCI bus"
+>>>    	depends on MMC_DW && PCI
+>>> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+>>> index 6aead24..267b3f1 100644
+>>> --- a/drivers/mmc/host/Makefile
+>>> +++ b/drivers/mmc/host/Makefile
+>>> @@ -55,6 +55,7 @@ obj-$(CONFIG_MMC_DW_K3)		+= dw_mmc-
+>> k3.o
+>>>    obj-$(CONFIG_MMC_DW_PCI)	+= dw_mmc-pci.o
+>>>    obj-$(CONFIG_MMC_DW_ROCKCHIP)	+= dw_mmc-rockchip.o
+>>>    obj-$(CONFIG_MMC_DW_ZX)		+= dw_mmc-zx.o
+>>> +obj-$(CONFIG_MMC_DW_BLUEFIELD)	+= dw_mmc-bluefield.o
+>>>    obj-$(CONFIG_MMC_SH_MMCIF)	+= sh_mmcif.o
+>>>    obj-$(CONFIG_MMC_JZ4740)	+= jz4740_mmc.o
+>>>    obj-$(CONFIG_MMC_VUB300)	+= vub300.o
+>>> diff --git a/drivers/mmc/host/dw_mmc-bluefield.c
+>> b/drivers/mmc/host/dw_mmc-bluefield.c
+>>> new file mode 100644
+>>> index 0000000..12067b1
+>>> --- /dev/null
+>>> +++ b/drivers/mmc/host/dw_mmc-bluefield.c
+>>> @@ -0,0 +1,72 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +/*
+>>> + * Copyright (C) 2018 Mellanox Technologies.
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License as published by
+>>> + * the Free Software Foundation; either version 2 of the License, or
+>>> + * (at your option) any later version.
+>>> + */
+>>> +
+>>> +#include <linux/module.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/irq.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/pm_runtime.h>
+>>> +#include <linux/mmc/host.h>
+>>> +#include <linux/mmc/mmc.h>
+>>> +#include <linux/of.h>
+>>> +
+>>> +#include "dw_mmc.h"
+>>> +#include "dw_mmc-pltfm.h"
+>>> +
+>>> +static void dw_mci_bluefield_set_ios(struct dw_mci *host, struct
+>> mmc_ios *ios)
+>>> +{
+>>> +	u32 regs;
+>>> +
+>>> +	/* Set drive=4 (bit 29:23) and sample=2 (bit 22:16) in UHS_REG_EXT.
+>> */
+>>> +	regs = mci_readl(host, UHS_REG_EXT);
+>>> +	regs = (regs & ~0x3F100000 & ~0x7F0000) | (4 << 23) | (2 << 16);
+>>> +	mci_writel(host, UHS_REG_EXT, regs);
+>>> +}
+>>> +
+>>> +static const struct dw_mci_drv_data bluefield_drv_data = {
+>>> +	.set_ios		= dw_mci_bluefield_set_ios
+>>> +};
+>>> +
+>>> +static const struct of_device_id dw_mci_bluefield_match[] = {
+>>> +	{ .compatible = "mellanox,bluefield-dw-mshc",
+>>> +		.data = &bluefield_drv_data },
+>>> +	{},
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, dw_mci_bluefield_match);
+>>> +
+>>> +static int dw_mci_bluefield_probe(struct platform_device *pdev)
+>>> +{
+>>> +	const struct dw_mci_drv_data *drv_data = NULL;
+>>> +	const struct of_device_id *match;
+>>> +
+>>> +	if (pdev->dev.of_node) {
+>>> +		match = of_match_node(dw_mci_bluefield_match,
+>>> +				      pdev->dev.of_node);
+>>> +		drv_data = match->data;
+>>> +	}
+>>> +
+>>> +	return dw_mci_pltfm_register(pdev, drv_data);
+>>> +}
+>>> +
+>>> +static struct platform_driver dw_mci_bluefield_pltfm_driver = {
+>>> +	.probe		= dw_mci_bluefield_probe,
+>>> +	.remove		= dw_mci_pltfm_remove,
+>>> +	.driver		= {
+>>> +		.name		= "dwmmc_bluefield",
+>>> +		.of_match_table	= dw_mci_bluefield_match,
+>>> +		.pm		= &dw_mci_pltfm_pmops,
+>>> +	},
+>>> +};
+>>> +
+>>> +module_platform_driver(dw_mci_bluefield_pltfm_driver);
+>>> +
+>>> +MODULE_DESCRIPTION("BlueField DW Multimedia Card driver");
+>>> +MODULE_AUTHOR("Mellanox Technologies");
+>>> +MODULE_LICENSE("GPL v2");
+>>>
+> 
+> 
+> 
+> 
