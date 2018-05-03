@@ -1,76 +1,48 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: [PATCH] ARM: tegra: apalis-tk1: fix high speed uart compatible
-Date: Thu,  3 May 2018 09:46:46 +0200
-Message-ID: <20180503074646.24300-1-marcel@ziswiler.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v5 00/14] mmc: sdhci-omap: Add UHS/HS200 mode support
+Date: Thu, 3 May 2018 10:51:42 +0200
+Message-ID: <CAPDyKFr4=p5Q1oEDVQct+8GeDm-rbQCLyE8+3RqGBkWLvDTKdA@mail.gmail.com>
+References: <20180427114723.2687-1-kishon@ti.com> <CAPDyKFqb=Dyi=UMZBLKcrBbmaWbGEjf-Vp5vQ0b7_F__+YnXHQ@mail.gmail.com>
+ <20180502145551.GL98604@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180502145551.GL98604@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On 2 May 2018 at 16:55, Tony Lindgren <tony@atomide.com> wrote:
+> * Ulf Hansson <ulf.hansson@linaro.org> [180502 13:17]:
+>> On 27 April 2018 at 13:47, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>> > Add UHS/HS200 mode support in sdhci-omap. The programming sequence
+>> > for voltage switching, tuning is followed from AM572x TRM
+>> > http://www.ti.com/lit/ug/spruhz6j/spruhz6j.pdf
+>> > (Similar to all AM57x/DRA7x SoCs). The patch series also implements
+>> > workaround for errata published in
+>> > http://www.ti.com/lit/er/sprz429l/sprz429l.pdf
+>> >
+>> > patches are created on top of
+>> > git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git next
+>> >
+>> > The patches along with dt has also been pushed to
+>> > https://github.com/kishon/linux-wip.git sdhci_uhs_v5
+>>
+>> Thanks, applied for next!
+>
+> OK. Ulf, can I use some commit id from your next as a base for
+> the related dts changes?
+>
 
-Turns out the compatible "nvidia,tegra124-hsuart" does not (yet) exit
-and everybody else also uses it only in conjunction with
-"nvidia,tegra30-hsuart".
+No, I am re-basing my next branch from time to time so it's not a good idea.
 
-Reported-by: Martin Šafařík <msafarik@retia.cz>
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Instead I have shared an immutable branch for your to pull/merge:
+git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git sdhci_omap
 
----
+I also signed the top commit on this branch: sdhci-omap-v4.17-rc3
 
- arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi | 6 +++---
- arch/arm/boot/dts/tegra124-apalis.dtsi      | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+The branch is based on 4.17-rc3.
 
-diff --git a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-index bb67edb016c5..3455822350c5 100644
---- a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-+++ b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-@@ -1536,15 +1536,15 @@
- 	};
- 
- 	serial@70006040 {
--		compatible = "nvidia,tegra124-hsuart";
-+		compatible = "nvidia,tegra124-hsuart", "nvidia,tegra30-hsuart";
- 	};
- 
- 	serial@70006200 {
--		compatible = "nvidia,tegra124-hsuart";
-+		compatible = "nvidia,tegra124-hsuart", "nvidia,tegra30-hsuart";
- 	};
- 
- 	serial@70006300 {
--		compatible = "nvidia,tegra124-hsuart";
-+		compatible = "nvidia,tegra124-hsuart", "nvidia,tegra30-hsuart";
- 	};
- 
- 	hdmi_ddc: i2c@7000c700 {
-diff --git a/arch/arm/boot/dts/tegra124-apalis.dtsi b/arch/arm/boot/dts/tegra124-apalis.dtsi
-index 65a2161b9b8e..9f960c84ba10 100644
---- a/arch/arm/boot/dts/tegra124-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra124-apalis.dtsi
-@@ -1565,15 +1565,15 @@
- 	};
- 
- 	serial@70006040 {
--		compatible = "nvidia,tegra124-hsuart";
-+		compatible = "nvidia,tegra124-hsuart", "nvidia,tegra30-hsuart";
- 	};
- 
- 	serial@70006200 {
--		compatible = "nvidia,tegra124-hsuart";
-+		compatible = "nvidia,tegra124-hsuart", "nvidia,tegra30-hsuart";
- 	};
- 
- 	serial@70006300 {
--		compatible = "nvidia,tegra124-hsuart";
-+		compatible = "nvidia,tegra124-hsuart", "nvidia,tegra30-hsuart";
- 	};
- 
- 	hdmi_ddc: i2c@7000c400 {
--- 
-2.14.3
+Kind regards
+Uffe
