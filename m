@@ -1,61 +1,47 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2] arm: exynos/s3c: dts: Remove leading 0x and 0s from
- bindings notation
-Date: Thu, 3 May 2018 18:30:27 +0200
-Message-ID: <20180503163027.lthixenaguphn4du@kozik-lap>
-References: <20171215124630.30082-1-malat@debian.org>
- <20180502201153.7459-1-malat@debian.org>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v4 2/2] drivers: remove force dma flag from buses
+Date: Thu, 3 May 2018 22:06:22 +0530
+Message-ID: <20180503163622.GA6014@localhost>
+References: <1520868292-2479-1-git-send-email-nipun.gupta@nxp.com>
+ <1524883919-29484-1-git-send-email-nipun.gupta@nxp.com>
+ <1524883919-29484-2-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20180502201153.7459-1-malat@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Malaterre <malat@debian.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1524883919-29484-2-git-send-email-nipun.gupta@nxp.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Nipun Gupta <nipun.gupta@nxp.com>
+Cc: zajec5@gmail.com, linux-pci@vger.kernel.org, jarkko.sakkinen@linux.intel.com, david.brown@linaro.org, thierry.reding@gmail.com, frowand.list@gmail.com, hch@lst.de, m.szyprowski@samsung.com, bharat.bhushan@nxp.com, rafael.j.wysocki@intel.com, linux@armlinux.org.uk, andy.gross@linaro.org, msuchanek@suse.de, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org, johan@kernel.org, robh+dt@kernel.org, dri-devel@lists.freedesktop.org, bhelgaas@google.com, dan.j.williams@intel.com, linux-soc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail.com, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, leoyang.li@nxp.com, iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org, robin.murphy@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 02, 2018 at 10:11:52PM +0200, Mathieu Malaterre wrote:
-> Improve the DTS files by removing all the leading "0x" and zeros to fix the
-> following dtc warnings:
-> 
-> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
-> 
-> and
-> 
-> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
-> 
-> Converted using the following command:
-> 
-> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed  -i -e "s/@\([0-9a-fA-FxX\.;:#]\+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0\+\(.*\) {/@0\1 {/g" {} +
-> 
-> For simplicity, two sed expressions were used to solve each warnings separately.
-> 
-> To make the regex expression more robust a few other issues were resolved,
-> namely setting unit-address to lower case, and adding a whitespace before the
-> the opening curly brace:
-> 
-> https://elinux.org/Device_Tree_Linux#Linux_conventions
-> 
-> This will solve as a side effect warning:
-> 
-> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
-> 
-> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
-> 
-> Reported-by: David Daney <ddaney@caviumnetworks.com>
-> Suggested-by: Rob Herring <robh@kernel.org>
-> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> ---
-> v2: intermediate patch contained unrelated changes. restrict to S3 and Exynos*
-> 
->  arch/arm/boot/dts/exynos5420.dtsi | 36 ++++++++++++++++++------------------
->  arch/arm/boot/dts/s3c2416.dtsi    |  8 ++++----
->  2 files changed, 22 insertions(+), 22 deletions(-)
-> 
-
-Thanks, applied.
-
-Best regards,
-Krzysztof
+T24gU2F0LCBBcHIgMjgsIDIwMTggYXQgMDg6MjE6NTlBTSArMDUzMCwgTmlwdW4gR3VwdGEgd3Jv
+dGU6Cj4gV2l0aCBlYWNoIGJ1cyBpbXBsZW1lbnRpbmcgaXRzIG93biBETUEgY29uZmlndXJhdGlv
+biBjYWxsYmFjaywKPiB0aGVyZSBpcyBubyBuZWVkIGZvciBidXMgdG8gZXhwbGljaXRseSBoYXZl
+IGZvcmNlX2RtYSBpbiBpdHMKPiBnbG9iYWwgc3RydWN0dXJlLiBUaGlzIHBhdGNoIG1vZGlmaWVz
+IG9mX2RtYV9jb25maWd1cmUgQVBJIHRvCj4gYWNjZXB0IGFuIGlucHV0IHBhcmFtZXRlciB3aGlj
+aCBzcGVjaWZpZXMgaWYgaW1wbGljaXQgRE1BCj4gY29uZmlndXJhdGlvbiBpcyByZXF1aXJlZCBl
+dmVuIHdoZW4gaXQgaXMgbm90IGRlc2NyaWJlZCBieSB0aGUKPiBmaXJtd2FyZS4KPiAKPiBTaWdu
+ZWQtb2ZmLWJ5OiBOaXB1biBHdXB0YSA8bmlwdW4uZ3VwdGFAbnhwLmNvbT4KPiBBY2tlZC1ieTog
+Qmpvcm4gSGVsZ2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT4gICMgUENJIHBhcnRzCj4gLS0tCj4g
+Q2hhbmdlcyBpbiB2MjoKPiAgIC0gVGhpcyBpcyBhIG5ldyBjaGFuZ2Ugc3VnZ2VzdGVkIGJ5IFJv
+YmluIGFuZCBDaHJpc3RvcGgKPiAgICAgYW5kIGlzIGFkZGVkIHRvIHRoZSBzZXJpZXMuCj4gCj4g
+Q2hhbmdlcyBpbiB2MzoKPiAgIC0gUmViYXNlIGFuZCBjaGFuZ2VzIGNvcnJlc3BvbmRpbmcgdG8g
+dGhlIGNoYW5nZXMgaW4gcGF0Y2ggMS8yCj4gCj4gQ2hhbmdlcyBpbiB2NDoKPiAgIC0gUmViYXNl
+ZCBvbiB0b3Agb2YgNC4xNy1yYzIKPiAKPiAgZHJpdmVycy9hbWJhL2J1cy5jICAgICAgICAgICAg
+fCAxIC0KPiAgZHJpdmVycy9iYXNlL3BsYXRmb3JtLmMgICAgICAgfCAzICstLQo+ICBkcml2ZXJz
+L2JjbWEvbWFpbi5jICAgICAgICAgICB8IDIgKy0KPiAgZHJpdmVycy9kbWEvcWNvbS9oaWRtYV9t
+Z210LmMgfCAyICstCgpUaGlzIG9uZToKQWNrZWQtYnk6IFZpbm9kIEtvdWwgPHZrb3VsQGtlcm5l
+bC5vcmc+CgotLSAKflZpbm9kCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
