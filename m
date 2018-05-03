@@ -1,70 +1,52 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next v2 00/15] ARM: sun8i: r40: Add Ethernet support
-Date: Thu, 03 May 2018 14:40:42 -0400 (EDT)
-Message-ID: <20180503.144042.266645949281979304.davem@davemloft.net>
-References: <CAGb2v67HFb6eLBS4_9s_wJ5uWFeQdUtwn_NMJnm59UUDFBDJUA@mail.gmail.com>
-        <20180502.110617.304411895589508709.davem@davemloft.net>
-        <20180503131257.rlqxetafejikmnji@flea>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH 2/7] arm64: allwinner: h6: add PRCM CCU device node
+Date: Fri,  4 May 2018 02:38:42 +0800
+Message-ID: <20180503183847.11046-3-icenowy@aosc.io>
+References: <20180503183847.11046-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180503131257.rlqxetafejikmnji@flea>
-Sender: netdev-owner@vger.kernel.org
-To: maxime.ripard@bootlin.com
-Cc: wens@csie.org, mturquette@baylibre.com, sboyd@kernel.org, peppe.cavallaro@st.com, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, clabbe.montjoie@gmail.com, icenowy@aosc.io
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBWNPVXLQKGQERXQOZLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180503183847.11046-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Date: Thu, 3 May 2018 15:12:57 +0200
+Allwinner H6 has also a PRCM CCU.
 
-> Hi Dave,
-> 
-> On Wed, May 02, 2018 at 11:06:17AM -0400, David Miller wrote:
->> From: Chen-Yu Tsai <wens@csie.org>
->> Date: Wed, 2 May 2018 00:33:45 +0800
->> 
->> > I should've mentioned that patches 3 ~ 10, and only these, should go
->> > through net-next. sunxi will handle the remaining clk, device tree, and
->> > soc driver patches.
->> 
->> Ok, I just noticed this.
->> 
->> Why don't you just post those patches separately as a series on their
->> own then, in order to avoid confusion?
->> 
->> Then you can adjust the patch series header posting to explain the
->> non-net-next changes, where they got merged, and what they provide
->> in order to faciliate the net-next changes.
-> 
-> I now that we usually have some feedback from non-net maintainers that
-> they actually prefer seeing the full picture (and I also tend to
-> prefer that as well) and having all the patches relevant to enable a
-> particular feature, even if it means getting multiple maintainers
-> involved.
-> 
-> Just to make sure we understood you fully, do you want Chen-Yu to
-> resend his serie following your comments, or was that just a general
-> remark for next time?
+Add its device node into the device tree.
 
-Yeah, good questions.
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-I think it can be argued either way.  For review having the complete
-context is important.
-
-But from a maintainer's standpoint, when there is any ambiguity
-whatsoever about what patches go into this tree or that, it is really
-frowned upon and is quite error prone.
-
-Also, that header posting is _SO_ important.  It explains the series.
-But for these 'partial apply' situations the header posting refers
-to patches not in the series.
-
-This looks terrible in the logs, when, as I do, the header posting
-text is added to a marge commit for the series.  People will read it
-and say "where are all of these other changes mentioned in the text?
-was this series misapplied?"
-
-That's why, maybe after the review is successful, I want the actual
-patch series standalone with appropriately updated header posting
-text.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 4debc3962830..db9da343ba46 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -173,5 +173,15 @@
+ 			resets = <&ccu RST_BUS_UART3>;
+ 			status = "disabled";
+ 		};
++
++		r_ccu: clock@7010000 {
++			compatible = "allwinner,sun50i-h6-r-ccu";
++			reg = <0x07010000 0x400>;
++			clocks = <&osc24M>, <&osc32k>, <&iosc>,
++				 <&ccu CLK_PLL_PERIPH0>;
++			clock-names = "hosc", "losc", "iosc", "pll-periph";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++		};
+ 	};
+ };
+-- 
+2.15.1
