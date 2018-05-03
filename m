@@ -1,34 +1,51 @@
-Return-Path: <SRS0=Xnq8=HX=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58677 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751394AbeEDMtN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 4 May 2018 08:49:13 -0400
-From: Jan Luebbe <jlu@pengutronix.de>
-Subject: [PATCH 0/2] add support for TI SCAN921226H video deserializer
-Date: Fri,  4 May 2018 14:49:01 +0200
-Message-Id: <20180504124903.6276-1-jlu@pengutronix.de>
+Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr10042.outbound.protection.outlook.com ([40.107.1.42]:55200
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751708AbeECAmd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 2 May 2018 20:42:33 -0400
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v5 13/14] staging: typec: tcpci: Only touch target bit when enable vconn
+Date: Thu,  3 May 2018 08:24:53 +0800
+Message-Id: <1525307094-27402-14-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
+References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Jan Luebbe <jlu@pengutronix.de>, kernel@pengutronix.de, devicetree@vger.kernel.org
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: jun.li@nxp.com, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-This series adds a binding and the corresponding V4L subdev driver for
-the TI SCAN921226H video deserializer. Although the device doesn't need
-to be configured, it can be controlled via GPIOs to allow multiple
-sensors on the same parallel video bus.
+We need regmap_update_bits to avoid touch any other bits when
+enable or disable vconn.
 
-Jan Luebbe (2):
-  media: dt-bindings: add binding for TI SCAN921226H video deserializer
-  media: platform: add driver for TI SCAN921226H video deserializer
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Li Jun <jun.li@nxp.com>
+---
+ drivers/staging/typec/tcpci.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
- .../bindings/media/ti,scan921226h.txt         |  59 +++
- drivers/media/platform/Kconfig                |   7 +
- drivers/media/platform/Makefile               |   2 +
- drivers/media/platform/scan921226h.c          | 353 ++++++++++++++++++
- 4 files changed, 421 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/ti,scan921226h.txt
- create mode 100644 drivers/media/platform/scan921226h.c
-
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index 5c0c5e3..2818a4d 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -218,12 +218,9 @@ static int tcpci_set_vconn(struct tcpc_dev *tcpc, bool enable)
+ 			return ret;
+ 	}
+ 
+-	ret = regmap_write(tcpci->regmap, TCPC_POWER_CTRL,
+-			   enable ? TCPC_POWER_CTRL_VCONN_ENABLE : 0);
+-	if (ret < 0)
+-		return ret;
+-
+-	return 0;
++	return regmap_update_bits(tcpci->regmap, TCPC_POWER_CTRL,
++				TCPC_POWER_CTRL_VCONN_ENABLE,
++				enable ? TCPC_POWER_CTRL_VCONN_ENABLE : 0);
+ }
+ 
+ static int tcpci_set_roles(struct tcpc_dev *tcpc, bool attached,
 -- 
-2.17.0
+2.7.4
 
