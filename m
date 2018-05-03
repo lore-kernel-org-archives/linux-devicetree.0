@@ -1,44 +1,52 @@
-Return-Path: <SRS0=qowN=HZ=googlemail.com=martin.blumenstingl@kernel.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 0/6] Meson8m2 (32-bit ARM) SoC support
-Date: Sun,  6 May 2018 11:21:13 +0200
-Message-Id: <20180506092119.467-1-martin.blumenstingl@googlemail.com>
-To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com, carlo@caione.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: balbes-150@yandex.ru, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr10054.outbound.protection.outlook.com ([40.107.1.54]:52001
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751747AbeECAlz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 2 May 2018 20:41:55 -0400
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v5 07/14] staging: typec: tcpci: remove unused tcpci_tcpc_config
+Date: Thu,  3 May 2018 08:24:47 +0800
+Message-Id: <1525307094-27402-8-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
+References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: jun.li@nxp.com, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-This series adds support for the Meson8m2 SoC. This SoC is mostly
-compatible with Meson8 while using some peripherals from Meson8b. Patch
-#4 contains a list of (known) differences between the Meson8 and Meson8m2
-SoCs.
+Since we will use config settings via device properties, so
+remove the hard code tcpci_tcpc_config.
 
-The first supported board with Meson8m2 SoC is the "Tronsmart MXIII Plus"
-where Oleg contributed the initial .dts and heavily tested it (many
-thanks!). His testing also confirmed that the Meson8m2 SoC uses the same
-register layout for the Ethernet "glue registers (supported by the
-dwmac-meson8b driver) as Meson8b.
+Signed-off-by: Li Jun <jun.li@nxp.com>
+---
+ drivers/staging/typec/tcpci.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-
-Martin Blumenstingl (5):
-  dt-bindings: arm: amlogic: add support for the Meson8m2 SoC
-  dt-bindings: arm: amlogic: add support for the Tronsmart MXIII Plus
-  ARM: meson: add support for the Meson8m2 SoCs
-  ARM: dts: meson: add support for the Meson8m2 SoC
-  ARM: dts: meson8: add the uart_A pins
-
-Oleg Ivanov (1):
-  ARM: dts: meson8m2: add support for the Tronsmart MXIII Plus
-
- .../devicetree/bindings/arm/amlogic.txt       |   6 +
- arch/arm/boot/dts/Makefile                    |   2 +
- arch/arm/boot/dts/meson8.dtsi                 |  16 ++
- arch/arm/boot/dts/meson8m2-mxiii-plus.dts     | 244 ++++++++++++++++++
- arch/arm/boot/dts/meson8m2.dtsi               |  54 ++++
- arch/arm/mach-meson/Kconfig                   |   7 +
- arch/arm/mach-meson/meson.c                   |   1 +
- 7 files changed, 330 insertions(+)
- create mode 100644 arch/arm/boot/dts/meson8m2-mxiii-plus.dts
- create mode 100644 arch/arm/boot/dts/meson8m2.dtsi
-
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index 01d14fb..a21aaf5 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -464,17 +464,10 @@ static const struct regmap_config tcpci_regmap_config = {
+ 	.max_register = 0x7F, /* 0x80 .. 0xFF are vendor defined */
+ };
+ 
+-static const struct tcpc_config tcpci_tcpc_config = {
+-	.type = TYPEC_PORT_DFP,
+-	.default_role = TYPEC_SINK,
+-};
+-
+ static int tcpci_parse_config(struct tcpci *tcpci)
+ {
+ 	tcpci->controls_vbus = true; /* XXX */
+ 
+-	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
+-	tcpci->tcpc.config = &tcpci_tcpc_config;
+ 	tcpci->tcpc.fwnode = device_get_named_child_node(tcpci->dev,
+ 							 "connector");
+ 	if (!tcpci->tcpc.fwnode) {
 -- 
-2.17.0
+2.7.4
+
