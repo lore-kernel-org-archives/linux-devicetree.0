@@ -1,281 +1,64 @@
-From: Mathieu Malaterre <malat@debian.org>
-Subject: Re: [PATCH v2] arm: exynos/s3c: dts: Remove leading 0x and 0s from
- bindings notation
-Date: Thu, 3 May 2018 20:47:00 +0200
-Message-ID: <CA+7wUsxVpWOWrKCU2G1Sxjx=UCZ5YzeND86JUqKTbRw677xM=w@mail.gmail.com>
-References: <20171215124630.30082-1-malat@debian.org> <20180502201153.7459-1-malat@debian.org>
- <20180503163502.vh56ggagsirklpfe@kozik-lap>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
+Date: Thu, 3 May 2018 20:50:37 +0200
+Message-ID: <20180503205037.7be552c1@aktux>
+References: <20180424163458.11947-1-johan@kernel.org>
+        <20180424163458.11947-5-johan@kernel.org>
+        <CAL_Jsq+mCp=geT8t_j+0fuTxAB7C9RYn6pESRpLc2GH273fM1Q@mail.gmail.com>
+        <20180426091018.GU4615@localhost>
+        <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
+        <20180502081637.GE2285@localhost>
+        <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/HLhJ7LSIWZdtL++bNKyJ94a"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180503163502.vh56ggagsirklpfe@kozik-lap>
+In-Reply-To: <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 3, 2018 at 6:35 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Wed, May 02, 2018 at 10:11:52PM +0200, Mathieu Malaterre wrote:
->> Improve the DTS files by removing all the leading "0x" and zeros to fix the
->> following dtc warnings:
->>
->> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
->>
->> and
->>
->> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
->
-> ... and dropped because apparently it does not work in all cases:
->
-> arch/arm/boot/dts/exynos5422-odroidhc1.dtb: Warning (unit_address_format): /firmware@02073000: unit name should not have leading 0s
->
-> Can you check why these were not fixed?
+--Sig_/HLhJ7LSIWZdtL++bNKyJ94a
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-My sed expression is not capable of handling @0 or @0,0. I've fixed it
-using an updated find + sed expression but this creates lots of
-incorrect changes in other files.
+On Thu, 3 May 2018 11:35:21 +0200
+H. Nikolaus Schaller <hns@goldelico.com> wrote:
 
-Thanks,
 
-> Best regards,
-> Krzysztof
->
->>
->> Converted using the following command:
->>
->> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed  -i -e "s/@\([0-9a-fA-FxX\.;:#]\+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0\+\(.*\) {/@0\1 {/g" {} +
->>
->> For simplicity, two sed expressions were used to solve each warnings separately.
->>
->> To make the regex expression more robust a few other issues were resolved,
->> namely setting unit-address to lower case, and adding a whitespace before the
->> the opening curly brace:
->>
->> https://elinux.org/Device_Tree_Linux#Linux_conventions
->>
->> This will solve as a side effect warning:
->>
->> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
->>
->> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
->>
->> Reported-by: David Daney <ddaney@caviumnetworks.com>
->> Suggested-by: Rob Herring <robh@kernel.org>
->> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
->> Signed-off-by: Mathieu Malaterre <malat@debian.org>
->> ---
->> v2: intermediate patch contained unrelated changes. restrict to S3 and Exynos*
->>
->>  arch/arm/boot/dts/exynos5420.dtsi | 36 ++++++++++++++++++------------------
->>  arch/arm/boot/dts/s3c2416.dtsi    |  8 ++++----
->>  2 files changed, 22 insertions(+), 22 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
->> index 2f3cb2a97f71..633952a96427 100644
->> --- a/arch/arm/boot/dts/exynos5420.dtsi
->> +++ b/arch/arm/boot/dts/exynos5420.dtsi
->> @@ -761,7 +761,7 @@
->>                       #include "exynos5420-tmu-sensor-conf.dtsi"
->>               };
->>
->> -             sysmmu_g2dr: sysmmu@0x10A60000 {
->> +             sysmmu_g2dr: sysmmu@10a60000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x10A60000 0x1000>;
->>                       interrupt-parent = <&combiner>;
->> @@ -771,7 +771,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_g2dw: sysmmu@0x10A70000 {
->> +             sysmmu_g2dw: sysmmu@10a70000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x10A70000 0x1000>;
->>                       interrupt-parent = <&combiner>;
->> @@ -781,7 +781,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_tv: sysmmu@0x14650000 {
->> +             sysmmu_tv: sysmmu@14650000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x14650000 0x1000>;
->>                       interrupt-parent = <&combiner>;
->> @@ -792,7 +792,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_gscl0: sysmmu@0x13E80000 {
->> +             sysmmu_gscl0: sysmmu@13e80000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x13E80000 0x1000>;
->>                       interrupt-parent = <&combiner>;
->> @@ -803,7 +803,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_gscl1: sysmmu@0x13E90000 {
->> +             sysmmu_gscl1: sysmmu@13e90000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x13E90000 0x1000>;
->>                       interrupt-parent = <&combiner>;
->> @@ -814,7 +814,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_scaler0r: sysmmu@0x12880000 {
->> +             sysmmu_scaler0r: sysmmu@12880000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x12880000 0x1000>;
->>                       interrupt-parent = <&combiner>;
->> @@ -824,7 +824,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_scaler1r: sysmmu@0x12890000 {
->> +             sysmmu_scaler1r: sysmmu@12890000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x12890000 0x1000>;
->>                       interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
->> @@ -833,7 +833,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_scaler2r: sysmmu@0x128A0000 {
->> +             sysmmu_scaler2r: sysmmu@128a0000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x128A0000 0x1000>;
->>                       interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
->> @@ -842,7 +842,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_scaler0w: sysmmu@0x128C0000 {
->> +             sysmmu_scaler0w: sysmmu@128c0000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x128C0000 0x1000>;
->>                       interrupt-parent = <&combiner>;
->> @@ -852,7 +852,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_scaler1w: sysmmu@0x128D0000 {
->> +             sysmmu_scaler1w: sysmmu@128d0000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x128D0000 0x1000>;
->>                       interrupt-parent = <&combiner>;
->> @@ -862,7 +862,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_scaler2w: sysmmu@0x128E0000 {
->> +             sysmmu_scaler2w: sysmmu@128e0000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x128E0000 0x1000>;
->>                       interrupt-parent = <&combiner>;
->> @@ -872,7 +872,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_rotator: sysmmu@0x11D40000 {
->> +             sysmmu_rotator: sysmmu@11d40000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x11D40000 0x1000>;
->>                       interrupt-parent = <&combiner>;
->> @@ -882,7 +882,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_jpeg0: sysmmu@0x11F10000 {
->> +             sysmmu_jpeg0: sysmmu@11f10000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x11F10000 0x1000>;
->>                       interrupt-parent = <&combiner>;
->> @@ -892,7 +892,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_jpeg1: sysmmu@0x11F20000 {
->> +             sysmmu_jpeg1: sysmmu@11f20000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x11F20000 0x1000>;
->>                       interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
->> @@ -901,7 +901,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_mfc_l: sysmmu@0x11200000 {
->> +             sysmmu_mfc_l: sysmmu@11200000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x11200000 0x1000>;
->>                       interrupt-parent = <&combiner>;
->> @@ -912,7 +912,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_mfc_r: sysmmu@0x11210000 {
->> +             sysmmu_mfc_r: sysmmu@11210000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x11210000 0x1000>;
->>                       interrupt-parent = <&combiner>;
->> @@ -923,7 +923,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_fimd1_0: sysmmu@0x14640000 {
->> +             sysmmu_fimd1_0: sysmmu@14640000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x14640000 0x1000>;
->>                       interrupt-parent = <&combiner>;
->> @@ -934,7 +934,7 @@
->>                       #iommu-cells = <0>;
->>               };
->>
->> -             sysmmu_fimd1_1: sysmmu@0x14680000 {
->> +             sysmmu_fimd1_1: sysmmu@14680000 {
->>                       compatible = "samsung,exynos-sysmmu";
->>                       reg = <0x14680000 0x1000>;
->>                       interrupt-parent = <&combiner>;
->> diff --git a/arch/arm/boot/dts/s3c2416.dtsi b/arch/arm/boot/dts/s3c2416.dtsi
->> index 3c7385cab248..46cf85f3c18b 100644
->> --- a/arch/arm/boot/dts/s3c2416.dtsi
->> +++ b/arch/arm/boot/dts/s3c2416.dtsi
->> @@ -30,7 +30,7 @@
->>               compatible = "samsung,s3c2416-irq";
->>       };
->>
->> -     clocks: clock-controller@0x4c000000 {
->> +     clocks: clock-controller@4c000000 {
->>               compatible = "samsung,s3c2416-clock";
->>               reg = <0x4c000000 0x40>;
->>               #clock-cells = <1>;
->> @@ -69,7 +69,7 @@
->>                               <&clocks SCLK_UART>;
->>       };
->>
->> -     uart_3: serial@5000C000 {
->> +     uart_3: serial@5000c000 {
->>               compatible = "samsung,s3c2440-uart";
->>               reg = <0x5000C000 0x4000>;
->>               interrupts = <1 18 24 4>, <1 18 25 4>;
->> @@ -80,7 +80,7 @@
->>               status = "disabled";
->>       };
->>
->> -     sdhci_1: sdhci@4AC00000 {
->> +     sdhci_1: sdhci@4ac00000 {
->>               compatible = "samsung,s3c6410-sdhci";
->>               reg = <0x4AC00000 0x100>;
->>               interrupts = <0 0 21 3>;
->> @@ -91,7 +91,7 @@
->>               status = "disabled";
->>       };
->>
->> -     sdhci_0: sdhci@4A800000 {
->> +     sdhci_0: sdhci@4a800000 {
->>               compatible = "samsung,s3c6410-sdhci";
->>               reg = <0x4A800000 0x100>;
->>               interrupts = <0 0 20 3>;
->> --
->> 2.11.0
->>
+> I have realized that the w2sg0004 is an exception (although a Sirf chip)
+> that it does not provide a WAKEUP signal. And another significant
+> difference is that we have to keep the serdev UART enabled even if there
+> is no user-space client. Otherwise we are not able to detect unexpected
+> activity. So we unfortunately can't move serdev open/close into the .open
+> and .close ops but need to open it in probe.
+>=20
+how much power does it use to keep the uart enabled? Or should it
+better be reprogrammed as gpio?
+
+Regards,
+Andreas
+
+--Sig_/HLhJ7LSIWZdtL++bNKyJ94a
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE7sDbhY5mwNpwYgrAfb1qx03ikyQFAlrrWf0ACgkQfb1qx03i
+kyQlqhAAtbo5wUH6KEaDMqYMadQUYR/q46hYFG2drKJQU2au0ZoTHugUaLZ1SY0a
+PAHAfxnBYAT/SHVOn7Tp1XkdwhsTVXj2Y/S2YgYymOqD/eDwO66ncyNhP1lWQwX8
+PxvtjelEqt4/U/x+QyXgp9eUltmdHDyFe4viZIAWi/ypK2Dltt4hHtry4UYdbmHu
+8rQYIesshXI/aaPHbGgE6P53gWl1Qyae68w+HnpjfT79c7mvldJEWAm+bFrJjgRA
+XlPnbBJ8X7T1J7V06d9xGhDd5GIYwBN8MaKTtejZ4LZs1tdAUQ029ZLVo0YNw2Ce
+aT9UsymY9wHVAinBQGiA7gogwusLOgoq62wDtTRmhKdsX/aE2zx0iKn8plowTcQ4
+knr+PHLT8jOnFWp8ecfCdRHIdLjywbMc8kM3oqIvXtZPDYfia2fcbySlSOJslE2V
+gk7JTgSZ5OCn3W0M8MObVzifq/G2XzWrqfOGGPm29CJfsDBR5p6FPj8Iqk1/U/Rc
+ITWgZWesivmVRXpQQUnoyhmKol21NI/LV7xLgVFJ2IEZzcLKz83cVoQgZKQ8oRUy
+PU2dHeAHMFTURTiCW6v+i80icUxOr5gbQAjYGl8KTOfGdB1hSEMK4/L664RecgVh
+vX40PHpsiAW8Hi+TvGNxI+jP7YYdKrrPEBoC6py0Q1PxBSp4W9k=
+=TFvd
+-----END PGP SIGNATURE-----
+
+--Sig_/HLhJ7LSIWZdtL++bNKyJ94a--
