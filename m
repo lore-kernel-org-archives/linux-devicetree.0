@@ -1,82 +1,51 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: tegra: Add support for 256 MB Colibri-T20 (plus
- such board on Iris)
-Date: Thu, 3 May 2018 16:54:43 +0200
-Message-ID: <CAJKOXPenZiTaXL+4b8gyGMLK_06LG5+ACZqfFN+oGRPAkzGYPw@mail.gmail.com>
-References: <1525359006-27251-1-git-send-email-krzk@kernel.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 04/17] irqchip/irq-mvebu-icu: fix wrong user data retrieval
+Date: Thu, 3 May 2018 16:57:35 +0200
+Message-ID: <20180503165735.3e248f29@xps13>
+References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
+ <20180421135537.24716-5-miquel.raynal@bootlin.com>
+ <20180430154913.64d94375@windsurf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525359006-27251-1-git-send-email-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>, Krzysztof Kozlowski <krzk@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180430154913.64d94375@windsurf>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 3, 2018 at 4:50 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> Colibri-T20 can come in 256 MB RAM (with 512 MB NAND) or 512 MB RAM
-> (with 1024 MB NAND) flavors.  Add support for the 256 MB version on Iris
-> evaluation board.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  Documentation/devicetree/bindings/arm/tegra.txt    |   1 +
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/tegra20-colibri-256.dtsi         |  11 +
->  arch/arm/boot/dts/tegra20-colibri-512.dtsi         | 531 +--------------------
->  ...gra20-colibri-512.dtsi => tegra20-colibri.dtsi} |   4 -
->  arch/arm/boot/dts/tegra20-iris-256.dts             |  10 +
->  arch/arm/boot/dts/tegra20-iris-512.dts             |  98 +---
->  ...gra20-iris-512.dts => tegra20-iris-common.dtsi} |  11 +-
->  8 files changed, 31 insertions(+), 636 deletions(-)
->  create mode 100644 arch/arm/boot/dts/tegra20-colibri-256.dtsi
->  copy arch/arm/boot/dts/{tegra20-colibri-512.dtsi => tegra20-colibri.dtsi} (99%)
->  create mode 100644 arch/arm/boot/dts/tegra20-iris-256.dts
->  copy arch/arm/boot/dts/{tegra20-iris-512.dts => tegra20-iris-common.dtsi} (85%)
->
-> diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
-> index 32f62bb7006d..d304574ae441 100644
-> --- a/Documentation/devicetree/bindings/arm/tegra.txt
-> +++ b/Documentation/devicetree/bindings/arm/tegra.txt
-> @@ -49,6 +49,7 @@ board-specific compatible values:
->    toradex,apalis_t30-eval
->    toradex,apalis-tk1
->    toradex,apalis-tk1-eval
-> +  toradex,colibri_t20-256
->    toradex,colibri_t20-512
->    toradex,colibri_t30
->    toradex,colibri_t30-eval-v3
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index da7d08c3ae98..d63214c6967c 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1031,6 +1031,7 @@ dtb-$(CONFIG_ARCH_TANGO) += \
->         tango4-vantage-1172.dtb
->  dtb-$(CONFIG_ARCH_TEGRA_2x_SOC) += \
->         tegra20-harmony.dtb \
-> +       tegra20-iris-256.dtb \
->         tegra20-iris-512.dtb \
->         tegra20-medcom-wide.dtb \
->         tegra20-paz00.dtb \
-> diff --git a/arch/arm/boot/dts/tegra20-colibri-256.dtsi b/arch/arm/boot/dts/tegra20-colibri-256.dtsi
-> new file mode 100644
-> index 000000000000..8f8922b0b7e7
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/tegra20-colibri-256.dtsi
-> @@ -0,0 +1,11 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include "tegra20-colibri.dtsi"
-> +
-> +/ {
-> +       model = "Toradex Colibri T20 256MB";
-> +       compatible = "toradex,colibri_t20-256", "nvidia,tegra20";
-> +
-> +       memory {
-> +               reg = <0x00000000 0x20000000>;
-
-... and obviously this is not 256 MB so I need to resend.
-
-Sorry for the noise.
-
-Best regards,
-Krzysztof
+SGkgVGhvbWFzLAoKT24gTW9uLCAzMCBBcHIgMjAxOCAxNTo0OToxMyArMDIwMCwgVGhvbWFzIFBl
+dGF6em9uaQo8dGhvbWFzLnBldGF6em9uaUBib290bGluLmNvbT4gd3JvdGU6Cgo+IEhlbGxvLAo+
+IAo+IEluIHRoZSB0aXRsZSwgSSB0aGluayAidXNlciBkYXRhIiBpcyBub3QgcmVhbGx5IGFwcHJv
+cHJpYXRlLiAicHJpdmF0ZQo+IGRhdGUiIG9yICJkZXZpY2UgcHJpdmF0ZSBkYXRhIiBtYXliZSA/
+CgpTdXJlLCBJIHdpbGwgY2hhbmdlIHRvICJmaXggd3JvbmcgcHJpdmF0ZSBkYXRhIHJldHJpZXZh
+bCIuCgo+IAo+IE9uIFNhdCwgMjEgQXByIDIwMTggMTU6NTU6MjQgKzAyMDAsIE1pcXVlbCBSYXlu
+YWwgd3JvdGU6Cj4gPiBUaGUgaXJxX2RvbWFpbiBzdHJ1Y3R1cmUgaGFzIGFuIGhvc3RfZGF0YSBw
+b2ludGVyIHRoYXQganVzdCBzdG9yZXMgdXNlcgo+ID4gZGF0YS4gSXQgaXMgbWVhbnQgdG8gbm90
+IGJlIHRvdWNoZWQgYnkgdGhlIElSUSBjb3JlLiBIb3dldmVyLCB3aGVuIGl0Cj4gPiBjb21lcyB0
+byBNU0ksIHRoZSBNU0kgbGF5ZXIgYWRkcyBpdHMgb3duIHByaXZhdGUgZGF0YSB0aGVyZSB3aXRo
+IGEKPiA+IHN0cnVjdHVyZSB0aGF0IGFsc28gaGFzIGEgaG9zdF9kYXRhIHBvaW50ZXIuCj4gPiAK
+PiA+IEJlY2F1c2UgdGhpcyBJUlEgZG9tYWluIGlzIGFuIE1TSSBkb21haW4sIHRvIGFjY2VzcyB1
+c2VyIGRhdGEgd2Ugc2hvdWxkCj4gPiBkbyBhIGQtPmhvc3RfZGF0YS0+aG9zdF9kYXRhLCBhbHNv
+IHdyYXBwZWQgYXMKPiA+ICdwbGF0Zm9ybV9tc2lfZ2V0X2hvc3RfZGF0YSgpJy4KPiA+IAo+ID4g
+VGhpcyBidWcgd2FzIGx5aW5nIHRoZXJlIHNpbGVudGx5IGJlY2F1c2UgdGhlICdpY3UnIHN0cnVj
+dHVyZSByZXRyaWV2ZWQKPiA+IHRoaXMgd2F5IHdhcyBqdXN0IGNhbGxlZCBieSBkZXZfZXJyKCks
+IG9ubHkgcHJvZHVjaW5nIGEKPiA+ICcoTlVMTCBkZXZpY2UgKik6JyBvdXRwdXQgb24gdGhlIGNv
+bnNvbGUuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXlu
+YWxAYm9vdGxpbi5jb20+ICAKPiAKPiBPdGhlcndpc2U6Cj4gCj4gUmV2aWV3ZWQtYnk6IFRob21h
+cyBQZXRhenpvbmkgPHRob21hcy5wZXRhenpvbmlAYm9vdGxpbi5jb20+CgpUaGFua3MsCk1pcXXD
+qGwKCi0tIApNaXF1ZWwgUmF5bmFsLCBCb290bGluIChmb3JtZXJseSBGcmVlIEVsZWN0cm9ucykK
+RW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRwczovL2Jvb3RsaW4uY29t
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVsCg==
