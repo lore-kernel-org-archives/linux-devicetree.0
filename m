@@ -1,80 +1,93 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v7 3/9] PCI: endpoint: functions/pci-epf-test: Add second
- entry
-Date: Thu, 3 May 2018 15:16:36 +0100
-Message-ID: <20180503141636.GA23270@e107981-ln.cambridge.arm.com>
-References: <cover.1524577064.git.gustavo.pimentel@synopsys.com>
- <c6cfd167838ae8e226dee0820983efe918fa4e1f.1524577064.git.gustavo.pimentel@synopsys.com>
- <20180426165605.GA6370@e107981-ln.cambridge.arm.com>
- <b65caf2e-b002-f591-6215-ff2241b2dfb8@ti.com>
- <20180501115417.GD19391@e107981-ln.cambridge.arm.com>
- <5d625d04-38fe-7d5a-67fc-5ea92039474c@ti.com>
- <20180501142607.GA21911@e107981-ln.cambridge.arm.com>
- <bfaebf3c-2175-f4b2-89c5-336ff9396ed0@synopsys.com>
- <20180502165144.GB4871@e107981-ln.cambridge.arm.com>
- <cf2772d5-26c0-b0e3-1e5b-ace91c1ea105@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [EXTERNAL] Re: [PATCH] arm: dts: am437x-sk-evm: add wilink8
+ support
+Date: Thu, 3 May 2018 07:17:59 -0700
+Message-ID: <20180503141759.GP98604@atomide.com>
+References: <1525159453-32489-1-git-send-email-eyalr@ti.com>
+ <20180502145100.GK98604@atomide.com>
+ <5cc906da15da45ab96e06957f878b65b@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cf2772d5-26c0-b0e3-1e5b-ace91c1ea105@ti.com>
+In-Reply-To: <5cc906da15da45ab96e06957f878b65b@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: "Reizer, Eyal" <eyalr@ti.com>
+Cc: Eyal Reizer <eyalreizer@gmail.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 03, 2018 at 12:03:15PM +0530, Kishon Vijay Abraham I wrote:
-
-[...]
-
-> >> Since the linkup notifier and BAR index (where auxiliary registers are
-> >> located) may be configurable and is something platform dependent,
-> >> perhaps the configuration of this variables should be done by module
-> >> parameter and not by configfs, leaving this configuration
-> >> responsibility in charge of each platform.
+* Reizer, Eyal <eyalr@ti.com> [180503 06:43]:
 > > 
-> > They are platform dependent because they depend on the EP controller.
-> > That's why I said that those are EP controller parameters. I do not
-> > think they are module parameters either - they should be part of HW
-> > description in firmware.
+> > * Eyal Reizer <eyalreizer@gmail.com> [180501 00:26]:
+> > > enable mmc3 used for wlan and uart1 used for bluetooth
+> > > configure the gpios used for wlan and bluetooth controls
+> > > add fixed voltage regulator used for wlan power control
+> > ...
+> > >  / {
+> > >  	model = "TI AM437x SK EVM";
+> > > @@ -158,6 +159,22 @@
+> > >  			};
+> > >  		};
+> > >  	};
+> > > +
+> > > +	vmmcwl_fixed: fixedregulator-mmcwl {
+> > > +		/*
+> > > +		 * WL_EN is not SDIO standard compliant. It is an out of band
+> > > +		 * signal and hard to be dealt with in a standard way by the
+> > > +		 * SDIO core driver.
+> > > +		 * So modelling the WL_EN line as a regulator was a natural
+> > > +		 * choice as the MMC core already deals with MMC supplies.
+> > > +		 */
+> > > +		compatible = "regulator-fixed";
+> > > +		regulator-name = "vmmcwl_fixed";
+> > > +		regulator-min-microvolt = <1800000>;
+> > > +		regulator-max-microvolt = <1800000>;
+> > > +		gpio = <&gpio4 8 GPIO_ACTIVE_HIGH>;
+> > > +		enable-active-high;
+> > > +	};
+> > >  };
+> > 
+> > Interesting that it needs much longer delay here compared to the
+> > earlier?
 > 
-> The problem is because pci-epf-test cannot be described in HW. pci-epf-test is
-> also not automatically bound to the EP controller but is bound by the user like
-> below
-> ln -s functions/pci_epf_test/func1 controllers/51000000.pcie_ep/
-> 
-> So given that user anyways has to bind the epf device to the controller, based
-> on the platform the user can use a different configfs entry like below
-> ln -s functions/pci_epf_test_dw/func1 controllers/51000000.pcie_ep/ or
-> ln -s functions/pci_epf_test_k2g/func1 controllers/21800000.pcie-ep/
-> 
-> If the epf can be described in dt, then something like below can be done
-> pcie1_ep: pcie_ep@51000000 {
-> 	compatible = "ti,dra7-pcie-ep";
-> 	interrupts = <0 232 0x4>;
-> 	num-lanes = <1>;
-> 	num-ib-windows = <4>;
-> 	num-ob-windows = <16>;
-> 	phys = <&pcie1_phy>;
-> 	phy-names = "pcie-phy0";
-> 	pci_epf_test: pci_epf_test@0 {
-> 		name = "pci_epf_test_dw";
-> 		<other properties>;
-> 	}
-> };
-> 
-> With this pci-dra7xx.c driver should create pci_epf_device using
-> pci_epf_create("pci_epf_test_dw");
-> 
-> Then the driver_data corresponding to "pci_epf_test_dw" will select linkup
-> notifier or BAR index etc.
+> Where do you see a delay in here?
+> There is no startup-delay-us value used in this patch.
 
-Those two properties are properties of the EP controller (it is not 100%
-clear to me how the test BAR register is defined), is this correct ?
+Oops sorry, I misread the voltage above as the startup-delay-us
+value :)
 
-If yes, given that those properties are not useful before an EPF is
-bound to an EPC, can't they be retrieved at bind time from the EPC
-controller data (that we can add through DT bindings) ?
+> > BTW, I do have a patch in work to add pwrseq support for wlcore that
+> > allows leaving out the regulator here. It still needs a bit more
+> > work though.
+> > 
+> > And I also have a series in work to make wlcore use runtime PM that
+> > needs even more work, just FYI to avoid any duplicate work.
+> > 
+> > Hmm you don't happen to have a patch series somewhere making
+> > wlcore use the SDIO dat lien interrupt?
+> wilink has always used out of band interrupt (using wlan_irq gpio).
+> in-band interrupts was not supported.
+> See section 10.5.2 in this the wl18xx hardware integration guide:
+> http://www.ti.com/lit/ug/swru437/swru437.pdf
 
-Thanks,
-Lorenzo
+Hmm yeah I've been wondering about that. Why not follow the SDIO
+standard here though? Do you have links to documentation explaining
+that?
+
+> > I think we should use that when idle rather than the (edge) gpio
+> > interrupt as the SDIO dat interrupt is level sensitive and wired
+> > to the always on gpio bank for most SDIO controller instances.
+> > On runtime PM wakeup, there's no status anywhere to been with the
+> > GPIO edge interrupt.
+> > 
+> I agree that it would have been better, especially for cases such as wake 
+> On wlan, but again, in-band interrupt was something that was talked 
+> about way back but it was never implemented.
+
+I think we can have both if performance is the reason for the
+out of band interrupt. We could still use SDIO dat line interrupt
+during idle for wake-up events.
+
+Regards,
+
+Tony
