@@ -1,133 +1,81 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH 07/11] irqchip: stm32: add stm32mp1 support with hierarchy
- domain
-Date: Thu, 3 May 2018 11:55:00 +0200
-Message-ID: <26de0a75-e4e1-7c43-e31d-599d3c7de0ff@st.com>
-References: <1524759514-12392-1-git-send-email-ludovic.Barre@st.com>
- <1524759514-12392-8-git-send-email-ludovic.Barre@st.com>
- <20180501145611.GA6842@rob-hp-laptop>
- <6fdb652b-e7f9-7035-3eda-39f763ed7ea3@st.com>
- <CAL_JsqLvbGdPC9ifPZ5+tVxznHbsDuWGRg4R47st8Y9BtnNYUQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqLvbGdPC9ifPZ5+tVxznHbsDuWGRg4R47st8Y9BtnNYUQ@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Loic PALLARDY <loic.pallardy@st.com>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald BAEZA <gerald.baeza@st.com>, Thomas Gleixner <tglx@linutronix.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Alexandre Torgue <alexandre.torgue@st.com>
+From: Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V1 1/5] qcom: wled: Rename pm8941-wled.c to qcom-wled.c
+Date: Thu,  3 May 2018 15:27:08 +0530
+Message-ID: <1525341432-15818-2-git-send-email-kgunda@codeaurora.org>
+References: <1525341432-15818-1-git-send-email-kgunda@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1525341432-15818-1-git-send-email-kgunda@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, Kiran Gunda <kgunda@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+pm8941-wled.c driver is supporting the WLED peripheral
+on pm8941. Rename it to qcom-wled.c so that it can support
+WLED on multiple PMICs.
 
+Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+---
+ .../bindings/leds/backlight/{pm8941-wled.txt => qcom-wled.txt}    | 2 +-
+ drivers/video/backlight/Kconfig                                   | 8 ++++----
+ drivers/video/backlight/Makefile                                  | 2 +-
+ drivers/video/backlight/{pm8941-wled.c => qcom-wled.c}            | 0
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+ rename Documentation/devicetree/bindings/leds/backlight/{pm8941-wled.txt => qcom-wled.txt} (95%)
+ rename drivers/video/backlight/{pm8941-wled.c => qcom-wled.c} (100%)
 
-On 05/02/2018 07:45 PM, Rob Herring wrote:
-> On Wed, May 2, 2018 at 11:03 AM, Ludovic BARRE <ludovic.barre@st.com> wrote:
->> Hi Rob
->>
->>
->>
->> On 05/01/2018 04:56 PM, Rob Herring wrote:
->>>
->>> On Thu, Apr 26, 2018 at 06:18:30PM +0200, Ludovic Barre wrote:
->>>>
->>>> From: Ludovic Barre <ludovic.barre@st.com>
->>>>
->>>> Exti controller has been differently integrated on stm32mp1 SoC.
->>>> A parent irq has only one external interrupt. A hierachy domain could
->>>> be used. Handlers are call by parent, each parent interrupt could be
->>>> masked and unmasked according to the needs.
->>>>
->>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->>>> ---
->>>>    .../interrupt-controller/st,stm32-exti.txt         |   3 +
->>>>    drivers/irqchip/irq-stm32-exti.c                   | 322
->>>> +++++++++++++++++++++
->>>>    2 files changed, 325 insertions(+)
->>>>
->>>> diff --git
->>>> a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
->>>> b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
->>>> index edf03f0..136bd61 100644
->>>> ---
->>>> a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
->>>> +++
->>>> b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
->>>> @@ -5,11 +5,14 @@ Required properties:
->>>>    - compatible: Should be:
->>>>        "st,stm32-exti"
->>>>        "st,stm32h7-exti"
->>>> +    "st,stm32mp1-exti"
->>>>    - reg: Specifies base physical address and size of the registers
->>>>    - interrupt-controller: Indentifies the node as an interrupt controller
->>>>    - #interrupt-cells: Specifies the number of cells to encode an
->>>> interrupt
->>>>      specifier, shall be 2
->>>>    - interrupts: interrupts references to primary interrupt controller
->>>> +  (only needed for exti controller with multiple exti under
->>>> +  same parent interrupt: st,stm32-exti and st,stm32h7-exti")
->>>>      Example:
->>>>    diff --git a/drivers/irqchip/irq-stm32-exti.c
->>>> b/drivers/irqchip/irq-stm32-exti.c
->>>> index b38c655..ebf7146 100644
->>>> --- a/drivers/irqchip/irq-stm32-exti.c
->>>> +++ b/drivers/irqchip/irq-stm32-exti.c
->>>
->>>
->>> [...]
->>>
->>>> +static const struct stm32_desc_irq stm32mp1_desc_irq[] = {
->>>> +       { .exti = 1, .irq_parent = 7 },
->>>> +       { .exti = 2, .irq_parent = 8 },
->>>> +       { .exti = 3, .irq_parent = 9 },
->>>> +       { .exti = 4, .irq_parent = 10 },
->>>> +       { .exti = 5, .irq_parent = 23 },
->>>> +       { .exti = 6, .irq_parent = 64 },
->>>> +       { .exti = 7, .irq_parent = 65 },
->>>> +       { .exti = 8, .irq_parent = 66 },
->>>> +       { .exti = 9, .irq_parent = 67 },
->>>> +       { .exti = 10, .irq_parent = 40 },
->>>> +       { .exti = 11, .irq_parent = 42 },
->>>> +       { .exti = 12, .irq_parent = 76 },
->>>> +       { .exti = 13, .irq_parent = 77 },
->>>> +       { .exti = 14, .irq_parent = 121 },
->>>> +       { .exti = 15, .irq_parent = 127 },
->>>> +       { .exti = 16, .irq_parent = 1 },
->>>> +       { .exti = 65, .irq_parent = 144 },
->>>> +       { .exti = 68, .irq_parent = 143 },
->>>> +       { .exti = 73, .irq_parent = 129 },
->>>> +};
->>>
->>>
->>> You can use an interrupt-map property rather than put this into the
->>> driver.
->>
->>
->> interrupt-map seemed interesting and promising like used in pci host.
->> At first sight this property can't be used into node with
->> "interrupt-controller" property (see in drivers/of/irq.c function:
->> of_irq_parse_raw) because "of_irq_parse_raw" checks if node got
->> it first, and after lookup the interrupt-map.
->>
->> Rob, Thomas, Jason, Marc what do you prefers or the right ways...?
-> 
-> I believe the correct thing to do is simply drop "interrupt-controller".
-
-if I drop "interrupt-controller" of my node, my driver will not be
-initialized by "of_irq_init"
-(start_kernel->init_IRQ->irqchip_init->of_irq_init).
-Probably, we could replace "IRQCHIP_DECLARE" by a
-"module_platform_driver" or "postcore_initcall" but I'm not a big fan of
-this solution. what do you think ?
-
-> 
-> Rob
-> 
+diff --git a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+similarity index 95%
+rename from Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
+rename to Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+index e5b294d..fb39e32 100644
+--- a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
++++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+@@ -1,4 +1,4 @@
+-Binding for Qualcomm PM8941 WLED driver
++Binding for Qualcomm Technologies, Inc. WLED driver
+ 
+ Required properties:
+ - compatible: should be "qcom,pm8941-wled"
+diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+index 4e1d2ad..8c095e3 100644
+--- a/drivers/video/backlight/Kconfig
++++ b/drivers/video/backlight/Kconfig
+@@ -299,12 +299,12 @@ config BACKLIGHT_TOSA
+ 	  If you have an Sharp SL-6000 Zaurus say Y to enable a driver
+ 	  for its backlight
+ 
+-config BACKLIGHT_PM8941_WLED
+-	tristate "Qualcomm PM8941 WLED Driver"
++config BACKLIGHT_QCOM_WLED
++	tristate "Qualcomm PMIC WLED Driver"
+ 	select REGMAP
+ 	help
+-	  If you have the Qualcomm PM8941, say Y to enable a driver for the
+-	  WLED block.
++	  If you have the Qualcomm PMIC, say Y to enable a driver for the
++	  WLED block. Currently it supports PM8941 and PMI8998.
+ 
+ config BACKLIGHT_SAHARA
+ 	tristate "Tabletkiosk Sahara Touch-iT Backlight Driver"
+diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
+index 5e28f01..6fd76ef 100644
+--- a/drivers/video/backlight/Makefile
++++ b/drivers/video/backlight/Makefile
+@@ -49,8 +49,8 @@ obj-$(CONFIG_BACKLIGHT_OMAP1)		+= omap1_bl.o
+ obj-$(CONFIG_BACKLIGHT_OT200)		+= ot200_bl.o
+ obj-$(CONFIG_BACKLIGHT_PANDORA)		+= pandora_bl.o
+ obj-$(CONFIG_BACKLIGHT_PCF50633)	+= pcf50633-backlight.o
+-obj-$(CONFIG_BACKLIGHT_PM8941_WLED)	+= pm8941-wled.o
+ obj-$(CONFIG_BACKLIGHT_PWM)		+= pwm_bl.o
++obj-$(CONFIG_BACKLIGHT_QCOM_WLED)	+= qcom-wled.o
+ obj-$(CONFIG_BACKLIGHT_SAHARA)		+= kb3886_bl.o
+ obj-$(CONFIG_BACKLIGHT_SKY81452)	+= sky81452-backlight.o
+ obj-$(CONFIG_BACKLIGHT_TOSA)		+= tosa_bl.o
+diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/qcom-wled.c
+similarity index 100%
+rename from drivers/video/backlight/pm8941-wled.c
+rename to drivers/video/backlight/qcom-wled.c
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
