@@ -1,27 +1,32 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] arm64: dts: rockchip: use canonical compatible for touchpad/touchscreen
-Date: Thu, 03 May 2018 14:36:13 +0200
-Message-ID: <3507285.Efm3MEd05V@phil>
-References: <20180501224628.GA150745@dtor-ws>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501224628.GA150745@dtor-ws>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Kaehlcke <mka@chromium.org>, Brian Norris <briannorris@chromium.org>, Emil Renner Berthing <kernel@esmil.dk>, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: can: rcar_can: Fix R8A7796 SoC name
+Date: Thu,  3 May 2018 15:02:33 +0200
+Message-ID: <1525352553-17045-1-git-send-email-geert+renesas@glider.be>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Chris Paterson <chris.paterson2@renesas.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 2. Mai 2018, 00:46:28 CEST schrieb Dmitry Torokhov:
-> "atmel,atmel_mxt_tp" and "atmel,atmel_mxt_ts" are ChromeOS inventions,
-> let's replace them with canonical compatible string "atmel,maxtouch".
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+R8A7796 is R-Car M3-W.
 
-I've amended the patch subject with a "on gru-kevin" and applied
-it for 4.18 with Brian's Reviewed-by
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Thanks
-Heiko
+diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+index 93c3a6ae32f995e9..1a4ee1d2506de532 100644
+--- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
++++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+@@ -5,7 +5,7 @@ Required properties:
+ - compatible: Must contain one or more of the following:
+   - "renesas,rcar-gen3-canfd" for R-Car Gen3 compatible controller.
+   - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
+-  - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3) compatible controller.
++  - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controller.
+ 
+   When compatible with the generic version, nodes must list the
+   SoC-specific version corresponding to the platform first, followed by the
+-- 
+2.7.4
