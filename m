@@ -1,49 +1,34 @@
-Return-Path: <SRS0=1mpY=HW=nxp.com=jun.li@kernel.org>
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v5 01/14] dt-bindings: connector: add properties for typec
-Date: Thu, 3 May 2018 08:35:14 +0000
-Message-ID: <VI1PR0402MB3917DA4B3789475540E38E4989870@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+Return-Path: <SRS0=vUhH=HW=suse.com=oneukum@kernel.org>
+Message-ID: <1525332431.12348.1.camel@suse.com>
+Subject: Re: [PATCH v5 01/14] dt-bindings: connector: add properties for
+ typec
+From: Oliver Neukum <oneukum@suse.com>
+Date: Thu, 03 May 2018 09:27:11 +0200
+In-Reply-To: <1525307094-27402-2-git-send-email-jun.li@nxp.com>
 References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
 	 <1525307094-27402-2-git-send-email-jun.li@nxp.com>
- <1525332431.12348.1.camel@suse.com>
-In-Reply-To: <1525332431.12348.1.camel@suse.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-To: Oliver Neukum <oneukum@suse.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux@roeck-us.net" <linux@roeck-us.net>
-Cc: "gsomlo@gmail.com" <gsomlo@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Peter Chen <peter.chen@nxp.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: Li Jun <jun.li@nxp.com>, robh+dt@kernel.org, heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org, linux@roeck-us.net
+Cc: gsomlo@gmail.com, linux-imx@nxp.com, peter.chen@nxp.com, shufan_lee@richtek.com, a.hajda@samsung.com, cw00.choi@samsung.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogT2xpdmVyIE5ldWt1bSBb
-bWFpbHRvOm9uZXVrdW1Ac3VzZS5jb21dDQo+IFNlbnQ6IDIwMTjlubQ15pyIM+aXpSAxNToyNw0K
-PiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gaGVp
-a2tpLmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7
-DQo+IGxpbnV4QHJvZWNrLXVzLm5ldA0KPiBDYzogZ3NvbWxvQGdtYWlsLmNvbTsgZGwtbGludXgt
-aW14IDxsaW51eC1pbXhAbnhwLmNvbT47IFBldGVyIENoZW4NCj4gPHBldGVyLmNoZW5AbnhwLmNv
-bT47IHNodWZhbl9sZWVAcmljaHRlay5jb207IGEuaGFqZGFAc2Ftc3VuZy5jb207DQo+IGN3MDAu
-Y2hvaUBzYW1zdW5nLmNvbTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LXVz
-YkB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NSAwMS8xNF0gZHQtYmlu
-ZGluZ3M6IGNvbm5lY3RvcjogYWRkIHByb3BlcnRpZXMgZm9yIHR5cGVjDQo+IA0KPiBBbSBEb25u
-ZXJzdGFnLCBkZW4gMDMuMDUuMjAxOCwgMDg6MjQgKzA4MDAgc2NocmllYiBMaSBKdW46DQo+ID4g
-K09wdGlvbmFsIHByb3BlcnRpZXMgZm9yIHVzYi1jLWNvbm5lY3RvcjoNCj4gPiArLSBwb3dlci1y
-b2xlOiBzaG91bGQgYmUgb25lIG9mICJzb3VyY2UiLCAic2luayIgb3IgImR1YWwiKERSUCkgaWYN
-Cj4gPiArdHlwZWMNCj4gPiArwqAgY29ubmVjdG9yIGhhcyBwb3dlciBzdXBwb3J0Lg0KPiA+ICst
-IHRyeS1wb3dlci1yb2xlOiBwcmVmZXJyZWQgcG93ZXIgcm9sZSBpZiAiZHVhbCIoRFJQKSBjYW4g
-c3VwcG9ydA0KPiA+ICtUcnkuU05LDQo+ID4gK8KgIG9yIFRyeS5TUkMsIHNob3VsZCBiZSAic2lu
-ayIgZm9yIFRyeS5TTksgb3IgInNvdXJjZSIgZm9yIFRyeS5TUkMuDQo+ID4gKy0gZGF0YS1yb2xl
-OiBzaG91bGQgYmUgb25lIG9mICJob3N0IiwgImRldmljZSIsICJkdWFsIihEUkQpIGlmIHR5cGVj
-DQo+ID4gK8KgIGNvbm5lY3RvciBzdXBwb3J0cyBVU0IgZGF0YS4NCj4gDQo+IEhpLA0KPiANCj4g
-aXMgdGhpcyByZWFsbHkgY29ycmVjdD8NCj4gDQo+IENhbiBvbmUgaW1wbGVtZW50IGEgZGV2aWNl
-IHRoYXQgY2FuIG9wZXJhdGUgYXMgZWl0aGVyIERGUCBvciBVRlAsIGJ1dCBub3QNCj4gaW1wbGVt
-ZW50cyB0aGUgZHluYW1pYyByb2xlIHN3aXRjaCB0aGF0IGEgRFJQIG11c3Qgc3VwcG9ydD8NCg0K
-WW91IG1lYW4gYSBwb3J0IHdpdGggRFJEIG9uIGRhdGEgYnV0IG5vdCBEUlAgb24gcG93ZXI/DQoN
-ClRoZSBkYXRhLXJvbGUgaXMgbmV3bHkgYWRkZWQgYXMgdGhlIGRhdGEgcm9sZSBpcyBub3QgY291
-cGxlZCB3aXRoIHBvd2VyDQpyb2xlIGluIG5ldyBQRCBzcGVjLCBpbiBwcmFjdGljZSwgSSB0aGlu
-ayB0aGlzIGlzIHZlcnkgbm9ybWFsLCBIZWlra2kgYWxyZWFkeQ0KYWRkZWQgYSBwYXRjaCB0byBz
-ZXBhcmF0ZSB0aGUgcG93ZXIgYW5kIGRhdGEgcm9sZSBpbiBjbGFzcyBkcml2ZXIsIGJ1dCB0Y3Bt
-DQpoYXNuJ3QgY2hhbmdlZCBhY2NvcmRpbmdseSBmb3IgdGhpcyB5ZXQsIHNvIGN1cnJlbnQgdGNw
-bSBtYXkgbm90IGFsbG93IHlvdXINCnF1ZXN0aW9uIGNhc2UsIGJ1dCBmcm9tIHByb3BlcnR5IGRl
-ZmluaXRpb24gcG9pbnQgdmlldywgd2Ugc2hvdWxkIG5vdCBsaW1pdA0KdGhpcyBhbmQgbGV0IHRo
-ZSAyIHJvbGVzIGluZGVwZW5kZW50IGVhY2ggb3RoZXIuDQoNClRoYW5rcw0KSnVuDQo+IA0KPiAJ
-UmVnYXJkcw0KPiAJCU9saXZlcg0KDQo=
+Am Donnerstag, den 03.05.2018, 08:24 +0800 schrieb Li Jun:
+> +Optional properties for usb-c-connector:
+> +- power-role: should be one of "source", "sink" or "dual"(DRP) if typec
+> +  connector has power support.
+> +- try-power-role: preferred power role if "dual"(DRP) can support Try.SNK
+> +  or Try.SRC, should be "sink" for Try.SNK or "source" for Try.SRC.
+> +- data-role: should be one of "host", "device", "dual"(DRD) if typec
+> +  connector supports USB data.
+
+Hi,
+
+is this really correct?
+
+Can one implement a device that can operate as either DFP or UFP,
+but not implements the dynamic role switch that a DRP must support?
+
+	Regards
+		Oliver
