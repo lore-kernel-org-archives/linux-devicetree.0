@@ -1,88 +1,103 @@
 Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr10088.outbound.protection.outlook.com ([40.107.1.88]:31339
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751747AbeECAlU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 2 May 2018 20:41:20 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v5 02/14] dt-bindings: usb: add documentation for typec port controller(TCPCI)
-Date: Thu,  3 May 2018 08:24:42 +0800
-Message-Id: <1525307094-27402-3-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
-References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:45922 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751069AbeECPTX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 3 May 2018 11:19:23 -0400
+Subject: Re: [PATCH v11 2/4] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
+References: <20180424122700.5387-1-maxime.ripard@bootlin.com>
+ <20180424122700.5387-3-maxime.ripard@bootlin.com>
+ <4924400e-67ea-e523-321a-a9d3490d7873@xs4all.nl>
+ <20180503151350.7pdu5kdl6vp7wz4y@flea>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <5d8e965c-90f4-6d86-6759-6d77ad7fefc5@xs4all.nl>
+Date: Thu, 3 May 2018 17:19:11 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20180503151350.7pdu5kdl6vp7wz4y@flea>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: jun.li@nxp.com, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-TCPCI stands for typec port controller interface, its implementation
-has full typec port control with power delivery support, it's a
-standard i2c slave with GPIO input as irq interface, detail see spec
-"Universal Serial Bus Type-C Port Controller Interface Specification
-Revision 1.0, Version 1.1"
+On 03/05/18 17:13, Maxime Ripard wrote:
+> Hi!
+> 
+> Thanks for your review,
+> 
+> On Thu, May 03, 2018 at 12:54:57PM +0200, Hans Verkuil wrote:
+>>> +static int csi2rx_stop(struct csi2rx_priv *csi2rx)
+>>> +{
+>>> +	unsigned int i;
+>>> +
+>>> +	clk_prepare_enable(csi2rx->p_clk);
+>>> +	clk_disable_unprepare(csi2rx->sys_clk);
+>>> +
+>>> +	for (i = 0; i < csi2rx->max_streams; i++) {
+>>> +		writel(0, csi2rx->base + CSI2RX_STREAM_CTRL_REG(i));
+>>> +
+>>> +		clk_disable_unprepare(csi2rx->pixel_clk[i]);
+>>> +	}
+>>> +
+>>> +	clk_disable_unprepare(csi2rx->p_clk);
+>>> +
+>>> +	return v4l2_subdev_call(csi2rx->source_subdev, video, s_stream, false);
+>>> +}
+>>> +
+>>> +static int csi2rx_s_stream(struct v4l2_subdev *subdev, int enable)
+>>> +{
+>>> +	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
+>>> +	int ret = 0;
+>>> +
+>>> +	mutex_lock(&csi2rx->lock);
+>>> +
+>>> +	if (enable) {
+>>> +		/*
+>>> +		 * If we're not the first users, there's no need to
+>>> +		 * enable the whole controller.
+>>> +		 */
+>>> +		if (!csi2rx->count) {
+>>> +			ret = csi2rx_start(csi2rx);
+>>> +			if (ret)
+>>> +				goto out;
+>>> +		}
+>>> +
+>>> +		csi2rx->count++;
+>>> +	} else {
+>>> +		csi2rx->count--;
+>>> +
+>>> +		/*
+>>> +		 * Let the last user turn off the lights.
+>>> +		 */
+>>> +		if (!csi2rx->count) {
+>>> +			ret = csi2rx_stop(csi2rx);
+>>> +			if (ret)
+>>> +				goto out;
+>>
+>> Here the error from csi2rx_stop is propagated to the caller, but in the TX
+>> driver it is ignored. Is there a reason for the difference?
+> 
+> Even though that wasn't really intentional, TX only does a writel in
+> its stop (which cannot fail), while RX will need to communicate with
+> its subdev, and that can fail.
+> 
+>> In general I see little value in propagating errors when releasing/stopping
+>> something, since there is usually very little you can do to handle the error.
+>> It really shouldn't fail.
+> 
+> So do you want me to ignore the values in the s_stream function and
+> log the error, or should I just make the start / stop function return
+> void?
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- .../devicetree/bindings/usb/typec-tcpci.txt        | 49 ++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+You can't ignore errors from start(), those should always be returned to the
+caller. But for stop() I'd just log the error and make csi2rx/tx_stop void functions.
 
-diff --git a/Documentation/devicetree/bindings/usb/typec-tcpci.txt b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
-new file mode 100644
-index 0000000..0dd1469
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
-@@ -0,0 +1,49 @@
-+TCPCI(Typec port cotroller interface) binding
-+---------------------------------------------
-+
-+Required properties:
-+- compatible:       should be set one of following:
-+		    - "nxp,ptn5110" for NXP USB PD TCPC PHY IC ptn5110.
-+
-+- reg:              the i2c slave address of typec port controller device.
-+- interrupt-parent: the phandle to the interrupt controller which provides
-+                    the interrupt.
-+- interrupts:       interrupt specification for tcpci alert.
-+
-+Required sub-node:
-+- connector: The "usb-c-connector" attached to the tcpci chip, the bindings
-+  of connector node are specified in
-+  Documentation/devicetree/bindings/connector/usb-connector.txt
-+
-+Example:
-+
-+ptn5110@50 {
-+	compatible = "nxp,ptn5110";
-+	reg = <0x50>;
-+	interrupt-parent = <&gpio3>;
-+	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+
-+	usb_con: connector {
-+		compatible = "usb-c-connector";
-+		label = "USB-C";
-+		data-role = "dual";
-+		power-role = "dual";
-+		try-power-role = "sink";
-+		source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)>;
-+		sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)
-+			     PDO_VAR(5000, 12000, 2000)>;
-+		op-sink-microwatt = <10000000>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@1 {
-+				reg = <1>;
-+				usb_con_ss: endpoint {
-+					remote-endpoint = <&usb3_data_ss>;
-+				};
-+			};
-+		};
-+	};
-+};
--- 
-2.7.4
+Regards,
+
+	Hans
+
+> 
+> Maxime
+> 
 
