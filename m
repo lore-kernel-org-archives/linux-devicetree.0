@@ -1,105 +1,53 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 6/8] drm/panel: Add Ilitek ILI9881c panel driver
-Date: Thu, 3 May 2018 15:59:04 +0200
-Message-ID: <20180503135904.bxobnijc3qadpz4f@flea>
-References: <cover.a3617c4362eac8783f412525e52cf5552d19095d.1522835818.git-series.maxime.ripard@bootlin.com>
- <a99bb44577ae18e77e60dba904618db23ee5dca7.1522835818.git-series.maxime.ripard@bootlin.com>
- <20180426150712.GF31888@ulmo>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v5 00/14] mmc: sdhci-omap: Add UHS/HS200 mode support
+Date: Thu, 3 May 2018 07:12:45 -0700
+Message-ID: <20180503141245.GO98604@atomide.com>
+References: <20180427114723.2687-1-kishon@ti.com>
+ <CAPDyKFqb=Dyi=UMZBLKcrBbmaWbGEjf-Vp5vQ0b7_F__+YnXHQ@mail.gmail.com>
+ <20180502145551.GL98604@atomide.com>
+ <CAPDyKFr4=p5Q1oEDVQct+8GeDm-rbQCLyE8+3RqGBkWLvDTKdA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0538574378=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180426150712.GF31888@ulmo>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFr4=p5Q1oEDVQct+8GeDm-rbQCLyE8+3RqGBkWLvDTKdA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+* Ulf Hansson <ulf.hansson@linaro.org> [180503 08:53]:
+> On 2 May 2018 at 16:55, Tony Lindgren <tony@atomide.com> wrote:
+> > * Ulf Hansson <ulf.hansson@linaro.org> [180502 13:17]:
+> >> On 27 April 2018 at 13:47, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >> > Add UHS/HS200 mode support in sdhci-omap. The programming sequence
+> >> > for voltage switching, tuning is followed from AM572x TRM
+> >> > http://www.ti.com/lit/ug/spruhz6j/spruhz6j.pdf
+> >> > (Similar to all AM57x/DRA7x SoCs). The patch series also implements
+> >> > workaround for errata published in
+> >> > http://www.ti.com/lit/er/sprz429l/sprz429l.pdf
+> >> >
+> >> > patches are created on top of
+> >> > git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git next
+> >> >
+> >> > The patches along with dt has also been pushed to
+> >> > https://github.com/kishon/linux-wip.git sdhci_uhs_v5
+> >>
+> >> Thanks, applied for next!
+> >
+> > OK. Ulf, can I use some commit id from your next as a base for
+> > the related dts changes?
+> >
+> 
+> No, I am re-basing my next branch from time to time so it's not a good idea.
+> 
+> Instead I have shared an immutable branch for your to pull/merge:
+> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git sdhci_omap
+> 
+> I also signed the top commit on this branch: sdhci-omap-v4.17-rc3
+> 
+> The branch is based on 4.17-rc3.
 
---===============0538574378==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qlm2nnhy75vsga56"
-Content-Disposition: inline
+OK great, thanks a lot!
 
-
---qlm2nnhy75vsga56
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Thierry,
-
-Thanks for your review, I'll fix the other things you pointed out.
-
-On Thu, Apr 26, 2018 at 05:07:12PM +0200, Thierry Reding wrote:
-> > +static int ili9881c_send_cmd_data(struct ili9881c *ctx, u8 cmd, u8 dat=
-a)
-> > +{
-> > +	u8 buf[2] =3D { cmd, data };
-> > +	int ret;
-> > +
-> > +	ret =3D mipi_dsi_dcs_write_buffer(ctx->dsi, buf, sizeof(buf));
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return 0;
-> > +}
->=20
-> According to this you're sending DCS commands, but none of the above
-> look like valid DCS commands. Do you know what's going on here?
-
-It looks to me that they are custom DCS commands.
-
-> Also, can you include a reference to a datasheet where these
-> instructions come from?
-
-I'm not sure an Excel spreadsheet coming from the panel supplier would
-be a good thing to include in a driver :)
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---qlm2nnhy75vsga56
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrrFacACgkQ0rTAlCFN
-r3Rd5w/+L3D/cUYcXj2rREM7Lt+SiwZWXdV7pIkLbY+MtKn7rxLqPewXTO/oSaoX
-ylzyDJ+nftxiVJIFf+iU+EyI/zjjvGBeJ+QsMcT0Iqpz3SeR0qdjWTOL7VZ4HaEQ
-TAexYkBHRhONKuc5g1boRwZ9a0sa8jhAy+C2kQKO+kC018GgU6/jg+TYKux9Sekn
-jzglGTsIEpq5TJv9XfbzfTJ6zQmL482a+8EIqz66aIY+TbZUjAk3z7Kqac4bM7fl
-OlyjRSK9Pa5U0O7kxjGsVEyJ45Wgl9UZOnNSfJYeLLqu/H1qyWOOwzuf6oyKnPda
-q4YdZg8gYqhlZ671AA38M6xlGVmGWL0bvAwPHHEvhbm5ct6ezACeY5kSfBUjpE7e
-FwdMIniPisqqP+ZHaRq7oi8SNQ6mWx208jL7I+tU9YnI+pptPjKbuyDQJEDC+3l9
-k1AA4YE0BORG4PEaLsNwj4kBBRh80EeUbBhfd15kTDwmqXkF/7IOPnjqte22O/Wg
-KW9O7pStLON1cguU+VvDIYDHmkQx0cgyMc3hJ4J99rlEtPv6q2mVSRBmb4WEVGNI
-wmkioOUSWN3h46ez2mNTLOK2pK5ED+Jmo6jVxo55K5Elx+h7KiojS+/NzQygA3Ml
-KqygE4kaJyZiWNFlEH0B7zzOt/SdCqwxngRs6QGtZCtqSzlRzAQ=
-=CZiK
------END PGP SIGNATURE-----
-
---qlm2nnhy75vsga56--
-
---===============0538574378==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0538574378==--
+Tony
