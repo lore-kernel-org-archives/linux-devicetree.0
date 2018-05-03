@@ -1,144 +1,219 @@
-Return-Path: <SRS0=jssF=H2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pg0-f68.google.com ([74.125.83.68]:33626 "EHLO
-        mail-pg0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751977AbeEGIwJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 7 May 2018 04:52:09 -0400
-Received: by mail-pg0-f68.google.com with SMTP id i194-v6so19740411pgd.0
-        for <devicetree@vger.kernel.org>; Mon, 07 May 2018 01:52:09 -0700 (PDT)
-From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Subject: [PATCH v10 1/3] PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver DT bindings
-Date: Mon,  7 May 2018 04:51:51 -0400
-Message-Id: <1525683111-9564-1-git-send-email-l.subrahmanya@mobiveil.co.in>
+Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr10056.outbound.protection.outlook.com ([40.107.1.56]:1220
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751747AbeECAls (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 2 May 2018 20:41:48 -0400
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v5 06/14] usb: typec: tcpm: support get typec and pd config from device properties
+Date: Thu,  3 May 2018 08:24:46 +0800
+Message-Id: <1525307094-27402-7-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
+References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, marc.zyngier@arm.com
-Cc: mingkai.hu@nxp.com, peter.newton@nxp.com, minghuan.lian@nxp.com, rajesh.raina@nxp.com, rajan.kapoor@nxp.com, prabhjot.singh@nxp.com, Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>, devicetree@vger.kernel.org
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: jun.li@nxp.com, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the DT bindings for Mobiveil PCIe Host Bridge
-IP driver and updates the vendor prefixes file.
+This patch adds support of get typec and power delivery config from
+firmware description.
 
-Signed-off-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- .../devicetree/bindings/pci/mobiveil-pcie.txt      | 73 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- MAINTAINERS                                        |  7 +++
- 3 files changed, 81 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+ drivers/usb/typec/tcpm.c | 133 +++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 111 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-new file mode 100644
-index 0000000..65038aa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-@@ -0,0 +1,73 @@
-+* Mobiveil AXI PCIe Root Port Bridge DT description
-+
-+Mobiveil's GPEX 4.0 is a PCIe Gen4 root port bridge IP. This configurable IP
-+has up to 8 outbound and inbound windows for the address translation.
-+
-+Required properties:
-+- #address-cells: Address representation for root ports, set to <3>
-+- #size-cells: Size representation for root ports, set to <2>
-+- #interrupt-cells: specifies the number of cells needed to encode an
-+	interrupt source. The value must be 1.
-+- compatible: Should contain "mbvl,gpex40-pcie"
-+- reg: Should contain PCIe registers location and length
-+	"config_axi_slave": PCIe controller registers
-+	"csr_axi_slave"	  : Bridge config registers
-+	"gpio_slave"	  : GPIO registers to control slot power
-+	"apb_csr"	  : MSI registers
-+
-+- device_type: must be "pci"
-+- apio-wins : number of requested apio outbound windows
-+		default 2 outbound windows are configured -
-+		1. Config window
-+		2. Memory window
-+- ppio-wins : number of requested ppio inbound windows
-+		default 1 inbound memory window is configured.
-+- bus-range: PCI bus numbers covered
-+- interrupt-controller: identifies the node as an interrupt controller
-+- #interrupt-cells: specifies the number of cells needed to encode an
-+	interrupt source. The value must be 1.
-+- interrupt-parent : phandle to the interrupt controller that
-+		it is attached to, it should be set to gic to point to
-+		ARM's Generic Interrupt Controller node in system DT.
-+- interrupts: The interrupt line of the PCIe controller
-+		last cell of this field is set to 4 to
-+		denote it as IRQ_TYPE_LEVEL_HIGH type interrupt.
-+- interrupt-map-mask,
-+	interrupt-map: standard PCI properties to define the mapping of the
-+	PCI interface to interrupt numbers.
-+- ranges: ranges for the PCI memory regions (I/O space region is not
-+	supported by hardware)
-+	Please refer to the standard PCI bus binding document for a more
-+	detailed explanation
-+
-+
-+Example:
-+++++++++
-+	pcie0: pcie@a0000000 {
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		compatible = "mbvl,gpex40-pcie";
-+		reg =	<0xa0000000 0x00001000>,
-+			<0xb0000000 0x00010000>,
-+			<0xff000000 0x00200000>,
-+			<0xb0010000 0x00001000>;
-+		reg-names =	"config_axi_slave",
-+				"csr_axi_slave",
-+				"gpio_slave",
-+				"apb_csr";
-+		device_type = "pci";
-+		apio-wins = <2>;
-+		ppio-wins = <1>;
-+		bus-range = <0x00000000 0x000000ff>;
-+		interrupt-controller;
-+		interrupt-parent = <&gic>;
-+		#interrupt-cells = <1>;
-+		interrupts = < 0 89 4 >;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 0 &pci_express 0>,
-+				<0 0 0 1 &pci_express 1>,
-+				<0 0 0 2 &pci_express 2>,
-+				<0 0 0 3 &pci_express 3>;
-+		ranges = < 0x83000000 0 0x00000000 0xa8000000 0 0x8000000>;
-+
-+	};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 0994bdd..8263cc7 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -197,6 +197,7 @@ lwn	Liebherr-Werk Nenzing GmbH
- macnica	Macnica Americas
- marvell	Marvell Technology Group Ltd.
- maxim	Maxim Integrated Products
-+mbvl	Mobiveil Inc.
- mcube	mCube
- meas	Measurement Specialties
- mediatek	MediaTek Inc.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 44512c3..b295080 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9162,6 +9162,13 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
- S:	Maintained
- F:	drivers/media/dvb-frontends/mn88473*
+diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
+index 80b2303..becedcf 100644
+--- a/drivers/usb/typec/tcpm.c
++++ b/drivers/usb/typec/tcpm.c
+@@ -14,6 +14,7 @@
+ #include <linux/mutex.h>
+ #include <linux/power_supply.h>
+ #include <linux/proc_fs.h>
++#include <linux/property.h>
+ #include <linux/sched/clock.h>
+ #include <linux/seq_file.h>
+ #include <linux/slab.h>
+@@ -4240,6 +4241,81 @@ static int tcpm_copy_vdos(u32 *dest_vdo, const u32 *src_vdo,
+ 	return nr_vdo;
+ }
  
-+PCI DRIVER FOR MOBIVEIL PCIE IP
-+M:	Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-+L:	linux-pci@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-+F:	drivers/pci/host/pcie-mobiveil.c
++static int tcpm_fw_get_caps(struct tcpm_port *port,
++			    struct fwnode_handle *fwnode)
++{
++	const char *cap_str;
++	int ret;
++	u32 mw;
 +
- MODULE SUPPORT
- M:	Jessica Yu <jeyu@kernel.org>
- M:	Rusty Russell <rusty@rustcorp.com.au>
++	if (!port || !fwnode)
++		return -EINVAL;
++
++	/* USB data support is optional */
++	ret = fwnode_property_read_string(fwnode, "data-role", &cap_str);
++	if (ret == 0) {
++		port->typec_caps.data = typec_find_data_type(cap_str);
++		if (port->typec_caps.data < 0)
++			return -EINVAL;
++	}
++
++	ret = fwnode_property_read_string(fwnode, "power-role", &cap_str);
++	if (ret < 0)
++		return ret;
++
++	port->typec_caps.type = typec_find_power_type(cap_str);
++	if (port->typec_caps.type < 0)
++		return -EINVAL;
++	port->port_type = port->typec_caps.type;
++
++	if (port->port_type == TYPEC_PORT_SNK)
++		goto sink;
++
++	/* Get soruce pdos */
++	ret = fwnode_property_read_u32_array(fwnode, "source-pdos",
++					     NULL, 0);
++	if (ret <= 0)
++		return -EINVAL;
++
++	port->nr_src_pdo = min(ret, PDO_MAX_OBJECTS);
++	ret = fwnode_property_read_u32_array(fwnode, "source-pdos",
++					     port->src_pdo, port->nr_src_pdo);
++	if ((ret < 0) || tcpm_validate_caps(port, port->src_pdo,
++					    port->nr_src_pdo))
++		return -EINVAL;
++
++	if (port->port_type == TYPEC_PORT_SRC)
++		return 0;
++
++	/* Get the preferred power role for DRP */
++	ret = fwnode_property_read_string(fwnode, "try-power-role", &cap_str);
++	if (ret < 0)
++		return ret;
++
++	port->typec_caps.prefer_role = typec_find_preferred_role(cap_str);
++	if (port->typec_caps.prefer_role < 0)
++		return -EINVAL;
++sink:
++	/* Get sink pdos */
++	ret = fwnode_property_read_u32_array(fwnode, "sink-pdos",
++					     NULL, 0);
++	if (ret <= 0)
++		return -EINVAL;
++
++	port->nr_snk_pdo = min(ret, PDO_MAX_OBJECTS);
++	ret = fwnode_property_read_u32_array(fwnode, "sink-pdos",
++					     port->snk_pdo, port->nr_snk_pdo);
++	if ((ret < 0) || tcpm_validate_caps(port, port->snk_pdo,
++					    port->nr_snk_pdo))
++		return -EINVAL;
++
++	if (fwnode_property_read_u32(fwnode, "op-sink-microwatt", &mw) < 0)
++		return -EINVAL;
++	port->operating_snk_mw = mw / 1000;
++
++	return 0;
++}
++
+ int tcpm_update_source_capabilities(struct tcpm_port *port, const u32 *pdo,
+ 				    unsigned int nr_pdo)
+ {
+@@ -4524,12 +4600,36 @@ static int devm_tcpm_psy_register(struct tcpm_port *port)
+ 	return PTR_ERR_OR_ZERO(port->psy);
+ }
+ 
++static int tcpm_copy_caps(struct tcpm_port *port,
++			  const struct tcpc_config *tcfg)
++{
++	if (tcpm_validate_caps(port, tcfg->src_pdo, tcfg->nr_src_pdo) ||
++	    tcpm_validate_caps(port, tcfg->snk_pdo, tcfg->nr_snk_pdo))
++		return -EINVAL;
++
++	port->nr_src_pdo = tcpm_copy_pdos(port->src_pdo, tcfg->src_pdo,
++					  tcfg->nr_src_pdo);
++	port->nr_snk_pdo = tcpm_copy_pdos(port->snk_pdo, tcfg->snk_pdo,
++					  tcfg->nr_snk_pdo);
++
++	port->nr_snk_vdo = tcpm_copy_vdos(port->snk_vdo, tcfg->snk_vdo,
++					  tcfg->nr_snk_vdo);
++
++	port->operating_snk_mw = tcfg->operating_snk_mw;
++
++	port->typec_caps.prefer_role = tcfg->default_role;
++	port->typec_caps.type = tcfg->type;
++	port->typec_caps.data = tcfg->data;
++
++	return 0;
++}
++
+ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+ {
+ 	struct tcpm_port *port;
+ 	int i, err;
+ 
+-	if (!dev || !tcpc || !tcpc->config ||
++	if (!dev || !tcpc ||
+ 	    !tcpc->get_vbus || !tcpc->set_cc || !tcpc->get_cc ||
+ 	    !tcpc->set_polarity || !tcpc->set_vconn || !tcpc->set_vbus ||
+ 	    !tcpc->set_pd_rx || !tcpc->set_roles || !tcpc->pd_transmit)
+@@ -4559,30 +4659,19 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+ 	init_completion(&port->pps_complete);
+ 	tcpm_debugfs_init(port);
+ 
+-	if (tcpm_validate_caps(port, tcpc->config->src_pdo,
+-			       tcpc->config->nr_src_pdo) ||
+-	    tcpm_validate_caps(port, tcpc->config->snk_pdo,
+-			       tcpc->config->nr_snk_pdo)) {
+-		err = -EINVAL;
++	if (tcpc->config)
++		err = tcpm_copy_caps(port, tcpc->config);
++	else
++		err = tcpm_fw_get_caps(port, tcpc->fwnode);
++	if (err < 0)
+ 		goto out_destroy_wq;
+-	}
+-	port->nr_src_pdo = tcpm_copy_pdos(port->src_pdo, tcpc->config->src_pdo,
+-					  tcpc->config->nr_src_pdo);
+-	port->nr_snk_pdo = tcpm_copy_pdos(port->snk_pdo, tcpc->config->snk_pdo,
+-					  tcpc->config->nr_snk_pdo);
+-	port->nr_snk_vdo = tcpm_copy_vdos(port->snk_vdo, tcpc->config->snk_vdo,
+-					  tcpc->config->nr_snk_vdo);
+-
+-	port->operating_snk_mw = tcpc->config->operating_snk_mw;
+-	if (!tcpc->config->try_role_hw)
+-		port->try_role = tcpc->config->default_role;
++
++	if (!tcpc->config || !tcpc->config->try_role_hw)
++		port->try_role = port->typec_caps.prefer_role;
+ 	else
+ 		port->try_role = TYPEC_NO_PREFERRED_ROLE;
+ 
+ 	port->typec_caps.fwnode = tcpc->fwnode;
+-	port->typec_caps.prefer_role = tcpc->config->default_role;
+-	port->typec_caps.type = tcpc->config->type;
+-	port->typec_caps.data = tcpc->config->data;
+ 	port->typec_caps.revision = 0x0120;	/* Type-C spec release 1.2 */
+ 	port->typec_caps.pd_revision = 0x0300;	/* USB-PD spec release 3.0 */
+ 	port->typec_caps.dr_set = tcpm_dr_set;
+@@ -4592,7 +4681,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+ 	port->typec_caps.port_type_set = tcpm_port_type_set;
+ 
+ 	port->partner_desc.identity = &port->partner_ident;
+-	port->port_type = tcpc->config->type;
++	port->port_type = port->typec_caps.type;
+ 
+ 	port->role_sw = usb_role_switch_get(port->dev);
+ 	if (IS_ERR(port->role_sw)) {
+@@ -4610,7 +4699,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+ 		goto out_destroy_wq;
+ 	}
+ 
+-	if (tcpc->config->alt_modes) {
++	if (tcpc->config && tcpc->config->alt_modes) {
+ 		const struct typec_altmode_desc *paltmode = tcpc->config->alt_modes;
+ 
+ 		i = 0;
 -- 
-1.8.3.1
+2.7.4
 
