@@ -1,13 +1,13 @@
 Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr10079.outbound.protection.outlook.com ([40.107.1.79]:55664
+Received: from mail-eopbgr10049.outbound.protection.outlook.com ([40.107.1.49]:21440
         "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751755AbeECAmU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 2 May 2018 20:42:20 -0400
+        id S1751747AbeECAld (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 2 May 2018 20:41:33 -0400
 From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v5 11/14] usb: typec: tcpm: set cc for drp toggling attach
-Date: Thu,  3 May 2018 08:24:51 +0800
-Message-Id: <1525307094-27402-12-git-send-email-jun.li@nxp.com>
+Subject: [PATCH v5 04/14] usb: typec: add fwnode to tcpc
+Date: Thu,  3 May 2018 08:24:44 +0800
+Message-Id: <1525307094-27402-5-git-send-email-jun.li@nxp.com>
 In-Reply-To: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
 References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
@@ -17,44 +17,74 @@ To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.
 Cc: jun.li@nxp.com, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-In case of drp toggling, we may need set correct cc value for role control
-after attach as it may never been set.
+Add fwnode handle to get the fwnode so we can get typec configs
+it contains.
 
+Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- drivers/usb/typec/tcpm.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/staging/typec/tcpci.c | 7 +++++++
+ drivers/usb/typec/tcpm.c      | 1 +
+ include/linux/usb/tcpm.h      | 2 ++
+ 3 files changed, 10 insertions(+)
 
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index 741a80a..01d14fb 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -10,6 +10,7 @@
+ #include <linux/module.h>
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
++#include <linux/property.h>
+ #include <linux/regmap.h>
+ #include <linux/usb/pd.h>
+ #include <linux/usb/tcpm.h>
+@@ -474,6 +475,12 @@ static int tcpci_parse_config(struct tcpci *tcpci)
+ 
+ 	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
+ 	tcpci->tcpc.config = &tcpci_tcpc_config;
++	tcpci->tcpc.fwnode = device_get_named_child_node(tcpci->dev,
++							 "connector");
++	if (!tcpci->tcpc.fwnode) {
++		dev_err(tcpci->dev, "Can't find connector node.\n");
++		return -EINVAL;
++	}
+ 
+ 	return 0;
+ }
 diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index 0c7fa14..7e7eaca 100644
+index 7ee417a..80b2303 100644
 --- a/drivers/usb/typec/tcpm.c
 +++ b/drivers/usb/typec/tcpm.c
-@@ -2599,6 +2599,7 @@ static void tcpm_reset_port(struct tcpm_port *port)
- 	tcpm_set_attached_state(port, false);
- 	port->try_src_count = 0;
- 	port->try_snk_count = 0;
-+	port->cc_req = TYPEC_CC_OPEN;
- 	port->supply_voltage = 0;
- 	port->current_limit = 0;
- 	port->usb_type = POWER_SUPPLY_USB_TYPE_C;
-@@ -2831,6 +2832,8 @@ static void run_state_machine(struct tcpm_port *port)
- 		break;
+@@ -4579,6 +4579,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+ 	else
+ 		port->try_role = TYPEC_NO_PREFERRED_ROLE;
  
- 	case SRC_ATTACHED:
-+		if (port->cc_req == TYPEC_CC_OPEN)
-+			tcpm_set_cc(port, tcpm_rp_cc(port));
- 		ret = tcpm_src_attach(port);
- 		tcpm_set_state(port, SRC_UNATTACHED,
- 			       ret < 0 ? 0 : PD_T_PS_SOURCE_ON);
-@@ -3004,6 +3007,8 @@ static void run_state_machine(struct tcpm_port *port)
- 		tcpm_set_state(port, SNK_UNATTACHED, PD_T_PD_DEBOUNCE);
- 		break;
- 	case SNK_ATTACHED:
-+		if (port->cc_req == TYPEC_CC_OPEN)
-+			tcpm_set_cc(port, TYPEC_CC_RD);
- 		ret = tcpm_snk_attach(port);
- 		if (ret < 0)
- 			tcpm_set_state(port, SNK_UNATTACHED, 0);
++	port->typec_caps.fwnode = tcpc->fwnode;
+ 	port->typec_caps.prefer_role = tcpc->config->default_role;
+ 	port->typec_caps.type = tcpc->config->type;
+ 	port->typec_caps.data = tcpc->config->data;
+diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
+index b231b93..193920a 100644
+--- a/include/linux/usb/tcpm.h
++++ b/include/linux/usb/tcpm.h
+@@ -110,6 +110,7 @@ enum tcpc_mux_mode {
+ /**
+  * struct tcpc_dev - Port configuration and callback functions
+  * @config:	Pointer to port configuration
++ * @fwnode:	Pointer to port fwnode
+  * @get_vbus:	Called to read current VBUS state
+  * @get_current_limit:
+  *		Optional; called by the tcpm core when configured as a snk
+@@ -138,6 +139,7 @@ enum tcpc_mux_mode {
+  */
+ struct tcpc_dev {
+ 	const struct tcpc_config *config;
++	struct fwnode_handle *fwnode;
+ 
+ 	int (*init)(struct tcpc_dev *dev);
+ 	int (*get_vbus)(struct tcpc_dev *dev);
 -- 
 2.7.4
 
