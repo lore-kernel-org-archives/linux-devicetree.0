@@ -1,63 +1,133 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] ARM: tegra: apalis-tk1: fix high speed uart compatible
-Date: Thu, 3 May 2018 11:45:23 +0200
-Message-ID: <20180503094523.GB3251@ulmo>
-References: <20180503074646.24300-1-marcel@ziswiler.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH 07/11] irqchip: stm32: add stm32mp1 support with hierarchy
+ domain
+Date: Thu, 3 May 2018 11:55:00 +0200
+Message-ID: <26de0a75-e4e1-7c43-e31d-599d3c7de0ff@st.com>
+References: <1524759514-12392-1-git-send-email-ludovic.Barre@st.com>
+ <1524759514-12392-8-git-send-email-ludovic.Barre@st.com>
+ <20180501145611.GA6842@rob-hp-laptop>
+ <6fdb652b-e7f9-7035-3eda-39f763ed7ea3@st.com>
+ <CAL_JsqLvbGdPC9ifPZ5+tVxznHbsDuWGRg4R47st8Y9BtnNYUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="LpQ9ahxlCli8rRTG"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180503074646.24300-1-marcel@ziswiler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqLvbGdPC9ifPZ5+tVxznHbsDuWGRg4R47st8Y9BtnNYUQ@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Loic PALLARDY <loic.pallardy@st.com>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald BAEZA <gerald.baeza@st.com>, Thomas Gleixner <tglx@linutronix.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Alexandre Torgue <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
 
---LpQ9ahxlCli8rRTG
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 03, 2018 at 09:46:46AM +0200, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
->=20
-> Turns out the compatible "nvidia,tegra124-hsuart" does not (yet) exit
-> and everybody else also uses it only in conjunction with
-> "nvidia,tegra30-hsuart".
->=20
-> Reported-by: Martin =C5=A0afa=C5=99=C3=ADk <msafarik@retia.cz>
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
->=20
-> ---
->=20
->  arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi | 6 +++---
->  arch/arm/boot/dts/tegra124-apalis.dtsi      | 6 +++---
->  2 files changed, 6 insertions(+), 6 deletions(-)
+On 05/02/2018 07:45 PM, Rob Herring wrote:
+> On Wed, May 2, 2018 at 11:03 AM, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>> Hi Rob
+>>
+>>
+>>
+>> On 05/01/2018 04:56 PM, Rob Herring wrote:
+>>>
+>>> On Thu, Apr 26, 2018 at 06:18:30PM +0200, Ludovic Barre wrote:
+>>>>
+>>>> From: Ludovic Barre <ludovic.barre@st.com>
+>>>>
+>>>> Exti controller has been differently integrated on stm32mp1 SoC.
+>>>> A parent irq has only one external interrupt. A hierachy domain could
+>>>> be used. Handlers are call by parent, each parent interrupt could be
+>>>> masked and unmasked according to the needs.
+>>>>
+>>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>>>> ---
+>>>>    .../interrupt-controller/st,stm32-exti.txt         |   3 +
+>>>>    drivers/irqchip/irq-stm32-exti.c                   | 322
+>>>> +++++++++++++++++++++
+>>>>    2 files changed, 325 insertions(+)
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+>>>> b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+>>>> index edf03f0..136bd61 100644
+>>>> ---
+>>>> a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+>>>> +++
+>>>> b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+>>>> @@ -5,11 +5,14 @@ Required properties:
+>>>>    - compatible: Should be:
+>>>>        "st,stm32-exti"
+>>>>        "st,stm32h7-exti"
+>>>> +    "st,stm32mp1-exti"
+>>>>    - reg: Specifies base physical address and size of the registers
+>>>>    - interrupt-controller: Indentifies the node as an interrupt controller
+>>>>    - #interrupt-cells: Specifies the number of cells to encode an
+>>>> interrupt
+>>>>      specifier, shall be 2
+>>>>    - interrupts: interrupts references to primary interrupt controller
+>>>> +  (only needed for exti controller with multiple exti under
+>>>> +  same parent interrupt: st,stm32-exti and st,stm32h7-exti")
+>>>>      Example:
+>>>>    diff --git a/drivers/irqchip/irq-stm32-exti.c
+>>>> b/drivers/irqchip/irq-stm32-exti.c
+>>>> index b38c655..ebf7146 100644
+>>>> --- a/drivers/irqchip/irq-stm32-exti.c
+>>>> +++ b/drivers/irqchip/irq-stm32-exti.c
+>>>
+>>>
+>>> [...]
+>>>
+>>>> +static const struct stm32_desc_irq stm32mp1_desc_irq[] = {
+>>>> +       { .exti = 1, .irq_parent = 7 },
+>>>> +       { .exti = 2, .irq_parent = 8 },
+>>>> +       { .exti = 3, .irq_parent = 9 },
+>>>> +       { .exti = 4, .irq_parent = 10 },
+>>>> +       { .exti = 5, .irq_parent = 23 },
+>>>> +       { .exti = 6, .irq_parent = 64 },
+>>>> +       { .exti = 7, .irq_parent = 65 },
+>>>> +       { .exti = 8, .irq_parent = 66 },
+>>>> +       { .exti = 9, .irq_parent = 67 },
+>>>> +       { .exti = 10, .irq_parent = 40 },
+>>>> +       { .exti = 11, .irq_parent = 42 },
+>>>> +       { .exti = 12, .irq_parent = 76 },
+>>>> +       { .exti = 13, .irq_parent = 77 },
+>>>> +       { .exti = 14, .irq_parent = 121 },
+>>>> +       { .exti = 15, .irq_parent = 127 },
+>>>> +       { .exti = 16, .irq_parent = 1 },
+>>>> +       { .exti = 65, .irq_parent = 144 },
+>>>> +       { .exti = 68, .irq_parent = 143 },
+>>>> +       { .exti = 73, .irq_parent = 129 },
+>>>> +};
+>>>
+>>>
+>>> You can use an interrupt-map property rather than put this into the
+>>> driver.
+>>
+>>
+>> interrupt-map seemed interesting and promising like used in pci host.
+>> At first sight this property can't be used into node with
+>> "interrupt-controller" property (see in drivers/of/irq.c function:
+>> of_irq_parse_raw) because "of_irq_parse_raw" checks if node got
+>> it first, and after lookup the interrupt-map.
+>>
+>> Rob, Thomas, Jason, Marc what do you prefers or the right ways...?
+> 
+> I believe the correct thing to do is simply drop "interrupt-controller".
 
-Applied, thanks.
+if I drop "interrupt-controller" of my node, my driver will not be
+initialized by "of_irq_init"
+(start_kernel->init_IRQ->irqchip_init->of_irq_init).
+Probably, we could replace "IRQCHIP_DECLARE" by a
+"module_platform_driver" or "postcore_initcall" but I'm not a big fan of
+this solution. what do you think ?
 
-Thierry
-
---LpQ9ahxlCli8rRTG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlrq2jMACgkQ3SOs138+
-s6HC4w/+LXFnOp8re0nyWyA5EYdCjhaX8tWdNlDpnJiBUW+mPUM/VkWGR+XOJSdP
-XjJpyXE2L22UaIN0qJli5jqRmL9m3zFS9ZKOw+CNX42aipJjVDjtaZkmf433SsEC
-ykUj5hCpfKSGDD/zzfW8oCHzsUBshgLOgbo6YU8fffLiE734pZBANzI3JKxyhqXp
-qOnkAT5gblKotWFt+Qdqc8O27H2AwOsxZu19rMWb6kU79AjUf2ZRUePoPlhLhFWn
-N2ys4J4wdr1CGHUc+88aPGU8dHIPFfA24/kUlGHJyNzi/4jFecJ2wQd1uBVryr8z
-Zv5sJQ/zUC1ujIBQz0zstjuk/v20IlyezN8O5XobtO9Nfocxr9m7XyNUMTrRowVt
-mAAC5ZQV3zMhu0RbSA7rs4G++z/8vkZ7Oswi1be/QN/o1htD58rx3nMEerEJrviy
-t2tOGkzYq6u8lrvSS53irGUdApzK7oMRxbio0xD69TZ2numHLYi6Wsi5BCVwIYOL
-FCUkWV+A2ocDdm+ozgVS2kwky9ztqsX/NQmNP0CIFrF8tJagPKON0ctGgwQUTCs3
-KIFoRVvCcZyP87tYIzV/cpJFrq1jFwqbxWAc719ApgjPkVEYMETH9i2ObDI7ej9L
-9+oOzAVY6BDMftB/wCueJsf+XfzrLySnjMUdPNDiPU4L5KIjaxw=
-=gipg
------END PGP SIGNATURE-----
-
---LpQ9ahxlCli8rRTG--
+> 
+> Rob
+> 
