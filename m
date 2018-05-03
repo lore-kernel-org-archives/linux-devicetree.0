@@ -1,55 +1,80 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/2] clk: qcom: clk-rpmh: Add QCOM RPMh clock driver
-Date: Thu, 03 May 2018 10:04:08 -0700
-Message-ID: <152536704820.138124.12887560717683281434@swboyd.mtv.corp.google.com>
-References: <1525258277-3478-1-git-send-email-tdas@codeaurora.org>
- <1525258277-3478-3-git-send-email-tdas@codeaurora.org>
- <152527500426.138124.18419525952886399750@swboyd.mtv.corp.google.com>
- <d687230c-1178-41e4-d8e3-2c3957affb4a@codeaurora.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 6/6] drm/panel: rpi-touchscreen: Set status to "fail"
+ when ->probe() fails
+Date: Thu, 3 May 2018 12:12:39 -0500
+Message-ID: <CAL_JsqJMarPW6sdcF1ZFCEr6wGyPgi2yhYMCxgypUYYwN7ayfQ@mail.gmail.com>
+References: <20180503164009.14395-1-boris.brezillon@bootlin.com>
+ <20180503164009.14395-7-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d687230c-1178-41e4-d8e3-2c3957affb4a@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Taniya Das <tdas@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180503164009.14395-7-boris.brezillon@bootlin.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2018-05-03 03:33:10)
-> Hello Stephen,
-> =
-
-> Thanks for review.
-> =
-
-> On 5/2/2018 9:00 PM, Stephen Boyd wrote:
-> > Quoting Taniya Das (2018-05-02 03:51:17)
-> >> +               ret =3D devm_clk_hw_register(&pdev->dev, hw_clks[i]);
-> >> +               if (ret) {
-> >> +                       dev_err(&pdev->dev, "failed to register %s\n",
-> >> +                                       hw_clks[i]->init->name);
-> >> +                       goto err;
-> >> +               }
-> >> +
-> >> +               rpmh_clk->dev =3D &pdev->dev;
-> >> +       }
-> >> +
-> >> +       ret =3D devm_of_clk_add_hw_provider(&pdev->dev, of_clk_rpmh_hw=
-_get,
-> >> +                                     (void *) desc);
-> > =
-
-> > Drop the void cast.
-> > =
-
-> =
-
-> I see a compiler warning, that is the reason to keep the void cast.
-> /include/linux/clk-provider.h:881:5: note: expected =E2=80=98void *=E2=80=
-=99 but =
-
-> argument is of type =E2=80=98const struct clk_rpmh_desc *=E2=80=99
-
-Ok. Casting away const is not good though. Can you pass a pointer to the
-hw_clks array instead?
+T24gVGh1LCBNYXkgMywgMjAxOCBhdCAxMTo0MCBBTSwgQm9yaXMgQnJlemlsbG9uCjxib3Jpcy5i
+cmV6aWxsb25AYm9vdGxpbi5jb20+IHdyb3RlOgo+IFRoZSBkZXZpY2UgbWlnaHQgYmUgZGVzY3Jp
+YmVkIGluIHRoZSBkZXZpY2UgdHJlZSBidXQgbm90IGNvbm5lY3RlZCB0bwo+IHRoZSBJMkMgYnVz
+LiBVcGRhdGUgdGhlIHN0YXR1cyBwcm9wZXJ0eSBzbyB0aGF0IHRoZSBEUk0gcGFuZWwgbG9naWMK
+PiByZXR1cm5zIC1FTk9ERVYgd2hlbiBzb21lb25lIHRyaWVzIHRvIGdldCB0aGUgcGFuZWwgYXR0
+YWNoZWQgdG8gdGhpcwo+IERUIG5vZGUuCj4KPiBTaWduZWQtb2ZmLWJ5OiBCb3JpcyBCcmV6aWxs
+b24gPGJvcmlzLmJyZXppbGxvbkBib290bGluLmNvbT4KPiAtLS0KPiAgLi4uL2dwdS9kcm0vcGFu
+ZWwvcGFuZWwtcmFzcGJlcnJ5cGktdG91Y2hzY3JlZW4uYyAgfCAzNSArKysrKysrKysrKysrKysr
+KysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXJhc3BiZXJyeXBpLXRvdWNoc2NyZWVuLmMg
+Yi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtcmFzcGJlcnJ5cGktdG91Y2hzY3JlZW4uYwo+
+IGluZGV4IDJjOWM5NzIyNzM0Zi4uYjhmY2IxYWNlZjc1IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMv
+Z3B1L2RybS9wYW5lbC9wYW5lbC1yYXNwYmVycnlwaS10b3VjaHNjcmVlbi5jCj4gKysrIGIvZHJp
+dmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXJhc3BiZXJyeXBpLXRvdWNoc2NyZWVuLmMKPiBAQCAt
+MzU4LDYgKzM1OCwzOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9wYW5lbF9mdW5jcyBycGlf
+dG91Y2hzY3JlZW5fZnVuY3MgPSB7Cj4gICAgICAgICAuZ2V0X21vZGVzID0gcnBpX3RvdWNoc2Ny
+ZWVuX2dldF9tb2RlcywKPiAgfTsKPgo+ICtzdGF0aWMgdm9pZCBycGlfdG91Y2hzY3JlZW5fc2V0
+X3N0YXR1c19mYWlsKHN0cnVjdCBpMmNfY2xpZW50ICppMmMpCj4gK3sKPiArICAgICAgIHN0cnVj
+dCBwcm9wZXJ0eSAqbmV3cHJvcDsKPiArCj4gKyAgICAgICBuZXdwcm9wID0ga3phbGxvYyhzaXpl
+b2YoKm5ld3Byb3ApLCBHRlBfS0VSTkVMKTsKPiArICAgICAgIGlmICghbmV3cHJvcCkKPiArICAg
+ICAgICAgICAgICAgcmV0dXJuOwo+ICsKPiArICAgICAgIG5ld3Byb3AtPm5hbWUgPSBrc3RyZHVw
+KCJzdGF0dXMiLCBHRlBfS0VSTkVMKTsKPiArICAgICAgIGlmICghbmV3cHJvcC0+bmFtZSkKPiAr
+ICAgICAgICAgICAgICAgZ290byBlcnI7Cj4gKwo+ICsgICAgICAgbmV3cHJvcC0+dmFsdWUgPSBr
+c3RyZHVwKCJmYWlsIiwgR0ZQX0tFUk5FTCk7Cj4gKyAgICAgICBpZiAoIW5ld3Byb3AtPnZhbHVl
+KQo+ICsgICAgICAgICAgICAgICBnb3RvIGVycjsKPiArCj4gKyAgICAgICBuZXdwcm9wLT5sZW5n
+dGggPSBzaXplb2YoImZhaWwiKTsKPiArCj4gKyAgICAgICBpZiAob2ZfdXBkYXRlX3Byb3BlcnR5
+KGkyYy0+ZGV2Lm9mX25vZGUsIG5ld3Byb3ApKQo+ICsgICAgICAgICAgICAgICBnb3RvIGVycjsK
+PiArCgpBcyBJIG1lbnRpb25lZCBvbiBpcmMsIGNhbiB5b3UgbWFrZSB0aGlzIGEgY29tbW9uIERU
+IGZ1bmN0aW9uLgoKSSdtIG5vdCBzdXJlIGlmIGl0IG1hdHRlcnMgdGhhdCB3ZSBzZXQgc3RhdHVz
+IHRvIGZhaWwgdnMuIGRpc2FibGVkLiBJCnNvbWV3aGF0IHByZWZlciB0aGUgbGF0dGVyIGFzIHdl
+IGFscmVhZHkgaGF2ZSBvdGhlciBjYXNlcyBhbmQgSSdkCnJhdGhlciB0aGUgYXBpIG5vdCBwYXNz
+IGEgc3RyaW5nIGluLiBJIGNhbid0IHRoaW5rIG9mIGFueSByZWFzb24gdG8KZGlzdGluZ3Vpc2gg
+dGhlIGRpZmZlcmVuY2UgYmV0d2VlbiBmYWlsIGFuZCBkaXNhYmxlZC4KCj4gKyAgICAgICAvKiBX
+ZSBpbnRlbnRpb25hbGx5IGxlYWsgdGhlIG1lbW9yeSB3ZSBhbGxvY2F0ZSBoZXJlLCBiZWNhdXNl
+IHRoZSBuZXcKPiArICAgICAgICAqIE9GIHByb3BlcnR5IG1pZ2h0IGxpdmUgbG9uZ2VyIHRoYW4g
+dGhlIHVuZGVybHlpbmcgZGV2LCBzbyBubyB3YXkKPiArICAgICAgICAqIHdlIGNhbiB1c2UgZGV2
+bV9remFsbG9jKCkgaGVyZS4KPiArICAgICAgICAqLwo+ICsgICAgICAgcmV0dXJuOwo+ICsKPiAr
+ZXJyOgo+ICsgICAgICAga2ZyZWUobmV3cHJvcC0+dmFsdWUpOwo+ICsgICAgICAga2ZyZWUobmV3
+cHJvcC0+bmFtZSk7Cj4gKyAgICAgICBrZnJlZShuZXdwcm9wKTsKPiArfQo+ICsKPiAgc3RhdGlj
+IGludCBycGlfdG91Y2hzY3JlZW5fcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmkyYywKPiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb25zdCBzdHJ1Y3QgaTJjX2RldmljZV9pZCAq
+aWQpCj4gIHsKPiBAQCAtMzgyLDYgKzQxNSw3IEBAIHN0YXRpYyBpbnQgcnBpX3RvdWNoc2NyZWVu
+X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICppMmMsCj4KPiAgICAgICAgIHZlciA9IHJwaV90b3Vj
+aHNjcmVlbl9pMmNfcmVhZCh0cywgUkVHX0lEKTsKPiAgICAgICAgIGlmICh2ZXIgPCAwKSB7Cj4g
+KyAgICAgICAgICAgICAgIHJwaV90b3VjaHNjcmVlbl9zZXRfc3RhdHVzX2ZhaWwoaTJjKTsKCkkn
+dmUgdGhvdWdodCBzb21lIG1vcmUgYWJvdXQgdGhpcyBhbmQgSSBzdGlsbCB0aGluayB0aGlzIHNo
+b3VsZCBiZQpoYW5kbGVkIGluIHRoZSBkcml2ZXIgY29yZSBvciBpMmMgY29yZS4KClRoZSByZWFz
+b24gaXMgc2ltcGxlLiBJIHRoaW5rIHRoZSBzdGF0ZSBvZiB0aGUgc3lzdGVtIHNob3VsZCBiZSB0
+aGUKc2FtZSBhZnRlciB0aGlzIGFzIGlmIHlvdSBib290ZWQgd2l0aCAnc3RhdHVzID0gImRpc2Fi
+bGVkIicgZm9yIHRoaXMKbm9kZS4gQW5kIHRoYXQgbWVhbnMgdGhlIGRldmljZSBzaG91bGQgYmUg
+cmVtb3ZlZCBjb21wbGV0ZWx5IGJlY2F1c2UKd2UgZG9uJ3QgY3JlYXRlIHN0cnVjdCBkZXZpY2Un
+cyBmb3IgZGlzYWJsZWQgbm9kZXMuCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
