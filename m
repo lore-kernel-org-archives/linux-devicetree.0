@@ -1,82 +1,40 @@
 From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [RESEND PATCH 3/3] ARM: dts: stm32: update pwm-cells for LPTimer
- on stm32h743
-Date: Thu, 3 May 2018 17:38:29 +0200
-Message-ID: <e531b9d2-e2d3-aedb-b388-ab639d0530d8@st.com>
-References: <1519392965-28235-1-git-send-email-fabrice.gasnier@st.com>
- <1519392965-28235-4-git-send-email-fabrice.gasnier@st.com>
+Subject: Re: [PATCH v1 0/2] Add I2C support for STM32H743
+Date: Thu, 3 May 2018 17:38:58 +0200
+Message-ID: <73ba5cf4-3ea5-497f-b5c1-808aadff1515@st.com>
+References: <1524215122-14046-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519392965-28235-4-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <1524215122-14046-1-git-send-email-pierre-yves.mordret@st.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>, thierry.reding@gmail.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, benjamin.gaignard@linaro.org
+To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrice
+Hi,
 
-On 02/23/2018 02:36 PM, Fabrice Gasnier wrote:
-> LPTimer pwm cells should be updated to 3, to allow initialization of
-> channel, period and polarity.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+On 04/20/2018 11:05 AM, Pierre-Yves MORDRET wrote:
+> Add I2C support on STM32H743 SoC.
+> Activate I2C1 on STM32H743I Evaluation Board.
 > ---
+>    Version history:
+>       v1:
+>          * Initial
+> ---
+> 
+> Pierre-Yves MORDRET (2):
+>    ARM: dts: stm32: Add I2C support for STM32H743 SoC
+>    ARM: dts: stm32: Add I2C1 support for STM32H743I-EVAL Board
+> 
+>   arch/arm/boot/dts/stm32h743-pinctrl.dtsi | 10 +++++++
+>   arch/arm/boot/dts/stm32h743.dtsi         | 48 ++++++++++++++++++++++++++++++++
+>   arch/arm/boot/dts/stm32h743i-eval.dts    |  8 ++++++
+>   3 files changed, 66 insertions(+)
+> 
 
+Series applied on stm32-next.
 
-Applied on stm32-next.
-
-Thanks.
+Regards
 Alex
-
-
->   arch/arm/boot/dts/stm32h743.dtsi | 5 +++++
->   1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
-> index bbfcbac..40d7d76 100644
-> --- a/arch/arm/boot/dts/stm32h743.dtsi
-> +++ b/arch/arm/boot/dts/stm32h743.dtsi
-> @@ -85,6 +85,7 @@
->   
->   			pwm {
->   				compatible = "st,stm32-pwm-lp";
-> +				#pwm-cells = <3>;
->   				status = "disabled";
->   			};
->   
-> @@ -238,6 +239,7 @@
->   
->   			pwm {
->   				compatible = "st,stm32-pwm-lp";
-> +				#pwm-cells = <3>;
->   				status = "disabled";
->   			};
->   
-> @@ -264,6 +266,7 @@
->   
->   			pwm {
->   				compatible = "st,stm32-pwm-lp";
-> +				#pwm-cells = <3>;
->   				status = "disabled";
->   			};
->   
-> @@ -285,6 +288,7 @@
->   
->   			pwm {
->   				compatible = "st,stm32-pwm-lp";
-> +				#pwm-cells = <3>;
->   				status = "disabled";
->   			};
->   		};
-> @@ -300,6 +304,7 @@
->   
->   			pwm {
->   				compatible = "st,stm32-pwm-lp";
-> +				#pwm-cells = <3>;
->   				status = "disabled";
->   			};
->   		};
-> 
