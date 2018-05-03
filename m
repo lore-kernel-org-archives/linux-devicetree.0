@@ -1,51 +1,40 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 04/17] irqchip/irq-mvebu-icu: fix wrong user data retrieval
-Date: Thu, 3 May 2018 16:57:35 +0200
-Message-ID: <20180503165735.3e248f29@xps13>
-References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
- <20180421135537.24716-5-miquel.raynal@bootlin.com>
- <20180430154913.64d94375@windsurf>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 0/3] ARM: dts: stm32: Add display support on
+ stm32f469-disco
+Date: Thu, 3 May 2018 16:58:00 +0200
+Message-ID: <0b6b2bac-a9b5-2e08-5da6-e367a083b03d@st.com>
+References: <20180215082014.30383-1-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180430154913.64d94375@windsurf>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180215082014.30383-1-philippe.cornu@st.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philippe Cornu <philippe.cornu@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Vincent Abriou <vincent.abriou@st.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhvbWFzLAoKT24gTW9uLCAzMCBBcHIgMjAxOCAxNTo0OToxMyArMDIwMCwgVGhvbWFzIFBl
-dGF6em9uaQo8dGhvbWFzLnBldGF6em9uaUBib290bGluLmNvbT4gd3JvdGU6Cgo+IEhlbGxvLAo+
-IAo+IEluIHRoZSB0aXRsZSwgSSB0aGluayAidXNlciBkYXRhIiBpcyBub3QgcmVhbGx5IGFwcHJv
-cHJpYXRlLiAicHJpdmF0ZQo+IGRhdGUiIG9yICJkZXZpY2UgcHJpdmF0ZSBkYXRhIiBtYXliZSA/
-CgpTdXJlLCBJIHdpbGwgY2hhbmdlIHRvICJmaXggd3JvbmcgcHJpdmF0ZSBkYXRhIHJldHJpZXZh
-bCIuCgo+IAo+IE9uIFNhdCwgMjEgQXByIDIwMTggMTU6NTU6MjQgKzAyMDAsIE1pcXVlbCBSYXlu
-YWwgd3JvdGU6Cj4gPiBUaGUgaXJxX2RvbWFpbiBzdHJ1Y3R1cmUgaGFzIGFuIGhvc3RfZGF0YSBw
-b2ludGVyIHRoYXQganVzdCBzdG9yZXMgdXNlcgo+ID4gZGF0YS4gSXQgaXMgbWVhbnQgdG8gbm90
-IGJlIHRvdWNoZWQgYnkgdGhlIElSUSBjb3JlLiBIb3dldmVyLCB3aGVuIGl0Cj4gPiBjb21lcyB0
-byBNU0ksIHRoZSBNU0kgbGF5ZXIgYWRkcyBpdHMgb3duIHByaXZhdGUgZGF0YSB0aGVyZSB3aXRo
-IGEKPiA+IHN0cnVjdHVyZSB0aGF0IGFsc28gaGFzIGEgaG9zdF9kYXRhIHBvaW50ZXIuCj4gPiAK
-PiA+IEJlY2F1c2UgdGhpcyBJUlEgZG9tYWluIGlzIGFuIE1TSSBkb21haW4sIHRvIGFjY2VzcyB1
-c2VyIGRhdGEgd2Ugc2hvdWxkCj4gPiBkbyBhIGQtPmhvc3RfZGF0YS0+aG9zdF9kYXRhLCBhbHNv
-IHdyYXBwZWQgYXMKPiA+ICdwbGF0Zm9ybV9tc2lfZ2V0X2hvc3RfZGF0YSgpJy4KPiA+IAo+ID4g
-VGhpcyBidWcgd2FzIGx5aW5nIHRoZXJlIHNpbGVudGx5IGJlY2F1c2UgdGhlICdpY3UnIHN0cnVj
-dHVyZSByZXRyaWV2ZWQKPiA+IHRoaXMgd2F5IHdhcyBqdXN0IGNhbGxlZCBieSBkZXZfZXJyKCks
-IG9ubHkgcHJvZHVjaW5nIGEKPiA+ICcoTlVMTCBkZXZpY2UgKik6JyBvdXRwdXQgb24gdGhlIGNv
-bnNvbGUuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXlu
-YWxAYm9vdGxpbi5jb20+ICAKPiAKPiBPdGhlcndpc2U6Cj4gCj4gUmV2aWV3ZWQtYnk6IFRob21h
-cyBQZXRhenpvbmkgPHRob21hcy5wZXRhenpvbmlAYm9vdGxpbi5jb20+CgpUaGFua3MsCk1pcXXD
-qGwKCi0tIApNaXF1ZWwgUmF5bmFsLCBCb290bGluIChmb3JtZXJseSBGcmVlIEVsZWN0cm9ucykK
-RW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRwczovL2Jvb3RsaW4uY29t
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+Hi Philippe
+
+On 02/15/2018 09:20 AM, Philippe Cornu wrote:
+> This serie adds the mipi dsi support to stm32f469 and enables it
+> on the stm32f469-disco board.
+> 
+> Philippe CORNU (1):
+>    ARM: dts: stm32: Add display support on stm32f469-disco
+> 
+> Philippe Cornu (2):
+>    ARM: dts: stm32: Add dt-bindings gpio.h include on stm32f469-disco
+>    ARM: dts: stm32: Add new stm32f469 dtsi file with mipi dsi
+> 
+>   arch/arm/boot/dts/stm32f469-disco.dts | 54 +++++++++++++++++++++++++++++++++--
+>   arch/arm/boot/dts/stm32f469.dtsi      | 19 ++++++++++++
+>   2 files changed, 71 insertions(+), 2 deletions(-)
+>   create mode 100644 arch/arm/boot/dts/stm32f469.dtsi
+> 
+
+Thanks for new dtsi file. Series applied on stm32-next.
+
+Regards
+Alex
