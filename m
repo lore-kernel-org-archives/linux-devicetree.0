@@ -1,91 +1,60 @@
-Return-Path: <SRS0=COmU=HV=mediatek.com=argus.lin@kernel.org>
-From: <argus.lin@mediatek.com>
-Subject: [PATCH V4 6/8] soc: mediatek: pwrap: fix cipher init
-Date: Wed, 2 May 2018 17:21:10 +0800
-Message-ID: <20180502092112.3991-7-argus.lin@mediatek.com>
-In-Reply-To: <20180502092112.3991-1-argus.lin@mediatek.com>
-References: <20180502092112.3991-1-argus.lin@mediatek.com>
+Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr10079.outbound.protection.outlook.com ([40.107.1.79]:55664
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751755AbeECAmU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 2 May 2018 20:42:20 -0400
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v5 11/14] usb: typec: tcpm: set cc for drp toggling attach
+Date: Thu,  3 May 2018 08:24:51 +0800
+Message-Id: <1525307094-27402-12-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
+References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_007_176485546.441091392"
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: jun.li@nxp.com, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_007_176485546.441091392
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_008_49307983.171173649"
+In case of drp toggling, we may need set correct cc value for role control
+after attach as it may never been set.
 
---__=_Part_Boundary_008_49307983.171173649
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+Signed-off-by: Li Jun <jun.li@nxp.com>
+---
+ drivers/usb/typec/tcpm.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
-UFdSQVBfREVXX0NJUEhFUl9MT0FEIGFuZCBQV1JBUF9ERVdfQ0lQSEVSX1NUQVJUDQpvbmx5IGV4
-aXN0IGF0IFBNSUNfbXQ2Mzk3IHJlZ2lzdGVyIHRhYmxlLiBXZSBkZWxldGUgdGhlbQ0KYW5kIHVz
-ZSB3cnAtJmd0O3NsYXZlLSZndDt0eXBlIGZvciBkaWZmZXJlbnQgY2hpcCYjMzk7cyBzZXR0aW5n
-Lg0KDQpGaXhlczogNWFlNDgwNDBhYTQ3ICgmcXVvdDtzb2M6IG1lZGlhdGVrOiBQTUlDIHdyYXA6
-IGFkZCBtdDYzMjMgc2xhdmUgc3VwcG9ydCZxdW90OykNClNpZ25lZC1vZmYtYnk6IEFyZ3VzIExp
-biAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCi0tLQ0KIGRyaXZlcnMvc29jL21lZGlh
-dGVrL210ay1wbWljLXdyYXAuYyB8IDIgLS0NCiAxIGZpbGUgY2hhbmdlZCwgMiBkZWxldGlvbnMo
-LSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYyBi
-L2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYw0KaW5kZXggMGQ0YTJkYWU2OTEy
-Li4yODViZmE3NjI0OWYgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1p
-Yy13cmFwLmMNCisrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYw0KQEAg
-LTExNDEsOCArMTE0MSw2IEBAIHN0YXRpYyBpbnQgcHdyYXBfaW5pdF9jaXBoZXIoc3RydWN0IHBt
-aWNfd3JhcHBlciAqd3JwKQ0KIAlwd3JhcF93cml0ZSh3cnAsIHdycC0mZ3Q7c2xhdmUtJmd0O2Rl
-d19yZWdzW1BXUkFQX0RFV19DSVBIRVJfU1dSU1RdLCAweDApOw0KIAlwd3JhcF93cml0ZSh3cnAs
-IHdycC0mZ3Q7c2xhdmUtJmd0O2Rld19yZWdzW1BXUkFQX0RFV19DSVBIRVJfS0VZX1NFTF0sIDB4
-MSk7DQogCXB3cmFwX3dyaXRlKHdycCwgd3JwLSZndDtzbGF2ZS0mZ3Q7ZGV3X3JlZ3NbUFdSQVBf
-REVXX0NJUEhFUl9JVl9TRUxdLCAweDIpOw0KLQlwd3JhcF93cml0ZSh3cnAsIHdycC0mZ3Q7c2xh
-dmUtJmd0O2Rld19yZWdzW1BXUkFQX0RFV19DSVBIRVJfTE9BRF0sIDB4MSk7DQotCXB3cmFwX3dy
-aXRlKHdycCwgd3JwLSZndDtzbGF2ZS0mZ3Q7ZGV3X3JlZ3NbUFdSQVBfREVXX0NJUEhFUl9TVEFS
-VF0sIDB4MSk7DQogDQogCXN3aXRjaCAod3JwLSZndDtzbGF2ZS0mZ3Q7dHlwZSkgew0KIAljYXNl
-IFBNSUNfTVQ2Mzk3Og0KLS0gDQoyLjEyLjUNCg0KPC9wcmU+PCEtLXR5cGU6dGV4dC0tPjwhLS17
-LS0+PHByZT4qKioqKioqKioqKioqIEVtYWlsIENvbmZpZGVudGlhbGl0eSBOb3RpY2UgKioqKioq
-KioqKioqKioqKioqKioNClRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaW4gdGhpcyBlLW1haWwg
-bWVzc2FnZSAoaW5jbHVkaW5nIGFueSANCmF0dGFjaG1lbnRzKSBtYXkgYmUgY29uZmlkZW50aWFs
-LCBwcm9wcmlldGFyeSwgcHJpdmlsZWdlZCwgb3Igb3RoZXJ3aXNlDQpleGVtcHQgZnJvbSBkaXNj
-bG9zdXJlIHVuZGVyIGFwcGxpY2FibGUgbGF3cy4gSXQgaXMgaW50ZW5kZWQgdG8gYmUgDQpjb252
-ZXllZCBvbmx5IHRvIHRoZSBkZXNpZ25hdGVkIHJlY2lwaWVudChzKS4gQW55IHVzZSwgZGlzc2Vt
-aW5hdGlvbiwgDQpkaXN0cmlidXRpb24sIHByaW50aW5nLCByZXRhaW5pbmcgb3IgY29weWluZyBv
-ZiB0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGl0cyANCmF0dGFjaG1lbnRzKSBieSB1bmludGVuZGVk
-IHJlY2lwaWVudChzKSBpcyBzdHJpY3RseSBwcm9oaWJpdGVkIGFuZCBtYXkgDQpiZSB1bmxhd2Z1
-bC4gSWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQgcmVjaXBpZW50IG9mIHRoaXMgZS1tYWlsLCBv
-ciBiZWxpZXZlIA0KdGhhdCB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFpbCBpbiBlcnJvciwg
-cGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIA0KaW1tZWRpYXRlbHkgKGJ5IHJlcGx5aW5nIHRvIHRo
-aXMgZS1tYWlsKSwgZGVsZXRlIGFueSBhbmQgYWxsIGNvcGllcyBvZiANCnRoaXMgZS1tYWlsIChp
-bmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVtLCBhbmQgZG8gbm90DQpk
-aXNjbG9zZSB0aGUgY29udGVudCBvZiB0aGlzIGUtbWFpbCB0byBhbnkgb3RoZXIgcGVyc29uLiBU
-aGFuayB5b3UhPC9wcmU+PCEtLX0tLT4=
+diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
+index 0c7fa14..7e7eaca 100644
+--- a/drivers/usb/typec/tcpm.c
++++ b/drivers/usb/typec/tcpm.c
+@@ -2599,6 +2599,7 @@ static void tcpm_reset_port(struct tcpm_port *port)
+ 	tcpm_set_attached_state(port, false);
+ 	port->try_src_count = 0;
+ 	port->try_snk_count = 0;
++	port->cc_req = TYPEC_CC_OPEN;
+ 	port->supply_voltage = 0;
+ 	port->current_limit = 0;
+ 	port->usb_type = POWER_SUPPLY_USB_TYPE_C;
+@@ -2831,6 +2832,8 @@ static void run_state_machine(struct tcpm_port *port)
+ 		break;
+ 
+ 	case SRC_ATTACHED:
++		if (port->cc_req == TYPEC_CC_OPEN)
++			tcpm_set_cc(port, tcpm_rp_cc(port));
+ 		ret = tcpm_src_attach(port);
+ 		tcpm_set_state(port, SRC_UNATTACHED,
+ 			       ret < 0 ? 0 : PD_T_PS_SOURCE_ON);
+@@ -3004,6 +3007,8 @@ static void run_state_machine(struct tcpm_port *port)
+ 		tcpm_set_state(port, SNK_UNATTACHED, PD_T_PD_DEBOUNCE);
+ 		break;
+ 	case SNK_ATTACHED:
++		if (port->cc_req == TYPEC_CC_OPEN)
++			tcpm_set_cc(port, TYPEC_CC_RD);
+ 		ret = tcpm_snk_attach(port);
+ 		if (ret < 0)
+ 			tcpm_set_state(port, SNK_UNATTACHED, 0);
+-- 
+2.7.4
 
---__=_Part_Boundary_008_49307983.171173649
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
-
-RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQpQV1JBUF9ERVdfQ0lQ
-SEVSX0xPQUQgYW5kIFBXUkFQX0RFV19DSVBIRVJfU1RBUlQNCm9ubHkgZXhpc3QgYXQgUE1JQ19t
-dDYzOTcgcmVnaXN0ZXIgdGFibGUuIFdlIGRlbGV0ZSB0aGVtDQphbmQgdXNlIHdycC0+c2xhdmUt
-PnR5cGUgZm9yIGRpZmZlcmVudCBjaGlwJ3Mgc2V0dGluZy4NCg0KRml4ZXM6IDVhZTQ4MDQwYWE0
-NyAoInNvYzogbWVkaWF0ZWs6IFBNSUMgd3JhcDogYWRkIG10NjMyMyBzbGF2ZSBzdXBwb3J0IikN
-ClNpZ25lZC1vZmYtYnk6IEFyZ3VzIExpbiA8YXJndXMubGluQG1lZGlhdGVrLmNvbT4NCi0tLQ0K
-IGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYyB8IDIgLS0NCiAxIGZpbGUgY2hh
-bmdlZCwgMiBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVr
-L210ay1wbWljLXdyYXAuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYw0K
-aW5kZXggMGQ0YTJkYWU2OTEyLi4yODViZmE3NjI0OWYgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3Nv
-Yy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMNCisrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210
-ay1wbWljLXdyYXAuYw0KQEAgLTExNDEsOCArMTE0MSw2IEBAIHN0YXRpYyBpbnQgcHdyYXBfaW5p
-dF9jaXBoZXIoc3RydWN0IHBtaWNfd3JhcHBlciAqd3JwKQ0KIAlwd3JhcF93cml0ZSh3cnAsIHdy
-cC0+c2xhdmUtPmRld19yZWdzW1BXUkFQX0RFV19DSVBIRVJfU1dSU1RdLCAweDApOw0KIAlwd3Jh
-cF93cml0ZSh3cnAsIHdycC0+c2xhdmUtPmRld19yZWdzW1BXUkFQX0RFV19DSVBIRVJfS0VZX1NF
-TF0sIDB4MSk7DQogCXB3cmFwX3dyaXRlKHdycCwgd3JwLT5zbGF2ZS0+ZGV3X3JlZ3NbUFdSQVBf
-REVXX0NJUEhFUl9JVl9TRUxdLCAweDIpOw0KLQlwd3JhcF93cml0ZSh3cnAsIHdycC0+c2xhdmUt
-PmRld19yZWdzW1BXUkFQX0RFV19DSVBIRVJfTE9BRF0sIDB4MSk7DQotCXB3cmFwX3dyaXRlKHdy
-cCwgd3JwLT5zbGF2ZS0+ZGV3X3JlZ3NbUFdSQVBfREVXX0NJUEhFUl9TVEFSVF0sIDB4MSk7DQog
-DQogCXN3aXRjaCAod3JwLT5zbGF2ZS0+dHlwZSkgew0KIAljYXNlIFBNSUNfTVQ2Mzk3Og0KLS0g
-DQoyLjEyLjUNCg==
-
---__=_Part_Boundary_008_49307983.171173649--
-
---__=_Part_Boundary_007_176485546.441091392--
