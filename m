@@ -1,89 +1,225 @@
-From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [PATCH v5 2/4] dt-bindings: drm/bridge: Document
- sn65dsi86 bridge bindings
-Date: Thu, 03 May 2018 15:11:29 +0530
-Message-ID: <3c44e961a198e20a606742034152d456@codeaurora.org>
-References: <1525235522-8954-1-git-send-email-spanda@codeaurora.org>
- <1525235522-8954-3-git-send-email-spanda@codeaurora.org>
- <152528047237.138124.6199225836688931193@swboyd.mtv.corp.google.com>
+From: Honghui Zhang <honghui.zhang@mediatek.com>
+Subject: Re: [PATCH 2/2] PCI: mediatek: Using chained IRQ to setup IRQ handle
+Date: Thu, 3 May 2018 17:41:54 +0800
+Message-ID: <1525340514.22948.25.camel@mhfsdcap03>
+References: <1524201910-22836-1-git-send-email-honghui.zhang@mediatek.com>
+         <1524201910-22836-3-git-send-email-honghui.zhang@mediatek.com>
+         <a2f7e70a-fdef-d925-8838-be3051c2e96d@arm.com>
+         <1525254064.22948.11.camel@mhfsdcap03>
+         <e04ea8b1-731f-e72b-8944-5c067e1a04da@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <152528047237.138124.6199225836688931193-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e04ea8b1-731f-e72b-8944-5c067e1a04da@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0wNS0wMiAyMjozMSwgU3RlcGhlbiBCb3lkIHdyb3RlOgo+IFF1b3RpbmcgU2FuZGVl
-cCBQYW5kYSAoMjAxOC0wNS0wMSAyMTozMjowMCkKPj4gZGlmZiAtLWdpdCAKPj4gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4
-dCAKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
-dGksc242NWRzaTg2LnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAw
-Li4wZDA0MmNlCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIAo+PiBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0Cj4+IEBAIC0w
-LDAgKzEsNzYgQEAKPj4gK1NONjVEU0k4NiBEU0kgdG8gZURQIGJyaWRnZSBjaGlwCj4+ICstLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiArCj4+ICtUaGlzIGlzIHRoZSBiaW5kaW5n
-IGZvciBUZXhhcyBJbnN0cnVtZW50cyBTTjY1RFNJODYgYnJpZGdlLgo+PiAraHR0cDovL3d3dy50
-aS5jb20vZ2VuZXJhbC9kb2NzL2xpdC9nZXRsaXRlcmF0dXJlLnRzcD9nZW5lcmljUGFydE51bWJl
-cj1zbjY1ZHNpODYmZmlsZVR5cGU9cGRmCj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+
-ICstIGNvbXBhdGlibGU6IE11c3QgYmUgInRpLHNuNjVkc2k4NiIKPj4gKy0gcmVnOiBpMmMgYWRk
-cmVzcyBvZiB0aGUgY2hpcCwgMHgyZCBhcyBwZXIgZGF0YXNoZWV0Cj4+ICstIGVuYWJsZS1ncGlv
-czogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBicmlkZ2VfZW4gcGluCj4+
-ICsKPj4gKy0gdmNjaW8tc3VwcGx5OiBBIDEuOFYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBk
-aWdpdGFsIElPcy4KPj4gKy0gdnBsbC1zdXBwbHk6IEEgMS44ViBzdXBwbHkgdGhhdCBwb3dlcnMg
-dXAgdGhlIGRpc3BsYXlwb3J0IFBMTC4KPj4gKy0gdmNjYS1zdXBwbHk6IEEgMS4yViBzdXBwbHkg
-dGhhdCBwb3dlcnMgdXAgdGhlIGFuYWxvZyBjaXJjdWl0cy4KPj4gKy0gdmNjLXN1cHBseTogQSAx
-LjJWIHN1cHBseSB0aGF0IHBvd2VycyB1cCB0aGUgZGlnaXRhbCBjb3JlLgo+PiArCj4+ICtPcHRp
-b25hbCBwcm9wZXJ0aWVzOgo+PiArLSBpbnRlcnJ1cHRzOiBTcGVjaWZpZXIgZm9yIHRoZSBTTjY1
-RFNJODYgaW50ZXJydXB0IGxpbmUuCj4+ICstIGhwZC1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3Bp
-byBzcGVjaWZpY2F0aW9ucyBmb3IgSFBEIHBpbi4KPj4gKwo+PiArLSByZWZjbGstZnJlcS1raHo6
-IFZhbHVlIHNwZWNpZnlpbmcgdGhlIGZyZXF1ZW5jeSBvZiByZWZlcmVuY2UgY2xvY2sgCj4+IGlu
-IEtIeiB1bml0Lgo+IAo+IFBsZWFzZSB1c2UgdGhlIGNsb2NrcyBwcm9wZXJ0eSBpbnN0ZWFkLiBX
-ZSBtYXkgbmVlZCB0byB0dXJuIHRoZSBjbGsgb24KPiBmaXJzdCBiZWZvcmUgdGhpcyBjYW4gd29y
-ayBzbyB0aGUgZHJpdmVyIHdvdWxkIHVzZSB0aGUgY2xrIGZyYW1ld29yayAKPiAoYXQKPiBsZWFz
-dCBpbiBsaW51eCkuIGNsb2NrLW5hbWVzIGNvdWxkIGhhdmUgJ3JlZmNsaycgYmVjYXVzZSB0aGF0
-J3MgdGhlIHBpbgo+IG5hbWUuCj4gCj4gSXMgdGhlcmUgYSB3YXkgaW4gRFJNIHRvIGZpZ3VyZSBv
-dXQgdGhlIGZyZXF1ZW5jeSBvZiB0aGUgY2xvY2sgCj4gZnJlcXVlbmN5Cj4gZm9yIERBQ1AvTj8g
-SXQgbG9va3MgbGlrZSBpZiByZWZjbGsgaXMgZ3JvdW5kZWQsIHRoZW4gdGhlIERBQ1AvTiBwaW5z
-Cj4gZnJvbSB0aGUgRFNJIHNpZGUgc2hvdWxkIGJlIG9uZSBvZiBhIHNldCBvZiBmcmVxdWVuY2ll
-cywgc28gSSdtIGp1c3QKPiBjdXJpb3VzIGhvdyB0aGF0IHdpbGwgd29yayBhbmQgaWYgdGhlIGJp
-bmRpbmcgd291bGQgbmVlZCB0byBiZSB1cGRhdGVkCj4gdG8gaW5kaWNhdGUgd2hhdCB0aGUgZnJl
-cXVlbmN5IG9mIHRoZSBEU0kgY2xvY2sgbGFuZSBpcywgb3IgaWYgRFJNIGNhbgo+IHRlbGwgdGhp
-cyBkcml2ZXIgdGhyb3VnaCB0aGUgcG9ydC9ncmFwaCBzdHVmZiBzb21laG93Lgo+IAoKQ2FuIHdl
-IGRvIHNvbWV0aGluZyBsaWtlIGJlbG93PwogICAgMS4gQWRkIGEgcmVxdWlyZWQgZHQtcHJvcGVy
-dHkgdG8gaW5kaWNhdGUgd2hhdCBpcyB0aGUgc291cmNlIG9mIApyZWZjbGssIHRpLHNuLXJlZmNs
-ay1zcmMgPSA8MD4gLS0tPiBtZWFucyByZWZjbGsgaXMgZGVyaXZlZCBmcm9tIHJlZmNsayAKcGlu
-LgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIAogICB0aSxzbi1yZWZjbGstc3JjID0gPDE+IC0tLT4gbWVhbnMg
-cmVmY2xrIGlzIGRlcml2ZWQgZnJvbSBEQUNQL04gcGluLgogICAgMi4gQWRkIGEgY2xvY2sgcHJv
-cGVydHkgdG8gaW5kaWNhdGUgdGhlIHJlZmNsayBmcmVxdWVuY3kgZm9yIHJlZmNsayAKcGluLgog
-ICAgMy4gSW4gZHJpdmVyLCBwYXJzZSB0aGUgcmVmY2xrIHNvdXJjZSBkdC1wcm9wZXJ0eS4gSWYg
-dGhlIHNvdXJjZSBpcyAKcmVmY2xrIHBpbiB0aGVuIGdldCB0aGUgZnJxdWVuY3kgZnJvbSBjbG9j
-ayBkdC1wcm9wZXJ0eSBhbmQgcHJvZ3JhbSB0aGUgCmkyYyByZWdpc3RlciBhY2NvcmRpbmdseS4K
-ICAgICAgIEVsc2UgaWYgdGhlIHNvdXJjZSBpcyBEQUNQL04gcGluIHRoZW4gY2FsY3VsYXRlIHRo
-ZSBEU0lBIGZyZXF1ZW5jeSAKYmFzZWQgb24gY3VycmVudCBkaXNwbGF5IG1vZGUgKGJ5IHRoZSB0
-aW1lIHdlIGdvIGZvciBjb25maWd1cmluZyByZWZjbGssIApkcm1fbW9kZV9zZXQgaXMgYWxyZWFk
-eSBkb25lIGFuZCBpbiAgZGl2ZXIgd2UgY2FuIGNhbGN1bGF0ZSB0aGUgCmZyZXF1ZW5jeSkgYW5k
-IHByb2dyYW0gdGhlIGkyYyByZWdpc3RlciBhY2NvcmRpbmdseS4KCj4+ICsKPj4gKy0gZ3Bpby1j
-b250cm9sbGVyOiBNYXJrcyB0aGUgZGV2aWNlIGhhcyBhIEdQSU8gY29udHJvbGxlci4KPj4gKy0g
-I2dwaW8tY2VsbHM6IE51bWJlciBvZiBHUElPIGNlbGxzLiBSZWZlciB0byBiaW5kaW5nIGRvY3Vt
-ZW50IAo+PiAiZ3Bpby9ncGlvLnR4dCIKPiAKPiBXaGF0J3MgdGhlIG51bWJlcj8gMj8KbnVtYmVy
-IGlzIDQsIGkgd2lsbCB1cGRhdGUgdGhpcyBpbiBiaW5kaW5nCj4gCj4+ICstICNwd20tY2VsbHMg
-OiBOdW1iZXIgb2YgY2VsbHMgdXNlZCB0byBzcGVjaWZ5IGEgUFdNLiBTZWUgcHdtLnR4dCBpbiAK
-Pj4gdGhpcyBkaXJlY3RvcnkKPj4gKyAgICAgICAgICAgICAgZm9yIGEgZGVzY3JpcHRpb24gb2Yg
-dGhlIGNlbGwgZm9ybWF0cy4KPiAKPiBXaGF0J3MgdGhlIG51bWJlcj8gMT8gVGhlcmUncyBhIHB3
-bS50eHQgaW4gdGhpcyBkaXJlY3Rvcnk/CnllcyBudW1iZXIgaXMgMSwgaSB3aWxsIHVwZGF0ZSB0
-aGUgYmluZGluZy4gaXQgc2hvdWxkIGJlIHB3bS9wd20udHh0Cl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRy
-ZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+On Wed, 2018-05-02 at 11:09 +0100, Marc Zyngier wrote:
+> On 02/05/18 10:41, Honghui Zhang wrote:
+> > On Mon, 2018-04-30 at 12:03 +0100, Marc Zyngier wrote:
+> >> Hi Zhang,
+> >>
+> >> On 20/04/18 06:25, honghui.zhang@mediatek.com wrote:
+> >>> From: Honghui Zhang <honghui.zhang@mediatek.com>
+> >>>
+> >>> Using irq_chip solution to setup IRQs for the consistent with IRQ framework.
+> >>>
+> >>> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> >>> ---
+> >>>  drivers/pci/host/pcie-mediatek.c | 192 +++++++++++++++++++++------------------
+> >>>  1 file changed, 105 insertions(+), 87 deletions(-)
+> >>>
+> >>> diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+> >>> index c3dc549..1d9c6f1 100644
+> >>> --- a/drivers/pci/host/pcie-mediatek.c
+> >>> +++ b/drivers/pci/host/pcie-mediatek.c
+> >>> @@ -11,8 +11,10 @@
+> >>>  #include <linux/delay.h>
+> >>>  #include <linux/iopoll.h>
+> >>>  #include <linux/irq.h>
+> >>> +#include <linux/irqchip/chained_irq.h>
+> >>>  #include <linux/irqdomain.h>
+> >>>  #include <linux/kernel.h>
+> >>> +#include <linux/msi.h>
+> >>>  #include <linux/of_address.h>
+> >>>  #include <linux/of_pci.h>
+> >>>  #include <linux/of_platform.h>
+> >>> @@ -130,14 +132,12 @@ struct mtk_pcie_port;
+> >>>  /**
+> >>>   * struct mtk_pcie_soc - differentiate between host generations
+> >>>   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
+> >>> - * @has_msi: whether this host supports MSI interrupts or not
+> >>>   * @ops: pointer to configuration access functions
+> >>>   * @startup: pointer to controller setting functions
+> >>>   * @setup_irq: pointer to initialize IRQ functions
+> >>>   */
+> >>>  struct mtk_pcie_soc {
+> >>>  	bool need_fix_class_id;
+> >>> -	bool has_msi;
+> >>>  	struct pci_ops *ops;
+> >>>  	int (*startup)(struct mtk_pcie_port *port);
+> >>>  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
+> >>> @@ -161,7 +161,9 @@ struct mtk_pcie_soc {
+> >>>   * @lane: lane count
+> >>>   * @slot: port slot
+> >>>   * @irq_domain: legacy INTx IRQ domain
+> >>> + * @inner_domain: inner IRQ domain
+> >>>   * @msi_domain: MSI IRQ domain
+> >>> + * @lock: protect the msi_irq_in_use bitmap
+> >>>   * @msi_irq_in_use: bit map for assigned MSI IRQ
+> >>>   */
+> >>>  struct mtk_pcie_port {
+> >>> @@ -179,7 +181,9 @@ struct mtk_pcie_port {
+> >>>  	u32 lane;
+> >>>  	u32 slot;
+> >>>  	struct irq_domain *irq_domain;
+> >>> +	struct irq_domain *inner_domain;
+> >>>  	struct irq_domain *msi_domain;
+> >>> +	struct mutex lock;
+> >>>  	DECLARE_BITMAP(msi_irq_in_use, MTK_MSI_IRQS_NUM);
+> >>>  };
+> >>>  
+> >>> @@ -446,103 +450,122 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+> >>>  	return 0;
+> >>>  }
+> >>>  
+> >>> -static int mtk_pcie_msi_alloc(struct mtk_pcie_port *port)
+> >>> +static void mtk_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+> >>>  {
+> >>> -	int msi;
+> >>> +	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(data);
+> >>> +	phys_addr_t addr;
+> >>>  
+> >>> -	msi = find_first_zero_bit(port->msi_irq_in_use, MTK_MSI_IRQS_NUM);
+> >>> -	if (msi < MTK_MSI_IRQS_NUM)
+> >>> -		set_bit(msi, port->msi_irq_in_use);
+> >>> -	else
+> >>> -		return -ENOSPC;
+> >>> +	/* MT2712/MT7622 only support 32-bit MSI addresses */
+> >>> +	addr = virt_to_phys(port->base + PCIE_MSI_VECTOR);
+> >>> +	msg->address_hi = 0;
+> >>> +	msg->address_lo = lower_32_bits(addr);
+> >>>  
+> >>> -	return msi;
+> >>> +	msg->data = data->hwirq;
+> >>> +
+> >>> +	dev_dbg(port->pcie->dev, "msi#%d address_hi %#x address_lo %#x\n",
+> >>> +		(int)data->hwirq, msg->address_hi, msg->address_lo);
+> >>>  }
+> >>>  
+> >>> -static void mtk_pcie_msi_free(struct mtk_pcie_port *port, unsigned long hwirq)
+> >>> +static int mtk_msi_set_affinity(struct irq_data *irq_data,
+> >>> +				   const struct cpumask *mask, bool force)
+> >>>  {
+> >>> -	clear_bit(hwirq, port->msi_irq_in_use);
+> >>> +	return -EINVAL;
+> >>>  }
+> >>>  
+> >>> -static int mtk_pcie_msi_setup_irq(struct msi_controller *chip,
+> >>> -				  struct pci_dev *pdev, struct msi_desc *desc)
+> >>> -{
+> >>> -	struct mtk_pcie_port *port;
+> >>> -	struct msi_msg msg;
+> >>> -	unsigned int irq;
+> >>> -	int hwirq;
+> >>> -	phys_addr_t msg_addr;
+> >>> +static struct irq_chip mtk_msi_bottom_irq_chip = {
+> >>> +	.name			= "MTK MSI",
+> >>> +	.irq_compose_msi_msg	= mtk_compose_msi_msg,
+> >>> +	.irq_set_affinity	= mtk_msi_set_affinity,
+> >>> +	.irq_mask		= pci_msi_mask_irq,
+> >>> +	.irq_unmask	= pci_msi_unmask_irq,
+> >>> +};
+> >>>  
+> >>> -	port = mtk_pcie_find_port(pdev->bus, pdev->devfn);
+> >>> -	if (!port)
+> >>> -		return -EINVAL;
+> >>> +static int mtk_pcie_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> >>> +				     unsigned int nr_irqs, void *args)
+> >>> +{
+> >>> +	struct mtk_pcie_port *port = domain->host_data;
+> >>> +	unsigned long bit;
+> >>>  
+> >>> -	hwirq = mtk_pcie_msi_alloc(port);
+> >>> -	if (hwirq < 0)
+> >>> -		return hwirq;
+> >>> +	WARN_ON(nr_irqs != 1);
+> >>> +	mutex_lock(&port->lock);
+> >>>  
+> >>> -	irq = irq_create_mapping(port->msi_domain, hwirq);
+> >>> -	if (!irq) {
+> >>> -		mtk_pcie_msi_free(port, hwirq);
+> >>> -		return -EINVAL;
+> >>> +	bit = find_first_zero_bit(port->msi_irq_in_use, MTK_MSI_IRQS_NUM);
+> >>> +	if (bit >= MTK_MSI_IRQS_NUM) {
+> >>> +		mutex_unlock(&port->lock);
+> >>> +		return -ENOSPC;
+> >>>  	}
+> >>>  
+> >>> -	chip->dev = &pdev->dev;
+> >>> -
+> >>> -	irq_set_msi_desc(irq, desc);
+> >>> +	__set_bit(bit, port->msi_irq_in_use);
+> >>>  
+> >>> -	/* MT2712/MT7622 only support 32-bit MSI addresses */
+> >>> -	msg_addr = virt_to_phys(port->base + PCIE_MSI_VECTOR);
+> >>> -	msg.address_hi = 0;
+> >>> -	msg.address_lo = lower_32_bits(msg_addr);
+> >>> -	msg.data = hwirq;
+> >>> +	mutex_unlock(&port->lock);
+> >>>  
+> >>> -	pci_write_msi_msg(irq, &msg);
+> >>> +	irq_domain_set_info(domain, virq, bit, &mtk_msi_bottom_irq_chip,
+> >>> +			    domain->host_data, handle_simple_irq,
+> >>
+> >> Why don't you handle the interrupt as an edge interrupt
+> >> (handle_edge_irq)? That's what it really is, and the fact that you use
+> >> "handle_simple_irq" makes me think that wou're papering over some other
+> >> issue (see below).
+> > 
+> > Hi, Marc,
+> > 
+> > Thanks very much for your comments.
+> > 
+> > I guess the MSI irq is more like a level IRQ instead of edge IRQ.
+> > When a MSI IRQ arrived, the corresponding bit of MSI status register
+> > will be asserted and stay asserted until it's been cleared by software.
+> 
+> There is some confusion here. The MSI itself is always edge-triggered.
+> That's by definition, and you cannot change it. The interrupt that is
+> used to signal that MSIs are pending (the multiplexing interrupt) can
+> itself be level triggered (and goes low once all the MSIs have been
+> acknowledged).
+
+Hi, Marc, thanks for your comments.
+
+Yes, PCIe SPEC have defined that the MSI must be edge trigged. But I'm
+not sure whether the HW design needed to following some edge irq
+standard. In our design, when there's MSI irq trigged(which may is edge
+trigged in hw implemented), the corresponding msi irq status bits will
+be asserted until it's been cleared by software. It's more like that the
+HW IP have translate the edge irq to level status. Do you think using
+handle_level_irq or handle_simple_irq(which most of the pci host driver
+now doing) is acceptable in this case?
+
+BTW, I'm still struggling in trying the handle_edge_irq solution. Seems
+that I could not get the msi index in irq_ack callback from
+irq_data->hwirq, the hwirq was set by pci_msi_domain_calc_hwirq() which
+I'm still try to figure out the proper routine in my driver.
+
+thanks.
+> 
+> > I will try to using handle_level_irq and add some callbacks of irq_ack
+> > in the next version.
+> 
+> The interrupt above seem to be the MSI itself, and not the multiplexing
+> interrupt. It should be handled as an edge.
+> 
+> If that doesn't work, we need to understand why.
+> 
+> Thanks,
+> 
+> 	M.
