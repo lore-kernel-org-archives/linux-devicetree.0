@@ -1,121 +1,123 @@
-Return-Path: <SRS0=31of=HV=linaro.org=ulf.hansson@kernel.org>
+Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr10084.outbound.protection.outlook.com ([40.107.1.84]:44256
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751410AbeECAlJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 2 May 2018 20:41:09 -0400
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v5 00/14] staging: typec: tcpci: move out of staging
+Date: Thu,  3 May 2018 08:24:40 +0800
+Message-Id: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <1524530577-183915-2-git-send-email-shawn.lin@rock-chips.com>
-References: <1524530577-183915-1-git-send-email-shawn.lin@rock-chips.com> <1524530577-183915-2-git-send-email-shawn.lin@rock-chips.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 2 May 2018 15:15:25 +0200
-Message-ID: <CAPDyKFokMjOP5=XAdvie-o2Q_Ao5fcO6_nSPf1-Dx5RbYVF-Lg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] mmc: core: Add tunable delay before detecting card
- after card is inserted
-Content-Type: text/plain; charset="UTF-8"
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: jun.li@nxp.com, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-+Linus
+This patch set attempts to move the tcpci driver out of staging by fix
+some tcpci driver issues and define typec and power delivery device
+properties, the changes are verified on NXP PTN5110, which is a standard
+tcpci typec port controller device with power delivery support, tested
+power source and sink with drp config.
 
-On 24 April 2018 at 02:42, Shawn Lin <shawn.lin@rock-chips.com> wrote:
-> Allow to use tunable delay before detecting card after card is inserted,
-> which either comes from firmware node, or comes from debounce value
-> passed on to mmc_gpiod_request_cd(). If the platform doesn't support
-> debounce, then we fall back to use the debounce period as the delay,
-> otherwise, it behaves the same as before that a HW debounce(if set) plus
-> a 200ms hardcode delay before detecting the card.
->
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+Changes for v5:
+- Use "power-role" and "data-role" for typec port power and data capability
+  property name.  
+- Use macro defintion instead of cryptic numbers for readability of
+  power delivery properties(PDO).
+- Add one tcpci driver binding string to be "nxp,ptn5110" to follow binding
+  name rule "<vendor prefix>,<device>".
+- Change operating power property name to be op-sink-microwatt.
+- Add one patch(remove unused tcpci_tcpc_config) to resolve bisectablitity
+  issue of patch usb: typec: add fwnode to tcpc.
+- A minor error handling change to keep the error path and success path
+  separate in patch: register port before request irq
+- Rebase to latest Greg's tree with max_snk_* removed.
 
-Thanks, applied for next and by adding Linus' reviewed-by tag from v2.
+Changes for v4:
+- Remove max-sink-* properties as we will purge max_snk_* in tcpm,
+  see patch set[4].
+- Get typec power and data type value via name string(patch 5).
+- Move finding typec and pd properties code from tcpci to tcpm(patch 6)
+- Add a compatible string for nxp ptn5110 typec controller in tcpci driver.
+  (patch 3)
+- Add set cc for drp toggling without try.src/snk in tcpm(patch 10), then
+  patch 11 can only update CCx bits for keep disconnect cc line open.
+- Update op-sink-microwatt-hours example value to be the right value in
+  micorwatts, and accordingly divide 1000 to get its miliwatts value
+  in patch 6.
+- Add Guenter's Reviewed-by for patch(8/9/12)
 
-Kind regards
-Uffe
+[4] https://www.spinics.net/lists/linux-usb/msg167261.html
 
->
-> ---
->
-> Changes in v4: None
-> Changes in v3:
-> - rename to cd_debounce_delay_ms
->
-> Changes in v2:
-> - doesn't introduce new agrument for mmc_gpiod_request_cd and drop
->   the change for host drivers
->
->  drivers/mmc/core/host.c      | 9 +++++++--
->  drivers/mmc/core/slot-gpio.c | 7 +++++--
->  2 files changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-> index 64b03d6..da08a17 100644
-> --- a/drivers/mmc/core/host.c
-> +++ b/drivers/mmc/core/host.c
-> @@ -179,7 +179,7 @@ static void mmc_retune_timer(struct timer_list *t)
->  int mmc_of_parse(struct mmc_host *host)
->  {
->         struct device *dev = host->parent;
-> -       u32 bus_width, drv_type;
-> +       u32 bus_width, drv_type, cd_debounce_delay_ms;
->         int ret;
->         bool cd_cap_invert, cd_gpio_invert = false;
->         bool ro_cap_invert, ro_gpio_invert = false;
-> @@ -230,11 +230,16 @@ int mmc_of_parse(struct mmc_host *host)
->         } else {
->                 cd_cap_invert = device_property_read_bool(dev, "cd-inverted");
->
-> +               if (device_property_read_u32(dev, "cd-debounce-delay-ms",
-> +                                            &cd_debounce_delay_ms))
-> +                       cd_debounce_delay_ms = 200;
-> +
->                 if (device_property_read_bool(dev, "broken-cd"))
->                         host->caps |= MMC_CAP_NEEDS_POLL;
->
->                 ret = mmc_gpiod_request_cd(host, "cd", 0, true,
-> -                                          0, &cd_gpio_invert);
-> +                                          cd_debounce_delay_ms,
-> +                                          &cd_gpio_invert);
->                 if (!ret)
->                         dev_info(host->parent, "Got CD GPIO\n");
->                 else if (ret != -ENOENT && ret != -ENOSYS)
-> diff --git a/drivers/mmc/core/slot-gpio.c b/drivers/mmc/core/slot-gpio.c
-> index 31f7dbb..5655935 100644
-> --- a/drivers/mmc/core/slot-gpio.c
-> +++ b/drivers/mmc/core/slot-gpio.c
-> @@ -28,15 +28,17 @@ struct mmc_gpio {
->         irqreturn_t (*cd_gpio_isr)(int irq, void *dev_id);
->         char *ro_label;
->         char cd_label[0];
-> +       u32 cd_debounce_delay_ms;
->  };
->
->  static irqreturn_t mmc_gpio_cd_irqt(int irq, void *dev_id)
->  {
->         /* Schedule a card detection after a debounce timeout */
->         struct mmc_host *host = dev_id;
-> +       struct mmc_gpio *ctx = host->slot.handler_priv;
->
->         host->trigger_card_event = true;
-> -       mmc_detect_change(host, msecs_to_jiffies(200));
-> +       mmc_detect_change(host, msecs_to_jiffies(ctx->cd_debounce_delay_ms));
->
->         return IRQ_HANDLED;
->  }
-> @@ -49,6 +51,7 @@ int mmc_gpio_alloc(struct mmc_host *host)
->
->         if (ctx) {
->                 ctx->ro_label = ctx->cd_label + len;
-> +               ctx->cd_debounce_delay_ms = 200;
->                 snprintf(ctx->cd_label, len, "%s cd", dev_name(host->parent));
->                 snprintf(ctx->ro_label, len, "%s ro", dev_name(host->parent));
->                 host->slot.handler_priv = ctx;
-> @@ -261,7 +264,7 @@ int mmc_gpiod_request_cd(struct mmc_host *host, const char *con_id,
->         if (debounce) {
->                 ret = gpiod_set_debounce(desc, debounce);
->                 if (ret < 0)
-> -                       return ret;
-> +                       ctx->cd_debounce_delay_ms = debounce;
->         }
->
->         if (gpio_invert)
-> --
-> 1.9.1
->
->
+Changes for v3:
+- Use 2 properties to separate power and data capability of typec port:
+  "power-type" and "data-type", this is based on Heikki's typec class code
+  change[2]. use "try-power-role" to present if the typec port can support
+  Try.SNK or Try.SRC.
+- 4 sink properties(max_sink_mv/ma/mw and op_sink_mw) are kept because the
+  counterpart code is back, see revert patch[3], meanwhile I post a patch
+  to fix the reported problem of current source pdo select machinism(which
+  completely ignored those 4 sink settings), to see if we can keep current
+  code, once it was discussed and have conclusion I can update this
+  accordingly.
+- Use fwnode to get the connector node for dt setting parse.
+
+Main changes for v2:
+- Typec properties are based on general usb connector bindings[1] proposed
+  by Andrzej Hajda, use the standard unit suffixes as defined in
+  property-units.txt.
+- Add 2 infra APIs to get power sink and source config from dt.
+- Don't change the set_cc api, to keep the uncontacted cc line open,
+  set cc1/cc2 to be open in tcpci driver when set polarity.
+- Directly enable vbus detect in tcpci driver rather than add a API.
+- Details added in each patch.
+
+[1] https://patchwork.kernel.org/patch/10231447/
+[2] https://patchwork.kernel.org/patch/10276483/
+[3] https://www.spinics.net/lists/linux-usb/msg166366.html
+
+Li Jun (13):
+  dt-bindings: connector: add properties for typec
+  dt-bindings: usb: add documentation for typec port controller(TCPCI)
+  staging: typec: tcpci: add compatible string for nxp ptn5110
+  usb: typec: add fwnode to tcpc
+  usb: typec: add API to get typec basic port power and data config
+  usb: typec: tcpm: support get typec and pd config from device
+    properties
+  staging: typec: tcpci: remove unused tcpci_tcpc_config
+  staging: typec: tcpci: enable vbus detection
+  typec: tcpm: add starting value for drp toggling
+  usb: typec: tcpm: set cc for drp toggling attach
+  staging: typec: tcpci: keep the not connecting cc line open
+  staging: typec: tcpci: Only touch target bit when enable vconn
+  staging: typec: tcpci: move tcpci driver out of staging
+
+Peter Chen (1):
+  staging: typec: tcpci: register port before request irq
+
+ .../bindings/connector/usb-connector.txt           |  44 ++++++
+ .../devicetree/bindings/usb/typec-tcpci.txt        |  49 +++++++
+ drivers/staging/Kconfig                            |   2 -
+ drivers/staging/Makefile                           |   1 -
+ drivers/staging/typec/TODO                         |   5 -
+ drivers/usb/typec/Kconfig                          |   7 +
+ drivers/usb/typec/Makefile                         |   1 +
+ drivers/usb/typec/class.c                          |  52 +++++++
+ drivers/{staging => usb}/typec/tcpci.c             |  63 +++++----
+ drivers/{staging => usb}/typec/tcpci.h             |   0
+ drivers/usb/typec/tcpm.c                           | 149 +++++++++++++++++----
+ include/dt-bindings/usb/pd.h                       |  62 +++++++++
+ include/linux/usb/tcpm.h                           |   2 +
+ include/linux/usb/typec.h                          |   3 +
+ 14 files changed, 382 insertions(+), 58 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/typec-tcpci.txt
+ delete mode 100644 drivers/staging/typec/TODO
+ rename drivers/{staging => usb}/typec/tcpci.c (93%)
+ rename drivers/{staging => usb}/typec/tcpci.h (100%)
+ create mode 100644 include/dt-bindings/usb/pd.h
+
+-- 
+2.7.4
+
