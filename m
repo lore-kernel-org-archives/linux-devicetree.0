@@ -1,32 +1,58 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: can: rcar_can: Fix R8A7796 SoC name
-Date: Thu,  3 May 2018 15:02:33 +0200
-Message-ID: <1525352553-17045-1-git-send-email-geert+renesas@glider.be>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Chris Paterson <chris.paterson2@renesas.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v3 3/3] arm64: dts: renesas: ulcb: Add PMIC DDR Backup Power
+ config
+Date: Thu,  3 May 2018 14:30:51 +0200
+Message-ID: <1525350651-12471-4-git-send-email-geert+renesas@glider.be>
+References: <1525350651-12471-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1525350651-12471-1-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-R8A7796 is R-Car M3-W.
+On the R-Car Starter Kit Premier/Pro, all of the DDR0, DDR1, DDR0C, and
+DDR1C power rails need to be kept powered when backup mode is enabled.
+Reflect this in the "rohm,ddr-backup-power" property for the BD9571MWV
+PMIC node.
+
+The accessory power switch (SW8) is a momentary switch, hense specify
+"rohm,rstbmode-pulse".
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v3:
+  - Use a hex value for the bit mask,
 
-diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-index 93c3a6ae32f995e9..1a4ee1d2506de532 100644
---- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-+++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-@@ -5,7 +5,7 @@ Required properties:
- - compatible: Must contain one or more of the following:
-   - "renesas,rcar-gen3-canfd" for R-Car Gen3 compatible controller.
-   - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
--  - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3) compatible controller.
-+  - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controller.
+v2:
+  - New.
+---
+ arch/arm64/boot/dts/renesas/ulcb.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/ulcb.dtsi b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+index bb21ae335e8b8489..432a4e9752f2b923 100644
+--- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
++++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+@@ -256,6 +256,8 @@
+ 		#interrupt-cells = <2>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		rohm,ddr-backup-power = <0xf>;
++		rohm,rstbmode-pulse;
  
-   When compatible with the generic version, nodes must list the
-   SoC-specific version corresponding to the platform first, followed by the
+ 		regulators {
+ 			dvfs: dvfs {
 -- 
 2.7.4
