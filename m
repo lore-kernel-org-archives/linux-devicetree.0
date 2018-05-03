@@ -1,41 +1,54 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 0/3] K2G: mmc: Update mmc dt node to use sdhci-omap
-Date: Thu, 3 May 2018 17:27:49 +0530
-Message-ID: <0481f6f0-539e-4809-63cd-1134367a7b78@ti.com>
-References: <20180425132746.13911-1-kishon@ti.com>
- <fc5f3498-62fd-15d3-90df-206c51649cb4@oracle.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v1 2/3] ARM: dts: stm32: add cec pins to stm32mp157c
+Date: Thu, 3 May 2018 14:16:26 +0200
+Message-ID: <298dd3aa-037c-5f8b-a276-9c9a8bcb67ac@st.com>
+References: <1524556449-5262-1-git-send-email-yannick.fertre@st.com>
+ <1524556449-5262-3-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fc5f3498-62fd-15d3-90df-206c51649cb4@oracle.com>
+In-Reply-To: <1524556449-5262-3-git-send-email-yannick.fertre@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>
+To: yannick fertre <yannick.fertre@st.com>, Philippe Cornu <philippe.cornu@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Loic Pallardy <loic.pallardy@st.com>, Gerald Baeza <gerald.baeza@st.com>, Patrice Chotard <patrice.chotard@st.com>, Kamel Kholti <kamel.kholti@st.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Santosh,
+Hi Yannick
 
-On Wednesday 25 April 2018 11:10 PM, Santosh Shilimkar wrote:
-> On 4/25/2018 6:27 AM, Kishon Vijay Abraham I wrote:
->> Update mmc dt node to use sdhci-omap binding instead of omap_hsmmc
->> binding.
->>
->> I've also updated keystone_defconfig to enable CONFIG_MMC_SDHCI_OMAP.
->> Everyone who use a custom .config should also enable
->> CONFIG_MMC_SDHCI_OMAP for MMC to work.
->>
->> This series should be merged only after [1]
->> [1] -> https://marc.info/?l=linux-kernel&m=152465820531802&w=2
->>
-> Keep me posted once the dependency gets merged.
-
-Ulf has merged the sdhci part and has shared an immutable branch
-
-git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git sdhci_omap
-with his signed tag sdhci-omap-v4.17-rc3.
-
-Can you use it as a base for merging this series?
+On 04/24/2018 09:54 AM, yannick fertre wrote:
+> This patch adds cec support on stm32mp157c eval board.
+> 
+> Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+> ---
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> index 6f044100..67b0349 100644
+> --- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> @@ -14,6 +14,15 @@
+>   			ranges = <0 0x50002000 0xa400>;
+>   			pins-are-numbered;
+>   
+> +			cec_pins_a: cec@0 {
+> +				pins {
+> +					pinmux = <STM32_PINMUX('A', 15, AF4)>;
+> +					bias-disable;
+> +					drive-open-drain;
+> +					slew-rate = <0>;
+> +				};
+> +			};
+> +
+>   			gpioa: gpio@50002000 {
+>   				gpio-controller;
+>   				#gpio-cells = <2>;
+> 
+Next time, please put pins group after gpio controller and don't use 
+cec@0 but cec-0 to declare pins group. I'll change it this time during 
+merge.
 
 Thanks
-Kishon
+Alex
