@@ -1,32 +1,88 @@
-Return-Path: <robherring2@gmail.com>
-Date: Mon, 7 May 2018 11:01:41 -0500
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 02/14] dt-bindings: usb: add documentation for typec
- port controller(TCPCI)
-Message-ID: <20180507160141.GA13573@rob-hp-laptop>
+Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr10088.outbound.protection.outlook.com ([40.107.1.88]:31339
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751747AbeECAlU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 2 May 2018 20:41:20 -0400
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v5 02/14] dt-bindings: usb: add documentation for typec port controller(TCPCI)
+Date: Thu,  3 May 2018 08:24:42 +0800
+Message-Id: <1525307094-27402-3-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
 References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
- <1525307094-27402-3-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1525307094-27402-3-git-send-email-jun.li@nxp.com>
-To: Li Jun <jun.li@nxp.com>
-Cc: gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: jun.li@nxp.com, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, May 03, 2018 at 08:24:42AM +0800, Li Jun wrote:
-> TCPCI stands for typec port controller interface, its implementation
-> has full typec port control with power delivery support, it's a
-> standard i2c slave with GPIO input as irq interface, detail see spec
-> "Universal Serial Bus Type-C Port Controller Interface Specification
-> Revision 1.0, Version 1.1"
-> 
-> Signed-off-by: Li Jun <jun.li@nxp.com>
-> ---
->  .../devicetree/bindings/usb/typec-tcpci.txt        | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
+TCPCI stands for typec port controller interface, its implementation
+has full typec port control with power delivery support, it's a
+standard i2c slave with GPIO input as irq interface, detail see spec
+"Universal Serial Bus Type-C Port Controller Interface Specification
+Revision 1.0, Version 1.1"
 
-The example may need to change based on discussion on the prior patch, 
-otherwise:
+Signed-off-by: Li Jun <jun.li@nxp.com>
+---
+ .../devicetree/bindings/usb/typec-tcpci.txt        | 49 ++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+diff --git a/Documentation/devicetree/bindings/usb/typec-tcpci.txt b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
+new file mode 100644
+index 0000000..0dd1469
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
+@@ -0,0 +1,49 @@
++TCPCI(Typec port cotroller interface) binding
++---------------------------------------------
++
++Required properties:
++- compatible:       should be set one of following:
++		    - "nxp,ptn5110" for NXP USB PD TCPC PHY IC ptn5110.
++
++- reg:              the i2c slave address of typec port controller device.
++- interrupt-parent: the phandle to the interrupt controller which provides
++                    the interrupt.
++- interrupts:       interrupt specification for tcpci alert.
++
++Required sub-node:
++- connector: The "usb-c-connector" attached to the tcpci chip, the bindings
++  of connector node are specified in
++  Documentation/devicetree/bindings/connector/usb-connector.txt
++
++Example:
++
++ptn5110@50 {
++	compatible = "nxp,ptn5110";
++	reg = <0x50>;
++	interrupt-parent = <&gpio3>;
++	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++
++	usb_con: connector {
++		compatible = "usb-c-connector";
++		label = "USB-C";
++		data-role = "dual";
++		power-role = "dual";
++		try-power-role = "sink";
++		source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)>;
++		sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)
++			     PDO_VAR(5000, 12000, 2000)>;
++		op-sink-microwatt = <10000000>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@1 {
++				reg = <1>;
++				usb_con_ss: endpoint {
++					remote-endpoint = <&usb3_data_ss>;
++				};
++			};
++		};
++	};
++};
+-- 
+2.7.4
+
