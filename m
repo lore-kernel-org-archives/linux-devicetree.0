@@ -1,80 +1,98 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx6sx-sabreauto: add egalax touch screen
- support
-Date: Fri, 4 May 2018 16:27:34 +0800
-Message-ID: <20180504082733.GC3443@dragon>
-References: <1524813650-19241-1-git-send-email-Anson.Huang@nxp.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 09/17] irqchip/irq-mvebu-icu: support ICU subnodes
+Date: Fri, 4 May 2018 10:32:20 +0200
+Message-ID: <20180504103220.3504e73b@xps13>
+References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
+ <20180421135537.24716-10-miquel.raynal@bootlin.com>
+ <20180502101300.49cc3623@windsurf.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1524813650-19241-1-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, haibo.chen@nxp.com, devicetree@vger.kernel.org, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180502101300.49cc3623@windsurf.home>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 27, 2018 at 03:20:50PM +0800, Anson Huang wrote:
-> From: Haibo Chen <haibo.chen@nxp.com>
-> 
-> Add egalax touch screen support on i2c2 bus.
-> 
-> Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> this patch is based on patch (ARM: dts: imx6sx-sabreauto: add debug LED support) I sent out for review.
->  arch/arm/boot/dts/imx6sx-sabreauto.dts | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-> index 6b94f24..2f6e474 100644
-> --- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
-> +++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-> @@ -131,6 +131,12 @@
->  &iomuxc {
->  	imx6x-sabreauto {
->  
-> +		pinctrl_egalax_int: egalax_intgrp {
-
-General recommendation: use hyphen instead of underscore in the node
-node.
-
-> +			fsl,pins = <
-> +				MX6SX_PAD_SD4_RESET_B__GPIO6_IO_22      0x80000000
-> +			>;
-> +		};
-> +
->  		pinctrl_led: ledgrp {
->  			fsl,pins = <
->  				MX6SX_PAD_CSI_PIXCLK__GPIO1_IO_24 0x17059
-> @@ -274,6 +280,16 @@
->  	pinctrl-0 = <&pinctrl_i2c2_1>;
->  	status = "okay";
->  
-> +	egalax_ts@04 {
-
-Use generic node name - touchscreen, as recommended by Devicetree
-Specification, and drop leading zeros in unit-address.
-
-Shawn
-
-> +		compatible = "eeti,egalax_ts";
-> +		reg = <0x04>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_egalax_int>;
-> +		interrupt-parent = <&gpio6>;
-> +		interrupts = <22 IRQ_TYPE_EDGE_FALLING>;
-> +		wakeup-gpios = <&gpio6 22 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
->  	max7322: gpio@68 {
->  		compatible = "maxim,max7322";
->  		reg = <0x68>;
-> -- 
-> 2.7.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+SGkgVGhvbWFzLAoKT24gV2VkLCAyIE1heSAyMDE4IDEwOjEzOjAwICswMjAwLCBUaG9tYXMgUGV0
+YXp6b25pCjx0aG9tYXMucGV0YXp6b25pQGJvb3RsaW4uY29tPiB3cm90ZToKCj4gSGVsbG8gTWlx
+dcOobCwKPiAKPiBPbiBTYXQsIDIxIEFwciAyMDE4IDE1OjU1OjI5ICswMjAwLCBNaXF1ZWwgUmF5
+bmFsIHdyb3RlOgo+ID4gSW50cm9kdWNlIG5ldyBiaW5kaW5ncyBmb3IgdGhlIElDVS4gIAo+IAo+
+IFBlcmhhcHMgdGhpcyBzaG91bGQgZXhwbGFpbiAqd2h5KiB3ZSBuZWVkIG5ldyBiaW5kaW5ncy4K
+ClN1cmUsIEkgY2hhbmdlZCB0aGUgd2hvbGUgbWVzc2FnZSBieToKCiAgICBUaGUgSUNVIGNhbiBo
+YW5kbGUgc2V2ZXJhbCB0eXBlIG9mIGludGVycnVwdCwgZWFjaCBvZiB0aGVtIGJlaW5nCiAgICBo
+YW5kbGVkIGRpZmZlcmVudGx5IG9uIEFQIHNpZGUuIE9uIENQIHNpZGUsIHRoZSBJQ1Ugc2hvdWxk
+IGJlIGFibGUKICAgIHRvIG1ha2UgdGhlIGRpc3RpbmN0aW9uIGJldHdlZW4gZWFjaCBpbnRlcnJ1
+cHQgZ3JvdXAgYnkgcG9pbnRpbmcgdG8KICAgIHRoZSByaWdodCBwYXJlbnQuCiAgICAKICAgIFRo
+aXMgaXMgZG9uZSB0aHJvdWdoIHRoZSBpbnRyb2R1Y3Rpb24gb2YgbmV3IGJpbmRpbmdzLCBwcmVz
+ZW50aW5nCiAgICB0aGUgSUNVIG5vZGUgYXMgdGhlIHBhcmVudCBvZiBtdWx0aXBsZSBJQ1Ugc3Vi
+LW5vZGVzLCBlYWNoIG9mIHRoZW0KICAgIGJlaW5nIGFuIGludGVycnVwdCB0eXBlIHdpdGggYSBk
+aWZmZXJlbnQgaW50ZXJydXB0IHBhcmVudC4gSUNVCiAgICBpbnRlcnJ1cHQgJ2NsaWVudHMnIG5v
+dyBkaXJlY3RseSBwb2ludCB0byB0aGUgcmlnaHQgc3ViLW5vZGUsCiAgICBhdm9pZGluZyB0aGUg
+bmVlZCBmb3IgdGhlIGV4dHJhIElDVV9HUlBfKiBwYXJhbWV0ZXIuCiAgICAKICAgIElDVSBzdWJu
+b2RlcyBhcmUgcHJvYmVkIGF1dG9tYXRpY2FsbHkgd2l0aAogICAgZGV2bV9wbGF0Zm9ybV9wb3B1
+bGF0ZSgpLiBJZiB0aGUgbm9kZSBhcyBubyBjaGlsZCwgdGhlIHByb2JlCiAgICBmdW5jdGlvbiBm
+b3IgTlNScyB3aWxsIHN0aWxsIGJlIGNhbGxlZCAnbWFudWFsbHknIGluIG9yZGVyIHRvCiAgICBw
+cmVzZXJ2ZSBiYWNrd2FyZCBjb21wYXRpYmlsaXR5IHdpdGggRFQgdXNpbmcgdGhlIG9sZCBiaW5k
+aW5nLgogICAgCj4gCj4gPiBFYWNoIERUIHN1Ym5vZGUgb2YgdGhlIElDVSByZXByZXNlbnRzIGEg
+dHlwZSBvZiBpbnRlcnJ1cHQgdGhhdCBzaG91bGQKPiA+IGJlIGhhbmRsZWQgc2VwYXJhdGVseS4g
+QWRkIHRoZSBwb3NzaWJpbGl0eSBmb3IgdGhlIElDVSB0byBoYXZlIHN1Ym5vZGVzCj4gPiBhbmQg
+cHJvYmUgZWFjaCBvZiB0aGVtIGF1dG9tYXRpY2FsbHkgd2l0aCBkZXZtX3BsYXRmb3JtX3BvcHVs
+YXRlKCkuIElmCj4gPiB0aGUgbm9kZSBhcyBubyBjaGlsZCwgdGhlIHByb2JlIGZ1bmN0aW9uIGZv
+ciBOU1JzIHdpbGwgc3RpbGwgYmUgY2FsbGVkCj4gPiAnbWFudWFsbHknLiAgCj4gCj4gIC4uLiBp
+biBvcmRlciB0byBwcmVzZXJ2ZSBiYWNrd2FyZCBjb21wYXRpYmlsaXR5IHdpdGggRGV2aWNlIFRy
+ZWVzCj4gIHVzaW5nIHRoZSBvbGQgYmluZGluZy4KCkFkZGVkLCBzZWUgYWJvdmUuCgo+IAo+ID4g
+K3N0YXRpYyBzdHJ1Y3QgbXZlYnVfaWN1ICptdmVidV9kZXZfZ2V0X2RydmRhdGEoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqcGRldikgIAo+IAo+IFRoZSBmdW5jdGlvbiBzaG91bGQgYmUgcHJlZml4
+ZWQgYnkgbXZlYnVfaWN1Xywgbm90IGp1c3QgbXZlYnVfLgoKQ2hhbmdlZC4KCj4gCj4gPiArewo+
+ID4gKwlzdHJ1Y3QgbXZlYnVfaWN1ICppY3U7Cj4gPiArCj4gPiArCWljdSA9IGRldl9nZXRfZHJ2
+ZGF0YSgmcGRldi0+ZGV2KTsKPiA+ICsJaWYgKGljdSkgewo+ID4gKwkJLyogTGVnYWN5IGJpbmRp
+bmdzOiBnZXQgdGhlIGRldmljZSBkYXRhICovICAKPiAKPiBJIGZpbmQgdGhpcyBjb21tZW50IHdl
+aXJkLCBiZWNhdXNlIGl0IGRvZXNuJ3QgZG9jdW1lbnQgd2hhdCB0aGUgdGVzdAo+IGp1c3QgYmVs
+b3cgaXMgZG9pbmcuCgpSZWZhY3RvcmVkIGEgYml0IHRoZSBjb21tZW50cyBpbiB0aGlzIHNlY3Rp
+b24uCgo+IAo+ID4gKwkJaWYgKCFpY3UtPmxlZ2FjeV9iaW5kaW5ncykKPiA+ICsJCQlyZXR1cm4g
+RVJSX1BUUigtRUlOVkFMKTsKPiA+ICsJfSBlbHNlIHsKPiA+ICsJCS8qIE5ldyBiaW5kaW5nczog
+Z2V0IHRoZSBwYXJlbnQgZGV2aWNlIChJQ1UpIGRhdGEgKi8KPiA+ICsJCWljdSA9IGRldl9nZXRf
+ZHJ2ZGF0YShwZGV2LT5kZXYucGFyZW50KTsKPiA+ICsJCWlmICghaWN1KQo+ID4gKwkJCXJldHVy
+biBFUlJfUFRSKC1FTk9ERVYpOwo+ID4gKwkJaWYgKGljdS0+bGVnYWN5X2JpbmRpbmdzKQo+ID4g
+KwkJCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOwo+ID4gKwl9ICAKPiAKPiAKPiA+IEBAIC0xNDQs
+NyArMTcwLDEwIEBAIG12ZWJ1X2ljdV9pcnFfZG9tYWluX2FsbG9jKHN0cnVjdCBpcnFfZG9tYWlu
+ICpkb21haW4sIHVuc2lnbmVkIGludCB2aXJxLAo+ID4gIAkJZ290byBmcmVlX2lycWQ7Cj4gPiAg
+CX0KPiA+ICAKPiA+IC0JaWN1X2lycWQtPmljdV9ncm91cCA9IGZ3c3BlYy0+cGFyYW1bMF07Cj4g
+PiArCWlmIChpY3UtPmxlZ2FjeV9iaW5kaW5ncykKPiA+ICsJCWljdV9pcnFkLT5pY3VfZ3JvdXAg
+PSBmd3NwZWMtPnBhcmFtWzBdOwo+ID4gKwllbHNlCj4gPiArCQlpY3VfaXJxZC0+aWN1X2dyb3Vw
+ID0gSUNVX0dSUF9OU1I7ICAKPiAKPiBJbiBwcmFjdGljZSBoZXJlIGZ3c3BlYy0+cGFyYW1bMF0g
+aXMgYWx3YXlzIGdvaW5nIHRvIGJlIGVxdWFsIHRvCj4gSUNVX0dSUF9OU1IsIGJ1dCBPSywgdGhl
+IHRlc3QgbWFrZXMgc2Vuc2UgYXMgaW4gYSBmdXR1cmUgY29tbWl0LCB0aGUKPiAiZWxzZSIgY2Fz
+ZSB3aWxsIGJlIGNoYW5nZWQgdG8gc3VwcG9ydCBTRUlzLgo+IAo+ID4gK3N0YXRpYyBjb25zdCBz
+dHJ1Y3Qgb2ZfZGV2aWNlX2lkIG12ZWJ1X2ljdV9uc3Jfb2ZfbWF0Y2hbXSA9IHsKPiA+ICsJeyAu
+Y29tcGF0aWJsZSA9ICJtYXJ2ZWxsLGNwMTEwLWljdS1uc3IiLCB9LAo+ID4gKwl7fSwKPiA+ICt9
+Owo+ID4gKwo+ID4gK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIG12ZWJ1X2ljdV9uc3Jf
+ZHJpdmVyID0gewo+ID4gKwkucHJvYmUgID0gbXZlYnVfaWN1X25zcl9wcm9iZSwKPiA+ICsJLmRy
+aXZlciA9IHsKPiA+ICsJCS5uYW1lID0gIm12ZWJ1LWljdS1uc3IiLAo+ID4gKwkJLm9mX21hdGNo
+X3RhYmxlID0gbXZlYnVfaWN1X25zcl9vZl9tYXRjaCwKPiA+ICsJfSwKPiA+ICt9Owo+ID4gK2J1
+aWx0aW5fcGxhdGZvcm1fZHJpdmVyKG12ZWJ1X2ljdV9uc3JfZHJpdmVyKTsgIAo+IAo+IEknbSBu
+b3Qgc3VyZSB3aHkgeW91IGNhbGwgdGhpcyBpY3VfbnNyIGhlcmUsIGFuZCBjaGFuZ2UgaXQgbGF0
+ZXIgdG8KPiBpY3Vfc3Vic2V0LiBXb3VsZG4ndCBpdCBtYWtlIHNlbnNlIHRvIGNhbGwgaXQgcmln
+aHQgYXdheSB3aXRoIHRoZSBmaW5hbAo+IG5hbWUgPyBOb3RlIHRoYXQgdGhpcyBpcyBub3QgYSB2
+ZXJ5IHN0cm9uZyByZXF1ZXN0IHRvIGNoYW5nZSB0aGlzCj4gYXNwZWN0LCBJJ20gZmluZSB3aXRo
+IGhvdyBpdCdzIGRvbmUgdG9kYXksIGl0J3MganVzdCB0aGF0IEkgd291bGQgaGF2ZQo+IGRvbmUg
+aXQgZGlmZmVyZW50bHkuCgpJIHRob3VnaHQgY2FsbGluZyBpdCBpY3Vfc3Vic2V0IHJpZ2h0IG5v
+dyB3b3VsZCBub3QgYmUgdmVyeSBjbGVhciBhcwp0aGVyZSBhcmUgbm90ICJJQ1Ugc3Vic2V0IiBv
+dGhlciB0aGFuIE5TUiBpbnRlcnJ1cHRzLCBidXQgSSBjaGFuZ2VkIGl0LAp0aGlzIGlzIG5vdCBh
+IGJpZyBkZWFsLgoKPiAKPiBPdGhlciB0aGFuIHRoYXQsIGxvb2tzIGdvb2QgdG8gbWUuCj4gCj4g
+VGhvbWFzCgpUaGFua3MgZm9yIHRoZSByZXZpZXcsCk1pcXXDqGwKCgotLSAKTWlxdWVsIFJheW5h
+bCwgQm9vdGxpbiAoZm9ybWVybHkgRnJlZSBFbGVjdHJvbnMpCkVtYmVkZGVkIExpbnV4IGFuZCBL
+ZXJuZWwgZW5naW5lZXJpbmcKaHR0cHM6Ly9ib290bGluLmNvbQoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
