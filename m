@@ -1,223 +1,49 @@
 From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 05/10] media: v4l: Add definitions for
- MPEG2 frame format and header metadata
-Date: Fri, 04 May 2018 10:48:34 +0200
-Message-ID: <32d299141f48e0faa0c6d8624d365b7958609023.camel@bootlin.com>
+Subject: Re: [PATCH v2 09/10] ARM: dts: sun7i-a20: Add Video
+ Engine and reserved memory nodes
+Date: Fri, 04 May 2018 10:54:18 +0200
+Message-ID: <5f7961d548b4d27eab8e0bd6bcfc35ea70e2d79b.camel@bootlin.com>
 References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
-	 <20180419154536.17846-1-paul.kocialkowski@bootlin.com>
+	 <20180419154536.17846-5-paul.kocialkowski@bootlin.com>
+	 <20180420073908.nkcbsdxibnzkqski@flea>
+	 <82057e2f734137a3902d9313c228b01ceb345ee7.camel@bootlin.com>
+	 <20180504084008.h6p4brari3xrbv6l@flea>
+	 <e8cd340605ab4db8ebf2888a4fce645e8bc481d0.camel@bootlin.com>
 Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-uY/2+HKVE4b4GlzRi2oE"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBTV5WDLQKGQE4KGR2DY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="=-nNmSDE07s9p6POYMMwU2"
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBFOAWDLQKGQE2XRXZ2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180419154536.17846-1-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <e8cd340605ab4db8ebf2888a4fce645e8bc481d0.camel-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---=-uY/2+HKVE4b4GlzRi2oE
+--=-nNmSDE07s9p6POYMMwU2
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 2018-04-19 at 17:45 +0200, Paul Kocialkowski wrote:
-> Stateless video decoding engines require both the MPEG slices and
-> associated metadata from the video stream in order to decode frames.
-> 
-> This introduces definitions for a new pixel format, describing buffers
-> with MPEG2 slice data, as well as a control structure for passing the
-> frame header (metadata) to drivers.
+On Fri, 2018-05-04 at 10:47 +0200, Paul Kocialkowski wrote:
+> > > > Don't you also need to map the SRAM on the A20?
+> > > 
+> > > That's a good point, there is currently no syscon handle for A20
+> > > (and
+> > > also A13). Maybe SRAM is muxed to the VE by default so it "just
+> > > works"? 
 
-While working on this, I came accross Hugues Fruchet's series that also
-adds similar definitions for parsed MPEG2 metadata:
-https://patchwork.kernel.org/patch/9704707/
+I just checked on the manual and it appears that SRAM Area C1 is muxed
+to the VE at reset, so we can probably keep things as-is until the SRAM
+driver is ready to handle explicitly muxing that area to the VE.
 
-Since that version made it to a v6, I will take the time to read the
-discussion and see what needs to be changed in my proposal, so that we
-can avoid discussing the same points over a year later.
-
-This will most likely not make it to the next revision of the driver
-series, so I will keep the format/controls definitions in their v2 state
-(despite all the useful comments received) and take the time to properly
-rework things in a future revision.
-
-Cheers,
-
-Paul
-
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Florent Revest <florent.revest-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/media/v4l2-core/v4l2-ctrls.c | 10 ++++++++++
->  drivers/media/v4l2-core/v4l2-ioctl.c |  1 +
->  include/uapi/linux/v4l2-controls.h   | 26 ++++++++++++++++++++++++++
->  include/uapi/linux/videodev2.h       |  3 +++
->  4 files changed, 40 insertions(+)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c
-> b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index ba05a8b9a095..fcdc12b9a9e0 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -761,6 +761,7 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_MPEG_VIDEO_MV_V_SEARCH_RANGE:		re
-> turn "Vertical MV Search Range";
->  	case V4L2_CID_MPEG_VIDEO_REPEAT_SEQ_HEADER:		re
-> turn "Repeat Sequence Header";
->  	case V4L2_CID_MPEG_VIDEO_FORCE_KEY_FRAME:		retu
-> rn "Force Key Frame";
-> +	case V4L2_CID_MPEG_VIDEO_MPEG2_FRAME_HDR:		retu
-> rn "MPEG2 Frame Header";
->  
->  	/* VPX controls */
->  	case V4L2_CID_MPEG_VIDEO_VPX_NUM_PARTITIONS:		r
-> eturn "VPX Number of Partitions";
-> @@ -1152,6 +1153,9 @@ void v4l2_ctrl_fill(u32 id, const char **name,
-> enum v4l2_ctrl_type *type,
->  	case V4L2_CID_RDS_TX_ALT_FREQS:
->  		*type = V4L2_CTRL_TYPE_U32;
->  		break;
-> +	case V4L2_CID_MPEG_VIDEO_MPEG2_FRAME_HDR:
-> +		*type = V4L2_CTRL_TYPE_MPEG2_FRAME_HDR;
-> +		break;
->  	default:
->  		*type = V4L2_CTRL_TYPE_INTEGER;
->  		break;
-> @@ -1472,6 +1476,9 @@ static int std_validate(const struct v4l2_ctrl
-> *ctrl, u32 idx,
->  			return -ERANGE;
->  		return 0;
->  
-> +	case V4L2_CTRL_TYPE_MPEG2_FRAME_HDR:
-> +		return 0;
-> +
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -2046,6 +2053,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct
-> v4l2_ctrl_handler *hdl,
->  	case V4L2_CTRL_TYPE_U32:
->  		elem_size = sizeof(u32);
->  		break;
-> +	case V4L2_CTRL_TYPE_MPEG2_FRAME_HDR:
-> +		elem_size = sizeof(struct v4l2_ctrl_mpeg2_frame_hdr);
-> +		break;
->  	default:
->  		if (type < V4L2_CTRL_COMPOUND_TYPES)
->  			elem_size = sizeof(s32);
-> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c
-> b/drivers/media/v4l2-core/v4l2-ioctl.c
-> index 468c3c65362d..8070203da5d2 100644
-> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> @@ -1273,6 +1273,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc
-> *fmt)
->  		case V4L2_PIX_FMT_VC1_ANNEX_L:	descr = "VC-1
-> (SMPTE 412M Annex L)"; break;
->  		case V4L2_PIX_FMT_VP8:		descr = "VP8";
-> break;
->  		case V4L2_PIX_FMT_VP9:		descr = "VP9";
-> break;
-> +		case V4L2_PIX_FMT_MPEG2_FRAME:	descr = "MPEG2
-> Frame"; break;
->  		case V4L2_PIX_FMT_CPIA1:	descr = "GSPCA CPiA
-> YUV"; break;
->  		case V4L2_PIX_FMT_WNVA:		descr =
-> "WNVA"; break;
->  		case V4L2_PIX_FMT_SN9C10X:	descr = "GSPCA
-> SN9C10X"; break;
-> diff --git a/include/uapi/linux/v4l2-controls.h
-> b/include/uapi/linux/v4l2-controls.h
-> index cbbb750d87d1..8431b2a540c7 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -557,6 +557,8 @@ enum v4l2_mpeg_video_mpeg4_profile {
->  };
->  #define V4L2_CID_MPEG_VIDEO_MPEG4_QPEL		(V4L2_CID_MPEG_
-> BASE+407)
->  
-> +#define
-> V4L2_CID_MPEG_VIDEO_MPEG2_FRAME_HDR     (V4L2_CID_MPEG_BASE+450)
-> +
->  /*  Control IDs for VP8 streams
->   *  Although VP8 is not part of MPEG we add these controls to the
-> MPEG class
->   *  as that class is already handling other video compression
-> standards
-> @@ -985,4 +987,28 @@ enum v4l2_detect_md_mode {
->  #define V4L2_CID_DETECT_MD_THRESHOLD_GRID	(V4L2_CID_DETECT_CLA
-> SS_BASE + 3)
->  #define V4L2_CID_DETECT_MD_REGION_GRID		(V4L2_CID_DETEC
-> T_CLASS_BASE + 4)
->  
-> +struct v4l2_ctrl_mpeg2_frame_hdr {
-> +	__u32 slice_len;
-> +	__u32 slice_pos;
-> +	enum { MPEG1, MPEG2 } type;
-> +
-> +	__u16 width;
-> +	__u16 height;
-> +
-> +	enum { PCT_I = 1, PCT_P, PCT_B, PCT_D } picture_coding_type;
-> +	__u8 f_code[2][2];
-> +
-> +	__u8 intra_dc_precision;
-> +	__u8 picture_structure;
-> +	__u8 top_field_first;
-> +	__u8 frame_pred_frame_dct;
-> +	__u8 concealment_motion_vectors;
-> +	__u8 q_scale_type;
-> +	__u8 intra_vlc_format;
-> +	__u8 alternate_scan;
-> +
-> +	__u8 backward_ref_index;
-> +	__u8 forward_ref_index;
-> +};
-> +
->  #endif
-> diff --git a/include/uapi/linux/videodev2.h
-> b/include/uapi/linux/videodev2.h
-> index 31b5728b56e9..4b8336f7bcf0 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -635,6 +635,7 @@ struct v4l2_pix_format {
->  #define V4L2_PIX_FMT_VC1_ANNEX_L v4l2_fourcc('V', 'C', '1', 'L') /*
-> SMPTE 421M Annex L compliant stream */
->  #define V4L2_PIX_FMT_VP8      v4l2_fourcc('V', 'P', '8', '0') /* VP8
-> */
->  #define V4L2_PIX_FMT_VP9      v4l2_fourcc('V', 'P', '9', '0') /* VP9
-> */
-> +#define V4L2_PIX_FMT_MPEG2_FRAME v4l2_fourcc('M', 'G', '2', 'F') /*
-> MPEG2 frame */
->  
->  /*  Vendor-specific formats   */
->  #define V4L2_PIX_FMT_CPIA1    v4l2_fourcc('C', 'P', 'I', 'A') /*
-> cpia1 YUV */
-> @@ -1586,6 +1587,7 @@ struct v4l2_ext_control {
->  		__u8 __user *p_u8;
->  		__u16 __user *p_u16;
->  		__u32 __user *p_u32;
-> +		struct v4l2_ctrl_mpeg2_frame_hdr __user
-> *p_mpeg2_frame_hdr;
->  		void __user *ptr;
->  	};
->  } __attribute__ ((packed));
-> @@ -1631,6 +1633,7 @@ enum v4l2_ctrl_type {
->  	V4L2_CTRL_TYPE_U8	     = 0x0100,
->  	V4L2_CTRL_TYPE_U16	     = 0x0101,
->  	V4L2_CTRL_TYPE_U32	     = 0x0102,
-> +	V4L2_CTRL_TYPE_MPEG2_FRAME_HDR = 0x0109,
->  };
->  
->  /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
 -- 
 Paul Kocialkowski, Bootlin (formerly Free Electrons)
 Embedded Linux and kernel engineering
 https://bootlin.com
---=-uY/2+HKVE4b4GlzRi2oE--
+--=-nNmSDE07s9p6POYMMwU2--
