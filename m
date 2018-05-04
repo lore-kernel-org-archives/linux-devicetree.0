@@ -1,98 +1,134 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 09/17] irqchip/irq-mvebu-icu: support ICU subnodes
-Date: Fri, 4 May 2018 10:32:20 +0200
-Message-ID: <20180504103220.3504e73b@xps13>
-References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
- <20180421135537.24716-10-miquel.raynal@bootlin.com>
- <20180502101300.49cc3623@windsurf.home>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH V4 5/8] soc: mediatek: pwrap: add pwrap for mt6797 SoCs
+Date: Fri, 4 May 2018 10:39:28 +0200
+Message-ID: <69e4766f-8c7a-7729-93f8-4f87d2ceff8b@gmail.com>
+References: <20180502092112.3991-1-argus.lin@mediatek.com>
+ <20180502092112.3991-6-argus.lin@mediatek.com>
+ <1525320067.14792.95.camel@mtkswgap22> <1525328436.6214.10.camel@mtkswgap22>
+ <1525403052.14792.131.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180502101300.49cc3623@windsurf.home>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1525403052.14792.131.camel@mtkswgap22>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sean Wang <sean.wang@mediatek.com>, Argus Lin <argus.lin@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chenglin Xu <chenglin.xu@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhvbWFzLAoKT24gV2VkLCAyIE1heSAyMDE4IDEwOjEzOjAwICswMjAwLCBUaG9tYXMgUGV0
-YXp6b25pCjx0aG9tYXMucGV0YXp6b25pQGJvb3RsaW4uY29tPiB3cm90ZToKCj4gSGVsbG8gTWlx
-dcOobCwKPiAKPiBPbiBTYXQsIDIxIEFwciAyMDE4IDE1OjU1OjI5ICswMjAwLCBNaXF1ZWwgUmF5
-bmFsIHdyb3RlOgo+ID4gSW50cm9kdWNlIG5ldyBiaW5kaW5ncyBmb3IgdGhlIElDVS4gIAo+IAo+
-IFBlcmhhcHMgdGhpcyBzaG91bGQgZXhwbGFpbiAqd2h5KiB3ZSBuZWVkIG5ldyBiaW5kaW5ncy4K
-ClN1cmUsIEkgY2hhbmdlZCB0aGUgd2hvbGUgbWVzc2FnZSBieToKCiAgICBUaGUgSUNVIGNhbiBo
-YW5kbGUgc2V2ZXJhbCB0eXBlIG9mIGludGVycnVwdCwgZWFjaCBvZiB0aGVtIGJlaW5nCiAgICBo
-YW5kbGVkIGRpZmZlcmVudGx5IG9uIEFQIHNpZGUuIE9uIENQIHNpZGUsIHRoZSBJQ1Ugc2hvdWxk
-IGJlIGFibGUKICAgIHRvIG1ha2UgdGhlIGRpc3RpbmN0aW9uIGJldHdlZW4gZWFjaCBpbnRlcnJ1
-cHQgZ3JvdXAgYnkgcG9pbnRpbmcgdG8KICAgIHRoZSByaWdodCBwYXJlbnQuCiAgICAKICAgIFRo
-aXMgaXMgZG9uZSB0aHJvdWdoIHRoZSBpbnRyb2R1Y3Rpb24gb2YgbmV3IGJpbmRpbmdzLCBwcmVz
-ZW50aW5nCiAgICB0aGUgSUNVIG5vZGUgYXMgdGhlIHBhcmVudCBvZiBtdWx0aXBsZSBJQ1Ugc3Vi
-LW5vZGVzLCBlYWNoIG9mIHRoZW0KICAgIGJlaW5nIGFuIGludGVycnVwdCB0eXBlIHdpdGggYSBk
-aWZmZXJlbnQgaW50ZXJydXB0IHBhcmVudC4gSUNVCiAgICBpbnRlcnJ1cHQgJ2NsaWVudHMnIG5v
-dyBkaXJlY3RseSBwb2ludCB0byB0aGUgcmlnaHQgc3ViLW5vZGUsCiAgICBhdm9pZGluZyB0aGUg
-bmVlZCBmb3IgdGhlIGV4dHJhIElDVV9HUlBfKiBwYXJhbWV0ZXIuCiAgICAKICAgIElDVSBzdWJu
-b2RlcyBhcmUgcHJvYmVkIGF1dG9tYXRpY2FsbHkgd2l0aAogICAgZGV2bV9wbGF0Zm9ybV9wb3B1
-bGF0ZSgpLiBJZiB0aGUgbm9kZSBhcyBubyBjaGlsZCwgdGhlIHByb2JlCiAgICBmdW5jdGlvbiBm
-b3IgTlNScyB3aWxsIHN0aWxsIGJlIGNhbGxlZCAnbWFudWFsbHknIGluIG9yZGVyIHRvCiAgICBw
-cmVzZXJ2ZSBiYWNrd2FyZCBjb21wYXRpYmlsaXR5IHdpdGggRFQgdXNpbmcgdGhlIG9sZCBiaW5k
-aW5nLgogICAgCj4gCj4gPiBFYWNoIERUIHN1Ym5vZGUgb2YgdGhlIElDVSByZXByZXNlbnRzIGEg
-dHlwZSBvZiBpbnRlcnJ1cHQgdGhhdCBzaG91bGQKPiA+IGJlIGhhbmRsZWQgc2VwYXJhdGVseS4g
-QWRkIHRoZSBwb3NzaWJpbGl0eSBmb3IgdGhlIElDVSB0byBoYXZlIHN1Ym5vZGVzCj4gPiBhbmQg
-cHJvYmUgZWFjaCBvZiB0aGVtIGF1dG9tYXRpY2FsbHkgd2l0aCBkZXZtX3BsYXRmb3JtX3BvcHVs
-YXRlKCkuIElmCj4gPiB0aGUgbm9kZSBhcyBubyBjaGlsZCwgdGhlIHByb2JlIGZ1bmN0aW9uIGZv
-ciBOU1JzIHdpbGwgc3RpbGwgYmUgY2FsbGVkCj4gPiAnbWFudWFsbHknLiAgCj4gCj4gIC4uLiBp
-biBvcmRlciB0byBwcmVzZXJ2ZSBiYWNrd2FyZCBjb21wYXRpYmlsaXR5IHdpdGggRGV2aWNlIFRy
-ZWVzCj4gIHVzaW5nIHRoZSBvbGQgYmluZGluZy4KCkFkZGVkLCBzZWUgYWJvdmUuCgo+IAo+ID4g
-K3N0YXRpYyBzdHJ1Y3QgbXZlYnVfaWN1ICptdmVidV9kZXZfZ2V0X2RydmRhdGEoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqcGRldikgIAo+IAo+IFRoZSBmdW5jdGlvbiBzaG91bGQgYmUgcHJlZml4
-ZWQgYnkgbXZlYnVfaWN1Xywgbm90IGp1c3QgbXZlYnVfLgoKQ2hhbmdlZC4KCj4gCj4gPiArewo+
-ID4gKwlzdHJ1Y3QgbXZlYnVfaWN1ICppY3U7Cj4gPiArCj4gPiArCWljdSA9IGRldl9nZXRfZHJ2
-ZGF0YSgmcGRldi0+ZGV2KTsKPiA+ICsJaWYgKGljdSkgewo+ID4gKwkJLyogTGVnYWN5IGJpbmRp
-bmdzOiBnZXQgdGhlIGRldmljZSBkYXRhICovICAKPiAKPiBJIGZpbmQgdGhpcyBjb21tZW50IHdl
-aXJkLCBiZWNhdXNlIGl0IGRvZXNuJ3QgZG9jdW1lbnQgd2hhdCB0aGUgdGVzdAo+IGp1c3QgYmVs
-b3cgaXMgZG9pbmcuCgpSZWZhY3RvcmVkIGEgYml0IHRoZSBjb21tZW50cyBpbiB0aGlzIHNlY3Rp
-b24uCgo+IAo+ID4gKwkJaWYgKCFpY3UtPmxlZ2FjeV9iaW5kaW5ncykKPiA+ICsJCQlyZXR1cm4g
-RVJSX1BUUigtRUlOVkFMKTsKPiA+ICsJfSBlbHNlIHsKPiA+ICsJCS8qIE5ldyBiaW5kaW5nczog
-Z2V0IHRoZSBwYXJlbnQgZGV2aWNlIChJQ1UpIGRhdGEgKi8KPiA+ICsJCWljdSA9IGRldl9nZXRf
-ZHJ2ZGF0YShwZGV2LT5kZXYucGFyZW50KTsKPiA+ICsJCWlmICghaWN1KQo+ID4gKwkJCXJldHVy
-biBFUlJfUFRSKC1FTk9ERVYpOwo+ID4gKwkJaWYgKGljdS0+bGVnYWN5X2JpbmRpbmdzKQo+ID4g
-KwkJCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOwo+ID4gKwl9ICAKPiAKPiAKPiA+IEBAIC0xNDQs
-NyArMTcwLDEwIEBAIG12ZWJ1X2ljdV9pcnFfZG9tYWluX2FsbG9jKHN0cnVjdCBpcnFfZG9tYWlu
-ICpkb21haW4sIHVuc2lnbmVkIGludCB2aXJxLAo+ID4gIAkJZ290byBmcmVlX2lycWQ7Cj4gPiAg
-CX0KPiA+ICAKPiA+IC0JaWN1X2lycWQtPmljdV9ncm91cCA9IGZ3c3BlYy0+cGFyYW1bMF07Cj4g
-PiArCWlmIChpY3UtPmxlZ2FjeV9iaW5kaW5ncykKPiA+ICsJCWljdV9pcnFkLT5pY3VfZ3JvdXAg
-PSBmd3NwZWMtPnBhcmFtWzBdOwo+ID4gKwllbHNlCj4gPiArCQlpY3VfaXJxZC0+aWN1X2dyb3Vw
-ID0gSUNVX0dSUF9OU1I7ICAKPiAKPiBJbiBwcmFjdGljZSBoZXJlIGZ3c3BlYy0+cGFyYW1bMF0g
-aXMgYWx3YXlzIGdvaW5nIHRvIGJlIGVxdWFsIHRvCj4gSUNVX0dSUF9OU1IsIGJ1dCBPSywgdGhl
-IHRlc3QgbWFrZXMgc2Vuc2UgYXMgaW4gYSBmdXR1cmUgY29tbWl0LCB0aGUKPiAiZWxzZSIgY2Fz
-ZSB3aWxsIGJlIGNoYW5nZWQgdG8gc3VwcG9ydCBTRUlzLgo+IAo+ID4gK3N0YXRpYyBjb25zdCBz
-dHJ1Y3Qgb2ZfZGV2aWNlX2lkIG12ZWJ1X2ljdV9uc3Jfb2ZfbWF0Y2hbXSA9IHsKPiA+ICsJeyAu
-Y29tcGF0aWJsZSA9ICJtYXJ2ZWxsLGNwMTEwLWljdS1uc3IiLCB9LAo+ID4gKwl7fSwKPiA+ICt9
-Owo+ID4gKwo+ID4gK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIG12ZWJ1X2ljdV9uc3Jf
-ZHJpdmVyID0gewo+ID4gKwkucHJvYmUgID0gbXZlYnVfaWN1X25zcl9wcm9iZSwKPiA+ICsJLmRy
-aXZlciA9IHsKPiA+ICsJCS5uYW1lID0gIm12ZWJ1LWljdS1uc3IiLAo+ID4gKwkJLm9mX21hdGNo
-X3RhYmxlID0gbXZlYnVfaWN1X25zcl9vZl9tYXRjaCwKPiA+ICsJfSwKPiA+ICt9Owo+ID4gK2J1
-aWx0aW5fcGxhdGZvcm1fZHJpdmVyKG12ZWJ1X2ljdV9uc3JfZHJpdmVyKTsgIAo+IAo+IEknbSBu
-b3Qgc3VyZSB3aHkgeW91IGNhbGwgdGhpcyBpY3VfbnNyIGhlcmUsIGFuZCBjaGFuZ2UgaXQgbGF0
-ZXIgdG8KPiBpY3Vfc3Vic2V0LiBXb3VsZG4ndCBpdCBtYWtlIHNlbnNlIHRvIGNhbGwgaXQgcmln
-aHQgYXdheSB3aXRoIHRoZSBmaW5hbAo+IG5hbWUgPyBOb3RlIHRoYXQgdGhpcyBpcyBub3QgYSB2
-ZXJ5IHN0cm9uZyByZXF1ZXN0IHRvIGNoYW5nZSB0aGlzCj4gYXNwZWN0LCBJJ20gZmluZSB3aXRo
-IGhvdyBpdCdzIGRvbmUgdG9kYXksIGl0J3MganVzdCB0aGF0IEkgd291bGQgaGF2ZQo+IGRvbmUg
-aXQgZGlmZmVyZW50bHkuCgpJIHRob3VnaHQgY2FsbGluZyBpdCBpY3Vfc3Vic2V0IHJpZ2h0IG5v
-dyB3b3VsZCBub3QgYmUgdmVyeSBjbGVhciBhcwp0aGVyZSBhcmUgbm90ICJJQ1Ugc3Vic2V0IiBv
-dGhlciB0aGFuIE5TUiBpbnRlcnJ1cHRzLCBidXQgSSBjaGFuZ2VkIGl0LAp0aGlzIGlzIG5vdCBh
-IGJpZyBkZWFsLgoKPiAKPiBPdGhlciB0aGFuIHRoYXQsIGxvb2tzIGdvb2QgdG8gbWUuCj4gCj4g
-VGhvbWFzCgpUaGFua3MgZm9yIHRoZSByZXZpZXcsCk1pcXXDqGwKCgotLSAKTWlxdWVsIFJheW5h
-bCwgQm9vdGxpbiAoZm9ybWVybHkgRnJlZSBFbGVjdHJvbnMpCkVtYmVkZGVkIExpbnV4IGFuZCBL
-ZXJuZWwgZW5naW5lZXJpbmcKaHR0cHM6Ly9ib290bGluLmNvbQoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+
+On 05/04/2018 05:04 AM, Sean Wang wrote:
+> On Thu, 2018-05-03 at 14:20 +0800, Argus Lin wrote:
+>> On Thu, 2018-05-03 at 12:01 +0800, Sean Wang wrote:
+>>>  };
+> 
+> [...]
+> 
+>>>> @@ -1503,11 +1581,13 @@ static int pwrap_probe(struct platform_device *pdev)
+>>>>  	if (IS_ERR(wrp->base))
+>>>>  		return PTR_ERR(wrp->base);
+>>>>  
+>>>> -	wrp->rstc = devm_reset_control_get(wrp->dev, "pwrap");
+>>>> -	if (IS_ERR(wrp->rstc)) {
+>>>> -		ret = PTR_ERR(wrp->rstc);
+>>>> -		dev_dbg(wrp->dev, "cannot get pwrap reset: %d\n", ret);
+>>>> -		return ret;
+>>>> +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_RESET)) {
+>>>> +		wrp->rstc = devm_reset_control_get(wrp->dev, "pwrap");
+>>>
+>>> there should be a reset bit present for pwrap on infrasys.
+>>>
+>>> the specific condition can be dropped when the reset cell is exported from infrasys and then the device has a reference to it.
+>> hmm, I think it need to keep here.
+>> because after pwrap initialized, it can't be reset alone.
+>> It needs to reset PMIC simultaneously, too.
+> 
+> Reset a pair, either a master or its slave, all had been a part of
+> pwrap_init.
+> 
+> The reset controller provided here is just to reset pwrap device.
+> And for its slave reset, it should be done by pwrap_reset_spislave. 
+> 
+> So for MT6397, it should be able to fall into the same procedure.
+> 
+>>>
+>>>> +		if (IS_ERR(wrp->rstc)) {
+>>>> +			ret = PTR_ERR(wrp->rstc);
+>>>> +			dev_dbg(wrp->dev, "cannot get pwrap reset: %d\n", ret);
+>>>> +			return ret;
+>>>> +		}
+>>>>  	}
+>>>>  
+>>>>  	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_BRIDGE)) {
+>>>> @@ -1549,9 +1629,17 @@ static int pwrap_probe(struct platform_device *pdev)
+>>>>  	if (ret)
+>>>>  		goto err_out1;
+>>>>  
+>>>> -	/* Enable internal dynamic clock */
+>>>> -	pwrap_writel(wrp, 1, PWRAP_DCM_EN);
+>>>> -	pwrap_writel(wrp, 0, PWRAP_DCM_DBC_PRD);
+>>>> +	/*
+>>>> +	 * add dcm capability check
+>>>> +	 */
+>>>> +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_DCM)) {
+>>>
+>>> the specific condition can be dropped since so far all devices the driver can support are owning PWRAP_CAP_DCM
+>> We did not support DCM for future chips.
+>> MT6797 is the last one.
+>> This why I want to add judgement here.
+> 
+> The series is only for MT6797 pwrap, so it's fine with only adding these
+> things the SoC actually relies on. 
+> 
+> PWRAP_CAP_DCM should not be added until a new SoC without dcm is really
+> introduced.
+> 
+
+I agree (and I think I said this already in a previous review).
+
+Regards,
+Matthias
+
+>>>
+>>>> +		if (wrp->master->type == PWRAP_MT6797)
+>>>> +			pwrap_writel(wrp, 3, PWRAP_DCM_EN);
+>>>
+>>> the setup for MT6797 can be moved into .init_soc_specific callback ?
+>>
+>> I think put it here is more generally.
+>>>
+>>>> +		else
+>>>> +			pwrap_writel(wrp, 1, PWRAP_DCM_EN);
+>>>> +
+>>>> +		pwrap_writel(wrp, 0, PWRAP_DCM_DBC_PRD);
+>>>> +	}
+>>>>  
+>>>>  	/*
+>>>>  	 * The PMIC could already be initialized by the bootloader.
+>>>> @@ -1580,6 +1668,12 @@ static int pwrap_probe(struct platform_device *pdev)
+>>>>  	pwrap_writel(wrp, wrp->master->wdt_src, PWRAP_WDT_SRC_EN);
+>>>>  	pwrap_writel(wrp, 0x1, PWRAP_TIMER_EN);
+>>>>  	pwrap_writel(wrp, wrp->master->int_en_all, PWRAP_INT_EN);
+>>>> +	/*
+>>>> +	 * We add INT1 interrupt to handle starvation and request exception
+>>>> +	 * If we support it, we should enable them here.
+>>>> +	 */
+>>>> +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_INT1_EN))
+>>>> +		pwrap_writel(wrp, wrp->master->int1_en_all, PWRAP_INT1_EN);
+>>>>  
+>>>
+>>> if there is no explicitly enabling on INT1, then ISR handling for INT1 is also unnecessary
+>>
+>> It's ok for me.
+>>>
+>>>>  	irq = platform_get_irq(pdev, 0);
+>>>>  	ret = devm_request_irq(wrp->dev, irq, pwrap_interrupt,
+>>>
+>>>
+>>>
+>>
+>>
+> 
+> 
