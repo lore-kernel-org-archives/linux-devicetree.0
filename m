@@ -1,104 +1,153 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 5/6] drm/vc4: Support the case where the DSI device is
- disabled
-Date: Fri, 4 May 2018 12:30:25 +0200
-Message-ID: <20180504103025.GK13459@ulmo>
-References: <20180503164009.14395-1-boris.brezillon@bootlin.com>
- <20180503164009.14395-6-boris.brezillon@bootlin.com>
+From: Amit Nischal <anischal@codeaurora.org>
+Subject: Re: [PATCH v6 3/3] clk: qcom: Add Global Clock controller (GCC)
+ driver for SDM845
+Date: Fri, 04 May 2018 16:15:12 +0530
+Message-ID: <a56ffa424689ff354a63642bf2998088@codeaurora.org>
+References: <1525105210-8689-1-git-send-email-anischal@codeaurora.org>
+ <1525105210-8689-4-git-send-email-anischal@codeaurora.org>
+ <152524580953.138124.2159165461856101134@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0740234064=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180503164009.14395-6-boris.brezillon@bootlin.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <152524580953.138124.2159165461856101134@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 2018-05-02 12:53, Stephen Boyd wrote:
+> Quoting Amit Nischal (2018-04-30 09:20:10)
+>> ---
+>>  .../devicetree/bindings/clock/qcom,gcc.txt         |    1 +
+>>  drivers/clk/qcom/Kconfig                           |   10 +-
+>>  drivers/clk/qcom/Makefile                          |    1 +
+>>  drivers/clk/qcom/gcc-sdm845.c                      | 3480 
+>> ++++++++++++++++++++
+>>  include/dt-bindings/clock/qcom,gcc-sdm845.h        |  239 ++
+> 
+> Do the split that Rob suggests please, given that you're resending. And
+> also include his reviewed-by tag.
 
---===============0740234064==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vk/v8fjDPiDepTtA"
-Content-Disposition: inline
+Thanks for the review. Sure I will split the dt-binding into
+separate patch in next series.
 
+> 
+>>  5 files changed, 3727 insertions(+), 4 deletions(-)
+>>  create mode 100644 drivers/clk/qcom/gcc-sdm845.c
+>>  create mode 100644 include/dt-bindings/clock/qcom,gcc-sdm845.h
+>> 
+>> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+>> index e42e1af..3298beb 100644
+>> --- a/drivers/clk/qcom/Kconfig
+>> +++ b/drivers/clk/qcom/Kconfig
+>> @@ -218,13 +218,15 @@ config MSM_MMCC_8996
+>>           Say Y if you want to support multimedia devices such as 
+>> display,
+>>           graphics, video encode/decode, camera, etc.
+>> 
+>> -config MSM_GCC_8998
+>> -       tristate "MSM8998 Global Clock Controller"
+>> +config SDM_GCC_845
+>> +       tristate "SDM845 Global Clock Controller"
+>> +       select QCOM_GDSC
+>>         depends on COMMON_CLK_QCOM
+>>         help
+>> -         Support for the global clock controller on msm8998 devices.
+>> +         Support for the global clock controller on Qualcomm 
+>> Technologies, Inc
+>> +         sdm845 devices.
+>>           Say Y if you want to use peripheral devices such as UART, 
+>> SPI,
+>> -         i2c, USB, UFS, SD/eMMC, PCIe, etc.
+>> +         I2C, USB, UFS, SDDC, PCIe, etc.
+> 
+> This is all wrong.
+> 
 
---vk/v8fjDPiDepTtA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My bad. I did by mistake. Will fix this in next series.
 
-On Thu, May 03, 2018 at 06:40:08PM +0200, Boris Brezillon wrote:
-> Having a device with a status property !=3D "okay" in the DT is a valid
-> use case, and we should not prevent the registration of the DRM device
-> when the DSI device connected to the DSI controller is disabled.
->=20
-> Consider the ENODEV return code as a valid result and do not expose the
-> DSI encoder/connector when it happens.
->=20
-> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> ---
->  drivers/gpu/drm/vc4/vc4_dsi.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.c
-> index 8aa897835118..db2f137f8b7b 100644
-> --- a/drivers/gpu/drm/vc4/vc4_dsi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_dsi.c
-> @@ -1606,8 +1606,18 @@ static int vc4_dsi_bind(struct device *dev, struct=
- device *master, void *data)
-> =20
->  	ret =3D drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
->  					  &panel, &dsi->bridge);
-> -	if (ret)
-> +	if (ret) {
-> +		/* If the bridge or panel pointed by dev->of_node is not
-> +		 * enabled, just return 0 here so that we don't prevent the DRM
-> +		 * dev from being registered. Of course that means the DSI
-> +		 * encoder won't be exposed, but that's not a problem since
-> +		 * nothing is connected to it.
-> +		 */
+>> 
+>>  config SPMI_PMIC_CLKDIV
+>>         tristate "SPMI PMIC clkdiv Support"
+>> diff --git a/drivers/clk/qcom/gcc-sdm845.c 
+>> b/drivers/clk/qcom/gcc-sdm845.c
+>> new file mode 100644
+>> index 0000000..6484cba
+>> --- /dev/null
+>> +++ b/drivers/clk/qcom/gcc-sdm845.c
+>> @@ -0,0 +1,3480 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+> [...]
+>> +                       .name = "gcc_disp_axi_clk",
+>> +                       .ops = &clk_branch2_ops,
+>> +               },
+>> +       },
+>> +};
+>> +
+>> +static struct clk_branch gcc_disp_gpll0_clk_src = {
+>> +       .halt_reg = 0x52004,
+>> +       .halt_check = BRANCH_HALT_DELAY,
+> 
+> What about this one? It's not a phy so I'm confused again why we're
+> unable to check the halt bit. To be clear(er), I don't see why we ever
+> want to have HALT_DELAY used. Hopefully we can remove that flag.
+> 
+> From what I recall, the flag is there for clks that don't toggle their
+> status bit at all, but that we know take a few cycles to ungate the
+> upstream clk. So we threw a delay into the code to make sure that when
+> clk_enable() returned, a driver wouldn't try to use hardware before the
+> clk was actually on. But these cases should pretty much never happen,
+> hence all the pushback against this flag.
+> 
 
-Also, nit: this isn't the correct style for block comments.
+For these "*gpll0_clk_src" and "*gpll0_div_clk" clocks, there is no halt
+bit to check the status and it is required to have delay for few cycles
+so that clock gets turned on before a client driver to use the hardware.
 
-Thierry
+>> +       .clkr = {
+>> +               .enable_reg = 0x52004,
+>> +               .enable_mask = BIT(18),
+>> +               .hw.init = &(struct clk_init_data){
+>> +                       .name = "gcc_disp_gpll0_clk_src",
+>> +                       .parent_names = (const char *[]){
+>> +                               "gpll0",
+>> +                       },
+>> +                       .num_parents = 1,
+> [...]
+>> +               .enable_reg = 0x7508c,
+>> +               .enable_mask = BIT(0),
+>> +               .hw.init = &(struct clk_init_data){
+>> +                       .name = "gcc_ufs_card_phy_aux_clk",
+>> +                       .parent_names = (const char *[]){
+>> +                               "gcc_ufs_card_phy_aux_clk_src",
+>> +                       },
+>> +                       .num_parents = 1,
+>> +                       .flags = CLK_SET_RATE_PARENT,
+>> +                       .ops = &clk_branch2_ops,
+>> +               },
+>> +       },
+>> +};
+>> +
+>> +static struct clk_branch gcc_ufs_card_rx_symbol_0_clk = {
+>> +       .halt_reg = 0x75018,
+>> +       .halt_check = BRANCH_HALT_DELAY,
+> 
+> There are still HALT_DELAY flags for UFS though? Why?
 
---vk/v8fjDPiDepTtA
-Content-Type: application/pgp-signature; name="signature.asc"
+For ufs_card tx/rx symbol clocks, we don't poll the status bit as
+per the recommendation from the HW team. We can change the halt_check
+type to newly implemented flag "BRANCH_HALT_SKIP". Please update us with
+your thoughts to change the flag to "BRANCH_HALT_SKIP".
 
------BEGIN PGP SIGNATURE-----
+> 
+> Also, are you going to send DFS support for the QUP clks? I would like
+> to see that code merged soon.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlrsNkAACgkQ3SOs138+
-s6F/HxAAnAJEZOvCziptXFtaIa7HO5boY0PU2N54ROPge0qXvK1ndu9dAN+hcDN5
-gCdPvBn8/CbrvHHJQMVX2YNWh+GRmq0v9/bluT9b9erHDNyAMDnuh0koNYFgUaAA
-JfXQY5s8hNLWEMeu1Ao625/NhtWTNde61oKKz1epeuxZAtLLK46eBMbeZ7Mco68r
-3osRB7z7tzQvCyxxwl1/7c6jAWLnDJ0sDFRfmJlkPsA7CTZX+Yte88FrVThU8hJ0
-KE7mSaiW+4cQwKmKvmFJFTGvUB38md4CshK+y00J0vs6JlO6SoSTC3pXzftXVS/g
-ls5WxaaPtJtMGf6z4wU8SmoJl1azT9KWGm/mbWO7UT/bGT2ey2MN5adSvfukJEv9
-7RMx9ps7LbUsx/+0JGNmlpsVplHjESauE2RYD/KaiCdkiHX9y7I7tp0N1fXCk4BB
-+kCm//KQ5q5ck1+MjKsFpHhzbLiLTAeoXxWVft+DcH9NsxSgTN9ncRUQPOLzIKzA
-xO3naKslrxDWipLa7iGIhKGow5+/aI9FXJrcpeOYnccXnz8z0Fm62HdJZ+BCweYU
-mtO6bIwFmnnAXtmW6U5m4f1FWHESR9EXXtN5i7zjcNQTRjFmbF+FWz8d9ZyPRuSn
-b349c+UBi6L8wdl2/NrMXSTc+jHjT2XY1LZlkr7cBOAAiQvYwu8=
-=CHgk
------END PGP SIGNATURE-----
-
---vk/v8fjDPiDepTtA--
-
---===============0740234064==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0740234064==--
+Taniya has sent the patches for DFS support for QUP clocks.
+https://patchwork.kernel.org/patch/10376951/
