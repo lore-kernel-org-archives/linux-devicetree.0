@@ -1,67 +1,104 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH] display: panel: Add KOE tx14d24vm1bpa display support
- (320x240)
-Date: Fri, 4 May 2018 12:28:42 +0200
-Message-ID: <20180504122842.33643142@jawa>
-References: <20180412143715.6828-1-lukma@denx.de>
-        <20180416192442.qnb53b6u3bsfet6y@rob-hp-laptop>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 5/6] drm/vc4: Support the case where the DSI device is
+ disabled
+Date: Fri, 4 May 2018 12:30:25 +0200
+Message-ID: <20180504103025.GK13459@ulmo>
+References: <20180503164009.14395-1-boris.brezillon@bootlin.com>
+ <20180503164009.14395-6-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/vW.pxVg+QsLWJxUUfG=jmkD"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180416192442.qnb53b6u3bsfet6y@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0740234064=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180503164009.14395-6-boris.brezillon@bootlin.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/vW.pxVg+QsLWJxUUfG=jmkD
-Content-Type: text/plain; charset=US-ASCII
+
+--===============0740234064==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vk/v8fjDPiDepTtA"
+Content-Disposition: inline
+
+
+--vk/v8fjDPiDepTtA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Rob,
-
-> On Thu, Apr 12, 2018 at 04:37:15PM +0200, Lukasz Majewski wrote:
-> > This commit adds support for KOE's 5.7" display.
-> >=20
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > ---
-> >  .../bindings/display/panel/koe,tx14d24vm1bpa.txt   | 42
-> > ++++++++++++++++++++++
-> > drivers/gpu/drm/panel/panel-simple.c               | 26
-> > ++++++++++++++ 2 files changed, 68 insertions(+) create mode 100644
-> > Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt =
-=20
+On Thu, May 03, 2018 at 06:40:08PM +0200, Boris Brezillon wrote:
+> Having a device with a status property !=3D "okay" in the DT is a valid
+> use case, and we should not prevent the registration of the DRM device
+> when the DSI device connected to the DSI controller is disabled.
 >=20
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Consider the ENODEV return code as a valid result and do not expose the
+> DSI encoder/connector when it happens.
 >=20
+> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> ---
+>  drivers/gpu/drm/vc4/vc4_dsi.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.c
+> index 8aa897835118..db2f137f8b7b 100644
+> --- a/drivers/gpu/drm/vc4/vc4_dsi.c
+> +++ b/drivers/gpu/drm/vc4/vc4_dsi.c
+> @@ -1606,8 +1606,18 @@ static int vc4_dsi_bind(struct device *dev, struct=
+ device *master, void *data)
+> =20
+>  	ret =3D drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
+>  					  &panel, &dsi->bridge);
+> -	if (ret)
+> +	if (ret) {
+> +		/* If the bridge or panel pointed by dev->of_node is not
+> +		 * enabled, just return 0 here so that we don't prevent the DRM
+> +		 * dev from being registered. Of course that means the DSI
+> +		 * encoder won't be exposed, but that's not a problem since
+> +		 * nothing is connected to it.
+> +		 */
 
-Gentle ping on this - as I don't know if this patch been applied.
+Also, nit: this isn't the correct style for block comments.
 
-Best regards,
+Thierry
 
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-
---Sig_/vW.pxVg+QsLWJxUUfG=jmkD
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--vk/v8fjDPiDepTtA
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlrsNdoACgkQAR8vZIA0
-zr2C1Af+KPlXskVTiaT8QMTA/1HLzsFY7FXlA+zWBgOpgV3QZBB69A+WCCZQplzl
-dRs43NMKuig9Lq4SOOKoSL+loF9g0i/saWVgo2oKro6Bitlzc/KDl0W800HnwSVm
-manbykIv1EchHXPdNFGiRF9yEfvVHWm46gtE80QCRofmKAWfW6cPiQokob/q9qhL
-qWxKKmbraH/5W9LcEUucOZzUIsa4m7hVjqO8PL1k2Oeu0JhhIqB/fdkoDiFv6K1n
-Jq5ZcYb9UvkcxFGeqXWPsPgyvm5xZyevuXDI2FTjPMOet4m7HfocajAGK2Mr8Vdo
-iLtcmpjv7cwyttMjyIzw1yV9Erg6xQ==
-=ZOoF
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlrsNkAACgkQ3SOs138+
+s6F/HxAAnAJEZOvCziptXFtaIa7HO5boY0PU2N54ROPge0qXvK1ndu9dAN+hcDN5
+gCdPvBn8/CbrvHHJQMVX2YNWh+GRmq0v9/bluT9b9erHDNyAMDnuh0koNYFgUaAA
+JfXQY5s8hNLWEMeu1Ao625/NhtWTNde61oKKz1epeuxZAtLLK46eBMbeZ7Mco68r
+3osRB7z7tzQvCyxxwl1/7c6jAWLnDJ0sDFRfmJlkPsA7CTZX+Yte88FrVThU8hJ0
+KE7mSaiW+4cQwKmKvmFJFTGvUB38md4CshK+y00J0vs6JlO6SoSTC3pXzftXVS/g
+ls5WxaaPtJtMGf6z4wU8SmoJl1azT9KWGm/mbWO7UT/bGT2ey2MN5adSvfukJEv9
+7RMx9ps7LbUsx/+0JGNmlpsVplHjESauE2RYD/KaiCdkiHX9y7I7tp0N1fXCk4BB
++kCm//KQ5q5ck1+MjKsFpHhzbLiLTAeoXxWVft+DcH9NsxSgTN9ncRUQPOLzIKzA
+xO3naKslrxDWipLa7iGIhKGow5+/aI9FXJrcpeOYnccXnz8z0Fm62HdJZ+BCweYU
+mtO6bIwFmnnAXtmW6U5m4f1FWHESR9EXXtN5i7zjcNQTRjFmbF+FWz8d9ZyPRuSn
+b349c+UBi6L8wdl2/NrMXSTc+jHjT2XY1LZlkr7cBOAAiQvYwu8=
+=CHgk
 -----END PGP SIGNATURE-----
 
---Sig_/vW.pxVg+QsLWJxUUfG=jmkD--
+--vk/v8fjDPiDepTtA--
+
+--===============0740234064==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0740234064==--
