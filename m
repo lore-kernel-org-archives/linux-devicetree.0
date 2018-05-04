@@ -1,394 +1,115 @@
-From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v7 2/2] PCI: mediatek: Using chained IRQ to setup IRQ handle
-Date: Fri, 4 May 2018 13:47:33 +0800
-Message-ID: <1525412853-24367-3-git-send-email-honghui.zhang@mediatek.com>
-References: <1525412853-24367-1-git-send-email-honghui.zhang@mediatek.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v7 3/9] PCI: endpoint: functions/pci-epf-test: Add second
+ entry
+Date: Fri, 4 May 2018 11:28:58 +0530
+Message-ID: <aeb80d31-c79e-80a9-5e67-9bf1f277f39a@ti.com>
+References: <cover.1524577064.git.gustavo.pimentel@synopsys.com>
+ <c6cfd167838ae8e226dee0820983efe918fa4e1f.1524577064.git.gustavo.pimentel@synopsys.com>
+ <20180426165605.GA6370@e107981-ln.cambridge.arm.com>
+ <b65caf2e-b002-f591-6215-ff2241b2dfb8@ti.com>
+ <20180501115417.GD19391@e107981-ln.cambridge.arm.com>
+ <5d625d04-38fe-7d5a-67fc-5ea92039474c@ti.com>
+ <20180501142607.GA21911@e107981-ln.cambridge.arm.com>
+ <bfaebf3c-2175-f4b2-89c5-336ff9396ed0@synopsys.com>
+ <20180502165144.GB4871@e107981-ln.cambridge.arm.com>
+ <cf2772d5-26c0-b0e3-1e5b-ace91c1ea105@ti.com>
+ <20180503141636.GA23270@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525412853-24367-1-git-send-email-honghui.zhang@mediatek.com>
+In-Reply-To: <20180503141636.GA23270@e107981-ln.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
-Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang@mediatek.com>
+Hi Lorenzo,
 
-Using irq_chip solution to setup IRQs in order to consist
-with IRQ framework.
+On Thursday 03 May 2018 07:46 PM, Lorenzo Pieralisi wrote:
+> On Thu, May 03, 2018 at 12:03:15PM +0530, Kishon Vijay Abraham I wrote:
+> 
+> [...]
+> 
+>>>> Since the linkup notifier and BAR index (where auxiliary registers are
+>>>> located) may be configurable and is something platform dependent,
+>>>> perhaps the configuration of this variables should be done by module
+>>>> parameter and not by configfs, leaving this configuration
+>>>> responsibility in charge of each platform.
+>>>
+>>> They are platform dependent because they depend on the EP controller.
+>>> That's why I said that those are EP controller parameters. I do not
+>>> think they are module parameters either - they should be part of HW
+>>> description in firmware.
+>>
+>> The problem is because pci-epf-test cannot be described in HW. pci-epf-test is
+>> also not automatically bound to the EP controller but is bound by the user like
+>> below
+>> ln -s functions/pci_epf_test/func1 controllers/51000000.pcie_ep/
+>>
+>> So given that user anyways has to bind the epf device to the controller, based
+>> on the platform the user can use a different configfs entry like below
+>> ln -s functions/pci_epf_test_dw/func1 controllers/51000000.pcie_ep/ or
+>> ln -s functions/pci_epf_test_k2g/func1 controllers/21800000.pcie-ep/
+>>
+>> If the epf can be described in dt, then something like below can be done
+>> pcie1_ep: pcie_ep@51000000 {
+>> 	compatible = "ti,dra7-pcie-ep";
+>> 	interrupts = <0 232 0x4>;
+>> 	num-lanes = <1>;
+>> 	num-ib-windows = <4>;
+>> 	num-ob-windows = <16>;
+>> 	phys = <&pcie1_phy>;
+>> 	phy-names = "pcie-phy0";
+>> 	pci_epf_test: pci_epf_test@0 {
+>> 		name = "pci_epf_test_dw";
+>> 		<other properties>;
+>> 	}
+>> };
+>>
+>> With this pci-dra7xx.c driver should create pci_epf_device using
+>> pci_epf_create("pci_epf_test_dw");
+>>
+>> Then the driver_data corresponding to "pci_epf_test_dw" will select linkup
+>> notifier or BAR index etc.
+> 
+> Those two properties are properties of the EP controller (it is not 100%
+> clear to me how the test BAR register is defined), is this correct ?
 
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-Acked-by: Ryder Lee <ryder.lee@mediatek.com>
----
- drivers/pci/host/pcie-mediatek.c | 206 ++++++++++++++++++++++-----------------
- 1 file changed, 115 insertions(+), 91 deletions(-)
+Right, these properties are specific to a platform. In some of the platforms
+like K2G (BAR0 is reserved i.e it is used to map PCIe app registers and cannot
+be used by pci_epf_test. In such cases we should use a BAR other than BAR0).
+> 
+> If yes, given that those properties are not useful before an EPF is
+> bound to an EPC, can't they be retrieved at bind time from the EPC
+> controller data (that we can add through DT bindings) ?
 
-diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-index c3dc549..dabf1086 100644
---- a/drivers/pci/host/pcie-mediatek.c
-+++ b/drivers/pci/host/pcie-mediatek.c
-@@ -11,8 +11,10 @@
- #include <linux/delay.h>
- #include <linux/iopoll.h>
- #include <linux/irq.h>
-+#include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
-+#include <linux/msi.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
- #include <linux/of_platform.h>
-@@ -130,14 +132,12 @@ struct mtk_pcie_port;
- /**
-  * struct mtk_pcie_soc - differentiate between host generations
-  * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-- * @has_msi: whether this host supports MSI interrupts or not
-  * @ops: pointer to configuration access functions
-  * @startup: pointer to controller setting functions
-  * @setup_irq: pointer to initialize IRQ functions
-  */
- struct mtk_pcie_soc {
- 	bool need_fix_class_id;
--	bool has_msi;
- 	struct pci_ops *ops;
- 	int (*startup)(struct mtk_pcie_port *port);
- 	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-@@ -161,7 +161,9 @@ struct mtk_pcie_soc {
-  * @lane: lane count
-  * @slot: port slot
-  * @irq_domain: legacy INTx IRQ domain
-+ * @inner_domain: inner IRQ domain
-  * @msi_domain: MSI IRQ domain
-+ * @lock: protect the msi_irq_in_use bitmap
-  * @msi_irq_in_use: bit map for assigned MSI IRQ
-  */
- struct mtk_pcie_port {
-@@ -179,7 +181,9 @@ struct mtk_pcie_port {
- 	u32 lane;
- 	u32 slot;
- 	struct irq_domain *irq_domain;
-+	struct irq_domain *inner_domain;
- 	struct irq_domain *msi_domain;
-+	struct mutex lock;
- 	DECLARE_BITMAP(msi_irq_in_use, MTK_MSI_IRQS_NUM);
- };
- 
-@@ -446,103 +450,130 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
- 	return 0;
- }
- 
--static int mtk_pcie_msi_alloc(struct mtk_pcie_port *port)
-+static void mtk_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- {
--	int msi;
-+	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(data);
-+	phys_addr_t addr;
- 
--	msi = find_first_zero_bit(port->msi_irq_in_use, MTK_MSI_IRQS_NUM);
--	if (msi < MTK_MSI_IRQS_NUM)
--		set_bit(msi, port->msi_irq_in_use);
--	else
--		return -ENOSPC;
-+	/* MT2712/MT7622 only support 32-bit MSI addresses */
-+	addr = virt_to_phys(port->base + PCIE_MSI_VECTOR);
-+	msg->address_hi = 0;
-+	msg->address_lo = lower_32_bits(addr);
-+
-+	msg->data = data->hwirq;
- 
--	return msi;
-+	dev_dbg(port->pcie->dev, "msi#%d address_hi %#x address_lo %#x\n",
-+		(int)data->hwirq, msg->address_hi, msg->address_lo);
- }
- 
--static void mtk_pcie_msi_free(struct mtk_pcie_port *port, unsigned long hwirq)
-+static int mtk_msi_set_affinity(struct irq_data *irq_data,
-+				const struct cpumask *mask, bool force)
- {
--	clear_bit(hwirq, port->msi_irq_in_use);
-+	 return -EINVAL;
- }
- 
--static int mtk_pcie_msi_setup_irq(struct msi_controller *chip,
--				  struct pci_dev *pdev, struct msi_desc *desc)
-+static void mtk_msi_ack_irq(struct irq_data *data)
- {
--	struct mtk_pcie_port *port;
--	struct msi_msg msg;
--	unsigned int irq;
--	int hwirq;
--	phys_addr_t msg_addr;
-+	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(data);
-+	u32 hwirq = data->hwirq;
- 
--	port = mtk_pcie_find_port(pdev->bus, pdev->devfn);
--	if (!port)
--		return -EINVAL;
-+	writel(1 << hwirq, port->base + PCIE_IMSI_STATUS);
-+}
- 
--	hwirq = mtk_pcie_msi_alloc(port);
--	if (hwirq < 0)
--		return hwirq;
-+static struct irq_chip mtk_msi_bottom_irq_chip = {
-+	.name			= "MTK MSI",
-+	.irq_compose_msi_msg	= mtk_compose_msi_msg,
-+	.irq_set_affinity	= mtk_msi_set_affinity,
-+	.irq_ack		= mtk_msi_ack_irq,
-+};
- 
--	irq = irq_create_mapping(port->msi_domain, hwirq);
--	if (!irq) {
--		mtk_pcie_msi_free(port, hwirq);
--		return -EINVAL;
--	}
-+static int mtk_pcie_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+				     unsigned int nr_irqs, void *args)
-+{
-+	struct mtk_pcie_port *port = domain->host_data;
-+	unsigned long bit;
- 
--	chip->dev = &pdev->dev;
-+	WARN_ON(nr_irqs != 1);
-+	mutex_lock(&port->lock);
- 
--	irq_set_msi_desc(irq, desc);
-+	bit = find_first_zero_bit(port->msi_irq_in_use, MTK_MSI_IRQS_NUM);
-+	if (bit >= MTK_MSI_IRQS_NUM) {
-+		mutex_unlock(&port->lock);
-+		return -ENOSPC;
-+	}
- 
--	/* MT2712/MT7622 only support 32-bit MSI addresses */
--	msg_addr = virt_to_phys(port->base + PCIE_MSI_VECTOR);
--	msg.address_hi = 0;
--	msg.address_lo = lower_32_bits(msg_addr);
--	msg.data = hwirq;
-+	__set_bit(bit, port->msi_irq_in_use);
-+
-+	mutex_unlock(&port->lock);
- 
--	pci_write_msi_msg(irq, &msg);
-+	irq_domain_set_info(domain, virq, bit, &mtk_msi_bottom_irq_chip,
-+			    domain->host_data, handle_edge_irq,
-+			    NULL, NULL);
- 
- 	return 0;
- }
- 
--static void mtk_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
-+static void mtk_pcie_irq_domain_free(struct irq_domain *domain,
-+				     unsigned int virq, unsigned int nr_irqs)
- {
--	struct pci_dev *pdev = to_pci_dev(chip->dev);
--	struct irq_data *d = irq_get_irq_data(irq);
--	irq_hw_number_t hwirq = irqd_to_hwirq(d);
--	struct mtk_pcie_port *port;
-+	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-+	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(d);
- 
--	port = mtk_pcie_find_port(pdev->bus, pdev->devfn);
--	if (!port)
--		return;
-+	mutex_lock(&port->lock);
-+
-+	if (!test_bit(d->hwirq, port->msi_irq_in_use))
-+		dev_err(port->pcie->dev, "trying to free unused MSI#%lu\n",
-+			d->hwirq);
-+	else
-+		__clear_bit(d->hwirq, port->msi_irq_in_use);
-+
-+	mutex_unlock(&port->lock);
- 
--	irq_dispose_mapping(irq);
--	mtk_pcie_msi_free(port, hwirq);
-+	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
- }
- 
--static struct msi_controller mtk_pcie_msi_chip = {
--	.setup_irq = mtk_pcie_msi_setup_irq,
--	.teardown_irq = mtk_msi_teardown_irq,
-+static const struct irq_domain_ops msi_domain_ops = {
-+	.alloc	= mtk_pcie_irq_domain_alloc,
-+	.free	= mtk_pcie_irq_domain_free,
- };
- 
- static struct irq_chip mtk_msi_irq_chip = {
--	.name = "MTK PCIe MSI",
--	.irq_enable = pci_msi_unmask_irq,
--	.irq_disable = pci_msi_mask_irq,
--	.irq_mask = pci_msi_mask_irq,
--	.irq_unmask = pci_msi_unmask_irq,
-+	.name		= "MTK PCIe MSI",
-+	.irq_ack	= irq_chip_ack_parent,
-+	.irq_mask	= pci_msi_mask_irq,
-+	.irq_unmask	= pci_msi_unmask_irq,
- };
- 
--static int mtk_pcie_msi_map(struct irq_domain *domain, unsigned int irq,
--			    irq_hw_number_t hwirq)
-+static struct msi_domain_info mtk_msi_domain_info = {
-+	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-+		   MSI_FLAG_PCI_MSIX),
-+	.chip	= &mtk_msi_irq_chip,
-+};
-+
-+static int mtk_pcie_allocate_msi_domains(struct mtk_pcie_port *port)
- {
--	irq_set_chip_and_handler(irq, &mtk_msi_irq_chip, handle_simple_irq);
--	irq_set_chip_data(irq, domain->host_data);
-+	struct fwnode_handle *fwnode = of_node_to_fwnode(port->pcie->dev->of_node);
-+
-+	mutex_init(&port->lock);
-+
-+	port->inner_domain = irq_domain_create_linear(fwnode, MTK_MSI_IRQS_NUM,
-+						      &msi_domain_ops, port);
-+	if (!port->inner_domain) {
-+		dev_err(port->pcie->dev, "failed to create IRQ domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	port->msi_domain = pci_msi_create_irq_domain(fwnode, &mtk_msi_domain_info,
-+						     port->inner_domain);
-+	if (!port->msi_domain) {
-+		dev_err(port->pcie->dev, "failed to create MSI domain\n");
-+		irq_domain_remove(port->inner_domain);
-+		return -ENOMEM;
-+	}
- 
- 	return 0;
- }
- 
--static const struct irq_domain_ops msi_domain_ops = {
--	.map = mtk_pcie_msi_map,
--};
--
- static void mtk_pcie_enable_msi(struct mtk_pcie_port *port)
- {
- 	u32 val;
-@@ -575,6 +606,7 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
- {
- 	struct device *dev = port->pcie->dev;
- 	struct device_node *pcie_intc_node;
-+	int ret;
- 
- 	/* Setup INTx */
- 	pcie_intc_node = of_get_next_child(node, NULL);
-@@ -591,27 +623,28 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
- 	}
- 
- 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
--		port->msi_domain = irq_domain_add_linear(node, MTK_MSI_IRQS_NUM,
--							 &msi_domain_ops,
--							 &mtk_pcie_msi_chip);
--		if (!port->msi_domain) {
--			dev_err(dev, "failed to create MSI IRQ domain\n");
--			return -ENODEV;
--		}
-+		ret = mtk_pcie_allocate_msi_domains(port);
-+		if (ret)
-+			return ret;
-+
- 		mtk_pcie_enable_msi(port);
- 	}
- 
- 	return 0;
- }
- 
--static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
-+static void mtk_pcie_intr_handler(struct irq_desc *desc)
- {
--	struct mtk_pcie_port *port = (struct mtk_pcie_port *)data;
-+	struct mtk_pcie_port *port = irq_desc_get_handler_data(desc);
-+	struct irq_chip *irqchip = irq_desc_get_chip(desc);
- 	unsigned long status;
- 	u32 virq;
- 	u32 bit = INTX_SHIFT;
- 
--	while ((status = readl(port->base + PCIE_INT_STATUS)) & INTX_MASK) {
-+	chained_irq_enter(irqchip, desc);
-+
-+	status = readl(port->base + PCIE_INT_STATUS);
-+	if (status & INTX_MASK) {
- 		for_each_set_bit_from(bit, &status, PCI_NUM_INTX + INTX_SHIFT) {
- 			/* Clear the INTx */
- 			writel(1 << bit, port->base + PCIE_INT_STATUS);
-@@ -622,14 +655,12 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
- 	}
- 
- 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
--		while ((status = readl(port->base + PCIE_INT_STATUS)) & MSI_STATUS) {
-+		if (status & MSI_STATUS){
- 			unsigned long imsi_status;
- 
- 			while ((imsi_status = readl(port->base + PCIE_IMSI_STATUS))) {
- 				for_each_set_bit(bit, &imsi_status, MTK_MSI_IRQS_NUM) {
--					/* Clear the MSI */
--					writel(1 << bit, port->base + PCIE_IMSI_STATUS);
--					virq = irq_find_mapping(port->msi_domain, bit);
-+					virq = irq_find_mapping(port->inner_domain, bit);
- 					generic_handle_irq(virq);
- 				}
- 			}
-@@ -638,7 +669,9 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
- 		}
- 	}
- 
--	return IRQ_HANDLED;
-+	chained_irq_exit(irqchip, desc);
-+
-+	return;
- }
- 
- static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
-@@ -649,20 +682,15 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
- 	struct platform_device *pdev = to_platform_device(dev);
- 	int err, irq;
- 
--	irq = platform_get_irq(pdev, port->slot);
--	err = devm_request_irq(dev, irq, mtk_pcie_intr_handler,
--			       IRQF_SHARED, "mtk-pcie", port);
--	if (err) {
--		dev_err(dev, "unable to request IRQ %d\n", irq);
--		return err;
--	}
--
- 	err = mtk_pcie_init_irq_domain(port, node);
- 	if (err) {
- 		dev_err(dev, "failed to init PCIe IRQ domain\n");
- 		return err;
- 	}
- 
-+	irq = platform_get_irq(pdev, port->slot);
-+	irq_set_chained_handler_and_data(irq, mtk_pcie_intr_handler, port);
-+
- 	return 0;
- }
- 
-@@ -1096,8 +1124,6 @@ static int mtk_pcie_register_host(struct pci_host_bridge *host)
- 	host->map_irq = of_irq_parse_and_map_pci;
- 	host->swizzle_irq = pci_common_swizzle;
- 	host->sysdata = pcie;
--	if (IS_ENABLED(CONFIG_PCI_MSI) && pcie->soc->has_msi)
--		host->msi = &mtk_pcie_msi_chip;
- 
- 	err = pci_scan_root_bus_bridge(host);
- 	if (err < 0)
-@@ -1159,7 +1185,6 @@ static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
- };
- 
- static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
--	.has_msi = true,
- 	.ops = &mtk_pcie_ops_v2,
- 	.startup = mtk_pcie_startup_port_v2,
- 	.setup_irq = mtk_pcie_setup_irq,
-@@ -1167,7 +1192,6 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
- 
- static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
- 	.need_fix_class_id = true,
--	.has_msi = true,
- 	.ops = &mtk_pcie_ops_v2,
- 	.startup = mtk_pcie_startup_port_v2,
- 	.setup_irq = mtk_pcie_setup_irq,
--- 
-2.6.4
+hmm..
+
+We can have quirk in pci_epc, something like below
+
+struct pci_epc {
+	.
+	.
+	unsigned int quirks;
+	.
+	.
+};
+
+#define EPC_QUIRKS_NO_LINKUP_NOTIFIER	BIT(0)
+#define EPC_QUIRKS_BAR0_RESERVED	BIT(1)
+#define EPC_QUIRKS_BAR1_RESERVED	BIT(2)
+#define EPC_QUIRKS_BAR2_RESERVED	BIT(3)
+#define EPC_QUIRKS_BAR3_RESERVED	BIT(4)
+#define EPC_QUIRKS_BAR4_RESERVED	BIT(5)
+#define EPC_QUIRKS_BAR5_RESERVED	BIT(6)
+
+The controller driver can set the appropriate quirks
+epc->quirks |= EPC_QUIRKS_NO_LINKUP_NOTIFIER | EPC_QUIRKS_BAR0_RESERVED;
+
+Then pci-epf-test driver can checks the quirks to see the supported EPC features.
+
+Does something like above looks okay to you?
+
+Thanks
+Kishon
