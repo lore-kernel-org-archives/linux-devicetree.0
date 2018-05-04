@@ -1,17 +1,16 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 5/6] drm/vc4: Support the case where the DSI device
- is disabled
-Date: Fri, 4 May 2018 15:49:06 +0200
-Message-ID: <20180504154906.2527d92b@bbrezillon>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 5/6] drm/vc4: Support the case where the DSI device is
+ disabled
+Date: Fri, 4 May 2018 15:56:51 +0200
+Message-ID: <20180504135651.GY13459@ulmo>
 References: <20180503164009.14395-1-boris.brezillon@bootlin.com>
  <20180503164009.14395-6-boris.brezillon@bootlin.com>
  <20180504102833.GJ13459@ulmo> <20180504140525.152d8d8e@bbrezillon>
- <20180504132915.GX13459@ulmo>
+ <20180504132915.GX13459@ulmo> <20180504154906.2527d92b@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============1227163806=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180504132915.GX13459@ulmo>
+In-Reply-To: <20180504154906.2527d92b@bbrezillon>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -21,66 +20,135 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCA0IE1heSAyMDE4IDE1OjI5OjE1ICswMjAwClRoaWVycnkgUmVkaW5nIDx0aGllcnJ5
-LnJlZGluZ0BnbWFpbC5jb20+IHdyb3RlOgoKPiBPbiBGcmksIE1heSAwNCwgMjAxOCBhdCAwMjow
-NToyNVBNICswMjAwLCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6Cj4gPiBPbiBGcmksIDQgTWF5IDIw
-MTggMTI6Mjg6MzMgKzAyMDAKPiA+IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFp
-bC5jb20+IHdyb3RlOgo+ID4gICAKPiA+ID4gT24gVGh1LCBNYXkgMDMsIDIwMTggYXQgMDY6NDA6
-MDhQTSArMDIwMCwgQm9yaXMgQnJlemlsbG9uIHdyb3RlOiAgCj4gPiA+ID4gSGF2aW5nIGEgZGV2
-aWNlIHdpdGggYSBzdGF0dXMgcHJvcGVydHkgIT0gIm9rYXkiIGluIHRoZSBEVCBpcyBhIHZhbGlk
-Cj4gPiA+ID4gdXNlIGNhc2UsIGFuZCB3ZSBzaG91bGQgbm90IHByZXZlbnQgdGhlIHJlZ2lzdHJh
-dGlvbiBvZiB0aGUgRFJNIGRldmljZQo+ID4gPiA+IHdoZW4gdGhlIERTSSBkZXZpY2UgY29ubmVj
-dGVkIHRvIHRoZSBEU0kgY29udHJvbGxlciBpcyBkaXNhYmxlZC4KPiA+ID4gPiAKPiA+ID4gPiBD
-b25zaWRlciB0aGUgRU5PREVWIHJldHVybiBjb2RlIGFzIGEgdmFsaWQgcmVzdWx0IGFuZCBkbyBu
-b3QgZXhwb3NlIHRoZQo+ID4gPiA+IERTSSBlbmNvZGVyL2Nvbm5lY3RvciB3aGVuIGl0IGhhcHBl
-bnMuCj4gPiA+ID4gCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jp
-cy5icmV6aWxsb25AYm9vdGxpbi5jb20+Cj4gPiA+ID4gLS0tCj4gPiA+ID4gIGRyaXZlcnMvZ3B1
-L2RybS92YzQvdmM0X2RzaS5jIHwgMTUgKysrKysrKysrKysrKy0tCj4gPiA+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+ID4gPiA+IAo+ID4gPiA+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kc2kuYyBiL2RyaXZlcnMvZ3B1
-L2RybS92YzQvdmM0X2RzaS5jCj4gPiA+ID4gaW5kZXggOGFhODk3ODM1MTE4Li5kYjJmMTM3Zjhi
-N2IgMTAwNjQ0Cj4gPiA+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfZHNpLmMKPiA+
-ID4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kc2kuYwo+ID4gPiA+IEBAIC0xNjA2
-LDggKzE2MDYsMTggQEAgc3RhdGljIGludCB2YzRfZHNpX2JpbmQoc3RydWN0IGRldmljZSAqZGV2
-LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCj4gPiA+ID4gIAo+ID4gPiA+ICAJ
-cmV0ID0gZHJtX29mX2ZpbmRfcGFuZWxfb3JfYnJpZGdlKGRldi0+b2Zfbm9kZSwgMCwgMCwKPiA+
-ID4gPiAgCQkJCQkgICZwYW5lbCwgJmRzaS0+YnJpZGdlKTsKPiA+ID4gPiAtCWlmIChyZXQpCj4g
-PiA+ID4gKwlpZiAocmV0KSB7Cj4gPiA+ID4gKwkJLyogSWYgdGhlIGJyaWRnZSBvciBwYW5lbCBw
-b2ludGVkIGJ5IGRldi0+b2Zfbm9kZSBpcyBub3QKPiA+ID4gPiArCQkgKiBlbmFibGVkLCBqdXN0
-IHJldHVybiAwIGhlcmUgc28gdGhhdCB3ZSBkb24ndCBwcmV2ZW50IHRoZSBEUk0KPiA+ID4gPiAr
-CQkgKiBkZXYgZnJvbSBiZWluZyByZWdpc3RlcmVkLiBPZiBjb3Vyc2UgdGhhdCBtZWFucyB0aGUg
-RFNJCj4gPiA+ID4gKwkJICogZW5jb2RlciB3b24ndCBiZSBleHBvc2VkLCBidXQgdGhhdCdzIG5v
-dCBhIHByb2JsZW0gc2luY2UKPiA+ID4gPiArCQkgKiBub3RoaW5nIGlzIGNvbm5lY3RlZCB0byBp
-dC4KPiA+ID4gPiArCQkgKi8KPiA+ID4gPiArCQlpZiAocmV0ID09IC1FTk9ERVYpCj4gPiA+ID4g
-KwkJCXJldHVybiAwOwo+ID4gPiA+ICsKPiA+ID4gPiAgCQlyZXR1cm4gcmV0Owo+ID4gPiA+ICsJ
-fQo+ID4gPiA+ICAKPiA+ID4gPiAgCWlmIChwYW5lbCkgewo+ID4gPiA+ICAJCWRzaS0+YnJpZGdl
-ID0gZGV2bV9kcm1fcGFuZWxfYnJpZGdlX2FkZChkZXYsIHBhbmVsLAo+ID4gPiA+IEBAIC0xNjUy
-LDcgKzE2NjIsOCBAQCBzdGF0aWMgdm9pZCB2YzRfZHNpX3VuYmluZChzdHJ1Y3QgZGV2aWNlICpk
-ZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKPiA+ID4gPiAgCXN0cnVjdCB2YzRfZGV2ICp2YzQg
-PSB0b192YzRfZGV2KGRybSk7Cj4gPiA+ID4gIAlzdHJ1Y3QgdmM0X2RzaSAqZHNpID0gZGV2X2dl
-dF9kcnZkYXRhKGRldik7Cj4gPiA+ID4gIAo+ID4gPiA+IC0JcG1fcnVudGltZV9kaXNhYmxlKGRl
-dik7Cj4gPiA+ID4gKwlpZiAoZHNpLT5icmlkZ2UpCj4gPiA+ID4gKwkJcG1fcnVudGltZV9kaXNh
-YmxlKGRldik7ICAgIAo+ID4gPiAKPiA+ID4gSXMgdGhpcyBzYWZlPyBUaGlzIHVzZXMgY29tcG9u
-ZW50L21hc3Rlciwgc28gZHNpLT5icmlkZ2UgaXMgZ29pbmcgdG8KPiA+ID4gcmVtYWluIHZhbGlk
-IHVudGlsIHRoZSBkcml2ZXIncyAtPnJlbW92ZSgpIGlzIGNhbGxlZC4gU28gdGVjaG5pY2FsbHkg
-eW91Cj4gPiA+IGNvdWxkIGhhdmUgYSBzaXR1YXRpb24gd2hlcmUgZHJtX29mX2ZpbmRfcGFuZWxf
-b3JfYnJpZGdlKCkgcmV0dXJuZWQgc29tZQo+ID4gPiBlcnJvciBjb2RlIHRoYXQgcmVtYWlucyBz
-dG9yZWQgaW4gZHNpLT5icmlkZ2UgYW5kIGNhdXNlIHRoZSBhYm92ZQo+ID4gPiBjb25kaXRpb24g
-dG8gYmUgaW5jb3JyZWN0bHkgdHJ1ZS4gIAo+ID4gCj4gPiBObywgYmVjYXVzZSBvZl9kcm1fZmlu
-ZF9icmlkZ2UoKSAod2hpY2ggaXMgY2FsbGVkIGZyb20KPiA+IGRybV9vZl9maW5kX3BhbmVsX29y
-X2JyaWRnZSgpIHJldHVybnMgZWl0aGVyIE5VTEwgb3IgYSB2YWxpZCBicmlkZ2UKPiA+IHBvaW50
-ZXIpLCBzbyBkc2ktPmJyaWRnZSBlaXRoZXIgcG9pbnRzIHRvIGEgdmFsaWQgYnJpZGdlIG9iamVj
-dCBvciBpcwo+ID4gTlVMTC4gQW0gSSBtaXNzaW5nIHNvbWV0aGluZz8gIAo+IAo+IFRoZSByZXR1
-cm4gdmFsdWUgb2YgZGV2bV9kcm1fcGFuZWxfYnJpZGdlX2FkZCgpIGlzIGFsc28gYXNzaWduZWQg
-dG8KPiBkc2ktPmJyaWRnZSBsYXRlciBvbiAoaW4gdGhlICJpZiAocGFuZWwpIiBjb25kaXRpb25h
-bCkuCgpCdXQgdGhlbiB3ZSByZXR1cm4gYW4gZXJyb3IgY29kZSBpZiBJU19FUlIoZHNpLT5icmlk
-Z2UpIFsxXSwgd2hpY2gKc2hvdWxkIHByZXZlbnQgdGhlIHVuYmluZCBmdW5jdGlvbiBmcm9tIGJl
-aW5nIGNhbGxlZCwgcmlnaHQ/CgpbMV1odHRwczovL2VsaXhpci5ib290bGluLmNvbS9saW51eC92
-NC4xNy1yYzMvc291cmNlL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2RzaS5jI0wxNjEwCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+--===============1227163806==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="1fZJyN7nFm/tosmV"
+Content-Disposition: inline
+
+
+--1fZJyN7nFm/tosmV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, May 04, 2018 at 03:49:06PM +0200, Boris Brezillon wrote:
+> On Fri, 4 May 2018 15:29:15 +0200
+> Thierry Reding <thierry.reding@gmail.com> wrote:
+>=20
+> > On Fri, May 04, 2018 at 02:05:25PM +0200, Boris Brezillon wrote:
+> > > On Fri, 4 May 2018 12:28:33 +0200
+> > > Thierry Reding <thierry.reding@gmail.com> wrote:
+> > >  =20
+> > > > On Thu, May 03, 2018 at 06:40:08PM +0200, Boris Brezillon wrote: =
+=20
+> > > > > Having a device with a status property !=3D "okay" in the DT is a=
+ valid
+> > > > > use case, and we should not prevent the registration of the DRM d=
+evice
+> > > > > when the DSI device connected to the DSI controller is disabled.
+> > > > >=20
+> > > > > Consider the ENODEV return code as a valid result and do not expo=
+se the
+> > > > > DSI encoder/connector when it happens.
+> > > > >=20
+> > > > > Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> > > > > ---
+> > > > >  drivers/gpu/drm/vc4/vc4_dsi.c | 15 +++++++++++++--
+> > > > >  1 file changed, 13 insertions(+), 2 deletions(-)
+> > > > >=20
+> > > > > diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/=
+vc4_dsi.c
+> > > > > index 8aa897835118..db2f137f8b7b 100644
+> > > > > --- a/drivers/gpu/drm/vc4/vc4_dsi.c
+> > > > > +++ b/drivers/gpu/drm/vc4/vc4_dsi.c
+> > > > > @@ -1606,8 +1606,18 @@ static int vc4_dsi_bind(struct device *dev=
+, struct device *master, void *data)
+> > > > > =20
+> > > > >  	ret =3D drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
+> > > > >  					  &panel, &dsi->bridge);
+> > > > > -	if (ret)
+> > > > > +	if (ret) {
+> > > > > +		/* If the bridge or panel pointed by dev->of_node is not
+> > > > > +		 * enabled, just return 0 here so that we don't prevent the DRM
+> > > > > +		 * dev from being registered. Of course that means the DSI
+> > > > > +		 * encoder won't be exposed, but that's not a problem since
+> > > > > +		 * nothing is connected to it.
+> > > > > +		 */
+> > > > > +		if (ret =3D=3D -ENODEV)
+> > > > > +			return 0;
+> > > > > +
+> > > > >  		return ret;
+> > > > > +	}
+> > > > > =20
+> > > > >  	if (panel) {
+> > > > >  		dsi->bridge =3D devm_drm_panel_bridge_add(dev, panel,
+> > > > > @@ -1652,7 +1662,8 @@ static void vc4_dsi_unbind(struct device *d=
+ev, struct device *master,
+> > > > >  	struct vc4_dev *vc4 =3D to_vc4_dev(drm);
+> > > > >  	struct vc4_dsi *dsi =3D dev_get_drvdata(dev);
+> > > > > =20
+> > > > > -	pm_runtime_disable(dev);
+> > > > > +	if (dsi->bridge)
+> > > > > +		pm_runtime_disable(dev);   =20
+> > > >=20
+> > > > Is this safe? This uses component/master, so dsi->bridge is going to
+> > > > remain valid until the driver's ->remove() is called. So technicall=
+y you
+> > > > could have a situation where drm_of_find_panel_or_bridge() returned=
+ some
+> > > > error code that remains stored in dsi->bridge and cause the above
+> > > > condition to be incorrectly true. =20
+> > >=20
+> > > No, because of_drm_find_bridge() (which is called from
+> > > drm_of_find_panel_or_bridge() returns either NULL or a valid bridge
+> > > pointer), so dsi->bridge either points to a valid bridge object or is
+> > > NULL. Am I missing something? =20
+> >=20
+> > The return value of devm_drm_panel_bridge_add() is also assigned to
+> > dsi->bridge later on (in the "if (panel)" conditional).
+>=20
+> But then we return an error code if IS_ERR(dsi->bridge) [1], which
+> should prevent the unbind function from being called, right?
+
+Right, that should work. Seems safe, then.
+
+Thierry
+
+--1fZJyN7nFm/tosmV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlrsZqAACgkQ3SOs138+
+s6H9zBAAkdtw+P991CC3fRmrq6jFxLN6Bcz7BRbALmsIto18G9tVothhspIAYenl
+4mpI3JRYlbdgkpTqsPikO9Xr2aOqGLQPF1PaK89fgrtuFLPn1NL0DX12+7IaCCWb
+OuDeu7bdImgF0yFFPj8xqY+0zfJvI6FgnaD/qiE7eNqAAAppBRDy2KlMha+BDDmW
+dPgiwV3R/R4Op3G5NaNyaMmMqo1gLEtocWN5LED2qfVqfCK+pMqVVf6VDNQdxPQM
+vPDUuPi5ZL+CCr/+ZnrDqkd5bDJvmk7ar5q7/QEA+Y/sgAQ0SYv2s5mZ4tmvvAa1
+Qw+lhAvXl70wZOUuN9LtGrMAgV8gipokQrqR6DSOUwoWUhio3qYzaD+F3NOVovfQ
+cd7h4Eq8TCgyaza/AssRr5iSrt6A7D9QAXvsaoHsSrn2JdNOStIANZsGY39p/VPI
+ZuE3/3W0NIZvqsJS3NKspZPl7z0eEHarqajd6v683tzWPRLiCEwkpD5Sn934bsg1
+KaFNGAGjTSCBeqIl3YTEPczRaOrdFV8VGyKlIweLYgsQRJ8iBXu494idYcVNdfiE
+9Zt4srPumGYYOFcrR/u8PhHjSP2Ow5GhNCt+0c4WB34MZpP7XLU3qwGUNH0Azwxl
+UjuTCCtafkiw7sQIaqwRfkBYwB2vt0AQtv/GIHXi1WWxKdzq/Tk=
+=8bBD
+-----END PGP SIGNATURE-----
+
+--1fZJyN7nFm/tosmV--
+
+--===============1227163806==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1227163806==--
