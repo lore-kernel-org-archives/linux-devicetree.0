@@ -1,153 +1,124 @@
-From: Amit Nischal <anischal@codeaurora.org>
-Subject: Re: [PATCH v6 3/3] clk: qcom: Add Global Clock controller (GCC)
- driver for SDM845
-Date: Fri, 04 May 2018 16:15:12 +0530
-Message-ID: <a56ffa424689ff354a63642bf2998088@codeaurora.org>
-References: <1525105210-8689-1-git-send-email-anischal@codeaurora.org>
- <1525105210-8689-4-git-send-email-anischal@codeaurora.org>
- <152524580953.138124.2159165461856101134@swboyd.mtv.corp.google.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v7 3/9] PCI: endpoint: functions/pci-epf-test: Add second
+ entry
+Date: Fri, 4 May 2018 12:18:51 +0100
+Message-ID: <20180504111843.GA5930@e107981-ln.cambridge.arm.com>
+References: <20180426165605.GA6370@e107981-ln.cambridge.arm.com>
+ <b65caf2e-b002-f591-6215-ff2241b2dfb8@ti.com>
+ <20180501115417.GD19391@e107981-ln.cambridge.arm.com>
+ <5d625d04-38fe-7d5a-67fc-5ea92039474c@ti.com>
+ <20180501142607.GA21911@e107981-ln.cambridge.arm.com>
+ <bfaebf3c-2175-f4b2-89c5-336ff9396ed0@synopsys.com>
+ <20180502165144.GB4871@e107981-ln.cambridge.arm.com>
+ <cf2772d5-26c0-b0e3-1e5b-ace91c1ea105@ti.com>
+ <20180503141636.GA23270@e107981-ln.cambridge.arm.com>
+ <aeb80d31-c79e-80a9-5e67-9bf1f277f39a@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152524580953.138124.2159165461856101134@swboyd.mtv.corp.google.com>
+Content-Disposition: inline
+In-Reply-To: <aeb80d31-c79e-80a9-5e67-9bf1f277f39a@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-05-02 12:53, Stephen Boyd wrote:
-> Quoting Amit Nischal (2018-04-30 09:20:10)
->> ---
->>  .../devicetree/bindings/clock/qcom,gcc.txt         |    1 +
->>  drivers/clk/qcom/Kconfig                           |   10 +-
->>  drivers/clk/qcom/Makefile                          |    1 +
->>  drivers/clk/qcom/gcc-sdm845.c                      | 3480 
->> ++++++++++++++++++++
->>  include/dt-bindings/clock/qcom,gcc-sdm845.h        |  239 ++
+On Fri, May 04, 2018 at 11:28:58AM +0530, Kishon Vijay Abraham I wrote:
+> Hi Lorenzo,
 > 
-> Do the split that Rob suggests please, given that you're resending. And
-> also include his reviewed-by tag.
-
-Thanks for the review. Sure I will split the dt-binding into
-separate patch in next series.
-
+> On Thursday 03 May 2018 07:46 PM, Lorenzo Pieralisi wrote:
+> > On Thu, May 03, 2018 at 12:03:15PM +0530, Kishon Vijay Abraham I wrote:
+> > 
+> > [...]
+> > 
+> >>>> Since the linkup notifier and BAR index (where auxiliary registers are
+> >>>> located) may be configurable and is something platform dependent,
+> >>>> perhaps the configuration of this variables should be done by module
+> >>>> parameter and not by configfs, leaving this configuration
+> >>>> responsibility in charge of each platform.
+> >>>
+> >>> They are platform dependent because they depend on the EP controller.
+> >>> That's why I said that those are EP controller parameters. I do not
+> >>> think they are module parameters either - they should be part of HW
+> >>> description in firmware.
+> >>
+> >> The problem is because pci-epf-test cannot be described in HW. pci-epf-test is
+> >> also not automatically bound to the EP controller but is bound by the user like
+> >> below
+> >> ln -s functions/pci_epf_test/func1 controllers/51000000.pcie_ep/
+> >>
+> >> So given that user anyways has to bind the epf device to the controller, based
+> >> on the platform the user can use a different configfs entry like below
+> >> ln -s functions/pci_epf_test_dw/func1 controllers/51000000.pcie_ep/ or
+> >> ln -s functions/pci_epf_test_k2g/func1 controllers/21800000.pcie-ep/
+> >>
+> >> If the epf can be described in dt, then something like below can be done
+> >> pcie1_ep: pcie_ep@51000000 {
+> >> 	compatible = "ti,dra7-pcie-ep";
+> >> 	interrupts = <0 232 0x4>;
+> >> 	num-lanes = <1>;
+> >> 	num-ib-windows = <4>;
+> >> 	num-ob-windows = <16>;
+> >> 	phys = <&pcie1_phy>;
+> >> 	phy-names = "pcie-phy0";
+> >> 	pci_epf_test: pci_epf_test@0 {
+> >> 		name = "pci_epf_test_dw";
+> >> 		<other properties>;
+> >> 	}
+> >> };
+> >>
+> >> With this pci-dra7xx.c driver should create pci_epf_device using
+> >> pci_epf_create("pci_epf_test_dw");
+> >>
+> >> Then the driver_data corresponding to "pci_epf_test_dw" will select linkup
+> >> notifier or BAR index etc.
+> > 
+> > Those two properties are properties of the EP controller (it is not 100%
+> > clear to me how the test BAR register is defined), is this correct ?
 > 
->>  5 files changed, 3727 insertions(+), 4 deletions(-)
->>  create mode 100644 drivers/clk/qcom/gcc-sdm845.c
->>  create mode 100644 include/dt-bindings/clock/qcom,gcc-sdm845.h
->> 
->> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
->> index e42e1af..3298beb 100644
->> --- a/drivers/clk/qcom/Kconfig
->> +++ b/drivers/clk/qcom/Kconfig
->> @@ -218,13 +218,15 @@ config MSM_MMCC_8996
->>           Say Y if you want to support multimedia devices such as 
->> display,
->>           graphics, video encode/decode, camera, etc.
->> 
->> -config MSM_GCC_8998
->> -       tristate "MSM8998 Global Clock Controller"
->> +config SDM_GCC_845
->> +       tristate "SDM845 Global Clock Controller"
->> +       select QCOM_GDSC
->>         depends on COMMON_CLK_QCOM
->>         help
->> -         Support for the global clock controller on msm8998 devices.
->> +         Support for the global clock controller on Qualcomm 
->> Technologies, Inc
->> +         sdm845 devices.
->>           Say Y if you want to use peripheral devices such as UART, 
->> SPI,
->> -         i2c, USB, UFS, SD/eMMC, PCIe, etc.
->> +         I2C, USB, UFS, SDDC, PCIe, etc.
-> 
-> This is all wrong.
-> 
+> Right, these properties are specific to a platform. In some of the platforms
+> like K2G (BAR0 is reserved i.e it is used to map PCIe app registers and cannot
+> be used by pci_epf_test. In such cases we should use a BAR other than BAR0).
 
-My bad. I did by mistake. Will fix this in next series.
+I do not think those properties are pci_epf_test specific, that's the
+whole point I am making. Those are EPC controller features.
 
->> 
->>  config SPMI_PMIC_CLKDIV
->>         tristate "SPMI PMIC clkdiv Support"
->> diff --git a/drivers/clk/qcom/gcc-sdm845.c 
->> b/drivers/clk/qcom/gcc-sdm845.c
->> new file mode 100644
->> index 0000000..6484cba
->> --- /dev/null
->> +++ b/drivers/clk/qcom/gcc-sdm845.c
->> @@ -0,0 +1,3480 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
->> + */
->> +
-> [...]
->> +                       .name = "gcc_disp_axi_clk",
->> +                       .ops = &clk_branch2_ops,
->> +               },
->> +       },
->> +};
->> +
->> +static struct clk_branch gcc_disp_gpll0_clk_src = {
->> +       .halt_reg = 0x52004,
->> +       .halt_check = BRANCH_HALT_DELAY,
+> > If yes, given that those properties are not useful before an EPF is
+> > bound to an EPC, can't they be retrieved at bind time from the EPC
+> > controller data (that we can add through DT bindings) ?
 > 
-> What about this one? It's not a phy so I'm confused again why we're
-> unable to check the halt bit. To be clear(er), I don't see why we ever
-> want to have HALT_DELAY used. Hopefully we can remove that flag.
+> hmm..
 > 
-> From what I recall, the flag is there for clks that don't toggle their
-> status bit at all, but that we know take a few cycles to ungate the
-> upstream clk. So we threw a delay into the code to make sure that when
-> clk_enable() returned, a driver wouldn't try to use hardware before the
-> clk was actually on. But these cases should pretty much never happen,
-> hence all the pushback against this flag.
+> We can have quirk in pci_epc, something like below
 > 
-
-For these "*gpll0_clk_src" and "*gpll0_div_clk" clocks, there is no halt
-bit to check the status and it is required to have delay for few cycles
-so that clock gets turned on before a client driver to use the hardware.
-
->> +       .clkr = {
->> +               .enable_reg = 0x52004,
->> +               .enable_mask = BIT(18),
->> +               .hw.init = &(struct clk_init_data){
->> +                       .name = "gcc_disp_gpll0_clk_src",
->> +                       .parent_names = (const char *[]){
->> +                               "gpll0",
->> +                       },
->> +                       .num_parents = 1,
-> [...]
->> +               .enable_reg = 0x7508c,
->> +               .enable_mask = BIT(0),
->> +               .hw.init = &(struct clk_init_data){
->> +                       .name = "gcc_ufs_card_phy_aux_clk",
->> +                       .parent_names = (const char *[]){
->> +                               "gcc_ufs_card_phy_aux_clk_src",
->> +                       },
->> +                       .num_parents = 1,
->> +                       .flags = CLK_SET_RATE_PARENT,
->> +                       .ops = &clk_branch2_ops,
->> +               },
->> +       },
->> +};
->> +
->> +static struct clk_branch gcc_ufs_card_rx_symbol_0_clk = {
->> +       .halt_reg = 0x75018,
->> +       .halt_check = BRANCH_HALT_DELAY,
+> struct pci_epc {
+> 	.
+> 	.
+> 	unsigned int quirks;
+> 	.
+> 	.
+> };
 > 
-> There are still HALT_DELAY flags for UFS though? Why?
-
-For ufs_card tx/rx symbol clocks, we don't poll the status bit as
-per the recommendation from the HW team. We can change the halt_check
-type to newly implemented flag "BRANCH_HALT_SKIP". Please update us with
-your thoughts to change the flag to "BRANCH_HALT_SKIP".
-
+> #define EPC_QUIRKS_NO_LINKUP_NOTIFIER	BIT(0)
+> #define EPC_QUIRKS_BAR0_RESERVED	BIT(1)
+> #define EPC_QUIRKS_BAR1_RESERVED	BIT(2)
+> #define EPC_QUIRKS_BAR2_RESERVED	BIT(3)
+> #define EPC_QUIRKS_BAR3_RESERVED	BIT(4)
+> #define EPC_QUIRKS_BAR4_RESERVED	BIT(5)
+> #define EPC_QUIRKS_BAR5_RESERVED	BIT(6)
 > 
-> Also, are you going to send DFS support for the QUP clks? I would like
-> to see that code merged soon.
+> The controller driver can set the appropriate quirks
+> epc->quirks |= EPC_QUIRKS_NO_LINKUP_NOTIFIER | EPC_QUIRKS_BAR0_RESERVED;
+> 
+> Then pci-epf-test driver can checks the quirks to see the supported EPC features.
+> 
+> Does something like above looks okay to you?
 
-Taniya has sent the patches for DFS support for QUP clocks.
-https://patchwork.kernel.org/patch/10376951/
+Well, it is better than the driver_data approach, I would not call them
+quirks but features and for the BARs you should define a mask it does
+not make sense to enumerate them. It is probably a good idea to leave
+room for additional "features" so please choose the bits placement
+wisely.
+
+Thanks,
+Lorenzo
