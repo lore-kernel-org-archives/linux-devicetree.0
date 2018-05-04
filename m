@@ -1,160 +1,70 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 09/10] ARM: dts: sun7i-a20: Add Video
- Engine and reserved memory nodes
-Date: Fri, 04 May 2018 09:49:16 +0200
-Message-ID: <82057e2f734137a3902d9313c228b01ceb345ee7.camel@bootlin.com>
-References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
-	 <20180419154536.17846-5-paul.kocialkowski@bootlin.com>
-	 <20180420073908.nkcbsdxibnzkqski@flea>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77980: add CAN-FD support
+Date: Fri, 4 May 2018 09:52:38 +0200
+Message-ID: <CAMuHMdWFLC=kyHKVuq4KByO=KFf2eHvXu0_g2HqGoZT7gKkNDA@mail.gmail.com>
+References: <c184f961-2f98-532f-ed02-6f3751256d9c@cogentembedded.com>
+ <f07c00b3-228c-e0d2-f7fe-38b8e9f25a4d@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-Ou7PoX3TY+MPVqw7G5RG"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBWFBWDLQKGQEJSRHOXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180420073908.nkcbsdxibnzkqski@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <f07c00b3-228c-e0d2-f7fe-38b8e9f25a4d@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sergei,
 
---=-Ou7PoX3TY+MPVqw7G5RG
-Content-Type: text/plain; charset="UTF-8"
+On Fri, Apr 27, 2018 at 9:12 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Define the generic R8A77980 part of the CAN-FD device node.
+>
+> Based on the original (and large) patch by Vladimir Barinov.
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Hi,
+Thanks for your patch!
 
-On Fri, 2018-04-20 at 09:39 +0200, Maxime Ripard wrote:
-> On Thu, Apr 19, 2018 at 05:45:35PM +0200, Paul Kocialkowski wrote:
-> > This adds nodes for the Video Engine and the associated reserved
-> > memory
-> > for the Allwinner A20. Up to 96 MiB of memory are dedicated to the
-> > VPU.
-> > 
-> > The VPU can only map the first 256 MiB of DRAM, so the reserved
-> > memory
-> > pool has to be located in that area. Following Allwinner's decision
-> > in
-> > downstream software, the last 96 MiB of the first 256 MiB of RAM are
-> > reserved for this purpose.
-> > 
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/sun7i-a20.dtsi | 31
-> > +++++++++++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi
-> > b/arch/arm/boot/dts/sun7i-a20.dtsi
-> > index bd0cd3204273..cb6d82065dcf 100644
-> > --- a/arch/arm/boot/dts/sun7i-a20.dtsi
-> > +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-> > @@ -163,6 +163,20 @@
-> >  		reg = <0x40000000 0x80000000>;
-> >  	};
-> >  
-> > +	reserved-memory {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		ranges;
-> > +
-> > +		/* Address must be kept in the lower 256 MiBs of
-> > DRAM for VE. */
-> > +		ve_memory: cma@4a000000 {
-> > +			compatible = "shared-dma-pool";
-> > +			reg = <0x4a000000 0x6000000>;
-> > +			no-map;
-> 
-> I'm not sure why no-map is needed.
+> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+=
+> @@ -170,6 +177,30 @@
+>                         status = "disabled";
+>                 };
+>
+> +               canfd: can@e66c0000 {
+> +                       compatible = "renesas,r8a77980-canfd",
+> +                                    "renesas,rcar-gen3-canfd";
+> +                       reg = <0 0xe66c0000 0 0x8000>;
+> +                       interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
+> +                                    <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&cpg CPG_MOD 914>,
+> +                                <&cpg CPG_CORE R8A77980_CLK_CANFD>,
+> +                                <&can_clk>;
+> +                       clock-names = "fck", "canfd", "can_clk";
+> +                       assigned-clocks = <&cpg CPG_CORE R8A77980_CLK_CANFD>;
+> +                       assigned-clock-rates = <40000000>;
+> +                       power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
 
-In fact, having no-map here would lead to reserving the area as cache-
-coherent instead of contiguous and thus prevented dmabuf support.
-Replacing it by "resuable" allows proper CMA reservation.
+You forgot the resets property.
 
-> And I guess we could use alloc-ranges to make sure the region is in
-> the proper memory range, instead of hardcoding it.
+Gr{oetje,eeting}s,
 
-As far as I could understand from the documentation, "alloc-ranges" is
-used for dynamic allocation while only "reg" is used for static
-allocation. We are currently going with static allocation and thus
-reserve the whole 96 MiB. Is using dynamic allocation instead desirable
-here?
-
-> > +			linux,cma-default;
-> > +		};
-> > +	};
-> > +
-> >  	timer {
-> >  		compatible = "arm,armv7-timer";
-> >  		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
-> > IRQ_TYPE_LEVEL_LOW)>,
-> > @@ -451,6 +465,23 @@
-> >  			};
-> >  		};
-> >  
-> > +		ve: video-engine@1c0e000 {
-> > +			compatible = "allwinner,sun4i-a10-video-
-> > engine";
-> 
-> We should have an A20-specific compatible here, at least, so that we
-> can deal with any quirk we might find down the road.
-
-Yes that's a very good point.
-
-> > +			reg = <0x01c0e000 0x1000>;
-> > +			memory-region = <&ve_memory>;
-> 
-> Since you made the CMA region the default one, you don't need to tie
-> it to that device in particular (and you can drop it being mandatory
-> from your binding as well).
-
-What if another driver (or the system) claims memory from that zone and
-that the reserved memory ends up not being available for the VPU
-anymore?
-
-Acccording to the reserved-memory documentation, the reusable property
-(that we need for dmabuf) puts a limitation that the device driver
-owning the region must be able to reclaim it back.
-
-How does that work out if the CMA region is not tied to a driver in
-particular?
-
-> > +
-> > +			clocks = <&ccu CLK_AHB_VE>, <&ccu CLK_VE>,
-> > +				 <&ccu CLK_DRAM_VE>;
-> > +			clock-names = "ahb", "mod", "ram";
-> > +
-> > +			assigned-clocks = <&ccu CLK_VE>;
-> > +			assigned-clock-rates = <320000000>;
-> 
-> This should be set from within the driver. If it's something that you
-> absolutely needed for the device to operate, you have no guarantee
-> that the clock rate won't change at any point in time after the device
-> probe, so that's not a proper solution.
-> 
-> And if it's not needed and can be adjusted depending on the
-> framerate/codec/resolution, then it shouldn't be in the DT either.
-
-Yes, that makes sense.
-
-> Don't you also need to map the SRAM on the A20?
-
-That's a good point, there is currently no syscon handle for A20 (and
-also A13). Maybe SRAM is muxed to the VE by default so it "just works"? 
-
-I'll investigate on this side, also keeping in mind that the actual
-solution is to use the SRAM controller driver (but that won't make it to
-v3).
-
-Cheers and thanks for the review!
+                        Geert
 
 -- 
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
---=-Ou7PoX3TY+MPVqw7G5RG--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
