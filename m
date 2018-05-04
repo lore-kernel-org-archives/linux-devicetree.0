@@ -1,106 +1,134 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 6/6] drm/panel: rpi-touchscreen: Set status to "fail"
- when ->probe() fails
-Date: Fri, 4 May 2018 10:06:53 +0200
-Message-ID: <20180504100653.6ee70802@bbrezillon>
-References: <20180503164009.14395-1-boris.brezillon@bootlin.com>
- <20180503164009.14395-7-boris.brezillon@bootlin.com>
- <CAL_JsqJMarPW6sdcF1ZFCEr6wGyPgi2yhYMCxgypUYYwN7ayfQ@mail.gmail.com>
+From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: Re: [PATCH v5 2/2] dt/bindings: Add bindings for Layerscape external
+ irqs
+Date: Fri, 4 May 2018 10:07:36 +0200
+Message-ID: <0bb4533d-c749-d8ff-e1f2-4b08eb724713@prevas.dk>
+References: <20180125150230.7234-1-rasmus.villemoes@prevas.dk>
+ <20180223210901.23480-1-rasmus.villemoes@prevas.dk>
+ <20180223210901.23480-3-rasmus.villemoes@prevas.dk>
+ <20180302194935.yq3xw4nxyrxuonz5@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqJMarPW6sdcF1ZFCEr6wGyPgi2yhYMCxgypUYYwN7ayfQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180302194935.yq3xw4nxyrxuonz5@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Andy Tang <andy.tang@nxp.com>, Alexander Stein <alexander.stein@systec-electronic.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gVGh1LCAzIE1heSAyMDE4IDEyOjEyOjM5IC0wNTAwClJvYiBIZXJyaW5nIDxy
-b2JoK2R0QGtlcm5lbC5vcmc+IHdyb3RlOgoKPiBPbiBUaHUsIE1heSAzLCAyMDE4IGF0IDExOjQw
-IEFNLCBCb3JpcyBCcmV6aWxsb24KPiA8Ym9yaXMuYnJlemlsbG9uQGJvb3RsaW4uY29tPiB3cm90
-ZToKPiA+IFRoZSBkZXZpY2UgbWlnaHQgYmUgZGVzY3JpYmVkIGluIHRoZSBkZXZpY2UgdHJlZSBi
-dXQgbm90IGNvbm5lY3RlZCB0bwo+ID4gdGhlIEkyQyBidXMuIFVwZGF0ZSB0aGUgc3RhdHVzIHBy
-b3BlcnR5IHNvIHRoYXQgdGhlIERSTSBwYW5lbCBsb2dpYwo+ID4gcmV0dXJucyAtRU5PREVWIHdo
-ZW4gc29tZW9uZSB0cmllcyB0byBnZXQgdGhlIHBhbmVsIGF0dGFjaGVkIHRvIHRoaXMKPiA+IERU
-IG5vZGUuCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6
-aWxsb25AYm9vdGxpbi5jb20+Cj4gPiAtLS0KPiA+ICAuLi4vZ3B1L2RybS9wYW5lbC9wYW5lbC1y
-YXNwYmVycnlwaS10b3VjaHNjcmVlbi5jICB8IDM1ICsrKysrKysrKysrKysrKysrKysrKysKPiA+
-ICAxIGZpbGUgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKQo+ID4KPiA+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtcmFzcGJlcnJ5cGktdG91Y2hzY3JlZW4uYyBiL2Ry
-aXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1yYXNwYmVycnlwaS10b3VjaHNjcmVlbi5jCj4gPiBp
-bmRleCAyYzljOTcyMjczNGYuLmI4ZmNiMWFjZWY3NSAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9wYW5lbC9wYW5lbC1yYXNwYmVycnlwaS10b3VjaHNjcmVlbi5jCj4gPiArKysgYi9k
-cml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtcmFzcGJlcnJ5cGktdG91Y2hzY3JlZW4uYwo+ID4g
-QEAgLTM1OCw2ICszNTgsMzkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fcGFuZWxfZnVuY3Mg
-cnBpX3RvdWNoc2NyZWVuX2Z1bmNzID0gewo+ID4gICAgICAgICAuZ2V0X21vZGVzID0gcnBpX3Rv
-dWNoc2NyZWVuX2dldF9tb2RlcywKPiA+ICB9Owo+ID4KPiA+ICtzdGF0aWMgdm9pZCBycGlfdG91
-Y2hzY3JlZW5fc2V0X3N0YXR1c19mYWlsKHN0cnVjdCBpMmNfY2xpZW50ICppMmMpCj4gPiArewo+
-ID4gKyAgICAgICBzdHJ1Y3QgcHJvcGVydHkgKm5ld3Byb3A7Cj4gPiArCj4gPiArICAgICAgIG5l
-d3Byb3AgPSBremFsbG9jKHNpemVvZigqbmV3cHJvcCksIEdGUF9LRVJORUwpOwo+ID4gKyAgICAg
-ICBpZiAoIW5ld3Byb3ApCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuOwo+ID4gKwo+ID4gKyAg
-ICAgICBuZXdwcm9wLT5uYW1lID0ga3N0cmR1cCgic3RhdHVzIiwgR0ZQX0tFUk5FTCk7Cj4gPiAr
-ICAgICAgIGlmICghbmV3cHJvcC0+bmFtZSkKPiA+ICsgICAgICAgICAgICAgICBnb3RvIGVycjsK
-PiA+ICsKPiA+ICsgICAgICAgbmV3cHJvcC0+dmFsdWUgPSBrc3RyZHVwKCJmYWlsIiwgR0ZQX0tF
-Uk5FTCk7Cj4gPiArICAgICAgIGlmICghbmV3cHJvcC0+dmFsdWUpCj4gPiArICAgICAgICAgICAg
-ICAgZ290byBlcnI7Cj4gPiArCj4gPiArICAgICAgIG5ld3Byb3AtPmxlbmd0aCA9IHNpemVvZigi
-ZmFpbCIpOwo+ID4gKwo+ID4gKyAgICAgICBpZiAob2ZfdXBkYXRlX3Byb3BlcnR5KGkyYy0+ZGV2
-Lm9mX25vZGUsIG5ld3Byb3ApKQo+ID4gKyAgICAgICAgICAgICAgIGdvdG8gZXJyOwo+ID4gKyAg
-Cj4gCj4gQXMgSSBtZW50aW9uZWQgb24gaXJjLCBjYW4geW91IG1ha2UgdGhpcyBhIGNvbW1vbiBE
-VCBmdW5jdGlvbi4KClllcCwgd2lsbCBtb3ZlIHRoYXQgdG8gZHJpdmVycy9vZi9iYXNlLmMgYW5k
-IG1ha2UgaXQgZ2VuZXJpYy4KCj4gCj4gSSdtIG5vdCBzdXJlIGlmIGl0IG1hdHRlcnMgdGhhdCB3
-ZSBzZXQgc3RhdHVzIHRvIGZhaWwgdnMuIGRpc2FibGVkLiBJCj4gc29tZXdoYXQgcHJlZmVyIHRo
-ZSBsYXR0ZXIgYXMgd2UgYWxyZWFkeSBoYXZlIG90aGVyIGNhc2VzIGFuZCBJJ2QKPiByYXRoZXIg
-dGhlIGFwaSBub3QgcGFzcyBhIHN0cmluZyBpbi4gSSBjYW4ndCB0aGluayBvZiBhbnkgcmVhc29u
-IHRvCj4gZGlzdGluZ3Vpc2ggdGhlIGRpZmZlcmVuY2UgYmV0d2VlbiBmYWlsIGFuZCBkaXNhYmxl
-ZC4KCldlbGwsIEkganVzdCByZWFkIHRoZSBlUEFQUiBkb2MgcG9pbnRlZCBieSBUaGllcnJ5IFsx
-XSAoc2VjdGlvbiAyLjMuNCksCmFuZCAiZmFpbCIgc2VlbWVkIGxpa2UgYSBnb29kIG1hdGNoIGZv
-ciB3aGF0IHdlIGFyZSB0cnlpbmcgdG8gZXhwcmVzcwpoZXJlOiAid2UgZmFpbGVkIHRvIGNvbW11
-bmljYXRlIHdpdGggdGhlIGRldmljZSBpbiB0aGUgcHJvYmUgZnVuY3Rpb24KYW5kIHdhbnQgdG8g
-bWFyayBpdCB1bnVzYWJsZSIsIHdoaWNoIGlzIGEgYml0IGRpZmZlcmVudCBmcm9tICJ0aGUKZGV2
-aWNlIHdhcyBleHBsaWNpdGx5IGRpc2FibGVkIGJ5IHRoZSB1c2VyIi4KCkFueXdheSwgaWYgeW91
-IHRoaW5rICJkaXNhYmxlZCIgaXMgbW9yZSBhcHByb3ByaWF0ZSwgSSdsbCB1c2UgdGhhdC4KCj4g
-Cj4gPiArICAgICAgIC8qIFdlIGludGVudGlvbmFsbHkgbGVhayB0aGUgbWVtb3J5IHdlIGFsbG9j
-YXRlIGhlcmUsIGJlY2F1c2UgdGhlIG5ldwo+ID4gKyAgICAgICAgKiBPRiBwcm9wZXJ0eSBtaWdo
-dCBsaXZlIGxvbmdlciB0aGFuIHRoZSB1bmRlcmx5aW5nIGRldiwgc28gbm8gd2F5Cj4gPiArICAg
-ICAgICAqIHdlIGNhbiB1c2UgZGV2bV9remFsbG9jKCkgaGVyZS4KPiA+ICsgICAgICAgICovCj4g
-PiArICAgICAgIHJldHVybjsKPiA+ICsKPiA+ICtlcnI6Cj4gPiArICAgICAgIGtmcmVlKG5ld3By
-b3AtPnZhbHVlKTsKPiA+ICsgICAgICAga2ZyZWUobmV3cHJvcC0+bmFtZSk7Cj4gPiArICAgICAg
-IGtmcmVlKG5ld3Byb3ApOwo+ID4gK30KPiA+ICsKPiA+ICBzdGF0aWMgaW50IHJwaV90b3VjaHNj
-cmVlbl9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqaTJjLAo+ID4gICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgY29uc3Qgc3RydWN0IGkyY19kZXZpY2VfaWQgKmlkKQo+ID4gIHsKPiA+
-IEBAIC0zODIsNiArNDE1LDcgQEAgc3RhdGljIGludCBycGlfdG91Y2hzY3JlZW5fcHJvYmUoc3Ry
-dWN0IGkyY19jbGllbnQgKmkyYywKPiA+Cj4gPiAgICAgICAgIHZlciA9IHJwaV90b3VjaHNjcmVl
-bl9pMmNfcmVhZCh0cywgUkVHX0lEKTsKPiA+ICAgICAgICAgaWYgKHZlciA8IDApIHsKPiA+ICsg
-ICAgICAgICAgICAgICBycGlfdG91Y2hzY3JlZW5fc2V0X3N0YXR1c19mYWlsKGkyYyk7ICAKPiAK
-PiBJJ3ZlIHRob3VnaHQgc29tZSBtb3JlIGFib3V0IHRoaXMgYW5kIEkgc3RpbGwgdGhpbmsgdGhp
-cyBzaG91bGQgYmUKPiBoYW5kbGVkIGluIHRoZSBkcml2ZXIgY29yZSBvciBpMmMgY29yZS4KPiAK
-PiBUaGUgcmVhc29uIGlzIHNpbXBsZS4gSSB0aGluayB0aGUgc3RhdGUgb2YgdGhlIHN5c3RlbSBz
-aG91bGQgYmUgdGhlCj4gc2FtZSBhZnRlciB0aGlzIGFzIGlmIHlvdSBib290ZWQgd2l0aCAnc3Rh
-dHVzID0gImRpc2FibGVkIicgZm9yIHRoaXMKPiBub2RlLiBBbmQgdGhhdCBtZWFucyB0aGUgZGV2
-aWNlIHNob3VsZCBiZSByZW1vdmVkIGNvbXBsZXRlbHkgYmVjYXVzZQo+IHdlIGRvbid0IGNyZWF0
-ZSBzdHJ1Y3QgZGV2aWNlJ3MgZm9yIGRpc2FibGVkIG5vZGVzLgoKVGhhdCB3YXMgbXkgZmVlbGlu
-ZyB0byB3aGVuIGZpcnN0IGRpc2N1c3NpbmcgdGhlIGlzc3VlIHdpdGggRGFuaWVsIGFuZApUaGll
-cnJ5IG9uIElSQywgYnV0IGFmdGVyIGRpZ2dpbmcgYSBiaXQgaW4gdGhlIGNvZGUgSSdtIG5vIGxv
-bmdlciBzdXJlCnRoaXMgaXMgYSBnb29kIGlkZWEuIEF0IGxlYXN0LCBJIGRvbid0IHRoaW5rIGJh
-c2luZyB0aGUgZGVjaXNpb24gdG8KZGlzYWJsZSB0aGUgZGV2aWNlIChvciBtYXJrIGl0IHVudXNh
-YmxlKSBiYXNlZCBvbiB0aGUgcmV0dXJuIHZhbHVlIG9mCnRoZSBwcm9iZSBmdW5jdGlvbiBpcyBh
-IGdvb2QgaWRlYS4gV2hhdCBJIGNhbiBkbyBpczoKCjEvIHByb3ZpZGUgYSBmdW5jdGlvbiB0byBj
-aGFuZ2UgdGhlIHN0YXR1cyBwcm9wIGluIG9mLmgKMi8gbGV0IGVhY2ggZHJpdmVyIGNhbGwgdGhp
-cyBmdW5jdGlvbiBpZiB0aGV5IHdhbnQgdG8KMy8gbGV0IHRoZSBJMkMgY29yZSB0ZXN0IHRoZSBz
-dGF0dXMgcHJvcCBhZ2FpbiBhZnRlciB0aGUgcHJvYmUgZnVuY3Rpb24KICAgaGFzIHJldHVybmVk
-IGFuIGVycm9yIHRvIGRldGVybWluZSB3aGV0aGVyIHRoZSBkZXZpY2UgKEkgbWVhbiBzdHJ1Y3QK
-ICAgaTJjX2NsaWVudC9kZXZpY2Ugb2JqZWN0KSBzaG91bGQgYmUgcmVtb3ZlZAoKV291bGQgdGhh
-dCB3b3JrIGZvciB5b3U/CgpSZWdhcmRzLAoKQm9yaXMKClsxXWh0dHBzOi8vZWxpbnV4Lm9yZy9p
-bWFnZXMvYy9jZi9Qb3dlcl9lUEFQUl9BUFBST1ZFRF92MS4xLnBkZgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 2018-03-02 20:49, Rob Herring wrote:
+> On Fri, Feb 23, 2018 at 10:09:00PM +0100, Rasmus Villemoes wrote:
+>> This adds Device Tree binding documentation for the external interrupt
+>> lines with configurable polarity present on some Layerscape SOCs.
+>>
+>> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+>> ---
+>>  .../interrupt-controller/fsl,ls-extirq.txt         | 44 ++++++++++++++++++++++
+>>  1 file changed, 44 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
+>> new file mode 100644
+>> index 000000000000..e510c715e8f6
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
+>> @@ -0,0 +1,44 @@
+>> +* Freescale Layerscape external IRQs
+>> +
+>> +Some Layerscape SOCs (LS1021A, LS1043A, LS1046A) support inverting
+>> +the polarity of certain external interrupt lines.
+>> +
+>> +The device node must be a child of the node representing the
+>> +Supplemental Configuration Unit (SCFG).
+>> +
+>> +Required properties:
+>> +- compatible: should be "fsl,<soc-name>-extirq", e.g. "fsl,ls1021a-extirq".
+>> +- interrupt-controller: Identifies the node as an interrupt controller
+>> +- #interrupt-cells: Must be 2. The first element is the index of the
+>> +  external interrupt line. The second element is the trigger type.
+>> +- interrupt-parent: phandle of GIC.
+>> +- reg: Specifies the Interrupt Polarity Control Register (INTPCR) in the SCFG.
+>> +- fsl,extirq-map: Specifies the mapping to interrupt numbers in the parent
+>> +  interrupt controller. Interrupts are mapped one-to-one to parent
+>> +  interrupts.
+> 
+> Use the interrupt-map property for this.
+
+Please point me at some documentation for that. AFAICT, that would
+require the property to consist of n*(3+2)*4 values, instead of just n
+(with 3+2 being sum of #interrupt-cells and 4 being the four different
+allowed incoming IRQ_TYPE_*). That seems quite excessive.
+
+I used a private property based on advice from Marc
+
+  Most interrupt controllers use a private property, potentially with a
+  range (see the recent example of the Qualcomm PDC [1]).
+
+  [1] https://patchwork.kernel.org/patch/10208037/
+
+and the qcom,pdc-ranges has this description (and that patch has your
+Reviewed-by):
+
++- qcom,pdc-ranges:
++       Usage: required
++       Value type: <u32 array>
++       Definition: Specifies the PDC pin offset and the number of PDC
+ports.
++                   The tuples indicates the valid mapping of valid PDC
+ports
++                   and their hwirq mapping.
++                   The first element of the tuple is the starting PDC port.
++                   The second element is the GIC hwirq number for the
+PDC port.
++                   The third element is the number of interrupts in
+sequence.
+
+In my case, this is simplified by the external irq lines being numbered
+consecutively from 0, so the array index itself serves as the "starting
+pdc port". I also omit the "number of interrupts in sequence", and have
+that be 1 implicitly, since it will only ever be either 6 or 12
+elements. So I end up with a simple array of GIC hwirq numbers.
+
+
+>> +
+>> +Optional properties:
+>> +- fsl,bit-reverse: This boolean property should be set on the LS1021A
+>> +  if the SCFGREVCR register has been set to all-ones (which is usually
+>> +  the case), meaning that all reads and writes of SCFG registers are
+>> +  implicitly bit-reversed. Other compatible platforms do not have such
+>> +  a register.
+>> +
+>> +Example:
+>> +	scfg: scfg@1570000 {
+>> +		compatible = "fsl,ls1021a-scfg", "syscon";
+>> +		...
+>> +		extirq: interrupt-controller {
+>> +			compatible = "fsl,ls1021a-extirq";
+>> +			#interrupt-cells = <2>;
+>> +			interrupt-controller;
+>> +			interrupt-parent = <&gic>;
+>> +			reg = <0x1ac>;
+> 
+> This needs the length too. What is buys us is following the standard in 
+> which mmio has a #size-cells >= 1. BTW, you need a #size-cells and 
+> #address-cells properties in the parent. (I think dtc will complain if 
+> not).
+
+Well, the parent consists solely of 32 bit registers, so I think it
+would make sense to have #size-cells = 0, to avoid redundant boilerplate
+in subnodes' reg properties. But you're right, the ls1021a scfg node
+currently has neither #size-cells or #address-cells, so I'll have to add
+a patch adding those before adding this subnode. And if #size-cells=0 is
+somehow frowned upon, I'll just make it 1.
+
+-- 
+Rasmus Villemoes
+Software Developer
+Prevas A/S
+Hedeager 3
+DK-8200 Aarhus N
++45 51210274
+rasmus.villemoes@prevas.dk
+www.prevas.dk
