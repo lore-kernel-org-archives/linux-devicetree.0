@@ -1,122 +1,46 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH V4 5/8] soc: mediatek: pwrap: add pwrap for mt6797 SoCs
-Date: Fri, 4 May 2018 11:04:12 +0800
-Message-ID: <1525403052.14792.131.camel@mtkswgap22>
-References: <20180502092112.3991-1-argus.lin@mediatek.com>
-         <20180502092112.3991-6-argus.lin@mediatek.com>
-         <1525320067.14792.95.camel@mtkswgap22>
-         <1525328436.6214.10.camel@mtkswgap22>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 2/2] ARM: dts: armada-xp-98dx: Add NAND pinctrl information
+Date: Fri,  4 May 2018 15:06:38 +1200
+Message-ID: <20180504030638.31521-2-chris.packham@alliedtelesis.co.nz>
+References: <20180504030638.31521-1-chris.packham@alliedtelesis.co.nz>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525328436.6214.10.camel@mtkswgap22>
+In-Reply-To: <20180504030638.31521-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Argus Lin <argus.lin@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chenglin Xu <chenglin.xu@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: andrew@lunn.ch, gregory.clement@bootlin.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-05-03 at 14:20 +0800, Argus Lin wrote:
-> On Thu, 2018-05-03 at 12:01 +0800, Sean Wang wrote:
-> >  };
+Add pin control information for the NAND interface on the Armada
+98DX3236 and variants.
 
-[...]
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ arch/arm/boot/dts/armada-xp-98dx3236.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-> > > @@ -1503,11 +1581,13 @@ static int pwrap_probe(struct platform_device *pdev)
-> > >  	if (IS_ERR(wrp->base))
-> > >  		return PTR_ERR(wrp->base);
-> > >  
-> > > -	wrp->rstc = devm_reset_control_get(wrp->dev, "pwrap");
-> > > -	if (IS_ERR(wrp->rstc)) {
-> > > -		ret = PTR_ERR(wrp->rstc);
-> > > -		dev_dbg(wrp->dev, "cannot get pwrap reset: %d\n", ret);
-> > > -		return ret;
-> > > +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_RESET)) {
-> > > +		wrp->rstc = devm_reset_control_get(wrp->dev, "pwrap");
-> > 
-> > there should be a reset bit present for pwrap on infrasys.
-> > 
-> > the specific condition can be dropped when the reset cell is exported from infrasys and then the device has a reference to it.
-> hmm, I think it need to keep here.
-> because after pwrap initialized, it can't be reset alone.
-> It needs to reset PMIC simultaneously, too.
-
-Reset a pair, either a master or its slave, all had been a part of
-pwrap_init.
-
-The reset controller provided here is just to reset pwrap device.
-And for its slave reset, it should be done by pwrap_reset_spislave. 
-
-So for MT6397, it should be able to fall into the same procedure.
-
-> > 
-> > > +		if (IS_ERR(wrp->rstc)) {
-> > > +			ret = PTR_ERR(wrp->rstc);
-> > > +			dev_dbg(wrp->dev, "cannot get pwrap reset: %d\n", ret);
-> > > +			return ret;
-> > > +		}
-> > >  	}
-> > >  
-> > >  	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_BRIDGE)) {
-> > > @@ -1549,9 +1629,17 @@ static int pwrap_probe(struct platform_device *pdev)
-> > >  	if (ret)
-> > >  		goto err_out1;
-> > >  
-> > > -	/* Enable internal dynamic clock */
-> > > -	pwrap_writel(wrp, 1, PWRAP_DCM_EN);
-> > > -	pwrap_writel(wrp, 0, PWRAP_DCM_DBC_PRD);
-> > > +	/*
-> > > +	 * add dcm capability check
-> > > +	 */
-> > > +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_DCM)) {
-> > 
-> > the specific condition can be dropped since so far all devices the driver can support are owning PWRAP_CAP_DCM
-> We did not support DCM for future chips.
-> MT6797 is the last one.
-> This why I want to add judgement here.
-
-The series is only for MT6797 pwrap, so it's fine with only adding these
-things the SoC actually relies on. 
-
-PWRAP_CAP_DCM should not be added until a new SoC without dcm is really
-introduced.
-
-> > 
-> > > +		if (wrp->master->type == PWRAP_MT6797)
-> > > +			pwrap_writel(wrp, 3, PWRAP_DCM_EN);
-> > 
-> > the setup for MT6797 can be moved into .init_soc_specific callback ?
-> 
-> I think put it here is more generally.
-> > 
-> > > +		else
-> > > +			pwrap_writel(wrp, 1, PWRAP_DCM_EN);
-> > > +
-> > > +		pwrap_writel(wrp, 0, PWRAP_DCM_DBC_PRD);
-> > > +	}
-> > >  
-> > >  	/*
-> > >  	 * The PMIC could already be initialized by the bootloader.
-> > > @@ -1580,6 +1668,12 @@ static int pwrap_probe(struct platform_device *pdev)
-> > >  	pwrap_writel(wrp, wrp->master->wdt_src, PWRAP_WDT_SRC_EN);
-> > >  	pwrap_writel(wrp, 0x1, PWRAP_TIMER_EN);
-> > >  	pwrap_writel(wrp, wrp->master->int_en_all, PWRAP_INT_EN);
-> > > +	/*
-> > > +	 * We add INT1 interrupt to handle starvation and request exception
-> > > +	 * If we support it, we should enable them here.
-> > > +	 */
-> > > +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_INT1_EN))
-> > > +		pwrap_writel(wrp, wrp->master->int1_en_all, PWRAP_INT1_EN);
-> > >  
-> > 
-> > if there is no explicitly enabling on INT1, then ISR handling for INT1 is also unnecessary
-> 
-> It's ok for me.
-> > 
-> > >  	irq = platform_get_irq(pdev, 0);
-> > >  	ret = devm_request_irq(wrp->dev, irq, pwrap_interrupt,
-> > 
-> > 
-> > 
-> 
-> 
+diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+index 9a589abd0379..099dc2520082 100644
+--- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
++++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+@@ -312,6 +312,19 @@
+ &pinctrl {
+ 	compatible = "marvell,98dx3236-pinctrl";
+ 
++	nand_pins: nand-pins {
++		marvell,pins = "mpp20", "mpp21", "mpp22",
++			       "mpp23", "mpp24", "mpp25",
++			       "mpp26", "mpp27", "mpp28",
++			       "mpp29", "mpp30";
++		marvell,function = "dev";
++	};
++
++	nand_rb: nand-rb {
++		marvell,pins = "mpp19";
++		marvell,function = "nand";
++	};
++
+ 	spi0_pins: spi0-pins {
+ 		marvell,pins = "mpp0", "mpp1",
+ 			       "mpp2", "mpp3";
+-- 
+2.17.0
