@@ -1,76 +1,26 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 6/7] ARM: dts: Add support for emtrion emCON-MX6 series
-Date: Fri, 4 May 2018 15:03:40 +0800
-Message-ID: <20180504070339.GS3443@dragon>
-References: <20180420125108.14197-1-jan.tuerk@emtrion.com>
- <20180427132445.3458-1-jan.tuerk@emtrion.com>
- <20180427132445.3458-7-jan.tuerk@emtrion.com>
- <20180428031231.GB3693@dragon>
- <95F51F4B902CAC40AF459205F6322F01B83109E5C3@BMK019S01.emtrion.local>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v4 08/14] dt: qcom: Add opp and thermal to the msm8996
+Date: Fri, 4 May 2018 12:33:54 +0530
+Message-ID: <20180504070354.jvdxlh3nj42rr64x@vireshk-i7>
+References: <1522358807-10413-1-git-send-email-ilialin@codeaurora.org>
+ <1522358807-10413-9-git-send-email-ilialin@codeaurora.org>
+ <20180402091617.GA3572@vireshk-i7>
+ <CAKohpo=cw+2Leuwa6XjEYh4kVYK093A5eckUmPBDutgqeqpvog@mail.gmail.com>
+ <003001d3e373$f94db540$ebe91fc0$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <95F51F4B902CAC40AF459205F6322F01B83109E5C3@BMK019S01.emtrion.local>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?iso-8859-1?B?VPxyayw=?= Jan <Jan.Tuerk@emtrion.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Russell King <linux@armlinux.org.uk>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, LinuxArmKernelMailingListe <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <003001d3e373$f94db540$ebe91fc0$@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ilialin@codeaurora.org
+Cc: 'Michael Turquette' <mturquette@baylibre.com>, 'Stephen Boyd' <sboyd@kernel.org>, 'Rob Herring' <robh@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, "'Rafael J. Wysocki'" <rjw@rjwysocki.net>, 'Liam Girdwood' <lgirdwood@gmail.com>, 'Mark Brown' <broonie@kernel.org>, 'Andy Gross' <andy.gross@linaro.org>, 'David Brown' <david.brown@linaro.org>, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Will Deacon' <will.deacon@arm.com>, 'Linux Clock List' <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, 'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, "'open list:ARM/QUALCOMM SUPPORT'" <linux-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "'Nayak, Rajendra'" <rnayak@codeau>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXkgMDMsIDIwMTggYXQgMTI6MDA6MDZQTSArMDIwMCwgVMO8cmssIEphbiB3cm90
-ZToKPiA+ID4gKy8gewo+ID4gPiArICAgYWxpYXNlcyB7Cj4gPiA+ICsgICAgICAgICAgIG1tYzAg
-PSAmdXNkaGMzOwo+ID4gPiArICAgICAgICAgICBtbWMyID0gJnVzZGhjMTsKPiA+ID4gKyAgICAg
-ICAgICAgbW1jMSA9ICZ1c2RoYzI7Cj4gPiA+ICsgICAgICAgICAgIG1tYzMgPSAmdXNkaGM0Owo+
-ID4gPiArICAgICAgICAgICBib2FyZElEID0gJmJvYXJkSUQ7Cj4gPgo+ID4gV2h5IGRvIHlvdSBu
-ZWVkIHRoaXMgYm9hcmRJRCBhbGlhcz8KPiBJIHdhbnRlZCB0byBoYXZlIGEgZ2VuZXJpYyBlbnRy
-eSBwb2ludCB0byBhZGRyZXNzIHRoZSBib2FyZC1pZCBvbiBhbGwgQ1BVLW1vZHVsZXMgd2l0aCB0
-aGVpciBkaWZmZXJlbnQgU29DJ3MgcmVzdWx0aW5nIGluIGRpZmZlcmVudCBkZXZpY2V0cmVlIHBh
-dGhzLgo+IEFsc28gYXMgaXQgbm93IGhhcyB0aGUgZ2VuZXJpYyAiZ3Bpb0AzYSIgbmFtZSwgdGhl
-cmUgd291bGQgYmUgbm8gb3RoZXIgd2F5IGluIGRpZmZlcmVuY2luZyB0aGUgYm9hcmQgSWRlbnRp
-ZnlpbmcgR1BJTy1leHBhbmRlciBmcm9tIGFuIGFkZGl0aW9uYWxseQo+IGF0dGFjaGVkIG9uZSAo
-ZXhjZXB0IHBsYXRmb3JtIGNvZGUgZXRjLikKPiBXaXRoIHRoZSBhbGlhcyBldmVyeSBjb2RlIGNv
-dWxkIGxvb2sgdXAgdGhlIGluZm9ybWF0aW9uIHJlcXVpcmVkIG92ZXIgdGhlIGFsaWFzIHBhdGgg
-d2l0aCB0aGUgc2FtZSBwaWVjZSBvZiBjb2RlLgoKT2theS4gIEJ1dCBubyB1cHBlcmNhc2UgcGxl
-YXNlLiAgT3RoZXJ3aXNlLCB5b3UgaW50cm9kdWNlIHRoZSBmb2xsb3dpbmcKRFRDIHdhcm5pbmdz
-ICh3aXRoIFc9MSBzd2l0Y2gpIHdlIGFyZSB0cnlpbmcgdG8gY2xlYW4gdXAuCgogV2FybmluZyAo
-YWxpYXNfcGF0aHMpOiAvYWxpYXNlczogYWxpYXNlcyBwcm9wZXJ0eSBuYW1lIG11c3QgaW5jbHVk
-ZSBvbmx5IGxvd2VyY2FzZSBhbmQgJy0nCgo+ID4KPiA+ID4gKyAgIH07Cgo8c25pcD4KCj4gPiA+
-ICZwaW5jdHJsX25vcl9mbGFzaAo+ID4gPiArICAgICAgICAgICAgJnBpbmN0cmxfdXNkaGMyCj4g
-PiA+ICsgICAgICAgICAgICAmcGluY3RybF9zcGRpZl9vdXQgICAgICZwaW5jdHJsX3NwZGlmX2lu
-Cj4gPiA+ICsgICAgICAgICAgICAmcGluY3RybF9jcGkxICAgICAgICAgICZwaW5jdHJsX2NwaTIK
-PiA+ID4gKyAgICAgICAgICAgPjsKPiA+Cj4gPiBBZ2FpbiwgcGxlYXNlIGRvIG5vdCBwdXQgY29u
-c3VtZXIgZGV2aWNlIHNwZWNpZmljIHBpbnMgaW4gaG9nIGdyb3VwLgo+ID4gQWxzbywgaXQncyBj
-b25mdXNpbmcgdG8gaGF2ZSB0aGUgc2FtZSBwaW5jdHJsIGluIGJvdGggaG9nIGFuZCBjb25zdW1l
-ciBkZXZpY2UKPiA+IG5vZGUsIGxpa2UgcGluY3RybF9ub3JfZmxhc2ggYW5kIHBpbmN0cmxfdXNk
-aGMyIGhlcmUuCj4gCj4gQWJvdXQgcGluY3RybF9ub3JfZmxhc2ggSSBmdWxseSBhZ3JlZSwgdGhh
-dCdzIGEgbWlzdGFrZS4KPiBwaW5jdHJsX3VzZGhjMiBpcyBub3QgY29ubmVjdGVkIG9uIHRoZSBh
-dmFyaSwgYW5kIHRoZXJlZm9yZSBub3QgZW5hYmxlZC4KPiBBcyB0b2xkIGJlZm9yZSBpdCBpcyBh
-ZGRlZCB0byB0aGUgSG9nIGdyb3VwIHRvIGZvcmNlIHRoZSBkZWZhdWx0IHBpbm11eGluZyB3aXRo
-b3V0IGVuYWJsaW5nIHRoZSBoYXJkd2FyZSBpdHNlbGYuCgpJZiB5b3Ugd2FudCB0byBkbyBzdWNo
-IGRlZmF1bHQgcGlubXV4aW5nLCBwbGVhc2UgZG8gaXQgaW4geW91ciBmaXJtd2FyZS4KV2UgZ2Vu
-ZXJhbGx5IGRvIG5vdCB3YW50IHRvIHVzZSBob2cgZ3JvdXAgdG9vIG11Y2gsIGJlY2F1c2UgdGhh
-dCBtYWtlcwppdCBkaWZmaWN1bHQgdG8gZmluZCBvdXQgd2hpY2ggY2xpZW50IGRldmljZXMgY29u
-c3VtZSB3aGljaCBwaW5zLgoKPiAKPiA+Cj4gPiA+ICt9OwoKPHNuaXA+Cgo+ID4gPiArJmkyYzEg
-ewo+ID4gPiArICAgY2xvY2stZnJlcXVlbmN5ID0gPDEwMDAwMD47Cj4gPiA+ICsgICBwaW5jdHJs
-LW5hbWVzID0gImRlZmF1bHQiOwo+ID4gPiArICAgcGluY3RybC0wID0gPCZwaW5jdHJsX2kyYzE+
-Owo+ID4gPiArICAgc3RhdHVzID0gIm9rYXkiOwo+ID4gPiArCj4gPiA+ICsgICBydGM6IHJ0Y0A2
-OCB7Cj4gPgo+ID4gSXMgdGhlIGxhYmVsIGFjdHVhbGx5IHVzZWQ/ICBJZiB5ZXMsIEkgd291bGQg
-c3VnZ2VzdCBhIG1vcmUgc3BlY2lmaWMgbmFtZSBsaWtlCj4gPiBkczEzMDcuCj4gUmVhbGx5PyBX
-aHkgc2hvdWxkIGl0IGJlIGEgZ2VuZXJpYyBuYW1lIGZvciAiZ3BpbyIgYW5kICJwbWljIiBidXQg
-bm90IGEgZ2VuZXJpYyBuYW1lIGZvciBhbiAicnRjIiBjaGlwPwoKSSdtIHRhbGtpbmcgYWJvdXQg
-bGFiZWwgbm90IG5vZGUgbmFtZS4gIFRoYXQgc2FpZCBJIHdhcyBzdWdnZXN0aW5nCnNvbWV0aGlu
-ZyBsaWtlOgoKCWRzMTMwNzogcnRjQDY4Cgo+IAo+ID4KPiA+ID4gKyAgICAgICAgICAgY29tcGF0
-aWJsZSA9ICJkYWxsYXMsZHMxMzA3IjsKPiA+ID4gKyAgICAgICAgICAgcmVnID0gPDB4Njg+Owo+
-ID4gPiArICAgfTsKClNoYXduCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+On 04-05-18, 09:48, ilialin@codeaurora.org wrote:
+> Kryo has single clock per cluster. I define here a shared OPP table per cluster.
+
+Thanks for clarifying.
+
+-- 
+viresh
