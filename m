@@ -1,136 +1,150 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 6/6] drm/panel: rpi-touchscreen: Set status to "fail"
- when ->probe() fails
-Date: Fri, 4 May 2018 14:17:49 +0200
-Message-ID: <20180504141749.03ef85fe@bbrezillon>
-References: <20180503164009.14395-1-boris.brezillon@bootlin.com>
- <20180503164009.14395-7-boris.brezillon@bootlin.com>
- <CAL_JsqJMarPW6sdcF1ZFCEr6wGyPgi2yhYMCxgypUYYwN7ayfQ@mail.gmail.com>
- <20180504100653.6ee70802@bbrezillon> <20180504094748.GD13459@ulmo>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v5 03/14] clk: qcom: Add CPU clock driver for msm8996
+Date: Fri, 4 May 2018 20:27:56 +0800
+Message-ID: <201805042040.jFAZvC33%fengguang.wu@intel.com>
+References: <1525348355-25471-4-git-send-email-ilialin@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180504094748.GD13459@ulmo>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1525348355-25471-4-git-send-email-ilialin@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: kbuild-all@01.org, mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, ilialin@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCA0IE1heSAyMDE4IDExOjQ3OjQ4ICswMjAwClRoaWVycnkgUmVkaW5nIDx0aGllcnJ5
-LnJlZGluZ0BnbWFpbC5jb20+IHdyb3RlOgoKPiBPbiBGcmksIE1heSAwNCwgMjAxOCBhdCAxMDow
-Njo1M0FNICswMjAwLCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6Cj4gPiBIaSBSb2IsCj4gPiAKPiA+
-IE9uIFRodSwgMyBNYXkgMjAxOCAxMjoxMjozOSAtMDUwMAo+ID4gUm9iIEhlcnJpbmcgPHJvYmgr
-ZHRAa2VybmVsLm9yZz4gd3JvdGU6Cj4gPiAgIAo+ID4gPiBPbiBUaHUsIE1heSAzLCAyMDE4IGF0
-IDExOjQwIEFNLCBCb3JpcyBCcmV6aWxsb24KPiA+ID4gPGJvcmlzLmJyZXppbGxvbkBib290bGlu
-LmNvbT4gd3JvdGU6ICAKPiA+ID4gPiBUaGUgZGV2aWNlIG1pZ2h0IGJlIGRlc2NyaWJlZCBpbiB0
-aGUgZGV2aWNlIHRyZWUgYnV0IG5vdCBjb25uZWN0ZWQgdG8KPiA+ID4gPiB0aGUgSTJDIGJ1cy4g
-VXBkYXRlIHRoZSBzdGF0dXMgcHJvcGVydHkgc28gdGhhdCB0aGUgRFJNIHBhbmVsIGxvZ2ljCj4g
-PiA+ID4gcmV0dXJucyAtRU5PREVWIHdoZW4gc29tZW9uZSB0cmllcyB0byBnZXQgdGhlIHBhbmVs
-IGF0dGFjaGVkIHRvIHRoaXMKPiA+ID4gPiBEVCBub2RlLgo+ID4gPiA+Cj4gPiA+ID4gU2lnbmVk
-LW9mZi1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxsb25AYm9vdGxpbi5jb20+Cj4g
-PiA+ID4gLS0tCj4gPiA+ID4gIC4uLi9ncHUvZHJtL3BhbmVsL3BhbmVsLXJhc3BiZXJyeXBpLXRv
-dWNoc2NyZWVuLmMgIHwgMzUgKysrKysrKysrKysrKysrKysrKysrKwo+ID4gPiA+ICAxIGZpbGUg
-Y2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKQo+ID4gPiA+Cj4gPiA+ID4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1yYXNwYmVycnlwaS10b3VjaHNjcmVlbi5jIGIvZHJp
-dmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXJhc3BiZXJyeXBpLXRvdWNoc2NyZWVuLmMKPiA+ID4g
-PiBpbmRleCAyYzljOTcyMjczNGYuLmI4ZmNiMWFjZWY3NSAxMDA2NDQKPiA+ID4gPiAtLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtcmFzcGJlcnJ5cGktdG91Y2hzY3JlZW4uYwo+ID4g
-PiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1yYXNwYmVycnlwaS10b3VjaHNj
-cmVlbi5jCj4gPiA+ID4gQEAgLTM1OCw2ICszNTgsMzkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBk
-cm1fcGFuZWxfZnVuY3MgcnBpX3RvdWNoc2NyZWVuX2Z1bmNzID0gewo+ID4gPiA+ICAgICAgICAg
-LmdldF9tb2RlcyA9IHJwaV90b3VjaHNjcmVlbl9nZXRfbW9kZXMsCj4gPiA+ID4gIH07Cj4gPiA+
-ID4KPiA+ID4gPiArc3RhdGljIHZvaWQgcnBpX3RvdWNoc2NyZWVuX3NldF9zdGF0dXNfZmFpbChz
-dHJ1Y3QgaTJjX2NsaWVudCAqaTJjKQo+ID4gPiA+ICt7Cj4gPiA+ID4gKyAgICAgICBzdHJ1Y3Qg
-cHJvcGVydHkgKm5ld3Byb3A7Cj4gPiA+ID4gKwo+ID4gPiA+ICsgICAgICAgbmV3cHJvcCA9IGt6
-YWxsb2Moc2l6ZW9mKCpuZXdwcm9wKSwgR0ZQX0tFUk5FTCk7Cj4gPiA+ID4gKyAgICAgICBpZiAo
-IW5ld3Byb3ApCj4gPiA+ID4gKyAgICAgICAgICAgICAgIHJldHVybjsKPiA+ID4gPiArCj4gPiA+
-ID4gKyAgICAgICBuZXdwcm9wLT5uYW1lID0ga3N0cmR1cCgic3RhdHVzIiwgR0ZQX0tFUk5FTCk7
-Cj4gPiA+ID4gKyAgICAgICBpZiAoIW5ld3Byb3AtPm5hbWUpCj4gPiA+ID4gKyAgICAgICAgICAg
-ICAgIGdvdG8gZXJyOwo+ID4gPiA+ICsKPiA+ID4gPiArICAgICAgIG5ld3Byb3AtPnZhbHVlID0g
-a3N0cmR1cCgiZmFpbCIsIEdGUF9LRVJORUwpOwo+ID4gPiA+ICsgICAgICAgaWYgKCFuZXdwcm9w
-LT52YWx1ZSkKPiA+ID4gPiArICAgICAgICAgICAgICAgZ290byBlcnI7Cj4gPiA+ID4gKwo+ID4g
-PiA+ICsgICAgICAgbmV3cHJvcC0+bGVuZ3RoID0gc2l6ZW9mKCJmYWlsIik7Cj4gPiA+ID4gKwo+
-ID4gPiA+ICsgICAgICAgaWYgKG9mX3VwZGF0ZV9wcm9wZXJ0eShpMmMtPmRldi5vZl9ub2RlLCBu
-ZXdwcm9wKSkKPiA+ID4gPiArICAgICAgICAgICAgICAgZ290byBlcnI7Cj4gPiA+ID4gKyAgICAK
-PiA+ID4gCj4gPiA+IEFzIEkgbWVudGlvbmVkIG9uIGlyYywgY2FuIHlvdSBtYWtlIHRoaXMgYSBj
-b21tb24gRFQgZnVuY3Rpb24uICAKPiA+IAo+ID4gWWVwLCB3aWxsIG1vdmUgdGhhdCB0byBkcml2
-ZXJzL29mL2Jhc2UuYyBhbmQgbWFrZSBpdCBnZW5lcmljLgo+ID4gICAKPiA+ID4gCj4gPiA+IEkn
-bSBub3Qgc3VyZSBpZiBpdCBtYXR0ZXJzIHRoYXQgd2Ugc2V0IHN0YXR1cyB0byBmYWlsIHZzLiBk
-aXNhYmxlZC4gSQo+ID4gPiBzb21ld2hhdCBwcmVmZXIgdGhlIGxhdHRlciBhcyB3ZSBhbHJlYWR5
-IGhhdmUgb3RoZXIgY2FzZXMgYW5kIEknZAo+ID4gPiByYXRoZXIgdGhlIGFwaSBub3QgcGFzcyBh
-IHN0cmluZyBpbi4gSSBjYW4ndCB0aGluayBvZiBhbnkgcmVhc29uIHRvCj4gPiA+IGRpc3Rpbmd1
-aXNoIHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gZmFpbCBhbmQgZGlzYWJsZWQuICAKPiA+IAo+ID4g
-V2VsbCwgSSBqdXN0IHJlYWQgdGhlIGVQQVBSIGRvYyBwb2ludGVkIGJ5IFRoaWVycnkgWzFdIChz
-ZWN0aW9uIDIuMy40KSwKPiA+IGFuZCAiZmFpbCIgc2VlbWVkIGxpa2UgYSBnb29kIG1hdGNoIGZv
-ciB3aGF0IHdlIGFyZSB0cnlpbmcgdG8gZXhwcmVzcwo+ID4gaGVyZTogIndlIGZhaWxlZCB0byBj
-b21tdW5pY2F0ZSB3aXRoIHRoZSBkZXZpY2UgaW4gdGhlIHByb2JlIGZ1bmN0aW9uCj4gPiBhbmQg
-d2FudCB0byBtYXJrIGl0IHVudXNhYmxlIiwgd2hpY2ggaXMgYSBiaXQgZGlmZmVyZW50IGZyb20g
-InRoZQo+ID4gZGV2aWNlIHdhcyBleHBsaWNpdGx5IGRpc2FibGVkIGJ5IHRoZSB1c2VyIi4KPiA+
-IAo+ID4gQW55d2F5LCBpZiB5b3UgdGhpbmsgImRpc2FibGVkIiBpcyBtb3JlIGFwcHJvcHJpYXRl
-LCBJJ2xsIHVzZSB0aGF0Lgo+ID4gICAKPiA+ID4gICAKPiA+ID4gPiArICAgICAgIC8qIFdlIGlu
-dGVudGlvbmFsbHkgbGVhayB0aGUgbWVtb3J5IHdlIGFsbG9jYXRlIGhlcmUsIGJlY2F1c2UgdGhl
-IG5ldwo+ID4gPiA+ICsgICAgICAgICogT0YgcHJvcGVydHkgbWlnaHQgbGl2ZSBsb25nZXIgdGhh
-biB0aGUgdW5kZXJseWluZyBkZXYsIHNvIG5vIHdheQo+ID4gPiA+ICsgICAgICAgICogd2UgY2Fu
-IHVzZSBkZXZtX2t6YWxsb2MoKSBoZXJlLgo+ID4gPiA+ICsgICAgICAgICovCj4gPiA+ID4gKyAg
-ICAgICByZXR1cm47Cj4gPiA+ID4gKwo+ID4gPiA+ICtlcnI6Cj4gPiA+ID4gKyAgICAgICBrZnJl
-ZShuZXdwcm9wLT52YWx1ZSk7Cj4gPiA+ID4gKyAgICAgICBrZnJlZShuZXdwcm9wLT5uYW1lKTsK
-PiA+ID4gPiArICAgICAgIGtmcmVlKG5ld3Byb3ApOwo+ID4gPiA+ICt9Cj4gPiA+ID4gKwo+ID4g
-PiA+ICBzdGF0aWMgaW50IHJwaV90b3VjaHNjcmVlbl9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAq
-aTJjLAo+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IHN0cnVj
-dCBpMmNfZGV2aWNlX2lkICppZCkKPiA+ID4gPiAgewo+ID4gPiA+IEBAIC0zODIsNiArNDE1LDcg
-QEAgc3RhdGljIGludCBycGlfdG91Y2hzY3JlZW5fcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmky
-YywKPiA+ID4gPgo+ID4gPiA+ICAgICAgICAgdmVyID0gcnBpX3RvdWNoc2NyZWVuX2kyY19yZWFk
-KHRzLCBSRUdfSUQpOwo+ID4gPiA+ICAgICAgICAgaWYgKHZlciA8IDApIHsKPiA+ID4gPiArICAg
-ICAgICAgICAgICAgcnBpX3RvdWNoc2NyZWVuX3NldF9zdGF0dXNfZmFpbChpMmMpOyAgICAKPiA+
-ID4gCj4gPiA+IEkndmUgdGhvdWdodCBzb21lIG1vcmUgYWJvdXQgdGhpcyBhbmQgSSBzdGlsbCB0
-aGluayB0aGlzIHNob3VsZCBiZQo+ID4gPiBoYW5kbGVkIGluIHRoZSBkcml2ZXIgY29yZSBvciBp
-MmMgY29yZS4KPiA+ID4gCj4gPiA+IFRoZSByZWFzb24gaXMgc2ltcGxlLiBJIHRoaW5rIHRoZSBz
-dGF0ZSBvZiB0aGUgc3lzdGVtIHNob3VsZCBiZSB0aGUKPiA+ID4gc2FtZSBhZnRlciB0aGlzIGFz
-IGlmIHlvdSBib290ZWQgd2l0aCAnc3RhdHVzID0gImRpc2FibGVkIicgZm9yIHRoaXMKPiA+ID4g
-bm9kZS4gQW5kIHRoYXQgbWVhbnMgdGhlIGRldmljZSBzaG91bGQgYmUgcmVtb3ZlZCBjb21wbGV0
-ZWx5IGJlY2F1c2UKPiA+ID4gd2UgZG9uJ3QgY3JlYXRlIHN0cnVjdCBkZXZpY2UncyBmb3IgZGlz
-YWJsZWQgbm9kZXMuICAKPiA+IAo+ID4gVGhhdCB3YXMgbXkgZmVlbGluZyB0byB3aGVuIGZpcnN0
-IGRpc2N1c3NpbmcgdGhlIGlzc3VlIHdpdGggRGFuaWVsIGFuZAo+ID4gVGhpZXJyeSBvbiBJUkMs
-IGJ1dCBhZnRlciBkaWdnaW5nIGEgYml0IGluIHRoZSBjb2RlIEknbSBubyBsb25nZXIgc3VyZQo+
-ID4gdGhpcyBpcyBhIGdvb2QgaWRlYS4gQXQgbGVhc3QsIEkgZG9uJ3QgdGhpbmsgYmFzaW5nIHRo
-ZSBkZWNpc2lvbiB0bwo+ID4gZGlzYWJsZSB0aGUgZGV2aWNlIChvciBtYXJrIGl0IHVudXNhYmxl
-KSBiYXNlZCBvbiB0aGUgcmV0dXJuIHZhbHVlIG9mCj4gPiB0aGUgcHJvYmUgZnVuY3Rpb24gaXMg
-YSBnb29kIGlkZWEuICAKPiAKPiBJJ20gbm90IHNvIHN1cmUgYWJvdXQgdGhhdC4gLUVOT0RFViBz
-ZWVtcyBsaWtlIGEgdmVyeSBzdWl0YWJsZSBlcnJvcgo+IGNvZGUgdG8gYmFzZSB0aGF0IGRlY2lz
-aW9uIG9uLiBBIHJhbmRvbSBzYW1wbGluZyBvZiBhIGhhbmRmdWwgb2YgZHJpdmVycwo+IGNvbmZp
-cm1zIHRoYXQgdGhpcyBpcyBwcmltYXJpbHkgdXNlZCB0byByZXBvcnQgc2l0dWF0aW9ucyB3aGVy
-ZSBpdCBpcwo+IGltcG9zc2libGUgZm9yIHRoZSBkZXZpY2UgdG8gZXZlciBiZSBwcm9iZWQgc3Vj
-Y2Vzc2Z1bGx5LCBzbyBtaWdodCBhcwo+IHdlbGwganVzdCByZW1vdmUgaXQuCgpJdCdzIG5vdCB0
-aGF0IGVhc3kuIEl0IGhhcyB0byBiZSBkb25lIGZyb20gdGhlIEkyQyBjb3JlIHNpbmNlIGl0J3Mg
-dGhlCm9ubHkgb25lIHdobyBjYW4gY2FsbCBkZXZpY2VfdW5yZWdpc3RlcigpIGFuZCBjbGVhbnVw
-IHRoZSBvdGhlciBiaXRzCmFzc29jaWF0ZWQgd2l0aCBhbiBJMkMgZGV2aWNlIChzZWUgaTJjX3Vu
-cmVnaXN0ZXJfZGV2aWNlKCkpLiBOb3csIHRoZQppMmNfZHJpdmVyLT5wcm9iZSgpIGZ1bmN0aW9u
-IGlzIGNhbGxlZCBmcm9tIGEgY29udGV4dCB3aGVyZSBJJ20gYWxtb3N0CnN1cmUgZGV2aWNlX3Vu
-cmVnaXN0ZXIoKSBjYW4ndCBiZSBjYWxsZWQgc2luY2Ugd2UgbWlnaHQgc3RpbGwgYmUgaW4gdGhl
-CmRldmljZV9yZWdpc3RlcigpIHBhdGguIFRoZSBzb2x1dGlvbiB3b3VsZCBiZSB0byBxdWV1ZSB0
-aGUKdW5yZWdpc3RyYXRpb24gd29yayB0byBhIHdvcmtxdWV1ZSwgYnV0IEknbSBub3QgZXZlbiBz
-dXJlIHRoaXMgaXMgc2FmZQp0byBkbyB0aGF0LiBXaGF0IGlmIHRoZSBJMkMgYWRhcHRlciBleHBv
-c2luZyB0aGUgZGV2aWNlIGlzIHJlbW92ZWQgaW4KdGhlIG1lYW50aW1lPyBPZiBjb3Vyc2UsIGFs
-bCBvZiB0aGlzIGNhbiBiZSBhZGRyZXNzZWQsIEknbSBqdXN0CndvbmRlcmluZyBpZiBpdCdzIHJl
-YWxseSB3b3J0aCB0aGUgdHJvdWJsZSAod2UncmUgbGlrZWx5IHRvIGludHJvZHVjZQpuZXcgcmFj
-ZXMgb3Igb3RoZXIga2luZCBvZiBidWdzIHdoaWxlIGRvaW5nIHRoYXQpLCBlc3BlY2lhbGx5IHNp
-bmNlCnBsYWNpbmcgdGhlIGRldmljZSBpbiBhICJmYWlsIiBzdGF0ZSBhbmQgc3RpbGwga2VlcGlu
-ZyBpdCBhcm91bmQgd291bGQKc29sdmUgdGhlIHByb2JsZW0gd2l0aG91dCByZXF1aXJpbmcgYWxs
-IHRoZSBleHRyYSBjbGVhbnVwIHdlJ3JlIHRhbGtpbmcKYWJvdXQgaGVyZS4KCj4gCj4gQXQgdGhl
-IHZlcnkgbGVhc3QgSSB0aGluayBpdCBpcyB3b3J0aCBwcm9wb3NpbmcgdGhlIHBhdGNoIGFuZCBs
-ZXQgR3JlZwo+IGFuZCBvdGhlcnMgd2VpZ2ggaW4uCgpXZWxsLCBpZiBpdCB3YXMgYW4gZWFzeSB0
-aGluZyB0byBkbywgSSBndWVzcyBJIHdvdWxkIGhhdmUgZ29uZSBmb3IgdGhpcwphcHByb2FjaCBm
-cm9tIHRoZSBiZWdpbm5pbmcsIGJ1dCBJIGZlYXIgZG9pbmcgdGhhdCB3aWxsIGJlIG11Y2ggbW9y
-ZQpjb21wbGljYXRlZCB0aGFuIHdlIHRoaW5rIGl0IGlzIChtYXliZSBJJ20gd3JvbmcpLgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Ilia,
+
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on clk/clk-next]
+[also build test WARNING on v4.17-rc3 next-20180503]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Ilia-Lin/CPU-scaling-support-for-msm8996/20180504-174840
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/clk/qcom/clk-cpu-8996.c:142:9: sparse: constant 2150400000 is so big it is long
+>> drivers/clk/qcom/clk-cpu-8996.c:239:22: sparse: symbol 'clk_cpu_8996_mux_ops' was not declared. Should it be static?
+   drivers/clk/qcom/clk-cpu-8996.c:324:19: sparse: symbol 'clks' was not declared. Should it be static?
+
+vim +142 drivers/clk/qcom/clk-cpu-8996.c
+
+   137	
+   138	static const struct pll_vco alt_pll_vco_modes[] = {
+   139		VCO(3,  250000000,  500000000),
+   140		VCO(2,  500000000,  750000000),
+   141		VCO(1,  750000000, 1000000000),
+ > 142		VCO(0, 1000000000, 2150400000),
+   143	};
+   144	
+   145	static const struct alpha_pll_config altpll_config = {
+   146		.l = 16,
+   147		.vco_val = 0x3 << 20,
+   148		.vco_mask = 0x3 << 20,
+   149		.config_ctl_val = 0x4001051b,
+   150		.post_div_mask = 0x3 << 8,
+   151		.post_div_val = 0x1,
+   152		.main_output_mask = BIT(0),
+   153		.early_output_mask = BIT(3),
+   154	};
+   155	
+   156	static struct clk_alpha_pll perfcl_alt_pll = {
+   157		.offset = 0x80100,
+   158		.regs = alt_pll_regs,
+   159		.vco_table = alt_pll_vco_modes,
+   160		.num_vco = ARRAY_SIZE(alt_pll_vco_modes),
+   161		.flags = SUPPORTS_OFFLINE_REQ | SUPPORTS_FSM_MODE,
+   162		.clkr.hw.init = &(struct clk_init_data) {
+   163			.name = "perfcl_alt_pll",
+   164			.parent_names = (const char *[]){ "xo" },
+   165			.num_parents = 1,
+   166			.ops = &clk_alpha_pll_hwfsm_ops,
+   167		},
+   168	};
+   169	
+   170	static struct clk_alpha_pll pwrcl_alt_pll = {
+   171		.offset = 0x100,
+   172		.regs = alt_pll_regs,
+   173		.vco_table = alt_pll_vco_modes,
+   174		.num_vco = ARRAY_SIZE(alt_pll_vco_modes),
+   175		.flags = SUPPORTS_OFFLINE_REQ | SUPPORTS_FSM_MODE,
+   176		.clkr.hw.init = &(struct clk_init_data) {
+   177			.name = "pwrcl_alt_pll",
+   178			.parent_names = (const char *[]){ "xo" },
+   179			.num_parents = 1,
+   180			.ops = &clk_alpha_pll_hwfsm_ops,
+   181		},
+   182	};
+   183	
+   184	/* Mux'es */
+   185	
+   186	struct clk_cpu_8996_mux {
+   187		u32	reg;
+   188		u8	shift;
+   189		u8	width;
+   190		struct clk_hw	*pll;
+   191		struct clk_regmap clkr;
+   192	};
+   193	
+   194	static inline
+   195	struct clk_cpu_8996_mux *to_clk_cpu_8996_mux_hw(struct clk_hw *hw)
+   196	{
+   197		return container_of(to_clk_regmap(hw), struct clk_cpu_8996_mux, clkr);
+   198	}
+   199	
+   200	static u8 clk_cpu_8996_mux_get_parent(struct clk_hw *hw)
+   201	{
+   202		u32 val;
+   203		struct clk_regmap *clkr = to_clk_regmap(hw);
+   204		struct clk_cpu_8996_mux *cpuclk = to_clk_cpu_8996_mux_hw(hw);
+   205		u32 mask = (u32)GENMASK(cpuclk->width - 1, 0);
+   206	
+   207		regmap_read(clkr->regmap, cpuclk->reg, &val);
+   208		val >>= (u32)(cpuclk->shift);
+   209	
+   210		return (u8)(val & mask);
+   211	}
+   212	
+   213	static int clk_cpu_8996_mux_set_parent(struct clk_hw *hw, u8 index)
+   214	{
+   215		u32 val;
+   216		struct clk_regmap *clkr = to_clk_regmap(hw);
+   217		struct clk_cpu_8996_mux *cpuclk = to_clk_cpu_8996_mux_hw(hw);
+   218		unsigned int mask = GENMASK(cpuclk->width + cpuclk->shift - 1,
+   219					    cpuclk->shift);
+   220	
+   221		val = (u32)index;
+   222		val <<= (u32)(cpuclk->shift);
+   223	
+   224		return regmap_update_bits(clkr->regmap, cpuclk->reg, mask, val);
+   225	}
+   226	
+   227	static int
+   228	clk_cpu_8996_mux_determine_rate(struct clk_hw *hw, struct clk_rate_request *req)
+   229	{
+   230		struct clk_cpu_8996_mux *cpuclk = to_clk_cpu_8996_mux_hw(hw);
+   231		struct clk_hw *parent = cpuclk->pll;
+   232	
+   233		req->best_parent_rate = clk_hw_round_rate(parent, req->rate);
+   234		req->best_parent_hw = parent;
+   235	
+   236		return 0;
+   237	}
+   238	
+ > 239	const struct clk_ops clk_cpu_8996_mux_ops = {
+   240		.set_parent = clk_cpu_8996_mux_set_parent,
+   241		.get_parent = clk_cpu_8996_mux_get_parent,
+   242		.determine_rate = clk_cpu_8996_mux_determine_rate,
+   243	};
+   244	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
