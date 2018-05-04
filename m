@@ -1,56 +1,36 @@
-Return-Path: <SRS0=QbTR=HV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:35804 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1751294AbeEBVbR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 2 May 2018 17:31:17 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH 2/2] smiapp: Support the "upside-down" property
-Date: Thu,  3 May 2018 00:31:15 +0300
-Message-Id: <20180502213115.24000-3-sakari.ailus@linux.intel.com>
-In-Reply-To: <20180502213115.24000-1-sakari.ailus@linux.intel.com>
-References: <20180502213115.24000-1-sakari.ailus@linux.intel.com>
+Return-Path: <SRS0=Xnq8=HX=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from m12-12.163.com ([220.181.12.12]:35571 "EHLO m12-12.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751519AbeEDJVQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 4 May 2018 05:21:16 -0400
+From: sunjg79@163.com
+Subject: [PATCH 0/2] add support for HiSilicon STB xHCI host controller
+Date: Fri,  4 May 2018 17:20:43 +0800
+Message-Id: <1525425645-17246-1-git-send-email-sunjg79@163.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, andy.yeh@intel.com
+To: mathias.nyman@intel.com, gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc: shawn.guo@linaro.org, xuejiancheng@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Jianguo Sun <sunjianguo1@huawei.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Use the "upside-down" property to tell that the sensor is mounted upside
-down. This reverses the behaviour of the VFLIP and HFLIP controls as well
-as the pixel order.
+From: Jianguo Sun <sunjianguo1@huawei.com>
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- Documentation/devicetree/bindings/media/i2c/nokia,smia.txt | 2 ++
- drivers/media/i2c/smiapp/smiapp-core.c                     | 3 +++
- 2 files changed, 5 insertions(+)
+This patch set adds bindings doc and xhci driver for xHCI host controller
+on HiSilicon STB SoCs.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
-index 33f10a94c381..c824cd7025b3 100644
---- a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
-@@ -29,6 +29,8 @@ Optional properties
- - reset-gpios: XSHUTDOWN GPIO
- - flash-leds: See ../video-interfaces.txt
- - lens-focus: See ../video-interfaces.txt
-+- upside-down: A boolean property. Tells that the sensor is mounted upside
-+  down.
- 
- 
- Endpoint node mandatory properties
-diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
-index 3b7ace395ee6..5bc91b5a5998 100644
---- a/drivers/media/i2c/smiapp/smiapp-core.c
-+++ b/drivers/media/i2c/smiapp/smiapp-core.c
-@@ -2801,6 +2801,9 @@ static struct smiapp_hwconfig *smiapp_get_hwconfig(struct device *dev)
- 
- 	dev_dbg(dev, "lanes %u\n", hwcfg->lanes);
- 
-+	if (fwnode_property_read_bool(fwnode, "upside-down"))
-+		hwcfg->module_board_orient = SMIAPP_MODULE_BOARD_ORIENT_180;
-+
- 	/* NVM size is not mandatory */
- 	fwnode_property_read_u32(fwnode, "nokia,nvm-size", &hwcfg->nvm_size);
- 
+Jianguo Sun (2):
+  dt-bindings: usb: add bindings doc for HiSilicon STB xHCI host
+    controller
+  xhci: hisilicon: support HiSilicon STB xHCI host controller
+
+ .../bindings/usb/hisilicon,histb-xhci.txt          |  40 ++
+ drivers/usb/host/Kconfig                           |   7 +
+ drivers/usb/host/Makefile                          |   1 +
+ drivers/usb/host/xhci-histb.c                      | 409 +++++++++++++++++++++
+ 4 files changed, 457 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/hisilicon,histb-xhci.txt
+ create mode 100644 drivers/usb/host/xhci-histb.c
+
 -- 
-2.11.0
+2.7.4
+
 
