@@ -1,18 +1,17 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 5/7] arm64: allwinner: h6: add R_INTC
- interrupt controller
-Date: Fri, 4 May 2018 17:10:00 +0200
-Message-ID: <20180504151000.uuvd54nzxe6p7b2f@flea>
+Subject: Re: [PATCH 6/7] arm64: allwinner: h6: add R_I2C controller
+Date: Fri, 4 May 2018 17:12:06 +0200
+Message-ID: <20180504151206.c6oi7vtaskg4sbys@flea>
 References: <20180503183847.11046-1-icenowy@aosc.io>
- <20180503183847.11046-6-icenowy@aosc.io>
+ <20180503183847.11046-7-icenowy@aosc.io>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="udvzld57c3qc4wzk"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSPPWHLQKGQEJRDPOQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="e4pavb2hql2yh5gb"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBR7QWHLQKGQERXRLOII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180503183847.11046-6-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20180503183847.11046-7-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,24 +23,25 @@ Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai 
 List-Id: devicetree@vger.kernel.org
 
 
---udvzld57c3qc4wzk
+--e4pavb2hql2yh5gb
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Fri, May 04, 2018 at 02:38:45AM +0800, Icenowy Zheng wrote:
-> Allwinner H6 SoC has also a R_INTC interrupt controller like Allwinner
-> A64 SoC, but has its base address changed due to the memory map change
-> in H6.
+On Fri, May 04, 2018 at 02:38:46AM +0800, Icenowy Zheng wrote:
+> Allwinner H6 SoC has a R_I2C controller wired to the PL0/PL1 pins, which
+> are used in the reference design to connect AXP805 PMIC.
 > 
-> Add it into the device tree.
+> Add support for it.
 > 
 > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-Applied, thanks!
+Dropped the headers (that should have been in your previous patch to
+maintain the bisectability) and changed for indices, and applied.
+
 Maxime
 
 -- 
 Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
---udvzld57c3qc4wzk--
+--e4pavb2hql2yh5gb--
