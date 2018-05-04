@@ -1,7 +1,7 @@
 From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 3/4] ASoC: wm8960: Make the node name generic
-Date: Fri,  4 May 2018 16:12:02 -0300
-Message-ID: <1525461123-16686-3-git-send-email-festevam@gmail.com>
+Subject: [PATCH 4/4] ASoC: cs42xx8: Make the node name generic
+Date: Fri,  4 May 2018 16:12:03 -0300
+Message-ID: <1525461123-16686-4-git-send-email-festevam@gmail.com>
 References: <1525461123-16686-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -32,21 +32,21 @@ Do as suggested in the binding example.
 
 Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
 ---
- Documentation/devicetree/bindings/sound/wm8960.txt | 2 +-
+ Documentation/devicetree/bindings/sound/cs42xx8.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/wm8960.txt b/Documentation/devicetree/bindings/sound/wm8960.txt
-index 2deb8a3..6d29ac3 100644
---- a/Documentation/devicetree/bindings/sound/wm8960.txt
-+++ b/Documentation/devicetree/bindings/sound/wm8960.txt
-@@ -23,7 +23,7 @@ Optional properties:
+diff --git a/Documentation/devicetree/bindings/sound/cs42xx8.txt b/Documentation/devicetree/bindings/sound/cs42xx8.txt
+index f631fbc..8619a15 100644
+--- a/Documentation/devicetree/bindings/sound/cs42xx8.txt
++++ b/Documentation/devicetree/bindings/sound/cs42xx8.txt
+@@ -16,7 +16,7 @@ Required properties:
  
  Example:
  
--codec: wm8960@1a {
-+wm8960: codec@1a {
- 	compatible = "wlf,wm8960";
- 	reg = <0x1a>;
- 
+-codec: cs42888@48 {
++cs42888: codec@48 {
+ 	compatible = "cirrus,cs42888";
+ 	reg = <0x48>;
+ 	clocks = <&codec_mclk 0>;
 -- 
 2.7.4
