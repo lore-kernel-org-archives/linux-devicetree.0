@@ -1,42 +1,93 @@
 From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-Subject: [PATCH v9 03/12] ARM: dts: sun8i: Add CPUCFG device node for A83T dtsi
-Date: Fri,  4 May 2018 21:05:36 +0200
-Message-ID: <20180504190545.5114-4-mylene.josserand@bootlin.com>
+Subject: [PATCH v9 07/12] ARM: sunxi: Add initialization of CNTVOFF
+Date: Fri,  4 May 2018 21:05:40 +0200
+Message-ID: <20180504190545.5114-8-mylene.josserand@bootlin.com>
 References: <20180504190545.5114-1-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180504190545.5114-1-mylene.josserand@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com
-Cc: devicetree@vger.kernel.org, opendmb@gmail.com, quentin.schulz@bootlin.com, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, f.fainelli@gmail.com, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, mylene.josserand@bootlin.com, linux-arm-kernel@lists.infradead.org
+Cc: f.fainelli@gmail.com, opendmb@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mylene.josserand@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-QXMgd2UgZm91bmQgaW4gc3VuOWktYTgwLCBDUFVDRkcgaXMgYSBjb2xsZWN0aW9uIG9mIHJlZ2lz
-dGVycyB0aGF0IGFyZQptYXBwZWQgdG8gdGhlIFNvQydzIHNpZ25hbHMgZnJvbSBlYWNoIGluZGl2
-aWR1YWwgcHJvY2Vzc29yIGNvcmUgYW5kCmFzc29jaWF0ZWQgcGVyaXBoZXJhbHMuCgpUaGVzZSBy
-ZWdpc3RlcnMgYXJlIHVzZWQgZm9yIFNNUCBicmluZ3VwIGFuZCBDUFUgaG90cGx1Z2dpbmcuCgpT
-aWduZWQtb2ZmLWJ5OiBNeWzDqG5lIEpvc3NlcmFuZCA8bXlsZW5lLmpvc3NlcmFuZEBib290bGlu
-LmNvbT4KUmV2aWV3ZWQtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4KLS0tCiBhcmNo
-L2FybS9ib290L2R0cy9zdW44aS1hODN0LmR0c2kgfCA1ICsrKysrCiAxIGZpbGUgY2hhbmdlZCwg
-NSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgz
-dC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC5kdHNpCmluZGV4IDM3OTk4MTM4
-OWVlYS4uYTUwY2NiNDc1ZGU4IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdW44aS1h
-ODN0LmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC5kdHNpCkBAIC0zNDks
-NiArMzQ5LDExIEBACiAJCQl9OwogCQl9OwogCisJCWNwdWNmZ0AxNzAwMDAwIHsKKwkJCWNvbXBh
-dGlibGUgPSAiYWxsd2lubmVyLHN1bjhpLWE4M3QtY3B1Y2ZnIjsKKwkJCXJlZyA9IDwweDAxNzAw
-MDAwIDB4NDAwPjsKKwkJfTsKKwogCQlzeXNjb246IHN5c2NvbkAxYzAwMDAwIHsKIAkJCWNvbXBh
-dGlibGUgPSAiYWxsd2lubmVyLHN1bjhpLWE4M3Qtc3lzdGVtLWNvbnRyb2xsZXIiLAogCQkJCSJz
-eXNjb24iOwotLSAKMi4xMS4wCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Add the initialization of CNTVOFF for sun8i-a83t.
+
+For boot CPU, create a new machine that handles this
+function's call in an "init_early" callback. We need to initialize
+CNTVOFF before the arch timer's initialization otherwise, it will
+not be taken into account and fails to boot correctly.
+Because of that, this function can't be called in SMP's early_initcall
+function which is called after timer's init.
+
+For secondary CPUs, add this function into secondary_startup
+assembly entry.
+
+Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ arch/arm/mach-sunxi/headsmp.S |  1 +
+ arch/arm/mach-sunxi/sunxi.c   | 20 +++++++++++++++++++-
+ 2 files changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/headsmp.S
+index 37dc772701f3..32d76be98541 100644
+--- a/arch/arm/mach-sunxi/headsmp.S
++++ b/arch/arm/mach-sunxi/headsmp.S
+@@ -71,6 +71,7 @@ ENDPROC(sunxi_mc_smp_cluster_cache_enable)
+ 
+ ENTRY(sunxi_mc_smp_secondary_startup)
+ 	bl	sunxi_mc_smp_cluster_cache_enable
++	bl	secure_cntvoff_init
+ 	b	secondary_startup
+ ENDPROC(sunxi_mc_smp_secondary_startup)
+ 
+diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
+index 5e9602ce1573..752e0748b0c8 100644
+--- a/arch/arm/mach-sunxi/sunxi.c
++++ b/arch/arm/mach-sunxi/sunxi.c
+@@ -16,6 +16,7 @@
+ #include <linux/platform_device.h>
+ 
+ #include <asm/mach/arch.h>
++#include <asm/secure_cntvoff.h>
+ 
+ static const char * const sunxi_board_dt_compat[] = {
+ 	"allwinner,sun4i-a10",
+@@ -62,7 +63,6 @@ MACHINE_END
+ static const char * const sun8i_board_dt_compat[] = {
+ 	"allwinner,sun8i-a23",
+ 	"allwinner,sun8i-a33",
+-	"allwinner,sun8i-a83t",
+ 	"allwinner,sun8i-h2-plus",
+ 	"allwinner,sun8i-h3",
+ 	"allwinner,sun8i-r40",
+@@ -75,6 +75,24 @@ DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i Family")
+ 	.dt_compat	= sun8i_board_dt_compat,
+ MACHINE_END
+ 
++void __init sun8i_a83t_cntvoff_init(void)
++{
++#ifdef CONFIG_SMP
++	secure_cntvoff_init();
++#endif
++}
++
++static const char * const sun8i_a83t_cntvoff_board_dt_compat[] = {
++	"allwinner,sun8i-a83t",
++	NULL,
++};
++
++DT_MACHINE_START(SUN8I_A83T_CNTVOFF_DT, "Allwinner sun8i-a83t board")
++	.init_early	= sun8i_a83t_cntvoff_init,
++	.init_time	= sun6i_timer_init,
++	.dt_compat	= sun8i_a83t_cntvoff_board_dt_compat,
++MACHINE_END
++
+ static const char * const sun9i_board_dt_compat[] = {
+ 	"allwinner,sun9i-a80",
+ 	NULL,
+-- 
+2.11.0
