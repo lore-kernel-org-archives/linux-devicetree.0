@@ -1,154 +1,144 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 5/6] drm/vc4: Support the case where the DSI device is
- disabled
-Date: Fri, 4 May 2018 15:56:51 +0200
-Message-ID: <20180504135651.GY13459@ulmo>
-References: <20180503164009.14395-1-boris.brezillon@bootlin.com>
- <20180503164009.14395-6-boris.brezillon@bootlin.com>
- <20180504102833.GJ13459@ulmo> <20180504140525.152d8d8e@bbrezillon>
- <20180504132915.GX13459@ulmo> <20180504154906.2527d92b@bbrezillon>
+From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 09/10] ARM: dts: sun7i-a20: Add Video
+ Engine and reserved memory nodes
+Date: Fri, 04 May 2018 15:57:48 +0200
+Message-ID: <dd6b502c66aad1fe34eb0b16a1e44a4ebfd172f1.camel@bootlin.com>
+References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
+	 <20180419154536.17846-5-paul.kocialkowski@bootlin.com>
+	 <20180420073908.nkcbsdxibnzkqski@flea>
+	 <82057e2f734137a3902d9313c228b01ceb345ee7.camel@bootlin.com>
+	 <20180504084008.h6p4brari3xrbv6l@flea>
+	 <e8cd340605ab4db8ebf2888a4fce645e8bc481d0.camel@bootlin.com>
+	 <20180504091555.idgtzey53lozj2uh@flea>
+	 <fc064c3f1534a6082dc2b4e18454e054b53e5aee.camel@bootlin.com>
+	 <20180504134033.wngpe5scyisreonn@flea>
+Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1227163806=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180504154906.2527d92b@bbrezillon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-mE95aWzEnbnH7U7+7hKq"
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBOWOWHLQKGQEMMJYANI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180504134033.wngpe5scyisreonn@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---===============1227163806==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="1fZJyN7nFm/tosmV"
-Content-Disposition: inline
+--=-mE95aWzEnbnH7U7+7hKq
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, 2018-05-04 at 15:40 +0200, Maxime Ripard wrote:
+> On Fri, May 04, 2018 at 02:04:38PM +0200, Paul Kocialkowski wrote:
+> > On Fri, 2018-05-04 at 11:15 +0200, Maxime Ripard wrote:
+> > > On Fri, May 04, 2018 at 10:47:44AM +0200, Paul Kocialkowski wrote:
+> > > > > > > > +			reg = <0x01c0e000 0x1000>;
+> > > > > > > > +			memory-region = <&ve_memory>;
+> > > > > > > 
+> > > > > > > Since you made the CMA region the default one, you don't
+> > > > > > > need
+> > > > > > > to
+> > > > > > > tie
+> > > > > > > it to that device in particular (and you can drop it being
+> > > > > > > mandatory
+> > > > > > > from your binding as well).
+> > > > > > 
+> > > > > > What if another driver (or the system) claims memory from
+> > > > > > that
+> > > > > > zone
+> > > > > > and
+> > > > > > that the reserved memory ends up not being available for the
+> > > > > > VPU
+> > > > > > anymore?
+> > > > > > 
+> > > > > > Acccording to the reserved-memory documentation, the
+> > > > > > reusable
+> > > > > > property
+> > > > > > (that we need for dmabuf) puts a limitation that the device
+> > > > > > driver
+> > > > > > owning the region must be able to reclaim it back.
+> > > > > > 
+> > > > > > How does that work out if the CMA region is not tied to a
+> > > > > > driver
+> > > > > > in
+> > > > > > particular?
+> > > > > 
+> > > > > I'm not sure to get what you're saying. You have the property
+> > > > > linux,cma-default in your reserved region, so the behaviour
+> > > > > you
+> > > > > described is what you explicitly asked for.
+> > > > 
+> > > > My point is that I don't see how the driver can claim back (part
+> > > > of)
+> > > > the
+> > > > reserved area if the area is not explicitly attached to it.
+> > > > 
+> > > > Or is that mechanism made in a way that all drivers wishing to
+> > > > use
+> > > > the
+> > > > reserved memory area can claim it back from the system, but
+> > > > there is
+> > > > no
+> > > > priority (other than first-come first-served) for which drivers
+> > > > claims
+> > > > it back in case two want to use the same reserved region (in a
+> > > > scenario
+> > > > where there isn't enough memory to allow both drivers)?
+> > > 
+> > > This is indeed what happens. Reusable is to let the system use the
+> > > reserved memory for things like caches that can easily be dropped
+> > > when
+> > > a driver wants to use the memory in that reserved area. Once that
+> > > memory has been allocated, there's no claiming back, unless that
+> > > memory segment was freed of course.
+> > 
+> > Thanks for the clarification. So in our case, perhaps the best fit
+> > would
+> > be to make that area the default CMA pool so that we can be ensured
+> > that
+> > the whole 96 MiB is available for the VPU and that no other consumer
+> > of
+> > CMA will use it?
+> 
+> The best fit for what use case ? We already discussed this, and I
+> don't see any point in having two separate CMA regions. If you have a
+> reasonably sized region that will accomodate for both the VPU and
+> display engine, why would we want to split them?
 
---1fZJyN7nFm/tosmV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The use case I have in mind is boilerplate use of the VPU with the
+display engine, say with DMAbuf.
 
-On Fri, May 04, 2018 at 03:49:06PM +0200, Boris Brezillon wrote:
-> On Fri, 4 May 2018 15:29:15 +0200
-> Thierry Reding <thierry.reding@gmail.com> wrote:
->=20
-> > On Fri, May 04, 2018 at 02:05:25PM +0200, Boris Brezillon wrote:
-> > > On Fri, 4 May 2018 12:28:33 +0200
-> > > Thierry Reding <thierry.reding@gmail.com> wrote:
-> > >  =20
-> > > > On Thu, May 03, 2018 at 06:40:08PM +0200, Boris Brezillon wrote: =
-=20
-> > > > > Having a device with a status property !=3D "okay" in the DT is a=
- valid
-> > > > > use case, and we should not prevent the registration of the DRM d=
-evice
-> > > > > when the DSI device connected to the DSI controller is disabled.
-> > > > >=20
-> > > > > Consider the ENODEV return code as a valid result and do not expo=
-se the
-> > > > > DSI encoder/connector when it happens.
-> > > > >=20
-> > > > > Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> > > > > ---
-> > > > >  drivers/gpu/drm/vc4/vc4_dsi.c | 15 +++++++++++++--
-> > > > >  1 file changed, 13 insertions(+), 2 deletions(-)
-> > > > >=20
-> > > > > diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/=
-vc4_dsi.c
-> > > > > index 8aa897835118..db2f137f8b7b 100644
-> > > > > --- a/drivers/gpu/drm/vc4/vc4_dsi.c
-> > > > > +++ b/drivers/gpu/drm/vc4/vc4_dsi.c
-> > > > > @@ -1606,8 +1606,18 @@ static int vc4_dsi_bind(struct device *dev=
-, struct device *master, void *data)
-> > > > > =20
-> > > > >  	ret =3D drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
-> > > > >  					  &panel, &dsi->bridge);
-> > > > > -	if (ret)
-> > > > > +	if (ret) {
-> > > > > +		/* If the bridge or panel pointed by dev->of_node is not
-> > > > > +		 * enabled, just return 0 here so that we don't prevent the DRM
-> > > > > +		 * dev from being registered. Of course that means the DSI
-> > > > > +		 * encoder won't be exposed, but that's not a problem since
-> > > > > +		 * nothing is connected to it.
-> > > > > +		 */
-> > > > > +		if (ret =3D=3D -ENODEV)
-> > > > > +			return 0;
-> > > > > +
-> > > > >  		return ret;
-> > > > > +	}
-> > > > > =20
-> > > > >  	if (panel) {
-> > > > >  		dsi->bridge =3D devm_drm_panel_bridge_add(dev, panel,
-> > > > > @@ -1652,7 +1662,8 @@ static void vc4_dsi_unbind(struct device *d=
-ev, struct device *master,
-> > > > >  	struct vc4_dev *vc4 =3D to_vc4_dev(drm);
-> > > > >  	struct vc4_dsi *dsi =3D dev_get_drvdata(dev);
-> > > > > =20
-> > > > > -	pm_runtime_disable(dev);
-> > > > > +	if (dsi->bridge)
-> > > > > +		pm_runtime_disable(dev);   =20
-> > > >=20
-> > > > Is this safe? This uses component/master, so dsi->bridge is going to
-> > > > remain valid until the driver's ->remove() is called. So technicall=
-y you
-> > > > could have a situation where drm_of_find_panel_or_bridge() returned=
- some
-> > > > error code that remains stored in dsi->bridge and cause the above
-> > > > condition to be incorrectly true. =20
-> > >=20
-> > > No, because of_drm_find_bridge() (which is called from
-> > > drm_of_find_panel_or_bridge() returns either NULL or a valid bridge
-> > > pointer), so dsi->bridge either points to a valid bridge object or is
-> > > NULL. Am I missing something? =20
-> >=20
-> > The return value of devm_drm_panel_bridge_add() is also assigned to
-> > dsi->bridge later on (in the "if (panel)" conditional).
->=20
-> But then we return an error code if IS_ERR(dsi->bridge) [1], which
-> should prevent the unbind function from being called, right?
+It wasn't exactly clear in my memory whether we had decided that the CMA
+pool we use for the VPU should also be used for other CMA consumers (I
+realize that this is what we've been doing all along by having
+linux,cma-default; though).
 
-Right, that should work. Seems safe, then.
+The fact that the memory region will accomodate for both the display
+engine and the VPU is not straightforward IMO and I think this has to be
+an explicit choice that we take. I was under the impression that we
+chose the 96 MiB because that's what the Allwinner reference code does.
+Does the reference code also use this pool for display?
 
-Thierry
+I liked the idea of having 96 MiB fully reserved to the VPU because it
+allows us to provide a limit on the use case, such as "this guarantees N
+buffers for resolution foo in format bar". If the display engine also
+uses it, then the limit also depends on how many GEM buffers are
+allocated (unless I'm missing something).
 
---1fZJyN7nFm/tosmV
-Content-Type: application/pgp-signature; name="signature.asc"
+> Or did you have any experience of running out of buffers?
 
------BEGIN PGP SIGNATURE-----
+Not yet, I haven't. I have no objection with making the reserved region
+the default CMA pool and have other consumers use it too.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlrsZqAACgkQ3SOs138+
-s6H9zBAAkdtw+P991CC3fRmrq6jFxLN6Bcz7BRbALmsIto18G9tVothhspIAYenl
-4mpI3JRYlbdgkpTqsPikO9Xr2aOqGLQPF1PaK89fgrtuFLPn1NL0DX12+7IaCCWb
-OuDeu7bdImgF0yFFPj8xqY+0zfJvI6FgnaD/qiE7eNqAAAppBRDy2KlMha+BDDmW
-dPgiwV3R/R4Op3G5NaNyaMmMqo1gLEtocWN5LED2qfVqfCK+pMqVVf6VDNQdxPQM
-vPDUuPi5ZL+CCr/+ZnrDqkd5bDJvmk7ar5q7/QEA+Y/sgAQ0SYv2s5mZ4tmvvAa1
-Qw+lhAvXl70wZOUuN9LtGrMAgV8gipokQrqR6DSOUwoWUhio3qYzaD+F3NOVovfQ
-cd7h4Eq8TCgyaza/AssRr5iSrt6A7D9QAXvsaoHsSrn2JdNOStIANZsGY39p/VPI
-ZuE3/3W0NIZvqsJS3NKspZPl7z0eEHarqajd6v683tzWPRLiCEwkpD5Sn934bsg1
-KaFNGAGjTSCBeqIl3YTEPczRaOrdFV8VGyKlIweLYgsQRJ8iBXu494idYcVNdfiE
-9Zt4srPumGYYOFcrR/u8PhHjSP2Ow5GhNCt+0c4WB34MZpP7XLU3qwGUNH0Azwxl
-UjuTCCtafkiw7sQIaqwRfkBYwB2vt0AQtv/GIHXi1WWxKdzq/Tk=
-=8bBD
------END PGP SIGNATURE-----
+Cheers,
 
---1fZJyN7nFm/tosmV--
-
---===============1227163806==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1227163806==--
+-- 
+Paul Kocialkowski, Bootlin (formerly Free Electrons)
+Embedded Linux and kernel engineering
+https://bootlin.com
+--=-mE95aWzEnbnH7U7+7hKq--
