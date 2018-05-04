@@ -1,120 +1,87 @@
-Return-Path: <SRS0=Rw9b=HW=cogentembedded.com=sergei.shtylyov@kernel.org>
-Subject: [PATCH v3 3/5] pcie-rcar: add R-Car gen3 PHY support
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-References: <b98130a7-b128-9fc3-aee1-1a5a2590b320@cogentembedded.com>
-Message-ID: <def3b364-088b-3fcc-47ab-bcb0838b8fe4@cogentembedded.com>
-Date: Thu, 3 May 2018 22:40:54 +0300
+Return-Path: <SRS0=vUYB=HX=bootlin.com=maxime.ripard@kernel.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v12 0/4] media: v4l: Add support for the Cadence MIPI-CSI2 TX controller
+Date: Fri,  4 May 2018 16:08:06 +0200
+Message-Id: <20180504140810.29497-1-maxime.ripard@bootlin.com>
 MIME-Version: 1.0
-In-Reply-To: <b98130a7-b128-9fc3-aee1-1a5a2590b320@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: horms@verge.net.au, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On R-Car gen3 SoCs the PCIe PHY has its own register region -- and I have
-written a generic PHY driver for it, thus we need to add the corresponding
-code in rcar_pcie_hw_init_gen3() and call devm_phy_optional_get() at the
-driver's probing time, so that the existing R-Car gen3 device trees (not
-having a PHY node) would still work (we only need to power up the PHY on
-R-Car V3H).
+Hi,
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Here is a hopefully final attempt at supporting the MIPI-CSI2 RX and
+TX blocks from Cadence.
 
----
-Changes in version 3:
-- removed double spaces in the patch description;
-- added Simon's tag;
-- refreshed atop of the recent driver/bindings patches.
+This is a merged serie of the CSI2-RX and CSI2-TX series I've been
+sending for a while now and gathered a significant amount of
+Reviewed-by/Acked-by. The merge has been done thanks to Sakari's
+suggestion to ease the merge and the dependency between the two
+drivers on the MAINTAINERS/Kconfig/Makefile sides.
 
-Changes in version 2:
-- updated the bindings.
+The CSI2-RX has not received any comment on its previous iteration,
+and CSI2-TX received some minor comments from Sakari that have been
+fixed in this series. You can have a look at the Changelog below if
+needed.
 
- Documentation/devicetree/bindings/pci/rcar-pci.txt |    5 +++
- drivers/pci/host/pcie-rcar.c                       |   27 +++++++++++++++++++--
- 2 files changed, 30 insertions(+), 2 deletions(-)
+The TX controller is able to receive 4 video streams and stream them over a
+MIPI-CSI2 link using up to 4 lanes. Those streams are basically the
+interfaces to controllers generating some video signals, like a camera
+or a pattern generator.
 
-Index: pci/Documentation/devicetree/bindings/pci/rcar-pci.txt
-===================================================================
---- pci.orig/Documentation/devicetree/bindings/pci/rcar-pci.txt
-+++ pci/Documentation/devicetree/bindings/pci/rcar-pci.txt
-@@ -32,6 +32,11 @@ compatible: "renesas,pcie-r8a7743" for t
- 	and PCIe bus clocks.
- - clock-names: from common clock binding: should be "pcie" and "pcie_bus".
- 
-+Optional properties:
-+- phys: from common PHY binding: PHY phandle and specifier (only make sense
-+	for R-Car gen3 SoCs where the PCIe PHYs have their own register blocks).
-+- phy-names: from common PHY binding: should be "pcie".
-+
- Example:
- 
- SoC-specific DT Entry:
-Index: pci/drivers/pci/host/pcie-rcar.c
-===================================================================
---- pci.orig/drivers/pci/host/pcie-rcar.c
-+++ pci/drivers/pci/host/pcie-rcar.c
-@@ -25,6 +25,7 @@
- #include <linux/of_pci.h>
- #include <linux/of_platform.h>
- #include <linux/pci.h>
-+#include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
-@@ -141,6 +142,7 @@ static inline struct rcar_msi *to_rcar_m
- /* Structure representing the PCIe interface */
- struct rcar_pcie {
- 	struct device		*dev;
-+	struct phy		*phy;
- 	void __iomem		*base;
- 	struct list_head	resources;
- 	int			root_bus_nr;
-@@ -667,6 +669,21 @@ static int rcar_pcie_hw_init_gen2(struct
- 	return rcar_pcie_hw_init(pcie);
- }
- 
-+static int rcar_pcie_hw_init_gen3(struct rcar_pcie *pcie)
-+{
-+	int err;
-+
-+	err = phy_init(pcie->phy);
-+	if (err)
-+		return err;
-+
-+	err = phy_power_on(pcie->phy);
-+	if (err)
-+		return err;
-+
-+	return rcar_pcie_hw_init(pcie);
-+}
-+
- static int rcar_msi_alloc(struct rcar_msi *chip)
- {
- 	int msi;
-@@ -916,6 +933,10 @@ static int rcar_pcie_get_resources(struc
- 	struct resource res;
- 	int err, i;
- 
-+	pcie->phy = devm_phy_optional_get(dev, "pcie");
-+	if (IS_ERR(pcie->phy))
-+		return PTR_ERR(pcie->phy);
-+
- 	err = of_address_to_resource(dev->of_node, 0, &res);
- 	if (err)
- 		return err;
-@@ -1056,8 +1077,10 @@ static const struct of_device_id rcar_pc
- 	  .data = rcar_pcie_hw_init_gen2 },
- 	{ .compatible = "renesas,pcie-rcar-gen2",
- 	  .data = rcar_pcie_hw_init_gen2 },
--	{ .compatible = "renesas,pcie-r8a7795", .data = rcar_pcie_hw_init },
--	{ .compatible = "renesas,pcie-rcar-gen3", .data = rcar_pcie_hw_init },
-+	{ .compatible = "renesas,pcie-r8a7795",
-+	  .data = rcar_pcie_hw_init_gen3 },
-+	{ .compatible = "renesas,pcie-rcar-gen3",
-+	  .data = rcar_pcie_hw_init_gen3 },
- 	{},
- };
- 
+The RX controller is able to receive CSI data over up to 4 lanes, and
+split it to over 4 streams. Those streams are basically the interfaces
+to the video grabbers that will perform the capture.
+
+TX is then able to map input streams to CSI2 virtual channels and
+datatypes dynamically. The streaming devices choose their virtual
+channels through an additional signal that is transparent to the
+CSI2-TX. The datatypes however are yet another additional input
+signal, and can be mapped to any CSI2 datatypes. RX can do the
+opposite, being able to take virtual channel / datatypes and route
+them to proper pixel interfaces on demand.
+
+Since v4l2 doesn't really allow for that setup at the moment, this
+preliminary version is a rather dumb one in order to start the
+discussion on how to address this properly.
+
+Let me know what you think!
+Maxime
+
+Changes from v11:
+  - Added Makefile license
+  - Added Benoit's Acked-by
+  - Ignored the CSI2-RX return code on stop, and just log an error
+    instead
+
+Changes from CSI2-TX v10:
+  - Reword the source pad exception comment
+  - Handle the V4L2_SUBDEV_FORMAT_TRY case for get_fmt / set_fmt
+
+Maxime Ripard (4):
+  dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
+  v4l: cadence: Add Cadence MIPI-CSI2 RX driver
+  dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
+  v4l: cadence: Add Cadence MIPI-CSI2 TX driver
+
+ .../devicetree/bindings/media/cdns,csi2rx.txt | 100 ++++
+ .../devicetree/bindings/media/cdns,csi2tx.txt |  98 +++
+ MAINTAINERS                                   |   7 +
+ drivers/media/platform/Kconfig                |   1 +
+ drivers/media/platform/Makefile               |   1 +
+ drivers/media/platform/cadence/Kconfig        |  34 ++
+ drivers/media/platform/cadence/Makefile       |   4 +
+ drivers/media/platform/cadence/cdns-csi2rx.c  | 498 ++++++++++++++++
+ drivers/media/platform/cadence/cdns-csi2tx.c  | 563 ++++++++++++++++++
+ 9 files changed, 1306 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+ create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+ create mode 100644 drivers/media/platform/cadence/Kconfig
+ create mode 100644 drivers/media/platform/cadence/Makefile
+ create mode 100644 drivers/media/platform/cadence/cdns-csi2rx.c
+ create mode 100644 drivers/media/platform/cadence/cdns-csi2tx.c
+
+-- 
+2.17.0
