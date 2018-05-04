@@ -1,82 +1,62 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
-Date: Fri, 4 May 2018 07:16:00 +0200
-Message-ID: <44A0BC7C-67C7-4116-849F-90FF7CF2B1F0@goldelico.com>
-References: <20180424163458.11947-1-johan@kernel.org> <20180424163458.11947-5-johan@kernel.org> <CAL_Jsq+mCp=geT8t_j+0fuTxAB7C9RYn6pESRpLc2GH273fM1Q@mail.gmail.com> <20180426091018.GU4615@localhost> <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com> <20180502081637.GE2285@localhost> <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com> <20180503205037.7be552c1@aktux>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: multipart/signed; boundary="Apple-Mail=_616FFBD6-319C-45AC-80B9-58545B949B9C"; protocol="application/pgp-signature"; micalg=pgp-sha256
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH v7 0/2] PCI: mediatek: Fixups for the IRQ handle routine and MT7622's class code
+Date: Fri, 4 May 2018 13:47:31 +0800
+Message-ID: <1525412853-24367-1-git-send-email-honghui.zhang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180503205037.7be552c1@aktux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
+To: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
+Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
---Apple-Mail=_616FFBD6-319C-45AC-80B9-58545B949B9C
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=us-ascii
+Two fixups for mediatek's host bridge:
+The first patch fixup class type and vendor ID for MT7622.
+The second patch fixup the IRQ handle routine by using irq_chip solution
+to avoid IRQ reentry which may exist for both MT2712 and MT7622.
 
-Hi Andreas,
+Change since v6:
+ - Remove the irq_mask, irq_unmask callback in lower layer irq_chip since we
+   have set the MSI_FLAG_USE_DEF_CHIP_OPS flags.
+ - Add irq_ack callback in irq_chip to handle edge IRQ.
+ - Uing handle_edge_irq to handle the MSI IRQs.
 
-> Am 03.05.2018 um 20:50 schrieb Andreas Kemnade <andreas@kemnade.info>:
-> 
-> On Thu, 3 May 2018 11:35:21 +0200
-> H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> 
-> 
->> I have realized that the w2sg0004 is an exception (although a Sirf chip)
->> that it does not provide a WAKEUP signal. And another significant
->> difference is that we have to keep the serdev UART enabled even if there
->> is no user-space client. Otherwise we are not able to detect unexpected
->> activity. So we unfortunately can't move serdev open/close into the .open
->> and .close ops but need to open it in probe.
->> 
-> how much power does it use to keep the uart enabled? Or should it
-> better be reprogrammed as gpio?
+Change since v5:
+ - Make the comments consistend with the code modification in the first patch.
+ - Using writew to performing a 16-bit write.
+ - Using irq_chip solution to fix the IRQ issue.
 
-I think it does not need much more (if at all) than a gpio controller on
-the OMAP3 chip (I think the clocks are active anyways for use by the other
-UARTs).
+The v5 patchset could be found in:
+ https://patchwork.kernel.org/patch/10133303
+ https://patchwork.kernel.org/patch/10133305
 
-We had proposed years ago to reprogram the UART RX pin by pinmux-states
-into an interrupt gpio but that was rejected because it was not general
-enough and ugly in the device tree (an rx-gpios record where the rx-line
-is already connected to the UART-rx).
+Change since v4:
+ - Only setup vendor ID for MT7622, igorning the device ID since mediatek's
+   host bridge driver does not cares about the device ID.
 
-Then we did experiment with tapping the UART driver and finally the
-serdev API was developed to solve this problem. Hence we use it now this
-way.
+Change since v3:
+ - Setup the class type and vendor ID at the beginning of startup instead
+   of in a quirk.
+ - Add mediatek's vendor ID, it could be found in:
+   https://pcisig.com/membership/member-companies?combine=&page=4
 
-BR and thanks,
-Nikolaus
+Change since v2:
+ - Move the initialize of the iterate before the loop to fix an
+   INTx IRQ issue in the first patch
 
+Change since v1:
+ - Add the second patch.
+ - Make the first patch's commit message more standard.
 
+Honghui Zhang (2):
+  PCI: mediatek: Set up vendor ID and class type for MT7622
+  PCI: mediatek: Using chained IRQ to setup IRQ handle
 
---Apple-Mail=_616FFBD6-319C-45AC-80B9-58545B949B9C
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP using GPGMail
+ drivers/pci/host/pcie-mediatek.c | 234 +++++++++++++++++++++++----------------
+ include/linux/pci_ids.h          |   2 +
+ 2 files changed, 143 insertions(+), 93 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJa6+yRAAoJEIl79TGLgAm6n9MP/ioJJNtWTpXLVcDKETg7CFxN
-FirfrzbJU07z3SwTU9fPtf8VcC6Uu6835f+1LYUXS8QmYGGwZRSH2miwSQKfYwgy
-TmEnDjNph5HfS8EP8ONnL6fcYndYsDyxdhqZ9joi6sjUyRriCjDIjtimZY9vddCW
-XnRm/N92wIKxFoReCJXNOJxtGZ7Ashi0hIVW67o0d1EGbqyttdnzPWRo9BGw6/JU
-4+HmgnW5JB8lX0Q5fk8BTni0h2GEWM3KVfqs8jtwKxehTixi7E2h5XfWTtl4swBY
-Cp250gAZZTlo1QfFSOwS0B58AVO8fecL92zuC2C2tvwtpGZqnQ8UmtoMf3rgR4eo
-Q+Ph6QVFrez0LdI+hOBvQzcAwX6k4rs3BwDYT5X4ZXRImYco2IJc6TwzEGBSp5vP
-Arkwm5atWHqCU0qVCzmeAuiUEVb47vYMSQ9fUKYnu1e87NVgpMLP91CQ7xGnuFgw
-9pNhsIpD+jS2l98/WP8jo9a9BywhvwniyVotWXKVSXC9+9zNUVMDfmE0vKZNWiX5
-YD2vu0kcS7FH0E1te7BdbRUZVzVCl9w/tfBQfbqH0YqMulREEALb5GEBO38VqZDg
-ExUg45Xu8/b1PjtJf4vUBVSBOGDP9VtF2XTCWUWtIu/Qs/9tZTlAUTdGRy69igAR
-v+HkIxWuv2aCoTPh9jOK
-=IwUu
------END PGP SIGNATURE-----
-
---Apple-Mail=_616FFBD6-319C-45AC-80B9-58545B949B9C--
+-- 
+2.6.4
