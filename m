@@ -1,21 +1,16 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Add dts file for the A20-linova1-7
- HMI
-Date: Fri, 4 May 2018 10:06:52 +0200
-Message-ID: <20180504080652.dniwaqqhbeuknp7y@flea>
-References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
- <1521662593-25468-7-git-send-email-giulio.benetti@micronovasrl.com>
- <20180322180508.my64gobhh5rc2x2m@flea>
- <8ef3b259-03b4-6987-286e-36ff627a8b76@micronovasrl.com>
- <20180424084137.7xfwji2gcibxavvt@flea>
- <03a02abb-e95c-b4ec-748f-907c0af67969@micronovasrl.com>
- <20180425184016.xktppxw7egddr7li@flea>
- <42feccc9-1d09-9ff2-3ccc-1dea63bacfb6@micronovasrl.com>
- <839d2560-0250-9b3a-8019-4e83d9e931e2@micronovasrl.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v2 6/6] drm/panel: rpi-touchscreen: Set status to "fail"
+ when ->probe() fails
+Date: Fri, 4 May 2018 10:06:53 +0200
+Message-ID: <20180504100653.6ee70802@bbrezillon>
+References: <20180503164009.14395-1-boris.brezillon@bootlin.com>
+ <20180503164009.14395-7-boris.brezillon@bootlin.com>
+ <CAL_JsqJMarPW6sdcF1ZFCEr6wGyPgi2yhYMCxgypUYYwN7ayfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0571139228=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <839d2560-0250-9b3a-8019-4e83d9e931e2@micronovasrl.com>
+In-Reply-To: <CAL_JsqJMarPW6sdcF1ZFCEr6wGyPgi2yhYMCxgypUYYwN7ayfQ@mail.gmail.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -25,158 +20,87 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============0571139228==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rttcqilsjxraxvtj"
-Content-Disposition: inline
-
-
---rttcqilsjxraxvtj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, May 02, 2018 at 06:41:34PM +0200, Giulio Benetti wrote:
-> > > You don't have to handcode the fragments anymore with the new syntax,
-> > > and U-Boot makes it really trivial to use if you use the FIT image
-> > > format to have multiple overlays bundled in the same image. You can
-> > > choose to apply them dynamically, for example based on an EEPROM or
-> > > some other metric to see which combination you have.
-> >=20
-> > Ah, this is interesting. I'm going to experiment with that.
-> >=20
->=20
-> I'm struggling against this, I don't really know how to proceed,
-> except keeping monolithic dts files including other dtsi files.
->=20
-> About dt-overlays I've tried to look around lot of time,
-> but the only thing I've found is this:
-> https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
-/tree/arch/arm/boot/dts?h=3Dtopic/renesas-overlays
->=20
-> where they use .dtso tagging them as "/plugin/;"
-> and compile all .dtso found in dts folder.
-> Then they obtain .dtbo files that should be the dt-overlays we have spoken
-> about right?
-
-Yes. You don't have to do that though, you can just rely on dtc to
-compile them, outside of the linux build system.
-
-> What I can't understand is if there's a real standard at this time to
-> follow, because on renesas-driver they use their way to handle all .dtso
-> files, but on mainline there seems to be nothing about that.
-
-I'm not sure what you mean here. It's just fragments of device tree,
-that have to be compiled using dtc, that's it. You can use the Linux
-build system infrastructure to do that, or you can build your own
-simpler one. That's really up to you. See for example
-https://github.com/NextThingCo/CHIP-dt-overlays/blob/master/Makefile
-
-(even though the overlays themselves use the legacy syntax and
-shouldn't really be used an examples)
-
-> So at the moment I'm trying to compile dts tagged as /plugin/;
-> but dtc gives me a lot of warnings.
->=20
-> dts:
-> "
-> /dts-v1/;
-> /plugin/;
->=20
-> #include <dt-bindings/gpio/gpio.h>
-> #include <dt-bindings/interrupt-controller/irq.h>
->=20
-> &i2c2 {
-> 	pinctrl-names =3D "default";
-> 	pinctrl-0 =3D <&i2c2_pins_a>;
-> 	status =3D "okay";
->=20
-> 	ft5x {
-> 		compatible =3D "edt,edt-ft5306";
-> 		reg =3D <0x38>;
-> 		interrupt-parent =3D <&pio>;
-> 		interrupts =3D <7 2 IRQ_TYPE_EDGE_FALLING>; /* PH2 */
-> 		reset-gpios =3D <&pio 7 3 GPIO_ACTIVE_LOW>; /* PH3 */
-> 		touchscreen-size-x =3D <480>;
-> 		touchscreen-size-y =3D <272>;
-> 	};
-> };
-> "
->=20
-> Build output issuing make ARCH=3Darm CROSS_COMPILE=3Darm-linux- aaa.dtb (=
-I use
-> aaa.dts as source):
-> "
-> arch/arm/boot/dts/aaa.dtb: Warning (reg_format):
-> /fragment@0/__overlay__/ft5x:reg: property has invalid length (4 bytes)
-> (#address-cells =3D=3D 2, #size-cells =3D=3D 1)
-> arch/arm/boot/dts/aaa.dtb: Warning (pci_device_bus_num): Failed prerequis=
-ite
-> 'reg_format'
-> arch/arm/boot/dts/aaa.dtb: Warning (simple_bus_reg): Failed prerequisite
-> 'reg_format'
-> arch/arm/boot/dts/aaa.dtb: Warning (avoid_default_addr_size):
-> /fragment@0/__overlay__/ft5x: Relying on default #address-cells value
-> arch/arm/boot/dts/aaa.dtb: Warning (avoid_default_addr_size):
-> /fragment@0/__overlay__/ft5x: Relying on default #size-cells value
-> "
-
-Yeah, your i2c node doesn't have the right address-cells and
-size-cells properties value, like dtc is telling you.
-
-> Then in uboot I'm trying to do as follows:
-> # fdt addr 0x43000000 (where dtb is)
-> # fdt resize 8192
-> # fdt apply 0x430c0000 (where dtbo is)
-> But it gives me "libfdt fdt_check_header(): FDT_ERR_BADMAGIC"
-> (I was expecting some error)
-
-It looks like your overlay hasn't been properly loaded.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---rttcqilsjxraxvtj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrsFJsACgkQ0rTAlCFN
-r3TVBw/9F7pOTRJNK4/JtxdlsA7UcgdtzJy9YXm9DySLRCZltkonNjqJOI9Niwt7
-D7hWMZrP0HSrN0ecl3+2LLiVd/JPJ40EX++3iCnLmyNmJv7WVDyhYFiRGd+ktaZ4
-xH9PMJsBu75wDucsZc6GJo2Md6zXb6VEpQ7tsbXQTqIZXq43iOpeCSZxqiQwbWkn
-V6BaD/aIZoQxnaFBxIwj5ennlL9E+0QpsgOePNvGUD5Uz1o0lM04T5ldUi6B8QA0
-5znF2fAq1MDBqwbYPqLBGScfcEVoURpPP9Upt8JesYAJXUTmCLeL1hRVutNidFJH
-m/6D7fYJ6Qg5lAqOiNKu/ddOKsBCQzvt+Ua3bdwvhqlCVTpHxqNCd2x3q/XNXoyF
-57QXkqWLUrHp+6D0JZlIAOYZY2Nl3gR3yATW2bnx+ppF4ACFnECaYZlcpCUTuaKJ
-d4tPL+urjiimjvqxTK/j8tRjQkAu3MR8bj1kDNwe/7aqVkMICpje5fz12T8hhnAu
-GJkL6W3nZpuDQrStcZAym6ASw4W9EV/AqpTINHLaTE0AOxC5ulSIETNcGLAtRqeD
-z6ypjIvI/NRB44RNqaEyvm1FgENnqvZ5A94PEPQEEfjzee4kzPhWU3v92/T5/LQ4
-rsZcKZFiTQm0jq0nlQquOy9zkkZogAfe1DmW62ZY+uFFEVYrU9M=
-=jt3Q
------END PGP SIGNATURE-----
-
---rttcqilsjxraxvtj--
-
---===============0571139228==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0571139228==--
+SGkgUm9iLAoKT24gVGh1LCAzIE1heSAyMDE4IDEyOjEyOjM5IC0wNTAwClJvYiBIZXJyaW5nIDxy
+b2JoK2R0QGtlcm5lbC5vcmc+IHdyb3RlOgoKPiBPbiBUaHUsIE1heSAzLCAyMDE4IGF0IDExOjQw
+IEFNLCBCb3JpcyBCcmV6aWxsb24KPiA8Ym9yaXMuYnJlemlsbG9uQGJvb3RsaW4uY29tPiB3cm90
+ZToKPiA+IFRoZSBkZXZpY2UgbWlnaHQgYmUgZGVzY3JpYmVkIGluIHRoZSBkZXZpY2UgdHJlZSBi
+dXQgbm90IGNvbm5lY3RlZCB0bwo+ID4gdGhlIEkyQyBidXMuIFVwZGF0ZSB0aGUgc3RhdHVzIHBy
+b3BlcnR5IHNvIHRoYXQgdGhlIERSTSBwYW5lbCBsb2dpYwo+ID4gcmV0dXJucyAtRU5PREVWIHdo
+ZW4gc29tZW9uZSB0cmllcyB0byBnZXQgdGhlIHBhbmVsIGF0dGFjaGVkIHRvIHRoaXMKPiA+IERU
+IG5vZGUuCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6
+aWxsb25AYm9vdGxpbi5jb20+Cj4gPiAtLS0KPiA+ICAuLi4vZ3B1L2RybS9wYW5lbC9wYW5lbC1y
+YXNwYmVycnlwaS10b3VjaHNjcmVlbi5jICB8IDM1ICsrKysrKysrKysrKysrKysrKysrKysKPiA+
+ICAxIGZpbGUgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKQo+ID4KPiA+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtcmFzcGJlcnJ5cGktdG91Y2hzY3JlZW4uYyBiL2Ry
+aXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1yYXNwYmVycnlwaS10b3VjaHNjcmVlbi5jCj4gPiBp
+bmRleCAyYzljOTcyMjczNGYuLmI4ZmNiMWFjZWY3NSAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMv
+Z3B1L2RybS9wYW5lbC9wYW5lbC1yYXNwYmVycnlwaS10b3VjaHNjcmVlbi5jCj4gPiArKysgYi9k
+cml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtcmFzcGJlcnJ5cGktdG91Y2hzY3JlZW4uYwo+ID4g
+QEAgLTM1OCw2ICszNTgsMzkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fcGFuZWxfZnVuY3Mg
+cnBpX3RvdWNoc2NyZWVuX2Z1bmNzID0gewo+ID4gICAgICAgICAuZ2V0X21vZGVzID0gcnBpX3Rv
+dWNoc2NyZWVuX2dldF9tb2RlcywKPiA+ICB9Owo+ID4KPiA+ICtzdGF0aWMgdm9pZCBycGlfdG91
+Y2hzY3JlZW5fc2V0X3N0YXR1c19mYWlsKHN0cnVjdCBpMmNfY2xpZW50ICppMmMpCj4gPiArewo+
+ID4gKyAgICAgICBzdHJ1Y3QgcHJvcGVydHkgKm5ld3Byb3A7Cj4gPiArCj4gPiArICAgICAgIG5l
+d3Byb3AgPSBremFsbG9jKHNpemVvZigqbmV3cHJvcCksIEdGUF9LRVJORUwpOwo+ID4gKyAgICAg
+ICBpZiAoIW5ld3Byb3ApCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuOwo+ID4gKwo+ID4gKyAg
+ICAgICBuZXdwcm9wLT5uYW1lID0ga3N0cmR1cCgic3RhdHVzIiwgR0ZQX0tFUk5FTCk7Cj4gPiAr
+ICAgICAgIGlmICghbmV3cHJvcC0+bmFtZSkKPiA+ICsgICAgICAgICAgICAgICBnb3RvIGVycjsK
+PiA+ICsKPiA+ICsgICAgICAgbmV3cHJvcC0+dmFsdWUgPSBrc3RyZHVwKCJmYWlsIiwgR0ZQX0tF
+Uk5FTCk7Cj4gPiArICAgICAgIGlmICghbmV3cHJvcC0+dmFsdWUpCj4gPiArICAgICAgICAgICAg
+ICAgZ290byBlcnI7Cj4gPiArCj4gPiArICAgICAgIG5ld3Byb3AtPmxlbmd0aCA9IHNpemVvZigi
+ZmFpbCIpOwo+ID4gKwo+ID4gKyAgICAgICBpZiAob2ZfdXBkYXRlX3Byb3BlcnR5KGkyYy0+ZGV2
+Lm9mX25vZGUsIG5ld3Byb3ApKQo+ID4gKyAgICAgICAgICAgICAgIGdvdG8gZXJyOwo+ID4gKyAg
+Cj4gCj4gQXMgSSBtZW50aW9uZWQgb24gaXJjLCBjYW4geW91IG1ha2UgdGhpcyBhIGNvbW1vbiBE
+VCBmdW5jdGlvbi4KClllcCwgd2lsbCBtb3ZlIHRoYXQgdG8gZHJpdmVycy9vZi9iYXNlLmMgYW5k
+IG1ha2UgaXQgZ2VuZXJpYy4KCj4gCj4gSSdtIG5vdCBzdXJlIGlmIGl0IG1hdHRlcnMgdGhhdCB3
+ZSBzZXQgc3RhdHVzIHRvIGZhaWwgdnMuIGRpc2FibGVkLiBJCj4gc29tZXdoYXQgcHJlZmVyIHRo
+ZSBsYXR0ZXIgYXMgd2UgYWxyZWFkeSBoYXZlIG90aGVyIGNhc2VzIGFuZCBJJ2QKPiByYXRoZXIg
+dGhlIGFwaSBub3QgcGFzcyBhIHN0cmluZyBpbi4gSSBjYW4ndCB0aGluayBvZiBhbnkgcmVhc29u
+IHRvCj4gZGlzdGluZ3Vpc2ggdGhlIGRpZmZlcmVuY2UgYmV0d2VlbiBmYWlsIGFuZCBkaXNhYmxl
+ZC4KCldlbGwsIEkganVzdCByZWFkIHRoZSBlUEFQUiBkb2MgcG9pbnRlZCBieSBUaGllcnJ5IFsx
+XSAoc2VjdGlvbiAyLjMuNCksCmFuZCAiZmFpbCIgc2VlbWVkIGxpa2UgYSBnb29kIG1hdGNoIGZv
+ciB3aGF0IHdlIGFyZSB0cnlpbmcgdG8gZXhwcmVzcwpoZXJlOiAid2UgZmFpbGVkIHRvIGNvbW11
+bmljYXRlIHdpdGggdGhlIGRldmljZSBpbiB0aGUgcHJvYmUgZnVuY3Rpb24KYW5kIHdhbnQgdG8g
+bWFyayBpdCB1bnVzYWJsZSIsIHdoaWNoIGlzIGEgYml0IGRpZmZlcmVudCBmcm9tICJ0aGUKZGV2
+aWNlIHdhcyBleHBsaWNpdGx5IGRpc2FibGVkIGJ5IHRoZSB1c2VyIi4KCkFueXdheSwgaWYgeW91
+IHRoaW5rICJkaXNhYmxlZCIgaXMgbW9yZSBhcHByb3ByaWF0ZSwgSSdsbCB1c2UgdGhhdC4KCj4g
+Cj4gPiArICAgICAgIC8qIFdlIGludGVudGlvbmFsbHkgbGVhayB0aGUgbWVtb3J5IHdlIGFsbG9j
+YXRlIGhlcmUsIGJlY2F1c2UgdGhlIG5ldwo+ID4gKyAgICAgICAgKiBPRiBwcm9wZXJ0eSBtaWdo
+dCBsaXZlIGxvbmdlciB0aGFuIHRoZSB1bmRlcmx5aW5nIGRldiwgc28gbm8gd2F5Cj4gPiArICAg
+ICAgICAqIHdlIGNhbiB1c2UgZGV2bV9remFsbG9jKCkgaGVyZS4KPiA+ICsgICAgICAgICovCj4g
+PiArICAgICAgIHJldHVybjsKPiA+ICsKPiA+ICtlcnI6Cj4gPiArICAgICAgIGtmcmVlKG5ld3By
+b3AtPnZhbHVlKTsKPiA+ICsgICAgICAga2ZyZWUobmV3cHJvcC0+bmFtZSk7Cj4gPiArICAgICAg
+IGtmcmVlKG5ld3Byb3ApOwo+ID4gK30KPiA+ICsKPiA+ICBzdGF0aWMgaW50IHJwaV90b3VjaHNj
+cmVlbl9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqaTJjLAo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgY29uc3Qgc3RydWN0IGkyY19kZXZpY2VfaWQgKmlkKQo+ID4gIHsKPiA+
+IEBAIC0zODIsNiArNDE1LDcgQEAgc3RhdGljIGludCBycGlfdG91Y2hzY3JlZW5fcHJvYmUoc3Ry
+dWN0IGkyY19jbGllbnQgKmkyYywKPiA+Cj4gPiAgICAgICAgIHZlciA9IHJwaV90b3VjaHNjcmVl
+bl9pMmNfcmVhZCh0cywgUkVHX0lEKTsKPiA+ICAgICAgICAgaWYgKHZlciA8IDApIHsKPiA+ICsg
+ICAgICAgICAgICAgICBycGlfdG91Y2hzY3JlZW5fc2V0X3N0YXR1c19mYWlsKGkyYyk7ICAKPiAK
+PiBJJ3ZlIHRob3VnaHQgc29tZSBtb3JlIGFib3V0IHRoaXMgYW5kIEkgc3RpbGwgdGhpbmsgdGhp
+cyBzaG91bGQgYmUKPiBoYW5kbGVkIGluIHRoZSBkcml2ZXIgY29yZSBvciBpMmMgY29yZS4KPiAK
+PiBUaGUgcmVhc29uIGlzIHNpbXBsZS4gSSB0aGluayB0aGUgc3RhdGUgb2YgdGhlIHN5c3RlbSBz
+aG91bGQgYmUgdGhlCj4gc2FtZSBhZnRlciB0aGlzIGFzIGlmIHlvdSBib290ZWQgd2l0aCAnc3Rh
+dHVzID0gImRpc2FibGVkIicgZm9yIHRoaXMKPiBub2RlLiBBbmQgdGhhdCBtZWFucyB0aGUgZGV2
+aWNlIHNob3VsZCBiZSByZW1vdmVkIGNvbXBsZXRlbHkgYmVjYXVzZQo+IHdlIGRvbid0IGNyZWF0
+ZSBzdHJ1Y3QgZGV2aWNlJ3MgZm9yIGRpc2FibGVkIG5vZGVzLgoKVGhhdCB3YXMgbXkgZmVlbGlu
+ZyB0byB3aGVuIGZpcnN0IGRpc2N1c3NpbmcgdGhlIGlzc3VlIHdpdGggRGFuaWVsIGFuZApUaGll
+cnJ5IG9uIElSQywgYnV0IGFmdGVyIGRpZ2dpbmcgYSBiaXQgaW4gdGhlIGNvZGUgSSdtIG5vIGxv
+bmdlciBzdXJlCnRoaXMgaXMgYSBnb29kIGlkZWEuIEF0IGxlYXN0LCBJIGRvbid0IHRoaW5rIGJh
+c2luZyB0aGUgZGVjaXNpb24gdG8KZGlzYWJsZSB0aGUgZGV2aWNlIChvciBtYXJrIGl0IHVudXNh
+YmxlKSBiYXNlZCBvbiB0aGUgcmV0dXJuIHZhbHVlIG9mCnRoZSBwcm9iZSBmdW5jdGlvbiBpcyBh
+IGdvb2QgaWRlYS4gV2hhdCBJIGNhbiBkbyBpczoKCjEvIHByb3ZpZGUgYSBmdW5jdGlvbiB0byBj
+aGFuZ2UgdGhlIHN0YXR1cyBwcm9wIGluIG9mLmgKMi8gbGV0IGVhY2ggZHJpdmVyIGNhbGwgdGhp
+cyBmdW5jdGlvbiBpZiB0aGV5IHdhbnQgdG8KMy8gbGV0IHRoZSBJMkMgY29yZSB0ZXN0IHRoZSBz
+dGF0dXMgcHJvcCBhZ2FpbiBhZnRlciB0aGUgcHJvYmUgZnVuY3Rpb24KICAgaGFzIHJldHVybmVk
+IGFuIGVycm9yIHRvIGRldGVybWluZSB3aGV0aGVyIHRoZSBkZXZpY2UgKEkgbWVhbiBzdHJ1Y3QK
+ICAgaTJjX2NsaWVudC9kZXZpY2Ugb2JqZWN0KSBzaG91bGQgYmUgcmVtb3ZlZAoKV291bGQgdGhh
+dCB3b3JrIGZvciB5b3U/CgpSZWdhcmRzLAoKQm9yaXMKClsxXWh0dHBzOi8vZWxpbnV4Lm9yZy9p
+bWFnZXMvYy9jZi9Qb3dlcl9lUEFQUl9BUFBST1ZFRF92MS4xLnBkZgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
