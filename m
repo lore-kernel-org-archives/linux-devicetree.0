@@ -1,7 +1,7 @@
 From: richard.gong@linux.intel.com
-Subject: [PATCHv4 5/7] arm64: dts: stratix10: add fpga manager and region
-Date: Fri,  4 May 2018 09:21:35 -0500
-Message-ID: <1525443697-31009-6-git-send-email-richard.gong@linux.intel.com>
+Subject: [PATCHv4 7/7] defconfig: enable fpga and service layer
+Date: Fri,  4 May 2018 09:21:37 -0500
+Message-ID: <1525443697-31009-8-git-send-email-richard.gong@linux.intel.com>
 References: <1525443697-31009-1-git-send-email-richard.gong@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1525443697-31009-1-git-send-email-richard.gong@linux.intel.com>
@@ -10,51 +10,46 @@ To: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@k
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@linux.intel.com, richard.gong@intel.com
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull@kernel.org>
+From: Richard Gong <richard.gong@intel.com>
 
-Add the Stratix10 FPGA manager and a FPGA region to the
-device tree.
+Enable fpga framework, Stratix 10 SoC FPGA manager and Stratix10
+Service Layer
 
-Signed-off-by: Alan Tull <atull@kernel.org>
 Signed-off-by: Richard Gong <richard.gong@intel.com>
+Signed-off-by: Alan Tull <atull@kernel.org>
 ---
 v2: this patch is added in patch set version 2
-v3: change to put fpga_mgr node under firmware/svc node
-v4: s/fpga-mgr@0/fpga-mgr/ to remove unit_address
-    Add Richard's signed-off-by
+v3: no change
+v4: s/CONFIG_INTEL_SERVICE/CONFIG_STRATIX10_SERVICE/
+    Add CONFIG_OF_FPGA_REGION=y
+    s/Intel/Stratix10/ in subject line
 ---
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm64/configs/defconfig | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-index 985b9e5..9e32607 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-@@ -106,6 +106,14 @@
- 		interrupt-parent = <&intc>;
- 		ranges = <0 0 0 0xffffffff>;
- 
-+		base_fpga_region {
-+			#address-cells = <0x1>;
-+			#size-cells = <0x1>;
-+
-+			compatible = "fpga-region";
-+			fpga-mgr = <&fpga_mgr>;
-+		};
-+
- 		clkmgr: clock-controller@ffd10000 {
- 			compatible = "intel,stratix10-clkmgr";
- 			reg = <0xffd10000 0x1000>;
-@@ -473,6 +481,10 @@
- 				compatible = "intel,stratix10-svc";
- 				method = "smc";
- 				memory-region = <&service_reserved>;
-+
-+				fpga_mgr: fpga-mgr {
-+					compatible = "intel,stratix10-soc-fpga-mgr";
-+				};
- 			};
- 		};
- 	};
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index ecf6137..5f7a9b7 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -180,6 +180,7 @@ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_BLK_DEV_NBD=m
+ CONFIG_VIRTIO_BLK=y
+ CONFIG_BLK_DEV_NVME=m
++CONFIG_STRATIX10_SERVICE=y
+ CONFIG_SRAM=y
+ CONFIG_EEPROM_AT25=m
+ # CONFIG_SCSI_PROC_FS is not set
+@@ -595,6 +596,11 @@ CONFIG_PHY_TEGRA_XUSB=y
+ CONFIG_QCOM_L2_PMU=y
+ CONFIG_QCOM_L3_PMU=y
+ CONFIG_MESON_EFUSE=m
++CONFIG_FPGA=y
++CONFIG_FPGA_MGR_STRATIX10_SOC=y
++CONFIG_FPGA_REGION=y
++CONFIG_FPGA_BRIDGE=y
++CONFIG_OF_FPGA_REGION=y
+ CONFIG_QCOM_QFPROM=y
+ CONFIG_UNIPHIER_EFUSE=y
+ CONFIG_TEE=y
 -- 
 2.7.4
