@@ -1,56 +1,182 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 0/3] K2G: mmc: Update mmc dt node to use sdhci-omap
-Date: Fri, 4 May 2018 13:36:06 +0530
-Message-ID: <e4b70bab-d3bd-7071-aefa-2934c20a3e30@ti.com>
-References: <20180425132746.13911-1-kishon@ti.com>
- <fc5f3498-62fd-15d3-90df-206c51649cb4@oracle.com>
- <0481f6f0-539e-4809-63cd-1134367a7b78@ti.com>
- <de0bd46a-21d4-14de-9695-9b0f3996dacb@oracle.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Add dts file for the A20-linova1-7
+ HMI
+Date: Fri, 4 May 2018 10:06:52 +0200
+Message-ID: <20180504080652.dniwaqqhbeuknp7y@flea>
+References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
+ <1521662593-25468-7-git-send-email-giulio.benetti@micronovasrl.com>
+ <20180322180508.my64gobhh5rc2x2m@flea>
+ <8ef3b259-03b4-6987-286e-36ff627a8b76@micronovasrl.com>
+ <20180424084137.7xfwji2gcibxavvt@flea>
+ <03a02abb-e95c-b4ec-748f-907c0af67969@micronovasrl.com>
+ <20180425184016.xktppxw7egddr7li@flea>
+ <42feccc9-1d09-9ff2-3ccc-1dea63bacfb6@micronovasrl.com>
+ <839d2560-0250-9b3a-8019-4e83d9e931e2@micronovasrl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <de0bd46a-21d4-14de-9695-9b0f3996dacb@oracle.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>
+Content-Type: multipart/mixed; boundary="===============0571139228=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <839d2560-0250-9b3a-8019-4e83d9e931e2@micronovasrl.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Santosh,
 
-On Friday 04 May 2018 12:22 AM, santosh.shilimkar@oracle.com wrote:
-> On 5/3/18 4:57 AM, Kishon Vijay Abraham I wrote:
->> Hi Santosh,
->>
->> On Wednesday 25 April 2018 11:10 PM, Santosh Shilimkar wrote:
->>> On 4/25/2018 6:27 AM, Kishon Vijay Abraham I wrote:
->>>> Update mmc dt node to use sdhci-omap binding instead of omap_hsmmc
->>>> binding.
->>>>
->>>> I've also updated keystone_defconfig to enable CONFIG_MMC_SDHCI_OMAP.
->>>> Everyone who use a custom .config should also enable
->>>> CONFIG_MMC_SDHCI_OMAP for MMC to work.
->>>>
->>>> This series should be merged only after [1]
->>>> [1] -> https://marc.info/?l=linux-kernel&m=152465820531802&w=2
->>>>
->>> Keep me posted once the dependency gets merged.
->>
->> Ulf has merged the sdhci part and has shared an immutable branch
->>
->> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git sdhci_omap
->> with his signed tag sdhci-omap-v4.17-rc3.
->>
->> Can you use it as a base for merging this series?
->>
-> How about I apply only DTS patches and exlude config file update ?
-> You can send the config patch after the merge window. Are the DTS
-> changes also going to break anything without basing of this sdhci
-> branch ?
+--===============0571139228==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rttcqilsjxraxvtj"
+Content-Disposition: inline
 
-Yes, the bindings has changed for sdhci-omap.
-It should also be fine if this entire series can be merged during the 4.18 -rc
-cycle since the dependent patches would have been already merged then.
 
-Thanks
-Kishon
+--rttcqilsjxraxvtj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Wed, May 02, 2018 at 06:41:34PM +0200, Giulio Benetti wrote:
+> > > You don't have to handcode the fragments anymore with the new syntax,
+> > > and U-Boot makes it really trivial to use if you use the FIT image
+> > > format to have multiple overlays bundled in the same image. You can
+> > > choose to apply them dynamically, for example based on an EEPROM or
+> > > some other metric to see which combination you have.
+> >=20
+> > Ah, this is interesting. I'm going to experiment with that.
+> >=20
+>=20
+> I'm struggling against this, I don't really know how to proceed,
+> except keeping monolithic dts files including other dtsi files.
+>=20
+> About dt-overlays I've tried to look around lot of time,
+> but the only thing I've found is this:
+> https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
+/tree/arch/arm/boot/dts?h=3Dtopic/renesas-overlays
+>=20
+> where they use .dtso tagging them as "/plugin/;"
+> and compile all .dtso found in dts folder.
+> Then they obtain .dtbo files that should be the dt-overlays we have spoken
+> about right?
+
+Yes. You don't have to do that though, you can just rely on dtc to
+compile them, outside of the linux build system.
+
+> What I can't understand is if there's a real standard at this time to
+> follow, because on renesas-driver they use their way to handle all .dtso
+> files, but on mainline there seems to be nothing about that.
+
+I'm not sure what you mean here. It's just fragments of device tree,
+that have to be compiled using dtc, that's it. You can use the Linux
+build system infrastructure to do that, or you can build your own
+simpler one. That's really up to you. See for example
+https://github.com/NextThingCo/CHIP-dt-overlays/blob/master/Makefile
+
+(even though the overlays themselves use the legacy syntax and
+shouldn't really be used an examples)
+
+> So at the moment I'm trying to compile dts tagged as /plugin/;
+> but dtc gives me a lot of warnings.
+>=20
+> dts:
+> "
+> /dts-v1/;
+> /plugin/;
+>=20
+> #include <dt-bindings/gpio/gpio.h>
+> #include <dt-bindings/interrupt-controller/irq.h>
+>=20
+> &i2c2 {
+> 	pinctrl-names =3D "default";
+> 	pinctrl-0 =3D <&i2c2_pins_a>;
+> 	status =3D "okay";
+>=20
+> 	ft5x {
+> 		compatible =3D "edt,edt-ft5306";
+> 		reg =3D <0x38>;
+> 		interrupt-parent =3D <&pio>;
+> 		interrupts =3D <7 2 IRQ_TYPE_EDGE_FALLING>; /* PH2 */
+> 		reset-gpios =3D <&pio 7 3 GPIO_ACTIVE_LOW>; /* PH3 */
+> 		touchscreen-size-x =3D <480>;
+> 		touchscreen-size-y =3D <272>;
+> 	};
+> };
+> "
+>=20
+> Build output issuing make ARCH=3Darm CROSS_COMPILE=3Darm-linux- aaa.dtb (=
+I use
+> aaa.dts as source):
+> "
+> arch/arm/boot/dts/aaa.dtb: Warning (reg_format):
+> /fragment@0/__overlay__/ft5x:reg: property has invalid length (4 bytes)
+> (#address-cells =3D=3D 2, #size-cells =3D=3D 1)
+> arch/arm/boot/dts/aaa.dtb: Warning (pci_device_bus_num): Failed prerequis=
+ite
+> 'reg_format'
+> arch/arm/boot/dts/aaa.dtb: Warning (simple_bus_reg): Failed prerequisite
+> 'reg_format'
+> arch/arm/boot/dts/aaa.dtb: Warning (avoid_default_addr_size):
+> /fragment@0/__overlay__/ft5x: Relying on default #address-cells value
+> arch/arm/boot/dts/aaa.dtb: Warning (avoid_default_addr_size):
+> /fragment@0/__overlay__/ft5x: Relying on default #size-cells value
+> "
+
+Yeah, your i2c node doesn't have the right address-cells and
+size-cells properties value, like dtc is telling you.
+
+> Then in uboot I'm trying to do as follows:
+> # fdt addr 0x43000000 (where dtb is)
+> # fdt resize 8192
+> # fdt apply 0x430c0000 (where dtbo is)
+> But it gives me "libfdt fdt_check_header(): FDT_ERR_BADMAGIC"
+> (I was expecting some error)
+
+It looks like your overlay hasn't been properly loaded.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--rttcqilsjxraxvtj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrsFJsACgkQ0rTAlCFN
+r3TVBw/9F7pOTRJNK4/JtxdlsA7UcgdtzJy9YXm9DySLRCZltkonNjqJOI9Niwt7
+D7hWMZrP0HSrN0ecl3+2LLiVd/JPJ40EX++3iCnLmyNmJv7WVDyhYFiRGd+ktaZ4
+xH9PMJsBu75wDucsZc6GJo2Md6zXb6VEpQ7tsbXQTqIZXq43iOpeCSZxqiQwbWkn
+V6BaD/aIZoQxnaFBxIwj5ennlL9E+0QpsgOePNvGUD5Uz1o0lM04T5ldUi6B8QA0
+5znF2fAq1MDBqwbYPqLBGScfcEVoURpPP9Upt8JesYAJXUTmCLeL1hRVutNidFJH
+m/6D7fYJ6Qg5lAqOiNKu/ddOKsBCQzvt+Ua3bdwvhqlCVTpHxqNCd2x3q/XNXoyF
+57QXkqWLUrHp+6D0JZlIAOYZY2Nl3gR3yATW2bnx+ppF4ACFnECaYZlcpCUTuaKJ
+d4tPL+urjiimjvqxTK/j8tRjQkAu3MR8bj1kDNwe/7aqVkMICpje5fz12T8hhnAu
+GJkL6W3nZpuDQrStcZAym6ASw4W9EV/AqpTINHLaTE0AOxC5ulSIETNcGLAtRqeD
+z6ypjIvI/NRB44RNqaEyvm1FgENnqvZ5A94PEPQEEfjzee4kzPhWU3v92/T5/LQ4
+rsZcKZFiTQm0jq0nlQquOy9zkkZogAfe1DmW62ZY+uFFEVYrU9M=
+=jt3Q
+-----END PGP SIGNATURE-----
+
+--rttcqilsjxraxvtj--
+
+--===============0571139228==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0571139228==--
