@@ -1,133 +1,52 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-Subject: [PATCH v9 05/12] ARM: dts: sun8i: a83t: Add CCI-400 node
-Date: Fri,  4 May 2018 21:05:38 +0200
-Message-ID: <20180504190545.5114-6-mylene.josserand@bootlin.com>
-References: <20180504190545.5114-1-mylene.josserand@bootlin.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 2/4] ASoC: wm8962: Make the node name generic
+Date: Fri,  4 May 2018 16:12:01 -0300
+Message-ID: <1525461123-16686-2-git-send-email-festevam@gmail.com>
+References: <1525461123-16686-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180504190545.5114-1-mylene.josserand@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com
-Cc: f.fainelli@gmail.com, opendmb@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mylene.josserand@bootlin.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1525461123-16686-1-git-send-email-festevam@gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add CCI-400 node and control-port on CPUs needed by SMP bringup.
+From: Fabio Estevam <fabio.estevam@nxp.com>
 
-Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+According to Devicetree Specification v0.2 document:
+
+"The name of a node should be somewhat generic, reflecting the function
+of the device and not its precise programming model."
+
+Do as suggested in the binding example.
+
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
 ---
- arch/arm/boot/dts/sun8i-a83t.dtsi | 41 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ Documentation/devicetree/bindings/sound/wm8962.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 53ace066b7dc..0669b8dc499d 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -66,6 +66,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu0_opp_table>;
-+			cci-control-port = <&cci_control0>;
- 			reg = <0>;
- 		};
+diff --git a/Documentation/devicetree/bindings/sound/wm8962.txt b/Documentation/devicetree/bindings/sound/wm8962.txt
+index 7f82b59..dcfa9a33 100644
+--- a/Documentation/devicetree/bindings/sound/wm8962.txt
++++ b/Documentation/devicetree/bindings/sound/wm8962.txt
+@@ -24,7 +24,7 @@ Optional properties:
  
-@@ -73,6 +74,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu0_opp_table>;
-+			cci-control-port = <&cci_control0>;
- 			reg = <1>;
- 		};
+ Example:
  
-@@ -80,6 +82,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu0_opp_table>;
-+			cci-control-port = <&cci_control0>;
- 			reg = <2>;
- 		};
+-codec: wm8962@1a {
++wm8962: codec@1a {
+ 	compatible = "wlf,wm8962";
+ 	reg = <0x1a>;
  
-@@ -87,6 +90,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu0_opp_table>;
-+			cci-control-port = <&cci_control0>;
- 			reg = <3>;
- 		};
- 
-@@ -96,6 +100,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu1_opp_table>;
-+			cci-control-port = <&cci_control1>;
- 			reg = <0x100>;
- 		};
- 
-@@ -103,6 +108,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu1_opp_table>;
-+			cci-control-port = <&cci_control1>;
- 			reg = <0x101>;
- 		};
- 
-@@ -110,6 +116,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu1_opp_table>;
-+			cci-control-port = <&cci_control1>;
- 			reg = <0x102>;
- 		};
- 
-@@ -117,6 +124,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu1_opp_table>;
-+			cci-control-port = <&cci_control1>;
- 			reg = <0x103>;
- 		};
- 	};
-@@ -354,6 +362,39 @@
- 			reg = <0x01700000 0x400>;
- 		};
- 
-+		cci@1790000 {
-+			compatible = "arm,cci-400";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x01790000 0x10000>;
-+			ranges = <0x0 0x01790000 0x10000>;
-+
-+			cci_control0: slave-if@4000 {
-+				compatible = "arm,cci-400-ctrl-if";
-+				interface-type = "ace";
-+				reg = <0x4000 0x1000>;
-+			};
-+
-+			cci_control1: slave-if@5000 {
-+				compatible = "arm,cci-400-ctrl-if";
-+				interface-type = "ace";
-+				reg = <0x5000 0x1000>;
-+			};
-+
-+			pmu@9000 {
-+				compatible = "arm,cci-400-pmu,r1";
-+				reg = <0x9000 0x5000>;
-+				interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
- 		syscon: syscon@1c00000 {
- 			compatible = "allwinner,sun8i-a83t-system-controller",
- 				"syscon";
 -- 
-2.11.0
+2.7.4
