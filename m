@@ -1,40 +1,101 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v2 1/2] ARM64: dts: meson-axg: drop sdio pwrseq property
-Date: Fri, 4 May 2018 09:45:32 +0000
-Message-ID: <20180504094533.15588-2-yixun.lan@amlogic.com>
-References: <20180504094533.15588-1-yixun.lan@amlogic.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: [RFC PATCH] ARM: dts: imx: replace underscore with hyphen in aliases
+ name
+Date: Fri,  4 May 2018 09:58:48 +0800
+Message-ID: <1525399128-11587-1-git-send-email-shawnguo@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180504094533.15588-1-yixun.lan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Gary Bisson <gary.bisson@boundarydevices.com>, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-This sdio-pwrseq property is not used untill wifi driver is merged,
-also the gpio reset is GPIOX_7 which need to be fixed.
-
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index f67d4e47e641..6b6581c513a8 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -48,11 +48,6 @@
- 		compatible = "mmc-pwrseq-emmc";
- 		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
- 	};
--
--	sdio_pwrseq: sdio-pwrseq {
--		compatible = "mmc-pwrseq-simple";
--		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
--	};
- };
- 
- &ethmac {
--- 
-2.17.0
+SXQgcmVwbGFjZXMgdW5kZXJzY29yZSB3aXRoIGh5cGhlbiBpbiBhbGlhc2VzIG5hbWUgdG8gZml4
+IERUQwphbGlhc19wYXRocyB3YXJuaW5nIGJlbG93LCB3aGljaCBpcyBzZWVuIHdpdGggdmFyaW91
+cyBpLk1YIGJvYXJkIGR0cwpmaWxlcyB3aGVuIFc9MSBzd2l0Y2ggaXMgb24uCgogV2FybmluZyAo
+YWxpYXNfcGF0aHMpOiAvYWxpYXNlczogYWxpYXNlcyBwcm9wZXJ0eSBuYW1lIG11c3QgaW5jbHVk
+ZSBvbmx5IGxvd2VyY2FzZSBhbmQgJy0nCgpDYzogTG90aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVs
+ZWN0cm9uaWNzLmRlPgpDYzogR2FyeSBCaXNzb24gPGdhcnkuYmlzc29uQGJvdW5kYXJ5ZGV2aWNl
+cy5jb20+ClNpZ25lZC1vZmYtYnk6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4KLS0t
+CkhpIExvdGhhciwgR2FyeSwKClBlciBteSBzZWFyY2ggb24ga2VybmVsIGNvZGUsIHRoaXMgY2hh
+bmdlIHdpbGwgbm90IGJyZWFrIGFueXRoaW5nIG9uCmtlcm5lbCBzdXBwb3J0LiAgQnV0IEknbSBu
+b3QgcmVhbGx5IHN1cmUgYWJvdXQgdGhlIGNhc2Ugb2YgYm9vdGxvYWRlcnMKcnVubmluZyBvbiB0
+aGUgYm9hcmRzLiAgVGhhdCdzIHdoeSBJJ20gc2VuZGluZyBpdCBhcyBSRkMuCgpXZSByZWFsbHkg
+d2FudCBpLk1YIHRvIGJlIHRoZSBmaXJzdC1jbGFzcyBjaXRpemVuIGluIHRoZSBjb21tdW5pdHku
+CkFmdGVyIGEgZmV3IGN5Y2xlcyBlZmZvcnRzIG9uIGNsZWFuaW5nIHVwIERUQyB3YXJuaW5ncywg
+dGhpcyBhbGlhc19wYXRocwp3YXJuaW5nIGlzIHRoZSBsYXN0IG9uZSB3ZSBzZWUgd2l0aCBpLk1Y
+IGR0cyBmaWxlcy4gIFdlIHJlYWxseSB3YW50IHRvCmdldCByaWQgb2YgaXQgYW5kIG1ha2UgaS5N
+WCBkdHMgYmUgRFRDIHdhcm5pbmcgZnJlZS4KClNvIHBsZWFzZSBjb21tZW50IHdoZXRoZXIgd2Ug
+Y2FuIG1lcmdlIHRoaXMgcGF0Y2guCgpTaGF3bgoKIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXR4
+NTMuZHRzaSAgICAgICAgICAgIHwgMiArLQogYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC10eDYu
+ZHRzaSAgICAgICAgICAgfCA2ICsrKy0tLQogYXJjaC9hcm0vYm9vdC9kdHMvaW14NnN4LW5pdHJv
+Z2VuNnN4LmR0cyAgICAgfCA0ICsrLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC10eDZ1bC1t
+YWluYm9hcmQuZHRzIHwgMiArLQogYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLXR4NnVsLmR0c2kg
+ICAgICAgICAgfCA2ICsrKy0tLQogYXJjaC9hcm0vYm9vdC9kdHMvaW14N2Qtbml0cm9nZW43LmR0
+cyAgICAgICAgfCA0ICsrLS0KIDYgZmlsZXMgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMTIg
+ZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NTMtdHg1My5k
+dHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NTMtdHg1My5kdHNpCmluZGV4IDVkZDNkZDNhMmZk
+MC4uNTRjZjNlNjcwNjlhIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg1My10eDUz
+LmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NTMtdHg1My5kdHNpCkBAIC01OCw3ICs1
+OCw3IEBACiAJCWNhbjAgPSAmY2FuMjsgLyogTWFrZSB0aGUgY2FuIGludGVyZmFjZSBpbmRpY2Vz
+IGNvbnNpc3RlbnQgd2l0aCBUWDI4L1RYNDggbW9kdWxlcyAqLwogCQljYW4xID0gJmNhbjE7CiAJ
+CWlwdSA9ICZpcHU7Ci0JCXJlZ19jYW5feGN2ciA9ICZyZWdfY2FuX3hjdnI7CisJCXJlZy1jYW4t
+eGN2ciA9ICZyZWdfY2FuX3hjdnI7CiAJCXVzYmgxID0gJnVzYmgxOwogCQl1c2JvdGcgPSAmdXNi
+b3RnOwogCX07CmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXR4Ni5kdHNp
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC10eDYuZHRzaQppbmRleCBmMDE1ZTJkMWNmMzUu
+LmE5OGZiMjU2NGM2MyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC10eDYu
+ZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXR4Ni5kdHNpCkBAIC01MCwxMSAr
+NTAsMTEgQEAKIAkJY2FuMCA9ICZjYW4yOwogCQljYW4xID0gJmNhbjE7CiAJCWV0aGVybmV0MCA9
+ICZmZWM7Ci0JCWxjZGlmXzIzYml0X3BpbnNfYSA9ICZwaW5jdHJsX2Rpc3AwXzE7Ci0JCWxjZGlm
+XzI0Yml0X3BpbnNfYSA9ICZwaW5jdHJsX2Rpc3AwXzI7CisJCWxjZGlmLTIzYml0LXBpbnMtYSA9
+ICZwaW5jdHJsX2Rpc3AwXzE7CisJCWxjZGlmLTI0Yml0LXBpbnMtYSA9ICZwaW5jdHJsX2Rpc3Aw
+XzI7CiAJCXB3bTAgPSAmcHdtMTsKIAkJcHdtMSA9ICZwd20yOwotCQlyZWdfY2FuX3hjdnIgPSAm
+cmVnX2Nhbl94Y3ZyOworCQlyZWctY2FuLXhjdnIgPSAmcmVnX2Nhbl94Y3ZyOwogCQlzdGs1bGVk
+ID0gJnVzZXJfbGVkOwogCQl1c2JvdGcgPSAmdXNib3RnOwogCQlzZGhjMCA9ICZ1c2RoYzE7CmRp
+ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2c3gtbml0cm9nZW42c3guZHRzIGIvYXJj
+aC9hcm0vYm9vdC9kdHMvaW14NnN4LW5pdHJvZ2VuNnN4LmR0cwppbmRleCBiNThmNzcwYzQwZDku
+LjU5ZTUyZjUwNDkyMiAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnN4LW5pdHJv
+Z2VuNnN4LmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2c3gtbml0cm9nZW42c3guZHRz
+CkBAIC00OCw4ICs0OCw4IEBACiAJY29tcGF0aWJsZSA9ICJib3VuZGFyeSxpbXg2c3gtbml0cm9n
+ZW42c3giLCAiZnNsLGlteDZzeCI7CiAKIAlhbGlhc2VzIHsKLQkJZmJfbGNkID0gJmxjZGlmMTsK
+LQkJdF9sY2QgPSAmdF9sY2Q7CisJCWZiLWxjZCA9ICZsY2RpZjE7CisJCXQtbGNkID0gJnRfbGNk
+OwogCX07CiAKIAltZW1vcnlAODAwMDAwMDAgewpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9k
+dHMvaW14NnVsLXR4NnVsLW1haW5ib2FyZC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwt
+dHg2dWwtbWFpbmJvYXJkLmR0cwppbmRleCAyZDgwZjdiNTBiYzAuLjk3Njg2MDk3YTg2ZSAxMDA2
+NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLXR4NnVsLW1haW5ib2FyZC5kdHMKKysr
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLXR4NnVsLW1haW5ib2FyZC5kdHMKQEAgLTQ4LDcg
+KzQ4LDcgQEAKIAljb21wYXRpYmxlID0gImthcm8saW14NnVsLXR4NnVsIiwgImZzbCxpbXg2dWwi
+OwogCiAJYWxpYXNlcyB7Ci0JCWxjZGlmXzI0Yml0X3BpbnNfYSA9ICZwaW5jdHJsX2Rpc3AwXzM7
+CisJCWxjZGlmLTI0Yml0LXBpbnMtYSA9ICZwaW5jdHJsX2Rpc3AwXzM7CiAJCW1tYzAgPSAmdXNk
+aGMxOwogCQkvZGVsZXRlLXByb3BlcnR5LyBtbWMxOwogCQlzZXJpYWwyID0gJnVhcnQzOwpkaWZm
+IC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLXR4NnVsLmR0c2kgYi9hcmNoL2FybS9i
+b290L2R0cy9pbXg2dWwtdHg2dWwuZHRzaQppbmRleCBmNjc4ZDE4YWQ0NGEuLjAyYjViYTQyY2Q1
+OSAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLXR4NnVsLmR0c2kKKysrIGIv
+YXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLXR4NnVsLmR0c2kKQEAgLTUzLDEwICs1MywxMCBAQAog
+CQlpMmMyID0gJmkyYzE7CiAJCWkyYzMgPSAmaTJjMzsKIAkJaTJjNCA9ICZpMmM0OwotCQlsY2Rp
+Zl8yM2JpdF9waW5zX2EgPSAmcGluY3RybF9kaXNwMF8xOwotCQlsY2RpZl8yNGJpdF9waW5zX2Eg
+PSAmcGluY3RybF9kaXNwMF8yOworCQlsY2RpZi0yM2JpdC1waW5zLWEgPSAmcGluY3RybF9kaXNw
+MF8xOworCQlsY2RpZi0yNGJpdC1waW5zLWEgPSAmcGluY3RybF9kaXNwMF8yOwogCQlwd20wID0g
+JnB3bTU7Ci0JCXJlZ19jYW5feGN2ciA9ICZyZWdfY2FuX3hjdnI7CisJCXJlZy1jYW4teGN2ciA9
+ICZyZWdfY2FuX3hjdnI7CiAJCXNlcmlhbDIgPSAmdWFydDU7CiAJCXNlcmlhbDQgPSAmdWFydDM7
+CiAJCXNwaTAgPSAmZWNzcGkyOwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14N2Qt
+bml0cm9nZW43LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdkLW5pdHJvZ2VuNy5kdHMKaW5k
+ZXggNTIxNjcyOTg5ODRkLi5iOGU3M2I0NmNkZGIgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2lteDdkLW5pdHJvZ2VuNy5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14N2Qtbml0
+cm9nZW43LmR0cwpAQCAtNDksOCArNDksOCBAQAogCWNvbXBhdGlibGUgPSAiYm91bmRhcnksaW14
+N2Qtbml0cm9nZW43IiwgImZzbCxpbXg3ZCI7CiAKIAlhbGlhc2VzIHsKLQkJZmJfbGNkID0gJmxj
+ZGlmOwotCQl0X2xjZCA9ICZ0X2xjZDsKKwkJZmItbGNkID0gJmxjZGlmOworCQl0LWxjZCA9ICZ0
+X2xjZDsKIAl9OwogCiAJbWVtb3J5QDgwMDAwMDAwIHsKLS0gCjEuOS4xCgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
+aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
