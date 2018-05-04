@@ -1,8 +1,8 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+From: Sergey Suloev <ssuloev@orpaltech.com>
 Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Add dts file for the A20-linova1-7
  HMI
-Date: Fri, 4 May 2018 23:52:59 +0200
-Message-ID: <afc78821-2d08-3f4f-d008-5b2d216e96c0@micronovasrl.com>
+Date: Sat, 5 May 2018 00:59:07 +0300
+Message-ID: <644bcd2f-3479-3f3c-3aef-9db3d565c133@orpaltech.com>
 References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
  <1521662593-25468-7-git-send-email-giulio.benetti@micronovasrl.com>
  <20180322180508.my64gobhh5rc2x2m@flea>
@@ -13,73 +13,93 @@ References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
  <42feccc9-1d09-9ff2-3ccc-1dea63bacfb6@micronovasrl.com>
  <839d2560-0250-9b3a-8019-4e83d9e931e2@micronovasrl.com>
  <20180504080652.dniwaqqhbeuknp7y@flea>
+ <afc78821-2d08-3f4f-d008-5b2d216e96c0@micronovasrl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180504080652.dniwaqqhbeuknp7y@flea>
-Content-Language: it
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <afc78821-2d08-3f4f-d008-5b2d216e96c0@micronovasrl.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWF4aW1lIQoKSWwgMDQvMDUvMjAxOCAxMDowNiwgTWF4aW1lIFJpcGFyZCBoYSBzY3JpdHRv
-Ogo+IEhpLAo+IAo+IE9uIFdlZCwgTWF5IDAyLCAyMDE4IGF0IDA2OjQxOjM0UE0gKzAyMDAsIEdp
-dWxpbyBCZW5ldHRpIHdyb3RlOgo+Pj4+IFlvdSBkb24ndCBoYXZlIHRvIGhhbmRjb2RlIHRoZSBm
-cmFnbWVudHMgYW55bW9yZSB3aXRoIHRoZSBuZXcgc3ludGF4LAo+Pj4+IGFuZCBVLUJvb3QgbWFr
-ZXMgaXQgcmVhbGx5IHRyaXZpYWwgdG8gdXNlIGlmIHlvdSB1c2UgdGhlIEZJVCBpbWFnZQo+Pj4+
-IGZvcm1hdCB0byBoYXZlIG11bHRpcGxlIG92ZXJsYXlzIGJ1bmRsZWQgaW4gdGhlIHNhbWUgaW1h
-Z2UuIFlvdSBjYW4KPj4+PiBjaG9vc2UgdG8gYXBwbHkgdGhlbSBkeW5hbWljYWxseSwgZm9yIGV4
-YW1wbGUgYmFzZWQgb24gYW4gRUVQUk9NIG9yCj4+Pj4gc29tZSBvdGhlciBtZXRyaWMgdG8gc2Vl
-IHdoaWNoIGNvbWJpbmF0aW9uIHlvdSBoYXZlLgo+Pj4KPj4+IEFoLCB0aGlzIGlzIGludGVyZXN0
-aW5nLiBJJ20gZ29pbmcgdG8gZXhwZXJpbWVudCB3aXRoIHRoYXQuCj4+Pgo+Pgo+PiBJJ20gc3Ry
-dWdnbGluZyBhZ2FpbnN0IHRoaXMsIEkgZG9uJ3QgcmVhbGx5IGtub3cgaG93IHRvIHByb2NlZWQs
-Cj4+IGV4Y2VwdCBrZWVwaW5nIG1vbm9saXRoaWMgZHRzIGZpbGVzIGluY2x1ZGluZyBvdGhlciBk
-dHNpIGZpbGVzLgo+Pgo+PiBBYm91dCBkdC1vdmVybGF5cyBJJ3ZlIHRyaWVkIHRvIGxvb2sgYXJv
-dW5kIGxvdCBvZiB0aW1lLAo+PiBidXQgdGhlIG9ubHkgdGhpbmcgSSd2ZSBmb3VuZCBpcyB0aGlz
-Ogo+PiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9nZWVy
-dC9yZW5lc2FzLWRyaXZlcnMuZ2l0L3RyZWUvYXJjaC9hcm0vYm9vdC9kdHM/aD10b3BpYy9yZW5l
-c2FzLW92ZXJsYXlzCj4+Cj4+IHdoZXJlIHRoZXkgdXNlIC5kdHNvIHRhZ2dpbmcgdGhlbSBhcyAi
-L3BsdWdpbi87Igo+PiBhbmQgY29tcGlsZSBhbGwgLmR0c28gZm91bmQgaW4gZHRzIGZvbGRlci4K
-Pj4gVGhlbiB0aGV5IG9idGFpbiAuZHRibyBmaWxlcyB0aGF0IHNob3VsZCBiZSB0aGUgZHQtb3Zl
-cmxheXMgd2UgaGF2ZSBzcG9rZW4KPj4gYWJvdXQgcmlnaHQ/Cj4gCj4gWWVzLiBZb3UgZG9uJ3Qg
-aGF2ZSB0byBkbyB0aGF0IHRob3VnaCwgeW91IGNhbiBqdXN0IHJlbHkgb24gZHRjIHRvCj4gY29t
-cGlsZSB0aGVtLCBvdXRzaWRlIG9mIHRoZSBsaW51eCBidWlsZCBzeXN0ZW0uCj4gCj4+IFdoYXQg
-SSBjYW4ndCB1bmRlcnN0YW5kIGlzIGlmIHRoZXJlJ3MgYSByZWFsIHN0YW5kYXJkIGF0IHRoaXMg
-dGltZSB0bwo+PiBmb2xsb3csIGJlY2F1c2Ugb24gcmVuZXNhcy1kcml2ZXIgdGhleSB1c2UgdGhl
-aXIgd2F5IHRvIGhhbmRsZSBhbGwgLmR0c28KPj4gZmlsZXMsIGJ1dCBvbiBtYWlubGluZSB0aGVy
-ZSBzZWVtcyB0byBiZSBub3RoaW5nIGFib3V0IHRoYXQuCj4gCj4gSSdtIG5vdCBzdXJlIHdoYXQg
-eW91IG1lYW4gaGVyZS4gSXQncyBqdXN0IGZyYWdtZW50cyBvZiBkZXZpY2UgdHJlZSwKPiB0aGF0
-IGhhdmUgdG8gYmUgY29tcGlsZWQgdXNpbmcgZHRjLCB0aGF0J3MgaXQuIFlvdSBjYW4gdXNlIHRo
-ZSBMaW51eAo+IGJ1aWxkIHN5c3RlbSBpbmZyYXN0cnVjdHVyZSB0byBkbyB0aGF0LCBvciB5b3Ug
-Y2FuIGJ1aWxkIHlvdXIgb3duCj4gc2ltcGxlciBvbmUuIFRoYXQncyByZWFsbHkgdXAgdG8geW91
-LiBTZWUgZm9yIGV4YW1wbGUKPiBodHRwczovL2dpdGh1Yi5jb20vTmV4dFRoaW5nQ28vQ0hJUC1k
-dC1vdmVybGF5cy9ibG9iL21hc3Rlci9NYWtlZmlsZQo+IAo+IChldmVuIHRob3VnaCB0aGUgb3Zl
-cmxheXMgdGhlbXNlbHZlcyB1c2UgdGhlIGxlZ2FjeSBzeW50YXggYW5kCj4gc2hvdWxkbid0IHJl
-YWxseSBiZSB1c2VkIGFuIGV4YW1wbGVzKQoKRXZlcnl0aGluZyB3b3JrcyBub3chClRoYW5rIHlv
-dSB2ZXJ5IG11Y2ghCkkndmUgc2V0dGVkIHVwIGEgUmVwbyBvbiBHaXRodWIgdG8gZ2l2ZSBhbiBl
-eGFtcGxlIG9uIGhvdyBtYWtlIGl0IHdvcmsgCndpdGggbm8gcGFpbjoKaHR0cHM6Ly9naXRodWIu
-Y29tL21pY3Jvbm92YXNybC9saW5vdmEtZHRvdmVybGF5cwoKQXQgdGhlIG1vbWVudCBpdCdzIGEg
-bWVzcyBhbGwgYXJvdW5kLCBidXQgaXQncyB3b3JraW5nIGFuZCBnaXZlIGFuIGlkZWEgCm9uIGhv
-dyB0byBtYWtlIGl0IHdvcmsuIFRob3VnaCBJJ20gZ29pbmcgdG8gY2xlYW4gaXQgdXAgd2VsbCBh
-cyBhIGJhc2UgCmZvciBsaW5vdmEgZHRvdmVybGF5cy4KCkFoLCBidHcsIGNhbiB5b3UgY29uZmly
-bSBtZSB0aGF0IGJhc2UgZHRzIGZpbGUgbXVzdCBiZSBjb21waWxlZCBvdXRzaWRlIAprZXJuZWwg
-d2l0aDoKZHRjIC1AIC4uLi4KT3RoZXJ3aXNlIGFzIGluLXRyZWUgZHRzIHdpdGggbWFrZSBkdGJz
-ICItQCIgYXJndW1lbnQgaXMgbm90IHBhc3NlZC4KUmlnaHQ/CgpUaGFuayB5b3UgYSBsb3QgZm9y
-IHlvdXIgaGVscCBhbmQgdGltZSBhZ2FpbiEKCkJlc3QgcmVnYXJkcyEKCi0tIApHaXVsaW8gQmVu
-ZXR0aQpDVE8KCk1JQ1JPTk9WQSBTUkwKU2VkZTogVmlhIEEuIE5pZWRkYSAzIC0gMzUwMTAgVmln
-b256YSAoUEQpClRlbC4gMDQ5Lzg5MzE1NjMgLSBGYXggMDQ5Lzg5MzEzNDYKQ29kLkZpc2NhbGUg
-LSBQLklWQSAwMjY2MzQyMDI4NQpDYXBpdGFsZSBTb2NpYWxlIOKCrCAyNi4wMDAgaS52LgpJc2Ny
-aXR0YSBhbCBSZWcuIEltcHJlc2UgZGkgUGFkb3ZhIE4uIDAyNjYzNDIwMjg1Ck51bWVybyBSLkUu
-QS4gMjU4NjQyCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi, Giulio,
+
+On 05/05/2018 12:52 AM, Giulio Benetti wrote:
+> Hi Maxime!
+>
+> Il 04/05/2018 10:06, Maxime Ripard ha scritto:
+>> Hi,
+>>
+>> On Wed, May 02, 2018 at 06:41:34PM +0200, Giulio Benetti wrote:
+>>>>> You don't have to handcode the fragments anymore with the new syntax,
+>>>>> and U-Boot makes it really trivial to use if you use the FIT image
+>>>>> format to have multiple overlays bundled in the same image. You can
+>>>>> choose to apply them dynamically, for example based on an EEPROM or
+>>>>> some other metric to see which combination you have.
+>>>>
+>>>> Ah, this is interesting. I'm going to experiment with that.
+>>>>
+>>>
+>>> I'm struggling against this, I don't really know how to proceed,
+>>> except keeping monolithic dts files including other dtsi files.
+>>>
+>>> About dt-overlays I've tried to look around lot of time,
+>>> but the only thing I've found is this:
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/tree/arch/arm/boot/dts?h=topic/renesas-overlays 
+>>>
+>>>
+>>> where they use .dtso tagging them as "/plugin/;"
+>>> and compile all .dtso found in dts folder.
+>>> Then they obtain .dtbo files that should be the dt-overlays we have 
+>>> spoken
+>>> about right?
+>>
+>> Yes. You don't have to do that though, you can just rely on dtc to
+>> compile them, outside of the linux build system.
+>>
+>>> What I can't understand is if there's a real standard at this time to
+>>> follow, because on renesas-driver they use their way to handle all 
+>>> .dtso
+>>> files, but on mainline there seems to be nothing about that.
+>>
+>> I'm not sure what you mean here. It's just fragments of device tree,
+>> that have to be compiled using dtc, that's it. You can use the Linux
+>> build system infrastructure to do that, or you can build your own
+>> simpler one. That's really up to you. See for example
+>> https://github.com/NextThingCo/CHIP-dt-overlays/blob/master/Makefile
+>>
+>> (even though the overlays themselves use the legacy syntax and
+>> shouldn't really be used an examples)
+>
+> Everything works now!
+> Thank you very much!
+> I've setted up a Repo on Github to give an example on how make it work 
+> with no pain:
+> https://github.com/micronovasrl/linova-dtoverlays
+>
+> At the moment it's a mess all around, but it's working and give an 
+> idea on how to make it work. Though I'm going to clean it up well as a 
+> base for linova dtoverlays.
+>
+> Ah, btw, can you confirm me that base dts file must be compiled 
+> outside kernel with:
+> dtc -@ ....
+> Otherwise as in-tree dts with make dtbs "-@" argument is not passed.
+> Right?
+>
+> Thank you a lot for your help and time again!
+>
+> Best regards!
+>
+I'd highly recommend you to look at Armbian overlay support: it is easy 
+and elegant.
+
+https://github.com/armbian/build/blob/master/patch/kernel/sunxi-next/add-overlay-compilation-support.patch
+
+https://github.com/armbian/build/blob/master/patch/kernel/sunxi-next/add-sunxi-overlays.patch
+
+
+Sergey
