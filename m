@@ -1,89 +1,245 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH 4/4] ARM: dts: imx: drop 'clocks' container for board
- level clocks
-Date: Fri, 4 May 2018 10:18:10 +0200
-Message-ID: <20180504101810.065b01f6@karo-electronics.de>
-References: <1525395446-1953-1-git-send-email-shawnguo@kernel.org>
- <1525395446-1953-5-git-send-email-shawnguo@kernel.org>
+From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 05/10] media: v4l: Add definitions for
+ MPEG2 frame format and header metadata
+Date: Fri, 04 May 2018 10:21:43 +0200
+Message-ID: <d728db1b56907c0f86aa661d71e16038329da2e1.camel@bootlin.com>
+References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
+	 <20180419154536.17846-1-paul.kocialkowski@bootlin.com>
+	 <20180424090150.rtbejfjaddd6wysk@paasikivi.fi.intel.com>
+Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1525395446-1953-5-git-send-email-shawnguo@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-5uYNwX/eeAle0iuBdbDf"
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRB4VQWDLQKGQEYSJHS6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180424090150.rtbejfjaddd6wysk-z7MJbOB4PBP+e+fPlCVrcFDQ4js95KgL@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBGcmksICA0IE1heSAyMDE4IDA4OjU3OjI2ICswODAwIFNoYXduIEd1byB3cm90ZToK
-PiBGb3Igc29jIGxldmVsIG9mIGNsb2NrcyB3aGljaCBhcmUgaW5wdXQgdG8gQ2xvY2sgQ29udHJv
-bCBNb2R1bGUsIGNsb2NrCj4gZHJpdmVyIGV4cGVjdHMgdGhlbSB0byBiZSB1bmRlciAnY2xvY2tz
-JyBjb250YWluZXIgbm9kZS4gIEJ1dCBmb3IgYm9hcmQKPiBsZXZlbCBjbG9ja3MsIHRoaXMgY29u
-dGFpbmVyIGlzIG5vdCByZWFsbHkgbmVjZXNzYXJ5LiAgTGV0J3MgZHJvcCBpdCBhbmQKPiB1c2Ug
-YW4gdW5pcXVlIG5hbWUgZm9yIGZpeGVkIHJhdGUgY2xvY2ssIHNvIHRoYXQgJ3JlZycgcHJvcGVy
-dHkgY2FuIGJlCj4gc2F2ZWQgYXMgd2VsbC4KPiAKRm9yIGlteDI4LXR4MjguZHRzIGFuZCBpbXg1
-My10eDUzLmR0c2k6CkFja2VkLUJ5OiBMb3RoYXIgV2HDn21hbm4gPExXQEtBUk8tZWxlY3Ryb25p
-Y3MuZGU+Cgo+IFNpZ25lZC1vZmYtYnk6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4K
-PiAtLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14MjgtdHgyOC5kdHMgICAgICAgICAgICAgfCAx
-MyArKysrLS0tLS0tLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXR4NTMuZHRzaSAgICAg
-ICAgICAgIHwgMTEgKysrKystLS0tLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLWNvbGli
-cmktZXZhbC12My5kdHMgfCAxNSArKysrKystLS0tLS0tLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnEtYng1MHYzLmR0c2kgICAgICAgICAgfCAxMSArKysrLS0tLS0tLQo+ICA0IGZpbGVzIGNo
-YW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDMxIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQg
-YS9hcmNoL2FybS9ib290L2R0cy9pbXgyOC10eDI4LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
-eDI4LXR4MjguZHRzCj4gaW5kZXggNjg3MTg2MzU4YzE4Li5lNGYxOWY5YmU2ZDAgMTAwNjQ0Cj4g
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14MjgtdHgyOC5kdHMKPiArKysgYi9hcmNoL2FybS9i
-b290L2R0cy9pbXgyOC10eDI4LmR0cwo+IEBAIC0xNDAsMTUgKzE0MCwxMCBAQAo+ICAJCXJlZ3Vs
-YXRvci1ib290LW9uOwo+ICAJfTsKPiAgCj4gLQljbG9ja3Mgewo+IC0JCSNhZGRyZXNzLWNlbGxz
-ID0gPDE+Owo+IC0JCSNzaXplLWNlbGxzID0gPDA+Owo+IC0JCW1jbGs6IGNsb2NrQDAgewo+IC0J
-CQljb21wYXRpYmxlID0gImZpeGVkLWNsb2NrIjsKPiAtCQkJcmVnID0gPDA+Owo+IC0JCQkjY2xv
-Y2stY2VsbHMgPSA8MD47Cj4gLQkJCWNsb2NrLWZyZXF1ZW5jeSA9IDwyNjAwMDAwMD47Cj4gLQkJ
-fTsKPiArCW1jbGs6IGNsb2NrLW1jbGsgewo+ICsJCWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2si
-Owo+ICsJCSNjbG9jay1jZWxscyA9IDwwPjsKPiArCQljbG9jay1mcmVxdWVuY3kgPSA8MjYwMDAw
-MDA+Owo+ICAJfTsKPiAgCj4gIAlzb3VuZCB7Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2lteDUzLXR4NTMuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXR4NTMuZHRzaQo+
-IGluZGV4IDc3ZjJjZTlmMWU0MS4uNWRkM2RkM2EyZmQwIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL2lteDUzLXR4NTMuZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUz
-LXR4NTMuZHRzaQo+IEBAIC02NywxMyArNjcsMTIgQEAKPiAgCQlja2loMSB7Cj4gIAkJCWNsb2Nr
-LWZyZXF1ZW5jeSA9IDwwPjsKPiAgCQl9Owo+ICsJfTsKPiAgCj4gLQkJbWNsazogY2xvY2tAMCB7
-Cj4gLQkJCWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOwo+IC0JCQlyZWcgPSA8MD47Cj4gLQkJ
-CSNjbG9jay1jZWxscyA9IDwwPjsKPiAtCQkJY2xvY2stZnJlcXVlbmN5ID0gPDI2MDAwMDAwPjsK
-PiAtCQl9Owo+ICsJbWNsazogY2xvY2stbWNsayB7Cj4gKwkJY29tcGF0aWJsZSA9ICJmaXhlZC1j
-bG9jayI7Cj4gKwkJI2Nsb2NrLWNlbGxzID0gPDA+Owo+ICsJCWNsb2NrLWZyZXF1ZW5jeSA9IDwy
-NjAwMDAwMD47Cj4gIAl9Owo+ICAKPiAgCWdwaW8ta2V5cyB7Cj4gZGlmZiAtLWdpdCBhL2FyY2gv
-YXJtL2Jvb3QvZHRzL2lteDZkbC1jb2xpYnJpLWV2YWwtdjMuZHRzIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvaW14NmRsLWNvbGlicmktZXZhbC12My5kdHMKPiBpbmRleCBlYTE4NGQxMDg0OTEuLjNkZWUz
-YWYxYTRjMSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2ZGwtY29saWJyaS1l
-dmFsLXYzLmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZkbC1jb2xpYnJpLWV2YWwt
-djMuZHRzCj4gQEAgLTcyLDE1ICs3MiwxMiBAQAo+ICAJCXN0ZG91dC1wYXRoID0gInNlcmlhbDA6
-MTE1MjAwbjgiOwo+ICAJfTsKPiAgCj4gLQljbG9ja3Mgewo+IC0JCS8qIEZpeGVkIGNyeXN0YWwg
-ZGVkaWNhdGVkIHRvIG1jcDI1MXggKi8KPiAtCQljbGsxNm06IGNsa0AxIHsKPiAtCQkJY29tcGF0
-aWJsZSA9ICJmaXhlZC1jbG9jayI7Cj4gLQkJCXJlZyA9IDwxPjsKPiAtCQkJI2Nsb2NrLWNlbGxz
-ID0gPDA+Owo+IC0JCQljbG9jay1mcmVxdWVuY3kgPSA8MTYwMDAwMDA+Owo+IC0JCQljbG9jay1v
-dXRwdXQtbmFtZXMgPSAiY2xrMTZtIjsKPiAtCQl9Owo+ICsJLyogRml4ZWQgY3J5c3RhbCBkZWRp
-Y2F0ZWQgdG8gbWNwMjUxeCAqLwo+ICsJY2xrMTZtOiBjbG9jay0xNm0gewo+ICsJCWNvbXBhdGli
-bGUgPSAiZml4ZWQtY2xvY2siOwo+ICsJCSNjbG9jay1jZWxscyA9IDwwPjsKPiArCQljbG9jay1m
-cmVxdWVuY3kgPSA8MTYwMDAwMDA+Owo+ICsJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJjbGsxNm0i
-Owo+ICAJfTsKPiAgCj4gIAlncGlvLWtleXMgewo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290
-L2R0cy9pbXg2cS1ieDUwdjMuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLWJ4NTB2My5k
-dHNpCj4gaW5kZXggZDBlN2RhYjRkNzJiLi5kM2NiYTA5YmUwY2IgMTAwNjQ0Cj4gLS0tIGEvYXJj
-aC9hcm0vYm9vdC9kdHMvaW14NnEtYng1MHYzLmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290L2R0
-cy9pbXg2cS1ieDUwdjMuZHRzaQo+IEBAIC00MywxMyArNDMsMTAgQEAKPiAgI2luY2x1ZGUgImlt
-eDZxLWJhMTYuZHRzaSIKPiAgCj4gIC8gewo+IC0JY2xvY2tzIHsKPiAtCQltY2xrOiBjbG9ja0Aw
-IHsKPiAtCQkJY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7Cj4gLQkJCXJlZyA9IDwwPjsKPiAt
-CQkJI2Nsb2NrLWNlbGxzID0gPDA+Owo+IC0JCQljbG9jay1mcmVxdWVuY3kgPSA8MjIwMDAwMDA+
-Owo+IC0JCX07Cj4gKwltY2xrOiBjbG9jay1tY2xrIHsKPiArCQljb21wYXRpYmxlID0gImZpeGVk
-LWNsb2NrIjsKPiArCQkjY2xvY2stY2VsbHMgPSA8MD47Cj4gKwkJY2xvY2stZnJlcXVlbmN5ID0g
-PDIyMDAwMDAwPjsKPiAgCX07Cj4gIAo+ICAJZ3Bpby1wb3dlcm9mZiB7CgoKTG90aGFyIFdhw59t
-YW5uCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+
+--=-5uYNwX/eeAle0iuBdbDf
+Content-Type: text/plain; charset="UTF-8"
+
+Hi,
+
+On Tue, 2018-04-24 at 12:01 +0300, Sakari Ailus wrote:
+> Hi Paul,
+> 
+> On Thu, Apr 19, 2018 at 05:45:31PM +0200, Paul Kocialkowski wrote:
+> > Stateless video decoding engines require both the MPEG slices and
+> > associated metadata from the video stream in order to decode frames.
+> > 
+> > This introduces definitions for a new pixel format, describing
+> > buffers
+> > with MPEG2 slice data, as well as a control structure for passing
+> > the
+> > frame header (metadata) to drivers.
+> 
+> What's the typical relationship between MPEG2 slice data and the
+> header?
+> 
+> Are the two always used together, do they originate from the same
+> source, for instance? I have to admit I'm not very familiar with
+> MPEG...
+
+Yes, the header is closely related to the slice data, as it expresses
+the metadata required for properly decoding the slice data. Both are
+extracted from the MPEG bitstream and there is dedicated metadata for
+each new set of slices that is decoded to a single frame.
+
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> > Signed-off-by: Florent Revest <florent.revest-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  drivers/media/v4l2-core/v4l2-ctrls.c | 10 ++++++++++
+> >  drivers/media/v4l2-core/v4l2-ioctl.c |  1 +
+> >  include/uapi/linux/v4l2-controls.h   | 26
+> > ++++++++++++++++++++++++++
+> >  include/uapi/linux/videodev2.h       |  3 +++
+> >  4 files changed, 40 insertions(+)
+> > 
+> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > index ba05a8b9a095..fcdc12b9a9e0 100644
+> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > @@ -761,6 +761,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+> >  	case V4L2_CID_MPEG_VIDEO_MV_V_SEARCH_RANGE:		
+> > return "Vertical MV Search Range";
+> >  	case V4L2_CID_MPEG_VIDEO_REPEAT_SEQ_HEADER:		
+> > return "Repeat Sequence Header";
+> >  	case V4L2_CID_MPEG_VIDEO_FORCE_KEY_FRAME:		re
+> > turn "Force Key Frame";
+> > +	case V4L2_CID_MPEG_VIDEO_MPEG2_FRAME_HDR:		re
+> > turn "MPEG2 Frame Header";
+> >  
+> >  	/* VPX controls */
+> >  	case V4L2_CID_MPEG_VIDEO_VPX_NUM_PARTITIONS:		
+> > return "VPX Number of Partitions";
+> > @@ -1152,6 +1153,9 @@ void v4l2_ctrl_fill(u32 id, const char **name,
+> > enum v4l2_ctrl_type *type,
+> >  	case V4L2_CID_RDS_TX_ALT_FREQS:
+> >  		*type = V4L2_CTRL_TYPE_U32;
+> >  		break;
+> > +	case V4L2_CID_MPEG_VIDEO_MPEG2_FRAME_HDR:
+> > +		*type = V4L2_CTRL_TYPE_MPEG2_FRAME_HDR;
+> > +		break;
+> >  	default:
+> >  		*type = V4L2_CTRL_TYPE_INTEGER;
+> >  		break;
+> > @@ -1472,6 +1476,9 @@ static int std_validate(const struct v4l2_ctrl
+> > *ctrl, u32 idx,
+> >  			return -ERANGE;
+> >  		return 0;
+> >  
+> > +	case V4L2_CTRL_TYPE_MPEG2_FRAME_HDR:
+> > +		return 0;
+> > +
+> >  	default:
+> >  		return -EINVAL;
+> >  	}
+> > @@ -2046,6 +2053,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct
+> > v4l2_ctrl_handler *hdl,
+> >  	case V4L2_CTRL_TYPE_U32:
+> >  		elem_size = sizeof(u32);
+> >  		break;
+> > +	case V4L2_CTRL_TYPE_MPEG2_FRAME_HDR:
+> > +		elem_size = sizeof(struct
+> > v4l2_ctrl_mpeg2_frame_hdr);
+> > +		break;
+> >  	default:
+> >  		if (type < V4L2_CTRL_COMPOUND_TYPES)
+> >  			elem_size = sizeof(s32);
+> > diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c
+> > b/drivers/media/v4l2-core/v4l2-ioctl.c
+> > index 468c3c65362d..8070203da5d2 100644
+> > --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> > +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> > @@ -1273,6 +1273,7 @@ static void v4l_fill_fmtdesc(struct
+> > v4l2_fmtdesc *fmt)
+> >  		case V4L2_PIX_FMT_VC1_ANNEX_L:	descr = "VC-1 
+> > (SMPTE 412M Annex L)"; break;
+> >  		case V4L2_PIX_FMT_VP8:		descr =
+> > "VP8"; break;
+> >  		case V4L2_PIX_FMT_VP9:		descr =
+> > "VP9"; break;
+> > +		case V4L2_PIX_FMT_MPEG2_FRAME:	descr =
+> > "MPEG2 Frame"; break;
+> >  		case V4L2_PIX_FMT_CPIA1:	descr = "GSPCA CPiA
+> > YUV"; break;
+> >  		case V4L2_PIX_FMT_WNVA:		descr =
+> > "WNVA"; break;
+> >  		case V4L2_PIX_FMT_SN9C10X:	descr = "GSPCA
+> > SN9C10X"; break;
+> > diff --git a/include/uapi/linux/v4l2-controls.h
+> > b/include/uapi/linux/v4l2-controls.h
+> > index cbbb750d87d1..8431b2a540c7 100644
+> > --- a/include/uapi/linux/v4l2-controls.h
+> > +++ b/include/uapi/linux/v4l2-controls.h
+> > @@ -557,6 +557,8 @@ enum v4l2_mpeg_video_mpeg4_profile {
+> >  };
+> >  #define V4L2_CID_MPEG_VIDEO_MPEG4_QPEL		(V4L2_CID_MPE
+> > G_BASE+407)
+> >  
+> > +#define
+> > V4L2_CID_MPEG_VIDEO_MPEG2_FRAME_HDR     (V4L2_CID_MPEG_BASE+450)
+> > +
+> >  /*  Control IDs for VP8 streams
+> >   *  Although VP8 is not part of MPEG we add these controls to the
+> > MPEG class
+> >   *  as that class is already handling other video compression
+> > standards
+> > @@ -985,4 +987,28 @@ enum v4l2_detect_md_mode {
+> >  #define V4L2_CID_DETECT_MD_THRESHOLD_GRID	(V4L2_CID_DETECT_C
+> > LASS_BASE + 3)
+> >  #define V4L2_CID_DETECT_MD_REGION_GRID		(V4L2_CID_DET
+> > ECT_CLASS_BASE + 4)
+> >  
+> > +struct v4l2_ctrl_mpeg2_frame_hdr {
+> > +	__u32 slice_len;
+> > +	__u32 slice_pos;
+> > +	enum { MPEG1, MPEG2 } type;
+> > +
+> > +	__u16 width;
+> > +	__u16 height;
+> > +
+> > +	enum { PCT_I = 1, PCT_P, PCT_B, PCT_D }
+> > picture_coding_type;
+> > +	__u8 f_code[2][2];
+> > +
+> > +	__u8 intra_dc_precision;
+> > +	__u8 picture_structure;
+> > +	__u8 top_field_first;
+> > +	__u8 frame_pred_frame_dct;
+> > +	__u8 concealment_motion_vectors;
+> > +	__u8 q_scale_type;
+> > +	__u8 intra_vlc_format;
+> > +	__u8 alternate_scan;
+> > +
+> > +	__u8 backward_ref_index;
+> > +	__u8 forward_ref_index;
+> > +};
+> 
+> Besides the comments that have been given, please add
+> __attribute__((packed)) to the struct definition.
+
+Noted.
+
+> > +
+> >  #endif
+> > diff --git a/include/uapi/linux/videodev2.h
+> > b/include/uapi/linux/videodev2.h
+> > index 31b5728b56e9..4b8336f7bcf0 100644
+> > --- a/include/uapi/linux/videodev2.h
+> > +++ b/include/uapi/linux/videodev2.h
+> > @@ -635,6 +635,7 @@ struct v4l2_pix_format {
+> >  #define V4L2_PIX_FMT_VC1_ANNEX_L v4l2_fourcc('V', 'C', '1', 'L') /*
+> > SMPTE 421M Annex L compliant stream */
+> >  #define V4L2_PIX_FMT_VP8      v4l2_fourcc('V', 'P', '8', '0') /*
+> > VP8 */
+> >  #define V4L2_PIX_FMT_VP9      v4l2_fourcc('V', 'P', '9', '0') /*
+> > VP9 */
+> > +#define V4L2_PIX_FMT_MPEG2_FRAME v4l2_fourcc('M', 'G', '2', 'F') /*
+> > MPEG2 frame */
+> 
+> This format needs documentation.
+
+Noted too. Thanks for the review!
+
+> >  
+> >  /*  Vendor-specific formats   */
+> >  #define V4L2_PIX_FMT_CPIA1    v4l2_fourcc('C', 'P', 'I', 'A') /*
+> > cpia1 YUV */
+> > @@ -1586,6 +1587,7 @@ struct v4l2_ext_control {
+> >  		__u8 __user *p_u8;
+> >  		__u16 __user *p_u16;
+> >  		__u32 __user *p_u32;
+> > +		struct v4l2_ctrl_mpeg2_frame_hdr __user
+> > *p_mpeg2_frame_hdr;
+> >  		void __user *ptr;
+> >  	};
+> >  } __attribute__ ((packed));
+> > @@ -1631,6 +1633,7 @@ enum v4l2_ctrl_type {
+> >  	V4L2_CTRL_TYPE_U8	     = 0x0100,
+> >  	V4L2_CTRL_TYPE_U16	     = 0x0101,
+> >  	V4L2_CTRL_TYPE_U32	     = 0x0102,
+> > +	V4L2_CTRL_TYPE_MPEG2_FRAME_HDR = 0x0109,
+> >  };
+> >  
+> >  /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
+> > -- 
+> > 2.16.3
+> > 
+> 
+> 
+-- 
+Paul Kocialkowski, Bootlin (formerly Free Electrons)
+Embedded Linux and kernel engineering
+https://bootlin.com
+--=-5uYNwX/eeAle0iuBdbDf--
