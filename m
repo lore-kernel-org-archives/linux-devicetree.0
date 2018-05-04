@@ -1,64 +1,58 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: tegra: Add support for 256 MB Colibri-T20
- (plus such board on Iris)
-Date: Fri, 4 May 2018 12:03:36 +0200
-Message-ID: <CAJKOXPeb+DmKVQ1uXkBOjaGMpxtPVFp54SBWm6h=+o30z9K3aQ@mail.gmail.com>
-References: <1525360112-9893-1-git-send-email-krzk@kernel.org> <c47c07b2c112219093b668c0b4d46ac8@agner.ch>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH] ARM: dts: BCM5301X: Relicense Asus RT-AC87U file to the GPL
+ 2.0+ / MIT
+Date: Fri,  4 May 2018 12:03:24 +0200
+Message-ID: <20180504100324.31847-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c47c07b2c112219093b668c0b4d46ac8@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Lucas Stach <dev@lynxeye.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 4, 2018 at 11:19 AM, Stefan Agner <stefan@agner.ch> wrote:
-> On 03.05.2018 17:08, Krzysztof Kozlowski wrote:
->> Colibri-T20 can come in 256 MB RAM (with 512 MB NAND) or 512 MB RAM
->> (with 1024 MB NAND) flavors.  Add support for the 256 MB version on Iris
->> evaluation board.
->
-> To we really need to specify memory size these days? I think all common
-> boot loaders fill the memory node anyway.
->
-> arch/arm/boot/dts/imx6qdl-apalis.dtsi:
->         /* Will be filled by the bootloader */
->         memory@10000000 {
->                 reg = <0x10000000 0>;
->         };
->
->
-> I think we should just rename tegra20-colibri-512.dtsi =>
-> tegra20-colibri.dtsi and tegra20-iris-512.dts => tegra20-iris.dts to
-> avoid confusion and add such an empty node.
-
-Having memory node is requirement of DeviceTree specification (at
-least one cpu and memory node). Of course if bootloader fills it, then
-we could assume that specification is satisfied... but what if some
-bootloader skips it? This creates quite specific dependency between
-kernel's DTS and bootloader.
-
-One safe solution would be to specify 256 MB memory node for both
-boards and assume that bootloader will bump it to 512 MB for specific
-module.
-
->> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->>
->> ---
->>
->> Changes since v1:
->> 1. Fix memory size in tegra20-colibri-256.dtsi (was working fine because
->>    my bootloader uses mem= argument).
->
-> What boot loader are you using? You even can omit mem= if your boot
-> loader fills the memory node properly.
-
-I use the one provided by vendor - Toradex. By default it passes both
-mem= and few other mem-like arguments (for FB and video processor) to
-command line. I believe it does not adjust the DTB itself because
-Toradex prepared this bootloader for... 3.1 kernel without DTB. 7
-years old kernel. :)
-
-Best regards,
-Krzysztof
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKVGhpcyBtYXRjaGVzIGxp
+Y2Vuc2luZyB1c2VkIGJ5IG90aGVyIEJDTTUzMDFYIGZpbGVzIGFuZCBpcyBwcmVmZXJyZWQgYXM6
+CjEpIEdQTCAyLjArIG1ha2VzIGlzIGNsZWFybHkgY29tcGF0aWJsZSB3aXRoIExpbnV4IGtlcm5l
+bAoyKSBNSVQgaXMgYWxzbyBwZXJtaXNzaXZlIGJ1dCBwcmVmZXJyZWQgb3ZlciBJU0MKClRoaXMg
+ZmlsZSB3ZXJlIGNyZWF0ZWQgYW5kIGV2ZXIgdG91Y2hlZCBieSBhIGdyb3VwIG9mIHRocmVlIHBl
+b3BsZSBvbmx5OgrDgWx2YXJvLCBIYXVrZSBhbmQgbWUuCgpTaWduZWQtb2ZmLWJ5OiBSYWZhxYIg
+TWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Ci0tLQrDgWx2YXJvLCBIYXVrZTogSSBuZWVkIGFw
+cHJvdmUgZm9yIHRoaXMgY2hhbmdlIGZyb20gZWFjaCBvZiB5b3UuIElmIHlvdQphcmUgT0sgd2l0
+aCBpdCwgY2FuIHlvdSByZXBseSB3aXRoIGFuIEFja2VkLWJ5LCBwbGVhc2U/Ci0tLQogYXJjaC9h
+cm0vYm9vdC9kdHMvYmNtNDcwOS1hc3VzLXJ0LWFjODd1LmR0cyB8IDEzICstLS0tLS0tLS0tLS0K
+IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMTIgZGVsZXRpb25zKC0pCgpkaWZmIC0t
+Z2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOS1hc3VzLXJ0LWFjODd1LmR0cyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL2JjbTQ3MDktYXN1cy1ydC1hYzg3dS5kdHMKaW5kZXggZGY0NzNjYzQxNTcy
+Li4yMjI3MTgxOGY5MDEgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDktYXN1
+cy1ydC1hYzg3dS5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOS1hc3VzLXJ0LWFj
+ODd1LmR0cwpAQCAtMSwyMCArMSw5IEBACisvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BM
+LTIuMC1vci1sYXRlciBPUiBNSVQKIC8qCiAgKiBCcm9hZGNvbSBCQ000NzBYIC8gQkNNNTMwMVgg
+QVJNIHBsYXRmb3JtIGNvZGUuCiAgKiBEVFMgZm9yIEFzdXMgUlQtQUM4N1UKICAqCiAgKiBDb3B5
+cmlnaHQgKEMpIDIwMTUgUmFmYcWCIE1pxYJlY2tpIDx6YWplYzVAZ21haWwuY29tPgotICoKLSAq
+IFBlcm1pc3Npb24gdG8gdXNlLCBjb3B5LCBtb2RpZnksIGFuZC9vciBkaXN0cmlidXRlIHRoaXMg
+c29mdHdhcmUgZm9yIGFueQotICogcHVycG9zZSB3aXRoIG9yIHdpdGhvdXQgZmVlIGlzIGhlcmVi
+eSBncmFudGVkLCBwcm92aWRlZCB0aGF0IHRoZSBhYm92ZQotICogY29weXJpZ2h0IG5vdGljZSBh
+bmQgdGhpcyBwZXJtaXNzaW9uIG5vdGljZSBhcHBlYXIgaW4gYWxsIGNvcGllcy4KLSAqCi0gKiBU
+SEUgU09GVFdBUkUgSVMgUFJPVklERUQgIkFTIElTIiBBTkQgVEhFIEFVVEhPUiBESVNDTEFJTVMg
+QUxMIFdBUlJBTlRJRVMgV0lUSAotICogUkVHQVJEIFRPIFRISVMgU09GVFdBUkUgSU5DTFVESU5H
+IEFMTCBJTVBMSUVEIFdBUlJBTlRJRVMgT0YgTUVSQ0hBTlRBQklMSVRZCi0gKiBBTkQgRklUTkVT
+Uy4gSU4gTk8gRVZFTlQgU0hBTEwgVEhFIEFVVEhPUiBCRSBMSUFCTEUgRk9SIEFOWSBTUEVDSUFM
+LCBESVJFQ1QsCi0gKiBJTkRJUkVDVCwgT1IgQ09OU0VRVUVOVElBTCBEQU1BR0VTIE9SIEFOWSBE
+QU1BR0VTIFdIQVRTT0VWRVIgUkVTVUxUSU5HIEZST00KLSAqIExPU1MgT0YgVVNFLCBEQVRBIE9S
+IFBST0ZJVFMsIFdIRVRIRVIgSU4gQU4gQUNUSU9OIE9GIENPTlRSQUNULCBORUdMSUdFTkNFCi0g
+KiBPUiBPVEhFUiBUT1JUSU9VUyBBQ1RJT04sIEFSSVNJTkcgT1VUIE9GIE9SIElOIENPTk5FQ1RJ
+T04gV0lUSCBUSEUgVVNFIE9SCi0gKiBQRVJGT1JNQU5DRSBPRiBUSElTIFNPRlRXQVJFLgogICov
+CiAKIC9kdHMtdjEvOwotLSAKMi4xMy42CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
