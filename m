@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/7] arm64: allwinner: h6: add PRCM CCU
- device node
-Date: Fri, 4 May 2018 17:07:06 +0200
-Message-ID: <20180504150706.hivzti5eoejwlavm@flea>
+Subject: Re: [PATCH 4/7] arm64: allwinner: h6: add node for
+ R_PIO pin controller
+Date: Fri, 4 May 2018 17:09:28 +0200
+Message-ID: <20180504150928.252mifsr533j6kvr@flea>
 References: <20180503183847.11046-1-icenowy@aosc.io>
- <20180503183847.11046-3-icenowy@aosc.io>
+ <20180503183847.11046-5-icenowy@aosc.io>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="h63zj6d43wukwd46"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBG7OWHLQKGQEK4TCJYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="6zcrwr66nczuc3u2"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKXPWHLQKGQEMWAFHHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180503183847.11046-3-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20180503183847.11046-5-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,22 +24,46 @@ Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai 
 List-Id: devicetree@vger.kernel.org
 
 
---h63zj6d43wukwd46
+--6zcrwr66nczuc3u2
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Fri, May 04, 2018 at 02:38:42AM +0800, Icenowy Zheng wrote:
-> Allwinner H6 has also a PRCM CCU.
+On Fri, May 04, 2018 at 02:38:44AM +0800, Icenowy Zheng wrote:
+> Allwinner H6 SoC has a R_PIO pin controller which controls PL and PM
+> GPIO banks.
 > 
-> Add its device node into the device tree.
+> Add support for it.
 > 
 > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> index db9da343ba46..a18b78fb4850 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> @@ -183,5 +183,18 @@
+>  			#clock-cells = <1>;
+>  			#reset-cells = <1>;
+>  		};
+> +
+> +		r_pio: pinctrl@7022000 {
+> +			compatible = "allwinner,sun50i-h6-r-pinctrl";
+> +			reg = <0x07022000 0x400>;
+> +			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&r_ccu CLK_R_APB1>, <&osc24M>, <&osc32k>;
 
-Applied, thanks!
-Maxime
+As usual, try not to use the indices you introduce in the previous
+patches of your serie. This introduces a dependency between the clk
+and arm-soc tree that is not easy to deal with.
+
+changed for the raw index, and applied, thanks!
+maxime
 
 -- 
 Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
---h63zj6d43wukwd46--
+--6zcrwr66nczuc3u2--
