@@ -1,16 +1,15 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [RFC PATCH] ARM: dts: imx: replace underscore with hyphen in
- aliases name
-Date: Fri, 4 May 2018 16:15:35 +0800
-Message-ID: <20180504081534.GA3443@dragon>
-References: <1525399128-11587-1-git-send-email-shawnguo@kernel.org>
- <20180504074025.GA11186@g751.home>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH 4/4] ARM: dts: imx: drop 'clocks' container for board
+ level clocks
+Date: Fri, 4 May 2018 10:18:10 +0200
+Message-ID: <20180504101810.065b01f6@karo-electronics.de>
+References: <1525395446-1953-1-git-send-email-shawnguo@kernel.org>
+ <1525395446-1953-5-git-send-email-shawnguo@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180504074025.GA11186@g751.home>
+In-Reply-To: <1525395446-1953-5-git-send-email-shawnguo@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,48 +19,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gary Bisson <gary.bisson@boundarydevices.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 04, 2018 at 09:40:25AM +0200, Gary Bisson wrote:
-> Hi Shawn,
-> =
-
-> On Fri, May 04, 2018 at 09:58:48AM +0800, Shawn Guo wrote:
-> > It replaces underscore with hyphen in aliases name to fix DTC
-> > alias_paths warning below, which is seen with various i.MX board dts
-> > files when W=3D1 switch is on.
-> > =
-
-> >  Warning (alias_paths): /aliases: aliases property name must include on=
-ly lowercase and '-'
-> > =
-
-> > Cc: Lothar Wa=DFmann <LW@KARO-electronics.de>
-> > Cc: Gary Bisson <gary.bisson@boundarydevices.com>
-> > Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-> > ---
-> > Hi Lothar, Gary,
-> > =
-
-> > Per my search on kernel code, this change will not break anything on
-> > kernel support.  But I'm not really sure about the case of bootloaders
-> > running on the boards.  That's why I'm sending it as RFC.
-> > =
-
-> > We really want i.MX to be the first-class citizen in the community.
-> > After a few cycles efforts on cleaning up DTC warnings, this alias_paths
-> > warning is the last one we see with i.MX dts files.  We really want to
-> > get rid of it and make i.MX dts be DTC warning free.
-> > =
-
-> > So please comment whether we can merge this patch.
-> =
-
-> Yes that is fine.
-> Reviewed-by: Gary Bisson <gary.bisson@boundarydevices.com>
-
-Thanks, Gary.
-
-Shawn
+SGksCgpPbiBGcmksICA0IE1heSAyMDE4IDA4OjU3OjI2ICswODAwIFNoYXduIEd1byB3cm90ZToK
+PiBGb3Igc29jIGxldmVsIG9mIGNsb2NrcyB3aGljaCBhcmUgaW5wdXQgdG8gQ2xvY2sgQ29udHJv
+bCBNb2R1bGUsIGNsb2NrCj4gZHJpdmVyIGV4cGVjdHMgdGhlbSB0byBiZSB1bmRlciAnY2xvY2tz
+JyBjb250YWluZXIgbm9kZS4gIEJ1dCBmb3IgYm9hcmQKPiBsZXZlbCBjbG9ja3MsIHRoaXMgY29u
+dGFpbmVyIGlzIG5vdCByZWFsbHkgbmVjZXNzYXJ5LiAgTGV0J3MgZHJvcCBpdCBhbmQKPiB1c2Ug
+YW4gdW5pcXVlIG5hbWUgZm9yIGZpeGVkIHJhdGUgY2xvY2ssIHNvIHRoYXQgJ3JlZycgcHJvcGVy
+dHkgY2FuIGJlCj4gc2F2ZWQgYXMgd2VsbC4KPiAKRm9yIGlteDI4LXR4MjguZHRzIGFuZCBpbXg1
+My10eDUzLmR0c2k6CkFja2VkLUJ5OiBMb3RoYXIgV2HDn21hbm4gPExXQEtBUk8tZWxlY3Ryb25p
+Y3MuZGU+Cgo+IFNpZ25lZC1vZmYtYnk6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4K
+PiAtLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14MjgtdHgyOC5kdHMgICAgICAgICAgICAgfCAx
+MyArKysrLS0tLS0tLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXR4NTMuZHRzaSAgICAg
+ICAgICAgIHwgMTEgKysrKystLS0tLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLWNvbGli
+cmktZXZhbC12My5kdHMgfCAxNSArKysrKystLS0tLS0tLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMv
+aW14NnEtYng1MHYzLmR0c2kgICAgICAgICAgfCAxMSArKysrLS0tLS0tLQo+ICA0IGZpbGVzIGNo
+YW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDMxIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQg
+YS9hcmNoL2FybS9ib290L2R0cy9pbXgyOC10eDI4LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
+eDI4LXR4MjguZHRzCj4gaW5kZXggNjg3MTg2MzU4YzE4Li5lNGYxOWY5YmU2ZDAgMTAwNjQ0Cj4g
+LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14MjgtdHgyOC5kdHMKPiArKysgYi9hcmNoL2FybS9i
+b290L2R0cy9pbXgyOC10eDI4LmR0cwo+IEBAIC0xNDAsMTUgKzE0MCwxMCBAQAo+ICAJCXJlZ3Vs
+YXRvci1ib290LW9uOwo+ICAJfTsKPiAgCj4gLQljbG9ja3Mgewo+IC0JCSNhZGRyZXNzLWNlbGxz
+ID0gPDE+Owo+IC0JCSNzaXplLWNlbGxzID0gPDA+Owo+IC0JCW1jbGs6IGNsb2NrQDAgewo+IC0J
+CQljb21wYXRpYmxlID0gImZpeGVkLWNsb2NrIjsKPiAtCQkJcmVnID0gPDA+Owo+IC0JCQkjY2xv
+Y2stY2VsbHMgPSA8MD47Cj4gLQkJCWNsb2NrLWZyZXF1ZW5jeSA9IDwyNjAwMDAwMD47Cj4gLQkJ
+fTsKPiArCW1jbGs6IGNsb2NrLW1jbGsgewo+ICsJCWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2si
+Owo+ICsJCSNjbG9jay1jZWxscyA9IDwwPjsKPiArCQljbG9jay1mcmVxdWVuY3kgPSA8MjYwMDAw
+MDA+Owo+ICAJfTsKPiAgCj4gIAlzb3VuZCB7Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2lteDUzLXR4NTMuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXR4NTMuZHRzaQo+
+IGluZGV4IDc3ZjJjZTlmMWU0MS4uNWRkM2RkM2EyZmQwIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJt
+L2Jvb3QvZHRzL2lteDUzLXR4NTMuZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUz
+LXR4NTMuZHRzaQo+IEBAIC02NywxMyArNjcsMTIgQEAKPiAgCQlja2loMSB7Cj4gIAkJCWNsb2Nr
+LWZyZXF1ZW5jeSA9IDwwPjsKPiAgCQl9Owo+ICsJfTsKPiAgCj4gLQkJbWNsazogY2xvY2tAMCB7
+Cj4gLQkJCWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOwo+IC0JCQlyZWcgPSA8MD47Cj4gLQkJ
+CSNjbG9jay1jZWxscyA9IDwwPjsKPiAtCQkJY2xvY2stZnJlcXVlbmN5ID0gPDI2MDAwMDAwPjsK
+PiAtCQl9Owo+ICsJbWNsazogY2xvY2stbWNsayB7Cj4gKwkJY29tcGF0aWJsZSA9ICJmaXhlZC1j
+bG9jayI7Cj4gKwkJI2Nsb2NrLWNlbGxzID0gPDA+Owo+ICsJCWNsb2NrLWZyZXF1ZW5jeSA9IDwy
+NjAwMDAwMD47Cj4gIAl9Owo+ICAKPiAgCWdwaW8ta2V5cyB7Cj4gZGlmZiAtLWdpdCBhL2FyY2gv
+YXJtL2Jvb3QvZHRzL2lteDZkbC1jb2xpYnJpLWV2YWwtdjMuZHRzIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvaW14NmRsLWNvbGlicmktZXZhbC12My5kdHMKPiBpbmRleCBlYTE4NGQxMDg0OTEuLjNkZWUz
+YWYxYTRjMSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2ZGwtY29saWJyaS1l
+dmFsLXYzLmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZkbC1jb2xpYnJpLWV2YWwt
+djMuZHRzCj4gQEAgLTcyLDE1ICs3MiwxMiBAQAo+ICAJCXN0ZG91dC1wYXRoID0gInNlcmlhbDA6
+MTE1MjAwbjgiOwo+ICAJfTsKPiAgCj4gLQljbG9ja3Mgewo+IC0JCS8qIEZpeGVkIGNyeXN0YWwg
+ZGVkaWNhdGVkIHRvIG1jcDI1MXggKi8KPiAtCQljbGsxNm06IGNsa0AxIHsKPiAtCQkJY29tcGF0
+aWJsZSA9ICJmaXhlZC1jbG9jayI7Cj4gLQkJCXJlZyA9IDwxPjsKPiAtCQkJI2Nsb2NrLWNlbGxz
+ID0gPDA+Owo+IC0JCQljbG9jay1mcmVxdWVuY3kgPSA8MTYwMDAwMDA+Owo+IC0JCQljbG9jay1v
+dXRwdXQtbmFtZXMgPSAiY2xrMTZtIjsKPiAtCQl9Owo+ICsJLyogRml4ZWQgY3J5c3RhbCBkZWRp
+Y2F0ZWQgdG8gbWNwMjUxeCAqLwo+ICsJY2xrMTZtOiBjbG9jay0xNm0gewo+ICsJCWNvbXBhdGli
+bGUgPSAiZml4ZWQtY2xvY2siOwo+ICsJCSNjbG9jay1jZWxscyA9IDwwPjsKPiArCQljbG9jay1m
+cmVxdWVuY3kgPSA8MTYwMDAwMDA+Owo+ICsJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJjbGsxNm0i
+Owo+ICAJfTsKPiAgCj4gIAlncGlvLWtleXMgewo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290
+L2R0cy9pbXg2cS1ieDUwdjMuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLWJ4NTB2My5k
+dHNpCj4gaW5kZXggZDBlN2RhYjRkNzJiLi5kM2NiYTA5YmUwY2IgMTAwNjQ0Cj4gLS0tIGEvYXJj
+aC9hcm0vYm9vdC9kdHMvaW14NnEtYng1MHYzLmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290L2R0
+cy9pbXg2cS1ieDUwdjMuZHRzaQo+IEBAIC00MywxMyArNDMsMTAgQEAKPiAgI2luY2x1ZGUgImlt
+eDZxLWJhMTYuZHRzaSIKPiAgCj4gIC8gewo+IC0JY2xvY2tzIHsKPiAtCQltY2xrOiBjbG9ja0Aw
+IHsKPiAtCQkJY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7Cj4gLQkJCXJlZyA9IDwwPjsKPiAt
+CQkJI2Nsb2NrLWNlbGxzID0gPDA+Owo+IC0JCQljbG9jay1mcmVxdWVuY3kgPSA8MjIwMDAwMDA+
+Owo+IC0JCX07Cj4gKwltY2xrOiBjbG9jay1tY2xrIHsKPiArCQljb21wYXRpYmxlID0gImZpeGVk
+LWNsb2NrIjsKPiArCQkjY2xvY2stY2VsbHMgPSA8MD47Cj4gKwkJY2xvY2stZnJlcXVlbmN5ID0g
+PDIyMDAwMDAwPjsKPiAgCX07Cj4gIAo+ICAJZ3Bpby1wb3dlcm9mZiB7CgoKTG90aGFyIFdhw59t
+YW5uCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
+eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
+cm0ta2VybmVsCg==
