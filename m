@@ -1,57 +1,70 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v5 4/7] gpio: pca953x: define masks for addressing common and extended registers
-Date: Fri, 4 May 2018 09:33:57 +0200
-Message-ID: <71415CEC-6763-4658-A0C4-7AD4E3C1746D@goldelico.com>
-References: <cover.1524933096.git.hns@goldelico.com> <3df974ea890116d759844e56362dc0786388869a.1524933096.git.hns@goldelico.com> <CAHp75Ve37aARbNZ8qu5W9C-fFG5Kf9GRE_VR4aRLFpX61zviyg@mail.gmail.com> <FA9DBCAF-2EA5-4317-BBA3-E2D6A9EAC5D4@goldelico.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 3/4] dt-bindings: rtc: update stm32-rtc documentation for
+ st,syscfg property
+Date: Fri, 4 May 2018 09:40:16 +0200
+Message-ID: <a2cbe252-c957-103d-aae1-4a8fce9116fa@st.com>
+References: <1524144103-21432-1-git-send-email-amelie.delaunay@st.com>
+ <1524144103-21432-4-git-send-email-amelie.delaunay@st.com>
+ <20180427025803.mn32y5xle2p6knn6@rob-hp-laptop>
+ <20180503205351.GE10960@piout.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <FA9DBCAF-2EA5-4317-BBA3-E2D6A9EAC5D4@goldelico.com>
+In-Reply-To: <20180503205351.GE10960@piout.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kernel@pyra-handheld.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh@kernel.org>
+Cc: Amelie Delaunay <amelie.delaunay@st.com>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Hi Alexandre,
 
-> Am 02.05.2018 um 14:36 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
->=20
->> Am 02.05.2018 um 14:29 schrieb Andy Shevchenko =
-<andy.shevchenko@gmail.com>:
->>=20
->> On Sat, Apr 28, 2018 at 7:31 PM, H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>> These mask bits are to be used to map the extended register
->>> addreseses (which are defined for an unsupported 8-bit pcal chip)
->>> to 16 and 24 bit chips (pcal6524).
->>>=20
+On 05/03/2018 10:53 PM, Alexandre Belloni wrote:
+> Amelie,
+> 
+> On 26/04/2018 21:58:03-0500, Rob Herring wrote:
+>> On Thu, Apr 19, 2018 at 03:21:42PM +0200, Amelie Delaunay wrote:
+>>> RTC driver should not be aware of the PWR registers offset and bits
+>>> position. Furthermore, we can imagine that Disable Backup Protection (DBP)
+>>> relative register and bit mask could change depending on the SoC. So this
+>>> patch moves st,syscfg property from single pwrcfg phandle to pwrcfg
+>>> phandle/offset/mask triplet.
+>>>
+>>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt | 10 ++++++----
+>>>   1 file changed, 6 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+>>> index a66692a..00f8b5d 100644
+>>> --- a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+>>> +++ b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+>>> @@ -14,8 +14,10 @@ Required properties:
+>>>       It is required only on stm32h7.
+>>>   - interrupt-parent: phandle for the interrupt controller.
+>>>   - interrupts: rtc alarm interrupt.
+>>> -- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup domain
+>>> -  (RTC registers) write protection.
+>>> +- st,syscfg: phandle/offset/mask triplet. The phandle to pwrcfg used to
+>>> +  access control register at offset, and change the dbp (Disable Backup
+>>> +  Protection) bit represented by the mask, mandatory to disable/enable backup
+>>> +  domain (RTC registers) write protection.
+>>
+>> It's fine to add this, but you are breaking compatibility in the driver
+>> with existing DTBs by requiring these new fields.
+>>
+> 
+> I'm fine with that change but I would like confirmation that this has
+> been well thought. Maybe Maxime or Alexandre could give their ack.
+> 
 
->>>=20
->>> +#define PCAL_GPIO_MASK         GENMASK(4, 0)
->>> +#define PCAL_PINCTRL_MASK      (~PCAL_GPIO_MASK)
->>=20
->> I'm not sure which would be better here
->>=20
->> 1) to follow existing style
->> 0x1F
->> 0xE0
->>=20
->> 2) to use GENMASK() in both definitions
->>=20
->> 3) as it in this patch.
->>=20
->>=20
->> Whatever Linus prefers.
->=20
-> Ok, waiting for his suggestion.
+It's a good thing to remove PWR registers information from RTC driver. 
+My only concern was the compatibility with old DT but we can accept it. 
+Indeed, Kernel will continue to boot fine, only RTC will not probe if we 
+use old DT.
 
-Any advice if we should change or keep this?
+Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-(Please do not merge before I submit a v6 because there are
-some more suggested-by and reviewed-by).
-
-BR and thanks,
-Nikolaus
+Regards
+alex
