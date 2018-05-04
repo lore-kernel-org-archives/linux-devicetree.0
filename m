@@ -1,161 +1,76 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v5 12/14] cpufreq: Add Kryo CPU scaling driver
-Date: Fri, 4 May 2018 12:27:09 +0530
-Message-ID: <20180504065709.62kacfext6bbprlo@vireshk-i7>
-References: <1525348355-25471-1-git-send-email-ilialin@codeaurora.org>
- <1525348355-25471-13-git-send-email-ilialin@codeaurora.org>
- <20180504060827.7bddb53ln2ogwcvv@vireshk-i7>
- <002a01d3e373$6b6ee410$424cac30$@codeaurora.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v4 6/7] ARM: dts: Add support for emtrion emCON-MX6 series
+Date: Fri, 4 May 2018 15:03:40 +0800
+Message-ID: <20180504070339.GS3443@dragon>
+References: <20180420125108.14197-1-jan.tuerk@emtrion.com>
+ <20180427132445.3458-1-jan.tuerk@emtrion.com>
+ <20180427132445.3458-7-jan.tuerk@emtrion.com>
+ <20180428031231.GB3693@dragon>
+ <95F51F4B902CAC40AF459205F6322F01B83109E5C3@BMK019S01.emtrion.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <002a01d3e373$6b6ee410$424cac30$@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ilialin@codeaurora.org
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
+In-Reply-To: <95F51F4B902CAC40AF459205F6322F01B83109E5C3@BMK019S01.emtrion.local>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?iso-8859-1?B?VPxyayw=?= Jan <Jan.Tuerk@emtrion.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Russell King <linux@armlinux.org.uk>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, LinuxArmKernelMailingListe <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04-05-18, 09:44, ilialin@codeaurora.org wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Viresh Kumar <viresh.kumar@linaro.org>
-> > Sent: Friday, May 4, 2018 09:08
-> > To: Ilia Lin <ilialin@codeaurora.org>
-> > Cc: mturquette@baylibre.com; sboyd@kernel.org; robh@kernel.org;
-> > mark.rutland@arm.com; rjw@rjwysocki.net; lgirdwood@gmail.com;
-> > broonie@kernel.org; andy.gross@linaro.org; david.brown@linaro.org;
-> > catalin.marinas@arm.com; will.deacon@arm.com; linux-clk@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> > pm@vger.kernel.org; linux-arm-msm@vger.kernel.org; linux-
-> > soc@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > rnayak@codeaurora.org; amit.kucheria@linaro.org;
-> > nicolas.dechesne@linaro.org; celster@codeaurora.org;
-> > tfinkel@codeaurora.org
-> > Subject: Re: [PATCH v5 12/14] cpufreq: Add Kryo CPU scaling driver
-> > 
-> > On 03-05-18, 14:52, Ilia Lin wrote:
-> > > In Certain QCOM SoCs like apq8096 and msm8996 that have KRYO
-> > > processors, the CPU ferequencies subset and voltage value of each OPP
-> > > varies based on the silicon variant in use. Qualcomm Process Voltage
-> > > Scaling Tables defines the voltage and frequency value based on the
-> > > msm-id in SMEM and speedbin blown in the efuse combination.
-> > > The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the
-> > > SoC to provide the OPP framework with required information.
-> > > This is used to determine the voltage and frequency value for each OPP
-> > > of
-> > > operating-points-v2 table when it is parsed by the OPP framework.
-> > >
-> > > Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-> > > ---
-> > >  drivers/cpufreq/Kconfig.arm          |  11 +++
-> > >  drivers/cpufreq/Makefile             |   1 +
-> > >  drivers/cpufreq/cpufreq-dt-platdev.c |   3 +
-> > >  drivers/cpufreq/qcom-cpufreq-kryo.c  | 153
-> > > +++++++++++++++++++++++++++++++++++
-> > >  4 files changed, 168 insertions(+)
-> > >  create mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
-> > >
-> > > diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> > > index de55c7d..f9da18c 100644
-> > > --- a/drivers/cpufreq/Kconfig.arm
-> > > +++ b/drivers/cpufreq/Kconfig.arm
-> > > @@ -124,6 +124,17 @@ config ARM_OMAP2PLUS_CPUFREQ
-> > >  	depends on ARCH_OMAP2PLUS
-> > >  	default ARCH_OMAP2PLUS
-> > >
-> > > +config ARM_QCOM_CPUFREQ_KRYO
-> > > +	tristate "Qualcomm Technologies, Inc. Kryo based CPUFreq"
-> > 
-> > I don't see any reply to Sricharan's query on this being tristate.
-> 
-> Why shouldn't we leave possibility to compile the cpufreq-dt built-in, and
-> the qcom-cpufreq-kryo module?
-
-I was not saying this is incorrect, all I am saying is that you never
-replied to a comment from one of the reviewers.
-
-And I don't see a reason why this should be a tristate really.
-cpufreq-dt is already capable of being a module, all your driver does
-is that it creates the cpufreq-dt platform device after setting the
-OPP hw properties..
-
-Over that, have you ever tried inserting, then removing and inserting
-the driver module again? I feel it will fail.
-
-The reason is that you never provided an exit routine which can get
-rid of the platform device created in the first place.
-
-> > > +	depends on QCOM_QFPROM
-> > > +	depends on QCOM_SMEM
-> > > +	select PM_OPP
-> > > +	help
-> > > +	  This adds the CPUFreq driver for
-> > > +	  Qualcomm Technologies, Inc. Kryo SoC based boards.
-> > > +
-> > > +	  If in doubt, say N.
-> > > +
-> > >  config ARM_S3C_CPUFREQ
-> > >  	bool
-> > >  	help
-> > > diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile index
-> > > 8d24ade..fb4a2ec 100644
-> > > --- a/drivers/cpufreq/Makefile
-> > > +++ b/drivers/cpufreq/Makefile
-> > > @@ -65,6 +65,7 @@ obj-$(CONFIG_MACH_MVEBU_V7)		+=
-> > mvebu-cpufreq.o
-> > >  obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
-> > >  obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
-> > >  obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
-> > > +obj-$(CONFIG_ARM_QCOM_CPUFREQ_KRYO)	+= qcom-cpufreq-
-> > kryo.o
-> > >  obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+= s3c2410-cpufreq.o
-> > >  obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+= s3c2412-cpufreq.o
-> > >  obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+= s3c2416-cpufreq.o
-> > > diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c
-> > > b/drivers/cpufreq/cpufreq-dt-platdev.c
-> > > index 3b585e4..77d6ab8 100644
-> > > --- a/drivers/cpufreq/cpufreq-dt-platdev.c
-> > > +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-> > > @@ -118,6 +118,9 @@
-> > >
-> > >  	{ .compatible = "nvidia,tegra124", },
-> > >
-> > > +	{ .compatible = "qcom,apq8096", },
-> > > +	{ .compatible = "qcom,msm8996", },
-> > > +
-> > >  	{ .compatible = "st,stih407", },
-> > >  	{ .compatible = "st,stih410", },
-> > >
-> > > diff --git a/drivers/cpufreq/qcom-cpufreq-kryo.c
-> > > b/drivers/cpufreq/qcom-cpufreq-kryo.c
-> > > new file mode 100644
-> > > index 0000000..32371cc
-> > > --- /dev/null
-> > > +++ b/drivers/cpufreq/qcom-cpufreq-kryo.c
-> > > @@ -0,0 +1,153 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/* Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> > 
-> > Incorrect multi line comment.
-> 
-> This was done as per Bjorn's instruction.
-
-You haven't followed him correctly.
-
-What he asked for is:
-
-// SPDX...
-/*
- * XXXX
- */
-
-What you have done is:
-
-// SPDX...
-/* XXXX
- */
- 
--- 
-viresh
+T24gVGh1LCBNYXkgMDMsIDIwMTggYXQgMTI6MDA6MDZQTSArMDIwMCwgVMO8cmssIEphbiB3cm90
+ZToKPiA+ID4gKy8gewo+ID4gPiArICAgYWxpYXNlcyB7Cj4gPiA+ICsgICAgICAgICAgIG1tYzAg
+PSAmdXNkaGMzOwo+ID4gPiArICAgICAgICAgICBtbWMyID0gJnVzZGhjMTsKPiA+ID4gKyAgICAg
+ICAgICAgbW1jMSA9ICZ1c2RoYzI7Cj4gPiA+ICsgICAgICAgICAgIG1tYzMgPSAmdXNkaGM0Owo+
+ID4gPiArICAgICAgICAgICBib2FyZElEID0gJmJvYXJkSUQ7Cj4gPgo+ID4gV2h5IGRvIHlvdSBu
+ZWVkIHRoaXMgYm9hcmRJRCBhbGlhcz8KPiBJIHdhbnRlZCB0byBoYXZlIGEgZ2VuZXJpYyBlbnRy
+eSBwb2ludCB0byBhZGRyZXNzIHRoZSBib2FyZC1pZCBvbiBhbGwgQ1BVLW1vZHVsZXMgd2l0aCB0
+aGVpciBkaWZmZXJlbnQgU29DJ3MgcmVzdWx0aW5nIGluIGRpZmZlcmVudCBkZXZpY2V0cmVlIHBh
+dGhzLgo+IEFsc28gYXMgaXQgbm93IGhhcyB0aGUgZ2VuZXJpYyAiZ3Bpb0AzYSIgbmFtZSwgdGhl
+cmUgd291bGQgYmUgbm8gb3RoZXIgd2F5IGluIGRpZmZlcmVuY2luZyB0aGUgYm9hcmQgSWRlbnRp
+ZnlpbmcgR1BJTy1leHBhbmRlciBmcm9tIGFuIGFkZGl0aW9uYWxseQo+IGF0dGFjaGVkIG9uZSAo
+ZXhjZXB0IHBsYXRmb3JtIGNvZGUgZXRjLikKPiBXaXRoIHRoZSBhbGlhcyBldmVyeSBjb2RlIGNv
+dWxkIGxvb2sgdXAgdGhlIGluZm9ybWF0aW9uIHJlcXVpcmVkIG92ZXIgdGhlIGFsaWFzIHBhdGgg
+d2l0aCB0aGUgc2FtZSBwaWVjZSBvZiBjb2RlLgoKT2theS4gIEJ1dCBubyB1cHBlcmNhc2UgcGxl
+YXNlLiAgT3RoZXJ3aXNlLCB5b3UgaW50cm9kdWNlIHRoZSBmb2xsb3dpbmcKRFRDIHdhcm5pbmdz
+ICh3aXRoIFc9MSBzd2l0Y2gpIHdlIGFyZSB0cnlpbmcgdG8gY2xlYW4gdXAuCgogV2FybmluZyAo
+YWxpYXNfcGF0aHMpOiAvYWxpYXNlczogYWxpYXNlcyBwcm9wZXJ0eSBuYW1lIG11c3QgaW5jbHVk
+ZSBvbmx5IGxvd2VyY2FzZSBhbmQgJy0nCgo+ID4KPiA+ID4gKyAgIH07Cgo8c25pcD4KCj4gPiA+
+ICZwaW5jdHJsX25vcl9mbGFzaAo+ID4gPiArICAgICAgICAgICAgJnBpbmN0cmxfdXNkaGMyCj4g
+PiA+ICsgICAgICAgICAgICAmcGluY3RybF9zcGRpZl9vdXQgICAgICZwaW5jdHJsX3NwZGlmX2lu
+Cj4gPiA+ICsgICAgICAgICAgICAmcGluY3RybF9jcGkxICAgICAgICAgICZwaW5jdHJsX2NwaTIK
+PiA+ID4gKyAgICAgICAgICAgPjsKPiA+Cj4gPiBBZ2FpbiwgcGxlYXNlIGRvIG5vdCBwdXQgY29u
+c3VtZXIgZGV2aWNlIHNwZWNpZmljIHBpbnMgaW4gaG9nIGdyb3VwLgo+ID4gQWxzbywgaXQncyBj
+b25mdXNpbmcgdG8gaGF2ZSB0aGUgc2FtZSBwaW5jdHJsIGluIGJvdGggaG9nIGFuZCBjb25zdW1l
+ciBkZXZpY2UKPiA+IG5vZGUsIGxpa2UgcGluY3RybF9ub3JfZmxhc2ggYW5kIHBpbmN0cmxfdXNk
+aGMyIGhlcmUuCj4gCj4gQWJvdXQgcGluY3RybF9ub3JfZmxhc2ggSSBmdWxseSBhZ3JlZSwgdGhh
+dCdzIGEgbWlzdGFrZS4KPiBwaW5jdHJsX3VzZGhjMiBpcyBub3QgY29ubmVjdGVkIG9uIHRoZSBh
+dmFyaSwgYW5kIHRoZXJlZm9yZSBub3QgZW5hYmxlZC4KPiBBcyB0b2xkIGJlZm9yZSBpdCBpcyBh
+ZGRlZCB0byB0aGUgSG9nIGdyb3VwIHRvIGZvcmNlIHRoZSBkZWZhdWx0IHBpbm11eGluZyB3aXRo
+b3V0IGVuYWJsaW5nIHRoZSBoYXJkd2FyZSBpdHNlbGYuCgpJZiB5b3Ugd2FudCB0byBkbyBzdWNo
+IGRlZmF1bHQgcGlubXV4aW5nLCBwbGVhc2UgZG8gaXQgaW4geW91ciBmaXJtd2FyZS4KV2UgZ2Vu
+ZXJhbGx5IGRvIG5vdCB3YW50IHRvIHVzZSBob2cgZ3JvdXAgdG9vIG11Y2gsIGJlY2F1c2UgdGhh
+dCBtYWtlcwppdCBkaWZmaWN1bHQgdG8gZmluZCBvdXQgd2hpY2ggY2xpZW50IGRldmljZXMgY29u
+c3VtZSB3aGljaCBwaW5zLgoKPiAKPiA+Cj4gPiA+ICt9OwoKPHNuaXA+Cgo+ID4gPiArJmkyYzEg
+ewo+ID4gPiArICAgY2xvY2stZnJlcXVlbmN5ID0gPDEwMDAwMD47Cj4gPiA+ICsgICBwaW5jdHJs
+LW5hbWVzID0gImRlZmF1bHQiOwo+ID4gPiArICAgcGluY3RybC0wID0gPCZwaW5jdHJsX2kyYzE+
+Owo+ID4gPiArICAgc3RhdHVzID0gIm9rYXkiOwo+ID4gPiArCj4gPiA+ICsgICBydGM6IHJ0Y0A2
+OCB7Cj4gPgo+ID4gSXMgdGhlIGxhYmVsIGFjdHVhbGx5IHVzZWQ/ICBJZiB5ZXMsIEkgd291bGQg
+c3VnZ2VzdCBhIG1vcmUgc3BlY2lmaWMgbmFtZSBsaWtlCj4gPiBkczEzMDcuCj4gUmVhbGx5PyBX
+aHkgc2hvdWxkIGl0IGJlIGEgZ2VuZXJpYyBuYW1lIGZvciAiZ3BpbyIgYW5kICJwbWljIiBidXQg
+bm90IGEgZ2VuZXJpYyBuYW1lIGZvciBhbiAicnRjIiBjaGlwPwoKSSdtIHRhbGtpbmcgYWJvdXQg
+bGFiZWwgbm90IG5vZGUgbmFtZS4gIFRoYXQgc2FpZCBJIHdhcyBzdWdnZXN0aW5nCnNvbWV0aGlu
+ZyBsaWtlOgoKCWRzMTMwNzogcnRjQDY4Cgo+IAo+ID4KPiA+ID4gKyAgICAgICAgICAgY29tcGF0
+aWJsZSA9ICJkYWxsYXMsZHMxMzA3IjsKPiA+ID4gKyAgICAgICAgICAgcmVnID0gPDB4Njg+Owo+
+ID4gPiArICAgfTsKClNoYXduCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
