@@ -1,72 +1,99 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 5/6] drm/vc4: Support the case where the DSI device
- is disabled
-Date: Fri, 4 May 2018 14:05:25 +0200
-Message-ID: <20180504140525.152d8d8e@bbrezillon>
-References: <20180503164009.14395-1-boris.brezillon@bootlin.com>
- <20180503164009.14395-6-boris.brezillon@bootlin.com>
- <20180504102833.GJ13459@ulmo>
+From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 09/10] ARM: dts: sun7i-a20: Add Video
+ Engine and reserved memory nodes
+Date: Fri, 04 May 2018 14:04:38 +0200
+Message-ID: <fc064c3f1534a6082dc2b4e18454e054b53e5aee.camel@bootlin.com>
+References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
+	 <20180419154536.17846-5-paul.kocialkowski@bootlin.com>
+	 <20180420073908.nkcbsdxibnzkqski@flea>
+	 <82057e2f734137a3902d9313c228b01ceb345ee7.camel@bootlin.com>
+	 <20180504084008.h6p4brari3xrbv6l@flea>
+	 <e8cd340605ab4db8ebf2888a4fce645e8bc481d0.camel@bootlin.com>
+	 <20180504091555.idgtzey53lozj2uh@flea>
+Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180504102833.GJ13459@ulmo>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-VN/vLUca0O9ClQU/OSCc"
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBMMZWHLQKGQEULFF6XQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180504091555.idgtzey53lozj2uh@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCA0IE1heSAyMDE4IDEyOjI4OjMzICswMjAwClRoaWVycnkgUmVkaW5nIDx0aGllcnJ5
-LnJlZGluZ0BnbWFpbC5jb20+IHdyb3RlOgoKPiBPbiBUaHUsIE1heSAwMywgMjAxOCBhdCAwNjo0
-MDowOFBNICswMjAwLCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6Cj4gPiBIYXZpbmcgYSBkZXZpY2Ug
-d2l0aCBhIHN0YXR1cyBwcm9wZXJ0eSAhPSAib2theSIgaW4gdGhlIERUIGlzIGEgdmFsaWQKPiA+
-IHVzZSBjYXNlLCBhbmQgd2Ugc2hvdWxkIG5vdCBwcmV2ZW50IHRoZSByZWdpc3RyYXRpb24gb2Yg
-dGhlIERSTSBkZXZpY2UKPiA+IHdoZW4gdGhlIERTSSBkZXZpY2UgY29ubmVjdGVkIHRvIHRoZSBE
-U0kgY29udHJvbGxlciBpcyBkaXNhYmxlZC4KPiA+IAo+ID4gQ29uc2lkZXIgdGhlIEVOT0RFViBy
-ZXR1cm4gY29kZSBhcyBhIHZhbGlkIHJlc3VsdCBhbmQgZG8gbm90IGV4cG9zZSB0aGUKPiA+IERT
-SSBlbmNvZGVyL2Nvbm5lY3RvciB3aGVuIGl0IGhhcHBlbnMuCj4gPiAKPiA+IFNpZ25lZC1vZmYt
-Ynk6IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGJvb3RsaW4uY29tPgo+ID4gLS0t
-Cj4gPiAgZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfZHNpLmMgfCAxNSArKysrKysrKysrKysrLS0K
-PiA+ICAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiA+
-IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2RzaS5jIGIvZHJpdmVy
-cy9ncHUvZHJtL3ZjNC92YzRfZHNpLmMKPiA+IGluZGV4IDhhYTg5NzgzNTExOC4uZGIyZjEzN2Y4
-YjdiIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfZHNpLmMKPiA+ICsr
-KyBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2RzaS5jCj4gPiBAQCAtMTYwNiw4ICsxNjA2LDE4
-IEBAIHN0YXRpYyBpbnQgdmM0X2RzaV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRl
-dmljZSAqbWFzdGVyLCB2b2lkICpkYXRhKQo+ID4gIAo+ID4gIAlyZXQgPSBkcm1fb2ZfZmluZF9w
-YW5lbF9vcl9icmlkZ2UoZGV2LT5vZl9ub2RlLCAwLCAwLAo+ID4gIAkJCQkJICAmcGFuZWwsICZk
-c2ktPmJyaWRnZSk7Cj4gPiAtCWlmIChyZXQpCj4gPiArCWlmIChyZXQpIHsKPiA+ICsJCS8qIElm
-IHRoZSBicmlkZ2Ugb3IgcGFuZWwgcG9pbnRlZCBieSBkZXYtPm9mX25vZGUgaXMgbm90Cj4gPiAr
-CQkgKiBlbmFibGVkLCBqdXN0IHJldHVybiAwIGhlcmUgc28gdGhhdCB3ZSBkb24ndCBwcmV2ZW50
-IHRoZSBEUk0KPiA+ICsJCSAqIGRldiBmcm9tIGJlaW5nIHJlZ2lzdGVyZWQuIE9mIGNvdXJzZSB0
-aGF0IG1lYW5zIHRoZSBEU0kKPiA+ICsJCSAqIGVuY29kZXIgd29uJ3QgYmUgZXhwb3NlZCwgYnV0
-IHRoYXQncyBub3QgYSBwcm9ibGVtIHNpbmNlCj4gPiArCQkgKiBub3RoaW5nIGlzIGNvbm5lY3Rl
-ZCB0byBpdC4KPiA+ICsJCSAqLwo+ID4gKwkJaWYgKHJldCA9PSAtRU5PREVWKQo+ID4gKwkJCXJl
-dHVybiAwOwo+ID4gKwo+ID4gIAkJcmV0dXJuIHJldDsKPiA+ICsJfQo+ID4gIAo+ID4gIAlpZiAo
-cGFuZWwpIHsKPiA+ICAJCWRzaS0+YnJpZGdlID0gZGV2bV9kcm1fcGFuZWxfYnJpZGdlX2FkZChk
-ZXYsIHBhbmVsLAo+ID4gQEAgLTE2NTIsNyArMTY2Miw4IEBAIHN0YXRpYyB2b2lkIHZjNF9kc2lf
-dW5iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAo+ID4gIAlz
-dHJ1Y3QgdmM0X2RldiAqdmM0ID0gdG9fdmM0X2Rldihkcm0pOwo+ID4gIAlzdHJ1Y3QgdmM0X2Rz
-aSAqZHNpID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4gPiAgCj4gPiAtCXBtX3J1bnRpbWVfZGlz
-YWJsZShkZXYpOwo+ID4gKwlpZiAoZHNpLT5icmlkZ2UpCj4gPiArCQlwbV9ydW50aW1lX2Rpc2Fi
-bGUoZGV2KTsgIAo+IAo+IElzIHRoaXMgc2FmZT8gVGhpcyB1c2VzIGNvbXBvbmVudC9tYXN0ZXIs
-IHNvIGRzaS0+YnJpZGdlIGlzIGdvaW5nIHRvCj4gcmVtYWluIHZhbGlkIHVudGlsIHRoZSBkcml2
-ZXIncyAtPnJlbW92ZSgpIGlzIGNhbGxlZC4gU28gdGVjaG5pY2FsbHkgeW91Cj4gY291bGQgaGF2
-ZSBhIHNpdHVhdGlvbiB3aGVyZSBkcm1fb2ZfZmluZF9wYW5lbF9vcl9icmlkZ2UoKSByZXR1cm5l
-ZCBzb21lCj4gZXJyb3IgY29kZSB0aGF0IHJlbWFpbnMgc3RvcmVkIGluIGRzaS0+YnJpZGdlIGFu
-ZCBjYXVzZSB0aGUgYWJvdmUKPiBjb25kaXRpb24gdG8gYmUgaW5jb3JyZWN0bHkgdHJ1ZS4KCk5v
-LCBiZWNhdXNlIG9mX2RybV9maW5kX2JyaWRnZSgpICh3aGljaCBpcyBjYWxsZWQgZnJvbQpkcm1f
-b2ZfZmluZF9wYW5lbF9vcl9icmlkZ2UoKSByZXR1cm5zIGVpdGhlciBOVUxMIG9yIGEgdmFsaWQg
-YnJpZGdlCnBvaW50ZXIpLCBzbyBkc2ktPmJyaWRnZSBlaXRoZXIgcG9pbnRzIHRvIGEgdmFsaWQg
-YnJpZGdlIG9iamVjdCBvciBpcwpOVUxMLiBBbSBJIG1pc3Npbmcgc29tZXRoaW5nPwoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--=-VN/vLUca0O9ClQU/OSCc
+Content-Type: text/plain; charset="UTF-8"
+
+Hi,
+
+On Fri, 2018-05-04 at 11:15 +0200, Maxime Ripard wrote:
+> On Fri, May 04, 2018 at 10:47:44AM +0200, Paul Kocialkowski wrote:
+> > > > > > +			reg = <0x01c0e000 0x1000>;
+> > > > > > +			memory-region = <&ve_memory>;
+> > > > > 
+> > > > > Since you made the CMA region the default one, you don't need
+> > > > > to
+> > > > > tie
+> > > > > it to that device in particular (and you can drop it being
+> > > > > mandatory
+> > > > > from your binding as well).
+> > > > 
+> > > > What if another driver (or the system) claims memory from that
+> > > > zone
+> > > > and
+> > > > that the reserved memory ends up not being available for the VPU
+> > > > anymore?
+> > > > 
+> > > > Acccording to the reserved-memory documentation, the reusable
+> > > > property
+> > > > (that we need for dmabuf) puts a limitation that the device
+> > > > driver
+> > > > owning the region must be able to reclaim it back.
+> > > > 
+> > > > How does that work out if the CMA region is not tied to a driver
+> > > > in
+> > > > particular?
+> > > 
+> > > I'm not sure to get what you're saying. You have the property
+> > > linux,cma-default in your reserved region, so the behaviour you
+> > > described is what you explicitly asked for.
+> > 
+> > My point is that I don't see how the driver can claim back (part of)
+> > the
+> > reserved area if the area is not explicitly attached to it.
+> > 
+> > Or is that mechanism made in a way that all drivers wishing to use
+> > the
+> > reserved memory area can claim it back from the system, but there is
+> > no
+> > priority (other than first-come first-served) for which drivers
+> > claims
+> > it back in case two want to use the same reserved region (in a
+> > scenario
+> > where there isn't enough memory to allow both drivers)?
+> 
+> This is indeed what happens. Reusable is to let the system use the
+> reserved memory for things like caches that can easily be dropped when
+> a driver wants to use the memory in that reserved area. Once that
+> memory has been allocated, there's no claiming back, unless that
+> memory segment was freed of course.
+
+Thanks for the clarification. So in our case, perhaps the best fit would
+be to make that area the default CMA pool so that we can be ensured that
+the whole 96 MiB is available for the VPU and that no other consumer of
+CMA will use it?
+
+Cheers,
+
+-- 
+Paul Kocialkowski, Bootlin (formerly Free Electrons)
+Embedded Linux and kernel engineering
+https://bootlin.com
+--=-VN/vLUca0O9ClQU/OSCc--
