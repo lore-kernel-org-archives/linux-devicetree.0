@@ -1,95 +1,173 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
-Date: Fri, 4 May 2018 07:29:58 -0700
-Message-ID: <20180504142958.GB98604@atomide.com>
-References: <CAL_Jsq+mCp=geT8t_j+0fuTxAB7C9RYn6pESRpLc2GH273fM1Q@mail.gmail.com>
- <20180426091018.GU4615@localhost>
- <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
- <20180502081637.GE2285@localhost>
- <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com>
- <20180503205037.7be552c1@aktux>
- <44A0BC7C-67C7-4116-849F-90FF7CF2B1F0@goldelico.com>
- <20180504114213.3xlzqxe74n55tk5s@earth.universe>
- <FC3D0AF4-66EB-48A9-8E81-EC78DE43E105@goldelico.com>
- <20180504133759.xauwewrqevsbhjyr@earth.universe>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v2 6/6] drm/panel: rpi-touchscreen: Set status to "fail"
+ when ->probe() fails
+Date: Fri, 4 May 2018 17:01:27 +0200
+Message-ID: <20180504170127.14d18a6b@bbrezillon>
+References: <20180503164009.14395-1-boris.brezillon@bootlin.com>
+ <20180503164009.14395-7-boris.brezillon@bootlin.com>
+ <CAL_JsqJMarPW6sdcF1ZFCEr6wGyPgi2yhYMCxgypUYYwN7ayfQ@mail.gmail.com>
+ <20180504100653.6ee70802@bbrezillon> <20180504094748.GD13459@ulmo>
+ <20180504141749.03ef85fe@bbrezillon>
+ <20180504142017.GB12521@phenom.ffwll.local>
+ <20180504162404.69667819@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180504133759.xauwewrqevsbhjyr@earth.universe>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Andreas Kemnade <andreas@kemnade.info>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180504162404.69667819@bbrezillon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre@kernel.org> [180504 13:40]:
-> Hi,
-> 
-> On Fri, May 04, 2018 at 02:04:15PM +0200, H. Nikolaus Schaller wrote:
-> > > Am 04.05.2018 um 13:42 schrieb Sebastian Reichel <sre@kernel.org>:
-> > >> I think it does not need much more (if at all) than a gpio controller on
-> > >> the OMAP3 chip (I think the clocks are active anyways for use by the other
-> > >> UARTs).
-> > >> 
-> > >> We had proposed years ago to reprogram the UART RX pin by pinmux-states
-> > >> into an interrupt gpio but that was rejected because it was not general
-> > >> enough and ugly in the device tree (an rx-gpios record where the rx-line
-> > >> is already connected to the UART-rx).
-> > >> 
-> > >> Then we did experiment with tapping the UART driver and finally the
-> > >> serdev API was developed to solve this problem. Hence we use it now this
-> > >> way.
-> > > 
-> > > Having any UART active on OMAP results in the SoC not entering
-> > > idle/off wasting energy. For normal (i.e. not connected to a peripheral)
-> > > TTYs you can enable runtime autosuspend and configure the RX pin as
-> > > wakeup interrupt. This will wakeup the TTY on incoming traffic, but you
-> > > will lose the first few characters (since the serial device needs some
-> > > time to wakeup). This is for example supported by the N900 uart3
-> > > (debug uart):
-> > > 
-> > > $ grep -A4 "&uart3 {" arch/arm/boot/dts/omap3-n900.dts 
-> > > &uart3 {
-> > > 	interrupts-extended = <&intc 74 &omap3_pmx_core OMAP3_UART3_RX>;
-> > > 	pinctrl-names = "default";
-> > > 	pinctrl-0 = <&uart3_pins>;
-> > > };
-> > > 
-> > > To get it working, you also need to enable autosuspend for the tty
-> > > in userspace (echo 3000 /sys/class/tty/ttyS2/device/power/autosuspend_delay_ms).
-> > > This is not enabled by default due to the character loss characteristic
-> > > during wakeup.
-> > > 
-> > > Having said all of this, serdev does not yet support runtime PM (at
-> > > all). Tony is currently looking into it. Fortunately serdev allows
-> > > us to enable runtime PM by default (once implemented), since we know
-> > > the remote side and can (hopefully) avoid losing characters (i.e.
-> > > with sideband wakeup gpios).
-> > 
-> > thanks for explaining this! We originally had similar thoughts when
-> > proposing a w2sg0004 driver for the first time (years ago), but we can
-> > not accept loosing characters...
-> > 
-> > Now, I could imagine a potential solution. The key situation why we keep
-> > the serdev open and listening is if the driver did try to turn the module
-> > off, but in fact did turn it on (because it was not in sync).
-> >
-> > It should be possible to cover this by a timer that is started
-> > in this case. If there is serdev data received after assuming the module
-> > is turned off, the driver has detected the wrong case - and can safely
-> > close the serdev until we want to have it powered on again.
-> > 
-> > If there is no response after turing off, the module power state is already
-> > in sync and we can close the serdev as well - after the timeout (let's say
-> > 30 seconds). Then, the serdev UART can idle. We should open the serdev
-> > and start this timer also in the probe function to catch an initially wrong
-> > state.
-> 
-> That sounds like a good plan.
-
-I don't know the details, but sounds like you should might be able to
-just the timer that comes with pm_runtime_use_autosuspend() :)
-
-Regards,
-
-Tony
+T24gRnJpLCA0IE1heSAyMDE4IDE2OjI0OjA0ICswMjAwCkJvcmlzIEJyZXppbGxvbiA8Ym9yaXMu
+YnJlemlsbG9uQGJvb3RsaW4uY29tPiB3cm90ZToKCj4gT24gRnJpLCA0IE1heSAyMDE4IDE2OjIw
+OjE3ICswMjAwCj4gRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPiB3cm90ZToKPiAKPiA+
+IE9uIEZyaSwgTWF5IDA0LCAyMDE4IGF0IDAyOjE3OjQ5UE0gKzAyMDAsIEJvcmlzIEJyZXppbGxv
+biB3cm90ZTogIAo+ID4gPiBPbiBGcmksIDQgTWF5IDIwMTggMTE6NDc6NDggKzAyMDAKPiA+ID4g
+VGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbT4gd3JvdGU6Cj4gPiA+ICAg
+ICAKPiA+ID4gPiBPbiBGcmksIE1heSAwNCwgMjAxOCBhdCAxMDowNjo1M0FNICswMjAwLCBCb3Jp
+cyBCcmV6aWxsb24gd3JvdGU6ICAgIAo+ID4gPiA+ID4gSGkgUm9iLAo+ID4gPiA+ID4gCj4gPiA+
+ID4gPiBPbiBUaHUsIDMgTWF5IDIwMTggMTI6MTI6MzkgLTA1MDAKPiA+ID4gPiA+IFJvYiBIZXJy
+aW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4gPiA+ID4gICAgICAgCj4gPiA+ID4g
+PiA+IE9uIFRodSwgTWF5IDMsIDIwMTggYXQgMTE6NDAgQU0sIEJvcmlzIEJyZXppbGxvbgo+ID4g
+PiA+ID4gPiA8Ym9yaXMuYnJlemlsbG9uQGJvb3RsaW4uY29tPiB3cm90ZTogICAgICAKPiA+ID4g
+PiA+ID4gPiBUaGUgZGV2aWNlIG1pZ2h0IGJlIGRlc2NyaWJlZCBpbiB0aGUgZGV2aWNlIHRyZWUg
+YnV0IG5vdCBjb25uZWN0ZWQgdG8KPiA+ID4gPiA+ID4gPiB0aGUgSTJDIGJ1cy4gVXBkYXRlIHRo
+ZSBzdGF0dXMgcHJvcGVydHkgc28gdGhhdCB0aGUgRFJNIHBhbmVsIGxvZ2ljCj4gPiA+ID4gPiA+
+ID4gcmV0dXJucyAtRU5PREVWIHdoZW4gc29tZW9uZSB0cmllcyB0byBnZXQgdGhlIHBhbmVsIGF0
+dGFjaGVkIHRvIHRoaXMKPiA+ID4gPiA+ID4gPiBEVCBub2RlLgo+ID4gPiA+ID4gPiA+Cj4gPiA+
+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxsb25A
+Ym9vdGxpbi5jb20+Cj4gPiA+ID4gPiA+ID4gLS0tCj4gPiA+ID4gPiA+ID4gIC4uLi9ncHUvZHJt
+L3BhbmVsL3BhbmVsLXJhc3BiZXJyeXBpLXRvdWNoc2NyZWVuLmMgIHwgMzUgKysrKysrKysrKysr
+KysrKysrKysrKwo+ID4gPiA+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygr
+KQo+ID4gPiA+ID4gPiA+Cj4gPiA+ID4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
+bS9wYW5lbC9wYW5lbC1yYXNwYmVycnlwaS10b3VjaHNjcmVlbi5jIGIvZHJpdmVycy9ncHUvZHJt
+L3BhbmVsL3BhbmVsLXJhc3BiZXJyeXBpLXRvdWNoc2NyZWVuLmMKPiA+ID4gPiA+ID4gPiBpbmRl
+eCAyYzljOTcyMjczNGYuLmI4ZmNiMWFjZWY3NSAxMDA2NDQKPiA+ID4gPiA+ID4gPiAtLS0gYS9k
+cml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtcmFzcGJlcnJ5cGktdG91Y2hzY3JlZW4uYwo+ID4g
+PiA+ID4gPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1yYXNwYmVycnlwaS10
+b3VjaHNjcmVlbi5jCj4gPiA+ID4gPiA+ID4gQEAgLTM1OCw2ICszNTgsMzkgQEAgc3RhdGljIGNv
+bnN0IHN0cnVjdCBkcm1fcGFuZWxfZnVuY3MgcnBpX3RvdWNoc2NyZWVuX2Z1bmNzID0gewo+ID4g
+PiA+ID4gPiA+ICAgICAgICAgLmdldF9tb2RlcyA9IHJwaV90b3VjaHNjcmVlbl9nZXRfbW9kZXMs
+Cj4gPiA+ID4gPiA+ID4gIH07Cj4gPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gPiArc3RhdGljIHZv
+aWQgcnBpX3RvdWNoc2NyZWVuX3NldF9zdGF0dXNfZmFpbChzdHJ1Y3QgaTJjX2NsaWVudCAqaTJj
+KQo+ID4gPiA+ID4gPiA+ICt7Cj4gPiA+ID4gPiA+ID4gKyAgICAgICBzdHJ1Y3QgcHJvcGVydHkg
+Km5ld3Byb3A7Cj4gPiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4gPiA+ICsgICAgICAgbmV3cHJvcCA9
+IGt6YWxsb2Moc2l6ZW9mKCpuZXdwcm9wKSwgR0ZQX0tFUk5FTCk7Cj4gPiA+ID4gPiA+ID4gKyAg
+ICAgICBpZiAoIW5ld3Byb3ApCj4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIHJldHVybjsK
+PiA+ID4gPiA+ID4gPiArCj4gPiA+ID4gPiA+ID4gKyAgICAgICBuZXdwcm9wLT5uYW1lID0ga3N0
+cmR1cCgic3RhdHVzIiwgR0ZQX0tFUk5FTCk7Cj4gPiA+ID4gPiA+ID4gKyAgICAgICBpZiAoIW5l
+d3Byb3AtPm5hbWUpCj4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIGdvdG8gZXJyOwo+ID4g
+PiA+ID4gPiA+ICsKPiA+ID4gPiA+ID4gPiArICAgICAgIG5ld3Byb3AtPnZhbHVlID0ga3N0cmR1
+cCgiZmFpbCIsIEdGUF9LRVJORUwpOwo+ID4gPiA+ID4gPiA+ICsgICAgICAgaWYgKCFuZXdwcm9w
+LT52YWx1ZSkKPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgZ290byBlcnI7Cj4gPiA+ID4g
+PiA+ID4gKwo+ID4gPiA+ID4gPiA+ICsgICAgICAgbmV3cHJvcC0+bGVuZ3RoID0gc2l6ZW9mKCJm
+YWlsIik7Cj4gPiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4gPiA+ICsgICAgICAgaWYgKG9mX3VwZGF0
+ZV9wcm9wZXJ0eShpMmMtPmRldi5vZl9ub2RlLCBuZXdwcm9wKSkKPiA+ID4gPiA+ID4gPiArICAg
+ICAgICAgICAgICAgZ290byBlcnI7Cj4gPiA+ID4gPiA+ID4gKyAgICAgICAgCj4gPiA+ID4gPiA+
+IAo+ID4gPiA+ID4gPiBBcyBJIG1lbnRpb25lZCBvbiBpcmMsIGNhbiB5b3UgbWFrZSB0aGlzIGEg
+Y29tbW9uIERUIGZ1bmN0aW9uLiAgICAgIAo+ID4gPiA+ID4gCj4gPiA+ID4gPiBZZXAsIHdpbGwg
+bW92ZSB0aGF0IHRvIGRyaXZlcnMvb2YvYmFzZS5jIGFuZCBtYWtlIGl0IGdlbmVyaWMuCj4gPiA+
+ID4gPiAgICAgICAKPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+IEknbSBub3Qgc3VyZSBpZiBpdCBt
+YXR0ZXJzIHRoYXQgd2Ugc2V0IHN0YXR1cyB0byBmYWlsIHZzLiBkaXNhYmxlZC4gSQo+ID4gPiA+
+ID4gPiBzb21ld2hhdCBwcmVmZXIgdGhlIGxhdHRlciBhcyB3ZSBhbHJlYWR5IGhhdmUgb3RoZXIg
+Y2FzZXMgYW5kIEknZAo+ID4gPiA+ID4gPiByYXRoZXIgdGhlIGFwaSBub3QgcGFzcyBhIHN0cmlu
+ZyBpbi4gSSBjYW4ndCB0aGluayBvZiBhbnkgcmVhc29uIHRvCj4gPiA+ID4gPiA+IGRpc3Rpbmd1
+aXNoIHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gZmFpbCBhbmQgZGlzYWJsZWQuICAgICAgCj4gPiA+
+ID4gPiAKPiA+ID4gPiA+IFdlbGwsIEkganVzdCByZWFkIHRoZSBlUEFQUiBkb2MgcG9pbnRlZCBi
+eSBUaGllcnJ5IFsxXSAoc2VjdGlvbiAyLjMuNCksCj4gPiA+ID4gPiBhbmQgImZhaWwiIHNlZW1l
+ZCBsaWtlIGEgZ29vZCBtYXRjaCBmb3Igd2hhdCB3ZSBhcmUgdHJ5aW5nIHRvIGV4cHJlc3MKPiA+
+ID4gPiA+IGhlcmU6ICJ3ZSBmYWlsZWQgdG8gY29tbXVuaWNhdGUgd2l0aCB0aGUgZGV2aWNlIGlu
+IHRoZSBwcm9iZSBmdW5jdGlvbgo+ID4gPiA+ID4gYW5kIHdhbnQgdG8gbWFyayBpdCB1bnVzYWJs
+ZSIsIHdoaWNoIGlzIGEgYml0IGRpZmZlcmVudCBmcm9tICJ0aGUKPiA+ID4gPiA+IGRldmljZSB3
+YXMgZXhwbGljaXRseSBkaXNhYmxlZCBieSB0aGUgdXNlciIuCj4gPiA+ID4gPiAKPiA+ID4gPiA+
+IEFueXdheSwgaWYgeW91IHRoaW5rICJkaXNhYmxlZCIgaXMgbW9yZSBhcHByb3ByaWF0ZSwgSSds
+bCB1c2UgdGhhdC4KPiA+ID4gPiA+ICAgICAgIAo+ID4gPiA+ID4gPiAgICAgICAKPiA+ID4gPiA+
+ID4gPiArICAgICAgIC8qIFdlIGludGVudGlvbmFsbHkgbGVhayB0aGUgbWVtb3J5IHdlIGFsbG9j
+YXRlIGhlcmUsIGJlY2F1c2UgdGhlIG5ldwo+ID4gPiA+ID4gPiA+ICsgICAgICAgICogT0YgcHJv
+cGVydHkgbWlnaHQgbGl2ZSBsb25nZXIgdGhhbiB0aGUgdW5kZXJseWluZyBkZXYsIHNvIG5vIHdh
+eQo+ID4gPiA+ID4gPiA+ICsgICAgICAgICogd2UgY2FuIHVzZSBkZXZtX2t6YWxsb2MoKSBoZXJl
+Lgo+ID4gPiA+ID4gPiA+ICsgICAgICAgICovCj4gPiA+ID4gPiA+ID4gKyAgICAgICByZXR1cm47
+Cj4gPiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4gPiA+ICtlcnI6Cj4gPiA+ID4gPiA+ID4gKyAgICAg
+ICBrZnJlZShuZXdwcm9wLT52YWx1ZSk7Cj4gPiA+ID4gPiA+ID4gKyAgICAgICBrZnJlZShuZXdw
+cm9wLT5uYW1lKTsKPiA+ID4gPiA+ID4gPiArICAgICAgIGtmcmVlKG5ld3Byb3ApOwo+ID4gPiA+
+ID4gPiA+ICt9Cj4gPiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4gPiA+ICBzdGF0aWMgaW50IHJwaV90
+b3VjaHNjcmVlbl9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqaTJjLAo+ID4gPiA+ID4gPiA+ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lk
+ICppZCkKPiA+ID4gPiA+ID4gPiAgewo+ID4gPiA+ID4gPiA+IEBAIC0zODIsNiArNDE1LDcgQEAg
+c3RhdGljIGludCBycGlfdG91Y2hzY3JlZW5fcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmkyYywK
+PiA+ID4gPiA+ID4gPgo+ID4gPiA+ID4gPiA+ICAgICAgICAgdmVyID0gcnBpX3RvdWNoc2NyZWVu
+X2kyY19yZWFkKHRzLCBSRUdfSUQpOwo+ID4gPiA+ID4gPiA+ICAgICAgICAgaWYgKHZlciA8IDAp
+IHsKPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgcnBpX3RvdWNoc2NyZWVuX3NldF9zdGF0
+dXNfZmFpbChpMmMpOyAgICAgICAgCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBJJ3ZlIHRob3Vn
+aHQgc29tZSBtb3JlIGFib3V0IHRoaXMgYW5kIEkgc3RpbGwgdGhpbmsgdGhpcyBzaG91bGQgYmUK
+PiA+ID4gPiA+ID4gaGFuZGxlZCBpbiB0aGUgZHJpdmVyIGNvcmUgb3IgaTJjIGNvcmUuCj4gPiA+
+ID4gPiA+IAo+ID4gPiA+ID4gPiBUaGUgcmVhc29uIGlzIHNpbXBsZS4gSSB0aGluayB0aGUgc3Rh
+dGUgb2YgdGhlIHN5c3RlbSBzaG91bGQgYmUgdGhlCj4gPiA+ID4gPiA+IHNhbWUgYWZ0ZXIgdGhp
+cyBhcyBpZiB5b3UgYm9vdGVkIHdpdGggJ3N0YXR1cyA9ICJkaXNhYmxlZCInIGZvciB0aGlzCj4g
+PiA+ID4gPiA+IG5vZGUuIEFuZCB0aGF0IG1lYW5zIHRoZSBkZXZpY2Ugc2hvdWxkIGJlIHJlbW92
+ZWQgY29tcGxldGVseSBiZWNhdXNlCj4gPiA+ID4gPiA+IHdlIGRvbid0IGNyZWF0ZSBzdHJ1Y3Qg
+ZGV2aWNlJ3MgZm9yIGRpc2FibGVkIG5vZGVzLiAgICAgIAo+ID4gPiA+ID4gCj4gPiA+ID4gPiBU
+aGF0IHdhcyBteSBmZWVsaW5nIHRvIHdoZW4gZmlyc3QgZGlzY3Vzc2luZyB0aGUgaXNzdWUgd2l0
+aCBEYW5pZWwgYW5kCj4gPiA+ID4gPiBUaGllcnJ5IG9uIElSQywgYnV0IGFmdGVyIGRpZ2dpbmcg
+YSBiaXQgaW4gdGhlIGNvZGUgSSdtIG5vIGxvbmdlciBzdXJlCj4gPiA+ID4gPiB0aGlzIGlzIGEg
+Z29vZCBpZGVhLiBBdCBsZWFzdCwgSSBkb24ndCB0aGluayBiYXNpbmcgdGhlIGRlY2lzaW9uIHRv
+Cj4gPiA+ID4gPiBkaXNhYmxlIHRoZSBkZXZpY2UgKG9yIG1hcmsgaXQgdW51c2FibGUpIGJhc2Vk
+IG9uIHRoZSByZXR1cm4gdmFsdWUgb2YKPiA+ID4gPiA+IHRoZSBwcm9iZSBmdW5jdGlvbiBpcyBh
+IGdvb2QgaWRlYS4gICAgICAKPiA+ID4gPiAKPiA+ID4gPiBJJ20gbm90IHNvIHN1cmUgYWJvdXQg
+dGhhdC4gLUVOT0RFViBzZWVtcyBsaWtlIGEgdmVyeSBzdWl0YWJsZSBlcnJvcgo+ID4gPiA+IGNv
+ZGUgdG8gYmFzZSB0aGF0IGRlY2lzaW9uIG9uLiBBIHJhbmRvbSBzYW1wbGluZyBvZiBhIGhhbmRm
+dWwgb2YgZHJpdmVycwo+ID4gPiA+IGNvbmZpcm1zIHRoYXQgdGhpcyBpcyBwcmltYXJpbHkgdXNl
+ZCB0byByZXBvcnQgc2l0dWF0aW9ucyB3aGVyZSBpdCBpcwo+ID4gPiA+IGltcG9zc2libGUgZm9y
+IHRoZSBkZXZpY2UgdG8gZXZlciBiZSBwcm9iZWQgc3VjY2Vzc2Z1bGx5LCBzbyBtaWdodCBhcwo+
+ID4gPiA+IHdlbGwganVzdCByZW1vdmUgaXQuICAgIAo+ID4gPiAKPiA+ID4gSXQncyBub3QgdGhh
+dCBlYXN5LiBJdCBoYXMgdG8gYmUgZG9uZSBmcm9tIHRoZSBJMkMgY29yZSBzaW5jZSBpdCdzIHRo
+ZQo+ID4gPiBvbmx5IG9uZSB3aG8gY2FuIGNhbGwgZGV2aWNlX3VucmVnaXN0ZXIoKSBhbmQgY2xl
+YW51cCB0aGUgb3RoZXIgYml0cwo+ID4gPiBhc3NvY2lhdGVkIHdpdGggYW4gSTJDIGRldmljZSAo
+c2VlIGkyY191bnJlZ2lzdGVyX2RldmljZSgpKS4gTm93LCB0aGUKPiA+ID4gaTJjX2RyaXZlci0+
+cHJvYmUoKSBmdW5jdGlvbiBpcyBjYWxsZWQgZnJvbSBhIGNvbnRleHQgd2hlcmUgSSdtIGFsbW9z
+dAo+ID4gPiBzdXJlIGRldmljZV91bnJlZ2lzdGVyKCkgY2FuJ3QgYmUgY2FsbGVkIHNpbmNlIHdl
+IG1pZ2h0IHN0aWxsIGJlIGluIHRoZQo+ID4gPiBkZXZpY2VfcmVnaXN0ZXIoKSBwYXRoLiBUaGUg
+c29sdXRpb24gd291bGQgYmUgdG8gcXVldWUgdGhlCj4gPiA+IHVucmVnaXN0cmF0aW9uIHdvcmsg
+dG8gYSB3b3JrcXVldWUsIGJ1dCBJJ20gbm90IGV2ZW4gc3VyZSB0aGlzIGlzIHNhZmUKPiA+ID4g
+dG8gZG8gdGhhdC4gV2hhdCBpZiB0aGUgSTJDIGFkYXB0ZXIgZXhwb3NpbmcgdGhlIGRldmljZSBp
+cyByZW1vdmVkIGluCj4gPiA+IHRoZSBtZWFudGltZT8gT2YgY291cnNlLCBhbGwgb2YgdGhpcyBj
+YW4gYmUgYWRkcmVzc2VkLCBJJ20ganVzdAo+ID4gPiB3b25kZXJpbmcgaWYgaXQncyByZWFsbHkg
+d29ydGggdGhlIHRyb3VibGUgKHdlJ3JlIGxpa2VseSB0byBpbnRyb2R1Y2UKPiA+ID4gbmV3IHJh
+Y2VzIG9yIG90aGVyIGtpbmQgb2YgYnVncyB3aGlsZSBkb2luZyB0aGF0KSwgZXNwZWNpYWxseSBz
+aW5jZQo+ID4gPiBwbGFjaW5nIHRoZSBkZXZpY2UgaW4gYSAiZmFpbCIgc3RhdGUgYW5kIHN0aWxs
+IGtlZXBpbmcgaXQgYXJvdW5kIHdvdWxkCj4gPiA+IHNvbHZlIHRoZSBwcm9ibGVtIHdpdGhvdXQg
+cmVxdWlyaW5nIGFsbCB0aGUgZXh0cmEgY2xlYW51cCB3ZSdyZSB0YWxraW5nCj4gPiA+IGFib3V0
+IGhlcmUuICAgIAo+ID4gCj4gPiBJIHRoaW5rIHlvdSBoYXZlIHRvIHB1dCB0aGUgZGV2aWNlIHN0
+YXR1cyBpbnRvICJmYWlsIiBpbW1lZGlhdGVseSwKPiA+IG90aGVyd2lzZSB0aGVyZSdzIGEgcmFj
+ZSB3aXRoIGRlZmVycmVkIHByb2JpbmcuIFNjZW5hcmlvOgo+ID4gCj4gPiAxLiB2YzQgbG9hZHMs
+IHBhbmVsIGlzbid0IHRoZXJlIHlldCAtPiBFUFJPQkVfREVGRVIuCj4gPiAyLiBycGkgZHJpdmVy
+IGxvYWRzLCBub3RpY2VzIHBhbmVsIGlzbid0IHRoZXJlLCByZXR1cm5zIC1FTk9ERVYKPiA+IDMu
+IGkyYyBjb3JlIGZpcmVzIG9mZiB0aGUgd29ya2VyIGFuZCBmaW5pc2hlcyBpdCdzIC0+cHJvYmUg
+Y2FsbGJhY2suCj4gPiA0LiBkZXZpY2UgY29yZSBzdGFydHMgYSByZXByb2JlIHRyaWdnZXIKPiA+
+IDUuIHZjNCBnZXRzIGxvYWRlZCwgZG9lcyB0aGUgb2ZfZGV2aWNlX2lzX2F2YWlsYWJsZSBjaGVj
+aywgYnV0IHNpbmNlCj4gPiB0aGF0J3Mgbm90IHlldCB1cGRhdGUgaXQgZG9lc24ndCBnZXQgdGhl
+IEVOT0RFViwgYnV0IHN0aWxsIEVQUk9CRV9ERUZFUi4KPiA+IDYuIGkyYyB3b3JrZXIgZGlzYWJs
+ZXMgdGhlIGRldmljZSBhbmQgdW5yZWdpc3RlcnMgaXQuCj4gPiAgIAo+ID4gLT4gdmM0IGZhaWxz
+IHRvIGxvYWQgc2luY2Ugbm90aGluZyB0cmlnZ2VycyBhbm90aGVyIHJlcHJvYmUgYW55bW9yZS4g
+ICAgCj4gPiAKPiA+IEF0IGxlYXN0IGFmYWljcyBkZXZpY2UgcmVtb3ZhbCBkb2VzIG5vdCB0cmln
+Z2VyIGEgcmVwcm9iZS4gIAo+IAo+IFllcCwgeW91J3JlIGNvcnJlY3QuIFNlZSwgb25lIG1vcmUg
+cmVhc29uIHRvIGtlZXAgdGhlIGxvZ2ljIHNpbXBsZSBhbmQKPiBsZXQgZWFjaCBkcml2ZXIgY2hh
+bmdlIHRoZSBzdGF0dXMgcHJvcCBpbiB0aGVpciAtPnByb2JlKCkgZnVuY3Rpb24uCgpIbSwgYWN0
+dWFsbHkgaXQgZG9lcyBub3Qgd29yayBldmVuIHdpdGggbXkgc29sdXRpb24gYmVjYXVzZSB0aGUg
+b25seQp0aGluZyB0aGF0IGZvcmNlcyBhIG5ldyBhdHRlbXB0IG9uIGFsbCBkZWZlcnJlZC1wcm9i
+ZSBkZXZpY2VzIGlzIHdoZW4gYQpuZXcgZGV2aWNlIGlzIGJvdW5kIHRvIGEgZHJpdmVyLCB3aGlj
+aCB3aWxsIG5vdCBoYXBwZW4gaWYgdGhlIHJwaS1wYW5lbAotPnByb2JlKCkgZnVuY3Rpb24gcmV0
+dXJucyAtRU5PREVWLgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
