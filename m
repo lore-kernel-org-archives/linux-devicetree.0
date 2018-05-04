@@ -1,23 +1,83 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V5 6/6] ARM: imx_v6_v7_defconfig: Select
- CONFIG_GPIO_MAX732X by default
-Date: Fri, 4 May 2018 17:05:20 +0800
-Message-ID: <20180504090519.GE3443@dragon>
-References: <1524725898-27974-1-git-send-email-Anson.Huang@nxp.com>
- <1524725898-27974-6-git-send-email-Anson.Huang@nxp.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 09/10] ARM: dts: sun7i-a20: Add Video
+ Engine and reserved memory nodes
+Date: Fri, 4 May 2018 11:15:55 +0200
+Message-ID: <20180504091555.idgtzey53lozj2uh@flea>
+References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
+ <20180419154536.17846-5-paul.kocialkowski@bootlin.com>
+ <20180420073908.nkcbsdxibnzkqski@flea>
+ <82057e2f734137a3902d9313c228b01ceb345ee7.camel@bootlin.com>
+ <20180504084008.h6p4brari3xrbv6l@flea>
+ <e8cd340605ab4db8ebf2888a4fce645e8bc481d0.camel@bootlin.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lg266mocsnmqmuk4"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBTGJWDLQKGQETXEDKQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1524725898-27974-6-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <e8cd340605ab4db8ebf2888a4fce645e8bc481d0.camel-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 02:58:18PM +0800, Anson Huang wrote:
-> Enable max7320 IO expander for i.MX platforms.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Applied, thanks.
+--lg266mocsnmqmuk4
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Fri, May 04, 2018 at 10:47:44AM +0200, Paul Kocialkowski wrote:
+> > > > > +			reg = <0x01c0e000 0x1000>;
+> > > > > +			memory-region = <&ve_memory>;
+> > > > 
+> > > > Since you made the CMA region the default one, you don't need to
+> > > > tie
+> > > > it to that device in particular (and you can drop it being
+> > > > mandatory
+> > > > from your binding as well).
+> > > 
+> > > What if another driver (or the system) claims memory from that zone
+> > > and
+> > > that the reserved memory ends up not being available for the VPU
+> > > anymore?
+> > > 
+> > > Acccording to the reserved-memory documentation, the reusable
+> > > property
+> > > (that we need for dmabuf) puts a limitation that the device driver
+> > > owning the region must be able to reclaim it back.
+> > > 
+> > > How does that work out if the CMA region is not tied to a driver in
+> > > particular?
+> > 
+> > I'm not sure to get what you're saying. You have the property
+> > linux,cma-default in your reserved region, so the behaviour you
+> > described is what you explicitly asked for.
+> 
+> My point is that I don't see how the driver can claim back (part of) the
+> reserved area if the area is not explicitly attached to it.
+> 
+> Or is that mechanism made in a way that all drivers wishing to use the
+> reserved memory area can claim it back from the system, but there is no
+> priority (other than first-come first-served) for which drivers claims
+> it back in case two want to use the same reserved region (in a scenario
+> where there isn't enough memory to allow both drivers)?
+
+This is indeed what happens. Reusable is to let the system use the
+reserved memory for things like caches that can easily be dropped when
+a driver wants to use the memory in that reserved area. Once that
+memory has been allocated, there's no claiming back, unless that
+memory segment was freed of course.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--lg266mocsnmqmuk4--
