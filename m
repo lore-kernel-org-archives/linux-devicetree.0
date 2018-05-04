@@ -1,39 +1,85 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v6 3/6] kernel/reboot.c: export pm_power_off_prepare
-Date: Fri, 4 May 2018 13:49:56 -0700
-Message-ID: <20180504134956.36dc72a253d03e94a517a867@linux-foundation.org>
-References: <20180305102524.5905-1-o.rempel@pengutronix.de>
-        <20180305102524.5905-4-o.rempel@pengutronix.de>
-        <20180504185052.bjhfkvpgrblc7tfc@pengutronix.de>
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Add dts file for the A20-linova1-7
+ HMI
+Date: Fri, 4 May 2018 23:52:59 +0200
+Message-ID: <afc78821-2d08-3f4f-d008-5b2d216e96c0@micronovasrl.com>
+References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
+ <1521662593-25468-7-git-send-email-giulio.benetti@micronovasrl.com>
+ <20180322180508.my64gobhh5rc2x2m@flea>
+ <8ef3b259-03b4-6987-286e-36ff627a8b76@micronovasrl.com>
+ <20180424084137.7xfwji2gcibxavvt@flea>
+ <03a02abb-e95c-b4ec-748f-907c0af67969@micronovasrl.com>
+ <20180425184016.xktppxw7egddr7li@flea>
+ <42feccc9-1d09-9ff2-3ccc-1dea63bacfb6@micronovasrl.com>
+ <839d2560-0250-9b3a-8019-4e83d9e931e2@micronovasrl.com>
+ <20180504080652.dniwaqqhbeuknp7y@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180504185052.bjhfkvpgrblc7tfc@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180504080652.dniwaqqhbeuknp7y@flea>
+Content-Language: it
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 4 May 2018 20:50:52 +0200 Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-
-> Hallo Andrew,
-> I need your ACK or NACK for this patch.
-> 
-> This function is used to configure external PMIC to interpret
-> signal which will be triggered by pm_power_off as power off.
-> Since same signal can be used for stand by, I linked PMIC configuration
-> with pm_power_off_prepare to avoid possible conflicts.
-> 
-> ...
->
-> > --- a/kernel/reboot.c
-> > +++ b/kernel/reboot.c
-> > @@ -49,6 +49,7 @@ int reboot_force;
-> >   */
-> >  
-> >  void (*pm_power_off_prepare)(void);
-> > +EXPORT_SYMBOL(pm_power_off_prepare);
-> >  
-
-OK by me, but it's more of a Rafael thing.
+SGkgTWF4aW1lIQoKSWwgMDQvMDUvMjAxOCAxMDowNiwgTWF4aW1lIFJpcGFyZCBoYSBzY3JpdHRv
+Ogo+IEhpLAo+IAo+IE9uIFdlZCwgTWF5IDAyLCAyMDE4IGF0IDA2OjQxOjM0UE0gKzAyMDAsIEdp
+dWxpbyBCZW5ldHRpIHdyb3RlOgo+Pj4+IFlvdSBkb24ndCBoYXZlIHRvIGhhbmRjb2RlIHRoZSBm
+cmFnbWVudHMgYW55bW9yZSB3aXRoIHRoZSBuZXcgc3ludGF4LAo+Pj4+IGFuZCBVLUJvb3QgbWFr
+ZXMgaXQgcmVhbGx5IHRyaXZpYWwgdG8gdXNlIGlmIHlvdSB1c2UgdGhlIEZJVCBpbWFnZQo+Pj4+
+IGZvcm1hdCB0byBoYXZlIG11bHRpcGxlIG92ZXJsYXlzIGJ1bmRsZWQgaW4gdGhlIHNhbWUgaW1h
+Z2UuIFlvdSBjYW4KPj4+PiBjaG9vc2UgdG8gYXBwbHkgdGhlbSBkeW5hbWljYWxseSwgZm9yIGV4
+YW1wbGUgYmFzZWQgb24gYW4gRUVQUk9NIG9yCj4+Pj4gc29tZSBvdGhlciBtZXRyaWMgdG8gc2Vl
+IHdoaWNoIGNvbWJpbmF0aW9uIHlvdSBoYXZlLgo+Pj4KPj4+IEFoLCB0aGlzIGlzIGludGVyZXN0
+aW5nLiBJJ20gZ29pbmcgdG8gZXhwZXJpbWVudCB3aXRoIHRoYXQuCj4+Pgo+Pgo+PiBJJ20gc3Ry
+dWdnbGluZyBhZ2FpbnN0IHRoaXMsIEkgZG9uJ3QgcmVhbGx5IGtub3cgaG93IHRvIHByb2NlZWQs
+Cj4+IGV4Y2VwdCBrZWVwaW5nIG1vbm9saXRoaWMgZHRzIGZpbGVzIGluY2x1ZGluZyBvdGhlciBk
+dHNpIGZpbGVzLgo+Pgo+PiBBYm91dCBkdC1vdmVybGF5cyBJJ3ZlIHRyaWVkIHRvIGxvb2sgYXJv
+dW5kIGxvdCBvZiB0aW1lLAo+PiBidXQgdGhlIG9ubHkgdGhpbmcgSSd2ZSBmb3VuZCBpcyB0aGlz
+Ogo+PiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9nZWVy
+dC9yZW5lc2FzLWRyaXZlcnMuZ2l0L3RyZWUvYXJjaC9hcm0vYm9vdC9kdHM/aD10b3BpYy9yZW5l
+c2FzLW92ZXJsYXlzCj4+Cj4+IHdoZXJlIHRoZXkgdXNlIC5kdHNvIHRhZ2dpbmcgdGhlbSBhcyAi
+L3BsdWdpbi87Igo+PiBhbmQgY29tcGlsZSBhbGwgLmR0c28gZm91bmQgaW4gZHRzIGZvbGRlci4K
+Pj4gVGhlbiB0aGV5IG9idGFpbiAuZHRibyBmaWxlcyB0aGF0IHNob3VsZCBiZSB0aGUgZHQtb3Zl
+cmxheXMgd2UgaGF2ZSBzcG9rZW4KPj4gYWJvdXQgcmlnaHQ/Cj4gCj4gWWVzLiBZb3UgZG9uJ3Qg
+aGF2ZSB0byBkbyB0aGF0IHRob3VnaCwgeW91IGNhbiBqdXN0IHJlbHkgb24gZHRjIHRvCj4gY29t
+cGlsZSB0aGVtLCBvdXRzaWRlIG9mIHRoZSBsaW51eCBidWlsZCBzeXN0ZW0uCj4gCj4+IFdoYXQg
+SSBjYW4ndCB1bmRlcnN0YW5kIGlzIGlmIHRoZXJlJ3MgYSByZWFsIHN0YW5kYXJkIGF0IHRoaXMg
+dGltZSB0bwo+PiBmb2xsb3csIGJlY2F1c2Ugb24gcmVuZXNhcy1kcml2ZXIgdGhleSB1c2UgdGhl
+aXIgd2F5IHRvIGhhbmRsZSBhbGwgLmR0c28KPj4gZmlsZXMsIGJ1dCBvbiBtYWlubGluZSB0aGVy
+ZSBzZWVtcyB0byBiZSBub3RoaW5nIGFib3V0IHRoYXQuCj4gCj4gSSdtIG5vdCBzdXJlIHdoYXQg
+eW91IG1lYW4gaGVyZS4gSXQncyBqdXN0IGZyYWdtZW50cyBvZiBkZXZpY2UgdHJlZSwKPiB0aGF0
+IGhhdmUgdG8gYmUgY29tcGlsZWQgdXNpbmcgZHRjLCB0aGF0J3MgaXQuIFlvdSBjYW4gdXNlIHRo
+ZSBMaW51eAo+IGJ1aWxkIHN5c3RlbSBpbmZyYXN0cnVjdHVyZSB0byBkbyB0aGF0LCBvciB5b3Ug
+Y2FuIGJ1aWxkIHlvdXIgb3duCj4gc2ltcGxlciBvbmUuIFRoYXQncyByZWFsbHkgdXAgdG8geW91
+LiBTZWUgZm9yIGV4YW1wbGUKPiBodHRwczovL2dpdGh1Yi5jb20vTmV4dFRoaW5nQ28vQ0hJUC1k
+dC1vdmVybGF5cy9ibG9iL21hc3Rlci9NYWtlZmlsZQo+IAo+IChldmVuIHRob3VnaCB0aGUgb3Zl
+cmxheXMgdGhlbXNlbHZlcyB1c2UgdGhlIGxlZ2FjeSBzeW50YXggYW5kCj4gc2hvdWxkbid0IHJl
+YWxseSBiZSB1c2VkIGFuIGV4YW1wbGVzKQoKRXZlcnl0aGluZyB3b3JrcyBub3chClRoYW5rIHlv
+dSB2ZXJ5IG11Y2ghCkkndmUgc2V0dGVkIHVwIGEgUmVwbyBvbiBHaXRodWIgdG8gZ2l2ZSBhbiBl
+eGFtcGxlIG9uIGhvdyBtYWtlIGl0IHdvcmsgCndpdGggbm8gcGFpbjoKaHR0cHM6Ly9naXRodWIu
+Y29tL21pY3Jvbm92YXNybC9saW5vdmEtZHRvdmVybGF5cwoKQXQgdGhlIG1vbWVudCBpdCdzIGEg
+bWVzcyBhbGwgYXJvdW5kLCBidXQgaXQncyB3b3JraW5nIGFuZCBnaXZlIGFuIGlkZWEgCm9uIGhv
+dyB0byBtYWtlIGl0IHdvcmsuIFRob3VnaCBJJ20gZ29pbmcgdG8gY2xlYW4gaXQgdXAgd2VsbCBh
+cyBhIGJhc2UgCmZvciBsaW5vdmEgZHRvdmVybGF5cy4KCkFoLCBidHcsIGNhbiB5b3UgY29uZmly
+bSBtZSB0aGF0IGJhc2UgZHRzIGZpbGUgbXVzdCBiZSBjb21waWxlZCBvdXRzaWRlIAprZXJuZWwg
+d2l0aDoKZHRjIC1AIC4uLi4KT3RoZXJ3aXNlIGFzIGluLXRyZWUgZHRzIHdpdGggbWFrZSBkdGJz
+ICItQCIgYXJndW1lbnQgaXMgbm90IHBhc3NlZC4KUmlnaHQ/CgpUaGFuayB5b3UgYSBsb3QgZm9y
+IHlvdXIgaGVscCBhbmQgdGltZSBhZ2FpbiEKCkJlc3QgcmVnYXJkcyEKCi0tIApHaXVsaW8gQmVu
+ZXR0aQpDVE8KCk1JQ1JPTk9WQSBTUkwKU2VkZTogVmlhIEEuIE5pZWRkYSAzIC0gMzUwMTAgVmln
+b256YSAoUEQpClRlbC4gMDQ5Lzg5MzE1NjMgLSBGYXggMDQ5Lzg5MzEzNDYKQ29kLkZpc2NhbGUg
+LSBQLklWQSAwMjY2MzQyMDI4NQpDYXBpdGFsZSBTb2NpYWxlIOKCrCAyNi4wMDAgaS52LgpJc2Ny
+aXR0YSBhbCBSZWcuIEltcHJlc2UgZGkgUGFkb3ZhIE4uIDAyNjYzNDIwMjg1Ck51bWVybyBSLkUu
+QS4gMjU4NjQyCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
