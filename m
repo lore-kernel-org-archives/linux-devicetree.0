@@ -1,85 +1,76 @@
-Return-Path: <SRS0=jfmr=HZ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pg0-f65.google.com ([74.125.83.65]:37943 "EHLO
-        mail-pg0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751777AbeEFOUA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 6 May 2018 10:20:00 -0400
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v5 05/14] media: ov772x: add media controller support
-Date: Sun,  6 May 2018 23:19:20 +0900
-Message-Id: <1525616369-8843-6-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
-References: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
+Return-Path: <SRS0=Xnq8=HX=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from m12-12.163.com ([220.181.12.12]:35573 "EHLO m12-12.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751533AbeEDJVQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 4 May 2018 05:21:16 -0400
+From: sunjg79@163.com
+Subject: [PATCH 1/2] dt-bindings: usb: add bindings doc for HiSilicon STB xHCI host controller
+Date: Fri,  4 May 2018 17:20:44 +0800
+Message-Id: <1525425645-17246-2-git-send-email-sunjg79@163.com>
+In-Reply-To: <1525425645-17246-1-git-send-email-sunjg79@163.com>
+References: <1525425645-17246-1-git-send-email-sunjg79@163.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+To: mathias.nyman@intel.com, gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc: shawn.guo@linaro.org, xuejiancheng@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Jianguo Sun <sunjianguo1@huawei.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Create a source pad and set the media controller type to the sensor.
+From: Jianguo Sun <sunjianguo1@huawei.com>
 
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+This commit adds bindings doc for HiSilicon STB xHCI host controller.
+
+Signed-off-by: Jianguo Sun <sunjianguo1@huawei.com>
 ---
-* v5
-- No changes
+ .../bindings/usb/hisilicon,histb-xhci.txt          | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/hisilicon,histb-xhci.txt
 
- drivers/media/i2c/ov772x.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 3fdbe64..bb5327f 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -424,6 +424,9 @@ struct ov772x_priv {
- 	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
- 	unsigned short                    band_filter;
- 	unsigned int			  fps;
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	struct media_pad pad;
-+#endif
- };
- 
- /*
-@@ -1316,16 +1319,26 @@ static int ov772x_probe(struct i2c_client *client,
- 	if (ret < 0)
- 		goto error_gpio_put;
- 
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	priv->pad.flags = MEDIA_PAD_FL_SOURCE;
-+	priv->subdev.entity.function = MEDIA_ENT_F_CAM_SENSOR;
-+	ret = media_entity_pads_init(&priv->subdev.entity, 1, &priv->pad);
-+	if (ret < 0)
-+		goto error_gpio_put;
-+#endif
+diff --git a/Documentation/devicetree/bindings/usb/hisilicon,histb-xhci.txt b/Documentation/devicetree/bindings/usb/hisilicon,histb-xhci.txt
+new file mode 100644
+index 0000000..628225f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/hisilicon,histb-xhci.txt
+@@ -0,0 +1,40 @@
++HiSilicon STB xHCI
 +
- 	priv->cfmt = &ov772x_cfmts[0];
- 	priv->win = &ov772x_win_sizes[0];
- 	priv->fps = 15;
- 
- 	ret = v4l2_async_register_subdev(&priv->subdev);
- 	if (ret)
--		goto error_gpio_put;
-+		goto error_entity_cleanup;
- 
- 	return 0;
- 
-+error_entity_cleanup:
-+	media_entity_cleanup(&priv->subdev.entity);
- error_gpio_put:
- 	if (priv->pwdn_gpio)
- 		gpiod_put(priv->pwdn_gpio);
-@@ -1341,6 +1354,7 @@ static int ov772x_remove(struct i2c_client *client)
- {
- 	struct ov772x_priv *priv = to_ov772x(i2c_get_clientdata(client));
- 
-+	media_entity_cleanup(&priv->subdev.entity);
- 	clk_put(priv->clk);
- 	if (priv->pwdn_gpio)
- 		gpiod_put(priv->pwdn_gpio);
++The device node for HiSilicon STB xHCI host controller
++
++Required properties:
++ - compatible : should be "hisilicon,hi3798cv200-xhci"
++ - reg : specifies physical base address and size of the registers
++ - interrupts : interrupt used by the controller
++ - clocks : a list of phandle + clock-specifier pairs, one for each
++	entry in clock-names
++ - clock-names : must contain
++	"bus": for bus clock
++	"utmi": for utmi clock
++	"pipe": for pipeE clock
++	"suspend": for suspend clock
++ - resets: a list of phandle and reset specifier pairs as listed in
++	reset-names property.
++ - reset-names: must contain
++	"soft": for soft reset
++ - phys : a list of phandle + phy specifier pairs
++ - phy-names: must contain one of following at least:
++	"inno": for inno phy
++	"combo": for combo phy
++
++Example:
++
++xhci0: xchi@f98a0000 {
++	compatible = "hisilicon,hi3798cv200-xhci";
++	reg = <0xf98a0000 0x10000>;
++	interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&crg HISTB_USB3_BUS_CLK>,
++		 <&crg HISTB_USB3_UTMI_CLK>,
++		 <&crg HISTB_USB3_PIPE_CLK>,
++		 <&crg HISTB_USB3_SUSPEND_CLK>;
++	clock-names = "bus", "utmi", "pipe", "suspend";
++	resets = <&crg 0xb0 12>;
++	reset-names = "soft";
++	phys = <&usb2_phy1_port1 0>, <&combphy0 PHY_TYPE_USB3>;
++	phy-names = "inno", "combo";
++};
 -- 
 2.7.4
+
 
