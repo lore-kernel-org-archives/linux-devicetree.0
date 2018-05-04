@@ -1,87 +1,241 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [alsa-devel] [PATCH v7 16/24] ASoC: qdsp6: q6asm: Add support to
- audio stream apis
-Date: Fri, 4 May 2018 09:24:16 +0100
-Message-ID: <196824c5-2b0c-1f1b-edd9-0ba6e82ac0f7@linaro.org>
-References: <20180501120820.11016-1-srinivas.kandagatla@linaro.org>
- <20180501120820.11016-17-srinivas.kandagatla@linaro.org>
- <f3b3d90b-6504-328e-c9f4-a3b3f085d9dc@codeaurora.org>
+From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 05/10] media: v4l: Add definitions for
+ MPEG2 frame format and header metadata
+Date: Fri, 04 May 2018 10:22:51 +0200
+Message-ID: <5534cc4b748d7b3b1ce621ea43ce44aabea09d56.camel@bootlin.com>
+References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
+	 <20180419154536.17846-1-paul.kocialkowski@bootlin.com>
+	 <4e6c4cb7-01b2-3278-4f12-c0ce8cd82ecc@xs4all.nl>
+Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f3b3d90b-6504-328e-c9f4-a3b3f085d9dc@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rohit Kumar <rohitkr@codeaurora.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, bgoswami@codeaurora.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-Q6WlS8F+GrOUSO6T6zi9"
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBN5RWDLQKGQEH7KKUNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <4e6c4cb7-01b2-3278-4f12-c0ce8cd82ecc-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Rohit for testing this!
 
+--=-Q6WlS8F+GrOUSO6T6zi9
+Content-Type: text/plain; charset="UTF-8"
 
-On 04/05/18 08:11, Rohit Kumar wrote:
+Hi,
+
+On Fri, 2018-04-20 at 15:57 +0200, Hans Verkuil wrote:
+> On 04/19/18 17:45, Paul Kocialkowski wrote:
+> > Stateless video decoding engines require both the MPEG slices and
+> > associated metadata from the video stream in order to decode frames.
+> > 
+> > This introduces definitions for a new pixel format, describing
+> > buffers
+> > with MPEG2 slice data, as well as a control structure for passing
+> > the
+> > frame header (metadata) to drivers.
+> > 
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> > Signed-off-by: Florent Revest <florent.revest-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  drivers/media/v4l2-core/v4l2-ctrls.c | 10 ++++++++++
+> >  drivers/media/v4l2-core/v4l2-ioctl.c |  1 +
+> >  include/uapi/linux/v4l2-controls.h   | 26
+> > ++++++++++++++++++++++++++
+> >  include/uapi/linux/videodev2.h       |  3 +++
+> >  4 files changed, 40 insertions(+)
+> > 
+> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > index ba05a8b9a095..fcdc12b9a9e0 100644
+> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > @@ -761,6 +761,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+> >  	case V4L2_CID_MPEG_VIDEO_MV_V_SEARCH_RANGE:		
+> > return "Vertical MV Search Range";
+> >  	case V4L2_CID_MPEG_VIDEO_REPEAT_SEQ_HEADER:		
+> > return "Repeat Sequence Header";
+> >  	case V4L2_CID_MPEG_VIDEO_FORCE_KEY_FRAME:		re
+> > turn "Force Key Frame";
+> > +	case V4L2_CID_MPEG_VIDEO_MPEG2_FRAME_HDR:		re
+> > turn "MPEG2 Frame Header";
+> >  
+> >  	/* VPX controls */
+> >  	case V4L2_CID_MPEG_VIDEO_VPX_NUM_PARTITIONS:		
+> > return "VPX Number of Partitions";
+> > @@ -1152,6 +1153,9 @@ void v4l2_ctrl_fill(u32 id, const char **name,
+> > enum v4l2_ctrl_type *type,
+> >  	case V4L2_CID_RDS_TX_ALT_FREQS:
+> >  		*type = V4L2_CTRL_TYPE_U32;
+> >  		break;
+> > +	case V4L2_CID_MPEG_VIDEO_MPEG2_FRAME_HDR:
+> > +		*type = V4L2_CTRL_TYPE_MPEG2_FRAME_HDR;
+> > +		break;
+> >  	default:
+> >  		*type = V4L2_CTRL_TYPE_INTEGER;
+> >  		break;
+> > @@ -1472,6 +1476,9 @@ static int std_validate(const struct v4l2_ctrl
+> > *ctrl, u32 idx,
+> >  			return -ERANGE;
+> >  		return 0;
+> >  
+> > +	case V4L2_CTRL_TYPE_MPEG2_FRAME_HDR:
+> > +		return 0;
+> > +
+> >  	default:
+> >  		return -EINVAL;
+> >  	}
+> > @@ -2046,6 +2053,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct
+> > v4l2_ctrl_handler *hdl,
+> >  	case V4L2_CTRL_TYPE_U32:
+> >  		elem_size = sizeof(u32);
+> >  		break;
+> > +	case V4L2_CTRL_TYPE_MPEG2_FRAME_HDR:
+> > +		elem_size = sizeof(struct
+> > v4l2_ctrl_mpeg2_frame_hdr);
+> > +		break;
+> >  	default:
+> >  		if (type < V4L2_CTRL_COMPOUND_TYPES)
+> >  			elem_size = sizeof(s32);
+> > diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c
+> > b/drivers/media/v4l2-core/v4l2-ioctl.c
+> > index 468c3c65362d..8070203da5d2 100644
+> > --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> > +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> > @@ -1273,6 +1273,7 @@ static void v4l_fill_fmtdesc(struct
+> > v4l2_fmtdesc *fmt)
+> >  		case V4L2_PIX_FMT_VC1_ANNEX_L:	descr = "VC-1 
+> > (SMPTE 412M Annex L)"; break;
+> >  		case V4L2_PIX_FMT_VP8:		descr =
+> > "VP8"; break;
+> >  		case V4L2_PIX_FMT_VP9:		descr =
+> > "VP9"; break;
+> > +		case V4L2_PIX_FMT_MPEG2_FRAME:	descr =
+> > "MPEG2 Frame"; break;
+> >  		case V4L2_PIX_FMT_CPIA1:	descr = "GSPCA CPiA
+> > YUV"; break;
+> >  		case V4L2_PIX_FMT_WNVA:		descr =
+> > "WNVA"; break;
+> >  		case V4L2_PIX_FMT_SN9C10X:	descr = "GSPCA
+> > SN9C10X"; break;
+> > diff --git a/include/uapi/linux/v4l2-controls.h
+> > b/include/uapi/linux/v4l2-controls.h
+> > index cbbb750d87d1..8431b2a540c7 100644
+> > --- a/include/uapi/linux/v4l2-controls.h
+> > +++ b/include/uapi/linux/v4l2-controls.h
+> > @@ -557,6 +557,8 @@ enum v4l2_mpeg_video_mpeg4_profile {
+> >  };
+> >  #define V4L2_CID_MPEG_VIDEO_MPEG4_QPEL		(V4L2_CID_MPE
+> > G_BASE+407)
+> >  
+> > +#define
+> > V4L2_CID_MPEG_VIDEO_MPEG2_FRAME_HDR     (V4L2_CID_MPEG_BASE+450)
+> > +
+> >  /*  Control IDs for VP8 streams
+> >   *  Although VP8 is not part of MPEG we add these controls to the
+> > MPEG class
+> >   *  as that class is already handling other video compression
+> > standards
+> > @@ -985,4 +987,28 @@ enum v4l2_detect_md_mode {
+> >  #define V4L2_CID_DETECT_MD_THRESHOLD_GRID	(V4L2_CID_DETECT_C
+> > LASS_BASE + 3)
+> >  #define V4L2_CID_DETECT_MD_REGION_GRID		(V4L2_CID_DET
+> > ECT_CLASS_BASE + 4)
+> >  
+> > +struct v4l2_ctrl_mpeg2_frame_hdr {
+> > +	__u32 slice_len;
+> > +	__u32 slice_pos;
+> > +	enum { MPEG1, MPEG2 } type;
+> > +
+> > +	__u16 width;
+> > +	__u16 height;
+> > +
+> > +	enum { PCT_I = 1, PCT_P, PCT_B, PCT_D }
+> > picture_coding_type;
+> 
+> As someone else already mentioned (I believe): avoid enums. Use __u16
+> instead.
+
+Indeed. I have taken a note of that.
+
+> > +	__u8 f_code[2][2];
+> > +
+> > +	__u8 intra_dc_precision;
+> > +	__u8 picture_structure;
+> > +	__u8 top_field_first;
+> > +	__u8 frame_pred_frame_dct;
+> > +	__u8 concealment_motion_vectors;
+> > +	__u8 q_scale_type;
+> > +	__u8 intra_vlc_format;
+> > +	__u8 alternate_scan;
+> > +
+> > +	__u8 backward_ref_index;
+> > +	__u8 forward_ref_index;
+> > +};
+> 
+> Please test that the layout and size of this structure is identical
+> for 32 and 64 bit
+> architectures, both on Intel and ARM.
+> 
+> It looks good, but it doesn't hurt to check.
+
+Right, I'll keep that in mind and make sure this is the case.
+
+Cheers and thanks for the review!
+
+Paul
+
+> Regards,
+> 
+> 	Hans
+> 
+> > +
+> >  #endif
+> > diff --git a/include/uapi/linux/videodev2.h
+> > b/include/uapi/linux/videodev2.h
+> > index 31b5728b56e9..4b8336f7bcf0 100644
+> > --- a/include/uapi/linux/videodev2.h
+> > +++ b/include/uapi/linux/videodev2.h
+> > @@ -635,6 +635,7 @@ struct v4l2_pix_format {
+> >  #define V4L2_PIX_FMT_VC1_ANNEX_L v4l2_fourcc('V', 'C', '1', 'L') /*
+> > SMPTE 421M Annex L compliant stream */
+> >  #define V4L2_PIX_FMT_VP8      v4l2_fourcc('V', 'P', '8', '0') /*
+> > VP8 */
+> >  #define V4L2_PIX_FMT_VP9      v4l2_fourcc('V', 'P', '9', '0') /*
+> > VP9 */
+> > +#define V4L2_PIX_FMT_MPEG2_FRAME v4l2_fourcc('M', 'G', '2', 'F') /*
+> > MPEG2 frame */
+> >  
+> >  /*  Vendor-specific formats   */
+> >  #define V4L2_PIX_FMT_CPIA1    v4l2_fourcc('C', 'P', 'I', 'A') /*
+> > cpia1 YUV */
+> > @@ -1586,6 +1587,7 @@ struct v4l2_ext_control {
+> >  		__u8 __user *p_u8;
+> >  		__u16 __user *p_u16;
+> >  		__u32 __user *p_u32;
+> > +		struct v4l2_ctrl_mpeg2_frame_hdr __user
+> > *p_mpeg2_frame_hdr;
+> >  		void __user *ptr;
+> >  	};
+> >  } __attribute__ ((packed));
+> > @@ -1631,6 +1633,7 @@ enum v4l2_ctrl_type {
+> >  	V4L2_CTRL_TYPE_U8	     = 0x0100,
+> >  	V4L2_CTRL_TYPE_U16	     = 0x0101,
+> >  	V4L2_CTRL_TYPE_U32	     = 0x0102,
+> > +	V4L2_CTRL_TYPE_MPEG2_FRAME_HDR = 0x0109,
+> >  };
+> >  
+> >  /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
+> > 
 > 
 > 
-> On 5/1/2018 5:38 PM, Srinivas Kandagatla wrote:
->> +static int __q6asm_run(struct audio_client *ac, uint32_t flags,
->> +          uint32_t msw_ts, uint32_t lsw_ts, bool wait)
->> +{
->> +    struct asm_session_cmd_run_v2 *run;
->> +    struct apr_pkt *pkt;
->> +    int pkt_size, rc;
->> +    void *p;
->> +
->> +    pkt_size = APR_HDR_SIZE + sizeof(*run);
->> +    p = kzalloc(pkt_size, GFP_KERNEL);
-> Should be GFP_ATOMIC as this API is also called from interrupt context
-
-Yes, these should be a GFP_ATOMIC, Will fix this up in next version.
-
-thanks,
-srini
-
->> +    if (!p)
->> +        return -ENOMEM;
->> +
-> [..]
->> +int q6asm_read(struct audio_client *ac)
->> +{
->> +    struct asm_data_cmd_read_v2 *read;
->> +    struct audio_port_data *port;
->> +    struct audio_buffer *ab;
->> +    struct apr_pkt *pkt;
->> +    int pkt_size;
->> +    int rc = 0;
->> +    void *p;
->> +
->> +    if (!(ac->io_mode & ASM_SYNC_IO_MODE))
->> +        return 0;
->> +
->> +    pkt_size = APR_HDR_SIZE + sizeof(*read);
->> +    p = kzalloc(pkt_size, GFP_KERNEL);
-> same here. GFP_ATOMIC
->> +    if (!p)
->> +        return -ENOMEM;
-> [..]
->> +int q6asm_write_async(struct audio_client *ac, uint32_t len, uint32_t 
->> msw_ts,
->> +               uint32_t lsw_ts, uint32_t flags)
->> +{
->> +    struct asm_data_cmd_write_v2 *write;
->> +    struct audio_port_data *port;
->> +    struct audio_buffer *ab;
->> +    struct apr_pkt *pkt;
->> +    int pkt_size;
->> +    int rc = 0;
->> +    void *p;
->> +
->> +    pkt_size = APR_HDR_SIZE + sizeof(*write);
->> +    p = kzalloc(pkt_size, GFP_KERNEL);
-> GFP_ATOMIC
->> +    if (!p)
->> +        return -ENOMEM;
->>
-> Thanks,
-> Rohit
-> 
+-- 
+Paul Kocialkowski, Bootlin (formerly Free Electrons)
+Embedded Linux and kernel engineering
+https://bootlin.com
+--=-Q6WlS8F+GrOUSO6T6zi9--
