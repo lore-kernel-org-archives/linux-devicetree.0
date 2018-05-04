@@ -1,206 +1,103 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] arm64: dts: qcom: sdm845: Sort nodes in the soc by address
-Date: Fri,  4 May 2018 15:03:56 -0700
-Message-ID: <20180504220356.261711-1-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, swboyd@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Add dts file for the A20-linova1-7
+ HMI
+Date: Sat, 5 May 2018 00:05:00 +0200
+Message-ID: <f8a35f86-80e5-c183-10ad-63e7425e75c6@micronovasrl.com>
+References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
+ <1521662593-25468-7-git-send-email-giulio.benetti@micronovasrl.com>
+ <20180322180508.my64gobhh5rc2x2m@flea>
+ <8ef3b259-03b4-6987-286e-36ff627a8b76@micronovasrl.com>
+ <20180424084137.7xfwji2gcibxavvt@flea>
+ <03a02abb-e95c-b4ec-748f-907c0af67969@micronovasrl.com>
+ <20180425184016.xktppxw7egddr7li@flea>
+ <42feccc9-1d09-9ff2-3ccc-1dea63bacfb6@micronovasrl.com>
+ <839d2560-0250-9b3a-8019-4e83d9e931e2@micronovasrl.com>
+ <20180504080652.dniwaqqhbeuknp7y@flea>
+ <afc78821-2d08-3f4f-d008-5b2d216e96c0@micronovasrl.com>
+ <644bcd2f-3479-3f3c-3aef-9db3d565c133@orpaltech.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <644bcd2f-3479-3f3c-3aef-9db3d565c133@orpaltech.com>
+Content-Language: it
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sergey Suloev <ssuloev@orpaltech.com>
+Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is pure-churn and should be a no-op.  I'm doing it in the hopes
-of reducing merge conflicts.  When things are sorted in a sane way
-(and by base address seems sane) then it's less likely that future
-patches will cause merge conflicts.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 152 +++++++++++++--------------
- 1 file changed, 76 insertions(+), 76 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 486ace9a9e8b..101350743bd2 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -158,32 +158,50 @@
- 		ranges = <0 0 0 0xffffffff>;
- 		compatible = "simple-bus";
- 
--		intc: interrupt-controller@17a00000 {
--			compatible = "arm,gic-v3";
-+		gcc: clock-controller@100000 {
-+			compatible = "qcom,gcc-sdm845";
-+			reg = <0x100000 0x1f0000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
-+		geniqup@ac0000 {
-+			compatible = "qcom,geni-se-qup";
-+			reg = <0xac0000 0x6000>;
-+			clock-names = "m-ahb", "s-ahb";
-+			clocks = <&gcc 105>,
-+				 <&gcc 106>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
--			#interrupt-cells = <3>;
--			interrupt-controller;
--			reg = <0x17a00000 0x10000>,     /* GICD */
--			      <0x17a60000 0x100000>;    /* GICR * 8 */
--			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
- 
--			gic-its@17a40000 {
--				compatible = "arm,gic-v3-its";
--				msi-controller;
--				#msi-cells = <1>;
--				reg = <0x17a40000 0x20000>;
-+			uart2: serial@a84000 {
-+				compatible = "qcom,geni-debug-uart";
-+				reg = <0xa84000 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc 89>;
-+				pinctrl-names = "default", "sleep";
-+				pinctrl-0 = <&qup_uart2_default>;
-+				pinctrl-1 = <&qup_uart2_sleep>;
-+				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
--		};
- 
--		gcc: clock-controller@100000 {
--			compatible = "qcom,gcc-sdm845";
--			reg = <0x100000 0x1f0000>;
--			#clock-cells = <1>;
--			#reset-cells = <1>;
--			#power-domain-cells = <1>;
-+			i2c10: i2c@a88000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0xa88000 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc 91>;
-+				pinctrl-names = "default", "sleep";
-+				pinctrl-0 = <&qup_i2c10_default>;
-+				pinctrl-1 = <&qup_i2c10_sleep>;
-+				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		tlmm: pinctrl@3400000 {
-@@ -224,6 +242,45 @@
- 			};
- 		};
- 
-+		spmi_bus: spmi@c440000 {
-+			compatible = "qcom,spmi-pmic-arb";
-+			reg = <0xc440000 0x1100>,
-+			      <0xc600000 0x2000000>,
-+			      <0xe600000 0x100000>,
-+			      <0xe700000 0xa0000>,
-+			      <0xc40a000 0x26000>;
-+			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
-+			interrupt-names = "periph_irq";
-+			interrupts = <GIC_SPI 481 IRQ_TYPE_LEVEL_HIGH>;
-+			qcom,ee = <0>;
-+			qcom,channel = <0>;
-+			#address-cells = <2>;
-+			#size-cells = <0>;
-+			interrupt-controller;
-+			#interrupt-cells = <4>;
-+			cell-index = <0>;
-+		};
-+
-+		intc: interrupt-controller@17a00000 {
-+			compatible = "arm,gic-v3";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+			reg = <0x17a00000 0x10000>,     /* GICD */
-+			      <0x17a60000 0x100000>;    /* GICR * 8 */
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			gic-its@17a40000 {
-+				compatible = "arm,gic-v3-its";
-+				msi-controller;
-+				#msi-cells = <1>;
-+				reg = <0x17a40000 0x20000>;
-+				status = "disabled";
-+			};
-+		};
-+
- 		timer@17c90000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -281,62 +338,5 @@
- 				status = "disabled";
- 			};
- 		};
--
--		spmi_bus: spmi@c440000 {
--			compatible = "qcom,spmi-pmic-arb";
--			reg = <0xc440000 0x1100>,
--			      <0xc600000 0x2000000>,
--			      <0xe600000 0x100000>,
--			      <0xe700000 0xa0000>,
--			      <0xc40a000 0x26000>;
--			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
--			interrupt-names = "periph_irq";
--			interrupts = <GIC_SPI 481 IRQ_TYPE_LEVEL_HIGH>;
--			qcom,ee = <0>;
--			qcom,channel = <0>;
--			#address-cells = <2>;
--			#size-cells = <0>;
--			interrupt-controller;
--			#interrupt-cells = <4>;
--			cell-index = <0>;
--		};
--
--		geniqup@ac0000 {
--			compatible = "qcom,geni-se-qup";
--			reg = <0xac0000 0x6000>;
--			clock-names = "m-ahb", "s-ahb";
--			clocks = <&gcc 105>,
--				 <&gcc 106>;
--			#address-cells = <1>;
--			#size-cells = <1>;
--			ranges;
--			status = "disabled";
--
--			uart2: serial@a84000 {
--				compatible = "qcom,geni-debug-uart";
--				reg = <0xa84000 0x4000>;
--				clock-names = "se";
--				clocks = <&gcc 89>;
--				pinctrl-names = "default", "sleep";
--				pinctrl-0 = <&qup_uart2_default>;
--				pinctrl-1 = <&qup_uart2_sleep>;
--				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
--				status = "disabled";
--			};
--
--			i2c10: i2c@a88000 {
--				compatible = "qcom,geni-i2c";
--				reg = <0xa88000 0x4000>;
--				clock-names = "se";
--				clocks = <&gcc 91>;
--				pinctrl-names = "default", "sleep";
--				pinctrl-0 = <&qup_i2c10_default>;
--				pinctrl-1 = <&qup_i2c10_sleep>;
--				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
--				#address-cells = <1>;
--				#size-cells = <0>;
--				status = "disabled";
--			};
--		};
- 	};
- };
--- 
-2.17.0.441.gb46fe60e1d-goog
+SGkgU2VyZ2V5LAoKSWwgMDQvMDUvMjAxOCAyMzo1OSwgU2VyZ2V5IFN1bG9ldiBoYSBzY3JpdHRv
+Ogo+IEhpLCBHaXVsaW8sCj4gCj4gT24gMDUvMDUvMjAxOCAxMjo1MiBBTSwgR2l1bGlvIEJlbmV0
+dGkgd3JvdGU6Cj4+IEhpIE1heGltZSEKPj4KPj4gSWwgMDQvMDUvMjAxOCAxMDowNiwgTWF4aW1l
+IFJpcGFyZCBoYSBzY3JpdHRvOgo+Pj4gSGksCj4+Pgo+Pj4gT24gV2VkLCBNYXkgMDIsIDIwMTgg
+YXQgMDY6NDE6MzRQTSArMDIwMCwgR2l1bGlvIEJlbmV0dGkgd3JvdGU6Cj4+Pj4+PiBZb3UgZG9u
+J3QgaGF2ZSB0byBoYW5kY29kZSB0aGUgZnJhZ21lbnRzIGFueW1vcmUgd2l0aCB0aGUgbmV3IHN5
+bnRheCwKPj4+Pj4+IGFuZCBVLUJvb3QgbWFrZXMgaXQgcmVhbGx5IHRyaXZpYWwgdG8gdXNlIGlm
+IHlvdSB1c2UgdGhlIEZJVCBpbWFnZQo+Pj4+Pj4gZm9ybWF0IHRvIGhhdmUgbXVsdGlwbGUgb3Zl
+cmxheXMgYnVuZGxlZCBpbiB0aGUgc2FtZSBpbWFnZS4gWW91IGNhbgo+Pj4+Pj4gY2hvb3NlIHRv
+IGFwcGx5IHRoZW0gZHluYW1pY2FsbHksIGZvciBleGFtcGxlIGJhc2VkIG9uIGFuIEVFUFJPTSBv
+cgo+Pj4+Pj4gc29tZSBvdGhlciBtZXRyaWMgdG8gc2VlIHdoaWNoIGNvbWJpbmF0aW9uIHlvdSBo
+YXZlLgo+Pj4+Pgo+Pj4+PiBBaCwgdGhpcyBpcyBpbnRlcmVzdGluZy4gSSdtIGdvaW5nIHRvIGV4
+cGVyaW1lbnQgd2l0aCB0aGF0Lgo+Pj4+Pgo+Pj4+Cj4+Pj4gSSdtIHN0cnVnZ2xpbmcgYWdhaW5z
+dCB0aGlzLCBJIGRvbid0IHJlYWxseSBrbm93IGhvdyB0byBwcm9jZWVkLAo+Pj4+IGV4Y2VwdCBr
+ZWVwaW5nIG1vbm9saXRoaWMgZHRzIGZpbGVzIGluY2x1ZGluZyBvdGhlciBkdHNpIGZpbGVzLgo+
+Pj4+Cj4+Pj4gQWJvdXQgZHQtb3ZlcmxheXMgSSd2ZSB0cmllZCB0byBsb29rIGFyb3VuZCBsb3Qg
+b2YgdGltZSwKPj4+PiBidXQgdGhlIG9ubHkgdGhpbmcgSSd2ZSBmb3VuZCBpcyB0aGlzOgo+Pj4+
+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2dlZXJ0L3Jl
+bmVzYXMtZHJpdmVycy5naXQvdHJlZS9hcmNoL2FybS9ib290L2R0cz9oPXRvcGljL3JlbmVzYXMt
+b3ZlcmxheXMgCj4+Pj4KPj4+Pgo+Pj4+IHdoZXJlIHRoZXkgdXNlIC5kdHNvIHRhZ2dpbmcgdGhl
+bSBhcyAiL3BsdWdpbi87Igo+Pj4+IGFuZCBjb21waWxlIGFsbCAuZHRzbyBmb3VuZCBpbiBkdHMg
+Zm9sZGVyLgo+Pj4+IFRoZW4gdGhleSBvYnRhaW4gLmR0Ym8gZmlsZXMgdGhhdCBzaG91bGQgYmUg
+dGhlIGR0LW92ZXJsYXlzIHdlIGhhdmUgCj4+Pj4gc3Bva2VuCj4+Pj4gYWJvdXQgcmlnaHQ/Cj4+
+Pgo+Pj4gWWVzLiBZb3UgZG9uJ3QgaGF2ZSB0byBkbyB0aGF0IHRob3VnaCwgeW91IGNhbiBqdXN0
+IHJlbHkgb24gZHRjIHRvCj4+PiBjb21waWxlIHRoZW0sIG91dHNpZGUgb2YgdGhlIGxpbnV4IGJ1
+aWxkIHN5c3RlbS4KPj4+Cj4+Pj4gV2hhdCBJIGNhbid0IHVuZGVyc3RhbmQgaXMgaWYgdGhlcmUn
+cyBhIHJlYWwgc3RhbmRhcmQgYXQgdGhpcyB0aW1lIHRvCj4+Pj4gZm9sbG93LCBiZWNhdXNlIG9u
+IHJlbmVzYXMtZHJpdmVyIHRoZXkgdXNlIHRoZWlyIHdheSB0byBoYW5kbGUgYWxsIAo+Pj4+IC5k
+dHNvCj4+Pj4gZmlsZXMsIGJ1dCBvbiBtYWlubGluZSB0aGVyZSBzZWVtcyB0byBiZSBub3RoaW5n
+IGFib3V0IHRoYXQuCj4+Pgo+Pj4gSSdtIG5vdCBzdXJlIHdoYXQgeW91IG1lYW4gaGVyZS4gSXQn
+cyBqdXN0IGZyYWdtZW50cyBvZiBkZXZpY2UgdHJlZSwKPj4+IHRoYXQgaGF2ZSB0byBiZSBjb21w
+aWxlZCB1c2luZyBkdGMsIHRoYXQncyBpdC4gWW91IGNhbiB1c2UgdGhlIExpbnV4Cj4+PiBidWls
+ZCBzeXN0ZW0gaW5mcmFzdHJ1Y3R1cmUgdG8gZG8gdGhhdCwgb3IgeW91IGNhbiBidWlsZCB5b3Vy
+IG93bgo+Pj4gc2ltcGxlciBvbmUuIFRoYXQncyByZWFsbHkgdXAgdG8geW91LiBTZWUgZm9yIGV4
+YW1wbGUKPj4+IGh0dHBzOi8vZ2l0aHViLmNvbS9OZXh0VGhpbmdDby9DSElQLWR0LW92ZXJsYXlz
+L2Jsb2IvbWFzdGVyL01ha2VmaWxlCj4+Pgo+Pj4gKGV2ZW4gdGhvdWdoIHRoZSBvdmVybGF5cyB0
+aGVtc2VsdmVzIHVzZSB0aGUgbGVnYWN5IHN5bnRheCBhbmQKPj4+IHNob3VsZG4ndCByZWFsbHkg
+YmUgdXNlZCBhbiBleGFtcGxlcykKPj4KPj4gRXZlcnl0aGluZyB3b3JrcyBub3chCj4+IFRoYW5r
+IHlvdSB2ZXJ5IG11Y2ghCj4+IEkndmUgc2V0dGVkIHVwIGEgUmVwbyBvbiBHaXRodWIgdG8gZ2l2
+ZSBhbiBleGFtcGxlIG9uIGhvdyBtYWtlIGl0IHdvcmsgCj4+IHdpdGggbm8gcGFpbjoKPj4gaHR0
+cHM6Ly9naXRodWIuY29tL21pY3Jvbm92YXNybC9saW5vdmEtZHRvdmVybGF5cwo+Pgo+PiBBdCB0
+aGUgbW9tZW50IGl0J3MgYSBtZXNzIGFsbCBhcm91bmQsIGJ1dCBpdCdzIHdvcmtpbmcgYW5kIGdp
+dmUgYW4gCj4+IGlkZWEgb24gaG93IHRvIG1ha2UgaXQgd29yay4gVGhvdWdoIEknbSBnb2luZyB0
+byBjbGVhbiBpdCB1cCB3ZWxsIGFzIGEgCj4+IGJhc2UgZm9yIGxpbm92YSBkdG92ZXJsYXlzLgo+
+Pgo+PiBBaCwgYnR3LCBjYW4geW91IGNvbmZpcm0gbWUgdGhhdCBiYXNlIGR0cyBmaWxlIG11c3Qg
+YmUgY29tcGlsZWQgCj4+IG91dHNpZGUga2VybmVsIHdpdGg6Cj4+IGR0YyAtQCAuLi4uCj4+IE90
+aGVyd2lzZSBhcyBpbi10cmVlIGR0cyB3aXRoIG1ha2UgZHRicyAiLUAiIGFyZ3VtZW50IGlzIG5v
+dCBwYXNzZWQuCj4+IFJpZ2h0Pwo+Pgo+PiBUaGFuayB5b3UgYSBsb3QgZm9yIHlvdXIgaGVscCBh
+bmQgdGltZSBhZ2FpbiEKPj4KPj4gQmVzdCByZWdhcmRzIQo+Pgo+IEknZCBoaWdobHkgcmVjb21t
+ZW5kIHlvdSB0byBsb29rIGF0IEFybWJpYW4gb3ZlcmxheSBzdXBwb3J0OiBpdCBpcyBlYXN5IAo+
+IGFuZCBlbGVnYW50Lgo+IAo+IGh0dHBzOi8vZ2l0aHViLmNvbS9hcm1iaWFuL2J1aWxkL2Jsb2Iv
+bWFzdGVyL3BhdGNoL2tlcm5lbC9zdW54aS1uZXh0L2FkZC1vdmVybGF5LWNvbXBpbGF0aW9uLXN1
+cHBvcnQucGF0Y2ggCj4gCj4gCj4gaHR0cHM6Ly9naXRodWIuY29tL2FybWJpYW4vYnVpbGQvYmxv
+Yi9tYXN0ZXIvcGF0Y2gva2VybmVsL3N1bnhpLW5leHQvYWRkLXN1bnhpLW92ZXJsYXlzLnBhdGNo
+IAoKVGhhbmtzIGZvciBwb2ludGluZyBtZSB0aGF0LApidXQgYXMgd2UndmUgZGlzY3Vzc2VkIGJl
+Zm9yZSwgYXQgdGhlIG1vbWVudCBvdmVybGF5cyBhcmUgbm90IGdvaW5nIHRvIApiZSBpbmNsdWRl
+ZCBpbiBNYWlubGluZSBLZXJuZWwoTWF4aW1lIGNvcnJlY3QgaWYgSSdtIHdyb25nKS4KVHJ5IHRv
+IHRoaW5rIG1haW50YWluaW5nIHRob3VzYW5kcyBhbmQgdGhvdXNhbmRzIG9mIG92ZXJsYXlzLApp
+dCB3b3VsZCBiZSBhIG5pZ2h0bWFyZShJTUhPKS4KTWF5YmUgaXQgd2lsbCBjaGFuZ2UsIEkgZG9u
+J3Qga25vdy4KClRoYW5rcyBhbnl3YXkuCkJlc3QgcmVnYXJkcwoKLS0gCkdpdWxpbyBCZW5ldHRp
+CkNUTwoKTUlDUk9OT1ZBIFNSTApTZWRlOiBWaWEgQS4gTmllZGRhIDMgLSAzNTAxMCBWaWdvbnph
+IChQRCkKVGVsLiAwNDkvODkzMTU2MyAtIEZheCAwNDkvODkzMTM0NgpDb2QuRmlzY2FsZSAtIFAu
+SVZBIDAyNjYzNDIwMjg1CkNhcGl0YWxlIFNvY2lhbGUg4oKsIDI2LjAwMCBpLnYuCklzY3JpdHRh
+IGFsIFJlZy4gSW1wcmVzZSBkaSBQYWRvdmEgTi4gMDI2NjM0MjAyODUKTnVtZXJvIFIuRS5BLiAy
+NTg2NDIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
