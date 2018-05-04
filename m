@@ -1,144 +1,100 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 09/10] ARM: dts: sun7i-a20: Add Video
- Engine and reserved memory nodes
-Date: Fri, 04 May 2018 15:57:48 +0200
-Message-ID: <dd6b502c66aad1fe34eb0b16a1e44a4ebfd172f1.camel@bootlin.com>
-References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
-	 <20180419154536.17846-5-paul.kocialkowski@bootlin.com>
-	 <20180420073908.nkcbsdxibnzkqski@flea>
-	 <82057e2f734137a3902d9313c228b01ceb345ee7.camel@bootlin.com>
-	 <20180504084008.h6p4brari3xrbv6l@flea>
-	 <e8cd340605ab4db8ebf2888a4fce645e8bc481d0.camel@bootlin.com>
-	 <20180504091555.idgtzey53lozj2uh@flea>
-	 <fc064c3f1534a6082dc2b4e18454e054b53e5aee.camel@bootlin.com>
-	 <20180504134033.wngpe5scyisreonn@flea>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: richard.gong@linux.intel.com
+Subject: [PATCHv4 0/7] Add Intel Stratix10 FPGA manager and service layer
+Date: Fri,  4 May 2018 09:21:30 -0500
+Message-ID: <1525443697-31009-1-git-send-email-richard.gong@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-mE95aWzEnbnH7U7+7hKq"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBOWOWHLQKGQEMMJYANI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180504134033.wngpe5scyisreonn@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@linux.intel.com, richard.gong@intel.com
 List-Id: devicetree@vger.kernel.org
 
+From: Richard Gong <richard.gong@intel.com>
 
---=-mE95aWzEnbnH7U7+7hKq
-Content-Type: text/plain; charset="UTF-8"
+This is the 4th submission of Intel stratix10 service layer patches. Intel
+Stratix10 FPGA manager, which is 1st Stratix10 service layer client, is
+included in this submission.
 
-On Fri, 2018-05-04 at 15:40 +0200, Maxime Ripard wrote:
-> On Fri, May 04, 2018 at 02:04:38PM +0200, Paul Kocialkowski wrote:
-> > On Fri, 2018-05-04 at 11:15 +0200, Maxime Ripard wrote:
-> > > On Fri, May 04, 2018 at 10:47:44AM +0200, Paul Kocialkowski wrote:
-> > > > > > > > +			reg = <0x01c0e000 0x1000>;
-> > > > > > > > +			memory-region = <&ve_memory>;
-> > > > > > > 
-> > > > > > > Since you made the CMA region the default one, you don't
-> > > > > > > need
-> > > > > > > to
-> > > > > > > tie
-> > > > > > > it to that device in particular (and you can drop it being
-> > > > > > > mandatory
-> > > > > > > from your binding as well).
-> > > > > > 
-> > > > > > What if another driver (or the system) claims memory from
-> > > > > > that
-> > > > > > zone
-> > > > > > and
-> > > > > > that the reserved memory ends up not being available for the
-> > > > > > VPU
-> > > > > > anymore?
-> > > > > > 
-> > > > > > Acccording to the reserved-memory documentation, the
-> > > > > > reusable
-> > > > > > property
-> > > > > > (that we need for dmabuf) puts a limitation that the device
-> > > > > > driver
-> > > > > > owning the region must be able to reclaim it back.
-> > > > > > 
-> > > > > > How does that work out if the CMA region is not tied to a
-> > > > > > driver
-> > > > > > in
-> > > > > > particular?
-> > > > > 
-> > > > > I'm not sure to get what you're saying. You have the property
-> > > > > linux,cma-default in your reserved region, so the behaviour
-> > > > > you
-> > > > > described is what you explicitly asked for.
-> > > > 
-> > > > My point is that I don't see how the driver can claim back (part
-> > > > of)
-> > > > the
-> > > > reserved area if the area is not explicitly attached to it.
-> > > > 
-> > > > Or is that mechanism made in a way that all drivers wishing to
-> > > > use
-> > > > the
-> > > > reserved memory area can claim it back from the system, but
-> > > > there is
-> > > > no
-> > > > priority (other than first-come first-served) for which drivers
-> > > > claims
-> > > > it back in case two want to use the same reserved region (in a
-> > > > scenario
-> > > > where there isn't enough memory to allow both drivers)?
-> > > 
-> > > This is indeed what happens. Reusable is to let the system use the
-> > > reserved memory for things like caches that can easily be dropped
-> > > when
-> > > a driver wants to use the memory in that reserved area. Once that
-> > > memory has been allocated, there's no claiming back, unless that
-> > > memory segment was freed of course.
-> > 
-> > Thanks for the clarification. So in our case, perhaps the best fit
-> > would
-> > be to make that area the default CMA pool so that we can be ensured
-> > that
-> > the whole 96 MiB is available for the VPU and that no other consumer
-> > of
-> > CMA will use it?
-> 
-> The best fit for what use case ? We already discussed this, and I
-> don't see any point in having two separate CMA regions. If you have a
-> reasonably sized region that will accomodate for both the VPU and
-> display engine, why would we want to split them?
+Stratix10 service layer patches have been reviewed internally by Alan Tull
+and other colleagues at Intel.
 
-The use case I have in mind is boilerplate use of the VPU with the
-display engine, say with DMAbuf.
+Some features of the Intel Stratix10 SoC require a level of privilege
+higher than the kernel is granted. Such secure features include
+FPGA programming. In terms of the ARMv8 architecture, the kernel runs
+at Exception Level 1 (EL1), access to the features requires
+Exception Level 3 (EL3).
 
-It wasn't exactly clear in my memory whether we had decided that the CMA
-pool we use for the VPU should also be used for other CMA consumers (I
-realize that this is what we've been doing all along by having
-linux,cma-default; though).
+The Intel Stratix10 service layer provides an in kernel API for drivers to
+request access to the secure features. The requests are queued and
+processed one by one. ARM’s SMCCC is used to pass the execution of the
+requests on to a secure monitor (EL3).
 
-The fact that the memory region will accomodate for both the display
-engine and the VPU is not straightforward IMO and I think this has to be
-an explicit choice that we take. I was under the impression that we
-chose the 96 MiB because that's what the Allwinner reference code does.
-Does the reference code also use this pool for display?
+Later the Intel Stratix10 service layer driver will be extended to provide
+services for QSPI, Crypto and warm reset.
 
-I liked the idea of having 96 MiB fully reserved to the VPU because it
-allows us to provide a limit on the use case, such as "this guarantees N
-buffers for resolution foo in format bar". If the display engine also
-uses it, then the limit also depends on how many GEM buffers are
-allocated (unless I'm missing something).
+v2: add patches for FPGA manager, FPGA manager binding, dts and defconfig
+    remove intel-service subdirectory and intel-service.h, move intel-smc.h
+    and intel-service.c to driver/misc subdirectory
+    remove global variables
+    change service layer driver be 'default n'
+    correct SPDX markers
+    add timeout for do..while() loop
+    add kernel-doc for the functions and structs, correct multiline comments
+    replace kfifo_in/kfifo_out with kfifo_in_spinlocked/kfifo_out_spinlocked
+    rename struct intel_svc_data (at client header) to intel_svc_client_msg
+    rename struct intel_svc_private_mem to intel_svc_data
+    other corrections/changes from Intel internal code reviews
+v3: change all exported functions with "intel_svc_" as the prefix
+    increase timeout values for claiming back submitted buffer(s)
+    rename struct intel_command_reconfig_payload to
+    struct intel_svc_command_reconfig_payload
+    add pr_err() to provide the error return value
+    change to put fpga_mgr node under firmware/svc node
+    change to FPGA manager to align the update of service client APIs, and the
+    update of fpga_mgr device node
+    Other corrections/changes
+v4: s/intel/stratix10/ on some variables, structs, functions, and file names
+    intel-service.c -> stratix10-svc.c
+    intel-smc.h -> stratix10-smc.h
+    intel-service-client.h -> stratix10-svc-client.h
+    remove non-kernel-doc formatting
+    s/fpga-mgr@0/fpga-mgr/ to remove unit_address at fpga_mgr node
+    add Rob's Reviewed-by
+    add Richard's signed-off-by
 
-> Or did you have any experience of running out of buffers?
+Alan Tull (3):
+  dt-bindings: fpga: add Stratix10 SoC FPGA manager binding
+  arm64: dts: stratix10: add fpga manager and region
+  fpga: add intel stratix10 soc fpga manager driver
 
-Not yet, I haven't. I have no objection with making the reserved region
-the default CMA pool and have other consumers use it too.
+Richard Gong (4):
+  dt-bindings, firmware: add Intel Stratix10 service layer binding
+  arm64: dts: stratix10: add stratix10 service driver binding to base
+    dtsi
+  driver, misc: add Intel Stratix10 service layer driver
+  defconfig: enable fpga and service layer
 
-Cheers,
+ .../bindings/firmware/intel,stratix10-svc.txt      |  57 ++
+ .../bindings/fpga/intel-stratix10-soc-fpga-mgr.txt |  17 +
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |  33 +
+ arch/arm64/configs/defconfig                       |   6 +
+ drivers/fpga/Kconfig                               |   6 +
+ drivers/fpga/Makefile                              |   1 +
+ drivers/fpga/stratix10-soc.c                       | 534 ++++++++++++
+ drivers/misc/Kconfig                               |  12 +
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/stratix10-smc.h                       | 203 +++++
+ drivers/misc/stratix10-svc.c                       | 945 +++++++++++++++++++++
+ include/linux/stratix10-svc-client.h               | 190 +++++
+ 12 files changed, 2005 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
+ create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
+ create mode 100644 drivers/fpga/stratix10-soc.c
+ create mode 100644 drivers/misc/stratix10-smc.h
+ create mode 100644 drivers/misc/stratix10-svc.c
+ create mode 100644 include/linux/stratix10-svc-client.h
 
 -- 
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
---=-mE95aWzEnbnH7U7+7hKq--
+2.7.4
