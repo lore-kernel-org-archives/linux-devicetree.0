@@ -1,95 +1,130 @@
-From: "Jingoo Han" <jingoohan1@gmail.com>
-Subject: Re: [PATCH V2 1/5] backlight: qcom-wled: Rename pm8941-wled.c to
- qcom-wled.c
-Date: Fri, 4 May 2018 11:55:17 -0400
-Message-ID: <000201d3e3c0$4cdf87a0$e69e96e0$@gmail.com>
-References: <1525342352-25072-1-git-send-email-kgunda@codeaurora.org>
- <1525342352-25072-2-git-send-email-kgunda@codeaurora.org>
+From: Dan Haab <riproute@gmail.com>
+Subject: [PATCH 1/2] ARM: dts: BCM5301X: Add DT for Luxul XWR-3150 V1
+Date: Fri,  4 May 2018 10:08:43 -0600
+Message-ID: <1525450124-21665-1-git-send-email-dan.haab@luxul.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1525342352-25072-2-git-send-email-kgunda@codeaurora.org>
-Content-Language: en-us
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: 'Kiran Gunda' <kgunda@codeaurora.org>, bjorn.andersson@linaro.org, 'Lee Jones' <lee.jones@linaro.org>, 'Daniel Thompson' <daniel.thompson@linaro.org>, 'Jacek Anaszewski' <jacek.anaszewski@gmail.com>, 'Pavel Machek' <pavel@ucw.cz>, 'Rob Herring' <robh+dt@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Dan Haab <dan.haab@luxul.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1cnNkYXksIE1heSAzLCAyMDE4IDY6MTIgQU0sIEtpcmFuIEd1bmRhIHdyb3RlOgoKSWYg
-eW91IHJlYWxseSB3YW50IHNvbWVvbmUgdG8gcmV2aWV3IHlvdXIgcGF0Y2gsIHBsZWFzZSBhZGQg
-bW9yZSBkZXRhaWxlZApleHBsYW5hdGlvbnMuCgoxLiBQbGVhc2UgYWRkIDB0aCBwYXRjaC4KMi4g
-UGxlYXNlIGFkZCB3aGF0IHRoZSBkaWZmZXJlbmNlIGlzIGJldHdlZW4gVjEgYW5kIFYyIHBhdGNo
-ZXMuCgpJZiB5b3UgY2Fubm90IHVuZGVyc3RhbmQgd2hhdCBJIGFtIHNheWluZywganVzdCBhc2sg
-YW5vdGhlciBwZXJzb24gd2hvIGhhdmUKYW4gZXhwZXJpZW5jZSB0byBzZW5kIHBhdGNoZXMgdG8g
-TGludXggbWFpbGluZy1saXN0LgoKQmVzdCByZWdhcmRzLApKaW5nb28gSGFuCgo+IAo+IHBtODk0
-MS13bGVkLmMgZHJpdmVyIGlzIHN1cHBvcnRpbmcgdGhlIFdMRUQgcGVyaXBoZXJhbAo+IG9uIHBt
-ODk0MS4gUmVuYW1lIGl0IHRvIHFjb20td2xlZC5jIHNvIHRoYXQgaXQgY2FuIHN1cHBvcnQKPiBX
-TEVEIG9uIG11bHRpcGxlIFBNSUNzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEtpcmFuIEd1bmRhIDxr
-Z3VuZGFAY29kZWF1cm9yYS5vcmc+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9sZWRzL2JhY2tsaWdo
-dC97cG04OTQxLXdsZWQudHh0ID0+IHFjb20td2xlZC50eHR9ICAgIHwgMiArLQo+ICBkcml2ZXJz
-L3ZpZGVvL2JhY2tsaWdodC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICB8IDgKKysrKy0tLS0KPiAgZHJpdmVycy92aWRlby9iYWNrbGlnaHQvTWFrZWZpbGUgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAyICstCj4gIGRyaXZlcnMvdmlkZW8vYmFja2xp
-Z2h0L3twbTg5NDEtd2xlZC5jID0+IHFjb20td2xlZC5jfSAgICAgICAgICAgIHwgMAo+ICA0IGZp
-bGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKPiAgcmVuYW1lIERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC97cG04OTQxLXds
-ZWQudHh0Cj4gPT4gcWNvbS13bGVkLnR4dH0gKDk1JSkKPiAgcmVuYW1lIGRyaXZlcnMvdmlkZW8v
-YmFja2xpZ2h0L3twbTg5NDEtd2xlZC5jID0+IHFjb20td2xlZC5jfSAoMTAwJSkKPiAKPiBkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0
-L3BtODk0MS0KPiB3bGVkLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9s
-ZWRzL2JhY2tsaWdodC9xY29tLXdsZWQudHh0Cj4gc2ltaWxhcml0eSBpbmRleCA5NSUKPiByZW5h
-bWUgZnJvbSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQv
-cG04OTQxLQo+IHdsZWQudHh0Cj4gcmVuYW1lIHRvIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9sZWRzL2JhY2tsaWdodC9xY29tLXdsZWQudHh0Cj4gaW5kZXggZTViMjk0ZC4uZmIz
-OWUzMiAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVk
-cy9iYWNrbGlnaHQvcG04OTQxLXdsZWQudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L3Fjb20td2xlZC50eHQKPiBAQCAtMSw0ICsxLDQg
-QEAKPiAtQmluZGluZyBmb3IgUXVhbGNvbW0gUE04OTQxIFdMRUQgZHJpdmVyCj4gK0JpbmRpbmcg
-Zm9yIFF1YWxjb21tIFRlY2hub2xvZ2llcywgSW5jLiBXTEVEIGRyaXZlcgo+IAo+ICBSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOgo+ICAtIGNvbXBhdGlibGU6IHNob3VsZCBiZSAicWNvbSxwbTg5NDEtd2xl
-ZCIKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvS2NvbmZpZwo+IGIvZHJp
-dmVycy92aWRlby9iYWNrbGlnaHQvS2NvbmZpZwo+IGluZGV4IDRlMWQyYWQuLjhjMDk1ZTMgMTAw
-NjQ0Cj4gLS0tIGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvS2NvbmZpZwo+ICsrKyBiL2RyaXZl
-cnMvdmlkZW8vYmFja2xpZ2h0L0tjb25maWcKPiBAQCAtMjk5LDEyICsyOTksMTIgQEAgY29uZmln
-IEJBQ0tMSUdIVF9UT1NBCj4gIAkgIElmIHlvdSBoYXZlIGFuIFNoYXJwIFNMLTYwMDAgWmF1cnVz
-IHNheSBZIHRvIGVuYWJsZSBhIGRyaXZlcgo+ICAJICBmb3IgaXRzIGJhY2tsaWdodAo+IAo+IC1j
-b25maWcgQkFDS0xJR0hUX1BNODk0MV9XTEVECj4gLQl0cmlzdGF0ZSAiUXVhbGNvbW0gUE04OTQx
-IFdMRUQgRHJpdmVyIgo+ICtjb25maWcgQkFDS0xJR0hUX1FDT01fV0xFRAo+ICsJdHJpc3RhdGUg
-IlF1YWxjb21tIFBNSUMgV0xFRCBEcml2ZXIiCj4gIAlzZWxlY3QgUkVHTUFQCj4gIAloZWxwCj4g
-LQkgIElmIHlvdSBoYXZlIHRoZSBRdWFsY29tbSBQTTg5NDEsIHNheSBZIHRvIGVuYWJsZSBhIGRy
-aXZlciBmb3IgdGhlCj4gLQkgIFdMRUQgYmxvY2suCj4gKwkgIElmIHlvdSBoYXZlIHRoZSBRdWFs
-Y29tbSBQTUlDLCBzYXkgWSB0byBlbmFibGUgYSBkcml2ZXIgZm9yIHRoZQo+ICsJICBXTEVEIGJs
-b2NrLiBDdXJyZW50bHkgaXQgc3VwcG9ydHMgUE04OTQxIGFuZCBQTUk4OTk4Lgo+IAo+ICBjb25m
-aWcgQkFDS0xJR0hUX1NBSEFSQQo+ICAJdHJpc3RhdGUgIlRhYmxldGtpb3NrIFNhaGFyYSBUb3Vj
-aC1pVCBCYWNrbGlnaHQgRHJpdmVyIgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3ZpZGVvL2JhY2ts
-aWdodC9NYWtlZmlsZQo+IGIvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvTWFrZWZpbGUKPiBpbmRl
-eCA1ZTI4ZjAxLi42ZmQ3NmVmIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0
-L01ha2VmaWxlCj4gKysrIGIvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvTWFrZWZpbGUKPiBAQCAt
-NDksOCArNDksOCBAQCBvYmotJChDT05GSUdfQkFDS0xJR0hUX09NQVAxKQkJKz0Kb21hcDFfYmwu
-bwo+ICBvYmotJChDT05GSUdfQkFDS0xJR0hUX09UMjAwKQkJKz0gb3QyMDBfYmwubwo+ICBvYmot
-JChDT05GSUdfQkFDS0xJR0hUX1BBTkRPUkEpCQkrPSBwYW5kb3JhX2JsLm8KPiAgb2JqLSQoQ09O
-RklHX0JBQ0tMSUdIVF9QQ0Y1MDYzMykJKz0gcGNmNTA2MzMtYmFja2xpZ2h0Lm8KPiAtb2JqLSQo
-Q09ORklHX0JBQ0tMSUdIVF9QTTg5NDFfV0xFRCkJKz0gcG04OTQxLXdsZWQubwo+ICBvYmotJChD
-T05GSUdfQkFDS0xJR0hUX1BXTSkJCSs9IHB3bV9ibC5vCj4gK29iai0kKENPTkZJR19CQUNLTElH
-SFRfUUNPTV9XTEVEKQkrPSBxY29tLXdsZWQubwo+ICBvYmotJChDT05GSUdfQkFDS0xJR0hUX1NB
-SEFSQSkJCSs9IGtiMzg4Nl9ibC5vCj4gIG9iai0kKENPTkZJR19CQUNLTElHSFRfU0tZODE0NTIp
-CSs9IHNreTgxNDUyLWJhY2tsaWdodC5vCj4gIG9iai0kKENPTkZJR19CQUNLTElHSFRfVE9TQSkJ
-CSs9IHRvc2FfYmwubwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9wbTg5
-NDEtd2xlZC5jCj4gYi9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9xY29tLXdsZWQuYwo+IHNpbWls
-YXJpdHkgaW5kZXggMTAwJQo+IHJlbmFtZSBmcm9tIGRyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L3Bt
-ODk0MS13bGVkLmMKPiByZW5hbWUgdG8gZHJpdmVycy92aWRlby9iYWNrbGlnaHQvcWNvbS13bGVk
-LmMKPiAtLQo+IFRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJl
-ciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCj4gIGEgTGludXggRm91bmRhdGlvbiBDb2xsYWJv
-cmF0aXZlIFByb2plY3QKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+Luxul XWR-3150 is a wireless router similar to the XWR-3100 except:
+1) It has more RAM
+2) Its NAND controller in running in BCH8 mode
+3) LAN ports LEDs are hardware controlled
+
+Signed-off-by: Dan Haab <dan.haab@luxul.com>
+---
+ arch/arm/boot/dts/Makefile                       |  1 +
+ arch/arm/boot/dts/bcm47094-luxul-xwr-3150-v1.dts | 77 ++++++++++++++++++++++++
+ 2 files changed, 78 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm47094-luxul-xwr-3150-v1.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 7e24249..a00b279 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -104,6 +104,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+ 	bcm47094-luxul-abr-4500.dtb \
+ 	bcm47094-luxul-xbr-4500.dtb \
+ 	bcm47094-luxul-xwr-3100.dtb \
++	bcm47094-luxul-xwr-3150-v1.dtb \
+ 	bcm47094-netgear-r8500.dtb \
+ 	bcm94708.dtb \
+ 	bcm94709.dtb \
+diff --git a/arch/arm/boot/dts/bcm47094-luxul-xwr-3150-v1.dts b/arch/arm/boot/dts/bcm47094-luxul-xwr-3150-v1.dts
+new file mode 100644
+index 0000000..bdad726
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm47094-luxul-xwr-3150-v1.dts
+@@ -0,0 +1,77 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++/*
++ * Copyright 2018 Luxul Inc.
++ */
++
++/dts-v1/;
++
++#include "bcm47094.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
++
++/ {
++	compatible = "luxul,xwr-3150-v1", "brcm,bcm47094", "brcm,bcm4708";
++	model = "Luxul XWR-3150 V1";
++
++	chosen {
++		bootargs = "earlycon";
++	};
++
++	memory {
++		reg = <0x00000000 0x08000000
++		       0x88000000 0x18000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		power	{
++			label = "bcm53xx:green:power";
++			gpios = <&chipcommon 0 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "default-on";
++		};
++
++		usb3	{
++			label = "bcm53xx:green:usb3";
++			gpios = <&chipcommon 8 GPIO_ACTIVE_LOW>;
++			trigger-sources = <&ohci_port1>, <&ehci_port1>,
++					  <&xhci_port1>;
++			linux,default-trigger = "usbport";
++		};
++
++		status	{
++			label = "bcm53xx:green:status";
++			gpios = <&chipcommon 10 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "timer";
++		};
++
++		2ghz {
++			label = "bcm53xx:green:2ghz";
++			gpios = <&chipcommon 13 GPIO_ACTIVE_LOW>;
++		};
++
++		5ghz {
++			label = "bcm53xx:green:5ghz";
++			gpios = <&chipcommon 14 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		restart {
++			label = "Reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&chipcommon 17 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&usb3 {
++	vcc-gpio = <&chipcommon 18 GPIO_ACTIVE_HIGH>;
++};
++
++&spi_nor {
++	status = "okay";
++};
+-- 
+1.9.1
