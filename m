@@ -1,40 +1,81 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 1/6] drm/tegra: Fix a device_node leak when the DRM
- panel is not found
-Date: Fri, 4 May 2018 11:54:46 +0200
-Message-ID: <20180504115446.45d3d4db@bbrezillon>
-References: <20180503164009.14395-1-boris.brezillon@bootlin.com>
-        <20180503164009.14395-2-boris.brezillon@bootlin.com>
-        <20180504095016.GE13459@ulmo>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH] ARM: dts: BCM5301X: Relicense Buffalo files to the GPL 2.0+ /
+ MIT
+Date: Fri,  4 May 2018 11:54:45 +0200
+Message-ID: <20180504095445.30918-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20180504095016.GE13459@ulmo>
-Sender: stable-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Felix Fietkau <nbd@nbd.name>, INAGAKI Hiroshi <musashino.open@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 4 May 2018 11:50:16 +0200
-Thierry Reding <thierry.reding@gmail.com> wrote:
-
-> On Thu, May 03, 2018 at 06:40:04PM +0200, Boris Brezillon wrote:
-> > of_node_put(panel) is not called when of_drm_find_panel(panel) returns
-> > NULL, thus leaking the reference we hold on panel.
-> > 
-> > Fixes: 9be7d864cf07 ("drm/tegra: Implement panel support")
-> > Cc: <stable@vger.kernel.org>
-> > Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> > ---
-> >  drivers/gpu/drm/tegra/output.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)  
-> 
-> I'm not sure this warrants a backport, it's a very minor reference leak
-> so doesn't really have an impact on system stability or functionality.
-> 
-> Since this patch is unrelated from the rest of the series, do you mind
-> if I pick this up into the drm/tegra tree?
-
-Sure, and feel free to remove the Cc-stable and Fixes tag if you think
-they are not necessary.
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKVGhpcyBtYXRjaGVzIGxp
+Y2Vuc2luZyB1c2VkIGJ5IG90aGVyIEJDTTUzMDFYIGZpbGVzIGFuZCBpcyBwcmVmZXJyZWQgYXM6
+CjEpIEdQTCAyLjArIG1ha2VzIGlzIGNsZWFybHkgY29tcGF0aWJsZSB3aXRoIExpbnV4IGtlcm5l
+bAoyKSBNSVQgaXMgYWxzbyBwZXJtaXNzaXZlIGJ1dCBwcmVmZXJyZWQgb3ZlciBJU0MKClRoZXNl
+IGZpbGVzIHdlcmUgY3JlYXRlZCBhbmQgZXZlciB0b3VjaGVkIGJ5IGEgZ3JvdXAgb2YgZm91ciBw
+ZW9wbGUKb25seTogRmVsaXgsIElOQUdBS0ksIEhhdWtlIGFuZCBtZS4KClNpZ25lZC1vZmYtYnk6
+IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KLS0tCkZlbGl4LCBJTkFHQUtJLCBI
+YXVrZTogSSBuZWVkIGFwcHJvdmUgZm9yIHRoaXMgY2hhbmdlIGZyb20gZWFjaCBvZiB5b3UuCklm
+IHlvdSBhcmUgT0sgd2l0aCBpdCwgY2FuIHlvdSByZXBseSB3aXRoIGEgbGluZSBsaWtlOgoKQWNr
+ZWQtYnk6IDxuYW1lPiAiPGUtbWFpbD4iCgpwbGVhc2U/Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMv
+YmNtNDcwOC1idWZmYWxvLXd6ci0xNzUwZGhwLmR0cyB8ICAzICstLQogYXJjaC9hcm0vYm9vdC9k
+dHMvYmNtNDcwODEtYnVmZmFsby13enItOTAwZGhwLmR0cyB8IDEzICstLS0tLS0tLS0tLS0KIGFy
+Y2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDktYnVmZmFsby13eHItMTkwMGRocC5kdHMgfCAgMyArLS0K
+IDMgZmlsZXMgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxNiBkZWxldGlvbnMoLSkKCmRpZmYg
+LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9iY200NzA4LWJ1ZmZhbG8td3pyLTE3NTBkaHAuZHRz
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOC1idWZmYWxvLXd6ci0xNzUwZGhwLmR0cwppbmRl
+eCA4YjY0Y2FhYmFhZDguLmE1ODczODRmOGU0MCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9k
+dHMvYmNtNDcwOC1idWZmYWxvLXd6ci0xNzUwZGhwLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0
+cy9iY200NzA4LWJ1ZmZhbG8td3pyLTE3NTBkaHAuZHRzCkBAIC0xLDEwICsxLDkgQEAKKy8vIFNQ
+RFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wLW9yLWxhdGVyIE9SIE1JVAogLyoKICAqIEJy
+b2FkY29tIEJDTTQ3MFggLyBCQ001MzAxWCBBUk0gcGxhdGZvcm0gY29kZS4KICAqIERUUyBmb3Ig
+QnVmZmFsbyBXWlItMTc1MERIUAogICoKICAqIENvcHlyaWdodCAoQykgMjAxNCBSYWZhxYIgTWnF
+gmVja2kgPHphamVjNUBnbWFpbC5jb20+Ci0gKgotICogTGljZW5zZWQgdW5kZXIgdGhlIEdOVS9H
+UEwuIFNlZSBDT1BZSU5HIGZvciBkZXRhaWxzLgogICovCiAKIC9kdHMtdjEvOwpkaWZmIC0tZ2l0
+IGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwODEtYnVmZmFsby13enItOTAwZGhwLmR0cyBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDgxLWJ1ZmZhbG8td3pyLTkwMGRocC5kdHMKaW5kZXggODdl
+YTZiYTY2NGY1Li44ZWE0NmVlZDI2ZTIgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2Jj
+bTQ3MDgxLWJ1ZmZhbG8td3pyLTkwMGRocC5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNt
+NDcwODEtYnVmZmFsby13enItOTAwZGhwLmR0cwpAQCAtMSwyMCArMSw5IEBACisvLyBTUERYLUxp
+Y2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vci1sYXRlciBPUiBNSVQKIC8qCiAgKiBCcm9hZGNv
+bSBCQ000NzBYIC8gQkNNNTMwMVggQVJNIHBsYXRmb3JtIGNvZGUuCiAgKiBEVFMgZm9yIEJ1ZmZh
+bG8gV1pSLTkwMERIUAogICoKICAqIENvcHlyaWdodCAoQykgMjAxNSBSYWZhxYIgTWnFgmVja2kg
+PHphamVjNUBnbWFpbC5jb20+Ci0gKgotICogUGVybWlzc2lvbiB0byB1c2UsIGNvcHksIG1vZGlm
+eSwgYW5kL29yIGRpc3RyaWJ1dGUgdGhpcyBzb2Z0d2FyZSBmb3IgYW55Ci0gKiBwdXJwb3NlIHdp
+dGggb3Igd2l0aG91dCBmZWUgaXMgaGVyZWJ5IGdyYW50ZWQsIHByb3ZpZGVkIHRoYXQgdGhlIGFi
+b3ZlCi0gKiBjb3B5cmlnaHQgbm90aWNlIGFuZCB0aGlzIHBlcm1pc3Npb24gbm90aWNlIGFwcGVh
+ciBpbiBhbGwgY29waWVzLgotICoKLSAqIFRIRSBTT0ZUV0FSRSBJUyBQUk9WSURFRCAiQVMgSVMi
+IEFORCBUSEUgQVVUSE9SIERJU0NMQUlNUyBBTEwgV0FSUkFOVElFUyBXSVRICi0gKiBSRUdBUkQg
+VE8gVEhJUyBTT0ZUV0FSRSBJTkNMVURJTkcgQUxMIElNUExJRUQgV0FSUkFOVElFUyBPRiBNRVJD
+SEFOVEFCSUxJVFkKLSAqIEFORCBGSVRORVNTLiBJTiBOTyBFVkVOVCBTSEFMTCBUSEUgQVVUSE9S
+IEJFIExJQUJMRSBGT1IgQU5ZIFNQRUNJQUwsIERJUkVDVCwKLSAqIElORElSRUNULCBPUiBDT05T
+RVFVRU5USUFMIERBTUFHRVMgT1IgQU5ZIERBTUFHRVMgV0hBVFNPRVZFUiBSRVNVTFRJTkcgRlJP
+TQotICogTE9TUyBPRiBVU0UsIERBVEEgT1IgUFJPRklUUywgV0hFVEhFUiBJTiBBTiBBQ1RJT04g
+T0YgQ09OVFJBQ1QsIE5FR0xJR0VOQ0UKLSAqIE9SIE9USEVSIFRPUlRJT1VTIEFDVElPTiwgQVJJ
+U0lORyBPVVQgT0YgT1IgSU4gQ09OTkVDVElPTiBXSVRIIFRIRSBVU0UgT1IKLSAqIFBFUkZPUk1B
+TkNFIE9GIFRISVMgU09GVFdBUkUuCiAgKi8KIAogL2R0cy12MS87CmRpZmYgLS1naXQgYS9hcmNo
+L2FybS9ib290L2R0cy9iY200NzA5LWJ1ZmZhbG8td3hyLTE5MDBkaHAuZHRzIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvYmNtNDcwOS1idWZmYWxvLXd4ci0xOTAwZGhwLmR0cwppbmRleCA5MjA1OGM3M2Vl
+NTkuLjc5YTk2MzNlYzQxNyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOS1i
+dWZmYWxvLXd4ci0xOTAwZGhwLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9iY200NzA5LWJ1
+ZmZhbG8td3hyLTE5MDBkaHAuZHRzCkBAIC0xLDEwICsxLDkgQEAKKy8vIFNQRFgtTGljZW5zZS1J
+ZGVudGlmaWVyOiBHUEwtMi4wLW9yLWxhdGVyIE9SIE1JVAogLyoKICAqIEJyb2FkY29tIEJDTTQ3
+MFggLyBCQ001MzAxWCBBUk0gcGxhdGZvcm0gY29kZS4KICAqIERUUyBmb3IgQnVmZmFsbyBXWFIt
+MTkwMERIUAogICoKICAqIENvcHlyaWdodCAoQykgMjAxNSBGZWxpeCBGaWV0a2F1IDxuYmRAb3Bl
+bndydC5vcmc+Ci0gKgotICogTGljZW5zZWQgdW5kZXIgdGhlIEdOVS9HUEwuIFNlZSBDT1BZSU5H
+IGZvciBkZXRhaWxzLgogICovCiAKIC9kdHMtdjEvOwotLSAKMi4xMy42CgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
+aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
