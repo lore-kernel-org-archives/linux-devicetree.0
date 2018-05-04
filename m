@@ -1,57 +1,87 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH] ARM: dts: da850-lcdk: increase the size of the u-boot
- nand partition
-Date: Fri, 4 May 2018 13:53:18 +0530
-Message-ID: <a998535f-8963-9e95-0652-b6ac16a13afa@ti.com>
-References: <20180504080835.28632-1-brgl@bgdev.pl>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [alsa-devel] [PATCH v7 16/24] ASoC: qdsp6: q6asm: Add support to
+ audio stream apis
+Date: Fri, 4 May 2018 09:24:16 +0100
+Message-ID: <196824c5-2b0c-1f1b-edd9-0ba6e82ac0f7@linaro.org>
+References: <20180501120820.11016-1-srinivas.kandagatla@linaro.org>
+ <20180501120820.11016-17-srinivas.kandagatla@linaro.org>
+ <f3b3d90b-6504-328e-c9f4-a3b3f085d9dc@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180504080835.28632-1-brgl@bgdev.pl>
+In-Reply-To: <f3b3d90b-6504-328e-c9f4-a3b3f085d9dc@codeaurora.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Rohit Kumar <rohitkr@codeaurora.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, bgoswami@codeaurora.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bartosz,
+Thanks Rohit for testing this!
 
-On Friday 04 May 2018 01:38 PM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+On 04/05/18 08:11, Rohit Kumar wrote:
 > 
-> Current mainline u-boot builds images that are bigger than the 0x80000
-> bytes u-boot partition allocated from the NAND memory. Using the free
-> space partition results in an unbootable system. Increase the partition
-> size to 0xa0000 bytes.
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  arch/arm/boot/dts/da850-lcdk.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> On 5/1/2018 5:38 PM, Srinivas Kandagatla wrote:
+>> +static int __q6asm_run(struct audio_client *ac, uint32_t flags,
+>> +          uint32_t msw_ts, uint32_t lsw_ts, bool wait)
+>> +{
+>> +    struct asm_session_cmd_run_v2 *run;
+>> +    struct apr_pkt *pkt;
+>> +    int pkt_size, rc;
+>> +    void *p;
+>> +
+>> +    pkt_size = APR_HDR_SIZE + sizeof(*run);
+>> +    p = kzalloc(pkt_size, GFP_KERNEL);
+> Should be GFP_ATOMIC as this API is also called from interrupt context
+
+Yes, these should be a GFP_ATOMIC, Will fix this up in next version.
+
+thanks,
+srini
+
+>> +    if (!p)
+>> +        return -ENOMEM;
+>> +
+> [..]
+>> +int q6asm_read(struct audio_client *ac)
+>> +{
+>> +    struct asm_data_cmd_read_v2 *read;
+>> +    struct audio_port_data *port;
+>> +    struct audio_buffer *ab;
+>> +    struct apr_pkt *pkt;
+>> +    int pkt_size;
+>> +    int rc = 0;
+>> +    void *p;
+>> +
+>> +    if (!(ac->io_mode & ASM_SYNC_IO_MODE))
+>> +        return 0;
+>> +
+>> +    pkt_size = APR_HDR_SIZE + sizeof(*read);
+>> +    p = kzalloc(pkt_size, GFP_KERNEL);
+> same here. GFP_ATOMIC
+>> +    if (!p)
+>> +        return -ENOMEM;
+> [..]
+>> +int q6asm_write_async(struct audio_client *ac, uint32_t len, uint32_t 
+>> msw_ts,
+>> +               uint32_t lsw_ts, uint32_t flags)
+>> +{
+>> +    struct asm_data_cmd_write_v2 *write;
+>> +    struct audio_port_data *port;
+>> +    struct audio_buffer *ab;
+>> +    struct apr_pkt *pkt;
+>> +    int pkt_size;
+>> +    int rc = 0;
+>> +    void *p;
+>> +
+>> +    pkt_size = APR_HDR_SIZE + sizeof(*write);
+>> +    p = kzalloc(pkt_size, GFP_KERNEL);
+> GFP_ATOMIC
+>> +    if (!p)
+>> +        return -ENOMEM;
+>>
+> Thanks,
+> Rohit
 > 
-> diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-> index 7de302f890d7..fc8667445892 100644
-> --- a/arch/arm/boot/dts/da850-lcdk.dts
-> +++ b/arch/arm/boot/dts/da850-lcdk.dts
-> @@ -336,11 +336,11 @@
->  				partition@20000 {
->  					/* The LCDK defaults to booting from this partition */
->  					label = "u-boot";
-> -					reg = <0x020000 0x080000>;
-> +					reg = <0x020000 0x0a0000>;
->  				};
->  				partition@a0000 {
->  					label = "free space";
-> -					reg = <0x0a0000 0>;
-> +					reg = <0x0c0000 0>;
-
-Unfortunately, we cannot do this because it introduces incompatibility
-(data loss) for users who may have some data stored in "free space".
-
-I should have insisted on a lot of padding for the u-boot partition or
-asked not to add partitions to DT at all. For now the only solution is
-to use command line partitions. They take precedence over DT partitions.
-
-Thanks,
-Sekhar
