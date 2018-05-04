@@ -1,57 +1,117 @@
-From: <ilialin@codeaurora.org>
-Subject: RE: [PATCH v4 08/14] dt: qcom: Add opp and thermal to the msm8996
-Date: Fri, 4 May 2018 09:48:46 +0300
-Message-ID: <003001d3e373$f94db540$ebe91fc0$@codeaurora.org>
-References: <1522358807-10413-1-git-send-email-ilialin@codeaurora.org> <1522358807-10413-9-git-send-email-ilialin@codeaurora.org> <20180402091617.GA3572@vireshk-i7> <CAKohpo=cw+2Leuwa6XjEYh4kVYK093A5eckUmPBDutgqeqpvog@mail.gmail.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [RFC PATCH] ARM: dts: imx: replace underscore with hyphen in
+ aliases name
+Date: Fri, 4 May 2018 08:52:48 +0200
+Message-ID: <20180504085248.532c8a47@karo-electronics.de>
+References: <1525399128-11587-1-git-send-email-shawnguo@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKohpo=cw+2Leuwa6XjEYh4kVYK093A5eckUmPBDutgqeqpvog@mail.gmail.com>
-Content-Language: en-us
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Viresh Kumar' <viresh.kumar@linaro.org>
-Cc: 'Michael Turquette' <mturquette@baylibre.com>, 'Stephen Boyd' <sboyd@kernel.org>, 'Rob Herring' <robh@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, "'Rafael J. Wysocki'" <rjw@rjwysocki.net>, 'Liam Girdwood' <lgirdwood@gmail.com>, 'Mark Brown' <broonie@kernel.org>, 'Andy Gross' <andy.gross@linaro.org>, 'David Brown' <david.brown@linaro.org>, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Will Deacon' <will.deacon@arm.com>, 'Linux Clock List' <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, 'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, "'open list:ARM/QUALCOMM SUPPORT'" <linux-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org'
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1525399128-11587-1-git-send-email-shawnguo@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, Gary Bisson <gary.bisson@boundarydevices.com>, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Kryo has single clock per cluster. I define here a shared OPP table per =
-cluster.
-
-> -----Original Message-----
-> From: Viresh Kumar <viresh.kumar@linaro.org>
-> Sent: Friday, May 4, 2018 09:04
-> To: Ilia Lin <ilialin@codeaurora.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>; Stephen Boyd
-> <sboyd@kernel.org>; Rob Herring <robh@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; Liam
-> Girdwood <lgirdwood@gmail.com>; Mark Brown <broonie@kernel.org>;
-> Andy Gross <andy.gross@linaro.org>; David Brown
-> <david.brown@linaro.org>; Catalin Marinas <catalin.marinas@arm.com>; =
-Will
-> Deacon <will.deacon@arm.com>; Linux Clock List <linux-
-> clk@vger.kernel.org>; devicetree@vger.kernel.org; Linux Kernel Mailing =
-List
-> <linux-kernel@vger.kernel.org>; linux-pm@vger.kernel.org; linux-arm-
-> msm@vger.kernel.org; open list:ARM/QUALCOMM SUPPORT <linux-
-> soc@vger.kernel.org>; linux-arm-kernel@lists.infradead.org; Nayak,
-> Rajendra <rnayak@codeaurora.org>; Amit Kucheria
-> <amit.kucheria@linaro.org>; Nicolas Dechesne
-> <nicolas.dechesne@linaro.org>; celster@codeaurora.org;
-> tfinkel@codeaurora.org
-> Subject: Re: [PATCH v4 08/14] dt: qcom: Add opp and thermal to the
-> msm8996
->=20
-> On 2 April 2018 at 14:46, Viresh Kumar <viresh.kumar@linaro.org> =
-wrote:
->=20
-> >> +     cluster0_opp: opp_table0 {
-> >> +             compatible =3D "operating-points-v2";
-> >> +             opp-shared;
-> >
-> > Is Kryo like krait where CPUs do DVFS independently ? If yes, then
-> > opp-shared thing should be dropped.
->=20
-> Have you ever replied to this question ? Sorry, but I am not able to =
-find it in
-> my inbox :(
+SGksCgpPbiBGcmksICA0IE1heSAyMDE4IDA5OjU4OjQ4ICswODAwIFNoYXduIEd1byB3cm90ZToK
+PiBJdCByZXBsYWNlcyB1bmRlcnNjb3JlIHdpdGggaHlwaGVuIGluIGFsaWFzZXMgbmFtZSB0byBm
+aXggRFRDCj4gYWxpYXNfcGF0aHMgd2FybmluZyBiZWxvdywgd2hpY2ggaXMgc2VlbiB3aXRoIHZh
+cmlvdXMgaS5NWCBib2FyZCBkdHMKPiBmaWxlcyB3aGVuIFc9MSBzd2l0Y2ggaXMgb24uCj4gCj4g
+IFdhcm5pbmcgKGFsaWFzX3BhdGhzKTogL2FsaWFzZXM6IGFsaWFzZXMgcHJvcGVydHkgbmFtZSBt
+dXN0IGluY2x1ZGUgb25seSBsb3dlcmNhc2UgYW5kICctJwo+IAo+IENjOiBMb3RoYXIgV2HDn21h
+bm4gPExXQEtBUk8tZWxlY3Ryb25pY3MuZGU+Cj4gQ2M6IEdhcnkgQmlzc29uIDxnYXJ5LmJpc3Nv
+bkBib3VuZGFyeWRldmljZXMuY29tPgo+IFNpZ25lZC1vZmYtYnk6IFNoYXduIEd1byA8c2hhd25n
+dW9Aa2VybmVsLm9yZz4KPiAtLS0KPiBIaSBMb3RoYXIsIEdhcnksCj4gCj4gUGVyIG15IHNlYXJj
+aCBvbiBrZXJuZWwgY29kZSwgdGhpcyBjaGFuZ2Ugd2lsbCBub3QgYnJlYWsgYW55dGhpbmcgb24K
+PiBrZXJuZWwgc3VwcG9ydC4gIEJ1dCBJJ20gbm90IHJlYWxseSBzdXJlIGFib3V0IHRoZSBjYXNl
+IG9mIGJvb3Rsb2FkZXJzCj4gcnVubmluZyBvbiB0aGUgYm9hcmRzLiAgVGhhdCdzIHdoeSBJJ20g
+c2VuZGluZyBpdCBhcyBSRkMuCj4gCj4gV2UgcmVhbGx5IHdhbnQgaS5NWCB0byBiZSB0aGUgZmly
+c3QtY2xhc3MgY2l0aXplbiBpbiB0aGUgY29tbXVuaXR5Lgo+IEFmdGVyIGEgZmV3IGN5Y2xlcyBl
+ZmZvcnRzIG9uIGNsZWFuaW5nIHVwIERUQyB3YXJuaW5ncywgdGhpcyBhbGlhc19wYXRocwo+IHdh
+cm5pbmcgaXMgdGhlIGxhc3Qgb25lIHdlIHNlZSB3aXRoIGkuTVggZHRzIGZpbGVzLiAgV2UgcmVh
+bGx5IHdhbnQgdG8KPiBnZXQgcmlkIG9mIGl0IGFuZCBtYWtlIGkuTVggZHRzIGJlIERUQyB3YXJu
+aW5nIGZyZWUuCj4gCj4gU28gcGxlYXNlIGNvbW1lbnQgd2hldGhlciB3ZSBjYW4gbWVyZ2UgdGhp
+cyBwYXRjaC4KPiAKVGhpcyBicmVha3Mgb3VyIFUtQm9vdCB3aGljaCBzZWFyY2hlcyBmb3IgdGhl
+IGFsaWFzIG5hbWVzIHdpdGggJ18nLgpCdXQgSSB0aGluayBpdCdzIG5vdCB3b3J0aCBrZWVwaW5n
+IHRoZSBvbGQgbmFtZXMgYWxpdmUsIHNpbmNlIHRoZQpwcm9ibGVtIGNhbiBlYXNpbHkgYmUgZml4
+ZWQgYnkgYWRkaW5nIHRoZSBvbGQgYWxpYXMgbmFtZSB0byB0aGUgRkRUCm9uIGFmZmVjdGVkIGJv
+YXJkcyBmcm9tIHdpdGhpbiBVLUJvb3QsIGlmIG5lY2Vzc2FyeS4KCkFsdGVybmF0aXZlbHkgd2Ug
+Y291bGQgYWRkIGE6CglyZWdfY2FuX3hjdnIgPSAicmVnLWNhbi14Y3ZyIjsKWy4uLl0Kc28gdGhh
+dCB0aGUgcmVzcGVjdGl2ZSBhbGlhc2VzIGNhbiBiZSByZXNvbHZlZCB1c2luZyBib3RoIG5hbWVz
+IGZvciBhCndoaWxlLgoKU286CkFja2VkLUJ5OiBMb3RoYXIgV2HDn21hbm4gPExXQEtBUk8tZWxl
+Y3Ryb25pY3MuZGU+Cgo+IFNoYXduCj4gCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXR4NTMu
+ZHRzaSAgICAgICAgICAgIHwgMiArLQo+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXR4Ni5k
+dHNpICAgICAgICAgICB8IDYgKysrLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZzeC1uaXRy
+b2dlbjZzeC5kdHMgICAgIHwgNCArKy0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC10eDZ1
+bC1tYWluYm9hcmQuZHRzIHwgMiArLQo+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2dWwtdHg2dWwu
+ZHRzaSAgICAgICAgICB8IDYgKysrLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDdkLW5pdHJv
+Z2VuNy5kdHMgICAgICAgIHwgNCArKy0tCj4gIDYgZmlsZXMgY2hhbmdlZCwgMTIgaW5zZXJ0aW9u
+cygrKSwgMTIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
+L2lteDUzLXR4NTMuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXR4NTMuZHRzaQo+IGlu
+ZGV4IDVkZDNkZDNhMmZkMC4uNTRjZjNlNjcwNjlhIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL2lteDUzLXR4NTMuZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXR4
+NTMuZHRzaQo+IEBAIC01OCw3ICs1OCw3IEBACj4gIAkJY2FuMCA9ICZjYW4yOyAvKiBNYWtlIHRo
+ZSBjYW4gaW50ZXJmYWNlIGluZGljZXMgY29uc2lzdGVudCB3aXRoIFRYMjgvVFg0OCBtb2R1bGVz
+ICovCj4gIAkJY2FuMSA9ICZjYW4xOwo+ICAJCWlwdSA9ICZpcHU7Cj4gLQkJcmVnX2Nhbl94Y3Zy
+ID0gJnJlZ19jYW5feGN2cjsKPiArCQlyZWctY2FuLXhjdnIgPSAmcmVnX2Nhbl94Y3ZyOwo+ICAJ
+CXVzYmgxID0gJnVzYmgxOwo+ICAJCXVzYm90ZyA9ICZ1c2JvdGc7Cj4gIAl9Owo+IGRpZmYgLS1n
+aXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXR4Ni5kdHNpIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvaW14NnFkbC10eDYuZHRzaQo+IGluZGV4IGYwMTVlMmQxY2YzNS4uYTk4ZmIyNTY0YzYzIDEw
+MDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtdHg2LmR0c2kKPiArKysgYi9h
+cmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXR4Ni5kdHNpCj4gQEAgLTUwLDExICs1MCwxMSBAQAo+
+ICAJCWNhbjAgPSAmY2FuMjsKPiAgCQljYW4xID0gJmNhbjE7Cj4gIAkJZXRoZXJuZXQwID0gJmZl
+YzsKPiAtCQlsY2RpZl8yM2JpdF9waW5zX2EgPSAmcGluY3RybF9kaXNwMF8xOwo+IC0JCWxjZGlm
+XzI0Yml0X3BpbnNfYSA9ICZwaW5jdHJsX2Rpc3AwXzI7Cj4gKwkJbGNkaWYtMjNiaXQtcGlucy1h
+ID0gJnBpbmN0cmxfZGlzcDBfMTsKPiArCQlsY2RpZi0yNGJpdC1waW5zLWEgPSAmcGluY3RybF9k
+aXNwMF8yOwo+ICAJCXB3bTAgPSAmcHdtMTsKPiAgCQlwd20xID0gJnB3bTI7Cj4gLQkJcmVnX2Nh
+bl94Y3ZyID0gJnJlZ19jYW5feGN2cjsKPiArCQlyZWctY2FuLXhjdnIgPSAmcmVnX2Nhbl94Y3Zy
+Owo+ICAJCXN0azVsZWQgPSAmdXNlcl9sZWQ7Cj4gIAkJdXNib3RnID0gJnVzYm90ZzsKPiAgCQlz
+ZGhjMCA9ICZ1c2RoYzE7Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZzeC1u
+aXRyb2dlbjZzeC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2c3gtbml0cm9nZW42c3guZHRz
+Cj4gaW5kZXggYjU4Zjc3MGM0MGQ5Li41OWU1MmY1MDQ5MjIgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9h
+cm0vYm9vdC9kdHMvaW14NnN4LW5pdHJvZ2VuNnN4LmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2lteDZzeC1uaXRyb2dlbjZzeC5kdHMKPiBAQCAtNDgsOCArNDgsOCBAQAo+ICAJY29tcGF0
+aWJsZSA9ICJib3VuZGFyeSxpbXg2c3gtbml0cm9nZW42c3giLCAiZnNsLGlteDZzeCI7Cj4gIAo+
+ICAJYWxpYXNlcyB7Cj4gLQkJZmJfbGNkID0gJmxjZGlmMTsKPiAtCQl0X2xjZCA9ICZ0X2xjZDsK
+PiArCQlmYi1sY2QgPSAmbGNkaWYxOwo+ICsJCXQtbGNkID0gJnRfbGNkOwo+ICAJfTsKPiAgCj4g
+IAltZW1vcnlAODAwMDAwMDAgewo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2
+dWwtdHg2dWwtbWFpbmJvYXJkLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC10eDZ1bC1t
+YWluYm9hcmQuZHRzCj4gaW5kZXggMmQ4MGY3YjUwYmMwLi45NzY4NjA5N2E4NmUgMTAwNjQ0Cj4g
+LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLXR4NnVsLW1haW5ib2FyZC5kdHMKPiArKysg
+Yi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwtdHg2dWwtbWFpbmJvYXJkLmR0cwo+IEBAIC00OCw3
+ICs0OCw3IEBACj4gIAljb21wYXRpYmxlID0gImthcm8saW14NnVsLXR4NnVsIiwgImZzbCxpbXg2
+dWwiOwo+ICAKPiAgCWFsaWFzZXMgewo+IC0JCWxjZGlmXzI0Yml0X3BpbnNfYSA9ICZwaW5jdHJs
+X2Rpc3AwXzM7Cj4gKwkJbGNkaWYtMjRiaXQtcGlucy1hID0gJnBpbmN0cmxfZGlzcDBfMzsKPiAg
+CQltbWMwID0gJnVzZGhjMTsKPiAgCQkvZGVsZXRlLXByb3BlcnR5LyBtbWMxOwo+ICAJCXNlcmlh
+bDIgPSAmdWFydDM7Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC10eDZ1
+bC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLXR4NnVsLmR0c2kKPiBpbmRleCBmNjc4
+ZDE4YWQ0NGEuLjAyYjViYTQyY2Q1OSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9p
+bXg2dWwtdHg2dWwuZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC10eDZ1bC5k
+dHNpCj4gQEAgLTUzLDEwICs1MywxMCBAQAo+ICAJCWkyYzIgPSAmaTJjMTsKPiAgCQlpMmMzID0g
+JmkyYzM7Cj4gIAkJaTJjNCA9ICZpMmM0Owo+IC0JCWxjZGlmXzIzYml0X3BpbnNfYSA9ICZwaW5j
+dHJsX2Rpc3AwXzE7Cj4gLQkJbGNkaWZfMjRiaXRfcGluc19hID0gJnBpbmN0cmxfZGlzcDBfMjsK
+PiArCQlsY2RpZi0yM2JpdC1waW5zLWEgPSAmcGluY3RybF9kaXNwMF8xOwo+ICsJCWxjZGlmLTI0
+Yml0LXBpbnMtYSA9ICZwaW5jdHJsX2Rpc3AwXzI7Cj4gIAkJcHdtMCA9ICZwd201Owo+IC0JCXJl
+Z19jYW5feGN2ciA9ICZyZWdfY2FuX3hjdnI7Cj4gKwkJcmVnLWNhbi14Y3ZyID0gJnJlZ19jYW5f
+eGN2cjsKPiAgCQlzZXJpYWwyID0gJnVhcnQ1Owo+ICAJCXNlcmlhbDQgPSAmdWFydDM7Cj4gIAkJ
+c3BpMCA9ICZlY3NwaTI7Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdkLW5p
+dHJvZ2VuNy5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9pbXg3ZC1uaXRyb2dlbjcuZHRzCj4gaW5k
+ZXggNTIxNjcyOTg5ODRkLi5iOGU3M2I0NmNkZGIgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9v
+dC9kdHMvaW14N2Qtbml0cm9nZW43LmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdk
+LW5pdHJvZ2VuNy5kdHMKPiBAQCAtNDksOCArNDksOCBAQAo+ICAJY29tcGF0aWJsZSA9ICJib3Vu
+ZGFyeSxpbXg3ZC1uaXRyb2dlbjciLCAiZnNsLGlteDdkIjsKPiAgCj4gIAlhbGlhc2VzIHsKPiAt
+CQlmYl9sY2QgPSAmbGNkaWY7Cj4gLQkJdF9sY2QgPSAmdF9sY2Q7Cj4gKwkJZmItbGNkID0gJmxj
+ZGlmOwo+ICsJCXQtbGNkID0gJnRfbGNkOwo+ICAJfTsKPiAgCj4gIAltZW1vcnlAODAwMDAwMDAg
+ewoKCkxvdGhhciBXYcOfbWFubgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
