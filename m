@@ -1,273 +1,147 @@
-From: Banajit Goswami <bgoswami@codeaurora.org>
-Subject: Re: [PATCH v7 08/24] ASoC: qdsp6: q6core: Add q6core driver
-Date: Fri, 4 May 2018 12:04:30 -0700
-Message-ID: <46511158-ed1d-7f07-0a8f-b325c088e386@codeaurora.org>
-References: <20180501120820.11016-1-srinivas.kandagatla@linaro.org>
- <20180501120820.11016-9-srinivas.kandagatla@linaro.org>
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
+Subject: [PATCH v9 00/12] Sunxi: Add SMP support on A83T
+Date: Fri,  4 May 2018 21:05:33 +0200
+Message-ID: <20180504190545.5114-1-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501120820.11016-9-srinivas.kandagatla@linaro.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
-Cc: gregkh@linuxfoundation.org, david.brown@linaro.org, mark.rutland@arm.com, lgirdwood@gmail.com, plai@codeaurora.org, tiwai@suse.com, perex@perex.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com, spatakok@qti.qualcomm.com
+To: linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com
+Cc: f.fainelli@gmail.com, opendmb@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mylene.josserand@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
+Hello everyone,
 
-On 5/1/2018 5:08 AM, Srinivas Kandagatla wrote:
-> This patch adds support to core apr service, which is used to query
-> status of other static and dynamic services on the dsp.
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Reviewed-and-tested-by: Rohit kumar <rohitkr@codeaurora.org>
-> ---
->   sound/soc/qcom/Kconfig        |   4 +
->   sound/soc/qcom/qdsp6/Makefile |   1 +
->   sound/soc/qcom/qdsp6/q6core.c | 380 ++++++++++++++++++++++++++++++++++++++++++
->   sound/soc/qcom/qdsp6/q6core.h |  15 ++
->   4 files changed, 400 insertions(+)
->   create mode 100644 sound/soc/qcom/qdsp6/q6core.c
->   create mode 100644 sound/soc/qcom/qdsp6/q6core.h
->
-> diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-> index b44a9fcd7ed3..37ee0d958145 100644
-> --- a/sound/soc/qcom/Kconfig
-> +++ b/sound/soc/qcom/Kconfig
-> @@ -44,10 +44,14 @@ config SND_SOC_APQ8016_SBC
->   config SND_SOC_QDSP6_COMMON
->   	tristate
->   
-> +config SND_SOC_QDSP6_CORE
-> +	tristate
-> +
->   config SND_SOC_QDSP6
->   	tristate "SoC ALSA audio driver for QDSP6"
->   	depends on QCOM_APR && HAS_DMA
->   	select SND_SOC_QDSP6_COMMON
-> +	select SND_SOC_QDSP6_CORE
->   	help
->   	 To add support for MSM QDSP6 Soc Audio.
->   	 This will enable sound soc platform specific
-> diff --git a/sound/soc/qcom/qdsp6/Makefile b/sound/soc/qcom/qdsp6/Makefile
-> index accebdb49306..03b8e89c9731 100644
-> --- a/sound/soc/qcom/qdsp6/Makefile
-> +++ b/sound/soc/qcom/qdsp6/Makefile
-> @@ -1 +1,2 @@
->   obj-$(CONFIG_SND_SOC_QDSP6_COMMON) += q6dsp-common.o
-> +obj-$(CONFIG_SND_SOC_QDSP6_CORE) += q6core.o
-> diff --git a/sound/soc/qcom/qdsp6/q6core.c b/sound/soc/qcom/qdsp6/q6core.c
-> new file mode 100644
-> index 000000000000..701aa3f50a6a
-> --- /dev/null
-> +++ b/sound/soc/qcom/qdsp6/q6core.c
-> @@ -0,0 +1,380 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2011-2017, The Linux Foundation. All rights reserved.
-> +// Copyright (c) 2018, Linaro Limited
-> +
-> +#include <linux/slab.h>
-> +#include <linux/wait.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/sched.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/wait.h>
-> +#include <linux/soc/qcom/apr.h>
-> +#include "q6core.h"
-> +#include "q6dsp-errno.h"
-> +
-> +#define ADSP_STATE_READY_TIMEOUT_MS    3000
-> +#define Q6_READY_TIMEOUT_MS 100
-> +#define AVCS_CMD_ADSP_EVENT_GET_STATE		0x0001290C
-> +#define AVCS_CMDRSP_ADSP_EVENT_GET_STATE	0x0001290D
-> +#define AVCS_GET_VERSIONS       0x00012905
-> +#define AVCS_GET_VERSIONS_RSP   0x00012906
-> +#define AVCS_CMD_GET_FWK_VERSION	0x001292c
-> +#define AVCS_CMDRSP_GET_FWK_VERSION	0x001292d
-> +
-> +struct avcs_svc_info {
-<snip>
-> +};
-> +
-> +static struct q6core *g_core;
-> +
-> +static int q6core_callback(struct apr_device *adev, struct apr_resp_pkt *data)
-> +{
-> +	struct q6core *core = dev_get_drvdata(&adev->dev);
-> +	struct aprv2_ibasic_rsp_result_t *result;
-> +	struct apr_hdr *hdr = &data->hdr;
-> +
-> +	result = data->payload;
-> +	switch (hdr->opcode) {
-> +	case APR_BASIC_RSP_RESULT:{
-> +		result = data->payload;
-> +		switch (result->opcode) {
-> +		case AVCS_GET_VERSIONS:
-> +			if (result->status == ADSP_EUNSUPPORTED)
-> +				core->get_version_supported = false;
-> +			core->resp_received = true;
-> +			break;
-> +		case AVCS_CMD_GET_FWK_VERSION:
-> +			if (result->status == ADSP_EUNSUPPORTED)
-> +				core->fwk_version_supported = false;
-> +			core->resp_received = true;
-> +			break;
-> +		case AVCS_CMD_ADSP_EVENT_GET_STATE:
-> +			if (result->status == ADSP_EUNSUPPORTED)
-> +				core->get_state_supported = false;
-> +			core->resp_received = true;
-> +			break;
-> +		}
-> +		break;
-> +	}
-> +	case AVCS_CMDRSP_GET_FWK_VERSION: {
-> +		struct avcs_cmdrsp_get_fwk_version *fwk;
-> +		int bytes;
-> +
-> +		fwk = data->payload;
-> +		core->fwk_version_supported = true;
-> +		bytes = sizeof(*fwk) + fwk->num_services *
-> +				sizeof(fwk->svc_api_info[0]);
-> +
-> +		core->fwk_version = kzalloc(bytes, GFP_ATOMIC);
-> +		if (!core->fwk_version)
-> +			return -ENOMEM;
-When the above allocation fails,  core->fwk_version_supported will be 
-still true, and q6core_get_fwk_versions() will return 0 (timeout as 
-core->resp_received will not be set to true). This can cause a NULL 
-pointer dereference inside the if() loop pointed below (added comment).
-Please move the line to set core->fwk_version_supported flag to after 
-memset() to copy fwk version info.
-> +
-> +		memcpy(core->fwk_version, data->payload, bytes);
-> +
-> +		core->resp_received = true;
-> +
-> +		break;
-> +	}
-> +	case AVCS_GET_VERSIONS_RSP: {
-> +		struct avcs_cmdrsp_get_version *v;
-> +		int len;
-> +
-> +		v = data->payload;
-> +		core->get_version_supported = true;
-> +
-<snip>
-> +	}
-> +
-> +	return rc;
-> +}
-> +
-> +static bool __q6core_is_adsp_ready(struct q6core *core)
-> +{
-> +	struct apr_device *adev = core->adev;
-> +	struct apr_pkt pkt;
-> +	int rc;
-> +
-> +	core->get_state_supported = false;
-> +
-> +	pkt.hdr.hdr_field = APR_HDR_FIELD(APR_MSG_TYPE_SEQ_CMD,
-> +				      APR_HDR_LEN(APR_HDR_SIZE), APR_PKT_VER);
-> +	pkt.hdr.pkt_size = APR_HDR_SIZE;
-> +	pkt.hdr.opcode = AVCS_CMD_ADSP_EVENT_GET_STATE;
-> +
-> +	rc = apr_send_pkt(adev, &pkt);
-> +	if (rc < 0)
-> +		return false;
-> +
-> +	rc = wait_event_timeout(core->wait, (core->resp_received),
-> +				msecs_to_jiffies(Q6_READY_TIMEOUT_MS));
-> +	if (rc > 0 && core->resp_received) {
-> +		core->resp_received = false;
-> +
-> +		if (core->avcs_state == 0x1)
-The AVCS state can be different non-zero value then 0x1.
-A better way to handle this can be check for (core->avcs_state > 0) for 
-success, and then return the "core->avcs_state" to the caller.
-> +			return true;
-> +	}
-> +
-> +	/* assume that the adsp is up if we not support this command */
-> +	if (!core->get_state_supported)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +/**
-> + * q6core_get_svc_api_info() - Get version number of a service.
-> + *
-> + * @svc_id: service id of the service.
-> + * @info: Valid struct pointer to fill svc api information.
-> + *
-> + * Return: zero on success and error code on failure or unsupported
-> + */
-> +int q6core_get_svc_api_info(int svc_id, struct q6core_svc_api_info *ainfo)
-> +{
-> +	int i;
-> +	int ret = -ENOTSUPP;
-> +
-> +	if (!g_core || !ainfo)
-> +		return 0;
-> +
-> +	mutex_lock(&g_core->lock);
-> +	if (!g_core->is_version_requested) {
-> +		if (q6core_get_fwk_versions(g_core) == -ENOTSUPP)
-> +			q6core_get_svc_versions(g_core);
-> +		g_core->is_version_requested = true;
-> +	}
-> +
-> +	if (g_core->fwk_version_supported) {
-> +		for (i = 0; i < g_core->fwk_version->num_services; i++) {
-..NULL pointer dereference here.
-> +			struct avcs_svc_api_info *info;
-> +
-> +			info = &g_core->fwk_version->svc_api_info[i];
-> +			if (svc_id != info->service_id)
-> +				continue;
-> +
-> +			ainfo->api_version = info->api_version;
-> +			ainfo->api_branch_version = info->api_branch_version;
-> +			ret = 0;
-> +			break;
-> +		}
-> +	} else if (g_core->get_version_supported) {
-> +		for (i = 0; i < g_core->svc_version->num_services; i++) {
-Similar issue of NULL pointer dereference is also present for 
-g_core->get_version_supported flag.
-> +			struct avcs_svc_info *info;
-> +
-> +			info = &g_core->svc_version->svc_api_info[i];
-> +			if (svc_id != info->service_id)
-> +				continue;
-> +
-> +			ainfo->api_version = info->version;
-> +			ainfo->api_branch_version = 0;
-> +			ret = 0;
-> +			break;
-<snip>
-> +	init_waitqueue_head(&g_core->wait);
-> +	return 0;
-> +}
-> +
-> +static int q6core_exit(struct apr_device *adev)
-> +{
-> +	struct q6core *core = dev_get_drvdata(&adev->dev);
-> +
-> +	if (core->fwk_version_supported)
-> +		kfree(core->fwk_version);
-> +	if (core->get_version_supported)
-> +		kfree(core->svc_version);
-> +
-> +	kfree(core);
-> +	g_core = NULL;
-This assignment can be before kfree() to avoid any possible issue in 
-using g_core, after the pointer is freed.
+This is a V9 of my series that adds SMP support for Allwinner sun8i-a83t.
+Based on sunxi's tree, sunxi/for-next branch.
+Depends on a patch from Doug Berger that allows to include the "cpu-type"
+header on assembly files that I included in my series (patch 01).
+
+The difference with the v8 is just that the machine is renamed in sun8i-a83t
+(see patch 07), according to Maxime's review.
+
+Thank you in advance,
+Best regards,
+Mylène
+
+Changes from v8:
+    - Rename machine into "sun8i-a83t"
+
+Changes from v7:
+    - Add the patch of Doug Berger in my series.
+    - Rename the machine name to start secure_cntvoff into "sun8i-a83t",
+    according to Maxime's review.
+    - Change the type of is_a83t field from integer into boolean.
+
+Changes from v6:
+    - Correct the commit log on patch 07 according to Sergei Shtylyov's
+    review.
+    - Rename the field "is_sun8i" into "is_a83t".
+    - Add all Tested-by and Reviewed-by from previous version.
+
+Changes from v5:
+    - Remove my patch 01 and use the patch of Doug Berger to be able to
+    include the cpu-type header on assembly files.
+    - Rename smp_init_cntvoff function into secure_cntvoff_init according
+    to Marc Zyngier's review.
+    - According to Chen-Yu and Maxime's reviews, remove the patch that was
+    moving structures. Instead of using an index to retrieve which
+    architecture we are having, use a global variable.
+    - Merge the 2 patches that move assembly code from C to assembly file.
+    - Use a sun8i field instead of sun9i to know on which architecture we
+    are using because many modifications/additions of the code are for
+    sun8i-a83t.
+    - Rework the patch "add is_sun8i field" to add only this field in this
+    patch. The part of the patch that was starting to handle the differences
+    between sun8i-a83t and sun9i-a80 is merged in the patch that adds the
+    support of sun8i-a83t.
+    - Add a new patch that refactor the shmobile code to use the new function
+    secure_cntvoff_init introduced in this series.
+
+Changes from v4:
+    - Rebased my series according to new Chen-Yu series:
+       "ARM: sunxi: Clean and improvements for multi-cluster SMP"
+       https://lkml.org/lkml/2018/3/8/886
+    - Updated my series according to Marc Zyngier's reviews to add CNTVOFF
+    initialization's function into ARM's common part. Thanks to that, other
+    platforms such as Renesa can use this function.
+    - For boot CPU, create a new machine to handle the CNTVOFF initialization
+    using "init_early" callback.
+
+Changes from v3:
+    - Take into account Maxime's reviews:
+	- split the first patch into 4 new patches: add sun9i device tree
+	parsing, rename some variables, add a83t support and finally,
+	add hotplug support.
+	- Move the code of previous patch 07 (to disable CPU0 disabling)
+	into hotplug support patch (see patch 04)
+	- Remove the patch that added PRCM register because it is already
+	available. Because of that, update the device tree parsing to use
+	"sun8i-a83t-r-ccu".
+	- Use a variable to know which SoC we currently have
+    - Take into account Chen-Yu's reviews: create two iounmap functions
+    to release the resources of the device tree parsing.
+    - Take into account Marc's review: Update the code to initialize CNTVOFF
+    register. As there is already assembly code in the driver, I decided
+    to create an assembly file not to mix assembly and C code.
+    For that, I create 3 new patches: move the current assembly code that
+    handles the cluster cache enabling into a file, move the cpu_resume entry
+    in this file and finally, add a new assembly entry to initialize the timer
+    offset for boot CPU and secondary CPUs.
+
+Changes from v2:
+    - Rebased my modifications according to new Chen Yu's patch series
+    that adds SMP support for sun9i-a80 (without MCPM).
+    - Split the device-tree patches into 3 patches for CPUCFG, R_CPUCFG
+    and PRCM registers for more visibility.
+    - The hotplug of CPU0 is currently not working (even after trying what
+    Allwinner's code is doing) so remove the possibility of disabling
+    this CPU. Created a new patch for it.
+
+Changes from v1:
+    - Add Chen Yu's patch in my series (see path 01)
+    - Add new compatibles for prcm and cpucfg registers for sun8i-a83t.
+    Create two functions to separate the DT parsing of sun9i-a80 and
+    sun8i-a83t.
+    - Thanks to Maxime's review: order device tree's nodes according
+    to physical addresses, remove unused label and fix registers' sizes.
+    Update the commit log and commit title of my last patch (see
+    patch 05).
+
+Doug Berger (1):
+  ARM: Allow this header to be included by assembly files
+
+Mylène Josserand (11):
+  ARM: sunxi: smp: Move assembly code into a file
+  ARM: dts: sun8i: Add CPUCFG device node for A83T dtsi
+  ARM: dts: sun8i: Add R_CPUCFG device node for the A83T dtsi
+  ARM: dts: sun8i: a83t: Add CCI-400 node
+  ARM: smp: Add initialization of CNTVOFF
+  ARM: sunxi: Add initialization of CNTVOFF
+  ARM: sun9i: smp: Rename clusters's power-off
+  ARM: sun9i: smp: Add is_a83t field
+  ARM: sun8i: smp: Add support for A83T
+  ARM: dts: sun8i: Add enable-method for SMP support for the A83T SoC
+  ARM: shmobile: Convert file to use cntvoff
+
+ arch/arm/boot/dts/sun8i-a83t.dtsi        |  59 ++++++++
+ arch/arm/common/Makefile                 |   1 +
+ arch/arm/common/secure_cntvoff.S         |  31 ++++
+ arch/arm/include/asm/cputype.h           |  10 +-
+ arch/arm/include/asm/secure_cntvoff.h    |   8 ++
+ arch/arm/mach-shmobile/common.h          |   1 -
+ arch/arm/mach-shmobile/headsmp-apmu.S    |  22 +--
+ arch/arm/mach-shmobile/setup-rcar-gen2.c |   3 +-
+ arch/arm/mach-sunxi/Kconfig              |   2 +-
+ arch/arm/mach-sunxi/Makefile             |   2 +-
+ arch/arm/mach-sunxi/headsmp.S            |  81 +++++++++++
+ arch/arm/mach-sunxi/mc_smp.c             | 239 +++++++++++++++++++------------
+ arch/arm/mach-sunxi/sunxi.c              |  20 ++-
+ 13 files changed, 356 insertions(+), 123 deletions(-)
+ create mode 100644 arch/arm/common/secure_cntvoff.S
+ create mode 100644 arch/arm/include/asm/secure_cntvoff.h
+ create mode 100644 arch/arm/mach-sunxi/headsmp.S
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.11.0
