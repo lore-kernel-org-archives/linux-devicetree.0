@@ -1,108 +1,86 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 09/10] ARM: dts: sun7i-a20: Add Video
- Engine and reserved memory nodes
-Date: Fri, 4 May 2018 15:40:33 +0200
-Message-ID: <20180504134033.wngpe5scyisreonn@flea>
-References: <20180419154124.17512-1-paul.kocialkowski@bootlin.com>
- <20180419154536.17846-5-paul.kocialkowski@bootlin.com>
- <20180420073908.nkcbsdxibnzkqski@flea>
- <82057e2f734137a3902d9313c228b01ceb345ee7.camel@bootlin.com>
- <20180504084008.h6p4brari3xrbv6l@flea>
- <e8cd340605ab4db8ebf2888a4fce645e8bc481d0.camel@bootlin.com>
- <20180504091555.idgtzey53lozj2uh@flea>
- <fc064c3f1534a6082dc2b4e18454e054b53e5aee.camel@bootlin.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v2 5/6] drm/vc4: Support the case where the DSI device
+ is disabled
+Date: Fri, 4 May 2018 15:49:06 +0200
+Message-ID: <20180504154906.2527d92b@bbrezillon>
+References: <20180503164009.14395-1-boris.brezillon@bootlin.com>
+ <20180503164009.14395-6-boris.brezillon@bootlin.com>
+ <20180504102833.GJ13459@ulmo> <20180504140525.152d8d8e@bbrezillon>
+ <20180504132915.GX13459@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mqms3knof33f5jwx"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBU6FWHLQKGQERUEL2TQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <fc064c3f1534a6082dc2b4e18454e054b53e5aee.camel-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180504132915.GX13459@ulmo>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-
---mqms3knof33f5jwx
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Fri, May 04, 2018 at 02:04:38PM +0200, Paul Kocialkowski wrote:
-> On Fri, 2018-05-04 at 11:15 +0200, Maxime Ripard wrote:
-> > On Fri, May 04, 2018 at 10:47:44AM +0200, Paul Kocialkowski wrote:
-> > > > > > > +			reg = <0x01c0e000 0x1000>;
-> > > > > > > +			memory-region = <&ve_memory>;
-> > > > > > 
-> > > > > > Since you made the CMA region the default one, you don't need
-> > > > > > to
-> > > > > > tie
-> > > > > > it to that device in particular (and you can drop it being
-> > > > > > mandatory
-> > > > > > from your binding as well).
-> > > > > 
-> > > > > What if another driver (or the system) claims memory from that
-> > > > > zone
-> > > > > and
-> > > > > that the reserved memory ends up not being available for the VPU
-> > > > > anymore?
-> > > > > 
-> > > > > Acccording to the reserved-memory documentation, the reusable
-> > > > > property
-> > > > > (that we need for dmabuf) puts a limitation that the device
-> > > > > driver
-> > > > > owning the region must be able to reclaim it back.
-> > > > > 
-> > > > > How does that work out if the CMA region is not tied to a driver
-> > > > > in
-> > > > > particular?
-> > > > 
-> > > > I'm not sure to get what you're saying. You have the property
-> > > > linux,cma-default in your reserved region, so the behaviour you
-> > > > described is what you explicitly asked for.
-> > > 
-> > > My point is that I don't see how the driver can claim back (part of)
-> > > the
-> > > reserved area if the area is not explicitly attached to it.
-> > > 
-> > > Or is that mechanism made in a way that all drivers wishing to use
-> > > the
-> > > reserved memory area can claim it back from the system, but there is
-> > > no
-> > > priority (other than first-come first-served) for which drivers
-> > > claims
-> > > it back in case two want to use the same reserved region (in a
-> > > scenario
-> > > where there isn't enough memory to allow both drivers)?
-> > 
-> > This is indeed what happens. Reusable is to let the system use the
-> > reserved memory for things like caches that can easily be dropped when
-> > a driver wants to use the memory in that reserved area. Once that
-> > memory has been allocated, there's no claiming back, unless that
-> > memory segment was freed of course.
-> 
-> Thanks for the clarification. So in our case, perhaps the best fit would
-> be to make that area the default CMA pool so that we can be ensured that
-> the whole 96 MiB is available for the VPU and that no other consumer of
-> CMA will use it?
-
-The best fit for what use case ? We already discussed this, and I
-don't see any point in having two separate CMA regions. If you have a
-reasonably sized region that will accomodate for both the VPU and
-display engine, why would we want to split them?
-
-Or did you have any experience of running out of buffers?
-
-Maxime
-
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---mqms3knof33f5jwx--
+T24gRnJpLCA0IE1heSAyMDE4IDE1OjI5OjE1ICswMjAwClRoaWVycnkgUmVkaW5nIDx0aGllcnJ5
+LnJlZGluZ0BnbWFpbC5jb20+IHdyb3RlOgoKPiBPbiBGcmksIE1heSAwNCwgMjAxOCBhdCAwMjow
+NToyNVBNICswMjAwLCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6Cj4gPiBPbiBGcmksIDQgTWF5IDIw
+MTggMTI6Mjg6MzMgKzAyMDAKPiA+IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFp
+bC5jb20+IHdyb3RlOgo+ID4gICAKPiA+ID4gT24gVGh1LCBNYXkgMDMsIDIwMTggYXQgMDY6NDA6
+MDhQTSArMDIwMCwgQm9yaXMgQnJlemlsbG9uIHdyb3RlOiAgCj4gPiA+ID4gSGF2aW5nIGEgZGV2
+aWNlIHdpdGggYSBzdGF0dXMgcHJvcGVydHkgIT0gIm9rYXkiIGluIHRoZSBEVCBpcyBhIHZhbGlk
+Cj4gPiA+ID4gdXNlIGNhc2UsIGFuZCB3ZSBzaG91bGQgbm90IHByZXZlbnQgdGhlIHJlZ2lzdHJh
+dGlvbiBvZiB0aGUgRFJNIGRldmljZQo+ID4gPiA+IHdoZW4gdGhlIERTSSBkZXZpY2UgY29ubmVj
+dGVkIHRvIHRoZSBEU0kgY29udHJvbGxlciBpcyBkaXNhYmxlZC4KPiA+ID4gPiAKPiA+ID4gPiBD
+b25zaWRlciB0aGUgRU5PREVWIHJldHVybiBjb2RlIGFzIGEgdmFsaWQgcmVzdWx0IGFuZCBkbyBu
+b3QgZXhwb3NlIHRoZQo+ID4gPiA+IERTSSBlbmNvZGVyL2Nvbm5lY3RvciB3aGVuIGl0IGhhcHBl
+bnMuCj4gPiA+ID4gCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jp
+cy5icmV6aWxsb25AYm9vdGxpbi5jb20+Cj4gPiA+ID4gLS0tCj4gPiA+ID4gIGRyaXZlcnMvZ3B1
+L2RybS92YzQvdmM0X2RzaS5jIHwgMTUgKysrKysrKysrKysrKy0tCj4gPiA+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+ID4gPiA+IAo+ID4gPiA+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kc2kuYyBiL2RyaXZlcnMvZ3B1
+L2RybS92YzQvdmM0X2RzaS5jCj4gPiA+ID4gaW5kZXggOGFhODk3ODM1MTE4Li5kYjJmMTM3Zjhi
+N2IgMTAwNjQ0Cj4gPiA+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfZHNpLmMKPiA+
+ID4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kc2kuYwo+ID4gPiA+IEBAIC0xNjA2
+LDggKzE2MDYsMTggQEAgc3RhdGljIGludCB2YzRfZHNpX2JpbmQoc3RydWN0IGRldmljZSAqZGV2
+LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCj4gPiA+ID4gIAo+ID4gPiA+ICAJ
+cmV0ID0gZHJtX29mX2ZpbmRfcGFuZWxfb3JfYnJpZGdlKGRldi0+b2Zfbm9kZSwgMCwgMCwKPiA+
+ID4gPiAgCQkJCQkgICZwYW5lbCwgJmRzaS0+YnJpZGdlKTsKPiA+ID4gPiAtCWlmIChyZXQpCj4g
+PiA+ID4gKwlpZiAocmV0KSB7Cj4gPiA+ID4gKwkJLyogSWYgdGhlIGJyaWRnZSBvciBwYW5lbCBw
+b2ludGVkIGJ5IGRldi0+b2Zfbm9kZSBpcyBub3QKPiA+ID4gPiArCQkgKiBlbmFibGVkLCBqdXN0
+IHJldHVybiAwIGhlcmUgc28gdGhhdCB3ZSBkb24ndCBwcmV2ZW50IHRoZSBEUk0KPiA+ID4gPiAr
+CQkgKiBkZXYgZnJvbSBiZWluZyByZWdpc3RlcmVkLiBPZiBjb3Vyc2UgdGhhdCBtZWFucyB0aGUg
+RFNJCj4gPiA+ID4gKwkJICogZW5jb2RlciB3b24ndCBiZSBleHBvc2VkLCBidXQgdGhhdCdzIG5v
+dCBhIHByb2JsZW0gc2luY2UKPiA+ID4gPiArCQkgKiBub3RoaW5nIGlzIGNvbm5lY3RlZCB0byBp
+dC4KPiA+ID4gPiArCQkgKi8KPiA+ID4gPiArCQlpZiAocmV0ID09IC1FTk9ERVYpCj4gPiA+ID4g
+KwkJCXJldHVybiAwOwo+ID4gPiA+ICsKPiA+ID4gPiAgCQlyZXR1cm4gcmV0Owo+ID4gPiA+ICsJ
+fQo+ID4gPiA+ICAKPiA+ID4gPiAgCWlmIChwYW5lbCkgewo+ID4gPiA+ICAJCWRzaS0+YnJpZGdl
+ID0gZGV2bV9kcm1fcGFuZWxfYnJpZGdlX2FkZChkZXYsIHBhbmVsLAo+ID4gPiA+IEBAIC0xNjUy
+LDcgKzE2NjIsOCBAQCBzdGF0aWMgdm9pZCB2YzRfZHNpX3VuYmluZChzdHJ1Y3QgZGV2aWNlICpk
+ZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKPiA+ID4gPiAgCXN0cnVjdCB2YzRfZGV2ICp2YzQg
+PSB0b192YzRfZGV2KGRybSk7Cj4gPiA+ID4gIAlzdHJ1Y3QgdmM0X2RzaSAqZHNpID0gZGV2X2dl
+dF9kcnZkYXRhKGRldik7Cj4gPiA+ID4gIAo+ID4gPiA+IC0JcG1fcnVudGltZV9kaXNhYmxlKGRl
+dik7Cj4gPiA+ID4gKwlpZiAoZHNpLT5icmlkZ2UpCj4gPiA+ID4gKwkJcG1fcnVudGltZV9kaXNh
+YmxlKGRldik7ICAgIAo+ID4gPiAKPiA+ID4gSXMgdGhpcyBzYWZlPyBUaGlzIHVzZXMgY29tcG9u
+ZW50L21hc3Rlciwgc28gZHNpLT5icmlkZ2UgaXMgZ29pbmcgdG8KPiA+ID4gcmVtYWluIHZhbGlk
+IHVudGlsIHRoZSBkcml2ZXIncyAtPnJlbW92ZSgpIGlzIGNhbGxlZC4gU28gdGVjaG5pY2FsbHkg
+eW91Cj4gPiA+IGNvdWxkIGhhdmUgYSBzaXR1YXRpb24gd2hlcmUgZHJtX29mX2ZpbmRfcGFuZWxf
+b3JfYnJpZGdlKCkgcmV0dXJuZWQgc29tZQo+ID4gPiBlcnJvciBjb2RlIHRoYXQgcmVtYWlucyBz
+dG9yZWQgaW4gZHNpLT5icmlkZ2UgYW5kIGNhdXNlIHRoZSBhYm92ZQo+ID4gPiBjb25kaXRpb24g
+dG8gYmUgaW5jb3JyZWN0bHkgdHJ1ZS4gIAo+ID4gCj4gPiBObywgYmVjYXVzZSBvZl9kcm1fZmlu
+ZF9icmlkZ2UoKSAod2hpY2ggaXMgY2FsbGVkIGZyb20KPiA+IGRybV9vZl9maW5kX3BhbmVsX29y
+X2JyaWRnZSgpIHJldHVybnMgZWl0aGVyIE5VTEwgb3IgYSB2YWxpZCBicmlkZ2UKPiA+IHBvaW50
+ZXIpLCBzbyBkc2ktPmJyaWRnZSBlaXRoZXIgcG9pbnRzIHRvIGEgdmFsaWQgYnJpZGdlIG9iamVj
+dCBvciBpcwo+ID4gTlVMTC4gQW0gSSBtaXNzaW5nIHNvbWV0aGluZz8gIAo+IAo+IFRoZSByZXR1
+cm4gdmFsdWUgb2YgZGV2bV9kcm1fcGFuZWxfYnJpZGdlX2FkZCgpIGlzIGFsc28gYXNzaWduZWQg
+dG8KPiBkc2ktPmJyaWRnZSBsYXRlciBvbiAoaW4gdGhlICJpZiAocGFuZWwpIiBjb25kaXRpb25h
+bCkuCgpCdXQgdGhlbiB3ZSByZXR1cm4gYW4gZXJyb3IgY29kZSBpZiBJU19FUlIoZHNpLT5icmlk
+Z2UpIFsxXSwgd2hpY2gKc2hvdWxkIHByZXZlbnQgdGhlIHVuYmluZCBmdW5jdGlvbiBmcm9tIGJl
+aW5nIGNhbGxlZCwgcmlnaHQ/CgpbMV1odHRwczovL2VsaXhpci5ib290bGluLmNvbS9saW51eC92
+NC4xNy1yYzMvc291cmNlL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2RzaS5jI0wxNjEwCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
