@@ -1,67 +1,67 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH 1/2] dt-bindings: leds: Add SC27xx breathing light controller documentation
-Date: Fri,  4 May 2018 18:08:35 +0800
-Message-ID: <099f4075ec489e425b5f1e7668a078c05f0d8509.1525427961.git.baolin.wang@linaro.org>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH v2] ARM: dts: tegra: Add support for 256 MB Colibri-T20
+ (plus such board on Iris)
+Date: Fri, 4 May 2018 10:14:47 +0000
+Message-ID: <1525428885.6296.18.camel@toradex.com>
+References: <1525360112-9893-1-git-send-email-krzk@kernel.org>
+         <c47c07b2c112219093b668c0b4d46ac8@agner.ch>
+         <CAJKOXPeb+DmKVQ1uXkBOjaGMpxtPVFp54SBWm6h=+o30z9K3aQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPeb+DmKVQ1uXkBOjaGMpxtPVFp54SBWm6h=+o30z9K3aQ@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <927B0483E71C84488A18CDFD34B32129@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: xiaotong.lu@spreadtrum.com, baolin.wang@linaro.org, broonie@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "stefan@agner.ch" <stefan@agner.ch>, "krzk@kernel.org" <krzk@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dev@lynxeye.de" <dev@lynxeye.de>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the binding documentation for Spreadtrum SC27xx series
-breathing light controller, which supports 3 outputs: red LED, green
-LED and blue LED.
-
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- .../devicetree/bindings/leds/leds-sc27xx-bltc.txt  |   39 ++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
-
-diff --git a/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
-new file mode 100644
-index 0000000..d4e267d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
-@@ -0,0 +1,39 @@
-+LEDs connected to Spreadtrum SC27XX PMIC breathing light controller
-+
-+The SC27xx breathing light controller supports to 3 outputs:
-+red LED, green LED and blue LED. Each LED can work at normal
-+PWM mode or breath light mode.
-+
-+Required properties:
-+- compatible: should be "sprd,sc27xx-bltc".
-+- #address-cells: must be 1.
-+- #size-cells: must be 0.
-+- reg: specify controller address.
-+
-+LED sub-node properties:
-+- reg: number of LED line (could be from 0 to 2).
-+- label: (optional) name of LED.
-+
-+Examples:
-+
-+led-controller@200 {
-+	compatible = "sprd,sc27xx-bltc";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	reg = <0x200>;
-+
-+	red@0 {
-+		label = "red";
-+		reg = <0x0>;
-+	};
-+
-+	green@1 {
-+		label = "green";
-+		reg = <0x1>;
-+	};
-+
-+	blue@2 {
-+		label = "blue";
-+		reg = <0x2>;
-+	};
-+};
--- 
-1.7.9.5
+SGkgS3J6eXN6dG9mDQoNCk9uIEZyaSwgMjAxOC0wNS0wNCBhdCAxMjowMyArMDIwMCwgS3J6eXN6
+dG9mIEtvemxvd3NraSB3cm90ZToNCj4gT24gRnJpLCBNYXkgNCwgMjAxOCBhdCAxMToxOSBBTSwg
+U3RlZmFuIEFnbmVyIDxzdGVmYW5AYWduZXIuY2g+DQo+IHdyb3RlOg0KPiA+IE9uIDAzLjA1LjIw
+MTggMTc6MDgsIEtyenlzenRvZiBLb3psb3dza2kgd3JvdGU6DQo+ID4gPiBDb2xpYnJpLVQyMCBj
+YW4gY29tZSBpbiAyNTYgTUIgUkFNICh3aXRoIDUxMiBNQiBOQU5EKSBvciA1MTIgTUINCj4gPiA+
+IFJBTQ0KPiA+ID4gKHdpdGggMTAyNCBNQiBOQU5EKSBmbGF2b3JzLiAgQWRkIHN1cHBvcnQgZm9y
+IHRoZSAyNTYgTUIgdmVyc2lvbg0KPiA+ID4gb24gSXJpcw0KPiA+ID4gZXZhbHVhdGlvbiBib2Fy
+ZC4NCj4gPiANCj4gPiBUbyB3ZSByZWFsbHkgbmVlZCB0byBzcGVjaWZ5IG1lbW9yeSBzaXplIHRo
+ZXNlIGRheXM/IEkgdGhpbmsgYWxsDQo+ID4gY29tbW9uDQo+ID4gYm9vdCBsb2FkZXJzIGZpbGwg
+dGhlIG1lbW9yeSBub2RlIGFueXdheS4NCj4gPiANCj4gPiBhcmNoL2FybS9ib290L2R0cy9pbXg2
+cWRsLWFwYWxpcy5kdHNpOg0KPiA+ICAgICAgICAgLyogV2lsbCBiZSBmaWxsZWQgYnkgdGhlIGJv
+b3Rsb2FkZXIgKi8NCj4gPiAgICAgICAgIG1lbW9yeUAxMDAwMDAwMCB7DQo+ID4gICAgICAgICAg
+ICAgICAgIHJlZyA9IDwweDEwMDAwMDAwIDA+Ow0KPiA+ICAgICAgICAgfTsNCj4gPiANCj4gPiAN
+Cj4gPiBJIHRoaW5rIHdlIHNob3VsZCBqdXN0IHJlbmFtZSB0ZWdyYTIwLWNvbGlicmktNTEyLmR0
+c2kgPT4NCj4gPiB0ZWdyYTIwLWNvbGlicmkuZHRzaSBhbmQgdGVncmEyMC1pcmlzLTUxMi5kdHMg
+PT4gdGVncmEyMC1pcmlzLmR0cw0KPiA+IHRvDQo+ID4gYXZvaWQgY29uZnVzaW9uIGFuZCBhZGQg
+c3VjaCBhbiBlbXB0eSBub2RlLg0KPiANCj4gSGF2aW5nIG1lbW9yeSBub2RlIGlzIHJlcXVpcmVt
+ZW50IG9mIERldmljZVRyZWUgc3BlY2lmaWNhdGlvbiAoYXQNCj4gbGVhc3Qgb25lIGNwdSBhbmQg
+bWVtb3J5IG5vZGUpLiBPZiBjb3Vyc2UgaWYgYm9vdGxvYWRlciBmaWxscyBpdCwNCj4gdGhlbg0K
+PiB3ZSBjb3VsZCBhc3N1bWUgdGhhdCBzcGVjaWZpY2F0aW9uIGlzIHNhdGlzZmllZC4uLiBidXQg
+d2hhdCBpZiBzb21lDQo+IGJvb3Rsb2FkZXIgc2tpcHMgaXQ/IFRoaXMgY3JlYXRlcyBxdWl0ZSBz
+cGVjaWZpYyBkZXBlbmRlbmN5IGJldHdlZW4NCj4ga2VybmVsJ3MgRFRTIGFuZCBib290bG9hZGVy
+Lg0KDQpZZXMsIG5vIHN5c3RlbSBib290cyB3aXRob3V0IGFueSBib290IGxvYWRlciBlLmcuIGlu
+aXRpYWxpc2luZyB0aGUNCm1lbW9yeSBhbmQgd2hhdCBub3QuIFNvIHRoZXJlIGFyZSBvYnZpb3Vz
+bHkgcXVpdGUgc3BlY2lmaWMNCmRlcGVuZGVuY2llcy4NCg0KPiBPbmUgc2FmZSBzb2x1dGlvbiB3
+b3VsZCBiZSB0byBzcGVjaWZ5IDI1NiBNQiBtZW1vcnkgbm9kZSBmb3IgYm90aA0KPiBib2FyZHMg
+YW5kIGFzc3VtZSB0aGF0IGJvb3Rsb2FkZXIgd2lsbCBidW1wIGl0IHRvIDUxMiBNQiBmb3Igc3Bl
+Y2lmaWMNCj4gbW9kdWxlLg0KDQpMaWtlIEkgbWVudGlvbmVkIHRoaXMgYWN0dWFsbHkgdXNlZCB0
+byBiZSBob3cgaXQgd2FzIGRvbmUgaG93ZXZlcg0KbGF0ZWx5IGl0IGhhcyBiZWVuIGFncmVlZCB0
+aGF0IGFueSBib290IGxvYWRlciBhbnl3YXkgbmVlZHMgdG8gZG8gdGhlDQpkZXZpY2UgdHJlZSBk
+YW5jZSAoZS5nLiBldmVuIGp1c3QgbG9hZGluZyBhbmQgcGFzc2luZyBpdCkuDQoNCj4gPiA+IFNp
+Z25lZC1vZmYtYnk6IEtyenlzenRvZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4NCj4gPiA+
+IA0KPiA+ID4gLS0tDQo+ID4gPiANCj4gPiA+IENoYW5nZXMgc2luY2UgdjE6DQo+ID4gPiAxLiBG
+aXggbWVtb3J5IHNpemUgaW4gdGVncmEyMC1jb2xpYnJpLTI1Ni5kdHNpICh3YXMgd29ya2luZyBm
+aW5lDQo+ID4gPiBiZWNhdXNlDQo+ID4gPiAgICBteSBib290bG9hZGVyIHVzZXMgbWVtPSBhcmd1
+bWVudCkuDQo+ID4gDQo+ID4gV2hhdCBib290IGxvYWRlciBhcmUgeW91IHVzaW5nPyBZb3UgZXZl
+biBjYW4gb21pdCBtZW09IGlmIHlvdXIgYm9vdA0KPiA+IGxvYWRlciBmaWxscyB0aGUgbWVtb3J5
+IG5vZGUgcHJvcGVybHkuDQo+IA0KPiBJIHVzZSB0aGUgb25lIHByb3ZpZGVkIGJ5IHZlbmRvciAt
+IFRvcmFkZXguIEJ5IGRlZmF1bHQgaXQgcGFzc2VzIGJvdGgNCj4gbWVtPSBhbmQgZmV3IG90aGVy
+IG1lbS1saWtlIGFyZ3VtZW50cyAoZm9yIEZCIGFuZCB2aWRlbyBwcm9jZXNzb3IpIHRvDQo+IGNv
+bW1hbmQgbGluZS4gSSBiZWxpZXZlIGl0IGRvZXMgbm90IGFkanVzdCB0aGUgRFRCIGl0c2VsZiBi
+ZWNhdXNlDQo+IFRvcmFkZXggcHJlcGFyZWQgdGhpcyBib290bG9hZGVyIGZvci4uLiAzLjEga2Vy
+bmVsIHdpdGhvdXQgRFRCLiA3DQo+IHllYXJzIG9sZCBrZXJuZWwuIDopDQoNClJlbWVtYmVyIG91
+ciByZWd1bGFyIEJTUCBpcyBzdGlsbCBiYXNlZCBvbiBOVklESUEncyBkb3duc3RyZWFtIExpbnV4
+DQpmb3IgVGVncmEgYWthIEw0VCBSMTYuNSBiYXNlZCBvbiBMaW51eCBrZXJuZWwgMy4xLjEwIHdo
+aWNoIGRvZXMgbm90DQpldmVuIHVzZSBhbnkgZGV2aWNlIHRyZWUgeWV0Lg0KDQo+IEJlc3QgcmVn
+YXJkcywNCj4gS3J6eXN6dG9mDQoNCkNoZWVycw0KDQpNYXJjZWw=
