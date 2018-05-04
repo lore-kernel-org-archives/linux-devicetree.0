@@ -1,124 +1,115 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v7 3/9] PCI: endpoint: functions/pci-epf-test: Add second
- entry
-Date: Fri, 4 May 2018 12:18:51 +0100
-Message-ID: <20180504111843.GA5930@e107981-ln.cambridge.arm.com>
-References: <20180426165605.GA6370@e107981-ln.cambridge.arm.com>
- <b65caf2e-b002-f591-6215-ff2241b2dfb8@ti.com>
- <20180501115417.GD19391@e107981-ln.cambridge.arm.com>
- <5d625d04-38fe-7d5a-67fc-5ea92039474c@ti.com>
- <20180501142607.GA21911@e107981-ln.cambridge.arm.com>
- <bfaebf3c-2175-f4b2-89c5-336ff9396ed0@synopsys.com>
- <20180502165144.GB4871@e107981-ln.cambridge.arm.com>
- <cf2772d5-26c0-b0e3-1e5b-ace91c1ea105@ti.com>
- <20180503141636.GA23270@e107981-ln.cambridge.arm.com>
- <aeb80d31-c79e-80a9-5e67-9bf1f277f39a@ti.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
+Date: Fri, 4 May 2018 13:42:13 +0200
+Message-ID: <20180504114213.3xlzqxe74n55tk5s@earth.universe>
+References: <20180424163458.11947-1-johan@kernel.org>
+ <20180424163458.11947-5-johan@kernel.org>
+ <CAL_Jsq+mCp=geT8t_j+0fuTxAB7C9RYn6pESRpLc2GH273fM1Q@mail.gmail.com>
+ <20180426091018.GU4615@localhost>
+ <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
+ <20180502081637.GE2285@localhost>
+ <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com>
+ <20180503205037.7be552c1@aktux>
+ <44A0BC7C-67C7-4116-849F-90FF7CF2B1F0@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fr6vxnvn3axa4j5k"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <aeb80d31-c79e-80a9-5e67-9bf1f277f39a@ti.com>
+In-Reply-To: <44A0BC7C-67C7-4116-849F-90FF7CF2B1F0@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Andreas Kemnade <andreas@kemnade.info>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 04, 2018 at 11:28:58AM +0530, Kishon Vijay Abraham I wrote:
-> Hi Lorenzo,
-> 
-> On Thursday 03 May 2018 07:46 PM, Lorenzo Pieralisi wrote:
-> > On Thu, May 03, 2018 at 12:03:15PM +0530, Kishon Vijay Abraham I wrote:
-> > 
-> > [...]
-> > 
-> >>>> Since the linkup notifier and BAR index (where auxiliary registers are
-> >>>> located) may be configurable and is something platform dependent,
-> >>>> perhaps the configuration of this variables should be done by module
-> >>>> parameter and not by configfs, leaving this configuration
-> >>>> responsibility in charge of each platform.
-> >>>
-> >>> They are platform dependent because they depend on the EP controller.
-> >>> That's why I said that those are EP controller parameters. I do not
-> >>> think they are module parameters either - they should be part of HW
-> >>> description in firmware.
-> >>
-> >> The problem is because pci-epf-test cannot be described in HW. pci-epf-test is
-> >> also not automatically bound to the EP controller but is bound by the user like
-> >> below
-> >> ln -s functions/pci_epf_test/func1 controllers/51000000.pcie_ep/
-> >>
-> >> So given that user anyways has to bind the epf device to the controller, based
-> >> on the platform the user can use a different configfs entry like below
-> >> ln -s functions/pci_epf_test_dw/func1 controllers/51000000.pcie_ep/ or
-> >> ln -s functions/pci_epf_test_k2g/func1 controllers/21800000.pcie-ep/
-> >>
-> >> If the epf can be described in dt, then something like below can be done
-> >> pcie1_ep: pcie_ep@51000000 {
-> >> 	compatible = "ti,dra7-pcie-ep";
-> >> 	interrupts = <0 232 0x4>;
-> >> 	num-lanes = <1>;
-> >> 	num-ib-windows = <4>;
-> >> 	num-ob-windows = <16>;
-> >> 	phys = <&pcie1_phy>;
-> >> 	phy-names = "pcie-phy0";
-> >> 	pci_epf_test: pci_epf_test@0 {
-> >> 		name = "pci_epf_test_dw";
-> >> 		<other properties>;
-> >> 	}
-> >> };
-> >>
-> >> With this pci-dra7xx.c driver should create pci_epf_device using
-> >> pci_epf_create("pci_epf_test_dw");
-> >>
-> >> Then the driver_data corresponding to "pci_epf_test_dw" will select linkup
-> >> notifier or BAR index etc.
-> > 
-> > Those two properties are properties of the EP controller (it is not 100%
-> > clear to me how the test BAR register is defined), is this correct ?
-> 
-> Right, these properties are specific to a platform. In some of the platforms
-> like K2G (BAR0 is reserved i.e it is used to map PCIe app registers and cannot
-> be used by pci_epf_test. In such cases we should use a BAR other than BAR0).
 
-I do not think those properties are pci_epf_test specific, that's the
-whole point I am making. Those are EPC controller features.
+--fr6vxnvn3axa4j5k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > If yes, given that those properties are not useful before an EPF is
-> > bound to an EPC, can't they be retrieved at bind time from the EPC
-> > controller data (that we can add through DT bindings) ?
-> 
-> hmm..
-> 
-> We can have quirk in pci_epc, something like below
-> 
-> struct pci_epc {
-> 	.
-> 	.
-> 	unsigned int quirks;
-> 	.
-> 	.
-> };
-> 
-> #define EPC_QUIRKS_NO_LINKUP_NOTIFIER	BIT(0)
-> #define EPC_QUIRKS_BAR0_RESERVED	BIT(1)
-> #define EPC_QUIRKS_BAR1_RESERVED	BIT(2)
-> #define EPC_QUIRKS_BAR2_RESERVED	BIT(3)
-> #define EPC_QUIRKS_BAR3_RESERVED	BIT(4)
-> #define EPC_QUIRKS_BAR4_RESERVED	BIT(5)
-> #define EPC_QUIRKS_BAR5_RESERVED	BIT(6)
-> 
-> The controller driver can set the appropriate quirks
-> epc->quirks |= EPC_QUIRKS_NO_LINKUP_NOTIFIER | EPC_QUIRKS_BAR0_RESERVED;
-> 
-> Then pci-epf-test driver can checks the quirks to see the supported EPC features.
-> 
-> Does something like above looks okay to you?
+[+cc Tony]
 
-Well, it is better than the driver_data approach, I would not call them
-quirks but features and for the BARs you should define a mask it does
-not make sense to enumerate them. It is probably a good idea to leave
-room for additional "features" so please choose the bits placement
-wisely.
+Hi,
 
-Thanks,
-Lorenzo
+On Fri, May 04, 2018 at 07:16:00AM +0200, H. Nikolaus Schaller wrote:
+> > Am 03.05.2018 um 20:50 schrieb Andreas Kemnade <andreas@kemnade.info>:
+> > On Thu, 3 May 2018 11:35:21 +0200
+> > H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> >=20
+> >> I have realized that the w2sg0004 is an exception (although a Sirf chi=
+p)
+> >> that it does not provide a WAKEUP signal. And another significant
+> >> difference is that we have to keep the serdev UART enabled even if the=
+re
+> >> is no user-space client. Otherwise we are not able to detect unexpected
+> >> activity. So we unfortunately can't move serdev open/close into the .o=
+pen
+> >> and .close ops but need to open it in probe.
+> >>=20
+> > how much power does it use to keep the uart enabled? Or should it
+> > better be reprogrammed as gpio?
+>=20
+> I think it does not need much more (if at all) than a gpio controller on
+> the OMAP3 chip (I think the clocks are active anyways for use by the other
+> UARTs).
+>
+> We had proposed years ago to reprogram the UART RX pin by pinmux-states
+> into an interrupt gpio but that was rejected because it was not general
+> enough and ugly in the device tree (an rx-gpios record where the rx-line
+> is already connected to the UART-rx).
+>=20
+> Then we did experiment with tapping the UART driver and finally the
+> serdev API was developed to solve this problem. Hence we use it now this
+> way.
+
+Having any UART active on OMAP results in the SoC not entering
+idle/off wasting energy. For normal (i.e. not connected to a peripheral)
+TTYs you can enable runtime autosuspend and configure the RX pin as
+wakeup interrupt. This will wakeup the TTY on incoming traffic, but you
+will lose the first few characters (since the serial device needs some
+time to wakeup). This is for example supported by the N900 uart3
+(debug uart):
+
+$ grep -A4 "&uart3 {" arch/arm/boot/dts/omap3-n900.dts=20
+&uart3 {
+	interrupts-extended =3D <&intc 74 &omap3_pmx_core OMAP3_UART3_RX>;
+	pinctrl-names =3D "default";
+	pinctrl-0 =3D <&uart3_pins>;
+};
+
+To get it working, you also need to enable autosuspend for the tty
+in userspace (echo 3000 /sys/class/tty/ttyS2/device/power/autosuspend_delay=
+_ms).
+This is not enabled by default due to the character loss characteristic
+during wakeup.
+
+Having said all of this, serdev does not yet support runtime PM (at
+all). Tony is currently looking into it. Fortunately serdev allows
+us to enable runtime PM by default (once implemented), since we know
+the remote side and can (hopefully) avoid losing characters (i.e.
+with sideband wakeup gpios).
+
+-- Sebastian
+
+--fr6vxnvn3axa4j5k
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlrsRw8ACgkQ2O7X88g7
++pqGdg//elQzv9AQMj6Bh2X1IMnncHM5o8P+66xvaTfO3HsdYPKnMchK3CaThTSg
+g3pGreNXkWqbj9YFiAWeyIAXs2WNjQ3dxtz3r3LuivdCboZ4BI7vnYj/mtZ8h5rP
+PYS7XarMTgAB0ieZgVfxUTP7+jJTAKdOOwICpO4A+pYXJAKjeH3HORAILhYyRs9L
+7Ve0fEeNcdIp0XEQ9ZNH1698KhOmaBiPC5qekcNLA0jb1mg0czpcM7vXVfldqrNX
+9pb9XDZNW2VmDUqISbf5oO2p25p34d02ffv0ccdXt0foGzb6Km/a6SufjcTtIcy7
+Labmo1XNSQWuPxIM6o1FZFrfEE404k3zDdWN0H3QwNZ8EylWZBOVT0eZtmmr99Js
+AD7l1KzD+k1sVL1yJyAm4qr3armQkymDVraLi3QxU0iouhHNr++OP1eNx7Esbc4W
+zF07J0cuGdc2zQR+NkWKNc2K4UF0F6MjGd9n2jiHrMpyKy4ZgVkFH+qkGJcIG0tD
+QQpmoLrNlu9+nDjy8doACRd1+LZd2F5GqDfT7IGawNOo/qqvIjwKB7CbNhKymrow
+Yu/MgfOU0d+53VCU4uVruvdSKL1+c7fsf32fgfc1eqG1W01LQQmxTdIbH7vZlFab
++ECGmzbz6wV5ePpRh5Uk5UepE7dLbgyDYB/RXxTtwQ/tQGytgEg=
+=bbq8
+-----END PGP SIGNATURE-----
+
+--fr6vxnvn3axa4j5k--
