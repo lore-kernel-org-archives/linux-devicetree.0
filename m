@@ -1,39 +1,37 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v9 01/12] ARM: Allow this header to be included by
- assembly files
-Date: Sat, 5 May 2018 11:49:23 +0300
-Message-ID: <60ba513e-d865-d4c0-7956-7d6302020165@cogentembedded.com>
-References: <20180504190545.5114-1-mylene.josserand@bootlin.com>
- <20180504190545.5114-2-mylene.josserand@bootlin.com>
+From: INAGAKI Hiroshi <musashino.open@gmail.com>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Relicense Buffalo files to the GPL
+ 2.0+ / MIT
+Date: Sat, 5 May 2018 17:53:31 +0900
+Message-ID: <15d68a4b-62d7-34b4-270e-ff42a71dc2dc@gmail.com>
+References: <20180504095445.30918-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180504190545.5114-2-mylene.josserand@bootlin.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180504095445.30918-1-zajec5@gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Myl=c3=a8ne_Josserand?= <mylene.josserand@bootlin.com>, linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com
-Cc: f.fainelli@gmail.com, opendmb@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Felix Fietkau <nbd@nbd.name>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 5/4/2018 10:05 PM, Mylène Josserand wrote:
-
-> From: Doug Berger <opendmb@gmail.com>
-> 
-> The constants defined in this file are equally useful in assembly and C
-> source files. The arm64 architecture version of this file allows
-> inclusion in both assembly and C source files, so this this commit adds
-
-    One "this" is enough. :-)
-
-> that capability to the arm architecture version so that the constants
-> don't need to be defined in multiple places.
-> 
-> Signed-off-by: Doug Berger <opendmb@gmail.com>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
-[...]
-
-MBR, Sergei
+QWNrZWQtYnk6IElOQUdBS0kgSGlyb3NoaSA8bXVzYXNoaW5vLm9wZW5AZ21haWwuY29tPgoKCk9u
+IDIwMTgvMDUvMDQgMTg6NTQsIFJhZmHFgiBNacWCZWNraSB3cm90ZToKPiBGcm9tOiBSYWZhxYIg
+TWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4KPiBUaGlzIG1hdGNoZXMgbGljZW5zaW5nIHVz
+ZWQgYnkgb3RoZXIgQkNNNTMwMVggZmlsZXMgYW5kIGlzIHByZWZlcnJlZCBhczoKPiAxKSBHUEwg
+Mi4wKyBtYWtlcyBpcyBjbGVhcmx5IGNvbXBhdGlibGUgd2l0aCBMaW51eCBrZXJuZWwKPiAyKSBN
+SVQgaXMgYWxzbyBwZXJtaXNzaXZlIGJ1dCBwcmVmZXJyZWQgb3ZlciBJU0MKPgo+IFRoZXNlIGZp
+bGVzIHdlcmUgY3JlYXRlZCBhbmQgZXZlciB0b3VjaGVkIGJ5IGEgZ3JvdXAgb2YgZm91ciBwZW9w
+bGUKPiBvbmx5OiBGZWxpeCwgSU5BR0FLSSwgSGF1a2UgYW5kIG1lLgo+Cj4gU2lnbmVkLW9mZi1i
+eTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
+aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
