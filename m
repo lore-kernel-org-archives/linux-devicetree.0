@@ -1,64 +1,47 @@
-From: Hauke Mehrtens <hauke@hauke-m.de>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Relicense Asus RT-AC87U file to the
- GPL 2.0+ / MIT
-Date: Sat, 5 May 2018 12:15:46 +0200
-Message-ID: <945090c5-2b7c-b1c5-7402-660dd3270e2d@hauke-m.de>
-References: <20180504100324.31847-1-zajec5@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 5/7] gpio: pca953x: fix address calculation for pcal6524
+Date: Sat, 5 May 2018 13:29:55 +0300
+Message-ID: <CAHp75Vfqcezf-WKuAamVJLDLdNStJCb0X7hB1+45TctM-iDUUQ@mail.gmail.com>
+References: <cover.1524933096.git.hns@goldelico.com> <aaac818909d71523726094b1dfacc03e756874e9.1524933096.git.hns@goldelico.com>
+ <CAHp75VfD4gYesEw2n4JMycmr=qcAtqSkAAjwCViJZRYC6kVUVg@mail.gmail.com>
+ <4F016FCD-04B0-4EE1-A9F4-5A182DD437EF@goldelico.com> <14D3FF3C-0F70-4F72-B381-318B61B944CA@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180504100324.31847-1-zajec5@gmail.com>
-Content-Language: de-LU
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <14D3FF3C-0F70-4F72-B381-318B61B944CA@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, kernel@pyra-handheld.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUvMDQvMjAxOCAxMjowMyBQTSwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+IEZyb206IFJh
-ZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiAKPiBUaGlzIG1hdGNoZXMgbGljZW5z
-aW5nIHVzZWQgYnkgb3RoZXIgQkNNNTMwMVggZmlsZXMgYW5kIGlzIHByZWZlcnJlZCBhczoKPiAx
-KSBHUEwgMi4wKyBtYWtlcyBpcyBjbGVhcmx5IGNvbXBhdGlibGUgd2l0aCBMaW51eCBrZXJuZWwK
-PiAyKSBNSVQgaXMgYWxzbyBwZXJtaXNzaXZlIGJ1dCBwcmVmZXJyZWQgb3ZlciBJU0MKPiAKPiBU
-aGlzIGZpbGUgd2VyZSBjcmVhdGVkIGFuZCBldmVyIHRvdWNoZWQgYnkgYSBncm91cCBvZiB0aHJl
-ZSBwZW9wbGUgb25seToKPiDDgWx2YXJvLCBIYXVrZSBhbmQgbWUuCj4gCj4gU2lnbmVkLW9mZi1i
-eTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKQWNrZWQtYnk6IEhhdWtlIE1l
-aHJ0ZW5zIDxoYXVrZUBoYXVrZS1tLmRlPgoKPiAtLS0KPiDDgWx2YXJvLCBIYXVrZTogSSBuZWVk
-IGFwcHJvdmUgZm9yIHRoaXMgY2hhbmdlIGZyb20gZWFjaCBvZiB5b3UuIElmIHlvdQo+IGFyZSBP
-SyB3aXRoIGl0LCBjYW4geW91IHJlcGx5IHdpdGggYW4gQWNrZWQtYnksIHBsZWFzZT8KPiAtLS0K
-PiAgYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOS1hc3VzLXJ0LWFjODd1LmR0cyB8IDEzICstLS0t
-LS0tLS0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxMiBkZWxldGlvbnMo
-LSkKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOS1hc3VzLXJ0LWFj
-ODd1LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDktYXN1cy1ydC1hYzg3dS5kdHMKPiBp
-bmRleCBkZjQ3M2NjNDE1NzIuLjIyMjcxODE4ZjkwMSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9i
-b290L2R0cy9iY200NzA5LWFzdXMtcnQtYWM4N3UuZHRzCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvYmNtNDcwOS1hc3VzLXJ0LWFjODd1LmR0cwo+IEBAIC0xLDIwICsxLDkgQEAKPiArLy8gU1BE
-WC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb3ItbGF0ZXIgT1IgTUlUCj4gIC8qCj4gICAq
-IEJyb2FkY29tIEJDTTQ3MFggLyBCQ001MzAxWCBBUk0gcGxhdGZvcm0gY29kZS4KPiAgICogRFRT
-IGZvciBBc3VzIFJULUFDODdVCj4gICAqCj4gICAqIENvcHlyaWdodCAoQykgMjAxNSBSYWZhxYIg
-TWnFgmVja2kgPHphamVjNUBnbWFpbC5jb20+Cj4gLSAqCj4gLSAqIFBlcm1pc3Npb24gdG8gdXNl
-LCBjb3B5LCBtb2RpZnksIGFuZC9vciBkaXN0cmlidXRlIHRoaXMgc29mdHdhcmUgZm9yIGFueQo+
-IC0gKiBwdXJwb3NlIHdpdGggb3Igd2l0aG91dCBmZWUgaXMgaGVyZWJ5IGdyYW50ZWQsIHByb3Zp
-ZGVkIHRoYXQgdGhlIGFib3ZlCj4gLSAqIGNvcHlyaWdodCBub3RpY2UgYW5kIHRoaXMgcGVybWlz
-c2lvbiBub3RpY2UgYXBwZWFyIGluIGFsbCBjb3BpZXMuCj4gLSAqCj4gLSAqIFRIRSBTT0ZUV0FS
-RSBJUyBQUk9WSURFRCAiQVMgSVMiIEFORCBUSEUgQVVUSE9SIERJU0NMQUlNUyBBTEwgV0FSUkFO
-VElFUyBXSVRICj4gLSAqIFJFR0FSRCBUTyBUSElTIFNPRlRXQVJFIElOQ0xVRElORyBBTEwgSU1Q
-TElFRCBXQVJSQU5USUVTIE9GIE1FUkNIQU5UQUJJTElUWQo+IC0gKiBBTkQgRklUTkVTUy4gSU4g
-Tk8gRVZFTlQgU0hBTEwgVEhFIEFVVEhPUiBCRSBMSUFCTEUgRk9SIEFOWSBTUEVDSUFMLCBESVJF
-Q1QsCj4gLSAqIElORElSRUNULCBPUiBDT05TRVFVRU5USUFMIERBTUFHRVMgT1IgQU5ZIERBTUFH
-RVMgV0hBVFNPRVZFUiBSRVNVTFRJTkcgRlJPTQo+IC0gKiBMT1NTIE9GIFVTRSwgREFUQSBPUiBQ
-Uk9GSVRTLCBXSEVUSEVSIElOIEFOIEFDVElPTiBPRiBDT05UUkFDVCwgTkVHTElHRU5DRQo+IC0g
-KiBPUiBPVEhFUiBUT1JUSU9VUyBBQ1RJT04sIEFSSVNJTkcgT1VUIE9GIE9SIElOIENPTk5FQ1RJ
-T04gV0lUSCBUSEUgVVNFIE9SCj4gLSAqIFBFUkZPUk1BTkNFIE9GIFRISVMgU09GVFdBUkUuCj4g
-ICAqLwo+ICAKPiAgL2R0cy12MS87Cj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Fri, May 4, 2018 at 10:30 AM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>> Am 02.05.2018 um 14:35 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
+
+>>> Suggested-by ?
+>>
+>> Detecting that we need to adjust the registers generally was from me,
+>> but your suggestion of an improved formula should of course be mentioned
+>> and appreciated!
+>>
+>> I'll think about a good formulation for v6.
+>
+> Would the following commit message be ok for you?
+
+Yes, it's perfect.
+
+>
+> ...
+>
+> Therefore, we have to add code to the 24 bit accessor functions
+> that adjusts the register number for these exended registers.
+>
+> The formula finally used was developed and proposed by
+> Andy Shevchenko <andy.shevchenko@gmail.com>.
+>
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
