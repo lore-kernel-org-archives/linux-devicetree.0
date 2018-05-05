@@ -1,141 +1,36 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v2 1/2] dt-bindings: add MediaTek XS-PHY binding
-Date: Sat, 5 May 2018 10:15:05 +0800
-Message-ID: <1525486506-19301-2-git-send-email-chunfeng.yun@mediatek.com>
-References: <1525486506-19301-1-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [RESEND PATCH 1/5] usb: mtu3: avoid TX data length truncated in SS/SSP mode
+Date: Sat, 5 May 2018 10:21:16 +0800
+Message-ID: <3b0c7ca576fee8220d63c9914483b70b0fbc8783.1525486663.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525486506-19301-1-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ryder Lee <ryder.lee@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add a DT binding documentation of XS-PHY for MediaTek SoCs
-with USB3.1 GEN2 controller
+The variable of 'count' is declared as u8, this will cause an issue
+due to value truncated when works in SS or SSP mode and data length
+is greater than 255, so change it as u32.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- .../devicetree/bindings/phy/phy-mtk-xsphy.txt      |  110 ++++++++++++++++++++
- 1 file changed, 110 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-xsphy.txt
+ drivers/usb/mtu3/mtu3_gadget_ep0.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-xsphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-xsphy.txt
-new file mode 100644
-index 0000000..9a95fab
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-mtk-xsphy.txt
-@@ -0,0 +1,110 @@
-+MediaTek XS-PHY binding
-+--------------------------
-+
-+The XS-PHY controller supports physical layer functionality for USB3.1
-+GEN2 controller on MediaTek SoCs.
-+
-+Required properties (controller (parent) node):
-+ - compatible	: should be "mediatek,<soc-model>-xsphy", "mediatek,xsphy",
-+ 		  soc-model is the name of SoC, such as mt2712 etc;
-+		  when using "mediatek,xsphy" compatible string, you need SoC specific
-+		  ones in addition, one of:
-+		  - "mediatek,mt3611-xsphy"
-+
-+ - #address-cells, #size-cells : should use the same values as the root node
-+ - ranges: must be present
-+
-+Optional properties (controller (parent) node):
-+ - reg		: offset and length of register shared by multiple U3 ports,
-+		  exclude port's private register, if only U2 ports provided,
-+		  shouldn't use the property.
-+ - mediatek,src-ref-clk-mhz	: u32, frequency of reference clock for slew rate
-+		  calibrate
-+ - mediatek,src-coef	: u32, coefficient for slew rate calibrate, depends on
-+		  SoC process
-+
-+Required nodes	: a sub-node is required for each port the controller
-+		  provides. Address range information including the usual
-+		  'reg' property is used inside these nodes to describe
-+		  the controller's topology.
-+
-+Required properties (port (child) node):
-+- reg		: address and length of the register set for the port.
-+- clocks	: a list of phandle + clock-specifier pairs, one for each
-+		  entry in clock-names
-+- clock-names	: must contain
-+		  "ref": 48M reference clock for HighSpeed analog phy; and 26M
-+			reference clock for SuperSpeedPlus analog phy, sometimes is
-+			24M, 25M or 27M, depended on platform.
-+- #phy-cells	: should be 1
-+		  cell after port phandle is phy type from:
-+			- PHY_TYPE_USB2
-+			- PHY_TYPE_USB3
-+
-+The following optional properties are only for debug or HQA test
-+Optional properties (PHY_TYPE_USB2 port (child) node):
-+- mediatek,eye-src	: u32, the value of slew rate calibrate
-+- mediatek,eye-vrt	: u32, the selection of VRT reference voltage
-+- mediatek,eye-term	: u32, the selection of HS_TX TERM reference voltage
-+- mediatek,efuse-intr	: u32, the selection of Internal Resistor
-+
-+Optional properties (PHY_TYPE_USB3 port (child) node):
-+- mediatek,efuse-intr	: u32, the selection of Internal Resistor
-+- mediatek,efuse-tx-imp	: u32, the selection of TX Impedance
-+- mediatek,efuse-rx-imp	: u32, the selection of RX Impedance
-+
-+Banks layout of xsphy
-+-------------------------------------------------------------
-+port        offset    bank
-+u2 port0    0x0000    MISC
-+            0x0100    FMREG
-+            0x0300    U2PHY_COM
-+u2 port1    0x1000    MISC
-+            0x1100    FMREG
-+            0x1300    U2PHY_COM
-+u2 port2    0x2000    MISC
-+            ...
-+u31 common  0x3000    DIG_GLB
-+            0x3100    PHYA_GLB
-+u31 port0   0x3400    DIG_LN_TOP
-+            0x3500    DIG_LN_TX0
-+            0x3600    DIG_LN_RX0
-+            0x3700    DIG_LN_DAIF
-+            0x3800    PHYA_LN
-+u31 port1   0x3a00    DIG_LN_TOP
-+            0x3b00    DIG_LN_TX0
-+            0x3c00    DIG_LN_RX0
-+            0x3d00    DIG_LN_DAIF
-+            0x3e00    PHYA_LN
-+            ...
-+
-+DIG_GLB & PHYA_GLB are shared by U31 ports.
-+
-+Example:
-+
-+u3phy: usb-phy@11c40000 {
-+	compatible = "mediatek,mt3611-xsphy", "mediatek,xsphy";
-+	reg = <0 0x11c43000 0 0x0200>;
-+	mediatek,src-ref-clk-mhz = <26>;
-+	mediatek,src-coef = <17>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	ranges;
-+
-+	u2port0: usb-phy@11c40000 {
-+		reg = <0 0x11c40000 0 0x0400>;
-+		clocks = <&clk48m>;
-+		clock-names = "ref";
-+		mediatek,eye-src = <4>;
-+		#phy-cells = <1>;
-+	};
-+
-+	u3port0: usb-phy@11c43000 {
-+		reg = <0 0x11c43400 0 0x0500>;
-+		clocks = <&clk26m>;
-+		clock-names = "ref";
-+		mediatek,efuse-intr = <28>;
-+		#phy-cells = <1>;
-+	};
-+};
-+
+diff --git a/drivers/usb/mtu3/mtu3_gadget_ep0.c b/drivers/usb/mtu3/mtu3_gadget_ep0.c
+index ebdcf7a..d67b540 100644
+--- a/drivers/usb/mtu3/mtu3_gadget_ep0.c
++++ b/drivers/usb/mtu3/mtu3_gadget_ep0.c
+@@ -546,7 +546,7 @@ static void ep0_tx_state(struct mtu3 *mtu)
+ 	struct usb_request *req;
+ 	u32 csr;
+ 	u8 *src;
+-	u8 count;
++	u32 count;
+ 	u32 maxp;
+ 
+ 	dev_dbg(mtu->dev, "%s\n", __func__);
 -- 
-1.7.9.5
+1.9.1
