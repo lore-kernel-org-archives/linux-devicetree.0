@@ -1,61 +1,32 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [RESEND PATCH 4/5] usb: mtu3: fix operation failure when test TEST_J/K
-Date: Sat, 5 May 2018 10:21:19 +0800
-Message-ID: <4c41c6c4230ac6f19643007540e786bc55a38a89.1525486663.git.chunfeng.yun@mediatek.com>
-References: <3b0c7ca576fee8220d63c9914483b70b0fbc8783.1525486663.git.chunfeng.yun@mediatek.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH V3 1/2] clk: imx6sx: add missing lvds2 clock to the clock tree
+Date: Fri, 04 May 2018 19:57:15 -0700
+Message-ID: <152548903523.138124.11755955848234075756@swboyd.mtv.corp.google.com>
+References: <1524209891-14146-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3b0c7ca576fee8220d63c9914483b70b0fbc8783.1525486663.git.chunfeng.yun@mediatek.com>
+In-Reply-To: <1524209891-14146-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Anson Huang <Anson.Huang@nxp.com>, fabio.estevam@nxp.com, kernel@pengutronix.de, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, shawnguo@kernel.org, shengjiu.wang@nxp.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There is an error dialog popped up in PC when test TEST_J/K
-by EHSETT tool, due to not waiting for the completion of
-control transfer. Here fix it by entering test mode after
-Status Stage finish.
+Quoting Anson Huang (2018-04-20 00:38:10)
+> i.MX6SX has lvds2 (analog clock2), an I/O clock like lvds1.
+> And this lvds2, along with lvds1, can be used to provide
+> external clock source to the internal pll, such as pll4_audio
+> and pll5_video.
+> =
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- drivers/usb/mtu3/mtu3_gadget_ep0.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> This patch mainly adds the lvds2 to the clock tree and fix its
+> relationship with pll accordingly.
+> =
 
-diff --git a/drivers/usb/mtu3/mtu3_gadget_ep0.c b/drivers/usb/mtu3/mtu3_gadget_ep0.c
-index d67b540..0d2b1cf 100644
---- a/drivers/usb/mtu3/mtu3_gadget_ep0.c
-+++ b/drivers/usb/mtu3/mtu3_gadget_ep0.c
-@@ -7,6 +7,7 @@
-  * Author:  Chunfeng.Yun <chunfeng.yun@mediatek.com>
-  */
- 
-+#include <linux/iopoll.h>
- #include <linux/usb/composite.h>
- 
- #include "mtu3.h"
-@@ -263,6 +264,7 @@ static int handle_test_mode(struct mtu3 *mtu, struct usb_ctrlrequest *setup)
- {
- 	void __iomem *mbase = mtu->mac_base;
- 	int handled = 1;
-+	u32 value;
- 
- 	switch (le16_to_cpu(setup->wIndex) >> 8) {
- 	case TEST_J:
-@@ -292,6 +294,14 @@ static int handle_test_mode(struct mtu3 *mtu, struct usb_ctrlrequest *setup)
- 	if (mtu->test_mode_nr == TEST_PACKET_MODE)
- 		ep0_load_test_packet(mtu);
- 
-+	/* send status before entering test mode. */
-+	value = mtu3_readl(mbase, U3D_EP0CSR) & EP0_W1C_BITS;
-+	mtu3_writel(mbase, U3D_EP0CSR, value | EP0_SETUPPKTRDY | EP0_DATAEND);
-+
-+	/* wait for ACK status sent by host */
-+	readl_poll_timeout(mbase + U3D_EP0CSR, value,
-+			!(value & EP0_DATAEND), 100, 5000);
-+
- 	mtu3_writel(mbase, U3D_USB2_TEST_MODE, mtu->test_mode_nr);
- 
- 	mtu->ep0_state = MU3D_EP0_STATE_SETUP;
--- 
-1.9.1
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+
+Applied to clk-next
