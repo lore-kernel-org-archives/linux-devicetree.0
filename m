@@ -1,80 +1,76 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v6 3/6] kernel/reboot.c: export pm_power_off_prepare
-Date: Sat, 5 May 2018 09:01:47 +0200
-Message-ID: <20180505070147.epsrglnypm72jr5u@pengutronix.de>
-References: <20180305102524.5905-1-o.rempel@pengutronix.de>
- <20180305102524.5905-4-o.rempel@pengutronix.de>
- <20180504185052.bjhfkvpgrblc7tfc@pengutronix.de>
- <20180504134956.36dc72a253d03e94a517a867@linux-foundation.org>
+From: =?utf-8?B?WGlhb3RvbmcgTHUgKOWNouWwj+mAmik=?=
+        <xiaotong.lu@unisoc.com>
+Subject: RE: [PATCH 2/2] leds: Add Spreadtrum SC27xx breathing light
+ controller driver
+Date: Sat, 5 May 2018 06:04:28 +0000
+Message-ID: <f873ec8f7bcc4f598681f2e0d8776531@SHMBX03.spreadtrum.com>
+References: <1bf5bc3e007d237477d740f47ed63f05aa71b348.1525427961.git.baolin.wang@linaro.org>
+ <201805051300.jy5SNVta%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="d2dufsg5h4kwcp6r"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180504134956.36dc72a253d03e94a517a867@linux-foundation.org>
+In-Reply-To: <201805051300.jy5SNVta%fengguang.wu@intel.com>
+Content-Language: zh-CN
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>
+To: kbuild test robot <lkp@intel.com>
+Cc: "kbuild-all@01.org" <kbuild-all@01.org>, "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>, "pavel@ucw.cz" <pavel@ucw.cz>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "baolin.wang@linaro.org" <baolin.wang@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---d2dufsg5h4kwcp6r
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Moving Rafael from Cc to To.
-
-Hi Rafael,
-
-can you please help here?
-I need your ACK or NACK for this patch.
-
-On Fri, May 04, 2018 at 01:49:56PM -0700, Andrew Morton wrote:
-> On Fri, 4 May 2018 20:50:52 +0200 Oleksij Rempel <o.rempel@pengutronix.de=
-> wrote:
->=20
-> > Hallo Andrew,
-> > I need your ACK or NACK for this patch.
-> >=20
-> > This function is used to configure external PMIC to interpret
-> > signal which will be triggered by pm_power_off as power off.
-> > Since same signal can be used for stand by, I linked PMIC configuration
-> > with pm_power_off_prepare to avoid possible conflicts.
-> >=20
-> > ...
-> >
-> > > --- a/kernel/reboot.c
-> > > +++ b/kernel/reboot.c
-> > > @@ -49,6 +49,7 @@ int reboot_force;
-> > >   */
-> > > =20
-> > >  void (*pm_power_off_prepare)(void);
-> > > +EXPORT_SYMBOL(pm_power_off_prepare);
-> > > =20
->=20
-> OK by me, but it's more of a Rafael thing.
->=20
-
---=20
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---d2dufsg5h4kwcp6r
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAlrtVtgACgkQdQOiSHVI
-77QObwf/cJgr0HweQIkx/33FIMM9bFE7R39Zd40PxhnmAGb2n5Jwgu1QH5AEUyRc
-f1rIROhBmAh6hgX08WEb4axdAHGfERMpiOpak999lBC9VLCN5INt3jpLwfHPi/VM
-21fzxr4jvEd9i4S9l670JWKtUPxUCAw7BBmn273tJQv1qdkNsJblqyW7XOe5qO+l
-DIsp9ScgU2VOpt2vfk+tMEkdoNa4sCejrN6jt2umP0uQoJY+UQD7PAA5xAemfssW
-aYF3aqpRlPKzn++AMgtiBDr8r3kerCx8+Klgjzt9PedqGxY2azr+ieZ1tkmYEDfg
-4k+0ebsVUca+n9M8c7tmpQVqbnedQA==
-=cKqR
------END PGP SIGNATURE-----
-
---d2dufsg5h4kwcp6r--
+SGkgbGtwLA0KVGhhbmtzIGZvciB5b3VyIGFkdmlzZS4gSSB3aWxsIGltcHJvdmUgaW4gbmV4dCB2
+ZXJzaW9uLg0KDQpCZXN0IFJlZ2FyZHMsDQrljaLlsI/pgJogWGlhb3RvbmcgTHUNCkNQU0QgRGVw
+dC4NClVuaWdyb3VwIFNwcmVhZHRydW0gJlJEQSBUZWNobm9sb2dpZXMgQ28uLEx0ZC4NClRlbDrC
+oCA4Ni0yMS0yMDM2MDYwMCBFeHQuIDI0OTYNCkZheDogODYtMjEtMjAzNjA3MDANCkUtbWFpbDog
+eGlhb3RvbmcubHVAdW5pc29jLmNvbQ0KSHR0cDovL3d3dy5zcHJlYWR0cnVtLmNvbSANCg0KDQot
+LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbToga2J1aWxkIHRlc3Qgcm9ib3QgW21haWx0
+bzpsa3BAaW50ZWwuY29tXSANClNlbnQ6IFNhdHVyZGF5LCBNYXkgMDUsIDIwMTggMToyNyBQTQ0K
+VG86IEJhb2xpbiBXYW5nDQpDYzoga2J1aWxkLWFsbEAwMS5vcmc7IGphY2VrLmFuYXN6ZXdza2lA
+Z21haWwuY29tOyBwYXZlbEB1Y3cuY3o7IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5k
+QGFybS5jb207IFhpYW90b25nIEx1ICjljaLlsI/pgJopOyBiYW9saW4ud2FuZ0BsaW5hcm8ub3Jn
+OyBicm9vbmllQGtlcm5lbC5vcmc7IGxpbnV4LWxlZHNAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KU3ViamVj
+dDogUmU6IFtQQVRDSCAyLzJdIGxlZHM6IEFkZCBTcHJlYWR0cnVtIFNDMjd4eCBicmVhdGhpbmcg
+bGlnaHQgY29udHJvbGxlciBkcml2ZXINCg0KSGkgWGlhb3RvbmcsDQoNClRoYW5rIHlvdSBmb3Ig
+dGhlIHBhdGNoISBQZXJoYXBzIHNvbWV0aGluZyB0byBpbXByb3ZlOg0KDQpbYXV0byBidWlsZCB0
+ZXN0IFdBUk5JTkcgb24gcm9iaC9mb3ItbmV4dF0gW2Fsc28gYnVpbGQgdGVzdCBXQVJOSU5HIG9u
+IHY0LjE3LXJjMyBuZXh0LTIwMTgwNTA0XSBbY2Fubm90IGFwcGx5IHRvIGouYW5hc3pld3NraS1s
+ZWRzL2Zvci1uZXh0XSBbaWYgeW91ciBwYXRjaCBpcyBhcHBsaWVkIHRvIHRoZSB3cm9uZyBnaXQg
+dHJlZSwgcGxlYXNlIGRyb3AgdXMgYSBub3RlIHRvIGhlbHAgaW1wcm92ZSB0aGUgc3lzdGVtXQ0K
+DQp1cmw6ICAgIGh0dHBzOi8vZ2l0aHViLmNvbS8wZGF5LWNpL2xpbnV4L2NvbW1pdHMvQmFvbGlu
+LVdhbmcvZHQtYmluZGluZ3MtbGVkcy1BZGQtU0MyN3h4LWJyZWF0aGluZy1saWdodC1jb250cm9s
+bGVyLWRvY3VtZW50YXRpb24vMjAxODA1MDQtMjAwODMwDQpiYXNlOiAgIGh0dHBzOi8vZ2l0Lmtl
+cm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3JvYmgvbGludXguZ2l0IGZvci1uZXh0
+DQoNCnNtYXRjaCB3YXJuaW5nczoNCmRyaXZlcnMvbGVkcy9sZWRzLXNjMjd4eC1ibHRjLmM6MzM3
+IHNjMjd4eF9sZWRfcHJvYmUoKSB3YXJuOiB1bnNpZ25lZCAncmVnJyBpcyBuZXZlciBsZXNzIHRo
+YW4gemVyby4NCg0KdmltICsvcmVnICszMzcgZHJpdmVycy9sZWRzL2xlZHMtc2MyN3h4LWJsdGMu
+Yw0KDQogICAyOTkJDQogICAzMDAJc3RhdGljIGludCBzYzI3eHhfbGVkX3Byb2JlKHN0cnVjdCBw
+bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogICAzMDEJew0KICAgMzAyCQlzdHJ1Y3QgZGV2aWNlICpk
+ZXYgPSAmcGRldi0+ZGV2Ow0KICAgMzAzCQlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gZGV2LT5v
+Zl9ub2RlLCAqY2hpbGQ7DQogICAzMDQJCXN0cnVjdCBzYzI3eHhfbGVkX3ByaXYgKnByaXY7DQog
+ICAzMDUJCXUzMiBiYXNlLCBjb3VudCwgcmVnOw0KICAgMzA2CQlpbnQgZXJyOw0KICAgMzA3CQ0K
+ICAgMzA4CQljb3VudCA9IG9mX2dldF9jaGlsZF9jb3VudChucCk7DQogICAzMDkJCWlmICghY291
+bnQgfHwgY291bnQgPiBTQzI3WFhfTEVEU19NQVgpDQogICAzMTAJCQlyZXR1cm4gLUVJTlZBTDsN
+CiAgIDMxMQkNCiAgIDMxMgkJZXJyID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobnAsICJyZWciLCAm
+YmFzZSk7DQogICAzMTMJCWlmIChlcnIpIHsNCiAgIDMxNAkJCWRldl9lcnIoZGV2LCAiZmFpbCB0
+byBnZXQgcmVnIG9mIHByb3BlcnR5XG4iKTsNCiAgIDMxNQkJCXJldHVybiBlcnI7DQogICAzMTYJ
+CX0NCiAgIDMxNwkNCiAgIDMxOAkJcHJpdiA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqcHJp
+diksIEdGUF9LRVJORUwpOw0KICAgMzE5CQlpZiAoIXByaXYpDQogICAzMjAJCQlyZXR1cm4gLUVO
+T01FTTsNCiAgIDMyMQkNCiAgIDMyMgkJcHJpdi0+YmFzZSA9IGJhc2U7DQogICAzMjMJCXByaXYt
+PnJlZ21hcCA9IGRldl9nZXRfcmVnbWFwKGRldi0+cGFyZW50LCBOVUxMKTsNCiAgIDMyNAkJaWYg
+KElTX0VSUihwcml2LT5yZWdtYXApKSB7DQogICAzMjUJCQllcnIgPSBQVFJfRVJSKHByaXYtPnJl
+Z21hcCk7DQogICAzMjYJCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0byBnZXQgcmVnbWFwOiAlZFxu
+IiwgZXJyKTsNCiAgIDMyNwkJCXJldHVybiBlcnI7DQogICAzMjgJCX0NCiAgIDMyOQkNCiAgIDMz
+MAkJZm9yX2VhY2hfY2hpbGRfb2Zfbm9kZShucCwgY2hpbGQpIHsNCiAgIDMzMQkJCWVyciA9IG9m
+X3Byb3BlcnR5X3JlYWRfdTMyKGNoaWxkLCAicmVnIiwgJnJlZyk7DQogICAzMzIJCQlpZiAoZXJy
+KSB7DQogICAzMzMJCQkJb2Zfbm9kZV9wdXQoY2hpbGQpOw0KICAgMzM0CQkJCXJldHVybiBlcnI7
+DQogICAzMzUJCQl9DQogICAzMzYJDQogPiAzMzcJCQlpZiAocmVnIDwgMCB8fCByZWcgPj0gU0My
+N1hYX0xFRFNfTUFYDQogICAzMzgJCQkgICAgfHwgcHJpdi0+bGVkc1tyZWddLmFjdGl2ZSkgew0K
+ICAgMzM5CQkJCW9mX25vZGVfcHV0KGNoaWxkKTsNCiAgIDM0MAkJCQlyZXR1cm4gLUVJTlZBTDsN
+CiAgIDM0MQkJCX0NCiAgIDM0MgkNCiAgIDM0MwkJCXByaXYtPmxlZHNbcmVnXS5hY3RpdmUgPSB0
+cnVlOw0KICAgMzQ0CQkJcHJpdi0+bGVkc1tyZWddLmxkZXYubmFtZSA9DQogICAzNDUJCQkJb2Zf
+Z2V0X3Byb3BlcnR5KGNoaWxkLCAibGFiZWwiLCBOVUxMKSA/IDogY2hpbGQtPm5hbWU7DQogICAz
+NDYJCX0NCiAgIDM0NwkNCiAgIDM0OAkJcmV0dXJuIHNjMjd4eF9sZWRfcmVnaXN0ZXIoZGV2LCBw
+cml2KTsNCiAgIDM0OQl9DQogICAzNTAJDQoNCi0tLQ0KMC1EQVkga2VybmVsIHRlc3QgaW5mcmFz
+dHJ1Y3R1cmUgICAgICAgICAgICAgICAgT3BlbiBTb3VyY2UgVGVjaG5vbG9neSBDZW50ZXINCmh0
+dHBzOi8vbGlzdHMuMDEub3JnL3BpcGVybWFpbC9rYnVpbGQtYWxsICAgICAgICAgICAgICAgICAg
+IEludGVsIENvcnBvcmF0aW9uDQo=
