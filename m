@@ -1,14 +1,14 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: cs42xx8: Make the node name generic" to
+Subject: Applied "ASoC: wm8960: Make the node name generic" to
 	the asoc tree
-Date: Sat,  5 May 2018 02:43:42 +0100 (BST)
-Message-ID: <20180505014342.6C1DD44007A@finisterre.ee.mobilebroadband>
-References: <1525461123-16686-4-git-send-email-festevam@gmail.com>
+Date: Sat,  5 May 2018 02:43:55 +0100 (BST)
+Message-ID: <20180505014355.3F91644007A@finisterre.ee.mobilebroadband>
+References: <1525461123-16686-3-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1525461123-16686-4-git-send-email-festevam@gmail.com>
+In-Reply-To: <1525461123-16686-3-git-send-email-festevam@gmail.com>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -24,7 +24,7 @@ List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: cs42xx8: Make the node name generic
+   ASoC: wm8960: Make the node name generic
 
 has been applied to the asoc tree at
 
@@ -49,10 +49,10 @@ to this mail.
 Thanks,
 Mark
 
->From 6a8f1a282348a47bcbb6c5418a86d271d1fb0ad2 Mon Sep 17 00:00:00 2001
+>From 1dbec1f0f086bbcf811f34cf56af6ff749d10b59 Mon Sep 17 00:00:00 2001
 From: Fabio Estevam <fabio.estevam@nxp.com>
-Date: Fri, 4 May 2018 16:12:03 -0300
-Subject: [PATCH] ASoC: cs42xx8: Make the node name generic
+Date: Fri, 4 May 2018 16:12:02 -0300
+Subject: [PATCH] ASoC: wm8960: Make the node name generic
 
 According to Devicetree Specification v0.2 document:
 
@@ -64,21 +64,21 @@ Do as suggested in the binding example.
 Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/cs42xx8.txt | 2 +-
+ Documentation/devicetree/bindings/sound/wm8960.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/cs42xx8.txt b/Documentation/devicetree/bindings/sound/cs42xx8.txt
-index f631fbca6284..8619a156d038 100644
---- a/Documentation/devicetree/bindings/sound/cs42xx8.txt
-+++ b/Documentation/devicetree/bindings/sound/cs42xx8.txt
-@@ -16,7 +16,7 @@ Required properties:
+diff --git a/Documentation/devicetree/bindings/sound/wm8960.txt b/Documentation/devicetree/bindings/sound/wm8960.txt
+index 2deb8a3da9c5..6d29ac3750ee 100644
+--- a/Documentation/devicetree/bindings/sound/wm8960.txt
++++ b/Documentation/devicetree/bindings/sound/wm8960.txt
+@@ -23,7 +23,7 @@ Optional properties:
  
  Example:
  
--codec: cs42888@48 {
-+cs42888: codec@48 {
- 	compatible = "cirrus,cs42888";
- 	reg = <0x48>;
- 	clocks = <&codec_mclk 0>;
+-codec: wm8960@1a {
++wm8960: codec@1a {
+ 	compatible = "wlf,wm8960";
+ 	reg = <0x1a>;
+ 
 -- 
 2.17.0
