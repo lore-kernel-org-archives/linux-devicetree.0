@@ -1,56 +1,61 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [RESEND PATCH 5/5] usb: mtu3: make USB_MTU3_DUAL_ROLE depend on
- EXTCON but not USB_MTU3
-Date: Sat, 5 May 2018 10:21:20 +0800
-Message-ID: <9d0d09a973c6a7d76088f6cf557bb052d02dd440.1525486663.git.chunfeng.yun@mediatek.com>
+Subject: [RESEND PATCH 4/5] usb: mtu3: fix operation failure when test TEST_J/K
+Date: Sat, 5 May 2018 10:21:19 +0800
+Message-ID: <4c41c6c4230ac6f19643007540e786bc55a38a89.1525486663.git.chunfeng.yun@mediatek.com>
 References: <3b0c7ca576fee8220d63c9914483b70b0fbc8783.1525486663.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <3b0c7ca576fee8220d63c9914483b70b0fbc8783.1525486663.git.chunfeng.yun@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In fact the driver depends on EXTCON only when it's configed as
-USB_MTU3_DUAL_ROLE, so make USB_MTU3_DUAL_ROLE depend on EXTCON but
-not USB_MTU3.
+There is an error dialog popped up in PC when test TEST_J/K
+by EHSETT tool, due to not waiting for the completion of
+control transfer. Here fix it by entering test mode after
+Status Stage finish.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/mtu3/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/mtu3/mtu3_gadget_ep0.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/usb/mtu3/Kconfig b/drivers/usb/mtu3/Kconfig
-index 25cd619..8daf277 100644
---- a/drivers/usb/mtu3/Kconfig
-+++ b/drivers/usb/mtu3/Kconfig
-@@ -2,7 +2,7 @@
+diff --git a/drivers/usb/mtu3/mtu3_gadget_ep0.c b/drivers/usb/mtu3/mtu3_gadget_ep0.c
+index d67b540..0d2b1cf 100644
+--- a/drivers/usb/mtu3/mtu3_gadget_ep0.c
++++ b/drivers/usb/mtu3/mtu3_gadget_ep0.c
+@@ -7,6 +7,7 @@
+  * Author:  Chunfeng.Yun <chunfeng.yun@mediatek.com>
+  */
  
- config USB_MTU3
- 	tristate "MediaTek USB3 Dual Role controller"
--	depends on EXTCON && (USB || USB_GADGET) && HAS_DMA
-+	depends on (USB || USB_GADGET) && HAS_DMA
- 	depends on ARCH_MEDIATEK || COMPILE_TEST
- 	select USB_XHCI_MTK if USB_SUPPORT && USB_XHCI_HCD
- 	help
-@@ -40,6 +40,7 @@ config USB_MTU3_GADGET
- config USB_MTU3_DUAL_ROLE
- 	bool "Dual Role mode"
- 	depends on ((USB=y || USB=USB_MTU3) && (USB_GADGET=y || USB_GADGET=USB_MTU3))
-+	depends on (EXTCON=y || EXTCON=USB_MTU3)
- 	help
- 	  This is the default mode of working of MTU3 controller where
- 	  both host and gadget features are enabled.
++#include <linux/iopoll.h>
+ #include <linux/usb/composite.h>
+ 
+ #include "mtu3.h"
+@@ -263,6 +264,7 @@ static int handle_test_mode(struct mtu3 *mtu, struct usb_ctrlrequest *setup)
+ {
+ 	void __iomem *mbase = mtu->mac_base;
+ 	int handled = 1;
++	u32 value;
+ 
+ 	switch (le16_to_cpu(setup->wIndex) >> 8) {
+ 	case TEST_J:
+@@ -292,6 +294,14 @@ static int handle_test_mode(struct mtu3 *mtu, struct usb_ctrlrequest *setup)
+ 	if (mtu->test_mode_nr == TEST_PACKET_MODE)
+ 		ep0_load_test_packet(mtu);
+ 
++	/* send status before entering test mode. */
++	value = mtu3_readl(mbase, U3D_EP0CSR) & EP0_W1C_BITS;
++	mtu3_writel(mbase, U3D_EP0CSR, value | EP0_SETUPPKTRDY | EP0_DATAEND);
++
++	/* wait for ACK status sent by host */
++	readl_poll_timeout(mbase + U3D_EP0CSR, value,
++			!(value & EP0_DATAEND), 100, 5000);
++
+ 	mtu3_writel(mbase, U3D_USB2_TEST_MODE, mtu->test_mode_nr);
+ 
+ 	mtu->ep0_state = MU3D_EP0_STATE_SETUP;
 -- 
 1.9.1
