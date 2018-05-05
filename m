@@ -1,50 +1,39 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V6 2/7] ARM: dts: imx6sx-sabreauto: add max7322 IO expander
- support
-Date: Sat,  5 May 2018 16:29:18 +0800
-Message-ID: <1525508963-7986-2-git-send-email-Anson.Huang@nxp.com>
-References: <1525508963-7986-1-git-send-email-Anson.Huang@nxp.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v9 01/12] ARM: Allow this header to be included by
+ assembly files
+Date: Sat, 5 May 2018 11:49:23 +0300
+Message-ID: <60ba513e-d865-d4c0-7956-7d6302020165@cogentembedded.com>
+References: <20180504190545.5114-1-mylene.josserand@bootlin.com>
+ <20180504190545.5114-2-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1525508963-7986-1-git-send-email-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, haibo.chen@freescale.com, fugang.duan@nxp.com, aisheng.dong@nxp.com, yibin.gong@nxp.com
-Cc: devicetree@vger.kernel.org, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180504190545.5114-2-mylene.josserand@bootlin.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Myl=c3=a8ne_Josserand?= <mylene.josserand@bootlin.com>, linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com
+Cc: f.fainelli@gmail.com, opendmb@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add MAX7322 IO expander support.
+Hello!
 
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6sx-sabreauto.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+On 5/4/2018 10:05 PM, Mylène Josserand wrote:
 
-diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-index 1d8cf0f..ae253af 100644
---- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
-+++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-@@ -254,4 +254,11 @@
- 			};
- 		};
- 	};
-+
-+	max7322: gpio@68 {
-+		compatible = "maxim,max7322";
-+		reg = <0x68>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
- };
--- 
-2.7.4
+> From: Doug Berger <opendmb@gmail.com>
+> 
+> The constants defined in this file are equally useful in assembly and C
+> source files. The arm64 architecture version of this file allows
+> inclusion in both assembly and C source files, so this this commit adds
+
+    One "this" is enough. :-)
+
+> that capability to the arm architecture version so that the constants
+> don't need to be defined in multiple places.
+> 
+> Signed-off-by: Doug Berger <opendmb@gmail.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+[...]
+
+MBR, Sergei
