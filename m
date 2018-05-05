@@ -1,46 +1,99 @@
-From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v2 0/2] drm/panel: Add Raydium RM67191 driver
-Date: Thu,  3 May 2018 17:26:00 +0300
-Message-ID: <1525357562-20810-1-git-send-email-robert.chiras@nxp.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 0/7] gnss: add new GNSS subsystem
+Date: Sat, 5 May 2018 23:11:29 +0200
+Message-ID: <20180505211129.GA762@amd>
+References: <20180424163458.11947-1-johan@kernel.org>
+ <20180504132741.brn5jqv5ufjhp7ky@earth.universe>
+ <20180504200315.GA22519@amd>
+ <20180505172847.qqpqkrfspak53sc6@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: thierry.reding@gmail.com, airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, linux-imx@nxp.com, mirela.rabulea@nxp.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180505172847.qqpqkrfspak53sc6@earth.universe>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaC1zZXQgYWRkIHN1cHBvcnQgZm9yIFJheWRpdW0gUk02NzE5MSBGSEQgKDEwODB4
-MTkyMCkKT0xFRCBwYW5lbCBkcml2ZXIuCgpOZXcgaW4gdjI6CiAgLSBTcGxpdHRlZCB0aGUgZGV2
-aWNlIHRyZWUgYmluZGluZ3MgaW50byBhIHNlcGFyYXRlIHBhdGNoCiAgLSBTcXVhc2hlZCB0aGUg
-Zml4IGZyb20gTWlyZWxhIGludG8gdGhlIGluaXRpYWwgcGF0Y2ggb2YgdGhlIGRyaXZlcgogIC0g
-U29ydGVkIE1ha2VmaWxlIGFuZCBLY29uZmlnIGFscGhhYmV0aWNhbGx5CiAgLSBPcHRpbWl6ZWQg
-dGhlIGNvZGUgYXJvdW5kIG1hbnVmYWN0dXJlcl9jbWRfc2V0IGFjY29yZGluZyB0byBzdWdnZXN0
-aW9ucwogIC0gVXNlIHRoZSBuZXcgYmFja2xpZ2h0X2VuYWJsZS9kaXNhYmxlKCkgZnVuY3Rpb25z
-CiAgLSBGaXhlZCB0aGUgY2FsbHMgdG8gcGFuZWxfdW5wcmVwYXJlL3BhbmVsX2Rpc2FibGUgYXMg
-c3VnZ2VzdGVkCiAgLSBNb3ZlZCB0aGUgRFNJIGluaXQgc2VxdWVuY2UgZnJvbSBwYW5lbF9wcmVw
-YXJlIGludG8gcGFuZWxfZW5hYmxlLiBOb3csCiAgICB3ZSBvbmx5IGhhbmRsZSByZXNldCBpbnRv
-IHByZXBhcmUvdW5wcmVwYXJlLCB3aGlsZSBkb2luZyB0aGUgRFNJCiAgICBpbml0L3VuaW5pdCBp
-biBlbmFibGUvZGlzYWJsZSBmdW5jdGlvbnMuCgpSb2JlcnQgQ2hpcmFzICgyKToKICBkcm0vcGFu
-ZWw6IEFkZCBSYXlkaXVtIFJNNjcxOTEgRFNJIFBhbmVsCiAgZHQtYmluZGluZ3M6IEFkZCBSYXlk
-aXVtIFJNNjcxOTEgcGFuZWwgYmluZGluZ3MKCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9y
-YXlkaXVtLHJtNjcxOTEudHh0ICAgICB8ICAzOCArKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tj
-b25maWcgICAgICAgICAgICAgICAgICAgICAgfCAgIDkgKwogZHJpdmVycy9ncHUvZHJtL3BhbmVs
-L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9ncHUvZHJtL3Bh
-bmVsL3BhbmVsLXJheWRpdW0tcm02NzE5MS5jICAgICAgfCA2NTQgKysrKysrKysrKysrKysrKysr
-KysrCiA0IGZpbGVzIGNoYW5nZWQsIDcwMiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2
-NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmF5ZGl1
-bSxybTY3MTkxLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9w
-YW5lbC1yYXlkaXVtLXJtNjcxOTEuYwoKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--2fHTh5uZTiUOsy+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> > > (*) I have those in mind:
+> > >=20
+> > > Nokia N900: The phone has GPS integrated into the modem and uses
+> > > ISI encapsulated data. The protocol has been reverse engineered
+> > > and it should be possible to write a kernel driver for handling
+> > > the GPS packets and dumping the raw data to /dev/gnss0. I don't
+> > > think this is particularly useful without a non-raw interface,
+> > > though. It would still require a custom userspace implementation.
+> >=20
+> > Actually... in this case it would be nice to do the protocol
+> > processing in kernel and just present reasonable interface to
+> > userland... or maybe NMEA.
+>=20
+> Converting a binary protocol to NMEA, which needs to be string
+> parsed is not very nice. I think first step would be to write a
+> simple driver, which exposes the binary location protocol without
+> ISI header. Then in a second step we can think about a reasonable
+> interface, that should be supported by all GNSS devices.
+
+Well, most of the userspace expects NMEA. So yes, its an ugly
+protocol, but .. it is not really a high-performance device.
+
+I'd suggest modeling this over input subsystem. We could use similar
+tag/value/sync protocol (evdev). In similar way /dev/input/mice was
+used for running legacy apps during transition, we'd have /dev/...//nmea.
+
+> > > Droid 4: GPS is similar to N900, but different protocol and QMI
+> > > encapsulated. This one also has known protocol with userspace
+> > > implementation. I did not yet have a detailed look, if its possible
+> > > to (un)wrap this in the kernel.
+> >=20
+> > So, this is actually NMEA over QMI. I do have patches libqmi that
+> > provides NMEA on stdout.
+>=20
+> Ok. So raw data is NMEA for this one. Should be reasonably easy to
+> write a driver exposing this via /dev/gnss device.
+
+If we have qmi implementation somewhere in kernel. Do we?
+
+> > But there seems to be another possibile interface (yes, that modem is
+> > crazy, and you can talk to it over few different interfaces), and
+> > that's NMEA over GSM07.10. That one should be feasible to decode in
+> > kernel and just provide NMEA to userland.
+>=20
+> I think both should be feasible. I suggest to wait a bit more
+> until you and Tony figured out some more details. You've got
+> the libqmi patch as workaround for now and we want a stable API
+> later.
+
+I do have the gsm07.10 one now, too. That one is certainly simple
+enough (and should eat less power -- no need to keep USB running).
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--2fHTh5uZTiUOsy+g
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlruHgEACgkQMOfwapXb+vJk1gCeMYvDY4pls3Zdi4tZvHvF5ox4
+bIIAmwR23q1w4QTtHnXRq8T4qcEh3J9M
+=z0kI
+-----END PGP SIGNATURE-----
+
+--2fHTh5uZTiUOsy+g--
