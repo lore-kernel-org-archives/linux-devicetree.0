@@ -1,99 +1,389 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 0/7] gnss: add new GNSS subsystem
-Date: Sat, 5 May 2018 23:11:29 +0200
-Message-ID: <20180505211129.GA762@amd>
-References: <20180424163458.11947-1-johan@kernel.org>
- <20180504132741.brn5jqv5ufjhp7ky@earth.universe>
- <20180504200315.GA22519@amd>
- <20180505172847.qqpqkrfspak53sc6@earth.universe>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+From: Andrea Greco <andrea.greco.gapmilano@gmail.com>
+Subject: [RFC PATCH 1/3] arcnet: com20020: Add memory map of com20020
+Date: Sat,  5 May 2018 23:34:45 +0200
+Message-ID: <20180505213448.8180-1-andrea.greco.gapmilano@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180505172847.qqpqkrfspak53sc6@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: m.grzeschik@pengutronix.de
+Cc: Andrea Greco <a.greco@4sigma.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Andrea Greco <a.greco@4sigma.it>
 
---2fHTh5uZTiUOsy+g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add support for com20022I/com20020, memory mapped chip version.
+Support bus: Intel 80xx and Motorola 68xx.
+Bus size: Only 8 bit bus size is supported.
+Added related device tree bindings
 
-Hi!
+Signed-off-by: Andrea Greco <a.greco@4sigma.it>
+---
+ .../devicetree/bindings/net/smsc-com20020.txt      |  23 +++
+ drivers/net/arcnet/Kconfig                         |  12 +-
+ drivers/net/arcnet/Makefile                        |   1 +
+ drivers/net/arcnet/arcdevice.h                     |  27 ++-
+ drivers/net/arcnet/com20020-membus.c               | 191 +++++++++++++++++++++
+ drivers/net/arcnet/com20020.c                      |   9 +-
+ 6 files changed, 253 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/smsc-com20020.txt
+ create mode 100644 drivers/net/arcnet/com20020-membus.c
 
-> > > (*) I have those in mind:
-> > >=20
-> > > Nokia N900: The phone has GPS integrated into the modem and uses
-> > > ISI encapsulated data. The protocol has been reverse engineered
-> > > and it should be possible to write a kernel driver for handling
-> > > the GPS packets and dumping the raw data to /dev/gnss0. I don't
-> > > think this is particularly useful without a non-raw interface,
-> > > though. It would still require a custom userspace implementation.
-> >=20
-> > Actually... in this case it would be nice to do the protocol
-> > processing in kernel and just present reasonable interface to
-> > userland... or maybe NMEA.
->=20
-> Converting a binary protocol to NMEA, which needs to be string
-> parsed is not very nice. I think first step would be to write a
-> simple driver, which exposes the binary location protocol without
-> ISI header. Then in a second step we can think about a reasonable
-> interface, that should be supported by all GNSS devices.
-
-Well, most of the userspace expects NMEA. So yes, its an ugly
-protocol, but .. it is not really a high-performance device.
-
-I'd suggest modeling this over input subsystem. We could use similar
-tag/value/sync protocol (evdev). In similar way /dev/input/mice was
-used for running legacy apps during transition, we'd have /dev/...//nmea.
-
-> > > Droid 4: GPS is similar to N900, but different protocol and QMI
-> > > encapsulated. This one also has known protocol with userspace
-> > > implementation. I did not yet have a detailed look, if its possible
-> > > to (un)wrap this in the kernel.
-> >=20
-> > So, this is actually NMEA over QMI. I do have patches libqmi that
-> > provides NMEA on stdout.
->=20
-> Ok. So raw data is NMEA for this one. Should be reasonably easy to
-> write a driver exposing this via /dev/gnss device.
-
-If we have qmi implementation somewhere in kernel. Do we?
-
-> > But there seems to be another possibile interface (yes, that modem is
-> > crazy, and you can talk to it over few different interfaces), and
-> > that's NMEA over GSM07.10. That one should be feasible to decode in
-> > kernel and just provide NMEA to userland.
->=20
-> I think both should be feasible. I suggest to wait a bit more
-> until you and Tony figured out some more details. You've got
-> the libqmi patch as workaround for now and we want a stable API
-> later.
-
-I do have the gsm07.10 one now, too. That one is certainly simple
-enough (and should eat less power -- no need to keep USB running).
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---2fHTh5uZTiUOsy+g
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlruHgEACgkQMOfwapXb+vJk1gCeMYvDY4pls3Zdi4tZvHvF5ox4
-bIIAmwR23q1w4QTtHnXRq8T4qcEh3J9M
-=z0kI
------END PGP SIGNATURE-----
-
---2fHTh5uZTiUOsy+g--
+diff --git a/Documentation/devicetree/bindings/net/smsc-com20020.txt b/Documentation/devicetree/bindings/net/smsc-com20020.txt
+new file mode 100644
+index 000000000000..39c5b19c55af
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/smsc-com20020.txt
+@@ -0,0 +1,23 @@
++SMSC com20020, com20022I
++
++timeout: Arcnet timeout, checkout datashet
++clockp: Clock Prescaler, checkout datashet
++clockm: Clock multiplier, checkout datasheet
++
++phy-reset-gpios: Chip reset ppin
++phy-irq-gpios: Chip irq pin
++
++com20020_A@0 {
++    compatible = "smsc,com20020";
++
++	timeout	= <0x3>;
++	backplane = <0x0>;
++
++	clockp = <0x0>;
++	clockm = <0x3>;
++
++	phy-reset-gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
++	phy-irq-gpios = <&gpio2 10 GPIO_ACTIVE_LOW>;
++
++	status = "okay";
++};
+diff --git a/drivers/net/arcnet/Kconfig b/drivers/net/arcnet/Kconfig
+index 39bd16f3f86d..d39faf45be1e 100644
+--- a/drivers/net/arcnet/Kconfig
++++ b/drivers/net/arcnet/Kconfig
+@@ -3,7 +3,7 @@
+ #
+ 
+ menuconfig ARCNET
+-	depends on NETDEVICES && (ISA || PCI || PCMCIA)
++	depends on NETDEVICES
+ 	tristate "ARCnet support"
+ 	---help---
+ 	  If you have a network card of this type, say Y and check out the
+@@ -129,5 +129,15 @@ config ARCNET_COM20020_CS
+ 
+ 	  To compile this driver as a module, choose M here: the module will be
+ 	  called com20020_cs.  If unsure, say N.
++config ARCNET_COM20020_MEMORY_BUS
++	bool "Support for COM20020 on external memory"
++	depends on ARCNET_COM20020 && !(ARCNET_COM20020_PCI || ARCNET_COM20020_ISA || ARCNET_COM20020_CS)
++	help
++	  Say Y here if on your custom board mount com20020 or friends.
++
++	  Com20022I support arcnet bus 10Mbitps.
++	  This driver support only 8bit, and DMA is not supported is attached on your board at external interface bus.
++	  Supported bus Intel80xx / Motorola 68xx.
++	  This driver not work with other com20020 module: PCI or PCMCIA compiled as [M].
+ 
+ endif # ARCNET
+diff --git a/drivers/net/arcnet/Makefile b/drivers/net/arcnet/Makefile
+index 53525e8ea130..19425c1e06f4 100644
+--- a/drivers/net/arcnet/Makefile
++++ b/drivers/net/arcnet/Makefile
+@@ -14,3 +14,4 @@ obj-$(CONFIG_ARCNET_COM20020) += com20020.o
+ obj-$(CONFIG_ARCNET_COM20020_ISA) += com20020-isa.o
+ obj-$(CONFIG_ARCNET_COM20020_PCI) += com20020-pci.o
+ obj-$(CONFIG_ARCNET_COM20020_CS) += com20020_cs.o
++obj-$(CONFIG_ARCNET_COM20020_MEMORY_BUS) += com20020-membus.o
+diff --git a/drivers/net/arcnet/arcdevice.h b/drivers/net/arcnet/arcdevice.h
+index d09b2b46ab63..16c608269cca 100644
+--- a/drivers/net/arcnet/arcdevice.h
++++ b/drivers/net/arcnet/arcdevice.h
+@@ -201,7 +201,7 @@ struct ArcProto {
+ 	void (*rx)(struct net_device *dev, int bufnum,
+ 		   struct archdr *pkthdr, int length);
+ 	int (*build_header)(struct sk_buff *skb, struct net_device *dev,
+-			    unsigned short ethproto, uint8_t daddr);
++				unsigned short ethproto, uint8_t daddr);
+ 
+ 	/* these functions return '1' if the skb can now be freed */
+ 	int (*prepare_tx)(struct net_device *dev, struct archdr *pkt,
+@@ -326,9 +326,9 @@ struct arcnet_local {
+ 		void (*recontrigger) (struct net_device * dev, int enable);
+ 
+ 		void (*copy_to_card)(struct net_device *dev, int bufnum,
+-				     int offset, void *buf, int count);
++					 int offset, void *buf, int count);
+ 		void (*copy_from_card)(struct net_device *dev, int bufnum,
+-				       int offset, void *buf, int count);
++					   int offset, void *buf, int count);
+ 	} hw;
+ 
+ 	void __iomem *mem_start;	/* pointer to ioremap'ed MMIO */
+@@ -360,7 +360,7 @@ struct net_device *alloc_arcdev(const char *name);
+ int arcnet_open(struct net_device *dev);
+ int arcnet_close(struct net_device *dev);
+ netdev_tx_t arcnet_send_packet(struct sk_buff *skb,
+-			       struct net_device *dev);
++				   struct net_device *dev);
+ void arcnet_timeout(struct net_device *dev);
+ 
+ /* I/O equivalents */
+@@ -371,7 +371,23 @@ void arcnet_timeout(struct net_device *dev);
+ #define BUS_ALIGN  1
+ #endif
+ 
+-/* addr and offset allow register like names to define the actual IO  address.
++#ifdef CONFIG_ARCNET_COM20020_MEMORY_BUS
++#define arcnet_inb(addr, offset)					\
++	ioread8((void __iomem *)(addr) + BUS_ALIGN * (offset))
++
++#define arcnet_outb(value, addr, offset)				\
++	iowrite8(value, (void __iomem *)(addr) + BUS_ALIGN * (offset))
++
++#define arcnet_insb(addr, offset, buffer, count)			\
++	ioread8_rep((void __iomem *)					\
++	(addr) + BUS_ALIGN * (offset), buffer, count)
++
++#define arcnet_outsb(addr, offset, buffer, count)			\
++	iowrite8_rep((void __iomem *)					\
++	(addr) + BUS_ALIGN * (offset), buffer, count)
++#else
++/**
++ * addr and offset allow register like names to define the actual IO  address.
+  * A configuration option multiplies the offset for alignment.
+  */
+ #define arcnet_inb(addr, offset)					\
+@@ -388,6 +404,7 @@ void arcnet_timeout(struct net_device *dev);
+ 	readb((addr) + (offset))
+ #define arcnet_writeb(value, addr, offset)				\
+ 	writeb(value, (addr) + (offset))
++#endif
+ 
+ #endif				/* __KERNEL__ */
+ #endif				/* _LINUX_ARCDEVICE_H */
+diff --git a/drivers/net/arcnet/com20020-membus.c b/drivers/net/arcnet/com20020-membus.c
+new file mode 100644
+index 000000000000..6e4a2f3a84f7
+--- /dev/null
++++ b/drivers/net/arcnet/com20020-membus.c
+@@ -0,0 +1,191 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/* Linux ARCnet driver for com 20020.
++ *
++ * This datasheet:
++ * http://ww1.microchip.com/downloads/en/DeviceDoc/200223vrevc.pdf
++ * http://ww1.microchip.com/downloads/en/DeviceDoc/20020.pdf
++ *
++ * This driver support:
++ * - com20020,
++ * - com20022
++ * - com20022I-3v3
++ *
++ * This driver support only, 8bit read and write.
++ * DMA is not supported by this driver.
++ */
++#include <linux/module.h>
++#include <linux/types.h>
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <linux/errno.h>
++#include <linux/platform_device.h>
++#include <linux/netdevice.h>
++#include <linux/of_address.h>
++#include <linux/of_gpio.h>
++#include <linux/sizes.h>
++#include <linux/interrupt.h>
++#include <linux/ioport.h>
++#include <linux/random.h>
++
++#include <linux/delay.h>
++#include "arcdevice.h"
++#include "com20020.h"
++
++#define VERSION "arcnet: COM20020 MEMORY BUS support loaded.\n"
++
++static int com20020_probe(struct platform_device *pdev)
++{
++	struct device_node *np;
++	struct net_device *dev;
++	struct arcnet_local *lp;
++	struct resource res, *iores;
++	int ret, phy_reset, err;
++	u32 timeout, backplane, clockp, clockm;
++	void __iomem *ioaddr;
++
++	np = pdev->dev.of_node;
++
++	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++
++	if (of_address_to_resource(np, 0, &res))
++		return -EINVAL;
++
++	ret = of_property_read_u32(np, "timeout", &timeout);
++	if (ret) {
++		dev_err(&pdev->dev, "timeout is required param");
++		return ret;
++	}
++
++	ret = of_property_read_u32(np, "backplane", &backplane);
++	if (ret) {
++		dev_err(&pdev->dev, "backplane is required param");
++		return ret;
++	}
++
++	ret = of_property_read_u32(np, "clockp", &clockp);
++	if (ret) {
++		dev_err(&pdev->dev, "clockp is required param");
++		return ret;
++	}
++
++	ret = of_property_read_u32(np, "clockm", &clockm);
++	if (ret) {
++		dev_err(&pdev->dev, "clockm is required param");
++		return ret;
++	}
++
++	phy_reset = of_get_named_gpio(np, "phy-reset-gpios", 0);
++	if (phy_reset == -EPROBE_DEFER) {
++		return phy_reset;
++	} else if (!gpio_is_valid(phy_reset)) {
++		dev_err(&pdev->dev, "phy-reset-gpios not valid !");
++		return 0;
++	}
++
++	err = devm_gpio_request_one(&pdev->dev, phy_reset, GPIOF_OUT_INIT_LOW,
++				    "arcnet-phy-reset");
++	if (err) {
++		dev_err(&pdev->dev, "failed to get phy-reset-gpios: %d\n", err);
++		return err;
++	}
++
++	dev = alloc_arcdev(NULL);// Let autoassign name arc%d
++	dev->netdev_ops = &com20020_netdev_ops;
++	lp = netdev_priv(dev);
++
++	lp->card_flags = ARC_CAN_10MBIT;/* pretend all of them can 10Mbit */
++
++	// Force address to 0
++	// Will be set by user with `ip set dev arc0 address YOUR_NODE_ID`
++	dev->dev_addr[0] = 0;
++
++	// request to system this memory region
++	if (!devm_request_mem_region(&pdev->dev, res.start, resource_size(&res),
++				     lp->card_name))
++		return -EBUSY;
++
++	ioaddr = devm_ioremap(&pdev->dev, iores->start, resource_size(iores));
++	if (!ioaddr) {
++		dev_err(&pdev->dev, "ioremap fallied\n");
++		return -ENOMEM;
++	}
++
++	// Reset time is 5 * xTalFreq, minimal xtal is 10Mhz
++	// (5 * 1000) / 10Mhz = 500ns
++
++	gpio_set_value_cansleep(phy_reset, 0);
++	ndelay(500);
++	gpio_set_value_cansleep(phy_reset, 1);
++	ndelay(500);
++
++	/* Dummy access after Reset
++	 * ARCNET controller needs
++	 * this access to detect bustype
++	 */
++	arcnet_outb(0x00, ioaddr, COM20020_REG_W_COMMAND);
++	arcnet_inb(ioaddr, COM20020_REG_R_DIAGSTAT);
++
++	dev->base_addr = (unsigned long)ioaddr;
++	get_random_bytes(dev->dev_addr, sizeof(u8));
++
++	dev->irq = of_get_named_gpio(np, "phy-irq-gpios", 0);
++	if (dev->irq == -EPROBE_DEFER) {
++		return dev->irq;
++	} else if (!gpio_is_valid(dev->irq)) {
++		dev_err(&pdev->dev, "phy-irq-gpios not valid !");
++		return 0;
++	}
++	dev->irq = gpio_to_irq(dev->irq);
++
++	lp->backplane = backplane;
++	lp->clockp = clockp & 7;
++	lp->clockm = clockm & 3;
++	lp->timeout = timeout;
++	lp->hw.owner = THIS_MODULE;
++
++	if (arcnet_inb(ioaddr, COM20020_REG_R_STATUS) == 0xFF) {
++		ret = -EIO;
++		goto err_release_mem;
++	}
++
++	if (com20020_check(dev)) {
++		ret = -EIO;
++		goto err_release_mem;
++	}
++
++	ret = com20020_found(dev, IRQF_TRIGGER_FALLING);
++	if (ret)
++		goto err_release_mem;
++
++	dev_dbg(&pdev->dev, "probe Done\n");
++	return 0;
++
++err_release_mem:
++	devm_iounmap(&pdev->dev, (void __iomem *)ioaddr);
++	devm_release_mem_region(&pdev->dev, res.start, resource_size(&res));
++	dev_err(&pdev->dev, "probe failed!\n");
++	return ret;
++}
++
++static const struct of_device_id of_com20020_match[] = {
++	{ .compatible = "smsc,com20020",	},
++	{ },
++};
++
++MODULE_DEVICE_TABLE(of, of_com20020_match);
++
++static struct platform_driver of_com20020_driver = {
++	.driver			= {
++		.name		= "com20020-memory-bus",
++		.of_match_table = of_com20020_match,
++	},
++	.probe			= com20020_probe,
++};
++
++static int com20020_init(void)
++{
++	return platform_driver_register(&of_com20020_driver);
++}
++late_initcall(com20020_init);
++
++MODULE_LICENSE("GPL");
+diff --git a/drivers/net/arcnet/com20020.c b/drivers/net/arcnet/com20020.c
+index 78043a9c5981..f09ea77dd6a8 100644
+--- a/drivers/net/arcnet/com20020.c
++++ b/drivers/net/arcnet/com20020.c
+@@ -43,7 +43,7 @@
+ #include "com20020.h"
+ 
+ static const char * const clockrates[] = {
+-	"XXXXXXX", "XXXXXXXX", "XXXXXX", "2.5 Mb/s",
++	"10 Mb/s", "XXXXXXXX", "XXXXXX", "2.5 Mb/s",
+ 	"1.25Mb/s", "625 Kb/s", "312.5 Kb/s", "156.25 Kb/s",
+ 	"Reserved", "Reserved", "Reserved"
+ };
+@@ -391,9 +391,10 @@ static void com20020_set_mc_list(struct net_device *dev)
+ 	}
+ }
+ 
+-#if defined(CONFIG_ARCNET_COM20020_PCI_MODULE) || \
+-    defined(CONFIG_ARCNET_COM20020_ISA_MODULE) || \
+-    defined(CONFIG_ARCNET_COM20020_CS_MODULE)
++#if	defined(CONFIG_ARCNET_COM20020_PCI_MODULE) || \
++	defined(CONFIG_ARCNET_COM20020_ISA_MODULE) || \
++	defined(CONFIG_ARCNET_COM20020_CS_MODULE)  || \
++	defined(CONFIG_ARCNET_COM20020_MEMORY_BUS)
+ EXPORT_SYMBOL(com20020_check);
+ EXPORT_SYMBOL(com20020_found);
+ EXPORT_SYMBOL(com20020_netdev_ops);
+-- 
+2.14.3
