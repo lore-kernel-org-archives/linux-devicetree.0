@@ -1,57 +1,84 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH] driver core: make deferring probe forever optional
-Date: Sat, 5 May 2018 10:25:13 +0900
-Message-ID: <20180505012513.GJ13402@sirena.org.uk>
-References: <20180501213114.20183-1-robh@kernel.org>
- <f808a652-2454-941c-2fd1-60776fb353f6@arm.com>
- <CAL_JsqJvMyrKS4LsRC6fDus24Yg8U+VcrbNNvxtOXmKbrc8RAA@mail.gmail.com>
- <74d495d8-04e2-fb7d-7d07-0905fbc8a6cf@arm.com>
+Subject: Applied "ASoC: cs42xx8: Make the node name generic" to
+	the asoc tree
+Date: Sat,  5 May 2018 02:43:42 +0100 (BST)
+Message-ID: <20180505014342.6C1DD44007A@finisterre.ee.mobilebroadband>
+References: <1525461123-16686-4-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bgQAstJ9X1Eg13Dy"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <74d495d8-04e2-fb7d-7d07-0905fbc8a6cf@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Rob Herring <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org, Stephen Boyd <sboyd@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Grant Likely <grant.likely@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1525461123-16686-4-git-send-email-festevam@gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---bgQAstJ9X1Eg13Dy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   ASoC: cs42xx8: Make the node name generic
 
-On Wed, May 02, 2018 at 07:49:57PM +0100, Robin Murphy wrote:
+has been applied to the asoc tree at
 
-> I guess there's also the possibility that a single driver may want multiple
-> behaviours, if e.g. if SoC variants A and B have some identical peripherals
-> but slightly different pinctrl/IOMMU/etc. hardware such that A has workable
-> default behaviour and can be treated as optional, whereas B absolutely must
-> be controlled by the kernel for the consumers to function properly, and they
-> *should* defer forever otherwise. I think that would pretty much demand some
-> sort of explicitly-curated white/blacklist setup at the subsystem or driver
-> level.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-Different board variants, and possibly even different bootloaders might
-also be an issue here - a vendor bootloader might do pinmuxing that an
-upstream bootloader doesn't for example.  In some cases the pinmuxing
-even depends on the boot method with things only getting configured if
-the bootloader wanted to use them.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
---bgQAstJ9X1Eg13Dy
-Content-Type: application/pgp-signature; name="signature.asc"
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
------BEGIN PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrtB/gACgkQJNaLcl1U
-h9D36gf+NGCs2L2oQLDrkfirjYtQCzWyoyDF5AUTuptG2p4w8gOd01NKW+x3vm8j
-FM8pDZBJ07oKXWAolGFS/qfEjrhsr652zHV+z5YsWrBVGNIWMXHcIRetvgsYCtAR
-ZAV8Pa9Va/JP2OlErC4AxhZCyTs3NScwC7g0BqU7bPpSZiTjJNKYuGa+jBXVyJzz
-0NDuU+bIoHup9Cq+NC3CTisxyZ0Oz5lp7gOxrdWGKjNay29+tiaOUZKC0U4iGq5f
-TYfXBqUnWWuUkauJdSKK0NvlVdX2gN4cWstepfOlcYYOLqq2XAZp08zRWWOGZHGp
-rfd1TTUV7q+ADx05Jjx/U35/P0OUXA==
-=JAMb
------END PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---bgQAstJ9X1Eg13Dy--
+Thanks,
+Mark
+
+>From 6a8f1a282348a47bcbb6c5418a86d271d1fb0ad2 Mon Sep 17 00:00:00 2001
+From: Fabio Estevam <fabio.estevam@nxp.com>
+Date: Fri, 4 May 2018 16:12:03 -0300
+Subject: [PATCH] ASoC: cs42xx8: Make the node name generic
+
+According to Devicetree Specification v0.2 document:
+
+"The name of a node should be somewhat generic, reflecting the function
+of the device and not its precise programming model."
+
+Do as suggested in the binding example.
+
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/cs42xx8.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/cs42xx8.txt b/Documentation/devicetree/bindings/sound/cs42xx8.txt
+index f631fbca6284..8619a156d038 100644
+--- a/Documentation/devicetree/bindings/sound/cs42xx8.txt
++++ b/Documentation/devicetree/bindings/sound/cs42xx8.txt
+@@ -16,7 +16,7 @@ Required properties:
+ 
+ Example:
+ 
+-codec: cs42888@48 {
++cs42888: codec@48 {
+ 	compatible = "cirrus,cs42888";
+ 	reg = <0x48>;
+ 	clocks = <&codec_mclk 0>;
+-- 
+2.17.0
