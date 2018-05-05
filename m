@@ -1,84 +1,57 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: sgtl5000: Make the node name generic"
-	to the asoc tree
-Date: Sat,  5 May 2018 02:44:01 +0100 (BST)
-Message-ID: <20180505014401.C269544007C@finisterre.ee.mobilebroadband>
-References: <1525461123-16686-1-git-send-email-festevam@gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v2] phy: phy-mtk-tphy: use SPDX license tag
+Date: Sat, 5 May 2018 09:47:41 +0800
+Message-ID: <e650d3f5f586e6282a5bbbc4007e4920d4a9147f.1525484369.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1525461123-16686-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org, robh+dt@kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Use SPDX-License-Identifier tag instead of the GPL license text
 
-   ASoC: sgtl5000: Make the node name generic
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From f59094e0373768a0c762ff0958879b12ad8beb82 Mon Sep 17 00:00:00 2001
-From: Fabio Estevam <fabio.estevam@nxp.com>
-Date: Fri, 4 May 2018 16:12:00 -0300
-Subject: [PATCH] ASoC: sgtl5000: Make the node name generic
-
-According to Devicetree Specification v0.2 document:
-
-"The name of a node should be somewhat generic, reflecting the function
-of the device and not its precise programming model."
-
-Do as suggested in the binding example.
-
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- Documentation/devicetree/bindings/sound/sgtl5000.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2: change subject line to fix checkpatch warning:
+    "A patch subject line should describe the change not
+    the tool that found it"
+---
+ drivers/phy/mediatek/Makefile       |  1 +
+ drivers/phy/mediatek/phy-mtk-tphy.c | 10 +---------
+ 2 files changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/sgtl5000.txt b/Documentation/devicetree/bindings/sound/sgtl5000.txt
-index 9a36c7e2a143..0f214457476f 100644
---- a/Documentation/devicetree/bindings/sound/sgtl5000.txt
-+++ b/Documentation/devicetree/bindings/sound/sgtl5000.txt
-@@ -39,7 +39,7 @@ VDDIO		1.8V		2.5V		3.3V
+diff --git a/drivers/phy/mediatek/Makefile b/drivers/phy/mediatek/Makefile
+index 763a92e..1bdab14 100644
+--- a/drivers/phy/mediatek/Makefile
++++ b/drivers/phy/mediatek/Makefile
+@@ -1,3 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0
+ #
+ # Makefile for the phy drivers.
+ #
+diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
+index 38c281b..b962339 100644
+--- a/drivers/phy/mediatek/phy-mtk-tphy.c
++++ b/drivers/phy/mediatek/phy-mtk-tphy.c
+@@ -1,16 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Copyright (c) 2015 MediaTek Inc.
+  * Author: Chunfeng Yun <chunfeng.yun@mediatek.com>
+  *
+- * This software is licensed under the terms of the GNU General Public
+- * License version 2, as published by the Free Software Foundation, and
+- * may be copied, distributed, and modified under those terms.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+  */
  
- Example:
- 
--codec: sgtl5000@a {
-+sgtl5000: codec@a {
- 	compatible = "fsl,sgtl5000";
- 	reg = <0x0a>;
- 	#sound-dai-cells = <0>;
+ #include <dt-bindings/phy/phy.h>
 -- 
-2.17.0
+1.9.1
