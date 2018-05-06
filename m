@@ -1,56 +1,101 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC v3 4/4] arm64: dts: renesas: r8a7795: add OF graph for usb role switch
-Date: Mon, 14 May 2018 18:16:00 +0900
-Message-Id: <1526289360-3997-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1526289360-3997-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1526289360-3997-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=qowN=HZ=googlemail.com=martin.blumenstingl@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 4/6] ARM: dts: meson: add support for the Meson8m2 SoC
+Date: Sun,  6 May 2018 11:21:17 +0200
+Message-Id: <20180506092119.467-5-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20180506092119.467-1-martin.blumenstingl@googlemail.com>
+References: <20180506092119.467-1-martin.blumenstingl@googlemail.com>
+To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com, carlo@caione.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: balbes-150@yandex.ru, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds OF graph properties for usb role switch in r8a7795
-into USB3.0 host/peripheral nodes.
+This adds a meson8m2.dtsi which simply inherits meson8.dtsi as both SoCs
+share most peripherals.
+The known differences are:
+- Meson8m2's hardware video decoder additionally supports H.265 decoding
+- Meson8m2 has the same Gigabit MAC as Meson8b (instead of the 10/100M
+  MAC that Meson8 uses)
+- Meson8m2 uses the same watchdog register layout/bits as Meson8b (using
+  the Meson8 watchdog compatible leads to an infinite hang when
+  rebooting the machine)
+- Meson8m2 uses the same SAR ADC register layout/bits as Meson8b.
+  However, it uses the temperature sensor calibration formula (and
+  registers) Meson8b which differ from Meson8. This however is currently
+  not supported by the meson-saradc driver yet.
+- the pin controller is mostly compatible with Meson8, Meson8m2 has
+  an additional function on eight pins and removes the "VGA" function.
+  So there's a total of 10 pins which are slightly changed, which is why
+  there's a separate compatible for the pin controller
+- a separate compatible for the clock controller is used because at
+  least the Mali clock tree (not supported yet) is the same as on GXBB
+  while Meson8 and Meson8b have a reduced/older version of the Mali
+  clock tree.
 
-TODO:
- - need patches for other SoCs.
-
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/meson8m2.dtsi | 54 +++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 arch/arm/boot/dts/meson8m2.dtsi
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index 1d5e3ac..50d3312 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -1746,6 +1746,12 @@
- 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
- 			resets = <&cpg 328>;
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/meson8m2.dtsi b/arch/arm/boot/dts/meson8m2.dtsi
+new file mode 100644
+index 000000000000..3e1f92273d7b
+--- /dev/null
++++ b/arch/arm/boot/dts/meson8m2.dtsi
+@@ -0,0 +1,54 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2017 Martin Blumenstingl <martin.blumenstingl@googlemail.com>.
++ */
 +
-+			port {
-+				usb3_host0_ep: endpoint {
-+					remote-endpoint = <&usb3_peri0_ep>;
-+				};
-+			};
- 		};
- 
- 		usb3_peri0: usb@ee020000 {
-@@ -1757,6 +1763,12 @@
- 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
- 			resets = <&cpg 328>;
- 			status = "disabled";
++#include "meson8.dtsi"
 +
-+			port {
-+				usb3_peri0_ep: endpoint {
-+					remote-endpoint = <&usb3_host0_ep>;
-+				};
-+			};
- 		};
- 
- 		usb_dmac0: dma-controller@e65a0000 {
++/ {
++	model = "Amlogic Meson8m2 SoC";
++	compatible = "amlogic,meson8m2";
++}; /* end of / */
++
++&clkc {
++	compatible = "amlogic,meson8m2-clkc", "amlogic,meson8-clkc";
++};
++
++&ethmac {
++	compatible = "amlogic,meson8m2-dwmac", "snps,dwmac";
++	reg = <0xc9410000 0x10000
++		0xc1108140 0x8>;
++	clocks = <&clkc CLKID_ETH>,
++		 <&clkc CLKID_MPLL2>,
++		 <&clkc CLKID_MPLL2>;
++	clock-names = "stmmaceth", "clkin0", "clkin1";
++	resets = <&reset RESET_ETHERNET>;
++	reset-names = "stmmaceth";
++};
++
++&pinctrl_aobus {
++	compatible = "amlogic,meson8m2-aobus-pinctrl",
++		     "amlogic,meson8-aobus-pinctrl";
++};
++
++&pinctrl_cbus {
++	compatible = "amlogic,meson8m2-cbus-pinctrl",
++		     "amlogic,meson8-cbus-pinctrl";
++
++	eth_rgmii_pins: ethernet {
++		mux {
++			groups = "eth_tx_clk_50m", "eth_tx_en",
++				 "eth_txd3", "eth_txd2",
++				 "eth_txd1", "eth_txd0",
++				 "eth_rx_clk_in", "eth_rx_dv",
++				 "eth_rxd3", "eth_rxd2",
++				 "eth_rxd1", "eth_rxd0",
++				 "eth_mdio", "eth_mdc";
++			function = "ethernet";
++		};
++	};
++};
++
++&wdt {
++	compatible = "amlogic,meson8m2-wdt", "amlogic,meson8b-wdt";
++};
 -- 
-1.9.1
+2.17.0
