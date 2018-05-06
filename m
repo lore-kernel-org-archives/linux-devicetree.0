@@ -1,43 +1,98 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V6 7/7] ARM: dts: imx6sx-sabreauto: add egalax touch
- screen support
-Date: Sun, 6 May 2018 06:10:11 +0000
-Message-ID: <AM3PR04MB1315E5B2A6C1DDCC6C279715F5840@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1525508963-7986-1-git-send-email-Anson.Huang@nxp.com>
- <1525508963-7986-7-git-send-email-Anson.Huang@nxp.com>
- <CAOMZO5A7bf1qcHrWjM1mr31Nkz+oDJ=fQo3rjksp1YY-HhPM9A@mail.gmail.com>
+From: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] resource: Use list_head to link sibling resource
+Date: Sun, 6 May 2018 14:30:14 +0800
+Message-ID: <20180506063014.GG19030@localhost.localdomain>
+References: <20180419001848.3041-2-bhe@redhat.com>
+ <201804261137.HPgv5SSG%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5A7bf1qcHrWjM1mr31Nkz+oDJ=fQo3rjksp1YY-HhPM9A@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Haibo Chen <haibo.chen@freescale.com>, Andy Duan <fugang.duan@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Robin Gong <yibin.gong@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201804261137.HPgv5SSG%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Yaowei Bai <baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Derrick <jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.o>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEZhYmlvDQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1A
-Z21haWwuY29tXQ0KPiBTZW50OiBTYXR1cmRheSwgTWF5IDUsIDIwMTggMTE6MTggUE0NCj4gVG86
-IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogU2hhd24gR3VvIDxzaGF3
-bmd1b0BrZXJuZWwub3JnPjsgU2FzY2hhIEhhdWVyDQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+
-OyBGYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBSb2INCj4gSGVycmluZyA8
-cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47
-DQo+IEhhaWJvIENoZW4gPGhhaWJvLmNoZW5AZnJlZXNjYWxlLmNvbT47IEFuZHkgRHVhbg0KPiA8
-ZnVnYW5nLmR1YW5AbnhwLmNvbT47IEEucy4gRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+OyBS
-b2JpbiBHb25nDQo+IDx5aWJpbi5nb25nQG54cC5jb20+OyBkbC1saW51eC1pbXggPGxpbnV4LWlt
-eEBueHAuY29tPjsgbW9kZXJhdGVkDQo+IGxpc3Q6QVJNL0ZSRUVTQ0FMRSBJTVggLyBNWEMgQVJN
-IEFSQ0hJVEVDVFVSRQ0KPiA8bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsg
-b3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EDQo+IEZMQVRURU5FRCBERVZJQ0UgVFJFRSBCSU5E
-SU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBsaW51eC1rZXJuZWwNCj4gPGxpbnV4
-LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjYgNy83XSBB
-Uk06IGR0czogaW14NnN4LXNhYnJlYXV0bzogYWRkIGVnYWxheCB0b3VjaA0KPiBzY3JlZW4gc3Vw
-cG9ydA0KPiANCj4gT24gU2F0LCBNYXkgNSwgMjAxOCBhdCA1OjI5IEFNLCBBbnNvbiBIdWFuZyA8
-QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gd3JvdGU6DQo+IA0KPiA+ICAmaW9tdXhjIHsNCj4gPiAr
-ICAgICAgIHBpbmN0cmxfZWdhbGF4X2ludDogZWdhbGF4LWludGdycCB7DQo+ID4gKyAgICAgICAg
-ICAgICAgIGZzbCxwaW5zID0gPA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIE1YNlNYX1BB
-RF9TRDRfUkVTRVRfQl9fR1BJTzZfSU9fMjINCj4gMHg4MDAwMDAwMA0KPiANCj4gUGxlYXNlIGF2
-b2lkIHVzaW5nIDB4ODAwMDAwMDAgYW5kIHVzZSB0aGUgcmVhbCBJT01VWCB2YWx1ZSBpbnN0ZWFk
-Lg0KIA0KV2lsbCB1c2UgdGhlIGV4cGVjdGVkIHBhZCBzZXR0aW5ncyBpbiBuZXh0IHZlcnNpb24u
-IFRoYW5rcy4NCg0KQW5zb24uDQo=
+On 04/26/18 at 11:23am, kbuild test robot wrote:
+> Hi Baoquan,
+> 
+> I love your patch! Yet something to improve:
+> 
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v4.17-rc2 next-20180424]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180419-223752
+> config: xtensa-common_defconfig (attached as .config)
+> compiler: xtensa-linux-gcc (GCC) 7.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=xtensa 
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from arch/xtensa/lib/pci-auto.c:22:0:
+>    arch/xtensa/include/asm/pci-bridge.h: In function 'pcibios_init_resource':
+> >> arch/xtensa/include/asm/pci-bridge.h:74:15: error: incompatible types when assigning to type 'struct list_head' from type 'void *'
+>      res->sibling = NULL;
+>                   ^
+>    arch/xtensa/include/asm/pci-bridge.h:75:13: error: incompatible types when assigning to type 'struct list_head' from type 'void *'
+>      res->child = NULL;
+
+Thanks, below fix can fix it.
+
+diff --git a/arch/xtensa/include/asm/pci-bridge.h b/arch/xtensa/include/asm/pci-bridge.h
+index 0b68c76ec1e6..f487b06817df 100644
+--- a/arch/xtensa/include/asm/pci-bridge.h
++++ b/arch/xtensa/include/asm/pci-bridge.h
+@@ -71,8 +71,8 @@ static inline void pcibios_init_resource(struct resource *res,
+ 	res->flags = flags;
+ 	res->name = name;
+ 	res->parent = NULL;
+-	res->sibling = NULL;
+-	res->child = NULL;
++	INIT_LIST_HEAD(&res->child);
++	INIT_LIST_HEAD(&res->sibling);
+ }
+ 
+ 
+
+>                 ^
+> 
+> vim +74 arch/xtensa/include/asm/pci-bridge.h
+> 
+> 9a8fd558 include/asm-xtensa/pci-bridge.h Chris Zankel 2005-06-23  65  
+> 9a8fd558 include/asm-xtensa/pci-bridge.h Chris Zankel 2005-06-23  66  static inline void pcibios_init_resource(struct resource *res,
+> 9a8fd558 include/asm-xtensa/pci-bridge.h Chris Zankel 2005-06-23  67  		unsigned long start, unsigned long end, int flags, char *name)
+> 9a8fd558 include/asm-xtensa/pci-bridge.h Chris Zankel 2005-06-23  68  {
+> 9a8fd558 include/asm-xtensa/pci-bridge.h Chris Zankel 2005-06-23  69  	res->start = start;
+> 9a8fd558 include/asm-xtensa/pci-bridge.h Chris Zankel 2005-06-23  70  	res->end = end;
+> 9a8fd558 include/asm-xtensa/pci-bridge.h Chris Zankel 2005-06-23  71  	res->flags = flags;
+> 9a8fd558 include/asm-xtensa/pci-bridge.h Chris Zankel 2005-06-23  72  	res->name = name;
+> 9a8fd558 include/asm-xtensa/pci-bridge.h Chris Zankel 2005-06-23  73  	res->parent = NULL;
+> 9a8fd558 include/asm-xtensa/pci-bridge.h Chris Zankel 2005-06-23 @74  	res->sibling = NULL;
+> 9a8fd558 include/asm-xtensa/pci-bridge.h Chris Zankel 2005-06-23  75  	res->child = NULL;
+> 9a8fd558 include/asm-xtensa/pci-bridge.h Chris Zankel 2005-06-23  76  }
+> 9a8fd558 include/asm-xtensa/pci-bridge.h Chris Zankel 2005-06-23  77  
+> 
+> :::::: The code at line 74 was first introduced by commit
+> :::::: 9a8fd5589902153a134111ed7a40f9cca1f83254 [PATCH] xtensa: Architecture support for Tensilica Xtensa Part 6
+> 
+> :::::: TO: Chris Zankel <czankel-66fqrpuXKgGB+jHODAdFcQ@public.gmane.org>
+> :::::: CC: Linus Torvalds <torvalds-gWtpgVMusWVb5UGfqNBoRg@public.gmane.org>
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
