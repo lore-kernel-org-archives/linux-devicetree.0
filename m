@@ -1,52 +1,84 @@
-Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr10054.outbound.protection.outlook.com ([40.107.1.54]:52001
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751747AbeECAlz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 2 May 2018 20:41:55 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v5 07/14] staging: typec: tcpci: remove unused tcpci_tcpc_config
-Date: Thu,  3 May 2018 08:24:47 +0800
-Message-Id: <1525307094-27402-8-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
-References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Return-Path: <SRS0=jfmr=HZ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf0-f194.google.com ([209.85.192.194]:33046 "EHLO
+        mail-pf0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751431AbeEFOT5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 6 May 2018 10:19:57 -0400
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v5 04/14] media: ov772x: add checks for register read errors
+Date: Sun,  6 May 2018 23:19:19 +0900
+Message-Id: <1525616369-8843-5-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
+References: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: jun.li@nxp.com, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Since we will use config settings via device properties, so
-remove the hard code tcpci_tcpc_config.
+This change adds checks for register read errors and returns correct
+error code.
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
- drivers/staging/typec/tcpci.c | 7 -------
- 1 file changed, 7 deletions(-)
+* v5
+- No changes
 
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index 01d14fb..a21aaf5 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -464,17 +464,10 @@ static const struct regmap_config tcpci_regmap_config = {
- 	.max_register = 0x7F, /* 0x80 .. 0xFF are vendor defined */
- };
- 
--static const struct tcpc_config tcpci_tcpc_config = {
--	.type = TYPEC_PORT_DFP,
--	.default_role = TYPEC_SINK,
--};
--
- static int tcpci_parse_config(struct tcpci *tcpci)
+ drivers/media/i2c/ov772x.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+index b6223bf..3fdbe64 100644
+--- a/drivers/media/i2c/ov772x.c
++++ b/drivers/media/i2c/ov772x.c
+@@ -1146,7 +1146,7 @@ static int ov772x_set_fmt(struct v4l2_subdev *sd,
+ static int ov772x_video_probe(struct ov772x_priv *priv)
  {
- 	tcpci->controls_vbus = true; /* XXX */
+ 	struct i2c_client  *client = v4l2_get_subdevdata(&priv->subdev);
+-	u8                  pid, ver;
++	int		    pid, ver, midh, midl;
+ 	const char         *devname;
+ 	int		    ret;
  
--	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
--	tcpci->tcpc.config = &tcpci_tcpc_config;
- 	tcpci->tcpc.fwnode = device_get_named_child_node(tcpci->dev,
- 							 "connector");
- 	if (!tcpci->tcpc.fwnode) {
+@@ -1156,7 +1156,11 @@ static int ov772x_video_probe(struct ov772x_priv *priv)
+ 
+ 	/* Check and show product ID and manufacturer ID. */
+ 	pid = ov772x_read(client, PID);
++	if (pid < 0)
++		return pid;
+ 	ver = ov772x_read(client, VER);
++	if (ver < 0)
++		return ver;
+ 
+ 	switch (VERSION(pid, ver)) {
+ 	case OV7720:
+@@ -1172,13 +1176,17 @@ static int ov772x_video_probe(struct ov772x_priv *priv)
+ 		goto done;
+ 	}
+ 
++	midh = ov772x_read(client, MIDH);
++	if (midh < 0)
++		return midh;
++	midl = ov772x_read(client, MIDL);
++	if (midl < 0)
++		return midl;
++
+ 	dev_info(&client->dev,
+ 		 "%s Product ID %0x:%0x Manufacturer ID %x:%x\n",
+-		 devname,
+-		 pid,
+-		 ver,
+-		 ov772x_read(client, MIDH),
+-		 ov772x_read(client, MIDL));
++		 devname, pid, ver, midh, midl);
++
+ 	ret = v4l2_ctrl_handler_setup(&priv->hdl);
+ 
+ done:
 -- 
 2.7.4
 
