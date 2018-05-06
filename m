@@ -1,21 +1,55 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V7 7/7] ARM: dts: imx6sx-sabreauto: add egalax touch
- screen support
-Date: Sun, 6 May 2018 12:07:44 -0300
-Message-ID: <CAOMZO5CfsmK3UJb3CE4L7Z6NQHeys6zaeGvrYk6fWbA4Gm7fsw@mail.gmail.com>
-References: <1525588093-29994-1-git-send-email-Anson.Huang@nxp.com> <1525588093-29994-7-git-send-email-Anson.Huang@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 1/3] ARM: dts: s3c24xx: Remove skeleton.dtsi and fix DTC warning for /memory
+Date: Sun,  6 May 2018 18:10:23 +0200
+Message-ID: <20180506161025.26937-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525588093-29994-7-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fugang Duan <fugang.duan@nxp.com>, Bough Chen <haibo.chen@nxp.com>, Robin Gong <yibin.gong@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>, NXP Linux Team <Linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 6, 2018 at 3:28 AM, Anson Huang <Anson.Huang@nxp.com> wrote:
-> Add egalax touch screen support on i2c2 bus.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Remove the usage of skeleton.dtsi to fix the DTC warning:
 
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+    arch/arm/boot/dts/s3c2416-smdk2416.dtb: Warning (unit_address_vs_reg):
+        /memory: node has a reg or ranges property, but no unit name
+
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/boot/dts/s3c2416-smdk2416.dts | 3 ++-
+ arch/arm/boot/dts/s3c24xx.dtsi         | 4 ++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/s3c2416-smdk2416.dts b/arch/arm/boot/dts/s3c2416-smdk2416.dts
+index a1c9d8c695cc..5ef1144afceb 100644
+--- a/arch/arm/boot/dts/s3c2416-smdk2416.dts
++++ b/arch/arm/boot/dts/s3c2416-smdk2416.dts
+@@ -12,7 +12,8 @@
+ 	model = "SMDK2416";
+ 	compatible = "samsung,s3c2416";
+ 
+-	memory {
++	memory@30000000 {
++		device_type = "memory";
+ 		reg =  <0x30000000 0x4000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/s3c24xx.dtsi b/arch/arm/boot/dts/s3c24xx.dtsi
+index 34c7fe6751cf..6d8dd3cdd3c0 100644
+--- a/arch/arm/boot/dts/s3c24xx.dtsi
++++ b/arch/arm/boot/dts/s3c24xx.dtsi
+@@ -5,11 +5,11 @@
+  * Copyright (c) 2013 Heiko Stuebner <heiko@sntech.de>
+  */
+ 
+-#include "skeleton.dtsi"
+-
+ / {
+ 	compatible = "samsung,s3c24xx";
+ 	interrupt-parent = <&intc>;
++	#address-cells = <1>;
++	#size-cells = <1>;
+ 
+ 	aliases {
+ 		pinctrl0 = &pinctrl_0;
+-- 
+2.14.1
