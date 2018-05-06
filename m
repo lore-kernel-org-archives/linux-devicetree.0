@@ -1,293 +1,65 @@
-Return-Path: <SRS0=qowN=HZ=googlemail.com=martin.blumenstingl@kernel.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 6/6] ARM: dts: meson8m2: add support for the Tronsmart MXIII Plus
-Date: Sun,  6 May 2018 11:21:19 +0200
-Message-Id: <20180506092119.467-7-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20180506092119.467-1-martin.blumenstingl@googlemail.com>
-References: <20180506092119.467-1-martin.blumenstingl@googlemail.com>
-To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com, carlo@caione.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: balbes-150@yandex.ru, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Return-Path: <SRS0=jfmr=HZ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pg0-f68.google.com ([74.125.83.68]:35934 "EHLO
+        mail-pg0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751777AbeEFOUF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 6 May 2018 10:20:05 -0400
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v5 07/14] media: ov772x: omit consumer ID when getting clock reference
+Date: Sun,  6 May 2018 23:19:22 +0900
+Message-Id: <1525616369-8843-8-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
+References: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Oleg Ivanov <balbes-150@yandex.ru>
+Currently the ov772x driver obtains a clock with a specific consumer ID.
+As there's a single clock for this driver, we could omit clock-names
+property in device tree by passing NULL as a consumer ID to clk_get().
 
-The Tronsmart MXIII Plus is an Android TV box which uses the Amlogic
-S812 (Meson8m2) SoC. It uses a Realtek RTL8211F RGMII Ethernet PHY as
-well as a Ricoh RN5T618 system power controller. It also comes with an
-Ampak AP6330 SDIO wifi/Bluetooth combo chip (support for wifi and
-Bluetooth is currently not added because the Linux drivers currently
-only support one MMC controller and that is used for the SD card).
-
-Signed-off-by: Oleg Ivanov <balbes-150@yandex.ru>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Tested-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
- arch/arm/boot/dts/Makefile                |   2 +
- arch/arm/boot/dts/meson8m2-mxiii-plus.dts | 244 ++++++++++++++++++++++
- 2 files changed, 246 insertions(+)
- create mode 100644 arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+* v5
+- No changes
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7e2424957809..b6d4fea16f50 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -320,6 +320,8 @@ dtb-$(CONFIG_ARCH_MMP) += \
- dtb-$(CONFIG_MACH_MESON8B) += \
- 	meson8b-mxq.dtb \
- 	meson8b-odroidc1.dtb
-+dtb-$(CONFIG_MACH_MESON8M2) += \
-+	meson8m2-mxiii-plus.dtb
- dtb-$(CONFIG_ARCH_MPS2) += \
- 	mps2-an385.dtb \
- 	mps2-an399.dtb
-diff --git a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
-new file mode 100644
-index 000000000000..f5853610b20b
---- /dev/null
-+++ b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
-@@ -0,0 +1,244 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2018 Oleg Ivanov <balbes-150@yandex.ru>
-+ * Copyright (c) 2018 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson8m2.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "Tronsmart MXIII Plus";
-+	compatible = "tronsmart,mxiii-plus", "amlogic,meson8m2";
-+
-+	aliases {
-+		ethernet0 = &ethmac;
-+		i2c0 = &i2c_AO;
-+		serial0 = &uart_AO;
-+		serial1 = &uart_A;
-+		mmc0 = &sd_card_slot;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		reg = <0x40000000 0x80000000>;
-+	};
-+
-+	adc-keys {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 0>;
-+		io-channel-names = "buttons";
-+		keyup-threshold-microvolt = <1710000>;
-+
-+		button-function {
-+			label = "Function";
-+			linux,code = <KEY_FN>;
-+			press-threshold-microvolt = <10000>;
-+		};
-+	};
-+
-+	vcc_3v3: regulator-vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&vcck>;
-+};
-+
-+&ethmac {
-+	status = "okay";
-+
-+	pinctrl-0 = <&eth_rgmii_pins>;
-+	pinctrl-names = "default";
-+
-+	phy-handle = <&eth_phy0>;
-+	phy-mode = "rgmii";
-+
-+	amlogic,tx-delay-ns = <4>;
-+
-+	snps,reset-gpio = <&gpio GPIOH_4 0>;
-+	snps,reset-delays-us = <0 10000 1000000>;
-+	snps,reset-active-low;
-+
-+	mdio {
-+		compatible = "snps,dwmac-mdio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		eth_phy0: ethernet-phy@0 {
-+			/* Realtek RTL8211F (0x001cc916) */
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+&ir_receiver {
-+	status = "okay";
-+	pinctrl-0 = <&ir_recv_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&i2c_AO {
-+	status = "okay";
-+	pinctrl-0 = <&i2c_ao_pins>;
-+	pinctrl-names = "default";
-+
-+	pmic@32 {
-+		compatible = "ricoh,rn5t618";
-+		reg = <0x32>;
-+		system-power-controller;
-+
-+		regulators {
-+			vcck: DCDC1 {
-+				regulator-name = "VCCK";
-+				regulator-min-microvolt = <825000>;
-+				regulator-max-microvolt = <1150000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			DCDC2 {
-+				regulator-name = "VDDAO";
-+				regulator-min-microvolt = <950000>;
-+				regulator-max-microvolt = <1150000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			DCDC3 {
-+				regulator-name = "VDD_DDR";
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			LDO1 {
-+				regulator-name = "VDDIO_AO28";
-+				regulator-min-microvolt = <2900000>;
-+				regulator-max-microvolt = <2900000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vddio_ao1v8: LDO2 {
-+				regulator-name = "VDDIO_AO18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			LDO3 {
-+				regulator-name = "VCC1V8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			LDO4 {
-+				regulator-name = "VCC2V8";
-+				regulator-min-microvolt = <2850000>;
-+				regulator-max-microvolt = <2850000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			LDO5 {
-+				regulator-name = "AVDD1V8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			LDORTC1 {
-+				regulator-name = "VDD_LDO";
-+				regulator-min-microvolt = <2700000>;
-+				regulator-max-microvolt = <2700000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			LDORTC2 {
-+				regulator-name = "RTC_0V9";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddio_ao1v8>;
-+};
-+
-+&sdio {
-+	status = "okay";
-+
-+	pinctrl-0 = <&sd_b_pins>;
-+	pinctrl-names = "default";
-+
-+	/* SD card */
-+	sd_card_slot: slot@1 {
-+		compatible = "mmc-slot";
-+		reg = <1>;
-+		status = "okay";
-+
-+		bus-width = <4>;
-+		no-sdio;
-+		cap-mmc-highspeed;
-+		cap-sd-highspeed;
-+		disable-wp;
-+
-+		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-+		cd-inverted;
-+
-+		vmmc-supply = <&vcc_3v3>;
-+	};
-+};
-+
-+/* connected to the Bluetooth module */
-+&uart_A {
-+	status = "okay";
-+	pinctrl-0 = <&uart_a1_pins>, <&uart_a1_cts_rts_pins>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
-+};
-+
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
-+
-+&usb0_phy {
-+	status = "okay";
-+};
-+
-+&usb1_phy {
-+	status = "okay";
-+};
+ arch/sh/boards/mach-migor/setup.c | 2 +-
+ drivers/media/i2c/ov772x.c        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/sh/boards/mach-migor/setup.c b/arch/sh/boards/mach-migor/setup.c
+index 73b9ee4..11f8001 100644
+--- a/arch/sh/boards/mach-migor/setup.c
++++ b/arch/sh/boards/mach-migor/setup.c
+@@ -593,7 +593,7 @@ static int __init migor_devices_setup(void)
+ 	}
+ 
+ 	/* Add a clock alias for ov7725 xclk source. */
+-	clk_add_alias("xclk", "0-0021", "video_clk", NULL);
++	clk_add_alias(NULL, "0-0021", "video_clk", NULL);
+ 
+ 	/* Register GPIOs for video sources. */
+ 	gpiod_add_lookup_table(&ov7725_gpios);
+diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+index 97a65ce..f939e28 100644
+--- a/drivers/media/i2c/ov772x.c
++++ b/drivers/media/i2c/ov772x.c
+@@ -1300,7 +1300,7 @@ static int ov772x_probe(struct i2c_client *client,
+ 	if (priv->hdl.error)
+ 		return priv->hdl.error;
+ 
+-	priv->clk = clk_get(&client->dev, "xclk");
++	priv->clk = clk_get(&client->dev, NULL);
+ 	if (IS_ERR(priv->clk)) {
+ 		dev_err(&client->dev, "Unable to get xclk clock\n");
+ 		ret = PTR_ERR(priv->clk);
 -- 
-2.17.0
+2.7.4
+
