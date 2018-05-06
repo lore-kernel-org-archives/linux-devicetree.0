@@ -1,42 +1,59 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 0/4] Various fixes on STM32 RTC
-Date: Sun, 6 May 2018 22:27:33 +0200
-Message-ID: <20180506202733.GM10960@piout.net>
-References: <1524144103-21432-1-git-send-email-amelie.delaunay@st.com>
+From: Paul Kocialkowski <contact@paulk.fr>
+Subject: [PATCH 1/3] drm/panel: Add RGB666 variant of Innolux AT070TN90
+Date: Sun,  6 May 2018 22:56:17 +0200
+Message-ID: <20180506205619.5591-1-contact@paulk.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1524144103-21432-1-git-send-email-amelie.delaunay@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie Delaunay <amelie.delaunay@st.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Paul Kocialkowski <contact@paulk.fr>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 19/04/2018 15:21:39+0200, Amelie Delaunay wrote:
-> This series makes some corrections on STM32 RTC:
-> - update copyright and adopt SPDX identifier
-> - fix alarm interrupt flags
-> - rework DBP (Disable Backup domain Protection) management.
-> 
-> This series is a preamble to the serie which will introduce next STM32 RTC
-> version.
-> 
-> Amelie Delaunay (4):
->   rtc: stm32: fix copyright and adopt SPDX identifier
->   rtc: stm32: fix alarm interrupt flags by removing IRQF_TRIGGER_RISING
->   dt-bindings: rtc: update stm32-rtc documentation for st,syscfg
->     property
->   rtc: stm32: get DBP register and mask from DT st,syscfg property
-> 
->  .../devicetree/bindings/rtc/st,stm32-rtc.txt       | 10 ++--
->  drivers/rtc/rtc-stm32.c                            | 68 +++++++++++++---------
->  2 files changed, 47 insertions(+), 31 deletions(-)
-> 
-
-Applied, thanks.
-
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+VGhpcyBhZGRzIHRpbWluZ3MgZm9yIHRoZSBSR0I2NjYgdmFyaWFudCBvZiB0aGUgSW5ub2x1eCBB
+VDA3MFROOTAgcGFuZWwsCmFzIGZvdW5kIG9uIHRoZSBBaW5vbCBBVzEgdGFibGV0LgoKVGhlIHBh
+bmVsIGFsc28gc3VwcG9ydHMgUkdCODg4IG91dHB1dC4gV2hlbiBSR0I2NjYgbW9kZSBpcyB1c2Vk
+IGluc3RlYWQsCnRoZSB0d28gZXh0cmEgbGFuZXMgcGVyIGNvbXBvbmVudCBhcmUgZ3JvdW5kZWQu
+CgpJbiB0aGUgZnV0dXJlLCBpdCBtaWdodCBiZWNvbWUgbmVjZXNzYXJ5IHRvIGludHJvZHVjZSBh
+IGRlZGljYXRlZApkZXZpY2UtdHJlZSBwcm9wZXJ0eSB0byBzcGVjaWZ5IHRoZSBidXMgZm9ybWF0
+IGFuZCBtYXliZSBzcGVjaWZ5IGl0IGluCnRoZSBtb2RlIGRlc2NyaXB0aW9uIGluc3RlYWQgb2Yg
+cGFuZWwgZGVzY3JpcHRpb24gc28gdGhhdCB0aGUKYXBwcm9wcmlhdGUgbW9kZSBjYW4gYmUgc2Vs
+ZWN0ZWQgZm9yIGVhY2ggYnVzIGZvcm1hdC4KClNpZ25lZC1vZmYtYnk6IFBhdWwgS29jaWFsa293
+c2tpIDxjb250YWN0QHBhdWxrLmZyPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1z
+aW1wbGUuYyB8IDI2ICsrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwg
+MjYgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5l
+bC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwppbmRleCBj
+YmYxYWI0MDRlZTcuLjM1MTc0MmRmOGVlMSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3Bh
+bmVsL3BhbmVsLXNpbXBsZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1w
+bGUuYwpAQCAtMTA4Niw2ICsxMDg2LDI5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVz
+YyBpbm5vbHV4X2F0MDcwdG45MiA9IHsKIAkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdC
+ODg4XzFYMjQsCiB9OwogCitzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgaW5u
+b2x1eF9hdDA3MHRuOTBfbW9kZSA9IHsKKwkuY2xvY2sgPSA0MDAwMCwKKwkuaGRpc3BsYXkgPSA4
+MDAsCisJLmhzeW5jX3N0YXJ0ID0gODAwICsgMTEyLAorCS5oc3luY19lbmQgPSA4MDAgKyAxMTIg
+KyAxLAorCS5odG90YWwgPSA4MDAgKyAxMTIgKyAxICsgODcsCisJLnZkaXNwbGF5ID0gNDgwLAor
+CS52c3luY19zdGFydCA9IDQ4MCArIDE0MSwKKwkudnN5bmNfZW5kID0gNDgwICsgMTQxICsgMSwK
+KwkudnRvdGFsID0gNDgwICsgMTQxICsgMSArIDM4LAorCS52cmVmcmVzaCA9IDYwLAorfTsKKwor
+c3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGlubm9sdXhfYXQwNzB0bjkwID0geworCS5t
+b2RlcyA9ICZpbm5vbHV4X2F0MDcwdG45MF9tb2RlLAorCS5udW1fbW9kZXMgPSAxLAorCS5zaXpl
+ID0geworCQkud2lkdGggPSAxNTQsCisJCS5oZWlnaHQgPSA4NiwKKwl9LAorCS5idXNfZm9ybWF0
+ID0gTUVESUFfQlVTX0ZNVF9SR0I2NjZfMVgxOCwKK307CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+ZGlzcGxheV90aW1pbmcgaW5ub2x1eF9nMTAxaWNlX2wwMV90aW1pbmcgPSB7CiAJLnBpeGVsY2xv
+Y2sgPSB7IDYwNDAwMDAwLCA3MTEwMDAwMCwgNzQ3MDAwMDAgfSwKIAkuaGFjdGl2ZSA9IHsgMTI4
+MCwgMTI4MCwgMTI4MCB9LApAQCAtMjE1NCw2ICsyMTc3LDkgQEAgc3RhdGljIGNvbnN0IHN0cnVj
+dCBvZl9kZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hbXSA9IHsKIAl9LCB7CiAJCS5jb21wYXRp
+YmxlID0gImlubm9sdXgsYXQwNzB0bjkyIiwKIAkJLmRhdGEgPSAmaW5ub2x1eF9hdDA3MHRuOTIs
+CisJfSwgeworCQkuY29tcGF0aWJsZSA9ICJpbm5vbHV4LGF0MDcwdG45MCIsCisJCS5kYXRhID0g
+Jmlubm9sdXhfYXQwNzB0bjkwLAogCX0sIHsKIAkJLmNvbXBhdGlibGUgPSJpbm5vbHV4LGcxMDFp
+Y2UtbDAxIiwKIAkJLmRhdGEgPSAmaW5ub2x1eF9nMTAxaWNlX2wwMQotLSAKMi4xNy4wCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
