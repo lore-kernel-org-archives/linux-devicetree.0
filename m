@@ -1,38 +1,64 @@
-Return-Path: <SRS0=Rw9b=HW=cogentembedded.com=sergei.shtylyov@kernel.org>
-Subject: [PATCH v3 5/5] DT: pci: rcar-pci: document R8A77980 bindings
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-References: <b98130a7-b128-9fc3-aee1-1a5a2590b320@cogentembedded.com>
-Message-ID: <eb928983-475a-c238-5a44-505c07472b93@cogentembedded.com>
-Date: Thu, 3 May 2018 22:44:58 +0300
+Return-Path: <jic23@kernel.org>
+Date: Sun, 6 May 2018 18:51:23 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 2/2] iio: ti-dac5571: Add DT binding documentation
+Message-ID: <20180506185123.2dcafe8b@archlinux>
+In-Reply-To: <20180501081554.5832-2-sean.nyekjaer@prevas.dk>
+References: <20180501081554.5832-1-sean.nyekjaer@prevas.dk>
+	<20180501081554.5832-2-sean.nyekjaer@prevas.dk>
 MIME-Version: 1.0
-In-Reply-To: <b98130a7-b128-9fc3-aee1-1a5a2590b320@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-To: horms@verge.net.au, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>
+To: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
+Cc: robh+dt@kernel.org, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Document the R-Car V3H (R8A77980) SoC in the R-Car PCIe bindings.
+On Tue,  1 May 2018 10:15:54 +0200
+Sean Nyekjaer <sean.nyekjaer@prevas.dk> wrote:
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Adding binding documentation for Texas Instruments DAC5571 Family
+> 
+> Signed-off-by: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
----
-Changes in version 2:
-- new patch.
+Applied to the togreg branch of iio.git and pushed out as testing.
 
- Documentation/devicetree/bindings/pci/rcar-pci.txt |    1 +
- 1 file changed, 1 insertion(+)
+Thanks,
 
-Index: pci/Documentation/devicetree/bindings/pci/rcar-pci.txt
-===================================================================
---- pci.orig/Documentation/devicetree/bindings/pci/rcar-pci.txt
-+++ pci/Documentation/devicetree/bindings/pci/rcar-pci.txt
-@@ -8,6 +8,7 @@ compatible: "renesas,pcie-r8a7743" for t
- 	    "renesas,pcie-r8a7793" for the R8A7793 SoC;
- 	    "renesas,pcie-r8a7795" for the R8A7795 SoC;
- 	    "renesas,pcie-r8a7796" for the R8A7796 SoC;
-+	    "renesas,pcie-r8a77980" for the R8A77980 SoC;
- 	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 or
- 				     RZ/G1 compatible device.
- 	    "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 compatible device.
+Jonathan
+
+> ---
+>  .../bindings/iio/dac/ti,dac5571.txt           | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/ti,dac5571.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/dac/ti,dac5571.txt b/Documentation/devicetree/bindings/iio/dac/ti,dac5571.txt
+> new file mode 100644
+> index 000000000000..03af6b9a4d07
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/dac/ti,dac5571.txt
+> @@ -0,0 +1,24 @@
+> +* Texas Instruments DAC5571 Family
+> +
+> +Required properties:
+> + - compatible: Should contain
+> +    "ti,dac5571"
+> +    "ti,dac6571"
+> +    "ti,dac7571"
+> +    "ti,dac5574"
+> +    "ti,dac6574"
+> +    "ti,dac7574"
+> +    "ti,dac5573"
+> +    "ti,dac6573"
+> +    "ti,dac7573"
+> + - reg: Should contain the DAC I2C address
+> +
+> +Optional properties:
+> + - vref-supply: The regulator supply for DAC reference voltage
+> +
+> +Example:
+> +dac@0 {
+> +	compatible = "ti,dac5571";
+> +	reg = <0x4C>;
+> +	vref-supply = <&vdd_supply>;
+> +};
