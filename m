@@ -1,26 +1,34 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 8 May 2018 11:51:08 -0500
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/6] dt-bindings: arm: amlogic: add support for the
- Tronsmart MXIII Plus
-Message-ID: <20180508165108.GA3488@rob-hp-laptop>
+Return-Path: <SRS0=qowN=HZ=googlemail.com=martin.blumenstingl@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 2/6] dt-bindings: arm: amlogic: add support for the Tronsmart MXIII Plus
+Date: Sun,  6 May 2018 11:21:15 +0200
+Message-Id: <20180506092119.467-3-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20180506092119.467-1-martin.blumenstingl@googlemail.com>
 References: <20180506092119.467-1-martin.blumenstingl@googlemail.com>
- <20180506092119.467-3-martin.blumenstingl@googlemail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180506092119.467-3-martin.blumenstingl@googlemail.com>
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com, carlo@caione.org, mark.rutland@arm.com, balbes-150@yandex.ru
+To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com, carlo@caione.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: balbes-150@yandex.ru, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Sun, May 06, 2018 at 11:21:15AM +0200, Martin Blumenstingl wrote:
-> Add the binding documentation for the Tronsmart MXIII Plus which is an
-> Android TV box using the Amlogic S812 (Meson8m2) SoC.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  Documentation/devicetree/bindings/arm/amlogic.txt | 2 ++
->  1 file changed, 2 insertions(+)
+Add the binding documentation for the Tronsmart MXIII Plus which is an
+Android TV box using the Amlogic S812 (Meson8m2) SoC.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ Documentation/devicetree/bindings/arm/amlogic.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+index 6c6642c69de3..69880560c0f0 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -58,6 +58,8 @@ Board compatible values (alphabetically, grouped by SoC):
+   - "hardkernel,odroid-c1" (Meson8b)
+   - "tronfy,mxq" (Meson8b)
+ 
++  - "tronsmart,mxiii-plus" (Meson8m2)
++
+   - "amlogic,p200" (Meson gxbb)
+   - "amlogic,p201" (Meson gxbb)
+   - "friendlyarm,nanopi-k2" (Meson gxbb)
+-- 
+2.17.0
