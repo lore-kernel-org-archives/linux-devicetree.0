@@ -1,153 +1,68 @@
 From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V7 1/7] ARM: dts: imx6sx-sabreauto: add PMIC support
-Date: Sun,  6 May 2018 14:28:07 +0800
-Message-ID: <1525588093-29994-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V7 3/7] ARM: dts: imx6sx-sabreauto: add IO expander max7310 support
+Date: Sun,  6 May 2018 14:28:09 +0800
+Message-ID: <1525588093-29994-3-git-send-email-Anson.Huang@nxp.com>
+References: <1525588093-29994-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1525588093-29994-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, fugang.duan@nxp.com, haibo.chen@nxp.com, yibin.gong@nxp.com, aisheng.dong@nxp.com
 Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add pfuze100 support on i.MX6SX Sabre Auto board.
+i.MX6SX Sabre Auto board has two max7310 IO expander on I2C3 bus, add
+support for them.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 changes since V6:
 	remove unnecessary sign-off.
- arch/arm/boot/dts/imx6sx-sabreauto.dts | 116 +++++++++++++++++++++++++++++++++
- 1 file changed, 116 insertions(+)
+ arch/arm/boot/dts/imx6sx-sabreauto.dts | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-index 87ffe2c..1d8cf0f 100644
+index ae253af..4d41b4d 100644
 --- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
 +++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-@@ -66,6 +66,13 @@
- };
+@@ -73,6 +73,13 @@
+ 		>;
+ 	};
  
- &iomuxc {
-+	pinctrl_i2c2: i2c2grp {
++	pinctrl_i2c3: i2c3grp {
 +		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO03__I2C2_SDA          0x4001b8b1
-+			MX6SX_PAD_GPIO1_IO02__I2C2_SCL          0x4001b8b1
++			MX6SX_PAD_KEY_ROW4__I2C3_SDA            0x4001b8b1
++			MX6SX_PAD_KEY_COL4__I2C3_SCL            0x4001b8b1
 +		>;
 +	};
 +
  	pinctrl_uart1: uart1grp {
  		fsl,pins = <
  			MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1
-@@ -139,3 +146,112 @@
- 		>;
+@@ -262,3 +269,24 @@
+ 		#gpio-cells = <2>;
  	};
  };
 +
-+&i2c2 {
++&i2c3 {
 +	clock-frequency = <100000>;
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
++	pinctrl-0 = <&pinctrl_i2c3>;
 +	status = "okay";
 +
-+	pfuze100: pmic@8 {
-+		compatible = "fsl,pfuze100";
-+		reg = <0x08>;
++	max7310_a: gpio@30 {
++		compatible = "maxim,max7310";
++		reg = <0x30>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
 +
-+		regulators {
-+			sw1a_reg: sw1ab {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw1c_reg: sw1c {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw2_reg: sw2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3a_reg: sw3a {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3b_reg: sw3b {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw4_reg: sw4 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			swbst_reg: swbst {
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5150000>;
-+			};
-+
-+			snvs_reg: vsnvs {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vref_reg: vrefddr {
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vgen1_reg: vgen1 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen2_reg: vgen2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+			};
-+
-+			vgen3_reg: vgen3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen4_reg: vgen4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen5_reg: vgen5 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen6_reg: vgen6 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
++	max7310_b: gpio@32 {
++		compatible = "maxim,max7310";
++		reg = <0x32>;
++		gpio-controller;
++		#gpio-cells = <2>;
 +	};
 +};
 -- 
