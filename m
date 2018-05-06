@@ -1,81 +1,107 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH 0/7] gnss: add new GNSS subsystem
-Date: Sun, 6 May 2018 08:47:34 +0200
-Message-ID: <31DFBFE6-5E04-4C1E-863A-33DC9EFA1219@holtmann.org>
-References: <20180424163458.11947-1-johan@kernel.org>
- <20180504132741.brn5jqv5ufjhp7ky@earth.universe> <20180504200315.GA22519@amd>
- <20180505172847.qqpqkrfspak53sc6@earth.universe> <20180505211129.GA762@amd>
-Mime-Version: 1.0 (Mac OS X Mail 11.3 \(3445.6.18\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: "Reizer, Eyal" <eyalr@ti.com>
+Subject: RE: [EXTERNAL] Re: [PATCH] arm: dts: am437x-sk-evm: add wilink8
+ support
+Date: Sun, 6 May 2018 07:45:31 +0000
+Message-ID: <f0ea5260b3e2413aab4780b203ff24a4@ti.com>
+References: <1525159453-32489-1-git-send-email-eyalr@ti.com>
+ <20180502145100.GK98604@atomide.com>
+ <5cc906da15da45ab96e06957f878b65b@ti.com>
+ <20180503141759.GP98604@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180505211129.GA762@amd>
+In-Reply-To: <20180503141759.GP98604@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Eyal Reizer <eyalreizer@gmail.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+>=20
+> * Reizer, Eyal <eyalr@ti.com> [180503 06:43]:
+> > >
+> > > * Eyal Reizer <eyalreizer@gmail.com> [180501 00:26]:
+> > > > enable mmc3 used for wlan and uart1 used for bluetooth
+> > > > configure the gpios used for wlan and bluetooth controls
+> > > > add fixed voltage regulator used for wlan power control
+> > > ...
+> > > >  / {
+> > > >  	model =3D "TI AM437x SK EVM";
+> > > > @@ -158,6 +159,22 @@
+> > > >  			};
+> > > >  		};
+> > > >  	};
+> > > > +
+> > > > +	vmmcwl_fixed: fixedregulator-mmcwl {
+> > > > +		/*
+> > > > +		 * WL_EN is not SDIO standard compliant. It is an out of band
+> > > > +		 * signal and hard to be dealt with in a standard way by the
+> > > > +		 * SDIO core driver.
+> > > > +		 * So modelling the WL_EN line as a regulator was a natural
+> > > > +		 * choice as the MMC core already deals with MMC supplies.
+> > > > +		 */
+> > > > +		compatible =3D "regulator-fixed";
+> > > > +		regulator-name =3D "vmmcwl_fixed";
+> > > > +		regulator-min-microvolt =3D <1800000>;
+> > > > +		regulator-max-microvolt =3D <1800000>;
+> > > > +		gpio =3D <&gpio4 8 GPIO_ACTIVE_HIGH>;
+> > > > +		enable-active-high;
+> > > > +	};
+> > > >  };
+> > >
+> > > Interesting that it needs much longer delay here compared to the
+> > > earlier?
+> >
+> > Where do you see a delay in here?
+> > There is no startup-delay-us value used in this patch.
+>=20
+> Oops sorry, I misread the voltage above as the startup-delay-us
+> value :)
+>=20
+No issue :)
 
->>>> (*) I have those in mind:
->>>> 
->>>> Nokia N900: The phone has GPS integrated into the modem and uses
->>>> ISI encapsulated data. The protocol has been reverse engineered
->>>> and it should be possible to write a kernel driver for handling
->>>> the GPS packets and dumping the raw data to /dev/gnss0. I don't
->>>> think this is particularly useful without a non-raw interface,
->>>> though. It would still require a custom userspace implementation.
->>> 
->>> Actually... in this case it would be nice to do the protocol
->>> processing in kernel and just present reasonable interface to
->>> userland... or maybe NMEA.
->> 
->> Converting a binary protocol to NMEA, which needs to be string
->> parsed is not very nice. I think first step would be to write a
->> simple driver, which exposes the binary location protocol without
->> ISI header. Then in a second step we can think about a reasonable
->> interface, that should be supported by all GNSS devices.
-> 
-> Well, most of the userspace expects NMEA. So yes, its an ugly
-> protocol, but .. it is not really a high-performance device.
-> 
-> I'd suggest modeling this over input subsystem. We could use similar
-> tag/value/sync protocol (evdev). In similar way /dev/input/mice was
-> used for running legacy apps during transition, we'd have /dev/...//nmea.
+> > > BTW, I do have a patch in work to add pwrseq support for wlcore that
+> > > allows leaving out the regulator here. It still needs a bit more
+> > > work though.
+> > >
+> > > And I also have a series in work to make wlcore use runtime PM that
+> > > needs even more work, just FYI to avoid any duplicate work.
+> > >
+> > > Hmm you don't happen to have a patch series somewhere making
+> > > wlcore use the SDIO dat lien interrupt?
+> > wilink has always used out of band interrupt (using wlan_irq gpio).
+> > in-band interrupts was not supported.
+> > See section 10.5.2 in this the wl18xx hardware integration guide:
+> > http://www.ti.com/lit/ug/swru437/swru437.pdf
+>=20
+> Hmm yeah I've been wondering about that. Why not follow the SDIO
+> standard here though? Do you have links to documentation explaining
+> that?
+>=20
+I will try to see what I can find out and why it has always been used only
+With out-of band interrupts and whether there is a real hardware
+Limitation behind it .=20
+In the past also the omap-hsmmc driver was not really supporting in-band
+sdio interrupt out of the box.
+Not sure what is the state of it tofday.
 
-I would _not_ model it after the input system. And /dev/input/mice was a really bad design choice. It was there because userspace was too stupid.
+> > > I think we should use that when idle rather than the (edge) gpio
+> > > interrupt as the SDIO dat interrupt is level sensitive and wired
+> > > to the always on gpio bank for most SDIO controller instances.
+> > > On runtime PM wakeup, there's no status anywhere to been with the
+> > > GPIO edge interrupt.
+> > >
+> > I agree that it would have been better, especially for cases such as wa=
+ke
+> > On wlan, but again, in-band interrupt was something that was talked
+> > about way back but it was never implemented.
+>=20
+> I think we can have both if performance is the reason for the
+> out of band interrupt. We could still use SDIO dat line interrupt
+> during idle for wake-up events.
 
->>>> Droid 4: GPS is similar to N900, but different protocol and QMI
->>>> encapsulated. This one also has known protocol with userspace
->>>> implementation. I did not yet have a detailed look, if its possible
->>>> to (un)wrap this in the kernel.
->>> 
->>> So, this is actually NMEA over QMI. I do have patches libqmi that
->>> provides NMEA on stdout.
->> 
->> Ok. So raw data is NMEA for this one. Should be reasonably easy to
->> write a driver exposing this via /dev/gnss device.
-> 
-> If we have qmi implementation somewhere in kernel. Do we?
+Correct, assuming we can make in-band interrupt work with wilink8.
 
-Not in a way that it can easily be hooked up, but essentially the QMUX part and everything around it needs to be done in the kernel. Like Phonet and CAIF have been done before that.
-
->>> But there seems to be another possibile interface (yes, that modem is
->>> crazy, and you can talk to it over few different interfaces), and
->>> that's NMEA over GSM07.10. That one should be feasible to decode in
->>> kernel and just provide NMEA to userland.
->> 
->> I think both should be feasible. I suggest to wait a bit more
->> until you and Tony figured out some more details. You've got
->> the libqmi patch as workaround for now and we want a stable API
->> later.
-> 
-> I do have the gsm07.10 one now, too. That one is certainly simple
-> enough (and should eat less power -- no need to keep USB running).
-
-Someone also needs to make the GSM 07.10 multiplexer code serdev aware. Since currently it is a line discipline and that is not really needed. In case this is a USB serial, it might be better to be hooked up directly into GSM 07.10 without even going through serdev.
-
-Regards
-
-Marcel
+Best Regards,
+Eyal
