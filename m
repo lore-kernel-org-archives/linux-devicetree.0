@@ -1,32 +1,20 @@
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH 1/9] dt-bindings: i2c: fix typo 'can by' to 'can be'
-Date: Sun,  6 May 2018 13:23:45 +0200
-Message-ID: <20180506112404.24872-2-wsa+renesas@sang-engineering.com>
-References: <20180506112404.24872-1-wsa+renesas@sang-engineering.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V7 1/7] ARM: dts: imx6sx-sabreauto: add PMIC support
+Date: Sun, 6 May 2018 12:05:29 -0300
+Message-ID: <CAOMZO5Cm+PRNRmvraH-5t=-KBBs=HcVscNXgraLXv31QQh7ikA@mail.gmail.com>
+References: <1525588093-29994-1-git-send-email-Anson.Huang@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180506112404.24872-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <1525588093-29994-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: trivial@kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fugang Duan <fugang.duan@nxp.com>, Bough Chen <haibo.chen@nxp.com>, Robin Gong <yibin.gong@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, NXP Linux Team <Linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- Documentation/devicetree/bindings/i2c/i2c-davinci.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sun, May 6, 2018 at 3:28 AM, Anson Huang <Anson.Huang@nxp.com> wrote:
+> Add pfuze100 support on i.MX6SX Sabre Auto board.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-davinci.txt b/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
-index 64e6e656c345c2..b745f3706120f0 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
-@@ -24,7 +24,7 @@ Recommended properties :
- - clock-frequency : desired I2C bus clock frequency in Hz.
- - ti,has-pfunc: boolean; if defined, it indicates that SoC supports PFUNC
- 	registers. PFUNC registers allow to switch I2C pins to function as
--	GPIOs, so they can by toggled manually.
-+	GPIOs, so they can be toggled manually.
- 
- Example (enbw_cmc board):
- 	i2c@1c22000 {
--- 
-2.11.0
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
