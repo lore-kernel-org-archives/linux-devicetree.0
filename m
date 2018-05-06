@@ -1,32 +1,44 @@
-Return-Path: <SRS0=QbTR=HV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:35800 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1750970AbeEBVbR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 2 May 2018 17:31:17 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH 0/2] Add a property to tell camera sensor orientation, support it in smiapp
-Date: Thu,  3 May 2018 00:31:13 +0300
-Message-Id: <20180502213115.24000-1-sakari.ailus@linux.intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, andy.yeh@intel.com
+Return-Path: <SRS0=qowN=HZ=googlemail.com=martin.blumenstingl@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/6] Meson8m2 (32-bit ARM) SoC support
+Date: Sun,  6 May 2018 11:21:13 +0200
+Message-Id: <20180506092119.467-1-martin.blumenstingl@googlemail.com>
+To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com, carlo@caione.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: balbes-150@yandex.ru, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+This series adds support for the Meson8m2 SoC. This SoC is mostly
+compatible with Meson8 while using some peripherals from Meson8b. Patch
+#4 contains a list of (known) differences between the Meson8 and Meson8m2
+SoCs.
 
-The two patches add an "upside-down" property to the video bindings and
-support for the property in the smiapp driver.
+The first supported board with Meson8m2 SoC is the "Tronsmart MXIII Plus"
+where Oleg contributed the initial .dts and heavily tested it (many
+thanks!). His testing also confirmed that the Meson8m2 SoC uses the same
+register layout for the Ethernet "glue registers (supported by the
+dwmac-meson8b driver) as Meson8b.
 
-Sakari Ailus (2):
-  dt-bindings: media: Add "upside-down" property to tell sensor
-    orientation
-  smiapp: Support the "upside-down" property
 
- Documentation/devicetree/bindings/media/i2c/nokia,smia.txt   | 2 ++
- Documentation/devicetree/bindings/media/video-interfaces.txt | 3 +++
- drivers/media/i2c/smiapp/smiapp-core.c                       | 3 +++
- 3 files changed, 8 insertions(+)
+Martin Blumenstingl (5):
+  dt-bindings: arm: amlogic: add support for the Meson8m2 SoC
+  dt-bindings: arm: amlogic: add support for the Tronsmart MXIII Plus
+  ARM: meson: add support for the Meson8m2 SoCs
+  ARM: dts: meson: add support for the Meson8m2 SoC
+  ARM: dts: meson8: add the uart_A pins
+
+Oleg Ivanov (1):
+  ARM: dts: meson8m2: add support for the Tronsmart MXIII Plus
+
+ .../devicetree/bindings/arm/amlogic.txt       |   6 +
+ arch/arm/boot/dts/Makefile                    |   2 +
+ arch/arm/boot/dts/meson8.dtsi                 |  16 ++
+ arch/arm/boot/dts/meson8m2-mxiii-plus.dts     | 244 ++++++++++++++++++
+ arch/arm/boot/dts/meson8m2.dtsi               |  54 ++++
+ arch/arm/mach-meson/Kconfig                   |   7 +
+ arch/arm/mach-meson/meson.c                   |   1 +
+ 7 files changed, 330 insertions(+)
+ create mode 100644 arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+ create mode 100644 arch/arm/boot/dts/meson8m2.dtsi
 
 -- 
-2.11.0
-
+2.17.0
