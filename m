@@ -1,13 +1,13 @@
 From: Paul Kocialkowski <contact@paulk.fr>
-Subject: [PATCH 3/3] ARM: dts: sun7i: Add support for the Ainol AW1 tablet
-Date: Sun,  6 May 2018 22:56:19 +0200
-Message-ID: <20180506205619.5591-3-contact@paulk.fr>
+Subject: Re: [PATCH 3/3] ARM: dts: sun7i: Add support for the Ainol AW1 tablet
+Date: Sun, 06 May 2018 23:38:51 +0200
+Message-ID: <2f45fb80d9c56b11a93a2ffc80217a4074cb572b.camel@paulk.fr>
 References: <20180506205619.5591-1-contact@paulk.fr>
+ <20180506205619.5591-3-contact@paulk.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============0106928588=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180506205619.5591-1-contact@paulk.fr>
+In-Reply-To: <20180506205619.5591-3-contact@paulk.fr>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -18,123 +18,394 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Paul Kocialkowski <contact@paulk.fr>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBBaW5vbCBBVzEsIGFuIEEyMC1iYXNlZCA3IiB0YWJs
-ZXQgZnJvbSBBaW5vbC4KClRoZSBmb2xsb3dpbmcgYm9hcmQtc3BlY2lmaWMgZmVhdHVyZXMgYXJl
-IHN1cHBvcnRlZDoKKiBMQ0QgcGFuZWwKKiBCYWNrbGlnaHQKKiBVU0IgT1RHCiogQnV0dG9ucwoq
-IFRvdWNoc2NyZWVuIChkb2Vzbid0IHdvcmsgd2l0aG91dCBub24tZnJlZSBmaXJtd2FyZSkKKiBB
-Y2NlbGVyb21ldGVyCiogQmF0dGVyeQoKVGhlIGZvbGxvd2luZyBhcmUgdW50ZXN0ZWQ6CiogQXVk
-aW8gb3V0cHV0CiogQXVkaW8gc3BlYWtlcnMKKiBVU0IgdmlhIFNQQ0kgY29ubmVjdG9yCgpUaGUg
-Zm9sbG93aW5nIGFyZSBub3Qgc3VwcG9ydGVkOgoqIFdpLUZpCiogQmx1ZXRvb3RoCiogTkFORAoq
-IEF1ZGlvIHZpYSBTUENJIGNvbm5lY3RvcgoqIEF1ZGlvIHZpYSBCbHVldG9vdGggSTJTCgpTaWdu
-ZWQtb2ZmLWJ5OiBQYXVsIEtvY2lhbGtvd3NraSA8Y29udGFjdEBwYXVsay5mcj4KLS0tCiBhcmNo
-L2FybS9ib290L2R0cy9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAgMSArCiBhcmNoL2FybS9i
-b290L2R0cy9zdW43aS1hMjAtYWlub2wtYXcxLmR0cyB8IDI3NSArKysrKysrKysrKysrKysrKysr
-KysrCiAyIGZpbGVzIGNoYW5nZWQsIDI3NiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2
-NDQgYXJjaC9hcm0vYm9vdC9kdHMvc3VuN2ktYTIwLWFpbm9sLWF3MS5kdHMKCmRpZmYgLS1naXQg
-YS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxl
-CmluZGV4IDdlMjQyNDk1NzgwOS4uNGE4MDk3MWYyYmM5IDEwMDY0NAotLS0gYS9hcmNoL2FybS9i
-b290L2R0cy9NYWtlZmlsZQorKysgYi9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZQpAQCAtOTQ2
-LDYgKzk0Niw3IEBAIGR0Yi0kKENPTkZJR19NQUNIX1NVTjZJKSArPSBcCiAJc3VuNmktYTMxcy1z
-aW5vdm9pcC1icGktbTIuZHRiIFwKIAlzdW42aS1hMzFzLXlvbmVzLXRvcHRlY2gtYnMxMDc4LXYy
-LmR0YgogZHRiLSQoQ09ORklHX01BQ0hfU1VON0kpICs9IFwKKwlzdW43aS1hMjAtYWlub2wtYXcx
-LmR0YiBcCiAJc3VuN2ktYTIwLWJhbmFuYXBpLmR0YiBcCiAJc3VuN2ktYTIwLWJhbmFuYXBpLW0x
-LXBsdXMuZHRiIFwKIAlzdW43aS1hMjAtYmFuYW5hcHJvLmR0YiBcCmRpZmYgLS1naXQgYS9hcmNo
-L2FybS9ib290L2R0cy9zdW43aS1hMjAtYWlub2wtYXcxLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L3N1bjdpLWEyMC1haW5vbC1hdzEuZHRzCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAw
-MDAwMDAwMC4uNmJiN2Y0N2ZkMDEwCi0tLSAvZGV2L251bGwKKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvc3VuN2ktYTIwLWFpbm9sLWF3MS5kdHMKQEAgLTAsMCArMSwyNzUgQEAKKy8qCisgKiBDb3B5
-cmlnaHQgKEMpIDIwMTggUGF1bCBLb2NpYWxrb3dza2kgPGNvbnRhY3RAcGF1bGsuZnI+CisgKgor
-ICogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjArCisgKi8KKworL2R0cy12MS87Cisj
-aW5jbHVkZSAic3VuN2ktYTIwLmR0c2kiCisjaW5jbHVkZSAic3VueGktY29tbW9uLXJlZ3VsYXRv
-cnMuZHRzaSIKKworI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPgorI2luY2x1ZGUg
-PGR0LWJpbmRpbmdzL2lucHV0L2lucHV0Lmg+CisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJy
-dXB0LWNvbnRyb2xsZXIvaXJxLmg+CisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcHdtL3B3bS5oPgor
-CisvIHsKKwltb2RlbCA9ICJBaW5vbCBBVzEiOworCWNvbXBhdGlibGUgPSAiYWlub2wsYWlub2wt
-YXcxIiwgImFsbHdpbm5lcixzdW43aS1hMjAiOworCisJYWxpYXNlcyB7CisJCXNlcmlhbDAgPSAm
-dWFydDA7CisJfTsKKworCWNob3NlbiB7CisJCXN0ZG91dC1wYXRoID0gInNlcmlhbDA6MTE1MjAw
-bjgiOworCX07CisKKwliYWNrbGlnaHQ6IGJhY2tsaWdodCB7CisJCWNvbXBhdGlibGUgPSAicHdt
-LWJhY2tsaWdodCI7CisJCXB3bXMgPSA8JnB3bSAwIDUwMDAwIFBXTV9QT0xBUklUWV9JTlZFUlRF
-RD47CisJCWJyaWdodG5lc3MtbGV2ZWxzID0gPDAgMTAgMjAgMzAgNDAgNTAgNjAgNzAgODAgOTAg
-MTAwPjsKKwkJZGVmYXVsdC1icmlnaHRuZXNzLWxldmVsID0gPDU+OworCQllbmFibGUtZ3Bpb3Mg
-PSA8JnBpbyA3IDcgR1BJT19BQ1RJVkVfSElHSD47IC8qIFBINyAqLworCX07CisKKwlwYW5lbDog
-cGFuZWwgeworCQljb21wYXRpYmxlID0gImlubm9sdXgsYXQwNzB0bjkwIjsKKwkJI2FkZHJlc3Mt
-Y2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+OworCQlwb3dlci1zdXBwbHkgPSA8JnBh
-bmVsX3Bvd2VyPjsKKwkJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+OworCisJCXBvcnRAMCB7CisJ
-CQlyZWcgPSA8MD47CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNzaXplLWNlbGxzID0g
-PDA+OworCisJCQlwYW5lbF9pbnB1dDogZW5kcG9pbnRAMCB7CisJCQkJcmVnID0gPDA+OworCQkJ
-CXJlbW90ZS1lbmRwb2ludCA9IDwmdGNvbjBfb3V0X3BhbmVsPjsKKwkJCX07CisJCX07CisJfTsK
-KworCXBhbmVsX3Bvd2VyOiBwYW5lbF9wb3dlciB7CisJCWNvbXBhdGlibGUgPSAicmVndWxhdG9y
-LWZpeGVkIjsKKwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwkJcGluY3RybC0wID0gPCZw
-YW5lbF9wb3dlcl9waW4+OworCQlyZWd1bGF0b3ItbmFtZSA9ICJwYW5lbC1wb3dlciI7CisJCXJl
-Z3VsYXRvci1taW4tbWljcm92b2x0ID0gPDEwNDAwMDAwPjsKKwkJcmVndWxhdG9yLW1heC1taWNy
-b3ZvbHQgPSA8MTA0MDAwMDA+OworCQlncGlvID0gPCZwaW8gNyA4IEdQSU9fQUNUSVZFX0hJR0g+
-OyAvKiBQSDggKi8KKwkJZW5hYmxlLWFjdGl2ZS1oaWdoOworCQlyZWd1bGF0b3ItYm9vdC1vbjsK
-Kwl9OworfTsKKworJmNvZGVjIHsKKwlhbGx3aW5uZXIscGEtZ3Bpb3MgPSA8JnBpbyA3IDE1IEdQ
-SU9fQUNUSVZFX0hJR0g+OyAvKiBQSDE1ICovCisJc3RhdHVzID0gIm9rYXkiOworfTsKKworJmNw
-dTAgeworCWNwdS1zdXBwbHkgPSA8JnJlZ19kY2RjMj47Cit9OworCismZGUgeworCXN0YXR1cyA9
-ICJva2F5IjsKK307CisKKyZlaGNpMCB7CisJc3RhdHVzID0gIm9rYXkiOworfTsKKworJmVoY2kx
-IHsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCismaTJjMCB7CisJcGluY3RybC1uYW1lcyA9ICJk
-ZWZhdWx0IjsKKwlwaW5jdHJsLTAgPSA8JmkyYzBfcGluc19hPjsKKwlzdGF0dXMgPSAib2theSI7
-CisKKwlheHAyMDk6IHBtaWNAMzQgeworCQlyZWcgPSA8MHgzND47CisJCWludGVycnVwdC1wYXJl
-bnQgPSA8Jm5taV9pbnRjPjsKKwkJaW50ZXJydXB0cyA9IDwwIElSUV9UWVBFX0xFVkVMX0xPVz47
-CisJfTsKK307CisKKyZpMmMxIHsKKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOworCXBpbmN0
-cmwtMCA9IDwmaTJjMV9waW5zX2E+OworCXN0YXR1cyA9ICJva2F5IjsKKworCWxpczNkaDogYWNj
-ZWxlcm9tZXRlckAxOCB7CisJCWNvbXBhdGlibGUgPSAic3QsbGlzM2RoLWFjY2VsIjsKKwkJcmVn
-ID0gPDB4MTg+OworCQl2ZGQtc3VwcGx5ID0gPCZyZWdfdmNjM3YzPjsKKwkJdmRkaW8tc3VwcGx5
-ID0gPCZyZWdfdmNjM3YzPjsKKwkJc3QsZHJkeS1pbnQtcGluID0gPDE+OworCX07Cit9OworCism
-aTJjMiB7CisJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwlwaW5jdHJsLTAgPSA8JmkyYzJf
-cGluc19hPjsKKwlzdGF0dXMgPSAib2theSI7CisJY2xvY2stZnJlcXVlbmN5ID0gPDQwMDAwMD47
-CisKKwlnc2wxNjgwOiB0b3VjaHNjcmVlbkA0MCB7CisJCWNvbXBhdGlibGUgPSAic2lsZWFkLGdz
-bDE2ODAiOworCQlyZWcgPSA8MHg0MD47CisJCWludGVycnVwdC1wYXJlbnQgPSA8JnBpbz47CisJ
-CWludGVycnVwdHMgPSA8NyAyMSBJUlFfVFlQRV9FREdFX0ZBTExJTkc+OyAvKiBFSU5UMjEgKFBI
-MjEpICovCisJCXBvd2VyLWdwaW9zID0gPCZwaW8gNyAyMCBHUElPX0FDVElWRV9ISUdIPjsgLyog
-UEgyMCAqLworCQlmaXJtd2FyZS1uYW1lID0gImdzbDE2ODAtYWlub2wtYXcxLmZ3IjsKKwkJdG91
-Y2hzY3JlZW4tc2l6ZS14ID0gPDQ4MD47CisJCXRvdWNoc2NyZWVuLXNpemUteSA9IDw4MDA+Owor
-CQl0b3VjaHNjcmVlbi1zd2FwcGVkLXgteTsKKwkJdG91Y2hzY3JlZW4taW52ZXJ0ZWQteTsKKwkJ
-c2lsZWFkLG1heC1maW5nZXJzID0gPDU+OworCX07Cit9OworCismbHJhZGMgeworCXZyZWYtc3Vw
-cGx5ID0gPCZyZWdfbGRvMj47CisJc3RhdHVzID0gIm9rYXkiOworCisJYnV0dG9uQDU3MSB7CisJ
-CWxhYmVsID0gIlZvbHVtZSBVcCI7CisJCWxpbnV4LGNvZGUgPSA8S0VZX1ZPTFVNRVVQPjsKKwkJ
-Y2hhbm5lbCA9IDwwPjsKKwkJdm9sdGFnZSA9IDw1NzE0Mjg+OworCX07CisKKwlidXR0b25ANzYx
-IHsKKwkJbGFiZWwgPSAiVm9sdW1lIERvd24iOworCQlsaW51eCxjb2RlID0gPEtFWV9WT0xVTUVE
-T1dOPjsKKwkJY2hhbm5lbCA9IDwwPjsKKwkJdm9sdGFnZSA9IDw3NjE5MDQ+OworCX07CisKKwli
-dXR0b25AOTUyIHsKKwkJbGFiZWwgPSAiSG9tZSI7CisJCWxpbnV4LGNvZGUgPSA8S0VZX0hPTUU+
-OworCQljaGFubmVsID0gPDA+OworCQl2b2x0YWdlID0gPDk1MjM4MD47CisJfTsKK307CisKKyZt
-bWMwIHsKKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOworCXBpbmN0cmwtMCA9IDwmbW1jMF9w
-aW5zX2E+OworCXZtbWMtc3VwcGx5ID0gPCZyZWdfdmNjM3YzPjsKKwlidXMtd2lkdGggPSA8ND47
-CisJY2QtZ3Bpb3MgPSA8JnBpbyA3IDEgR1BJT19BQ1RJVkVfSElHSD47IC8qIFBIMSAqLworCWNk
-LWludmVydGVkOworCXN0YXR1cyA9ICJva2F5IjsKK307CisKKyZvaGNpMCB7CisJc3RhdHVzID0g
-Im9rYXkiOworfTsKKworJm9oY2kxIHsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCismb3RnX3Ny
-YW0geworCXN0YXR1cyA9ICJva2F5IjsKK307CisKKyZwaW8geworCXBhbmVsX3Bvd2VyX3Bpbjog
-cGFuZWxfcG93ZXJfcGluQDAgeworCQlwaW5zID0gIlBIOCI7CisJCWZ1bmN0aW9uID0gImdwaW9f
-b3V0IjsKKwl9OworfTsKKworJnB3bSB7CisJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwlw
-aW5jdHJsLTAgPSA8JnB3bTBfcGluc19hPjsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCismdGNv
-bjAgeworCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJcGluY3RybC0wID0gPCZsY2QwX3Jn
-Yjg4OF9waW5zPjsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCismdGNvbjBfb3V0IHsKKwl0Y29u
-MF9vdXRfcGFuZWw6IGVuZHBvaW50QDAgeworCQlyZWcgPSA8MD47CisJCXJlbW90ZS1lbmRwb2lu
-dCA9IDwmcGFuZWxfaW5wdXQ+OworCX07Cit9OworCismdWFydDAgeworCXBpbmN0cmwtbmFtZXMg
-PSAiZGVmYXVsdCI7CisJcGluY3RybC0wID0gPCZ1YXJ0MF9waW5zX2E+OworCXN0YXR1cyA9ICJv
-a2F5IjsKK307CisKKyZ1c2Jfb3RnIHsKKwlkcl9tb2RlID0gIm90ZyI7CisJc3RhdHVzID0gIm9r
-YXkiOworfTsKKworJnVzYnBoeSB7CisJdXNiMF9pZF9kZXQtZ3BpbyA9IDwmcGlvIDcgNCBHUElP
-X0FDVElWRV9ISUdIPjsgLyogUEg0ICovCisJdXNiMF92YnVzX3Bvd2VyLXN1cHBseSA9IDwmdXNi
-X3Bvd2VyX3N1cHBseT47CisJdXNiMF92YnVzLXN1cHBseSA9IDwmcmVnX3VzYjBfdmJ1cz47CisJ
-dXNiMV92YnVzLXN1cHBseSA9IDwmcmVnX3VzYjFfdmJ1cz47CisJdXNiMl92YnVzLXN1cHBseSA9
-IDwmcmVnX3VzYjJfdmJ1cz47CisJc3RhdHVzID0gIm9rYXkiOworfTsKKworI2luY2x1ZGUgImF4
-cDIwOS5kdHNpIgorCismYmF0dGVyeV9wb3dlcl9zdXBwbHkgeworCXN0YXR1cyA9ICJva2F5IjsK
-K307CisKKyZyZWdfZGNkYzIgeworCXJlZ3VsYXRvci1hbHdheXMtb247CisJcmVndWxhdG9yLW1p
-bi1taWNyb3ZvbHQgPSA8MTAwMDAwMD47CisJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MTQ1
-MDAwMD47CisJcmVndWxhdG9yLW5hbWUgPSAidmRkLWNwdSI7Cit9OworCismcmVnX2RjZGMzIHsK
-KwlyZWd1bGF0b3ItYWx3YXlzLW9uOworCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDEwMDAw
-MDA+OworCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE0MDAwMDA+OworCXJlZ3VsYXRvci1u
-YW1lID0gInZkZC1pbnQtZGxsIjsKK307CisKKyZyZWdfbGRvMSB7CisJcmVndWxhdG9yLW5hbWUg
-PSAidmRkLXJ0YyI7Cit9OworCismcmVnX2xkbzIgeworCXJlZ3VsYXRvci1hbHdheXMtb247CisJ
-cmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MzAwMDAwMD47CisJcmVndWxhdG9yLW1heC1taWNy
-b3ZvbHQgPSA8MzAwMDAwMD47CisJcmVndWxhdG9yLW5hbWUgPSAiYXZjYyI7Cit9OworCismcmVn
-X3VzYjBfdmJ1cyB7CisJc3RhdHVzID0gIm9rYXkiOworfTsKKworJnJlZ191c2IxX3ZidXMgewor
-CXN0YXR1cyA9ICJva2F5IjsKK307CisKKyZyZWdfdXNiMl92YnVzIHsKKwlzdGF0dXMgPSAib2th
-eSI7Cit9OworCismdXNiX3Bvd2VyX3N1cHBseSB7CisJc3RhdHVzID0gIm9rYXkiOworfTsKLS0g
-CjIuMTcuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0106928588==
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-ksghnooShb75xlCfqZvF"
+
+
+--=-ksghnooShb75xlCfqZvF
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Le dimanche 06 mai 2018 =C3=A0 22:56 +0200, Paul Kocialkowski a =C3=A9crit =
+:
+> This adds support for the Ainol AW1, an A20-based 7" tablet from
+> Ainol.
+>=20
+> The following board-specific features are supported:
+> * LCD panel
+> * Backlight
+> * USB OTG
+> * Buttons
+> * Touchscreen (doesn't work without non-free firmware)
+> * Accelerometer
+> * Battery
+>=20
+> The following are untested:
+> * Audio output
+> * Audio speakers
+> * USB via SPCI connector
+>=20
+> The following are not supported:
+> * Wi-Fi
+> * Bluetooth
+> * NAND
+> * Audio via SPCI connector
+> * Audio via Bluetooth I2S
+>=20
+> Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+> ---
+>  arch/arm/boot/dts/Makefile                |   1 +
+>  arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts | 275
+> ++++++++++++++++++++++
+>  2 files changed, 276 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
+>=20
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 7e2424957809..4a80971f2bc9 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -946,6 +946,7 @@ dtb-$(CONFIG_MACH_SUN6I) +=3D \
+>  	sun6i-a31s-sinovoip-bpi-m2.dtb \
+>  	sun6i-a31s-yones-toptech-bs1078-v2.dtb
+>  dtb-$(CONFIG_MACH_SUN7I) +=3D \
+> +	sun7i-a20-ainol-aw1.dtb \
+>  	sun7i-a20-bananapi.dtb \
+>  	sun7i-a20-bananapi-m1-plus.dtb \
+>  	sun7i-a20-bananapro.dtb \
+> diff --git a/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
+> b/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
+> new file mode 100644
+> index 000000000000..6bb7f47fd010
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
+> @@ -0,0 +1,275 @@
+> +/*
+> + * Copyright (C) 2018 Paul Kocialkowski <contact@paulk.fr>
+> + *
+> + * SPDX-License-Identifier: GPL-2.0+
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun7i-a20.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/pwm/pwm.h>
+> +
+> +/ {
+> +	model =3D "Ainol AW1";
+> +	compatible =3D "ainol,ainol-aw1", "allwinner,sun7i-a20";
+> +
+> +	aliases {
+> +		serial0 =3D &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path =3D "serial0:115200n8";
+> +	};
+> +
+> +	backlight: backlight {
+> +		compatible =3D "pwm-backlight";
+> +		pwms =3D <&pwm 0 50000 PWM_POLARITY_INVERTED>;
+> +		brightness-levels =3D <0 10 20 30 40 50 60 70 80 90
+> 100>;
+> +		default-brightness-level =3D <5>;
+> +		enable-gpios =3D <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
+> +	};
+> +
+> +	panel: panel {
+> +		compatible =3D "innolux,at070tn90";
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +		power-supply =3D <&panel_power>;
+> +		backlight =3D <&backlight>;
+> +
+> +		port@0 {
+> +			reg =3D <0>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			panel_input: endpoint@0 {
+> +				reg =3D <0>;
+> +				remote-endpoint =3D <&tcon0_out_panel>;
+> +			};
+> +		};
+> +	};
+> +
+> +	panel_power: panel_power {
+> +		compatible =3D "regulator-fixed";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&panel_power_pin>;
+> +		regulator-name =3D "panel-power";
+> +		regulator-min-microvolt =3D <10400000>;
+> +		regulator-max-microvolt =3D <10400000>;
+> +		gpio =3D <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
+> +		enable-active-high;
+> +		regulator-boot-on;
+> +	};
+> +};
+> +
+> +&codec {
+> +	allwinner,pa-gpios =3D <&pio 7 15 GPIO_ACTIVE_HIGH>; /* PH15 */
+> +	status =3D "okay";
+> +};
+> +
+> +&cpu0 {
+> +	cpu-supply =3D <&reg_dcdc2>;
+> +};
+> +
+> +&de {
+> +	status =3D "okay";
+> +};
+> +
+> +&ehci0 {
+> +	status =3D "okay";
+> +};
+> +
+> +&ehci1 {
+> +	status =3D "okay";
+> +};
+> +
+> +&i2c0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&i2c0_pins_a>;
+> +	status =3D "okay";
+> +
+> +	axp209: pmic@34 {
+> +		reg =3D <0x34>;
+> +		interrupt-parent =3D <&nmi_intc>;
+> +		interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&i2c1_pins_a>;
+> +	status =3D "okay";
+> +
+> +	lis3dh: accelerometer@18 {
+> +		compatible =3D "st,lis3dh-accel";
+> +		reg =3D <0x18>;
+> +		vdd-supply =3D <&reg_vcc3v3>;
+> +		vddio-supply =3D <&reg_vcc3v3>;
+> +		st,drdy-int-pin =3D <1>;
+> +	};
+> +};
+> +
+> +&i2c2 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&i2c2_pins_a>;
+> +	status =3D "okay";
+> +	clock-frequency =3D <400000>;
+> +
+> +	gsl1680: touchscreen@40 {
+> +		compatible =3D "silead,gsl1680";
+> +		reg =3D <0x40>;
+> +		interrupt-parent =3D <&pio>;
+> +		interrupts =3D <7 21 IRQ_TYPE_EDGE_FALLING>; /* EINT21
+> (PH21) */
+> +		power-gpios =3D <&pio 7 20 GPIO_ACTIVE_HIGH>; /* PH20
+> */
+> +		firmware-name =3D "gsl1680-ainol-aw1.fw";
+> +		touchscreen-size-x =3D <480>;
+> +		touchscreen-size-y =3D <800>;
+> +		touchscreen-swapped-x-y;
+> +		touchscreen-inverted-y;
+> +		silead,max-fingers =3D <5>;
+> +	};
+> +};
+> +
+> +&lradc {
+> +	vref-supply =3D <&reg_ldo2>;
+> +	status =3D "okay";
+> +
+> +	button@571 {
+> +		label =3D "Volume Up";
+> +		linux,code =3D <KEY_VOLUMEUP>;
+> +		channel =3D <0>;
+> +		voltage =3D <571428>;
+> +	};
+> +
+> +	button@761 {
+> +		label =3D "Volume Down";
+> +		linux,code =3D <KEY_VOLUMEDOWN>;
+> +		channel =3D <0>;
+> +		voltage =3D <761904>;
+> +	};
+> +
+> +	button@952 {
+> +		label =3D "Home";
+> +		linux,code =3D <KEY_HOME>;
+> +		channel =3D <0>;
+> +		voltage =3D <952380>;
+> +	};
+> +};
+> +
+> +&mmc0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&mmc0_pins_a>;
+> +	vmmc-supply =3D <&reg_vcc3v3>;
+> +	bus-width =3D <4>;
+> +	cd-gpios =3D <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+> +	cd-inverted;
+> +	status =3D "okay";
+> +};
+> +
+> +&ohci0 {
+> +	status =3D "okay";
+> +};
+> +
+> +&ohci1 {
+> +	status =3D "okay";
+> +};
+> +
+> +&otg_sram {
+> +	status =3D "okay";
+> +};
+> +
+> +&pio {
+> +	panel_power_pin: panel_power_pin@0 {
+> +		pins =3D "PH8";
+> +		function =3D "gpio_out";
+> +	};
+> +};
+> +
+> +&pwm {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pwm0_pins_a>;
+> +	status =3D "okay";
+> +};
+> +
+> +&tcon0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&lcd0_rgb888_pins>;
+
+Mhh, looks like this should be lcd0_rgb666_pins.
+
+> +	status =3D "okay";
+> +};
+> +
+> +&tcon0_out {
+> +	tcon0_out_panel: endpoint@0 {
+> +		reg =3D <0>;
+> +		remote-endpoint =3D <&panel_input>;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&uart0_pins_a>;
+> +	status =3D "okay";
+> +};
+> +
+> +&usb_otg {
+> +	dr_mode =3D "otg";
+> +	status =3D "okay";
+> +};
+> +
+> +&usbphy {
+> +	usb0_id_det-gpio =3D <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
+> +	usb0_vbus_power-supply =3D <&usb_power_supply>;
+> +	usb0_vbus-supply =3D <&reg_usb0_vbus>;
+> +	usb1_vbus-supply =3D <&reg_usb1_vbus>;
+> +	usb2_vbus-supply =3D <&reg_usb2_vbus>;
+> +	status =3D "okay";
+> +};
+> +
+> +#include "axp209.dtsi"
+> +
+> +&battery_power_supply {
+> +	status =3D "okay";
+> +};
+> +
+> +&reg_dcdc2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt =3D <1000000>;
+> +	regulator-max-microvolt =3D <1450000>;
+> +	regulator-name =3D "vdd-cpu";
+> +};
+> +
+> +&reg_dcdc3 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt =3D <1000000>;
+> +	regulator-max-microvolt =3D <1400000>;
+> +	regulator-name =3D "vdd-int-dll";
+> +};
+> +
+> +&reg_ldo1 {
+> +	regulator-name =3D "vdd-rtc";
+> +};
+> +
+> +&reg_ldo2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt =3D <3000000>;
+> +	regulator-max-microvolt =3D <3000000>;
+> +	regulator-name =3D "avcc";
+> +};
+> +
+> +&reg_usb0_vbus {
+> +	status =3D "okay";
+> +};
+> +
+> +&reg_usb1_vbus {
+> +	status =3D "okay";
+> +};
+> +
+> +&reg_usb2_vbus {
+> +	status =3D "okay";
+> +};
+> +
+> +&usb_power_supply {
+> +	status =3D "okay";
+> +};
+--=20
+Paul Kocialkowski,
+
+developer of free digital technology and hardware support.
+
+Website: https://www.paulk.fr/
+Coding blog: https://code.paulk.fr/
+Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+--=-ksghnooShb75xlCfqZvF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlrvdesACgkQhP3B6o/u
+lQwX8Q//ZrTxkRkWS8IGQc0mVZtauRG7BCpGHLcJUJOemBgnMPXuQmofXNTGIRVJ
+/0lL4YOzJbukt3xnEqnNEiPYLs+PEKmCmy0r1EKosS0bStpew86LPVkgFKQxOdCJ
+qtCDKKYZoRcwjgVQkGpzsb14miZSkJ/aLPSt1gPA+YGG6346sMpc6hrn5E4fsiDI
+fNswH43M1xB8dfeqUfL9kwKD7GMF+7oqnV0xYbjwsDn8zaMNqMsIveHogbO5RzOd
+6Y0BN5kcKosrdrowwIcecE48KbCaEeXv3QqTeRrGMUQF7TvRHl789yiIPxVdOkaM
+tjdJs2T0cpaRgFJIDdizqWhJxSdT/lHN2Ot68buNFsQ6VI90Eh7R05AHPY+LU5lt
+Fb3AKxvaaMmeBjqwDNzDOU2OOHFBmIDqttdNNUIdYHhyyyMxOguEcD4OmV9RqTki
+ACv8YaGxN97RUPKscSN3ceht6fa2cYKepOSt25N04YfyYVoGwfNKzjSOYUoQyVzd
+q3CHkh7WYS0m9lfCQntw6psxGTrKsq5tGNUBtauS/1dTfdshkvbPmfgMc++5mJN4
+DvrE5awVTTS42FBOz84j4OTU9vjNLMWwzUhNt0lPTwXLDnvcop3o3bVy/UQTcuHW
+1IKVDom6cUctQhI3VWJr6F3b6ftqkWQ7bm8Ok97MX5PlBrJLK5g=
+=UuhG
+-----END PGP SIGNATURE-----
+
+--=-ksghnooShb75xlCfqZvF--
+
+
+--===============0106928588==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0106928588==--
