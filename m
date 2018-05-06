@@ -1,103 +1,293 @@
-Return-Path: <SRS0=IKTP=H5=mediatek.com=argus.lin@kernel.org>
-From: <argus.lin@mediatek.com>
-Subject: [PATCH V5 0/4] Pwrap: Mediatek pwrap driver for mt6797
-Date: Thu, 10 May 2018 21:01:55 +0800
-Message-ID: <1525957319-20557-1-git-send-email-argus.lin@mediatek.com>
-MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_007_1380858335.999013154"
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-Path: <SRS0=qowN=HZ=googlemail.com=martin.blumenstingl@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 6/6] ARM: dts: meson8m2: add support for the Tronsmart MXIII Plus
+Date: Sun,  6 May 2018 11:21:19 +0200
+Message-Id: <20180506092119.467-7-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20180506092119.467-1-martin.blumenstingl@googlemail.com>
+References: <20180506092119.467-1-martin.blumenstingl@googlemail.com>
+To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com, carlo@caione.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: balbes-150@yandex.ru, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_007_1380858335.999013154
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_008_1824443256.1537580129"
+From: Oleg Ivanov <balbes-150@yandex.ru>
 
---__=_Part_Boundary_008_1824443256.1537580129
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+The Tronsmart MXIII Plus is an Android TV box which uses the Amlogic
+S812 (Meson8m2) SoC. It uses a Realtek RTL8211F RGMII Ethernet PHY as
+well as a Ricoh RN5T618 system power controller. It also comes with an
+Ampak AP6330 SDIO wifi/Bluetooth combo chip (support for wifi and
+Bluetooth is currently not added because the Linux drivers currently
+only support one MMC controller and that is used for the SD card).
 
-PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
-SGVyZSYjMzk7cyB2ZXJzaW9uIDUgb2YgdGhlIHBhdGNoIHNlcmllcywgaW5jbHVkZSA0IHBhdGNo
-ZXM6DQoxLiBmaXggYnVnIGF0IGNpcGhlciBpbml0IGZvcg0KNWFlNDgwNDBhYTQ3ICgmcXVvdDtz
-b2M6IG1lZGlhdGVrOiBQTUlDIHdyYXA6IGFkZCBtdDYzMjMgc2xhdmUgc3VwcG9ydCZxdW90OykN
-CjIuIGFkZCBwd3JhcCBkcml2ZXIgZm9yIG10Njc5NyBTb0NzLg0KMy4gYWRkIG10NjM1MSBzdXBw
-b3J0IGZvciBtdDY3OTcgU29Dcy4NCjQuIHJlbW92ZSBjYXBzIGZsYWcgYXQgcGF0Y2ggVjQgYW5k
-IGtlZXAgdG8gdXNlIGhhc19icmlkZ2UuDQoNCkNoYW5nZXMgZnJvbSB2MyB0byB2NDoNCjEpYWRk
-IGNhcHMgZmxhZyBmb3IgcHdyYXAgdG8gZXhwbGFpbiBwd3JhcCYjMzk7cyBjYXBhYmlsaXR5Lg0K
-MilyZW1vdmUgaGFzX2JyaWRnZSBmbGFnLCByZXBsYWNlIGJ5IGNhcHMgZmxhZy4NCjMpYWRkIGlu
-dDFfZW5fYWxsIGZsYWcgZm9yIG5ldyBpbnRlcnJ1cHQuDQo0KWFkZCBwd3JhcCBkcml2ZXJzIGZv
-ciBtdDY3OTcgU29Dcy4NCjUpZml4IGJ1ZyBhdCBjaXBoZXIgaW5pdCBmb3INCjVhZTQ4MDQwYWE0
-NyAoJnF1b3Q7c29jOiBtZWRpYXRlazogUE1JQyB3cmFwOiBhZGQgbXQ2MzIzIHNsYXZlIHN1cHBv
-cnQmcXVvdDspDQo2KWFkZCBtdDYzNTEgc3VwcG9ydCBmb3IgbXQ2Nzk3IFNvQ3MuDQoNCkNoYW5n
-ZXMgZnJvbSB2MiB0byB2MzoNCjEpYWRqdXN0IHVwc3RyZWFtIHBhdGNoIHNlcXVlbmNlLg0KMilm
-aXggYnVpbGQgZXJyb3IgZm9yIG5ldyBmaWxlZCBhdCBwbWljX3dyYXBwZXJfdHlwZS4NCjMpYWRq
-dXN0IHBtaWNfdHlwZSBlbnVtIHNlcXVlbmNlLg0KDQpDaGFuZ2VzIGZyb20gdjEgdG8gdjI6DQox
-KSBhZGQgbmV3IGNhcGFiaWxpdHkgZmllbGQgYW5kIE1BUkNPIGZvciBkaWZmZXJlbnQgcHdyYXAg
-c2VyaWVzLCB0aGUgY2FwYWJpbGl0eSBpbmNsdWRlIEJSSURHRSwgUkVTRVQsIERDTSwgUFJJT1JJ
-VFlfU0VMIGFuZCBJTlQxX0VOLg0KMikgYWRkIHN0YXJ2YWN0aW9uIGZvciBtdDY3OTcgcHdyYXAu
-DQozKSBhZGQgSU5UMSBpbnRlcnJ1cHQgdG8gaGFuZGxlIHN0YXJ2YWN0aW9uIGFuZCByZXF1ZXN0
-IGV4Y2VwdGlvbi4NCg0KDQoNCkFyZ3VzIExpbiAoNCk6DQogIGR0LWJpbmRpbmdzOiBwd3JhcDog
-bWVkaWF0ZWs6IGFkZCBwd3JhcCBzdXBwb3J0IGZvciBNVDY3OTcNCiAgc29jOiBtZWRpYXRlazog
-cHdyYXA6IGZpeCBjaXBoZXIgaW5pdCBzZXR0aW5nIGVycm9yDQogIHNvYzogbWVkaWF0ZWs6IHB3
-cmFwOiBhZGQgcHdyYXAgZHJpdmVyIGZvciBtdDY3OTcgU29Dcw0KICBzb2M6IG1lZGlhdGVrOiBw
-d3JhcDogYWRkIG10NjM1MSBkcml2ZXIgZm9yIG10Njc5NyBTb0NzDQoNCiAuLi4vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0ICAgICB8ICAxICsNCiBkcml2ZXJzL3Nv
-Yy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMgICAgICAgICAgICAgICB8IDgxICsrKysrKysrKysr
-KysrKysrKysrKy0NCiAyIGZpbGVzIGNoYW5nZWQsIDgwIGluc2VydGlvbnMoKyksIDIgZGVsZXRp
-b25zKC0pDQoNCi0tIA0KMS44LjEuMS5kaXJ0eQ0KDQo8L3ByZT48IS0tdHlwZTp0ZXh0LS0+PCEt
-LXstLT48cHJlPioqKioqKioqKioqKiogRW1haWwgQ29uZmlkZW50aWFsaXR5IE5vdGljZQ0KICoq
-KioqKioqKioqKioqKioqKioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZS1t
-YWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5IGJlIGNvbmZpZGVu
-dGlhbCwgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhlbXB0IGZyb20g
-ZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVuZGVkIHRvIGJlIA0K
-Y29udmV5ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFueSB1c2UsIGRp
-c3NlbWluYXRpb24sIA0KZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWluaW5nIG9yIGNvcHlp
-bmcgb2YgdGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50cykgYnkgdW5pbnRl
-bmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5IA0KYmUgdW5s
-YXdmdWwuIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUtbWFp
-bCwgb3IgYmVsaWV2ZQ0KIA0KdGhhdCB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFpbCBpbiBl
-cnJvciwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIA0KaW1tZWRpYXRlbHkgKGJ5IHJlcGx5aW5n
-IHRvIHRoaXMgZS1tYWlsKSwgZGVsZXRlIGFueSBhbmQgYWxsIGNvcGllcyBvZiANCnRoaXMgZS1t
-YWlsIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVtLCBhbmQgZG8g
-bm90DQpkaXNjbG9zZSB0aGUgY29udGVudCBvZiB0aGlzIGUtbWFpbCB0byBhbnkgb3RoZXIgcGVy
-c29uLiBUaGFuaw0KIHlvdSE8L3ByZT48IS0tfS0tPg==
+Signed-off-by: Oleg Ivanov <balbes-150@yandex.ru>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ arch/arm/boot/dts/Makefile                |   2 +
+ arch/arm/boot/dts/meson8m2-mxiii-plus.dts | 244 ++++++++++++++++++++++
+ 2 files changed, 246 insertions(+)
+ create mode 100644 arch/arm/boot/dts/meson8m2-mxiii-plus.dts
 
---__=_Part_Boundary_008_1824443256.1537580129
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
-
-RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQpIZXJlJ3MgdmVyc2lv
-biA1IG9mIHRoZSBwYXRjaCBzZXJpZXMsIGluY2x1ZGUgNCBwYXRjaGVzOg0KMS4gZml4IGJ1ZyBh
-dCBjaXBoZXIgaW5pdCBmb3INCjVhZTQ4MDQwYWE0NyAoInNvYzogbWVkaWF0ZWs6IFBNSUMgd3Jh
-cDogYWRkIG10NjMyMyBzbGF2ZSBzdXBwb3J0IikNCjIuIGFkZCBwd3JhcCBkcml2ZXIgZm9yIG10
-Njc5NyBTb0NzLg0KMy4gYWRkIG10NjM1MSBzdXBwb3J0IGZvciBtdDY3OTcgU29Dcy4NCjQuIHJl
-bW92ZSBjYXBzIGZsYWcgYXQgcGF0Y2ggVjQgYW5kIGtlZXAgdG8gdXNlIGhhc19icmlkZ2UuDQoN
-CkNoYW5nZXMgZnJvbSB2MyB0byB2NDoNCjEpYWRkIGNhcHMgZmxhZyBmb3IgcHdyYXAgdG8gZXhw
-bGFpbiBwd3JhcCdzIGNhcGFiaWxpdHkuDQoyKXJlbW92ZSBoYXNfYnJpZGdlIGZsYWcsIHJlcGxh
-Y2UgYnkgY2FwcyBmbGFnLg0KMylhZGQgaW50MV9lbl9hbGwgZmxhZyBmb3IgbmV3IGludGVycnVw
-dC4NCjQpYWRkIHB3cmFwIGRyaXZlcnMgZm9yIG10Njc5NyBTb0NzLg0KNSlmaXggYnVnIGF0IGNp
-cGhlciBpbml0IGZvcg0KNWFlNDgwNDBhYTQ3ICgic29jOiBtZWRpYXRlazogUE1JQyB3cmFwOiBh
-ZGQgbXQ2MzIzIHNsYXZlIHN1cHBvcnQiKQ0KNilhZGQgbXQ2MzUxIHN1cHBvcnQgZm9yIG10Njc5
-NyBTb0NzLg0KDQpDaGFuZ2VzIGZyb20gdjIgdG8gdjM6DQoxKWFkanVzdCB1cHN0cmVhbSBwYXRj
-aCBzZXF1ZW5jZS4NCjIpZml4IGJ1aWxkIGVycm9yIGZvciBuZXcgZmlsZWQgYXQgcG1pY193cmFw
-cGVyX3R5cGUuDQozKWFkanVzdCBwbWljX3R5cGUgZW51bSBzZXF1ZW5jZS4NCg0KQ2hhbmdlcyBm
-cm9tIHYxIHRvIHYyOg0KMSkgYWRkIG5ldyBjYXBhYmlsaXR5IGZpZWxkIGFuZCBNQVJDTyBmb3Ig
-ZGlmZmVyZW50IHB3cmFwIHNlcmllcywgdGhlIGNhcGFiaWxpdHkgaW5jbHVkZSBCUklER0UsIFJF
-U0VULCBEQ00sIFBSSU9SSVRZX1NFTCBhbmQgSU5UMV9FTi4NCjIpIGFkZCBzdGFydmFjdGlvbiBm
-b3IgbXQ2Nzk3IHB3cmFwLg0KMykgYWRkIElOVDEgaW50ZXJydXB0IHRvIGhhbmRsZSBzdGFydmFj
-dGlvbiBhbmQgcmVxdWVzdCBleGNlcHRpb24uDQoNCg0KDQpBcmd1cyBMaW4gKDQpOg0KICBkdC1i
-aW5kaW5nczogcHdyYXA6IG1lZGlhdGVrOiBhZGQgcHdyYXAgc3VwcG9ydCBmb3IgTVQ2Nzk3DQog
-IHNvYzogbWVkaWF0ZWs6IHB3cmFwOiBmaXggY2lwaGVyIGluaXQgc2V0dGluZyBlcnJvcg0KICBz
-b2M6IG1lZGlhdGVrOiBwd3JhcDogYWRkIHB3cmFwIGRyaXZlciBmb3IgbXQ2Nzk3IFNvQ3MNCiAg
-c29jOiBtZWRpYXRlazogcHdyYXA6IGFkZCBtdDYzNTEgZHJpdmVyIGZvciBtdDY3OTcgU29Dcw0K
-DQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCAgICAgfCAg
-MSArDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jICAgICAgICAgICAgICAg
-fCA4MSArKysrKysrKysrKysrKysrKysrKystDQogMiBmaWxlcyBjaGFuZ2VkLCA4MCBpbnNlcnRp
-b25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQotLSANCjEuOC4xLjEuZGlydHkNCg==
-
---__=_Part_Boundary_008_1824443256.1537580129--
-
---__=_Part_Boundary_007_1380858335.999013154--
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 7e2424957809..b6d4fea16f50 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -320,6 +320,8 @@ dtb-$(CONFIG_ARCH_MMP) += \
+ dtb-$(CONFIG_MACH_MESON8B) += \
+ 	meson8b-mxq.dtb \
+ 	meson8b-odroidc1.dtb
++dtb-$(CONFIG_MACH_MESON8M2) += \
++	meson8m2-mxiii-plus.dtb
+ dtb-$(CONFIG_ARCH_MPS2) += \
+ 	mps2-an385.dtb \
+ 	mps2-an399.dtb
+diff --git a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+new file mode 100644
+index 000000000000..f5853610b20b
+--- /dev/null
++++ b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+@@ -0,0 +1,244 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2018 Oleg Ivanov <balbes-150@yandex.ru>
++ * Copyright (c) 2018 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
++ */
++
++/dts-v1/;
++
++#include "meson8m2.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	model = "Tronsmart MXIII Plus";
++	compatible = "tronsmart,mxiii-plus", "amlogic,meson8m2";
++
++	aliases {
++		ethernet0 = &ethmac;
++		i2c0 = &i2c_AO;
++		serial0 = &uart_AO;
++		serial1 = &uart_A;
++		mmc0 = &sd_card_slot;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		reg = <0x40000000 0x80000000>;
++	};
++
++	adc-keys {
++		compatible = "adc-keys";
++		io-channels = <&saradc 0>;
++		io-channel-names = "buttons";
++		keyup-threshold-microvolt = <1710000>;
++
++		button-function {
++			label = "Function";
++			linux,code = <KEY_FN>;
++			press-threshold-microvolt = <10000>;
++		};
++	};
++
++	vcc_3v3: regulator-vcc3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++};
++
++&cpu0 {
++	cpu-supply = <&vcck>;
++};
++
++&ethmac {
++	status = "okay";
++
++	pinctrl-0 = <&eth_rgmii_pins>;
++	pinctrl-names = "default";
++
++	phy-handle = <&eth_phy0>;
++	phy-mode = "rgmii";
++
++	amlogic,tx-delay-ns = <4>;
++
++	snps,reset-gpio = <&gpio GPIOH_4 0>;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-active-low;
++
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		eth_phy0: ethernet-phy@0 {
++			/* Realtek RTL8211F (0x001cc916) */
++			reg = <0>;
++		};
++	};
++};
++
++&ir_receiver {
++	status = "okay";
++	pinctrl-0 = <&ir_recv_pins>;
++	pinctrl-names = "default";
++};
++
++&i2c_AO {
++	status = "okay";
++	pinctrl-0 = <&i2c_ao_pins>;
++	pinctrl-names = "default";
++
++	pmic@32 {
++		compatible = "ricoh,rn5t618";
++		reg = <0x32>;
++		system-power-controller;
++
++		regulators {
++			vcck: DCDC1 {
++				regulator-name = "VCCK";
++				regulator-min-microvolt = <825000>;
++				regulator-max-microvolt = <1150000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			DCDC2 {
++				regulator-name = "VDDAO";
++				regulator-min-microvolt = <950000>;
++				regulator-max-microvolt = <1150000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			DCDC3 {
++				regulator-name = "VDD_DDR";
++				regulator-min-microvolt = <1500000>;
++				regulator-max-microvolt = <1500000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			LDO1 {
++				regulator-name = "VDDIO_AO28";
++				regulator-min-microvolt = <2900000>;
++				regulator-max-microvolt = <2900000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vddio_ao1v8: LDO2 {
++				regulator-name = "VDDIO_AO18";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			LDO3 {
++				regulator-name = "VCC1V8";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			LDO4 {
++				regulator-name = "VCC2V8";
++				regulator-min-microvolt = <2850000>;
++				regulator-max-microvolt = <2850000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			LDO5 {
++				regulator-name = "AVDD1V8";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			LDORTC1 {
++				regulator-name = "VDD_LDO";
++				regulator-min-microvolt = <2700000>;
++				regulator-max-microvolt = <2700000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			LDORTC2 {
++				regulator-name = "RTC_0V9";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <900000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++	};
++};
++
++&saradc {
++	status = "okay";
++	vref-supply = <&vddio_ao1v8>;
++};
++
++&sdio {
++	status = "okay";
++
++	pinctrl-0 = <&sd_b_pins>;
++	pinctrl-names = "default";
++
++	/* SD card */
++	sd_card_slot: slot@1 {
++		compatible = "mmc-slot";
++		reg = <1>;
++		status = "okay";
++
++		bus-width = <4>;
++		no-sdio;
++		cap-mmc-highspeed;
++		cap-sd-highspeed;
++		disable-wp;
++
++		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
++		cd-inverted;
++
++		vmmc-supply = <&vcc_3v3>;
++	};
++};
++
++/* connected to the Bluetooth module */
++&uart_A {
++	status = "okay";
++	pinctrl-0 = <&uart_a1_pins>, <&uart_a1_cts_rts_pins>;
++	pinctrl-names = "default";
++	uart-has-rtscts;
++};
++
++&uart_AO {
++	status = "okay";
++	pinctrl-0 = <&uart_ao_a_pins>;
++	pinctrl-names = "default";
++};
++
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
++
++&usb0_phy {
++	status = "okay";
++};
++
++&usb1_phy {
++	status = "okay";
++};
+-- 
+2.17.0
