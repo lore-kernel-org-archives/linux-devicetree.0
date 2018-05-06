@@ -1,72 +1,121 @@
-Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr10055.outbound.protection.outlook.com ([40.107.1.55]:63776
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751755AbeECAmO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 2 May 2018 20:42:14 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v5 10/14] typec: tcpm: add starting value for drp toggling
-Date: Thu,  3 May 2018 08:24:50 +0800
-Message-Id: <1525307094-27402-11-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
-References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Return-Path: <SRS0=jfmr=HZ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf0-f193.google.com ([209.85.192.193]:41128 "EHLO
+        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751777AbeEFOUL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 6 May 2018 10:20:11 -0400
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v5 09/14] media: ov772x: handle nested s_power() calls
+Date: Sun,  6 May 2018 23:19:24 +0900
+Message-Id: <1525616369-8843-10-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
+References: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: jun.li@nxp.com, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-As DRP port autonomously toggles the Rp/Rd need a start value to
-begin with, so add one parameter for it in tcpm_start_drp_toggling.
+Depending on the v4l2 driver, calling s_power() could be nested.  So the
+actual transitions between power saving mode and normal operation mode
+should only happen at the first power on and the last power off.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Li Jun <jun.li@nxp.com>
+This adds an s_power() nesting counter and updates the power state if the
+counter is modified from 0 to != 0 or from != 0 to 0.
+
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
- drivers/usb/typec/tcpm.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+* v5
+- No changes
 
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index becedcf..0c7fa14 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -2436,15 +2436,15 @@ static int tcpm_set_charge(struct tcpm_port *port, bool charge)
- 	return 0;
+ drivers/media/i2c/ov772x.c | 34 ++++++++++++++++++++++++++++++----
+ 1 file changed, 30 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+index 2b02411..6c0c792 100644
+--- a/drivers/media/i2c/ov772x.c
++++ b/drivers/media/i2c/ov772x.c
+@@ -424,6 +424,9 @@ struct ov772x_priv {
+ 	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
+ 	unsigned short                    band_filter;
+ 	unsigned int			  fps;
++	/* lock to protect power_count */
++	struct mutex			  lock;
++	int				  power_count;
+ #ifdef CONFIG_MEDIA_CONTROLLER
+ 	struct media_pad pad;
+ #endif
+@@ -871,9 +874,26 @@ static int ov772x_power_off(struct ov772x_priv *priv)
+ static int ov772x_s_power(struct v4l2_subdev *sd, int on)
+ {
+ 	struct ov772x_priv *priv = to_ov772x(sd);
++	int ret = 0;
++
++	mutex_lock(&priv->lock);
++
++	/* If the power count is modified from 0 to != 0 or from != 0 to 0,
++	 * update the power state.
++	 */
++	if (priv->power_count == !on)
++		ret = on ? ov772x_power_on(priv) : ov772x_power_off(priv);
++
++	if (!ret) {
++		/* Update the power count. */
++		priv->power_count += on ? 1 : -1;
++		WARN(priv->power_count < 0, "Unbalanced power count\n");
++		WARN(priv->power_count > 1, "Duplicated s_power call\n");
++	}
++
++	mutex_unlock(&priv->lock);
+ 
+-	return on ? ov772x_power_on(priv) :
+-		    ov772x_power_off(priv);
++	return ret;
  }
  
--static bool tcpm_start_drp_toggling(struct tcpm_port *port)
-+static bool tcpm_start_drp_toggling(struct tcpm_port *port,
-+				    enum typec_cc_status cc)
- {
- 	int ret;
+ static const struct ov772x_win_size *ov772x_select_win(u32 width, u32 height)
+@@ -1303,6 +1323,7 @@ static int ov772x_probe(struct i2c_client *client,
+ 		return -ENOMEM;
  
- 	if (port->tcpc->start_drp_toggling &&
- 	    port->port_type == TYPEC_PORT_DRP) {
- 		tcpm_log_force(port, "Start DRP toggling");
--		ret = port->tcpc->start_drp_toggling(port->tcpc,
--						     tcpm_rp_cc(port));
-+		ret = port->tcpc->start_drp_toggling(port->tcpc, cc);
- 		if (!ret)
- 			return true;
- 	}
-@@ -2752,7 +2752,7 @@ static void run_state_machine(struct tcpm_port *port)
- 		if (!port->non_pd_role_swap)
- 			tcpm_swap_complete(port, -ENOTCONN);
- 		tcpm_src_detach(port);
--		if (tcpm_start_drp_toggling(port)) {
-+		if (tcpm_start_drp_toggling(port, tcpm_rp_cc(port))) {
- 			tcpm_set_state(port, DRP_TOGGLING, 0);
- 			break;
- 		}
-@@ -2927,7 +2927,7 @@ static void run_state_machine(struct tcpm_port *port)
- 			tcpm_swap_complete(port, -ENOTCONN);
- 		tcpm_pps_complete(port, -ENOTCONN);
- 		tcpm_snk_detach(port);
--		if (tcpm_start_drp_toggling(port)) {
-+		if (tcpm_start_drp_toggling(port, TYPEC_CC_RD)) {
- 			tcpm_set_state(port, DRP_TOGGLING, 0);
- 			break;
- 		}
+ 	priv->info = client->dev.platform_data;
++	mutex_init(&priv->lock);
+ 
+ 	v4l2_i2c_subdev_init(&priv->subdev, client, &ov772x_subdev_ops);
+ 	v4l2_ctrl_handler_init(&priv->hdl, 3);
+@@ -1313,8 +1334,10 @@ static int ov772x_probe(struct i2c_client *client,
+ 	v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
+ 			  V4L2_CID_BAND_STOP_FILTER, 0, 256, 1, 0);
+ 	priv->subdev.ctrl_handler = &priv->hdl;
+-	if (priv->hdl.error)
+-		return priv->hdl.error;
++	if (priv->hdl.error) {
++		ret = priv->hdl.error;
++		goto error_mutex_destroy;
++	}
+ 
+ 	priv->clk = clk_get(&client->dev, NULL);
+ 	if (IS_ERR(priv->clk)) {
+@@ -1362,6 +1385,8 @@ static int ov772x_probe(struct i2c_client *client,
+ 	clk_put(priv->clk);
+ error_ctrl_free:
+ 	v4l2_ctrl_handler_free(&priv->hdl);
++error_mutex_destroy:
++	mutex_destroy(&priv->lock);
+ 
+ 	return ret;
+ }
+@@ -1376,6 +1401,7 @@ static int ov772x_remove(struct i2c_client *client)
+ 		gpiod_put(priv->pwdn_gpio);
+ 	v4l2_async_unregister_subdev(&priv->subdev);
+ 	v4l2_ctrl_handler_free(&priv->hdl);
++	mutex_destroy(&priv->lock);
+ 
+ 	return 0;
+ }
 -- 
 2.7.4
 
