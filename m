@@ -1,74 +1,39 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 3/3] ARM: dts: s3c64xx: Remove skeleton.dtsi and fix DTC warnings for /memory
-Date: Sun,  6 May 2018 18:10:25 +0200
-Message-ID: <20180506161025.26937-3-krzk@kernel.org>
-References: <20180506161025.26937-1-krzk@kernel.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [EXTERNAL] Re: [PATCH] arm: dts: am437x-sk-evm: add wilink8
+ support
+Date: Sun, 6 May 2018 09:56:21 -0700
+Message-ID: <20180506165621.GL98604@atomide.com>
+References: <1525159453-32489-1-git-send-email-eyalr@ti.com>
+ <20180502145100.GK98604@atomide.com>
+ <5cc906da15da45ab96e06957f878b65b@ti.com>
+ <20180503141759.GP98604@atomide.com>
+ <f0ea5260b3e2413aab4780b203ff24a4@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180506161025.26937-1-krzk@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <f0ea5260b3e2413aab4780b203ff24a4@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+To: "Reizer, Eyal" <eyalr@ti.com>
+Cc: Eyal Reizer <eyalreizer@gmail.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove the usage of skeleton.dtsi to fix the DTC warnings:
+* Reizer, Eyal <eyalr@ti.com> [180506 07:47]:
+> I will try to see what I can find out and why it has always been used only
+> With out-of band interrupts and whether there is a real hardware
+> Limitation behind it . 
+> In the past also the omap-hsmmc driver was not really supporting in-band
+> sdio interrupt out of the box.
+> Not sure what is the state of it tofday.
 
-    arch/arm/boot/dts/s3c6410-mini6410.dtb: Warning (unit_address_vs_reg):
-        /memory: node has a reg or ranges property, but no unit name
-    arch/arm/boot/dts/s3c6410-smdk6410.dtb: Warning (unit_address_vs_reg):
-        /memory: node has a reg or ranges property, but no unit name
+Yeah my guess is that the reason for the separate GPIO interrupt was
+that on omap3 we did not have SDIO interrupt working for years. This was
+because of the issues related to padconf interrupts for off mode.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/s3c6410-mini6410.dts | 3 ++-
- arch/arm/boot/dts/s3c6410-smdk6410.dts | 3 ++-
- arch/arm/boot/dts/s3c64xx.dtsi         | 4 +++-
- 3 files changed, 7 insertions(+), 3 deletions(-)
+We now have Linux generic wakeirq support working with SDIO and it has
+been confirmed to work also for off mode with mwifiex at least. So
+there should be no reason to not also use the SDIO interrupt.
 
-diff --git a/arch/arm/boot/dts/s3c6410-mini6410.dts b/arch/arm/boot/dts/s3c6410-mini6410.dts
-index f68601bd9c91..0e159c884f97 100644
---- a/arch/arm/boot/dts/s3c6410-mini6410.dts
-+++ b/arch/arm/boot/dts/s3c6410-mini6410.dts
-@@ -19,7 +19,8 @@
- 	model = "FriendlyARM Mini6410 board based on S3C6410";
- 	compatible = "friendlyarm,mini6410", "samsung,s3c6410";
- 
--	memory {
-+	memory@50000000 {
-+		device_type = "memory";
- 		reg = <0x50000000 0x10000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/s3c6410-smdk6410.dts b/arch/arm/boot/dts/s3c6410-smdk6410.dts
-index b6b5afcd7602..a9a5689dc462 100644
---- a/arch/arm/boot/dts/s3c6410-smdk6410.dts
-+++ b/arch/arm/boot/dts/s3c6410-smdk6410.dts
-@@ -19,7 +19,8 @@
- 	model = "SAMSUNG SMDK6410 board based on S3C6410";
- 	compatible = "samsung,mini6410", "samsung,s3c6410";
- 
--	memory {
-+	memory@50000000 {
-+		device_type = "memory";
- 		reg = <0x50000000 0x8000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/s3c64xx.dtsi b/arch/arm/boot/dts/s3c64xx.dtsi
-index e2be3fbdd3f3..2e611df37911 100644
---- a/arch/arm/boot/dts/s3c64xx.dtsi
-+++ b/arch/arm/boot/dts/s3c64xx.dtsi
-@@ -13,10 +13,12 @@
-  * nodes can be added to this file.
-  */
- 
--#include "skeleton.dtsi"
- #include <dt-bindings/clock/samsung,s3c64xx-clock.h>
- 
- / {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
- 	aliases {
- 		i2c0 = &i2c0;
- 		pinctrl0 = &pinctrl0;
--- 
-2.14.1
+Regards,
+
+Tony
