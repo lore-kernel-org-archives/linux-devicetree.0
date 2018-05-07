@@ -1,369 +1,80 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: [PATCH v4 3/3] ARM: dts: sun7i: Add support for the
- Ainol AW1 tablet
-Date: Tue,  8 May 2018 00:04:13 +0200
-Message-ID: <20180507220413.21990-3-contact@paulk.fr>
-References: <20180507220413.21990-1-contact@paulk.fr>
-Reply-To: contact-W9ppeneeCTY@public.gmane.org
+From: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] dt-bindings: drm/bridge: Document
+ sn65dsi86 bridge bindings
+Date: Mon, 07 May 2018 15:18:27 -0700
+Message-ID: <152573150728.138124.7552894725134629406@swboyd.mtv.corp.google.com>
+References: <1525235522-8954-1-git-send-email-spanda@codeaurora.org>
+ <1525235522-8954-3-git-send-email-spanda@codeaurora.org>
+ <152528047237.138124.6199225836688931193@swboyd.mtv.corp.google.com>
+ <3c44e961a198e20a606742034152d456@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBC75HK6WUAEBBME3YPLQKGQEAQYOLIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180507220413.21990-1-contact-W9ppeneeCTY@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <3c44e961a198e20a606742034152d456-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the Ainol AW1, an A20-based 7" tablet from Ainol.
-
-The following board-specific features are supported:
-* LCD panel
-* Backlight
-* USB OTG
-* Buttons
-* Touchscreen (doesn't work without non-free firmware)
-* Accelerometer
-* Battery
-
-The following are untested:
-* Audio output
-* Audio speakers
-* USB via SPCI connector
-
-The following are not supported:
-* Wi-Fi
-* Bluetooth
-* NAND
-* Audio via SPCI connector
-* Audio via Bluetooth I2S
-
-Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                |   1 +
- arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts | 297 ++++++++++++++++++++++
- 2 files changed, 298 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7e2424957809..4a80971f2bc9 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -946,6 +946,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
- 	sun6i-a31s-sinovoip-bpi-m2.dtb \
- 	sun6i-a31s-yones-toptech-bs1078-v2.dtb
- dtb-$(CONFIG_MACH_SUN7I) += \
-+	sun7i-a20-ainol-aw1.dtb \
- 	sun7i-a20-bananapi.dtb \
- 	sun7i-a20-bananapi-m1-plus.dtb \
- 	sun7i-a20-bananapro.dtb \
-diff --git a/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts b/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
-new file mode 100644
-index 000000000000..9a732e4cd076
---- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
-@@ -0,0 +1,297 @@
-+/*
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ *
-+ * Copyright (C) 2018 Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-+ */
-+
-+/dts-v1/;
-+#include "sun7i-a20.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pwm/pwm.h>
-+
-+/ {
-+	model = "Ainol AW1";
-+	compatible = "ainol,ainol-aw1", "allwinner,sun7i-a20";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <  0   1   1   1   1   2   2   2
-+				       2   3   3   3   3   4   4   4
-+				       5   5   5   6   6   6   7   7
-+				       8   8   8   9   9   9  10  10
-+				      10  11  11  12  12  12  13  13
-+				      14  14  14  15  15  16  16  17
-+				      17  17  18  18  19  19  20  20
-+				      21  21  21  22  22  23  23  24
-+				      24  25  25  26  26  27  27  28
-+				      28  29  30  30  31  31  32  32
-+				      33  33  34  35  35  36  36  37
-+				      38  38  39  39  40  41  41  42
-+				      43  43  44  44  45  46  47  47
-+				      48  49  49  50  51  51  52  53
-+				      54  54  55  56  57  57  58  59
-+				      60  61  61  62  63  64  65  65
-+				      66  67  68  69  70  71  71  72
-+				      73  74  75  76  77  78  79  80
-+				      81  82  83  84  85  86  87  88
-+				      89  90  91  92  93  94  95  96
-+				      97  98  99 101 102 103 104 105
-+				     106 108 109 110 111 112 114 115
-+				     116 117 119 120 121 123 124 125
-+				     127 128 129 131 132 133 135 136
-+				     138 139 141 142 144 145 147 148
-+				     150 151 153 154 156 157 159 161
-+				     162 164 166 167 169 171 173 174
-+				     176 178 180 181 183 185 187 189
-+				     191 192 194 196 198 200 202 204
-+				     206 208 210 212 214 216 219 221
-+				     223 225 227 229 232 234 236 238
-+				     241 242 244 246 248 250 253 255>;
-+		default-brightness-level = <128>;
-+		enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
-+	};
-+
-+	panel: panel {
-+		compatible = "innolux,at070tn90";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		power-supply = <&panel_power>;
-+		backlight = <&backlight>;
-+
-+		port@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			panel_input: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&tcon0_out_panel>;
-+			};
-+		};
-+	};
-+
-+	panel_power: panel_power {
-+		compatible = "regulator-fixed";
-+		regulator-name = "panel-power";
-+		regulator-min-microvolt = <10400000>;
-+		regulator-max-microvolt = <10400000>;
-+		gpio = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
-+		enable-active-high;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&codec {
-+	allwinner,pa-gpios = <&pio 7 15 GPIO_ACTIVE_HIGH>; /* PH15 */
-+	status = "okay";
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&de {
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+
-+	axp209: pmic@34 {
-+		reg = <0x34>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	status = "okay";
-+
-+	lis3dh: accelerometer@18 {
-+		compatible = "st,lis3dh-accel";
-+		reg = <0x18>;
-+		vdd-supply = <&reg_vcc3v3>;
-+		vddio-supply = <&reg_vcc3v3>;
-+		st,drdy-int-pin = <1>;
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	gsl1680: touchscreen@40 {
-+		compatible = "silead,gsl1680";
-+		reg = <0x40>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 21 IRQ_TYPE_EDGE_FALLING>; /* EINT21 (PH21) */
-+		power-gpios = <&pio 7 20 GPIO_ACTIVE_HIGH>; /* PH20 */
-+		firmware-name = "gsl1680-ainol-aw1.fw";
-+		touchscreen-size-x = <480>;
-+		touchscreen-size-y = <800>;
-+		touchscreen-swapped-x-y;
-+		touchscreen-inverted-y;
-+		silead,max-fingers = <5>;
-+	};
-+};
-+
-+&lradc {
-+	vref-supply = <&reg_ldo2>;
-+	status = "okay";
-+
-+	button@571 {
-+		label = "Volume Up";
-+		linux,code = <KEY_VOLUMEUP>;
-+		channel = <0>;
-+		voltage = <571428>;
-+	};
-+
-+	button@761 {
-+		label = "Volume Down";
-+		linux,code = <KEY_VOLUMEDOWN>;
-+		channel = <0>;
-+		voltage = <761904>;
-+	};
-+
-+	button@952 {
-+		label = "Home";
-+		linux,code = <KEY_HOME>;
-+		channel = <0>;
-+		voltage = <952380>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&otg_sram {
-+	status = "okay";
-+};
-+
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_pins_a>;
-+	status = "okay";
-+};
-+
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd0_rgb666_pins>;
-+	status = "okay";
-+};
-+
-+&tcon0_out {
-+	tcon0_out_panel: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&panel_input>;
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-+	usb0_vbus_power-supply = <&usb_power_supply>;
-+	usb0_vbus-supply = <&reg_usb0_vbus>;
-+	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_usb2_vbus>;
-+	status = "okay";
-+};
-+
-+#include "axp209.dtsi"
-+
-+&battery_power_supply {
-+	status = "okay";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1450000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-int-dll";
-+};
-+
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
-+&reg_usb0_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb1_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb2_vbus {
-+	status = "okay";
-+};
-+
-+&usb_power_supply {
-+	status = "okay";
-+};
--- 
-2.17.0
+UXVvdGluZyBzcGFuZGFAY29kZWF1cm9yYS5vcmcgKDIwMTgtMDUtMDMgMDI6NDE6MjkpCj4gT24g
+MjAxOC0wNS0wMiAyMjozMSwgU3RlcGhlbiBCb3lkIHdyb3RlOgo+ID4gUXVvdGluZyBTYW5kZWVw
+IFBhbmRhICgyMDE4LTA1LTAxIDIxOjMyOjAwKQo+ID4+IGRpZmYgLS1naXQgCj4gPj4gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2
+LnR4dCAKPiA+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
+aWRnZS90aSxzbjY1ZHNpODYudHh0Cj4gPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+PiBpbmRl
+eCAwMDAwMDAwLi4wZDA0MmNlCj4gPiAKPiA+IFBsZWFzZSB1c2UgdGhlIGNsb2NrcyBwcm9wZXJ0
+eSBpbnN0ZWFkLiBXZSBtYXkgbmVlZCB0byB0dXJuIHRoZSBjbGsgb24KPiA+IGZpcnN0IGJlZm9y
+ZSB0aGlzIGNhbiB3b3JrIHNvIHRoZSBkcml2ZXIgd291bGQgdXNlIHRoZSBjbGsgZnJhbWV3b3Jr
+IAo+ID4gKGF0Cj4gPiBsZWFzdCBpbiBsaW51eCkuIGNsb2NrLW5hbWVzIGNvdWxkIGhhdmUgJ3Jl
+ZmNsaycgYmVjYXVzZSB0aGF0J3MgdGhlIHBpbgo+ID4gbmFtZS4KPiA+IAo+ID4gSXMgdGhlcmUg
+YSB3YXkgaW4gRFJNIHRvIGZpZ3VyZSBvdXQgdGhlIGZyZXF1ZW5jeSBvZiB0aGUgY2xvY2sgCj4g
+PiBmcmVxdWVuY3kKPiA+IGZvciBEQUNQL04/IEl0IGxvb2tzIGxpa2UgaWYgcmVmY2xrIGlzIGdy
+b3VuZGVkLCB0aGVuIHRoZSBEQUNQL04gcGlucwo+ID4gZnJvbSB0aGUgRFNJIHNpZGUgc2hvdWxk
+IGJlIG9uZSBvZiBhIHNldCBvZiBmcmVxdWVuY2llcywgc28gSSdtIGp1c3QKPiA+IGN1cmlvdXMg
+aG93IHRoYXQgd2lsbCB3b3JrIGFuZCBpZiB0aGUgYmluZGluZyB3b3VsZCBuZWVkIHRvIGJlIHVw
+ZGF0ZWQKPiA+IHRvIGluZGljYXRlIHdoYXQgdGhlIGZyZXF1ZW5jeSBvZiB0aGUgRFNJIGNsb2Nr
+IGxhbmUgaXMsIG9yIGlmIERSTSBjYW4KPiA+IHRlbGwgdGhpcyBkcml2ZXIgdGhyb3VnaCB0aGUg
+cG9ydC9ncmFwaCBzdHVmZiBzb21laG93Lgo+ID4gCj4gCj4gQ2FuIHdlIGRvIHNvbWV0aGluZyBs
+aWtlIGJlbG93Pwo+ICAgICAxLiBBZGQgYSByZXF1aXJlZCBkdC1wcm9wZXJ0eSB0byBpbmRpY2F0
+ZSB3aGF0IGlzIHRoZSBzb3VyY2Ugb2YgCj4gcmVmY2xrLCB0aSxzbi1yZWZjbGstc3JjID0gPDA+
+IC0tLT4gbWVhbnMgcmVmY2xrIGlzIGRlcml2ZWQgZnJvbSByZWZjbGsgCj4gcGluLgo+ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgCj4gICAgdGksc24tcmVmY2xrLXNyYyA9IDwxPiAtLS0+IG1lYW5zIHJlZmNs
+ayBpcyBkZXJpdmVkIGZyb20gREFDUC9OIHBpbi4KPiAgICAgMi4gQWRkIGEgY2xvY2sgcHJvcGVy
+dHkgdG8gaW5kaWNhdGUgdGhlIHJlZmNsayBmcmVxdWVuY3kgZm9yIHJlZmNsayAKPiBwaW4uCj4g
+ICAgIDMuIEluIGRyaXZlciwgcGFyc2UgdGhlIHJlZmNsayBzb3VyY2UgZHQtcHJvcGVydHkuIElm
+IHRoZSBzb3VyY2UgaXMgCj4gcmVmY2xrIHBpbiB0aGVuIGdldCB0aGUgZnJxdWVuY3kgZnJvbSBj
+bG9jayBkdC1wcm9wZXJ0eSBhbmQgcHJvZ3JhbSB0aGUgCj4gaTJjIHJlZ2lzdGVyIGFjY29yZGlu
+Z2x5Lgo+ICAgICAgICBFbHNlIGlmIHRoZSBzb3VyY2UgaXMgREFDUC9OIHBpbiB0aGVuIGNhbGN1
+bGF0ZSB0aGUgRFNJQSBmcmVxdWVuY3kgCj4gYmFzZWQgb24gY3VycmVudCBkaXNwbGF5IG1vZGUg
+KGJ5IHRoZSB0aW1lIHdlIGdvIGZvciBjb25maWd1cmluZyByZWZjbGssIAo+IGRybV9tb2RlX3Nl
+dCBpcyBhbHJlYWR5IGRvbmUgYW5kIGluICBkaXZlciB3ZSBjYW4gY2FsY3VsYXRlIHRoZSAKPiBm
+cmVxdWVuY3kpIGFuZCBwcm9ncmFtIHRoZSBpMmMgcmVnaXN0ZXIgYWNjb3JkaW5nbHkuCgpUaGUg
+cHJlc2VuY2Ugb3Igbm9uLXByZXNlbmNlIG9mIHRoZSByZWZjbGsgc2hvdWxkIHN0aWxsIGJlIGlu
+ZGljYXRlZCB2aWEKdGhlIHN0YW5kYXJkIGNsb2NrIHByb3BlcnR5IGluc3RlYWQgb2Ygc29tZSBU
+SSBzcGVjaWZpYyBwcm9wZXJ0eS4gVGhlCmRyaXZlciBjYW4gdHJ5IHRvIGNsa19nZXQoKSB0aGUg
+cmVmY2xrIGFuZCBpZiBpdHMgdGhlcmUgaXQgY2FuIGNhbGwKY2xrX2dldF9yYXRlKCkgdG8gZmln
+dXJlIG91dCB0aGUgcmVmZXJlbmNlIGNsayBmcmVxdWVuY3kuIEl0IHNob3VsZCBhbHNvCnR1cm4g
+aXQgb24gd2l0aCBjbGtfcHJlcGFyZV9lbmFibGUoKSB0byBtYWtlIHN1cmUgdGhlIGNsayBpcyBj
+bG9ja2luZwphbmQgdHVybiBpdCBvZmYgd2hlbiB0aGUgZHJpdmVyIGlzbid0IHVzaW5nIGl0LgoK
+SWYgdGhlIHJlZmVyZW5jZSBjbGsgaXMgcmVjb3ZlcmVkIGZyb20gdGhlIERBQ1AvTiBwaW4gdGhl
+biB0aGVyZSB3b24ndApiZSBhIGNsb2NrcyBwcm9wZXJ0eSwgYW5kIHRoZSBkcml2ZXIgY2FuIGRv
+IHdoYXQgeW91IGRlc2NyaWJlIGluICMzLgoKPiAKPiA+PiArCj4gPj4gKy0gZ3Bpby1jb250cm9s
+bGVyOiBNYXJrcyB0aGUgZGV2aWNlIGhhcyBhIEdQSU8gY29udHJvbGxlci4KPiA+PiArLSAjZ3Bp
+by1jZWxsczogTnVtYmVyIG9mIEdQSU8gY2VsbHMuIFJlZmVyIHRvIGJpbmRpbmcgZG9jdW1lbnQg
+Cj4gPj4gImdwaW8vZ3Bpby50eHQiCj4gPiAKPiA+IFdoYXQncyB0aGUgbnVtYmVyPyAyPwo+IG51
+bWJlciBpcyA0LCBpIHdpbGwgdXBkYXRlIHRoaXMgaW4gYmluZGluZwoKUmVhbGx5PyBXaGF0IGRv
+IHlvdSBuZWVkIDQgY2VsbHMgZm9yPyBUaGUgbnVtYmVyIG9mIGNlbGxzIGRvZXNuJ3QKaW5kaWNh
+dGUgdGhlIG51bWJlciBvZiBHUElPcyBvbiB0aGUgZGV2aWNlLgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVl
+ZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
