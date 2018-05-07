@@ -1,46 +1,139 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 4/4] dt-bindings: drm/panel: Document Innolux TV123WAM
- panel bindings
-Date: Mon, 7 May 2018 09:21:02 -0500
-Message-ID: <20180507142102.GA8458@rob-hp-laptop>
-References: <1525235522-8954-1-git-send-email-spanda@codeaurora.org>
- <1525235522-8954-5-git-send-email-spanda@codeaurora.org>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v3 00/14] Sunxi-Cedrus driver for the Allwinner Video
+ Engine, using media requests
+Date: Mon, 07 May 2018 16:50:08 +0200
+Message-ID: <611315f6d89ef7a85d56dd4b976c1207a4806dda.camel@bootlin.com>
+References: <20180507124500.20434-1-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1525235522-8954-5-git-send-email-spanda@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sandeep Panda <spanda@codeaurora.org>
-Cc: devicetree@vger.kernel.org, ryadav@codeaurora.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, abhinavk@codeaurora.org, hoegsberg@chromium.org, freedreno@lists.freedesktop.org, chandanu@codeaurora.org
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-GLnQEMAVvrJnfLPQ/EJ1"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180507124500.20434-1-paul.kocialkowski@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S . Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Arnd Bergmann <arnd@arndb.de>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Philipp Zabel <p.zabel@pengutronix.de>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Yannick Fertre <yannick.fertre@st.com>, Thomas Gleixner <tglx@linutronix.de>H
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMDIsIDIwMTggYXQgMTA6MDI6MDJBTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
-cm90ZToKPiBJbm5vbHV4IFRWMTIzV0FNIGlzIGEgMTIuMyIgZURQIGRpc3BsYXkgcGFuZWwgd2l0
-aAo+IDIxNjB4MTQ0MCByZXNvbHV0aW9uLCB3aGljaCBjYW4gYmUgc3VwcG9ydGVkIGJ5IHNpbXBs
-ZQo+IHBhbmVsIGRyaXZlci4KPiAKPiBDaGFuZ2VzIGluIHYxOgo+ICAtIE1ha2UgdXNlIG9mIHNp
-bXBsZSBwYW5lbCBkcml2ZXIgaW5zdGVhZCBvZiBjcmVhdGluZwo+ICAgIGEgbmV3IGRyaXZlciBm
-b3IgdGhpcyBwYW5lbCAoU2VhbiBQYXVsKS4KPiAgLSBDb21iaW5lIGR0LWJpbmRpbmcgYW5kIGRy
-aXZlciBjaGFuZ2VzIGludG8gb25lIHBhdGNoCj4gICAgYXMgZG9uZSBieSBvdGhlciBleGlzdGlu
-ZyBwYW5lbCBzdXBwb3J0IGNoYW5nZXMuCj4gCj4gQ2hhbmdlcyBpbiB2MjoKPiAgLSBTZXBhcmF0
-ZSBkcml2ZXIgY2hhbmdlIGZyb20gZHQtYmluZGluZyBkb2N1bWVudGF0aW9uIChSb2IgSGVycmlu
-ZykuCj4gIC0gQWRkIHRoZSBwcm9wZXJ0aWVzIGZyb20gc2ltcGxlLXBhbmVsIGJpbmRpbmcgdGhh
-dCBhcmUgYXBwbGljYWJsZSB0bwo+ICAgIHRoaXMgcGFuZWwgKFJvYiBIZXJyaW5nKS4KPiAKPiBT
-aWduZWQtb2ZmLWJ5OiBTYW5kZWVwIFBhbmRhIDxzcGFuZGFAY29kZWF1cm9yYS5vcmc+Cj4gLS0t
-Cj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsdHYxMjN3YW0udHh0ICAgICAg
-fCAyMCArKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9u
-cygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKClJldmlld2VkLWJ5OiBSb2Ig
-SGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+
+--=-GLnQEMAVvrJnfLPQ/EJ1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+[...]
+
+On Mon, 2018-05-07 at 14:44 +0200, Paul Kocialkowski wrote:
+> Remaining tasks:
+> * cleaning up registers description and documenting the fields used;
+> * removing the assigned-clocks property and setting the clock rate
+>   in the driver directly;
+> * checking the series with checkpatch and fixing warnings;
+> * documenting the MB32 NV12 format and adding it to v4l_fill_fmtdesc;
+> * reworking and documenting the MPEG2 header, then adding it to
+>   v4l_fill_fmtdesc;
+> * checking and fixing the error paths;
+> * testing on more platforms.
+
+Another item for the tasks list that is not yet in this revision:
+* changing the id for V4L2_CTRL_TYPE_MPEG2_FRAME_HDR=0F;
+
+Paul
+
+> Cheers!
+>=20
+> [0]: https://patchwork.kernel.org/patch/9299073/
+> [1]: https://git.linuxtv.org/hverkuil/media_tree.git/log/?h=3Dreqv13
+>=20
+> Florent Revest (1):
+>   media: v4l: Add definitions for MPEG2 frame format and header metadata
+>=20
+> Maxime Ripard (4):
+>   drivers: soc: sunxi: Add support for the C1 SRAM region
+>   ARM: sun5i: Add support for the C1 SRAM region with the SRAM
+>     controller
+>   ARM: sun7i-a20: Add support for the C1 SRAM region with the SRAM
+>     controller
+>   ARM: sun8i-a33: Add SRAM controller node and C1 SRAM region
+>=20
+> Paul Kocialkowski (9):
+>   drivers: soc: sunxi: Add dedicated compatibles for the A13, A20 and
+>     A33
+>   ARM: dts: sun5i: Use dedicated SRAM controller compatible
+>   ARM: dts: sun7i-a20: Use dedicated SRAM controller compatible
+>   media: v4l: Add definition for Allwinner's MB32-tiled NV12 format
+>   dt-bindings: media: Document bindings for the Sunxi-Cedrus VPU driver
+>   media: platform: Add Sunxi-Cedrus VPU decoder driver
+>   ARM: dts: sun5i: Add Video Engine and reserved memory nodes
+>   ARM: dts: sun7i-a20: Add Video Engine and reserved memory nodes
+>   ARM: dts: sun8i-a33: Add Video Engine and reserved memory nodes
+>=20
+>  .../devicetree/bindings/media/sunxi-cedrus.txt     |  58 +++
+>  MAINTAINERS                                        |   7 +
+>  arch/arm/boot/dts/sun5i.dtsi                       |  47 +-
+>  arch/arm/boot/dts/sun7i-a20.dtsi                   |  47 +-
+>  arch/arm/boot/dts/sun8i-a33.dtsi                   |  54 +++
+>  drivers/media/platform/Kconfig                     |  15 +
+>  drivers/media/platform/Makefile                    |   1 +
+>  drivers/media/platform/sunxi/cedrus/Makefile       |   4 +
+>  drivers/media/platform/sunxi/cedrus/sunxi_cedrus.c | 333 ++++++++++++++
+>  .../platform/sunxi/cedrus/sunxi_cedrus_common.h    | 128 ++++++
+>  .../media/platform/sunxi/cedrus/sunxi_cedrus_dec.c | 188 ++++++++
+>  .../media/platform/sunxi/cedrus/sunxi_cedrus_dec.h |  35 ++
+>  .../media/platform/sunxi/cedrus/sunxi_cedrus_hw.c  | 240 ++++++++++
+>  .../media/platform/sunxi/cedrus/sunxi_cedrus_hw.h  |  37 ++
+>  .../platform/sunxi/cedrus/sunxi_cedrus_mpeg2.c     | 160 +++++++
+>  .../platform/sunxi/cedrus/sunxi_cedrus_mpeg2.h     |  33 ++
+>  .../platform/sunxi/cedrus/sunxi_cedrus_regs.h      | 175 +++++++
+>  .../platform/sunxi/cedrus/sunxi_cedrus_video.c     | 505 +++++++++++++++=
+++++++
+>  .../platform/sunxi/cedrus/sunxi_cedrus_video.h     |  31 ++
+>  drivers/media/v4l2-core/v4l2-ctrls.c               |  10 +
+>  drivers/media/v4l2-core/v4l2-ioctl.c               |   1 +
+>  drivers/soc/sunxi/sunxi_sram.c                     |  13 +
+>  include/uapi/linux/v4l2-controls.h                 |  26 ++
+>  include/uapi/linux/videodev2.h                     |   4 +
+>  24 files changed, 2150 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/sunxi-cedrus.=
+txt
+>  create mode 100644 drivers/media/platform/sunxi/cedrus/Makefile
+>  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus.c
+>  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_comm=
+on.h
+>  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_dec.=
+c
+>  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_dec.=
+h
+>  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_hw.c
+>  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_hw.h
+>  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_mpeg=
+2.c
+>  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_mpeg=
+2.h
+>  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_regs=
+.h
+>  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_vide=
+o.c
+>  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_vide=
+o.h
+>=20
+--=20
+Paul Kocialkowski, Bootlin (formerly Free Electrons)
+Embedded Linux and kernel engineering
+https://bootlin.com
+--=-GLnQEMAVvrJnfLPQ/EJ1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAlrwZ6AACgkQ3cLmz3+f
+v9Hzjgf/fUlUbHuTPjXkZdWutpBxX5BC8KKEoWFYxc0MqvHPNJz7w1UAe91T4o6e
+GySZvJKwQYjpLyAS3rNDjs+7qGGku6mAuQVWSq6RV70+xkSygR1+dj46HcdeiJXh
+Ux3ObkAgw/GqWmMj+68uWaJg0QSRVNCg0fEp8CPy3CVy/palWK5tB0AyJpuYNY3w
+s1RbwxLD9OufTbLurkKAsiDkyk8peRud9GzJff51GA3+RF023/XSlOx11BCij+X5
+Yl6RDZhQXc26HMjQB78tbC7QjbjYVv0yBzDmbkJZpxH5RwbB4jdTFME6zfriTQT2
+cbufAr8qfZeoN+C/ilGnU0i3DmdUmw==
+=mUBt
+-----END PGP SIGNATURE-----
+
+--=-GLnQEMAVvrJnfLPQ/EJ1--
