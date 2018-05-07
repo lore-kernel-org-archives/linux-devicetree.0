@@ -1,54 +1,32 @@
-Return-Path: <SRS0=PsaT=HU=prevas.dk=Sean.Nyekjaer@kernel.org>
-From: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
-Subject: [PATCH 2/2] iio: ti-dac5571: Add DT binding documentation
-Date: Tue,  1 May 2018 10:15:54 +0200
-Message-Id: <20180501081554.5832-2-sean.nyekjaer@prevas.dk>
-In-Reply-To: <20180501081554.5832-1-sean.nyekjaer@prevas.dk>
-References: <20180501081554.5832-1-sean.nyekjaer@prevas.dk>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 7 May 2018 11:01:41 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 02/14] dt-bindings: usb: add documentation for typec
+ port controller(TCPCI)
+Message-ID: <20180507160141.GA13573@rob-hp-laptop>
+References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
+ <1525307094-27402-3-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: jic23@kernel.org, robh+dt@kernel.org
-Cc: Sean Nyekjaer <sean.nyekjaer@prevas.dk>, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1525307094-27402-3-git-send-email-jun.li@nxp.com>
+To: Li Jun <jun.li@nxp.com>
+Cc: gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Adding binding documentation for Texas Instruments DAC5571 Family
+On Thu, May 03, 2018 at 08:24:42AM +0800, Li Jun wrote:
+> TCPCI stands for typec port controller interface, its implementation
+> has full typec port control with power delivery support, it's a
+> standard i2c slave with GPIO input as irq interface, detail see spec
+> "Universal Serial Bus Type-C Port Controller Interface Specification
+> Revision 1.0, Version 1.1"
+> 
+> Signed-off-by: Li Jun <jun.li@nxp.com>
+> ---
+>  .../devicetree/bindings/usb/typec-tcpci.txt        | 49 ++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
 
-Signed-off-by: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
+The example may need to change based on discussion on the prior patch, 
+otherwise:
+
 Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/iio/dac/ti,dac5571.txt           | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/ti,dac5571.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/dac/ti,dac5571.txt b/Documentation/devicetree/bindings/iio/dac/ti,dac5571.txt
-new file mode 100644
-index 000000000000..03af6b9a4d07
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/ti,dac5571.txt
-@@ -0,0 +1,24 @@
-+* Texas Instruments DAC5571 Family
-+
-+Required properties:
-+ - compatible: Should contain
-+    "ti,dac5571"
-+    "ti,dac6571"
-+    "ti,dac7571"
-+    "ti,dac5574"
-+    "ti,dac6574"
-+    "ti,dac7574"
-+    "ti,dac5573"
-+    "ti,dac6573"
-+    "ti,dac7573"
-+ - reg: Should contain the DAC I2C address
-+
-+Optional properties:
-+ - vref-supply: The regulator supply for DAC reference voltage
-+
-+Example:
-+dac@0 {
-+	compatible = "ti,dac5571";
-+	reg = <0x4C>;
-+	vref-supply = <&vdd_supply>;
-+};
--- 
-2.17.0
