@@ -1,164 +1,206 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 6/6] drm/panel: rpi-touchscreen: Set status to "fail"
- when ->probe() fails
-Date: Mon, 7 May 2018 13:14:33 +0200
-Message-ID: <20180507131433.07cf5565@bbrezillon>
-References: <20180503164009.14395-1-boris.brezillon@bootlin.com>
- <20180503164009.14395-7-boris.brezillon@bootlin.com>
- <CAL_JsqJMarPW6sdcF1ZFCEr6wGyPgi2yhYMCxgypUYYwN7ayfQ@mail.gmail.com>
- <20180504100653.6ee70802@bbrezillon> <20180504094748.GD13459@ulmo>
- <20180504141749.03ef85fe@bbrezillon>
- <20180504142017.GB12521@phenom.ffwll.local>
- <CAL_JsqKCD-WGDGg2LOXBUe768vyN11paJ5gX13J1NS7U6EDcWw@mail.gmail.com>
+From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] resource: Use list_head to link sibling resource
+Date: Mon, 7 May 2018 19:42:14 +0800
+Message-ID: <201805071803.2MKgOLTP%fengguang.wu@intel.com>
+References: <20180507063224.24229-2-bhe@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqKCD-WGDGg2LOXBUe768vyN11paJ5gX13J1NS7U6EDcWw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20180507063224.24229-2-bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, brijesh.singh-5C7GfCeVMHo@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ebiederm-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, linux-parisc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dmitry.torokhov@gmail.c
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCA0IE1heSAyMDE4IDE0OjI5OjI3IC0wNTAwClJvYiBIZXJyaW5nIDxyb2JoK2R0QGtl
-cm5lbC5vcmc+IHdyb3RlOgoKPiBPbiBGcmksIE1heSA0LCAyMDE4IGF0IDk6MjAgQU0sIERhbmll
-bCBWZXR0ZXIgPGRhbmllbEBmZndsbC5jaD4gd3JvdGU6Cj4gPiBPbiBGcmksIE1heSAwNCwgMjAx
-OCBhdCAwMjoxNzo0OVBNICswMjAwLCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6ICAKPiA+PiBPbiBG
-cmksIDQgTWF5IDIwMTggMTE6NDc6NDggKzAyMDAKPiA+PiBUaGllcnJ5IFJlZGluZyA8dGhpZXJy
-eS5yZWRpbmdAZ21haWwuY29tPiB3cm90ZToKPiA+PiAgCj4gPj4gPiBPbiBGcmksIE1heSAwNCwg
-MjAxOCBhdCAxMDowNjo1M0FNICswMjAwLCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6ICAKPiA+PiA+
-ID4gSGkgUm9iLAo+ID4+ID4gPgo+ID4+ID4gPiBPbiBUaHUsIDMgTWF5IDIwMTggMTI6MTI6Mzkg
-LTA1MDAKPiA+PiA+ID4gUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4gd3JvdGU6Cj4g
-Pj4gPiA+ICAKPiA+PiA+ID4gPiBPbiBUaHUsIE1heSAzLCAyMDE4IGF0IDExOjQwIEFNLCBCb3Jp
-cyBCcmV6aWxsb24KPiA+PiA+ID4gPiA8Ym9yaXMuYnJlemlsbG9uQGJvb3RsaW4uY29tPiB3cm90
-ZTogIAo+ID4+ID4gPiA+ID4gVGhlIGRldmljZSBtaWdodCBiZSBkZXNjcmliZWQgaW4gdGhlIGRl
-dmljZSB0cmVlIGJ1dCBub3QgY29ubmVjdGVkIHRvCj4gPj4gPiA+ID4gPiB0aGUgSTJDIGJ1cy4g
-VXBkYXRlIHRoZSBzdGF0dXMgcHJvcGVydHkgc28gdGhhdCB0aGUgRFJNIHBhbmVsIGxvZ2ljCj4g
-Pj4gPiA+ID4gPiByZXR1cm5zIC1FTk9ERVYgd2hlbiBzb21lb25lIHRyaWVzIHRvIGdldCB0aGUg
-cGFuZWwgYXR0YWNoZWQgdG8gdGhpcwo+ID4+ID4gPiA+ID4gRFQgbm9kZS4KPiA+PiA+ID4gPiA+
-Cj4gPj4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXpp
-bGxvbkBib290bGluLmNvbT4KPiA+PiA+ID4gPiA+IC0tLQo+ID4+ID4gPiA+ID4gIC4uLi9ncHUv
-ZHJtL3BhbmVsL3BhbmVsLXJhc3BiZXJyeXBpLXRvdWNoc2NyZWVuLmMgIHwgMzUgKysrKysrKysr
-KysrKysrKysrKysrKwo+ID4+ID4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzNSBpbnNlcnRpb25z
-KCspCj4gPj4gPiA+ID4gPgo+ID4+ID4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS9wYW5lbC9wYW5lbC1yYXNwYmVycnlwaS10b3VjaHNjcmVlbi5jIGIvZHJpdmVycy9ncHUvZHJt
-L3BhbmVsL3BhbmVsLXJhc3BiZXJyeXBpLXRvdWNoc2NyZWVuLmMKPiA+PiA+ID4gPiA+IGluZGV4
-IDJjOWM5NzIyNzM0Zi4uYjhmY2IxYWNlZjc1IDEwMDY0NAo+ID4+ID4gPiA+ID4gLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXJhc3BiZXJyeXBpLXRvdWNoc2NyZWVuLmMKPiA+PiA+
-ID4gPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1yYXNwYmVycnlwaS10b3Vj
-aHNjcmVlbi5jCj4gPj4gPiA+ID4gPiBAQCAtMzU4LDYgKzM1OCwzOSBAQCBzdGF0aWMgY29uc3Qg
-c3RydWN0IGRybV9wYW5lbF9mdW5jcyBycGlfdG91Y2hzY3JlZW5fZnVuY3MgPSB7Cj4gPj4gPiA+
-ID4gPiAgICAgICAgIC5nZXRfbW9kZXMgPSBycGlfdG91Y2hzY3JlZW5fZ2V0X21vZGVzLAo+ID4+
-ID4gPiA+ID4gIH07Cj4gPj4gPiA+ID4gPgo+ID4+ID4gPiA+ID4gK3N0YXRpYyB2b2lkIHJwaV90
-b3VjaHNjcmVlbl9zZXRfc3RhdHVzX2ZhaWwoc3RydWN0IGkyY19jbGllbnQgKmkyYykKPiA+PiA+
-ID4gPiA+ICt7Cj4gPj4gPiA+ID4gPiArICAgICAgIHN0cnVjdCBwcm9wZXJ0eSAqbmV3cHJvcDsK
-PiA+PiA+ID4gPiA+ICsKPiA+PiA+ID4gPiA+ICsgICAgICAgbmV3cHJvcCA9IGt6YWxsb2Moc2l6
-ZW9mKCpuZXdwcm9wKSwgR0ZQX0tFUk5FTCk7Cj4gPj4gPiA+ID4gPiArICAgICAgIGlmICghbmV3
-cHJvcCkKPiA+PiA+ID4gPiA+ICsgICAgICAgICAgICAgICByZXR1cm47Cj4gPj4gPiA+ID4gPiAr
-Cj4gPj4gPiA+ID4gPiArICAgICAgIG5ld3Byb3AtPm5hbWUgPSBrc3RyZHVwKCJzdGF0dXMiLCBH
-RlBfS0VSTkVMKTsKPiA+PiA+ID4gPiA+ICsgICAgICAgaWYgKCFuZXdwcm9wLT5uYW1lKQo+ID4+
-ID4gPiA+ID4gKyAgICAgICAgICAgICAgIGdvdG8gZXJyOwo+ID4+ID4gPiA+ID4gKwo+ID4+ID4g
-PiA+ID4gKyAgICAgICBuZXdwcm9wLT52YWx1ZSA9IGtzdHJkdXAoImZhaWwiLCBHRlBfS0VSTkVM
-KTsKPiA+PiA+ID4gPiA+ICsgICAgICAgaWYgKCFuZXdwcm9wLT52YWx1ZSkKPiA+PiA+ID4gPiA+
-ICsgICAgICAgICAgICAgICBnb3RvIGVycjsKPiA+PiA+ID4gPiA+ICsKPiA+PiA+ID4gPiA+ICsg
-ICAgICAgbmV3cHJvcC0+bGVuZ3RoID0gc2l6ZW9mKCJmYWlsIik7Cj4gPj4gPiA+ID4gPiArCj4g
-Pj4gPiA+ID4gPiArICAgICAgIGlmIChvZl91cGRhdGVfcHJvcGVydHkoaTJjLT5kZXYub2Zfbm9k
-ZSwgbmV3cHJvcCkpCj4gPj4gPiA+ID4gPiArICAgICAgICAgICAgICAgZ290byBlcnI7Cj4gPj4g
-PiA+ID4gPiArICAKPiA+PiA+ID4gPgo+ID4+ID4gPiA+IEFzIEkgbWVudGlvbmVkIG9uIGlyYywg
-Y2FuIHlvdSBtYWtlIHRoaXMgYSBjb21tb24gRFQgZnVuY3Rpb24uICAKPiA+PiA+ID4KPiA+PiA+
-ID4gWWVwLCB3aWxsIG1vdmUgdGhhdCB0byBkcml2ZXJzL29mL2Jhc2UuYyBhbmQgbWFrZSBpdCBn
-ZW5lcmljLgo+ID4+ID4gPiAgCj4gPj4gPiA+ID4KPiA+PiA+ID4gPiBJJ20gbm90IHN1cmUgaWYg
-aXQgbWF0dGVycyB0aGF0IHdlIHNldCBzdGF0dXMgdG8gZmFpbCB2cy4gZGlzYWJsZWQuIEkKPiA+
-PiA+ID4gPiBzb21ld2hhdCBwcmVmZXIgdGhlIGxhdHRlciBhcyB3ZSBhbHJlYWR5IGhhdmUgb3Ro
-ZXIgY2FzZXMgYW5kIEknZAo+ID4+ID4gPiA+IHJhdGhlciB0aGUgYXBpIG5vdCBwYXNzIGEgc3Ry
-aW5nIGluLiBJIGNhbid0IHRoaW5rIG9mIGFueSByZWFzb24gdG8KPiA+PiA+ID4gPiBkaXN0aW5n
-dWlzaCB0aGUgZGlmZmVyZW5jZSBiZXR3ZWVuIGZhaWwgYW5kIGRpc2FibGVkLiAgCj4gPj4gPiA+
-Cj4gPj4gPiA+IFdlbGwsIEkganVzdCByZWFkIHRoZSBlUEFQUiBkb2MgcG9pbnRlZCBieSBUaGll
-cnJ5IFsxXSAoc2VjdGlvbiAyLjMuNCksCj4gPj4gPiA+IGFuZCAiZmFpbCIgc2VlbWVkIGxpa2Ug
-YSBnb29kIG1hdGNoIGZvciB3aGF0IHdlIGFyZSB0cnlpbmcgdG8gZXhwcmVzcwo+ID4+ID4gPiBo
-ZXJlOiAid2UgZmFpbGVkIHRvIGNvbW11bmljYXRlIHdpdGggdGhlIGRldmljZSBpbiB0aGUgcHJv
-YmUgZnVuY3Rpb24KPiA+PiA+ID4gYW5kIHdhbnQgdG8gbWFyayBpdCB1bnVzYWJsZSIsIHdoaWNo
-IGlzIGEgYml0IGRpZmZlcmVudCBmcm9tICJ0aGUKPiA+PiA+ID4gZGV2aWNlIHdhcyBleHBsaWNp
-dGx5IGRpc2FibGVkIGJ5IHRoZSB1c2VyIi4KPiA+PiA+ID4KPiA+PiA+ID4gQW55d2F5LCBpZiB5
-b3UgdGhpbmsgImRpc2FibGVkIiBpcyBtb3JlIGFwcHJvcHJpYXRlLCBJJ2xsIHVzZSB0aGF0Lgo+
-ID4+ID4gPiAgCj4gPj4gPiA+ID4gIAo+ID4+ID4gPiA+ID4gKyAgICAgICAvKiBXZSBpbnRlbnRp
-b25hbGx5IGxlYWsgdGhlIG1lbW9yeSB3ZSBhbGxvY2F0ZSBoZXJlLCBiZWNhdXNlIHRoZSBuZXcK
-PiA+PiA+ID4gPiA+ICsgICAgICAgICogT0YgcHJvcGVydHkgbWlnaHQgbGl2ZSBsb25nZXIgdGhh
-biB0aGUgdW5kZXJseWluZyBkZXYsIHNvIG5vIHdheQo+ID4+ID4gPiA+ID4gKyAgICAgICAgKiB3
-ZSBjYW4gdXNlIGRldm1fa3phbGxvYygpIGhlcmUuCj4gPj4gPiA+ID4gPiArICAgICAgICAqLwo+
-ID4+ID4gPiA+ID4gKyAgICAgICByZXR1cm47Cj4gPj4gPiA+ID4gPiArCj4gPj4gPiA+ID4gPiAr
-ZXJyOgo+ID4+ID4gPiA+ID4gKyAgICAgICBrZnJlZShuZXdwcm9wLT52YWx1ZSk7Cj4gPj4gPiA+
-ID4gPiArICAgICAgIGtmcmVlKG5ld3Byb3AtPm5hbWUpOwo+ID4+ID4gPiA+ID4gKyAgICAgICBr
-ZnJlZShuZXdwcm9wKTsKPiA+PiA+ID4gPiA+ICt9Cj4gPj4gPiA+ID4gPiArCj4gPj4gPiA+ID4g
-PiAgc3RhdGljIGludCBycGlfdG91Y2hzY3JlZW5fcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmky
-YywKPiA+PiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IHN0
-cnVjdCBpMmNfZGV2aWNlX2lkICppZCkKPiA+PiA+ID4gPiA+ICB7Cj4gPj4gPiA+ID4gPiBAQCAt
-MzgyLDYgKzQxNSw3IEBAIHN0YXRpYyBpbnQgcnBpX3RvdWNoc2NyZWVuX3Byb2JlKHN0cnVjdCBp
-MmNfY2xpZW50ICppMmMsCj4gPj4gPiA+ID4gPgo+ID4+ID4gPiA+ID4gICAgICAgICB2ZXIgPSBy
-cGlfdG91Y2hzY3JlZW5faTJjX3JlYWQodHMsIFJFR19JRCk7Cj4gPj4gPiA+ID4gPiAgICAgICAg
-IGlmICh2ZXIgPCAwKSB7Cj4gPj4gPiA+ID4gPiArICAgICAgICAgICAgICAgcnBpX3RvdWNoc2Ny
-ZWVuX3NldF9zdGF0dXNfZmFpbChpMmMpOyAgCj4gPj4gPiA+ID4KPiA+PiA+ID4gPiBJJ3ZlIHRo
-b3VnaHQgc29tZSBtb3JlIGFib3V0IHRoaXMgYW5kIEkgc3RpbGwgdGhpbmsgdGhpcyBzaG91bGQg
-YmUKPiA+PiA+ID4gPiBoYW5kbGVkIGluIHRoZSBkcml2ZXIgY29yZSBvciBpMmMgY29yZS4KPiA+
-PiA+ID4gPgo+ID4+ID4gPiA+IFRoZSByZWFzb24gaXMgc2ltcGxlLiBJIHRoaW5rIHRoZSBzdGF0
-ZSBvZiB0aGUgc3lzdGVtIHNob3VsZCBiZSB0aGUKPiA+PiA+ID4gPiBzYW1lIGFmdGVyIHRoaXMg
-YXMgaWYgeW91IGJvb3RlZCB3aXRoICdzdGF0dXMgPSAiZGlzYWJsZWQiJyBmb3IgdGhpcwo+ID4+
-ID4gPiA+IG5vZGUuIEFuZCB0aGF0IG1lYW5zIHRoZSBkZXZpY2Ugc2hvdWxkIGJlIHJlbW92ZWQg
-Y29tcGxldGVseSBiZWNhdXNlCj4gPj4gPiA+ID4gd2UgZG9uJ3QgY3JlYXRlIHN0cnVjdCBkZXZp
-Y2UncyBmb3IgZGlzYWJsZWQgbm9kZXMuICAKPiA+PiA+ID4KPiA+PiA+ID4gVGhhdCB3YXMgbXkg
-ZmVlbGluZyB0byB3aGVuIGZpcnN0IGRpc2N1c3NpbmcgdGhlIGlzc3VlIHdpdGggRGFuaWVsIGFu
-ZAo+ID4+ID4gPiBUaGllcnJ5IG9uIElSQywgYnV0IGFmdGVyIGRpZ2dpbmcgYSBiaXQgaW4gdGhl
-IGNvZGUgSSdtIG5vIGxvbmdlciBzdXJlCj4gPj4gPiA+IHRoaXMgaXMgYSBnb29kIGlkZWEuIEF0
-IGxlYXN0LCBJIGRvbid0IHRoaW5rIGJhc2luZyB0aGUgZGVjaXNpb24gdG8KPiA+PiA+ID4gZGlz
-YWJsZSB0aGUgZGV2aWNlIChvciBtYXJrIGl0IHVudXNhYmxlKSBiYXNlZCBvbiB0aGUgcmV0dXJu
-IHZhbHVlIG9mCj4gPj4gPiA+IHRoZSBwcm9iZSBmdW5jdGlvbiBpcyBhIGdvb2QgaWRlYS4gIAo+
-ID4+ID4KPiA+PiA+IEknbSBub3Qgc28gc3VyZSBhYm91dCB0aGF0LiAtRU5PREVWIHNlZW1zIGxp
-a2UgYSB2ZXJ5IHN1aXRhYmxlIGVycm9yCj4gPj4gPiBjb2RlIHRvIGJhc2UgdGhhdCBkZWNpc2lv
-biBvbi4gQSByYW5kb20gc2FtcGxpbmcgb2YgYSBoYW5kZnVsIG9mIGRyaXZlcnMKPiA+PiA+IGNv
-bmZpcm1zIHRoYXQgdGhpcyBpcyBwcmltYXJpbHkgdXNlZCB0byByZXBvcnQgc2l0dWF0aW9ucyB3
-aGVyZSBpdCBpcwo+ID4+ID4gaW1wb3NzaWJsZSBmb3IgdGhlIGRldmljZSB0byBldmVyIGJlIHBy
-b2JlZCBzdWNjZXNzZnVsbHksIHNvIG1pZ2h0IGFzCj4gPj4gPiB3ZWxsIGp1c3QgcmVtb3ZlIGl0
-LiAgCj4gPj4KPiA+PiBJdCdzIG5vdCB0aGF0IGVhc3kuIEl0IGhhcyB0byBiZSBkb25lIGZyb20g
-dGhlIEkyQyBjb3JlIHNpbmNlIGl0J3MgdGhlCj4gPj4gb25seSBvbmUgd2hvIGNhbiBjYWxsIGRl
-dmljZV91bnJlZ2lzdGVyKCkgYW5kIGNsZWFudXAgdGhlIG90aGVyIGJpdHMKPiA+PiBhc3NvY2lh
-dGVkIHdpdGggYW4gSTJDIGRldmljZSAoc2VlIGkyY191bnJlZ2lzdGVyX2RldmljZSgpKS4gTm93
-LCB0aGUKPiA+PiBpMmNfZHJpdmVyLT5wcm9iZSgpIGZ1bmN0aW9uIGlzIGNhbGxlZCBmcm9tIGEg
-Y29udGV4dCB3aGVyZSBJJ20gYWxtb3N0Cj4gPj4gc3VyZSBkZXZpY2VfdW5yZWdpc3RlcigpIGNh
-bid0IGJlIGNhbGxlZCBzaW5jZSB3ZSBtaWdodCBzdGlsbCBiZSBpbiB0aGUKPiA+PiBkZXZpY2Vf
-cmVnaXN0ZXIoKSBwYXRoLiBUaGUgc29sdXRpb24gd291bGQgYmUgdG8gcXVldWUgdGhlCj4gPj4g
-dW5yZWdpc3RyYXRpb24gd29yayB0byBhIHdvcmtxdWV1ZSwgYnV0IEknbSBub3QgZXZlbiBzdXJl
-IHRoaXMgaXMgc2FmZQo+ID4+IHRvIGRvIHRoYXQuIFdoYXQgaWYgdGhlIEkyQyBhZGFwdGVyIGV4
-cG9zaW5nIHRoZSBkZXZpY2UgaXMgcmVtb3ZlZCBpbgo+ID4+IHRoZSBtZWFudGltZT8gT2YgY291
-cnNlLCBhbGwgb2YgdGhpcyBjYW4gYmUgYWRkcmVzc2VkLCBJJ20ganVzdAo+ID4+IHdvbmRlcmlu
-ZyBpZiBpdCdzIHJlYWxseSB3b3J0aCB0aGUgdHJvdWJsZSAod2UncmUgbGlrZWx5IHRvIGludHJv
-ZHVjZQo+ID4+IG5ldyByYWNlcyBvciBvdGhlciBraW5kIG9mIGJ1Z3Mgd2hpbGUgZG9pbmcgdGhh
-dCksIGVzcGVjaWFsbHkgc2luY2UKPiA+PiBwbGFjaW5nIHRoZSBkZXZpY2UgaW4gYSAiZmFpbCIg
-c3RhdGUgYW5kIHN0aWxsIGtlZXBpbmcgaXQgYXJvdW5kIHdvdWxkCj4gPj4gc29sdmUgdGhlIHBy
-b2JsZW0gd2l0aG91dCByZXF1aXJpbmcgYWxsIHRoZSBleHRyYSBjbGVhbnVwIHdlJ3JlIHRhbGtp
-bmcKPiA+PiBhYm91dCBoZXJlLiAgCj4gPgo+ID4gSSB0aGluayB5b3UgaGF2ZSB0byBwdXQgdGhl
-IGRldmljZSBzdGF0dXMgaW50byAiZmFpbCIgaW1tZWRpYXRlbHksCj4gPiBvdGhlcndpc2UgdGhl
-cmUncyBhIHJhY2Ugd2l0aCBkZWZlcnJlZCBwcm9iaW5nLiBTY2VuYXJpbzoKPiA+Cj4gPiAxLiB2
-YzQgbG9hZHMsIHBhbmVsIGlzbid0IHRoZXJlIHlldCAtPiBFUFJPQkVfREVGRVIuCj4gPiAyLiBy
-cGkgZHJpdmVyIGxvYWRzLCBub3RpY2VzIHBhbmVsIGlzbid0IHRoZXJlLCByZXR1cm5zIC1FTk9E
-RVYgIAo+IAo+IFN0ZXAgM2E6IGkyYyBjb3JlIHVwZGF0ZXMgZGV2aWNlIERUIHN0YXR1cyBwcm9w
-ZXJ0eQo+IFN0ZXAgM2I6IGkyYyBjb3JlIGZpcmVzIG9mZiB3b3JrZXIgZm9yIGRldmljZV91bnJl
-Z2lzdGVyCj4gCj4gVGhhdCBzb2x2ZXMgdGhlIHJhY2UsIHJpZ2h0PwoKWWVwLCB0aGF0IHNob3Vs
-ZCBzb2x2ZSB0aGlzIHBhcnRpY3VsYXIgcmFjZSwgYnV0IHdlIHN0aWxsIGhhdmUgYQpwcm9ibGVt
-IHdpdGggdGhlIGRlZmVycmVkLXByb2JlIHRyaWdnZXIuIFRoZSBvbmx5IHRoaW5nIHRoYXQgZm9y
-Y2VzIGFsbApkZXZpY2VzIHRoYXQgaGF2ZSBzZWVuIC1FUFJPQkVfREVGRVIgdG8gYmUgcHJvYmVk
-IGFnYWluIGlzIHdoZW4gYQpkZXZpY2UgaXMgYm91bmQgdG8gYSBkcml2ZXIsIHdoaWNoIGluIG91
-ciBjYXNlIHdvbid0IGhhcHBlbiBiZWNhdXNlIHdlCnJldHVybiAtRU5PREVWLiBJZiB3ZSdyZSBs
-dWNreSwgc29tZXRoaW5nIGVsc2UgaW4gdGhlIHN5c3RlbSB3aWxsCnRyaWdnZXIgdGhhdCBhZnRl
-ciB0aGUgSTJDIGNvcmUgaGFzIGNoYW5nZWQgdGhlIHN0YXR1cyBwcm9wLCBhbmQgaWYKd2UncmUg
-bm90LCB0aGUgRFJNIGRldiB3aWxsIG5ldmVyIGJ1dCBwcm9iZWQgYWdhaW4uCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Baoquan,
+
+I love your patch! Yet something to improve:
+
+[auto build test ERROR on linus/master]
+[also build test ERROR on v4.17-rc4 next-20180504]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180507-144345
+config: powerpc-defconfig (attached as .config)
+compiler: powerpc64-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        make.cross ARCH=powerpc 
+
+All errors (new ones prefixed by >>):
+
+   arch/powerpc/kernel/pci-common.c: In function 'pci_process_bridge_OF_ranges':
+>> arch/powerpc/kernel/pci-common.c:764:44: error: incompatible types when assigning to type 'struct list_head' from type 'void *'
+       res->parent = res->child = res->sibling = NULL;
+                                               ^
+   arch/powerpc/kernel/pci-common.c: In function 'reparent_resources':
+>> arch/powerpc/kernel/pci-common.c:1100:10: error: assignment from incompatible pointer type [-Werror=incompatible-pointer-types]
+     for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
+             ^
+   arch/powerpc/kernel/pci-common.c:1100:50: error: assignment from incompatible pointer type [-Werror=incompatible-pointer-types]
+     for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
+                                                     ^
+>> arch/powerpc/kernel/pci-common.c:1113:13: error: incompatible types when assigning to type 'struct list_head' from type 'struct resource *'
+     res->child = *firstpp;
+                ^
+   arch/powerpc/kernel/pci-common.c:1114:15: error: incompatible types when assigning to type 'struct list_head' from type 'struct resource *'
+     res->sibling = *pp;
+                  ^
+>> arch/powerpc/kernel/pci-common.c:1117:9: error: incompatible types when assigning to type 'struct resource *' from type 'struct list_head'
+     for (p = res->child; p != NULL; p = p->sibling) {
+            ^
+   arch/powerpc/kernel/pci-common.c:1117:36: error: incompatible types when assigning to type 'struct resource *' from type 'struct list_head'
+     for (p = res->child; p != NULL; p = p->sibling) {
+                                       ^
+   cc1: all warnings being treated as errors
+
+vim +764 arch/powerpc/kernel/pci-common.c
+
+13dccb9e Benjamin Herrenschmidt 2007-12-11  642  
+13dccb9e Benjamin Herrenschmidt 2007-12-11  643  /**
+13dccb9e Benjamin Herrenschmidt 2007-12-11  644   * pci_process_bridge_OF_ranges - Parse PCI bridge resources from device tree
+13dccb9e Benjamin Herrenschmidt 2007-12-11  645   * @hose: newly allocated pci_controller to be setup
+13dccb9e Benjamin Herrenschmidt 2007-12-11  646   * @dev: device node of the host bridge
+13dccb9e Benjamin Herrenschmidt 2007-12-11  647   * @primary: set if primary bus (32 bits only, soon to be deprecated)
+13dccb9e Benjamin Herrenschmidt 2007-12-11  648   *
+13dccb9e Benjamin Herrenschmidt 2007-12-11  649   * This function will parse the "ranges" property of a PCI host bridge device
+13dccb9e Benjamin Herrenschmidt 2007-12-11  650   * node and setup the resource mapping of a pci controller based on its
+13dccb9e Benjamin Herrenschmidt 2007-12-11  651   * content.
+13dccb9e Benjamin Herrenschmidt 2007-12-11  652   *
+13dccb9e Benjamin Herrenschmidt 2007-12-11  653   * Life would be boring if it wasn't for a few issues that we have to deal
+13dccb9e Benjamin Herrenschmidt 2007-12-11  654   * with here:
+13dccb9e Benjamin Herrenschmidt 2007-12-11  655   *
+13dccb9e Benjamin Herrenschmidt 2007-12-11  656   *   - We can only cope with one IO space range and up to 3 Memory space
+13dccb9e Benjamin Herrenschmidt 2007-12-11  657   *     ranges. However, some machines (thanks Apple !) tend to split their
+13dccb9e Benjamin Herrenschmidt 2007-12-11  658   *     space into lots of small contiguous ranges. So we have to coalesce.
+13dccb9e Benjamin Herrenschmidt 2007-12-11  659   *
+13dccb9e Benjamin Herrenschmidt 2007-12-11  660   *   - Some busses have IO space not starting at 0, which causes trouble with
+13dccb9e Benjamin Herrenschmidt 2007-12-11  661   *     the way we do our IO resource renumbering. The code somewhat deals with
+13dccb9e Benjamin Herrenschmidt 2007-12-11  662   *     it for 64 bits but I would expect problems on 32 bits.
+13dccb9e Benjamin Herrenschmidt 2007-12-11  663   *
+13dccb9e Benjamin Herrenschmidt 2007-12-11  664   *   - Some 32 bits platforms such as 4xx can have physical space larger than
+13dccb9e Benjamin Herrenschmidt 2007-12-11  665   *     32 bits so we need to use 64 bits values for the parsing
+13dccb9e Benjamin Herrenschmidt 2007-12-11  666   */
+cad5cef6 Greg Kroah-Hartman     2012-12-21  667  void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+cad5cef6 Greg Kroah-Hartman     2012-12-21  668  				  struct device_node *dev, int primary)
+13dccb9e Benjamin Herrenschmidt 2007-12-11  669  {
+858957ab Kevin Hao              2013-05-16  670  	int memno = 0;
+13dccb9e Benjamin Herrenschmidt 2007-12-11  671  	struct resource *res;
+654837e8 Andrew Murray          2014-02-25  672  	struct of_pci_range range;
+654837e8 Andrew Murray          2014-02-25  673  	struct of_pci_range_parser parser;
+13dccb9e Benjamin Herrenschmidt 2007-12-11  674  
+b7c670d6 Rob Herring            2017-08-21  675  	printk(KERN_INFO "PCI host bridge %pOF %s ranges:\n",
+b7c670d6 Rob Herring            2017-08-21  676  	       dev, primary ? "(primary)" : "");
+13dccb9e Benjamin Herrenschmidt 2007-12-11  677  
+654837e8 Andrew Murray          2014-02-25  678  	/* Check for ranges property */
+654837e8 Andrew Murray          2014-02-25  679  	if (of_pci_range_parser_init(&parser, dev))
+13dccb9e Benjamin Herrenschmidt 2007-12-11  680  		return;
+13dccb9e Benjamin Herrenschmidt 2007-12-11  681  
+13dccb9e Benjamin Herrenschmidt 2007-12-11  682  	/* Parse it */
+654837e8 Andrew Murray          2014-02-25  683  	for_each_of_pci_range(&parser, &range) {
+e9f82cb7 Benjamin Herrenschmidt 2008-10-14  684  		/* If we failed translation or got a zero-sized region
+e9f82cb7 Benjamin Herrenschmidt 2008-10-14  685  		 * (some FW try to feed us with non sensical zero sized regions
+e9f82cb7 Benjamin Herrenschmidt 2008-10-14  686  		 * such as power3 which look like some kind of attempt at exposing
+e9f82cb7 Benjamin Herrenschmidt 2008-10-14  687  		 * the VGA memory hole)
+e9f82cb7 Benjamin Herrenschmidt 2008-10-14  688  		 */
+654837e8 Andrew Murray          2014-02-25  689  		if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
+13dccb9e Benjamin Herrenschmidt 2007-12-11  690  			continue;
+13dccb9e Benjamin Herrenschmidt 2007-12-11  691  
+13dccb9e Benjamin Herrenschmidt 2007-12-11  692  		/* Act based on address space type */
+13dccb9e Benjamin Herrenschmidt 2007-12-11  693  		res = NULL;
+654837e8 Andrew Murray          2014-02-25  694  		switch (range.flags & IORESOURCE_TYPE_BITS) {
+654837e8 Andrew Murray          2014-02-25  695  		case IORESOURCE_IO:
+13dccb9e Benjamin Herrenschmidt 2007-12-11  696  			printk(KERN_INFO
+13dccb9e Benjamin Herrenschmidt 2007-12-11  697  			       "  IO 0x%016llx..0x%016llx -> 0x%016llx\n",
+654837e8 Andrew Murray          2014-02-25  698  			       range.cpu_addr, range.cpu_addr + range.size - 1,
+654837e8 Andrew Murray          2014-02-25  699  			       range.pci_addr);
+13dccb9e Benjamin Herrenschmidt 2007-12-11  700  
+13dccb9e Benjamin Herrenschmidt 2007-12-11  701  			/* We support only one IO range */
+13dccb9e Benjamin Herrenschmidt 2007-12-11  702  			if (hose->pci_io_size) {
+13dccb9e Benjamin Herrenschmidt 2007-12-11  703  				printk(KERN_INFO
+13dccb9e Benjamin Herrenschmidt 2007-12-11  704  				       " \\--> Skipped (too many) !\n");
+13dccb9e Benjamin Herrenschmidt 2007-12-11  705  				continue;
+13dccb9e Benjamin Herrenschmidt 2007-12-11  706  			}
+13dccb9e Benjamin Herrenschmidt 2007-12-11  707  #ifdef CONFIG_PPC32
+13dccb9e Benjamin Herrenschmidt 2007-12-11  708  			/* On 32 bits, limit I/O space to 16MB */
+654837e8 Andrew Murray          2014-02-25  709  			if (range.size > 0x01000000)
+654837e8 Andrew Murray          2014-02-25  710  				range.size = 0x01000000;
+13dccb9e Benjamin Herrenschmidt 2007-12-11  711  
+13dccb9e Benjamin Herrenschmidt 2007-12-11  712  			/* 32 bits needs to map IOs here */
+654837e8 Andrew Murray          2014-02-25  713  			hose->io_base_virt = ioremap(range.cpu_addr,
+654837e8 Andrew Murray          2014-02-25  714  						range.size);
+13dccb9e Benjamin Herrenschmidt 2007-12-11  715  
+13dccb9e Benjamin Herrenschmidt 2007-12-11  716  			/* Expect trouble if pci_addr is not 0 */
+13dccb9e Benjamin Herrenschmidt 2007-12-11  717  			if (primary)
+13dccb9e Benjamin Herrenschmidt 2007-12-11  718  				isa_io_base =
+13dccb9e Benjamin Herrenschmidt 2007-12-11  719  					(unsigned long)hose->io_base_virt;
+13dccb9e Benjamin Herrenschmidt 2007-12-11  720  #endif /* CONFIG_PPC32 */
+13dccb9e Benjamin Herrenschmidt 2007-12-11  721  			/* pci_io_size and io_base_phys always represent IO
+13dccb9e Benjamin Herrenschmidt 2007-12-11  722  			 * space starting at 0 so we factor in pci_addr
+13dccb9e Benjamin Herrenschmidt 2007-12-11  723  			 */
+654837e8 Andrew Murray          2014-02-25  724  			hose->pci_io_size = range.pci_addr + range.size;
+654837e8 Andrew Murray          2014-02-25  725  			hose->io_base_phys = range.cpu_addr - range.pci_addr;
+13dccb9e Benjamin Herrenschmidt 2007-12-11  726  
+13dccb9e Benjamin Herrenschmidt 2007-12-11  727  			/* Build resource */
+13dccb9e Benjamin Herrenschmidt 2007-12-11  728  			res = &hose->io_resource;
+654837e8 Andrew Murray          2014-02-25  729  			range.cpu_addr = range.pci_addr;
+13dccb9e Benjamin Herrenschmidt 2007-12-11  730  			break;
+654837e8 Andrew Murray          2014-02-25  731  		case IORESOURCE_MEM:
+13dccb9e Benjamin Herrenschmidt 2007-12-11  732  			printk(KERN_INFO
+13dccb9e Benjamin Herrenschmidt 2007-12-11  733  			       " MEM 0x%016llx..0x%016llx -> 0x%016llx %s\n",
+654837e8 Andrew Murray          2014-02-25  734  			       range.cpu_addr, range.cpu_addr + range.size - 1,
+654837e8 Andrew Murray          2014-02-25  735  			       range.pci_addr,
+654837e8 Andrew Murray          2014-02-25  736  			       (range.pci_space & 0x40000000) ?
+654837e8 Andrew Murray          2014-02-25  737  			       "Prefetch" : "");
+13dccb9e Benjamin Herrenschmidt 2007-12-11  738  
+13dccb9e Benjamin Herrenschmidt 2007-12-11  739  			/* We support only 3 memory ranges */
+13dccb9e Benjamin Herrenschmidt 2007-12-11  740  			if (memno >= 3) {
+13dccb9e Benjamin Herrenschmidt 2007-12-11  741  				printk(KERN_INFO
+13dccb9e Benjamin Herrenschmidt 2007-12-11  742  				       " \\--> Skipped (too many) !\n");
+13dccb9e Benjamin Herrenschmidt 2007-12-11  743  				continue;
+13dccb9e Benjamin Herrenschmidt 2007-12-11  744  			}
+13dccb9e Benjamin Herrenschmidt 2007-12-11  745  			/* Handles ISA memory hole space here */
+654837e8 Andrew Murray          2014-02-25  746  			if (range.pci_addr == 0) {
+13dccb9e Benjamin Herrenschmidt 2007-12-11  747  				if (primary || isa_mem_base == 0)
+654837e8 Andrew Murray          2014-02-25  748  					isa_mem_base = range.cpu_addr;
+654837e8 Andrew Murray          2014-02-25  749  				hose->isa_mem_phys = range.cpu_addr;
+654837e8 Andrew Murray          2014-02-25  750  				hose->isa_mem_size = range.size;
+13dccb9e Benjamin Herrenschmidt 2007-12-11  751  			}
+13dccb9e Benjamin Herrenschmidt 2007-12-11  752  
+13dccb9e Benjamin Herrenschmidt 2007-12-11  753  			/* Build resource */
+654837e8 Andrew Murray          2014-02-25  754  			hose->mem_offset[memno] = range.cpu_addr -
+654837e8 Andrew Murray          2014-02-25  755  							range.pci_addr;
+13dccb9e Benjamin Herrenschmidt 2007-12-11  756  			res = &hose->mem_resources[memno++];
+13dccb9e Benjamin Herrenschmidt 2007-12-11  757  			break;
+13dccb9e Benjamin Herrenschmidt 2007-12-11  758  		}
+13dccb9e Benjamin Herrenschmidt 2007-12-11  759  		if (res != NULL) {
+aeba3731 Michael Ellerman       2014-10-16  760  			res->name = dev->full_name;
+aeba3731 Michael Ellerman       2014-10-16  761  			res->flags = range.flags;
+aeba3731 Michael Ellerman       2014-10-16  762  			res->start = range.cpu_addr;
+aeba3731 Michael Ellerman       2014-10-16  763  			res->end = range.cpu_addr + range.size - 1;
+aeba3731 Michael Ellerman       2014-10-16 @764  			res->parent = res->child = res->sibling = NULL;
+13dccb9e Benjamin Herrenschmidt 2007-12-11  765  		}
+13dccb9e Benjamin Herrenschmidt 2007-12-11  766  	}
+13dccb9e Benjamin Herrenschmidt 2007-12-11  767  }
+fa462f2d Benjamin Herrenschmidt 2007-12-20  768  
+
+:::::: The code at line 764 was first introduced by commit
+:::::: aeba3731b150188685225b510886f1370d8814de powerpc/pci: Fix IO space breakage after of_pci_range_to_resource() change
+
+:::::: TO: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+:::::: CC: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
