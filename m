@@ -1,71 +1,196 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v4 5/9] iio: adc: at91-sama5d2_adc: add support for
- position and pressure channels
-Date: Mon, 7 May 2018 12:28:10 +0200
-Message-ID: <20180507102810.GO10960@piout.net>
-References: <1525084335-11276-1-git-send-email-eugen.hristev@microchip.com>
- <1525084335-11276-6-git-send-email-eugen.hristev@microchip.com>
- <20180506182953.6adad5b5@archlinux>
- <20180506175914.GL10960@piout.net>
- <eaeced9e-390f-0eea-0466-66c789bacdd6@microchip.com>
+From: Amit Nischal <anischal@codeaurora.org>
+Subject: Re: [PATCH v6 1/3] clk: qcom: Configure the RCGs to a safe source as
+ needed
+Date: Mon, 07 May 2018 16:03:33 +0530
+Message-ID: <f7c41c4d7df95ab093150de1d2c4b4b1@codeaurora.org>
+References: <1525105210-8689-1-git-send-email-anischal@codeaurora.org>
+ <1525105210-8689-2-git-send-email-anischal@codeaurora.org>
+ <152524713612.138124.1776677011439726084@swboyd.mtv.corp.google.com>
+ <68f6216b3de12d90a54207a6a0110c6b@codeaurora.org>
+ <152549069940.138124.10210385659890209429@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <eaeced9e-390f-0eea-0466-66c789bacdd6@microchip.com>
+In-Reply-To: <152549069940.138124.10210385659890209429@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eugen Hristev <eugen.hristev@microchip.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, ludovic.desroches@microchip.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, nicolas.ferre@microchip.com, dmitry.torokhov@gmail.com, robh@kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/05/2018 09:18:39+0300, Eugen Hristev wrote:
-> On 06.05.2018 20:59, Alexandre Belloni wrote:
-> > Hi,
-> > 
-> > On 06/05/2018 18:29:53+0100, Jonathan Cameron wrote:
-> > > On Mon, 30 Apr 2018 13:32:11 +0300
-> > > Eugen Hristev <eugen.hristev@microchip.com> wrote:
-> > > 
-> > > > This implements the support for position and pressure for the included
-> > > > touchscreen support in the SAMA5D2 SOC ADC block.
-> > > > Two position channels are added and one for pressure.
-> > > > They can be read in raw format, or through a buffer.
-> > > > A normal use case is for a consumer driver to register a callback buffer
-> > > > for these channels.
-> > > > When the touchscreen channels are in the active scan mask,
-> > > > the driver will start the touchscreen sampling and push the data to the
-> > > > buffer.
-> > > > 
-> > > > Some parts of this patch are based on initial original work by
-> > > > Mohamed Jamsheeth Hajanajubudeen and Bandaru Venkateswara Swamy
-> > > > 
-> > > > Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> > > Looks good to me now.
-> > > 
-> > > I'm assuming that once Dmitry and others are happy, I'll take the
-> > > series through the IIO tree. Will reply to the cover letter if the
-> > > rest of the patches look good to me to let everyone know that without
-> > > having to catch this comment down in here!
-> > > 
-> > 
-> > I'm planning to take both DT patches through the at91 tree once you take
-> > the DT bindings patches.
+On 2018-05-05 08:54, Stephen Boyd wrote:
+> Quoting Amit Nischal (2018-05-03 04:57:37)
+>> On 2018-05-02 13:15, Stephen Boyd wrote:
+>> > Quoting Amit Nischal (2018-04-30 09:20:08)
+>> >
+>> >> +}
+>> >> +
+>> >> +static void clk_rcg2_shared_disable(struct clk_hw *hw)
+>> >> +{
+>> >> +       struct clk_rcg2 *rcg = to_clk_rcg2(hw);
+>> >> +       struct freq_tbl safe_src_tbl = { 0 };
+>> >> +
+>> >> +       /*
+>> >> +        * Park the RCG at a safe configuration - sourced off from
+>> >> safe source.
+>> >> +        * Force enable and disable the RCG while configuring it to
+>> >> safeguard
+>> >> +        * against any update signal coming from the downstream clock.
+>> >> +        * The current parent is still prepared and enabled at this
+>> >> point, and
+>> >> +        * the safe source is always on while application processor
+>> >> subsystem
+>> >> +        * is online. Therefore, the RCG can safely switch its parent.
+>> >> +        */
+>> >> +       safe_src_tbl.src = rcg->safe_src_index;
+>> >> +       clk_rcg2_shared_force_enable_clear(hw, &safe_src_tbl);
+>> >
+>> > This should then re-dirty the config register to have the software
+>> > frequency settings that existed in the hardware when disable was
+>> > called.
+>> > Given that MND shouldn't be changed here, this should be as simple as
+>> > saving away the CFG register, forcing it to XO speed by changing the
+>> > src
+>> > and disabling dual edge in the CFG register (please don't call
+>> > force_enable_clear with some frequency pointer, just do this inline
+>> > here), and then rewriting the cfg register with the "real" settings for
+>> > whatever frequency it's supposed to run at and then returning from this
+>> > function.
+>> >
+>> > I guess we have to do a read cfg from hardware, write cfg, hit update
+>> > config, and then write cfg again each time we disable. For enable, we
+>> > just do an update config (if it's dirty?) inside of a force
+>> > enable/disable pair. And set_rate doesn't really change except it
+>> > either
+>> > does or doesn't hit the update config bit if the clk is enabled or
+>> > disabled respectively.
+>> >
+>> 
+>> We have done the below changes suggested by you and that logic seems 
+>> to
+>> be
+>> working fine. But we have one concern about leaving the RCG registers 
+>> in
+>> dirty state and would like to have a little bit modification as
+>> explained
+>> below:
+>> 
+>> Suggested Logic:
+>> 1. set_rate()--> Update CFG, M, N and D registers and don't hit the
+>> update
+>>                   bit if clock is disabled - call new
+>> __clk_rcg2_configure().
+>>                   Above will make the CFG register as dirty.
+>> 
+>> 2. _disable()--> 2.1 - Store the CFG register configuration in a
+>> variable.
+>>                   2.2 - Move to the safe source (XO) and hit the 
+>> update
+>> bit.
+>>                         It will only touch the CFG register and M, N, 
+>> D
+>>                         register values will remain as it was.
+>>                   2.3 - Write back the stored CFG value done in step 
+>> #2.1
+>>                         This will again redirty the CFG register.
+>> 
+>> 3. _enable()--> Just hit the update bit as the configuration write 
+>> will
+>>                  be taken care in the steps #1 and #2.
+>> 
+>> It would be great if we don't redirty the CFG register and leave the 
+>> RCG
+>> CFG register to at safe source(XO) in disable() path.
+>> 
+>> This would help us to debug the issues where device crashes and we 
+>> want
+>> to dump the RCG registers to know whether from software, we have
+>> actually
+>> moved to safe source or not. Otherwise, we would get the dirty 
+>> register
+>> values in crash dumps.
+>> 
+>> So instead of writing back the stored CFG(corresponding to real rate
+>> settings) in disable path, we want to restore the stored CFG in enable
+>> path and then hit the update bit.
+>> CFG configuration store can happen at two places - set_rate() and
+>> disable()
+>> path and above logic will be modified as below:
+>> 
+>> 1. set_rate()--> 1.1 - Update CFG, M, N and D registers and don't hit
+>> the
+>>                         update bit if clock is disabled.
+>>                   1.2 - Store CFG register value in 'current_cfg' 
+>> member
+>>                         of 'rcg2' structure.
+>> 
+>> 2. _disable()--> 2.1 - Store the CFG register value in 'current_cfg'
+>> before
+>>                         switching to the safe source (XO).
+>>                   2.2 - Move to the safe source (XO) and hit the 
+>> update
+>> bit.
+>>                         Now RCG configuration wil not be dirty.
+>> 
+>> 3. _enable()--> 3.1 - Check for 'current_cfg' value and if 0 then
+>> return.
+>>                        This would catch the below one time condition:
+>>                        - when clk_enable() gets call without 
+>> set_rate().
 > 
-> Please take into consideration that those DT patches do not build
-> stand-alone, they depend on
-> [PATCH v4 7/9] dt-bindings: iio: adc: at91-sama5d2_adc: add channel specific
-> consumer info
+> We want clk_enable() to work without set_rate() though. So returning 0
+> if the value is 0 is wrong.
 > 
-> (the DT patches add an include statement of a file which is created in this
-> patch).
+>>                  3.2 - Write the CFG value from 'current_cfg' to CFG
+>> register.
+>>                  3.2 - Hit the update bit as we have already written 
+>> the
+>> latest
+>>                        configuration in step #3.2.
+>>                  3.3 - Clear the 'current_cfg' value.
+>> 
+>> We feel above logic will work as expected and in this way, we don't 
+>> have
+>> CFG
+>> registers in dirty state when clock is disabled.
+>> Could you please inform us your thoughts about above implementation 
+>> and
+>> based
+>> on that I will send the required changes.
+>> 
 > 
+> If you want to save away current_cfg in a memory location so you know
+> what it was before it was dirty, then perhaps that needs to be a debug
+> patch that you stack on top when debugging. In the end, it would just 
+> be
+> saving the state of the frequency setting that we have in software
+> though, and that would be the latest rate of the clk we have configured
+> the clk for. There aren't any mux switches going on when the clk is 
+> off,
+> so you're saying you want to know the rate of the clk that the kernel
+> set when we turned the clk off, which we already have with the clk 
+> rate.
+> I'm confused.
 
-So the proper way is to actually have the values in the dt instead of
-the define and then patch it on the next version of the kernel.
+Thanks for the suggestions. We will implement the new ops with the below
+logic which you suggested earlier i.e. re-dirtying the RCG in disable() 
+path
+with real CFG settings and in enable() path, only hit the update bit.
 
-Or we take the dts patches on the next version.
+1. set_rate()--> Update CFG, M, N and D registers and don't hit the
+                  update bit if clock is disabled - call new
+                  __clk_rcg2_configure().
+                  Above will make the CFG register as dirty.
 
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2. _disable()--> 2.1 - Store the CFG register configuration in a
+                        variable.
+                  2.2 - Move to the safe source (XO) and hit the update
+                        bit. It will only touch the CFG register and M, 
+N, D
+                        register values will remain as it was.
+                  2.3 - Write back the stored CFG value done in step #2.1
+                        This will again redirty the CFG register.
+
+3. _enable()--> Just hit the update bit as the configuration write will
+                 be taken care in the steps #1 and #2.
