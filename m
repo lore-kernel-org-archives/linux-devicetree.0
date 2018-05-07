@@ -1,72 +1,38 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/8] ARM: dts: r8a7790: Add PMU device nodes
-Date: Mon,  7 May 2018 15:57:01 +0200
-Message-ID: <1525701427-12914-3-git-send-email-geert+renesas@glider.be>
-References: <1525701427-12914-1-git-send-email-geert+renesas@glider.be>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/5] dt-bindings: devfreq: rk3399_dmc: improve binding
+ documentation.
+Date: Mon, 7 May 2018 09:11:52 -0500
+Message-ID: <20180507141152.GA28712@rob-hp-laptop>
+References: <20180505093450.17327-1-enric.balletbo@collabora.com>
+ <20180505093450.17327-2-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1525701427-12914-1-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180505093450.17327-2-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, heiko@sntech.de, linux-pm@vger.kernel.org, dbasehore@chromium.org, linux-kernel@vger.kernel.org, dianders@google.com, groeck@chromium.org, kernel@collabora.com, hl@rock-chips.com, Nick Milner <nick.milner@collabora.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable support for the ARM Performance Monitor Units in the Cortex-A15
-and Cortex-A7 CPU cores on R-Car H2 by adding device nodes for the two
-PMUs.
+On Sat, May 05, 2018 at 11:34:46AM +0200, Enric Balletbo i Serra wrote:
+> From: Nick Milner <nick.milner@collabora.com>
+> 
+> There are several typos, references to non existent files, grammar and
+> punctuation mistakes in the rk3399_dmc.txt binding. This patch tries
+> to improve the binding documentation and fix these mistakes.
+> 
+> Signed-off-by: Nick Milner <nick.milner@collabora.com>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+> ---
+> 
+> Changes in v3: None
+> Changes in v2:
+> - [1/6] Add Acked-by MyungJoo Ham.
+> - [6/6] Removed this patch from this series.
+> 
+>  .../bindings/devfreq/rk3399_dmc.txt           | 207 +++++++++---------
+>  1 file changed, 105 insertions(+), 102 deletions(-)
 
-New Linux output:
-
-    hw perfevents: enabled with armv7_cortex_a15 PMU driver, 7 counters available
-    hw perfevents: /pmu-1: failed to probe PMU!
-    hw perfevents: /pmu-1: failed to register PMU devices!
-
-The last two lines are due to the Cortex-A7 CPU cores being described in
-DT, but not enabled by the firmware.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm/boot/dts/r8a7790.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index 47a51cd71434e7d2..4d06b154bd7ebd9e 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -202,6 +202,24 @@
- 		clock-frequency = <0>;
- 	};
- 
-+	pmu-0 {
-+		compatible = "arm,cortex-a15-pmu";
-+		interrupts-extended = <&gic GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
-+	pmu-1 {
-+		compatible = "arm,cortex-a7-pmu";
-+		interrupts-extended = <&gic GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu4>, <&cpu5>, <&cpu6>, <&cpu7>;
-+	};
-+
- 	/* External SCIF clock */
- 	scif_clk: scif {
- 		compatible = "fixed-clock";
--- 
-2.7.4
+Reviewed-by: Rob Herring <robh@kernel.org>
