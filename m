@@ -1,58 +1,50 @@
-From: Paul Kocialkowski <contact@paulk.fr>
-Subject: [PATCH v4 1/3] drm/panel: Add RGB666 variant of Innolux AT070TN90
-Date: Tue,  8 May 2018 00:04:11 +0200
-Message-ID: <20180507220413.21990-1-contact@paulk.fr>
+From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Subject: [PATCH v4 2/3] ARM: dts: sun7i: Add RGB666 pins definition
+Date: Tue,  8 May 2018 00:04:12 +0200
+Message-ID: <20180507220413.21990-2-contact@paulk.fr>
+References: <20180507220413.21990-1-contact@paulk.fr>
+Reply-To: contact-W9ppeneeCTY@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Paul Kocialkowski <contact@paulk.fr>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBC75HK6WUAEBBF43YPLQKGQEJCLUZZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180507220413.21990-1-contact-W9ppeneeCTY@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIHRpbWluZ3MgZm9yIHRoZSBSR0I2NjYgdmFyaWFudCBvZiB0aGUgSW5ub2x1eCBB
-VDA3MFROOTAgcGFuZWwsCmFzIGZvdW5kIG9uIHRoZSBBaW5vbCBBVzEgdGFibGV0LgoKVGhlIHBh
-bmVsIGFsc28gc3VwcG9ydHMgUkdCODg4IG91dHB1dC4gV2hlbiBSR0I2NjYgbW9kZSBpcyB1c2Vk
-IGluc3RlYWQsCnRoZSB0d28gZXh0cmEgbGFuZXMgcGVyIGNvbXBvbmVudCBhcmUgZ3JvdW5kZWQu
-CgpJbiB0aGUgZnV0dXJlLCBpdCBtaWdodCBiZWNvbWUgbmVjZXNzYXJ5IHRvIGludHJvZHVjZSBh
-IGRlZGljYXRlZApkZXZpY2UtdHJlZSBwcm9wZXJ0eSB0byBzcGVjaWZ5IHRoZSBidXMgZm9ybWF0
-IHRvIHVzZSBpbnN0ZWFkIG9mIHRoZQpkZWZhdWx0IG9uZSBmb3IgdGhlIHBhbmVsLiBUaGlzIHdp
-bGwgYWxsb3cgc3VwcG9ydGluZyBkaWZmZXJlbnQgYnVzCmZvcm1hdHMgZm9yIHRoZSBzYW1lIHBh
-bmVsIG1vZGVzLgoKU2lnbmVkLW9mZi1ieTogUGF1bCBLb2NpYWxrb3dza2kgPGNvbnRhY3RAcGF1
-bGsuZnI+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIHwgMjYgKysr
-KysrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCsp
-CgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJp
-dmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCmluZGV4IGNiZjFhYjQwNGVlNy4uMzJl
-MzBkNWE4ZjA4IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxl
-LmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCkBAIC0xMDYzLDYg
-KzEwNjMsMjkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGlubm9sdXhfYXQwNDN0
-bjI0ID0gewogCS5idXNfZmxhZ3MgPSBEUk1fQlVTX0ZMQUdfREVfSElHSCB8IERSTV9CVVNfRkxB
-R19QSVhEQVRBX1BPU0VER0UsCiB9OwogCitzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5
-X21vZGUgaW5ub2x1eF9hdDA3MHRuOTBfbW9kZSA9IHsKKwkuY2xvY2sgPSA0MDAwMCwKKwkuaGRp
-c3BsYXkgPSA4MDAsCisJLmhzeW5jX3N0YXJ0ID0gODAwICsgMTEyLAorCS5oc3luY19lbmQgPSA4
-MDAgKyAxMTIgKyAxLAorCS5odG90YWwgPSA4MDAgKyAxMTIgKyAxICsgODcsCisJLnZkaXNwbGF5
-ID0gNDgwLAorCS52c3luY19zdGFydCA9IDQ4MCArIDE0MSwKKwkudnN5bmNfZW5kID0gNDgwICsg
-MTQxICsgMSwKKwkudnRvdGFsID0gNDgwICsgMTQxICsgMSArIDM4LAorCS52cmVmcmVzaCA9IDYw
-LAorfTsKKworc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGlubm9sdXhfYXQwNzB0bjkw
-ID0geworCS5tb2RlcyA9ICZpbm5vbHV4X2F0MDcwdG45MF9tb2RlLAorCS5udW1fbW9kZXMgPSAx
-LAorCS5zaXplID0geworCQkud2lkdGggPSAxNTQsCisJCS5oZWlnaHQgPSA4NiwKKwl9LAorCS5i
-dXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I2NjZfMVgxOCwKK307CisKIHN0YXRpYyBjb25z
-dCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBpbm5vbHV4X2F0MDcwdG45Ml9tb2RlID0gewogCS5j
-bG9jayA9IDMzMzMzLAogCS5oZGlzcGxheSA9IDgwMCwKQEAgLTIxNTEsNiArMjE3NCw5IEBAIHN0
-YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJ
-fSwgewogCQkuY29tcGF0aWJsZSA9ICJpbm5vbHV4LGF0MDQzdG4yNCIsCiAJCS5kYXRhID0gJmlu
-bm9sdXhfYXQwNDN0bjI0LAorCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAiaW5ub2x1eCxhdDA3MHRu
-OTAiLAorCQkuZGF0YSA9ICZpbm5vbHV4X2F0MDcwdG45MCwKIAl9LCB7CiAJCS5jb21wYXRpYmxl
-ID0gImlubm9sdXgsYXQwNzB0bjkyIiwKIAkJLmRhdGEgPSAmaW5ub2x1eF9hdDA3MHRuOTIsCi0t
-IAoyLjE3LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+This adds the pins definition for RGB666 LCD panels on the A20. It was
+inspired by the A33 definition, that concernes the same set of pins.
+
+Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index e529e4ff2174..b3ee36cd7fa7 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -781,6 +781,14 @@
+ 				function = "ir1";
+ 			};
+ 
++			lcd0_rgb666_pins: lcd0-rgb666 {
++				pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
++				       "PD10", "PD11", "PD12", "PD13", "PD14", "PD15",
++				       "PD18", "PD19", "PD20", "PD21", "PD22", "PD23",
++				       "PD24", "PD25", "PD26", "PD27";
++				function = "lcd0";
++			};
++
+ 			mmc0_pins_a: mmc0@0 {
+ 				pins = "PF0", "PF1", "PF2",
+ 				       "PF3", "PF4", "PF5";
+-- 
+2.17.0
