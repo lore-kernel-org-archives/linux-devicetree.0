@@ -1,412 +1,151 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: [PATCH V3] ARM: dts: da850-evm: use phandles to extend nodes
-Date: Mon,  7 May 2018 07:37:21 -0500
-Message-ID: <20180507123721.9264-1-aford173@gmail.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: [PATCH v3 00/14] Sunxi-Cedrus driver for the Allwinner Video Engine, using media requests
+Date: Mon,  7 May 2018 14:44:46 +0200
+Message-ID: <20180507124500.20434-1-paul.kocialkowski@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: adam.ford@logicpd.com
-Cc: Adam Ford <aford173@gmail.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S . Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Arnd Bergmann <arnd@arndb.de>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Philipp Zabel <p.zabel@pengutronix.de>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Yannick Fertre <yannick.fertre@st.co>
 List-Id: devicetree@vger.kernel.org
 
-Many node labels in the device tree (like serial0, serial1, etc) are being
-redefined, so let's modernize the device tree by using phandles to
-extend the existing nodes.  This helps reduce the whitespace.
+This presents a third iteration of the updated Sunxi-Cedrus driver,
+that supports the Video Engine found in most Allwinner SoCs, starting
+with the A10. It was tested on the A13, A20 and A33.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
----
-V3:  Rebase against 4.18/dt and fix subject.
+The initial version of this driver[0] was originally written and
+submitted by Florent Revest using a previous version of the request API
+that is necessary to provide coherency between controls and the buffers
+they apply to.
 
-V2: Rename subject per feedback from Sekhar.
-    Extend notes from tps6507x
-    Add empty line after each node
-    
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 339cae353302..3c486d8675b8 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -27,143 +27,6 @@
- 		spi0 = &spi1;
- 	};
- 
--	soc@1c00000 {
--		pmx_core: pinmux@14120 {
--			status = "okay";
--
--			mcasp0_pins: pinmux_mcasp0_pins {
--				pinctrl-single,bits = <
--					/*
--					 * AHCLKX, ACLKX, AFSX, AHCLKR, ACLKR,
--					 * AFSR, AMUTE
--					 */
--					0x00 0x11111111 0xffffffff
--					/* AXR11, AXR12 */
--					0x04 0x00011000 0x000ff000
--				>;
--			};
--			nand_pins: nand_pins {
--				pinctrl-single,bits = <
--					/* EMA_WAIT[0], EMA_OE, EMA_WE, EMA_CS[4], EMA_CS[3] */
--					0x1c 0x10110110  0xf0ff0ff0
--					/*
--					 * EMA_D[0], EMA_D[1], EMA_D[2],
--					 * EMA_D[3], EMA_D[4], EMA_D[5],
--					 * EMA_D[6], EMA_D[7]
--					 */
--					0x24 0x11111111  0xffffffff
--					/* EMA_A[1], EMA_A[2] */
--					0x30 0x01100000  0x0ff00000
--				>;
--			};
--		};
--		serial0: serial@42000 {
--			status = "okay";
--		};
--		serial1: serial@10c000 {
--			status = "okay";
--		};
--		serial2: serial@10d000 {
--			status = "okay";
--		};
--		rtc0: rtc@23000 {
--			status = "okay";
--		};
--		i2c0: i2c@22000 {
--			status = "okay";
--			clock-frequency = <100000>;
--			pinctrl-names = "default";
--			pinctrl-0 = <&i2c0_pins>;
--
--			tps: tps@48 {
--				reg = <0x48>;
--			};
--			tlv320aic3106: tlv320aic3106@18 {
--				#sound-dai-cells = <0>;
--				compatible = "ti,tlv320aic3106";
--				reg = <0x18>;
--				status = "okay";
--
--				/* Regulators */
--				IOVDD-supply = <&vdcdc2_reg>;
--				/* Derived from VBAT: Baseboard 3.3V / 1.8V */
--				AVDD-supply = <&vbat>;
--				DRVDD-supply = <&vbat>;
--				DVDD-supply = <&vbat>;
--			};
--			tca6416: gpio@20 {
--				compatible = "ti,tca6416";
--				reg = <0x20>;
--				gpio-controller;
--				#gpio-cells = <2>;
--			};
--		};
--		wdt: wdt@21000 {
--			status = "okay";
--		};
--		mmc0: mmc@40000 {
--			max-frequency = <50000000>;
--			bus-width = <4>;
--			status = "okay";
--			pinctrl-names = "default";
--			pinctrl-0 = <&mmc0_pins>;
--		};
--		spi1: spi@30e000 {
--			status = "okay";
--			pinctrl-names = "default";
--			pinctrl-0 = <&spi1_pins &spi1_cs0_pin>;
--			flash: m25p80@0 {
--				#address-cells = <1>;
--				#size-cells = <1>;
--				compatible = "m25p64";
--				spi-max-frequency = <30000000>;
--				m25p,fast-read;
--				reg = <0>;
--				partition@0 {
--					label = "U-Boot-SPL";
--					reg = <0x00000000 0x00010000>;
--					read-only;
--				};
--				partition@1 {
--					label = "U-Boot";
--					reg = <0x00010000 0x00080000>;
--					read-only;
--				};
--				partition@2 {
--					label = "U-Boot-Env";
--					reg = <0x00090000 0x00010000>;
--					read-only;
--				};
--				partition@3 {
--					label = "Kernel";
--					reg = <0x000a0000 0x00280000>;
--				};
--				partition@4 {
--					label = "Filesystem";
--					reg = <0x00320000 0x00400000>;
--				};
--				partition@5 {
--					label = "MAC-Address";
--					reg = <0x007f0000 0x00010000>;
--					read-only;
--				};
--			};
--		};
--		mdio: mdio@224000 {
--			status = "okay";
--			pinctrl-names = "default";
--			pinctrl-0 = <&mdio_pins>;
--			bus_freq = <2200000>;
--		};
--		eth0: ethernet@220000 {
--			status = "okay";
--			pinctrl-names = "default";
--			pinctrl-0 = <&mii_pins>;
--		};
--		gpio: gpio@226000 {
--			status = "okay";
--		};
--	};
- 	vbat: fixedregulator0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vbat";
-@@ -200,56 +63,200 @@
- 	};
- };
- 
-+&pmx_core {
-+	status = "okay";
-+
-+	mcasp0_pins: pinmux_mcasp0_pins {
-+		pinctrl-single,bits = <
-+			/*
-+			 * AHCLKX, ACLKX, AFSX, AHCLKR, ACLKR,
-+			 * AFSR, AMUTE
-+			 */
-+			0x00 0x11111111 0xffffffff
-+			/* AXR11, AXR12 */
-+			0x04 0x00011000 0x000ff000
-+		>;
-+	};
-+	nand_pins: nand_pins {
-+		pinctrl-single,bits = <
-+			/* EMA_WAIT[0], EMA_OE, EMA_WE, EMA_CS[4], EMA_CS[3] */
-+			0x1c 0x10110110  0xf0ff0ff0
-+			/*
-+			 * EMA_D[0], EMA_D[1], EMA_D[2],
-+			 * EMA_D[3], EMA_D[4], EMA_D[5],
-+			 * EMA_D[6], EMA_D[7]
-+			 */
-+			0x24 0x11111111  0xffffffff
-+			/* EMA_A[1], EMA_A[2] */
-+			0x30 0x01100000  0x0ff00000
-+		>;
-+	};
-+};
-+
-+&serial0 {
-+	status = "okay";
-+};
-+
-+&serial1 {
-+	status = "okay";
-+};
-+
-+&serial2 {
-+	status = "okay";
-+};
-+
-+&rtc0 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins>;
-+
-+	tps: tps@48 {
-+		reg = <0x48>;
-+	};
-+	tlv320aic3106: tlv320aic3106@18 {
-+		#sound-dai-cells = <0>;
-+		compatible = "ti,tlv320aic3106";
-+		reg = <0x18>;
-+		status = "okay";
-+
-+		/* Regulators */
-+		IOVDD-supply = <&vdcdc2_reg>;
-+		/* Derived from VBAT: Baseboard 3.3V / 1.8V */
-+		AVDD-supply = <&vbat>;
-+		DRVDD-supply = <&vbat>;
-+		DVDD-supply = <&vbat>;
-+	};
-+	tca6416: gpio@20 {
-+		compatible = "ti,tca6416";
-+		reg = <0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+};
-+
-+&wdt {
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	max-frequency = <50000000>;
-+	bus-width = <4>;
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>;
-+};
-+
-+&spi1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi1_pins &spi1_cs0_pin>;
-+	flash: m25p80@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "m25p64";
-+		spi-max-frequency = <30000000>;
-+		m25p,fast-read;
-+		reg = <0>;
-+		partition@0 {
-+			label = "U-Boot-SPL";
-+			reg = <0x00000000 0x00010000>;
-+			read-only;
-+		};
-+		partition@1 {
-+			label = "U-Boot";
-+			reg = <0x00010000 0x00080000>;
-+			read-only;
-+		};
-+		partition@2 {
-+			label = "U-Boot-Env";
-+			reg = <0x00090000 0x00010000>;
-+			read-only;
-+		};
-+		partition@3 {
-+			label = "Kernel";
-+			reg = <0x000a0000 0x00280000>;
-+		};
-+		partition@4 {
-+			label = "Filesystem";
-+			reg = <0x00320000 0x00400000>;
-+		};
-+		partition@5 {
-+			label = "MAC-Address";
-+			reg = <0x007f0000 0x00010000>;
-+			read-only;
-+		};
-+	};
-+};
-+&mdio {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mdio_pins>;
-+	bus_freq = <2200000>;
-+};
-+
-+&eth0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mii_pins>;
-+};
-+
-+&gpio {
-+	status = "okay";
-+};
-+
- /include/ "tps6507x.dtsi"
- 
- &tps {
- 	vdcdc1_2-supply = <&vbat>;
- 	vdcdc3-supply = <&vbat>;
- 	vldo1_2-supply = <&vbat>;
-+};
- 
--	regulators {
--		vdcdc1_reg: regulator@0 {
--			regulator-name = "VDCDC1_3.3V";
--			regulator-min-microvolt = <3150000>;
--			regulator-max-microvolt = <3450000>;
--			regulator-always-on;
--			regulator-boot-on;
--		};
-+&vdcdc1_reg {
-+	regulator-name = "VDCDC1_3.3V";
-+	regulator-min-microvolt = <3150000>;
-+	regulator-max-microvolt = <3450000>;
-+	regulator-always-on;
-+	regulator-boot-on;
-+};
- 
--		vdcdc2_reg: regulator@1 {
--			regulator-name = "VDCDC2_3.3V";
--			regulator-min-microvolt = <1710000>;
--			regulator-max-microvolt = <3450000>;
--			regulator-always-on;
--			regulator-boot-on;
--			ti,defdcdc_default = <1>;
--		};
-+&vdcdc2_reg {
-+	regulator-name = "VDCDC2_3.3V";
-+	regulator-min-microvolt = <1710000>;
-+	regulator-max-microvolt = <3450000>;
-+	regulator-always-on;
-+	regulator-boot-on;
-+	ti,defdcdc_default = <1>;
-+};
- 
--		vdcdc3_reg: regulator@2 {
--			regulator-name = "VDCDC3_1.2V";
--			regulator-min-microvolt = <950000>;
--			regulator-max-microvolt = <1350000>;
--			regulator-always-on;
--			regulator-boot-on;
--			ti,defdcdc_default = <1>;
--		};
-+&vdcdc3_reg {
-+	regulator-name = "VDCDC3_1.2V";
-+	regulator-min-microvolt = <950000>;
-+	regulator-max-microvolt = <1350000>;
-+	regulator-always-on;
-+	regulator-boot-on;
-+	ti,defdcdc_default = <1>;
-+};
- 
--		ldo1_reg: regulator@3 {
--			regulator-name = "LDO1_1.8V";
--			regulator-min-microvolt = <1710000>;
--			regulator-max-microvolt = <1890000>;
--			regulator-always-on;
--			regulator-boot-on;
--		};
-+&ldo1_reg {
-+	regulator-name = "LDO1_1.8V";
-+	regulator-min-microvolt = <1710000>;
-+	regulator-max-microvolt = <1890000>;
-+	regulator-always-on;
-+	regulator-boot-on;
-+};
- 
--		ldo2_reg: regulator@4 {
--			regulator-name = "LDO2_1.2V";
--			regulator-min-microvolt = <1140000>;
--			regulator-max-microvolt = <1320000>;
--			regulator-always-on;
--			regulator-boot-on;
--		};
--	};
-+&ldo2_reg {
-+	regulator-name = "LDO2_1.2V";
-+	regulator-min-microvolt = <1140000>;
-+	regulator-max-microvolt = <1320000>;
-+	regulator-always-on;
-+	regulator-boot-on;
- };
- 
- &mcasp0 {
+The driver was adapted to use the latest version of the media request
+API[1], as submitted by Hand Verkuil. Media request API support is a
+hard requirement for the Sunxi-Cedrus driver.
+
+The driver itself currently only supports MPEG2 and more codecs will be
+added to the driver eventually. The output frames provided by the
+Video Engine are in a multi-planar 32x32-tiled YUV format, with a plane
+for luminance (Y) and a plane for chrominance (UV). A specific format is
+introduced in the V4L2 API to describe it.
+
+This implementation is based on the significant work that was conducted
+by various members of the linux-sunxi community for understanding and
+documenting the Video Engine's innards.
+
+Changes since v2:
+* updated to version 13 of the media request API;
+* integrated various changes from Maxime Ripard;
+* reworked memory reservation to use CMA, dynamic allocation and allow
+  DMABUF;
+* removed reserved memory binding since the CMA pool is the default one
+  (and allow ENODEV in the driver, for that use case);
+* added SRAM controller support for the SRAM region used by the VE;
+* updated the device-tree bindings the for SRAM region;
+* added per-platform bindings;
+* added A13 support;
+* renamed VE node name and label;
+* fixed Florent's authorship for the MPEG2 headers;
+* added a MAINTAINERS entry.
+
+Changes since v1:
+* use the latest version of the request API for Hans Verkuil;
+* added media controller support and dependency
+* renamed v4l2 format to the more explicit V4L2_PIX_FMT_MB32_NV12;
+* reworked bindings documentation;
+* moved driver to drivers/media/platforms/sunxi/cedrus to pair with
+  incoming CSI support ;
+* added a workqueue and lists to schedule buffer completion, since it
+  cannot be done in interrupt context;
+* split mpeg2 support into a setup and a trigger function to avoid race
+  condition;
+* split video-related ops to a dedicated sunxi_cedrus_video file;
+* cleaned up the included headers for each file;
+* used device PFN offset instead of subtracting PHYS_BASE;
+* used reset_control_reset instead of assert+deassert;
+* put the device in reset when removing driver;
+* changed dt bindings to use the last 96 Mib of the first 256 MiB of
+  DRAM;
+* made it clear in the mpeg frame header structure that forward and
+  backward indexes are used as reference frames for motion vectors;
+* lots of small cosmetic and consistency changes, including naming
+  harmonization and headers text rework.
+
+Remaining tasks:
+* cleaning up registers description and documenting the fields used;
+* removing the assigned-clocks property and setting the clock rate
+  in the driver directly;
+* checking the series with checkpatch and fixing warnings;
+* documenting the MB32 NV12 format and adding it to v4l_fill_fmtdesc;
+* reworking and documenting the MPEG2 header, then adding it to
+  v4l_fill_fmtdesc;
+* checking and fixing the error paths;
+* testing on more platforms.
+
+Cheers!
+
+[0]: https://patchwork.kernel.org/patch/9299073/
+[1]: https://git.linuxtv.org/hverkuil/media_tree.git/log/?h=reqv13
+
+Florent Revest (1):
+  media: v4l: Add definitions for MPEG2 frame format and header metadata
+
+Maxime Ripard (4):
+  drivers: soc: sunxi: Add support for the C1 SRAM region
+  ARM: sun5i: Add support for the C1 SRAM region with the SRAM
+    controller
+  ARM: sun7i-a20: Add support for the C1 SRAM region with the SRAM
+    controller
+  ARM: sun8i-a33: Add SRAM controller node and C1 SRAM region
+
+Paul Kocialkowski (9):
+  drivers: soc: sunxi: Add dedicated compatibles for the A13, A20 and
+    A33
+  ARM: dts: sun5i: Use dedicated SRAM controller compatible
+  ARM: dts: sun7i-a20: Use dedicated SRAM controller compatible
+  media: v4l: Add definition for Allwinner's MB32-tiled NV12 format
+  dt-bindings: media: Document bindings for the Sunxi-Cedrus VPU driver
+  media: platform: Add Sunxi-Cedrus VPU decoder driver
+  ARM: dts: sun5i: Add Video Engine and reserved memory nodes
+  ARM: dts: sun7i-a20: Add Video Engine and reserved memory nodes
+  ARM: dts: sun8i-a33: Add Video Engine and reserved memory nodes
+
+ .../devicetree/bindings/media/sunxi-cedrus.txt     |  58 +++
+ MAINTAINERS                                        |   7 +
+ arch/arm/boot/dts/sun5i.dtsi                       |  47 +-
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |  47 +-
+ arch/arm/boot/dts/sun8i-a33.dtsi                   |  54 +++
+ drivers/media/platform/Kconfig                     |  15 +
+ drivers/media/platform/Makefile                    |   1 +
+ drivers/media/platform/sunxi/cedrus/Makefile       |   4 +
+ drivers/media/platform/sunxi/cedrus/sunxi_cedrus.c | 333 ++++++++++++++
+ .../platform/sunxi/cedrus/sunxi_cedrus_common.h    | 128 ++++++
+ .../media/platform/sunxi/cedrus/sunxi_cedrus_dec.c | 188 ++++++++
+ .../media/platform/sunxi/cedrus/sunxi_cedrus_dec.h |  35 ++
+ .../media/platform/sunxi/cedrus/sunxi_cedrus_hw.c  | 240 ++++++++++
+ .../media/platform/sunxi/cedrus/sunxi_cedrus_hw.h  |  37 ++
+ .../platform/sunxi/cedrus/sunxi_cedrus_mpeg2.c     | 160 +++++++
+ .../platform/sunxi/cedrus/sunxi_cedrus_mpeg2.h     |  33 ++
+ .../platform/sunxi/cedrus/sunxi_cedrus_regs.h      | 175 +++++++
+ .../platform/sunxi/cedrus/sunxi_cedrus_video.c     | 505 +++++++++++++++++++++
+ .../platform/sunxi/cedrus/sunxi_cedrus_video.h     |  31 ++
+ drivers/media/v4l2-core/v4l2-ctrls.c               |  10 +
+ drivers/media/v4l2-core/v4l2-ioctl.c               |   1 +
+ drivers/soc/sunxi/sunxi_sram.c                     |  13 +
+ include/uapi/linux/v4l2-controls.h                 |  26 ++
+ include/uapi/linux/videodev2.h                     |   4 +
+ 24 files changed, 2150 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+ create mode 100644 drivers/media/platform/sunxi/cedrus/Makefile
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus.c
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_common.h
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_dec.c
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_dec.h
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_hw.c
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_hw.h
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_mpeg2.c
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_mpeg2.h
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_regs.h
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_video.c
+ create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_video.h
+
 -- 
-2.17.0
+2.16.3
