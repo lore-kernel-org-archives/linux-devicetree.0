@@ -1,55 +1,27 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 6/8] ARM: dts: r8a7794: Add PMU device node
-Date: Mon,  7 May 2018 15:57:05 +0200
-Message-ID: <1525701427-12914-7-git-send-email-geert+renesas@glider.be>
-References: <1525701427-12914-1-git-send-email-geert+renesas@glider.be>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx51-zii-rdu1: fix touchscreen bindings
+Date: Mon, 7 May 2018 11:02:20 -0300
+Message-ID: <CAOMZO5A5gXho1_jhGGC6CF02C=JX5vniKB_vxsTcMXC4Ayh4oQ@mail.gmail.com>
+References: <20180507135309.32580-1-nikita.yoush@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1525701427-12914-1-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180507135309.32580-1-nikita.yoush@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lucas Stach <l.stach@pengutronix.de>, Marco Franchi <marcofrk@gmail.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chris Healy <Chris.Healy@zii.aero>
 List-Id: devicetree@vger.kernel.org
 
-Enable support for the ARM Performance Monitor Units in the Cortex-A7
-CPU cores on R-Car E2 by adding a device node for the PMU.
+Hi Nikita,
 
-New Linux output:
+On Mon, May 7, 2018 at 10:53 AM, Nikita Yushchenko
+<nikita.yoush@cogentembedded.com> wrote:
+> This fixes errors in RDU1 device tree that cause touch screens not
+> working.
 
-    hw perfevents: enabled with armv7_cortex_a7 PMU driver, 5 counters available
+Fixes: ceef0396f367 ("ARM: dts: imx: add ZII RDU1 board")
+Cc: stable@vger.kernel.org #4.15+
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm/boot/dts/r8a7794.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
 
-diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
-index 76aadcdf9d37b39c..736196903d22f0e0 100644
---- a/arch/arm/boot/dts/r8a7794.dtsi
-+++ b/arch/arm/boot/dts/r8a7794.dtsi
-@@ -103,6 +103,13 @@
- 		clock-frequency = <0>;
- 	};
- 
-+	pmu {
-+		compatible = "arm,cortex-a7-pmu";
-+		interrupts-extended = <&gic GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>;
-+	};
-+
- 	/* External SCIF clock */
- 	scif_clk: scif {
- 		compatible = "fixed-clock";
--- 
-2.7.4
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
