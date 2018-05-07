@@ -1,104 +1,72 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: msm8998: Add rpm and regulators
- for MTP
-Date: Mon, 7 May 2018 16:43:12 -0700
-Message-ID: <20180507234312.GD14924@minitux>
-References: <20180428054248.22387-1-bjorn.andersson@linaro.org>
- <20180428054248.22387-2-bjorn.andersson@linaro.org>
- <152573424824.138124.9876892052732688689@swboyd.mtv.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Subject: [PATCH] thermal: qcom: tsens: Allow number of sensors to come from DT
+Date: Mon,  7 May 2018 16:53:39 -0700
+Message-ID: <20180507235339.8836-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <152573424824.138124.9876892052732688689@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 07 May 16:04 PDT 2018, Stephen Boyd wrote:
+For platforms that has multiple copies of the TSENS hardware block it's
+necessary to be able to specify the number of sensors per block in DeviceTree.
 
-> Quoting Bjorn Andersson (2018-04-27 22:42:48)
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > index d6665e4f801f..ccbf6347aacb 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > @@ -220,6 +220,16 @@
-> >                 method = "smc";
-> >         };
-> >  
-> > +       rpm_glink: rpm-glink {
-> > +               compatible = "qcom,glink-rpm";
-> > +
-> > +               interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
-> > +
-> > +               qcom,rpm-msg-ram = <&rpm_msg_ram>;
-> > +
-> > +               mboxes = <&apcs_glb 0>;
-> 
-> Why so many newlines?
-> 
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ .../devicetree/bindings/thermal/qcom-tsens.txt       |  1 +
+ drivers/thermal/qcom/tsens.c                         | 12 +++++++++---
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
-No particular reason...
-
-> > +       };
-> > +
-> >         soc: soc {};
-> >  };
-> >  
-> > @@ -337,4 +347,77 @@
-> >                 #interrupt-cells = <4>;
-> >                 cell-index = <0>;
-> >         };
-> > +
-> > +       rpm_msg_ram: memory@68000 {
-> 
-> unit address doesn't match reg property.
-> 
-
-Doh...
-
-> > +               compatible = "qcom,rpm-msg-ram";
-> > +               reg = <0x778000 0x7000>;
-> > +       };
-[..]
-> > +&rpm_glink {
-> > +       rpm_requests {
-> > +               compatible = "qcom,rpm-msm8998";
-> > +               qcom,glink-channels = "rpm_requests";
-> > +
-> > +               pm8998-regulators {
-> > +                       compatible = "qcom,rpm-pm8998-regulators";
-> > +
-> > +                       pm8998_s1: s1 {};
-[..]
-> > +                       pm8998_lvs2: lvs2 {};
-> 
-> What's the benefit to having the nodes here instead of in each board?
-> 
-
-That's how we've done it in the previous boards, but I had a discussion
-regarding this with Doug the other day and agree that it might make
-sense to just leave them out.
-
-In particular Doug wanted to use labels based on names in the schematics
-for his board...
-
-> > +               };
-> > +
-> > +               pmi8998-regulators {
-> > +                       compatible = "qcom,rpm-pmi8998-regulators";
-> > +
-> > +                       pmi8998_bob: bob {};
-> > +               };
-> 
-> These may be board specific? So each regulator container would need
-> status = "disabled" and then status = "okay" in the board file.
-> 
-
-Right, we haven't really seen the need for this before, but it seems to
-make more sense to move all regulators and their references to the board
-file.
-
-Regards,
-Bjorn
+diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+index 292ed89d900b..06195e8f35e2 100644
+--- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
++++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+@@ -8,6 +8,7 @@ Required properties:
+ 
+ - reg: Address range of the thermal registers
+ - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
++- #qcom,sensors: Number of sensors in tsens block
+ - Refer to Documentation/devicetree/bindings/nvmem/nvmem.txt to know how to specify
+ nvmem cells
+ 
+diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+index 3f9fe6aa51cc..20f3b87d7667 100644
+--- a/drivers/thermal/qcom/tsens.c
++++ b/drivers/thermal/qcom/tsens.c
+@@ -116,6 +116,7 @@ static int tsens_probe(struct platform_device *pdev)
+ 	struct tsens_device *tmdev;
+ 	const struct tsens_data *data;
+ 	const struct of_device_id *id;
++	u32 num_sensors;
+ 
+ 	if (pdev->dev.of_node)
+ 		dev = &pdev->dev;
+@@ -130,18 +131,23 @@ static int tsens_probe(struct platform_device *pdev)
+ 	else
+ 		data = &data_8960;
+ 
+-	if (data->num_sensors <= 0) {
++	num_sensors = data->num_sensors;
++
++	if (np)
++		of_property_read_u32(np, "#qcom,sensors", &num_sensors);
++
++	if (num_sensors <= 0) {
+ 		dev_err(dev, "invalid number of sensors\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	tmdev = devm_kzalloc(dev, sizeof(*tmdev) +
+-			     data->num_sensors * sizeof(*s), GFP_KERNEL);
++			     num_sensors * sizeof(*s), GFP_KERNEL);
+ 	if (!tmdev)
+ 		return -ENOMEM;
+ 
+ 	tmdev->dev = dev;
+-	tmdev->num_sensors = data->num_sensors;
++	tmdev->num_sensors = num_sensors;
+ 	tmdev->ops = data->ops;
+ 	for (i = 0;  i < tmdev->num_sensors; i++) {
+ 		if (data->hw_ids)
+-- 
+2.17.0
