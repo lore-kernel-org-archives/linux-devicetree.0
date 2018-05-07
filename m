@@ -1,211 +1,98 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v3 13/14] media: imx7.rst: add documentation for i.MX7 media
- driver
-Date: Mon,  7 May 2018 17:21:51 +0100
-Message-ID: <20180507162152.2545-14-rui.silva@linaro.org>
-References: <20180507162152.2545-1-rui.silva@linaro.org>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
+Date: Mon, 7 May 2018 18:34:39 +0200
+Message-ID: <20180507163439.GV2285@localhost>
+References: <CAL_Jsq+mCp=geT8t_j+0fuTxAB7C9RYn6pESRpLc2GH273fM1Q@mail.gmail.com>
+ <20180426091018.GU4615@localhost>
+ <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
+ <20180502081637.GE2285@localhost>
+ <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com>
+ <20180503205037.7be552c1@aktux>
+ <44A0BC7C-67C7-4116-849F-90FF7CF2B1F0@goldelico.com>
+ <20180504114213.3xlzqxe74n55tk5s@earth.universe>
+ <20180507100135.GS2285@localhost>
+ <20180507154515.GP98604@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180507162152.2545-1-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180507154515.GP98604@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Johan Hovold <johan@kernel.org>, Sebastian Reichel <sre@kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andreas Kemnade <andreas@kemnade.info>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add rst document to describe the i.MX7 media driver and also a working example
-from the Warp7 board usage with a OV2680 sensor.
+On Mon, May 07, 2018 at 08:45:15AM -0700, Tony Lindgren wrote:
+> Hi,
+> 
+> * Johan Hovold <johan@kernel.org> [180507 03:03]:
+> > On Fri, May 04, 2018 at 01:42:13PM +0200, Sebastian Reichel wrote:
+> > 
+> > > Having said all of this, serdev does not yet support runtime PM (at
+> > > all). Tony is currently looking into it. Fortunately serdev allows
+> > > us to enable runtime PM by default (once implemented), since we know
+> > > the remote side and can (hopefully) avoid losing characters (i.e.
+> > > with sideband wakeup gpios).
+> > 
+> > I'm not sure we want generic runtime-pm support for the controllers in
+> > the sense that the slave device state is always reflected by the serial
+> > controller. Similar as for i2c and spi, we really only want to keep the
+> > controller active when we are doing I/O, but we may want to keep a
+> > client active for longer.
+> 
+> Yeah i2c seems to do the right thing where the bus takes care
+> of runtime PM.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- Documentation/media/v4l-drivers/imx7.rst  | 157 ++++++++++++++++++++++
- Documentation/media/v4l-drivers/index.rst |   1 +
- 2 files changed, 158 insertions(+)
- create mode 100644 Documentation/media/v4l-drivers/imx7.rst
+Yeah, but since serial is async in contrast to i2c/spi, we may not be
+able to push this entirely into core. The serdev drivers may need to
+indicate when they expect or need to do I/O by opening and closing the
+port. And this is how I implemented these first couple of gnss drivers.
 
-diff --git a/Documentation/media/v4l-drivers/imx7.rst b/Documentation/media/v4l-drivers/imx7.rst
-new file mode 100644
-index 000000000000..64b97b442277
---- /dev/null
-+++ b/Documentation/media/v4l-drivers/imx7.rst
-@@ -0,0 +1,157 @@
-+i.MX7 Video Capture Driver
-+==========================
-+
-+Introduction
-+------------
-+
-+The i.MX7 contrary to the i.MX5/6 family does not contain an Image Processing
-+Unit (IPU), because of that the capabilities to perform operations or
-+manipulation of the capture frames is less feature rich.
-+
-+For image capture the i.MX7 have three units:
-+- CMOS Sensor Interface (CSI)
-+- Video Multiplexer
-+- MIPI CSI-2 Receiver
-+
-+::
-+                                           |\
-+   MIPI Camera Input ---> MIPI CSI-2 --- > | \
-+                                           |  \
-+                                           | M |
-+                                           | U | ------>  CSI ---> Capture
-+                                           | X |
-+                                           |  /
-+   Parallel Camera Input ----------------> | /
-+                                           |/
-+
-+For additional information, please refer to the latest versions of the i.MX7
-+reference manual [#f1]_.
-+
-+Entities
-+--------
-+
-+imx7-mipi-csi2
-+--------------
-+
-+This is the MIPI CSI-2 recevier entity. It has one sink pad to receive the pixel
-+data from MIPI CSI-2 camera sensor. It has one source pad, corresponding to the
-+virtual channel 0. This module is compliant to previous version of Samsung
-+D-phy, and support two D-PHY Rx Data lanes.
-+
-+csi_mux
-+-------
-+
-+This is the video multiplexer. It has two sink pads to select from either camera
-+sensors with a parallel interface or from MIPI CSI-2 virtual channel 0.  It has
-+a single source pad that routes to the CSI.
-+
-+csi
-+---
-+
-+The CSI enables the chip to connect directly to external CMOS image sensor. CSI
-+can interfaces directly with Parallel and MIPI CSI-2 buses. It has 256 x 64 FIFO
-+to store received image pixel data and embedded DMA controllers to transfer data
-+from the FIFO through AHB bus.
-+
-+This entity has one sink pad that receive from the csi_mux entity and a single
-+source pad that route video frames directly to memory buffers, this pad is
-+routed to a capture device node.
-+
-+Usage Notes
-+-----------
-+
-+To aid in configuration and for backward compatibility with V4L2 applications
-+that access controls only from video device nodes, the capture device interfaces
-+inherit controls from the active entities in the current pipeline, so controls
-+can be accessed either directly from the subdev or from the active capture
-+device interface. For example, the sensor controls are available either from the
-+sensor subdevs or from the active capture device.
-+
-+Warp7 with OV2680
-+-----------------
-+
-+On this platform an OV2680 MIPI CSI-2 module is connected to the internal MIPI
-+CSI-2 receiver. The following example configures a video capture pipeline with
-+an output of 800x600, and BGGR 10 bit bayer format:
-+
-+.. code-block:: none
-+   # Setup links
-+   media-ctl -l "'ov2680 1-0036':0 -> 'imx7-mipi-csis.0':0[1]"
-+   media-ctl -l "'imx7-mipi-csis.0':1 -> 'csi_mux':1[1]"
-+   media-ctl -l "'csi_mux':2 -> 'csi':0[1]"
-+   media-ctl -l "'csi':1 -> 'csi capture':0[1]"
-+
-+   # Configure pads for pipeline
-+   media-ctl -V "'ov2680 1-0036':0 [fmt:SBGGR10_1X10/800x600 field:none]"
-+   media-ctl -V "'csi_mux':1 [fmt:SBGGR10_1X10/800x600 field:none]"
-+   media-ctl -V "'csi_mux':2 [fmt:SBGGR10_1X10/800x600 field:none]"
-+   media-ctl -V "'imx7-mipi-csis.0':0 [fmt:SBGGR10_1X10/800x600 field:none]"
-+   media-ctl -V "'csi':0 [fmt:SBGGR10_1X10/800x600 field:none]"
-+
-+After this streaming can start, the v4l2-ctl tool can be used to select any of
-+the resolutions supported by the sensor.
-+
-+.. code-block:: none
-+    root@imx7s-warp:~# media-ctl -p
-+    Media controller API version 4.17.0
-+
-+    Media device information
-+    ------------------------
-+    driver          imx-media
-+    model           imx-media
-+    serial
-+    bus info
-+    hw revision     0x0
-+    driver version  4.17.0
-+
-+    Device topology
-+    - entity 1: csi (2 pads, 2 links)
-+		type V4L2 subdev subtype Unknown flags 0
-+		device node name /dev/v4l-subdev0
-+	    pad0: Sink
-+		    [fmt:SBGGR10_1X10/800x600 field:none]
-+		    <- "csi_mux":2 [ENABLED]
-+	    pad1: Source
-+		    [fmt:SBGGR10_1X10/800x600 field:none]
-+		    -> "csi capture":0 [ENABLED]
-+
-+    - entity 4: csi capture (1 pad, 1 link)
-+		type Node subtype V4L flags 0
-+		device node name /dev/video0
-+	    pad0: Sink
-+		    <- "csi":1 [ENABLED]
-+
-+    - entity 10: csi_mux (3 pads, 2 links)
-+		type V4L2 subdev subtype Unknown flags 0
-+		device node name /dev/v4l-subdev1
-+	    pad0: Sink
-+		    [fmt:unknown/0x0]
-+	    pad1: Sink
-+		    [fmt:unknown/800x600 field:none]
-+		    <- "imx7-mipi-csis.0":1 [ENABLED]
-+	    pad2: Source
-+		    [fmt:unknown/800x600 field:none]
-+		    -> "csi":0 [ENABLED]
-+
-+    - entity 14: imx7-mipi-csis.0 (2 pads, 2 links)
-+		type V4L2 subdev subtype Unknown flags 0
-+		device node name /dev/v4l-subdev2
-+	    pad0: Sink
-+		    [fmt:SBGGR10_1X10/800x600 field:none]
-+		    <- "ov2680 1-0036":0 [ENABLED]
-+	    pad1: Source
-+		    [fmt:SBGGR10_1X10/800x600 field:none]
-+		    -> "csi_mux":1 [ENABLED]
-+
-+    - entity 17: ov2680 1-0036 (1 pad, 1 link)
-+		type V4L2 subdev subtype Sensor flags 0
-+		device node name /dev/v4l-subdev3
-+	    pad0: Source
-+		    [fmt:SBGGR10_1X10/800x600 field:none]
-+		    -> "imx7-mipi-csis.0":0 [ENABLED]
-+
-+
-+References
-+----------
-+
-+.. [#f1] https://www.nxp.com/docs/en/reference-manual/IMX7SRM.pdf
-diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
-index 679238e786a7..693295bbc53f 100644
---- a/Documentation/media/v4l-drivers/index.rst
-+++ b/Documentation/media/v4l-drivers/index.rst
-@@ -44,6 +44,7 @@ For more details see the file COPYING in the source distribution of Linux.
- 	davinci-vpbe
- 	fimc
- 	imx
-+	imx7
- 	ivtv
- 	max2175
- 	meye
--- 
-2.17.0
+Also note that most serial driver do not do runtime pm while the port is
+open (as OMAP does), and doing so also has the drawbacks of lost
+characters etc. as Sebastian mentioned.
+
+> > Take the u-blox driver in this series for example. As I'm using runtime
+> > PM to manage device power, user-space can chose to prevent the receiver
+> > from runtime suspending in order to avoid lengthy (re-)acquisition times
+> > in setups without a backup battery (by means of the power/control
+> > attribute).
+> 
+> Sorry I don't seem to have that one, care to paste the subject
+> line of that patch?
+
+	"[PATCH 5/7] gnss: add driver for u-blox receivers"
+
+	https://lkml.kernel.org/r/20180424163458.11947-6-johan@kernel.org
+
+> > Note that serdev not enabling runtime pm for controllers is roughly
+> > equivalent to setting the .ignore_children flag, which is what we do for
+> > i2c and spi controller, and possibly what we want here too.
+> 
+> We currently don't idle serdev at all even if not in use. What
+> I noticed is if I have these in my .config:
+> 
+> CONFIG_SERIAL_DEV_BUS=y
+> CONFIG_SERIAL_DEV_CTRL_TTYPORT=y
+> 
+> And no hci_serdev.ko driver loaded, then the 8250 port still stays
+> active and there are no sysfs entries to idle it.
+
+Sounds like the 8250_omap driver is doing something funky. Why would
+there not be any sysfs attributes to control runtime pm?
+
+> Are you seeing this with your series?
+
+I'm using omap-serial (on BBB) and like 8250_omap, the driver disables
+runtime pm at probe by setting a negative autosuspend timeout.
+
+Changing this through sysfs causes the serial controller to runtime
+suspend, but something is not right in my setup as it doesn't wake up on
+incoming data.
+
+I'd say the omap drivers are broken; the controller should definitely
+idle when the port is closed (whether using serdev or not) without
+having to fiddle with sysfs.
+
+Thanks,
+Johan
