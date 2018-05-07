@@ -1,14 +1,14 @@
 Return-Path: <SRS0=jssF=H2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf0-f194.google.com ([209.85.192.194]:41773 "EHLO
-        mail-pf0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751977AbeEGIwY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 7 May 2018 04:52:24 -0400
-Received: by mail-pf0-f194.google.com with SMTP id v63so22311751pfk.8
-        for <devicetree@vger.kernel.org>; Mon, 07 May 2018 01:52:24 -0700 (PDT)
+Received: from mail-pg0-f68.google.com ([74.125.83.68]:33626 "EHLO
+        mail-pg0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751977AbeEGIwJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 7 May 2018 04:52:09 -0400
+Received: by mail-pg0-f68.google.com with SMTP id i194-v6so19740411pgd.0
+        for <devicetree@vger.kernel.org>; Mon, 07 May 2018 01:52:09 -0700 (PDT)
 From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 Subject: [PATCH v10 1/3] PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver DT bindings
-Date: Mon,  7 May 2018 04:52:14 -0400
-Message-Id: <1525683134-9611-1-git-send-email-l.subrahmanya@mobiveil.co.in>
+Date: Mon,  7 May 2018 04:51:51 -0400
+Message-Id: <1525683111-9564-1-git-send-email-l.subrahmanya@mobiveil.co.in>
 Sender: devicetree-owner@vger.kernel.org
 To: linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, marc.zyngier@arm.com
 Cc: mingkai.hu@nxp.com, peter.newton@nxp.com, minghuan.lian@nxp.com, rajesh.raina@nxp.com, rajan.kapoor@nxp.com, prabhjot.singh@nxp.com, Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>, devicetree@vger.kernel.org
