@@ -1,109 +1,78 @@
-Return-Path: <SRS0=LUPS=H2=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH 4/4] media: ov2680: add regulators to supply control
-Date: Mon,  7 May 2018 16:56:55 +0100
-Message-Id: <20180507155655.1555-5-rui.silva@linaro.org>
-In-Reply-To: <20180507155655.1555-1-rui.silva@linaro.org>
-References: <20180507155655.1555-1-rui.silva@linaro.org>
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl, Rob Herring <robh+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>
+MIME-Version: 1.0
+In-Reply-To: <4e6952d7-4896-71d3-9522-fe4c67f03ed2@rock-chips.com>
+References: <1524471030-3527-1-git-send-email-shawn.lin@rock-chips.com>
+	<20180427185458.6o5tlfic75gy2vqr@rob-hp-laptop>
+	<979a598a-9b8f-0bcc-0de0-f1d02496515d@rock-chips.com>
+	<CAPDyKFrYyaRASpAx7c6BvJ_5LP4whNeRUv-ZrveLftnV6ywO3w@mail.gmail.com>
+	<4e6952d7-4896-71d3-9522-fe4c67f03ed2@rock-chips.com>
+Date: Mon, 7 May 2018 08:46:07 -0500
+Message-ID: <CAL_Jsq+X6US=oZreqSL7JSQE_+fk5QTUU3+x-_192sMa5WtU1Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] Documentation: mmc: add description for power-delay-ms
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Adrian Hunter <adrian.hunter@intel.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add the code to control the regulators for the analogue and digital power
-supplies.
+On Thu, May 3, 2018 at 2:26 AM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+> On 2018/5/2 20:46, Ulf Hansson wrote:
+>>
+>> On 28 April 2018 at 03:11, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+>>>
+>>> Hi Rob and Ulf,
+>>>
+>>> On 2018/4/28 2:54, Rob Herring wrote:
+>>>>
+>>>>
+>>>> On Mon, Apr 23, 2018 at 04:10:29PM +0800, Shawn Lin wrote:
+>>>
+>>>
+>>>
+>>> ...
+>>>
+>>>>> +- power-delay-ms: Tunable delay waiting for I/O signalling and card
+>>>>> power supply
+>>>>> +  to be stable. Default to 10ms if no available.
+>>>>
+>>>>
+>>>>
+>>>> How long do you need? Would changing the default to say 20ms work and
+>>>> still be short enough others don't care?
+>>>
+>>>
+>>>
+>>> It varies from board-2-board, but my boards only need 2ms or less. The
+>>> hard-coded 10ms was increased from 2ms since 2009, just for fixing one
+>>> board. And nobody complained 10ms is too short(including me), so it's
+>>> fine for everybody probably. However, nobody complained it's toooo long
+>>> as well, expect me, so my best guess is either others don't care it at
+>>> all, or haven't noticed it. So the intention for this patch, is to save
+>>> the unnecessary waste for the boot-time sensitive environment, by
+>>> reducing the delay but don't break anything else.
+>>>
+>>>
+>>>>
+>>>> Can we use the same property as the mmc pwrseq binding defines:
+>>>> post-power-on-delay-ms
+>>>
+>>>
+>>>
+>>> I'm fine with using post-power-on-delay-ms, but it depends on whether
+>>> using pwrseq_simple. So I need add parsing it in two places for
+>>> different prupose. Is it ok, or better idea?
+>>
+>>
+>> I don't think the parsing is an issue, but that we need to allow two
+>> different descriptions of the same property name may be a bit
+>> confusing.
+>
+>
+>> I would rather keep them separate, but I have no strong onion.
+>>
+>
+> I also would like to keep the separate. Rob, any suggestion? :)
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- drivers/media/i2c/ov2680.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+I think it is fine to describe it in 2 places. It just needs to have
+the same definition in terms of what happens before and after it.
 
-diff --git a/drivers/media/i2c/ov2680.c b/drivers/media/i2c/ov2680.c
-index 8962b397211a..07bb475c970c 100644
---- a/drivers/media/i2c/ov2680.c
-+++ b/drivers/media/i2c/ov2680.c
-@@ -19,6 +19,7 @@
- #include <linux/module.h>
- #include <linux/of_device.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/regulator/consumer.h>
- 
- #include <media/v4l2-common.h>
- #include <media/v4l2-ctrls.h>
-@@ -65,6 +66,14 @@ struct reg_value {
- 	u8 val;
- };
- 
-+static const char * const ov2680_supply_name[] = {
-+	"DOVDD",
-+	"DVDD",
-+	"AVDD",
-+};
-+
-+#define OV2680_NUM_SUPPLIES ARRAY_SIZE(ov2680_supply_name)
-+
- struct ov2680_mode_info {
- 	const char *name;
- 	enum ov2680_mode_id id;
-@@ -97,6 +106,7 @@ struct ov2680_dev {
- 	struct media_pad		pad;
- 	struct clk			*xvclk;
- 	u32				xvclk_freq;
-+	struct regulator_bulk_data	supplies[OV2680_NUM_SUPPLIES];
- 
- 	struct gpio_desc		*reset_gpio;
- 	struct mutex			lock; /* protect members */
-@@ -522,6 +532,7 @@ static int ov2680_power_off(struct ov2680_dev *sensor)
- 
- 	clk_disable_unprepare(sensor->xvclk);
- 	ov2680_power_down(sensor);
-+	regulator_bulk_disable(OV2680_NUM_SUPPLIES, sensor->supplies);
- 	sensor->is_enabled = false;
- 
- 	return 0;
-@@ -535,6 +546,12 @@ static int ov2680_power_on(struct ov2680_dev *sensor)
- 	if (sensor->is_enabled)
- 		return 0;
- 
-+	ret = regulator_bulk_enable(OV2680_NUM_SUPPLIES, sensor->supplies);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to enable regulators: %d\n", ret);
-+		return ret;
-+	}
-+
- 	if (!sensor->reset_gpio) {
- 		ret = ov2680_write_reg(sensor, OV2680_REG_SOFT_RESET, 0x01);
- 		if (ret != 0) {
-@@ -962,6 +979,18 @@ static int ov2680_v4l2_init(struct ov2680_dev *sensor)
- 	return ret;
- }
- 
-+static int ov2680_get_regulators(struct ov2680_dev *sensor)
-+{
-+	int i;
-+
-+	for (i = 0; i < OV2680_NUM_SUPPLIES; i++)
-+		sensor->supplies[i].supply = ov2680_supply_name[i];
-+
-+	return devm_regulator_bulk_get(&sensor->i2c_client->dev,
-+				       OV2680_NUM_SUPPLIES,
-+				       sensor->supplies);
-+}
-+
- static int ov2680_check_id(struct ov2680_dev *sensor)
- {
- 	struct device *dev = ov2680_to_dev(sensor);
-@@ -1034,6 +1063,12 @@ static int ov2680_probe(struct i2c_client *client)
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = ov2680_get_regulators(sensor);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get regulators\n");
-+		return ret;
-+	}
-+
- 	mutex_init(&sensor->lock);
- 
- 	ret = ov2680_v4l2_init(sensor);
--- 
-2.17.0
+Rob
