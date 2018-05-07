@@ -1,16 +1,15 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 2/5] backlight: qcom-wled: Add support for WLED4
- peripheral
-Date: Mon, 7 May 2018 11:45:34 -0500
-Message-ID: <20180507164534.GB21042@rob-hp-laptop>
-References: <1525342352-25072-1-git-send-email-kgunda@codeaurora.org>
- <1525342352-25072-3-git-send-email-kgunda@codeaurora.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: Add Raydium RM67191 panel bindings
+Date: Mon, 7 May 2018 11:50:21 -0500
+Message-ID: <20180507165021.GA30361@rob-hp-laptop>
+References: <1525357562-20810-1-git-send-email-robert.chiras@nxp.com>
+ <1525357562-20810-3-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1525342352-25072-3-git-send-email-kgunda@codeaurora.org>
+In-Reply-To: <1525357562-20810-3-git-send-email-robert.chiras@nxp.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -20,25 +19,36 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kiran Gunda <kgunda@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org, linux-fbdev@vger.kernel.org, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, linux-arm-msm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org
+To: Robert Chiras <robert.chiras@nxp.com>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, mirela.rabulea@nxp.com, thierry.reding@gmail.com, linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXkgMDMsIDIwMTggYXQgMDM6NDI6MjlQTSArMDUzMCwgS2lyYW4gR3VuZGEgd3Jv
-dGU6Cj4gV0xFRDQgcGVyaXBoZXJhbCBpcyBwcmVzZW50IG9uIHNvbWUgUE1JQ3MgbGlrZSBwbWk4
-OTk4Cj4gYW5kIHBtNjYwbC4gSXQgaGFzIGEgZGlmZmVyZW50IHJlZ2lzdGVyIG1hcCBhbmQgYWxz
-bwo+IGNvbmZpZ3VyYXRpb25zIGFyZSBkaWZmZXJlbnQuIEFkZCBzdXBwb3J0IGZvciBpdC4KPiAK
-PiBTaWduZWQtb2ZmLWJ5OiBLaXJhbiBHdW5kYSA8a2d1bmRhQGNvZGVhdXJvcmEub3JnPgo+IC0t
-LQo+ICAuLi4vYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvcWNvbS13bGVkLnR4dCAgICAgICAgICB8
-IDE3MiArKysrLQoKUGxlYXNlIHNwbGl0IGJpbmRpbmdzIHRvIGEgc2VwYXJhdGUgcGF0Y2guCgpU
-aGlzIGlzIGFsc28gYSB3aG9sZSBsb3Qgb2YgY2h1cm4gcmUtZm9ybWF0dGluZy4gVGhhdCBpcyBm
-aW5lLCBidXQgZG9uJ3QgCm1peCBhY3R1YWwgY2hhbmdlcyB0byB0aGUgYmluZGluZyB3aXRoIHJl
-LWZvcm1hdHRpbmcuIFlvdSBjYW4gZG8gMiAKcGF0Y2hlcyBpbiB0aGlzIGNhc2U6IAoKLSBtb3Zl
-IGFuZCByZWZvcm1hdCAoYXMgbG9uZyBhcyB0aGUgbW92ZSBzaG93cyB1cCBhcyBhIG1vdmUgCmFu
-ZCBub3QgYSByZW1vdmUgYW5kIGFkZCkgCi0gYWRkaXRpb25zIGZvciBuZXcgY2hpcHMKCj4gIGRy
-aXZlcnMvdmlkZW8vYmFja2xpZ2h0L3Fjb20td2xlZC5jICAgICAgICAgICAgICAgIHwgNzQ5ICsr
-KysrKysrKysrKysrKy0tLS0tLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDY5NiBpbnNlcnRpb25zKCsp
-LCAyMjUgZGVsZXRpb25zKC0pCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+T24gVGh1LCBNYXkgMDMsIDIwMTggYXQgMDU6MjY6MDJQTSArMDMwMCwgUm9iZXJ0IENoaXJhcyB3
+cm90ZToKPiBTaWduZWQtb2ZmLWJ5OiBSb2JlcnQgQ2hpcmFzIDxyb2JlcnQuY2hpcmFzQG54cC5j
+b20+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3JheWRpdW0scm02NzE5MS50
+eHQgICAgIHwgMzggKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMzgg
+aW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmF5ZGl1bSxybTY3MTkxLnR4dAo+IAo+IGRpZmYg
+LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9y
+YXlkaXVtLHJtNjcxOTEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwvcmF5ZGl1bSxybTY3MTkxLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4g
+aW5kZXggMDAwMDAwMC4uMGZlNmQ0Ygo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9yYXlkaXVtLHJtNjcxOTEudHh0
+Cj4gQEAgLTAsMCArMSwzOCBAQAo+ICtSYXlkaXVtIFJNNjcxNzEgT0xFRCBMQ0QgcGFuZWwgd2l0
+aCBNSVBJLURTSSBwcm90b2NvbAo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSBjb21w
+YXRpYmxlOiAJCSJyYXlkaXVtLHJtNjcxOTEiCj4gKy0gcmVnOgkJCXZpcnR1YWwgY2hhbm5lbCBm
+b3IgTUlQSS1EU0kgcHJvdG9jb2wKPiArCQkJbXVzdCBiZSA8MD4KPiArLSBkc2ktbGFuZXM6CQlu
+dW1iZXIgb2YgRFNJIGxhbmVzIHRvIGJlIHVzZWQKPiArCQkJbXVzdCBiZSA8Mz4gb3IgPDQ+Cj4g
+Ky0gcG9ydDogCQlpbnB1dCBwb3J0IG5vZGUgd2l0aCBlbmRwb2ludCBkZWZpbml0aW9uIGFzCj4g
+KwkJCWRlZmluZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4
+dDsKPiArCQkJdGhlIGlucHV0IHBvcnQgc2hvdWxkIGJlIGNvbm5lY3RlZCB0byBhIE1JUEktRFNJ
+IGRldmljZQo+ICsJCQlkcml2ZXIKPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gcmVz
+ZXQtZ3BpbzoJCWEgR1BJTyBzcGVjIGZvciB0aGUgUlNUX0IgR1BJTyBwaW4KPiArLSBwaW5jdHJs
+LTAJCXBoYW5kbGUgdG8gdGhlIHBpbiBzZXR0aW5ncyBmb3IgdGhlIHJlc2V0IHBpbgo+ICstIHBh
+bmVsLXdpZHRoLW1tOglwaHlzaWNhbCBwYW5lbCB3aWR0aCBbbW1dCj4gKy0gcGFuZWwtaGVpZ2h0
+LW1tOglwaHlzaWNhbCBwYW5lbCBoZWlnaHQgW21tXQoKd2lkdGgtbW0gYW5kIGhlaWdodC1tbSBh
+cmUgdGhlIGNvbW1vbiBwcm9wZXJ0eSBuYW1lcy4KCj4gKwo+ICtbMV06IERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Rpc3BsYXktdGltaW5nLnR4dAoKRm9vdG5vdGUg
+dG8gd2hhdD8KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
