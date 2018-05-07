@@ -1,94 +1,94 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH V1 1/5] qcom: wled: Rename pm8941-wled.c to qcom-wled.c
-Date: Mon, 7 May 2018 08:41:35 -0700
-Message-ID: <20180507154135.GA2259@tuxbook-pro>
-References: <1525341432-15818-1-git-send-email-kgunda@codeaurora.org>
- <1525341432-15818-2-git-send-email-kgunda@codeaurora.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 11/14] media: platform: Add Sunxi-Cedrus VPU decoder
+ driver
+Date: Mon, 7 May 2018 17:42:01 +0200
+Message-ID: <20180507154201.4vz3y6j7u7kzfud6@flea>
+References: <20180507124500.20434-1-paul.kocialkowski@bootlin.com>
+ <20180507124500.20434-12-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1525341432-15818-2-git-send-email-kgunda@codeaurora.org>
+In-Reply-To: <20180507124500.20434-12-paul.kocialkowski@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kiran Gunda <kgunda@codeaurora.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S . Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Arnd Bergmann <arnd@arndb.de>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Philipp Zabel <p.zabel@pengutronix.de>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Yanni
 List-Id: devicetree@vger.kernel.org
 
-On Thu 03 May 02:57 PDT 2018, Kiran Gunda wrote:
+On Mon, May 07, 2018 at 02:44:57PM +0200, Paul Kocialkowski wrote:
+> +#define SYSCON_SRAM_CTRL_REG0	0x0
+> +#define SYSCON_SRAM_C1_MAP_VE	0x7fffffff
 
-> pm8941-wled.c driver is supporting the WLED peripheral
-> on pm8941. Rename it to qcom-wled.c so that it can support
-> WLED on multiple PMICs.
-> 
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+This isn't needed anymore
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> +	dev->ahb_clk = devm_clk_get(dev->dev, "ahb");
+> +	if (IS_ERR(dev->ahb_clk)) {
+> +		dev_err(dev->dev, "failed to get ahb clock\n");
+> +		return PTR_ERR(dev->ahb_clk);
+> +	}
+> +	dev->mod_clk = devm_clk_get(dev->dev, "mod");
+> +	if (IS_ERR(dev->mod_clk)) {
+> +		dev_err(dev->dev, "failed to get mod clock\n");
+> +		return PTR_ERR(dev->mod_clk);
+> +	}
+> +	dev->ram_clk = devm_clk_get(dev->dev, "ram");
+> +	if (IS_ERR(dev->ram_clk)) {
+> +		dev_err(dev->dev, "failed to get ram clock\n");
+> +		return PTR_ERR(dev->ram_clk);
+> +	}
 
-Regards,
-Bjorn
+Please add some blank lines between those blocks
 
-> ---
->  .../bindings/leds/backlight/{pm8941-wled.txt => qcom-wled.txt}    | 2 +-
->  drivers/video/backlight/Kconfig                                   | 8 ++++----
->  drivers/video/backlight/Makefile                                  | 2 +-
->  drivers/video/backlight/{pm8941-wled.c => qcom-wled.c}            | 0
->  4 files changed, 6 insertions(+), 6 deletions(-)
->  rename Documentation/devicetree/bindings/leds/backlight/{pm8941-wled.txt => qcom-wled.txt} (95%)
->  rename drivers/video/backlight/{pm8941-wled.c => qcom-wled.c} (100%)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
-> similarity index 95%
-> rename from Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
-> rename to Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
-> index e5b294d..fb39e32 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
-> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
-> @@ -1,4 +1,4 @@
-> -Binding for Qualcomm PM8941 WLED driver
-> +Binding for Qualcomm Technologies, Inc. WLED driver
->  
->  Required properties:
->  - compatible: should be "qcom,pm8941-wled"
-> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-> index 4e1d2ad..8c095e3 100644
-> --- a/drivers/video/backlight/Kconfig
-> +++ b/drivers/video/backlight/Kconfig
-> @@ -299,12 +299,12 @@ config BACKLIGHT_TOSA
->  	  If you have an Sharp SL-6000 Zaurus say Y to enable a driver
->  	  for its backlight
->  
-> -config BACKLIGHT_PM8941_WLED
-> -	tristate "Qualcomm PM8941 WLED Driver"
-> +config BACKLIGHT_QCOM_WLED
-> +	tristate "Qualcomm PMIC WLED Driver"
->  	select REGMAP
->  	help
-> -	  If you have the Qualcomm PM8941, say Y to enable a driver for the
-> -	  WLED block.
-> +	  If you have the Qualcomm PMIC, say Y to enable a driver for the
-> +	  WLED block. Currently it supports PM8941 and PMI8998.
->  
->  config BACKLIGHT_SAHARA
->  	tristate "Tabletkiosk Sahara Touch-iT Backlight Driver"
-> diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
-> index 5e28f01..6fd76ef 100644
-> --- a/drivers/video/backlight/Makefile
-> +++ b/drivers/video/backlight/Makefile
-> @@ -49,8 +49,8 @@ obj-$(CONFIG_BACKLIGHT_OMAP1)		+= omap1_bl.o
->  obj-$(CONFIG_BACKLIGHT_OT200)		+= ot200_bl.o
->  obj-$(CONFIG_BACKLIGHT_PANDORA)		+= pandora_bl.o
->  obj-$(CONFIG_BACKLIGHT_PCF50633)	+= pcf50633-backlight.o
-> -obj-$(CONFIG_BACKLIGHT_PM8941_WLED)	+= pm8941-wled.o
->  obj-$(CONFIG_BACKLIGHT_PWM)		+= pwm_bl.o
-> +obj-$(CONFIG_BACKLIGHT_QCOM_WLED)	+= qcom-wled.o
->  obj-$(CONFIG_BACKLIGHT_SAHARA)		+= kb3886_bl.o
->  obj-$(CONFIG_BACKLIGHT_SKY81452)	+= sky81452-backlight.o
->  obj-$(CONFIG_BACKLIGHT_TOSA)		+= tosa_bl.o
-> diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/qcom-wled.c
-> similarity index 100%
-> rename from drivers/video/backlight/pm8941-wled.c
-> rename to drivers/video/backlight/qcom-wled.c
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+> +	dev->rstc = devm_reset_control_get(dev->dev, NULL);
+
+You're not checking the error code here
+
+> +	dev->syscon = syscon_regmap_lookup_by_phandle(dev->dev->of_node,
+> +						      "syscon");
+> +	if (IS_ERR(dev->syscon)) {
+> +		dev->syscon = NULL;
+> +	} else {
+> +		regmap_write_bits(dev->syscon, SYSCON_SRAM_CTRL_REG0,
+> +				  SYSCON_SRAM_C1_MAP_VE,
+> +				  SYSCON_SRAM_C1_MAP_VE);
+> +	}
+
+You don't need the syscon part anymore either
+
+> +	ret = clk_prepare_enable(dev->ahb_clk);
+> +	if (ret) {
+> +		dev_err(dev->dev, "could not enable ahb clock\n");
+> +		return -EFAULT;
+> +	}
+> +	ret = clk_prepare_enable(dev->mod_clk);
+> +	if (ret) {
+> +		clk_disable_unprepare(dev->ahb_clk);
+> +		dev_err(dev->dev, "could not enable mod clock\n");
+> +		return -EFAULT;
+> +	}
+> +	ret = clk_prepare_enable(dev->ram_clk);
+> +	if (ret) {
+> +		clk_disable_unprepare(dev->mod_clk);
+> +		clk_disable_unprepare(dev->ahb_clk);
+> +		dev_err(dev->dev, "could not enable ram clock\n");
+> +		return -EFAULT;
+> +	}
+> +
+> +	ret = reset_control_reset(dev->rstc);
+> +	if (ret) {
+> +		clk_disable_unprepare(dev->ram_clk);
+> +		clk_disable_unprepare(dev->mod_clk);
+> +		clk_disable_unprepare(dev->ahb_clk);
+> +		dev_err(dev->dev, "could not reset device\n");
+> +		return -EFAULT;
+
+labels would simplify this greatly, and you should also release the
+sram and the memory region here.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
