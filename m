@@ -1,7 +1,7 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v3 06/14] media: staging/imx: add imx7 capture subsystem
-Date: Mon,  7 May 2018 17:21:44 +0100
-Message-ID: <20180507162152.2545-7-rui.silva@linaro.org>
+Subject: [PATCH v3 12/14] ARM: dts: imx7s-warp: add ov2680 sensor node
+Date: Mon,  7 May 2018 17:21:50 +0100
+Message-ID: <20180507162152.2545-13-rui.silva@linaro.org>
 References: <20180507162152.2545-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,34 +21,59 @@ To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerb
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add imx7 capture subsystem to imx-media core to allow the use some of the
-existing modules for i.MX5/6 with i.MX7 SoC.
-
-Since i.MX7 does not have an IPU, add driver data with unset ipu_present flag
-that change some runtime behaviors.
+Warp7 comes with a Omnivision OV2680 sensor, add the node here to make complete
+the camera data path for this system. Add the needed regulator to the analog
+voltage supply.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- drivers/staging/media/imx/imx-media-dev.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/imx7s-warp.dts | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
-index b019dcefccd6..55fe0321edc0 100644
---- a/drivers/staging/media/imx/imx-media-dev.c
-+++ b/drivers/staging/media/imx/imx-media-dev.c
-@@ -561,8 +561,13 @@ static const struct imx_media_driver_data imx6_drvdata = {
- 	.ipu_present = true,
+diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
+index ffd170ae925a..10df24c05b76 100644
+--- a/arch/arm/boot/dts/imx7s-warp.dts
++++ b/arch/arm/boot/dts/imx7s-warp.dts
+@@ -91,6 +91,14 @@
+ 		regulator-always-on;
+ 	};
+ 
++	reg_peri_3p15v: regulator-peri-3p15v {
++		compatible = "regulator-fixed";
++		regulator-name = "peri_3p15v_reg";
++		regulator-min-microvolt = <3150000>;
++		regulator-max-microvolt = <3150000>;
++		regulator-always-on;
++	};
++
+ 	sound {
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,name = "imx7-sgtl5000";
+@@ -218,6 +226,25 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
++
++	ov2680: camera@36 {
++		compatible = "ovti,ov2680";
++		reg = <0x36>;
++		clocks = <&osc>;
++		clock-names = "xvclk";
++		reset-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
++		DOVDD-supply = <&sw2_reg>;
++		DVDD-supply = <&sw2_reg>;
++		AVDD-supply = <&reg_peri_3p15v>;
++
++		port {
++			ov2680_to_mipi: endpoint {
++				remote-endpoint = <&mipi_from_sensor>;
++				clock-lanes = <0>;
++				data-lanes = <1>;
++			};
++		};
++	};
  };
  
-+static const struct imx_media_driver_data imx7_drvdata = {
-+	.ipu_present = false,
-+};
-+
- static const struct of_device_id imx_media_dt_ids[] = {
- 	{ .compatible = "fsl,imx-capture-subsystem", .data = &imx6_drvdata },
-+	{ .compatible = "fsl,imx7-capture-subsystem", .data = &imx7_drvdata },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, imx_media_dt_ids);
+ &i2c4 {
 -- 
 2.17.0
