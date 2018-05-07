@@ -1,214 +1,53 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH 2/2] media: i2c: mt9t112: Add device tree support
-Date: Mon, 7 May 2018 12:32:19 +0300
-Message-ID: <20180507093219.hrhaliadccaytenj@valkosipuli.retiisi.org.uk>
-References: <1524654014-17852-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524654014-17852-3-git-send-email-jacopo+renesas@jmondi.org>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
+Date: Mon, 7 May 2018 11:47:53 +0200
+Message-ID: <20180507094753.GR2285@localhost>
+References: <20180424163458.11947-1-johan@kernel.org>
+ <20180424163458.11947-5-johan@kernel.org>
+ <CAL_Jsq+mCp=geT8t_j+0fuTxAB7C9RYn6pESRpLc2GH273fM1Q@mail.gmail.com>
+ <20180426091018.GU4615@localhost>
+ <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
+ <20180502081637.GE2285@localhost>
+ <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1524654014-17852-3-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: hans.verkuil@cisco.com, mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+On Thu, May 03, 2018 at 11:35:21AM +0200, H. Nikolaus Schaller wrote:
 
-On Wed, Apr 25, 2018 at 01:00:14PM +0200, Jacopo Mondi wrote:
-> Add support for OF systems to mt9t112 image sensor driver.
-> 
-> As the devicetree bindings use standard name for 'powerdown' gpio, and while
-> at there, update the existing mt9t112 users to use the new name.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  arch/sh/boards/mach-ecovec24/setup.c |  4 +-
->  drivers/media/i2c/mt9t112.c          | 87 +++++++++++++++++++++++++++++++-----
->  2 files changed, 77 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/sh/boards/mach-ecovec24/setup.c b/arch/sh/boards/mach-ecovec24/setup.c
-> index adc61d1..16de9ec 100644
-> --- a/arch/sh/boards/mach-ecovec24/setup.c
-> +++ b/arch/sh/boards/mach-ecovec24/setup.c
-> @@ -480,7 +480,7 @@ static struct gpiod_lookup_table tw9910_gpios = {
->  static struct gpiod_lookup_table mt9t112_0_gpios = {
->  	.dev_id		= "0-003c",
->  	.table		= {
-> -		GPIO_LOOKUP("sh7724_pfc", GPIO_PTA3, "standby",
-> +		GPIO_LOOKUP("sh7724_pfc", GPIO_PTA3, "powerdown",
->  			    GPIO_ACTIVE_HIGH),
->  	},
->  };
-> @@ -488,7 +488,7 @@ static struct gpiod_lookup_table mt9t112_0_gpios = {
->  static struct gpiod_lookup_table mt9t112_1_gpios = {
->  	.dev_id		= "1-003c",
->  	.table		= {
-> -		GPIO_LOOKUP("sh7724_pfc", GPIO_PTA4, "standby",
-> +		GPIO_LOOKUP("sh7724_pfc", GPIO_PTA4, "powerdown",
->  			    GPIO_ACTIVE_HIGH),
->  	},
->  };
-> diff --git a/drivers/media/i2c/mt9t112.c b/drivers/media/i2c/mt9t112.c
-> index af8cca9..704e7fb 100644
-> --- a/drivers/media/i2c/mt9t112.c
-> +++ b/drivers/media/i2c/mt9t112.c
-> @@ -32,6 +32,7 @@
-> 
->  #include <media/i2c/mt9t112.h>
->  #include <media/v4l2-common.h>
-> +#include <media/v4l2-fwnode.h>
->  #include <media/v4l2-image-sizes.h>
->  #include <media/v4l2-subdev.h>
-> 
-> @@ -77,6 +78,15 @@
->  #define VAR(id, offset)  _VAR(id, offset, 0x0000)
->  #define VAR8(id, offset) _VAR(id, offset, 0x8000)
-> 
-> +/*
-> + * Default PLL configuration for 24MHz input clock
-> + */
-> +static struct mt9t112_platform_data mt9t112_default_pdata_24MHz = {
-> +	.divider	= {
-> +		0x49, 0x6, 0, 6, 0, 9, 9, 6, 0,
-> +	},
-> +};
-> +
->  /************************************************************************
->   *			struct
->   ***********************************************************************/
-> @@ -88,6 +98,7 @@ struct mt9t112_format {
->  };
-> 
->  struct mt9t112_priv {
-> +	struct device			*dev;
->  	struct v4l2_subdev		 subdev;
->  	struct mt9t112_platform_data	*info;
->  	struct i2c_client		*client;
-> @@ -1066,13 +1077,39 @@ static int mt9t112_camera_probe(struct i2c_client *client)
->  	return ret;
->  }
-> 
-> +static int mt9t112_parse_dt(struct mt9t112_priv *priv)
-> +{
-> +	struct fwnode_handle *fwnode = dev_fwnode(priv->dev);
-> +	struct fwnode_handle *ep;
-> +	struct v4l2_fwnode_endpoint vep;
-> +	int ret;
-> +
-> +	ep = fwnode_graph_get_next_endpoint(fwnode, NULL);
-> +	if (IS_ERR_OR_NULL(ep)) {
-> +		dev_err(priv->dev, "No endpoint registered\n");
-> +		return PTR_ERR(ep);
-> +	}
-> +
-> +	ret = v4l2_fwnode_endpoint_parse(ep, &vep);
-> +	fwnode_handle_put(ep);
-> +	if (ret) {
-> +		dev_err(priv->dev, "Unable to parse endpoint: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	if (vep.bus.parallel.flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
-> +		priv->info->flags = MT9T112_FLAG_PCLK_RISING_EDGE;
-> +
-> +	return 0;
-> +}
-> +
->  static int mt9t112_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *did)
->  {
->  	struct mt9t112_priv *priv;
->  	int ret;
-> 
-> -	if (!client->dev.platform_data) {
-> +	if (!client->dev.of_node && !client->dev.platform_data) {
->  		dev_err(&client->dev, "mt9t112: missing platform data!\n");
->  		return -EINVAL;
->  	}
-> @@ -1081,23 +1118,39 @@ static int mt9t112_probe(struct i2c_client *client,
->  	if (!priv)
->  		return -ENOMEM;
-> 
-> -	priv->info = client->dev.platform_data;
->  	priv->init_done = false;
-> -
-> -	v4l2_i2c_subdev_init(&priv->subdev, client, &mt9t112_subdev_ops);
-> -
-> -	priv->clk = devm_clk_get(&client->dev, "extclk");
-> -	if (PTR_ERR(priv->clk) == -ENOENT) {
-> +	priv->dev = &client->dev;
-> +
-> +	if (client->dev.platform_data) {
-> +		priv->info = client->dev.platform_data;
-> +
-> +		priv->clk = devm_clk_get(&client->dev, "extclk");
+> I have realized that the w2sg0004 is an exception (although a Sirf chip)
+> that it does not provide a WAKEUP signal. And another significant
+> difference is that we have to keep the serdev UART enabled even if there
+> is no user-space client. Otherwise we are not able to detect unexpected
+> activity. So we unfortunately can't move serdev open/close into the .open
+> and .close ops but need to open it in probe.
 
-extclk needs to be documented in DT binding documentation.
+As have also been discussed elsewhere in this thread it may be possible,
+and it is definitely desirable, to only keep the port open when really
+needed. But given the complexity of implementing this, starting with a
+simpler and less power efficient method for sirf-chips without WAKEUP
+may be acceptable.
 
-> +		if (PTR_ERR(priv->clk) == -ENOENT) {
-> +			priv->clk = NULL;
-> +		} else if (IS_ERR(priv->clk)) {
-> +			dev_err(&client->dev,
-> +				"Unable to get clock \"extclk\"\n");
-> +			return PTR_ERR(priv->clk);
-> +		}
-> +	} else {
-> +		/*
-> +		 * External clock frequencies != 24MHz are only supported
-> +		 * for non-OF systems.
-> +		 */
+> Therefore, it is in my opinion still better to have a separate driver for
+> the w2sg0004 instead of hacking the support of this chip into your WAKEUP
+> capable sirfstar driver. So I suggest that you make WAKEUP a required
+> property.
 
-Shouldn't you actually set the frequency? Or perhaps even better to check
-it, and use assigned-clocks and assigned-clock-rates properties?
+I disagree. The sirf driver subsumes your particular wi2wi module and
+configurations without WAKEUP are described by the datasheets for other
+modules as well.
 
->  		priv->clk = NULL;
-> -	} else if (IS_ERR(priv->clk)) {
-> -		dev_err(&client->dev, "Unable to get clock \"extclk\"\n");
-> -		return PTR_ERR(priv->clk);
-> +		priv->info = &mt9t112_default_pdata_24MHz;
-> +
-> +		ret = mt9t112_parse_dt(priv);
-> +		if (ret)
-> +			return ret;
->  	}
-> 
-> -	priv->standby_gpio = devm_gpiod_get_optional(&client->dev, "standby",
-> +	v4l2_i2c_subdev_init(&priv->subdev, client, &mt9t112_subdev_ops);
-> +
-> +	priv->standby_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
->  						     GPIOD_OUT_HIGH);
->  	if (IS_ERR(priv->standby_gpio)) {
-> -		dev_err(&client->dev, "Unable to get gpio \"standby\"\n");
-> +		dev_err(&client->dev, "Unable to get gpio \"powerdown\"\n");
->  		return PTR_ERR(priv->standby_gpio);
->  	}
-> 
-> @@ -1124,9 +1177,19 @@ static const struct i2c_device_id mt9t112_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, mt9t112_id);
-> 
-> +#if IS_ENABLED(CONFIG_OF)
-> +static const struct of_device_id mt9t112_of_match[] = {
-> +	{ .compatible = "micron,mt9t111", },
-> +	{ .compatible = "micron,mt9t112", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, mt9t112_of_match);
-> +#endif
-> +
->  static struct i2c_driver mt9t112_i2c_driver = {
->  	.driver = {
->  		.name = "mt9t112",
-> +		.of_match_table = of_match_ptr(mt9t112_of_match),
+> We had faced a comparable decision last year with the ov9650 and ov9655 camera
+> sensors which are almost the same. But not same enough to integrate both into
+> a single driver.
 
-No need to use of_match_ptr().
+But here we are talking about two configuration for the same chip (even
+if your particular chip only supports one).
 
->  	},
->  	.probe    = mt9t112_probe,
->  	.remove   = mt9t112_remove,
-
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+Johan
