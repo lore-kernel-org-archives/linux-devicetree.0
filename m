@@ -1,60 +1,84 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: tegra: Add support for 256 MB Colibri-T20
- (plus such board on Iris)
-Date: Mon, 7 May 2018 11:58:14 -0500
-Message-ID: <20180507165814.GA4180@rob-hp-laptop>
-References: <1525360112-9893-1-git-send-email-krzk@kernel.org>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCHv2 3/3] arm64: dts: stratix10: add sdram ecc
+Date: Mon, 7 May 2018 18:59:43 +0200
+Message-ID: <20180507165943.GE733@pd.tnic>
+References: <1524854238-19394-1-git-send-email-thor.thayer@linux.intel.com>
+ <1524854238-19394-4-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1525360112-9893-1-git-send-email-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>
+In-Reply-To: <1524854238-19394-4-git-send-email-thor.thayer@linux.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, thor.thayer@linux.intel.com, catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 03, 2018 at 05:08:32PM +0200, Krzysztof Kozlowski wrote:
-> Colibri-T20 can come in 256 MB RAM (with 512 MB NAND) or 512 MB RAM
-> (with 1024 MB NAND) flavors.  Add support for the 256 MB version on Iris
-> evaluation board.
+On Fri, Apr 27, 2018 at 01:37:18PM -0500, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Add the Stratix10 ECC Manager and SDRAM EDAC nodes to the
+> device tree.
 > 
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 > ---
-> 
-> Changes since v1:
-> 1. Fix memory size in tegra20-colibri-256.dtsi (was working fine because
->    my bootloader uses mem= argument).
+> v2  Remove unused SysMan syscon
+>     Remove unused SDRAM ECC register defines
+>     Remove unused address, size and range from device tree.
 > ---
->  Documentation/devicetree/bindings/arm/tegra.txt    |   1 +
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/tegra20-colibri-256.dtsi         |  11 +
->  arch/arm/boot/dts/tegra20-colibri-512.dtsi         | 531 +--------------------
->  ...gra20-colibri-512.dtsi => tegra20-colibri.dtsi} |   4 -
->  arch/arm/boot/dts/tegra20-iris-256.dts             |  10 +
->  arch/arm/boot/dts/tegra20-iris-512.dts             |  98 +---
->  ...gra20-iris-512.dts => tegra20-iris-common.dtsi} |  11 +-
->  8 files changed, 31 insertions(+), 636 deletions(-)
->  create mode 100644 arch/arm/boot/dts/tegra20-colibri-256.dtsi
->  copy arch/arm/boot/dts/{tegra20-colibri-512.dtsi => tegra20-colibri.dtsi} (99%)
->  create mode 100644 arch/arm/boot/dts/tegra20-iris-256.dts
->  copy arch/arm/boot/dts/{tegra20-iris-512.dts => tegra20-iris-common.dtsi} (85%)
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
-> index 32f62bb7006d..d304574ae441 100644
-> --- a/Documentation/devicetree/bindings/arm/tegra.txt
-> +++ b/Documentation/devicetree/bindings/arm/tegra.txt
-> @@ -49,6 +49,7 @@ board-specific compatible values:
->    toradex,apalis_t30-eval
->    toradex,apalis-tk1
->    toradex,apalis-tk1-eval
-> +  toradex,colibri_t20-256
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> index c89d0c307f8d..688391f3bf78 100644
+> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> @@ -387,5 +387,17 @@
+>  			resets = <&rst WATCHDOG3_RESET>;
+>  			status = "disabled";
+>  		};
+> +
+> +		eccmgr {
+> +			compatible = "altr,socfpga-s10-ecc-manager";
+> +			interrupts = <0 15 4>, <0 95 4>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +
+> +			sdramedac {
+> +				compatible = "altr,sdram-edac-s10";
+> +				interrupts = <16 4>, <48 4>;
+> +			};
+> +		};
+>  	};
+>  };
+> -- 
+> 2.7.4
+> 
+> --
 
-NAK unless there are changes beyond the memory size. Otherwise, just use 
-the existing string or deprecate the existing one for a new one without 
-the memory size. I prefer the less churn of the former option.
+Hey Rob,
 
->    toradex,colibri_t20-512
->    toradex,colibri_t30
->    toradex,colibri_t30-eval-v3
+ACK here too?
+
+Also, this one:
+
+https://lkml.kernel.org/r/1525203036-21774-1-git-send-email-thor.thayer@linux.intel.com
+
+?
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
