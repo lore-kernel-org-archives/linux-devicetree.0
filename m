@@ -1,43 +1,54 @@
-Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-by2nam01on0049.outbound.protection.outlook.com ([104.47.34.49]:63384
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1750954AbeECJAG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 3 May 2018 05:00:06 -0400
-From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCH 1/2] dt-bindings: gpio-xilinx: Update no-init property
-Date: Thu, 3 May 2018 14:35:45 +0530
-Message-ID: <1525338346-31684-1-git-send-email-shubhrajyoti.datta@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, git-dev@xilinx.com
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, michals@xilinx.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Return-Path: <SRS0=LUPS=H2=linaro.org=rui.silva@kernel.org>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH 1/4] media: ov2680: dt: add voltage supplies as required
+Date: Mon,  7 May 2018 16:56:52 +0100
+Message-Id: <20180507155655.1555-2-rui.silva@linaro.org>
+In-Reply-To: <20180507155655.1555-1-rui.silva@linaro.org>
+References: <20180507155655.1555-1-rui.silva@linaro.org>
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl, Rob Herring <robh+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+The ov2680 needs to control 3 regulators for the voltage supplies and that was
+missing by the first description, added their description and example here.
 
-In some cases the user may not want to initialise the
-gpios to default. Add a property to allow the same. This is specially
-useful in case the PS is reset and PL is not.
-
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- Documentation/devicetree/bindings/gpio/gpio-xilinx.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/media/i2c/ov2680.txt | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt b/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
-index 63bf4be..3a09d9e 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
-@@ -25,6 +25,7 @@ Optional properties:
- - xlnx,dout-default-2 : as above but the second channel
- - xlnx,gpio2-width : as above but for the second channel
- - xlnx,tri-default-2 : as above but for the second channel
-+- xlnx,no-init : No initialisation at probe
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov2680.txt b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
+index 0e29f1a113c0..e5d8f130309d 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ov2680.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
+@@ -4,6 +4,9 @@ Required Properties:
+ - compatible: should be "ovti,ov2680".
+ - clocks: reference to the xvclk input clock.
+ - clock-names: should be "xvclk".
++- DOVDD-supply: Digital I/O voltage supply.
++- DVDD-supply: Digital core voltage supply.
++- AVDD-supply: Analog voltage supply.
  
- 
+ Optional Properties:
+ - powerdown-gpios: reference to the GPIO connected to the powerdown pin,
+@@ -18,7 +21,7 @@ Endpoint node required properties for CSI-2 connection are:
+ - remote-endpoint: a phandle to the bus receiver's endpoint node.
+ - clock-lanes: should be set to <0> (clock lane on hardware lane 0).
+ - data-lanes: should be set to <1> (one CSI-2 lane supported).
+- 
++
  Example:
+ 
+ &i2c2 {
+@@ -28,6 +31,9 @@ Example:
+ 		clocks = <&osc>;
+ 		clock-names = "xvclk";
+ 		powerdown-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
++		DOVDD-supply = <&sw2_reg>;
++		DVDD-supply = <&sw2_reg>;
++		AVDD-supply = <&reg_peri_3p15v>;
+ 
+ 		port {
+ 			ov2680_mipi_ep: endpoint {
 -- 
-2.1.1
-
+2.17.0
