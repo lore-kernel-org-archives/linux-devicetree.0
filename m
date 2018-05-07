@@ -1,94 +1,71 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 11/14] media: platform: Add Sunxi-Cedrus VPU decoder
- driver
-Date: Mon, 7 May 2018 17:42:01 +0200
-Message-ID: <20180507154201.4vz3y6j7u7kzfud6@flea>
-References: <20180507124500.20434-1-paul.kocialkowski@bootlin.com>
- <20180507124500.20434-12-paul.kocialkowski@bootlin.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
+Date: Mon, 7 May 2018 08:45:15 -0700
+Message-ID: <20180507154515.GP98604@atomide.com>
+References: <20180424163458.11947-5-johan@kernel.org>
+ <CAL_Jsq+mCp=geT8t_j+0fuTxAB7C9RYn6pESRpLc2GH273fM1Q@mail.gmail.com>
+ <20180426091018.GU4615@localhost>
+ <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
+ <20180502081637.GE2285@localhost>
+ <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com>
+ <20180503205037.7be552c1@aktux>
+ <44A0BC7C-67C7-4116-849F-90FF7CF2B1F0@goldelico.com>
+ <20180504114213.3xlzqxe74n55tk5s@earth.universe>
+ <20180507100135.GS2285@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180507124500.20434-12-paul.kocialkowski@bootlin.com>
+In-Reply-To: <20180507100135.GS2285@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S . Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Arnd Bergmann <arnd@arndb.de>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Philipp Zabel <p.zabel@pengutronix.de>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Yanni
+To: Johan Hovold <johan@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andreas Kemnade <andreas@kemnade.info>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 07, 2018 at 02:44:57PM +0200, Paul Kocialkowski wrote:
-> +#define SYSCON_SRAM_CTRL_REG0	0x0
-> +#define SYSCON_SRAM_C1_MAP_VE	0x7fffffff
+Hi,
 
-This isn't needed anymore
+* Johan Hovold <johan@kernel.org> [180507 03:03]:
+> On Fri, May 04, 2018 at 01:42:13PM +0200, Sebastian Reichel wrote:
+> 
+> > Having said all of this, serdev does not yet support runtime PM (at
+> > all). Tony is currently looking into it. Fortunately serdev allows
+> > us to enable runtime PM by default (once implemented), since we know
+> > the remote side and can (hopefully) avoid losing characters (i.e.
+> > with sideband wakeup gpios).
+> 
+> I'm not sure we want generic runtime-pm support for the controllers in
+> the sense that the slave device state is always reflected by the serial
+> controller. Similar as for i2c and spi, we really only want to keep the
+> controller active when we are doing I/O, but we may want to keep a
+> client active for longer.
 
-> +	dev->ahb_clk = devm_clk_get(dev->dev, "ahb");
-> +	if (IS_ERR(dev->ahb_clk)) {
-> +		dev_err(dev->dev, "failed to get ahb clock\n");
-> +		return PTR_ERR(dev->ahb_clk);
-> +	}
-> +	dev->mod_clk = devm_clk_get(dev->dev, "mod");
-> +	if (IS_ERR(dev->mod_clk)) {
-> +		dev_err(dev->dev, "failed to get mod clock\n");
-> +		return PTR_ERR(dev->mod_clk);
-> +	}
-> +	dev->ram_clk = devm_clk_get(dev->dev, "ram");
-> +	if (IS_ERR(dev->ram_clk)) {
-> +		dev_err(dev->dev, "failed to get ram clock\n");
-> +		return PTR_ERR(dev->ram_clk);
-> +	}
+Yeah i2c seems to do the right thing where the bus takes care
+of runtime PM.
 
-Please add some blank lines between those blocks
+> Take the u-blox driver in this series for example. As I'm using runtime
+> PM to manage device power, user-space can chose to prevent the receiver
+> from runtime suspending in order to avoid lengthy (re-)acquisition times
+> in setups without a backup battery (by means of the power/control
+> attribute).
 
-> +	dev->rstc = devm_reset_control_get(dev->dev, NULL);
+Sorry I don't seem to have that one, care to paste the subject
+line of that patch?
 
-You're not checking the error code here
+> Note that serdev not enabling runtime pm for controllers is roughly
+> equivalent to setting the .ignore_children flag, which is what we do for
+> i2c and spi controller, and possibly what we want here too.
 
-> +	dev->syscon = syscon_regmap_lookup_by_phandle(dev->dev->of_node,
-> +						      "syscon");
-> +	if (IS_ERR(dev->syscon)) {
-> +		dev->syscon = NULL;
-> +	} else {
-> +		regmap_write_bits(dev->syscon, SYSCON_SRAM_CTRL_REG0,
-> +				  SYSCON_SRAM_C1_MAP_VE,
-> +				  SYSCON_SRAM_C1_MAP_VE);
-> +	}
+We currently don't idle serdev at all even if not in use. What
+I noticed is if I have these in my .config:
 
-You don't need the syscon part anymore either
+CONFIG_SERIAL_DEV_BUS=y
+CONFIG_SERIAL_DEV_CTRL_TTYPORT=y
 
-> +	ret = clk_prepare_enable(dev->ahb_clk);
-> +	if (ret) {
-> +		dev_err(dev->dev, "could not enable ahb clock\n");
-> +		return -EFAULT;
-> +	}
-> +	ret = clk_prepare_enable(dev->mod_clk);
-> +	if (ret) {
-> +		clk_disable_unprepare(dev->ahb_clk);
-> +		dev_err(dev->dev, "could not enable mod clock\n");
-> +		return -EFAULT;
-> +	}
-> +	ret = clk_prepare_enable(dev->ram_clk);
-> +	if (ret) {
-> +		clk_disable_unprepare(dev->mod_clk);
-> +		clk_disable_unprepare(dev->ahb_clk);
-> +		dev_err(dev->dev, "could not enable ram clock\n");
-> +		return -EFAULT;
-> +	}
-> +
-> +	ret = reset_control_reset(dev->rstc);
-> +	if (ret) {
-> +		clk_disable_unprepare(dev->ram_clk);
-> +		clk_disable_unprepare(dev->mod_clk);
-> +		clk_disable_unprepare(dev->ahb_clk);
-> +		dev_err(dev->dev, "could not reset device\n");
-> +		return -EFAULT;
+And no hci_serdev.ko driver loaded, then the 8250 port still stays
+active and there are no sysfs entries to idle it.
 
-labels would simplify this greatly, and you should also release the
-sram and the memory region here.
+Are you seeing this with your series?
 
-Maxime
+Regards,
 
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Tony
