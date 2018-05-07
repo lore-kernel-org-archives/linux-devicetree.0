@@ -1,58 +1,45 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH net-next] dt-bindings: dsa: Remove unnecessary #address/#size-cells
-Date: Mon,  7 May 2018 09:17:51 -0300
-Message-ID: <1525695471-19984-1-git-send-email-festevam@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net
-Cc: f.fainelli@gmail.com, andrew@lunn.ch, robh+dt@kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v4 0/3] SY8106A regulator support and enable it
+ on Orange Pi PC
+Date: Mon,  7 May 2018 20:29:39 +0800
+Message-ID: <20180507122942.25758-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBAMOYHLQKGQEZCK6RRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+This patchset adds dt-bindings and driver for Silergy SY8106A, and then
+utilize it on the Orange Pi PC board, which uses SY8016A as its CPUX
+(main ARM CPU cluster in an Allwinner SoC) power supply.
 
-If the example binding is used on a real dts file, the following DTC
-warning is seen with W=1:
-    
-arch/arm/boot/dts/imx6q-b450v3.dtb: Warning (avoid_unnecessary_addr_size): /mdio-gpio/switch@0: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+The driver's functionality is restricted now, mainly {en,dis}able function
+is not yet implemented, as it cannot be debugged on Orange Pi PC
+(disable it will kill Linux).
 
-Remove unnecessary #address-cells/#size-cells to improve the binding
-document examples.
+Ondrej Jirman (3):
+  dt-bindings: add binding for the SY8106A voltage regulator
+  regulator: add support for SY8106A regulator
+  ARM: dts: sun8i: h3: Add SY8106A regulator to Orange Pi PC
 
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
----
- Documentation/devicetree/bindings/net/dsa/dsa.txt | 6 ------
- 1 file changed, 6 deletions(-)
+ .../bindings/regulator/sy8106a-regulator.txt  |  23 +++
+ MAINTAINERS                                   |   6 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts    |  28 +++
+ drivers/regulator/Kconfig                     |   7 +
+ drivers/regulator/Makefile                    |   2 +-
+ drivers/regulator/sy8106a-regulator.c         | 168 ++++++++++++++++++
+ 6 files changed, 233 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/sy8106a-regulator.txt
+ create mode 100644 drivers/regulator/sy8106a-regulator.c
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/dsa.txt b/Documentation/devicetree/bindings/net/dsa/dsa.txt
-index cfe8f64..3ceeb8d 100644
---- a/Documentation/devicetree/bindings/net/dsa/dsa.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/dsa.txt
-@@ -82,8 +82,6 @@ linked into one DSA cluster.
- 
- 	switch0: switch0@0 {
- 		compatible = "marvell,mv88e6085";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		reg = <0>;
- 
- 		dsa,member = <0 0>;
-@@ -135,8 +133,6 @@ linked into one DSA cluster.
- 
- 	switch1: switch1@0 {
- 		compatible = "marvell,mv88e6085";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		reg = <0>;
- 
- 		dsa,member = <0 1>;
-@@ -204,8 +200,6 @@ linked into one DSA cluster.
- 
- 	switch2: switch2@0 {
- 		compatible = "marvell,mv88e6085";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		reg = <0>;
- 
- 		dsa,member = <0 2>;
 -- 
-2.7.4
+2.17.0
