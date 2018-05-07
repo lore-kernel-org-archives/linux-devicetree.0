@@ -1,77 +1,83 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [EXTERNAL] Re: [PATCH] arm: dts: am437x-sk-evm: add wilink8
- support
-Date: Mon, 7 May 2018 08:08:21 -0700
-Message-ID: <20180507150821.GM98604@atomide.com>
-References: <1525159453-32489-1-git-send-email-eyalr@ti.com>
- <20180502145100.GK98604@atomide.com>
- <5cc906da15da45ab96e06957f878b65b@ti.com>
- <20180503141759.GP98604@atomide.com>
- <f0ea5260b3e2413aab4780b203ff24a4@ti.com>
- <20180506165621.GL98604@atomide.com>
- <a4dd3009f0f5492d8756f42c11590423@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [GIT PULL] DeviceTree fixes for 4.17
+Date: Mon, 7 May 2018 10:09:49 -0500
+Message-ID: <CAL_JsqJcQnEoWK8F0f1SzUstAPvYyRwht4UQOo1ZLGb6t-o8YQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a4dd3009f0f5492d8756f42c11590423@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Reizer, Eyal" <eyalr@ti.com>
-Cc: Eyal Reizer <eyalreizer@gmail.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Loewy, Chen" <c-loewy@ti.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-* Reizer, Eyal <eyalr@ti.com> [180507 06:57]:
-> Hi Tony,
-> 
-> > 
-> > Yeah my guess is that the reason for the separate GPIO interrupt was
-> > that on omap3 we did not have SDIO interrupt working for years. This was
-> > because of the issues related to padconf interrupts for off mode.
-> > 
-> > We now have Linux generic wakeirq support working with SDIO and it has
-> > been confirmed to work also for off mode with mwifiex at least. So
-> > there should be no reason to not also use the SDIO interrupt.
-> > 
-> 
-> There is more to this than just the padconf.
-> Using in-band interrupt instead of the out of band one requires
-> Supporting a feature called "Asynchronous interrupts in 4Bit mode"
-> Which is part of SDIO 3.0 spec:
-> https://www.sdcard.org/downloads/pls/pdf/index.php?p=PartE1_SDIO_Simplified_Specification_Ver3.00.jpg&f=PartE1_SDIO_Simplified_Specification_Ver3.00.pdf&e=EN_SSE1
-> 
-> Take a look at page 41 at the bottom part of the table.
-> Wilink8 supports this feature but AFAIK this support is still not part of the 
-> mmc/sdio core in the Linux kernel.
-> If we want wilink8 to trigger a host wakeup using the in-band interrupt instead 
-> Of the wlan_irq pin we would need to enable/use this feature.
+Hi Linus,
 
-Well the SDIO dat line interrupt is working just fine with
-mwifiex_sdio driver and runtime PM like I said :)
+Please pull DT fixes for 4.17. Details below.
 
-> I did use it internally in the past and was able to patch the Ubuntu kernel 
-> (3.5.0 at that time) to use wilink8 in a standard SD Card slot of an Ubuntu Laptop 
-> while removing the use of wlan_irq pin completely.
-> However this was an experimental patch set written by a third party 
-> that was not up-steamtable at that time.
-> I do have this patch set somewhere...
-> 
-> It is similar to the following patch which is not  upstream as well for some reason:
-> https://gitlab.com/k2wl/g2_kernel/commit/5c4970fdaa50422d7ea7220efa20fb35148a4bca
-> It is not the only patch needed, there are a couple of additional patches needed 
-> for fully using it from driver.
-> I did check latest Linux-next and don't see this support there. Not sure why.
+Rob
 
-Hmm not sure if this is needed here. When things enter idle, the whole
-SDIO block is off and the SDIO dat interrupt is delivered as wakeirq to
-the pinctrl-single driver instead that manages padconf wake events.
-Then we have runtime PM wake up MMC subsystem and the SDIO dat line
-interrupt is still there and will trigger as it's level sensitive.
 
-So the test to do would be simply configure wlcore to use SDIO dat line
-interrupt instead of the GPIO interrupt and configure a wakeirq for
-the board on the SDIO dat line. Sounds like I need to get my wlcore
-runtime PM patches ready though as that is needed for using the wakeirq.
+The following changes since commit 60cc43fc888428bb2f18f08997432d426a243338:
 
-Regards,
+  Linux 4.17-rc1 (2018-04-15 18:24:20 -0700)
 
-Tony
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-fixes-for-4.17
+
+for you to fetch changes up to f130307054a59ca21d2396f386be77ebd2e8ca96:
+
+  dt-bindings: panel: lvds: Fix path to display timing bindings
+(2018-05-01 09:26:31 -0500)
+
+----------------------------------------------------------------
+DeviceTree fixes for 4.17:
+
+- Fix path to display timing binding
+
+- Fix some typos in interrupt-names and clock-names
+
+- Fix a resource leak on overlay removal
+
+- Add missing documentation for R8A77965 DMA, serial, and net
+
+- Cleanup sunxi pinctrl description
+
+- Add Kieback & Peter GmbH vendor prefix
+
+----------------------------------------------------------------
+Geert Uytterhoeven (3):
+      dt-bindings: meson-uart: DT fix s/clocks-names/clock-names/
+      dt-bindings: mvebu-uart: DT fix s/interrupts-names/interrupt-names/
+      dt-bindings: panel: lvds: Fix path to display timing bindings
+
+Jacopo Mondi (3):
+      dt-bindings: net: ravb: Add support for r8a77965 SoC
+      dt-bindings: serial: sh-sci: Add support for r8a77965 (H)SCIF
+      dt-bindings: dmaengine: rcar-dmac: document R8A77965 support
+
+Jan Kiszka (1):
+      of: overlay: Stop leaking resources on overlay removal
+
+Lukasz Majewski (1):
+      doc: Add vendor prefix for Kieback & Peter GmbH
+
+Matheus Castello (1):
+      dt-bindings: pinctrl: sunxi: Fix reference to driver
+
+Rob Herring (1):
+      dtc: checks: drop warning for missing PCI bridge bus-range
+
+ .../bindings/display/panel/panel-common.txt        |  2 +-
+ .../devicetree/bindings/dma/renesas,rcar-dmac.txt  |  1 +
+ .../devicetree/bindings/net/renesas,ravb.txt       |  1 +
+ .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |  6 ++---
+ .../bindings/serial/amlogic,meson-uart.txt         |  2 +-
+ .../devicetree/bindings/serial/mvebu-uart.txt      |  2 +-
+ .../bindings/serial/renesas,sci-serial.txt         |  2 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ Documentation/devicetree/overlay-notes.txt         |  8 ++++++
+ drivers/of/overlay.c                               | 30 +++++++++++++++-------
+ scripts/dtc/checks.c                               |  5 ++--
+ 11 files changed, 42 insertions(+), 18 deletions(-)
