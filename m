@@ -1,125 +1,76 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [RFC PATCH] driver core: make deferring probe forever optional
-Date: Mon, 7 May 2018 11:31:06 -0700
-Message-ID: <20180507183106.GF2259@tuxbook-pro>
-References: <20180501213114.20183-1-robh@kernel.org>
+Subject: Re: [PATCH V3] Input: pm8941-pwrkey: add resin key capabilities
+Date: Mon, 7 May 2018 11:46:59 -0700
+Message-ID: <20180507184659.GG2259@tuxbook-pro>
+References: <1521786192-19487-1-git-send-email-tirupath@codeaurora.org>
+ <20180505001039.GA112416@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180501213114.20183-1-robh@kernel.org>
+In-Reply-To: <20180505001039.GA112416@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@kernel.org>, boot-architecture@lists.linaro.org, linux-arm-kernel@lists.infradead.org, Alexander Graf <agraf@suse.de>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Tirupathi Reddy <tirupath@codeaurora.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 01 May 14:31 PDT 2018, Rob Herring wrote:
+On Fri 04 May 17:10 PDT 2018, Dmitry Torokhov wrote:
 
-> Deferred probe will currently wait forever on dependent devices to probe,
-> but sometimes a driver will never exist. It's also not always critical for
-> a driver to exist. Platforms can rely on default configuration from the
-> bootloader or reset defaults for things such as pinctrl and power domains.
-
-But how do you know if this is the case?
-
-> This is often the case with initial platform support until various drivers
-> get enabled.
-
-Can you please name platform that has enough support for Alexander to
-care about backwards and forwards compatibility but lacks a pinctrl
-driver.
-
-> There's at least 2 scenarios where deferred probe can render
-> a platform broken. Both involve using a DT which has more devices and
-> dependencies than the kernel supports. The 1st case is a driver may be
-> disabled in the kernel config.
-
-I agree that there is a chance that you _might_ get some parts of the
-system working by relying on the boot loader configuration, but
-misconfiguration issues applies to any other fundamental providers, such
-as clocks, regulators, power domains and gpios as well.
-
-> The 2nd case is the kernel version may
-> simply not have the dependent driver. This can happen if using a newer DT
-> (provided by firmware perhaps) with a stable kernel version.
+> Hi Tirupathi,
 > 
-
-As above, this is in no way limited to pinctrl drivers.
-
-> Unfortunately, this change breaks with modules as we have no way of
-> knowing when modules are done loading. One possibility is to make this
-> opt in or out based on compatible strings rather than at a subsystem level.
-> Ideally this information could be extracted automatically somehow. OTOH,
-> maybe the lists are pretty small. There's only a handful of subsystems
-> that can be optional, and then only so many drivers in those that can be
-> modules (at least for pinctrl, many drivers are built-in only).
+> On Fri, Mar 23, 2018 at 11:53:12AM +0530, Tirupathi Reddy wrote:
+> > Add resin key support to handle different types of key events
+> > defined in different platforms.
+> > 
+> > Signed-off-by: Tirupathi Reddy <tirupath@codeaurora.org>
+> > ---
+> >  .../bindings/input/qcom,pm8941-pwrkey.txt          | 32 +++++++++
+> >  drivers/input/misc/pm8941-pwrkey.c                 | 81 ++++++++++++++++++++++
+> >  2 files changed, 113 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+[..]
+> >  EXAMPLE
+> >  
+> >  	pwrkey@800 {
+> > @@ -40,4 +66,10 @@ EXAMPLE
+> >  		interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
+> >  		debounce = <15625>;
+> >  		bias-pull-up;
+> > +
+> > +		resin {
+> > +			interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
+> > +			linux,code = <KEY_VOLUMEDOWN>;
+> > +			bias-pull-up;
+> > +		};
+> >  	};
 > 
-
-On the Qualcomm platform most drivers are tristate and on most platforms
-there are size restrictions in the proprietary boot loader preventing us
-from boot the kernel after switching all these frameworks from tristate
-to bool (which feels like a more appropriate solution than your hack).
-
-> Cc: Alexander Graf <agraf@suse.de>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> This patch came out of a discussion on the ARM boot-architecture 
-> list[1] about DT forwards and backwards compatibility issues. There are 
-> issues with newer DTs breaking on older, stable kernels. Some of these 
-> are difficult to solve, but cases of optional devices not having 
-> kernel support should be solvable.
+> The new key and power key bindings are very similar, I would prefer if
+> we shared the parsing code and our new DTS looked like:
 > 
-
-There are two cases here:
-1) DT contains compatibles that isn't supported by the kernel. In this
-case the associated device will remain in the probe deferral list and
-user space won't know about the device.
-
-2) DT contains compatibles known to the kernel but has new optional
-properties that makes things functional or works around hardware bugs.
-
-> I tested this on a RPi3 B with the pinctrl driver forced off. With this 
-> change, the MMC/SD and UART drivers can function without the pinctrl 
-> driver.
-> 
-
-Cool, so what about graphics, audio, networking, usb and all the other
-things that people actually expect when they _use_ a distro?
-
-> Rob
-> 
-> [1] https://lists.linaro.org/pipermail/boot-architecture/2018-April/000466.html
-> 
->  drivers/base/dd.c            | 16 ++++++++++++++++
->  drivers/pinctrl/devicetree.c |  2 +-
->  include/linux/device.h       |  2 ++
->  3 files changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index c9f54089429b..5848808b9d7a 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -226,6 +226,15 @@ void device_unblock_probing(void)
->  	driver_deferred_probe_trigger();
->  }
+> 		power {
+> 			...
+> 		};
 >  
-> +
-> +int driver_deferred_probe_optional(void)
-> +{
-> +	if (initcalls_done)
-> +		return -ENODEV;
+> 		resin {
+> 			...
+> 		};
+> 
+> (we can easily keep backward compatibility with power properties being
+> in device node).
+> 
 
-You forgot the humongous printout here that tells the users that we do
-not want any bug reports related hardware not working as expected after
-this point.
+As discussed here https://patchwork.kernel.org/patch/9751627/ the PON
+block does, in addition to providing power and resin key support also
+handle the restart reason ("reboot bootloader" in Android).
 
-> +
-> +	return -EPROBE_DEFER;
-> +}
-> +
+My interpretation of our conclusion was to come up with a new binding
+for the "pon" and a driver for this block that instantiates the power
+key device.
 
-I do not agree with the partial benefits of this at the cost of not
-supporting kernel modules.
+It seems reasonable for such binding to describe the two keys, as you
+propose here Dmitry, and instantiates the two input devices based on
+this.
 
 Regards,
 Bjorn
