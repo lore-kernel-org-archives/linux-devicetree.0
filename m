@@ -1,153 +1,57 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Add dts file for the A20-linova1-7
- HMI
-Date: Mon, 7 May 2018 09:30:13 +0200
-Message-ID: <20180507073013.dvtbmwi4ora6tdj2@flea>
-References: <1521662593-25468-7-git-send-email-giulio.benetti@micronovasrl.com>
- <20180322180508.my64gobhh5rc2x2m@flea>
- <8ef3b259-03b4-6987-286e-36ff627a8b76@micronovasrl.com>
- <20180424084137.7xfwji2gcibxavvt@flea>
- <03a02abb-e95c-b4ec-748f-907c0af67969@micronovasrl.com>
- <20180425184016.xktppxw7egddr7li@flea>
- <42feccc9-1d09-9ff2-3ccc-1dea63bacfb6@micronovasrl.com>
- <839d2560-0250-9b3a-8019-4e83d9e931e2@micronovasrl.com>
- <20180504080652.dniwaqqhbeuknp7y@flea>
- <afc78821-2d08-3f4f-d008-5b2d216e96c0@micronovasrl.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v2 03/14] dt-bindings: qcom_nandc: make
+ nand-ecc-strength optional
+Date: Mon, 7 May 2018 10:40:10 +0200
+Message-ID: <20180507104010.620a4b43@bbrezillon>
+References: <1525350041-22995-1-git-send-email-absahu@codeaurora.org>
+        <1525350041-22995-4-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0776681297=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <afc78821-2d08-3f4f-d008-5b2d216e96c0@micronovasrl.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1525350041-22995-4-git-send-email-absahu@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Abhishek Sahu <absahu@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, Richard Weinberger <richard@nod.at>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Andy Gross <andy.gross@linaro.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu,  3 May 2018 17:50:30 +0530
+Abhishek Sahu <absahu@codeaurora.org> wrote:
 
---===============0776681297==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="o7fuc4npexahvokm"
-Content-Disposition: inline
+> Now, nand-ecc-strength is optional. If specified in DT, then
+> controller will use this ECC strength otherwise ECC strength will
+> be calculated according to chip requirement and available OOB size.
+> 
+> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> ---
+> * Changes from v1:
+> 
+>   NEW PATCH
+> 
+>  Documentation/devicetree/bindings/mtd/qcom_nandc.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> index 73d336be..f246aa0 100644
+> --- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> @@ -45,11 +45,13 @@ Required properties:
+>  			number (e.g., 0, 1, 2, etc.)
+>  - #address-cells:	see partition.txt
+>  - #size-cells:		see partition.txt
+> -- nand-ecc-strength:	see nand.txt
+>  - nand-ecc-step-size:	must be 512. see nand.txt for more details.
 
+As mentioned in my other review, no need to specify nand-ecc-step-size
+if you don't have a choice. You can remove the property and say that
+nand-ecc-strength encodes the ECC strength for 512 bytes chunks.
 
---o7fuc4npexahvokm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, May 04, 2018 at 11:52:59PM +0200, Giulio Benetti wrote:
-> Hi Maxime!
->=20
-> Il 04/05/2018 10:06, Maxime Ripard ha scritto:
-> > Hi,
-> >=20
-> > On Wed, May 02, 2018 at 06:41:34PM +0200, Giulio Benetti wrote:
-> > > > > You don't have to handcode the fragments anymore with the new syn=
-tax,
-> > > > > and U-Boot makes it really trivial to use if you use the FIT image
-> > > > > format to have multiple overlays bundled in the same image. You c=
-an
-> > > > > choose to apply them dynamically, for example based on an EEPROM =
-or
-> > > > > some other metric to see which combination you have.
-> > > >=20
-> > > > Ah, this is interesting. I'm going to experiment with that.
-> > > >=20
-> > >=20
-> > > I'm struggling against this, I don't really know how to proceed,
-> > > except keeping monolithic dts files including other dtsi files.
-> > >=20
-> > > About dt-overlays I've tried to look around lot of time,
-> > > but the only thing I've found is this:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers=
-=2Egit/tree/arch/arm/boot/dts?h=3Dtopic/renesas-overlays
-> > >=20
-> > > where they use .dtso tagging them as "/plugin/;"
-> > > and compile all .dtso found in dts folder.
-> > > Then they obtain .dtbo files that should be the dt-overlays we have s=
-poken
-> > > about right?
-> >=20
-> > Yes. You don't have to do that though, you can just rely on dtc to
-> > compile them, outside of the linux build system.
-> >=20
-> > > What I can't understand is if there's a real standard at this time to
-> > > follow, because on renesas-driver they use their way to handle all .d=
-tso
-> > > files, but on mainline there seems to be nothing about that.
-> >=20
-> > I'm not sure what you mean here. It's just fragments of device tree,
-> > that have to be compiled using dtc, that's it. You can use the Linux
-> > build system infrastructure to do that, or you can build your own
-> > simpler one. That's really up to you. See for example
-> > https://github.com/NextThingCo/CHIP-dt-overlays/blob/master/Makefile
-> >=20
-> > (even though the overlays themselves use the legacy syntax and
-> > shouldn't really be used an examples)
->=20
-> Everything works now!
-> Thank you very much!
-> I've setted up a Repo on Github to give an example on how make it work wi=
-th
-> no pain:
-> https://github.com/micronovasrl/linova-dtoverlays
->=20
-> At the moment it's a mess all around, but it's working and give an idea on
-> how to make it work. Though I'm going to clean it up well as a base for
-> linova dtoverlays.
->=20
-> Ah, btw, can you confirm me that base dts file must be compiled outside
-> kernel with:
-> dtc -@ ....
-> Otherwise as in-tree dts with make dtbs "-@" argument is not passed.
-> Right?
-
-You should use DTC_FLAGS=3D'-@'
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---o7fuc4npexahvokm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrwAIQACgkQ0rTAlCFN
-r3SVLw/+LDFHwA0c8/mSHzlpzdmP/6fgR7yVzo0kZSEglnGdAdT6w1VeAQR18wNS
-Zlce+zpJPayARbe3Srp4Sm2epC6CeS0m2hEClrvuOT3tEJP9MNTsOwFm2KlHPg0Y
-ZZiq2A/LM11cOCZNg6K5KZyskOzd4LAO9ssmeDtKDd8bxzfU0M5P53qNuTwK7AJ4
-64Ih0sKM9pCiY4bnj9TOoFJF90he6ofSyXYVCe20d7m6FU2vl1L1fT0fKk1ovOS5
-Ugvw+Fg2/63SQXsOGvmQW7OWSGD+mRiqXunwfkxgvfo/rOpBZMSpbUYvbgCp52Hc
-i1kvvX3cdaQuJw9dpnvpuxpfMkB7oRjlNpuP1SXDSjVCYvtya6vuzXJC+b5WCWhD
-77gVxs5Sf0kwpo0hJw8OMwW1IlFv7e+DQr1vseE06PEN2NXhNfOXhwHLQES7sQTc
-o/j3KiGUiTIqcXfdo1tt10T9Yk1LQaVDq8tA/2LXoPQH+FL+kdZQqYBT5TYAIn+M
-NbnuaPcBQSNNM3pkJtW3aO8ehFG3/010nsCDMejCVK1XNjI1GlXguoDsrI0OGHoU
-D4GyA8zUNruqB5z3788YDD/1Xph3Gil/AXJefT2yGrnvesmSJD+7MPOLuNO6vCVh
-Isx3ruQNTU4B5lXGlNCK8DJqUytZNH2LllceQBR1tAmqBFkaG7A=
-=20SU
------END PGP SIGNATURE-----
-
---o7fuc4npexahvokm--
-
---===============0776681297==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0776681297==--
+>  
+>  Optional properties:
+>  - nand-bus-width:	see nand.txt
+> +- nand-ecc-strength:	see nand.txt. If not specified, then ECC strength will
+> +			be used according to chip requirement and available
+> +			OOB size.
+>  
+>  Each nandcs device node may optionally contain a 'partitions' sub-node, which
+>  further contains sub-nodes describing the flash partition mapping. See
