@@ -1,46 +1,32 @@
-Return-Path: <SRS0=jssF=H2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from albert.telenet-ops.be ([195.130.137.90]:57702 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752029AbeEGNkH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 7 May 2018 09:40:07 -0400
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 0/2] ARM: dts: renesas: Add missing interrupt-affinity to PMU
-Date: Mon,  7 May 2018 15:40:03 +0200
-Message-Id: <1525700405-7993-1-git-send-email-geert+renesas@glider.be>
-Sender: devicetree-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 7 May 2018 15:45:57 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] Documentation: dt: edac: Move Altera SOCFPGA EDAC file
+Message-ID: <20180507204557.GA18719@rob-hp-laptop>
+References: <1525203036-21774-1-git-send-email-thor.thayer@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1525203036-21774-1-git-send-email-thor.thayer@linux.intel.com>
+To: thor.thayer@linux.intel.com
+Cc: bp@alien8.de, mchehab@kernel.org, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-	Hi Simon, Magnus,
+On Tue, May 01, 2018 at 02:30:36PM -0500, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> Move the Altera SOCFPGA EDAC file from bindings/arm/altera to
+> bindings/edac.
+> 
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> ---
+>  .../bindings/arm/altera/socfpga-eccmgr.txt         | 268 ---------------------
+>  .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 268 +++++++++++++++++++++
+>  2 files changed, 268 insertions(+), 268 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
+>  create mode 100644 Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
 
-The Cortex-A9 PMU nodes on SH-Mobile AG5 and Emma Mobile EV2 reference
-two interrupts, but lack interrupt-affinity properties, leading to:
+Next time be sure to use the -M option to show moves (or set the git 
+config option permanently).
 
-    hw perfevents: no interrupt-affinity property for /pmu, guessing.
-
-This series adds the missing properties to fix this.
-
-Thanks!
-
-Geert Uytterhoeven (2):
-  ARM: dts: sh73a0: Add missing interrupt-affinity to PMU node
-  ARM: dts: emev2: Add missing interrupt-affinity to PMU node
-
- arch/arm/boot/dts/emev2.dtsi  | 5 +++--
- arch/arm/boot/dts/sh73a0.dtsi | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
-
--- 
-2.7.4
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+Acked-by: Rob Herring <robh@kernel.org>
