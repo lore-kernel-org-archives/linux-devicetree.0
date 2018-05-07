@@ -1,14 +1,22 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 3/3] ARM: dts: sun7i: Add support for the Ainol AW1
- tablet
-Date: Mon, 7 May 2018 09:19:31 +0200
-Message-ID: <20180507071931.tebv45yxrojxxkeb@flea>
-References: <20180506214901.23429-1-contact@paulk.fr>
- <20180506214901.23429-3-contact@paulk.fr>
+Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Add dts file for the A20-linova1-7
+ HMI
+Date: Mon, 7 May 2018 09:30:13 +0200
+Message-ID: <20180507073013.dvtbmwi4ora6tdj2@flea>
+References: <1521662593-25468-7-git-send-email-giulio.benetti@micronovasrl.com>
+ <20180322180508.my64gobhh5rc2x2m@flea>
+ <8ef3b259-03b4-6987-286e-36ff627a8b76@micronovasrl.com>
+ <20180424084137.7xfwji2gcibxavvt@flea>
+ <03a02abb-e95c-b4ec-748f-907c0af67969@micronovasrl.com>
+ <20180425184016.xktppxw7egddr7li@flea>
+ <42feccc9-1d09-9ff2-3ccc-1dea63bacfb6@micronovasrl.com>
+ <839d2560-0250-9b3a-8019-4e83d9e931e2@micronovasrl.com>
+ <20180504080652.dniwaqqhbeuknp7y@flea>
+ <afc78821-2d08-3f4f-d008-5b2d216e96c0@micronovasrl.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0014935768=="
+Content-Type: multipart/mixed; boundary="===============0776681297=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180506214901.23429-3-contact@paulk.fr>
+In-Reply-To: <afc78821-2d08-3f4f-d008-5b2d216e96c0@micronovasrl.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -18,280 +26,90 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Paul Kocialkowski <contact@paulk.fr>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============0014935768==
+--===============0776681297==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="y6g2nzcki4pe24es"
+	protocol="application/pgp-signature"; boundary="o7fuc4npexahvokm"
 Content-Disposition: inline
 
 
---y6g2nzcki4pe24es
+--o7fuc4npexahvokm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Sun, May 06, 2018 at 11:49:01PM +0200, Paul Kocialkowski wrote:
-> This adds support for the Ainol AW1, an A20-based 7" tablet from Ainol.
+On Fri, May 04, 2018 at 11:52:59PM +0200, Giulio Benetti wrote:
+> Hi Maxime!
 >=20
-> The following board-specific features are supported:
-> * LCD panel
-> * Backlight
-> * USB OTG
-> * Buttons
-> * Touchscreen (doesn't work without non-free firmware)
-> * Accelerometer
-> * Battery
+> Il 04/05/2018 10:06, Maxime Ripard ha scritto:
+> > Hi,
+> >=20
+> > On Wed, May 02, 2018 at 06:41:34PM +0200, Giulio Benetti wrote:
+> > > > > You don't have to handcode the fragments anymore with the new syn=
+tax,
+> > > > > and U-Boot makes it really trivial to use if you use the FIT image
+> > > > > format to have multiple overlays bundled in the same image. You c=
+an
+> > > > > choose to apply them dynamically, for example based on an EEPROM =
+or
+> > > > > some other metric to see which combination you have.
+> > > >=20
+> > > > Ah, this is interesting. I'm going to experiment with that.
+> > > >=20
+> > >=20
+> > > I'm struggling against this, I don't really know how to proceed,
+> > > except keeping monolithic dts files including other dtsi files.
+> > >=20
+> > > About dt-overlays I've tried to look around lot of time,
+> > > but the only thing I've found is this:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers=
+=2Egit/tree/arch/arm/boot/dts?h=3Dtopic/renesas-overlays
+> > >=20
+> > > where they use .dtso tagging them as "/plugin/;"
+> > > and compile all .dtso found in dts folder.
+> > > Then they obtain .dtbo files that should be the dt-overlays we have s=
+poken
+> > > about right?
+> >=20
+> > Yes. You don't have to do that though, you can just rely on dtc to
+> > compile them, outside of the linux build system.
+> >=20
+> > > What I can't understand is if there's a real standard at this time to
+> > > follow, because on renesas-driver they use their way to handle all .d=
+tso
+> > > files, but on mainline there seems to be nothing about that.
+> >=20
+> > I'm not sure what you mean here. It's just fragments of device tree,
+> > that have to be compiled using dtc, that's it. You can use the Linux
+> > build system infrastructure to do that, or you can build your own
+> > simpler one. That's really up to you. See for example
+> > https://github.com/NextThingCo/CHIP-dt-overlays/blob/master/Makefile
+> >=20
+> > (even though the overlays themselves use the legacy syntax and
+> > shouldn't really be used an examples)
 >=20
-> The following are untested:
-> * Audio output
-> * Audio speakers
-> * USB via SPCI connector
+> Everything works now!
+> Thank you very much!
+> I've setted up a Repo on Github to give an example on how make it work wi=
+th
+> no pain:
+> https://github.com/micronovasrl/linova-dtoverlays
 >=20
-> The following are not supported:
-> * Wi-Fi
-> * Bluetooth
-> * NAND
-> * Audio via SPCI connector
-> * Audio via Bluetooth I2S
+> At the moment it's a mess all around, but it's working and give an idea on
+> how to make it work. Though I'm going to clean it up well as a base for
+> linova dtoverlays.
 >=20
-> Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
-> ---
->  arch/arm/boot/dts/Makefile                |   1 +
->  arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts | 275 ++++++++++++++++++++++
->  2 files changed, 276 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
->=20
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 7e2424957809..4a80971f2bc9 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -946,6 +946,7 @@ dtb-$(CONFIG_MACH_SUN6I) +=3D \
->  	sun6i-a31s-sinovoip-bpi-m2.dtb \
->  	sun6i-a31s-yones-toptech-bs1078-v2.dtb
->  dtb-$(CONFIG_MACH_SUN7I) +=3D \
-> +	sun7i-a20-ainol-aw1.dtb \
->  	sun7i-a20-bananapi.dtb \
->  	sun7i-a20-bananapi-m1-plus.dtb \
->  	sun7i-a20-bananapro.dtb \
-> diff --git a/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts b/arch/arm/boot/dt=
-s/sun7i-a20-ainol-aw1.dts
-> new file mode 100644
-> index 000000000000..9a1d54a9f9a0
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
-> @@ -0,0 +1,275 @@
-> +/*
-> + * Copyright (C) 2018 Paul Kocialkowski <contact@paulk.fr>
-> + *
-> + * SPDX-License-Identifier: GPL-2.0+
+> Ah, btw, can you confirm me that base dts file must be compiled outside
+> kernel with:
+> dtc -@ ....
+> Otherwise as in-tree dts with make dtbs "-@" argument is not passed.
+> Right?
 
-This should be your first line. Also, we usually license our DT under
-a dual license (GPL and MIT) so that other projects (like FreeBSD) can
-use them as well, instead of duplicating them. It would be great if
-you'd consider it.
-
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun7i-a20.dtsi"
-> +#include "sunxi-common-regulators.dtsi"
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/pwm/pwm.h>
-> +
-> +/ {
-> +	model =3D "Ainol AW1";
-> +	compatible =3D "ainol,ainol-aw1", "allwinner,sun7i-a20";
-> +
-> +	aliases {
-> +		serial0 =3D &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path =3D "serial0:115200n8";
-> +	};
-> +
-> +	backlight: backlight {
-> +		compatible =3D "pwm-backlight";
-> +		pwms =3D <&pwm 0 50000 PWM_POLARITY_INVERTED>;
-> +		brightness-levels =3D <0 10 20 30 40 50 60 70 80 90 100>;
-
-The increase in perceived brightness should be linear. Usually, for
-PWMs backed backlight, an exponential list is a much better
-approximation.
-
-> +		default-brightness-level =3D <5>;
-> +		enable-gpios =3D <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
-> +	};
-> +
-> +	panel: panel {
-> +		compatible =3D "innolux,at070tn90";
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +		power-supply =3D <&panel_power>;
-> +		backlight =3D <&backlight>;
-> +
-> +		port@0 {
-> +			reg =3D <0>;
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +
-> +			panel_input: endpoint@0 {
-> +				reg =3D <0>;
-> +				remote-endpoint =3D <&tcon0_out_panel>;
-> +			};
-> +		};
-> +	};
-> +
-> +	panel_power: panel_power {
-> +		compatible =3D "regulator-fixed";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&panel_power_pin>;
-> +		regulator-name =3D "panel-power";
-> +		regulator-min-microvolt =3D <10400000>;
-> +		regulator-max-microvolt =3D <10400000>;
-> +		gpio =3D <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
-> +		enable-active-high;
-> +		regulator-boot-on;
-> +	};
-> +};
-> +
-> +&codec {
-> +	allwinner,pa-gpios =3D <&pio 7 15 GPIO_ACTIVE_HIGH>; /* PH15 */
-> +	status =3D "okay";
-> +};
-> +
-> +&cpu0 {
-> +	cpu-supply =3D <&reg_dcdc2>;
-> +};
-> +
-> +&de {
-> +	status =3D "okay";
-> +};
-> +
-> +&ehci0 {
-> +	status =3D "okay";
-> +};
-> +
-> +&ehci1 {
-> +	status =3D "okay";
-> +};
-> +
-> +&i2c0 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&i2c0_pins_a>;
-> +	status =3D "okay";
-> +
-> +	axp209: pmic@34 {
-> +		reg =3D <0x34>;
-> +		interrupt-parent =3D <&nmi_intc>;
-> +		interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&i2c1_pins_a>;
-> +	status =3D "okay";
-> +
-> +	lis3dh: accelerometer@18 {
-> +		compatible =3D "st,lis3dh-accel";
-> +		reg =3D <0x18>;
-> +		vdd-supply =3D <&reg_vcc3v3>;
-> +		vddio-supply =3D <&reg_vcc3v3>;
-> +		st,drdy-int-pin =3D <1>;
-> +	};
-> +};
-> +
-> +&i2c2 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&i2c2_pins_a>;
-> +	status =3D "okay";
-> +	clock-frequency =3D <400000>;
-> +
-> +	gsl1680: touchscreen@40 {
-> +		compatible =3D "silead,gsl1680";
-> +		reg =3D <0x40>;
-> +		interrupt-parent =3D <&pio>;
-> +		interrupts =3D <7 21 IRQ_TYPE_EDGE_FALLING>; /* EINT21 (PH21) */
-> +		power-gpios =3D <&pio 7 20 GPIO_ACTIVE_HIGH>; /* PH20 */
-> +		firmware-name =3D "gsl1680-ainol-aw1.fw";
-> +		touchscreen-size-x =3D <480>;
-> +		touchscreen-size-y =3D <800>;
-> +		touchscreen-swapped-x-y;
-> +		touchscreen-inverted-y;
-> +		silead,max-fingers =3D <5>;
-> +	};
-> +};
-> +
-> +&lradc {
-> +	vref-supply =3D <&reg_ldo2>;
-> +	status =3D "okay";
-> +
-> +	button@571 {
-> +		label =3D "Volume Up";
-> +		linux,code =3D <KEY_VOLUMEUP>;
-> +		channel =3D <0>;
-> +		voltage =3D <571428>;
-> +	};
-> +
-> +	button@761 {
-> +		label =3D "Volume Down";
-> +		linux,code =3D <KEY_VOLUMEDOWN>;
-> +		channel =3D <0>;
-> +		voltage =3D <761904>;
-> +	};
-> +
-> +	button@952 {
-> +		label =3D "Home";
-> +		linux,code =3D <KEY_HOME>;
-> +		channel =3D <0>;
-> +		voltage =3D <952380>;
-> +	};
-> +};
-> +
-> +&mmc0 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&mmc0_pins_a>;
-> +	vmmc-supply =3D <&reg_vcc3v3>;
-
-You have the regulators described in your DT, you'd better use them
-instead of the one coming from sunxi-common-regulators.dtsi.
-
-> +	bus-width =3D <4>;
-> +	cd-gpios =3D <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-> +	cd-inverted;
-> +	status =3D "okay";
-> +};
-> +
-> +&ohci0 {
-> +	status =3D "okay";
-> +};
-> +
-> +&ohci1 {
-> +	status =3D "okay";
-> +};
-> +
-> +&otg_sram {
-> +	status =3D "okay";
-> +};
-> +
-> +&pio {
-> +	panel_power_pin: panel_power_pin@0 {
-> +		pins =3D "PH8";
-> +		function =3D "gpio_out";
-> +	};
-> +};
-
-You don't need that pinctrl node.
+You should use DTC_FLAGS=3D'-@'
 
 Maxime
 
@@ -300,29 +118,29 @@ Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---y6g2nzcki4pe24es
+--o7fuc4npexahvokm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrv/gIACgkQ0rTAlCFN
-r3S4UA//UubFJ13xD4IpAyFnbvWrCjeIWtq2X4UddRSR0w1iLgZb2e4piqvGLa5H
-QBOS89vTHtjPxJVhdtZkX4bTHy/E+GMa1fQuMNGlVetRvYQfUx9XXabFMwQXVgw9
-8bdVeyB1AxNDm7PID49cjQcYJtW6005+e1CjMKi6/IR683iXhGqwuS9HfojwXK/Y
-oZakCLNWebFfY8fo91dtvjgzTWrgSvH3uDQKQDam3EBLLO0U3BRF9A6emrNQ33tz
-3K/bxuk7B6zzbNHvG9ZUw9iruP4OBOfCBZaQnnWcwbC38OQ6XvnfEIm+haHJ8Awv
-CkOh2DCyMYvE47FKb65yfhB1bGGdOBySinnPkAazFtW2LC/1VzhtO+Ctdpl8A1Hk
-HMIwQAp1Ped7+2puRamhc9QVf0YRt1UyUaSShngjcGTMQEEm+sGNUS78GO5mpHKb
-Qu2bE0MVRsxhYPxjrt9X+faF3P3WDdm3LrIelmZqWn5W9M0s/k4U4avXVM2Aahff
-PxUwFLuOd5NOLKzr+XVcNoTibsKoEQXvXLORyR+dux0/NsmSFaH06QyOpkl62cxA
-1w6B108mWaoFxLm6/Ea6dcg35gV+GPgBGnnifZpGpl8ZcPkNXDsakVjePIHxxQ/8
-c3htBM+2niylOtDST0YVU+4YxKahTwZVKme8oUqYzqw8wB5gqy4=
-=RXn1
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrwAIQACgkQ0rTAlCFN
+r3SVLw/+LDFHwA0c8/mSHzlpzdmP/6fgR7yVzo0kZSEglnGdAdT6w1VeAQR18wNS
+Zlce+zpJPayARbe3Srp4Sm2epC6CeS0m2hEClrvuOT3tEJP9MNTsOwFm2KlHPg0Y
+ZZiq2A/LM11cOCZNg6K5KZyskOzd4LAO9ssmeDtKDd8bxzfU0M5P53qNuTwK7AJ4
+64Ih0sKM9pCiY4bnj9TOoFJF90he6ofSyXYVCe20d7m6FU2vl1L1fT0fKk1ovOS5
+Ugvw+Fg2/63SQXsOGvmQW7OWSGD+mRiqXunwfkxgvfo/rOpBZMSpbUYvbgCp52Hc
+i1kvvX3cdaQuJw9dpnvpuxpfMkB7oRjlNpuP1SXDSjVCYvtya6vuzXJC+b5WCWhD
+77gVxs5Sf0kwpo0hJw8OMwW1IlFv7e+DQr1vseE06PEN2NXhNfOXhwHLQES7sQTc
+o/j3KiGUiTIqcXfdo1tt10T9Yk1LQaVDq8tA/2LXoPQH+FL+kdZQqYBT5TYAIn+M
+NbnuaPcBQSNNM3pkJtW3aO8ehFG3/010nsCDMejCVK1XNjI1GlXguoDsrI0OGHoU
+D4GyA8zUNruqB5z3788YDD/1Xph3Gil/AXJefT2yGrnvesmSJD+7MPOLuNO6vCVh
+Isx3ruQNTU4B5lXGlNCK8DJqUytZNH2LllceQBR1tAmqBFkaG7A=
+=20SU
 -----END PGP SIGNATURE-----
 
---y6g2nzcki4pe24es--
+--o7fuc4npexahvokm--
 
---===============0014935768==
+--===============0776681297==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -332,4 +150,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
---===============0014935768==--
+--===============0776681297==--
