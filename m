@@ -1,166 +1,72 @@
-From: Paul Kocialkowski <contact@paulk.fr>
-Subject: Re: [PATCH v3 1/3] drm/panel: Add RGB666 variant of Innolux AT070TN90
-Date: Mon, 07 May 2018 20:50:23 +0200
-Message-ID: <8050492b544e5783d16eb74050313bfdddc0fc0d.camel@paulk.fr>
-References: <20180506214901.23429-1-contact@paulk.fr>
- <20180507070855.dh47obvpmze577x5@flea>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0809026388=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180507070855.dh47obvpmze577x5@flea>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH 0/7] gnss: add new GNSS subsystem
+Date: Mon, 7 May 2018 21:06:44 +0200
+Message-ID: <FA27606D-AB12-4D62-8EBD-3CC6F0900AF7@holtmann.org>
+References: <20180424163458.11947-1-johan@kernel.org>
+ <20180504132741.brn5jqv5ufjhp7ky@earth.universe>
+ <20180507102056.GU2285@localhost>
+Mime-Version: 1.0 (Mac OS X Mail 11.3 \(3445.6.18\))
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180507102056.GU2285@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Johan,
 
---===============0809026388==
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-pO4jWJbZQwRC3mFFtFHZ"
+>>> This series adds a new subsystem for GNSS receivers (e.g. GPS
+>>> receivers).
+>>> 
+>>> While GNSS receivers are typically accessed using a UART interface they
+>>> often also support other I/O interfaces such as I2C, SPI and USB, while
+>>> yet other devices use iomem or even some form of remote-processor
+>>> messaging (rpmsg).
+>>> 
+>>> The new GNSS subsystem abstracts the underlying interface and provides a
+>>> new "gnss" class type, which exposes a character-device interface (e.g.
+>>> /dev/gnss0) to user space. This allows GNSS receivers to have a
+>>> representation in the Linux device model, something which is important
+>>> not least for power management purposes and which also allows for easy
+>>> detection and (eventually) identification of GNSS devices.
+>>> 
+>>> Note that the character-device interface provides raw access to whatever
+>>> protocol the receiver is (currently) using, such as NMEA 0183, UBX or
+>>> SiRF Binary. These protocols are expected to be continued to be handled
+>>> by user space for the time being, even if some hybrid solutions are also
+>>> conceivable (e.g. to have kernel drivers issue management commands).
+> 
+>> Great work. I like your design decisions. I have quite a few devices
+>> with have non-serial based GPS peripherals using binary protocols (*).
+>> As far as I can see it should be possible to add support for those.
+> 
+> Thanks! Yeah, the aim here was to abstract the actual I/O interface
+> used.
+> 
+>> I have one concern, though. While providing raw data by
+>> default is fine generally, it is a problem with device
+>> auto-discovery. I think there should be some IOCTL from
+>> the start, that can be used to inform userspace about
+>> the raw protocol being used (i.e. "NMEA"). I fear, that
+>> userspace may start to just assume raw = NMEA without
+>> having this (especially since all initial drivers provide
+>> NMEA).
+> 
+> One problem I see here would be that the driver does not necessarily
+> know either what protocol is currently being used. Some devices have
+> boot-pins which can be used to configure the initial protocol used (and
+> this could perhaps be reflected in DT), but this can often later be
+> changed (by user space) and even be made persistent using battery-backed
+> ram or eeproms.
+> 
+> Also note that at least u-blox devices supports having more than one
+> protocol active on the same port...
 
+as long as userspace can determine that it is GNSS hardware and what hardware it is, then you deal with the rest in userspace.
 
---=-pO4jWJbZQwRC3mFFtFHZ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Regards
 
-Hi,
-
-Le lundi 07 mai 2018 =C3=A0 09:08 +0200, Maxime Ripard a =C3=A9crit :
-> Hi,
->=20
-> On Sun, May 06, 2018 at 11:48:59PM +0200, Paul Kocialkowski wrote:
-> > This adds timings for the RGB666 variant of the Innolux AT070TN90
-> > panel,
-> > as found on the Ainol AW1 tablet.
-> >=20
-> > The panel also supports RGB888 output. When RGB666 mode is used
-> > instead,
-> > the two extra lanes per component are grounded.
-> >=20
-> > In the future, it might become necessary to introduce a dedicated
-> > device-tree property to specify the bus format and maybe specify it
-> > in
-> > the mode description instead of panel description so that the
-> > appropriate mode can be selected for each bus format.
-> >=20
-> > Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
->=20
-> A change log would be nice. Also, you mentionned in your first version
-> that the screen was an AT070TN92, and now you mention that it is an
-> AT070TN90, which one is it?
-
-Yes, I should probably have explained why I changed the model here.
-I checked on the device yesterday and found that the ribbon cable
-indicates AT070TN90. I am not sure why I was initially assuming that the
-panel was an AT070TN92.=20
-
-> Maxime
->=20
-> > ---
-> >  drivers/gpu/drm/panel/panel-simple.c | 26
-> > ++++++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >=20
-> > diff --git a/drivers/gpu/drm/panel/panel-simple.c
-> > b/drivers/gpu/drm/panel/panel-simple.c
-> > index cbf1ab404ee7..351742df8ee1 100644
-> > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > @@ -1086,6 +1086,29 @@ static const struct panel_desc
-> > innolux_at070tn92 =3D {
-> >  	.bus_format =3D MEDIA_BUS_FMT_RGB888_1X24,
-> >  };
-> > =20
-> > +static const struct drm_display_mode innolux_at070tn90_mode =3D {
-> > +	.clock =3D 40000,
-> > +	.hdisplay =3D 800,
-> > +	.hsync_start =3D 800 + 112,
-> > +	.hsync_end =3D 800 + 112 + 1,
-> > +	.htotal =3D 800 + 112 + 1 + 87,
-> > +	.vdisplay =3D 480,
-> > +	.vsync_start =3D 480 + 141,
-> > +	.vsync_end =3D 480 + 141 + 1,
-> > +	.vtotal =3D 480 + 141 + 1 + 38,
-> > +	.vrefresh =3D 60,
-> > +};
-> > +
-> > +static const struct panel_desc innolux_at070tn90 =3D {
-> > +	.modes =3D &innolux_at070tn90_mode,
-> > +	.num_modes =3D 1,
-> > +	.size =3D {
-> > +		.width =3D 154,
-> > +		.height =3D 86,
-> > +	},
-> > +	.bus_format =3D MEDIA_BUS_FMT_RGB666_1X18,
-> > +};
-> > +
-> >  static const struct display_timing innolux_g101ice_l01_timing =3D {
-> >  	.pixelclock =3D { 60400000, 71100000, 74700000 },
-> >  	.hactive =3D { 1280, 1280, 1280 },
-> > @@ -2154,6 +2177,9 @@ static const struct of_device_id
-> > platform_of_match[] =3D {
-> >  	}, {
-> >  		.compatible =3D "innolux,at070tn92",
-> >  		.data =3D &innolux_at070tn92,
-> > +	}, {
-> > +		.compatible =3D "innolux,at070tn90",
-> > +		.data =3D &innolux_at070tn90,
->=20
-> This should be ordered alphabetically.
-
-Thanks for the review!
-
-Cheers,
-
-Paul
-
---=20
-Developer of free digital technology and hardware support.
-
-Website: https://www.paulk.fr/
-Coding blog: https://code.paulk.fr/
-Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
---=-pO4jWJbZQwRC3mFFtFHZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlrwn+8ACgkQhP3B6o/u
-lQxquA//XKzR9OjdCYa5ePJa1UQBRjpdiT1z/xGHn4bRm5XyBKByh5GtQ96yrHKG
-bLd5TIig/Cd6AbiX/sb6bS0Hpp5tYdEWb9XiLLn3JpUugBdoHh9qxiYenQt/5tlX
-JtdKfmifRkDoTjaBzFzSO/0CVVVmBzHuXSLxuif2Fn2WijdIJz3Ioof+7+feUjTX
-nSL85ueAdOzZGSrS2zHuFZb9UXu9yrJ10lvyMu5qBTtGn1lT3C+Q2lr3nkgTWw1r
-K/n3hd0T8Z5Zwkt4f7xqTcX7WQr8Jxf7fLYt26nTZYKORUYHNcHLuHcTHDZis1Ov
-kC9PI3dOtNMVx1eskKU8t8nDOvHI+ECObArxdMIDu+Zc13/UeqVea3GaLBvAzCOi
-gV4xDAtcIvt8c+Kk7tesXana/9uPg/CAl5wSfuOCGr6caFcYURLU8utc/8s5IAYh
-BQqZxl5ugV/XUhX/PhPbu7sOKcslFOUUVOMnOyKq6vXODLH7e4LDFs4D5aHnRKW1
-8zwreIfRV4ssnAFlROYQSzB6LaaPgjoAXTPEWUggL08VkgF9dF5sAIBa7M98FsNA
-KdfweSOmlKbaivRVReKf0+ZNe2FC8VyMuZuGGQ94//j3v1Z/kDnjKY4r0I4qtjbN
-4ub8nBqZlA3vHILQo9uBOkiEtb4lapShAkiVcE2sIedldRdvwiw=
-=R+uD
------END PGP SIGNATURE-----
-
---=-pO4jWJbZQwRC3mFFtFHZ--
-
-
---===============0809026388==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0809026388==--
+Marcel
