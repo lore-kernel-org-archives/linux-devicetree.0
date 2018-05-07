@@ -1,7 +1,7 @@
 From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v3 14/14] ARM: dts: sun8i-a33: Add Video Engine and reserved memory nodes
-Date: Mon,  7 May 2018 14:45:00 +0200
-Message-ID: <20180507124500.20434-15-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v3 13/14] ARM: dts: sun7i-a20: Add Video Engine and reserved memory nodes
+Date: Mon,  7 May 2018 14:44:59 +0200
+Message-ID: <20180507124500.20434-14-paul.kocialkowski@bootlin.com>
 References: <20180507124500.20434-1-paul.kocialkowski@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180507124500.20434-1-paul.kocialkowski@bootlin.com>
@@ -11,7 +11,7 @@ Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 This adds nodes for the Video Engine and the associated reserved memory
-for the A33. Up to 96 MiB of memory are dedicated to the CMA pool.
+for the A20. Up to 96 MiB of memory are dedicated to the CMA pool.
 
 The VPU can only map the first 256 MiB of DRAM, so the reserved memory
 pool has to be located in that area. Following Allwinner's decision in
@@ -20,14 +20,14 @@ reserved for this purpose.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 ---
- arch/arm/boot/dts/sun8i-a33.dtsi | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ arch/arm/boot/dts/sun7i-a20.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
-index 97a976b3b1ef..5308a49601f6 100644
---- a/arch/arm/boot/dts/sun8i-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-@@ -181,6 +181,21 @@
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 9bb6c35fb850..5fccccff469b 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -161,6 +161,21 @@
  		reg = <0x40000000 0x80000000>;
  	};
  
@@ -46,32 +46,31 @@ index 97a976b3b1ef..5308a49601f6 100644
 +		};
 +	};
 +
- 	sound: sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "sun8i-a33-audio";
-@@ -262,6 +277,23 @@
+ 	timer {
+ 		compatible = "arm,armv7-timer";
+ 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+@@ -463,6 +478,22 @@
  			};
  		};
  
-+		vpu: video-codec@01c0e000 {
-+			compatible = "allwinner,sun8i-a33-video-engine";
++		vpu: video-codec@1c0e000 {
++			compatible = "allwinner,sun7i-a20-video-engine";
 +			reg = <0x01c0e000 0x1000>;
 +
-+			clocks = <&ccu CLK_BUS_VE>, <&ccu CLK_VE>,
++			clocks = <&ccu CLK_AHB_VE>, <&ccu CLK_VE>,
 +				 <&ccu CLK_DRAM_VE>;
 +			clock-names = "ahb", "mod", "ram";
 +
 +			assigned-clocks = <&ccu CLK_VE>;
 +			assigned-clock-rates = <320000000>;
 +
-+			resets = <&ccu RST_BUS_VE>;
-+
-+			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
++			resets = <&ccu RST_VE>;
++			interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
 +			allwinner,sram = <&ve_sram 1>;
 +		};
 +
- 		crypto: crypto-engine@1c15000 {
- 			compatible = "allwinner,sun4i-a10-crypto";
- 			reg = <0x01c15000 0x1000>;
+ 		mmc0: mmc@1c0f000 {
+ 			compatible = "allwinner,sun7i-a20-mmc";
+ 			reg = <0x01c0f000 0x1000>;
 -- 
 2.16.3
