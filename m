@@ -1,54 +1,44 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v3 09/14] media: v4l: Add definition for Allwinner's
- MB32-tiled NV12 format
-Date: Mon, 7 May 2018 15:50:29 +0200
-Message-ID: <8b9aa08f-d514-5680-3d10-91e1a72c1e82@xs4all.nl>
-References: <20180507124500.20434-1-paul.kocialkowski@bootlin.com>
- <20180507124500.20434-10-paul.kocialkowski@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Subject: [PATCH] ARM: dts: imx51-zii-rdu1: fix touchscreen bindings
+Date: Mon,  7 May 2018 16:53:09 +0300
+Message-ID: <20180507135309.32580-1-nikita.yoush@cogentembedded.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180507124500.20434-10-paul.kocialkowski@bootlin.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S . Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Arnd Bergmann <arnd@arndb.de>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Philipp Zabel <p.zabel@pengutronix.de>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Yannick Fertre <yannick.fertre@st.com>, Thomas Gleixner <tglx@linutronix.de>H
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lucas Stach <l.stach@pengutronix.de>, Marco Franchi <marcofrk@gmail.com>, Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Healy <Chris.Healy@zii.aero>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/05/18 14:44, Paul Kocialkowski wrote:
-> This introduces support for Allwinner's MB32-tiled NV12 format, where
-> each plane is divided into macroblocks of 32x32 pixels. Hence, the size
-> of each plane has to be aligned to 32 bytes. The pixels inside each
-> macroblock are coded as they would be if the macroblock was a single
-> plane, line after line.
-> 
-> The MB32-tiled NV12 format is used by the video engine on Allwinner
-> platforms: it is the default format for decoded frames (and the only one
-> available in the oldest supported platforms).
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  include/uapi/linux/videodev2.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index d8f9b59d90d7..242a6bfa1440 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -670,6 +670,7 @@ struct v4l2_pix_format {
->  #define V4L2_PIX_FMT_Z16      v4l2_fourcc('Z', '1', '6', ' ') /* Depth data 16-bit */
->  #define V4L2_PIX_FMT_MT21C    v4l2_fourcc('M', 'T', '2', '1') /* Mediatek compressed block mode  */
->  #define V4L2_PIX_FMT_INZI     v4l2_fourcc('I', 'N', 'Z', 'I') /* Intel Planar Greyscale 10-bit and Depth 16-bit */
-> +#define V4L2_PIX_FMT_MB32_NV12 v4l2_fourcc('M', 'N', '1', '2') /* Allwinner NV12 in 32x32 macroblocks */
+This fixes errors in RDU1 device tree that cause touch screens not
+working.
 
-Must be documented in the spec as well.
+Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+---
+ arch/arm/boot/dts/imx51-zii-rdu1.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Regards,
-
-	Hans
-
->  
->  /* 10bit raw bayer packed, 32 bytes for every 25 pixels, last LSB 6 bits unused */
->  #define V4L2_PIX_FMT_IPU3_SBGGR10	v4l2_fourcc('i', 'p', '3', 'b') /* IPU3 packed 10-bit BGGR bayer */
-> 
+diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+index 0c99ac04ad08..6464f2560e06 100644
+--- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
++++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+@@ -523,7 +523,7 @@
+ 	};
+ 
+ 	touchscreen@20 {
+-		compatible = "syna,rmi4_i2c";
++		compatible = "syna,rmi4-i2c";
+ 		reg = <0x20>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_ts>;
+@@ -541,8 +541,8 @@
+ 
+ 		rmi4-f11@11 {
+ 			reg = <0x11>;
+-			touch-inverted-y;
+-			touch-swapped-x-y;
++			touchscreen-inverted-y;
++			touchscreen-swapped-x-y;
+ 			syna,sensor-type = <1>;
+ 		};
+ 	};
+-- 
+2.11.0
