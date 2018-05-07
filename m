@@ -1,12 +1,14 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 1/3] drm/panel: Add RGB666 variant of Innolux AT070TN90
-Date: Mon, 7 May 2018 09:08:55 +0200
-Message-ID: <20180507070855.dh47obvpmze577x5@flea>
+Subject: Re: [PATCH v3 3/3] ARM: dts: sun7i: Add support for the Ainol AW1
+ tablet
+Date: Mon, 7 May 2018 09:19:31 +0200
+Message-ID: <20180507071931.tebv45yxrojxxkeb@flea>
 References: <20180506214901.23429-1-contact@paulk.fr>
+ <20180506214901.23429-3-contact@paulk.fr>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1321882889=="
+Content-Type: multipart/mixed; boundary="===============0014935768=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180506214901.23429-1-contact@paulk.fr>
+In-Reply-To: <20180506214901.23429-3-contact@paulk.fr>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -21,89 +23,275 @@ Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kerne
 List-Id: devicetree@vger.kernel.org
 
 
---===============1321882889==
+--===============0014935768==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zflohqhccy2xls4x"
+	protocol="application/pgp-signature"; boundary="y6g2nzcki4pe24es"
 Content-Disposition: inline
 
 
---zflohqhccy2xls4x
+--y6g2nzcki4pe24es
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Sun, May 06, 2018 at 11:48:59PM +0200, Paul Kocialkowski wrote:
-> This adds timings for the RGB666 variant of the Innolux AT070TN90 panel,
-> as found on the Ainol AW1 tablet.
+On Sun, May 06, 2018 at 11:49:01PM +0200, Paul Kocialkowski wrote:
+> This adds support for the Ainol AW1, an A20-based 7" tablet from Ainol.
 >=20
-> The panel also supports RGB888 output. When RGB666 mode is used instead,
-> the two extra lanes per component are grounded.
+> The following board-specific features are supported:
+> * LCD panel
+> * Backlight
+> * USB OTG
+> * Buttons
+> * Touchscreen (doesn't work without non-free firmware)
+> * Accelerometer
+> * Battery
 >=20
-> In the future, it might become necessary to introduce a dedicated
-> device-tree property to specify the bus format and maybe specify it in
-> the mode description instead of panel description so that the
-> appropriate mode can be selected for each bus format.
+> The following are untested:
+> * Audio output
+> * Audio speakers
+> * USB via SPCI connector
+>=20
+> The following are not supported:
+> * Wi-Fi
+> * Bluetooth
+> * NAND
+> * Audio via SPCI connector
+> * Audio via Bluetooth I2S
 >=20
 > Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
-
-A change log would be nice. Also, you mentionned in your first version
-that the screen was an AT070TN92, and now you mention that it is an
-AT070TN90, which one is it?
-
-Maxime
-
 > ---
->  drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
+>  arch/arm/boot/dts/Makefile                |   1 +
+>  arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts | 275 ++++++++++++++++++++++
+>  2 files changed, 276 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
 >=20
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel=
-/panel-simple.c
-> index cbf1ab404ee7..351742df8ee1 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -1086,6 +1086,29 @@ static const struct panel_desc innolux_at070tn92 =
-=3D {
->  	.bus_format =3D MEDIA_BUS_FMT_RGB888_1X24,
->  };
-> =20
-> +static const struct drm_display_mode innolux_at070tn90_mode =3D {
-> +	.clock =3D 40000,
-> +	.hdisplay =3D 800,
-> +	.hsync_start =3D 800 + 112,
-> +	.hsync_end =3D 800 + 112 + 1,
-> +	.htotal =3D 800 + 112 + 1 + 87,
-> +	.vdisplay =3D 480,
-> +	.vsync_start =3D 480 + 141,
-> +	.vsync_end =3D 480 + 141 + 1,
-> +	.vtotal =3D 480 + 141 + 1 + 38,
-> +	.vrefresh =3D 60,
-> +};
-> +
-> +static const struct panel_desc innolux_at070tn90 =3D {
-> +	.modes =3D &innolux_at070tn90_mode,
-> +	.num_modes =3D 1,
-> +	.size =3D {
-> +		.width =3D 154,
-> +		.height =3D 86,
-> +	},
-> +	.bus_format =3D MEDIA_BUS_FMT_RGB666_1X18,
-> +};
-> +
->  static const struct display_timing innolux_g101ice_l01_timing =3D {
->  	.pixelclock =3D { 60400000, 71100000, 74700000 },
->  	.hactive =3D { 1280, 1280, 1280 },
-> @@ -2154,6 +2177,9 @@ static const struct of_device_id platform_of_match[=
-] =3D {
->  	}, {
->  		.compatible =3D "innolux,at070tn92",
->  		.data =3D &innolux_at070tn92,
-> +	}, {
-> +		.compatible =3D "innolux,at070tn90",
-> +		.data =3D &innolux_at070tn90,
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 7e2424957809..4a80971f2bc9 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -946,6 +946,7 @@ dtb-$(CONFIG_MACH_SUN6I) +=3D \
+>  	sun6i-a31s-sinovoip-bpi-m2.dtb \
+>  	sun6i-a31s-yones-toptech-bs1078-v2.dtb
+>  dtb-$(CONFIG_MACH_SUN7I) +=3D \
+> +	sun7i-a20-ainol-aw1.dtb \
+>  	sun7i-a20-bananapi.dtb \
+>  	sun7i-a20-bananapi-m1-plus.dtb \
+>  	sun7i-a20-bananapro.dtb \
+> diff --git a/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts b/arch/arm/boot/dt=
+s/sun7i-a20-ainol-aw1.dts
+> new file mode 100644
+> index 000000000000..9a1d54a9f9a0
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
+> @@ -0,0 +1,275 @@
+> +/*
+> + * Copyright (C) 2018 Paul Kocialkowski <contact@paulk.fr>
+> + *
+> + * SPDX-License-Identifier: GPL-2.0+
 
-This should be ordered alphabetically.
+This should be your first line. Also, we usually license our DT under
+a dual license (GPL and MIT) so that other projects (like FreeBSD) can
+use them as well, instead of duplicating them. It would be great if
+you'd consider it.
+
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun7i-a20.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/pwm/pwm.h>
+> +
+> +/ {
+> +	model =3D "Ainol AW1";
+> +	compatible =3D "ainol,ainol-aw1", "allwinner,sun7i-a20";
+> +
+> +	aliases {
+> +		serial0 =3D &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path =3D "serial0:115200n8";
+> +	};
+> +
+> +	backlight: backlight {
+> +		compatible =3D "pwm-backlight";
+> +		pwms =3D <&pwm 0 50000 PWM_POLARITY_INVERTED>;
+> +		brightness-levels =3D <0 10 20 30 40 50 60 70 80 90 100>;
+
+The increase in perceived brightness should be linear. Usually, for
+PWMs backed backlight, an exponential list is a much better
+approximation.
+
+> +		default-brightness-level =3D <5>;
+> +		enable-gpios =3D <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
+> +	};
+> +
+> +	panel: panel {
+> +		compatible =3D "innolux,at070tn90";
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +		power-supply =3D <&panel_power>;
+> +		backlight =3D <&backlight>;
+> +
+> +		port@0 {
+> +			reg =3D <0>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			panel_input: endpoint@0 {
+> +				reg =3D <0>;
+> +				remote-endpoint =3D <&tcon0_out_panel>;
+> +			};
+> +		};
+> +	};
+> +
+> +	panel_power: panel_power {
+> +		compatible =3D "regulator-fixed";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&panel_power_pin>;
+> +		regulator-name =3D "panel-power";
+> +		regulator-min-microvolt =3D <10400000>;
+> +		regulator-max-microvolt =3D <10400000>;
+> +		gpio =3D <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
+> +		enable-active-high;
+> +		regulator-boot-on;
+> +	};
+> +};
+> +
+> +&codec {
+> +	allwinner,pa-gpios =3D <&pio 7 15 GPIO_ACTIVE_HIGH>; /* PH15 */
+> +	status =3D "okay";
+> +};
+> +
+> +&cpu0 {
+> +	cpu-supply =3D <&reg_dcdc2>;
+> +};
+> +
+> +&de {
+> +	status =3D "okay";
+> +};
+> +
+> +&ehci0 {
+> +	status =3D "okay";
+> +};
+> +
+> +&ehci1 {
+> +	status =3D "okay";
+> +};
+> +
+> +&i2c0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&i2c0_pins_a>;
+> +	status =3D "okay";
+> +
+> +	axp209: pmic@34 {
+> +		reg =3D <0x34>;
+> +		interrupt-parent =3D <&nmi_intc>;
+> +		interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&i2c1_pins_a>;
+> +	status =3D "okay";
+> +
+> +	lis3dh: accelerometer@18 {
+> +		compatible =3D "st,lis3dh-accel";
+> +		reg =3D <0x18>;
+> +		vdd-supply =3D <&reg_vcc3v3>;
+> +		vddio-supply =3D <&reg_vcc3v3>;
+> +		st,drdy-int-pin =3D <1>;
+> +	};
+> +};
+> +
+> +&i2c2 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&i2c2_pins_a>;
+> +	status =3D "okay";
+> +	clock-frequency =3D <400000>;
+> +
+> +	gsl1680: touchscreen@40 {
+> +		compatible =3D "silead,gsl1680";
+> +		reg =3D <0x40>;
+> +		interrupt-parent =3D <&pio>;
+> +		interrupts =3D <7 21 IRQ_TYPE_EDGE_FALLING>; /* EINT21 (PH21) */
+> +		power-gpios =3D <&pio 7 20 GPIO_ACTIVE_HIGH>; /* PH20 */
+> +		firmware-name =3D "gsl1680-ainol-aw1.fw";
+> +		touchscreen-size-x =3D <480>;
+> +		touchscreen-size-y =3D <800>;
+> +		touchscreen-swapped-x-y;
+> +		touchscreen-inverted-y;
+> +		silead,max-fingers =3D <5>;
+> +	};
+> +};
+> +
+> +&lradc {
+> +	vref-supply =3D <&reg_ldo2>;
+> +	status =3D "okay";
+> +
+> +	button@571 {
+> +		label =3D "Volume Up";
+> +		linux,code =3D <KEY_VOLUMEUP>;
+> +		channel =3D <0>;
+> +		voltage =3D <571428>;
+> +	};
+> +
+> +	button@761 {
+> +		label =3D "Volume Down";
+> +		linux,code =3D <KEY_VOLUMEDOWN>;
+> +		channel =3D <0>;
+> +		voltage =3D <761904>;
+> +	};
+> +
+> +	button@952 {
+> +		label =3D "Home";
+> +		linux,code =3D <KEY_HOME>;
+> +		channel =3D <0>;
+> +		voltage =3D <952380>;
+> +	};
+> +};
+> +
+> +&mmc0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&mmc0_pins_a>;
+> +	vmmc-supply =3D <&reg_vcc3v3>;
+
+You have the regulators described in your DT, you'd better use them
+instead of the one coming from sunxi-common-regulators.dtsi.
+
+> +	bus-width =3D <4>;
+> +	cd-gpios =3D <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+> +	cd-inverted;
+> +	status =3D "okay";
+> +};
+> +
+> +&ohci0 {
+> +	status =3D "okay";
+> +};
+> +
+> +&ohci1 {
+> +	status =3D "okay";
+> +};
+> +
+> +&otg_sram {
+> +	status =3D "okay";
+> +};
+> +
+> +&pio {
+> +	panel_power_pin: panel_power_pin@0 {
+> +		pins =3D "PH8";
+> +		function =3D "gpio_out";
+> +	};
+> +};
+
+You don't need that pinctrl node.
 
 Maxime
 
@@ -112,29 +300,29 @@ Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---zflohqhccy2xls4x
+--y6g2nzcki4pe24es
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrv+4YACgkQ0rTAlCFN
-r3StJA/+Ivqt5/ogoP/WZe9C4b6EswFcTuzZy1j+RoW+qqHXmtuC+3BrPLvkZa4o
-UyVEoFUd8ZF6yienLfFBgS0iAbwlOfwEDJ8lsarWfSxM+7ExTJd40puEqCqEiSXt
-4rClJ+zlTwQjUbZ6tDgG5f6LPfPnzmykma0WRftvy9InXXE3JzDp0R8jg+oecodB
-BZg7wiLtXYIlkxCxIGc7amvpFpB+aNQyRJ0MfUAw6qziYdU31qfSlSrnxi6YVUkq
-eBu4HxOeVTLcsdby2j7aqkY8vF94KjM+it58erhOOT6sFLd1V3zZUFUUvtrNplTy
-wXp3CADKVqw4paeSXTtK+mwfho01Tj14wqg4il2r5UMH5RgKtL9GGyipvxFsy6vg
-xar5A7MtBXgDeUvrOU9Hoo4lPxxLqNVURz+KrdiKn6y3DQInPHB/FZVtMt0R17YJ
-EvMSpbBsL9K+nwUUIIq1GSTx0k3XQl0zME988U6tvfqtaHTEY7ImeL3Vl4h9B8HY
-d/DtOJj2R86gL1upY+ZLPSQPJQUfbZOVNI4DjuujYixgJclhAHTmq2W+R51zxMEz
-cl8CeGVCwQYXT6OnvAVhgpAFVbqhhaWlbsLjd5d3dbV0B7vVGwnySQujkvUmVi8k
-ZZdMAxaYxGQ7BNkzxfFCfleS4zUnyefx1Y/XXwVYyshXJSK/JRw=
-=5ukw
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrv/gIACgkQ0rTAlCFN
+r3S4UA//UubFJ13xD4IpAyFnbvWrCjeIWtq2X4UddRSR0w1iLgZb2e4piqvGLa5H
+QBOS89vTHtjPxJVhdtZkX4bTHy/E+GMa1fQuMNGlVetRvYQfUx9XXabFMwQXVgw9
+8bdVeyB1AxNDm7PID49cjQcYJtW6005+e1CjMKi6/IR683iXhGqwuS9HfojwXK/Y
+oZakCLNWebFfY8fo91dtvjgzTWrgSvH3uDQKQDam3EBLLO0U3BRF9A6emrNQ33tz
+3K/bxuk7B6zzbNHvG9ZUw9iruP4OBOfCBZaQnnWcwbC38OQ6XvnfEIm+haHJ8Awv
+CkOh2DCyMYvE47FKb65yfhB1bGGdOBySinnPkAazFtW2LC/1VzhtO+Ctdpl8A1Hk
+HMIwQAp1Ped7+2puRamhc9QVf0YRt1UyUaSShngjcGTMQEEm+sGNUS78GO5mpHKb
+Qu2bE0MVRsxhYPxjrt9X+faF3P3WDdm3LrIelmZqWn5W9M0s/k4U4avXVM2Aahff
+PxUwFLuOd5NOLKzr+XVcNoTibsKoEQXvXLORyR+dux0/NsmSFaH06QyOpkl62cxA
+1w6B108mWaoFxLm6/Ea6dcg35gV+GPgBGnnifZpGpl8ZcPkNXDsakVjePIHxxQ/8
+c3htBM+2niylOtDST0YVU+4YxKahTwZVKme8oUqYzqw8wB5gqy4=
+=RXn1
 -----END PGP SIGNATURE-----
 
---zflohqhccy2xls4x--
+--y6g2nzcki4pe24es--
 
---===============1321882889==
+--===============0014935768==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -144,4 +332,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
---===============1321882889==--
+--===============0014935768==--
