@@ -1,76 +1,31 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH V3] Input: pm8941-pwrkey: add resin key capabilities
-Date: Mon, 7 May 2018 11:46:59 -0700
-Message-ID: <20180507184659.GG2259@tuxbook-pro>
-References: <1521786192-19487-1-git-send-email-tirupath@codeaurora.org>
- <20180505001039.GA112416@dtor-ws>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845: Sort nodes in the soc by
+ address
+Date: Mon, 7 May 2018 11:49:00 -0700
+Message-ID: <20180507184900.GH2259@tuxbook-pro>
+References: <20180504220356.261711-1-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180505001039.GA112416@dtor-ws>
+In-Reply-To: <20180504220356.261711-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Tirupathi Reddy <tirupath@codeaurora.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, swboyd@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 04 May 17:10 PDT 2018, Dmitry Torokhov wrote:
+On Fri 04 May 15:03 PDT 2018, Douglas Anderson wrote:
 
-> Hi Tirupathi,
+> This is pure-churn and should be a no-op.  I'm doing it in the hopes
+> of reducing merge conflicts.  When things are sorted in a sane way
+> (and by base address seems sane) then it's less likely that future
+> patches will cause merge conflicts.
 > 
-> On Fri, Mar 23, 2018 at 11:53:12AM +0530, Tirupathi Reddy wrote:
-> > Add resin key support to handle different types of key events
-> > defined in different platforms.
-> > 
-> > Signed-off-by: Tirupathi Reddy <tirupath@codeaurora.org>
-> > ---
-> >  .../bindings/input/qcom,pm8941-pwrkey.txt          | 32 +++++++++
-> >  drivers/input/misc/pm8941-pwrkey.c                 | 81 ++++++++++++++++++++++
-> >  2 files changed, 113 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-[..]
-> >  EXAMPLE
-> >  
-> >  	pwrkey@800 {
-> > @@ -40,4 +66,10 @@ EXAMPLE
-> >  		interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
-> >  		debounce = <15625>;
-> >  		bias-pull-up;
-> > +
-> > +		resin {
-> > +			interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
-> > +			linux,code = <KEY_VOLUMEDOWN>;
-> > +			bias-pull-up;
-> > +		};
-> >  	};
-> 
-> The new key and power key bindings are very similar, I would prefer if
-> we shared the parsing code and our new DTS looked like:
-> 
-> 		power {
-> 			...
-> 		};
->  
-> 		resin {
-> 			...
-> 		};
-> 
-> (we can easily keep backward compatibility with power properties being
-> in device node).
-> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-As discussed here https://patchwork.kernel.org/patch/9751627/ the PON
-block does, in addition to providing power and resin key support also
-handle the restart reason ("reboot bootloader" in Android).
+Nice, I like it.
 
-My interpretation of our conclusion was to come up with a new binding
-for the "pon" and a driver for this block that instantiates the power
-key device.
-
-It seems reasonable for such binding to describe the two keys, as you
-propose here Dmitry, and instantiates the two input devices based on
-this.
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
