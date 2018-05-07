@@ -1,105 +1,58 @@
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Subject: Re: [PATCHv2 3/3] arm64: dts: stratix10: add sdram ecc
-Date: Mon, 7 May 2018 16:10:01 -0500
-Message-ID: <CADhT+weL=8ODk1JVLwUXtFG3e4iKfzBMpZmo4Y0UwoK0=H=Zhg@mail.gmail.com>
-References: <1524854238-19394-1-git-send-email-thor.thayer@linux.intel.com>
- <1524854238-19394-4-git-send-email-thor.thayer@linux.intel.com>
- <20180507165943.GE733@pd.tnic>
- <CADhT+weyJFhMyPbVt0n2EVe7OpeHHLjhxjw7aY2_8GBZ-7h7Xg@mail.gmail.com>
+From: Paul Kocialkowski <contact@paulk.fr>
+Subject: [PATCH v4 1/3] drm/panel: Add RGB666 variant of Innolux AT070TN90
+Date: Tue,  8 May 2018 00:04:11 +0200
+Message-ID: <20180507220413.21990-1-contact@paulk.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CADhT+weyJFhMyPbVt0n2EVe7OpeHHLjhxjw7aY2_8GBZ-7h7Xg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, thor.thayer@linux.intel.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, mchehab@kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
+Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Paul Kocialkowski <contact@paulk.fr>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
-
-On Mon, May 7, 2018 at 3:50 PM, Dinh Nguyen <dinh.linux@gmail.com> wrote:
-> On Mon, May 7, 2018 at 11:59 AM, Borislav Petkov <bp@alien8.de> wrote:
->> On Fri, Apr 27, 2018 at 01:37:18PM -0500, thor.thayer@linux.intel.com wrote:
->>> From: Thor Thayer <thor.thayer@linux.intel.com>
->>>
->>> Add the Stratix10 ECC Manager and SDRAM EDAC nodes to the
->>> device tree.
->>>
->>> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
->>> ---
->>> v2  Remove unused SysMan syscon
->>>     Remove unused SDRAM ECC register defines
->>>     Remove unused address, size and range from device tree.
->>> ---
->>>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 12 ++++++++++++
->>>  1 file changed, 12 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
->>> index c89d0c307f8d..688391f3bf78 100644
->>> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
->>> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
->>> @@ -387,5 +387,17 @@
->>>                       resets = <&rst WATCHDOG3_RESET>;
->>>                       status = "disabled";
->>>               };
->>> +
->>> +             eccmgr {
->>> +                     compatible = "altr,socfpga-s10-ecc-manager";
->>> +                     interrupts = <0 15 4>, <0 95 4>;
->>> +                     interrupt-controller;
->>> +                     #interrupt-cells = <2>;
->>> +
->>> +                     sdramedac {
->>> +                             compatible = "altr,sdram-edac-s10";
->>> +                             interrupts = <16 4>, <48 4>;
->>> +                     };
->>> +             };
->>>       };
->>>  };
->>> --
->>> 2.7.4
->>>
->>> --
->>
->> Hey Rob,
->>
->> ACK here too?
->>
->> Also, this one:
->>
->> https://lkml.kernel.org/r/1525203036-21774-1-git-send-email-thor.thayer@linux.intel.com
->>
->> ?
->>
->
-> Just in case you need mine, since the edits here match what was in the
-> in the bindings doc.
->
-> Acked-by: Dinh Nguyen <dinguyen@kernel.org>
->
-
-Do you mind if I take this patch through arm-soc? I have a pull
-request to arm-soc that is pending.
-
-http://lists.infradead.org/pipermail/linux-arm-kernel/2018-April/573133.html
-
-In that pull request, there is a patch:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux.git/commit/?h=socfpga_for_next_v4.18_dts_v1&id=d93101abe41e9596555a0f7f6f775e543b71c441
-
-This patch has some major changes to the socfpga_stratix10.dtsi file
-that will conflict with this patch.
-
-If it's okay with you.
-
-Thanks,
-Dinh
+VGhpcyBhZGRzIHRpbWluZ3MgZm9yIHRoZSBSR0I2NjYgdmFyaWFudCBvZiB0aGUgSW5ub2x1eCBB
+VDA3MFROOTAgcGFuZWwsCmFzIGZvdW5kIG9uIHRoZSBBaW5vbCBBVzEgdGFibGV0LgoKVGhlIHBh
+bmVsIGFsc28gc3VwcG9ydHMgUkdCODg4IG91dHB1dC4gV2hlbiBSR0I2NjYgbW9kZSBpcyB1c2Vk
+IGluc3RlYWQsCnRoZSB0d28gZXh0cmEgbGFuZXMgcGVyIGNvbXBvbmVudCBhcmUgZ3JvdW5kZWQu
+CgpJbiB0aGUgZnV0dXJlLCBpdCBtaWdodCBiZWNvbWUgbmVjZXNzYXJ5IHRvIGludHJvZHVjZSBh
+IGRlZGljYXRlZApkZXZpY2UtdHJlZSBwcm9wZXJ0eSB0byBzcGVjaWZ5IHRoZSBidXMgZm9ybWF0
+IHRvIHVzZSBpbnN0ZWFkIG9mIHRoZQpkZWZhdWx0IG9uZSBmb3IgdGhlIHBhbmVsLiBUaGlzIHdp
+bGwgYWxsb3cgc3VwcG9ydGluZyBkaWZmZXJlbnQgYnVzCmZvcm1hdHMgZm9yIHRoZSBzYW1lIHBh
+bmVsIG1vZGVzLgoKU2lnbmVkLW9mZi1ieTogUGF1bCBLb2NpYWxrb3dza2kgPGNvbnRhY3RAcGF1
+bGsuZnI+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIHwgMjYgKysr
+KysrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCsp
+CgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJp
+dmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCmluZGV4IGNiZjFhYjQwNGVlNy4uMzJl
+MzBkNWE4ZjA4IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxl
+LmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCkBAIC0xMDYzLDYg
+KzEwNjMsMjkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGlubm9sdXhfYXQwNDN0
+bjI0ID0gewogCS5idXNfZmxhZ3MgPSBEUk1fQlVTX0ZMQUdfREVfSElHSCB8IERSTV9CVVNfRkxB
+R19QSVhEQVRBX1BPU0VER0UsCiB9OwogCitzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5
+X21vZGUgaW5ub2x1eF9hdDA3MHRuOTBfbW9kZSA9IHsKKwkuY2xvY2sgPSA0MDAwMCwKKwkuaGRp
+c3BsYXkgPSA4MDAsCisJLmhzeW5jX3N0YXJ0ID0gODAwICsgMTEyLAorCS5oc3luY19lbmQgPSA4
+MDAgKyAxMTIgKyAxLAorCS5odG90YWwgPSA4MDAgKyAxMTIgKyAxICsgODcsCisJLnZkaXNwbGF5
+ID0gNDgwLAorCS52c3luY19zdGFydCA9IDQ4MCArIDE0MSwKKwkudnN5bmNfZW5kID0gNDgwICsg
+MTQxICsgMSwKKwkudnRvdGFsID0gNDgwICsgMTQxICsgMSArIDM4LAorCS52cmVmcmVzaCA9IDYw
+LAorfTsKKworc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGlubm9sdXhfYXQwNzB0bjkw
+ID0geworCS5tb2RlcyA9ICZpbm5vbHV4X2F0MDcwdG45MF9tb2RlLAorCS5udW1fbW9kZXMgPSAx
+LAorCS5zaXplID0geworCQkud2lkdGggPSAxNTQsCisJCS5oZWlnaHQgPSA4NiwKKwl9LAorCS5i
+dXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I2NjZfMVgxOCwKK307CisKIHN0YXRpYyBjb25z
+dCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBpbm5vbHV4X2F0MDcwdG45Ml9tb2RlID0gewogCS5j
+bG9jayA9IDMzMzMzLAogCS5oZGlzcGxheSA9IDgwMCwKQEAgLTIxNTEsNiArMjE3NCw5IEBAIHN0
+YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJ
+fSwgewogCQkuY29tcGF0aWJsZSA9ICJpbm5vbHV4LGF0MDQzdG4yNCIsCiAJCS5kYXRhID0gJmlu
+bm9sdXhfYXQwNDN0bjI0LAorCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAiaW5ub2x1eCxhdDA3MHRu
+OTAiLAorCQkuZGF0YSA9ICZpbm5vbHV4X2F0MDcwdG45MCwKIAl9LCB7CiAJCS5jb21wYXRpYmxl
+ID0gImlubm9sdXgsYXQwNzB0bjkyIiwKIAkJLmRhdGEgPSAmaW5ub2x1eF9hdDA3MHRuOTIsCi0t
+IAoyLjE3LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
