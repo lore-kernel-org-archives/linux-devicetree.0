@@ -1,475 +1,346 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 2/2] leds: Add Spreadtrum SC27xx breathing light
- controller driver
-Date: Mon, 7 May 2018 22:13:24 +0200
-Message-ID: <6c575d06-b37e-e04f-e830-d38a53927d6f@gmail.com>
-References: <099f4075ec489e425b5f1e7668a078c05f0d8509.1525427961.git.baolin.wang@linaro.org>
- <1bf5bc3e007d237477d740f47ed63f05aa71b348.1525427961.git.baolin.wang@linaro.org>
+From: Paul Kocialkowski <contact@paulk.fr>
+Subject: Re: [PATCH v3 3/3] ARM: dts: sun7i: Add support for the Ainol AW1
+ tablet
+Date: Mon, 07 May 2018 22:15:46 +0200
+Message-ID: <d8de7d2237a74388ac8c8152eded3477e7fd56a4.camel@paulk.fr>
+References: <20180506214901.23429-1-contact@paulk.fr>
+         <20180506214901.23429-3-contact@paulk.fr>
+         <20180507071931.tebv45yxrojxxkeb@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-LZASvdTavrcasiQJxSbY"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1bf5bc3e007d237477d740f47ed63f05aa71b348.1525427961.git.baolin.wang@linaro.org>
-Content-Language: en-US
+In-Reply-To: <20180507071931.tebv45yxrojxxkeb@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: xiaotong.lu@spreadtrum.com, broonie@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Baolin,
 
-Thank you for the patch. Generally this is a nice and clean driver,
-but I noticed some locking related issues and one detail
-regarding LED naming. Please refer below.
+--=-LZASvdTavrcasiQJxSbY
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 05/04/2018 12:08 PM, Baolin Wang wrote:
-> From: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
-> 
-> This patch adds Spreadtrum SC27xx PMIC series breathing light controller
-> driver, which can support 3 LEDs. Each LED can work at normal PWM mode
-> and breathing mode.
-> 
-> Signed-off-by: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
->   drivers/leds/Kconfig            |   11 ++
->   drivers/leds/Makefile           |    1 +
->   drivers/leds/leds-sc27xx-bltc.c |  369 +++++++++++++++++++++++++++++++++++++++
->   3 files changed, 381 insertions(+)
->   create mode 100644 drivers/leds/leds-sc27xx-bltc.c
-> 
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 2c896c0..319449b 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -647,6 +647,17 @@ config LEDS_IS31FL32XX
->   	  LED controllers. They are I2C devices with multiple constant-current
->   	  channels, each with independent 256-level PWM control.
->   
-> +config LEDS_SC27XX_BLTC
-> +	tristate "LED support for the SC27xx breathing light controller"
-> +	depends on LEDS_CLASS && MFD_SC27XX_PMIC
-> +	depends on OF
-> +	help
-> +	  Say Y here to include support for the SC27xx breathing light controller
-> +	  LEDs.
-> +
-> +	  This driver can also be built as a module. If so the module will be
-> +	  called leds-sc27xx-bltc.
-> +
->   comment "LED driver for blink(1) USB RGB LED is under Special HID drivers (HID_THINGM)"
->   
->   config LEDS_BLINKM
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index 91eca81..ff6917e 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -76,6 +76,7 @@ obj-$(CONFIG_LEDS_MLXREG)		+= leds-mlxreg.o
->   obj-$(CONFIG_LEDS_NIC78BX)		+= leds-nic78bx.o
->   obj-$(CONFIG_LEDS_MT6323)		+= leds-mt6323.o
->   obj-$(CONFIG_LEDS_LM3692X)		+= leds-lm3692x.o
-> +obj-$(CONFIG_LEDS_SC27XX_BLTC)		+= leds-sc27xx-bltc.o
->   
->   # LED SPI Drivers
->   obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
-> diff --git a/drivers/leds/leds-sc27xx-bltc.c b/drivers/leds/leds-sc27xx-bltc.c
-> new file mode 100644
-> index 0000000..0016a87
-> --- /dev/null
-> +++ b/drivers/leds/leds-sc27xx-bltc.c
-> @@ -0,0 +1,369 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 Spreadtrum Communications Inc.
-> + */
+Hi,
 
-Please use uniform "//" comment style here.
+Le lundi 07 mai 2018 =C3=A0 09:19 +0200, Maxime Ripard a =C3=A9crit :
+> Hi,
+>=20
+> On Sun, May 06, 2018 at 11:49:01PM +0200, Paul Kocialkowski wrote:
+> > This adds support for the Ainol AW1, an A20-based 7" tablet from Ainol.
+> >=20
+> > The following board-specific features are supported:
+> > * LCD panel
+> > * Backlight
+> > * USB OTG
+> > * Buttons
+> > * Touchscreen (doesn't work without non-free firmware)
+> > * Accelerometer
+> > * Battery
+> >=20
+> > The following are untested:
+> > * Audio output
+> > * Audio speakers
+> > * USB via SPCI connector
+> >=20
+> > The following are not supported:
+> > * Wi-Fi
+> > * Bluetooth
+> > * NAND
+> > * Audio via SPCI connector
+> > * Audio via Bluetooth I2S
+> >=20
+> > Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+> > ---
+> >  arch/arm/boot/dts/Makefile                |   1 +
+> >  arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts | 275 ++++++++++++++++++++++
+> >  2 files changed, 276 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
+> >=20
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index 7e2424957809..4a80971f2bc9 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -946,6 +946,7 @@ dtb-$(CONFIG_MACH_SUN6I) +=3D \
+> >  	sun6i-a31s-sinovoip-bpi-m2.dtb \
+> >  	sun6i-a31s-yones-toptech-bs1078-v2.dtb
+> >  dtb-$(CONFIG_MACH_SUN7I) +=3D \
+> > +	sun7i-a20-ainol-aw1.dtb \
+> >  	sun7i-a20-bananapi.dtb \
+> >  	sun7i-a20-bananapi-m1-plus.dtb \
+> >  	sun7i-a20-bananapro.dtb \
+> > diff --git a/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts b/arch/arm/boot/=
+dts/sun7i-a20-ainol-aw1.dts
+> > new file mode 100644
+> > index 000000000000..9a1d54a9f9a0
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
+> > @@ -0,0 +1,275 @@
+> > +/*
+> > + * Copyright (C) 2018 Paul Kocialkowski <contact@paulk.fr>
+> > + *
+> > + * SPDX-License-Identifier: GPL-2.0+
+>=20
+> This should be your first line.
 
-> +
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +/* PMIC global control register definition */
-> +#define SC27XX_MODULE_EN0	0xc08
-> +#define SC27XX_CLK_EN0		0xc18
-> +#define SC27XX_RGB_CTRL		0xebc
-> +
-> +#define SC27XX_BLTC_EN		BIT(9)
-> +#define SC27XX_RTC_EN		BIT(7)
-> +#define SC27XX_RGB_PD		BIT(0)
-> +
-> +/* Breathing light controller register definition */
-> +#define SC27XX_LEDS_CTRL	0x00
-> +#define SC27XX_LEDS_PRESCALE	0x04
-> +#define SC27XX_LEDS_DUTY	0x08
-> +#define SC27XX_LEDS_CURVE0	0x0c
-> +#define SC27XX_LEDS_CURVE1	0x10
-> +
-> +#define SC27XX_CTRL_SHIFT	4
-> +#define SC27XX_LED_RUN		BIT(0)
-> +#define SC27XX_LED_TYPE		BIT(1)
-> +
-> +#define SC27XX_DUTY_SHIFT	8
-> +#define SC27XX_DUTY_MASK	GENMASK(15, 0)
-> +#define SC27XX_MOD_MASK		GENMASK(7, 0)
-> +
-> +#define SC27XX_CURVE_SHIFT	8
-> +#define SC27XX_CURVE_L_MASK	GENMASK(7, 0)
-> +#define SC27XX_CURVE_H_MASK	GENMASK(15, 8)
-> +
-> +#define SC27XX_LEDS_OFFSET	0x10
-> +#define SC27XX_LEDS_MAX		3
-> +
-> +/*
-> + * The SC27xx breathing light controller can support 3 outputs: red LED,
-> + * green LED and blue LED. Each LED can support normal PWM mode and breathing
-> + * mode.
-> + *
-> + * In breathing mode, the LED output curve includes raise, high, fall and low 4
-> + * stages, and the duration of each stage is configurable.
-> + */
-> +enum sc27xx_led_config {
-> +	SC27XX_RAISE_TIME,
-> +	SC27XX_FALL_TIME,
-> +	SC27XX_HIGH_TIME,
-> +	SC27XX_LOW_TIME,
-> +};
-> +
-> +struct sc27xx_led {
-> +	struct led_classdev ldev;
-> +	struct sc27xx_led_priv *priv;
-> +	enum led_brightness value;
-> +	u8 line;
-> +	bool breath_mode;
-> +	bool active;
-> +};
-> +
-> +struct sc27xx_led_priv {
-> +	struct sc27xx_led leds[SC27XX_LEDS_MAX];
-> +	struct regmap *regmap;
-> +	u32 base;
-> +};
-> +
-> +#define to_sc27xx_led(ldev) \
-> +	container_of(ldev, struct sc27xx_led, ldev)
-> +
-> +static int sc27xx_led_init(struct regmap *regmap)
-> +{
-> +	int err;
-> +
-> +	err = regmap_update_bits(regmap, SC27XX_MODULE_EN0, SC27XX_BLTC_EN,
-> +				 SC27XX_BLTC_EN);
-> +	if (err)
-> +		return err;
-> +
-> +	err = regmap_update_bits(regmap, SC27XX_CLK_EN0, SC27XX_RTC_EN,
-> +				 SC27XX_RTC_EN);
-> +	if (err)
-> +		return err;
-> +
-> +	return regmap_update_bits(regmap, SC27XX_RGB_CTRL, SC27XX_RGB_PD, 0);
-> +}
-> +
-> +static u32 sc27xx_led_get_offset(struct sc27xx_led *leds)
-> +{
-> +	return leds->priv->base + SC27XX_LEDS_OFFSET * leds->line;
-> +}
-> +
-> +static int sc27xx_led_enable(struct sc27xx_led *leds)
-> +{
-> +	u32 base = sc27xx_led_get_offset(leds);
-> +	u32 ctrl_base = leds->priv->base + SC27XX_LEDS_CTRL;
-> +	u8 ctrl_shift = SC27XX_CTRL_SHIFT * leds->line;
-> +	struct regmap *regmap = leds->priv->regmap;
-> +	int err;
-> +
-> +	err = regmap_update_bits(regmap, base + SC27XX_LEDS_DUTY,
-> +				 SC27XX_DUTY_MASK,
-> +				 (leds->value  << SC27XX_DUTY_SHIFT) |
-> +				 SC27XX_MOD_MASK);
-> +	if (err)
-> +		return err;
-> +
-> +	if (leds->breath_mode)
-> +		return regmap_update_bits(regmap, ctrl_base,
-> +					  SC27XX_LED_RUN << ctrl_shift,
-> +					  SC27XX_LED_RUN << ctrl_shift);
-> +
-> +	return regmap_update_bits(regmap, ctrl_base,
-> +			(SC27XX_LED_RUN | SC27XX_LED_TYPE) << ctrl_shift,
-> +			(SC27XX_LED_RUN | SC27XX_LED_TYPE) << ctrl_shift);
-> +}
-> +
-> +static int sc27xx_led_disable(struct sc27xx_led *leds)
-> +{
-> +	u8 ctrl_shift = SC27XX_CTRL_SHIFT * leds->line;
-> +
-> +	leds->breath_mode = false;
-> +
-> +	return regmap_update_bits(leds->priv->regmap,
-> +			leds->priv->base + SC27XX_LEDS_CTRL,
-> +			(SC27XX_LED_RUN | SC27XX_LED_TYPE) << ctrl_shift, 0);
-> +}
-> +
-> +static int sc27xx_led_set(struct led_classdev *ldev, enum led_brightness value)
-> +{
-> +	struct sc27xx_led *leds = to_sc27xx_led(ldev);
+Alright then. For reference, I based this off sun8i-h3-libretech-all-h3-
+cc.dts, that has the copyright first.
 
-You need mutex protection here to ensure that the device will
-not be left in an inconsistent state in case of concurrent access
-from userspace.
+> Also, we usually license our DT under
+> a dual license (GPL and MIT) so that other projects (like FreeBSD) can
+> use them as well, instead of duplicating them. It would be great if
+> you'd consider it.
 
-> +	leds->value = value;
-> +	if (value == LED_OFF)
-> +		return sc27xx_led_disable(leds);
-> +
-> +	return sc27xx_led_enable(leds);
-> +}
-> +
-> +static int sc27xx_led_config(struct sc27xx_led *leds,
-> +			     enum sc27xx_led_config config, u32 val)
-> +{
-> +	u32 base = sc27xx_led_get_offset(leds);
-> +	struct regmap *regmap = leds->priv->regmap;
-> +	int err;
-> +
-> +	switch (config) {
-> +	case SC27XX_RAISE_TIME:
-> +		err = regmap_update_bits(regmap, base + SC27XX_LEDS_CURVE0,
-> +					 SC27XX_CURVE_L_MASK, val);
-> +		break;
-> +	case SC27XX_FALL_TIME:
-> +		err = regmap_update_bits(regmap, base + SC27XX_LEDS_CURVE0,
-> +					 SC27XX_CURVE_H_MASK,
-> +					 val << SC27XX_CURVE_SHIFT);
-> +		break;
-> +	case SC27XX_HIGH_TIME:
-> +		err = regmap_update_bits(regmap, base + SC27XX_LEDS_CURVE1,
-> +					 SC27XX_CURVE_L_MASK, val);
-> +		break;
-> +	case SC27XX_LOW_TIME:
-> +		err = regmap_update_bits(regmap, base + SC27XX_LEDS_CURVE1,
-> +					 SC27XX_CURVE_H_MASK,
-> +					 val << SC27XX_CURVE_SHIFT);
-> +		break;
-> +	default:
-> +		err = -ENOTSUPP;
-> +		break;
-> +	}
+Ah, I didn't think of BSD-licensed systems like FreeBSD off-hand.
 
-Ditto.
+Since they are apparently working on ARM support, it's probably worth
+publishing this under a non-copyleft license.
 
-> +
-> +	if (!err && !leds->breath_mode)
-> +		leds->breath_mode = true;
-> +
-> +	return err;
-> +}
-> +
-> +static ssize_t raise_time_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t size)
-> +{
-> +	struct led_classdev *ldev = dev_get_drvdata(dev);
-> +	struct sc27xx_led *leds = to_sc27xx_led(ldev);
-> +	u32 val;
-> +	int err;
-> +
-> +	if (kstrtou32(buf, 10, &val))
-> +		return -EINVAL;
-> +
-> +	err = sc27xx_led_config(leds, SC27XX_RAISE_TIME, val);
-> +	if (err)
-> +		return err;
-> +
-> +	return size;
-> +}
-> +
-> +static ssize_t fall_time_store(struct device *dev,
-> +			       struct device_attribute *attr,
-> +			       const char *buf, size_t size)
-> +{
-> +	struct led_classdev *ldev = dev_get_drvdata(dev);
-> +	struct sc27xx_led *leds = to_sc27xx_led(ldev);
-> +	u32 val;
-> +	int err;
-> +
-> +	if (kstrtou32(buf, 10, &val))
-> +		return -EINVAL;
-> +
-> +	err = sc27xx_led_config(leds, SC27XX_FALL_TIME, val);
-> +	if (err)
-> +		return err;
-> +
-> +	return size;
-> +}
-> +
-> +static ssize_t high_time_store(struct device *dev,
-> +			       struct device_attribute *attr,
-> +			       const char *buf, size_t size)
-> +{
-> +	struct led_classdev *ldev = dev_get_drvdata(dev);
-> +	struct sc27xx_led *leds = to_sc27xx_led(ldev);
-> +	u32 val;
-> +	int err;
-> +
-> +	if (kstrtou32(buf, 10, &val))
-> +		return -EINVAL;
-> +
-> +	err = sc27xx_led_config(leds, SC27XX_HIGH_TIME, val);
-> +	if (err)
-> +		return err;
-> +
-> +	return size;
-> +}
-> +
-> +static ssize_t low_time_store(struct device *dev,
-> +			      struct device_attribute *attr,
-> +			      const char *buf, size_t size)
-> +{
-> +	struct led_classdev *ldev = dev_get_drvdata(dev);
-> +	struct sc27xx_led *leds = to_sc27xx_led(ldev);
-> +	u32 val;
-> +	int err;
-> +
-> +	if (kstrtou32(buf, 10, &val))
-> +		return -EINVAL;
-> +
-> +	err = sc27xx_led_config(leds, SC27XX_LOW_TIME, val);
-> +	if (err)
-> +		return err;
-> +
-> +	return size;
-> +}
-> +
-> +static DEVICE_ATTR_WO(raise_time);
-> +static DEVICE_ATTR_WO(fall_time);
-> +static DEVICE_ATTR_WO(high_time);
-> +static DEVICE_ATTR_WO(low_time);
-> +
-> +static struct attribute *sc27xx_led_attrs[] = {
-> +	&dev_attr_raise_time.attr,
-> +	&dev_attr_fall_time.attr,
-> +	&dev_attr_high_time.attr,
-> +	&dev_attr_low_time.attr,
-> +	NULL,
-> +};
-> +ATTRIBUTE_GROUPS(sc27xx_led);
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "sun7i-a20.dtsi"
+> > +#include "sunxi-common-regulators.dtsi"
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/input/input.h>
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/pwm/pwm.h>
+> > +
+> > +/ {
+> > +	model =3D "Ainol AW1";
+> > +	compatible =3D "ainol,ainol-aw1", "allwinner,sun7i-a20";
+> > +
+> > +	aliases {
+> > +		serial0 =3D &uart0;
+> > +	};
+> > +
+> > +	chosen {
+> > +		stdout-path =3D "serial0:115200n8";
+> > +	};
+> > +
+> > +	backlight: backlight {
+> > +		compatible =3D "pwm-backlight";
+> > +		pwms =3D <&pwm 0 50000 PWM_POLARITY_INVERTED>;
+> > +		brightness-levels =3D <0 10 20 30 40 50 60 70 80 90 100>;
+>=20
+> The increase in perceived brightness should be linear. Usually, for
+> PWMs backed backlight, an exponential list is a much better
+> approximation.
 
-Please add ABI documentation for this sysfs interface.
+Thanks for the hint, it never occurred to me that pwm duty cycle was not
+linear with brightness, but that makes sense. I'll give that a try (on
+255 values instead of 10 to keep some level of precision in low
+brightness). The way to go here is probably use a base-255 logarithm
+such as: duty cycle =3D range * log(i+1)/log(255) with i the linear
+brightness value (0 to 255) and range the amplitude of our values (that
+gets divided by the maximum brightness, so it's really up to hardware
+precision at this point). I'll go with a range of 255 as well.
 
-> +static int sc27xx_led_register(struct device *dev, struct sc27xx_led_priv *priv)
-> +{
-> +	int i, err;
-> +
-> +	err = sc27xx_led_init(priv->regmap);
-> +	if (err)
-> +		return err;
-> +
-> +	for (i = 0; i < SC27XX_LEDS_MAX; i++) {
-> +		struct sc27xx_led *led = &priv->leds[i];
-> +
-> +		if (!led->active)
-> +			continue;
-> +
-> +		led->line = i;
-> +		led->priv = priv;
-> +		led->ldev.brightness_set_blocking = sc27xx_led_set;
-> +		led->ldev.max_brightness = LED_FULL;
-> +		led->ldev.groups = sc27xx_led_groups;
-> +
-> +		err = devm_led_classdev_register(dev, &led->ldev);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int sc27xx_led_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node, *child;
-> +	struct sc27xx_led_priv *priv;
-> +	u32 base, count, reg;
-> +	int err;
-> +
-> +	count = of_get_child_count(np);
-> +	if (!count || count > SC27XX_LEDS_MAX)
-> +		return -EINVAL;
-> +
-> +	err = of_property_read_u32(np, "reg", &base);
-> +	if (err) {
-> +		dev_err(dev, "fail to get reg of property\n");
-> +		return err;
-> +	}
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->base = base;
-> +	priv->regmap = dev_get_regmap(dev->parent, NULL);
-> +	if (IS_ERR(priv->regmap)) {
-> +		err = PTR_ERR(priv->regmap);
-> +		dev_err(dev, "failed to get regmap: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	for_each_child_of_node(np, child) {
-> +		err = of_property_read_u32(child, "reg", &reg);
-> +		if (err) {
-> +			of_node_put(child);
-> +			return err;
-> +		}
-> +
-> +		if (reg < 0 || reg >= SC27XX_LEDS_MAX
-> +		    || priv->leds[reg].active) {
-> +			of_node_put(child);
-> +			return -EINVAL;
-> +		}
-> +
-> +		priv->leds[reg].active = true;
-> +		priv->leds[reg].ldev.name =
-> +			of_get_property(child, "label", NULL) ? : child->name;
+> > +		default-brightness-level =3D <5>;
+> > +		enable-gpios =3D <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
+> > +	};
+> > +
+> > +	panel: panel {
+> > +		compatible =3D "innolux,at070tn90";
+> > +		#address-cells =3D <1>;
+> > +		#size-cells =3D <0>;
+> > +		power-supply =3D <&panel_power>;
+> > +		backlight =3D <&backlight>;
+> > +
+> > +		port@0 {
+> > +			reg =3D <0>;
+> > +			#address-cells =3D <1>;
+> > +			#size-cells =3D <0>;
+> > +
+> > +			panel_input: endpoint@0 {
+> > +				reg =3D <0>;
+> > +				remote-endpoint =3D <&tcon0_out_panel>;
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > +	panel_power: panel_power {
+> > +		compatible =3D "regulator-fixed";
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&panel_power_pin>;
+> > +		regulator-name =3D "panel-power";
+> > +		regulator-min-microvolt =3D <10400000>;
+> > +		regulator-max-microvolt =3D <10400000>;
+> > +		gpio =3D <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
+> > +		enable-active-high;
+> > +		regulator-boot-on;
+> > +	};
+> > +};
+> > +
+> > +&codec {
+> > +	allwinner,pa-gpios =3D <&pio 7 15 GPIO_ACTIVE_HIGH>; /* PH15 */
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&cpu0 {
+> > +	cpu-supply =3D <&reg_dcdc2>;
+> > +};
+> > +
+> > +&de {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&ehci0 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&ehci1 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&i2c0 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&i2c0_pins_a>;
+> > +	status =3D "okay";
+> > +
+> > +	axp209: pmic@34 {
+> > +		reg =3D <0x34>;
+> > +		interrupt-parent =3D <&nmi_intc>;
+> > +		interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
+> > +	};
+> > +};
+> > +
+> > +&i2c1 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&i2c1_pins_a>;
+> > +	status =3D "okay";
+> > +
+> > +	lis3dh: accelerometer@18 {
+> > +		compatible =3D "st,lis3dh-accel";
+> > +		reg =3D <0x18>;
+> > +		vdd-supply =3D <&reg_vcc3v3>;
+> > +		vddio-supply =3D <&reg_vcc3v3>;
+> > +		st,drdy-int-pin =3D <1>;
+> > +	};
+> > +};
+> > +
+> > +&i2c2 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&i2c2_pins_a>;
+> > +	status =3D "okay";
+> > +	clock-frequency =3D <400000>;
+> > +
+> > +	gsl1680: touchscreen@40 {
+> > +		compatible =3D "silead,gsl1680";
+> > +		reg =3D <0x40>;
+> > +		interrupt-parent =3D <&pio>;
+> > +		interrupts =3D <7 21 IRQ_TYPE_EDGE_FALLING>; /* EINT21 (PH21) */
+> > +		power-gpios =3D <&pio 7 20 GPIO_ACTIVE_HIGH>; /* PH20 */
+> > +		firmware-name =3D "gsl1680-ainol-aw1.fw";
+> > +		touchscreen-size-x =3D <480>;
+> > +		touchscreen-size-y =3D <800>;
+> > +		touchscreen-swapped-x-y;
+> > +		touchscreen-inverted-y;
+> > +		silead,max-fingers =3D <5>;
+> > +	};
+> > +};
+> > +
+> > +&lradc {
+> > +	vref-supply =3D <&reg_ldo2>;
+> > +	status =3D "okay";
+> > +
+> > +	button@571 {
+> > +		label =3D "Volume Up";
+> > +		linux,code =3D <KEY_VOLUMEUP>;
+> > +		channel =3D <0>;
+> > +		voltage =3D <571428>;
+> > +	};
+> > +
+> > +	button@761 {
+> > +		label =3D "Volume Down";
+> > +		linux,code =3D <KEY_VOLUMEDOWN>;
+> > +		channel =3D <0>;
+> > +		voltage =3D <761904>;
+> > +	};
+> > +
+> > +	button@952 {
+> > +		label =3D "Home";
+> > +		linux,code =3D <KEY_HOME>;
+> > +		channel =3D <0>;
+> > +		voltage =3D <952380>;
+> > +	};
+> > +};
+> > +
+> > +&mmc0 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&mmc0_pins_a>;
+> > +	vmmc-supply =3D <&reg_vcc3v3>;
+>=20
+> You have the regulators described in your DT, you'd better use them
+> instead of the one coming from sunxi-common-regulators.dtsi.
 
-LED class device naming pattern requires devicename section.
-Please use "sc27xx::" for the case when label is not available
-and concatenate "sc27xx:" with the child->name otherwise.
+Well, according to the reference A20 design, the mmc pins and the card
+are powered by the 3.3V power rail, that comes from a regular step-down
+regulator sourcing from IPSOUT, so I don't see what regulator I should
+better use. Do you have a suggestion?
 
-You can refer to drivers/leds/leds-cr0014114.c in this regard.
-We're sorting out issues around LED class device naming, so this
-is quite new approach.
+> > +	bus-width =3D <4>;
+> > +	cd-gpios =3D <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+> > +	cd-inverted;
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&ohci0 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&ohci1 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&otg_sram {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&pio {
+> > +	panel_power_pin: panel_power_pin@0 {
+> > +		pins =3D "PH8";
+> > +		function =3D "gpio_out";
+> > +	};
+> > +};
+>=20
+> You don't need that pinctrl node.
 
-> +	}
-> +
-> +	return sc27xx_led_register(dev, priv);
-> +}
-> +
-> +static const struct of_device_id sc27xx_led_of_match[] = {
-> +	{ .compatible = "sprd,sc27xx-bltc", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, sc27xx_led_of_match);
-> +
-> +static struct platform_driver sc27xx_led_driver = {
-> +	.driver = {
-> +		.name = "sc27xx-bltc",
-> +		.of_match_table = sc27xx_led_of_match,
-> +	},
-> +	.probe = sc27xx_led_probe,
-> +};
-> +
-> +module_platform_driver(sc27xx_led_driver);
-> +
-> +MODULE_DESCRIPTION("Spreadtrum SC27xx breathing light controller driver");
-> +MODULE_AUTHOR("Xiaotong Lu <xiaotong.lu@spreadtrum.com>");
-> +MODULE_LICENSE("GPL v2");
-> 
+I'll get rid of it then. You mentioned that regulator-simple uses the
+old GPIO API, so I assumed it meant that a pinctrl node is still needed.
+For reference, it uses of_get_named_gpio (not the devm-managed fashion).
 
--- 
-Best regards,
-Jacek Anaszewski
+Cheers,
+
+Paul
+
+--=20
+Developer of free digital technology and hardware support.
+
+Website: https://www.paulk.fr/
+Coding blog: https://code.paulk.fr/
+Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+--=-LZASvdTavrcasiQJxSbY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlrws/IACgkQhP3B6o/u
+lQy2zg/9GKAlXfphJOX4YKvn88ABtNZmHfRpRdHbNoLIoTavi1ULbDb/NdcJ2H3M
+JoAvp3+ur1VuJD3fwo3W+k5hqWGOmVHguqtH2gjDxWLkPN1H5zSIgFtqBErBZDtT
+TevBRzHRp69hDG37pYODs9nwPNvH+16kMSOL5id+E1GGDHblNWnxAl5EHc11A0rD
+UBNKgcaU71LnWA6uX0oOCIeJQMlU5wV4uAYPpzaA1MZmTSIe4xhvR7XeATIXSfDU
+o74z9Af8S7TgBoDo77T0ez68qSHkeFiKOIYeQvqIq7zORIOl1HhdD37yh+QPOFiW
+ArHkN1ijyTz372Y5SNIQ/GjdKZ5+drDtgIU9IS5wFEE1RcO9lG5KfXNT8XiJoKIO
+k0+JmsnC6mJeEN3D/rUKGBPmNhVLB7wqui6FO2p80/8E2xAAQpU/8CaNeaCVSKF4
+rYURAL5KNL/RavvTdeayaJzX9QCTNmFj0rmDI9UIDduJncSUsQpgQH0Bl11zAaxt
+B848mQB5CAcCy+shMUBcZRXqA6MA7dGqYg2Pa9YrGN1YQFgWsJd6aXw6ITB1D40E
+EKeGj2jbdPo+dY4E8WrYDD8hG5Nkt7yx+B1iBw6WlQl5SsamBoVlASJ4EhNgf+Kj
+Hr4bnxW1u+7TwOX/1JxHfVuh0UfTcRDka+1X+mMaOGZGQQ4QRU8=
+=WVgK
+-----END PGP SIGNATURE-----
+
+--=-LZASvdTavrcasiQJxSbY--
