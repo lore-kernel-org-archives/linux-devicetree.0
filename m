@@ -1,140 +1,240 @@
-From: Paul Kocialkowski <contact@paulk.fr>
-Subject: [PATCH v3 3/3] ARM: dts: sun7i: Add support for the Ainol AW1 tablet
-Date: Sun,  6 May 2018 23:49:01 +0200
-Message-ID: <20180506214901.23429-3-contact@paulk.fr>
-References: <20180506214901.23429-1-contact@paulk.fr>
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v3 1/3] resource: Use list_head to link sibling resource
+Date: Mon, 7 May 2018 09:14:29 +0800
+Message-ID: <20180507011429.GG30581@MiWiFi-R3L-srv>
+References: <20180419001848.3041-1-bhe@redhat.com>
+ <20180419001848.3041-2-bhe@redhat.com>
+ <20180426011837.GA79340@WeideMacBook-Pro.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180506214901.23429-1-contact@paulk.fr>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Paul Kocialkowski <contact@paulk.fr>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <20180426011837.GA79340@WeideMacBook-Pro.local>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: nicolas.pitre@linaro.org, Brijesh Singh <brijesh.singh@amd.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org, Keith Busch <keith.busch@intel.com>, Yaowei Bai <baiyaowei@cmss.chinamobile.com>, Frank Rowand <frowand.list@gmail.com>, dan.j.williams@intel.com, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Hemminger <sthemmin@microsoft.com>, linux-nvdimm@lists.01.org, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, linux-input@vger.kernel.org, Borislav Petkov <bp@suse.de>, Tom Lendacky <thomas.lendacky@amd.com>, Haiyang Zhang <haiyangz@microsoft.com>, josh@joshtriplett.org, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>, robh+dt@kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Jonathan Derrick <jonathan.derrick@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dmitry
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBBaW5vbCBBVzEsIGFuIEEyMC1iYXNlZCA3IiB0YWJs
-ZXQgZnJvbSBBaW5vbC4KClRoZSBmb2xsb3dpbmcgYm9hcmQtc3BlY2lmaWMgZmVhdHVyZXMgYXJl
-IHN1cHBvcnRlZDoKKiBMQ0QgcGFuZWwKKiBCYWNrbGlnaHQKKiBVU0IgT1RHCiogQnV0dG9ucwoq
-IFRvdWNoc2NyZWVuIChkb2Vzbid0IHdvcmsgd2l0aG91dCBub24tZnJlZSBmaXJtd2FyZSkKKiBB
-Y2NlbGVyb21ldGVyCiogQmF0dGVyeQoKVGhlIGZvbGxvd2luZyBhcmUgdW50ZXN0ZWQ6CiogQXVk
-aW8gb3V0cHV0CiogQXVkaW8gc3BlYWtlcnMKKiBVU0IgdmlhIFNQQ0kgY29ubmVjdG9yCgpUaGUg
-Zm9sbG93aW5nIGFyZSBub3Qgc3VwcG9ydGVkOgoqIFdpLUZpCiogQmx1ZXRvb3RoCiogTkFORAoq
-IEF1ZGlvIHZpYSBTUENJIGNvbm5lY3RvcgoqIEF1ZGlvIHZpYSBCbHVldG9vdGggSTJTCgpTaWdu
-ZWQtb2ZmLWJ5OiBQYXVsIEtvY2lhbGtvd3NraSA8Y29udGFjdEBwYXVsay5mcj4KLS0tCiBhcmNo
-L2FybS9ib290L2R0cy9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAgMSArCiBhcmNoL2FybS9i
-b290L2R0cy9zdW43aS1hMjAtYWlub2wtYXcxLmR0cyB8IDI3NSArKysrKysrKysrKysrKysrKysr
-KysrCiAyIGZpbGVzIGNoYW5nZWQsIDI3NiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2
-NDQgYXJjaC9hcm0vYm9vdC9kdHMvc3VuN2ktYTIwLWFpbm9sLWF3MS5kdHMKCmRpZmYgLS1naXQg
-YS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxl
-CmluZGV4IDdlMjQyNDk1NzgwOS4uNGE4MDk3MWYyYmM5IDEwMDY0NAotLS0gYS9hcmNoL2FybS9i
-b290L2R0cy9NYWtlZmlsZQorKysgYi9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZQpAQCAtOTQ2
-LDYgKzk0Niw3IEBAIGR0Yi0kKENPTkZJR19NQUNIX1NVTjZJKSArPSBcCiAJc3VuNmktYTMxcy1z
-aW5vdm9pcC1icGktbTIuZHRiIFwKIAlzdW42aS1hMzFzLXlvbmVzLXRvcHRlY2gtYnMxMDc4LXYy
-LmR0YgogZHRiLSQoQ09ORklHX01BQ0hfU1VON0kpICs9IFwKKwlzdW43aS1hMjAtYWlub2wtYXcx
-LmR0YiBcCiAJc3VuN2ktYTIwLWJhbmFuYXBpLmR0YiBcCiAJc3VuN2ktYTIwLWJhbmFuYXBpLW0x
-LXBsdXMuZHRiIFwKIAlzdW43aS1hMjAtYmFuYW5hcHJvLmR0YiBcCmRpZmYgLS1naXQgYS9hcmNo
-L2FybS9ib290L2R0cy9zdW43aS1hMjAtYWlub2wtYXcxLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L3N1bjdpLWEyMC1haW5vbC1hdzEuZHRzCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAw
-MDAwMDAwMC4uOWExZDU0YTlmOWEwCi0tLSAvZGV2L251bGwKKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvc3VuN2ktYTIwLWFpbm9sLWF3MS5kdHMKQEAgLTAsMCArMSwyNzUgQEAKKy8qCisgKiBDb3B5
-cmlnaHQgKEMpIDIwMTggUGF1bCBLb2NpYWxrb3dza2kgPGNvbnRhY3RAcGF1bGsuZnI+CisgKgor
-ICogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjArCisgKi8KKworL2R0cy12MS87Cisj
-aW5jbHVkZSAic3VuN2ktYTIwLmR0c2kiCisjaW5jbHVkZSAic3VueGktY29tbW9uLXJlZ3VsYXRv
-cnMuZHRzaSIKKworI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPgorI2luY2x1ZGUg
-PGR0LWJpbmRpbmdzL2lucHV0L2lucHV0Lmg+CisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJy
-dXB0LWNvbnRyb2xsZXIvaXJxLmg+CisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcHdtL3B3bS5oPgor
-CisvIHsKKwltb2RlbCA9ICJBaW5vbCBBVzEiOworCWNvbXBhdGlibGUgPSAiYWlub2wsYWlub2wt
-YXcxIiwgImFsbHdpbm5lcixzdW43aS1hMjAiOworCisJYWxpYXNlcyB7CisJCXNlcmlhbDAgPSAm
-dWFydDA7CisJfTsKKworCWNob3NlbiB7CisJCXN0ZG91dC1wYXRoID0gInNlcmlhbDA6MTE1MjAw
-bjgiOworCX07CisKKwliYWNrbGlnaHQ6IGJhY2tsaWdodCB7CisJCWNvbXBhdGlibGUgPSAicHdt
-LWJhY2tsaWdodCI7CisJCXB3bXMgPSA8JnB3bSAwIDUwMDAwIFBXTV9QT0xBUklUWV9JTlZFUlRF
-RD47CisJCWJyaWdodG5lc3MtbGV2ZWxzID0gPDAgMTAgMjAgMzAgNDAgNTAgNjAgNzAgODAgOTAg
-MTAwPjsKKwkJZGVmYXVsdC1icmlnaHRuZXNzLWxldmVsID0gPDU+OworCQllbmFibGUtZ3Bpb3Mg
-PSA8JnBpbyA3IDcgR1BJT19BQ1RJVkVfSElHSD47IC8qIFBINyAqLworCX07CisKKwlwYW5lbDog
-cGFuZWwgeworCQljb21wYXRpYmxlID0gImlubm9sdXgsYXQwNzB0bjkwIjsKKwkJI2FkZHJlc3Mt
-Y2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+OworCQlwb3dlci1zdXBwbHkgPSA8JnBh
-bmVsX3Bvd2VyPjsKKwkJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+OworCisJCXBvcnRAMCB7CisJ
-CQlyZWcgPSA8MD47CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNzaXplLWNlbGxzID0g
-PDA+OworCisJCQlwYW5lbF9pbnB1dDogZW5kcG9pbnRAMCB7CisJCQkJcmVnID0gPDA+OworCQkJ
-CXJlbW90ZS1lbmRwb2ludCA9IDwmdGNvbjBfb3V0X3BhbmVsPjsKKwkJCX07CisJCX07CisJfTsK
-KworCXBhbmVsX3Bvd2VyOiBwYW5lbF9wb3dlciB7CisJCWNvbXBhdGlibGUgPSAicmVndWxhdG9y
-LWZpeGVkIjsKKwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwkJcGluY3RybC0wID0gPCZw
-YW5lbF9wb3dlcl9waW4+OworCQlyZWd1bGF0b3ItbmFtZSA9ICJwYW5lbC1wb3dlciI7CisJCXJl
-Z3VsYXRvci1taW4tbWljcm92b2x0ID0gPDEwNDAwMDAwPjsKKwkJcmVndWxhdG9yLW1heC1taWNy
-b3ZvbHQgPSA8MTA0MDAwMDA+OworCQlncGlvID0gPCZwaW8gNyA4IEdQSU9fQUNUSVZFX0hJR0g+
-OyAvKiBQSDggKi8KKwkJZW5hYmxlLWFjdGl2ZS1oaWdoOworCQlyZWd1bGF0b3ItYm9vdC1vbjsK
-Kwl9OworfTsKKworJmNvZGVjIHsKKwlhbGx3aW5uZXIscGEtZ3Bpb3MgPSA8JnBpbyA3IDE1IEdQ
-SU9fQUNUSVZFX0hJR0g+OyAvKiBQSDE1ICovCisJc3RhdHVzID0gIm9rYXkiOworfTsKKworJmNw
-dTAgeworCWNwdS1zdXBwbHkgPSA8JnJlZ19kY2RjMj47Cit9OworCismZGUgeworCXN0YXR1cyA9
-ICJva2F5IjsKK307CisKKyZlaGNpMCB7CisJc3RhdHVzID0gIm9rYXkiOworfTsKKworJmVoY2kx
-IHsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCismaTJjMCB7CisJcGluY3RybC1uYW1lcyA9ICJk
-ZWZhdWx0IjsKKwlwaW5jdHJsLTAgPSA8JmkyYzBfcGluc19hPjsKKwlzdGF0dXMgPSAib2theSI7
-CisKKwlheHAyMDk6IHBtaWNAMzQgeworCQlyZWcgPSA8MHgzND47CisJCWludGVycnVwdC1wYXJl
-bnQgPSA8Jm5taV9pbnRjPjsKKwkJaW50ZXJydXB0cyA9IDwwIElSUV9UWVBFX0xFVkVMX0xPVz47
-CisJfTsKK307CisKKyZpMmMxIHsKKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOworCXBpbmN0
-cmwtMCA9IDwmaTJjMV9waW5zX2E+OworCXN0YXR1cyA9ICJva2F5IjsKKworCWxpczNkaDogYWNj
-ZWxlcm9tZXRlckAxOCB7CisJCWNvbXBhdGlibGUgPSAic3QsbGlzM2RoLWFjY2VsIjsKKwkJcmVn
-ID0gPDB4MTg+OworCQl2ZGQtc3VwcGx5ID0gPCZyZWdfdmNjM3YzPjsKKwkJdmRkaW8tc3VwcGx5
-ID0gPCZyZWdfdmNjM3YzPjsKKwkJc3QsZHJkeS1pbnQtcGluID0gPDE+OworCX07Cit9OworCism
-aTJjMiB7CisJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwlwaW5jdHJsLTAgPSA8JmkyYzJf
-cGluc19hPjsKKwlzdGF0dXMgPSAib2theSI7CisJY2xvY2stZnJlcXVlbmN5ID0gPDQwMDAwMD47
-CisKKwlnc2wxNjgwOiB0b3VjaHNjcmVlbkA0MCB7CisJCWNvbXBhdGlibGUgPSAic2lsZWFkLGdz
-bDE2ODAiOworCQlyZWcgPSA8MHg0MD47CisJCWludGVycnVwdC1wYXJlbnQgPSA8JnBpbz47CisJ
-CWludGVycnVwdHMgPSA8NyAyMSBJUlFfVFlQRV9FREdFX0ZBTExJTkc+OyAvKiBFSU5UMjEgKFBI
-MjEpICovCisJCXBvd2VyLWdwaW9zID0gPCZwaW8gNyAyMCBHUElPX0FDVElWRV9ISUdIPjsgLyog
-UEgyMCAqLworCQlmaXJtd2FyZS1uYW1lID0gImdzbDE2ODAtYWlub2wtYXcxLmZ3IjsKKwkJdG91
-Y2hzY3JlZW4tc2l6ZS14ID0gPDQ4MD47CisJCXRvdWNoc2NyZWVuLXNpemUteSA9IDw4MDA+Owor
-CQl0b3VjaHNjcmVlbi1zd2FwcGVkLXgteTsKKwkJdG91Y2hzY3JlZW4taW52ZXJ0ZWQteTsKKwkJ
-c2lsZWFkLG1heC1maW5nZXJzID0gPDU+OworCX07Cit9OworCismbHJhZGMgeworCXZyZWYtc3Vw
-cGx5ID0gPCZyZWdfbGRvMj47CisJc3RhdHVzID0gIm9rYXkiOworCisJYnV0dG9uQDU3MSB7CisJ
-CWxhYmVsID0gIlZvbHVtZSBVcCI7CisJCWxpbnV4LGNvZGUgPSA8S0VZX1ZPTFVNRVVQPjsKKwkJ
-Y2hhbm5lbCA9IDwwPjsKKwkJdm9sdGFnZSA9IDw1NzE0Mjg+OworCX07CisKKwlidXR0b25ANzYx
-IHsKKwkJbGFiZWwgPSAiVm9sdW1lIERvd24iOworCQlsaW51eCxjb2RlID0gPEtFWV9WT0xVTUVE
-T1dOPjsKKwkJY2hhbm5lbCA9IDwwPjsKKwkJdm9sdGFnZSA9IDw3NjE5MDQ+OworCX07CisKKwli
-dXR0b25AOTUyIHsKKwkJbGFiZWwgPSAiSG9tZSI7CisJCWxpbnV4LGNvZGUgPSA8S0VZX0hPTUU+
-OworCQljaGFubmVsID0gPDA+OworCQl2b2x0YWdlID0gPDk1MjM4MD47CisJfTsKK307CisKKyZt
-bWMwIHsKKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOworCXBpbmN0cmwtMCA9IDwmbW1jMF9w
-aW5zX2E+OworCXZtbWMtc3VwcGx5ID0gPCZyZWdfdmNjM3YzPjsKKwlidXMtd2lkdGggPSA8ND47
-CisJY2QtZ3Bpb3MgPSA8JnBpbyA3IDEgR1BJT19BQ1RJVkVfSElHSD47IC8qIFBIMSAqLworCWNk
-LWludmVydGVkOworCXN0YXR1cyA9ICJva2F5IjsKK307CisKKyZvaGNpMCB7CisJc3RhdHVzID0g
-Im9rYXkiOworfTsKKworJm9oY2kxIHsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCismb3RnX3Ny
-YW0geworCXN0YXR1cyA9ICJva2F5IjsKK307CisKKyZwaW8geworCXBhbmVsX3Bvd2VyX3Bpbjog
-cGFuZWxfcG93ZXJfcGluQDAgeworCQlwaW5zID0gIlBIOCI7CisJCWZ1bmN0aW9uID0gImdwaW9f
-b3V0IjsKKwl9OworfTsKKworJnB3bSB7CisJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwlw
-aW5jdHJsLTAgPSA8JnB3bTBfcGluc19hPjsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCismdGNv
-bjAgeworCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJcGluY3RybC0wID0gPCZsY2QwX3Jn
-YjY2Nl9waW5zPjsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCismdGNvbjBfb3V0IHsKKwl0Y29u
-MF9vdXRfcGFuZWw6IGVuZHBvaW50QDAgeworCQlyZWcgPSA8MD47CisJCXJlbW90ZS1lbmRwb2lu
-dCA9IDwmcGFuZWxfaW5wdXQ+OworCX07Cit9OworCismdWFydDAgeworCXBpbmN0cmwtbmFtZXMg
-PSAiZGVmYXVsdCI7CisJcGluY3RybC0wID0gPCZ1YXJ0MF9waW5zX2E+OworCXN0YXR1cyA9ICJv
-a2F5IjsKK307CisKKyZ1c2Jfb3RnIHsKKwlkcl9tb2RlID0gIm90ZyI7CisJc3RhdHVzID0gIm9r
-YXkiOworfTsKKworJnVzYnBoeSB7CisJdXNiMF9pZF9kZXQtZ3BpbyA9IDwmcGlvIDcgNCBHUElP
-X0FDVElWRV9ISUdIPjsgLyogUEg0ICovCisJdXNiMF92YnVzX3Bvd2VyLXN1cHBseSA9IDwmdXNi
-X3Bvd2VyX3N1cHBseT47CisJdXNiMF92YnVzLXN1cHBseSA9IDwmcmVnX3VzYjBfdmJ1cz47CisJ
-dXNiMV92YnVzLXN1cHBseSA9IDwmcmVnX3VzYjFfdmJ1cz47CisJdXNiMl92YnVzLXN1cHBseSA9
-IDwmcmVnX3VzYjJfdmJ1cz47CisJc3RhdHVzID0gIm9rYXkiOworfTsKKworI2luY2x1ZGUgImF4
-cDIwOS5kdHNpIgorCismYmF0dGVyeV9wb3dlcl9zdXBwbHkgeworCXN0YXR1cyA9ICJva2F5IjsK
-K307CisKKyZyZWdfZGNkYzIgeworCXJlZ3VsYXRvci1hbHdheXMtb247CisJcmVndWxhdG9yLW1p
-bi1taWNyb3ZvbHQgPSA8MTAwMDAwMD47CisJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MTQ1
-MDAwMD47CisJcmVndWxhdG9yLW5hbWUgPSAidmRkLWNwdSI7Cit9OworCismcmVnX2RjZGMzIHsK
-KwlyZWd1bGF0b3ItYWx3YXlzLW9uOworCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDEwMDAw
-MDA+OworCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE0MDAwMDA+OworCXJlZ3VsYXRvci1u
-YW1lID0gInZkZC1pbnQtZGxsIjsKK307CisKKyZyZWdfbGRvMSB7CisJcmVndWxhdG9yLW5hbWUg
-PSAidmRkLXJ0YyI7Cit9OworCismcmVnX2xkbzIgeworCXJlZ3VsYXRvci1hbHdheXMtb247CisJ
-cmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MzAwMDAwMD47CisJcmVndWxhdG9yLW1heC1taWNy
-b3ZvbHQgPSA8MzAwMDAwMD47CisJcmVndWxhdG9yLW5hbWUgPSAiYXZjYyI7Cit9OworCismcmVn
-X3VzYjBfdmJ1cyB7CisJc3RhdHVzID0gIm9rYXkiOworfTsKKworJnJlZ191c2IxX3ZidXMgewor
-CXN0YXR1cyA9ICJva2F5IjsKK307CisKKyZyZWdfdXNiMl92YnVzIHsKKwlzdGF0dXMgPSAib2th
-eSI7Cit9OworCismdXNiX3Bvd2VyX3N1cHBseSB7CisJc3RhdHVzID0gIm9rYXkiOworfTsKLS0g
-CjIuMTcuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Wei Yang,
+
+On 04/26/18 at 09:18am, Wei Yang wrote:
+> On Thu, Apr 19, 2018 at 08:18:46AM +0800, Baoquan He wrote:
+> >The struct resource uses singly linked list to link siblings. It's not
+> >easy to do reverse iteration on sibling list. So replace it with list_head.
+> >
+> 
+> Hi, Baoquan
+> 
+> Besides changing the data structure, I have another proposal to do the reverse
+> iteration. Which means it would not affect other users, if you just want a
+> reverse iteration.
+> 
+> BTW, I don't think Andrew suggest to use linked-list directly. What he wants
+> is a better solution to your first proposal in
+> https://patchwork.kernel.org/patch/10300819/.
+> 
+> Below is my proposal of resource reverse iteration without changing current
+> design.
+
+I got your mail and read it, then interrupted by other thing and forgot
+replying, sorry.
+
+I am fine with your code change. As I said before, I have tried to change
+code per reviewers' comment, then let reviewers decide which way is
+better. Please feel free to post formal patches and joining discussion
+about this issue.
+
+Thanks
+Baoquan
+
+> 
+> From 5d7145d44fe48b98572a03884fa3a3aa82e3cef9 Mon Sep 17 00:00:00 2001
+> From: Wei Yang <richard.weiyang@gmail.com>
+> Date: Sat, 24 Mar 2018 23:25:46 +0800
+> Subject: [PATCH] kernel/resource: add walk_system_ram_res_rev()
+> 
+> As discussed on https://patchwork.kernel.org/patch/10300819/, this patch
+> comes up with a variant implementation of walk_system_ram_res_rev(), which
+> uses iteration instead of allocating array to store those resources.
+> 
+> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+> ---
+>  include/linux/ioport.h |   3 ++
+>  kernel/resource.c      | 113 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 116 insertions(+)
+> 
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index da0ebaec25f0..473f1d9cb97e 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -277,6 +277,9 @@ extern int
+>  walk_system_ram_res(u64 start, u64 end, void *arg,
+>  		    int (*func)(struct resource *, void *));
+>  extern int
+> +walk_system_ram_res_rev(u64 start, u64 end, void *arg,
+> +		    int (*func)(struct resource *, void *));
+> +extern int
+>  walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start, u64 end,
+>  		    void *arg, int (*func)(struct resource *, void *));
+>  
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index 769109f20fb7..d4ec5fbc6875 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -73,6 +73,38 @@ static struct resource *next_resource(struct resource *p, bool sibling_only)
+>  	return p->sibling;
+>  }
+>  
+> +static struct resource *prev_resource(struct resource *p, bool sibling_only)
+> +{
+> +	struct resource *prev;
+> +	if (NULL == iomem_resource.child)
+> +		return NULL;
+> +
+> +	if (p == NULL) {
+> +		prev = iomem_resource.child;
+> +		while (prev->sibling)
+> +			prev = prev->sibling;
+> +	} else {
+> +		if (p->parent->child == p) {
+> +			return p->parent;
+> +		}
+> +
+> +		for (prev = p->parent->child; prev->sibling != p;
+> +			prev = prev->sibling) {}
+> +	}
+> +
+> +	/* Caller wants to traverse through siblings only */
+> +	if (sibling_only)
+> +		return prev;
+> +
+> +	for (;prev->child;) {
+> +		prev = prev->child;
+> +
+> +		while (prev->sibling)
+> +			prev = prev->sibling;
+> +	}
+> +	return prev;
+> +}
+> +
+>  static void *r_next(struct seq_file *m, void *v, loff_t *pos)
+>  {
+>  	struct resource *p = v;
+> @@ -401,6 +433,47 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
+>  	return 0;
+>  }
+>  
+> +/*
+> + * Finds the highest iomem resource existing within [res->start.res->end).
+> + * The caller must specify res->start, res->end, res->flags, and optionally
+> + * desc.  If found, returns 0, res is overwritten, if not found, returns -1.
+> + * This function walks the whole tree and not just first level children until
+> + * and unless first_level_children_only is true.
+> + */
+> +static int find_prev_iomem_res(struct resource *res, unsigned long desc,
+> +			       bool first_level_children_only)
+> +{
+> +	struct resource *p;
+> +
+> +	BUG_ON(!res);
+> +	BUG_ON(res->start >= res->end);
+> +
+> +	read_lock(&resource_lock);
+> +
+> +	for (p = prev_resource(NULL, first_level_children_only); p;
+> +		p = prev_resource(p, first_level_children_only)) {
+> +		if ((p->flags & res->flags) != res->flags)
+> +			continue;
+> +		if ((desc != IORES_DESC_NONE) && (desc != p->desc))
+> +			continue;
+> +		if (p->end < res->start || p->child == iomem_resource.child) {
+> +			p = NULL;
+> +			break;
+> +		}
+> +		if ((p->end >= res->start) && (p->start < res->end))
+> +			break;
+> +	}
+> +
+> +	read_unlock(&resource_lock);
+> +	if (!p)
+> +		return -1;
+> +	/* copy data */
+> +	resource_clip(res, p->start, p->end);
+> +	res->flags = p->flags;
+> +	res->desc = p->desc;
+> +	return 0;
+> +}
+> +
+>  static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
+>  				 bool first_level_children_only,
+>  				 void *arg,
+> @@ -422,6 +495,27 @@ static int __walk_iomem_res_desc(struct resource *res, unsigned long desc,
+>  	return ret;
+>  }
+>  
+> +static int __walk_iomem_res_rev_desc(struct resource *res, unsigned long desc,
+> +				 bool first_level_children_only,
+> +				 void *arg,
+> +				 int (*func)(struct resource *, void *))
+> +{
+> +	u64 orig_start = res->start;
+> +	int ret = -1;
+> +
+> +	while ((res->start < res->end) &&
+> +	       !find_prev_iomem_res(res, desc, first_level_children_only)) {
+> +		ret = (*func)(res, arg);
+> +		if (ret)
+> +			break;
+> +
+> +		res->end = res->start?(res->start - 1):0;
+> +		res->start = orig_start;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  /*
+>   * Walks through iomem resources and calls func() with matching resource
+>   * ranges. This walks through whole tree and not just first level children.
+> @@ -468,6 +562,25 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
+>  				     arg, func);
+>  }
+>  
+> +/*
+> + * This function, being a variant of walk_system_ram_res(), calls the @func
+> + * callback against all memory ranges of type System RAM which are marked as
+> + * IORESOURCE_SYSTEM_RAM and IORESOUCE_BUSY in reversed order, i.e., from
+> + * higher to lower.
+> + */
+> +int walk_system_ram_res_rev(u64 start, u64 end, void *arg,
+> +				int (*func)(struct resource *, void *))
+> +{
+> +	struct resource res;
+> +
+> +	res.start = start;
+> +	res.end = end;
+> +	res.flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> +
+> +	return __walk_iomem_res_rev_desc(&res, IORES_DESC_NONE, true,
+> +				     arg, func);
+> +}
+> +
+>  /*
+>   * This function calls the @func callback against all memory ranges, which
+>   * are ranges marked as IORESOURCE_MEM and IORESOUCE_BUSY.
+> -- 
+> 2.15.1
+> 
+> 
+> -- 
+> Wei Yang
+> Help you, Help me
