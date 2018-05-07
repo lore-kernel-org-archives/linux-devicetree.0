@@ -1,37 +1,46 @@
-Return-Path: <SRS0=cv1X=H3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from kirsty.vergenet.net ([202.4.237.240]:55016 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752228AbeEHNqK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 8 May 2018 09:46:10 -0400
-Date: Tue, 8 May 2018 15:46:06 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/2] ARM: dts: renesas: Add missing interrupt-affinity to
- PMU
-Message-ID: <20180508134605.7bpanbkuuxibgza7@verge.net.au>
-References: <1525700405-7993-1-git-send-email-geert+renesas@glider.be>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1525700405-7993-1-git-send-email-geert+renesas@glider.be>
+Return-Path: <SRS0=jssF=H2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from albert.telenet-ops.be ([195.130.137.90]:57702 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752029AbeEGNkH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 7 May 2018 09:40:07 -0400
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/2] ARM: dts: renesas: Add missing interrupt-affinity to PMU
+Date: Mon,  7 May 2018 15:40:03 +0200
+Message-Id: <1525700405-7993-1-git-send-email-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, May 07, 2018 at 03:40:03PM +0200, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
-> 
-> The Cortex-A9 PMU nodes on SH-Mobile AG5 and Emma Mobile EV2 reference
-> two interrupts, but lack interrupt-affinity properties, leading to:
-> 
->     hw perfevents: no interrupt-affinity property for /pmu, guessing.
-> 
-> This series adds the missing properties to fix this.
-> 
-> Thanks!
-> 
-> Geert Uytterhoeven (2):
->   ARM: dts: sh73a0: Add missing interrupt-affinity to PMU node
->   ARM: dts: emev2: Add missing interrupt-affinity to PMU node
+	Hi Simon, Magnus,
 
-Thanks, applied.
+The Cortex-A9 PMU nodes on SH-Mobile AG5 and Emma Mobile EV2 reference
+two interrupts, but lack interrupt-affinity properties, leading to:
+
+    hw perfevents: no interrupt-affinity property for /pmu, guessing.
+
+This series adds the missing properties to fix this.
+
+Thanks!
+
+Geert Uytterhoeven (2):
+  ARM: dts: sh73a0: Add missing interrupt-affinity to PMU node
+  ARM: dts: emev2: Add missing interrupt-affinity to PMU node
+
+ arch/arm/boot/dts/emev2.dtsi  | 5 +++--
+ arch/arm/boot/dts/sh73a0.dtsi | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+-- 
+2.7.4
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
