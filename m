@@ -1,140 +1,135 @@
-Return-Path: <SRS0=ygw4=H4=gmail.com=ykaneko0929@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20180507124332.3vsqemrywyms4nwy@verge.net.au>
-References: <1522379583-4503-1-git-send-email-ykaneko0929@gmail.com>
- <1522379583-4503-2-git-send-email-ykaneko0929@gmail.com> <CAMuHMdX7t9eZQ+3rhzZBKBjETqC7EUgZ4D+dxwhrwiMxvF3Wdw@mail.gmail.com>
- <CAH1o70JGht863MYjRQzyhXyjm60LL_xGO19iSqZas3Fiu6Z6CQ@mail.gmail.com> <20180507124332.3vsqemrywyms4nwy@verge.net.au>
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Date: Wed, 9 May 2018 22:35:16 +0900
-Message-ID: <CAH1o70JPUCsk8wyF5-v6sT7nE09LAqDmMxeCMRxXWOV_VucmKg@mail.gmail.com>
+Return-Path: <SRS0=lP+a=H2=verge.net.au=horms@kernel.org>
+Date: Mon, 7 May 2018 14:43:33 +0200
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH/RFT v2 1/3] thermal: rcar_thermal: add r8a77995 support
-Content-Type: text/plain; charset="UTF-8"
-To: Simon Horman <horms@verge.net.au>
+Message-ID: <20180507124332.3vsqemrywyms4nwy@verge.net.au>
+References: <1522379583-4503-1-git-send-email-ykaneko0929@gmail.com>
+ <1522379583-4503-2-git-send-email-ykaneko0929@gmail.com>
+ <CAMuHMdX7t9eZQ+3rhzZBKBjETqC7EUgZ4D+dxwhrwiMxvF3Wdw@mail.gmail.com>
+ <CAH1o70JGht863MYjRQzyhXyjm60LL_xGO19iSqZas3Fiu6Z6CQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH1o70JGht863MYjRQzyhXyjm60LL_xGO19iSqZas3Fiu6Z6CQ@mail.gmail.com>
+To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
 Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Simon-san,
+Hi Kaneko-san,
 
-2018-05-07 21:43 GMT+09:00 Simon Horman <horms@verge.net.au>:
-> Hi Kaneko-san,
->
-> could you re-spin this series with Geerts concerns (below) addressed.
->
-> When you repost I think you can add the tested tags and drop the RFT from
-> the prefix. I think its likely it can then be merged.
+could you re-spin this series with Geerts concerns (below) addressed.
 
-I had posted V3 that was updated with Geert-san's suggestions.
-Should I repost V4 with the tested tags and without the RFT prefix?
+When you repost I think you can add the tested tags and drop the RFT from
+the prefix. I think its likely it can then be merged.
 
->
-> On Tue, Apr 03, 2018 at 08:17:01PM +0900, Yoshihiro Kaneko wrote:
->> Hi Geert-san,
->>
->> 2018-03-30 18:25 GMT+09:00 Geert Uytterhoeven <geert@linux-m68k.org>:
->> > Hi Kaneko-san,
->> >
->> > On Fri, Mar 30, 2018 at 5:13 AM, Yoshihiro Kaneko <ykaneko0929@gmail.com> wrote:
->> >> Add support for R-Car D3 (r8a77995) thermal sensor.
->> >>
->> >> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
->> >
->> > Thanks for your patch!
->> >
->> >> --- a/drivers/thermal/rcar_thermal.c
->> >> +++ b/drivers/thermal/rcar_thermal.c
->> >> @@ -58,10 +58,35 @@ struct rcar_thermal_common {
->> >>         spinlock_t lock;
->> >>  };
->> >>
->> >> +enum rcar_thermal_type {
->> >> +       RCAR_THERMAL,
->> >> +       RCAR_GEN2_THERMAL,
->> >> +       RCAR_GEN3_THERMAL,
->> >> +};
->> >> +
->> >> +struct rcar_thermal_chip {
->> >> +       int use_of_thermal;
->> >
->> > This can be a single bit:
->> >
->> >     unsigned int use_of_thermal : 1;
->> >
->> >> +       enum rcar_thermal_type type;
->> >
->> > If you would add feature bits, you can get rid of rcar_thermal_type:
->> >
->> >     unsigned int has_filonoff : 1;
->> >     unsigned int has_enr : 1;
->> >     unsigned int needs_suspend_resume : 1;
->> >
->> > The number of interrupts can be stored here, too.
->>
->> It's nice!
->>
->> >
->> >> +};
->> >> +
->> >> +static const struct rcar_thermal_chip rcar_thermal = {
->> >> +       .use_of_thermal = 0,
->> >> +       .type = RCAR_THERMAL,
->> >
->> > .has_filonoff = 1,
->> > .has_enr = 0,
->> > ...
->> > .nirqs = 1,
->> >
->> >> @@ -190,7 +222,8 @@ static int rcar_thermal_update_temp(struct rcar_thermal_priv *priv)
->> >>          * enable IRQ
->> >>          */
->> >>         if (rcar_has_irq_support(priv)) {
->> >> -               rcar_thermal_write(priv, FILONOFF, 0);
->> >> +               if (priv->chip->type != RCAR_GEN3_THERMAL)
->> >
->> > if (priv->chip->has_filonoff)
->> >
->> >> @@ -438,6 +471,9 @@ static int rcar_thermal_probe(struct platform_device *pdev)
->> >>         struct rcar_thermal_priv *priv;
->> >>         struct device *dev = &pdev->dev;
->> >>         struct resource *res, *irq;
->> >> +       struct rcar_thermal_chip *chip = ((struct rcar_thermal_chip *)
->> >
->> > I don't think the cast is needed.
->>
->> I will make 'chip' a const variable.
->>
->> >
->> >> @@ -457,19 +493,35 @@ static int rcar_thermal_probe(struct platform_device *pdev)
->> >>         pm_runtime_enable(dev);
->> >>         pm_runtime_get_sync(dev);
->> >>
->> >> -       irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
->> >> -       if (irq) {
->> >> -               /*
->> >> -                * platform has IRQ support.
->> >> -                * Then, driver uses common registers
->> >> -                * rcar_has_irq_support() will be enabled
->> >> -                */
->> >> -               res = platform_get_resource(pdev, IORESOURCE_MEM, mres++);
->> >> -               common->base = devm_ioremap_resource(dev, res);
->> >> -               if (IS_ERR(common->base))
->> >> -                       return PTR_ERR(common->base);
->> >> +       for (i = 0; i < nirq; i++) {
->> >
->> > for (i = 0; i < priv->nirqs; i++) {
->>
->>
->> Best regards,
->> Kaneko
->>
->> >
->> > Gr{oetje,eeting}s,
->> >
->> >                         Geert
->> >
->> > --
->> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->> >
->> > In personal conversations with technical people, I call myself a hacker. But
->> > when I'm talking to journalists I just say "programmer" or something like that.
->> >                                 -- Linus Torvalds
->>
+On Tue, Apr 03, 2018 at 08:17:01PM +0900, Yoshihiro Kaneko wrote:
+> Hi Geert-san,
+> 
+> 2018-03-30 18:25 GMT+09:00 Geert Uytterhoeven <geert@linux-m68k.org>:
+> > Hi Kaneko-san,
+> >
+> > On Fri, Mar 30, 2018 at 5:13 AM, Yoshihiro Kaneko <ykaneko0929@gmail.com> wrote:
+> >> Add support for R-Car D3 (r8a77995) thermal sensor.
+> >>
+> >> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+> >
+> > Thanks for your patch!
+> >
+> >> --- a/drivers/thermal/rcar_thermal.c
+> >> +++ b/drivers/thermal/rcar_thermal.c
+> >> @@ -58,10 +58,35 @@ struct rcar_thermal_common {
+> >>         spinlock_t lock;
+> >>  };
+> >>
+> >> +enum rcar_thermal_type {
+> >> +       RCAR_THERMAL,
+> >> +       RCAR_GEN2_THERMAL,
+> >> +       RCAR_GEN3_THERMAL,
+> >> +};
+> >> +
+> >> +struct rcar_thermal_chip {
+> >> +       int use_of_thermal;
+> >
+> > This can be a single bit:
+> >
+> >     unsigned int use_of_thermal : 1;
+> >
+> >> +       enum rcar_thermal_type type;
+> >
+> > If you would add feature bits, you can get rid of rcar_thermal_type:
+> >
+> >     unsigned int has_filonoff : 1;
+> >     unsigned int has_enr : 1;
+> >     unsigned int needs_suspend_resume : 1;
+> >
+> > The number of interrupts can be stored here, too.
+> 
+> It's nice!
+> 
+> >
+> >> +};
+> >> +
+> >> +static const struct rcar_thermal_chip rcar_thermal = {
+> >> +       .use_of_thermal = 0,
+> >> +       .type = RCAR_THERMAL,
+> >
+> > .has_filonoff = 1,
+> > .has_enr = 0,
+> > ...
+> > .nirqs = 1,
+> >
+> >> @@ -190,7 +222,8 @@ static int rcar_thermal_update_temp(struct rcar_thermal_priv *priv)
+> >>          * enable IRQ
+> >>          */
+> >>         if (rcar_has_irq_support(priv)) {
+> >> -               rcar_thermal_write(priv, FILONOFF, 0);
+> >> +               if (priv->chip->type != RCAR_GEN3_THERMAL)
+> >
+> > if (priv->chip->has_filonoff)
+> >
+> >> @@ -438,6 +471,9 @@ static int rcar_thermal_probe(struct platform_device *pdev)
+> >>         struct rcar_thermal_priv *priv;
+> >>         struct device *dev = &pdev->dev;
+> >>         struct resource *res, *irq;
+> >> +       struct rcar_thermal_chip *chip = ((struct rcar_thermal_chip *)
+> >
+> > I don't think the cast is needed.
+> 
+> I will make 'chip' a const variable.
+> 
+> >
+> >> @@ -457,19 +493,35 @@ static int rcar_thermal_probe(struct platform_device *pdev)
+> >>         pm_runtime_enable(dev);
+> >>         pm_runtime_get_sync(dev);
+> >>
+> >> -       irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> >> -       if (irq) {
+> >> -               /*
+> >> -                * platform has IRQ support.
+> >> -                * Then, driver uses common registers
+> >> -                * rcar_has_irq_support() will be enabled
+> >> -                */
+> >> -               res = platform_get_resource(pdev, IORESOURCE_MEM, mres++);
+> >> -               common->base = devm_ioremap_resource(dev, res);
+> >> -               if (IS_ERR(common->base))
+> >> -                       return PTR_ERR(common->base);
+> >> +       for (i = 0; i < nirq; i++) {
+> >
+> > for (i = 0; i < priv->nirqs; i++) {
+> 
+> 
+> Best regards,
+> Kaneko
+> 
+> >
+> > Gr{oetje,eeting}s,
+> >
+> >                         Geert
+> >
+> > --
+> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> >
+> > In personal conversations with technical people, I call myself a hacker. But
+> > when I'm talking to journalists I just say "programmer" or something like that.
+> >                                 -- Linus Torvalds
+> 
