@@ -1,7 +1,7 @@
 From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v3 07/14] ARM: sun8i-a33: Add SRAM controller node and C1 SRAM region
-Date: Mon,  7 May 2018 14:44:53 +0200
-Message-ID: <20180507124500.20434-8-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v3 06/14] ARM: sun7i-a20: Add support for the C1 SRAM region with the SRAM controller
+Date: Mon,  7 May 2018 14:44:52 +0200
+Message-ID: <20180507124500.20434-7-paul.kocialkowski@bootlin.com>
 References: <20180507124500.20434-1-paul.kocialkowski@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180507124500.20434-1-paul.kocialkowski@bootlin.com>
@@ -12,29 +12,24 @@ List-Id: devicetree@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-This adds a SRAM controller node for the A33, with support for the C1
-SRAM region that is shared between the Video Engine and the CPU.
+This adds support for the C1 SRAM region (to be used with the SRAM
+controller driver) for the A20 platform. The region is shared
+between the Video Engine and the CPU.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 ---
- arch/arm/boot/dts/sun8i-a33.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/arm/boot/dts/sun7i-a20.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
-index a21f2ed07a52..97a976b3b1ef 100644
---- a/arch/arm/boot/dts/sun8i-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-@@ -204,6 +204,28 @@
- 	};
- 
- 	soc@1c00000 {
-+		sram-controller@1c00000 {
-+			compatible = "allwinner,sun8i-a33-sram-controller";
-+			reg = <0x01c00000 0x30>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index b179e05408e4..9bb6c35fb850 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -273,6 +273,20 @@
+ 					status = "disabled";
+ 				};
+ 			};
 +
 +			sram_c: sram@1d00000 {
 +				compatible = "mmio-sram";
@@ -44,15 +39,13 @@ index a21f2ed07a52..97a976b3b1ef 100644
 +				ranges = <0 0x01d00000 0xd00000>;
 +
 +				ve_sram: sram-section@0 {
-+					compatible = "allwinner,sun8i-a33-sram-c1",
++					compatible = "allwinner,sun7i-a20-sram-c1",
 +						     "allwinner,sun4i-a10-sram-c1";
 +					reg = <0x000000 0x80000>;
 +				};
 +			};
-+		};
-+
- 		tcon0: lcd-controller@1c0c000 {
- 			compatible = "allwinner,sun8i-a33-tcon";
- 			reg = <0x01c0c000 0x1000>;
+ 		};
+ 
+ 		nmi_intc: interrupt-controller@1c00030 {
 -- 
 2.16.3
