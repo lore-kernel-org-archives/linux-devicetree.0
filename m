@@ -1,61 +1,84 @@
-Return-Path: <SRS0=jssF=H2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from michel.telenet-ops.be ([195.130.137.88]:36766 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752029AbeEGNkJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 7 May 2018 09:40:09 -0400
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/2] ARM: dts: sh73a0: Add missing interrupt-affinity to PMU node
-Date: Mon,  7 May 2018 15:40:04 +0200
-Message-Id: <1525700405-7993-2-git-send-email-geert+renesas@glider.be>
-In-Reply-To: <1525700405-7993-1-git-send-email-geert+renesas@glider.be>
-References: <1525700405-7993-1-git-send-email-geert+renesas@glider.be>
-Sender: devicetree-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <SRS0=LUPS=H2=linaro.org=rui.silva@kernel.org>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH 3/4] media: ov2680: rename powerdown gpio and fix polarity
+Date: Mon,  7 May 2018 16:56:54 +0100
+Message-Id: <20180507155655.1555-4-rui.silva@linaro.org>
+In-Reply-To: <20180507155655.1555-1-rui.silva@linaro.org>
+References: <20180507155655.1555-1-rui.silva@linaro.org>
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl, Rob Herring <robh+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The PMU node references two interrupts, but lacks the interrupt-affinity
-property, which is required in that case:
+Rename the power control gpio to reset, since it is the same, and fix the
+polarity code since this gpio is active at low and not at high as controlled
+before.
 
-    hw perfevents: no interrupt-affinity property for /pmu, guessing.
-
-Add the missing property to fix this.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- arch/arm/boot/dts/sh73a0.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/i2c/ov2680.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
-index 2bcd6a276734c527..c8d45425c3393880 100644
---- a/arch/arm/boot/dts/sh73a0.dtsi
-+++ b/arch/arm/boot/dts/sh73a0.dtsi
-@@ -22,7 +22,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+diff --git a/drivers/media/i2c/ov2680.c b/drivers/media/i2c/ov2680.c
+index cc3d06096d51..8962b397211a 100644
+--- a/drivers/media/i2c/ov2680.c
++++ b/drivers/media/i2c/ov2680.c
+@@ -98,7 +98,7 @@ struct ov2680_dev {
+ 	struct clk			*xvclk;
+ 	u32				xvclk_freq;
  
--		cpu@0 {
-+		cpu0: cpu@0 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <0>;
-@@ -31,7 +31,7 @@
- 			power-domains = <&pd_a2sl>;
- 			next-level-cache = <&L2>;
- 		};
--		cpu@1 {
-+		cpu1: cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <1>;
-@@ -96,6 +96,7 @@
- 		compatible = "arm,cortex-a9-pmu";
- 		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>;
- 	};
+-	struct gpio_desc		*pwdn_gpio;
++	struct gpio_desc		*reset_gpio;
+ 	struct mutex			lock; /* protect members */
  
- 	cmt1: timer@e6138000 {
+ 	bool				mode_pending_changes;
+@@ -295,19 +295,19 @@ static int ov2680_load_regs(struct ov2680_dev *sensor,
+ 
+ static void ov2680_power_up(struct ov2680_dev *sensor)
+ {
+-	if (!sensor->pwdn_gpio)
++	if (!sensor->reset_gpio)
+ 		return;
+ 
+-	gpiod_set_value(sensor->pwdn_gpio, 1);
++	gpiod_set_value(sensor->reset_gpio, 0);
+ 	usleep_range(5000, 10000);
+ }
+ 
+ static void ov2680_power_down(struct ov2680_dev *sensor)
+ {
+-	if (!sensor->pwdn_gpio)
++	if (!sensor->reset_gpio)
+ 		return;
+ 
+-	gpiod_set_value(sensor->pwdn_gpio, 0);
++	gpiod_set_value(sensor->reset_gpio, 1);
+ 	usleep_range(5000, 10000);
+ }
+ 
+@@ -535,7 +535,7 @@ static int ov2680_power_on(struct ov2680_dev *sensor)
+ 	if (sensor->is_enabled)
+ 		return 0;
+ 
+-	if (!sensor->pwdn_gpio) {
++	if (!sensor->reset_gpio) {
+ 		ret = ov2680_write_reg(sensor, OV2680_REG_SOFT_RESET, 0x01);
+ 		if (ret != 0) {
+ 			dev_err(dev, "sensor soft reset failed\n");
+@@ -990,11 +990,11 @@ static int ov2860_parse_dt(struct ov2680_dev *sensor)
+ 	struct device *dev = ov2680_to_dev(sensor);
+ 	int ret;
+ 
+-	sensor->pwdn_gpio = devm_gpiod_get_optional(dev, "powerdown",
+-						    GPIOD_OUT_HIGH);
+-	ret = PTR_ERR_OR_ZERO(sensor->pwdn_gpio);
++	sensor->reset_gpio = devm_gpiod_get_optional(dev, "reset",
++						     GPIOD_OUT_HIGH);
++	ret = PTR_ERR_OR_ZERO(sensor->reset_gpio);
+ 	if (ret < 0) {
+-		dev_dbg(dev, "error while getting powerdown gpio: %d\n", ret);
++		dev_dbg(dev, "error while getting reset gpio: %d\n", ret);
+ 		return ret;
+ 	}
+ 
 -- 
-2.7.4
-
+2.17.0
