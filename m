@@ -1,31 +1,166 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845: Sort nodes in the soc by
- address
-Date: Mon, 7 May 2018 11:49:00 -0700
-Message-ID: <20180507184900.GH2259@tuxbook-pro>
-References: <20180504220356.261711-1-dianders@chromium.org>
+From: Paul Kocialkowski <contact@paulk.fr>
+Subject: Re: [PATCH v3 1/3] drm/panel: Add RGB666 variant of Innolux AT070TN90
+Date: Mon, 07 May 2018 20:50:23 +0200
+Message-ID: <8050492b544e5783d16eb74050313bfdddc0fc0d.camel@paulk.fr>
+References: <20180506214901.23429-1-contact@paulk.fr>
+ <20180507070855.dh47obvpmze577x5@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180504220356.261711-1-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, swboyd@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============0809026388=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180507070855.dh47obvpmze577x5@flea>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 04 May 15:03 PDT 2018, Douglas Anderson wrote:
 
-> This is pure-churn and should be a no-op.  I'm doing it in the hopes
-> of reducing merge conflicts.  When things are sorted in a sane way
-> (and by base address seems sane) then it's less likely that future
-> patches will cause merge conflicts.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+--===============0809026388==
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-pO4jWJbZQwRC3mFFtFHZ"
 
-Nice, I like it.
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+--=-pO4jWJbZQwRC3mFFtFHZ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Bjorn
+Hi,
+
+Le lundi 07 mai 2018 =C3=A0 09:08 +0200, Maxime Ripard a =C3=A9crit :
+> Hi,
+>=20
+> On Sun, May 06, 2018 at 11:48:59PM +0200, Paul Kocialkowski wrote:
+> > This adds timings for the RGB666 variant of the Innolux AT070TN90
+> > panel,
+> > as found on the Ainol AW1 tablet.
+> >=20
+> > The panel also supports RGB888 output. When RGB666 mode is used
+> > instead,
+> > the two extra lanes per component are grounded.
+> >=20
+> > In the future, it might become necessary to introduce a dedicated
+> > device-tree property to specify the bus format and maybe specify it
+> > in
+> > the mode description instead of panel description so that the
+> > appropriate mode can be selected for each bus format.
+> >=20
+> > Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+>=20
+> A change log would be nice. Also, you mentionned in your first version
+> that the screen was an AT070TN92, and now you mention that it is an
+> AT070TN90, which one is it?
+
+Yes, I should probably have explained why I changed the model here.
+I checked on the device yesterday and found that the ribbon cable
+indicates AT070TN90. I am not sure why I was initially assuming that the
+panel was an AT070TN92.=20
+
+> Maxime
+>=20
+> > ---
+> >  drivers/gpu/drm/panel/panel-simple.c | 26
+> > ++++++++++++++++++++++++++
+> >  1 file changed, 26 insertions(+)
+> >=20
+> > diff --git a/drivers/gpu/drm/panel/panel-simple.c
+> > b/drivers/gpu/drm/panel/panel-simple.c
+> > index cbf1ab404ee7..351742df8ee1 100644
+> > --- a/drivers/gpu/drm/panel/panel-simple.c
+> > +++ b/drivers/gpu/drm/panel/panel-simple.c
+> > @@ -1086,6 +1086,29 @@ static const struct panel_desc
+> > innolux_at070tn92 =3D {
+> >  	.bus_format =3D MEDIA_BUS_FMT_RGB888_1X24,
+> >  };
+> > =20
+> > +static const struct drm_display_mode innolux_at070tn90_mode =3D {
+> > +	.clock =3D 40000,
+> > +	.hdisplay =3D 800,
+> > +	.hsync_start =3D 800 + 112,
+> > +	.hsync_end =3D 800 + 112 + 1,
+> > +	.htotal =3D 800 + 112 + 1 + 87,
+> > +	.vdisplay =3D 480,
+> > +	.vsync_start =3D 480 + 141,
+> > +	.vsync_end =3D 480 + 141 + 1,
+> > +	.vtotal =3D 480 + 141 + 1 + 38,
+> > +	.vrefresh =3D 60,
+> > +};
+> > +
+> > +static const struct panel_desc innolux_at070tn90 =3D {
+> > +	.modes =3D &innolux_at070tn90_mode,
+> > +	.num_modes =3D 1,
+> > +	.size =3D {
+> > +		.width =3D 154,
+> > +		.height =3D 86,
+> > +	},
+> > +	.bus_format =3D MEDIA_BUS_FMT_RGB666_1X18,
+> > +};
+> > +
+> >  static const struct display_timing innolux_g101ice_l01_timing =3D {
+> >  	.pixelclock =3D { 60400000, 71100000, 74700000 },
+> >  	.hactive =3D { 1280, 1280, 1280 },
+> > @@ -2154,6 +2177,9 @@ static const struct of_device_id
+> > platform_of_match[] =3D {
+> >  	}, {
+> >  		.compatible =3D "innolux,at070tn92",
+> >  		.data =3D &innolux_at070tn92,
+> > +	}, {
+> > +		.compatible =3D "innolux,at070tn90",
+> > +		.data =3D &innolux_at070tn90,
+>=20
+> This should be ordered alphabetically.
+
+Thanks for the review!
+
+Cheers,
+
+Paul
+
+--=20
+Developer of free digital technology and hardware support.
+
+Website: https://www.paulk.fr/
+Coding blog: https://code.paulk.fr/
+Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+--=-pO4jWJbZQwRC3mFFtFHZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlrwn+8ACgkQhP3B6o/u
+lQxquA//XKzR9OjdCYa5ePJa1UQBRjpdiT1z/xGHn4bRm5XyBKByh5GtQ96yrHKG
+bLd5TIig/Cd6AbiX/sb6bS0Hpp5tYdEWb9XiLLn3JpUugBdoHh9qxiYenQt/5tlX
+JtdKfmifRkDoTjaBzFzSO/0CVVVmBzHuXSLxuif2Fn2WijdIJz3Ioof+7+feUjTX
+nSL85ueAdOzZGSrS2zHuFZb9UXu9yrJ10lvyMu5qBTtGn1lT3C+Q2lr3nkgTWw1r
+K/n3hd0T8Z5Zwkt4f7xqTcX7WQr8Jxf7fLYt26nTZYKORUYHNcHLuHcTHDZis1Ov
+kC9PI3dOtNMVx1eskKU8t8nDOvHI+ECObArxdMIDu+Zc13/UeqVea3GaLBvAzCOi
+gV4xDAtcIvt8c+Kk7tesXana/9uPg/CAl5wSfuOCGr6caFcYURLU8utc/8s5IAYh
+BQqZxl5ugV/XUhX/PhPbu7sOKcslFOUUVOMnOyKq6vXODLH7e4LDFs4D5aHnRKW1
+8zwreIfRV4ssnAFlROYQSzB6LaaPgjoAXTPEWUggL08VkgF9dF5sAIBa7M98FsNA
+KdfweSOmlKbaivRVReKf0+ZNe2FC8VyMuZuGGQ94//j3v1Z/kDnjKY4r0I4qtjbN
+4ub8nBqZlA3vHILQo9uBOkiEtb4lapShAkiVcE2sIedldRdvwiw=
+=R+uD
+-----END PGP SIGNATURE-----
+
+--=-pO4jWJbZQwRC3mFFtFHZ--
+
+
+--===============0809026388==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0809026388==--
