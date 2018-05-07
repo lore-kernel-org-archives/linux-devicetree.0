@@ -1,46 +1,69 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
-Date: Mon, 7 May 2018 12:07:50 +0200
-Message-ID: <20180507100750.GT2285@localhost>
-References: <20180424163458.11947-5-johan@kernel.org>
- <CAL_Jsq+mCp=geT8t_j+0fuTxAB7C9RYn6pESRpLc2GH273fM1Q@mail.gmail.com>
- <20180426091018.GU4615@localhost>
- <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
- <20180502081637.GE2285@localhost>
- <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com>
- <20180503205037.7be552c1@aktux>
- <44A0BC7C-67C7-4116-849F-90FF7CF2B1F0@goldelico.com>
- <20180504114213.3xlzqxe74n55tk5s@earth.universe>
- <FC3D0AF4-66EB-48A9-8E81-EC78DE43E105@goldelico.com>
+Subject: Re: [PATCH 0/7] gnss: add new GNSS subsystem
+Date: Mon, 7 May 2018 12:20:56 +0200
+Message-ID: <20180507102056.GU2285@localhost>
+References: <20180424163458.11947-1-johan@kernel.org>
+ <20180504132741.brn5jqv5ufjhp7ky@earth.universe>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <FC3D0AF4-66EB-48A9-8E81-EC78DE43E105@goldelico.com>
+In-Reply-To: <20180504132741.brn5jqv5ufjhp7ky@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Andreas Kemnade <andreas@kemnade.info>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 04, 2018 at 02:04:15PM +0200, H. Nikolaus Schaller wrote:
-
-> It should be possible to cover this by a timer that is started
-> in this case. If there is serdev data received after assuming the module
-> is turned off, the driver has detected the wrong case - and can safely
-> close the serdev until we want to have it powered on again.
+On Fri, May 04, 2018 at 03:27:41PM +0200, Sebastian Reichel wrote:
+> Hi Johan,
 > 
-> If there is no response after turing off, the module power state is already
-> in sync and we can close the serdev as well - after the timeout (let's say
-> 30 seconds). Then, the serdev UART can idle. We should open the serdev
-> and start this timer also in the probe function to catch an initially wrong
-> state.
+> On Tue, Apr 24, 2018 at 06:34:51PM +0200, Johan Hovold wrote:
+> > This series adds a new subsystem for GNSS receivers (e.g. GPS
+> > receivers).
+> > 
+> > While GNSS receivers are typically accessed using a UART interface they
+> > often also support other I/O interfaces such as I2C, SPI and USB, while
+> > yet other devices use iomem or even some form of remote-processor
+> > messaging (rpmsg).
+> >     
+> > The new GNSS subsystem abstracts the underlying interface and provides a
+> > new "gnss" class type, which exposes a character-device interface (e.g.
+> > /dev/gnss0) to user space. This allows GNSS receivers to have a
+> > representation in the Linux device model, something which is important
+> > not least for power management purposes and which also allows for easy
+> > detection and (eventually) identification of GNSS devices.
+> > 
+> > Note that the character-device interface provides raw access to whatever
+> > protocol the receiver is (currently) using, such as NMEA 0183, UBX or
+> > SiRF Binary. These protocols are expected to be continued to be handled
+> > by user space for the time being, even if some hybrid solutions are also
+> > conceivable (e.g. to have kernel drivers issue management commands).
 
-Right, the only thing that worried me about that was that we cannot
-really delay system suspend for 30 seconds even if a somewhat shorter
-delay should be probably be sufficient (still a number of seconds).
+> Great work. I like your design decisions. I have quite a few devices
+> with have non-serial based GPS peripherals using binary protocols (*).
+> As far as I can see it should be possible to add support for those.
 
-Configuring the serial controller as a wakeup source which aborts
-suspend or resumes if the driver gets it wrong might be preferred to
-draining the battery in suspend however.
+Thanks! Yeah, the aim here was to abstract the actual I/O interface
+used.
 
+> I have one concern, though. While providing raw data by
+> default is fine generally, it is a problem with device
+> auto-discovery. I think there should be some IOCTL from
+> the start, that can be used to inform userspace about
+> the raw protocol being used (i.e. "NMEA"). I fear, that
+> userspace may start to just assume raw = NMEA without
+> having this (especially since all initial drivers provide
+> NMEA).
+
+One problem I see here would be that the driver does not necessarily
+know either what protocol is currently being used. Some devices have
+boot-pins which can be used to configure the initial protocol used (and
+this could perhaps be reflected in DT), but this can often later be
+changed (by user space) and even be made persistent using battery-backed
+ram or eeproms.
+
+Also note that at least u-blox devices supports having more than one
+protocol active on the same port...
+
+Thanks,
 Johan
