@@ -1,140 +1,58 @@
-From: kgunda@codeaurora.org
-Subject: Re: [PATCH V2 1/5] backlight: qcom-wled: Rename pm8941-wled.c to
- qcom-wled.c
-Date: Mon, 07 May 2018 11:26:59 +0530
-Message-ID: <a9faa8c2866f44b46c3733c8165f6bae@codeaurora.org>
-References: <1525342352-25072-1-git-send-email-kgunda@codeaurora.org>
- <1525342352-25072-2-git-send-email-kgunda@codeaurora.org>
- <000201d3e3c0$4cdf87a0$e69e96e0$@gmail.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v6 05/17] media: rkisp1: add Rockchip ISP1 subdev driver
+Date: Mon, 07 May 2018 06:13:27 +0000
+Message-ID: <CAAFQd5CvBv4hkE=PSHBJTYa9Lj0SyggxpMBEAYD=if0=T0uzHw@mail.gmail.com>
+References: <20180308094807.9443-1-jacob-chen@iotwrt.com> <20180308094807.9443-6-jacob-chen@iotwrt.com>
+ <20180503090909.o3dyhukzs2y7em5z@tarshish>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <000201d3e3c0$4cdf87a0$e69e96e0$@gmail.com>
+In-Reply-To: <20180503090909.o3dyhukzs2y7em5z@tarshish>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jingoo Han <jingoohan1@gmail.com>
-Cc: bjorn.andersson@linaro.org, 'Lee Jones' <lee.jones@linaro.org>, 'Daniel Thompson' <daniel.thompson@linaro.org>, 'Jacek Anaszewski' <jacek.anaszewski@gmail.com>, 'Pavel Machek' <pavel@ucw.cz>, 'Rob Herring' <robh+dt@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: baruch@tkos.co.il
+Cc: Jacob Chen <jacob-chen@iotwrt.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Shunqian Zheng <zhengsq@rock-chips.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>, Eddie Cai <eddie.cai.linux@gmail.com>, Jeffy <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jingoo Han,
-Thanks for the response.
+Hi Baruch,
 
-Thanks,
-Kiran
-On 2018-05-04 21:25, Jingoo Han wrote:
-> On Thursday, May 3, 2018 6:12 AM, Kiran Gunda wrote:
-> 
-> If you really want someone to review your patch, please add more 
-> detailed
-> explanations.
-> 
-> 1. Please add 0th patch.
-I have already added the 0th patch (cover letter). Following is the 
-subject for the same.
-forwarding the same to you.
-[PATCH V2 0/5] backlight: qcom-wled: Support for QCOM wled driver
+On Thu, May 3, 2018 at 6:09 PM Baruch Siach <baruch@tkos.co.il> wrote:
 
-> 2. Please add what the difference is between V1 and V2 patches.
-> 
-Already added the difference between V1 and V2 in the cover letter (0th 
-patch).
-Please let me know if you are looking for any other info. Following is 
-the difference
-added between v1 and v2.
->>> 
-changes from v1:
-     Fixed the commit message for
-     backlight: qcom-wled: Rename pm8941-wled.c to qcom-wled.c
+> Hi Jacob,
 
-> If you cannot understand what I am saying, just ask another person who 
-> have
-> an experience to send patches to Linux mailing-list.
-> 
-> Best regards,
-> Jingoo Han
-> 
->> 
->> pm8941-wled.c driver is supporting the WLED peripheral
->> on pm8941. Rename it to qcom-wled.c so that it can support
->> WLED on multiple PMICs.
->> 
->> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
->> ---
->>  .../bindings/leds/backlight/{pm8941-wled.txt => qcom-wled.txt}    | 2 
->> +-
->>  drivers/video/backlight/Kconfig                                   | 8
-> ++++----
->>  drivers/video/backlight/Makefile                                  | 2 
->> +-
->>  drivers/video/backlight/{pm8941-wled.c => qcom-wled.c}            | 0
->>  4 files changed, 6 insertions(+), 6 deletions(-)
->>  rename 
->> Documentation/devicetree/bindings/leds/backlight/{pm8941-wled.txt
->> => qcom-wled.txt} (95%)
->>  rename drivers/video/backlight/{pm8941-wled.c => qcom-wled.c} (100%)
->> 
->> diff --git a/Documentation/devicetree/bindings/leds/backlight/pm8941-
->> wled.txt 
->> b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
->> similarity index 95%
->> rename from Documentation/devicetree/bindings/leds/backlight/pm8941-
->> wled.txt
->> rename to 
->> Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
->> index e5b294d..fb39e32 100644
->> --- a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
->> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
->> @@ -1,4 +1,4 @@
->> -Binding for Qualcomm PM8941 WLED driver
->> +Binding for Qualcomm Technologies, Inc. WLED driver
->> 
->>  Required properties:
->>  - compatible: should be "qcom,pm8941-wled"
->> diff --git a/drivers/video/backlight/Kconfig
->> b/drivers/video/backlight/Kconfig
->> index 4e1d2ad..8c095e3 100644
->> --- a/drivers/video/backlight/Kconfig
->> +++ b/drivers/video/backlight/Kconfig
->> @@ -299,12 +299,12 @@ config BACKLIGHT_TOSA
->>  	  If you have an Sharp SL-6000 Zaurus say Y to enable a driver
->>  	  for its backlight
->> 
->> -config BACKLIGHT_PM8941_WLED
->> -	tristate "Qualcomm PM8941 WLED Driver"
->> +config BACKLIGHT_QCOM_WLED
->> +	tristate "Qualcomm PMIC WLED Driver"
->>  	select REGMAP
->>  	help
->> -	  If you have the Qualcomm PM8941, say Y to enable a driver for the
->> -	  WLED block.
->> +	  If you have the Qualcomm PMIC, say Y to enable a driver for the
->> +	  WLED block. Currently it supports PM8941 and PMI8998.
->> 
->>  config BACKLIGHT_SAHARA
->>  	tristate "Tabletkiosk Sahara Touch-iT Backlight Driver"
->> diff --git a/drivers/video/backlight/Makefile
->> b/drivers/video/backlight/Makefile
->> index 5e28f01..6fd76ef 100644
->> --- a/drivers/video/backlight/Makefile
->> +++ b/drivers/video/backlight/Makefile
->> @@ -49,8 +49,8 @@ obj-$(CONFIG_BACKLIGHT_OMAP1)		+=
-> omap1_bl.o
->>  obj-$(CONFIG_BACKLIGHT_OT200)		+= ot200_bl.o
->>  obj-$(CONFIG_BACKLIGHT_PANDORA)		+= pandora_bl.o
->>  obj-$(CONFIG_BACKLIGHT_PCF50633)	+= pcf50633-backlight.o
->> -obj-$(CONFIG_BACKLIGHT_PM8941_WLED)	+= pm8941-wled.o
->>  obj-$(CONFIG_BACKLIGHT_PWM)		+= pwm_bl.o
->> +obj-$(CONFIG_BACKLIGHT_QCOM_WLED)	+= qcom-wled.o
->>  obj-$(CONFIG_BACKLIGHT_SAHARA)		+= kb3886_bl.o
->>  obj-$(CONFIG_BACKLIGHT_SKY81452)	+= sky81452-backlight.o
->>  obj-$(CONFIG_BACKLIGHT_TOSA)		+= tosa_bl.o
->> diff --git a/drivers/video/backlight/pm8941-wled.c
->> b/drivers/video/backlight/qcom-wled.c
->> similarity index 100%
->> rename from drivers/video/backlight/pm8941-wled.c
->> rename to drivers/video/backlight/qcom-wled.c
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->>  a Linux Foundation Collaborative Project
+> On Thu, Mar 08, 2018 at 05:47:55PM +0800, Jacob Chen wrote:
+> > +static int rkisp1_isp_sd_s_power(struct v4l2_subdev *sd, int on)
+> > +{
+> > +     struct rkisp1_device *isp_dev = sd_to_isp_dev(sd);
+> > +     int ret;
+> > +
+> > +     v4l2_dbg(1, rkisp1_debug, &isp_dev->v4l2_dev, "s_power: %d\n",
+on);
+> > +
+> > +     if (on) {
+> > +             ret = pm_runtime_get_sync(isp_dev->dev);
+> > +             if (ret < 0)
+> > +                     return ret;
+> > +
+> > +             rkisp1_config_clk(isp_dev);
+> > +     } else {
+> > +             ret = pm_runtime_put(isp_dev->dev);
+
+> I commented this line out to make more than one STREAMON work. Otherwise,
+the
+> second STREAMON hangs. I guess the bug is not this driver. Probably
+something
+> in drivers/soc/rockchip/pm_domains.c. Just noting that in case you or
+someone
+> on Cc would like to investigate it further.
+
+> I tested v4.16-rc4 on the Tinkerboard.
+
+Looks like that version doesn't include the IOMMU PM and clock handling
+rework [1], which should fix a lot of runtime PM issues. FWIW, linux-next
+seems to already include it.
+
+[1] https://lkml.org/lkml/2018/3/23/44
+
+Best regards,
+Tomasz
