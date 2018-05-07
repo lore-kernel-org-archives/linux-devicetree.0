@@ -1,84 +1,46 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCHv2 3/3] arm64: dts: stratix10: add sdram ecc
-Date: Mon, 7 May 2018 18:59:43 +0200
-Message-ID: <20180507165943.GE733@pd.tnic>
-References: <1524854238-19394-1-git-send-email-thor.thayer@linux.intel.com>
- <1524854238-19394-4-git-send-email-thor.thayer@linux.intel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: add MediaTek XS-PHY binding
+Date: Mon, 7 May 2018 12:04:35 -0500
+Message-ID: <20180507170435.GA14540@rob-hp-laptop>
+References: <1525486506-19301-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1525486506-19301-2-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1524854238-19394-4-git-send-email-thor.thayer@linux.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, thor.thayer@linux.intel.com, catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+In-Reply-To: <1525486506-19301-2-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ryder Lee <ryder.lee@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 27, 2018 at 01:37:18PM -0500, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
+On Sat, May 05, 2018 at 10:15:05AM +0800, Chunfeng Yun wrote:
+> Add a DT binding documentation of XS-PHY for MediaTek SoCs
+> with USB3.1 GEN2 controller
 > 
-> Add the Stratix10 ECC Manager and SDRAM EDAC nodes to the
-> device tree.
-> 
-> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 > ---
-> v2  Remove unused SysMan syscon
->     Remove unused SDRAM ECC register defines
->     Remove unused address, size and range from device tree.
-> ---
->  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  .../devicetree/bindings/phy/phy-mtk-xsphy.txt      |  110 ++++++++++++++++++++
+>  1 file changed, 110 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-xsphy.txt
 > 
-> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> index c89d0c307f8d..688391f3bf78 100644
-> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> @@ -387,5 +387,17 @@
->  			resets = <&rst WATCHDOG3_RESET>;
->  			status = "disabled";
->  		};
+> diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-xsphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-xsphy.txt
+> new file mode 100644
+> index 0000000..9a95fab
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-mtk-xsphy.txt
+> @@ -0,0 +1,110 @@
+> +MediaTek XS-PHY binding
+> +--------------------------
 > +
-> +		eccmgr {
-> +			compatible = "altr,socfpga-s10-ecc-manager";
-> +			interrupts = <0 15 4>, <0 95 4>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
+> +The XS-PHY controller supports physical layer functionality for USB3.1
+> +GEN2 controller on MediaTek SoCs.
 > +
-> +			sdramedac {
-> +				compatible = "altr,sdram-edac-s10";
-> +				interrupts = <16 4>, <48 4>;
-> +			};
-> +		};
->  	};
->  };
-> -- 
-> 2.7.4
-> 
-> --
+> +Required properties (controller (parent) node):
+> + - compatible	: should be "mediatek,<soc-model>-xsphy", "mediatek,xsphy",
+> + 		  soc-model is the name of SoC, such as mt2712 etc;
+> +		  when using "mediatek,xsphy" compatible string, you need SoC specific
+> +		  ones in addition, one of:
+> +		  - "mediatek,mt3611-xsphy"
 
-Hey Rob,
-
-ACK here too?
-
-Also, this one:
-
-https://lkml.kernel.org/r/1525203036-21774-1-git-send-email-thor.thayer@linux.intel.com
-
-?
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+What about mt2712 you mention above?
