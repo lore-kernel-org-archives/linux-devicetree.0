@@ -1,86 +1,27 @@
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Subject: Re: [PATCHv2 3/3] arm64: dts: stratix10: add sdram ecc
-Date: Mon, 7 May 2018 15:50:38 -0500
-Message-ID: <CADhT+weyJFhMyPbVt0n2EVe7OpeHHLjhxjw7aY2_8GBZ-7h7Xg@mail.gmail.com>
-References: <1524854238-19394-1-git-send-email-thor.thayer@linux.intel.com>
- <1524854238-19394-4-git-send-email-thor.thayer@linux.intel.com>
- <20180507165943.GE733@pd.tnic>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] iio: adc: stm32-dfsdm: Add support for stm32mp1
+Date: Mon, 7 May 2018 15:51:51 -0500
+Message-ID: <20180507205151.GA25321@rob-hp-laptop>
+References: <1525266323-4922-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180507165943.GE733@pd.tnic>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, thor.thayer@linux.intel.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, mchehab@kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1525266323-4922-1-git-send-email-fabrice.gasnier@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: jic23@kernel.org, alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, benjamin.gaignard@linaro.org, arnaud.pouliquen@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 7, 2018 at 11:59 AM, Borislav Petkov <bp@alien8.de> wrote:
-> On Fri, Apr 27, 2018 at 01:37:18PM -0500, thor.thayer@linux.intel.com wrote:
->> From: Thor Thayer <thor.thayer@linux.intel.com>
->>
->> Add the Stratix10 ECC Manager and SDRAM EDAC nodes to the
->> device tree.
->>
->> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
->> ---
->> v2  Remove unused SysMan syscon
->>     Remove unused SDRAM ECC register defines
->>     Remove unused address, size and range from device tree.
->> ---
->>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
->> index c89d0c307f8d..688391f3bf78 100644
->> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
->> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
->> @@ -387,5 +387,17 @@
->>                       resets = <&rst WATCHDOG3_RESET>;
->>                       status = "disabled";
->>               };
->> +
->> +             eccmgr {
->> +                     compatible = "altr,socfpga-s10-ecc-manager";
->> +                     interrupts = <0 15 4>, <0 95 4>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +
->> +                     sdramedac {
->> +                             compatible = "altr,sdram-edac-s10";
->> +                             interrupts = <16 4>, <48 4>;
->> +                     };
->> +             };
->>       };
->>  };
->> --
->> 2.7.4
->>
->> --
->
-> Hey Rob,
->
-> ACK here too?
->
-> Also, this one:
->
-> https://lkml.kernel.org/r/1525203036-21774-1-git-send-email-thor.thayer@linux.intel.com
->
-> ?
->
+On Wed, May 02, 2018 at 03:05:23PM +0200, Fabrice Gasnier wrote:
+> Add support for DFSDM (Digital Filter For Sigma Delta Modulators)
+> to STM32MP1. This variant is close to STM32H7 DFSDM, it implements
+> 6 filter instances. Registers map is also increased.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+>  .../bindings/iio/adc/st,stm32-dfsdm-adc.txt         |  7 +++++--
+>  drivers/iio/adc/stm32-dfsdm-core.c                  | 21 +++++++++++++++++++++
+>  2 files changed, 26 insertions(+), 2 deletions(-)
 
-Just in case you need mine, since the edits here match what was in the
-in the bindings doc.
-
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
-
-Thanks,
-Dinh
+Reviewed-by: Rob Herring <robh@kernel.org>
