@@ -1,54 +1,60 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: Add Raydium RM67191 panel bindings
-Date: Mon, 7 May 2018 11:50:21 -0500
-Message-ID: <20180507165021.GA30361@rob-hp-laptop>
-References: <1525357562-20810-1-git-send-email-robert.chiras@nxp.com>
- <1525357562-20810-3-git-send-email-robert.chiras@nxp.com>
+Subject: Re: [PATCH v2] ARM: dts: tegra: Add support for 256 MB Colibri-T20
+ (plus such board on Iris)
+Date: Mon, 7 May 2018 11:58:14 -0500
+Message-ID: <20180507165814.GA4180@rob-hp-laptop>
+References: <1525360112-9893-1-git-send-email-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1525357562-20810-3-git-send-email-robert.chiras@nxp.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Robert Chiras <robert.chiras@nxp.com>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, mirela.rabulea@nxp.com, thierry.reding@gmail.com, linux-imx@nxp.com
+In-Reply-To: <1525360112-9893-1-git-send-email-krzk@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXkgMDMsIDIwMTggYXQgMDU6MjY6MDJQTSArMDMwMCwgUm9iZXJ0IENoaXJhcyB3
-cm90ZToKPiBTaWduZWQtb2ZmLWJ5OiBSb2JlcnQgQ2hpcmFzIDxyb2JlcnQuY2hpcmFzQG54cC5j
-b20+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3JheWRpdW0scm02NzE5MS50
-eHQgICAgIHwgMzggKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMzgg
-aW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmF5ZGl1bSxybTY3MTkxLnR4dAo+IAo+IGRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9y
-YXlkaXVtLHJtNjcxOTEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcGFuZWwvcmF5ZGl1bSxybTY3MTkxLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4g
-aW5kZXggMDAwMDAwMC4uMGZlNmQ0Ygo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9yYXlkaXVtLHJtNjcxOTEudHh0
-Cj4gQEAgLTAsMCArMSwzOCBAQAo+ICtSYXlkaXVtIFJNNjcxNzEgT0xFRCBMQ0QgcGFuZWwgd2l0
-aCBNSVBJLURTSSBwcm90b2NvbAo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSBjb21w
-YXRpYmxlOiAJCSJyYXlkaXVtLHJtNjcxOTEiCj4gKy0gcmVnOgkJCXZpcnR1YWwgY2hhbm5lbCBm
-b3IgTUlQSS1EU0kgcHJvdG9jb2wKPiArCQkJbXVzdCBiZSA8MD4KPiArLSBkc2ktbGFuZXM6CQlu
-dW1iZXIgb2YgRFNJIGxhbmVzIHRvIGJlIHVzZWQKPiArCQkJbXVzdCBiZSA8Mz4gb3IgPDQ+Cj4g
-Ky0gcG9ydDogCQlpbnB1dCBwb3J0IG5vZGUgd2l0aCBlbmRwb2ludCBkZWZpbml0aW9uIGFzCj4g
-KwkJCWRlZmluZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4
-dDsKPiArCQkJdGhlIGlucHV0IHBvcnQgc2hvdWxkIGJlIGNvbm5lY3RlZCB0byBhIE1JUEktRFNJ
-IGRldmljZQo+ICsJCQlkcml2ZXIKPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gcmVz
-ZXQtZ3BpbzoJCWEgR1BJTyBzcGVjIGZvciB0aGUgUlNUX0IgR1BJTyBwaW4KPiArLSBwaW5jdHJs
-LTAJCXBoYW5kbGUgdG8gdGhlIHBpbiBzZXR0aW5ncyBmb3IgdGhlIHJlc2V0IHBpbgo+ICstIHBh
-bmVsLXdpZHRoLW1tOglwaHlzaWNhbCBwYW5lbCB3aWR0aCBbbW1dCj4gKy0gcGFuZWwtaGVpZ2h0
-LW1tOglwaHlzaWNhbCBwYW5lbCBoZWlnaHQgW21tXQoKd2lkdGgtbW0gYW5kIGhlaWdodC1tbSBh
-cmUgdGhlIGNvbW1vbiBwcm9wZXJ0eSBuYW1lcy4KCj4gKwo+ICtbMV06IERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Rpc3BsYXktdGltaW5nLnR4dAoKRm9vdG5vdGUg
-dG8gd2hhdD8KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Thu, May 03, 2018 at 05:08:32PM +0200, Krzysztof Kozlowski wrote:
+> Colibri-T20 can come in 256 MB RAM (with 512 MB NAND) or 512 MB RAM
+> (with 1024 MB NAND) flavors.  Add support for the 256 MB version on Iris
+> evaluation board.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+> Changes since v1:
+> 1. Fix memory size in tegra20-colibri-256.dtsi (was working fine because
+>    my bootloader uses mem= argument).
+> ---
+>  Documentation/devicetree/bindings/arm/tegra.txt    |   1 +
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/tegra20-colibri-256.dtsi         |  11 +
+>  arch/arm/boot/dts/tegra20-colibri-512.dtsi         | 531 +--------------------
+>  ...gra20-colibri-512.dtsi => tegra20-colibri.dtsi} |   4 -
+>  arch/arm/boot/dts/tegra20-iris-256.dts             |  10 +
+>  arch/arm/boot/dts/tegra20-iris-512.dts             |  98 +---
+>  ...gra20-iris-512.dts => tegra20-iris-common.dtsi} |  11 +-
+>  8 files changed, 31 insertions(+), 636 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/tegra20-colibri-256.dtsi
+>  copy arch/arm/boot/dts/{tegra20-colibri-512.dtsi => tegra20-colibri.dtsi} (99%)
+>  create mode 100644 arch/arm/boot/dts/tegra20-iris-256.dts
+>  copy arch/arm/boot/dts/{tegra20-iris-512.dts => tegra20-iris-common.dtsi} (85%)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
+> index 32f62bb7006d..d304574ae441 100644
+> --- a/Documentation/devicetree/bindings/arm/tegra.txt
+> +++ b/Documentation/devicetree/bindings/arm/tegra.txt
+> @@ -49,6 +49,7 @@ board-specific compatible values:
+>    toradex,apalis_t30-eval
+>    toradex,apalis-tk1
+>    toradex,apalis-tk1-eval
+> +  toradex,colibri_t20-256
+
+NAK unless there are changes beyond the memory size. Otherwise, just use 
+the existing string or deprecate the existing one for a new one without 
+the memory size. I prefer the less churn of the former option.
+
+>    toradex,colibri_t20-512
+>    toradex,colibri_t30
+>    toradex,colibri_t30-eval-v3
