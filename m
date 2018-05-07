@@ -1,90 +1,35 @@
 From: Amit Nischal <anischal@codeaurora.org>
-Subject: Re: [PATCH v6 3/3] clk: qcom: Add Global Clock controller (GCC)
- driver for SDM845
-Date: Mon, 07 May 2018 16:12:49 +0530
-Message-ID: <3f3049ee7cc151ac619cb29c3d07142c@codeaurora.org>
-References: <1525105210-8689-1-git-send-email-anischal@codeaurora.org>
- <1525105210-8689-4-git-send-email-anischal@codeaurora.org>
- <152524580953.138124.2159165461856101134@swboyd.mtv.corp.google.com>
- <a56ffa424689ff354a63642bf2998088@codeaurora.org>
- <152549007801.138124.1209193202019560634@swboyd.mtv.corp.google.com>
+Subject: Re: [PATCH v1 0/2] Add QCOM video clock controller driver
+Date: Mon, 07 May 2018 16:16:53 +0530
+Message-ID: <09ac2bd5eab25cfc70a1c5dc7b0f90ed@codeaurora.org>
+References: <1525350925-16006-1-git-send-email-anischal@codeaurora.org>
+ <152545146453.138124.2471609033510400995@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152549007801.138124.1209193202019560634@swboyd.mtv.corp.google.com>
+In-Reply-To: <152545146453.138124.2471609033510400995@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@kernel.org>
 Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-05-05 08:44, Stephen Boyd wrote:
-> Quoting Amit Nischal (2018-05-04 03:45:12)
->> On 2018-05-02 12:53, Stephen Boyd wrote:
->> > Quoting Amit Nischal (2018-04-30 09:20:10)
->> >> +
->> >> +static struct clk_branch gcc_disp_gpll0_clk_src = {
->> >> +       .halt_reg = 0x52004,
->> >> +       .halt_check = BRANCH_HALT_DELAY,
->> >
->> > What about this one? It's not a phy so I'm confused again why we're
->> > unable to check the halt bit. To be clear(er), I don't see why we ever
->> > want to have HALT_DELAY used. Hopefully we can remove that flag.
->> >
->> > From what I recall, the flag is there for clks that don't toggle their
->> > status bit at all, but that we know take a few cycles to ungate the
->> > upstream clk. So we threw a delay into the code to make sure that when
->> > clk_enable() returned, a driver wouldn't try to use hardware before the
->> > clk was actually on. But these cases should pretty much never happen,
->> > hence all the pushback against this flag.
->> >
->> 
->> For these "*gpll0_clk_src" and "*gpll0_div_clk" clocks, there is no 
->> halt
->> bit to check the status and it is required to have delay for few 
->> cycles
->> so that clock gets turned on before a client driver to use the 
->> hardware.
+On 2018-05-04 22:01, Stephen Boyd wrote:
+> Quoting Amit Nischal (2018-05-03 05:35:23)
+>> Changes in v1:
+>>    https://lkml.org/lkml/2018/4/24/545
+>> Addressed below review comments given by Rob
+>> - Change the compatible property as per '<vendor>,<soc>-<block>' 
+>> format.
+>> - Add header definitions for resets and power-domain cells.
 > 
-> Ok.. but then why is there a 'halt_reg' configured for the clk?
+> You didn't add any reset definitions though?
 
-Thanks for the review.
-I will remove the halt_reg for the clocks where we are using the 
-'HALT_DELAY'
-flag and there is no need to poll the status bit as we are returning 
-early
-from the 'clk_branch_wait()' function.
+We haven't added the reset definitions for videocc as there is no
+video reset client.
 
 > 
->> >> +
->> >> +static struct clk_branch gcc_ufs_card_rx_symbol_0_clk = {
->> >> +       .halt_reg = 0x75018,
->> >> +       .halt_check = BRANCH_HALT_DELAY,
->> >
->> > There are still HALT_DELAY flags for UFS though? Why?
->> 
->> For ufs_card tx/rx symbol clocks, we don't poll the status bit as
->> per the recommendation from the HW team. We can change the halt_check
->> type to newly implemented flag "BRANCH_HALT_SKIP". Please update us 
->> with
->> your thoughts to change the flag to "BRANCH_HALT_SKIP".
-> 
-> Yes use HALT_SKIP please.
-
-Thanks for confirming. I will do the changes in the next patch series.
-
-> 
->> 
->> >
->> > Also, are you going to send DFS support for the QUP clks? I would like
->> > to see that code merged soon.
->> 
->> Taniya has sent the patches for DFS support for QUP clocks.
->> https://patchwork.kernel.org/patch/10376951/
->> 
-> 
-> I'll take a look.
 > --
 > To unsubscribe from this list: send the line "unsubscribe linux-clk" in
 > the body of a message to majordomo@vger.kernel.org
