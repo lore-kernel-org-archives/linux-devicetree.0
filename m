@@ -1,43 +1,43 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/7] pinctrl: sunxi: add support for H6
- R_PIO pin controller
-Date: Mon, 7 May 2018 16:05:30 -0500
-Message-ID: <20180507210530.GA8285@rob-hp-laptop>
-References: <20180503183847.11046-1-icenowy@aosc.io>
- <20180503183847.11046-4-icenowy@aosc.io>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: leds: Add SC27xx breathing light
+ controller documentation
+Date: Mon, 7 May 2018 16:10:41 -0500
+Message-ID: <20180507211041.GA10205@rob-hp-laptop>
+References: <099f4075ec489e425b5f1e7668a078c05f0d8509.1525427961.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBHH7YLLQKGQESEACU4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180503183847.11046-4-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <099f4075ec489e425b5f1e7668a078c05f0d8509.1525427961.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, xiaotong.lu@spreadtrum.com, broonie@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 04, 2018 at 02:38:43AM +0800, Icenowy Zheng wrote:
-> Allwinner H6 SoC has a R_PIO pin controller like other Allwinner SoCs,
-> which controls the PL and PM pin banks.
+On Fri, May 04, 2018 at 06:08:35PM +0800, Baolin Wang wrote:
+> This patch adds the binding documentation for Spreadtrum SC27xx series
+> breathing light controller, which supports 3 outputs: red LED, green
+> LED and blue LED.
 > 
-> Add support for it.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 > ---
->  .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
+>  .../devicetree/bindings/leds/leds-sc27xx-bltc.txt  |   39 ++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+> new file mode 100644
+> index 0000000..d4e267d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+> @@ -0,0 +1,39 @@
+> +LEDs connected to Spreadtrum SC27XX PMIC breathing light controller
+> +
+> +The SC27xx breathing light controller supports to 3 outputs:
+> +red LED, green LED and blue LED. Each LED can work at normal
+> +PWM mode or breath light mode.
+> +
+> +Required properties:
+> +- compatible: should be "sprd,sc27xx-bltc".
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-In the future, please split bindings to separate patches.
-
->  drivers/pinctrl/sunxi/Kconfig                      |   4 +
->  drivers/pinctrl/sunxi/Makefile                     |   1 +
->  drivers/pinctrl/sunxi/pinctrl-sun50i-h6-r.c        | 128 +++++++++++++++++++++
->  4 files changed, 134 insertions(+)
->  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-h6-r.c
+Don't use wildcards in compatible strings.
