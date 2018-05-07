@@ -1,83 +1,47 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [GIT PULL] DeviceTree fixes for 4.17
-Date: Mon, 7 May 2018 10:09:49 -0500
-Message-ID: <CAL_JsqJcQnEoWK8F0f1SzUstAPvYyRwht4UQOo1ZLGb6t-o8YQ@mail.gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH 0/5] Allwinner H6 USB3 support
+Date: Mon,  7 May 2018 23:18:12 +0800
+Message-ID: <20180507151817.55663-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB5W4YHLQKGQEPGVIUZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+This patchset contains USB3 support for Allwinner H6 SoC (DWC3 with a custom PHY).
 
-Please pull DT fixes for 4.17. Details below.
+The first patch adds the PHY driver, and the second/third patch adds
+compatible to adapt DWC3 platform glue to Allwinner platform. The last
+two patches are DT changes.
 
-Rob
+Icenowy Zheng (5):
+  phy: allwinner: add phy driver for USB3 PHY on Allwinner H6 SoC
+  dt-bindings: usb: add binding for the DWC3 controller on Allwinner SoC
+  usb: dwc3: of-simple: Add compatible for Allwinner H6 platform
+  arm64: allwinner: h6: add USB3 device nodes
+  arm64: allwinner: h6: enable USB3 port on Pine H64
 
+ .../bindings/phy/sun50i-usb3-phy.txt          |  24 +++
+ .../bindings/usb/allwinner,dwc3.txt           |  39 ++++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  23 +++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  38 ++++
+ drivers/phy/allwinner/Kconfig                 |  13 ++
+ drivers/phy/allwinner/Makefile                |   1 +
+ drivers/phy/allwinner/phy-sun50i-usb3.c       | 195 ++++++++++++++++++
+ drivers/usb/dwc3/dwc3-of-simple.c             |   1 +
+ 8 files changed, 334 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/allwinner,dwc3.txt
+ create mode 100644 drivers/phy/allwinner/phy-sun50i-usb3.c
 
-The following changes since commit 60cc43fc888428bb2f18f08997432d426a243338:
-
-  Linux 4.17-rc1 (2018-04-15 18:24:20 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-4.17
-
-for you to fetch changes up to f130307054a59ca21d2396f386be77ebd2e8ca96:
-
-  dt-bindings: panel: lvds: Fix path to display timing bindings
-(2018-05-01 09:26:31 -0500)
-
-----------------------------------------------------------------
-DeviceTree fixes for 4.17:
-
-- Fix path to display timing binding
-
-- Fix some typos in interrupt-names and clock-names
-
-- Fix a resource leak on overlay removal
-
-- Add missing documentation for R8A77965 DMA, serial, and net
-
-- Cleanup sunxi pinctrl description
-
-- Add Kieback & Peter GmbH vendor prefix
-
-----------------------------------------------------------------
-Geert Uytterhoeven (3):
-      dt-bindings: meson-uart: DT fix s/clocks-names/clock-names/
-      dt-bindings: mvebu-uart: DT fix s/interrupts-names/interrupt-names/
-      dt-bindings: panel: lvds: Fix path to display timing bindings
-
-Jacopo Mondi (3):
-      dt-bindings: net: ravb: Add support for r8a77965 SoC
-      dt-bindings: serial: sh-sci: Add support for r8a77965 (H)SCIF
-      dt-bindings: dmaengine: rcar-dmac: document R8A77965 support
-
-Jan Kiszka (1):
-      of: overlay: Stop leaking resources on overlay removal
-
-Lukasz Majewski (1):
-      doc: Add vendor prefix for Kieback & Peter GmbH
-
-Matheus Castello (1):
-      dt-bindings: pinctrl: sunxi: Fix reference to driver
-
-Rob Herring (1):
-      dtc: checks: drop warning for missing PCI bridge bus-range
-
- .../bindings/display/panel/panel-common.txt        |  2 +-
- .../devicetree/bindings/dma/renesas,rcar-dmac.txt  |  1 +
- .../devicetree/bindings/net/renesas,ravb.txt       |  1 +
- .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |  6 ++---
- .../bindings/serial/amlogic,meson-uart.txt         |  2 +-
- .../devicetree/bindings/serial/mvebu-uart.txt      |  2 +-
- .../bindings/serial/renesas,sci-serial.txt         |  2 ++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- Documentation/devicetree/overlay-notes.txt         |  8 ++++++
- drivers/of/overlay.c                               | 30 +++++++++++++++-------
- scripts/dtc/checks.c                               |  5 ++--
- 11 files changed, 42 insertions(+), 18 deletions(-)
+-- 
+2.17.0
