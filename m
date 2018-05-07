@@ -1,35 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv4 4/7] dt-bindings: fpga: add Stratix10 SoC FPGA manager
- binding
-Date: Mon, 7 May 2018 11:10:46 -0500
-Message-ID: <20180507161045.GA24624@rob-hp-laptop>
-References: <1525443697-31009-1-git-send-email-richard.gong@linux.intel.com>
- <1525443697-31009-5-git-send-email-richard.gong@linux.intel.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: usb: Update documentation for
+ Qualcomm DWC3 driver
+Date: Mon, 7 May 2018 11:17:49 -0500
+Message-ID: <20180507161749.GA26979@rob-hp-laptop>
+References: <1525459689-1358-1-git-send-email-mgautam@codeaurora.org>
+ <1525459689-1358-2-git-send-email-mgautam@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1525443697-31009-5-git-send-email-richard.gong@linux.intel.com>
+In-Reply-To: <1525459689-1358-2-git-send-email-mgautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: richard.gong@linux.intel.com
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@intel.com
+To: Manu Gautam <mgautam@codeaurora.org>
+Cc: balbi@kernel.org, andy.gross@linaro.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 04, 2018 at 09:21:34AM -0500, richard.gong@linux.intel.com wrote:
-> From: Alan Tull <atull@kernel.org>
+On Sat, May 05, 2018 at 12:18:07AM +0530, Manu Gautam wrote:
+> Existing documentation has lot of incorrect information as it
+> was originally added for a driver that no longer exists.
 > 
-> Add a Device Tree binding for the Intel Stratix10 SoC FPGA manager.
-> 
-> Signed-off-by: Alan Tull <atull@kernel.org>
-> Signed-off-by: Richard Gong <richard.gong@intel.com>
+> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
 > ---
-> v2: this patch is added in patch set version 2
-> v3: change to put fpga_mgr node under firmware/svc node
-> v4: s/fpga-mgr@0/fpga-mgr/ to remove unit_address
->     Add Richard's signed-off-by
-> ---
->  .../bindings/fpga/intel-stratix10-soc-fpga-mgr.txt      | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
+>  .../devicetree/bindings/usb/qcom,dwc3.txt          | 85 ++++++++++++++++------
+>  1 file changed, 63 insertions(+), 22 deletions(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
