@@ -1,69 +1,71 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 0/7] gnss: add new GNSS subsystem
-Date: Mon, 7 May 2018 12:20:56 +0200
-Message-ID: <20180507102056.GU2285@localhost>
-References: <20180424163458.11947-1-johan@kernel.org>
- <20180504132741.brn5jqv5ufjhp7ky@earth.universe>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v4 5/9] iio: adc: at91-sama5d2_adc: add support for
+ position and pressure channels
+Date: Mon, 7 May 2018 12:28:10 +0200
+Message-ID: <20180507102810.GO10960@piout.net>
+References: <1525084335-11276-1-git-send-email-eugen.hristev@microchip.com>
+ <1525084335-11276-6-git-send-email-eugen.hristev@microchip.com>
+ <20180506182953.6adad5b5@archlinux>
+ <20180506175914.GL10960@piout.net>
+ <eaeced9e-390f-0eea-0466-66c789bacdd6@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180504132741.brn5jqv5ufjhp7ky@earth.universe>
+In-Reply-To: <eaeced9e-390f-0eea-0466-66c789bacdd6@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Eugen Hristev <eugen.hristev@microchip.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, ludovic.desroches@microchip.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, nicolas.ferre@microchip.com, dmitry.torokhov@gmail.com, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 04, 2018 at 03:27:41PM +0200, Sebastian Reichel wrote:
-> Hi Johan,
+On 07/05/2018 09:18:39+0300, Eugen Hristev wrote:
+> On 06.05.2018 20:59, Alexandre Belloni wrote:
+> > Hi,
+> > 
+> > On 06/05/2018 18:29:53+0100, Jonathan Cameron wrote:
+> > > On Mon, 30 Apr 2018 13:32:11 +0300
+> > > Eugen Hristev <eugen.hristev@microchip.com> wrote:
+> > > 
+> > > > This implements the support for position and pressure for the included
+> > > > touchscreen support in the SAMA5D2 SOC ADC block.
+> > > > Two position channels are added and one for pressure.
+> > > > They can be read in raw format, or through a buffer.
+> > > > A normal use case is for a consumer driver to register a callback buffer
+> > > > for these channels.
+> > > > When the touchscreen channels are in the active scan mask,
+> > > > the driver will start the touchscreen sampling and push the data to the
+> > > > buffer.
+> > > > 
+> > > > Some parts of this patch are based on initial original work by
+> > > > Mohamed Jamsheeth Hajanajubudeen and Bandaru Venkateswara Swamy
+> > > > 
+> > > > Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> > > Looks good to me now.
+> > > 
+> > > I'm assuming that once Dmitry and others are happy, I'll take the
+> > > series through the IIO tree. Will reply to the cover letter if the
+> > > rest of the patches look good to me to let everyone know that without
+> > > having to catch this comment down in here!
+> > > 
+> > 
+> > I'm planning to take both DT patches through the at91 tree once you take
+> > the DT bindings patches.
 > 
-> On Tue, Apr 24, 2018 at 06:34:51PM +0200, Johan Hovold wrote:
-> > This series adds a new subsystem for GNSS receivers (e.g. GPS
-> > receivers).
-> > 
-> > While GNSS receivers are typically accessed using a UART interface they
-> > often also support other I/O interfaces such as I2C, SPI and USB, while
-> > yet other devices use iomem or even some form of remote-processor
-> > messaging (rpmsg).
-> >     
-> > The new GNSS subsystem abstracts the underlying interface and provides a
-> > new "gnss" class type, which exposes a character-device interface (e.g.
-> > /dev/gnss0) to user space. This allows GNSS receivers to have a
-> > representation in the Linux device model, something which is important
-> > not least for power management purposes and which also allows for easy
-> > detection and (eventually) identification of GNSS devices.
-> > 
-> > Note that the character-device interface provides raw access to whatever
-> > protocol the receiver is (currently) using, such as NMEA 0183, UBX or
-> > SiRF Binary. These protocols are expected to be continued to be handled
-> > by user space for the time being, even if some hybrid solutions are also
-> > conceivable (e.g. to have kernel drivers issue management commands).
+> Please take into consideration that those DT patches do not build
+> stand-alone, they depend on
+> [PATCH v4 7/9] dt-bindings: iio: adc: at91-sama5d2_adc: add channel specific
+> consumer info
+> 
+> (the DT patches add an include statement of a file which is created in this
+> patch).
+> 
 
-> Great work. I like your design decisions. I have quite a few devices
-> with have non-serial based GPS peripherals using binary protocols (*).
-> As far as I can see it should be possible to add support for those.
+So the proper way is to actually have the values in the dt instead of
+the define and then patch it on the next version of the kernel.
 
-Thanks! Yeah, the aim here was to abstract the actual I/O interface
-used.
+Or we take the dts patches on the next version.
 
-> I have one concern, though. While providing raw data by
-> default is fine generally, it is a problem with device
-> auto-discovery. I think there should be some IOCTL from
-> the start, that can be used to inform userspace about
-> the raw protocol being used (i.e. "NMEA"). I fear, that
-> userspace may start to just assume raw = NMEA without
-> having this (especially since all initial drivers provide
-> NMEA).
-
-One problem I see here would be that the driver does not necessarily
-know either what protocol is currently being used. Some devices have
-boot-pins which can be used to configure the initial protocol used (and
-this could perhaps be reflected in DT), but this can often later be
-changed (by user space) and even be made persistent using battery-backed
-ram or eeproms.
-
-Also note that at least u-blox devices supports having more than one
-protocol active on the same port...
-
-Thanks,
-Johan
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
