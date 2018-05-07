@@ -1,139 +1,77 @@
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v3 00/14] Sunxi-Cedrus driver for the Allwinner Video
- Engine, using media requests
-Date: Mon, 07 May 2018 16:50:08 +0200
-Message-ID: <611315f6d89ef7a85d56dd4b976c1207a4806dda.camel@bootlin.com>
-References: <20180507124500.20434-1-paul.kocialkowski@bootlin.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [EXTERNAL] Re: [PATCH] arm: dts: am437x-sk-evm: add wilink8
+ support
+Date: Mon, 7 May 2018 08:08:21 -0700
+Message-ID: <20180507150821.GM98604@atomide.com>
+References: <1525159453-32489-1-git-send-email-eyalr@ti.com>
+ <20180502145100.GK98604@atomide.com>
+ <5cc906da15da45ab96e06957f878b65b@ti.com>
+ <20180503141759.GP98604@atomide.com>
+ <f0ea5260b3e2413aab4780b203ff24a4@ti.com>
+ <20180506165621.GL98604@atomide.com>
+ <a4dd3009f0f5492d8756f42c11590423@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-GLnQEMAVvrJnfLPQ/EJ1"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180507124500.20434-1-paul.kocialkowski@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <a4dd3009f0f5492d8756f42c11590423@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S . Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Arnd Bergmann <arnd@arndb.de>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Philipp Zabel <p.zabel@pengutronix.de>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Yannick Fertre <yannick.fertre@st.com>, Thomas Gleixner <tglx@linutronix.de>H
+To: "Reizer, Eyal" <eyalr@ti.com>
+Cc: Eyal Reizer <eyalreizer@gmail.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Loewy, Chen" <c-loewy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+* Reizer, Eyal <eyalr@ti.com> [180507 06:57]:
+> Hi Tony,
+> 
+> > 
+> > Yeah my guess is that the reason for the separate GPIO interrupt was
+> > that on omap3 we did not have SDIO interrupt working for years. This was
+> > because of the issues related to padconf interrupts for off mode.
+> > 
+> > We now have Linux generic wakeirq support working with SDIO and it has
+> > been confirmed to work also for off mode with mwifiex at least. So
+> > there should be no reason to not also use the SDIO interrupt.
+> > 
+> 
+> There is more to this than just the padconf.
+> Using in-band interrupt instead of the out of band one requires
+> Supporting a feature called "Asynchronous interrupts in 4Bit mode"
+> Which is part of SDIO 3.0 spec:
+> https://www.sdcard.org/downloads/pls/pdf/index.php?p=PartE1_SDIO_Simplified_Specification_Ver3.00.jpg&f=PartE1_SDIO_Simplified_Specification_Ver3.00.pdf&e=EN_SSE1
+> 
+> Take a look at page 41 at the bottom part of the table.
+> Wilink8 supports this feature but AFAIK this support is still not part of the 
+> mmc/sdio core in the Linux kernel.
+> If we want wilink8 to trigger a host wakeup using the in-band interrupt instead 
+> Of the wlan_irq pin we would need to enable/use this feature.
 
---=-GLnQEMAVvrJnfLPQ/EJ1
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Well the SDIO dat line interrupt is working just fine with
+mwifiex_sdio driver and runtime PM like I said :)
 
-[...]
+> I did use it internally in the past and was able to patch the Ubuntu kernel 
+> (3.5.0 at that time) to use wilink8 in a standard SD Card slot of an Ubuntu Laptop 
+> while removing the use of wlan_irq pin completely.
+> However this was an experimental patch set written by a third party 
+> that was not up-steamtable at that time.
+> I do have this patch set somewhere...
+> 
+> It is similar to the following patch which is not  upstream as well for some reason:
+> https://gitlab.com/k2wl/g2_kernel/commit/5c4970fdaa50422d7ea7220efa20fb35148a4bca
+> It is not the only patch needed, there are a couple of additional patches needed 
+> for fully using it from driver.
+> I did check latest Linux-next and don't see this support there. Not sure why.
 
-On Mon, 2018-05-07 at 14:44 +0200, Paul Kocialkowski wrote:
-> Remaining tasks:
-> * cleaning up registers description and documenting the fields used;
-> * removing the assigned-clocks property and setting the clock rate
->   in the driver directly;
-> * checking the series with checkpatch and fixing warnings;
-> * documenting the MB32 NV12 format and adding it to v4l_fill_fmtdesc;
-> * reworking and documenting the MPEG2 header, then adding it to
->   v4l_fill_fmtdesc;
-> * checking and fixing the error paths;
-> * testing on more platforms.
+Hmm not sure if this is needed here. When things enter idle, the whole
+SDIO block is off and the SDIO dat interrupt is delivered as wakeirq to
+the pinctrl-single driver instead that manages padconf wake events.
+Then we have runtime PM wake up MMC subsystem and the SDIO dat line
+interrupt is still there and will trigger as it's level sensitive.
 
-Another item for the tasks list that is not yet in this revision:
-* changing the id for V4L2_CTRL_TYPE_MPEG2_FRAME_HDR=0F;
+So the test to do would be simply configure wlcore to use SDIO dat line
+interrupt instead of the GPIO interrupt and configure a wakeirq for
+the board on the SDIO dat line. Sounds like I need to get my wlcore
+runtime PM patches ready though as that is needed for using the wakeirq.
 
-Paul
+Regards,
 
-> Cheers!
->=20
-> [0]: https://patchwork.kernel.org/patch/9299073/
-> [1]: https://git.linuxtv.org/hverkuil/media_tree.git/log/?h=3Dreqv13
->=20
-> Florent Revest (1):
->   media: v4l: Add definitions for MPEG2 frame format and header metadata
->=20
-> Maxime Ripard (4):
->   drivers: soc: sunxi: Add support for the C1 SRAM region
->   ARM: sun5i: Add support for the C1 SRAM region with the SRAM
->     controller
->   ARM: sun7i-a20: Add support for the C1 SRAM region with the SRAM
->     controller
->   ARM: sun8i-a33: Add SRAM controller node and C1 SRAM region
->=20
-> Paul Kocialkowski (9):
->   drivers: soc: sunxi: Add dedicated compatibles for the A13, A20 and
->     A33
->   ARM: dts: sun5i: Use dedicated SRAM controller compatible
->   ARM: dts: sun7i-a20: Use dedicated SRAM controller compatible
->   media: v4l: Add definition for Allwinner's MB32-tiled NV12 format
->   dt-bindings: media: Document bindings for the Sunxi-Cedrus VPU driver
->   media: platform: Add Sunxi-Cedrus VPU decoder driver
->   ARM: dts: sun5i: Add Video Engine and reserved memory nodes
->   ARM: dts: sun7i-a20: Add Video Engine and reserved memory nodes
->   ARM: dts: sun8i-a33: Add Video Engine and reserved memory nodes
->=20
->  .../devicetree/bindings/media/sunxi-cedrus.txt     |  58 +++
->  MAINTAINERS                                        |   7 +
->  arch/arm/boot/dts/sun5i.dtsi                       |  47 +-
->  arch/arm/boot/dts/sun7i-a20.dtsi                   |  47 +-
->  arch/arm/boot/dts/sun8i-a33.dtsi                   |  54 +++
->  drivers/media/platform/Kconfig                     |  15 +
->  drivers/media/platform/Makefile                    |   1 +
->  drivers/media/platform/sunxi/cedrus/Makefile       |   4 +
->  drivers/media/platform/sunxi/cedrus/sunxi_cedrus.c | 333 ++++++++++++++
->  .../platform/sunxi/cedrus/sunxi_cedrus_common.h    | 128 ++++++
->  .../media/platform/sunxi/cedrus/sunxi_cedrus_dec.c | 188 ++++++++
->  .../media/platform/sunxi/cedrus/sunxi_cedrus_dec.h |  35 ++
->  .../media/platform/sunxi/cedrus/sunxi_cedrus_hw.c  | 240 ++++++++++
->  .../media/platform/sunxi/cedrus/sunxi_cedrus_hw.h  |  37 ++
->  .../platform/sunxi/cedrus/sunxi_cedrus_mpeg2.c     | 160 +++++++
->  .../platform/sunxi/cedrus/sunxi_cedrus_mpeg2.h     |  33 ++
->  .../platform/sunxi/cedrus/sunxi_cedrus_regs.h      | 175 +++++++
->  .../platform/sunxi/cedrus/sunxi_cedrus_video.c     | 505 +++++++++++++++=
-++++++
->  .../platform/sunxi/cedrus/sunxi_cedrus_video.h     |  31 ++
->  drivers/media/v4l2-core/v4l2-ctrls.c               |  10 +
->  drivers/media/v4l2-core/v4l2-ioctl.c               |   1 +
->  drivers/soc/sunxi/sunxi_sram.c                     |  13 +
->  include/uapi/linux/v4l2-controls.h                 |  26 ++
->  include/uapi/linux/videodev2.h                     |   4 +
->  24 files changed, 2150 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/sunxi-cedrus.=
-txt
->  create mode 100644 drivers/media/platform/sunxi/cedrus/Makefile
->  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus.c
->  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_comm=
-on.h
->  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_dec.=
-c
->  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_dec.=
-h
->  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_hw.c
->  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_hw.h
->  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_mpeg=
-2.c
->  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_mpeg=
-2.h
->  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_regs=
-.h
->  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_vide=
-o.c
->  create mode 100644 drivers/media/platform/sunxi/cedrus/sunxi_cedrus_vide=
-o.h
->=20
---=20
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
---=-GLnQEMAVvrJnfLPQ/EJ1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAlrwZ6AACgkQ3cLmz3+f
-v9Hzjgf/fUlUbHuTPjXkZdWutpBxX5BC8KKEoWFYxc0MqvHPNJz7w1UAe91T4o6e
-GySZvJKwQYjpLyAS3rNDjs+7qGGku6mAuQVWSq6RV70+xkSygR1+dj46HcdeiJXh
-Ux3ObkAgw/GqWmMj+68uWaJg0QSRVNCg0fEp8CPy3CVy/palWK5tB0AyJpuYNY3w
-s1RbwxLD9OufTbLurkKAsiDkyk8peRud9GzJff51GA3+RF023/XSlOx11BCij+X5
-Yl6RDZhQXc26HMjQB78tbC7QjbjYVv0yBzDmbkJZpxH5RwbB4jdTFME6zfriTQT2
-cbufAr8qfZeoN+C/ilGnU0i3DmdUmw==
-=mUBt
------END PGP SIGNATURE-----
-
---=-GLnQEMAVvrJnfLPQ/EJ1--
+Tony
