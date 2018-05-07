@@ -1,149 +1,32 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v3 01/14] media: staging/imx: add support to media dev for no
- IPU systems
-Date: Mon,  7 May 2018 17:21:39 +0100
-Message-ID: <20180507162152.2545-2-rui.silva@linaro.org>
-References: <20180507162152.2545-1-rui.silva@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: iio: stm32-adc: add support for
+ STM32MP1
+Date: Mon, 7 May 2018 11:28:31 -0500
+Message-ID: <20180507162830.GA11497@rob-hp-laptop>
+References: <1525247091-18143-1-git-send-email-fabrice.gasnier@st.com>
+ <1525247091-18143-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180507162152.2545-1-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1525247091-18143-2-git-send-email-fabrice.gasnier@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: jic23@kernel.org, alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, benjamin.gaignard@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Some i.MX SoC do not have IPU, like the i.MX7, add to the the media device
-infrastructure support to be used in this type of systems that do not have
-internal subdevices besides the CSI.
+On Wed, May 02, 2018 at 09:44:49AM +0200, Fabrice Gasnier wrote:
+> Document support for STM32MP1 ADC. It's quite similar to STM32H7 ADC.
+> Introduce "st,stm32mp1-adc" compatible to handle variants of this
+> hardware such as vregready flag, interrupts, clock rate.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+> Changes in v2:
+> - Update dt-bindings following Rob's remark: STM32MP1 ADC has two
+>   interrupt lines
+> ---
+>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- drivers/staging/media/imx/imx-media-dev.c     | 38 ++++++++++++++++---
- .../staging/media/imx/imx-media-internal-sd.c |  3 ++
- drivers/staging/media/imx/imx-media.h         |  3 ++
- 3 files changed, 39 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
-index f67ec8e27093..b019dcefccd6 100644
---- a/drivers/staging/media/imx/imx-media-dev.c
-+++ b/drivers/staging/media/imx/imx-media-dev.c
-@@ -27,6 +27,12 @@
- #include <media/imx.h>
- #include "imx-media.h"
- 
-+static const struct of_device_id imx_media_dt_ids[];
-+
-+struct imx_media_driver_data {
-+	bool ipu_present;
-+};
-+
- static inline struct imx_media_dev *notifier2dev(struct v4l2_async_notifier *n)
- {
- 	return container_of(n, struct imx_media_dev, notifier);
-@@ -92,6 +98,9 @@ static int imx_media_get_ipu(struct imx_media_dev *imxmd,
- 	struct ipu_soc *ipu;
- 	int ipu_id;
- 
-+	if (!imxmd->ipu_present)
-+		return 0;
-+
- 	ipu = dev_get_drvdata(csi_sd->dev->parent);
- 	if (!ipu) {
- 		v4l2_err(&imxmd->v4l2_dev,
-@@ -440,6 +449,8 @@ static const struct media_device_ops imx_media_md_ops = {
- 
- static int imx_media_probe(struct platform_device *pdev)
- {
-+	const struct imx_media_driver_data *drvdata;
-+	const struct of_device_id *of_id;
- 	struct device *dev = &pdev->dev;
- 	struct device_node *node = dev->of_node;
- 	struct imx_media_dev *imxmd;
-@@ -481,16 +492,29 @@ static int imx_media_probe(struct platform_device *pdev)
- 		goto notifier_cleanup;
- 	}
- 
--	ret = imx_media_add_internal_subdevs(imxmd);
--	if (ret) {
--		v4l2_err(&imxmd->v4l2_dev,
--			 "add_internal_subdevs failed with %d\n", ret);
-+	of_id = of_match_device(imx_media_dt_ids, &pdev->dev);
-+	if (!of_id) {
-+		v4l2_err(&imxmd->v4l2_dev, "failed to find driver data\n");
- 		goto notifier_cleanup;
- 	}
- 
-+	drvdata = of_id->data;
-+
-+	imxmd->ipu_present = drvdata->ipu_present;
-+
-+	if (imxmd->ipu_present) {
-+		ret = imx_media_add_internal_subdevs(imxmd);
-+		if (ret) {
-+			v4l2_err(&imxmd->v4l2_dev,
-+				 "add_internal_subdevs failed with %d\n", ret);
-+			goto notifier_cleanup;
-+		}
-+	}
-+
- 	/* no subdevs? just bail */
- 	if (imxmd->notifier.num_subdevs == 0) {
- 		ret = -ENODEV;
-+		v4l2_err(&imxmd->v4l2_dev, "no subdevs\n");
- 		goto notifier_cleanup;
- 	}
- 
-@@ -533,8 +557,12 @@ static int imx_media_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct imx_media_driver_data imx6_drvdata = {
-+	.ipu_present = true,
-+};
-+
- static const struct of_device_id imx_media_dt_ids[] = {
--	{ .compatible = "fsl,imx-capture-subsystem" },
-+	{ .compatible = "fsl,imx-capture-subsystem", .data = &imx6_drvdata },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, imx_media_dt_ids);
-diff --git a/drivers/staging/media/imx/imx-media-internal-sd.c b/drivers/staging/media/imx/imx-media-internal-sd.c
-index 0fdc45dbfb76..2bcdc232369a 100644
---- a/drivers/staging/media/imx/imx-media-internal-sd.c
-+++ b/drivers/staging/media/imx/imx-media-internal-sd.c
-@@ -238,6 +238,9 @@ int imx_media_create_internal_links(struct imx_media_dev *imxmd,
- 	struct media_pad *pad;
- 	int i, j, ret;
- 
-+	if (!imxmd->ipu_present)
-+		return 0;
-+
- 	intsd = find_intsd_by_grp_id(sd->grp_id);
- 	if (!intsd)
- 		return -ENODEV;
-diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
-index 44532cd5b812..d40538ecf176 100644
---- a/drivers/staging/media/imx/imx-media.h
-+++ b/drivers/staging/media/imx/imx-media.h
-@@ -147,6 +147,9 @@ struct imx_media_dev {
- 
- 	/* for async subdev registration */
- 	struct v4l2_async_notifier notifier;
-+
-+	/* indicator to if the system has IPU */
-+	bool ipu_present;
- };
- 
- enum codespace_sel {
--- 
-2.17.0
+Reviewed-by: Rob Herring <robh@kernel.org>
