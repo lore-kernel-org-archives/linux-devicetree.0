@@ -1,57 +1,61 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC v4 0/4] usb: role: rcar-usb3-role-switch: add support for R-Car SoCs
-Date: Tue, 22 May 2018 21:01:05 +0900
-Message-Id: <1526990469-20739-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=jssF=H2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from michel.telenet-ops.be ([195.130.137.88]:36766 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752029AbeEGNkJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 7 May 2018 09:40:09 -0400
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/2] ARM: dts: sh73a0: Add missing interrupt-affinity to PMU node
+Date: Mon,  7 May 2018 15:40:04 +0200
+Message-Id: <1525700405-7993-2-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1525700405-7993-1-git-send-email-geert+renesas@glider.be>
+References: <1525700405-7993-1-git-send-email-geert+renesas@glider.be>
+Sender: devicetree-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch set is based on Felipe's usb.git / testing/next branch
-(commit id = 47265c067c0d129f3a0e94bc221293a780af9d78).
+The PMU node references two interrupts, but lacks the interrupt-affinity
+property, which is required in that case:
 
-I still marked this patch set as "RFC". I would like to know whether
-this way is good or not. About last discusstion with Heikki:
- https://patchwork.kernel.org/patch/10397635/
+    hw perfevents: no interrupt-affinity property for /pmu, guessing.
 
-Changes from RFC v3:
- - Rebase latest usb.git / testing/next branch.
- - Add graph parse into device_connection_find_match().
- - Use workqueue to call _usb3_set_mode() in patch 3.
-   (I realized renesas_usb3_role_switch_set() cannot run on atomic because
-    device_attach() might sleep.)
+Add the missing property to fix this.
 
-Changes from RFC v2:
- - Add registering usb role switch into drivers/usb/gadget/udc/renesas_usb3
-   because hardware resource (a register) is shared and remove individual
-   usb role switch driver/dt-bindings for R-Car.
- - Remove "usb_role_switch_get_by_graph" API because the renesas_usb3 driver
-   doesn't need such API now.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm/boot/dts/sh73a0.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Changes from RFC:
- - Remove "device-connection-id" and "usb role switch driver" dt-bingings.
- - Remove drivers/of code.
- - Add a new API for find the connection by using graph on devcon.c and roles.c.
- - Use each new API on the rcar usb role switch and renesas_usb3 drivers.
- - Update the dtsi file for r8a7795.
-
-
-Yoshihiro Shimoda (4):
-  base: devcon: add graph parse in device_connection_find_match()
-  usb: gadget: udc: renesas_usb3: Add register of usb role switch
-  usb: gadget: udc: renesas_usb3: use usb role switch API
-  arm64: dts: renesas: r8a7795: add OF graph for usb role switch
-
- .../devicetree/bindings/usb/renesas_usb3.txt       |  15 +++
- Documentation/driver-api/device_connection.rst     |   2 +-
- arch/arm64/boot/dts/renesas/r8a7795.dtsi           |  12 +++
- drivers/base/devcon.c                              |  15 +++
- drivers/usb/gadget/udc/Kconfig                     |   1 +
- drivers/usb/gadget/udc/renesas_usb3.c              | 105 ++++++++++++++++++++-
- include/linux/device.h                             |   2 +
- 7 files changed, 150 insertions(+), 2 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
+index 2bcd6a276734c527..c8d45425c3393880 100644
+--- a/arch/arm/boot/dts/sh73a0.dtsi
++++ b/arch/arm/boot/dts/sh73a0.dtsi
+@@ -22,7 +22,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu@0 {
++		cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
+@@ -31,7 +31,7 @@
+ 			power-domains = <&pd_a2sl>;
+ 			next-level-cache = <&L2>;
+ 		};
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
+@@ -96,6 +96,7 @@
+ 		compatible = "arm,cortex-a9-pmu";
+ 		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>;
+ 	};
+ 
+ 	cmt1: timer@e6138000 {
 -- 
-1.9.1
+2.7.4
+
