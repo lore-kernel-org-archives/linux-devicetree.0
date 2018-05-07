@@ -1,71 +1,87 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
-Date: Mon, 7 May 2018 08:45:15 -0700
-Message-ID: <20180507154515.GP98604@atomide.com>
-References: <20180424163458.11947-5-johan@kernel.org>
- <CAL_Jsq+mCp=geT8t_j+0fuTxAB7C9RYn6pESRpLc2GH273fM1Q@mail.gmail.com>
- <20180426091018.GU4615@localhost>
- <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
- <20180502081637.GE2285@localhost>
- <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com>
- <20180503205037.7be552c1@aktux>
- <44A0BC7C-67C7-4116-849F-90FF7CF2B1F0@goldelico.com>
- <20180504114213.3xlzqxe74n55tk5s@earth.universe>
- <20180507100135.GS2285@localhost>
+From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] resource: Use list_head to link sibling resource
+Date: Mon, 7 May 2018 23:50:22 +0800
+Message-ID: <201805072210.H1bsHs9Y%fengguang.wu@intel.com>
+References: <20180507063224.24229-2-bhe@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20180507063224.24229-2-bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180507100135.GS2285@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andreas Kemnade <andreas@kemnade.info>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, brijesh.singh-5C7GfCeVMHo@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ebiederm-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, linux-parisc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dmitry.torokhov@gmail.c
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Baoquan,
 
-* Johan Hovold <johan@kernel.org> [180507 03:03]:
-> On Fri, May 04, 2018 at 01:42:13PM +0200, Sebastian Reichel wrote:
-> 
-> > Having said all of this, serdev does not yet support runtime PM (at
-> > all). Tony is currently looking into it. Fortunately serdev allows
-> > us to enable runtime PM by default (once implemented), since we know
-> > the remote side and can (hopefully) avoid losing characters (i.e.
-> > with sideband wakeup gpios).
-> 
-> I'm not sure we want generic runtime-pm support for the controllers in
-> the sense that the slave device state is always reflected by the serial
-> controller. Similar as for i2c and spi, we really only want to keep the
-> controller active when we are doing I/O, but we may want to keep a
-> client active for longer.
+I love your patch! Yet something to improve:
 
-Yeah i2c seems to do the right thing where the bus takes care
-of runtime PM.
+[auto build test ERROR on linus/master]
+[also build test ERROR on v4.17-rc4 next-20180504]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-> Take the u-blox driver in this series for example. As I'm using runtime
-> PM to manage device power, user-space can chose to prevent the receiver
-> from runtime suspending in order to avoid lengthy (re-)acquisition times
-> in setups without a backup battery (by means of the power/control
-> attribute).
+url:    https://github.com/0day-ci/linux/commits/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180507-144345
+config: arm-allmodconfig (attached as .config)
+compiler: arm-linux-gnueabi-gcc (Debian 7.2.0-11) 7.2.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        make.cross ARCH=arm 
 
-Sorry I don't seem to have that one, care to paste the subject
-line of that patch?
+All errors (new ones prefixed by >>):
 
-> Note that serdev not enabling runtime pm for controllers is roughly
-> equivalent to setting the .ignore_children flag, which is what we do for
-> i2c and spi controller, and possibly what we want here too.
+   arch/arm/plat-samsung/pm-check.c: In function 's3c_pm_run_res':
+>> arch/arm/plat-samsung/pm-check.c:49:18: error: invalid operands to binary != (have 'struct list_head' and 'void *')
+      if (ptr->child != NULL)
+          ~~~~~~~~~~ ^~
+>> arch/arm/plat-samsung/pm-check.c:50:19: error: incompatible type for argument 1 of 's3c_pm_run_res'
+       s3c_pm_run_res(ptr->child, fn, arg);
+                      ^~~
+   arch/arm/plat-samsung/pm-check.c:46:13: note: expected 'struct resource *' but argument is of type 'struct list_head'
+    static void s3c_pm_run_res(struct resource *ptr, run_fn_t fn, u32 *arg)
+                ^~~~~~~~~~~~~~
+>> arch/arm/plat-samsung/pm-check.c:60:7: error: incompatible types when assigning to type 'struct resource *' from type 'struct list_head'
+      ptr = ptr->sibling;
+          ^
 
-We currently don't idle serdev at all even if not in use. What
-I noticed is if I have these in my .config:
+vim +49 arch/arm/plat-samsung/pm-check.c
 
-CONFIG_SERIAL_DEV_BUS=y
-CONFIG_SERIAL_DEV_CTRL_TTYPORT=y
+549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  45  
+549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  46  static void s3c_pm_run_res(struct resource *ptr, run_fn_t fn, u32 *arg)
+549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  47  {
+549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  48  	while (ptr != NULL) {
+549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12 @49  		if (ptr->child != NULL)
+549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12 @50  			s3c_pm_run_res(ptr->child, fn, arg);
+549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  51  
+05fee7cf arch/arm/plat-samsung/pm-check.c Toshi Kani 2016-01-26  52  		if ((ptr->flags & IORESOURCE_SYSTEM_RAM)
+05fee7cf arch/arm/plat-samsung/pm-check.c Toshi Kani 2016-01-26  53  				== IORESOURCE_SYSTEM_RAM) {
+549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  54  			S3C_PMDBG("Found system RAM at %08lx..%08lx\n",
+840eeeb8 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  55  				  (unsigned long)ptr->start,
+840eeeb8 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  56  				  (unsigned long)ptr->end);
+549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  57  			arg = (fn)(ptr, arg);
+549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  58  		}
+549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  59  
+549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12 @60  		ptr = ptr->sibling;
+549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  61  	}
+549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  62  }
+549c7e33 arch/arm/plat-s3c/pm-check.c     Ben Dooks  2008-12-12  63  
 
-And no hci_serdev.ko driver loaded, then the 8250 port still stays
-active and there are no sysfs entries to idle it.
+:::::: The code at line 49 was first introduced by commit
+:::::: 549c7e33aeb9bfe441ecf68639d2227bb90978e7 [ARM] S3C: Split the resume memory check code from pm.c
 
-Are you seeing this with your series?
+:::::: TO: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+:::::: CC: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
 
-Regards,
-
-Tony
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
