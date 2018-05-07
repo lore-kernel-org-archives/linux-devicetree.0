@@ -1,75 +1,71 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v6 05/17] media: rkisp1: add Rockchip ISP1 subdev driver
-Date: Mon, 07 May 2018 06:41:50 +0000
-Message-ID: <CAAFQd5A7gAK4fXH9YVrobR5_QX_5f8xa272R_56v5YUghV6Sxw@mail.gmail.com>
-References: <20180308094807.9443-1-jacob-chen@iotwrt.com> <20180308094807.9443-6-jacob-chen@iotwrt.com>
- <20180503090909.o3dyhukzs2y7em5z@tarshish> <CAAFQd5CvBv4hkE=PSHBJTYa9Lj0SyggxpMBEAYD=if0=T0uzHw@mail.gmail.com>
- <20180507063814.vweb4p3nfgnoc3td@tarshish>
+From: "Reizer, Eyal" <eyalr@ti.com>
+Subject: RE: [EXTERNAL] Re: [PATCH] arm: dts: am437x-sk-evm: add wilink8
+ support
+Date: Mon, 7 May 2018 06:55:03 +0000
+Message-ID: <a4dd3009f0f5492d8756f42c11590423@ti.com>
+References: <1525159453-32489-1-git-send-email-eyalr@ti.com>
+ <20180502145100.GK98604@atomide.com>
+ <5cc906da15da45ab96e06957f878b65b@ti.com>
+ <20180503141759.GP98604@atomide.com>
+ <f0ea5260b3e2413aab4780b203ff24a4@ti.com>
+ <20180506165621.GL98604@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180507063814.vweb4p3nfgnoc3td@tarshish>
+In-Reply-To: <20180506165621.GL98604@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: baruch@tkos.co.il
-Cc: Jacob Chen <jacob-chen@iotwrt.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Shunqian Zheng <zhengsq@rock-chips.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>, Eddie Cai <eddie.cai.linux@gmail.com>, Jeffy <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Eyal Reizer <eyalreizer@gmail.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Loewy, Chen" <c-loewy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 7, 2018 at 3:38 PM Baruch Siach <baruch@tkos.co.il> wrote:
+Hi Tony,
 
-> Hi Tomasz,
+>=20
+> Yeah my guess is that the reason for the separate GPIO interrupt was
+> that on omap3 we did not have SDIO interrupt working for years. This was
+> because of the issues related to padconf interrupts for off mode.
+>=20
+> We now have Linux generic wakeirq support working with SDIO and it has
+> been confirmed to work also for off mode with mwifiex at least. So
+> there should be no reason to not also use the SDIO interrupt.
+>=20
 
-> On Mon, May 07, 2018 at 06:13:27AM +0000, Tomasz Figa wrote:
-> > On Thu, May 3, 2018 at 6:09 PM Baruch Siach <baruch@tkos.co.il> wrote:
-> > > On Thu, Mar 08, 2018 at 05:47:55PM +0800, Jacob Chen wrote:
-> > > > +static int rkisp1_isp_sd_s_power(struct v4l2_subdev *sd, int on)
-> > > > +{
-> > > > +     struct rkisp1_device *isp_dev = sd_to_isp_dev(sd);
-> > > > +     int ret;
-> > > > +
-> > > > +     v4l2_dbg(1, rkisp1_debug, &isp_dev->v4l2_dev, "s_power: %d\n",
-> > on);
-> > > > +
-> > > > +     if (on) {
-> > > > +             ret = pm_runtime_get_sync(isp_dev->dev);
-> > > > +             if (ret < 0)
-> > > > +                     return ret;
-> > > > +
-> > > > +             rkisp1_config_clk(isp_dev);
-> > > > +     } else {
-> > > > +             ret = pm_runtime_put(isp_dev->dev);
-> >
-> > > I commented this line out to make more than one STREAMON work.
-Otherwise,
-> > > the second STREAMON hangs. I guess the bug is not this driver.
-Probably
-> > > something in drivers/soc/rockchip/pm_domains.c. Just noting that in
-case
-> > > you or someone on Cc would like to investigate it further.
-> > >
-> > > I tested v4.16-rc4 on the Tinkerboard.
-> >
-> > Looks like that version doesn't include the IOMMU PM and clock handling
-> > rework [1], which should fix a lot of runtime PM issues. FWIW,
-linux-next
-> > seems to already include it.
-> >
-> > [1] https://lkml.org/lkml/2018/3/23/44
+There is more to this than just the padconf.
+Using in-band interrupt instead of the out of band one requires
+Supporting a feature called "Asynchronous interrupts in 4Bit mode"
+Which is part of SDIO 3.0 spec:
+https://www.sdcard.org/downloads/pls/pdf/index.php?p=3DPartE1_SDIO_Simplifi=
+ed_Specification_Ver3.00.jpg&f=3DPartE1_SDIO_Simplified_Specification_Ver3.=
+00.pdf&e=3DEN_SSE1
 
-> Thanks for the reference.
+Take a look at page 41 at the bottom part of the table.
+Wilink8 supports this feature but AFAIK this support is still not part of t=
+he=20
+mmc/sdio core in the Linux kernel.
+If we want wilink8 to trigger a host wakeup using the in-band interrupt ins=
+tead=20
+Of the wlan_irq pin we would need to enable/use this feature.
 
-> It looks like the iommu driver part is in Linus' tree already. The DT
-part is
-> in the v4.18-armsoc/dts32 branch of Heiko's tree. Am I missing anything?
+I did use it internally in the past and was able to patch the Ubuntu kernel=
+=20
+(3.5.0 at that time) to use wilink8 in a standard SD Card slot of an Ubuntu=
+ Laptop=20
+while removing the use of wlan_irq pin completely.
+However this was an experimental patch set written by a third party=20
+that was not up-steamtable at that time.
+I do have this patch set somewhere...
 
-You're right, most of the series made it in time for 4.17. However, the DT
-part (precisely, the clocks properties added to IOMMU nodes) is crucial for
-the fixes to be effective.
+It is similar to the following patch which is not  upstream as well for som=
+e reason:
+https://gitlab.com/k2wl/g2_kernel/commit/5c4970fdaa50422d7ea7220efa20fb3514=
+8a4bca
+It is not the only patch needed, there are a couple of additional patches n=
+eeded=20
+for fully using it from driver.
+I did check latest Linux-next and don't see this support there. Not sure wh=
+y.
 
-
-> Anyway, I'll take a look.
-
-Thanks for testing. :) (Forgot to mention in my previous email...)
-
-Best regards,
-Tomasz
+Best Regards,
+Eyal
