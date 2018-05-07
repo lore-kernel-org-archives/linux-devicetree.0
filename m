@@ -1,32 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 10/14] dt-bindings: qcom_spmi: Add support for SAW
- documentation
-Date: Mon, 7 May 2018 11:07:37 -0500
-Message-ID: <20180507160737.GA16495@rob-hp-laptop>
-References: <1525348355-25471-1-git-send-email-ilialin@codeaurora.org>
- <1525348355-25471-11-git-send-email-ilialin@codeaurora.org>
+Subject: Re: [PATCHv4 4/7] dt-bindings: fpga: add Stratix10 SoC FPGA manager
+ binding
+Date: Mon, 7 May 2018 11:10:46 -0500
+Message-ID: <20180507161045.GA24624@rob-hp-laptop>
+References: <1525443697-31009-1-git-send-email-richard.gong@linux.intel.com>
+ <1525443697-31009-5-git-send-email-richard.gong@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1525348355-25471-11-git-send-email-ilialin@codeaurora.org>
+In-Reply-To: <1525443697-31009-5-git-send-email-richard.gong@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ilia Lin <ilialin@codeaurora.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
+To: richard.gong@linux.intel.com
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 03, 2018 at 02:52:31PM +0300, Ilia Lin wrote:
-> Add support for SAW controlled regulators.
-> The regulators defined as SAW controlled in the device tree
-> will be controlled through special CPU registers instead of direct
-> SPMI accesses.
-> This is required especially for CPU supply regulators to synchronize
-> with clock scaling and for Automatic Voltage Switching.
-> Document it.
+On Fri, May 04, 2018 at 09:21:34AM -0500, richard.gong@linux.intel.com wrote:
+> From: Alan Tull <atull@kernel.org>
 > 
-> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+> Add a Device Tree binding for the Intel Stratix10 SoC FPGA manager.
+> 
+> Signed-off-by: Alan Tull <atull@kernel.org>
+> Signed-off-by: Richard Gong <richard.gong@intel.com>
 > ---
->  .../bindings/regulator/qcom,spmi-regulator.txt     | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
+> v2: this patch is added in patch set version 2
+> v3: change to put fpga_mgr node under firmware/svc node
+> v4: s/fpga-mgr@0/fpga-mgr/ to remove unit_address
+>     Add Richard's signed-off-by
+> ---
+>  .../bindings/fpga/intel-stratix10-soc-fpga-mgr.txt      | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
 
 Reviewed-by: Rob Herring <robh@kernel.org>
