@@ -1,132 +1,133 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: msm8998: Add rpm and regulators for MTP
-Date: Mon, 07 May 2018 16:04:08 -0700
-Message-ID: <152573424824.138124.9876892052732688689@swboyd.mtv.corp.google.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 1/2] arm64: dts: Add msm8998 SoC and MTP board support
+Date: Mon, 7 May 2018 16:35:11 -0700
+Message-ID: <20180507233511.GC14924@minitux>
 References: <20180428054248.22387-1-bjorn.andersson@linaro.org>
- <20180428054248.22387-2-bjorn.andersson@linaro.org>
+ <152573399648.138124.10341359049104453178@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180428054248.22387-2-bjorn.andersson@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <152573399648.138124.10341359049104453178@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2018-04-27 22:42:48)
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/=
-qcom/msm8998.dtsi
-> index d6665e4f801f..ccbf6347aacb 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> @@ -220,6 +220,16 @@
->                 method =3D "smc";
->         };
->  =
+On Mon 07 May 15:59 PDT 2018, Stephen Boyd wrote:
 
-> +       rpm_glink: rpm-glink {
-> +               compatible =3D "qcom,glink-rpm";
-> +
-> +               interrupts =3D <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
-> +
-> +               qcom,rpm-msg-ram =3D <&rpm_msg_ram>;
-> +
-> +               mboxes =3D <&apcs_glb 0>;
+> Quoting Bjorn Andersson (2018-04-27 22:42:47)
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > new file mode 100644
+> > index 000000000000..d6665e4f801f
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > @@ -0,0 +1,340 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/* Copyright (c) 2016, The Linux Foundation. All rights reserved. */
+> > +
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +#include <dt-bindings/clock/qcom,gcc-msm8998.h>
+> > +
+> > +/ {
+> > +       model = "Qualcomm Technologies, Inc. MSM 8998";
+> > +
+> > +       interrupt-parent = <&intc>;
+> > +
+> > +       qcom,msm-id = <292 0x0>;
+> 
+> No update to dtbtool?
+> 
 
-Why so many newlines?
+This allows me to concatenate the dtb to the Image.gz and boot the
+device. From my scripts I see that I tried to use dtbTool before
+reverting to this...
 
-> +       };
-> +
->         soc: soc {};
->  };
->  =
+[..]
+> > +               cpu-map {
+> > +                       cluster0 {
+> > +                               core0 {
+> > +                                       cpu = <&CPU0>;
+> > +                               };
+> > +
+> > +                               core1 {
+> > +                                       cpu = <&CPU1>;
+> > +                               };
+> > +
+> > +                               core2 {
+> > +                                       cpu = <&CPU2>;
+> > +                               };
+> > +
+> > +                               core3 {
+> > +                                       cpu = <&CPU3>;
+> > +                               };
+> > +                       };
+> > +
+> > +                       cluster1 {
+> > +                               core0 {
+> > +                                       cpu = <&CPU4>;
+> > +                               };
+> > +
+> > +                               core1 {
+> > +                                       cpu = <&CPU5>;
+> > +                               };
+> > +
+> > +                               core2 {
+> > +                                       cpu = <&CPU6>;
+> > +                               };
+> > +
+> > +                               core3 {
+> > +                                       cpu = <&CPU7>;
+> > +                               };
+> > +                       };
+> > +               };
+> 
+> I still wonder if this is accurate, but OK.
+> 
 
-> @@ -337,4 +347,77 @@
->                 #interrupt-cells =3D <4>;
->                 cell-index =3D <0>;
->         };
-> +
-> +       rpm_msg_ram: memory@68000 {
+Afaict it matches downstream, not sure if I'm missing something?
 
-unit address doesn't match reg property.
+[..]
+> > +       intc: interrupt-controller@17a00000 {
+> > +               compatible = "arm,gic-v3";
+> > +               reg = <0x17a00000 0x10000>,       /* GICD */
+> > +                     <0x17b00000 0x100000>;      /* GICR * 8 */
+> > +               #interrupt-cells = <3>;
+> > +               #address-cells = <1>;
+> > +               #size-cells = <1>;
+> > +               ranges;
+> > +               interrupt-controller;
+> > +               #redistributor-regions = <1>;
+> > +               redistributor-stride = <0x0 0x20000>;
+> 
+> Is this needed? The redistributor stuff can be left out if there's only
+> one right?
+> 
 
-> +               compatible =3D "qcom,rpm-msg-ram";
-> +               reg =3D <0x778000 0x7000>;
-> +       };
-> +
-> +       apcs_glb: mailbox@9820000 {
+#redistributor-regions is listed as optional if there's more than 1, the
+stride is still needed.
 
-unit address doesn't match reg property.
+Afaict the stride still needs to be specified, as it's different from
+the default 64kb.
 
-> +               compatible =3D "qcom,msm8998-apcs-hmss-global";
-> +               reg =3D <0x17911000 0x1000>;
-> +
-> +               #mbox-cells =3D <1>;
-> +       };
-> +};
-> +
-> +&rpm_glink {
-> +       rpm_requests {
-> +               compatible =3D "qcom,rpm-msm8998";
-> +               qcom,glink-channels =3D "rpm_requests";
-> +
-> +               pm8998-regulators {
-> +                       compatible =3D "qcom,rpm-pm8998-regulators";
-> +
-> +                       pm8998_s1: s1 {};
-> +                       pm8998_s2: s2 {};
-> +                       pm8998_s3: s3 {};
-> +                       pm8998_s4: s4 {};
-> +                       pm8998_s5: s5 {};
-> +                       pm8998_s6: s6 {};
-> +                       pm8998_s7: s7 {};
-> +                       pm8998_s8: s8 {};
-> +                       pm8998_s9: s9 {};
-> +                       pm8998_s10: s10 {};
-> +                       pm8998_s11: s11 {};
-> +                       pm8998_s12: s12 {};
-> +                       pm8998_s13: s13 {};
-> +                       pm8998_l1: l1 {};
-> +                       pm8998_l2: l2 {};
-> +                       pm8998_l3: l3 {};
-> +                       pm8998_l4: l4 {};
-> +                       pm8998_l5: l5 {};
-> +                       pm8998_l6: l6 {};
-> +                       pm8998_l7: l7 {};
-> +                       pm8998_l8: l8 {};
-> +                       pm8998_l9: l9 {};
-> +                       pm8998_l10: l10 {};
-> +                       pm8998_l11: l11 {};
-> +                       pm8998_l12: l12 {};
-> +                       pm8998_l13: l13 {};
-> +                       pm8998_l14: l14 {};
-> +                       pm8998_l15: l15 {};
-> +                       pm8998_l16: l16 {};
-> +                       pm8998_l17: l17 {};
-> +                       pm8998_l18: l18 {};
-> +                       pm8998_l19: l19 {};
-> +                       pm8998_l20: l20 {};
-> +                       pm8998_l21: l21 {};
-> +                       pm8998_l22: l22 {};
-> +                       pm8998_l23: l23 {};
-> +                       pm8998_l24: l24 {};
-> +                       pm8998_l25: l25 {};
-> +                       pm8998_l26: l26 {};
-> +                       pm8998_l27: l27 {};
-> +                       pm8998_l28: l28 {};
-> +                       pm8998_lvs1: lvs1 {};
-> +                       pm8998_lvs2: lvs2 {};
+> > +               interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> > +       };
+> > +
+> > +       blsp2_uart1: serial@c1b0000 {
+> 
+> Clk name says uart2 though?
+> 
 
-What's the benefit to having the nodes here instead of in each board?
+That's because it's the wrong clock. Thanks!
 
-> +               };
-> +
-> +               pmi8998-regulators {
-> +                       compatible =3D "qcom,rpm-pmi8998-regulators";
-> +
-> +                       pmi8998_bob: bob {};
-> +               };
+> > +               compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+> > +               reg = <0xc1b0000 0x1000>;
+> > +               interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
+> > +               clocks = <&gcc GCC_BLSP2_UART2_APPS_CLK>,
+> > +                        <&gcc GCC_BLSP2_AHB_CLK>;
+> > +               clock-names = "core", "iface";
+> > +               status = "disabled";
+> > +       };
 
-These may be board specific? So each regulator container would need
-status =3D "disabled" and then status =3D "okay" in the board file.
+Regards,
+Bjorn
