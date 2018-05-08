@@ -1,31 +1,52 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v7 3/3] clk: qcom: Add Global Clock controller (GCC) driver for
- SDM845
-Date: Mon, 07 May 2018 18:14:43 -0700
-Message-ID: <152574208368.138124.673130853127341411@swboyd.mtv.corp.google.com>
-References: <1525690220-26525-1-git-send-email-anischal@codeaurora.org>
- <1525690220-26525-4-git-send-email-anischal@codeaurora.org>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: leds: Add SC27xx breathing light
+ controller documentation
+Date: Tue, 8 May 2018 09:50:57 +0800
+Message-ID: <CAMz4kuLp=9Ae1UEE8LqoxBQneQ-x9T__WQ-zmtFf3n1AUUkUHw@mail.gmail.com>
+References: <099f4075ec489e425b5f1e7668a078c05f0d8509.1525427961.git.baolin.wang@linaro.org>
+ <20180507211041.GA10205@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525690220-26525-4-git-send-email-anischal@codeaurora.org>
+In-Reply-To: <20180507211041.GA10205@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Amit Nischal <anischal@codeaurora.org>
+To: Rob Herring <robh@kernel.org>
+Cc: jacek.anaszewski@gmail.com, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, xiaotong.lu@spreadtrum.com, Mark Brown <broonie@kernel.org>, linux-leds@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Amit Nischal (2018-05-07 03:50:20)
-> From: Taniya Das <tdas@codeaurora.org>
-> =
+Hi Rob,
 
-> Add support for the global clock controller found on SDM845
-> based devices. This should allow most non-multimedia device
-> drivers to probe and control their clocks.
-> =
+On 8 May 2018 at 05:10, Rob Herring <robh@kernel.org> wrote:
+> On Fri, May 04, 2018 at 06:08:35PM +0800, Baolin Wang wrote:
+>> This patch adds the binding documentation for Spreadtrum SC27xx series
+>> breathing light controller, which supports 3 outputs: red LED, green
+>> LED and blue LED.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> ---
+>>  .../devicetree/bindings/leds/leds-sc27xx-bltc.txt  |   39 ++++++++++++++++++++
+>>  1 file changed, 39 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+>> new file mode 100644
+>> index 0000000..d4e267d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+>> @@ -0,0 +1,39 @@
+>> +LEDs connected to Spreadtrum SC27XX PMIC breathing light controller
+>> +
+>> +The SC27xx breathing light controller supports to 3 outputs:
+>> +red LED, green LED and blue LED. Each LED can work at normal
+>> +PWM mode or breath light mode.
+>> +
+>> +Required properties:
+>> +- compatible: should be "sprd,sc27xx-bltc".
+>
+> Don't use wildcards in compatible strings.
 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
-> ---
+Will change to one explicit Soc name. Thanks.
 
-Applied to clk-next
+-- 
+Baolin.wang
+Best Regards
