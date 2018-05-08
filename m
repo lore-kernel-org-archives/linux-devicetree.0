@@ -1,134 +1,110 @@
-Return-Path: <SRS0=X3x8=H4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pl0-f65.google.com ([209.85.160.65]:33732 "EHLO
-        mail-pl0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S933988AbeEIOl0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 9 May 2018 10:41:26 -0400
-Received: by mail-pl0-f65.google.com with SMTP id n10-v6so1332765plp.0
-        for <devicetree@vger.kernel.org>; Wed, 09 May 2018 07:41:26 -0700 (PDT)
-Date: Wed, 9 May 2018 20:11:19 +0530
-From: Himanshu Jha <himanshujha199640@gmail.com>
-Subject: When does of_match_device() return NULL ?
-Message-ID: <20180509144119.GA6358@himanshu-Vostro-3559>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 8 May 2018 11:06:54 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] media: dt-bindings: add binding for TI SCAN921226H
+ video deserializer
+Message-ID: <20180508160654.GA5752@rob-hp-laptop>
+References: <20180504124903.6276-1-jlu@pengutronix.de>
+ <20180504124903.6276-2-jlu@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: julia.lawall@lip6.fr
+In-Reply-To: <20180504124903.6276-2-jlu@pengutronix.de>
+To: Jan Luebbe <jlu@pengutronix.de>
+Cc: linux-media@vger.kernel.org, kernel@pengutronix.de, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+On Fri, May 04, 2018 at 02:49:02PM +0200, Jan Luebbe wrote:
+> This deserializer can be used with sensors that directly produce a
+> 10-bit LVDS stream and converts it to a parallel bus.
+> 
+> Controlling it via the optional GPIOs is mainly useful for avoiding
+> conflicts when another parallel sensor is connected to the same data bus
+> as the deserializer.
+> 
+> Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
+> ---
+>  .../bindings/media/ti,scan921226h.txt         | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/ti,scan921226h.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/ti,scan921226h.txt b/Documentation/devicetree/bindings/media/ti,scan921226h.txt
+> new file mode 100644
+> index 000000000000..4e475672d7bf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/ti,scan921226h.txt
+> @@ -0,0 +1,59 @@
+> +TI SCAN921226H Video Deserializer
+> +---------------------------------
+> +
+> +The SCAN921226H receives a LVDS serial data stream with embedded clock and
+> +converts it to a 10-bit wide parallel data bus and recovers parallel clock.
+> +Some CMOS sensors such as the ON Semiconductor MT9V024 produce a LVDS signal
+> +compatible with this deserializer.
+> +
+> +Required properties:
+> +- compatible : should be "ti,scan921226h"
+> +- #address-cells: should be <1>
+> +- #size-cells: should be <0>
+> +- port@0: serial (LVDS) input
+> +- port@1: parallel output
+> +
+> +The device node should contain two 'port' child nodes (one each for input and
+> +output), in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Optional Properties:
+> +- enable-gpios: reference to the GPIO connected to the REN (output enable) pin,
+> +  if any.
+> +- npwrdn-gpios: reference to the GPIO connected to the nPWRDN pin, if any.
 
+Use the standard powerdown-gpios here.
 
+Both should state the active level.
 
-The only way to probe an OF driver is when a match is found
-in the device table. And hence checking for of_match_device() is redundant
-and instead it is better to use of_device_get_match_data() to get the
-matched driver specific data in the probe function.
+> +
+> +Optionally, #address-cells, #size-cells, and port nodes can be grouped under a
+> +ports node as described in Documentation/devicetree/bindings/graph.txt.
+> +
+> +Example:
+> +
+> +      csi0_deserializer: csi0_deserializer {
 
-For instance:
-https://lkml.org/lkml/2018/4/30/66
+Don't use '_' in node names.
 
- static int mmio_74xx_gpio_probe(struct platform_device *pdev)
- {
--	const struct of_device_id *of_id;
- 	struct mmio_74xx_gpio_priv *priv;
- 	struct resource *res;
- 	void __iomem *dat;
- 	int err;
- 
--	of_id = of_match_device(mmio_74xx_gpio_ids, &pdev->dev);
--	if (!of_id)
--		return -ENODEV;
--
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
- 
-+	priv->flags = (uintptr_t)of_device_get_match_data(&pdev->dev);
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	dat = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(dat))
- 		return PTR_ERR(dat);
- 
--	priv->flags = (uintptr_t) of_id->data;
--
-
---------------------------------------------------------------------------
-
-In the above example of_match_device() is useless since the
-probe occurs *only* when a match is found and therefore checking again
-is redundant.
-
-But now my question is if this is the case, then when does
-of_match_device() return NULL ? When is the error handling required ?
-
-There are places where it is done as "safe-play" coding as suggested to me
-by Jonathan Cameron previosuly https://lkml.org/lkml/2018/3/16/1245
-
-I am working on a Coccinelle SmPL rule with the help of Julia Lawall to
-replace of_match_device() + error handling with
-of_device_get_match_data() simply.
-
-I am testing the refactoring changes and it is at:
-https://github.com/himanshujha199640/linux-next/commit/efb7ed923bd00c86fe0a4e67e2ddb636ff0e0ff4
-
--------------------------------------------------------------------------------
-
-Some statistics found by Julia Lawall:
-
-
-f_match_device with check: 257/283
-  no of tbl: 39, of tbl only: 148, other tbl only: 4, multi tbl: 66
-  has of_match_ptr: 87, no of_match_ptr: 170 
-
-of_match_device without check: 26/283
-  no of tbl: 14, of tbl only: 11, other tbl only: 0, multi tbl: 1
-  has of_match_ptr: 6, no of_match_ptr: 20
-
-of_device_get_match_data with check: 158/212
-  no of tbl: 29, of tbl only: 78, other tbl only: 0, multi tbl: 51
-  has of_match_ptr: 53, no of_match_ptr: 105 
-
-of_device_get_match_data without check: 54/212
-  no of tbl: 13, of tbl only: 40, other tbl only: 0, multi tbl: 1
-  has of_match_ptr: 8, no of_match_ptr: 46
-
-Multi table files without an of_match_device check
-  drivers/mmc/host/mxs-mmc.c
-
-Multi table files without an of_device_get_match_data check
-  drivers/clk/clk-versaclock5.c
-
-of_match_ptr files without an of_match_device check
-  drivers/pinctrl/mvebu/pinctrl-orion.c
-  drivers/tty/serial/mvebu-uart.c
-  drivers/misc/eeprom/eeprom_93xx46.c
-  arch/arm/plat-pxa/ssp.c
-  drivers/soc/mediatek/mtk-scpsys.c
-  drivers/pinctrl/mvebu/pinctrl-armada-cp110.c
-of_match_ptr files without an of_device_get_match_data check
-  drivers/gpu/drm/nouveau/nouveau_platform.c
-  drivers/gpio/gpio-pxa.c
-  drivers/gpio/gpio-rcar.c
-  drivers/iommu/arm-smmu.c
-  drivers/usb/gadget/udc/renesas_usb3.c
-  drivers/i2c/busses/i2c-mt65xx.c
-  drivers/iommu/ipmmu-vmsa.c
-  drivers/mtd/nand/raw/mtk_ecc.c
-
-other table only (no of_device_id matching)
-  drivers/mfd/wm831x-i2c.c
-  drivers/macintosh/macio_asic.c
-  drivers/mfd/max14577.c
-  drivers/mfd/wm831x-spi.c
-
---------------------------------------------------------------------------
-
-
--- 
-Himanshu Jha
-Undergraduate Student
-Department of Electronics & Communication
-Guru Tegh Bahadur Institute of Technology
+> +              compatible = "ti,scan921226h";
+> +
+> +              enable-gpios = <&gpio5 20 GPIO_ACTIVE_HIGH>;
+> +              npwrdn-gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
+> +
+> +              #address-cells = <1>;
+> +              #size-cells = <0>;
+> +
+> +              /* serial sink interface */
+> +              port@0 {
+> +                      reg = <0>;
+> +
+> +                      des0_in: endpoint {
+> +                              remote-endpoint = <&mt9v024_0_out>;
+> +                      };
+> +              };
+> +
+> +              /* parallel source interface */
+> +              port@1 {
+> +                      reg = <1>;
+> +
+> +                      des0_out: endpoint {
+> +                              remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
+> +                              bus-width = <8>;
+> +                              hsync-active = <1>;
+> +                              vsync-active = <1>;
+> +                      };
+> +              };
+> +      };
+> -- 
+> 2.17.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
