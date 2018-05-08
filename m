@@ -1,48 +1,150 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 0/2] Add QCOM video clock controller driver
-Date: Tue, 8 May 2018 07:48:07 -0500
-Message-ID: <CAL_JsqL3wz_Y0Qp7Z8-JjkFGegKLFOUscJgGp+XO-Lm52iN2Vg@mail.gmail.com>
-References: <1525350925-16006-1-git-send-email-anischal@codeaurora.org>
- <152545146453.138124.2471609033510400995@swboyd.mtv.corp.google.com>
- <09ac2bd5eab25cfc70a1c5dc7b0f90ed@codeaurora.org> <20180507171121.GA22656@rob-hp-laptop>
- <8ac8a361a7dc69cce1e7498f1473bad8@codeaurora.org>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH] Kirin-PCIe: Add kirin pcie msi feature.
+Date: Tue, 8 May 2018 07:56:58 -0500
+Message-ID: <20180508125658.GK161390@bhelgaas-glaptop.roam.corp.google.com>
+References: <1525763028-107417-1-git-send-email-chenyao11@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8ac8a361a7dc69cce1e7498f1473bad8@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <1525763028-107417-1-git-send-email-chenyao11@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Nischal <anischal@codeaurora.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-clk-owner@vger.kernel.org
+To: Yao Chen <chenyao11@huawei.com>
+Cc: songxiaowei@hisilicon.com, wangbinghui@hisilicon.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dimitrysh@google.com, guodong.xu@linaro.org, Stanimir Varbanov <svarbanov@mm-sol.com>, Jianguo Sun <sunjianguo1@huawei.com>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 7, 2018 at 11:53 PM, Amit Nischal <anischal@codeaurora.org> wrote:
-> On 2018-05-07 22:41, Rob Herring wrote:
->>
->> On Mon, May 07, 2018 at 04:16:53PM +0530, Amit Nischal wrote:
->>>
->>> On 2018-05-04 22:01, Stephen Boyd wrote:
->>> > Quoting Amit Nischal (2018-05-03 05:35:23)
->>> > > Changes in v1:
->>> > >    https://lkml.org/lkml/2018/4/24/545
->>> > > Addressed below review comments given by Rob
->>> > > - Change the compatible property as per '<vendor>,<soc>-<block>'
->>> > > format.
->>> > > - Add header definitions for resets and power-domain cells.
->>> >
->>> > You didn't add any reset definitions though?
->>>
->>> We haven't added the reset definitions for videocc as there is no
->>> video reset client.
->>
->>
->> So? You don't know what resets there are?
->>
->
-> We know the resets, but video driver doesn't do any block resets
-> prior to accessing the video subsystem so that's the reason we do
-> not want to expose the resets in videocc driver.
+[+cc Stanimir, Jianguo, Shawn for qcom, histb comments below]
 
-Bindings don't have to match what drivers currently use but should be
-complete as possible.
+On Tue, May 08, 2018 at 03:03:48PM +0800, Yao Chen wrote:
+> This patch adds kirin pcie msi feature.
 
-Rob
+Thanks for the patch!  Please update your subject and changelog like this:
+
+  PCI: kirin: Add MSI support
+
+  Add support for MSI.
+
+You can figure out what style to use for the subject by running:
+
+  git log --oneline drivers/pci/dwc/pcie-kirin.c
+
+Then follow the existing style.
+
+> Signed-off-by: Yao Chen <chenyao11@huawei.com>
+> ---
+>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi |  2 ++
+>  drivers/pci/dwc/pcie-kirin.c              | 38 +++++++++++++++++++++++++++++++
+>  2 files changed, 40 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> index ec3eb8e..4ef684f 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> @@ -872,6 +872,8 @@
+>  				  0x0 0x02000000>;
+>  			num-lanes = <1>;
+>  			#interrupt-cells = <1>;
+> +			interrupts = <0 283 4>;
+> +			interrupts-names = "msi";
+>  			interrupt-map-mask = <0xf800 0 0 7>;
+>  			interrupt-map = <0x0 0 0 1
+>  					 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
+> diff --git a/drivers/pci/dwc/pcie-kirin.c b/drivers/pci/dwc/pcie-kirin.c
+> index d2970a0..2319c9c 100644
+> --- a/drivers/pci/dwc/pcie-kirin.c
+> +++ b/drivers/pci/dwc/pcie-kirin.c
+> @@ -426,9 +426,28 @@ static int kirin_pcie_establish_link(struct pcie_port *pp)
+>  	return 0;
+>  }
+>  
+> +static irqreturn_t kirin_pcie_msi_irq_handler(int irq, void *arg)
+> +{
+> +	struct pcie_port *pp = arg;
+> +
+> +	return dw_handle_msi_irq(pp);
+> +}
+> +
+> +static void kirin_pcie_msi_init(struct pcie_port *pp)
+> +{
+> +	dw_pcie_msi_init(pp);
+> +}
+> +
+> +static void kirin_pcie_enable_interrupts(struct pcie_port *pp)
+> +{
+> +	if (IS_ENABLED(CONFIG_PCI_MSI))
+> +		kirin_pcie_msi_init(pp);
+> +}
+> +
+>  static int kirin_pcie_host_init(struct pcie_port *pp)
+>  {
+>  	kirin_pcie_establish_link(pp);
+> +	kirin_pcie_enable_interrupts(pp);
+>  
+>  	return 0;
+>  }
+> @@ -448,6 +467,25 @@ static int kirin_pcie_host_init(struct pcie_port *pp)
+>  static int __init kirin_add_pcie_port(struct dw_pcie *pci,
+>  				      struct platform_device *pdev)
+>  {
+> +	int ret;
+> +
+> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> +		pci->pp.msi_irq = platform_get_irq(pdev, 0);
+> +		if (!pci->pp.msi_irq) {
+> +			dev_err(&pdev->dev, "failed to get msi irq\n");
+
+s/msi irq/MSI IRQ/
+
+> +			return -ENODEV;
+> +		}
+> +		ret = devm_request_irq(&pdev->dev, pci->pp.msi_irq,
+> +				       kirin_pcie_msi_irq_handler,
+> +				       IRQF_SHARED | IRQF_NO_THREAD,
+> +				       "kirin_pcie_msi", &pci->pp);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "failed to request msi irq\n");
+
+s/msi irq/MSI IRQ/
+Also, please include the IRQ number (pci->pp.msi_irq) in the message.
+
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	pci->pp.root_bus_nr = -1;
+
+Setting root_bus_nr looks like an unrelated change that should be in a
+separate patch.
+
+But I'm not sure why you need to set root_bus_nr at all, since
+dw_pcie_host_init() always sets it.
+
+Some other callers of dw_pcie_host_init() do set it:
+
+  exynos_add_pcie_port()
+  imx6_add_pcie_port()
+  armada8k_add_pcie_port()
+  artpec6_add_pcie_port()
+  dw_plat_add_pcie_port()
+  histb_pcie_probe()
+  qcom_pcie_probe()
+  spear13xx_add_pcie_port()
+
+But I don't see *why* any of these need to set it.  If they don't need to
+set it, they shouldn't.
+
+And it would be nice if histb and qcom followed the structure and naming
+conventions of the other drivers, i.e., they should have
+histb_add_pcie_port() and qcom_add_pcie_port().
+
+>  	pci->pp.ops = &kirin_pcie_host_ops;
+>  
+>  	return dw_pcie_host_init(&pci->pp);
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
