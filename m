@@ -1,56 +1,44 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH] ARM: dts: am335x-evmsk: Add phandle for the backlight for the
- panel
-Date: Tue, 8 May 2018 13:04:33 +0300
-Message-ID: <20180508100433.1051-1-peter.ujfalusi@ti.com>
+From: kgunda@codeaurora.org
+Subject: Re: [PATCH V2 2/5] backlight: qcom-wled: Add support for WLED4
+ peripheral
+Date: Tue, 08 May 2018 15:34:19 +0530
+Message-ID: <398b0fafebdcad8072d592c2ab812286@codeaurora.org>
+References: <1525342352-25072-1-git-send-email-kgunda@codeaurora.org>
+ <1525342352-25072-3-git-send-email-kgunda@codeaurora.org>
+ <20180507164534.GB21042@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180507164534.GB21042@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: bjorn.andersson@linaro.org, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-With the backlight phandle the driver can manage the backlight on/off in
-sync with the panel enable/disable.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm/boot/dts/am335x-evmsk.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index d0d6bacfafc2..0c096a795e37 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -137,7 +137,7 @@
- 		};
- 	};
- 
--	backlight {
-+	lcd_bl: backlight {
- 		compatible = "pwm-backlight";
- 		pwms = <&ecap2 0 50000 PWM_POLARITY_INVERTED>;
- 		brightness-levels = <0 58 61 66 75 90 125 170 255>;
-@@ -172,6 +172,7 @@
- 		pinctrl-names = "default", "sleep";
- 		pinctrl-0 = <&lcd_pins_default>;
- 		pinctrl-1 = <&lcd_pins_sleep>;
-+		backlight = <&lcd_bl>;
- 		status = "okay";
- 		panel-info {
- 			ac-bias		= <255>;
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+On 2018-05-07 22:15, Rob Herring wrote:
+> On Thu, May 03, 2018 at 03:42:29PM +0530, Kiran Gunda wrote:
+>> WLED4 peripheral is present on some PMICs like pmi8998
+>> and pm660l. It has a different register map and also
+>> configurations are different. Add support for it.
+>> 
+>> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> ---
+>>  .../bindings/leds/backlight/qcom-wled.txt          | 172 ++++-
+> 
+> Please split bindings to a separate patch.
+> 
+> This is also a whole lot of churn re-formatting. That is fine, but 
+> don't
+> mix actual changes to the binding with re-formatting. You can do 2
+> patches in this case:
+> 
+> - move and reformat (as long as the move shows up as a move
+> and not a remove and add)
+> - additions for new chips
+> 
+Sure. I will do it in the next series.
+>>  drivers/video/backlight/qcom-wled.c                | 749 
+>> +++++++++++++++------
+>>  2 files changed, 696 insertions(+), 225 deletions(-)
