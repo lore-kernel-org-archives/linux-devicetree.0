@@ -1,118 +1,48 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 3/4] rtc: ds1307: add calibration of_ for mt41txx chips.
-Date: Tue, 8 May 2018 21:19:56 +0200
-Message-ID: <20180508191956.GP10960@piout.net>
-References: <20180508145611.49072-1-giulio.benetti@micronovasrl.com>
- <20180508145611.49072-3-giulio.benetti@micronovasrl.com>
+From: Dinh Nguyen <dinh.linux@gmail.com>
+Subject: Re: [PATCHv2 3/3] arm64: dts: stratix10: add sdram ecc
+Date: Tue, 8 May 2018 14:27:29 -0500
+Message-ID: <CADhT+wc_WfT-F29dHu=XQeS6Y9QL0nb=L1u5VFUObjp1Kw9eaA@mail.gmail.com>
+References: <1524854238-19394-1-git-send-email-thor.thayer@linux.intel.com>
+ <1524854238-19394-4-git-send-email-thor.thayer@linux.intel.com>
+ <20180507165943.GE733@pd.tnic>
+ <CADhT+weyJFhMyPbVt0n2EVe7OpeHHLjhxjw7aY2_8GBZ-7h7Xg@mail.gmail.com>
+ <CADhT+weL=8ODk1JVLwUXtFG3e4iKfzBMpZmo4Y0UwoK0=H=Zhg@mail.gmail.com>
+ <20180508085330.GA12190@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180508145611.49072-3-giulio.benetti@micronovasrl.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180508085330.GA12190@pd.tnic>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, thor.thayer@linux.intel.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, mchehab@kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Boris,
 
-There is a sysfs interface for calibration, please use it. this is
-especially useful since the calibration value probably depend on
-temperature so it has to be updated dynamically to be really useful.
+On Tue, May 8, 2018 at 3:53 AM, Borislav Petkov <bp@alien8.de> wrote:
+> On Mon, May 07, 2018 at 04:10:01PM -0500, Dinh Nguyen wrote:
+>> Do you mind if I take this patch through arm-soc?
+>
+> Sure, but you have to give me an immutable branch which I can merge into
+> my tree so that the functionality in 2/3 can get used when it lands in
+> linux-next and later in mainline.
+>
+> So please take it and give me the tag (I see you're using tags) which
+> you're sending up.
+>
 
-See https://elixir.bootlin.com/linux/v4.16.7/source/Documentation/ABI/testing/sysfs-class-rtc#L68
-and https://elixir.bootlin.com/linux/v4.16.7/source/drivers/rtc/interface.c#L999
+Please this tag socfpga_updates_for_v4.18_part2  at :
 
-On 08/05/2018 16:56:10+0200, Giulio Benetti wrote:
-> m41txx chips can hold a calibration value to get really near to real
-> tick value.
-> 
-> Add calibration property(ranging between (-31) and 31), so on every probe
-> calibration value will be written to rtc.
-> This is because ic could loose supply due to low battery.
-> 
-> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
-> ---
->  .../devicetree/bindings/rtc/rtc-ds1307.txt    |  2 ++
->  drivers/rtc/rtc-ds1307.c                      | 33 +++++++++++++++++++
->  2 files changed, 35 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-> index ce6469c1a516..d3d70a5495c5 100644
-> --- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-> @@ -34,6 +34,8 @@ Optional properties:
->  - trickle-diode-disable : ds1339, ds1340 and ds 1388 only
->  	Do not use internal trickle charger diode
->  	Should be given if internal trickle charger diode should be disabled
-> +- calibration: m41t0, m41t00, m41t11 only
-> +	Set calibration value to correct external bias, ranging between (-31) and 31.
->  
->  Example:
->  	rtc1: ds1339@68 {
-> diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-> index 0ab0c166da83..9cda52589c0f 100644
-> --- a/drivers/rtc/rtc-ds1307.c
-> +++ b/drivers/rtc/rtc-ds1307.c
-> @@ -114,6 +114,12 @@ enum ds_type {
->  #	define RX8025_BIT_VDET		0x40
->  #	define RX8025_BIT_XST		0x20
->  
-> +#define M41TXX_REG_CONTROL	0x07
-> +#	define M41TXX_BIT_OUT		0x80
-> +#	define M41TXX_BIT_FT		0x40
-> +#	define M41TXX_BIT_CALIB_SIGN	0x20
-> +#	define M41TXX_M_CALIBRATION	0x1f
-> +
->  struct ds1307 {
->  	enum ds_type		type;
->  	unsigned long		flags;
-> @@ -1397,6 +1403,7 @@ static int ds1307_probe(struct i2c_client *client,
->  	unsigned char		regs[8];
->  	struct ds1307_platform_data *pdata = dev_get_platdata(&client->dev);
->  	u8			trickle_charger_setup = 0;
-> +	s32			calib;
->  
->  	ds1307 = devm_kzalloc(&client->dev, sizeof(struct ds1307), GFP_KERNEL);
->  	if (!ds1307)
-> @@ -1460,6 +1467,32 @@ static int ds1307_probe(struct i2c_client *client,
->  	if (chip->alarm && of_property_read_bool(client->dev.of_node,
->  						 "wakeup-source"))
->  		ds1307_can_wakeup_device = true;
-> +
-> +	/* retrieve calibration value if provided */
-> +	if (!of_property_read_s32(client->dev.of_node, "calibration",
-> +				 &calib)) {
-> +		switch (ds1307->type) {
-> +		case m41t0:
-> +		case m41t00:
-> +		case m41t11:
-> +		{
-> +			/*
-> +			 * Set calibration value every power-on since rtc
-> +			 * could have shut off(low battery)
-> +			 */
-> +			u8 out_byte = abs(calib) & M41TXX_M_CALIBRATION;
-> +
-> +			if (calib >= 0)
-> +				out_byte |= M41TXX_BIT_CALIB_SIGN;
-> +
-> +			regmap_write(ds1307->regmap, M41TXX_REG_CONTROL,
-> +					out_byte);
-> +		}
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +	}
->  #endif
->  
->  	switch (ds1307->type) {
-> -- 
-> 2.17.0
-> 
+git://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux.git
 
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks,
+Dinh
