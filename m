@@ -1,76 +1,65 @@
-From: Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] resource: Use list_head to link sibling resource
-Date: Wed, 9 May 2018 08:41:23 +0900
-Message-ID: <20180508234123.GA23307@WeideMacBook-Pro.local>
-References: <20180419001848.3041-1-bhe@redhat.com>
- <20180419001848.3041-2-bhe@redhat.com>
- <20180426011837.GA79340@WeideMacBook-Pro.local>
- <20180507011429.GG30581@MiWiFi-R3L-srv>
- <20180508114845.GA19459@WeideMacBook-Pro.local>
- <20180508121123.GI30581@MiWiFi-R3L-srv>
-Reply-To: Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 2/2] kbuild: disable new dtc graph and unit-address warnings
+Date: Wed, 9 May 2018 08:51:43 +0900
+Message-ID: <CAK7LNAQnFrZNJetQRrB_KuV_=oRneSFXj-KJ=SK6ZTZWjdn1tg@mail.gmail.com>
+References: <20180508135150.27762-1-robh@kernel.org> <20180508135150.27762-2-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180508121123.GI30581@MiWiFi-R3L-srv>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Yaowei Bai <baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, "K. Y. Srinivasan" <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jonathan Derrick <jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180508135150.27762-2-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Michal Marek <michal.lkml@markovi.net>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 08, 2018 at 08:11:23PM +0800, Baoquan He wrote:
->On 05/08/18 at 08:48pm, Wei Yang wrote:
->> On Mon, May 07, 2018 at 09:14:29AM +0800, Baoquan He wrote:
->> >Hi Wei Yang,
->> >
->> >On 04/26/18 at 09:18am, Wei Yang wrote:
->> >> On Thu, Apr 19, 2018 at 08:18:46AM +0800, Baoquan He wrote:
->> >> >The struct resource uses singly linked list to link siblings. It's not
->> >> >easy to do reverse iteration on sibling list. So replace it with list_head.
->> >> >
->> >> 
->> >> Hi, Baoquan
->> >> 
->> >> Besides changing the data structure, I have another proposal to do the reverse
->> >> iteration. Which means it would not affect other users, if you just want a
->> >> reverse iteration.
->> >> 
->> >> BTW, I don't think Andrew suggest to use linked-list directly. What he wants
->> >> is a better solution to your first proposal in
->> >> https://patchwork.kernel.org/patch/10300819/.
->> >> 
->> >> Below is my proposal of resource reverse iteration without changing current
->> >> design.
->> >
->> >I got your mail and read it, then interrupted by other thing and forgot
->> >replying, sorry.
->> >
->> >I am fine with your code change. As I said before, I have tried to change
->> >code per reviewers' comment, then let reviewers decide which way is
->> >better. Please feel free to post formal patches and joining discussion
->> >about this issue.
->> 
->> Yep, while I don't have a real requirement to add the reverse version, so what
->> is the proper way to send a patch?
->> 
->> A patch reply to this thread is ok?
->
->I am not sure either. Since my patches are still under reviewing. And
->you have pasted your patch. It depends on maintainers, mainly Andrew and
->other reviewers who have concerns.
+Hi Rob,
 
-Ok, thanks.
+2018-05-08 22:51 GMT+09:00 Rob Herring <robh@kernel.org>:
+> dtc gained some new warnings for OF graphs and unique unit addresses,
+> but they are currently much too noisy. So turn off
+> 'graph_child_address', 'graph_port', and 'unique_unit_address' warnings
+> by default. They can be enabled by building dtbs with W=1.
+>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Michal Marek <michal.lkml@markovi.net>
+> Cc: linux-kbuild@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> I plan to take this via DT tree as it is dependent on a dtc update in
+> patch 1.
+
+
+Yes, please do so.
+
+Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+
+
+
+
+>  scripts/Makefile.lib | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 5af34a2b0cd9..1bb594fcfe12 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -251,6 +251,9 @@ DTC_FLAGS += -Wno-unit_address_vs_reg \
+>         -Wno-unit_address_format \
+>         -Wno-avoid_unnecessary_addr_size \
+>         -Wno-alias_paths \
+> +       -Wno-graph_child_address \
+> +       -Wno-graph_port \
+> +       -Wno-unique_unit_address \
+>         -Wno-pci_device_reg
+>  endif
+>
+> --
+> 2.17.0
+>
+
+
 
 -- 
-Wei Yang
-Help you, Help me
+Best Regards
+Masahiro Yamada
