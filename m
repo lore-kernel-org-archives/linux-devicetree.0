@@ -1,34 +1,30 @@
-Return-Path: <SRS0=01BR=H3=linux.intel.com=sakari.ailus@kernel.org>
-Date: Tue, 8 May 2018 23:03:31 +0300
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH 0/4] media: ov2680: follow up from initial version
-Message-ID: <20180508200331.enfi6dtw4bctcgyi@kekkonen.localdomain>
-References: <20180507155655.1555-1-rui.silva@linaro.org>
+Return-Path: <SRS0=2PWB=H3=gmail.com=festevam@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180507155655.1555-1-rui.silva@linaro.org>
+In-Reply-To: <m3muxa6ypx.fsf@linaro.org>
+References: <20180507155655.1555-1-rui.silva@linaro.org> <CAOMZO5APU9CTGukYsQarPCvp=e8P6LgOWbNFx-dhnKM_3UHf+A@mail.gmail.com>
+ <m3muxa6ypx.fsf@linaro.org>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Tue, 8 May 2018 10:55:04 -0300
+Message-ID: <CAOMZO5AyktaSZ3xkQbY7WLX6fdSN-Xs=hutrwFFA9PDxm-FdCw@mail.gmail.com>
+Subject: Re: [PATCH 0/4] media: ov2680: follow up from initial version
+Content-Type: text/plain; charset="UTF-8"
 To: Rui Miguel Silva <rui.silva@linaro.org>
-Cc: mchehab@kernel.org, hverkuil@xs4all.nl, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Ryan Harkin <ryan.harkin@linaro.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, linux-media <linux-media@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Ryan Harkin <ryan.harkin@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+Hi Rui,
 
-On Mon, May 07, 2018 at 04:56:51PM +0100, Rui Miguel Silva wrote:
-> Sorry I have Out-of-Office some part of last week, I had v6 of the original
-> series ready but since I have received the notification from patchwork that the
-> v5 was accepted, I am sending this as a follow up tha address Fabio comments.
+On Tue, May 8, 2018 at 10:52 AM, Rui Miguel Silva <rui.silva@linaro.org> wrote:
 
-I think I somehow managed to get the patchwork state wrong; the original
-ov2680 set hasn't been applied yet. The latest patches I have applied are
-here:
+> So, my understand is that the patches will be applied or are already
+> applied to someone tree (strange patchwork does not send who or which
+> tree), but since I do not want to break someone workflow I will wait for
+> some maintainer word on this... If it is better to send the original series
+> or the follow up patches.
 
-<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=for-4.18-3>
+Ah, didn't know it has been applied. It seems it will soon appear in
+linux-next then.
 
-Could you merge this to the original set and resend, please?
+In this case, the follow up series makes sense.
 
--- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Thanks
