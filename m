@@ -1,78 +1,82 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 2/3] ARM: dts: tegra: Fix unit_address_vs_reg and avoid_unnecessary_addr_size DTC warnings
-Date: Tue,  8 May 2018 10:24:40 +0200
-Message-ID: <1525767881-28516-3-git-send-email-krzk@kernel.org>
-References: <1525767881-28516-1-git-send-email-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525767881-28516-1-git-send-email-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>, Krzysztof Kozlowski <krzk@kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/5] arm64: allwinner: h6: add USB3 device nodes
+Date: Tue, 8 May 2018 11:31:27 +0300
+Message-ID: <9a25a561-b643-a77b-3287-8082780fce60@cogentembedded.com>
+References: <20180507151817.55663-1-icenowy@aosc.io>
+ <20180507151817.55663-5-icenowy@aosc.io>
+Reply-To: sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBC6MFNV32EFRBY6AYXLQKGQEEVTIPQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180507151817.55663-5-icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Remove unneeded address/size cells properties and unit addresses to fix
-DTC warnings like:
+Hello!
 
-    arch/arm/boot/dts/tegra30-apalis-eval.dtb: Warning (unit_address_vs_reg):
-        /i2c@7000d000/stmpe811@41/stmpe_touchscreen@0: node has a unit name, but no reg property
-    arch/arm/boot/dts/tegra30-apalis-eval.dtb: Warning (avoid_unnecessary_addr_size):
-        /i2c@7000d000/stmpe811@41: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+On 5/7/2018 6:18 PM, Icenowy Zheng wrote:
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/tegra30-apalis.dtsi  | 4 +---
- arch/arm/boot/dts/tegra30-beaver.dts   | 3 ---
- arch/arm/boot/dts/tegra30-colibri.dtsi | 2 --
- 3 files changed, 1 insertion(+), 8 deletions(-)
+> Allwinner H6 SoC features USB3 functionality, with a DWC3 controller and
+> a custom PHY.
+> 
+> Add device tree nodes for them.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>   arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 38 ++++++++++++++++++++
+>   1 file changed, 38 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> index c72da8cd9ef5..9564c938717c 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> @@ -174,6 +174,44 @@
+>   			status = "disabled";
+>   		};
+>   
+> +		usb3: usb@5200000 {
 
-diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
-index 184f60c720fa..5038ca7b68af 100644
---- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-@@ -590,8 +590,6 @@
- 		/* STMPE811 touch screen controller */
- 		stmpe811@41 {
- 			compatible = "st,stmpe811";
--			#address-cells = <1>;
--			#size-cells = <0>;
- 			reg = <0x41>;
- 			interrupts = <TEGRA_GPIO(V, 0) IRQ_TYPE_LEVEL_LOW>;
- 			interrupt-parent = <&gpio>;
-@@ -600,7 +598,7 @@
- 			blocks = <0x5>;
- 			irq-trigger = <0x1>;
- 
--			stmpe_touchscreen@0 {
-+			stmpe_touchscreen {
- 				compatible = "st,stmpe-ts";
- 				/* 3.25 MHz ADC clock speed */
- 				st,adc-freq = <1>;
-diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
-index 72369877d284..961934f70639 100644
---- a/arch/arm/boot/dts/tegra30-beaver.dts
-+++ b/arch/arm/boot/dts/tegra30-beaver.dts
-@@ -1791,9 +1791,6 @@
- 			vccio-supply = <&vdd_5v_in_reg>;
- 
- 			regulators {
--				#address-cells = <1>;
--				#size-cells = <0>;
--
- 				vdd1_reg: vdd1 {
- 					regulator-name = "vddio_ddr_1v2";
- 					regulator-min-microvolt = <1200000>;
-diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi b/arch/arm/boot/dts/tegra30-colibri.dtsi
-index cc46cedf80b9..a593dc8be47f 100644
---- a/arch/arm/boot/dts/tegra30-colibri.dtsi
-+++ b/arch/arm/boot/dts/tegra30-colibri.dtsi
-@@ -352,8 +352,6 @@
- 		/* STMPE811 touch screen controller */
- 		stmpe811@41 {
- 			compatible = "st,stmpe811";
--			#address-cells = <1>;
--			#size-cells = <0>;
- 			reg = <0x41>;
- 			interrupts = <TEGRA_GPIO(V, 0) IRQ_TYPE_LEVEL_LOW>;
- 			interrupt-parent = <&gpio>;
--- 
-2.7.4
+    I don't think <unit-address> is allowed for a node having no "reg" prop...
+
+> +			compatible = "allwinner,sun50i-h6-dwc3";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			clocks = <&ccu CLK_BUS_XHCI>;
+> +			clock-names = "bus";
+> +			resets = <&ccu RST_BUS_XHCI>;
+> +			reset-names = "bus";
+> +			status = "disabled";
+> +
+> +			dwc3: dwc3 {
+
+    Contrariwise, need <unit-address> here...
+
+> +				compatible = "snps,dwc3";
+> +				reg = <0x5200000 0x10000>;
+> +				interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> +				/*
+> +				 * According to Wink from Allwinner, the
+> +				 * USB3 port on H6 is not capable of OTG;
+> +				 * the datasheet doesn't mention OTG at all
+> +				 * either, so the dr_mode is default to
+> +				 * "host" here.
+> +				 */
+> +				dr_mode = "host";
+> +				phys = <&usb3phy>;
+> +				phy-names = "usb3-phy";
+> +				status = "disabled";
+> +			};
+> +		};
+[...]
+
+MBR, Sergei
