@@ -1,57 +1,56 @@
-From: kgunda@codeaurora.org
-Subject: Re: [PATCH V2 1/5] backlight: qcom-wled: Rename pm8941-wled.c to
- qcom-wled.c
-Date: Tue, 08 May 2018 15:23:15 +0530
-Message-ID: <19e02b14f0b828b9470eb863ab9f3a11@codeaurora.org>
-References: <1525342352-25072-1-git-send-email-kgunda@codeaurora.org>
- <1525342352-25072-2-git-send-email-kgunda@codeaurora.org>
- <000201d3e3c0$4cdf87a0$e69e96e0$@gmail.com>
- <a9faa8c2866f44b46c3733c8165f6bae@codeaurora.org>
- <20180508083658.mc7x7izthxjrv5ey@holly.lan>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH] ARM: dts: am335x-evmsk: Add phandle for the backlight for the
+ panel
+Date: Tue, 8 May 2018 13:04:33 +0300
+Message-ID: <20180508100433.1051-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180508083658.mc7x7izthxjrv5ey@holly.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>, bjorn.andersson@linaro.org, 'Lee Jones' <lee.jones@linaro.org>, 'Jacek Anaszewski' <jacek.anaszewski@gmail.com>, 'Pavel Machek' <pavel@ucw.cz>, 'Rob Herring' <robh+dt@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-05-08 14:06, Daniel Thompson wrote:
-> On Mon, May 07, 2018 at 11:26:59AM +0530, kgunda@codeaurora.org wrote:
->> Hi Jingoo Han,
->> Thanks for the response.
->> 
->> Thanks,
->> Kiran
->> On 2018-05-04 21:25, Jingoo Han wrote:
->> > On Thursday, May 3, 2018 6:12 AM, Kiran Gunda wrote:
->> >
->> > If you really want someone to review your patch, please add more
->> > detailed
->> > explanations.
->> >
->> > 1. Please add 0th patch.
->> I have already added the 0th patch (cover letter). Following is the 
->> subject
->> for the same.
->> forwarding the same to you.
->> [PATCH V2 0/5] backlight: qcom-wled: Support for QCOM wled driver
-> 
-> Perhaps you should interpret Jingoo's comment as a request to improve
-> the To: and Cc: list on the 0th patch the next time you circulate it.
-> 
-> Many maintainers configure their mailers to give patches where they are
-> in the To: or Cc: list special treatment so it confusing when a series
-> arrives with a spartan set of recipients for the 0th patch (and doubly
-> confusing when every patch in the set targets the same driver).
-> 
-> 
-> Daniel.
-Ok. Got it. Not sure how the To: Cc: list on the 0th patch got shrink, 
-while I was
-using the To: Cc: list same for all the patches. Anyways, will double 
-check of it while
-circulating the next series.
+With the backlight phandle the driver can manage the backlight on/off in
+sync with the panel enable/disable.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ arch/arm/boot/dts/am335x-evmsk.dts | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+index d0d6bacfafc2..0c096a795e37 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -137,7 +137,7 @@
+ 		};
+ 	};
+ 
+-	backlight {
++	lcd_bl: backlight {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&ecap2 0 50000 PWM_POLARITY_INVERTED>;
+ 		brightness-levels = <0 58 61 66 75 90 125 170 255>;
+@@ -172,6 +172,7 @@
+ 		pinctrl-names = "default", "sleep";
+ 		pinctrl-0 = <&lcd_pins_default>;
+ 		pinctrl-1 = <&lcd_pins_sleep>;
++		backlight = <&lcd_bl>;
+ 		status = "okay";
+ 		panel-info {
+ 			ac-bias		= <255>;
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
