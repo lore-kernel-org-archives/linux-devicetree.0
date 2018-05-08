@@ -1,38 +1,74 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next] dt-bindings: dsa: Remove unnecessary
- #address/#size-cells
-Date: Tue, 8 May 2018 13:58:12 -0700
-Message-ID: <926828d5-477a-514f-ac54-42dc7a263f5a@gmail.com>
-References: <1525695471-19984-1-git-send-email-festevam@gmail.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH] arm: dts: atmel: graph_child_address warning fixes
+Date: Tue, 8 May 2018 23:00:50 +0200
+Message-ID: <20180508230050.3ee22309@bbrezillon>
+References: <20180508135930.5768-1-robh@kernel.org>
+ <20180508221819.6b70d5c7@bbrezillon>
+ <CAL_JsqLckD9FAS=mOH_gr7PL5xipF2qsGvBi0mRKXPnXn6bEMQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1525695471-19984-1-git-send-email-festevam@gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>, davem@davemloft.net
-Cc: andrew@lunn.ch, robh+dt@kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqLckD9FAS=mOH_gr7PL5xipF2qsGvBi0mRKXPnXn6bEMQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM
+ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2018 05:17 AM, Fabio Estevam wrote:
-> From: Fabio Estevam <fabio.estevam@nxp.com>
+On Tue, 8 May 2018 15:41:51 -0500
+Rob Herring <robh@kernel.org> wrote:
+
+> On Tue, May 8, 2018 at 3:18 PM, Boris Brezillon
+> <boris.brezillon@bootlin.com> wrote:
+> > On Tue,  8 May 2018 08:59:25 -0500
+> > Rob Herring <robh@kernel.org> wrote:
+> >  
+> >> Addresses for graph ports and endpoints are not necessary when
+> >> there's only a single child. Fix the following warnings removing
+> >> unnecessary addresses on OF graph nodes:
+> >>
+> >> Warning (graph_child_address): /ahb/apb/hlcdc@f0030000/hlcdc-display-controller: graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
+> >> Warning (graph_child_address): /ahb/apb/hlcdc@f0030000/hlcdc-display-controller/port@0: graph node has single child node 'endpoint', #address-cells/#size-cells are not necessary
+> >> Warning (graph_child_address): /ahb/apb/isi@f0034000/port: graph node has single child node 'endpoint', #address-cells/#size-cells are not necessary
+> >> Warning (graph_child_address): /panel/port@0: graph node has single child node 'endpoint@0', #address-cells/#size-cells are not necessary  
+> >
+> > Unfortunately that's not going to work, because the driver calls
+> > drm_of_find_panel_or_bridge() with a positive port and endpoint,
+> > not -1. While we could switch port arg from 0 to -1, that's not that
+> > simple for the endpoint arg, because we don't know in advance how many
+> > devices will be connected to the RGB/DPI port.  
 > 
-> If the example binding is used on a real dts file, the following DTC
-> warning is seen with W=1:
->     
-> arch/arm/boot/dts/imx6q-b450v3.dtb: Warning (avoid_unnecessary_addr_size): /mdio-gpio/switch@0: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+> 0 and -1 are treated the same way in the graph code.
+
+Oh, you're right, I didn't check the of_graph_parse_endpoint() code.
+
 > 
-> Remove unnecessary #address-cells/#size-cells to improve the binding
-> document examples.
+> Ports should be separate data streams. Can the hlcdc have more than 1
+> data stream (I think I checked that)?
 
-In most cases this is unnecessary because the parent node is an MDIO,
-I2C or SPI controller, and those typically have #address-cells = <1> and
-#size-cells = <0> because of their specific binding, but this is not
-necessarily true if using e.g: a MMIO mapped Ethernet switch.
+Yes, there's only one port.
 
-With the particular example though, this appears fine:
+> If not, then more than 1 port
+> will never be needed. Likewise, a panel is pretty much never going to
+> have 2 ports (or endpoints).
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+True.
+
+> The hlcdc could have more than 1 endpoint
+> if you have multiple connections, but that's not what's defined. If
+> you have an 'endpoint' node, then having #address-cells/#size-cells is
+> wrong without a reg prop and unit-address.
+
+The reg and unit-address were present in the endpoint nodes (maybe not
+in all dts though). AFAICT, the problem is more that the port only has a
+single child, and dtc complains that such nodes should not have a reg
+prop.
