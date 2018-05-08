@@ -1,148 +1,90 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v0 2/2] arm64: dts: rockchip: Add sdmmc UHS support for roc-rk3328-cc
-Date: Tue, 08 May 2018 13:57:17 +0200
-Message-ID: <4418544.G3kHmbejD5@phil>
-References: <1525747704-8537-1-git-send-email-djw@t-chip.com.cn> <1525747704-8537-3-git-send-email-djw@t-chip.com.cn>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 0/7] Add endpoint driver for Rockchip PCIe controller
+Date: Tue, 8 May 2018 12:52:29 +0100
+Message-ID: <20180508115229.GA10653@e107981-ln.cambridge.arm.com>
+References: <1524796697-160764-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525747704-8537-3-git-send-email-djw@t-chip.com.cn>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: djw@t-chip.com.cn, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Wayne Chou <zxf@t-chip.com.cn>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, David Wu <david.wu@rock-chips.com>, William Wu <william.wu@rock-chips.com>, Rocky Hao <rocky.hao@rock-chips.com>, "David S. Miller" <davem@davemloft.net>, Liang Chen <cl@rock-chips.com>, Joseph Chen <chenjh@rock-chips.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1524796697-160764-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Levin,
+Hi Shawn,
 
-Am Dienstag, 8. Mai 2018, 04:48:24 CEST schrieb djw@t-chip.com.cn:
-> From: Levin Du <djw@t-chip.com.cn>
+On Fri, Apr 27, 2018 at 10:38:17AM +0800, Shawn Lin wrote:
 > 
-> In roc-rk3328-cc board, the signal voltage of sdmmc is supplied by
-> the vcc_sdio regulator, which is a mux between 1.8V and 3.3V,
-> controlled by a special output only gpio pin.
+> Hi Lorenzo,
 > 
-> However, this pin,  not being a normal gpio in the rockchip pinctrl,
-> is set by bit 1 of system register GRF_SOC_CON10. Therefore a new
-> gpio controller using gpio-syscon driver is defined in order to use
-> regulator-gpio.
+> This's the 6th try to upstream endpoint driver for Rockchip PCIe
+> controller. V6 is rebased by droping the rename change.
 > 
-> If the signal voltage changes, the io domain needs to change
-> correspondingly.
+> Thanks.
 > 
-> To use this feature, the following options are required in kernel config:
->  - CONFIG_GPIO_SYSCON=y
->  - CONFIG_POWER_AVS=y
->  - CONFIG_ROCKCHIP_IODOMAIN=y
 > 
-> Signed-off-by: Levin Du <djw@t-chip.com.cn>
+> Changes in v6:
+> - rebase
 > 
-> ---
+> Changes in v5:
+> - export symbol to fix error reported by Kbuild robot
+> - PCIE_ROCKCHIP depends on PCI
 > 
->  arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 36 ++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
+> Changes in v4:
+> - remove empty line
+> - keep rockchip's order next to cadence and dwc, but
+>   we will try to resort it later when reconstructing
+>   the directories
 > 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-> index 246c317..792cb04 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-> @@ -14,6 +14,12 @@
->  		stdout-path = "serial2:1500000n8";
->  	};
->  
-> +	gpio_syscon10: gpio-syscon10 {
-> +		compatible = "rockchip,rk3328-gpio-syscon10";
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +	};
-> +
+> Shawn Lin (7):
+>   PCI: rockchip: Separate common code from RC driver
 
-please split this into a separate patch, move it to rk3328.dtsi and together
-with the suggestions from patch 1/2 make it look like
+There seems to be no patch (1) on linux-pci list, not sure what
+happened, mind resending the whole series possibly with
+commit logs updated as discussed ?
 
-grf: syscon@ff100000 {
-	compatible = "rockchip,rk3328-grf", "syscon", "simple-mfd";
-	reg = <0x0 0xff100000 0x0 0x1000>;
-...
-		gpio_mute: gpio-mute {
-		compatible = "rockchip,rk3328-gpio-mute";
-		gpio-controller;
-		#gpio-cells = <2>;
-	};
-...
-};
+Thanks,
+Lorenzo
 
-So making the gpio-controller a child of the grf node.
-And as this definition is not specific to the roc-cc it should be in the
-main devicetree file for the rk3328.
-
->  	gmac_clkin: external-gmac-clock {
->  		compatible = "fixed-clock";
->  		clock-frequency = <125000000>;
-> @@ -41,6 +47,19 @@
->  		vin-supply = <&vcc_io>;
->  	};
->  
-> +	vcc_sdio: sdmmcio-regulator {
-> +		compatible = "regulator-gpio";
-> +		gpios = <&gpio_syscon10 1 GPIO_ACTIVE_HIGH>;
-> +		states = <1800000 0x1
-> +			  3300000 0x0>;
-> +		regulator-name = "vcc_sdio";
-> +		regulator-type = "voltage";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-always-on;
-> +		vin-supply = <&vcc_sys>;
-> +	};
-> +
->  	vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
->  		compatible = "regulator-fixed";
->  		enable-active-high;
-> @@ -208,6 +227,18 @@
->  	};
->  };
->  
-> +&io_domains {
-> +	status = "okay";
-> +
-> +	vccio1-supply = <&vcc_io>;
-> +	vccio2-supply = <&vcc18_emmc>;
-> +	vccio3-supply = <&vcc_sdio>;
-> +	vccio4-supply = <&vcc_18>;
-> +	vccio5-supply = <&vcc_io>;
-> +	vccio6-supply = <&vcc_io>;
-> +	pmuio-supply = <&vcc_io>;
-> +};
-> +
-
-Please split this into a separate patch about
-"adding io-domain supplies for roc-cc"
-
-
->  &pinctrl {
->  	pmic {
->  		pmic_int_l: pmic-int-l {
-> @@ -227,10 +258,15 @@
->  	cap-mmc-highspeed;
->  	cap-sd-highspeed;
->  	disable-wp;
-> +	sd-uhs-sdr12;
-> +	sd-uhs-sdr25;
-> +	sd-uhs-sdr50;
-> +	sd-uhs-sdr104;
-
-please sort properties alphabetically, so between pinctrl-0 and vmmc-supply
-
-
->  	max-frequency = <150000000>;
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_dectn &sdmmc0_bus4>;
->  	vmmc-supply = <&vcc_sd>;
-> +	vqmmc-supply = <&vcc_sdio>;
->  	status = "okay";
->  };
-
-
-Thanks
-Heiko
+>   PCI: rockchip: Split out common function to parse DT
+>   PCI: rockchip: Split out common function to init controller
+>   dt-bindings: PCI: rockchip: Rename rockchip-pcie.txt to
+>     rockchip-pcie-host.txt
+>   PCI: rockchip: Add Endpoint controller driver for Rockchip PCIe
+>     controller
+>   dt-bindings: PCI: rockchip: Add DT bindings for Rockchip PCIe endpoint
+>     controller
+>   arm64: defconfig: update config for Rockchip PCIe
+> 
+>  .../devicetree/bindings/pci/rockchip-pcie-ep.txt   |   62 +
+>  .../{rockchip-pcie.txt => rockchip-pcie-host.txt}  |    0
+>  MAINTAINERS                                        |    4 +-
+>  arch/arm64/configs/defconfig                       |    3 +-
+>  drivers/pci/host/Kconfig                           |   19 +-
+>  drivers/pci/host/Makefile                          |    2 +
+>  drivers/pci/host/pcie-rockchip-ep.c                |  642 ++++++++
+>  drivers/pci/host/pcie-rockchip-host.c              | 1141 +++++++++++++
+>  drivers/pci/host/pcie-rockchip.c                   | 1683 +++-----------------
+>  drivers/pci/host/pcie-rockchip.h                   |  338 ++++
+>  10 files changed, 2406 insertions(+), 1488 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
+>  rename Documentation/devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} (100%)
+>  create mode 100644 drivers/pci/host/pcie-rockchip-ep.c
+>  create mode 100644 drivers/pci/host/pcie-rockchip-host.c
+>  create mode 100644 drivers/pci/host/pcie-rockchip.h
+> 
+> -- 
+> 1.9.1
+> 
+> 
