@@ -1,57 +1,101 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH V1 2/5] backlight: qcom-wled: Add support for WLED4
- peripheral
-Date: Tue, 8 May 2018 10:17:36 -0700
-Message-ID: <20180508171736.GJ2259@tuxbook-pro>
-References: <1525341432-15818-1-git-send-email-kgunda@codeaurora.org>
- <1525341432-15818-3-git-send-email-kgunda@codeaurora.org>
- <20180507162004.GB2259@tuxbook-pro>
- <f970143860bd64624e7fad58333df1be@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 10/27] dts: bindings: Restrict coresight tmc-etr
+ scatter-gather mode
+Date: Tue, 8 May 2018 12:34:37 -0500
+Message-ID: <CAL_JsqLD9cw2gUSg9U9jmBTQNgPZ3Fp894y19w6+Kht4y2wbzw@mail.gmail.com>
+References: <1525165857-11096-1-git-send-email-suzuki.poulose@arm.com>
+ <1525165857-11096-11-git-send-email-suzuki.poulose@arm.com>
+ <20180501131300.GA31425@rob-hp-laptop> <CANLsYkwozU7QC5EeEy46KrEd4X7J9S69SiNg8-GhSSuMkhQrBw@mail.gmail.com>
+ <CAL_JsqJDTx2UWN7VdsvDctyXw_rco6Q8NmoWQ5EBx6uhwJu=0Q@mail.gmail.com> <514f69b1-2219-aa83-dfe8-09c26ed4f5b1@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f970143860bd64624e7fad58333df1be@codeaurora.org>
+In-Reply-To: <514f69b1-2219-aa83-dfe8-09c26ed4f5b1@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kgunda@codeaurora.org
-Cc: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Leach <mike.leach@linaro.org>, Robert Walker <robert.walker@arm.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Frank Rowand <frowand.list@gmail.com>, John Horley <john.horley@arm.com>, Mathieu Poirier <matheiu.poirier@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 08 May 03:25 PDT 2018, kgunda@codeaurora.org wrote:
+On Tue, May 8, 2018 at 10:48 AM, Suzuki K Poulose
+<Suzuki.Poulose@arm.com> wrote:
+> On 04/05/18 23:56, Rob Herring wrote:
+>>
+>> On Thu, May 3, 2018 at 3:32 PM, Mathieu Poirier
+>> <mathieu.poirier@linaro.org> wrote:
+>>>
+>>> On 1 May 2018 at 07:13, Rob Herring <robh@kernel.org> wrote:
+>>>>
+>>>> On Tue, May 01, 2018 at 10:10:40AM +0100, Suzuki K Poulose wrote:
+>>>>>
+>>>>> We are about to add the support for ETR builtin scatter-gather mode
+>>>>> for dealing with large amount of trace buffers. However, on some of
+>>>>> the platforms, using the ETR SG mode can lock up the system due to
+>>>>> the way the ETR is connected to the memory subsystem.
+>>>>>
+>>>>> In SG mode, the ETR performs READ from the scatter-gather table to
+>>>>> fetch the next page and regular WRITE of trace data. If the READ
+>>>>> operation doesn't complete(due to the memory subsystem issues,
+>>>>> which we have seen on a couple of platforms) the trace WRITE
+>>>>> cannot proceed leading to issues. So, we by default do not
+>>>>> use the SG mode, unless it is known to be safe on the platform.
+>>>>> We define a DT property for the TMC node to specify whether we
+>>>>> have a proper SG mode.
+>
+>
+>
+>>>>> ---
+>>>>>   Documentation/devicetree/bindings/arm/coresight.txt | 3 +++
+>>>>>   drivers/hwtracing/coresight/coresight-tmc.c         | 8 +++++++-
+>>>>>   2 files changed, 10 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt
+>>>>> b/Documentation/devicetree/bindings/arm/coresight.txt
+>>>>> index cdd84d0..7c0c8f0 100644
+>>>>> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+>>>>> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+>>>>> @@ -88,6 +88,9 @@ its hardware characteristcs.
+>>>>>        * arm,buffer-size: size of contiguous buffer space for TMC ETR
+>>>>>         (embedded trace router)
+>>>>>
+>>>>> +     * scatter-gather: boolean. Indicates that the TMC-ETR can safely
+>>>>> +       use the SG mode on this system.
+>>>>> +
+>>>>
+>>>>
+>>>> Needs a vendor prefix.
+>>>>
+>>>
+>>> Thinking further on this, do we need to make it device specific as
+>>> well - something like "arm,etr-scatter-gather"?  That way we don't
+>>> have to redefine "scatter-gather" for other ARM devices if they happen
+>>> to need the same property but for different reasons.
+>>
+>>
+>> No. If we had a bunch of cases, then we'd probably want to have just
+>> 'scatter-gather'.
+>
+>
+> Does it mean "arm,scatter-gather" ?
 
-> On 2018-05-07 21:50, Bjorn Andersson wrote:
-> > On Thu 03 May 02:57 PDT 2018, Kiran Gunda wrote:
-[..]
-> > > +- qcom,ovp
-> > > +	Usage:        optional
-> > > +	Value type:   <u32>
-> > > +	Definition:   mV; Over-voltage protection limit;
-> > 
-> > The existing users of qcom,pm8941-wled depends on this being in V, so
-> > you can't change the unit. I suggest that you add a new "qcom,ovp-mv"
-> > property and make the driver fall back to looking for qcom,ovp if that
-> > isn't specified.
-> > 
-> > PS. This is a very good example of why it is a good idea to not
-> > restructure and make changes at the same time - I almost missed this.
-> > 
-> Actually I have checked the current kernel and none of the properties are
-> being configured from the device tree node. Hence, i thought it is the right
-> time modify the units to mV to support the PMI8998.
-> 
+Yes. Use that.
 
-arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts does.
+> If we ever wanted to add the device
+> specific information, I would prefer to go with "arm,tmc-scatter-gather"
+> and not "etr-scatter-gather". They both could mean different things.
+>
+>>
+>> BTW, if SG had already been supported, then I'd say this is a quirk
+>> and we should invert this property. Otherwise, you'd be disabling once
+>> enabled SG and require working platforms to update their dtb. Of
+>> course, I shouldn't really let the state of an OS driver influence the
+>> DT binding.
+>>
+>
+> The SG support is added with this series. So, the OS has never made use
+> of the feature.
 
-> You still want to have the qcom,ovp-mv, even though it is not being
-> configured from device tree ?
+Linux never did, but other OSs use DT, hence why I said "an OS
+driver", not "the OS driver". But in reality, I'd guess only Linux has
+Coresight support at all.
 
-Yes, please.
-
-> > > +		      For pm8941:  one of 27000, 29000, 32000, 35000
-> > > +				  Default: 29000 mV
-> > > +		      For pmi8998: one of 18100, 19600, 29600, 31100
-> > > +				  Default: 29600 mV
-> > > +
-
-Regards,
-Bjorn
+Rob
