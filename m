@@ -1,67 +1,63 @@
-From: Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] resource: Use list_head to link sibling resource
-Date: Tue, 8 May 2018 20:48:45 +0900
-Message-ID: <20180508114845.GA19459@WeideMacBook-Pro.local>
-References: <20180419001848.3041-1-bhe@redhat.com>
- <20180419001848.3041-2-bhe@redhat.com>
- <20180426011837.GA79340@WeideMacBook-Pro.local>
- <20180507011429.GG30581@MiWiFi-R3L-srv>
-Reply-To: Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Mikko Perttunen <mperttunen@nvidia.com>
+Subject: [PATCH 0/8] Tegra Combined UART driver
+Date: Tue, 8 May 2018 14:43:55 +0300
+Message-ID: <20180508114403.14499-1-mperttunen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180507011429.GG30581@MiWiFi-R3L-srv>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Yaowei Bai <baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, "K. Y. Srinivasan" <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jonathan Derrick <jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com
+Cc: araza@nvidia.com, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mikko Perttunen <mperttunen@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 07, 2018 at 09:14:29AM +0800, Baoquan He wrote:
->Hi Wei Yang,
->
->On 04/26/18 at 09:18am, Wei Yang wrote:
->> On Thu, Apr 19, 2018 at 08:18:46AM +0800, Baoquan He wrote:
->> >The struct resource uses singly linked list to link siblings. It's not
->> >easy to do reverse iteration on sibling list. So replace it with list_head.
->> >
->> 
->> Hi, Baoquan
->> 
->> Besides changing the data structure, I have another proposal to do the reverse
->> iteration. Which means it would not affect other users, if you just want a
->> reverse iteration.
->> 
->> BTW, I don't think Andrew suggest to use linked-list directly. What he wants
->> is a better solution to your first proposal in
->> https://patchwork.kernel.org/patch/10300819/.
->> 
->> Below is my proposal of resource reverse iteration without changing current
->> design.
->
->I got your mail and read it, then interrupted by other thing and forgot
->replying, sorry.
->
->I am fine with your code change. As I said before, I have tried to change
->code per reviewers' comment, then let reviewers decide which way is
->better. Please feel free to post formal patches and joining discussion
->about this issue.
+Hi all,
 
-Yep, while I don't have a real requirement to add the reverse version, so what
-is the proper way to send a patch?
+on Tegra194, the primary console UART is the "Tegra Combined UART",
+or TCU. This is a "virtual UART", where each consumer communicates
+with a central implementation over mailboxes. The central
+implementation then multiplexes the streams and arbitrates use of
+a hardware serial port. This driver implements the consumer portion
+to allow using the primary console.
 
-A patch reply to this thread is ok?
+The series is split into the following parts:
+* patches 1 and 2 add the device tree bindings for mailbox and tcu
+  itself.
+* patch 3 adds a blocking transmission option to the mailbox
+  framework.
+* patches 4 and 5 add support for the "shared mailbox" primitive
+  to the Tegra HSP driver.
+* patch 6 adds the TCU driver itself
+* patches 7 and 8 do the necessary device tree changes.
 
->
->Thanks
->Baoquan
->
+The series has been tested on the Tegra194 P2972 board.
+
+Thanks,
+Mikko
+
+Mikko Perttunen (8):
+  dt-bindings: tegra186-hsp: Add shared interrupts
+  dt-bindings: serial: Add bindings for nvidia,tegra194-tcu
+  mailbox: Add transmit done by blocking option
+  mailbox: tegra-hsp: Refactor in preparation of mailboxes
+  mailbox: tegra-hsp: Add support for shared mailboxes
+  serial: Add Tegra Combined UART driver
+  arm64: tegra: Add nodes for tcu on Tegra194
+  arm64: tegra: Mark tcu as primary serial port on Tegra194 P2888
+
+ .../bindings/mailbox/nvidia,tegra186-hsp.txt       |   2 +
+ .../bindings/serial/nvidia,tegra194-tcu.txt        |  35 +++
+ arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi     |   2 +-
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi           |  34 ++-
+ drivers/mailbox/mailbox.c                          |  30 +-
+ drivers/mailbox/mailbox.h                          |   1 +
+ drivers/mailbox/tegra-hsp.c                        | 320 +++++++++++++++++----
+ drivers/tty/serial/Kconfig                         |   9 +
+ drivers/tty/serial/Makefile                        |   1 +
+ drivers/tty/serial/tegra-tcu.c                     | 302 +++++++++++++++++++
+ include/uapi/linux/serial_core.h                   |   3 +
+ 11 files changed, 671 insertions(+), 68 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/nvidia,tegra194-tcu.txt
+ create mode 100644 drivers/tty/serial/tegra-tcu.c
+
+-- 
+2.16.1
