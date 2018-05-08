@@ -1,11 +1,11 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] arm: dts: imx7: Fix error in coresight TPIU graph connection
-Date: Tue,  8 May 2018 08:59:28 -0500
-Message-ID: <20180508135930.5768-4-robh@kernel.org>
+Subject: [PATCH] arm: dts: omap: fix OF graph in omap3-devkit8000
+Date: Tue,  8 May 2018 08:59:29 -0500
+Message-ID: <20180508135930.5768-5-robh@kernel.org>
 References: <20180508135930.5768-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180508135930.5768-1-robh@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
@@ -18,40 +18,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-OF graph endpoint connections must be bidirectional and dtc will now
-warn if they are not. i.MX7 based DTs have an error and generate
-warnings:
-
-Warning (graph_endpoint): /replicator/ports/port@0/endpoint: graph connection to node '/soc/tpiu@30087000/port/endpoint' is not bidirectional
-Warning (graph_endpoint): /soc/tpiu@30087000/port/endpoint: graph connection to node '/replicator/ports/port@1/endpoint' is not bidirectional
-
-This appears to be a copy-n-paste error and the TPIU input should be
-connected to replicator port 0 instead of port 1.
-
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- arch/arm/boot/dts/imx7s.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 4d42335c0dee..5db530ec756e 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -321,7 +321,7 @@
- 			port {
- 				tpiu_in_port: endpoint {
- 					slave-mode;
--					remote-endpoint = <&replicator_out_port1>;
-+					remote-endpoint = <&replicator_out_port0>;
- 				};
- 			};
- 		};
--- 
-2.17.0
+b21hcDMtZGV2a2l0ODAwMC1jb21tb24uZHRzaSBkZWZpbmVzIGEgZ3JhcGggY29ubmVjdGlvbiBm
+b3IgRFZJLCBidXQKdGhlbiBvbWFwMy1kZXZraXQ4MDAwLWxjZC1jb21tb24uZHRzaSBvdmVycmlk
+ZXMgdGhhdCB3aXRoIGEgZ3JhcGgKY29ubmVjdGlvbiBmb3IgdGhlIExDRCBhcyB0aGUgc2FtZSBv
+dXRwdXQgc2lnbmFscyBhcmUgdXNlZC4gVGhpcwpsZWF2ZXMgYW4gaW5jb21wbGV0ZSBncmFwaCBh
+cyB0aGUgVEZQNDEwIG91dHB1dCBoYXMgb25seSBoYWxmIGEKY29ubmVjdGlvbi4gVGhlIHJlc3Vs
+dCBpcyB0aGUgZm9sbG93aW5nIHdhcm5pbmc6CgphcmNoL2FybS9ib290L2R0cy9vbWFwMy1kZXZr
+aXQ4MDAwLWxjZDcwLmR0YjogV2FybmluZyAoZ3JhcGhfZW5kcG9pbnQpOiAvZW5jb2RlcjAvcG9y
+dHMvcG9ydEAwL2VuZHBvaW50OiBncmFwaCBjb25uZWN0aW9uIHRvIG5vZGUgJy9vY3BANjgwMDAw
+MDAvZHNzQDQ4MDUwMDAwL3BvcnQvZW5kcG9pbnQnIGlzIG5vdCBiaWRpcmVjdGlvbmFsCgpGaXgg
+dGhpcyBieSBkZWZpbmluZyBtdWx0aXBsZSBlbmRwb2ludHMgd2hpY2ggaXMgdGhlIGNvcnJlY3Qg
+d2F5IHRvIHNob3cKYSAxIHRvIG1hbnkgY29ubmVjdGlvbi4KCkNjOiAiQmVub8OudCBDb3Vzc29u
+IiA8YmNvdXNzb25AYmF5bGlicmUuY29tPgpDYzogVG9ueSBMaW5kZ3JlbiA8dG9ueUBhdG9taWRl
+LmNvbT4KU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KLS0tCiBh
+cmNoL2FybS9ib290L2R0cy9vbWFwMy1kZXZraXQ4MDAwLWNvbW1vbi5kdHNpICAgICB8IDkgKysr
+KysrKystCiBhcmNoL2FybS9ib290L2R0cy9vbWFwMy1kZXZraXQ4MDAwLWxjZC1jb21tb24uZHRz
+aSB8IDUgKysrKy0KIDIgZmlsZXMgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlv
+bnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9vbWFwMy1kZXZraXQ4MDAwLWNv
+bW1vbi5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtZGV2a2l0ODAwMC1jb21tb24uZHRz
+aQppbmRleCAwYzBiYjFiMDFiMGIuLjc0NmE2NThlODRiNiAxMDA2NDQKLS0tIGEvYXJjaC9hcm0v
+Ym9vdC9kdHMvb21hcDMtZGV2a2l0ODAwMC1jb21tb24uZHRzaQorKysgYi9hcmNoL2FybS9ib290
+L2R0cy9vbWFwMy1kZXZraXQ4MDAwLWNvbW1vbi5kdHNpCkBAIC0zNDksMTAgKzM0OSwxNyBAQAog
+CXZkZGFfZGFjLXN1cHBseSA9IDwmdmRhYz47CiAKIAlwb3J0IHsKLQkJZHBpX2R2aV9vdXQ6IGVu
+ZHBvaW50IHsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+Owor
+CQlkcGlfZHZpX291dDogZW5kcG9pbnRAMCB7CisJCQlyZWcgPSA8MD47CiAJCQlyZW1vdGUtZW5k
+cG9pbnQgPSA8JnRmcDQxMF9pbj47CiAJCQlkYXRhLWxpbmVzID0gPDI0PjsKIAkJfTsKKworCQll
+bmRwb2ludEAxIHsKKwkJCXJlZyA9IDwxPjsKKwkJfTsKIAl9OwogfTsKIApkaWZmIC0tZ2l0IGEv
+YXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtZGV2a2l0ODAwMC1sY2QtY29tbW9uLmR0c2kgYi9hcmNo
+L2FybS9ib290L2R0cy9vbWFwMy1kZXZraXQ4MDAwLWxjZC1jb21tb24uZHRzaQppbmRleCAyZDY0
+YmNmZmFhYTguLjEwOTMzODcyNTllMiAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvb21h
+cDMtZGV2a2l0ODAwMC1sY2QtY29tbW9uLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvb21h
+cDMtZGV2a2l0ODAwMC1sY2QtY29tbW9uLmR0c2kKQEAgLTMwLDcgKzMwLDEwIEBACiAKICZkc3Mg
+ewogCXBvcnQgewotCQlkcGlfbGNkX291dDogZW5kcG9pbnQgeworCQkjYWRkcmVzcy1jZWxscyA9
+IDwxPjsKKwkJI3NpemUtY2VsbHMgPSA8MD47CisJCWRwaV9sY2Rfb3V0OiBlbmRwb2ludEAxIHsK
+KwkJCXJlZyA9IDwxPjsKIAkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbGNkX2luPjsKIAkJCWRhdGEt
+bGluZXMgPSA8MjQ+OwogCQl9OwotLSAKMi4xNy4wCgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
