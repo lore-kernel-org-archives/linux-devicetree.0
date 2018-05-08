@@ -1,142 +1,185 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: Re: [PATCH v2] ARM: dts: tegra: Add support for 256 MB Colibri-T20
- (plus such board on Iris)
-Date: Tue, 08 May 2018 15:03:02 +0200
-Message-ID: <1525784582.6999.27.camel@ziswiler.com>
-References: <1525360112-9893-1-git-send-email-krzk@kernel.org>
-         <c47c07b2c112219093b668c0b4d46ac8@agner.ch>
-         <CAJKOXPeb+DmKVQ1uXkBOjaGMpxtPVFp54SBWm6h=+o30z9K3aQ@mail.gmail.com>
-         <1525428885.6296.18.camel@toradex.com>
-         <CAJKOXPetgqJgGHwdSzZeujM2KEDMWqffYMAJdBS3MXPd3Thb5w@mail.gmail.com>
+From: Liming Sun <lsun@mellanox.com>
+Subject: RE: [PATCH v2 1/3] mmc: dw_mmc-bluefield: Add driver extension
+Date: Tue, 8 May 2018 13:06:28 +0000
+Message-ID: <AM2PR05MB07537DA4728DE85B21482BC9A19A0@AM2PR05MB0753.eurprd05.prod.outlook.com>
+References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+ <a59e321a-2498-d9c1-4a22-296ffa13417a@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPetgqJgGHwdSzZeujM2KEDMWqffYMAJdBS3MXPd3Thb5w@mail.gmail.com>
+In-Reply-To: <a59e321a-2498-d9c1-4a22-296ffa13417a@rock-chips.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: "stefan@agner.ch" <stefan@agner.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dev@lynxeye.de" <dev@lynxeye.de>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-05-08 at 14:35 +0200, Krzysztof Kozlowski wrote:
-> On Fri, May 4, 2018 at 12:14 PM, Marcel Ziswiler
-> <marcel.ziswiler@toradex.com> wrote:
-> > Hi Krzysztof
-> > 
-> > On Fri, 2018-05-04 at 12:03 +0200, Krzysztof Kozlowski wrote:
-> > > On Fri, May 4, 2018 at 11:19 AM, Stefan Agner <stefan@agner.ch>
-> > > wrote:
-> > > > On 03.05.2018 17:08, Krzysztof Kozlowski wrote:
-> > > > > Colibri-T20 can come in 256 MB RAM (with 512 MB NAND) or 512
-> > > > > MB
-> > > > > RAM
-> > > > > (with 1024 MB NAND) flavors.  Add support for the 256 MB
-> > > > > version
-> > > > > on Iris
-> > > > > evaluation board.
-> > > > 
-> > > > To we really need to specify memory size these days? I think
-> > > > all
-> > > > common
-> > > > boot loaders fill the memory node anyway.
-> > > > 
-> > > > arch/arm/boot/dts/imx6qdl-apalis.dtsi:
-> > > >         /* Will be filled by the bootloader */
-> > > >         memory@10000000 {
-> > > >                 reg = <0x10000000 0>;
-> > > >         };
-> > > > 
-> > > > 
-> > > > I think we should just rename tegra20-colibri-512.dtsi =>
-> > > > tegra20-colibri.dtsi and tegra20-iris-512.dts => tegra20-
-> > > > iris.dts
-> > > > to
-> > > > avoid confusion and add such an empty node.
-> > > 
-> > > Having memory node is requirement of DeviceTree specification (at
-> > > least one cpu and memory node). Of course if bootloader fills it,
-> > > then
-> > > we could assume that specification is satisfied... but what if
-> > > some
-> > > bootloader skips it? This creates quite specific dependency
-> > > between
-> > > kernel's DTS and bootloader.
-> > 
-> > Yes, no system boots without any boot loader e.g. initialising the
-> > memory and what not. So there are obviously quite specific
-> > dependencies.
-> 
-> Sorry for late reply, I missed your emails because unfortunately
-> Google marks messages coming for Toradex as spam ("This message has a
-> from address in toradex.com but has failed toradex.com's required
-> tests for authentication.").
+Sorry Shawn, somehow I missed this comment...=20
+Will update it in v7 soon.
 
-Argh, I guess that happens if you have stubborn IT departments which
-still believe in M$. Sending via private email now.
-
-> Therefore I did not include your comments
-> and sent v3.
-
-Yeah, I noticed that. It's forgiven, don't worry (;-p).
-
-> > > One safe solution would be to specify 256 MB memory node for both
-> > > boards and assume that bootloader will bump it to 512 MB for
-> > > specific
-> > > module.
-> > 
-> > Like I mentioned this actually used to be how it was done however
-> > lately it has been agreed that any boot loader anyway needs to do
-> > the
-> > device tree dance (e.g. even just loading and passing it).
-> 
-> Then the safest way is to provide /memory node with 256 MB. If some
-> bootloader omits it (e.g. because it is too old or by any mistake)
-> the
-> FDT will be still usable with reduced memory in case of 512 board.
-
-Makes sense.
-
-> > > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > > > 
-> > > > > ---
-> > > > > 
-> > > > > Changes since v1:
-> > > > > 1. Fix memory size in tegra20-colibri-256.dtsi (was working
-> > > > > fine
-> > > > > because
-> > > > >    my bootloader uses mem= argument).
-> > > > 
-> > > > What boot loader are you using? You even can omit mem= if your
-> > > > boot
-> > > > loader fills the memory node properly.
-> > > 
-> > > I use the one provided by vendor - Toradex. By default it passes
-> > > both
-> > > mem= and few other mem-like arguments (for FB and video
-> > > processor) to
-> > > command line. I believe it does not adjust the DTB itself because
-> > > Toradex prepared this bootloader for... 3.1 kernel without DTB. 7
-> > > years old kernel. :)
-> > 
-> > Remember our regular BSP is still based on NVIDIA's downstream
-> > Linux
-> > for Tegra aka L4T R16.5 based on Linux kernel 3.1.10 which does not
-> > even use any device tree yet.
-> 
-> Yes, I noticed. I am trying to bring it fully on new kernels but no
-> huge successes so far... I'm stuck on NAND trying Lucas Stach's old
-> patchset.
-
-Yeah, for a while I kept his patch set alive as well. I believe 4.4 was
-still working fine passing all MTD tests. However, lately there were so
-many changes it all fell apart. About a month ago I spend a couple
-nights trying to get it running again but something is still not quite
-right. Yet have to sync with Stefan in my team who is much more
-knowledgeable about latest NAND development.
-
-> Best regards,
-> Krzysztof
-
-Cheers
-
-Marcel
+> -----Original Message-----
+> From: Shawn Lin [mailto:shawn.lin@rock-chips.com]
+> Sent: Monday, April 23, 2018 9:11 PM
+> To: Liming Sun <lsun@mellanox.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>; Rob Herring
+> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Jaehoon
+> Chung <jh80.chung@samsung.com>; Catalin Marinas
+> <catalin.marinas@arm.com>; Will Deacon <will.deacon@arm.com>;
+> shawn.lin@rock-chips.com; linux-mmc@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v2 1/3] mmc: dw_mmc-bluefield: Add driver extension
+>=20
+> Hi Liming,
+>=20
+> On 2018/4/23 23:32, Liming Sun wrote:
+> > This commit adds extension to the dw_mmc driver for Mellanox BlueField
+> > SoC. It updates the UHS_REG_EXT register to bring up the eMMC card on
+> > this SoC.
+> >
+> > Signed-off-by: Liming Sun <lsun@mellanox.com>
+> > ---
+> >   drivers/mmc/host/Kconfig            |  9 +++++
+> >   drivers/mmc/host/Makefile           |  1 +
+> >   drivers/mmc/host/dw_mmc-bluefield.c | 72
+> +++++++++++++++++++++++++++++++++++++
+> >   3 files changed, 82 insertions(+)
+> >   create mode 100644 drivers/mmc/host/dw_mmc-bluefield.c
+> >
+> > diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> > index 9589f9c..26ac6b5 100644
+> > --- a/drivers/mmc/host/Kconfig
+> > +++ b/drivers/mmc/host/Kconfig
+> > @@ -717,6 +717,15 @@ config MMC_DW_K3
+> >   	  Synopsys DesignWare Memory Card Interface driver. Select this
+> option
+> >   	  for platforms based on Hisilicon K3 SoC's.
+> >
+> > +config MMC_DW_BLUEFIELD
+> > +	tristate "BlueField specific extensions for Synopsys DW Memory Card
+> Interface"
+> > +	depends on MMC_DW
+> > +	select MMC_DW_PLTFM
+> > +	help
+> > +	  This selects support for Mellanox BlueField SoC specific extensions
+> to
+> > +	  the Synopsys DesignWare Memory Card Interface driver. Select this
+> > +	  option for platforms based on Mellanox BlueField SoC's.
+> > +
+>=20
+> It'd better to keep the order, so you could place it before
+> MMC_DW_EXYNOS.
+>=20
+> >   config MMC_DW_PCI
+> >   	tristate "Synopsys Designware MCI support on PCI bus"
+> >   	depends on MMC_DW && PCI
+> > diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+> > index 6aead24..267b3f1 100644
+> > --- a/drivers/mmc/host/Makefile
+> > +++ b/drivers/mmc/host/Makefile
+> > @@ -55,6 +55,7 @@ obj-$(CONFIG_MMC_DW_K3)		+=3D dw_mmc-
+> k3.o
+> >   obj-$(CONFIG_MMC_DW_PCI)	+=3D dw_mmc-pci.o
+> >   obj-$(CONFIG_MMC_DW_ROCKCHIP)	+=3D dw_mmc-rockchip.o
+> >   obj-$(CONFIG_MMC_DW_ZX)		+=3D dw_mmc-zx.o
+> > +obj-$(CONFIG_MMC_DW_BLUEFIELD)	+=3D dw_mmc-bluefield.o
+>=20
+> Ditto.
+>=20
+> >   obj-$(CONFIG_MMC_SH_MMCIF)	+=3D sh_mmcif.o
+> >   obj-$(CONFIG_MMC_JZ4740)	+=3D jz4740_mmc.o
+> >   obj-$(CONFIG_MMC_VUB300)	+=3D vub300.o
+> > diff --git a/drivers/mmc/host/dw_mmc-bluefield.c
+> b/drivers/mmc/host/dw_mmc-bluefield.c
+> > new file mode 100644
+> > index 0000000..12067b1
+> > --- /dev/null
+> > +++ b/drivers/mmc/host/dw_mmc-bluefield.c
+> > @@ -0,0 +1,72 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2018 Mellanox Technologies.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modif=
+y
+> > + * it under the terms of the GNU General Public License as published b=
+y
+> > + * the Free Software Foundation; either version 2 of the License, or
+> > + * (at your option) any later version.
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/io.h>
+> > +#include <linux/irq.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pm_runtime.h>
+> > +#include <linux/mmc/host.h>
+> > +#include <linux/mmc/mmc.h>
+> > +#include <linux/of.h>
+> > +
+>=20
+> Ditto.
+>=20
+> > +#include "dw_mmc.h"
+> > +#include "dw_mmc-pltfm.h"
+> > +
+> > +static void dw_mci_bluefield_set_ios(struct dw_mci *host, struct
+> mmc_ios *ios)
+> > +{
+> > +	u32 regs;
+> > +
+> > +	/* Set drive=3D4 (bit 29:23) and sample=3D2 (bit 22:16) in UHS_REG_EX=
+T.
+> */
+> > +	regs =3D mci_readl(host, UHS_REG_EXT);
+> > +	regs =3D (regs & ~0x3F100000 & ~0x7F0000) | (4 << 23) | (2 << 16);
+>=20
+> GENMASK woule be more readable IMHO.
+>=20
+> > +	mci_writel(host, UHS_REG_EXT, regs);
+> > +}
+> > +
+> > +static const struct dw_mci_drv_data bluefield_drv_data =3D {
+> > +	.set_ios		=3D dw_mci_bluefield_set_ios
+> > +};
+> > +
+> > +static const struct of_device_id dw_mci_bluefield_match[] =3D {
+> > +	{ .compatible =3D "mellanox,bluefield-dw-mshc",
+> > +		.data =3D &bluefield_drv_data },
+>=20
+> Keep the indent.
+>=20
+> > +	{},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, dw_mci_bluefield_match);
+> > +
+> > +static int dw_mci_bluefield_probe(struct platform_device *pdev)
+> > +{
+> > +	const struct dw_mci_drv_data *drv_data =3D NULL;
+> > +	const struct of_device_id *match;
+> > +
+> > +	if (pdev->dev.of_node) {
+> > +		match =3D of_match_node(dw_mci_bluefield_match,
+> > +				      pdev->dev.of_node);
+> > +		drv_data =3D match->data;
+> > +	}
+> > +
+> > +	return dw_mci_pltfm_register(pdev, drv_data);
+> > +}
+> > +
+> > +static struct platform_driver dw_mci_bluefield_pltfm_driver =3D {
+> > +	.probe		=3D dw_mci_bluefield_probe,
+> > +	.remove		=3D dw_mci_pltfm_remove,
+> > +	.driver		=3D {
+> > +		.name		=3D "dwmmc_bluefield",
+> > +		.of_match_table	=3D dw_mci_bluefield_match,
+> > +		.pm		=3D &dw_mci_pltfm_pmops,
+> > +	},
+> > +};
+> > +
+> > +module_platform_driver(dw_mci_bluefield_pltfm_driver);
+> > +
+> > +MODULE_DESCRIPTION("BlueField DW Multimedia Card driver");
+> > +MODULE_AUTHOR("Mellanox Technologies");
+> > +MODULE_LICENSE("GPL v2");
+> >
