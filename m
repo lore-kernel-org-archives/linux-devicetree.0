@@ -1,60 +1,41 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] arm: dts: imx: fix IPU OF graph endpoint node names
-Date: Tue, 8 May 2018 11:06:44 -0300
-Message-ID: <CAOMZO5A+7YW89E5PEo6841hk8GQUr2k7D+xWPGb1iqvpD096Rg@mail.gmail.com>
-References: <20180508135930.5768-1-robh@kernel.org>
- <20180508135930.5768-2-robh@kernel.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/4] ARM: dts: am437x boards: Correct (again) tps65218
+ irq type
+Date: Tue, 8 May 2018 07:16:00 -0700
+Message-ID: <20180508141600.GT98604@atomide.com>
+References: <20180508132053.5471-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180508135930.5768-2-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180508132053.5471-1-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, j-keerthy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [180508 13:22]:
+> Hi,
+> 
+> While based on the datasheet of tps65218 the INT is low active, the GIC_SPI
+> does not support anythin but IRQ_TYPE_LEVEL_HIGH or IRQ_TYPE_EDGE_RISING:
+> 
+> [    2.761814] genirq: Setting trigger mode 8 for irq 102 failed (irq_chip_set_type_parent+0x0/0x30)
+> [    2.770913] tps65218 0-0024: Failed to request IRQ 102 for tps65218: -22
+> [    2.777854] tps65218: probe of 0-0024 failed with error -22
 
-On Tue, May 8, 2018 at 10:59 AM, Rob Herring <robh@kernel.org> wrote:
+So does the tps65218 have some register to control the interrupt
+direction or is it's datasheet wrong?
 
-> diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-> index 18b65052553d..654cf2c9b073 100644
-> --- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-> @@ -379,9 +379,6 @@
->                 powerdown-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* NANDF_WP_B */
->
->                 port {
-> -                       #address-cells = <1>;
-> -                       #size-cells = <0>;
-> -
->                         ov5640_to_mipi_csi2: endpoint {
->                                 remote-endpoint = <&mipi_csi2_in>;
->                                 clock-lanes = <0>;
-> diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-> index f019f9900369..c2de2250718c 100644
-> --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-> @@ -294,9 +294,6 @@
->                 reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
->
->                 port {
-> -                       #address-cells = <1>;
-> -                       #size-cells = <0>;
-> -
->                         ov5640_to_mipi_csi2: endpoint {
+BTW, ADC might be a good test case for PMIC interrupt if it has one.
 
-These two changes seem unrelated and I have already fixed them at:
-https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git/commit/?h=imx/dt&id=1b215c73d1586e6f2586e9a6d6dfaf49cc142b3a
+> Use LEVEL_HIGH for the interrupt as it looks to be the correct setting:
+> INTn of tps65218 is connected to NMIn of the SoC.
+> 
+> The offending patches are only in linux-next.
 
-BTW, linux-next from today shows no W=1 DTC warnings on
-imx_v6_v7_defconfig, but maybe new ones are coming soon :-)
+OK
+
+Regards,
+
+Tony
