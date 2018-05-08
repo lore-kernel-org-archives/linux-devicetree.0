@@ -1,105 +1,56 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: tegra: Add support for 256 MB Colibri-T20
- (plus such board on Iris)
-Date: Tue, 8 May 2018 14:35:45 +0200
-Message-ID: <CAJKOXPetgqJgGHwdSzZeujM2KEDMWqffYMAJdBS3MXPd3Thb5w@mail.gmail.com>
-References: <1525360112-9893-1-git-send-email-krzk@kernel.org>
- <c47c07b2c112219093b668c0b4d46ac8@agner.ch> <CAJKOXPeb+DmKVQ1uXkBOjaGMpxtPVFp54SBWm6h=+o30z9K3aQ@mail.gmail.com>
- <1525428885.6296.18.camel@toradex.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v6 2/6] ARM: imx6: register pm_power_off handler if
+ "fsl,pmic-stby-poweroff" is set
+Date: Tue, 8 May 2018 13:40:33 +0100
+Message-ID: <20180508124033.GL16141@n2100.armlinux.org.uk>
+References: <20180305102524.5905-1-o.rempel@pengutronix.de>
+ <20180305102524.5905-3-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525428885.6296.18.camel@toradex.com>
+Content-Disposition: inline
+In-Reply-To: <20180305102524.5905-3-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc: "stefan@agner.ch" <stefan@agner.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dev@lynxeye.de" <dev@lynxeye.de>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 4, 2018 at 12:14 PM, Marcel Ziswiler
-<marcel.ziswiler@toradex.com> wrote:
-> Hi Krzysztof
->
-> On Fri, 2018-05-04 at 12:03 +0200, Krzysztof Kozlowski wrote:
->> On Fri, May 4, 2018 at 11:19 AM, Stefan Agner <stefan@agner.ch>
->> wrote:
->> > On 03.05.2018 17:08, Krzysztof Kozlowski wrote:
->> > > Colibri-T20 can come in 256 MB RAM (with 512 MB NAND) or 512 MB
->> > > RAM
->> > > (with 1024 MB NAND) flavors.  Add support for the 256 MB version
->> > > on Iris
->> > > evaluation board.
->> >
->> > To we really need to specify memory size these days? I think all
->> > common
->> > boot loaders fill the memory node anyway.
->> >
->> > arch/arm/boot/dts/imx6qdl-apalis.dtsi:
->> >         /* Will be filled by the bootloader */
->> >         memory@10000000 {
->> >                 reg = <0x10000000 0>;
->> >         };
->> >
->> >
->> > I think we should just rename tegra20-colibri-512.dtsi =>
->> > tegra20-colibri.dtsi and tegra20-iris-512.dts => tegra20-iris.dts
->> > to
->> > avoid confusion and add such an empty node.
->>
->> Having memory node is requirement of DeviceTree specification (at
->> least one cpu and memory node). Of course if bootloader fills it,
->> then
->> we could assume that specification is satisfied... but what if some
->> bootloader skips it? This creates quite specific dependency between
->> kernel's DTS and bootloader.
->
-> Yes, no system boots without any boot loader e.g. initialising the
-> memory and what not. So there are obviously quite specific
-> dependencies.
+On Mon, Mar 05, 2018 at 11:25:19AM +0100, Oleksij Rempel wrote:
+> One of the Freescale recommended sequences for power off with external
+> PMIC is the following:
+> ...
+> 3.  SoC is programming PMIC for power off when standby is asserted.
+> 4.  In CCM STOP mode, Standby is asserted, PMIC gates SoC supplies.
+> 
+> See:
+> http://www.nxp.com/assets/documents/data/en/reference-manuals/IMX6DQRM.pdf
+> page 5083
+> 
+> This patch implements step 4. of this sequence.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  arch/arm/mach-imx/pm-imx6.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
+> index ecdf071653d4..24689260a2a5 100644
+> --- a/arch/arm/mach-imx/pm-imx6.c
+> +++ b/arch/arm/mach-imx/pm-imx6.c
+> @@ -604,6 +604,28 @@ static void __init imx6_pm_common_init(const struct imx6_pm_socdata
+>  				   IMX6Q_GPR1_GINT);
+>  }
+>  
+> +static void imx6_pm_stby_poweroff(void)
+> +{
+> +	imx6_set_lpm(STOP_POWER_OFF);
+> +	cpu_suspend(0, imx6q_suspend_finish);
 
-Sorry for late reply, I missed your emails because unfortunately
-Google marks messages coming for Toradex as spam ("This message has a
-from address in toradex.com but has failed toradex.com's required
-tests for authentication."). Therefore I did not include your comments
-and sent v3.
+Do you actually need to save the processor state etc here - the request
+is after all to power down the system and not to suspend.  Would calling
+imx6q_suspend_finish() directly work (and hence simplify the code) ?
 
->
->> One safe solution would be to specify 256 MB memory node for both
->> boards and assume that bootloader will bump it to 512 MB for specific
->> module.
->
-> Like I mentioned this actually used to be how it was done however
-> lately it has been agreed that any boot loader anyway needs to do the
-> device tree dance (e.g. even just loading and passing it).
-
-Then the safest way is to provide /memory node with 256 MB. If some
-bootloader omits it (e.g. because it is too old or by any mistake) the
-FDT will be still usable with reduced memory in case of 512 board.
-
->> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->> > >
->> > > ---
->> > >
->> > > Changes since v1:
->> > > 1. Fix memory size in tegra20-colibri-256.dtsi (was working fine
->> > > because
->> > >    my bootloader uses mem= argument).
->> >
->> > What boot loader are you using? You even can omit mem= if your boot
->> > loader fills the memory node properly.
->>
->> I use the one provided by vendor - Toradex. By default it passes both
->> mem= and few other mem-like arguments (for FB and video processor) to
->> command line. I believe it does not adjust the DTB itself because
->> Toradex prepared this bootloader for... 3.1 kernel without DTB. 7
->> years old kernel. :)
->
-> Remember our regular BSP is still based on NVIDIA's downstream Linux
-> for Tegra aka L4T R16.5 based on Linux kernel 3.1.10 which does not
-> even use any device tree yet.
-
-Yes, I noticed. I am trying to bring it fully on new kernels but no
-huge successes so far... I'm stuck on NAND trying Lucas Stach's old
-patchset.
-
-Best regards,
-Krzysztof
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
