@@ -1,46 +1,94 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 0/7] gnss: add new GNSS subsystem
-Date: Tue, 8 May 2018 09:01:53 +0200
-Message-ID: <20180508070153.GX2285@localhost>
-References: <20180424163458.11947-1-johan@kernel.org>
- <20180504132741.brn5jqv5ufjhp7ky@earth.universe>
- <20180507102056.GU2285@localhost>
- <FA27606D-AB12-4D62-8EBD-3CC6F0900AF7@holtmann.org>
+From: Yao Chen <chenyao11@huawei.com>
+Subject: [PATCH] Kirin-PCIe: Add kirin pcie msi feature.
+Date: Tue, 8 May 2018 15:03:48 +0800
+Message-ID: <1525763028-107417-1-git-send-email-chenyao11@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <FA27606D-AB12-4D62-8EBD-3CC6F0900AF7@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Johan Hovold <johan@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: songxiaowei@hisilicon.com, wangbinghui@hisilicon.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: dimitrysh@google.com, guodong.xu@linaro.org, chenyao11@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 07, 2018 at 09:06:44PM +0200, Marcel Holtmann wrote:
+This patch adds kirin pcie msi feature.
 
-> >> I have one concern, though. While providing raw data by
-> >> default is fine generally, it is a problem with device
-> >> auto-discovery. I think there should be some IOCTL from
-> >> the start, that can be used to inform userspace about
-> >> the raw protocol being used (i.e. "NMEA"). I fear, that
-> >> userspace may start to just assume raw = NMEA without
-> >> having this (especially since all initial drivers provide
-> >> NMEA).
-> > 
-> > One problem I see here would be that the driver does not necessarily
-> > know either what protocol is currently being used. Some devices have
-> > boot-pins which can be used to configure the initial protocol used (and
-> > this could perhaps be reflected in DT), but this can often later be
-> > changed (by user space) and even be made persistent using battery-backed
-> > ram or eeproms.
-> > 
-> > Also note that at least u-blox devices supports having more than one
-> > protocol active on the same port...
-> 
-> as long as userspace can determine that it is GNSS hardware and what
-> hardware it is, then you deal with the rest in userspace.
+Signed-off-by: Yao Chen <chenyao11@huawei.com>
+---
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi |  2 ++
+ drivers/pci/dwc/pcie-kirin.c              | 38 +++++++++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
 
-Yeah, I think that will do for now.
-
-Thanks,
-Johan
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index ec3eb8e..4ef684f 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -872,6 +872,8 @@
+ 				  0x0 0x02000000>;
+ 			num-lanes = <1>;
+ 			#interrupt-cells = <1>;
++			interrupts = <0 283 4>;
++			interrupts-names = "msi";
+ 			interrupt-map-mask = <0xf800 0 0 7>;
+ 			interrupt-map = <0x0 0 0 1
+ 					 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
+diff --git a/drivers/pci/dwc/pcie-kirin.c b/drivers/pci/dwc/pcie-kirin.c
+index d2970a0..2319c9c 100644
+--- a/drivers/pci/dwc/pcie-kirin.c
++++ b/drivers/pci/dwc/pcie-kirin.c
+@@ -426,9 +426,28 @@ static int kirin_pcie_establish_link(struct pcie_port *pp)
+ 	return 0;
+ }
+ 
++static irqreturn_t kirin_pcie_msi_irq_handler(int irq, void *arg)
++{
++	struct pcie_port *pp = arg;
++
++	return dw_handle_msi_irq(pp);
++}
++
++static void kirin_pcie_msi_init(struct pcie_port *pp)
++{
++	dw_pcie_msi_init(pp);
++}
++
++static void kirin_pcie_enable_interrupts(struct pcie_port *pp)
++{
++	if (IS_ENABLED(CONFIG_PCI_MSI))
++		kirin_pcie_msi_init(pp);
++}
++
+ static int kirin_pcie_host_init(struct pcie_port *pp)
+ {
+ 	kirin_pcie_establish_link(pp);
++	kirin_pcie_enable_interrupts(pp);
+ 
+ 	return 0;
+ }
+@@ -448,6 +467,25 @@ static int kirin_pcie_host_init(struct pcie_port *pp)
+ static int __init kirin_add_pcie_port(struct dw_pcie *pci,
+ 				      struct platform_device *pdev)
+ {
++	int ret;
++
++	if (IS_ENABLED(CONFIG_PCI_MSI)) {
++		pci->pp.msi_irq = platform_get_irq(pdev, 0);
++		if (!pci->pp.msi_irq) {
++			dev_err(&pdev->dev, "failed to get msi irq\n");
++			return -ENODEV;
++		}
++		ret = devm_request_irq(&pdev->dev, pci->pp.msi_irq,
++				       kirin_pcie_msi_irq_handler,
++				       IRQF_SHARED | IRQF_NO_THREAD,
++				       "kirin_pcie_msi", &pci->pp);
++		if (ret) {
++			dev_err(&pdev->dev, "failed to request msi irq\n");
++			return ret;
++		}
++	}
++
++	pci->pp.root_bus_nr = -1;
+ 	pci->pp.ops = &kirin_pcie_host_ops;
+ 
+ 	return dw_pcie_host_init(&pci->pp);
+-- 
+1.9.1
