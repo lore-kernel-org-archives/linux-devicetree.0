@@ -1,183 +1,76 @@
-From: Andi Shyti <andi@etezian.org>
-Subject: Re: [PATCH] Input: ili251x - add support for Ilitek ILI251x
- touchscreens
-Date: Wed, 9 May 2018 06:49:09 +0900
-Message-ID: <20180508214909.GB4974@jack.zhora.eu>
-References: <20180507131823.28800-1-pp@emlix.com>
+From: Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] resource: Use list_head to link sibling resource
+Date: Wed, 9 May 2018 08:41:23 +0900
+Message-ID: <20180508234123.GA23307@WeideMacBook-Pro.local>
+References: <20180419001848.3041-1-bhe@redhat.com>
+ <20180419001848.3041-2-bhe@redhat.com>
+ <20180426011837.GA79340@WeideMacBook-Pro.local>
+ <20180507011429.GG30581@MiWiFi-R3L-srv>
+ <20180508114845.GA19459@WeideMacBook-Pro.local>
+ <20180508121123.GI30581@MiWiFi-R3L-srv>
+Reply-To: Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180507131823.28800-1-pp@emlix.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Puschmann <pp@emlix.com>
-Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, rydberg@bitmath.org, andi@etezian.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180508121123.GI30581@MiWiFi-R3L-srv>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Yaowei Bai <baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, "K. Y. Srinivasan" <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jonathan Derrick <jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+On Tue, May 08, 2018 at 08:11:23PM +0800, Baoquan He wrote:
+>On 05/08/18 at 08:48pm, Wei Yang wrote:
+>> On Mon, May 07, 2018 at 09:14:29AM +0800, Baoquan He wrote:
+>> >Hi Wei Yang,
+>> >
+>> >On 04/26/18 at 09:18am, Wei Yang wrote:
+>> >> On Thu, Apr 19, 2018 at 08:18:46AM +0800, Baoquan He wrote:
+>> >> >The struct resource uses singly linked list to link siblings. It's not
+>> >> >easy to do reverse iteration on sibling list. So replace it with list_head.
+>> >> >
+>> >> 
+>> >> Hi, Baoquan
+>> >> 
+>> >> Besides changing the data structure, I have another proposal to do the reverse
+>> >> iteration. Which means it would not affect other users, if you just want a
+>> >> reverse iteration.
+>> >> 
+>> >> BTW, I don't think Andrew suggest to use linked-list directly. What he wants
+>> >> is a better solution to your first proposal in
+>> >> https://patchwork.kernel.org/patch/10300819/.
+>> >> 
+>> >> Below is my proposal of resource reverse iteration without changing current
+>> >> design.
+>> >
+>> >I got your mail and read it, then interrupted by other thing and forgot
+>> >replying, sorry.
+>> >
+>> >I am fine with your code change. As I said before, I have tried to change
+>> >code per reviewers' comment, then let reviewers decide which way is
+>> >better. Please feel free to post formal patches and joining discussion
+>> >about this issue.
+>> 
+>> Yep, while I don't have a real requirement to add the reverse version, so what
+>> is the proper way to send a patch?
+>> 
+>> A patch reply to this thread is ok?
+>
+>I am not sure either. Since my patches are still under reviewing. And
+>you have pasted your patch. It depends on maintainers, mainly Andrew and
+>other reviewers who have concerns.
 
-I had a fast look to your driver and I have few comments.
+Ok, thanks.
 
->  .../bindings/input/touchscreen/ili251x.txt    |  35 ++
->  drivers/input/touchscreen/Kconfig             |  12 +
->  drivers/input/touchscreen/Makefile            |   1 +
->  drivers/input/touchscreen/ili251x.c           | 350 ++++++++++++++++++
->  4 files changed, 398 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/ili251x.txt
->  create mode 100644 drivers/input/touchscreen/ili251x.c
-
-Please split the patch, the bindig should be on a separate patch
-and must come before the driver.
-
-> +#define MAX_FINGERS		10
-> +#define REG_TOUCHDATA		0x10
-> +#define TOUCHDATA_FINGERS	6
-> +#define REG_TOUCHDATA2		0x14
-> +#define TOUCHDATA2_FINGERS	4
-> +#define REG_PANEL_INFO		0x20
-> +#define REG_FIRMWARE_VERSION	0x40
-> +#define REG_PROTO_VERSION	0x42
-> +#define REG_CALIBRATE		0xcc
-
-Can you please group and sort these definitions by type? REGs
-with REGs and others together?
-
-Please start the defines names with a unique identifier,
-ILI251X_REG_* instead of just REG_*
-
-> +struct finger {
-> +	u8 x_high:6;
-> +	u8 dummy:1;
-> +	u8 status:1;
-> +	u8 x_low;
-> +	u8 y_high;
-> +	u8 y_low;
-> +	u8 pressure;
-> +} __packed;
-> +
-> +struct touchdata {
-> +	u8 status;
-> +	struct finger fingers[MAX_FINGERS];
-> +} __packed;
-> +
-> +struct panel_info {
-> +	u8 x_low;
-> +	u8 x_high;
-> +	u8 y_low;
-> +	u8 y_high;
-> +	u8 xchannel_num;
-> +	u8 ychannel_num;
-> +	u8 max_fingers;
-> +} __packed;
-> +
-> +struct firmware_version {
-> +	u8 id;
-> +	u8 major;
-> +	u8 minor;
-> +} __packed;
-> +
-> +struct protocol_version {
-> +	u8 major;
-> +	u8 minor;
-> +} __packed;
-
-panel_info, firmware_version and protocol_version are used very
-little in the driver (just in probe). Is it really necessary to
-keep a definition?
-
-Is there a way to get rid of them?
-
-> +struct ili251x_data {
-> +	struct i2c_client *client;
-> +	struct input_dev *input;
-> +	unsigned int max_fingers;
-> +	bool use_pressure;
-> +	struct gpio_desc *reset_gpio;
-> +};
-
-Please start also the strct definitions with the unique
-identifier ili251x_* like you did with ili251x_data.
-
-> +
-> +static int ili251x_read_reg(struct i2c_client *client, u8 reg, void *buf,
-> +			    size_t len)
-> +{
-> +	struct i2c_msg msg[2] = {
-> +		{
-> +			.addr	= client->addr,
-> +			.flags	= 0,
-> +			.len	= 1,
-> +			.buf	= &reg,
-> +		},
-> +		{
-> +			.addr	= client->addr,
-> +			.flags	= I2C_M_RD,
-> +			.len	= len,
-> +			.buf	= buf,
-> +		}
-> +	};
-> +
-> +	if (i2c_transfer(client->adapter, msg, 2) != 2) {
-> +		dev_err(&client->dev, "i2c transfer failed\n");
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-
-I do not see the need for a ili251x_read_reg function. You are
-not reading more than 240 bytes per time, am I right?
-
-In this case I would use the smbus functions (at least whenever
-possible in case I miscalculated the 240b), this is ju a
-duplicated code.
-
-> +static void ili251x_report_events(struct ili251x_data *data,
-> +				  const struct touchdata *touchdata)
-> +{
-> +	struct input_dev *input = data->input;
-> +	unsigned int i;
-> +	bool touch;
-> +	unsigned int x, y;
-> +	const struct finger *finger;
-> +	unsigned int reported_fingers = 0;
-> +
-> +	/* the touch chip does not count the real fingers but switches between
-> +	 * 0, 6 and 10 reported fingers *
-> +	 *
-> +	 * FIXME: With a tested ili2511 we received only garbage for fingers
-> +	 *        6-9. As workaround we add a device tree option to limit the
-> +	 *        handled number of fingers
-> +	 */
-> +	if (touchdata->status == 1)
-> +		reported_fingers = 6;
-> +	else if (touchdata->status == 2)
-> +		reported_fingers = 10;
-> +
-> +	for (i = 0; i < reported_fingers && i < data->max_fingers; i++) {
-> +		input_mt_slot(input, i);
-> +
-> +		finger = &touchdata->fingers[i];
-> +
-> +		touch = finger->status;
-> +		input_mt_report_slot_state(input, MT_TOOL_FINGER, touch);
-> +		x = finger->x_low | (finger->x_high << 8);
-> +		y = finger->y_low | (finger->y_high << 8);
-
-the x and y calculation can go uinside the if() below, right?
-
-> +		if (touch) {
-> +			input_report_abs(input, ABS_MT_POSITION_X, x);
-> +			input_report_abs(input, ABS_MT_POSITION_Y, y);
-> +			if (data->use_pressure)
-> +				input_report_abs(input, ABS_MT_PRESSURE,
-> +						 finger->pressure);
-> +
-> +		}
-
-just a small nitpick, that is more a matter of preference, with
-
-  if(!touch)
-    continue;
-
-we save a level of indentation.
+-- 
+Wei Yang
+Help you, Help me
