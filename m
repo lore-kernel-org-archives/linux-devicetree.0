@@ -1,99 +1,238 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] Input: ili251x - add support for Ilitek ILI251x
- touchscreens
-Date: Tue, 8 May 2018 12:51:36 -0500
-Message-ID: <20180508175136.GA26802@rob-hp-laptop>
-References: <20180507131823.28800-1-pp@emlix.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v3 13/14] media: imx7.rst: add documentation for i.MX7
+ media driver
+Date: Tue, 8 May 2018 10:24:21 -0700
+Message-ID: <c4f8d144-0ab8-d72a-7bff-3dc4d1598380@infradead.org>
+References: <20180507162152.2545-1-rui.silva@linaro.org>
+ <20180507162152.2545-14-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180507131823.28800-1-pp@emlix.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Puschmann <pp@emlix.com>
-Cc: dmitry.torokhov@gmail.com, mark.rutland@arm.com, rydberg@bitmath.org, andi@etezian.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20180507162152.2545-14-rui.silva@linaro.org>
+Content-Language: en-US
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>, mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 07, 2018 at 03:18:23PM +0200, Philipp Puschmann wrote:
-> The driver supports at least the ili2511 chipset but may support other
-> Ilitek chipsets using Ilitek i2c protocol v3.x.
+Hi,
+
+I have a few editing suggestions below...
+
+On 05/07/2018 09:21 AM, Rui Miguel Silva wrote:
+> Add rst document to describe the i.MX7 media driver and also a working example
+> from the Warp7 board usage with a OV2680 sensor.
 > 
-> The tested ili2511-based touchscreen delivers garbage for more than 6
-> fingers while it should support up to 10 fingers. The reason is still
-> unclear and this remains a FIXME in the driver for now.
-> 
-> The usage of pressure is optional. Touchscreens may deliver constant
-> and so useless pressure data.
-> 
-> Signed-off-by: Philipp Puschmann <pp@emlix.com>
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 > ---
->  .../bindings/input/touchscreen/ili251x.txt    |  35 ++
-
-Please make the binding a separate patch.
-
->  drivers/input/touchscreen/Kconfig             |  12 +
->  drivers/input/touchscreen/Makefile            |   1 +
->  drivers/input/touchscreen/ili251x.c           | 350 ++++++++++++++++++
->  4 files changed, 398 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/ili251x.txt
->  create mode 100644 drivers/input/touchscreen/ili251x.c
+>  Documentation/media/v4l-drivers/imx7.rst  | 157 ++++++++++++++++++++++
+>  Documentation/media/v4l-drivers/index.rst |   1 +
+>  2 files changed, 158 insertions(+)
+>  create mode 100644 Documentation/media/v4l-drivers/imx7.rst
 > 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/ili251x.txt b/Documentation/devicetree/bindings/input/touchscreen/ili251x.txt
+> diff --git a/Documentation/media/v4l-drivers/imx7.rst b/Documentation/media/v4l-drivers/imx7.rst
 > new file mode 100644
-> index 000000000000..f21ad93d3bdd
+> index 000000000000..64b97b442277
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/ili251x.txt
-> @@ -0,0 +1,35 @@
-> +Ilitek ili251x touchscreen driver
-
-Bindings are not drivers.
+> +++ b/Documentation/media/v4l-drivers/imx7.rst
+> @@ -0,0 +1,157 @@
+> +i.MX7 Video Capture Driver
+> +==========================
 > +
-> +This driver uses protocol version 3 and should be compatible with other
-> +Ilitek touch controllers that use protocol 3.x
+> +Introduction
+> +------------
 > +
-> +Required properties:
-> + - compatible:  "ili251x"
+> +The i.MX7 contrary to the i.MX5/6 family does not contain an Image Processing
+> +Unit (IPU), because of that the capabilities to perform operations or
 
-Needs a vendor prefix.
+s/,/;/
 
-Don't use wildcards in compatible strings. Maybe you want to incorporate 
-the protocol version into the compatible string.
+> +manipulation of the capture frames is less feature rich.
 
-> + - reg:         I2C slave address of the chip (0x41)
-> + - interrupt-parent: a phandle pointing to the interrupt controller
-> +                     serving the interrupt for this chip
-> + - interrupts:       interrupt specification for the touchdetect
-> +                     interrupt
+                                      are less
+
 > +
-> +Optional properties:
-> + - reset-gpios: GPIO specification for the RESET input
+> +For image capture the i.MX7 have three units:
+
+                               has
+
+> +- CMOS Sensor Interface (CSI)
+> +- Video Multiplexer
+> +- MIPI CSI-2 Receiver
 > +
-> + - pinctrl-names: should be "default"
-> + - pinctrl-0:   a phandle pointing to the pin settings for the
-> +                control gpios
-> + - max-fingers: the maximum number of fingers to handle
-
-We already have 'silead,max-fingers', so probably time for a common 
-property.
-
-> + - pressure: support pressure data
-
-This should be implied by the compatible string.
-
-> + - generic options	   : See touchscreen.txt
+> +::
+> +                                           |\
+> +   MIPI Camera Input ---> MIPI CSI-2 --- > | \
+> +                                           |  \
+> +                                           | M |
+> +                                           | U | ------>  CSI ---> Capture
+> +                                           | X |
+> +                                           |  /
+> +   Parallel Camera Input ----------------> | /
+> +                                           |/
 > +
-> +Example:
+> +For additional information, please refer to the latest versions of the i.MX7
+> +reference manual [#f1]_.
 > +
-> +	ili251x@41 {
+> +Entities
+> +--------
+> +
+> +imx7-mipi-csi2
+> +--------------
+> +
+> +This is the MIPI CSI-2 recevier entity. It has one sink pad to receive the pixel
 
-touchscreen@41
+                          receiver
 
-> +		compatible = "ili251x";
-> +		reg = <0x41>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_touchpanel>;
-> +		interrupt-parent = <&gpio5>;
-> +		interrupts = <20 IRQ_TYPE_EDGE_FALLING>;
-> +		reset-gpios = <&gpio5 18 GPIO_ACTIVE_HIGH>;
-> +		max-fingers = <6>;
-> +	};
+> +data from MIPI CSI-2 camera sensor. It has one source pad, corresponding to the
+> +virtual channel 0. This module is compliant to previous version of Samsung
+> +D-phy, and support two D-PHY Rx Data lanes.
+
+              supports
+
+> +
+> +csi_mux
+> +-------
+> +
+> +This is the video multiplexer. It has two sink pads to select from either camera
+> +sensors with a parallel interface or from MIPI CSI-2 virtual channel 0.  It has
+
+   sensor
+
+> +a single source pad that routes to the CSI.
+> +
+> +csi
+> +---
+> +
+> +The CSI enables the chip to connect directly to external CMOS image sensor. CSI
+> +can interfaces directly with Parallel and MIPI CSI-2 buses. It has 256 x 64 FIFO
+
+       interface
+
+> +to store received image pixel data and embedded DMA controllers to transfer data
+> +from the FIFO through AHB bus.
+> +
+> +This entity has one sink pad that receive from the csi_mux entity and a single
+
+                                     receives
+
+> +source pad that route video frames directly to memory buffers, this pad is
+
+                   routes                                buffers. This pad is
+
+> +routed to a capture device node.
+> +
+> +Usage Notes
+> +-----------
+> +
+> +To aid in configuration and for backward compatibility with V4L2 applications
+> +that access controls only from video device nodes, the capture device interfaces
+> +inherit controls from the active entities in the current pipeline, so controls
+> +can be accessed either directly from the subdev or from the active capture
+> +device interface. For example, the sensor controls are available either from the
+> +sensor subdevs or from the active capture device.
+> +
+> +Warp7 with OV2680
+> +-----------------
+> +
+> +On this platform an OV2680 MIPI CSI-2 module is connected to the internal MIPI
+> +CSI-2 receiver. The following example configures a video capture pipeline with
+> +an output of 800x600, and BGGR 10 bit bayer format:
+> +
+> +.. code-block:: none
+> +   # Setup links
+> +   media-ctl -l "'ov2680 1-0036':0 -> 'imx7-mipi-csis.0':0[1]"
+> +   media-ctl -l "'imx7-mipi-csis.0':1 -> 'csi_mux':1[1]"
+> +   media-ctl -l "'csi_mux':2 -> 'csi':0[1]"
+> +   media-ctl -l "'csi':1 -> 'csi capture':0[1]"
+> +
+> +   # Configure pads for pipeline
+> +   media-ctl -V "'ov2680 1-0036':0 [fmt:SBGGR10_1X10/800x600 field:none]"
+> +   media-ctl -V "'csi_mux':1 [fmt:SBGGR10_1X10/800x600 field:none]"
+> +   media-ctl -V "'csi_mux':2 [fmt:SBGGR10_1X10/800x600 field:none]"
+> +   media-ctl -V "'imx7-mipi-csis.0':0 [fmt:SBGGR10_1X10/800x600 field:none]"
+> +   media-ctl -V "'csi':0 [fmt:SBGGR10_1X10/800x600 field:none]"
+> +
+> +After this streaming can start, the v4l2-ctl tool can be used to select any of
+
+                        can start. The
+
+> +the resolutions supported by the sensor.
+> +
+> +.. code-block:: none
+> +    root@imx7s-warp:~# media-ctl -p
+> +    Media controller API version 4.17.0
+> +
+> +    Media device information
+> +    ------------------------
+> +    driver          imx-media
+> +    model           imx-media
+> +    serial
+> +    bus info
+> +    hw revision     0x0
+> +    driver version  4.17.0
+> +
+> +    Device topology
+> +    - entity 1: csi (2 pads, 2 links)
+> +		type V4L2 subdev subtype Unknown flags 0
+> +		device node name /dev/v4l-subdev0
+> +	    pad0: Sink
+> +		    [fmt:SBGGR10_1X10/800x600 field:none]
+> +		    <- "csi_mux":2 [ENABLED]
+> +	    pad1: Source
+> +		    [fmt:SBGGR10_1X10/800x600 field:none]
+> +		    -> "csi capture":0 [ENABLED]
+> +
+> +    - entity 4: csi capture (1 pad, 1 link)
+> +		type Node subtype V4L flags 0
+> +		device node name /dev/video0
+> +	    pad0: Sink
+> +		    <- "csi":1 [ENABLED]
+> +
+> +    - entity 10: csi_mux (3 pads, 2 links)
+> +		type V4L2 subdev subtype Unknown flags 0
+> +		device node name /dev/v4l-subdev1
+> +	    pad0: Sink
+> +		    [fmt:unknown/0x0]
+> +	    pad1: Sink
+> +		    [fmt:unknown/800x600 field:none]
+> +		    <- "imx7-mipi-csis.0":1 [ENABLED]
+> +	    pad2: Source
+> +		    [fmt:unknown/800x600 field:none]
+> +		    -> "csi":0 [ENABLED]
+> +
+> +    - entity 14: imx7-mipi-csis.0 (2 pads, 2 links)
+> +		type V4L2 subdev subtype Unknown flags 0
+> +		device node name /dev/v4l-subdev2
+> +	    pad0: Sink
+> +		    [fmt:SBGGR10_1X10/800x600 field:none]
+> +		    <- "ov2680 1-0036":0 [ENABLED]
+> +	    pad1: Source
+> +		    [fmt:SBGGR10_1X10/800x600 field:none]
+> +		    -> "csi_mux":1 [ENABLED]
+> +
+> +    - entity 17: ov2680 1-0036 (1 pad, 1 link)
+> +		type V4L2 subdev subtype Sensor flags 0
+> +		device node name /dev/v4l-subdev3
+> +	    pad0: Source
+> +		    [fmt:SBGGR10_1X10/800x600 field:none]
+> +		    -> "imx7-mipi-csis.0":0 [ENABLED]
+> +
+> +
+> +References
+> +----------
+> +
+> +.. [#f1] https://www.nxp.com/docs/en/reference-manual/IMX7SRM.pdf
+
+thanks.
+-- 
+~Randy
