@@ -1,13 +1,11 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] arm: dts: omap: fix OMAP3 CM-T3x OF graph video connectors
-Date: Tue,  8 May 2018 08:59:30 -0500
-Message-ID: <20180508135930.5768-6-robh@kernel.org>
-References: <20180508135930.5768-1-robh@kernel.org>
+Subject: [PATCH] arm: dts: atmel: graph_child_address warning fixes
+Date: Tue,  8 May 2018 08:59:25 -0500
+Message-ID: <20180508135930.5768-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180508135930.5768-1-robh@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,36 +16,232 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIE9NQVAzIENNLVQzeCBiYXNlZCBib2FyZHMgZGVmaW5lIDIgL2Nvbm5lY3RvciBub2RlcyBm
-b3IgUy1WaWRlbyBhbmQKRFZJIG91dHB1dC4gSG93ZXZlciwgc2luY2UgdGhleSBoYXZlIHRoZSBz
-YW1lIG5vZGUgbmFtZSwgdGhlIFMtVmlkZW8KY29ubmVjdG9yIG92ZXJ3cml0dGVuLiBUaGlzIGxl
-YXZlcyBhIGRhbmdsaW5nIGdyYXBoIGNvbm5lY3Rpb24gd2hpY2gKZ2l2ZXMgdGhlIGZvbGxvd2lu
-ZyB3YXJuaW5nOgoKYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtc2JjLXQzNTE3LmR0YjogV2Fybmlu
-ZyAoZ3JhcGhfZW5kcG9pbnQpOiAvb2NwQDY4MDAwMDAwL2Rzc0A0ODA1MDAwMC9lbmNvZGVyQDQ4
-MDUwYzAwL3BvcnQvZW5kcG9pbnQ6IGdyYXBoIGNvbm5lY3Rpb24gdG8gbm9kZSAnL2Nvbm5lY3Rv
-ci9wb3J0L2VuZHBvaW50JyBpcyBub3QgYmlkaXJlY3Rpb25hbAoKRml4IHRoaXMgYnkgcmVuYW1p
-bmcgdGhlIG5vZGVzIHRvIHMtdmlkZW8tY29ubmVjdG9yIGFuZCBkdmktY29ubmVjdG9yLgoKQ2M6
-ICJCZW5vw650IENvdXNzb24iIDxiY291c3NvbkBiYXlsaWJyZS5jb20+CkNjOiBUb255IExpbmRn
-cmVuIDx0b255QGF0b21pZGUuY29tPgpTaWduZWQtb2ZmLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBr
-ZXJuZWwub3JnPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLWNtLXQzeC5kdHNpIHwgMiAr
-LQogYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtc2ItdDM1LmR0c2kgfCAyICstCiAyIGZpbGVzIGNo
-YW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNo
-L2FybS9ib290L2R0cy9vbWFwMy1jbS10M3guZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAz
-LWNtLXQzeC5kdHNpCmluZGV4IDlkY2IxOGQyMmNkZS4uY2RiNjMyZGYxNTJhIDEwMDY0NAotLS0g
-YS9hcmNoL2FybS9ib290L2R0cy9vbWFwMy1jbS10M3guZHRzaQorKysgYi9hcmNoL2FybS9ib290
-L2R0cy9vbWFwMy1jbS10M3guZHRzaQpAQCAtNjAsNyArNjAsNyBAQAogCQlyZWd1bGF0b3ItbWF4
-LW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsKIAl9OwogCi0JdHYwOiBjb25uZWN0b3IgeworCXR2MDog
-c3ZpZGVvLWNvbm5lY3RvciB7CiAJCWNvbXBhdGlibGUgPSAic3ZpZGVvLWNvbm5lY3RvciI7CiAJ
-CWxhYmVsID0gInR2IjsKIApkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtc2It
-dDM1LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9vbWFwMy1zYi10MzUuZHRzaQppbmRleCAyMmI0
-YzhiZGNjNjUuLmZiOTg0MmZhOTIyYyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvb21h
-cDMtc2ItdDM1LmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtc2ItdDM1LmR0c2kK
-QEAgLTM0LDcgKzM0LDcgQEAKIAkJfTsKIAl9OwogCi0JZHZpMDogY29ubmVjdG9yIHsKKwlkdmkw
-OiBkdmktY29ubmVjdG9yIHsKIAkJY29tcGF0aWJsZSA9ICJkdmktY29ubmVjdG9yIjsKIAkJbGFi
-ZWwgPSAiZHZpIjsKIAotLSAKMi4xNy4wCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Addresses for graph ports and endpoints are not necessary when
+there's only a single child. Fix the following warnings removing
+unnecessary addresses on OF graph nodes:
+
+Warning (graph_child_address): /ahb/apb/hlcdc@f0030000/hlcdc-display-controller: graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
+Warning (graph_child_address): /ahb/apb/hlcdc@f0030000/hlcdc-display-controller/port@0: graph node has single child node 'endpoint', #address-cells/#size-cells are not necessary
+Warning (graph_child_address): /ahb/apb/isi@f0034000/port: graph node has single child node 'endpoint', #address-cells/#size-cells are not necessary
+Warning (graph_child_address): /panel/port@0: graph node has single child node 'endpoint@0', #address-cells/#size-cells are not necessary
+
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts | 15 ++++-----------
+ arch/arm/boot/dts/at91sam9g45.dtsi          |  2 --
+ arch/arm/boot/dts/at91sam9n12.dtsi          |  8 +-------
+ arch/arm/boot/dts/at91sam9n12ek.dts         | 14 ++++----------
+ arch/arm/boot/dts/at91sam9x5_lcd.dtsi       |  7 +------
+ arch/arm/boot/dts/at91sam9x5dm.dtsi         | 13 ++++---------
+ arch/arm/boot/dts/sama5d3.dtsi              |  2 --
+ arch/arm/boot/dts/sama5d3_lcd.dtsi          |  8 +-------
+ arch/arm/boot/dts/sama5d4.dtsi              |  8 +-------
+ 9 files changed, 16 insertions(+), 61 deletions(-)
+
+diff --git a/arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts b/arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts
+index fe05aaa7ac87..72c3b077fb46 100644
+--- a/arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts
++++ b/arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts
+@@ -49,9 +49,8 @@
+ 					pinctrl-names = "default";
+ 					pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
+ 
+-					port@0 {
+-						hlcdc_panel_output: endpoint@0 {
+-							reg = <0>;
++					port {
++						hlcdc_panel_output: endpoint {
+ 							remote-endpoint = <&panel_input>;
+ 						};
+ 					};
+@@ -144,16 +143,10 @@
+ 		/* Actually Ampire 800480R2 */
+ 		compatible = "foxlink,fl500wvr00-a0t", "simple-panel";
+ 		backlight = <&backlight>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 		status = "okay";
+ 
+-		port@0 {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			panel_input: endpoint@0 {
+-				reg = <0>;
++		port {
++			panel_input: endpoint {
+ 				remote-endpoint = <&hlcdc_panel_output>;
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index 1ee25a475be8..36729e3f2899 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -1114,8 +1114,6 @@
+ 				clock-names = "isi_clk";
+ 				status = "disabled";
+ 				port {
+-					#address-cells = <1>;
+-					#size-cells = <0>;
+ 				};
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
+index 37cb81f457b5..a071fccb729b 100644
+--- a/arch/arm/boot/dts/at91sam9n12.dtsi
++++ b/arch/arm/boot/dts/at91sam9n12.dtsi
+@@ -475,13 +475,7 @@
+ 
+ 				hlcdc-display-controller {
+ 					compatible = "atmel,hlcdc-display-controller";
+-					#address-cells = <1>;
+-					#size-cells = <0>;
+-
+-					port@0 {
+-						#address-cells = <1>;
+-						#size-cells = <0>;
+-						reg = <0>;
++					port {
+ 					};
+ 				};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
+index c43095c5cb5c..eb0c1e11fa4d 100644
+--- a/arch/arm/boot/dts/at91sam9n12ek.dts
++++ b/arch/arm/boot/dts/at91sam9n12ek.dts
+@@ -134,9 +134,8 @@
+ 					pinctrl-names = "default";
+ 					pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
+ 
+-					port@0 {
+-						hlcdc_panel_output: endpoint@0 {
+-							reg = <0>;
++					port {
++						hlcdc_panel_output: endpoint {
+ 							remote-endpoint = <&panel_input>;
+ 						};
+ 					};
+@@ -246,13 +245,8 @@
+ 		#size-cells = <0>;
+ 		status = "okay";
+ 
+-		port@0 {
+-			reg = <0>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			panel_input: endpoint@0 {
+-				reg = <0>;
++		port {
++			panel_input: endpoint {
+ 				remote-endpoint = <&hlcdc_panel_output>;
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/at91sam9x5_lcd.dtsi b/arch/arm/boot/dts/at91sam9x5_lcd.dtsi
+index 1629db9dd563..e243dff67a67 100644
+--- a/arch/arm/boot/dts/at91sam9x5_lcd.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5_lcd.dtsi
+@@ -23,13 +23,8 @@
+ 
+ 				hlcdc-display-controller {
+ 					compatible = "atmel,hlcdc-display-controller";
+-					#address-cells = <1>;
+-					#size-cells = <0>;
+ 
+-					port@0 {
+-						#address-cells = <1>;
+-						#size-cells = <0>;
+-						reg = <0>;
++					port {
+ 					};
+ 				};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9x5dm.dtsi b/arch/arm/boot/dts/at91sam9x5dm.dtsi
+index 34c089fe0bc0..5aea8fd09ad6 100644
+--- a/arch/arm/boot/dts/at91sam9x5dm.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5dm.dtsi
+@@ -29,9 +29,8 @@
+ 					pinctrl-names = "default";
+ 					pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
+ 
+-					port@0 {
+-						hlcdc_panel_output: endpoint@0 {
+-							reg = <0>;
++					port {
++						hlcdc_panel_output: endpoint {
+ 							remote-endpoint = <&panel_input>;
+ 						};
+ 					};
+@@ -80,12 +79,8 @@
+ 		#size-cells = <0>;
+ 		status = "disabled";
+ 
+-		port@0 {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			panel_input: endpoint@0 {
+-				reg = <0>;
++		port {
++			panel_input: endpoint {
+ 				remote-endpoint = <&hlcdc_panel_output>;
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+index eae5e1ee9cd8..2c51042e1f6b 100644
+--- a/arch/arm/boot/dts/sama5d3.dtsi
++++ b/arch/arm/boot/dts/sama5d3.dtsi
+@@ -239,8 +239,6 @@
+ 				clock-names = "isi_clk";
+ 				status = "disabled";
+ 				port {
+-					#address-cells = <1>;
+-					#size-cells = <0>;
+ 				};
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/sama5d3_lcd.dtsi b/arch/arm/boot/dts/sama5d3_lcd.dtsi
+index be7cfefc6c31..2d042d7ec531 100644
+--- a/arch/arm/boot/dts/sama5d3_lcd.dtsi
++++ b/arch/arm/boot/dts/sama5d3_lcd.dtsi
+@@ -23,13 +23,7 @@
+ 
+ 				hlcdc-display-controller {
+ 					compatible = "atmel,hlcdc-display-controller";
+-					#address-cells = <1>;
+-					#size-cells = <0>;
+-
+-					port@0 {
+-						#address-cells = <1>;
+-						#size-cells = <0>;
+-						reg = <0>;
++					port {
+ 					};
+ 				};
+ 
+diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+index 0cf9beddd556..90d7b64915ec 100644
+--- a/arch/arm/boot/dts/sama5d4.dtsi
++++ b/arch/arm/boot/dts/sama5d4.dtsi
+@@ -333,13 +333,7 @@
+ 
+ 				hlcdc-display-controller {
+ 					compatible = "atmel,hlcdc-display-controller";
+-					#address-cells = <1>;
+-					#size-cells = <0>;
+-
+-					port@0 {
+-						#address-cells = <1>;
+-						#size-cells = <0>;
+-						reg = <0>;
++					port {
+ 					};
+ 				};
+ 
+-- 
+2.17.0
