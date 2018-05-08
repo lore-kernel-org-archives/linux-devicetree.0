@@ -1,125 +1,41 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3 07/14] media: dt-bindings: add bindings for i.MX7
- media driver
-Date: Tue, 08 May 2018 16:30:23 +0200
-Message-ID: <1525789823.18091.11.camel@pengutronix.de>
-References: <20180507162152.2545-1-rui.silva@linaro.org>
- <20180507162152.2545-8-rui.silva@linaro.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 01/11] irqchip: stm32: Optimizes and cleans up stm32-exti
+ irq_domain
+Date: Tue, 8 May 2018 15:47:04 +0100
+Message-ID: <20a1b5f0-7494-01a9-635f-c46c337a23b3@arm.com>
+References: <1524759514-12392-1-git-send-email-ludovic.Barre@st.com>
+ <1524759514-12392-2-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180507162152.2545-8-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>, mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524759514-12392-2-git-send-email-ludovic.Barre@st.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic Barre <ludovic.Barre@st.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald BAEZA <gerald.baeza@st.com>, Loic PALLARDY <loic.pallardy@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, radek <radoslaw.pietrzyk@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-05-07 at 17:21 +0100, Rui Miguel Silva wrote:
-> Add bindings documentation for i.MX7 media drivers.
+On 26/04/18 17:18, Ludovic Barre wrote:
+> From: radek <radoslaw.pietrzyk@gmail.com>
 > 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> ---
->  .../devicetree/bindings/media/imx7.txt        | 152 ++++++++++++++++++
->  1 file changed, 152 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/imx7.txt
+> - In stm32_exti_alloc function, discards irq_domain_set_info
+>   with handle_simple_irq. This overwrite the setting defined while init
+>   of generic chips. Exti controller manages edge irq type.
+> - Removes acking in chained irq handler as this is done by
+>   irq_chip itself inside handle_edge_irq
+> - removes unneeded irq_domain_ops.xlate callback
 > 
-> diff --git a/Documentation/devicetree/bindings/media/imx7.txt b/Documentation/devicetree/bindings/media/imx7.txt
-> new file mode 100644
-> index 000000000000..06d723d6354d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/imx7.txt
-> @@ -0,0 +1,152 @@
-> +Freescale i.MX7 Media Video Device
-> +==================================
-> +
-> +Video Media Controller node
-> +---------------------------
-> +
-> +This is the media controller node for video capture support. It is a
-> +virtual device that lists the camera serial interface nodes that the
-> +media device will control.
-> +
-> +Required properties:
-> +- compatible : "fsl,imx7-capture-subsystem";
-> +- ports      : Should contain a list of phandles pointing to camera
-> +		sensor interface port of CSI
-> +
-> +example:
-> +
-> +capture-subsystem {
-> +	compatible = "fsl,imx7-capture-subsystem";
-> +	ports = <&csi>;
-> +};
+> Signed-off-by: Radoslaw Pietrzyk <radoslaw.pietrzyk@gmail.com>
+> Acked-by: Ludovic Barre <ludovic.barre@st.com>
+> Tested-by: Ludovic Barre <ludovic.barre@st.com>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 
-Purely from a device tree perspective, I think this node is unnecessary
-on i.MX7. The reason we have it for i.MX6 is that there are two
-identical IPUs on some of them, which makes it impossible to reasonably
-bind the subsystem driver to one or the other of the ipu nodes. On i.MX7
-the csi node is unique.
+Nit: the "From:" should match the SoB line (the address does, but not
+the name). I can fix that up when I apply the series.
 
-The relevant imx-media-dev.c code in imx_media_probe could be refactored
-into a utility function that could be called from the probe function of
-the csi driver as well.
+Thanks,
 
-[...]
-> +csi node
-> +--------
-> +
-> +This is device node for the CMOS Sensor Interface (CSI) which enables the chip
-> +to connect directly to external CMOS image sensors.
-> +
-> +Required properties:
-> +
-> +- compatible    : "fsl,imx7-csi";
-> +- reg           : base address and length of the register set for the device;
-> +- interrupts    : should contain CSI interrupt;
-> +- clocks        : list of clock specifiers, see
-> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
-> +- clock-names   : must contain "axi", "mclk" and "dcic" entries, matching
-> +                 entries in the clock property;
-> +
-> +port node
-> +---------
-> +
-> +- reg		  : (required) should be 0 for the sink port;
-
-Not necessary, see below.
-
-> +
-> +example:
-> +
-> +                csi: csi@30710000 {
-> +                        #address-cells = <1>;
-> +                        #size-cells = <0>;
-> +
-> +                        compatible = "fsl,imx7-csi";
-> +                        reg = <0x30710000 0x10000>;
-> +                        interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +                        clocks = <&clks IMX7D_CLK_DUMMY>,
-> +                                        <&clks IMX7D_CSI_MCLK_ROOT_CLK>,
-> +                                        <&clks IMX7D_CLK_DUMMY>;
-> +                        clock-names = "axi", "mclk", "dcic";
-> +
-> +                        port@0 {
-> +                                reg = <0>;
-
-Since there is only one port, it does not need to be numbered.
-
-> +
-> +                                csi_from_csi_mux: endpoint {
-> +                                        remote-endpoint = <&csi_mux_to_csi>;
-> +                                };
-> +                        };
-> +                };
-
-regards
-Philipp
+	M.
+-- 
+Jazz is not dead. It just smells funny...
