@@ -1,37 +1,78 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v3 12/14] ARM: dts: imx7s-warp: add ov2680 sensor node
-Date: Tue, 8 May 2018 10:28:11 -0300
-Message-ID: <CAOMZO5B+P5jyPshBe1NyyFyXCtmeQ_=pEB3CGHQuX_1Gfpa8rQ@mail.gmail.com>
-References: <20180507162152.2545-1-rui.silva@linaro.org>
- <20180507162152.2545-13-rui.silva@linaro.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 3/3] ARM: dts: sun7i: Add support for the Ainol AW1
+ tablet
+Date: Tue, 8 May 2018 15:28:51 +0200
+Message-ID: <20180508132851.cvthykob5mw6v6yy@flea>
+References: <20180506214901.23429-1-contact@paulk.fr>
+ <20180506214901.23429-3-contact@paulk.fr>
+ <20180507071931.tebv45yxrojxxkeb@flea>
+ <d8de7d2237a74388ac8c8152eded3477e7fd56a4.camel@paulk.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180507162152.2545-13-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>
-Cc: devel@driverdev.osuosl.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>, linux-media <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <d8de7d2237a74388ac8c8152eded3477e7fd56a4.camel@paulk.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Kocialkowski <contact@paulk.fr>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rui,
+On Mon, May 07, 2018 at 10:15:46PM +0200, Paul Kocialkowski wrote:
+> > > +	backlight: backlight {
+> > > +		compatible = "pwm-backlight";
+> > > +		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
+> > > +		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
+> > 
+> > The increase in perceived brightness should be linear. Usually, for
+> > PWMs backed backlight, an exponential list is a much better
+> > approximation.
+> 
+> Thanks for the hint, it never occurred to me that pwm duty cycle was not
+> linear with brightness, but that makes sense. I'll give that a try (on
+> 255 values instead of 10 to keep some level of precision in low
+> brightness). The way to go here is probably use a base-255 logarithm
+> such as: duty cycle = range * log(i+1)/log(255) with i the linear
+> brightness value (0 to 255) and range the amplitude of our values (that
+> gets divided by the maximum brightness, so it's really up to hardware
+> precision at this point). I'll go with a range of 255 as well.
 
-On Mon, May 7, 2018 at 1:21 PM, Rui Miguel Silva <rui.silva@linaro.org> wrote:
+Without going into something so complicated, usually a list with power
+of two ending at 255 is a good approximation :)
 
-> +       reg_peri_3p15v: regulator-peri-3p15v {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "peri_3p15v_reg";
-> +               regulator-min-microvolt = <3150000>;
-> +               regulator-max-microvolt = <3150000>;
-> +               regulator-always-on;
+> > > +&mmc0 {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&mmc0_pins_a>;
+> > > +	vmmc-supply = <&reg_vcc3v3>;
+> > 
+> > You have the regulators described in your DT, you'd better use them
+> > instead of the one coming from sunxi-common-regulators.dtsi.
+> 
+> Well, according to the reference A20 design, the mmc pins and the card
+> are powered by the 3.3V power rail, that comes from a regular step-down
+> regulator sourcing from IPSOUT, so I don't see what regulator I should
+> better use. Do you have a suggestion?
 
-You can remove the 'regulator-always-on' property as this regulator
-will be controlled by AVDD-supply.
+That works for me then.
+
+> > > +&pio {
+> > > +	panel_power_pin: panel_power_pin@0 {
+> > > +		pins = "PH8";
+> > > +		function = "gpio_out";
+> > > +	};
+> > > +};
+> > 
+> > You don't need that pinctrl node.
+> 
+> I'll get rid of it then. You mentioned that regulator-simple uses the
+> old GPIO API, so I assumed it meant that a pinctrl node is still needed.
+> For reference, it uses of_get_named_gpio (not the devm-managed fashion).
+
+This is only relevant for the polarity of the pins, not the pinctrl part.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
