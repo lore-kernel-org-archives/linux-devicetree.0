@@ -1,47 +1,74 @@
-From: Amit Nischal <anischal@codeaurora.org>
-Subject: Re: [PATCH v1 0/2] Add QCOM video clock controller driver
-Date: Tue, 08 May 2018 10:23:23 +0530
-Message-ID: <8ac8a361a7dc69cce1e7498f1473bad8@codeaurora.org>
-References: <1525350925-16006-1-git-send-email-anischal@codeaurora.org>
- <152545146453.138124.2471609033510400995@swboyd.mtv.corp.google.com>
- <09ac2bd5eab25cfc70a1c5dc7b0f90ed@codeaurora.org>
- <20180507171121.GA22656@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v2 1/2] dt-bindings: leds: Add SC27xx breathing light controller documentation
+Date: Tue,  8 May 2018 13:39:44 +0800
+Message-ID: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180507171121.GA22656@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk-owner@vger.kernel.org
+To: jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: xiaotong.lu@spreadtrum.com, baolin.wang@linaro.org, broonie@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-05-07 22:41, Rob Herring wrote:
-> On Mon, May 07, 2018 at 04:16:53PM +0530, Amit Nischal wrote:
->> On 2018-05-04 22:01, Stephen Boyd wrote:
->> > Quoting Amit Nischal (2018-05-03 05:35:23)
->> > > Changes in v1:
->> > >    https://lkml.org/lkml/2018/4/24/545
->> > > Addressed below review comments given by Rob
->> > > - Change the compatible property as per '<vendor>,<soc>-<block>'
->> > > format.
->> > > - Add header definitions for resets and power-domain cells.
->> >
->> > You didn't add any reset definitions though?
->> 
->> We haven't added the reset definitions for videocc as there is no
->> video reset client.
-> 
-> So? You don't know what resets there are?
-> 
+This patch adds the binding documentation for Spreadtrum SC27xx series
+breathing light controller, which supports 3 outputs: red LED, green
+LED and blue LED.
 
-We know the resets, but video driver doesn't do any block resets
-prior to accessing the video subsystem so that's the reason we do
-not want to expose the resets in videocc driver.
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+Changes since v1:
+ - Change the compatible string to be one explicit SoC name.
+ - Change the child node name.
+ - Change to be upper case for the first character.
+---
+ .../devicetree/bindings/leds/leds-sc27xx-bltc.txt  |   41 ++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
 
-> Rob
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-clk" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+new file mode 100644
+index 0000000..b3de7fc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+@@ -0,0 +1,41 @@
++LEDs connected to Spreadtrum SC27XX PMIC breathing light controller
++
++The SC27xx breathing light controller supports to 3 outputs:
++red LED, green LED and blue LED. Each LED can work at normal
++PWM mode or breath light mode.
++
++Required properties:
++- compatible: Should be "sprd,sc2731-bltc".
++- #address-cells: Must be 1.
++- #size-cells: Must be 0.
++- reg: Specify controller address.
++
++Required child properties:
++- reg: Number of LED line (could be from 0 to 2).
++
++Optional child properties:
++- label: See Documentation/devicetree/bindings/leds/common.txt.
++
++Examples:
++
++led-controller@200 {
++	compatible = "sprd,sc2731-bltc";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = <0x200>;
++
++	led@0 {
++		label = "red";
++		reg = <0x0>;
++	};
++
++	led@1 {
++		label = "green";
++		reg = <0x1>;
++	};
++
++	led@2 {
++		label = "blue";
++		reg = <0x2>;
++	};
++};
+-- 
+1.7.9.5
