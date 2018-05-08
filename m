@@ -1,125 +1,548 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH] arm: dts: atmel: graph_child_address warning fixes
-Date: Tue, 8 May 2018 22:50:00 +0200
-Message-ID: <20180508225000.15c04b69@bbrezillon>
-References: <20180508135930.5768-1-robh@kernel.org>
- <20180508221819.6b70d5c7@bbrezillon>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v2 2/2] leds: Add Spreadtrum SC27xx breathing light
+ controller driver
+Date: Tue, 8 May 2018 22:54:10 +0200
+Message-ID: <085f9ca1-13de-36d6-18eb-ac0e560ba237@gmail.com>
+References: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
+ <9a2a07b8eb313ae3ba64af911337ee7ff7c9ad43.1525757122.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180508221819.6b70d5c7@bbrezillon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9a2a07b8eb313ae3ba64af911337ee7ff7c9ad43.1525757122.git.baolin.wang@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: xiaotong.lu@spreadtrum.com, broonie@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 8 May 2018 22:18:19 +0200
-Boris Brezillon <boris.brezillon@bootlin.com> wrote:
+Hi Baolin,
 
-> On Tue,  8 May 2018 08:59:25 -0500
-> Rob Herring <robh@kernel.org> wrote:
+Thank you for the updated version.
+
+I have few notes below, please take a look.
+
+On 05/08/2018 07:39 AM, Baolin Wang wrote:
+> From: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
 > 
-> > Addresses for graph ports and endpoints are not necessary when
-> > there's only a single child. Fix the following warnings removing
-> > unnecessary addresses on OF graph nodes:
-> > 
-> > Warning (graph_child_address): /ahb/apb/hlcdc@f0030000/hlcdc-display-controller: graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
-> > Warning (graph_child_address): /ahb/apb/hlcdc@f0030000/hlcdc-display-controller/port@0: graph node has single child node 'endpoint', #address-cells/#size-cells are not necessary
-> > Warning (graph_child_address): /ahb/apb/isi@f0034000/port: graph node has single child node 'endpoint', #address-cells/#size-cells are not necessary
-> > Warning (graph_child_address): /panel/port@0: graph node has single child node 'endpoint@0', #address-cells/#size-cells are not necessary  
+> This patch adds Spreadtrum SC27xx PMIC series breathing light controller
+> driver, which can support 3 LEDs. Each LED can work at normal PWM mode
+> and breathing mode.
 > 
-> Unfortunately that's not going to work, because the driver calls
-> drm_of_find_panel_or_bridge() with a positive port and endpoint,
-> not -1. While we could switch port arg from 0 to -1, that's not that
-> simple for the endpoint arg, because we don't know in advance how many
-> devices will be connected to the RGB/DPI port.
+> Signed-off-by: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+> Changes since v1:
+>   - Add ABI documentation.
+>   - Add mutex protection in case of concurrent access.
+>   - Change the LED device name pattern.
+>   - Fix build warning.
+> ---
+>   .../ABI/testing/sysfs-class-led-driver-sc27xx      |   19 +
+>   drivers/leds/Kconfig                               |   11 +
+>   drivers/leds/Makefile                              |    1 +
+>   drivers/leds/leds-sc27xx-bltc.c                    |  387 ++++++++++++++++++++
+>   4 files changed, 418 insertions(+)
+>   create mode 100644 Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
+>   create mode 100644 drivers/leds/leds-sc27xx-bltc.c
 > 
-> [1]https://elixir.bootlin.com/linux/v4.17-rc3/source/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c#L41
+> diff --git a/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx b/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
+> new file mode 100644
+> index 0000000..22166fb
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
+> @@ -0,0 +1,19 @@
+> +What:		/sys/class/leds/<led>/rise_time
+> +What:		/sys/class/leds/<led>/high_time
+> +What:		/sys/class/leds/<led>/fall_time
+> +What:		/sys/class/leds/<led>/low_time
+> +Date:		May 2018
+> +KernelVersion:	4.18
+> +Contact:	Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+> +Description:
+> +		Set the pattern generator rise, high, fall and low
+> +		times (0..63). It's unit is 0.125s, it should be > 0.
+> +
+> +		1 - 125 ms
+> +		2 - 250 ms
+> +		3 - 375 ms
+> +		...
+> +		...
+> +		...
+> +		62 - 7.75 s
+> +		63 - 7.875 s
+
+It would be good to describe here how altering these settings
+interacts with brightness changes. E.g., AFAICS from the code
+the pattern is turned off when setting brightness to 0, and
+turned on when writing any of these files.
+
+I'm also not sure if making these files RO is a good idea.
+How about making them RW? Any brightness change would
+reset those values to 0 and turn off pattern generator.
+
+Otherwise it would be not possible to check whether pattern
+generator is enabled or not.
+
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 2c896c0..319449b 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -647,6 +647,17 @@ config LEDS_IS31FL32XX
+>   	  LED controllers. They are I2C devices with multiple constant-current
+>   	  channels, each with independent 256-level PWM control.
+>   
+> +config LEDS_SC27XX_BLTC
+> +	tristate "LED support for the SC27xx breathing light controller"
+> +	depends on LEDS_CLASS && MFD_SC27XX_PMIC
+> +	depends on OF
+> +	help
+> +	  Say Y here to include support for the SC27xx breathing light controller
+> +	  LEDs.
+> +
+> +	  This driver can also be built as a module. If so the module will be
+> +	  called leds-sc27xx-bltc.
+> +
+>   comment "LED driver for blink(1) USB RGB LED is under Special HID drivers (HID_THINGM)"
+>   
+>   config LEDS_BLINKM
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index 91eca81..ff6917e 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -76,6 +76,7 @@ obj-$(CONFIG_LEDS_MLXREG)		+= leds-mlxreg.o
+>   obj-$(CONFIG_LEDS_NIC78BX)		+= leds-nic78bx.o
+>   obj-$(CONFIG_LEDS_MT6323)		+= leds-mt6323.o
+>   obj-$(CONFIG_LEDS_LM3692X)		+= leds-lm3692x.o
+> +obj-$(CONFIG_LEDS_SC27XX_BLTC)		+= leds-sc27xx-bltc.o
+>   
+>   # LED SPI Drivers
+>   obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
+> diff --git a/drivers/leds/leds-sc27xx-bltc.c b/drivers/leds/leds-sc27xx-bltc.c
+> new file mode 100644
+> index 0000000..61c5b72
+> --- /dev/null
+> +++ b/drivers/leds/leds-sc27xx-bltc.c
+> @@ -0,0 +1,387 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2018 Spreadtrum Communications Inc.
+> +
+> +#include <linux/leds.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <uapi/linux/uleds.h>
+> +
+> +/* PMIC global control register definition */
+> +#define SC27XX_MODULE_EN0	0xc08
+> +#define SC27XX_CLK_EN0		0xc18
+> +#define SC27XX_RGB_CTRL		0xebc
+> +
+> +#define SC27XX_BLTC_EN		BIT(9)
+> +#define SC27XX_RTC_EN		BIT(7)
+> +#define SC27XX_RGB_PD		BIT(0)
+> +
+> +/* Breathing light controller register definition */
+> +#define SC27XX_LEDS_CTRL	0x00
+> +#define SC27XX_LEDS_PRESCALE	0x04
+> +#define SC27XX_LEDS_DUTY	0x08
+> +#define SC27XX_LEDS_CURVE0	0x0c
+> +#define SC27XX_LEDS_CURVE1	0x10
+> +
+> +#define SC27XX_CTRL_SHIFT	4
+> +#define SC27XX_LED_RUN		BIT(0)
+> +#define SC27XX_LED_TYPE		BIT(1)
+> +
+> +#define SC27XX_DUTY_SHIFT	8
+> +#define SC27XX_DUTY_MASK	GENMASK(15, 0)
+> +#define SC27XX_MOD_MASK		GENMASK(7, 0)
+> +
+> +#define SC27XX_CURVE_SHIFT	8
+> +#define SC27XX_CURVE_L_MASK	GENMASK(7, 0)
+> +#define SC27XX_CURVE_H_MASK	GENMASK(15, 8)
+> +
+> +#define SC27XX_LEDS_OFFSET	0x10
+> +#define SC27XX_LEDS_MAX		3
+> +#define SC27XX_LEDS_TIME_MAX	63
+> +
+> +/*
+> + * The SC27xx breathing light controller can support 3 outputs: red LED,
+> + * green LED and blue LED. Each LED can support normal PWM mode and breathing
+> + * mode.
+> + *
+> + * In breathing mode, the LED output curve includes rise, high, fall and low 4
+> + * stages, and the duration of each stage is configurable.
+> + */
+> +enum sc27xx_led_config {
+> +	SC27XX_RISE_TIME,
+> +	SC27XX_FALL_TIME,
+> +	SC27XX_HIGH_TIME,
+> +	SC27XX_LOW_TIME,
+> +};
+> +
+> +struct sc27xx_led {
+> +	char name[LED_MAX_NAME_SIZE];
+> +	struct led_classdev ldev;
+> +	struct sc27xx_led_priv *priv;
+> +	enum led_brightness value;
+
+This property is redundant - you have brightness in the
+struct led_classdev.
+
+> +	u8 line;
+> +	bool breath_mode;
+> +	bool active;
+> +};
+> +
+> +struct sc27xx_led_priv {
+> +	struct sc27xx_led leds[SC27XX_LEDS_MAX];
+> +	struct regmap *regmap;
+> +	struct mutex lock;
+> +	u32 base;
+> +};
+> +
+> +#define to_sc27xx_led(ldev) \
+> +	container_of(ldev, struct sc27xx_led, ldev)
+> +
+> +static int sc27xx_led_init(struct regmap *regmap)
+> +{
+> +	int err;
+> +
+> +	err = regmap_update_bits(regmap, SC27XX_MODULE_EN0, SC27XX_BLTC_EN,
+> +				 SC27XX_BLTC_EN);
+> +	if (err)
+> +		return err;
+> +
+> +	err = regmap_update_bits(regmap, SC27XX_CLK_EN0, SC27XX_RTC_EN,
+> +				 SC27XX_RTC_EN);
+> +	if (err)
+> +		return err;
+> +
+> +	return regmap_update_bits(regmap, SC27XX_RGB_CTRL, SC27XX_RGB_PD, 0);
+> +}
+> +
+> +static u32 sc27xx_led_get_offset(struct sc27xx_led *leds)
+> +{
+> +	return leds->priv->base + SC27XX_LEDS_OFFSET * leds->line;
+> +}
+> +
+> +static int sc27xx_led_enable(struct sc27xx_led *leds)
+> +{
+> +	u32 base = sc27xx_led_get_offset(leds);
+> +	u32 ctrl_base = leds->priv->base + SC27XX_LEDS_CTRL;
+> +	u8 ctrl_shift = SC27XX_CTRL_SHIFT * leds->line;
+> +	struct regmap *regmap = leds->priv->regmap;
+> +	int err;
+> +
+> +	err = regmap_update_bits(regmap, base + SC27XX_LEDS_DUTY,
+> +				 SC27XX_DUTY_MASK,
+> +				 (leds->value  << SC27XX_DUTY_SHIFT) |
+> +				 SC27XX_MOD_MASK);
+> +	if (err)
+> +		return err;
+> +
+> +	if (leds->breath_mode)
+> +		return regmap_update_bits(regmap, ctrl_base,
+> +					  SC27XX_LED_RUN << ctrl_shift,
+> +					  SC27XX_LED_RUN << ctrl_shift);
+> +
+> +	return regmap_update_bits(regmap, ctrl_base,
+> +			(SC27XX_LED_RUN | SC27XX_LED_TYPE) << ctrl_shift,
+> +			(SC27XX_LED_RUN | SC27XX_LED_TYPE) << ctrl_shift);
+> +}
+> +
+> +static int sc27xx_led_disable(struct sc27xx_led *leds)
+> +{
+> +	u8 ctrl_shift = SC27XX_CTRL_SHIFT * leds->line;
+> +
+> +	leds->breath_mode = false;
+> +
+> +	return regmap_update_bits(leds->priv->regmap,
+> +			leds->priv->base + SC27XX_LEDS_CTRL,
+> +			(SC27XX_LED_RUN | SC27XX_LED_TYPE) << ctrl_shift, 0);
+> +}
+> +
+> +static int sc27xx_led_set(struct led_classdev *ldev, enum led_brightness value)
+> +{
+> +	struct sc27xx_led *leds = to_sc27xx_led(ldev);
+> +	int err;
+> +
+> +	mutex_lock(&leds->priv->lock);
+
+Empty line here please.
+
+> +	leds->value = value;
+
+It should not be needed at all.
+
+> +	if (value == LED_OFF)
+> +		err = sc27xx_led_disable(leds);
+> +	else
+> +		err = sc27xx_led_enable(leds);
+
+Empty line here please.
+
+> +	mutex_unlock(&leds->priv->lock);
+> +
+> +	return err;
+> +}
+> +
+> +static int sc27xx_led_config(struct sc27xx_led *leds,
+> +			     enum sc27xx_led_config config, u32 val)
+> +{
+> +	u32 base = sc27xx_led_get_offset(leds);
+> +	struct regmap *regmap = leds->priv->regmap;
+> +	int err;
+> +
+> +	mutex_lock(&leds->priv->lock);
+
+Empty line here please.
+
+> +	switch (config) {
+> +	case SC27XX_RISE_TIME:
+> +		err = regmap_update_bits(regmap, base + SC27XX_LEDS_CURVE0,
+> +					 SC27XX_CURVE_L_MASK, val);
+> +		break;
+> +	case SC27XX_FALL_TIME:
+> +		err = regmap_update_bits(regmap, base + SC27XX_LEDS_CURVE0,
+> +					 SC27XX_CURVE_H_MASK,
+> +					 val << SC27XX_CURVE_SHIFT);
+> +		break;
+> +	case SC27XX_HIGH_TIME:
+> +		err = regmap_update_bits(regmap, base + SC27XX_LEDS_CURVE1,
+> +					 SC27XX_CURVE_L_MASK, val);
+> +		break;
+> +	case SC27XX_LOW_TIME:
+> +		err = regmap_update_bits(regmap, base + SC27XX_LEDS_CURVE1,
+> +					 SC27XX_CURVE_H_MASK,
+> +					 val << SC27XX_CURVE_SHIFT);
+> +		break;
+> +	default:
+> +		err = -ENOTSUPP;
+> +		break;
+> +	}
+> +
+> +	if (!err && !leds->breath_mode)
+> +		leds->breath_mode = true;
+> +
+> +	mutex_unlock(&leds->priv->lock);
+> +
+> +	return err;
+> +}
+> +
+> +static ssize_t rise_time_store(struct device *dev,
+> +			       struct device_attribute *attr,
+> +			       const char *buf, size_t size)
+> +{
+> +	struct led_classdev *ldev = dev_get_drvdata(dev);
+> +	struct sc27xx_led *leds = to_sc27xx_led(ldev);
+> +	u32 val;
+> +	int err;
+> +
+> +	if (kstrtou32(buf, 10, &val) || val > SC27XX_LEDS_TIME_MAX)
+> +		return -EINVAL;
+> +
+> +	err = sc27xx_led_config(leds, SC27XX_RISE_TIME, val);
+> +	if (err)
+> +		return err;
+> +
+> +	return size;
+> +}
+> +
+> +static ssize_t fall_time_store(struct device *dev,
+> +			       struct device_attribute *attr,
+> +			       const char *buf, size_t size)
+> +{
+> +	struct led_classdev *ldev = dev_get_drvdata(dev);
+> +	struct sc27xx_led *leds = to_sc27xx_led(ldev);
+> +	u32 val;
+> +	int err;
+> +
+> +	if (kstrtou32(buf, 10, &val) || val > SC27XX_LEDS_TIME_MAX)
+> +		return -EINVAL;
+> +
+> +	err = sc27xx_led_config(leds, SC27XX_FALL_TIME, val);
+> +	if (err)
+> +		return err;
+> +
+> +	return size;
+> +}
+> +
+> +static ssize_t high_time_store(struct device *dev,
+> +			       struct device_attribute *attr,
+> +			       const char *buf, size_t size)
+> +{
+> +	struct led_classdev *ldev = dev_get_drvdata(dev);
+> +	struct sc27xx_led *leds = to_sc27xx_led(ldev);
+> +	u32 val;
+> +	int err;
+> +
+> +	if (kstrtou32(buf, 10, &val) || val > SC27XX_LEDS_TIME_MAX)
+> +		return -EINVAL;
+> +
+> +	err = sc27xx_led_config(leds, SC27XX_HIGH_TIME, val);
+> +	if (err)
+> +		return err;
+> +
+> +	return size;
+> +}
+> +
+> +static ssize_t low_time_store(struct device *dev,
+> +			      struct device_attribute *attr,
+> +			      const char *buf, size_t size)
+> +{
+> +	struct led_classdev *ldev = dev_get_drvdata(dev);
+> +	struct sc27xx_led *leds = to_sc27xx_led(ldev);
+> +	u32 val;
+> +	int err;
+> +
+> +	if (kstrtou32(buf, 10, &val) || val > SC27XX_LEDS_TIME_MAX)
+> +		return -EINVAL;
+> +
+> +	err = sc27xx_led_config(leds, SC27XX_LOW_TIME, val);
+> +	if (err)
+> +		return err;
+> +
+> +	return size;
+> +}
+> +
+> +static DEVICE_ATTR_WO(rise_time);
+> +static DEVICE_ATTR_WO(fall_time);
+> +static DEVICE_ATTR_WO(high_time);
+> +static DEVICE_ATTR_WO(low_time);
+> +
+> +static struct attribute *sc27xx_led_attrs[] = {
+> +	&dev_attr_rise_time.attr,
+> +	&dev_attr_fall_time.attr,
+> +	&dev_attr_high_time.attr,
+> +	&dev_attr_low_time.attr,
+> +	NULL,
+> +};
+> +ATTRIBUTE_GROUPS(sc27xx_led);
+> +
+> +static int sc27xx_led_register(struct device *dev, struct sc27xx_led_priv *priv)
+> +{
+> +	int i, err;
+> +
+> +	err = sc27xx_led_init(priv->regmap);
+> +	if (err)
+> +		return err;
+> +
+> +	for (i = 0; i < SC27XX_LEDS_MAX; i++) {
+> +		struct sc27xx_led *led = &priv->leds[i];
+> +
+> +		if (!led->active)
+> +			continue;
+> +
+> +		led->line = i;
+> +		led->priv = priv;
+> +		led->ldev.name = led->name;
+> +		led->ldev.brightness_set_blocking = sc27xx_led_set;
+> +		led->ldev.max_brightness = LED_FULL;
+
+LED core will set max_brightness to LED_FULL if initialized to 0,
+so we can skip this line.
+
+> +		led->ldev.groups = sc27xx_led_groups;
+> +
+> +		err = devm_led_classdev_register(dev, &led->ldev);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int sc27xx_led_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node, *child;
+> +	struct sc27xx_led_priv *priv;
+> +	const char *str;
+> +	u32 base, count, reg;
+> +	int err;
+> +
+> +	count = of_get_child_count(np);
+> +	if (!count || count > SC27XX_LEDS_MAX)
+> +		return -EINVAL;
+> +
+> +	err = of_property_read_u32(np, "reg", &base);
+> +	if (err) {
+> +		dev_err(dev, "fail to get reg of property\n");
+> +		return err;
+> +	}
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&priv->lock);
+> +	priv->base = base;
+> +	priv->regmap = dev_get_regmap(dev->parent, NULL);
+> +	if (IS_ERR(priv->regmap)) {
+> +		err = PTR_ERR(priv->regmap);
+> +		dev_err(dev, "failed to get regmap: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	for_each_child_of_node(np, child) {
+> +		err = of_property_read_u32(child, "reg", &reg);
+> +		if (err) {
+> +			of_node_put(child);
+
+Now we need also mutex_destroy() in the error path, so please add 
+relevant label and go there from here.
+
+> +			return err;
+> +		}
+> +
+> +		if (reg >= SC27XX_LEDS_MAX || priv->leds[reg].active) {
+> +			of_node_put(child);
+> +			return -EINVAL;
+
+Ditto.
+
+> +		}
+> +
+> +		priv->leds[reg].active = true;
+> +
+> +		err = of_property_read_string(child, "label", &str);
+> +		if (err)
+> +			snprintf(priv->leds[reg].name, LED_MAX_NAME_SIZE,
+> +				 "sc27xx::");
+> +		else
+> +			snprintf(priv->leds[reg].name, LED_MAX_NAME_SIZE,
+> +				 "sc27xx:%s", str);
+> +	}
+> +
+> +	return sc27xx_led_register(dev, priv);
+> +}
+> +
+> +static const struct of_device_id sc27xx_led_of_match[] = {
+> +	{ .compatible = "sprd,sc2731-bltc", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, sc27xx_led_of_match);
+> +
+> +static struct platform_driver sc27xx_led_driver = {
+> +	.driver = {
+> +		.name = "sprd-bltc",
+> +		.of_match_table = sc27xx_led_of_match,
+> +	},
+> +	.probe = sc27xx_led_probe,
+
+"remove" op will be needed as well for mutex_destroy().
+
+> +};
+> +
+> +module_platform_driver(sc27xx_led_driver);
+> +
+> +MODULE_DESCRIPTION("Spreadtrum SC27xx breathing light controller driver");
+> +MODULE_AUTHOR("Xiaotong Lu <xiaotong.lu@spreadtrum.com>");
+> +MODULE_LICENSE("GPL v2");
 > 
 
-I can prepare patches containing the following changes, but I need to
-test them first.
-
-To be honest, I still don't see the problem with the "single child having
-a reg" case. Sure, it's not required, but it's also not an invalid
-representation. Also note that, depending on the board, we'll have to
-define addresses in endpoints if there's more than one endpoint, which
-IMO makes things even harder to follow, because in some cases endpoints
-will be numbered and in the others they won't.
-
---->8---
-diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
-index 82f2acb3d374..bc01c431d624 100644
---- a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
-+++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
-@@ -7,13 +7,12 @@ Required properties:
-  - compatible: value should be "atmel,hlcdc-display-controller"
-  - pinctrl-names: the pin control state names. Should contain "default".
-  - pinctrl-0: should contain the default pinctrl states.
-- - #address-cells: should be set to 1.
-- - #size-cells: should be set to 0.
- 
- Required children nodes:
-- Children nodes are encoding available output ports and their connections
-- to external devices using the OF graph reprensentation (see ../graph.txt).
-- At least one port node is required.
-+ The port node represent the RGB/DPI output and can contain 0 to N endpoints
-+ which encode connections to devices present on the RGB/DPI bus.
-+ These connections are represented using the OF graph representation (see
-+ ../graph.txt).
- 
- Example:
- 
-@@ -28,16 +27,9 @@ Example:
-                        compatible = "atmel,hlcdc-display-controller";
-                        pinctrl-names = "default";
-                        pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
--                       #address-cells = <1>;
--                       #size-cells = <0>;
- 
--                       port@0 {
--                               #address-cells = <1>;
--                               #size-cells = <0>;
--                               reg = <0>;
--
--                               hlcdc_panel_output: endpoint@0 {
--                                       reg = <0>;
-+                       port {
-+                               hlcdc_panel_output: endpoint {
-                                        remote-endpoint = <&panel_input>;
-                                };
-                        };
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
-index 8db51fb131db..0dc8f124a95e 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
-@@ -38,7 +38,7 @@ static int atmel_hlcdc_attach_endpoint(struct drm_device *dev, int endpoint)
-        struct drm_bridge *bridge;
-        int ret;
- 
--       ret = drm_of_find_panel_or_bridge(dev->dev->of_node, 0, endpoint,
-+       ret = drm_of_find_panel_or_bridge(dev->dev->of_node, -1, endpoint,
-                                          &panel, &bridge);
-        if (ret)
-                return ret;
-@@ -86,5 +86,10 @@ int atmel_hlcdc_create_outputs(struct drm_device *dev)
-        if (ret == -ENODEV && endpoint)
-                return 0;
- 
--       return ret;
-+       /*
-+        * If there's only one endpoint, the reg field will not be specified
-+        * and no specific ID will be attached to this endpoint. Try with
-+        * endpoint = -1 to handle this case.
-+        */
-+       return atmel_hlcdc_attach_endpoint(dev, -1);
- }
+-- 
+Best regards,
+Jacek Anaszewski
