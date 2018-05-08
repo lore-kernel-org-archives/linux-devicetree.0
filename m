@@ -1,259 +1,77 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH] arm: dts: atmel: graph_child_address warning fixes
-Date: Tue, 8 May 2018 22:18:19 +0200
-Message-ID: <20180508221819.6b70d5c7@bbrezillon>
-References: <20180508135930.5768-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180508135930.5768-1-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+From: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: [PATCH v6 0/2] SDM845 System Cache Driver
+Date: Tue,  8 May 2018 13:21:59 -0700
+Message-ID: <1525810921-15878-1-git-send-email-rishabhb@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, evgreen@chromium.org, robh@kernel.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  8 May 2018 08:59:25 -0500
-Rob Herring <robh@kernel.org> wrote:
+This series implements system cache or LLCC(Last Level Cache Controller)
+driver for SDM845 SOC. The purpose of the driver is to partition the
+system cache and program the settings such as priortiy, lines to probe
+while doing a look up in the system cache, low power related settings etc.
+The partitions are called cache slices. Each cache slice is associated
+with size and SCID(System Cache ID). The driver also provides API for
+clients to query the cache slice details,activate and deactivate them.
 
-> Addresses for graph ports and endpoints are not necessary when
-> there's only a single child. Fix the following warnings removing
-> unnecessary addresses on OF graph nodes:
-> 
-> Warning (graph_child_address): /ahb/apb/hlcdc@f0030000/hlcdc-display-controller: graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
-> Warning (graph_child_address): /ahb/apb/hlcdc@f0030000/hlcdc-display-controller/port@0: graph node has single child node 'endpoint', #address-cells/#size-cells are not necessary
-> Warning (graph_child_address): /ahb/apb/isi@f0034000/port: graph node has single child node 'endpoint', #address-cells/#size-cells are not necessary
-> Warning (graph_child_address): /panel/port@0: graph node has single child node 'endpoint@0', #address-cells/#size-cells are not necessary
+The driver can be broadly classified into:
+* SOC specific driver: llcc-sdm845.c: Cache partitioning and cache slice
+properties for usecases on sdm845 that need to use system cache.
 
-Unfortunately that's not going to work, because the driver calls
-drm_of_find_panel_or_bridge() with a positive port and endpoint,
-not -1. While we could switch port arg from 0 to -1, that's not that
-simple for the endpoint arg, because we don't know in advance how many
-devices will be connected to the RGB/DPI port.
+* API : llcc-slice.c: Exports APIs to clients to query cache slice details,
+activate and deactivate cache slices.
 
-[1]https://elixir.bootlin.com/linux/v4.17-rc3/source/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c#L41
+Changes since v5:
+* Remove client information from DT and make driver data global.
+* Check return value of llcc_update_act_ctrl function
+* Change error returned from -EFAULT to -EINVAL
 
-> 
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts | 15 ++++-----------
->  arch/arm/boot/dts/at91sam9g45.dtsi          |  2 --
->  arch/arm/boot/dts/at91sam9n12.dtsi          |  8 +-------
->  arch/arm/boot/dts/at91sam9n12ek.dts         | 14 ++++----------
->  arch/arm/boot/dts/at91sam9x5_lcd.dtsi       |  7 +------
->  arch/arm/boot/dts/at91sam9x5dm.dtsi         | 13 ++++---------
->  arch/arm/boot/dts/sama5d3.dtsi              |  2 --
->  arch/arm/boot/dts/sama5d3_lcd.dtsi          |  8 +-------
->  arch/arm/boot/dts/sama5d4.dtsi              |  8 +-------
->  9 files changed, 16 insertions(+), 61 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts b/arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts
-> index fe05aaa7ac87..72c3b077fb46 100644
-> --- a/arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts
-> +++ b/arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts
-> @@ -49,9 +49,8 @@
->  					pinctrl-names = "default";
->  					pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
->  
-> -					port@0 {
-> -						hlcdc_panel_output: endpoint@0 {
-> -							reg = <0>;
-> +					port {
-> +						hlcdc_panel_output: endpoint {
->  							remote-endpoint = <&panel_input>;
->  						};
->  					};
-> @@ -144,16 +143,10 @@
->  		/* Actually Ampire 800480R2 */
->  		compatible = "foxlink,fl500wvr00-a0t", "simple-panel";
->  		backlight = <&backlight>;
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
->  		status = "okay";
->  
-> -		port@0 {
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			panel_input: endpoint@0 {
-> -				reg = <0>;
-> +		port {
-> +			panel_input: endpoint {
->  				remote-endpoint = <&hlcdc_panel_output>;
->  			};
->  		};
-> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-> index 1ee25a475be8..36729e3f2899 100644
-> --- a/arch/arm/boot/dts/at91sam9g45.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-> @@ -1114,8 +1114,6 @@
->  				clock-names = "isi_clk";
->  				status = "disabled";
->  				port {
-> -					#address-cells = <1>;
-> -					#size-cells = <0>;
->  				};
->  			};
->  
-> diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-> index 37cb81f457b5..a071fccb729b 100644
-> --- a/arch/arm/boot/dts/at91sam9n12.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-> @@ -475,13 +475,7 @@
->  
->  				hlcdc-display-controller {
->  					compatible = "atmel,hlcdc-display-controller";
-> -					#address-cells = <1>;
-> -					#size-cells = <0>;
-> -
-> -					port@0 {
-> -						#address-cells = <1>;
-> -						#size-cells = <0>;
-> -						reg = <0>;
-> +					port {
->  					};
->  				};
->  
-> diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
-> index c43095c5cb5c..eb0c1e11fa4d 100644
-> --- a/arch/arm/boot/dts/at91sam9n12ek.dts
-> +++ b/arch/arm/boot/dts/at91sam9n12ek.dts
-> @@ -134,9 +134,8 @@
->  					pinctrl-names = "default";
->  					pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
->  
-> -					port@0 {
-> -						hlcdc_panel_output: endpoint@0 {
-> -							reg = <0>;
-> +					port {
-> +						hlcdc_panel_output: endpoint {
->  							remote-endpoint = <&panel_input>;
->  						};
->  					};
-> @@ -246,13 +245,8 @@
->  		#size-cells = <0>;
->  		status = "okay";
->  
-> -		port@0 {
-> -			reg = <0>;
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			panel_input: endpoint@0 {
-> -				reg = <0>;
-> +		port {
-> +			panel_input: endpoint {
->  				remote-endpoint = <&hlcdc_panel_output>;
->  			};
->  		};
-> diff --git a/arch/arm/boot/dts/at91sam9x5_lcd.dtsi b/arch/arm/boot/dts/at91sam9x5_lcd.dtsi
-> index 1629db9dd563..e243dff67a67 100644
-> --- a/arch/arm/boot/dts/at91sam9x5_lcd.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9x5_lcd.dtsi
-> @@ -23,13 +23,8 @@
->  
->  				hlcdc-display-controller {
->  					compatible = "atmel,hlcdc-display-controller";
-> -					#address-cells = <1>;
-> -					#size-cells = <0>;
->  
-> -					port@0 {
-> -						#address-cells = <1>;
-> -						#size-cells = <0>;
-> -						reg = <0>;
-> +					port {
->  					};
->  				};
->  
-> diff --git a/arch/arm/boot/dts/at91sam9x5dm.dtsi b/arch/arm/boot/dts/at91sam9x5dm.dtsi
-> index 34c089fe0bc0..5aea8fd09ad6 100644
-> --- a/arch/arm/boot/dts/at91sam9x5dm.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9x5dm.dtsi
-> @@ -29,9 +29,8 @@
->  					pinctrl-names = "default";
->  					pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
->  
-> -					port@0 {
-> -						hlcdc_panel_output: endpoint@0 {
-> -							reg = <0>;
-> +					port {
-> +						hlcdc_panel_output: endpoint {
->  							remote-endpoint = <&panel_input>;
->  						};
->  					};
-> @@ -80,12 +79,8 @@
->  		#size-cells = <0>;
->  		status = "disabled";
->  
-> -		port@0 {
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			panel_input: endpoint@0 {
-> -				reg = <0>;
-> +		port {
-> +			panel_input: endpoint {
->  				remote-endpoint = <&hlcdc_panel_output>;
->  			};
->  		};
-> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-> index eae5e1ee9cd8..2c51042e1f6b 100644
-> --- a/arch/arm/boot/dts/sama5d3.dtsi
-> +++ b/arch/arm/boot/dts/sama5d3.dtsi
-> @@ -239,8 +239,6 @@
->  				clock-names = "isi_clk";
->  				status = "disabled";
->  				port {
-> -					#address-cells = <1>;
-> -					#size-cells = <0>;
->  				};
->  			};
->  
-> diff --git a/arch/arm/boot/dts/sama5d3_lcd.dtsi b/arch/arm/boot/dts/sama5d3_lcd.dtsi
-> index be7cfefc6c31..2d042d7ec531 100644
-> --- a/arch/arm/boot/dts/sama5d3_lcd.dtsi
-> +++ b/arch/arm/boot/dts/sama5d3_lcd.dtsi
-> @@ -23,13 +23,7 @@
->  
->  				hlcdc-display-controller {
->  					compatible = "atmel,hlcdc-display-controller";
-> -					#address-cells = <1>;
-> -					#size-cells = <0>;
-> -
-> -					port@0 {
-> -						#address-cells = <1>;
-> -						#size-cells = <0>;
-> -						reg = <0>;
-> +					port {
->  					};
->  				};
->  
-> diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-> index 0cf9beddd556..90d7b64915ec 100644
-> --- a/arch/arm/boot/dts/sama5d4.dtsi
-> +++ b/arch/arm/boot/dts/sama5d4.dtsi
-> @@ -333,13 +333,7 @@
->  
->  				hlcdc-display-controller {
->  					compatible = "atmel,hlcdc-display-controller";
-> -					#address-cells = <1>;
-> -					#size-cells = <0>;
-> -
-> -					port@0 {
-> -						#address-cells = <1>;
-> -						#size-cells = <0>;
-> -						reg = <0>;
-> +					port {
->  					};
->  				};
->  
+Changes since v4:
+* Remove null pointer checks as per comments.
+* Remove extra blank lines.
+
+Changes since v3:
+* Use the regmap_read_poll_timeout function
+* Check for regmap read/write errors.
+* Remove memory barrier after regmap write
+* Derive memory bank offsets using stride macro variable
+* Remove debug statements from code
+* Remove the qcom_llcc_remove function
+* Use if IS_ENABLED in place of ifdef for built-in module
+* Change EXPORT_SYMBOL to EXPORT_SYMBOL_GPL
+* Remove unnecessary free functions
+* Change the variable names as per review comments
+
+Changes since v2:
+* Corrected the Makefile to fix compilation.
+
+Changes since v1:
+* Added Makefile and Kconfig.
+
+Changes since v0:
+* Removed the syscon and simple-mfd approach
+* Updated the device tree nodes to mention LLCC as a single HW block
+* Moved llcc bank offsets from device tree and handled the offset
+  in the driver.
+
+ckadabi@codeaurora.org (2):
+  dt-bindings: Documentation for qcom, llcc
+  drivers: soc: Add LLCC driver
+
+ .../devicetree/bindings/arm/msm/qcom,llcc.txt      |  32 ++
+ drivers/soc/qcom/Kconfig                           |  17 ++
+ drivers/soc/qcom/Makefile                          |   2 +
+ drivers/soc/qcom/llcc-sdm845.c                     | 106 +++++++
+ drivers/soc/qcom/llcc-slice.c                      | 335 +++++++++++++++++++++
+ include/linux/soc/qcom/llcc-qcom.h                 | 162 ++++++++++
+ 6 files changed, 654 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+ create mode 100644 drivers/soc/qcom/llcc-sdm845.c
+ create mode 100644 drivers/soc/qcom/llcc-slice.c
+ create mode 100644 include/linux/soc/qcom/llcc-qcom.h
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
