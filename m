@@ -1,142 +1,67 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v1 6/7] Bluetooth: hci_mediatek: Add protocol support for
- MediaTek serial devices
-Date: Tue, 8 May 2018 13:18:49 +0200
-Message-ID: <6033F916-F103-4F07-9912-695B5B49F30F@holtmann.org>
-References: <cover.1522736996.git.sean.wang@mediatek.com>
- <f0e0a0b7f1dc3845dc6eafb4ccd60284d1675f8d.1522736996.git.sean.wang@mediatek.com>
- <A7391E5D-2945-415B-8AB1-8DFBF2E65878@holtmann.org>
- <1525762084.14468.20.camel@mtkswgap22>
- <D474053D-6910-4B04-8B98-59B96FEB86BC@holtmann.org>
- <1525767775.18877.22.camel@mtkswgap22>
-Mime-Version: 1.0 (Mac OS X Mail 11.3 \(3445.6.18\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525767775.18877.22.camel@mtkswgap22>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, BlueZ development <linux-bluetooth@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] resource: Use list_head to link sibling resource
+Date: Tue, 8 May 2018 20:48:45 +0900
+Message-ID: <20180508114845.GA19459@WeideMacBook-Pro.local>
+References: <20180419001848.3041-1-bhe@redhat.com>
+ <20180419001848.3041-2-bhe@redhat.com>
+ <20180426011837.GA79340@WeideMacBook-Pro.local>
+ <20180507011429.GG30581@MiWiFi-R3L-srv>
+Reply-To: Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180507011429.GG30581@MiWiFi-R3L-srv>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Yaowei Bai <baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, "K. Y. Srinivasan" <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jonathan Derrick <jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
-
->>>>> +
->>>>> +static int mtk_wmt_cmd_sync(struct hci_uart *hu, u8 opcode, u8 flag, u16 plen,
->>>>> +			    const void *param)
->>>>> +{
->>>>> +	struct mtk_bt_dev *btdev = hu->priv;
->>>>> +	struct hci_command_hdr *hhdr;
->>>>> +	struct hci_acl_hdr *ahdr;
->>>>> +	struct mtk_wmt_hdr *whdr;
->>>>> +	struct sk_buff *skb;
->>>>> +	int ret = 0;
->>>>> +
->>>>> +	init_completion(&btdev->wmt_cmd);
->>>>> +
->>>>> +	skb = bt_skb_alloc(plen + MTK_WMT_CMD_SIZE, GFP_KERNEL);
->>>>> +	if (!skb)
->>>>> +		return -ENOMEM;
->>>>> +
->>>>> +	/*
->>>>> +	 * WMT data is carried in either ACL or HCI format with op code as
->>>>> +	 * 0xfc6f and followed by a WMT header and its actual payload.
->>>>> +	 */
->>>> 
->>>> Please use net subsystem comment style.
->>>> 
->>>>> +	switch (opcode) {
->>>>> +	case MTK_WMT_PATCH_DWNLD:
->>>>> +		ahdr = skb_put(skb, HCI_ACL_HDR_SIZE);
->>>>> +		ahdr->handle = cpu_to_le16(0xfc6f);
->>>>> +		ahdr->dlen   = cpu_to_le16(plen + MTK_WMT_HDR_SIZE);
->>>>> +		break;
->>>>> +	default:
->>>>> +		hhdr = skb_put(skb, HCI_COMMAND_HDR_SIZE);
->>>>> +		hhdr->opcode = cpu_to_le16(0xfc6f);
->>>>> +		hhdr->plen = plen + MTK_WMT_HDR_SIZE;
->>>>> +		break;
->>>>> +	}
->>>>> +
->>>>> +	hci_skb_pkt_type(skb) = opcode == MTK_WMT_PATCH_DWNLD ?
->>>>> +				HCI_ACLDATA_PKT : HCI_COMMAND_PKT;
->>>> 
->>>> Why not move that into the switch statement above.
->>>> 
->>>>> +
->>>>> +	/* Start to build a WMT header and its actual payload. */
->>>>> +	whdr = skb_put(skb, MTK_WMT_HDR_SIZE);
->>>>> +	whdr->dir = 1;
->>>>> +	whdr->op = opcode;
->>>>> +	whdr->dlen = cpu_to_le16(plen + 1);
->>>>> +	whdr->flag = flag;
->>>>> +	skb_put_data(skb, param, plen);
->>>>> +
->>>>> +	mtk_enqueue(hu, skb);
->>>>> +	hci_uart_tx_wakeup(hu);
->>>>> +
->>>>> +	/*
->>>>> +	 * Waiting a WMT event response, while we must take care in case of
->>>>> +	 * failures for the wait.
->>>>> +	 */
->>>>> +	ret = wait_for_completion_interruptible_timeout(&btdev->wmt_cmd, HZ);
->>>>> +
->>>>> +	return ret > 0 ? 0 : ret < 0 ? ret : -ETIMEDOUT;
->>>>> +}
->>>> 
->>>> All in all I am not convinced that this is super clean. I get that we need something special for having this in the ACL data packets, but for the standard HCI command I prefer that __hci_cmd_sync is used. I addition, it seems that patch download is the only special case and that happens before at the setup stage. So we could make things special for that. I need to understand this a bit better. Can I get a btmon -w trace.log file from the whole init procedure.
->>>> 
->>> 
->>> While i was trying to rewrite the driver based on btuart.c. you posted
->>> on RFC, I used __hci_cmd_sync_ev to replace such kinds of SoC specific
->>> hci command sending which I've done previously with mtk_wmt_cmd_sync.
->>> 
->>> However, eventually, I got a cmd_timer timeout whose message printed
->>> on console as "Bluetooth: hci0: command 0xfc6f tx timeout".
->>> 
->>> The mtk soc specific cmd/event I posted below, I dumped directly in
->>> driver, always uses cmd as opcode 0xfc6f, and its event id as 0xe4.
->>> 
->>> It appears to the event id is not standard and thus it cannot cancel the
->>> cmd timer when the special hci event is being handled. This way can we
->>> can still use __hci_cmd_sync api ?
->>> 
->>> [    4.896200] hci tx: 00000000: 01 6f fc 05 01 07 01 00 04    
->>> [    4.904671] hci rx: 00000000: e4 05 02 07 01 00
->>> 00                             
->>> [    4.912859] Bluetooth: hci0 event 0xe4
->>> 
->>> 
->>> buildroot login: [    6.914509] Bluetooth: hci0: command 0xfc6f tx
->>> timeout
->>> [    6.919831] hci tx: 00000000: 01 6f fc 06 01 06 02 00 00
->>> 01                    .o........
->>> [    7.006631] hci rx: 00000000: e4 05 02 06 01 00
->>> 00                             .......
->>> [    7.014821] Bluetooth: hci0 event 0xe4
+On Mon, May 07, 2018 at 09:14:29AM +0800, Baoquan He wrote:
+>Hi Wei Yang,
+>
+>On 04/26/18 at 09:18am, Wei Yang wrote:
+>> On Thu, Apr 19, 2018 at 08:18:46AM +0800, Baoquan He wrote:
+>> >The struct resource uses singly linked list to link siblings. It's not
+>> >easy to do reverse iteration on sibling list. So replace it with list_head.
+>> >
 >> 
->> can you just start btmon before loading the module / driver? It makes it a lot easier since it will actually decode the basics for us. If there is a bug within __hci_cmd_sync_ev, then we are going to fix it.
+>> Hi, Baoquan
 >> 
-> 
-> I'm happy to do with btmon. just the environment with buildroot the BT
-> running on seems there's a missing support for btmon. I can start to use
-> btmon once I change the environment to Debian.
-> 
->> So all the MTK vendor commands respond with a vendor event? Or are there some that do the standard command status/complete handling?
+>> Besides changing the data structure, I have another proposal to do the reverse
+>> iteration. Which means it would not affect other users, if you just want a
+>> reverse iteration.
 >> 
-> 
-> yes, mtk controller after mt7622 (included), its MTK vendors command
-> (opcode 0xfc6f) always respond with a vendor event id 0xe4. And they
-> don't do any standard status/complete handling.
+>> BTW, I don't think Andrew suggest to use linked-list directly. What he wants
+>> is a better solution to your first proposal in
+>> https://patchwork.kernel.org/patch/10300819/.
+>> 
+>> Below is my proposal of resource reverse iteration without changing current
+>> design.
+>
+>I got your mail and read it, then interrupted by other thing and forgot
+>replying, sorry.
+>
+>I am fine with your code change. As I said before, I have tried to change
+>code per reviewers' comment, then let reviewers decide which way is
+>better. Please feel free to post formal patches and joining discussion
+>about this issue.
 
-then we need to figure out where the __hci_cmd_sync_ev causes a problem. Since normally that should just work for you.
+Yep, while I don't have a real requirement to add the reverse version, so what
+is the proper way to send a patch?
 
-> BTW, mtk controller before mt7622, such as mt7623, its MTK vendor
-> command always go with completely specific format, not with hci format.
+A patch reply to this thread is ok?
 
-What does that mean? Do you have an example?
-
-Regards
-
-Marcel
+>
+>Thanks
+>Baoquan
+>
