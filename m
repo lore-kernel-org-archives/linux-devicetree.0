@@ -1,43 +1,61 @@
-Return-Path: <SRS0=JkaE=H3=suse.com=oneukum@kernel.org>
-Message-ID: <1525773790.24345.12.camel@suse.com>
-Subject: Re: [PATCH v5 01/14] dt-bindings: connector: add properties for
- typec
-From: Oliver Neukum <oneukum@suse.com>
-Date: Tue, 08 May 2018 12:03:10 +0200
-In-Reply-To: <VI1PR0402MB3917C957925B7175A8A16A6F89860@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+Return-Path: <SRS0=odsK=H3=nxp.com=jun.li@kernel.org>
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v5 01/14] dt-bindings: connector: add properties for typec
+Date: Tue, 8 May 2018 05:36:02 +0000
+Message-ID: 
+ <VI1PR0402MB3917089732A4524FEA498A74899A0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
 References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
-	 <1525307094-27402-2-git-send-email-jun.li@nxp.com>
-	 <1525332431.12348.1.camel@suse.com>
-	 <VI1PR0402MB3917DA4B3789475540E38E4989870@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-	 <1525339063.12348.4.camel@suse.com>
-	 <VI1PR0402MB3917C957925B7175A8A16A6F89860@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-To: Jun Li <jun.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux@roeck-us.net" <linux@roeck-us.net>
-Cc: "gsomlo@gmail.com" <gsomlo@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Peter Chen <peter.chen@nxp.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+ <1525307094-27402-2-git-send-email-jun.li@nxp.com>
+ <20180507155852.GA7962@rob-hp-laptop>
+In-Reply-To: <20180507155852.GA7962@rob-hp-laptop>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Rob Herring <robh@kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, Peter Chen <peter.chen@nxp.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Am Freitag, den 04.05.2018, 08:59 +0000 schrieb Jun Li:
-> 
-> > > > Can one implement a device that can operate as either DFP or UFP,
-> > > > but not implements the dynamic role switch that a DRP must support?
-> > > 
-> > > You mean a port with DRD on data but not DRP on power?
-> > > 
-> > > The data-role is newly added as the data role is not coupled with
-> > > power
-> > 
-> > No, I meant data role. As far as I can tell for a DRP you need to implement the
-> > detection logic described in chapter 4 of the spec.
-> 
-> Could you please point me the "detection logic" of typec spec chapter 4
-> you are referring to?
-
-Chapter 4.5.2.2, especially state diagramms 4.15 and 4.16
-
-It just seems to me that a DRP and a physical port that can be switched
-between UFP and DFP are not the same thing, but can be implemented.
-
-	Regards
-		Oliver
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIFttYWls
+dG86cm9iaEBrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE4xOo11MI3yNUgMjM6NTkNCj4gVG86IEp1
+biBMaSA8anVuLmxpQG54cC5jb20+DQo+IENjOiBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsg
+aGVpa2tpLmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbTsNCj4gbGludXhAcm9lY2stdXMubmV0OyBh
+LmhhamRhQHNhbXN1bmcuY29tOyBjdzAwLmNob2lAc2Ftc3VuZy5jb207DQo+IHNodWZhbl9sZWVA
+cmljaHRlay5jb207IFBldGVyIENoZW4gPHBldGVyLmNoZW5AbnhwLmNvbT47DQo+IGdzb21sb0Bn
+bWFpbC5jb207IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC11c2JAdmdlci5rZXJu
+ZWwub3JnOw0KPiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBS
+ZTogW1BBVENIIHY1IDAxLzE0XSBkdC1iaW5kaW5nczogY29ubmVjdG9yOiBhZGQgcHJvcGVydGll
+cyBmb3IgdHlwZWMNCj4gDQo+IE9uIFRodSwgTWF5IDAzLCAyMDE4IGF0IDA4OjI0OjQxQU0gKzA4
+MDAsIExpIEp1biB3cm90ZToNCj4gPiBBZGQgYmluZ2RpbmdzIHN1cHBvcnRlZCBieSBjdXJyZW50
+IHR5cGVjIGRyaXZlciwgc28gdXNlciBjYW4gcGFzcyBhbGwNCj4gPiB0aG9zZSBwcm9wZXJ0aWVz
+IHZpYSBkdC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IExpIEp1biA8anVuLmxpQG54cC5jb20+
+DQo+ID4gLS0tDQo+ID4gIC4uLi9iaW5kaW5ncy9jb25uZWN0b3IvdXNiLWNvbm5lY3Rvci50eHQg
+ICAgICAgICAgIHwgNDQNCj4gKysrKysrKysrKysrKysrDQo+ID4gIGluY2x1ZGUvZHQtYmluZGlu
+Z3MvdXNiL3BkLmggICAgICAgICAgICAgICAgICAgICAgIHwgNjINCj4gKysrKysrKysrKysrKysr
+KysrKysrKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDEwNiBpbnNlcnRpb25zKCspDQo+ID4NCj4g
+PiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY29u
+bmVjdG9yL3VzYi1jb25uZWN0b3IudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvY29ubmVjdG9yL3VzYi1jb25uZWN0b3IudHh0DQo+ID4gaW5kZXggZTE0NjNmMS4u
+NGIxOWRlNmQwIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9jb25uZWN0b3IvdXNiLWNvbm5lY3Rvci50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvY29ubmVjdG9yL3VzYi1jb25uZWN0b3IudHh0DQo+ID4gQEAg
+LTE1LDYgKzE1LDMzIEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gIC0gdHlwZTogc2l6ZSBv
+ZiB0aGUgY29ubmVjdG9yLCBzaG91bGQgYmUgc3BlY2lmaWVkIGluIGNhc2Ugb2YgVVNCLUEsIFVT
+Qi1CDQo+ID4gICAgbm9uLWZ1bGxzaXplIGNvbm5lY3RvcnM6ICJtaW5pIiwgIm1pY3JvIi4NCj4g
+Pg0KPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciB1c2ItYy1jb25uZWN0b3I6DQo+ID4gKy0g
+cG93ZXItcm9sZTogc2hvdWxkIGJlIG9uZSBvZiAic291cmNlIiwgInNpbmsiIG9yICJkdWFsIihE
+UlApIGlmDQo+ID4gK3R5cGVjDQo+ID4gKyAgY29ubmVjdG9yIGhhcyBwb3dlciBzdXBwb3J0Lg0K
+PiA+ICstIHRyeS1wb3dlci1yb2xlOiBwcmVmZXJyZWQgcG93ZXIgcm9sZSBpZiAiZHVhbCIoRFJQ
+KSBjYW4gc3VwcG9ydA0KPiA+ICtUcnkuU05LDQo+ID4gKyAgb3IgVHJ5LlNSQywgc2hvdWxkIGJl
+ICJzaW5rIiBmb3IgVHJ5LlNOSyBvciAic291cmNlIiBmb3IgVHJ5LlNSQy4NCj4gPiArLSBkYXRh
+LXJvbGU6IHNob3VsZCBiZSBvbmUgb2YgImhvc3QiLCAiZGV2aWNlIiwgImR1YWwiKERSRCkgaWYg
+dHlwZWMNCj4gPiArICBjb25uZWN0b3Igc3VwcG9ydHMgVVNCIGRhdGEuDQo+IA0KPiBOZWVkIHRv
+IGRlZmluZSB3aGF0IGFyZSB0aGUgZGVmYXVsdHMgb24gdGhlc2UgaWYgdGhlIHByb3BlcnRpZXMg
+YXJlbid0IHByZXNlbnQNCj4gKGlkZWFsbHksIHRob3NlIHdvdWxkIGJlIHRoZSBjb21tb24gY2Fz
+ZSk/DQoNCklmIG9uZSBvZiBhYm92ZSBwcm9wZXJ0aWVzIGlzbid0IHByZXNlbnQsIG1lYW5zIHRo
+ZSBwb3J0IGRvZXNuJ3QgaGF2ZQ0KY29ycmVzcG9uZGluZyBjYXBhYmlsaXR5LiBJIHRoaW5rIHRo
+ZSBjb21tb24gY2FzZSBpcyBhIHBvcnQgaGFzIGENCnNwZWNpZmljIHByb3BlcnR5IHZhbHVlLCBi
+dXQgaXQncyBhbHNvIHBvc3NpYmxlIGl0IGRvZXNuJ3Qgc3VwcG9ydCB0aGF0DQpmdW5jdGlvbihl
+LmcuIGEgdHlwZWMgcG9ydCBvbmx5IGZvciBwb3dlciBidXQgbm8gZGF0YSBjb21tdW5pY2F0aW9u
+KSwNCnNvIEkgdXNlICJub3QgcHJlc2VudCIgZm9yIHRoaXMgY2FzZSBpbnN0ZWFkIG9mIHNvbWUg
+ZGVmYXVsdCB2YWx1ZSkuDQoNClRoYW5rcw0KTGkgSnVuDQo+IA0KPiBSb2INCg==
