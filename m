@@ -1,104 +1,79 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: [PATCH 2/4] rtc: ds1307: support m41t11 variant
-Date: Tue,  8 May 2018 16:56:09 +0200
-Message-ID: <20180508145611.49072-2-giulio.benetti@micronovasrl.com>
-References: <20180508145611.49072-1-giulio.benetti@micronovasrl.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180508145611.49072-1-giulio.benetti@micronovasrl.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: a.zummo@towertech.it
-Cc: alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Giulio Benetti <giulio.benetti@micronovasrl.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] arm64: dts: juno: fix OF graph endpoint node names
+Date: Tue,  8 May 2018 10:09:49 -0500
+Message-ID: <20180508150952.24562-1-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The m41t11 variant is very similar to the already supported m41t00 and
-m41t0, but it has also 56 bytes of NVRAM.
+OF graph endpoint node names should be 'endpoint'. Fix the following
+warnings found by dtc:
 
-Add it to driver taking into account NVRAM section.
+Warning (graph_endpoint): /hdlcd@7ff50000/port/hdlcd1-endpoint: graph endpont node nameshould be 'endpoint'
+Warning (graph_endpoint): /hdlcd@7ff60000/port/hdlcd0-endpoint: graph endpont node nameshould be 'endpoint'
+Warning (graph_endpoint): /i2c@7ffa0000/hdmi-transmitter@70/port/tda998x-0-endpoint: graph endpont node name should be 'endpoint'
+Warning (graph_endpoint): /i2c@7ffa0000/hdmi-transmitter@71/port/tda998x-1-endpoint: graph endpont node name should be 'endpoint'
 
-Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/rtc/rtc-ds1307.txt         |  1 +
- drivers/rtc/rtc-ds1307.c                           | 14 ++++++++++++++
- 2 files changed, 15 insertions(+)
+ arch/arm64/boot/dts/arm/juno-base.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-index d28d6e7f6ae8..ce6469c1a516 100644
---- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-+++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-@@ -13,6 +13,7 @@ Required properties:
- 	"maxim,ds3231",
- 	"st,m41t0",
- 	"st,m41t00",
-+	"st,m41t11",
- 	"microchip,mcp7940x",
- 	"microchip,mcp7941x",
- 	"pericom,pt7c4338",
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index 32aadcbc377f..0ab0c166da83 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -44,6 +44,7 @@ enum ds_type {
- 	ds_3231,
- 	m41t0,
- 	m41t00,
-+	m41t11,
- 	mcp794xx,
- 	rx_8025,
- 	rx_8130,
-@@ -226,6 +227,11 @@ static const struct chip_desc chips[last_ds_type] = {
- 		.irq_handler = rx8130_irq,
- 		.rtc_ops = &rx8130_rtc_ops,
- 	},
-+	[m41t11] = {
-+		/* this is battery backed SRAM */
-+		.nvram_offset	= 8,
-+		.nvram_size	= 56,
-+	},
- 	[mcp794xx] = {
- 		.alarm		= 1,
- 		/* this is battery backed SRAM */
-@@ -248,6 +254,7 @@ static const struct i2c_device_id ds1307_id[] = {
- 	{ "ds3231", ds_3231 },
- 	{ "m41t0", m41t0 },
- 	{ "m41t00", m41t00 },
-+	{ "m41t11", m41t11 },
- 	{ "mcp7940x", mcp794xx },
- 	{ "mcp7941x", mcp794xx },
- 	{ "pt7c4338", ds_1307 },
-@@ -304,6 +311,10 @@ static const struct of_device_id ds1307_of_match[] = {
- 		.compatible = "st,m41t00",
- 		.data = (void *)m41t00
- 	},
-+	{
-+		.compatible = "st,m41t11",
-+		.data = (void *)m41t11
-+	},
- 	{
- 		.compatible = "microchip,mcp7940x",
- 		.data = (void *)mcp794xx
-@@ -346,6 +357,7 @@ static const struct acpi_device_id ds1307_acpi_ids[] = {
- 	{ .id = "DS3231", .driver_data = ds_3231 },
- 	{ .id = "M41T0", .driver_data = m41t0 },
- 	{ .id = "M41T00", .driver_data = m41t00 },
-+	{ .id = "M41T11", .driver_data = m41t11 },
- 	{ .id = "MCP7940X", .driver_data = mcp794xx },
- 	{ .id = "MCP7941X", .driver_data = mcp794xx },
- 	{ .id = "PT7C4338", .driver_data = ds_1307 },
-@@ -1574,6 +1586,7 @@ static int ds1307_probe(struct i2c_client *client,
- 	case ds_1307:
- 	case m41t0:
- 	case m41t00:
-+	case m41t11:
- 		/* clock halted?  turn it on, so clock can tick. */
- 		if (tmp & DS1307_BIT_CH) {
- 			regmap_write(ds1307->regmap, DS1307_REG_SECS, 0);
-@@ -1639,6 +1652,7 @@ static int ds1307_probe(struct i2c_client *client,
- 	case ds_1340:
- 	case m41t0:
- 	case m41t00:
-+	case m41t11:
- 		/*
- 		 * NOTE: ignores century bits; fix before deploying
- 		 * systems that will run through year 2100.
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+index eb749c50a736..b2fedaab3fcc 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -677,7 +677,7 @@
+ 		clock-names = "pxlclk";
+ 
+ 		port {
+-			hdlcd1_output: hdlcd1-endpoint {
++			hdlcd1_output: endpoint {
+ 				remote-endpoint = <&tda998x_1_input>;
+ 			};
+ 		};
+@@ -692,7 +692,7 @@
+ 		clock-names = "pxlclk";
+ 
+ 		port {
+-			hdlcd0_output: hdlcd0-endpoint {
++			hdlcd0_output: endpoint {
+ 				remote-endpoint = <&tda998x_0_input>;
+ 			};
+ 		};
+@@ -720,7 +720,7 @@
+ 			compatible = "nxp,tda998x";
+ 			reg = <0x70>;
+ 			port {
+-				tda998x_0_input: tda998x-0-endpoint {
++				tda998x_0_input: endpoint {
+ 					remote-endpoint = <&hdlcd0_output>;
+ 				};
+ 			};
+@@ -730,7 +730,7 @@
+ 			compatible = "nxp,tda998x";
+ 			reg = <0x71>;
+ 			port {
+-				tda998x_1_input: tda998x-1-endpoint {
++				tda998x_1_input: endpoint {
+ 					remote-endpoint = <&hdlcd1_output>;
+ 				};
+ 			};
 -- 
 2.17.0
