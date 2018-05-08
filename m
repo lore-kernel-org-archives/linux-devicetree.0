@@ -1,43 +1,98 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] arm: dts: imx: fix IPU OF graph endpoint node names
-Date: Tue, 8 May 2018 10:26:59 -0500
-Message-ID: <CAL_JsqJJ7PZZZX1ks7u4VyQ=6xLMtgd9hPE_7xEP07O=LQ+78g@mail.gmail.com>
-References: <20180508135930.5768-1-robh@kernel.org>
- <20180508135930.5768-2-robh@kernel.org>
- <1525789158.18091.7.camel@pengutronix.de>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v2 1/2] dt: bindings: lm3601x: Introduce the lm3601x
+ driver
+Date: Tue, 8 May 2018 10:32:59 -0500
+Message-ID: <554b283f-7c27-e2de-3052-e5119dba9396@ti.com>
+References: <20180508141704.24271-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1525789158.18091.7.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Joshua Clayton <stillcompiling@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180508141704.24271-1-dmurphy@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, mark.rutland@arm.com, jacek.anaszewski@gmail.com, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 8, 2018 at 9:19 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> On Tue, 2018-05-08 at 08:59 -0500, Rob Herring wrote:
->> OF graph endpoint nodes are supposed to be named 'endpoint' with an
->> address if there is more than one. The i.MX IPU binding graph has used
->> unique endpoint names instead which now generate dtc warnings:
->
-> This partially reverts commit 416196cd9099 ("ARM: dts: imx6: fix dtc
-> warnings for ipu endpoints") and also solves the same issue differently
-> by adding reg properties. Should this get a Fixes: tag for these
-> changes?
+On 05/08/2018 09:17 AM, Dan Murphy wrote:
+> Introduce the device tree bindings for the lm3601x
+> family of LED torch, flash and IR drivers.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+> 
+> v2 - No changes - https://patchwork.kernel.org/patch/10384587/
+> 
+>  .../devicetree/bindings/leds/leds-lm3601x.txt | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+> new file mode 100644
+> index 000000000000..38cdabf6ca7e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+> @@ -0,0 +1,51 @@
+> +* Texas Instruments - lm3601x Single-LED Flash Driver
+> +
+> +The LM3601X are ultra-small LED flash drivers that
+> +provides a high level of adjustability.
+> +
+> +Required properties:
+> +	- compatible : Can be one of the following
+> +		"ti,lm3601x"
 
-Yes, I'd missed that. This has become my concern with the dtc
-warnings. They are often fixed in the wrong way to silence warnings.
-This one is trivial, but sometimes they point to deeper issues like
-poor binding design. This is certainly true for the new
-unique_unit_address check.
 
-Rob
+No wildcard compatibles, drop this.
+
+
+> +		"ti,lm36010"
+> +		"ti,lm36011"
+> +	- reg : I2C slave address
+> +	- #address-cells : 1
+> +	- #size-cells : 0
+> +
+> +Required child properties:
+> +	- reg : 0 - Indicates to support and register a torch interface
+> +		1 - Indicates to support and register a strobe interface
+> +		2 - Indicates to support and register an ir interface
+> +
+> +Optional child properties:
+> +	- label : see Documentation/devicetree/bindings/leds/common.txt
+> +
+
+
+Relative path might work better here.
+
+
+> +Example:
+> +led-controller@64 {
+> +	compatible = "ti,lm3601x";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	reg = <0x64>;
+> +
+> +	led@0 {
+> +		reg = <0>;
+> +		label = "white:torch";
+> +		led-max-microamp=<10000>;
+> +	};
+> +
+> +	led@1 {
+> +		reg = <1>;
+> +		label = "white:strobe";
+> +		flash-max-microamp=<10000>;
+> +		flash-max-timeout-us=<800>;
+> +	};
+> +
+> +	led@2 {
+> +		reg = <2>;
+> +		label = "invisible:ir";
+> +	};
+> +}
+> +
+> +For more product information please see the links below:
+> +http://www.ti.com/product/LM36010
+> +http://www.ti.com/product/LM36011
+> 
