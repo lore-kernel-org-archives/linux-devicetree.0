@@ -1,43 +1,119 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v7 1/6] dt-bindings: define vendor prefix for Wi2Wi, Inc.
-Date: Tue, 8 May 2018 08:41:45 +0200
-Message-ID: <61FC6AF2-C770-45FF-B2D3-932377FF0C91@goldelico.com>
-References: <cover.1525340143.git.hns@goldelico.com>
- <7c03df30ceec8b171ab88787c1ef9556c96b30f6.1525340143.git.hns@goldelico.com>
- <20180507205455.GA28316@rob-hp-laptop>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset="us-ascii"
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v1 6/7] Bluetooth: hci_mediatek: Add protocol support
+ for MediaTek serial devices
+Date: Tue, 8 May 2018 14:48:04 +0800
+Message-ID: <1525762084.14468.20.camel@mtkswgap22>
+References: <cover.1522736996.git.sean.wang@mediatek.com>
+         <f0e0a0b7f1dc3845dc6eafb4ccd60284d1675f8d.1522736996.git.sean.wang@mediatek.com>
+         <A7391E5D-2945-415B-8AB1-8DFBF2E65878@holtmann.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180507205455.GA28316@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thierry Reding <treding@nvidia.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kernel@pyra-handheld.com, Russell King <linux@armlinux.org.uk>, Johan Hovold <johan@kernel.org>, linux-omap@vger.kernel.org, =?utf-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>, linux-arm-kernel@lists.infradead.org, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, letux-kernel@openphoenux.org, afd@ti.com, =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Jonathan Cameron <jic23@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <A7391E5D-2945-415B-8AB1-8DFBF2E65878@holtmann.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, Johan Hedberg <johan.hedberg@gmail.com>, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-HI Rob,
+Hi, Marcel
 
-> Am 07.05.2018 um 22:54 schrieb Rob Herring <robh@kernel.org>:
+On Tue, 2018-04-03 at 12:27 +0200, Marcel Holtmann wrote:
+> Hi Sean,
 > 
-> On Thu, May 03, 2018 at 11:35:46AM +0200, H. Nikolaus Schaller wrote:
->> Introduce vendor prefix for Wi2Wi, Inc. for W2SG0004 GPS module
->> and W2CBW003 Bluetooth/WiFi combo (CSR/Marvell).
->> 
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->> ---
->> Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->> 1 file changed, 1 insertion(+)
-> 
-> Applied this one so you don't have to keep sending it.
 
-Thanks and BR,
-Nikolaus
+[ ... ]
+
+> > +
+> > +static int mtk_wmt_cmd_sync(struct hci_uart *hu, u8 opcode, u8 flag, u16 plen,
+> > +			    const void *param)
+> > +{
+> > +	struct mtk_bt_dev *btdev = hu->priv;
+> > +	struct hci_command_hdr *hhdr;
+> > +	struct hci_acl_hdr *ahdr;
+> > +	struct mtk_wmt_hdr *whdr;
+> > +	struct sk_buff *skb;
+> > +	int ret = 0;
+> > +
+> > +	init_completion(&btdev->wmt_cmd);
+> > +
+> > +	skb = bt_skb_alloc(plen + MTK_WMT_CMD_SIZE, GFP_KERNEL);
+> > +	if (!skb)
+> > +		return -ENOMEM;
+> > +
+> > +	/*
+> > +	 * WMT data is carried in either ACL or HCI format with op code as
+> > +	 * 0xfc6f and followed by a WMT header and its actual payload.
+> > +	 */
+> 
+> Please use net subsystem comment style.
+> 
+> > +	switch (opcode) {
+> > +	case MTK_WMT_PATCH_DWNLD:
+> > +		ahdr = skb_put(skb, HCI_ACL_HDR_SIZE);
+> > +		ahdr->handle = cpu_to_le16(0xfc6f);
+> > +		ahdr->dlen   = cpu_to_le16(plen + MTK_WMT_HDR_SIZE);
+> > +		break;
+> > +	default:
+> > +		hhdr = skb_put(skb, HCI_COMMAND_HDR_SIZE);
+> > +		hhdr->opcode = cpu_to_le16(0xfc6f);
+> > +		hhdr->plen = plen + MTK_WMT_HDR_SIZE;
+> > +		break;
+> > +	}
+> > +
+> > +	hci_skb_pkt_type(skb) = opcode == MTK_WMT_PATCH_DWNLD ?
+> > +				HCI_ACLDATA_PKT : HCI_COMMAND_PKT;
+> 
+> Why not move that into the switch statement above.
+> 
+> > +
+> > +	/* Start to build a WMT header and its actual payload. */
+> > +	whdr = skb_put(skb, MTK_WMT_HDR_SIZE);
+> > +	whdr->dir = 1;
+> > +	whdr->op = opcode;
+> > +	whdr->dlen = cpu_to_le16(plen + 1);
+> > +	whdr->flag = flag;
+> > +	skb_put_data(skb, param, plen);
+> > +
+> > +	mtk_enqueue(hu, skb);
+> > +	hci_uart_tx_wakeup(hu);
+> > +
+> > +	/*
+> > +	 * Waiting a WMT event response, while we must take care in case of
+> > +	 * failures for the wait.
+> > +	 */
+> > +	ret = wait_for_completion_interruptible_timeout(&btdev->wmt_cmd, HZ);
+> > +
+> > +	return ret > 0 ? 0 : ret < 0 ? ret : -ETIMEDOUT;
+> > +}
+> 
+> All in all I am not convinced that this is super clean. I get that we need something special for having this in the ACL data packets, but for the standard HCI command I prefer that __hci_cmd_sync is used. I addition, it seems that patch download is the only special case and that happens before at the setup stage. So we could make things special for that. I need to understand this a bit better. Can I get a btmon -w trace.log file from the whole init procedure.
+> 
+
+While i was trying to rewrite the driver based on btuart.c. you posted
+on RFC, I used __hci_cmd_sync_ev to replace such kinds of SoC specific
+hci command sending which I've done previously with mtk_wmt_cmd_sync.
+
+However, eventually, I got a cmd_timer timeout whose message printed
+on console as "Bluetooth: hci0: command 0xfc6f tx timeout".
+
+The mtk soc specific cmd/event I posted below, I dumped directly in
+driver, always uses cmd as opcode 0xfc6f, and its event id as 0xe4.
+
+It appears to the event id is not standard and thus it cannot cancel the
+cmd timer when the special hci event is being handled. This way can we
+can still use __hci_cmd_sync api ?
+                         
+[    4.896200] hci tx: 00000000: 01 6f fc 05 01 07 01 00 04    
+[    4.904671] hci rx: 00000000: e4 05 02 07 01 00
+00                             
+[    4.912859] Bluetooth: hci0 event 0xe4
+
+
+buildroot login: [    6.914509] Bluetooth: hci0: command 0xfc6f tx
+timeout
+[    6.919831] hci tx: 00000000: 01 6f fc 06 01 06 02 00 00
+01                    .o........
+[    7.006631] hci rx: 00000000: e4 05 02 06 01 00
+00                             .......
+[    7.014821] Bluetooth: hci0 event 0xe4
