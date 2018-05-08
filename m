@@ -1,42 +1,33 @@
-Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr10040.outbound.protection.outlook.com ([40.107.1.40]:53408
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751747AbeECAl1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 2 May 2018 20:41:27 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v5 03/14] staging: typec: tcpci: add compatible string for nxp ptn5110
-Date: Thu,  3 May 2018 08:24:43 +0800
-Message-Id: <1525307094-27402-4-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
-References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 8 May 2018 10:42:07 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V2 resend] PM / OPP: dt-bindings: Make "opp-hz" optional
+ for power domains
+Message-ID: <20180508154207.GA27069@rob-hp-laptop>
+References: <cover.1523273291.git.viresh.kumar@linaro.org>
+ <525112ef4e6148d8fc46d92c0554bd516e24952f.1525750390.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: jun.li@nxp.com, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <525112ef4e6148d8fc46d92c0554bd516e24952f.1525750390.git.viresh.kumar@linaro.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add nxp ptn5110 typec controller compatible string: usb-tcpci,ptn5110,
-which is a standard tcpci chip with power delivery support.
+On Tue, May 08, 2018 at 09:04:42AM +0530, Viresh Kumar wrote:
+> The "opp-hz" property is not relevant across all the devices that use
+> the OPP tables now. For example, for a power domain a frequency value
+> wouldn't mean anything. Though they must have another property, which
+> may be implementation defined, which uniquely identifies the OPP nodes.
+> 
+> Make "opp-hz" optional for such devices.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+> Resending to get Ack from Rob.
+> 
+>  Documentation/devicetree/bindings/opp/opp.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- drivers/staging/typec/tcpci.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index 076d97e..741a80a 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -576,6 +576,7 @@ MODULE_DEVICE_TABLE(i2c, tcpci_id);
- #ifdef CONFIG_OF
- static const struct of_device_id tcpci_of_match[] = {
- 	{ .compatible = "usb,tcpci", },
-+	{ .compatible = "nxp,ptn5110", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, tcpci_of_match);
--- 
-2.7.4
-
+Reviewed-by: Rob Herring <robh@kernel.org>
