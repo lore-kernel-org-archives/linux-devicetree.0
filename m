@@ -1,98 +1,95 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v2 1/2] dt: bindings: lm3601x: Introduce the lm3601x
- driver
-Date: Tue, 8 May 2018 10:32:59 -0500
-Message-ID: <554b283f-7c27-e2de-3052-e5119dba9396@ti.com>
-References: <20180508141704.24271-1-dmurphy@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: Documentation for qcom, llcc
+Date: Tue, 8 May 2018 10:35:34 -0500
+Message-ID: <20180508153534.GA15538@rob-hp-laptop>
+References: <1524524972-12014-1-git-send-email-rishabhb@codeaurora.org>
+ <1524524972-12014-2-git-send-email-rishabhb@codeaurora.org>
+ <20180427142144.tvy5xamuwz6jnxk5@rob-hp-laptop>
+ <b458e2bf5b23a4af996e80d81ceabaa4@codeaurora.org>
+ <CAL_JsqJEQU-BysQ7LmQRJ5ySPpUXYCMPAQ1JqeboGoQL-SyAqg@mail.gmail.com>
+ <4b47ff9a5aa1b51a2810aff6203878f9@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180508141704.24271-1-dmurphy@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <4b47ff9a5aa1b51a2810aff6203878f9@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, mark.rutland@arm.com, jacek.anaszewski@gmail.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: rishabhb@codeaurora.org
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm@lists.infradead.org, linux-kernel@vger.kernel.org, Trilok Soni <tsoni@codeaurora.org>, Kyle Yan <kyan@codeaurora.org>, ckadabi@codeaurora.org, Evan Green <evgreen@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/08/2018 09:17 AM, Dan Murphy wrote:
-> Introduce the device tree bindings for the lm3601x
-> family of LED torch, flash and IR drivers.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> 
-> v2 - No changes - https://patchwork.kernel.org/patch/10384587/
-> 
->  .../devicetree/bindings/leds/leds-lm3601x.txt | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3601x.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
-> new file mode 100644
-> index 000000000000..38cdabf6ca7e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
-> @@ -0,0 +1,51 @@
-> +* Texas Instruments - lm3601x Single-LED Flash Driver
-> +
-> +The LM3601X are ultra-small LED flash drivers that
-> +provides a high level of adjustability.
-> +
-> +Required properties:
-> +	- compatible : Can be one of the following
-> +		"ti,lm3601x"
+On Mon, Apr 30, 2018 at 05:37:49PM -0700, rishabhb@codeaurora.org wrote:
+> On 2018-04-30 07:33, Rob Herring wrote:
+> > On Fri, Apr 27, 2018 at 5:57 PM,  <rishabhb@codeaurora.org> wrote:
+> > > On 2018-04-27 07:21, Rob Herring wrote:
+> > > > 
+> > > > On Mon, Apr 23, 2018 at 04:09:31PM -0700, Rishabh Bhatnagar wrote:
+> > > > > 
+> > > > > Documentation for last level cache controller device tree bindings,
+> > > > > client bindings usage examples.
+> > > > > 
+> > > > > Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
+> > > > > Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> > > > > ---
+> > > > >  .../devicetree/bindings/arm/msm/qcom,llcc.txt      | 60
+> > > > > ++++++++++++++++++++++
+> > > > >  1 file changed, 60 insertions(+)
+> > > > >  create mode 100644
+> > > > > Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+> > > > 
+> > > > 
+> > > > My comments on v4 still apply.
+> > > > 
+> > > > Rob
+> > > 
+> > > 
+> > > Hi Rob,
+> > > Reposting our replies to your comments on v4:
+> > > 
+> > > This is partially true, a bunch of SoCs would support this design but
+> > > clients IDs are not expected to change. So Ideally client drivers
+> > > could
+> > > hard code these IDs.
+> > > 
+> > > However I have other concerns of moving the client Ids in the driver.
+> > > The way the APIs implemented today are as follows:
+> > > #1. Client calls into system cache driver to get cache slice handle
+> > > with the usecase Id as input.
+> > > #2. System cache driver gets the phandle of system cache instance from
+> > > the client device to obtain the private data.
+> > > #3. Based on the usecase Id perform look up in the private data to get
+> > > cache slice handle.
+> > > #4. Return the cache slice handle to client
+> > > 
+> > > If we don't have the connection between client & system cache then the
+> > >  private data needs to declared as static global in the system cache
+> > > driver,
+> > > that limits us to have just once instance of system cache block.
+> > 
+> > How many instances do you have?
+> > 
+> > It is easier to put the data into the kernel and move it to DT later
+> > than vice-versa. I don't think it is a good idea to do a custom
+> > binding here and one that only addresses caches and nothing else in
+> > the interconnect. So either we define an extensible and future-proof
+> > binding or put the data into the kernel for now.
+> > 
+> > Rob
+> Hi rob,
+> Currently we have only instance but how do you propose we handle multiple
+> instances in future?
 
+Worry about that when you have more that one. If it's only a  
+theoretical possibility then it can wait.
 
-No wildcard compatibles, drop this.
+> Currently we do a lookup in the private data of the driver to get the slice
+> handle but, if we were to remove the client connection we will have to make
+> lookup table as global and we can't have more than one instance.
+> Also, can you suggest any extensible interconnect binding that we can refer
+> to?
 
+There's been some work to add interconnect support for QCom chips. ATM, 
+there is no binding for it and it is just a kernel driver and subsystem. 
+I'm sure you can Google that to find as easily as me.
 
-> +		"ti,lm36010"
-> +		"ti,lm36011"
-> +	- reg : I2C slave address
-> +	- #address-cells : 1
-> +	- #size-cells : 0
-> +
-> +Required child properties:
-> +	- reg : 0 - Indicates to support and register a torch interface
-> +		1 - Indicates to support and register a strobe interface
-> +		2 - Indicates to support and register an ir interface
-> +
-> +Optional child properties:
-> +	- label : see Documentation/devicetree/bindings/leds/common.txt
-> +
-
-
-Relative path might work better here.
-
-
-> +Example:
-> +led-controller@64 {
-> +	compatible = "ti,lm3601x";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	reg = <0x64>;
-> +
-> +	led@0 {
-> +		reg = <0>;
-> +		label = "white:torch";
-> +		led-max-microamp=<10000>;
-> +	};
-> +
-> +	led@1 {
-> +		reg = <1>;
-> +		label = "white:strobe";
-> +		flash-max-microamp=<10000>;
-> +		flash-max-timeout-us=<800>;
-> +	};
-> +
-> +	led@2 {
-> +		reg = <2>;
-> +		label = "invisible:ir";
-> +	};
-> +}
-> +
-> +For more product information please see the links below:
-> +http://www.ti.com/product/LM36010
-> +http://www.ti.com/product/LM36011
-> 
+Rob
