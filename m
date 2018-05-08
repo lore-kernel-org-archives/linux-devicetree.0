@@ -1,119 +1,134 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v1 6/7] Bluetooth: hci_mediatek: Add protocol support
- for MediaTek serial devices
-Date: Tue, 8 May 2018 14:48:04 +0800
-Message-ID: <1525762084.14468.20.camel@mtkswgap22>
-References: <cover.1522736996.git.sean.wang@mediatek.com>
-         <f0e0a0b7f1dc3845dc6eafb4ccd60284d1675f8d.1522736996.git.sean.wang@mediatek.com>
-         <A7391E5D-2945-415B-8AB1-8DFBF2E65878@holtmann.org>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
+Date: Tue, 8 May 2018 08:58:52 +0200
+Message-ID: <20180508065852.GW2285@localhost>
+References: <CAL_JsqK=xQBx2YCd0kDP0zLn_LAZb6Mi5UfSTQf2soooVz2unQ@mail.gmail.com>
+ <20180502081637.GE2285@localhost>
+ <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com>
+ <20180503205037.7be552c1@aktux>
+ <44A0BC7C-67C7-4116-849F-90FF7CF2B1F0@goldelico.com>
+ <20180504114213.3xlzqxe74n55tk5s@earth.universe>
+ <20180507100135.GS2285@localhost>
+ <20180507154515.GP98604@atomide.com>
+ <20180507163439.GV2285@localhost>
+ <20180507175032.GR98604@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <A7391E5D-2945-415B-8AB1-8DFBF2E65878@holtmann.org>
+Content-Disposition: inline
+In-Reply-To: <20180507175032.GR98604@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, Johan Hedberg <johan.hedberg@gmail.com>, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Johan Hovold <johan@kernel.org>, Sebastian Reichel <sre@kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andreas Kemnade <andreas@kemnade.info>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Marcel
+On Mon, May 07, 2018 at 10:50:32AM -0700, Tony Lindgren wrote:
+> * Johan Hovold <johan@kernel.org> [180507 16:36]:
+> > On Mon, May 07, 2018 at 08:45:15AM -0700, Tony Lindgren wrote:
+> > > Hi,
+> > > 
+> > > * Johan Hovold <johan@kernel.org> [180507 03:03]:
+> > > > On Fri, May 04, 2018 at 01:42:13PM +0200, Sebastian Reichel wrote:
 
-On Tue, 2018-04-03 at 12:27 +0200, Marcel Holtmann wrote:
-> Hi Sean,
+> > > > Note that serdev not enabling runtime pm for controllers is roughly
+> > > > equivalent to setting the .ignore_children flag, which is what we do for
+> > > > i2c and spi controller, and possibly what we want here too.
+> > > 
+> > > We currently don't idle serdev at all even if not in use. What
+> > > I noticed is if I have these in my .config:
+> > > 
+> > > CONFIG_SERIAL_DEV_BUS=y
+> > > CONFIG_SERIAL_DEV_CTRL_TTYPORT=y
+> > > 
+> > > And no hci_serdev.ko driver loaded, then the 8250 port still stays
+> > > active and there are no sysfs entries to idle it.
+> > 
+> > Sounds like the 8250_omap driver is doing something funky. Why would
+> > there not be any sysfs attributes to control runtime pm?
 > 
+> I don't know, they are there for the ports that don't have any
+> serdev device. But if there is a serdev child node, the sysfs
+> disappear for the 8250 port like it's /dev/ttyS* entry. That is
+> even with no hci_serdev.ko loaded :)
 
-[ ... ]
+It sounds to me like you have a udev rule that's matching on TTY devices
+and setting an autosuspend timeout that allows the controller to runtime
+suspend. Is that so?
 
-> > +
-> > +static int mtk_wmt_cmd_sync(struct hci_uart *hu, u8 opcode, u8 flag, u16 plen,
-> > +			    const void *param)
-> > +{
-> > +	struct mtk_bt_dev *btdev = hu->priv;
-> > +	struct hci_command_hdr *hhdr;
-> > +	struct hci_acl_hdr *ahdr;
-> > +	struct mtk_wmt_hdr *whdr;
-> > +	struct sk_buff *skb;
-> > +	int ret = 0;
-> > +
-> > +	init_completion(&btdev->wmt_cmd);
-> > +
-> > +	skb = bt_skb_alloc(plen + MTK_WMT_CMD_SIZE, GFP_KERNEL);
-> > +	if (!skb)
-> > +		return -ENOMEM;
-> > +
-> > +	/*
-> > +	 * WMT data is carried in either ACL or HCI format with op code as
-> > +	 * 0xfc6f and followed by a WMT header and its actual payload.
-> > +	 */
+With serdev such a rule would no longer be sufficient as it would no
+longer configure all controllers. You can always set the autosuspend
+directly through the platform device node, for example:
+
+	/sys/bus/platform/devices/481aa000.serial
+
+But the point is, we really don't want the runtime PM behaviour to be
+dependent on the presence of such rules. The serial controllers should
+always be idle when not in use (unless overridden by user space).
+
+> > > Are you seeing this with your series?
+> > 
+> > I'm using omap-serial (on BBB) and like 8250_omap, the driver disables
+> > runtime pm at probe by setting a negative autosuspend timeout.
 > 
-> Please use net subsystem comment style.
+> Hmm I though we now have both 8250_omap and serial-omap behave the
+> same way for PM.
+
+It looks like they've been implemented the same way (e.g. the negative
+autosuspend timeout).
+
+> > Changing this through sysfs causes the serial controller to runtime
+> > suspend, but something is not right in my setup as it doesn't wake up on
+> > incoming data.
 > 
-> > +	switch (opcode) {
-> > +	case MTK_WMT_PATCH_DWNLD:
-> > +		ahdr = skb_put(skb, HCI_ACL_HDR_SIZE);
-> > +		ahdr->handle = cpu_to_le16(0xfc6f);
-> > +		ahdr->dlen   = cpu_to_le16(plen + MTK_WMT_HDR_SIZE);
-> > +		break;
-> > +	default:
-> > +		hhdr = skb_put(skb, HCI_COMMAND_HDR_SIZE);
-> > +		hhdr->opcode = cpu_to_le16(0xfc6f);
-> > +		hhdr->plen = plen + MTK_WMT_HDR_SIZE;
-> > +		break;
-> > +	}
-> > +
-> > +	hci_skb_pkt_type(skb) = opcode == MTK_WMT_PATCH_DWNLD ?
-> > +				HCI_ACLDATA_PKT : HCI_COMMAND_PKT;
+> Do you have also a /dev/ttyO* entry created for the serdev port?
+
+No, serdev claims the port and no tty device is created.
+
+> > I'd say the omap drivers are broken; the controller should definitely
+> > idle when the port is closed (whether using serdev or not) without
+> > having to fiddle with sysfs.
 > 
-> Why not move that into the switch statement above.
+> This is happening for the non-serdev ports for sure. FYI, there is
+> one patch needed for omap4 to idle unused ports that I posted
+> few days ago:
 > 
-> > +
-> > +	/* Start to build a WMT header and its actual payload. */
-> > +	whdr = skb_put(skb, MTK_WMT_HDR_SIZE);
-> > +	whdr->dir = 1;
-> > +	whdr->op = opcode;
-> > +	whdr->dlen = cpu_to_le16(plen + 1);
-> > +	whdr->flag = flag;
-> > +	skb_put_data(skb, param, plen);
-> > +
-> > +	mtk_enqueue(hu, skb);
-> > +	hci_uart_tx_wakeup(hu);
-> > +
-> > +	/*
-> > +	 * Waiting a WMT event response, while we must take care in case of
-> > +	 * failures for the wait.
-> > +	 */
-> > +	ret = wait_for_completion_interruptible_timeout(&btdev->wmt_cmd, HZ);
-> > +
-> > +	return ret > 0 ? 0 : ret < 0 ? ret : -ETIMEDOUT;
-> > +}
+> [PATCHv3] serial: 8250: omap: Fix idling of clocks for unused uarts
 > 
-> All in all I am not convinced that this is super clean. I get that we need something special for having this in the ACL data packets, but for the standard HCI command I prefer that __hci_cmd_sync is used. I addition, it seems that patch download is the only special case and that happens before at the setup stage. So we could make things special for that. I need to understand this a bit better. Can I get a btmon -w trace.log file from the whole init procedure.
+> But the serdev port is never idled, even if unused.
+
+With the negative autosuspend set in both omap drivers probe functions,
+this is the expected behaviour. Which I think we must fix.
+
+> Can you check your serdev port clkctrl reg with rwmem or similar
+> tool when it's idle?
 > 
+> You can do it with:
+> 
+> rwmem -s32 0x44e004b4           # uart 1 on l4_wkup
+> rwmem -s32 0x44e0006c+0x10      # uart 2 - 5 on l4_per
+> rwmem -s32 0x44e00038           # uart 6 on l4_per
+> 
+> And here's what I have on my bbb with 8250_omap:
+> 
+> 0x44e004b4 = 0x00000002
+> 0x44e0006c = 0x00030000
+> 0x44e00070 = 0x00030000
+> 0x44e00074 = 0x00030000
+> 0x44e00078 = 0x00030000
+> 0x44e00038 = 0x00030000
+> 
+> So all disabled except for the console UART.
 
-While i was trying to rewrite the driver based on btuart.c. you posted
-on RFC, I used __hci_cmd_sync_ev to replace such kinds of SoC specific
-hci command sending which I've done previously with mtk_wmt_cmd_sync.
+On BBB with omap-serial I have:
 
-However, eventually, I got a cmd_timer timeout whose message printed
-on console as "Bluetooth: hci0: command 0xfc6f tx timeout".
+0x44e004b4 = 0x2	(uart 1, console, open)
+0x44e0006c = 0x2	(uart 2, serdev, closed)
+0x44e00070 = 0x30000	(uart 3, disabled in DT)
+0x44e00074 = 0x30000	(uart 4, disabled in DT)
+0x44e00078 = 0x2	(uart 5, serdev, closed)
+0x44e00038 = 0x2	(uart 6, ttyO5, closed)
 
-The mtk soc specific cmd/event I posted below, I dumped directly in
-driver, always uses cmd as opcode 0xfc6f, and its event id as 0xe4.
+So no enabled and closed port is idle, whether using serdev or not.
 
-It appears to the event id is not standard and thus it cannot cancel the
-cmd timer when the special hci event is being handled. This way can we
-can still use __hci_cmd_sync api ?
-                         
-[    4.896200] hci tx: 00000000: 01 6f fc 05 01 07 01 00 04    
-[    4.904671] hci rx: 00000000: e4 05 02 07 01 00
-00                             
-[    4.912859] Bluetooth: hci0 event 0xe4
-
-
-buildroot login: [    6.914509] Bluetooth: hci0: command 0xfc6f tx
-timeout
-[    6.919831] hci tx: 00000000: 01 6f fc 06 01 06 02 00 00
-01                    .o........
-[    7.006631] hci rx: 00000000: e4 05 02 06 01 00
-00                             .......
-[    7.014821] Bluetooth: hci0 event 0xe4
+Thanks,
+Johan
