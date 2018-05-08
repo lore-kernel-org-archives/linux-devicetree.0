@@ -1,23 +1,44 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 2/2] ARM: dts: r8a7740: Add CEU0
-Date: Tue, 8 May 2018 15:33:13 +0200
-Message-ID: <20180508133312.vjipajdlosaa3atp@verge.net.au>
-References: <1524767083-19862-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524767083-19862-3-git-send-email-jacopo+renesas@jmondi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 2/2] kbuild: disable new dtc graph and unit-address warnings
+Date: Tue,  8 May 2018 08:51:50 -0500
+Message-ID: <20180508135150.27762-2-robh@kernel.org>
+References: <20180508135150.27762-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1524767083-19862-3-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <20180508135150.27762-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: geert@linux-m68k.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>, linux-kbuild@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 26, 2018 at 08:24:43PM +0200, Jacopo Mondi wrote:
-> Describe CEU0 peripheral for Renesas R-Mobile A1 R8A7740 Soc.
-> 
-> Reported-by: Geert Uytterhoeven <geert@glider.be>
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+dtc gained some new warnings for OF graphs and unique unit addresses,
+but they are currently much too noisy. So turn off
+'graph_child_address', 'graph_port', and 'unique_unit_address' warnings
+by default. They can be enabled by building dtbs with W=1.
 
-Thanks, applied.
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: linux-kbuild@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+I plan to take this via DT tree as it is dependent on a dtc update in 
+patch 1.
+
+ scripts/Makefile.lib | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 5af34a2b0cd9..1bb594fcfe12 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -251,6 +251,9 @@ DTC_FLAGS += -Wno-unit_address_vs_reg \
+ 	-Wno-unit_address_format \
+ 	-Wno-avoid_unnecessary_addr_size \
+ 	-Wno-alias_paths \
++	-Wno-graph_child_address \
++	-Wno-graph_port \
++	-Wno-unique_unit_address \
+ 	-Wno-pci_device_reg
+ endif
+ 
+-- 
+2.17.0
