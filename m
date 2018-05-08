@@ -1,95 +1,65 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] drm/panel: Add RGB666 variant of
- Innolux AT070TN90
-Date: Wed, 9 May 2018 09:12:26 +0200
-Message-ID: <20180509071226.ivh4s3wtczg2u7zw@flea>
-References: <20180507220413.21990-1-contact@paulk.fr>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: Add Raydium RM67191 panel bindings
+Date: Tue, 8 May 2018 10:20:33 +0000
+Message-ID: <1525774832.27738.21.camel@nxp.com>
+References: <1525357562-20810-1-git-send-email-robert.chiras@nxp.com>
+ <1525357562-20810-3-git-send-email-robert.chiras@nxp.com>
+ <20180507165021.GA30361@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="erirrsr4rgg7d5ew"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXF6ZLLQKGQEJ7AIYTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180507220413.21990-1-contact-W9ppeneeCTY@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180507165021.GA30361@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <3A0C15839003DD4590861A61B6A4497D@eurprd04.prod.outlook.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: "robh@kernel.org" <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "airlied@linux.ie" <airlied@linux.ie>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Mirela Rabulea <mirela.rabulea@nxp.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
---erirrsr4rgg7d5ew
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Tue, May 08, 2018 at 12:04:11AM +0200, Paul Kocialkowski wrote:
-> This adds timings for the RGB666 variant of the Innolux AT070TN90 panel,
-> as found on the Ainol AW1 tablet.
-> 
-> The panel also supports RGB888 output. When RGB666 mode is used instead,
-> the two extra lanes per component are grounded.
-> 
-> In the future, it might become necessary to introduce a dedicated
-> device-tree property to specify the bus format to use instead of the
-> default one for the panel. This will allow supporting different bus
-> formats for the same panel modes.
-> 
-> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index cbf1ab404ee7..32e30d5a8f08 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -1063,6 +1063,29 @@ static const struct panel_desc innolux_at043tn24 = {
->  	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
->  };
->  
-> +static const struct drm_display_mode innolux_at070tn90_mode = {
-> +	.clock = 40000,
-> +	.hdisplay = 800,
-> +	.hsync_start = 800 + 112,
-> +	.hsync_end = 800 + 112 + 1,
-> +	.htotal = 800 + 112 + 1 + 87,
-> +	.vdisplay = 480,
-> +	.vsync_start = 480 + 141,
-> +	.vsync_end = 480 + 141 + 1,
-> +	.vtotal = 480 + 141 + 1 + 38,
-> +	.vrefresh = 60,
-> +};
-> +
-> +static const struct panel_desc innolux_at070tn90 = {
-> +	.modes = &innolux_at070tn90_mode,
-> +	.num_modes = 1,
-> +	.size = {
-> +		.width = 154,
-> +		.height = 86,
-> +	},
-> +	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-> +};
-> +
-
-I'm not really convinced this is the right approach. You said it
-yourself, the panel is using a 24-bits interface, and you just happen
-to have a tablet that routed it using a 18-bits interface instead.
-
-That doesn't belong in the driver, especially associated to the
-compatible, but where the routing is described: in the device
-tree. And given that the panel interface is a 24 bits panel, if we
-were to have a default, we should have this one, and not the one
-fitting your use case.
-
-Maxime
-
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---erirrsr4rgg7d5ew--
+T24gTHUsIDIwMTgtMDUtMDcgYXQgMTE6NTAgLTA1MDAsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBP
+biBUaHUsIE1heSAwMywgMjAxOCBhdCAwNToyNjowMlBNICswMzAwLCBSb2JlcnQgQ2hpcmFzIHdy
+b3RlOg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFJvYmVydCBDaGlyYXMgPHJvYmVydC5jaGly
+YXNAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiDCoC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Jh
+eWRpdW0scm02NzE5MS50eHTCoMKgwqDCoMKgfCAzOA0KPiA+ICsrKysrKysrKysrKysrKysrKysr
+KysNCj4gPiDCoDEgZmlsZSBjaGFuZ2VkLCAzOCBpbnNlcnRpb25zKCspDQo+ID4gwqBjcmVhdGUg
+bW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9wYW5lbC9yYXlkaXVtLHJtNjcxOTEudHh0DQo+ID4gDQo+ID4gZGlmZiAtLWdpdA0KPiA+IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmF5ZGl1bSxy
+bTY3MTkxLnQNCj4gPiB4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvcGFuZWwvcmF5ZGl1bSxybTY3MTkxLnQNCj4gPiB4dA0KPiA+IG5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uMGZlNmQ0Yg0KPiA+IC0tLSAvZGV2L251bGwN
+Cj4gPiArKysNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3BhbmVsL3JheWRpdW0scm02NzE5MS50DQo+ID4geHQNCj4gPiBAQCAtMCwwICsxLDM4IEBADQo+
+ID4gK1JheWRpdW0gUk02NzE3MSBPTEVEIExDRCBwYW5lbCB3aXRoIE1JUEktRFNJIHByb3RvY29s
+DQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICstIGNvbXBhdGlibGU6wqAJ
+CSJyYXlkaXVtLHJtNjcxOTEiDQo+ID4gKy0gcmVnOgkJCXZpcnR1YWwgY2hhbm5lbCBmb3IgTUlQ
+SS1EU0kNCj4gPiBwcm90b2NvbA0KPiA+ICsJCQltdXN0IGJlIDwwPg0KPiA+ICstIGRzaS1sYW5l
+czoJCW51bWJlciBvZiBEU0kgbGFuZXMgdG8gYmUgdXNlZA0KPiA+ICsJCQltdXN0IGJlIDwzPiBv
+ciA8ND4NCj4gPiArLSBwb3J0OsKgCQlpbnB1dCBwb3J0IG5vZGUgd2l0aCBlbmRwb2ludCBkZWZp
+bml0aW9uDQo+ID4gYXMNCj4gPiArCQkJZGVmaW5lZCBpbg0KPiA+IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQ7DQo+ID4gKwkJCXRoZSBpbnB1dCBwb3J0IHNob3Vs
+ZCBiZSBjb25uZWN0ZWQgdG8gYQ0KPiA+IE1JUEktRFNJIGRldmljZQ0KPiA+ICsJCQlkcml2ZXIN
+Cj4gPiArDQo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gKy0gcmVzZXQtZ3BpbzoJCWEg
+R1BJTyBzcGVjIGZvciB0aGUgUlNUX0IgR1BJTyBwaW4NCj4gPiArLSBwaW5jdHJsLTAJCXBoYW5k
+bGUgdG8gdGhlIHBpbiBzZXR0aW5ncyBmb3IgdGhlDQo+ID4gcmVzZXQgcGluDQo+ID4gKy0gcGFu
+ZWwtd2lkdGgtbW06CXBoeXNpY2FsIHBhbmVsIHdpZHRoIFttbV0NCj4gPiArLSBwYW5lbC1oZWln
+aHQtbW06CXBoeXNpY2FsIHBhbmVsIGhlaWdodCBbbW1dDQo+IHdpZHRoLW1tIGFuZCBoZWlnaHQt
+bW0gYXJlIHRoZSBjb21tb24gcHJvcGVydHkgbmFtZXMuDQpPSywgSSB3aWxsIGNoYW5nZSB0aGVt
+IGFjY29yZGluZ2x5Lg0KPiANCj4gPiANCj4gPiArDQo+ID4gK1sxXTogRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZGlzcGxheS10aW1pbmcudHh0DQo+IEZvb3Rub3Rl
+IHRvIHdoYXQ/DQpJbiB0aGUgcHJldmlvdXMgdmVyc2lvbiBpdCBoYWQgYW4gb3B0aW9uYWwgZGlz
+cGxheS10aW1pbmcgcHJvcGVydHkuIEkNCnJlbW92ZWQgaXQgaW4gdGhpcyB2ZXJzaW9uLCBidXQg
+SSBmb3Jnb3QgdG8gcmVtb3ZlIHRoZSBmb290bm90ZS4gSSB3aWxsDQpyZW1vdmUgdGhpcyBpbiB0
+aGUgbmV4dCB2ZXJzaW9uIG9mIHRoZSBwYXRjaC1zZXQuDQo+IApfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
