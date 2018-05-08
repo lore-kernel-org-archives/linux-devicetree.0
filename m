@@ -1,150 +1,142 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] Kirin-PCIe: Add kirin pcie msi feature.
-Date: Tue, 8 May 2018 07:56:58 -0500
-Message-ID: <20180508125658.GK161390@bhelgaas-glaptop.roam.corp.google.com>
-References: <1525763028-107417-1-git-send-email-chenyao11@huawei.com>
+From: Marcel Ziswiler <marcel@ziswiler.com>
+Subject: Re: [PATCH v2] ARM: dts: tegra: Add support for 256 MB Colibri-T20
+ (plus such board on Iris)
+Date: Tue, 08 May 2018 15:03:02 +0200
+Message-ID: <1525784582.6999.27.camel@ziswiler.com>
+References: <1525360112-9893-1-git-send-email-krzk@kernel.org>
+         <c47c07b2c112219093b668c0b4d46ac8@agner.ch>
+         <CAJKOXPeb+DmKVQ1uXkBOjaGMpxtPVFp54SBWm6h=+o30z9K3aQ@mail.gmail.com>
+         <1525428885.6296.18.camel@toradex.com>
+         <CAJKOXPetgqJgGHwdSzZeujM2KEDMWqffYMAJdBS3MXPd3Thb5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1525763028-107417-1-git-send-email-chenyao11@huawei.com>
+In-Reply-To: <CAJKOXPetgqJgGHwdSzZeujM2KEDMWqffYMAJdBS3MXPd3Thb5w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yao Chen <chenyao11@huawei.com>
-Cc: songxiaowei@hisilicon.com, wangbinghui@hisilicon.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dimitrysh@google.com, guodong.xu@linaro.org, Stanimir Varbanov <svarbanov@mm-sol.com>, Jianguo Sun <sunjianguo1@huawei.com>, Shawn Guo <shawn.guo@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: "stefan@agner.ch" <stefan@agner.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dev@lynxeye.de" <dev@lynxeye.de>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-[+cc Stanimir, Jianguo, Shawn for qcom, histb comments below]
-
-On Tue, May 08, 2018 at 03:03:48PM +0800, Yao Chen wrote:
-> This patch adds kirin pcie msi feature.
-
-Thanks for the patch!  Please update your subject and changelog like this:
-
-  PCI: kirin: Add MSI support
-
-  Add support for MSI.
-
-You can figure out what style to use for the subject by running:
-
-  git log --oneline drivers/pci/dwc/pcie-kirin.c
-
-Then follow the existing style.
-
-> Signed-off-by: Yao Chen <chenyao11@huawei.com>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi |  2 ++
->  drivers/pci/dwc/pcie-kirin.c              | 38 +++++++++++++++++++++++++++++++
->  2 files changed, 40 insertions(+)
+On Tue, 2018-05-08 at 14:35 +0200, Krzysztof Kozlowski wrote:
+> On Fri, May 4, 2018 at 12:14 PM, Marcel Ziswiler
+> <marcel.ziswiler@toradex.com> wrote:
+> > Hi Krzysztof
+> > 
+> > On Fri, 2018-05-04 at 12:03 +0200, Krzysztof Kozlowski wrote:
+> > > On Fri, May 4, 2018 at 11:19 AM, Stefan Agner <stefan@agner.ch>
+> > > wrote:
+> > > > On 03.05.2018 17:08, Krzysztof Kozlowski wrote:
+> > > > > Colibri-T20 can come in 256 MB RAM (with 512 MB NAND) or 512
+> > > > > MB
+> > > > > RAM
+> > > > > (with 1024 MB NAND) flavors.  Add support for the 256 MB
+> > > > > version
+> > > > > on Iris
+> > > > > evaluation board.
+> > > > 
+> > > > To we really need to specify memory size these days? I think
+> > > > all
+> > > > common
+> > > > boot loaders fill the memory node anyway.
+> > > > 
+> > > > arch/arm/boot/dts/imx6qdl-apalis.dtsi:
+> > > >         /* Will be filled by the bootloader */
+> > > >         memory@10000000 {
+> > > >                 reg = <0x10000000 0>;
+> > > >         };
+> > > > 
+> > > > 
+> > > > I think we should just rename tegra20-colibri-512.dtsi =>
+> > > > tegra20-colibri.dtsi and tegra20-iris-512.dts => tegra20-
+> > > > iris.dts
+> > > > to
+> > > > avoid confusion and add such an empty node.
+> > > 
+> > > Having memory node is requirement of DeviceTree specification (at
+> > > least one cpu and memory node). Of course if bootloader fills it,
+> > > then
+> > > we could assume that specification is satisfied... but what if
+> > > some
+> > > bootloader skips it? This creates quite specific dependency
+> > > between
+> > > kernel's DTS and bootloader.
+> > 
+> > Yes, no system boots without any boot loader e.g. initialising the
+> > memory and what not. So there are obviously quite specific
+> > dependencies.
 > 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> index ec3eb8e..4ef684f 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> @@ -872,6 +872,8 @@
->  				  0x0 0x02000000>;
->  			num-lanes = <1>;
->  			#interrupt-cells = <1>;
-> +			interrupts = <0 283 4>;
-> +			interrupts-names = "msi";
->  			interrupt-map-mask = <0xf800 0 0 7>;
->  			interrupt-map = <0x0 0 0 1
->  					 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
-> diff --git a/drivers/pci/dwc/pcie-kirin.c b/drivers/pci/dwc/pcie-kirin.c
-> index d2970a0..2319c9c 100644
-> --- a/drivers/pci/dwc/pcie-kirin.c
-> +++ b/drivers/pci/dwc/pcie-kirin.c
-> @@ -426,9 +426,28 @@ static int kirin_pcie_establish_link(struct pcie_port *pp)
->  	return 0;
->  }
->  
-> +static irqreturn_t kirin_pcie_msi_irq_handler(int irq, void *arg)
-> +{
-> +	struct pcie_port *pp = arg;
-> +
-> +	return dw_handle_msi_irq(pp);
-> +}
-> +
-> +static void kirin_pcie_msi_init(struct pcie_port *pp)
-> +{
-> +	dw_pcie_msi_init(pp);
-> +}
-> +
-> +static void kirin_pcie_enable_interrupts(struct pcie_port *pp)
-> +{
-> +	if (IS_ENABLED(CONFIG_PCI_MSI))
-> +		kirin_pcie_msi_init(pp);
-> +}
-> +
->  static int kirin_pcie_host_init(struct pcie_port *pp)
->  {
->  	kirin_pcie_establish_link(pp);
-> +	kirin_pcie_enable_interrupts(pp);
->  
->  	return 0;
->  }
-> @@ -448,6 +467,25 @@ static int kirin_pcie_host_init(struct pcie_port *pp)
->  static int __init kirin_add_pcie_port(struct dw_pcie *pci,
->  				      struct platform_device *pdev)
->  {
-> +	int ret;
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +		pci->pp.msi_irq = platform_get_irq(pdev, 0);
-> +		if (!pci->pp.msi_irq) {
-> +			dev_err(&pdev->dev, "failed to get msi irq\n");
+> Sorry for late reply, I missed your emails because unfortunately
+> Google marks messages coming for Toradex as spam ("This message has a
+> from address in toradex.com but has failed toradex.com's required
+> tests for authentication.").
 
-s/msi irq/MSI IRQ/
+Argh, I guess that happens if you have stubborn IT departments which
+still believe in M$. Sending via private email now.
 
-> +			return -ENODEV;
-> +		}
-> +		ret = devm_request_irq(&pdev->dev, pci->pp.msi_irq,
-> +				       kirin_pcie_msi_irq_handler,
-> +				       IRQF_SHARED | IRQF_NO_THREAD,
-> +				       "kirin_pcie_msi", &pci->pp);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "failed to request msi irq\n");
+> Therefore I did not include your comments
+> and sent v3.
 
-s/msi irq/MSI IRQ/
-Also, please include the IRQ number (pci->pp.msi_irq) in the message.
+Yeah, I noticed that. It's forgiven, don't worry (;-p).
 
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	pci->pp.root_bus_nr = -1;
-
-Setting root_bus_nr looks like an unrelated change that should be in a
-separate patch.
-
-But I'm not sure why you need to set root_bus_nr at all, since
-dw_pcie_host_init() always sets it.
-
-Some other callers of dw_pcie_host_init() do set it:
-
-  exynos_add_pcie_port()
-  imx6_add_pcie_port()
-  armada8k_add_pcie_port()
-  artpec6_add_pcie_port()
-  dw_plat_add_pcie_port()
-  histb_pcie_probe()
-  qcom_pcie_probe()
-  spear13xx_add_pcie_port()
-
-But I don't see *why* any of these need to set it.  If they don't need to
-set it, they shouldn't.
-
-And it would be nice if histb and qcom followed the structure and naming
-conventions of the other drivers, i.e., they should have
-histb_add_pcie_port() and qcom_add_pcie_port().
-
->  	pci->pp.ops = &kirin_pcie_host_ops;
->  
->  	return dw_pcie_host_init(&pci->pp);
-> -- 
-> 1.9.1
+> > > One safe solution would be to specify 256 MB memory node for both
+> > > boards and assume that bootloader will bump it to 512 MB for
+> > > specific
+> > > module.
+> > 
+> > Like I mentioned this actually used to be how it was done however
+> > lately it has been agreed that any boot loader anyway needs to do
+> > the
+> > device tree dance (e.g. even just loading and passing it).
 > 
+> Then the safest way is to provide /memory node with 256 MB. If some
+> bootloader omits it (e.g. because it is too old or by any mistake)
+> the
+> FDT will be still usable with reduced memory in case of 512 board.
+
+Makes sense.
+
+> > > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > > 
+> > > > > ---
+> > > > > 
+> > > > > Changes since v1:
+> > > > > 1. Fix memory size in tegra20-colibri-256.dtsi (was working
+> > > > > fine
+> > > > > because
+> > > > >    my bootloader uses mem= argument).
+> > > > 
+> > > > What boot loader are you using? You even can omit mem= if your
+> > > > boot
+> > > > loader fills the memory node properly.
+> > > 
+> > > I use the one provided by vendor - Toradex. By default it passes
+> > > both
+> > > mem= and few other mem-like arguments (for FB and video
+> > > processor) to
+> > > command line. I believe it does not adjust the DTB itself because
+> > > Toradex prepared this bootloader for... 3.1 kernel without DTB. 7
+> > > years old kernel. :)
+> > 
+> > Remember our regular BSP is still based on NVIDIA's downstream
+> > Linux
+> > for Tegra aka L4T R16.5 based on Linux kernel 3.1.10 which does not
+> > even use any device tree yet.
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Yes, I noticed. I am trying to bring it fully on new kernels but no
+> huge successes so far... I'm stuck on NAND trying Lucas Stach's old
+> patchset.
+
+Yeah, for a while I kept his patch set alive as well. I believe 4.4 was
+still working fine passing all MTD tests. However, lately there were so
+many changes it all fell apart. About a month ago I spend a couple
+nights trying to get it running again but something is still not quite
+right. Yet have to sync with Stefan in my team who is much more
+knowledgeable about latest NAND development.
+
+> Best regards,
+> Krzysztof
+
+Cheers
+
+Marcel
