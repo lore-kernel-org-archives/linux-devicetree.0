@@ -1,68 +1,124 @@
-From: Liviu Dudau <liviu.dudau@arm.com>
-Subject: Re: [PATCH] arm64: dts: juno: fix OF graph endpoint node names
-Date: Tue, 8 May 2018 16:15:01 +0100
-Message-ID: <20180508151501.GN1027@e110455-lin.cambridge.arm.com>
-References: <20180508150952.24562-1-robh@kernel.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
+Date: Tue, 8 May 2018 08:22:28 -0700
+Message-ID: <20180508152228.GV98604@atomide.com>
+References: <20180502081637.GE2285@localhost>
+ <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com>
+ <20180503205037.7be552c1@aktux>
+ <44A0BC7C-67C7-4116-849F-90FF7CF2B1F0@goldelico.com>
+ <20180504114213.3xlzqxe74n55tk5s@earth.universe>
+ <20180507100135.GS2285@localhost>
+ <20180507154515.GP98604@atomide.com>
+ <20180507163439.GV2285@localhost>
+ <20180507175032.GR98604@atomide.com>
+ <20180508065852.GW2285@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180508150952.24562-1-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-kernel@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
+In-Reply-To: <20180508065852.GW2285@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andreas Kemnade <andreas@kemnade.info>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXkgMDgsIDIwMTggYXQgMTA6MDk6NDlBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3Jv
-dGU6Cj4gT0YgZ3JhcGggZW5kcG9pbnQgbm9kZSBuYW1lcyBzaG91bGQgYmUgJ2VuZHBvaW50Jy4g
-Rml4IHRoZSBmb2xsb3dpbmcKPiB3YXJuaW5ncyBmb3VuZCBieSBkdGM6Cj4gCj4gV2FybmluZyAo
-Z3JhcGhfZW5kcG9pbnQpOiAvaGRsY2RAN2ZmNTAwMDAvcG9ydC9oZGxjZDEtZW5kcG9pbnQ6IGdy
-YXBoIGVuZHBvbnQgbm9kZSBuYW1lc2hvdWxkIGJlICdlbmRwb2ludCcKPiBXYXJuaW5nIChncmFw
-aF9lbmRwb2ludCk6IC9oZGxjZEA3ZmY2MDAwMC9wb3J0L2hkbGNkMC1lbmRwb2ludDogZ3JhcGgg
-ZW5kcG9udCBub2RlIG5hbWVzaG91bGQgYmUgJ2VuZHBvaW50Jwo+IFdhcm5pbmcgKGdyYXBoX2Vu
-ZHBvaW50KTogL2kyY0A3ZmZhMDAwMC9oZG1pLXRyYW5zbWl0dGVyQDcwL3BvcnQvdGRhOTk4eC0w
-LWVuZHBvaW50OiBncmFwaCBlbmRwb250IG5vZGUgbmFtZSBzaG91bGQgYmUgJ2VuZHBvaW50Jwo+
-IFdhcm5pbmcgKGdyYXBoX2VuZHBvaW50KTogL2kyY0A3ZmZhMDAwMC9oZG1pLXRyYW5zbWl0dGVy
-QDcxL3BvcnQvdGRhOTk4eC0xLWVuZHBvaW50OiBncmFwaCBlbmRwb250IG5vZGUgbmFtZSBzaG91
-bGQgYmUgJ2VuZHBvaW50Jwo+IAo+IENjOiBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNv
-bT4KCkFja2VkLWJ5OiBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4KClRoYW5rcyBm
-b3IgdGhpcyEKTGl2aXUKCj4gQ2M6IFN1ZGVlcCBIb2xsYSA8c3VkZWVwLmhvbGxhQGFybS5jb20+
-Cj4gQ2M6IExvcmVuem8gUGllcmFsaXNpIDxsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tPgo+IFNp
-Z25lZC1vZmYtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gLS0tCj4gIGFyY2gv
-YXJtNjQvYm9vdC9kdHMvYXJtL2p1bm8tYmFzZS5kdHNpIHwgOCArKysrLS0tLQo+ICAxIGZpbGUg
-Y2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQg
-YS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLWJhc2UuZHRzaSBiL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvYXJtL2p1bm8tYmFzZS5kdHNpCj4gaW5kZXggZWI3NDljNTBhNzM2Li5iMmZlZGFhYjNm
-Y2MgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVuby1iYXNlLmR0c2kK
-PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLWJhc2UuZHRzaQo+IEBAIC02Nzcs
-NyArNjc3LDcgQEAKPiAgCQljbG9jay1uYW1lcyA9ICJweGxjbGsiOwo+ICAKPiAgCQlwb3J0IHsK
-PiAtCQkJaGRsY2QxX291dHB1dDogaGRsY2QxLWVuZHBvaW50IHsKPiArCQkJaGRsY2QxX291dHB1
-dDogZW5kcG9pbnQgewo+ICAJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ0ZGE5OTh4XzFfaW5wdXQ+
-Owo+ICAJCQl9Owo+ICAJCX07Cj4gQEAgLTY5Miw3ICs2OTIsNyBAQAo+ICAJCWNsb2NrLW5hbWVz
-ID0gInB4bGNsayI7Cj4gIAo+ICAJCXBvcnQgewo+IC0JCQloZGxjZDBfb3V0cHV0OiBoZGxjZDAt
-ZW5kcG9pbnQgewo+ICsJCQloZGxjZDBfb3V0cHV0OiBlbmRwb2ludCB7Cj4gIAkJCQlyZW1vdGUt
-ZW5kcG9pbnQgPSA8JnRkYTk5OHhfMF9pbnB1dD47Cj4gIAkJCX07Cj4gIAkJfTsKPiBAQCAtNzIw
-LDcgKzcyMCw3IEBACj4gIAkJCWNvbXBhdGlibGUgPSAibnhwLHRkYTk5OHgiOwo+ICAJCQlyZWcg
-PSA8MHg3MD47Cj4gIAkJCXBvcnQgewo+IC0JCQkJdGRhOTk4eF8wX2lucHV0OiB0ZGE5OTh4LTAt
-ZW5kcG9pbnQgewo+ICsJCQkJdGRhOTk4eF8wX2lucHV0OiBlbmRwb2ludCB7Cj4gIAkJCQkJcmVt
-b3RlLWVuZHBvaW50ID0gPCZoZGxjZDBfb3V0cHV0PjsKPiAgCQkJCX07Cj4gIAkJCX07Cj4gQEAg
-LTczMCw3ICs3MzAsNyBAQAo+ICAJCQljb21wYXRpYmxlID0gIm54cCx0ZGE5OTh4IjsKPiAgCQkJ
-cmVnID0gPDB4NzE+Owo+ICAJCQlwb3J0IHsKPiAtCQkJCXRkYTk5OHhfMV9pbnB1dDogdGRhOTk4
-eC0xLWVuZHBvaW50IHsKPiArCQkJCXRkYTk5OHhfMV9pbnB1dDogZW5kcG9pbnQgewo+ICAJCQkJ
-CXJlbW90ZS1lbmRwb2ludCA9IDwmaGRsY2QxX291dHB1dD47Cj4gIAkJCQl9Owo+ICAJCQl9Owo+
-IC0tIAo+IDIuMTcuMAo+IAoKLS0gCj09PT09PT09PT09PT09PT09PT09CnwgSSB3b3VsZCBsaWtl
-IHRvIHwKfCBmaXggdGhlIHdvcmxkLCAgfAp8IGJ1dCB0aGV5J3JlIG5vdCB8CnwgZ2l2aW5nIG1l
-IHRoZSAgIHwKIFwgc291cmNlIGNvZGUhICAvCiAgLS0tLS0tLS0tLS0tLS0tCiAgICDCr1xfKOOD
-hClfL8KvCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+* Johan Hovold <johan@kernel.org> [180508 07:00]:
+> On Mon, May 07, 2018 at 10:50:32AM -0700, Tony Lindgren wrote:
+> > I don't know, they are there for the ports that don't have any
+> > serdev device. But if there is a serdev child node, the sysfs
+> > disappear for the 8250 port like it's /dev/ttyS* entry. That is
+> > even with no hci_serdev.ko loaded :)
+> 
+> It sounds to me like you have a udev rule that's matching on TTY devices
+> and setting an autosuspend timeout that allows the controller to runtime
+> suspend. Is that so?
+
+Oh you are right, I do have an old init script that idles the UARTs.
+
+And that script is looking for tty[SO]*. Updating it to use
+/sys/bus/platform/devices fixes the issue I was seeing:
+
+uarts=$(find /sys/bus/platform/devices/4*.serial/power/ -type d)
+for uart in $uarts; do
+	echo -n 1000 > $uart/autosuspend_delay_ms
+	echo -n enabled > $uart/wakeup
+	echo -n auto > $uart/control
+done
+
+The above also idles the console so beware though.
+
+> But the point is, we really don't want the runtime PM behaviour to be
+> dependent on the presence of such rules. The serial controllers should
+> always be idle when not in use (unless overridden by user space).
+
+I agree, and that seems broken right now.
+
+> > Do you have also a /dev/ttyO* entry created for the serdev port?
+> 
+> No, serdev claims the port and no tty device is created.
+
+And this is no longer the issue when using /sys/bus/platform/devices
+instead of tty[SO]* in my init script :)
+
+> > > I'd say the omap drivers are broken; the controller should definitely
+> > > idle when the port is closed (whether using serdev or not) without
+> > > having to fiddle with sysfs.
+> > 
+> > This is happening for the non-serdev ports for sure. FYI, there is
+> > one patch needed for omap4 to idle unused ports that I posted
+> > few days ago:
+> > 
+> > [PATCHv3] serial: 8250: omap: Fix idling of clocks for unused uarts
+> > 
+> > But the serdev port is never idled, even if unused.
+> 
+> With the negative autosuspend set in both omap drivers probe functions,
+> this is the expected behaviour. Which I think we must fix.
+
+Yes indeed. I've been using my script for years now and have
+completely missed the fact that the unused ports are not idled
+at all on start-up when unused.
+
+> > Can you check your serdev port clkctrl reg with rwmem or similar
+> > tool when it's idle?
+> > 
+> > You can do it with:
+> > 
+> > rwmem -s32 0x44e004b4           # uart 1 on l4_wkup
+> > rwmem -s32 0x44e0006c+0x10      # uart 2 - 5 on l4_per
+> > rwmem -s32 0x44e00038           # uart 6 on l4_per
+> > 
+> > And here's what I have on my bbb with 8250_omap:
+> > 
+> > 0x44e004b4 = 0x00000002
+> > 0x44e0006c = 0x00030000
+> > 0x44e00070 = 0x00030000
+> > 0x44e00074 = 0x00030000
+> > 0x44e00078 = 0x00030000
+> > 0x44e00038 = 0x00030000
+> > 
+> > So all disabled except for the console UART.
+> 
+> On BBB with omap-serial I have:
+> 
+> 0x44e004b4 = 0x2	(uart 1, console, open)
+> 0x44e0006c = 0x2	(uart 2, serdev, closed)
+> 0x44e00070 = 0x30000	(uart 3, disabled in DT)
+> 0x44e00074 = 0x30000	(uart 4, disabled in DT)
+> 0x44e00078 = 0x2	(uart 5, serdev, closed)
+> 0x44e00038 = 0x2	(uart 6, ttyO5, closed)
+> 
+> So no enabled and closed port is idle, whether using serdev or not.
+
+OK so we really have currently just one PM related bug where
+unused UARTs should be idled on init. And then the serdev PM
+can be handled the way you're doing it and tested with the
+above rwmem.
+
+Hmm maybe all we need for serdev runtime PM is to set the parent
+UART autoidle timeout to immediate (0 instead of -1) from the serdev
+child driver to allow the serdev driver manage the PM.
+
+Regards,
+
+Tony
