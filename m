@@ -1,82 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/5] arm64: allwinner: h6: add USB3 device nodes
-Date: Tue, 8 May 2018 11:31:27 +0300
-Message-ID: <9a25a561-b643-a77b-3287-8082780fce60@cogentembedded.com>
-References: <20180507151817.55663-1-icenowy@aosc.io>
- <20180507151817.55663-5-icenowy@aosc.io>
-Reply-To: sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH V2 1/5] backlight: qcom-wled: Rename pm8941-wled.c to
+ qcom-wled.c
+Date: Tue, 8 May 2018 09:36:58 +0100
+Message-ID: <20180508083658.mc7x7izthxjrv5ey@holly.lan>
+References: <1525342352-25072-1-git-send-email-kgunda@codeaurora.org>
+ <1525342352-25072-2-git-send-email-kgunda@codeaurora.org>
+ <000201d3e3c0$4cdf87a0$e69e96e0$@gmail.com>
+ <a9faa8c2866f44b46c3733c8165f6bae@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Return-path: <linux-sunxi+bncBC6MFNV32EFRBY6AYXLQKGQEEVTIPQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180507151817.55663-5-icenowy-h8G6r0blFSE@public.gmane.org>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <a9faa8c2866f44b46c3733c8165f6bae@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: kgunda@codeaurora.org
+Cc: 'Mark Rutland' <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org, 'Rob Herring' <robh+dt@kernel.org>, 'Jacek Anaszewski' <jacek.anaszewski@gmail.com>, 'Pavel Machek' <pavel@ucw.cz>, linux-arm-msm@vger.kernel.org, 'Lee Jones' <lee.jones@linaro.org>, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 5/7/2018 6:18 PM, Icenowy Zheng wrote:
-
-> Allwinner H6 SoC features USB3 functionality, with a DWC3 controller and
-> a custom PHY.
-> 
-> Add device tree nodes for them.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->   arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 38 ++++++++++++++++++++
->   1 file changed, 38 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> index c72da8cd9ef5..9564c938717c 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -174,6 +174,44 @@
->   			status = "disabled";
->   		};
->   
-> +		usb3: usb@5200000 {
-
-    I don't think <unit-address> is allowed for a node having no "reg" prop...
-
-> +			compatible = "allwinner,sun50i-h6-dwc3";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			clocks = <&ccu CLK_BUS_XHCI>;
-> +			clock-names = "bus";
-> +			resets = <&ccu RST_BUS_XHCI>;
-> +			reset-names = "bus";
-> +			status = "disabled";
-> +
-> +			dwc3: dwc3 {
-
-    Contrariwise, need <unit-address> here...
-
-> +				compatible = "snps,dwc3";
-> +				reg = <0x5200000 0x10000>;
-> +				interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> +				/*
-> +				 * According to Wink from Allwinner, the
-> +				 * USB3 port on H6 is not capable of OTG;
-> +				 * the datasheet doesn't mention OTG at all
-> +				 * either, so the dr_mode is default to
-> +				 * "host" here.
-> +				 */
-> +				dr_mode = "host";
-> +				phys = <&usb3phy>;
-> +				phy-names = "usb3-phy";
-> +				status = "disabled";
-> +			};
-> +		};
-[...]
-
-MBR, Sergei
+T24gTW9uLCBNYXkgMDcsIDIwMTggYXQgMTE6MjY6NTlBTSArMDUzMCwga2d1bmRhQGNvZGVhdXJv
+cmEub3JnIHdyb3RlOgo+IEhpIEppbmdvbyBIYW4sCj4gVGhhbmtzIGZvciB0aGUgcmVzcG9uc2Uu
+Cj4gCj4gVGhhbmtzLAo+IEtpcmFuCj4gT24gMjAxOC0wNS0wNCAyMToyNSwgSmluZ29vIEhhbiB3
+cm90ZToKPiA+IE9uIFRodXJzZGF5LCBNYXkgMywgMjAxOCA2OjEyIEFNLCBLaXJhbiBHdW5kYSB3
+cm90ZToKPiA+IAo+ID4gSWYgeW91IHJlYWxseSB3YW50IHNvbWVvbmUgdG8gcmV2aWV3IHlvdXIg
+cGF0Y2gsIHBsZWFzZSBhZGQgbW9yZQo+ID4gZGV0YWlsZWQKPiA+IGV4cGxhbmF0aW9ucy4KPiA+
+IAo+ID4gMS4gUGxlYXNlIGFkZCAwdGggcGF0Y2guCj4gSSBoYXZlIGFscmVhZHkgYWRkZWQgdGhl
+IDB0aCBwYXRjaCAoY292ZXIgbGV0dGVyKS4gRm9sbG93aW5nIGlzIHRoZSBzdWJqZWN0Cj4gZm9y
+IHRoZSBzYW1lLgo+IGZvcndhcmRpbmcgdGhlIHNhbWUgdG8geW91Lgo+IFtQQVRDSCBWMiAwLzVd
+IGJhY2tsaWdodDogcWNvbS13bGVkOiBTdXBwb3J0IGZvciBRQ09NIHdsZWQgZHJpdmVyCgpQZXJo
+YXBzIHlvdSBzaG91bGQgaW50ZXJwcmV0IEppbmdvbydzIGNvbW1lbnQgYXMgYSByZXF1ZXN0IHRv
+IGltcHJvdmUKdGhlIFRvOiBhbmQgQ2M6IGxpc3Qgb24gdGhlIDB0aCBwYXRjaCB0aGUgbmV4dCB0
+aW1lIHlvdSBjaXJjdWxhdGUgaXQuCgpNYW55IG1haW50YWluZXJzIGNvbmZpZ3VyZSB0aGVpciBt
+YWlsZXJzIHRvIGdpdmUgcGF0Y2hlcyB3aGVyZSB0aGV5IGFyZQppbiB0aGUgVG86IG9yIENjOiBs
+aXN0IHNwZWNpYWwgdHJlYXRtZW50IHNvIGl0IGNvbmZ1c2luZyB3aGVuIGEgc2VyaWVzCmFycml2
+ZXMgd2l0aCBhIHNwYXJ0YW4gc2V0IG9mIHJlY2lwaWVudHMgZm9yIHRoZSAwdGggcGF0Y2ggKGFu
+ZCBkb3VibHkKY29uZnVzaW5nIHdoZW4gZXZlcnkgcGF0Y2ggaW4gdGhlIHNldCB0YXJnZXRzIHRo
+ZSBzYW1lIGRyaXZlcikuCgoKRGFuaWVsLgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
