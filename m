@@ -1,91 +1,83 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH] arm: dts: imx53: Fix LDB OF graph warning
-Date: Tue, 08 May 2018 16:16:37 +0200
-Message-ID: <1525788997.18091.5.camel@pengutronix.de>
-References: <20180508135930.5768-1-robh@kernel.org>
- <20180508135930.5768-3-robh@kernel.org>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v2 1/2] dt: bindings: lm3601x: Introduce the lm3601x driver
+Date: Tue, 8 May 2018 09:17:03 -0500
+Message-ID: <20180508141704.24271-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180508135930.5768-3-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, jacek.anaszewski@gmail.com, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-05-08 at 08:59 -0500, Rob Herring wrote:
-> Single child nodes in OF graph don't need an address and now dtc will
-> warn about this:
-> 
-> Warning (graph_child_address): /soc/aips@50000000/ldb@53fa8008/lvds-channel@0: graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
-> 
-> Since the LDB should always have an output port, fix the warning by
-> adding the output port, 2, to the DT.
-> 
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  arch/arm/boot/dts/imx53.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-> index 7d647d043f52..1cf2fc9d0a58 100644
-> --- a/arch/arm/boot/dts/imx53.dtsi
-> +++ b/arch/arm/boot/dts/imx53.dtsi
-> @@ -488,6 +488,10 @@
->  							remote-endpoint = <&ipu_di0_lvds0>;
->  						};
->  					};
-> +
-> +					port@2 {
-> +						reg = <2>;
-> +					};
+Introduce the device tree bindings for the lm3601x
+family of LED torch, flash and IR drivers.
 
-Now that the reg property of port@2 is added in the .dtsi, it could be
-removed from the one .dts files that use it:
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
 
-----------8<----------
---- a/arch/arm/boot/dts/imx53-ppd.dts
-+++ b/arch/arm/boot/dts/imx53-ppd.dts
-@@ -559,8 +559,6 @@
-                status = "okay";
- 
-                port@2 {
--                       reg = <2>;
--
-                        lvds0_out: endpoint {
-                                remote-endpoint = <&panel_in_lvds0>;
-                        };
----------->8----------
+v2 - No changes - https://patchwork.kernel.org/patch/10384587/
 
->  				};
->  
->  				lvds-channel@1 {
-> @@ -503,6 +507,10 @@
->  							remote-endpoint = <&ipu_di1_lvds1>;
->  						};
->  					};
-> +
-> +					port@2 {
-> +						reg = <2>;
-> +					};
->  				};
->  			};
->  
+ .../devicetree/bindings/leds/leds-lm3601x.txt | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3601x.txt
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-regards
-Philipp
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+new file mode 100644
+index 000000000000..38cdabf6ca7e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+@@ -0,0 +1,51 @@
++* Texas Instruments - lm3601x Single-LED Flash Driver
++
++The LM3601X are ultra-small LED flash drivers that
++provides a high level of adjustability.
++
++Required properties:
++	- compatible : Can be one of the following
++		"ti,lm3601x"
++		"ti,lm36010"
++		"ti,lm36011"
++	- reg : I2C slave address
++	- #address-cells : 1
++	- #size-cells : 0
++
++Required child properties:
++	- reg : 0 - Indicates to support and register a torch interface
++		1 - Indicates to support and register a strobe interface
++		2 - Indicates to support and register an ir interface
++
++Optional child properties:
++	- label : see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++led-controller@64 {
++	compatible = "ti,lm3601x";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = <0x64>;
++
++	led@0 {
++		reg = <0>;
++		label = "white:torch";
++		led-max-microamp=<10000>;
++	};
++
++	led@1 {
++		reg = <1>;
++		label = "white:strobe";
++		flash-max-microamp=<10000>;
++		flash-max-timeout-us=<800>;
++	};
++
++	led@2 {
++		reg = <2>;
++		label = "invisible:ir";
++	};
++}
++
++For more product information please see the links below:
++http://www.ti.com/product/LM36010
++http://www.ti.com/product/LM36011
+-- 
+2.17.0.252.gfe0a9eaf3
