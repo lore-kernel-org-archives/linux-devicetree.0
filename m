@@ -1,44 +1,37 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 3/4] ARM: dts: am437x-epos-evm: Fixup (again) tps65218 irq type
-Date: Tue, 8 May 2018 16:20:52 +0300
-Message-ID: <20180508132053.5471-4-peter.ujfalusi@ti.com>
-References: <20180508132053.5471-1-peter.ujfalusi@ti.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v3 12/14] ARM: dts: imx7s-warp: add ov2680 sensor node
+Date: Tue, 8 May 2018 10:28:11 -0300
+Message-ID: <CAOMZO5B+P5jyPshBe1NyyFyXCtmeQ_=pEB3CGHQuX_1Gfpa8rQ@mail.gmail.com>
+References: <20180507162152.2545-1-rui.silva@linaro.org>
+ <20180507162152.2545-13-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180508132053.5471-1-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, j-keerthy@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20180507162152.2545-13-rui.silva@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: devel@driverdev.osuosl.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>, linux-media <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-While the correct IRQ level fixed the WARN_ON(), but prevented the probe
-of tps65218 as GIC_SPI does not support LEVEL_LOW (?)
+Hi Rui,
 
-Use LEVEL_HIGH as it looks to be the accurate one since the INTn of TPS is
-connected to NMIn of the SoC.
+On Mon, May 7, 2018 at 1:21 PM, Rui Miguel Silva <rui.silva@linaro.org> wrote:
 
-Fixes: 7a53a34622da ("ARM: dts: am437x-epos-evm: Correct tps65218 irq type")
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm/boot/dts/am43x-epos-evm.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +       reg_peri_3p15v: regulator-peri-3p15v {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "peri_3p15v_reg";
+> +               regulator-min-microvolt = <3150000>;
+> +               regulator-max-microvolt = <3150000>;
+> +               regulator-always-on;
 
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 7a5b06fb2cff..6502d3397653 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -595,7 +595,7 @@
- 	tps65218: tps65218@24 {
- 		reg = <0x24>;
- 		compatible = "ti,tps65218";
--		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_LOW>; /* NMIn */
-+		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>; /* NMIn */
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+You can remove the 'regulator-always-on' property as this regulator
+will be controlled by AVDD-supply.
