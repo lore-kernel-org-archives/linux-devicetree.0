@@ -1,30 +1,97 @@
-Return-Path: <SRS0=2PWB=H3=gmail.com=festevam@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <m3muxa6ypx.fsf@linaro.org>
+Return-Path: <SRS0=/DP7=H3=linaro.org=rui.silva@kernel.org>
 References: <20180507155655.1555-1-rui.silva@linaro.org> <CAOMZO5APU9CTGukYsQarPCvp=e8P6LgOWbNFx-dhnKM_3UHf+A@mail.gmail.com>
- <m3muxa6ypx.fsf@linaro.org>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Tue, 8 May 2018 10:55:04 -0300
-Message-ID: <CAOMZO5AyktaSZ3xkQbY7WLX6fdSN-Xs=hutrwFFA9PDxm-FdCw@mail.gmail.com>
+From: Rui Miguel Silva <rui.silva@linaro.org>
 Subject: Re: [PATCH 0/4] media: ov2680: follow up from initial version
-Content-Type: text/plain; charset="UTF-8"
-To: Rui Miguel Silva <rui.silva@linaro.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, linux-media <linux-media@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Ryan Harkin <ryan.harkin@linaro.org>
+In-reply-to: <CAOMZO5APU9CTGukYsQarPCvp=e8P6LgOWbNFx-dhnKM_3UHf+A@mail.gmail.com>
+Date: Tue, 08 May 2018 14:52:58 +0100
+Message-ID: <m3muxa6ypx.fsf@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Rui Miguel Silva <rui.silva@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, linux-media <linux-media@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Ryan Harkin <ryan.harkin@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Rui,
+Ola Fabio,
+On Tue 08 May 2018 at 13:29, Fabio Estevam wrote:
+> Hi Rui,
+>
+> On Mon, May 7, 2018 at 12:56 PM, Rui Miguel Silva 
+> <rui.silva@linaro.org> wrote:
+>> Sorry I have Out-of-Office some part of last week, I had v6 of 
+>> the original
+>> series ready but since I have received the notification from 
+>> patchwork that the
+>> v5 was accepted, I am sending this as a follow up tha address 
+>> Fabio comments.
+>>
+>> - this adds the power supplies to this sensor
+>> - fix gpio polarity and naming.
+>>
+>> Cheers,
+>>    Rui
+>>
+>>
+>> Rui Miguel Silva (4):
+>>   media: ov2680: dt: add voltage supplies as required
+>>   media: ov2680: dt: rename gpio to reset and fix polarity
+>>   media: ov2680: rename powerdown gpio and fix polarity
+>>   media: ov2680: add regulators to supply control
+>
+> As the initial ov2680 series has not been applied, I think it 
+> would be
+> better if you send a new version with all these fixes.
 
-On Tue, May 8, 2018 at 10:52 AM, Rui Miguel Silva <rui.silva@linaro.org> wrote:
+What I've got was this from patchwork:
+Hello,
 
-> So, my understand is that the patches will be applied or are already
-> applied to someone tree (strange patchwork does not send who or which
-> tree), but since I do not want to break someone workflow I will wait for
-> some maintainer word on this... If it is better to send the original series
-> or the follow up patches.
+The following patches (submitted by you) have been updated in 
+patchwork:
 
-Ah, didn't know it has been applied. It seems it will soon appear in
-linux-next then.
+ * linux-media: [v5,1/2] media: ov2680: dt: Add bindings for 
+ OV2680
+     - http://patchwork.linuxtv.org/patch/48819/
+     - for: Linux Media kernel patches
+    was: New
+    now: Accepted
 
-In this case, the follow up series makes sense.
+ * linux-media: [v4,1/2] media: ov2680: dt: Add bindings for 
+ OV2680
+     - http://patchwork.linuxtv.org/patch/48357/
+     - for: Linux Media kernel patches
+    was: New
+    now: Accepted
 
-Thanks
+This email is a notification only - you do not need to respond.
+
+-
+
+Patches submitted to linux-media@vger.kernel.org have the 
+following
+possible states:
+
+<snip>
+
+Accepted: when some driver maintainer says that the patch will be 
+applied
+	  via his tree, or when everything is ok and it got 
+	  applied
+	  either at the main tree or via some other tree (fixes 
+	  tree;
+	  some other maintainer's tree - when it belongs to other 
+	  subsystems,
+	  etc);
+
+So, my understand is that the patches will be applied or are 
+already
+applied to someone tree (strange patchwork does not send who or 
+which
+tree), but since I do not want to break someone workflow I will 
+wait for
+some maintainer word on this... If it is better to send the 
+original series
+or the follow up patches.
+
+Thanks for your feedback.
+---
+Cheers,
+	Rui
