@@ -1,200 +1,118 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v2 1/3] mmc: dw_mmc-bluefield: Add driver extension
-Date: Tue, 8 May 2018 18:55:08 +0000
-Message-ID: <DB4PR05MB0768969F61B828B1B19A31DDA19A0@DB4PR05MB0768.eurprd05.prod.outlook.com>
-References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
- <a59e321a-2498-d9c1-4a22-296ffa13417a@rock-chips.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 3/4] rtc: ds1307: add calibration of_ for mt41txx chips.
+Date: Tue, 8 May 2018 21:19:56 +0200
+Message-ID: <20180508191956.GP10960@piout.net>
+References: <20180508145611.49072-1-giulio.benetti@micronovasrl.com>
+ <20180508145611.49072-3-giulio.benetti@micronovasrl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a59e321a-2498-d9c1-4a22-296ffa13417a@rock-chips.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180508145611.49072-3-giulio.benetti@micronovasrl.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Shawn. Patch v7 has been sent out to address these comments.
+Hi,
 
-> -----Original Message-----
-> From: Shawn Lin [mailto:shawn.lin@rock-chips.com]
-> Sent: Monday, April 23, 2018 9:11 PM
-> To: Liming Sun <lsun@mellanox.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>; Rob Herring
-> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Jaehoon
-> Chung <jh80.chung@samsung.com>; Catalin Marinas
-> <catalin.marinas@arm.com>; Will Deacon <will.deacon@arm.com>;
-> shawn.lin@rock-chips.com; linux-mmc@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v2 1/3] mmc: dw_mmc-bluefield: Add driver extension
->=20
-> Hi Liming,
->=20
-> On 2018/4/23 23:32, Liming Sun wrote:
-> > This commit adds extension to the dw_mmc driver for Mellanox BlueField
-> > SoC. It updates the UHS_REG_EXT register to bring up the eMMC card on
-> > this SoC.
-> >
-> > Signed-off-by: Liming Sun <lsun@mellanox.com>
-> > ---
-> >   drivers/mmc/host/Kconfig            |  9 +++++
-> >   drivers/mmc/host/Makefile           |  1 +
-> >   drivers/mmc/host/dw_mmc-bluefield.c | 72
-> +++++++++++++++++++++++++++++++++++++
-> >   3 files changed, 82 insertions(+)
-> >   create mode 100644 drivers/mmc/host/dw_mmc-bluefield.c
-> >
-> > diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> > index 9589f9c..26ac6b5 100644
-> > --- a/drivers/mmc/host/Kconfig
-> > +++ b/drivers/mmc/host/Kconfig
-> > @@ -717,6 +717,15 @@ config MMC_DW_K3
-> >   	  Synopsys DesignWare Memory Card Interface driver. Select this
-> option
-> >   	  for platforms based on Hisilicon K3 SoC's.
-> >
-> > +config MMC_DW_BLUEFIELD
-> > +	tristate "BlueField specific extensions for Synopsys DW Memory Card
-> Interface"
-> > +	depends on MMC_DW
-> > +	select MMC_DW_PLTFM
-> > +	help
-> > +	  This selects support for Mellanox BlueField SoC specific extensions
-> to
-> > +	  the Synopsys DesignWare Memory Card Interface driver. Select this
-> > +	  option for platforms based on Mellanox BlueField SoC's.
-> > +
->=20
-> It'd better to keep the order, so you could place it before
-> MMC_DW_EXYNOS.
+There is a sysfs interface for calibration, please use it. this is
+especially useful since the calibration value probably depend on
+temperature so it has to be updated dynamically to be really useful.
 
-Updated in v7 1/3.
+See https://elixir.bootlin.com/linux/v4.16.7/source/Documentation/ABI/testing/sysfs-class-rtc#L68
+and https://elixir.bootlin.com/linux/v4.16.7/source/drivers/rtc/interface.c#L999
 
->=20
-> >   config MMC_DW_PCI
-> >   	tristate "Synopsys Designware MCI support on PCI bus"
-> >   	depends on MMC_DW && PCI
-> > diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-> > index 6aead24..267b3f1 100644
-> > --- a/drivers/mmc/host/Makefile
-> > +++ b/drivers/mmc/host/Makefile
-> > @@ -55,6 +55,7 @@ obj-$(CONFIG_MMC_DW_K3)		+=3D dw_mmc-
-> k3.o
-> >   obj-$(CONFIG_MMC_DW_PCI)	+=3D dw_mmc-pci.o
-> >   obj-$(CONFIG_MMC_DW_ROCKCHIP)	+=3D dw_mmc-rockchip.o
-> >   obj-$(CONFIG_MMC_DW_ZX)		+=3D dw_mmc-zx.o
-> > +obj-$(CONFIG_MMC_DW_BLUEFIELD)	+=3D dw_mmc-bluefield.o
->=20
-> Ditto.
+On 08/05/2018 16:56:10+0200, Giulio Benetti wrote:
+> m41txx chips can hold a calibration value to get really near to real
+> tick value.
+> 
+> Add calibration property(ranging between (-31) and 31), so on every probe
+> calibration value will be written to rtc.
+> This is because ic could loose supply due to low battery.
+> 
+> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> ---
+>  .../devicetree/bindings/rtc/rtc-ds1307.txt    |  2 ++
+>  drivers/rtc/rtc-ds1307.c                      | 33 +++++++++++++++++++
+>  2 files changed, 35 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+> index ce6469c1a516..d3d70a5495c5 100644
+> --- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+> @@ -34,6 +34,8 @@ Optional properties:
+>  - trickle-diode-disable : ds1339, ds1340 and ds 1388 only
+>  	Do not use internal trickle charger diode
+>  	Should be given if internal trickle charger diode should be disabled
+> +- calibration: m41t0, m41t00, m41t11 only
+> +	Set calibration value to correct external bias, ranging between (-31) and 31.
+>  
+>  Example:
+>  	rtc1: ds1339@68 {
+> diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+> index 0ab0c166da83..9cda52589c0f 100644
+> --- a/drivers/rtc/rtc-ds1307.c
+> +++ b/drivers/rtc/rtc-ds1307.c
+> @@ -114,6 +114,12 @@ enum ds_type {
+>  #	define RX8025_BIT_VDET		0x40
+>  #	define RX8025_BIT_XST		0x20
+>  
+> +#define M41TXX_REG_CONTROL	0x07
+> +#	define M41TXX_BIT_OUT		0x80
+> +#	define M41TXX_BIT_FT		0x40
+> +#	define M41TXX_BIT_CALIB_SIGN	0x20
+> +#	define M41TXX_M_CALIBRATION	0x1f
+> +
+>  struct ds1307 {
+>  	enum ds_type		type;
+>  	unsigned long		flags;
+> @@ -1397,6 +1403,7 @@ static int ds1307_probe(struct i2c_client *client,
+>  	unsigned char		regs[8];
+>  	struct ds1307_platform_data *pdata = dev_get_platdata(&client->dev);
+>  	u8			trickle_charger_setup = 0;
+> +	s32			calib;
+>  
+>  	ds1307 = devm_kzalloc(&client->dev, sizeof(struct ds1307), GFP_KERNEL);
+>  	if (!ds1307)
+> @@ -1460,6 +1467,32 @@ static int ds1307_probe(struct i2c_client *client,
+>  	if (chip->alarm && of_property_read_bool(client->dev.of_node,
+>  						 "wakeup-source"))
+>  		ds1307_can_wakeup_device = true;
+> +
+> +	/* retrieve calibration value if provided */
+> +	if (!of_property_read_s32(client->dev.of_node, "calibration",
+> +				 &calib)) {
+> +		switch (ds1307->type) {
+> +		case m41t0:
+> +		case m41t00:
+> +		case m41t11:
+> +		{
+> +			/*
+> +			 * Set calibration value every power-on since rtc
+> +			 * could have shut off(low battery)
+> +			 */
+> +			u8 out_byte = abs(calib) & M41TXX_M_CALIBRATION;
+> +
+> +			if (calib >= 0)
+> +				out_byte |= M41TXX_BIT_CALIB_SIGN;
+> +
+> +			regmap_write(ds1307->regmap, M41TXX_REG_CONTROL,
+> +					out_byte);
+> +		}
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
+>  #endif
+>  
+>  	switch (ds1307->type) {
+> -- 
+> 2.17.0
+> 
 
-Updated in v7 1/3.
-
->=20
-> >   obj-$(CONFIG_MMC_SH_MMCIF)	+=3D sh_mmcif.o
-> >   obj-$(CONFIG_MMC_JZ4740)	+=3D jz4740_mmc.o
-> >   obj-$(CONFIG_MMC_VUB300)	+=3D vub300.o
-> > diff --git a/drivers/mmc/host/dw_mmc-bluefield.c
-> b/drivers/mmc/host/dw_mmc-bluefield.c
-> > new file mode 100644
-> > index 0000000..12067b1
-> > --- /dev/null
-> > +++ b/drivers/mmc/host/dw_mmc-bluefield.c
-> > @@ -0,0 +1,72 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2018 Mellanox Technologies.
-> > + *
-> > + * This program is free software; you can redistribute it and/or modif=
-y
-> > + * it under the terms of the GNU General Public License as published b=
-y
-> > + * the Free Software Foundation; either version 2 of the License, or
-> > + * (at your option) any later version.
-> > + */
-> > +
-> > +#include <linux/module.h>
-> > +#include <linux/io.h>
-> > +#include <linux/irq.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/mmc/host.h>
-> > +#include <linux/mmc/mmc.h>
-> > +#include <linux/of.h>
-> > +
->=20
-> Ditto.
-
-Updated in v7 1/3.
-
->=20
-> > +#include "dw_mmc.h"
-> > +#include "dw_mmc-pltfm.h"
-> > +
-> > +static void dw_mci_bluefield_set_ios(struct dw_mci *host, struct
-> mmc_ios *ios)
-> > +{
-> > +	u32 regs;
-> > +
-> > +	/* Set drive=3D4 (bit 29:23) and sample=3D2 (bit 22:16) in UHS_REG_EX=
-T.
-> */
-> > +	regs =3D mci_readl(host, UHS_REG_EXT);
-> > +	regs =3D (regs & ~0x3F100000 & ~0x7F0000) | (4 << 23) | (2 << 16);
->=20
-> GENMASK woule be more readable IMHO.
-
-Updated in v7 1/3.
-
->=20
-> > +	mci_writel(host, UHS_REG_EXT, regs);
-> > +}
-> > +
-> > +static const struct dw_mci_drv_data bluefield_drv_data =3D {
-> > +	.set_ios		=3D dw_mci_bluefield_set_ios
-> > +};
-> > +
-> > +static const struct of_device_id dw_mci_bluefield_match[] =3D {
-> > +	{ .compatible =3D "mellanox,bluefield-dw-mshc",
-> > +		.data =3D &bluefield_drv_data },
->=20
-> Keep the indent.
-
-Updated in v7 1/3, assuming this comment is to let the ".data" aligned with=
- the ".compatible".
-
->=20
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, dw_mci_bluefield_match);
-> > +
-> > +static int dw_mci_bluefield_probe(struct platform_device *pdev)
-> > +{
-> > +	const struct dw_mci_drv_data *drv_data =3D NULL;
-> > +	const struct of_device_id *match;
-> > +
-> > +	if (pdev->dev.of_node) {
-> > +		match =3D of_match_node(dw_mci_bluefield_match,
-> > +				      pdev->dev.of_node);
-> > +		drv_data =3D match->data;
-> > +	}
-> > +
-> > +	return dw_mci_pltfm_register(pdev, drv_data);
-> > +}
-> > +
-> > +static struct platform_driver dw_mci_bluefield_pltfm_driver =3D {
-> > +	.probe		=3D dw_mci_bluefield_probe,
-> > +	.remove		=3D dw_mci_pltfm_remove,
-> > +	.driver		=3D {
-> > +		.name		=3D "dwmmc_bluefield",
-> > +		.of_match_table	=3D dw_mci_bluefield_match,
-> > +		.pm		=3D &dw_mci_pltfm_pmops,
-> > +	},
-> > +};
-> > +
-> > +module_platform_driver(dw_mci_bluefield_pltfm_driver);
-> > +
-> > +MODULE_DESCRIPTION("BlueField DW Multimedia Card driver");
-> > +MODULE_AUTHOR("Mellanox Technologies");
-> > +MODULE_LICENSE("GPL v2");
-> >
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
