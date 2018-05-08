@@ -1,104 +1,125 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v6 0/7] Add endpoint driver for Rockchip PCIe controller
-Date: Tue, 8 May 2018 22:28:57 +0800
-Message-ID: <abbd0c7a-c592-b628-e2ab-3df6a5ca33a4@rock-chips.com>
-References: <1524796697-160764-1-git-send-email-shawn.lin@rock-chips.com>
- <20180508115229.GA10653@e107981-ln.cambridge.arm.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 07/14] media: dt-bindings: add bindings for i.MX7
+ media driver
+Date: Tue, 08 May 2018 16:30:23 +0200
+Message-ID: <1525789823.18091.11.camel@pengutronix.de>
+References: <20180507162152.2545-1-rui.silva@linaro.org>
+ <20180507162152.2545-8-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180508115229.GA10653-4tUPXFaYRHv6sAKXYmQ0tx/iLCjYCKR+VpNB7YpNyf8@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20180507162152.2545-8-rui.silva@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>, mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+On Mon, 2018-05-07 at 17:21 +0100, Rui Miguel Silva wrote:
+> Add bindings documentation for i.MX7 media drivers.
+> 
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> ---
+>  .../devicetree/bindings/media/imx7.txt        | 152 ++++++++++++++++++
+>  1 file changed, 152 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/imx7.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/imx7.txt b/Documentation/devicetree/bindings/media/imx7.txt
+> new file mode 100644
+> index 000000000000..06d723d6354d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/imx7.txt
+> @@ -0,0 +1,152 @@
+> +Freescale i.MX7 Media Video Device
+> +==================================
+> +
+> +Video Media Controller node
+> +---------------------------
+> +
+> +This is the media controller node for video capture support. It is a
+> +virtual device that lists the camera serial interface nodes that the
+> +media device will control.
+> +
+> +Required properties:
+> +- compatible : "fsl,imx7-capture-subsystem";
+> +- ports      : Should contain a list of phandles pointing to camera
+> +		sensor interface port of CSI
+> +
+> +example:
+> +
+> +capture-subsystem {
+> +	compatible = "fsl,imx7-capture-subsystem";
+> +	ports = <&csi>;
+> +};
 
-On 2018/5/8 19:52, Lorenzo Pieralisi wrote:
-> Hi Shawn,
-> 
-> On Fri, Apr 27, 2018 at 10:38:17AM +0800, Shawn Lin wrote:
->>
->> Hi Lorenzo,
->>
->> This's the 6th try to upstream endpoint driver for Rockchip PCIe
->> controller. V6 is rebased by droping the rename change.
->>
->> Thanks.
->>
->>
->> Changes in v6:
->> - rebase
->>
->> Changes in v5:
->> - export symbol to fix error reported by Kbuild robot
->> - PCIE_ROCKCHIP depends on PCI
->>
->> Changes in v4:
->> - remove empty line
->> - keep rockchip's order next to cadence and dwc, but
->>    we will try to resort it later when reconstructing
->>    the directories
->>
->> Shawn Lin (7):
->>    PCI: rockchip: Separate common code from RC driver
-> 
-> There seems to be no patch (1) on linux-pci list, not sure what
-> happened, mind resending the whole series possibly with
-> commit logs updated as discussed ?
+Purely from a device tree perspective, I think this node is unnecessary
+on i.MX7. The reason we have it for i.MX6 is that there are two
+identical IPUs on some of them, which makes it impossible to reasonably
+bind the subsystem driver to one or the other of the ipu nodes. On i.MX7
+the csi node is unique.
 
-Sure! Will send v7 for updating commit logs.
+The relevant imx-media-dev.c code in imx_media_probe could be refactored
+into a utility function that could be called from the probe function of
+the csi driver as well.
 
-> 
-> Thanks,
-> Lorenzo
-> 
->>    PCI: rockchip: Split out common function to parse DT
->>    PCI: rockchip: Split out common function to init controller
->>    dt-bindings: PCI: rockchip: Rename rockchip-pcie.txt to
->>      rockchip-pcie-host.txt
->>    PCI: rockchip: Add Endpoint controller driver for Rockchip PCIe
->>      controller
->>    dt-bindings: PCI: rockchip: Add DT bindings for Rockchip PCIe endpoint
->>      controller
->>    arm64: defconfig: update config for Rockchip PCIe
->>
->>   .../devicetree/bindings/pci/rockchip-pcie-ep.txt   |   62 +
->>   .../{rockchip-pcie.txt => rockchip-pcie-host.txt}  |    0
->>   MAINTAINERS                                        |    4 +-
->>   arch/arm64/configs/defconfig                       |    3 +-
->>   drivers/pci/host/Kconfig                           |   19 +-
->>   drivers/pci/host/Makefile                          |    2 +
->>   drivers/pci/host/pcie-rockchip-ep.c                |  642 ++++++++
->>   drivers/pci/host/pcie-rockchip-host.c              | 1141 +++++++++++++
->>   drivers/pci/host/pcie-rockchip.c                   | 1683 +++-----------------
->>   drivers/pci/host/pcie-rockchip.h                   |  338 ++++
->>   10 files changed, 2406 insertions(+), 1488 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
->>   rename Documentation/devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} (100%)
->>   create mode 100644 drivers/pci/host/pcie-rockchip-ep.c
->>   create mode 100644 drivers/pci/host/pcie-rockchip-host.c
->>   create mode 100644 drivers/pci/host/pcie-rockchip.h
->>
->> -- 
->> 1.9.1
->>
->>
-> 
-> 
-> 
+[...]
+> +csi node
+> +--------
+> +
+> +This is device node for the CMOS Sensor Interface (CSI) which enables the chip
+> +to connect directly to external CMOS image sensors.
+> +
+> +Required properties:
+> +
+> +- compatible    : "fsl,imx7-csi";
+> +- reg           : base address and length of the register set for the device;
+> +- interrupts    : should contain CSI interrupt;
+> +- clocks        : list of clock specifiers, see
+> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
+> +- clock-names   : must contain "axi", "mclk" and "dcic" entries, matching
+> +                 entries in the clock property;
+> +
+> +port node
+> +---------
+> +
+> +- reg		  : (required) should be 0 for the sink port;
 
+Not necessary, see below.
 
--- 
-Best Regards
-Shawn Lin
+> +
+> +example:
+> +
+> +                csi: csi@30710000 {
+> +                        #address-cells = <1>;
+> +                        #size-cells = <0>;
+> +
+> +                        compatible = "fsl,imx7-csi";
+> +                        reg = <0x30710000 0x10000>;
+> +                        interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +                        clocks = <&clks IMX7D_CLK_DUMMY>,
+> +                                        <&clks IMX7D_CSI_MCLK_ROOT_CLK>,
+> +                                        <&clks IMX7D_CLK_DUMMY>;
+> +                        clock-names = "axi", "mclk", "dcic";
+> +
+> +                        port@0 {
+> +                                reg = <0>;
+
+Since there is only one port, it does not need to be numbered.
+
+> +
+> +                                csi_from_csi_mux: endpoint {
+> +                                        remote-endpoint = <&csi_mux_to_csi>;
+> +                                };
+> +                        };
+> +                };
+
+regards
+Philipp
