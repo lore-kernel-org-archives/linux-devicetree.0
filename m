@@ -1,90 +1,67 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 0/7] Add endpoint driver for Rockchip PCIe controller
-Date: Tue, 8 May 2018 12:52:29 +0100
-Message-ID: <20180508115229.GA10653@e107981-ln.cambridge.arm.com>
-References: <1524796697-160764-1-git-send-email-shawn.lin@rock-chips.com>
+From: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] resource: Use list_head to link sibling resource
+Date: Tue, 8 May 2018 20:11:23 +0800
+Message-ID: <20180508121123.GI30581@MiWiFi-R3L-srv>
+References: <20180419001848.3041-1-bhe@redhat.com>
+ <20180419001848.3041-2-bhe@redhat.com>
+ <20180426011837.GA79340@WeideMacBook-Pro.local>
+ <20180507011429.GG30581@MiWiFi-R3L-srv>
+ <20180508114845.GA19459@WeideMacBook-Pro.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1524796697-160764-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20180508114845.GA19459-1F0jQSPB5oJ4KljauMffTLjjLBE8jN/0@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Yaowei Bai <baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, "K. Y. Srinivasan" <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jonathan Derrick <jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+On 05/08/18 at 08:48pm, Wei Yang wrote:
+> On Mon, May 07, 2018 at 09:14:29AM +0800, Baoquan He wrote:
+> >Hi Wei Yang,
+> >
+> >On 04/26/18 at 09:18am, Wei Yang wrote:
+> >> On Thu, Apr 19, 2018 at 08:18:46AM +0800, Baoquan He wrote:
+> >> >The struct resource uses singly linked list to link siblings. It's not
+> >> >easy to do reverse iteration on sibling list. So replace it with list_head.
+> >> >
+> >> 
+> >> Hi, Baoquan
+> >> 
+> >> Besides changing the data structure, I have another proposal to do the reverse
+> >> iteration. Which means it would not affect other users, if you just want a
+> >> reverse iteration.
+> >> 
+> >> BTW, I don't think Andrew suggest to use linked-list directly. What he wants
+> >> is a better solution to your first proposal in
+> >> https://patchwork.kernel.org/patch/10300819/.
+> >> 
+> >> Below is my proposal of resource reverse iteration without changing current
+> >> design.
+> >
+> >I got your mail and read it, then interrupted by other thing and forgot
+> >replying, sorry.
+> >
+> >I am fine with your code change. As I said before, I have tried to change
+> >code per reviewers' comment, then let reviewers decide which way is
+> >better. Please feel free to post formal patches and joining discussion
+> >about this issue.
+> 
+> Yep, while I don't have a real requirement to add the reverse version, so what
+> is the proper way to send a patch?
+> 
+> A patch reply to this thread is ok?
 
-On Fri, Apr 27, 2018 at 10:38:17AM +0800, Shawn Lin wrote:
-> 
-> Hi Lorenzo,
-> 
-> This's the 6th try to upstream endpoint driver for Rockchip PCIe
-> controller. V6 is rebased by droping the rename change.
-> 
-> Thanks.
-> 
-> 
-> Changes in v6:
-> - rebase
-> 
-> Changes in v5:
-> - export symbol to fix error reported by Kbuild robot
-> - PCIE_ROCKCHIP depends on PCI
-> 
-> Changes in v4:
-> - remove empty line
-> - keep rockchip's order next to cadence and dwc, but
->   we will try to resort it later when reconstructing
->   the directories
-> 
-> Shawn Lin (7):
->   PCI: rockchip: Separate common code from RC driver
-
-There seems to be no patch (1) on linux-pci list, not sure what
-happened, mind resending the whole series possibly with
-commit logs updated as discussed ?
-
-Thanks,
-Lorenzo
-
->   PCI: rockchip: Split out common function to parse DT
->   PCI: rockchip: Split out common function to init controller
->   dt-bindings: PCI: rockchip: Rename rockchip-pcie.txt to
->     rockchip-pcie-host.txt
->   PCI: rockchip: Add Endpoint controller driver for Rockchip PCIe
->     controller
->   dt-bindings: PCI: rockchip: Add DT bindings for Rockchip PCIe endpoint
->     controller
->   arm64: defconfig: update config for Rockchip PCIe
-> 
->  .../devicetree/bindings/pci/rockchip-pcie-ep.txt   |   62 +
->  .../{rockchip-pcie.txt => rockchip-pcie-host.txt}  |    0
->  MAINTAINERS                                        |    4 +-
->  arch/arm64/configs/defconfig                       |    3 +-
->  drivers/pci/host/Kconfig                           |   19 +-
->  drivers/pci/host/Makefile                          |    2 +
->  drivers/pci/host/pcie-rockchip-ep.c                |  642 ++++++++
->  drivers/pci/host/pcie-rockchip-host.c              | 1141 +++++++++++++
->  drivers/pci/host/pcie-rockchip.c                   | 1683 +++-----------------
->  drivers/pci/host/pcie-rockchip.h                   |  338 ++++
->  10 files changed, 2406 insertions(+), 1488 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
->  rename Documentation/devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} (100%)
->  create mode 100644 drivers/pci/host/pcie-rockchip-ep.c
->  create mode 100644 drivers/pci/host/pcie-rockchip-host.c
->  create mode 100644 drivers/pci/host/pcie-rockchip.h
-> 
-> -- 
-> 1.9.1
-> 
-> 
+I am not sure either. Since my patches are still under reviewing. And
+you have pasted your patch. It depends on maintainers, mainly Andrew and
+other reviewers who have concerns.
