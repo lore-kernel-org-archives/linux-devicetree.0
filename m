@@ -1,112 +1,47 @@
-From: djw@t-chip.com.cn
-Subject: [PATCH v0 2/2] arm64: dts: rockchip: Add sdmmc UHS support for roc-rk3328-cc
-Date: Tue,  8 May 2018 10:48:24 +0800
-Message-ID: <1525747704-8537-3-git-send-email-djw@t-chip.com.cn>
-References: <1525747704-8537-1-git-send-email-djw@t-chip.com.cn>
+From: Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v3 2/3] usb: dwc3: Add Qualcomm DWC3 glue driver
+Date: Tue, 8 May 2018 09:36:48 +0530
+Message-ID: <7bc35d33-c819-fb64-353c-f64dce08505f@codeaurora.org>
+References: <1525459689-1358-1-git-send-email-mgautam@codeaurora.org>
+ <1525459689-1358-3-git-send-email-mgautam@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525747704-8537-1-git-send-email-djw@t-chip.com.cn>
+In-Reply-To: <1525459689-1358-3-git-send-email-mgautam@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: Wayne Chou <zxf@t-chip.com.cn>, Levin Du <djw@t-chip.com.cn>, devicetree@vger.kernel.org, David Wu <david.wu@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Liang Chen <cl@rock-chips.com>, William Wu <william.wu@rock-chips.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rocky Hao <rocky.hao@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Joseph Chen <chenjh@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org, "David S. Miller" <davem@davemloft.net>
+To: balbi@kernel.org, robh@kernel.org, andy.gross@linaro.org
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Levin Du <djw@t-chip.com.cn>
 
-In roc-rk3328-cc board, the signal voltage of sdmmc is supplied by
-the vcc_sdio regulator, which is a mux between 1.8V and 3.3V,
-controlled by a special output only gpio pin.
 
-However, this pin,  not being a normal gpio in the rockchip pinctrl,
-is set by bit 1 of system register GRF_SOC_CON10. Therefore a new
-gpio controller using gpio-syscon driver is defined in order to use
-regulator-gpio.
+On 5/5/2018 12:18 AM, Manu Gautam wrote:
+> DWC3 controller on Qualcomm SOCs has a Qscratch wrapper.
+> Some of its uses are described below resulting in need to
+> have a separate glue driver instead of using dwc3-of-simple:
+>  - It exposes register interface to override vbus-override
+>    and lane0-pwr-present signals going to hardware. These
+>    must be updated in peripheral mode for DWC3 if vbus lines
+>    are not connected to hardware block. Otherwise RX termination
+>    in SS mode or DP pull-up is not applied by device controller.
+>  - pwr_events_irq_stat support to check if USB2 PHY is in L2 state
+>    before glue driver proceeds with suspend.
+>  - Support for wakeup interrupts lines that are asserted whenever
+>    there is any wakeup event on USB3 or USB2 bus.
+>  - Support to replace pip3 clock going to DWC3 with utmi clock
+>    for hardware configuration where SSPHY is not used with DWC3.
+>
+> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+[snip]
+> +static const struct of_device_id dwc3_qcom_of_match[] = {
+> +	{ .compatible = "qcom,dwc3" },
 
-If the signal voltage changes, the io domain needs to change
-correspondingly.
+I should also add SOC specific compatibles.
+Will do that in next patch.
 
-To use this feature, the following options are required in kernel config:
- - CONFIG_GPIO_SYSCON=y
- - CONFIG_POWER_AVS=y
- - CONFIG_ROCKCHIP_IODOMAIN=y
 
-Signed-off-by: Levin Du <djw@t-chip.com.cn>
-
----
-
- arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 36 ++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-index 246c317..792cb04 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-@@ -14,6 +14,12 @@
- 		stdout-path = "serial2:1500000n8";
- 	};
- 
-+	gpio_syscon10: gpio-syscon10 {
-+		compatible = "rockchip,rk3328-gpio-syscon10";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
- 	gmac_clkin: external-gmac-clock {
- 		compatible = "fixed-clock";
- 		clock-frequency = <125000000>;
-@@ -41,6 +47,19 @@
- 		vin-supply = <&vcc_io>;
- 	};
- 
-+	vcc_sdio: sdmmcio-regulator {
-+		compatible = "regulator-gpio";
-+		gpios = <&gpio_syscon10 1 GPIO_ACTIVE_HIGH>;
-+		states = <1800000 0x1
-+			  3300000 0x0>;
-+		regulator-name = "vcc_sdio";
-+		regulator-type = "voltage";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		vin-supply = <&vcc_sys>;
-+	};
-+
- 	vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
-@@ -208,6 +227,18 @@
- 	};
- };
- 
-+&io_domains {
-+	status = "okay";
-+
-+	vccio1-supply = <&vcc_io>;
-+	vccio2-supply = <&vcc18_emmc>;
-+	vccio3-supply = <&vcc_sdio>;
-+	vccio4-supply = <&vcc_18>;
-+	vccio5-supply = <&vcc_io>;
-+	vccio6-supply = <&vcc_io>;
-+	pmuio-supply = <&vcc_io>;
-+};
-+
- &pinctrl {
- 	pmic {
- 		pmic_int_l: pmic-int-l {
-@@ -227,10 +258,15 @@
- 	cap-mmc-highspeed;
- 	cap-sd-highspeed;
- 	disable-wp;
-+	sd-uhs-sdr12;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr104;
- 	max-frequency = <150000000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_dectn &sdmmc0_bus4>;
- 	vmmc-supply = <&vcc_sd>;
-+	vqmmc-supply = <&vcc_sdio>;
- 	status = "okay";
- };
- 
 -- 
-2.7.4
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
