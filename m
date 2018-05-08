@@ -1,104 +1,85 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 4/7] dt-bindings: gnss: add u-blox binding
-Date: Tue, 8 May 2018 08:47:56 -0700
-Message-ID: <20180508154756.GW98604@atomide.com>
-References: <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com>
- <20180503205037.7be552c1@aktux>
- <44A0BC7C-67C7-4116-849F-90FF7CF2B1F0@goldelico.com>
- <20180504114213.3xlzqxe74n55tk5s@earth.universe>
- <20180507100135.GS2285@localhost>
- <20180507154515.GP98604@atomide.com>
- <20180507163439.GV2285@localhost>
- <20180507175032.GR98604@atomide.com>
- <20180508065852.GW2285@localhost>
- <20180508152228.GV98604@atomide.com>
+From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Subject: Re: [PATCH v2 10/27] dts: bindings: Restrict coresight tmc-etr
+ scatter-gather mode
+Date: Tue, 8 May 2018 16:48:36 +0100
+Message-ID: <514f69b1-2219-aa83-dfe8-09c26ed4f5b1@arm.com>
+References: <1525165857-11096-1-git-send-email-suzuki.poulose@arm.com>
+ <1525165857-11096-11-git-send-email-suzuki.poulose@arm.com>
+ <20180501131300.GA31425@rob-hp-laptop>
+ <CANLsYkwozU7QC5EeEy46KrEd4X7J9S69SiNg8-GhSSuMkhQrBw@mail.gmail.com>
+ <CAL_JsqJDTx2UWN7VdsvDctyXw_rco6Q8NmoWQ5EBx6uhwJu=0Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180508152228.GV98604@atomide.com>
+In-Reply-To: <CAL_JsqJDTx2UWN7VdsvDctyXw_rco6Q8NmoWQ5EBx6uhwJu=0Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andreas Kemnade <andreas@kemnade.info>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
+To: Rob Herring <robh@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Leach <mike.leach@linaro.org>, Robert Walker <robert.walker@arm.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Frank Rowand <frowand.list@gmail.com>, John Horley <john.horley@arm.com>, Mathieu Poirier <matheiu.poirier@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [180508 08:22]:
-> * Johan Hovold <johan@kernel.org> [180508 07:00]:
-> > With the negative autosuspend set in both omap drivers probe functions,
-> > this is the expected behaviour. Which I think we must fix.
+On 04/05/18 23:56, Rob Herring wrote:
+> On Thu, May 3, 2018 at 3:32 PM, Mathieu Poirier
+> <mathieu.poirier@linaro.org> wrote:
+>> On 1 May 2018 at 07:13, Rob Herring <robh@kernel.org> wrote:
+>>> On Tue, May 01, 2018 at 10:10:40AM +0100, Suzuki K Poulose wrote:
+>>>> We are about to add the support for ETR builtin scatter-gather mode
+>>>> for dealing with large amount of trace buffers. However, on some of
+>>>> the platforms, using the ETR SG mode can lock up the system due to
+>>>> the way the ETR is connected to the memory subsystem.
+>>>>
+>>>> In SG mode, the ETR performs READ from the scatter-gather table to
+>>>> fetch the next page and regular WRITE of trace data. If the READ
+>>>> operation doesn't complete(due to the memory subsystem issues,
+>>>> which we have seen on a couple of platforms) the trace WRITE
+>>>> cannot proceed leading to issues. So, we by default do not
+>>>> use the SG mode, unless it is known to be safe on the platform.
+>>>> We define a DT property for the TMC node to specify whether we
+>>>> have a proper SG mode.
+
+
+>>>> ---
+>>>>   Documentation/devicetree/bindings/arm/coresight.txt | 3 +++
+>>>>   drivers/hwtracing/coresight/coresight-tmc.c         | 8 +++++++-
+>>>>   2 files changed, 10 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+>>>> index cdd84d0..7c0c8f0 100644
+>>>> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+>>>> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+>>>> @@ -88,6 +88,9 @@ its hardware characteristcs.
+>>>>        * arm,buffer-size: size of contiguous buffer space for TMC ETR
+>>>>         (embedded trace router)
+>>>>
+>>>> +     * scatter-gather: boolean. Indicates that the TMC-ETR can safely
+>>>> +       use the SG mode on this system.
+>>>> +
+>>>
+>>> Needs a vendor prefix.
+>>>
+>>
+>> Thinking further on this, do we need to make it device specific as
+>> well - something like "arm,etr-scatter-gather"?  That way we don't
+>> have to redefine "scatter-gather" for other ARM devices if they happen
+>> to need the same property but for different reasons.
 > 
-> Yes indeed. I've been using my script for years now and have
-> completely missed the fact that the unused ports are not idled
-> at all on start-up when unused.
+> No. If we had a bunch of cases, then we'd probably want to have just
+> 'scatter-gather'.
 
-This might be all that's needed, care to try it and if it works
-I'll send out two separate proper patches?
+Does it mean "arm,scatter-gather" ? If we ever wanted to add the device
+specific information, I would prefer to go with "arm,tmc-scatter-gather"
+and not "etr-scatter-gather". They both could mean different things.
 
-I'm seeing this now on my bbb after temporarily disabling my
-UART idle init script:
+> 
+> BTW, if SG had already been supported, then I'd say this is a quirk
+> and we should invert this property. Otherwise, you'd be disabling once
+> enabled SG and require working platforms to update their dtb. Of
+> course, I shouldn't really let the state of an OS driver influence the
+> DT binding.
+> 
 
-# rwmem -s32 0x44e004b4           # uart 1 on l4_wkup
-0x44e004b4 = 0x00000002
+The SG support is added with this series. So, the OS has never made use
+of the feature.
 
-# rwmem -s32 0x44e0006c+0x10      # uart 2 - 5 on l4_per
-0x44e0006c = 0x00030000
-0x44e00070 = 0x00030000
-0x44e00074 = 0x00030000
-0x44e00078 = 0x00030000
-
-# rwmem -s32 0x44e00038           # uart 6 on l4_per
-0x44e00038 = 0x00030000
-
-Regards,
-
-Tony
-
-8< ----------------------
-diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
---- a/drivers/tty/serial/8250/8250_omap.c
-+++ b/drivers/tty/serial/8250/8250_omap.c
-@@ -685,8 +685,7 @@ static void omap_8250_shutdown(struct uart_port *port)
- 		serial_out(up, UART_LCR, up->lcr & ~UART_LCR_SBC);
- 	serial_out(up, UART_FCR, UART_FCR_CLEAR_RCVR | UART_FCR_CLEAR_XMIT);
- 
--	pm_runtime_mark_last_busy(port->dev);
--	pm_runtime_put_autosuspend(port->dev);
-+	pm_runtime_put_sync(port->dev);
- 	free_irq(port->irq, port);
- 	dev_pm_clear_wake_irq(port->dev);
- }
-@@ -1265,8 +1264,7 @@ static int omap8250_probe(struct platform_device *pdev)
- 	}
- 	priv->line = ret;
- 	platform_set_drvdata(pdev, priv);
--	pm_runtime_mark_last_busy(&pdev->dev);
--	pm_runtime_put_autosuspend(&pdev->dev);
-+	pm_runtime_put_sync(&pdev->dev);
- 	return 0;
- err:
- 	pm_runtime_dont_use_autosuspend(&pdev->dev);
-diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
---- a/drivers/tty/serial/omap-serial.c
-+++ b/drivers/tty/serial/omap-serial.c
-@@ -821,8 +821,7 @@ static void serial_omap_shutdown(struct uart_port *port)
- 	if (serial_in(up, UART_LSR) & UART_LSR_DR)
- 		(void) serial_in(up, UART_RX);
- 
--	pm_runtime_mark_last_busy(up->dev);
--	pm_runtime_put_autosuspend(up->dev);
-+	pm_runtime_put_sync(up->dev);
- 	free_irq(up->port.irq, up);
- 	dev_pm_clear_wake_irq(up->dev);
- }
-@@ -1751,8 +1750,7 @@ static int serial_omap_probe(struct platform_device *pdev)
- 	if (ret != 0)
- 		goto err_add_port;
- 
--	pm_runtime_mark_last_busy(up->dev);
--	pm_runtime_put_autosuspend(up->dev);
-+	pm_runtime_put_sync(&pdev->dev);
- 	return 0;
- 
- err_add_port:
--- 
-2.17.0
+Suzuki
