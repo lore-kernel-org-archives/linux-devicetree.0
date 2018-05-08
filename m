@@ -1,78 +1,23 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 3/3] ARM: dts: sun7i: Add support for the Ainol AW1
- tablet
-Date: Tue, 8 May 2018 15:28:51 +0200
-Message-ID: <20180508132851.cvthykob5mw6v6yy@flea>
-References: <20180506214901.23429-1-contact@paulk.fr>
- <20180506214901.23429-3-contact@paulk.fr>
- <20180507071931.tebv45yxrojxxkeb@flea>
- <d8de7d2237a74388ac8c8152eded3477e7fd56a4.camel@paulk.fr>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/2] ARM: dts: r8a7740: Add CEU0
+Date: Tue, 8 May 2018 15:33:13 +0200
+Message-ID: <20180508133312.vjipajdlosaa3atp@verge.net.au>
+References: <1524767083-19862-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1524767083-19862-3-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d8de7d2237a74388ac8c8152eded3477e7fd56a4.camel@paulk.fr>
+In-Reply-To: <1524767083-19862-3-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <contact@paulk.fr>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: geert@linux-m68k.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 07, 2018 at 10:15:46PM +0200, Paul Kocialkowski wrote:
-> > > +	backlight: backlight {
-> > > +		compatible = "pwm-backlight";
-> > > +		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
-> > > +		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
-> > 
-> > The increase in perceived brightness should be linear. Usually, for
-> > PWMs backed backlight, an exponential list is a much better
-> > approximation.
+On Thu, Apr 26, 2018 at 08:24:43PM +0200, Jacopo Mondi wrote:
+> Describe CEU0 peripheral for Renesas R-Mobile A1 R8A7740 Soc.
 > 
-> Thanks for the hint, it never occurred to me that pwm duty cycle was not
-> linear with brightness, but that makes sense. I'll give that a try (on
-> 255 values instead of 10 to keep some level of precision in low
-> brightness). The way to go here is probably use a base-255 logarithm
-> such as: duty cycle = range * log(i+1)/log(255) with i the linear
-> brightness value (0 to 255) and range the amplitude of our values (that
-> gets divided by the maximum brightness, so it's really up to hardware
-> precision at this point). I'll go with a range of 255 as well.
+> Reported-by: Geert Uytterhoeven <geert@glider.be>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-Without going into something so complicated, usually a list with power
-of two ending at 255 is a good approximation :)
-
-> > > +&mmc0 {
-> > > +	pinctrl-names = "default";
-> > > +	pinctrl-0 = <&mmc0_pins_a>;
-> > > +	vmmc-supply = <&reg_vcc3v3>;
-> > 
-> > You have the regulators described in your DT, you'd better use them
-> > instead of the one coming from sunxi-common-regulators.dtsi.
-> 
-> Well, according to the reference A20 design, the mmc pins and the card
-> are powered by the 3.3V power rail, that comes from a regular step-down
-> regulator sourcing from IPSOUT, so I don't see what regulator I should
-> better use. Do you have a suggestion?
-
-That works for me then.
-
-> > > +&pio {
-> > > +	panel_power_pin: panel_power_pin@0 {
-> > > +		pins = "PH8";
-> > > +		function = "gpio_out";
-> > > +	};
-> > > +};
-> > 
-> > You don't need that pinctrl node.
-> 
-> I'll get rid of it then. You mentioned that regulator-simple uses the
-> old GPIO API, so I assumed it meant that a pinctrl node is still needed.
-> For reference, it uses of_get_named_gpio (not the devm-managed fashion).
-
-This is only relevant for the polarity of the pins, not the pinctrl part.
-
-Maxime
-
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks, applied.
