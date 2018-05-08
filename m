@@ -1,44 +1,105 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH] dt-bindings: Add vendor prefix for Avnet, Inc.
-Date: Tue, 8 May 2018 14:15:20 +0200
-Message-ID: <933bb0a1-2ea2-3f23-492e-56805a804300@suse.de>
-References: <d860eb7551e343fa59b77fd3e144a633186a8378.1525249073.git.michal.simek@xilinx.com>
- <20180507204937.GA21052@rob-hp-laptop>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: tegra: Add support for 256 MB Colibri-T20
+ (plus such board on Iris)
+Date: Tue, 8 May 2018 14:35:45 +0200
+Message-ID: <CAJKOXPetgqJgGHwdSzZeujM2KEDMWqffYMAJdBS3MXPd3Thb5w@mail.gmail.com>
+References: <1525360112-9893-1-git-send-email-krzk@kernel.org>
+ <c47c07b2c112219093b668c0b4d46ac8@agner.ch> <CAJKOXPeb+DmKVQ1uXkBOjaGMpxtPVFp54SBWm6h=+o30z9K3aQ@mail.gmail.com>
+ <1525428885.6296.18.camel@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180507204937.GA21052@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <1525428885.6296.18.camel@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, Thierry Reding <treding@nvidia.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, SZ Lin <sz.lin@moxa.com>
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc: "stefan@agner.ch" <stefan@agner.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dev@lynxeye.de" <dev@lynxeye.de>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal,
-
-Am 07.05.2018 um 22:49 schrieb Rob Herring:
-> On Wed, May 02, 2018 at 10:17:57AM +0200, Michal Simek wrote:
->> "Avnet, Inc. is one of the world's largest distributors of electronic
->> components and embedded solutions." - Wikipedia.org
+On Fri, May 4, 2018 at 12:14 PM, Marcel Ziswiler
+<marcel.ziswiler@toradex.com> wrote:
+> Hi Krzysztof
+>
+> On Fri, 2018-05-04 at 12:03 +0200, Krzysztof Kozlowski wrote:
+>> On Fri, May 4, 2018 at 11:19 AM, Stefan Agner <stefan@agner.ch>
+>> wrote:
+>> > On 03.05.2018 17:08, Krzysztof Kozlowski wrote:
+>> > > Colibri-T20 can come in 256 MB RAM (with 512 MB NAND) or 512 MB
+>> > > RAM
+>> > > (with 1024 MB NAND) flavors.  Add support for the 256 MB version
+>> > > on Iris
+>> > > evaluation board.
+>> >
+>> > To we really need to specify memory size these days? I think all
+>> > common
+>> > boot loaders fill the memory node anyway.
+>> >
+>> > arch/arm/boot/dts/imx6qdl-apalis.dtsi:
+>> >         /* Will be filled by the bootloader */
+>> >         memory@10000000 {
+>> >                 reg = <0x10000000 0>;
+>> >         };
+>> >
+>> >
+>> > I think we should just rename tegra20-colibri-512.dtsi =>
+>> > tegra20-colibri.dtsi and tegra20-iris-512.dts => tegra20-iris.dts
+>> > to
+>> > avoid confusion and add such an empty node.
 >>
->> Website: www.avnet.com
+>> Having memory node is requirement of DeviceTree specification (at
+>> least one cpu and memory node). Of course if bootloader fills it,
+>> then
+>> we could assume that specification is satisfied... but what if some
+>> bootloader skips it? This creates quite specific dependency between
+>> kernel's DTS and bootloader.
+>
+> Yes, no system boots without any boot loader e.g. initialising the
+> memory and what not. So there are obviously quite specific
+> dependencies.
+
+Sorry for late reply, I missed your emails because unfortunately
+Google marks messages coming for Toradex as spam ("This message has a
+from address in toradex.com but has failed toradex.com's required
+tests for authentication."). Therefore I did not include your comments
+and sent v3.
+
+>
+>> One safe solution would be to specify 256 MB memory node for both
+>> boards and assume that bootloader will bump it to 512 MB for specific
+>> module.
+>
+> Like I mentioned this actually used to be how it was done however
+> lately it has been agreed that any boot loader anyway needs to do the
+> device tree dance (e.g. even just loading and passing it).
+
+Then the safest way is to provide /memory node with 256 MB. If some
+bootloader omits it (e.g. because it is too old or by any mistake) the
+FDT will be still usable with reduced memory in case of 512 board.
+
+>> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> > >
+>> > > ---
+>> > >
+>> > > Changes since v1:
+>> > > 1. Fix memory size in tegra20-colibri-256.dtsi (was working fine
+>> > > because
+>> > >    my bootloader uses mem= argument).
+>> >
+>> > What boot loader are you using? You even can omit mem= if your boot
+>> > loader fills the memory node properly.
 >>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> ---
->>
->>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>  1 file changed, 1 insertion(+)
-> 
-> Applied.
+>> I use the one provided by vendor - Toradex. By default it passes both
+>> mem= and few other mem-like arguments (for FB and video processor) to
+>> command line. I believe it does not adjust the DTB itself because
+>> Toradex prepared this bootloader for... 3.1 kernel without DTB. 7
+>> years old kernel. :)
+>
+> Remember our regular BSP is still based on NVIDIA's downstream Linux
+> for Tegra aka L4T R16.5 based on Linux kernel 3.1.10 which does not
+> even use any device tree yet.
 
-What is this standalone patch needed for? Looks fine, but it doesn't
-appear to be part of a series using it - is it for board compatibles?
+Yes, I noticed. I am trying to bring it fully on new kernels but no
+huge successes so far... I'm stuck on NAND trying Lucas Stach's old
+patchset.
 
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+Best regards,
+Krzysztof
