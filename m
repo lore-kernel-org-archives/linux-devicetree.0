@@ -1,42 +1,44 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v9 00/12] Sunxi: Add SMP support on A83T
-Date: Tue, 8 May 2018 15:19:14 +0200
-Message-ID: <20180508131914.6sy7cd6urnfg3tam@flea>
-References: <20180504190545.5114-1-mylene.josserand@bootlin.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 1/4] ARM: dts: am437x-gp-evm: Fixup (again) tps65218 irq type
+Date: Tue, 8 May 2018 16:20:50 +0300
+Message-ID: <20180508132053.5471-2-peter.ujfalusi@ti.com>
+References: <20180508132053.5471-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180504190545.5114-1-mylene.josserand@bootlin.com>
+In-Reply-To: <20180508132053.5471-1-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>
-Cc: linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com, f.fainelli@gmail.com, opendmb@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: tony@atomide.com
+Cc: bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, j-keerthy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+While the correct IRQ level fixed the WARN_ON(), but prevented the probe
+of tps65218 as GIC_SPI does not support LEVEL_LOW (?)
 
-On Fri, May 04, 2018 at 09:05:33PM +0200, Mylène Josserand wrote:
-> Hello everyone,
-> 
-> This is a V9 of my series that adds SMP support for Allwinner sun8i-a83t.
-> Based on sunxi's tree, sunxi/for-next branch.
-> Depends on a patch from Doug Berger that allows to include the "cpu-type"
-> header on assembly files that I included in my series (patch 01).
+Use LEVEL_HIGH as it looks to be the accurate one since the INTn of TPS is
+connected to NMIn of the SoC.
 
-I applied the patches, with the remarks done by Russell on v8 fixed,
-and the function sun8i_a83t_cntvoff_init made static.
+Fixes: 5692b911c980 ("ARM: dts: am437x-gp-evm: Correct tps65218 irq type")
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ arch/arm/boot/dts/am437x-gp-evm.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> The difference with the v8 is just that the machine is renamed in sun8i-a83t
-> (see patch 07), according to Maxime's review.
-
-The machine name hasn't changed, and the name sun8i-a83t still doesn't
-make much sense. I've fixed it as well.
-
-Thanks,
-Maxime
-
+diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+index d0192e07adc6..60414b1ca404 100644
+--- a/arch/arm/boot/dts/am437x-gp-evm.dts
++++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+@@ -543,7 +543,7 @@
+ 	tps65218: tps65218@24 {
+ 		reg = <0x24>;
+ 		compatible = "ti,tps65218";
+-		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_LOW>; /* NMIn */
++		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>; /* NMIn */
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+ 
 -- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
