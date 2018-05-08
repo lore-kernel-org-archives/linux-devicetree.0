@@ -1,12 +1,13 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] arm64: dts: sprd: fix typo in 'remote-endpoint'
-Date: Tue,  8 May 2018 10:09:52 -0500
-Message-ID: <20180508150952.24562-4-robh@kernel.org>
+From: Liviu Dudau <liviu.dudau@arm.com>
+Subject: Re: [PATCH] arm64: dts: juno: fix OF graph endpoint node names
+Date: Tue, 8 May 2018 16:15:01 +0100
+Message-ID: <20180508151501.GN1027@e110455-lin.cambridge.arm.com>
 References: <20180508150952.24562-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
 In-Reply-To: <20180508150952.24562-1-robh@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -17,36 +18,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Baolin Wang <baolin.wang@linaro.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-kernel@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-dtc now warns on incomplete OF graph endpoint connections:
-
-arch/arm64/boot/dts/sprd/sp9860g-1h10.dtb: Warning (graph_endpoint): /soc/stm@10006000/port/endpoint: graph connection to node '/soc/funnel@10001000/ports/port@2/endpoint' is not bidirectional
-
-The cause is a typo in 'remote-endpoint'.
-
-Cc: Orson Zhai <orsonzhai@gmail.com>
-Cc: Baolin Wang <baolin.wang@linaro.org>
-Cc: Chunyan Zhang <zhang.lyra@gmail.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- arch/arm64/boot/dts/sprd/sc9860.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/sprd/sc9860.dtsi b/arch/arm64/boot/dts/sprd/sc9860.dtsi
-index 5dbfb796d9f9..dcd03ffcda03 100644
---- a/arch/arm64/boot/dts/sprd/sc9860.dtsi
-+++ b/arch/arm64/boot/dts/sprd/sc9860.dtsi
-@@ -326,7 +326,7 @@
- 					reg = <4>;
- 					soc_funnel_in_port1: endpoint {
- 						slave-mode;
--						remote-endpioint =
-+						remote-endpoint =
- 							<&stm_out_port>;
- 					};
- 				};
--- 
-2.17.0
+T24gVHVlLCBNYXkgMDgsIDIwMTggYXQgMTA6MDk6NDlBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4gT0YgZ3JhcGggZW5kcG9pbnQgbm9kZSBuYW1lcyBzaG91bGQgYmUgJ2VuZHBvaW50Jy4g
+Rml4IHRoZSBmb2xsb3dpbmcKPiB3YXJuaW5ncyBmb3VuZCBieSBkdGM6Cj4gCj4gV2FybmluZyAo
+Z3JhcGhfZW5kcG9pbnQpOiAvaGRsY2RAN2ZmNTAwMDAvcG9ydC9oZGxjZDEtZW5kcG9pbnQ6IGdy
+YXBoIGVuZHBvbnQgbm9kZSBuYW1lc2hvdWxkIGJlICdlbmRwb2ludCcKPiBXYXJuaW5nIChncmFw
+aF9lbmRwb2ludCk6IC9oZGxjZEA3ZmY2MDAwMC9wb3J0L2hkbGNkMC1lbmRwb2ludDogZ3JhcGgg
+ZW5kcG9udCBub2RlIG5hbWVzaG91bGQgYmUgJ2VuZHBvaW50Jwo+IFdhcm5pbmcgKGdyYXBoX2Vu
+ZHBvaW50KTogL2kyY0A3ZmZhMDAwMC9oZG1pLXRyYW5zbWl0dGVyQDcwL3BvcnQvdGRhOTk4eC0w
+LWVuZHBvaW50OiBncmFwaCBlbmRwb250IG5vZGUgbmFtZSBzaG91bGQgYmUgJ2VuZHBvaW50Jwo+
+IFdhcm5pbmcgKGdyYXBoX2VuZHBvaW50KTogL2kyY0A3ZmZhMDAwMC9oZG1pLXRyYW5zbWl0dGVy
+QDcxL3BvcnQvdGRhOTk4eC0xLWVuZHBvaW50OiBncmFwaCBlbmRwb250IG5vZGUgbmFtZSBzaG91
+bGQgYmUgJ2VuZHBvaW50Jwo+IAo+IENjOiBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNv
+bT4KCkFja2VkLWJ5OiBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4KClRoYW5rcyBm
+b3IgdGhpcyEKTGl2aXUKCj4gQ2M6IFN1ZGVlcCBIb2xsYSA8c3VkZWVwLmhvbGxhQGFybS5jb20+
+Cj4gQ2M6IExvcmVuem8gUGllcmFsaXNpIDxsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tPgo+IFNp
+Z25lZC1vZmYtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gLS0tCj4gIGFyY2gv
+YXJtNjQvYm9vdC9kdHMvYXJtL2p1bm8tYmFzZS5kdHNpIHwgOCArKysrLS0tLQo+ICAxIGZpbGUg
+Y2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQg
+YS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLWJhc2UuZHRzaSBiL2FyY2gvYXJtNjQvYm9v
+dC9kdHMvYXJtL2p1bm8tYmFzZS5kdHNpCj4gaW5kZXggZWI3NDljNTBhNzM2Li5iMmZlZGFhYjNm
+Y2MgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVuby1iYXNlLmR0c2kK
+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLWJhc2UuZHRzaQo+IEBAIC02Nzcs
+NyArNjc3LDcgQEAKPiAgCQljbG9jay1uYW1lcyA9ICJweGxjbGsiOwo+ICAKPiAgCQlwb3J0IHsK
+PiAtCQkJaGRsY2QxX291dHB1dDogaGRsY2QxLWVuZHBvaW50IHsKPiArCQkJaGRsY2QxX291dHB1
+dDogZW5kcG9pbnQgewo+ICAJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ0ZGE5OTh4XzFfaW5wdXQ+
+Owo+ICAJCQl9Owo+ICAJCX07Cj4gQEAgLTY5Miw3ICs2OTIsNyBAQAo+ICAJCWNsb2NrLW5hbWVz
+ID0gInB4bGNsayI7Cj4gIAo+ICAJCXBvcnQgewo+IC0JCQloZGxjZDBfb3V0cHV0OiBoZGxjZDAt
+ZW5kcG9pbnQgewo+ICsJCQloZGxjZDBfb3V0cHV0OiBlbmRwb2ludCB7Cj4gIAkJCQlyZW1vdGUt
+ZW5kcG9pbnQgPSA8JnRkYTk5OHhfMF9pbnB1dD47Cj4gIAkJCX07Cj4gIAkJfTsKPiBAQCAtNzIw
+LDcgKzcyMCw3IEBACj4gIAkJCWNvbXBhdGlibGUgPSAibnhwLHRkYTk5OHgiOwo+ICAJCQlyZWcg
+PSA8MHg3MD47Cj4gIAkJCXBvcnQgewo+IC0JCQkJdGRhOTk4eF8wX2lucHV0OiB0ZGE5OTh4LTAt
+ZW5kcG9pbnQgewo+ICsJCQkJdGRhOTk4eF8wX2lucHV0OiBlbmRwb2ludCB7Cj4gIAkJCQkJcmVt
+b3RlLWVuZHBvaW50ID0gPCZoZGxjZDBfb3V0cHV0PjsKPiAgCQkJCX07Cj4gIAkJCX07Cj4gQEAg
+LTczMCw3ICs3MzAsNyBAQAo+ICAJCQljb21wYXRpYmxlID0gIm54cCx0ZGE5OTh4IjsKPiAgCQkJ
+cmVnID0gPDB4NzE+Owo+ICAJCQlwb3J0IHsKPiAtCQkJCXRkYTk5OHhfMV9pbnB1dDogdGRhOTk4
+eC0xLWVuZHBvaW50IHsKPiArCQkJCXRkYTk5OHhfMV9pbnB1dDogZW5kcG9pbnQgewo+ICAJCQkJ
+CXJlbW90ZS1lbmRwb2ludCA9IDwmaGRsY2QxX291dHB1dD47Cj4gIAkJCQl9Owo+ICAJCQl9Owo+
+IC0tIAo+IDIuMTcuMAo+IAoKLS0gCj09PT09PT09PT09PT09PT09PT09CnwgSSB3b3VsZCBsaWtl
+IHRvIHwKfCBmaXggdGhlIHdvcmxkLCAgfAp8IGJ1dCB0aGV5J3JlIG5vdCB8CnwgZ2l2aW5nIG1l
+IHRoZSAgIHwKIFwgc291cmNlIGNvZGUhICAvCiAgLS0tLS0tLS0tLS0tLS0tCiAgICDCr1xfKOOD
+hClfL8KvCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
+aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1hcm0ta2VybmVsCg==
