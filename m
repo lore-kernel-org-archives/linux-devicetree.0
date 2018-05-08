@@ -1,370 +1,148 @@
-From: Mikko Perttunen <mperttunen@nvidia.com>
-Subject: [PATCH 5/8] mailbox: tegra-hsp: Add support for shared mailboxes
-Date: Tue, 8 May 2018 14:44:00 +0300
-Message-ID: <20180508114403.14499-6-mperttunen@nvidia.com>
-References: <20180508114403.14499-1-mperttunen@nvidia.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v0 2/2] arm64: dts: rockchip: Add sdmmc UHS support for roc-rk3328-cc
+Date: Tue, 08 May 2018 13:57:17 +0200
+Message-ID: <4418544.G3kHmbejD5@phil>
+References: <1525747704-8537-1-git-send-email-djw@t-chip.com.cn> <1525747704-8537-3-git-send-email-djw@t-chip.com.cn>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180508114403.14499-1-mperttunen@nvidia.com>
+In-Reply-To: <1525747704-8537-3-git-send-email-djw@t-chip.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com
-Cc: araza@nvidia.com, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mikko Perttunen <mperttunen@nvidia.com>
+To: linux-rockchip@lists.infradead.org
+Cc: djw@t-chip.com.cn, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Wayne Chou <zxf@t-chip.com.cn>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, David Wu <david.wu@rock-chips.com>, William Wu <william.wu@rock-chips.com>, Rocky Hao <rocky.hao@rock-chips.com>, "David S. Miller" <davem@davemloft.net>, Liang Chen <cl@rock-chips.com>, Joseph Chen <chenjh@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-The Tegra HSP block supports 'shared mailboxes' that are simple 32-bit
-registers consisting of a FULL bit in MSB position and 31 bits of data.
-The hardware can be configured to trigger interrupts when a mailbox
-is empty or full. Add support for these shared mailboxes to the HSP
-driver.
+Hi Levin,
 
-The initial use for the mailboxes is the Tegra Combined UART. For this
-purpose, we use interrupts to receive data, and spinning to wait for
-the transmit mailbox to be emptied to minimize unnecessary overhead.
+Am Dienstag, 8. Mai 2018, 04:48:24 CEST schrieb djw@t-chip.com.cn:
+> From: Levin Du <djw@t-chip.com.cn>
+> 
+> In roc-rk3328-cc board, the signal voltage of sdmmc is supplied by
+> the vcc_sdio regulator, which is a mux between 1.8V and 3.3V,
+> controlled by a special output only gpio pin.
+> 
+> However, this pin,  not being a normal gpio in the rockchip pinctrl,
+> is set by bit 1 of system register GRF_SOC_CON10. Therefore a new
+> gpio controller using gpio-syscon driver is defined in order to use
+> regulator-gpio.
+> 
+> If the signal voltage changes, the io domain needs to change
+> correspondingly.
+> 
+> To use this feature, the following options are required in kernel config:
+>  - CONFIG_GPIO_SYSCON=y
+>  - CONFIG_POWER_AVS=y
+>  - CONFIG_ROCKCHIP_IODOMAIN=y
+> 
+> Signed-off-by: Levin Du <djw@t-chip.com.cn>
+> 
+> ---
+> 
+>  arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 36 ++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+> index 246c317..792cb04 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+> @@ -14,6 +14,12 @@
+>  		stdout-path = "serial2:1500000n8";
+>  	};
+>  
+> +	gpio_syscon10: gpio-syscon10 {
+> +		compatible = "rockchip,rk3328-gpio-syscon10";
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +	};
+> +
 
-Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
----
- drivers/mailbox/tegra-hsp.c | 216 +++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 193 insertions(+), 23 deletions(-)
+please split this into a separate patch, move it to rk3328.dtsi and together
+with the suggestions from patch 1/2 make it look like
 
-diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
-index 16eb970f2c9f..77bc8ed7ef15 100644
---- a/drivers/mailbox/tegra-hsp.c
-+++ b/drivers/mailbox/tegra-hsp.c
-@@ -21,6 +21,11 @@
- 
- #include <dt-bindings/mailbox/tegra186-hsp.h>
- 
-+#include "mailbox.h"
-+
-+#define HSP_INT0_IE		0x100
-+#define HSP_INT_IR		0x304
-+
- #define HSP_INT_DIMENSIONING	0x380
- #define HSP_nSM_SHIFT		0
- #define HSP_nSS_SHIFT		4
-@@ -34,6 +39,8 @@
- #define HSP_DB_RAW	0x8
- #define HSP_DB_PENDING	0xc
- 
-+#define HSP_SM_SHRD_MBOX	0x0
-+
- #define HSP_DB_CCPLEX		1
- #define HSP_DB_BPMP		3
- #define HSP_DB_MAX		7
-@@ -68,6 +75,18 @@ struct tegra_hsp_db_map {
- 	unsigned int index;
- };
- 
-+struct tegra_hsp_mailbox {
-+	struct tegra_hsp_channel channel;
-+	unsigned int index;
-+	bool sending;
-+};
-+
-+static inline struct tegra_hsp_mailbox *
-+channel_to_mailbox(struct tegra_hsp_channel *channel)
-+{
-+	return container_of(channel, struct tegra_hsp_mailbox, channel);
-+}
-+
- struct tegra_hsp_soc {
- 	const struct tegra_hsp_db_map *map;
- };
-@@ -77,6 +96,7 @@ struct tegra_hsp {
- 	struct mbox_controller mbox;
- 	void __iomem *regs;
- 	unsigned int doorbell_irq;
-+	unsigned int shared_irq;
- 	unsigned int num_sm;
- 	unsigned int num_as;
- 	unsigned int num_ss;
-@@ -85,6 +105,7 @@ struct tegra_hsp {
- 	spinlock_t lock;
- 
- 	struct list_head doorbells;
-+	struct tegra_hsp_mailbox *mailboxes;
- };
- 
- static inline struct tegra_hsp *
-@@ -189,6 +210,35 @@ static irqreturn_t tegra_hsp_doorbell_irq(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
-+static irqreturn_t tegra_hsp_shared_irq(int irq, void *data)
-+{
-+	struct tegra_hsp_mailbox *mb;
-+	struct tegra_hsp *hsp = data;
-+	unsigned long bit, mask;
-+	u32 value;
-+
-+	mask = tegra_hsp_readl(hsp, HSP_INT_IR);
-+	/* Only interested in FULL interrupts */
-+	mask &= 0xff << 8;
-+
-+	for_each_set_bit(bit, &mask, 16) {
-+		unsigned int mb_i = bit % 8;
-+
-+		mb = &hsp->mailboxes[mb_i];
-+
-+		if (!mb->sending) {
-+			value = tegra_hsp_channel_readl(&mb->channel,
-+							HSP_SM_SHRD_MBOX);
-+			value &= ~BIT(31);
-+			mbox_chan_received_data(mb->channel.chan, &value);
-+			tegra_hsp_channel_writel(&mb->channel, value,
-+						 HSP_SM_SHRD_MBOX);
-+		}
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
- static struct tegra_hsp_channel *
- tegra_hsp_doorbell_create(struct tegra_hsp *hsp, const char *name,
- 			  unsigned int master, unsigned int index)
-@@ -277,15 +327,58 @@ static void tegra_hsp_doorbell_shutdown(struct tegra_hsp_doorbell *db)
- 	spin_unlock_irqrestore(&hsp->lock, flags);
- }
- 
-+static int tegra_hsp_mailbox_startup(struct tegra_hsp_mailbox *mb)
-+{
-+	struct tegra_hsp *hsp = mb->channel.hsp;
-+	u32 value;
-+
-+	mb->channel.chan->txdone_method = TXDONE_BY_BLOCK;
-+
-+	/* Route FULL interrupt to external IRQ 0 */
-+	value = tegra_hsp_readl(hsp, HSP_INT0_IE);
-+	value |= BIT(mb->index + 8);
-+	tegra_hsp_writel(hsp, value, HSP_INT0_IE);
-+
-+	return 0;
-+}
-+
-+static int tegra_hsp_mailbox_shutdown(struct tegra_hsp_mailbox *mb)
-+{
-+	struct tegra_hsp *hsp = mb->channel.hsp;
-+	u32 value;
-+
-+	value = tegra_hsp_readl(hsp, HSP_INT0_IE);
-+	value &= ~BIT(mb->index + 8);
-+	tegra_hsp_writel(hsp, value, HSP_INT0_IE);
-+
-+	return 0;
-+}
-+
- static int tegra_hsp_send_data(struct mbox_chan *chan, void *data)
- {
- 	struct tegra_hsp_channel *channel = chan->con_priv;
--	struct tegra_hsp_doorbell *db;
-+	struct tegra_hsp_mailbox *mailbox;
-+	uint32_t value;
- 
- 	switch (channel->type) {
- 	case TEGRA_HSP_MBOX_TYPE_DB:
--		db = channel_to_doorbell(channel);
--		tegra_hsp_channel_writel(&db->channel, 1, HSP_DB_TRIGGER);
-+		tegra_hsp_channel_writel(channel, 1, HSP_DB_TRIGGER);
-+		return 0;
-+	case TEGRA_HSP_MBOX_TYPE_SM:
-+		mailbox = channel_to_mailbox(channel);
-+		mailbox->sending = true;
-+
-+		value = *(uint32_t *)data;
-+		/* Mark mailbox full */
-+		value |= BIT(31);
-+
-+		tegra_hsp_channel_writel(channel, value, HSP_SM_SHRD_MBOX);
-+
-+		while (tegra_hsp_channel_readl(channel, HSP_SM_SHRD_MBOX)
-+		               & BIT(31))
-+			cpu_relax();
-+
-+		return 0;
- 	}
- 
- 	return -EINVAL;
-@@ -298,6 +391,8 @@ static int tegra_hsp_startup(struct mbox_chan *chan)
- 	switch (channel->type) {
- 	case TEGRA_HSP_MBOX_TYPE_DB:
- 		return tegra_hsp_doorbell_startup(channel_to_doorbell(channel));
-+	case TEGRA_HSP_MBOX_TYPE_SM:
-+		return tegra_hsp_mailbox_startup(channel_to_mailbox(channel));
- 	}
- 
- 	return -EINVAL;
-@@ -311,6 +406,9 @@ static void tegra_hsp_shutdown(struct mbox_chan *chan)
- 	case TEGRA_HSP_MBOX_TYPE_DB:
- 		tegra_hsp_doorbell_shutdown(channel_to_doorbell(channel));
- 		break;
-+	case TEGRA_HSP_MBOX_TYPE_SM:
-+		tegra_hsp_mailbox_shutdown(channel_to_mailbox(channel));
-+		break;
- 	}
- }
- 
-@@ -364,7 +462,16 @@ static struct mbox_chan *of_tegra_hsp_xlate(struct mbox_controller *mbox,
- 
- 	switch (type) {
- 	case TEGRA_HSP_MBOX_TYPE_DB:
--		return tegra_hsp_doorbell_xlate(hsp, param);
-+		if (hsp->doorbell_irq)
-+			return tegra_hsp_doorbell_xlate(hsp, param);
-+		else
-+			return ERR_PTR(-EINVAL);
-+
-+	case TEGRA_HSP_MBOX_TYPE_SM:
-+		if (hsp->shared_irq && param < hsp->num_sm)
-+			return hsp->mailboxes[param].channel.chan;
-+		else
-+			return ERR_PTR(-EINVAL);
- 
- 	default:
- 		return ERR_PTR(-EINVAL);
-@@ -403,6 +510,31 @@ static int tegra_hsp_add_doorbells(struct tegra_hsp *hsp)
- 	return 0;
- }
- 
-+static int tegra_hsp_add_mailboxes(struct tegra_hsp *hsp, struct device *dev)
-+{
-+	int i;
-+
-+	hsp->mailboxes = devm_kcalloc(dev, hsp->num_sm, sizeof(*hsp->mailboxes),
-+				      GFP_KERNEL);
-+	if (!hsp->mailboxes)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < hsp->num_sm; i++) {
-+		struct tegra_hsp_mailbox *mb = &hsp->mailboxes[i];
-+
-+		mb->index = i;
-+		mb->sending = false;
-+
-+		mb->channel.hsp = hsp;
-+		mb->channel.type = TEGRA_HSP_MBOX_TYPE_SM;
-+		mb->channel.regs = hsp->regs + SZ_64K + i * SZ_32K;
-+		mb->channel.chan = &hsp->mbox.chans[i];
-+		mb->channel.chan->con_priv = &mb->channel;
-+	}
-+
-+	return 0;
-+}
-+
- static int tegra_hsp_probe(struct platform_device *pdev)
- {
- 	struct tegra_hsp *hsp;
-@@ -431,14 +563,19 @@ static int tegra_hsp_probe(struct platform_device *pdev)
- 	hsp->num_si = (value >> HSP_nSI_SHIFT) & HSP_nINT_MASK;
- 
- 	err = platform_get_irq_byname(pdev, "doorbell");
--	if (err < 0) {
--		dev_err(&pdev->dev, "failed to get doorbell IRQ: %d\n", err);
--		return err;
--	}
-+	if (err < 0)
-+		hsp->doorbell_irq = 0;
-+	else
-+		hsp->doorbell_irq = err;
- 
--	hsp->doorbell_irq = err;
-+	err = platform_get_irq_byname(pdev, "shared0");
-+	if (err < 0)
-+		hsp->shared_irq = 0;
-+	else
-+		hsp->shared_irq = err;
- 
- 	hsp->mbox.of_xlate = of_tegra_hsp_xlate;
-+	/* First nSM are reserved for mailboxes */
- 	hsp->mbox.num_chans = 32;
- 	hsp->mbox.dev = &pdev->dev;
- 	hsp->mbox.txdone_irq = false;
-@@ -451,10 +588,22 @@ static int tegra_hsp_probe(struct platform_device *pdev)
- 	if (!hsp->mbox.chans)
- 		return -ENOMEM;
- 
--	err = tegra_hsp_add_doorbells(hsp);
--	if (err < 0) {
--		dev_err(&pdev->dev, "failed to add doorbells: %d\n", err);
--		return err;
-+	if (hsp->doorbell_irq) {
-+		err = tegra_hsp_add_doorbells(hsp);
-+		if (err < 0) {
-+			dev_err(&pdev->dev, "failed to add doorbells: %d\n",
-+			        err);
-+			return err;
-+		}
-+	}
-+
-+	if (hsp->shared_irq) {
-+		err = tegra_hsp_add_mailboxes(hsp, &pdev->dev);
-+		if (err < 0) {
-+			dev_err(&pdev->dev, "failed to add mailboxes: %d\n",
-+			        err);
-+			goto remove_doorbells;
-+		}
- 	}
- 
- 	platform_set_drvdata(pdev, hsp);
-@@ -462,20 +611,40 @@ static int tegra_hsp_probe(struct platform_device *pdev)
- 	err = mbox_controller_register(&hsp->mbox);
- 	if (err) {
- 		dev_err(&pdev->dev, "failed to register mailbox: %d\n", err);
--		tegra_hsp_remove_doorbells(hsp);
--		return err;
-+		goto remove_doorbells;
- 	}
- 
--	err = devm_request_irq(&pdev->dev, hsp->doorbell_irq,
--			       tegra_hsp_doorbell_irq, IRQF_NO_SUSPEND,
--			       dev_name(&pdev->dev), hsp);
--	if (err < 0) {
--		dev_err(&pdev->dev, "failed to request doorbell IRQ#%u: %d\n",
--			hsp->doorbell_irq, err);
--		return err;
-+	if (hsp->doorbell_irq) {
-+		err = devm_request_irq(&pdev->dev, hsp->doorbell_irq,
-+				       tegra_hsp_doorbell_irq, IRQF_NO_SUSPEND,
-+				       dev_name(&pdev->dev), hsp);
-+		if (err < 0) {
-+			dev_err(&pdev->dev,
-+			        "failed to request doorbell IRQ#%u: %d\n",
-+				hsp->doorbell_irq, err);
-+			return err;
-+		}
-+	}
-+
-+	if (hsp->shared_irq) {
-+		err = devm_request_irq(&pdev->dev, hsp->shared_irq,
-+				       tegra_hsp_shared_irq, 0,
-+				       dev_name(&pdev->dev), hsp);
-+		if (err < 0) {
-+			dev_err(&pdev->dev,
-+				"failed to request shared0 IRQ%u: %d\n",
-+				hsp->shared_irq, err);
-+			return err;
-+		}
- 	}
- 
- 	return 0;
-+
-+remove_doorbells:
-+	if (hsp->doorbell_irq)
-+		tegra_hsp_remove_doorbells(hsp);
-+
-+	return err;
- }
- 
- static int tegra_hsp_remove(struct platform_device *pdev)
-@@ -483,7 +652,8 @@ static int tegra_hsp_remove(struct platform_device *pdev)
- 	struct tegra_hsp *hsp = platform_get_drvdata(pdev);
- 
- 	mbox_controller_unregister(&hsp->mbox);
--	tegra_hsp_remove_doorbells(hsp);
-+	if (hsp->doorbell_irq)
-+		tegra_hsp_remove_doorbells(hsp);
- 
- 	return 0;
- }
--- 
-2.16.1
+grf: syscon@ff100000 {
+	compatible = "rockchip,rk3328-grf", "syscon", "simple-mfd";
+	reg = <0x0 0xff100000 0x0 0x1000>;
+...
+		gpio_mute: gpio-mute {
+		compatible = "rockchip,rk3328-gpio-mute";
+		gpio-controller;
+		#gpio-cells = <2>;
+	};
+...
+};
+
+So making the gpio-controller a child of the grf node.
+And as this definition is not specific to the roc-cc it should be in the
+main devicetree file for the rk3328.
+
+>  	gmac_clkin: external-gmac-clock {
+>  		compatible = "fixed-clock";
+>  		clock-frequency = <125000000>;
+> @@ -41,6 +47,19 @@
+>  		vin-supply = <&vcc_io>;
+>  	};
+>  
+> +	vcc_sdio: sdmmcio-regulator {
+> +		compatible = "regulator-gpio";
+> +		gpios = <&gpio_syscon10 1 GPIO_ACTIVE_HIGH>;
+> +		states = <1800000 0x1
+> +			  3300000 0x0>;
+> +		regulator-name = "vcc_sdio";
+> +		regulator-type = "voltage";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +		vin-supply = <&vcc_sys>;
+> +	};
+> +
+>  	vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
+>  		compatible = "regulator-fixed";
+>  		enable-active-high;
+> @@ -208,6 +227,18 @@
+>  	};
+>  };
+>  
+> +&io_domains {
+> +	status = "okay";
+> +
+> +	vccio1-supply = <&vcc_io>;
+> +	vccio2-supply = <&vcc18_emmc>;
+> +	vccio3-supply = <&vcc_sdio>;
+> +	vccio4-supply = <&vcc_18>;
+> +	vccio5-supply = <&vcc_io>;
+> +	vccio6-supply = <&vcc_io>;
+> +	pmuio-supply = <&vcc_io>;
+> +};
+> +
+
+Please split this into a separate patch about
+"adding io-domain supplies for roc-cc"
+
+
+>  &pinctrl {
+>  	pmic {
+>  		pmic_int_l: pmic-int-l {
+> @@ -227,10 +258,15 @@
+>  	cap-mmc-highspeed;
+>  	cap-sd-highspeed;
+>  	disable-wp;
+> +	sd-uhs-sdr12;
+> +	sd-uhs-sdr25;
+> +	sd-uhs-sdr50;
+> +	sd-uhs-sdr104;
+
+please sort properties alphabetically, so between pinctrl-0 and vmmc-supply
+
+
+>  	max-frequency = <150000000>;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_dectn &sdmmc0_bus4>;
+>  	vmmc-supply = <&vcc_sd>;
+> +	vqmmc-supply = <&vcc_sdio>;
+>  	status = "okay";
+>  };
+
+
+Thanks
+Heiko
