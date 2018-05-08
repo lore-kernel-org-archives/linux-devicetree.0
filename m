@@ -1,71 +1,49 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2] MAINTAINERS: add keyword for devicetree overlay
- notifiers
-Date: Mon, 7 May 2018 17:16:59 -0700
-Message-ID: <0d6a7e46-f659-ae6d-c25d-978f17aa2e63@gmail.com>
-References: <1524879080-27111-1-git-send-email-frowand.list@gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: add MediaTek XS-PHY binding
+Date: Tue, 8 May 2018 09:03:09 +0800
+Message-ID: <1525741389.25162.37.camel@mhfsdcap03>
+References: <1525486506-19301-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1525486506-19301-2-git-send-email-chunfeng.yun@mediatek.com>
+         <20180507170435.GA14540@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524879080-27111-1-git-send-email-frowand.list@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180507170435.GA14540@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ryder Lee <ryder.lee@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Do you want to take this or should I route it through Andrew?
-
--Frank
-
-
-On 04/27/18 18:31, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
+On Mon, 2018-05-07 at 12:04 -0500, Rob Herring wrote:
+> On Sat, May 05, 2018 at 10:15:05AM +0800, Chunfeng Yun wrote:
+> > Add a DT binding documentation of XS-PHY for MediaTek SoCs
+> > with USB3.1 GEN2 controller
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/phy/phy-mtk-xsphy.txt      |  110 ++++++++++++++++++++
+> >  1 file changed, 110 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-xsphy.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-xsphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-xsphy.txt
+> > new file mode 100644
+> > index 0000000..9a95fab
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/phy-mtk-xsphy.txt
+> > @@ -0,0 +1,110 @@
+> > +MediaTek XS-PHY binding
+> > +--------------------------
+> > +
+> > +The XS-PHY controller supports physical layer functionality for USB3.1
+> > +GEN2 controller on MediaTek SoCs.
+> > +
+> > +Required properties (controller (parent) node):
+> > + - compatible	: should be "mediatek,<soc-model>-xsphy", "mediatek,xsphy",
+> > + 		  soc-model is the name of SoC, such as mt2712 etc;
+> > +		  when using "mediatek,xsphy" compatible string, you need SoC specific
+> > +		  ones in addition, one of:
+> > +		  - "mediatek,mt3611-xsphy"
 > 
-> Devicetree overlay notifiers have a chance to potentially get
-> pointers into the overlay unflattened devicetree and overlay FDT.
-> The only protection against these pointers being accessed after
-> the underlying data has been released by kfree() is by source
-> code review of patches.  Add a keyword line to the devicetree
-> overlay maintainers entry to try to catch overlay notifier
-> related patches.
-> 
-> The keyword line is added to the devicetree overlay entry instead
-> of the devicetree entry so that not all maintainers will receive
-> the additional review traffic.  Add Frank Rowand (already a
-> maintainer in the devicetree entry) so that he will receive
-> the additional review traffic.
-> 
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
-> 
-> changes from version 1:
->    - removed extraneous "From:" tags at top of patch description
-> 
-> 
->  MAINTAINERS | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 92be777d060a..aca3956694f8 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10422,12 +10422,14 @@ F:	drivers/infiniband/ulp/opa_vnic
->  
->  OPEN FIRMWARE AND DEVICE TREE OVERLAYS
->  M:	Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> +M:	Frank Rowand <frowand.list@gmail.com>
->  L:	devicetree@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/devicetree/dynamic-resolution-notes.txt
->  F:	Documentation/devicetree/overlay-notes.txt
->  F:	drivers/of/overlay.c
->  F:	drivers/of/resolver.c
-> +K:	of_overlay_notifier_
->  
->  OPEN FIRMWARE AND FLATTENED DEVICE TREE
->  M:	Rob Herring <robh+dt@kernel.org>
-> 
+> What about mt2712 you mention above?
+Sorry, forgot to modify it
