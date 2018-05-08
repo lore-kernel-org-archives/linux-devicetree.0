@@ -1,150 +1,165 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: mtd: document Broadcom's BCM47xx
- partitions
-Date: Tue, 8 May 2018 11:25:24 -0500
-Message-ID: <20180508162524.GB23960@rob-hp-laptop>
-References: <20180112093354.17593-1-zajec5@gmail.com>
- <20180119214450.vhctphu5d4kagwkv@rob-hp-laptop>
- <39fbb845-784b-3e73-a9c6-0729a783930f@gmail.com>
- <CACna6rxVkV=VdUu+Q8cfRk626eCKqq9ue+=_+GBMgEWO_KTkgg@mail.gmail.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v2 1/2] arm64: dts: Add msm8998 SoC and MTP board support
+Date: Tue, 08 May 2018 09:32:58 -0700
+Message-ID: <152579717814.138124.2254267448028084692@swboyd.mtv.corp.google.com>
+References: <20180428054248.22387-1-bjorn.andersson@linaro.org>
+ <152573399648.138124.10341359049104453178@swboyd.mtv.corp.google.com>
+ <20180507233511.GC14924@minitux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CACna6rxVkV=VdUu+Q8cfRk626eCKqq9ue+=_+GBMgEWO_KTkgg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Jonas Gorski <jonas.gorski@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180507233511.GC14924@minitux>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBNYXkgMDUsIDIwMTggYXQgMTE6NDc6MzFQTSArMDIwMCwgUmFmYcWCIE1pxYJlY2tp
-IHdyb3RlOgo+IEhpIFJvYiwKPiAKPiBPbiAyOSBNYXJjaCAyMDE4IGF0IDA4OjIzLCBSYWZhxYIg
-TWnFgmVja2kgPHphamVjNUBnbWFpbC5jb20+IHdyb3RlOgo+ID4gSGkgUm9iICYgc29ycnkgZm9y
-IHRoZSBsYXRlIHJlcGx5LiBNeSBlYXJsaWVyIGFjY2VwdGVkIHBhdGNoc2V0IGFkZGluZwo+ID4g
-b2ZfbWF0Y2hfdGFibGUgbWF0Y2hpbmcgd2FzIHJlcG9ydGVkIHRvIGNhdXNlIGEgcmVncmVzc2lv
-bi4gSXQgaGFkIHRvIGJlCj4gPiBkcm9wcGVkIGFuZCBJIGhhZCB0byBmb2N1cyBvbiBmaXhpbmcg
-dGhhdCBmaXJzdC4KPiA+Cj4gPgo+ID4gT24gMDEvMTkvMjAxOCAxMDo0NCBQTSwgUm9iIEhlcnJp
-bmcgd3JvdGU6Cj4gPj4KPiA+PiBPbiBGcmksIEphbiAxMiwgMjAxOCBhdCAxMDozMzo1M0FNICsw
-MTAwLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4gPj4+Cj4gPj4+IEZyb206IFJhZmHFgiBNacWC
-ZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiA+Pj4KPiA+Pj4gQnJvYWRjb20gYmFzZWQgaG9tZSBy
-b3V0ZXIgZGV2aWNlcyB1c2UgcGFydGl0aW9ucyB3aGljaCBoYXZlIHRvIGJlCj4gPj4+IGRpc2Nv
-dmVyZWQgaW4gYSBzcGVjaWZpYyBub24tc3RhbmRhcmQgd2F5LiBBcyB0aGVyZSBpcyBubyBwYXJ0
-aXRpb24KPiA+Pj4gdGFibGUgdGhpcyBjb21taXQgYWRkcyBhbmQgZGVzY3JpYmVzIGEgbmV3IGN1
-c3RvbSBiaW5kaW5nLgo+ID4+Pgo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnFgmVja2kg
-PHJhZmFsQG1pbGVja2kucGw+Cj4gPj4+IC0tLQo+ID4+PiAgLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbXRkL3BhcnRpdGlvbi50eHQgICAgICAgICAgfCA0Ngo+ID4+PiArKysrKysrKysrKysrKysr
-KysrKystCj4gPj4+ICAxIGZpbGUgY2hhbmdlZCwgNDQgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlv
-bnMoLSkKPiA+Pj4KPiA+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4dAo+ID4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4dAo+ID4+PiBpbmRleCAzNmYzYjc2OWE2MjYuLmIy
-MDFkNDk3YjYxOCAxMDA2NDQKPiA+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL210ZC9wYXJ0aXRpb24udHh0Cj4gPj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4dAo+ID4+PiBAQCAtMTQsOCArMTQsNiBAQCBt
-ZXRob2QgaXMgdXNlZCBmb3IgYSBnaXZlbiBmbGFzaCBkZXZpY2UuIFRvIGRlc2NyaWJlCj4gPj4+
-IHRoZSBtZXRob2QgdGhlcmUgc2hvdWxkIGJlCj4gPj4+ICBhIHN1Ym5vZGUgb2YgdGhlIGZsYXNo
-IGRldmljZSB0aGF0IGlzIG5hbWVkICdwYXJ0aXRpb25zJy4gSXQgbXVzdCBoYXZlIGEKPiA+Pj4g
-ICdjb21wYXRpYmxlJyBwcm9wZXJ0eSwgd2hpY2ggaXMgdXNlZCB0byBpZGVudGlmeSB0aGUgbWV0
-aG9kIHRvIHVzZS4KPiA+Pj4KPiA+Pj4gLVdlIGN1cnJlbnRseSBvbmx5IGRvY3VtZW50IGEgYmlu
-ZGluZyBmb3IgZml4ZWQgbGF5b3V0cy4KPiA+Pj4gLQo+ID4+Pgo+ID4+PiAgRml4ZWQgUGFydGl0
-aW9ucwo+ID4+PiAgPT09PT09PT09PT09PT09PQo+ID4+PiBAQCAtMTA5LDMgKzEwNyw0NyBAQCBm
-bGFzaEAyIHsKPiA+Pj4gICAgICAgICAgICAgICAgIH07Cj4gPj4+ICAgICAgICAgfTsKPiA+Pj4g
-IH07Cj4gPj4+ICsKPiA+Pj4gKwo+ID4+PiArQnJvYWRjb20gQkNNNDd4eCBQYXJ0aXRpb25zCj4g
-Pj4+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT0KPiA+Pj4gKwo+ID4+PiArQnJvYWRjb20g
-aXMgb25lIG9mIGhhcmR3YXJlIG1hbnVmYWN0dXJlcnMgcHJvdmlkaW5nIFNvQ3MgKEJDTTQ3eHgp
-IHVzZWQKPiA+Pj4gaW4KPiA+Pj4gK2hvbWUgcm91dGVycy4gVGhlaXIgQkNNOTQ3eHggYm9hcmRz
-IHVzaW5nIENGRSBib290bG9hZGVyIGhhdmUgc2V2ZXJhbAo+ID4+PiBwYXJ0aXRpb25zCj4gPj4+
-ICt3aXRob3V0IGFueSBvbi1mbGFzaCBwYXJ0aXRpb24gdGFibGUuIE9uIHNvbWUgZGV2aWNlcyB0
-aGVpciBzaXplcyBhbmQvb3IKPiA+Pj4gK21lYW5pbmdzIGNhbiBhbHNvIHZhcnkgc28gZml4ZWQg
-cGFydGl0aW9uaW5nIGNhbid0IGJlIHVzZWQuCj4gPj4+ICsKPiA+Pj4gK0Rpc2NvdmVyaW5nIHBh
-cnRpdGlvbnMgb24gdGhlc2UgZGV2aWNlcyBpcyBwb3NzaWJsZSB0aGFua3MgdG8gaGF2aW5nIGEK
-PiA+Pj4gc3BlY2lhbAo+ID4+PiAraGVhZGVyIGFuZC9vciBtYWdpYyBzaWduYXR1cmUgYXQgdGhl
-IGJlZ2lubmluZyBvZiBlYWNoIG9mIHRoZW0uIFRoZXkgYXJlCj4gPj4+IGFsc28KPiA+Pj4gK2Js
-b2NrIGFsaWduZWQgd2hpY2ggaXMgaW1wb3J0YW50IGZvciBkZXRlcm1pbmlnIGEgc2l6ZS4KPiA+
-Pj4gKwo+ID4+PiArTW9zdCBvZiBwYXJ0aXRpb25zIHVzZSBBU0NJSSB0ZXh0IGJhc2VkIG1hZ2lj
-IGZvciBkZXRlcm1pbmluZyBhIHR5cGUuCj4gPj4+IE1vcmUKPiA+Pj4gK2NvbXBsZXggcGFydGl0
-aW9ucyAobGlrZSBUUlggd2l0aCBpdHMgSERSMCBtYWdpYykgbWF5IGluY2x1ZGUgZXh0cmEKPiA+
-Pj4gaGVhZGVyCj4gPj4+ICtjb250YWluaW5nIHNvbWUgZGV0YWlscywgaW5jbHVkaW5nIGEgbGVu
-Z3RoLgo+ID4+PiArCj4gPj4+ICtBIGxpc3Qgb2Ygc3VwcG9ydGVkIHBhcnRpdGlvbnMgaW5jbHVk
-ZXM6Cj4gPj4+ICsxKSBCb290bG9hZGVyIHdpdGggQnJvYWRjb20ncyBDRkUgKENvbW1vbiBGaXJt
-d2FyZSBFbnZpcm9ubWVudCkKPiA+Pj4gKzIpIE5WUkFNIHdpdGggY29uZmlndXJhdGlvbi9jYWxp
-YnJhdGlvbiBkYXRhCj4gPj4+ICszKSBEZXZpY2UgbWFudWZhY3R1cmVyJ3MgZGF0YSB3aXRoIHNv
-bWUgZGVmYXVsdCB2YWx1ZXMgKGUuZy4gU1NJRHMpCj4gPj4+ICs0KSBUUlggZmlybXdhcmUgY29u
-dGFpbmVyIHdoaWNoIGNhbiBob2xkIHVwIHRvIDQgc3VicGFydGl0aW9ucwo+ID4+PiArNSkgQmFj
-a3VwIFRSWCBmaXJtd2FyZSB1c2VkIGFmdGVyIGZhaWxlZCB1cGdyYWRlCj4gPj4+ICsKPiA+Pj4g
-K0FzIG1lbnRpb25lZCBlYXJsaWVyLCByb2xlIG9mIHNvbWUgcGFydGl0aW9ucyBtYXkgZGVwZW5k
-IG9uIGV4dHJhCj4gPj4+IGNvbmZpZ3VyYXRpb24uCj4gPj4+ICtGb3IgZXhhbXBsZSBib3RoOiBt
-YWluIGZpcm13YXJlIGFuZCBiYWNrdXAgZmlybXdhcmUgdXNlIHRoZSBzYW1lIFRSWAo+ID4+PiBm
-b3JtYXQgd2l0aAo+ID4+PiArdGhlIHNhbWUgaGVhZGVyLiBUbyBkaXN0aW5ndWlzaCBjdXJyZW50
-bHkgdXNlZCBmaXJtd2FyZSBhIENGRSdzCj4gPj4+IGVudmlyb25tZW50Cj4gPj4+ICt2YXJpYWJs
-ZSAiYm9vdHBhcnRpdGlvbiIgaXMgdXNlZC4KPiA+Pj4gKwo+ID4+PiArCj4gPj4+ICtEZXZpY2Vz
-IHVzaW5nIEJyb2FkY29tIHBhcnRpdGlvbnMgZGVzY3JpYmVkIGFib3ZlIHNob3VsZCBzaG91bGQg
-aGF2ZQo+ID4+PiBmbGFzaCBub2RlCj4gPj4+ICt3aXRoIGEgc3Vibm9kZSBuYW1lZCAicGFydGl0
-aW9ucyIgdXNpbmcgZm9sbG93aW5nIHByb3BlcnRpZXM6Cj4gPj4+ICsKPiA+Pj4gK1JlcXVpcmVk
-IHByb3BlcnRpZXM6Cj4gPj4+ICstIGNvbXBhdGlibGUgOiAocmVxdWlyZWQpIG11c3QgYmUgImJy
-Y20sYmNtOTQ3eHgtY2ZlLXBhcnRpdGlvbnMiCj4gPj4KPiA+Pgo+ID4+IFNvIHlvdSBjYW4ndCBk
-aXNjb3ZlciB5b3UgaGF2ZSBDRkUgcGFydGl0aW9ucywgYnV0IHlvdSBjYW4gZGlzY292ZXIKPiA+
-PiBldmVyeXRoaW5nIGVsc2UgbGlrZSB3aGVyZSBwYXJ0aXRpb25zIHN0YXJ0Pwo+ID4KPiA+Cj4g
-PiBJIGNvdWxkIGRpc2NvdmVyIHRoZXJlIGlzIGEgQ0ZFIGJvb3Rsb2FkZXIgYXQgdGhlIGZsYXNo
-IGJlZ2lubmluZyBhbmQKPiA+IGFzc3VtZSB0aGVyZSBhcmUgQ0ZFLWxpa2UgcGFydGl0aW9ucy4g
-SXQgZG9lc24ndCBzb3VuZCBzYWZlIGhvd2V2ZXIgYW5kCj4gPiBJIGJlbGlldmUgdGhlIHBvaW50
-IG9mIHVzaW5nIERUICsgY29tcGF0aWJsZSBwcm9wZXJ0aWVzIGlzIHRvIGF2b2lkIHN1Y2gKPiA+
-IC9ndWVzc2luZy8uIFRoZXJlIGFyZSB0b28gbWFueSBjYXNlcywgZGV2aWNlcywgImZvcm1hdHMi
-IHRvIGp1c3QgYmxpbmRseQo+ID4gdHJ5IGV2ZXJ5IHBvc3NpYmxlIHBhcnNlci4gVGhhdCdzIHdo
-eSB3ZSBhZ3JlZWQgdG8gdXNlICJjb21wYXRpYmxlIgo+ID4gc3RyaW5ncy4KPiA+Cj4gPiBUaGlz
-IHdhcyBhbHNvIGRlc2NyaWJlZCBieSBCb3JpcyBpbiBoaXMgcGF0Y2hzZXQgMisgeWVhcnMgYWdv
-Ogo+ID4gW1JGQyBQQVRDSCAwLzddIG10ZDogcGFydGl0aW9uczogYWRkIG9mX21hdGNoX3RhYmxl
-IHN1cHBvcnQKPiA+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1t
-dGQvMjAxNS1EZWNlbWJlci8wNjQwNzYuaHRtbAo+ID4KPiA+PiAgKDIpIHdlIGNhbid0IGp1c3Qg
-c2NhbiBmb3IgYWxsIHN1cHBvcnRlZCBwYXJzZXJzIChsaWtlIHRoZSBibG9jayBzeXN0ZW0KPiA+
-PiBkb2VzKSwgc2luY2UKPiA+PiAgICAgIHRoZXJlIGlzIGEgd2lkZSBkaXZlcnNpdHkgb2YgImZv
-cm1hdHMiIChubyBzdGFuZGFyZGl6YXRpb24pLCBhbmQgaXQKPiA+PiBpcyBub3QKPiA+PiAgICAg
-IGFsd2F5cyBzYWZlIG9yIGVmZmljaWVudCB0byBhdHRlbXB0IHRvIGRvIHNvLCBwYXJ0aWN1bGFy
-bHkgc2luY2UgbWFueQo+ID4+IG9mCj4gPj4gICAgICB0aGVtIGFsbG93IHRoZWlyIGRhdGEgc3Ry
-dWN0dXJlcyB0byBiZSBwbGFjZWQgYW55d2hlcmUgb24gdGhlIGZsYXNoLAo+ID4+IGFuZAo+ID4+
-ICAgICAgc28gcmVxdWlyZSBzY2FubmluZyB0aGUgZW50aXJlIGZsYXNoIGRldmljZSB0byBmaW5k
-IHRoZW0uCj4gPgo+ID4gSSBhbHNvIGJlbGlldmUgdGhpcyBpcyBzb2x1dGlvbiB5b3UgYWNrZWQg
-YmFjayB0aGVuOgo+ID4gW1JGQyBQQVRDSCAzLzddIGRvYzogZHQ6IG10ZDogcGFydGl0aW9uOiBh
-ZGQgb24tZmxhc2ggZm9ybWF0IGJpbmRpbmcKPiA+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L3BpcGVybWFpbC9saW51eC1tdGQvMjAxNS1EZWNlbWJlci8wNjQxMDAuaHRtbAo+ID4KPiA+PiBP
-biBGcmksIERlYyAwNCwgMjAxNSBhdCAwOToxOToxOVBNIC0wODAwLCBCcmlhbiBOb3JyaXMgd3Jv
-dGU6Cj4gPj4gPiBUaGUgcGxhdGZvcm0gZGVzY3JpcHRpb24gKHN1Y2ggYXMgdGhlIHR5cGUgb2Yg
-cGFydGl0aW9uIGZvcm1hdHMgdXNlZCBvbgo+ID4+ID4gYSBnaXZlbiBmbGFzaCkgc2hvdWxkIGJl
-IGRvbmUgaW5kZXBlbmRlbnRseSBvZiB0aGUgZmxhc2ggZHJpdmVyIGluIHVzZS4KPiA+PiA+IEhv
-d2V2ZXIsIHdlIGNhbid0IHJlYXNvbmFibHkgaGF2ZSAqYWxsKiBwYXJ0aXRpb24gcGFyc2VycyBy
-dW4gb24gYWxsCj4gPj4gPiBmbGFzaCAodW50aWwgdGhleSBmaW5kIGEgbWF0Y2gpLCBzbyBsZXQn
-cyBvdmVybG9hZCB0aGUgJ3BhcnRpdGlvbnMnCj4gPj4gPiBzdWJub2RlIHRvIHN1cHBvcnQgc3Bl
-Y2lmeWluZyB3aGljaCBmb3JtYXQocykgdG8gdHJ5IGluIHRoZSBkZXZpY2UgdHJlZS4KPiA+PiA+
-Cj4gPj4gPiAoLi4uKQo+ID4+Cj4gPj4gTG9va3MgZ29vZCB0byBtZS4gSWYgeW91IGhhZCBsb3Rz
-IG9mIHBhcnRpdGlvbnMsIEknZCBhZ3JlZSB3aXRoIGNvbW1lbnRzCj4gPj4gdGhhdCB0aGV5IHNo
-b3VsZCBiZSBzZXBhcmF0ZSBmaWxlcywgYnV0IEkgZG91YnQgd2UnbGwgaGF2ZSBtYW55IDEwcyBv
-Zgo+ID4+IHRoZW0uIFBsdXMgYWxsIHdlIHJlYWxseSBuZWVkIGhlcmUgaXMgYSBsaXN0IG9mIGNv
-bXBhdGlibGUgc3RyaW5ncy4KPiA+Pgo+ID4+IEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaCBh
-dCBrZXJuZWwub3JnPgo+ID4KPiA+IFNvIEkgZ3Vlc3MgdGhlIGFuc3dlciBpczoKPiA+IDEpIEkg
-cmVhbGx5IGRvbid0IHdhbnQgdG8gYmxpbmRseSBsb29rIGZvciBDRkUtbGlrZSBwYXJ0aXRpb25z
-LiBUb28gbXVjaAo+ID4gICAgcmlzayBvZiBmYWxzZSBwb3NpdGl2ZXMuCj4gPiAyKSBJIGRvbid0
-IHdhbnQgcGFyc2VyIHRvIGJlIGJsaW5kbHkgY2FsbGVkICYgdXNlIGV4dHJhIG1hZ2ljIGNoZWNr
-cyB0bwo+ID4gICAgbWFrZSBzdXJlIEknbSBkZWFsaW5nIHdpdGggZGV2aWNlIHVzaW5nIENGRSBi
-b290bG9hZGVyLgo+ID4gMykgT25jZSBJIGtub3cgSSdtIGRlYWxpbmcgd2l0aCBkZXZpY2UgdXNp
-bmcgQ0ZFIGJvb3Rsb2FkZXIgSSBjYW4gZmluZAo+ID4gICAgcGFydGl0aW9ucyBvbiB0aGUgZmxh
-c2guCj4gPgo+ID4KPiA+PiBXaHkgZG9lc24ndCB0aGUga2VybmVsIGp1c3QgcHJvYmUgZm9yIHRo
-ZSBwYXJ0aXRpb24gdGFibGU/Cj4gPgo+ID4KPiA+IElmIGJ5IGEgInBhcnRpdGlvbiB0YWJsZSIg
-eW91IG1lYW4gYSBzaW5nbGUgYmxvY2sgd2l0aCBkYXRhIHVzaW5nIGEKPiA+IGNsZWFyIHN0cnVj
-dHVyZTogaXQgZG9lc24ndCBleGlzdC4gVGhhdCdzIHRoZSB3aG9sZSBwb2ludCB3aXRoIGNyYXBw
-eQo+ID4gQnJvYWRjb20gZGV2aWNlcy4KPiAKPiBXb3VsZCB5b3UgZmluZCBhIG1vbWVudCB0byBy
-ZXZpZXcgdGhhdCBwYXRjaCBhZ2FpbiwgYWZ0ZXIgZXh0cmEKPiBleHBsYW5hdGlvbiBJIHByb3Zp
-ZGVkLCBwbGVhc2U/CgpJIGd1ZXNzIHRoaXMgaXMgZmluZS4gQ2FuIHlvdSByZXNlbmQgYXMgSSBk
-b24ndCBoYXZlIHRoZSBvcmlnaW5hbCBwYXRjaC4gCgpJIHRoaW5rIGl0IHNob3VsZCBiZSBhIHNl
-cGFyYXRlIGZpbGUgdGhvdWdoIGFzIHBhcnRpdGlvbi50eHQgd291bGQgCmJlY29tZSB2ZXJ5IGxv
-bmcgaWYgZXZlcnkgdmVuZG9yIHBhcnRpdGlvbmluZyB3YXMgYWRkZWQgdGhlcmUuCgpSb2IKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51
-eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
+Quoting Bjorn Andersson (2018-05-07 16:35:11)
+> On Mon 07 May 15:59 PDT 2018, Stephen Boyd wrote:
+> =
+
+> > Quoting Bjorn Andersson (2018-04-27 22:42:47)
+> > > diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/=
+dts/qcom/msm8998.dtsi
+> > > new file mode 100644
+> > > index 000000000000..d6665e4f801f
+> > > --- /dev/null
+> > > +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > > @@ -0,0 +1,340 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/* Copyright (c) 2016, The Linux Foundation. All rights reserved. */
+> > > +
+> > > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > > +#include <dt-bindings/clock/qcom,gcc-msm8998.h>
+> > > +
+> > > +/ {
+> > > +       model =3D "Qualcomm Technologies, Inc. MSM 8998";
+
+Drop the space between MSM and 8998?
+
+> > > +
+> > > +       interrupt-parent =3D <&intc>;
+> > > +
+> > > +       qcom,msm-id =3D <292 0x0>;
+> > =
+
+> > No update to dtbtool?
+> > =
+
+> =
+
+> This allows me to concatenate the dtb to the Image.gz and boot the
+> device. From my scripts I see that I tried to use dtbTool before
+> reverting to this...
+
+Oh, must be that the bootloader mandates the magic numbers exist in the
+blob and you can't concatenate a single dtb and have it ignore the magic
+numbers? Sounds perfect.
+
+> =
+
+> [..]
+> > > +               cpu-map {
+> > > +                       cluster0 {
+> > > +                               core0 {
+> > > +                                       cpu =3D <&CPU0>;
+> > > +                               };
+> > > +
+> > > +                               core1 {
+> > > +                                       cpu =3D <&CPU1>;
+> > > +                               };
+> > > +
+> > > +                               core2 {
+> > > +                                       cpu =3D <&CPU2>;
+> > > +                               };
+> > > +
+> > > +                               core3 {
+> > > +                                       cpu =3D <&CPU3>;
+> > > +                               };
+> > > +                       };
+> > > +
+> > > +                       cluster1 {
+> > > +                               core0 {
+> > > +                                       cpu =3D <&CPU4>;
+> > > +                               };
+> > > +
+> > > +                               core1 {
+> > > +                                       cpu =3D <&CPU5>;
+> > > +                               };
+> > > +
+> > > +                               core2 {
+> > > +                                       cpu =3D <&CPU6>;
+> > > +                               };
+> > > +
+> > > +                               core3 {
+> > > +                                       cpu =3D <&CPU7>;
+> > > +                               };
+> > > +                       };
+> > > +               };
+> > =
+
+> > I still wonder if this is accurate, but OK.
+> > =
+
+> =
+
+> Afaict it matches downstream, not sure if I'm missing something?
+
+Right, it matches downstream, but I seem to recall that downstream was
+describing the power "clusters" for big and little, when this mapping
+usually follows the cache layout of the CPUs (i.e. if all CPUs share a
+cache then they're in the same cluster).
+
+> =
+
+> [..]
+> > > +       intc: interrupt-controller@17a00000 {
+> > > +               compatible =3D "arm,gic-v3";
+> > > +               reg =3D <0x17a00000 0x10000>,       /* GICD */
+> > > +                     <0x17b00000 0x100000>;      /* GICR * 8 */
+> > > +               #interrupt-cells =3D <3>;
+> > > +               #address-cells =3D <1>;
+> > > +               #size-cells =3D <1>;
+> > > +               ranges;
+> > > +               interrupt-controller;
+> > > +               #redistributor-regions =3D <1>;
+> > > +               redistributor-stride =3D <0x0 0x20000>;
+> > =
+
+> > Is this needed? The redistributor stuff can be left out if there's only
+> > one right?
+> > =
+
+> =
+
+> #redistributor-regions is listed as optional if there's more than 1, the
+> stride is still needed.
+> =
+
+> Afaict the stride still needs to be specified, as it's different from
+> the default 64kb.
+
+There's one region though. Marc rejected those properties in the sdm845
+dts file[1] and it looks exactly the same here. It would be nice if the
+ITS region was described (we know it's there and it's probably the same
+offset as on SDM845 no doubt).
+
+> =
+
+> > > +               interrupts =3D <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> > > +       };
+> > > +
+> > > +       blsp2_uart1: serial@c1b0000 {
+> > =
+
+> > Clk name says uart2 though?
+> > =
+
+> =
+
+> That's because it's the wrong clock. Thanks!
+
+Hah!
+
+[1] https://lkml.kernel.org/r/96fac632-8fb8-0933-cc1f-627acb38a595@arm.com
