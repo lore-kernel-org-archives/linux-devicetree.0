@@ -1,55 +1,33 @@
-Return-Path: <SRS0=+w6M=II=linaro.org=ulf.hansson@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <1525741460-109455-1-git-send-email-shawn.lin@rock-chips.com>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 8 May 2018 10:38:06 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] Documentation: mmc: addtional description for
+ post-power-on-delay-ms
+Message-ID: <20180508153806.GA22616@rob-hp-laptop>
 References: <1525741460-109455-1-git-send-email-shawn.lin@rock-chips.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 21 May 2018 13:35:54 +0200
-Message-ID: <CAPDyKFojixSA_9q0kg4Uzd5Xm9TvqgAmSVNuPw4s8GJPnkGsgw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] Documentation: mmc: addtional description for post-power-on-delay-ms
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1525741460-109455-1-git-send-email-shawn.lin@rock-chips.com>
 To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Adrian Hunter <adrian.hunter@intel.com>, devicetree@vger.kernel.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Adrian Hunter <adrian.hunter@intel.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 8 May 2018 at 03:04, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+On Tue, May 08, 2018 at 09:04:19AM +0800, Shawn Lin wrote:
 > post-power-on-delay-ms woule be reused to substitute the hard-coded 10ms
 > delay waiting for power supply to be stable, specificed by individual
 > platform/board. Default to 10ms as before, if no available.
->
+> 
 > Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-
-Thanks, applied for next!
-
-Kind regards
-Uffe
-
->
+> 
 > ---
->
+> 
 > Changes in v3:
 > - reused post-power-on-delay-ms suggested by Rob
->
+> 
 > Changes in v2: None
->
+> 
 >  Documentation/devicetree/bindings/mmc/mmc.txt | 4 ++++
 >  1 file changed, 4 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-> index 467cd7b..a1d0cf4 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-> @@ -56,6 +56,10 @@ Optional properties:
->  - fixed-emmc-driver-type: for non-removable eMMC, enforce this driver type.
->    The value <n> is the driver type as specified in the eMMC specification
->    (table 206 in spec version 5.1).
-> +- post-power-on-delay-ms : It was invented for MMC pwrseq-simple which could
-> +  be referred to mmc-pwrseq-simple.txt. But now it's reused as a tunable delay
-> +  waiting for I/O signalling and card power supply to be stable, regardless of
-> +  whether pwrseq-simple is used. Default to 10ms if no available.
->
->  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
->  polarity properties, we have to fix the meaning of the "normal" and "inverted"
-> --
-> 1.9.1
->
->
+
+Reviewed-by: Rob Herring <robh@kernel.org>
