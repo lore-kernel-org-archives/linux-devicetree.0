@@ -1,114 +1,97 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v2 1/2] dt: bindings: lm3601x: Introduce the lm3601x
- driver
-Date: Tue, 8 May 2018 11:10:49 -0500
-Message-ID: <70e9b1ef-495b-a1ee-7abe-f7c719438b72@ti.com>
-References: <20180508141704.24271-1-dmurphy@ti.com>
- <554b283f-7c27-e2de-3052-e5119dba9396@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH 1/3] arcnet: com20020: Add memory map of com20020
+Date: Tue, 8 May 2018 11:16:36 -0500
+Message-ID: <20180508161636.GA23960@rob-hp-laptop>
+References: <20180505213448.8180-1-andrea.greco.gapmilano@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <554b283f-7c27-e2de-3052-e5119dba9396@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180505213448.8180-1-andrea.greco.gapmilano@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>, robh+dt@kernel.org, mark.rutland@arm.com, jacek.anaszewski@gmail.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Andrea Greco <andrea.greco.gapmilano@gmail.com>
+Cc: m.grzeschik@pengutronix.de, Andrea Greco <a.greco@4sigma.it>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/08/2018 10:32 AM, Andrew F. Davis wrote:
-> On 05/08/2018 09:17 AM, Dan Murphy wrote:
->> Introduce the device tree bindings for the lm3601x
->> family of LED torch, flash and IR drivers.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>
->> v2 - No changes - https://patchwork.kernel.org/patch/10384587/
->>
->>  .../devicetree/bindings/leds/leds-lm3601x.txt | 51 +++++++++++++++++++
->>  1 file changed, 51 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3601x.txt
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
->> new file mode 100644
->> index 000000000000..38cdabf6ca7e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
->> @@ -0,0 +1,51 @@
->> +* Texas Instruments - lm3601x Single-LED Flash Driver
->> +
->> +The LM3601X are ultra-small LED flash drivers that
->> +provides a high level of adjustability.
->> +
->> +Required properties:
->> +	- compatible : Can be one of the following
->> +		"ti,lm3601x"
+On Sat, May 05, 2018 at 11:34:45PM +0200, Andrea Greco wrote:
+> From: Andrea Greco <a.greco@4sigma.it>
 > 
+> Add support for com20022I/com20020, memory mapped chip version.
+> Support bus: Intel 80xx and Motorola 68xx.
+> Bus size: Only 8 bit bus size is supported.
+> Added related device tree bindings
 > 
-> No wildcard compatibles, drop this.
+> Signed-off-by: Andrea Greco <a.greco@4sigma.it>
+> ---
+>  .../devicetree/bindings/net/smsc-com20020.txt      |  23 +++
 
-Yeah I hmm and hawed about keeping this so I figured I would get community feedback on this.
-I can remove it.
+Please split bindings to separate patch.
 
+>  drivers/net/arcnet/Kconfig                         |  12 +-
+>  drivers/net/arcnet/Makefile                        |   1 +
+>  drivers/net/arcnet/arcdevice.h                     |  27 ++-
+>  drivers/net/arcnet/com20020-membus.c               | 191 +++++++++++++++++++++
+>  drivers/net/arcnet/com20020.c                      |   9 +-
+>  6 files changed, 253 insertions(+), 10 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/smsc-com20020.txt
+>  create mode 100644 drivers/net/arcnet/com20020-membus.c
 > 
-> 
->> +		"ti,lm36010"
->> +		"ti,lm36011"
->> +	- reg : I2C slave address
->> +	- #address-cells : 1
->> +	- #size-cells : 0
->> +
->> +Required child properties:
->> +	- reg : 0 - Indicates to support and register a torch interface
->> +		1 - Indicates to support and register a strobe interface
->> +		2 - Indicates to support and register an ir interface
->> +
->> +Optional child properties:
->> +	- label : see Documentation/devicetree/bindings/leds/common.txt
->> +
-> 
-> 
-> Relative path might work better here.
+> diff --git a/Documentation/devicetree/bindings/net/smsc-com20020.txt b/Documentation/devicetree/bindings/net/smsc-com20020.txt
+> new file mode 100644
+> index 000000000000..39c5b19c55af
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/smsc-com20020.txt
+> @@ -0,0 +1,23 @@
+> +SMSC com20020, com20022I
 
-I was following the other LED documentation.
+What does this device do?
 
-Pretty much a copy and paste
+> +
+> +timeout: Arcnet timeout, checkout datashet
+> +clockp: Clock Prescaler, checkout datashet
 
-> 
-> 
->> +Example:
->> +led-controller@64 {
->> +	compatible = "ti,lm3601x";
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +	reg = <0x64>;
->> +
->> +	led@0 {
->> +		reg = <0>;
->> +		label = "white:torch";
->> +		led-max-microamp=<10000>;
->> +	};
->> +
->> +	led@1 {
->> +		reg = <1>;
->> +		label = "white:strobe";
->> +		flash-max-microamp=<10000>;
->> +		flash-max-timeout-us=<800>;
->> +	};
->> +
->> +	led@2 {
->> +		reg = <2>;
->> +		label = "invisible:ir";
->> +	};
->> +}
->> +
->> +For more product information please see the links below:
->> +http://www.ti.com/product/LM36010
->> +http://www.ti.com/product/LM36011
->>
+s/datashet/datasheet/
 
+> +clockm: Clock multiplier, checkout datasheet
 
--- 
-------------------
-Dan Murphy
+Would these 3 properties be common for arcnet devices? If not, then they 
+should have a vendor prefix.
+
+> +
+> +phy-reset-gpios: Chip reset ppin
+
+Use 'reset-gpios' as that is standard.
+
+> +phy-irq-gpios: Chip irq pin
+
+Use 'interrupts'. Interrupt capable gpio controllers are also interrupt 
+controllers.
+
+> +
+> +com20020_A@0 {
+
+Node names should be generic based on the class of device. I don't think 
+we have one defined, but how about 'arcnet'.
+
+Unit addresses must have a corresponding reg property. How is this 
+device accessed?
+
+> +    compatible = "smsc,com20020";
+
+Not documented.
+
+> +
+> +	timeout	= <0x3>;
+> +	backplane = <0x0>;
+> +
+> +	clockp = <0x0>;
+> +	clockm = <0x3>;
+> +
+> +	phy-reset-gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
+> +	phy-irq-gpios = <&gpio2 10 GPIO_ACTIVE_LOW>;
+> +
+> +	status = "okay";
+
+Don't should status in examples.
+
+> +};
