@@ -1,41 +1,91 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/4] ARM: dts: am437x boards: Correct (again) tps65218
- irq type
-Date: Tue, 8 May 2018 07:16:00 -0700
-Message-ID: <20180508141600.GT98604@atomide.com>
-References: <20180508132053.5471-1-peter.ujfalusi@ti.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] arm: dts: imx53: Fix LDB OF graph warning
+Date: Tue, 08 May 2018 16:16:37 +0200
+Message-ID: <1525788997.18091.5.camel@pengutronix.de>
+References: <20180508135930.5768-1-robh@kernel.org>
+ <20180508135930.5768-3-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180508132053.5471-1-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, j-keerthy@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180508135930.5768-3-robh@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [180508 13:22]:
-> Hi,
+On Tue, 2018-05-08 at 08:59 -0500, Rob Herring wrote:
+> Single child nodes in OF graph don't need an address and now dtc will
+> warn about this:
 > 
-> While based on the datasheet of tps65218 the INT is low active, the GIC_SPI
-> does not support anythin but IRQ_TYPE_LEVEL_HIGH or IRQ_TYPE_EDGE_RISING:
+> Warning (graph_child_address): /soc/aips@50000000/ldb@53fa8008/lvds-channel@0: graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
 > 
-> [    2.761814] genirq: Setting trigger mode 8 for irq 102 failed (irq_chip_set_type_parent+0x0/0x30)
-> [    2.770913] tps65218 0-0024: Failed to request IRQ 102 for tps65218: -22
-> [    2.777854] tps65218: probe of 0-0024 failed with error -22
-
-So does the tps65218 have some register to control the interrupt
-direction or is it's datasheet wrong?
-
-BTW, ADC might be a good test case for PMIC interrupt if it has one.
-
-> Use LEVEL_HIGH for the interrupt as it looks to be the correct setting:
-> INTn of tps65218 is connected to NMIn of the SoC.
+> Since the LDB should always have an output port, fix the warning by
+> adding the output port, 2, to the DT.
 > 
-> The offending patches are only in linux-next.
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  arch/arm/boot/dts/imx53.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+> index 7d647d043f52..1cf2fc9d0a58 100644
+> --- a/arch/arm/boot/dts/imx53.dtsi
+> +++ b/arch/arm/boot/dts/imx53.dtsi
+> @@ -488,6 +488,10 @@
+>  							remote-endpoint = <&ipu_di0_lvds0>;
+>  						};
+>  					};
+> +
+> +					port@2 {
+> +						reg = <2>;
+> +					};
 
-OK
+Now that the reg property of port@2 is added in the .dtsi, it could be
+removed from the one .dts files that use it:
 
-Regards,
+----------8<----------
+--- a/arch/arm/boot/dts/imx53-ppd.dts
++++ b/arch/arm/boot/dts/imx53-ppd.dts
+@@ -559,8 +559,6 @@
+                status = "okay";
+ 
+                port@2 {
+-                       reg = <2>;
+-
+                        lvds0_out: endpoint {
+                                remote-endpoint = <&panel_in_lvds0>;
+                        };
+---------->8----------
 
-Tony
+>  				};
+>  
+>  				lvds-channel@1 {
+> @@ -503,6 +507,10 @@
+>  							remote-endpoint = <&ipu_di1_lvds1>;
+>  						};
+>  					};
+> +
+> +					port@2 {
+> +						reg = <2>;
+> +					};
+>  				};
+>  			};
+>  
+
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+
+regards
+Philipp
