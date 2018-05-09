@@ -1,57 +1,32 @@
-From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH 1/5] dt-bindings: pinctrl: document the STMFX pinctrl
- bindings
-Date: Wed, 9 May 2018 07:56:57 +0000
-Message-ID: <55392fe7-20d2-9447-60f9-4bd226b60195@st.com>
-References: <1523440025-18077-1-git-send-email-amelie.delaunay@st.com>
- <1523440025-18077-2-git-send-email-amelie.delaunay@st.com>
- <20180416181940.4b5z4svbde3ompij@rob-hp-laptop>
- <CACRpkdYOMjjYyWQz7PK34jqUK7z5-CmH1HY6un4k8nBn7Cq8ag@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v7 13/24] ASoC: qdsp6: q6adm: Add q6adm driver
+Date: Wed, 9 May 2018 09:08:01 +0100
+Message-ID: <d85db592-903a-2da3-4ff1-e153b3dde2cb@linaro.org>
+References: <20180501120820.11016-1-srinivas.kandagatla@linaro.org>
+ <20180501120820.11016-14-srinivas.kandagatla@linaro.org>
+ <e9a97387-2bd7-9733-5946-50091aec93a0@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYOMjjYyWQz7PK34jqUK7z5-CmH1HY6un4k8nBn7Cq8ag@mail.gmail.com>
+In-Reply-To: <e9a97387-2bd7-9733-5946-50091aec93a0@codeaurora.org>
 Content-Language: en-US
-Content-ID: <B0BCCDC397D58B4F98AEF4626D073125@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Lee Jones <lee.jones@linaro.org>
+To: Banajit Goswami <bgoswami@codeaurora.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc: gregkh@linuxfoundation.org, david.brown@linaro.org, mark.rutland@arm.com, lgirdwood@gmail.com, plai@codeaurora.org, tiwai@suse.com, perex@perex.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com, spatakok@qti.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA0LzI2LzIwMTggMDI6NDkgUE0sIExpbnVzIFdhbGxlaWogd3JvdGU6DQo+IE9uIE1v
-biwgQXByIDE2LCAyMDE4IGF0IDg6MTkgUE0sIFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+
-IHdyb3RlOg0KPj4gT24gV2VkLCBBcHIgMTEsIDIwMTggYXQgMTE6NDc6MDFBTSArMDIwMCwgQW1l
-bGllIERlbGF1bmF5IHdyb3RlOg0KPj4+IFRoaXMgcGF0Y2ggYWRkcyBkb2N1bWVudGF0aW9uIG9m
-IGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUNCj4+PiBTVE1pY3JvZWxlY3Ryb25pY3MgTXVs
-dGktRnVuY3Rpb24gZVhwYW5kZXIgKFNUTUZYKSBHUElPIGV4cGFuZGVyLg0KPj4+DQo+Pj4gU2ln
-bmVkLW9mZi1ieTogQW1lbGllIERlbGF1bmF5IDxhbWVsaWUuZGVsYXVuYXlAc3QuY29tPg0KPiAN
-Cj4+PiArICAgICBzdG1meHBpbmN0cmw6IHN0bWZ4QDQyIHsNCj4+PiArICAgICAgICAgICAgIGNv
-bXBhdGlibGUgPSAic3Qsc3RtZngtMDMwMCI7DQo+Pj4gKyAgICAgICAgICAgICByZWcgPSA8MHg0
-Mj47DQo+Pj4gKyAgICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvaT47DQo+Pj4g
-KyAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDggSVJRX1RZUEVfRURHRV9SSVNJTkc+Ow0KPj4+
-ICsgICAgICAgICAgICAgdmRkLXN1cHBseSA9IDwmdjN2Mz47DQo+Pj4gKyAgICAgICAgICAgICBz
-dGF0dXMgPSAib2theSI7DQo+Pg0KPj4gRG9uJ3Qgc2hvdyBzdGF0dXMgaW4gZXhhbXBsZXMuDQo+
-Pg0KPj4+ICsNCj4+PiArICAgICAgICAgICAgIHN0bWZ4Z3BpbzogZ3BpbyB7DQo+Pg0KPj4gV2h5
-IGRvZXMgdGhpcyBuZWVkIHRvIGJlIGEgc3ViIG5vZGU/IEFyZSB0aGVyZSBmdW5jdGlvbnMgYmV5
-b25kIEdQSU8/DQo+IA0KPiBBbWVsaWUgY2FuIGFuc3dlciB0byB3aGV0aGVyIHRoZXJlIGFyZSwg
-SSBzdXNwZWN0IHRoZXJlDQo+IGFyZSBhbmQgaW4gdGhlIHJldmlldyBvZiBwYXRjaCAyIEkgc3Vn
-Z2VzdCBhIE1GRCBwYXJlbnQNCj4gYW5kIHBhcmVudC9jaGlsZCBzcGF3bmluZyBvZiBhIE1GRCBj
-aGlsZCBmb3IgdGhlIEdQSU8NCj4gYW5kIHBpbiBjb250cm9sIGRldmljZS4NCj4gDQo+IFlvdXJz
-LA0KPiBMaW51cyBXYWxsZWlqDQo+IA0KDQpJbmRlZWQsIHN0bWZ4IGhhcyBvdGhlciBmdW5jdGlv
-bnMgdGhhbiBHUElPLiBCdXQsIGFmdGVyIGNvbW1lbnRzIGRvbmUgDQpoZXJlOiBbMV0gYW5kIHRo
-ZXJlOiBbMl0sIGl0IGhhcyBiZWVuIGRlY2lkZWQgdG8gbW92ZSBNRkQgcGFyZW50L0dQSU8gDQpj
-aGlsZCBkcml2ZXJzIGludG8gYSBzaW5nbGUgUElOQ1RSTC9HUElPIGRyaXZlciBiZWNhdXNlIG9m
-IHRoZSBmb2xsb3dpbmcgDQpyZWFzb25zOg0KLSBPdGhlciBzdG1meCBmdW5jdGlvbnMgKElERCBt
-ZWFzdXJlbWVudCBhbmQgVG91Y2hTY3JlZW4gY29udHJvbGxlcikgYXJlIA0Kbm90IHVzZWQgb24g
-YW55IG9mIHRoZSBib2FyZHMgdXNpbmcgYW4gc3RtZnggYW5kIHN1cHBvcnRlZCBieSBMaW51eCwg
-c28gDQpubyB3YXkgdG8gdGVzdCB0aGVzZSBmdW5jdGlvbnMsIGFuZCBubyBuZWVkIHRvIG1haW50
-YWluIHRoZW0gd2hpbGUgdGhleSANCmFyZSBub3QgYmVpbmcgdXNlZC4NCi0gQnV0LCBpbiB0aGUg
-Y2FzZSBhIG5ldyBib2FyZCB3aWxsIHVzZSBtb3JlIHRoYW4gR1BJTyBmdW5jdGlvbiBvbiANCnN0
-bWZ4LCB0aGUgYWN0dWFsIGltcGxlbWVudGF0aW9uIGFsbG93IHRvIGVhc2lseSBleHRyYWN0IGNv
-bW1vbiBpbml0IA0KcGFydCBvZiBzdG1meCBhbmQgcHV0IGl0IGluIGFuIE1GRCBkcml2ZXIuDQoN
-ClNvIEkgY291bGQgcmVtb3ZlIGdwaW8gc3ViLW5vZGUgYW5kIHB1dCBpdHMgY29udGVudHMgaW4g
-c3RtZnggbm9kZSBhbmQgDQprZWVwIHNpbmdsZSBQSU5DVFJML0dQSU8gZHJpdmVyIGZvciB0aGUg
-dGltZSBiZWluZy4NClBsZWFzZSBhZHZpc2UsDQoNClRoYW5rcywNCkFtZWxpZQ0KDQpbMV0gaHR0
-cHM6Ly9sa21sLm9yZy9sa21sLzIwMTgvMi8xMi8yNjUNClsyXSBodHRwczovL2xrbWwub3JnL2xr
-bWwvMjAxOC8yLzIxLzE1MDM=
+
+
+On 09/05/18 08:55, Banajit Goswami wrote:
+>> + */
+>> +int q6adm_close(struct device *dev, int port_id, int perf_mode, int 
+>> copp_idx)
+> perf_mode unused param. Remove for now. Can be added back when needed.
+> 
+> Otherwise LGTM.
+Yep, will do that thanks.
+
+--srini
+> Once fixed above, add acked-by
+> Acked-by: Banajit Goswami <bgoswami@codeaurora.org>
