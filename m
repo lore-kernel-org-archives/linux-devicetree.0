@@ -1,8 +1,8 @@
 From: Marco Felsch <m.felsch@pengutronix.de>
 Subject: [PATCH v2 1/2] dt-bindings: Add vendor prefix for DLC Display Co.,
  Ltd.
-Date: Wed,  9 May 2018 16:59:38 +0200
-Message-ID: <20180509145939.4140-5-m.felsch@pengutronix.de>
+Date: Wed,  9 May 2018 16:59:35 +0200
+Message-ID: <20180509145939.4140-2-m.felsch@pengutronix.de>
 References: <20180509145939.4140-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
