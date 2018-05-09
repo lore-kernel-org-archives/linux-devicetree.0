@@ -1,234 +1,600 @@
-From: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] resource: Use list_head to link sibling resource
-Date: Wed, 9 May 2018 10:08:52 +0800
-Message-ID: <20180509020852.GK30581@MiWiFi-R3L-srv>
-References: <20180507063224.24229-2-bhe@redhat.com>
- <201805071803.2MKgOLTP%fengguang.wu@intel.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v2 2/2] leds: Add Spreadtrum SC27xx breathing light
+ controller driver
+Date: Wed, 9 May 2018 10:34:53 +0800
+Message-ID: <CAMz4ku+xXgdC-2irgvwHnvsjoLx2FRvCKQQcFedLVjYuFR3J=w@mail.gmail.com>
+References: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
+ <9a2a07b8eb313ae3ba64af911337ee7ff7c9ad43.1525757122.git.baolin.wang@linaro.org>
+ <085f9ca1-13de-36d6-18eb-ac0e560ba237@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201805071803.2MKgOLTP%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, brijesh.singh-5C7GfCeVMHo@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ebiederm-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, linux-parisc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <085f9ca1-13de-36d6-18eb-ac0e560ba237@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, xiaotong.lu@spreadtrum.com, Mark Brown <broonie@kernel.org>, linux-leds@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/18 at 07:42pm, kbuild test robot wrote:
-> Hi Baoquan,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v4.17-rc4 next-20180504]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180507-144345
-> config: powerpc-defconfig (attached as .config)
-> compiler: powerpc64-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=powerpc 
-> 
-> All errors (new ones prefixed by >>):
-> 
->    arch/powerpc/kernel/pci-common.c: In function 'pci_process_bridge_OF_ranges':
-> >> arch/powerpc/kernel/pci-common.c:764:44: error: incompatible types when assigning to type 'struct list_head' from type 'void *'
->        res->parent = res->child = res->sibling = NULL;
+Hi Jacek,
 
-Pasted code can fix above error.
+On 9 May 2018 at 04:54, Jacek Anaszewski <jacek.anaszewski@gmail.com> wrote:
+> Hi Baolin,
+>
+> Thank you for the updated version.
+>
+> I have few notes below, please take a look.
+>
+>
+> On 05/08/2018 07:39 AM, Baolin Wang wrote:
+>>
+>> From: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+>>
+>> This patch adds Spreadtrum SC27xx PMIC series breathing light controller
+>> driver, which can support 3 LEDs. Each LED can work at normal PWM mode
+>> and breathing mode.
+>>
+>> Signed-off-by: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> ---
+>> Changes since v1:
+>>   - Add ABI documentation.
+>>   - Add mutex protection in case of concurrent access.
+>>   - Change the LED device name pattern.
+>>   - Fix build warning.
+>> ---
+>>   .../ABI/testing/sysfs-class-led-driver-sc27xx      |   19 +
+>>   drivers/leds/Kconfig                               |   11 +
+>>   drivers/leds/Makefile                              |    1 +
+>>   drivers/leds/leds-sc27xx-bltc.c                    |  387
+>> ++++++++++++++++++++
+>>   4 files changed, 418 insertions(+)
+>>   create mode 100644
+>> Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
+>>   create mode 100644 drivers/leds/leds-sc27xx-bltc.c
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
+>> b/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
+>> new file mode 100644
+>> index 0000000..22166fb
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
+>> @@ -0,0 +1,19 @@
+>> +What:          /sys/class/leds/<led>/rise_time
+>> +What:          /sys/class/leds/<led>/high_time
+>> +What:          /sys/class/leds/<led>/fall_time
+>> +What:          /sys/class/leds/<led>/low_time
+>> +Date:          May 2018
+>> +KernelVersion: 4.18
+>> +Contact:       Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+>> +Description:
+>> +               Set the pattern generator rise, high, fall and low
+>> +               times (0..63). It's unit is 0.125s, it should be > 0.
+>> +
+>> +               1 - 125 ms
+>> +               2 - 250 ms
+>> +               3 - 375 ms
+>> +               ...
+>> +               ...
+>> +               ...
+>> +               62 - 7.75 s
+>> +               63 - 7.875 s
+>
+>
+> It would be good to describe here how altering these settings
+> interacts with brightness changes. E.g., AFAICS from the code
+> the pattern is turned off when setting brightness to 0, and
+> turned on when writing any of these files.
 
-diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-index fe9733ffffaa..a7e68f6f9f24 100644
---- a/arch/powerpc/kernel/pci-common.c
-+++ b/arch/powerpc/kernel/pci-common.c
-@@ -761,7 +761,9 @@ void pci_process_bridge_OF_ranges(struct pci_controller *hose,
- 			res->flags = range.flags;
- 			res->start = range.cpu_addr;
- 			res->end = range.cpu_addr + range.size - 1;
--			res->parent = res->child = res->sibling = NULL;
-+			res->parent = NULL;
-+			INIT_LIST_HEAD(&res->child);
-+			INIT_LIST_HEAD(&res->sibling);
- 		}
- 	}
- }
+Correct. We need set rise, high, fall and low time firstly, then turn
+on the LED with setting brightness > 0. Will add more description to
+explain how to use them.
 
->                                                ^
->    arch/powerpc/kernel/pci-common.c: In function 'reparent_resources':
-> >> arch/powerpc/kernel/pci-common.c:1100:10: error: assignment from incompatible pointer type [-Werror=incompatible-pointer-types]
->      for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
->              ^
+>
+> I'm also not sure if making these files RO is a good idea.
+> How about making them RW? Any brightness change would
+> reset those values to 0 and turn off pattern generator.
 
-This reparent_resources() function is duplicated with the one in
-arch/microblaze/pci/pci-common.c which has been fixed in v4. I planned
-to move it to kernel/resource.c in a separate patch since it's shared by
-different ARCH, then fix it in this patch.
+Sure, will make them RW.
 
->    arch/powerpc/kernel/pci-common.c:1100:50: error: assignment from incompatible pointer type [-Werror=incompatible-pointer-types]
->      for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
->                                                      ^
-> >> arch/powerpc/kernel/pci-common.c:1113:13: error: incompatible types when assigning to type 'struct list_head' from type 'struct resource *'
->      res->child = *firstpp;
->                 ^
->    arch/powerpc/kernel/pci-common.c:1114:15: error: incompatible types when assigning to type 'struct list_head' from type 'struct resource *'
->      res->sibling = *pp;
->                   ^
-> >> arch/powerpc/kernel/pci-common.c:1117:9: error: incompatible types when assigning to type 'struct resource *' from type 'struct list_head'
->      for (p = res->child; p != NULL; p = p->sibling) {
->             ^
->    arch/powerpc/kernel/pci-common.c:1117:36: error: incompatible types when assigning to type 'struct resource *' from type 'struct list_head'
->      for (p = res->child; p != NULL; p = p->sibling) {
->                                        ^
->    cc1: all warnings being treated as errors
-> 
-> vim +764 arch/powerpc/kernel/pci-common.c
-> 
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  642  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  643  /**
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  644   * pci_process_bridge_OF_ranges - Parse PCI bridge resources from device tree
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  645   * @hose: newly allocated pci_controller to be setup
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  646   * @dev: device node of the host bridge
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  647   * @primary: set if primary bus (32 bits only, soon to be deprecated)
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  648   *
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  649   * This function will parse the "ranges" property of a PCI host bridge device
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  650   * node and setup the resource mapping of a pci controller based on its
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  651   * content.
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  652   *
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  653   * Life would be boring if it wasn't for a few issues that we have to deal
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  654   * with here:
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  655   *
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  656   *   - We can only cope with one IO space range and up to 3 Memory space
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  657   *     ranges. However, some machines (thanks Apple !) tend to split their
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  658   *     space into lots of small contiguous ranges. So we have to coalesce.
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  659   *
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  660   *   - Some busses have IO space not starting at 0, which causes trouble with
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  661   *     the way we do our IO resource renumbering. The code somewhat deals with
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  662   *     it for 64 bits but I would expect problems on 32 bits.
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  663   *
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  664   *   - Some 32 bits platforms such as 4xx can have physical space larger than
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  665   *     32 bits so we need to use 64 bits values for the parsing
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  666   */
-> cad5cef6 Greg Kroah-Hartman     2012-12-21  667  void pci_process_bridge_OF_ranges(struct pci_controller *hose,
-> cad5cef6 Greg Kroah-Hartman     2012-12-21  668  				  struct device_node *dev, int primary)
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  669  {
-> 858957ab Kevin Hao              2013-05-16  670  	int memno = 0;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  671  	struct resource *res;
-> 654837e8 Andrew Murray          2014-02-25  672  	struct of_pci_range range;
-> 654837e8 Andrew Murray          2014-02-25  673  	struct of_pci_range_parser parser;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  674  
-> b7c670d6 Rob Herring            2017-08-21  675  	printk(KERN_INFO "PCI host bridge %pOF %s ranges:\n",
-> b7c670d6 Rob Herring            2017-08-21  676  	       dev, primary ? "(primary)" : "");
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  677  
-> 654837e8 Andrew Murray          2014-02-25  678  	/* Check for ranges property */
-> 654837e8 Andrew Murray          2014-02-25  679  	if (of_pci_range_parser_init(&parser, dev))
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  680  		return;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  681  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  682  	/* Parse it */
-> 654837e8 Andrew Murray          2014-02-25  683  	for_each_of_pci_range(&parser, &range) {
-> e9f82cb7 Benjamin Herrenschmidt 2008-10-14  684  		/* If we failed translation or got a zero-sized region
-> e9f82cb7 Benjamin Herrenschmidt 2008-10-14  685  		 * (some FW try to feed us with non sensical zero sized regions
-> e9f82cb7 Benjamin Herrenschmidt 2008-10-14  686  		 * such as power3 which look like some kind of attempt at exposing
-> e9f82cb7 Benjamin Herrenschmidt 2008-10-14  687  		 * the VGA memory hole)
-> e9f82cb7 Benjamin Herrenschmidt 2008-10-14  688  		 */
-> 654837e8 Andrew Murray          2014-02-25  689  		if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  690  			continue;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  691  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  692  		/* Act based on address space type */
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  693  		res = NULL;
-> 654837e8 Andrew Murray          2014-02-25  694  		switch (range.flags & IORESOURCE_TYPE_BITS) {
-> 654837e8 Andrew Murray          2014-02-25  695  		case IORESOURCE_IO:
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  696  			printk(KERN_INFO
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  697  			       "  IO 0x%016llx..0x%016llx -> 0x%016llx\n",
-> 654837e8 Andrew Murray          2014-02-25  698  			       range.cpu_addr, range.cpu_addr + range.size - 1,
-> 654837e8 Andrew Murray          2014-02-25  699  			       range.pci_addr);
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  700  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  701  			/* We support only one IO range */
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  702  			if (hose->pci_io_size) {
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  703  				printk(KERN_INFO
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  704  				       " \\--> Skipped (too many) !\n");
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  705  				continue;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  706  			}
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  707  #ifdef CONFIG_PPC32
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  708  			/* On 32 bits, limit I/O space to 16MB */
-> 654837e8 Andrew Murray          2014-02-25  709  			if (range.size > 0x01000000)
-> 654837e8 Andrew Murray          2014-02-25  710  				range.size = 0x01000000;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  711  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  712  			/* 32 bits needs to map IOs here */
-> 654837e8 Andrew Murray          2014-02-25  713  			hose->io_base_virt = ioremap(range.cpu_addr,
-> 654837e8 Andrew Murray          2014-02-25  714  						range.size);
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  715  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  716  			/* Expect trouble if pci_addr is not 0 */
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  717  			if (primary)
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  718  				isa_io_base =
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  719  					(unsigned long)hose->io_base_virt;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  720  #endif /* CONFIG_PPC32 */
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  721  			/* pci_io_size and io_base_phys always represent IO
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  722  			 * space starting at 0 so we factor in pci_addr
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  723  			 */
-> 654837e8 Andrew Murray          2014-02-25  724  			hose->pci_io_size = range.pci_addr + range.size;
-> 654837e8 Andrew Murray          2014-02-25  725  			hose->io_base_phys = range.cpu_addr - range.pci_addr;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  726  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  727  			/* Build resource */
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  728  			res = &hose->io_resource;
-> 654837e8 Andrew Murray          2014-02-25  729  			range.cpu_addr = range.pci_addr;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  730  			break;
-> 654837e8 Andrew Murray          2014-02-25  731  		case IORESOURCE_MEM:
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  732  			printk(KERN_INFO
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  733  			       " MEM 0x%016llx..0x%016llx -> 0x%016llx %s\n",
-> 654837e8 Andrew Murray          2014-02-25  734  			       range.cpu_addr, range.cpu_addr + range.size - 1,
-> 654837e8 Andrew Murray          2014-02-25  735  			       range.pci_addr,
-> 654837e8 Andrew Murray          2014-02-25  736  			       (range.pci_space & 0x40000000) ?
-> 654837e8 Andrew Murray          2014-02-25  737  			       "Prefetch" : "");
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  738  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  739  			/* We support only 3 memory ranges */
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  740  			if (memno >= 3) {
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  741  				printk(KERN_INFO
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  742  				       " \\--> Skipped (too many) !\n");
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  743  				continue;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  744  			}
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  745  			/* Handles ISA memory hole space here */
-> 654837e8 Andrew Murray          2014-02-25  746  			if (range.pci_addr == 0) {
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  747  				if (primary || isa_mem_base == 0)
-> 654837e8 Andrew Murray          2014-02-25  748  					isa_mem_base = range.cpu_addr;
-> 654837e8 Andrew Murray          2014-02-25  749  				hose->isa_mem_phys = range.cpu_addr;
-> 654837e8 Andrew Murray          2014-02-25  750  				hose->isa_mem_size = range.size;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  751  			}
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  752  
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  753  			/* Build resource */
-> 654837e8 Andrew Murray          2014-02-25  754  			hose->mem_offset[memno] = range.cpu_addr -
-> 654837e8 Andrew Murray          2014-02-25  755  							range.pci_addr;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  756  			res = &hose->mem_resources[memno++];
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  757  			break;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  758  		}
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  759  		if (res != NULL) {
-> aeba3731 Michael Ellerman       2014-10-16  760  			res->name = dev->full_name;
-> aeba3731 Michael Ellerman       2014-10-16  761  			res->flags = range.flags;
-> aeba3731 Michael Ellerman       2014-10-16  762  			res->start = range.cpu_addr;
-> aeba3731 Michael Ellerman       2014-10-16  763  			res->end = range.cpu_addr + range.size - 1;
-> aeba3731 Michael Ellerman       2014-10-16 @764  			res->parent = res->child = res->sibling = NULL;
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  765  		}
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  766  	}
-> 13dccb9e Benjamin Herrenschmidt 2007-12-11  767  }
-> fa462f2d Benjamin Herrenschmidt 2007-12-20  768  
-> 
-> :::::: The code at line 764 was first introduced by commit
-> :::::: aeba3731b150188685225b510886f1370d8814de powerpc/pci: Fix IO space breakage after of_pci_range_to_resource() change
-> 
-> :::::: TO: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-> :::::: CC: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>
+> Otherwise it would be not possible to check whether pattern
+> generator is enabled or not.
+>
+>
+>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>> index 2c896c0..319449b 100644
+>> --- a/drivers/leds/Kconfig
+>> +++ b/drivers/leds/Kconfig
+>> @@ -647,6 +647,17 @@ config LEDS_IS31FL32XX
+>>           LED controllers. They are I2C devices with multiple
+>> constant-current
+>>           channels, each with independent 256-level PWM control.
+>>   +config LEDS_SC27XX_BLTC
+>> +       tristate "LED support for the SC27xx breathing light controller"
+>> +       depends on LEDS_CLASS && MFD_SC27XX_PMIC
+>> +       depends on OF
+>> +       help
+>> +         Say Y here to include support for the SC27xx breathing light
+>> controller
+>> +         LEDs.
+>> +
+>> +         This driver can also be built as a module. If so the module will
+>> be
+>> +         called leds-sc27xx-bltc.
+>> +
+>>   comment "LED driver for blink(1) USB RGB LED is under Special HID
+>> drivers (HID_THINGM)"
+>>     config LEDS_BLINKM
+>> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+>> index 91eca81..ff6917e 100644
+>> --- a/drivers/leds/Makefile
+>> +++ b/drivers/leds/Makefile
+>> @@ -76,6 +76,7 @@ obj-$(CONFIG_LEDS_MLXREG)             += leds-mlxreg.o
+>>   obj-$(CONFIG_LEDS_NIC78BX)            += leds-nic78bx.o
+>>   obj-$(CONFIG_LEDS_MT6323)             += leds-mt6323.o
+>>   obj-$(CONFIG_LEDS_LM3692X)            += leds-lm3692x.o
+>> +obj-$(CONFIG_LEDS_SC27XX_BLTC)         += leds-sc27xx-bltc.o
+>>     # LED SPI Drivers
+>>   obj-$(CONFIG_LEDS_DAC124S085)         += leds-dac124s085.o
+>> diff --git a/drivers/leds/leds-sc27xx-bltc.c
+>> b/drivers/leds/leds-sc27xx-bltc.c
+>> new file mode 100644
+>> index 0000000..61c5b72
+>> --- /dev/null
+>> +++ b/drivers/leds/leds-sc27xx-bltc.c
+>> @@ -0,0 +1,387 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// Copyright (C) 2018 Spreadtrum Communications Inc.
+>> +
+>> +#include <linux/leds.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <uapi/linux/uleds.h>
+>> +
+>> +/* PMIC global control register definition */
+>> +#define SC27XX_MODULE_EN0      0xc08
+>> +#define SC27XX_CLK_EN0         0xc18
+>> +#define SC27XX_RGB_CTRL                0xebc
+>> +
+>> +#define SC27XX_BLTC_EN         BIT(9)
+>> +#define SC27XX_RTC_EN          BIT(7)
+>> +#define SC27XX_RGB_PD          BIT(0)
+>> +
+>> +/* Breathing light controller register definition */
+>> +#define SC27XX_LEDS_CTRL       0x00
+>> +#define SC27XX_LEDS_PRESCALE   0x04
+>> +#define SC27XX_LEDS_DUTY       0x08
+>> +#define SC27XX_LEDS_CURVE0     0x0c
+>> +#define SC27XX_LEDS_CURVE1     0x10
+>> +
+>> +#define SC27XX_CTRL_SHIFT      4
+>> +#define SC27XX_LED_RUN         BIT(0)
+>> +#define SC27XX_LED_TYPE                BIT(1)
+>> +
+>> +#define SC27XX_DUTY_SHIFT      8
+>> +#define SC27XX_DUTY_MASK       GENMASK(15, 0)
+>> +#define SC27XX_MOD_MASK                GENMASK(7, 0)
+>> +
+>> +#define SC27XX_CURVE_SHIFT     8
+>> +#define SC27XX_CURVE_L_MASK    GENMASK(7, 0)
+>> +#define SC27XX_CURVE_H_MASK    GENMASK(15, 8)
+>> +
+>> +#define SC27XX_LEDS_OFFSET     0x10
+>> +#define SC27XX_LEDS_MAX                3
+>> +#define SC27XX_LEDS_TIME_MAX   63
+>> +
+>> +/*
+>> + * The SC27xx breathing light controller can support 3 outputs: red LED,
+>> + * green LED and blue LED. Each LED can support normal PWM mode and
+>> breathing
+>> + * mode.
+>> + *
+>> + * In breathing mode, the LED output curve includes rise, high, fall and
+>> low 4
+>> + * stages, and the duration of each stage is configurable.
+>> + */
+>> +enum sc27xx_led_config {
+>> +       SC27XX_RISE_TIME,
+>> +       SC27XX_FALL_TIME,
+>> +       SC27XX_HIGH_TIME,
+>> +       SC27XX_LOW_TIME,
+>> +};
+>> +
+>> +struct sc27xx_led {
+>> +       char name[LED_MAX_NAME_SIZE];
+>> +       struct led_classdev ldev;
+>> +       struct sc27xx_led_priv *priv;
+>> +       enum led_brightness value;
+>
+>
+> This property is redundant - you have brightness in the
+> struct led_classdev.
+
+Yes, will remove this.
+
+>> +       u8 line;
+>> +       bool breath_mode;
+>> +       bool active;
+>> +};
+>> +
+>> +struct sc27xx_led_priv {
+>> +       struct sc27xx_led leds[SC27XX_LEDS_MAX];
+>> +       struct regmap *regmap;
+>> +       struct mutex lock;
+>> +       u32 base;
+>> +};
+>> +
+>> +#define to_sc27xx_led(ldev) \
+>> +       container_of(ldev, struct sc27xx_led, ldev)
+>> +
+>> +static int sc27xx_led_init(struct regmap *regmap)
+>> +{
+>> +       int err;
+>> +
+>> +       err = regmap_update_bits(regmap, SC27XX_MODULE_EN0,
+>> SC27XX_BLTC_EN,
+>> +                                SC27XX_BLTC_EN);
+>> +       if (err)
+>> +               return err;
+>> +
+>> +       err = regmap_update_bits(regmap, SC27XX_CLK_EN0, SC27XX_RTC_EN,
+>> +                                SC27XX_RTC_EN);
+>> +       if (err)
+>> +               return err;
+>> +
+>> +       return regmap_update_bits(regmap, SC27XX_RGB_CTRL, SC27XX_RGB_PD,
+>> 0);
+>> +}
+>> +
+>> +static u32 sc27xx_led_get_offset(struct sc27xx_led *leds)
+>> +{
+>> +       return leds->priv->base + SC27XX_LEDS_OFFSET * leds->line;
+>> +}
+>> +
+>> +static int sc27xx_led_enable(struct sc27xx_led *leds)
+>> +{
+>> +       u32 base = sc27xx_led_get_offset(leds);
+>> +       u32 ctrl_base = leds->priv->base + SC27XX_LEDS_CTRL;
+>> +       u8 ctrl_shift = SC27XX_CTRL_SHIFT * leds->line;
+>> +       struct regmap *regmap = leds->priv->regmap;
+>> +       int err;
+>> +
+>> +       err = regmap_update_bits(regmap, base + SC27XX_LEDS_DUTY,
+>> +                                SC27XX_DUTY_MASK,
+>> +                                (leds->value  << SC27XX_DUTY_SHIFT) |
+>> +                                SC27XX_MOD_MASK);
+>> +       if (err)
+>> +               return err;
+>> +
+>> +       if (leds->breath_mode)
+>> +               return regmap_update_bits(regmap, ctrl_base,
+>> +                                         SC27XX_LED_RUN << ctrl_shift,
+>> +                                         SC27XX_LED_RUN << ctrl_shift);
+>> +
+>> +       return regmap_update_bits(regmap, ctrl_base,
+>> +                       (SC27XX_LED_RUN | SC27XX_LED_TYPE) << ctrl_shift,
+>> +                       (SC27XX_LED_RUN | SC27XX_LED_TYPE) << ctrl_shift);
+>> +}
+>> +
+>> +static int sc27xx_led_disable(struct sc27xx_led *leds)
+>> +{
+>> +       u8 ctrl_shift = SC27XX_CTRL_SHIFT * leds->line;
+>> +
+>> +       leds->breath_mode = false;
+>> +
+>> +       return regmap_update_bits(leds->priv->regmap,
+>> +                       leds->priv->base + SC27XX_LEDS_CTRL,
+>> +                       (SC27XX_LED_RUN | SC27XX_LED_TYPE) << ctrl_shift,
+>> 0);
+>> +}
+>> +
+>> +static int sc27xx_led_set(struct led_classdev *ldev, enum led_brightness
+>> value)
+>> +{
+>> +       struct sc27xx_led *leds = to_sc27xx_led(ldev);
+>> +       int err;
+>> +
+>> +       mutex_lock(&leds->priv->lock);
+>
+>
+> Empty line here please.
+
+OK.
+
+>
+>> +       leds->value = value;
+>
+>
+> It should not be needed at all.
+
+Yes.
+
+>
+>> +       if (value == LED_OFF)
+>> +               err = sc27xx_led_disable(leds);
+>> +       else
+>> +               err = sc27xx_led_enable(leds);
+>
+>
+> Empty line here please.
+
+OK.
+
+>
+>> +       mutex_unlock(&leds->priv->lock);
+>> +
+>> +       return err;
+>> +}
+>> +
+>> +static int sc27xx_led_config(struct sc27xx_led *leds,
+>> +                            enum sc27xx_led_config config, u32 val)
+>> +{
+>> +       u32 base = sc27xx_led_get_offset(leds);
+>> +       struct regmap *regmap = leds->priv->regmap;
+>> +       int err;
+>> +
+>> +       mutex_lock(&leds->priv->lock);
+>
+>
+> Empty line here please.
+
+OK.
+
+>
+>> +       switch (config) {
+>> +       case SC27XX_RISE_TIME:
+>> +               err = regmap_update_bits(regmap, base +
+>> SC27XX_LEDS_CURVE0,
+>> +                                        SC27XX_CURVE_L_MASK, val);
+>> +               break;
+>> +       case SC27XX_FALL_TIME:
+>> +               err = regmap_update_bits(regmap, base +
+>> SC27XX_LEDS_CURVE0,
+>> +                                        SC27XX_CURVE_H_MASK,
+>> +                                        val << SC27XX_CURVE_SHIFT);
+>> +               break;
+>> +       case SC27XX_HIGH_TIME:
+>> +               err = regmap_update_bits(regmap, base +
+>> SC27XX_LEDS_CURVE1,
+>> +                                        SC27XX_CURVE_L_MASK, val);
+>> +               break;
+>> +       case SC27XX_LOW_TIME:
+>> +               err = regmap_update_bits(regmap, base +
+>> SC27XX_LEDS_CURVE1,
+>> +                                        SC27XX_CURVE_H_MASK,
+>> +                                        val << SC27XX_CURVE_SHIFT);
+>> +               break;
+>> +       default:
+>> +               err = -ENOTSUPP;
+>> +               break;
+>> +       }
+>> +
+>> +       if (!err && !leds->breath_mode)
+>> +               leds->breath_mode = true;
+>> +
+>> +       mutex_unlock(&leds->priv->lock);
+>> +
+>> +       return err;
+>> +}
+>> +
+>> +static ssize_t rise_time_store(struct device *dev,
+>> +                              struct device_attribute *attr,
+>> +                              const char *buf, size_t size)
+>> +{
+>> +       struct led_classdev *ldev = dev_get_drvdata(dev);
+>> +       struct sc27xx_led *leds = to_sc27xx_led(ldev);
+>> +       u32 val;
+>> +       int err;
+>> +
+>> +       if (kstrtou32(buf, 10, &val) || val > SC27XX_LEDS_TIME_MAX)
+>> +               return -EINVAL;
+>> +
+>> +       err = sc27xx_led_config(leds, SC27XX_RISE_TIME, val);
+>> +       if (err)
+>> +               return err;
+>> +
+>> +       return size;
+>> +}
+>> +
+>> +static ssize_t fall_time_store(struct device *dev,
+>> +                              struct device_attribute *attr,
+>> +                              const char *buf, size_t size)
+>> +{
+>> +       struct led_classdev *ldev = dev_get_drvdata(dev);
+>> +       struct sc27xx_led *leds = to_sc27xx_led(ldev);
+>> +       u32 val;
+>> +       int err;
+>> +
+>> +       if (kstrtou32(buf, 10, &val) || val > SC27XX_LEDS_TIME_MAX)
+>> +               return -EINVAL;
+>> +
+>> +       err = sc27xx_led_config(leds, SC27XX_FALL_TIME, val);
+>> +       if (err)
+>> +               return err;
+>> +
+>> +       return size;
+>> +}
+>> +
+>> +static ssize_t high_time_store(struct device *dev,
+>> +                              struct device_attribute *attr,
+>> +                              const char *buf, size_t size)
+>> +{
+>> +       struct led_classdev *ldev = dev_get_drvdata(dev);
+>> +       struct sc27xx_led *leds = to_sc27xx_led(ldev);
+>> +       u32 val;
+>> +       int err;
+>> +
+>> +       if (kstrtou32(buf, 10, &val) || val > SC27XX_LEDS_TIME_MAX)
+>> +               return -EINVAL;
+>> +
+>> +       err = sc27xx_led_config(leds, SC27XX_HIGH_TIME, val);
+>> +       if (err)
+>> +               return err;
+>> +
+>> +       return size;
+>> +}
+>> +
+>> +static ssize_t low_time_store(struct device *dev,
+>> +                             struct device_attribute *attr,
+>> +                             const char *buf, size_t size)
+>> +{
+>> +       struct led_classdev *ldev = dev_get_drvdata(dev);
+>> +       struct sc27xx_led *leds = to_sc27xx_led(ldev);
+>> +       u32 val;
+>> +       int err;
+>> +
+>> +       if (kstrtou32(buf, 10, &val) || val > SC27XX_LEDS_TIME_MAX)
+>> +               return -EINVAL;
+>> +
+>> +       err = sc27xx_led_config(leds, SC27XX_LOW_TIME, val);
+>> +       if (err)
+>> +               return err;
+>> +
+>> +       return size;
+>> +}
+>> +
+>> +static DEVICE_ATTR_WO(rise_time);
+>> +static DEVICE_ATTR_WO(fall_time);
+>> +static DEVICE_ATTR_WO(high_time);
+>> +static DEVICE_ATTR_WO(low_time);
+>> +
+>> +static struct attribute *sc27xx_led_attrs[] = {
+>> +       &dev_attr_rise_time.attr,
+>> +       &dev_attr_fall_time.attr,
+>> +       &dev_attr_high_time.attr,
+>> +       &dev_attr_low_time.attr,
+>> +       NULL,
+>> +};
+>> +ATTRIBUTE_GROUPS(sc27xx_led);
+>> +
+>> +static int sc27xx_led_register(struct device *dev, struct sc27xx_led_priv
+>> *priv)
+>> +{
+>> +       int i, err;
+>> +
+>> +       err = sc27xx_led_init(priv->regmap);
+>> +       if (err)
+>> +               return err;
+>> +
+>> +       for (i = 0; i < SC27XX_LEDS_MAX; i++) {
+>> +               struct sc27xx_led *led = &priv->leds[i];
+>> +
+>> +               if (!led->active)
+>> +                       continue;
+>> +
+>> +               led->line = i;
+>> +               led->priv = priv;
+>> +               led->ldev.name = led->name;
+>> +               led->ldev.brightness_set_blocking = sc27xx_led_set;
+>> +               led->ldev.max_brightness = LED_FULL;
+>
+>
+> LED core will set max_brightness to LED_FULL if initialized to 0,
+> so we can skip this line.
+
+Sure.
+
+>> +               led->ldev.groups = sc27xx_led_groups;
+>> +
+>> +               err = devm_led_classdev_register(dev, &led->ldev);
+>> +               if (err)
+>> +                       return err;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int sc27xx_led_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device *dev = &pdev->dev;
+>> +       struct device_node *np = dev->of_node, *child;
+>> +       struct sc27xx_led_priv *priv;
+>> +       const char *str;
+>> +       u32 base, count, reg;
+>> +       int err;
+>> +
+>> +       count = of_get_child_count(np);
+>> +       if (!count || count > SC27XX_LEDS_MAX)
+>> +               return -EINVAL;
+>> +
+>> +       err = of_property_read_u32(np, "reg", &base);
+>> +       if (err) {
+>> +               dev_err(dev, "fail to get reg of property\n");
+>> +               return err;
+>> +       }
+>> +
+>> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>> +       if (!priv)
+>> +               return -ENOMEM;
+>> +
+>> +       mutex_init(&priv->lock);
+>> +       priv->base = base;
+>> +       priv->regmap = dev_get_regmap(dev->parent, NULL);
+>> +       if (IS_ERR(priv->regmap)) {
+>> +               err = PTR_ERR(priv->regmap);
+>> +               dev_err(dev, "failed to get regmap: %d\n", err);
+>> +               return err;
+>> +       }
+>> +
+>> +       for_each_child_of_node(np, child) {
+>> +               err = of_property_read_u32(child, "reg", &reg);
+>> +               if (err) {
+>> +                       of_node_put(child);
+>
+>
+> Now we need also mutex_destroy() in the error path, so please add relevant
+> label and go there from here.
+
+OK.
+
+>
+>> +                       return err;
+>> +               }
+>> +
+>> +               if (reg >= SC27XX_LEDS_MAX || priv->leds[reg].active) {
+>> +                       of_node_put(child);
+>> +                       return -EINVAL;
+>
+>
+> Ditto.
+>
+>
+>> +               }
+>> +
+>> +               priv->leds[reg].active = true;
+>> +
+>> +               err = of_property_read_string(child, "label", &str);
+>> +               if (err)
+>> +                       snprintf(priv->leds[reg].name, LED_MAX_NAME_SIZE,
+>> +                                "sc27xx::");
+>> +               else
+>> +                       snprintf(priv->leds[reg].name, LED_MAX_NAME_SIZE,
+>> +                                "sc27xx:%s", str);
+>> +       }
+>> +
+>> +       return sc27xx_led_register(dev, priv);
+>> +}
+>> +
+>> +static const struct of_device_id sc27xx_led_of_match[] = {
+>> +       { .compatible = "sprd,sc2731-bltc", },
+>> +       { }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, sc27xx_led_of_match);
+>> +
+>> +static struct platform_driver sc27xx_led_driver = {
+>> +       .driver = {
+>> +               .name = "sprd-bltc",
+>> +               .of_match_table = sc27xx_led_of_match,
+>> +       },
+>> +       .probe = sc27xx_led_probe,
+>
+>
+> "remove" op will be needed as well for mutex_destroy().
+
+Yes. Thanks for your comments.
+
+-- 
+Baolin.wang
+Best Regards
