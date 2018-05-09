@@ -1,200 +1,298 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3 10/14] ARM: dts: imx7: Add video mux, csi and
- mipi_csi and connections
-Date: Wed, 09 May 2018 10:53:46 +0200
-Message-ID: <1525856026.5888.4.camel@pengutronix.de>
-References: <20180507162152.2545-1-rui.silva@linaro.org>
- <20180507162152.2545-11-rui.silva@linaro.org>
+From: Banajit Goswami <bgoswami@codeaurora.org>
+Subject: Re: [PATCH v7 17/24] ASoC: qdsp6: q6routing: Add q6routing driver
+Date: Wed, 9 May 2018 01:56:27 -0700
+Message-ID: <bf93d6d6-ba10-21b9-4bbe-224bb39f56f2@codeaurora.org>
+References: <20180501120820.11016-1-srinivas.kandagatla@linaro.org>
+ <20180501120820.11016-18-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180507162152.2545-11-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>, mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180501120820.11016-18-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, perex@perex.cz, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-05-07 at 17:21 +0100, Rui Miguel Silva wrote:
-> This patch adds the device tree nodes for csi, video multiplexer and mipi-csi
-> besides the graph connecting the necessary endpoints to make the media capture
-> entities to work in imx7 Warp board.
-> 
-> Also add the pin control related with the mipi_csi in that board.
-> 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+
+On 5/1/2018 5:08 AM, Srinivas Kandagatla wrote:
+> This patch adds support to q6 routing driver which configures route
+> between ASM and AFE module using ADM apis.
+>
+> This driver uses dapm widgets to setup the matrix between AFE ports and
+> ASM streams.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Reviewed-and-tested-by: Rohit kumar <rohitkr@codeaurora.org>
 > ---
->  arch/arm/boot/dts/imx7s-warp.dts | 78 ++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/imx7s.dtsi     | 28 ++++++++++++
->  2 files changed, 106 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
-> index 8a30b148534d..ffd170ae925a 100644
-> --- a/arch/arm/boot/dts/imx7s-warp.dts
-> +++ b/arch/arm/boot/dts/imx7s-warp.dts
-> @@ -310,6 +310,77 @@
->  	status = "okay";
->  };
->  
-> +&gpr {
-> +	csi_mux {
-> +		compatible = "video-mux";
-> +		mux-controls = <&mux 0>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+>   sound/soc/qcom/Kconfig           |   4 +
+>   sound/soc/qcom/qdsp6/Makefile    |   1 +
+>   sound/soc/qcom/qdsp6/q6routing.c | 393 +++++++++++++++++++++++++++++++++++++++
+>   sound/soc/qcom/qdsp6/q6routing.h |   9 +
+>   4 files changed, 407 insertions(+)
+>   create mode 100644 sound/soc/qcom/qdsp6/q6routing.c
+>   create mode 100644 sound/soc/qcom/qdsp6/q6routing.h
+>
+> diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
+> index 941774abd94f..43f9ed85efa8 100644
+> --- a/sound/soc/qcom/Kconfig
+> +++ b/sound/soc/qcom/Kconfig
+> @@ -53,6 +53,9 @@ config SND_SOC_QDSP6_AFE
+>   config SND_SOC_QDSP6_ADM
+>   	tristate
+>   
+> +config SND_SOC_QDSP6_ROUTING
+> +	tristate
 > +
-> +		port@0 {
-> +			reg = <0>;
+>   config SND_SOC_QDSP6_ASM
+>   	tristate
+>   
+> @@ -63,6 +66,7 @@ config SND_SOC_QDSP6
+>   	select SND_SOC_QDSP6_CORE
+>   	select SND_SOC_QDSP6_AFE
+>   	select SND_SOC_QDSP6_ADM
+> +	select SND_SOC_QDSP6_ROUTING
+>   	select SND_SOC_QDSP6_ASM
+>   	help
+>   	 To add support for MSM QDSP6 Soc Audio.
+> diff --git a/sound/soc/qcom/qdsp6/Makefile b/sound/soc/qcom/qdsp6/Makefile
+> index 01d9dcf3375c..0e8e2febb7ec 100644
+> --- a/sound/soc/qcom/qdsp6/Makefile
+> +++ b/sound/soc/qcom/qdsp6/Makefile
+> @@ -2,4 +2,5 @@ obj-$(CONFIG_SND_SOC_QDSP6_COMMON) += q6dsp-common.o
+>   obj-$(CONFIG_SND_SOC_QDSP6_CORE) += q6core.o
+>   obj-$(CONFIG_SND_SOC_QDSP6_AFE) += q6afe.o
+>   obj-$(CONFIG_SND_SOC_QDSP6_ADM) += q6adm.o
+> +obj-$(CONFIG_SND_SOC_QDSP6_ROUTING) += q6routing.o
+>   obj-$(CONFIG_SND_SOC_QDSP6_ASM) += q6asm.o
+> diff --git a/sound/soc/qcom/qdsp6/q6routing.c b/sound/soc/qcom/qdsp6/q6routing.c
+> new file mode 100644
+> index 000000000000..72863672f11f
+> --- /dev/null
+> +++ b/sound/soc/qcom/qdsp6/q6routing.c
+> @@ -0,0 +1,393 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2011-2017, The Linux Foundation. All rights reserved.
+> +// Copyright (c) 2018, Linaro Limited
 > +
-> +			csi_mux_from_parallel_sensor: endpoint {
-> +			};
-> +		};
+> +#include <linux/init.h>
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/bitops.h>
+> +#include <linux/component.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of_device.h>
+> +#include <linux/slab.h>
+> +#include <sound/core.h>
+> +#include <sound/soc.h>
+> +#include <sound/soc-dapm.h>
+> +#include <sound/pcm.h>
+> +#include <sound/control.h>
+> +#include <sound/asound.h>
+> +#include <sound/pcm_params.h>
+> +#include "q6afe.h"
+> +#include "q6asm.h"
+> +#include "q6adm.h"
+> +#include "q6routing.h"
 > +
-> +		port@1 {
-> +			reg = <1>;
+> +#define DRV_NAME "q6routing-component"
 > +
-> +			csi_mux_from_mipi_vc0: endpoint {
-> +				remote-endpoint = <&mipi_vc0_to_csi_mux>;
-> +			};
-> +		};
-> +
-> +		port@2 {
-> +			reg = <2>;
-> +
-> +			csi_mux_to_csi: endpoint {
-> +				remote-endpoint = <&csi_from_csi_mux>;
-> +			};
-> +		};
-> +	};
+> +struct session_data {
+> +	int state;
+> +	int port_id;
+> +	int path_type;
+> +	int app_type;
+> +	int acdb_id;
+> +	int sample_rate;
+> +	int bits_per_sample;
+> +	int channels;
+> +	int perf_mode;
+> +	int numcopps;
+> +	int fedai_id;
+> +	unsigned long copp_map;
 > +};
 > +
-> +&csi {
-> +	status = "okay";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	port@0 {
-> +		reg = <0>;
-
-Same comment as for the binding docs, since the CSI only has one port,
-it doesn't have to be numbered.
-
-> +
-> +		csi_from_csi_mux: endpoint {
-> +			remote-endpoint = <&csi_mux_to_csi>;
-> +		};
-> +	};
+> +struct msm_routing_data {
+> +	struct session_data sessions[MAX_SESSIONS];
+> +	struct session_data port_data[AFE_MAX_PORTS];
+> +	struct device *dev;
+> +	struct mutex lock;
 > +};
 > +
-> +&mipi_csi {
-> +	clock-frequency = <166000000>;
-> +	status = "okay";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	fsl,csis-hs-settle = <3>;
+> +static struct msm_routing_data *routing_data;
 > +
-> +	port@0 {
-> +		reg = <0>;
+> +/**
+> + * q6routing_stream_open() - Register a new stream for route setup
+> + *
+> + * @fedai_id: Frontend dai id.
+> + * @perf_mode: Performance mode.
+> + * @stream_id: ASM stream id to map.
+> + * @stream_type: Direction of stream
+> + *
+> + * Return: Will be an negative on error or a zero on success.
+> + */
+> +int q6routing_stream_open(int fedai_id, int perf_mode,
+> +			   int stream_id, int stream_type)
+> +{
+> +	int j, topology, num_copps = 0;
+> +	struct route_payload payload;
+> +	int copp_idx;
+> +	struct session_data *session, *pdata;
 > +
-> +		mipi_from_sensor: endpoint {
-> +			remote-endpoint = <&ov2680_to_mipi>;
-> +			data-lanes = <1>;
-> +		};
-> +	};
+> +	if (!routing_data) {
+> +		pr_err("Routing driver not yet ready\n");
+> +		return -EINVAL;
+> +	}
 > +
-> +	port@1 {
-> +		reg = <1>;
+> +	session = &routing_data->sessions[stream_id - 1];
+> +	pdata = &routing_data->port_data[session->port_id];
 > +
-> +		mipi_vc0_to_csi_mux: endpoint {
-> +			remote-endpoint = <&csi_mux_from_mipi_vc0>;
-> +		};
-> +	};
-> +};
+> +	mutex_lock(&routing_data->lock);
+> +	session->fedai_id = fedai_id;
 > +
->  &wdog1 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_wdog>;
-> @@ -357,6 +428,13 @@
->  		>;
->  	};
->  
-> +	pinctrl_mipi_csi: mipi_csi {
-> +		fsl,pins = <
-> +			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x14
+> +	session->path_type = pdata->path_type;
+> +	session->sample_rate = pdata->sample_rate;
+> +	session->channels = pdata->channels;
+> +	session->bits_per_sample = pdata->bits_per_sample;
+> +
+> +	payload.num_copps = 0; /* only RX needs to use payload */
+> +	topology = NULL_COPP_TOPOLOGY;
+> +	copp_idx = q6adm_open(routing_data->dev, session->port_id,
+> +			      session->path_type, session->sample_rate,
+> +			      session->channels, topology, perf_mode,
+> +			      session->bits_per_sample, 0, 0);
+> +
+> +	if (copp_idx < 0) {
+> +		mutex_unlock(&routing_data->lock);
+> +		return -EINVAL;
+> +	}
+> +
+> +	set_bit(copp_idx, &session->copp_map);
+> +
+> +	for_each_set_bit(j, &session->copp_map, MAX_COPPS_PER_PORT) {
+> +		payload.port_id[num_copps] = session->port_id;
+> +		payload.copp_idx[num_copps] = j;
+> +		num_copps++;
+> +	}
+> +
+> +	if (num_copps) {
+> +		payload.num_copps = num_copps;
+> +		payload.session_id = stream_id;
+> +		q6adm_matrix_map(routing_data->dev, session->path_type,
+> +				 payload, perf_mode);
+> +	}
+> +	mutex_unlock(&routing_data->lock);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(q6routing_stream_open);
+> +
+> +static struct session_data *get_session_from_id(struct msm_routing_data *data,
+> +						int fedai_id)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < MAX_SESSIONS; i++) {
+> +		if (fedai_id == data->sessions[i].fedai_id)
+> +			return &data->sessions[i];
+> +	}
+> +
+> +	return NULL;
+> +}
+> +/**
+> + * q6routing_stream_close() - Deregister a stream
+> + *
+> + * @fedai_id: Frontend dai id.
+> + * @stream_type: Direction of stream
+> + *
+> + * Return: Will be an negative on error or a zero on success.
+> + */
+> +void q6routing_stream_close(int fedai_id, int stream_type)
+> +{
+> +	struct session_data *session;
+> +	int idx;
+> +
+> +	session = get_session_from_id(routing_data, fedai_id);
+> +	if (!session)
+> +		return;
+> +
+> +	for_each_set_bit(idx, &session->copp_map, MAX_COPPS_PER_PORT)
+> +		q6adm_close(routing_data->dev, session->port_id,
+> +			    session->perf_mode, idx);
+> +
+> +	session->fedai_id = -1;
+> +	session->copp_map = 0;
+> +}
+> +EXPORT_SYMBOL_GPL(q6routing_stream_close);
+> +
+> +static int msm_routing_get_audio_mixer(struct snd_kcontrol *kcontrol,
+> +				       struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	struct snd_soc_dapm_context *dapm =
+> +	    snd_soc_dapm_kcontrol_dapm(kcontrol);
+> +	struct soc_mixer_control *mc =
+> +	    (struct soc_mixer_control *)kcontrol->private_value;
+> +	int session_id = mc->shift;
+> +	struct snd_soc_component *c = snd_soc_dapm_to_component(dapm);
+> +	struct msm_routing_data *priv = dev_get_drvdata(c->dev);
+> +	struct session_data *session = &priv->sessions[session_id];
+> +
+> +	if (session->port_id == mc->reg)
+> +		ucontrol->value.integer.value[0] = 1;
+> +	else
+> +		ucontrol->value.integer.value[0] = 0;
+> +
+> +	return 0;
+> +}
+> +
+> +static int msm_routing_put_audio_mixer(struct snd_kcontrol *kcontrol,
+> +				       struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	struct snd_soc_dapm_context *dapm =
+> +				    snd_soc_dapm_kcontrol_dapm(kcontrol);
+> +	struct snd_soc_component *c = snd_soc_dapm_to_component(dapm);
+> +	struct msm_routing_data *data = dev_get_drvdata(c->dev);
+> +	struct soc_mixer_control *mc =
+> +		    (struct soc_mixer_control *)kcontrol->private_value;
+> +	struct snd_soc_dapm_update *update = NULL;
+> +	int be_id = mc->reg;
+> +	int session_id = mc->shift;
+> +	struct session_data *session = &data->sessions[session_id];
+> +
+> +	if (ucontrol->value.integer.value[0]) {
+> +		session->port_id = be_id;
+> +		snd_soc_dapm_mixer_update_power(dapm, kcontrol, 1, update);
+> +	} else {
+> +		session->port_id = -1;
+> +		snd_soc_dapm_mixer_update_power(dapm, kcontrol, 0, update);
+> +	}
+> +
+> +	return 1;
+> +}
+> +
+> +static const struct snd_kcontrol_new hdmi_mixer_controls[] = {
+> +	SOC_SINGLE_EXT("MultiMedia1", HDMI_RX,
+> +		       MSM_FRONTEND_DAI_MULTIMEDIA1, 1, 0,
+At some point in future, when FE DAI IDs become more than "31", 
+SOC_DOUBLE_EXT would need to be used with "reg" marked with SND_SOC_NOPM 
+and FE DAI and BE DAI IDs passed in shift_left and shift_right. This is 
+to avoid having any "shift" operation issue in DAPM code, when reg is 
+not marked with SND_SOC_NOPM, and shift value is more than 31.
+However, for now, its OK.
 
-This is the ov2680 reset GPIO? I think this belongs into patch 12.
+Acked-by: Banajit Goswami <bgoswami@codeaurora.org
 
-> +			MX7D_PAD_ENET1_RGMII_TD0__GPIO7_IO6	0x14
-
-What is this GPIO used for?
-
-> +		>;
-> +	};
-> +
->  	pinctrl_sai1: sai1grp {
->  		fsl,pins = <
->  			MX7D_PAD_SAI1_RX_DATA__SAI1_RX_DATA0	0x1f
-> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-> index 3590dab529f9..0bae41f2944c 100644
-> --- a/arch/arm/boot/dts/imx7s.dtsi
-> +++ b/arch/arm/boot/dts/imx7s.dtsi
-> @@ -46,6 +46,7 @@
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/input/input.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/reset/imx7-reset.h>
->  #include "imx7d-pinfunc.h"
->  
->  / {
-> @@ -738,6 +739,17 @@
->  				status = "disabled";
->  			};
->  
-> +			csi: csi@30710000 {
-> +				compatible = "fsl,imx7-csi";
-> +				reg = <0x30710000 0x10000>;
-> +				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clks IMX7D_CLK_DUMMY>,
-> +						<&clks IMX7D_CSI_MCLK_ROOT_CLK>,
-> +						<&clks IMX7D_CLK_DUMMY>;
-> +				clock-names = "axi", "mclk", "dcic";
-> +				status = "disabled";
-> +			};
-> +
->  			lcdif: lcdif@30730000 {
->  				compatible = "fsl,imx7d-lcdif", "fsl,imx28-lcdif";
->  				reg = <0x30730000 0x10000>;
-> @@ -747,6 +759,22 @@
->  				clock-names = "pix", "axi";
->  				status = "disabled";
->  			};
-> +
-> +			mipi_csi: mipi-csi@30750000 {
-> +				compatible = "fsl,imx7-mipi-csi2";
-> +				reg = <0x30750000 0x10000>;
-> +				interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clks IMX7D_IPG_ROOT_CLK>,
-> +						<&clks IMX7D_MIPI_CSI_ROOT_CLK>,
-> +						<&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
-> +				clock-names = "pclk", "wrap", "phy";
-> +				power-domains = <&pgc_mipi_phy>;
-> +				phy-supply = <&reg_1p0d>;
-> +				resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
-> +				reset-names = "mrst";
-> +				bus-width = <2>;
-> +				status = "disabled";
-> +			};
->  		};
->  
->  		aips3: aips-bus@30800000 {
-
-regards
-Philipp
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
