@@ -1,16 +1,15 @@
 From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [PATCH 4/4] rtc: ds1307: add frequency-test property to check
- calibration on m41txx
-Date: Wed, 9 May 2018 20:32:38 +0200
-Message-ID: <05eb5e80-a38a-1988-bec8-54ba7c6f38df@micronovasrl.com>
+Subject: Re: [PATCH 3/4] rtc: ds1307: add calibration of_ for mt41txx chips.
+Date: Wed, 9 May 2018 20:33:56 +0200
+Message-ID: <201d77b1-ea75-90eb-8b30-da60529c70ba@micronovasrl.com>
 References: <20180508145611.49072-1-giulio.benetti@micronovasrl.com>
- <20180508145611.49072-4-giulio.benetti@micronovasrl.com>
- <CAL_JsqKb9aLxjQbOc1PFRQhbVL2a3Ti2oJ8Gm8Ojn0a39LxajA@mail.gmail.com>
+ <20180508145611.49072-3-giulio.benetti@micronovasrl.com>
+ <CAL_JsqKa7AF4x5440aVtCsCcvbTS85o-dRT8+Ka6QB=8zK2NzA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKb9aLxjQbOc1PFRQhbVL2a3Ti2oJ8Gm8Ojn0a39LxajA@mail.gmail.com>
+In-Reply-To: <CAL_JsqKa7AF4x5440aVtCsCcvbTS85o-dRT8+Ka6QB=8zK2NzA@mail.gmail.com>
 Content-Language: it
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>
@@ -19,22 +18,51 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Rob,
 
-Il 08/05/2018 19:44, Rob Herring ha scritto:
+Il 08/05/2018 19:40, Rob Herring ha scritto:
 > On Tue, May 8, 2018 at 9:56 AM, Giulio Benetti
 > <giulio.benetti@micronovasrl.com> wrote:
->> On m41txx you can enable open-drain OUT pin to check if calibration is ok.
->> Enabling OUT pin with frequency-test bool property, OUT pin will tick
->> 512 times faster than 1s tick base.
->>
->> Enable FT bit on CONTROL register if calibration is active.
+>> m41txx chips can hold a calibration value to get really near to real
+>> tick value.
 > 
-> A DT is (or should be) a pretty static thing, so I don't think this
-> belongs. A kernel command line option (via module params) or a
-> sysfs/debugfs file would make more sense IMO.
+> Typo in the subject.
+> 
+>> Add calibration property(ranging between (-31) and 31), so on every probe
+>> calibration value will be written to rtc.
+>> This is because ic could loose supply due to low battery.
+>>
+>> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+>> ---
+>>   .../devicetree/bindings/rtc/rtc-ds1307.txt    |  2 ++
+> 
+> Put all the binding changes in separate patch (or maybe 2: new
+> compatible and new properties).
+> 
+>>   drivers/rtc/rtc-ds1307.c                      | 33 +++++++++++++++++++
+>>   2 files changed, 35 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+>> index ce6469c1a516..d3d70a5495c5 100644
+>> --- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+>> +++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+>> @@ -34,6 +34,8 @@ Optional properties:
+>>   - trickle-diode-disable : ds1339, ds1340 and ds 1388 only
+>>          Do not use internal trickle charger diode
+>>          Should be given if internal trickle charger diode should be disabled
+>> +- calibration: m41t0, m41t00, m41t11 only
+> 
+> Needs a vendor prefix.
+> 
+> Calibration of what and what are the units?
+> 
+>> +       Set calibration value to correct external bias, ranging between (-31) and 31.
+>>
+>>   Example:
+>>          rtc1: ds1339@68 {
 
-Totally right, it's very useful having it accessible via sysfs.
-Already changed and just submitted V2 patchset.
-Thanks
+This is not a problem anymore since I've used standard rtc sysfs 
+"offset" instead of a dt-property as Alexandre pointed me out.
+
+Thanks.
 
 -- 
 Giulio Benetti
