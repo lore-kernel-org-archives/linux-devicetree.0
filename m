@@ -1,168 +1,79 @@
-From: Yao Chen <chenyao11@huawei.com>
-Subject: Re: [PATCH] Kirin-PCIe: Add kirin pcie msi feature.
-Date: Wed, 9 May 2018 14:28:52 +0800
-Message-ID: <a9f05f3d-9c5c-472b-73be-f37c41bd71be@huawei.com>
-References: <1525763028-107417-1-git-send-email-chenyao11@huawei.com>
- <20180508125658.GK161390@bhelgaas-glaptop.roam.corp.google.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v9 00/12] Sunxi: Add SMP support on A83T
+Date: Wed, 9 May 2018 09:07:40 +0200
+Message-ID: <20180509070740.x4nl7efu4ptw6c4d@flea>
+References: <20180504190545.5114-1-mylene.josserand@bootlin.com>
+ <20180508131914.6sy7cd6urnfg3tam@flea>
+ <7491f58f-d24d-8f7c-c195-87d13457fd80@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nngtanzdsds3yhmc"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180508125658.GK161390@bhelgaas-glaptop.roam.corp.google.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <7491f58f-d24d-8f7c-c195-87d13457fd80@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: songxiaowei@hisilicon.com, wangbinghui@hisilicon.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dimitrysh@google.com, guodong.xu@linaro.org, Stanimir Varbanov <svarbanov@mm-sol.com>, Jianguo Sun <sunjianguo1@huawei.com>, Shawn Guo <shawn.guo@linaro.org>, suzhuangluan@hisilicon.com, kongfei@hisilicon.com
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>, linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com, opendmb@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--nngtanzdsds3yhmc
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2018/5/8 20:56, Bjorn Helgaas wrote:
-> [+cc Stanimir, Jianguo, Shawn for qcom, histb comments below]
-> 
-> On Tue, May 08, 2018 at 03:03:48PM +0800, Yao Chen wrote:
->> This patch adds kirin pcie msi feature.
-> 
-> Thanks for the patch!  Please update your subject and changelog like this:
-> 
->   PCI: kirin: Add MSI support
-> 
->   Add support for MSI.
-> 
-> You can figure out what style to use for the subject by running:
-> 
->   git log --oneline drivers/pci/dwc/pcie-kirin.c
-> 
-> Then follow the existing style.
-> 
+Hi!
 
-Ok, I will update the style of subject and changelog.
+On Tue, May 08, 2018 at 10:11:07AM -0700, Florian Fainelli wrote:
+> On 05/08/2018 06:19 AM, Maxime Ripard wrote:
+> > Hi,
+> >=20
+> > On Fri, May 04, 2018 at 09:05:33PM +0200, Myl=E8ne Josserand wrote:
+> >> Hello everyone,
+> >>
+> >> This is a V9 of my series that adds SMP support for Allwinner sun8i-a8=
+3t.
+> >> Based on sunxi's tree, sunxi/for-next branch.
+> >> Depends on a patch from Doug Berger that allows to include the "cpu-ty=
+pe"
+> >> header on assembly files that I included in my series (patch 01).
+> >=20
+> > I applied the patches, with the remarks done by Russell on v8 fixed,
+> > and the function sun8i_a83t_cntvoff_init made static.
+>=20
+> Did you push those patches to sunxi/linux.git yet? I would like to make
+> sure I have the same copy of patch 1 since that is necessary for some of
+> our Broadcom ARM SoCs for 4.18.
 
->> Signed-off-by: Yao Chen <chenyao11@huawei.com>
->> ---
->>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi |  2 ++
->>  drivers/pci/dwc/pcie-kirin.c              | 38 +++++++++++++++++++++++++++++++
->>  2 files changed, 40 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
->> index ec3eb8e..4ef684f 100644
->> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
->> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
->> @@ -872,6 +872,8 @@
->>  				  0x0 0x02000000>;
->>  			num-lanes = <1>;
->>  			#interrupt-cells = <1>;
->> +			interrupts = <0 283 4>;
->> +			interrupts-names = "msi";
->>  			interrupt-map-mask = <0xf800 0 0 7>;
->>  			interrupt-map = <0x0 0 0 1
->>  					 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
->> diff --git a/drivers/pci/dwc/pcie-kirin.c b/drivers/pci/dwc/pcie-kirin.c
->> index d2970a0..2319c9c 100644
->> --- a/drivers/pci/dwc/pcie-kirin.c
->> +++ b/drivers/pci/dwc/pcie-kirin.c
->> @@ -426,9 +426,28 @@ static int kirin_pcie_establish_link(struct pcie_port *pp)
->>  	return 0;
->>  }
->>  
->> +static irqreturn_t kirin_pcie_msi_irq_handler(int irq, void *arg)
->> +{
->> +	struct pcie_port *pp = arg;
->> +
->> +	return dw_handle_msi_irq(pp);
->> +}
->> +
->> +static void kirin_pcie_msi_init(struct pcie_port *pp)
->> +{
->> +	dw_pcie_msi_init(pp);
->> +}
->> +
->> +static void kirin_pcie_enable_interrupts(struct pcie_port *pp)
->> +{
->> +	if (IS_ENABLED(CONFIG_PCI_MSI))
->> +		kirin_pcie_msi_init(pp);
->> +}
->> +
->>  static int kirin_pcie_host_init(struct pcie_port *pp)
->>  {
->>  	kirin_pcie_establish_link(pp);
->> +	kirin_pcie_enable_interrupts(pp);
->>  
->>  	return 0;
->>  }
->> @@ -448,6 +467,25 @@ static int kirin_pcie_host_init(struct pcie_port *pp)
->>  static int __init kirin_add_pcie_port(struct dw_pcie *pci,
->>  				      struct platform_device *pdev)
->>  {
->> +	int ret;
->> +
->> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
->> +		pci->pp.msi_irq = platform_get_irq(pdev, 0);
->> +		if (!pci->pp.msi_irq) {
->> +			dev_err(&pdev->dev, "failed to get msi irq\n");
-> 
-> s/msi irq/MSI IRQ/
-> 
->> +			return -ENODEV;
->> +		}
->> +		ret = devm_request_irq(&pdev->dev, pci->pp.msi_irq,
->> +				       kirin_pcie_msi_irq_handler,
->> +				       IRQF_SHARED | IRQF_NO_THREAD,
->> +				       "kirin_pcie_msi", &pci->pp);
->> +		if (ret) {
->> +			dev_err(&pdev->dev, "failed to request msi irq\n");
-> 
-> s/msi irq/MSI IRQ/
-> Also, please include the IRQ number (pci->pp.msi_irq) in the message.
-> 
-Ok, I will add msi_irq message.
+I forgot, I just did. I tested to merge the latest next tag though,
+and it went fine without any conflicts, so I guess we're fine?
 
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	pci->pp.root_bus_nr = -1;
-> 
-> Setting root_bus_nr looks like an unrelated change that should be in a
-> separate patch.
-> 
-> But I'm not sure why you need to set root_bus_nr at all, since
-> dw_pcie_host_init() always sets it.
-> 
-> Some other callers of dw_pcie_host_init() do set it:
-> 
->   exynos_add_pcie_port()
->   imx6_add_pcie_port()
->   armada8k_add_pcie_port()
->   artpec6_add_pcie_port()
->   dw_plat_add_pcie_port()
->   histb_pcie_probe()
->   qcom_pcie_probe()
->   spear13xx_add_pcie_port()
-> 
-> But I don't see *why* any of these need to set it.  If they don't need to
-> set it, they shouldn't.
-> 
-> And it would be nice if histb and qcom followed the structure and naming
-> conventions of the other drivers, i.e., they should have
-> histb_add_pcie_port() and qcom_add_pcie_port().
-> 
+Maxime
 
-You're right, "pci->pp.root_bus_nr = -1;" is truly unnecessary. I will delete it.
 
->>  	pci->pp.ops = &kirin_pcie_host_ops;
->>  
->>  	return dw_pcie_host_init(&pci->pp);
->> -- 
->> 1.9.1
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> .
-> 
-Thanks,
-Yao
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--nngtanzdsds3yhmc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrynjsACgkQ0rTAlCFN
+r3TZwA/+NK/QgR7t6HLmZMEq9qrvkK1WGT5Usdqks7WV3BYxGueHfXZTl/YeYeMT
+F8aaAC247CyictqQMz2slBcFzWTpMVAwYdxFUj+LJKGf2gPFmBZM0uMxbF3m/e/7
+4h1AuspmmuHSR7xB/lVG207eckjXKla9J6DmJdQnau59HHdAQhD81LLD0xZiw+9Q
+KJ8wrVxVSxEj/RxfUnrX/VWRcvGB/CWYlMt/2NyPx+dAPW7a7XNHbMIKhUnn/9gF
+h14YPssTqbgC9FXlf/s6Sr1/uTI+I+ZjPxY5gCA2BcSKx8ig3DHQpADUMhUcmbF4
+uu10XlsOImNpOiPB/LJnfV7zhTIHveE4nZgRMZFKqHuRsSce26Q7BdJK30BdUdZw
+FH32W8FTwYz3F3FKufOfGZjj0h0vdLQ1CREOhys2G4COVHr+ELvkt+wMfOxd6NE6
+u5OP8vHYMu091kpEF4ZASJSrf3tlUuW8rYtXzD6Ptxbcf2r3pvfaTrFq6IJpZSlg
+GrfKCsRWnoXMnolz4kp7vIdS+GiCCnd8oYZFijjBVH4Xew2Jb+ud0bAwY3SWcvHT
+3B9yKEadJibPYvwdzedEahCanH1PuCW9QLY3nwgKkcfvurROds2xzFvZv03Zd1IQ
+fMpwqwDPbii9mNqw7c0HViq+v5ljiqQdxIaJNiO/NEG212ihi5U=
+=vD5G
+-----END PGP SIGNATURE-----
+
+--nngtanzdsds3yhmc--
