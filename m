@@ -1,14 +1,13 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] arm64: dts: juno: fix OF graph endpoint node names
-Date: Wed, 9 May 2018 17:34:30 +0100
-Message-ID: <e4775e42-fb07-c51c-2698-0bfe6e7b9417@arm.com>
-References: <20180508150952.24562-1-robh@kernel.org>
+Subject: [PATCH 2/3] arm64: dts: juno: replace '_' with '-' in node names
+Date: Wed,  9 May 2018 17:44:50 +0100
+Message-ID: <1525884291-18851-2-git-send-email-sudeep.holla@arm.com>
+References: <1525884291-18851-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180508150952.24562-1-robh@kernel.org>
-Content-Language: en-US
+In-Reply-To: <1525884291-18851-1-git-send-email-sudeep.holla@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,28 +17,130 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+The latest DTC throws warnings for character '_' in the node names.
 
+Warning (node_name_chars_strict): /thermal-zones/big_cluster: Character '_' not recommended in node name
+Warning (node_name_chars_strict): /thermal-zones/little_cluster: Character '_' not recommended in node name
+Warning (node_name_chars_strict): /smb@8000000/motherboard/gpio_keys: Character '_' not recommended in node name
+Warning (node_name_chars_strict): /pmu_a57: Character '_' not recommended in node name
+Warning (node_name_chars_strict): /pmu_a53: Character '_' not recommended in node name
 
-On 08/05/18 16:09, Rob Herring wrote:
-> OF graph endpoint node names should be 'endpoint'. Fix the following
-> warnings found by dtc:
-> 
-> Warning (graph_endpoint): /hdlcd@7ff50000/port/hdlcd1-endpoint: graph endpont node nameshould be 'endpoint'
-> Warning (graph_endpoint): /hdlcd@7ff60000/port/hdlcd0-endpoint: graph endpont node nameshould be 'endpoint'
-> Warning (graph_endpoint): /i2c@7ffa0000/hdmi-transmitter@70/port/tda998x-0-endpoint: graph endpont node name should be 'endpoint'
-> Warning (graph_endpoint): /i2c@7ffa0000/hdmi-transmitter@71/port/tda998x-1-endpoint: graph endpont node name should be 'endpoint'
-> 
-> Cc: Liviu Dudau <liviu.dudau@arm.com>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+The general recommendation is to use character '-' for all the node names.
+This patch fixes the warnings following the recommendation.
 
-Thanks Robs, both patches applied.
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ arch/arm64/boot/dts/arm/juno-base.dtsi        | 4 ++--
+ arch/arm64/boot/dts/arm/juno-motherboard.dtsi | 2 +-
+ arch/arm64/boot/dts/arm/juno-r1.dts           | 4 ++--
+ arch/arm64/boot/dts/arm/juno-r2.dts           | 4 ++--
+ arch/arm64/boot/dts/arm/juno.dts              | 4 ++--
+ 5 files changed, 9 insertions(+), 9 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+index b2fedaab3fcc..b74e462c6658 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -572,14 +572,14 @@
+ 			thermal-sensors = <&scpi_sensors0 3>;
+ 		};
+ 
+-		big_cluster_thermal_zone: big_cluster {
++		big_cluster_thermal_zone: big-cluster {
+ 			polling-delay = <1000>;
+ 			polling-delay-passive = <100>;
+ 			thermal-sensors = <&scpi_sensors0 21>;
+ 			status = "disabled";
+ 		};
+ 
+-		little_cluster_thermal_zone: little_cluster {
++		little_cluster_thermal_zone: little-cluster {
+ 			polling-delay = <1000>;
+ 			polling-delay-passive = <100>;
+ 			thermal-sensors = <&scpi_sensors0 22>;
+diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
+index 4b38195a8bea..70e3409d86a3 100644
+--- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
+@@ -54,7 +54,7 @@
+ 				regulator-always-on;
+ 			};
+ 
+-			gpio_keys {
++			gpio-keys {
+ 				compatible = "gpio-keys";
+ 
+ 				power-button {
+diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
+index c52c5c40dede..2c5db03f226c 100644
+--- a/arch/arm64/boot/dts/arm/juno-r1.dts
++++ b/arch/arm64/boot/dts/arm/juno-r1.dts
+@@ -201,7 +201,7 @@
+ 		};
+ 	};
+ 
+-	pmu_a57 {
++	pmu-a57 {
+ 		compatible = "arm,cortex-a57-pmu";
+ 		interrupts = <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 06 IRQ_TYPE_LEVEL_HIGH>;
+@@ -209,7 +209,7 @@
+ 				     <&A57_1>;
+ 	};
+ 
+-	pmu_a53 {
++	pmu-a53 {
+ 		compatible = "arm,cortex-a53-pmu";
+ 		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+diff --git a/arch/arm64/boot/dts/arm/juno-r2.dts b/arch/arm64/boot/dts/arm/juno-r2.dts
+index a90982ceda35..c51950f4a1b6 100644
+--- a/arch/arm64/boot/dts/arm/juno-r2.dts
++++ b/arch/arm64/boot/dts/arm/juno-r2.dts
+@@ -201,7 +201,7 @@
+ 		};
+ 	};
+ 
+-	pmu_a72 {
++	pmu-a72 {
+ 		compatible = "arm,cortex-a72-pmu";
+ 		interrupts = <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 06 IRQ_TYPE_LEVEL_HIGH>;
+@@ -209,7 +209,7 @@
+ 				     <&A72_1>;
+ 	};
+ 
+-	pmu_a53 {
++	pmu-a53 {
+ 		compatible = "arm,cortex-a53-pmu";
+ 		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+index c9236c4b967d..2b2bf39c30ef 100644
+--- a/arch/arm64/boot/dts/arm/juno.dts
++++ b/arch/arm64/boot/dts/arm/juno.dts
+@@ -200,7 +200,7 @@
+ 		};
+ 	};
+ 
+-	pmu_a57 {
++	pmu-a57 {
+ 		compatible = "arm,cortex-a57-pmu";
+ 		interrupts = <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 06 IRQ_TYPE_LEVEL_HIGH>;
+@@ -208,7 +208,7 @@
+ 				     <&A57_1>;
+ 	};
+ 
+-	pmu_a53 {
++	pmu-a53 {
+ 		compatible = "arm,cortex-a53-pmu";
+ 		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
 -- 
-Regards,
-Sudeep
+2.7.4
