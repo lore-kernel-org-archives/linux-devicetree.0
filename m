@@ -1,49 +1,63 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Add dts file for the A20-linova1-7
- HMI
-Date: Wed, 9 May 2018 14:28:19 +0200
-Message-ID: <102bc56e-f746-6d2c-d3a5-f9d0449781ff@micronovasrl.com>
-References: <1521662593-25468-7-git-send-email-giulio.benetti@micronovasrl.com>
- <20180322180508.my64gobhh5rc2x2m@flea>
- <8ef3b259-03b4-6987-286e-36ff627a8b76@micronovasrl.com>
- <20180424084137.7xfwji2gcibxavvt@flea>
- <03a02abb-e95c-b4ec-748f-907c0af67969@micronovasrl.com>
- <20180425184016.xktppxw7egddr7li@flea>
- <42feccc9-1d09-9ff2-3ccc-1dea63bacfb6@micronovasrl.com>
- <839d2560-0250-9b3a-8019-4e83d9e931e2@micronovasrl.com>
- <20180504080652.dniwaqqhbeuknp7y@flea>
- <afc78821-2d08-3f4f-d008-5b2d216e96c0@micronovasrl.com>
- <20180507073013.dvtbmwi4ora6tdj2@flea>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH v4 0/6] devfreq: rk3399_dmc: improve rk3399_dmc driver and it's documentation
+Date: Wed,  9 May 2018 14:57:42 +0200
+Message-ID: <20180509125749.31318-1-enric.balletbo@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180507073013.dvtbmwi4ora6tdj2@flea>
-Content-Language: it
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+To: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, heiko@sntech.de, linux-pm@vger.kernel.org, dbasehore@chromium.org, linux-kernel@vger.kernel.org, dianders@google.com, groeck@chromium.org, kernel@collabora.com, hl@rock-chips.com, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Dear all,
 
-Il 07/05/2018 09:30, Maxime Ripard ha scritto:
->> Otherwise as in-tree dts with make dtbs "-@" argument is not passed.
->> Right?
-> 
-> You should use DTC_FLAGS='-@'
+These patches is an attempt to improve a little bit the rk3399_dmc
+driver and it's documentation in order to have all in a better shape for
+a future work I am doing. My final intention is add ddrfreq support for
+rockchip drm driver, but the patches for this are still
+work-in-progress. So let's start with this first patchset that is
+basically some fixes/improvements for the rk3399_dmc driver.
 
-Thank you, I'm going to use that.
+The patches apply on top of current 4.17-rc3.
 
+Best regards,
+ Enric
+
+Changes in v4:
+- [4/6] Add Reviewed-by Rob Herring.
+- [6/6] Introduce this new patch that fixes some spelling.
+
+Changes in v3:
+- [1/5] Add Reviewed-by Rob Herring.
+- [2/5] Add Reviewed-by Rob Herring.
+- [4/6] Move interrupts to be optional instead of remove.
+
+Changes in v2:
+- [1/6] Add Acked-by MyungJoo Ham.
+- [2/6] Improved commit message.
+- [2/6] Rename ddr.h to rk3399-ddr.h because is SoC specific.
+- [3/6] Add Reviewed-by Chanwoo Choi
+- [4/6] Add Reviewed-by Chanwoo Choi.
+- [5/6] Add Acked-by MyungJoo Ham.
+- [5/6] Add Reviewed-by Chanwoo Choi.
+- [6/6] Removed this patch from this series.
+
+Enric Balletbo i Serra (4):
+  dt-bindings: clock: add rk3399 DDR3 standard speed bins.
+  devfreq: rk3399_dmc: remove wait for dcf irq event.
+  dt-bindings: devfreq: rk3399_dmc: move interrupts to be optional.
+  devfreq: rk3399_dmc: fix spelling mistakes.
+
+Lin Huang (1):
+  devfreq: rk3399_dmc: do not print error when get supply and clk defer.
+
+Nick Milner (1):
+  dt-bindings: devfreq: rk3399_dmc: improve binding documentation.
+
+ .../bindings/devfreq/rk3399_dmc.txt           | 213 +++++++++---------
+ drivers/devfreq/rk3399_dmc.c                  |  71 ++----
+ include/dt-bindings/clock/rk3399-ddr.h        |  56 +++++
+ 3 files changed, 178 insertions(+), 162 deletions(-)
+ create mode 100644 include/dt-bindings/clock/rk3399-ddr.h
 
 -- 
-Giulio Benetti
-CTO
-
-MICRONOVA SRL
-Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
-Tel. 049/8931563 - Fax 049/8931346
-Cod.Fiscale - P.IVA 02663420285
-Capitale Sociale € 26.000 i.v.
-Iscritta al Reg. Imprese di Padova N. 02663420285
-Numero R.E.A. 258642
+2.17.0
