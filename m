@@ -1,112 +1,101 @@
-From: Andrea Parri <parri.andrea@gmail.com>
-Subject: Re: [PATCH v2 09/11] docs: Fix some broken references
-Date: Wed, 9 May 2018 19:15:01 +0200
-Message-ID: <20180509171501.GA17405@andrea>
-References: <cover.1525870886.git.mchehab+samsung@kernel.org>
- <e959f23d6f6905ee606fadfda13e2bb37deed017.1525870886.git.mchehab+samsung@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xenproject.org>
-Content-Disposition: inline
-In-Reply-To: <e959f23d6f6905ee606fadfda13e2bb37deed017.1525870886.git.mchehab+samsung@kernel.org>
-List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xenproject.org>
-List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
-List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xenproject.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Jaroslav Kysela <perex@perex.cz>, Eric Paris <eparis@parisplace.org>, linux-clk@vger.kernel.org, James Morris <jmorris@namei.org>, Alan Stern <stern@rowland.harvard.edu>, xen-devel@lists.xenproject.org, Boqun Feng <boqun.feng@gmail.com>, Nicholas Piggin <npiggin@gmail.com>, Sean Paul <seanpaul@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Antoine Jacquet <royale@zerezo.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>, linux-crypto@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo@pa>
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v10 02/27] clk: davinci: da850-pll: change PLL0 to CLK_OF_DECLARE
+Date: Wed,  9 May 2018 12:25:41 -0500
+Message-ID: <20180509172606.29387-3-david@lechnology.com>
+References: <20180509172606.29387-1-david@lechnology.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180509172606.29387-1-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMDksIDIwMTggYXQgMTA6MTg6NTJBTSAtMDMwMCwgTWF1cm8gQ2FydmFsaG8g
-Q2hlaGFiIHdyb3RlOgo+IEFzIHdlIG1vdmUgc3R1ZmYgYXJvdW5kLCBzb21lIGRvYyByZWZlcmVu
-Y2VzIGFyZSBicm9rZW4uIEZpeCBzb21lIG9mCj4gdGhlbSB2aWEgdGhpcyBzY3JpcHQ6Cj4gCS4v
-c2NyaXB0cy9kb2N1bWVudGF0aW9uLWZpbGUtcmVmLWNoZWNrIC0tZml4LXJzdAo+IAo+IE1hbnVh
-bGx5IGNoZWNrZWQgaWYgdGhlIHByb2R1Y2VkIHJlc3VsdCBpcyB2YWxpZCwgcmVtb3ZpbmcgYSBm
-ZXcKPiBmYWxzZS1wb3NpdGl2ZXMuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWF1cm8gQ2FydmFsaG8g
-Q2hlaGFiIDxtY2hlaGFiK3NhbXN1bmdAa2VybmVsLm9yZz4KClRoYW5rIHlvdSBhZ2FpbiBmb3Ig
-ZG9pbmcgdGhpcywKCgo+IC0tLQo+ICAuLi4vYWRtaW4tZ3VpZGUva2VybmVsLXBhcmFtZXRlcnMu
-dHh0ICAgICAgICAgfCAgNCArKy0tCj4gIC4uLi9iaW5kaW5ncy9pbnB1dC9yb3RhcnktZW5jb2Rl
-ci50eHQgICAgICAgICB8ICAyICstCj4gIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9ncGlvL2Nv
-bnN1bWVyLnJzdCAgICB8ICAyICstCj4gIERvY3VtZW50YXRpb24va3Byb2Jlcy50eHQgICAgICAg
-ICAgICAgICAgICAgICB8ICA0ICsrLS0KPiAgRG9jdW1lbnRhdGlvbi90cmFjZS9jb3Jlc2lnaHQu
-dHh0ICAgICAgICAgICAgIHwgIDIgKy0KPiAgRG9jdW1lbnRhdGlvbi90cmFjZS9ldmVudHMucnN0
-ICAgICAgICAgICAgICAgIHwgIDIgKy0KPiAgRG9jdW1lbnRhdGlvbi90cmFjZS9mdHJhY2UtdXNl
-cy5yc3QgICAgICAgICAgIHwgIDIgKy0KPiAgRG9jdW1lbnRhdGlvbi90cmFjZS9oaXN0b2dyYW0u
-dHh0ICAgICAgICAgICAgIHwgIDIgKy0KPiAgRG9jdW1lbnRhdGlvbi90cmFjZS9pbnRlbF90aC5y
-c3QgICAgICAgICAgICAgIHwgIDIgKy0KPiAgRG9jdW1lbnRhdGlvbi90cmFjZS90cmFjZXBvaW50
-LWFuYWx5c2lzLnJzdCAgIHwgIDYgKysrLS0tCj4gIERvY3VtZW50YXRpb24vdHJhbnNsYXRpb25z
-L2phX0pQL2hvd3RvLnJzdCAgICB8ICA0ICsrLS0KPiAgLi4uL3RyYW5zbGF0aW9ucy96aF9DTi9t
-YWdpYy1udW1iZXIudHh0ICAgICAgIHwgIDQgKystLQo+ICAuLi4vemhfQ04vdmlkZW80bGludXgv
-b21hcDNpc3AudHh0ICAgICAgICAgICAgfCAgNCArKy0tCj4gIE1BSU5UQUlORVJTICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICB8IDIwICsrKysrKysrKy0tLS0tLS0tLS0KPiAgYXJj
-aC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KPiAgYXJj
-aC9hcm0vaW5jbHVkZS9hc20vY2FjaGVmbHVzaC5oICAgICAgICAgICAgIHwgIDIgKy0KPiAgYXJj
-aC9hcm02NC9pbmNsdWRlL2FzbS9jYWNoZWZsdXNoLmggICAgICAgICAgIHwgIDIgKy0KPiAgYXJj
-aC9taWNyb2JsYXplL2luY2x1ZGUvYXNtL2NhY2hlZmx1c2guaCAgICAgIHwgIDIgKy0KPiAgYXJj
-aC91bS9LY29uZmlnLnVtICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KPiAgYXJj
-aC91bmljb3JlMzIvaW5jbHVkZS9hc20vY2FjaGVmbHVzaC5oICAgICAgIHwgIDIgKy0KPiAgYXJj
-aC94ODYvZW50cnkvdnN5c2NhbGwvdnN5c2NhbGxfNjQuYyAgICAgICAgIHwgIDIgKy0KPiAgYXJj
-aC94dGVuc2EvaW5jbHVkZS9hc20vY2FjaGVmbHVzaC5oICAgICAgICAgIHwgIDQgKystLQo+ICBi
-bG9jay9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQo+ICBj
-ZXJ0cy9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQo+ICBj
-cnlwdG8vYXN5bW1ldHJpY19rZXlzL2FzeW1tZXRyaWNfdHlwZS5jICAgICAgfCAgMiArLQo+ICBj
-cnlwdG8vYXN5bW1ldHJpY19rZXlzL3NpZ25hdHVyZS5jICAgICAgICAgICAgfCAgMiArLQo+ICBk
-cml2ZXJzL2NoYXIvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQo+ICBk
-cml2ZXJzL2Nsay9jbGsuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgNCArKy0tCj4g
-IGRyaXZlcnMvY2xrL2luZ2VuaWMvY2d1LmggICAgICAgICAgICAgICAgICAgICB8ICAyICstCj4g
-IGRyaXZlcnMvZ3B1L3ZnYS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICB8ICAyICstCj4g
-IGRyaXZlcnMvZ3B1L3ZnYS92Z2FhcmIuYyAgICAgICAgICAgICAgICAgICAgICB8ICAyICstCj4g
-IGRyaXZlcnMvaW5wdXQvam95c3RpY2svS2NvbmZpZyAgICAgICAgICAgICAgICB8IDEwICsrKysr
-LS0tLS0KPiAgZHJpdmVycy9pbnB1dC9qb3lzdGljay9pZm9yY2UvS2NvbmZpZyAgICAgICAgIHwg
-IDIgKy0KPiAgZHJpdmVycy9pbnB1dC9qb3lzdGljay93YWxrZXJhMDcwMS5jICAgICAgICAgIHwg
-IDIgKy0KPiAgZHJpdmVycy9pbnB1dC9taXNjL0tjb25maWcgICAgICAgICAgICAgICAgICAgIHwg
-IDQgKystLQo+ICBkcml2ZXJzL2lucHV0L21pc2Mvcm90YXJ5X2VuY29kZXIuYyAgICAgICAgICAg
-fCAgMiArLQo+ICBkcml2ZXJzL2lucHV0L21vdXNlL0tjb25maWcgICAgICAgICAgICAgICAgICAg
-fCAgNiArKystLS0KPiAgZHJpdmVycy9pbnB1dC9tb3VzZS9hbHBzLmMgICAgICAgICAgICAgICAg
-ICAgIHwgIDIgKy0KPiAgZHJpdmVycy9pbnB1dC90b3VjaHNjcmVlbi93bTk3eHgtY29yZS5jICAg
-ICAgIHwgIDIgKy0KPiAgZHJpdmVycy9saWdodG52bS9wYmxrLXJiLmMgICAgICAgICAgICAgICAg
-ICAgIHwgIDIgKy0KPiAgZHJpdmVycy9tZC9iY2FjaGUvS2NvbmZpZyAgICAgICAgICAgICAgICAg
-ICAgIHwgIDIgKy0KPiAgZHJpdmVycy9tZC9iY2FjaGUvYnRyZWUuYyAgICAgICAgICAgICAgICAg
-ICAgIHwgIDIgKy0KPiAgZHJpdmVycy9tZC9iY2FjaGUvZXh0ZW50cy5jICAgICAgICAgICAgICAg
-ICAgIHwgIDIgKy0KPiAgZHJpdmVycy9tZWRpYS9kdmItY29yZS9kdmJfcmluZ2J1ZmZlci5jICAg
-ICAgIHwgIDIgKy0KPiAgZHJpdmVycy9tZWRpYS9wY2kvbWV5ZS9LY29uZmlnICAgICAgICAgICAg
-ICAgIHwgIDIgKy0KPiAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9weGFfY2FtZXJhLmMgICAgICAg
-ICAgIHwgIDQgKystLQo+ICAuLi4vc29jX2NhbWVyYS9zaF9tb2JpbGVfY2V1X2NhbWVyYS5jICAg
-ICAgICAgfCAgMiArLQo+ICBkcml2ZXJzL21lZGlhL3JhZGlvL0tjb25maWcgICAgICAgICAgICAg
-ICAgICAgfCAgMiArLQo+ICBkcml2ZXJzL21lZGlhL3JhZGlvL3NpNDcweC9LY29uZmlnICAgICAg
-ICAgICAgfCAgMiArLQo+ICBkcml2ZXJzL21lZGlhL3VzYi9kdmItdXNiLXYyL2xtZWRtMDQuYyAg
-ICAgICAgfCAgMiArLQo+ICBkcml2ZXJzL21lZGlhL3VzYi96cjM2NHh4L0tjb25maWcgICAgICAg
-ICAgICAgfCAgMiArLQo+ICBkcml2ZXJzL3BhcnBvcnQvS2NvbmZpZyAgICAgICAgICAgICAgICAg
-ICAgICAgfCAgNiArKystLS0KPiAgZHJpdmVycy9zdGFnaW5nL21lZGlhL2JjbTIwNDgvVE9ETyAg
-ICAgICAgICAgIHwgIDIgKy0KPiAgaW5jbHVkZS9rZXlzL2FzeW1tZXRyaWMtc3VidHlwZS5oICAg
-ICAgICAgICAgIHwgIDIgKy0KPiAgaW5jbHVkZS9rZXlzL2FzeW1tZXRyaWMtdHlwZS5oICAgICAg
-ICAgICAgICAgIHwgIDIgKy0KPiAgaW5jbHVkZS9saW51eC9hc3NvY19hcnJheS5oICAgICAgICAg
-ICAgICAgICAgIHwgIDIgKy0KPiAgaW5jbHVkZS9saW51eC9hc3NvY19hcnJheV9wcml2LmggICAg
-ICAgICAgICAgIHwgIDIgKy0KPiAgaW5jbHVkZS9saW51eC9jaXJjX2J1Zi5oICAgICAgICAgICAg
-ICAgICAgICAgIHwgIDIgKy0KPiAgaW5jbHVkZS9saW51eC9mdHJhY2UuaCAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgIDIgKy0KPiAgaW5jbHVkZS9saW51eC9yY3VsaXN0X251bGxzLmggICAgICAg
-ICAgICAgICAgIHwgIDIgKy0KPiAgaW5jbHVkZS91YXBpL2xpbnV4L3ByY3RsLmggICAgICAgICAg
-ICAgICAgICAgIHwgIDIgKy0KPiAgaW5jbHVkZS94ZW4vaW50ZXJmYWNlL2lvL2tiZGlmLmggICAg
-ICAgICAgICAgIHwgIDIgKy0KPiAga2VybmVsL2Nncm91cC9jcHVzZXQuYyAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgIDIgKy0KPiAga2VybmVsL3RyYWNlL0tjb25maWcgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgMTYgKysrKysrKy0tLS0tLS0tCj4gIGxpYi9LY29uZmlnICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICB8ICAyICstCj4gIHNlY3VyaXR5L3NlbGludXgvaG9va3Mu
-YyAgICAgICAgICAgICAgICAgICAgICB8ICAyICstCj4gIHNvdW5kL2NvcmUvS2NvbmZpZyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICB8ICA0ICsrLS0KPiAgc291bmQvZHJpdmVycy9LY29uZmln
-ICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDQgKystLQo+ICBzb3VuZC9wY2kvS2NvbmZpZyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxMCArKysrKy0tLS0tCj4gIHRvb2xzL2luY2x1
-ZGUvdWFwaS9saW51eC9wcmN0bC5oICAgICAgICAgICAgICB8ICAyICstCj4gIHRvb2xzL2xpYi9h
-cGkvZnMvZnMuYyAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyICstCj4gIHRvb2xzL21lbW9y
-eS1tb2RlbC9SRUFETUUgICAgICAgICAgICAgICAgICAgICB8IDEwICsrKysrLS0tLS0KCkFzIG1l
-bnRpb25lZCBpbiB0aGUgcHJldmlvdXMgdGhyZWFkLCBJIGFtIGZvciBrZWVwaW5nIHRoZSBjdXJy
-ZW50CnJlZmVyZW5jZXM6IHRoZSBSRUFNREUgaXMgbGlzdGluZyB0aGUgZG9jIGZpbGVzLCBhcyB3
-ZWxsIGFzIG90aGVyCmZpbGVzIGluIHRvb2xzL21lbW9yeS1tb2RlbC8sIHJlbGF0aXZlbHkgdG8g
-dGhhdCBkaXJlY3RvcnkuCgogIEFuZHJlYQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KWGVuLWRldmVsIG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMu
-eGVucHJvamVjdC5vcmcKaHR0cHM6Ly9saXN0cy54ZW5wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL3hlbi1kZXZlbA==
+PLL0 on davinci/da850-type device needs to be registered early in boot
+because it is needed for clocksource/clockevent. Change the driver
+to use CLK_OF_DECLARE for this special case.
+
+Signed-off-by: David Lechner <david@lechnology.com>
+---
+
+v10 changes:
+- removed duplicate warning message
+
+v9 changes:
+- new patch in v9
+
+ drivers/clk/davinci/pll-da850.c | 21 +++++++++++++++++----
+ drivers/clk/davinci/pll.c       |  4 +++-
+ drivers/clk/davinci/pll.h       |  2 +-
+ 3 files changed, 21 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/clk/davinci/pll-da850.c b/drivers/clk/davinci/pll-da850.c
+index 00a6ece7b524..fde4642a993f 100644
+--- a/drivers/clk/davinci/pll-da850.c
++++ b/drivers/clk/davinci/pll-da850.c
+@@ -12,6 +12,8 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/mfd/da8xx-cfgchip.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of_address.h>
+ #include <linux/of.h>
+ #include <linux/types.h>
+ 
+@@ -135,11 +137,22 @@ static const struct davinci_pll_sysclk_info *da850_pll0_sysclk_info[] = {
+ 	NULL
+ };
+ 
+-int of_da850_pll0_init(struct device *dev, void __iomem *base, struct regmap *cfgchip)
++void of_da850_pll0_init(struct device_node *node)
+ {
+-	return of_davinci_pll_init(dev, dev->of_node, &da850_pll0_info,
+-				   &da850_pll0_obsclk_info,
+-				   da850_pll0_sysclk_info, 7, base, cfgchip);
++	void __iomem *base;
++	struct regmap *cfgchip;
++
++	base = of_iomap(node, 0);
++	if (!base) {
++		pr_err("%s: ioremap failed\n", __func__);
++		return;
++	}
++
++	cfgchip = syscon_regmap_lookup_by_compatible("ti,da830-cfgchip");
++
++	of_davinci_pll_init(NULL, node, &da850_pll0_info,
++			    &da850_pll0_obsclk_info,
++			    da850_pll0_sysclk_info, 7, base, cfgchip);
+ }
+ 
+ static const struct davinci_pll_clk_info da850_pll1_info = {
+diff --git a/drivers/clk/davinci/pll.c b/drivers/clk/davinci/pll.c
+index f362f10d8459..dcfa780f828a 100644
+--- a/drivers/clk/davinci/pll.c
++++ b/drivers/clk/davinci/pll.c
+@@ -770,8 +770,10 @@ static struct davinci_pll_platform_data *davinci_pll_get_pdata(struct device *de
+ 	return pdata;
+ }
+ 
++/* needed in early boot for clocksource/clockevent */
++CLK_OF_DECLARE(da850_pll0, "ti,da850-pll0", of_da850_pll0_init);
++
+ static const struct of_device_id davinci_pll_of_match[] = {
+-	{ .compatible = "ti,da850-pll0", .data = of_da850_pll0_init },
+ 	{ .compatible = "ti,da850-pll1", .data = of_da850_pll1_init },
+ 	{ }
+ };
+diff --git a/drivers/clk/davinci/pll.h b/drivers/clk/davinci/pll.h
+index 562652fc0759..b2e5c4496645 100644
+--- a/drivers/clk/davinci/pll.h
++++ b/drivers/clk/davinci/pll.h
+@@ -123,7 +123,7 @@ int of_davinci_pll_init(struct device *dev, struct device_node *node,
+ /* Platform-specific callbacks */
+ 
+ int da850_pll1_init(struct device *dev, void __iomem *base, struct regmap *cfgchip);
+-int of_da850_pll0_init(struct device *dev, void __iomem *base, struct regmap *cfgchip);
++void of_da850_pll0_init(struct device_node *node);
+ int of_da850_pll1_init(struct device *dev, void __iomem *base, struct regmap *cfgchip);
+ 
+ int dm355_pll2_init(struct device *dev, void __iomem *base, struct regmap *cfgchip);
+-- 
+2.17.0
