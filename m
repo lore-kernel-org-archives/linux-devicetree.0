@@ -1,115 +1,47 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH RESEND] display: panel: Add KOE tx14d24vm1bpa display support (320x240)
-Date: Wed,  9 May 2018 17:43:38 +0200
-Message-ID: <20180509154338.2841-1-lukma@denx.de>
-References: <20180412143715.6828-1-lukma@denx.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180412143715.6828-1-lukma@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH v2 0/3] Introduce STM32MP1 RTC
+Date: Wed, 9 May 2018 17:46:07 +0200
+Message-ID: <1525880770-22263-1-git-send-email-amelie.delaunay@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds support for KOE's 5.7" display.
+This series introduces STM32MP1 RTC.
+On STM32MP1:
+- two clocks are needed, plck and rtc_ck;
+- to wakeup the system, a wakeup alarm interrupt is needed;
+- some registers or bits have moved, but the operation is the same;
+- the Backup Domain Protection (DBP) is not managed by RTC driver.
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
 ---
- .../bindings/display/panel/koe,tx14d24vm1bpa.txt   | 42 ++++++++++++++++++++++
- drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++
- 2 files changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+Changes in v2:
+* One compatible per line in bindings file
+* Remove unnecessary comment under rtc_ck as this clock is required for all
+* Remove interrupts-extended and add stm32mp1 rtc alarm wakeup interrupt in
+  interrupts property description
 
-diff --git a/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
-new file mode 100644
-index 000000000000..be7ac666807b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
-@@ -0,0 +1,42 @@
-+Kaohsiung Opto-Electronics Inc. 5.7" QVGA (320 x 240) TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "koe,tx14d24vm1bpa"
-+- backlight: phandle of the backlight device attached to the panel
-+- power-supply: single regulator to provide the supply voltage
-+
-+Required nodes:
-+- port: Parallel port mapping to connect this display
-+
-+This panel needs single power supply voltage. Its backlight is conntrolled
-+via PWM signal.
-+
-+Example:
-+--------
-+
-+Example device-tree definition when connected to iMX53 based board
-+
-+	lcd_panel: lcd-panel {
-+		compatible = "koe,tx14d24vm1bpa";
-+		backlight = <&backlight_lcd>;
-+		power-supply = <&reg_3v3>;
-+
-+		port {
-+			lcd_panel_in: endpoint {
-+				remote-endpoint = <&lcd_display_out>;
-+			};
-+		};
-+	};
-+
-+Then one needs to extend the dispX node:
-+
-+	lcd_display: disp1 {
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			lcd_display_out: endpoint {
-+				remote-endpoint = <&lcd_panel_in>;
-+			};
-+		};
-+	};
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index d9984bdb5bb5..103b43ce7dee 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1268,6 +1268,29 @@ static const struct panel_desc innolux_zj070na_01p = {
- 	},
- };
- 
-+static const struct display_timing koe_tx14d24vm1bpa_timing = {
-+	.pixelclock = { 5580000, 5850000, 6200000 },
-+	.hactive = { 320, 320, 320 },
-+	.hfront_porch = { 30, 30, 30 },
-+	.hback_porch = { 30, 30, 30 },
-+	.hsync_len = { 1, 5, 17 },
-+	.vactive = { 240, 240, 240 },
-+	.vfront_porch = { 6, 6, 6 },
-+	.vback_porch = { 5, 5, 5 },
-+	.vsync_len = { 1, 2, 11 },
-+	.flags = DISPLAY_FLAGS_DE_HIGH,
-+};
-+
-+static const struct panel_desc koe_tx14d24vm1bpa = {
-+	.timings = &koe_tx14d24vm1bpa_timing,
-+	.num_timings = 1,
-+	.bpc = 6,
-+	.size = {
-+		.width = 115,
-+		.height = 86,
-+	},
-+};
-+
- static const struct display_timing koe_tx31d200vm0baa_timing = {
- 	.pixelclock = { 39600000, 43200000, 48000000 },
- 	.hactive = { 1280, 1280, 1280 },
-@@ -2204,6 +2227,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "innolux,zj070na-01p",
- 		.data = &innolux_zj070na_01p,
- 	}, {
-+		.compatible = "koe,tx14d24vm1bpa",
-+		.data = &koe_tx14d24vm1bpa,
-+	}, {
- 		.compatible = "koe,tx31d200vm0baa",
- 		.data = &koe_tx31d200vm0baa,
- 	}, {
+Amelie Delaunay (3):
+  rtc: stm32: rework register management to prepare other version of RTC
+  dt-bindings: rtc: update stm32-rtc documentation for stm32mp1 rtc
+  rtc: stm32: add stm32mp1 rtc support
+
+ .../devicetree/bindings/rtc/st,stm32-rtc.txt       |  27 +-
+ drivers/rtc/rtc-stm32.c                            | 272 ++++++++++++++++-----
+ 2 files changed, 228 insertions(+), 71 deletions(-)
+
 -- 
-2.11.0
+2.7.4
