@@ -1,78 +1,86 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/8] ARM: dts: renesas: Add PMU device nodes
-Date: Wed, 9 May 2018 21:12:39 +0200
-Message-ID: <20180509191238.rmcmq6ls3bmosxjb@verge.net.au>
-References: <1525701427-12914-1-git-send-email-geert+renesas@glider.be>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v3 2/2] leds: lm3601x: Introduce the lm3601x LED driver
+Date: Thu, 10 May 2018 03:13:42 +0800
+Message-ID: <201805100310.5poORgcq%fengguang.wu@intel.com>
+References: <20180509115727.12070-2-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1525701427-12914-1-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180509115727.12070-2-dmurphy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: kbuild-all@01.org, robh+dt@kernel.org, mark.rutland@arm.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, afd@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 07, 2018 at 03:56:59PM +0200, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
-> 
-> This patch series enables support for the ARM Performance Monitor Units
-> in Cortex-A7, Cortex-A9, and Cortex-A15 CPU cores on Renesas RZ/A1,
-> R-Car Gen2, and RZ/G1 SoCs.  This allows for better performance analysis
-> using the "perf" tool.
-> 
-> Sample output of "perf stat echo" on r8a7791/koelsch:
-> 
->   - Before:
-> 
->      Performance counter stats for 'echo':
-> 
-> 	      2,636300      task-clock (msec)         #    0,265 CPUs utilized
-> 		     8      context-switches          #    0,003 M/sec
-> 		     0      cpu-migrations            #    0,000 K/sec
-> 		    43      page-faults               #    0,016 M/sec
->        <not supported>      cycles
->        <not supported>      stalled-cycles-frontend
->        <not supported>      stalled-cycles-backend
->        <not supported>      instructions
->        <not supported>      branches
->        <not supported>      branch-misses
-> 
-> 	   0,009960300 seconds time elapsed
-> 
->   - After:
-> 
->      Performance counter stats for 'echo':
-> 
-> 	      2,455400      task-clock (msec)         #    0,273 CPUs utilized
-> 		     3      context-switches          #    0,001 M/sec
-> 		     0      cpu-migrations            #    0,000 K/sec
-> 		    45      page-faults               #    0,018 M/sec
-> 	     3.556.784      cycles                    #    1,449 GHz
->        <not supported>      stalled-cycles-frontend
->        <not supported>      stalled-cycles-backend
-> 	     1.350.480      instructions              #    0,38  insns per cycle
-> 	       335.542      branches                  #  136,655 M/sec
-> 		18.075      branch-misses             #    5,39% of all branches
-> 
-> 	   0,008987900 seconds time elapsed
-> 
-> Still missing:
->   - R-Mobile APE6 (no PMU interrupt documented),
->   - R-Car M1A and H1 (the PMU interrupt seems to be routed to the legacy
->     SH INTC only?),
->   - RZ/G1C (SMP support not yet upstream).
-> 
-> This has been tested on r8a7791/koelsch, and boot-tested on
-> r7s72100/genmai, r8a7790/lager, r8a7792/blanche, and r8a7794/silk.
+Hi Dan,
 
-Thanks, applied.
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on v4.17-rc4 next-20180509]
+[cannot apply to j.anaszewski-leds/for-next]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Dan-Murphy/dt-bindings-lm3601x-Introduce-the-lm3601x-driver/20180509-232022
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+
+
+coccinelle warnings: (new ones prefixed by >>)
+
+>> drivers/leds/leds-lm3601x.c:241:35-36: WARNING: Use ARRAY_SIZE
+
+vim +241 drivers/leds/leds-lm3601x.c
+
+   224	
+   225	static int lm3601x_strobe_set(struct led_classdev_flash *fled_cdev,
+   226					bool state)
+   227	{
+   228		struct lm3601x_led *led = fled_cdev_to_led(fled_cdev);
+   229		int ret;
+   230		int current_timeout;
+   231		int reg_count;
+   232		int i;
+   233		int timeout_reg_val = 0;
+   234	
+   235		mutex_lock(&led->lock);
+   236	
+   237		ret = regmap_read(led->regmap, LM3601X_CFG_REG, &current_timeout);
+   238		if (ret < 0)
+   239			goto out;
+   240	
+ > 241		reg_count = sizeof(strobe_timeouts) / sizeof(strobe_timeouts[0]);
+   242		for (i = 0; i < reg_count; i++) {
+   243			if (led->strobe_timeout > strobe_timeouts[i].timeout)
+   244				continue;
+   245	
+   246			if (led->strobe_timeout <= strobe_timeouts[i].timeout) {
+   247				timeout_reg_val = (strobe_timeouts[i].reg_val << 1);
+   248				break;
+   249			}
+   250	
+   251			ret = -EINVAL;
+   252			goto out;
+   253		}
+   254	
+   255		if (led->strobe_timeout != current_timeout)
+   256			ret = regmap_update_bits(led->regmap, LM3601X_CFG_REG,
+   257						0x1e, timeout_reg_val);
+   258	
+   259		if (state)
+   260			ret = regmap_update_bits(led->regmap, LM3601X_ENABLE_REG,
+   261						LM3601X_MODE_STROBE,
+   262						LM3601X_MODE_STROBE);
+   263		else
+   264			ret = regmap_update_bits(led->regmap, LM3601X_ENABLE_REG,
+   265						LM3601X_MODE_STROBE, LED_OFF);
+   266	
+   267		ret = lm3601x_read_faults(led);
+   268	out:
+   269		mutex_unlock(&led->lock);
+   270		return ret;
+   271	}
+   272	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
