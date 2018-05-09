@@ -1,74 +1,94 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH v2] display: panel: Add AUO g070vvn01 display support
- (800x480)
-Date: Wed, 9 May 2018 16:15:45 +0200
-Message-ID: <20180509161545.6bba76ef@jawa>
-References: <20180403101525.22369-1-lukma@denx.de>
-        <20180410102927.17787-1-lukma@denx.de>
-        <CAL_JsqJii+ssU8kjVgqvSn77smMb4+gkT=PcwfCwvavReuAo+g@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Add SC27xx breathing light
+ controller documentation
+Date: Wed, 9 May 2018 16:25:26 +0200
+Message-ID: <20180509142526.GA25131@amd>
+References: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/iVCV5_VFT3Ts81h1T37f06_"; protocol="application/pgp-signature"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJii+ssU8kjVgqvSn77smMb4+gkT=PcwfCwvavReuAo+g@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: jacek.anaszewski@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, xiaotong.lu@spreadtrum.com, broonie@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/iVCV5_VFT3Ts81h1T37f06_
-Content-Type: text/plain; charset=US-ASCII
+
+--0OAP2g/MAC+5xKAE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Rob,
+Hi!
 
-> On Tue, Apr 10, 2018 at 5:29 AM, Lukasz Majewski <lukma@denx.de>
-> wrote:
-> > This commit adds support for AUO's 7.0" display.
-> >
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> >
-> > ---
-> > Changes for v2:
-> > - Add *.txt suffix to the auo,g070wn01 file
-> > - Remove not needed bus-format-override =3D "rgb565"; property
-> > ---
-> >  .../bindings/display/panel/auo,g070vvn01.txt       | 30
-> > +++++++++++++++++++++
-> > drivers/gpu/drm/panel/panel-simple.c               | 31
-> > ++++++++++++++++++++++ 2 files changed, 61 insertions(+) create
-> > mode 100644
-> > Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt =20
+> This patch adds the binding documentation for Spreadtrum SC27xx series
+> breathing light controller, which supports 3 outputs: red LED, green
+> LED and blue LED.
 >=20
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+> Changes since v1:
+>  - Change the compatible string to be one explicit SoC name.
+>  - Change the child node name.
+>  - Change to be upper case for the first character.
+> ---
+>  .../devicetree/bindings/leds/leds-sc27xx-bltc.txt  |   41 ++++++++++++++=
+++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-sc27xx-bl=
+tc.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt =
+b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+> new file mode 100644
+> index 0000000..b3de7fc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+> @@ -0,0 +1,41 @@
+> +LEDs connected to Spreadtrum SC27XX PMIC breathing light controller
+> +
+> +The SC27xx breathing light controller supports to 3 outputs:
+> +red LED, green LED and blue LED. Each LED can work at normal
+> +PWM mode or breath light mode.
 
-Gentle ping on this patch .... It is almost month now...
+> +Required properties:
+> +- compatible: Should be "sprd,sc2731-bltc".
 
+If this is for 2731, I'd say so in the title and the filename...?
 
-Best regards,
+> +- #address-cells: Must be 1.
+> +- #size-cells: Must be 0.
+> +- reg: Specify controller address.
 
-Lukasz Majewski
+the controller...
 
---
+> +Required child properties:
+> +- reg: Number of LED line (could be from 0 to 2).
 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+Uff. "Port this LED is connected to"?
 
---Sig_/iVCV5_VFT3Ts81h1T37f06_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+With that fixed...
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--0OAP2g/MAC+5xKAE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlrzApIACgkQAR8vZIA0
-zr0iAgf9F96IbluwagWXGVlqyhZh+e1toEQjziwibpXSqEpD/VmuF0Tsa+96uYrt
-/4k1vl0ZZIGDPOxgBxxi5qLi88qRmQzti5n7csiex7kX/DUx07AXS0Q4nqoKr2wY
-w+A/dxyTickH4oCCVs4ZMWQy3OB9KtTP8+2l/q01MikjKFHLXfyWjbPKNi4DTac+
-XtC6lY1po8QXub469++2MDoKC6CLZ/7kxQN51WsYbbqfap6SsFMaC5LJbotIZ/ry
-bnwnFcFDCTYcd3kIlMmx1jiVSagzGb+IWDkHx1BpiRyO4MBeoB0L807teSKzceRO
-hXfSS8Vyod86exk/QHRviUdvi/xcUw==
-=K62i
+iEYEARECAAYFAlrzBNYACgkQMOfwapXb+vJAuQCgvcB9K0kKr4+5DMMuDIbDRnsS
+g00AoK8sAt+IgvgozXJ3/+Y5F/Xd59wK
+=n0xY
 -----END PGP SIGNATURE-----
 
---Sig_/iVCV5_VFT3Ts81h1T37f06_--
+--0OAP2g/MAC+5xKAE--
