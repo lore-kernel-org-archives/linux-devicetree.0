@@ -1,68 +1,32 @@
-From: =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Relicense Asus RT-AC87U file to the
- GPL 2.0+ / MIT
-Date: Wed, 9 May 2018 21:21:31 +0200
-Message-ID: <4726c206-0201-c0fc-4313-bbaec29f35c4@gmail.com>
-References: <20180504100324.31847-1-zajec5@gmail.com>
- <f80f8566-aada-65ae-9952-83780f041eb7@gmail.com>
+From: James Morris <jmorris@namei.org>
+Subject: Re: [PATCH v2 11/11] docs: fix broken references with multiple
+ hints
+Date: Thu, 10 May 2018 05:22:44 +1000 (AEST)
+Message-ID: <alpine.LRH.2.21.1805100522240.12749@namei.org>
+References: <cover.1525870886.git.mchehab+samsung@kernel.org> <63a4f8a93f9115475bc184d0f37d076c9b9c75ff.1525870886.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f80f8566-aada-65ae-9952-83780f041eb7@gmail.com>
-Content-Language: es-ES
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <63a4f8a93f9115475bc184d0f37d076c9b9c75ff.1525870886.git.mchehab+samsung@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harry Wei <harryxiyou@gmail.com>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Roy Pledge <Roy.Pledge@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, "Serge E. Hallyn" <serge@hallyn.com>, linux-gpio@vger.kernel.org, dri-devel@lists.
 List-Id: devicetree@vger.kernel.org
 
-U29ycnkgZm9yIHRoZSBkZWxheS4KCkFja2VkLWJ5OiDDgWx2YXJvIEZlcm7DoW5kZXogUm9qYXMg
-PG5vbHRhcmlAZ21haWwuY29tPgoKRWwgMDkvMDUvMjAxOCBhIGxhcyAyMToxOSwgRmxvcmlhbiBG
-YWluZWxsaSBlc2NyaWJpw7M6Cj4gT24gMDUvMDQvMjAxOCAwMzowMyBBTSwgUmFmYcWCIE1pxYJl
-Y2tpIHdyb3RlOgo+PiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4+
-Cj4+IFRoaXMgbWF0Y2hlcyBsaWNlbnNpbmcgdXNlZCBieSBvdGhlciBCQ001MzAxWCBmaWxlcyBh
-bmQgaXMgcHJlZmVycmVkIGFzOgo+PiAxKSBHUEwgMi4wKyBtYWtlcyBpcyBjbGVhcmx5IGNvbXBh
-dGlibGUgd2l0aCBMaW51eCBrZXJuZWwKPj4gMikgTUlUIGlzIGFsc28gcGVybWlzc2l2ZSBidXQg
-cHJlZmVycmVkIG92ZXIgSVNDCj4+Cj4+IFRoaXMgZmlsZSB3ZXJlIGNyZWF0ZWQgYW5kIGV2ZXIg
-dG91Y2hlZCBieSBhIGdyb3VwIG9mIHRocmVlIHBlb3BsZSBvbmx5Ogo+PiDDgWx2YXJvLCBIYXVr
-ZSBhbmQgbWUuCj4gQWx2YXJvLCBwbGVhc2UgQWNrL05hY2sgdGhlIGxpY2Vuc2UgY2hhbmdlLiBU
-aGFuayB5b3UKPgo+PiBTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
-a2kucGw+Cj4+IC0tLQo+PiDDgWx2YXJvLCBIYXVrZTogSSBuZWVkIGFwcHJvdmUgZm9yIHRoaXMg
-Y2hhbmdlIGZyb20gZWFjaCBvZiB5b3UuIElmIHlvdQo+PiBhcmUgT0sgd2l0aCBpdCwgY2FuIHlv
-dSByZXBseSB3aXRoIGFuIEFja2VkLWJ5LCBwbGVhc2U/Cj4+IC0tLQo+PiAgIGFyY2gvYXJtL2Jv
-b3QvZHRzL2JjbTQ3MDktYXN1cy1ydC1hYzg3dS5kdHMgfCAxMyArLS0tLS0tLS0tLS0tCj4+ICAg
-MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxMiBkZWxldGlvbnMoLSkKPj4KPj4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDktYXN1cy1ydC1hYzg3dS5kdHMgYi9h
-cmNoL2FybS9ib290L2R0cy9iY200NzA5LWFzdXMtcnQtYWM4N3UuZHRzCj4+IGluZGV4IGRmNDcz
-Y2M0MTU3Mi4uMjIyNzE4MThmOTAxIDEwMDY0NAo+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9i
-Y200NzA5LWFzdXMtcnQtYWM4N3UuZHRzCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3
-MDktYXN1cy1ydC1hYzg3dS5kdHMKPj4gQEAgLTEsMjAgKzEsOSBAQAo+PiArLy8gU1BEWC1MaWNl
-bnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb3ItbGF0ZXIgT1IgTUlUCj4+ICAgLyoKPj4gICAgKiBC
-cm9hZGNvbSBCQ000NzBYIC8gQkNNNTMwMVggQVJNIHBsYXRmb3JtIGNvZGUuCj4+ICAgICogRFRT
-IGZvciBBc3VzIFJULUFDODdVCj4+ICAgICoKPj4gICAgKiBDb3B5cmlnaHQgKEMpIDIwMTUgUmFm
-YcWCIE1pxYJlY2tpIDx6YWplYzVAZ21haWwuY29tPgo+PiAtICoKPj4gLSAqIFBlcm1pc3Npb24g
-dG8gdXNlLCBjb3B5LCBtb2RpZnksIGFuZC9vciBkaXN0cmlidXRlIHRoaXMgc29mdHdhcmUgZm9y
-IGFueQo+PiAtICogcHVycG9zZSB3aXRoIG9yIHdpdGhvdXQgZmVlIGlzIGhlcmVieSBncmFudGVk
-LCBwcm92aWRlZCB0aGF0IHRoZSBhYm92ZQo+PiAtICogY29weXJpZ2h0IG5vdGljZSBhbmQgdGhp
-cyBwZXJtaXNzaW9uIG5vdGljZSBhcHBlYXIgaW4gYWxsIGNvcGllcy4KPj4gLSAqCj4+IC0gKiBU
-SEUgU09GVFdBUkUgSVMgUFJPVklERUQgIkFTIElTIiBBTkQgVEhFIEFVVEhPUiBESVNDTEFJTVMg
-QUxMIFdBUlJBTlRJRVMgV0lUSAo+PiAtICogUkVHQVJEIFRPIFRISVMgU09GVFdBUkUgSU5DTFVE
-SU5HIEFMTCBJTVBMSUVEIFdBUlJBTlRJRVMgT0YgTUVSQ0hBTlRBQklMSVRZCj4+IC0gKiBBTkQg
-RklUTkVTUy4gSU4gTk8gRVZFTlQgU0hBTEwgVEhFIEFVVEhPUiBCRSBMSUFCTEUgRk9SIEFOWSBT
-UEVDSUFMLCBESVJFQ1QsCj4+IC0gKiBJTkRJUkVDVCwgT1IgQ09OU0VRVUVOVElBTCBEQU1BR0VT
-IE9SIEFOWSBEQU1BR0VTIFdIQVRTT0VWRVIgUkVTVUxUSU5HIEZST00KPj4gLSAqIExPU1MgT0Yg
-VVNFLCBEQVRBIE9SIFBST0ZJVFMsIFdIRVRIRVIgSU4gQU4gQUNUSU9OIE9GIENPTlRSQUNULCBO
-RUdMSUdFTkNFCj4+IC0gKiBPUiBPVEhFUiBUT1JUSU9VUyBBQ1RJT04sIEFSSVNJTkcgT1VUIE9G
-IE9SIElOIENPTk5FQ1RJT04gV0lUSCBUSEUgVVNFIE9SCj4+IC0gKiBQRVJGT1JNQU5DRSBPRiBU
-SElTIFNPRlRXQVJFLgo+PiAgICAqLwo+PiAgIAo+PiAgIC9kdHMtdjEvOwo+Pgo+CgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
-bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Wed, 9 May 2018, Mauro Carvalho Chehab wrote:
+
+> The script:
+> 	./scripts/documentation-file-ref-check --fix-rst
+> 
+> Gives multiple hints for broken references on some files.
+> Manually use the one that applies for some files.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+
+Acked-by: James Morris <james.morris@microsoft.com>
+
+
+-- 
+James Morris
+<jmorris@namei.org>
