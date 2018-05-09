@@ -1,114 +1,309 @@
-From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH 1/5] dt-bindings: pinctrl: document the STMFX pinctrl
- bindings
-Date: Wed, 9 May 2018 07:31:31 +0000
-Message-ID: <124c557b-d6c0-5734-5992-af15b527cbe4@st.com>
-References: <1523440025-18077-1-git-send-email-amelie.delaunay@st.com>
- <1523440025-18077-2-git-send-email-amelie.delaunay@st.com>
- <20180416181940.4b5z4svbde3ompij@rob-hp-laptop>
+From: Todor Tomov <todor.tomov@linaro.org>
+Subject: Re: [PATCH v2 1/1] dts: qcom: db820c: Add gpio-line-names property
+Date: Wed, 9 May 2018 10:53:53 +0300
+Message-ID: <be4d347f-646b-1a37-0364-a2a458a30f84@linaro.org>
+References: <20180418134601.8502-1-manivannan.sadhasivam@linaro.org>
+ <20180418134601.8502-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180416181940.4b5z4svbde3ompij@rob-hp-laptop>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180418134601.8502-2-manivannan.sadhasivam@linaro.org>
 Content-Language: en-US
-Content-ID: <0CAA554B401A6644A093DE9AEF268EB6@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lee Jones <lee.jones@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, bjorn.andersson@linaro.org, will.deacon@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, dragonboard@lists.96boards.org, nicolas.dechesne@linaro.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA0LzE2LzIwMTggMDg6MTkgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBXZWQs
-IEFwciAxMSwgMjAxOCBhdCAxMTo0NzowMUFNICswMjAwLCBBbWVsaWUgRGVsYXVuYXkgd3JvdGU6
-DQo+PiBUaGlzIHBhdGNoIGFkZHMgZG9jdW1lbnRhdGlvbiBvZiBkZXZpY2UgdHJlZSBiaW5kaW5n
-cyBmb3IgdGhlDQo+PiBTVE1pY3JvZWxlY3Ryb25pY3MgTXVsdGktRnVuY3Rpb24gZVhwYW5kZXIg
-KFNUTUZYKSBHUElPIGV4cGFuZGVyLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEFtZWxpZSBEZWxh
-dW5heSA8YW1lbGllLmRlbGF1bmF5QHN0LmNvbT4NCj4+IC0tLQ0KPj4gICAuLi4vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtc3RtZngudHh0ICB8IDExOCArKysrKysrKysrKysr
-KysrKysrKysNCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDExOCBpbnNlcnRpb25zKCspDQo+PiAgIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3Ry
-bC9waW5jdHJsLXN0bWZ4LnR4dA0KPj4NCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9waW5jdHJsLXN0bWZ4LnR4dCBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtc3RtZngudHh0DQo+PiBuZXcg
-ZmlsZSBtb2RlIDEwMDY0NA0KPj4gaW5kZXggMDAwMDAwMC4uNGQ4OTQxZGUNCj4+IC0tLSAvZGV2
-L251bGwNCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJs
-L3BpbmN0cmwtc3RtZngudHh0DQo+PiBAQCAtMCwwICsxLDExOCBAQA0KPj4gK1NUTWljcm9lbGVj
-dHJvbmljcyBNdWx0aS1GdW5jdGlvbiBlWHBhbmRlciAoU1RNRlgpIEdQSU8gZXhwYW5kZXIgYmlu
-ZGluZ3MNCj4+ICsNCj4+ICtTVCBNdWx0aS1GdW5jdGlvbiBlWHBhbmRlciAoU1RNRlgpIGlzIGEg
-c2xhdmUgY29udHJvbGxlciB1c2luZyBJMkMgZm9yDQo+PiArY29tbXVuaWNhdGlvbiB3aXRoIHRo
-ZSBtYWluIE1DVS4gSXQgb2ZmZXJzIHVwIHRvIDI0IEdQSU9zIGV4cGFuc2lvbi4NCj4+ICsNCj4+
-ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJzdCxz
-dG1meC0wMzAwIi4NCj4+ICstIHJlZzogSTJDIHNsYXZlIGFkZHJlc3Mgb2YgdGhlIGRldmljZS4N
-Cj4+ICstIGludGVycnVwdC1wYXJlbnQ6IHBoYW5kbGUgb2YgdGhlIFNUTUZYIHBhcmVudCBpbnRl
-cnJ1cHQgY29udHJvbGxlci4NCj4+ICstIGludGVycnV0cHM6IGludGVycnVwdCBzcGVjaWZpZXIg
-dHJpZ2dlcmVkIGJ5IE1GWF9JUlFfT1VUIHNpZ25hbC4NCj4+ICsNCj4+ICtPcHRpb25hbCBwcm9w
-ZXJ0eToNCj4gDQo+IHMvcHJvcGVydHkvcHJvcGVydGllcy8NCj4gDQo+PiArLSBkcml2ZS1vcGVu
-LWRyYWluOiBjb25maWd1cmUgTUZYX0lSUV9PVVQgYXMgb3BlbiBkcmFpbi4NCj4+ICstIHZkZC1z
-dXBwbHk6IHBoYW5kbGUgb2YgdGhlIHJlZ3VsYXRvciBzdXBwbHlpbmcgU1RNRlguDQo+PiArDQo+
-PiArUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgZ3BpbyBjb250cm9sbGVyIHN1Yi1ub2RlOg0KPj4g
-Ky0gI2dwaW8tY2VsbHM6IHNob3VsZCBiZSA8Mj4sIHRoZSBmaXJzdCBjZWxsIGlzIHRoZSBHUElP
-IG51bWJlciBhbmQgdGhlIHNlY29uZA0KPj4gKyAgY2VsbCBpcyB0aGUgZ3BpbyBmbGFncyBpbiBh
-Y2NvcmRhbmNlIHdpdGggPGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPi4NCj4+ICstIGdwaW8tY29u
-dHJvbGxlcjogbWFya3MgdGhlIGRldmljZSBhcyBhIEdQSU8gY29udHJvbGxlci4NCj4+ICtQbGVh
-c2UgcmVmZXIgdG8gLi4vZ3Bpby9ncGlvLnR4dC4NCj4+ICsNCj4+ICtPcHRpb25hbCBwcm9wZXJ0
-aWVzIGZvciBncGlvIGNvbnRyb2xsZXIgc3ViLW5vZGU6DQo+PiArLSAjaW50ZXJydXB0LWNlbGxz
-OiBzaG91bGQgYmUgPDI+LCB0aGUgZmlyc3QgY2VsbCBpcyB0aGUgR1BJTyBudW1iZXIgYW5kIHRo
-ZQ0KPj4gKyAgc2Vjb25kIGNlbGwgaXMgdGhlIGludGVycnVwdCBmbGFncyBpbiBhY2NvcmRhbmNl
-IHdpdGgNCj4+ICsgIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9pcnEuaD4uDQo+
-PiArLSBpbnRlcnJ1cHQtY29udHJvbGxlcjogbWFya3MgdGhlIGRldmljZSBhcyBhbiBpbnRlcnJ1
-cHQgY29udHJvbGxlci4NCj4+ICsNCj4+ICtQbGVhc2UgcmVmZXIgdG8gcGluY3RybC1iaW5kaW5n
-cy50eHQgZm9yIHBpbiBjb25maWd1cmF0aW9uLg0KPj4gKw0KPj4gK1JlcXVpcmVkIHByb3BlcnRp
-ZXMgZm9yIHBpbiBjb25maWd1cmF0aW9uIHN1Yi1ub2RlczoNCj4+ICstIHBpbnM6IGxpc3Qgb2Yg
-cGlucyB0byB3aGljaCB0aGUgY29uZmlndXJhdGlvbiBhcHBsaWVzLg0KPj4gKw0KPj4gK09wdGlv
-bmFsIHByb3BlcnRpZXMgZm9yIHBpbiBjb25maWd1cmF0aW9uIHN1Yi1ub2RlcyAocGluY29uZi1n
-ZW5lcmljIG9uZXMpOg0KPj4gKy0gYmlhcy1kaXNhYmxlOiBkaXNhYmxlIGFueSBiaWFzIG9uIHRo
-ZSBwaW4uDQo+PiArLSBiaWFzLXB1bGwtdXA6IHRoZSBwaW4gd2lsbCBiZSBwdWxsZWQgdXAuDQo+
-PiArLSBiaWFzLXB1bGwtcGluLWRlZmF1bHQ6IHVzZSB0aGUgcGluLWRlZmF1bHQgcHVsbCBzdGF0
-ZS4NCj4+ICstIGJpYXMtcHVsbC1kb3duOiB0aGUgcGluIHdpbGwgYmUgcHVsbGVkIGRvd24uDQo+
-PiArLSBkcml2ZS1vcGVuLWRyYWluOiB0aGUgcGluIHdpbGwgYmUgZHJpdmVuIHdpdGggb3BlbiBk
-cmFpbi4NCj4+ICstIGRyaXZlLXB1c2gtcHVsbDogdGhlIHBpbiB3aWxsIGJlIGRyaXZlbiBhY3Rp
-dmVseSBoaWdoIGFuZCBsb3cuDQo+PiArLSBvdXRwdXQtaGlnaDogdGhlIHBpbiB3aWxsIGJlIGNv
-bmZpZ3VyZWQgYXMgYW4gb3V0cHV0IGRyaXZpbmcgaGlnaCBsZXZlbC4NCj4+ICstIG91dHB1dC1s
-b3c6IHRoZSBwaW4gd2lsbCBiZSBjb25maWd1cmVkIGFzIGFuIG91dHB1dCBkcml2aW5nIGxvdyBs
-ZXZlbC4NCj4+ICsNCj4+ICtOb3RlIHRoYXQgU1RNRlggcGluc1sxNTowXSBhcmUgY2FsbGVkICJn
-cGlvWzE1OjBdIiwgYW5kIFNUTUZYIHBpbnNbMjM6MTZdIGFyZQ0KPj4gK2NhbGxlZCAiYWdwaW9b
-NzowXSIuIEV4YW1wbGUsIHRvIHJlZmVyIHRvIHBpbiAxOCBvZiBTVE1GWCwgdXNlICJhZ3BpbzIi
-Lg0KPj4gKw0KPj4gK0V4YW1wbGU6DQo+PiArDQo+PiArCXN0bWZ4cGluY3RybDogc3RtZnhANDIg
-ew0KPj4gKwkJY29tcGF0aWJsZSA9ICJzdCxzdG1meC0wMzAwIjsNCj4+ICsJCXJlZyA9IDwweDQy
-PjsNCj4+ICsJCWludGVycnVwdC1wYXJlbnQgPSA8JmdwaW9pPjsNCj4+ICsJCWludGVycnVwdHMg
-PSA8OCBJUlFfVFlQRV9FREdFX1JJU0lORz47DQo+PiArCQl2ZGQtc3VwcGx5ID0gPCZ2M3YzPjsN
-Cj4+ICsJCXN0YXR1cyA9ICJva2F5IjsNCj4gDQo+IERvbid0IHNob3cgc3RhdHVzIGluIGV4YW1w
-bGVzLg0KPiANCg0KSSdsbCBmaXggaXQuDQoNCj4+ICsNCj4+ICsJCXN0bWZ4Z3BpbzogZ3BpbyB7
-DQo+IA0KPiBXaHkgZG9lcyB0aGlzIG5lZWQgdG8gYmUgYSBzdWIgbm9kZT8gQXJlIHRoZXJlIGZ1
-bmN0aW9ucyBiZXlvbmQgR1BJTz8NCj4gDQoNCkknbGwgYWRkcmVzcyB0aGlzIHBvaW50IGluIG15
-IHJlc3BvbnNlIHRvIExpbnVzLg0KDQo+PiArCQkJI2dwaW8tY2VsbHMgPSA8Mj47DQo+PiArCQkJ
-I2ludGVycnVwdC1jZWxscyA9IDwyPjsNCj4+ICsJCQlncGlvLWNvbnRyb2xsZXI7DQo+PiArCQkJ
-aW50ZXJydXB0LWNvbnRyb2xsZXI7DQo+PiArCQkJc3RhdHVzID0gIm9rYXkiOw0KPj4gKwkJfTsN
-Cj4+ICsNCj4+ICsJCWpveXN0aWNrX3BpbnM6IGpveXN0aWNrQDAgew0KPiANCj4gQSB1bml0LWFk
-ZHJlc3Mgd2l0aG91dCBhIHJlZyBwcm9wIGlzIG5vdCB2YWxpZC4NCj4gDQoNCk9LLCBJJ2xsIHJl
-cGxhY2UgaXQgYnkgJ2pveXN0aWNrX3BpbnM6IGpveXN0aWNrLTAnLg0KDQo+PiArCQkJcGlucyA9
-ICJncGlvMCIsICJncGlvMSIsICJncGlvMiIsICJncGlvMyIsICJncGlvNCI7DQo+PiArCQkJZHJp
-dmUtcHVzaC1wdWxsOw0KPj4gKwkJCWJpYXMtcHVsbC1kb3duOw0KPj4gKwkJfTsNCj4+ICsJfTsN
-Cj4+ICsNCj4+ICsJam95c3RpY2sgew0KPj4gKwkJY29tcGF0aWJsZSA9ICJncGlvLWtleXMiOw0K
-Pj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+PiArCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4+
-ICsJCXBpbmN0cmwtMCA9IDwmam95c3RpY2tfcGlucz47DQo+PiArCQlwaW5jdHJsLW5hbWVzID0g
-ImRlZmF1bHQiOw0KPj4gKwkJYnV0dG9uQDAgew0KPj4gKwkJCWxhYmVsID0gIkpveVNlbCI7DQo+
-PiArCQkJbGludXgsY29kZSA9IDxLRVlfRU5URVI+Ow0KPj4gKwkJCWludGVycnVwdC1wYXJlbnQg
-PSA8JnN0bWZ4Z3Bpbz47DQo+PiArCQkJaW50ZXJydXB0cyA9IDwwIElSUV9UWVBFX0VER0VfUklT
-SU5HPjsNCj4+ICsJCX07DQo+PiArCQlidXR0b25AMSB7DQo+PiArCQkJbGFiZWwgPSAiSm95RG93
-biI7DQo+PiArCQkJbGludXgsY29kZSA9IDxLRVlfRE9XTj47DQo+PiArCQkJaW50ZXJydXB0LXBh
-cmVudCA9IDwmc3RtZnhncGlvPjsNCj4+ICsJCQlpbnRlcnJ1cHRzID0gPDEgSVJRX1RZUEVfRURH
-RV9SSVNJTkc+Ow0KPj4gKwkJfTsNCj4+ICsJCWJ1dHRvbkAyIHsNCj4+ICsJCQlsYWJlbCA9ICJK
-b3lMZWZ0IjsNCj4+ICsJCQlsaW51eCxjb2RlID0gPEtFWV9MRUZUPjsNCj4+ICsJCQlpbnRlcnJ1
-cHQtcGFyZW50ID0gPCZzdG1meGdwaW8+Ow0KPj4gKwkJCWludGVycnVwdHMgPSA8MiBJUlFfVFlQ
-RV9FREdFX1JJU0lORz47DQo+PiArCQl9Ow0KPj4gKwkJYnV0dG9uQDMgew0KPj4gKwkJCWxhYmVs
-ID0gIkpveVJpZ2h0IjsNCj4+ICsJCQlsaW51eCxjb2RlID0gPEtFWV9SSUdIVD47DQo+PiArCQkJ
-aW50ZXJydXB0LXBhcmVudCA9IDwmc3RtZnhncGlvPjsNCj4+ICsJCQlpbnRlcnJ1cHRzID0gPDMg
-SVJRX1RZUEVfRURHRV9SSVNJTkc+Ow0KPj4gKwkJfTsNCj4+ICsJCWJ1dHRvbkA0IHsNCj4+ICsJ
-CQlsYWJlbCA9ICJKb3lVcCI7DQo+PiArCQkJbGludXgsY29kZSA9IDxLRVlfVVA+Ow0KPj4gKwkJ
-CWludGVycnVwdC1wYXJlbnQgPSA8JnN0bWZ4Z3Bpbz47DQo+PiArCQkJaW50ZXJydXB0cyA9IDw0
-IElSUV9UWVBFX0VER0VfUklTSU5HPjsNCj4+ICsJCX07DQo+PiArCX07DQo+PiArDQo+PiArCWxl
-ZHMgew0KPj4gKwkJY29tcGF0aWJsZSA9ICJncGlvLWxlZHMiOw0KPj4gKwkJb3JhbmdlIHsNCj4+
-ICsJCQlncGlvcyA9IDwmc3RtZnhncGlvIDE3IDE+Ow0KPj4gKwkJfTsNCj4+ICsNCj4+ICsJCWJs
-dWUgew0KPj4gKwkJCWdwaW9zID0gPCZzdG1meGdwaW8gMTkgMT47DQo+PiArCQl9Ow0KPj4gKwl9
-DQo+PiAtLSANCj4+IDIuNy40DQo+Pg0KDQpUaGFua3MsDQpBbWVsaWU=
+Hi Mani,
+
+On 18.04.2018 16:46, Manivannan Sadhasivam wrote:
+> Add gpio-line-names property for Dragonboard820c based on APQ8096 SoC.
+> There are 4 gpio-controllers present on this board, including the
+> APQ8096 SoC, PM8994 (GPIO and MPP) and PMI8994 (GPIO).
+> 
+> Lines names are derived from 96Boards CE Specification 1.0, Appendix
+> "Expansion Connector Signal Description". Line names for PMI8994 MPP
+> pins are not added due to the absence of the gpio-controller support.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Thank you for adding the schematic names to the comments.
+You can have my:
+Reviewed-by: Todor Tomov <todor.tomov@linaro.org>
+
+
+> ---
+>  arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 239 +++++++++++++++++++++++++++
+>  1 file changed, 239 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+> index 1c8f1b86472d..473530527e27 100644
+> --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+> @@ -19,6 +19,33 @@
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  
+> +/*
+> + * GPIO name legend: proper name = the GPIO line is used as GPIO
+> + *         NC      = not connected (pin out but not routed from the chip to
+> + *                   anything the board)
+> + *         "[PER]" = pin is muxed for [peripheral] (not GPIO)
+> + *         LSEC    = Low Speed External Connector
+> + *         P HSEC  = Primary High Speed External Connector
+> + *         S HSEC  = Secondary High Speed External Connector
+> + *         J14     = Camera Connector
+> + *         TP      = Test Points
+> + *
+> + * Line names are taken from the schematic "DragonBoard 820c",
+> + * drawing no: LM25-P2751-1
+> + *
+> + * For the lines routed to the external connectors the
+> + * lines are named after the 96Boards CE Specification 1.0,
+> + * Appendix "Expansion Connector Signal Description".
+> + *
+> + * When the 96Board naming of a line and the schematic name of
+> + * the same line are in conflict, the 96Board specification
+> + * takes precedence, which means that the external UART on the
+> + * LSEC is named UART0 while the schematic and SoC names this
+> + * UART3. This is only for the informational lines i.e. "[FOO]",
+> + * the GPIO named lines "GPIO-A" thru "GPIO-L" are the only
+> + * ones actually used for GPIO.
+> + */
+> +
+>  / {
+>  	aliases {
+>  		serial0 = &blsp2_uart1;
+> @@ -90,6 +117,218 @@
+>  			status = "okay";
+>  		};
+>  
+> +		pinctrl@1010000 {
+> +			gpio-line-names =
+> +				"[SPI0_DOUT]", /* GPIO_0, BLSP1_SPI_MOSI, LSEC pin 14 */
+> +				"[SPI0_DIN]", /* GPIO_1, BLSP1_SPI_MISO, LSEC pin 10 */
+> +				"[SPI0_CS]", /* GPIO_2, BLSP1_SPI_CS_N, LSEC pin 12 */
+> +				"[SPI0_SCLK]", /* GPIO_3, BLSP1_SPI_CLK, LSEC pin 8 */
+> +				"[UART1_TxD]", /* GPIO_4, BLSP8_UART_TX, LSEC pin 11 */
+> +				"[UART1_RxD]", /* GPIO_5, BLSP8_UART_RX, LSEC pin 13 */
+> +				"[I2C1_SDA]", /* GPIO_6, BLSP8_I2C_SDA, LSEC pin 21 */
+> +				"[I2C1_SCL]", /* GPIO_7, BLSP8_I2C_SCL, LSEC pin 19 */
+> +				"GPIO-H", /* GPIO_8, LCD0_RESET_N, LSEC pin 30 */
+> +				"TP93", /* GPIO_9 */
+> +				"GPIO-G", /* GPIO_10, MDP_VSYNC_P, LSEC pin 29 */
+> +				"[MDP_VSYNC_S]", /* GPIO_11, S HSEC pin 55 */
+> +				"NC", /* GPIO_12 */
+> +				"[CSI0_MCLK]", /* GPIO_13, CAM_MCLK0, P HSEC pin 15 */
+> +				"[CAM_MCLK1]", /* GPIO_14, J14 pin 11 */
+> +				"[CSI1_MCLK]", /* GPIO_15, CAM_MCLK2, P HSEC pin 17 */
+> +				"TP99", /* GPIO_16 */
+> +				"[I2C2_SDA]", /* GPIO_17, CCI_I2C_SDA0, P HSEC pin 34 */
+> +				"[I2C2_SCL]", /* GPIO_18, CCI_I2C_SCL0, P HSEC pin 32 */
+> +				"[CCI_I2C_SDA1]", /* GPIO_19, S HSEC pin 38 */
+> +				"[CCI_I2C_SCL1]", /* GPIO_20, S HSEC pin 36 */
+> +				"FLASH_STROBE_EN", /* GPIO_21, S HSEC pin 5 */
+> +				"FLASH_STROBE_TRIG", /* GPIO_22, S HSEC pin 1 */
+> +				"GPIO-K", /* GPIO_23, CAM2_RST_N, LSEC pin 33 */
+> +				"GPIO-D", /* GPIO_24, LSEC pin 26 */
+> +				"GPIO-I", /* GPIO_25, CAM0_RST_N, LSEC pin 31 */
+> +				"GPIO-J", /* GPIO_26, CAM0_STANDBY_N, LSEC pin 32 */
+> +				"BLSP6_I2C_SDA", /* GPIO_27 */
+> +				"BLSP6_I2C_SCL", /* GPIO_28 */
+> +				"GPIO-B", /* GPIO_29, TS0_RESET_N, LSEC pin 24 */
+> +				"GPIO30", /* GPIO_30, S HSEC pin 4 */
+> +				"HDMI_CEC", /* GPIO_31 */
+> +				"HDMI_DDC_CLOCK", /* GPIO_32 */
+> +				"HDMI_DDC_DATA", /* GPIO_33 */
+> +				"HDMI_HOT_PLUG_DETECT", /* GPIO_34 */
+> +				"PCIE0_RST_N", /* GPIO_35 */
+> +				"PCIE0_CLKREQ_N", /* GPIO_36 */
+> +				"PCIE0_WAKE", /* GPIO_37 */
+> +				"SD_CARD_DET_N", /* GPIO_38 */
+> +				"TSIF1_SYNC", /* GPIO_39, S HSEC pin 48 */
+> +				"W_DISABLE_N", /* GPIO_40 */
+> +				"[BLSP9_UART_TX]", /* GPIO_41 */
+> +				"[BLSP9_UART_RX]", /* GPIO_42 */
+> +				"[BLSP2_UART_CTS_N]", /* GPIO_43 */
+> +				"[BLSP2_UART_RFR_N]", /* GPIO_44 */
+> +				"[BLSP3_UART_TX]", /* GPIO_45 */
+> +				"[BLSP3_UART_RX]", /* GPIO_46 */
+> +				"[I2C0_SDA]", /* GPIO_47, LS_I2C0_SDA, LSEC pin 17 */
+> +				"[I2C0_SCL]", /* GPIO_48, LS_I2C0_SCL, LSEC pin 15 */
+> +				"[UART0_TxD]", /* GPIO_49, BLSP9_UART_TX, LSEC pin 5 */
+> +				"[UART0_RxD]", /* GPIO_50, BLSP9_UART_RX, LSEC pin 7 */
+> +				"[UART0_CTS]", /* GPIO_51, BLSP9_UART_CTS_N, LSEC pin 3 */
+> +				"[UART0_RTS]", /* GPIO_52, BLSP9_UART_RFR_N, LSEC pin 9 */
+> +				"[CODEC_INT1_N]", /* GPIO_53 */
+> +				"[CODEC_INT2_N]", /* GPIO_54 */
+> +				"[BLSP7_I2C_SDA]", /* GPIO_55 */
+> +				"[BLSP7_I2C_SCL]", /* GPIO_56 */
+> +				"MI2S_MCLK", /* GPIO_57, S HSEC pin 3 */
+> +				"[PCM_CLK]", /* GPIO_58, QUA_MI2S_SCK, LSEC pin 18 */
+> +				"[PCM_FS]", /* GPIO_59, QUA_MI2S_WS, LSEC pin 16 */
+> +				"[PCM_DO]", /* GPIO_60, QUA_MI2S_DATA0, LSEC pin 20 */
+> +				"[PCM_DI]", /* GPIO_61, QUA_MI2S_DATA1, LSEC pin 22 */
+> +				"GPIO-E", /* GPIO_62, LSEC pin 27 */
+> +				"TP87", /* GPIO_63 */
+> +				"[CODEC_RST_N]", /* GPIO_64 */
+> +				"[PCM1_CLK]", /* GPIO_65 */
+> +				"[PCM1_SYNC]", /* GPIO_66 */
+> +				"[PCM1_DIN]", /* GPIO_67 */
+> +				"[PCM1_DOUT]", /* GPIO_68 */
+> +				"AUDIO_REF_CLK", /* GPIO_69 */
+> +				"SLIMBUS_CLK", /* GPIO_70 */
+> +				"SLIMBUS_DATA0", /* GPIO_71 */
+> +				"SLIMBUS_DATA1", /* GPIO_72 */
+> +				"NC", /* GPIO_73 */
+> +				"NC", /* GPIO_74 */
+> +				"NC", /* GPIO_75 */
+> +				"NC", /* GPIO_76 */
+> +				"TP94", /* GPIO_77 */
+> +				"NC", /* GPIO_78 */
+> +				"TP95", /* GPIO_79 */
+> +				"GPIO-A", /* GPIO_80, MEMS_RESET_N, LSEC pin 23 */
+> +				"TP88", /* GPIO_81 */
+> +				"TP89", /* GPIO_82 */
+> +				"TP90", /* GPIO_83 */
+> +				"TP91", /* GPIO_84 */
+> +				"[SD_DAT0]", /* GPIO_85, BLSP12_SPI_MOSI, P HSEC pin 1 */
+> +				"[SD_CMD]", /* GPIO_86, BLSP12_SPI_MISO, P HSEC pin 11 */
+> +				"[SD_DAT3]", /* GPIO_87, BLSP12_SPI_CS_N, P HSEC pin 7 */
+> +				"[SD_SCLK]", /* GPIO_88, BLSP12_SPI_CLK, P HSEC pin 9 */
+> +				"TSIF1_CLK", /* GPIO_89, S HSEC pin 42 */
+> +				"TSIF1_EN", /* GPIO_90, S HSEC pin 46 */
+> +				"TSIF1_DATA", /* GPIO_91, S HSEC pin 44 */
+> +				"NC", /* GPIO_92 */
+> +				"TSIF2_CLK", /* GPIO_93, S HSEC pin 52 */
+> +				"TSIF2_EN", /* GPIO_94, S HSEC pin 56 */
+> +				"TSIF2_DATA", /* GPIO_95, S HSEC pin 54 */
+> +				"TSIF2_SYNC", /* GPIO_96, S HSEC pin 58 */
+> +				"NC", /* GPIO_97 */
+> +				"CAM1_STANDBY_N", /* GPIO_98 */
+> +				"NC", /* GPIO_99 */
+> +				"NC", /* GPIO_100 */
+> +				"[LCD1_RESET_N]", /* GPIO_101, S HSEC pin 51 */
+> +				"BOOT_CONFIG1", /* GPIO_102 */
+> +				"USB_HUB_RESET", /* GPIO_103 */
+> +				"CAM1_RST_N", /* GPIO_104 */
+> +				"NC", /* GPIO_105 */
+> +				"NC", /* GPIO_106 */
+> +				"NC", /* GPIO_107 */
+> +				"NC", /* GPIO_108 */
+> +				"NC", /* GPIO_109 */
+> +				"NC", /* GPIO_110 */
+> +				"NC", /* GPIO_111 */
+> +				"NC", /* GPIO_112 */
+> +				"PMI8994_BUA", /* GPIO_113 */
+> +				"PCIE2_RST_N", /* GPIO_114 */
+> +				"PCIE2_CLKREQ_N", /* GPIO_115 */
+> +				"PCIE2_WAKE", /* GPIO_116 */
+> +				"SSC_IRQ_0", /* GPIO_117 */
+> +				"SSC_IRQ_1", /* GPIO_118 */
+> +				"SSC_IRQ_2", /* GPIO_119 */
+> +				"NC", /* GPIO_120 */
+> +				"GPIO121", /* GPIO_121, S HSEC pin 2 */
+> +				"NC", /* GPIO_122 */
+> +				"SSC_IRQ_6", /* GPIO_123 */
+> +				"SSC_IRQ_7", /* GPIO_124 */
+> +				"GPIO-C", /* GPIO_125, TS_INT0, LSEC pin 25 */
+> +				"BOOT_CONFIG5", /* GPIO_126 */
+> +				"NC", /* GPIO_127 */
+> +				"NC", /* GPIO_128 */
+> +				"BOOT_CONFIG7", /* GPIO_129 */
+> +				"PCIE1_RST_N", /* GPIO_130 */
+> +				"PCIE1_CLKREQ_N", /* GPIO_131 */
+> +				"PCIE1_WAKE", /* GPIO_132 */
+> +				"GPIO-L", /* GPIO_133, CAM2_STANDBY_N, LSEC pin 34 */
+> +				"NC", /* GPIO_134 */
+> +				"NC", /* GPIO_135 */
+> +				"BOOT_CONFIG8", /* GPIO_136 */
+> +				"NC", /* GPIO_137 */
+> +				"NC", /* GPIO_138 */
+> +				"GPS_SSBI2", /* GPIO_139 */
+> +				"GPS_SSBI1", /* GPIO_140 */
+> +				"NC", /* GPIO_141 */
+> +				"NC", /* GPIO_142 */
+> +				"NC", /* GPIO_143 */
+> +				"BOOT_CONFIG6", /* GPIO_144 */
+> +				"NC", /* GPIO_145 */
+> +				"NC", /* GPIO_146 */
+> +				"NC", /* GPIO_147 */
+> +				"NC", /* GPIO_148 */
+> +				"NC"; /* GPIO_149 */
+> +		};
+> +
+> +		qcom,spmi@400f000 {
+> +			pmic@0 {
+> +				gpios@c000 {
+> +					gpio-line-names =
+> +						"NC",
+> +						"KEY_VOLP_N",
+> +						"NC",
+> +						"BL1_PWM",
+> +						"GPIO-F", /* BL0_PWM, LSEC pin 28 */
+> +						"BL1_EN",
+> +						"NC",
+> +						"WLAN_EN",
+> +						"NC",
+> +						"NC",
+> +						"NC",
+> +						"NC",
+> +						"NC",
+> +						"NC",
+> +						"DIVCLK1",
+> +						"DIVCLK2",
+> +						"DIVCLK3",
+> +						"DIVCLK4",
+> +						"BT_EN",
+> +						"PMIC_SLB",
+> +						"PMIC_BUA",
+> +						"USB_VBUS_DET";
+> +				};
+> +
+> +				mpps@a000 {
+> +					gpio-line-names =
+> +						"VDDPX_BIAS",
+> +						"WIFI_LED",
+> +						"NC",
+> +						"BT_LED",
+> +						"PM_MPP05",
+> +						"PM_MPP06",
+> +						"PM_MPP07",
+> +						"NC";
+> +				};
+> +			};
+> +
+> +			pmic@2 {
+> +				gpios@c000 {
+> +					gpio-line-names =
+> +						"NC",
+> +						"SPKR_AMP_EN1",
+> +						"SPKR_AMP_EN2",
+> +						"TP61",
+> +						"NC",
+> +						"USB2_VBUS_DET",
+> +						"NC",
+> +						"NC",
+> +						"NC",
+> +						"NC";
+> +				};
+> +			};
+> +		};
+> +
+>  		phy@34000 {
+>  			status = "okay";
+>  		};
+> 
+
+-- 
+Best regards,
+Todor Tomov
