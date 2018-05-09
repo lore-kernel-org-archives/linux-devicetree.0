@@ -1,63 +1,92 @@
-From: kgunda@codeaurora.org
-Subject: Re: [PATCH V1 2/5] backlight: qcom-wled: Add support for WLED4
- peripheral
-Date: Wed, 09 May 2018 10:45:02 +0530
-Message-ID: <212855c92923c0437feaefae3139cc4a@codeaurora.org>
-References: <1525341432-15818-1-git-send-email-kgunda@codeaurora.org>
- <1525341432-15818-3-git-send-email-kgunda@codeaurora.org>
- <20180507162004.GB2259@tuxbook-pro>
- <f970143860bd64624e7fad58333df1be@codeaurora.org>
- <20180508171736.GJ2259@tuxbook-pro>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v7 11/24] ASoC: qdsp6: q6afe: Add support
+	to MI2S ports
+Date: Wed, 9 May 2018 07:05:11 +0100
+Message-ID: <3e8b4622-81b9-2091-dfd9-22ea035a8b52@linaro.org>
+References: <20180501120820.11016-1-srinivas.kandagatla@linaro.org>
+ <20180501120820.11016-12-srinivas.kandagatla@linaro.org>
+ <2d1e7dfd-b65a-4297-f98b-15c2dd54c61a@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180508171736.GJ2259@tuxbook-pro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <2d1e7dfd-b65a-4297-f98b-15c2dd54c61a@codeaurora.org>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Banajit Goswami <bgoswami@codeaurora.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-05-08 22:47, Bjorn Andersson wrote:
-> On Tue 08 May 03:25 PDT 2018, kgunda@codeaurora.org wrote:
+Thanks Banajit for review!
+
+On 09/05/18 04:21, Banajit Goswami wrote:
 > 
->> On 2018-05-07 21:50, Bjorn Andersson wrote:
->> > On Thu 03 May 02:57 PDT 2018, Kiran Gunda wrote:
-> [..]
->> > > +- qcom,ovp
->> > > +	Usage:        optional
->> > > +	Value type:   <u32>
->> > > +	Definition:   mV; Over-voltage protection limit;
->> >
->> > The existing users of qcom,pm8941-wled depends on this being in V, so
->> > you can't change the unit. I suggest that you add a new "qcom,ovp-mv"
->> > property and make the driver fall back to looking for qcom,ovp if that
->> > isn't specified.
->> >
->> > PS. This is a very good example of why it is a good idea to not
->> > restructure and make changes at the same time - I almost missed this.
->> >
->> Actually I have checked the current kernel and none of the properties 
->> are
->> being configured from the device tree node. Hence, i thought it is the 
->> right
->> time modify the units to mV to support the PMI8998.
->> 
+> On 5/1/2018 5:08 AM, Srinivas Kandagatla wrote:
+>> This patch adds support to 4 MI2S ports on LPASS.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> Reviewed-and-tested-by: Rohit kumar <rohitkr@codeaurora.org>
+>> ---
+>>   sound/soc/qcom/qdsp6/q6afe.c | 224 
+>> +++++++++++++++++++++++++++++++++++++++++++
+>>   sound/soc/qcom/qdsp6/q6afe.h |  13 +++
+>>   2 files changed, 237 insertions(+)
+>>
+>> diff --git a/sound/soc/qcom/qdsp6/q6afe.c b/sound/soc/qcom/qdsp6/q6afe.c
+>> index be55b3ab045f..ceb18aaa5af4 100644
+>> --- a/sound/soc/qcom/qdsp6/q6afe.c
+>> +++ b/sound/soc/qcom/qdsp6/q6afe.c
+>> @@ -14,6 +14,10 @@
+>>   #include <linux/spinlock.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/soc/qcom/apr.h>
+>> +#include <sound/soc.h>
+>> +#include <sound/soc-dai.h>
+>> +#include <sound/pcm.h>
+> <snip>
 > 
-> arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts does.
+>>   union afe_port_config {
+>>       struct afe_param_id_hdmi_multi_chan_audio_cfg hdmi_multi_ch;
+>>       struct afe_param_id_slimbus_cfg           slim_cfg;
+>> +    struct afe_param_id_i2s_cfg    i2s_cfg;
+>>   } __packed;
+>>   struct q6afe_port {
+>> @@ -210,6 +264,22 @@ static struct afe_port_map 
+>> port_maps[AFE_PORT_MAX] = {
+>>                   SLIMBUS_4_RX, 1, 1},
+>>       [SLIMBUS_5_RX] = { AFE_PORT_ID_SLIMBUS_MULTI_CHAN_5_RX,
+>>                   SLIMBUS_5_RX, 1, 1},
+>> +    [QUATERNARY_MI2S_RX] = { AFE_PORT_ID_QUATERNARY_MI2S_RX,
+>> +                QUATERNARY_MI2S_RX, 1, 1},
+>> +    [QUATERNARY_MI2S_TX] = { AFE_PORT_ID_QUATERNARY_MI2S_TX,
+>> +                QUATERNARY_MI2S_TX, 0, 1},
+>> +    [SECONDARY_MI2S_RX] = { AFE_PORT_ID_SECONDARY_MI2S_RX,
+>> +                SECONDARY_MI2S_RX, 1, 1},
+>> +    [SECONDARY_MI2S_TX] = { AFE_PORT_ID_SECONDARY_MI2S_TX,
+>> +                SECONDARY_MI2S_TX, 0, 1},
+>> +    [TERTIARY_MI2S_RX] = { AFE_PORT_ID_TERTIARY_MI2S_RX,
+>> +                TERTIARY_MI2S_RX, 1, 1},
+>> +    [TERTIARY_MI2S_TX] = { AFE_PORT_ID_TERTIARY_MI2S_TX,
+>> +                TERTIARY_MI2S_TX, 0, 1},
+>> +    [PRIMARY_MI2S_RX] = { AFE_PORT_ID_PRIMARY_MI2S_RX,
+>> +                PRIMARY_MI2S_RX, 1, 1},
+>> +    [PRIMARY_MI2S_TX] = { AFE_PORT_ID_PRIMARY_MI2S_TX,
+>> +                PRIMARY_MI2S_RX, 0, 1},
+> Can these be added after SLIMBUS_6_RX?
+> Also, for better arrangement, please add the port_maps from 
+> PRIMARY_MI2S_RX to QUATERNARY_MI2S_TX in the same sequence of definition 
+> of AFE ports.
+> Otherwise LGTM.
+Yep, I have reordered this now!
+
+> Once fixed the above comment add-
+> Acked-by: Banajit Goswami <bgoswami@codeaurora.org>
 > 
->> You still want to have the qcom,ovp-mv, even though it is not being
->> configured from device tree ?
-> 
-> Yes, please.
-> 
-Sure.
->> > > +		      For pm8941:  one of 27000, 29000, 32000, 35000
->> > > +				  Default: 29000 mV
->> > > +		      For pmi8998: one of 18100, 19600, 29600, 31100
->> > > +				  Default: 29600 mV
->> > > +
-> 
-> Regards,
-> Bjorn
