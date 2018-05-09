@@ -1,60 +1,74 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: Serdev runtime PM (was: Re: [PATCH 4/7] dt-bindings: gnss: add
- u-blox binding)
-Date: Wed, 9 May 2018 07:05:50 -0700
-Message-ID: <20180509140550.GC98604@atomide.com>
-References: <20180502081637.GE2285@localhost>
- <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com>
- <20180503205037.7be552c1@aktux>
- <44A0BC7C-67C7-4116-849F-90FF7CF2B1F0@goldelico.com>
- <20180504114213.3xlzqxe74n55tk5s@earth.universe>
- <20180507100135.GS2285@localhost>
- <20180507154515.GP98604@atomide.com>
- <20180507163439.GV2285@localhost>
- <20180508155608.3bzcbepsmoskhlox@earth.universe>
- <20180509091831.GA2285@localhost>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH v2] display: panel: Add AUO g070vvn01 display support
+ (800x480)
+Date: Wed, 9 May 2018 16:15:45 +0200
+Message-ID: <20180509161545.6bba76ef@jawa>
+References: <20180403101525.22369-1-lukma@denx.de>
+        <20180410102927.17787-1-lukma@denx.de>
+        <CAL_JsqJii+ssU8kjVgqvSn77smMb4+gkT=PcwfCwvavReuAo+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/iVCV5_VFT3Ts81h1T37f06_"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180509091831.GA2285@localhost>
+In-Reply-To: <CAL_JsqJii+ssU8kjVgqvSn77smMb4+gkT=PcwfCwvavReuAo+g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andreas Kemnade <andreas@kemnade.info>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, linux-pm@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Johan Hovold <johan@kernel.org> [180509 09:20]:
-> On Tue, May 08, 2018 at 05:56:08PM +0200, Sebastian Reichel wrote:
-> > I think using open/close for runtime pm is good enough for GPS,
-> > since it regularly sends data and draws lots of power anyways.
-> > But devices, that have an out-of-band wakeup signal can do proper
-> > runtime PM of the serial port without loosing characters.
-> 
-> Yeah, there may be some applications where this is possible. And this is
-> not the case for GPS, but not just because of a generally higher power
-> consumption, but due to the fact that we cannot afford having the first
-> message in every report burst be dropped.
+--Sig_/iVCV5_VFT3Ts81h1T37f06_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Well most of the phone implementations use one or two out of band
-GPIOs to first wake the UART before any data is sent. For serdev
-this can be called from the serdev consumer write function for TX.
-For RX, the serdev consumer needs to implement an interrupt handler
-and wake up the parent UART before serdev RX.
+Hi Rob,
 
-> > Note, that OMAP does not reach deep idle states with active
-> > serial port. This is not acceptable for low power devices.
-> 
-> Sure, but note that OMAP is the only serial driver which currently
-> implements this kind of aggressive runtime PM (besides a couple of
-> usb-serial drivers). This means that a serdev driver can never rely on
-> this being the case, and therefore needs to be restrictive about how
-> long the port is kept open if it cares about power at all.
+> On Tue, Apr 10, 2018 at 5:29 AM, Lukasz Majewski <lukma@denx.de>
+> wrote:
+> > This commit adds support for AUO's 7.0" display.
+> >
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> >
+> > ---
+> > Changes for v2:
+> > - Add *.txt suffix to the auo,g070wn01 file
+> > - Remove not needed bus-format-override =3D "rgb565"; property
+> > ---
+> >  .../bindings/display/panel/auo,g070vvn01.txt       | 30
+> > +++++++++++++++++++++
+> > drivers/gpu/drm/panel/panel-simple.c               | 31
+> > ++++++++++++++++++++++ 2 files changed, 61 insertions(+) create
+> > mode 100644
+> > Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt =20
+>=20
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Well by default we don't allow lossy UART. It needs to be manually
-configured via /sys for the timeout. With serdev, this can all be
-done with no /sys configuration needed for the cases with GPIO
-wake irqs :)
+Gentle ping on this patch .... It is almost month now...
 
-Regards,
 
-Tony
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+
+--Sig_/iVCV5_VFT3Ts81h1T37f06_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlrzApIACgkQAR8vZIA0
+zr0iAgf9F96IbluwagWXGVlqyhZh+e1toEQjziwibpXSqEpD/VmuF0Tsa+96uYrt
+/4k1vl0ZZIGDPOxgBxxi5qLi88qRmQzti5n7csiex7kX/DUx07AXS0Q4nqoKr2wY
+w+A/dxyTickH4oCCVs4ZMWQy3OB9KtTP8+2l/q01MikjKFHLXfyWjbPKNi4DTac+
+XtC6lY1po8QXub469++2MDoKC6CLZ/7kxQN51WsYbbqfap6SsFMaC5LJbotIZ/ry
+bnwnFcFDCTYcd3kIlMmx1jiVSagzGb+IWDkHx1BpiRyO4MBeoB0L807teSKzceRO
+hXfSS8Vyod86exk/QHRviUdvi/xcUw==
+=K62i
+-----END PGP SIGNATURE-----
+
+--Sig_/iVCV5_VFT3Ts81h1T37f06_--
