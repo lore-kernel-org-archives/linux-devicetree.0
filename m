@@ -1,141 +1,174 @@
-From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH 2/5] pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver
-Date: Wed, 9 May 2018 09:13:26 +0000
-Message-ID: <97d688a0-c0b7-dfe4-04c7-1668a08e911a@st.com>
-References: <1523440025-18077-1-git-send-email-amelie.delaunay@st.com>
- <1523440025-18077-3-git-send-email-amelie.delaunay@st.com>
- <CACRpkdb-=QU74-MZxMdB6QPqMLZr97WxN80iyOoTFqXPicL75w@mail.gmail.com>
+From: Banajit Goswami <bgoswami@codeaurora.org>
+Subject: Re: [PATCH v7 23/24] ASoC: qcom: apq8096: Add db820c machine driver
+Date: Wed, 9 May 2018 02:15:18 -0700
+Message-ID: <c52fc35d-95a6-6675-6c6e-32a0d5f486d4@codeaurora.org>
+References: <20180501120820.11016-1-srinivas.kandagatla@linaro.org>
+ <20180501120820.11016-24-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdb-=QU74-MZxMdB6QPqMLZr97WxN80iyOoTFqXPicL75w@mail.gmail.com>
+In-Reply-To: <20180501120820.11016-24-srinivas.kandagatla@linaro.org>
 Content-Language: en-US
-Content-ID: <022A6355FD0E5146B37B397391FA8BDA@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Lee Jones <lee.jones@linaro.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc: gregkh@linuxfoundation.org, david.brown@linaro.org, mark.rutland@arm.com, lgirdwood@gmail.com, plai@codeaurora.org, tiwai@suse.com, perex@perex.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com, spatakok@qti.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMDQvMjYvMjAxOCAwMjo0OCBQTSwgTGludXMgV2FsbGVpaiB3cm90ZToNCj4gT24gV2VkLCBB
-cHIgMTEsIDIwMTggYXQgMTE6NDcgQU0sIEFtZWxpZSBEZWxhdW5heQ0KPiA8YW1lbGllLmRlbGF1
-bmF5QHN0LmNvbT4gd3JvdGU6DQo+IA0KPiBIaSBBbWVsaWUsIHRoYW5rcyBmb3IgeW91ciBwYXRj
-aCENCj4gDQoNCkhpIExpbnVzLCB0aGFua3MgZm9yIHJldmlld2luZyENCg0KPj4gVGhpcyBwYXRj
-aCBhZGRzIHBpbmN0cmwvR1BJTyBkcml2ZXIgZm9yIFNUTWljcm9lbGVjdHJvbmljcw0KPj4gTXVs
-dGktRnVuY3Rpb24gZVhwYW5kZXIgKFNUTUZYKSBHUElPIGV4cGFuZGVyLg0KPj4gU1RNRlggaXMg
-YW4gSTJDIHNsYXZlIGNvbnRyb2xsZXIsIG9mZmVyaW5nIHVwIHRvIDI0IEdQSU9zLg0KPj4gVGhl
-IGRyaXZlciByZWxpZXMgb24gZ2VuZXJpYyBwaW4gY29uZmlnIGludGVyZmFjZSB0byBjb25maWd1
-cmUgdGhlIEdQSU9zLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEFtZWxpZSBEZWxhdW5heSA8YW1l
-bGllLmRlbGF1bmF5QHN0LmNvbT4NCj4gDQo+IFRoaXMgaXMgbG9va2luZyB2ZXJ5IGdvb2QuDQo+
-IA0KPiBUaGUgb3ZlcmFsbCBhcmNoaXRlY3R1cmUgb2YgdGhpcyBwYXRjaCBzZXQgaXMgZXhjZWxs
-ZW50Lg0KPiANCj4gSSBoYXZlIG9ubHkgb25lIG1ham9yIHF1ZXN0aW9uIGFib3V0IHdoZXRoZXIg
-dGhpcyBzaG91bGQgYmUNCj4gYSBNRkQgcGFyZW50IGFuZCBHUElPLXBpbmN0cmwtY2hpbGQgc3Bs
-aXQgZHJpdmVyLCBzZWUgYmVsb3cuDQo+IA0KPj4gK2NvbmZpZyBQSU5DVFJMX1NUTUZYDQo+PiAr
-ICAgICAgIHRyaXN0YXRlICJTVE1pY3JvZWxlY3Ryb25pY3MgU1RNRlggSTJDIEdQSU8gZXhwYW5k
-ZXIgcGluY3RybCBkcml2ZXIiDQo+PiArICAgICAgIGRlcGVuZHMgb24gR1BJT0xJQiAmJiBJMkM9
-eQ0KPj4gKyAgICAgICBzZWxlY3QgR0VORVJJQ19QSU5DT05GDQo+PiArICAgICAgIHNlbGVjdCBH
-UElPTElCX0lSUUNISVANCj4+ICsgICAgICAgc2VsZWN0IFJFR01BUF9JMkMNCj4gDQo+IFRoYW5r
-cyBmb3IgdXNpbmcgYWxsIHRoZSBoZWxwZXJzLCBpdCBtYWtlcyB0aGUgY29kZSB2ZXJ5IHNtYWxs
-IGFuZA0KPiBjb25zaXN0ZW50IGFuZCBlYXN5IHRvIHJldmlldyBhbmQgbWFpbnRhaW4uDQo+IA0K
-Pj4gKyNpbmNsdWRlIDxsaW51eC9iaXRmaWVsZC5oPg0KPj4gKyNpbmNsdWRlIDxsaW51eC9ncGlv
-Lmg+DQo+IA0KPiBQbGVhc2UganVzdCB1c2U6DQo+ICAgI2luY2x1ZGUgPGxpbnV4L2dwaW8vZHJp
-dmVyLmg+DQo+IA0KDQpPSywgSSdsbCBmaXggaXQuDQoNCj4+ICtzdGF0aWMgdm9pZCBzdG1meF9n
-cGlvX2lycV90b2dnbGVfdHJpZ2dlcihzdHJ1Y3Qgc3RtZnhfcGluY3RybCAqcGN0bCwNCj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCBvZmZz
-ZXQpDQo+PiArew0KPj4gKyAgICAgICB1MzIgcmVnID0gZ2V0X3JlZyhvZmZzZXQpOw0KPj4gKyAg
-ICAgICB1MzIgbWFzayA9IGdldF9tYXNrKG9mZnNldCk7DQo+PiArICAgICAgIGludCB2YWw7DQo+
-PiArDQo+PiArICAgICAgIGlmICghKHBjdGwtPmlycV90b2dnbGVfZWRnZVtyZWddICYgbWFzaykp
-DQo+PiArICAgICAgICAgICAgICAgcmV0dXJuOw0KPj4gKw0KPj4gKyAgICAgICB2YWwgPSBzdG1m
-eF9ncGlvX2dldCgmcGN0bC0+Z3Bpb19jaGlwLCBvZmZzZXQpOw0KPj4gKyAgICAgICBpZiAodmFs
-IDwgMCkNCj4+ICsgICAgICAgICAgICAgICByZXR1cm47DQo+PiArDQo+PiArICAgICAgIGlmICh2
-YWwpIHsNCj4+ICsgICAgICAgICAgICAgICBwY3RsLT5pcnFfZ3BpX3R5cGVbcmVnXSAmPSBtYXNr
-Ow0KPj4gKyAgICAgICAgICAgICAgIHJlZ21hcF93cml0ZV9iaXRzKHBjdGwtPnJlZ21hcCwgU1RN
-RlhfUkVHX0lSUV9HUElfVFlQRSArIHJlZywNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBnZXRfbWFzayhvZmZzZXQpLCAwKTsNCj4+ICsNCj4+ICsgICAgICAgfSBlbHNlIHsN
-Cj4+ICsgICAgICAgICAgICAgICBwY3RsLT5pcnFfZ3BpX3R5cGVbcmVnXSB8PSBtYXNrOw0KPj4g
-KyAgICAgICAgICAgICAgIHJlZ21hcF93cml0ZV9iaXRzKHBjdGwtPnJlZ21hcCwgU1RNRlhfUkVH
-X0lSUV9HUElfVFlQRSArIHJlZywNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBnZXRfbWFzayhvZmZzZXQpLCBnZXRfbWFzayhvZmZzZXQpKTsNCj4+ICsgICAgICAgfQ0KPj4g
-K30NCj4gDQo+IFdlIGhhZCBhIGJpdCBvZiBkaXNjdXNzaW9uIGFib3V0IGVkZ2UgdHJpZ2dlciBl
-bXVsYXRpb24gb24gdGhlDQo+IG1haWxpbmcgbGlzdC4gU3RyYW5nZSB0aGF0IHRoZXNlIEhXIGVu
-Z2luZWVycyBkaWRuJ3QgdGhpbmsgb2YgdGhpcywNCj4gSSB0aG91Z2h0IGl0IHdhcyB3aWRlbHkg
-a25vd24gdGhhdCBkb3VibGUtZWRnZSB0cmlnZ2VyIChub3QganVzdCBvbmUNCj4gb3IgdGhlIG90
-aGVyKSBpcyBuZWVkZWQgaW4gY29udGVtcG9yYXJ5IEdQSU8gSFcuDQo+IA0KDQpZZXMhIFN1cHBv
-cnRlZCBieSB0aGUgU1RNMzJMMTUyIG9uIHdoaWNoIHN0bWZ4IGlzIGJhc2VkIGJ1dCBub3QgYnkg
-dGhlIA0KRlcgYWJzdHJhY3Rpb24uIFNvLCBtYXliZSwgaW4gYSBmdXR1cmUgc3RtZnggRlcgdmVy
-c2lvbi4uLg0KDQo+PiArICAgICAgIGlmICghb2ZfZmluZF9wcm9wZXJ0eShucCwgImdwaW8tcmFu
-Z2VzIiwgTlVMTCkpIHsNCj4+ICsgICAgICAgICAgICAgICByZXQgPSBncGlvY2hpcF9hZGRfcGlu
-X3JhbmdlKCZwY3RsLT5ncGlvX2NoaXAsDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBkZXZfbmFtZShwY3RsLT5kZXYpLA0KPj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMCwgMCwgcGN0bC0+cGN0bF9kZXNjLm5waW5z
-KTsNCj4+ICsgICAgICAgICAgICAgICBpZiAocmV0KQ0KPj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgcmV0dXJuIHJldDsNCj4gDQo+IERvIHlvdSByZWFsbHkgbmVlZCB0byBzdXBwb3J0IERUQnMg
-d2l0aG91dCBncGlvLXJhbmdlcz8NCj4gDQo+IEkuZS4gY2FuJ3QgeW91IGp1c3QgcHJpbnQgYW4g
-ZXJyb3IgYW5kIGV4aXQgaWYgdGhlcmUgaXMgbm8gcmFuZ2U/DQo+IA0KPiBJIHRoaW5rIG90aGVy
-IGRyaXZlcnMgaGFzIHRoaXMgaGFuZGxpbmcgYmVjYXVzZSBvZiBvbGRlcg0KPiBEVCBiaW5kaW5n
-cyBhbmQgdHJlZXMgZHJpZnRpbmcgYXJvdW5kLg0KPiANCg0KWW91J3JlIHJpZ2h0LCBubyBuZWVk
-IHRvIHN1cHBvcnQgRFRCcyB3aXRob3V0IGdwaW8tcmFuZ2VzLiBJJ2xsIGFkZCANCmdwaW8tcmFu
-Z2VzIHByb3BlcnR5IHVuZGVyIHJlcXVpcmVkIHNlY3Rpb24gb2Ygc3RtZnggYmluZGluZ3MuDQoN
-Cj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHJlZ21hcF9jb25maWcgc3RtZnhfcmVnbWFwX2NvbmZp
-ZyA9IHsNCj4+ICsgICAgICAgLnJlZ19iaXRzID0gOCwNCj4+ICsgICAgICAgLnZhbF9iaXRzID0g
-OCwNCj4+ICt9Ow0KPiANCj4gVGhpcyBjYW4gcHJvYmFibHkgYmUgaW1wcm92ZWQgaW4gdGhlIGZ1
-dHVyZS4NCj4gT3IgYXJlIHRoZXJlIHJlYWxseSBleGFjdGx5IDI1NSByZWdpc3RlcnM/DQo+IA0K
-DQpPSywgSSdsbCBoYXZlIGEgbG9vayB0byBpbXByb3ZlIGl0Lg0KDQo+PiArc3RhdGljIGludCBz
-dG1meF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0KPj4gKyAgICAgICAgICAgICAg
-ICAgICAgICBjb25zdCBzdHJ1Y3QgaTJjX2RldmljZV9pZCAqaWQpDQo+PiArew0KPj4gKyAgICAg
-ICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gY2xpZW50LT5kZXYub2Zfbm9kZSwgKmNoaWxkOw0K
-Pj4gKyAgICAgICBzdHJ1Y3Qgc3RtZnggKnN0bWZ4Ow0KPj4gKyAgICAgICBpbnQgcmV0Ow0KPj4g
-Kw0KPj4gKyAgICAgICBzdG1meCA9IGRldm1fa3phbGxvYygmY2xpZW50LT5kZXYsIHNpemVvZigq
-c3RtZngpLCBHRlBfS0VSTkVMKTsNCj4+ICsgICAgICAgaWYgKCFzdG1meCkNCj4+ICsgICAgICAg
-ICAgICAgICByZXR1cm4gLUVOT01FTTsNCj4+ICsNCj4+ICsgICAgICAgaTJjX3NldF9jbGllbnRk
-YXRhKGNsaWVudCwgc3RtZngpOw0KPj4gKw0KPj4gKyAgICAgICBzdG1meC0+ZGV2ID0gJmNsaWVu
-dC0+ZGV2Ow0KPj4gKw0KPj4gKyAgICAgICBzdG1meC0+cmVnbWFwID0gZGV2bV9yZWdtYXBfaW5p
-dF9pMmMoY2xpZW50LCAmc3RtZnhfcmVnbWFwX2NvbmZpZyk7DQo+PiArICAgICAgIGlmIChJU19F
-UlIoc3RtZngtPnJlZ21hcCkpIHsNCj4+ICsgICAgICAgICAgICAgICByZXQgPSBQVFJfRVJSKHN0
-bWZ4LT5yZWdtYXApOw0KPj4gKyAgICAgICAgICAgICAgIGRldl9lcnIoc3RtZngtPmRldiwNCj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgICJGYWlsZWQgdG8gYWxsb2NhdGUgcmVnaXN0ZXIgbWFw
-OiAlZFxuIiwgcmV0KTsNCj4+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPj4gKyAgICAg
-ICB9DQo+PiArDQo+PiArICAgICAgIHJldCA9IHN0bWZ4X2NoaXBfaW5pdChzdG1meCwgY2xpZW50
-KTsNCj4+ICsgICAgICAgaWYgKHJldCkgew0KPj4gKyAgICAgICAgICAgICAgIGlmIChyZXQgPT0g
-LUVUSU1FRE9VVCkNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAtRVBST0JFX0RF
-RkVSOw0KPj4gKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+PiArICAgICAgIH0NCj4+ICsN
-Cj4+ICsgICAgICAgc3RtZngtPmlycSA9IGNsaWVudC0+aXJxOw0KPj4gKyAgICAgICByZXQgPSBz
-dG1meF9pcnFfaW5pdChzdG1meCk7DQo+PiArICAgICAgIGlmIChyZXQpDQo+PiArICAgICAgICAg
-ICAgICAgcmV0dXJuIHJldDsNCj4+ICsNCj4+ICsgICAgICAgZm9yX2VhY2hfYXZhaWxhYmxlX2No
-aWxkX29mX25vZGUobnAsIGNoaWxkKSB7DQo+PiArICAgICAgICAgICAgICAgaWYgKG9mX3Byb3Bl
-cnR5X3JlYWRfYm9vbChjaGlsZCwgImdwaW8tY29udHJvbGxlciIpKSB7DQo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICByZXQgPSBzdG1meF9ncGlvX2luaXQoc3RtZngsIGNoaWxkKTsNCj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIGlmIChyZXQpDQo+PiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIGdvdG8gZXJyOw0KPj4gKyAgICAgICAgICAgICAgIH0NCj4+ICsgICAgICAgfQ0K
-PiANCj4gSG0gc28geW91IGRvIG5vdCB1c2UgYSBNRkQgZHJpdmVyIGZvciB0aGUgY29yZSBvZiB0
-aGUgZHJpdmVyPw0KPiANCj4gSW5zdGVhZCB0aGlzIGRyaXZlciBiZWNvbWVzIHRoZSBjb3JlIGRy
-aXZlcj8NCj4gDQo+IEkgZ3Vlc3MgaXQgaXMgZmluZSBhcyBsb25nIGFzIHRoZSBjaGlwIGlzIG9u
-bHkgZG9pbmcgR1BJTw0KPiBhbmQgcGluIGNvbnRyb2wuIElmIHRoZSBjaGlwIGhhcyBtb3JlIGFi
-aWxpdGllcyAoc3VjaCBhcyBQV00sDQo+IExFRC4uLikgdGhlbiB0aGUgY29yZSBzaG91bGQgYmUg
-YW4gTUZEIGRyaXZlciB0aGF0IHNwYXducw0KPiBHUElPL3BpbmN0cmwgZHJpdmVyIGFzIGEgY2hp
-bGQsIHRoZW4gdGhpcyBjaGlsZCBsb29rcyB1cCB0aGUNCj4gcmVnbWFwIGZyb20gdGhlIHBhcmVu
-dCBNRkQgZHJpdmVyLg0KDQpZZXMsIHRoaXMgcmVzdW1lcyB0aGUgYmluZGluZyBwYXRjaCBjb25j
-ZXJucy4NCnN0bWZ4IGNoaXAgb24gYm9hcmRzIHN1cHBvcnRlZCBieSBMaW51eCBpcyBvbmx5IGRv
-aW5nIEdQSU8gYW5kIHBpbiANCmNvbnRyb2wuIFRoZSBvdGhlciBhYmlsaXRpZXMgKElERCBtZWFz
-dXJlbWVudCBhbmQgVG91Y2hTY3JlZW4gDQpjb250cm9sbGVyKSBhcmUgbm90IHVzZWQgYW5kIGNh
-bm5vdCBiZSB0ZXN0ZWQgd2l0aCBMaW51eCBmb3IgdGhlIHRpbWUgDQpiZWluZy4gQnV0IGlmIHRo
-ZXNlIGZ1bmN0aW9uIGFyZSB1c2VkLCB0aGVuIHRoZSBjb3JlIHBhcnQgb2YgdGhpcyBkcml2ZXIg
-DQooYWxsIG5vdCBzdG1meF9ncGlvXy9zdG1meF9waW5jdHJsXy9zdG1meF9waW5jb25mXyBwcmVm
-aXhlZCBmdW5jdGlvbnMpIA0Kd2lsbCBiZWNvbWUgYW4gTUZEIGRyaXZlci4NCg0KPiANCj4gU2Vl
-IGZvciBleGFtcGxlIGhvdyB0aGUgc2ltcGxlIFNUdzQ4MXggZHJpdmVyIGRvZXMgdGhpbmdzOg0K
-PiBkcml2ZXJzL21mZC9zdHc0ODF4LmMNCj4gZHJpdmVycy9yZWd1bGF0b3Ivc3R3NDgxeC12bW1j
-LmMNCj4gDQo+IFRoaXMgTUZEIGhhcyBubyBHUElPL3BpbiBjb250cm9sIGJ1dCBpdCBpbGx1c3Ry
-YXRlcyBhIHNpbXBsZQ0KPiBwYXJlbnQvY2hpbGQgaW5zdGFudGlhdGlvbiB3aXRoIGFuIE1GRCBj
-b3JlIGRyaXZlci4NCj4gDQo+IEl0IGhhcyB0aGlzIERUUyBlbnRyeToNCj4gDQo+ICAgICAgICAg
-ICAgICAgICAgc3R3NDgxMUAyZCB7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRp
-YmxlID0gInN0LHN0dzQ4MTEiOw0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4
-MmQ+Ow0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgdm1tY19yZWd1bGF0b3I6IHZtbWMgew0K
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInN0LHN0dzQ4
-MXgtdm1tYyI7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1u
-YW1lID0gIlZNTUMiOw0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0
-b3ItbWluLW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsNCj4gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47DQo+ICAgICAgICAg
-ICAgICAgICAgICAgICAgICB9Ow0KPiAgICAgICAgICAgICAgICAgIH07DQo+IA0KPiBUaGUgTUZE
-IGRyaXZlciBtYXRjaGVzIGFuZCBzcGF3bnMgdGhlIFZNTUMgY2hpbGQNCj4gdGhlbiB0aGF0IGRy
-aXZlciBtYXRoZXMgdG8gdGhlIHZtbWMgbm9kZS4NCj4gDQo+IFlvdXJzLA0KPiBMaW51cyBXYWxs
-ZWlqDQo+IA0KDQpUaGFua3MsDQpBbWVsaWU=
+
+On 5/1/2018 5:08 AM, Srinivas Kandagatla wrote:
+> This patch adds support to DB820c machine driver.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>   sound/soc/qcom/Kconfig   |   9 ++
+>   sound/soc/qcom/Makefile  |   2 +
+>   sound/soc/qcom/apq8096.c | 238 +++++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 249 insertions(+)
+>   create mode 100644 sound/soc/qcom/apq8096.c
+<snip>
+
+> +
+> +static int apq8096_sbc_parse_of(struct snd_soc_card *card)
+> +{
+> +	struct device_node *np, *codec, *platform, *cpu, *node;
+> +	struct device *dev = card->dev;
+> +	struct snd_soc_dai_link *link;
+> +	int ret, num_links;
+> +
+> +	ret = snd_soc_of_parse_card_name(card, "qcom,model");
+> +	if (ret) {
+> +		dev_err(dev, "Error parsing card name: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	node = dev->of_node;
+> +
+> +	/* DAPM routes */
+> +	if (of_property_read_bool(node, "qcom,audio-routing")) {
+> +		ret = snd_soc_of_parse_audio_routing(card,
+> +					"qcom,audio-routing");
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	/* Populate links */
+> +	num_links = of_get_child_count(node);
+> +
+> +	/* Allocate the DAI link array */
+> +	card->dai_link = kcalloc(num_links, sizeof(*link), GFP_KERNEL);
+> +	if (!card->dai_link)
+> +		return -ENOMEM;
+> +
+> +	card->num_links	= num_links;
+> +	link = card->dai_link;
+> +
+> +	for_each_child_of_node(node, np) {
+> +		cpu = of_get_child_by_name(np, "cpu");
+> +		platform = of_get_child_by_name(np, "platform");
+> +		codec = of_get_child_by_name(np, "codec");
+> +
+> +		if (!cpu) {
+> +			dev_err(dev, "Can't find cpu DT node\n");
+clean up missing to kfree(card->dai_link)?
+
+> +			return -EINVAL;
+> +		}
+> +
+> +		link->cpu_of_node = of_parse_phandle(cpu, "sound-dai", 0);
+> +		if (!link->cpu_of_node) {
+> +			dev_err(card->dev, "error getting cpu phandle\n");
+ditto
+
+> +			return -EINVAL;
+> +		}
+> +
+> +		ret = snd_soc_of_get_dai_name(cpu, &link->cpu_dai_name);
+> +		if (ret) {
+> +			dev_err(card->dev, "error getting cpu dai name\n");
+ditto
+
+> +			return ret;
+> +		}
+> +
+> +		if (codec && platform) {
+> +			link->platform_of_node = of_parse_phandle(platform,
+> +								  "sound-dai",
+> +								   0);
+> +			if (!link->platform_of_node) {
+> +				dev_err(card->dev, "platform dai not found\n");
+ditto
+
+> +				return -EINVAL;
+> +			}
+> +
+> +			ret = snd_soc_of_get_dai_link_codecs(dev, codec, link);
+> +			if (ret < 0) {
+> +				dev_err(card->dev, "codec dai not found\n");
+ditto
+
+> +				return ret;
+> +			}
+> +			link->no_pcm = 1;
+> +			link->ignore_suspend = 1;
+ignore_suspend will also need to be set for FE DAIs?
+
+> +			link->ignore_pmdown_time = 1;
+> +			link->be_hw_params_fixup = apq8096_be_hw_params_fixup;
+> +		} else {
+> +			link->platform_of_node = link->cpu_of_node;
+> +			link->codec_dai_name = "snd-soc-dummy-dai";
+> +			link->codec_name = "snd-soc-dummy";
+> +			link->dynamic = 1;
+> +		}
+> +
+> +		ret = of_property_read_string(np, "link-name", &link->name);
+> +		if (ret) {
+> +			dev_err(card->dev, "error getting codec dai_link name\n");
+clean up
+
+> +			return ret;
+> +		}
+> +
+> +		link->dpcm_playback = 1;
+> +		link->dpcm_capture = 1;
+> +		link->stream_name = link->name;
+> +		link++;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int apq8096_bind(struct device *dev)
+> +{
+> +	struct snd_soc_card *card;
+> +	int ret;
+> +
+> +	card = kzalloc(sizeof(*card), GFP_KERNEL);
+> +	if (!card)
+> +		return -ENOMEM;
+> +
+> +	component_bind_all(dev, card);
+> +	card->dev = dev;
+> +	ret = apq8096_sbc_parse_of(card);
+> +	if (ret) {
+> +		dev_err(dev, "Error parsing OF data\n");
+> +		component_unbind_all(dev, card);
+> +		return ret;
+> +	}
+> +
+> +	return snd_soc_register_card(card);
+> +}
+> +
+> +static void apq8096_unbind(struct device *dev)
+> +{
+> +	struct snd_soc_card *card = dev_get_drvdata(dev);
+> +
+> +	component_unbind_all(dev, card);
+> +	snd_soc_unregister_card(card);
+Should sound card not be unregistered first, before calling 
+component_unbind_all()?
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
