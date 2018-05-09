@@ -1,94 +1,60 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 2/2] leds: Add Spreadtrum SC27xx breathing light
- controller driver
-Date: Wed, 9 May 2018 21:40:35 +0200
-Message-ID: <bddc1f89-8c2c-ba6e-3c7e-d89710ed5424@gmail.com>
-References: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
- <9a2a07b8eb313ae3ba64af911337ee7ff7c9ad43.1525757122.git.baolin.wang@linaro.org>
- <20180509142539.GB25131@amd>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: [PATCH v2 09/11] docs: Fix some broken references
+Date: Wed, 9 May 2018 16:41:53 -0300
+Message-ID: <20180509164153.5b9ab9db@vento.lan>
+References: <20180509152045.722f0c51@vento.lan>
+ <Pine.LNX.4.44L0.1805091509100.1391-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180509142539.GB25131@amd>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Baolin Wang <baolin.wang@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, xiaotong.lu@spreadtrum.com, broonie@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <Pine.LNX.4.44L0.1805091509100.1391-100000@iolanthe.rowland.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Jaroslav Kysela <perex@perex.cz>, Eric Paris <eparis@parisplace.org>, linux-clk@vger.kernel.org, James Morris <jmorris@namei.org>, xen-devel@lists.xenproject.org, Boqun Feng <boqun.feng@gmail.com>, Nicholas Piggin <npiggin@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Antoine Jacquet <royale@zerezo.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>, linux-crypto@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, David Airlie <airlied@linux.ie>, Max Filippov <jcmvbkbc@gmail.com>, Harry Wei <harryxiyou@gmail.com>, selinux@tycho.nsa.gov, Paul Moore <paul@paul-moore.com>, Anil
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 05/09/2018 04:25 PM, Pavel Machek wrote:
-> On Tue 2018-05-08 13:39:45, Baolin Wang wrote:
->> From: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
->>
->> This patch adds Spreadtrum SC27xx PMIC series breathing light controller
->> driver, which can support 3 LEDs. Each LED can work at normal PWM mode
->> and breathing mode.
->>
->> diff --git a/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx b/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
->> new file mode 100644
->> index 0000000..22166fb
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
->> @@ -0,0 +1,19 @@
->> +What:		/sys/class/leds/<led>/rise_time
->> +What:		/sys/class/leds/<led>/high_time
->> +What:		/sys/class/leds/<led>/fall_time
->> +What:		/sys/class/leds/<led>/low_time
->> +Date:		May 2018
->> +KernelVersion:	4.18
->> +Contact:	Xiaotong Lu <xiaotong.lu@spreadtrum.com>
->> +Description:
->> +		Set the pattern generator rise, high, fall and low
->> +		times (0..63). It's unit is 0.125s, it should be > 0.
->> +
->> +		1 - 125 ms
->> +		2 - 250 ms
->> +		3 - 375 ms
->> +		...
->> +		...
->> +		...
->> +		62 - 7.75 s
->> +		63 - 7.875 s
-> 
-> How does this interact with triggers? With manually setting
-> brightness? Are the pattern generators independend for the LEDs?
-> 
-> Can you generate white breathing pattern? If so, how?
-> 
-> How do you select between normal and breathing modes?
-> 
-> I'd specify times in miliseconds or something, this is way too
-> hardware specific.
-
-Agreed.
-
-> Now... functionality like this is common between many LED
-> controllers. N900 could do this kind of "breathing", too, and it also
-> supports other patterns.
-> 
-> I believe we need interface common between different LED controllers.
-> 
-> And I guess it would be easiest if you dropped this part from initial
-> merge.
-
-I disagree here. We already had the same discussion at the occasion
-of the patch [0] and it turned out to be a dead-end [1]. Now we have
-neither the driver nor the generic pattern interface.
-
-We also already have some older LED class drivers that implement custom
-pattern interfaces (e.g. drivers/leds/leds-lm3533.c) and the same
-approach can be applied in this case.
-
-Regarding interaction with triggers - we could disable pattern
-on setting any trigger and return -EBUSY from the pattern
-interface if led_cdev->trigger is not NULL.
-
-[0] https://lkml.org/lkml/2017/3/23/33
-[1] https://lkml.org/lkml/2017/11/15/27
-
--- 
-Best regards,
-Jacek Anaszewski
+RW0gV2VkLCA5IE1heSAyMDE4IDE1OjExOjA3IC0wNDAwIChFRFQpCkFsYW4gU3Rlcm4gPHN0ZXJu
+QHJvd2xhbmQuaGFydmFyZC5lZHU+IGVzY3JldmV1OgoKPiBPbiBXZWQsIDkgTWF5IDIwMTgsIE1h
+dXJvIENhcnZhbGhvIENoZWhhYiB3cm90ZToKPiAKPiA+IEVtIFdlZCwgOSBNYXkgMjAxOCAxOTox
+NTowMSArMDIwMAo+ID4gQW5kcmVhIFBhcnJpIDxwYXJyaS5hbmRyZWFAZ21haWwuY29tPiBlc2Ny
+ZXZldTogIAo+IAo+ID4gPiA+ICB0b29scy9tZW1vcnktbW9kZWwvUkVBRE1FICAgICAgICAgICAg
+ICAgICAgICAgfCAxMCArKysrKy0tLS0tICAgIAo+ID4gPiAKPiA+ID4gQXMgbWVudGlvbmVkIGlu
+IHRoZSBwcmV2aW91cyB0aHJlYWQsIEkgYW0gZm9yIGtlZXBpbmcgdGhlIGN1cnJlbnQKPiA+ID4g
+cmVmZXJlbmNlczogdGhlIFJFQU1ERSBpcyBsaXN0aW5nIHRoZSBkb2MgZmlsZXMsIGFzIHdlbGwg
+YXMgb3RoZXIKPiA+ID4gZmlsZXMgaW4gdG9vbHMvbWVtb3J5LW1vZGVsLywgcmVsYXRpdmVseSB0
+byB0aGF0IGRpcmVjdG9yeS4gIAo+ID4gCj4gPiBZZWFoLCBhdCBsZWFzdCB0aGlzIGh1bmsgZGVz
+ZXJ2ZXMgc29tZSByZXdvcmssIGFzIG5vdyBzb21lCj4gPiByZWZlcmVuY2VzIGFyZSBEb2N1bWVu
+dGF0aW9uLy4uLi9mb28sIHdoaWxlIG90aGVycyBhcmUganVzdAo+ID4gYmFyLgo+ID4gCj4gPiBB
+cyBvbiAoYWxtb3N0KSBhbGwgb3RoZXIgcGxhY2VzIChleGNlcHQgZm9yIHRvb2xzL21lbW9yeS1t
+b2RlbC9SRUFETUUpLAo+ID4gdGhlIHJlZmVyZW5jZXMgYXJlIGFsd2F5cyBmcm9tIHRoZSBtYWlu
+IGRpcmVjdG9yeSwgSSB3b3VsZCBtYWtlIGFsbAo+ID4gcGF0Y2hlcyB0aGVyZSBhbHNvIHJlbGF0
+aXZlIHRvIG1haW4gZGlyLiBJZiB5b3UncmUgYWZyYWlkIG9mCj4gPiBub3QgYmVpbmcgdG9vIGNs
+ZWFyZXIsIHdlIGNvdWxkIHByZWZpeCBhbGwgb2YgdGhlbSB3aXRoIHNvbWV0aGluZwo+ID4gbGlr
+ZToKPiA+IAo+ID4gCSR7TElOVVh9L3Rvb2xzL21lbW9yeS1tb2RlbC8uLi4KPiA+IAo+ID4ganVz
+dCBsaWtlIHNvbWUgRFQgYmluZGluZyBmaWxlcyBkbzoKPiA+IAo+ID4gCURvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9hdWRpby1ncmFwaC1jYXJkLnR4dDpzZWUgJHtMSU5V
+WH0vRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dAo+ID4gCj4gPiBB
+IGJvbnVzIG9mIGRvaW5nIHRoYXQgaXMgdGhhdCB0aGUgYnJva2VuIHJlZmVyZW5jZSBkZXRlY3Qg
+c2NyaXB0IGNhbgo+ID4ga2VlcCBwYXJzaW5nIGl0IHdpdGhvdXQgY2hhbmdlcyAod2VsbCwgaXQg
+d291bGRuJ3QgYmUgaGFyZCB0byBtYWtlCj4gPiBpdCBhbHNvIGFjY2VwdCBhIHJlbGF0aXZlIGZp
+bGUsIGJ1dCBkb2luZyB0aGF0IGp1c3QgZHVlIHRvIAo+ID4gdG9vbHMvbWVtb3J5LW1vZGVsL1JF
+QURNRSBzZWVtcyBvdmVya2lsbCkuCj4gPiAKPiA+IEFub3RoZXIgYWR2YW50YWdlIGlzIHRoYXQg
+aXQgd291bGQgYWxsb3cgdG8gZWFzaWx5IGFkZCByZWZlcmVuY2VzCj4gPiB0aGVyZSBmcm9tIHRo
+ZSBtYWluIGtlcm5lbCBEb2N1bWVudGF0aW9uLCBpZiBuZWVkZWQgaW4gdGhlIGZ1dHVyZSwKPiA+
+IHdpdGhvdXQgbWVzc2luZyB3aXRoIGxvY2FsIHggbm9uLWxvY2FsIHJlbGF0aXZlIG5hbWVzcGFj
+ZS4gIAo+IAo+IEhvdyBhYm91dCBjaGFuZ2luZyB0aGUgcmVsYXRpdmUgcmVmZXJlbmNlcyBzbyB0
+aGF0IHNvbWV0aGluZyBsaWtlCj4gRG9jdW1lbnRhdGlvbi9yZWNpcGVzLnR4dCBiZWNvbWVzIC4v
+RG9jdW1lbnRhdGlvbi9yZWNpcGVzLnR4dD8KClNvdW5kcyBhIGdvb2QgaWRlYSB0byBtZS4gQW5k
+cmVhPwoKVGhhbmtzLApNYXVybwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
