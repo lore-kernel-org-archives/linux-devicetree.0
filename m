@@ -1,35 +1,50 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH 5/5] hisi: Consolidate the Kconfigs for the CLOCK_STUB and
- the MAILBOX
-Date: Wed, 9 May 2018 09:19:13 +0530
-Message-ID: <CABb+yY2ke__W2ZW4c_Z9CejZzup52ykRDyNecTs0+nkvf5cbNA@mail.gmail.com>
-References: <1522811675-12741-1-git-send-email-leo.yan@linaro.org> <1522811675-12741-6-git-send-email-leo.yan@linaro.org>
+From: Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH 0/4] ARM: dts: am437x boards: Correct (again) tps65218 irq
+ type
+Date: Wed, 9 May 2018 09:30:56 +0530
+Message-ID: <4b4100d0-85e1-659b-8f7e-b3d4b3925e82@ti.com>
+References: <20180508132053.5471-1-peter.ujfalusi@ti.com>
+ <20180508141600.GT98604@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522811675-12741-6-git-send-email-leo.yan@linaro.org>
+In-Reply-To: <20180508141600.GT98604@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Wei Xu <xuwei5@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, Kaihua Zhong <zhongkaihua@huawei.com>, Tao Wang <kevin.wangtao@hisilicon.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, ", linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream" <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
+To: Tony Lindgren <tony@atomide.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 4, 2018 at 8:44 AM, Leo Yan <leo.yan@linaro.org> wrote:
-> From: Daniel Lezcano <daniel.lezcano@linaro.org>
->
-> The current defconfig is inconsistent as it selects the mailbox and
-> the clock for the hi6220 and the hi3660 without having their Kconfigs
-> making sure the dependencies are correct. It ends up when selecting
-> different versions for the kernel (for example when git bisecting)
-> those options disappear and they don't get back, leading to unexpected
-> behaviors. In our case, the cpufreq driver does no longer work because
-> the clock fails to initialize due to the clock stub and the mailbox
-> missing.
->
-> In order to have the dependencies correctly set when defaulting, let's
-> do the same as commit 3a49afb84ca074e ("clk: enable hi655x common clk
-> automatically") where we select automatically the driver when the
-> parent driver is selected. With sensible defaults in place, we can leave
-> other choices for EXPERT.
->
-Acked-by: Jassi Brar <jaswinder.singh@linaro.org>
+
+
+On Tuesday 08 May 2018 07:46 PM, Tony Lindgren wrote:
+> * Peter Ujfalusi <peter.ujfalusi@ti.com> [180508 13:22]:
+>> Hi,
+>>
+>> While based on the datasheet of tps65218 the INT is low active, the GIC_SPI
+>> does not support anythin but IRQ_TYPE_LEVEL_HIGH or IRQ_TYPE_EDGE_RISING:
+>>
+>> [    2.761814] genirq: Setting trigger mode 8 for irq 102 failed (irq_chip_set_type_parent+0x0/0x30)
+>> [    2.770913] tps65218 0-0024: Failed to request IRQ 102 for tps65218: -22
+>> [    2.777854] tps65218: probe of 0-0024 failed with error -22
+> 
+> So does the tps65218 have some register to control the interrupt
+> direction or is it's datasheet wrong?
+> 
+> BTW, ADC might be a good test case for PMIC interrupt if it has one.
+
+There is no ADC on this PMIC.
+
+> 
+>> Use LEVEL_HIGH for the interrupt as it looks to be the correct setting:
+>> INTn of tps65218 is connected to NMIn of the SoC.
+>>
+>> The offending patches are only in linux-next.
+> 
+> OK
+> 
+> Regards,
+> 
+> Tony
+> 
