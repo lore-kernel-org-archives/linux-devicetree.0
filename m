@@ -1,42 +1,49 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] MAINTAINERS: add keyword for devicetree overlay
- notifiers
-Date: Wed, 9 May 2018 13:31:40 -0500
-Message-ID: <20180509183140.GA11580@rob-hp-laptop>
-References: <1524879080-27111-1-git-send-email-frowand.list@gmail.com>
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH 4/4] rtc: ds1307: add frequency-test property to check
+ calibration on m41txx
+Date: Wed, 9 May 2018 20:32:38 +0200
+Message-ID: <05eb5e80-a38a-1988-bec8-54ba7c6f38df@micronovasrl.com>
+References: <20180508145611.49072-1-giulio.benetti@micronovasrl.com>
+ <20180508145611.49072-4-giulio.benetti@micronovasrl.com>
+ <CAL_JsqKb9aLxjQbOc1PFRQhbVL2a3Ti2oJ8Gm8Ojn0a39LxajA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1524879080-27111-1-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <CAL_JsqKb9aLxjQbOc1PFRQhbVL2a3Ti2oJ8Gm8Ojn0a39LxajA@mail.gmail.com>
+Content-Language: it
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com
-Cc: pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 27, 2018 at 06:31:20PM -0700, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
-> 
-> Devicetree overlay notifiers have a chance to potentially get
-> pointers into the overlay unflattened devicetree and overlay FDT.
-> The only protection against these pointers being accessed after
-> the underlying data has been released by kfree() is by source
-> code review of patches.  Add a keyword line to the devicetree
-> overlay maintainers entry to try to catch overlay notifier
-> related patches.
-> 
-> The keyword line is added to the devicetree overlay entry instead
-> of the devicetree entry so that not all maintainers will receive
-> the additional review traffic.  Add Frank Rowand (already a
-> maintainer in the devicetree entry) so that he will receive
-> the additional review traffic.
-> 
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
-> 
-> changes from version 1:
->    - removed extraneous "From:" tags at top of patch description
+Hi Rob,
 
-Applied, sorry it fell thru the cracks.
+Il 08/05/2018 19:44, Rob Herring ha scritto:
+> On Tue, May 8, 2018 at 9:56 AM, Giulio Benetti
+> <giulio.benetti@micronovasrl.com> wrote:
+>> On m41txx you can enable open-drain OUT pin to check if calibration is ok.
+>> Enabling OUT pin with frequency-test bool property, OUT pin will tick
+>> 512 times faster than 1s tick base.
+>>
+>> Enable FT bit on CONTROL register if calibration is active.
+> 
+> A DT is (or should be) a pretty static thing, so I don't think this
+> belongs. A kernel command line option (via module params) or a
+> sysfs/debugfs file would make more sense IMO.
 
-Rob
+Totally right, it's very useful having it accessible via sysfs.
+Already changed and just submitted V2 patchset.
+Thanks
+
+-- 
+Giulio Benetti
+CTO
+
+MICRONOVA SRL
+Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
+Tel. 049/8931563 - Fax 049/8931346
+Cod.Fiscale - P.IVA 02663420285
+Capitale Sociale € 26.000 i.v.
+Iscritta al Reg. Imprese di Padova N. 02663420285
+Numero R.E.A. 258642
