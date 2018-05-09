@@ -1,97 +1,24 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v6 0/7] Add endpoint driver for Rockchip PCIe controller
-Date: Wed, 9 May 2018 09:42:14 +0800
-Message-ID: <a19ffd66-2298-281f-1217-a48a8af2958d@rock-chips.com>
-References: <1524796697-160764-1-git-send-email-shawn.lin@rock-chips.com>
- <20180508115229.GA10653@e107981-ln.cambridge.arm.com>
- <abbd0c7a-c592-b628-e2ab-3df6a5ca33a4@rock-chips.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v7 1/3] mmc: dw_mmc-bluefield: Add driver extension
+Date: Wed, 9 May 2018 09:45:03 +0800
+Message-ID: <6a25eb18-a2d3-8004-563c-2655287932df@rock-chips.com>
+References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+ <1525805210-15246-1-git-send-email-lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <abbd0c7a-c592-b628-e2ab-3df6a5ca33a4-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1525805210-15246-1-git-send-email-lsun@mellanox.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liming Sun <lsun@mellanox.com>, Will Deacon <will.deacon@arm.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, shawn.lin@rock-chips.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTG9yZW56bywKCk9uIDIwMTgvNS84IDIyOjI4LCBTaGF3biBMaW4gd3JvdGU6Cj4gSGkgTG9y
-ZW56bywKPiAKPiBPbiAyMDE4LzUvOCAxOTo1MiwgTG9yZW56byBQaWVyYWxpc2kgd3JvdGU6Cj4+
-IEhpIFNoYXduLAo+Pgo+PiBPbiBGcmksIEFwciAyNywgMjAxOCBhdCAxMDozODoxN0FNICswODAw
-LCBTaGF3biBMaW4gd3JvdGU6Cj4+Pgo+Pj4gSGkgTG9yZW56bywKPj4+Cj4+PiBUaGlzJ3MgdGhl
-IDZ0aCB0cnkgdG8gdXBzdHJlYW0gZW5kcG9pbnQgZHJpdmVyIGZvciBSb2NrY2hpcCBQQ0llCj4+
-PiBjb250cm9sbGVyLiBWNiBpcyByZWJhc2VkIGJ5IGRyb3BpbmcgdGhlIHJlbmFtZSBjaGFuZ2Uu
-Cj4+Pgo+Pj4gVGhhbmtzLgo+Pj4KPj4+Cj4+PiBDaGFuZ2VzIGluIHY2Ogo+Pj4gLSByZWJhc2UK
-Pj4+Cj4+PiBDaGFuZ2VzIGluIHY1Ogo+Pj4gLSBleHBvcnQgc3ltYm9sIHRvIGZpeCBlcnJvciBy
-ZXBvcnRlZCBieSBLYnVpbGQgcm9ib3QKPj4+IC0gUENJRV9ST0NLQ0hJUCBkZXBlbmRzIG9uIFBD
-SQo+Pj4KPj4+IENoYW5nZXMgaW4gdjQ6Cj4+PiAtIHJlbW92ZSBlbXB0eSBsaW5lCj4+PiAtIGtl
-ZXAgcm9ja2NoaXAncyBvcmRlciBuZXh0IHRvIGNhZGVuY2UgYW5kIGR3YywgYnV0Cj4+PiDCoMKg
-IHdlIHdpbGwgdHJ5IHRvIHJlc29ydCBpdCBsYXRlciB3aGVuIHJlY29uc3RydWN0aW5nCj4+PiDC
-oMKgIHRoZSBkaXJlY3Rvcmllcwo+Pj4KPj4+IFNoYXduIExpbiAoNyk6Cj4+PiDCoMKgIFBDSTog
-cm9ja2NoaXA6IFNlcGFyYXRlIGNvbW1vbiBjb2RlIGZyb20gUkMgZHJpdmVyCj4+Cj4+IFRoZXJl
-IHNlZW1zIHRvIGJlIG5vIHBhdGNoICgxKSBvbiBsaW51eC1wY2kgbGlzdCwgbm90IHN1cmUgd2hh
-dAo+PiBoYXBwZW5lZCwgbWluZCByZXNlbmRpbmcgdGhlIHdob2xlIHNlcmllcyBwb3NzaWJseSB3
-aXRoCj4+IGNvbW1pdCBsb2dzIHVwZGF0ZWQgYXMgZGlzY3Vzc2VkID8KPiAKPiBTdXJlISBXaWxs
-IHNlbmQgdjcgZm9yIHVwZGF0aW5nIGNvbW1pdCBsb2dzLgo+IAoKSSBzZW5kIHY3IGFuZCBjaGVj
-ayB0aGUgc2VyaWVzIGluIGxpbnV4LXBjaVsxXSwgYnV0IHBhdGNoICgxKSBpcyBzdGlsbAptaXNz
-aW5nLCBidXQgSSBjb3VsZCBmaW5kIGl0IGFjdHVhbGx5IGhpdCB0aGUgbGludXgtcm9ja2NoaXBb
-Ml0uIEkKZ3Vlc3MgaXQgd2FzIHNwYW1tZWQgYnkgbGludXgtcGNpIGFuZCBwcm9iYWJseSBkdWUg
-dG8gdGhlIHNpemUsIDEwMEssCndoaWNoIGlzIGxhcmdlciB0aGFuIHRoZSB0aHJvdHRsZSBzZXR0
-aW5nIG9mIHBhdGNod29yayBmb3IgbGludXgtcGNpLgpIb3cgc2hvdWxkIEkgbW92ZSBmb3J3YXJk
-IHdpdGggdGhhdD8gOikKCgo0LjBLIDAwMDAtY292ZXItbGV0dGVyLnBhdGNoCjEwMEsgMDAwMS1Q
-Q0ktcm9ja2NoaXAtU2VwYXJhdGUtY29tbW9uLWNvZGUtZnJvbS1SQy1kcml2ZXIucGF0Y2gKMTJL
-IDAwMDItUENJLXJvY2tjaGlwLVNwbGl0LW91dC1yb2NrY2hpcF9wY2llX3BhcnNlX2R0LXRvLXBh
-ci5wYXRjaAoxMksgMDAwMy1QQ0ktcm9ja2NoaXAtU3BsaXQtb3V0LWNvbW1vbi1mdW5jdGlvbi10
-by1pbml0LWNvbnRyLnBhdGNoCjQuMEsgMDAwNC1kdC1iaW5kaW5ncy1QQ0ktcm9ja2NoaXAtUmVu
-YW1lLXJvY2tjaGlwLXBjaWUudHh0LXRvLnBhdGNoCjI4SyAwMDA1LVBDSS1yb2NrY2hpcC1BZGQt
-RVAtZHJpdmVyLWZvci1Sb2NrY2hpcC1QQ0llLWNvbnRyb2wucGF0Y2gKNC4wSyAwMDA2LWR0LWJp
-bmRpbmdzLVBDSS1yb2NrY2hpcC1BZGQtRFQtYmluZGluZ3MtZm9yLVJvY2tjaGkucGF0Y2gKNC4w
-SyAwMDA3LWFybTY0LWRlZmNvbmZpZy11cGRhdGUtY29uZmlnLWZvci1Sb2NrY2hpcC1QQ0llLnBh
-dGNoCgoKWzFdOiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgtcGNp
-L2xpc3QvClsyXTogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDM4NzkxNS8K
-Cj4+Cj4+IFRoYW5rcywKPj4gTG9yZW56bwo+Pgo+Pj4gwqDCoCBQQ0k6IHJvY2tjaGlwOiBTcGxp
-dCBvdXQgY29tbW9uIGZ1bmN0aW9uIHRvIHBhcnNlIERUCj4+PiDCoMKgIFBDSTogcm9ja2NoaXA6
-IFNwbGl0IG91dCBjb21tb24gZnVuY3Rpb24gdG8gaW5pdCBjb250cm9sbGVyCj4+PiDCoMKgIGR0
-LWJpbmRpbmdzOiBQQ0k6IHJvY2tjaGlwOiBSZW5hbWUgcm9ja2NoaXAtcGNpZS50eHQgdG8KPj4+
-IMKgwqDCoMKgIHJvY2tjaGlwLXBjaWUtaG9zdC50eHQKPj4+IMKgwqAgUENJOiByb2NrY2hpcDog
-QWRkIEVuZHBvaW50IGNvbnRyb2xsZXIgZHJpdmVyIGZvciBSb2NrY2hpcCBQQ0llCj4+PiDCoMKg
-wqDCoCBjb250cm9sbGVyCj4+PiDCoMKgIGR0LWJpbmRpbmdzOiBQQ0k6IHJvY2tjaGlwOiBBZGQg
-RFQgYmluZGluZ3MgZm9yIFJvY2tjaGlwIFBDSWUgCj4+PiBlbmRwb2ludAo+Pj4gwqDCoMKgwqAg
-Y29udHJvbGxlcgo+Pj4gwqDCoCBhcm02NDogZGVmY29uZmlnOiB1cGRhdGUgY29uZmlnIGZvciBS
-b2NrY2hpcCBQQ0llCj4+Pgo+Pj4gwqAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3JvY2tj
-aGlwLXBjaWUtZXAudHh0wqDCoCB8wqDCoCA2MiArCj4+PiDCoCAuLi4ve3JvY2tjaGlwLXBjaWUu
-dHh0ID0+IHJvY2tjaGlwLXBjaWUtaG9zdC50eHR9wqAgfMKgwqDCoCAwCj4+PiDCoCBNQUlOVEFJ
-TkVSU8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgIDQgKy0KPj4+IMKgIGFyY2gvYXJtNjQv
-Y29uZmlncy9kZWZjb25maWfCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCB8wqDCoMKgIDMgKy0KPj4+IMKgIGRyaXZlcnMvcGNpL2hvc3QvS2NvbmZpZ8KgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgMTkgKy0K
-Pj4+IMKgIGRyaXZlcnMvcGNpL2hvc3QvTWFrZWZpbGXCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgIDIgKwo+Pj4gwqAgZHJpdmVycy9wY2kv
-aG9zdC9wY2llLXJvY2tjaGlwLWVwLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKg
-IDY0MiArKysrKysrKwo+Pj4gwqAgZHJpdmVycy9wY2kvaG9zdC9wY2llLXJvY2tjaGlwLWhvc3Qu
-Y8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMTE0MSAKPj4+ICsrKysrKysrKysrKysKPj4+
-IMKgIGRyaXZlcnMvcGNpL2hvc3QvcGNpZS1yb2NrY2hpcC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIHwgMTY4MyAKPj4+ICsrKy0tLS0tLS0tLS0tLS0tLS0tCj4+PiDCoCBk
-cml2ZXJzL3BjaS9ob3N0L3BjaWUtcm9ja2NoaXAuaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCB8wqAgMzM4ICsrKysKPj4+IMKgIDEwIGZpbGVzIGNoYW5nZWQsIDI0MDYgaW5z
-ZXJ0aW9ucygrKSwgMTQ4OCBkZWxldGlvbnMoLSkKPj4+IMKgIGNyZWF0ZSBtb2RlIDEwMDY0NCAK
-Pj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvcm9ja2NoaXAtcGNpZS1l
-cC50eHQKPj4+IMKgIHJlbmFtZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNp
-L3tyb2NrY2hpcC1wY2llLnR4dCA9PiAKPj4+IHJvY2tjaGlwLXBjaWUtaG9zdC50eHR9ICgxMDAl
-KQo+Pj4gwqAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2hvc3QvcGNpZS1yb2NrY2hp
-cC1lcC5jCj4+PiDCoCBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wY2kvaG9zdC9wY2llLXJv
-Y2tjaGlwLWhvc3QuYwo+Pj4gwqAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2hvc3Qv
-cGNpZS1yb2NrY2hpcC5oCj4+Pgo+Pj4gLS0gCj4+PiAxLjkuMQo+Pj4KPj4+Cj4+Cj4+Cj4+Cj4g
-Cj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGlu
-dXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2Nr
-Y2hpcAo=
+
+On 2018/5/9 2:46, Liming Sun wrote:
+> This commit adds extension to the dw_mmc driver for Mellanox BlueField
+> SoC. It updates the UHS_REG_EXT register to bring up the eMMC card on
+> this SoC.
+> 
+
+Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
