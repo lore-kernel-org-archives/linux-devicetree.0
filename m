@@ -1,92 +1,114 @@
-From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH v2 2/3] dt-bindings: rtc: update stm32-rtc documentation for
- stm32mp1 rtc
-Date: Wed, 9 May 2018 17:46:09 +0200
-Message-ID: <1525880770-22263-3-git-send-email-amelie.delaunay@st.com>
-References: <1525880770-22263-1-git-send-email-amelie.delaunay@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1525880770-22263-1-git-send-email-amelie.delaunay@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
-Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH v3] display: panel: Add AUO g070vvn01 display support (800x480)
+Date: Wed,  9 May 2018 17:59:13 +0200
+Message-ID: <20180509155913.7562-1-lukma@denx.de>
+References: <20180410102927.17787-1-lukma@denx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180410102927.17787-1-lukma@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-RTC embedded in stm32mp1 SoC is slightly different from stm32h7 one, it
-doesn't require to disable backup domain write protection, and rtc_ck
-parent clock assignment isn't allowed.
-To sum up, stm32mp1 RTC requires 2 clocks, pclk and rtc_ck, and an RTC
-alarm interrupt.
+This commit adds support for AUO's 7.0" display.
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+
 ---
- .../devicetree/bindings/rtc/st,stm32-rtc.txt       | 27 ++++++++++++++++------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+Changes for v3:
+- Remove not used 'bus-format-override = "rgb565";' property
 
-diff --git a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-index 00f8b5d..c920e27 100644
---- a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-@@ -1,25 +1,29 @@
- STM32 Real Time Clock
- 
- Required properties:
--- compatible: can be either "st,stm32-rtc" or "st,stm32h7-rtc", depending on
--  the device is compatible with stm32(f4/f7) or stm32h7.
-+- compatible: can be one of the following:
-+  - "st,stm32-rtc" for devices compatible with stm32(f4/f7).
-+  - "st,stm32h7-rtc" for devices compatible with stm32h7.
-+  - "st,stm32mp1-rtc" for devices compatible with stm32mp1.
- - reg: address range of rtc register set.
- - clocks: can use up to two clocks, depending on part used:
-   - "rtc_ck": RTC clock source.
--    It is required on stm32(f4/f7) and stm32h7.
-   - "pclk": RTC APB interface clock.
-     It is not present on stm32(f4/f7).
--    It is required on stm32h7.
-+    It is required on stm32(h7/mp1).
- - clock-names: must be "rtc_ck" and "pclk".
--    It is required only on stm32h7.
-+    It is required on stm32(h7/mp1).
- - interrupt-parent: phandle for the interrupt controller.
--- interrupts: rtc alarm interrupt.
-+    It is required on stm32(f4/f7/h7).
-+- interrupts: rtc alarm interrupt. On stm32mp1, a second interrupt is required
-+  for rtc alarm wakeup interrupt.
- - st,syscfg: phandle/offset/mask triplet. The phandle to pwrcfg used to
-   access control register at offset, and change the dbp (Disable Backup
-   Protection) bit represented by the mask, mandatory to disable/enable backup
-   domain (RTC registers) write protection.
-+    It is required on stm32(f4/f7/h7).
- 
--Optional properties (to override default rtc_ck parent clock):
-+Optional properties (to override default rtc_ck parent clock on stm32(f4/f7/h7):
- - assigned-clocks: reference to the rtc_ck clock entry.
- - assigned-clock-parents: phandle of the new parent clock of rtc_ck.
- 
-@@ -48,3 +52,12 @@ Example:
- 		interrupt-names = "alarm";
- 		st,syscfg = <&pwrcfg 0x00 0x100>;
- 	};
+Changes for v2:
+- Add *.txt suffix to the auo,g070wn01 file
+---
+ .../bindings/display/panel/auo,g070vvn01.txt       | 29 ++++++++++++++++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 31 ++++++++++++++++++++++
+ 2 files changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt
+
+diff --git a/Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt b/Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt
+new file mode 100644
+index 000000000000..49e4105378f6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt
+@@ -0,0 +1,29 @@
++AU Optronics Corporation 7.0" FHD (800 x 480) TFT LCD panel
 +
-+	rtc: rtc@5c004000 {
-+		compatible = "st,stm32mp1-rtc";
-+		reg = <0x5c004000 0x400>;
-+		clocks = <&rcc RTCAPB>, <&rcc RTC>;
-+		clock-names = "pclk", "rtc_ck";
-+		interrupts-extended = <&intc GIC_SPI 3 IRQ_TYPE_NONE>,
-+				      <&exti 19 1>;
++Required properties:
++- compatible: should be "auo,g070vvn01"
++- backlight: phandle of the backlight device attached to the panel
++- power-supply: single regulator to provide the supply voltage
++
++Required nodes:
++- port: Parallel port mapping to connect this display
++
++This panel needs single power supply voltage. Its backlight is conntrolled
++via PWM signal.
++
++Example:
++--------
++
++Example device-tree definition when connected to iMX6Q based board
++
++	lcd_panel: lcd-panel {
++		compatible = "auo,g070vvn01";
++		backlight = <&backlight_lcd>;
++		power-supply = <&reg_display>;
++
++		port {
++			lcd_panel_in: endpoint {
++				remote-endpoint = <&lcd_display_out>;
++			};
++		};
 +	};
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index cbf1ab404ee7..d9984bdb5bb5 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -581,6 +581,34 @@ static const struct panel_desc auo_b133htn01 = {
+ 	},
+ };
+ 
++static const struct display_timing auo_g070vvn01_timings = {
++	.pixelclock = { 33300000, 34209000, 45000000 },
++	.hactive = { 800, 800, 800 },
++	.hfront_porch = { 20, 40, 200 },
++	.hback_porch = { 87, 40, 1 },
++	.hsync_len = { 1, 48, 87 },
++	.vactive = { 480, 480, 480 },
++	.vfront_porch = { 5, 13, 200 },
++	.vback_porch = { 31, 31, 29 },
++	.vsync_len = { 1, 1, 3 },
++};
++
++static const struct panel_desc auo_g070vvn01 = {
++	.timings = &auo_g070vvn01_timings,
++	.num_timings = 1,
++	.bpc = 8,
++	.size = {
++		.width = 152,
++		.height = 91,
++	},
++	.delay = {
++		.prepare = 200,
++		.enable = 50,
++		.disable = 50,
++		.unprepare = 1000,
++	},
++};
++
+ static const struct drm_display_mode auo_g104sn02_mode = {
+ 	.clock = 40000,
+ 	.hdisplay = 800,
+@@ -2095,6 +2123,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "auo,b133xtn01",
+ 		.data = &auo_b133xtn01,
+ 	}, {
++		.compatible = "auo,g070vvn01",
++		.data = &auo_g070vvn01,
++	}, {
+ 		.compatible = "auo,g104sn02",
+ 		.data = &auo_g104sn02,
+ 	}, {
 -- 
-2.7.4
+2.11.0
