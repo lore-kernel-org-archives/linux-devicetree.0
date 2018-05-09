@@ -1,56 +1,59 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: [PATCH] ARM: dts: qcom-apq8064: use correct pci address for address translation
-Date: Wed,  9 May 2018 14:01:34 +0200
-Message-ID: <20180509120135.25940-1-niklas.cassel@linaro.org>
+From: Vivek Unune <npcomplete13@gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: BCM5301X: Make usb3 phy use mdio phy driver
+Date: Wed, 9 May 2018 08:08:06 -0400
+Message-ID: <20180509120806.7a37jpcqcby7ryku@osboxes>
+References: <20180315135647.48456-1-npcomplete13@gmail.com>
+ <20180409223153.41893-1-npcomplete13@gmail.com>
+ <68519de5-9a47-9cb5-064c-dc4703aaa508@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <68519de5-9a47-9cb5-064c-dc4703aaa508@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-pci@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: hauke@hauke-m.de, zajec5@gmail.com, jonmason@broadcom.com, bcm-kernel-feedback-list@broadcom.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-For PCI, the second and third cell in ranges specifies the upper and
-lower target address for address translation. This target address will
-be used to program the internal address translation unit (iATU).
+On Wed, Apr 18, 2018 at 03:31:17PM -0700, Florian Fainelli wrote:
+> On 04/09/2018 03:31 PM, Vivek Unune wrote:
+> > Currently, usb3 phy in bcm5301x.dtsi uses platform driver which
+> > requires register range "ccb-mii" <0x18003000 0x1000>. This range
+> > overlaps with mdio cmd and param registers (<0x18003000 0x8>).
+> > Essentially, the platform driver partly acts like a mdio bus
+> > driver, hence to use of this register range.
+> > 
+> > In some Northstar devices like Linksys EA9500, secondary switch
+> > is connected via external mdio. The only way to access and
+> > configure the external switch is via mdio bus. When we enable the
+> > mdio bus in it's current state, the mdio bus and any child buses
+> > fail to register because of the register range overlap.
+> > 
+> > On Northstar, the usb3 phy is connected at address 0x10 on the
+> > internal mdio bus. This change moves the usb3_phy node and makes
+> > it a child node of internal mdio bus.
+> > 
+> > Thanks to Rafał Miłecki's commit af850e14a7ae
+> > ("phy: bcm-ns-usb3: add MDIO driver using proper bus layer") the
+> > same usb3 platform driver can now act as usb3 phy mdio driver.
+> > 
+> > Tested on Linksys Panamera (EA9500)
+> > 
+> > Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
+> > ---
+> > v2: Disabled usb3_phy by default, then enabled in dts where
+> >     necessary
+> 
+> Rafal, Hauke, this looks good to me, can you review? Thanks
+> -- 
+> Florian
 
-The current device tree configuration will program the iATU to translate
-CPU accesses to 0x08000000 to PCI address 0x0 (with TLP type MEM).
-The device tree configuration also specifies that CPU acesses to
-0x0fe00000 will be translated to PCI address 0x0 (with TLP type I/O).
+Rafał, Hauke,
 
-We cannot have both I/O space and memory space at PCI address 0x0.
+I'm sure you are super busy :) Just want to bring this to your
+attention. 
 
-The PCI code already uses the CPU address when assigning addresses to
-memory BARs, so for memory space the PCI address should be the same as
-the CPU address. This also matches how all other device trees using
-snps,dw-pcie are configured.
+Thanks,
 
-The existing configuration appears to work, even if it is incorrect.
-For some reason the iATU doesn't obey the existing configuration,
-and doesn't translate CPU accesses from 0x08000000 to PCI address 0x0.
-
-The reason why the existing configuration works at all is probably
-because the default behavior, when there is no match, is to use the
-untranslated address. This happens to work for memory space, since
-it's a 1:1 mapping. However, instead of relying on this behavior,
-let's configure the iATU correctly.
-
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
----
- arch/arm/boot/dts/qcom-apq8064.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 5341a39c0392..148cf7e565f6 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -1417,7 +1417,7 @@
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			ranges = <0x81000000 0 0 0x0fe00000 0 0x00100000   /* I/O */
--				  0x82000000 0 0 0x08000000 0 0x07e00000>; /* memory */
-+				  0x82000000 0 0x08000000 0x08000000 0 0x07e00000>; /* memory */
- 			interrupts = <GIC_SPI 238 IRQ_TYPE_NONE>;
- 			interrupt-names = "msi";
- 			#interrupt-cells = <1>;
--- 
-2.17.0
+Vivek
