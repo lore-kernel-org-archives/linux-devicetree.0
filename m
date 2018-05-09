@@ -1,88 +1,113 @@
-From: Banajit Goswami <bgoswami@codeaurora.org>
-Subject: Re: [PATCH v7 11/24] ASoC: qdsp6: q6afe: Add support
-	to MI2S ports
-Date: Tue, 8 May 2018 20:21:21 -0700
-Message-ID: <2d1e7dfd-b65a-4297-f98b-15c2dd54c61a@codeaurora.org>
-References: <20180501120820.11016-1-srinivas.kandagatla@linaro.org>
- <20180501120820.11016-12-srinivas.kandagatla@linaro.org>
+From: Yao Chen <chenyao11@huawei.com>
+Subject: Re: [PATCH] Kirin-PCIe: Add kirin pcie msi feature.
+Date: Wed, 9 May 2018 11:41:14 +0800
+Message-ID: <ce1ad9b2-e883-75be-aa4a-b7cdfc0b3f48@huawei.com>
+References: <1525763028-107417-1-git-send-email-chenyao11@huawei.com>
+ <CAH7ZN-zOwCqzzmKxkCeLt+z2FCpMrxnu5a8s8Os-fSsuS2R01w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180501120820.11016-12-srinivas.kandagatla@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAH7ZN-zOwCqzzmKxkCeLt+z2FCpMrxnu5a8s8Os-fSsuS2R01w@mail.gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, linux-kernel@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Shmidt <dimitrysh@google.com>
+Cc: songxiaowei <songxiaowei@hisilicon.com>, Wangbinghui <wangbinghui@hisilicon.com>, lorenzo.pieralisi@arm.com, bhelgaas@google.com, xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-pci@vger.kernel.org, "<linux-kernel@vger.kernel.org>" <linux-kernel@vger.kernel.org>, "<linux-arm-kernel@lists.infradead.org>" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On 5/1/2018 5:08 AM, Srinivas Kandagatla wrote:
-> This patch adds support to 4 MI2S ports on LPASS.
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Reviewed-and-tested-by: Rohit kumar <rohitkr@codeaurora.org>
-> ---
->   sound/soc/qcom/qdsp6/q6afe.c | 224 +++++++++++++++++++++++++++++++++++++++++++
->   sound/soc/qcom/qdsp6/q6afe.h |  13 +++
->   2 files changed, 237 insertions(+)
->
-> diff --git a/sound/soc/qcom/qdsp6/q6afe.c b/sound/soc/qcom/qdsp6/q6afe.c
-> index be55b3ab045f..ceb18aaa5af4 100644
-> --- a/sound/soc/qcom/qdsp6/q6afe.c
-> +++ b/sound/soc/qcom/qdsp6/q6afe.c
-> @@ -14,6 +14,10 @@
->   #include <linux/spinlock.h>
->   #include <linux/delay.h>
->   #include <linux/soc/qcom/apr.h>
-> +#include <sound/soc.h>
-> +#include <sound/soc-dai.h>
-> +#include <sound/pcm.h>
-<snip>
 
->   union afe_port_config {
->   	struct afe_param_id_hdmi_multi_chan_audio_cfg hdmi_multi_ch;
->   	struct afe_param_id_slimbus_cfg           slim_cfg;
-> +	struct afe_param_id_i2s_cfg	i2s_cfg;
->   } __packed;
->   
->   struct q6afe_port {
-> @@ -210,6 +264,22 @@ static struct afe_port_map port_maps[AFE_PORT_MAX] = {
->   				SLIMBUS_4_RX, 1, 1},
->   	[SLIMBUS_5_RX] = { AFE_PORT_ID_SLIMBUS_MULTI_CHAN_5_RX,
->   				SLIMBUS_5_RX, 1, 1},
-> +	[QUATERNARY_MI2S_RX] = { AFE_PORT_ID_QUATERNARY_MI2S_RX,
-> +				QUATERNARY_MI2S_RX, 1, 1},
-> +	[QUATERNARY_MI2S_TX] = { AFE_PORT_ID_QUATERNARY_MI2S_TX,
-> +				QUATERNARY_MI2S_TX, 0, 1},
-> +	[SECONDARY_MI2S_RX] = { AFE_PORT_ID_SECONDARY_MI2S_RX,
-> +				SECONDARY_MI2S_RX, 1, 1},
-> +	[SECONDARY_MI2S_TX] = { AFE_PORT_ID_SECONDARY_MI2S_TX,
-> +				SECONDARY_MI2S_TX, 0, 1},
-> +	[TERTIARY_MI2S_RX] = { AFE_PORT_ID_TERTIARY_MI2S_RX,
-> +				TERTIARY_MI2S_RX, 1, 1},
-> +	[TERTIARY_MI2S_TX] = { AFE_PORT_ID_TERTIARY_MI2S_TX,
-> +				TERTIARY_MI2S_TX, 0, 1},
-> +	[PRIMARY_MI2S_RX] = { AFE_PORT_ID_PRIMARY_MI2S_RX,
-> +				PRIMARY_MI2S_RX, 1, 1},
-> +	[PRIMARY_MI2S_TX] = { AFE_PORT_ID_PRIMARY_MI2S_TX,
-> +				PRIMARY_MI2S_RX, 0, 1},
-Can these be added after SLIMBUS_6_RX?
-Also, for better arrangement, please add the port_maps from 
-PRIMARY_MI2S_RX to QUATERNARY_MI2S_TX in the same sequence of definition 
-of AFE ports.
-Otherwise LGTM.
-Once fixed the above comment add-
-Acked-by: Banajit Goswami <bgoswami@codeaurora.org>
+On 2018/5/9 5:31, Dmitry Shmidt wrote:
+> On Tue, May 8, 2018 at 12:03 AM, Yao Chen <chenyao11@huawei.com> wrote:
+>> This patch adds kirin pcie msi feature.
+>>
+>> Signed-off-by: Yao Chen <chenyao11@huawei.com>
+>> ---
+>>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi |  2 ++
+>>  drivers/pci/dwc/pcie-kirin.c              | 38 +++++++++++++++++++++++++++++++
+>>  2 files changed, 40 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>> index ec3eb8e..4ef684f 100644
+>> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>> @@ -872,6 +872,8 @@
+>>                                   0x0 0x02000000>;
+>>                         num-lanes = <1>;
+>>                         #interrupt-cells = <1>;
+>> +                       interrupts = <0 283 4>;
+>> +                       interrupts-names = "msi";
+> 
+> Possible typo? Should be interrupt-names = "msi";
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Yes, you're right. It should be interrupt-names = "msi". I will fix it. Thanks.
+
+> 
+>>                         interrupt-map-mask = <0xf800 0 0 7>;
+>>                         interrupt-map = <0x0 0 0 1
+>>                                          &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
+>> diff --git a/drivers/pci/dwc/pcie-kirin.c b/drivers/pci/dwc/pcie-kirin.c
+>> index d2970a0..2319c9c 100644
+>> --- a/drivers/pci/dwc/pcie-kirin.c
+>> +++ b/drivers/pci/dwc/pcie-kirin.c
+>> @@ -426,9 +426,28 @@ static int kirin_pcie_establish_link(struct pcie_port *pp)
+>>         return 0;
+>>  }
+>>
+>> +static irqreturn_t kirin_pcie_msi_irq_handler(int irq, void *arg)
+>> +{
+>> +       struct pcie_port *pp = arg;
+>> +
+>> +       return dw_handle_msi_irq(pp);
+>> +}
+>> +
+>> +static void kirin_pcie_msi_init(struct pcie_port *pp)
+>> +{
+>> +       dw_pcie_msi_init(pp);
+>> +}
+>> +
+>> +static void kirin_pcie_enable_interrupts(struct pcie_port *pp)
+>> +{
+>> +       if (IS_ENABLED(CONFIG_PCI_MSI))
+>> +               kirin_pcie_msi_init(pp);
+>> +}
+>> +
+>>  static int kirin_pcie_host_init(struct pcie_port *pp)
+>>  {
+>>         kirin_pcie_establish_link(pp);
+>> +       kirin_pcie_enable_interrupts(pp);
+>>
+>>         return 0;
+>>  }
+>> @@ -448,6 +467,25 @@ static int kirin_pcie_host_init(struct pcie_port *pp)
+>>  static int __init kirin_add_pcie_port(struct dw_pcie *pci,
+>>                                       struct platform_device *pdev)
+>>  {
+>> +       int ret;
+>> +
+>> +       if (IS_ENABLED(CONFIG_PCI_MSI)) {
+>> +               pci->pp.msi_irq = platform_get_irq(pdev, 0);
+>> +               if (!pci->pp.msi_irq) {
+>> +                       dev_err(&pdev->dev, "failed to get msi irq\n");
+>> +                       return -ENODEV;
+>> +               }
+>> +               ret = devm_request_irq(&pdev->dev, pci->pp.msi_irq,
+>> +                                      kirin_pcie_msi_irq_handler,
+>> +                                      IRQF_SHARED | IRQF_NO_THREAD,
+>> +                                      "kirin_pcie_msi", &pci->pp);
+>> +               if (ret) {
+>> +                       dev_err(&pdev->dev, "failed to request msi irq\n");
+>> +                       return ret;
+>> +               }
+>> +       }
+>> +
+>> +       pci->pp.root_bus_nr = -1;
+>>         pci->pp.ops = &kirin_pcie_host_ops;
+>>
+>>         return dw_pcie_host_init(&pci->pp);
+>> --
+>> 1.9.1
+>>
+> 
+> .
+> 
