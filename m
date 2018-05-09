@@ -1,68 +1,71 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 3/3] arm64: dts: juno/rtsm: re-structure motherboard
- includes
-Date: Thu, 10 May 2018 11:07:09 +0100
-Message-ID: <fd05b1da-83aa-2177-8e99-23dcb7199856@arm.com>
-References: <1525884291-18851-1-git-send-email-sudeep.holla@arm.com>
- <1525884291-18851-3-git-send-email-sudeep.holla@arm.com>
- <20180510094901.GR1027@e110455-lin.cambridge.arm.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v2 2/2] gpu: drm/panel: Add DLC DLC0700YZG-1 panel
+Date: Wed,  9 May 2018 16:59:36 +0200
+Message-ID: <20180509145939.4140-3-m.felsch@pengutronix.de>
+References: <20180509145939.4140-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180510094901.GR1027@e110455-lin.cambridge.arm.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liviu Dudau <liviu.dudau@arm.com>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180509145939.4140-1-m.felsch@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/05/18 10:49, Liviu Dudau wrote:
-> On Wed, May 09, 2018 at 05:44:51PM +0100, Sudeep Holla wrote:
->> It is a bit unorthodox to just include a file in the middle of a another
->> DTS file, it breaks the pattern from other device trees and also makes
->> it really hard to reference things across the files with phandles.
->>
->> Restructure the include for the Juno/RTSM motherboards to happen at the
->> top of the file, reference the target nodes directly, and indent the
->> motherboard .dtsi files to reflect their actual depth in the hierarchy.
->>
->> This is a purely syntactic change that result in the same DTB files from
->> the DTS/DTSI files. This is based on similar patch from Linus Walleij
->> for ARM Vexpress platforms.
-> 
-> A bit of bikeshedding here: the reason I've used the DT /include/
-> here was that on decompilation of the DTB the nodes would have been in
-> the natural order and easier to look for issues. Those were the early
-> days and I can accept that the general practice has changed and we're
-> using now the C preprocessor more. I don't have any strong feelings on
-> how the DT looks nowadays, so:
->
-
-I can understand. After this patch applied, I did hit an issue with
-timer registration. I just posted a patch [1]
-
->>
->> Cc: Liviu Dudau <liviu.dudau@arm.com>
-> 
-> Acked-by: Liviu Dudau <liviu.dudau@arm.com>
-> 
-
-Thanks for all the acks.
-
--- 
-Regards,
-Sudeep
-
-[1]
-https://lkml.kernel.org/r/1525881728-4858-1-git-send-email-sudeep.holla@arm.com
+RnJvbTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KClRoaXMgcGF0Y2gg
+YWRkcyBzdXBwb3J0IGZvciBETEMgRExDMDcwMFlaRy0xIDEwMjR4NjAwIExWRFMgcGFuZWxzCnRv
+IHRoZSBzaW1wbGUtcGFuZWwgZHJpdmVyLgoKU2lnbmVkLW9mZi1ieTogUGhpbGlwcCBaYWJlbCA8
+cC56YWJlbEBwZW5ndXRyb25peC5kZT4KW20uZmVsc2NoQHBlbmd1dHJvbml4LmRlOiBmaXggdHlw
+byBpbiBjb21wYXRpYmxlIGR0LWJpbmRpbmddClNpZ25lZC1vZmYtYnk6IE1hcmNvIEZlbHNjaCA8
+bS5mZWxzY2hAcGVuZ3V0cm9uaXguZGU+Ci0tLQogLi4uL2Rpc3BsYXkvcGFuZWwvZGxjLGRsYzA3
+MDB5emctMS50eHQgICAgICAgIHwgIDcgKysrKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVs
+LXNpbXBsZS5jICAgICAgICAgIHwgMzIgKysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFu
+Z2VkLCAzOSBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvZGxjLGRsYzA3MDB5emctMS50eHQKCmRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
+bC9kbGMsZGxjMDcwMHl6Zy0xLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3BhbmVsL2RsYyxkbGMwNzAweXpnLTEudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0
+CmluZGV4IDAwMDAwMDAwMDAwMC4uM2NmYWZlMjZlYjM1Ci0tLSAvZGV2L251bGwKKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvZGxjLGRsYzA3MDB5
+emctMS50eHQKQEAgLTAsMCArMSw3IEBACitETEMgRGlzcGxheSBDby4gRExDMDcwMFlaRy0xIDcu
+MCIgV1NWR0EgVEZUIExDRCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRp
+YmxlOiBzaG91bGQgYmUgImRsYyxkbGMwNzAweXpnLTEiCisKK1RoaXMgYmluZGluZyBpcyBjb21w
+YXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQK
+K2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwv
+cGFuZWwtc2ltcGxlLmMKaW5kZXggY2JmMWFiNDA0ZWU3Li5hOTE2NzU0YjJhZmEgMTAwNjQ0Ci0t
+LSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYworKysgYi9kcml2ZXJzL2dw
+dS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKQEAgLTg1Nyw2ICs4NTcsMzUgQEAgc3RhdGljIGNv
+bnN0IHN0cnVjdCBwYW5lbF9kZXNjIGNodW5naHdhX2NsYWExMDF3YjAxID0gewogCX0sCiB9Owog
+CitzdGF0aWMgY29uc3Qgc3RydWN0IGRpc3BsYXlfdGltaW5nIGRsY19kbGMwNzAweXpnXzFfdGlt
+aW5nID0geworCS5waXhlbGNsb2NrID0geyA0NTAwMDAwMCwgNTEyMDAwMDAsIDU3MDAwMDAwIH0s
+CisJLmhhY3RpdmUgPSB7IDEwMjQsIDEwMjQsIDEwMjQgfSwKKwkuaGZyb250X3BvcmNoID0geyAx
+MDAsIDEwNiwgMTEzIH0sCisJLmhiYWNrX3BvcmNoID0geyAxMDAsIDEwNiwgMTEzIH0sCisJLmhz
+eW5jX2xlbiA9IHsgMTAwLCAxMDgsIDExNCB9LAorCS52YWN0aXZlID0geyA2MDAsIDYwMCwgNjAw
+IH0sCisJLnZmcm9udF9wb3JjaCA9IHsgOCwgMTEsIDE1IH0sCisJLnZiYWNrX3BvcmNoID0geyA4
+LCAxMSwgMTUgfSwKKwkudnN5bmNfbGVuID0geyA5LCAxMywgMTUgfSwKKwkuZmxhZ3MgPSBESVNQ
+TEFZX0ZMQUdTX0RFX0hJR0gsCit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2Mg
+ZGxjX2RsYzA3MDB5emdfMSA9IHsKKwkudGltaW5ncyA9ICZkbGNfZGxjMDcwMHl6Z18xX3RpbWlu
+ZywKKwkubnVtX3RpbWluZ3MgPSAxLAorCS5icGMgPSA2LAorCS5zaXplID0geworCQkud2lkdGgg
+PSAxNTQsCisJCS5oZWlnaHQgPSA4NiwKKwl9LAorCS5kZWxheSA9IHsKKwkJLnByZXBhcmUgPSAz
+MCwKKwkJLmVuYWJsZSA9IDIwMCwKKwkJLmRpc2FibGUgPSAyMDAsCisJfSwKKwkuYnVzX2Zvcm1h
+dCA9IE1FRElBX0JVU19GTVRfUkdCNjY2XzFYN1gzX1NQV0csCit9OworCiBzdGF0aWMgY29uc3Qg
+c3RydWN0IGRybV9kaXNwbGF5X21vZGUgZWR0X2V0MDU3MDkwZGh1X21vZGUgPSB7CiAJLmNsb2Nr
+ID0gMjUxNzUsCiAJLmhkaXNwbGF5ID0gNjQwLApAQCAtMjEyNCw2ICsyMTUzLDkgQEAgc3RhdGlj
+IGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hbXSA9IHsKIAl9LCB7
+CiAJCS5jb21wYXRpYmxlID0gImNodW5naHdhLGNsYWExMDF3YjAxIiwKIAkJLmRhdGEgPSAmY2h1
+bmdod2FfY2xhYTEwMXdiMDEKKwl9LCB7CisJCS5jb21wYXRpYmxlID0gImRsYyxkbGMwNzAweXpn
+LTEiLAorCQkuZGF0YSA9ICZkbGNfZGxjMDcwMHl6Z18xLAogCX0sIHsKIAkJLmNvbXBhdGlibGUg
+PSAiZWR0LGV0MDU3MDkwZGh1IiwKIAkJLmRhdGEgPSAmZWR0X2V0MDU3MDkwZGh1LAotLSAKMi4x
+Ny4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
