@@ -1,20 +1,18 @@
 From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH 3/4] dt-bindings: rtc: update stm32-rtc documentation for
- st,syscfg property
-Date: Wed, 9 May 2018 07:21:00 +0000
-Message-ID: <bf861b1b-5a55-e144-5999-b41d9d2cea8b@st.com>
-References: <1524144103-21432-1-git-send-email-amelie.delaunay@st.com>
- <1524144103-21432-4-git-send-email-amelie.delaunay@st.com>
- <20180427025803.mn32y5xle2p6knn6@rob-hp-laptop>
- <20180503205351.GE10960@piout.net>
- <a2cbe252-c957-103d-aae1-4a8fce9116fa@st.com>
+Subject: Re: [PATCH 2/3] dt-bindings: rtc: update stm32-rtc documentation for
+ stm32mp1 rtc
+Date: Wed, 9 May 2018 07:25:53 +0000
+Message-ID: <4fed55d0-95a2-c6cc-8812-7aea214d39e4@st.com>
+References: <1524144845-23016-1-git-send-email-amelie.delaunay@st.com>
+ <1524144845-23016-3-git-send-email-amelie.delaunay@st.com>
+ <20180427030140.nmlqmpewqatabnmt@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <a2cbe252-c957-103d-aae1-4a8fce9116fa@st.com>
+In-Reply-To: <20180427030140.nmlqmpewqatabnmt@rob-hp-laptop>
 Content-Language: en-US
-Content-ID: <8813105358D8D047AEABABC37D977E2C@st.com>
+Content-ID: <CA1470BDC1991D428DCA67E0059AAD01@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,56 +22,100 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexandre TORGUE <alexandre.torgue@st.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCk9uIDA1LzA0LzIwMTggMDk6NDAgQU0sIEFsZXhhbmRyZSBUb3JndWUgd3JvdGU6DQo+
-IEhpIEFsZXhhbmRyZSwNCj4gDQo+IE9uIDA1LzAzLzIwMTggMTA6NTMgUE0sIEFsZXhhbmRyZSBC
-ZWxsb25pIHdyb3RlOg0KPj4gQW1lbGllLA0KPj4NCj4+IE9uIDI2LzA0LzIwMTggMjE6NTg6MDMt
-MDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+Pj4gT24gVGh1LCBBcHIgMTksIDIwMTggYXQgMDM6
-MjE6NDJQTSArMDIwMCwgQW1lbGllIERlbGF1bmF5IHdyb3RlOg0KPj4+PiBSVEMgZHJpdmVyIHNo
-b3VsZCBub3QgYmUgYXdhcmUgb2YgdGhlIFBXUiByZWdpc3RlcnMgb2Zmc2V0IGFuZCBiaXRzDQo+
-Pj4+IHBvc2l0aW9uLiBGdXJ0aGVybW9yZSwgd2UgY2FuIGltYWdpbmUgdGhhdCBEaXNhYmxlIEJh
-Y2t1cCBQcm90ZWN0aW9uIA0KPj4+PiAoREJQKQ0KPj4+PiByZWxhdGl2ZSByZWdpc3RlciBhbmQg
-Yml0IG1hc2sgY291bGQgY2hhbmdlIGRlcGVuZGluZyBvbiB0aGUgU29DLiBTbyANCj4+Pj4gdGhp
-cw0KPj4+PiBwYXRjaCBtb3ZlcyBzdCxzeXNjZmcgcHJvcGVydHkgZnJvbSBzaW5nbGUgcHdyY2Zn
-IHBoYW5kbGUgdG8gcHdyY2ZnDQo+Pj4+IHBoYW5kbGUvb2Zmc2V0L21hc2sgdHJpcGxldC4NCj4+
-Pj4NCj4+Pj4gU2lnbmVkLW9mZi1ieTogQW1lbGllIERlbGF1bmF5IDxhbWVsaWUuZGVsYXVuYXlA
-c3QuY29tPg0KPj4+PiAtLS0NCj4+Pj4gwqAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3J0Yy9zdCxzdG0zMi1ydGMudHh0IHwgMTAgDQo+Pj4+ICsrKysrKy0tLS0NCj4+Pj4gwqAg
-MSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4+Pj4NCj4+
-Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ydGMvc3Qs
-c3RtMzItcnRjLnR4dCANCj4+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cnRjL3N0LHN0bTMyLXJ0Yy50eHQNCj4+Pj4gaW5kZXggYTY2NjkyYS4uMDBmOGI1ZCAxMDA2NDQN
-Cj4+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0Yy9zdCxzdG0z
-Mi1ydGMudHh0DQo+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9y
-dGMvc3Qsc3RtMzItcnRjLnR4dA0KPj4+PiBAQCAtMTQsOCArMTQsMTAgQEAgUmVxdWlyZWQgcHJv
-cGVydGllczoNCj4+Pj4gwqDCoMKgwqDCoCBJdCBpcyByZXF1aXJlZCBvbmx5IG9uIHN0bTMyaDcu
-DQo+Pj4+IMKgIC0gaW50ZXJydXB0LXBhcmVudDogcGhhbmRsZSBmb3IgdGhlIGludGVycnVwdCBj
-b250cm9sbGVyLg0KPj4+PiDCoCAtIGludGVycnVwdHM6IHJ0YyBhbGFybSBpbnRlcnJ1cHQuDQo+
-Pj4+IC0tIHN0LHN5c2NmZzogcGhhbmRsZSBmb3IgcHdyY2ZnLCBtYW5kYXRvcnkgdG8gZGlzYWJs
-ZS9lbmFibGUgYmFja3VwIA0KPj4+PiBkb21haW4NCj4+Pj4gLcKgIChSVEMgcmVnaXN0ZXJzKSB3
-cml0ZSBwcm90ZWN0aW9uLg0KPj4+PiArLSBzdCxzeXNjZmc6IHBoYW5kbGUvb2Zmc2V0L21hc2sg
-dHJpcGxldC4gVGhlIHBoYW5kbGUgdG8gcHdyY2ZnIA0KPj4+PiB1c2VkIHRvDQo+Pj4+ICvCoCBh
-Y2Nlc3MgY29udHJvbCByZWdpc3RlciBhdCBvZmZzZXQsIGFuZCBjaGFuZ2UgdGhlIGRicCAoRGlz
-YWJsZSANCj4+Pj4gQmFja3VwDQo+Pj4+ICvCoCBQcm90ZWN0aW9uKSBiaXQgcmVwcmVzZW50ZWQg
-YnkgdGhlIG1hc2ssIG1hbmRhdG9yeSB0byANCj4+Pj4gZGlzYWJsZS9lbmFibGUgYmFja3VwDQo+
-Pj4+ICvCoCBkb21haW4gKFJUQyByZWdpc3RlcnMpIHdyaXRlIHByb3RlY3Rpb24uDQo+Pj4NCj4+
-PiBJdCdzIGZpbmUgdG8gYWRkIHRoaXMsIGJ1dCB5b3UgYXJlIGJyZWFraW5nIGNvbXBhdGliaWxp
-dHkgaW4gdGhlIGRyaXZlcg0KPj4+IHdpdGggZXhpc3RpbmcgRFRCcyBieSByZXF1aXJpbmcgdGhl
-c2UgbmV3IGZpZWxkcy4NCj4+Pg0KPj4NCj4+IEknbSBmaW5lIHdpdGggdGhhdCBjaGFuZ2UgYnV0
-IEkgd291bGQgbGlrZSBjb25maXJtYXRpb24gdGhhdCB0aGlzIGhhcw0KPj4gYmVlbiB3ZWxsIHRo
-b3VnaHQuIE1heWJlIE1heGltZSBvciBBbGV4YW5kcmUgY291bGQgZ2l2ZSB0aGVpciBhY2suDQo+
-Pg0KPiANCj4gSXQncyBhIGdvb2QgdGhpbmcgdG8gcmVtb3ZlIFBXUiByZWdpc3RlcnMgaW5mb3Jt
-YXRpb24gZnJvbSBSVEMgZHJpdmVyLiANCj4gTXkgb25seSBjb25jZXJuIHdhcyB0aGUgY29tcGF0
-aWJpbGl0eSB3aXRoIG9sZCBEVCBidXQgd2UgY2FuIGFjY2VwdCBpdC4gDQo+IEluZGVlZCwgS2Vy
-bmVsIHdpbGwgY29udGludWUgdG8gYm9vdCBmaW5lLCBvbmx5IFJUQyB3aWxsIG5vdCBwcm9iZSBp
-ZiB3ZSANCj4gdXNlIG9sZCBEVC4NCj4gDQo+IEFja2VkLWJ5OiBBbGV4YW5kcmUgVE9SR1VFIDxh
-bGV4YW5kcmUudG9yZ3VlQHN0LmNvbT4NCj4gDQo+IFJlZ2FyZHMNCj4gYWxleA0KDQpJIGFtIGdv
-aW5nIHRvIHNlbmQgYSBzZXJpZXMgdG8gdXBkYXRlIHN0LHN5c2NmZyBwcm9wZXJ0eSBpbiANCnN0
-bTMyZjQyOS9zdG0zMmY3NDYvc3RtMzJoNzQzIFJUQyBub2RlLg0KDQpUaGFua3MsDQpBbWVsaWUK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
-LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
-cm5lbAo=
+
+
+On 04/27/2018 05:01 AM, Rob Herring wrote:
+> On Thu, Apr 19, 2018 at 03:34:04PM +0200, Amelie Delaunay wrote:
+>> RTC embedded in stm32mp1 SoC is slightly different from stm32h7 one, it
+>> doesn't require to disable backup domain write protection, and rtc_ck
+>> parent clock assignment isn't allowed.
+>> To sum up, stm32mp1 RTC requires 2 clocks, pclk and rtc_ck, and an RTC
+>> alarm interrupt.
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+>> ---
+>>   .../devicetree/bindings/rtc/st,stm32-rtc.txt       | 27 +++++++++++++++++-----
+>>   1 file changed, 21 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+>> index 00f8b5d..f1c2080 100644
+>> --- a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+>> +++ b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+>> @@ -1,25 +1,31 @@
+>>   STM32 Real Time Clock
+>>   
+>>   Required properties:
+>> -- compatible: can be either "st,stm32-rtc" or "st,stm32h7-rtc", depending on
+>> -  the device is compatible with stm32(f4/f7) or stm32h7.
+>> +- compatible: can be "st,stm32-rtc", "st,stm32h7-rtc" or "st,stm32mp1-rtc",
+>> +	      depending on the device is compatible with stm32(f4/f7), stm32h7
+>> +	      or stm32mp1.
+> 
+> One compatible per line please.
+> 
+>>   - reg: address range of rtc register set.
+>>   - clocks: can use up to two clocks, depending on part used:
+>>     - "rtc_ck": RTC clock source.
+>> -    It is required on stm32(f4/f7) and stm32h7.
+>> +    It is required on stm32(f4/f7/h7/mp1).
+> 
+> IOW, required for all?
+> 
+
+Yes, so, I'll remove the comment as it is required for all.
+
+>>     - "pclk": RTC APB interface clock.
+>>       It is not present on stm32(f4/f7).
+>> -    It is required on stm32h7.
+>> +    It is required on stm32(h7/mp1).
+>>   - clock-names: must be "rtc_ck" and "pclk".
+>> -    It is required only on stm32h7.
+>> +    It is required on stm32(h7/mp1).
+>>   - interrupt-parent: phandle for the interrupt controller.
+>> +    It is required on stm32(f4/f7/h7).
+>>   - interrupts: rtc alarm interrupt.
+>> +- interrupts-extended: replace interrupts property on stm32mp1, to specify rtc
+>> +  alarm wakeup interrupt, which is on exti interrupt controller instead of gic.
+>> +    It is required on stm32mp1.
+> 
+> Just document 'interrupts'. interrupts-extended is implicitly supported
+> and what the interrupts are connected to is outside the scope of this
+> binding.
+> 
+
+OK, I'll clean this.
+
+>>   - st,syscfg: phandle/offset/mask triplet. The phandle to pwrcfg used to
+>>     access control register at offset, and change the dbp (Disable Backup
+>>     Protection) bit represented by the mask, mandatory to disable/enable backup
+>>     domain (RTC registers) write protection.
+>> +    It is required on stm32(f4/f7/h7).
+>>   
+>> -Optional properties (to override default rtc_ck parent clock):
+>> +Optional properties (to override default rtc_ck parent clock on stm32(f4/f7/h7):
+>>   - assigned-clocks: reference to the rtc_ck clock entry.
+>>   - assigned-clock-parents: phandle of the new parent clock of rtc_ck.
+>>   
+>> @@ -48,3 +54,12 @@ Example:
+>>   		interrupt-names = "alarm";
+>>   		st,syscfg = <&pwrcfg 0x00 0x100>;
+>>   	};
+>> +
+>> +	rtc: rtc@5c004000 {
+>> +		compatible = "st,stm32mp1-rtc";
+>> +		reg = <0x5c004000 0x400>;
+>> +		clocks = <&rcc RTCAPB>, <&rcc RTC>;
+>> +		clock-names = "pclk", "rtc_ck";
+>> +		interrupts-extended = <&intc GIC_SPI 3 IRQ_TYPE_NONE>,
+>> +				      <&exti 19 1>;
+>> +	};
+>> -- 
+>> 2.7.4
+>>
+
+Thanks,
+Amelie
