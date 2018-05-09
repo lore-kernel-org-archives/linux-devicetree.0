@@ -1,49 +1,168 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH] dt-bindings: Add vendor prefix for Avnet, Inc.
-Date: Wed, 9 May 2018 08:22:34 +0200
-Message-ID: <47d7a8d3-ea6e-200d-2426-d0fe3671196a@xilinx.com>
-References: <d860eb7551e343fa59b77fd3e144a633186a8378.1525249073.git.michal.simek@xilinx.com>
- <20180507204937.GA21052@rob-hp-laptop>
- <933bb0a1-2ea2-3f23-492e-56805a804300@suse.de>
+From: Yao Chen <chenyao11@huawei.com>
+Subject: Re: [PATCH] Kirin-PCIe: Add kirin pcie msi feature.
+Date: Wed, 9 May 2018 14:28:52 +0800
+Message-ID: <a9f05f3d-9c5c-472b-73be-f37c41bd71be@huawei.com>
+References: <1525763028-107417-1-git-send-email-chenyao11@huawei.com>
+ <20180508125658.GK161390@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <933bb0a1-2ea2-3f23-492e-56805a804300@suse.de>
+In-Reply-To: <20180508125658.GK161390@bhelgaas-glaptop.roam.corp.google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Rob Herring <robh@kernel.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, Thierry Reding <treding@nvidia.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, SZ Lin <sz.lin@moxa.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: songxiaowei@hisilicon.com, wangbinghui@hisilicon.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dimitrysh@google.com, guodong.xu@linaro.org, Stanimir Varbanov <svarbanov@mm-sol.com>, Jianguo Sun <sunjianguo1@huawei.com>, Shawn Guo <shawn.guo@linaro.org>, suzhuangluan@hisilicon.com, kongfei@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 8.5.2018 14:15, Andreas Färber wrote:
-> Hi Michal,
+
+On 2018/5/8 20:56, Bjorn Helgaas wrote:
+> [+cc Stanimir, Jianguo, Shawn for qcom, histb comments below]
 > 
-> Am 07.05.2018 um 22:49 schrieb Rob Herring:
->> On Wed, May 02, 2018 at 10:17:57AM +0200, Michal Simek wrote:
->>> "Avnet, Inc. is one of the world's largest distributors of electronic
->>> components and embedded solutions." - Wikipedia.org
->>>
->>> Website: www.avnet.com
->>>
->>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->>> ---
->>>
->>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>>  1 file changed, 1 insertion(+)
+> On Tue, May 08, 2018 at 03:03:48PM +0800, Yao Chen wrote:
+>> This patch adds kirin pcie msi feature.
+> 
+> Thanks for the patch!  Please update your subject and changelog like this:
+> 
+>   PCI: kirin: Add MSI support
+> 
+>   Add support for MSI.
+> 
+> You can figure out what style to use for the subject by running:
+> 
+>   git log --oneline drivers/pci/dwc/pcie-kirin.c
+> 
+> Then follow the existing style.
+> 
+
+Ok, I will update the style of subject and changelog.
+
+>> Signed-off-by: Yao Chen <chenyao11@huawei.com>
+>> ---
+>>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi |  2 ++
+>>  drivers/pci/dwc/pcie-kirin.c              | 38 +++++++++++++++++++++++++++++++
+>>  2 files changed, 40 insertions(+)
 >>
->> Applied.
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>> index ec3eb8e..4ef684f 100644
+>> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>> @@ -872,6 +872,8 @@
+>>  				  0x0 0x02000000>;
+>>  			num-lanes = <1>;
+>>  			#interrupt-cells = <1>;
+>> +			interrupts = <0 283 4>;
+>> +			interrupts-names = "msi";
+>>  			interrupt-map-mask = <0xf800 0 0 7>;
+>>  			interrupt-map = <0x0 0 0 1
+>>  					 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
+>> diff --git a/drivers/pci/dwc/pcie-kirin.c b/drivers/pci/dwc/pcie-kirin.c
+>> index d2970a0..2319c9c 100644
+>> --- a/drivers/pci/dwc/pcie-kirin.c
+>> +++ b/drivers/pci/dwc/pcie-kirin.c
+>> @@ -426,9 +426,28 @@ static int kirin_pcie_establish_link(struct pcie_port *pp)
+>>  	return 0;
+>>  }
+>>  
+>> +static irqreturn_t kirin_pcie_msi_irq_handler(int irq, void *arg)
+>> +{
+>> +	struct pcie_port *pp = arg;
+>> +
+>> +	return dw_handle_msi_irq(pp);
+>> +}
+>> +
+>> +static void kirin_pcie_msi_init(struct pcie_port *pp)
+>> +{
+>> +	dw_pcie_msi_init(pp);
+>> +}
+>> +
+>> +static void kirin_pcie_enable_interrupts(struct pcie_port *pp)
+>> +{
+>> +	if (IS_ENABLED(CONFIG_PCI_MSI))
+>> +		kirin_pcie_msi_init(pp);
+>> +}
+>> +
+>>  static int kirin_pcie_host_init(struct pcie_port *pp)
+>>  {
+>>  	kirin_pcie_establish_link(pp);
+>> +	kirin_pcie_enable_interrupts(pp);
+>>  
+>>  	return 0;
+>>  }
+>> @@ -448,6 +467,25 @@ static int kirin_pcie_host_init(struct pcie_port *pp)
+>>  static int __init kirin_add_pcie_port(struct dw_pcie *pci,
+>>  				      struct platform_device *pdev)
+>>  {
+>> +	int ret;
+>> +
+>> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+>> +		pci->pp.msi_irq = platform_get_irq(pdev, 0);
+>> +		if (!pci->pp.msi_irq) {
+>> +			dev_err(&pdev->dev, "failed to get msi irq\n");
 > 
-> What is this standalone patch needed for? Looks fine, but it doesn't
-> appear to be part of a series using it - is it for board compatibles?
+> s/msi irq/MSI IRQ/
+> 
+>> +			return -ENODEV;
+>> +		}
+>> +		ret = devm_request_irq(&pdev->dev, pci->pp.msi_irq,
+>> +				       kirin_pcie_msi_irq_handler,
+>> +				       IRQF_SHARED | IRQF_NO_THREAD,
+>> +				       "kirin_pcie_msi", &pci->pp);
+>> +		if (ret) {
+>> +			dev_err(&pdev->dev, "failed to request msi irq\n");
+> 
+> s/msi irq/MSI IRQ/
+> Also, please include the IRQ number (pci->pp.msi_irq) in the message.
+> 
+Ok, I will add msi_irq message.
 
-This file is used by other projects but that's just side note.
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	pci->pp.root_bus_nr = -1;
+> 
+> Setting root_bus_nr looks like an unrelated change that should be in a
+> separate patch.
+> 
+> But I'm not sure why you need to set root_bus_nr at all, since
+> dw_pcie_host_init() always sets it.
+> 
+> Some other callers of dw_pcie_host_init() do set it:
+> 
+>   exynos_add_pcie_port()
+>   imx6_add_pcie_port()
+>   armada8k_add_pcie_port()
+>   artpec6_add_pcie_port()
+>   dw_plat_add_pcie_port()
+>   histb_pcie_probe()
+>   qcom_pcie_probe()
+>   spear13xx_add_pcie_port()
+> 
+> But I don't see *why* any of these need to set it.  If they don't need to
+> set it, they shouldn't.
+> 
+> And it would be nice if histb and qcom followed the structure and naming
+> conventions of the other drivers, i.e., they should have
+> histb_add_pcie_port() and qcom_add_pcie_port().
+> 
 
-I have sent a patch which uses that separately because it will be
-applied separately out of this patch.
-https://patchwork.kernel.org/patch/10375553/
+You're right, "pci->pp.root_bus_nr = -1;" is truly unnecessary. I will delete it.
 
+>>  	pci->pp.ops = &kirin_pcie_host_ops;
+>>  
+>>  	return dw_pcie_host_init(&pci->pp);
+>> -- 
+>> 1.9.1
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+> .
+> 
 Thanks,
-Michal
+Yao
