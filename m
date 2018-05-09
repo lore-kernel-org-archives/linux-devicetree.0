@@ -1,32 +1,37 @@
-From: James Morris <jmorris@namei.org>
-Subject: Re: [PATCH v2 11/11] docs: fix broken references with multiple
- hints
-Date: Thu, 10 May 2018 05:22:44 +1000 (AEST)
-Message-ID: <alpine.LRH.2.21.1805100522240.12749@namei.org>
-References: <cover.1525870886.git.mchehab+samsung@kernel.org> <63a4f8a93f9115475bc184d0f37d076c9b9c75ff.1525870886.git.mchehab+samsung@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Relicense Asus RT-AC87U file to the
+ GPL 2.0+ / MIT
+Date: Wed,  9 May 2018 12:26:59 -0700
+Message-ID: <20180509192659.32382-1-f.fainelli@gmail.com>
+References: <20180504100324.31847-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <63a4f8a93f9115475bc184d0f37d076c9b9c75ff.1525870886.git.mchehab+samsung@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harry Wei <harryxiyou@gmail.com>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Roy Pledge <Roy.Pledge@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, "Serge E. Hallyn" <serge@hallyn.com>, linux-gpio@vger.kernel.org, dri-devel@lists.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180504100324.31847-1-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: bcm-kernel-feedback-list@broadcom.com, =?iso-8859-2?q?Rafa=B3_Mi=B3ecki?= <zajec5@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, =?iso-8859-1?q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Rob Herring <robh+dt@kernel.org>, =?iso-8859-2?q?Rafa=B3_Mi=B3ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 9 May 2018, Mauro Carvalho Chehab wrote:
-
-> The script:
-> 	./scripts/documentation-file-ref-check --fix-rst
-> 
-> Gives multiple hints for broken references on some files.
-> Manually use the one that applies for some files.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
-
-Acked-by: James Morris <james.morris@microsoft.com>
-
-
--- 
-James Morris
-<jmorris@namei.org>
+T24gRnJpLCAgNCBNYXkgMjAxOCAxMjowMzoyNCArMDIwMCwgUmFmYcWCIE1pxYJlY2tpIDx6YWpl
+YzVAZ21haWwuY29tPiB3cm90ZToKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
+a2kucGw+Cj4gCj4gVGhpcyBtYXRjaGVzIGxpY2Vuc2luZyB1c2VkIGJ5IG90aGVyIEJDTTUzMDFY
+IGZpbGVzIGFuZCBpcyBwcmVmZXJyZWQgYXM6Cj4gMSkgR1BMIDIuMCsgbWFrZXMgaXMgY2xlYXJs
+eSBjb21wYXRpYmxlIHdpdGggTGludXgga2VybmVsCj4gMikgTUlUIGlzIGFsc28gcGVybWlzc2l2
+ZSBidXQgcHJlZmVycmVkIG92ZXIgSVNDCj4gCj4gVGhpcyBmaWxlIHdlcmUgY3JlYXRlZCBhbmQg
+ZXZlciB0b3VjaGVkIGJ5IGEgZ3JvdXAgb2YgdGhyZWUgcGVvcGxlIG9ubHk6Cj4gw4FsdmFybywg
+SGF1a2UgYW5kIG1lLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFJhZmHFgiBNacWCZWNraSA8cmFmYWxA
+bWlsZWNraS5wbD4KPiAtLS0KCkFwcGxpZWQgdG8gZGV2aWNldHJlZS9uZXh0LCB0aGFua3MhCi0t
+CkZsb3JpYW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LWFybS1rZXJuZWwK
