@@ -1,13 +1,11 @@
 From: Marco Felsch <m.felsch@pengutronix.de>
 Subject: [PATCH v2 0/2] gpu: drm/panel: Add DLC DLC0700YZG-1 support
-Date: Wed,  9 May 2018 16:59:37 +0200
-Message-ID: <20180509145939.4140-4-m.felsch@pengutronix.de>
-References: <20180509145939.4140-1-m.felsch@pengutronix.de>
+Date: Wed,  9 May 2018 16:59:34 +0200
+Message-ID: <20180509145939.4140-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180509145939.4140-1-m.felsch@pengutronix.de>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
