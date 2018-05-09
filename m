@@ -1,63 +1,36 @@
-From: Amit Nischal <anischal@codeaurora.org>
-Subject: Re: [PATCH v1 0/2] Add QCOM video clock controller driver
-Date: Wed, 09 May 2018 17:09:54 +0530
-Message-ID: <b82e7d0b1b56398672f2cba8dcdeb620@codeaurora.org>
-References: <1525350925-16006-1-git-send-email-anischal@codeaurora.org>
- <152545146453.138124.2471609033510400995@swboyd.mtv.corp.google.com>
- <09ac2bd5eab25cfc70a1c5dc7b0f90ed@codeaurora.org>
- <20180507171121.GA22656@rob-hp-laptop>
- <8ac8a361a7dc69cce1e7498f1473bad8@codeaurora.org>
- <CAL_JsqL3wz_Y0Qp7Z8-JjkFGegKLFOUscJgGp+XO-Lm52iN2Vg@mail.gmail.com>
- <152581050735.138124.795656319855957213@swboyd.mtv.corp.google.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH] usb: gadget: composite: fill bcdUSB as 0x0320 for SuperSpeed or higher speeds
+Date: Wed, 9 May 2018 19:29:16 +0800
+Message-ID: <69cc710fa8b7d18c494c9f482fd2b8e6fb7c0c94.1525865206.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152581050735.138124.795656319855957213@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-05-09 01:45, Stephen Boyd wrote:
-> Quoting Rob Herring (2018-05-08 05:48:07)
->> On Mon, May 7, 2018 at 11:53 PM, Amit Nischal 
->> <anischal@codeaurora.org> wrote:
->> > On 2018-05-07 22:41, Rob Herring wrote:
->> >>
->> >> On Mon, May 07, 2018 at 04:16:53PM +0530, Amit Nischal wrote:
->> >>>
->> >>> On 2018-05-04 22:01, Stephen Boyd wrote:
->> >>> > Quoting Amit Nischal (2018-05-03 05:35:23)
->> >>> > > Changes in v1:
->> >>> > >    https://lkml.org/lkml/2018/4/24/545
->> >>> > > Addressed below review comments given by Rob
->> >>> > > - Change the compatible property as per '<vendor>,<soc>-<block>'
->> >>> > > format.
->> >>> > > - Add header definitions for resets and power-domain cells.
->> >>> >
->> >>> > You didn't add any reset definitions though?
->> >>>
->> >>> We haven't added the reset definitions for videocc as there is no
->> >>> video reset client.
->> >>
->> >>
->> >> So? You don't know what resets there are?
->> >>
->> >
->> > We know the resets, but video driver doesn't do any block resets
->> > prior to accessing the video subsystem so that's the reason we do
->> > not want to expose the resets in videocc driver.
->> 
->> Bindings don't have to match what drivers currently use but should be
->> complete as possible.
-> 
-> Right. Please add the #defines in the header file for the resets. You
-> can leave them out of the driver if you really want to, but typically 
-> we
-> still add them and then rely on not touching them if they shouldn't be
-> used.
+The USB3CV version 2.1.80 (March 26, 2018) requires all devices
+( gen1, gen2, single lane, dual lane) to return the value of 0x0320
+in the bcdUSB field
 
-Thanks for the suggestion.
-I will add the videocc resets in the header file.
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ drivers/usb/gadget/composite.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
+index 63a7cb8..f242c2b 100644
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -1601,7 +1601,7 @@ static int fill_ext_prop(struct usb_configuration *c, int interface, u8 *buf)
+ 				cdev->gadget->ep0->maxpacket;
+ 			if (gadget_is_superspeed(gadget)) {
+ 				if (gadget->speed >= USB_SPEED_SUPER) {
+-					cdev->desc.bcdUSB = cpu_to_le16(0x0310);
++					cdev->desc.bcdUSB = cpu_to_le16(0x0320);
+ 					cdev->desc.bMaxPacketSize0 = 9;
+ 				} else {
+ 					cdev->desc.bcdUSB = cpu_to_le16(0x0210);
+-- 
+1.9.1
