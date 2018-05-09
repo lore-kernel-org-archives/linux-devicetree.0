@@ -1,106 +1,31 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH V2 1/2] dt-bindings: mtd: document Broadcom's BCM47xx
- partitions
-Date: Wed,  9 May 2018 10:17:28 +0200
-Message-ID: <20180509081729.28347-1-zajec5@gmail.com>
+From: Yao Chen <chenyao11@huawei.com>
+Subject: [PATCH v2 0/2] Add MSI support
+Date: Wed, 9 May 2018 16:20:10 +0800
+Message-ID: <1525854012-24228-1-git-send-email-chenyao11@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Jonas Gorski <jonas.gorski@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: songxiaowei@hisilicon.com, wangbinghui@hisilicon.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: dimitrysh@google.com, guodong.xu@linaro.org, chenyao11@huawei.com, suzhuangluan@hisilicon.com, kongfei@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKQnJvYWRjb20gYmFzZWQg
-aG9tZSByb3V0ZXIgZGV2aWNlcyB1c2UgcGFydGl0aW9ucyB3aGljaCBoYXZlIHRvIGJlCmRpc2Nv
-dmVyZWQgaW4gYSBzcGVjaWZpYyB3YXkuIFRoZXkgYXJlIG5vdCBmaXhlZCBhbmQgdGhlcmUgaXMg
-bm90IGFueQpzdGFuZGFyZCBwYXJ0aXRpb24gdGFibGUuIFRoaXMgY29tbWl0IGFkZHMgYW5kIGRl
-c2NyaWJlcyBhIG5ldyBjdXN0b20KYmluZGluZyBmb3Igc3VjaCBkZXZpY2VzLgoKU2lnbmVkLW9m
-Zi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgotLS0KVGhpcyBjb21taXQg
-ZG9jdW1lbnRzIGEgbmV3IGJpbmRpbmcgZm9yIGRlc2NyaWJpbmcgcGFydGl0aW9ucy4gSnVzdCBh
-cyBhCnJlbWluZGVyOiB3ZSBhZ3JlZWQgdG8gdXNlICJjb21wYXRpYmxlIiBmb3IgdGhhdCBwdXJw
-b3NlIHRvIGF2b2lkCi9ndWVzc2luZy8uIFRoZXJlIGFyZSB0b28gbWFueSBjYXNlcywgZGV2aWNl
-cyBhbmQgL2Zvcm1hdHMvIHRvIGp1c3QKYmxpbmRseSB0cnkgZXZlcnkgcG9zc2libGUgcGFyc2Vy
-LgoKVGhpcyB3YXMgZS5nLiBkZXNjcmliZWQgYnkgQm9yaXMgaW4gaGlzIHBhdGNoc2V0IDIrIHll
-YXJzIGFnbzoKW1JGQyBQQVRDSCAwLzddIG10ZDogcGFydGl0aW9uczogYWRkIG9mX21hdGNoX3Rh
-YmxlIHN1cHBvcnQKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LW10
-ZC8yMDE1LURlY2VtYmVyLzA2NDA3Ni5odG1sCgpRdW90ZToKPiAgKDIpIHdlIGNhbid0IGp1c3Qg
-c2NhbiBmb3IgYWxsIHN1cHBvcnRlZCBwYXJzZXJzIChsaWtlIHRoZSBibG9jayBzeXN0ZW0gZG9l
-cyksIHNpbmNlCj4gICAgICB0aGVyZSBpcyBhIHdpZGUgZGl2ZXJzaXR5IG9mICJmb3JtYXRzIiAo
-bm8gc3RhbmRhcmRpemF0aW9uKSwgYW5kIGl0IGlzIG5vdAo+ICAgICAgYWx3YXlzIHNhZmUgb3Ig
-ZWZmaWNpZW50IHRvIGF0dGVtcHQgdG8gZG8gc28sIHBhcnRpY3VsYXJseSBzaW5jZSBtYW55IG9m
-Cj4gICAgICB0aGVtIGFsbG93IHRoZWlyIGRhdGEgc3RydWN0dXJlcyB0byBiZSBwbGFjZWQgYW55
-d2hlcmUgb24gdGhlIGZsYXNoLCBhbmQKPiAgICAgIHNvIHJlcXVpcmUgc2Nhbm5pbmcgdGhlIGVu
-dGlyZSBmbGFzaCBkZXZpY2UgdG8gZmluZCB0aGVtLgoKSSBiZWxpZXZlIHRoaXMgc29sdXRpb24g
-d2FzIGFsc28gYWNrZWQgYmFjayB0aGVuIGJ5IFJvYjoKW1JGQyBQQVRDSCAzLzddIGRvYzogZHQ6
-IG10ZDogcGFydGl0aW9uOiBhZGQgb24tZmxhc2ggZm9ybWF0IGJpbmRpbmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LW10ZC8yMDE1LURlY2VtYmVyLzA2NDEwMC5o
-dG1sCgpWMjogTW92ZSBkb2N1bWVudGF0aW9uIHRvIHRoZSBuZXcgYnJjbSxiY205NDd4eC1jZmUt
-cGFydGl0aW9ucy50eHQgZmlsZQogICAgYXMgc3VnZ2VzdGVkIGJ5IFJvYiAod2UgZG9uJ3Qgd2Fu
-dCB0byBibG9hdCBwYXJ0aXRpb24udHh0KS4KICAgIFNsaWdodGx5IHVwZGF0ZSBjb21taXQgbWVz
-c2FnZS4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4dCAgICAg
-ICAgICB8ICAyICstCiAuLi4vcGFydGl0aW9ucy9icmNtLGJjbTk0N3h4LWNmZS1wYXJ0aXRpb25z
-LnR4dCAgICB8IDQyICsrKysrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgNDMg
-aW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9ucy9icmNtLGJjbTk0N3h4LWNm
-ZS1wYXJ0aXRpb25zLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9tdGQvcGFydGl0aW9uLnR4dAppbmRleCAzNmYzYjc2OWE2MjYuLmE4ZjM4MjY0MmJhOSAx
-MDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRp
-b24udHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0
-aW9uLnR4dApAQCAtMTQsNyArMTQsNyBAQCBtZXRob2QgaXMgdXNlZCBmb3IgYSBnaXZlbiBmbGFz
-aCBkZXZpY2UuIFRvIGRlc2NyaWJlIHRoZSBtZXRob2QgdGhlcmUgc2hvdWxkIGJlCiBhIHN1Ym5v
-ZGUgb2YgdGhlIGZsYXNoIGRldmljZSB0aGF0IGlzIG5hbWVkICdwYXJ0aXRpb25zJy4gSXQgbXVz
-dCBoYXZlIGEKICdjb21wYXRpYmxlJyBwcm9wZXJ0eSwgd2hpY2ggaXMgdXNlZCB0byBpZGVudGlm
-eSB0aGUgbWV0aG9kIHRvIHVzZS4KIAotV2UgY3VycmVudGx5IG9ubHkgZG9jdW1lbnQgYSBiaW5k
-aW5nIGZvciBmaXhlZCBsYXlvdXRzLgorQXZhaWxhYmxlIGJpbmRpbmdzIGFyZSBsaXN0ZWQgaW4g
-dGhlICJwYXJ0aXRpb25zIiBzdWJkaXJlY3RvcnkuCiAKIAogRml4ZWQgUGFydGl0aW9ucwpkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb25z
-L2JyY20sYmNtOTQ3eHgtY2ZlLXBhcnRpdGlvbnMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb25zL2JyY20sYmNtOTQ3eHgtY2ZlLXBhcnRpdGlvbnMu
-dHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uMWQ2MWEwMjkzOTVl
-Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210
-ZC9wYXJ0aXRpb25zL2JyY20sYmNtOTQ3eHgtY2ZlLXBhcnRpdGlvbnMudHh0CkBAIC0wLDAgKzEs
-NDIgQEAKK0Jyb2FkY29tIEJDTTQ3eHggUGFydGl0aW9ucworPT09PT09PT09PT09PT09PT09PT09
-PT09PT09CisKK0Jyb2FkY29tIGlzIG9uZSBvZiBoYXJkd2FyZSBtYW51ZmFjdHVyZXJzIHByb3Zp
-ZGluZyBTb0NzIChCQ000N3h4KSB1c2VkIGluCitob21lIHJvdXRlcnMuIFRoZWlyIEJDTTk0N3h4
-IGJvYXJkcyB1c2luZyBDRkUgYm9vdGxvYWRlciBoYXZlIHNldmVyYWwgcGFydGl0aW9ucword2l0
-aG91dCBhbnkgb24tZmxhc2ggcGFydGl0aW9uIHRhYmxlLiBPbiBzb21lIGRldmljZXMgdGhlaXIg
-c2l6ZXMgYW5kL29yCittZWFuaW5ncyBjYW4gYWxzbyB2YXJ5IHNvIGZpeGVkIHBhcnRpdGlvbmlu
-ZyBjYW4ndCBiZSB1c2VkLgorCitEaXNjb3ZlcmluZyBwYXJ0aXRpb25zIG9uIHRoZXNlIGRldmlj
-ZXMgaXMgcG9zc2libGUgdGhhbmtzIHRvIGhhdmluZyBhIHNwZWNpYWwKK2hlYWRlciBhbmQvb3Ig
-bWFnaWMgc2lnbmF0dXJlIGF0IHRoZSBiZWdpbm5pbmcgb2YgZWFjaCBvZiB0aGVtLiBUaGV5IGFy
-ZSBhbHNvCitibG9jayBhbGlnbmVkIHdoaWNoIGlzIGltcG9ydGFudCBmb3IgZGV0ZXJtaW5pZyBh
-IHNpemUuCisKK01vc3Qgb2YgcGFydGl0aW9ucyB1c2UgQVNDSUkgdGV4dCBiYXNlZCBtYWdpYyBm
-b3IgZGV0ZXJtaW5pbmcgYSB0eXBlLiBNb3JlCitjb21wbGV4IHBhcnRpdGlvbnMgKGxpa2UgVFJY
-IHdpdGggaXRzIEhEUjAgbWFnaWMpIG1heSBpbmNsdWRlIGV4dHJhIGhlYWRlcgorY29udGFpbmlu
-ZyBzb21lIGRldGFpbHMsIGluY2x1ZGluZyBhIGxlbmd0aC4KKworQSBsaXN0IG9mIHN1cHBvcnRl
-ZCBwYXJ0aXRpb25zIGluY2x1ZGVzOgorMSkgQm9vdGxvYWRlciB3aXRoIEJyb2FkY29tJ3MgQ0ZF
-IChDb21tb24gRmlybXdhcmUgRW52aXJvbm1lbnQpCisyKSBOVlJBTSB3aXRoIGNvbmZpZ3VyYXRp
-b24vY2FsaWJyYXRpb24gZGF0YQorMykgRGV2aWNlIG1hbnVmYWN0dXJlcidzIGRhdGEgd2l0aCBz
-b21lIGRlZmF1bHQgdmFsdWVzIChlLmcuIFNTSURzKQorNCkgVFJYIGZpcm13YXJlIGNvbnRhaW5l
-ciB3aGljaCBjYW4gaG9sZCB1cCB0byA0IHN1YnBhcnRpdGlvbnMKKzUpIEJhY2t1cCBUUlggZmly
-bXdhcmUgdXNlZCBhZnRlciBmYWlsZWQgdXBncmFkZQorCitBcyBtZW50aW9uZWQgZWFybGllciwg
-cm9sZSBvZiBzb21lIHBhcnRpdGlvbnMgbWF5IGRlcGVuZCBvbiBleHRyYSBjb25maWd1cmF0aW9u
-LgorRm9yIGV4YW1wbGUgYm90aDogbWFpbiBmaXJtd2FyZSBhbmQgYmFja3VwIGZpcm13YXJlIHVz
-ZSB0aGUgc2FtZSBUUlggZm9ybWF0IHdpdGgKK3RoZSBzYW1lIGhlYWRlci4gVG8gZGlzdGluZ3Vp
-c2ggY3VycmVudGx5IHVzZWQgZmlybXdhcmUgYSBDRkUncyBlbnZpcm9ubWVudAordmFyaWFibGUg
-ImJvb3RwYXJ0aXRpb24iIGlzIHVzZWQuCisKKworRGV2aWNlcyB1c2luZyBCcm9hZGNvbSBwYXJ0
-aXRpb25zIGRlc2NyaWJlZCBhYm92ZSBzaG91bGQgc2hvdWxkIGhhdmUgZmxhc2ggbm9kZQord2l0
-aCBhIHN1Ym5vZGUgbmFtZWQgInBhcnRpdGlvbnMiIHVzaW5nIGZvbGxvd2luZyBwcm9wZXJ0aWVz
-OgorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlIDogKHJlcXVpcmVkKSBtdXN0
-IGJlICJicmNtLGJjbTk0N3h4LWNmZS1wYXJ0aXRpb25zIgorCitFeGFtcGxlOgorCitmbGFzaEAw
-IHsKKwlwYXJ0aXRpb25zIHsKKwkJY29tcGF0aWJsZSA9ICJicmNtLGJjbTk0N3h4LWNmZS1wYXJ0
-aXRpb25zIjsKKwl9OworfTsKLS0gCjIuMTMuNgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5n
-IGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1t
-dGQvCg==
+Changes between V2 and V1
+=========================
+1. seperate DT binding patch.
+2. fix issues according to review comments
+   (1)from Bjorn Helgaas: Update the style of subject and changelog.
+   (2)from Bjorn Helgaas: Add msi irq number in the message.
+   (3)from Bjorn Helgaas: Delete unnecessary code 'pci->pp.root_bus_nr = -1'.
+   (4)from Dmitry Shmidt: Fix typing error. Replace 'interrupts-names' of 'interrupt-names'.
+
+Yao Chen (2):
+  PCI: kirin: Add MSI support
+  arm64: dts: hi3660: Add pcie msi interrupt attribute
+
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi |  2 ++
+ drivers/pci/dwc/pcie-kirin.c              | 39 +++++++++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+)
+
+-- 
+1.9.1
