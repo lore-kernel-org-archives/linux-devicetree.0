@@ -1,114 +1,45 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v3] display: panel: Add AUO g070vvn01 display support (800x480)
-Date: Wed,  9 May 2018 17:59:13 +0200
-Message-ID: <20180509155913.7562-1-lukma@denx.de>
-References: <20180410102927.17787-1-lukma@denx.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180410102927.17787-1-lukma@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] arm64: dts: juno: fix OF graph endpoint node names
+Date: Wed, 9 May 2018 17:34:30 +0100
+Message-ID: <e4775e42-fb07-c51c-2698-0bfe6e7b9417@arm.com>
+References: <20180508150952.24562-1-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180508150952.24562-1-robh@kernel.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds support for AUO's 7.0" display.
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
 
----
-Changes for v3:
-- Remove not used 'bus-format-override = "rgb565";' property
+On 08/05/18 16:09, Rob Herring wrote:
+> OF graph endpoint node names should be 'endpoint'. Fix the following
+> warnings found by dtc:
+> 
+> Warning (graph_endpoint): /hdlcd@7ff50000/port/hdlcd1-endpoint: graph endpont node nameshould be 'endpoint'
+> Warning (graph_endpoint): /hdlcd@7ff60000/port/hdlcd0-endpoint: graph endpont node nameshould be 'endpoint'
+> Warning (graph_endpoint): /i2c@7ffa0000/hdmi-transmitter@70/port/tda998x-0-endpoint: graph endpont node name should be 'endpoint'
+> Warning (graph_endpoint): /i2c@7ffa0000/hdmi-transmitter@71/port/tda998x-1-endpoint: graph endpont node name should be 'endpoint'
+> 
+> Cc: Liviu Dudau <liviu.dudau@arm.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Changes for v2:
-- Add *.txt suffix to the auo,g070wn01 file
----
- .../bindings/display/panel/auo,g070vvn01.txt       | 29 ++++++++++++++++++++
- drivers/gpu/drm/panel/panel-simple.c               | 31 ++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt
+Thanks Robs, both patches applied.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt b/Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt
-new file mode 100644
-index 000000000000..49e4105378f6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt
-@@ -0,0 +1,29 @@
-+AU Optronics Corporation 7.0" FHD (800 x 480) TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "auo,g070vvn01"
-+- backlight: phandle of the backlight device attached to the panel
-+- power-supply: single regulator to provide the supply voltage
-+
-+Required nodes:
-+- port: Parallel port mapping to connect this display
-+
-+This panel needs single power supply voltage. Its backlight is conntrolled
-+via PWM signal.
-+
-+Example:
-+--------
-+
-+Example device-tree definition when connected to iMX6Q based board
-+
-+	lcd_panel: lcd-panel {
-+		compatible = "auo,g070vvn01";
-+		backlight = <&backlight_lcd>;
-+		power-supply = <&reg_display>;
-+
-+		port {
-+			lcd_panel_in: endpoint {
-+				remote-endpoint = <&lcd_display_out>;
-+			};
-+		};
-+	};
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index cbf1ab404ee7..d9984bdb5bb5 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -581,6 +581,34 @@ static const struct panel_desc auo_b133htn01 = {
- 	},
- };
- 
-+static const struct display_timing auo_g070vvn01_timings = {
-+	.pixelclock = { 33300000, 34209000, 45000000 },
-+	.hactive = { 800, 800, 800 },
-+	.hfront_porch = { 20, 40, 200 },
-+	.hback_porch = { 87, 40, 1 },
-+	.hsync_len = { 1, 48, 87 },
-+	.vactive = { 480, 480, 480 },
-+	.vfront_porch = { 5, 13, 200 },
-+	.vback_porch = { 31, 31, 29 },
-+	.vsync_len = { 1, 1, 3 },
-+};
-+
-+static const struct panel_desc auo_g070vvn01 = {
-+	.timings = &auo_g070vvn01_timings,
-+	.num_timings = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 152,
-+		.height = 91,
-+	},
-+	.delay = {
-+		.prepare = 200,
-+		.enable = 50,
-+		.disable = 50,
-+		.unprepare = 1000,
-+	},
-+};
-+
- static const struct drm_display_mode auo_g104sn02_mode = {
- 	.clock = 40000,
- 	.hdisplay = 800,
-@@ -2095,6 +2123,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "auo,b133xtn01",
- 		.data = &auo_b133xtn01,
- 	}, {
-+		.compatible = "auo,g070vvn01",
-+		.data = &auo_g070vvn01,
-+	}, {
- 		.compatible = "auo,g104sn02",
- 		.data = &auo_g104sn02,
- 	}, {
 -- 
-2.11.0
+Regards,
+Sudeep
