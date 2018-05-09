@@ -1,56 +1,54 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/2] arm64: dts: renesas: r8a77970: Add SMP Support
-Date: Wed, 9 May 2018 21:08:05 +0200
-Message-ID: <20180509190804.l6luktwhrfeasspc@verge.net.au>
-References: <1525879403-12207-1-git-send-email-geert+renesas@glider.be>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH v2 09/11] docs: Fix some broken references
+Date: Wed, 9 May 2018 15:11:07 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1805091509100.1391-100000@iolanthe.rowland.org>
+References: <20180509152045.722f0c51@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1525879403-12207-1-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xenproject.org>
+In-Reply-To: <20180509152045.722f0c51@vento.lan>
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Jaroslav Kysela <perex@perex.cz>, Eric Paris <eparis@parisplace.org>, linux-clk@vger.kernel.org, James Morris <jmorris@namei.org>, xen-devel@lists.xenproject.org, Boqun Feng <boqun.feng@gmail.com>, Nicholas Piggin <npiggin@gmail.com>, Sean Paul <seanpaul@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Antoine Jacquet <royale@zerezo.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>, linux-crypto@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo@padovan.org>, Max Filippov <jcmvbkbc@gmai>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 09, 2018 at 05:23:21PM +0200, Geert Uytterhoeven wrote:
->         Hi Simon, Magnus,
-> 
-> This patch series enables SMP support on the R-Car V3M SoC, by adding
-> the second Cortex-A53 CPU core.  It also adds the performance monitor
-> unit, and links it to both CPU cores.
-> 
-> Changes compared to v1:
->   - Adjust GIC_CPU_MASK_SIMPLE(),
->   - Use symbolic core clock and power domain indices,
->   - Move the pmu node from the soc subnode to the root node, as it
->     doesn't have registers.
-> 
-> Note that the PSCI implementation on Eagle may be a preliminary version
-> with some familiar quirks:
->   - SMP bringup works, and both CPUs can be used,
->   - Offlining CPU0 crashes the system,
->   - CPU1 can be offlined, but trying to bring it online again crashes
->     the system, too.
-> 
-> I'm confident these will be fixed in future firmware versions, just like
-> on H3/Salvator-X.  Note that
-> git@github.com:renesas-rcar/arm-trusted-firmware.git does not have
-> support for R-Car V3M, V3H, and D3.
-> 
-> Thanks!
-> 
-> Geert Uytterhoeven (2):
->   arm64: dts: renesas: r8a77970: Add secondary CA53 CPU core
->   arm64: dts: renesas: r8a77970: Add Cortex-A53 PMU node
-
-Thanks, applied.
+T24gV2VkLCA5IE1heSAyMDE4LCBNYXVybyBDYXJ2YWxobyBDaGVoYWIgd3JvdGU6Cgo+IEVtIFdl
+ZCwgOSBNYXkgMjAxOCAxOToxNTowMSArMDIwMAo+IEFuZHJlYSBQYXJyaSA8cGFycmkuYW5kcmVh
+QGdtYWlsLmNvbT4gZXNjcmV2ZXU6Cgo+ID4gPiAgdG9vbHMvbWVtb3J5LW1vZGVsL1JFQURNRSAg
+ICAgICAgICAgICAgICAgICAgIHwgMTAgKysrKystLS0tLSAgCj4gPiAKPiA+IEFzIG1lbnRpb25l
+ZCBpbiB0aGUgcHJldmlvdXMgdGhyZWFkLCBJIGFtIGZvciBrZWVwaW5nIHRoZSBjdXJyZW50Cj4g
+PiByZWZlcmVuY2VzOiB0aGUgUkVBTURFIGlzIGxpc3RpbmcgdGhlIGRvYyBmaWxlcywgYXMgd2Vs
+bCBhcyBvdGhlcgo+ID4gZmlsZXMgaW4gdG9vbHMvbWVtb3J5LW1vZGVsLywgcmVsYXRpdmVseSB0
+byB0aGF0IGRpcmVjdG9yeS4KPiAKPiBZZWFoLCBhdCBsZWFzdCB0aGlzIGh1bmsgZGVzZXJ2ZXMg
+c29tZSByZXdvcmssIGFzIG5vdyBzb21lCj4gcmVmZXJlbmNlcyBhcmUgRG9jdW1lbnRhdGlvbi8u
+Li4vZm9vLCB3aGlsZSBvdGhlcnMgYXJlIGp1c3QKPiBiYXIuCj4gCj4gQXMgb24gKGFsbW9zdCkg
+YWxsIG90aGVyIHBsYWNlcyAoZXhjZXB0IGZvciB0b29scy9tZW1vcnktbW9kZWwvUkVBRE1FKSwK
+PiB0aGUgcmVmZXJlbmNlcyBhcmUgYWx3YXlzIGZyb20gdGhlIG1haW4gZGlyZWN0b3J5LCBJIHdv
+dWxkIG1ha2UgYWxsCj4gcGF0Y2hlcyB0aGVyZSBhbHNvIHJlbGF0aXZlIHRvIG1haW4gZGlyLiBJ
+ZiB5b3UncmUgYWZyYWlkIG9mCj4gbm90IGJlaW5nIHRvbyBjbGVhcmVyLCB3ZSBjb3VsZCBwcmVm
+aXggYWxsIG9mIHRoZW0gd2l0aCBzb21ldGhpbmcKPiBsaWtlOgo+IAo+IAkke0xJTlVYfS90b29s
+cy9tZW1vcnktbW9kZWwvLi4uCj4gCj4ganVzdCBsaWtlIHNvbWUgRFQgYmluZGluZyBmaWxlcyBk
+bzoKPiAKPiAJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2F1ZGlvLWdy
+YXBoLWNhcmQudHh0OnNlZSAke0xJTlVYfS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZ3JhcGgudHh0Cj4gCj4gQSBib251cyBvZiBkb2luZyB0aGF0IGlzIHRoYXQgdGhlIGJyb2tl
+biByZWZlcmVuY2UgZGV0ZWN0IHNjcmlwdCBjYW4KPiBrZWVwIHBhcnNpbmcgaXQgd2l0aG91dCBj
+aGFuZ2VzICh3ZWxsLCBpdCB3b3VsZG4ndCBiZSBoYXJkIHRvIG1ha2UKPiBpdCBhbHNvIGFjY2Vw
+dCBhIHJlbGF0aXZlIGZpbGUsIGJ1dCBkb2luZyB0aGF0IGp1c3QgZHVlIHRvIAo+IHRvb2xzL21l
+bW9yeS1tb2RlbC9SRUFETUUgc2VlbXMgb3ZlcmtpbGwpLgo+IAo+IEFub3RoZXIgYWR2YW50YWdl
+IGlzIHRoYXQgaXQgd291bGQgYWxsb3cgdG8gZWFzaWx5IGFkZCByZWZlcmVuY2VzCj4gdGhlcmUg
+ZnJvbSB0aGUgbWFpbiBrZXJuZWwgRG9jdW1lbnRhdGlvbiwgaWYgbmVlZGVkIGluIHRoZSBmdXR1
+cmUsCj4gd2l0aG91dCBtZXNzaW5nIHdpdGggbG9jYWwgeCBub24tbG9jYWwgcmVsYXRpdmUgbmFt
+ZXNwYWNlLgoKSG93IGFib3V0IGNoYW5naW5nIHRoZSByZWxhdGl2ZSByZWZlcmVuY2VzIHNvIHRo
+YXQgc29tZXRoaW5nIGxpa2UKRG9jdW1lbnRhdGlvbi9yZWNpcGVzLnR4dCBiZWNvbWVzIC4vRG9j
+dW1lbnRhdGlvbi9yZWNpcGVzLnR4dD8KCkFsYW4gU3Rlcm4KCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpYZW4tZGV2ZWwgbWFpbGluZyBsaXN0Clhlbi1k
+ZXZlbEBsaXN0cy54ZW5wcm9qZWN0Lm9yZwpodHRwczovL2xpc3RzLnhlbnByb2plY3Qub3JnL21h
+aWxtYW4vbGlzdGluZm8veGVuLWRldmVs
