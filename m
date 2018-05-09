@@ -1,78 +1,61 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Add SC27xx breathing light
- controller documentation
-Date: Wed, 9 May 2018 22:09:25 +0200
-Message-ID: <c7e433a2-f7cf-c748-4fb8-209bfb245573@gmail.com>
-References: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
- <20180509142526.GA25131@amd>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] ARM: dts: vexpress: Replace '_' with '-' in node names
+Date: Wed, 9 May 2018 16:14:11 -0500
+Message-ID: <CAL_Jsq+VNuvbxgFTFVouJF-_yMS90u0fd8jaXnYtKwogOP5rww@mail.gmail.com>
+References: <1525884482-19855-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180509142526.GA25131@amd>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Baolin Wang <baolin.wang@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, xiaotong.lu@spreadtrum.com, broonie@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1525884482-19855-1-git-send-email-sudeep.holla@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/09/2018 04:25 PM, Pavel Machek wrote:
-> Hi!
-> 
->> This patch adds the binding documentation for Spreadtrum SC27xx series
->> breathing light controller, which supports 3 outputs: red LED, green
->> LED and blue LED.
->>
->> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->> ---
->> Changes since v1:
->>   - Change the compatible string to be one explicit SoC name.
->>   - Change the child node name.
->>   - Change to be upper case for the first character.
->> ---
->>   .../devicetree/bindings/leds/leds-sc27xx-bltc.txt  |   41 ++++++++++++++++++++
->>   1 file changed, 41 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
->> new file mode 100644
->> index 0000000..b3de7fc
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
->> @@ -0,0 +1,41 @@
->> +LEDs connected to Spreadtrum SC27XX PMIC breathing light controller
->> +
->> +The SC27xx breathing light controller supports to 3 outputs:
->> +red LED, green LED and blue LED. Each LED can work at normal
->> +PWM mode or breath light mode.
-> 
->> +Required properties:
->> +- compatible: Should be "sprd,sc2731-bltc".
-> 
-> If this is for 2731, I'd say so in the title and the filename...?
+On Wed, May 9, 2018 at 11:48 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> The latest DTC throws warnings for character '_' in the node names.
+>
+> Warning (node_name_chars_strict): /sysreg@10000/sys_led: Character '_' not recommended in node name
+> Warning (node_name_chars_strict): /sysreg@10000/sys_mci: Character '_' not recommended in node name
+> Warning (node_name_chars_strict): /sysreg@10000/sys_flash: Character '_' not recommended in node name
+>
+> The general recommendation is to use character '-' for all the node names.
+> This patch fixes the warnings following the recommendation.
+>
+> Cc: Liviu Dudau <liviu.dudau@arm.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  arch/arm/boot/dts/vexpress-v2m-rs1.dtsi | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+> index 7b8ff5b3b912..58e73131ecef 100644
+> --- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+> +++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+> @@ -77,19 +77,19 @@
+>                                         compatible = "arm,vexpress-sysreg";
+>                                         reg = <0x010000 0x1000>;
+>
+> -                                       v2m_led_gpios: sys_led {
+> +                                       v2m_led_gpios: sys-led {
 
-Not necessarily, since apparently it is possible that other compatibles
-might be added to it in the future.
+Except this is a gpio-controller so it should have 'gpio' for its node
+name. (I have a dtc check written for that, but there are too many
+false positives.)
 
-> 
->> +- #address-cells: Must be 1.
->> +- #size-cells: Must be 0.
->> +- reg: Specify controller address.
-> 
-> the controller...
-> 
->> +Required child properties:
->> +- reg: Number of LED line (could be from 0 to 2).
-> 
-> Uff. "Port this LED is connected to"?
-> 
-> With that fixed...
-> 
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> 
-> 									Pavel
-> 
+But then you have 3 of them and no addressing, so you need to add reg
+property (with the register's offset and size) and unit-address.
 
--- 
-Best regards,
-Jacek Anaszewski
+I'm surprised Linus W accepted these a GPIO when they are not really
+general purpose, but then lots of things slip in.
+
+Rob
