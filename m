@@ -1,35 +1,115 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2 RESEND] display: panel: Add AUO g070vvn01 display
- support (800x480)
-Date: Wed, 9 May 2018 12:43:20 -0300
-Message-ID: <CAOMZO5CEojwRGYqDNjXhbLcRrmd5VXyKTdxbdMfLw2bb8vgfnQ@mail.gmail.com>
-References: <20180410102927.17787-1-lukma@denx.de>
- <20180509153933.2233-1-lukma@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180509153933.2233-1-lukma@denx.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH RESEND] display: panel: Add KOE tx14d24vm1bpa display support (320x240)
+Date: Wed,  9 May 2018 17:43:38 +0200
+Message-ID: <20180509154338.2841-1-lukma@denx.de>
+References: <20180412143715.6828-1-lukma@denx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180412143715.6828-1-lukma@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTHVrYXN6LAoKT24gV2VkLCBNYXkgOSwgMjAxOCBhdCAxMjozOSBQTSwgTHVrYXN6IE1hamV3
-c2tpIDxsdWttYUBkZW54LmRlPiB3cm90ZToKCj4gK0V4YW1wbGUgZGV2aWNlLXRyZWUgZGVmaW5p
-dGlvbiB3aGVuIGNvbm5lY3RlZCB0byBpTVg2USBiYXNlZCBib2FyZAo+ICsKPiArICAgICAgIGxj
-ZF9wYW5lbDogbGNkLXBhbmVsIHsKPiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhdW8s
-ZzA3MHZ2bjAxIjsKPiArICAgICAgICAgICAgICAgYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHRfbGNk
-PjsKPiArICAgICAgICAgICAgICAgYnVzLWZvcm1hdC1vdmVycmlkZSA9ICJyZ2I1NjUiOwoKUGxl
-YXNlIHJlbW92ZSB0aGlzIHByb3BlcnR5IGFzIGl0IGlzIG5vdCBkb2N1bWVudGVkIG5vciB1c2Vk
-IGFueXdoZXJlLgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This commit adds support for KOE's 5.7" display.
+
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+---
+ .../bindings/display/panel/koe,tx14d24vm1bpa.txt   | 42 ++++++++++++++++++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++
+ 2 files changed, 68 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+
+diff --git a/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+new file mode 100644
+index 000000000000..be7ac666807b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+@@ -0,0 +1,42 @@
++Kaohsiung Opto-Electronics Inc. 5.7" QVGA (320 x 240) TFT LCD panel
++
++Required properties:
++- compatible: should be "koe,tx14d24vm1bpa"
++- backlight: phandle of the backlight device attached to the panel
++- power-supply: single regulator to provide the supply voltage
++
++Required nodes:
++- port: Parallel port mapping to connect this display
++
++This panel needs single power supply voltage. Its backlight is conntrolled
++via PWM signal.
++
++Example:
++--------
++
++Example device-tree definition when connected to iMX53 based board
++
++	lcd_panel: lcd-panel {
++		compatible = "koe,tx14d24vm1bpa";
++		backlight = <&backlight_lcd>;
++		power-supply = <&reg_3v3>;
++
++		port {
++			lcd_panel_in: endpoint {
++				remote-endpoint = <&lcd_display_out>;
++			};
++		};
++	};
++
++Then one needs to extend the dispX node:
++
++	lcd_display: disp1 {
++
++		port@1 {
++			reg = <1>;
++
++			lcd_display_out: endpoint {
++				remote-endpoint = <&lcd_panel_in>;
++			};
++		};
++	};
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index d9984bdb5bb5..103b43ce7dee 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1268,6 +1268,29 @@ static const struct panel_desc innolux_zj070na_01p = {
+ 	},
+ };
+ 
++static const struct display_timing koe_tx14d24vm1bpa_timing = {
++	.pixelclock = { 5580000, 5850000, 6200000 },
++	.hactive = { 320, 320, 320 },
++	.hfront_porch = { 30, 30, 30 },
++	.hback_porch = { 30, 30, 30 },
++	.hsync_len = { 1, 5, 17 },
++	.vactive = { 240, 240, 240 },
++	.vfront_porch = { 6, 6, 6 },
++	.vback_porch = { 5, 5, 5 },
++	.vsync_len = { 1, 2, 11 },
++	.flags = DISPLAY_FLAGS_DE_HIGH,
++};
++
++static const struct panel_desc koe_tx14d24vm1bpa = {
++	.timings = &koe_tx14d24vm1bpa_timing,
++	.num_timings = 1,
++	.bpc = 6,
++	.size = {
++		.width = 115,
++		.height = 86,
++	},
++};
++
+ static const struct display_timing koe_tx31d200vm0baa_timing = {
+ 	.pixelclock = { 39600000, 43200000, 48000000 },
+ 	.hactive = { 1280, 1280, 1280 },
+@@ -2204,6 +2227,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "innolux,zj070na-01p",
+ 		.data = &innolux_zj070na_01p,
+ 	}, {
++		.compatible = "koe,tx14d24vm1bpa",
++		.data = &koe_tx14d24vm1bpa,
++	}, {
+ 		.compatible = "koe,tx31d200vm0baa",
+ 		.data = &koe_tx31d200vm0baa,
+ 	}, {
+-- 
+2.11.0
