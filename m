@@ -1,7 +1,7 @@
 From: Marco Felsch <m.felsch@pengutronix.de>
 Subject: [PATCH v2 2/2] gpu: drm/panel: Add DLC DLC0700YZG-1 panel
-Date: Wed,  9 May 2018 16:59:36 +0200
-Message-ID: <20180509145939.4140-3-m.felsch@pengutronix.de>
+Date: Wed,  9 May 2018 16:59:39 +0200
+Message-ID: <20180509145939.4140-6-m.felsch@pengutronix.de>
 References: <20180509145939.4140-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
