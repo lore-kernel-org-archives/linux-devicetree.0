@@ -1,86 +1,35 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v3 2/2] leds: lm3601x: Introduce the lm3601x LED driver
-Date: Thu, 10 May 2018 03:13:42 +0800
-Message-ID: <201805100310.5poORgcq%fengguang.wu@intel.com>
-References: <20180509115727.12070-2-dmurphy@ti.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: BCM5301X: Add DT for Luxul XWR-3150 V1
+Date: Wed,  9 May 2018 12:17:49 -0700
+Message-ID: <20180509191749.31920-1-f.fainelli@gmail.com>
+References: <1525450124-21665-1-git-send-email-dan.haab@luxul.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180509115727.12070-2-dmurphy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, robh+dt@kernel.org, mark.rutland@arm.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, afd@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1525450124-21665-1-git-send-email-dan.haab@luxul.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: bcm-kernel-feedback-list@broadcom.com, Dan Haab <riproute@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, =?iso-8859-2?q?Rafa=B3_Mi=B3ecki?= <rafal@milecki.pl>, Dan Haab <dan.haab@luxul.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
+On Fri,  4 May 2018 10:08:43 -0600, Dan Haab <riproute@gmail.com> wrote:
+> Luxul XWR-3150 is a wireless router similar to the XWR-3100 except:
+> 1) It has more RAM
+> 2) Its NAND controller in running in BCH8 mode
+> 3) LAN ports LEDs are hardware controlled
+> 
+> Signed-off-by: Dan Haab <dan.haab@luxul.com>
+> ---
 
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on v4.17-rc4 next-20180509]
-[cannot apply to j.anaszewski-leds/for-next]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Dan-Murphy/dt-bindings-lm3601x-Introduce-the-lm3601x-driver/20180509-232022
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-
-
-coccinelle warnings: (new ones prefixed by >>)
-
->> drivers/leds/leds-lm3601x.c:241:35-36: WARNING: Use ARRAY_SIZE
-
-vim +241 drivers/leds/leds-lm3601x.c
-
-   224	
-   225	static int lm3601x_strobe_set(struct led_classdev_flash *fled_cdev,
-   226					bool state)
-   227	{
-   228		struct lm3601x_led *led = fled_cdev_to_led(fled_cdev);
-   229		int ret;
-   230		int current_timeout;
-   231		int reg_count;
-   232		int i;
-   233		int timeout_reg_val = 0;
-   234	
-   235		mutex_lock(&led->lock);
-   236	
-   237		ret = regmap_read(led->regmap, LM3601X_CFG_REG, &current_timeout);
-   238		if (ret < 0)
-   239			goto out;
-   240	
- > 241		reg_count = sizeof(strobe_timeouts) / sizeof(strobe_timeouts[0]);
-   242		for (i = 0; i < reg_count; i++) {
-   243			if (led->strobe_timeout > strobe_timeouts[i].timeout)
-   244				continue;
-   245	
-   246			if (led->strobe_timeout <= strobe_timeouts[i].timeout) {
-   247				timeout_reg_val = (strobe_timeouts[i].reg_val << 1);
-   248				break;
-   249			}
-   250	
-   251			ret = -EINVAL;
-   252			goto out;
-   253		}
-   254	
-   255		if (led->strobe_timeout != current_timeout)
-   256			ret = regmap_update_bits(led->regmap, LM3601X_CFG_REG,
-   257						0x1e, timeout_reg_val);
-   258	
-   259		if (state)
-   260			ret = regmap_update_bits(led->regmap, LM3601X_ENABLE_REG,
-   261						LM3601X_MODE_STROBE,
-   262						LM3601X_MODE_STROBE);
-   263		else
-   264			ret = regmap_update_bits(led->regmap, LM3601X_ENABLE_REG,
-   265						LM3601X_MODE_STROBE, LED_OFF);
-   266	
-   267		ret = lm3601x_read_faults(led);
-   268	out:
-   269		mutex_unlock(&led->lock);
-   270		return ret;
-   271	}
-   272	
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Applied to devicetree/next, thanks!
+--
+Florian
