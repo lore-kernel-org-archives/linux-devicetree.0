@@ -1,12 +1,17 @@
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH] media: rcar-vin: Drop unnecessary register properties from
- example vin port
-Date: Wed,  9 May 2018 20:45:58 +0200
-Message-ID: <20180509184558.14960-1-horms+renesas@verge.net.au>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a77970: add SMP support
+Date: Wed, 9 May 2018 21:05:17 +0200
+Message-ID: <20180509190517.ho5og3grbuzf4wz4@verge.net.au>
+References: <14666252.G84Ipxe6EL@wasted.cogentembedded.com>
+ <54dbd1d2-8279-5073-cffb-c647fba91e42@cogentembedded.com>
+ <CAMuHMdUqVVWz0jLb2Vmrkk3BQBsYVsCOW1zsaPUi8o6jr_mojQ@mail.gmail.com>
+ <db136ee6-4ce6-756e-743d-3342b2e65f2b@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <db136ee6-4ce6-756e-743d-3342b2e65f2b@cogentembedded.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,31 +21,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-renesas-soc@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Simon Horman <horms+renesas@verge.net.au>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The example vin port node does not have an address and thus does not
-need address-cells or address size-properties.
+On Tue, May 08, 2018 at 09:47:10PM +0300, Sergei Shtylyov wrote:
+> On 05/08/2018 09:40 PM, Geert Uytterhoeven wrote:
+> 
+> >> Add the device node for the second Cortex-A53 CPU core.
+> >>
+> >> Based on the original (and large) patch by Daisuke Matsushita
+> >> <daisuke.matsushita.ns@hitachi.com>.
+> >>
+> >> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> >> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> > 
+> > Dupe of https://patchwork.kernel.org/patch/10032875/
+> 
+>    Sorry!
+>    Not an exact dupe, though -- mine has clock/power #define's used,
+> yours -- only bare #s. :-)
+> 
+> > From series "[PATCH 0/2] arm64: dts: renesas: r8a77970: Add SMP Support"
+> > (https://www.spinics.net/lists/linux-renesas-soc/msg19681.html)
+> 
+>    Hmm... what's the fate of this series?
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
- Documentation/devicetree/bindings/media/rcar_vin.txt | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
-index a19517e1c669..2a0c59e97f40 100644
---- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-+++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-@@ -107,9 +107,6 @@ Board setup example for Gen2 platforms (vin1 composite video input)
-         status = "okay";
- 
-         port {
--                #address-cells = <1>;
--                #size-cells = <0>;
--
-                 vin1ep0: endpoint {
-                         remote-endpoint = <&adv7180>;
-                         bus-width = <8>;
--- 
-2.11.0
+There is now a v2 of Geert's series which incorporates your enhancements.
+I will apply that.
