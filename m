@@ -1,24 +1,62 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH v7 1/3] mmc: dw_mmc-bluefield: Add driver extension
-Date: Wed, 9 May 2018 09:45:03 +0800
-Message-ID: <6a25eb18-a2d3-8004-563c-2655287932df@rock-chips.com>
-References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
- <1525805210-15246-1-git-send-email-lsun@mellanox.com>
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH] arm64: dts: sprd: fix typo in 'remote-endpoint'
+Date: Wed, 9 May 2018 09:58:38 +0800
+Message-ID: <CAAfSe-tgKJvzCN6eHCuUR94ECSE8ypAR1eRjhV-VJNztebK9Xw@mail.gmail.com>
+References: <20180508150952.24562-1-robh@kernel.org>
+ <20180508150952.24562-4-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525805210-15246-1-git-send-email-lsun@mellanox.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liming Sun <lsun@mellanox.com>, Will Deacon <will.deacon@arm.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, shawn.lin@rock-chips.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180508150952.24562-4-robh@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: DTML <devicetree@vger.kernel.org>, Baolin Wang <baolin.wang@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Orson Zhai <orsonzhai@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
-On 2018/5/9 2:46, Liming Sun wrote:
-> This commit adds extension to the dw_mmc driver for Mellanox BlueField
-> SoC. It updates the UHS_REG_EXT register to bring up the eMMC card on
-> this SoC.
-> 
+On 8 May 2018 at 23:09, Rob Herring <robh@kernel.org> wrote:
+> dtc now warns on incomplete OF graph endpoint connections:
+>
+> arch/arm64/boot/dts/sprd/sp9860g-1h10.dtb: Warning (graph_endpoint): /soc/stm@10006000/port/endpoint: graph connection to node '/soc/funnel@10001000/ports/port@2/endpoint' is not bidirectional
+>
+> The cause is a typo in 'remote-endpoint'.
 
-Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
+Thanks for fixing this and,
+
+Acked-by: Chunyan Zhang <zhang.lyra@gmail.com>
+
+>
+> Cc: Orson Zhai <orsonzhai@gmail.com>
+> Cc: Baolin Wang <baolin.wang@linaro.org>
+> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  arch/arm64/boot/dts/sprd/sc9860.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/sprd/sc9860.dtsi b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+> index 5dbfb796d9f9..dcd03ffcda03 100644
+> --- a/arch/arm64/boot/dts/sprd/sc9860.dtsi
+> +++ b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+> @@ -326,7 +326,7 @@
+>                                         reg = <4>;
+>                                         soc_funnel_in_port1: endpoint {
+>                                                 slave-mode;
+> -                                               remote-endpioint =
+> +                                               remote-endpoint =
+>                                                         <&stm_out_port>;
+>                                         };
+>                                 };
+> --
+> 2.17.0
+>
