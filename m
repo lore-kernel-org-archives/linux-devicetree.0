@@ -1,99 +1,53 @@
 From: Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH] ARM: DTS: imx53: Add support for imx53 HSC/DDC boards from K+P
-Date: Wed,  9 May 2018 17:34:28 +0200
-Message-ID: <20180509153428.1440-1-lukma@denx.de>
+Subject: [PATCH v2 RESEND] display: panel: Add AUO g070vvn01 display support (800x480)
+Date: Wed,  9 May 2018 17:39:33 +0200
+Message-ID: <20180509153933.2233-1-lukma@denx.de>
+References: <20180410102927.17787-1-lukma@denx.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180410102927.17787-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lukasz Majewski <lukma@denx.de>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-This commit provides support for HSC and DDC boards from
-Kieback&Peter GmbH vendor.
+This commit adds support for AUO's 7.0" display.
 
 Signed-off-by: Lukasz Majewski <lukma@denx.de>
 ---
- arch/arm/boot/dts/Makefile         |   2 +
- arch/arm/boot/dts/imx53-kp-ddc.dts | 146 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx53-kp-hsc.dts |  53 ++++++++++
- arch/arm/boot/dts/imx53-kp.dtsi    | 191 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 392 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx53-kp-ddc.dts
- create mode 100644 arch/arm/boot/dts/imx53-kp-hsc.dts
- create mode 100644 arch/arm/boot/dts/imx53-kp.dtsi
+ .../bindings/display/panel/auo,g070vvn01           | 30 +++++++++++++++++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 31 ++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/auo,g070vvn01
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index fbc04b0db781..00854a5b6ac4 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -360,6 +360,8 @@ dtb-$(CONFIG_SOC_IMX51) += \
- dtb-$(CONFIG_SOC_IMX53) += \
- 	imx53-ard.dtb \
- 	imx53-cx9020.dtb \
-+	imx53-kp-ddc.dtb \
-+	imx53-kp-hsc.dtb \
- 	imx53-m53evk.dtb \
- 	imx53-mba53.dtb \
- 	imx53-ppd.dtb \
-diff --git a/arch/arm/boot/dts/imx53-kp-ddc.dts b/arch/arm/boot/dts/imx53-kp-ddc.dts
+diff --git a/Documentation/devicetree/bindings/display/panel/auo,g070vvn01 b/Documentation/devicetree/bindings/display/panel/auo,g070vvn01
 new file mode 100644
-index 000000000000..acaf477a52c5
+index 000000000000..bd4017362094
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx53-kp-ddc.dts
-@@ -0,0 +1,146 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright 2018
-+ * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
-+ */
++++ b/Documentation/devicetree/bindings/display/panel/auo,g070vvn01
+@@ -0,0 +1,30 @@
++AU Optronics Corporation 7.0" FHD (800 x 480) TFT LCD panel
 +
-+/dts-v1/;
-+#include "imx53-kp.dtsi"
++Required properties:
++- compatible: should be "auo,g070vvn01"
++- backlight: phandle of the backlight device attached to the panel
++- power-supply: single regulator to provide the supply voltage
 +
-+/ {
-+	model = "K+P imx53 DDC";
-+	compatible = "kiebackpeter,imx53-ddc", "fsl,imx53";
++Required nodes:
++- port: Parallel port mapping to connect this display
 +
-+	backlight_lcd: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm2 0 50000>;
-+		power-supply = <&reg_backlight>;
-+		brightness-levels = <0 24 28 32 36
-+				     40 44 48 52 56
-+				     60 64 68 72 76
-+				     80 84 88 92 96 100>;
-+		default-brightness-level = <20>;
-+	};
++This panel needs single power supply voltage. Its backlight is conntrolled
++via PWM signal.
 +
-+	lcd_display: disp1 {
-+		compatible = "fsl,imx-parallel-display";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interface-pix-fmt = "rgb24";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_disp>;
++Example:
++--------
 +
-+		port@0 {
-+			reg = <0>;
-+
-+			display1_in: endpoint {
-+				remote-endpoint = <&ipu_di1_disp1>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			lcd_display_out: endpoint {
-+				remote-endpoint = <&lcd_panel_in>;
-+			};
-+		};
-+	};
++Example device-tree definition when connected to iMX6Q based board
 +
 +	lcd_panel: lcd-panel {
-+		compatible = "koe,tx14d24vm1bpa";
++		compatible = "auo,g070vvn01";
 +		backlight = <&backlight_lcd>;
-+		power-supply = <&reg_3v3>;
++		bus-format-override = "rgb565";
++		power-supply = <&reg_display>;
 +
 +		port {
 +			lcd_panel_in: endpoint {
@@ -101,347 +55,54 @@ index 000000000000..acaf477a52c5
 +			};
 +		};
 +	};
-+
-+	reg_backlight: regulator-backlight {
-+		compatible = "regulator-fixed";
-+		regulator-name = "backlight-supply";
-+		regulator-min-microvolt = <15000000>;
-+		regulator-max-microvolt = <15000000>;
-+		regulator-always-on;
-+	};
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index cbf1ab404ee7..d9984bdb5bb5 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -581,6 +581,34 @@ static const struct panel_desc auo_b133htn01 = {
+ 	},
+ };
+ 
++static const struct display_timing auo_g070vvn01_timings = {
++	.pixelclock = { 33300000, 34209000, 45000000 },
++	.hactive = { 800, 800, 800 },
++	.hfront_porch = { 20, 40, 200 },
++	.hback_porch = { 87, 40, 1 },
++	.hsync_len = { 1, 48, 87 },
++	.vactive = { 480, 480, 480 },
++	.vfront_porch = { 5, 13, 200 },
++	.vback_porch = { 31, 31, 29 },
++	.vsync_len = { 1, 1, 3 },
 +};
 +
-+&i2c3 {
-+	adc@48 {
-+		compatible = "ti,ads1015";
-+		reg = <0x48>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		channel@4 {
-+			reg = <4>;
-+			ti,gain = <2>;
-+			ti,datarate = <4>;
-+		};
-+
-+		channel@6 {
-+			reg = <6>;
-+			ti,gain = <2>;
-+			ti,datarate = <4>;
-+		};
-+	};
-+
-+	gpio_expander2@21 {
-+		compatible = "nxp,pcf8574";
-+		reg = <0x21>;
-+		interrupts = <109>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+	};
++static const struct panel_desc auo_g070vvn01 = {
++	.timings = &auo_g070vvn01_timings,
++	.num_timings = 1,
++	.bpc = 8,
++	.size = {
++		.width = 152,
++		.height = 91,
++	},
++	.delay = {
++		.prepare = 200,
++		.enable = 50,
++		.disable = 50,
++		.unprepare = 1000,
++	},
 +};
 +
-+&iomuxc {
-+	imx53-kp-ddc {
-+		pinctrl_disp: dispgrp {
-+			fsl,pins = <
-+				MX53_PAD_EIM_A16__IPU_DI1_DISP_CLK      0x4
-+				MX53_PAD_EIM_DA10__IPU_DI1_PIN15        0x4
-+				MX53_PAD_EIM_DA9__IPU_DISP1_DAT_0       0x4
-+				MX53_PAD_EIM_DA8__IPU_DISP1_DAT_1       0x4
-+				MX53_PAD_EIM_DA7__IPU_DISP1_DAT_2       0x4
-+				MX53_PAD_EIM_DA6__IPU_DISP1_DAT_3       0x4
-+				MX53_PAD_EIM_DA5__IPU_DISP1_DAT_4       0x4
-+				MX53_PAD_EIM_DA4__IPU_DISP1_DAT_5       0x4
-+				MX53_PAD_EIM_DA3__IPU_DISP1_DAT_6       0x4
-+				MX53_PAD_EIM_DA2__IPU_DISP1_DAT_7       0x4
-+				MX53_PAD_EIM_DA1__IPU_DISP1_DAT_8       0x4
-+				MX53_PAD_EIM_DA0__IPU_DISP1_DAT_9       0x4
-+				MX53_PAD_EIM_EB1__IPU_DISP1_DAT_10      0x4
-+				MX53_PAD_EIM_EB0__IPU_DISP1_DAT_11      0x4
-+				MX53_PAD_EIM_A17__IPU_DISP1_DAT_12      0x4
-+				MX53_PAD_EIM_A18__IPU_DISP1_DAT_13      0x4
-+				MX53_PAD_EIM_A19__IPU_DISP1_DAT_14      0x4
-+				MX53_PAD_EIM_A20__IPU_DISP1_DAT_15      0x4
-+				MX53_PAD_EIM_A21__IPU_DISP1_DAT_16      0x4
-+				MX53_PAD_EIM_A22__IPU_DISP1_DAT_17      0x4
-+				MX53_PAD_EIM_A23__IPU_DISP1_DAT_18      0x4
-+				MX53_PAD_EIM_A24__IPU_DISP1_DAT_19      0x4
-+				MX53_PAD_EIM_D31__IPU_DISP1_DAT_20      0x4
-+				MX53_PAD_EIM_D30__IPU_DISP1_DAT_21      0x4
-+				MX53_PAD_EIM_D26__IPU_DISP1_DAT_22      0x4
-+				MX53_PAD_EIM_D27__IPU_DISP1_DAT_23      0x4
-+				MX53_PAD_GPIO_1__PWM2_PWMO 0x4
-+			>;
-+		};
-+	};
-+};
-+
-+&ipu_di1_disp1 {
-+	remote-endpoint = <&display1_in>;
-+};
-+
-+&fec {
-+	status = "okay";
-+};
-+
-+&pmic {
-+	fsl,mc13xxx-uses-touch;
-+};
-diff --git a/arch/arm/boot/dts/imx53-kp-hsc.dts b/arch/arm/boot/dts/imx53-kp-hsc.dts
-new file mode 100644
-index 000000000000..fff358395c9d
---- /dev/null
-+++ b/arch/arm/boot/dts/imx53-kp-hsc.dts
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright 2018
-+ * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
-+ */
-+
-+/dts-v1/;
-+#include "imx53-kp.dtsi"
-+
-+/ {
-+	model = "K+P imx53 HSC";
-+	compatible = "kiebackpeter,imx53-hsc", "fsl,imx53";
-+
-+};
-+
-+&fec {
-+	status = "okay";
-+
-+	fixed-link { /* RMII fixed link to LAN9303 */
-+		speed = <100>;
-+		full-duplex;
-+	};
-+};
-+
-+&i2c3 {
-+	switch: switch@a {
-+		compatible = "smsc,lan9303-i2c";
-+		reg = <0xa>;
-+		reset-gpios = <&gpio7 6 GPIO_ACTIVE_LOW>;
-+		reset-duration = <400>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 { /* RMII fixed link to master */
-+				reg = <0>;
-+				label = "cpu";
-+				ethernet = <&fec>;
-+			};
-+
-+			port@1 { /* external port 1 */
-+				reg = <1>;
-+				label = "lan1";
-+			};
-+
-+			port@2 { /* external port 2 */
-+				reg = <2>;
-+				label = "lan2";
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx53-kp.dtsi b/arch/arm/boot/dts/imx53-kp.dtsi
-new file mode 100644
-index 000000000000..86bea3217f18
---- /dev/null
-+++ b/arch/arm/boot/dts/imx53-kp.dtsi
-@@ -0,0 +1,191 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright 2018
-+ * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
-+ */
-+
-+/dts-v1/;
-+#include "imx53-tqma53.dtsi"
-+
-+/ {
-+	buzzer {
-+		compatible = "pwm-beeper";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_buzzer>;
-+
-+		pwms = <&pwm1 0 500000>;
-+	};
-+
-+	gpio_buttons {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpiobuttons>;
-+
-+		button@1 {
-+			label = "Kaltstart";
-+			linux,code = <64>; /* KEY_F6 */
-+			gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>;
-+		};
-+		button@2 {
-+			label = "PowerFailInterrupt";
-+			linux,code = <65>; /* KEY_F7 */
-+			gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_leds>;
-+
-+		led_bus {
-+			label = "bus";
-+			gpios = <&gpio2 30 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "gpio";
-+			default-state = "off";
-+		};
-+
-+		led_error {
-+			label = "error";
-+			gpios = <&gpio3 28 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "gpio";
-+			default-state = "off";
-+		};
-+
-+		led_flash {
-+			label = "flash";
-+			gpios = <&gpio5 0 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	reg_3v3: regulator-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&can1 {
-+	status = "okay";
-+};
-+
-+&can2 {
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+
-+	gpio_expander1@22 {
-+		compatible = "nxp,pcf8574";
-+		reg = <0x22>;
-+		interrupts = <109>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+	};
-+
-+	rtc@51 {
-+		compatible = "nxp,pcf8563";
-+		reg = <0x51>;
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_kp_common>;
-+
-+	imx53-kp-common {
-+		pinctrl_buzzer: buzzergrp {
-+			fsl,pins = <
-+				MX53_PAD_SD1_DATA3__PWM1_PWMO 0x1e4
-+			>;
-+		};
-+
-+		pinctrl_gpiobuttons: gpiobuttonsgrp {
-+			fsl,pins = <
-+				MX53_PAD_EIM_RW__GPIO2_26 0x1e4
-+				MX53_PAD_EIM_D22__GPIO3_22 0x1e4
-+			>;
-+		};
-+
-+		pinctrl_kp_common: kpcommongrp {
-+			fsl,pins = <
-+				MX53_PAD_EIM_CS0__GPIO2_23 0x1e4
-+				MX53_PAD_GPIO_19__GPIO4_5  0x1e4
-+				MX53_PAD_PATA_DATA6__GPIO2_6 0x1e4
-+				MX53_PAD_PATA_DATA7__GPIO2_7 0xe0
-+				MX53_PAD_CSI0_DAT14__GPIO6_0 0x1e4
-+				MX53_PAD_CSI0_DAT16__GPIO6_2 0x1e4
-+				MX53_PAD_CSI0_DAT18__GPIO6_4 0x1e4
-+				MX53_PAD_EIM_D17__GPIO3_17 0x1e4
-+				MX53_PAD_EIM_D18__GPIO3_18 0x1e4
-+				MX53_PAD_EIM_D21__GPIO3_21 0x1e4
-+				MX53_PAD_EIM_D29__GPIO3_29 0x1e4
-+				MX53_PAD_EIM_DA11__GPIO3_11 0x1e4
-+				MX53_PAD_EIM_DA13__GPIO3_13 0x1e4
-+				MX53_PAD_EIM_DA14__GPIO3_14 0x1e4
-+				MX53_PAD_SD1_DATA0__GPIO1_16 0x1e4
-+				MX53_PAD_SD1_CMD__GPIO1_18 0x1e4
-+				MX53_PAD_SD1_CLK__GPIO1_20 0x1e4
-+			>;
-+		};
-+
-+		pinctrl_leds: ledgrp {
-+			fsl,pins = <
-+				MX53_PAD_EIM_EB2__GPIO2_30 0x1d4
-+				MX53_PAD_EIM_D28__GPIO3_28 0x1d4
-+				MX53_PAD_EIM_WAIT__GPIO5_0 0x1d4
-+			>;
-+		};
-+
-+		pinctrl_uart4: uart4grp {
-+			fsl,pins = <
-+				MX53_PAD_CSI0_DAT12__UART4_TXD_MUX 0x1e4
-+				MX53_PAD_CSI0_DAT13__UART4_RXD_MUX 0x1e4
-+			>;
-+		};
-+	};
-+};
-+
-+&pinctrl_uart1 {
-+	fsl,pins = <
-+		MX53_PAD_EIM_D23__GPIO3_23 0x1e4
-+		MX53_PAD_EIM_EB3__GPIO2_31 0x1e4
-+		MX53_PAD_EIM_D24__GPIO3_24 0x1e4
-+		MX53_PAD_EIM_D25__GPIO3_25 0x1e4
-+		MX53_PAD_EIM_D19__GPIO3_19 0x1e4
-+		MX53_PAD_EIM_D20__GPIO3_20 0x1e4
-+	>;
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	status = "okay";
-+};
-+
-+&usbphy0 {
-+	status = "disabled";
-+};
+ static const struct drm_display_mode auo_g104sn02_mode = {
+ 	.clock = 40000,
+ 	.hdisplay = 800,
+@@ -2095,6 +2123,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "auo,b133xtn01",
+ 		.data = &auo_b133xtn01,
+ 	}, {
++		.compatible = "auo,g070vvn01",
++		.data = &auo_g070vvn01,
++	}, {
+ 		.compatible = "auo,g104sn02",
+ 		.data = &auo_g104sn02,
+ 	}, {
 -- 
 2.11.0
