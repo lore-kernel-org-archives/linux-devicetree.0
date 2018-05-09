@@ -1,59 +1,33 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3 09/14] ARM: dts: imx7s: add multiplexer controls
-Date: Wed, 09 May 2018 10:59:13 +0200
-Message-ID: <1525856353.5888.6.camel@pengutronix.de>
-References: <20180507162152.2545-1-rui.silva@linaro.org>
- <20180507162152.2545-10-rui.silva@linaro.org>
+From: Banajit Goswami <bgoswami@codeaurora.org>
+Subject: Re: [PATCH v7 22/24] ASoC: qdsp6: dt-bindings: Add apq8096 machine
+ bindings
+Date: Wed, 9 May 2018 02:01:34 -0700
+Message-ID: <a33018c1-1ee8-da44-ae93-459abe12b049@codeaurora.org>
+References: <20180501120820.11016-1-srinivas.kandagatla@linaro.org>
+ <20180501120820.11016-23-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180507162152.2545-10-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>, mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180501120820.11016-23-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc: gregkh@linuxfoundation.org, david.brown@linaro.org, mark.rutland@arm.com, lgirdwood@gmail.com, plai@codeaurora.org, tiwai@suse.com, perex@perex.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com, spatakok@qti.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-05-07 at 17:21 +0100, Rui Miguel Silva wrote:
-> The IOMUXC General Purpose Register has bitfield to control video bus
-> multiplexer to control the CSI input between the MIPI-CSI2 and parallel
-> interface. Add that register and mask.
-> 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+On 5/1/2018 5:08 AM, Srinivas Kandagatla wrote:
+> Add devicetree bindings documentation file for Qualcomm apq8096 sound card.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->  arch/arm/boot/dts/imx7s.dtsi | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-> index 67450ad89940..3590dab529f9 100644
-> --- a/arch/arm/boot/dts/imx7s.dtsi
-> +++ b/arch/arm/boot/dts/imx7s.dtsi
-> @@ -520,8 +520,14 @@
->  
->  			gpr: iomuxc-gpr@30340000 {
->  				compatible = "fsl,imx7d-iomuxc-gpr",
-> -					"fsl,imx6q-iomuxc-gpr", "syscon";
-> +					"fsl,imx6q-iomuxc-gpr", "syscon", "simple-mfd";
->  				reg = <0x30340000 0x10000>;
-> +
-> +				mux: mux-controller {
-> +					compatible = "mmio-mux";
-> +					#mux-control-cells = <1>;
-> +					mux-reg-masks = <0x14 0x00000010>;
-> +				};
->  			};
->  
->  			ocotp: ocotp-ctrl@30350000 {
+>   .../devicetree/bindings/sound/qcom,apq8096.txt     | 109 +++++++++++++++++++++
+>   1 file changed, 109 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+>
+Reviewed-by: Banajit Goswami <bgoswami@codeaurora.org>
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-regards
-Philipp
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
