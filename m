@@ -1,68 +1,57 @@
 From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [PATCH 3/4] rtc: ds1307: add calibration of_ for mt41txx chips.
-Date: Wed, 9 May 2018 20:33:56 +0200
-Message-ID: <201d77b1-ea75-90eb-8b30-da60529c70ba@micronovasrl.com>
-References: <20180508145611.49072-1-giulio.benetti@micronovasrl.com>
- <20180508145611.49072-3-giulio.benetti@micronovasrl.com>
- <CAL_JsqKa7AF4x5440aVtCsCcvbTS85o-dRT8+Ka6QB=8zK2NzA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] rtc: ds1307: add freq_test sysfs attribute to
+ check tick on m41txx
+Date: Wed, 9 May 2018 20:46:09 +0200
+Message-ID: <de96728f-c5c6-0d2e-4814-21105c0683ed@micronovasrl.com>
+References: <20180509182812.17646-1-giulio.benetti@micronovasrl.com>
+ <20180509182812.17646-4-giulio.benetti@micronovasrl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKa7AF4x5440aVtCsCcvbTS85o-dRT8+Ka6QB=8zK2NzA@mail.gmail.com>
+In-Reply-To: <20180509182812.17646-4-giulio.benetti@micronovasrl.com>
 Content-Language: it
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: a.zummo@towertech.it, alexandre.belloni@bootlin.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Sorry everybody,
 
-Il 08/05/2018 19:40, Rob Herring ha scritto:
-> On Tue, May 8, 2018 at 9:56 AM, Giulio Benetti
-> <giulio.benetti@micronovasrl.com> wrote:
->> m41txx chips can hold a calibration value to get really near to real
->> tick value.
+Il 09/05/2018 20:28, Giulio Benetti ha scritto:
+>   static int ds1307_probe(struct i2c_client *client,
+>   			const struct i2c_device_id *id)
+>   {
+> @@ -1783,6 +1851,24 @@ static int ds1307_probe(struct i2c_client *client,
+>   	if (err)
+>   		return err;
+>   
+> +	/* Export sysfs entries */
+> +	err = sysfs_create_group(&(&client->dev)->kobj, &rtc_calib_attr_group);
+> +	if (err) {
+> +		dev_err(&client->dev, "Failed to create sysfs group: %d\n",
+> +			err);
+> +		return err;
+> +	}
+> +
+> +	err = devm_add_action_or_reset(&client->dev,
+> +				       rtc_calib_remove_sysfs_group,
+> +				       &client->dev);
+> +	if (err) {
+> +		dev_err(&client->dev,
+> +			"Failed to add sysfs cleanup action: %d\n",
+> +			err);
+> +		return err;
+> +	}
+> +
+>   	if (chip->nvram_size) {
+>   		struct nvmem_config nvmem_cfg = {
+>   			.name = "ds1307_nvram",
 > 
-> Typo in the subject.
-> 
->> Add calibration property(ranging between (-31) and 31), so on every probe
->> calibration value will be written to rtc.
->> This is because ic could loose supply due to low battery.
->>
->> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
->> ---
->>   .../devicetree/bindings/rtc/rtc-ds1307.txt    |  2 ++
-> 
-> Put all the binding changes in separate patch (or maybe 2: new
-> compatible and new properties).
-> 
->>   drivers/rtc/rtc-ds1307.c                      | 33 +++++++++++++++++++
->>   2 files changed, 35 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
->> index ce6469c1a516..d3d70a5495c5 100644
->> --- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
->> +++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
->> @@ -34,6 +34,8 @@ Optional properties:
->>   - trickle-diode-disable : ds1339, ds1340 and ds 1388 only
->>          Do not use internal trickle charger diode
->>          Should be given if internal trickle charger diode should be disabled
->> +- calibration: m41t0, m41t00, m41t11 only
-> 
-> Needs a vendor prefix.
-> 
-> Calibration of what and what are the units?
-> 
->> +       Set calibration value to correct external bias, ranging between (-31) and 31.
->>
->>   Example:
->>          rtc1: ds1339@68 {
 
-This is not a problem anymore since I've used standard rtc sysfs 
-"offset" instead of a dt-property as Alexandre pointed me out.
-
-Thanks.
+Adding sysfs must be done only for mt41xx series.
+I correct and submit V3 patchest.
+Sorry again.
 
 -- 
 Giulio Benetti
@@ -72,6 +61,6 @@ MICRONOVA SRL
 Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
 Tel. 049/8931563 - Fax 049/8931346
 Cod.Fiscale - P.IVA 02663420285
-Capitale Sociale â‚¬ 26.000 i.v.
+Capitale Sociale ¤ 26.000 i.v.
 Iscritta al Reg. Imprese di Padova N. 02663420285
 Numero R.E.A. 258642
