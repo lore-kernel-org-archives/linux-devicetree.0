@@ -1,112 +1,292 @@
-From: Alexander Graf <agraf@suse.de>
-Subject: Re: [RFC PATCH] driver core: make deferring probe forever optional
-Date: Wed, 9 May 2018 11:44:55 +0200
-Message-ID: <91dad272-e07d-2ab6-2afa-538294e9cefa@suse.de>
-References: <20180501213114.20183-1-robh@kernel.org>
- <20180507183106.GF2259@tuxbook-pro>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: add support for SY8106A regulator" to the regulator tree
+Date: Wed,  9 May 2018 10:48:13 +0100 (BST)
+Message-ID: <20180509094813.741F244007A@finisterre.ee.mobilebroadband>
+References: <20180507122942.25758-3-icenowy@aosc.io>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180507183106.GF2259@tuxbook-pro>
-Content-Language: en-US
+In-Reply-To: <20180507122942.25758-3-icenowy@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@kernel.org>, boot-architecture@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+To: Ondrej Jirman <megous@megous.com>
+Cc: Icenowy Zheng <icenowy@aosc.io>, Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.comIcenowy Zheng <icenowy@aosc.io>linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2018 08:31 PM, Bjorn Andersson wrote:
-> On Tue 01 May 14:31 PDT 2018, Rob Herring wrote:
->
->> Deferred probe will currently wait forever on dependent devices to probe,
->> but sometimes a driver will never exist. It's also not always critical for
->> a driver to exist. Platforms can rely on default configuration from the
->> bootloader or reset defaults for things such as pinctrl and power domains.
-> But how do you know if this is the case?
->
->> This is often the case with initial platform support until various drivers
->> get enabled.
-> Can you please name platform that has enough support for Alexander to
-> care about backwards and forwards compatibility but lacks a pinctrl
-> driver.
+The patch
 
-ZynqMP is one example that immediately comes to my mind. I'm sure there 
-are others too.
+   regulator: add support for SY8106A regulator
 
-In general it's very frustrating to debug what goes wrong when you can't 
-even get serial to output anything at all just because there are now 
-pinctrl bindings that your kernel may not know about yet. I've run into 
-that too many times.
+has been applied to the regulator tree at
 
->
->> There's at least 2 scenarios where deferred probe can render
->> a platform broken. Both involve using a DT which has more devices and
->> dependencies than the kernel supports. The 1st case is a driver may be
->> disabled in the kernel config.
-> I agree that there is a chance that you _might_ get some parts of the
-> system working by relying on the boot loader configuration, but
-> misconfiguration issues applies to any other fundamental providers, such
-> as clocks, regulators, power domains and gpios as well.
->
->> The 2nd case is the kernel version may
->> simply not have the dependent driver. This can happen if using a newer DT
->> (provided by firmware perhaps) with a stable kernel version.
->>
-> As above, this is in no way limited to pinctrl drivers.
->
->> Unfortunately, this change breaks with modules as we have no way of
->> knowing when modules are done loading. One possibility is to make this
->> opt in or out based on compatible strings rather than at a subsystem level.
->> Ideally this information could be extracted automatically somehow. OTOH,
->> maybe the lists are pretty small. There's only a handful of subsystems
->> that can be optional, and then only so many drivers in those that can be
->> modules (at least for pinctrl, many drivers are built-in only).
->>
-> On the Qualcomm platform most drivers are tristate and on most platforms
-> there are size restrictions in the proprietary boot loader preventing us
-> from boot the kernel after switching all these frameworks from tristate
-> to bool (which feels like a more appropriate solution than your hack).
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
-I don't see how setting them to bool contradicts with the hack? The goal 
-of this patch is to allow systems to load drivers on firmware provided 
-pinctrl setups if there is no matching pinctrl driver in the kernel.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
->
->> Cc: Alexander Graf <agraf@suse.de>
->> Signed-off-by: Rob Herring <robh@kernel.org>
->> ---
->> This patch came out of a discussion on the ARM boot-architecture
->> list[1] about DT forwards and backwards compatibility issues. There are
->> issues with newer DTs breaking on older, stable kernels. Some of these
->> are difficult to solve, but cases of optional devices not having
->> kernel support should be solvable.
->>
-> There are two cases here:
-> 1) DT contains compatibles that isn't supported by the kernel. In this
-> case the associated device will remain in the probe deferral list and
-> user space won't know about the device.
->
-> 2) DT contains compatibles known to the kernel but has new optional
-> properties that makes things functional or works around hardware bugs.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-The key point is not to regress. Imagine you have firmware 1.0 which 
-works with OS 1.0. Firmware provides the device tree.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-When you update to firmware to 1.1 you want to make sure OS 1.0 still 
-works. The bug you're referring to that existed before of course still 
-exists. But we're not worse off.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
->
->> I tested this on a RPi3 B with the pinctrl driver forced off. With this
->> change, the MMC/SD and UART drivers can function without the pinctrl
->> driver.
->>
-> Cool, so what about graphics, audio, networking, usb and all the other
-> things that people actually expect when they _use_ a distro?
+Thanks,
+Mark
 
-Again, it's about regressions. If audio didn't work before, a firmware 
-update may not get you working audio with OS 1.0. But it may enable OS 
-1.1 to provide audio.
+>From 8878302ebbc580d64f390c0acc509e5e8276598c Mon Sep 17 00:00:00 2001
+From: Ondrej Jirman <megous@megous.com>
+Date: Mon, 7 May 2018 20:29:41 +0800
+Subject: [PATCH] regulator: add support for SY8106A regulator
 
+SY8106A is an I2C attached single output regulator made by Silergy Corp,
+which is used on several Allwinner H3/H5 SBCs to control the power
+supply of the ARM cores.
 
-Alex
+Add a driver for it.
+
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+[Icenowy: Change commit message, remove enable/disable code, add default
+ ramp_delay, add comment for go bit, add code for fixed mode voltage]
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ MAINTAINERS                           |   6 +
+ drivers/regulator/Kconfig             |   7 ++
+ drivers/regulator/Makefile            |   2 +-
+ drivers/regulator/sy8106a-regulator.c | 167 ++++++++++++++++++++++++++
+ 4 files changed, 181 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/regulator/sy8106a-regulator.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0a1410d5a621..971300930067 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13461,6 +13461,12 @@ S:	Supported
+ F:	net/switchdev/
+ F:	include/net/switchdev.h
+ 
++SY8106A REGULATOR DRIVER
++M:	Icenowy Zheng <icenowy@aosc.io>
++S:	Maintained
++F:	drivers/regulator/sy8106a-regulator.c
++F:	Documentation/devicetree/bindings/regulator/sy8106a-regulator.txt
++
+ SYNC FILE FRAMEWORK
+ M:	Sumit Semwal <sumit.semwal@linaro.org>
+ R:	Gustavo Padovan <gustavo@padovan.org>
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 097f61784a7d..4efae3b7e746 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -801,6 +801,13 @@ config REGULATOR_STW481X_VMMC
+ 	  This driver supports the internal VMMC regulator in the STw481x
+ 	  PMIC chips.
+ 
++config REGULATOR_SY8106A
++	tristate "Silergy SY8106A regulator"
++	depends on I2C && (OF || COMPILE_TEST)
++	select REGMAP_I2C
++	help
++	  This driver supports SY8106A single output regulator.
++
+ config REGULATOR_TPS51632
+ 	tristate "TI TPS51632 Power Regulator"
+ 	depends on I2C
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 590674fbecd7..d81fb02bd6e9 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -100,6 +100,7 @@ obj-$(CONFIG_REGULATOR_SC2731) += sc2731-regulator.o
+ obj-$(CONFIG_REGULATOR_SKY81452) += sky81452-regulator.o
+ obj-$(CONFIG_REGULATOR_STM32_VREFBUF) += stm32-vrefbuf.o
+ obj-$(CONFIG_REGULATOR_STW481X_VMMC) += stw481x-vmmc.o
++obj-$(CONFIG_REGULATOR_SY8106A) += sy8106a-regulator.o
+ obj-$(CONFIG_REGULATOR_TI_ABB) += ti-abb-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS6105X) += tps6105x-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS62360) += tps62360-regulator.o
+@@ -125,5 +126,4 @@ obj-$(CONFIG_REGULATOR_WM8350) += wm8350-regulator.o
+ obj-$(CONFIG_REGULATOR_WM8400) += wm8400-regulator.o
+ obj-$(CONFIG_REGULATOR_WM8994) += wm8994-regulator.o
+ 
+-
+ ccflags-$(CONFIG_REGULATOR_DEBUG) += -DDEBUG
+diff --git a/drivers/regulator/sy8106a-regulator.c b/drivers/regulator/sy8106a-regulator.c
+new file mode 100644
+index 000000000000..65fbd1f0b612
+--- /dev/null
++++ b/drivers/regulator/sy8106a-regulator.c
+@@ -0,0 +1,167 @@
++// SPDX-License-Identifier: GPL-2.0+
++//
++// sy8106a-regulator.c - Regulator device driver for SY8106A
++//
++// Copyright (C) 2016 Ondřej Jirman <megous@megous.com>
++// Copyright (c) 2017-2018 Icenowy Zheng <icenowy@aosc.io>
++
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/of_regulator.h>
++
++#define SY8106A_REG_VOUT1_SEL		0x01
++#define SY8106A_REG_VOUT_COM		0x02
++#define SY8106A_REG_VOUT1_SEL_MASK	0x7f
++#define SY8106A_DISABLE_REG		BIT(0)
++/*
++ * The I2C controlled voltage will only work when this bit is set; otherwise
++ * it will behave like a fixed regulator.
++ */
++#define SY8106A_GO_BIT			BIT(7)
++
++struct sy8106a {
++	struct regulator_dev *rdev;
++	struct regmap *regmap;
++	u32 fixed_voltage;
++};
++
++static const struct regmap_config sy8106a_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++};
++
++static const struct regulator_ops sy8106a_ops = {
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.set_voltage_time_sel = regulator_set_voltage_time_sel,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.list_voltage = regulator_list_voltage_linear,
++	/* Enabling/disabling the regulator is not yet implemented */
++};
++
++/* Default limits measured in millivolts */
++#define SY8106A_MIN_MV		680
++#define SY8106A_MAX_MV		1950
++#define SY8106A_STEP_MV		10
++
++static const struct regulator_desc sy8106a_reg = {
++	.name = "SY8106A",
++	.id = 0,
++	.ops = &sy8106a_ops,
++	.type = REGULATOR_VOLTAGE,
++	.n_voltages = ((SY8106A_MAX_MV - SY8106A_MIN_MV) / SY8106A_STEP_MV) + 1,
++	.min_uV = (SY8106A_MIN_MV * 1000),
++	.uV_step = (SY8106A_STEP_MV * 1000),
++	.vsel_reg = SY8106A_REG_VOUT1_SEL,
++	.vsel_mask = SY8106A_REG_VOUT1_SEL_MASK,
++	/*
++	 * This ramp_delay is a conservative default value which works on
++	 * H3/H5 boards VDD-CPUX situations.
++	 */
++	.ramp_delay = 200,
++	.owner = THIS_MODULE,
++};
++
++/*
++ * I2C driver interface functions
++ */
++static int sy8106a_i2c_probe(struct i2c_client *i2c,
++			    const struct i2c_device_id *id)
++{
++	struct sy8106a *chip;
++	struct device *dev = &i2c->dev;
++	struct regulator_dev *rdev = NULL;
++	struct regulator_config config = { };
++	unsigned int reg, vsel;
++	int error;
++
++	chip = devm_kzalloc(&i2c->dev, sizeof(struct sy8106a), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
++
++	error = of_property_read_u32(dev->of_node, "silergy,fixed-microvolt",
++				     &chip->fixed_voltage);
++	if (error)
++		return error;
++
++	if (chip->fixed_voltage < SY8106A_MIN_MV * 1000 ||
++	    chip->fixed_voltage > SY8106A_MAX_MV * 1000)
++		return -EINVAL;
++
++	chip->regmap = devm_regmap_init_i2c(i2c, &sy8106a_regmap_config);
++	if (IS_ERR(chip->regmap)) {
++		error = PTR_ERR(chip->regmap);
++		dev_err(dev, "Failed to allocate register map: %d\n", error);
++		return error;
++	}
++
++	config.dev = &i2c->dev;
++	config.regmap = chip->regmap;
++	config.driver_data = chip;
++
++	config.of_node = dev->of_node;
++	config.init_data = of_get_regulator_init_data(dev, dev->of_node,
++						      &sy8106a_reg);
++
++	if (!config.init_data)
++		return -ENOMEM;
++
++	/* Ensure GO_BIT is enabled when probing */
++	error = regmap_read(chip->regmap, SY8106A_REG_VOUT1_SEL, &reg);
++	if (error)
++		return error;
++
++	if (!(reg & SY8106A_GO_BIT)) {
++		vsel = (chip->fixed_voltage / 1000 - SY8106A_MIN_MV) /
++		       SY8106A_STEP_MV;
++
++		error = regmap_write(chip->regmap, SY8106A_REG_VOUT1_SEL,
++				     vsel | SY8106A_GO_BIT);
++		if (error)
++			return error;
++	}
++
++	/* Probe regulator */
++	rdev = devm_regulator_register(&i2c->dev, &sy8106a_reg, &config);
++	if (IS_ERR(rdev)) {
++		error = PTR_ERR(rdev);
++		dev_err(&i2c->dev, "Failed to register SY8106A regulator: %d\n", error);
++		return error;
++	}
++
++	chip->rdev = rdev;
++
++	i2c_set_clientdata(i2c, chip);
++
++	return 0;
++}
++
++static const struct of_device_id sy8106a_i2c_of_match[] = {
++	{ .compatible = "silergy,sy8106a" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, sy8106a_i2c_of_match);
++
++static const struct i2c_device_id sy8106a_i2c_id[] = {
++	{ "sy8106a", 0 },
++	{ },
++};
++MODULE_DEVICE_TABLE(i2c, sy8106a_i2c_id);
++
++static struct i2c_driver sy8106a_regulator_driver = {
++	.driver = {
++		.name = "sy8106a",
++		.of_match_table	= of_match_ptr(sy8106a_i2c_of_match),
++	},
++	.probe = sy8106a_i2c_probe,
++	.id_table = sy8106a_i2c_id,
++};
++
++module_i2c_driver(sy8106a_regulator_driver);
++
++MODULE_AUTHOR("Ondřej Jirman <megous@megous.com>");
++MODULE_AUTHOR("Icenowy Zheng <icenowy@aosc.io>");
++MODULE_DESCRIPTION("Regulator device driver for Silergy SY8106A");
++MODULE_LICENSE("GPL");
+-- 
+2.17.0
