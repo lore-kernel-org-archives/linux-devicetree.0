@@ -1,55 +1,78 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] arm64: dts: sdm845: Fix xo_board clock name and speed
-Date: Wed,  9 May 2018 13:05:28 -0700
-Message-ID: <20180509200528.233451-1-dianders@chromium.org>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Add SC27xx breathing light
+ controller documentation
+Date: Wed, 9 May 2018 22:09:25 +0200
+Message-ID: <c7e433a2-f7cf-c748-4fb8-209bfb245573@gmail.com>
+References: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
+ <20180509142526.GA25131@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180509142526.GA25131@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org
-Cc: sboyd@kernel.org, tdas@codeaurora.org, anischal@codeaurora.org, bjorn.andersson@linaro.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Pavel Machek <pavel@ucw.cz>, Baolin Wang <baolin.wang@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, xiaotong.lu@spreadtrum.com, broonie@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The RPMh clock driver assumes that the xo_board clock is named
-"xo_board", not "xo-board".  Add a "clock-output-names" property to
-the device tree to get the right name.
+On 05/09/2018 04:25 PM, Pavel Machek wrote:
+> Hi!
+> 
+>> This patch adds the binding documentation for Spreadtrum SC27xx series
+>> breathing light controller, which supports 3 outputs: red LED, green
+>> LED and blue LED.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> ---
+>> Changes since v1:
+>>   - Change the compatible string to be one explicit SoC name.
+>>   - Change the child node name.
+>>   - Change to be upper case for the first character.
+>> ---
+>>   .../devicetree/bindings/leds/leds-sc27xx-bltc.txt  |   41 ++++++++++++++++++++
+>>   1 file changed, 41 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+>> new file mode 100644
+>> index 0000000..b3de7fc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+>> @@ -0,0 +1,41 @@
+>> +LEDs connected to Spreadtrum SC27XX PMIC breathing light controller
+>> +
+>> +The SC27xx breathing light controller supports to 3 outputs:
+>> +red LED, green LED and blue LED. Each LED can work at normal
+>> +PWM mode or breath light mode.
+> 
+>> +Required properties:
+>> +- compatible: Should be "sprd,sc2731-bltc".
+> 
+> If this is for 2731, I'd say so in the title and the filename...?
 
-Also add the proper speed for the xo-clock as 38400000.  This is
-internally divided in RPMh clock driver to get "bi_tcxo" at 19200000.
+Not necessarily, since apparently it is possible that other compatibles
+might be added to it in the future.
 
-After this change the clock tree in /sys/kernel/debug/clk/clk_summary
-looks much better.
+> 
+>> +- #address-cells: Must be 1.
+>> +- #size-cells: Must be 0.
+>> +- reg: Specify controller address.
+> 
+> the controller...
+> 
+>> +Required child properties:
+>> +- reg: Number of LED line (could be from 0 to 2).
+> 
+> Uff. "Port this LED is connected to"?
+> 
+> With that fixed...
+> 
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> 
+> 									Pavel
+> 
 
-NOTES:
-- Technically you could argue that this clock could belong in board
-  .dts files, not in the SoC one.  However at the moment it's believed
-  that 100% of sdm845 boards will have an external clock at 38.4.  It
-  can always be moved later if necessary.
-- We could rename the "xo-board" device tree node to "xo_board" to
-  achieve the same effect as this patch.  Presumably device-tree folks
-  would rather keep node names using dashes though.
-- We could change the RPMh clock driver to use a dash to achieve the
-  same effect as this patch, but all other clocks in the clock tree
-  use underscores.  It seems silly to change just this one.
-
-Fixes: 7bafa643647f ("arm64: dts: sdm845: Add minimal dts/dtsi files for sdm845 SoC and MTP")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 486ace9a9e8b..4945f8cccd6c 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -137,7 +137,8 @@
- 		xo_board: xo-board {
- 			compatible = "fixed-clock";
- 			#clock-cells = <0>;
--			clock-frequency = <19200000>;
-+			clock-frequency = <38400000>;
-+			clock-output-names = "xo_board";
- 		};
- 
- 		sleep_clk: sleep-clk {
 -- 
-2.17.0.441.gb46fe60e1d-goog
+Best regards,
+Jacek Anaszewski
