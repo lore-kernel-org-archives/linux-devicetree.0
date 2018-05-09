@@ -1,68 +1,141 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v6 2/6] ARM: imx6: register pm_power_off handler if
- "fsl,pmic-stby-poweroff" is set
-Date: Wed, 9 May 2018 10:02:13 +0100
-Message-ID: <20180509090213.GQ16141@n2100.armlinux.org.uk>
-References: <20180305102524.5905-1-o.rempel@pengutronix.de>
- <20180305102524.5905-3-o.rempel@pengutronix.de>
- <20180508124033.GL16141@n2100.armlinux.org.uk>
- <20180509050628.csbusplowpvmmiwa@pengutronix.de>
+From: Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH 2/5] pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver
+Date: Wed, 9 May 2018 09:13:26 +0000
+Message-ID: <97d688a0-c0b7-dfe4-04c7-1668a08e911a@st.com>
+References: <1523440025-18077-1-git-send-email-amelie.delaunay@st.com>
+ <1523440025-18077-3-git-send-email-amelie.delaunay@st.com>
+ <CACRpkdb-=QU74-MZxMdB6QPqMLZr97WxN80iyOoTFqXPicL75w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180509050628.csbusplowpvmmiwa@pengutronix.de>
+In-Reply-To: <CACRpkdb-=QU74-MZxMdB6QPqMLZr97WxN80iyOoTFqXPicL75w@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <022A6355FD0E5146B37B397391FA8BDA@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Andrew Morton <akpm@linux-foundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 09, 2018 at 07:06:28AM +0200, Oleksij Rempel wrote:
-> On Tue, May 08, 2018 at 01:40:33PM +0100, Russell King - ARM Linux wrote:
-> > On Mon, Mar 05, 2018 at 11:25:19AM +0100, Oleksij Rempel wrote:
-> > > One of the Freescale recommended sequences for power off with external
-> > > PMIC is the following:
-> > > ...
-> > > 3.  SoC is programming PMIC for power off when standby is asserted.
-> > > 4.  In CCM STOP mode, Standby is asserted, PMIC gates SoC supplies.
-> > > 
-> > > See:
-> > > http://www.nxp.com/assets/documents/data/en/reference-manuals/IMX6DQRM.pdf
-> > > page 5083
-> > > 
-> > > This patch implements step 4. of this sequence.
-> > > 
-> > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > > ---
-> > >  arch/arm/mach-imx/pm-imx6.c | 25 +++++++++++++++++++++++++
-> > >  1 file changed, 25 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
-> > > index ecdf071653d4..24689260a2a5 100644
-> > > --- a/arch/arm/mach-imx/pm-imx6.c
-> > > +++ b/arch/arm/mach-imx/pm-imx6.c
-> > > @@ -604,6 +604,28 @@ static void __init imx6_pm_common_init(const struct imx6_pm_socdata
-> > >  				   IMX6Q_GPR1_GINT);
-> > >  }
-> > >  
-> > > +static void imx6_pm_stby_poweroff(void)
-> > > +{
-> > > +	imx6_set_lpm(STOP_POWER_OFF);
-> > > +	cpu_suspend(0, imx6q_suspend_finish);
-> > 
-> > Do you actually need to save the processor state etc here - the request
-> > is after all to power down the system and not to suspend.  Would calling
-> > imx6q_suspend_finish() directly work (and hence simplify the code) ?
-> 
-> yes you right. This will work as well.
-> I'll send changed version after Rafaels feedback for kernel/reboot.c
-> part.
-> Russell, can I expect your Signed-off-by for changed patch?
-
-No, please read Documentation/process/submitting-patches.rst section 12.
-s-o-b does not apply in this case.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+T24gMDQvMjYvMjAxOCAwMjo0OCBQTSwgTGludXMgV2FsbGVpaiB3cm90ZToNCj4gT24gV2VkLCBB
+cHIgMTEsIDIwMTggYXQgMTE6NDcgQU0sIEFtZWxpZSBEZWxhdW5heQ0KPiA8YW1lbGllLmRlbGF1
+bmF5QHN0LmNvbT4gd3JvdGU6DQo+IA0KPiBIaSBBbWVsaWUsIHRoYW5rcyBmb3IgeW91ciBwYXRj
+aCENCj4gDQoNCkhpIExpbnVzLCB0aGFua3MgZm9yIHJldmlld2luZyENCg0KPj4gVGhpcyBwYXRj
+aCBhZGRzIHBpbmN0cmwvR1BJTyBkcml2ZXIgZm9yIFNUTWljcm9lbGVjdHJvbmljcw0KPj4gTXVs
+dGktRnVuY3Rpb24gZVhwYW5kZXIgKFNUTUZYKSBHUElPIGV4cGFuZGVyLg0KPj4gU1RNRlggaXMg
+YW4gSTJDIHNsYXZlIGNvbnRyb2xsZXIsIG9mZmVyaW5nIHVwIHRvIDI0IEdQSU9zLg0KPj4gVGhl
+IGRyaXZlciByZWxpZXMgb24gZ2VuZXJpYyBwaW4gY29uZmlnIGludGVyZmFjZSB0byBjb25maWd1
+cmUgdGhlIEdQSU9zLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEFtZWxpZSBEZWxhdW5heSA8YW1l
+bGllLmRlbGF1bmF5QHN0LmNvbT4NCj4gDQo+IFRoaXMgaXMgbG9va2luZyB2ZXJ5IGdvb2QuDQo+
+IA0KPiBUaGUgb3ZlcmFsbCBhcmNoaXRlY3R1cmUgb2YgdGhpcyBwYXRjaCBzZXQgaXMgZXhjZWxs
+ZW50Lg0KPiANCj4gSSBoYXZlIG9ubHkgb25lIG1ham9yIHF1ZXN0aW9uIGFib3V0IHdoZXRoZXIg
+dGhpcyBzaG91bGQgYmUNCj4gYSBNRkQgcGFyZW50IGFuZCBHUElPLXBpbmN0cmwtY2hpbGQgc3Bs
+aXQgZHJpdmVyLCBzZWUgYmVsb3cuDQo+IA0KPj4gK2NvbmZpZyBQSU5DVFJMX1NUTUZYDQo+PiAr
+ICAgICAgIHRyaXN0YXRlICJTVE1pY3JvZWxlY3Ryb25pY3MgU1RNRlggSTJDIEdQSU8gZXhwYW5k
+ZXIgcGluY3RybCBkcml2ZXIiDQo+PiArICAgICAgIGRlcGVuZHMgb24gR1BJT0xJQiAmJiBJMkM9
+eQ0KPj4gKyAgICAgICBzZWxlY3QgR0VORVJJQ19QSU5DT05GDQo+PiArICAgICAgIHNlbGVjdCBH
+UElPTElCX0lSUUNISVANCj4+ICsgICAgICAgc2VsZWN0IFJFR01BUF9JMkMNCj4gDQo+IFRoYW5r
+cyBmb3IgdXNpbmcgYWxsIHRoZSBoZWxwZXJzLCBpdCBtYWtlcyB0aGUgY29kZSB2ZXJ5IHNtYWxs
+IGFuZA0KPiBjb25zaXN0ZW50IGFuZCBlYXN5IHRvIHJldmlldyBhbmQgbWFpbnRhaW4uDQo+IA0K
+Pj4gKyNpbmNsdWRlIDxsaW51eC9iaXRmaWVsZC5oPg0KPj4gKyNpbmNsdWRlIDxsaW51eC9ncGlv
+Lmg+DQo+IA0KPiBQbGVhc2UganVzdCB1c2U6DQo+ICAgI2luY2x1ZGUgPGxpbnV4L2dwaW8vZHJp
+dmVyLmg+DQo+IA0KDQpPSywgSSdsbCBmaXggaXQuDQoNCj4+ICtzdGF0aWMgdm9pZCBzdG1meF9n
+cGlvX2lycV90b2dnbGVfdHJpZ2dlcihzdHJ1Y3Qgc3RtZnhfcGluY3RybCAqcGN0bCwNCj4+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCBvZmZz
+ZXQpDQo+PiArew0KPj4gKyAgICAgICB1MzIgcmVnID0gZ2V0X3JlZyhvZmZzZXQpOw0KPj4gKyAg
+ICAgICB1MzIgbWFzayA9IGdldF9tYXNrKG9mZnNldCk7DQo+PiArICAgICAgIGludCB2YWw7DQo+
+PiArDQo+PiArICAgICAgIGlmICghKHBjdGwtPmlycV90b2dnbGVfZWRnZVtyZWddICYgbWFzaykp
+DQo+PiArICAgICAgICAgICAgICAgcmV0dXJuOw0KPj4gKw0KPj4gKyAgICAgICB2YWwgPSBzdG1m
+eF9ncGlvX2dldCgmcGN0bC0+Z3Bpb19jaGlwLCBvZmZzZXQpOw0KPj4gKyAgICAgICBpZiAodmFs
+IDwgMCkNCj4+ICsgICAgICAgICAgICAgICByZXR1cm47DQo+PiArDQo+PiArICAgICAgIGlmICh2
+YWwpIHsNCj4+ICsgICAgICAgICAgICAgICBwY3RsLT5pcnFfZ3BpX3R5cGVbcmVnXSAmPSBtYXNr
+Ow0KPj4gKyAgICAgICAgICAgICAgIHJlZ21hcF93cml0ZV9iaXRzKHBjdGwtPnJlZ21hcCwgU1RN
+RlhfUkVHX0lSUV9HUElfVFlQRSArIHJlZywNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBnZXRfbWFzayhvZmZzZXQpLCAwKTsNCj4+ICsNCj4+ICsgICAgICAgfSBlbHNlIHsN
+Cj4+ICsgICAgICAgICAgICAgICBwY3RsLT5pcnFfZ3BpX3R5cGVbcmVnXSB8PSBtYXNrOw0KPj4g
+KyAgICAgICAgICAgICAgIHJlZ21hcF93cml0ZV9iaXRzKHBjdGwtPnJlZ21hcCwgU1RNRlhfUkVH
+X0lSUV9HUElfVFlQRSArIHJlZywNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBnZXRfbWFzayhvZmZzZXQpLCBnZXRfbWFzayhvZmZzZXQpKTsNCj4+ICsgICAgICAgfQ0KPj4g
+K30NCj4gDQo+IFdlIGhhZCBhIGJpdCBvZiBkaXNjdXNzaW9uIGFib3V0IGVkZ2UgdHJpZ2dlciBl
+bXVsYXRpb24gb24gdGhlDQo+IG1haWxpbmcgbGlzdC4gU3RyYW5nZSB0aGF0IHRoZXNlIEhXIGVu
+Z2luZWVycyBkaWRuJ3QgdGhpbmsgb2YgdGhpcywNCj4gSSB0aG91Z2h0IGl0IHdhcyB3aWRlbHkg
+a25vd24gdGhhdCBkb3VibGUtZWRnZSB0cmlnZ2VyIChub3QganVzdCBvbmUNCj4gb3IgdGhlIG90
+aGVyKSBpcyBuZWVkZWQgaW4gY29udGVtcG9yYXJ5IEdQSU8gSFcuDQo+IA0KDQpZZXMhIFN1cHBv
+cnRlZCBieSB0aGUgU1RNMzJMMTUyIG9uIHdoaWNoIHN0bWZ4IGlzIGJhc2VkIGJ1dCBub3QgYnkg
+dGhlIA0KRlcgYWJzdHJhY3Rpb24uIFNvLCBtYXliZSwgaW4gYSBmdXR1cmUgc3RtZnggRlcgdmVy
+c2lvbi4uLg0KDQo+PiArICAgICAgIGlmICghb2ZfZmluZF9wcm9wZXJ0eShucCwgImdwaW8tcmFu
+Z2VzIiwgTlVMTCkpIHsNCj4+ICsgICAgICAgICAgICAgICByZXQgPSBncGlvY2hpcF9hZGRfcGlu
+X3JhbmdlKCZwY3RsLT5ncGlvX2NoaXAsDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBkZXZfbmFtZShwY3RsLT5kZXYpLA0KPj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMCwgMCwgcGN0bC0+cGN0bF9kZXNjLm5waW5z
+KTsNCj4+ICsgICAgICAgICAgICAgICBpZiAocmV0KQ0KPj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgcmV0dXJuIHJldDsNCj4gDQo+IERvIHlvdSByZWFsbHkgbmVlZCB0byBzdXBwb3J0IERUQnMg
+d2l0aG91dCBncGlvLXJhbmdlcz8NCj4gDQo+IEkuZS4gY2FuJ3QgeW91IGp1c3QgcHJpbnQgYW4g
+ZXJyb3IgYW5kIGV4aXQgaWYgdGhlcmUgaXMgbm8gcmFuZ2U/DQo+IA0KPiBJIHRoaW5rIG90aGVy
+IGRyaXZlcnMgaGFzIHRoaXMgaGFuZGxpbmcgYmVjYXVzZSBvZiBvbGRlcg0KPiBEVCBiaW5kaW5n
+cyBhbmQgdHJlZXMgZHJpZnRpbmcgYXJvdW5kLg0KPiANCg0KWW91J3JlIHJpZ2h0LCBubyBuZWVk
+IHRvIHN1cHBvcnQgRFRCcyB3aXRob3V0IGdwaW8tcmFuZ2VzLiBJJ2xsIGFkZCANCmdwaW8tcmFu
+Z2VzIHByb3BlcnR5IHVuZGVyIHJlcXVpcmVkIHNlY3Rpb24gb2Ygc3RtZnggYmluZGluZ3MuDQoN
+Cj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHJlZ21hcF9jb25maWcgc3RtZnhfcmVnbWFwX2NvbmZp
+ZyA9IHsNCj4+ICsgICAgICAgLnJlZ19iaXRzID0gOCwNCj4+ICsgICAgICAgLnZhbF9iaXRzID0g
+OCwNCj4+ICt9Ow0KPiANCj4gVGhpcyBjYW4gcHJvYmFibHkgYmUgaW1wcm92ZWQgaW4gdGhlIGZ1
+dHVyZS4NCj4gT3IgYXJlIHRoZXJlIHJlYWxseSBleGFjdGx5IDI1NSByZWdpc3RlcnM/DQo+IA0K
+DQpPSywgSSdsbCBoYXZlIGEgbG9vayB0byBpbXByb3ZlIGl0Lg0KDQo+PiArc3RhdGljIGludCBz
+dG1meF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0KPj4gKyAgICAgICAgICAgICAg
+ICAgICAgICBjb25zdCBzdHJ1Y3QgaTJjX2RldmljZV9pZCAqaWQpDQo+PiArew0KPj4gKyAgICAg
+ICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gY2xpZW50LT5kZXYub2Zfbm9kZSwgKmNoaWxkOw0K
+Pj4gKyAgICAgICBzdHJ1Y3Qgc3RtZnggKnN0bWZ4Ow0KPj4gKyAgICAgICBpbnQgcmV0Ow0KPj4g
+Kw0KPj4gKyAgICAgICBzdG1meCA9IGRldm1fa3phbGxvYygmY2xpZW50LT5kZXYsIHNpemVvZigq
+c3RtZngpLCBHRlBfS0VSTkVMKTsNCj4+ICsgICAgICAgaWYgKCFzdG1meCkNCj4+ICsgICAgICAg
+ICAgICAgICByZXR1cm4gLUVOT01FTTsNCj4+ICsNCj4+ICsgICAgICAgaTJjX3NldF9jbGllbnRk
+YXRhKGNsaWVudCwgc3RtZngpOw0KPj4gKw0KPj4gKyAgICAgICBzdG1meC0+ZGV2ID0gJmNsaWVu
+dC0+ZGV2Ow0KPj4gKw0KPj4gKyAgICAgICBzdG1meC0+cmVnbWFwID0gZGV2bV9yZWdtYXBfaW5p
+dF9pMmMoY2xpZW50LCAmc3RtZnhfcmVnbWFwX2NvbmZpZyk7DQo+PiArICAgICAgIGlmIChJU19F
+UlIoc3RtZngtPnJlZ21hcCkpIHsNCj4+ICsgICAgICAgICAgICAgICByZXQgPSBQVFJfRVJSKHN0
+bWZ4LT5yZWdtYXApOw0KPj4gKyAgICAgICAgICAgICAgIGRldl9lcnIoc3RtZngtPmRldiwNCj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgICJGYWlsZWQgdG8gYWxsb2NhdGUgcmVnaXN0ZXIgbWFw
+OiAlZFxuIiwgcmV0KTsNCj4+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPj4gKyAgICAg
+ICB9DQo+PiArDQo+PiArICAgICAgIHJldCA9IHN0bWZ4X2NoaXBfaW5pdChzdG1meCwgY2xpZW50
+KTsNCj4+ICsgICAgICAgaWYgKHJldCkgew0KPj4gKyAgICAgICAgICAgICAgIGlmIChyZXQgPT0g
+LUVUSU1FRE9VVCkNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAtRVBST0JFX0RF
+RkVSOw0KPj4gKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+PiArICAgICAgIH0NCj4+ICsN
+Cj4+ICsgICAgICAgc3RtZngtPmlycSA9IGNsaWVudC0+aXJxOw0KPj4gKyAgICAgICByZXQgPSBz
+dG1meF9pcnFfaW5pdChzdG1meCk7DQo+PiArICAgICAgIGlmIChyZXQpDQo+PiArICAgICAgICAg
+ICAgICAgcmV0dXJuIHJldDsNCj4+ICsNCj4+ICsgICAgICAgZm9yX2VhY2hfYXZhaWxhYmxlX2No
+aWxkX29mX25vZGUobnAsIGNoaWxkKSB7DQo+PiArICAgICAgICAgICAgICAgaWYgKG9mX3Byb3Bl
+cnR5X3JlYWRfYm9vbChjaGlsZCwgImdwaW8tY29udHJvbGxlciIpKSB7DQo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICByZXQgPSBzdG1meF9ncGlvX2luaXQoc3RtZngsIGNoaWxkKTsNCj4+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIGlmIChyZXQpDQo+PiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIGdvdG8gZXJyOw0KPj4gKyAgICAgICAgICAgICAgIH0NCj4+ICsgICAgICAgfQ0K
+PiANCj4gSG0gc28geW91IGRvIG5vdCB1c2UgYSBNRkQgZHJpdmVyIGZvciB0aGUgY29yZSBvZiB0
+aGUgZHJpdmVyPw0KPiANCj4gSW5zdGVhZCB0aGlzIGRyaXZlciBiZWNvbWVzIHRoZSBjb3JlIGRy
+aXZlcj8NCj4gDQo+IEkgZ3Vlc3MgaXQgaXMgZmluZSBhcyBsb25nIGFzIHRoZSBjaGlwIGlzIG9u
+bHkgZG9pbmcgR1BJTw0KPiBhbmQgcGluIGNvbnRyb2wuIElmIHRoZSBjaGlwIGhhcyBtb3JlIGFi
+aWxpdGllcyAoc3VjaCBhcyBQV00sDQo+IExFRC4uLikgdGhlbiB0aGUgY29yZSBzaG91bGQgYmUg
+YW4gTUZEIGRyaXZlciB0aGF0IHNwYXducw0KPiBHUElPL3BpbmN0cmwgZHJpdmVyIGFzIGEgY2hp
+bGQsIHRoZW4gdGhpcyBjaGlsZCBsb29rcyB1cCB0aGUNCj4gcmVnbWFwIGZyb20gdGhlIHBhcmVu
+dCBNRkQgZHJpdmVyLg0KDQpZZXMsIHRoaXMgcmVzdW1lcyB0aGUgYmluZGluZyBwYXRjaCBjb25j
+ZXJucy4NCnN0bWZ4IGNoaXAgb24gYm9hcmRzIHN1cHBvcnRlZCBieSBMaW51eCBpcyBvbmx5IGRv
+aW5nIEdQSU8gYW5kIHBpbiANCmNvbnRyb2wuIFRoZSBvdGhlciBhYmlsaXRpZXMgKElERCBtZWFz
+dXJlbWVudCBhbmQgVG91Y2hTY3JlZW4gDQpjb250cm9sbGVyKSBhcmUgbm90IHVzZWQgYW5kIGNh
+bm5vdCBiZSB0ZXN0ZWQgd2l0aCBMaW51eCBmb3IgdGhlIHRpbWUgDQpiZWluZy4gQnV0IGlmIHRo
+ZXNlIGZ1bmN0aW9uIGFyZSB1c2VkLCB0aGVuIHRoZSBjb3JlIHBhcnQgb2YgdGhpcyBkcml2ZXIg
+DQooYWxsIG5vdCBzdG1meF9ncGlvXy9zdG1meF9waW5jdHJsXy9zdG1meF9waW5jb25mXyBwcmVm
+aXhlZCBmdW5jdGlvbnMpIA0Kd2lsbCBiZWNvbWUgYW4gTUZEIGRyaXZlci4NCg0KPiANCj4gU2Vl
+IGZvciBleGFtcGxlIGhvdyB0aGUgc2ltcGxlIFNUdzQ4MXggZHJpdmVyIGRvZXMgdGhpbmdzOg0K
+PiBkcml2ZXJzL21mZC9zdHc0ODF4LmMNCj4gZHJpdmVycy9yZWd1bGF0b3Ivc3R3NDgxeC12bW1j
+LmMNCj4gDQo+IFRoaXMgTUZEIGhhcyBubyBHUElPL3BpbiBjb250cm9sIGJ1dCBpdCBpbGx1c3Ry
+YXRlcyBhIHNpbXBsZQ0KPiBwYXJlbnQvY2hpbGQgaW5zdGFudGlhdGlvbiB3aXRoIGFuIE1GRCBj
+b3JlIGRyaXZlci4NCj4gDQo+IEl0IGhhcyB0aGlzIERUUyBlbnRyeToNCj4gDQo+ICAgICAgICAg
+ICAgICAgICAgc3R3NDgxMUAyZCB7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRp
+YmxlID0gInN0LHN0dzQ4MTEiOw0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4
+MmQ+Ow0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgdm1tY19yZWd1bGF0b3I6IHZtbWMgew0K
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInN0LHN0dzQ4
+MXgtdm1tYyI7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1u
+YW1lID0gIlZNTUMiOw0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0
+b3ItbWluLW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsNCj4gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47DQo+ICAgICAgICAg
+ICAgICAgICAgICAgICAgICB9Ow0KPiAgICAgICAgICAgICAgICAgIH07DQo+IA0KPiBUaGUgTUZE
+IGRyaXZlciBtYXRjaGVzIGFuZCBzcGF3bnMgdGhlIFZNTUMgY2hpbGQNCj4gdGhlbiB0aGF0IGRy
+aXZlciBtYXRoZXMgdG8gdGhlIHZtbWMgbm9kZS4NCj4gDQo+IFlvdXJzLA0KPiBMaW51cyBXYWxs
+ZWlqDQo+IA0KDQpUaGFua3MsDQpBbWVsaWU=
