@@ -1,7 +1,7 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v10 04/27] ARM: davinci: pass clock as parameter to davinci_timer_init()
-Date: Wed,  9 May 2018 12:25:43 -0500
-Message-ID: <20180509172606.29387-5-david@lechnology.com>
+Subject: [PATCH v10 15/27] ARM: davinci: switch to common clock framework
+Date: Wed,  9 May 2018 12:25:54 -0500
+Message-ID: <20180509172606.29387-16-david@lechnology.com>
 References: <20180509172606.29387-1-david@lechnology.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180509172606.29387-1-david@lechnology.com>
@@ -10,18 +10,12 @@ To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@list
 Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-This changes davinci_timer_init() so that we pass the clock as a
-parameter instead of using clk_get(). This is done in preparation
-for converting to the common clock framework.
+This switches ARCH_DAVINCI to use the common clock framework. The legacy
+clock code in arch/arm/mach-davinci/ is no longer used. New drivers in
+drivers/clk/davinci/ are used instead.
 
-It removes the requirement that we have to have a clock with con_id
-of "timer0", which will be good for DT bindings since clock-names =
-"timer0" doesn't really make sense.
+A few macros had to be moved to prevent compilation errors.
 
-Also, drop use of extern in header file since we are touching the
-definition.
-
-Reviewed-by: Sekhar Nori <nsekhar@ti.com>
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
@@ -29,140 +23,105 @@ v10 changes:
 - none
 
 v9 changes:
-- drop comment about using ref_clk
+- none
 
 v8 changes:
 - none
 
 v7 changes:
-- new in v7
+- s/compile/compilation and space instead of tab
+- add PM_GENERIC_DOMAINS dependencies
+
+v6 changes:
+- clean up indent on Common objects section
 
 
- arch/arm/mach-davinci/da830.c               | 2 +-
- arch/arm/mach-davinci/da850.c               | 2 +-
- arch/arm/mach-davinci/dm355.c               | 2 +-
- arch/arm/mach-davinci/dm365.c               | 2 +-
- arch/arm/mach-davinci/dm644x.c              | 2 +-
- arch/arm/mach-davinci/dm646x.c              | 2 +-
- arch/arm/mach-davinci/include/mach/common.h | 3 ++-
- arch/arm/mach-davinci/time.c                | 5 +----
- 8 files changed, 9 insertions(+), 11 deletions(-)
+ arch/arm/Kconfig                | 5 ++++-
+ arch/arm/mach-davinci/Makefile  | 4 ++--
+ arch/arm/mach-davinci/clock.h   | 4 ----
+ arch/arm/mach-davinci/davinci.h | 4 ++++
+ arch/arm/mach-davinci/psc.h     | 2 --
+ 5 files changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
-index 350d7673aa4d..0b17e5a22e5e 100644
---- a/arch/arm/mach-davinci/da830.c
-+++ b/arch/arm/mach-davinci/da830.c
-@@ -1224,5 +1224,5 @@ void __init da830_init(void)
- void __init da830_init_time(void)
- {
- 	davinci_clk_init(da830_clks);
--	davinci_timer_init();
-+	davinci_timer_init(&timerp64_0_clk);
- }
-diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
-index 34117e614e08..1dbf01c4124b 100644
---- a/arch/arm/mach-davinci/da850.c
-+++ b/arch/arm/mach-davinci/da850.c
-@@ -1396,5 +1396,5 @@ void __init da850_init(void)
- void __init da850_init_time(void)
- {
- 	davinci_clk_init(da850_clks);
--	davinci_timer_init();
-+	davinci_timer_init(&timerp64_0_clk);
- }
-diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
-index f29480495c18..0da7516018ca 100644
---- a/arch/arm/mach-davinci/dm355.c
-+++ b/arch/arm/mach-davinci/dm355.c
-@@ -1047,7 +1047,7 @@ void __init dm355_init(void)
- void __init dm355_init_time(void)
- {
- 	davinci_clk_init(dm355_clks);
--	davinci_timer_init();
-+	davinci_timer_init(&timer0_clk);
- }
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index a7f8e7f4b88f..a57ad13810c8 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -609,13 +609,16 @@ config ARCH_S3C24XX
+ config ARCH_DAVINCI
+ 	bool "TI DaVinci"
+ 	select ARCH_HAS_HOLES_MEMORYMODEL
+-	select CLKDEV_LOOKUP
++	select COMMON_CLK
+ 	select CPU_ARM926T
+ 	select GENERIC_ALLOCATOR
+ 	select GENERIC_CLOCKEVENTS
+ 	select GENERIC_IRQ_CHIP
+ 	select GPIOLIB
+ 	select HAVE_IDE
++	select PM_GENERIC_DOMAINS if PM
++	select PM_GENERIC_DOMAINS_OF if PM && OF
++	select RESET_CONTROLLER
+ 	select USE_OF
+ 	select ZONE_DMA
+ 	help
+diff --git a/arch/arm/mach-davinci/Makefile b/arch/arm/mach-davinci/Makefile
+index 4e8178050027..8725d8bea567 100644
+--- a/arch/arm/mach-davinci/Makefile
++++ b/arch/arm/mach-davinci/Makefile
+@@ -5,8 +5,8 @@
+ #
  
- int __init dm355_init_video(struct vpfe_config *vpfe_cfg,
-diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
-index 1e3df9df1e10..871372a59da8 100644
---- a/arch/arm/mach-davinci/dm365.c
-+++ b/arch/arm/mach-davinci/dm365.c
-@@ -1172,7 +1172,7 @@ void __init dm365_init(void)
- void __init dm365_init_time(void)
- {
- 	davinci_clk_init(dm365_clks);
--	davinci_timer_init();
-+	davinci_timer_init(&timer0_clk);
- }
+ # Common objects
+-obj-y 			:= time.o clock.o serial.o psc.o \
+-			   usb.o common.o sram.o aemif.o
++obj-y 					:= time.o serial.o usb.o \
++					   common.o sram.o aemif.o
  
- static struct resource dm365_vpss_resources[] = {
-diff --git a/arch/arm/mach-davinci/dm644x.c b/arch/arm/mach-davinci/dm644x.c
-index a2e8586c8a6d..708df0ed8554 100644
---- a/arch/arm/mach-davinci/dm644x.c
-+++ b/arch/arm/mach-davinci/dm644x.c
-@@ -935,7 +935,7 @@ void __init dm644x_init(void)
- void __init dm644x_init_time(void)
- {
- 	davinci_clk_init(dm644x_clks);
--	davinci_timer_init();
-+	davinci_timer_init(&timer0_clk);
- }
+ obj-$(CONFIG_DAVINCI_MUX)		+= mux.o
  
- int __init dm644x_init_video(struct vpfe_config *vpfe_cfg,
-diff --git a/arch/arm/mach-davinci/dm646x.c b/arch/arm/mach-davinci/dm646x.c
-index 109ab1fa0d2c..e1d6e92f434a 100644
---- a/arch/arm/mach-davinci/dm646x.c
-+++ b/arch/arm/mach-davinci/dm646x.c
-@@ -956,7 +956,7 @@ void __init dm646x_init_time(unsigned long ref_clk_rate,
- 	ref_clk.rate = ref_clk_rate;
- 	aux_clkin.rate = aux_clkin_rate;
- 	davinci_clk_init(dm646x_clks);
--	davinci_timer_init();
-+	davinci_timer_init(&timer0_clk);
- }
+diff --git a/arch/arm/mach-davinci/clock.h b/arch/arm/mach-davinci/clock.h
+index d7894d5aaa25..2d058568e004 100644
+--- a/arch/arm/mach-davinci/clock.h
++++ b/arch/arm/mach-davinci/clock.h
+@@ -12,10 +12,6 @@
+ #ifndef __ARCH_ARM_DAVINCI_CLOCK_H
+ #define __ARCH_ARM_DAVINCI_CLOCK_H
  
- static int __init dm646x_init_devices(void)
-diff --git a/arch/arm/mach-davinci/include/mach/common.h b/arch/arm/mach-davinci/include/mach/common.h
-index f0d5e858f158..5f45d0ac66a8 100644
---- a/arch/arm/mach-davinci/include/mach/common.h
-+++ b/arch/arm/mach-davinci/include/mach/common.h
-@@ -12,11 +12,12 @@
- #ifndef __ARCH_ARM_MACH_DAVINCI_COMMON_H
- #define __ARCH_ARM_MACH_DAVINCI_COMMON_H
- 
-+#include <linux/clk.h>
- #include <linux/compiler.h>
- #include <linux/types.h>
- #include <linux/reboot.h>
- 
--extern void davinci_timer_init(void);
-+void davinci_timer_init(struct clk *clk);
- 
- extern void davinci_irq_init(void);
- extern void __iomem *davinci_intc_base;
-diff --git a/arch/arm/mach-davinci/time.c b/arch/arm/mach-davinci/time.c
-index 1bb991ad9c1e..486896f309c5 100644
---- a/arch/arm/mach-davinci/time.c
-+++ b/arch/arm/mach-davinci/time.c
-@@ -334,10 +334,8 @@ static struct clock_event_device clockevent_davinci = {
- 	.set_state_oneshot	= davinci_set_oneshot,
- };
- 
+-#define DAVINCI_PLL1_BASE 0x01c40800
+-#define DAVINCI_PLL2_BASE 0x01c40c00
+-#define MAX_PLL 2
 -
--void __init davinci_timer_init(void)
-+void __init davinci_timer_init(struct clk *timer_clk)
- {
--	struct clk *timer_clk;
- 	struct davinci_soc_info *soc_info = &davinci_soc_info;
- 	unsigned int clockevent_id;
- 	unsigned int clocksource_id;
-@@ -373,7 +371,6 @@ void __init davinci_timer_init(void)
- 		}
- 	}
+ /* PLL/Reset register offsets */
+ #define PLLCTL          0x100
+ #define PLLCTL_PLLEN    BIT(0)
+diff --git a/arch/arm/mach-davinci/davinci.h b/arch/arm/mach-davinci/davinci.h
+index fa99197d36f9..db4c95ef4d5c 100644
+--- a/arch/arm/mach-davinci/davinci.h
++++ b/arch/arm/mach-davinci/davinci.h
+@@ -35,6 +35,10 @@
+ #include <media/davinci/vpbe.h>
+ #include <media/davinci/vpbe_osd.h>
  
--	timer_clk = clk_get(NULL, "timer0");
- 	BUG_ON(IS_ERR(timer_clk));
- 	clk_prepare_enable(timer_clk);
++#define DAVINCI_PLL1_BASE		0x01c40800
++#define DAVINCI_PLL2_BASE		0x01c40c00
++#define DAVINCI_PWR_SLEEP_CNTRL_BASE	0x01c41000
++
+ #define DAVINCI_SYSTEM_MODULE_BASE	0x01c40000
+ #define SYSMOD_VDAC_CONFIG		0x2c
+ #define SYSMOD_VIDCLKCTL		0x38
+diff --git a/arch/arm/mach-davinci/psc.h b/arch/arm/mach-davinci/psc.h
+index 8af9f09fc10c..b58707cf7033 100644
+--- a/arch/arm/mach-davinci/psc.h
++++ b/arch/arm/mach-davinci/psc.h
+@@ -27,8 +27,6 @@
+ #ifndef __ASM_ARCH_PSC_H
+ #define __ASM_ARCH_PSC_H
  
+-#define	DAVINCI_PWR_SLEEP_CNTRL_BASE	0x01C41000
+-
+ /* Power and Sleep Controller (PSC) Domains */
+ #define DAVINCI_GPSC_ARMDOMAIN		0
+ #define DAVINCI_GPSC_DSPDOMAIN		1
 -- 
 2.17.0
