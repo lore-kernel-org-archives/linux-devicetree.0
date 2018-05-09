@@ -1,304 +1,174 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v4 1/6] dt-bindings: devfreq: rk3399_dmc: improve binding documentation.
-Date: Wed,  9 May 2018 14:57:43 +0200
-Message-ID: <20180509125749.31318-2-enric.balletbo@collabora.com>
-References: <20180509125749.31318-1-enric.balletbo@collabora.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v8 00/24] ASoC: qcom: Add support to QDSP based Audio
+Date: Wed,  9 May 2018 13:56:11 +0100
+Message-ID: <20180509125635.5653-1-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180509125749.31318-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, heiko@sntech.de, linux-pm@vger.kernel.org, dbasehore@chromium.org, linux-kernel@vger.kernel.org, dianders@google.com, groeck@chromium.org, kernel@collabora.com, hl@rock-chips.com, Nick Milner <nick.milner@collabora.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>
+To: andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, bgoswami@codeaurora.org
+Cc: gregkh@linuxfoundation.org, david.brown@linaro.org, mark.rutland@arm.com, lgirdwood@gmail.com, plai@codeaurora.org, tiwai@suse.com, perex@perex.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com, spatakok@qti.qualcomm.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Nick Milner <nick.milner@collabora.com>
+Thankyou everyone for providing feedback and testing v7 patchset.
+This patchset aims to provide a basic version of QCOM DSP based
+audio support which is available in downstream andriod kernels.
+This patchset support audio playback on HDMI-RX, MI2S, SLIMBus and
+will add support to other features as we move on.
 
-There are several typos, references to non existent files, grammar and
-punctuation mistakes in the rk3399_dmc.txt binding. This patch tries
-to improve the binding documentation and fix these mistakes.
+QDSP has both static and dynamic modules. static modules like AFE
+(Audio FrontEnd), ADM (Audio Device Manager), ASM(Audio Stream Manager)
+and CORE to provide this audio services.
+All these services use APR (Asynchronous Packet Router) protocol
+via smd/glink transport to communicate with Application processor.
+More details on each module is availble in there respective patch.
 
-Signed-off-by: Nick Milner <nick.milner@collabora.com>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-- [1/5] Fix some attributes to match with the code s/_disb/_dis/
+This patchset is tested on DB820c, with HDMI audio playback, MI2S on
+DB410c on top of mainline, Also tested SLIMBus analog audio using
+wcd9355 with an additional patches. Patches are also tested on
+SDM845 by Rohit.
 
----
+Here is my test branch incase someone want to try these patches
+https://git.linaro.org/people/srinivas.kandagatla/linux.git/log/?h=v4.17-qdsp6
 
-Changes in v4: None
-Changes in v3:
-- [1/5] Add Reviewed-by Rob Herring.
+Here is block diagram to give a quick overview of the components
 
-Changes in v2:
-- [1/6] Add Acked-by MyungJoo Ham.
-- [6/6] Removed this patch from this series.
 
- .../bindings/devfreq/rk3399_dmc.txt           | 207 +++++++++---------
- 1 file changed, 105 insertions(+), 102 deletions(-)
+  +---------+          +---------+         +---------+   
+  |  q6asm  |          |q6routing|         | q6afe   | 
+  |   dais  | <------> |  mixers | <-----> |  dais   |  
+  +---------+          +---------+         +---------+   
+      ^                     ^                   ^
+      |                     |                   |
+      |  +------------------+----------------+  |       
+      |  |                  |                |  |       
+      v  v                  v                v  v       
+  +---------+          +---------+         +---------+ 
+  |   q6ASM |          |  q6ADM  |         |   q6AFE |  
+  +---------+          +---------+         +---------+  
+      ^                     ^                   ^          ^
+      |                     |                   | CPU Side |
+------+---------------------+-------------------+--------
+      |                     |                   |
+      |                     |APR(smd/glink)     | 
+      |                     |                   |
+      |  +------------------+----------------+  |
+      |  |                  |                |  |
++-----+--+-----------------------------------+--+-------
+      |  |                  |                |  | QDSP Side |
+      v  v                  v                v  v           v
+ +---------+          +---------+         +---------+
+ |   ASM   | <------> |   ADM   | <-----> |   AFE   |
+ +---------+          +---------+         +---------+
+                                               ^
+                                               | 
+                           +-------------------+
+                           |
+---------------------------+--------------------------
+                           |            Audio I/O |
+                           v                      v
+    +--------------------------------------------------+
+    |                Audio devices                     |
+    | CODEC | HDMI-TX | PCM  | SLIMBUS | I2S |MI2S |...|
+    |                                                  |
+    +--------------------------------------------------+
 
-diff --git a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-index d6d2833482c9..1b93b33c7d38 100644
---- a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-+++ b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-@@ -1,155 +1,158 @@
--* Rockchip rk3399 DMC(Dynamic Memory Controller) device
-+* Rockchip rk3399 DMC (Dynamic Memory Controller) device
- 
- Required properties:
- - compatible:		 Must be "rockchip,rk3399-dmc".
- - devfreq-events:	 Node to get DDR loading, Refer to
--			 Documentation/devicetree/bindings/devfreq/
-+			 Documentation/devicetree/bindings/devfreq/event/
- 			 rockchip-dfi.txt
--- interrupts:		 The interrupt number to the CPU. The interrupt
--			 specifier format depends on the interrupt controller.
--			 It should be DCF interrupts, when DDR dvfs finish,
--			 it will happen.
-+- interrupts:		 The CPU interrupt number. The interrupt specifier
-+			 format depends on the interrupt controller.
-+			 It should be a DCF interrupt. When DDR DVFS finishes
-+			 a DCF interrupt is triggered.
- - clocks:		 Phandles for clock specified in "clock-names" property
- - clock-names :		 The name of clock used by the DFI, must be
- 			 "pclk_ddr_mon";
--- operating-points-v2:	 Refer to Documentation/devicetree/bindings/power/opp.txt
-+- operating-points-v2:	 Refer to Documentation/devicetree/bindings/opp/opp.txt
- 			 for details.
- - center-supply:	 DMC supply node.
- - status:		 Marks the node enabled/disabled.
- 
--Following properties are ddr timing:
-+Following properties relate to DDR timing:
- 
- - rockchip,dram_speed_bin :	  Value reference include/dt-bindings/clock/ddr.h,
--				  it select ddr3 cl-trp-trcd type, default value
--				  "DDR3_DEFAULT".it must selected according to
--				  "Speed Bin" in ddr3 datasheet, DO NOT use
--				  smaller "Speed Bin" than ddr3 exactly is.
--
--- rockchip,pd_idle :		  Config the PD_IDLE value, defined the power-down
--				  idle period, memories are places into power-down
--				  mode if bus is idle for PD_IDLE DFI clocks.
--
--- rockchip,sr_idle :		  Configure the SR_IDLE value, defined the
--				  selfrefresh idle period, memories are places
--				  into self-refresh mode if bus is idle for
--				  SR_IDLE*1024 DFI clocks (DFI clocks freq is
--				  half of dram's clocks), defaule value is "0".
--
--- rockchip,sr_mc_gate_idle :	  Defined the self-refresh with memory and
--				  controller clock gating idle period, memories
--				  are places into self-refresh mode and memory
--				  controller clock arg gating if bus is idle for
--				  sr_mc_gate_idle*1024 DFI clocks.
--
--- rockchip,srpd_lite_idle :	  Defined the self-refresh power down idle
--				  period, memories are places into self-refresh
--				  power down mode if bus is idle for
--				  srpd_lite_idle*1024 DFI clocks. This parameter
--				  is for LPDDR4 only.
--
--- rockchip,standby_idle :	  Defined the standby idle period, memories are
--				  places into self-refresh than controller, pi,
--				  phy and dram clock will gating if bus is idle
--				  for standby_idle * DFI clocks.
--
--- rockchip,dram_dll_disb_freq :  It's defined the DDR3 dll bypass frequency in
--				  MHz, when ddr freq less than DRAM_DLL_DISB_FREQ,
--				  ddr3 dll will bypssed note: if dll was bypassed,
--				  the odt also stop working.
--
--- rockchip,phy_dll_disb_freq :	  Defined the PHY dll bypass frequency in
--				  MHz (Mega Hz), when ddr freq less than
--				  DRAM_DLL_DISB_FREQ, phy dll will bypssed.
--				  note: phy dll and phy odt are independent.
--
--- rockchip,ddr3_odt_disb_freq :  When dram type is DDR3, this parameter defined
--				  the odt disable frequency in MHz (Mega Hz),
--				  when ddr frequency less then ddr3_odt_disb_freq,
--				  the odt on dram side and controller side are
-+				  it selects the DDR3 cl-trp-trcd type. It must be
-+				  set according to "Speed Bin" in DDR3 datasheet,
-+				  DO NOT use a smaller "Speed Bin" than specified
-+				  for the DDR3 being used.
-+
-+- rockchip,pd_idle :		  Configure the PD_IDLE value. Defines the
-+				  power-down idle period in which memories are
-+				  placed into power-down mode if bus is idle
-+				  for PD_IDLE DFI clock cycles.
-+
-+- rockchip,sr_idle :		  Configure the SR_IDLE value. Defines the
-+				  self-refresh idle period in which memories are
-+				  placed into self-refresh mode if bus is idle
-+				  for SR_IDLE * 1024 DFI clock cycles (DFI
-+				  clocks freq is half of DRAM clock), default
-+				  value is "0".
-+
-+- rockchip,sr_mc_gate_idle :	  Defines the memory self-refresh and controller
-+				  clock gating idle period. Memories are placed
-+				  into self-refresh mode and memory controller
-+				  clock arg gating started if bus is idle for
-+				  sr_mc_gate_idle*1024 DFI clock cycles.
-+
-+- rockchip,srpd_lite_idle :	  Defines the self-refresh power down idle
-+				  period in which memories are placed into
-+				  self-refresh power down mode if bus is idle
-+				  for srpd_lite_idle * 1024 DFI clock cycles.
-+				  This parameter is for LPDDR4 only.
-+
-+- rockchip,standby_idle :	  Defines the standby idle period in which
-+				  memories are placed into self-refresh mode.
-+				  The controller, pi, PHY and DRAM clock will
-+				  be gated if bus is idle for standby_idle * DFI
-+				  clock cycles.
-+
-+- rockchip,dram_dll_dis_freq :	  Defines the DDR3 DLL bypass frequency in MHz.
-+				  When DDR frequency is less than DRAM_DLL_DISB_FREQ,
-+				  DDR3 DLL will be bypassed. Note: if DLL was bypassed,
-+				  the odt will also stop working.
-+
-+- rockchip,phy_dll_dis_freq :	  Defines the PHY dll bypass frequency in
-+				  MHz (Mega Hz). When DDR frequency is less than
-+				  DRAM_DLL_DISB_FREQ, PHY DLL will be bypassed.
-+				  Note: PHY DLL and PHY ODT are independent.
-+
-+- rockchip,ddr3_odt_dis_freq :	  When the DRAM type is DDR3, this parameter defines
-+				  the ODT disable frequency in MHz (Mega Hz).
-+				  when the DDR frequency is  less then ddr3_odt_dis_freq,
-+				  the ODT on the DRAM side and controller side are
- 				  both disabled.
- 
--- rockchip,ddr3_drv :		  When dram type is DDR3, this parameter define
--				  the dram side driver stength in ohm, default
-+- rockchip,ddr3_drv :		  When the DRAM type is DDR3, this parameter defines
-+				  the DRAM side driver strength in ohms. Default
- 				  value is DDR3_DS_40ohm.
- 
--- rockchip,ddr3_odt :		  When dram type is DDR3, this parameter define
--				  the dram side ODT stength in ohm, default value
-+- rockchip,ddr3_odt :		  When the DRAM type is DDR3, this parameter defines
-+				  the DRAM side ODT strength in ohms. Default value
- 				  is DDR3_ODT_120ohm.
- 
--- rockchip,phy_ddr3_ca_drv :	  When dram type is DDR3, this parameter define
--				  the phy side CA line(incluing command line,
-+- rockchip,phy_ddr3_ca_drv :	  When the DRAM type is DDR3, this parameter defines
-+				  the phy side CA line (incluing command line,
- 				  address line and clock line) driver strength.
- 				  Default value is PHY_DRV_ODT_40.
- 
--- rockchip,phy_ddr3_dq_drv :	  When dram type is DDR3, this parameter define
--				  the phy side DQ line(incluing DQS/DQ/DM line)
--				  driver strength. default value is PHY_DRV_ODT_40.
-+- rockchip,phy_ddr3_dq_drv :	  When the DRAM type is DDR3, this parameter defines
-+				  the PHY side DQ line (including DQS/DQ/DM line)
-+				  driver strength. Default value is PHY_DRV_ODT_40.
- 
--- rockchip,phy_ddr3_odt : 	  When dram type is DDR3, this parameter define the
--				  phy side odt strength, default value is
-+- rockchip,phy_ddr3_odt : 	  When the DRAM type is DDR3, this parameter defines
-+				  the PHY side ODT strength. Default value is
- 				  PHY_DRV_ODT_240.
- 
--- rockchip,lpddr3_odt_disb_freq : When dram type is LPDDR3, this parameter defined
--				  then odt disable frequency in MHz (Mega Hz),
--				  when ddr frequency less then ddr3_odt_disb_freq,
--				  the odt on dram side and controller side are
-+- rockchip,lpddr3_odt_dis_freq : When the DRAM type is LPDDR3, this parameter defines
-+				  then ODT disable frequency in MHz (Mega Hz).
-+				  When DDR frequency is less then ddr3_odt_dis_freq,
-+				  the ODT on the DRAM side and controller side are
- 				  both disabled.
- 
--- rockchip,lpddr3_drv :	  When dram type is LPDDR3, this parameter define
--				  the dram side driver stength in ohm, default
-+- rockchip,lpddr3_drv :		  When the DRAM type is LPDDR3, this parameter defines
-+				  the DRAM side driver strength in ohms. Default
- 				  value is LP3_DS_34ohm.
- 
--- rockchip,lpddr3_odt :	  When dram type is LPDDR3, this parameter define
--				  the dram side ODT stength in ohm, default value
-+- rockchip,lpddr3_odt :		  When the DRAM type is LPDDR3, this parameter defines
-+				  the DRAM side ODT strength in ohms. Default value
- 				  is LP3_ODT_240ohm.
- 
--- rockchip,phy_lpddr3_ca_drv :	  When dram type is LPDDR3, this parameter define
--				  the phy side CA line(incluing command line,
-+- rockchip,phy_lpddr3_ca_drv :	  When the DRAM type is LPDDR3, this parameter defines
-+				  the PHY side CA line (including command line,
- 				  address line and clock line) driver strength.
--				  default value is PHY_DRV_ODT_40.
-+				  Default value is PHY_DRV_ODT_40.
- 
--- rockchip,phy_lpddr3_dq_drv :	  When dram type is LPDDR3, this parameter define
--				  the phy side DQ line(incluing DQS/DQ/DM line)
--				  driver strength. default value is
-+- rockchip,phy_lpddr3_dq_drv :	  When the DRAM type is LPDDR3, this parameter defines
-+				  the PHY side DQ line (including DQS/DQ/DM line)
-+				  driver strength. Default value is
- 				  PHY_DRV_ODT_40.
- 
- - rockchip,phy_lpddr3_odt : 	  When dram type is LPDDR3, this parameter define
- 				  the phy side odt strength, default value is
- 				  PHY_DRV_ODT_240.
- 
--- rockchip,lpddr4_odt_disb_freq : When dram type is LPDDR4, this parameter
--				  defined the odt disable frequency in
--				  MHz (Mega Hz), when ddr frequency less then
--				  ddr3_odt_disb_freq, the odt on dram side and
-+- rockchip,lpddr4_odt_dis_freq : When the DRAM type is LPDDR4, this parameter
-+				  defines the ODT disable frequency in
-+				  MHz (Mega Hz). When the DDR frequency is less then
-+				  ddr3_odt_dis_freq, the ODT on the DRAM side and
- 				  controller side are both disabled.
- 
--- rockchip,lpddr4_drv :	  When dram type is LPDDR4, this parameter define
--				  the dram side driver stength in ohm, default
-+- rockchip,lpddr4_drv :		  When the DRAM type is LPDDR4, this parameter defines
-+				  the DRAM side driver strength in ohms. Default
- 				  value is LP4_PDDS_60ohm.
- 
--- rockchip,lpddr4_dq_odt : 	  When dram type is LPDDR4, this parameter define
--				  the dram side ODT on dqs/dq line stength in ohm,
--				  default value is LP4_DQ_ODT_40ohm.
-+- rockchip,lpddr4_dq_odt : 	  When the DRAM type is LPDDR4, this parameter defines
-+				  the DRAM side ODT on DQS/DQ line strength in ohms.
-+				  Default value is LP4_DQ_ODT_40ohm.
- 
--- rockchip,lpddr4_ca_odt :	  When dram type is LPDDR4, this parameter define
--				  the dram side ODT on ca line stength in ohm,
--				  default value is LP4_CA_ODT_40ohm.
-+- rockchip,lpddr4_ca_odt :	  When the DRAM type is LPDDR4, this parameter defines
-+				  the DRAM side ODT on CA line strength in ohms.
-+				  Default value is LP4_CA_ODT_40ohm.
- 
--- rockchip,phy_lpddr4_ca_drv :	  When dram type is LPDDR4, this parameter define
--				  the phy side  CA line(incluing command address
--				  line) driver strength. default value is
-+- rockchip,phy_lpddr4_ca_drv :	  When the DRAM type is LPDDR4, this parameter defines
-+				  the PHY side CA line (including command address
-+				  line) driver strength. Default value is
- 				  PHY_DRV_ODT_40.
- 
--- rockchip,phy_lpddr4_ck_cs_drv : When dram type is LPDDR4, this parameter define
--				  the phy side clock line and cs line driver
--				  strength. default value is PHY_DRV_ODT_80.
-+- rockchip,phy_lpddr4_ck_cs_drv : When the DRAM type is LPDDR4, this parameter defines
-+				  the PHY side clock line and CS line driver
-+				  strength. Default value is PHY_DRV_ODT_80.
- 
--- rockchip,phy_lpddr4_dq_drv :	  When dram type is LPDDR4, this parameter define
--				  the phy side DQ line(incluing DQS/DQ/DM line)
--				  driver strength. default value is PHY_DRV_ODT_80.
-+- rockchip,phy_lpddr4_dq_drv :	  When the DRAM type is LPDDR4, this parameter defines
-+				  the PHY side DQ line (including DQS/DQ/DM line)
-+				  driver strength. Default value is PHY_DRV_ODT_80.
- 
--- rockchip,phy_lpddr4_odt :	  When dram type is LPDDR4, this parameter define
--				  the phy side odt strength, default value is
-+- rockchip,phy_lpddr4_odt :	  When the DRAM type is LPDDR4, this parameter defines
-+				  the PHY side ODT strength. Default value is
- 				  PHY_DRV_ODT_60.
- 
- Example:
+
+Changes since v6 (https://lkml.org/lkml/2018/5/1/176)
+- Added Banajit's and Bjorn's reviewed by tags to patches.
+- Few minor typos spotted by Banajit.
+- Made read/write allocations to be atomic as spotted by Rohit.
+- fixed error path in db820c machine driver.
+- rebased patchset on top of
+https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/?h=for-next
+
+Srinivas Kandagatla (24):
+  soc: qcom dt-bindings: Add APR bus bindings
+  soc: qcom: Add APR bus driver
+  ASoC: qdsp6: dt-bindings: Add q6core dt bindings
+  ASoC: qdsp6: dt-bindings: Add q6afe dt bindings
+  ASoC: qdsp6: dt-bindings: Add q6adm dt bindings
+  ASoC: qdsp6: dt-bindings: Add q6asm dt bindings
+  ASoC: qdsp6: q6common: Add qdsp6 helper functions
+  ASoC: qdsp6: q6core: Add q6core driver
+  ASoC: qdsp6: q6afe: Add q6afe driver
+  ASoC: qdsp6: qdafe: Add SLIMBus port Support
+  ASoC: qdsp6: q6afe: Add support to MI2S ports
+  ASoC: qdsp6: q6afe: Add support to MI2S sysclks
+  ASoC: qdsp6: q6adm: Add q6adm driver
+  ASoC: qdsp6: q6asm: Add q6asm driver
+  ASoC: qdsp6: q6asm: Add support to memory map and unmap
+  ASoC: qdsp6: q6asm: Add support to audio stream apis
+  ASoC: qdsp6: q6routing: Add q6routing driver
+  ASoC: qdsp6: q6routing: Add support to all SLIMBus Mixers
+  ASoC: qdsp6: q6routing: Add support to MI2S Mixers
+  ASoC: qdsp6: q6afe: Add q6afe dai driver
+  ASoC: qdsp6: q6asm: Add q6asm dai driver
+  ASoC: qdsp6: dt-bindings: Add apq8096 machine bindings
+  ASoC: qcom: apq8096: Add db820c machine driver
+  MAINTAINERS: Add myself as co-maintainer of qcom audio
+
+ .../devicetree/bindings/soc/qcom/qcom,apr.txt      |   84 ++
+ .../devicetree/bindings/sound/qcom,apq8096.txt     |  109 ++
+ .../devicetree/bindings/sound/qcom,q6adm.txt       |   33 +
+ .../devicetree/bindings/sound/qcom,q6afe.txt       |  104 ++
+ .../devicetree/bindings/sound/qcom,q6asm.txt       |   33 +
+ .../devicetree/bindings/sound/qcom,q6core.txt      |   21 +
+ MAINTAINERS                                        |    1 +
+ drivers/soc/qcom/Kconfig                           |    9 +
+ drivers/soc/qcom/Makefile                          |    1 +
+ drivers/soc/qcom/apr.c                             |  378 ++++++
+ include/dt-bindings/soc/qcom,apr.h                 |   28 +
+ include/dt-bindings/sound/qcom,q6afe.h             |   31 +
+ include/dt-bindings/sound/qcom,q6asm.h             |   22 +
+ include/linux/mod_devicetable.h                    |   11 +
+ include/linux/soc/qcom/apr.h                       |  128 ++
+ sound/soc/qcom/Kconfig                             |   50 +
+ sound/soc/qcom/Makefile                            |    5 +
+ sound/soc/qcom/apq8096.c                           |  255 ++++
+ sound/soc/qcom/qdsp6/Makefile                      |    8 +
+ sound/soc/qcom/qdsp6/q6adm.c                       |  633 +++++++++
+ sound/soc/qcom/qdsp6/q6adm.h                       |   25 +
+ sound/soc/qcom/qdsp6/q6afe-dai.c                   |  748 +++++++++++
+ sound/soc/qcom/qdsp6/q6afe.c                       | 1046 +++++++++++++++
+ sound/soc/qcom/qdsp6/q6afe.h                       |  193 +++
+ sound/soc/qcom/qdsp6/q6asm-dai.c                   |  624 +++++++++
+ sound/soc/qcom/qdsp6/q6asm.c                       | 1398 ++++++++++++++++++++
+ sound/soc/qcom/qdsp6/q6asm.h                       |   69 +
+ sound/soc/qcom/qdsp6/q6core.c                      |  380 ++++++
+ sound/soc/qcom/qdsp6/q6core.h                      |   15 +
+ sound/soc/qcom/qdsp6/q6dsp-common.c                |   66 +
+ sound/soc/qcom/qdsp6/q6dsp-common.h                |   24 +
+ sound/soc/qcom/qdsp6/q6dsp-errno.h                 |   51 +
+ sound/soc/qcom/qdsp6/q6routing.c                   |  982 ++++++++++++++
+ sound/soc/qcom/qdsp6/q6routing.h                   |    9 +
+ 34 files changed, 7574 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6adm.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6afe.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6asm.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6core.txt
+ create mode 100644 drivers/soc/qcom/apr.c
+ create mode 100644 include/dt-bindings/soc/qcom,apr.h
+ create mode 100644 include/dt-bindings/sound/qcom,q6afe.h
+ create mode 100644 include/dt-bindings/sound/qcom,q6asm.h
+ create mode 100644 include/linux/soc/qcom/apr.h
+ create mode 100644 sound/soc/qcom/apq8096.c
+ create mode 100644 sound/soc/qcom/qdsp6/Makefile
+ create mode 100644 sound/soc/qcom/qdsp6/q6adm.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6adm.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6afe-dai.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6afe.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6afe.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6asm-dai.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6asm.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6asm.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6core.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6core.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6dsp-common.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6dsp-common.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6dsp-errno.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6routing.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6routing.h
+
 -- 
-2.17.0
+2.16.2
