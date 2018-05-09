@@ -1,91 +1,50 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: add binding for the SY8106A voltage regulator" to the regulator tree
-Date: Wed,  9 May 2018 10:32:59 +0100 (BST)
-Message-ID: <20180509093259.62E4644007A@finisterre.ee.mobilebroadband>
-References: <20180423144657.63264-2-icenowy@aosc.io>
+From: Banajit Goswami <bgoswami@codeaurora.org>
+Subject: Re: [PATCH v7 20/24] ASoC: qdsp6: q6afe: Add q6afe dai driver
+Date: Wed, 9 May 2018 02:42:34 -0700
+Message-ID: <22a39a17-36ef-3e94-e91b-11d303559ae4@codeaurora.org>
+References: <20180501120820.11016-1-srinivas.kandagatla@linaro.org>
+ <20180501120820.11016-21-srinivas.kandagatla@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180423144657.63264-2-icenowy@aosc.io>
+In-Reply-To: <20180501120820.11016-21-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ondrej Jirman <megous@megous.com>
-Cc: Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.comIcenowy Zheng <icenowy@aosc.io>linux-kernel@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc: gregkh@linuxfoundation.org, david.brown@linaro.org, mark.rutland@arm.com, lgirdwood@gmail.com, plai@codeaurora.org, tiwai@suse.com, perex@perex.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com, spatakok@qti.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On 5/1/2018 5:08 AM, Srinivas Kandagatla wrote:
+> This patch adds support to q6afe backend dais driver.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Reviewed-and-tested-by: Rohit kumar <rohitkr@codeaurora.org>
+> ---
+>   sound/soc/qcom/Kconfig           |   4 +
+>   sound/soc/qcom/qdsp6/Makefile    |   1 +
+>   sound/soc/qcom/qdsp6/q6afe-dai.c | 752 +++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 757 insertions(+)
+>   create mode 100644 sound/soc/qcom/qdsp6/q6afe-dai.c
+>
+> diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
+> index 43f9ed85efa8..d3523a30d942 100644
+> --- a/sound/soc/qcom/Kconfig
+<snip>
+> +};
+> +
+> +static int msm_dai_q6_dai_probe(struct snd_soc_dai *dai)
+> +{
+> +	struct q6afe_dai_data *dai_data = dev_get_drvdata(dai->dev);
+> +	struct snd_soc_dapm_context *dapm;
+> +	struct q6afe_port *port;
+> +
+> +	dapm = snd_soc_component_get_dapm(dai->component);
+dapm unused here?
 
-   regulator: add binding for the SY8106A voltage regulator
+LGTM otherwise.
+Acked-by: Banajit Goswami <bgoswami@codeaurora.org>
 
-has been applied to the regulator tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 32aba834f2a9fe126ff5e624371113ac1defa06e Mon Sep 17 00:00:00 2001
-From: Ondrej Jirman <megous@megous.com>
-Date: Mon, 7 May 2018 20:29:40 +0800
-Subject: [PATCH] regulator: add binding for the SY8106A voltage regulator
-
-SY8106A is an I2C-controlled adjustable voltage regulator made by
-Silergy Corp.
-
-Add its device tree binding.
-
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-[Icenowy: Change commit message and slight fixes]
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/regulator/sy8106a-regulator.txt  | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/sy8106a-regulator.txt
-
-diff --git a/Documentation/devicetree/bindings/regulator/sy8106a-regulator.txt b/Documentation/devicetree/bindings/regulator/sy8106a-regulator.txt
-new file mode 100644
-index 000000000000..39a8ca73f572
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/sy8106a-regulator.txt
-@@ -0,0 +1,23 @@
-+SY8106A Voltage regulator
-+
-+Required properties:
-+- compatible: Must be "silergy,sy8106a"
-+- reg: I2C slave address - must be <0x65>
-+- silergy,fixed-microvolt - the voltage when I2C regulating is disabled (set
-+  by external resistor like a fixed voltage)
-+
-+Any property defined as part of the core regulator binding, defined in
-+./regulator.txt, can also be used.
-+
-+Example:
-+
-+	sy8106a {
-+		compatible = "silergy,sy8106a";
-+		reg = <0x65>;
-+		regulator-name = "sy8106a-vdd";
-+		silergy,fixed-microvolt = <1200000>;
-+		regulator-min-microvolt = <1000000>;
-+		regulator-max-microvolt = <1400000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
 -- 
-2.17.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
