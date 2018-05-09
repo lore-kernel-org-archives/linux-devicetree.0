@@ -1,15 +1,16 @@
-From: Rui Miguel Silva <rmfrfs@gmail.com>
-Subject: Re: [PATCH v3 12/14] ARM: dts: imx7s-warp: add ov2680 sensor node
-Date: Wed, 09 May 2018 12:03:56 +0100
-Message-ID: <m3efil9jkz.fsf@gmail.com>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: Re: [PATCH v3 07/14] media: dt-bindings: add bindings for i.MX7 media
+ driver
+Date: Wed, 09 May 2018 12:06:49 +0100
+Message-ID: <m3d0y59jg6.fsf@linaro.org>
 References: <20180507162152.2545-1-rui.silva@linaro.org>
- <20180507162152.2545-13-rui.silva@linaro.org>
- <CAOMZO5B+P5jyPshBe1NyyFyXCtmeQ_=pEB3CGHQuX_1Gfpa8rQ@mail.gmail.com>
+ <20180507162152.2545-8-rui.silva@linaro.org>
+ <1525789823.18091.11.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-reply-to: <CAOMZO5B+P5jyPshBe1NyyFyXCtmeQ_=pEB3CGHQuX_1Gfpa8rQ@mail.gmail.com>
+In-reply-to: <1525789823.18091.11.camel@pengutronix.de>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -19,29 +20,128 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Fabio Estevam <festevam@gmail.com>
-Cc: devel@driverdev.osuosl.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>, linux-media <linux-media@vger.kernel.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
-On Tue 08 May 2018 at 13:28, Fabio Estevam wrote:
-> Hi Rui,
->
-> On Mon, May 7, 2018 at 1:21 PM, Rui Miguel Silva 
-> <rui.silva@linaro.org> wrote:
->
->> +       reg_peri_3p15v: regulator-peri-3p15v {
->> +               compatible = "regulator-fixed";
->> +               regulator-name = "peri_3p15v_reg";
->> +               regulator-min-microvolt = <3150000>;
->> +               regulator-max-microvolt = <3150000>;
->> +               regulator-always-on;
->
-> You can remove the 'regulator-always-on' property as this 
-> regulator
-> will be controlled by AVDD-supply.
+Hi Philipp,
+Thanks for the review.
 
-Yeah, will do.
+On Tue 08 May 2018 at 14:30, Philipp Zabel wrote:
+> On Mon, 2018-05-07 at 17:21 +0100, Rui Miguel Silva wrote:
+>> Add bindings documentation for i.MX7 media drivers.
+>> 
+>> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+>> ---
+>>  .../devicetree/bindings/media/imx7.txt        | 152 
+>>  ++++++++++++++++++
+>>  1 file changed, 152 insertions(+)
+>>  create mode 100644 
+>>  Documentation/devicetree/bindings/media/imx7.txt
+>> 
+>> diff --git a/Documentation/devicetree/bindings/media/imx7.txt 
+>> b/Documentation/devicetree/bindings/media/imx7.txt
+>> new file mode 100644
+>> index 000000000000..06d723d6354d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/imx7.txt
+>> @@ -0,0 +1,152 @@
+>> +Freescale i.MX7 Media Video Device
+>> +==================================
+>> +
+>> +Video Media Controller node
+>> +---------------------------
+>> +
+>> +This is the media controller node for video capture support. 
+>> It is a
+>> +virtual device that lists the camera serial interface nodes 
+>> that the
+>> +media device will control.
+>> +
+>> +Required properties:
+>> +- compatible : "fsl,imx7-capture-subsystem";
+>> +- ports      : Should contain a list of phandles pointing to 
+>> camera
+>> +		sensor interface port of CSI
+>> +
+>> +example:
+>> +
+>> +capture-subsystem {
+>> +	compatible = "fsl,imx7-capture-subsystem";
+>> +	ports = <&csi>;
+>> +};
+>
+> Purely from a device tree perspective, I think this node is 
+> unnecessary
+> on i.MX7. The reason we have it for i.MX6 is that there are two
+> identical IPUs on some of them, which makes it impossible to 
+> reasonably
+> bind the subsystem driver to one or the other of the ipu nodes. 
+> On i.MX7
+> the csi node is unique.
+>
+> The relevant imx-media-dev.c code in imx_media_probe could be 
+> refactored
+> into a utility function that could be called from the probe 
+> function of
+> the csi driver as well.
+
+I think is a good idea, I will do something like this in v4
+>
+> [...]
+>> +csi node
+>> +--------
+>> +
+>> +This is device node for the CMOS Sensor Interface (CSI) which 
+>> enables the chip
+>> +to connect directly to external CMOS image sensors.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible    : "fsl,imx7-csi";
+>> +- reg           : base address and length of the register set 
+>> for the device;
+>> +- interrupts    : should contain CSI interrupt;
+>> +- clocks        : list of clock specifiers, see
+>> + 
+>> Documentation/devicetree/bindings/clock/clock-bindings.txt for 
+>> details;
+>> +- clock-names   : must contain "axi", "mclk" and "dcic" 
+>> entries, matching
+>> +                 entries in the clock property;
+>> +
+>> +port node
+>> +---------
+>> +
+>> +- reg		  : (required) should be 0 for the sink 
+>> port;
+>
+> Not necessary, see below.
+>
+>> +
+>> +example:
+>> +
+>> +                csi: csi@30710000 {
+>> +                        #address-cells = <1>;
+>> +                        #size-cells = <0>;
+>> +
+>> +                        compatible = "fsl,imx7-csi";
+>> +                        reg = <0x30710000 0x10000>;
+>> +                        interrupts = <GIC_SPI 7 
+>> IRQ_TYPE_LEVEL_HIGH>;
+>> +                        clocks = <&clks IMX7D_CLK_DUMMY>,
+>> +                                        <&clks 
+>> IMX7D_CSI_MCLK_ROOT_CLK>,
+>> +                                        <&clks 
+>> IMX7D_CLK_DUMMY>;
+>> +                        clock-names = "axi", "mclk", "dcic";
+>> +
+>> +                        port@0 {
+>> +                                reg = <0>;
+>
+> Since there is only one port, it does not need to be numbered.
+
+Yes, ack.
 
 ---
 Cheers,
