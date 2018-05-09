@@ -1,16 +1,16 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: Re: [PATCH v3 13/14] media: imx7.rst: add documentation for i.MX7
- media driver
-Date: Wed, 09 May 2018 12:08:29 +0100
-Message-ID: <m3bmdp9jde.fsf@linaro.org>
+Subject: Re: [PATCH v3 10/14] ARM: dts: imx7: Add video mux,
+ csi and mipi_csi and connections
+Date: Wed, 09 May 2018 12:10:24 +0100
+Message-ID: <m3a7t99ja7.fsf@linaro.org>
 References: <20180507162152.2545-1-rui.silva@linaro.org>
- <20180507162152.2545-14-rui.silva@linaro.org>
- <c4f8d144-0ab8-d72a-7bff-3dc4d1598380@infradead.org>
+ <20180507162152.2545-11-rui.silva@linaro.org>
+ <1525856026.5888.4.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-reply-to: <c4f8d144-0ab8-d72a-7bff-3dc4d1598380@infradead.org>
+In-reply-to: <1525856026.5888.4.camel@pengutronix.de>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -20,259 +20,148 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Randy,
-On Tue 08 May 2018 at 17:24, Randy Dunlap wrote:
-> Hi,
->
-> I have a few editing suggestions below...
+Hi Philipp,
+Thanks.
 
-Thank you very much for this. I will incorporate this in the next 
-version.
+On Wed 09 May 2018 at 08:53, Philipp Zabel wrote:
+> On Mon, 2018-05-07 at 17:21 +0100, Rui Miguel Silva wrote:
+>> This patch adds the device tree nodes for csi, video 
+>> multiplexer and mipi-csi
+>> besides the graph connecting the necessary endpoints to make 
+>> the media capture
+>> entities to work in imx7 Warp board.
+>> 
+>> Also add the pin control related with the mipi_csi in that 
+>> board.
+>> 
+>> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+>> ---
+>>  arch/arm/boot/dts/imx7s-warp.dts | 78 
+>>  ++++++++++++++++++++++++++++++++
+>>  arch/arm/boot/dts/imx7s.dtsi     | 28 ++++++++++++
+>>  2 files changed, 106 insertions(+)
+>> 
+>> diff --git a/arch/arm/boot/dts/imx7s-warp.dts 
+>> b/arch/arm/boot/dts/imx7s-warp.dts
+>> index 8a30b148534d..ffd170ae925a 100644
+>> --- a/arch/arm/boot/dts/imx7s-warp.dts
+>> +++ b/arch/arm/boot/dts/imx7s-warp.dts
+>> @@ -310,6 +310,77 @@
+>>  	status = "okay";
+>>  };
+>>  
+>> +&gpr {
+>> +	csi_mux {
+>> +		compatible = "video-mux";
+>> +		mux-controls = <&mux 0>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		port@0 {
+>> +			reg = <0>;
+>> +
+>> +			csi_mux_from_parallel_sensor: endpoint {
+>> +			};
+>> +		};
+>> +
+>> +		port@1 {
+>> +			reg = <1>;
+>> +
+>> +			csi_mux_from_mipi_vc0: endpoint {
+>> +				remote-endpoint = 
+>> <&mipi_vc0_to_csi_mux>;
+>> +			};
+>> +		};
+>> +
+>> +		port@2 {
+>> +			reg = <2>;
+>> +
+>> +			csi_mux_to_csi: endpoint {
+>> +				remote-endpoint = 
+>> <&csi_from_csi_mux>;
+>> +			};
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&csi {
+>> +	status = "okay";
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +
+>> +	port@0 {
+>> +		reg = <0>;
+>
+> Same comment as for the binding docs, since the CSI only has one 
+> port,
+> it doesn't have to be numbered.
+
+ack.
+
+>
+>> +
+>> +		csi_from_csi_mux: endpoint {
+>> +			remote-endpoint = <&csi_mux_to_csi>;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&mipi_csi {
+>> +	clock-frequency = <166000000>;
+>> +	status = "okay";
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	fsl,csis-hs-settle = <3>;
+>> +
+>> +	port@0 {
+>> +		reg = <0>;
+>> +
+>> +		mipi_from_sensor: endpoint {
+>> +			remote-endpoint = <&ov2680_to_mipi>;
+>> +			data-lanes = <1>;
+>> +		};
+>> +	};
+>> +
+>> +	port@1 {
+>> +		reg = <1>;
+>> +
+>> +		mipi_vc0_to_csi_mux: endpoint {
+>> +			remote-endpoint = 
+>> <&csi_mux_from_mipi_vc0>;
+>> +		};
+>> +	};
+>> +};
+>> +
+>>  &wdog1 {
+>>  	pinctrl-names = "default";
+>>  	pinctrl-0 = <&pinctrl_wdog>;
+>> @@ -357,6 +428,13 @@
+>>  		>;
+>>  	};
+>>  
+>> +	pinctrl_mipi_csi: mipi_csi {
+>> +		fsl,pins = <
+>> +			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3 
+>> 0x14
+>
+> This is the ov2680 reset GPIO? I think this belongs into patch 
+> 12.
+
+Yes, you are right.
+
+>
+>> +			MX7D_PAD_ENET1_RGMII_TD0__GPIO7_IO6 
+>> 0x14
+>
+> What is this GPIO used for?
+
+MKBUS_RESET and totally unrelated. I will remove it. Thanks for 
+notice this.
 
 ---
 Cheers,
 	Rui
-
->
-> On 05/07/2018 09:21 AM, Rui Miguel Silva wrote:
->> Add rst document to describe the i.MX7 media driver and also a 
->> working example
->> from the Warp7 board usage with a OV2680 sensor.
->> 
->> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
->> ---
->>  Documentation/media/v4l-drivers/imx7.rst  | 157 
->>  ++++++++++++++++++++++
->>  Documentation/media/v4l-drivers/index.rst |   1 +
->>  2 files changed, 158 insertions(+)
->>  create mode 100644 Documentation/media/v4l-drivers/imx7.rst
->> 
->> diff --git a/Documentation/media/v4l-drivers/imx7.rst 
->> b/Documentation/media/v4l-drivers/imx7.rst
->> new file mode 100644
->> index 000000000000..64b97b442277
->> --- /dev/null
->> +++ b/Documentation/media/v4l-drivers/imx7.rst
->> @@ -0,0 +1,157 @@
->> +i.MX7 Video Capture Driver
->> +==========================
->> +
->> +Introduction
->> +------------
->> +
->> +The i.MX7 contrary to the i.MX5/6 family does not contain an 
->> Image Processing
->> +Unit (IPU), because of that the capabilities to perform 
->> operations or
->
-> s/,/;/
->
->> +manipulation of the capture frames is less feature rich.
->
->                                       are less
->
->> +
->> +For image capture the i.MX7 have three units:
->
->                                has
->
->> +- CMOS Sensor Interface (CSI)
->> +- Video Multiplexer
->> +- MIPI CSI-2 Receiver
->> +
->> +::
->> +                                           |\
->> +   MIPI Camera Input ---> MIPI CSI-2 --- > | \
->> +                                           |  \
->> +                                           | M |
->> +                                           | U | ------>  CSI 
->> ---> Capture
->> +                                           | X |
->> +                                           |  /
->> +   Parallel Camera Input ----------------> | /
->> +                                           |/
->> +
->> +For additional information, please refer to the latest 
->> versions of the i.MX7
->> +reference manual [#f1]_.
->> +
->> +Entities
->> +--------
->> +
->> +imx7-mipi-csi2
->> +--------------
->> +
->> +This is the MIPI CSI-2 recevier entity. It has one sink pad to 
->> receive the pixel
->
->                           receiver
->
->> +data from MIPI CSI-2 camera sensor. It has one source pad, 
->> corresponding to the
->> +virtual channel 0. This module is compliant to previous 
->> version of Samsung
->> +D-phy, and support two D-PHY Rx Data lanes.
->
->               supports
->
->> +
->> +csi_mux
->> +-------
->> +
->> +This is the video multiplexer. It has two sink pads to select 
->> from either camera
->> +sensors with a parallel interface or from MIPI CSI-2 virtual 
->> channel 0.  It has
->
->    sensor
->
->> +a single source pad that routes to the CSI.
->> +
->> +csi
->> +---
->> +
->> +The CSI enables the chip to connect directly to external CMOS 
->> image sensor. CSI
->> +can interfaces directly with Parallel and MIPI CSI-2 buses. It 
->> has 256 x 64 FIFO
->
->        interface
->
->> +to store received image pixel data and embedded DMA 
->> controllers to transfer data
->> +from the FIFO through AHB bus.
->> +
->> +This entity has one sink pad that receive from the csi_mux 
->> entity and a single
->
->                                      receives
->
->> +source pad that route video frames directly to memory buffers, 
->> this pad is
->
->                    routes 
->                    buffers. This pad is
->
->> +routed to a capture device node.
->> +
->> +Usage Notes
->> +-----------
->> +
->> +To aid in configuration and for backward compatibility with 
->> V4L2 applications
->> +that access controls only from video device nodes, the capture 
->> device interfaces
->> +inherit controls from the active entities in the current 
->> pipeline, so controls
->> +can be accessed either directly from the subdev or from the 
->> active capture
->> +device interface. For example, the sensor controls are 
->> available either from the
->> +sensor subdevs or from the active capture device.
->> +
->> +Warp7 with OV2680
->> +-----------------
->> +
->> +On this platform an OV2680 MIPI CSI-2 module is connected to 
->> the internal MIPI
->> +CSI-2 receiver. The following example configures a video 
->> capture pipeline with
->> +an output of 800x600, and BGGR 10 bit bayer format:
->> +
->> +.. code-block:: none
->> +   # Setup links
->> +   media-ctl -l "'ov2680 1-0036':0 -> 'imx7-mipi-csis.0':0[1]"
->> +   media-ctl -l "'imx7-mipi-csis.0':1 -> 'csi_mux':1[1]"
->> +   media-ctl -l "'csi_mux':2 -> 'csi':0[1]"
->> +   media-ctl -l "'csi':1 -> 'csi capture':0[1]"
->> +
->> +   # Configure pads for pipeline
->> +   media-ctl -V "'ov2680 1-0036':0 [fmt:SBGGR10_1X10/800x600 
->> field:none]"
->> +   media-ctl -V "'csi_mux':1 [fmt:SBGGR10_1X10/800x600 
->> field:none]"
->> +   media-ctl -V "'csi_mux':2 [fmt:SBGGR10_1X10/800x600 
->> field:none]"
->> +   media-ctl -V "'imx7-mipi-csis.0':0 
->> [fmt:SBGGR10_1X10/800x600 field:none]"
->> +   media-ctl -V "'csi':0 [fmt:SBGGR10_1X10/800x600 
->> field:none]"
->> +
->> +After this streaming can start, the v4l2-ctl tool can be used 
->> to select any of
->
->                         can start. The
->
->> +the resolutions supported by the sensor.
->> +
->> +.. code-block:: none
->> +    root@imx7s-warp:~# media-ctl -p
->> +    Media controller API version 4.17.0
->> +
->> +    Media device information
->> +    ------------------------
->> +    driver          imx-media
->> +    model           imx-media
->> +    serial
->> +    bus info
->> +    hw revision     0x0
->> +    driver version  4.17.0
->> +
->> +    Device topology
->> +    - entity 1: csi (2 pads, 2 links)
->> +		type V4L2 subdev subtype Unknown flags 0
->> +		device node name /dev/v4l-subdev0
->> +	    pad0: Sink
->> +		    [fmt:SBGGR10_1X10/800x600 field:none]
->> +		    <- "csi_mux":2 [ENABLED]
->> +	    pad1: Source
->> +		    [fmt:SBGGR10_1X10/800x600 field:none]
->> +		    -> "csi capture":0 [ENABLED]
->> +
->> +    - entity 4: csi capture (1 pad, 1 link)
->> +		type Node subtype V4L flags 0
->> +		device node name /dev/video0
->> +	    pad0: Sink
->> +		    <- "csi":1 [ENABLED]
->> +
->> +    - entity 10: csi_mux (3 pads, 2 links)
->> +		type V4L2 subdev subtype Unknown flags 0
->> +		device node name /dev/v4l-subdev1
->> +	    pad0: Sink
->> +		    [fmt:unknown/0x0]
->> +	    pad1: Sink
->> +		    [fmt:unknown/800x600 field:none]
->> +		    <- "imx7-mipi-csis.0":1 [ENABLED]
->> +	    pad2: Source
->> +		    [fmt:unknown/800x600 field:none]
->> +		    -> "csi":0 [ENABLED]
->> +
->> +    - entity 14: imx7-mipi-csis.0 (2 pads, 2 links)
->> +		type V4L2 subdev subtype Unknown flags 0
->> +		device node name /dev/v4l-subdev2
->> +	    pad0: Sink
->> +		    [fmt:SBGGR10_1X10/800x600 field:none]
->> +		    <- "ov2680 1-0036":0 [ENABLED]
->> +	    pad1: Source
->> +		    [fmt:SBGGR10_1X10/800x600 field:none]
->> +		    -> "csi_mux":1 [ENABLED]
->> +
->> +    - entity 17: ov2680 1-0036 (1 pad, 1 link)
->> +		type V4L2 subdev subtype Sensor flags 0
->> +		device node name /dev/v4l-subdev3
->> +	    pad0: Source
->> +		    [fmt:SBGGR10_1X10/800x600 field:none]
->> +		    -> "imx7-mipi-csis.0":0 [ENABLED]
->> +
->> +
->> +References
->> +----------
->> +
->> +.. [#f1] 
->> https://www.nxp.com/docs/en/reference-manual/IMX7SRM.pdf
->
-> thanks.
