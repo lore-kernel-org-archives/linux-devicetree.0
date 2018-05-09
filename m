@@ -1,142 +1,87 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [RFC PATCH 0/3] serial: uartps: Add run time support for more IPs
- than hardcoded 2
-Date: Wed, 9 May 2018 14:09:40 +0200
-Message-ID: <b1915bcd-00c4-ce88-b50f-73815ff36755@xilinx.com>
-References: <cover.1524751696.git.michal.simek@xilinx.com>
- <1d3bc2082972bb1d4abc2c15db396257@vanmierlo.com>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: RE: [PATCH v5] gpio: dwapb: Add support for 1 interrupt per port A
+ GPIO
+Date: Wed, 9 May 2018 12:11:27 +0000
+Message-ID: <TY1PR01MB1769D461E888BA9F9537678EF5990@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+References: <1524759587-7007-1-git-send-email-phil.edworthy@renesas.com>
+ <CAHp75Vc3qBOYjUAgxZCkpXAdg=ueM2KApPynPdpkEmOoMR7sQQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1d3bc2082972bb1d4abc2c15db396257@vanmierlo.com>
+In-Reply-To: <CAHp75Vc3qBOYjUAgxZCkpXAdg=ueM2KApPynPdpkEmOoMR7sQQ@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maarten Brock <m.brock@vanmierlo.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, gnomes@lxorguk.ukuu.org.uk, Alexander Graf <agraf@suse.de>, devicetree@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-serial-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Michel Pollet <michel.pollet@bp.renesas.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 5.5.2018 15:10, Maarten Brock wrote:
-> On 2018-04-26 16:08, Michal Simek wrote:
->> Hi,
->>
->> this series is trying to address discussion I had with Alan in past
->> https://patchwork.kernel.org/patch/9738445/.
->>
->> It is moving uart_register_driver() to probe function like it is done in
->> pl011 driver.
->> And also introducing new function for alias compatibility checking to
->> resolve cases where some IPs have alias and some of them not.
->> This case is detected in pl011_probe_dt_alias() but not properly solved.
->>
->> Also keep status of free ids/minor numbers in bitmap to know what's the
->> next unallocated number.
->>
->> The same solution can be used in pl011, uart16550 and uartlite to really
->> get unified kernel.
->>
->> Tested on these use cases:
->> Notes:
->> ff000000 is the first PS uart listed in dtsi
->> ff010000 is the second PS uart listed in dtsi
->>
->> Standard zcu102 setting
->>         serial0 = &uart0;
->>         serial1 = &uart1;
->> [    0.196628] ff000000.serial: ttyPS0 at MMIO 0xff000000 (irq = 33,
->> base_baud = 6250000) is a xuartps
->> [    0.642542] ff010000.serial: ttyPS1 at MMIO 0xff010000 (irq = 34,
->> base_baud = 6250000) is a xuartps
->>
->> Swapped zcu102 setting
->>         serial0 = &uart1;
->>         serial1 = &uart0;
->> [    0.196472] ff000000.serial: ttyPS1 at MMIO 0xff000000 (irq = 33,
->> base_baud = 6250000) is a xuartps
->> [    0.196824] ff010000.serial: ttyPS0 at MMIO 0xff010000 (irq = 34,
->> base_baud = 6250000) is a xuartps
->>
->> uart0 on alias higher then MAX uart ports
->>         serial0 = &uart1;
->>         serial200 = &uart0;
->> [    0.176793] ff000000.serial: ttyPS200 at MMIO 0xff000000 (irq = 33,
->> base_baud = 6250000) is a xuartps
->> [    0.177288] ff010000.serial: ttyPS0 at MMIO 0xff010000 (irq = 34,
->> base_baud = 6250000) is a xuartps
->>
->> Both uarts on higher aliases
->>         serial1 = &uart1;
->>         serial2 = &uart0;
->> [    0.196470] ff000000.serial: ttyPS2 at MMIO 0xff000000 (irq = 33,
->> base_baud = 6250000) is a xuartps
->> [    0.196823] ff010000.serial: ttyPS1 at MMIO 0xff010000 (irq = 34,
->> base_baud = 6250000) is a xuartps
->>
->> uart0 not listed but it is probed first that's why should be ttyPS0 but
->> there is uart1 via alias
->>         serial0 = &uart1;
->> [    0.176656] xuartps ff000000.serial: No serial alias passed. Using
->> the first free id
->> [    0.176671] xuartps ff000000.serial: Validate id 0
->> [    0.176680] xuartps ff000000.serial: The empty id is 0
->> [    0.176692] xuartps ff000000.serial: ID 0 already taken - skipped
->> [    0.176701] xuartps ff000000.serial: Validate id 1
->> [    0.176710] xuartps ff000000.serial: The empty id is 1
->> [    0.176719] xuartps ff000000.serial: Selected ID 1 allocation passed
->> [    0.176760] ff000000.serial: ttyPS1 at MMIO 0xff000000 (irq = 33,
->> base_baud = 6250000) is a xuartps
->> [    0.177104] ff010000.serial: ttyPS0 at MMIO 0xff010000 (irq = 34,
->> base_baud = 6250000) is a xuartps
->>
->> uart0 not listed but it is probed first that's why should be ttyPS0
->>         serial1 = &uart1;
->> [    0.176661] xuartps ff000000.serial: No serial alias passed. Using
->> the first free id
->> [    0.176676] xuartps ff000000.serial: Validate id 0
->> [    0.176686] xuartps ff000000.serial: The empty id is 0
->> [    0.176696] xuartps ff000000.serial: Selected ID 0 allocation passed
->> [    0.176737] ff000000.serial: ttyPS0 at MMIO 0xff000000 (irq = 33,
->> base_baud = 6250000) is a xuartps
->> [    0.177069] ff010000.serial: ttyPS1 at MMIO 0xff010000 (irq = 34,
->> base_baud = 6250000) is a xuartps
->>
->> uarts not listed in aliases list
->> [    0.176673] xuartps ff000000.serial: No serial alias passed. Using
->> the first free id
->> [    0.176687] xuartps ff000000.serial: Validate id 0
->> [    0.176697] xuartps ff000000.serial: The empty id is 0
->> [    0.176707] xuartps ff000000.serial: Selected ID 0 allocation passed
->> [    0.176746] ff000000.serial: ttyPS0 at MMIO 0xff000000 (irq = 33,
->> base_baud = 6250000) is a xuartps
->> [    0.177057] xuartps ff010000.serial: No serial alias passed. Using
->> the first free id
->> [    0.177070] xuartps ff010000.serial: Validate id 0
->> [    0.177079] xuartps ff010000.serial: The empty id is 0
->> [    0.177089] xuartps ff010000.serial: Selected ID 0 allocation failed
->> [    0.177098] xuartps ff010000.serial: Validate id 1
->> [    0.177107] xuartps ff010000.serial: The empty id is 1
->> [    0.177116] xuartps ff010000.serial: Selected ID 1 allocation passed
->> [    0.177149] ff010000.serial: ttyPS1 at MMIO 0xff010000 (irq = 34,
->> base_baud = 6250000) is a xuartps
->>
->> Thanks,
->> Michal
-> 
-> Hello Michal,
-> 
-> How will this interact with ns16550 based UARTs?
-> 
-> Can we have both /dev/ttyS0 and /dev/ttyPS0?
-> Currently we can't unless we create *no* serialN alias for the ns16550.
-> And there is no other means to lock the /dev/ttySx name to a device either.
-> 
-> Or will the xuartps driver eventually use /dev/ttySx as well?
-
-I am not changing any current behavior in this case. uartps is using
-ttyPS. ns16550 is using ttyS and on xilinx devices we are using also
-ttyUL for uartlite. Other drivers are using different names.
-
-Thanks,
-Michal
+SGkgQW5keSwNCg0KT24gMDUgTWF5IDIwMTggMTE6NDkgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0K
+PiBPbiBUaHUsIEFwciAyNiwgMjAxOCBhdCA3OjE5IFBNLCBQaGlsIEVkd29ydGh5IHdyb3RlOg0K
+PiANCj4gU290dHkgZm8gYSBsYXRlIHJlc3BvbnNlLiBDb25zaWRlciBmb2xsb3cgdXAgZml4ZXMg
+Zm9yIGJlbG93Lg0KPiANCj4gPiAgICAgICAgIGlmICghcHAtPmlycV9zaGFyZWQpIHsNCj4gPiAr
+ICAgICAgICAgICAgICAgaW50IGk7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBmb3IgKGkg
+PSAwOyBpIDwgcHAtPm5ncGlvOyBpKyspIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBp
+ZiAocHAtPmlycVtpXSkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlycV9z
+ZXRfY2hhaW5lZF9oYW5kbGVyX2FuZF9kYXRhKHBwLT5pcnFbaV0sDQo+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZHdhcGJfaXJxX2hhbmRsZXIsIGdw
+aW8pOw0KPiA+ICsgICAgICAgICAgICAgICB9DQo+ID4gICAgICAgICB9IGVsc2Ugew0KPiA+ICAg
+ICAgICAgICAgICAgICAvKg0KPiA+ICAgICAgICAgICAgICAgICAgKiBSZXF1ZXN0IGEgc2hhcmVk
+IElSUSBzaW5jZSB3aGVyZSBNRkQgd291bGQgaGF2ZSBkZXZpY2VzDQo+ID4gICAgICAgICAgICAg
+ICAgICAqIHVzaW5nIHRoZSBzYW1lIGlycSBwaW4NCj4gPiAgICAgICAgICAgICAgICAgICovDQo+
+ID4gKyAgICAgICAgICAgICAgIGVyciA9IGRldm1fcmVxdWVzdF9pcnEoZ3Bpby0+ZGV2LCBwcC0+
+aXJxWzBdLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGR3YXBi
+X2lycV9oYW5kbGVyX21mZCwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBJUlFGX1NIQVJFRCwgImdwaW8tZHdhcGItbWZkIiwNCj4gPiBncGlvKTsNCj4gDQo+ID4g
+KyAgICAgICBpZiAocHAtPmhhc19pcnEpDQo+ID4gICAgICAgICAgICAgICAgIGR3YXBiX2NvbmZp
+Z3VyZV9pcnFzKGdwaW8sIHBvcnQsIHBwKTsNCj4gDQo+IEkgd291bGQgcmF0aGVyIG1ha2UgaXJx
+IGFycmF5IGEgdHlwZSBvZiBzaWduZWQgaW50IGFuZCBtb3ZlIGNvbmRpdGlvbmFsIGludG8NCj4g
+dGhlIGZ1bmN0aW9uIHRvIHRlc3QgcGVyIElSUSBiYXNlZC4NCk9rLCB0aG91Z2ggc2luY2UgdGhl
+IGRyaXZlciBjYW4gYmUgdXNlZCB3aXRob3V0IGludGVycnVwdHMsIGl0IGhhcyB0byBjaGVjaw0K
+aWYgYW55IGFyZSB1c2VkIGJlZm9yZSB0aGUgZHJpdmVyIGRvZXMgYWxsIHRoZSBvdGhlciBpbnRl
+cnJ1cHQgcmVsYXRlZCB0aGluZ3MuDQogDQo+ID4gICAgICAgICAvKiBBZGQgR1BJTy1zaWduYWxl
+ZCBBQ1BJIGV2ZW50IHN1cHBvcnQgKi8NCj4gPiArICAgICAgIGlmIChwcC0+aGFzX2lycSkNCj4g
+PiAgICAgICAgICAgICAgICAgYWNwaV9ncGlvY2hpcF9yZXF1ZXN0X2ludGVycnVwdHMoJnBvcnQt
+PmdjKTsNCj4gDQo+IFBlcmhhcHMgc29tZXRoaW5nIHNpbWlsYXIuDQo+IA0KPiA+ICAgICAgICAg
+ICAgICAgICBpZiAoZGV2LT5vZl9ub2RlICYmIHBwLT5pZHggPT0gMCAmJg0KPiA+ICAgICAgICAg
+ICAgICAgICAgICAgICAgIGZ3bm9kZV9wcm9wZXJ0eV9yZWFkX2Jvb2woZndub2RlLA0KPiA+DQo+
+ID4gImludGVycnVwdC1jb250cm9sbGVyIikpIHsNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgc3RydWN0IGRldmljZV9ub2RlICpucCA9IHRvX29mX25vZGUoZndub2RlKTsNCj4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBpbnQgajsNCj4gPiArDQo+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgLyoNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgKiBUaGUg
+SVAgaGFzIGNvbmZpZ3VyYXRpb24gb3B0aW9ucyB0byBhbGxvdyBhIHNpbmdsZQ0KPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAqIGNvbWJpbmVkIGludGVycnVwdCBvciBvbmUgcGVyIGdwaW8u
+IElmIG9uZSBwZXIgZ3BpbywNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgKiBzb21lIG1p
+Z2h0IG5vdCBiZSB1c2VkLg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAqLw0KPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIGZvciAoaiA9IDA7IGogPCBwcC0+bmdwaW87IGorKykgew0K
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50IGlycSA9IG9mX2lycV9nZXQo
+bnAsIGopOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWYgKGlycSA8IDAp
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0K
+PiA+ICsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBwLT5pcnFbal0gPSBp
+cnE7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwcC0+aGFzX2lycSA9IHRy
+dWU7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfQ0KPiANCj4gZm9yICguLi4pDQo+ICBw
+cC0+aXJxID0gb2ZfaXJxX2dldCgpOw0KPiANCj4gPiAgICAgICAgICAgICAgICAgfQ0KPiANCj4g
+PiArICAgICAgICAgICAgICAgaWYgKGhhc19hY3BpX2NvbXBhbmlvbihkZXYpICYmIHBwLT5pZHgg
+PT0gMCkgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCBqOw0KPiA+
+ICsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBmb3IgKGogPSAwOyBqIDwgcHAtPm5ncGlv
+OyBqKyspIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBwLT5pcnFbal0g
+PSBwbGF0Zm9ybV9nZXRfaXJxKHRvX3BsYXRmb3JtX2RldmljZShkZXYpLCBqKTsNCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIChwcC0+aXJxW2pdKQ0KPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwcC0+aGFzX2lycSA9IHRydWU7DQo+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgfQ0KPiANCj4gRGl0dG8uDQo+IE1vcmVvdmVyIHlvdSBo
+YXZlIGEgYnVnIGhlcmUuIFNlZSBteSBwcm9wb3NhbCBhdCB0aGUgdG9wIG9mIHRoaXMgbWVzc2Fn
+ZS4NCkkgZ3Vlc3MgeW91IG1lYW4gdGhhdCBpdCBkb2VzbuKAmXQgY2hlY2sgZm9yIGVycm9ycyBy
+ZXR1cm5lZD8NCg0KPiBBbmQgbm93IGV2ZW4gYmV0dGVyIHRvIGFzaywgd2h5IHBsYXRmb3JtX2dl
+dF9pcnEoKSB3b3VsZG4ndCB3b3JrIGZvciBEVA0KPiBjYXNlPw0KVGhlIHByb2JsZW0gaXMgdGhh
+dCB0aGUgaW50ZXJydXB0cyBhcmUgZGVmaW5lZCBpbiB0aGUgcG9ydCBzdWItbm9kZSBpbiBEVCwN
+Cm5vdCBpbiB0aGUgZ3BpbyBjb250cm9sbGVyIG5vZGUsIGNhdXNpbmcgcGxhdGZvcm1fZ2V0X2ly
+cSgpIHRvIGZhaWwuIFRoZQ0KcG9ydCBzdWItbm9kZSBkb2VzbuKAmXQgaGF2ZSBhbiBhc3NvY2lh
+dGVkIHBsYXRmb3JtIGRldmljZS4gSSBkb27igJl0IHRoaW5rDQp0aGVyZSBpcyBhIHdheSBhcm91
+bmQgdGhpcy4uLg0KDQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmICghcHAt
+Pmhhc19pcnEpDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZXZfd2Fybihk
+ZXYsICJubyBpcnEgZm9yIHBvcnQlZFxuIiwNCj4gPiBwcC0+aWR4KTsNCj4gDQo+IFRoaXMgY291
+bGQgYmUgaXNzdWVkIGluIHRoZSBhY3R1YWwgZnVuY3Rpb24gd2hpY2ggd2lsbCB0cnkgdG8gYWxs
+b2NhdGUgSVJRcw0KPiAocGVyaGFwcyBvbiBkZWJ1ZyBsZXZlbCkNCj4gDQo+IA0KPiBQLlMuIEp1
+c3QgdGhpbmsgYWJvdXQgaXQsIHBlcmhhcHMgeW91IGZpbmQgZXZlbiBiZXR0ZXIgc29sdXRpb25z
+Lg0KVGhlcmUncyBjZXJ0YWlubHkgc29tZSBkdXBsaWNhdGlvbiBiZXR3ZWVuIERUIGFuZCBBQ1BJ
+IHRoYXQgY2FuIGJlIHJlbW92ZWQuDQoNClRoYW5rcw0KUGhpbA0K
