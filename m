@@ -1,98 +1,49 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v7 08/24] ASoC: qdsp6: q6core: Add q6core
-	driver
-Date: Wed, 9 May 2018 07:06:04 +0100
-Message-ID: <9ea47387-d849-19e8-1075-74a5e7e11a22@linaro.org>
-References: <20180501120820.11016-1-srinivas.kandagatla@linaro.org>
- <20180501120820.11016-9-srinivas.kandagatla@linaro.org>
- <46511158-ed1d-7f07-0a8f-b325c088e386@codeaurora.org>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH] dt-bindings: Add vendor prefix for Avnet, Inc.
+Date: Wed, 9 May 2018 08:22:34 +0200
+Message-ID: <47d7a8d3-ea6e-200d-2426-d0fe3671196a@xilinx.com>
+References: <d860eb7551e343fa59b77fd3e144a633186a8378.1525249073.git.michal.simek@xilinx.com>
+ <20180507204937.GA21052@rob-hp-laptop>
+ <933bb0a1-2ea2-3f23-492e-56805a804300@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <46511158-ed1d-7f07-0a8f-b325c088e386@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <933bb0a1-2ea2-3f23-492e-56805a804300@suse.de>
 Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Banajit Goswami <bgoswami@codeaurora.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, linux-kernel@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Rob Herring <robh@kernel.org>, Michal Simek <michal.simek@xilinx.com>
+Cc: devicetree@vger.kernel.org, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, Thierry Reding <treding@nvidia.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, SZ Lin <sz.lin@moxa.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Banajit for the review!
+Hi,
 
-On 04/05/18 20:04, Banajit Goswami wrote:
->> +
->> +static int q6core_callback(struct apr_device *adev, struct 
->> apr_resp_pkt *data)
->> +{
->> +    struct q6core *core = dev_get_drvdata(&adev->dev);
->> +    struct aprv2_ibasic_rsp_result_t *result;
->> +    struct apr_hdr *hdr = &data->hdr;
->> +
->> +    result = data->payload;
->> +    switch (hdr->opcode) {
->> +    case APR_BASIC_RSP_RESULT:{
->> +        result = data->payload;
->> +        switch (result->opcode) {
->> +        case AVCS_GET_VERSIONS:
->> +            if (result->status == ADSP_EUNSUPPORTED)
->> +                core->get_version_supported = false;
->> +            core->resp_received = true;
->> +            break;
->> +        case AVCS_CMD_GET_FWK_VERSION:
->> +            if (result->status == ADSP_EUNSUPPORTED)
->> +                core->fwk_version_supported = false;
->> +            core->resp_received = true;
->> +            break;
->> +        case AVCS_CMD_ADSP_EVENT_GET_STATE:
->> +            if (result->status == ADSP_EUNSUPPORTED)
->> +                core->get_state_supported = false;
->> +            core->resp_received = true;
->> +            break;
->> +        }
->> +        break;
->> +    }
->> +    case AVCS_CMDRSP_GET_FWK_VERSION: {
->> +        struct avcs_cmdrsp_get_fwk_version *fwk;
->> +        int bytes;
->> +
->> +        fwk = data->payload;
->> +        core->fwk_version_supported = true;
->> +        bytes = sizeof(*fwk) + fwk->num_services *
->> +                sizeof(fwk->svc_api_info[0]);
->> +
->> +        core->fwk_version = kzalloc(bytes, GFP_ATOMIC);
->> +        if (!core->fwk_version)
->> +            return -ENOMEM;
-> When the above allocation fails,  core->fwk_version_supported will be 
-> still true, and q6core_get_fwk_versions() will return 0 (timeout as 
-> core->resp_received will not be set to true). This can cause a NULL 
-> pointer dereference inside the if() loop pointed below (added comment).
-> Please move the line to set core->fwk_version_supported flag to after 
-> memset() to copy fwk version info.
+On 8.5.2018 14:15, Andreas Färber wrote:
+> Hi Michal,
+> 
+> Am 07.05.2018 um 22:49 schrieb Rob Herring:
+>> On Wed, May 02, 2018 at 10:17:57AM +0200, Michal Simek wrote:
+>>> "Avnet, Inc. is one of the world's largest distributors of electronic
+>>> components and embedded solutions." - Wikipedia.org
+>>>
+>>> Website: www.avnet.com
+>>>
+>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>>> ---
+>>>
+>>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>
+>> Applied.
+> 
+> What is this standalone patch needed for? Looks fine, but it doesn't
+> appear to be part of a series using it - is it for board compatibles?
 
-Yes, makes sense, I fixed this and other comments in v8.
+This file is used by other projects but that's just side note.
 
-thanks,
-srini
->> +
->> +        memcpy(core->fwk_version, data->payload, bytes);
->> +
->> +        core->resp_received = true;
->> +
->> +        break;
->> +    }
->> +    case AVCS_GET_VERSIONS_RSP: {
->> +        struct avcs_cmdrsp_get_version *v;
->> +        int len;
->> +
->> +        v = data->payload;
->> +        core->get_version_supported = true;
->> + 
+I have sent a patch which uses that separately because it will be
+applied separately out of this patch.
+https://patchwork.kernel.org/patch/10375553/
+
+Thanks,
+Michal
