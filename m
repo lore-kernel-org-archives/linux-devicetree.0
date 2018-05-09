@@ -1,102 +1,166 @@
-Return-Path: <SRS0=COmU=HV=mediatek.com=argus.lin@kernel.org>
-From: <argus.lin@mediatek.com>
-Subject: [PATCH V4 0/8] Pwrap: Mediatek pwrap driver for mt6797
-Date: Wed, 2 May 2018 17:21:04 +0800
-Message-ID: <20180502092112.3991-1-argus.lin@mediatek.com>
+Return-Path: <SRS0=X3x8=H4=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-wm0-f67.google.com ([74.125.82.67]:40214 "EHLO
+        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S933558AbeEIChq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 8 May 2018 22:37:46 -0400
+Received: by mail-wm0-f67.google.com with SMTP id j5-v6so24804189wme.5
+        for <devicetree@vger.kernel.org>; Tue, 08 May 2018 19:37:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_006_58909319.2090924712"
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+In-Reply-To: <20180508161824.GB13724@e107981-ln.cambridge.arm.com>
+References: <1525683134-9611-1-git-send-email-l.subrahmanya@mobiveil.co.in> <20180508161824.GB13724@e107981-ln.cambridge.arm.com>
+From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Date: Wed, 9 May 2018 08:07:44 +0530
+Message-ID: <CAFZiPx1iB3pYF-3yqry+h1oBrsDocsTTRx5Y6ULEHQYs_XC_5A@mail.gmail.com>
+Subject: Re: [PATCH v10 1/3] PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP
+ driver DT bindings
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <marc.zyngier@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, Peter W Newton <peter.newton@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Raj Raina <rajesh.raina@nxp.com>, Rajan Kapoor <rajan.kapoor@nxp.com>, Prabhjot Singh <prabhjot.singh@nxp.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_006_58909319.2090924712
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_007_1339890623.1102709541"
+Lorenzo,
+my apologies; I will make sure not to send multiple copies of same
+patch next time.
 
---__=_Part_Boundary_007_1339890623.1102709541
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+Thanks.
 
-PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
-SGVyZSYjMzk7cyB2ZXJzaW9uIDQgb2YgdGhlIHBhdGNoIHNlcmllcywgaW5jbHVkZSA4IHBhdGNo
-ZXM6DQoxLiBhZGQgY2FwcyBmbGFnIGZvciBwd3JhcCB0byBleHBsYWluIHB3cmFwJiMzOTtzIGNh
-cGFiaWxpdHkuDQoyLiByZW1vdmUgaGFzX2JyaWRnZSBmbGFnLCByZXBsYWNlIGJ5IGNhcHMgZmxh
-Zy4NCjMuIGFkZCBpbnQxX2VuX2FsbCBmbGFnIGZvciBuZXcgaW50ZXJydXB0Lg0KNC4gYWRkIHB3
-cmFwIGRyaXZlcnMgZm9yIG10Njc5NyBTb0NzLg0KNS4gZml4IGJ1ZyBhdCBjaXBoZXIgaW5pdCBm
-b3INCjVhZTQ4MDQwYWE0NyAoJnF1b3Q7c29jOiBtZWRpYXRlazogUE1JQyB3cmFwOiBhZGQgbXQ2
-MzIzIHNsYXZlIHN1cHBvcnQmcXVvdDspDQo2LiBhZGQgbXQ2MzUxIHN1cHBvcnQgZm9yIG10Njc5
-NyBTb0NzLg0KDQpDaGFuZ2VzIGZyb20gdjIgdG8gdjM6DQoxKWFkanVzdCB1cHN0cmVhbSBwYXRj
-aCBzZXF1ZW5jZS4NCjIpZml4IGJ1aWxkIGVycm9yIGZvciBuZXcgZmlsZWQgYXQgcG1pY193cmFw
-cGVyX3R5cGUuDQozKWFkanVzdCBwbWljX3R5cGUgZW51bSBzZXF1ZW5jZS4NCg0KQ2hhbmdlcyBm
-cm9tIHYxIHRvIHYyOg0KMSkgYWRkIG5ldyBjYXBhYmlsaXR5IGZpZWxkIGFuZCBNQVJDTyBmb3Ig
-ZGlmZmVyZW50IHB3cmFwIHNlcmllcywgdGhlIGNhcGFiaWxpdHkgaW5jbHVkZSBCUklER0UsIFJF
-U0VULCBEQ00sIFBSSU9SSVRZX1NFTCBhbmQgSU5UMV9FTi4NCjIpIGFkZCBzdGFydmFjdGlvbiBm
-b3IgbXQ2Nzk3IHB3cmFwLg0KMykgYWRkIElOVDEgaW50ZXJydXB0IHRvIGhhbmRsZSBzdGFydmFj
-dGlvbiBhbmQgcmVxdWVzdCBleGNlcHRpb24uDQoNCg0KQXJndXMgTGluICg4KToNCiAgZHQtYmlu
-ZGluZ3M6IHB3cmFwOiBtZWRpYXRlazogYWRkIE1UNjM1MSBQTUlDIHN1cHBvcnQgZm9yIE1UNjc5
-Nw0KICBzb2M6IG1lZGlhdGVrOiBwd3JhcDogYWRkIGNhcHMgZmxhZyBmb3IgcHdyYXANCiAgc29j
-OiBtZWRpYXRlazogcHdyYXA6IHJlbW92ZSBoYXNfYnJpZGdlIGZsYWcNCiAgc29jOiBtZWRpYXRl
-azogcHdyYXA6IGFkZCBpbnQxX2VuX2FsbCBmbGFnDQogIHNvYzogbWVkaWF0ZWs6IHB3cmFwOiBh
-ZGQgcHdyYXAgZm9yIG10Njc5NyBTb0NzDQogIHNvYzogbWVkaWF0ZWs6IHB3cmFwOiBmaXggY2lw
-aGVyIGluaXQNCiAgc29jOiBtZWRpYXRlazogcHdyYXA6IGFkZCBtdDYzNTEgZm9yIG10Njc5NyBT
-b0NzDQogIGFybTY0OiBkdHM6IG10Njc5NzogYWRkIHB3cmFwIHN1cHBvcnQgZm9yIG10Njc5Nw0K
-DQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCAgICAgfCAg
-IDEgKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzk3LmR0c2kgICAgICAgICAg
-IHwgIDE0ICsrDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jICAgICAgICAg
-ICAgICAgfCAxNjcgKysrKysrKysrKysrKysrKysrLS0tDQogMyBmaWxlcyBjaGFuZ2VkLCAxNjUg
-aW5zZXJ0aW9ucygrKSwgMTcgZGVsZXRpb25zKC0pDQoNCi0tIA0KMi4xMi41DQoNCjwvcHJlPjwh
-LS10eXBlOnRleHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRp
-YWxpdHkgTm90aWNlICoqKioqKioqKioqKioqKioqKioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFp
-bmVkIGluIHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykg
-bWF5IGJlIGNvbmZpZGVudGlhbCwgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lz
-ZQ0KZXhlbXB0IGZyb20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGlu
-dGVuZGVkIHRvIGJlIA0KY29udmV5ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQo
-cykuIEFueSB1c2UsIGRpc3NlbWluYXRpb24sIA0KZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0
-YWluaW5nIG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2ht
-ZW50cykgYnkgdW5pbnRlbmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBh
-bmQgbWF5IA0KYmUgdW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVu
-dCBvZiB0aGlzIGUtbWFpbCwgb3IgYmVsaWV2ZSANCnRoYXQgeW91IGhhdmUgcmVjZWl2ZWQgdGhp
-cyBlLW1haWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciANCmltbWVkaWF0ZWx5
-IChieSByZXBseWluZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBhbnkgYW5kIGFsbCBjb3BpZXMg
-b2YgDQp0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2htZW50cykgZnJvbSB5b3VyIHN5
-c3RlbSwgYW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQgb2YgdGhpcyBlLW1haWwgdG8g
-YW55IG90aGVyIHBlcnNvbi4gVGhhbmsgeW91ITwvcHJlPjwhLS19LS0+
-
---__=_Part_Boundary_007_1339890623.1102709541
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
-
-RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQpIZXJlJ3MgdmVyc2lv
-biA0IG9mIHRoZSBwYXRjaCBzZXJpZXMsIGluY2x1ZGUgOCBwYXRjaGVzOg0KMS4gYWRkIGNhcHMg
-ZmxhZyBmb3IgcHdyYXAgdG8gZXhwbGFpbiBwd3JhcCdzIGNhcGFiaWxpdHkuDQoyLiByZW1vdmUg
-aGFzX2JyaWRnZSBmbGFnLCByZXBsYWNlIGJ5IGNhcHMgZmxhZy4NCjMuIGFkZCBpbnQxX2VuX2Fs
-bCBmbGFnIGZvciBuZXcgaW50ZXJydXB0Lg0KNC4gYWRkIHB3cmFwIGRyaXZlcnMgZm9yIG10Njc5
-NyBTb0NzLg0KNS4gZml4IGJ1ZyBhdCBjaXBoZXIgaW5pdCBmb3INCjVhZTQ4MDQwYWE0NyAoInNv
-YzogbWVkaWF0ZWs6IFBNSUMgd3JhcDogYWRkIG10NjMyMyBzbGF2ZSBzdXBwb3J0IikNCjYuIGFk
-ZCBtdDYzNTEgc3VwcG9ydCBmb3IgbXQ2Nzk3IFNvQ3MuDQoNCkNoYW5nZXMgZnJvbSB2MiB0byB2
-MzoNCjEpYWRqdXN0IHVwc3RyZWFtIHBhdGNoIHNlcXVlbmNlLg0KMilmaXggYnVpbGQgZXJyb3Ig
-Zm9yIG5ldyBmaWxlZCBhdCBwbWljX3dyYXBwZXJfdHlwZS4NCjMpYWRqdXN0IHBtaWNfdHlwZSBl
-bnVtIHNlcXVlbmNlLg0KDQpDaGFuZ2VzIGZyb20gdjEgdG8gdjI6DQoxKSBhZGQgbmV3IGNhcGFi
-aWxpdHkgZmllbGQgYW5kIE1BUkNPIGZvciBkaWZmZXJlbnQgcHdyYXAgc2VyaWVzLCB0aGUgY2Fw
-YWJpbGl0eSBpbmNsdWRlIEJSSURHRSwgUkVTRVQsIERDTSwgUFJJT1JJVFlfU0VMIGFuZCBJTlQx
-X0VOLg0KMikgYWRkIHN0YXJ2YWN0aW9uIGZvciBtdDY3OTcgcHdyYXAuDQozKSBhZGQgSU5UMSBp
-bnRlcnJ1cHQgdG8gaGFuZGxlIHN0YXJ2YWN0aW9uIGFuZCByZXF1ZXN0IGV4Y2VwdGlvbi4NCg0K
-DQpBcmd1cyBMaW4gKDgpOg0KICBkdC1iaW5kaW5nczogcHdyYXA6IG1lZGlhdGVrOiBhZGQgTVQ2
-MzUxIFBNSUMgc3VwcG9ydCBmb3IgTVQ2Nzk3DQogIHNvYzogbWVkaWF0ZWs6IHB3cmFwOiBhZGQg
-Y2FwcyBmbGFnIGZvciBwd3JhcA0KICBzb2M6IG1lZGlhdGVrOiBwd3JhcDogcmVtb3ZlIGhhc19i
-cmlkZ2UgZmxhZw0KICBzb2M6IG1lZGlhdGVrOiBwd3JhcDogYWRkIGludDFfZW5fYWxsIGZsYWcN
-CiAgc29jOiBtZWRpYXRlazogcHdyYXA6IGFkZCBwd3JhcCBmb3IgbXQ2Nzk3IFNvQ3MNCiAgc29j
-OiBtZWRpYXRlazogcHdyYXA6IGZpeCBjaXBoZXIgaW5pdA0KICBzb2M6IG1lZGlhdGVrOiBwd3Jh
-cDogYWRkIG10NjM1MSBmb3IgbXQ2Nzk3IFNvQ3MNCiAgYXJtNjQ6IGR0czogbXQ2Nzk3OiBhZGQg
-cHdyYXAgc3VwcG9ydCBmb3IgbXQ2Nzk3DQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2Mv
-bWVkaWF0ZWsvcHdyYXAudHh0ICAgICB8ICAgMSArDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRp
-YXRlay9tdDY3OTcuZHRzaSAgICAgICAgICAgfCAgMTQgKysNCiBkcml2ZXJzL3NvYy9tZWRpYXRl
-ay9tdGstcG1pYy13cmFwLmMgICAgICAgICAgICAgICB8IDE2NyArKysrKysrKysrKysrKysrKyst
-LS0NCiAzIGZpbGVzIGNoYW5nZWQsIDE2NSBpbnNlcnRpb25zKCspLCAxNyBkZWxldGlvbnMoLSkN
-Cg0KLS0gDQoyLjEyLjUNCg==
-
---__=_Part_Boundary_007_1339890623.1102709541--
-
---__=_Part_Boundary_006_58909319.2090924712--
+On Tue, May 8, 2018 at 9:48 PM, Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+> On Mon, May 07, 2018 at 04:52:14AM -0400, Subrahmanya Lingappa wrote:
+>> This patch adds the DT bindings for Mobiveil PCIe Host Bridge
+>> IP driver and updates the vendor prefixes file.
+>>
+>> Signed-off-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>> Cc: linux-pci@vger.kernel.org
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>>  .../devicetree/bindings/pci/mobiveil-pcie.txt      | 73 ++++++++++++++++++++++
+>>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>>  MAINTAINERS                                        |  7 +++
+>>  3 files changed, 81 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+>
+> You sent this patch twice, which confused patchwork (which we use to
+> apply patches), please send the series to yourself to test it is right
+> before sending it to the list.
+>
+> Thanks,
+> Lorenzo
+>
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+>> new file mode 100644
+>> index 0000000..65038aa
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+>> @@ -0,0 +1,73 @@
+>> +* Mobiveil AXI PCIe Root Port Bridge DT description
+>> +
+>> +Mobiveil's GPEX 4.0 is a PCIe Gen4 root port bridge IP. This configurable IP
+>> +has up to 8 outbound and inbound windows for the address translation.
+>> +
+>> +Required properties:
+>> +- #address-cells: Address representation for root ports, set to <3>
+>> +- #size-cells: Size representation for root ports, set to <2>
+>> +- #interrupt-cells: specifies the number of cells needed to encode an
+>> +     interrupt source. The value must be 1.
+>> +- compatible: Should contain "mbvl,gpex40-pcie"
+>> +- reg: Should contain PCIe registers location and length
+>> +     "config_axi_slave": PCIe controller registers
+>> +     "csr_axi_slave"   : Bridge config registers
+>> +     "gpio_slave"      : GPIO registers to control slot power
+>> +     "apb_csr"         : MSI registers
+>> +
+>> +- device_type: must be "pci"
+>> +- apio-wins : number of requested apio outbound windows
+>> +             default 2 outbound windows are configured -
+>> +             1. Config window
+>> +             2. Memory window
+>> +- ppio-wins : number of requested ppio inbound windows
+>> +             default 1 inbound memory window is configured.
+>> +- bus-range: PCI bus numbers covered
+>> +- interrupt-controller: identifies the node as an interrupt controller
+>> +- #interrupt-cells: specifies the number of cells needed to encode an
+>> +     interrupt source. The value must be 1.
+>> +- interrupt-parent : phandle to the interrupt controller that
+>> +             it is attached to, it should be set to gic to point to
+>> +             ARM's Generic Interrupt Controller node in system DT.
+>> +- interrupts: The interrupt line of the PCIe controller
+>> +             last cell of this field is set to 4 to
+>> +             denote it as IRQ_TYPE_LEVEL_HIGH type interrupt.
+>> +- interrupt-map-mask,
+>> +     interrupt-map: standard PCI properties to define the mapping of the
+>> +     PCI interface to interrupt numbers.
+>> +- ranges: ranges for the PCI memory regions (I/O space region is not
+>> +     supported by hardware)
+>> +     Please refer to the standard PCI bus binding document for a more
+>> +     detailed explanation
+>> +
+>> +
+>> +Example:
+>> +++++++++
+>> +     pcie0: pcie@a0000000 {
+>> +             #address-cells = <3>;
+>> +             #size-cells = <2>;
+>> +             compatible = "mbvl,gpex40-pcie";
+>> +             reg =   <0xa0000000 0x00001000>,
+>> +                     <0xb0000000 0x00010000>,
+>> +                     <0xff000000 0x00200000>,
+>> +                     <0xb0010000 0x00001000>;
+>> +             reg-names =     "config_axi_slave",
+>> +                             "csr_axi_slave",
+>> +                             "gpio_slave",
+>> +                             "apb_csr";
+>> +             device_type = "pci";
+>> +             apio-wins = <2>;
+>> +             ppio-wins = <1>;
+>> +             bus-range = <0x00000000 0x000000ff>;
+>> +             interrupt-controller;
+>> +             interrupt-parent = <&gic>;
+>> +             #interrupt-cells = <1>;
+>> +             interrupts = < 0 89 4 >;
+>> +             interrupt-map-mask = <0 0 0 7>;
+>> +             interrupt-map = <0 0 0 0 &pci_express 0>,
+>> +                             <0 0 0 1 &pci_express 1>,
+>> +                             <0 0 0 2 &pci_express 2>,
+>> +                             <0 0 0 3 &pci_express 3>;
+>> +             ranges = < 0x83000000 0 0x00000000 0xa8000000 0 0x8000000>;
+>> +
+>> +     };
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index 0994bdd..8263cc7 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -197,6 +197,7 @@ lwn       Liebherr-Werk Nenzing GmbH
+>>  macnica      Macnica Americas
+>>  marvell      Marvell Technology Group Ltd.
+>>  maxim        Maxim Integrated Products
+>> +mbvl Mobiveil Inc.
+>>  mcube        mCube
+>>  meas Measurement Specialties
+>>  mediatek     MediaTek Inc.
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 44512c3..b295080 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -9162,6 +9162,13 @@ Q:     http://patchwork.linuxtv.org/project/linux-media/list/
+>>  S:   Maintained
+>>  F:   drivers/media/dvb-frontends/mn88473*
+>>
+>> +PCI DRIVER FOR MOBIVEIL PCIE IP
+>> +M:   Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+>> +L:   linux-pci@vger.kernel.org
+>> +S:   Supported
+>> +F:   Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+>> +F:   drivers/pci/host/pcie-mobiveil.c
+>> +
+>>  MODULE SUPPORT
+>>  M:   Jessica Yu <jeyu@kernel.org>
+>>  M:   Rusty Russell <rusty@rustcorp.com.au>
+>> --
+>> 1.8.3.1
+>>
