@@ -1,167 +1,109 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: Re: [PATCH v3 10/14] ARM: dts: imx7: Add video mux,
- csi and mipi_csi and connections
-Date: Wed, 09 May 2018 12:10:24 +0100
-Message-ID: <m3a7t99ja7.fsf@linaro.org>
-References: <20180507162152.2545-1-rui.silva@linaro.org>
- <20180507162152.2545-11-rui.silva@linaro.org>
- <1525856026.5888.4.camel@pengutronix.de>
+From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] drm/panel: Add RGB666 variant of
+ Innolux AT070TN90
+Date: Wed, 09 May 2018 13:31:23 +0200
+Message-ID: <c8ab5f472881063b90abe9461933baf6ee325dcd.camel@paulk.fr>
+References: <20180507220413.21990-1-contact@paulk.fr>
+	 <20180509071226.ivh4s3wtczg2u7zw@flea>
+Reply-To: contact-W9ppeneeCTY@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-reply-to: <1525856026.5888.4.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBC75HK6WUAEBB3FYZPLQKGQENT3EQSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180509071226.ivh4s3wtczg2u7zw@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
-Thanks.
+Hi,
 
-On Wed 09 May 2018 at 08:53, Philipp Zabel wrote:
-> On Mon, 2018-05-07 at 17:21 +0100, Rui Miguel Silva wrote:
->> This patch adds the device tree nodes for csi, video 
->> multiplexer and mipi-csi
->> besides the graph connecting the necessary endpoints to make 
->> the media capture
->> entities to work in imx7 Warp board.
->> 
->> Also add the pin control related with the mipi_csi in that 
->> board.
->> 
->> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
->> ---
->>  arch/arm/boot/dts/imx7s-warp.dts | 78 
->>  ++++++++++++++++++++++++++++++++
->>  arch/arm/boot/dts/imx7s.dtsi     | 28 ++++++++++++
->>  2 files changed, 106 insertions(+)
->> 
->> diff --git a/arch/arm/boot/dts/imx7s-warp.dts 
->> b/arch/arm/boot/dts/imx7s-warp.dts
->> index 8a30b148534d..ffd170ae925a 100644
->> --- a/arch/arm/boot/dts/imx7s-warp.dts
->> +++ b/arch/arm/boot/dts/imx7s-warp.dts
->> @@ -310,6 +310,77 @@
->>  	status = "okay";
->>  };
->>  
->> +&gpr {
->> +	csi_mux {
->> +		compatible = "video-mux";
->> +		mux-controls = <&mux 0>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		port@0 {
->> +			reg = <0>;
->> +
->> +			csi_mux_from_parallel_sensor: endpoint {
->> +			};
->> +		};
->> +
->> +		port@1 {
->> +			reg = <1>;
->> +
->> +			csi_mux_from_mipi_vc0: endpoint {
->> +				remote-endpoint = 
->> <&mipi_vc0_to_csi_mux>;
->> +			};
->> +		};
->> +
->> +		port@2 {
->> +			reg = <2>;
->> +
->> +			csi_mux_to_csi: endpoint {
->> +				remote-endpoint = 
->> <&csi_from_csi_mux>;
->> +			};
->> +		};
->> +	};
->> +};
->> +
->> +&csi {
->> +	status = "okay";
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +
->> +	port@0 {
->> +		reg = <0>;
->
-> Same comment as for the binding docs, since the CSI only has one 
-> port,
-> it doesn't have to be numbered.
+On Wed, 2018-05-09 at 09:12 +0200, Maxime Ripard wrote:
+> On Tue, May 08, 2018 at 12:04:11AM +0200, Paul Kocialkowski wrote:
+> > This adds timings for the RGB666 variant of the Innolux AT070TN90 panel,
+> > as found on the Ainol AW1 tablet.
+> > 
+> > The panel also supports RGB888 output. When RGB666 mode is used instead,
+> > the two extra lanes per component are grounded.
+> > 
+> > In the future, it might become necessary to introduce a dedicated
+> > device-tree property to specify the bus format to use instead of the
+> > default one for the panel. This will allow supporting different bus
+> > formats for the same panel modes.
+> > 
+> > Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+> > ---
+> >  drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++++++++++++++
+> >  1 file changed, 26 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> > index cbf1ab404ee7..32e30d5a8f08 100644
+> > --- a/drivers/gpu/drm/panel/panel-simple.c
+> > +++ b/drivers/gpu/drm/panel/panel-simple.c
+> > @@ -1063,6 +1063,29 @@ static const struct panel_desc innolux_at043tn24 = {
+> >  	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
+> >  };
+> >  
+> > +static const struct drm_display_mode innolux_at070tn90_mode = {
+> > +	.clock = 40000,
+> > +	.hdisplay = 800,
+> > +	.hsync_start = 800 + 112,
+> > +	.hsync_end = 800 + 112 + 1,
+> > +	.htotal = 800 + 112 + 1 + 87,
+> > +	.vdisplay = 480,
+> > +	.vsync_start = 480 + 141,
+> > +	.vsync_end = 480 + 141 + 1,
+> > +	.vtotal = 480 + 141 + 1 + 38,
+> > +	.vrefresh = 60,
+> > +};
+> > +
+> > +static const struct panel_desc innolux_at070tn90 = {
+> > +	.modes = &innolux_at070tn90_mode,
+> > +	.num_modes = 1,
+> > +	.size = {
+> > +		.width = 154,
+> > +		.height = 86,
+> > +	},
+> > +	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+> > +};
+> > +
+> 
+> I'm not really convinced this is the right approach. You said it
+> yourself, the panel is using a 24-bits interface, and you just happen
+> to have a tablet that routed it using a 18-bits interface instead.
+> 
+> That doesn't belong in the driver, especially associated to the
+> compatible, but where the routing is described: in the device
+> tree. And given that the panel interface is a 24 bits panel, if we
+> were to have a default, we should have this one, and not the one
+> fitting your use case.
 
-ack.
+I fully agree, this is why I suggested introducing a dedicated dt
+property for selecting the bus format (in the commit message). I still
+proposed this patch as a temporary solution, but I'm definitely willing
+to craft a proper solution as well.
 
->
->> +
->> +		csi_from_csi_mux: endpoint {
->> +			remote-endpoint = <&csi_mux_to_csi>;
->> +		};
->> +	};
->> +};
->> +
->> +&mipi_csi {
->> +	clock-frequency = <166000000>;
->> +	status = "okay";
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +	fsl,csis-hs-settle = <3>;
->> +
->> +	port@0 {
->> +		reg = <0>;
->> +
->> +		mipi_from_sensor: endpoint {
->> +			remote-endpoint = <&ov2680_to_mipi>;
->> +			data-lanes = <1>;
->> +		};
->> +	};
->> +
->> +	port@1 {
->> +		reg = <1>;
->> +
->> +		mipi_vc0_to_csi_mux: endpoint {
->> +			remote-endpoint = 
->> <&csi_mux_from_mipi_vc0>;
->> +		};
->> +	};
->> +};
->> +
->>  &wdog1 {
->>  	pinctrl-names = "default";
->>  	pinctrl-0 = <&pinctrl_wdog>;
->> @@ -357,6 +428,13 @@
->>  		>;
->>  	};
->>  
->> +	pinctrl_mipi_csi: mipi_csi {
->> +		fsl,pins = <
->> +			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3 
->> 0x14
->
-> This is the ov2680 reset GPIO? I think this belongs into patch 
-> 12.
+Here is an initial proposition:
+1. Making bus_format an array in struct panel_desc and listing all the
+relevant bus formats that the panel can support there;
+2. Introducing an optional "bus-format" dt property that indicates which
+bus format to use, and using the first index of the bus formats array if
+the property is not present;
+3. Checking that the bus format requested from dt is supported by the
+panel.
 
-Yes, you are right.
+What do you think?
 
->
->> +			MX7D_PAD_ENET1_RGMII_TD0__GPIO7_IO6 
->> 0x14
->
-> What is this GPIO used for?
+Paul
 
-MKBUS_RESET and totally unrelated. I will remove it. Thanks for 
-notice this.
+-- 
+Developer of free digital technology and hardware support.
 
----
-Cheers,
-	Rui
+Website: https://www.paulk.fr/
+Coding blog: https://code.paulk.fr/
+Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
