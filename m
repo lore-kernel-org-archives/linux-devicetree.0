@@ -1,35 +1,35 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: Serdev runtime PM (was: Re: [PATCH 4/7] dt-bindings: gnss: add
- u-blox binding)
-Date: Wed, 9 May 2018 11:49:57 +0200
-Message-ID: <20180509094957.GB2285@localhost>
-References: <20180502081637.GE2285@localhost>
- <5242FCAD-3139-4A9C-B9FA-7BBAA0E6AE57@goldelico.com>
- <20180503205037.7be552c1@aktux>
- <44A0BC7C-67C7-4116-849F-90FF7CF2B1F0@goldelico.com>
- <20180504114213.3xlzqxe74n55tk5s@earth.universe>
- <20180507100135.GS2285@localhost>
- <20180507154515.GP98604@atomide.com>
- <20180507163439.GV2285@localhost>
- <20180508155608.3bzcbepsmoskhlox@earth.universe>
- <20180509091831.GA2285@localhost>
+From: Banajit Goswami <bgoswami@codeaurora.org>
+Subject: Re: [PATCH v7 21/24] ASoC: qdsp6: q6asm: Add q6asm dai driver
+Date: Wed, 9 May 2018 02:57:13 -0700
+Message-ID: <d4972fcf-c513-83db-4770-8009b5ab6d76@codeaurora.org>
+References: <20180501120820.11016-1-srinivas.kandagatla@linaro.org>
+ <20180501120820.11016-22-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180509091831.GA2285@localhost>
+In-Reply-To: <20180501120820.11016-22-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>, Tony Lindgren <tony@atomide.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andreas Kemnade <andreas@kemnade.info>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, linux-pm@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc: gregkh@linuxfoundation.org, david.brown@linaro.org, mark.rutland@arm.com, lgirdwood@gmail.com, plai@codeaurora.org, tiwai@suse.com, perex@perex.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com, spatakok@qti.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 09, 2018 at 11:18:31AM +0200, Johan Hovold wrote:
+On 5/1/2018 5:08 AM, Srinivas Kandagatla wrote:
+> This patch adds support to q6asm dai driver which configures Q6ASM streams
+> to pass pcm data.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Reviewed-and-tested-by: Rohit kumar <rohitkr@codeaurora.org>
+> ---
+>   sound/soc/qcom/Kconfig           |   4 +
+>   sound/soc/qcom/qdsp6/Makefile    |   1 +
+>   sound/soc/qcom/qdsp6/q6asm-dai.c | 628 +++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 633 insertions(+)
+>   create mode 100644 sound/soc/qcom/qdsp6/q6asm-dai.c
+>
+Acked-by: Banajit Goswami <bgoswami@codeaurora.org>
 
-> I've cooked up a patch which I'll be sending as a reply to this mail.
-
-Forgot to add the in-reply-to header of course. For the interested, the
-patch can be found here:
-
-https://lkml.kernel.org/r/20180509094419.13470-1-johan@kernel.org
-
-Johan
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
