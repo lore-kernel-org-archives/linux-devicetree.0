@@ -1,475 +1,109 @@
-Return-Path: <SRS0=v9pK=IB=163.com=sunjg79@kernel.org>
-From: sunjg79@163.com
-Subject: [PATCH v3 2/2] xhci: hisilicon: support HiSilicon STB xHCI host controller
-Date: Mon, 14 May 2018 14:20:42 +0800
-Message-Id: <1526278842-13883-3-git-send-email-sunjg79@163.com>
-In-Reply-To: <1526278842-13883-1-git-send-email-sunjg79@163.com>
-References: <1526278842-13883-1-git-send-email-sunjg79@163.com>
-To: mathias.nyman@intel.com, gregkh@linuxfoundation.org, robh+dt@kernel.org
-Cc: shawn.guo@linaro.org, xuejiancheng@hisilicon.com, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Jianguo Sun <sunjianguo1@huawei.com>
+Return-Path: <SRS0=X3x8=H4=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-wm0-f67.google.com ([74.125.82.67]:52233 "EHLO
+        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S965309AbeEIXuw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 9 May 2018 19:50:52 -0400
+Received: by mail-wm0-f67.google.com with SMTP id w194-v6so1168494wmf.2
+        for <devicetree@vger.kernel.org>; Wed, 09 May 2018 16:50:52 -0700 (PDT)
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 2/4] ARM: dts: meson: add support for the Meson8m2 SoC
+Date: Thu, 10 May 2018 01:50:35 +0200
+Message-Id: <20180509235037.5876-3-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20180509235037.5876-1-martin.blumenstingl@googlemail.com>
+References: <20180509235037.5876-1-martin.blumenstingl@googlemail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
+Cc: devicetree@vger.kernel.org, balbes-150@yandex.ru, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Jianguo Sun <sunjianguo1@huawei.com>
+This adds a meson8m2.dtsi which simply inherits meson8.dtsi as both SoCs
+share most peripherals.
+The known differences are:
+- Meson8m2's hardware video decoder additionally supports H.265 decoding
+- Meson8m2 has the same Gigabit MAC as Meson8b (instead of the 10/100M
+  MAC that Meson8 uses)
+- Meson8m2 uses the same watchdog register layout/bits as Meson8b (using
+  the Meson8 watchdog compatible leads to an infinite hang when
+  rebooting the machine)
+- Meson8m2 uses the same SAR ADC register layout/bits as Meson8b.
+  However, it uses the temperature sensor calibration formula (and
+  registers) Meson8b which differ from Meson8. This however is currently
+  not supported by the meson-saradc driver yet.
+- the pin controller is mostly compatible with Meson8, Meson8m2 has
+  an additional function on eight pins and removes the "VGA" function.
+  So there's a total of 10 pins which are slightly changed, which is why
+  there's a separate compatible for the pin controller
+- a separate compatible for the clock controller is used because at
+  least the Mali clock tree (not supported yet) is the same as on GXBB
+  while Meson8 and Meson8b have a reduced/older version of the Mali
+  clock tree.
 
-This commit adds support for HiSilicon STB xHCI host controller.
-There are two xHCI host controllers on HiSilicon STB SoCs. Each
-one requires additional configuration before exposing interface
-compliant with xHCI.
-
-Reviewed-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Signed-off-by: Jianguo Sun <sunjianguo1@huawei.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/usb/host/Kconfig      |   7 +
- drivers/usb/host/Makefile     |   1 +
- drivers/usb/host/xhci-histb.c | 410 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 418 insertions(+)
- create mode 100644 drivers/usb/host/xhci-histb.c
+ arch/arm/boot/dts/meson8m2.dtsi | 54 +++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 arch/arm/boot/dts/meson8m2.dtsi
 
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index 5d958da..c813fc4 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -52,6 +52,13 @@ config USB_XHCI_PLATFORM
- 
- 	  If unsure, say N.
- 
-+config USB_XHCI_HISTB
-+	tristate "xHCI support for HiSilicon STB SoCs"
-+	depends on USB_XHCI_PLATFORM && (ARCH_HISI || COMPILE_TEST)
-+	help
-+	  Say 'Y' to enable the support for the xHCI host controller
-+	  found in HiSilicon STB SoCs.
-+
- config USB_XHCI_MTK
- 	tristate "xHCI support for MediaTek SoCs"
- 	select MFD_SYSCON
-diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-index 8a8cffe..9b669c9 100644
---- a/drivers/usb/host/Makefile
-+++ b/drivers/usb/host/Makefile
-@@ -74,6 +74,7 @@ obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
- obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
- obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
- obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
-+obj-$(CONFIG_USB_XHCI_HISTB)	+= xhci-histb.o
- obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
- obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
- obj-$(CONFIG_USB_SL811_HCD)	+= sl811-hcd.o
-diff --git a/drivers/usb/host/xhci-histb.c b/drivers/usb/host/xhci-histb.c
+diff --git a/arch/arm/boot/dts/meson8m2.dtsi b/arch/arm/boot/dts/meson8m2.dtsi
 new file mode 100644
-index 0000000..27f0016
+index 000000000000..3e1f92273d7b
 --- /dev/null
-+++ b/drivers/usb/host/xhci-histb.c
-@@ -0,0 +1,410 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/arch/arm/boot/dts/meson8m2.dtsi
+@@ -0,0 +1,54 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
-+ * xHCI host controller driver for HiSilicon STB SoCs
-+ *
-+ * Copyright (C) 2017-2018 HiSilicon Co., Ltd. http://www.hisilicon.com
-+ *
-+ * Authors: Jianguo Sun <sunjianguo1@huawei.com>
++ * Copyright (c) 2017 Martin Blumenstingl <martin.blumenstingl@googlemail.com>.
 + */
 +
-+#include <linux/clk.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/reset.h>
++#include "meson8.dtsi"
 +
-+#include "xhci.h"
++/ {
++	model = "Amlogic Meson8m2 SoC";
++	compatible = "amlogic,meson8m2";
++}; /* end of / */
 +
-+#define GTXTHRCFG		0xc108
-+#define GRXTHRCFG		0xc10c
-+#define REG_GUSB2PHYCFG0	0xc200
-+#define BIT_UTMI_8_16		BIT(3)
-+#define BIT_UTMI_ULPI		BIT(4)
-+#define BIT_FREECLK_EXIST	BIT(30)
-+
-+#define REG_GUSB3PIPECTL0	0xc2c0
-+#define USB3_DEEMPHASIS_MASK	GENMASK(2, 1)
-+#define USB3_DEEMPHASIS0	BIT(1)
-+#define USB3_TX_MARGIN1		BIT(4)
-+
-+struct xhci_hcd_histb {
-+	struct device		*dev;
-+	struct usb_hcd		*hcd;
-+	void __iomem		*ctrl;
-+	struct clk		*bus_clk;
-+	struct clk		*utmi_clk;
-+	struct clk		*pipe_clk;
-+	struct clk		*suspend_clk;
-+	struct reset_control	*soft_reset;
++&clkc {
++	compatible = "amlogic,meson8m2-clkc", "amlogic,meson8-clkc";
 +};
 +
-+static inline struct xhci_hcd_histb *hcd_to_histb(struct usb_hcd *hcd)
-+{
-+	return dev_get_drvdata(hcd->self.controller);
-+}
-+
-+static int xhci_histb_config(struct xhci_hcd_histb *histb)
-+{
-+	struct device_node *np = histb->dev->of_node;
-+	u32 regval;
-+
-+	if (of_property_match_string(np, "phys-names", "inno") >= 0) {
-+		/* USB2 PHY chose ulpi 8bit interface */
-+		regval = readl(histb->ctrl + REG_GUSB2PHYCFG0);
-+		regval &= ~BIT_UTMI_ULPI;
-+		regval &= ~(BIT_UTMI_8_16);
-+		regval &= ~BIT_FREECLK_EXIST;
-+		writel(regval, histb->ctrl + REG_GUSB2PHYCFG0);
-+	}
-+
-+	if (of_property_match_string(np, "phys-names", "combo") >= 0) {
-+		/*
-+		 * write 0x010c0012 to GUSB3PIPECTL0
-+		 * GUSB3PIPECTL0[5:3] = 010 : Tx Margin = 900mV ,
-+		 * decrease TX voltage
-+		 * GUSB3PIPECTL0[2:1] = 01 : Tx Deemphasis = -3.5dB,
-+		 * refer to xHCI spec
-+		 */
-+		regval = readl(histb->ctrl + REG_GUSB3PIPECTL0);
-+		regval &= ~USB3_DEEMPHASIS_MASK;
-+		regval |= USB3_DEEMPHASIS0;
-+		regval |= USB3_TX_MARGIN1;
-+		writel(regval, histb->ctrl + REG_GUSB3PIPECTL0);
-+	}
-+
-+	writel(0x23100000, histb->ctrl + GTXTHRCFG);
-+	writel(0x23100000, histb->ctrl + GRXTHRCFG);
-+
-+	return 0;
-+}
-+
-+static int xhci_histb_clks_get(struct xhci_hcd_histb *histb)
-+{
-+	struct device *dev = histb->dev;
-+
-+	histb->bus_clk = devm_clk_get(dev, "bus");
-+	if (IS_ERR(histb->bus_clk)) {
-+		dev_err(dev, "fail to get bus clk\n");
-+		return PTR_ERR(histb->bus_clk);
-+	}
-+
-+	histb->utmi_clk = devm_clk_get(dev, "utmi");
-+	if (IS_ERR(histb->utmi_clk)) {
-+		dev_err(dev, "fail to get utmi clk\n");
-+		return PTR_ERR(histb->utmi_clk);
-+	}
-+
-+	histb->pipe_clk = devm_clk_get(dev, "pipe");
-+	if (IS_ERR(histb->pipe_clk)) {
-+		dev_err(dev, "fail to get pipe clk\n");
-+		return PTR_ERR(histb->pipe_clk);
-+	}
-+
-+	histb->suspend_clk = devm_clk_get(dev, "suspend");
-+	if (IS_ERR(histb->suspend_clk)) {
-+		dev_err(dev, "fail to get suspend clk\n");
-+		return PTR_ERR(histb->suspend_clk);
-+	}
-+
-+	return 0;
-+}
-+
-+static int xhci_histb_host_enable(struct xhci_hcd_histb *histb)
-+{
-+	int ret;
-+
-+	ret = clk_prepare_enable(histb->bus_clk);
-+	if (ret) {
-+		dev_err(histb->dev, "failed to enable bus clk\n");
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(histb->utmi_clk);
-+	if (ret) {
-+		dev_err(histb->dev, "failed to enable utmi clk\n");
-+		goto err_utmi_clk;
-+	}
-+
-+	ret = clk_prepare_enable(histb->pipe_clk);
-+	if (ret) {
-+		dev_err(histb->dev, "failed to enable pipe clk\n");
-+		goto err_pipe_clk;
-+	}
-+
-+	ret = clk_prepare_enable(histb->suspend_clk);
-+	if (ret) {
-+		dev_err(histb->dev, "failed to enable suspend clk\n");
-+		goto err_suspend_clk;
-+	}
-+
-+	reset_control_deassert(histb->soft_reset);
-+
-+	return 0;
-+
-+err_suspend_clk:
-+	clk_disable_unprepare(histb->pipe_clk);
-+err_pipe_clk:
-+	clk_disable_unprepare(histb->utmi_clk);
-+err_utmi_clk:
-+	clk_disable_unprepare(histb->bus_clk);
-+
-+	return ret;
-+}
-+
-+static void xhci_histb_host_disable(struct xhci_hcd_histb *histb)
-+{
-+	reset_control_assert(histb->soft_reset);
-+
-+	clk_disable_unprepare(histb->suspend_clk);
-+	clk_disable_unprepare(histb->pipe_clk);
-+	clk_disable_unprepare(histb->utmi_clk);
-+	clk_disable_unprepare(histb->bus_clk);
-+}
-+
-+static void xhci_histb_quirks(struct device *dev, struct xhci_hcd *xhci)
-+{
-+	/*
-+	 * As of now platform drivers don't provide MSI support so we ensure
-+	 * here that the generic code does not try to make a pci_dev from our
-+	 * dev struct in order to setup MSI
-+	 */
-+	xhci->quirks |= XHCI_PLAT;
-+}
-+
-+/* called during probe() after chip reset completes */
-+static int xhci_histb_setup(struct usb_hcd *hcd)
-+{
-+	struct xhci_hcd_histb *histb = hcd_to_histb(hcd);
-+	int ret;
-+
-+	if (usb_hcd_is_primary_hcd(hcd)) {
-+		ret = xhci_histb_config(histb);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return xhci_gen_setup(hcd, xhci_histb_quirks);
-+}
-+
-+static const struct xhci_driver_overrides xhci_histb_overrides __initconst = {
-+	.reset = xhci_histb_setup,
++&ethmac {
++	compatible = "amlogic,meson8m2-dwmac", "snps,dwmac";
++	reg = <0xc9410000 0x10000
++		0xc1108140 0x8>;
++	clocks = <&clkc CLKID_ETH>,
++		 <&clkc CLKID_MPLL2>,
++		 <&clkc CLKID_MPLL2>;
++	clock-names = "stmmaceth", "clkin0", "clkin1";
++	resets = <&reset RESET_ETHERNET>;
++	reset-names = "stmmaceth";
 +};
 +
-+static struct hc_driver __read_mostly xhci_histb_hc_driver;
-+static int xhci_histb_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct xhci_hcd_histb *histb;
-+	const struct hc_driver *driver;
-+	struct usb_hcd *hcd;
-+	struct xhci_hcd *xhci;
-+	struct resource *res;
-+	int irq;
-+	int ret = -ENODEV;
-+
-+	if (usb_disabled())
-+		return -ENODEV;
-+
-+	driver = &xhci_histb_hc_driver;
-+	histb = devm_kzalloc(dev, sizeof(*histb), GFP_KERNEL);
-+	if (!histb)
-+		return -ENOMEM;
-+
-+	histb->dev = dev;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	histb->ctrl = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(histb->ctrl))
-+		return PTR_ERR(histb->ctrl);
-+
-+	ret = xhci_histb_clks_get(histb);
-+	if (ret)
-+		return ret;
-+
-+	histb->soft_reset = devm_reset_control_get(dev, "soft");
-+	if (IS_ERR(histb->soft_reset)) {
-+		dev_err(dev, "failed to get soft reset\n");
-+		return PTR_ERR(histb->soft_reset);
-+	}
-+
-+	pm_runtime_enable(dev);
-+	pm_runtime_get_sync(dev);
-+	device_enable_async_suspend(dev);
-+
-+	/* Initialize dma_mask and coherent_dma_mask to 32-bits */
-+	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-+	if (ret)
-+		return ret;
-+
-+	hcd = usb_create_hcd(driver, dev, dev_name(dev));
-+	if (!hcd) {
-+		ret = -ENOMEM;
-+		goto disable_pm;
-+	}
-+
-+	hcd->regs = histb->ctrl;
-+	hcd->rsrc_start = res->start;
-+	hcd->rsrc_len = resource_size(res);
-+
-+	histb->hcd = hcd;
-+	dev_set_drvdata(hcd->self.controller, histb);
-+
-+	ret = xhci_histb_host_enable(histb);
-+	if (ret)
-+		goto put_hcd;
-+
-+	xhci = hcd_to_xhci(hcd);
-+
-+	device_wakeup_enable(hcd->self.controller);
-+
-+	xhci->main_hcd = hcd;
-+	xhci->shared_hcd = usb_create_shared_hcd(driver, dev, dev_name(dev),
-+						 hcd);
-+	if (!xhci->shared_hcd) {
-+		ret = -ENOMEM;
-+		goto disable_host;
-+	}
-+
-+	if (device_property_read_bool(dev, "usb2-lpm-disable"))
-+		xhci->quirks |= XHCI_HW_LPM_DISABLE;
-+
-+	if (device_property_read_bool(dev, "usb3-lpm-capable"))
-+		xhci->quirks |= XHCI_LPM_SUPPORT;
-+
-+	/* imod_interval is the interrupt moderation value in nanoseconds. */
-+	xhci->imod_interval = 40000;
-+	device_property_read_u32(dev, "imod-interval-ns",
-+				 &xhci->imod_interval);
-+
-+	ret = usb_add_hcd(hcd, irq, IRQF_SHARED);
-+	if (ret)
-+		goto put_usb3_hcd;
-+
-+	if (HCC_MAX_PSA(xhci->hcc_params) >= 4)
-+		xhci->shared_hcd->can_do_streams = 1;
-+
-+	ret = usb_add_hcd(xhci->shared_hcd, irq, IRQF_SHARED);
-+	if (ret)
-+		goto dealloc_usb2_hcd;
-+
-+	device_enable_async_suspend(dev);
-+	pm_runtime_put_noidle(dev);
-+
-+	/*
-+	 * Prevent runtime pm from being on as default, users should enable
-+	 * runtime pm using power/control in sysfs.
-+	 */
-+	pm_runtime_forbid(dev);
-+
-+	return 0;
-+
-+dealloc_usb2_hcd:
-+	usb_remove_hcd(hcd);
-+put_usb3_hcd:
-+	usb_put_hcd(xhci->shared_hcd);
-+disable_host:
-+	xhci_histb_host_disable(histb);
-+put_hcd:
-+	usb_put_hcd(hcd);
-+disable_pm:
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
-+
-+	return ret;
-+}
-+
-+static int xhci_histb_remove(struct platform_device *dev)
-+{
-+	struct xhci_hcd_histb *histb = platform_get_drvdata(dev);
-+	struct usb_hcd *hcd = histb->hcd;
-+	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
-+
-+	xhci->xhc_state |= XHCI_STATE_REMOVING;
-+
-+	usb_remove_hcd(xhci->shared_hcd);
-+	device_wakeup_disable(&dev->dev);
-+
-+	usb_remove_hcd(hcd);
-+	usb_put_hcd(xhci->shared_hcd);
-+
-+	xhci_histb_host_disable(histb);
-+	usb_put_hcd(hcd);
-+	pm_runtime_put_sync(&dev->dev);
-+	pm_runtime_disable(&dev->dev);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused xhci_histb_suspend(struct device *dev)
-+{
-+	struct xhci_hcd_histb *histb = dev_get_drvdata(dev);
-+	struct usb_hcd *hcd = histb->hcd;
-+	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
-+	int ret;
-+
-+	ret = xhci_suspend(xhci, device_may_wakeup(dev));
-+
-+	if (!device_may_wakeup(dev))
-+		xhci_histb_host_disable(histb);
-+
-+	return ret;
-+}
-+
-+static int __maybe_unused xhci_histb_resume(struct device *dev)
-+{
-+	struct xhci_hcd_histb *histb = dev_get_drvdata(dev);
-+	struct usb_hcd *hcd = histb->hcd;
-+	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
-+
-+	if (!device_may_wakeup(dev))
-+		xhci_histb_host_enable(histb);
-+
-+	return xhci_resume(xhci, 0);
-+}
-+
-+static const struct dev_pm_ops xhci_histb_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(xhci_histb_suspend, xhci_histb_resume)
++&pinctrl_aobus {
++	compatible = "amlogic,meson8m2-aobus-pinctrl",
++		     "amlogic,meson8-aobus-pinctrl";
 +};
-+#define DEV_PM_OPS (IS_ENABLED(CONFIG_PM) ? &xhci_histb_pm_ops : NULL)
 +
-+#ifdef CONFIG_OF
-+static const struct of_device_id histb_xhci_of_match[] = {
-+	{ .compatible = "hisilicon,hi3798cv200-xhci"},
-+	{ },
++&pinctrl_cbus {
++	compatible = "amlogic,meson8m2-cbus-pinctrl",
++		     "amlogic,meson8-cbus-pinctrl";
++
++	eth_rgmii_pins: ethernet {
++		mux {
++			groups = "eth_tx_clk_50m", "eth_tx_en",
++				 "eth_txd3", "eth_txd2",
++				 "eth_txd1", "eth_txd0",
++				 "eth_rx_clk_in", "eth_rx_dv",
++				 "eth_rxd3", "eth_rxd2",
++				 "eth_rxd1", "eth_rxd0",
++				 "eth_mdio", "eth_mdc";
++			function = "ethernet";
++		};
++	};
 +};
-+MODULE_DEVICE_TABLE(of, histb_xhci_of_match);
-+#endif
 +
-+static struct platform_driver histb_xhci_driver = {
-+	.probe	= xhci_histb_probe,
-+	.remove	= xhci_histb_remove,
-+	.driver	= {
-+		.name = "xhci-histb",
-+		.pm = DEV_PM_OPS,
-+		.of_match_table = of_match_ptr(histb_xhci_of_match),
-+	},
++&wdt {
++	compatible = "amlogic,meson8m2-wdt", "amlogic,meson8b-wdt";
 +};
-+MODULE_ALIAS("platform:xhci-histb");
-+
-+static int __init xhci_histb_init(void)
-+{
-+	xhci_init_driver(&xhci_histb_hc_driver, &xhci_histb_overrides);
-+	return platform_driver_register(&histb_xhci_driver);
-+}
-+module_init(xhci_histb_init);
-+
-+static void __exit xhci_histb_exit(void)
-+{
-+	platform_driver_unregister(&histb_xhci_driver);
-+}
-+module_exit(xhci_histb_exit);
-+
-+MODULE_DESCRIPTION("HiSilicon STB xHCI Host Controller Driver");
-+MODULE_LICENSE("GPL v2");
 -- 
-2.7.4
+2.17.0
+
