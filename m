@@ -1,90 +1,33 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v6 2/6] ARM: imx6: register pm_power_off handler if
- "fsl,pmic-stby-poweroff" is set
-Date: Wed, 9 May 2018 07:06:28 +0200
-Message-ID: <20180509050628.csbusplowpvmmiwa@pengutronix.de>
-References: <20180305102524.5905-1-o.rempel@pengutronix.de>
- <20180305102524.5905-3-o.rempel@pengutronix.de>
- <20180508124033.GL16141@n2100.armlinux.org.uk>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH 1/2] ARM: dts: BCM5301X: Add DT for Luxul XWR-3150 V1
+Date: Wed, 9 May 2018 07:06:50 +0200
+Message-ID: <5ab90473-d453-89a2-4e1b-5161b9f003fc@milecki.pl>
+References: <1525450124-21665-1-git-send-email-dan.haab@luxul.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="soqpjcx3im3qprt5"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180508124033.GL16141@n2100.armlinux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Andrew Morton <akpm@linux-foundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1525450124-21665-1-git-send-email-dan.haab@luxul.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dan Haab <riproute@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Dan Haab <dan.haab@luxul.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---soqpjcx3im3qprt5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, May 08, 2018 at 01:40:33PM +0100, Russell King - ARM Linux wrote:
-> On Mon, Mar 05, 2018 at 11:25:19AM +0100, Oleksij Rempel wrote:
-> > One of the Freescale recommended sequences for power off with external
-> > PMIC is the following:
-> > ...
-> > 3.  SoC is programming PMIC for power off when standby is asserted.
-> > 4.  In CCM STOP mode, Standby is asserted, PMIC gates SoC supplies.
-> >=20
-> > See:
-> > http://www.nxp.com/assets/documents/data/en/reference-manuals/IMX6DQRM.=
-pdf
-> > page 5083
-> >=20
-> > This patch implements step 4. of this sequence.
-> >=20
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> >  arch/arm/mach-imx/pm-imx6.c | 25 +++++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> >=20
-> > diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
-> > index ecdf071653d4..24689260a2a5 100644
-> > --- a/arch/arm/mach-imx/pm-imx6.c
-> > +++ b/arch/arm/mach-imx/pm-imx6.c
-> > @@ -604,6 +604,28 @@ static void __init imx6_pm_common_init(const struc=
-t imx6_pm_socdata
-> >  				   IMX6Q_GPR1_GINT);
-> >  }
-> > =20
-> > +static void imx6_pm_stby_poweroff(void)
-> > +{
-> > +	imx6_set_lpm(STOP_POWER_OFF);
-> > +	cpu_suspend(0, imx6q_suspend_finish);
->=20
-> Do you actually need to save the processor state etc here - the request
-> is after all to power down the system and not to suspend.  Would calling
-> imx6q_suspend_finish() directly work (and hence simplify the code) ?
-
-yes you right. This will work as well.
-I'll send changed version after Rafaels feedback for kernel/reboot.c
-part.
-Russell, can I expect your Signed-off-by for changed patch?
-
---=20
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---soqpjcx3im3qprt5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAlrygdAACgkQdQOiSHVI
-77R93Qf+K3DxiMZbVQizzjCvsHOT4tntdIwXjwTzgw8o/vU1QDCNU+NK+vbFnbFW
-D6BlSnJyU03IivY4Z1+5m/J3xzYvqWiXjyVwuOEVk9HRpbIgEQkZP7ClXvC7ZJo0
-chLpRlDSvejxp1M5dhyuvZqK60IMnRdqdqQnWy24neucvK1l301w8C1cY2ZIP6IN
-SxVDOw6Li+BDcS6eFxGlORVXpJcej6ulWYtsxLyWQtFM8VqPB+uK/GvUHG9ZQsd+
-Fx4Y2XwvVALPK33HNjgV2m/gkGc2tC2IOniIg6v16LXiqTV9d5jMS75jpAUnxWQH
-woku+n846M17jvaOU2uUe35+tpWY6g==
-=M5Xn
------END PGP SIGNATURE-----
-
---soqpjcx3im3qprt5--
+T24gMDQuMDUuMjAxOCAxODowOCwgRGFuIEhhYWIgd3JvdGU6Cj4gTHV4dWwgWFdSLTMxNTAgaXMg
+YSB3aXJlbGVzcyByb3V0ZXIgc2ltaWxhciB0byB0aGUgWFdSLTMxMDAgZXhjZXB0Ogo+IDEpIEl0
+IGhhcyBtb3JlIFJBTQo+IDIpIEl0cyBOQU5EIGNvbnRyb2xsZXIgaW4gcnVubmluZyBpbiBCQ0g4
+IG1vZGUKPiAzKSBMQU4gcG9ydHMgTEVEcyBhcmUgaGFyZHdhcmUgY29udHJvbGxlZAo+IAo+IFNp
+Z25lZC1vZmYtYnk6IERhbiBIYWFiIDxkYW4uaGFhYkBsdXh1bC5jb20+CgpBY2tlZC1ieTogUmFm
+YcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
