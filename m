@@ -1,98 +1,47 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 2/2] leds: Add Spreadtrum SC27xx breathing light
- controller driver
-Date: Wed, 9 May 2018 16:25:39 +0200
-Message-ID: <20180509142539.GB25131@amd>
-References: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
- <9a2a07b8eb313ae3ba64af911337ee7ff7c9ad43.1525757122.git.baolin.wang@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 0/8] ARM: dts: renesas: Add PMU device nodes
+Date: Wed, 9 May 2018 16:39:19 +0200
+Message-ID: <CAMuHMdWLoQ+SnD29NLbmVWt3z3YJf-4BGsUx9Yog8VQg3r4J=Q@mail.gmail.com>
+References: <1525701427-12914-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="JP+T4n/bALQSJXh8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9a2a07b8eb313ae3ba64af911337ee7ff7c9ad43.1525757122.git.baolin.wang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: jacek.anaszewski@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, xiaotong.lu@spreadtrum.com, broonie@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1525701427-12914-1-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, May 7, 2018 at 3:56 PM, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> This patch series enables support for the ARM Performance Monitor Units
+> in Cortex-A7, Cortex-A9, and Cortex-A15 CPU cores on Renesas RZ/A1,
+> R-Car Gen2, and RZ/G1 SoCs.  This allows for better performance analysis
+> using the "perf" tool.
 
---JP+T4n/bALQSJXh8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-On Tue 2018-05-08 13:39:45, Baolin Wang wrote:
-> From: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
->=20
-> This patch adds Spreadtrum SC27xx PMIC series breathing light controller
-> driver, which can support 3 LEDs. Each LED can work at normal PWM mode
-> and breathing mode.
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx b/Do=
-cumentation/ABI/testing/sysfs-class-led-driver-sc27xx
-> new file mode 100644
-> index 0000000..22166fb
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
-> @@ -0,0 +1,19 @@
-> +What:		/sys/class/leds/<led>/rise_time
-> +What:		/sys/class/leds/<led>/high_time
-> +What:		/sys/class/leds/<led>/fall_time
-> +What:		/sys/class/leds/<led>/low_time
-> +Date:		May 2018
-> +KernelVersion:	4.18
-> +Contact:	Xiaotong Lu <xiaotong.lu@spreadtrum.com>
-> +Description:
-> +		Set the pattern generator rise, high, fall and low
-> +		times (0..63). It's unit is 0.125s, it should be > 0.
-> +
-> +		1 - 125 ms
-> +		2 - 250 ms
-> +		3 - 375 ms
-> +		...
-> +		...
-> +		...
-> +		62 - 7.75 s
-> +		63 - 7.875 s
+> This has been tested on r8a7791/koelsch, and boot-tested on
+> r7s72100/genmai, r8a7790/lager, r8a7792/blanche, and r8a7794/silk.
 
-How does this interact with triggers? With manually setting
-brightness? Are the pattern generators independend for the LEDs?
+... and r8a7793/gose and r8a7794/alt.
 
-Can you generate white breathing pattern? If so, how?
+Gr{oetje,eeting}s,
 
-How do you select between normal and breathing modes?
+                        Geert
 
-I'd specify times in miliseconds or something, this is way too
-hardware specific.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Now... functionality like this is common between many LED
-controllers. N900 could do this kind of "breathing", too, and it also
-supports other patterns.
-
-I believe we need interface common between different LED controllers.
-
-And I guess it would be easiest if you dropped this part from initial
-merge.
-
-Thanks and best regards,
-
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---JP+T4n/bALQSJXh8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlrzBOMACgkQMOfwapXb+vJ6AgCgntQ+iS7NFuZ6HniFO9sNh7eS
-gyYAoJvq31PEZSnLU83UWVqOv700hzMp
-=dNHU
------END PGP SIGNATURE-----
-
---JP+T4n/bALQSJXh8--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
