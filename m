@@ -1,39 +1,41 @@
-Return-Path: <SRS0=7nnO=H4=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=KHjo=H4=linaro.org=rui.silva@kernel.org>
+References: <20180507155655.1555-1-rui.silva@linaro.org> <20180508200331.enfi6dtw4bctcgyi@kekkonen.localdomain>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: Re: [PATCH 0/4] media: ov2680: follow up from initial version
+In-reply-to: <20180508200331.enfi6dtw4bctcgyi@kekkonen.localdomain>
+Date: Wed, 09 May 2018 12:03:22 +0100
+Message-ID: <m3fu319jlx.fsf@linaro.org>
 MIME-Version: 1.0
-Sender: geert.uytterhoeven@gmail.com
-In-Reply-To: <1524227264-24896-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1524227264-24896-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1524227264-24896-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 9 May 2018 18:56:44 +0200
-Message-ID: <CAMuHMdW52m=N4mTbdnQGT=O-vH3AMdbQ_H8b+PsxVZ_nukxrcw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] clk: renesas: cpg-mssr: Add support for R-Car E3
-Content-Type: text/plain; charset="UTF-8"
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; format=flowed
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Rui Miguel Silva <rui.silva@linaro.org>, mchehab@kernel.org, hverkuil@xs4all.nl, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Ryan Harkin <ryan.harkin@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Shimoda-san,
+Hi Sakari,
+On Tue 08 May 2018 at 20:03, Sakari Ailus wrote:
+> Hi,
+>
+> On Mon, May 07, 2018 at 04:56:51PM +0100, Rui Miguel Silva 
+> wrote:
+>> Sorry I have Out-of-Office some part of last week, I had v6 of 
+>> the original
+>> series ready but since I have received the notification from 
+>> patchwork that the
+>> v5 was accepted, I am sending this as a follow up tha address 
+>> Fabio comments.
+>
+> I think I somehow managed to get the patchwork state wrong; the 
+> original
+> ov2680 set hasn't been applied yet. The latest patches I have 
+> applied are
+> here:
+>
+> <URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=for-4.18-3>
+>
+> Could you merge this to the original set and resend, please?
 
-On Fri, Apr 20, 2018 at 2:27 PM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> --- /dev/null
-> +++ b/drivers/clk/renesas/r8a77990-cpg-mssr.c
-> @@ -0,0 +1,289 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
+Ok, no problem, I will send it as v6 of the original series.
 
-For the record: SPDX lines in C source files should use C++-style comments,
-as recent checkpatch complains about.
-
-Fixed for the pull request.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+---
+Cheers,
+	Rui
