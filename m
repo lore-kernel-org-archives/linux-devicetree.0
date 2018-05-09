@@ -1,32 +1,76 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next] dt-bindings: dsa: Remove unnecessary
- #address/#size-cells
-Date: Tue, 08 May 2018 20:28:58 -0400 (EDT)
-Message-ID: <20180508.202858.1234294956740495060.davem@davemloft.net>
-References: <1525695471-19984-1-git-send-email-festevam@gmail.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v7 0/7] Add EP driver for Rockchip PCIe controller
+Date: Wed,  9 May 2018 09:11:18 +0800
+Message-ID: <1525828278-69800-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1525695471-19984-1-git-send-email-festevam@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: festevam@gmail.com
-Cc: f.fainelli@gmail.com, andrew@lunn.ch, robh+dt@kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, fabio.estevam@nxp.com
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
-Date: Mon,  7 May 2018 09:17:51 -0300
+Hi Lorenzo,
 
-> From: Fabio Estevam <fabio.estevam@nxp.com>
-> 
-> If the example binding is used on a real dts file, the following DTC
-> warning is seen with W=1:
->     
-> arch/arm/boot/dts/imx6q-b450v3.dtb: Warning (avoid_unnecessary_addr_size): /mdio-gpio/switch@0: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
-> 
-> Remove unnecessary #address-cells/#size-cells to improve the binding
-> document examples.
-> 
-> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+This's the 7th try to upstream EP driver for Rockchip PCIe
+controller. V7 is the same with V6 but with some minor adjustment
+for commit title and commit log.
 
-Applied, thank you.
+Thanks.
+
+
+Changes in v7:
+- check and update commit log
+
+Changes in v6:
+- rebase
+
+Changes in v5:
+- export symbol to fix error reported by Kbuild robot
+- PCIE_ROCKCHIP depends on PCI
+
+Changes in v4:
+- remove empty line
+- keep rockchip's order next to cadence and dwc, but
+  we will try to resort it later when reconstructing
+  the directories
+
+Shawn Lin (7):
+  PCI: rockchip: Separate common code from RC driver
+  PCI: rockchip: Split out rockchip_pcie_parse_dt() to parse DT
+  PCI: rockchip: Split out common function to init controller
+  dt-bindings: PCI: rockchip: Rename rockchip-pcie.txt to
+    rockchip-pcie-host.txt
+  PCI: rockchip: Add EP driver for Rockchip PCIe controller
+  dt-bindings: PCI: rockchip: Add DT bindings for Rockchip PCIe EP
+    driver
+  arm64: defconfig: update config for Rockchip PCIe
+
+ .../devicetree/bindings/pci/rockchip-pcie-ep.txt   |   62 +
+ .../{rockchip-pcie.txt => rockchip-pcie-host.txt}  |    0
+ MAINTAINERS                                        |    4 +-
+ arch/arm64/configs/defconfig                       |    3 +-
+ drivers/pci/host/Kconfig                           |   19 +-
+ drivers/pci/host/Makefile                          |    2 +
+ drivers/pci/host/pcie-rockchip-ep.c                |  639 ++++++++
+ drivers/pci/host/pcie-rockchip-host.c              | 1141 +++++++++++++
+ drivers/pci/host/pcie-rockchip.c                   | 1683 +++-----------------
+ drivers/pci/host/pcie-rockchip.h                   |  338 ++++
+ 10 files changed, 2403 insertions(+), 1488 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
+ rename Documentation/devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} (100%)
+ create mode 100644 drivers/pci/host/pcie-rockchip-ep.c
+ create mode 100644 drivers/pci/host/pcie-rockchip-host.c
+ create mode 100644 drivers/pci/host/pcie-rockchip.h
+
+-- 
+1.9.1
