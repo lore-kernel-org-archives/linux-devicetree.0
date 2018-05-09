@@ -1,45 +1,72 @@
-From: Banajit Goswami <bgoswami@codeaurora.org>
-Subject: Re: [PATCH v7 12/24] ASoC: qdsp6: q6afe: Add support
-	to MI2S sysclks
-Date: Tue, 8 May 2018 21:29:50 -0700
-Message-ID: <5e4cd4a7-c375-4b92-f28b-f34900a828a8@codeaurora.org>
-References: <20180501120820.11016-1-srinivas.kandagatla@linaro.org>
- <20180501120820.11016-13-srinivas.kandagatla@linaro.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH] Kirin-PCIe: Add kirin pcie msi feature.
+Date: Wed, 9 May 2018 12:51:53 +0800
+Message-ID: <20180509045151.GA24899@dragon>
+References: <1525763028-107417-1-git-send-email-chenyao11@huawei.com>
+ <20180508125658.GK161390@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180501120820.11016-13-srinivas.kandagatla@linaro.org>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180508125658.GK161390@bhelgaas-glaptop.roam.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Yao Chen <chenyao11@huawei.com>, songxiaowei@hisilicon.com, wangbinghui@hisilicon.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dimitrysh@google.com, guodong.xu@linaro.org, Stanimir Varbanov <svarbanov@mm-sol.com>, Jianguo Sun <sunjianguo1@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Bjorn,
 
-On 5/1/2018 5:08 AM, Srinivas Kandagatla wrote:
-> This patch adds support to LPASS Bit clock, LPASS Digital
-> core clock and OSR clock. These clocks are required for both
-> MI2S and PCM setup.
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Reviewed-and-tested-by: Rohit kumar <rohitkr@codeaurora.org>
-> ---
->   sound/soc/qcom/qdsp6/q6afe.c | 171 +++++++++++++++++++++++++++++++++++++++++--
->   sound/soc/qcom/qdsp6/q6afe.h | 131 +++++++++++++++++++++++++++++++++
->   2 files changed, 295 insertions(+), 7 deletions(-)
->
->
-Acked-by: Banajit Goswami <bgoswami@codeaurora.org>
+On Tue, May 08, 2018 at 07:56:58AM -0500, Bjorn Helgaas wrote:
+...
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> > +	pci->pp.root_bus_nr = -1;
+> 
+> Setting root_bus_nr looks like an unrelated change that should be in a
+> separate patch.
+> 
+> But I'm not sure why you need to set root_bus_nr at all, since
+> dw_pcie_host_init() always sets it.
+> 
+> Some other callers of dw_pcie_host_init() do set it:
+> 
+>   exynos_add_pcie_port()
+>   imx6_add_pcie_port()
+>   armada8k_add_pcie_port()
+>   artpec6_add_pcie_port()
+>   dw_plat_add_pcie_port()
+>   histb_pcie_probe()
+>   qcom_pcie_probe()
+>   spear13xx_add_pcie_port()
+> 
+> But I don't see *why* any of these need to set it.  If they don't need to
+> set it, they shouldn't.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Mostly it's a blind copy of unnecessary code.  I tested histb driver
+by dropping the line, and did not see anything broken.  I will cook up
+a series to remove the code from all above drivers, and copy
+corresponding driver owner to comment.
+
+> And it would be nice if histb and qcom followed the structure and naming
+> conventions of the other drivers, i.e., they should have
+> histb_add_pcie_port() and qcom_add_pcie_port().
+
+I can create a patch for histb driver, but will leave qcom one to
+Stanimir to decide.
+
+Shawn
+
+> 
+> >  	pci->pp.ops = &kirin_pcie_host_ops;
+> >  
+> >  	return dw_pcie_host_init(&pci->pp);
+> > -- 
+> > 1.9.1
+> > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
