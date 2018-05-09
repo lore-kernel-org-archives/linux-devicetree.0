@@ -1,57 +1,32 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add command DB node
-Date: Wed, 9 May 2018 14:41:14 -0700
-Message-ID: <20180509214114.GH14924@minitux>
-References: <20180509213439.165623-1-dianders@chromium.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 0/2] ARM64: dts: meson-axg: enable wifi driver
+Date: Wed, 09 May 2018 15:17:02 -0700
+Message-ID: <7hlgcszd7l.fsf@baylibre.com>
+References: <20180504094533.15588-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180509213439.165623-1-dianders@chromium.org>
+In-Reply-To: <20180504094533.15588-1-yixun.lan@amlogic.com> (Yixun Lan's
+        message of "Fri, 4 May 2018 09:45:31 +0000")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: andy.gross@linaro.org, rnayak@codeaurora.org, evgreen@chromium.org, ilina@codeaurora.org, swboyd@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 09 May 14:34 PDT 2018, Douglas Anderson wrote:
+Hi Yixun,
 
-> Add command DB node based on the bindings example.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Yixun Lan <yixun.lan@amlogic.com> writes:
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>  These patches try to enable the WIFI module AP6255 in Meson-AXG S400
+> baord. First patch revert an error which was introduced in early commit.
+>
+> Hi Kevin
+>  Please squash patch 1 into the commit[1] of your v4.18/dt64 branch,
+> which was the error introduced there.
 
-Regards,
-Bjorn
+Thanks for the explanation, I've squashed patch 1, and applied patch 2
+to v4.18/dt64.
 
-> ---
-> 
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 486ace9a9e8b..7b5f2b3982a3 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -21,6 +21,18 @@
->  		reg = <0 0x80000000 0 0>;
->  	};
->  
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		reserved-memory@85fe0000 {
-> +			compatible = "qcom,cmd-db";
-> +			reg = <0x0 0x85fe0000 0x0 0x20000>;
-> +			no-map;
-> +		};
-> +	};
-> +
->  	cpus {
->  		#address-cells = <2>;
->  		#size-cells = <0>;
-> -- 
-> 2.17.0.441.gb46fe60e1d-goog
-> 
+Thanks,
+
+Kevin
