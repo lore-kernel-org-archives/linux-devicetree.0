@@ -1,121 +1,114 @@
 From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH 2/3] dt-bindings: rtc: update stm32-rtc documentation for
- stm32mp1 rtc
-Date: Wed, 9 May 2018 07:25:53 +0000
-Message-ID: <4fed55d0-95a2-c6cc-8812-7aea214d39e4@st.com>
-References: <1524144845-23016-1-git-send-email-amelie.delaunay@st.com>
- <1524144845-23016-3-git-send-email-amelie.delaunay@st.com>
- <20180427030140.nmlqmpewqatabnmt@rob-hp-laptop>
+Subject: Re: [PATCH 1/5] dt-bindings: pinctrl: document the STMFX pinctrl
+ bindings
+Date: Wed, 9 May 2018 07:31:31 +0000
+Message-ID: <124c557b-d6c0-5734-5992-af15b527cbe4@st.com>
+References: <1523440025-18077-1-git-send-email-amelie.delaunay@st.com>
+ <1523440025-18077-2-git-send-email-amelie.delaunay@st.com>
+ <20180416181940.4b5z4svbde3ompij@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180427030140.nmlqmpewqatabnmt@rob-hp-laptop>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180416181940.4b5z4svbde3ompij@rob-hp-laptop>
 Content-Language: en-US
-Content-ID: <CA1470BDC1991D428DCA67E0059AAD01@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-ID: <0CAA554B401A6644A093DE9AEF268EB6@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 04/27/2018 05:01 AM, Rob Herring wrote:
-> On Thu, Apr 19, 2018 at 03:34:04PM +0200, Amelie Delaunay wrote:
->> RTC embedded in stm32mp1 SoC is slightly different from stm32h7 one, it
->> doesn't require to disable backup domain write protection, and rtc_ck
->> parent clock assignment isn't allowed.
->> To sum up, stm32mp1 RTC requires 2 clocks, pclk and rtc_ck, and an RTC
->> alarm interrupt.
->>
->> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
->> ---
->>   .../devicetree/bindings/rtc/st,stm32-rtc.txt       | 27 +++++++++++++++++-----
->>   1 file changed, 21 insertions(+), 6 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
->> index 00f8b5d..f1c2080 100644
->> --- a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
->> +++ b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
->> @@ -1,25 +1,31 @@
->>   STM32 Real Time Clock
->>   
->>   Required properties:
->> -- compatible: can be either "st,stm32-rtc" or "st,stm32h7-rtc", depending on
->> -  the device is compatible with stm32(f4/f7) or stm32h7.
->> +- compatible: can be "st,stm32-rtc", "st,stm32h7-rtc" or "st,stm32mp1-rtc",
->> +	      depending on the device is compatible with stm32(f4/f7), stm32h7
->> +	      or stm32mp1.
-> 
-> One compatible per line please.
-> 
->>   - reg: address range of rtc register set.
->>   - clocks: can use up to two clocks, depending on part used:
->>     - "rtc_ck": RTC clock source.
->> -    It is required on stm32(f4/f7) and stm32h7.
->> +    It is required on stm32(f4/f7/h7/mp1).
-> 
-> IOW, required for all?
-> 
-
-Yes, so, I'll remove the comment as it is required for all.
-
->>     - "pclk": RTC APB interface clock.
->>       It is not present on stm32(f4/f7).
->> -    It is required on stm32h7.
->> +    It is required on stm32(h7/mp1).
->>   - clock-names: must be "rtc_ck" and "pclk".
->> -    It is required only on stm32h7.
->> +    It is required on stm32(h7/mp1).
->>   - interrupt-parent: phandle for the interrupt controller.
->> +    It is required on stm32(f4/f7/h7).
->>   - interrupts: rtc alarm interrupt.
->> +- interrupts-extended: replace interrupts property on stm32mp1, to specify rtc
->> +  alarm wakeup interrupt, which is on exti interrupt controller instead of gic.
->> +    It is required on stm32mp1.
-> 
-> Just document 'interrupts'. interrupts-extended is implicitly supported
-> and what the interrupts are connected to is outside the scope of this
-> binding.
-> 
-
-OK, I'll clean this.
-
->>   - st,syscfg: phandle/offset/mask triplet. The phandle to pwrcfg used to
->>     access control register at offset, and change the dbp (Disable Backup
->>     Protection) bit represented by the mask, mandatory to disable/enable backup
->>     domain (RTC registers) write protection.
->> +    It is required on stm32(f4/f7/h7).
->>   
->> -Optional properties (to override default rtc_ck parent clock):
->> +Optional properties (to override default rtc_ck parent clock on stm32(f4/f7/h7):
->>   - assigned-clocks: reference to the rtc_ck clock entry.
->>   - assigned-clock-parents: phandle of the new parent clock of rtc_ck.
->>   
->> @@ -48,3 +54,12 @@ Example:
->>   		interrupt-names = "alarm";
->>   		st,syscfg = <&pwrcfg 0x00 0x100>;
->>   	};
->> +
->> +	rtc: rtc@5c004000 {
->> +		compatible = "st,stm32mp1-rtc";
->> +		reg = <0x5c004000 0x400>;
->> +		clocks = <&rcc RTCAPB>, <&rcc RTC>;
->> +		clock-names = "pclk", "rtc_ck";
->> +		interrupts-extended = <&intc GIC_SPI 3 IRQ_TYPE_NONE>,
->> +				      <&exti 19 1>;
->> +	};
->> -- 
->> 2.7.4
->>
-
-Thanks,
-Amelie
+DQoNCk9uIDA0LzE2LzIwMTggMDg6MTkgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBXZWQs
+IEFwciAxMSwgMjAxOCBhdCAxMTo0NzowMUFNICswMjAwLCBBbWVsaWUgRGVsYXVuYXkgd3JvdGU6
+DQo+PiBUaGlzIHBhdGNoIGFkZHMgZG9jdW1lbnRhdGlvbiBvZiBkZXZpY2UgdHJlZSBiaW5kaW5n
+cyBmb3IgdGhlDQo+PiBTVE1pY3JvZWxlY3Ryb25pY3MgTXVsdGktRnVuY3Rpb24gZVhwYW5kZXIg
+KFNUTUZYKSBHUElPIGV4cGFuZGVyLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEFtZWxpZSBEZWxh
+dW5heSA8YW1lbGllLmRlbGF1bmF5QHN0LmNvbT4NCj4+IC0tLQ0KPj4gICAuLi4vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtc3RtZngudHh0ICB8IDExOCArKysrKysrKysrKysr
+KysrKysrKysNCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDExOCBpbnNlcnRpb25zKCspDQo+PiAgIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3Ry
+bC9waW5jdHJsLXN0bWZ4LnR4dA0KPj4NCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9waW5jdHJsLXN0bWZ4LnR4dCBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtc3RtZngudHh0DQo+PiBuZXcg
+ZmlsZSBtb2RlIDEwMDY0NA0KPj4gaW5kZXggMDAwMDAwMC4uNGQ4OTQxZGUNCj4+IC0tLSAvZGV2
+L251bGwNCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJs
+L3BpbmN0cmwtc3RtZngudHh0DQo+PiBAQCAtMCwwICsxLDExOCBAQA0KPj4gK1NUTWljcm9lbGVj
+dHJvbmljcyBNdWx0aS1GdW5jdGlvbiBlWHBhbmRlciAoU1RNRlgpIEdQSU8gZXhwYW5kZXIgYmlu
+ZGluZ3MNCj4+ICsNCj4+ICtTVCBNdWx0aS1GdW5jdGlvbiBlWHBhbmRlciAoU1RNRlgpIGlzIGEg
+c2xhdmUgY29udHJvbGxlciB1c2luZyBJMkMgZm9yDQo+PiArY29tbXVuaWNhdGlvbiB3aXRoIHRo
+ZSBtYWluIE1DVS4gSXQgb2ZmZXJzIHVwIHRvIDI0IEdQSU9zIGV4cGFuc2lvbi4NCj4+ICsNCj4+
+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJzdCxz
+dG1meC0wMzAwIi4NCj4+ICstIHJlZzogSTJDIHNsYXZlIGFkZHJlc3Mgb2YgdGhlIGRldmljZS4N
+Cj4+ICstIGludGVycnVwdC1wYXJlbnQ6IHBoYW5kbGUgb2YgdGhlIFNUTUZYIHBhcmVudCBpbnRl
+cnJ1cHQgY29udHJvbGxlci4NCj4+ICstIGludGVycnV0cHM6IGludGVycnVwdCBzcGVjaWZpZXIg
+dHJpZ2dlcmVkIGJ5IE1GWF9JUlFfT1VUIHNpZ25hbC4NCj4+ICsNCj4+ICtPcHRpb25hbCBwcm9w
+ZXJ0eToNCj4gDQo+IHMvcHJvcGVydHkvcHJvcGVydGllcy8NCj4gDQo+PiArLSBkcml2ZS1vcGVu
+LWRyYWluOiBjb25maWd1cmUgTUZYX0lSUV9PVVQgYXMgb3BlbiBkcmFpbi4NCj4+ICstIHZkZC1z
+dXBwbHk6IHBoYW5kbGUgb2YgdGhlIHJlZ3VsYXRvciBzdXBwbHlpbmcgU1RNRlguDQo+PiArDQo+
+PiArUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgZ3BpbyBjb250cm9sbGVyIHN1Yi1ub2RlOg0KPj4g
+Ky0gI2dwaW8tY2VsbHM6IHNob3VsZCBiZSA8Mj4sIHRoZSBmaXJzdCBjZWxsIGlzIHRoZSBHUElP
+IG51bWJlciBhbmQgdGhlIHNlY29uZA0KPj4gKyAgY2VsbCBpcyB0aGUgZ3BpbyBmbGFncyBpbiBh
+Y2NvcmRhbmNlIHdpdGggPGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPi4NCj4+ICstIGdwaW8tY29u
+dHJvbGxlcjogbWFya3MgdGhlIGRldmljZSBhcyBhIEdQSU8gY29udHJvbGxlci4NCj4+ICtQbGVh
+c2UgcmVmZXIgdG8gLi4vZ3Bpby9ncGlvLnR4dC4NCj4+ICsNCj4+ICtPcHRpb25hbCBwcm9wZXJ0
+aWVzIGZvciBncGlvIGNvbnRyb2xsZXIgc3ViLW5vZGU6DQo+PiArLSAjaW50ZXJydXB0LWNlbGxz
+OiBzaG91bGQgYmUgPDI+LCB0aGUgZmlyc3QgY2VsbCBpcyB0aGUgR1BJTyBudW1iZXIgYW5kIHRo
+ZQ0KPj4gKyAgc2Vjb25kIGNlbGwgaXMgdGhlIGludGVycnVwdCBmbGFncyBpbiBhY2NvcmRhbmNl
+IHdpdGgNCj4+ICsgIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9pcnEuaD4uDQo+
+PiArLSBpbnRlcnJ1cHQtY29udHJvbGxlcjogbWFya3MgdGhlIGRldmljZSBhcyBhbiBpbnRlcnJ1
+cHQgY29udHJvbGxlci4NCj4+ICsNCj4+ICtQbGVhc2UgcmVmZXIgdG8gcGluY3RybC1iaW5kaW5n
+cy50eHQgZm9yIHBpbiBjb25maWd1cmF0aW9uLg0KPj4gKw0KPj4gK1JlcXVpcmVkIHByb3BlcnRp
+ZXMgZm9yIHBpbiBjb25maWd1cmF0aW9uIHN1Yi1ub2RlczoNCj4+ICstIHBpbnM6IGxpc3Qgb2Yg
+cGlucyB0byB3aGljaCB0aGUgY29uZmlndXJhdGlvbiBhcHBsaWVzLg0KPj4gKw0KPj4gK09wdGlv
+bmFsIHByb3BlcnRpZXMgZm9yIHBpbiBjb25maWd1cmF0aW9uIHN1Yi1ub2RlcyAocGluY29uZi1n
+ZW5lcmljIG9uZXMpOg0KPj4gKy0gYmlhcy1kaXNhYmxlOiBkaXNhYmxlIGFueSBiaWFzIG9uIHRo
+ZSBwaW4uDQo+PiArLSBiaWFzLXB1bGwtdXA6IHRoZSBwaW4gd2lsbCBiZSBwdWxsZWQgdXAuDQo+
+PiArLSBiaWFzLXB1bGwtcGluLWRlZmF1bHQ6IHVzZSB0aGUgcGluLWRlZmF1bHQgcHVsbCBzdGF0
+ZS4NCj4+ICstIGJpYXMtcHVsbC1kb3duOiB0aGUgcGluIHdpbGwgYmUgcHVsbGVkIGRvd24uDQo+
+PiArLSBkcml2ZS1vcGVuLWRyYWluOiB0aGUgcGluIHdpbGwgYmUgZHJpdmVuIHdpdGggb3BlbiBk
+cmFpbi4NCj4+ICstIGRyaXZlLXB1c2gtcHVsbDogdGhlIHBpbiB3aWxsIGJlIGRyaXZlbiBhY3Rp
+dmVseSBoaWdoIGFuZCBsb3cuDQo+PiArLSBvdXRwdXQtaGlnaDogdGhlIHBpbiB3aWxsIGJlIGNv
+bmZpZ3VyZWQgYXMgYW4gb3V0cHV0IGRyaXZpbmcgaGlnaCBsZXZlbC4NCj4+ICstIG91dHB1dC1s
+b3c6IHRoZSBwaW4gd2lsbCBiZSBjb25maWd1cmVkIGFzIGFuIG91dHB1dCBkcml2aW5nIGxvdyBs
+ZXZlbC4NCj4+ICsNCj4+ICtOb3RlIHRoYXQgU1RNRlggcGluc1sxNTowXSBhcmUgY2FsbGVkICJn
+cGlvWzE1OjBdIiwgYW5kIFNUTUZYIHBpbnNbMjM6MTZdIGFyZQ0KPj4gK2NhbGxlZCAiYWdwaW9b
+NzowXSIuIEV4YW1wbGUsIHRvIHJlZmVyIHRvIHBpbiAxOCBvZiBTVE1GWCwgdXNlICJhZ3BpbzIi
+Lg0KPj4gKw0KPj4gK0V4YW1wbGU6DQo+PiArDQo+PiArCXN0bWZ4cGluY3RybDogc3RtZnhANDIg
+ew0KPj4gKwkJY29tcGF0aWJsZSA9ICJzdCxzdG1meC0wMzAwIjsNCj4+ICsJCXJlZyA9IDwweDQy
+PjsNCj4+ICsJCWludGVycnVwdC1wYXJlbnQgPSA8JmdwaW9pPjsNCj4+ICsJCWludGVycnVwdHMg
+PSA8OCBJUlFfVFlQRV9FREdFX1JJU0lORz47DQo+PiArCQl2ZGQtc3VwcGx5ID0gPCZ2M3YzPjsN
+Cj4+ICsJCXN0YXR1cyA9ICJva2F5IjsNCj4gDQo+IERvbid0IHNob3cgc3RhdHVzIGluIGV4YW1w
+bGVzLg0KPiANCg0KSSdsbCBmaXggaXQuDQoNCj4+ICsNCj4+ICsJCXN0bWZ4Z3BpbzogZ3BpbyB7
+DQo+IA0KPiBXaHkgZG9lcyB0aGlzIG5lZWQgdG8gYmUgYSBzdWIgbm9kZT8gQXJlIHRoZXJlIGZ1
+bmN0aW9ucyBiZXlvbmQgR1BJTz8NCj4gDQoNCkknbGwgYWRkcmVzcyB0aGlzIHBvaW50IGluIG15
+IHJlc3BvbnNlIHRvIExpbnVzLg0KDQo+PiArCQkJI2dwaW8tY2VsbHMgPSA8Mj47DQo+PiArCQkJ
+I2ludGVycnVwdC1jZWxscyA9IDwyPjsNCj4+ICsJCQlncGlvLWNvbnRyb2xsZXI7DQo+PiArCQkJ
+aW50ZXJydXB0LWNvbnRyb2xsZXI7DQo+PiArCQkJc3RhdHVzID0gIm9rYXkiOw0KPj4gKwkJfTsN
+Cj4+ICsNCj4+ICsJCWpveXN0aWNrX3BpbnM6IGpveXN0aWNrQDAgew0KPiANCj4gQSB1bml0LWFk
+ZHJlc3Mgd2l0aG91dCBhIHJlZyBwcm9wIGlzIG5vdCB2YWxpZC4NCj4gDQoNCk9LLCBJJ2xsIHJl
+cGxhY2UgaXQgYnkgJ2pveXN0aWNrX3BpbnM6IGpveXN0aWNrLTAnLg0KDQo+PiArCQkJcGlucyA9
+ICJncGlvMCIsICJncGlvMSIsICJncGlvMiIsICJncGlvMyIsICJncGlvNCI7DQo+PiArCQkJZHJp
+dmUtcHVzaC1wdWxsOw0KPj4gKwkJCWJpYXMtcHVsbC1kb3duOw0KPj4gKwkJfTsNCj4+ICsJfTsN
+Cj4+ICsNCj4+ICsJam95c3RpY2sgew0KPj4gKwkJY29tcGF0aWJsZSA9ICJncGlvLWtleXMiOw0K
+Pj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+PiArCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4+
+ICsJCXBpbmN0cmwtMCA9IDwmam95c3RpY2tfcGlucz47DQo+PiArCQlwaW5jdHJsLW5hbWVzID0g
+ImRlZmF1bHQiOw0KPj4gKwkJYnV0dG9uQDAgew0KPj4gKwkJCWxhYmVsID0gIkpveVNlbCI7DQo+
+PiArCQkJbGludXgsY29kZSA9IDxLRVlfRU5URVI+Ow0KPj4gKwkJCWludGVycnVwdC1wYXJlbnQg
+PSA8JnN0bWZ4Z3Bpbz47DQo+PiArCQkJaW50ZXJydXB0cyA9IDwwIElSUV9UWVBFX0VER0VfUklT
+SU5HPjsNCj4+ICsJCX07DQo+PiArCQlidXR0b25AMSB7DQo+PiArCQkJbGFiZWwgPSAiSm95RG93
+biI7DQo+PiArCQkJbGludXgsY29kZSA9IDxLRVlfRE9XTj47DQo+PiArCQkJaW50ZXJydXB0LXBh
+cmVudCA9IDwmc3RtZnhncGlvPjsNCj4+ICsJCQlpbnRlcnJ1cHRzID0gPDEgSVJRX1RZUEVfRURH
+RV9SSVNJTkc+Ow0KPj4gKwkJfTsNCj4+ICsJCWJ1dHRvbkAyIHsNCj4+ICsJCQlsYWJlbCA9ICJK
+b3lMZWZ0IjsNCj4+ICsJCQlsaW51eCxjb2RlID0gPEtFWV9MRUZUPjsNCj4+ICsJCQlpbnRlcnJ1
+cHQtcGFyZW50ID0gPCZzdG1meGdwaW8+Ow0KPj4gKwkJCWludGVycnVwdHMgPSA8MiBJUlFfVFlQ
+RV9FREdFX1JJU0lORz47DQo+PiArCQl9Ow0KPj4gKwkJYnV0dG9uQDMgew0KPj4gKwkJCWxhYmVs
+ID0gIkpveVJpZ2h0IjsNCj4+ICsJCQlsaW51eCxjb2RlID0gPEtFWV9SSUdIVD47DQo+PiArCQkJ
+aW50ZXJydXB0LXBhcmVudCA9IDwmc3RtZnhncGlvPjsNCj4+ICsJCQlpbnRlcnJ1cHRzID0gPDMg
+SVJRX1RZUEVfRURHRV9SSVNJTkc+Ow0KPj4gKwkJfTsNCj4+ICsJCWJ1dHRvbkA0IHsNCj4+ICsJ
+CQlsYWJlbCA9ICJKb3lVcCI7DQo+PiArCQkJbGludXgsY29kZSA9IDxLRVlfVVA+Ow0KPj4gKwkJ
+CWludGVycnVwdC1wYXJlbnQgPSA8JnN0bWZ4Z3Bpbz47DQo+PiArCQkJaW50ZXJydXB0cyA9IDw0
+IElSUV9UWVBFX0VER0VfUklTSU5HPjsNCj4+ICsJCX07DQo+PiArCX07DQo+PiArDQo+PiArCWxl
+ZHMgew0KPj4gKwkJY29tcGF0aWJsZSA9ICJncGlvLWxlZHMiOw0KPj4gKwkJb3JhbmdlIHsNCj4+
+ICsJCQlncGlvcyA9IDwmc3RtZnhncGlvIDE3IDE+Ow0KPj4gKwkJfTsNCj4+ICsNCj4+ICsJCWJs
+dWUgew0KPj4gKwkJCWdwaW9zID0gPCZzdG1meGdwaW8gMTkgMT47DQo+PiArCQl9Ow0KPj4gKwl9
+DQo+PiAtLSANCj4+IDIuNy40DQo+Pg0KDQpUaGFua3MsDQpBbWVsaWU=
