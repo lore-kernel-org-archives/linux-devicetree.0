@@ -1,66 +1,46 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [PATCH v2 4/4] rtc: ds1307: add freq_test sysfs attribute to
- check tick on m41txx
-Date: Wed, 9 May 2018 20:46:09 +0200
-Message-ID: <de96728f-c5c6-0d2e-4814-21105c0683ed@micronovasrl.com>
-References: <20180509182812.17646-1-giulio.benetti@micronovasrl.com>
- <20180509182812.17646-4-giulio.benetti@micronovasrl.com>
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH] media: rcar-vin: Drop unnecessary register properties from
+ example vin port
+Date: Wed,  9 May 2018 20:45:58 +0200
+Message-ID: <20180509184558.14960-1-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180509182812.17646-4-giulio.benetti@micronovasrl.com>
-Content-Language: it
-Sender: linux-kernel-owner@vger.kernel.org
-To: a.zummo@towertech.it, alexandre.belloni@bootlin.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-renesas-soc@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Simon Horman <horms+renesas@verge.net.au>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sorry everybody,
+The example vin port node does not have an address and thus does not
+need address-cells or address size-properties.
 
-Il 09/05/2018 20:28, Giulio Benetti ha scritto:
->   static int ds1307_probe(struct i2c_client *client,
->   			const struct i2c_device_id *id)
->   {
-> @@ -1783,6 +1851,24 @@ static int ds1307_probe(struct i2c_client *client,
->   	if (err)
->   		return err;
->   
-> +	/* Export sysfs entries */
-> +	err = sysfs_create_group(&(&client->dev)->kobj, &rtc_calib_attr_group);
-> +	if (err) {
-> +		dev_err(&client->dev, "Failed to create sysfs group: %d\n",
-> +			err);
-> +		return err;
-> +	}
-> +
-> +	err = devm_add_action_or_reset(&client->dev,
-> +				       rtc_calib_remove_sysfs_group,
-> +				       &client->dev);
-> +	if (err) {
-> +		dev_err(&client->dev,
-> +			"Failed to add sysfs cleanup action: %d\n",
-> +			err);
-> +		return err;
-> +	}
-> +
->   	if (chip->nvram_size) {
->   		struct nvmem_config nvmem_cfg = {
->   			.name = "ds1307_nvram",
-> 
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ Documentation/devicetree/bindings/media/rcar_vin.txt | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Adding sysfs must be done only for mt41xx series.
-I correct and submit V3 patchest.
-Sorry again.
-
+diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
+index a19517e1c669..2a0c59e97f40 100644
+--- a/Documentation/devicetree/bindings/media/rcar_vin.txt
++++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+@@ -107,9 +107,6 @@ Board setup example for Gen2 platforms (vin1 composite video input)
+         status = "okay";
+ 
+         port {
+-                #address-cells = <1>;
+-                #size-cells = <0>;
+-
+                 vin1ep0: endpoint {
+                         remote-endpoint = <&adv7180>;
+                         bus-width = <8>;
 -- 
-Giulio Benetti
-CTO
-
-MICRONOVA SRL
-Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
-Tel. 049/8931563 - Fax 049/8931346
-Cod.Fiscale - P.IVA 02663420285
-Capitale Sociale ¤ 26.000 i.v.
-Iscritta al Reg. Imprese di Padova N. 02663420285
-Numero R.E.A. 258642
+2.11.0
