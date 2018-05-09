@@ -1,147 +1,94 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: [PATCH v3 3/4] rtc: ds1307: add offset sysfs for mt41txx chips.
-Date: Wed,  9 May 2018 21:33:54 +0200
-Message-ID: <20180509193355.49466-3-giulio.benetti@micronovasrl.com>
-References: <20180509193355.49466-1-giulio.benetti@micronovasrl.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v2 2/2] leds: Add Spreadtrum SC27xx breathing light
+ controller driver
+Date: Wed, 9 May 2018 21:40:35 +0200
+Message-ID: <bddc1f89-8c2c-ba6e-3c7e-d89710ed5424@gmail.com>
+References: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
+ <9a2a07b8eb313ae3ba64af911337ee7ff7c9ad43.1525757122.git.baolin.wang@linaro.org>
+ <20180509142539.GB25131@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180509193355.49466-1-giulio.benetti@micronovasrl.com>
+In-Reply-To: <20180509142539.GB25131@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: a.zummo@towertech.it, alexandre.belloni@bootlin.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Giulio Benetti <giulio.benetti@micronovasrl.com>
+To: Pavel Machek <pavel@ucw.cz>, Baolin Wang <baolin.wang@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, xiaotong.lu@spreadtrum.com, broonie@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-m41txx chips can hold a calibration value to get correct clock bias.
-If positive offset is passed, it means adding 512 cycles(@32.768Hz)
-every tick(1s).
-If negative offset is passed, it means subtracting 256 cycles(@32.768Hz)
-every tick(1s).
+Hi,
 
-Add offset handling (ranging between (-31) and 31) via sysfs.
+On 05/09/2018 04:25 PM, Pavel Machek wrote:
+> On Tue 2018-05-08 13:39:45, Baolin Wang wrote:
+>> From: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+>>
+>> This patch adds Spreadtrum SC27xx PMIC series breathing light controller
+>> driver, which can support 3 LEDs. Each LED can work at normal PWM mode
+>> and breathing mode.
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx b/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
+>> new file mode 100644
+>> index 0000000..22166fb
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
+>> @@ -0,0 +1,19 @@
+>> +What:		/sys/class/leds/<led>/rise_time
+>> +What:		/sys/class/leds/<led>/high_time
+>> +What:		/sys/class/leds/<led>/fall_time
+>> +What:		/sys/class/leds/<led>/low_time
+>> +Date:		May 2018
+>> +KernelVersion:	4.18
+>> +Contact:	Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+>> +Description:
+>> +		Set the pattern generator rise, high, fall and low
+>> +		times (0..63). It's unit is 0.125s, it should be > 0.
+>> +
+>> +		1 - 125 ms
+>> +		2 - 250 ms
+>> +		3 - 375 ms
+>> +		...
+>> +		...
+>> +		...
+>> +		62 - 7.75 s
+>> +		63 - 7.875 s
+> 
+> How does this interact with triggers? With manually setting
+> brightness? Are the pattern generators independend for the LEDs?
+> 
+> Can you generate white breathing pattern? If so, how?
+> 
+> How do you select between normal and breathing modes?
+> 
+> I'd specify times in miliseconds or something, this is way too
+> hardware specific.
 
-Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
----
- drivers/rtc/rtc-ds1307.c | 70 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+Agreed.
 
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index 0ab0c166da83..33895668b363 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -114,6 +114,16 @@ enum ds_type {
- #	define RX8025_BIT_VDET		0x40
- #	define RX8025_BIT_XST		0x20
- 
-+#define M41TXX_REG_CONTROL	0x07
-+#	define M41TXX_BIT_OUT		0x80
-+#	define M41TXX_BIT_FT		0x40
-+#	define M41TXX_BIT_CALIB_SIGN	0x20
-+#	define M41TXX_M_CALIBRATION	0x1f
-+
-+/* Min and max values supported with 'offset' interface by M41TXX */
-+#define M41TXX_MIN_OFFSET	(-31)
-+#define M41TXX_MAX_OFFSET	(31)
-+
- struct ds1307 {
- 	enum ds_type		type;
- 	unsigned long		flags;
-@@ -146,6 +156,9 @@ struct chip_desc {
- 
- static int ds1307_get_time(struct device *dev, struct rtc_time *t);
- static int ds1307_set_time(struct device *dev, struct rtc_time *t);
-+static int ds1337_read_alarm(struct device *dev, struct rtc_wkalrm *t);
-+static int ds1337_set_alarm(struct device *dev, struct rtc_wkalrm *t);
-+static int ds1307_alarm_irq_enable(struct device *dev, unsigned int enabled);
- static u8 do_trickle_setup_ds1339(struct ds1307 *, u32 ohms, bool diode);
- static irqreturn_t rx8130_irq(int irq, void *dev_id);
- static int rx8130_read_alarm(struct device *dev, struct rtc_wkalrm *t);
-@@ -155,6 +168,8 @@ static irqreturn_t mcp794xx_irq(int irq, void *dev_id);
- static int mcp794xx_read_alarm(struct device *dev, struct rtc_wkalrm *t);
- static int mcp794xx_set_alarm(struct device *dev, struct rtc_wkalrm *t);
- static int mcp794xx_alarm_irq_enable(struct device *dev, unsigned int enabled);
-+static int m41txx_rtc_read_offset(struct device *dev, long *offset);
-+static int m41txx_rtc_set_offset(struct device *dev, long offset);
- 
- static const struct rtc_class_ops rx8130_rtc_ops = {
- 	.read_time      = ds1307_get_time,
-@@ -172,6 +187,16 @@ static const struct rtc_class_ops mcp794xx_rtc_ops = {
- 	.alarm_irq_enable = mcp794xx_alarm_irq_enable,
- };
- 
-+static const struct rtc_class_ops m41txx_rtc_ops = {
-+	.read_time      = ds1307_get_time,
-+	.set_time       = ds1307_set_time,
-+	.read_alarm	= ds1337_read_alarm,
-+	.set_alarm	= ds1337_set_alarm,
-+	.alarm_irq_enable = ds1307_alarm_irq_enable,
-+	.read_offset	= m41txx_rtc_read_offset,
-+	.set_offset	= m41txx_rtc_set_offset,
-+};
-+
- static const struct chip_desc chips[last_ds_type] = {
- 	[ds_1307] = {
- 		.nvram_offset	= 8,
-@@ -227,10 +252,17 @@ static const struct chip_desc chips[last_ds_type] = {
- 		.irq_handler = rx8130_irq,
- 		.rtc_ops = &rx8130_rtc_ops,
- 	},
-+	[m41t0] = {
-+		.rtc_ops	= &m41txx_rtc_ops,
-+	},
-+	[m41t00] = {
-+		.rtc_ops	= &m41txx_rtc_ops,
-+	},
- 	[m41t11] = {
- 		/* this is battery backed SRAM */
- 		.nvram_offset	= 8,
- 		.nvram_size	= 56,
-+		.rtc_ops	= &m41txx_rtc_ops,
- 	},
- 	[mcp794xx] = {
- 		.alarm		= 1,
-@@ -972,6 +1004,44 @@ static int mcp794xx_alarm_irq_enable(struct device *dev, unsigned int enabled)
- 				  enabled ? MCP794XX_BIT_ALM0_EN : 0);
- }
- 
-+static int m41txx_rtc_read_offset(struct device *dev, long *offset)
-+{
-+	struct ds1307 *ds1307 = dev_get_drvdata(dev);
-+	unsigned int ctrl_reg;
-+	u8 val;
-+
-+	regmap_read(ds1307->regmap, M41TXX_REG_CONTROL, &ctrl_reg);
-+
-+	val = ctrl_reg & M41TXX_M_CALIBRATION;
-+
-+	/* check if positive */
-+	if (ctrl_reg & M41TXX_BIT_CALIB_SIGN)
-+		*offset = val;
-+	else
-+		*offset = -val;
-+
-+	return 0;
-+}
-+
-+static int m41txx_rtc_set_offset(struct device *dev, long offset)
-+{
-+	struct ds1307 *ds1307 = dev_get_drvdata(dev);
-+	unsigned int ctrl_reg;
-+
-+	if ((offset < M41TXX_MIN_OFFSET) || (offset > M41TXX_MAX_OFFSET))
-+		return -ERANGE;
-+
-+	regmap_read(ds1307->regmap, M41TXX_REG_CONTROL, &ctrl_reg);
-+
-+	ctrl_reg &= ~M41TXX_M_CALIBRATION;
-+	ctrl_reg |= abs(offset) & M41TXX_M_CALIBRATION;
-+
-+	if (offset >= 0)
-+		ctrl_reg |= M41TXX_BIT_CALIB_SIGN;
-+
-+	return regmap_write(ds1307->regmap, M41TXX_REG_CONTROL,	ctrl_reg);
-+}
-+
- /*----------------------------------------------------------------------*/
- 
- static int ds1307_nvram_read(void *priv, unsigned int offset, void *val,
+> Now... functionality like this is common between many LED
+> controllers. N900 could do this kind of "breathing", too, and it also
+> supports other patterns.
+> 
+> I believe we need interface common between different LED controllers.
+> 
+> And I guess it would be easiest if you dropped this part from initial
+> merge.
+
+I disagree here. We already had the same discussion at the occasion
+of the patch [0] and it turned out to be a dead-end [1]. Now we have
+neither the driver nor the generic pattern interface.
+
+We also already have some older LED class drivers that implement custom
+pattern interfaces (e.g. drivers/leds/leds-lm3533.c) and the same
+approach can be applied in this case.
+
+Regarding interaction with triggers - we could disable pattern
+on setting any trigger and return -EBUSY from the pattern
+interface if led_cdev->trigger is not NULL.
+
+[0] https://lkml.org/lkml/2017/3/23/33
+[1] https://lkml.org/lkml/2017/11/15/27
+
 -- 
-2.17.0
+Best regards,
+Jacek Anaszewski
