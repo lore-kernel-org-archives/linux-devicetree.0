@@ -1,87 +1,49 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: RE: [PATCH v5] gpio: dwapb: Add support for 1 interrupt per port A
- GPIO
-Date: Wed, 9 May 2018 12:11:27 +0000
-Message-ID: <TY1PR01MB1769D461E888BA9F9537678EF5990@TY1PR01MB1769.jpnprd01.prod.outlook.com>
-References: <1524759587-7007-1-git-send-email-phil.edworthy@renesas.com>
- <CAHp75Vc3qBOYjUAgxZCkpXAdg=ueM2KApPynPdpkEmOoMR7sQQ@mail.gmail.com>
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Add dts file for the A20-linova1-7
+ HMI
+Date: Wed, 9 May 2018 14:28:19 +0200
+Message-ID: <102bc56e-f746-6d2c-d3a5-f9d0449781ff@micronovasrl.com>
+References: <1521662593-25468-7-git-send-email-giulio.benetti@micronovasrl.com>
+ <20180322180508.my64gobhh5rc2x2m@flea>
+ <8ef3b259-03b4-6987-286e-36ff627a8b76@micronovasrl.com>
+ <20180424084137.7xfwji2gcibxavvt@flea>
+ <03a02abb-e95c-b4ec-748f-907c0af67969@micronovasrl.com>
+ <20180425184016.xktppxw7egddr7li@flea>
+ <42feccc9-1d09-9ff2-3ccc-1dea63bacfb6@micronovasrl.com>
+ <839d2560-0250-9b3a-8019-4e83d9e931e2@micronovasrl.com>
+ <20180504080652.dniwaqqhbeuknp7y@flea>
+ <afc78821-2d08-3f4f-d008-5b2d216e96c0@micronovasrl.com>
+ <20180507073013.dvtbmwi4ora6tdj2@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vc3qBOYjUAgxZCkpXAdg=ueM2KApPynPdpkEmOoMR7sQQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180507073013.dvtbmwi4ora6tdj2@flea>
+Content-Language: it
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Michel Pollet <michel.pollet@bp.renesas.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5keSwNCg0KT24gMDUgTWF5IDIwMTggMTE6NDkgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0K
-PiBPbiBUaHUsIEFwciAyNiwgMjAxOCBhdCA3OjE5IFBNLCBQaGlsIEVkd29ydGh5IHdyb3RlOg0K
-PiANCj4gU290dHkgZm8gYSBsYXRlIHJlc3BvbnNlLiBDb25zaWRlciBmb2xsb3cgdXAgZml4ZXMg
-Zm9yIGJlbG93Lg0KPiANCj4gPiAgICAgICAgIGlmICghcHAtPmlycV9zaGFyZWQpIHsNCj4gPiAr
-ICAgICAgICAgICAgICAgaW50IGk7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBmb3IgKGkg
-PSAwOyBpIDwgcHAtPm5ncGlvOyBpKyspIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBp
-ZiAocHAtPmlycVtpXSkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlycV9z
-ZXRfY2hhaW5lZF9oYW5kbGVyX2FuZF9kYXRhKHBwLT5pcnFbaV0sDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZHdhcGJfaXJxX2hhbmRsZXIsIGdw
-aW8pOw0KPiA+ICsgICAgICAgICAgICAgICB9DQo+ID4gICAgICAgICB9IGVsc2Ugew0KPiA+ICAg
-ICAgICAgICAgICAgICAvKg0KPiA+ICAgICAgICAgICAgICAgICAgKiBSZXF1ZXN0IGEgc2hhcmVk
-IElSUSBzaW5jZSB3aGVyZSBNRkQgd291bGQgaGF2ZSBkZXZpY2VzDQo+ID4gICAgICAgICAgICAg
-ICAgICAqIHVzaW5nIHRoZSBzYW1lIGlycSBwaW4NCj4gPiAgICAgICAgICAgICAgICAgICovDQo+
-ID4gKyAgICAgICAgICAgICAgIGVyciA9IGRldm1fcmVxdWVzdF9pcnEoZ3Bpby0+ZGV2LCBwcC0+
-aXJxWzBdLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGR3YXBi
-X2lycV9oYW5kbGVyX21mZCwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBJUlFGX1NIQVJFRCwgImdwaW8tZHdhcGItbWZkIiwNCj4gPiBncGlvKTsNCj4gDQo+ID4g
-KyAgICAgICBpZiAocHAtPmhhc19pcnEpDQo+ID4gICAgICAgICAgICAgICAgIGR3YXBiX2NvbmZp
-Z3VyZV9pcnFzKGdwaW8sIHBvcnQsIHBwKTsNCj4gDQo+IEkgd291bGQgcmF0aGVyIG1ha2UgaXJx
-IGFycmF5IGEgdHlwZSBvZiBzaWduZWQgaW50IGFuZCBtb3ZlIGNvbmRpdGlvbmFsIGludG8NCj4g
-dGhlIGZ1bmN0aW9uIHRvIHRlc3QgcGVyIElSUSBiYXNlZC4NCk9rLCB0aG91Z2ggc2luY2UgdGhl
-IGRyaXZlciBjYW4gYmUgdXNlZCB3aXRob3V0IGludGVycnVwdHMsIGl0IGhhcyB0byBjaGVjaw0K
-aWYgYW55IGFyZSB1c2VkIGJlZm9yZSB0aGUgZHJpdmVyIGRvZXMgYWxsIHRoZSBvdGhlciBpbnRl
-cnJ1cHQgcmVsYXRlZCB0aGluZ3MuDQogDQo+ID4gICAgICAgICAvKiBBZGQgR1BJTy1zaWduYWxl
-ZCBBQ1BJIGV2ZW50IHN1cHBvcnQgKi8NCj4gPiArICAgICAgIGlmIChwcC0+aGFzX2lycSkNCj4g
-PiAgICAgICAgICAgICAgICAgYWNwaV9ncGlvY2hpcF9yZXF1ZXN0X2ludGVycnVwdHMoJnBvcnQt
-PmdjKTsNCj4gDQo+IFBlcmhhcHMgc29tZXRoaW5nIHNpbWlsYXIuDQo+IA0KPiA+ICAgICAgICAg
-ICAgICAgICBpZiAoZGV2LT5vZl9ub2RlICYmIHBwLT5pZHggPT0gMCAmJg0KPiA+ICAgICAgICAg
-ICAgICAgICAgICAgICAgIGZ3bm9kZV9wcm9wZXJ0eV9yZWFkX2Jvb2woZndub2RlLA0KPiA+DQo+
-ID4gImludGVycnVwdC1jb250cm9sbGVyIikpIHsNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgc3RydWN0IGRldmljZV9ub2RlICpucCA9IHRvX29mX25vZGUoZndub2RlKTsNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBpbnQgajsNCj4gPiArDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgLyoNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgKiBUaGUg
-SVAgaGFzIGNvbmZpZ3VyYXRpb24gb3B0aW9ucyB0byBhbGxvdyBhIHNpbmdsZQ0KPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAqIGNvbWJpbmVkIGludGVycnVwdCBvciBvbmUgcGVyIGdwaW8u
-IElmIG9uZSBwZXIgZ3BpbywNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgKiBzb21lIG1p
-Z2h0IG5vdCBiZSB1c2VkLg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAqLw0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIGZvciAoaiA9IDA7IGogPCBwcC0+bmdwaW87IGorKykgew0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50IGlycSA9IG9mX2lycV9nZXQo
-bnAsIGopOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWYgKGlycSA8IDAp
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0K
-PiA+ICsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBwLT5pcnFbal0gPSBp
-cnE7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwcC0+aGFzX2lycSA9IHRy
-dWU7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfQ0KPiANCj4gZm9yICguLi4pDQo+ICBw
-cC0+aXJxID0gb2ZfaXJxX2dldCgpOw0KPiANCj4gPiAgICAgICAgICAgICAgICAgfQ0KPiANCj4g
-PiArICAgICAgICAgICAgICAgaWYgKGhhc19hY3BpX2NvbXBhbmlvbihkZXYpICYmIHBwLT5pZHgg
-PT0gMCkgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCBqOw0KPiA+
-ICsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBmb3IgKGogPSAwOyBqIDwgcHAtPm5ncGlv
-OyBqKyspIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBwLT5pcnFbal0g
-PSBwbGF0Zm9ybV9nZXRfaXJxKHRvX3BsYXRmb3JtX2RldmljZShkZXYpLCBqKTsNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIChwcC0+aXJxW2pdKQ0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwcC0+aGFzX2lycSA9IHRydWU7DQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgfQ0KPiANCj4gRGl0dG8uDQo+IE1vcmVvdmVyIHlvdSBo
-YXZlIGEgYnVnIGhlcmUuIFNlZSBteSBwcm9wb3NhbCBhdCB0aGUgdG9wIG9mIHRoaXMgbWVzc2Fn
-ZS4NCkkgZ3Vlc3MgeW91IG1lYW4gdGhhdCBpdCBkb2VzbuKAmXQgY2hlY2sgZm9yIGVycm9ycyBy
-ZXR1cm5lZD8NCg0KPiBBbmQgbm93IGV2ZW4gYmV0dGVyIHRvIGFzaywgd2h5IHBsYXRmb3JtX2dl
-dF9pcnEoKSB3b3VsZG4ndCB3b3JrIGZvciBEVA0KPiBjYXNlPw0KVGhlIHByb2JsZW0gaXMgdGhh
-dCB0aGUgaW50ZXJydXB0cyBhcmUgZGVmaW5lZCBpbiB0aGUgcG9ydCBzdWItbm9kZSBpbiBEVCwN
-Cm5vdCBpbiB0aGUgZ3BpbyBjb250cm9sbGVyIG5vZGUsIGNhdXNpbmcgcGxhdGZvcm1fZ2V0X2ly
-cSgpIHRvIGZhaWwuIFRoZQ0KcG9ydCBzdWItbm9kZSBkb2VzbuKAmXQgaGF2ZSBhbiBhc3NvY2lh
-dGVkIHBsYXRmb3JtIGRldmljZS4gSSBkb27igJl0IHRoaW5rDQp0aGVyZSBpcyBhIHdheSBhcm91
-bmQgdGhpcy4uLg0KDQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmICghcHAt
-Pmhhc19pcnEpDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZXZfd2Fybihk
-ZXYsICJubyBpcnEgZm9yIHBvcnQlZFxuIiwNCj4gPiBwcC0+aWR4KTsNCj4gDQo+IFRoaXMgY291
-bGQgYmUgaXNzdWVkIGluIHRoZSBhY3R1YWwgZnVuY3Rpb24gd2hpY2ggd2lsbCB0cnkgdG8gYWxs
-b2NhdGUgSVJRcw0KPiAocGVyaGFwcyBvbiBkZWJ1ZyBsZXZlbCkNCj4gDQo+IA0KPiBQLlMuIEp1
-c3QgdGhpbmsgYWJvdXQgaXQsIHBlcmhhcHMgeW91IGZpbmQgZXZlbiBiZXR0ZXIgc29sdXRpb25z
-Lg0KVGhlcmUncyBjZXJ0YWlubHkgc29tZSBkdXBsaWNhdGlvbiBiZXR3ZWVuIERUIGFuZCBBQ1BJ
-IHRoYXQgY2FuIGJlIHJlbW92ZWQuDQoNClRoYW5rcw0KUGhpbA0K
+Hi,
+
+Il 07/05/2018 09:30, Maxime Ripard ha scritto:
+>> Otherwise as in-tree dts with make dtbs "-@" argument is not passed.
+>> Right?
+> 
+> You should use DTC_FLAGS='-@'
+
+Thank you, I'm going to use that.
+
+
+-- 
+Giulio Benetti
+CTO
+
+MICRONOVA SRL
+Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
+Tel. 049/8931563 - Fax 049/8931346
+Cod.Fiscale - P.IVA 02663420285
+Capitale Sociale € 26.000 i.v.
+Iscritta al Reg. Imprese di Padova N. 02663420285
+Numero R.E.A. 258642
