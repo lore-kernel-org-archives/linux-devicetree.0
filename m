@@ -1,45 +1,42 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [PATCH 3/4] rtc: ds1307: add calibration of_ for mt41txx chips.
-Date: Wed, 9 May 2018 20:31:39 +0200
-Message-ID: <4d1b1ead-9439-210e-f246-cb49219390f5@micronovasrl.com>
-References: <20180508145611.49072-1-giulio.benetti@micronovasrl.com>
- <20180508145611.49072-3-giulio.benetti@micronovasrl.com>
- <20180508191956.GP10960@piout.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] MAINTAINERS: add keyword for devicetree overlay
+ notifiers
+Date: Wed, 9 May 2018 13:31:40 -0500
+Message-ID: <20180509183140.GA11580@rob-hp-laptop>
+References: <1524879080-27111-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180508191956.GP10960@piout.net>
-Content-Language: it
+Content-Disposition: inline
+In-Reply-To: <1524879080-27111-1-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: frowand.list@gmail.com
+Cc: pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
-
-Il 08/05/2018 21:19, Alexandre Belloni ha scritto:
-> Hi,
+On Fri, Apr 27, 2018 at 06:31:20PM -0700, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
 > 
-> There is a sysfs interface for calibration, please use it. this is
-> especially useful since the calibration value probably depend on
-> temperature so it has to be updated dynamically to be really useful.
+> Devicetree overlay notifiers have a chance to potentially get
+> pointers into the overlay unflattened devicetree and overlay FDT.
+> The only protection against these pointers being accessed after
+> the underlying data has been released by kfree() is by source
+> code review of patches.  Add a keyword line to the devicetree
+> overlay maintainers entry to try to catch overlay notifier
+> related patches.
 > 
-> See https://elixir.bootlin.com/linux/v4.16.7/source/Documentation/ABI/testing/sysfs-class-rtc#L68
-> and https://elixir.bootlin.com/linux/v4.16.7/source/drivers/rtc/interface.c#L999
+> The keyword line is added to the devicetree overlay entry instead
+> of the devicetree entry so that not all maintainers will receive
+> the additional review traffic.  Add Frank Rowand (already a
+> maintainer in the devicetree entry) so that he will receive
+> the additional review traffic.
 > 
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
+> 
+> changes from version 1:
+>    - removed extraneous "From:" tags at top of patch description
 
-Used sysfs now and just submitted V2 patchset.
-Thanks for pointing me those links.
+Applied, sorry it fell thru the cracks.
 
--- 
-Giulio Benetti
-CTO
-
-MICRONOVA SRL
-Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
-Tel. 049/8931563 - Fax 049/8931346
-Cod.Fiscale - P.IVA 02663420285
-Capitale Sociale ¤ 26.000 i.v.
-Iscritta al Reg. Imprese di Padova N. 02663420285
-Numero R.E.A. 258642
+Rob
