@@ -1,370 +1,160 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH V3] ARM: dts: da850-evm: use phandles to extend nodes
-Date: Thu, 10 May 2018 10:08:04 -0500
-Message-ID: <CAHCN7xKXJnh5MSudY3FU_9Xw98PwDi3yaWTUdfjFDaE24NBrzw@mail.gmail.com>
-References: <20180507123721.9264-1-aford173@gmail.com> <ae8292b2-b167-7a96-70be-1cfea6059874@ti.com>
+From: Oleksandr Shamray <oleksandrs@mellanox.com>
+Subject: RE: [patch v18 0/4] JTAG driver introduction
+Date: Thu, 10 May 2018 15:13:26 +0000
+Message-ID: <HE1PR0502MB2972F340728121766CEEC593B1980@HE1PR0502MB2972.eurprd05.prod.outlook.com>
+References: <1517236305-4880-1-git-send-email-oleksandrs@mellanox.com>
+ <ff739c26-d3b2-3df7-e751-fbf037ae96d1@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="koi8-r"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ae8292b2-b167-7a96-70be-1cfea6059874@ti.com>
+In-Reply-To: <ff739c26-d3b2-3df7-e751-fbf037ae96d1@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Adam Ford <adam.ford@logicpd.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Florian Fainelli <f.fainelli@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "arnd@arndb.de" <arnd@arndb.de>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>, "joel@jms.id.au" <joel@jms.id.au>, "jiri@resnulli.us" <jiri@resnulli.us>, "tklauser@distanz.ch" <tklauser@distanz.ch>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Vadim Pasternak <vadimp@mellanox.com>, system-sw-low-level <system-sw-low-level@mellanox.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "openocd-devel-owner@lists.sourceforge.net" <openocd-devel-owner@lists.sourceforge.net>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 10, 2018 at 4:10 AM, Sekhar Nori <nsekhar@ti.com> wrote:
-> On Monday 07 May 2018 06:07 PM, Adam Ford wrote:
->> Many node labels in the device tree (like serial0, serial1, etc) are being
->> redefined, so let's modernize the device tree by using phandles to
->> extend the existing nodes.  This helps reduce the whitespace.
->>
->> Signed-off-by: Adam Ford <aford173@gmail.com>
->
-> I applied this without the pmic changes. I am not convinced about those.
-> The tps node is already being referred to as phandle. I am not sure
-> referring to each individual regulator using phandle is needed. Other
-> files like am335x-evm.dts don't do it as well.
+Hi Florian.
 
-I tested the regulator values and names after booting to see if the
-names and values matched the expected values. They did, so I am
-fairly confident it would have worked.
+>> We propose to implement general JTAG interface and infrastructure=20
+>> to communicate with user layer application. In such way, we can=20
+>> have the standard JTAG interface core part and separation from=20
+>> specific HW implementation.
+>
+>Well, the framework in its current shape is still extremely=20
+>simplistic, therefore leaving a lot of room (read: bugs,=20
+>inconsistencies) within the hands of the driver, so while the=20
+>user-space interface is standard through the proposed character=20
+>device, the user experience, likely might not.
 
->
-> Another thing is whether we really need the tp6507x.dtsi file. It does
-> not seem to contain much and also da850-evm.dts is the only file
-> including it. So it seems pretty pointless to me.
+Well, the framework is intentionally simply and provide the very basic
+interface. It supposed that interface can be extended in the future, if=20
+necessary. Current kernel does not provide a framework for JTAG interface,
+and we believe this is good starting point to allow such framework. This
+provide minimal, but sufficient interface and any future extension will be
+of course welcomed.
 
-Do you want me to do a patch that removes the  tp6507x.dtsi file and
-just sets up the
-PMIC from scratch within the da850-evm file?
+At the moment we have one controller driver, which works well with this
+infrastructure. And we have very reasonable use case - this driver allows
+flashing for all the programmable devices, connected to JTAG interface,
+where the image for these device is provided with the standard SVF format.
 
->
-> Here is what I committed.
 
-Thank you.  I think looks cleaner this way, and more consistent with
-many of the other platforms and boards.
+>> This allow new capability to debug the CPU or program system's=20
+>> device via BMC without additional devices nor cost.
 
-adam
->
-> Thanks,
-> Sekhar
->
-> ---8<---
-> commit ae62a32d6019a8225e2c32e631b8b0d039151131 (refs/heads/v4.18/dt)
-> Author:     Adam Ford <aford173@gmail.com>
-> AuthorDate: Mon May 7 07:37:21 2018 -0500
-> Commit:     Sekhar Nori <nsekhar@ti.com>
-> CommitDate: Thu May 10 14:01:15 2018 +0530
->
->     ARM: dts: da850-evm: use phandles to extend nodes
->
->     Many node labels in the device tree (like serial0, serial1, etc) are being
->     redefined, so let's modernize the device tree by using phandles to
->     extend the existing nodes.  This helps reduce the whitespace.
->
->     Signed-off-by: Adam Ford <aford173@gmail.com>
->     [nsekhar@ti.com: drop tps6507x related changes]
->     Signed-off-by: Sekhar Nori <nsekhar@ti.com>
->
-> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> index 339cae353302..9389f95f4094 100644
-> --- a/arch/arm/boot/dts/da850-evm.dts
-> +++ b/arch/arm/boot/dts/da850-evm.dts
-> @@ -27,143 +27,6 @@
->                 spi0 = &spi1;
->         };
->
-> -       soc@1c00000 {
-> -               pmx_core: pinmux@14120 {
-> -                       status = "okay";
-> -
-> -                       mcasp0_pins: pinmux_mcasp0_pins {
-> -                               pinctrl-single,bits = <
-> -                                       /*
-> -                                        * AHCLKX, ACLKX, AFSX, AHCLKR, ACLKR,
-> -                                        * AFSR, AMUTE
-> -                                        */
-> -                                       0x00 0x11111111 0xffffffff
-> -                                       /* AXR11, AXR12 */
-> -                                       0x04 0x00011000 0x000ff000
-> -                               >;
-> -                       };
-> -                       nand_pins: nand_pins {
-> -                               pinctrl-single,bits = <
-> -                                       /* EMA_WAIT[0], EMA_OE, EMA_WE, EMA_CS[4], EMA_CS[3] */
-> -                                       0x1c 0x10110110  0xf0ff0ff0
-> -                                       /*
-> -                                        * EMA_D[0], EMA_D[1], EMA_D[2],
-> -                                        * EMA_D[3], EMA_D[4], EMA_D[5],
-> -                                        * EMA_D[6], EMA_D[7]
-> -                                        */
-> -                                       0x24 0x11111111  0xffffffff
-> -                                       /* EMA_A[1], EMA_A[2] */
-> -                                       0x30 0x01100000  0x0ff00000
-> -                               >;
-> -                       };
-> -               };
-> -               serial0: serial@42000 {
-> -                       status = "okay";
-> -               };
-> -               serial1: serial@10c000 {
-> -                       status = "okay";
-> -               };
-> -               serial2: serial@10d000 {
-> -                       status = "okay";
-> -               };
-> -               rtc0: rtc@23000 {
-> -                       status = "okay";
-> -               };
-> -               i2c0: i2c@22000 {
-> -                       status = "okay";
-> -                       clock-frequency = <100000>;
-> -                       pinctrl-names = "default";
-> -                       pinctrl-0 = <&i2c0_pins>;
-> -
-> -                       tps: tps@48 {
-> -                               reg = <0x48>;
-> -                       };
-> -                       tlv320aic3106: tlv320aic3106@18 {
-> -                               #sound-dai-cells = <0>;
-> -                               compatible = "ti,tlv320aic3106";
-> -                               reg = <0x18>;
-> -                               status = "okay";
-> -
-> -                               /* Regulators */
-> -                               IOVDD-supply = <&vdcdc2_reg>;
-> -                               /* Derived from VBAT: Baseboard 3.3V / 1.8V */
-> -                               AVDD-supply = <&vbat>;
-> -                               DRVDD-supply = <&vbat>;
-> -                               DVDD-supply = <&vbat>;
-> -                       };
-> -                       tca6416: gpio@20 {
-> -                               compatible = "ti,tca6416";
-> -                               reg = <0x20>;
-> -                               gpio-controller;
-> -                               #gpio-cells = <2>;
-> -                       };
-> -               };
-> -               wdt: wdt@21000 {
-> -                       status = "okay";
-> -               };
-> -               mmc0: mmc@40000 {
-> -                       max-frequency = <50000000>;
-> -                       bus-width = <4>;
-> -                       status = "okay";
-> -                       pinctrl-names = "default";
-> -                       pinctrl-0 = <&mmc0_pins>;
-> -               };
-> -               spi1: spi@30e000 {
-> -                       status = "okay";
-> -                       pinctrl-names = "default";
-> -                       pinctrl-0 = <&spi1_pins &spi1_cs0_pin>;
-> -                       flash: m25p80@0 {
-> -                               #address-cells = <1>;
-> -                               #size-cells = <1>;
-> -                               compatible = "m25p64";
-> -                               spi-max-frequency = <30000000>;
-> -                               m25p,fast-read;
-> -                               reg = <0>;
-> -                               partition@0 {
-> -                                       label = "U-Boot-SPL";
-> -                                       reg = <0x00000000 0x00010000>;
-> -                                       read-only;
-> -                               };
-> -                               partition@1 {
-> -                                       label = "U-Boot";
-> -                                       reg = <0x00010000 0x00080000>;
-> -                                       read-only;
-> -                               };
-> -                               partition@2 {
-> -                                       label = "U-Boot-Env";
-> -                                       reg = <0x00090000 0x00010000>;
-> -                                       read-only;
-> -                               };
-> -                               partition@3 {
-> -                                       label = "Kernel";
-> -                                       reg = <0x000a0000 0x00280000>;
-> -                               };
-> -                               partition@4 {
-> -                                       label = "Filesystem";
-> -                                       reg = <0x00320000 0x00400000>;
-> -                               };
-> -                               partition@5 {
-> -                                       label = "MAC-Address";
-> -                                       reg = <0x007f0000 0x00010000>;
-> -                                       read-only;
-> -                               };
-> -                       };
-> -               };
-> -               mdio: mdio@224000 {
-> -                       status = "okay";
-> -                       pinctrl-names = "default";
-> -                       pinctrl-0 = <&mdio_pins>;
-> -                       bus_freq = <2200000>;
-> -               };
-> -               eth0: ethernet@220000 {
-> -                       status = "okay";
-> -                       pinctrl-names = "default";
-> -                       pinctrl-0 = <&mii_pins>;
-> -               };
-> -               gpio: gpio@226000 {
-> -                       status = "okay";
-> -               };
-> -       };
->         vbat: fixedregulator0 {
->                 compatible = "regulator-fixed";
->                 regulator-name = "vbat";
-> @@ -200,6 +63,153 @@
->         };
->  };
->
-> +&pmx_core {
-> +       status = "okay";
-> +
-> +       mcasp0_pins: pinmux_mcasp0_pins {
-> +               pinctrl-single,bits = <
-> +                       /*
-> +                        * AHCLKX, ACLKX, AFSX, AHCLKR, ACLKR,
-> +                        * AFSR, AMUTE
-> +                        */
-> +                       0x00 0x11111111 0xffffffff
-> +                       /* AXR11, AXR12 */
-> +                       0x04 0x00011000 0x000ff000
-> +               >;
-> +       };
-> +       nand_pins: nand_pins {
-> +               pinctrl-single,bits = <
-> +                       /* EMA_WAIT[0], EMA_OE, EMA_WE, EMA_CS[4], EMA_CS[3] */
-> +                       0x1c 0x10110110  0xf0ff0ff0
-> +                       /*
-> +                        * EMA_D[0], EMA_D[1], EMA_D[2],
-> +                        * EMA_D[3], EMA_D[4], EMA_D[5],
-> +                        * EMA_D[6], EMA_D[7]
-> +                        */
-> +                       0x24 0x11111111  0xffffffff
-> +                       /* EMA_A[1], EMA_A[2] */
-> +                       0x30 0x01100000  0x0ff00000
-> +               >;
-> +       };
-> +};
-> +
-> +&serial0 {
-> +       status = "okay";
-> +};
-> +
-> +&serial1 {
-> +       status = "okay";
-> +};
-> +
-> +&serial2 {
-> +       status = "okay";
-> +};
-> +
-> +&rtc0 {
-> +       status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +       status = "okay";
-> +       clock-frequency = <100000>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&i2c0_pins>;
-> +
-> +       tps: tps@48 {
-> +               reg = <0x48>;
-> +       };
-> +       tlv320aic3106: tlv320aic3106@18 {
-> +               #sound-dai-cells = <0>;
-> +               compatible = "ti,tlv320aic3106";
-> +               reg = <0x18>;
-> +               status = "okay";
-> +
-> +               /* Regulators */
-> +               IOVDD-supply = <&vdcdc2_reg>;
-> +               /* Derived from VBAT: Baseboard 3.3V / 1.8V */
-> +               AVDD-supply = <&vbat>;
-> +               DRVDD-supply = <&vbat>;
-> +               DVDD-supply = <&vbat>;
-> +       };
-> +       tca6416: gpio@20 {
-> +               compatible = "ti,tca6416";
-> +               reg = <0x20>;
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +       };
-> +};
-> +
-> +&wdt {
-> +       status = "okay";
-> +};
-> +
-> +&mmc0 {
-> +       max-frequency = <50000000>;
-> +       bus-width = <4>;
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&mmc0_pins>;
-> +};
-> +
-> +&spi1 {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&spi1_pins &spi1_cs0_pin>;
-> +       flash: m25p80@0 {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               compatible = "m25p64";
-> +               spi-max-frequency = <30000000>;
-> +               m25p,fast-read;
-> +               reg = <0>;
-> +               partition@0 {
-> +                       label = "U-Boot-SPL";
-> +                       reg = <0x00000000 0x00010000>;
-> +                       read-only;
-> +               };
-> +               partition@1 {
-> +                       label = "U-Boot";
-> +                       reg = <0x00010000 0x00080000>;
-> +                       read-only;
-> +               };
-> +               partition@2 {
-> +                       label = "U-Boot-Env";
-> +                       reg = <0x00090000 0x00010000>;
-> +                       read-only;
-> +               };
-> +               partition@3 {
-> +                       label = "Kernel";
-> +                       reg = <0x000a0000 0x00280000>;
-> +               };
-> +               partition@4 {
-> +                       label = "Filesystem";
-> +                       reg = <0x00320000 0x00400000>;
-> +               };
-> +               partition@5 {
-> +                       label = "MAC-Address";
-> +                       reg = <0x007f0000 0x00010000>;
-> +                       read-only;
-> +               };
-> +       };
-> +};
-> +
-> +&mdio {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&mdio_pins>;
-> +       bus_freq = <2200000>;
-> +};
-> +
-> +&eth0 {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&mii_pins>;
-> +};
-> +
-> +&gpio {
-> +       status = "okay";
-> +};
-> +
->  /include/ "tps6507x.dtsi"
->
->  &tps {
+>If that is the case, should not we leverage the kernel's device=20
+>driver model and expect the JTAG framework to create specific devices=20
+>for the different pieces of HW discovered on the scan chain? That=20
+>would also
+>presumably allow the core JTAG framework to retain the necessary=20
+>state
+>changes in order to address one particular device within the scan chain.
+
+For the device programming use case, the flashing image will contain
+jtag chain topology. If for example, jtag domain contains x devices, but
+image contains less, the only relevant devices will be flashed and there is
+no need to distinct between them.
+In case there are several domains, jtag interface is  configured to be
+connected to the relevant one.
+
+For the CPU debug use case, jtag interface is configured to be connected
+to CPU only.
+
+System should be able to provide jtag selection according to the needs
+and this kind of operations should be out of the JTAG driver scope.
+
+
+>> This patch purpose is to add JTAG master core infrastructure by=20
+>> defining new JTAG class and provide generic JTAG interface to allow=20
+>> hardware specific drivers to connect this interface.
+>> This will enable all JTAG drivers to use the common interface part=20
+>> and will have separate for hardware implementation.
+
+>Let's consider I want to get rid of OpenOCD, or rather, move its=20
+>driver interface within the kernel and replace it on the OpenOCD side=20
+>with a generic character device interface. I could presumably=20
+>amortize the costly operations which are currently I/O and/or system=20
+>call limiting when running in user-space, what would it look like=20
+>with your proposed framework, have you given some thoughts about that?
+
+
+The JTAG driver using SDR/SIR transactions to send/receive data.
+It can send/receive multiple data bits by a single transaction.
+
+For the bit-banging style drivers it gives you an advantage of sending
+Bits stream by one system call vs per-bit system call.
+So, instead of updating GPIO pins a few time through user space interface
+(sysfs) for sending single bit, an application can send multiple bits in a
+stream by one call. And all GPIO operations will be performed than in a
+kernel space.
+It'll be necessary to have bit-banging driver, using the JTAG infrastructur=
+e,
+which should be configured according to the particular system during
+initialization. And we are planning to develop such kind of driver.
+It definitely reduces system calls and saves time for JTAG operations.
+
+For the system equipped with the JTAG master there the same advantages
+plus hardware acceleration for pin access (all pins can be accessed by
+one shot).
+
+Driver supports universal transactions (include/uapi/linux/jtag.h),
+which are sent through  IOCTL interface JTAG_IOCRUNTEST, JTAG_IOCXFER
+struct struct jtag_xfer {
+              __u8      type;
+              __u8      direction;
+              __u8      endstate;
+              __u8      padding;
+              __u32    length;
+               __u64    tdio;
+};
+
+jtag_run_test_idle {
+              __u8      reset;
+              __u8      endstate;
+              __u8      tck;
+};
+
+You can see usage example on https://github.com/mellanoxbmc/mellanox-bmc-to=
+ols/tree/master/mlnx_cpldprog
+
+Best Regards,
+Oleksandr Shamray
+
+> -----Original Message-----
+> From: Florian Fainelli [mailto:f.fainelli@gmail.com]
+> Sent: 31 =D1=CE=D7=C1=D2=D1 2018 =C7. 5:03
+> To: Oleksandr Shamray <oleksandrs@mellanox.com>;
+> gregkh@linuxfoundation.org; arnd@arndb.de
+> Cc: linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org; openbmc@lists.ozlabs.org; joel@jms.id.au;
+> jiri@resnulli.us; tklauser@distanz.ch; linux-serial@vger.kernel.org; Vadi=
+m
+> Pasternak <vadimp@mellanox.com>; system-sw-low-level <system-sw-low-
+> level@mellanox.com>; robh+dt@kernel.org; openocd-devel-
+> owner@lists.sourceforge.net; linux-api@vger.kernel.org;
+> davem@davemloft.net; mchehab@kernel.org
+> Subject: Re: [patch v18 0/4] JTAG driver introduction
+>=20
+> On 01/29/2018 06:31 AM, Oleksandr Shamray wrote:
+> > When a need raise up to use JTAG interface for system's devices
+> > programming or CPU debugging, usually the user layer application
+> > implements jtag protocol by bit-bang or using a proprietary connection
+> > to vendor hardware.
+> > This method can be slow and not generic.
+> >
+> > We propose to implement general JTAG interface and infrastructure to
+> > communicate with user layer application. In such way, we can have the
+> > standard JTAG interface core part and separation from specific HW
+> > implementation.
+> > This allow new capability to debug the CPU or program system's device
+> > via BMC without additional devices nor cost.
+>=20
+> Oleksandr, you have completed dodged my questions here:
+>=20
+> https://lkml.org/lkml/2017/12/25/163
+>=20
+> can you try to respond to some of these questions please?
+> --
+> Florian
