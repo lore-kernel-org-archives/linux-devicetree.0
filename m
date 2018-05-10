@@ -1,84 +1,50 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] ARM: dts: vexpress: Replace '_' with '-' in node names
-Date: Thu, 10 May 2018 11:51:14 +0100
-Message-ID: <f28fb5d6-1070-8cbb-e815-4baf7128b19e@arm.com>
-References: <1525884482-19855-1-git-send-email-sudeep.holla@arm.com>
- <CAL_Jsq+VNuvbxgFTFVouJF-_yMS90u0fd8jaXnYtKwogOP5rww@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH V1 1/5] qcom: wled: Rename pm8941-wled.c to qcom-wled.c
+Date: Thu, 10 May 2018 13:10:16 +0200
+Message-ID: <20180510111015.GB6977@amd>
+References: <1525341432-15818-1-git-send-email-kgunda@codeaurora.org>
+ <1525341432-15818-2-git-send-email-kgunda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq+VNuvbxgFTFVouJF-_yMS90u0fd8jaXnYtKwogOP5rww@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, linux-arm-kernel@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1525341432-15818-2-git-send-email-kgunda@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kiran Gunda <kgunda@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--ftEhullJWpWg/VHq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 09/05/18 22:14, Rob Herring wrote:
-> On Wed, May 9, 2018 at 11:48 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> The latest DTC throws warnings for character '_' in the node names.
->>
->> Warning (node_name_chars_strict): /sysreg@10000/sys_led: Character '_' not recommended in node name
->> Warning (node_name_chars_strict): /sysreg@10000/sys_mci: Character '_' not recommended in node name
->> Warning (node_name_chars_strict): /sysreg@10000/sys_flash: Character '_' not recommended in node name
->>
->> The general recommendation is to use character '-' for all the node names.
->> This patch fixes the warnings following the recommendation.
->>
->> Cc: Liviu Dudau <liviu.dudau@arm.com>
->> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->> ---
->>  arch/arm/boot/dts/vexpress-v2m-rs1.dtsi | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
->> index 7b8ff5b3b912..58e73131ecef 100644
->> --- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
->> +++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
->> @@ -77,19 +77,19 @@
->>                                         compatible = "arm,vexpress-sysreg";
->>                                         reg = <0x010000 0x1000>;
->>
->> -                                       v2m_led_gpios: sys_led {
->> +                                       v2m_led_gpios: sys-led {
-> 
-> Except this is a gpio-controller so it should have 'gpio' for its node
-> name. (I have a dtc check written for that, but there are too many
-> false positives.)
-> 
+On Thu 2018-05-03 15:27:08, Kiran Gunda wrote:
+> pm8941-wled.c driver is supporting the WLED peripheral
+> on pm8941. Rename it to qcom-wled.c so that it can support
+> WLED on multiple PMICs.
+>=20
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
 
-True, sorry I didn't look at it in detail.
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
-> But then you have 3 of them and no addressing, so you need to add reg
-> property (with the register's offset and size) and unit-address.
-> 
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Indeed. I had a look at the history but couldn't gather much. All I
-could get is that this is one of those weird mix of all functionality on
-ARM Ltd platforms which fits no subsystem. Me and Lorenzo has similar
-issue on TC2 platform. Pawel seem to have plumed this system control
-registers block into MFD and GPIO long back.
+--ftEhullJWpWg/VHq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> I'm surprised Linus W accepted these a GPIO when they are not really
-> general purpose, but then lots of things slip in.
-> 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-I assume all these happened in early days of DT.
+iEYEARECAAYFAlr0KJcACgkQMOfwapXb+vIBCACfdU/BG35pa+jbxl1zQluwZJYV
+gl0AnA5DIMfp+UoE3Dv076pGtMJ/sJIv
+=LDbK
+-----END PGP SIGNATURE-----
 
-I will drop this for now. I will take a look if these nodes can be made
-better to align with standard gpio controller nodes.
-
--- 
-Regards,
-Sudeep
+--ftEhullJWpWg/VHq--
