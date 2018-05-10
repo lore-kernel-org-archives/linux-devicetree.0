@@ -1,89 +1,236 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH V3] ARM: dts: da850-evm: use phandles to extend nodes
-Date: Thu, 10 May 2018 10:39:01 -0500
-Message-ID: <CAHCN7xJnufoz10QTxKR4je=SW97PhLJYjhOWpDp-qg6JBf9QKA@mail.gmail.com>
-References: <20180507123721.9264-1-aford173@gmail.com> <ae8292b2-b167-7a96-70be-1cfea6059874@ti.com>
- <CAHCN7xKXJnh5MSudY3FU_9Xw98PwDi3yaWTUdfjFDaE24NBrzw@mail.gmail.com> <7692ca00-3c9d-6e3e-12b6-f65d82f6fa95@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Oleksandr Shamray <oleksandrs@mellanox.com>
+Subject: [patch v19 4/4] Documentation: jtag: Add ABI documentation
+Date: Thu, 10 May 2018 18:44:24 +0300
+Message-ID: <1525967064-10760-5-git-send-email-oleksandrs@mellanox.com>
+References: <1525967064-10760-1-git-send-email-oleksandrs@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7692ca00-3c9d-6e3e-12b6-f65d82f6fa95@ti.com>
+In-Reply-To: <1525967064-10760-1-git-send-email-oleksandrs@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Adam Ford <adam.ford@logicpd.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: gregkh@linuxfoundation.org, arnd@arndb.de
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, joel@jms.id.au, jiri@resnulli.us, tklauser@distanz.ch, linux-serial@vger.kernel.org, vadimp@mellanox.com, system-sw-low-level@mellanox.com, robh+dt@kernel.org, openocd-devel-owner@lists.sourceforge.net, linux-api@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, Oleksandr Shamray <oleksandrs@mellanox.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 10, 2018 at 10:19 AM, Sekhar Nori <nsekhar@ti.com> wrote:
-> On Thursday 10 May 2018 08:38 PM, Adam Ford wrote:
->> On Thu, May 10, 2018 at 4:10 AM, Sekhar Nori <nsekhar@ti.com> wrote:
->>> On Monday 07 May 2018 06:07 PM, Adam Ford wrote:
->>>> Many node labels in the device tree (like serial0, serial1, etc) are being
->>>> redefined, so let's modernize the device tree by using phandles to
->>>> extend the existing nodes.  This helps reduce the whitespace.
->>>>
->>>> Signed-off-by: Adam Ford <aford173@gmail.com>
->>>
->>> I applied this without the pmic changes. I am not convinced about those.
->>> The tps node is already being referred to as phandle. I am not sure
->>> referring to each individual regulator using phandle is needed. Other
->>> files like am335x-evm.dts don't do it as well.
->>
->> I tested the regulator values and names after booting to see if the
->> names and values matched the expected values. They did, so I am
->> fairly confident it would have worked.
->
-> Not doubting that. But I am not sure if thats the "norm". Do you see any
-> other device-tree file doing this?
+Added document that describe the ABI for JTAG class drivrer
 
-The omap3 boards do this.  For example, the beagle-xm board includes
-the twl4030 files
+Signed-off-by: Oleksandr Shamray <oleksandrs@mellanox.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+---
+v18-v19
+Pavel Machek <pavel@ucw.cz>
+- Added JTAG doccumentation to Documentation/jtag
 
-#include "twl4030.dtsi"
-#include "twl4030_omap3.dtsi"
+v17->v18
+v16->v17
+v15->v16
+v14->v15
+v13->v14
+v12->v13
+v11->v12
+Tobias Klauser <tklauser@distanz.ch>
+- rename /Documentation/ABI/testing/jatg-dev -> jtag-dev
+- Typo: s/interfase/interface
+v10->v11
+v9->v10
+Fixes added by Oleksandr:
+- change jtag-cdev to jtag-dev in documentation
+- update Kernel Version and Date in jtag-dev documentation;
+v8->v9
+v7->v8
+v6->v7
+Comments pointed by Pavel Machek <pavel@ucw.cz>
+- Added jtag-cdev documentation to Documentation/ABI/testing folder
+---
+ Documentation/ABI/testing/jtag-dev |   27 +++++++++
+ Documentation/jtag/overview        |   31 ++++++++++
+ Documentation/jtag/transactions    |  108 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 166 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/ABI/testing/jtag-dev
+ create mode 100644 Documentation/jtag/overview
+ create mode 100644 Documentation/jtag/transactions
 
-These files setup the PMIC regulators, but the beagle-xm modifies the
-PMIC settings phandles.
-
-&vaux2 {
-regulator-name = "usb_1v8";
-regulator-min-microvolt = <1800000>;
-regulator-max-microvolt = <1800000>;
-regulator-always-on;
-};
-
-I was trying to mimic this behavior when I did it for the da850-evm,
-however, it seems like a moot point we merge the
- tp6507x.dtsi contents into the da850-evm.dts.
-
->
->>
->>>
->>> Another thing is whether we really need the tp6507x.dtsi file. It does
->>> not seem to contain much and also da850-evm.dts is the only file
->>> including it. So it seems pretty pointless to me.
->>
->> Do you want me to do a patch that removes the  tp6507x.dtsi file and
->> just sets up the
->> PMIC from scratch within the da850-evm file?
->
-> I am fine with the plan, but not something urgent, IMO.
-
-I'm going to try and revisit the LCD again first, but I'll try to do
-them both this weekend if I can get some time.
-
->
->>
->>>
->>> Here is what I committed.
->>
->> Thank you.  I think looks cleaner this way, and more consistent with
->> many of the other platforms and boards.
->
-> Yes.
->
-> Thanks,
-> Sekhar
-
-Thank you,
-
-adam
+diff --git a/Documentation/ABI/testing/jtag-dev b/Documentation/ABI/testing/jtag-dev
+new file mode 100644
+index 0000000..4325316
+--- /dev/null
++++ b/Documentation/ABI/testing/jtag-dev
+@@ -0,0 +1,27 @@
++What:		/dev/jtag[0-9]+
++Date:		May 2018
++KernelVersion:	4.18
++Contact:	oleksandrs@mellanox.com
++Description:
++		The misc device files /dev/jtag* are the interface
++		between JTAG master interface and userspace.
++
++		The ioctl(2)-based ABI is defined and documented in
++		[include/uapi]<linux/jtag.h>.
++
++		The following file operations are supported:
++
++		open(2)
++		The argument flag currently support only one access
++		mode O_RDWR.
++
++		ioctl(2)
++		Initiate various actions.
++		See the inline documentation in [include/uapi]<linux/jtag.h>
++		for descriptions of all ioctls.
++
++		close(2)
++		Stops and free up the I/O contexts that was associated
++		with the file descriptor.
++
++Users:		TBD
+diff --git a/Documentation/jtag/overview b/Documentation/jtag/overview
+new file mode 100644
+index 0000000..e35afc0
+--- /dev/null
++++ b/Documentation/jtag/overview
+@@ -0,0 +1,31 @@
++Linux kernel JTAG support
++=========================
++
++The JTAG (Joint Test Action Group) is an industry standard for hardware
++verifying designs and testing printed circuit boards after manufacture.
++JTAG provides access to many logic signals of a complex integrated circuit,
++including the device pins
++
++JTAG provides access to many logic signals of a complex integrated circuit,
++including the device pins.
++
++A JTAG interface is a special interface added to a chip.
++Depending on the version of JTAG, two, four, or five pins are added.
++
++The connector pins are:
++	TDI (Test Data In)
++	TDO (Test Data Out)
++	TCK (Test Clock)
++	TMS (Test Mode Select)
++	TRST (Test Reset) optional.
++
++JTAG interface is supposed to have two parts - basic core driver and
++hardware specific driver.
++The basic driver introduces general interface which is not dependent of specific
++hardware. It  provides communication between user space and hardware specific
++driver.
++Each JTAG device is represented as char device from (jtag0, jtag1, ...).
++Access to JTAG device is performed through IOCTL call.
++
++Call flow example:
++User (IOCTL) -> /dev/jtagX -> JTAG core driver -> JTAG hw specific driver
+diff --git a/Documentation/jtag/transactions b/Documentation/jtag/transactions
+new file mode 100644
+index 0000000..91f7f92
+--- /dev/null
++++ b/Documentation/jtag/transactions
+@@ -0,0 +1,108 @@
++The JTAG API
++=============
++
++JTAG master devices can be accessed through a character misc-device.
++Each JTAG master interface can be accessed by using /dev/jtagN
++
++JTAG system calls set:
++- SIR (Scan Instruction Register, IEEE 1149.1 Data Register scan);
++- SDR (Scan Data Register, IEEE 1149.1 Instruction Register scan);
++- RUNTEST (Forces the IEEE 1149.1 bus to a run state for a specified
++number of clocks.
++
++open(), close()
++-------
++open() opens JTAG device. Only one open operation per JTAG device
++can be performed. Twice and more open for one device will return error
++
++Open/Close  device:
++- open('/dev/jtag0', O_RDWR);
++- close(jtag_fd');
++
++ioctl()
++-------
++All access operations to JTAG device performed trougth ioctl interface.
++It support another requests:
++	JTAG_IOCRUNTEST - Force JTAG state machine to RUN_TEST/IDLE state
++	JTAG_SIOCFREQ - Set JTAG TCK frequency
++	JTAG_GIOCFREQ - GET JTAG TCK frequency
++	JTAG_IOCXFER - send JTAG data Xfer
++	JTAG_GIOCSTATUS - get current JTAG TAP status
++	JTAG_SIOCMODE - set JTAG mode flags.
++
++JTAG_SIOCFREQ, JTAG_GIOCFREQ
++------
++Set/Get JTAG clock speed:
++
++	ioctl(jtag_fd, JTAG_SIOCFREQ, &frq);
++	ioctl(jtag_fd, JTAG_GIOCFREQ, &frq);
++
++JTAG_IOCRUNTEST
++------
++Force JTAG state machine to RUN_TEST/IDLE state
++
++struct jtag_run_test_idle {
++	__u8	reset;
++	__u8	endstate;
++	__u8	tck;
++};
++
++reset: 0 - run IDLE/PAUSE from current state
++	   1 - go through TEST_LOGIC/RESET state before  IDLE/PAUSE
++end: completion flag
++tck: clock counter
++
++Example:
++	struct jtag_run_test_idle runtest;
++
++	runtest.endstate = JTAG_STATE_IDLE;
++	runtest.reset = 0;
++	runtest.tck = data_p->tck;
++	usleep(25 * 1000);
++	ioctl(jtag_fd, JTAG_IOCRUNTEST, &runtest);
++
++JTAG_IOCXFER
++------
++Send SDR/SIR transaction
++
++struct jtag_xfer {
++	__u8	type;
++	__u8	direction;
++	__u8	endstate;
++	__u8	padding;
++	__u32	length;
++	__u64	tdio;
++};
++
++type: transfer type - JTAG_SIR_XFER/JTAG_SDR_XFER
++direction: xfer direction - JTAG_SIR_XFER/JTAG_SDR_XFER,
++length: xfer data len in bits
++tdio : xfer data array
++endir: xfer end state after transaction finish
++	   can be: JTAG_STATE_IDLE/JTAG_STATE_PAUSEIR/JTAG_STATE_PAUSEDR
++
++Example:
++	struct jtag_xfer xfer;
++	static char buf[64];
++	static unsigned int buf_len = 0;
++	[...]
++	xfer.type = JTAG_SDR_XFER;
++	xfer.tdio = (__u64)buf;
++	xfer.length = buf_len;
++	xfer.endstate = JTAG_STATE_IDLE;
++
++	if (is_read)
++		xfer.direction = JTAG_READ_XFER;
++	else
++		xfer.direction = JTAG_WRITE_XFER;
++
++	ioctl(jtag_fd, JTAG_IOCXFER, &xfer);
++
++JTAG_SIOCMODE
++------
++If hw driver can support different running modes you can change it.
++
++Example:
++	int mode;
++	mode = JTAG_XFER_HW_MODE;
++	ioctl(jtag_fd, JTAG_SIOCMODE, &mode);
+-- 
+1.7.1
