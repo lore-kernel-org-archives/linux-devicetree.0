@@ -1,302 +1,129 @@
-Return-Path: <SRS0=X3x8=H4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr0-f196.google.com ([209.85.128.196]:38637 "EHLO
-        mail-wr0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S965408AbeEIXuz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 9 May 2018 19:50:55 -0400
-Received: by mail-wr0-f196.google.com with SMTP id 94-v6so231674wrf.5
-        for <devicetree@vger.kernel.org>; Wed, 09 May 2018 16:50:54 -0700 (PDT)
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 4/4] ARM: dts: meson8m2: add support for the Tronsmart MXIII Plus
-Date: Thu, 10 May 2018 01:50:37 +0200
-Message-Id: <20180509235037.5876-5-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20180509235037.5876-1-martin.blumenstingl@googlemail.com>
-References: <20180509235037.5876-1-martin.blumenstingl@googlemail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
-Cc: devicetree@vger.kernel.org, balbes-150@yandex.ru, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Return-Path: <SRS0=IKTP=H5=mediatek.com=argus.lin@kernel.org>
+From: <argus.lin@mediatek.com>
+Subject: [PATCH V5 4/4] soc: mediatek: pwrap: add mt6351 driver for mt6797 SoCs
+Date: Thu, 10 May 2018 21:01:59 +0800
+Message-ID: <1525957319-20557-5-git-send-email-argus.lin@mediatek.com>
+In-Reply-To: <1525957319-20557-1-git-send-email-argus.lin@mediatek.com>
+References: <1525957319-20557-1-git-send-email-argus.lin@mediatek.com>
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_009_362893062.464246952"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Oleg Ivanov <balbes-150@yandex.ru>
+--__=_Part_Boundary_009_362893062.464246952
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_001_1602877470.665710589"
 
-The Tronsmart MXIII Plus is an Android TV box which uses the Amlogic
-S812 (Meson8m2) SoC. It uses a Realtek RTL8211F RGMII Ethernet PHY as
-well as a Ricoh RN5T618 system power controller. It also comes with an
-Ampak AP6330 SDIO wifi/Bluetooth combo chip (support for wifi and
-Bluetooth is currently not added because the Linux drivers currently
-only support one MMC controller and that is used for the SD card).
+--__=_Part_Boundary_001_1602877470.665710589
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-Signed-off-by: Oleg Ivanov <balbes-150@yandex.ru>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm/boot/dts/Makefile                |   3 +-
- arch/arm/boot/dts/meson8m2-mxiii-plus.dts | 244 ++++++++++++++++++++++
- 2 files changed, 246 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
+TVQ2MzUxIGlzIGEgbmV3IHBvd2VyIG1hbmFnZW1lbnQgSUMgYW5kIGl0IGlzIHVzZWQgZm9yIG10
+Njc5NyBTb0NzLiBXZQ0KbmVlZCB0byBhZGQgbXQ2MzUxX3JlZ3MgZm9yIHBtaWMgcmVnaXN0ZXIg
+bWFwcGluZyBhbmQgcG1pY19tdDYzNTEgZm9yDQphY2Nlc3NpbmcgcmVnaXN0ZXIuDQoNCi0tLQ0K
+IGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYyB8IDI5ICsrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKykNCg0KZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYyBiL2RyaXZlcnMv
+c29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYw0KaW5kZXggZDAzZTJkNC4uNGNmOTQ5NiAxMDA2
+NDQNCi0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYw0KKysrIGIvZHJp
+dmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQpAQCAtMTQ2LDYgKzE0NiwyMSBAQCBl
+bnVtIGRld19yZWdzIHsNCiAJW1BXUkFQX0RFV19DSVBIRVJfU1dSU1RdID0JMHhiYzI0LA0KIH07
+DQogDQorc3RhdGljIGNvbnN0IHUzMiBtdDYzNTFfcmVnc1tdID0gew0KKwlbUFdSQVBfREVXX0RJ
+T19FTl0gPQkJMHgwMkYyLA0KKwlbUFdSQVBfREVXX1JFQURfVEVTVF0gPQkJMHgwMkY0LA0KKwlb
+UFdSQVBfREVXX1dSSVRFX1RFU1RdID0JMHgwMkY2LA0KKwlbUFdSQVBfREVXX0NSQ19FTl0gPQkJ
+MHgwMkZBLA0KKwlbUFdSQVBfREVXX0NSQ19WQUxdID0JCTB4MDJGQywNCisJW1BXUkFQX0RFV19D
+SVBIRVJfS0VZX1NFTF0gPQkweDAzMDAsDQorCVtQV1JBUF9ERVdfQ0lQSEVSX0lWX1NFTF0gPQkw
+eDAzMDIsDQorCVtQV1JBUF9ERVdfQ0lQSEVSX0VOXSA9CQkweDAzMDQsDQorCVtQV1JBUF9ERVdf
+Q0lQSEVSX1JEWV0gPQkweDAzMDYsDQorCVtQV1JBUF9ERVdfQ0lQSEVSX01PREVdID0JMHgwMzA4
+LA0KKwlbUFdSQVBfREVXX0NJUEhFUl9TV1JTVF0gPQkweDAzMEEsDQorCVtQV1JBUF9ERVdfUkRE
+TVlfTk9dID0JCTB4MDMwQywNCit9Ow0KKw0KIGVudW0gcHdyYXBfcmVncyB7DQogCVBXUkFQX01V
+WF9TRUwsDQogCVBXUkFQX1dSQVBfRU4sDQpAQCAtNjY4LDYgKzY4Myw3IEBAIGVudW0gcHdyYXBf
+cmVncyB7DQogDQogZW51bSBwbWljX3R5cGUgew0KIAlQTUlDX01UNjMyMywNCisJUE1JQ19NVDYz
+NTEsDQogCVBNSUNfTVQ2MzgwLA0KIAlQTUlDX01UNjM5NywNCiB9Ow0KQEAgLTExMjQsNiArMTE0
+MCw3IEBAIHN0YXRpYyBpbnQgcHdyYXBfaW5pdF9jaXBoZXIoc3RydWN0IHBtaWNfd3JhcHBlciAq
+d3JwKQ0KIAkJCSAgICAweDEpOw0KIAkJYnJlYWs7DQogCWNhc2UgUE1JQ19NVDYzMjM6DQorCWNh
+c2UgUE1JQ19NVDYzNTE6DQogCQlwd3JhcF93cml0ZSh3cnAsIHdycC0mZ3Q7c2xhdmUtJmd0O2Rl
+d19yZWdzW1BXUkFQX0RFV19DSVBIRVJfRU5dLA0KIAkJCSAgICAweDEpOw0KIAkJYnJlYWs7DQpA
+QCAtMTQwMCw2ICsxNDE3LDE1IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBwd3JhcF9pbnRlcnJ1cHQo
+aW50IGlycW5vLCB2b2lkICpkZXZfaWQpDQogCS5wd3JhcF93cml0ZSA9IHB3cmFwX3dyaXRlMTYs
+DQogfTsNCiANCitzdGF0aWMgY29uc3Qgc3RydWN0IHB3cmFwX3Nsdl90eXBlIHBtaWNfbXQ2MzUx
+ID0gew0KKwkuZGV3X3JlZ3MgPSBtdDYzNTFfcmVncywNCisJLnR5cGUgPSBQTUlDX01UNjM1MSwN
+CisJLnJlZ21hcCA9ICZhbXA7cHdyYXBfcmVnbWFwX2NvbmZpZzE2LA0KKwkuY2FwcyA9IDAsDQor
+CS5wd3JhcF9yZWFkID0gcHdyYXBfcmVhZDE2LA0KKwkucHdyYXBfd3JpdGUgPSBwd3JhcF93cml0
+ZTE2LA0KK307DQorDQogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgb2Zfc2xhdmVf
+bWF0Y2hfdGJsW10gPSB7DQogCXsNCiAJCS5jb21wYXRpYmxlID0gJnF1b3Q7bWVkaWF0ZWssbXQ2
+MzIzJnF1b3Q7LA0KQEAgLTE0MTQsNiArMTQ0MCw5IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBwd3Jh
+cF9pbnRlcnJ1cHQoaW50IGlycW5vLCB2b2lkICpkZXZfaWQpDQogCQkuY29tcGF0aWJsZSA9ICZx
+dW90O21lZGlhdGVrLG10NjM5NyZxdW90OywNCiAJCS5kYXRhID0gJmFtcDtwbWljX210NjM5NywN
+CiAJfSwgew0KKwkJLmNvbXBhdGlibGUgPSAmcXVvdDttZWRpYXRlayxtdDYzNTEmcXVvdDssDQor
+CQkuZGF0YSA9ICZhbXA7cG1pY19tdDYzNTEsDQorCX0sIHsNCiAJCS8qIHNlbnRpbmVsICovDQog
+CX0NCiB9Ow0KLS0gDQoxLjguMS4xLmRpcnR5DQoNCjwvcHJlPjwhLS10eXBlOnRleHQtLT48IS0t
+ey0tPjxwcmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxpdHkgTm90aWNlDQogKioq
+KioqKioqKioqKioqKioqKioNClRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaW4gdGhpcyBlLW1h
+aWwgbWVzc2FnZSAoaW5jbHVkaW5nIGFueSANCmF0dGFjaG1lbnRzKSBtYXkgYmUgY29uZmlkZW50
+aWFsLCBwcm9wcmlldGFyeSwgcHJpdmlsZWdlZCwgb3Igb3RoZXJ3aXNlDQpleGVtcHQgZnJvbSBk
+aXNjbG9zdXJlIHVuZGVyIGFwcGxpY2FibGUgbGF3cy4gSXQgaXMgaW50ZW5kZWQgdG8gYmUgDQpj
+b252ZXllZCBvbmx5IHRvIHRoZSBkZXNpZ25hdGVkIHJlY2lwaWVudChzKS4gQW55IHVzZSwgZGlz
+c2VtaW5hdGlvbiwgDQpkaXN0cmlidXRpb24sIHByaW50aW5nLCByZXRhaW5pbmcgb3IgY29weWlu
+ZyBvZiB0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGl0cyANCmF0dGFjaG1lbnRzKSBieSB1bmludGVu
+ZGVkIHJlY2lwaWVudChzKSBpcyBzdHJpY3RseSBwcm9oaWJpdGVkIGFuZCBtYXkgDQpiZSB1bmxh
+d2Z1bC4gSWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQgcmVjaXBpZW50IG9mIHRoaXMgZS1tYWls
+LCBvciBiZWxpZXZlDQogDQp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWlsIGluIGVy
+cm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQppbW1lZGlhdGVseSAoYnkgcmVwbHlpbmcg
+dG8gdGhpcyBlLW1haWwpLCBkZWxldGUgYW55IGFuZCBhbGwgY29waWVzIG9mIA0KdGhpcyBlLW1h
+aWwgKGluY2x1ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBzeXN0ZW0sIGFuZCBkbyBu
+b3QNCmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBvdGhlciBwZXJz
+b24uIFRoYW5rDQogeW91ITwvcHJlPjwhLS19LS0+
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7e2424957809..4300e86049ee 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -312,7 +312,8 @@ dtb-$(CONFIG_ARCH_NPCM7XX) += \
- dtb-$(CONFIG_MACH_MESON6) += \
- 	meson6-atv1200.dtb
- dtb-$(CONFIG_MACH_MESON8) += \
--	meson8-minix-neo-x8.dtb
-+	meson8-minix-neo-x8.dtb \
-+	meson8m2-mxiii-plus.dtb
- dtb-$(CONFIG_ARCH_MMP) += \
- 	pxa168-aspenite.dtb \
- 	pxa910-dkb.dtb \
-diff --git a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
-new file mode 100644
-index 000000000000..f5853610b20b
---- /dev/null
-+++ b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
-@@ -0,0 +1,244 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2018 Oleg Ivanov <balbes-150@yandex.ru>
-+ * Copyright (c) 2018 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson8m2.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "Tronsmart MXIII Plus";
-+	compatible = "tronsmart,mxiii-plus", "amlogic,meson8m2";
-+
-+	aliases {
-+		ethernet0 = &ethmac;
-+		i2c0 = &i2c_AO;
-+		serial0 = &uart_AO;
-+		serial1 = &uart_A;
-+		mmc0 = &sd_card_slot;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		reg = <0x40000000 0x80000000>;
-+	};
-+
-+	adc-keys {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 0>;
-+		io-channel-names = "buttons";
-+		keyup-threshold-microvolt = <1710000>;
-+
-+		button-function {
-+			label = "Function";
-+			linux,code = <KEY_FN>;
-+			press-threshold-microvolt = <10000>;
-+		};
-+	};
-+
-+	vcc_3v3: regulator-vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&vcck>;
-+};
-+
-+&ethmac {
-+	status = "okay";
-+
-+	pinctrl-0 = <&eth_rgmii_pins>;
-+	pinctrl-names = "default";
-+
-+	phy-handle = <&eth_phy0>;
-+	phy-mode = "rgmii";
-+
-+	amlogic,tx-delay-ns = <4>;
-+
-+	snps,reset-gpio = <&gpio GPIOH_4 0>;
-+	snps,reset-delays-us = <0 10000 1000000>;
-+	snps,reset-active-low;
-+
-+	mdio {
-+		compatible = "snps,dwmac-mdio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		eth_phy0: ethernet-phy@0 {
-+			/* Realtek RTL8211F (0x001cc916) */
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+&ir_receiver {
-+	status = "okay";
-+	pinctrl-0 = <&ir_recv_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&i2c_AO {
-+	status = "okay";
-+	pinctrl-0 = <&i2c_ao_pins>;
-+	pinctrl-names = "default";
-+
-+	pmic@32 {
-+		compatible = "ricoh,rn5t618";
-+		reg = <0x32>;
-+		system-power-controller;
-+
-+		regulators {
-+			vcck: DCDC1 {
-+				regulator-name = "VCCK";
-+				regulator-min-microvolt = <825000>;
-+				regulator-max-microvolt = <1150000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			DCDC2 {
-+				regulator-name = "VDDAO";
-+				regulator-min-microvolt = <950000>;
-+				regulator-max-microvolt = <1150000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			DCDC3 {
-+				regulator-name = "VDD_DDR";
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			LDO1 {
-+				regulator-name = "VDDIO_AO28";
-+				regulator-min-microvolt = <2900000>;
-+				regulator-max-microvolt = <2900000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vddio_ao1v8: LDO2 {
-+				regulator-name = "VDDIO_AO18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			LDO3 {
-+				regulator-name = "VCC1V8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			LDO4 {
-+				regulator-name = "VCC2V8";
-+				regulator-min-microvolt = <2850000>;
-+				regulator-max-microvolt = <2850000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			LDO5 {
-+				regulator-name = "AVDD1V8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			LDORTC1 {
-+				regulator-name = "VDD_LDO";
-+				regulator-min-microvolt = <2700000>;
-+				regulator-max-microvolt = <2700000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			LDORTC2 {
-+				regulator-name = "RTC_0V9";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddio_ao1v8>;
-+};
-+
-+&sdio {
-+	status = "okay";
-+
-+	pinctrl-0 = <&sd_b_pins>;
-+	pinctrl-names = "default";
-+
-+	/* SD card */
-+	sd_card_slot: slot@1 {
-+		compatible = "mmc-slot";
-+		reg = <1>;
-+		status = "okay";
-+
-+		bus-width = <4>;
-+		no-sdio;
-+		cap-mmc-highspeed;
-+		cap-sd-highspeed;
-+		disable-wp;
-+
-+		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-+		cd-inverted;
-+
-+		vmmc-supply = <&vcc_3v3>;
-+	};
-+};
-+
-+/* connected to the Bluetooth module */
-+&uart_A {
-+	status = "okay";
-+	pinctrl-0 = <&uart_a1_pins>, <&uart_a1_cts_rts_pins>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
-+};
-+
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
-+
-+&usb0_phy {
-+	status = "okay";
-+};
-+
-+&usb1_phy {
-+	status = "okay";
-+};
--- 
-2.17.0
+--__=_Part_Boundary_001_1602877470.665710589
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
+RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQpNVDYzNTEgaXMgYSBu
+ZXcgcG93ZXIgbWFuYWdlbWVudCBJQyBhbmQgaXQgaXMgdXNlZCBmb3IgbXQ2Nzk3IFNvQ3MuIFdl
+DQpuZWVkIHRvIGFkZCBtdDYzNTFfcmVncyBmb3IgcG1pYyByZWdpc3RlciBtYXBwaW5nIGFuZCBw
+bWljX210NjM1MSBmb3INCmFjY2Vzc2luZyByZWdpc3Rlci4NCg0KLS0tDQogZHJpdmVycy9zb2Mv
+bWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jIHwgMjkgKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysNCiAxIGZpbGUgY2hhbmdlZCwgMjkgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsv
+bXRrLXBtaWMtd3JhcC5jDQppbmRleCBkMDNlMmQ0Li40Y2Y5NDk2IDEwMDY0NA0KLS0tIGEvZHJp
+dmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQorKysgYi9kcml2ZXJzL3NvYy9tZWRp
+YXRlay9tdGstcG1pYy13cmFwLmMNCkBAIC0xNDYsNiArMTQ2LDIxIEBAIGVudW0gZGV3X3JlZ3Mg
+ew0KIAlbUFdSQVBfREVXX0NJUEhFUl9TV1JTVF0gPQkweGJjMjQsDQogfTsNCiANCitzdGF0aWMg
+Y29uc3QgdTMyIG10NjM1MV9yZWdzW10gPSB7DQorCVtQV1JBUF9ERVdfRElPX0VOXSA9CQkweDAy
+RjIsDQorCVtQV1JBUF9ERVdfUkVBRF9URVNUXSA9CQkweDAyRjQsDQorCVtQV1JBUF9ERVdfV1JJ
+VEVfVEVTVF0gPQkweDAyRjYsDQorCVtQV1JBUF9ERVdfQ1JDX0VOXSA9CQkweDAyRkEsDQorCVtQ
+V1JBUF9ERVdfQ1JDX1ZBTF0gPQkJMHgwMkZDLA0KKwlbUFdSQVBfREVXX0NJUEhFUl9LRVlfU0VM
+XSA9CTB4MDMwMCwNCisJW1BXUkFQX0RFV19DSVBIRVJfSVZfU0VMXSA9CTB4MDMwMiwNCisJW1BX
+UkFQX0RFV19DSVBIRVJfRU5dID0JCTB4MDMwNCwNCisJW1BXUkFQX0RFV19DSVBIRVJfUkRZXSA9
+CTB4MDMwNiwNCisJW1BXUkFQX0RFV19DSVBIRVJfTU9ERV0gPQkweDAzMDgsDQorCVtQV1JBUF9E
+RVdfQ0lQSEVSX1NXUlNUXSA9CTB4MDMwQSwNCisJW1BXUkFQX0RFV19SRERNWV9OT10gPQkJMHgw
+MzBDLA0KK307DQorDQogZW51bSBwd3JhcF9yZWdzIHsNCiAJUFdSQVBfTVVYX1NFTCwNCiAJUFdS
+QVBfV1JBUF9FTiwNCkBAIC02NjgsNiArNjgzLDcgQEAgZW51bSBwd3JhcF9yZWdzIHsNCiANCiBl
+bnVtIHBtaWNfdHlwZSB7DQogCVBNSUNfTVQ2MzIzLA0KKwlQTUlDX01UNjM1MSwNCiAJUE1JQ19N
+VDYzODAsDQogCVBNSUNfTVQ2Mzk3LA0KIH07DQpAQCAtMTEyNCw2ICsxMTQwLDcgQEAgc3RhdGlj
+IGludCBwd3JhcF9pbml0X2NpcGhlcihzdHJ1Y3QgcG1pY193cmFwcGVyICp3cnApDQogCQkJICAg
+IDB4MSk7DQogCQlicmVhazsNCiAJY2FzZSBQTUlDX01UNjMyMzoNCisJY2FzZSBQTUlDX01UNjM1
+MToNCiAJCXB3cmFwX3dyaXRlKHdycCwgd3JwLT5zbGF2ZS0+ZGV3X3JlZ3NbUFdSQVBfREVXX0NJ
+UEhFUl9FTl0sDQogCQkJICAgIDB4MSk7DQogCQlicmVhazsNCkBAIC0xNDAwLDYgKzE0MTcsMTUg
+QEAgc3RhdGljIGlycXJldHVybl90IHB3cmFwX2ludGVycnVwdChpbnQgaXJxbm8sIHZvaWQgKmRl
+dl9pZCkNCiAJLnB3cmFwX3dyaXRlID0gcHdyYXBfd3JpdGUxNiwNCiB9Ow0KIA0KK3N0YXRpYyBj
+b25zdCBzdHJ1Y3QgcHdyYXBfc2x2X3R5cGUgcG1pY19tdDYzNTEgPSB7DQorCS5kZXdfcmVncyA9
+IG10NjM1MV9yZWdzLA0KKwkudHlwZSA9IFBNSUNfTVQ2MzUxLA0KKwkucmVnbWFwID0gJnB3cmFw
+X3JlZ21hcF9jb25maWcxNiwNCisJLmNhcHMgPSAwLA0KKwkucHdyYXBfcmVhZCA9IHB3cmFwX3Jl
+YWQxNiwNCisJLnB3cmFwX3dyaXRlID0gcHdyYXBfd3JpdGUxNiwNCit9Ow0KKw0KIHN0YXRpYyBj
+b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG9mX3NsYXZlX21hdGNoX3RibFtdID0gew0KIAl7DQog
+CQkuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDYzMjMiLA0KQEAgLTE0MTQsNiArMTQ0MCw5IEBA
+IHN0YXRpYyBpcnFyZXR1cm5fdCBwd3JhcF9pbnRlcnJ1cHQoaW50IGlycW5vLCB2b2lkICpkZXZf
+aWQpDQogCQkuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDYzOTciLA0KIAkJLmRhdGEgPSAmcG1p
+Y19tdDYzOTcsDQogCX0sIHsNCisJCS5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10NjM1MSIsDQor
+CQkuZGF0YSA9ICZwbWljX210NjM1MSwNCisJfSwgew0KIAkJLyogc2VudGluZWwgKi8NCiAJfQ0K
+IH07DQotLSANCjEuOC4xLjEuZGlydHkNCg==
+
+--__=_Part_Boundary_001_1602877470.665710589--
+
+--__=_Part_Boundary_009_362893062.464246952--
