@@ -1,43 +1,176 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH] ARM: dts: BCM5301X: Switch D-Link DIR-885L to the new
- partitions syntax
-Date: Thu, 10 May 2018 23:20:00 +0200
-Message-ID: <20180510212000.11110-1-zajec5@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v3 4/4] rtc: ds1307: add freq_test sysfs attribute to
+ check tick on m41txx
+Date: Thu, 10 May 2018 23:46:49 +0200
+Message-ID: <20180510214649.GR10960@piout.net>
+References: <20180509193355.49466-1-giulio.benetti@micronovasrl.com>
+ <20180509193355.49466-4-giulio.benetti@micronovasrl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180509193355.49466-4-giulio.benetti@micronovasrl.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKVGhpcyBuZXcgc3ludGF4
-IGlzIHNsaWdodGx5IGJldHRlciBkZXNpZ25lZCAmIHVzZXMgImNvbXBhdGlibGUiIHN0cmluZy4K
-Rm9yIGRldGFpbHMgc2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFy
-dGl0aW9uLnR4dCAuCgpTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
-a2kucGw+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOTQtZGxpbmstZGlyLTg4NWwuZHRz
-IHwgMTIgKysrKysrKysrLS0tCiAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCAzIGRl
-bGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDk0LWRsaW5r
-LWRpci04ODVsLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDk0LWRsaW5rLWRpci04ODVs
-LmR0cwppbmRleCA0OTRkYmQzOTY1OGMuLmQxNzNiY2Q5M2I5MSAxMDA2NDQKLS0tIGEvYXJjaC9h
-cm0vYm9vdC9kdHMvYmNtNDcwOTQtZGxpbmstZGlyLTg4NWwuZHRzCisrKyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL2JjbTQ3MDk0LWRsaW5rLWRpci04ODVsLmR0cwpAQCAtMjYsOSArMjYsMTUgQEAKIAog
-CW5hbmQ6IG5hbmRAMTgwMjgwMDAgewogCQluYW5kY3NAMCB7Ci0JCQlwYXJ0aXRpb25AMCB7Ci0J
-CQkJbGFiZWwgPSAiZmlybXdhcmUiOwotCQkJCXJlZyA9IDwweDAwMDAwMDAwIDB4MDgwMDAwMDA+
-OworCQkJcGFydGl0aW9ucyB7CisJCQkJY29tcGF0aWJsZSA9ICJmaXhlZC1wYXJ0aXRpb25zIjsK
-KwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCQkjc2l6ZS1jZWxscyA9IDwxPjsKKworCQkJ
-CXBhcnRpdGlvbkAwIHsKKwkJCQkJbGFiZWwgPSAiZmlybXdhcmUiOworCQkJCQlyZWcgPSA8MHgw
-MDAwMDAwMCAweDA4MDAwMDAwPjsKKwkJCQl9OwogCQkJfTsKIAkJfTsKIAl9OwotLSAKMi4xMy42
-CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
-YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
-LWtlcm5lbAo=
+On 09/05/2018 21:33:55+0200, Giulio Benetti wrote:
+> On m41txx you can enable open-drain OUT pin to check if offset is ok.
+> Enabling OUT pin with freq_test attribute, OUT pin will tick 512 times
+> faster than 1s tick base.
+> 
+> Enable or Disable FT bit on CONTROL register if freq_test is 1 or 0.
+> 
+> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> ---
+> V2 => V3: export freq_test on sysfs only if supported(m41txx series)
+> 
+>  drivers/rtc/rtc-ds1307.c | 107 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 107 insertions(+)
+> 
+> diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+> index 33895668b363..79206bf21018 100644
+> --- a/drivers/rtc/rtc-ds1307.c
+> +++ b/drivers/rtc/rtc-ds1307.c
+> @@ -1042,6 +1042,109 @@ static int m41txx_rtc_set_offset(struct device *dev, long offset)
+>  	return regmap_write(ds1307->regmap, M41TXX_REG_CONTROL,	ctrl_reg);
+>  }
+>  
+> +static ssize_t freq_test_store(struct device *dev,
+> +			       struct device_attribute *attr,
+> +			       const char *buf, size_t count)
+> +{
+> +	struct ds1307 *ds1307 = dev_get_drvdata(dev);
+> +	unsigned long freq_test = 0;
+> +	unsigned int ctrl_reg;
+> +	int retval;
+> +
+> +	retval = kstrtoul(buf, 10, &freq_test);
+> +	if ((retval < 0) || (retval > 1)) {
+> +		dev_err(dev, "Failed to store RTC Frequency Test attribute\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	regmap_read(ds1307->regmap, M41TXX_REG_CONTROL, &ctrl_reg);
+> +
+> +	if (freq_test)
+> +		ctrl_reg |= M41TXX_BIT_FT;
+> +	else
+> +		ctrl_reg &= ~M41TXX_BIT_FT;
+> +
+> +	retval = regmap_write(ds1307->regmap, M41TXX_REG_CONTROL, ctrl_reg);
+> +
+
+Pleas use regmap_update_bits
+
+> +	return retval ? retval : count;
+> +}
+> +
+> +static ssize_t freq_test_show(struct device *dev,
+> +				    struct device_attribute *attr, char *buf)
+> +{
+> +	struct ds1307 *ds1307 = dev_get_drvdata(dev);
+> +	int freq_test = 0;
+> +	unsigned int ctrl_reg;
+> +
+> +	regmap_read(ds1307->regmap, M41TXX_REG_CONTROL, &ctrl_reg);
+> +
+> +	if (ctrl_reg & M41TXX_BIT_FT)
+> +		freq_test = true;
+> +	else
+> +		freq_test = false;
+> +
+> +	if ((freq_test < 0) || (freq_test > 1)) {
+
+This will never happen
+
+> +		dev_err(dev, "Failed to read RTC Frequency Test\n");
+> +		sprintf(buf, "0\n");
+> +		return freq_test;
+> +	}
+> +
+> +	return sprintf(buf, "%d\n", freq_test);
+> +}
+> +
+> +static DEVICE_ATTR_RW(freq_test);
+
+I'd prefer the file to be named frequency_test_enable
+
+> +
+> +static struct attribute *rtc_freq_test_attrs[] = {
+> +	&dev_attr_freq_test.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group rtc_freq_test_attr_group = {
+> +	.attrs		= rtc_freq_test_attrs,
+> +};
+> +
+> +static void rtc_calib_remove_sysfs_group(void *_dev)
+> +{
+> +	struct device *dev = _dev;
+> +
+> +	sysfs_remove_group(&dev->kobj, &rtc_freq_test_attr_group);
+> +}
+> +
+> +static int ds1307_add_frequency_test(struct ds1307 *ds1307)
+> +{
+> +	int err = 0;
+> +
+> +	switch (ds1307->type) {
+> +	case m41t0:
+> +	case m41t00:
+> +	case m41t11:
+> +		/* Export sysfs entries */
+> +		err = sysfs_create_group(&(ds1307->dev)->kobj,
+> +					 &rtc_freq_test_attr_group);
+> +		if (err) {
+> +			dev_err(ds1307->dev,
+> +				"Failed to create sysfs group: %d\n",
+> +				err);
+> +			return err;
+> +		}
+> +
+> +		err = devm_add_action_or_reset(ds1307->dev,
+> +					       rtc_calib_remove_sysfs_group,
+> +					       ds1307->dev);
+> +		if (err) {
+> +			dev_err(ds1307->dev,
+> +				"Failed to add sysfs cleanup action: %d\n",
+> +				err);
+
+You need to sysfs_remove_group here
+
+> +			return err;
+> +		}
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+>  /*----------------------------------------------------------------------*/
+>  
+>  static int ds1307_nvram_read(void *priv, unsigned int offset, void *val,
+> @@ -1783,6 +1886,10 @@ static int ds1307_probe(struct i2c_client *client,
+>  	if (err)
+>  		return err;
+>  
+> +	err = ds1307_add_frequency_test(ds1307);
+> +	if (err)
+> +		return err;
+> +
+>  	if (chip->nvram_size) {
+>  		struct nvmem_config nvmem_cfg = {
+>  			.name = "ds1307_nvram",
+> -- 
+> 2.17.0
+> 
+
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
