@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 5/8] MIPS: jz4740: dts: Add bindings for the jz4740-wdt driver
-Date: Thu, 10 May 2018 20:47:48 +0200
-Message-ID: <20180510184751.13416-5-paul@crapouillou.net>
+Subject: [PATCH v3 6/8] MIPS: jz4780: dts: Fix watchdog node
+Date: Thu, 10 May 2018 20:47:49 +0200
+Message-ID: <20180510184751.13416-6-paul@crapouillou.net>
 References: <20180510184751.13416-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180510184751.13416-1-paul@crapouillou.net>
@@ -10,63 +10,59 @@ To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark R
 Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Mathieu Malaterre <malat@debian.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Also remove the watchdog platform_device from platform.c, since it
-wasn't used anywhere anyway.
+- The previous node requested a memory area of 0x100 bytes, while the
+  driver only manipulates four registers present in the first 0x10 bytes.
+
+- The driver requests for the "rtc" clock, but the previous node did not
+  provide any.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Mathieu Malaterre <malat@debian.org>
+Acked-by: James Hogan <jhogan@kernel.org>
 ---
- arch/mips/boot/dts/ingenic/jz4740.dtsi |  8 ++++++++
- arch/mips/jz4740/platform.c            | 16 ----------------
- 2 files changed, 8 insertions(+), 16 deletions(-)
+ Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt | 7 ++++++-
+ arch/mips/boot/dts/ingenic/jz4780.dtsi                            | 5 ++++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
  v2: No change
- v3: No change
+ v3: Also fix documentation
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index cd5185bb90ae..26c6b561d6f7 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -45,6 +45,14 @@
- 		#clock-cells = <1>;
- 	};
+diff --git a/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt b/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
+index cb44918f01a8..ce1cb72d5345 100644
+--- a/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
+@@ -3,10 +3,15 @@ Ingenic Watchdog Timer (WDT) Controller for JZ4740 & JZ4780
+ Required properties:
+ compatible: "ingenic,jz4740-watchdog" or "ingenic,jz4780-watchdog"
+ reg: Register address and length for watchdog registers
++clocks: phandle to the RTC clock
++clock-names: should be "rtc"
  
-+	watchdog: watchdog@10002000 {
-+		compatible = "ingenic,jz4740-watchdog";
+ Example:
+ 
+ watchdog: jz4740-watchdog@10002000 {
+ 	compatible = "ingenic,jz4740-watchdog";
+-	reg = <0x10002000 0x100>;
++	reg = <0x10002000 0x10>;
++
++	clocks = <&cgu JZ4740_CLK_RTC>;
++	clock-names = "rtc";
+ };
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index 9b5794667aee..a52f59bf58c7 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -221,7 +221,10 @@
+ 
+ 	watchdog: watchdog@10002000 {
+ 		compatible = "ingenic,jz4780-watchdog";
+-		reg = <0x10002000 0x100>;
 +		reg = <0x10002000 0x10>;
 +
-+		clocks = <&cgu JZ4740_CLK_RTC>;
++		clocks = <&cgu JZ4780_CLK_RTCLK>;
 +		clock-names = "rtc";
-+	};
-+
- 	rtc_dev: rtc@10003000 {
- 		compatible = "ingenic,jz4740-rtc";
- 		reg = <0x10003000 0x40>;
-diff --git a/arch/mips/jz4740/platform.c b/arch/mips/jz4740/platform.c
-index 5b7cdd67a9d9..cbc5f8e87230 100644
---- a/arch/mips/jz4740/platform.c
-+++ b/arch/mips/jz4740/platform.c
-@@ -233,22 +233,6 @@ struct platform_device jz4740_adc_device = {
- 	.resource	= jz4740_adc_resources,
- };
+ 	};
  
--/* Watchdog */
--static struct resource jz4740_wdt_resources[] = {
--	{
--		.start = JZ4740_WDT_BASE_ADDR,
--		.end   = JZ4740_WDT_BASE_ADDR + 0x10 - 1,
--		.flags = IORESOURCE_MEM,
--	},
--};
--
--struct platform_device jz4740_wdt_device = {
--	.name	       = "jz4740-wdt",
--	.id	       = -1,
--	.num_resources = ARRAY_SIZE(jz4740_wdt_resources),
--	.resource      = jz4740_wdt_resources,
--};
--
- /* PWM */
- struct platform_device jz4740_pwm_device = {
- 	.name = "jz4740-pwm",
+ 	nemc: nemc@13410000 {
 -- 
 2.11.0
