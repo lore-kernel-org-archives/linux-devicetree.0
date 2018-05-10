@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v2 3/7] usb: mtu3: fix an unrecognized issue when connected with PC
-Date: Thu, 10 May 2018 13:47:08 +0800
-Message-ID: <ee3a8ac3622be752e42580acf2558ebd0213cca1.1525930818.git.chunfeng.yun@mediatek.com>
+Subject: [PATCH v2 6/7] usb: mtu3: re-enable controller to accept LPM request after LPM resume
+Date: Thu, 10 May 2018 13:47:11 +0800
+Message-ID: <5ebd9e0bfbf3dcb7312b931849d2bd639c170673.1525930818.git.chunfeng.yun@mediatek.com>
 References: <6b82c11302a81368bd6936424d081ede3340b431.1525930818.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,94 +12,43 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@
 Cc: Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-When boot on the platform with the USB cable connected to Win7,
-the Win7 will pop up an error dialog: "USB Device not recognized",
-but finally the Win7 can enumerate it successfully.
-The root cause is as the following:
-When the xHCI driver set PORT_POWER of the OTG port, and if both
-IDPIN and VBUS_VALID are high at the same time, the MTU3 controller
-will set SESSION and pull up DP, so the Win7 can detect existence
-of USB device, but if the mtu3 driver can't switch to device mode
-during the debounce time, the Win7 can not enumerate it.
-Here to fix it by removing the 1s delayed EXTCON register to speed up
-mode switch.
+After the controller receives a LPM request, it will reject the LPM
+request, and need software to re-enable it after LPM resume if the
+controller doesn't remote wakeup from L1 automatically
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/mtu3/mtu3.h    |  4 ----
- drivers/usb/mtu3/mtu3_dr.c | 25 +++----------------------
- 2 files changed, 3 insertions(+), 26 deletions(-)
+v2:
+    add this patch
+---
+ drivers/usb/mtu3/mtu3_core.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
-index 2cd00a2..a56fee0 100644
---- a/drivers/usb/mtu3/mtu3.h
-+++ b/drivers/usb/mtu3/mtu3.h
-@@ -197,9 +197,6 @@ struct mtu3_gpd_ring {
- * @edev: external connector used to detect vbus and iddig changes
- * @vbus_nb: notifier for vbus detection
- * @vbus_nb: notifier for iddig(idpin) detection
--* @extcon_reg_dwork: delay work for extcon notifier register, waiting for
--*		xHCI driver initialization, it's necessary for system bootup
--*		as device.
- * @is_u3_drd: whether port0 supports usb3.0 dual-role device or not
- * @manual_drd_enabled: it's true when supports dual-role device by debugfs
- *		to switch host/device modes depending on user input.
-@@ -209,7 +206,6 @@ struct otg_switch_mtk {
- 	struct extcon_dev *edev;
- 	struct notifier_block vbus_nb;
- 	struct notifier_block id_nb;
--	struct delayed_work extcon_reg_dwork;
- 	bool is_u3_drd;
- 	bool manual_drd_enabled;
- };
-diff --git a/drivers/usb/mtu3/mtu3_dr.c b/drivers/usb/mtu3/mtu3_dr.c
-index db7562d..80083e0 100644
---- a/drivers/usb/mtu3/mtu3_dr.c
-+++ b/drivers/usb/mtu3/mtu3_dr.c
-@@ -238,15 +238,6 @@ static int ssusb_extcon_register(struct otg_switch_mtk *otg_sx)
- 	return 0;
+diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
+index b1b99a8..65ff53a 100644
+--- a/drivers/usb/mtu3/mtu3_core.c
++++ b/drivers/usb/mtu3/mtu3_core.c
+@@ -176,7 +176,7 @@ static void mtu3_intr_enable(struct mtu3 *mtu)
+ 	mtu3_writel(mbase, U3D_LV1IESR, value);
+ 
+ 	/* Enable U2 common USB interrupts */
+-	value = SUSPEND_INTR | RESUME_INTR | RESET_INTR;
++	value = SUSPEND_INTR | RESUME_INTR | RESET_INTR | LPM_RESUME_INTR;
+ 	mtu3_writel(mbase, U3D_COMMON_USB_INTR_ENABLE, value);
+ 
+ 	if (mtu->is_u3_ip) {
+@@ -692,6 +692,12 @@ static irqreturn_t mtu3_u2_common_isr(struct mtu3 *mtu)
+ 	if (u2comm & RESET_INTR)
+ 		mtu3_gadget_reset(mtu);
+ 
++	if (u2comm & LPM_RESUME_INTR) {
++		if (!(mtu3_readl(mbase, U3D_POWER_MANAGEMENT) & LPM_HRWE))
++			mtu3_setbits(mbase, U3D_USB20_MISC_CONTROL,
++				     LPM_U3_ACK_EN);
++	}
++
+ 	return IRQ_HANDLED;
  }
  
--static void extcon_register_dwork(struct work_struct *work)
--{
--	struct delayed_work *dwork = to_delayed_work(work);
--	struct otg_switch_mtk *otg_sx =
--	    container_of(dwork, struct otg_switch_mtk, extcon_reg_dwork);
--
--	ssusb_extcon_register(otg_sx);
--}
--
- /*
-  * We provide an interface via debugfs to switch between host and device modes
-  * depending on user input.
-@@ -407,18 +398,10 @@ int ssusb_otg_switch_init(struct ssusb_mtk *ssusb)
- {
- 	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
- 
--	if (otg_sx->manual_drd_enabled) {
-+	if (otg_sx->manual_drd_enabled)
- 		ssusb_debugfs_init(ssusb);
--	} else {
--		INIT_DELAYED_WORK(&otg_sx->extcon_reg_dwork,
--				  extcon_register_dwork);
--
--		/*
--		 * It is enough to delay 1s for waiting for
--		 * host initialization
--		 */
--		schedule_delayed_work(&otg_sx->extcon_reg_dwork, HZ);
--	}
-+	else
-+		ssusb_extcon_register(otg_sx);
- 
- 	return 0;
- }
-@@ -429,6 +412,4 @@ void ssusb_otg_switch_exit(struct ssusb_mtk *ssusb)
- 
- 	if (otg_sx->manual_drd_enabled)
- 		ssusb_debugfs_exit(ssusb);
--	else
--		cancel_delayed_work(&otg_sx->extcon_reg_dwork);
- }
 -- 
 1.9.1
