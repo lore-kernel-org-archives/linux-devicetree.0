@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 8/8] MIPS: jz4740: Drop old platform reset code
-Date: Thu, 10 May 2018 20:47:51 +0200
-Message-ID: <20180510184751.13416-8-paul@crapouillou.net>
+Subject: [PATCH v3 4/8] watchdog: JZ4740: Drop module remove function
+Date: Thu, 10 May 2018 20:47:47 +0200
+Message-ID: <20180510184751.13416-4-paul@crapouillou.net>
 References: <20180510184751.13416-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180510184751.13416-1-paul@crapouillou.net>
@@ -10,69 +10,48 @@ To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark R
 Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Mathieu Malaterre <malat@debian.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-This work is now performed by the watchdog driver directly.
+When the watchdog was configured for nowayout, and after the
+userspace watchdog daemon closed the dev node without sending the
+magic character, unloading this module stopped the watchdog
+hardware, which was clearly a problem.
+
+Besides, unloading the module is not possible when the userspace
+watchdog daemon is running, so it's safe to assume that we don't
+need to stop the watchdog hardware in the jz4740_wdt_remove()
+function.
+
+For this reason, the jz4740_wdt_remove() function can then be
+dropped alltogether.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Acked-by: James Hogan <jhogan@kernel.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 ---
- arch/mips/jz4740/reset.c | 31 -------------------------------
- 1 file changed, 31 deletions(-)
+ drivers/watchdog/jz4740_wdt.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
- v2: No change
+ v2: New patch in this series
  v3: No change
 
-diff --git a/arch/mips/jz4740/reset.c b/arch/mips/jz4740/reset.c
-index 67780c4b6573..5bf0cf44b55f 100644
---- a/arch/mips/jz4740/reset.c
-+++ b/arch/mips/jz4740/reset.c
-@@ -12,18 +12,9 @@
-  *
-  */
- 
--#include <linux/clk.h>
--#include <linux/io.h>
--#include <linux/kernel.h>
--#include <linux/pm.h>
--
- #include <asm/reboot.h>
- 
--#include <asm/mach-jz4740/base.h>
--#include <asm/mach-jz4740/timer.h>
--
- #include "reset.h"
--#include "clock.h"
- 
- static void jz4740_halt(void)
- {
-@@ -36,29 +27,7 @@ static void jz4740_halt(void)
- 	}
+diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
+index b8b015a7d045..ec4d99a830ba 100644
+--- a/drivers/watchdog/jz4740_wdt.c
++++ b/drivers/watchdog/jz4740_wdt.c
+@@ -206,16 +206,8 @@ static int jz4740_wdt_probe(struct platform_device *pdev)
+ 	return 0;
  }
  
--#define JZ_REG_WDT_DATA 0x00
--#define JZ_REG_WDT_COUNTER_ENABLE 0x04
--#define JZ_REG_WDT_COUNTER 0x08
--#define JZ_REG_WDT_CTRL 0x0c
--
--static void jz4740_restart(char *command)
+-static int jz4740_wdt_remove(struct platform_device *pdev)
 -{
--	void __iomem *wdt_base = ioremap(JZ4740_WDT_BASE_ADDR, 0x0f);
+-	struct jz4740_wdt_drvdata *drvdata = platform_get_drvdata(pdev);
 -
--	jz4740_timer_enable_watchdog();
--
--	writeb(0, wdt_base + JZ_REG_WDT_COUNTER_ENABLE);
--
--	writew(0, wdt_base + JZ_REG_WDT_COUNTER);
--	writew(0, wdt_base + JZ_REG_WDT_DATA);
--	writew(BIT(2), wdt_base + JZ_REG_WDT_CTRL);
--
--	writeb(1, wdt_base + JZ_REG_WDT_COUNTER_ENABLE);
--	jz4740_halt();
+-	return jz4740_wdt_stop(&drvdata->wdt);
 -}
 -
- void jz4740_reset_init(void)
- {
--	_machine_restart = jz4740_restart;
- 	_machine_halt = jz4740_halt;
- }
+ static struct platform_driver jz4740_wdt_driver = {
+ 	.probe = jz4740_wdt_probe,
+-	.remove = jz4740_wdt_remove,
+ 	.driver = {
+ 		.name = "jz4740-wdt",
+ 		.of_match_table = of_match_ptr(jz4740_wdt_of_matches),
 -- 
 2.11.0
