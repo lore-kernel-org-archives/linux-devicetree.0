@@ -1,76 +1,79 @@
-Return-Path: <SRS0=Xnq8=HX=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from m12-12.163.com ([220.181.12.12]:35573 "EHLO m12-12.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751533AbeEDJVQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 4 May 2018 05:21:16 -0400
-From: sunjg79@163.com
-Subject: [PATCH 1/2] dt-bindings: usb: add bindings doc for HiSilicon STB xHCI host controller
-Date: Fri,  4 May 2018 17:20:44 +0800
-Message-Id: <1525425645-17246-2-git-send-email-sunjg79@163.com>
-In-Reply-To: <1525425645-17246-1-git-send-email-sunjg79@163.com>
-References: <1525425645-17246-1-git-send-email-sunjg79@163.com>
-Sender: devicetree-owner@vger.kernel.org
-To: mathias.nyman@intel.com, gregkh@linuxfoundation.org, robh+dt@kernel.org
-Cc: shawn.guo@linaro.org, xuejiancheng@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Jianguo Sun <sunjianguo1@huawei.com>
+Return-Path: <SRS0=IKTP=H5=mediatek.com=argus.lin@kernel.org>
+From: <argus.lin@mediatek.com>
+Subject: [PATCH V5 1/4] dt-bindings: pwrap: mediatek: add pwrap support for MT6797
+Date: Thu, 10 May 2018 21:01:56 +0800
+Message-ID: <1525957319-20557-2-git-send-email-argus.lin@mediatek.com>
+In-Reply-To: <1525957319-20557-1-git-send-email-argus.lin@mediatek.com>
+References: <1525957319-20557-1-git-send-email-argus.lin@mediatek.com>
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_002_1654965732.1450000975"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Jianguo Sun <sunjianguo1@huawei.com>
+--__=_Part_Boundary_002_1654965732.1450000975
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_003_596119451.1637383062"
 
-This commit adds bindings doc for HiSilicon STB xHCI host controller.
+--__=_Part_Boundary_003_596119451.1637383062
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-Signed-off-by: Jianguo Sun <sunjianguo1@huawei.com>
----
- .../bindings/usb/hisilicon,histb-xhci.txt          | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/hisilicon,histb-xhci.txt
+PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
+V2UgYWRkIHB3cmFwIHN1cHBvcnQgZm9yIE1UNjc5NyBTb0NzLg0KDQotLS0NCiBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCB8IDEgKw0KIDEg
+ZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KaW5kZXggYmY4
+MGUzZi4uZjk5ODdjMyAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KQEAgLTE5LDYgKzE5LDcgQEAgSVAg
+UGFpcmluZw0KIFJlcXVpcmVkIHByb3BlcnRpZXMgaW4gcHdyYXAgZGV2aWNlIG5vZGUuDQogLSBj
+b21wYXRpYmxlOg0KIAkmcXVvdDttZWRpYXRlayxtdDI3MDEtcHdyYXAmcXVvdDsgZm9yIE1UMjcw
+MS83NjIzIFNvQ3MNCisJJnF1b3Q7bWVkaWF0ZWssbXQ2Nzk3LXB3cmFwJnF1b3Q7IGZvciBNVDY3
+OTcgU29Dcw0KIAkmcXVvdDttZWRpYXRlayxtdDc2MjItcHdyYXAmcXVvdDsgZm9yIE1UNzYyMiBT
+b0NzDQogCSZxdW90O21lZGlhdGVrLG10ODEzNS1wd3JhcCZxdW90OyBmb3IgTVQ4MTM1IFNvQ3MN
+CiAJJnF1b3Q7bWVkaWF0ZWssbXQ4MTczLXB3cmFwJnF1b3Q7IGZvciBNVDgxNzMgU29Dcw0KLS0g
+DQoxLjguMS4xLmRpcnR5DQoNCjwvcHJlPjwhLS10eXBlOnRleHQtLT48IS0tey0tPjxwcmU+Kioq
+KioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxpdHkgTm90aWNlICoqKioqKioqKioqKioqKioq
+KioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGlu
+Y2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5IGJlIGNvbmZpZGVudGlhbCwgcHJvcHJpZXRh
+cnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhlbXB0IGZyb20gZGlzY2xvc3VyZSB1bmRl
+ciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVuZGVkIHRvIGJlIA0KY29udmV5ZWQgb25seSB0
+byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFueSB1c2UsIGRpc3NlbWluYXRpb24sIA0K
+ZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWluaW5nIG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1h
+aWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50cykgYnkgdW5pbnRlbmRlZCByZWNpcGllbnQo
+cykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5IA0KYmUgdW5sYXdmdWwuIElmIHlvdSBh
+cmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUtbWFpbCwgb3IgYmVsaWV2ZSAN
+CnRoYXQgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBsZWFzZSBub3Rp
+ZnkgdGhlIHNlbmRlciANCmltbWVkaWF0ZWx5IChieSByZXBseWluZyB0byB0aGlzIGUtbWFpbCks
+IGRlbGV0ZSBhbnkgYW5kIGFsbCBjb3BpZXMgb2YgDQp0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFu
+eSBhdHRhY2htZW50cykgZnJvbSB5b3VyIHN5c3RlbSwgYW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhl
+IGNvbnRlbnQgb2YgdGhpcyBlLW1haWwgdG8gYW55IG90aGVyIHBlcnNvbi4gVGhhbmsgeW91ITwv
+cHJlPjwhLS19LS0+
 
-diff --git a/Documentation/devicetree/bindings/usb/hisilicon,histb-xhci.txt b/Documentation/devicetree/bindings/usb/hisilicon,histb-xhci.txt
-new file mode 100644
-index 0000000..628225f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/hisilicon,histb-xhci.txt
-@@ -0,0 +1,40 @@
-+HiSilicon STB xHCI
-+
-+The device node for HiSilicon STB xHCI host controller
-+
-+Required properties:
-+ - compatible : should be "hisilicon,hi3798cv200-xhci"
-+ - reg : specifies physical base address and size of the registers
-+ - interrupts : interrupt used by the controller
-+ - clocks : a list of phandle + clock-specifier pairs, one for each
-+	entry in clock-names
-+ - clock-names : must contain
-+	"bus": for bus clock
-+	"utmi": for utmi clock
-+	"pipe": for pipeE clock
-+	"suspend": for suspend clock
-+ - resets: a list of phandle and reset specifier pairs as listed in
-+	reset-names property.
-+ - reset-names: must contain
-+	"soft": for soft reset
-+ - phys : a list of phandle + phy specifier pairs
-+ - phy-names: must contain one of following at least:
-+	"inno": for inno phy
-+	"combo": for combo phy
-+
-+Example:
-+
-+xhci0: xchi@f98a0000 {
-+	compatible = "hisilicon,hi3798cv200-xhci";
-+	reg = <0xf98a0000 0x10000>;
-+	interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&crg HISTB_USB3_BUS_CLK>,
-+		 <&crg HISTB_USB3_UTMI_CLK>,
-+		 <&crg HISTB_USB3_PIPE_CLK>,
-+		 <&crg HISTB_USB3_SUSPEND_CLK>;
-+	clock-names = "bus", "utmi", "pipe", "suspend";
-+	resets = <&crg 0xb0 12>;
-+	reset-names = "soft";
-+	phys = <&usb2_phy1_port1 0>, <&combphy0 PHY_TYPE_USB3>;
-+	phy-names = "inno", "combo";
-+};
--- 
-2.7.4
+--__=_Part_Boundary_003_596119451.1637383062
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
+RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQpXZSBhZGQgcHdyYXAg
+c3VwcG9ydCBmb3IgTVQ2Nzk3IFNvQ3MuDQoNCi0tLQ0KIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0IHwgMSArDQogMSBmaWxlIGNoYW5nZWQs
+IDEgaW5zZXJ0aW9uKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0DQppbmRleCBiZjgwZTNmLi5mOTk4N2Mz
+IDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRp
+YXRlay9wd3JhcC50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
+b2MvbWVkaWF0ZWsvcHdyYXAudHh0DQpAQCAtMTksNiArMTksNyBAQCBJUCBQYWlyaW5nDQogUmVx
+dWlyZWQgcHJvcGVydGllcyBpbiBwd3JhcCBkZXZpY2Ugbm9kZS4NCiAtIGNvbXBhdGlibGU6DQog
+CSJtZWRpYXRlayxtdDI3MDEtcHdyYXAiIGZvciBNVDI3MDEvNzYyMyBTb0NzDQorCSJtZWRpYXRl
+ayxtdDY3OTctcHdyYXAiIGZvciBNVDY3OTcgU29Dcw0KIAkibWVkaWF0ZWssbXQ3NjIyLXB3cmFw
+IiBmb3IgTVQ3NjIyIFNvQ3MNCiAJIm1lZGlhdGVrLG10ODEzNS1wd3JhcCIgZm9yIE1UODEzNSBT
+b0NzDQogCSJtZWRpYXRlayxtdDgxNzMtcHdyYXAiIGZvciBNVDgxNzMgU29Dcw0KLS0gDQoxLjgu
+MS4xLmRpcnR5DQo=
 
+--__=_Part_Boundary_003_596119451.1637383062--
+
+--__=_Part_Boundary_002_1654965732.1450000975--
