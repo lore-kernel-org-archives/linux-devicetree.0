@@ -1,66 +1,87 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v6 04/11] firmware: xilinx: Add query data API
-Date: Thu, 10 May 2018 15:12:18 +0100
-Message-ID: <85f8f8c5-a177-dad8-e095-a9dd1c513e8d@arm.com>
-References: <1523389127-14243-1-git-send-email-jollys@xilinx.com>
- <1523389127-14243-5-git-send-email-jollys@xilinx.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] ARM: dts: vexpress: Replace '_' with '-' in node names
+Date: Thu, 10 May 2018 09:05:02 -0500
+Message-ID: <CAL_Jsq+csM-Z8+bMTdD7gWhWRQLAkD0EMNUS0boWkes345cCrw@mail.gmail.com>
+References: <1525884482-19855-1-git-send-email-sudeep.holla@arm.com>
+ <CAL_Jsq+VNuvbxgFTFVouJF-_yMS90u0fd8jaXnYtKwogOP5rww@mail.gmail.com>
+ <f28fb5d6-1070-8cbb-e815-4baf7128b19e@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523389127-14243-5-git-send-email-jollys@xilinx.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <f28fb5d6-1070-8cbb-e815-4baf7128b19e@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, May 10, 2018 at 5:51 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+>
+> On 09/05/18 22:14, Rob Herring wrote:
+>> On Wed, May 9, 2018 at 11:48 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>>> The latest DTC throws warnings for character '_' in the node names.
+>>>
+>>> Warning (node_name_chars_strict): /sysreg@10000/sys_led: Character '_' not recommended in node name
+>>> Warning (node_name_chars_strict): /sysreg@10000/sys_mci: Character '_' not recommended in node name
+>>> Warning (node_name_chars_strict): /sysreg@10000/sys_flash: Character '_' not recommended in node name
+>>>
+>>> The general recommendation is to use character '-' for all the node names.
+>>> This patch fixes the warnings following the recommendation.
+>>>
+>>> Cc: Liviu Dudau <liviu.dudau@arm.com>
+>>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>>> ---
+>>>  arch/arm/boot/dts/vexpress-v2m-rs1.dtsi | 6 +++---
+>>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+>>> index 7b8ff5b3b912..58e73131ecef 100644
+>>> --- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+>>> +++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+>>> @@ -77,19 +77,19 @@
+>>>                                         compatible = "arm,vexpress-sysreg";
+>>>                                         reg = <0x010000 0x1000>;
+>>>
+>>> -                                       v2m_led_gpios: sys_led {
+>>> +                                       v2m_led_gpios: sys-led {
+>>
+>> Except this is a gpio-controller so it should have 'gpio' for its node
+>> name. (I have a dtc check written for that, but there are too many
+>> false positives.)
+>>
+>
+> True, sorry I didn't look at it in detail.
+>
+>> But then you have 3 of them and no addressing, so you need to add reg
+>> property (with the register's offset and size) and unit-address.
+>>
+>
+> Indeed. I had a look at the history but couldn't gather much. All I
+> could get is that this is one of those weird mix of all functionality on
+> ARM Ltd platforms which fits no subsystem. Me and Lorenzo has similar
+> issue on TC2 platform. Pawel seem to have plumed this system control
+> registers block into MFD and GPIO long back.
+>
+>> I'm surprised Linus W accepted these a GPIO when they are not really
+>> general purpose, but then lots of things slip in.
+>>
+>
+> I assume all these happened in early days of DT.
+>
+> I will drop this for now. I will take a look if these nodes can be made
+> better to align with standard gpio controller nodes.
 
+Why not just make the changes I suggested? It shouldn't break
+anything. You can add reg property even though the kernel doesn't use
+it.
 
-On 10/04/18 20:38, Jolly Shah wrote:
-> From: Rajan Vaja <rajanv@xilinx.com>
-> 
-> Add ZynqMP firmware query data API to query platform
-> specific information(clocks, pins) from firmware.
-> 
-> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
-> Signed-off-by: Jolly Shah <jollys@xilinx.com>
-> ---
->  drivers/firmware/xilinx/zynqmp.c     | 14 ++++++++++++++
->  include/linux/firmware/xlnx-zynqmp.h | 20 ++++++++++++++++++++
->  2 files changed, 34 insertions(+)
-> 
-> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-> index 44b43fa..ef09c44 100644
-> --- a/drivers/firmware/xilinx/zynqmp.c
-> +++ b/drivers/firmware/xilinx/zynqmp.c
-> @@ -258,9 +258,23 @@ static int zynqmp_pm_ioctl(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2,
->  				   arg1, arg2, out);
->  }
->  
-> +/**
-> + * zynqmp_pm_query_data() - Get query data from firmware
-> + * @qdata:	Variable to the zynqmp_pm_query_data structure
-> + * @out:	Returned output value
-> + *
-> + * Return: Returns status, either success or error+reason
-> + */
-> +static int zynqmp_pm_query_data(struct zynqmp_pm_query_data qdata, u32 *out)
-> +{
-> +	return zynqmp_pm_invoke_fn(PM_QUERY_DATA, qdata.qid, qdata.arg1,
-> +				   qdata.arg2, qdata.arg3, out);
-> +}
-> +
->  static const struct zynqmp_eemi_ops eemi_ops = {
->  	.get_api_version = zynqmp_pm_get_api_version,
->  	.ioctl = zynqmp_pm_ioctl,
-> +	.query_data = zynqmp_pm_query_data,
-
-Can you give more insight into this ? How will be this used ?
-How this aligns with data we get from DT ? I am just trying to
-understand how is this information split between this API and DT for
-example.
-
--- 
-Regards,
-Sudeep
+Rob
