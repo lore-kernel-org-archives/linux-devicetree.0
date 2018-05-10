@@ -1,115 +1,60 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/2] arm64: dts: renesas: initial V3HSK board device tree
-Date: Thu, 10 May 2018 21:12:30 +0300
-Message-ID: <50de037c-7560-c261-f96a-f86065674c9b@cogentembedded.com>
-References: <3923fc5f-103c-94c9-57ba-cb29e8c55d05@cogentembedded.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v4 2/2] leds: lm3601x: Introduce the lm3601x LED driver
+Date: Thu, 10 May 2018 20:39:22 +0200
+Message-ID: <20180510183922.GA12846@amd>
+References: <20180510122718.8413-1-dmurphy@ti.com>
+ <20180510122718.8413-2-dmurphy@ti.com>
+ <87eaf628-3cf6-6855-5732-b0e5291f3b34@ti.com>
+ <08526618-7463-1e6e-a4ac-c4da4627c1b2@ti.com>
+ <7832225b-115c-2316-025e-29929cd4f208@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3923fc5f-103c-94c9-57ba-cb29e8c55d05@cogentembedded.com>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7832225b-115c-2316-025e-29929cd4f208@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, mark.rutland@arm.com, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the initial device  tree for  the V3H Starter Kit board.
-The board has 1 debug serial port (SCIF0); include support for it,
-so that the serial console can work.
 
-Based on the original (and large) patch by Vladimir Barinov.
+--pWyiEgJYm5f9v55/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Hi!
 
----
- arch/arm64/boot/dts/renesas/Makefile           |    2 
- arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts |   60 +++++++++++++++++++++++++
- 2 files changed, 61 insertions(+), 1 deletion(-)
+> >> Plus, removing the driver is not a command to disable the LED anyway.
+> >=20
+> > True but you don't want to leave any LEDs in the on state without a dri=
+ver to support it.
+> > This could burn out the LED or the board if left on on max brightness
+>=20
+> I disagree, we should not try to decide what the user wants here. We
+> should only do what we are instructed to do, which for remove() is to
+> cleanup what probe has done so the driver can be removed w/o leaking
+> memory or device state.
 
-Index: renesas/arch/arm64/boot/dts/renesas/Makefile
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/Makefile
-+++ renesas/arch/arm64/boot/dts/renesas/Makefile
-@@ -9,6 +9,6 @@ dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-m3
- dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-xs.dtb
- dtb-$(CONFIG_ARCH_R8A77965) += r8a77965-salvator-x.dtb r8a77965-salvator-xs.dtb
- dtb-$(CONFIG_ARCH_R8A77970) += r8a77970-eagle.dtb r8a77970-v3msk.dtb
--dtb-$(CONFIG_ARCH_R8A77980) += r8a77980-condor.dtb
-+dtb-$(CONFIG_ARCH_R8A77980) += r8a77980-condor.dtb r8a77980-v3hsk.dtb
- dtb-$(CONFIG_ARCH_R8A77990) += r8a77990-ebisu.dtb
- dtb-$(CONFIG_ARCH_R8A77995) += r8a77995-draak.dtb
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
-===================================================================
---- /dev/null
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the V3H Starter Kit board
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ * Copyright (C) 2018 Cogent Embedded, Inc.
-+ */
-+
-+/dts-v1/;
-+#include "r8a77980.dtsi"
-+
-+/ {
-+	model = "Renesas V3H Starter Kit board";
-+	compatible = "renesas,v3hsk", "renesas,r8a77980";
-+
-+	aliases {
-+		serial0 = &scif0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@48000000 {
-+		device_type = "memory";
-+		/* first 128MB is reserved for secure area. */
-+		reg = <0 0x48000000 0 0x78000000>;
-+	};
-+};
-+
-+&extal_clk {
-+	clock-frequency = <16666666>;
-+};
-+
-+&extalr_clk {
-+	clock-frequency = <32768>;
-+};
-+
-+&pfc {
-+	scif0_pins: scif0 {
-+		groups = "scif0_data";
-+		function = "scif0";
-+	};
-+
-+	scif_clk_pins: scif_clk {
-+		groups = "scif_clk_b";
-+		function = "scif_clk";
-+	};
-+};
-+
-+&scif0 {
-+	pinctrl-0 = <&scif0_pins>, <&scif_clk_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-+
-+&scif_clk {
-+	clock-frequency = <14745600>;
-+};
+We normally powerdown on rmmod. We should do that here, too.
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--pWyiEgJYm5f9v55/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlr0kdoACgkQMOfwapXb+vIfsgCeNsFH+hGjLHgRwD6e/r4rWcmE
+fxMAoJ4iKLz7nXtYLLRoeH0YaacQRtiU
+=Q/r+
+-----END PGP SIGNATURE-----
+
+--pWyiEgJYm5f9v55/--
