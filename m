@@ -1,87 +1,42 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] ARM: dts: vexpress: Replace '_' with '-' in node names
-Date: Thu, 10 May 2018 09:05:02 -0500
-Message-ID: <CAL_Jsq+csM-Z8+bMTdD7gWhWRQLAkD0EMNUS0boWkes345cCrw@mail.gmail.com>
-References: <1525884482-19855-1-git-send-email-sudeep.holla@arm.com>
- <CAL_Jsq+VNuvbxgFTFVouJF-_yMS90u0fd8jaXnYtKwogOP5rww@mail.gmail.com>
- <f28fb5d6-1070-8cbb-e815-4baf7128b19e@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] display: panel: Add KOE tx14d24vm1bpa display support
+ (320x240)
+Date: Thu, 10 May 2018 09:22:42 -0500
+Message-ID: <CAL_JsqLHwOv5+yoJ8S+74TmA2nUxzohhAkksZtrBCK7CAnp46A@mail.gmail.com>
+References: <20180412143715.6828-1-lukma@denx.de>
+ <20180416192442.qnb53b6u3bsfet6y@rob-hp-laptop>
+ <20180504122842.33643142@jawa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f28fb5d6-1070-8cbb-e815-4baf7128b19e@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180504122842.33643142@jawa>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 10, 2018 at 5:51 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
->
-> On 09/05/18 22:14, Rob Herring wrote:
->> On Wed, May 9, 2018 at 11:48 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->>> The latest DTC throws warnings for character '_' in the node names.
->>>
->>> Warning (node_name_chars_strict): /sysreg@10000/sys_led: Character '_' not recommended in node name
->>> Warning (node_name_chars_strict): /sysreg@10000/sys_mci: Character '_' not recommended in node name
->>> Warning (node_name_chars_strict): /sysreg@10000/sys_flash: Character '_' not recommended in node name
->>>
->>> The general recommendation is to use character '-' for all the node names.
->>> This patch fixes the warnings following the recommendation.
->>>
->>> Cc: Liviu Dudau <liviu.dudau@arm.com>
->>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->>> ---
->>>  arch/arm/boot/dts/vexpress-v2m-rs1.dtsi | 6 +++---
->>>  1 file changed, 3 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
->>> index 7b8ff5b3b912..58e73131ecef 100644
->>> --- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
->>> +++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
->>> @@ -77,19 +77,19 @@
->>>                                         compatible = "arm,vexpress-sysreg";
->>>                                         reg = <0x010000 0x1000>;
->>>
->>> -                                       v2m_led_gpios: sys_led {
->>> +                                       v2m_led_gpios: sys-led {
->>
->> Except this is a gpio-controller so it should have 'gpio' for its node
->> name. (I have a dtc check written for that, but there are too many
->> false positives.)
->>
->
-> True, sorry I didn't look at it in detail.
->
->> But then you have 3 of them and no addressing, so you need to add reg
->> property (with the register's offset and size) and unit-address.
->>
->
-> Indeed. I had a look at the history but couldn't gather much. All I
-> could get is that this is one of those weird mix of all functionality on
-> ARM Ltd platforms which fits no subsystem. Me and Lorenzo has similar
-> issue on TC2 platform. Pawel seem to have plumed this system control
-> registers block into MFD and GPIO long back.
->
->> I'm surprised Linus W accepted these a GPIO when they are not really
->> general purpose, but then lots of things slip in.
->>
->
-> I assume all these happened in early days of DT.
->
-> I will drop this for now. I will take a look if these nodes can be made
-> better to align with standard gpio controller nodes.
-
-Why not just make the changes I suggested? It shouldn't break
-anything. You can add reg property even though the kernel doesn't use
-it.
-
-Rob
+T24gRnJpLCBNYXkgNCwgMjAxOCBhdCA1OjI4IEFNLCBMdWthc3ogTWFqZXdza2kgPGx1a21hQGRl
+bnguZGU+IHdyb3RlOgo+IEhpIFJvYiwKPgo+PiBPbiBUaHUsIEFwciAxMiwgMjAxOCBhdCAwNDoz
+NzoxNVBNICswMjAwLCBMdWthc3ogTWFqZXdza2kgd3JvdGU6Cj4+ID4gVGhpcyBjb21taXQgYWRk
+cyBzdXBwb3J0IGZvciBLT0UncyA1LjciIGRpc3BsYXkuCj4+ID4KPj4gPiBTaWduZWQtb2ZmLWJ5
+OiBMdWthc3ogTWFqZXdza2kgPGx1a21hQGRlbnguZGU+Cj4+ID4gLS0tCj4+ID4gIC4uLi9iaW5k
+aW5ncy9kaXNwbGF5L3BhbmVsL2tvZSx0eDE0ZDI0dm0xYnBhLnR4dCAgIHwgNDIKPj4gPiArKysr
+KysrKysrKysrKysrKysrKysrCj4+ID4gZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
+ZS5jICAgICAgICAgICAgICAgfCAyNgo+PiA+ICsrKysrKysrKysrKysrIDIgZmlsZXMgY2hhbmdl
+ZCwgNjggaW5zZXJ0aW9ucygrKSBjcmVhdGUgbW9kZSAxMDA2NDQKPj4gPiBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9rb2UsdHgxNGQyNHZtMWJwYS50eHQK
+Pj4KPj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4+Cj4KPiBH
+ZW50bGUgcGluZyBvbiB0aGlzIC0gYXMgSSBkb24ndCBrbm93IGlmIHRoaXMgcGF0Y2ggYmVlbiBh
+cHBsaWVkLgoKVGhpcyBzaG91bGQgZ28gdGhydSBEUk0gdHJlZSB2aWEgVGhpZXJyeS4KClJvYgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
