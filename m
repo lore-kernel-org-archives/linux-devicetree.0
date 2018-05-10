@@ -1,98 +1,78 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] ARM: dts: vexpress: Replace '_' with '-' in node names
-Date: Thu, 10 May 2018 15:16:37 +0100
-Message-ID: <f4f3e96b-2699-61e6-400e-134b9af9d72b@arm.com>
-References: <1525884482-19855-1-git-send-email-sudeep.holla@arm.com>
- <CAL_Jsq+VNuvbxgFTFVouJF-_yMS90u0fd8jaXnYtKwogOP5rww@mail.gmail.com>
- <f28fb5d6-1070-8cbb-e815-4baf7128b19e@arm.com>
- <CAL_Jsq+csM-Z8+bMTdD7gWhWRQLAkD0EMNUS0boWkes345cCrw@mail.gmail.com>
+Subject: Re: [PATCH v6 09/11] firmware: xilinx: Add debugfs for clock control
+ APIs
+Date: Thu, 10 May 2018 15:31:18 +0100
+Message-ID: <5bcc47f7-3352-f0e6-29c5-78d5be96c1d1@arm.com>
+References: <1523389127-14243-1-git-send-email-jollys@xilinx.com>
+ <1523389127-14243-10-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq+csM-Z8+bMTdD7gWhWRQLAkD0EMNUS0boWkes345cCrw@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1523389127-14243-10-git-send-email-jollys@xilinx.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sudeep Holla <sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 10/05/18 15:05, Rob Herring wrote:
-> On Thu, May 10, 2018 at 5:51 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->>
->>
->> On 09/05/18 22:14, Rob Herring wrote:
->>> On Wed, May 9, 2018 at 11:48 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->>>> The latest DTC throws warnings for character '_' in the node names.
->>>>
->>>> Warning (node_name_chars_strict): /sysreg@10000/sys_led: Character '_' not recommended in node name
->>>> Warning (node_name_chars_strict): /sysreg@10000/sys_mci: Character '_' not recommended in node name
->>>> Warning (node_name_chars_strict): /sysreg@10000/sys_flash: Character '_' not recommended in node name
->>>>
->>>> The general recommendation is to use character '-' for all the node names.
->>>> This patch fixes the warnings following the recommendation.
->>>>
->>>> Cc: Liviu Dudau <liviu.dudau@arm.com>
->>>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->>>> ---
->>>>  arch/arm/boot/dts/vexpress-v2m-rs1.dtsi | 6 +++---
->>>>  1 file changed, 3 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
->>>> index 7b8ff5b3b912..58e73131ecef 100644
->>>> --- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
->>>> +++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
->>>> @@ -77,19 +77,19 @@
->>>>                                         compatible = "arm,vexpress-sysreg";
->>>>                                         reg = <0x010000 0x1000>;
->>>>
->>>> -                                       v2m_led_gpios: sys_led {
->>>> +                                       v2m_led_gpios: sys-led {
->>>
->>> Except this is a gpio-controller so it should have 'gpio' for its node
->>> name. (I have a dtc check written for that, but there are too many
->>> false positives.)
->>>
->>
->> True, sorry I didn't look at it in detail.
->>
->>> But then you have 3 of them and no addressing, so you need to add reg
->>> property (with the register's offset and size) and unit-address.
->>>
->>
->> Indeed. I had a look at the history but couldn't gather much. All I
->> could get is that this is one of those weird mix of all functionality on
->> ARM Ltd platforms which fits no subsystem. Me and Lorenzo has similar
->> issue on TC2 platform. Pawel seem to have plumed this system control
->> registers block into MFD and GPIO long back.
->>
->>> I'm surprised Linus W accepted these a GPIO when they are not really
->>> general purpose, but then lots of things slip in.
->>>
->>
->> I assume all these happened in early days of DT.
->>
->> I will drop this for now. I will take a look if these nodes can be made
->> better to align with standard gpio controller nodes.
+On 10/04/18 20:38, Jolly Shah wrote:
+> From: Rajan Vaja <rajanv@xilinx.com>
 > 
-> Why not just make the changes I suggested? It shouldn't break
-> anything. You can add reg property even though the kernel doesn't use
-> it.
+> Add debugfs file to control clocks using firmware APIs
+> through debugfs interface.
 > 
+> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+> Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> ---
+>  drivers/firmware/xilinx/zynqmp-debug.c | 48 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+> 
+> diff --git a/drivers/firmware/xilinx/zynqmp-debug.c b/drivers/firmware/xilinx/zynqmp-debug.c
+> index 1cb69f7..837fcd1 100644
+> --- a/drivers/firmware/xilinx/zynqmp-debug.c
+> +++ b/drivers/firmware/xilinx/zynqmp-debug.c
+> @@ -34,6 +34,15 @@ static struct pm_api_info pm_api_list[] = {
+>  	PM_API(PM_GET_API_VERSION),
+>  	PM_API(PM_IOCTL),
+>  	PM_API(PM_QUERY_DATA),
+> +	PM_API(PM_CLOCK_ENABLE),
+> +	PM_API(PM_CLOCK_DISABLE),
+> +	PM_API(PM_CLOCK_GETSTATE),
+> +	PM_API(PM_CLOCK_SETDIVIDER),
+> +	PM_API(PM_CLOCK_GETDIVIDER),
+> +	PM_API(PM_CLOCK_SETRATE),
+> +	PM_API(PM_CLOCK_GETRATE),
+> +	PM_API(PM_CLOCK_SETPARENT),
+> +	PM_API(PM_CLOCK_GETPARENT),
+>  };
+>  
+>  /**
+> @@ -87,6 +96,7 @@ static int process_api_request(u32 pm_id, u64 *pm_api_arg, u32 *pm_api_ret)
+>  	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
+>  	u32 pm_api_version;
+>  	int ret;
+> +	u64 rate;
+>  
+>  	if (!eemi_ops)
+>  		return -ENXIO;
+> @@ -132,6 +142,44 @@ static int process_api_request(u32 pm_id, u64 *pm_api_arg, u32 *pm_api_ret)
+>  				pm_api_ret[2], pm_api_ret[3]);
+>  		break;
+>  	}
+> +	case PM_CLOCK_ENABLE:
+> +		ret = eemi_ops->clock_enable(pm_api_arg[0]);
+> +		break;
 
-Ah OK. That makes sense. IIRC it used to have some @<offset> value
-previously which has some correlation to HW block. I will dig that out.
-Sorry I missed that you were suggesting to add reg property.
+As I mentioned in earlier patch, I don't see the need for this debugfs
+interface. Clock lay has read-only interface in debugfs already. Also if
+you want to debug clocks, you can do so using the driver which uses
+these clocks. Do you really want to manage clocks in user-space ?
+The whole idea of EEMI kind of interface is to abstract and hide the
+fine details even from non-trusted rich OS like Linux kernel, but by
+providing this you are doing exactly opposite.
 
 -- 
 Regards,
