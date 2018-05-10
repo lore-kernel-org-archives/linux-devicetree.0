@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 6/8] MIPS: jz4780: dts: Fix watchdog node
-Date: Thu, 10 May 2018 20:47:49 +0200
-Message-ID: <20180510184751.13416-6-paul@crapouillou.net>
+Subject: [PATCH v3 7/8] MIPS: qi_lb60: Enable the jz4740-wdt driver
+Date: Thu, 10 May 2018 20:47:50 +0200
+Message-ID: <20180510184751.13416-7-paul@crapouillou.net>
 References: <20180510184751.13416-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180510184751.13416-1-paul@crapouillou.net>
@@ -10,59 +10,35 @@ To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark R
 Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Mathieu Malaterre <malat@debian.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-- The previous node requested a memory area of 0x100 bytes, while the
-  driver only manipulates four registers present in the first 0x10 bytes.
+The watchdog is an useful piece of hardware, so there's no reason not to
+enable it.
 
-- The driver requests for the "rtc" clock, but the previous node did not
-  provide any.
+Besides, this is important for restart to work after the change in the
+next commit.
+
+This commit enables the Kconfig option in the qi_lb60 defconfig.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Mathieu Malaterre <malat@debian.org>
 Acked-by: James Hogan <jhogan@kernel.org>
 ---
- Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt | 7 ++++++-
- arch/mips/boot/dts/ingenic/jz4780.dtsi                            | 5 ++++-
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ arch/mips/configs/qi_lb60_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
  v2: No change
- v3: Also fix documentation
+ v3: No change
 
-diff --git a/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt b/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
-index cb44918f01a8..ce1cb72d5345 100644
---- a/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
-@@ -3,10 +3,15 @@ Ingenic Watchdog Timer (WDT) Controller for JZ4740 & JZ4780
- Required properties:
- compatible: "ingenic,jz4740-watchdog" or "ingenic,jz4780-watchdog"
- reg: Register address and length for watchdog registers
-+clocks: phandle to the RTC clock
-+clock-names: should be "rtc"
- 
- Example:
- 
- watchdog: jz4740-watchdog@10002000 {
- 	compatible = "ingenic,jz4740-watchdog";
--	reg = <0x10002000 0x100>;
-+	reg = <0x10002000 0x10>;
-+
-+	clocks = <&cgu JZ4740_CLK_RTC>;
-+	clock-names = "rtc";
- };
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index 9b5794667aee..a52f59bf58c7 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -221,7 +221,10 @@
- 
- 	watchdog: watchdog@10002000 {
- 		compatible = "ingenic,jz4780-watchdog";
--		reg = <0x10002000 0x100>;
-+		reg = <0x10002000 0x10>;
-+
-+		clocks = <&cgu JZ4780_CLK_RTCLK>;
-+		clock-names = "rtc";
- 	};
- 
- 	nemc: nemc@13410000 {
+diff --git a/arch/mips/configs/qi_lb60_defconfig b/arch/mips/configs/qi_lb60_defconfig
+index 3b02ff9a7c64..d8b7211a7b0f 100644
+--- a/arch/mips/configs/qi_lb60_defconfig
++++ b/arch/mips/configs/qi_lb60_defconfig
+@@ -72,6 +72,8 @@ CONFIG_POWER_SUPPLY=y
+ CONFIG_BATTERY_JZ4740=y
+ CONFIG_CHARGER_GPIO=y
+ # CONFIG_HWMON is not set
++CONFIG_WATCHDOG=y
++CONFIG_JZ4740_WDT=y
+ CONFIG_MFD_JZ4740_ADC=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
 -- 
 2.11.0
