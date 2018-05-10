@@ -1,170 +1,370 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v1 2/5] gpio: syscon: Add gpio-syscon for rockchip
-Date: Thu, 10 May 2018 15:56:08 +0100
-Message-ID: <c0f520d1-42e3-e8b5-128e-3ff3d532ec4c@arm.com>
-References: <1525943800-14095-1-git-send-email-djw@t-chip.com.cn>
- <1525943800-14095-3-git-send-email-djw@t-chip.com.cn>
+From: Adam Ford <aford173@gmail.com>
+Subject: Re: [PATCH V3] ARM: dts: da850-evm: use phandles to extend nodes
+Date: Thu, 10 May 2018 10:08:04 -0500
+Message-ID: <CAHCN7xKXJnh5MSudY3FU_9Xw98PwDi3yaWTUdfjFDaE24NBrzw@mail.gmail.com>
+References: <20180507123721.9264-1-aford173@gmail.com> <ae8292b2-b167-7a96-70be-1cfea6059874@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525943800-14095-3-git-send-email-djw@t-chip.com.cn>
-Content-Language: en-GB
+In-Reply-To: <ae8292b2-b167-7a96-70be-1cfea6059874@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: djw@t-chip.com.cn, linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Wayne Chou <zxf@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Adam Ford <adam.ford@logicpd.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/05/18 10:16, djw@t-chip.com.cn wrote:
-> From: Levin Du <djw@t-chip.com.cn>
-> 
-> Some GPIOs sit in the GRF_SOC_CON registers of Rockchip SoCs,
-> which do not belong to the general pinctrl.
-> 
-> Adding gpio-syscon support makes controlling regulator or
-> LED using these special pins very easy by reusing existing
-> drivers, such as gpio-regulator and led-gpio.
-> 
-> Signed-off-by: Levin Du <djw@t-chip.com.cn>
-> 
-> ---
-> 
-> Changes in v1:
-> - Refactured for general gpio-syscon usage for Rockchip SoCs.
-> - Add doc rockchip,gpio-syscon.txt
-> 
->   .../bindings/gpio/rockchip,gpio-syscon.txt         | 41 ++++++++++++++++++++++
->   drivers/gpio/gpio-syscon.c                         | 30 ++++++++++++++++
->   2 files changed, 71 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt b/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
-> new file mode 100644
-> index 0000000..e4c1650
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
-> @@ -0,0 +1,41 @@
-> +* Rockchip GPIO support for GRF_SOC_CON registers
-> +
-> +Required properties:
-> +- compatible: Should contain "rockchip,gpio-syscon".
-> +- gpio-controller: Marks the device node as a gpio controller.
-> +- #gpio-cells: Should be two. The first cell is the pin number and
+On Thu, May 10, 2018 at 4:10 AM, Sekhar Nori <nsekhar@ti.com> wrote:
+> On Monday 07 May 2018 06:07 PM, Adam Ford wrote:
+>> Many node labels in the device tree (like serial0, serial1, etc) are being
+>> redefined, so let's modernize the device tree by using phandles to
+>> extend the existing nodes.  This helps reduce the whitespace.
+>>
+>> Signed-off-by: Adam Ford <aford173@gmail.com>
+>
+> I applied this without the pmic changes. I am not convinced about those.
+> The tps node is already being referred to as phandle. I am not sure
+> referring to each individual regulator using phandle is needed. Other
+> files like am335x-evm.dts don't do it as well.
 
-I would suggest s/pin number/bit number in the associated GRF register/ 
-here. At least in this RK3328 case there's only one pin, which isn't 
-numbered, and if you naively considered it pin 0 of this 'bank' you'd 
-already have the wrong number. Since we're dealing with the "random 
-SoC-specific controls" region of the GRF as opposed to the 
-relatively-consistent and organised pinmux parts, I don't think we 
-should rely on any assumptions about how things are laid out.
+I tested the regulator values and names after booting to see if the
+names and values matched the expected values. They did, so I am
+fairly confident it would have worked.
 
-I was initially going to suggest a more specific compatible string as 
-well, but on reflection I think the generic "rockchip,gpio-syscon" for 
-basic "flip this single GRF bit" functionality actually is the right way 
-to go. In the specific RK3328 GPIO_MUTE case, there look to be 4 bits in 
-total related to this pin - the enable, value, and some pull controls 
-(which I assume apply when the output is disabled) - if at some point in 
-future we *did* want to start explicitly controlling the rest of them 
-too, then would be a good time to define a separate 
-"rockchip,rk3328-gpio-mute" binding (and probably a dedicated driver) 
-for that specialised functionality, independently of this basic one.
+>
+> Another thing is whether we really need the tp6507x.dtsi file. It does
+> not seem to contain much and also da850-evm.dts is the only file
+> including it. So it seems pretty pointless to me.
 
-> +  the second cell is used to specify the gpio polarity:
-> +    0 = Active high,
-> +    1 = Active low.
-> +- gpio,syscon-dev: Should contain <grf_phandle syscon_offset 0>.
-> +  If declared as child of the grf node, the grf_phandle can be 0.
-> +
-> +Example:
-> +
-> +1. As child of grf node:
-> +
-> +	grf: syscon@ff100000 {
-> +		compatible = "rockchip,rk3328-grf", "syscon", "simple-mfd";
-> +
-> +		gpio_syscon10: gpio-syscon10 {
-> +			compatible = "rockchip,gpio-syscon";
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio,syscon-dev = <0 0x0428 0>;
-> +		};
-> +	};
-> +
-> +
-> +2. Not child of grf node:
-> +
-> +	grf: syscon@ff100000 {
-> +		compatible = "rockchip,rk3328-grf", "syscon", "simple-mfd";
-> +		//...
-> +	};
-> +
-> +	gpio_syscon10: gpio-syscon10 {
-> +		compatible = "rockchip,gpio-syscon";
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		gpio,syscon-dev = <&grf 0x0428 0>;
-> +	};
-> diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-> index 7325b86..e24b408 100644
-> --- a/drivers/gpio/gpio-syscon.c
-> +++ b/drivers/gpio/gpio-syscon.c
-> @@ -135,6 +135,32 @@ static const struct syscon_gpio_data clps711x_mctrl_gpio = {
->   	.dat_bit_offset	= 0x40 * 8 + 8,
->   };
->   
-> +static void rockchip_gpio_set(struct gpio_chip *chip, unsigned int offset,
-> +			      int val)
-> +{
-> +	struct syscon_gpio_priv *priv = gpiochip_get_data(chip);
-> +	unsigned int offs;
-> +	u8 bit;
-> +	u32 data;
-> +	int ret;
-> +
-> +	offs = priv->dreg_offset + priv->data->dat_bit_offset + offset;
+Do you want me to do a patch that removes the  tp6507x.dtsi file and
+just sets up the
+PMIC from scratch within the da850-evm file?
 
-data->dat_bit_offset is always 0 here, but given that wrapping large 
-offsets to successive GRF registers doesn't make sense (and wouldn't 
-work anyway with this arithmetic) I don't think you even need this 
-calculation of offs at all...
+>
+> Here is what I committed.
 
-> +	bit = offs % SYSCON_REG_BITS;
+Thank you.  I think looks cleaner this way, and more consistent with
+many of the other platforms and boards.
 
-... since it would suffice to use offset here...
-
-> +	data = (val ? BIT(bit) : 0) | BIT(bit + 16);
-> +	ret = regmap_write(priv->syscon,
-> +			   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
-
-... and priv->dreg_offset here.
-
-Robin.
-
-> +			   data);
-> +	if (ret < 0)
-> +		dev_err(chip->parent, "gpio write failed ret(%d)\n", ret);
-> +}
+adam
+>
+> Thanks,
+> Sekhar
+>
+> ---8<---
+> commit ae62a32d6019a8225e2c32e631b8b0d039151131 (refs/heads/v4.18/dt)
+> Author:     Adam Ford <aford173@gmail.com>
+> AuthorDate: Mon May 7 07:37:21 2018 -0500
+> Commit:     Sekhar Nori <nsekhar@ti.com>
+> CommitDate: Thu May 10 14:01:15 2018 +0530
+>
+>     ARM: dts: da850-evm: use phandles to extend nodes
+>
+>     Many node labels in the device tree (like serial0, serial1, etc) are being
+>     redefined, so let's modernize the device tree by using phandles to
+>     extend the existing nodes.  This helps reduce the whitespace.
+>
+>     Signed-off-by: Adam Ford <aford173@gmail.com>
+>     [nsekhar@ti.com: drop tps6507x related changes]
+>     Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+>
+> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+> index 339cae353302..9389f95f4094 100644
+> --- a/arch/arm/boot/dts/da850-evm.dts
+> +++ b/arch/arm/boot/dts/da850-evm.dts
+> @@ -27,143 +27,6 @@
+>                 spi0 = &spi1;
+>         };
+>
+> -       soc@1c00000 {
+> -               pmx_core: pinmux@14120 {
+> -                       status = "okay";
+> -
+> -                       mcasp0_pins: pinmux_mcasp0_pins {
+> -                               pinctrl-single,bits = <
+> -                                       /*
+> -                                        * AHCLKX, ACLKX, AFSX, AHCLKR, ACLKR,
+> -                                        * AFSR, AMUTE
+> -                                        */
+> -                                       0x00 0x11111111 0xffffffff
+> -                                       /* AXR11, AXR12 */
+> -                                       0x04 0x00011000 0x000ff000
+> -                               >;
+> -                       };
+> -                       nand_pins: nand_pins {
+> -                               pinctrl-single,bits = <
+> -                                       /* EMA_WAIT[0], EMA_OE, EMA_WE, EMA_CS[4], EMA_CS[3] */
+> -                                       0x1c 0x10110110  0xf0ff0ff0
+> -                                       /*
+> -                                        * EMA_D[0], EMA_D[1], EMA_D[2],
+> -                                        * EMA_D[3], EMA_D[4], EMA_D[5],
+> -                                        * EMA_D[6], EMA_D[7]
+> -                                        */
+> -                                       0x24 0x11111111  0xffffffff
+> -                                       /* EMA_A[1], EMA_A[2] */
+> -                                       0x30 0x01100000  0x0ff00000
+> -                               >;
+> -                       };
+> -               };
+> -               serial0: serial@42000 {
+> -                       status = "okay";
+> -               };
+> -               serial1: serial@10c000 {
+> -                       status = "okay";
+> -               };
+> -               serial2: serial@10d000 {
+> -                       status = "okay";
+> -               };
+> -               rtc0: rtc@23000 {
+> -                       status = "okay";
+> -               };
+> -               i2c0: i2c@22000 {
+> -                       status = "okay";
+> -                       clock-frequency = <100000>;
+> -                       pinctrl-names = "default";
+> -                       pinctrl-0 = <&i2c0_pins>;
+> -
+> -                       tps: tps@48 {
+> -                               reg = <0x48>;
+> -                       };
+> -                       tlv320aic3106: tlv320aic3106@18 {
+> -                               #sound-dai-cells = <0>;
+> -                               compatible = "ti,tlv320aic3106";
+> -                               reg = <0x18>;
+> -                               status = "okay";
+> -
+> -                               /* Regulators */
+> -                               IOVDD-supply = <&vdcdc2_reg>;
+> -                               /* Derived from VBAT: Baseboard 3.3V / 1.8V */
+> -                               AVDD-supply = <&vbat>;
+> -                               DRVDD-supply = <&vbat>;
+> -                               DVDD-supply = <&vbat>;
+> -                       };
+> -                       tca6416: gpio@20 {
+> -                               compatible = "ti,tca6416";
+> -                               reg = <0x20>;
+> -                               gpio-controller;
+> -                               #gpio-cells = <2>;
+> -                       };
+> -               };
+> -               wdt: wdt@21000 {
+> -                       status = "okay";
+> -               };
+> -               mmc0: mmc@40000 {
+> -                       max-frequency = <50000000>;
+> -                       bus-width = <4>;
+> -                       status = "okay";
+> -                       pinctrl-names = "default";
+> -                       pinctrl-0 = <&mmc0_pins>;
+> -               };
+> -               spi1: spi@30e000 {
+> -                       status = "okay";
+> -                       pinctrl-names = "default";
+> -                       pinctrl-0 = <&spi1_pins &spi1_cs0_pin>;
+> -                       flash: m25p80@0 {
+> -                               #address-cells = <1>;
+> -                               #size-cells = <1>;
+> -                               compatible = "m25p64";
+> -                               spi-max-frequency = <30000000>;
+> -                               m25p,fast-read;
+> -                               reg = <0>;
+> -                               partition@0 {
+> -                                       label = "U-Boot-SPL";
+> -                                       reg = <0x00000000 0x00010000>;
+> -                                       read-only;
+> -                               };
+> -                               partition@1 {
+> -                                       label = "U-Boot";
+> -                                       reg = <0x00010000 0x00080000>;
+> -                                       read-only;
+> -                               };
+> -                               partition@2 {
+> -                                       label = "U-Boot-Env";
+> -                                       reg = <0x00090000 0x00010000>;
+> -                                       read-only;
+> -                               };
+> -                               partition@3 {
+> -                                       label = "Kernel";
+> -                                       reg = <0x000a0000 0x00280000>;
+> -                               };
+> -                               partition@4 {
+> -                                       label = "Filesystem";
+> -                                       reg = <0x00320000 0x00400000>;
+> -                               };
+> -                               partition@5 {
+> -                                       label = "MAC-Address";
+> -                                       reg = <0x007f0000 0x00010000>;
+> -                                       read-only;
+> -                               };
+> -                       };
+> -               };
+> -               mdio: mdio@224000 {
+> -                       status = "okay";
+> -                       pinctrl-names = "default";
+> -                       pinctrl-0 = <&mdio_pins>;
+> -                       bus_freq = <2200000>;
+> -               };
+> -               eth0: ethernet@220000 {
+> -                       status = "okay";
+> -                       pinctrl-names = "default";
+> -                       pinctrl-0 = <&mii_pins>;
+> -               };
+> -               gpio: gpio@226000 {
+> -                       status = "okay";
+> -               };
+> -       };
+>         vbat: fixedregulator0 {
+>                 compatible = "regulator-fixed";
+>                 regulator-name = "vbat";
+> @@ -200,6 +63,153 @@
+>         };
+>  };
+>
+> +&pmx_core {
+> +       status = "okay";
 > +
-> +static const struct syscon_gpio_data rockchip_gpio_syscon = {
-> +	/* Rockchip GRF_SOC_CON Bits 0-15 */
-> +	.flags		= GPIO_SYSCON_FEAT_OUT,
-> +	.bit_count	= 16,
-> +	.set		= rockchip_gpio_set,
+> +       mcasp0_pins: pinmux_mcasp0_pins {
+> +               pinctrl-single,bits = <
+> +                       /*
+> +                        * AHCLKX, ACLKX, AFSX, AHCLKR, ACLKR,
+> +                        * AFSR, AMUTE
+> +                        */
+> +                       0x00 0x11111111 0xffffffff
+> +                       /* AXR11, AXR12 */
+> +                       0x04 0x00011000 0x000ff000
+> +               >;
+> +       };
+> +       nand_pins: nand_pins {
+> +               pinctrl-single,bits = <
+> +                       /* EMA_WAIT[0], EMA_OE, EMA_WE, EMA_CS[4], EMA_CS[3] */
+> +                       0x1c 0x10110110  0xf0ff0ff0
+> +                       /*
+> +                        * EMA_D[0], EMA_D[1], EMA_D[2],
+> +                        * EMA_D[3], EMA_D[4], EMA_D[5],
+> +                        * EMA_D[6], EMA_D[7]
+> +                        */
+> +                       0x24 0x11111111  0xffffffff
+> +                       /* EMA_A[1], EMA_A[2] */
+> +                       0x30 0x01100000  0x0ff00000
+> +               >;
+> +       };
 > +};
 > +
->   #define KEYSTONE_LOCK_BIT BIT(0)
->   
->   static void keystone_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
-> @@ -175,6 +201,10 @@ static const struct of_device_id syscon_gpio_ids[] = {
->   		.compatible	= "ti,keystone-dsp-gpio",
->   		.data		= &keystone_dsp_gpio,
->   	},
-> +	{
-> +		.compatible	= "rockchip,gpio-syscon",
-> +		.data		= &rockchip_gpio_syscon,
-> +	},
->   	{ }
->   };
->   MODULE_DEVICE_TABLE(of, syscon_gpio_ids);
-> 
+> +&serial0 {
+> +       status = "okay";
+> +};
+> +
+> +&serial1 {
+> +       status = "okay";
+> +};
+> +
+> +&serial2 {
+> +       status = "okay";
+> +};
+> +
+> +&rtc0 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +       status = "okay";
+> +       clock-frequency = <100000>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&i2c0_pins>;
+> +
+> +       tps: tps@48 {
+> +               reg = <0x48>;
+> +       };
+> +       tlv320aic3106: tlv320aic3106@18 {
+> +               #sound-dai-cells = <0>;
+> +               compatible = "ti,tlv320aic3106";
+> +               reg = <0x18>;
+> +               status = "okay";
+> +
+> +               /* Regulators */
+> +               IOVDD-supply = <&vdcdc2_reg>;
+> +               /* Derived from VBAT: Baseboard 3.3V / 1.8V */
+> +               AVDD-supply = <&vbat>;
+> +               DRVDD-supply = <&vbat>;
+> +               DVDD-supply = <&vbat>;
+> +       };
+> +       tca6416: gpio@20 {
+> +               compatible = "ti,tca6416";
+> +               reg = <0x20>;
+> +               gpio-controller;
+> +               #gpio-cells = <2>;
+> +       };
+> +};
+> +
+> +&wdt {
+> +       status = "okay";
+> +};
+> +
+> +&mmc0 {
+> +       max-frequency = <50000000>;
+> +       bus-width = <4>;
+> +       status = "okay";
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&mmc0_pins>;
+> +};
+> +
+> +&spi1 {
+> +       status = "okay";
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&spi1_pins &spi1_cs0_pin>;
+> +       flash: m25p80@0 {
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               compatible = "m25p64";
+> +               spi-max-frequency = <30000000>;
+> +               m25p,fast-read;
+> +               reg = <0>;
+> +               partition@0 {
+> +                       label = "U-Boot-SPL";
+> +                       reg = <0x00000000 0x00010000>;
+> +                       read-only;
+> +               };
+> +               partition@1 {
+> +                       label = "U-Boot";
+> +                       reg = <0x00010000 0x00080000>;
+> +                       read-only;
+> +               };
+> +               partition@2 {
+> +                       label = "U-Boot-Env";
+> +                       reg = <0x00090000 0x00010000>;
+> +                       read-only;
+> +               };
+> +               partition@3 {
+> +                       label = "Kernel";
+> +                       reg = <0x000a0000 0x00280000>;
+> +               };
+> +               partition@4 {
+> +                       label = "Filesystem";
+> +                       reg = <0x00320000 0x00400000>;
+> +               };
+> +               partition@5 {
+> +                       label = "MAC-Address";
+> +                       reg = <0x007f0000 0x00010000>;
+> +                       read-only;
+> +               };
+> +       };
+> +};
+> +
+> +&mdio {
+> +       status = "okay";
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&mdio_pins>;
+> +       bus_freq = <2200000>;
+> +};
+> +
+> +&eth0 {
+> +       status = "okay";
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&mii_pins>;
+> +};
+> +
+> +&gpio {
+> +       status = "okay";
+> +};
+> +
+>  /include/ "tps6507x.dtsi"
+>
+>  &tps {
