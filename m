@@ -1,105 +1,43 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v5 1/2] dt: bindings: lm3601x: Introduce the lm3601x
- driver
-Date: Thu, 10 May 2018 22:50:47 +0200
-Message-ID: <868fe3bf-b12d-581b-18f9-1eac734e6239@gmail.com>
-References: <20180510174717.26540-1-dmurphy@ti.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH] ARM: dts: BCM5301X: Switch D-Link DIR-885L to the new
+ partitions syntax
+Date: Thu, 10 May 2018 23:20:00 +0200
+Message-ID: <20180510212000.11110-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180510174717.26540-1-dmurphy@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, mark.rutland@arm.com, pavel@ucw.cz, afd@ti.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/10/2018 07:47 PM, Dan Murphy wrote:
-> Introduce the device tree bindings for the lm3601x
-> family of LED torch, flash and IR drivers.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> 
-> v5 - No changes - https://patchwork.kernel.org/patch/10391743/
-> 
-> v4 - Added " " around "=", changed strobe to flash on label, removed "support and
-> register" comment and change ir lable to ir:torch - See v2 patchworks for comments
-> v3 - Removed wildcard compatible - https://patchwork.kernel.org/patch/10386241/
-> v2 - No changes - https://patchwork.kernel.org/patch/10384587/
-> 
->   .../devicetree/bindings/leds/leds-lm3601x.txt | 50 +++++++++++++++++++
->   1 file changed, 50 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3601x.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
-> new file mode 100644
-> index 000000000000..697e5e3a1d4c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
-> @@ -0,0 +1,50 @@
-> +* Texas Instruments - lm3601x Single-LED Flash Driver
-> +
-> +The LM3601X are ultra-small LED flash drivers that
-> +provide a high level of adjustability.
-> +
-> +Required properties:
-> +	- compatible : Can be one of the following
-> +		"ti,lm36010"
-> +		"ti,lm36011"
-> +	- reg : I2C slave address
-> +	- #address-cells : 1
-> +	- #size-cells : 0
-> +
-> +Required child properties:
-> +	- reg : 0 - Indicates a torch interface
-> +		1 - Indicates a flash interface
-> +		2 - Indicates an infrared interface
-
-You need here also:
-
-- flash-max-microamp : see Documentation/devicetree/bindin
-/leds/common.txt
-- flash-max-timeout-us : see 
-Documentation/devicetree/bindings/leds/common.txt
-
-
-> +
-> +Optional child properties:
-> +	- label : see Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Example:
-> +led-controller@64 {
-> +	compatible = "ti,lm36010";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	reg = <0x64>;
-> +
-> +	led@0 {
-> +		reg = <0>;
-> +		label = "white:torch";
-> +		led-max-microamp = <10000>;
-> +	};
-> +
-> +	led@1 {
-> +		reg = <1>;
-> +		label = "white:flash";
-> +		flash-max-microamp = <10000>;
-> +		flash-max-timeout-us = <800>;
-> +	};
-> +
-> +	led@2 {
-> +		reg = <2>;
-> +		label = "ir:torch";
-> +	};
-> +}
-> +
-> +For more product information please see the links below:
-> +http://www.ti.com/product/LM36010
-> +http://www.ti.com/product/LM36011
-> 
-
--- 
-Best regards,
-Jacek Anaszewski
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKVGhpcyBuZXcgc3ludGF4
+IGlzIHNsaWdodGx5IGJldHRlciBkZXNpZ25lZCAmIHVzZXMgImNvbXBhdGlibGUiIHN0cmluZy4K
+Rm9yIGRldGFpbHMgc2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFy
+dGl0aW9uLnR4dCAuCgpTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
+a2kucGw+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOTQtZGxpbmstZGlyLTg4NWwuZHRz
+IHwgMTIgKysrKysrKysrLS0tCiAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCAzIGRl
+bGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDk0LWRsaW5r
+LWRpci04ODVsLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDk0LWRsaW5rLWRpci04ODVs
+LmR0cwppbmRleCA0OTRkYmQzOTY1OGMuLmQxNzNiY2Q5M2I5MSAxMDA2NDQKLS0tIGEvYXJjaC9h
+cm0vYm9vdC9kdHMvYmNtNDcwOTQtZGxpbmstZGlyLTg4NWwuZHRzCisrKyBiL2FyY2gvYXJtL2Jv
+b3QvZHRzL2JjbTQ3MDk0LWRsaW5rLWRpci04ODVsLmR0cwpAQCAtMjYsOSArMjYsMTUgQEAKIAog
+CW5hbmQ6IG5hbmRAMTgwMjgwMDAgewogCQluYW5kY3NAMCB7Ci0JCQlwYXJ0aXRpb25AMCB7Ci0J
+CQkJbGFiZWwgPSAiZmlybXdhcmUiOwotCQkJCXJlZyA9IDwweDAwMDAwMDAwIDB4MDgwMDAwMDA+
+OworCQkJcGFydGl0aW9ucyB7CisJCQkJY29tcGF0aWJsZSA9ICJmaXhlZC1wYXJ0aXRpb25zIjsK
+KwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCQkjc2l6ZS1jZWxscyA9IDwxPjsKKworCQkJ
+CXBhcnRpdGlvbkAwIHsKKwkJCQkJbGFiZWwgPSAiZmlybXdhcmUiOworCQkJCQlyZWcgPSA8MHgw
+MDAwMDAwMCAweDA4MDAwMDAwPjsKKwkJCQl9OwogCQkJfTsKIAkJfTsKIAl9OwotLSAKMi4xMy42
+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
+YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
+LWtlcm5lbAo=
