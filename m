@@ -1,205 +1,103 @@
-Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay10.mail.gandi.net ([217.70.178.230]:45789 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750911AbeECU3h (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 3 May 2018 16:29:37 -0400
-Date: Thu, 3 May 2018 22:29:31 +0200
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v4 10/14] media: ov772x: reconstruct s_frame_interval()
-Message-ID: <20180503202931.GE19612@w540>
-References: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
- <1525021993-17789-11-git-send-email-akinobu.mita@gmail.com>
+Return-Path: <SRS0=IKTP=H5=mediatek.com=argus.lin@kernel.org>
+From: <argus.lin@mediatek.com>
+Subject: [PATCH V5 0/4] Pwrap: Mediatek pwrap driver for mt6797
+Date: Thu, 10 May 2018 21:01:55 +0800
+Message-ID: <1525957319-20557-1-git-send-email-argus.lin@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2qXFWqzzG3v1+95a"
-Content-Disposition: inline
-In-Reply-To: <1525021993-17789-11-git-send-email-akinobu.mita@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_007_1380858335.999013154"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
+--__=_Part_Boundary_007_1380858335.999013154
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_008_1824443256.1537580129"
 
---2qXFWqzzG3v1+95a
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+--__=_Part_Boundary_008_1824443256.1537580129
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-Hi Akinobu,
-   thank you for the patch
+PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
+SGVyZSYjMzk7cyB2ZXJzaW9uIDUgb2YgdGhlIHBhdGNoIHNlcmllcywgaW5jbHVkZSA0IHBhdGNo
+ZXM6DQoxLiBmaXggYnVnIGF0IGNpcGhlciBpbml0IGZvcg0KNWFlNDgwNDBhYTQ3ICgmcXVvdDtz
+b2M6IG1lZGlhdGVrOiBQTUlDIHdyYXA6IGFkZCBtdDYzMjMgc2xhdmUgc3VwcG9ydCZxdW90OykN
+CjIuIGFkZCBwd3JhcCBkcml2ZXIgZm9yIG10Njc5NyBTb0NzLg0KMy4gYWRkIG10NjM1MSBzdXBw
+b3J0IGZvciBtdDY3OTcgU29Dcy4NCjQuIHJlbW92ZSBjYXBzIGZsYWcgYXQgcGF0Y2ggVjQgYW5k
+IGtlZXAgdG8gdXNlIGhhc19icmlkZ2UuDQoNCkNoYW5nZXMgZnJvbSB2MyB0byB2NDoNCjEpYWRk
+IGNhcHMgZmxhZyBmb3IgcHdyYXAgdG8gZXhwbGFpbiBwd3JhcCYjMzk7cyBjYXBhYmlsaXR5Lg0K
+MilyZW1vdmUgaGFzX2JyaWRnZSBmbGFnLCByZXBsYWNlIGJ5IGNhcHMgZmxhZy4NCjMpYWRkIGlu
+dDFfZW5fYWxsIGZsYWcgZm9yIG5ldyBpbnRlcnJ1cHQuDQo0KWFkZCBwd3JhcCBkcml2ZXJzIGZv
+ciBtdDY3OTcgU29Dcy4NCjUpZml4IGJ1ZyBhdCBjaXBoZXIgaW5pdCBmb3INCjVhZTQ4MDQwYWE0
+NyAoJnF1b3Q7c29jOiBtZWRpYXRlazogUE1JQyB3cmFwOiBhZGQgbXQ2MzIzIHNsYXZlIHN1cHBv
+cnQmcXVvdDspDQo2KWFkZCBtdDYzNTEgc3VwcG9ydCBmb3IgbXQ2Nzk3IFNvQ3MuDQoNCkNoYW5n
+ZXMgZnJvbSB2MiB0byB2MzoNCjEpYWRqdXN0IHVwc3RyZWFtIHBhdGNoIHNlcXVlbmNlLg0KMilm
+aXggYnVpbGQgZXJyb3IgZm9yIG5ldyBmaWxlZCBhdCBwbWljX3dyYXBwZXJfdHlwZS4NCjMpYWRq
+dXN0IHBtaWNfdHlwZSBlbnVtIHNlcXVlbmNlLg0KDQpDaGFuZ2VzIGZyb20gdjEgdG8gdjI6DQox
+KSBhZGQgbmV3IGNhcGFiaWxpdHkgZmllbGQgYW5kIE1BUkNPIGZvciBkaWZmZXJlbnQgcHdyYXAg
+c2VyaWVzLCB0aGUgY2FwYWJpbGl0eSBpbmNsdWRlIEJSSURHRSwgUkVTRVQsIERDTSwgUFJJT1JJ
+VFlfU0VMIGFuZCBJTlQxX0VOLg0KMikgYWRkIHN0YXJ2YWN0aW9uIGZvciBtdDY3OTcgcHdyYXAu
+DQozKSBhZGQgSU5UMSBpbnRlcnJ1cHQgdG8gaGFuZGxlIHN0YXJ2YWN0aW9uIGFuZCByZXF1ZXN0
+IGV4Y2VwdGlvbi4NCg0KDQoNCkFyZ3VzIExpbiAoNCk6DQogIGR0LWJpbmRpbmdzOiBwd3JhcDog
+bWVkaWF0ZWs6IGFkZCBwd3JhcCBzdXBwb3J0IGZvciBNVDY3OTcNCiAgc29jOiBtZWRpYXRlazog
+cHdyYXA6IGZpeCBjaXBoZXIgaW5pdCBzZXR0aW5nIGVycm9yDQogIHNvYzogbWVkaWF0ZWs6IHB3
+cmFwOiBhZGQgcHdyYXAgZHJpdmVyIGZvciBtdDY3OTcgU29Dcw0KICBzb2M6IG1lZGlhdGVrOiBw
+d3JhcDogYWRkIG10NjM1MSBkcml2ZXIgZm9yIG10Njc5NyBTb0NzDQoNCiAuLi4vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0ICAgICB8ICAxICsNCiBkcml2ZXJzL3Nv
+Yy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMgICAgICAgICAgICAgICB8IDgxICsrKysrKysrKysr
+KysrKysrKysrKy0NCiAyIGZpbGVzIGNoYW5nZWQsIDgwIGluc2VydGlvbnMoKyksIDIgZGVsZXRp
+b25zKC0pDQoNCi0tIA0KMS44LjEuMS5kaXJ0eQ0KDQo8L3ByZT48IS0tdHlwZTp0ZXh0LS0+PCEt
+LXstLT48cHJlPioqKioqKioqKioqKiogRW1haWwgQ29uZmlkZW50aWFsaXR5IE5vdGljZQ0KICoq
+KioqKioqKioqKioqKioqKioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZS1t
+YWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5IGJlIGNvbmZpZGVu
+dGlhbCwgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhlbXB0IGZyb20g
+ZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVuZGVkIHRvIGJlIA0K
+Y29udmV5ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFueSB1c2UsIGRp
+c3NlbWluYXRpb24sIA0KZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWluaW5nIG9yIGNvcHlp
+bmcgb2YgdGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50cykgYnkgdW5pbnRl
+bmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5IA0KYmUgdW5s
+YXdmdWwuIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUtbWFp
+bCwgb3IgYmVsaWV2ZQ0KIA0KdGhhdCB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFpbCBpbiBl
+cnJvciwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIA0KaW1tZWRpYXRlbHkgKGJ5IHJlcGx5aW5n
+IHRvIHRoaXMgZS1tYWlsKSwgZGVsZXRlIGFueSBhbmQgYWxsIGNvcGllcyBvZiANCnRoaXMgZS1t
+YWlsIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVtLCBhbmQgZG8g
+bm90DQpkaXNjbG9zZSB0aGUgY29udGVudCBvZiB0aGlzIGUtbWFpbCB0byBhbnkgb3RoZXIgcGVy
+c29uLiBUaGFuaw0KIHlvdSE8L3ByZT48IS0tfS0tPg==
 
-On Mon, Apr 30, 2018 at 02:13:09AM +0900, Akinobu Mita wrote:
-> This splits the s_frame_interval() in subdev video ops into selecting the
-> frame interval and setting up the registers.
->
-> This is a preparatory change to avoid accessing registers under power
-> saving mode.
->
-> Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Hans Verkuil <hans.verkuil@cisco.com>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> ---
-> * v4
-> - No changes
->
->  drivers/media/i2c/ov772x.c | 56 +++++++++++++++++++++++++++++-----------------
->  1 file changed, 35 insertions(+), 21 deletions(-)
->
-> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-> index edc013d..7ea157e 100644
-> --- a/drivers/media/i2c/ov772x.c
-> +++ b/drivers/media/i2c/ov772x.c
-> @@ -617,25 +617,16 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
->  	return 0;
->  }
->
-> -static int ov772x_set_frame_rate(struct ov772x_priv *priv,
-> -				 struct v4l2_fract *tpf,
-> -				 const struct ov772x_color_format *cfmt,
-> -				 const struct ov772x_win_size *win)
-> +static unsigned int ov772x_select_fps(struct ov772x_priv *priv,
-> +				 struct v4l2_fract *tpf)
+--__=_Part_Boundary_008_1824443256.1537580129
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
-Please align to the open brace, as all the other functions in the
-driver.
+RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQpIZXJlJ3MgdmVyc2lv
+biA1IG9mIHRoZSBwYXRjaCBzZXJpZXMsIGluY2x1ZGUgNCBwYXRjaGVzOg0KMS4gZml4IGJ1ZyBh
+dCBjaXBoZXIgaW5pdCBmb3INCjVhZTQ4MDQwYWE0NyAoInNvYzogbWVkaWF0ZWs6IFBNSUMgd3Jh
+cDogYWRkIG10NjMyMyBzbGF2ZSBzdXBwb3J0IikNCjIuIGFkZCBwd3JhcCBkcml2ZXIgZm9yIG10
+Njc5NyBTb0NzLg0KMy4gYWRkIG10NjM1MSBzdXBwb3J0IGZvciBtdDY3OTcgU29Dcy4NCjQuIHJl
+bW92ZSBjYXBzIGZsYWcgYXQgcGF0Y2ggVjQgYW5kIGtlZXAgdG8gdXNlIGhhc19icmlkZ2UuDQoN
+CkNoYW5nZXMgZnJvbSB2MyB0byB2NDoNCjEpYWRkIGNhcHMgZmxhZyBmb3IgcHdyYXAgdG8gZXhw
+bGFpbiBwd3JhcCdzIGNhcGFiaWxpdHkuDQoyKXJlbW92ZSBoYXNfYnJpZGdlIGZsYWcsIHJlcGxh
+Y2UgYnkgY2FwcyBmbGFnLg0KMylhZGQgaW50MV9lbl9hbGwgZmxhZyBmb3IgbmV3IGludGVycnVw
+dC4NCjQpYWRkIHB3cmFwIGRyaXZlcnMgZm9yIG10Njc5NyBTb0NzLg0KNSlmaXggYnVnIGF0IGNp
+cGhlciBpbml0IGZvcg0KNWFlNDgwNDBhYTQ3ICgic29jOiBtZWRpYXRlazogUE1JQyB3cmFwOiBh
+ZGQgbXQ2MzIzIHNsYXZlIHN1cHBvcnQiKQ0KNilhZGQgbXQ2MzUxIHN1cHBvcnQgZm9yIG10Njc5
+NyBTb0NzLg0KDQpDaGFuZ2VzIGZyb20gdjIgdG8gdjM6DQoxKWFkanVzdCB1cHN0cmVhbSBwYXRj
+aCBzZXF1ZW5jZS4NCjIpZml4IGJ1aWxkIGVycm9yIGZvciBuZXcgZmlsZWQgYXQgcG1pY193cmFw
+cGVyX3R5cGUuDQozKWFkanVzdCBwbWljX3R5cGUgZW51bSBzZXF1ZW5jZS4NCg0KQ2hhbmdlcyBm
+cm9tIHYxIHRvIHYyOg0KMSkgYWRkIG5ldyBjYXBhYmlsaXR5IGZpZWxkIGFuZCBNQVJDTyBmb3Ig
+ZGlmZmVyZW50IHB3cmFwIHNlcmllcywgdGhlIGNhcGFiaWxpdHkgaW5jbHVkZSBCUklER0UsIFJF
+U0VULCBEQ00sIFBSSU9SSVRZX1NFTCBhbmQgSU5UMV9FTi4NCjIpIGFkZCBzdGFydmFjdGlvbiBm
+b3IgbXQ2Nzk3IHB3cmFwLg0KMykgYWRkIElOVDEgaW50ZXJydXB0IHRvIGhhbmRsZSBzdGFydmFj
+dGlvbiBhbmQgcmVxdWVzdCBleGNlcHRpb24uDQoNCg0KDQpBcmd1cyBMaW4gKDQpOg0KICBkdC1i
+aW5kaW5nczogcHdyYXA6IG1lZGlhdGVrOiBhZGQgcHdyYXAgc3VwcG9ydCBmb3IgTVQ2Nzk3DQog
+IHNvYzogbWVkaWF0ZWs6IHB3cmFwOiBmaXggY2lwaGVyIGluaXQgc2V0dGluZyBlcnJvcg0KICBz
+b2M6IG1lZGlhdGVrOiBwd3JhcDogYWRkIHB3cmFwIGRyaXZlciBmb3IgbXQ2Nzk3IFNvQ3MNCiAg
+c29jOiBtZWRpYXRlazogcHdyYXA6IGFkZCBtdDYzNTEgZHJpdmVyIGZvciBtdDY3OTcgU29Dcw0K
+DQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCAgICAgfCAg
+MSArDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jICAgICAgICAgICAgICAg
+fCA4MSArKysrKysrKysrKysrKysrKysrKystDQogMiBmaWxlcyBjaGFuZ2VkLCA4MCBpbnNlcnRp
+b25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQotLSANCjEuOC4xLjEuZGlydHkNCg==
 
-Also, is it worth making a function out of this? It is called from one
-place only... see below.
+--__=_Part_Boundary_008_1824443256.1537580129--
 
->  {
-> -	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
-> -	unsigned long fin = clk_get_rate(priv->clk);
->  	unsigned int fps = tpf->numerator ?
->  			   tpf->denominator / tpf->numerator :
->  			   tpf->denominator;
->  	unsigned int best_diff;
-> -	unsigned int fsize;
-> -	unsigned int pclk;
->  	unsigned int diff;
->  	unsigned int idx;
->  	unsigned int i;
-> -	u8 clkrc = 0;
-> -	u8 com4 = 0;
-> -	int ret;
->
->  	/* Approximate to the closest supported frame interval. */
->  	best_diff = ~0L;
-> @@ -646,7 +637,25 @@ static int ov772x_set_frame_rate(struct ov772x_priv *priv,
->  			best_diff = diff;
->  		}
->  	}
-> -	fps = ov772x_frame_intervals[idx];
-> +
-> +	return ov772x_frame_intervals[idx];
-> +}
-> +
-> +static int ov772x_set_frame_rate(struct ov772x_priv *priv,
-> +				 unsigned int fps,
-> +				 const struct ov772x_color_format *cfmt,
-> +				 const struct ov772x_win_size *win)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
-> +	unsigned long fin = clk_get_rate(priv->clk);
-> +	unsigned int fsize;
-> +	unsigned int pclk;
-> +	unsigned int best_diff;
-
-Please keep variable declarations sorted as in other functions in the
-driver.
-
-> +	unsigned int diff;
-> +	unsigned int i;
-> +	u8 clkrc = 0;
-> +	u8 com4 = 0;
-> +	int ret;
->
->  	/* Use image size (with blankings) to calculate desired pixel clock. */
->  	switch (cfmt->com7 & OFMT_MASK) {
-> @@ -711,10 +720,6 @@ static int ov772x_set_frame_rate(struct ov772x_priv *priv,
->  	if (ret < 0)
->  		return ret;
->
-> -	tpf->numerator = 1;
-> -	tpf->denominator = fps;
-> -	priv->fps = tpf->denominator;
-> -
->  	return 0;
->  }
->
-> @@ -735,8 +740,20 @@ static int ov772x_s_frame_interval(struct v4l2_subdev *sd,
->  {
->  	struct ov772x_priv *priv = to_ov772x(sd);
->  	struct v4l2_fract *tpf = &ival->interval;
-> +	unsigned int fps;
-> +	int ret;
-> +
-> +	fps = ov772x_select_fps(priv, tpf);
-
-That's the only caller of this function. I'm fine if you want to keep
-it as it is though.
-
-Thanks
-   j
-
-
-> +
-> +	ret = ov772x_set_frame_rate(priv, fps, priv->cfmt, priv->win);
-> +	if (ret)
-> +		return ret;
->
-> -	return ov772x_set_frame_rate(priv, tpf, priv->cfmt, priv->win);
-> +	tpf->numerator = 1;
-> +	tpf->denominator = fps;
-> +	priv->fps = fps;
-> +
-> +	return 0;
->  }
->
->  static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
-> @@ -993,7 +1010,6 @@ static int ov772x_set_params(struct ov772x_priv *priv,
->  			     const struct ov772x_win_size *win)
->  {
->  	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
-> -	struct v4l2_fract tpf;
->  	int ret;
->  	u8  val;
->
-> @@ -1075,9 +1091,7 @@ static int ov772x_set_params(struct ov772x_priv *priv,
->  		goto ov772x_set_fmt_error;
->
->  	/* COM4, CLKRC: Set pixel clock and framerate. */
-> -	tpf.numerator = 1;
-> -	tpf.denominator = priv->fps;
-> -	ret = ov772x_set_frame_rate(priv, &tpf, cfmt, win);
-> +	ret = ov772x_set_frame_rate(priv, priv->fps, cfmt, win);
->  	if (ret < 0)
->  		goto ov772x_set_fmt_error;
->
-> --
-> 2.7.4
->
-
---2qXFWqzzG3v1+95a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJa63ErAAoJEHI0Bo8WoVY8tFQP/AqfuHMjF8lOekTJCsCxTMN2
-rCbdIeRTK4p6xE0O9lsOSFRlA3FjnognI0BzAXVFn/LXzq+/TTg5qp+lqo7ZdvMs
-PTe/4yPkzrOiLKwT3kogBkk/LI9MZ+L1IxidjJvjPYlYtIPZmagwmJNvsyzmjf5I
-Vr4+WALnBgtdjw6+8sFIbkS+6EmnJmzsqGdgU+qlgokHkDV8nG26QyzxioPuA3Eo
-R9MhuA1zDKg1wdDlDLFifq5A+6qt9m6SuNf5SanagZKte4oM1ukSo4Ww4Cuf8gut
-r77qYSYuwGCPbymjcuksuyK2NMk8F0GdliDqePacZGAIx48VJZfBHGn2M68K3Zk9
-g2upxqZAzvGtPNESXWZiNKrOZZ8oF87kLwihcqstcCgfGl9WBjZmz1vbQ85iB5S8
-nu9emmcR4LjSscSZBHgxqQvrSeJbHHVsWxY4ycZMOwrSyYTgtujdrIaSOrKN6aD5
-x3u8VUVGQD7xxLX923Bqmgy5pfjcVoJAJ8S/w3+cw4S4rxBJNgvQcFVPMJrZUKXK
-6yYlOITEGvCwm+w05/8QxvYVVRGfGkniSG8WoUU+56CN8Z/WoNod4cu5PhfCuz+N
-BwlrPotnZA5t3SoV/zT7JfhdHDr0kcA5s8Ifrw/zdHcJkG3BvwDRakbXUw6LuTmx
-OCdVbmsNBSxALVXeOI/G
-=62wc
------END PGP SIGNATURE-----
-
---2qXFWqzzG3v1+95a--
+--__=_Part_Boundary_007_1380858335.999013154--
