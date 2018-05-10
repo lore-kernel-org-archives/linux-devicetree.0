@@ -1,16 +1,17 @@
-From: Liviu Dudau <liviu.dudau@arm.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 Subject: Re: [PATCH 3/3] arm64: dts: juno/rtsm: re-structure motherboard
  includes
-Date: Thu, 10 May 2018 10:49:01 +0100
-Message-ID: <20180510094901.GR1027@e110455-lin.cambridge.arm.com>
+Date: Thu, 10 May 2018 11:07:09 +0100
+Message-ID: <fd05b1da-83aa-2177-8e99-23dcb7199856@arm.com>
 References: <1525884291-18851-1-git-send-email-sudeep.holla@arm.com>
  <1525884291-18851-3-git-send-email-sudeep.holla@arm.com>
+ <20180510094901.GR1027@e110455-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1525884291-18851-3-git-send-email-sudeep.holla@arm.com>
+In-Reply-To: <20180510094901.GR1027@e110455-lin.cambridge.arm.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,82 +21,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Liviu Dudau <liviu.dudau@arm.com>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMDksIDIwMTggYXQgMDU6NDQ6NTFQTSArMDEwMCwgU3VkZWVwIEhvbGxhIHdy
-b3RlOgo+IEl0IGlzIGEgYml0IHVub3J0aG9kb3ggdG8ganVzdCBpbmNsdWRlIGEgZmlsZSBpbiB0
-aGUgbWlkZGxlIG9mIGEgYW5vdGhlcgo+IERUUyBmaWxlLCBpdCBicmVha3MgdGhlIHBhdHRlcm4g
-ZnJvbSBvdGhlciBkZXZpY2UgdHJlZXMgYW5kIGFsc28gbWFrZXMKPiBpdCByZWFsbHkgaGFyZCB0
-byByZWZlcmVuY2UgdGhpbmdzIGFjcm9zcyB0aGUgZmlsZXMgd2l0aCBwaGFuZGxlcy4KPiAKPiBS
-ZXN0cnVjdHVyZSB0aGUgaW5jbHVkZSBmb3IgdGhlIEp1bm8vUlRTTSBtb3RoZXJib2FyZHMgdG8g
-aGFwcGVuIGF0IHRoZQo+IHRvcCBvZiB0aGUgZmlsZSwgcmVmZXJlbmNlIHRoZSB0YXJnZXQgbm9k
-ZXMgZGlyZWN0bHksIGFuZCBpbmRlbnQgdGhlCj4gbW90aGVyYm9hcmQgLmR0c2kgZmlsZXMgdG8g
-cmVmbGVjdCB0aGVpciBhY3R1YWwgZGVwdGggaW4gdGhlIGhpZXJhcmNoeS4KPiAKPiBUaGlzIGlz
-IGEgcHVyZWx5IHN5bnRhY3RpYyBjaGFuZ2UgdGhhdCByZXN1bHQgaW4gdGhlIHNhbWUgRFRCIGZp
-bGVzIGZyb20KPiB0aGUgRFRTL0RUU0kgZmlsZXMuIFRoaXMgaXMgYmFzZWQgb24gc2ltaWxhciBw
-YXRjaCBmcm9tIExpbnVzIFdhbGxlaWoKPiBmb3IgQVJNIFZleHByZXNzIHBsYXRmb3Jtcy4KCkEg
-Yml0IG9mIGJpa2VzaGVkZGluZyBoZXJlOiB0aGUgcmVhc29uIEkndmUgdXNlZCB0aGUgRFQgL2lu
-Y2x1ZGUvCmhlcmUgd2FzIHRoYXQgb24gZGVjb21waWxhdGlvbiBvZiB0aGUgRFRCIHRoZSBub2Rl
-cyB3b3VsZCBoYXZlIGJlZW4gaW4KdGhlIG5hdHVyYWwgb3JkZXIgYW5kIGVhc2llciB0byBsb29r
-IGZvciBpc3N1ZXMuIFRob3NlIHdlcmUgdGhlIGVhcmx5CmRheXMgYW5kIEkgY2FuIGFjY2VwdCB0
-aGF0IHRoZSBnZW5lcmFsIHByYWN0aWNlIGhhcyBjaGFuZ2VkIGFuZCB3ZSdyZQp1c2luZyBub3cg
-dGhlIEMgcHJlcHJvY2Vzc29yIG1vcmUuIEkgZG9uJ3QgaGF2ZSBhbnkgc3Ryb25nIGZlZWxpbmdz
-IG9uCmhvdyB0aGUgRFQgbG9va3Mgbm93YWRheXMsIHNvOgoKPiAKPiBDYzogTGl2aXUgRHVkYXUg
-PGxpdml1LmR1ZGF1QGFybS5jb20+CgpBY2tlZC1ieTogTGl2aXUgRHVkYXUgPGxpdml1LmR1ZGF1
-QGFybS5jb20+Cgo+IENjOiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+
-Cj4gU2lnbmVkLW9mZi1ieTogU3VkZWVwIEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT4KPiAt
-LS0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVuby1iYXNlLmR0c2kgICAgICAgICAgIHwg
-MyArLS0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVuby1tb3RoZXJib2FyZC5kdHNpICAg
-IHwgNCArKysrCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvYXJtL3J0c21fdmUtYWVtdjhhLmR0cyAg
-ICAgICB8IDQgKystLQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9ydHNtX3ZlLW1vdGhlcmJv
-YXJkLmR0c2kgfCA1ICsrKystCj4gIDQgZmlsZXMgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKSwg
-NSBkZWxldGlvbnMoLSkKPiAKPiBIaSwKPiAKPiBQb3N0aW5nIHRoaXMgcGF0Y2ggd2l0aCAtYihh
-a2EgaWdub3JlLXNwYWNlcyBvcHRpb24gZm9yIHJldmlldyBwdXJwb3NlLgo+IAo+IFJlZ2FyZHMs
-Cj4gU3VkZWVwCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYXJtL2p1bm8t
-YmFzZS5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVuby1iYXNlLmR0c2kKPiBpbmRl
-eCBiNzRlNDYyYzY2NTguLmNlNTZhNGFjZGE0ZiAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jv
-b3QvZHRzL2FybS9qdW5vLWJhc2UuZHRzaQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYXJt
-L2p1bm8tYmFzZS5kdHNpCj4gQEAgLTEsNSArMSw2IEBACj4gIC8vIFNQRFgtTGljZW5zZS1JZGVu
-dGlmaWVyOiBHUEwtMi4wCj4gICNpbmNsdWRlICJqdW5vLWNsb2Nrcy5kdHNpIgo+ICsjaW5jbHVk
-ZSAianVuby1tb3RoZXJib2FyZC5kdHNpIgo+ICAKPiAgLyB7Cj4gIAkvKgo+IEBAIC03OTUsOCAr
-Nzk2LDYgQEAKPiAgCQkJCTwwIDAgMTAgJmdpYyAwIDAgMCAxNjcgSVJRX1RZUEVfTEVWRUxfSElH
-SD4sCj4gIAkJCQk8MCAwIDExICZnaWMgMCAwIDAgMTY4IElSUV9UWVBFX0xFVkVMX0hJR0g+LAo+
-ICAJCQkJPDAgMCAxMiAmZ2ljIDAgMCAwIDE2OSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiAtCj4g
-LQkJL2luY2x1ZGUvICJqdW5vLW1vdGhlcmJvYXJkLmR0c2kiCj4gIAl9Owo+ICAKPiAgCXNpdGUy
-OiB0bHhANjAwMDAwMDAgewo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9q
-dW5vLW1vdGhlcmJvYXJkLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLW1vdGhl
-cmJvYXJkLmR0c2kKPiBpbmRleCA3MGUzNDA5ZDg2YTMuLjE3OTJiMDc0ZTlhMyAxMDA2NDQKPiAt
-LS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLW1vdGhlcmJvYXJkLmR0c2kKPiArKysg
-Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLW1vdGhlcmJvYXJkLmR0c2kKPiBAQCAtNyw2
-ICs3LDggQEAKPiAgICoKPiAgICovCj4gIAo+ICsvIHsKPiArCXNtYkA4MDAwMDAwIHsKPiAgCQlt
-Yl9jbGsyNG1oejogY2xrMjRtaHogewo+ICAJCQljb21wYXRpYmxlID0gImZpeGVkLWNsb2NrIjsK
-PiAgCQkJI2Nsb2NrLWNlbGxzID0gPDA+Owo+IEBAIC0yODcsMyArMjg5LDUgQEAKPiAgCQkJCX07
-Cj4gIAkJCX07Cj4gIAkJfTsKPiArCX07Cj4gK307Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQv
-Ym9vdC9kdHMvYXJtL3J0c21fdmUtYWVtdjhhLmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYXJt
-L3J0c21fdmUtYWVtdjhhLmR0cwo+IGluZGV4IDA2YzgxMTdlODEyYS4uNjAyZjYzZjcyYzM3IDEw
-MDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYXJtL3J0c21fdmUtYWVtdjhhLmR0cwo+
-ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYXJtL3J0c21fdmUtYWVtdjhhLmR0cwo+IEBAIC0x
-Miw2ICsxMiw4IEBACj4gIAo+ICAvbWVtcmVzZXJ2ZS8gMHg4MDAwMDAwMCAweDAwMDEwMDAwOwo+
-ICAKPiArI2luY2x1ZGUgInJ0c21fdmUtbW90aGVyYm9hcmQuZHRzaSIKPiArCj4gIC8gewo+ICAJ
-bW9kZWwgPSAiUlRTTV9WRV9BRU12OEEiOwo+ICAJY29tcGF0aWJsZSA9ICJhcm0scnRzbV92ZSxh
-ZW12OGEiLCAiYXJtLHZleHByZXNzIjsKPiBAQCAtMTYyLDcgKzE2NCw1IEBACj4gIAkJCQk8MCAw
-IDQwICZnaWMgMCA0MCA0PiwKPiAgCQkJCTwwIDAgNDEgJmdpYyAwIDQxIDQ+LAo+ICAJCQkJPDAg
-MCA0MiAmZ2ljIDAgNDIgND47Cj4gLQo+IC0JCS9pbmNsdWRlLyAicnRzbV92ZS1tb3RoZXJib2Fy
-ZC5kdHNpIgo+ICAJfTsKPiAgfTsKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9h
-cm0vcnRzbV92ZS1tb3RoZXJib2FyZC5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vcnRz
-bV92ZS1tb3RoZXJib2FyZC5kdHNpCj4gaW5kZXggMTEzNGU1ZDhkZjE4Li5kMmRiYzNmMzkyNjMg
-MTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vcnRzbV92ZS1tb3RoZXJib2Fy
-ZC5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vcnRzbV92ZS1tb3RoZXJib2Fy
-ZC5kdHNpCj4gQEAgLTcsNyArNyw4IEBACj4gICAqCj4gICAqIFZFTW90aGVyQm9hcmQubGlzYQo+
-ICAgKi8KPiAtCj4gKy8gewo+ICsJc21iQDgwMDAwMDAgewo+ICAJCW1vdGhlcmJvYXJkIHsKPiAg
-CQkJYXJtLHYybS1tZW1vcnktbWFwID0gInJzMSI7Cj4gIAkJCWNvbXBhdGlibGUgPSAiYXJtLHZl
-eHByZXNzLHYybS1wMSIsICJzaW1wbGUtYnVzIjsKPiBAQCAtMjc0LDMgKzI3NSw1IEBACj4gIAkJ
-CQl9Owo+ICAJCQl9Owo+ICAJCX07Cj4gKwl9Owo+ICt9Owo+IC0tIAo+IDIuNy40Cj4gCgotLSAK
-PT09PT09PT09PT09PT09PT09PT0KfCBJIHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQs
-ICB8CnwgYnV0IHRoZXkncmUgbm90IHwKfCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29k
-ZSEgIC8KICAtLS0tLS0tLS0tLS0tLS0KICAgIMKvXF8o44OEKV8vwq8KCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
-ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+
+On 10/05/18 10:49, Liviu Dudau wrote:
+> On Wed, May 09, 2018 at 05:44:51PM +0100, Sudeep Holla wrote:
+>> It is a bit unorthodox to just include a file in the middle of a another
+>> DTS file, it breaks the pattern from other device trees and also makes
+>> it really hard to reference things across the files with phandles.
+>>
+>> Restructure the include for the Juno/RTSM motherboards to happen at the
+>> top of the file, reference the target nodes directly, and indent the
+>> motherboard .dtsi files to reflect their actual depth in the hierarchy.
+>>
+>> This is a purely syntactic change that result in the same DTB files from
+>> the DTS/DTSI files. This is based on similar patch from Linus Walleij
+>> for ARM Vexpress platforms.
+> 
+> A bit of bikeshedding here: the reason I've used the DT /include/
+> here was that on decompilation of the DTB the nodes would have been in
+> the natural order and easier to look for issues. Those were the early
+> days and I can accept that the general practice has changed and we're
+> using now the C preprocessor more. I don't have any strong feelings on
+> how the DT looks nowadays, so:
+>
+
+I can understand. After this patch applied, I did hit an issue with
+timer registration. I just posted a patch [1]
+
+>>
+>> Cc: Liviu Dudau <liviu.dudau@arm.com>
+> 
+> Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+> 
+
+Thanks for all the acks.
+
+-- 
+Regards,
+Sudeep
+
+[1]
+https://lkml.kernel.org/r/1525881728-4858-1-git-send-email-sudeep.holla@arm.com
