@@ -1,52 +1,49 @@
 From: djw@t-chip.com.cn
-Subject: [PATCH v1 0/5] Add sdmmc UHS support to ROC-RK3328-CC board.
-Date: Thu, 10 May 2018 17:16:35 +0800
-Message-ID: <1525943800-14095-1-git-send-email-djw@t-chip.com.cn>
+Subject: [PATCH v1 3/5] arm64: dts: rockchip: Add gpio-syscon10 to rk3328
+Date: Thu, 10 May 2018 17:16:38 +0800
+Message-ID: <1525943800-14095-4-git-send-email-djw@t-chip.com.cn>
+References: <1525943800-14095-1-git-send-email-djw@t-chip.com.cn>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1525943800-14095-1-git-send-email-djw@t-chip.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-rockchip@lists.infradead.org
-Cc: Wayne Chou <zxf@t-chip.com.cn>, Levin Du <djw@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, David Wu <david.wu@rock-chips.com>, Arnd Bergmann <arnd@arndb.de>, Finley Xiao <finley.xiao@rock-chips.com>, Liang Chen <cl@rock-chips.com>, William Wu <william.wu@rock-chips.com>, Linus Walleij <linus.walleij@linaro.org>, Sugar Zhang <sugar.zhang@rock-chips.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Rocky Hao <rocky.hao@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Joseph Chen <chenjh@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Wayne Chou <zxf@t-chip.com.cn>, Levin Du <djw@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, David Wu <david.wu@rock-chips.com>, Arnd Bergmann <arnd@arndb.de>, Finley Xiao <finley.xiao@rock-chips.com>, William Wu <william.wu@rock-chips.com>, Sugar Zhang <sugar.zhang@rock-chips.com>, linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Rocky Hao <rocky.hao@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Levin Du <djw@t-chip.com.cn>
 
-Hi all, this is an attemp to add sdmmc UHS support to the
-ROC-RK3328-CC board.
+Adding a new gpio controller named "gpio-syscon10" to rk3328, providing
+access to the pins defined in the syscon GRF_SOC_CON10.
 
-This patch series adds a new compatible `rockchip,gpio-syscon` to
-the gpio-syscon driver for general Rockchip SoC usage..
+Boards using these special pins to control regulators or LEDs, can now
+utilize existing drivers like gpio-regulator and leds-gpio.
 
-A new gpio controller named `gpio_syscon10` is defined in
-rk3328.dtsi so that all rk3328 boards has access to it.
+Signed-off-by: Levin Du <djw@t-chip.com.cn>
 
-The ROC-RK3328-CC board use the new gpio <&gpio_syscon10 1> in
-gpio-regulator to control the signal voltage of the sdmmc.
-It is essential for UHS support which requires 1.8V signal voltage.
-
-Many thanks to Heiko's great advice!
+---
 
 Changes in v1:
-- Refactured for general gpio-syscon usage for Rockchip SoCs.
-- Add doc rockchip,gpio-syscon.txt .
-- Split into small patches.
-- Add gpio-syscon10 to rk3328 for general use.
-- Sort dts properties in sdmmc node.
+- Split from V0 and add to rk3328.dtsi for general use.
 
-Heiko Stuebner (1):
-  gpio: syscon: allow fetching syscon from parent node
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Levin Du (4):
-  gpio: syscon: Add gpio-syscon for rockchip
-  arm64: dts: rockchip: Add gpio-syscon10 to rk3328
-  arm64: dts: rockchip: Add io-domain to roc-rk3328-cc
-  arm64: dts: rockchip: Add sdmmc UHS support for roc-rk3328-cc
-
- .../bindings/gpio/rockchip,gpio-syscon.txt         | 41 ++++++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts     | 30 ++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3328.dtsi           |  6 ++++
- drivers/gpio/gpio-syscon.c                         | 32 +++++++++++++++++
- 4 files changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index b8e9da1..73a822d 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -309,6 +309,12 @@
+ 			mode-loader = <BOOT_BL_DOWNLOAD>;
+ 		};
+ 
++		gpio_syscon10: gpio-syscon10 {
++			compatible = "rockchip,gpio-syscon";
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio,syscon-dev = <0 0x0428 0>;
++		};
+ 	};
+ 
+ 	uart0: serial@ff110000 {
 -- 
 2.7.4
