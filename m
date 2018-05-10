@@ -1,107 +1,63 @@
 From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v2 2/2] leds: Add Spreadtrum SC27xx breathing light
- controller driver
-Date: Thu, 10 May 2018 11:12:32 +0800
-Message-ID: <CAMz4kuLYP1aHTAsgN0rkqV8Zj12V4-d1pECTn8x537a9fLRndw@mail.gmail.com>
-References: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
- <9a2a07b8eb313ae3ba64af911337ee7ff7c9ad43.1525757122.git.baolin.wang@linaro.org>
- <20180509142539.GB25131@amd>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH v4 1/2] dt-bindings: input: Add Add Spreadtrum SC27xx vibrator documentation
+Date: Thu, 10 May 2018 13:08:33 +0800
+Message-ID: <44b17778d8f0bf897a316a39516ba2cafecf43c9.1525928437.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180509142539.GB25131@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, xiaotong.lu@spreadtrum.com, Mark Brown <broonie@kernel.org>, linux-leds@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, baolin.wang@linaro.org, xiaotong.lu@spreadtrum.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+From: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
 
-On 9 May 2018 at 22:25, Pavel Machek <pavel@ucw.cz> wrote:
-> On Tue 2018-05-08 13:39:45, Baolin Wang wrote:
->> From: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
->>
->> This patch adds Spreadtrum SC27xx PMIC series breathing light controller
->> driver, which can support 3 LEDs. Each LED can work at normal PWM mode
->> and breathing mode.
->>
->> diff --git a/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx b/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
->> new file mode 100644
->> index 0000000..22166fb
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
->> @@ -0,0 +1,19 @@
->> +What:                /sys/class/leds/<led>/rise_time
->> +What:                /sys/class/leds/<led>/high_time
->> +What:                /sys/class/leds/<led>/fall_time
->> +What:                /sys/class/leds/<led>/low_time
->> +Date:                May 2018
->> +KernelVersion:       4.18
->> +Contact:     Xiaotong Lu <xiaotong.lu@spreadtrum.com>
->> +Description:
->> +             Set the pattern generator rise, high, fall and low
->> +             times (0..63). It's unit is 0.125s, it should be > 0.
->> +
->> +             1 - 125 ms
->> +             2 - 250 ms
->> +             3 - 375 ms
->> +             ...
->> +             ...
->> +             ...
->> +             62 - 7.75 s
->> +             63 - 7.875 s
->
-> How does this interact with triggers? With manually setting
-> brightness? Are the pattern generators independend for the LEDs?
+This patch adds the binding documentation for Spreadtrum SC27xx series
+vibrator device.
 
-With depending on what mode user selected. If user set the
-raise/high/fall/low time values, that means the LED will work at
-breathing mode, and we set brightness to turn on/off the breathing
-mode LED.
+Signed-off-by: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+Changes since v3:
+ - Change compatible string to explicit Soc name.
+ - Add parent MFD node.
 
-Yes, they are independent for each LED.
+Changes since v2:
+ - No updates.
 
->
-> Can you generate white breathing pattern? If so, how?
+Changes since v1:
+  - No updates.
+---
+ .../bindings/input/sprd,sc27xx-vibra.txt           |   23 ++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt
 
-Yes, firstly we should set the raise/high/fall/low time values for red
-LED, blue LED and green LED (each LED time values are same), then set
-one brightness value to turn on the red LED, blue LED and green LED.
-
->
-> How do you select between normal and breathing modes?
-
-As I explained, when user set the raise/high/fall/low time values,
-that means user selects the breathing mode of the LED. Otherwise the
-LED works at normal mode.
-
->
-> I'd specify times in miliseconds or something, this is way too
-> hardware specific.
-
-But our hardware specification defines magic numbers, not times values
-in milliseconds. So I think we should follow our specification's
-definition, and user should also follow the same rules.
-
->
-> Now... functionality like this is common between many LED
-> controllers. N900 could do this kind of "breathing", too, and it also
-> supports other patterns.
->
-> I believe we need interface common between different LED controllers.
->
-> And I guess it would be easiest if you dropped this part from initial
-> merge.
->
-> Thanks and best regards,
->
->                                                                 Pavel
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
-
-
+diff --git a/Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt b/Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt
+new file mode 100644
+index 0000000..f2ec0d4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/sprd,sc27xx-vibra.txt
+@@ -0,0 +1,23 @@
++Spreadtrum SC27xx PMIC Vibrator
++
++Required properties:
++- compatible: should be "sprd,sc2731-vibrator".
++- reg: address of vibrator control register.
++
++Example :
++
++	sc2731_pmic: pmic@0 {
++		compatible = "sprd,sc2731";
++		reg = <0>;
++		spi-max-frequency = <26000000>;
++		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		vibrator@eb4 {
++			compatible = "sprd,sc2731-vibrator";
++			reg = <0xeb4>;
++		};
++	};
 -- 
-Baolin.wang
-Best Regards
+1.7.9.5
