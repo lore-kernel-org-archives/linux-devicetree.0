@@ -1,38 +1,87 @@
-Return-Path: <SRS0=v9pK=IB=163.com=sunjg79@kernel.org>
-From: sunjg79@163.com
-Subject: [PATCH v3 0/2] add support for HiSilicon STB xHCI host controller
-Date: Mon, 14 May 2018 14:20:40 +0800
-Message-Id: <1526278842-13883-1-git-send-email-sunjg79@163.com>
-To: mathias.nyman@intel.com, gregkh@linuxfoundation.org, robh+dt@kernel.org
-Cc: shawn.guo@linaro.org, xuejiancheng@hisilicon.com, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Jianguo Sun <sunjianguo1@huawei.com>
+Return-Path: <SRS0=IKTP=H5=mediatek.com=argus.lin@kernel.org>
+From: <argus.lin@mediatek.com>
+Subject: [PATCH V5 2/4] soc: mediatek: pwrap: fix cipher init setting error
+Date: Thu, 10 May 2018 21:01:57 +0800
+Message-ID: <1525957319-20557-3-git-send-email-argus.lin@mediatek.com>
+In-Reply-To: <1525957319-20557-1-git-send-email-argus.lin@mediatek.com>
+References: <1525957319-20557-1-git-send-email-argus.lin@mediatek.com>
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_004_201185824.221353708"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Jianguo Sun <sunjianguo1@huawei.com>
+--__=_Part_Boundary_004_201185824.221353708
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_005_1587082726.11133386"
 
-This patch set adds bindings doc and xhci driver for xHCI host controller
-on HiSilicon STB SoCs.
+--__=_Part_Boundary_005_1587082726.11133386
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-changes in v3:
-  - fix typo of "pipeE"
-  - remove optional property of "quirk-broken-port-ped"
+PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
+UFdSQVBfREVXX0NJUEhFUl9MT0FEIGFuZCBQV1JBUF9ERVdfQ0lQSEVSX1NUQVJUIG9ubHkgZXhp
+c3QgYXQNClBNSUNfbXQ2Mzk3IGRhdGFzaGVldC4gV2UgZml4IGl0IGJlZm9yZSBtZXJnZSBQTUlD
+X210NjM1MSBkcml2ZXIuDQoNCkZpeGVzOiA1YWU0ODA0MGFhNDcgKCZxdW90O3NvYzogbWVkaWF0
+ZWs6IFBNSUMgd3JhcDogYWRkIG10NjMyMyBzbGF2ZSBzdXBwb3J0JnF1b3Q7KQ0KLS0tDQogZHJp
+dmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jIHwgMiAtLQ0KIDEgZmlsZSBjaGFuZ2Vk
+LCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRr
+LXBtaWMtd3JhcC5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQppbmRl
+eCBlOWUwNTRhLi45YTAxZTMwIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRr
+LXBtaWMtd3JhcC5jDQorKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMN
+CkBAIC0xMDgwLDggKzEwODAsNiBAQCBzdGF0aWMgaW50IHB3cmFwX2luaXRfY2lwaGVyKHN0cnVj
+dCBwbWljX3dyYXBwZXIgKndycCkNCiAJcHdyYXBfd3JpdGUod3JwLCB3cnAtJmd0O3NsYXZlLSZn
+dDtkZXdfcmVnc1tQV1JBUF9ERVdfQ0lQSEVSX1NXUlNUXSwgMHgwKTsNCiAJcHdyYXBfd3JpdGUo
+d3JwLCB3cnAtJmd0O3NsYXZlLSZndDtkZXdfcmVnc1tQV1JBUF9ERVdfQ0lQSEVSX0tFWV9TRUxd
+LCAweDEpOw0KIAlwd3JhcF93cml0ZSh3cnAsIHdycC0mZ3Q7c2xhdmUtJmd0O2Rld19yZWdzW1BX
+UkFQX0RFV19DSVBIRVJfSVZfU0VMXSwgMHgyKTsNCi0JcHdyYXBfd3JpdGUod3JwLCB3cnAtJmd0
+O3NsYXZlLSZndDtkZXdfcmVnc1tQV1JBUF9ERVdfQ0lQSEVSX0xPQURdLCAweDEpOw0KLQlwd3Jh
+cF93cml0ZSh3cnAsIHdycC0mZ3Q7c2xhdmUtJmd0O2Rld19yZWdzW1BXUkFQX0RFV19DSVBIRVJf
+U1RBUlRdLCAweDEpOw0KIA0KIAlzd2l0Y2ggKHdycC0mZ3Q7c2xhdmUtJmd0O3R5cGUpIHsNCiAJ
+Y2FzZSBQTUlDX01UNjM5NzoNCi0tIA0KMS44LjEuMS5kaXJ0eQ0KDQo8L3ByZT48IS0tdHlwZTp0
+ZXh0LS0+PCEtLXstLT48cHJlPioqKioqKioqKioqKiogRW1haWwgQ29uZmlkZW50aWFsaXR5IE5v
+dGljZSAqKioqKioqKioqKioqKioqKioqKg0KVGhlIGluZm9ybWF0aW9uIGNvbnRhaW5lZCBpbiB0
+aGlzIGUtbWFpbCBtZXNzYWdlIChpbmNsdWRpbmcgYW55IA0KYXR0YWNobWVudHMpIG1heSBiZSBj
+b25maWRlbnRpYWwsIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2VkLCBvciBvdGhlcndpc2UNCmV4ZW1w
+dCBmcm9tIGRpc2Nsb3N1cmUgdW5kZXIgYXBwbGljYWJsZSBsYXdzLiBJdCBpcyBpbnRlbmRlZCB0
+byBiZSANCmNvbnZleWVkIG9ubHkgdG8gdGhlIGRlc2lnbmF0ZWQgcmVjaXBpZW50KHMpLiBBbnkg
+dXNlLCBkaXNzZW1pbmF0aW9uLCANCmRpc3RyaWJ1dGlvbiwgcHJpbnRpbmcsIHJldGFpbmluZyBv
+ciBjb3B5aW5nIG9mIHRoaXMgZS1tYWlsIChpbmNsdWRpbmcgaXRzIA0KYXR0YWNobWVudHMpIGJ5
+IHVuaW50ZW5kZWQgcmVjaXBpZW50KHMpIGlzIHN0cmljdGx5IHByb2hpYml0ZWQgYW5kIG1heSAN
+CmJlIHVubGF3ZnVsLiBJZiB5b3UgYXJlIG5vdCBhbiBpbnRlbmRlZCByZWNpcGllbnQgb2YgdGhp
+cyBlLW1haWwsIG9yIGJlbGlldmUgDQp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWls
+IGluIGVycm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQppbW1lZGlhdGVseSAoYnkgcmVw
+bHlpbmcgdG8gdGhpcyBlLW1haWwpLCBkZWxldGUgYW55IGFuZCBhbGwgY29waWVzIG9mIA0KdGhp
+cyBlLW1haWwgKGluY2x1ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBzeXN0ZW0sIGFu
+ZCBkbyBub3QNCmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBvdGhl
+ciBwZXJzb24uIFRoYW5rIHlvdSE8L3ByZT48IS0tfS0tPg==
 
-changes in v2:
-  - add optional properties in bindings doc
-  - assign the value of imod_interval
-  - remove unnecessary codes
+--__=_Part_Boundary_005_1587082726.11133386
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
-Jianguo Sun (2):
-  dt-bindings: usb: add bindings doc for HiSilicon STB xHCI host
-    controller
-  xhci: hisilicon: support HiSilicon STB xHCI host controller
+RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQpQV1JBUF9ERVdfQ0lQ
+SEVSX0xPQUQgYW5kIFBXUkFQX0RFV19DSVBIRVJfU1RBUlQgb25seSBleGlzdCBhdA0KUE1JQ19t
+dDYzOTcgZGF0YXNoZWV0LiBXZSBmaXggaXQgYmVmb3JlIG1lcmdlIFBNSUNfbXQ2MzUxIGRyaXZl
+ci4NCg0KRml4ZXM6IDVhZTQ4MDQwYWE0NyAoInNvYzogbWVkaWF0ZWs6IFBNSUMgd3JhcDogYWRk
+IG10NjMyMyBzbGF2ZSBzdXBwb3J0IikNCi0tLQ0KIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1w
+bWljLXdyYXAuYyB8IDIgLS0NCiAxIGZpbGUgY2hhbmdlZCwgMiBkZWxldGlvbnMoLSkNCg0KZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYyBiL2RyaXZlcnMv
+c29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYw0KaW5kZXggZTllMDU0YS4uOWEwMWUzMCAxMDA2
+NDQNCi0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYw0KKysrIGIvZHJp
+dmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQpAQCAtMTA4MCw4ICsxMDgwLDYgQEAg
+c3RhdGljIGludCBwd3JhcF9pbml0X2NpcGhlcihzdHJ1Y3QgcG1pY193cmFwcGVyICp3cnApDQog
+CXB3cmFwX3dyaXRlKHdycCwgd3JwLT5zbGF2ZS0+ZGV3X3JlZ3NbUFdSQVBfREVXX0NJUEhFUl9T
+V1JTVF0sIDB4MCk7DQogCXB3cmFwX3dyaXRlKHdycCwgd3JwLT5zbGF2ZS0+ZGV3X3JlZ3NbUFdS
+QVBfREVXX0NJUEhFUl9LRVlfU0VMXSwgMHgxKTsNCiAJcHdyYXBfd3JpdGUod3JwLCB3cnAtPnNs
+YXZlLT5kZXdfcmVnc1tQV1JBUF9ERVdfQ0lQSEVSX0lWX1NFTF0sIDB4Mik7DQotCXB3cmFwX3dy
+aXRlKHdycCwgd3JwLT5zbGF2ZS0+ZGV3X3JlZ3NbUFdSQVBfREVXX0NJUEhFUl9MT0FEXSwgMHgx
+KTsNCi0JcHdyYXBfd3JpdGUod3JwLCB3cnAtPnNsYXZlLT5kZXdfcmVnc1tQV1JBUF9ERVdfQ0lQ
+SEVSX1NUQVJUXSwgMHgxKTsNCiANCiAJc3dpdGNoICh3cnAtPnNsYXZlLT50eXBlKSB7DQogCWNh
+c2UgUE1JQ19NVDYzOTc6DQotLSANCjEuOC4xLjEuZGlydHkNCg==
 
- .../bindings/usb/hisilicon,histb-xhci.txt          |  45 +++
- drivers/usb/host/Kconfig                           |   7 +
- drivers/usb/host/Makefile                          |   1 +
- drivers/usb/host/xhci-histb.c                      | 410 +++++++++++++++++++++
- 4 files changed, 463 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/hisilicon,histb-xhci.txt
- create mode 100644 drivers/usb/host/xhci-histb.c
+--__=_Part_Boundary_005_1587082726.11133386--
 
--- 
-2.7.4
+--__=_Part_Boundary_004_201185824.221353708--
