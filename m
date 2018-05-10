@@ -1,32 +1,46 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH RESEND] display: panel: Add KOE tx14d24vm1bpa display
- support (320x240)
-Date: Thu, 10 May 2018 09:24:09 -0500
-Message-ID: <CAL_JsqLFkx=o=osC5exaOLcuHgFzU+Y7C5UEkTrXw=3z-EYXZw@mail.gmail.com>
-References: <20180412143715.6828-1-lukma@denx.de>
- <20180509154338.2841-1-lukma@denx.de>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v6 06/11] firmware: xilinx: Add debugfs interface
+Date: Thu, 10 May 2018 15:26:26 +0100
+Message-ID: <b880a598-54cb-6428-e60d-232615e809c1@arm.com>
+References: <1523389127-14243-1-git-send-email-jollys@xilinx.com>
+ <1523389127-14243-7-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180509154338.2841-1-lukma@denx.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1523389127-14243-7-git-send-email-jollys@xilinx.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgOSwgMjAxOCBhdCAxMDo0MyBBTSwgTHVrYXN6IE1hamV3c2tpIDxsdWttYUBk
-ZW54LmRlPiB3cm90ZToKPiBUaGlzIGNvbW1pdCBhZGRzIHN1cHBvcnQgZm9yIEtPRSdzIDUuNyIg
-ZGlzcGxheS4KPgo+IFNpZ25lZC1vZmYtYnk6IEx1a2FzeiBNYWpld3NraSA8bHVrbWFAZGVueC5k
-ZT4KClBsZWFzZSBhZGQgYWNrL3Jldmlld2VkLWJ5J3Mgd2hlbiBwb3N0aW5nIG5ldyB2ZXJzaW9u
-cy4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+
+On 10/04/18 20:38, Jolly Shah wrote:
+> From: Rajan Vaja <rajanv@xilinx.com>
+> 
+> Firmware-debug provides debugfs interface to all APIs.
+> Debugfs can be used to call firmware APIs with required
+> parameters.
+> 
+> Usage:
+> * Calling firmware API through debugfs:
+>   # echo "<api-name> <arg1> .. <argn>" > /sys/.../zynqmp-firmware/pm
+> 
+> * Read output of last called firmware API:
+>   # cat /sys/.../zynqmp-firmware/pm
+> 
+> Refer ug1200 for more information on these APIs:
+>   * https://www.xilinx.com/support/documentation/user_guides/ug1200-eemi-api.pdf
+> 
+> Add basic debugfs file to get API version.
+Who are the users of this apart from debugging ? I am bit over sensitive
+as this remote processor manages/controls the power and other shared
+resources in the system. Giving such fine grained access to user space
+is not a good idea. I assume you want this DEBUGFS off by default on
+production images ?
+
+-- 
+Regards,
+Sudeep
