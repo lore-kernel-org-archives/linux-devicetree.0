@@ -1,83 +1,51 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Add SC27xx breathing light
- controller documentation
-Date: Thu, 10 May 2018 09:55:52 +0800
-Message-ID: <CAMz4kuLar4jxPkX2GZi4UD_VgacXcmy+VJPWGyc7UrrLX_JW2Q@mail.gmail.com>
-References: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
- <20180509142526.GA25131@amd>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [RESEND PATCH 1/5] usb: mtu3: avoid TX data length truncated in
+ SS/SSP mode
+Date: Thu, 10 May 2018 10:16:46 +0800
+Message-ID: <1525918606.32173.9.camel@mhfsdcap03>
+References: <3b0c7ca576fee8220d63c9914483b70b0fbc8783.1525486663.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180509142526.GA25131@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, xiaotong.lu@spreadtrum.com, Mark Brown <broonie@kernel.org>, linux-leds@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3b0c7ca576fee8220d63c9914483b70b0fbc8783.1525486663.git.chunfeng.yun@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+Hi, Greg
 
-On 9 May 2018 at 22:25, Pavel Machek <pavel@ucw.cz> wrote:
-> Hi!
->
->> This patch adds the binding documentation for Spreadtrum SC27xx series
->> breathing light controller, which supports 3 outputs: red LED, green
->> LED and blue LED.
->>
->> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->> ---
->> Changes since v1:
->>  - Change the compatible string to be one explicit SoC name.
->>  - Change the child node name.
->>  - Change to be upper case for the first character.
->> ---
->>  .../devicetree/bindings/leds/leds-sc27xx-bltc.txt  |   41 ++++++++++++++++++++
->>  1 file changed, 41 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
->> new file mode 100644
->> index 0000000..b3de7fc
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
->> @@ -0,0 +1,41 @@
->> +LEDs connected to Spreadtrum SC27XX PMIC breathing light controller
->> +
->> +The SC27xx breathing light controller supports to 3 outputs:
->> +red LED, green LED and blue LED. Each LED can work at normal
->> +PWM mode or breath light mode.
->
->> +Required properties:
->> +- compatible: Should be "sprd,sc2731-bltc".
->
-> If this is for 2731, I'd say so in the title and the filename...?
-
-I agree with Jacek's comments. We will add other PMICs belonging to
-sc27xx series in future.
-
->
->> +- #address-cells: Must be 1.
->> +- #size-cells: Must be 0.
->> +- reg: Specify controller address.
->
-> the controller...
-
-Will fix.
-
->
->> +Required child properties:
->> +- reg: Number of LED line (could be from 0 to 2).
->
-> Uff. "Port this LED is connected to"?
-
-Will fix.
-
->
-> With that fixed...
->
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-
-Thanks for your comments.
-
--- 
-Baolin.wang
-Best Regards
+   Could you please pick up the series of patches, thanks a lot
+ 
+On Sat, 2018-05-05 at 10:21 +0800, Chunfeng Yun wrote:
+> The variable of 'count' is declared as u8, this will cause an issue
+> due to value truncated when works in SS or SSP mode and data length
+> is greater than 255, so change it as u32.
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>  drivers/usb/mtu3/mtu3_gadget_ep0.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/mtu3/mtu3_gadget_ep0.c b/drivers/usb/mtu3/mtu3_gadget_ep0.c
+> index ebdcf7a..d67b540 100644
+> --- a/drivers/usb/mtu3/mtu3_gadget_ep0.c
+> +++ b/drivers/usb/mtu3/mtu3_gadget_ep0.c
+> @@ -546,7 +546,7 @@ static void ep0_tx_state(struct mtu3 *mtu)
+>  	struct usb_request *req;
+>  	u32 csr;
+>  	u8 *src;
+> -	u8 count;
+> +	u32 count;
+>  	u32 maxp;
+>  
+>  	dev_dbg(mtu->dev, "%s\n", __func__);
