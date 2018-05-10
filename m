@@ -1,191 +1,139 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v2 3/3] rtc: stm32: add stm32mp1 rtc support
-Date: Thu, 10 May 2018 19:40:09 +0800
-Message-ID: <201805101823.CrM3ZuJP%fengguang.wu@intel.com>
-References: <1525880770-22263-4-git-send-email-amelie.delaunay@st.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v2 1/2] dt: bindings: lm3601x: Introduce the lm3601x
+ driver
+Date: Thu, 10 May 2018 07:04:00 -0500
+Message-ID: <1c4dc2a1-2d3e-d282-7d94-8301d0e9dd83@ti.com>
+References: <20180508141704.24271-1-dmurphy@ti.com>
+ <20180510112807.GF6977@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1525880770-22263-4-git-send-email-amelie.delaunay@st.com>
+In-Reply-To: <20180510112807.GF6977@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Amelie,
+Pavel
 
-Thank you for the patch! Perhaps something to improve:
+Thanks for the review
 
-[auto build test WARNING on abelloni/rtc-next]
-[also build test WARNING on next-20180510]
-[cannot apply to v4.17-rc4]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+On 05/10/2018 06:28 AM, Pavel Machek wrote:
+> On Tue 2018-05-08 09:17:03, Dan Murphy wrote:
+>> Introduce the device tree bindings for the lm3601x
+>> family of LED torch, flash and IR drivers.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>
+>> v2 - No changes - https://patchwork.kernel.org/patch/10384587/
+>>
+>>  .../devicetree/bindings/leds/leds-lm3601x.txt | 51 +++++++++++++++++++
+>>  1 file changed, 51 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+>> new file mode 100644
+>> index 000000000000..38cdabf6ca7e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+>> @@ -0,0 +1,51 @@
+>> +* Texas Instruments - lm3601x Single-LED Flash Driver
+>> +
+>> +The LM3601X are ultra-small LED flash drivers that
+>> +provides a high level of adjustability.
+> 
+> "provide".
 
-url:    https://github.com/0day-ci/linux/commits/Amelie-Delaunay/Introduce-STM32MP1-RTC/20180510-054013
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git rtc-next
+Data sheet says provides.
 
-smatch warnings:
-drivers/rtc/rtc-stm32.c:827 stm32_rtc_probe() warn: always true condition '(regs.verr != ~0) => (0-u16max != (-1))'
+It reads fine either way but I will change it.
 
-vim +827 drivers/rtc/rtc-stm32.c
+> 
+>> +Required properties:
+>> +	- compatible : Can be one of the following
+>> +		"ti,lm3601x"
+>> +		"ti,lm36010"
+>> +		"ti,lm36011"
+>> +	- reg : I2C slave address
+>> +	- #address-cells : 1
+>> +	- #size-cells : 0
+>> +
+>> +Required child properties:
+>> +	- reg : 0 - Indicates to support and register a torch interface
+>> +		1 - Indicates to support and register a strobe interface
+>> +		2 - Indicates to support and register an ir interface
+> 
+> I'd delete "to support and register" -- we are describing hardware here.
 
-   694	
-   695	static int stm32_rtc_probe(struct platform_device *pdev)
-   696	{
-   697		struct stm32_rtc *rtc;
-   698		struct stm32_rtc_registers regs;
-   699		struct resource *res;
-   700		int ret;
-   701	
-   702		rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
-   703		if (!rtc)
-   704			return -ENOMEM;
-   705	
-   706		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-   707		rtc->base = devm_ioremap_resource(&pdev->dev, res);
-   708		if (IS_ERR(rtc->base))
-   709			return PTR_ERR(rtc->base);
-   710	
-   711		rtc->data = (struct stm32_rtc_data *)
-   712			    of_device_get_match_data(&pdev->dev);
-   713		regs = rtc->data->regs;
-   714	
-   715		if (rtc->data->need_dbp) {
-   716			rtc->dbp = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-   717								   "st,syscfg");
-   718			if (IS_ERR(rtc->dbp)) {
-   719				dev_err(&pdev->dev, "no st,syscfg\n");
-   720				return PTR_ERR(rtc->dbp);
-   721			}
-   722	
-   723			ret = of_property_read_u32_index(pdev->dev.of_node, "st,syscfg",
-   724							 1, &rtc->dbp_reg);
-   725			if (ret) {
-   726				dev_err(&pdev->dev, "can't read DBP register offset\n");
-   727				return ret;
-   728			}
-   729	
-   730			ret = of_property_read_u32_index(pdev->dev.of_node, "st,syscfg",
-   731							 2, &rtc->dbp_mask);
-   732			if (ret) {
-   733				dev_err(&pdev->dev, "can't read DBP register mask\n");
-   734				return ret;
-   735			}
-   736		}
-   737	
-   738		if (!rtc->data->has_pclk) {
-   739			rtc->pclk = NULL;
-   740			rtc->rtc_ck = devm_clk_get(&pdev->dev, NULL);
-   741		} else {
-   742			rtc->pclk = devm_clk_get(&pdev->dev, "pclk");
-   743			if (IS_ERR(rtc->pclk)) {
-   744				dev_err(&pdev->dev, "no pclk clock");
-   745				return PTR_ERR(rtc->pclk);
-   746			}
-   747			rtc->rtc_ck = devm_clk_get(&pdev->dev, "rtc_ck");
-   748		}
-   749		if (IS_ERR(rtc->rtc_ck)) {
-   750			dev_err(&pdev->dev, "no rtc_ck clock");
-   751			return PTR_ERR(rtc->rtc_ck);
-   752		}
-   753	
-   754		if (rtc->data->has_pclk) {
-   755			ret = clk_prepare_enable(rtc->pclk);
-   756			if (ret)
-   757				return ret;
-   758		}
-   759	
-   760		ret = clk_prepare_enable(rtc->rtc_ck);
-   761		if (ret)
-   762			goto err;
-   763	
-   764		if (rtc->data->need_dbp)
-   765			regmap_update_bits(rtc->dbp, rtc->dbp_reg,
-   766					   rtc->dbp_mask, rtc->dbp_mask);
-   767	
-   768		/*
-   769		 * After a system reset, RTC_ISR.INITS flag can be read to check if
-   770		 * the calendar has been initialized or not. INITS flag is reset by a
-   771		 * power-on reset (no vbat, no power-supply). It is not reset if
-   772		 * rtc_ck parent clock has changed (so RTC prescalers need to be
-   773		 * changed). That's why we cannot rely on this flag to know if RTC
-   774		 * init has to be done.
-   775		 */
-   776		ret = stm32_rtc_init(pdev, rtc);
-   777		if (ret)
-   778			goto err;
-   779	
-   780		rtc->irq_alarm = platform_get_irq(pdev, 0);
-   781		if (rtc->irq_alarm <= 0) {
-   782			dev_err(&pdev->dev, "no alarm irq\n");
-   783			ret = rtc->irq_alarm;
-   784			goto err;
-   785		}
-   786	
-   787		ret = device_init_wakeup(&pdev->dev, true);
-   788		if (rtc->data->has_wakeirq) {
-   789			rtc->wakeirq_alarm = platform_get_irq(pdev, 1);
-   790			if (rtc->wakeirq_alarm <= 0)
-   791				ret = rtc->wakeirq_alarm;
-   792			else
-   793				ret = dev_pm_set_dedicated_wake_irq(&pdev->dev,
-   794								    rtc->wakeirq_alarm);
-   795		}
-   796		if (ret)
-   797			dev_warn(&pdev->dev, "alarm can't wake up the system: %d", ret);
-   798	
-   799		platform_set_drvdata(pdev, rtc);
-   800	
-   801		rtc->rtc_dev = devm_rtc_device_register(&pdev->dev, pdev->name,
-   802							&stm32_rtc_ops, THIS_MODULE);
-   803		if (IS_ERR(rtc->rtc_dev)) {
-   804			ret = PTR_ERR(rtc->rtc_dev);
-   805			dev_err(&pdev->dev, "rtc device registration failed, err=%d\n",
-   806				ret);
-   807			goto err;
-   808		}
-   809	
-   810		/* Handle RTC alarm interrupts */
-   811		ret = devm_request_threaded_irq(&pdev->dev, rtc->irq_alarm, NULL,
-   812						stm32_rtc_alarm_irq, IRQF_ONESHOT,
-   813						pdev->name, rtc);
-   814		if (ret) {
-   815			dev_err(&pdev->dev, "IRQ%d (alarm interrupt) already claimed\n",
-   816				rtc->irq_alarm);
-   817			goto err;
-   818		}
-   819	
-   820		/*
-   821		 * If INITS flag is reset (calendar year field set to 0x00), calendar
-   822		 * must be initialized
-   823		 */
-   824		if (!(readl_relaxed(rtc->base + regs.isr) & STM32_RTC_ISR_INITS))
-   825			dev_warn(&pdev->dev, "Date/Time must be initialized\n");
-   826	
- > 827		if (regs.verr != UNDEF_REG) {
-   828			u32 ver = readl_relaxed(rtc->base + regs.verr);
-   829	
-   830			dev_info(&pdev->dev, "registered rev:%d.%d\n",
-   831				 (ver >> STM32_RTC_VERR_MAJREV_SHIFT) & 0xF,
-   832				 (ver >> STM32_RTC_VERR_MINREV_SHIFT) & 0xF);
-   833		}
-   834	
-   835		return 0;
-   836	err:
-   837		if (rtc->data->has_pclk)
-   838			clk_disable_unprepare(rtc->pclk);
-   839		clk_disable_unprepare(rtc->rtc_ck);
-   840	
-   841		if (rtc->data->need_dbp)
-   842			regmap_update_bits(rtc->dbp, rtc->dbp_reg, rtc->dbp_mask, 0);
-   843	
-   844		dev_pm_clear_wake_irq(&pdev->dev);
-   845		device_init_wakeup(&pdev->dev, false);
-   846	
-   847		return ret;
-   848	}
-   849	
+OK
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> 
+>> +Optional child properties:
+>> +	- label : see Documentation/devicetree/bindings/leds/common.txt
+>> +
+>> +Example:
+>> +led-controller@64 {
+>> +	compatible = "ti,lm3601x";
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	reg = <0x64>;
+>> +
+>> +	led@0 {
+>> +		reg = <0>;
+>> +		label = "white:torch";
+>> +		led-max-microamp=<10000>;
+>> +	};
+>> +
+>> +	led@1 {
+>> +		reg = <1>;
+>> +		label = "white:strobe";
+>> +		flash-max-microamp=<10000>;
+>> +		flash-max-timeout-us=<800>;
+>> +	};
+>> +
+>> +	led@2 {
+>> +		reg = <2>;
+>> +		label = "invisible:ir";
+>> +	};
+>> +}
+> 
+> Title says this is single-LED driver chip, but it controls three chips
+> in this example?
+
+3 chips?  It technically controls 3 LED methods and only 2 LEDs.  The torch can be used as the strobe
+and the IR is controlled independently.
+
+> 
+> I'd put " " around "=" for consistency.
+
+OK
+
+> 
+> We use "flash" elsewhere, I'd replace "strobe" with that. Userspace
+> would like consistency, too.
+
+Labels are meant to be examples only not absolutes.  I will change it to say flash
+but the label can be anything the customer wants it to be.
+
+> 
+> What is the IR led good for? Taking videos in the dark?
+
+Yes.  That is one application.
+And hunting ghosts ;)
+
+> 
+> I guess for consistency, it is "ir:torch" :-).
+
+OK
+
+> 
+> 									Pavel
+> 
+
+
+-- 
+------------------
+Dan Murphy
