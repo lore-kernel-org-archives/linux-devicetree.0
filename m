@@ -1,86 +1,63 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v4 1/2] dt: bindings: lm3601x: Introduce the lm3601x driver
-Date: Thu, 10 May 2018 07:27:17 -0500
-Message-ID: <20180510122718.8413-1-dmurphy@ti.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v1 3/5] arm64: dts: rockchip: Add gpio-syscon10 to rk3328
+Date: Thu, 10 May 2018 13:50:47 +0100
+Message-ID: <76f2bbde-e158-a186-f136-9fb610a810c5@arm.com>
+References: <1525943800-14095-1-git-send-email-djw@t-chip.com.cn>
+ <1525943800-14095-4-git-send-email-djw@t-chip.com.cn>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1525943800-14095-4-git-send-email-djw@t-chip.com.cn>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, afd@ti.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+To: djw@t-chip.com.cn, linux-rockchip@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Wayne Chou <zxf@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Sugar Zhang <sugar.zhang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Finley Xiao <finley.xiao@rock-chips.com>, David Wu <david.wu@rock-chips.com>, William Wu <william.wu@rock-chips.com>, Rocky Hao <rocky.hao@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Introduce the device tree bindings for the lm3601x
-family of LED torch, flash and IR drivers.
+On 10/05/18 10:16, djw@t-chip.com.cn wrote:
+> From: Levin Du <djw@t-chip.com.cn>
+> 
+> Adding a new gpio controller named "gpio-syscon10" to rk3328, providing
+> access to the pins defined in the syscon GRF_SOC_CON10.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
+This is the GPIO_MUTE pin, right? The public TRM is rather vague, but 
+cross-referencing against the datasheet and schematics implies that it's 
+the "gpiomut_*" part of the GRF bit names which is most significant.
 
-v4 - Added " " around "=", changed strobe to flash on label, removed "support and
-register" comment and change ir lable to ir:torch - See v2 patchworks for comments
+It might be worth using a more descriptive name here, since "syscon10" 
+is pretty much meaningless at the board level.
 
-v3 - Removed wildcard compatible - https://patchwork.kernel.org/patch/10386241/
-v2 - No changes - https://patchwork.kernel.org/patch/10384587/
+Robin.
 
- .../devicetree/bindings/leds/leds-lm3601x.txt | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3601x.txt
-
-diff --git a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
-new file mode 100644
-index 000000000000..697e5e3a1d4c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
-@@ -0,0 +1,50 @@
-+* Texas Instruments - lm3601x Single-LED Flash Driver
-+
-+The LM3601X are ultra-small LED flash drivers that
-+provide a high level of adjustability.
-+
-+Required properties:
-+	- compatible : Can be one of the following
-+		"ti,lm36010"
-+		"ti,lm36011"
-+	- reg : I2C slave address
-+	- #address-cells : 1
-+	- #size-cells : 0
-+
-+Required child properties:
-+	- reg : 0 - Indicates a torch interface
-+		1 - Indicates a flash interface
-+		2 - Indicates an infrared interface
-+
-+Optional child properties:
-+	- label : see Documentation/devicetree/bindings/leds/common.txt
-+
-+Example:
-+led-controller@64 {
-+	compatible = "ti,lm36010";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	reg = <0x64>;
-+
-+	led@0 {
-+		reg = <0>;
-+		label = "white:torch";
-+		led-max-microamp = <10000>;
-+	};
-+
-+	led@1 {
-+		reg = <1>;
-+		label = "white:flash";
-+		flash-max-microamp = <10000>;
-+		flash-max-timeout-us = <800>;
-+	};
-+
-+	led@2 {
-+		reg = <2>;
-+		label = "ir:torch";
-+	};
-+}
-+
-+For more product information please see the links below:
-+http://www.ti.com/product/LM36010
-+http://www.ti.com/product/LM36011
--- 
-2.17.0.582.gccdcbd54c
+> Boards using these special pins to control regulators or LEDs, can now
+> utilize existing drivers like gpio-regulator and leds-gpio.
+> 
+> Signed-off-by: Levin Du <djw@t-chip.com.cn>
+> 
+> ---
+> 
+> Changes in v1:
+> - Split from V0 and add to rk3328.dtsi for general use.
+> 
+>   arch/arm64/boot/dts/rockchip/rk3328.dtsi | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+> index b8e9da1..73a822d 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+> @@ -309,6 +309,12 @@
+>   			mode-loader = <BOOT_BL_DOWNLOAD>;
+>   		};
+>   
+> +		gpio_syscon10: gpio-syscon10 {
+> +			compatible = "rockchip,gpio-syscon";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			gpio,syscon-dev = <0 0x0428 0>;
+> +		};
+>   	};
+>   
+>   	uart0: serial@ff110000 {
+> 
