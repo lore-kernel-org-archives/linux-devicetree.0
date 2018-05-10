@@ -1,57 +1,85 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 4/8] watchdog: JZ4740: Drop module remove function
-Date: Thu, 10 May 2018 20:47:47 +0200
-Message-ID: <20180510184751.13416-4-paul@crapouillou.net>
-References: <20180510184751.13416-1-paul@crapouillou.net>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v5 1/2] dt: bindings: lm3601x: Introduce the lm3601x
+ driver
+Date: Thu, 10 May 2018 20:54:01 +0200
+Message-ID: <20180510185401.GB12846@amd>
+References: <20180510174717.26540-1-dmurphy@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="f2QGlHpHGjS2mn6Y"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180510184751.13416-1-paul@crapouillou.net>
+Content-Disposition: inline
+In-Reply-To: <20180510174717.26540-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Mathieu Malaterre <malat@debian.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Paul Cercueil <paul@crapouillou.net>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, jacek.anaszewski@gmail.com, afd@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When the watchdog was configured for nowayout, and after the
-userspace watchdog daemon closed the dev node without sending the
-magic character, unloading this module stopped the watchdog
-hardware, which was clearly a problem.
 
-Besides, unloading the module is not possible when the userspace
-watchdog daemon is running, so it's safe to assume that we don't
-need to stop the watchdog hardware in the jz4740_wdt_remove()
-function.
+--f2QGlHpHGjS2mn6Y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-For this reason, the jz4740_wdt_remove() function can then be
-dropped alltogether.
+Hi!
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/watchdog/jz4740_wdt.c | 8 --------
- 1 file changed, 8 deletions(-)
+> Introduce the device tree bindings for the lm3601x
+> family of LED torch, flash and IR drivers.
+>=20
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 
- v2: New patch in this series
- v3: No change
+Better, thanks.
+> +++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+> @@ -0,0 +1,50 @@
+> +* Texas Instruments - lm3601x Single-LED Flash Driver
 
-diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
-index b8b015a7d045..ec4d99a830ba 100644
---- a/drivers/watchdog/jz4740_wdt.c
-+++ b/drivers/watchdog/jz4740_wdt.c
-@@ -206,16 +206,8 @@ static int jz4740_wdt_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int jz4740_wdt_remove(struct platform_device *pdev)
--{
--	struct jz4740_wdt_drvdata *drvdata = platform_get_drvdata(pdev);
--
--	return jz4740_wdt_stop(&drvdata->wdt);
--}
--
- static struct platform_driver jz4740_wdt_driver = {
- 	.probe = jz4740_wdt_probe,
--	.remove = jz4740_wdt_remove,
- 	.driver = {
- 		.name = "jz4740-wdt",
- 		.of_match_table = of_match_ptr(jz4740_wdt_of_matches),
--- 
-2.11.0
+Ok, so is it single-LED driver, or can it driver ir & white LEDs at
+the same time?
+
+> +Example:
+> +led-controller@64 {
+> +	compatible =3D "ti,lm36010";
+> +	#address-cells =3D <1>;
+> +	#size-cells =3D <0>;
+> +	reg =3D <0x64>;
+> +
+> +	led@0 {
+> +		reg =3D <0>;
+> +		label =3D "white:torch";
+> +		led-max-microamp =3D <10000>;
+> +	};
+> +
+> +	led@1 {
+> +		reg =3D <1>;
+> +		label =3D "white:flash";
+> +		flash-max-microamp =3D <10000>;
+> +		flash-max-timeout-us =3D <800>;
+> +	};
+
+Is this realistic config? I'd expect flash to use more power than
+torch, and would expect longer timeout than 0.8msec.
+
+Also.. if this is physically one white LED, it should not be
+spread over reg =3D <0> and reg =3D <1>...
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--f2QGlHpHGjS2mn6Y
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlr0lUkACgkQMOfwapXb+vJg4gCfQUnlmBYBsVn6YVgXLouAy2GT
+jp0Amwf+o18z7hJWY+C02tv68/w1Xzfg
+=wUOK
+-----END PGP SIGNATURE-----
+
+--f2QGlHpHGjS2mn6Y--
