@@ -1,83 +1,43 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: DTS: imx53: Add support for imx53 HSC/DDC boards
- from K+P
-Date: Wed, 9 May 2018 22:10:41 -0300
-Message-ID: <CAOMZO5AexXNEGVoXa9K_GAm+aFLNRQOXOhF_SdKAjV1qmuD2nA@mail.gmail.com>
-References: <20180509153428.1440-1-lukma@denx.de>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v4 6/6] devfreq: rk3399_dmc: fix spelling mistakes.
+Date: Thu, 10 May 2018 10:14:55 +0900
+Message-ID: <5AF39D0F.20006@samsung.com>
+References: <20180509125749.31318-1-enric.balletbo@collabora.com>
+        <CGME20180509125837epcas1p2fb18921a0c7f25e277e795c290a824d6@epcas1p2.samsung.com>
+        <20180509125749.31318-7-enric.balletbo@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180509153428.1440-1-lukma@denx.de>
+In-reply-to: <20180509125749.31318-7-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, heiko@sntech.de, linux-pm@vger.kernel.org, dbasehore@chromium.org, linux-kernel@vger.kernel.org, groeck@chromium.org, kernel@collabora.com, hl@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
+Hi,
 
-On Wed, May 9, 2018 at 12:34 PM, Lukasz Majewski <lukma@denx.de> wrote:
+On 2018년 05월 09일 21:57, Enric Balletbo i Serra wrote:
+> Fix some spelling mistakes in error and debug messages.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> 
+> Changes in v4:
+> - [6/6] Introduce this new patch that fixes some spelling.
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  drivers/devfreq/rk3399_dmc.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 
-> +&iomuxc {
-> +       imx53-kp-ddc {
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-No need for keeping this imx53-kp-ddc.
+[snip]
 
-> diff --git a/arch/arm/boot/dts/imx53-kp-hsc.dts b/arch/arm/boot/dts/imx53-kp-hsc.dts
-> new file mode 100644
-> index 000000000000..fff358395c9d
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx53-kp-hsc.dts
-> @@ -0,0 +1,53 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright 2018
-> + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
-> + */
-> +
-> +/dts-v1/;
-> +#include "imx53-kp.dtsi"
-> +
-> +/ {
-> +       model = "K+P imx53 HSC";
-> +       compatible = "kiebackpeter,imx53-hsc", "fsl,imx53";
-> +
 
-No need for this blank line.
-
-> +};
-> +
-> +&fec {
-> +       status = "okay";
-
-We usually put the status in the last line.
-
-> +       gpio_buttons {
-> +               compatible = "gpio-keys";
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_gpiobuttons>;
-> +
-> +               button@1 {
-
-You pass @1 without a reg property. This triggers a warning when
-building with W=1.
-
-You could remove the @1.
-
-Please make sure this patch does not introduce any W=1 dtc warning.
-
-> +&iomuxc {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_kp_common>;
-> +
-> +       imx53-kp-common {
-
-No need for this  imx53-kp-common
-
-> +&uart4 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_uart4>;
-> +
-
-No need for this blank line.
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
