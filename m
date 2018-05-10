@@ -1,114 +1,355 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 2/2] leds: Add Spreadtrum SC27xx breathing light
- controller driver
-Date: Thu, 10 May 2018 21:41:50 +0200
-Message-ID: <6289571e-7224-ca5e-1acf-5b099be57302@gmail.com>
-References: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
- <9a2a07b8eb313ae3ba64af911337ee7ff7c9ad43.1525757122.git.baolin.wang@linaro.org>
- <20180509142539.GB25131@amd> <bddc1f89-8c2c-ba6e-3c7e-d89710ed5424@gmail.com>
- <20180510113749.GG6977@amd>
+From: Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH v6 2/2] drivers: soc: Add LLCC driver
+Date: Thu, 10 May 2018 20:15:39 +0000
+Message-ID: <CAE=gft6n8tyjqbi19eVSWT=_isQSv6sbsJK18i42Adb6LGw6HQ@mail.gmail.com>
+References: <1525810921-15878-1-git-send-email-rishabhb@codeaurora.org> <1525810921-15878-3-git-send-email-rishabhb@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180510113749.GG6977@amd>
-Content-Language: en-US
+In-Reply-To: <1525810921-15878-3-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Baolin Wang <baolin.wang@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, xiaotong.lu@spreadtrum.com, broonie@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: rishabhb@codeaurora.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+Hi Rishabh,
+On Tue, May 8, 2018 at 1:23 PM Rishabh Bhatnagar <rishabhb@codeaurora.org>
+wrote:
 
-On 05/10/2018 01:37 PM, Pavel Machek wrote:
-> Hi!
-> 
->>>> This patch adds Spreadtrum SC27xx PMIC series breathing light controller
->>>> driver, which can support 3 LEDs. Each LED can work at normal PWM mode
->>>> and breathing mode.
->>>>
->>>> diff --git a/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx b/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
->>>> new file mode 100644
->>>> index 0000000..22166fb
->>>> --- /dev/null
->>>> +++ b/Documentation/ABI/testing/sysfs-class-led-driver-sc27xx
->>>> @@ -0,0 +1,19 @@
->>>> +What:		/sys/class/leds/<led>/rise_time
->>>> +What:		/sys/class/leds/<led>/high_time
->>>> +What:		/sys/class/leds/<led>/fall_time
->>>> +What:		/sys/class/leds/<led>/low_time
->>>> +Date:		May 2018
->>>> +KernelVersion:	4.18
->>>> +Contact:	Xiaotong Lu <xiaotong.lu@spreadtrum.com>
->>>> +Description:
->>>> +		Set the pattern generator rise, high, fall and low
->>>> +		times (0..63). It's unit is 0.125s, it should be > 0.
->>>> +
->>>> +		1 - 125 ms
->>>> +		2 - 250 ms
->>>> +		3 - 375 ms
->>>> +		...
->>>> +		...
->>>> +		...
->>>> +		62 - 7.75 s
->>>> +		63 - 7.875 s
->>>
->>> How does this interact with triggers? With manually setting
->>> brightness? Are the pattern generators independend for the LEDs?
->>>
->>> Can you generate white breathing pattern? If so, how?
->>>
->>> How do you select between normal and breathing modes?
->>>
->>> I'd specify times in miliseconds or something, this is way too
->>> hardware specific.
->>
->> Agreed.
->>
->>> Now... functionality like this is common between many LED
->>> controllers. N900 could do this kind of "breathing", too, and it also
->>> supports other patterns.
->>>
->>> I believe we need interface common between different LED controllers.
->>>
->>> And I guess it would be easiest if you dropped this part from initial
->>> merge.
->>
->> I disagree here. We already had the same discussion at the occasion
->> of the patch [0] and it turned out to be a dead-end [1]. Now we have
->> neither the driver nor the generic pattern interface.
->>
->> We also already have some older LED class drivers that implement custom
->> pattern interfaces (e.g. drivers/leds/leds-lm3533.c) and the same
->> approach can be applied in this case.
-> 
-> Please don't. It was mistake to implement custom pattern interfaces
-> back then, it is still mistake now.
+> LLCC (Last Level Cache Controller) provides additional cache memory
+> in the system. LLCC is partitioned into multiple slices and each
+> slice gets its own priority, size, ID and other config parameters.
+> LLCC driver programs these parameters for each slice. Clients that
+> are assigned to use LLCC need to get information such size & ID of the
+> slice they get and activate or deactivate the slice as needed. LLCC driver
+> provides API for the clients to perform these operations.
 
-It turned out to be really hard to cover all known pattern generator
-implementations with generic interface. Sure, it would be nice to have
-one, but the whole discussion around [0] only unveiled the diversity of
-parameters to cover. And still new devices appear on the market.
+> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> ---
+>   drivers/soc/qcom/Kconfig           |  17 ++
+>   drivers/soc/qcom/Makefile          |   2 +
+>   drivers/soc/qcom/llcc-sdm845.c     | 106 ++++++++++++
+>   drivers/soc/qcom/llcc-slice.c      | 335
++++++++++++++++++++++++++++++++++++++
+>   include/linux/soc/qcom/llcc-qcom.h | 162 ++++++++++++++++++
+>   5 files changed, 622 insertions(+)
+>   create mode 100644 drivers/soc/qcom/llcc-sdm845.c
+>   create mode 100644 drivers/soc/qcom/llcc-slice.c
+>   create mode 100644 include/linux/soc/qcom/llcc-qcom.h
 
-We would have to propose a set of pattern schemes and allow to
-add new ones to it.
+...
+> diff --git a/drivers/soc/qcom/llcc-sdm845.c
+b/drivers/soc/qcom/llcc-sdm845.c
+> new file mode 100644
+> index 0000000..e5e792c
+> --- /dev/null
+> +++ b/drivers/soc/qcom/llcc-sdm845.c
+> @@ -0,0 +1,106 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+> + *
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/soc/qcom/llcc-qcom.h>
+> +
+> +/*
+> + * SCT(System Cache Table) entry contains of the following members:
+> + * usecase_id: Unique id for the client's use case
+> + * slice_id: llcc slice id for each client
+> + * max_cap: The maximum capacity of the cache slice provided in KB
+> + * priority: Priority of the client used to select victim line for
+replacement
+> + * fixed_size: Boolean indicating if the slice has a fixed capacity
+> + * bonus_ways: Bonus ways are additional ways to be used for any slice,
+> + *             if client ends up using more than reserved cache ways.
+Bonus
+> + *             ways are allocated only if they are not reserved for some
+> + *             other client.
+> + * res_ways: Reserved ways for the cache slice, the reserved ways cannot
+> + *             be used by any other client than the one its assigned to.
+> + * cache_mode: Each slice operates as a cache, this controls the mode of
+the
+> + *             slice: normal or TCM(Tightly Coupled Memory)
+> + * probe_target_ways: Determines what ways to probe for access hit. When
+> + *                    configured to 1 only bonus and reserved ways are
+probed.
+> + *                    When configured to 0 all ways in llcc are probed.
+> + * dis_cap_alloc: Disable capacity based allocation for a client
+> + * retain_on_pc: If this bit is set and client has maintained active vote
+> + *               then the ways assigned to this client are not flushed
+on power
+> + *               collapse.
+> + * activate_on_init: Activate the slice immediately after the SCT is
+programmed
+> + */
+> +#define SCT_ENTRY(uid, sid, mc, p, fs, bway, rway, cmod, ptw, dca, rp,
+a) \
+> +       {                                       \
+> +               .usecase_id = uid,              \
+> +               .slice_id = sid,                \
+> +               .max_cap = mc,                  \
+> +               .priority = p,                  \
+> +               .fixed_size = fs,               \
+> +               .bonus_ways = bway,             \
+> +               .res_ways = rway,               \
+> +               .cache_mode = cmod,             \
+> +               .probe_target_ways = ptw,       \
+> +               .dis_cap_alloc = dca,           \
+> +               .retain_on_pc = rp,             \
+> +               .activate_on_init = a,          \
+> +       }
+> +
+> +static struct llcc_slice_config sdm845_data[] =  {
+> +       SCT_ENTRY(1,  1,  2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 1),
+> +       SCT_ENTRY(2,  2,  512,  2, 1, 0x0,   0x0f0, 0, 0, 1, 1, 0),
+> +       SCT_ENTRY(3,  3,  512,  2, 1, 0x0,   0x0f0, 0, 0, 1, 1, 0),
+> +       SCT_ENTRY(4,  4,  563,  2, 1, 0x0,   0x00e, 2, 0, 1, 1, 0),
+> +       SCT_ENTRY(5,  5,  2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 0),
+> +       SCT_ENTRY(6,  6,  2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 0),
+> +       SCT_ENTRY(7,  7,  1024, 2, 0, 0xfc,  0xf00, 0, 0, 1, 1, 0),
+> +       SCT_ENTRY(8,  8,  2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 0),
+> +       SCT_ENTRY(10, 10, 2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 0),
+> +       SCT_ENTRY(11, 11, 512,  1, 1, 0xc,   0x0,   0, 0, 1, 1, 0),
+> +       SCT_ENTRY(12, 12, 2304, 1, 0, 0xff0, 0x2,   0, 0, 1, 1, 0),
+> +       SCT_ENTRY(13, 13, 256,  2, 0, 0x0,   0x1,   0, 0, 1, 0, 1),
+> +       SCT_ENTRY(15, 15, 2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 0),
+> +       SCT_ENTRY(16, 16, 2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 0),
+> +       SCT_ENTRY(17, 17, 2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 0),
+> +       SCT_ENTRY(20, 20, 1024, 2, 1, 0x0,   0xf00, 0, 0, 1, 1, 0),
+> +       SCT_ENTRY(21, 21, 1024, 0, 1, 0x1e,  0x0,   0, 0, 1, 1, 0),
+> +       SCT_ENTRY(22, 22, 1024, 1, 1, 0xffc, 0x2,   0, 0, 1, 1, 0),
+> +};
 
-> If we really need solution now, I'd recommend "pattern" file with
-> 
-> "<delta time> <brightness> <delta time> <brightness>".
-> 
-> In this specific case, hardware only supports patterns in this format:
-> 
-> low_time 0 rise_time 255 high_time 255 fall_time 0
-> 
-> so driver would simply -EINVAL on anything else.
+Now that drivers are hardcoding IDs when calling llcc_slice_getd, should we
+add #defines in llcc-qcom.h for each of the usecase IDs? Then this would
+change the entries to look like:
+        SCT_ENTRY(QCOM_LLCC_CPUSS,  1,  2816, 1, 0, 0xffc, 0x2,   0, 0, 1,
+1, 1),
 
-I'm fine with the pattern file, but the pattern format would have
-to be defined in the per-driver ABI documentation. It wouldn't much
-differ from the custom pattern approach though, unless I'm missing some
-gain of having pattern setting in a uniformly named single sysfs file
-(with semantics differing from driver to driver).
+and drivers using it would call llcc_slice_getd(QCOM_LLCC_CPUSS), rather
+than llcc_slice_getd(1).
 
--- 
-Best regards,
-Jacek Anaszewski
+> diff --git a/drivers/soc/qcom/llcc-slice.c b/drivers/soc/qcom/llcc-slice.c
+> new file mode 100644
+> index 0000000..209df55
+> --- /dev/null
+> +++ b/drivers/soc/qcom/llcc-slice.c
+> @@ -0,0 +1,335 @@
+...
+> +
+> +/**
+> + * llcc_slice_activate - Activate the llcc slice
+> + * @desc: Pointer to llcc slice descriptor
+> + *
+> + * A value of zero will be returned on success and a negative errno will
+> + * be returned in error cases
+> + */
+> +int llcc_slice_activate(struct llcc_slice_desc *desc)
+> +{
+> +       int ret;
+> +       u32 act_ctrl_val;
+> +
+> +       mutex_lock(&drv_data->lock);
+> +       if (test_bit(desc->slice_id, drv_data->bitmap)) {
+> +               mutex_unlock(&drv_data->lock);
+> +               return 0;
+> +       }
+> +
+> +       act_ctrl_val = ACT_CTRL_OPCODE_ACTIVATE << ACT_CTRL_OPCODE_SHIFT;
+> +
+> +       ret = llcc_update_act_ctrl(desc->slice_id, act_ctrl_val,
+> +                                 DEACTIVATE);
+> +       if (ret)
+> +               return ret;
+
+I had asked for this in the last revision, and thank you for putting that
+in so that the bitmap matches reality. Unfortunately this introduces
+another error, which is that you never unlock the mutex :(
+
+> +
+> +       __set_bit(desc->slice_id, drv_data->bitmap);
+> +       mutex_unlock(&drv_data->lock);
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(llcc_slice_activate);
+> +
+> +/**
+> + * llcc_slice_deactivate - Deactivate the llcc slice
+> + * @desc: Pointer to llcc slice descriptor
+> + *
+> + * A value of zero will be returned on success and a negative errno will
+> + * be returned in error cases
+> + */
+> +int llcc_slice_deactivate(struct llcc_slice_desc *desc)
+> +{
+> +       u32 act_ctrl_val;
+> +       int ret;
+> +
+> +       mutex_lock(&drv_data->lock);
+> +       if (!test_bit(desc->slice_id, drv_data->bitmap)) {
+> +               mutex_unlock(&drv_data->lock);
+> +               return 0;
+> +       }
+> +       act_ctrl_val = ACT_CTRL_OPCODE_DEACTIVATE <<
+ACT_CTRL_OPCODE_SHIFT;
+> +
+> +       ret = llcc_update_act_ctrl(desc->slice_id, act_ctrl_val,
+> +                                 ACTIVATE);
+> +       if (ret)
+> +               return ret;
+
+Same here, mutex left locked.
+
+> +
+> +       __clear_bit(desc->slice_id, drv_data->bitmap);
+> +       mutex_unlock(&drv_data->lock);
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(llcc_slice_deactivate);
+> +
+> +/**
+> + * llcc_get_slice_id - return the slice id
+> + * @desc: Pointer to llcc slice descriptor
+> + */
+> +int llcc_get_slice_id(struct llcc_slice_desc *desc)
+> +{
+> +       return desc->slice_id;
+> +}
+> +EXPORT_SYMBOL_GPL(llcc_get_slice_id);
+> +
+> +/**
+> + * llcc_get_slice_size - return the slice id
+> + * @desc: Pointer to llcc slice descriptor
+> + */
+> +size_t llcc_get_slice_size(struct llcc_slice_desc *desc)
+> +{
+> +       return desc->slice_size;
+> +}
+> +EXPORT_SYMBOL_GPL(llcc_get_slice_size);
+> +
+> +static int qcom_llcc_cfg_program(struct platform_device *pdev)
+> +{
+> +       int i;
+> +       u32 attr1_cfg;
+> +       u32 attr0_cfg;
+> +       u32 attr1_val;
+> +       u32 attr0_val;
+> +       u32 max_cap_cacheline;
+> +       u32 sz;
+> +       int ret = 0;
+> +       const struct llcc_slice_config *llcc_table;
+> +       struct llcc_slice_desc desc;
+> +       u32 bcast_off = drv_data->bcast_off;
+> +
+> +       sz = drv_data->cfg_size;
+> +       llcc_table = drv_data->cfg;
+> +
+> +       for (i = 0; i < sz; i++) {
+> +               attr1_cfg = bcast_off +
+> +
+LLCC_TRP_ATTR1_CFGn(llcc_table[i].slice_id);
+> +               attr0_cfg = bcast_off +
+> +
+LLCC_TRP_ATTR0_CFGn(llcc_table[i].slice_id);
+> +
+> +               attr1_val = llcc_table[i].cache_mode;
+> +               attr1_val |= llcc_table[i].probe_target_ways <<
+> +                               ATTR1_PROBE_TARGET_WAYS_SHIFT;
+> +               attr1_val |= llcc_table[i].fixed_size <<
+> +                               ATTR1_FIXED_SIZE_SHIFT;
+> +               attr1_val |= llcc_table[i].priority <<
+ATTR1_PRIORITY_SHIFT;
+> +
+> +               max_cap_cacheline =
+MAX_CAP_TO_BYTES(llcc_table[i].max_cap);
+> +
+> +               /* LLCC instances can vary for each target.
+> +                * The SW writes to broadcast register which gets
+propagated
+> +                * to each llcc instace (llcc0,.. llccN).
+> +                * Since the size of the memory is divided equally
+amongst the
+> +                * llcc instances, we need to configure the max cap
+accordingly.
+> +                */
+> +               max_cap_cacheline = max_cap_cacheline /
+drv_data->num_banks;
+> +               max_cap_cacheline >>= CACHE_LINE_SIZE_SHIFT;
+> +               attr1_val |= max_cap_cacheline << ATTR1_MAX_CAP_SHIFT;
+> +
+> +               attr0_val = llcc_table[i].res_ways & ATTR0_RES_WAYS_MASK;
+> +               attr0_val |= llcc_table[i].bonus_ways <<
+ATTR0_BONUS_WAYS_SHIFT;
+> +
+> +               ret = regmap_write(drv_data->regmap, attr1_cfg,
+attr1_val);
+> +               if (ret)
+> +                       return ret;
+> +               ret = regmap_write(drv_data->regmap, attr0_cfg,
+attr0_val);
+> +               if (ret)
+> +                       return ret;
+> +               if (llcc_table[i].activate_on_init) {
+> +                       desc.slice_id = llcc_table[i].slice_id;
+> +                       ret = llcc_slice_activate(&desc);
+> +               }
+> +       }
+> +       return ret;
+> +}
+> +
+> +int qcom_llcc_probe(struct platform_device *pdev,
+> +                     const struct llcc_slice_config *llcc_cfg, u32 sz)
+> +{
+> +
+> +       u32 num_banks = 0;
+> +       struct device *dev = &pdev->dev;
+> +       struct resource *res;
+> +       void __iomem *base;
+> +       int ret = 0;
+> +       int i;
+> +
+> +       drv_data = devm_kzalloc(dev, sizeof(*drv_data), GFP_KERNEL);
+> +       if (!drv_data)
+> +               return -ENOMEM;
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       base = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(base))
+> +               return PTR_ERR(base);
+> +
+> +       drv_data->regmap = devm_regmap_init_mmio(dev, base,
+> +                                       &llcc_regmap_config);
+> +       if (IS_ERR(drv_data->regmap))
+> +               return PTR_ERR(drv_data->regmap);
+> +
+> +       ret = regmap_read(drv_data->regmap, LLCC_COMMON_STATUS0,
+> +                                               &num_banks);
+> +       if (ret)
+> +               return ret;
+> +
+> +       num_banks &= LLCC_LB_CNT_MASK;
+> +       num_banks >>= LLCC_LB_CNT_SHIFT;
+> +       drv_data->num_banks = num_banks;
+> +
+> +       ret = of_property_read_u32(pdev->dev.of_node, "max-slices",
+> +                                 &drv_data->max_slices);
+> +       if (ret)
+> +               return ret;
+> +
+
+The way this driver is written, there is only one sane value for
+max-slices, and it can be derived by finding the max slice_id in llcc_cfg.
+You only use "max-slices" to size the bitmap, but then use the slice_id
+everywhere when indexing into the bitmap, so as far as I can tell this DT
+property is not needed. Can we remove it from the binding and just derive
+the value by iterating over llcc_cfg to find the max slice_id?
+
+-Evan
