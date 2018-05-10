@@ -1,89 +1,71 @@
-From: djw@t-chip.com.cn
-Subject: [PATCH v1 5/5] arm64: dts: rockchip: Add sdmmc UHS support for roc-rk3328-cc
-Date: Thu, 10 May 2018 17:28:41 +0800
-Message-ID: <1525944521-17114-1-git-send-email-djw@t-chip.com.cn>
-References: <1525943800-14095-1-git-send-email-djw@t-chip.com.cn>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525943800-14095-1-git-send-email-djw@t-chip.com.cn>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: Wayne Chou <zxf@t-chip.com.cn>, Levin Du <djw@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, David Wu <david.wu@rock-chips.com>, Liang Chen <cl@rock-chips.com>, William Wu <william.wu@rock-chips.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Joseph Chen <chenjh@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org, Rocky Hao <rocky.hao@rock-chips.com>
+From: Liviu Dudau <liviu.dudau@arm.com>
+Subject: Re: [PATCH 1/3] arm64: dts: juno: Fix "debounce-interval" property
+ misspelling
+Date: Thu, 10 May 2018 10:44:53 +0100
+Message-ID: <20180510094453.GP1027@e110455-lin.cambridge.arm.com>
+References: <1525884291-18851-1-git-send-email-sudeep.holla@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1525884291-18851-1-git-send-email-sudeep.holla@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Levin Du <djw@t-chip.com.cn>
-
-In roc-rk3328-cc board, the signal voltage of sdmmc is supplied by
-the vcc_sdio regulator, which is a mux between 1.8V and 3.3V,
-controlled by a special output only gpio pin labeled
-"gpiomut_pmuio_iout", corresponding bit 1 of the syscon GRF_SOC_CON10.
-
-This special pin can now be reference as <&gpio_syscon10 1>, thanks
-to the gpio-syscon driver, which makes writing regulator-gpio possible.
-
-If the signal voltage changes, the io domain needs to change
-correspondingly.
-
-To use this feature, the following options are required in kernel config:
- - CONFIG_GPIO_SYSCON=y
- - CONFIG_POWER_AVS=y
- - CONFIG_ROCKCHIP_IODOMAIN=y
-
-Signed-off-by: Levin Du <djw@t-chip.com.cn>
-
----
-
-Changes in v1:
-- Split into small patches
-- Sort dts properties in sdmmc node
-
- arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-index b983abd..3f33e42 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-@@ -41,6 +41,19 @@
- 		vin-supply = <&vcc_io>;
- 	};
- 
-+	vcc_sdio: sdmmcio-regulator {
-+		compatible = "regulator-gpio";
-+		gpios = <&gpio_syscon10 1 GPIO_ACTIVE_HIGH>;
-+		states = <1800000 0x1
-+			  3300000 0x0>;
-+		regulator-name = "vcc_sdio";
-+		regulator-type = "voltage";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		vin-supply = <&vcc_sys>;
-+	};
-+
- 	vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
-@@ -213,7 +226,7 @@
- 
- 	vccio1-supply = <&vcc_io>;
- 	vccio2-supply = <&vcc18_emmc>;
--	vccio3-supply = <&vcc_io>;
-+	vccio3-supply = <&vcc_sdio>;
- 	vccio4-supply = <&vcc_18>;
- 	vccio5-supply = <&vcc_io>;
- 	vccio6-supply = <&vcc_io>;
-@@ -242,7 +255,12 @@
- 	max-frequency = <150000000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_dectn &sdmmc0_bus4>;
-+	sd-uhs-sdr12;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr104;
- 	vmmc-supply = <&vcc_sd>;
-+	vqmmc-supply = <&vcc_sdio>;
- 	status = "okay";
- };
- 
--- 
-2.7.4
+T24gV2VkLCBNYXkgMDksIDIwMTggYXQgMDU6NDQ6NDlQTSArMDEwMCwgU3VkZWVwIEhvbGxhIHdy
+b3RlOgo+ICJkZWJvdW5jZV9pbnRlcnZhbCIgd2FzIG5ldmVyIHN1cHBvcnRlZCBpbiB0aGUgYmlu
+ZGluZ3MuIEl0IHNob3VsZCBiZQo+ICJkZWJvdW5jZS1pbnRlcnZhbCIuIE1vcmVvdmVyLCBsYXRl
+c3QgRFRDIGNvbXBsYWlucyB0aGUgZm9sbG93aW5nOgo+IAo+IFdhcm5pbmcgKHByb3BlcnR5X25h
+bWVfY2hhcnNfc3RyaWN0KTogZGVib3VuY2VfaW50ZXJ2YWw6IENoYXJhY3RlciAnXycgbm90IHJl
+Y29tbWVuZGVkIGluIHByb3BlcnR5IG5hbWUKPiAKPiBUaGlzIHBhdGNoIGZpeGVzIHRoZSBhYm92
+ZSB3YXJuaW5nIGJ5IHVzaW5nIHRoZSBjb3JyZWN0IHByb3BlcnR5IGFzCj4gcGVyIHRoZSBiaW5k
+aW5ncy4KPiAKPiBDYzogTGl2aXUgRHVkYXUgPGxpdml1LmR1ZGF1QGFybS5jb20+CgpBY2tlZC1i
+eTogTGl2aXUgRHVkYXUgPGxpdml1LmR1ZGF1QGFybS5jb20+Cgo+IFNpZ25lZC1vZmYtYnk6IFN1
+ZGVlcCBIb2xsYSA8c3VkZWVwLmhvbGxhQGFybS5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtNjQvYm9v
+dC9kdHMvYXJtL2p1bm8tbW90aGVyYm9hcmQuZHRzaSB8IDEyICsrKysrKy0tLS0tLQo+ICAxIGZp
+bGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1n
+aXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLW1vdGhlcmJvYXJkLmR0c2kgYi9hcmNo
+L2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLW1vdGhlcmJvYXJkLmR0c2kKPiBpbmRleCA2OTgwNGM1
+ZjExOTcuLjRiMzgxOTVhOGJlYSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2Fy
+bS9qdW5vLW1vdGhlcmJvYXJkLmR0c2kKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9q
+dW5vLW1vdGhlcmJvYXJkLmR0c2kKPiBAQCAtNTgsNDIgKzU4LDQyIEBACj4gIAkJCQljb21wYXRp
+YmxlID0gImdwaW8ta2V5cyI7Cj4gIAo+ICAJCQkJcG93ZXItYnV0dG9uIHsKPiAtCQkJCQlkZWJv
+dW5jZV9pbnRlcnZhbCA9IDw1MD47Cj4gKwkJCQkJZGVib3VuY2UtaW50ZXJ2YWwgPSA8NTA+Owo+
+ICAJCQkJCXdha2V1cC1zb3VyY2U7Cj4gIAkJCQkJbGludXgsY29kZSA9IDwxMTY+Owo+ICAJCQkJ
+CWxhYmVsID0gIlBPV0VSIjsKPiAgCQkJCQlncGlvcyA9IDwmaW9mcGdhX2dwaW8wIDAgMHg0PjsK
+PiAgCQkJCX07Cj4gIAkJCQlob21lLWJ1dHRvbiB7Cj4gLQkJCQkJZGVib3VuY2VfaW50ZXJ2YWwg
+PSA8NTA+Owo+ICsJCQkJCWRlYm91bmNlLWludGVydmFsID0gPDUwPjsKPiAgCQkJCQl3YWtldXAt
+c291cmNlOwo+ICAJCQkJCWxpbnV4LGNvZGUgPSA8MTAyPjsKPiAgCQkJCQlsYWJlbCA9ICJIT01F
+IjsKPiAgCQkJCQlncGlvcyA9IDwmaW9mcGdhX2dwaW8wIDEgMHg0PjsKPiAgCQkJCX07Cj4gIAkJ
+CQlybG9jay1idXR0b24gewo+IC0JCQkJCWRlYm91bmNlX2ludGVydmFsID0gPDUwPjsKPiArCQkJ
+CQlkZWJvdW5jZS1pbnRlcnZhbCA9IDw1MD47Cj4gIAkJCQkJd2FrZXVwLXNvdXJjZTsKPiAgCQkJ
+CQlsaW51eCxjb2RlID0gPDE1Mj47Cj4gIAkJCQkJbGFiZWwgPSAiUkxPQ0siOwo+ICAJCQkJCWdw
+aW9zID0gPCZpb2ZwZ2FfZ3BpbzAgMiAweDQ+Owo+ICAJCQkJfTsKPiAgCQkJCXZvbC11cC1idXR0
+b24gewo+IC0JCQkJCWRlYm91bmNlX2ludGVydmFsID0gPDUwPjsKPiArCQkJCQlkZWJvdW5jZS1p
+bnRlcnZhbCA9IDw1MD47Cj4gIAkJCQkJd2FrZXVwLXNvdXJjZTsKPiAgCQkJCQlsaW51eCxjb2Rl
+ID0gPDExNT47Cj4gIAkJCQkJbGFiZWwgPSAiVk9MKyI7Cj4gIAkJCQkJZ3Bpb3MgPSA8JmlvZnBn
+YV9ncGlvMCAzIDB4ND47Cj4gIAkJCQl9Owo+ICAJCQkJdm9sLWRvd24tYnV0dG9uIHsKPiAtCQkJ
+CQlkZWJvdW5jZV9pbnRlcnZhbCA9IDw1MD47Cj4gKwkJCQkJZGVib3VuY2UtaW50ZXJ2YWwgPSA8
+NTA+Owo+ICAJCQkJCXdha2V1cC1zb3VyY2U7Cj4gIAkJCQkJbGludXgsY29kZSA9IDwxMTQ+Owo+
+ICAJCQkJCWxhYmVsID0gIlZPTC0iOwo+ICAJCQkJCWdwaW9zID0gPCZpb2ZwZ2FfZ3BpbzAgNCAw
+eDQ+Owo+ICAJCQkJfTsKPiAgCQkJCW5taS1idXR0b24gewo+IC0JCQkJCWRlYm91bmNlX2ludGVy
+dmFsID0gPDUwPjsKPiArCQkJCQlkZWJvdW5jZS1pbnRlcnZhbCA9IDw1MD47Cj4gIAkJCQkJd2Fr
+ZXVwLXNvdXJjZTsKPiAgCQkJCQlsaW51eCxjb2RlID0gPDk5PjsKPiAgCQkJCQlsYWJlbCA9ICJO
+TUkiOwo+IC0tIAo+IDIuNy40Cj4gCgotLSAKPT09PT09PT09PT09PT09PT09PT0KfCBJIHdvdWxk
+IGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8CnwgYnV0IHRoZXkncmUgbm90IHwKfCBnaXZp
+bmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEgIC8KICAtLS0tLS0tLS0tLS0tLS0KICAgIMKv
+XF8o44OEKV8vwq8KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LWFybS1rZXJuZWwK
