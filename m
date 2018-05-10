@@ -1,50 +1,127 @@
 From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH V1 1/5] qcom: wled: Rename pm8941-wled.c to qcom-wled.c
-Date: Thu, 10 May 2018 13:10:16 +0200
-Message-ID: <20180510111015.GB6977@amd>
-References: <1525341432-15818-1-git-send-email-kgunda@codeaurora.org>
- <1525341432-15818-2-git-send-email-kgunda@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] dt: bindings: lm3601x: Introduce the lm3601x
+ driver
+Date: Thu, 10 May 2018 13:28:07 +0200
+Message-ID: <20180510112807.GF6977@amd>
+References: <20180508141704.24271-1-dmurphy@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
+        protocol="application/pgp-signature"; boundary="pyE8wggRBhVBcj8z"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1525341432-15818-2-git-send-email-kgunda@codeaurora.org>
+In-Reply-To: <20180508141704.24271-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kiran Gunda <kgunda@codeaurora.org>
-Cc: bjorn.andersson@linaro.org, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---ftEhullJWpWg/VHq
+--pyE8wggRBhVBcj8z
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu 2018-05-03 15:27:08, Kiran Gunda wrote:
-> pm8941-wled.c driver is supporting the WLED peripheral
-> on pm8941. Rename it to qcom-wled.c so that it can support
-> WLED on multiple PMICs.
+On Tue 2018-05-08 09:17:03, Dan Murphy wrote:
+> Introduce the device tree bindings for the lm3601x
+> family of LED torch, flash and IR drivers.
 >=20
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>=20
+> v2 - No changes - https://patchwork.kernel.org/patch/10384587/
+>=20
+>  .../devicetree/bindings/leds/leds-lm3601x.txt | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3601x.t=
+xt
+>=20
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt b/Do=
+cumentation/devicetree/bindings/leds/leds-lm3601x.txt
+> new file mode 100644
+> index 000000000000..38cdabf6ca7e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+> @@ -0,0 +1,51 @@
+> +* Texas Instruments - lm3601x Single-LED Flash Driver
+> +
+> +The LM3601X are ultra-small LED flash drivers that
+> +provides a high level of adjustability.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+"provide".
 
+> +Required properties:
+> +	- compatible : Can be one of the following
+> +		"ti,lm3601x"
+> +		"ti,lm36010"
+> +		"ti,lm36011"
+> +	- reg : I2C slave address
+> +	- #address-cells : 1
+> +	- #size-cells : 0
+> +
+> +Required child properties:
+> +	- reg : 0 - Indicates to support and register a torch interface
+> +		1 - Indicates to support and register a strobe interface
+> +		2 - Indicates to support and register an ir interface
+
+I'd delete "to support and register" -- we are describing hardware here.
+
+> +Optional child properties:
+> +	- label : see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Example:
+> +led-controller@64 {
+> +	compatible =3D "ti,lm3601x";
+> +	#address-cells =3D <1>;
+> +	#size-cells =3D <0>;
+> +	reg =3D <0x64>;
+> +
+> +	led@0 {
+> +		reg =3D <0>;
+> +		label =3D "white:torch";
+> +		led-max-microamp=3D<10000>;
+> +	};
+> +
+> +	led@1 {
+> +		reg =3D <1>;
+> +		label =3D "white:strobe";
+> +		flash-max-microamp=3D<10000>;
+> +		flash-max-timeout-us=3D<800>;
+> +	};
+> +
+> +	led@2 {
+> +		reg =3D <2>;
+> +		label =3D "invisible:ir";
+> +	};
+> +}
+
+Title says this is single-LED driver chip, but it controls three chips
+in this example?
+
+I'd put " " around "=3D" for consistency.
+
+We use "flash" elsewhere, I'd replace "strobe" with that. Userspace
+would like consistency, too.
+
+What is the IR led good for? Taking videos in the dark?
+
+I guess for consistency, it is "ir:torch" :-).
+
+									Pavel
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---ftEhullJWpWg/VHq
+--pyE8wggRBhVBcj8z
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAlr0KJcACgkQMOfwapXb+vIBCACfdU/BG35pa+jbxl1zQluwZJYV
-gl0AnA5DIMfp+UoE3Dv076pGtMJ/sJIv
-=LDbK
+iEYEARECAAYFAlr0LMcACgkQMOfwapXb+vI1igCfR3PBrzknyo2zuV5qghdEPA9j
+bZUAoIDk6ULSlOTimfVCCCsVoA+hZga/
+=kSWL
 -----END PGP SIGNATURE-----
 
---ftEhullJWpWg/VHq--
+--pyE8wggRBhVBcj8z--
