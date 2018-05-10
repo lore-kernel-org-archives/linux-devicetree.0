@@ -1,75 +1,70 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v4 2/2] leds: lm3601x: Introduce the lm3601x LED driver
-Date: Thu, 10 May 2018 10:16:19 -0500
-Message-ID: <33622c0a-1e6d-f930-d4c8-a465541f56cc@ti.com>
-References: <20180510122718.8413-1-dmurphy@ti.com>
- <20180510122718.8413-2-dmurphy@ti.com>
- <87eaf628-3cf6-6855-5732-b0e5291f3b34@ti.com>
- <08526618-7463-1e6e-a4ac-c4da4627c1b2@ti.com>
- <7832225b-115c-2316-025e-29929cd4f208@ti.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH V3] ARM: dts: da850-evm: use phandles to extend nodes
+Date: Thu, 10 May 2018 20:49:17 +0530
+Message-ID: <7692ca00-3c9d-6e3e-12b6-f65d82f6fa95@ti.com>
+References: <20180507123721.9264-1-aford173@gmail.com>
+ <ae8292b2-b167-7a96-70be-1cfea6059874@ti.com>
+ <CAHCN7xKXJnh5MSudY3FU_9Xw98PwDi3yaWTUdfjFDaE24NBrzw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7832225b-115c-2316-025e-29929cd4f208@ti.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAHCN7xKXJnh5MSudY3FU_9Xw98PwDi3yaWTUdfjFDaE24NBrzw@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>, robh+dt@kernel.org, mark.rutland@arm.com, jacek.anaszewski@gmail.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Adam Ford <aford173@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Adam Ford <adam.ford@logicpd.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/10/2018 09:31 AM, Andrew F. Davis wrote:
-> On 05/10/2018 09:04 AM, Dan Murphy wrote:
-> 
->>>> +static int lm3601x_remove(struct i2c_client *client)
->>>> +{
->>>> +	struct lm3601x_led *led = i2c_get_clientdata(client);
->>>> +
->>>> +	regmap_write(led->regmap, LM3601X_ENABLE_REG, 0);
->>>> +
+On Thursday 10 May 2018 08:38 PM, Adam Ford wrote:
+> On Thu, May 10, 2018 at 4:10 AM, Sekhar Nori <nsekhar@ti.com> wrote:
+>> On Monday 07 May 2018 06:07 PM, Adam Ford wrote:
+>>> Many node labels in the device tree (like serial0, serial1, etc) are being
+>>> redefined, so let's modernize the device tree by using phandles to
+>>> extend the existing nodes.  This helps reduce the whitespace.
 >>>
->>>
->>> If probe doesn't enable this, remove shouldn't disable it. It can lead
->>> to odd cases if the driver is removed and added again.
+>>> Signed-off-by: Adam Ford <aford173@gmail.com>
 >>
->> I want to make sure the LED is off and in standby mode.  Maybe I will just set it to
->> the default value instead.
->>
+>> I applied this without the pmic changes. I am not convinced about those.
+>> The tps node is already being referred to as phandle. I am not sure
+>> referring to each individual regulator using phandle is needed. Other
+>> files like am335x-evm.dts don't do it as well.
 > 
-> 
-> Why? If you want to do this then implement PM controls and put it in
-> standby mode there.
-> 
-> 
+> I tested the regulator values and names after booting to see if the
+> names and values matched the expected values. They did, so I am
+> fairly confident it would have worked.
 
-Implementing PM controls does not cause this line to be removed on a removal.
+Not doubting that. But I am not sure if thats the "norm". Do you see any
+other device-tree file doing this?
 
->>>
->>> Plus, removing the driver is not a command to disable the LED anyway.
->>
->> True but you don't want to leave any LEDs in the on state without a driver to support it.
->> This could burn out the LED or the board if left on on max brightness
->>
-> 
-> 
-> I disagree, we should not try to decide what the user wants here. We
-> should only do what we are instructed to do, which for remove() is to
-> cleanup what probe has done so the driver can be removed w/o leaking
-> memory or device state.
-
-So your OK with a causing a burn out of the device or LED or draining the battery because the driver was
-unloaded and there is not way to turn it off besides hard power cycling the device.  Because even a reboot
-of the device will still leave the LED on throughout the boot until the driver is reloaded.
-
-I will let the maintainer weigh in on this issue.
-
-> 
 > 
 >>
->> Dan
+>> Another thing is whether we really need the tp6507x.dtsi file. It does
+>> not seem to contain much and also da850-evm.dts is the only file
+>> including it. So it seems pretty pointless to me.
+> 
+> Do you want me to do a patch that removes the  tp6507x.dtsi file and
+> just sets up the
+> PMIC from scratch within the da850-evm file?
+
+I am fine with the plan, but not something urgent, IMO.
+
+> 
 >>
+>> Here is what I committed.
+> 
+> Thank you.  I think looks cleaner this way, and more consistent with
+> many of the other platforms and boards.
 
+Yes.
 
--- 
-------------------
-Dan Murphy
+Thanks,
+Sekhar
