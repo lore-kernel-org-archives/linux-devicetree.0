@@ -1,28 +1,32 @@
-Return-Path: <SRS0=Dt34=H6=crapouillou.net=paul@kernel.org>
-Message-Id: <5af5c20f.1c69fb81.2f3c2.2b5fSMTPIN_ADDED_MISSING@mx.google.com>
-Date: Fri, 11 May 2018 13:17:04 -0300
-Subject: Re: [PATCH v3 5/8] MIPS: jz4740: dts: Add bindings for the
- jz4740-wdt driver
-From: Paul Cercueil <paul@crapouillou.net>
+Return-Path: <SRS0=9rWN=H5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:20480 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S935285AbeEJNut (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 10 May 2018 09:50:49 -0400
+Date: Thu, 10 May 2018 15:50:48 +0200 (CEST)
+From: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: When does of_match_device() return NULL ?
+In-Reply-To: <CAL_JsqJ=CZOgJi048rbeJagynGpd=eM+Yu8-ntyihrYwTWEX0Q@mail.gmail.com>
+Message-ID: <alpine.DEB.2.20.1805101550240.2589@hadrien>
+References: <20180509144119.GA6358@himanshu-Vostro-3559> <CAL_JsqJPXyq59oK+n+w7wX=4ua3Qe9oSiAV99ADB0f-5-a0VLg@mail.gmail.com> <alpine.DEB.2.20.1805100728350.2589@hadrien> <CAL_JsqJ=CZOgJi048rbeJagynGpd=eM+Yu8-ntyihrYwTWEX0Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-To: James Hogan <jhogan@kernel.org>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Mathieu Malaterre <malat@debian.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org
+Content-Type: text/plain; charset=US-ASCII
+Sender: devicetree-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Himanshu Jha <himanshujha199640@gmail.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgSmFtZXMsCgpMZSAxMSBtYWkgMjAxOCAxMTo1MiwgSmFtZXMgSG9nYW4gPGpob2dhbkBrZXJu
-ZWwub3JnPiBhIMOpY3JpdCA6Cj4KPiBPbiBUaHUsIE1heSAxMCwgMjAxOCBhdCAwODo0Nzo0OFBN
-ICswMjAwLCBQYXVsIENlcmN1ZWlsIHdyb3RlOiAKPiA+IEFsc28gcmVtb3ZlIHRoZSB3YXRjaGRv
-ZyBwbGF0Zm9ybV9kZXZpY2UgZnJvbSBwbGF0Zm9ybS5jLCBzaW5jZSBpdCAKPiA+IHdhc24ndCB1
-c2VkIGFueXdoZXJlIGFueXdheS4gCj4KPiBOaXQ6IGl0J2QgYmUgc2xpZ2h0bHkgbmljZXIgSU1P
-IGlmIHRoZSBwYXRjaCBib2R5IHdhcyBhIHN1cGVyc2V0IG9mIHRoZSAKPiBzdWJqZWN0IGxpbmUu
-IEl0J3MgZmluZSB0byByZXBlYXQgd2hhdCB0aGUgc3ViamVjdCBzYXlzIHNpbmNlIHRoYXRzIAo+
-IG1lYW50IHRvIHN1bW1hcmlzZSB0aGUgYm9keS4gCj4KPiA+IC1zdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlIGp6NDc0MF93ZHRfZGV2aWNlID0geyAKPgo+IFRoZXJlJ3MgYW4gZXh0ZXJuIGluIGFyY2gv
-bWlwcy9pbmNsdWRlL2FzbS9tYWNoLWp6NDc0MC9wbGF0Zm9ybS5oIHRoYXQgCj4gc2hvdWxkIHBl
-cmhhcHMgYmUgcmVtb3ZlZCBhbHNvPyAKCllvdSdyZSByaWdodC4gSXQgc2hvdWxkIGJlIHJlbW92
-ZWQuCgo+IE90aGVyd2lzZSAKPiBBY2tlZC1ieTogSmFtZXMgSG9nYW4gPGpob2dhbkBrZXJuZWwu
-b3JnPiAKPgo+IEknbSBoYXBweSB0byBhcHBseSBmb3IgNC4xOCB3aXRoIHRoYXQgY2hhbmdlIGlm
-IHlvdSB3YW50IGl0IHRvIGdvIAo+IHRocm91Z2ggdGhlIE1JUFMgdHJlZS4gCgpZZXMgcGxlYXNl
-IQoKPiBDaGVlcnMgCj4gSmFtZXMgCgpUaGFua3MsCi1QYXVs
+> > Is there any way that one can
+> > infer from the presence or absence of either kind of declaration that
+> > there is only one way to cause the probe function to be invoked?
+>
+> I think the short answer is no.
+>
+> DT requires an of_match_table. ACPI requires an acpi_match_table
+> (IIRC). PCI/USB use VID/PID. Then you have old style platform device
+> and driver .name matching. And then there's manually binding.
+
+Thanks for all of the clarifications!
+
+julia
