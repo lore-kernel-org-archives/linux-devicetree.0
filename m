@@ -1,121 +1,125 @@
 From: Amit Kucheria <amit.kucheria@verdurent.com>
-Subject: Re: [PATCH] arm64: dts: msm8996: fix gic_irq_domain_translate warnings
-Date: Thu, 10 May 2018 11:16:28 +0300
-Message-ID: <CAHLCerPCDbTEa3k=iz=frf4Sdn_-61z-S+rirCt1dPwbva4LUg@mail.gmail.com>
-References: <20180427061028.13192-1-thierry.escande@linaro.org>
+Subject: Re: [PATCH] arm64: msm8916: fix gic_irq_domain_translate warnings
+Date: Thu, 10 May 2018 12:03:27 +0300
+Message-ID: <CAHLCerOZ3_A7PvD6i53WXLJXVPmUWcNakvA2gcwFYMT9f1iR0A@mail.gmail.com>
+References: <20180418163415.21646-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427061028.13192-1-thierry.escande@linaro.org>
+In-Reply-To: <20180418163415.21646-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Escande <thierry.escande@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: srinivas.kandagatla@linaro.org
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-soc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, lakml <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 27, 2018 at 9:10 AM, Thierry Escande
-<thierry.escande@linaro.org> wrote:
+On Wed, Apr 18, 2018 at 7:34 PM,  <srinivas.kandagatla@linaro.org> wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>
 > Remove the usage of IRQ_TYPE_NONE to fix loud warnings from
 > patch (83a86fbb5b56b "irqchip/gic: Loudly complain about
 > the use of IRQ_TYPE_NONE").
 >
-> Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
 Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
 
 (boot report here:
-https://storage.kernelci.org/qcom-lt/integration-linux-qcomlt/v4.17-rc4-247-gbe94bee41bf6/arm64/defconfig/lab-bjorn/boot-apq8096-db820c.txt)
+https://storage.kernelci.org/qcom-lt/integration-linux-qcomlt/v4.17-rc4-247-gbe94bee41bf6/arm64/defconfig/lab-bjorn/boot-apq8016-sbc.txt)
 
 > ---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 19 ++++++++++---------
->  1 file changed, 10 insertions(+), 9 deletions(-)
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
 >
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index 410ae787ebb4..1aaf1fa2604e 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -437,7 +437,7 @@
->                 blsp2_i2c0: i2c@75b5000 {
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> index cfbd72186762..5d66a575c7e1 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> @@ -180,7 +180,7 @@
+>
+>         pmu {
+>                 compatible = "arm,cortex-a53-pmu";
+> -               interrupts = <GIC_PPI 7 GIC_CPU_MASK_SIMPLE(4)>;
+> +               interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4)| IRQ_TYPE_LEVEL_HIGH)>;
+>         };
+>
+>         thermal-zones {
+> @@ -513,7 +513,7 @@
+>                 blsp_i2c2: i2c@78b6000 {
 >                         compatible = "qcom,i2c-qup-v2.2.1";
->                         reg = <0x075b5000 0x1000>;
-> -                       interrupts = <GIC_SPI 101 0>;
-> +                       interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
->                         clocks = <&gcc GCC_BLSP2_AHB_CLK>,
->                                 <&gcc GCC_BLSP2_QUP1_I2C_APPS_CLK>;
->                         clock-names = "iface", "core";
-> @@ -468,7 +468,7 @@
->                 blsp2_i2c1: i2c@75b6000 {
->                         compatible = "qcom,i2c-qup-v2.2.1";
->                         reg = <0x075b6000 0x1000>;
-> -                       interrupts = <GIC_SPI 102 0>;
-> +                       interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
->                         clocks = <&gcc GCC_BLSP2_AHB_CLK>,
->                                 <&gcc GCC_BLSP2_QUP2_I2C_APPS_CLK>;
->                         clock-names = "iface", "core";
-> @@ -493,7 +493,7 @@
->                 blsp1_i2c2: i2c@7577000 {
->                         compatible = "qcom,i2c-qup-v2.2.1";
->                         reg = <0x07577000 0x1000>;
-> -                       interrupts = <GIC_SPI 97 0>;
-> +                       interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+>                         reg = <0x078b6000 0x500>;
+> -                       interrupts = <GIC_SPI 96 0>;
+> +                       interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
 >                         clocks = <&gcc GCC_BLSP1_AHB_CLK>,
->                                 <&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>;
+>                                  <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
 >                         clock-names = "iface", "core";
-> @@ -526,7 +526,8 @@
->                          reg = <0x74a4900 0x314>, <0x74a4000 0x800>;
->                          reg-names = "hc_mem", "core_mem";
+> @@ -528,7 +528,7 @@
+>                 blsp_i2c4: i2c@78b8000 {
+>                         compatible = "qcom,i2c-qup-v2.2.1";
+>                         reg = <0x078b8000 0x500>;
+> -                       interrupts = <GIC_SPI 98 0>;
+> +                       interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+>                         clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+>                                  <&gcc GCC_BLSP1_QUP4_I2C_APPS_CLK>;
+>                         clock-names = "iface", "core";
+> @@ -543,7 +543,7 @@
+>                 blsp_i2c6: i2c@78ba000 {
+>                         compatible = "qcom,i2c-qup-v2.2.1";
+>                         reg = <0x078ba000 0x500>;
+> -                       interrupts = <GIC_SPI 100 0>;
+> +                       interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
+>                         clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+>                                  <&gcc GCC_BLSP1_QUP6_I2C_APPS_CLK>;
+>                         clock-names = "iface", "core";
+> @@ -575,7 +575,7 @@
+>                                         "mi2s-bit-clk3";
+>                         #sound-dai-cells = <1>;
 >
-> -                        interrupts = <0 125 0>, <0 221 0>;
-> +                        interrupts = <0 125 IRQ_TYPE_LEVEL_HIGH>,
-> +                                     <0 221 IRQ_TYPE_LEVEL_HIGH>;
->                          interrupt-names = "hc_irq", "pwr_irq";
+> -                       interrupts = <0 160 0>;
+> +                       interrupts = <0 160 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupt-names = "lpass-irq-lpaif";
+>                         reg = <0x07708000 0x10000>;
+>                         reg-names = "lpass-lpaif";
+> @@ -595,7 +595,7 @@
+>                         reg = <0x07824900 0x11c>, <0x07824000 0x800>;
+>                         reg-names = "hc_mem", "core_mem";
 >
->                          clock-names = "iface", "core", "xo";
-> @@ -809,7 +810,7 @@
->                         dwc3@7600000 {
->                                 compatible = "snps,dwc3";
->                                 reg = <0x7600000 0xcc00>;
-> -                               interrupts = <0 138 0>;
-> +                               interrupts = <0 138 IRQ_TYPE_LEVEL_HIGH>;
->                                 phys = <&hsusb_phy2>;
->                                 phy-names = "usb2-phy";
+> -                       interrupts = <0 123 0>, <0 138 0>;
+> +                       interrupts = <0 123 IRQ_TYPE_LEVEL_HIGH>, <0 138 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupt-names = "hc_irq", "pwr_irq";
+>                         clocks = <&gcc GCC_SDCC1_APPS_CLK>,
+>                                  <&gcc GCC_SDCC1_AHB_CLK>,
+> @@ -612,7 +612,7 @@
+>                         reg = <0x07864900 0x11c>, <0x07864000 0x800>;
+>                         reg-names = "hc_mem", "core_mem";
+>
+> -                       interrupts = <0 125 0>, <0 221 0>;
+> +                       interrupts = <0 125 IRQ_TYPE_LEVEL_HIGH>, <0 221 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupt-names = "hc_irq", "pwr_irq";
+>                         clocks = <&gcc GCC_SDCC2_APPS_CLK>,
+>                                  <&gcc GCC_SDCC2_AHB_CLK>,
+> @@ -819,7 +819,7 @@
+>                         iommu-ctx@2000 {
+>                                 compatible = "qcom,msm-iommu-v1-ns";
+>                                 reg = <0x2000 0x1000>;
+> -                               interrupts = <GIC_SPI 242 0>;
+> +                               interrupts = <GIC_SPI 242 IRQ_TYPE_LEVEL_HIGH>;
 >                         };
-> @@ -838,7 +839,7 @@
->                         dwc3@6a00000 {
->                                 compatible = "snps,dwc3";
->                                 reg = <0x6a00000 0xcc00>;
-> -                               interrupts = <0 131 0>;
-> +                               interrupts = <0 131 IRQ_TYPE_LEVEL_HIGH>;
->                                 phys = <&hsusb_phy1>, <&ssusb_phy_0>;
->                                 phy-names = "usb2-phy", "usb3-phy";
->                         };
-> @@ -872,7 +873,7 @@
->                                 ranges = <0x01000000 0x0 0x0c200000 0x0c200000 0x0 0x100000>,
->                                         <0x02000000 0x0 0x0c300000 0x0c300000 0x0 0xd00000>;
+>                 };
 >
-> -                               interrupts = <GIC_SPI 405 IRQ_TYPE_NONE>;
-> +                               interrupts = <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>;
->                                 interrupt-names = "msi";
->                                 #interrupt-cells = <1>;
->                                 interrupt-map-mask = <0 0 0 0x7>;
-> @@ -927,7 +928,7 @@
->                                 ranges = <0x01000000 0x0 0x0d200000 0x0d200000 0x0 0x100000>,
->                                         <0x02000000 0x0 0x0d300000 0x0d300000 0x0 0xd00000>;
+> @@ -864,7 +864,7 @@
+>                                       "bus_clk",
+>                                       "vsync_clk";
 >
-> -                               interrupts = <GIC_SPI 413 IRQ_TYPE_NONE>;
-> +                               interrupts = <GIC_SPI 413 IRQ_TYPE_LEVEL_HIGH>;
->                                 interrupt-names = "msi";
->                                 #interrupt-cells = <1>;
->                                 interrupt-map-mask = <0 0 0 0x7>;
-> @@ -980,7 +981,7 @@
+> -                       interrupts = <0 72 0>;
+> +                       interrupts = <0 72 IRQ_TYPE_LEVEL_HIGH>;
 >
->                                 device_type = "pci";
->
-> -                               interrupts = <GIC_SPI 421 IRQ_TYPE_NONE>;
-> +                               interrupts = <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH>;
->                                 interrupt-names = "msi";
->                                 #interrupt-cells = <1>;
->                                 interrupt-map-mask = <0 0 0 0x7>;
+>                         interrupt-controller;
+>                         #interrupt-cells = <1>;
 > --
-> 2.14.1
+> 2.16.2
 >
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
