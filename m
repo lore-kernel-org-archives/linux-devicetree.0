@@ -1,119 +1,107 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] arm64: dts: stratix10: Add QSPI support for Stratix10
-Date: Fri, 11 May 2018 07:31:45 -0500
-Message-ID: <CAL_JsqKN0TxFoGjoeXuOb1tJ4GhhC1yHRud3g6-DvZOH_Ago5Q@mail.gmail.com>
-References: <1525985204-11525-1-git-send-email-thor.thayer@linux.intel.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2 1/2] ARM: dts: vexpress: use standard gpio bindings for
+ sys_{led,mci,flash}
+Date: Fri, 11 May 2018 14:16:56 +0100
+Message-ID: <60e76b54-468a-f0ae-790d-3fc6bb4b55ed@arm.com>
+References: <1525884482-19855-1-git-send-email-sudeep.holla@arm.com>
+ <1526034208-9690-1-git-send-email-sudeep.holla@arm.com>
+ <CAL_JsqKsGV8rrox2hSioASD+96ws9JLTo_DLw9nKwAgr5uZ_3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525985204-11525-1-git-send-email-thor.thayer@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thor.thayer@linux.intel.com
-Cc: Dinh Nguyen <dinguyen@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqKsGV8rrox2hSioASD+96ws9JLTo_DLw9nKwAgr5uZ_3g@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 10, 2018 at 3:46 PM,  <thor.thayer@linux.intel.com> wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
->
-> Add qspi_clock
->    The qspi_clk frequency is updated by U-Boot before starting Linux.
-> Add QSPI interface node.
-> Add QSPI flash memory child node.
->    Setup the QSPI memory in 2 partitions.
->
-> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-> ---
->  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 22 +++++++++++++++
->  .../boot/dts/altera/socfpga_stratix10_socdk.dts    | 31 ++++++++++++++++++++++
->  2 files changed, 53 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> index e6b059378dc0..ed47dfce3ba6 100644
-> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> @@ -119,6 +119,12 @@
->                                 #clock-cells = <0>;
->                                 compatible = "fixed-clock";
->                         };
-> +
-> +                       qspi_clk: qspi_clk {
 
-s/_/-/
 
-> +                               #clock-cells = <0>;
-> +                               compatible = "fixed-clock";
-> +                               clock-frequency = <200000000>;
-> +                       };
->                 };
->
->                 gmac0: ethernet@ff800000 {
-> @@ -466,5 +472,21 @@
->                                 interrupts = <16 4>, <48 4>;
->                         };
->                 };
-> +
-> +               qspi: spi@ff8d2000 {
-> +                       compatible = "cdns,qspi-nor";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       reg = <0xff8d2000 0x100>,
-> +                             <0xff900000 0x100000>;
-> +                       interrupts = <0 3 4>;
-> +                       cdns,fifo-depth = <128>;
-> +                       cdns,fifo-width = <4>;
-> +                       cdns,trigger-address = <0x00000000>;
-> +                       clocks = <&qspi_clk>;
-> +                       bus-num = <1>;
-> +
-> +                       status = "disabled";
-> +               };
->         };
->  };
-> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> index f9b1ef12db48..60251462067a 100644
-> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> @@ -147,3 +147,34 @@
->                 reg = <0x68>;
->         };
->  };
-> +
-> +&qspi {
-> +       flash0: n25q00@0 {
+On 11/05/18 13:10, Rob Herring wrote:
+> On Fri, May 11, 2018 at 5:23 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>> Commit 2cff6dba57b7 ("ARM: dts: vexpress: fix node name unit-address presence warnings")
+>> removed the unit address as there was no associated reg property in
+>> these sysreg nodes.
+>>
+>> Also the latest DTC throws warnings for character '_' in the node names.
+>>
+>> Warning (node_name_chars_strict): /sysreg@10000/sys_led: Character '_' not recommended in node name
+>> Warning (node_name_chars_strict): /sysreg@10000/sys_mci: Character '_' not recommended in node name
+>> Warning (node_name_chars_strict): /sysreg@10000/sys_flash: Character '_' not recommended in node name
+>>
+>> The correct way to fix this as well as the original unit-address presence
+>> warnings is to use the standard gpio controller binding and specify the
+>> reg properties as per the hardware as it was before.
+>>
+>> However note that Vexpress sysreg MFD driver will still continue to use
+>> the hardcoded values for compatibility reasons.
+>>
+>> Cc: Liviu Dudau <liviu.dudau@arm.com>
+>> Suggested-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>> ---
+>>  arch/arm/boot/dts/vexpress-v2m-rs1.dtsi | 11 ++++++++---
+>>  arch/arm/boot/dts/vexpress-v2m.dtsi     | 11 ++++++++---
+>>  2 files changed, 16 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+>> index 7b8ff5b3b912..a8586a0b957d 100644
+>> --- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+>> +++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+>> @@ -76,21 +76,26 @@
+>>                                 v2m_sysreg: sysreg@10000 {
+>>                                         compatible = "arm,vexpress-sysreg";
+>>                                         reg = <0x010000 0x1000>;
+>> +                                       #address-cells = <1>;
+>> +                                       #size-cells = <1>;
+> 
+> You need a ranges here and below to translate from 0-0x10000 range.
+> 
+> With that,
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
 
-flash@0
+Thanks, I have appended it with below change
 
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               compatible = "n25q00aa";
-> +               reg = <0>;
-> +               spi-max-frequency = <50000000>;
-> +
-> +               m25p,fast-read;
-> +               cdns,page-size = <256>;
-> +               cdns,block-size = <16>;
-> +               cdns,read-delay = <1>;
-> +               cdns,tshsl-ns = <50>;
-> +               cdns,tsd2d-ns = <50>;
-> +               cdns,tchsh-ns = <4>;
-> +               cdns,tslch-ns = <4>;
-> +
-> +               partition@qspi-boot {
+Regards,
+Sudeep
 
-use a 'partitions' node to contain all the partitions.
+--
 
-> +                       label = "Boot and fpga data";
-> +                       /* 64MB for boot and FPGA data */
-> +                       reg = <0x0 0x4000000>;
-> +               };
-> +
-> +               partition@qspi-rootfs {
-> +                       label = "Root Filesystem - JFFS2";
-> +                       /* 64MB for Linux jffs2 */
-> +                       reg = <0x4000000 0x4000000>;
-> +               };
-> +       };
-> +};
-> --
-> 2.7.4
->
+diff --git c/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+w/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+index a8586a0b957d..4488c8fe213a 100644
+--- c/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
++++ w/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+@@ -78,6 +78,7 @@
+                                        reg = <0x010000 0x1000>;
+                                        #address-cells = <1>;
+                                        #size-cells = <1>;
++                                       ranges = <0 0x10000 0x1000>;
+                                        v2m_led_gpios: gpio@8 {
+                                                compatible =
+"arm,vexpress-sysreg,sys_led";
+diff --git c/arch/arm/boot/dts/vexpress-v2m.dtsi
+w/arch/arm/boot/dts/vexpress-v2m.dtsi
+index 37ecccebd937..4db42f6326a3 100644
+--- c/arch/arm/boot/dts/vexpress-v2m.dtsi
++++ w/arch/arm/boot/dts/vexpress-v2m.dtsi
+@@ -78,6 +78,7 @@
+                                        reg = <0x00000 0x1000>;
+                                        #address-cells = <1>;
+                                        #size-cells = <1>;
++                                       ranges = <0 0 0x1000>;
+                                        v2m_led_gpios: gpio@8 {
+                                                compatible =
+"arm,vexpress-sysreg,sys_led";
