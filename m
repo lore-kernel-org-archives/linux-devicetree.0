@@ -1,97 +1,111 @@
-Return-Path: <SRS0=ePA5=IB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00059.outbound.protection.outlook.com ([40.107.0.59]:36960
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1752039AbeENJiq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 14 May 2018 05:38:46 -0400
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v5 14/14] staging: typec: tcpci: move tcpci driver out of
+Return-Path: <SRS0=f43A=H6=gmail.com=mats.dev.list@kernel.org>
+Subject: Re: [PATCH v5 14/14] staging: typec: tcpci: move tcpci driver out of
  staging
-Date: Mon, 14 May 2018 09:38:42 +0000
-Message-ID: <VI1PR0402MB39177BBE3639158AEE77FCE6899C0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
 References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
  <1525307094-27402-15-git-send-email-jun.li@nxp.com>
- <d29927f6-0481-8fee-fdc8-0eef81a56f9c@gmail.com>
-In-Reply-To: <d29927f6-0481-8fee-fdc8-0eef81a56f9c@gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Mats Karrman <mats.dev.list@gmail.com>
+Message-ID: <d29927f6-0481-8fee-fdc8-0eef81a56f9c@gmail.com>
+Date: Fri, 11 May 2018 23:37:27 +0200
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Mats Karrman <mats.dev.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>
-Cc: "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, Peter Chen <peter.chen@nxp.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+In-Reply-To: <1525307094-27402-15-git-send-email-jun.li@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+To: Li Jun <jun.li@nxp.com>, robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWF0cyBLYXJybWFuIFtt
-YWlsdG86bWF0cy5kZXYubGlzdEBnbWFpbC5jb21dDQo+IFNlbnQ6IDIwMTjlubQ15pyIMTLml6Ug
-NTozNw0KPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsg
-Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+IGhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRl
-bC5jb207IGxpbnV4QHJvZWNrLXVzLm5ldA0KPiBDYzogYS5oYWpkYUBzYW1zdW5nLmNvbTsgY3cw
-MC5jaG9pQHNhbXN1bmcuY29tOw0KPiBzaHVmYW5fbGVlQHJpY2h0ZWsuY29tOyBQZXRlciBDaGVu
-IDxwZXRlci5jaGVuQG54cC5jb20+Ow0KPiBnc29tbG9AZ21haWwuY29tOyBkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZzsgbGludXgtdXNiQHZnZXIua2VybmVsLm9yZzsNCj4gZGwtbGludXgtaW14
-IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NSAxNC8xNF0gc3Rh
-Z2luZzogdHlwZWM6IHRjcGNpOiBtb3ZlIHRjcGNpIGRyaXZlciBvdXQgb2YNCj4gc3RhZ2luZw0K
-PiANCj4gSGkgTGkgSnVuLA0KPiANCj4gVGhpcyBwYXRjaCB0YWtlcyBhd2F5IGJ1aWxkaW5nIHRo
-ZSBlbnRpcmUgc3RhZ2luZy90eXBlYyB0cmVlIGJ1dCB0aGlzIGlzIHN0aWxsIG5vdA0KPiBlbXB0
-eSBhZnRlciB5b3VyIHBhdGNoLCBhbm90aGVyIGRyaXZlciAidGNwY2lfcnQxNzExaCIgaXMgdGhl
-cmUuDQo+IEJldHRlciBqdXN0IHJlbW92ZSB0Y3BjaSBmcm9tIHN0YWdpbmcvdHlwZWMve0tjb25m
-aWcsTWFrZWZpbGV9DQoNCk9oLCB5ZXMsIEkgc2hvdWxkIGFsc28gbW92ZSBvdXQgdGNwY2lfcnQx
-NzExaCBkcml2ZXIsIHdpbGwgdXBkYXRlIGluIG5leHQgdmVyc2lvbi4NCg0KVGhhbmtzDQpMaSBK
-dW4NCj4gDQo+IC8vIE1hdHMNCj4gDQo+IE9uIDIwMTgtMDUtMDMgMDI6MjQsIExpIEp1biB3cm90
-ZToNCj4gDQo+ID4gTW92ZSBUQ1BDSShUeXBlYyBwb3J0IGNvbnRyb2xsZXIgaW50ZXJmYWNlKSBk
-cml2ZXIgb3V0IG9mIHN0YWdpbmcuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBMaSBKdW4gPGp1
-bi5saUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICAgZHJpdmVycy9zdGFnaW5nL0tjb25maWcgICAg
-ICAgICAgICAgICAgfCAyIC0tDQo+ID4gICBkcml2ZXJzL3N0YWdpbmcvTWFrZWZpbGUgICAgICAg
-ICAgICAgICB8IDEgLQ0KPiA+ICAgZHJpdmVycy9zdGFnaW5nL3R5cGVjL1RPRE8gICAgICAgICAg
-ICAgfCA1IC0tLS0tDQo+ID4gICBkcml2ZXJzL3VzYi90eXBlYy9LY29uZmlnICAgICAgICAgICAg
-ICB8IDcgKysrKysrKw0KPiA+ICAgZHJpdmVycy91c2IvdHlwZWMvTWFrZWZpbGUgICAgICAgICAg
-ICAgfCAxICsNCj4gPiAgIGRyaXZlcnMve3N0YWdpbmcgPT4gdXNifS90eXBlYy90Y3BjaS5jIHwg
-MA0KPiA+ICAgZHJpdmVycy97c3RhZ2luZyA9PiB1c2J9L3R5cGVjL3RjcGNpLmggfCAwDQo+ID4g
-ICA3IGZpbGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCj4gPg0K
-PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvS2NvbmZpZyBiL2RyaXZlcnMvc3RhZ2lu
-Zy9LY29uZmlnIGluZGV4DQo+ID4gZDU5MjZmMC4uZDgzZmY2NiAxMDA2NDQNCj4gPiAtLS0gYS9k
-cml2ZXJzL3N0YWdpbmcvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMvc3RhZ2luZy9LY29uZmln
-DQo+ID4gQEAgLTExMiw4ICsxMTIsNiBAQCBzb3VyY2UgImRyaXZlcnMvc3RhZ2luZy9ncmV5YnVz
-L0tjb25maWciDQo+ID4NCj4gPiAgIHNvdXJjZSAiZHJpdmVycy9zdGFnaW5nL3ZjMDRfc2Vydmlj
-ZXMvS2NvbmZpZyINCj4gPg0KPiA+IC1zb3VyY2UgImRyaXZlcnMvc3RhZ2luZy90eXBlYy9LY29u
-ZmlnIg0KPiA+IC0NCj4gPiAgIHNvdXJjZSAiZHJpdmVycy9zdGFnaW5nL3Zib3h2aWRlby9LY29u
-ZmlnIg0KPiA+DQo+ID4gICBzb3VyY2UgImRyaXZlcnMvc3RhZ2luZy9waTQzMy9LY29uZmlnIg0K
-PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvTWFrZWZpbGUgYi9kcml2ZXJzL3N0YWdp
-bmcvTWFrZWZpbGUgaW5kZXgNCj4gPiA5MTk3NTNjLi5hNzFlYzFmIDEwMDY0NA0KPiA+IC0tLSBh
-L2RyaXZlcnMvc3RhZ2luZy9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZlcnMvc3RhZ2luZy9NYWtl
-ZmlsZQ0KPiA+IEBAIC0yLDcgKzIsNiBAQA0KPiA+ICAgIyBNYWtlZmlsZSBmb3Igc3RhZ2luZyBk
-aXJlY3RvcnkNCj4gPg0KPiA+ICAgb2JqLXkJCQkJKz0gbWVkaWEvDQo+ID4gLW9iai15CQkJCSs9
-IHR5cGVjLw0KPiA+ICAgb2JqLSQoQ09ORklHX0lQWCkJCSs9IGlweC8NCj4gPiAgIG9iai0kKENP
-TkZJR19OQ1BfRlMpCQkrPSBuY3Bmcy8NCj4gPiAgIG9iai0kKENPTkZJR19QUklTTTJfVVNCKQkr
-PSB3bGFuLW5nLw0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvdHlwZWMvVE9ETyBi
-L2RyaXZlcnMvc3RhZ2luZy90eXBlYy9UT0RPDQo+ID4gZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0
-IGluZGV4IDUzZmUyZjcuLjAwMDAwMDANCj4gPiAtLS0gYS9kcml2ZXJzL3N0YWdpbmcvdHlwZWMv
-VE9ETw0KPiA+ICsrKyAvZGV2L251bGwNCj4gPiBAQCAtMSw1ICswLDAgQEANCj4gPiAtdGNwY2k6
-DQo+ID4gLS0gVGVzdCB3aXRoIHJlYWwgaGFyZHdhcmUNCj4gPiAtDQo+ID4gLVBsZWFzZSBzZW5k
-IHBhdGNoZXMgdG8gR3VlbnRlciBSb2VjayA8bGludXhAcm9lY2stdXMubmV0PiBhbmQgY29weQ0K
-PiA+IC1IZWlra2kgS3JvZ2VydXMgPGhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRlbC5jb20+Lg0K
-PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi90eXBlYy9LY29uZmlnIGIvZHJpdmVycy91c2Iv
-dHlwZWMvS2NvbmZpZw0KPiA+IGluZGV4IDJjOGVhYjEuLjBhODYyZmMgMTAwNjQ0DQo+ID4gLS0t
-IGEvZHJpdmVycy91c2IvdHlwZWMvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMvdXNiL3R5cGVj
-L0tjb25maWcNCj4gPiBAQCAtNTYsNiArNTYsMTMgQEAgY29uZmlnIFRZUEVDX1RDUE0NCj4gPg0K
-PiA+ICAgaWYgVFlQRUNfVENQTQ0KPiA+DQo+ID4gK2NvbmZpZyBUWVBFQ19UQ1BDSQ0KPiA+ICsJ
-dHJpc3RhdGUgIlR5cGUtQyBQb3J0IENvbnRyb2xsZXIgSW50ZXJmYWNlIGRyaXZlciINCj4gPiAr
-CWRlcGVuZHMgb24gSTJDDQo+ID4gKwlzZWxlY3QgUkVHTUFQX0kyQw0KPiA+ICsJaGVscA0KPiA+
-ICsJICBUeXBlLUMgUG9ydCBDb250cm9sbGVyIGRyaXZlciBmb3IgVENQQ0ktY29tcGxpYW50IGNv
-bnRyb2xsZXIuDQo+ID4gKw0KPiA+ICAgc291cmNlICJkcml2ZXJzL3VzYi90eXBlYy9mdXNiMzAy
-L0tjb25maWciDQo+ID4NCj4gPiAgIGNvbmZpZyBUWVBFQ19XQ09WRQ0KPiA+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL3VzYi90eXBlYy9NYWtlZmlsZSBiL2RyaXZlcnMvdXNiL3R5cGVjL01ha2VmaWxl
-DQo+ID4gaW5kZXggMWY1OTlhNi4uMDI3NThhMSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3Vz
-Yi90eXBlYy9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZlcnMvdXNiL3R5cGVjL01ha2VmaWxlDQo+
-ID4gQEAgLTcsMyArNyw0IEBAIG9iai0kKENPTkZJR19UWVBFQ19XQ09WRSkJKz0gdHlwZWNfd2Nv
-dmUubw0KPiA+ICAgb2JqLSQoQ09ORklHX1RZUEVDX1VDU0kpCSs9IHVjc2kvDQo+ID4gICBvYmot
-JChDT05GSUdfVFlQRUNfVFBTNjU5OFgpCSs9IHRwczY1OTh4Lm8NCj4gPiAgIG9iai0kKENPTkZJ
-R19UWVBFQykJCSs9IG11eC8NCj4gPiArb2JqLSQoQ09ORklHX1RZUEVDX1RDUENJKQkrPSB0Y3Bj
-aS5vDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy90eXBlYy90Y3BjaS5jIGIvZHJp
-dmVycy91c2IvdHlwZWMvdGNwY2kuYw0KPiA+IHNpbWlsYXJpdHkgaW5kZXggMTAwJSByZW5hbWUg
-ZnJvbSBkcml2ZXJzL3N0YWdpbmcvdHlwZWMvdGNwY2kuYyByZW5hbWUNCj4gPiB0byBkcml2ZXJz
-L3VzYi90eXBlYy90Y3BjaS5jIGRpZmYgLS1naXQNCj4gPiBhL2RyaXZlcnMvc3RhZ2luZy90eXBl
-Yy90Y3BjaS5oIGIvZHJpdmVycy91c2IvdHlwZWMvdGNwY2kuaCBzaW1pbGFyaXR5DQo+ID4gaW5k
-ZXggMTAwJSByZW5hbWUgZnJvbSBkcml2ZXJzL3N0YWdpbmcvdHlwZWMvdGNwY2kuaCByZW5hbWUg
-dG8NCj4gPiBkcml2ZXJzL3VzYi90eXBlYy90Y3BjaS5oDQoNCg==
+Hi Li Jun,
+
+This patch takes away building the entire staging/typec tree but this is still
+not empty after your patch, another driver "tcpci_rt1711h" is there.
+Better just remove tcpci from staging/typec/{Kconfig,Makefile}
+
+// Mats
+
+On 2018-05-03 02:24, Li Jun wrote:
+
+> Move TCPCI(Typec port controller interface) driver out of staging.
+>
+> Signed-off-by: Li Jun <jun.li@nxp.com>
+> ---
+>   drivers/staging/Kconfig                | 2 --
+>   drivers/staging/Makefile               | 1 -
+>   drivers/staging/typec/TODO             | 5 -----
+>   drivers/usb/typec/Kconfig              | 7 +++++++
+>   drivers/usb/typec/Makefile             | 1 +
+>   drivers/{staging => usb}/typec/tcpci.c | 0
+>   drivers/{staging => usb}/typec/tcpci.h | 0
+>   7 files changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
+> index d5926f0..d83ff66 100644
+> --- a/drivers/staging/Kconfig
+> +++ b/drivers/staging/Kconfig
+> @@ -112,8 +112,6 @@ source "drivers/staging/greybus/Kconfig"
+>   
+>   source "drivers/staging/vc04_services/Kconfig"
+>   
+> -source "drivers/staging/typec/Kconfig"
+> -
+>   source "drivers/staging/vboxvideo/Kconfig"
+>   
+>   source "drivers/staging/pi433/Kconfig"
+> diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
+> index 919753c..a71ec1f 100644
+> --- a/drivers/staging/Makefile
+> +++ b/drivers/staging/Makefile
+> @@ -2,7 +2,6 @@
+>   # Makefile for staging directory
+>   
+>   obj-y				+= media/
+> -obj-y				+= typec/
+>   obj-$(CONFIG_IPX)		+= ipx/
+>   obj-$(CONFIG_NCP_FS)		+= ncpfs/
+>   obj-$(CONFIG_PRISM2_USB)	+= wlan-ng/
+> diff --git a/drivers/staging/typec/TODO b/drivers/staging/typec/TODO
+> deleted file mode 100644
+> index 53fe2f7..0000000
+> --- a/drivers/staging/typec/TODO
+> +++ /dev/null
+> @@ -1,5 +0,0 @@
+> -tcpci:
+> -- Test with real hardware
+> -
+> -Please send patches to Guenter Roeck <linux@roeck-us.net> and copy
+> -Heikki Krogerus <heikki.krogerus@linux.intel.com>.
+> diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
+> index 2c8eab1..0a862fc 100644
+> --- a/drivers/usb/typec/Kconfig
+> +++ b/drivers/usb/typec/Kconfig
+> @@ -56,6 +56,13 @@ config TYPEC_TCPM
+>   
+>   if TYPEC_TCPM
+>   
+> +config TYPEC_TCPCI
+> +	tristate "Type-C Port Controller Interface driver"
+> +	depends on I2C
+> +	select REGMAP_I2C
+> +	help
+> +	  Type-C Port Controller driver for TCPCI-compliant controller.
+> +
+>   source "drivers/usb/typec/fusb302/Kconfig"
+>   
+>   config TYPEC_WCOVE
+> diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
+> index 1f599a6..02758a1 100644
+> --- a/drivers/usb/typec/Makefile
+> +++ b/drivers/usb/typec/Makefile
+> @@ -7,3 +7,4 @@ obj-$(CONFIG_TYPEC_WCOVE)	+= typec_wcove.o
+>   obj-$(CONFIG_TYPEC_UCSI)	+= ucsi/
+>   obj-$(CONFIG_TYPEC_TPS6598X)	+= tps6598x.o
+>   obj-$(CONFIG_TYPEC)		+= mux/
+> +obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
+> diff --git a/drivers/staging/typec/tcpci.c b/drivers/usb/typec/tcpci.c
+> similarity index 100%
+> rename from drivers/staging/typec/tcpci.c
+> rename to drivers/usb/typec/tcpci.c
+> diff --git a/drivers/staging/typec/tcpci.h b/drivers/usb/typec/tcpci.h
+> similarity index 100%
+> rename from drivers/staging/typec/tcpci.h
+> rename to drivers/usb/typec/tcpci.h
