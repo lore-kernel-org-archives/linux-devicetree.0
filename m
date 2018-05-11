@@ -1,83 +1,61 @@
-From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [PATCH v5 2/4] dt-bindings: drm/bridge: Document
- sn65dsi86 bridge bindings
-Date: Fri, 11 May 2018 16:48:01 +0530
-Message-ID: <5afab092c2ae49741da4f65f2f2da984@codeaurora.org>
-References: <1525235522-8954-1-git-send-email-spanda@codeaurora.org>
- <1525235522-8954-3-git-send-email-spanda@codeaurora.org>
- <152528047237.138124.6199225836688931193@swboyd.mtv.corp.google.com>
- <3c44e961a198e20a606742034152d456@codeaurora.org>
- <152573150728.138124.7552894725134629406@swboyd.mtv.corp.google.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: Add Mediatek SoC MT8183 and evaluation
+ board dts and Makefile
+Date: Fri, 11 May 2018 13:19:54 +0200
+Message-ID: <b2dfc052-bbf4-2154-985d-b1e2e7717cf4@gmail.com>
+References: <1526019083-20237-1-git-send-email-erin.lo@mediatek.com>
+ <1526019083-20237-3-git-send-email-erin.lo@mediatek.com>
+ <860cba8a-3af8-31d6-ec3f-81706d2d998b@gmail.com>
+ <1526035267.13828.13.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <152573150728.138124.7552894725134629406-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1526035267.13828.13.camel@mtksdaap41>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Erin Lo <erin.lo@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, Ben Ho <Ben.Ho@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0wNS0wOCAwMzo0OCwgU3RlcGhlbiBCb3lkIHdyb3RlOgo+IFF1b3Rpbmcgc3BhbmRh
-QGNvZGVhdXJvcmEub3JnICgyMDE4LTA1LTAzIDAyOjQxOjI5KQo+PiBPbiAyMDE4LTA1LTAyIDIy
-OjMxLCBTdGVwaGVuIEJveWQgd3JvdGU6Cj4+ID4gUXVvdGluZyBTYW5kZWVwIFBhbmRhICgyMDE4
-LTA1LTAxIDIxOjMyOjAwKQo+PiA+PiBkaWZmIC0tZ2l0Cj4+ID4+IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQKPj4gPj4g
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242
-NWRzaTg2LnR4dAo+PiA+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiA+PiBpbmRleCAwMDAwMDAw
-Li4wZDA0MmNlCj4+ID4KPj4gPiBQbGVhc2UgdXNlIHRoZSBjbG9ja3MgcHJvcGVydHkgaW5zdGVh
-ZC4gV2UgbWF5IG5lZWQgdG8gdHVybiB0aGUgY2xrIG9uCj4+ID4gZmlyc3QgYmVmb3JlIHRoaXMg
-Y2FuIHdvcmsgc28gdGhlIGRyaXZlciB3b3VsZCB1c2UgdGhlIGNsayBmcmFtZXdvcmsKPj4gPiAo
-YXQKPj4gPiBsZWFzdCBpbiBsaW51eCkuIGNsb2NrLW5hbWVzIGNvdWxkIGhhdmUgJ3JlZmNsaycg
-YmVjYXVzZSB0aGF0J3MgdGhlIHBpbgo+PiA+IG5hbWUuCj4+ID4KPj4gPiBJcyB0aGVyZSBhIHdh
-eSBpbiBEUk0gdG8gZmlndXJlIG91dCB0aGUgZnJlcXVlbmN5IG9mIHRoZSBjbG9jawo+PiA+IGZy
-ZXF1ZW5jeQo+PiA+IGZvciBEQUNQL04/IEl0IGxvb2tzIGxpa2UgaWYgcmVmY2xrIGlzIGdyb3Vu
-ZGVkLCB0aGVuIHRoZSBEQUNQL04gcGlucwo+PiA+IGZyb20gdGhlIERTSSBzaWRlIHNob3VsZCBi
-ZSBvbmUgb2YgYSBzZXQgb2YgZnJlcXVlbmNpZXMsIHNvIEknbSBqdXN0Cj4+ID4gY3VyaW91cyBo
-b3cgdGhhdCB3aWxsIHdvcmsgYW5kIGlmIHRoZSBiaW5kaW5nIHdvdWxkIG5lZWQgdG8gYmUgdXBk
-YXRlZAo+PiA+IHRvIGluZGljYXRlIHdoYXQgdGhlIGZyZXF1ZW5jeSBvZiB0aGUgRFNJIGNsb2Nr
-IGxhbmUgaXMsIG9yIGlmIERSTSBjYW4KPj4gPiB0ZWxsIHRoaXMgZHJpdmVyIHRocm91Z2ggdGhl
-IHBvcnQvZ3JhcGggc3R1ZmYgc29tZWhvdy4KPj4gPgo+PiAKPj4gQ2FuIHdlIGRvIHNvbWV0aGlu
-ZyBsaWtlIGJlbG93Pwo+PiAgICAgMS4gQWRkIGEgcmVxdWlyZWQgZHQtcHJvcGVydHkgdG8gaW5k
-aWNhdGUgd2hhdCBpcyB0aGUgc291cmNlIG9mCj4+IHJlZmNsaywgdGksc24tcmVmY2xrLXNyYyA9
-IDwwPiAtLS0+IG1lYW5zIHJlZmNsayBpcyBkZXJpdmVkIGZyb20gCj4+IHJlZmNsawo+PiBwaW4u
-Cj4+IAo+PiAgICB0aSxzbi1yZWZjbGstc3JjID0gPDE+IC0tLT4gbWVhbnMgcmVmY2xrIGlzIGRl
-cml2ZWQgZnJvbSBEQUNQL04gCj4+IHBpbi4KPj4gICAgIDIuIEFkZCBhIGNsb2NrIHByb3BlcnR5
-IHRvIGluZGljYXRlIHRoZSByZWZjbGsgZnJlcXVlbmN5IGZvciAKPj4gcmVmY2xrCj4+IHBpbi4K
-Pj4gICAgIDMuIEluIGRyaXZlciwgcGFyc2UgdGhlIHJlZmNsayBzb3VyY2UgZHQtcHJvcGVydHku
-IElmIHRoZSBzb3VyY2UgCj4+IGlzCj4+IHJlZmNsayBwaW4gdGhlbiBnZXQgdGhlIGZycXVlbmN5
-IGZyb20gY2xvY2sgZHQtcHJvcGVydHkgYW5kIHByb2dyYW0gCj4+IHRoZQo+PiBpMmMgcmVnaXN0
-ZXIgYWNjb3JkaW5nbHkuCj4+ICAgICAgICBFbHNlIGlmIHRoZSBzb3VyY2UgaXMgREFDUC9OIHBp
-biB0aGVuIGNhbGN1bGF0ZSB0aGUgRFNJQSAKPj4gZnJlcXVlbmN5Cj4+IGJhc2VkIG9uIGN1cnJl
-bnQgZGlzcGxheSBtb2RlIChieSB0aGUgdGltZSB3ZSBnbyBmb3IgY29uZmlndXJpbmcgCj4+IHJl
-ZmNsaywKPj4gZHJtX21vZGVfc2V0IGlzIGFscmVhZHkgZG9uZSBhbmQgaW4gIGRpdmVyIHdlIGNh
-biBjYWxjdWxhdGUgdGhlCj4+IGZyZXF1ZW5jeSkgYW5kIHByb2dyYW0gdGhlIGkyYyByZWdpc3Rl
-ciBhY2NvcmRpbmdseS4KPiAKPiBUaGUgcHJlc2VuY2Ugb3Igbm9uLXByZXNlbmNlIG9mIHRoZSBy
-ZWZjbGsgc2hvdWxkIHN0aWxsIGJlIGluZGljYXRlZCAKPiB2aWEKPiB0aGUgc3RhbmRhcmQgY2xv
-Y2sgcHJvcGVydHkgaW5zdGVhZCBvZiBzb21lIFRJIHNwZWNpZmljIHByb3BlcnR5LiBUaGUKPiBk
-cml2ZXIgY2FuIHRyeSB0byBjbGtfZ2V0KCkgdGhlIHJlZmNsayBhbmQgaWYgaXRzIHRoZXJlIGl0
-IGNhbiBjYWxsCj4gY2xrX2dldF9yYXRlKCkgdG8gZmlndXJlIG91dCB0aGUgcmVmZXJlbmNlIGNs
-ayBmcmVxdWVuY3kuIEl0IHNob3VsZCAKPiBhbHNvCj4gdHVybiBpdCBvbiB3aXRoIGNsa19wcmVw
-YXJlX2VuYWJsZSgpIHRvIG1ha2Ugc3VyZSB0aGUgY2xrIGlzIGNsb2NraW5nCj4gYW5kIHR1cm4g
-aXQgb2ZmIHdoZW4gdGhlIGRyaXZlciBpc24ndCB1c2luZyBpdC4KPiAKPiBJZiB0aGUgcmVmZXJl
-bmNlIGNsayBpcyByZWNvdmVyZWQgZnJvbSB0aGUgREFDUC9OIHBpbiB0aGVuIHRoZXJlIHdvbid0
-Cj4gYmUgYSBjbG9ja3MgcHJvcGVydHksIGFuZCB0aGUgZHJpdmVyIGNhbiBkbyB3aGF0IHlvdSBk
-ZXNjcmliZSBpbiAjMy4KPiAKPj4gCj4+ID4+ICsKPj4gPj4gKy0gZ3Bpby1jb250cm9sbGVyOiBN
-YXJrcyB0aGUgZGV2aWNlIGhhcyBhIEdQSU8gY29udHJvbGxlci4KPj4gPj4gKy0gI2dwaW8tY2Vs
-bHM6IE51bWJlciBvZiBHUElPIGNlbGxzLiBSZWZlciB0byBiaW5kaW5nIGRvY3VtZW50Cj4+ID4+
-ICJncGlvL2dwaW8udHh0Igo+PiA+Cj4+ID4gV2hhdCdzIHRoZSBudW1iZXI/IDI/Cj4+IG51bWJl
-ciBpcyA0LCBpIHdpbGwgdXBkYXRlIHRoaXMgaW4gYmluZGluZwo+IAo+IFJlYWxseT8gV2hhdCBk
-byB5b3UgbmVlZCA0IGNlbGxzIGZvcj8gVGhlIG51bWJlciBvZiBjZWxscyBkb2Vzbid0Cj4gaW5k
-aWNhdGUgdGhlIG51bWJlciBvZiBHUElPcyBvbiB0aGUgZGV2aWNlLgoKSXQgc2hvdWxkIGJlIDIs
-IGdvdCBjb25mdXNlZCB3aXRoIG51bWJlciBHUElPcy4KX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9A
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+
+
+On 05/11/2018 12:41 PM, Erin Lo wrote:
+> On Fri, 2018-05-11 at 10:36 +0200, Matthias Brugger wrote:
+>>
+>> On 05/11/2018 08:11 AM, Erin Lo wrote:
+[...]
+>>
+>> I wonder if there aren't any other devices which can be supported out of the box.
+>> I understand that for now we are missing the clock driver and the pinctrl
+>> driver. Are you planning to submit them in the near future?
+>>
+>> I'm asking because I don't want to bloat the dts with boards that only can boot
+>> to an initramfs with a serial console. Especially if there is no HW + datasheet
+>> available for anyone in the community who wants to work on this.
+>>
+>> Regards,
+>> Matthias
+>>
+>> Regards,
+>> Matthias
+> 
+> 
+> We have implement clock and pinctrl driver these days, and plan to
+> submit them maybe next month.
+> After that we will submit other drivers of MT8183 continuously.
+> 
+
+I'm happy to hear this. So in this case I'm fine with merging these once you
+figured out the dt-bindings.
+
+Thanks a lot,
+Matthias
