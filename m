@@ -1,33 +1,39 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [linux-next PATCH 4/4] ARM: keystone: k2g: enable micrel and dp83867 phys
-Date: Fri, 11 May 2018 15:29:12 -0400
-Message-ID: <1526066952-5230-5-git-send-email-m-karicheri2@ti.com>
-References: <1526066952-5230-1-git-send-email-m-karicheri2@ti.com>
+From: Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH v3 1/2] vfio: platform: Fix reset module leak in error
+ path
+Date: Fri, 11 May 2018 13:45:44 -0600
+Message-ID: <20180511134544.72b46acb@w520.home>
+References: <1523438149-16433-1-git-send-email-geert+renesas@glider.be>
+        <1523438149-16433-3-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526066952-5230-1-git-send-email-m-karicheri2@ti.com>
+In-Reply-To: <1523438149-16433-3-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ssantosh@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Baptiste Reynal <b.reynal@virtualopensystems.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable micrel and dp83867 phys for K2G Boards in keystone_defconfig
-to support Network driver on these boards (K2G ICE and GP EVM).
+On Wed, 11 Apr 2018 11:15:48 +0200
+Geert Uytterhoeven <geert+renesas@glider.be> wrote:
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- arch/arm/configs/keystone_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+> If the IOMMU group setup fails, the reset module is not released.
+> 
+> Fixes: b5add544d677d363 ("vfio, platform: make reset driver a requirement by default")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> ---
+> v3:
+>   - Add Reviewed-by,
+> 
+> v2:
+>   - Add Reviewed-by.
+> ---
+>  drivers/vfio/platform/vfio_platform_common.c | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
-index 2536c23..85cf2fc 100644
---- a/arch/arm/configs/keystone_defconfig
-+++ b/arch/arm/configs/keystone_defconfig
-@@ -235,3 +235,5 @@ CONFIG_INPUT_GPIO_DECODER=m
- CONFIG_GPIO_PCA953X=m
- CONFIG_LEDS_TRIGGER_ACTIVITY=y
- CONFIG_LEDS_TRIGGER_CPU=y
-+CONFIG_MICREL_PHY=y
-+CONFIG_DP83867_PHY=y
--- 
-1.9.1
+Applied to next branch for v4.18 with Eric's ack.  Thanks,
+
+Alex
