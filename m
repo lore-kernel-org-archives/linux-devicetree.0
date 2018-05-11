@@ -1,98 +1,184 @@
-From: Leo Li <leoyang.li@nxp.com>
-Subject: RE: [PATCH 3/9] soc: fsl: set rcpm bit for FTM
-Date: Fri, 11 May 2018 17:00:28 +0000
-Message-ID: <AM4PR0401MB16995DFED0376ACE0DD5E7A78F9F0@AM4PR0401MB1699.eurprd04.prod.outlook.com>
-References: <20180511033530.7931-1-yinbo.zhu@nxp.com>
- <20180511033530.7931-3-yinbo.zhu@nxp.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v2 00/40] Shared Virtual Addressing for the IOMMU
+Date: Fri, 11 May 2018 20:06:01 +0100
+Message-ID: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180511033530.7931-3-yinbo.zhu@nxp.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yinbo Zhu <yinbo.zhu@nxp.com>Yinbo Zhu <yinbo.zhu@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Catalin Marinas )" <catalin.marinas@arm.com>, "Will Deacon )" <will.deacon@arm.com>, "Lorenzo Pieralisi )" <lorenzo.pieralisi@arm.com>
-Cc: Xiaobo Xie <xiaobo.xie@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>, Jerry Huang <jerry.huang@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Qiang Zhao <qiang.zhao@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>, Po Liu <po.liu@nxp.com>, Nipun Gupta <nipun.gupta@nxp.com>, =?iso-8859-2?Q?Horia_Geant=E3?= <horia.geanta@nxp.com>, Priyanka Jain <priyanka.jain@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, costi <constantin.tudor@freescale.com>, Bogdan Purcareata <bogdan.purcareata@nxp.com>, open list:CLOCKSOURCE, CLOCKEVENT DRIVERS
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org
+Cc: xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This is version 2 of the Shared Virtual Addressing (SVA) series, which
+adds process address space management (1-6) and I/O page faults (7-9) to
+the IOMMU core. It also includes two example users of the API: VFIO as
+device driver (10-13), and Arm SMMUv3 as IOMMU driver (14-40).
 
+The series is getting bulky and although it will remove lots of context,
+I'll probably split next version into IOMMU, VFIO and SMMU changes. This
+time around I also Cc'd the mm list even though get_maintainers doesn't
+pick it up, because I'd like to export a few symbols in patches 10-12
+and because of the recent interest in sharing mm with devices [1], which
+seems somewhat related.
 
-> -----Original Message-----
-> From: Yinbo Zhu [mailto:yinbo.zhu@nxp.com]
-> Sent: Thursday, May 10, 2018 10:35 PM
-> To: Yinbo Zhu <yinbo.zhu@nxp.com>; Rob Herring <robh+dt@kernel.org>;
-> Mark Rutland <mark.rutland@arm.com>; Catalin Marinas )
-> <catalin.marinas@arm.com>; Will Deacon ) <will.deacon@arm.com>;
-> Lorenzo Pieralisi ) <lorenzo.pieralisi@arm.com>; Leo Li <leoyang.li@nxp.c=
-om>
-> Cc: Xiaobo Xie <xiaobo.xie@nxp.com>; Ran Wang <ran.wang_1@nxp.com>;
-> Daniel Lezcano <daniel.lezcano@linaro.org>; Thomas Gleixner
-> <tglx@linutronix.de>; Shawn Guo <shawnguo@kernel.org>; Madalin-cristian
-> Bucur <madalin.bucur@nxp.com>; Z.q. Hou <zhiqiang.hou@nxp.com>; Jerry
-> Huang <jerry.huang@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>;
-> Qiang Zhao <qiang.zhao@nxp.com>; Fabio Estevam
-> <fabio.estevam@nxp.com>; Jiaheng Fan <jiaheng.fan@nxp.com>; Po Liu
-> <po.liu@nxp.com>; Nipun Gupta <nipun.gupta@nxp.com>; Horia Geant=E3
-> <horia.geanta@nxp.com>; Priyanka Jain <priyanka.jain@nxp.com>; Sumit
-> Garg <sumit.garg@nxp.com>; costi <constantin.tudor@freescale.com>;
-> Bogdan Purcareata <bogdan.purcareata@nxp.com>; Meng Yi
-> <meng.yi@nxp.com>; Wang Dongsheng <dongsheng.wang@nxp.com>; open
-> list:CLOCKSOURCE, CLOCKEVENT DRIVERS <linux-kernel@vger.kernel.org>;
-> open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-> <devicetree@vger.kernel.org>; linux-arm-kernel@lists.infradead.org; open
-> list:FREESCALE SOC DRIVERS <linuxppc-dev@lists.ozlabs.org>; Andy Tang
-> <andy.tang@nxp.com>; Ying Zhang <ying.zhang22455@nxp.com>
-> Subject: [PATCH 3/9] soc: fsl: set rcpm bit for FTM
->=20
-> From: Zhang Ying-22455 <ying.zhang22455@nxp.com>
->=20
-> Set RCPM for FTM when using FTM as wakeup source. Because the RCPM
-> module of each platform has different big-end and little-end mode, there
-> need to set RCPM depending on the platform.
->=20
-> Signed-off-by: Zhang Ying-22455 <ying.zhang22455@nxp.com>
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-> ---
->  .../devicetree/bindings/timer/fsl,ftm-timer.txt    |    7 ++
->  drivers/soc/fsl/layerscape/ftm_alarm.c             |   92 ++++++++++++++=
-++++-
->  2 files changed, 94 insertions(+), 5 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
-> b/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
-> index aa8c402..15ead58 100644
-> --- a/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
-> +++ b/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
-> @@ -3,6 +3,13 @@ Freescale FlexTimer Module (FTM) Timer  Required
-> properties:
->=20
->  - compatible : should be "fsl,ftm-timer"
+Major changes since v1 [2]:
 
-Hi Yingbo,
+* Removed bind_group(). Only bind_device() is supported. Supporting
+  multi-device groups is difficult and unnecessary at the moment.
 
-This is a change that breaks backward compatibility and not acceptable.
+* Reworked the I/O Page Fault code to support multiple queues. IOMMU
+  driver now registers IOPF queues as needed (for example one per IOMMU
+  device), then attach devices that require IOPF (for example, in
+  sva_device_init)
 
-> + Possible compatibles for ARM:
-> +     "fsl,ls1012a-ftm"
-> +     "fsl,ls1021a-ftm"
-> +     "fsl,ls1043a-ftm"
-> +     "fsl,ls1046a-ftm"
-> +     "fsl,ls1088a-ftm"
-> +     "fsl,ls208xa-ftm"
->  - reg : Specifies base physical address and size of the register sets fo=
-r the
->    clock event device and clock source device.
->  - interrupts : Should be the clock event device interrupt.
-> diff --git a/drivers/soc/fsl/layerscape/ftm_alarm.c
-> b/drivers/soc/fsl/layerscape/ftm_alarm.c
-> index 6f9882f..811dcfa 100644
-> --- a/drivers/soc/fsl/layerscape/ftm_alarm.c
-> +++ b/drivers/soc/fsl/layerscape/ftm_alarm.c
+* mm_exit callback is allowed to sleep. It is now registered with
+  init_sva_device_init() instead of a separate function.
 
-There is no such file in the mainline kernel.  So it looks like the patch s=
-et is based on some internal git repo instead of the upstream Linux kernel.=
-  This kind of patches shouldn't be sent to the upstream mailing list for r=
-eview.
+* Remove IOMMU_SVA_FEAT_PASID, making PASID support mandatory for now.
+  If a future series implements !PASID, it will have to introduce flag
+  IOMMU_SVA_FEAT_NO_PASID.
 
-Regards,
-Leo
+* Removed the atomic/blocking handler distinction for now. It is a bit
+  irrelevant here and can be added back later.
+
+* Tried to address all comments. Please let me know if I missed
+  something.
+
+The series relies on Jacob Pan's fault reporting work, currently under
+discussion [3].
+
+You can pull everything from:
+     git://linux-arm.org/linux-jpb.git sva/v2
+Branch sva/debug contains tracepoints and other tools that I found
+useful for validation.
+
+[1] https://lwn.net/Articles/753481/
+[2] https://www.mail-archive.com/iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org/msg21813.html
+[3] IOMMU and VT-d driver support for Shared Virtual Address (SVA)
+    https://www.mail-archive.com/iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org/msg22640.html
+                                ---
+
+If you're unfamiliar with SVM/SVA, a wordy description copied from
+previous version follows.
+
+Shared Virtual Addressing (SVA) is the ability to share process address
+spaces with devices. It is called "SVM" (Shared Virtual Memory) by OpenCL
+and some IOMMU architectures, but since that abbreviation is already used
+for AMD virtualisation in Linux (Secure Virtual Machine), we prefer the
+less ambiguous "SVA".
+
+Sharing process address spaces with devices allows to rely on core kernel
+memory management for DMA, removing some complexity from application and
+device drivers. After binding to a device, applications can instruct it to
+perform DMA on buffers obtained with malloc.
+
+The device, bus and IOMMU must support the following features:
+
+* Multiple address spaces per device, for example using the PCI PASID
+  (Process Address Space ID) extension. The IOMMU driver allocates a
+  PASID and the device uses it in DMA transactions.
+
+* I/O Page Faults (IOPF), for example PCI PRI (Page Request Interface) or
+  Arm SMMU stall. The core mm handles translation faults from the IOMMU.
+
+* MMU and IOMMU implement compatible page table formats.
+
+This series requires to support all three features. Upcoming patches will
+enable private PASID management, which doesn't share page tables and
+augments the map/unmap API with PASIDs.
+
+Although we don't have any performance measurement at the moment, SVA will
+likely be slower than classical DMA since it relies on page faults,
+whereas classical DMA pins all pages in memory. SVA mostly aims at
+simplifying DMA management, but also improves security by isolating
+address spaces in devices.
+
+Jean-Philippe Brucker (40):
+  iommu: Introduce Shared Virtual Addressing API
+  iommu/sva: Bind process address spaces to devices
+  iommu/sva: Manage process address spaces
+  iommu/sva: Add a mm_exit callback for device drivers
+  iommu/sva: Track mm changes with an MMU notifier
+  iommu/sva: Search mm by PASID
+  iommu: Add a page fault handler
+  iommu/iopf: Handle mm faults
+  iommu/sva: Register page fault handler
+  mm: export symbol mm_access
+  mm: export symbol find_get_task_by_vpid
+  mm: export symbol mmput_async
+  vfio: Add support for Shared Virtual Addressing
+  dt-bindings: document stall and PASID properties for IOMMU masters
+  iommu/of: Add stall and pasid properties to iommu_fwspec
+  arm64: mm: Pin down ASIDs for sharing mm with devices
+  iommu/arm-smmu-v3: Link domains and devices
+  iommu/io-pgtable-arm: Factor out ARM LPAE register defines
+  iommu: Add generic PASID table library
+  iommu/arm-smmu-v3: Move context descriptor code
+  iommu/arm-smmu-v3: Add support for Substream IDs
+  iommu/arm-smmu-v3: Add second level of context descriptor table
+  iommu/arm-smmu-v3: Share process page tables
+  iommu/arm-smmu-v3: Seize private ASID
+  iommu/arm-smmu-v3: Add support for VHE
+  iommu/arm-smmu-v3: Enable broadcast TLB maintenance
+  iommu/arm-smmu-v3: Add SVA feature checking
+  iommu/arm-smmu-v3: Implement mm operations
+  iommu/arm-smmu-v3: Add support for Hardware Translation Table Update
+  iommu/arm-smmu-v3: Register I/O Page Fault queue
+  iommu/arm-smmu-v3: Improve add_device error handling
+  iommu/arm-smmu-v3: Maintain a SID->device structure
+  iommu/arm-smmu-v3: Add stall support for platform devices
+  ACPI/IORT: Check ATS capability in root complex nodes
+  iommu/arm-smmu-v3: Add support for PCI ATS
+  iommu/arm-smmu-v3: Hook up ATC invalidation to mm ops
+  iommu/arm-smmu-v3: Disable tagged pointers
+  PCI: Make "PRG Response PASID Required" handling common
+  iommu/arm-smmu-v3: Add support for PRI
+  iommu/arm-smmu-v3: Add support for PCI PASID
+
+ .../devicetree/bindings/iommu/iommu.txt       |   24 +
+ MAINTAINERS                                   |    6 +-
+ arch/arm64/include/asm/mmu.h                  |    1 +
+ arch/arm64/include/asm/mmu_context.h          |   11 +-
+ arch/arm64/mm/context.c                       |   92 +-
+ drivers/acpi/arm64/iort.c                     |   11 +
+ drivers/iommu/Kconfig                         |   29 +
+ drivers/iommu/Makefile                        |    4 +
+ drivers/iommu/amd_iommu.c                     |   19 +-
+ drivers/iommu/arm-smmu-v3-context.c           |  700 ++++++++
+ drivers/iommu/arm-smmu-v3.c                   | 1438 ++++++++++++++---
+ drivers/iommu/io-pgfault.c                    |  445 +++++
+ drivers/iommu/io-pgtable-arm.c                |   49 +-
+ drivers/iommu/io-pgtable-arm.h                |   54 +
+ drivers/iommu/iommu-pasid-table.c             |   52 +
+ drivers/iommu/iommu-pasid-table.h             |  177 ++
+ drivers/iommu/iommu-sva.c                     |  792 +++++++++
+ drivers/iommu/iommu.c                         |   84 +
+ drivers/iommu/of_iommu.c                      |   12 +
+ drivers/pci/ats.c                             |   17 +
+ drivers/vfio/vfio_iommu_type1.c               |  449 ++++-
+ include/linux/iommu.h                         |  184 +++
+ include/linux/pci-ats.h                       |    8 +
+ include/uapi/linux/pci_regs.h                 |    1 +
+ include/uapi/linux/vfio.h                     |   76 +
+ kernel/fork.c                                 |   15 +
+ kernel/pid.c                                  |    1 +
+ 27 files changed, 4469 insertions(+), 282 deletions(-)
+ create mode 100644 drivers/iommu/arm-smmu-v3-context.c
+ create mode 100644 drivers/iommu/io-pgfault.c
+ create mode 100644 drivers/iommu/io-pgtable-arm.h
+ create mode 100644 drivers/iommu/iommu-pasid-table.c
+ create mode 100644 drivers/iommu/iommu-pasid-table.h
+ create mode 100644 drivers/iommu/iommu-sva.c
+
+-- 
+2.17.0
