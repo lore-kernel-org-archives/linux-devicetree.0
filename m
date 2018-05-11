@@ -1,14 +1,14 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v2 2/2] ARM: dts: vexpress: replace '_' with '-' in node names
-Date: Fri, 11 May 2018 11:23:28 +0100
-Message-ID: <1526034208-9690-2-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v2 1/2] ARM: dts: vexpress: use standard gpio bindings for
+ sys_{led, mci, flash}
+Date: Fri, 11 May 2018 11:23:27 +0100
+Message-ID: <1526034208-9690-1-git-send-email-sudeep.holla@arm.com>
 References: <1525884482-19855-1-git-send-email-sudeep.holla@arm.com>
- <1526034208-9690-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1526034208-9690-1-git-send-email-sudeep.holla@arm.com>
+In-Reply-To: <1525884482-19855-1-git-send-email-sudeep.holla@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,44 +22,98 @@ To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Liviu Duda
 Cc: Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The latest DTC throws warnings for character '_' in the node names.
+Commit 2cff6dba57b7 ("ARM: dts: vexpress: fix node name unit-address presence warnings")
+removed the unit address as there was no associated reg property in
+these sysreg nodes.
 
-Warning (node_name_chars_strict): /pmu_a15: Character '_' not recommended in node name
-Warning (node_name_chars_strict): /pmu_a7: Character '_' not recommended in node name
+Also the latest DTC throws warnings for character '_' in the node names.
 
-The general recommendation is to use character '-' for all the node names.
-This patch fixes the warnings following the recommendation.
+Warning (node_name_chars_strict): /sysreg@10000/sys_led: Character '_' not recommended in node name
+Warning (node_name_chars_strict): /sysreg@10000/sys_mci: Character '_' not recommended in node name
+Warning (node_name_chars_strict): /sysreg@10000/sys_flash: Character '_' not recommended in node name
+
+The correct way to fix this as well as the original unit-address presence
+warnings is to use the standard gpio controller binding and specify the
+reg properties as per the hardware as it was before.
+
+However note that Vexpress sysreg MFD driver will still continue to use
+the hardcoded values for compatibility reasons.
 
 Cc: Liviu Dudau <liviu.dudau@arm.com>
+Suggested-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/vexpress-v2m-rs1.dtsi | 11 ++++++++---
+ arch/arm/boot/dts/vexpress-v2m.dtsi     | 11 ++++++++---
+ 2 files changed, 16 insertions(+), 6 deletions(-)
 
-v1->v2:
-	- This patch is newly added in v2 and was missing earlier
+diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+index 7b8ff5b3b912..a8586a0b957d 100644
+--- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+@@ -76,21 +76,26 @@
+ 				v2m_sysreg: sysreg@10000 {
+ 					compatible = "arm,vexpress-sysreg";
+ 					reg = <0x010000 0x1000>;
++					#address-cells = <1>;
++					#size-cells = <1>;
 
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-index 65a874ea66be..ac6b90e9d806 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-@@ -204,7 +204,7 @@
- 			     <1 10 0xf08>;
- 	};
+-					v2m_led_gpios: sys_led {
++					v2m_led_gpios: gpio@8 {
+ 						compatible = "arm,vexpress-sysreg,sys_led";
++						reg = <0x008 4>;
+ 						gpio-controller;
+ 						#gpio-cells = <2>;
+ 					};
 
--	pmu_a15 {
-+	pmu-a15 {
- 		compatible = "arm,cortex-a15-pmu";
- 		interrupts = <0 68 4>,
- 			     <0 69 4>;
-@@ -212,7 +212,7 @@
- 				     <&cpu1>;
- 	};
+-					v2m_mmc_gpios: sys_mci {
++					v2m_mmc_gpios: gpio@48 {
+ 						compatible = "arm,vexpress-sysreg,sys_mci";
++						reg = <0x048 4>;
+ 						gpio-controller;
+ 						#gpio-cells = <2>;
+ 					};
 
--	pmu_a7 {
-+	pmu-a7 {
- 		compatible = "arm,cortex-a7-pmu";
- 		interrupts = <0 128 4>,
- 			     <0 129 4>,
+-					v2m_flash_gpios: sys_flash {
++					v2m_flash_gpios: gpio@4c {
+ 						compatible = "arm,vexpress-sysreg,sys_flash";
++						reg = <0x04c 4>;
+ 						gpio-controller;
+ 						#gpio-cells = <2>;
+ 					};
+diff --git a/arch/arm/boot/dts/vexpress-v2m.dtsi b/arch/arm/boot/dts/vexpress-v2m.dtsi
+index 9cd5e146abd5..37ecccebd937 100644
+--- a/arch/arm/boot/dts/vexpress-v2m.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m.dtsi
+@@ -76,21 +76,26 @@
+ 				v2m_sysreg: sysreg@0 {
+ 					compatible = "arm,vexpress-sysreg";
+ 					reg = <0x00000 0x1000>;
++					#address-cells = <1>;
++					#size-cells = <1>;
+
+-					v2m_led_gpios: sys_led {
++					v2m_led_gpios: gpio@8 {
+ 						compatible = "arm,vexpress-sysreg,sys_led";
++						reg = <0x008 4>;
+ 						gpio-controller;
+ 						#gpio-cells = <2>;
+ 					};
+
+-					v2m_mmc_gpios: sys_mci {
++					v2m_mmc_gpios: gpio@48 {
+ 						compatible = "arm,vexpress-sysreg,sys_mci";
++						reg = <0x048 4>;
+ 						gpio-controller;
+ 						#gpio-cells = <2>;
+ 					};
+
+-					v2m_flash_gpios: sys_flash {
++					v2m_flash_gpios: gpio@4c {
+ 						compatible = "arm,vexpress-sysreg,sys_flash";
++						reg = <0x04c 4>;
+ 						gpio-controller;
+ 						#gpio-cells = <2>;
+ 					};
 --
 2.7.4
