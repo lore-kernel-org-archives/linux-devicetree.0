@@ -1,53 +1,131 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] ARM: dts: sun8i: h3: Add SY8106A
- regulator to Orange Pi PC
-Date: Fri, 11 May 2018 10:01:54 +0200
-Message-ID: <20180511080154.iubx6jidtxdojgfx@flea>
-References: <20180507122942.25758-1-icenowy@aosc.io>
- <20180507122942.25758-4-icenowy@aosc.io>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zsrhuep42maihh3q"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB7M32XLQKGQEZT4DUCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180507122942.25758-4-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH] ARM: dts: exynos: Use dedicated DT bindings for Odroid
+ X/X2, U3
+Date: Fri, 11 May 2018 10:09:47 +0200
+Message-ID: <20180511080947.3057-1-s.nawrocki@samsung.com>
+References: <CGME20180511081032epcas2p30f381cf699cb7524d9a143390e9c74b5@epcas2p3.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: krzk@kernel.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Use dedicated Odroid audio subsystem DT bindings instead of the simple-card.
+This adds support for audio on the HDMI interface.
 
---zsrhuep42maihh3q
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 33 ++++++++++++++-----------
+ arch/arm/boot/dts/exynos4412-odroidu3.dts       |  7 +++---
+ arch/arm/boot/dts/exynos4412-odroidx.dts        |  7 +++---
+ 3 files changed, 27 insertions(+), 20 deletions(-)
 
-On Mon, May 07, 2018 at 08:29:42PM +0800, Icenowy Zheng wrote:
-> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> 
-> Add SY8106A regulator to r_i2c bus and enable the r_i2c bus on
-> Orange Pi PC, then set the power supply of the ARM cores to this
-> regulator, in order to enable DVFS.
-> 
-> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> [Icenowy: Enable DVFS in this patch, slight changes and change commit
->  message]
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> [wens-jdAy2FN1RRM@public.gmane.org: Rename regulator label]
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
-Dropped Chen-Yu's SoB and applied, thanks!
-Maxime
-
+diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+index d7ad07fd48f9..bad08e70358a 100644
+--- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
++++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+@@ -37,20 +37,12 @@
+ 	};
+ 
+ 	sound: sound {
+-		compatible = "simple-audio-card";
+-
+-		simple-audio-card,format = "i2s";
+-		simple-audio-card,bitclock-master = <&link0_codec>;
+-		simple-audio-card,frame-master = <&link0_codec>;
+-
+-		simple-audio-card,cpu {
++		cpu {
+ 			sound-dai = <&i2s0 0>;
+-			system-clock-frequency = <19200000>;
+ 		};
+ 
+-		link0_codec: simple-audio-card,codec {
+-			sound-dai = <&max98090>;
+-			clocks = <&i2s0 CLK_I2S_CDCLK>;
++		codec {
++			sound-dai = <&hdmi>, <&max98090>;
+ 		};
+ 	};
+ 
+@@ -142,14 +134,25 @@
+ 	pinctrl-0 = <>;
+ };
+ 
++&clock {
++	assigned-clocks = <&clock CLK_FOUT_EPLL>;
++	assigned-clock-rates = <45158401>;
++};
++
+ &clock_audss {
+ 	assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>,
+ 			<&clock_audss EXYNOS_MOUT_I2S>,
+ 			<&clock_audss EXYNOS_DOUT_SRP>,
+-			<&clock_audss EXYNOS_DOUT_AUD_BUS>;
++			<&clock_audss EXYNOS_DOUT_AUD_BUS>,
++			<&clock_audss EXYNOS_DOUT_I2S>;
++
+ 	assigned-clock-parents = <&clock CLK_FOUT_EPLL>,
+-			<&clock_audss EXYNOS_MOUT_AUDSS>;
+-	assigned-clock-rates = <0>, <0>, <192000000>, <19200000>;
++			  <&clock_audss EXYNOS_MOUT_AUDSS>;
++
++	assigned-clock-rates = <0>, <0>,
++			<196608001>,
++			<(196608001 / 2)>,
++			<(196608001 / 8)>;
+ };
+ 
+ &cpu0 {
+@@ -498,6 +501,8 @@
+ 	pinctrl-0 = <&i2s0_bus>;
+ 	pinctrl-names = "default";
+ 	status = "okay";
++	assigned-clocks = <&i2s0 CLK_I2S_RCLK_SRC>;
++	assigned-clock-parents = <&clock_audss EXYNOS_SCLK_I2S>;
+ };
+ 
+ &mixer {
+diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
+index bdcd4523cc1c..7a94a423097d 100644
+--- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
++++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
+@@ -113,11 +113,12 @@
+ };
+ 
+ &sound {
+-	simple-audio-card,name = "Odroid-U3";
+-	simple-audio-card,widgets =
++	compatible = "hardkernel,odroid-xu4-audio";
++	model = "Odroid-U3";
++	samsung,audio-widgets =
+ 		"Headphone", "Headphone Jack",
+ 		"Speakers", "Speakers";
+-	simple-audio-card,routing =
++	samsung,audio-routing =
+ 		"Headphone Jack", "HPL",
+ 		"Headphone Jack", "HPR",
+ 		"Headphone Jack", "MICBIAS",
+diff --git a/arch/arm/boot/dts/exynos4412-odroidx.dts b/arch/arm/boot/dts/exynos4412-odroidx.dts
+index 2dff129bc2ad..f0d5037f3a5d 100644
+--- a/arch/arm/boot/dts/exynos4412-odroidx.dts
++++ b/arch/arm/boot/dts/exynos4412-odroidx.dts
+@@ -97,12 +97,13 @@
+ };
+ 
+ &sound {
+-	simple-audio-card,name = "Odroid-X";
+-	simple-audio-card,widgets =
++	compatible = "hardkernel,odroid-xu4-audio";
++	model = "Odroid-X";
++	samsung,audio-widgets =
+ 		"Headphone", "Headphone Jack",
+ 		"Microphone", "Mic Jack",
+ 		"Microphone", "DMIC";
+-	simple-audio-card,routing =
++	samsung,audio-routing =
+ 		"Headphone Jack", "HPL",
+ 		"Headphone Jack", "HPR",
+ 		"IN1", "Mic Jack",
 -- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---zsrhuep42maihh3q--
+2.14.2
