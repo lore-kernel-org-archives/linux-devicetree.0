@@ -1,107 +1,23 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2 1/2] ARM: dts: vexpress: use standard gpio bindings for
- sys_{led,mci,flash}
-Date: Fri, 11 May 2018 14:16:56 +0100
-Message-ID: <60e76b54-468a-f0ae-790d-3fc6bb4b55ed@arm.com>
-References: <1525884482-19855-1-git-send-email-sudeep.holla@arm.com>
- <1526034208-9690-1-git-send-email-sudeep.holla@arm.com>
- <CAL_JsqKsGV8rrox2hSioASD+96ws9JLTo_DLw9nKwAgr5uZ_3g@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/3] dt-bindings: media: rcar-vin: Add R8A77995 support
+Date: Fri, 11 May 2018 15:35:14 +0200
+Message-ID: <20180511133513.25dldevvnlnxl7y6@verge.net.au>
+References: <1526032802-14376-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1526032802-14376-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqKsGV8rrox2hSioASD+96ws9JLTo_DLw9nKwAgr5uZ_3g@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1526032802-14376-2-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/05/18 13:10, Rob Herring wrote:
-> On Fri, May 11, 2018 at 5:23 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> Commit 2cff6dba57b7 ("ARM: dts: vexpress: fix node name unit-address presence warnings")
->> removed the unit address as there was no associated reg property in
->> these sysreg nodes.
->>
->> Also the latest DTC throws warnings for character '_' in the node names.
->>
->> Warning (node_name_chars_strict): /sysreg@10000/sys_led: Character '_' not recommended in node name
->> Warning (node_name_chars_strict): /sysreg@10000/sys_mci: Character '_' not recommended in node name
->> Warning (node_name_chars_strict): /sysreg@10000/sys_flash: Character '_' not recommended in node name
->>
->> The correct way to fix this as well as the original unit-address presence
->> warnings is to use the standard gpio controller binding and specify the
->> reg properties as per the hardware as it was before.
->>
->> However note that Vexpress sysreg MFD driver will still continue to use
->> the hardcoded values for compatibility reasons.
->>
->> Cc: Liviu Dudau <liviu.dudau@arm.com>
->> Suggested-by: Rob Herring <robh@kernel.org>
->> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->> ---
->>  arch/arm/boot/dts/vexpress-v2m-rs1.dtsi | 11 ++++++++---
->>  arch/arm/boot/dts/vexpress-v2m.dtsi     | 11 ++++++++---
->>  2 files changed, 16 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
->> index 7b8ff5b3b912..a8586a0b957d 100644
->> --- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
->> +++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
->> @@ -76,21 +76,26 @@
->>                                 v2m_sysreg: sysreg@10000 {
->>                                         compatible = "arm,vexpress-sysreg";
->>                                         reg = <0x010000 0x1000>;
->> +                                       #address-cells = <1>;
->> +                                       #size-cells = <1>;
+On Fri, May 11, 2018 at 12:00:00PM +0200, Jacopo Mondi wrote:
+> Add compatible string for R-Car D3 R8A7795 to list of SoCs supported by
+> rcar-vin driver.
 > 
-> You need a ranges here and below to translate from 0-0x10000 range.
-> 
-> With that,
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-Thanks, I have appended it with below change
-
-Regards,
-Sudeep
-
---
-
-diff --git c/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-w/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-index a8586a0b957d..4488c8fe213a 100644
---- c/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-+++ w/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-@@ -78,6 +78,7 @@
-                                        reg = <0x010000 0x1000>;
-                                        #address-cells = <1>;
-                                        #size-cells = <1>;
-+                                       ranges = <0 0x10000 0x1000>;
-                                        v2m_led_gpios: gpio@8 {
-                                                compatible =
-"arm,vexpress-sysreg,sys_led";
-diff --git c/arch/arm/boot/dts/vexpress-v2m.dtsi
-w/arch/arm/boot/dts/vexpress-v2m.dtsi
-index 37ecccebd937..4db42f6326a3 100644
---- c/arch/arm/boot/dts/vexpress-v2m.dtsi
-+++ w/arch/arm/boot/dts/vexpress-v2m.dtsi
-@@ -78,6 +78,7 @@
-                                        reg = <0x00000 0x1000>;
-                                        #address-cells = <1>;
-                                        #size-cells = <1>;
-+                                       ranges = <0 0 0x1000>;
-                                        v2m_led_gpios: gpio@8 {
-                                                compatible =
-"arm,vexpress-sysreg,sys_led";
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
