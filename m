@@ -1,101 +1,84 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 03/12] arm: dts: mt7623: fix invalid memory node being
- generated
-Date: Fri, 11 May 2018 17:03:22 +0200
-Message-ID: <4dcb0435-1f98-0753-0feb-d17ad02077ae@gmail.com>
-References: <cover.1523434757.git.sean.wang@mediatek.com>
- <d887b72e1839c7e476179e384cfc712216096f20.1523434758.git.sean.wang@mediatek.com>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH] display: panel: Add KOE tx14d24vm1bpa display support
+ (320x240)
+Date: Fri, 11 May 2018 17:04:07 +0200
+Message-ID: <20180511170407.6c1c6f97@jawa>
+References: <20180412143715.6828-1-lukma@denx.de>
+        <20180416192442.qnb53b6u3bsfet6y@rob-hp-laptop>
+        <20180504122842.33643142@jawa>
+        <CAL_JsqLHwOv5+yoJ8S+74TmA2nUxzohhAkksZtrBCK7CAnp46A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/xU.VF1Ch=hs4zt3QjPG/F=e"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d887b72e1839c7e476179e384cfc712216096f20.1523434758.git.sean.wang@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <CAL_JsqLHwOv5+yoJ8S+74TmA2nUxzohhAkksZtrBCK7CAnp46A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+--Sig_/xU.VF1Ch=hs4zt3QjPG/F=e
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Rob, Thierry
+
+> On Fri, May 4, 2018 at 5:28 AM, Lukasz Majewski <lukma@denx.de> wrote:
+> > Hi Rob,
+> > =20
+> >> On Thu, Apr 12, 2018 at 04:37:15PM +0200, Lukasz Majewski wrote: =20
+> >> > This commit adds support for KOE's 5.7" display.
+> >> >
+> >> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> >> > ---
+> >> >  .../bindings/display/panel/koe,tx14d24vm1bpa.txt   | 42
+> >> > ++++++++++++++++++++++
+> >> > drivers/gpu/drm/panel/panel-simple.c               | 26
+> >> > ++++++++++++++ 2 files changed, 68 insertions(+) create mode
+> >> > 100644
+> >> > Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.tx=
+t =20
+> >>
+> >> Reviewed-by: Rob Herring <robh@kernel.org>
+> >> =20
+> >
+> > Gentle ping on this - as I don't know if this patch been applied. =20
+>=20
+> This should go thru DRM tree via Thierry.
+
+Would it be possible to pull this patch along with:
+[PATCH v3] display: panel: Add AUO g070vvn01 display support (800x480)
+
+To your -next tree (as we are now with -rc4) ?
+
+>=20
+> Rob
 
 
-On 04/11/2018 10:53 AM, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> Below two wrong nodes in existing DTS files would cause a fail boot since
-> in fact the address 0 is not the correct place the memory device locates
-> at.
-> 
-> memory {
->         device_type = "memory";
->         reg = <0x0 0x0 0x0 0x0>;
-> };
-> 
-> memory@80000000 {
->         reg = <0x0 0x80000000 0x0 0x40000000>;
-> };
-> 
-> In order to avoid having a memory node starting at address 0, we can't
-> include file skeleton64.dtsi and instead need to explicitly manually
-> define a few of properties the DTS relies on such as #address-cells
-> and #size-cells in root node and device_type in the node memory@80000000.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 31ac0d69a1d4 ("ARM: dts: mediatek: add MT7623 basic support")
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> ---
->  arch/arm/boot/dts/mt7623.dtsi                 | 3 ++-
->  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 1 +
->  arch/arm/boot/dts/mt7623n-rfb.dtsi            | 1 +
->  3 files changed, 4 insertions(+), 1 deletion(-)
-> 
+Best regards,
 
-merged. We would need this at least for mt2701 as well, correct?
-Would you mind to provide a patch.
+Lukasz Majewski
 
-Regards,
-Matthias
+--
 
-> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-> index fec4715..406a9f3 100644
-> --- a/arch/arm/boot/dts/mt7623.dtsi
-> +++ b/arch/arm/boot/dts/mt7623.dtsi
-> @@ -15,11 +15,12 @@
->  #include <dt-bindings/phy/phy.h>
->  #include <dt-bindings/reset/mt2701-resets.h>
->  #include <dt-bindings/thermal/thermal.h>
-> -#include "skeleton64.dtsi"
->  
->  / {
->  	compatible = "mediatek,mt7623";
->  	interrupt-parent = <&sysirq>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
->  
->  	cpu_opp_table: opp-table {
->  		compatible = "operating-points-v2";
-> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> index bbf56f8..5938e4c 100644
-> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> @@ -109,6 +109,7 @@
->  	};
->  
->  	memory@80000000 {
-> +		device_type = "memory";
->  		reg = <0 0x80000000 0 0x40000000>;
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/mt7623n-rfb.dtsi b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-> index a199ae7..343e8ef 100644
-> --- a/arch/arm/boot/dts/mt7623n-rfb.dtsi
-> +++ b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-> @@ -40,6 +40,7 @@
->  	};
->  
->  	memory@80000000 {
-> +		device_type = "memory";
->  		reg = <0 0x80000000 0 0x40000000>;
->  	};
->  
-> 
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+
+--Sig_/xU.VF1Ch=hs4zt3QjPG/F=e
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlr1sOcACgkQAR8vZIA0
+zr195AgA5G6IoQZcFMD90RBg78llcnE9ygCo0yXiRhvqr5p5DJKjIH8IFNgg+mAx
+5WJhLcVCQmXl+oe0jMfmKj4TOqx2KOsrkrj9Nq1hAXg0tX2GaluJ38VGlFGmjYzF
+V6m0nMwbnvzuiqq0g8Dchmt1THkGoW6jH97ld/P3yefh0jh0MkpKHPmYf4hU9LJm
+YnGnydpGgRpZ6OAEdJbpBVclpv8EBTcc5HaUEeeXq3xO5Bd/4FqhMjv6Iu1oujV4
+Xu56C2TCTgplVsAh6q6S7dVnvd0JS6DjnnTRR5DwaqNE/rI5kbc2IBdyqWDTYB49
+WWrnmD0iPCflJZS9dC9mRx2SsFU3fw==
+=r/LW
+-----END PGP SIGNATURE-----
+
+--Sig_/xU.VF1Ch=hs4zt3QjPG/F=e--
