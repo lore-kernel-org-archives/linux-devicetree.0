@@ -1,95 +1,165 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a77995: Add VIN4
-Date: Fri, 11 May 2018 15:45:16 +0200
-Message-ID: <20180511134516.omsv25i2wi4cxypc@verge.net.au>
-References: <1526032802-14376-1-git-send-email-jacopo+renesas@jmondi.org>
- <1526032802-14376-3-git-send-email-jacopo+renesas@jmondi.org>
- <20180511112523.GK18974@bigcity.dyn.berto.se>
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH 1/3] arm64: dts: hi3798cv200: enable PCIe support for
+ poplar board
+Date: Fri, 11 May 2018 14:58:04 +0100
+Message-ID: <5AF5A16C.6090804@hisilicon.com>
+References: <1526004220-17030-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180511112523.GK18974@bigcity.dyn.berto.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1526004220-17030-1-git-send-email-shawn.guo@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Jianguo Sun <sunjianguo1@huawei.com>, Jiancheng Xue <xuejiancheng@hisilicon.com>, xuwei5@hisilicon.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 11, 2018 at 01:25:23PM +0200, Niklas Söderlund wrote:
-> Hi Jacopo,
+Hi Shawn,
+
+On 2018/5/11 3:03, Shawn Guo wrote:
+> It adds combophy devices under peripheral controller and enables PCIe
+> support for Hi3798CV200 Poplar board.
 > 
-> Thanks for your work.
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+
+Series applied into the hisilicon dt tree.
+Thanks!
+
+BR,
+Wei
+
+> ---
+>  .../boot/dts/hisilicon/hi3798cv200-poplar.dts      | 15 ++++++
+>  arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi     | 63 ++++++++++++++++++++++
+>  2 files changed, 78 insertions(+)
 > 
-> On 2018-05-11 12:00:01 +0200, Jacopo Mondi wrote:
-> > Describe VIN4 interface for R-Car D3 R8A77995 SoC.
-> > 
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
+> index 4d5d644abb12..c4382e1f3c92 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
+> @@ -61,6 +61,15 @@
+>  			default-state = "off";
+>  		};
+>  	};
+> +
+> +	reg_pcie: regulator-pcie {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3V3_PCIE0";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpio6 7 0>;
+> +		enable-active-high;
+> +	};
+>  };
+>  
+>  &gmac1 {
+> @@ -146,6 +155,12 @@
+>  	status = "okay";
+>  };
+>  
+> +&pcie {
+> +	reset-gpios = <&gpio4 4 GPIO_ACTIVE_HIGH>;
+> +	vpcie-supply = <&reg_pcie>;
+> +	status = "okay";
+> +};
+> +
+>  &sd0 {
+>  	bus-width = <4>;
+>  	cap-sd-highspeed;
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
+> index 962bd79139e4..5b73403551e6 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
+> @@ -8,7 +8,9 @@
+>   */
+>  
+>  #include <dt-bindings/clock/histb-clock.h>
+> +#include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/phy/phy.h>
+>  #include <dt-bindings/reset/ti-syscon.h>
+>  
+>  / {
+> @@ -106,6 +108,37 @@
+>  			#reset-cells = <2>;
+>  		};
+>  
+> +		perictrl: peripheral-controller@8a20000 {
+> +			compatible = "hisilicon,hi3798cv200-perictrl", "syscon",
+> +				     "simple-mfd";
+> +			reg = <0x8a20000 0x1000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0x0 0x8a20000 0x1000>;
+> +
+> +			combphy0: phy@850 {
+> +				compatible = "hisilicon,hi3798cv200-combphy";
+> +				reg = <0x850 0x8>;
+> +				#phy-cells = <1>;
+> +				clocks = <&crg HISTB_COMBPHY0_CLK>;
+> +				resets = <&crg 0x188 4>;
+> +				assigned-clocks = <&crg HISTB_COMBPHY0_CLK>;
+> +				assigned-clock-rates = <100000000>;
+> +				hisilicon,fixed-mode = <PHY_TYPE_USB3>;
+> +			};
+> +
+> +			combphy1: phy@858 {
+> +				compatible = "hisilicon,hi3798cv200-combphy";
+> +				reg = <0x858 0x8>;
+> +				#phy-cells = <1>;
+> +				clocks = <&crg HISTB_COMBPHY1_CLK>;
+> +				resets = <&crg 0x188 12>;
+> +				assigned-clocks = <&crg HISTB_COMBPHY1_CLK>;
+> +				assigned-clock-rates = <100000000>;
+> +				hisilicon,mode-select-bits = <0x0008 11 (0x3 << 11)>;
+> +			};
+> +		};
+> +
+>  		uart0: serial@8b00000 {
+>  			compatible = "arm,pl011", "arm,primecell";
+>  			reg = <0x8b00000 0x1000>;
+> @@ -419,5 +452,35 @@
+>  			clocks = <&sysctrl HISTB_IR_CLK>;
+>  			status = "disabled";
+>  		};
+> +
+> +		pcie: pcie@9860000 {
+> +			compatible = "hisilicon,hi3798cv200-pcie";
+> +			reg = <0x9860000 0x1000>,
+> +			      <0x0 0x2000>,
+> +			      <0x2000000 0x01000000>;
+> +			reg-names = "control", "rc-dbi", "config";
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			device_type = "pci";
+> +			bus-range = <0 15>;
+> +			num-lanes = <1>;
+> +			ranges = <0x81000000 0x0 0x00000000 0x4f00000 0x0 0x100000
+> +				  0x82000000 0x0 0x3000000 0x3000000 0x0 0x01f00000>;
+> +			interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "msi";
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0>;
+> +			interrupt-map = <0 0 0 0 &gic 0 131 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&crg HISTB_PCIE_AUX_CLK>,
+> +				 <&crg HISTB_PCIE_PIPE_CLK>,
+> +				 <&crg HISTB_PCIE_SYS_CLK>,
+> +				 <&crg HISTB_PCIE_BUS_CLK>;
+> +			clock-names = "aux", "pipe", "sys", "bus";
+> +			resets = <&crg 0x18c 6>, <&crg 0x18c 5>, <&crg 0x18c 4>;
+> +			reset-names = "soft", "sys", "bus";
+> +			phys = <&combphy1 PHY_TYPE_PCIE>;
+> +			phy-names = "phy";
+> +			status = "disabled";
+> +		};
+>  	};
+>  };
 > 
-> Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> 
-> > ---
-> >  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> > index 82aed7e..bdf7017 100644
-> > --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> > +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> > @@ -783,6 +783,17 @@
-> >  				};
-> >  			};
-> >  		};
-> > +
-> > +		vin4: video@e6ef4000 {
-> > +			compatible = "renesas,vin-r8a77995";
-> > +			reg = <0 0xe6ef4000 0 0x1000>;
-> > +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> > +			clocks = <&cpg CPG_MOD 807>;
-> > +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-> > +			resets = <&cpg 807>;
-> > +			renesas,id = <4>;
-> > +			status = "disabled";
-> > +		};
-> >  	};
-
-Thanks, I have moved the new node to preserve sorting of nodes by bus
-address and applied the result. It is as follows:
-
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH] arm64: dts: renesas: r8a77995: Add VIN4
-
-Describe VIN4 interface for R-Car D3 R8A77995 SoC.
-
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-[simon: sorted node by bus address]
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
- arch/arm64/boot/dts/renesas/r8a77995.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-index ba98865b0c9b..2506f46293e8 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-@@ -610,6 +610,17 @@
- 			status = "disabled";
- 		};
- 
-+		vin4: video@e6ef4000 {
-+			compatible = "renesas,vin-r8a77995";
-+			reg = <0 0xe6ef4000 0 0x1000>;
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 807>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 807>;
-+			renesas,id = <4>;
-+			status = "disabled";
-+		};
-+
- 		ohci0: usb@ee080000 {
- 			compatible = "generic-ohci";
- 			reg = <0 0xee080000 0 0x100>;
--- 
-2.11.0
