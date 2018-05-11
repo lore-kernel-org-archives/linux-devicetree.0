@@ -1,44 +1,30 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 5/8] MIPS: jz4740: dts: Add bindings for the
- jz4740-wdt driver
-Date: Fri, 11 May 2018 14:30:22 -0700
-Message-ID: <20180511213022.GA11705@roeck-us.net>
-References: <5af5c20f.1c69fb81.e968b.17c0SMTPIN_ADDED_MISSING@mx.google.com>
- <20180511205413.GA18694@jamesdev>
- <20180511211416.GA10947@roeck-us.net>
- <20180511211554.GA20264@jamesdev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH 0/2] soc: bcm: brcmstb: Updates to support newer controllers
+Date: Fri, 11 May 2018 15:02:40 -0700
+Message-ID: <20180511220242.837-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180511211554.GA20264@jamesdev>
 Sender: linux-kernel-owner@vger.kernel.org
-To: James Hogan <jhogan@kernel.org>
-Cc: Paul Cercueil <paul@crapouillou.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mathieu Malaterre <malat@debian.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Doug Berger <opendmb@gmail.com>, Justin Chen <justinpopo6@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 11, 2018 at 10:15:55PM +0100, James Hogan wrote:
-> On Fri, May 11, 2018 at 02:14:16PM -0700, Guenter Roeck wrote:
-> > On Fri, May 11, 2018 at 09:54:14PM +0100, James Hogan wrote:
-> > > On Fri, May 11, 2018 at 01:17:04PM -0300, Paul Cercueil wrote:
-> > > > Le 11 mai 2018 11:52, James Hogan <jhogan@kernel.org> a écrit :
-> > > > > Otherwise 
-> > > > > Acked-by: James Hogan <jhogan@kernel.org> 
-> > > > >
-> > > > > I'm happy to apply for 4.18 with that change if you want it to go 
-> > > > > through the MIPS tree. 
-> > > > 
-> > > > Yes please!
-> > > 
-> > > Done
-> > > 
-> > Does that include the watchdog changes ? No problem with it, just asking to make
-> > sure that those don't get lost.
-> 
-> Yes, I suppose I was taking your reviewed-by as an ack.
-> 
-Ok.
+Hi all,
 
-Thanks,
-Guenter
+This patch series adds support for newer reveisions of the memory controller
+which is necessary to make sure we do use the right programming sequence to
+enter S2 and S3 suspend/resume modes.
+
+Doug Berger (1):
+  soc: bcm: brcmstb: pm: Add support for newer rev B3.0 controllers
+
+Florian Fainelli (1):
+  soc: bcm: brcmstb: Add missing DDR MEMC compatible strings
+
+ .../devicetree/bindings/arm/bcm/brcm,brcmstb.txt         |  4 ++++
+ drivers/soc/bcm/brcmstb/pm/pm-arm.c                      | 16 ++++++++++++++++
+ 2 files changed, 20 insertions(+)
+
+-- 
+2.14.1
