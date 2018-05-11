@@ -1,112 +1,64 @@
-From: thor.thayer@linux.intel.com
-Subject: [PATCHv2] arm64: dts: stratix10: Add QSPI support for Stratix10
-Date: Fri, 11 May 2018 11:10:52 -0500
-Message-ID: <1526055052-11371-1-git-send-email-thor.thayer@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Thor Thayer <thor.thayer@linux.intel.com>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH v2 3/4] Documentation: bindings: add phy_config for
+ Rockchip USB Type-C PHY
+Date: Fri, 11 May 2018 18:09:33 +0200
+Message-ID: <CAFqH_51esHUZP4htLYYqHTCotb6P=fA4ozpENU7bXTaCBg8Cbg@mail.gmail.com>
+References: <1525861364-26323-1-git-send-email-hl@rock-chips.com>
+ <1525861364-26323-3-git-send-email-hl@rock-chips.com>
+ <20180511144305.GP33053@art_vandelay>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180511144305.GP33053@art_vandelay>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sean Paul <seanpaul@chromium.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lin Huang <hl@rock-chips.com>, David Airlie <airlied@linux.ie>, Brian Norris <briannorris@chromium.org>, Doug Anderson <dianders@chromium.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chris Zhong <zyw@rock-chips.com>, daniel.vetter@intel.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
-
-Add qspi_clock
-   The qspi_clk frequency is updated by U-Boot before starting Linux.
-Add QSPI interface node.
-Add QSPI flash memory child node.
-   Setup the QSPI memory in 2 partitions.
-
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
----
-v2  s/_/-/ in qspi-clk
-    rename flash node.
-    use partition child node notation
----
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 22 ++++++++++++++
- .../boot/dts/altera/socfpga_stratix10_socdk.dts    | 35 ++++++++++++++++++++++
- 2 files changed, 57 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-index e6b059378dc0..bac01b0b7907 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-@@ -119,6 +119,12 @@
- 				#clock-cells = <0>;
- 				compatible = "fixed-clock";
- 			};
-+
-+			qspi_clk: qspi-clk {
-+				#clock-cells = <0>;
-+				compatible = "fixed-clock";
-+				clock-frequency = <200000000>;
-+			};
- 		};
- 
- 		gmac0: ethernet@ff800000 {
-@@ -466,5 +472,21 @@
- 				interrupts = <16 4>, <48 4>;
- 			};
- 		};
-+
-+		qspi: spi@ff8d2000 {
-+			compatible = "cdns,qspi-nor";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0xff8d2000 0x100>,
-+			      <0xff900000 0x100000>;
-+			interrupts = <0 3 4>;
-+			cdns,fifo-depth = <128>;
-+			cdns,fifo-width = <4>;
-+			cdns,trigger-address = <0x00000000>;
-+			clocks = <&qspi_clk>;
-+			bus-num = <1>;
-+
-+			status = "disabled";
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-index f9b1ef12db48..96542150654b 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-@@ -147,3 +147,38 @@
- 		reg = <0x68>;
- 	};
- };
-+
-+&qspi {
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "n25q00aa";
-+		reg = <0>;
-+		spi-max-frequency = <50000000>;
-+
-+		m25p,fast-read;
-+		cdns,page-size = <256>;
-+		cdns,block-size = <16>;
-+		cdns,read-delay = <1>;
-+		cdns,tshsl-ns = <50>;
-+		cdns,tsd2d-ns = <50>;
-+		cdns,tchsh-ns = <4>;
-+		cdns,tslch-ns = <4>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			qspi_boot: partition@0 {
-+				label = "Boot and fpga data";
-+				reg = <0x0 0x4000000>;
-+			};
-+
-+			qspi_rootfs: partition@4000000 {
-+				label = "Root Filesystem - JFFS2";
-+				reg = <0x4000000 0x4000000>;
-+			};
-+		};
-+	};
-+};
--- 
-2.7.4
+SGkgTGluLAoKMjAxOC0wNS0xMSAxNjo0MyBHTVQrMDI6MDAgU2VhbiBQYXVsIDxzZWFucGF1bEBj
+aHJvbWl1bS5vcmc+Ogo+IE9uIFdlZCwgTWF5IDA5LCAyMDE4IGF0IDA2OjIyOjQzUE0gKzA4MDAs
+IExpbiBIdWFuZyB3cm90ZToKPj4gSWYgd2FudCB0byBkbyB0cmFpbmluZyBvdXRzaWRlIERQIEZp
+cm13YXJlLCBuZWVkIHBoeSB2b2x0YWdlIHN3aW5nCj4+IGFuZCBwcmVfZW1waGFzaXMgdmFsdWUu
+Cj4+Cj4+IFNpZ25lZC1vZmYtYnk6IExpbiBIdWFuZyA8aGxAcm9jay1jaGlwcy5jb20+Cj4KPiBB
+ZGRpbmcgUm9iIEhlcnJpbmcgc28gaGUgaGFzIGEgaG9wZSBvZiBzZWVpbmcgdGhpcy4KPgoKQW5k
+IGFkZGluZyB0aGUgZGV2aWNldHJlZSBNTCwgb3RoZXJ3aXNlIFJvYiB3aWxsIHByb2JhYmx5IGln
+bm9yZSB0aGUgcGF0Y2guCgo+PiAtLS0KPj4gQ2hhbmdlcyBpbiB2MjoKPj4gLSByZWJhc2UKPj4K
+Pj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LXJvY2tjaGlwLXR5
+cGVjLnR4dCB8IDQgKysrLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBk
+ZWxldGlvbigtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3BoeS9waHktcm9ja2NoaXAtdHlwZWMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3BoeS9waHktcm9ja2NoaXAtdHlwZWMudHh0Cj4+IGluZGV4IDk2MGRhN2Yu
+LmVkYTI2ZGQgMTAwNjQ0Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9waHkvcGh5LXJvY2tjaGlwLXR5cGVjLnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1yb2NrY2hpcC10eXBlYy50eHQKPj4gQEAgLTE3LDcgKzE3
+LDkgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPj4KPj4gIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4+
+ICAgLSBleHRjb24gOiBleHRjb24gc3BlY2lmaWVyIGZvciB0aGUgUG93ZXIgRGVsaXZlcnkKPj4g
+LQo+PiArIC0gcm9ja2NoaXAscGh5X2NvbmZpZyA6IFRoYXQncyBwaHkgdm9sdGFnZSBzd2luZyBh
+bmQgcHJlX2VtcGhhc2lzCj4+ICsgICAgICAgICAgICAgICAgICAgICAgc2V0dGluZywgaWYgd2Fu
+dCB0byBkbyBkcCB0cmFpbmluZyBvdXRzaWRlCj4+ICsgICAgICAgICAgICAgICAgICAgICAgZHAg
+ZmlybXdhcmUsIG5lZWQgdG8gYWRkIHRoZXNlIHZhbHVlLgo+Cj4gV2hhdCBhcmUgdGhlIHVuaXRz
+Pwo+CgpBbHNvLCBJIHRoaW5rIHRoYXQgd2lsbCBiZSBnb29kIGFkZCBhbiBleGFtcGxlIG9yIGlu
+Y2x1ZGUgdGhlIHByb3BlcnR5CmluIHRoZSBjdXJyZW50IGV4YW1wbGVzIHRvIHNlZSBob3cgd29y
+a3MuIEl0J3Mgbm90IGNsZWFyIGZyb20gdGhlCnByb3BlcnR5IGRlc2NyaXB0aW9uLiBJIHN1cHBv
+c2UgaXQgaXMgYW4gYXJyYXkgb2YgcGFpcnMgPHN3aW5nCnByZS1lbXBoYXNpcz4/CgpuaXQ6Cgot
+cm9ja2NoaXAscGh5X2NvbmZpZzogQSBsaXN0IG9mIHZvbHRhZ2Ugc3dpbmcgKHVuaXQpIGFuZCBw
+cmUtZW1waGFzaXMKKHVuaXQpIHBhaXJzLiBVc2UgdGhpcyBwcm9wZXJ0eSB0byBlbmFibGUgc29m
+dHdhcmUgbGluayB0cmFpbmluZwppbnN0ZWFkIG9mIGhhcmR3YXJlIGxpbmsgdHJhaW5pbmcuCgpC
+ZXN0IHJlZ2FyZHMsCiBFbnJpYwoKPiBTZWFuCj4KPj4gIFJlcXVpcmVkIG5vZGVzIDogYSBzdWIt
+bm9kZSBpcyByZXF1aXJlZCBmb3IgZWFjaCBwb3J0IHRoZSBwaHkgcHJvdmlkZXMuCj4+ICAgICAg
+ICAgICAgICAgIFRoZSBzdWItbm9kZSBuYW1lIGlzIHVzZWQgdG8gaWRlbnRpZnkgZHAgb3IgdXNi
+MyBwb3J0LAo+PiAgICAgICAgICAgICAgICBhbmQgc2hhbGwgYmUgdGhlIGZvbGxvd2luZyBlbnRy
+aWVzOgo+PiAtLQo+PiAyLjcuNAo+Pgo+Cj4gLS0KPiBTZWFuIFBhdWwsIFNvZnR3YXJlIEVuZ2lu
+ZWVyLCBHb29nbGUgLyBDaHJvbWl1bSBPUwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
