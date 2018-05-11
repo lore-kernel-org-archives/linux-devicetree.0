@@ -1,121 +1,45 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] drm/panel: Add RGB666 variant of
- Innolux AT070TN90
-Date: Fri, 11 May 2018 10:59:38 +0200
-Message-ID: <20180511085938.wjmdsdjfvdxd4shk@flea>
-References: <20180507220413.21990-1-contact@paulk.fr>
- <20180509071226.ivh4s3wtczg2u7zw@flea>
- <c8ab5f472881063b90abe9461933baf6ee325dcd.camel@paulk.fr>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Yao Chen <chenyao11@huawei.com>
+Subject: [PATCH v3 0/2] Add MSI support
+Date: Fri, 11 May 2018 17:15:47 +0800
+Message-ID: <1526030149-23985-1-git-send-email-chenyao11@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="makdxzrl7mgv4ors"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBVX2XLQKGQE2KZDY4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <c8ab5f472881063b90abe9461933baf6ee325dcd.camel-W9ppeneeCTY@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: songxiaowei@hisilicon.com, wangbinghui@hisilicon.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: dimitrysh@google.com, guodong.xu@linaro.org, chenyao11@huawei.com, suzhuangluan@hisilicon.com, kongfei@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
+Before Version Patches
+======================
+patch v2
+https://www.spinics.net/lists/kernel/msg2797610.html
 
---makdxzrl7mgv4ors
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+patch v1
+https://www.spinics.net/lists/kernel/msg2796410.html
 
-On Wed, May 09, 2018 at 01:31:23PM +0200, Paul Kocialkowski wrote:
-> On Wed, 2018-05-09 at 09:12 +0200, Maxime Ripard wrote:
-> > On Tue, May 08, 2018 at 12:04:11AM +0200, Paul Kocialkowski wrote:
-> > > This adds timings for the RGB666 variant of the Innolux AT070TN90 panel,
-> > > as found on the Ainol AW1 tablet.
-> > > 
-> > > The panel also supports RGB888 output. When RGB666 mode is used instead,
-> > > the two extra lanes per component are grounded.
-> > > 
-> > > In the future, it might become necessary to introduce a dedicated
-> > > device-tree property to specify the bus format to use instead of the
-> > > default one for the panel. This will allow supporting different bus
-> > > formats for the same panel modes.
-> > > 
-> > > Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-> > > ---
-> > >  drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++++++++++++++
-> > >  1 file changed, 26 insertions(+)
-> > > 
-> > > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> > > index cbf1ab404ee7..32e30d5a8f08 100644
-> > > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > > @@ -1063,6 +1063,29 @@ static const struct panel_desc innolux_at043tn24 = {
-> > >  	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
-> > >  };
-> > >  
-> > > +static const struct drm_display_mode innolux_at070tn90_mode = {
-> > > +	.clock = 40000,
-> > > +	.hdisplay = 800,
-> > > +	.hsync_start = 800 + 112,
-> > > +	.hsync_end = 800 + 112 + 1,
-> > > +	.htotal = 800 + 112 + 1 + 87,
-> > > +	.vdisplay = 480,
-> > > +	.vsync_start = 480 + 141,
-> > > +	.vsync_end = 480 + 141 + 1,
-> > > +	.vtotal = 480 + 141 + 1 + 38,
-> > > +	.vrefresh = 60,
-> > > +};
-> > > +
-> > > +static const struct panel_desc innolux_at070tn90 = {
-> > > +	.modes = &innolux_at070tn90_mode,
-> > > +	.num_modes = 1,
-> > > +	.size = {
-> > > +		.width = 154,
-> > > +		.height = 86,
-> > > +	},
-> > > +	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-> > > +};
-> > > +
-> > 
-> > I'm not really convinced this is the right approach. You said it
-> > yourself, the panel is using a 24-bits interface, and you just happen
-> > to have a tablet that routed it using a 18-bits interface instead.
-> > 
-> > That doesn't belong in the driver, especially associated to the
-> > compatible, but where the routing is described: in the device
-> > tree. And given that the panel interface is a 24 bits panel, if we
-> > were to have a default, we should have this one, and not the one
-> > fitting your use case.
-> 
-> I fully agree, this is why I suggested introducing a dedicated dt
-> property for selecting the bus format (in the commit message). I still
-> proposed this patch as a temporary solution, but I'm definitely willing
-> to craft a proper solution as well.
-> 
-> Here is an initial proposition:
-> 1. Making bus_format an array in struct panel_desc and listing all the
-> relevant bus formats that the panel can support there;
+Changes between V3 and V2
+=========================
+1. fix issues according to review comments
+   (1)from Bjorn Helgaas: Check for 'pci->pp.msi_irq < 0'.
+   (2)from Bjorn Helgaas: Update the message of 'msi irq' in dev_err().
 
-I'm not sure this is needed, the input format is always the same in
-your case, the panel will always take a 24 bits RGB value. What you
-want to change is the encoder output format (and I guess you want that
-to be meaningful to enable or not the dithering).
+Changes between V2 and V1
+=========================
+1. seperate DT binding patch.
+2. fix issues according to review comments
+   (1)from Bjorn Helgaas: Update the style of subject and changelog.
+   (2)from Bjorn Helgaas: Add msi irq number in the message.
+   (3)from Bjorn Helgaas: Delete unnecessary code 'pci->pp.root_bus_nr = -1'.
+   (4)from Dmitry Shmidt: Fix typing error. Replace 'interrupts-names' of 'interrupt-names'.
 
-> 2. Introducing an optional "bus-format" dt property that indicates which
-> bus format to use, and using the first index of the bus formats array if
-> the property is not present;
+Yao Chen (2):
+  PCI: kirin: Add MSI support
+  arm64: dts: hi3660: Add pcie msi interrupt attribute
 
-I guess the width would be enough, and that way we can take the
-bus-width format that is already defined (but used in the v4l2
-framework, not in DRM yet).
-
-Maxime
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi |  2 ++
+ drivers/pci/dwc/pcie-kirin.c              | 39 +++++++++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+)
 
 -- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---makdxzrl7mgv4ors--
+1.9.1
