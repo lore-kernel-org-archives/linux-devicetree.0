@@ -1,84 +1,106 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH] display: panel: Add KOE tx14d24vm1bpa display support
- (320x240)
-Date: Fri, 11 May 2018 17:04:07 +0200
-Message-ID: <20180511170407.6c1c6f97@jawa>
-References: <20180412143715.6828-1-lukma@denx.de>
-        <20180416192442.qnb53b6u3bsfet6y@rob-hp-laptop>
-        <20180504122842.33643142@jawa>
-        <CAL_JsqLHwOv5+yoJ8S+74TmA2nUxzohhAkksZtrBCK7CAnp46A@mail.gmail.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: =?UTF-8?Q?Re:_[PATCH_v10_00/27]_ARM:_davinci:_convert_to_common_clo?=
+ =?UTF-8?B?Y2sgZnJhbWV3b3Jr4oCL?=
+Date: Fri, 11 May 2018 20:56:40 +0530
+Message-ID: <45ce3129-4a9e-54d2-e594-49b451571842@ti.com>
+References: <20180509172606.29387-1-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/xU.VF1Ch=hs4zt3QjPG/F=e"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLHwOv5+yoJ8S+74TmA2nUxzohhAkksZtrBCK7CAnp46A@mail.gmail.com>
+In-Reply-To: <20180509172606.29387-1-david@lechnology.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/xU.VF1Ch=hs4zt3QjPG/F=e
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi David,
 
-Hi Rob, Thierry
+On Wednesday 09 May 2018 10:55 PM, David Lechner wrote:
+> This series converts mach-davinci to use the common clock framework.
+> 
+> The series works like this, the first 3 patches fix some issues with the clock
+> drivers that have already been accepted into the mainline kernel.
 
-> On Fri, May 4, 2018 at 5:28 AM, Lukasz Majewski <lukma@denx.de> wrote:
-> > Hi Rob,
-> > =20
-> >> On Thu, Apr 12, 2018 at 04:37:15PM +0200, Lukasz Majewski wrote: =20
-> >> > This commit adds support for KOE's 5.7" display.
-> >> >
-> >> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> >> > ---
-> >> >  .../bindings/display/panel/koe,tx14d24vm1bpa.txt   | 42
-> >> > ++++++++++++++++++++++
-> >> > drivers/gpu/drm/panel/panel-simple.c               | 26
-> >> > ++++++++++++++ 2 files changed, 68 insertions(+) create mode
-> >> > 100644
-> >> > Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.tx=
-t =20
-> >>
-> >> Reviewed-by: Rob Herring <robh@kernel.org>
-> >> =20
-> >
-> > Gentle ping on this - as I don't know if this patch been applied. =20
->=20
-> This should go thru DRM tree via Thierry.
+I have not yet looked at the patches, but I got a bunch of W=1 warnings 
+and some sparse warnings when building your branch. Please take a look 
+at these. Unfortunately the output is mixed between sparse and compiler.
+The "expression using sizeof(void)" can be ignored as its a known issue
+with sparse, I believe.
 
-Would it be possible to pull this patch along with:
-[PATCH v3] display: panel: Add AUO g070vvn01 display support (800x480)
+Thanks,
+Sekhar
 
-To your -next tree (as we are now with -rc4) ?
-
->=20
-> Rob
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-
---Sig_/xU.VF1Ch=hs4zt3QjPG/F=e
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlr1sOcACgkQAR8vZIA0
-zr195AgA5G6IoQZcFMD90RBg78llcnE9ygCo0yXiRhvqr5p5DJKjIH8IFNgg+mAx
-5WJhLcVCQmXl+oe0jMfmKj4TOqx2KOsrkrj9Nq1hAXg0tX2GaluJ38VGlFGmjYzF
-V6m0nMwbnvzuiqq0g8Dchmt1THkGoW6jH97ld/P3yefh0jh0MkpKHPmYf4hU9LJm
-YnGnydpGgRpZ6OAEdJbpBVclpv8EBTcc5HaUEeeXq3xO5Bd/4FqhMjv6Iu1oujV4
-Xu56C2TCTgplVsAh6q6S7dVnvd0JS6DjnnTRR5DwaqNE/rI5kbc2IBdyqWDTYB49
-WWrnmD0iPCflJZS9dC9mRx2SsFU3fw==
-=r/LW
------END PGP SIGNATURE-----
-
---Sig_/xU.VF1Ch=hs4zt3QjPG/F=e--
+drivers/clk/davinci/pll-da830.c:39:5: warning: symbol 'da830_pll_init' was not declared. Should it be static?
+drivers/clk/davinci/pll.c:142:16: warning: expression using sizeof(void)
+drivers/clk/davinci/pll.c:142:16: warning: expression using sizeof(void)
+drivers/clk/davinci/pll-da850.c:87:5: warning: symbol 'da850_pll0_init' was not declared. Should it be static?
+drivers/clk/davinci/pll-da830.c:39:5: warning: no previous prototype for ‘da830_pll_init’ [-Wmissing-prototypes]
+ int da830_pll_init(struct device *dev, void __iomem *base, struct regmap *cfgchip)
+     ^~~~~~~~~~~~~~
+drivers/clk/davinci/pll-da850.c:87:5: warning: no previous prototype for ‘da850_pll0_init’ [-Wmissing-prototypes]
+ int da850_pll0_init(struct device *dev, void __iomem *base, struct regmap *cfgchip)
+     ^~~~~~~~~~~~~~~
+drivers/clk/davinci/pll-dm355.c:30:5: warning: symbol 'dm355_pll1_init' was not declared. Should it be static?
+drivers/clk/davinci/pll-dm365.c:59:5: warning: symbol 'dm365_pll1_init' was not declared. Should it be static?
+drivers/clk/davinci/pll-dm365.c:122:5: warning: symbol 'dm365_pll2_init' was not declared. Should it be static?
+drivers/clk/davinci/da8xx-cfgchip.c:581: warning: Function parameter or member 'dev' not described in 'da8xx_cfgchip_register_usb1_clk48'
+drivers/clk/davinci/pll-dm646x.c:32:5: warning: symbol 'dm646x_pll1_init' was not declared. Should it be static?
+drivers/clk/davinci/pll-dm644x.c:30:5: warning: symbol 'dm644x_pll1_init' was not declared. Should it be static?
+drivers/clk/davinci/pll-dm365.c:59:5: warning: no previous prototype for ‘dm365_pll1_init’ [-Wmissing-prototypes]
+ int dm365_pll1_init(struct device *dev, void __iomem *base, struct regmap *cfgchip)
+     ^~~~~~~~~~~~~~~
+drivers/clk/davinci/pll-dm365.c:122:5: warning: no previous prototype for ‘dm365_pll2_init’ [-Wmissing-prototypes]
+ int dm365_pll2_init(struct device *dev, void __iomem *base, struct regmap *cfgchip)
+     ^~~~~~~~~~~~~~~
+drivers/clk/davinci/pll-dm355.c:30:5: warning: no previous prototype for ‘dm355_pll1_init’ [-Wmissing-prototypes]
+ int dm355_pll1_init(struct device *dev, void __iomem *base, struct regmap *cfgchip)
+     ^~~~~~~~~~~~~~~
+drivers/clk/davinci/psc.c:310:5: warning: symbol 'davinci_clk_reset_assert' was not declared. Should it be static?
+drivers/clk/davinci/psc.c:316:5: warning: symbol 'davinci_clk_reset_deassert' was not declared. Should it be static?
+drivers/clk/davinci/psc-dm644x.c:66:5: warning: symbol 'dm644x_psc_init' was not declared. Should it be static?
+drivers/clk/davinci/psc-dm355.c:71:5: warning: symbol 'dm355_psc_init' was not declared. Should it be static?
+drivers/clk/davinci/pll-dm646x.c:32:5: warning: no previous prototype for ‘dm646x_pll1_init’ [-Wmissing-prototypes]
+ int dm646x_pll1_init(struct device *dev, void __iomem *base, struct regmap *cfgchip)
+     ^~~~~~~~~~~~~~~~
+drivers/clk/davinci/psc-dm365.c:76:5: warning: symbol 'dm365_psc_init' was not declared. Should it be static?
+drivers/clk/davinci/psc-dm646x.c:61:5: warning: symbol 'dm646x_psc_init' was not declared. Should it be static?
+drivers/clk/davinci/pll-dm644x.c:30:5: warning: no previous prototype for ‘dm644x_pll1_init’ [-Wmissing-prototypes]
+ int dm644x_pll1_init(struct device *dev, void __iomem *base, struct regmap *cfgchip)
+     ^~~~~~~~~~~~~~~~
+drivers/clk/davinci/psc-dm355.c:71:5: warning: no previous prototype for ‘dm355_psc_init’ [-Wmissing-prototypes]
+ int dm355_psc_init(struct device *dev, void __iomem *base)
+     ^~~~~~~~~~~~~~
+In file included from drivers/clk/davinci/psc-dm355.c:15:0:
+drivers/clk/davinci/psc-dm355.c:26:14: warning: ‘mcbsp0_clkdev’ defined but not used [-Wunused-const-variable=]
+ LPSC_CLKDEV1(mcbsp0_clkdev,  NULL,  "davinci-mcbsp.0");
+              ^
+drivers/clk/davinci/psc.h:31:46: note: in definition of macro ‘LPSC_CLKDEV1’
+ static const struct davinci_lpsc_clkdev_info n[] __initconst = { \
+                                              ^
+drivers/clk/davinci/psc-dm355.c:21:14: warning: ‘mcbsp1_clkdev’ defined but not used [-Wunused-const-variable=]
+ LPSC_CLKDEV1(mcbsp1_clkdev,  NULL,  "davinci-mcbsp.1");
+              ^
+drivers/clk/davinci/psc.h:31:46: note: in definition of macro ‘LPSC_CLKDEV1’
+ static const struct davinci_lpsc_clkdev_info n[] __initconst = { \
+                                              ^
+drivers/clk/davinci/psc-dm365.c:76:5: warning: no previous prototype for ‘dm365_psc_init’ [-Wmissing-prototypes]
+ int dm365_psc_init(struct device *dev, void __iomem *base)
+     ^~~~~~~~~~~~~~
+drivers/clk/davinci/psc-dm646x.c:61:5: warning: no previous prototype for ‘dm646x_psc_init’ [-Wmissing-prototypes]
+ int dm646x_psc_init(struct device *dev, void __iomem *base)
+     ^~~~~~~~~~~~~~~
+drivers/clk/davinci/psc-dm644x.c:66:5: warning: no previous prototype for ‘dm644x_psc_init’ [-Wmissing-prototypes]
+ int dm644x_psc_init(struct device *dev, void __iomem *base)
+     ^~~~~~~~~~~~~~~
+drivers/clk/davinci/pll.c:496: warning: Function parameter or member 'dev' not described in 'davinci_pll_auxclk_register'
+drivers/clk/davinci/psc.c:310:5: warning: no previous prototype for ‘davinci_clk_reset_assert’ [-Wmissing-prototypes]
+ int davinci_clk_reset_assert(struct clk *clk)
+     ^~~~~~~~~~~~~~~~~~~~~~~~
+drivers/clk/davinci/psc.c:316:5: warning: no previous prototype for ‘davinci_clk_reset_deassert’ [-Wmissing-prototypes]
+ int davinci_clk_reset_deassert(struct clk *clk)
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/clk/davinci/pll.c:509: warning: Function parameter or member 'dev' not described in 'davinci_pll_sysclkbp_clk_register'
+drivers/clk/davinci/pll.c:524: warning: Function parameter or member 'dev' not described in 'davinci_pll_obsclk_register'
+drivers/clk/davinci/pll.c:605: warning: Function parameter or member 'dev' not described in 'davinci_pll_sysclk_register'
