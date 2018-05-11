@@ -1,49 +1,91 @@
-Return-Path: <SRS0=xPmq=IM=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:52228 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S966625AbeEYM1i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 25 May 2018 08:27:38 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v2 1/2] dt-bindings: media: Define "rotation" property for sensors
-Date: Fri, 25 May 2018 15:27:25 +0300
-Message-Id: <20180525122726.3409-2-sakari.ailus@linux.intel.com>
-In-Reply-To: <20180525122726.3409-1-sakari.ailus@linux.intel.com>
-References: <20180525122726.3409-1-sakari.ailus@linux.intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, andy.yeh@intel.com, sebastian.reichel@collabora.co.uk
+Return-Path: <SRS0=S2P+=H6=gmail.com=matthias.bgg@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: Add bindings for Mediatek MT8183
+ SoC Platform
+References: <1526019083-20237-1-git-send-email-erin.lo@mediatek.com>
+ <1526019083-20237-2-git-send-email-erin.lo@mediatek.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <4a32814b-e905-74e8-ed5c-5e68f38faa28@gmail.com>
+Date: Fri, 11 May 2018 10:33:27 +0200
+MIME-Version: 1.0
+In-Reply-To: <1526019083-20237-2-git-send-email-erin.lo@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Sensors are occasionally mounted upside down to systems such as mobile
-phones or tablets. In order to use such a sensor without having to turn
-every image upside down, most camera sensors support reversing the readout
-order by setting both horizontal and vertical flipping.
 
-This patch documents the "rotation" property for camera sensors, mirroring
-what is defined for displays in
-Documentation/devicetree/bindings/display/panel/panel.txt .
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- Documentation/devicetree/bindings/media/video-interfaces.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+On 05/11/2018 08:11 AM, Erin Lo wrote:
+> This adds dt-binding documentation for Mediatek MT8183.
+> Only include very basic items: cpu, gic and uart.
+> 
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/arm/mediatek.txt                    | 4 ++++
+>  .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt      | 1 +
+>  Documentation/devicetree/bindings/serial/mtk-uart.txt                 | 1 +
+>  3 files changed, 6 insertions(+)
+> 
 
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index 258b8dfddf48..52b7c7b57842 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -85,6 +85,10 @@ Optional properties
- 
- - lens-focus: A phandle to the node of the focus lens controller.
- 
-+- rotation: The device, typically an image sensor, is not mounted upright,
-+  but a number of degrees counter clockwise. Typical values are 0 and 180
-+  (upside down).
-+
- 
- Optional endpoint properties
- ----------------------------
--- 
-2.11.0
+This touches different maintainers and the patches should go through their
+trees, so that no merge conflicts occur.
+I'm fine with take it through my tree but it's more work as we might need a
+stable branch that the other maintainers can merge. Apart I'd need the Acked-by
+from the maintainers.
 
+I'm fine with either way.
+
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
+> index 7d21ab3..2754535 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek.txt
+> @@ -19,6 +19,7 @@ compatible: Must contain one of
+>     "mediatek,mt8127"
+>     "mediatek,mt8135"
+>     "mediatek,mt8173"
+> +   "mediatek,mt8183"
+>  
+>  
+>  Supported boards:
+> @@ -73,3 +74,6 @@ Supported boards:
+>  - MTK mt8173 tablet EVB:
+>      Required root node properties:
+>        - compatible = "mediatek,mt8173-evb", "mediatek,mt8173";
+> +- Evaluation board for MT8183:
+> +    Required root node properties:
+> +      - compatible = "mediatek,mt8183-evb", "mediatek,mt8183";
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> index 07bf0b9..5ff48a8 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> @@ -5,6 +5,7 @@ interrupt.
+>  
+>  Required properties:
+>  - compatible: should be
+> +	"mediatek,mt8183-sysirq", "mediatek,mt6577-sysirq": for MT8183
+>  	"mediatek,mt8173-sysirq", "mediatek,mt6577-sysirq": for MT8173
+>  	"mediatek,mt8135-sysirq", "mediatek,mt6577-sysirq": for MT8135
+>  	"mediatek,mt8127-sysirq", "mediatek,mt6577-sysirq": for MT8127
+> diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+> index f73abff..6e6d168 100644
+> --- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
+> +++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+> @@ -15,6 +15,7 @@ Required properties:
+>    * "mediatek,mt8127-uart" for MT8127 compatible UARTS
+>    * "mediatek,mt8135-uart" for MT8135 compatible UARTS
+>    * "mediatek,mt8173-uart" for MT8173 compatible UARTS
+> +  * "mediatek,mt8183-uart" for MT8183 compatible UARTS
+
+If you add this compatible without a fallback that you will need an update in
+the driver. Is there really anything new in the serial console with regard to
+older devices?
+
+Regards,
+Matthias
+
+>    * "mediatek,mt6577-uart" for MT6577 and all of the above
+>  
+>  - reg: The base address of the UART register bank.
+> 
