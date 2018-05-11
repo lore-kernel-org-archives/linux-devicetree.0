@@ -1,7 +1,7 @@
 From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [linux-next PATCH 3/4] ARM: dts: keystone-k2g-ice: Enable netcp network driver
-Date: Fri, 11 May 2018 15:29:11 -0400
-Message-ID: <1526066952-5230-4-git-send-email-m-karicheri2@ti.com>
+Subject: [linux-next PATCH 2/4] ARM: dts: keystone-k2g-evm: Enable netcp network driver
+Date: Fri, 11 May 2018 15:29:10 -0400
+Message-ID: <1526066952-5230-3-git-send-email-m-karicheri2@ti.com>
 References: <1526066952-5230-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -11,38 +11,21 @@ Sender: linux-kernel-owner@vger.kernel.org
 To: ssantosh@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds dt bindings to enable netcp network driver on K2G
-ICE boards. This consists of enabling bindings for NSS qmss, pktdma,
-2u ethss, mdio, pinmux and netcp devices as well as DP83867 phy.
-
-EVM hardware spec recommends to add 0.25 nsec delay in the tx direction
-and 2.25 nsec delay in the rx direction for internal delay in the clock
-path to be on the safer side.
-
-The board straps RX_DV/RX_CTRL pin of on board DP83867 phy in mode 1.
-The phy data manual disallows this. Add ti,dp83867-rxctrl-strap-quirk
-in the phy node to allow software to enable the workaround suggested for
-this incorrect strap setting. This ensures proper operation of this PHY.
+Add dt bindings to enable netcp network driver on K2G GP EVM. This
+consists of enabling bindings for nss qmss, pktdma, 2u ethss,
+mdio, pinmux and netcp devices.
 
 Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
 ---
- arch/arm/boot/dts/keystone-k2g-ice.dts | 59 ++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ arch/arm/boot/dts/keystone-k2g-evm.dts | 53 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/arch/arm/boot/dts/keystone-k2g-ice.dts b/arch/arm/boot/dts/keystone-k2g-ice.dts
-index d820ed2..2a2d38c 100644
---- a/arch/arm/boot/dts/keystone-k2g-ice.dts
-+++ b/arch/arm/boot/dts/keystone-k2g-ice.dts
-@@ -7,6 +7,7 @@
- /dts-v1/;
- 
- #include "keystone-k2g.dtsi"
-+#include <dt-bindings/net/ti-dp83867.h>
- 
- / {
- 	compatible = "ti,k2g-ice", "ti,k2g", "ti,keystone";
-@@ -281,6 +282,30 @@
- 			K2G_CORE_IOPAD(0x11bc) (BUFFER_CLASS_B | PIN_PULLUP | MUX_MODE3)	/* spi2_scsn1.gpio0_102 */
+diff --git a/arch/arm/boot/dts/keystone-k2g-evm.dts b/arch/arm/boot/dts/keystone-k2g-evm.dts
+index 154fdd7..f028a00 100644
+--- a/arch/arm/boot/dts/keystone-k2g-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2g-evm.dts
+@@ -128,6 +128,30 @@
+ 			K2G_CORE_IOPAD(0x1228) (BUFFER_CLASS_B | PIN_PULLDOWN  | MUX_MODE1)	/* qspicsn3.dcan1rx */
  		>;
  	};
 +
@@ -72,9 +55,9 @@ index d820ed2..2a2d38c 100644
  };
  
  &uart0 {
-@@ -386,3 +411,37 @@
- 		vcc-supply = <&vdd_3v3>;
- 	};
+@@ -294,3 +318,32 @@
+ 	pinctrl-0 = <&dcan1_pins>;
+ 	status = "okay";
  };
 +
 +&qmss {
@@ -85,29 +68,24 @@ index d820ed2..2a2d38c 100644
 +	status = "okay";
 +};
 +
-+&netcp {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_pins>;
-+	status = "okay";
-+};
-+
 +&mdio {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&mdio_pins>;
 +	status = "okay";
 +	ethphy0: ethernet-phy@0 {
 +		reg = <0>;
-+		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_25_NS>;
-+		ti,tx-internal-delay = <DP83867_RGMIIDCTL_250_PS>;
-+		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_8_B_NIB>;
-+		ti,min-output-impedance;
-+		ti,dp83867-rxctrl-strap-quirk;
 +	};
 +};
 +
 +&gbe0 {
 +	phy-handle = <&ethphy0>;
 +	phy-mode = "rgmii-id";
++	status = "okay";
++};
++
++&netcp {
++	pinctrl-names = "default";
++	pinctrl-0 = <&emac_pins>;
 +	status = "okay";
 +};
 -- 
