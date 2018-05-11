@@ -1,72 +1,101 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: allwinner: a64: Add Amarula A64
- Relic initial support
-Date: Fri, 11 May 2018 16:57:58 +0200
-Message-ID: <20180511145758.z3ufqu3njnm7kb2m@flea>
-References: <20180511054307.3410-1-jagan@amarulasolutions.com>
- <CAGb2v67ZDUqLGiWfocZXzGY54dYcSVUMC-xz87xaJQs88-nqyw@mail.gmail.com>
- <CAMty3ZCM7Sxsp4MwDRYq9NSfWJfj6XKK6JN9DKyk91MNrLvPAg@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 03/12] arm: dts: mt7623: fix invalid memory node being
+ generated
+Date: Fri, 11 May 2018 17:03:22 +0200
+Message-ID: <4dcb0435-1f98-0753-0feb-d17ad02077ae@gmail.com>
+References: <cover.1523434757.git.sean.wang@mediatek.com>
+ <d887b72e1839c7e476179e384cfc712216096f20.1523434758.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="obqtqp7m74x2wcoj"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6G623LQKGQEASDB5DY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZCM7Sxsp4MwDRYq9NSfWJfj6XKK6JN9DKyk91MNrLvPAg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d887b72e1839c7e476179e384cfc712216096f20.1523434758.git.sean.wang@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---obqtqp7m74x2wcoj
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
 
-On Fri, May 11, 2018 at 11:37:04AM +0530, Jagan Teki wrote:
-> On Fri, May 11, 2018 at 11:20 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> > On Thu, May 10, 2018 at 10:43 PM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
-> >> Amarula A64 Relic is Allwinner A64 based IoT device, which support
-> >> - Allwinner A64 Cortex-A53
-> >> - Mali-400MP2 GPU
-> >> - AXP803 PMIC
-> >> - 1GB DDR3 RAM
-> >> - 8GB eMMC
-> >> - AP6330 Wifi/BLE
-> >> - MIPI-DSI
-> >> - CSI: OV5640 sensor
-> >> - USB OTG
-> >> - 12V DC power supply
-> >>
-> >> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> >> ---
-> >> Changes for v2:
-> >> - Rename dts name to sun50i-a64-relic.dts which is simple to use
-> >
-> > This is subjective. For other users this hardly qualifies to
-> > identify the board. Please keep the vendor / brand name in
-> > the file name.
+On 04/11/2018 10:53 AM, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
 > 
-> Which I thought initially, but adding vendor makes long string which
-> become lengthy for next boards to add it in future. So we make
-> notation with <SOC_name>_<board_name> like sun50i-a64-teres-i.dts
-> does.
+> Below two wrong nodes in existing DTS files would cause a fail boot since
+> in fact the address 0 is not the correct place the memory device locates
+> at.
+> 
+> memory {
+>         device_type = "memory";
+>         reg = <0x0 0x0 0x0 0x0>;
+> };
+> 
+> memory@80000000 {
+>         reg = <0x0 0x80000000 0x0 0x40000000>;
+> };
+> 
+> In order to avoid having a memory node starting at address 0, we can't
+> include file skeleton64.dtsi and instead need to explicitly manually
+> define a few of properties the DTS relies on such as #address-cells
+> and #size-cells in root node and device_type in the node memory@80000000.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 31ac0d69a1d4 ("ARM: dts: mediatek: add MT7623 basic support")
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> ---
+>  arch/arm/boot/dts/mt7623.dtsi                 | 3 ++-
+>  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 1 +
+>  arch/arm/boot/dts/mt7623n-rfb.dtsi            | 1 +
+>  3 files changed, 4 insertions(+), 1 deletion(-)
+> 
 
-In the case of Teres-I, this is an easily identifiable board, for
-which a simple google search can give you very easily what board it is
-and where you can get it. Yours fail for both, so I agree with Chen-Yu
-here.
+merged. We would need this at least for mt2701 as well, correct?
+Would you mind to provide a patch.
 
-Maxime
+Regards,
+Matthias
 
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---obqtqp7m74x2wcoj--
+> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+> index fec4715..406a9f3 100644
+> --- a/arch/arm/boot/dts/mt7623.dtsi
+> +++ b/arch/arm/boot/dts/mt7623.dtsi
+> @@ -15,11 +15,12 @@
+>  #include <dt-bindings/phy/phy.h>
+>  #include <dt-bindings/reset/mt2701-resets.h>
+>  #include <dt-bindings/thermal/thermal.h>
+> -#include "skeleton64.dtsi"
+>  
+>  / {
+>  	compatible = "mediatek,mt7623";
+>  	interrupt-parent = <&sysirq>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+>  
+>  	cpu_opp_table: opp-table {
+>  		compatible = "operating-points-v2";
+> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> index bbf56f8..5938e4c 100644
+> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> @@ -109,6 +109,7 @@
+>  	};
+>  
+>  	memory@80000000 {
+> +		device_type = "memory";
+>  		reg = <0 0x80000000 0 0x40000000>;
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/mt7623n-rfb.dtsi b/arch/arm/boot/dts/mt7623n-rfb.dtsi
+> index a199ae7..343e8ef 100644
+> --- a/arch/arm/boot/dts/mt7623n-rfb.dtsi
+> +++ b/arch/arm/boot/dts/mt7623n-rfb.dtsi
+> @@ -40,6 +40,7 @@
+>  	};
+>  
+>  	memory@80000000 {
+> +		device_type = "memory";
+>  		reg = <0 0x80000000 0 0x40000000>;
+>  	};
+>  
+> 
