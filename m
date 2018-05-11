@@ -1,82 +1,103 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 04/12] platform: provide a separate function for initializing platform devices
-Date: Fri, 11 May 2018 18:20:20 +0200
-Message-ID: <20180511162028.20616-5-brgl@bgdev.pl>
-References: <20180511162028.20616-1-brgl@bgdev.pl>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 00/12] refactor dts and add support for more boards
+Date: Fri, 11 May 2018 18:40:14 +0200
+Message-ID: <df482bb2-df7c-3e65-fc0a-f20c81c2dac3@gmail.com>
+References: <cover.1523434757.git.sean.wang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180511162028.20616-1-brgl@bgdev.pl>
+In-Reply-To: <cover.1523434757.git.sean.wang@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Peter Rosin <peda@axentia.se>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Johan Hovold <johan@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The early platform driver framework will allocate platform devices
-using its own internal mechanisms. Provide a function that allows to
-initialize a platform device object without allocating it.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/base/platform.c         | 24 ++++++++++++++++++++----
- include/linux/platform_device.h |  2 ++
- 2 files changed, 22 insertions(+), 4 deletions(-)
+On 04/11/2018 10:53 AM, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> Changes since v1:
+> - Dropped several patches which have been merged.
+> - Rebased to linux-next-20180410 where those dependent patches including
+>   [1] and [2] all have been got merged.
+> - Revised according to suggestions and comments on v1, where the major work is
+>   to put board-specific nodes into DTS files and to leave the common nodes
+>   among boards in DTSI files as done in patch 7,9,10,11 and 12.
+> - Merged Ryder Lee's patch for update audio nodes reflecting the latest
+>   bindings.
+> - Revised commit message.
+> 
+> The series is to refactor current .dts for allowing more boards can properly
+> join and reuse almost the same device node definitions.
+> 
+> Before we're doing that, some works about enhancements and fixups are being
+> made on the dt-binding document and .dts files. In addition, the series has to
+> depend on the patch [1][2]. Otherwise, certain build failure would have an
+> occurrence.
+> 
+> [1] arm: dts: mt7623: add PCIe related nodes
+> http://lists.infradead.org/pipermail/linux-mediatek/2018-February/012053.html
+> 
+> [2] dt-bindings: soc: add header files required for MT7623A SCPSYS dt-binding
+> http://lists.infradead.org/pipermail/linux-mediatek/2018-February/011930.html
+> 
+> Ryder Lee (1):
+>   arm: dts: mediatek: modify audio related nodes for both MT2701 and
+>     MT7623
+> 
+> Sean Wang (11):
+>   dt-bindings: cpufreq: mediatek: use - instead of _ in examples
+>   arm: dts: mediatek: converted to using SPDX identifiers
+>   arm: dts: mt7623: fix invalid memory node being generated
+>   arm: dts: mt7623: fix available memory size on bananapi-r2
+>   arm: dts: mt7623: fix all Warnings (unit_address_vs_reg)
+>   arm: dts: mt7623: add BTIF, HSDMA and SPI-NOR device nodes
+>   arm: dts: mt6323: move node mt6323 leds to mt6323.dtsi
+>   arm: dts: mt7623: extend common file reused by all boards with MT7623
+>     SoCs
+>   arm: dts: mt7623: add MT7623A SoC level DTS
+>   arm: dts: mt7623: add MT7623A reference boards
+>   arm: dts: mt7623: add MT7623N reference board with eMMC
+> 
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 0c53e3e3e5aa..0ba4effb9618 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -252,6 +252,25 @@ static void platform_device_release(struct device *dev)
- 	kfree(pa);
- }
- 
-+/**
-+ * platform_device_init - initialize a platform device
-+ * @pdev: platform device to initialize
-+ * @name: base name of the device we're adding, NOTE: it's not copied
-+ * @id: instance id
-+ *
-+ * Initiate an already allocated platform device. This routine does not set
-+ * the release device callback.
-+ */
-+void platform_device_init(struct platform_device *pdev,
-+			  const char *name, int id)
-+{
-+	pdev->name = name;
-+	pdev->id = id;
-+	device_initialize(&pdev->dev);
-+	arch_setup_pdev_archdata(pdev);
-+}
-+EXPORT_SYMBOL_GPL(platform_device_init);
-+
- /**
-  * platform_device_alloc - create a platform device
-  * @name: base name of the device we're adding
-@@ -267,11 +286,8 @@ struct platform_device *platform_device_alloc(const char *name, int id)
- 	pa = kzalloc(sizeof(*pa) + strlen(name) + 1, GFP_KERNEL);
- 	if (pa) {
- 		strcpy(pa->name, name);
--		pa->pdev.name = pa->name;
--		pa->pdev.id = id;
--		device_initialize(&pa->pdev.dev);
-+		platform_device_init(&pa->pdev, pa->name, id);
- 		pa->pdev.dev.release = platform_device_release;
--		arch_setup_pdev_archdata(&pa->pdev);
- 	}
- 
- 	return pa ? &pa->pdev : NULL;
-diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
-index 099aaf804b50..46bfd5ff666f 100644
---- a/include/linux/platform_device.h
-+++ b/include/linux/platform_device.h
-@@ -165,6 +165,8 @@ static inline struct platform_device *platform_device_register_data(
- 			NULL, 0, data, size);
- }
- 
-+extern void platform_device_init(struct platform_device *pdev,
-+				 const char *name, int id);
- extern struct platform_device *platform_device_alloc(const char *name, int id);
- extern int platform_device_add_resources(struct platform_device *pdev,
- 					 const struct resource *res,
--- 
-2.17.0
+I merged all but 1/12 which needs to go through rafaels tree and 8/12 which was
+already applied from a different series.
+
+You can find them in v4.17-next/soc on git.kernel.org
+
+Regards,
+Matthias
+
+
+>  .../bindings/cpufreq/cpufreq-mediatek.txt          |   6 +-
+>  arch/arm/boot/dts/Makefile                         |   3 +
+>  arch/arm/boot/dts/mt2701-evb.dts                   |   9 +-
+>  arch/arm/boot/dts/mt2701.dtsi                      | 197 ++++----
+>  arch/arm/boot/dts/mt6323.dtsi                      |  17 +-
+>  arch/arm/boot/dts/mt6580-evbp1.dts                 |   9 +-
+>  arch/arm/boot/dts/mt6580.dtsi                      |   9 +-
+>  arch/arm/boot/dts/mt6589-aquaris5.dts              |  10 +-
+>  arch/arm/boot/dts/mt6589.dtsi                      |  12 +-
+>  arch/arm/boot/dts/mt6592-evb.dts                   |   9 +-
+>  arch/arm/boot/dts/mt6592.dtsi                      |   9 +-
+>  arch/arm/boot/dts/mt7623.dtsi                      | 537 ++++++++++++++++-----
+>  arch/arm/boot/dts/mt7623a-rfb-emmc.dts             | 291 +++++++++++
+>  arch/arm/boot/dts/mt7623a-rfb-nand.dts             | 337 +++++++++++++
+>  arch/arm/boot/dts/mt7623a.dtsi                     |  44 ++
+>  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts      | 279 ++---------
+>  arch/arm/boot/dts/mt7623n-rfb-emmc.dts             | 326 +++++++++++++
+>  arch/arm/boot/dts/mt7623n-rfb-nand.dts             |  40 +-
+>  arch/arm/boot/dts/mt7623n-rfb.dtsi                 |  12 +-
+>  arch/arm/boot/dts/mt8127-moose.dts                 |   9 +-
+>  arch/arm/boot/dts/mt8127.dtsi                      |   9 +-
+>  arch/arm/boot/dts/mt8135-evbp1.dts                 |   9 +-
+>  arch/arm/boot/dts/mt8135.dtsi                      |   9 +-
+>  23 files changed, 1576 insertions(+), 616 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/mt7623a-rfb-emmc.dts
+>  create mode 100644 arch/arm/boot/dts/mt7623a-rfb-nand.dts
+>  create mode 100644 arch/arm/boot/dts/mt7623a.dtsi
+>  create mode 100644 arch/arm/boot/dts/mt7623n-rfb-emmc.dts
+> 
