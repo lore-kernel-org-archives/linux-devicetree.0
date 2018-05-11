@@ -1,60 +1,58 @@
-From: Levin Du <djw@t-chip.com.cn>
-Subject: Re: [PATCH v1 3/5] arm64: dts: rockchip: Add gpio-syscon10 to rk3328
-Date: Fri, 11 May 2018 11:45:24 +0800
-Message-ID: <3fdfcc9b-90b5-191c-37e0-c99389a4e872@t-chip.com.cn>
-References: <1525943800-14095-1-git-send-email-djw@t-chip.com.cn>
- <1525943800-14095-4-git-send-email-djw@t-chip.com.cn>
- <76f2bbde-e158-a186-f136-9fb610a810c5@arm.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 02/14] drivers: soc: sunxi: Add dedicated compatibles
+ for the A13, A20 and A33
+Date: Thu, 10 May 2018 22:05:33 -0700
+Message-ID: <CAGb2v67An8RSCKEDSgW_jY7m8iw22K4rRHb02q67decmCBcjhg@mail.gmail.com>
+References: <20180507124500.20434-1-paul.kocialkowski@bootlin.com>
+ <20180507124500.20434-3-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <76f2bbde-e158-a186-f136-9fb610a810c5@arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Wayne Chou <zxf@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Sugar Zhang <sugar.zhang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Finley Xiao <finley.xiao@rock-chips.com>, David Wu <david.wu@rock-chips.com>, William Wu <william.wu@rock-chips.com>, Rocky Hao <rocky.hao@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180507124500.20434-3-paul.kocialkowski@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Smitha T Murthy <smitha.t@samsung.com>, Randy Li <ayaka@soulik.info>, Rob Herring <robh+dt@kernel.org>, Hugues Fruchet <hugues.fruchet@st.com>, Thomas Gleixner <tglx@linutronix.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdu>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-05-10 8:50 PM, Robin Murphy wrote:
-> On 10/05/18 10:16, djw@t-chip.com.cn wrote:
->> From: Levin Du <djw@t-chip.com.cn>
->>
->> Adding a new gpio controller named "gpio-syscon10" to rk3328, providing
->> access to the pins defined in the syscon GRF_SOC_CON10.
+On Mon, May 7, 2018 at 5:44 AM, Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
+> This introduces platform-specific compatibles for the A13, A20 and A33
+> SRAM driver. No particular adaptation for these platforms is required at
+> this point, although this might become the case in the future.
 >
-> This is the GPIO_MUTE pin, right? The public TRM is rather vague, but 
-> cross-referencing against the datasheet and schematics implies that 
-> it's the "gpiomut_*" part of the GRF bit names which is most significant.
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> ---
+>  drivers/soc/sunxi/sunxi_sram.c | 3 +++
+>  1 file changed, 3 insertions(+)
 >
-> It might be worth using a more descriptive name here, since "syscon10" 
-> is pretty much meaningless at the board level.
+> diff --git a/drivers/soc/sunxi/sunxi_sram.c b/drivers/soc/sunxi/sunxi_sram.c
+> index 74cb81f37bd6..43ebc3bd33f2 100644
+> --- a/drivers/soc/sunxi/sunxi_sram.c
+> +++ b/drivers/soc/sunxi/sunxi_sram.c
+> @@ -315,6 +315,9 @@ static int sunxi_sram_probe(struct platform_device *pdev)
 >
-> Robin.
+>  static const struct of_device_id sunxi_sram_dt_match[] = {
+>         { .compatible = "allwinner,sun4i-a10-sram-controller" },
+> +       { .compatible = "allwinner,sun5i-a13-sram-controller" },
+> +       { .compatible = "allwinner,sun7i-a20-sram-controller" },
+> +       { .compatible = "allwinner,sun8i-a33-sram-controller" },
+
+We should probably name these "system-controller". Maxime?
+
+ChenYu
+
+>         { .compatible = "allwinner,sun50i-a64-sram-controller" },
+>         { },
+>  };
+> --
+> 2.16.3
 >
-Previously I though other bits might be able to reference from syscon10, 
-other than GPIO_MUTE alone.
-If it is renamed to gpio-mute, then the GPIO_MUTE pin is accessed as 
-`<&gpio-mute 1>`. Yet other
-bits in syscon10 can also be referenced, say, `<&gpio-mute 10>`, which 
-is not good.
-
-I'd like to add a `gpio,syscon-bit` property to gpio-syscon, which 
-overrides the properties
-of bit_count,  data_bit_offset and dir_bit_offset in the driver. For 
-example:
-
-                 gpio_mute: gpio-mute {
-                         compatible = "rockchip,gpio-syscon";
-                         gpio-controller;
-                         #gpio-cells = <2>;
-                         gpio,syscon-dev = <0 0x0428 0>;
-                         gpio,syscon-bit = <1 1 0>;
-                 };
-
-That way, the mute pin is strictly specified as <&gpio_mute 0>, and 
-<&gpio_mute 1> will be invalid.
-I think that is neat, and consistent with the gpio_mute name.
-
-Thanks
-Levin
