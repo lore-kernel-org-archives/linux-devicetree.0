@@ -1,34 +1,198 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] dt-bindings: net: ravb: Add support for r8a77990 SoC
-Date: Fri, 11 May 2018 12:18:56 +0900
-Message-ID: <1526008736-26496-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "soc: qcom dt-bindings: Add APR bus bindings"
+	to the asoc tree
+Date: Fri, 11 May 2018 04:19:30 +0100 (BST)
+Message-ID: <20180511031930.419CC44007A@finisterre.ee.mobilebroadband>
+References: <20180426094606.4775-2-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180426094606.4775-2-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, spatakok@qti.qualcomm.com, linux-kernel@vger.kernel.org, tiwai@suse.com, robh+dt@kernel.org, lgirdwood@gmail.com, david.brown@linaro.org, broonie@kernel.org, gregkh@linuxfoundation.org, andy.gross@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for r8a77990 compatible string to renesas ravb device
-tree bindings documentation.
+The patch
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+   soc: qcom dt-bindings: Add APR bus bindings
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 8675e8d3d1b413dc0e6165d2ce09de4335f7f57a Mon Sep 17 00:00:00 2001
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Date: Wed, 9 May 2018 13:56:12 +0100
+Subject: [PATCH] soc: qcom dt-bindings: Add APR bus bindings
+
+This patch add dt bindings for Qualcomm APR (Asynchronous Packet Router)
+bus driver. This bus is used for communicating with DSP which provides
+audio and various other services to cpu.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Banajit Goswami <bgoswami@codeaurora.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/net/renesas,ravb.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/soc/qcom/qcom,apr.txt | 84 +++++++++++++++++++
+ include/dt-bindings/soc/qcom,apr.h            | 28 +++++++
+ 2 files changed, 112 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+ create mode 100644 include/dt-bindings/soc/qcom,apr.h
 
-diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-index 890526d..fac897d 100644
---- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
-+++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-@@ -21,6 +21,7 @@ Required properties:
-       - "renesas,etheravb-r8a77965" for the R8A77965 SoC.
-       - "renesas,etheravb-r8a77970" for the R8A77970 SoC.
-       - "renesas,etheravb-r8a77980" for the R8A77980 SoC.
-+      - "renesas,etheravb-r8a77990" for the R8A77990 SoC.
-       - "renesas,etheravb-r8a77995" for the R8A77995 SoC.
-       - "renesas,etheravb-rcar-gen3" as a fallback for the above
- 		R-Car Gen3 devices.
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+new file mode 100644
+index 000000000000..bcc612cc7423
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+@@ -0,0 +1,84 @@
++Qualcomm APR (Asynchronous Packet Router) binding
++
++This binding describes the Qualcomm APR. APR is a IPC protocol for
++communication between Application processor and QDSP. APR is mainly
++used for audio/voice services on the QDSP.
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "qcom,apr-v<VERSION-NUMBER>", example "qcom,apr-v2"
++
++- reg
++	Usage: required
++	Value type: <u32>
++	Definition: Destination processor ID.
++	Possible values are :
++			1 - APR simulator
++			2 - PC
++			3 - MODEM
++			4 - ADSP
++			5 - APPS
++			6 - MODEM2
++			7 - APPS2
++
++= APR SERVICES
++Each subnode of the APR node represents service tied to this apr. The name
++of the nodes are not important. The properties of these nodes are defined
++by the individual bindings for the specific service
++- All APR services MUST contain the following property:
++
++- reg
++	Usage: required
++	Value type: <u32>
++	Definition: APR Service ID
++	Possible values are :
++			3 - DSP Core Service
++			4 - Audio Front End Service.
++			5 - Voice Stream Manager Service.
++			6 - Voice processing manager.
++			7 - Audio Stream Manager Service.
++			8 - Audio Device Manager Service.
++			9 - Multimode voice manager.
++			10 - Core voice stream.
++			11 - Core voice processor.
++			12 - Ultrasound stream manager.
++			13 - Listen stream manager.
++
++= EXAMPLE
++The following example represents a QDSP based sound card on a MSM8996 device
++which uses apr as communication between Apps and QDSP.
++
++	apr@4 {
++		compatible = "qcom,apr-v2";
++		reg = <APR_DOMAIN_ADSP>;
++
++		q6core@3 {
++			compatible = "qcom,q6core";
++			reg = <APR_SVC_ADSP_CORE>;
++		};
++
++		q6afe@4 {
++			compatible = "qcom,q6afe";
++			reg = <APR_SVC_AFE>;
++
++			dais {
++				#sound-dai-cells = <1>;
++				hdmi@1 {
++					reg = <1>;
++				};
++			};
++		};
++
++		q6asm@7 {
++			compatible = "qcom,q6asm";
++			reg = <APR_SVC_ASM>;
++			...
++		};
++
++		q6adm@8 {
++			compatible = "qcom,q6adm";
++			reg = <APR_SVC_ADM>;
++			...
++		};
++	};
+diff --git a/include/dt-bindings/soc/qcom,apr.h b/include/dt-bindings/soc/qcom,apr.h
+new file mode 100644
+index 000000000000..006362400c0f
+--- /dev/null
++++ b/include/dt-bindings/soc/qcom,apr.h
+@@ -0,0 +1,28 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __DT_BINDINGS_QCOM_APR_H
++#define __DT_BINDINGS_QCOM_APR_H
++
++/* Domain IDs */
++#define APR_DOMAIN_SIM		0x1
++#define APR_DOMAIN_PC		0x2
++#define APR_DOMAIN_MODEM	0x3
++#define APR_DOMAIN_ADSP		0x4
++#define APR_DOMAIN_APPS		0x5
++#define APR_DOMAIN_MAX		0x6
++
++/* ADSP service IDs */
++#define APR_SVC_ADSP_CORE	0x3
++#define APR_SVC_AFE		0x4
++#define APR_SVC_VSM		0x5
++#define APR_SVC_VPM		0x6
++#define APR_SVC_ASM		0x7
++#define APR_SVC_ADM		0x8
++#define APR_SVC_ADSP_MVM	0x09
++#define APR_SVC_ADSP_CVS	0x0A
++#define APR_SVC_ADSP_CVP	0x0B
++#define APR_SVC_USM		0x0C
++#define APR_SVC_LSM		0x0D
++#define APR_SVC_VIDC		0x16
++#define APR_SVC_MAX		0x17
++
++#endif /* __DT_BINDINGS_QCOM_APR_H */
 -- 
-1.9.1
+2.17.0
