@@ -1,11 +1,13 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 0/2] Disable EtherAVB by default on R8A779{7|8}0 SoCs
-Date: Fri, 11 May 2018 23:18:36 +0300
-Message-ID: <5844eef7-0f5e-6366-4d3d-a3a658e7f988@cogentembedded.com>
+Subject: [PATCH 1/2] arm64: dts: renesas: r8a77970: disable EtherAVB
+Date: Fri, 11 May 2018 23:21:57 +0300
+Message-ID: <653a7410-20ba-2cc9-b223-09c00d5be280@cogentembedded.com>
+References: <5844eef7-0f5e-6366-4d3d-a3a658e7f988@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5844eef7-0f5e-6366-4d3d-a3a658e7f988@cogentembedded.com>
 Content-Language: en-MW
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -20,17 +22,29 @@ To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin
 Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+When adding the R8A77970 EtherAVB device I failed to notice that it does
+not have the usual "status" property disabling the described devices in
+anticipation that the board device trees enable the devices according to
+their needs. This causes the EtherAVB driver to successfully probe despite
+e.g. the needed pins not having been configured -- luckily, "eth<n>" device
+can't be opened anyway...
 
-Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
-'renesas-devel-20180511-v4.17-rc4' tag. I'm fixing the issue in the EtherAVB
-device nodes in the R8A779{7|8}0 device trees that missed the "status" prop,
-usually disabling the SoC devices in anticipation that the board device trees
-enable the devices according to their needs. There should be no issues with
-the current R8A779{7|8}0 board device trees, as all of them use EtherAVB
-anyway, so I'm sending the patches generated against the 'devel' branch...
+Fixes: bea2ab136eaa ("arm64: dts: renesas: r8a77970: add EtherAVB support")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[1/2] arm64: dts: renesas: r8a77970: disable EtherAVB
-[2/2] arm64: dts: renesas: r8a77980: disable EtherAVB
+---
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
-MBR, Sergei
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970.dtsi
++++ renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+@@ -473,6 +473,7 @@
+ 			iommus = <&ipmmu_rt 3>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			status = "disabled";
+ 		};
+ 
+ 		scif0: serial@e6e60000 {
