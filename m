@@ -1,166 +1,307 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v3 3/4] rtc: ds1307: add offset sysfs for mt41txx chips.
-Date: Thu, 10 May 2018 23:59:46 +0200
-Message-ID: <20180510215946.GS10960@piout.net>
-References: <20180509193355.49466-1-giulio.benetti@micronovasrl.com>
- <20180509193355.49466-3-giulio.benetti@micronovasrl.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 1/3] ARM: dts: imx6/7: Remove unit-address from anatop
+ regulators
+Date: Thu, 10 May 2018 21:16:48 -0300
+Message-ID: <1525997810-10964-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180509193355.49466-3-giulio.benetti@micronovasrl.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/05/2018 21:33:54+0200, Giulio Benetti wrote:
-> m41txx chips can hold a calibration value to get correct clock bias.
-> If positive offset is passed, it means adding 512 cycles(@32.768Hz)
-> every tick(1s).
-> If negative offset is passed, it means subtracting 256 cycles(@32.768Hz)
-> every tick(1s).
-> 
-> Add offset handling (ranging between (-31) and 31) via sysfs.
-> 
-> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
-> ---
->  drivers/rtc/rtc-ds1307.c | 70 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
-> 
-> diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-> index 0ab0c166da83..33895668b363 100644
-> --- a/drivers/rtc/rtc-ds1307.c
-> +++ b/drivers/rtc/rtc-ds1307.c
-> @@ -114,6 +114,16 @@ enum ds_type {
->  #	define RX8025_BIT_VDET		0x40
->  #	define RX8025_BIT_XST		0x20
->  
-> +#define M41TXX_REG_CONTROL	0x07
-> +#	define M41TXX_BIT_OUT		0x80
-> +#	define M41TXX_BIT_FT		0x40
-> +#	define M41TXX_BIT_CALIB_SIGN	0x20
-> +#	define M41TXX_M_CALIBRATION	0x1f
-> +
-> +/* Min and max values supported with 'offset' interface by M41TXX */
-> +#define M41TXX_MIN_OFFSET	(-31)
-> +#define M41TXX_MAX_OFFSET	(31)
-> +
->  struct ds1307 {
->  	enum ds_type		type;
->  	unsigned long		flags;
-> @@ -146,6 +156,9 @@ struct chip_desc {
->  
->  static int ds1307_get_time(struct device *dev, struct rtc_time *t);
->  static int ds1307_set_time(struct device *dev, struct rtc_time *t);
-> +static int ds1337_read_alarm(struct device *dev, struct rtc_wkalrm *t);
-> +static int ds1337_set_alarm(struct device *dev, struct rtc_wkalrm *t);
-> +static int ds1307_alarm_irq_enable(struct device *dev, unsigned int enabled);
->  static u8 do_trickle_setup_ds1339(struct ds1307 *, u32 ohms, bool diode);
->  static irqreturn_t rx8130_irq(int irq, void *dev_id);
->  static int rx8130_read_alarm(struct device *dev, struct rtc_wkalrm *t);
-> @@ -155,6 +168,8 @@ static irqreturn_t mcp794xx_irq(int irq, void *dev_id);
->  static int mcp794xx_read_alarm(struct device *dev, struct rtc_wkalrm *t);
->  static int mcp794xx_set_alarm(struct device *dev, struct rtc_wkalrm *t);
->  static int mcp794xx_alarm_irq_enable(struct device *dev, unsigned int enabled);
-> +static int m41txx_rtc_read_offset(struct device *dev, long *offset);
-> +static int m41txx_rtc_set_offset(struct device *dev, long offset);
->  
->  static const struct rtc_class_ops rx8130_rtc_ops = {
->  	.read_time      = ds1307_get_time,
-> @@ -172,6 +187,16 @@ static const struct rtc_class_ops mcp794xx_rtc_ops = {
->  	.alarm_irq_enable = mcp794xx_alarm_irq_enable,
->  };
->  
-> +static const struct rtc_class_ops m41txx_rtc_ops = {
-> +	.read_time      = ds1307_get_time,
-> +	.set_time       = ds1307_set_time,
-> +	.read_alarm	= ds1337_read_alarm,
-> +	.set_alarm	= ds1337_set_alarm,
-> +	.alarm_irq_enable = ds1307_alarm_irq_enable,
-> +	.read_offset	= m41txx_rtc_read_offset,
-> +	.set_offset	= m41txx_rtc_set_offset,
-> +};
-> +
->  static const struct chip_desc chips[last_ds_type] = {
->  	[ds_1307] = {
->  		.nvram_offset	= 8,
-> @@ -227,10 +252,17 @@ static const struct chip_desc chips[last_ds_type] = {
->  		.irq_handler = rx8130_irq,
->  		.rtc_ops = &rx8130_rtc_ops,
->  	},
-> +	[m41t0] = {
-> +		.rtc_ops	= &m41txx_rtc_ops,
-> +	},
-> +	[m41t00] = {
-> +		.rtc_ops	= &m41txx_rtc_ops,
-> +	},
->  	[m41t11] = {
->  		/* this is battery backed SRAM */
->  		.nvram_offset	= 8,
->  		.nvram_size	= 56,
-> +		.rtc_ops	= &m41txx_rtc_ops,
->  	},
->  	[mcp794xx] = {
->  		.alarm		= 1,
-> @@ -972,6 +1004,44 @@ static int mcp794xx_alarm_irq_enable(struct device *dev, unsigned int enabled)
->  				  enabled ? MCP794XX_BIT_ALM0_EN : 0);
->  }
->  
-> +static int m41txx_rtc_read_offset(struct device *dev, long *offset)
-> +{
-> +	struct ds1307 *ds1307 = dev_get_drvdata(dev);
-> +	unsigned int ctrl_reg;
-> +	u8 val;
-> +
-> +	regmap_read(ds1307->regmap, M41TXX_REG_CONTROL, &ctrl_reg);
-> +
-> +	val = ctrl_reg & M41TXX_M_CALIBRATION;
-> +
-> +	/* check if positive */
-> +	if (ctrl_reg & M41TXX_BIT_CALIB_SIGN)
-> +		*offset = val;
-> +	else
-> +		*offset = -val;
-> +
+From: Fabio Estevam <fabio.estevam@nxp.com>
 
-This is definitively not right, you have to convert to/from ppb when
-reading/setting the offset. The datasheet gives you the correct steps in
-ppm.
+Remove unit-address and reg property from anatop regulators to fix
+the following DTC warnings with W=1:
 
-> +	return 0;
-> +}
-> +
-> +static int m41txx_rtc_set_offset(struct device *dev, long offset)
-> +{
-> +	struct ds1307 *ds1307 = dev_get_drvdata(dev);
-> +	unsigned int ctrl_reg;
-> +
-> +	if ((offset < M41TXX_MIN_OFFSET) || (offset > M41TXX_MAX_OFFSET))
-> +		return -ERANGE;
-> +
-> +	regmap_read(ds1307->regmap, M41TXX_REG_CONTROL, &ctrl_reg);
-> +
-> +	ctrl_reg &= ~M41TXX_M_CALIBRATION;
-> +	ctrl_reg |= abs(offset) & M41TXX_M_CALIBRATION;
-> +
-> +	if (offset >= 0)
-> +		ctrl_reg |= M41TXX_BIT_CALIB_SIGN;
-> +
-> +	return regmap_write(ds1307->regmap, M41TXX_REG_CONTROL,	ctrl_reg);
+arch/arm/boot/dts/imx6dl-apf6dev.dtb: Warning (unique_unit_address): /soc/aips-bus@2000000/anatop@20c8000/regulator-vddcore@20c8140: duplicate unit-address (also used in node /soc/aips-bus@2000000/anatop@20c8000/regulator-vddpu@20c8140)
+arch/arm/boot/dts/imx6dl-apf6dev.dtb: Warning (unique_unit_address): /soc/aips-bus@2000000/anatop@20c8000/regulator-vddcore@20c8140: duplicate unit-address (also used in node /soc/aips-bus@2000000/anatop@20c8000/regulator-vddsoc@20c8140)
+arch/arm/boot/dts/imx6dl-apf6dev.dtb: Warning (unique_unit_address): /soc/aips-bus@2000000/anatop@20c8000/regulator-vddpu@20c8140: duplicate unit-address (also used in node /soc/aips-bus@2000000/anatop@20c8000/regulator-vddsoc@20c8140)
 
-Please use regmap_update_bits
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+---
+ arch/arm/boot/dts/imx6qdl.dtsi | 20 ++++++--------------
+ arch/arm/boot/dts/imx6sl.dtsi  | 20 ++++++--------------
+ arch/arm/boot/dts/imx6sx.dtsi  | 20 ++++++--------------
+ arch/arm/boot/dts/imx6ul.dtsi  | 11 +++--------
+ arch/arm/boot/dts/imx7s.dtsi   |  8 ++------
+ 5 files changed, 23 insertions(+), 56 deletions(-)
 
-> +}
-> +
->  /*----------------------------------------------------------------------*/
->  
->  static int ds1307_nvram_read(void *priv, unsigned int offset, void *val,
-> -- 
-> 2.17.0
-> 
-
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 69648e2..22942dd 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -692,11 +692,8 @@
+ 				interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>,
+ 					     <0 54 IRQ_TYPE_LEVEL_HIGH>,
+ 					     <0 127 IRQ_TYPE_LEVEL_HIGH>;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 
+-				regulator-1p1@20c8110 {
+-					reg = <0x20c8110>;
++				regulator-1p1 {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vdd1p1";
+ 					regulator-min-microvolt = <1000000>;
+@@ -711,8 +708,7 @@
+ 					anatop-enable-bit = <0>;
+ 				};
+ 
+-				regulator-3p0@20c8120 {
+-					reg = <0x20c8120>;
++				regulator-3p0 {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vdd3p0";
+ 					regulator-min-microvolt = <2800000>;
+@@ -727,8 +723,7 @@
+ 					anatop-enable-bit = <0>;
+ 				};
+ 
+-				regulator-2p5@20c8130 {
+-					reg = <0x20c8130>;
++				regulator-2p5 {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vdd2p5";
+ 					regulator-min-microvolt = <2250000>;
+@@ -743,8 +738,7 @@
+ 					anatop-enable-bit = <0>;
+ 				};
+ 
+-				reg_arm: regulator-vddcore@20c8140 {
+-					reg = <0x20c8140>;
++				reg_arm: regulator-vddcore {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vddarm";
+ 					regulator-min-microvolt = <725000>;
+@@ -761,8 +755,7 @@
+ 					anatop-max-voltage = <1450000>;
+ 				};
+ 
+-				reg_pu: regulator-vddpu@20c8140 {
+-					reg = <0x20c8140>;
++				reg_pu: regulator-vddpu {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vddpu";
+ 					regulator-min-microvolt = <725000>;
+@@ -779,8 +772,7 @@
+ 					anatop-max-voltage = <1450000>;
+ 				};
+ 
+-				reg_soc: regulator-vddsoc@20c8140 {
+-					reg = <0x20c8140>;
++				reg_soc: regulator-vddsoc {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vddsoc";
+ 					regulator-min-microvolt = <725000>;
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 2002db2..8c838ba 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -524,11 +524,8 @@
+ 				interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>,
+ 					     <0 54 IRQ_TYPE_LEVEL_HIGH>,
+ 					     <0 127 IRQ_TYPE_LEVEL_HIGH>;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 
+-				regulator-1p1@20c8110 {
+-					reg = <0x20c8110>;
++				regulator-1p1 {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vdd1p1";
+ 					regulator-min-microvolt = <800000>;
+@@ -543,8 +540,7 @@
+ 					anatop-enable-bit = <0>;
+ 				};
+ 
+-				regulator-3p0@20c8120 {
+-					reg = <0x20c8120>;
++				regulator-3p0 {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vdd3p0";
+ 					regulator-min-microvolt = <2800000>;
+@@ -559,8 +555,7 @@
+ 					anatop-enable-bit = <0>;
+ 				};
+ 
+-				regulator-2p5@20c8130 {
+-					reg = <0x20c8130>;
++				regulator-2p5 {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vdd2p5";
+ 					regulator-min-microvolt = <2100000>;
+@@ -575,8 +570,7 @@
+ 					anatop-enable-bit = <0>;
+ 				};
+ 
+-				reg_arm: regulator-vddcore@20c8140 {
+-					reg = <0x20c8140>;
++				reg_arm: regulator-vddcore {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vddarm";
+ 					regulator-min-microvolt = <725000>;
+@@ -593,8 +587,7 @@
+ 					anatop-max-voltage = <1450000>;
+ 				};
+ 
+-				reg_pu: regulator-vddpu@20c8140 {
+-					reg = <0x20c8140>;
++				reg_pu: regulator-vddpu {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vddpu";
+ 					regulator-min-microvolt = <725000>;
+@@ -611,8 +604,7 @@
+ 					anatop-max-voltage = <1450000>;
+ 				};
+ 
+-				reg_soc: regulator-vddsoc@20c8140 {
+-					reg = <0x20c8140>;
++				reg_soc: regulator-vddsoc {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vddsoc";
+ 					regulator-min-microvolt = <725000>;
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 7e463d2..4a97513 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -591,11 +591,8 @@
+ 				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
+ 					     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
+ 					     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 
+-				regulator-1p1@20c8110 {
+-					reg = <0x20c8110>;
++				regulator-1p1 {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vdd1p1";
+ 					regulator-min-microvolt = <800000>;
+@@ -610,8 +607,7 @@
+ 					anatop-enable-bit = <0>;
+ 				};
+ 
+-				regulator-3p0@20c8120 {
+-					reg = <0x20c8120>;
++				regulator-3p0 {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vdd3p0";
+ 					regulator-min-microvolt = <2800000>;
+@@ -626,8 +622,7 @@
+ 					anatop-enable-bit = <0>;
+ 				};
+ 
+-				regulator-2p5@20c8130 {
+-					reg = <0x20c8130>;
++				regulator-2p5 {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vdd2p5";
+ 					regulator-min-microvolt = <2100000>;
+@@ -642,8 +637,7 @@
+ 					anatop-enable-bit = <0>;
+ 				};
+ 
+-				reg_arm: regulator-vddcore@20c8140 {
+-					reg = <0x20c8140>;
++				reg_arm: regulator-vddcore {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vddarm";
+ 					regulator-min-microvolt = <725000>;
+@@ -660,8 +654,7 @@
+ 					anatop-max-voltage = <1450000>;
+ 				};
+ 
+-				reg_pcie: regulator-vddpcie@20c8140 {
+-					reg = <0x20c8140>;
++				reg_pcie: regulator-vddpcie {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vddpcie";
+ 					regulator-min-microvolt = <725000>;
+@@ -677,8 +670,7 @@
+ 					anatop-max-voltage = <1450000>;
+ 				};
+ 
+-				reg_soc: regulator-vddsoc@20c8140 {
+-					reg = <0x20c8140>;
++				reg_soc: regulator-vddsoc {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vddsoc";
+ 					regulator-min-microvolt = <725000>;
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 2b854d1..1818b6c 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -551,11 +551,8 @@
+ 				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
+ 					     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
+ 					     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 
+-				reg_3p0: regulator-3p0@20c8110 {
+-					reg = <0x20c8110>;
++				reg_3p0: regulator-3p0 {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vdd3p0";
+ 					regulator-min-microvolt = <2625000>;
+@@ -569,8 +566,7 @@
+ 					anatop-enable-bit = <0>;
+ 				};
+ 
+-				reg_arm: regulator-vddcore@20c8140 {
+-					reg = <0x20c8140>;
++				reg_arm: regulator-vddcore {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "cpu";
+ 					regulator-min-microvolt = <725000>;
+@@ -587,8 +583,7 @@
+ 					anatop-max-voltage = <1450000>;
+ 				};
+ 
+-				reg_soc: regulator-vddsoc@20c8140 {
+-					reg = <0x20c8140>;
++				reg_soc: regulator-vddsoc {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vddsoc";
+ 					regulator-min-microvolt = <725000>;
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index b416d2b..99f92ec 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -557,11 +557,8 @@
+ 				reg = <0x30360000 0x10000>;
+ 				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
+ 					<GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 
+-				reg_1p0d: regulator-vdd1p0d@30360210 {
+-					reg = <0x30360210>;
++				reg_1p0d: regulator-vdd1p0d {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vdd1p0d";
+ 					regulator-min-microvolt = <800000>;
+@@ -575,8 +572,7 @@
+ 					anatop-enable-bit = <0>;
+ 				};
+ 
+-				reg_1p2: regulator-vdd1p2@30360220 {
+-					reg = <0x30360220>;
++				reg_1p2: regulator-vdd1p2 {
+ 					compatible = "fsl,anatop-regulator";
+ 					regulator-name = "vdd1p2";
+ 					regulator-min-microvolt = <1100000>;
 -- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.7.4
