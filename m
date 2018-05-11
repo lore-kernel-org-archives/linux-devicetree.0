@@ -1,131 +1,129 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH] ARM: dts: exynos: Use dedicated DT bindings for Odroid
- X/X2, U3
-Date: Fri, 11 May 2018 10:09:47 +0200
-Message-ID: <20180511080947.3057-1-s.nawrocki@samsung.com>
-References: <CGME20180511081032epcas2p30f381cf699cb7524d9a143390e9c74b5@epcas2p3.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: krzk@kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/2] arm64: dts: ls1012a: Add FRWY-LS1012A board support
+Date: Fri, 11 May 2018 16:11:47 +0800
+Message-ID: <20180511081145.GD26863@dragon>
+References: <1525760999-6187-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1525760999-6187-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
+Cc: oss@buserror.net, devicetree@vger.kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use dedicated Odroid audio subsystem DT bindings instead of the simple-card.
-This adds support for audio on the HDMI interface.
+On Tue, May 08, 2018 at 11:59:58AM +0530, Bhaskar Upadhaya wrote:
+> FRWY-LS1012A is a different design from LS1012A-FRDM,
+> but has some common SoC features. Key feature on this
+> board is Micro SD, USB 3.0, DDR, UART.
+> 
+> Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/Makefile             |  1 +
+>  arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts | 64 ++++++++++++++++++++++
+>  2 files changed, 65 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index 86e18ad..d116144 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-frwy.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-frdm.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-qds.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-rdb.dtb
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
+> new file mode 100644
+> index 0000000..f69086d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
+> @@ -0,0 +1,64 @@
+> +/*
+> + * Device Tree file for NXP LS1012A FRWY Board.
+> + *
+> + * Copyright 2018 NXP
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPLv2 or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +/dts-v1/;
+> +
+> +#include "fsl-ls1012a.dtsi"
+> +
+> +/ {
+> +	model = "LS1012A FRWY Board";
+> +	compatible = "fsl,frwy-ls1012a", "fsl,ls1012a";
+> +
+> +};
+> +
+> +&pcie {
+> +	status = "okay";
+> +};
+> +
+> +&duart0 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +};
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 33 ++++++++++++++-----------
- arch/arm/boot/dts/exynos4412-odroidu3.dts       |  7 +++---
- arch/arm/boot/dts/exynos4412-odroidx.dts        |  7 +++---
- 3 files changed, 27 insertions(+), 20 deletions(-)
+Please sort these nodes alphabetically in label name.
 
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index d7ad07fd48f9..bad08e70358a 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -37,20 +37,12 @@
- 	};
- 
- 	sound: sound {
--		compatible = "simple-audio-card";
--
--		simple-audio-card,format = "i2s";
--		simple-audio-card,bitclock-master = <&link0_codec>;
--		simple-audio-card,frame-master = <&link0_codec>;
--
--		simple-audio-card,cpu {
-+		cpu {
- 			sound-dai = <&i2s0 0>;
--			system-clock-frequency = <19200000>;
- 		};
- 
--		link0_codec: simple-audio-card,codec {
--			sound-dai = <&max98090>;
--			clocks = <&i2s0 CLK_I2S_CDCLK>;
-+		codec {
-+			sound-dai = <&hdmi>, <&max98090>;
- 		};
- 	};
- 
-@@ -142,14 +134,25 @@
- 	pinctrl-0 = <>;
- };
- 
-+&clock {
-+	assigned-clocks = <&clock CLK_FOUT_EPLL>;
-+	assigned-clock-rates = <45158401>;
-+};
-+
- &clock_audss {
- 	assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>,
- 			<&clock_audss EXYNOS_MOUT_I2S>,
- 			<&clock_audss EXYNOS_DOUT_SRP>,
--			<&clock_audss EXYNOS_DOUT_AUD_BUS>;
-+			<&clock_audss EXYNOS_DOUT_AUD_BUS>,
-+			<&clock_audss EXYNOS_DOUT_I2S>;
-+
- 	assigned-clock-parents = <&clock CLK_FOUT_EPLL>,
--			<&clock_audss EXYNOS_MOUT_AUDSS>;
--	assigned-clock-rates = <0>, <0>, <192000000>, <19200000>;
-+			  <&clock_audss EXYNOS_MOUT_AUDSS>;
-+
-+	assigned-clock-rates = <0>, <0>,
-+			<196608001>,
-+			<(196608001 / 2)>,
-+			<(196608001 / 8)>;
- };
- 
- &cpu0 {
-@@ -498,6 +501,8 @@
- 	pinctrl-0 = <&i2s0_bus>;
- 	pinctrl-names = "default";
- 	status = "okay";
-+	assigned-clocks = <&i2s0 CLK_I2S_RCLK_SRC>;
-+	assigned-clock-parents = <&clock_audss EXYNOS_SCLK_I2S>;
- };
- 
- &mixer {
-diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-index bdcd4523cc1c..7a94a423097d 100644
---- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
-+++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-@@ -113,11 +113,12 @@
- };
- 
- &sound {
--	simple-audio-card,name = "Odroid-U3";
--	simple-audio-card,widgets =
-+	compatible = "hardkernel,odroid-xu4-audio";
-+	model = "Odroid-U3";
-+	samsung,audio-widgets =
- 		"Headphone", "Headphone Jack",
- 		"Speakers", "Speakers";
--	simple-audio-card,routing =
-+	samsung,audio-routing =
- 		"Headphone Jack", "HPL",
- 		"Headphone Jack", "HPR",
- 		"Headphone Jack", "MICBIAS",
-diff --git a/arch/arm/boot/dts/exynos4412-odroidx.dts b/arch/arm/boot/dts/exynos4412-odroidx.dts
-index 2dff129bc2ad..f0d5037f3a5d 100644
---- a/arch/arm/boot/dts/exynos4412-odroidx.dts
-+++ b/arch/arm/boot/dts/exynos4412-odroidx.dts
-@@ -97,12 +97,13 @@
- };
- 
- &sound {
--	simple-audio-card,name = "Odroid-X";
--	simple-audio-card,widgets =
-+	compatible = "hardkernel,odroid-xu4-audio";
-+	model = "Odroid-X";
-+	samsung,audio-widgets =
- 		"Headphone", "Headphone Jack",
- 		"Microphone", "Mic Jack",
- 		"Microphone", "DMIC";
--	simple-audio-card,routing =
-+	samsung,audio-routing =
- 		"Headphone Jack", "HPL",
- 		"Headphone Jack", "HPR",
- 		"IN1", "Mic Jack",
--- 
-2.14.2
+Shawn
+
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
