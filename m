@@ -1,120 +1,95 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 1/3] arcnet: com20020: Add memory map of com20020
-Date: Fri, 11 May 2018 08:35:15 -0500
-Message-ID: <CAL_JsqLU9EMKWTgLSuW-xekEmfOXfpAYtLpxXXp25AidSg7ejA@mail.gmail.com>
-References: <20180505213448.8180-1-andrea.greco.gapmilano@gmail.com>
- <20180508161636.GA23960@rob-hp-laptop> <CAPoXtQK2s-G3sPHOQQcEQe+O9LGBWBv3Jrsy_NTVNo_nAtd1bg@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a77995: Add VIN4
+Date: Fri, 11 May 2018 15:45:16 +0200
+Message-ID: <20180511134516.omsv25i2wi4cxypc@verge.net.au>
+References: <1526032802-14376-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1526032802-14376-3-git-send-email-jacopo+renesas@jmondi.org>
+ <20180511112523.GK18974@bigcity.dyn.berto.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPoXtQK2s-G3sPHOQQcEQe+O9LGBWBv3Jrsy_NTVNo_nAtd1bg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180511112523.GK18974@bigcity.dyn.berto.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrea Greco <andrea.greco.gapmilano@gmail.com>
-Cc: Michael Grzeschik <m.grzeschik@pengutronix.de>, Andrea Greco <a.greco@4sigma.it>, Mark Rutland <mark.rutland@arm.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 11, 2018 at 5:50 AM, Andrea Greco
-<andrea.greco.gapmilano@gmail.com> wrote:
-> On 05/08/2018 06:16 PM, Rob Herring wrote:
->> On Sat, May 05, 2018 at 11:34:45PM +0200, Andrea Greco wrote:
->>> From: Andrea Greco <a.greco@4sigma.it>
->>>
->>> Add support for com20022I/com20020, memory mapped chip version.
->>> Support bus: Intel 80xx and Motorola 68xx.
->>> Bus size: Only 8 bit bus size is supported.
->>> Added related device tree bindings
->>>
->>> Signed-off-by: Andrea Greco <a.greco@4sigma.it>
->>> ---
->>>   .../devicetree/bindings/net/smsc-com20020.txt      |  23 +++
->>
->> Please split bindings to separate patch.
->
-> Ok
->>
->>>   drivers/net/arcnet/Kconfig                         |  12 +-
->>>   drivers/net/arcnet/Makefile                        |   1 +
->>>   drivers/net/arcnet/arcdevice.h                     |  27 ++-
->>>   drivers/net/arcnet/com20020-membus.c               | 191 +++++++++++++++++++++
->>>   drivers/net/arcnet/com20020.c                      |   9 +-
->>>   6 files changed, 253 insertions(+), 10 deletions(-)
->>>   create mode 100644 Documentation/devicetree/bindings/net/smsc-com20020.txt
->>>   create mode 100644 drivers/net/arcnet/com20020-membus.c
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/smsc-com20020.txt b/Documentation/devicetree/bindings/net/smsc-com20020.txt
->>> new file mode 100644
->>> index 000000000000..39c5b19c55af
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/net/smsc-com20020.txt
->>> @@ -0,0 +1,23 @@
->>> +SMSC com20020, com20022I
->>
->> What does this device do?
->>
->
-> Changed in:
-> SMSC com20020 Arcnet network controller
->
->>> +
->>> +timeout: Arcnet timeout, checkout datashet
->>> +clockp: Clock Prescaler, checkout datashet
->>
->> s/datashet/datasheet/
->>
->>> +clockm: Clock multiplier, checkout datasheet
->>
->> Would these 3 properties be common for arcnet devices? If not, then they
->> should have a vendor prefix.
->>
->
-> Timeout is arcnet propelty:
-> Other is smsc params, then become:
-> - timeout: Arcnet timeout
+On Fri, May 11, 2018 at 01:25:23PM +0200, Niklas Söderlund wrote:
+> Hi Jacopo,
+> 
+> Thanks for your work.
+> 
+> On 2018-05-11 12:00:01 +0200, Jacopo Mondi wrote:
+> > Describe VIN4 interface for R-Car D3 R8A77995 SoC.
+> > 
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> 
+> Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> 
+> > ---
+> >  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> > index 82aed7e..bdf7017 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> > @@ -783,6 +783,17 @@
+> >  				};
+> >  			};
+> >  		};
+> > +
+> > +		vin4: video@e6ef4000 {
+> > +			compatible = "renesas,vin-r8a77995";
+> > +			reg = <0 0xe6ef4000 0 0x1000>;
+> > +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&cpg CPG_MOD 807>;
+> > +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+> > +			resets = <&cpg 807>;
+> > +			renesas,id = <4>;
+> > +			status = "disabled";
+> > +		};
+> >  	};
 
-Needs unit suffix as defined in property-units.txt.
+Thanks, I have moved the new node to preserve sorting of nodes by bus
+address and applied the result. It is as follows:
 
-> - smsc-clockp: Clock Prescaler
-> - smsc-clockm: Clock multiplier
-> - smsc-backplane: Controller use backplane mode inside of transceiver
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH] arm64: dts: renesas: r8a77995: Add VIN4
 
-Vendor properties are <vendor>,<prop-name>.
+Describe VIN4 interface for R-Car D3 R8A77995 SoC.
 
->
-> I forget backplane propelty, but is required
->
->>> +
->>> +phy-reset-gpios: Chip reset ppin
->>
->> Use 'reset-gpios' as that is standard.
->>
->>> +phy-irq-gpios: Chip irq pin
->>
->> Use 'interrupts'. Interrupt capable gpio controllers are also interrupt
->> controllers.
->>
->
-> Ok, change to standard
->
->>> +
->>> +com20020_A@0 {
->>
->> Node names should be generic based on the class of device. I don't think
->> we have one defined, but how about 'arcnet'.
->>
->> Unit addresses must have a corresponding reg property. How is this
->> device accessed?
->>
->
-> Then: arcnet@28000000
->
->>> +    compatible = "smsc,com20020";
->>
->> Not documented.
->>
-> I miss something? Where add this doc?
-> Is not this file?
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+[simon: sorted node by bus address]
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ arch/arm64/boot/dts/renesas/r8a77995.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Yes, this file up above with all the other properties. The example is
-just an example, not a binding definition.
-
-Rob
+diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+index ba98865b0c9b..2506f46293e8 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+@@ -610,6 +610,17 @@
+ 			status = "disabled";
+ 		};
+ 
++		vin4: video@e6ef4000 {
++			compatible = "renesas,vin-r8a77995";
++			reg = <0 0xe6ef4000 0 0x1000>;
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 807>;
++			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++			resets = <&cpg 807>;
++			renesas,id = <4>;
++			status = "disabled";
++		};
++
+ 		ohci0: usb@ee080000 {
+ 			compatible = "generic-ohci";
+ 			reg = <0 0xee080000 0 0x100>;
+-- 
+2.11.0
