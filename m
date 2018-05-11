@@ -1,64 +1,49 @@
-From: Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH v2 3/4] Documentation: bindings: add phy_config for
- Rockchip USB Type-C PHY
-Date: Fri, 11 May 2018 18:09:33 +0200
-Message-ID: <CAFqH_51esHUZP4htLYYqHTCotb6P=fA4ozpENU7bXTaCBg8Cbg@mail.gmail.com>
-References: <1525861364-26323-1-git-send-email-hl@rock-chips.com>
- <1525861364-26323-3-git-send-email-hl@rock-chips.com>
- <20180511144305.GP33053@art_vandelay>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180511144305.GP33053@art_vandelay>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sean Paul <seanpaul@chromium.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lin Huang <hl@rock-chips.com>, David Airlie <airlied@linux.ie>, Brian Norris <briannorris@chromium.org>, Doug Anderson <dianders@chromium.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chris Zhong <zyw@rock-chips.com>, daniel.vetter@intel.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 03/12] platform/early: export platform_match() locally
+Date: Fri, 11 May 2018 18:20:19 +0200
+Message-ID: <20180511162028.20616-4-brgl@bgdev.pl>
+References: <20180511162028.20616-1-brgl@bgdev.pl>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180511162028.20616-1-brgl@bgdev.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Peter Rosin <peda@axentia.se>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Johan Hovold <johan@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGluLAoKMjAxOC0wNS0xMSAxNjo0MyBHTVQrMDI6MDAgU2VhbiBQYXVsIDxzZWFucGF1bEBj
-aHJvbWl1bS5vcmc+Ogo+IE9uIFdlZCwgTWF5IDA5LCAyMDE4IGF0IDA2OjIyOjQzUE0gKzA4MDAs
-IExpbiBIdWFuZyB3cm90ZToKPj4gSWYgd2FudCB0byBkbyB0cmFpbmluZyBvdXRzaWRlIERQIEZp
-cm13YXJlLCBuZWVkIHBoeSB2b2x0YWdlIHN3aW5nCj4+IGFuZCBwcmVfZW1waGFzaXMgdmFsdWUu
-Cj4+Cj4+IFNpZ25lZC1vZmYtYnk6IExpbiBIdWFuZyA8aGxAcm9jay1jaGlwcy5jb20+Cj4KPiBB
-ZGRpbmcgUm9iIEhlcnJpbmcgc28gaGUgaGFzIGEgaG9wZSBvZiBzZWVpbmcgdGhpcy4KPgoKQW5k
-IGFkZGluZyB0aGUgZGV2aWNldHJlZSBNTCwgb3RoZXJ3aXNlIFJvYiB3aWxsIHByb2JhYmx5IGln
-bm9yZSB0aGUgcGF0Y2guCgo+PiAtLS0KPj4gQ2hhbmdlcyBpbiB2MjoKPj4gLSByZWJhc2UKPj4K
-Pj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LXJvY2tjaGlwLXR5
-cGVjLnR4dCB8IDQgKysrLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBk
-ZWxldGlvbigtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3BoeS9waHktcm9ja2NoaXAtdHlwZWMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3BoeS9waHktcm9ja2NoaXAtdHlwZWMudHh0Cj4+IGluZGV4IDk2MGRhN2Yu
-LmVkYTI2ZGQgMTAwNjQ0Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9waHkvcGh5LXJvY2tjaGlwLXR5cGVjLnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1yb2NrY2hpcC10eXBlYy50eHQKPj4gQEAgLTE3LDcgKzE3
-LDkgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPj4KPj4gIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4+
-ICAgLSBleHRjb24gOiBleHRjb24gc3BlY2lmaWVyIGZvciB0aGUgUG93ZXIgRGVsaXZlcnkKPj4g
-LQo+PiArIC0gcm9ja2NoaXAscGh5X2NvbmZpZyA6IFRoYXQncyBwaHkgdm9sdGFnZSBzd2luZyBh
-bmQgcHJlX2VtcGhhc2lzCj4+ICsgICAgICAgICAgICAgICAgICAgICAgc2V0dGluZywgaWYgd2Fu
-dCB0byBkbyBkcCB0cmFpbmluZyBvdXRzaWRlCj4+ICsgICAgICAgICAgICAgICAgICAgICAgZHAg
-ZmlybXdhcmUsIG5lZWQgdG8gYWRkIHRoZXNlIHZhbHVlLgo+Cj4gV2hhdCBhcmUgdGhlIHVuaXRz
-Pwo+CgpBbHNvLCBJIHRoaW5rIHRoYXQgd2lsbCBiZSBnb29kIGFkZCBhbiBleGFtcGxlIG9yIGlu
-Y2x1ZGUgdGhlIHByb3BlcnR5CmluIHRoZSBjdXJyZW50IGV4YW1wbGVzIHRvIHNlZSBob3cgd29y
-a3MuIEl0J3Mgbm90IGNsZWFyIGZyb20gdGhlCnByb3BlcnR5IGRlc2NyaXB0aW9uLiBJIHN1cHBv
-c2UgaXQgaXMgYW4gYXJyYXkgb2YgcGFpcnMgPHN3aW5nCnByZS1lbXBoYXNpcz4/CgpuaXQ6Cgot
-cm9ja2NoaXAscGh5X2NvbmZpZzogQSBsaXN0IG9mIHZvbHRhZ2Ugc3dpbmcgKHVuaXQpIGFuZCBw
-cmUtZW1waGFzaXMKKHVuaXQpIHBhaXJzLiBVc2UgdGhpcyBwcm9wZXJ0eSB0byBlbmFibGUgc29m
-dHdhcmUgbGluayB0cmFpbmluZwppbnN0ZWFkIG9mIGhhcmR3YXJlIGxpbmsgdHJhaW5pbmcuCgpC
-ZXN0IHJlZ2FyZHMsCiBFbnJpYwoKPiBTZWFuCj4KPj4gIFJlcXVpcmVkIG5vZGVzIDogYSBzdWIt
-bm9kZSBpcyByZXF1aXJlZCBmb3IgZWFjaCBwb3J0IHRoZSBwaHkgcHJvdmlkZXMuCj4+ICAgICAg
-ICAgICAgICAgIFRoZSBzdWItbm9kZSBuYW1lIGlzIHVzZWQgdG8gaWRlbnRpZnkgZHAgb3IgdXNi
-MyBwb3J0LAo+PiAgICAgICAgICAgICAgICBhbmQgc2hhbGwgYmUgdGhlIGZvbGxvd2luZyBlbnRy
-aWVzOgo+PiAtLQo+PiAyLjcuNAo+Pgo+Cj4gLS0KPiBTZWFuIFBhdWwsIFNvZnR3YXJlIEVuZ2lu
-ZWVyLCBHb29nbGUgLyBDaHJvbWl1bSBPUwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+We will use this function to match devices in the early platform core
+code. Export it locally in drivers/base.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/base/base.h     | 3 +++
+ drivers/base/platform.c | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/base/base.h b/drivers/base/base.h
+index d800de650fa5..7a72ae72a98e 100644
+--- a/drivers/base/base.h
++++ b/drivers/base/base.h
+@@ -161,3 +161,6 @@ extern void device_links_driver_cleanup(struct device *dev);
+ extern void device_links_no_driver(struct device *dev);
+ extern bool device_links_busy(struct device *dev);
+ extern void device_links_unbind_consumers(struct device *dev);
++
++/* Platform device helpers. */
++extern int platform_match(struct device *dev, struct device_driver *drv);
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 70b156ee267a..0c53e3e3e5aa 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -961,7 +961,7 @@ static const struct platform_device_id *platform_match_id(
+  * and compare it against the name of the driver. Return whether they match
+  * or not.
+  */
+-static int platform_match(struct device *dev, struct device_driver *drv)
++int platform_match(struct device *dev, struct device_driver *drv)
+ {
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct platform_driver *pdrv = to_platform_driver(drv);
+-- 
+2.17.0
