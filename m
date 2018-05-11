@@ -1,45 +1,49 @@
-Return-Path: <SRS0=A7Xe=IP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00069.outbound.protection.outlook.com ([40.107.0.69]:14464
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1753134AbeE1DJ2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 May 2018 23:09:28 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v6 03/15] staging: typec: tcpci: add compatible string for nxp ptn5110
-Date: Mon, 28 May 2018 10:52:35 +0800
-Message-Id: <1527475967-15201-4-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
-References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=a3Lp=H6=renesas.com=yoshihiro.shimoda.uh@kernel.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH] dt-bindings: net: ravb: Add support for r8a77990 SoC
+Date: Fri, 11 May 2018 03:17:12 +0000
+Message-ID: <OSBPR01MB2293B7074A7F3169F29A08E8D89F0@OSBPR01MB2293.jpnprd01.prod.outlook.com>
+References: <1526008386-26420-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1526008386-26420-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1526008386-26420-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Content-Language: ja-JP
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, jun.li@nxp.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+To: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add nxp ptn5110 typec controller compatible string: "nxp,ptn5110",
-which is a standard tcpci chip with power delivery support. Meanwhile
-remove "usb,tcpci" because it doesn't follow the binding format rule
-and has not been used yet.
+Hi All,
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- drivers/staging/typec/tcpci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm sorry I submitted this patch to incorrect addresses.
+So, would you delete this?
 
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index 076d97e..dd29288 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -575,7 +575,7 @@ MODULE_DEVICE_TABLE(i2c, tcpci_id);
- 
- #ifdef CONFIG_OF
- static const struct of_device_id tcpci_of_match[] = {
--	{ .compatible = "usb,tcpci", },
-+	{ .compatible = "nxp,ptn5110", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, tcpci_of_match);
--- 
-2.7.4
+Best regards,
+Yoshihiro Shimoda
 
+> From: Yoshihiro Shimoda, Sent: Friday, May 11, 2018 12:13 PM
+>=20
+> Add documentation for r8a77990 compatible string to renesas ravb device
+> tree bindings documentation.
+>=20
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  Documentation/devicetree/bindings/net/renesas,ravb.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> index 890526d..fac897d 100644
+> --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> @@ -21,6 +21,7 @@ Required properties:
+>        - "renesas,etheravb-r8a77965" for the R8A77965 SoC.
+>        - "renesas,etheravb-r8a77970" for the R8A77970 SoC.
+>        - "renesas,etheravb-r8a77980" for the R8A77980 SoC.
+> +      - "renesas,etheravb-r8a77990" for the R8A77990 SoC.
+>        - "renesas,etheravb-r8a77995" for the R8A77995 SoC.
+>        - "renesas,etheravb-rcar-gen3" as a fallback for the above
+>  		R-Car Gen3 devices.
+> --
+> 1.9.1
