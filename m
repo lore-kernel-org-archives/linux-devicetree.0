@@ -1,60 +1,100 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: Add compatible string for FRWY-LS1012A
-Date: Fri, 11 May 2018 16:14:03 +0800
-Message-ID: <20180511081401.GE26863@dragon>
-References: <1525760999-6187-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
- <1525760999-6187-2-git-send-email-Bhaskar.Upadhaya@nxp.com>
+From: "chenyao (F)" <chenyao11@huawei.com>
+Subject: RE: [PATCH v2 1/2] PCI: kirin: Add MSI support
+Date: Fri, 11 May 2018 08:30:59 +0000
+Message-ID: <1F615B5A909C3342A3B7B4843796B9151C35E2A4@dggemi502-mbs.china.huawei.com>
+References: <1525854012-24228-1-git-send-email-chenyao11@huawei.com>
+ <1525854012-24228-2-git-send-email-chenyao11@huawei.com>
+ <20180510140431.GJ173327@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1525760999-6187-2-git-send-email-Bhaskar.Upadhaya@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
-Cc: oss@buserror.net, devicetree@vger.kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180510140431.GJ173327@bhelgaas-glaptop.roam.corp.google.com>
+Content-Language: zh-CN
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: songxiaowei <songxiaowei@hisilicon.com>, Wangbinghui <wangbinghui@hisilicon.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "xuwei (O)" <xuwei5@huawei.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, "dimitrysh@google.com" <dimi>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 08, 2018 at 11:59:59AM +0530, Bhaskar Upadhaya wrote:
-> Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.txt | 4 ++++
+Hi Bjorn,
 
-Bindings should be copied to DT maintainer for ACK.  Also, bindings
-patch should go before the one using the bindings.
+> 
+> [+cc Tejun, Wolfram]
+> 
+> On Wed, May 09, 2018 at 04:20:11PM +0800, Yao Chen wrote:
+> > Add support for MSI.
+> > ...
+> 
+> > @@ -448,6 +467,26 @@ static int kirin_pcie_host_init(struct pcie_port
+> > *pp)  static int __init kirin_add_pcie_port(struct dw_pcie *pci,
+> >  				      struct platform_device *pdev)  {
+> > +	int ret;
+> > +
+> > +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> > +		pci->pp.msi_irq = platform_get_irq(pdev, 0);
+> > +		if (!pci->pp.msi_irq) {
+> 
+> I think this test is incorrect.  platform_get_irq() returns a negative errno
+> value when it fails.  Most calls test "irq < 0" to check for failure.
+> 
+> There's a lot of duplicated code like this, so maybe we should consider
+> putting that check into devm_request_irq(), similar to what
+> devm_ioremap_resource() does, so the driver code could look like this:
+> 
+>   pci->pp.msi_irq = platform_get_irq(pdev, 0);
+>   ret = devm_request_irq(&pdev->dev, pci->pp.msi_irq, ...);
+>   if (ret) {
+>     dev_err(&pdev->dev, "failed to request MSI IRQ\n");
+>     return ret;
+>   }
+> 
+> The basic devm_ioremap_resource() motivation is here: 72f8c0bfa0de ("lib:
+> devres: add convenience function to remap a resource") and the same
+> considerations seem to apply here.
+> 
+> But that's more than you need to do for *this* series.  So for now, I would
+> simply fix the test to check for "irq < 0" and update the messages as I
+> mention below.
 
-Shawn
+Thank you for pointing out my mistake.  I'll fix it.
 
->  1 file changed, 4 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-> index cdb9dd7..0517440 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> @@ -147,6 +147,10 @@ LS1012A ARMv8 based RDB Board
->  Required root node properties:
->      - compatible = "fsl,ls1012a-rdb", "fsl,ls1012a";
->  
-> +LS1012A ARMv8 based FRWY Board
-> +Required root node properties:
-> +    - compatible = "fsl,frwy-ls1012a", "fsl,ls1012a";
-> +
->  LS1012A ARMv8 based FRDM Board
->  Required root node properties:
->      - compatible = "fsl,ls1012a-frdm", "fsl,ls1012a";
-> -- 
-> 1.9.1
+> > +			dev_err(&pdev->dev, "failed to get msi irq[%d]\n",
+> > +				pci->pp.msi_irq);
+> > +			return -ENODEV;
+> > +		}
+> > +		ret = devm_request_irq(&pdev->dev, pci->pp.msi_irq,
+> > +				       kirin_pcie_msi_irq_handler,
+> > +				       IRQF_SHARED | IRQF_NO_THREAD,
+> > +				       "kirin_pcie_msi", &pci->pp);
+> > +		if (ret) {
+> > +			dev_err(&pdev->dev, "failed to request msi
+> irq[%d]\n",
 > 
+> s/msi irq/MSI IRQ/ in both dev_err() messages above.  This is because the
+> message is English text (not code), and the convention is that non-words like
+> these initialisms written in all caps.
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> I would style the first one as "failed to get MSI IRQ (%d)" because the %d
+> there is a return code, probably -ENXIO.
+> 
+> The second one should be "failed to request MSI IRQ %d" because here
+> the %d is the actual IRQ.
+> 
+
+I'll fix it. Thanks again.
+
+> > +				pci->pp.msi_irq);
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> >  	pci->pp.ops = &kirin_pcie_host_ops;
+> >
+> >  	return dw_pcie_host_init(&pci->pp);
+> > --
+> > 1.9.1
+> >
+
+Best regards,
+Yao
