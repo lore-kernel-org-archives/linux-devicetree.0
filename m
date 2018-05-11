@@ -1,85 +1,163 @@
-Return-Path: <SRS0=ePA5=IB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ve1eur01on0066.outbound.protection.outlook.com ([104.47.1.66]:51520
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1752590AbeENJGV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 14 May 2018 05:06:21 -0400
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v5 01/14] dt-bindings: connector: add properties for typec
-Date: Mon, 14 May 2018 09:06:17 +0000
-Message-ID: <VI1PR0402MB3917E0B90009EDABB6B21382899C0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+Return-Path: <SRS0=f43A=H6=gmail.com=mats.dev.list@kernel.org>
+Subject: Re: [PATCH v5 01/14] dt-bindings: connector: add properties for typec
 References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
  <1525307094-27402-2-git-send-email-jun.li@nxp.com>
- <deb2502c-4ffc-c7ef-ec6f-4fb5b7685bf6@gmail.com>
-In-Reply-To: <deb2502c-4ffc-c7ef-ec6f-4fb5b7685bf6@gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Mats Karrman <mats.dev.list@gmail.com>
+Message-ID: <deb2502c-4ffc-c7ef-ec6f-4fb5b7685bf6@gmail.com>
+Date: Fri, 11 May 2018 21:49:02 +0200
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Mats Karrman <mats.dev.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>
-Cc: "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, Peter Chen <peter.chen@nxp.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+In-Reply-To: <1525307094-27402-2-git-send-email-jun.li@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+To: Li Jun <jun.li@nxp.com>, robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWF0cyBLYXJybWFuIFtt
-YWlsdG86bWF0cy5kZXYubGlzdEBnbWFpbC5jb21dDQo+IFNlbnQ6IDIwMTjlubQ15pyIMTLml6Ug
-Mzo0OQ0KPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsg
-Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+IGhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRl
-bC5jb207IGxpbnV4QHJvZWNrLXVzLm5ldA0KPiBDYzogYS5oYWpkYUBzYW1zdW5nLmNvbTsgY3cw
-MC5jaG9pQHNhbXN1bmcuY29tOw0KPiBzaHVmYW5fbGVlQHJpY2h0ZWsuY29tOyBQZXRlciBDaGVu
-IDxwZXRlci5jaGVuQG54cC5jb20+Ow0KPiBnc29tbG9AZ21haWwuY29tOyBkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZzsgbGludXgtdXNiQHZnZXIua2VybmVsLm9yZzsNCj4gZGwtbGludXgtaW14
-IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NSAwMS8xNF0gZHQt
-YmluZGluZ3M6IGNvbm5lY3RvcjogYWRkIHByb3BlcnRpZXMgZm9yIHR5cGVjDQo+IA0KPiBIaSBM
-aSBKdW4sDQo+IA0KPiBPbiAyMDE4LTA1LTAzIDAyOjI0LCBMaSBKdW4gd3JvdGU6DQo+IA0KPiA+
-IEFkZCBiaW5nZGluZ3Mgc3VwcG9ydGVkIGJ5IGN1cnJlbnQgdHlwZWMgZHJpdmVyLCBzbyB1c2Vy
-IGNhbiBwYXNzIGFsbA0KPiA+IHRob3NlIHByb3BlcnRpZXMgdmlhIGR0Lg0KPiA+DQo+ID4gU2ln
-bmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgIC4uLi9i
-aW5kaW5ncy9jb25uZWN0b3IvdXNiLWNvbm5lY3Rvci50eHQgICAgICAgICAgIHwgNDQNCj4gKysr
-KysrKysrKysrKysrDQo+ID4gICBpbmNsdWRlL2R0LWJpbmRpbmdzL3VzYi9wZC5oICAgICAgICAg
-ICAgICAgICAgICAgICB8IDYyDQo+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgIDIgZmls
-ZXMgY2hhbmdlZCwgMTA2IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQNCj4gPiBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jb25uZWN0b3IvdXNiLWNvbm5lY3Rv
-ci50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jb25uZWN0b3Iv
-dXNiLWNvbm5lY3Rvci50eHQNCj4gPiBpbmRleCBlMTQ2M2YxLi40YjE5ZGU2ZDAgMTAwNjQ0DQo+
-ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nvbm5lY3Rvci91c2It
-Y29ubmVjdG9yLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9jb25uZWN0b3IvdXNiLWNvbm5lY3Rvci50eHQNCj4gPiBAQCAtMTUsNiArMTUsMzMgQEAgT3B0
-aW9uYWwgcHJvcGVydGllczoNCj4gPiAgIC0gdHlwZTogc2l6ZSBvZiB0aGUgY29ubmVjdG9yLCBz
-aG91bGQgYmUgc3BlY2lmaWVkIGluIGNhc2Ugb2YgVVNCLUEsIFVTQi1CDQo+ID4gICAgIG5vbi1m
-dWxsc2l6ZSBjb25uZWN0b3JzOiAibWluaSIsICJtaWNybyIuDQo+ID4NCj4gPiArT3B0aW9uYWwg
-cHJvcGVydGllcyBmb3IgdXNiLWMtY29ubmVjdG9yOg0KPiA+ICstIHBvd2VyLXJvbGU6IHNob3Vs
-ZCBiZSBvbmUgb2YgInNvdXJjZSIsICJzaW5rIiBvciAiZHVhbCIoRFJQKSBpZg0KPiA+ICt0eXBl
-Yw0KPiA+ICsgIGNvbm5lY3RvciBoYXMgcG93ZXIgc3VwcG9ydC4NCj4gPiArLSB0cnktcG93ZXIt
-cm9sZTogcHJlZmVycmVkIHBvd2VyIHJvbGUgaWYgImR1YWwiKERSUCkgY2FuIHN1cHBvcnQNCj4g
-PiArVHJ5LlNOSw0KPiA+ICsgIG9yIFRyeS5TUkMsIHNob3VsZCBiZSAic2luayIgZm9yIFRyeS5T
-Tksgb3IgInNvdXJjZSIgZm9yIFRyeS5TUkMuDQo+ID4gKy0gZGF0YS1yb2xlOiBzaG91bGQgYmUg
-b25lIG9mICJob3N0IiwgImRldmljZSIsICJkdWFsIihEUkQpIGlmIHR5cGVjDQo+ID4gKyAgY29u
-bmVjdG9yIHN1cHBvcnRzIFVTQiBkYXRhLg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGll
-cyBmb3IgdXNiLWMtY29ubmVjdG9yIHdpdGggcG93ZXIgZGVsaXZlcnkgc3VwcG9ydDoNCj4gPiAr
-LSBzb3VyY2UtcGRvczogQW4gYXJyYXkgb2YgdTMyIHdpdGggZWFjaCBlbnRyeSBwcm92aWRpbmcg
-c3VwcG9ydGVkDQo+ID4gK3Bvd2VyDQo+ID4gKyAgc291cmNlIGRhdGEgb2JqZWN0KFBETyksIHRo
-ZSBkZXRhaWxlZCBiaXQgZGVmaW5pdGlvbnMgb2YgUERPIGNhbiBiZQ0KPiA+ICtmb3VuZA0KPiA+
-ICsgIGluICJVbml2ZXJzYWwgU2VyaWFsIEJ1cyBQb3dlciBEZWxpdmVyeSBTcGVjaWZpY2F0aW9u
-IiBjaGFwdGVyDQo+ID4gKzYuNC4xLjINCj4gPiArICBTb3VyY2VfQ2FwYWJpbGl0aWVzIE1lc3Nh
-Z2UsIHRoZSBvcmRlciBvZiBlYWNoIGVudHJ5KFBETykgc2hvdWxkDQo+ID4gK2ZvbGxvdw0KPiA+
-ICsgIHRoZSBQRCBzcGVjIGNoYXB0ZXIgNi40LjEuIFJlcXVpcmVkIGZvciBwb3dlciBzb3VyY2Ug
-YW5kIHBvd2VyIGR1YWwNCj4gcm9sZS4NCj4gPiArICBVc2VyIGNhbiBzcGVjaWZ5IHRoZSBzb3Vy
-Y2UgUERPIGFycmF5IHZpYSBQRE9fRklYRUQvQkFUVC9WQVIoKQ0KPiA+ICtkZWZpbmVkIGluDQo+
-ID4gKyAgZHQtYmluZGluZ3MvdXNiL3BkLmguDQo+ID4gKy0gc2luay1wZG9zOiBBbiBhcnJheSBv
-ZiB1MzIgd2l0aCBlYWNoIGVudHJ5IHByb3ZpZGluZyBzdXBwb3J0ZWQNCj4gPiArcG93ZXINCj4g
-PiArICBzaW5rIGRhdGEgb2JqZWN0KFBETyksIHRoZSBkZXRhaWxlZCBiaXQgZGVmaW5pdGlvbnMg
-b2YgUERPIGNhbiBiZQ0KPiA+ICtmb3VuZA0KPiA+ICsgIGluICJVbml2ZXJzYWwgU2VyaWFsIEJ1
-cyBQb3dlciBEZWxpdmVyeSBTcGVjaWZpY2F0aW9uIiBjaGFwdGVyDQo+ID4gKzYuNC4xLjMNCj4g
-PiArICBTaW5rIENhcGFiaWxpdGllcyBNZXNzYWdlLCB0aGUgb3JkZXIgb2YgZWFjaCBlbnRyeShQ
-RE8pIHNob3VsZA0KPiA+ICtmb2xsb3cNCj4gPiArICB0aGUgUEQgc3BlYyBjaGFwdGVyIDYuNC4x
-LiBSZXF1aXJlZCBmb3IgcG93ZXIgc2luayBhbmQgcG93ZXIgZHVhbCByb2xlLg0KPiA+ICsgIFVz
-ZXIgY2FuIHNwZWNpZnkgdGhlIHNpbmsgUERPIGFycmF5IHZpYSBQRE9fRklYRUQvQkFUVC9WQVIo
-KQ0KPiA+ICtkZWZpbmVkIGluDQo+ID4gKyAgZHQtYmluZGluZ3MvdXNiL3BkLmguDQo+ID4gKy0g
-b3Atc2luay1taWNyb3dhdHQ6IFNpbmsgcmVxdWlyZWQgb3BlcmF0aW5nIHBvd2VyIGluIG1pY3Jv
-d2F0dCwgaWYNCj4gPiArc291cmNlDQo+ID4gKyAgY2FuJ3Qgb2ZmZXIgdGhlIHBvd2VyLCBDYXBh
-YmlsaXR5IE1pc21hdGNoIGlzIHNldCwgcmVxdWlyZWQgZm9yDQo+ID4gK3Bvd2VyDQo+IA0KPiAu
-Li5zZXQuIFJlcXVpcmVkLi4uDQo+IChuZXcgc2VudGVuY2UsIG90aGVyd2lzZSBpdCdzIHVuY2xl
-YXIgd2hhdCBpcyByZXF1aXJlZDsgb3Atc2luay1taWNyb3dhdHQgb3INCj4gQ2FwYWJpbGl0eSBN
-aXNtYXRjaCBzZXQpDQoNCk9LLCB3aWxsIHVwZGF0ZSBhcyB5b3Ugc3VnZ2VzdGVkLg0KDQpUaGFu
-a3MNCkxpIEp1bg0K
+Hi Li Jun,
+
+On 2018-05-03 02:24, Li Jun wrote:
+
+> Add bingdings supported by current typec driver, so user can pass
+> all those properties via dt.
+>
+> Signed-off-by: Li Jun <jun.li@nxp.com>
+> ---
+>   .../bindings/connector/usb-connector.txt           | 44 +++++++++++++++
+>   include/dt-bindings/usb/pd.h                       | 62 ++++++++++++++++++++++
+>   2 files changed, 106 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> index e1463f1..4b19de6d0 100644
+> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> @@ -15,6 +15,33 @@ Optional properties:
+>   - type: size of the connector, should be specified in case of USB-A, USB-B
+>     non-fullsize connectors: "mini", "micro".
+>   
+> +Optional properties for usb-c-connector:
+> +- power-role: should be one of "source", "sink" or "dual"(DRP) if typec
+> +  connector has power support.
+> +- try-power-role: preferred power role if "dual"(DRP) can support Try.SNK
+> +  or Try.SRC, should be "sink" for Try.SNK or "source" for Try.SRC.
+> +- data-role: should be one of "host", "device", "dual"(DRD) if typec
+> +  connector supports USB data.
+> +
+> +Required properties for usb-c-connector with power delivery support:
+> +- source-pdos: An array of u32 with each entry providing supported power
+> +  source data object(PDO), the detailed bit definitions of PDO can be found
+> +  in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.2
+> +  Source_Capabilities Message, the order of each entry(PDO) should follow
+> +  the PD spec chapter 6.4.1. Required for power source and power dual role.
+> +  User can specify the source PDO array via PDO_FIXED/BATT/VAR() defined in
+> +  dt-bindings/usb/pd.h.
+> +- sink-pdos: An array of u32 with each entry providing supported power
+> +  sink data object(PDO), the detailed bit definitions of PDO can be found
+> +  in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.3
+> +  Sink Capabilities Message, the order of each entry(PDO) should follow
+> +  the PD spec chapter 6.4.1. Required for power sink and power dual role.
+> +  User can specify the sink PDO array via PDO_FIXED/BATT/VAR() defined in
+> +  dt-bindings/usb/pd.h.
+> +- op-sink-microwatt: Sink required operating power in microwatt, if source
+> +  can't offer the power, Capability Mismatch is set, required for power
+
+...set. Required...
+(new sentence, otherwise it's unclear what is required; op-sink-microwatt or
+Capability Mismatch set)
+
+BR // Mats
+
+> +  sink and power dual role.
+> +
+>   Required nodes:
+>   - any data bus to the connector should be modeled using the OF graph bindings
+>     specified in bindings/graph.txt, unless the bus is between parent node and
+> @@ -73,3 +100,20 @@ ccic: s2mm005@33 {
+>   		};
+>   	};
+>   };
+> +
+> +3. USB-C connector attached to a typec port controller(ptn5110), which has
+> +power delivery support and enables drp.
+> +
+> +typec: ptn5110@50 {
+> +	...
+> +	usb_con: connector {
+> +		compatible = "usb-c-connector";
+> +		label = "USB-C";
+> +		power-role = "dual";
+> +		try-power-role = "sink";
+> +		source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)>;
+> +		sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)
+> +			     PDO_VAR(5000, 12000, 2000)>;
+> +		op-sink-microwatt = <10000000>;
+> +	};
+> +};
+> diff --git a/include/dt-bindings/usb/pd.h b/include/dt-bindings/usb/pd.h
+> new file mode 100644
+> index 0000000..7b7a92f
+> --- /dev/null
+> +++ b/include/dt-bindings/usb/pd.h
+> @@ -0,0 +1,62 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __DT_POWER_DELIVERY_H
+> +#define __DT_POWER_DELIVERY_H
+> +
+> +/* Power delivery Power Data Object definitions */
+> +#define PDO_TYPE_FIXED		0
+> +#define PDO_TYPE_BATT		1
+> +#define PDO_TYPE_VAR		2
+> +#define PDO_TYPE_APDO		3
+> +
+> +#define PDO_TYPE_SHIFT		30
+> +#define PDO_TYPE_MASK		0x3
+> +
+> +#define PDO_TYPE(t)	((t) << PDO_TYPE_SHIFT)
+> +
+> +#define PDO_VOLT_MASK		0x3ff
+> +#define PDO_CURR_MASK		0x3ff
+> +#define PDO_PWR_MASK		0x3ff
+> +
+> +#define PDO_FIXED_DUAL_ROLE	(1 << 29) /* Power role swap supported */
+> +#define PDO_FIXED_SUSPEND	(1 << 28) /* USB Suspend supported (Source) */
+> +#define PDO_FIXED_HIGHER_CAP	(1 << 28) /* Requires more than vSafe5V (Sink) */
+> +#define PDO_FIXED_EXTPOWER	(1 << 27) /* Externally powered */
+> +#define PDO_FIXED_USB_COMM	(1 << 26) /* USB communications capable */
+> +#define PDO_FIXED_DATA_SWAP	(1 << 25) /* Data role swap supported */
+> +#define PDO_FIXED_VOLT_SHIFT	10	/* 50mV units */
+> +#define PDO_FIXED_CURR_SHIFT	0	/* 10mA units */
+> +
+> +#define PDO_FIXED_VOLT(mv)	((((mv) / 50) & PDO_VOLT_MASK) << PDO_FIXED_VOLT_SHIFT)
+> +#define PDO_FIXED_CURR(ma)	((((ma) / 10) & PDO_CURR_MASK) << PDO_FIXED_CURR_SHIFT)
+> +
+> +#define PDO_FIXED(mv, ma, flags)			\
+> +	(PDO_TYPE(PDO_TYPE_FIXED) | (flags) |		\
+> +	 PDO_FIXED_VOLT(mv) | PDO_FIXED_CURR(ma))
+> +
+> +#define VSAFE5V 5000 /* mv units */
+> +
+> +#define PDO_BATT_MAX_VOLT_SHIFT	20	/* 50mV units */
+> +#define PDO_BATT_MIN_VOLT_SHIFT	10	/* 50mV units */
+> +#define PDO_BATT_MAX_PWR_SHIFT	0	/* 250mW units */
+> +
+> +#define PDO_BATT_MIN_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_BATT_MIN_VOLT_SHIFT)
+> +#define PDO_BATT_MAX_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_BATT_MAX_VOLT_SHIFT)
+> +#define PDO_BATT_MAX_POWER(mw) ((((mw) / 250) & PDO_PWR_MASK) << PDO_BATT_MAX_PWR_SHIFT)
+> +
+> +#define PDO_BATT(min_mv, max_mv, max_mw)			\
+> +	(PDO_TYPE(PDO_TYPE_BATT) | PDO_BATT_MIN_VOLT(min_mv) |	\
+> +	 PDO_BATT_MAX_VOLT(max_mv) | PDO_BATT_MAX_POWER(max_mw))
+> +
+> +#define PDO_VAR_MAX_VOLT_SHIFT	20	/* 50mV units */
+> +#define PDO_VAR_MIN_VOLT_SHIFT	10	/* 50mV units */
+> +#define PDO_VAR_MAX_CURR_SHIFT	0	/* 10mA units */
+> +
+> +#define PDO_VAR_MIN_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_VAR_MIN_VOLT_SHIFT)
+> +#define PDO_VAR_MAX_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_VAR_MAX_VOLT_SHIFT)
+> +#define PDO_VAR_MAX_CURR(ma) ((((ma) / 10) & PDO_CURR_MASK) << PDO_VAR_MAX_CURR_SHIFT)
+> +
+> +#define PDO_VAR(min_mv, max_mv, max_ma)				\
+> +	(PDO_TYPE(PDO_TYPE_VAR) | PDO_VAR_MIN_VOLT(min_mv) |	\
+> +	 PDO_VAR_MAX_VOLT(max_mv) | PDO_VAR_MAX_CURR(max_ma))
+> +
+> + #endif /* __DT_POWER_DELIVERY_H */
