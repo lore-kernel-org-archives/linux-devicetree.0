@@ -1,119 +1,84 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 3/3] arm64: dts: renesas: draak: Describe HDMI input
-Date: Fri, 11 May 2018 12:00:02 +0200
-Message-ID: <1526032802-14376-4-git-send-email-jacopo+renesas@jmondi.org>
-References: <1526032802-14376-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 02/14] drivers: soc: sunxi: Add dedicated compatibles
+ for the A13, A20 and A33
+Date: Fri, 11 May 2018 12:20:33 +0200
+Message-ID: <20180511102033.i6jtzljbvkg47wz3@flea>
+References: <20180507124500.20434-1-paul.kocialkowski@bootlin.com>
+ <20180507124500.20434-3-paul.kocialkowski@bootlin.com>
+ <CAGb2v67An8RSCKEDSgW_jY7m8iw22K4rRHb02q67decmCBcjhg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ropnmmpiqwyci4ux"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526032802-14376-1-git-send-email-jacopo+renesas@jmondi.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v67An8RSCKEDSgW_jY7m8iw22K4rRHb02q67decmCBcjhg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, horms@verge.net.au, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S . Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Arnd Bergmann <arnd@arndb.de>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>Philipp Zabel <p>
 List-Id: devicetree@vger.kernel.org
 
-Describe HDMI input connected to VIN4 interface for R-Car D3 Draak
-development board.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 68 ++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+--ropnmmpiqwyci4ux
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-index d03f194..e0ce462 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-@@ -59,6 +59,17 @@
- 		};
- 	};
- 
-+	hdmi-in {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&adv7612_in>;
-+			};
-+		};
-+	};
-+
- 	memory@48000000 {
- 		device_type = "memory";
- 		/* first 128MB is reserved for secure area. */
-@@ -142,6 +153,11 @@
- 		groups = "usb0";
- 		function = "usb0";
- 	};
-+
-+	vin4_pins: vin4 {
-+		groups = "vin4_data24", "vin4_sync", "vin4_clk", "vin4_clkenb";
-+		function = "vin4";
-+	};
- };
- 
- &i2c0 {
-@@ -154,6 +170,35 @@
- 		reg = <0x50>;
- 		pagesize = <8>;
- 	};
-+
-+	hdmi-decoder@4c {
-+		compatible = "adi,adv7612";
-+		reg = <0x4c>;
-+		default-input = <0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				adv7612_in: endpoint {
-+					remote-endpoint = <&hdmi_con_in>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <2>;
-+				adv7612_out: endpoint {
-+					pclk-sample = <0>;
-+					hsync-active = <0>;
-+					vsync-active = <0>;
-+
-+					remote-endpoint = <&vin4_in>;
-+				};
-+			};
-+		};
-+	};
- };
- 
- &i2c1 {
-@@ -246,3 +291,26 @@
- 	timeout-sec = <60>;
- 	status = "okay";
- };
-+
-+&vin4 {
-+	pinctrl-0 = <&vin4_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			vin4_in: endpoint {
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+
-+				remote-endpoint = <&adv7612_out>;
-+			};
-+		};
-+	};
-+};
--- 
-2.7.4
+On Thu, May 10, 2018 at 10:05:33PM -0700, Chen-Yu Tsai wrote:
+> On Mon, May 7, 2018 at 5:44 AM, Paul Kocialkowski
+> <paul.kocialkowski@bootlin.com> wrote:
+> > This introduces platform-specific compatibles for the A13, A20 and A33
+> > SRAM driver. No particular adaptation for these platforms is required at
+> > this point, although this might become the case in the future.
+> >
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > ---
+> >  drivers/soc/sunxi/sunxi_sram.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/soc/sunxi/sunxi_sram.c b/drivers/soc/sunxi/sunxi_s=
+ram.c
+> > index 74cb81f37bd6..43ebc3bd33f2 100644
+> > --- a/drivers/soc/sunxi/sunxi_sram.c
+> > +++ b/drivers/soc/sunxi/sunxi_sram.c
+> > @@ -315,6 +315,9 @@ static int sunxi_sram_probe(struct platform_device =
+*pdev)
+> >
+> >  static const struct of_device_id sunxi_sram_dt_match[] =3D {
+> >         { .compatible =3D "allwinner,sun4i-a10-sram-controller" },
+> > +       { .compatible =3D "allwinner,sun5i-a13-sram-controller" },
+> > +       { .compatible =3D "allwinner,sun7i-a20-sram-controller" },
+> > +       { .compatible =3D "allwinner,sun8i-a33-sram-controller" },
+>=20
+> We should probably name these "system-controller". Maxime?
+
+This would make sense yes, but we don't really need to add the A20 one
+to the driver, it's exactly the same than the A10.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ropnmmpiqwyci4ux
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlr1bnAACgkQ0rTAlCFN
+r3RGSxAAioGxVMYYKKP7EpsOvbcLiyJu90l6vMcfmB01xdWSxl+0TlQ713l3g6cU
+gcFQgm6W5tdJ0i3ps84bGi3H6SqZJhc/S6so/zgS/sI9FNLSq5ztjLw0gAgaaJL5
+/pc3Z5HR5hKKWZ3Knho1NG1GYnpTPR2YcN1Wa0GZfrgMgsZkeduW3iJTSC/wOnWF
+8+c512DMqND1tq2TRgIAG99pisRh3mHFfKxaTOy7xI5eufZNSqn/an5Doz25wbIZ
+HoE53kw1+ALSvxoQwHGtfbiyAf4GjK/qQygiFvb3veFYDyIQpq8FOYjjDbaE/LLr
+KOIGIcHmPoQzo3o8CEupTW98volKFo33WY/Q/+FJn2RXoT8+ZCdObEIBJA3Za8+T
+wEG5EfuKmw2zUSqiALZlDTz3W7gHYQKlOLmZRNje4TDoeNIOu63D/xTB+2OhRWix
+bj7FOvRoO5n/ERwMNJgfZmic2xh7mBD2+x7vvYib2+cRguEl6bEqtpP5i4rcCKH3
+l5gBKmS0+hr39Qasi5NbiRHK4IVceZ8WgVHLLUuhSQXRoGijZMZygiITE+Ql4wop
+WR8yhAjwlIReRwkpDe46iU8ep51A0sTIyQ3zfGwv6pv+xLmW+lC7wdXIjKuU19DL
+EB9+WAZc/J3M92BSw8KZ+SFWL35/orGB5s24sgKegg7GzMI8oR0=
+=SzVX
+-----END PGP SIGNATURE-----
+
+--ropnmmpiqwyci4ux--
