@@ -1,39 +1,24 @@
-From: Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH v3 1/2] vfio: platform: Fix reset module leak in error
- path
-Date: Fri, 11 May 2018 13:45:44 -0600
-Message-ID: <20180511134544.72b46acb@w520.home>
-References: <1523438149-16433-1-git-send-email-geert+renesas@glider.be>
-        <1523438149-16433-3-git-send-email-geert+renesas@glider.be>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] dt-bindings: net: ravb: Add support for r8a77990 SoC
+Date: Fri, 11 May 2018 15:59:42 -0400 (EDT)
+Message-ID: <20180511.155942.16024095909155343.davem@davemloft.net>
+References: <1526008736-26496-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523438149-16433-3-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Baptiste Reynal <b.reynal@virtualopensystems.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1526008736-26496-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: yoshihiro.shimoda.uh@renesas.com
+Cc: netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Apr 2018 11:15:48 +0200
-Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Date: Fri, 11 May 2018 12:18:56 +0900
 
-> If the IOMMU group setup fails, the reset module is not released.
+> Add documentation for r8a77990 compatible string to renesas ravb device
+> tree bindings documentation.
 > 
-> Fixes: b5add544d677d363 ("vfio, platform: make reset driver a requirement by default")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
-> v3:
->   - Add Reviewed-by,
-> 
-> v2:
->   - Add Reviewed-by.
-> ---
->  drivers/vfio/platform/vfio_platform_common.c | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Applied to next branch for v4.18 with Eric's ack.  Thanks,
-
-Alex
+I'm assuming this isn't targetted at one of my trees.  Just FYI.
