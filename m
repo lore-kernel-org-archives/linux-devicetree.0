@@ -1,82 +1,59 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 2/8] dt-bindings: nvmem: Add binding for RAVE SP EEPROM driver
-Date: Fri, 11 May 2018 12:06:57 +0100
-Message-ID: <20180511110703.4924-3-srinivas.kandagatla@linaro.org>
-References: <20180511110703.4924-1-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180511110703.4924-1-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org, Andrey Smirnov <andrew.smirnov@gmail.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Aleksander Morgado <aleksander@aleksander.es>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [PATCH v5 1/4] drm/bridge: add support for
+ sn65dsi86 bridge driver
+Date: Fri, 11 May 2018 16:46:11 +0530
+Message-ID: <9e3c5e599a9313c8e86e810a008910d8@codeaurora.org>
+References: <1525235522-8954-1-git-send-email-spanda@codeaurora.org>
+ <1525235522-8954-2-git-send-email-spanda@codeaurora.org>
+ <20180502190316.GR73214@art_vandelay>
+ <152573164597.138124.14000479717180675318@swboyd.mtv.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <152573164597.138124.14000479717180675318-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-
-Add Device Tree bindings for RAVE SP EEPROM driver - an MFD cell of
-parent RAVE SP driver (documented in
-Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
-
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Aleksander Morgado <aleksander@aleksander.es>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- .../bindings/nvmem/zii,rave-sp-eeprom.txt          | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
-
-diff --git a/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
-new file mode 100644
-index 000000000000..d5e22fc67d66
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
-@@ -0,0 +1,40 @@
-+Zodiac Inflight Innovations RAVE EEPROM Bindings
-+
-+RAVE SP EEPROM device is a "MFD cell" device exposing physical EEPROM
-+attached to RAVE Supervisory Processor. It is expected that its Device
-+Tree node is specified as a child of the node corresponding to the
-+parent RAVE SP device (as documented in
-+Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
-+
-+Required properties:
-+
-+- compatible: Should be "zii,rave-sp-eeprom"
-+
-+Optional properties:
-+
-+- zii,eeprom-name: Unique EEPROM identifier describing its function in the
-+  system. Will be used as created NVMEM deivce's name.
-+
-+Data cells:
-+
-+Data cells are child nodes of eerpom node, bindings for which are
-+documented in Documentation/bindings/nvmem/nvmem.txt
-+
-+Example:
-+
-+	rave-sp {
-+		compatible = "zii,rave-sp-rdu1";
-+		current-speed = <38400>;
-+
-+		eeprom@a4 {
-+			compatible = "zii,rave-sp-eeprom";
-+			reg = <0xa4 0x4000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			zii,eeprom-name = "main-eeprom";
-+
-+			wdt_timeout: wdt-timeout@81 {
-+				reg = <0x81 2>;
-+			};
-+		};
-+	}
--- 
-2.16.2
+T24gMjAxOC0wNS0wOCAwMzo1MCwgU3RlcGhlbiBCb3lkIHdyb3RlOgo+IFF1b3RpbmcgU2VhbiBQ
+YXVsICgyMDE4LTA1LTAyIDEyOjAzOjE2KQo+PiBPbiBXZWQsIE1heSAwMiwgMjAxOCBhdCAxMDow
+MTo1OUFNICswNTMwLCBTYW5kZWVwIFBhbmRhIHdyb3RlOgo+PiAKPj4gPiArICAgICBzdHJ1Y3Qg
+ZHJtX2Rpc3BsYXlfbW9kZSBjdXJyX21vZGU7Cj4+ID4gKyAgICAgc3RydWN0IG11dGV4IGxvY2s7
+Cj4+ID4gKyAgICAgdW5zaWduZWQgaW50IGN0cmxfcmVmX2NvdW50Owo+PiA+ICt9Owo+PiA+ICsK
+Pj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCByZWdtYXBfcmFuZ2UgdGlfc25fYnJpZGdlX3ZvbGF0
+aWxlX3Jhbmdlc1tdID0gewo+PiA+ICsgICAgIHsgLnJhbmdlX21pbiA9IDAsIC5yYW5nZV9tYXgg
+PSAweGZmIH0sCj4+ID4gK307Cj4+ID4gKwo+PiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHJlZ21h
+cF9hY2Nlc3NfdGFibGUgdGlfc25fYnJpZGdlX3ZvbGF0aWxlX3RhYmxlID0gewo+PiA+ICsgICAg
+IC55ZXNfcmFuZ2VzID0gdGlfc25fYnJpZGdlX3ZvbGF0aWxlX3JhbmdlcywKPj4gPiArICAgICAu
+bl95ZXNfcmFuZ2VzID0gQVJSQVlfU0laRSh0aV9zbl9icmlkZ2Vfdm9sYXRpbGVfcmFuZ2VzKSwK
+Pj4gPiArfTsKPj4gPiArCj4+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcmVnbWFwX2NvbmZpZyB0
+aV9zbl9icmlkZ2VfcmVnbWFwX2NvbmZpZyA9IHsKPj4gPiArICAgICAucmVnX2JpdHMgPSA4LAo+
+PiA+ICsgICAgIC52YWxfYml0cyA9IDgsCj4+ID4gKyAgICAgLnZvbGF0aWxlX3RhYmxlID0gJnRp
+X3NuX2JyaWRnZV92b2xhdGlsZV90YWJsZSwKPj4gPiArICAgICAuY2FjaGVfdHlwZSA9IFJFR0NB
+Q0hFX05PTkUsCj4+ID4gK307Cj4+ID4gKwo+PiA+ICtzdGF0aWMgaW50IHRpX3NuX2JyaWRnZV9w
+b3dlcl9jdHJsKHN0cnVjdCB0aV9zbl9icmlkZ2UgKnBkYXRhLCBib29sIGVuYWJsZSkKPj4gPiAr
+ewo+PiA+ICsgICAgIGludCByZXQgPSAwOwo+PiA+ICsKPj4gPiArICAgICBtdXRleF9sb2NrKCZw
+ZGF0YS0+bG9jayk7Cj4+ID4gKyAgICAgaWYgKGVuYWJsZSkKPj4gPiArICAgICAgICAgICAgIHBk
+YXRhLT5jdHJsX3JlZl9jb3VudCsrOwo+PiA+ICsgICAgIGVsc2UKPj4gPiArICAgICAgICAgICAg
+IHBkYXRhLT5jdHJsX3JlZl9jb3VudC0tOwo+PiAKPj4gSSB0aGluayB5b3Ugc2hvdWxkIHVzZSBh
+IGtyZWYgaW5zdGVhZCBvZiByb2xsaW5nIHlvdXIgb3duIHJlZl9jb3VudC4gCj4+IFlvdSBjYW4K
+Pj4gaGFuZGxlIHJlbGVhc2UgYnkgY2FsbGluZyBrcmVmX3B1dF9tdXRleCgpLCB3aGljaCB3aWxs
+IGhhbmRsZSB0aGUgCj4+IHJlZmVyZW5jZSBhbmQKPj4gdGhlIGxvY2suIE9uIHRoZSBhY3F1aXJl
+IHNpZGUsIHlvdSBjYW4gdXNlIGtyZWZfZ2V0X3VubGVzc196ZXJvIHdoaWNoIAo+PiB3aWxsIGJl
+Cj4+IGZhc3QgaWYgdGhlIHJlZmVyZW5jZSBpcyBhbHJlYWR5IGFjdGl2ZS4KPiAKPiBXaHkgbm90
+IHVzZSBydW50aW1lIFBNPwoKSSB0aGluayBQTSBydW50aW1lIHdpbGwgYmUgYSBiZXR0ZXIgYXBw
+cm9hY2ggc2luY2Ugd2UgYXJlIHRyeWluZyB0byAKcHJvdGVjdCBicmlkZ2UgcG93ZXIgc291cmNl
+IHJlbGF0ZWQgcmVzb3VyY2VzIGhlcmUuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2ZyZWVkcmVubwo=
