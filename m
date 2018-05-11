@@ -1,83 +1,68 @@
-From: Yao Chen <chenyao11@huawei.com>
-Subject: [PATCH v3 1/2] PCI: kirin: Add MSI support
-Date: Fri, 11 May 2018 17:15:48 +0800
-Message-ID: <1526030149-23985-2-git-send-email-chenyao11@huawei.com>
-References: <1526030149-23985-1-git-send-email-chenyao11@huawei.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH V5 2/4] soc: mediatek: pwrap: fix cipher init setting
+ error
+Date: Fri, 11 May 2018 11:26:58 +0200
+Message-ID: <318abd43-a2ac-121c-8c18-dd32248a4676@gmail.com>
+References: <1525957319-20557-1-git-send-email-argus.lin@mediatek.com>
+ <1525957319-20557-3-git-send-email-argus.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526030149-23985-1-git-send-email-chenyao11@huawei.com>
+In-Reply-To: <1525957319-20557-3-git-send-email-argus.lin@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: songxiaowei@hisilicon.com, wangbinghui@hisilicon.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: dimitrysh@google.com, guodong.xu@linaro.org, chenyao11@huawei.com, suzhuangluan@hisilicon.com, kongfei@hisilicon.com
+To: argus.lin@mediatek.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for MSI.
 
-Signed-off-by: Yao Chen <chenyao11@huawei.com>
----
- drivers/pci/dwc/pcie-kirin.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
 
-diff --git a/drivers/pci/dwc/pcie-kirin.c b/drivers/pci/dwc/pcie-kirin.c
-index d2970a0..8daab1f 100644
---- a/drivers/pci/dwc/pcie-kirin.c
-+++ b/drivers/pci/dwc/pcie-kirin.c
-@@ -426,9 +426,28 @@ static int kirin_pcie_establish_link(struct pcie_port *pp)
- 	return 0;
- }
- 
-+static irqreturn_t kirin_pcie_msi_irq_handler(int irq, void *arg)
-+{
-+	struct pcie_port *pp = arg;
-+
-+	return dw_handle_msi_irq(pp);
-+}
-+
-+static void kirin_pcie_msi_init(struct pcie_port *pp)
-+{
-+	dw_pcie_msi_init(pp);
-+}
-+
-+static void kirin_pcie_enable_interrupts(struct pcie_port *pp)
-+{
-+	if (IS_ENABLED(CONFIG_PCI_MSI))
-+		kirin_pcie_msi_init(pp);
-+}
-+
- static int kirin_pcie_host_init(struct pcie_port *pp)
- {
- 	kirin_pcie_establish_link(pp);
-+	kirin_pcie_enable_interrupts(pp);
- 
- 	return 0;
- }
-@@ -448,6 +467,26 @@ static int kirin_pcie_host_init(struct pcie_port *pp)
- static int __init kirin_add_pcie_port(struct dw_pcie *pci,
- 				      struct platform_device *pdev)
- {
-+	int ret;
-+
-+	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-+		pci->pp.msi_irq = platform_get_irq(pdev, 0);
-+		if (pci->pp.msi_irq < 0) {
-+			dev_err(&pdev->dev, "failed to get MSI IRQ (%d)\n",
-+				pci->pp.msi_irq);
-+			return -ENODEV;
-+		}
-+		ret = devm_request_irq(&pdev->dev, pci->pp.msi_irq,
-+				       kirin_pcie_msi_irq_handler,
-+				       IRQF_SHARED | IRQF_NO_THREAD,
-+				       "kirin_pcie_msi", &pci->pp);
-+		if (ret) {
-+			dev_err(&pdev->dev, "failed to request MSI IRQ %d\n",
-+				pci->pp.msi_irq);
-+			return ret;
-+		}
-+	}
-+
- 	pci->pp.ops = &kirin_pcie_host_ops;
- 
- 	return dw_pcie_host_init(&pci->pp);
--- 
-1.9.1
+On 05/10/2018 03:01 PM, argus.lin@mediatek.com wrote:
+> From: Argus Lin <argus.lin@mediatek.com>
+> 
+> PWRAP_DEW_CIPHER_LOAD and PWRAP_DEW_CIPHER_START only exist at
+> PMIC_mt6397 datasheet. We fix it before merge PMIC_mt6351 driver.
+
+Please don't put info like "We fix it before merge PMIC_mt6351 driver." in the
+commit message. You can see this from the git log later and it does not add any
+value.
+
+Regards,
+Matthias
+
+> 
+> Fixes: 5ae48040aa47 ("soc: mediatek: PMIC wrap: add mt6323 slave support")
+> ---
+>  drivers/soc/mediatek/mtk-pmic-wrap.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> index e9e054a..9a01e30 100644
+> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
+> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> @@ -1080,8 +1080,6 @@ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
+>  	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_SWRST], 0x0);
+>  	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_KEY_SEL], 0x1);
+>  	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_IV_SEL], 0x2);
+> -	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_LOAD], 0x1);
+> -	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_START], 0x1);
+>  
+>  	switch (wrp->slave->type) {
+>  	case PMIC_MT6397:
+> -- 
+> 1.8.1.1.dirty
+> 
+> ************* Email Confidentiality Notice ********************
+> The information contained in this e-mail message (including any 
+> attachments) may be confidential, proprietary, privileged, or otherwise
+> exempt from disclosure under applicable laws. It is intended to be 
+> conveyed only to the designated recipient(s). Any use, dissemination, 
+> distribution, printing, retaining or copying of this e-mail (including its 
+> attachments) by unintended recipient(s) is strictly prohibited and may 
+> be unlawful. If you are not an intended recipient of this e-mail, or believe 
+> that you have received this e-mail in error, please notify the sender 
+> immediately (by replying to this e-mail), delete any and all copies of 
+> this e-mail (including any attachments) from your system, and do not
+> disclose the content of this e-mail to any other person. Thank you!
+> 
