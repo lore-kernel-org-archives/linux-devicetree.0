@@ -1,121 +1,210 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v2 40/40] iommu/arm-smmu-v3: Add support for PCI PASID
-Date: Fri, 11 May 2018 20:06:41 +0100
-Message-ID: <20180511190641.23008-41-jean-philippe.brucker@arm.com>
-References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [linux-next PATCH 1/4] ARM: dts: k2g: add dt bindings to support network driver
+Date: Fri, 11 May 2018 15:29:09 -0400
+Message-ID: <1526066952-5230-2-git-send-email-m-karicheri2@ti.com>
+References: <1526066952-5230-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180511190641.23008-1-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org
-Cc: xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1526066952-5230-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ssantosh@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable PASID for PCI devices that support it. Unlike PRI, we can't enable
-PASID lazily in iommu_sva_device_init(), because it has to be enabled
-before ATS, and because we have to allocate substream tables early.
+This patch add dt bindings to support network driver based on
+Network Sub System (NSS) found on k2g SoC. This consists of
+bindings for netcp node, nss qmss , pktdma, cpsw 2u version
+of ethss and mdio.
 
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+In order to support transitioning between non-promiscuous
+and promiscuous modes in K2G's ethernet switch, netcp ALE
+needs to be enabled. Therefore this patch enables K2G's
+netcp ALE for that purpose.
+
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- drivers/iommu/arm-smmu-v3.c | 54 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ arch/arm/boot/dts/keystone-k2g-netcp.dtsi | 147 ++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/keystone-k2g.dtsi       |  13 +++
+ 2 files changed, 160 insertions(+)
+ create mode 100644 arch/arm/boot/dts/keystone-k2g-netcp.dtsi
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 0edbb8d19579..ac6e69f25893 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -2542,6 +2542,52 @@ static bool arm_smmu_sid_in_range(struct arm_smmu_device *smmu, u32 sid)
- 	return sid < limit;
- }
- 
-+static int arm_smmu_enable_pasid(struct arm_smmu_master_data *master)
-+{
-+	int ret;
-+	int features;
-+	u8 pasid_bits;
-+	int num_pasids;
-+	struct pci_dev *pdev;
+diff --git a/arch/arm/boot/dts/keystone-k2g-netcp.dtsi b/arch/arm/boot/dts/keystone-k2g-netcp.dtsi
+new file mode 100644
+index 0000000..d0e6a9a
+--- /dev/null
++++ b/arch/arm/boot/dts/keystone-k2g-netcp.dtsi
+@@ -0,0 +1,147 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for K2G Netcp driver
++ *
++ * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ */
 +
-+	if (!dev_is_pci(master->dev))
-+		return -ENOSYS;
++qmss: qmss@4020000 {
++	compatible = "ti,66ak2g-navss-qm";
++	dma-coherent;
++	#address-cells = <1>;
++	#size-cells = <1>;
++	power-domains = <&k2g_pds 0x0018>;
++	clocks = <&k2g_clks 0x0018 0>;
++	clock-names = "nss_vclk";
++	ranges;
++	queue-range = <0 0x80>;
++	linkram0 = <0x4020000 0x7ff>;
++	status = "disabled";
 +
-+	pdev = to_pci_dev(master->dev);
++	qmgrs {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++		qmgr0 {
++			managed-queues = <0 0x80>;
++			reg = <0x4100000 0x800>,
++			      <0x4040000 0x100>,
++			      <0x4080000 0x800>,
++			      <0x40c0000 0x800>;
++			reg-names = "peek", "config",
++				    "region", "push";
++		};
 +
-+	features = pci_pasid_features(pdev);
-+	if (features < 0)
-+		return -ENOSYS;
++	};
++	queue-pools {
++		qpend {
++			qpend-0 {
++				qrange = <77 8>;
++				interrupts =<0 308 0xf04 0 309 0xf04 0 310 0xf04
++					     0 311 0xf04 0 312 0xf04 0 313 0xf04
++					     0 314 0xf04 0 315 0xf04>;
++				qalloc-by-id;
++			};
++		};
++		general-purpose {
++			gp-0 {
++				qrange = <112 8>;
++			};
++			netcp-tx {
++				qrange = <5 8>;
++				qalloc-by-id;
++			};
++		};
++	};
 +
-+	num_pasids = pci_max_pasids(pdev);
-+	if (num_pasids <= 0)
-+		return -ENOSYS;
++	descriptor-regions {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++		region-12 {
++			id = <12>;
++			region-spec = <1023 128>; /* num_desc desc_size */
++			link-index = <0x400>;
++		};
++	};
++}; /* qmss */
 +
-+	pasid_bits = min_t(u8, ilog2(num_pasids), master->smmu->ssid_bits);
++knav_dmas: knav_dmas@0 {
++	compatible = "ti,keystone-navigator-dma";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	status = "disabled";
++	power-domains = <&k2g_pds 0x0018>;
++	clocks = <&k2g_clks 0x0018 0>;
++	clock-names = "nss_vclk";
++	ranges;
++	ti,navigator-cloud-address = <0x40c0000 0x40c0000 0x40c0000 0x40c0000>;
 +
-+	dev_dbg(&pdev->dev, "device supports %#x PASID bits [%s%s]\n", pasid_bits,
-+		(features & PCI_PASID_CAP_EXEC) ? "x" : "",
-+		(features & PCI_PASID_CAP_PRIV) ? "p" : "");
++	dma_gbe: dma_gbe@0 {
++		reg = <0x4010000 0x100>,
++		      <0x4011000 0x2a0>, /* 21 Tx channels */
++		      <0x4012000 0x400>, /* 32 Rx channels */
++		      <0x4010100 0x80>,
++		      <0x4013000 0x400>; /* 32 Rx flows */
++		reg-names = "global", "txchan", "rxchan",
++			    "txsched", "rxflow";
++	};
 +
-+	ret = pci_enable_pasid(pdev, features);
-+	return ret ? ret : pasid_bits;
-+}
++};
 +
-+static void arm_smmu_disable_pasid(struct arm_smmu_master_data *master)
-+{
-+	struct pci_dev *pdev;
++netcp: netcp@4000000 {
++	reg = <0x2620110 0x8>;
++	reg-names = "efuse";
++	compatible = "ti,netcp-1.0";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	status = "disabled";
++	power-domains = <&k2g_pds 0x0018>;
++	clocks = <&k2g_clks 0x0018 3>, <&k2g_clks 0x0018 8>;
++	clock-names = "ethss_clk", "cpts";
 +
-+	if (!dev_is_pci(master->dev))
-+		return;
++	/* NetCP address range */
++	ranges = <0 0x4000000 0x1000000>;
 +
-+	pdev = to_pci_dev(master->dev);
++	dma-coherent;
 +
-+	if (!pdev->pasid_enabled)
-+		return;
++	ti,navigator-dmas = <&dma_gbe 0>, <&dma_gbe 5>;
++	ti,navigator-dma-names = "netrx0", "nettx";
 +
-+	pci_disable_pasid(pdev);
-+}
++	netcp-devices {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++		gbe: gbe@200000 {
++			label = "netcp-gbe";
++			compatible = "ti,netcp-gbe-2";
++			reg = <0x200000 0x20>, <0x220000 0x20000>;
++			enable-ale;
++			tx-queue = <5>;
++			tx-channel = "nettx";
++			cpts-rftclk-sel = <0>;
++			cpts-ext-ts-inputs = <8>;
 +
- static int arm_smmu_enable_ats(struct arm_smmu_master_data *master)
- {
- 	size_t stu;
-@@ -2712,6 +2758,11 @@ static int arm_smmu_add_device(struct device *dev)
- 		master->ste.can_stall = true;
- 	}
- 
-+	/* PASID must be enabled before ATS */
-+	ret = arm_smmu_enable_pasid(master);
-+	if (ret > 0)
-+		master->ssid_bits = ret;
++			interfaces {
++				gbe0: interface-0 {
++					slave-port = <0>;
++					link-interface	= <5>;
++				};
++			};
++		};
++	};
 +
- 	arm_smmu_enable_ats(master);
- 
- 	ret = iommu_device_link(&smmu->iommu, dev);
-@@ -2740,6 +2791,7 @@ static int arm_smmu_add_device(struct device *dev)
- 
- err_disable_ats:
- 	arm_smmu_disable_ats(master);
-+	arm_smmu_disable_pasid(master);
- 
- err_free_master:
- 	kfree(master);
-@@ -2769,7 +2821,9 @@ static void arm_smmu_remove_device(struct device *dev)
- 	arm_smmu_remove_master(smmu, master);
- 	iommu_device_unlink(&smmu->iommu, dev);
- 	arm_smmu_disable_pri(master);
-+	/* PASID must be disabled after ATS */
- 	arm_smmu_disable_ats(master);
-+	arm_smmu_disable_pasid(master);
- 	kfree(master);
- 	iommu_fwspec_free(dev);
- }
++	netcp-interfaces {
++		interface-0 {
++			rx-channel = "netrx0";
++			rx-pool = <512 12>;
++			tx-pool = <511 12>;
++			rx-queue-depth = <128 128 0 0>;
++			rx-buffer-size = <1518 4096 0 0>;
++			rx-queue = <77>;
++			tx-completion-queue = <78>;
++			efuse-mac = <1>;
++			netcp-gbe = <&gbe0>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
+index da78c00..a8324a7 100644
+--- a/arch/arm/boot/dts/keystone-k2g.dtsi
++++ b/arch/arm/boot/dts/keystone-k2g.dtsi
+@@ -609,5 +609,18 @@
+ 			reg = <0x21010000 0x200>;
+ 			interrupts = <GIC_SPI 123 IRQ_TYPE_EDGE_RISING>;
+ 		};
++
++		mdio: mdio@4200f00 {
++			compatible = "ti,keystone_mdio", "ti,davinci_mdio";
++			reg = <0x04200f00 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			clocks = <&k2g_clks 0x0018 3>;
++			clock-names = "fck";
++			power-domains = <&k2g_pds 0x0018>;
++			status = "disabled";
++			bus_freq = <2500000>;
++		};
++		#include "keystone-k2g-netcp.dtsi"
+ 	};
+ };
 -- 
-2.17.0
+1.9.1
