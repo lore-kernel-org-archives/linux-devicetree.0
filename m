@@ -1,50 +1,199 @@
-From: Elaine Zhang <zhangqing@rock-chips.com>
-Subject: [PATCH v1 09/13] dt-bindings: add binding for rk3228 power domains
-Date: Fri, 11 May 2018 11:33:46 +0800
-Message-ID: <1526009626-2000-1-git-send-email-zhangqing@rock-chips.com>
-References: <1526009458-28579-1-git-send-email-zhangqing@rock-chips.com>
+From: Yinbo Zhu <yinbo.zhu@nxp.com>
+Subject: [PATCH 1/9] armv8: pm: add rcpm module support
+Date: Fri, 11 May 2018 11:35:22 +0800
+Message-ID: <20180511033530.7931-1-yinbo.zhu@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526009458-28579-1-git-send-email-zhangqing@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, rjw@rjwysocki.net, khilman@kernel.org, ulf.hansson@linaro.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, wxt@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com, Elaine Zhang <zhangqing@rock-chips.com>
+To: yinbo.zhu@nxp.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Catalin Marinas )" <catalin.marinas@arm.com>, "Will Deacon )" <will.deacon@arm.com>, "Lorenzo Pieralisi )" <lorenzo.pieralisi@arm.com>, Li Yang <leoyang.li@nxp.com>
+Cc: xiaobo.xie@nxp.com, ran.wang_1@nxp.com, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Madalin Bucur <madalin.bucur@nxp.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Changming Huang <jerry.huang@nxp.com>, Minghuan Lian <Minghuan.Lian@nxp.com>, Zhao Qiang <qiang.zhao@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, "jiaheng . fan" <jiaheng.fan@nxp.com>, Po Liu <po.liu@nxp.com>, Nipun Gupta <nipun.gupta@nxp.com>, =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>, Priyanka Jain <priyanka.jain@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, costi <constantin.tudor@freescale.com>, Bogdan Purcareata <bogdan.purcareata@nxp.com>, Meng Yi <meng.yi@nxp.com>, Wang Dongsheng <dongsheng.>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for the power domains
-found on Rockchip RK3228 SoCs.
+From: Yuantian Tang <andy.tang@nxp.com>
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+The Run Control and Power Management (RCPM) module communicates
+with embedded cores, coherency modules, and other device platform
+module to provide run control and power management functionality
+
+Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
 ---
- Documentation/devicetree/bindings/soc/rockchip/power_domain.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/soc/fsl/Makefile |    1 +
+ drivers/soc/fsl/rcpm.c   |  153 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 154 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/soc/fsl/rcpm.c
 
-diff --git a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-index 9a3f5fd36a80..affe36dcfa17 100644
---- a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-+++ b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-@@ -7,6 +7,7 @@ Required properties for power domain controller:
- - compatible: Should be one of the following.
- 	"rockchip,rk3036-power-controller" - for RK3036 SoCs.
- 	"rockchip,rk3128-power-controller" - for RK3128 SoCs.
-+	"rockchip,rk3228-power-controller" - for RK3228 SoCs.
- 	"rockchip,rk3288-power-controller" - for RK3288 SoCs.
- 	"rockchip,rk3328-power-controller" - for RK3328 SoCs.
- 	"rockchip,rk3366-power-controller" - for RK3366 SoCs.
-@@ -21,6 +22,7 @@ Required properties for power domain sub nodes:
- - reg: index of the power domain, should use macros in:
- 	"include/dt-bindings/power/rk3036-power.h" - for RK3036 type power domain.
- 	"include/dt-bindings/power/rk3128-power.h" - for RK3128 type power domain.
-+	"include/dt-bindings/power/rk3228-power.h" - for RK3228 type power domain.
- 	"include/dt-bindings/power/rk3288-power.h" - for RK3288 type power domain.
- 	"include/dt-bindings/power/rk3328-power.h" - for RK3328 type power domain.
- 	"include/dt-bindings/power/rk3366-power.h" - for RK3366 type power domain.
-@@ -99,6 +101,7 @@ power domain to use.
- The index should use macros in:
- 	"include/dt-bindings/power/rk3036-power.h" - for rk3036 type power domain.
- 	"include/dt-bindings/power/rk3128-power.h" - for rk3128 type power domain.
-+	"include/dt-bindings/power/rk3128-power.h" - for rk3228 type power domain.
- 	"include/dt-bindings/power/rk3288-power.h" - for rk3288 type power domain.
- 	"include/dt-bindings/power/rk3328-power.h" - for rk3328 type power domain.
- 	"include/dt-bindings/power/rk3366-power.h" - for rk3366 type power domain.
+diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
+index 629dab8..68fcd71 100644
+--- a/drivers/soc/fsl/Makefile
++++ b/drivers/soc/fsl/Makefile
+@@ -5,6 +5,7 @@
+ obj-$(CONFIG_FSL_DPAA)                 += qbman/
+ obj-$(CONFIG_QUICC_ENGINE)		+= qe/
+ obj-$(CONFIG_CPM)			+= qe/
++obj-$(CONFIG_SUSPEND)            	+= rcpm.o
+ obj-$(CONFIG_FSL_GUTS)			+= guts.o
+ obj-$(CONFIG_FSL_LS2_CONSOLE)		+= ls2-console/
+ obj-$(CONFIG_LS_SOC_DRIVERS)		+= layerscape/
+diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
+new file mode 100644
+index 0000000..ff0477b
+--- /dev/null
++++ b/drivers/soc/fsl/rcpm.c
+@@ -0,0 +1,153 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2016 NXP
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ */
++#define pr_fmt(fmt) "RCPM: %s: " fmt, __func__
++
++#include <linux/kernel.h>
++#include <linux/io.h>
++#include <linux/of_platform.h>
++#include <linux/of_address.h>
++#include <linux/suspend.h>
++
++/* RCPM register offset */
++#define RCPM_IPPDEXPCR0			0x140
++
++#define RCPM_WAKEUP_CELL_SIZE	2
++
++struct rcpm_config {
++	int ipp_num;
++	int ippdexpcr_offset;
++	u32 ippdexpcr[2];
++	void *rcpm_reg_base;
++};
++
++static struct rcpm_config *rcpm;
++
++static inline void rcpm_reg_write(u32 offset, u32 value)
++{
++	iowrite32be(value, rcpm->rcpm_reg_base + offset);
++}
++
++static inline u32 rcpm_reg_read(u32 offset)
++{
++	return ioread32be(rcpm->rcpm_reg_base + offset);
++}
++
++static void rcpm_wakeup_fixup(struct device *dev, void *data)
++{
++	struct device_node *node = dev ? dev->of_node : NULL;
++	u32 value[RCPM_WAKEUP_CELL_SIZE];
++	int ret, i;
++
++	if (!dev || !node || !device_may_wakeup(dev))
++		return;
++
++	/*
++	 * Get the values in the "rcpm-wakeup" property.
++	 * Three values are:
++	 * The first is a pointer to the RCPM node.
++	 * The second is the value of the ippdexpcr0 register.
++	 * The third is the value of the ippdexpcr1 register.
++	 */
++	ret = of_property_read_u32_array(node, "fsl,rcpm-wakeup",
++					 value, RCPM_WAKEUP_CELL_SIZE);
++	if (ret)
++		return;
++
++	pr_debug("wakeup source: the device %s\n", node->full_name);
++
++	for (i = 0; i < rcpm->ipp_num; i++)
++		rcpm->ippdexpcr[i] |= value[i + 1];
++}
++
++static int rcpm_suspend_prepare(void)
++{
++	int i;
++
++	WARN_ON(!rcpm);
++
++	for (i = 0; i < rcpm->ipp_num; i++)
++		rcpm->ippdexpcr[i] = 0;
++
++	dpm_for_each_dev(NULL, rcpm_wakeup_fixup);
++
++	for (i = 0; i < rcpm->ipp_num; i++) {
++		rcpm_reg_write(rcpm->ippdexpcr_offset + 4 * i,
++			       rcpm->ippdexpcr[i]);
++		pr_debug("ippdexpcr%d = 0x%x\n", i, rcpm->ippdexpcr[i]);
++	}
++
++	return 0;
++}
++
++static int rcpm_suspend_notifier_call(struct notifier_block *bl,
++				      unsigned long state,
++				      void *unused)
++{
++	switch (state) {
++	case PM_SUSPEND_PREPARE:
++		rcpm_suspend_prepare();
++		break;
++	}
++
++	return NOTIFY_DONE;
++}
++
++static struct rcpm_config rcpm_default_config = {
++	.ipp_num = 1,
++	.ippdexpcr_offset = RCPM_IPPDEXPCR0,
++};
++
++static const struct of_device_id rcpm_matches[] = {
++	{
++		.compatible = "fsl,qoriq-rcpm-2.1",
++		.data = &rcpm_default_config,
++	},
++	{}
++};
++
++static struct notifier_block rcpm_suspend_notifier = {
++	.notifier_call = rcpm_suspend_notifier_call,
++};
++
++static int __init layerscape_rcpm_init(void)
++{
++	const struct of_device_id *match;
++	struct device_node *np;
++
++	np = of_find_matching_node_and_match(NULL, rcpm_matches, &match);
++	if (!np) {
++		pr_err("Can't find the RCPM node.\n");
++		return -EINVAL;
++	}
++
++	if (match->data)
++		rcpm = (struct rcpm_config *)match->data;
++	else
++		return -EINVAL;
++
++	rcpm->rcpm_reg_base = of_iomap(np, 0);
++	of_node_put(np);
++	if (!rcpm->rcpm_reg_base)
++		return -ENOMEM;
++
++	register_pm_notifier(&rcpm_suspend_notifier);
++
++	pr_info("The RCPM driver initialized.\n");
++
++	return 0;
++}
++
++subsys_initcall(layerscape_rcpm_init);
 -- 
-1.9.1
+1.7.1
