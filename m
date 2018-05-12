@@ -1,45 +1,51 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH] iio: adc: stm32-dfsdm: Add support for stm32mp1
-Date: Sat, 12 May 2018 10:33:24 +0100
-Message-ID: <20180512103324.5068c893@archlinux>
-References: <1525266323-4922-1-git-send-email-fabrice.gasnier@st.com>
-        <20180507205151.GA25321@rob-hp-laptop>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v6 3/6] kernel/reboot.c: export pm_power_off_prepare
+Date: Sat, 12 May 2018 13:13:36 +0200
+Message-ID: <1937901.oyadCYFYNo@aspire.rjw.lan>
+References: <20180305102524.5905-1-o.rempel@pengutronix.de> <20180305102524.5905-4-o.rempel@pengutronix.de> <20180504185052.bjhfkvpgrblc7tfc@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180507205151.GA25321@rob-hp-laptop>
+In-Reply-To: <20180504185052.bjhfkvpgrblc7tfc@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Fabrice Gasnier <fabrice.gasnier@st.com>, alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, benjamin.gaignard@linaro.org, arnaud.pouliquen@st.com
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 7 May 2018 15:51:51 -0500
-Rob Herring <robh@kernel.org> wrote:
-
-> On Wed, May 02, 2018 at 03:05:23PM +0200, Fabrice Gasnier wrote:
-> > Add support for DFSDM (Digital Filter For Sigma Delta Modulators)
-> > to STM32MP1. This variant is close to STM32H7 DFSDM, it implements
-> > 6 filter instances. Registers map is also increased.
-> > 
-> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> > ---
-> >  .../bindings/iio/adc/st,stm32-dfsdm-adc.txt         |  7 +++++--
-> >  drivers/iio/adc/stm32-dfsdm-core.c                  | 21 +++++++++++++++++++++
-> >  2 files changed, 26 insertions(+), 2 deletions(-)  
+On Friday, May 4, 2018 8:50:52 PM CEST Oleksij Rempel wrote:
+> Hallo Andrew,
+> I need your ACK or NACK for this patch.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Applied.   Whilst doing this I note that I'm getting a few sparse
-warnings for this driver that would be nice to clean up...
+> This function is used to configure external PMIC to interpret
+> signal which will be triggered by pm_power_off as power off.
+> Since same signal can be used for stand by, I linked PMIC configuration
+> with pm_power_off_prepare to avoid possible conflicts.
+> 
+> On Mon, Mar 05, 2018 at 11:25:20AM +0100, Oleksij Rempel wrote:
+> > Export pm_power_off_prepare. It is needed to implement power off on
+> > Freescale/NXP iMX6 based boards with external power management
+> > integrated circuit (PMIC).
+> > 
+> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > ---
+> >  kernel/reboot.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/kernel/reboot.c b/kernel/reboot.c
+> > index e4ced883d8de..350be6baa60d 100644
+> > --- a/kernel/reboot.c
+> > +++ b/kernel/reboot.c
+> > @@ -49,6 +49,7 @@ int reboot_force;
+> >   */
+> >  
+> >  void (*pm_power_off_prepare)(void);
+> > +EXPORT_SYMBOL(pm_power_off_prepare);
 
-  CHECK   drivers/iio/adc/stm32-dfsdm-adc.c
-drivers/iio/adc/stm32-dfsdm-adc.c:503:21: warning: expression using sizeof(void)
-drivers/iio/adc/stm32-dfsdm-adc.c:503:21: warning: expression using sizeof(void)
+Why not EXPORT_SYMBOL_GPL() ?
 
-Which is mystifying at first glance... Something deep and dirty in the min macro
-but I can't see what..
-
-drivers/iio/adc/stm32-dfsdm-adc.c:680:5: warning: symbol 'stm32_dfsdm_get_buff_cb' was not declared. Should it be static?
-drivers/iio/adc/stm32-dfsdm-adc.c:703:5: warning: symbol 'stm32_dfsdm_release_buff_cb' was not declared. Should it be static?
-
-Are rather more obvious
+> >  
+> >  /**
+> >   *	emergency_restart - reboot the system
+> 
+> 
