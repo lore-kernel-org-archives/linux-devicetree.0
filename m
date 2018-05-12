@@ -1,50 +1,45 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v7 2/3] pinctrl: bcm2835: Add support for generic
- pinctrl binding
-Date: Sat, 12 May 2018 11:08:33 +0200 (CEST)
-Message-ID: <1682893537.255642.1526116113914@email.1und1.de>
-References: <1525030092-3643-3-git-send-email-matheus@castello.eng.br>
- <1525135334-28506-1-git-send-email-matheus@castello.eng.br>
- <1525135334-28506-2-git-send-email-matheus@castello.eng.br>
- <1763017303.92936.1525369119182@email.1und1.de>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH] iio: adc: stm32-dfsdm: Add support for stm32mp1
+Date: Sat, 12 May 2018 10:33:24 +0100
+Message-ID: <20180512103324.5068c893@archlinux>
+References: <1525266323-4922-1-git-send-email-fabrice.gasnier@st.com>
+        <20180507205151.GA25321@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1763017303.92936.1525369119182@email.1und1.de>
+In-Reply-To: <20180507205151.GA25321@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, eric@anholt.net, Matheus Castello <matheus@castello.eng.br>
-Cc: swarren@wwwdotorg.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Fabrice Gasnier <fabrice.gasnier@st.com>, alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, benjamin.gaignard@linaro.org, arnaud.pouliquen@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Mon, 7 May 2018 15:51:51 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-> Stefan Wahren <stefan.wahren@i2se.com> hat am 3. Mai 2018 um 19:38 geschrieben:
-> 
-> 
-> 
-> > Matheus Castello <matheus@castello.eng.br> hat am 1. Mai 2018 um 02:42 geschrieben:
+> On Wed, May 02, 2018 at 03:05:23PM +0200, Fabrice Gasnier wrote:
+> > Add support for DFSDM (Digital Filter For Sigma Delta Modulators)
+> > to STM32MP1. This variant is close to STM32H7 DFSDM, it implements
+> > 6 filter instances. Registers map is also increased.
 > > 
-> > 
-> > To keep driver up to date we add generic pinctrl binding support, which
-> > covers the features used in this driver and has additional node properties
-> > that this SoC has compatibility, so enabling future implementations of
-> > these properties without the need to create new node properties in the
-> > device trees.
-> > 
-> > The logic of this change maintain the old brcm legacy binding support in
-> > order to keep the ABI stable.
-> > 
-> > Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> > Reviewed-by: Eric Anholt <eric@anholt.net>
+> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> > ---
+> >  .../bindings/iio/adc/st,stm32-dfsdm-adc.txt         |  7 +++++--
+> >  drivers/iio/adc/stm32-dfsdm-core.c                  | 21 +++++++++++++++++++++
+> >  2 files changed, 26 insertions(+), 2 deletions(-)  
 > 
-> Patches 2 and 3 are
-> 
-> Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
-> 
-> Thanks
-> Stefan
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Applied.   Whilst doing this I note that I'm getting a few sparse
+warnings for this driver that would be nice to clean up...
 
-gentle ping ...
-> 
-> Btw Stephen isn't BCM2835 maintainer anymore
+  CHECK   drivers/iio/adc/stm32-dfsdm-adc.c
+drivers/iio/adc/stm32-dfsdm-adc.c:503:21: warning: expression using sizeof(void)
+drivers/iio/adc/stm32-dfsdm-adc.c:503:21: warning: expression using sizeof(void)
+
+Which is mystifying at first glance... Something deep and dirty in the min macro
+but I can't see what..
+
+drivers/iio/adc/stm32-dfsdm-adc.c:680:5: warning: symbol 'stm32_dfsdm_get_buff_cb' was not declared. Should it be static?
+drivers/iio/adc/stm32-dfsdm-adc.c:703:5: warning: symbol 'stm32_dfsdm_release_buff_cb' was not declared. Should it be static?
+
+Are rather more obvious
