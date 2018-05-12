@@ -1,121 +1,99 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH] mtd: nand: Add support for reading ooblayout from
- device tree
-Date: Sat, 12 May 2018 07:55:56 +0200
-Message-ID: <20180512075556.2e590e06@bbrezillon>
-References: <20180511212912.1426-1-paul@crapouillou.net>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 2/2] leds: Add Spreadtrum SC27xx breathing light
+ controller driver
+Date: Sat, 12 May 2018 10:35:59 +0200
+Message-ID: <20180512083559.GB8944@amd>
+References: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
+ <9a2a07b8eb313ae3ba64af911337ee7ff7c9ad43.1525757122.git.baolin.wang@linaro.org>
+ <20180509142539.GB25131@amd>
+ <bddc1f89-8c2c-ba6e-3c7e-d89710ed5424@gmail.com>
+ <20180510113749.GG6977@amd>
+ <6289571e-7224-ca5e-1acf-5b099be57302@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="v9Ux+11Zm5mwPlX6"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180511212912.1426-1-paul@crapouillou.net>
+Content-Disposition: inline
+In-Reply-To: <6289571e-7224-ca5e-1acf-5b099be57302@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bolin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Baolin Wang <baolin.wang@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, xiaotong.lu@spreadtrum.com, broonie@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
 
-On Fri, 11 May 2018 23:29:12 +0200
-Paul Cercueil <paul@crapouillou.net> wrote:
+--v9Ux+11Zm5mwPlX6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> By specifying the properties "mtd-oob-ecc" and "mtd-oob-free", it is
-> now possible to specify from devicetree where the ECC data is located
-> inside the OOB region.
+Hi!
 
-Why would we want to do that? I mean, ECC/free regions are ECC
-controller dependent (and NAND chip dependent for the OOB size part),
-so there's no reason to describe it in the DT. And more importantly,
-people are likely to get it wrong.
+> >>I disagree here. We already had the same discussion at the occasion
+> >>of the patch [0] and it turned out to be a dead-end [1]. Now we have
+> >>neither the driver nor the generic pattern interface.
+> >>
+> >>We also already have some older LED class drivers that implement custom
+> >>pattern interfaces (e.g. drivers/leds/leds-lm3533.c) and the same
+> >>approach can be applied in this case.
+> >
+> >Please don't. It was mistake to implement custom pattern interfaces
+> >back then, it is still mistake now.
+>=20
+> It turned out to be really hard to cover all known pattern generator
+> implementations with generic interface. Sure, it would be nice to have
+> one, but the whole discussion around [0] only unveiled the diversity of
+> parameters to cover. And still new devices appear on the market.
+>=20
+> We would have to propose a set of pattern schemes and allow to
+> add new ones to it.
 
-I'm curious, why do you need that?
+I believe that what I'm proposing below is close enough to universal.
 
-Regards,
+> >If we really need solution now, I'd recommend "pattern" file with
+> >
+> >"<delta time> <brightness> <delta time> <brightness>".
+> >
+> >In this specific case, hardware only supports patterns in this format:
+> >
+> >low_time 0 rise_time 255 high_time 255 fall_time 0
+> >
+> >so driver would simply -EINVAL on anything else.
+>=20
+> I'm fine with the pattern file, but the pattern format would have
+> to be defined in the per-driver ABI documentation. It wouldn't much
+> differ from the custom pattern approach though, unless I'm missing some
+> gain of having pattern setting in a uniformly named single sysfs file
+> (with semantics differing from driver to driver).
 
-Boris
+I'm proposing "<delta time> <brightness> ..." sysfs file. It certainly
+covers this hardware, it would be enough to cover the Qualcomm Pulse
+generator (IIRC), and it would cover most uses cases of Nokia N900's
+LED.
 
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  Documentation/devicetree/bindings/mtd/nand.txt |  7 +++++
->  drivers/mtd/nand/raw/nand_base.c               | 42 ++++++++++++++++++++++++++
->  2 files changed, 49 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
-> index 8bb11d809429..118ea92787cb 100644
-> --- a/Documentation/devicetree/bindings/mtd/nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
-> @@ -45,6 +45,13 @@ Optional NAND chip properties:
->  		     as reliable as possible.
->  - nand-rb: shall contain the native Ready/Busy ids.
->  
-> +- nand-oob-ecc: <offset, length> couples of integers, specifying the offset
-> +		     and length of the ECC data in the OOB region. There can be more
-> +		     than one couple.
-> +- nand-oob-free: <offset, length> couples of integers, specifying the offset
-> +		     and length of a free-to-use area in the OOB region. There can be
-> +		     more than one couple.
-> +
->  The ECC strength and ECC step size properties define the correction capability
->  of a controller. Together, they say a controller can correct "{strength} bit
->  errors per {size} bytes".
-> diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-> index 72f3a89da513..c905531effb0 100644
-> --- a/drivers/mtd/nand/raw/nand_base.c
-> +++ b/drivers/mtd/nand/raw/nand_base.c
-> @@ -213,6 +213,43 @@ static const struct mtd_ooblayout_ops nand_ooblayout_lp_hamming_ops = {
->  	.free = nand_ooblayout_free_lp_hamming,
->  };
->  
-> +static int nand_oob_of(struct device_node *np, int section,
-> +		       struct mtd_oob_region *oobregion, const char *prop)
-> +{
-> +	int ret = of_property_read_u32_index(np, prop,
-> +			section * 2, &oobregion->offset);
-> +	if (ret == -EOVERFLOW)
-> +		return -ERANGE; /* We're done */
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = of_property_read_u32_index(np, prop,
-> +			section * 2 + 1, &oobregion->length);
-> +	if (ret == -EOVERFLOW)
-> +		return -EINVAL; /* We must have an even number of integers */
-> +
-> +	return ret;
-> +}
-> +
-> +static int nand_ooblayout_ecc_of(struct mtd_info *mtd, int section,
-> +				 struct mtd_oob_region *oobregion)
-> +{
-> +	return nand_oob_of(mtd->dev.of_node, section,
-> +			oobregion, "nand-oob-ecc");
-> +}
-> +
-> +static int nand_ooblayout_free_of(struct mtd_info *mtd, int section,
-> +				 struct mtd_oob_region *oobregion)
-> +{
-> +	return nand_oob_of(mtd->dev.of_node, section,
-> +			oobregion, "nand-oob-free");
-> +}
-> +
-> +static const struct mtd_ooblayout_ops nand_ooblayout_of_ops = {
-> +	.ecc = nand_ooblayout_ecc_of,
-> +	.free = nand_ooblayout_free_of,
-> +};
-> +
->  static int check_offs_len(struct mtd_info *mtd,
->  					loff_t ofs, uint64_t len)
->  {
-> @@ -5843,6 +5880,11 @@ static int nand_dt_init(struct nand_chip *chip)
->  	if (of_property_read_bool(dn, "nand-ecc-maximize"))
->  		chip->ecc.options |= NAND_ECC_MAXIMIZE;
->  
-> +	if (!chip->mtd.ooblayout &&
-> +				of_property_read_bool(dn, "nand-oob-ecc") &&
-> +				of_property_read_bool(dn, "nand-oob-free"))
-> +		chip->mtd.ooblayout = &nand_ooblayout_of_ops;
-> +
->  	return 0;
->  }
->  
+Yes, we would need to document limitations of each chip. But it should
+be easily possible to run pattern designed for Spreadtrum on N900,
+even if it would not work the other way around.
+
+(If someone really wants to run complex patterns on simple hardware,
+we can provide software emulation using same file format. I believe I
+still have that patch somewhere.)
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--v9Ux+11Zm5mwPlX6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlr2p28ACgkQMOfwapXb+vIf9gCfbc7J1DbeydXSF6VfCfDj6MY8
+6JMAoMAEpqFV5gkVpTTIJ/6wvGYtGh0s
+=FSXM
+-----END PGP SIGNATURE-----
+
+--v9Ux+11Zm5mwPlX6--
