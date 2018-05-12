@@ -1,40 +1,34 @@
 From: David Lechner <david@lechnology.com>
-Subject: =?UTF-8?Q?Re:_[PATCH_v10_00/27]_ARM:_davinci:_convert_to_common_clo?=
- =?UTF-8?B?Y2sgZnJhbWV3b3Jr4oCL?=
-Date: Sat, 12 May 2018 16:11:06 -0500
-Message-ID: <0b62ac7b-aa02-6641-2a02-6cefb4076262@lechnology.com>
-References: <20180509172606.29387-1-david@lechnology.com>
- <45ce3129-4a9e-54d2-e594-49b451571842@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH] ARM: dts: da850-lego-ev3: remove unnecessary gpio-keys properties
+Date: Sat, 12 May 2018 16:41:59 -0500
+Message-ID: <20180512214159.22041-1-david@lechnology.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <45ce3129-4a9e-54d2-e594-49b451571842@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: David Lechner <david@lechnology.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/11/2018 10:26 AM, Sekhar Nori wrote:
-> Hi David,
-> 
-> On Wednesday 09 May 2018 10:55 PM, David Lechner wrote:
->> This series converts mach-davinci to use the common clock framework.
->>
->> The series works like this, the first 3 patches fix some issues with the clock
->> drivers that have already been accepted into the mainline kernel.
-> 
-> I have not yet looked at the patches, but I got a bunch of W=1 warnings
-> and some sparse warnings when building your branch. Please take a look
-> at these. Unfortunately the output is mixed between sparse and compiler.
-> The "expression using sizeof(void)" can be ignored as its a known issue
-> with sparse, I believe.
-> 
+This removes the #address-cells and #size-cells properties from the
+gpio-keys node in the da850-lego-ev3 device tree. These properties are
+not needed since the child nodes don't have a reg property.
 
-I've started a common-clk-v11 branch on my GitHub that fixes most of these.
-Also submitted "clk: davinci: psc-dm355: fix ASP0/1 clkdev lookups" that
-fixes a couple more. I've purposely not fixed the davinci_clk_reset_* functions
-since there is already a patch that will remove those functions in the future.
+Signed-off-by: David Lechner <david@lechnology.com>
+---
+ arch/arm/boot/dts/da850-lego-ev3.dts | 2 --
+ 1 file changed, 2 deletions(-)
 
-I'll wait a bit longer for DT review before re-sending v11 of this series.
+diff --git a/arch/arm/boot/dts/da850-lego-ev3.dts b/arch/arm/boot/dts/da850-lego-ev3.dts
+index d4a131b6a46e..3fe8db69f50c 100644
+--- a/arch/arm/boot/dts/da850-lego-ev3.dts
++++ b/arch/arm/boot/dts/da850-lego-ev3.dts
+@@ -33,8 +33,6 @@
+ 	 */
+ 	gpio_keys {
+ 		compatible = "gpio-keys";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 		label = "EV3 Brick Buttons";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&button_bias>;
+-- 
+2.17.0
