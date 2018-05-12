@@ -1,51 +1,46 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v6 3/6] kernel/reboot.c: export pm_power_off_prepare
-Date: Sat, 12 May 2018 13:13:36 +0200
-Message-ID: <1937901.oyadCYFYNo@aspire.rjw.lan>
-References: <20180305102524.5905-1-o.rempel@pengutronix.de> <20180305102524.5905-4-o.rempel@pengutronix.de> <20180504185052.bjhfkvpgrblc7tfc@pengutronix.de>
+From: Adam Ford <aford173@gmail.com>
+Subject: [PATCH V3] ARM: dts: da850-evm: add WP and CD to MMC
+Date: Sat, 12 May 2018 07:23:58 -0500
+Message-ID: <20180512122358.17459-1-aford173@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180504185052.bjhfkvpgrblc7tfc@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Adam Ford <aford173@gmail.com>, devicetree@vger.kernel.org, nsekhar@ti.com, khilman@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, May 4, 2018 8:50:52 PM CEST Oleksij Rempel wrote:
-> Hallo Andrew,
-> I need your ACK or NACK for this patch.
-> 
-> This function is used to configure external PMIC to interpret
-> signal which will be triggered by pm_power_off as power off.
-> Since same signal can be used for stand by, I linked PMIC configuration
-> with pm_power_off_prepare to avoid possible conflicts.
-> 
-> On Mon, Mar 05, 2018 at 11:25:20AM +0100, Oleksij Rempel wrote:
-> > Export pm_power_off_prepare. It is needed to implement power off on
-> > Freescale/NXP iMX6 based boards with external power management
-> > integrated circuit (PMIC).
-> > 
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> >  kernel/reboot.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/kernel/reboot.c b/kernel/reboot.c
-> > index e4ced883d8de..350be6baa60d 100644
-> > --- a/kernel/reboot.c
-> > +++ b/kernel/reboot.c
-> > @@ -49,6 +49,7 @@ int reboot_force;
-> >   */
-> >  
-> >  void (*pm_power_off_prepare)(void);
-> > +EXPORT_SYMBOL(pm_power_off_prepare);
+The legacy mode uses the write protect and card detect but DT does not.
+This patch enables Write-Protect and Card-Detect pins for the MMC card, and
+the gpio-ranges property sets the gpio pinmuxing for those respective pins.
 
-Why not EXPORT_SYMBOL_GPL() ?
+Signed-off-by: Adam Ford <aford173@gmail.com>
+--
 
-> >  
-> >  /**
-> >   *	emergency_restart - reboot the system
-> 
-> 
+V3: Update description of the patch. Rebase on davinci 4.18/dt
+V2: Rebase on davinci master and remove GPIO pinmuxing
+
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index e91f81f21b22..2e817da37fdb 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -149,6 +149,8 @@
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins>;
++	cd-gpios = <&gpio 64 GPIO_ACTIVE_LOW>;
++	wp-gpios = <&gpio 65 GPIO_ACTIVE_HIGH>;
+ };
+ 
+ &spi1 {
+-- 
+2.17.0
