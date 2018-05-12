@@ -1,107 +1,121 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v2 03/12] arm: dts: mt7623: fix invalid memory node
- being generated
-Date: Sat, 12 May 2018 13:28:26 +0800
-Message-ID: <1526102906.18877.42.camel@mtkswgap22>
-References: <cover.1523434757.git.sean.wang@mediatek.com>
-         <d887b72e1839c7e476179e384cfc712216096f20.1523434758.git.sean.wang@mediatek.com>
-         <4dcb0435-1f98-0753-0feb-d17ad02077ae@gmail.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH] mtd: nand: Add support for reading ooblayout from
+ device tree
+Date: Sat, 12 May 2018 07:55:56 +0200
+Message-ID: <20180512075556.2e590e06@bbrezillon>
+References: <20180511212912.1426-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <4dcb0435-1f98-0753-0feb-d17ad02077ae@gmail.com>
-Sender: stable-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180511212912.1426-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bolin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-05-11 at 17:03 +0200, Matthias Brugger wrote:
-> 
-> On 04/11/2018 10:53 AM, sean.wang@mediatek.com wrote:
-> > From: Sean Wang <sean.wang@mediatek.com>
-> > 
-> > Below two wrong nodes in existing DTS files would cause a fail boot since
-> > in fact the address 0 is not the correct place the memory device locates
-> > at.
-> > 
-> > memory {
-> >         device_type = "memory";
-> >         reg = <0x0 0x0 0x0 0x0>;
-> > };
-> > 
-> > memory@80000000 {
-> >         reg = <0x0 0x80000000 0x0 0x40000000>;
-> > };
-> > 
-> > In order to avoid having a memory node starting at address 0, we can't
-> > include file skeleton64.dtsi and instead need to explicitly manually
-> > define a few of properties the DTS relies on such as #address-cells
-> > and #size-cells in root node and device_type in the node memory@80000000.
-> > 
-> > Cc: stable@vger.kernel.org
-> > Fixes: 31ac0d69a1d4 ("ARM: dts: mediatek: add MT7623 basic support")
-> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > ---
-> >  arch/arm/boot/dts/mt7623.dtsi                 | 3 ++-
-> >  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 1 +
-> >  arch/arm/boot/dts/mt7623n-rfb.dtsi            | 1 +
-> >  3 files changed, 4 insertions(+), 1 deletion(-)
-> > 
-> 
-> merged. We would need this at least for mt2701 as well, correct?
-> Would you mind to provide a patch.
-> 
-> Regards,
-> Matthias
-> 
+Hi Paul,
 
-Thanks! I totally think the same problem could happen on mt2701, so I'm 
-happy to come up with a patch for that.
+On Fri, 11 May 2018 23:29:12 +0200
+Paul Cercueil <paul@crapouillou.net> wrote:
 
-	Sean
+> By specifying the properties "mtd-oob-ecc" and "mtd-oob-free", it is
+> now possible to specify from devicetree where the ECC data is located
+> inside the OOB region.
 
-> > diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-> > index fec4715..406a9f3 100644
-> > --- a/arch/arm/boot/dts/mt7623.dtsi
-> > +++ b/arch/arm/boot/dts/mt7623.dtsi
-> > @@ -15,11 +15,12 @@
-> >  #include <dt-bindings/phy/phy.h>
-> >  #include <dt-bindings/reset/mt2701-resets.h>
-> >  #include <dt-bindings/thermal/thermal.h>
-> > -#include "skeleton64.dtsi"
-> >  
-> >  / {
-> >  	compatible = "mediatek,mt7623";
-> >  	interrupt-parent = <&sysirq>;
-> > +	#address-cells = <2>;
-> > +	#size-cells = <2>;
-> >  
-> >  	cpu_opp_table: opp-table {
-> >  		compatible = "operating-points-v2";
-> > diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> > index bbf56f8..5938e4c 100644
-> > --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> > +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> > @@ -109,6 +109,7 @@
-> >  	};
-> >  
-> >  	memory@80000000 {
-> > +		device_type = "memory";
-> >  		reg = <0 0x80000000 0 0x40000000>;
-> >  	};
-> >  };
-> > diff --git a/arch/arm/boot/dts/mt7623n-rfb.dtsi b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-> > index a199ae7..343e8ef 100644
-> > --- a/arch/arm/boot/dts/mt7623n-rfb.dtsi
-> > +++ b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-> > @@ -40,6 +40,7 @@
-> >  	};
-> >  
-> >  	memory@80000000 {
-> > +		device_type = "memory";
-> >  		reg = <0 0x80000000 0 0x40000000>;
-> >  	};
-> >  
-> > 
+Why would we want to do that? I mean, ECC/free regions are ECC
+controller dependent (and NAND chip dependent for the OOB size part),
+so there's no reason to describe it in the DT. And more importantly,
+people are likely to get it wrong.
+
+I'm curious, why do you need that?
+
+Regards,
+
+Boris
+
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  Documentation/devicetree/bindings/mtd/nand.txt |  7 +++++
+>  drivers/mtd/nand/raw/nand_base.c               | 42 ++++++++++++++++++++++++++
+>  2 files changed, 49 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
+> index 8bb11d809429..118ea92787cb 100644
+> --- a/Documentation/devicetree/bindings/mtd/nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
+> @@ -45,6 +45,13 @@ Optional NAND chip properties:
+>  		     as reliable as possible.
+>  - nand-rb: shall contain the native Ready/Busy ids.
+>  
+> +- nand-oob-ecc: <offset, length> couples of integers, specifying the offset
+> +		     and length of the ECC data in the OOB region. There can be more
+> +		     than one couple.
+> +- nand-oob-free: <offset, length> couples of integers, specifying the offset
+> +		     and length of a free-to-use area in the OOB region. There can be
+> +		     more than one couple.
+> +
+>  The ECC strength and ECC step size properties define the correction capability
+>  of a controller. Together, they say a controller can correct "{strength} bit
+>  errors per {size} bytes".
+> diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+> index 72f3a89da513..c905531effb0 100644
+> --- a/drivers/mtd/nand/raw/nand_base.c
+> +++ b/drivers/mtd/nand/raw/nand_base.c
+> @@ -213,6 +213,43 @@ static const struct mtd_ooblayout_ops nand_ooblayout_lp_hamming_ops = {
+>  	.free = nand_ooblayout_free_lp_hamming,
+>  };
+>  
+> +static int nand_oob_of(struct device_node *np, int section,
+> +		       struct mtd_oob_region *oobregion, const char *prop)
+> +{
+> +	int ret = of_property_read_u32_index(np, prop,
+> +			section * 2, &oobregion->offset);
+> +	if (ret == -EOVERFLOW)
+> +		return -ERANGE; /* We're done */
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = of_property_read_u32_index(np, prop,
+> +			section * 2 + 1, &oobregion->length);
+> +	if (ret == -EOVERFLOW)
+> +		return -EINVAL; /* We must have an even number of integers */
+> +
+> +	return ret;
+> +}
+> +
+> +static int nand_ooblayout_ecc_of(struct mtd_info *mtd, int section,
+> +				 struct mtd_oob_region *oobregion)
+> +{
+> +	return nand_oob_of(mtd->dev.of_node, section,
+> +			oobregion, "nand-oob-ecc");
+> +}
+> +
+> +static int nand_ooblayout_free_of(struct mtd_info *mtd, int section,
+> +				 struct mtd_oob_region *oobregion)
+> +{
+> +	return nand_oob_of(mtd->dev.of_node, section,
+> +			oobregion, "nand-oob-free");
+> +}
+> +
+> +static const struct mtd_ooblayout_ops nand_ooblayout_of_ops = {
+> +	.ecc = nand_ooblayout_ecc_of,
+> +	.free = nand_ooblayout_free_of,
+> +};
+> +
+>  static int check_offs_len(struct mtd_info *mtd,
+>  					loff_t ofs, uint64_t len)
+>  {
+> @@ -5843,6 +5880,11 @@ static int nand_dt_init(struct nand_chip *chip)
+>  	if (of_property_read_bool(dn, "nand-ecc-maximize"))
+>  		chip->ecc.options |= NAND_ECC_MAXIMIZE;
+>  
+> +	if (!chip->mtd.ooblayout &&
+> +				of_property_read_bool(dn, "nand-oob-ecc") &&
+> +				of_property_read_bool(dn, "nand-oob-free"))
+> +		chip->mtd.ooblayout = &nand_ooblayout_of_ops;
+> +
+>  	return 0;
+>  }
+>  
