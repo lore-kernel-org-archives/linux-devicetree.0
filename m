@@ -1,99 +1,50 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 2/2] leds: Add Spreadtrum SC27xx breathing light
- controller driver
-Date: Sat, 12 May 2018 10:35:59 +0200
-Message-ID: <20180512083559.GB8944@amd>
-References: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
- <9a2a07b8eb313ae3ba64af911337ee7ff7c9ad43.1525757122.git.baolin.wang@linaro.org>
- <20180509142539.GB25131@amd>
- <bddc1f89-8c2c-ba6e-3c7e-d89710ed5424@gmail.com>
- <20180510113749.GG6977@amd>
- <6289571e-7224-ca5e-1acf-5b099be57302@gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v7 2/3] pinctrl: bcm2835: Add support for generic
+ pinctrl binding
+Date: Sat, 12 May 2018 11:08:33 +0200 (CEST)
+Message-ID: <1682893537.255642.1526116113914@email.1und1.de>
+References: <1525030092-3643-3-git-send-email-matheus@castello.eng.br>
+ <1525135334-28506-1-git-send-email-matheus@castello.eng.br>
+ <1525135334-28506-2-git-send-email-matheus@castello.eng.br>
+ <1763017303.92936.1525369119182@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="v9Ux+11Zm5mwPlX6"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6289571e-7224-ca5e-1acf-5b099be57302@gmail.com>
+In-Reply-To: <1763017303.92936.1525369119182@email.1und1.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Baolin Wang <baolin.wang@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, xiaotong.lu@spreadtrum.com, broonie@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linus.walleij@linaro.org, eric@anholt.net, Matheus Castello <matheus@castello.eng.br>
+Cc: swarren@wwwdotorg.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Linus,
 
---v9Ux+11Zm5mwPlX6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Stefan Wahren <stefan.wahren@i2se.com> hat am 3. Mai 2018 um 19:38 geschrieben:
+> 
+> 
+> 
+> > Matheus Castello <matheus@castello.eng.br> hat am 1. Mai 2018 um 02:42 geschrieben:
+> > 
+> > 
+> > To keep driver up to date we add generic pinctrl binding support, which
+> > covers the features used in this driver and has additional node properties
+> > that this SoC has compatibility, so enabling future implementations of
+> > these properties without the need to create new node properties in the
+> > device trees.
+> > 
+> > The logic of this change maintain the old brcm legacy binding support in
+> > order to keep the ABI stable.
+> > 
+> > Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> > Reviewed-by: Eric Anholt <eric@anholt.net>
+> 
+> Patches 2 and 3 are
+> 
+> Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+> 
+> Thanks
+> Stefan
 
-Hi!
-
-> >>I disagree here. We already had the same discussion at the occasion
-> >>of the patch [0] and it turned out to be a dead-end [1]. Now we have
-> >>neither the driver nor the generic pattern interface.
-> >>
-> >>We also already have some older LED class drivers that implement custom
-> >>pattern interfaces (e.g. drivers/leds/leds-lm3533.c) and the same
-> >>approach can be applied in this case.
-> >
-> >Please don't. It was mistake to implement custom pattern interfaces
-> >back then, it is still mistake now.
->=20
-> It turned out to be really hard to cover all known pattern generator
-> implementations with generic interface. Sure, it would be nice to have
-> one, but the whole discussion around [0] only unveiled the diversity of
-> parameters to cover. And still new devices appear on the market.
->=20
-> We would have to propose a set of pattern schemes and allow to
-> add new ones to it.
-
-I believe that what I'm proposing below is close enough to universal.
-
-> >If we really need solution now, I'd recommend "pattern" file with
-> >
-> >"<delta time> <brightness> <delta time> <brightness>".
-> >
-> >In this specific case, hardware only supports patterns in this format:
-> >
-> >low_time 0 rise_time 255 high_time 255 fall_time 0
-> >
-> >so driver would simply -EINVAL on anything else.
->=20
-> I'm fine with the pattern file, but the pattern format would have
-> to be defined in the per-driver ABI documentation. It wouldn't much
-> differ from the custom pattern approach though, unless I'm missing some
-> gain of having pattern setting in a uniformly named single sysfs file
-> (with semantics differing from driver to driver).
-
-I'm proposing "<delta time> <brightness> ..." sysfs file. It certainly
-covers this hardware, it would be enough to cover the Qualcomm Pulse
-generator (IIRC), and it would cover most uses cases of Nokia N900's
-LED.
-
-Yes, we would need to document limitations of each chip. But it should
-be easily possible to run pattern designed for Spreadtrum on N900,
-even if it would not work the other way around.
-
-(If someone really wants to run complex patterns on simple hardware,
-we can provide software emulation using same file format. I believe I
-still have that patch somewhere.)
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---v9Ux+11Zm5mwPlX6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlr2p28ACgkQMOfwapXb+vIf9gCfbc7J1DbeydXSF6VfCfDj6MY8
-6JMAoMAEpqFV5gkVpTTIJ/6wvGYtGh0s
-=FSXM
------END PGP SIGNATURE-----
-
---v9Ux+11Zm5mwPlX6--
+gentle ping ...
+> 
+> Btw Stephen isn't BCM2835 maintainer anymore
