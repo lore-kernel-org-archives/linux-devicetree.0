@@ -1,49 +1,92 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC v3 0/4] usb: role: rcar-usb3-role-switch: add support for R-Car SoCs
-Date: Mon, 14 May 2018 18:15:56 +0900
-Message-Id: <1526289360-3997-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=ApHA=H7=crapouillou.net=paul@kernel.org>
+Message-Id: <5af6d649.1c69fb81.1cb2d.7f5bSMTPIN_ADDED_MISSING@mx.google.com>
+Date: Sat, 12 May 2018 08:55:40 -0300
+Subject: Re: [PATCH] mtd: nand: Add support for reading ooblayout from
+ device tree
+From: Paul Cercueil <paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Boris Brezillon <boris.brezillon@bolin.com>, Marek Vasut <marek.vasut@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch set is based on Felipe's usb.git / testing/next branch
-(commit id = 5d1332a8eabd8bd5b8c322d45542968ee6f113be).
-
-I still marked this patch set as "RFC". I would like to know whether
-this way is good or not.
-
-Changes from RFC v2:
- - Add registering usb role switch into drivers/usb/gadget/udc/renesas_usb3
-   because hardware resource (a register) is shared and remove individual
-   usb role switch driver/dt-bindings for R-Car.
- - Remove "usb_role_switch_get_by_graph" API because the renesas_usb3 driver
-   doesn't need such API now.
-
-Changes from RFC:
- - Remove "device-connection-id" and "usb role switch driver" dt-bingings.
- - Remove drivers/of code.
- - Add a new API for find the connection by using graph on devcon.c and roles.c.
- - Use each new API on the rcar usb role switch and renesas_usb3 drivers.
- - Update the dtsi file for r8a7795.
-
-
-Yoshihiro Shimoda (4):
-  base: devcon: add a new API to find the graph
-  usb: gadget: udc: renesas_usb3: Add register of usb role switch
-  usb: gadget: udc: renesas_usb3: use usb role switch API
-  arm64: dts: renesas: r8a7795: add OF graph for usb role switch
-
- .../devicetree/bindings/usb/renesas_usb3.txt       | 15 +++++
- Documentation/driver-api/device_connection.rst     |  4 +-
- arch/arm64/boot/dts/renesas/r8a7795.dtsi           | 12 ++++
- drivers/base/devcon.c                              | 43 +++++++++++++
- drivers/usb/gadget/udc/Kconfig                     |  1 +
- drivers/usb/gadget/udc/renesas_usb3.c              | 74 +++++++++++++++++++++-
- include/linux/device.h                             |  2 +
- 7 files changed, 147 insertions(+), 4 deletions(-)
-
--- 
-1.9.1
+SGkgQm9yaXMsCgpMZSAxMiBtYWkgMjAxOCAwMjo1NSwgQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5i
+cmV6aWxsb25AYm9vdGxpbi5jb20+IGEgw6ljcml0IDoKPgo+IEhpIFBhdWwsIAo+Cj4gT24gRnJp
+LCAxMSBNYXkgMjAxOCAyMzoyOToxMiArMDIwMCAKPiBQYXVsIENlcmN1ZWlsIDxwYXVsQGNyYXBv
+dWlsbG91Lm5ldD4gd3JvdGU6IAo+Cj4gPiBCeSBzcGVjaWZ5aW5nIHRoZSBwcm9wZXJ0aWVzICJt
+dGQtb29iLWVjYyIgYW5kICJtdGQtb29iLWZyZWUiLCBpdCBpcyAKPiA+IG5vdyBwb3NzaWJsZSB0
+byBzcGVjaWZ5IGZyb20gZGV2aWNldHJlZSB3aGVyZSB0aGUgRUNDIGRhdGEgaXMgbG9jYXRlZCAK
+PiA+IGluc2lkZSB0aGUgT09CIHJlZ2lvbi4gCj4KPiBXaHkgd291bGQgd2Ugd2FudCB0byBkbyB0
+aGF0PyBJIG1lYW4sIEVDQy9mcmVlIHJlZ2lvbnMgYXJlIEVDQyAKPiBjb250cm9sbGVyIGRlcGVu
+ZGVudCAoYW5kIE5BTkQgY2hpcCBkZXBlbmRlbnQgZm9yIHRoZSBPT0Igc2l6ZSBwYXJ0KSwgCj4g
+c28gdGhlcmUncyBubyByZWFzb24gdG8gZGVzY3JpYmUgaXQgaW4gdGhlIERULiBBbmQgbW9yZSBp
+bXBvcnRhbnRseSwgCj4gcGVvcGxlIGFyZSBsaWtlbHkgdG8gZ2V0IGl0IHdyb25nLiAKPgo+IEkn
+bSBjdXJpb3VzLCB3aHkgZG8geW91IG5lZWQgdGhhdD8gCgpHb29kIHF1ZXN0aW9uLgoKVGhlIHJl
+YXNvbiBpcyB0aGF0IHNvbWUgU29DcyBoYXZlIG5vIEVDQyBjb250cm9sbGVyLgpUaGUgdmFyaW91
+cyBib2FyZHMgZm9yIHRoZXNlIFNvQ3MgdGhlbiBhbGwgdXNlIGEgZGlmZmVyZW50IGxheW91dC4K
+Ck15IG1vdGl2YXRpb24gaXMgdG8gZ2V0IHJpZCBvZiB0aGlzIChtb3ZlIGl0IHRvIGRldmljZXRy
+ZWUpOgpodHRwczovL2VsaXhpci5ib290bGluLmNvbS9saW51eC9sYXRlc3Qvc291cmNlL2FyY2gv
+bWlwcy9qejQ3NDAvYm9hcmQtcWlfbGI2MC5jI0w5MwpBbmQgZW5hYmxlIHRoZSBzdXBwb3J0IG9m
+IG90aGVyIGJvYXJkcyB3aXRoIGN1c3RvbSBPT0IgbGF5b3V0cy4KCj4gUmVnYXJkcywgCj4KPiBC
+b3JpcyAKClRoYW5rcywKLVBhdWwKCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IFBhdWwgQ2VyY3Vl
+aWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PiAKPiA+IC0tLSAKPiA+wqAgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9uYW5kLnR4dCB8wqAgNyArKysrKyAKPiA+wqAgZHJpdmVy
+cy9tdGQvbmFuZC9yYXcvbmFuZF9iYXNlLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwg
+NDIgKysrKysrKysrKysrKysrKysrKysrKysrKysgCj4gPsKgIDIgZmlsZXMgY2hhbmdlZCwgNDkg
+aW5zZXJ0aW9ucygrKSAKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tdGQvbmFuZC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbXRkL25hbmQudHh0IAo+ID4gaW5kZXggOGJiMTFkODA5NDI5Li4xMThlYTkyNzg3Y2Ig
+MTAwNjQ0IAo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9u
+YW5kLnR4dCAKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQv
+bmFuZC50eHQgCj4gPiBAQCAtNDUsNiArNDUsMTMgQEAgT3B0aW9uYWwgTkFORCBjaGlwIHByb3Bl
+cnRpZXM6IAo+ID7CoCDCoMKgwqDCoCBhcyByZWxpYWJsZSBhcyBwb3NzaWJsZS4gCj4gPsKgIC0g
+bmFuZC1yYjogc2hhbGwgY29udGFpbiB0aGUgbmF0aXZlIFJlYWR5L0J1c3kgaWRzLiAKPiA+wqAg
+Cj4gPiArLSBuYW5kLW9vYi1lY2M6IDxvZmZzZXQsIGxlbmd0aD4gY291cGxlcyBvZiBpbnRlZ2Vy
+cywgc3BlY2lmeWluZyB0aGUgb2Zmc2V0IAo+ID4gKyDCoMKgwqDCoCBhbmQgbGVuZ3RoIG9mIHRo
+ZSBFQ0MgZGF0YSBpbiB0aGUgT09CIHJlZ2lvbi4gVGhlcmUgY2FuIGJlIG1vcmUgCj4gPiArIMKg
+wqDCoMKgIHRoYW4gb25lIGNvdXBsZS4gCj4gPiArLSBuYW5kLW9vYi1mcmVlOiA8b2Zmc2V0LCBs
+ZW5ndGg+IGNvdXBsZXMgb2YgaW50ZWdlcnMsIHNwZWNpZnlpbmcgdGhlIG9mZnNldCAKPiA+ICsg
+wqDCoMKgwqAgYW5kIGxlbmd0aCBvZiBhIGZyZWUtdG8tdXNlIGFyZWEgaW4gdGhlIE9PQiByZWdp
+b24uIFRoZXJlIGNhbiBiZSAKPiA+ICsgwqDCoMKgwqAgbW9yZSB0aGFuIG9uZSBjb3VwbGUuIAo+
+ID4gKyAKPiA+wqAgVGhlIEVDQyBzdHJlbmd0aCBhbmQgRUNDIHN0ZXAgc2l6ZSBwcm9wZXJ0aWVz
+IGRlZmluZSB0aGUgY29ycmVjdGlvbiBjYXBhYmlsaXR5IAo+ID7CoCBvZiBhIGNvbnRyb2xsZXIu
+IFRvZ2V0aGVyLCB0aGV5IHNheSBhIGNvbnRyb2xsZXIgY2FuIGNvcnJlY3QgIntzdHJlbmd0aH0g
+Yml0IAo+ID7CoCBlcnJvcnMgcGVyIHtzaXplfSBieXRlcyIuIAo+ID4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvbXRkL25hbmQvcmF3L25hbmRfYmFzZS5jIGIvZHJpdmVycy9tdGQvbmFuZC9yYXcvbmFu
+ZF9iYXNlLmMgCj4gPiBpbmRleCA3MmYzYTg5ZGE1MTMuLmM5MDU1MzFlZmZiMCAxMDA2NDQgCj4g
+PiAtLS0gYS9kcml2ZXJzL210ZC9uYW5kL3Jhdy9uYW5kX2Jhc2UuYyAKPiA+ICsrKyBiL2RyaXZl
+cnMvbXRkL25hbmQvcmF3L25hbmRfYmFzZS5jIAo+ID4gQEAgLTIxMyw2ICsyMTMsNDMgQEAgc3Rh
+dGljIGNvbnN0IHN0cnVjdCBtdGRfb29ibGF5b3V0X29wcyBuYW5kX29vYmxheW91dF9scF9oYW1t
+aW5nX29wcyA9IHsgCj4gPsKgIC5mcmVlID0gbmFuZF9vb2JsYXlvdXRfZnJlZV9scF9oYW1taW5n
+LCAKPiA+wqAgfTsgCj4gPsKgIAo+ID4gK3N0YXRpYyBpbnQgbmFuZF9vb2Jfb2Yoc3RydWN0IGRl
+dmljZV9ub2RlICpucCwgaW50IHNlY3Rpb24sIAo+ID4gKyDCoMKgwqDCoMKgwqAgc3RydWN0IG10
+ZF9vb2JfcmVnaW9uICpvb2JyZWdpb24sIGNvbnN0IGNoYXIgKnByb3ApIAo+ID4gK3sgCj4gPiAr
+IGludCByZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMl9pbmRleChucCwgcHJvcCwgCj4gPiArIHNl
+Y3Rpb24gKiAyLCAmb29icmVnaW9uLT5vZmZzZXQpOyAKPiA+ICsgaWYgKHJldCA9PSAtRU9WRVJG
+TE9XKSAKPiA+ICsgcmV0dXJuIC1FUkFOR0U7IC8qIFdlJ3JlIGRvbmUgKi8gCj4gPiArIGlmIChy
+ZXQpIAo+ID4gKyByZXR1cm4gcmV0OyAKPiA+ICsgCj4gPiArIHJldCA9IG9mX3Byb3BlcnR5X3Jl
+YWRfdTMyX2luZGV4KG5wLCBwcm9wLCAKPiA+ICsgc2VjdGlvbiAqIDIgKyAxLCAmb29icmVnaW9u
+LT5sZW5ndGgpOyAKPiA+ICsgaWYgKHJldCA9PSAtRU9WRVJGTE9XKSAKPiA+ICsgcmV0dXJuIC1F
+SU5WQUw7IC8qIFdlIG11c3QgaGF2ZSBhbiBldmVuIG51bWJlciBvZiBpbnRlZ2VycyAqLyAKPiA+
+ICsgCj4gPiArIHJldHVybiByZXQ7IAo+ID4gK30gCj4gPiArIAo+ID4gK3N0YXRpYyBpbnQgbmFu
+ZF9vb2JsYXlvdXRfZWNjX29mKHN0cnVjdCBtdGRfaW5mbyAqbXRkLCBpbnQgc2VjdGlvbiwgCj4g
+PiArIHN0cnVjdCBtdGRfb29iX3JlZ2lvbiAqb29icmVnaW9uKSAKPiA+ICt7IAo+ID4gKyByZXR1
+cm4gbmFuZF9vb2Jfb2YobXRkLT5kZXYub2Zfbm9kZSwgc2VjdGlvbiwgCj4gPiArIG9vYnJlZ2lv
+biwgIm5hbmQtb29iLWVjYyIpOyAKPiA+ICt9IAo+ID4gKyAKPiA+ICtzdGF0aWMgaW50IG5hbmRf
+b29ibGF5b3V0X2ZyZWVfb2Yoc3RydWN0IG10ZF9pbmZvICptdGQsIGludCBzZWN0aW9uLCAKPiA+
+ICsgc3RydWN0IG10ZF9vb2JfcmVnaW9uICpvb2JyZWdpb24pIAo+ID4gK3sgCj4gPiArIHJldHVy
+biBuYW5kX29vYl9vZihtdGQtPmRldi5vZl9ub2RlLCBzZWN0aW9uLCAKPiA+ICsgb29icmVnaW9u
+LCAibmFuZC1vb2ItZnJlZSIpOyAKPiA+ICt9IAo+ID4gKyAKPiA+ICtzdGF0aWMgY29uc3Qgc3Ry
+dWN0IG10ZF9vb2JsYXlvdXRfb3BzIG5hbmRfb29ibGF5b3V0X29mX29wcyA9IHsgCj4gPiArIC5l
+Y2MgPSBuYW5kX29vYmxheW91dF9lY2Nfb2YsIAo+ID4gKyAuZnJlZSA9IG5hbmRfb29ibGF5b3V0
+X2ZyZWVfb2YsIAo+ID4gK307IAo+ID4gKyAKPiA+wqAgc3RhdGljIGludCBjaGVja19vZmZzX2xl
+bihzdHJ1Y3QgbXRkX2luZm8gKm10ZCwgCj4gPsKgIGxvZmZfdCBvZnMsIHVpbnQ2NF90IGxlbikg
+Cj4gPsKgIHsgCj4gPiBAQCAtNTg0Myw2ICs1ODgwLDExIEBAIHN0YXRpYyBpbnQgbmFuZF9kdF9p
+bml0KHN0cnVjdCBuYW5kX2NoaXAgKmNoaXApIAo+ID7CoCBpZiAob2ZfcHJvcGVydHlfcmVhZF9i
+b29sKGRuLCAibmFuZC1lY2MtbWF4aW1pemUiKSkgCj4gPsKgIGNoaXAtPmVjYy5vcHRpb25zIHw9
+IE5BTkRfRUNDX01BWElNSVpFOyAKPiA+wqAgCj4gPiArIGlmICghY2hpcC0+bXRkLm9vYmxheW91
+dCAmJiAKPiA+ICsgb2ZfcHJvcGVydHlfcmVhZF9ib29sKGRuLCAibmFuZC1vb2ItZWNjIikgJiYg
+Cj4gPiArIG9mX3Byb3BlcnR5X3JlYWRfYm9vbChkbiwgIm5hbmQtb29iLWZyZWUiKSkgCj4gPiAr
+IGNoaXAtPm10ZC5vb2JsYXlvdXQgPSAmbmFuZF9vb2JsYXlvdXRfb2Zfb3BzOyAKPiA+ICsgCj4g
+PsKgIHJldHVybiAwOyAKPiA+wqAgfSAKPiA+wqAgCj4K
