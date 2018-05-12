@@ -1,88 +1,107 @@
-From: David Collins <collinsd@codeaurora.org>
-Subject: [PATCH v3 0/2] regulator: add QCOM RPMh regulator driver
-Date: Fri, 11 May 2018 19:28:04 -0700
-Message-ID: <cover.1526088081.git.collinsd@codeaurora.org>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 03/12] arm: dts: mt7623: fix invalid memory node
+ being generated
+Date: Sat, 12 May 2018 13:28:26 +0800
+Message-ID: <1526102906.18877.42.camel@mtkswgap22>
+References: <cover.1523434757.git.sean.wang@mediatek.com>
+         <d887b72e1839c7e476179e384cfc712216096f20.1523434758.git.sean.wang@mediatek.com>
+         <4dcb0435-1f98-0753-0feb-d17ad02077ae@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, rnayak@codeaurora.org, David Collins <collinsd@codeaurora.org>, sboyd@kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, linux-arm-kernel@lists.infradead.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <4dcb0435-1f98-0753-0feb-d17ad02077ae@gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds a driver and device tree binding documentation for
-PMIC regulator control via Resource Power Manager-hardened (RPMh) on some
-Qualcomm Technologies, Inc. SoCs such as SDM845.  RPMh is a hardware block
-which contains several accelerators which are used to manage various
-hardware resources that are shared between the processors of the SoC.  The
-final hardware state of a regulator is determined within RPMh by performing
-max aggregation of the requests made by all of the processors.
+On Fri, 2018-05-11 at 17:03 +0200, Matthias Brugger wrote:
+> 
+> On 04/11/2018 10:53 AM, sean.wang@mediatek.com wrote:
+> > From: Sean Wang <sean.wang@mediatek.com>
+> > 
+> > Below two wrong nodes in existing DTS files would cause a fail boot since
+> > in fact the address 0 is not the correct place the memory device locates
+> > at.
+> > 
+> > memory {
+> >         device_type = "memory";
+> >         reg = <0x0 0x0 0x0 0x0>;
+> > };
+> > 
+> > memory@80000000 {
+> >         reg = <0x0 0x80000000 0x0 0x40000000>;
+> > };
+> > 
+> > In order to avoid having a memory node starting at address 0, we can't
+> > include file skeleton64.dtsi and instead need to explicitly manually
+> > define a few of properties the DTS relies on such as #address-cells
+> > and #size-cells in root node and device_type in the node memory@80000000.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: 31ac0d69a1d4 ("ARM: dts: mediatek: add MT7623 basic support")
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > ---
+> >  arch/arm/boot/dts/mt7623.dtsi                 | 3 ++-
+> >  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 1 +
+> >  arch/arm/boot/dts/mt7623n-rfb.dtsi            | 1 +
+> >  3 files changed, 4 insertions(+), 1 deletion(-)
+> > 
+> 
+> merged. We would need this at least for mt2701 as well, correct?
+> Would you mind to provide a patch.
+> 
+> Regards,
+> Matthias
+> 
 
-The RPMh regulator driver depends upon the RPMh driver [1] and command DB
-driver [2] which are both still undergoing review.  It also depends upon
-two recent of_regulator changes: [3] and [4].
+Thanks! I totally think the same problem could happen on mt2701, so I'm 
+happy to come up with a patch for that.
 
-Changes since v2 [5]:
- - Replaced '_' with '-' in device tree supply property names
- - Renamed qcom_rpmh-regulator.c to be qcom-rpmh-regulator.c
- - Updated various DT property names to use "microvolt" and "microamp"
- - Moved allowed modes constraint specification out of the driver [4]
- - Replaced rpmh_client with device pointer to match new RPMh API [1]
- - Corrected drms mode threshold checking
- - Initialized voltage_selector to -EINVAL when not specified in DT
- - Added constants for PMIC regulator hardware modes
- - Corrected type sign of mode mapping tables
- - Made variable names for mode arrays plural
- - Simplified Kconfig depends on
- - Removed unnecessary constants and struct fields
- - Added some descriptive comments
+	Sean
 
-Changes since v1 [6]:
- - Addressed review feedback from Doug, Mark, and Stephen
- - Replaced set_voltage()/get_voltage() callbacks with set_voltage_sel()/
-   get_voltage_sel()
- - Added set_bypass()/get_bypass() callbacks for BOB pass-through mode
-   control
- - Removed top-level PMIC data structures
- - Removed initialization variables from structs and passed them as
-   function parameters
- - Removed various comments and error messages
- - Simplified mode handling
- - Refactored per-PMIC rpmh-regulator data specification
- - Simplified probe function
- - Moved header into DT patch
- - Removed redundant property listings from DT binding documentation
-
-[1]: https://lkml.org/lkml/2018/5/9/729
-[2]: https://lkml.org/lkml/2018/4/10/714
-[3]: https://patchwork.kernel.org/patch/10348629
-[4]: https://lkml.org/lkml/2018/5/11/696
-[5]: https://lkml.org/lkml/2018/4/13/687
-[6]: https://lkml.org/lkml/2018/3/16/1431
-
-David Collins (2):
-  regulator: dt-bindings: add QCOM RPMh regulator bindings
-  regulator: add QCOM RPMh regulator driver
-
- .../bindings/regulator/qcom,rpmh-regulator.txt     | 208 +++++
- drivers/regulator/Kconfig                          |   9 +
- drivers/regulator/Makefile                         |   1 +
- drivers/regulator/qcom-rpmh-regulator.c            | 925 +++++++++++++++++++++
- .../dt-bindings/regulator/qcom,rpmh-regulator.h    |  36 +
- 5 files changed, 1179 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
- create mode 100644 drivers/regulator/qcom-rpmh-regulator.c
- create mode 100644 include/dt-bindings/regulator/qcom,rpmh-regulator.h
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> > diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+> > index fec4715..406a9f3 100644
+> > --- a/arch/arm/boot/dts/mt7623.dtsi
+> > +++ b/arch/arm/boot/dts/mt7623.dtsi
+> > @@ -15,11 +15,12 @@
+> >  #include <dt-bindings/phy/phy.h>
+> >  #include <dt-bindings/reset/mt2701-resets.h>
+> >  #include <dt-bindings/thermal/thermal.h>
+> > -#include "skeleton64.dtsi"
+> >  
+> >  / {
+> >  	compatible = "mediatek,mt7623";
+> >  	interrupt-parent = <&sysirq>;
+> > +	#address-cells = <2>;
+> > +	#size-cells = <2>;
+> >  
+> >  	cpu_opp_table: opp-table {
+> >  		compatible = "operating-points-v2";
+> > diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> > index bbf56f8..5938e4c 100644
+> > --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> > +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> > @@ -109,6 +109,7 @@
+> >  	};
+> >  
+> >  	memory@80000000 {
+> > +		device_type = "memory";
+> >  		reg = <0 0x80000000 0 0x40000000>;
+> >  	};
+> >  };
+> > diff --git a/arch/arm/boot/dts/mt7623n-rfb.dtsi b/arch/arm/boot/dts/mt7623n-rfb.dtsi
+> > index a199ae7..343e8ef 100644
+> > --- a/arch/arm/boot/dts/mt7623n-rfb.dtsi
+> > +++ b/arch/arm/boot/dts/mt7623n-rfb.dtsi
+> > @@ -40,6 +40,7 @@
+> >  	};
+> >  
+> >  	memory@80000000 {
+> > +		device_type = "memory";
+> >  		reg = <0 0x80000000 0 0x40000000>;
+> >  	};
+> >  
+> > 
