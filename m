@@ -1,142 +1,160 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 6/8] serial: Add Tegra Combined UART driver
-Date: Sun, 13 May 2018 17:16:36 +0300
-Message-ID: <CAHp75VfYF_u2bZ+temGbReEB9K-t3A75aUNYwffyv9-=zEi0Lw@mail.gmail.com>
-References: <20180508114403.14499-1-mperttunen@nvidia.com> <20180508114403.14499-7-mperttunen@nvidia.com>
+Subject: Re: [PATCH v3] Input: add bu21029 touch driver
+Date: Sun, 13 May 2018 17:56:43 +0300
+Message-ID: <CAHp75Vf=eJbJPv5=y3fDKZapAnmABD0=v+WRhrBhMv+RSoBnKg@mail.gmail.com>
+References: <1521651874-15379-1-git-send-email-mark.jonas@de.bosch.com> <1526048528-3613-1-git-send-email-mark.jonas@de.bosch.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180508114403.14499-7-mperttunen@nvidia.com>
+In-Reply-To: <1526048528-3613-1-git-send-email-mark.jonas@de.bosch.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mikko Perttunen <mperttunen@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, araza@nvidia.com, devicetree <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, linux-tegra@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Mark Jonas <mark.jonas@de.bosch.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input <linux-input@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Heiko Schocher <hs@denx.de>, Zhu Yi <yi.zhu5@cn.bosch.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 8, 2018 at 2:44 PM, Mikko Perttunen <mperttunen@nvidia.com> wrote:
-> The Tegra Combined UART (TCU) is a mailbox-based mechanism that allows
-> multiplexing multiple "virtual UARTs" into a single hardware serial
-> port. The TCU is the primary serial port on Tegra194 devices.
->
-> Add a TCU driver utilizing the mailbox framework, as the used mailboxes
-> are part of Tegra HSP blocks that are already controlled by the Tegra
-> HSP mailbox driver.
+On Fri, May 11, 2018 at 5:22 PM, Mark Jonas <mark.jonas@de.bosch.com> wrote:
 
-First question, can it be done utilizing SERDEV framework?
+> Add Rohm BU21029 resistive touch panel controller support with I2C
+> interface.
 
-> +static void tegra_tcu_uart_set_mctrl(struct uart_port *port, unsigned int mctrl)
+> +#include <linux/of.h>
+
+This becomes redundant (see below).
+
+> +#define STOP_DELAY_US  50L
+> +#define START_DELAY_MS 2L
+> +#define BUF_LEN        8L
+
+No need to use L for such small numbers. Integer promotion is a part
+of C standard.
+
+> +#define SCALE_12BIT    (1 << 12)
+> +#define MAX_12BIT      ((1 << 12) - 1)
+
+BIT(12)
+GENMASK(11, 0)
+
+> +static int bu21029_touch_report(struct bu21029_ts_data *bu21029)
 > +{
+> +       struct i2c_client *i2c = bu21029->client;
+> +       u8 buf[BUF_LEN];
+> +       int error = bu21029_touch_report(bu21029);
 
-> +       (void)port;
-> +       (void)mctrl;
-
-Huh?
-
-> +}
-
-> +static void tegra_tcu_uart_stop_tx(struct uart_port *port)
-> +{
-> +       (void)port;
-> +}
-
-Ditto.
-
-> +               if (written == 3) {
-> +                       value |= 3 << 24;
-> +                       value |= BIT(26);
-> +                       mbox_send_message(tcu->tx, &value);
-
-> +               }
-
-(1)
-
-> +       }
 > +
-> +       if (written) {
-> +               value |= written << 24;
-> +               value |= BIT(26);
-> +               mbox_send_message(tcu->tx, &value);
+
+Redundant empty line.
+
+> +       if (error) {
+
+> +               dev_err(&i2c->dev, "failed to report (error: %d)\n", error);
+
+Potential spamming case.
+
+> +               return IRQ_NONE;
 > +       }
 
-(2)
-
-These are code duplications.
-
-> +static void tegra_tcu_uart_stop_rx(struct uart_port *port)
+> +static void bu21029_stop_chip(struct input_dev *dev)
 > +{
-> +       (void)port;
+> +       struct bu21029_ts_data *bu21029 = input_get_drvdata(dev);
+> +
+> +       disable_irq(bu21029->client->irq);
+> +       del_timer_sync(&bu21029->timer);
+> +
+> +       /* put chip into reset */
+> +       gpiod_set_value_cansleep(bu21029->reset_gpios, 1);
+
+> +       udelay(STOP_DELAY_US);
+
+udelay() ?!
+
 > +}
 > +
-> +static void tegra_tcu_uart_break_ctl(struct uart_port *port, int ctl)
+
+> +static int bu21029_start_chip(struct input_dev *dev)
 > +{
-> +       (void)port;
-> +       (void)ctl;
-> +}
+
+> +       u16 hwid;
 > +
-> +static int tegra_tcu_uart_startup(struct uart_port *port)
+> +       /* take chip out of reset */
+> +       gpiod_set_value_cansleep(bu21029->reset_gpios, 0);
+
+> +       mdelay(START_DELAY_MS);
+
+mdelay()?!
+
+> +
+> +       error = i2c_smbus_read_i2c_block_data(i2c,
+> +                                             BU21029_HWID_REG,
+> +                                             2,
+> +                                             (u8 *)&hwid);
+> +       if (error < 0) {
+> +               dev_err(&i2c->dev, "failed to read HW ID\n");
+> +               goto out;
+> +       }
+> +
+
+> +       if (cpu_to_be16(hwid) != SUPPORTED_HWID) {
+
+Hmm... Why cpu_to_be16() is required?
+
+> +               dev_err(&i2c->dev, "unsupported HW ID 0x%x\n", hwid);
+> +               error = -ENODEV;
+> +               goto out;
+> +       }
+> +}
+
+> +static int bu21029_parse_dt(struct bu21029_ts_data *bu21029)
+
+You can get rid of DT requirement by...
+
 > +{
-> +       (void)port;
+> +       struct device *dev = &bu21029->client->dev;
+> +       struct device_node *np = dev->of_node;
+> +       u32 val32;
+> +       int error;
+
+> +       if (!np) {
+> +               dev_err(dev, "no device tree data\n");
+> +               return -EINVAL;
+> +       }
+
+(this becomes redundant)
+
+> +
+> +       bu21029->reset_gpios = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+> +       if (IS_ERR(bu21029->reset_gpios)) {
+> +               error = PTR_ERR(bu21029->reset_gpios);
+> +               if (error != -EPROBE_DEFER)
+> +                       dev_err(dev, "invalid 'reset-gpios':%d\n", error);
+> +               return error;
+> +       }
+> +
+
+> +       if (of_property_read_u32(np, "rohm,x-plate-ohms", &val32)) {
+
+...simple calling device_property_read_u32() instead.
+
+> +               dev_err(dev, "invalid 'x-plate-ohms' supplied\n");
+> +               return -EINVAL;
+> +       }
+> +       bu21029->x_plate_ohms = val32;
+> +
+> +       touchscreen_parse_properties(bu21029->in_dev, false, &bu21029->prop);
 > +
 > +       return 0;
 > +}
-> +
-> +static void tegra_tcu_uart_shutdown(struct uart_port *port)
-> +{
-> +       (void)port;
-> +}
-> +
-> +static void tegra_tcu_uart_set_termios(struct uart_port *port,
-> +                                      struct ktermios *new,
-> +                                      struct ktermios *old)
-> +{
-> +       (void)port;
-> +       (void)new;
-> +       (void)old;
-> +}
 
-Remove those unused stub contents.
+> +#ifdef CONFIG_PM_SLEEP
 
-> +       return uart_set_options(&tegra_tcu_uart_port, cons,
-> +                               115200, 'n', 8, 'n');
+Instead...
 
-Can't it be one line?
+> +static int bu21029_suspend(struct device *dev)
 
-> +static void tegra_tcu_receive(struct mbox_client *client, void *msg_p)
-> +{
-> +       struct tty_port *port = &tegra_tcu_uart_port.state->port;
+...use __maby_unused annotation.
 
-> +       uint32_t msg = *(uint32_t *)msg_p;
+> +static int bu21029_resume(struct device *dev)
 
-Redundant casting.
-
-> +       unsigned int num_bytes;
-> +       int i;
-> +
-
-> +       num_bytes = (msg >> 24) & 0x3;
-
-Two magic numbers.
-
-> +       for (i = 0; i < num_bytes; i++)
-> +               tty_insert_flip_char(port, (msg >> (i*8)) & 0xff, TTY_NORMAL);
-> +
-> +       tty_flip_buffer_push(port);
-> +}
-
-> +MODULE_AUTHOR("Mikko Perttunen <mperttunen@nvidia.com>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("NVIDIA Tegra Combined UART driver");
-> diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/serial_core.h
-> index dce5f9dae121..eaf3c303cba6 100644
-> --- a/include/uapi/linux/serial_core.h
-> +++ b/include/uapi/linux/serial_core.h
-> @@ -281,4 +281,7 @@
->  /* MediaTek BTIF */
->  #define PORT_MTK_BTIF  117
->
-> +/* NVIDIA Tegra Combined UART */
-> +#define PORT_TEGRA_TCU 118
-
-Check if there is an unused gap. IIRC we still have one near to 40ish.
+Ditto.
 
 -- 
 With Best Regards,
