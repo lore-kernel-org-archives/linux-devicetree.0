@@ -1,51 +1,36 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 1/2] PCI: kirin: Add MSI support
-Date: Mon, 14 May 2018 02:16:08 +0300
-Message-ID: <CAHp75VfqfnTw6PkQq_sGeTe+RpV6iqNEf5JV1TQgpNhMk=VyeA@mail.gmail.com>
-References: <1526030149-23985-1-git-send-email-chenyao11@huawei.com> <1526030149-23985-2-git-send-email-chenyao11@huawei.com>
+From: =?UTF-8?q?Hern=C3=A1n=20Gonzalez?= <hernan@vanguardiasur.com.ar>
+Subject: [PATCH] ARM: dts: am335x-baltos-ir5221: Use IRQ_TYPE specifier
+Date: Sun, 13 May 2018 20:18:14 -0300
+Message-ID: <1526253494-3333-1-git-send-email-hernan@vanguardiasur.com.ar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526030149-23985-2-git-send-email-chenyao11@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yao Chen <chenyao11@huawei.com>
-Cc: songxiaowei@hisilicon.com, wangbinghui@hisilicon.com, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "xuwei (O)" <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-pci@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, dimitrysh@google.com, guodong.xu@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com
+To: bcousson@baylibre.com
+Cc: tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Hern=C3=A1n=20Gonzalez?= <hernan@vanguardiasur.com.ar>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 11, 2018 at 12:15 PM, Yao Chen <chenyao11@huawei.com> wrote:
-> Add support for MSI.
+GPIO_ACTIVE_LOW was being used to specify an interrupt, use
+IRQ_TYPE_EDGE_RISING instead. This improves DT readability.
 
+Signed-off-by: Hernán Gonzalez <hernan@vanguardiasur.com.ar>
+---
+ arch/arm/boot/dts/am335x-baltos-ir5221.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +       int ret;
-> +
-> +       if (IS_ENABLED(CONFIG_PCI_MSI)) {
-
-> +               pci->pp.msi_irq = platform_get_irq(pdev, 0);
-> +               if (pci->pp.msi_irq < 0) {
-> +                       dev_err(&pdev->dev, "failed to get MSI IRQ (%d)\n",
-> +                               pci->pp.msi_irq);
-
-> +                       return -ENODEV;
-
-Why shadowing actual error code?
-
-> +               }
-> +               ret = devm_request_irq(&pdev->dev, pci->pp.msi_irq,
-> +                                      kirin_pcie_msi_irq_handler,
-> +                                      IRQF_SHARED | IRQF_NO_THREAD,
-> +                                      "kirin_pcie_msi", &pci->pp);
-> +               if (ret) {
-> +                       dev_err(&pdev->dev, "failed to request MSI IRQ %d\n",
-> +                               pci->pp.msi_irq);
-> +                       return ret;
-> +               }
-
-It would be easy to read and maintain if this would be a separate function.
-
-> +       }
-
-
-
+diff --git a/arch/arm/boot/dts/am335x-baltos-ir5221.dts b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
+index 5d56355..832ead8 100644
+--- a/arch/arm/boot/dts/am335x-baltos-ir5221.dts
++++ b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
+@@ -94,7 +94,7 @@
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 		interrupt-parent = <&gpio0>;
+-		interrupts = <20 GPIO_ACTIVE_LOW>;
++		interrupts = <20 IRQ_TYPE_EDGE_RISING>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&tca6416_pins>;
+ 	};
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
