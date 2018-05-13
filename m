@@ -1,49 +1,39 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH RESEND net-next v2 1/8] dt-bindings: net: dwmac-sun8i:
- Clean up clock delay chain descriptions
-Date: Sun, 13 May 2018 22:29:38 +0200
-Message-ID: <20180513202938.GH12738@lunn.ch>
-References: <20180513191425.9801-1-wens@csie.org>
- <20180513191425.9801-2-wens@csie.org>
- <20180513194919.GE12738@lunn.ch>
- <CAGb2v66nqWnioS1pwfWFtMZFZSWvf4SwXr_ExnnGvYsK9RU_LA@mail.gmail.com>
- <20180513200529.GF12738@lunn.ch>
- <CAGb2v64ACc1tQRhy4LhnvCC7VJ3nVM-wMbgUgzviGMWKPFsSuQ@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v1 11/13] dt-bindings: power: add PX30 SoCs header for power-domain
+Date: Sun, 13 May 2018 22:53:00 +0200
+Message-ID: <1550439.0mAU4944n0@diego>
+References: <1526009458-28579-1-git-send-email-zhangqing@rock-chips.com> <508694354.7btLQf7nsA@phil> <9c9606f0-5c97-1a6e-a3c5-f6380c16fea4@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v64ACc1tQRhy4LhnvCC7VJ3nVM-wMbgUgzviGMWKPFsSuQ@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, Icenowy Zheng <icenowy@aosc.io>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9c9606f0-5c97-1a6e-a3c5-f6380c16fea4@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tao Huang <huangtao@rock-chips.com>
+Cc: Elaine Zhang <zhangqing@rock-chips.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, khilman@kernel.org, xxx@rock-chips.com, linux-pm@vger.kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, xf@rock-chips.com, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, Finley Xiao <finley.xiao@rock-chips.com>, linux-arm-kernel@lists.infradead.org, wxt@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 13, 2018 at 01:11:08PM -0700, Chen-Yu Tsai wrote:
-> On Sun, May 13, 2018 at 1:05 PM, Andrew Lunn <andrew@lunn.ch> wrote:
-> >> > Hi Chen-Yu
-> >> >
-> >> > Are these delays the MAC applies? Not the PHY. It would be good to
-> >> > make it clear here these are MAC imposed delays.
-> >>
-> >> Yes these are applied on the MAC side. Being described in the device
-> >> tree bindings for the MAC, I thought this was implied to be the case?
-> >> Are there known exceptions?
-> >
-> > There is frequent confusion with this. Most of the time, the PHY does
-> > the delay, not the MAC, based on the phy-mode. So the MAC doing it is
-> > an exception in itself.
-> >
-> > Do you actually need these delays for the board you adding support
-> > for? Does the PHY not support adding the needed delays? If you don't
-> > need the delays, i would not even implement them.
+Hi,
+
+Am Sonntag, 13. Mai 2018, 17:18:12 CEST schrieb Tao Huang:
+> Hi Heiko:
 > 
-> Yes this is already used on the Bananapi M3. This patch merely reformats
-> the description and adds a note saying this only applies to RGMII mode.
+> On 2018年05月12日 06:11, Heiko Stuebner wrote:
+> > Here I have a naming question. When looking at the vendor kernel
+> > it looks like the px30 is largely related to the rk3326.
+> > (rk3326.dtsi includeing the px30.dtsi)
+> > 
+> > What is the reason for basing the naming on the px30 this time? And could
+> > we possibly keep to rkXXXX names for the basic things in the kernel, thus
+> > keeping the pxXX as second name, like with the other px-variants before?
+> 
+> PX30 and RK3326 are different chips. PX30 has more features. You can simply
+> think that RK3326 is a subset of PX30. The RK3326 is more like a PX30
+> derivative chip. This is not the same as the previous chips. So we use PX30
+> instead of RK3326 for name, and the opening document is only for PX30, we
+> think this is more convenient for developers.
 
-Yes, the current code is needed for the Bananapi M3. But you have
-another patch which extends the code to support a smaller range. Do
-you have a board which actually needs this? If not, i would not add
-that new code.
+ok, sounds reasonable :-) ... So we'll stay with the PX30.
 
-     Andrew
+
+Heiko
