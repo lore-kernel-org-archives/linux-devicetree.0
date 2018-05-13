@@ -1,107 +1,51 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a77995: Add VIN4
-Date: Sun, 13 May 2018 20:30:35 +0200
-Message-ID: <20180513183035.6ufwkdtlyg4gyco3@apu3b>
-References: <1526032802-14376-1-git-send-email-jacopo+renesas@jmondi.org>
- <1526032802-14376-3-git-send-email-jacopo+renesas@jmondi.org>
- <20180511112523.GK18974@bigcity.dyn.berto.se>
- <20180511134516.omsv25i2wi4cxypc@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180511134516.omsv25i2wi4cxypc@verge.net.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH RESEND net-next v2 3/8] dt-bindings: net: dwmac-sun8i: simplify description of syscon property
+Date: Mon, 14 May 2018 03:14:20 +0800
+Message-ID: <20180513191425.9801-4-wens@csie.org>
+References: <20180513191425.9801-1-wens@csie.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180513191425.9801-1-wens@csie.org>
+Sender: netdev-owner@vger.kernel.org
+To: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, Icenowy Zheng <icenowy@aosc.io>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+The syscon property is used to point to the device that holds the glue
+layer control register known as the "EMAC (or GMAC) clock register".
 
-On Fri, May 11, 2018 at 03:45:16PM +0200, Simon Horman wrote:
-> On Fri, May 11, 2018 at 01:25:23PM +0200, Niklas Söderlund wrote:
-> > Hi Jacopo,
-> > 
-> > Thanks for your work.
-> > 
-> > On 2018-05-11 12:00:01 +0200, Jacopo Mondi wrote:
-> > > Describe VIN4 interface for R-Car D3 R8A77995 SoC.
-> > > 
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > 
-> > Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> > 
-> > > ---
-> > >  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 11 +++++++++++
-> > >  1 file changed, 11 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> > > index 82aed7e..bdf7017 100644
-> > > --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> > > +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> > > @@ -783,6 +783,17 @@
-> > >  				};
-> > >  			};
-> > >  		};
-> > > +
-> > > +		vin4: video@e6ef4000 {
-> > > +			compatible = "renesas,vin-r8a77995";
-> > > +			reg = <0 0xe6ef4000 0 0x1000>;
-> > > +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> > > +			clocks = <&cpg CPG_MOD 807>;
-> > > +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-> > > +			resets = <&cpg 807>;
-> > > +			renesas,id = <4>;
-> > > +			status = "disabled";
-> > > +		};
-> > >  	};
-> 
-> Thanks, I have moved the new node to preserve sorting of nodes by bus
-> address and applied the result. It is as follows:
+We do not need to explicitly list what compatible strings are needed, as
+this information is readily available in the user manuals. Also the
+"syscon" device type is more of an implementation detail. There are many
+ways to access a register not in a device's address range, the syscon
+interface being the most generic and unrestricted one.
 
-Great, thanks for doing this, I should have take care of sorting nodes
-opprtunely.
+Simplify the description so that it says what it is supposed to
+describe.
 
-Thanks
-   j
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ Documentation/devicetree/bindings/net/dwmac-sun8i.txt | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-> 
-> From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Subject: [PATCH] arm64: dts: renesas: r8a77995: Add VIN4
-> 
-> Describe VIN4 interface for R-Car D3 R8A77995 SoC.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> [simon: sorted node by bus address]
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> index ba98865b0c9b..2506f46293e8 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> @@ -610,6 +610,17 @@
->  			status = "disabled";
->  		};
-s  
-> +		vin4: video@e6ef4000 {
-> +			compatible = "renesas,vin-r8a77995";
-> +			reg = <0 0xe6ef4000 0 0x1000>;
-> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 807>;
-> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-> +			resets = <&cpg 807>;
-> +			renesas,id = <4>;
-> +			status = "disabled";
-> +		};
-> +
->  		ohci0: usb@ee080000 {
->  			compatible = "generic-ohci";
->  			reg = <0 0xee080000 0 0x100>;
-> -- 
-> 2.11.0
-> 
+diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+index 1b8e33e71651..1c0906a5c02b 100644
+--- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
++++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+@@ -20,12 +20,7 @@ Required properties:
+ - phy-handle: See ethernet.txt
+ - #address-cells: shall be 1
+ - #size-cells: shall be 0
+-- syscon: A phandle to the syscon of the SoC with one of the following
+- compatible string:
+-  - allwinner,sun8i-a83t-system-controller
+-  - allwinner,sun8i-h3-system-controller
+-  - allwinner,sun8i-v3s-system-controller
+-  - allwinner,sun50i-a64-system-controller
++- syscon: A phandle to the device containing the EMAC or GMAC clock register
+ 
+ Optional properties:
+ - allwinner,tx-delay-ps: TX clock delay chain value in ps.
+-- 
+2.17.0
