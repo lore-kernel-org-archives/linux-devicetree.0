@@ -1,91 +1,97 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH RESEND net-next v2 0/8] net: stmmac: dwmac-sun8i: Support R40
-Date: Mon, 14 May 2018 03:14:17 +0800
-Message-ID: <20180513191425.9801-1-wens@csie.org>
+Subject: Re: [PATCH net-next v2 15/15] arm64: dts: allwinner: a64: add SRAM
+ controller device tree node
+Date: Sun, 13 May 2018 12:37:49 -0700
+Message-ID: <CAGb2v64xTNqQQSppw2NZoLn+ViQNQLytn1EukLqw+HJzf1=5ig@mail.gmail.com>
+References: <20180501161227.2110-1-wens@csie.org> <20180501161227.2110-16-wens@csie.org>
+ <20180502095118.rqnfwy576xh6ercm@flea> <CAGb2v67pvL58Pes1ZFDZtPu_nL2+m6dgf_XOOymG9nVAkXVpEw@mail.gmail.com>
+ <29E5670C-9D17-4EC1-AAAC-0CF33DD0534C@aosc.io> <20180502115437.zlu2rafrguufutvp@flea>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180502115437.zlu2rafrguufutvp@flea>
 Sender: netdev-owner@vger.kernel.org
-To: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, Icenowy Zheng <icenowy@aosc.io>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Icenowy Zheng <icenowy@aosc.io>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, netdev <netdev@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, Mark Brown <broonie@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a resend of the patches for net-next split out from my R40
-Ethernet support v2 series, as requested by David Miller. The arm-soc
-bits will follow, once I rework the A64 system controller compatible.
+On Wed, May 2, 2018 at 4:54 AM, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> On Wed, May 02, 2018 at 06:19:51PM +0800, Icenowy Zheng wrote:
+>>
+>>
+>> 于 2018年5月2日 GMT+08:00 下午5:53:21, Chen-Yu Tsai <wens@csie.org> 写到:
+>> >On Wed, May 2, 2018 at 5:51 PM, Maxime Ripard
+>> ><maxime.ripard@bootlin.com> wrote:
+>> >> Hi,
+>> >>
+>> >> On Wed, May 02, 2018 at 12:12:27AM +0800, Chen-Yu Tsai wrote:
+>> >>> From: Icenowy Zheng <icenowy@aosc.io>
+>> >>>
+>> >>> Allwinner A64 has a SRAM controller, and in the device tree
+>> >currently
+>> >>> we have a syscon node to enable EMAC driver to access the EMAC clock
+>> >>> register. As SRAM controller driver can now export regmap for this
+>> >>> register, replace the syscon node to the SRAM controller device
+>> >node,
+>> >>> and let EMAC driver to acquire its EMAC clock regmap.
+>> >>>
+>> >>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+>> >>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>> >>> ---
+>> >>>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 23
+>> >+++++++++++++++----
+>> >>>  1 file changed, 19 insertions(+), 4 deletions(-)
+>> >>>
+>> >>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> >b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> >>> index 1b2ef28c42bd..1c37659d9d41 100644
+>> >>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> >>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> >>> @@ -168,10 +168,25 @@
+>> >>>               #size-cells = <1>;
+>> >>>               ranges;
+>> >>>
+>> >>> -             syscon: syscon@1c00000 {
+>> >>> -                     compatible =
+>> >"allwinner,sun50i-a64-system-controller",
+>> >>> -                             "syscon";
+>> >>> +             sram_controller: sram-controller@1c00000 {
+>> >>> +                     compatible =
+>> >"allwinner,sun50i-a64-sram-controller";
+>> >>
+>> >> I don't think there's anything preventing us from keeping the
+>> >> -system-controller compatible. It's what was in the DT before, and
+>> >> it's how it's called in the datasheet.
+>> >
+>> >I actually meant to ask you about this. The -system-controller
+>> >compatible matches the datasheet better. Maybe we should just
+>> >switch to that one?
+>>
+>> No, if we do the switch the system-controller compatible,
+>> the device will be probed on the same memory region with
+>> a syscon on old DTs.
+>
+> The device hasn't magically changed either. Maybe we just need to add
+> a check to make sure we don't have the syscon compatible in the SRAM
+> driver probe so that the double driver issue doesn't happen?
 
-Patches 1, 2, and 3 clean up the dwmac-sun8i binding.
+The syscon interface (which is not even a full blown device driver)
+only looks at the "syscon" compatible. Either way we're removing that
+part from the device tree so things should be ok for new device trees.
+As Maxime mentioned we can do a check for the syscon compatible and
+either give a warning to the user asking them to update their device
+tree, or not register our custom regmap, or not probe the SRAM driver.
+Personally I prefer the first option. The system controller block is
+probed before any syscon users, so we should be fine, given the dwmac
+driver goes the custom regmap path first.
 
-Patch 4 adds device tree binding for Allwinner R40's Ethernet
-controller.
+BTW, I still might end up changing the compatible. The manual uses
+"system control", not "system controller", which I think makes sense,
+since it is just a bunch of register files, kind of like the GRF
+(General Register Files) block found in Rockchip SoCs [1], and not an
+actual "controller".
 
-Patch 5 converts regmap access of the syscon region in the dwmac-sun8i
-driver to regmap_field, in anticipation of different field widths on
-the R40.
-
-Patch 6 introduces custom plumbing in the dwmac-sun8i driver to fetch
-a regmap from another device, by looking up said device via a phandle,
-then getting the regmap associated with that device.
-
-Patch 7 adds support for different or absent TX/RX delay chain ranges
-to the dwmac-sun8i driver.
-
-Patch 8 adds support for the R40's ethernet controller.
-
-
-Excerpt from original cover letter:
-
-Changes since v1:
-
-  - Default to fetching regmap from device pointed to by syscon phandle,
-    and falling back to syscon API if that fails.
-
-  - Dropped .syscon_from_dev field in device data as a result of the
-    previous change.
-
-  - Added a large comment block explaining the first change.
-
-  - Simplified description of syscon property in sun8i-dwmac binding.
-
-  - Regmap now only exposes the EMAC/GMAC register, but retains the
-    offset within its address space.
-
-  - Added patches for A64, which reuse the same sun8i-dwmac changes.
-
-This series adds support for the DWMAC based Ethernet controller found
-on the Allwinner R40 SoC. The controller is either a DWMAC clone or
-DWMAC core with its registers rearranged. This is already supported by
-the dwmac-sun8i driver. The glue layer control registers, unlike other
-sun8i family SoCs, is not in the system controller region, but in the
-clock control unit, like with the older A20 and A31 SoCs.
-
-While we reuse the bindings for dwmac-sun8i using a syscon phandle
-reference, we need some custom plumbing for the clock driver to export
-a regmap that only allows access to the GMAC register to the dwmac-sun8i
-driver. An alternative would be to allow drivers to register custom
-syscon devices with their own regmap and locking.
-
-
-Please have a look.
-
-Regards
 ChenYu
 
-Chen-Yu Tsai (8):
-  dt-bindings: net: dwmac-sun8i: Clean up clock delay chain descriptions
-  dt-bindings: net: dwmac-sun8i: Sort syscon compatibles by alphabetical
-    order
-  dt-bindings: net: dwmac-sun8i: simplify description of syscon property
-  dt-bindings: net: dwmac-sun8i: Add binding for GMAC on Allwinner R40
-    SoC
-  net: stmmac: dwmac-sun8i: Use regmap_field for syscon register access
-  net: stmmac: dwmac-sun8i: Allow getting syscon regmap from external
-    device
-  net: stmmac: dwmac-sun8i: Support different ranges for TX/RX delay
-    chains
-  net: stmmac: dwmac-sun8i: Add support for GMAC on Allwinner R40 SoC
-
- .../devicetree/bindings/net/dwmac-sun8i.txt   |  21 +--
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 139 +++++++++++++++---
- 2 files changed, 130 insertions(+), 30 deletions(-)
-
--- 
-2.17.0
+[1] https://www.kernel.org/doc/Documentation/devicetree/bindings/soc/rockchip/grf.txt
