@@ -1,39 +1,32 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v1 11/13] dt-bindings: power: add PX30 SoCs header for power-domain
-Date: Sun, 13 May 2018 22:53:00 +0200
-Message-ID: <1550439.0mAU4944n0@diego>
-References: <1526009458-28579-1-git-send-email-zhangqing@rock-chips.com> <508694354.7btLQf7nsA@phil> <9c9606f0-5c97-1a6e-a3c5-f6380c16fea4@rock-chips.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH] driver core: make deferring probe forever optional
+Date: Mon, 14 May 2018 00:01:31 +0200
+Message-ID: <CACRpkdaYN-wKErERP_65T2NH6L-+8O_ugSgg7pXfkaLkn1A2KQ@mail.gmail.com>
+References: <20180501213114.20183-1-robh@kernel.org> <20180507183106.GF2259@tuxbook-pro>
+ <91dad272-e07d-2ab6-2afa-538294e9cefa@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9c9606f0-5c97-1a6e-a3c5-f6380c16fea4@rock-chips.com>
+In-Reply-To: <91dad272-e07d-2ab6-2afa-538294e9cefa@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tao Huang <huangtao@rock-chips.com>
-Cc: Elaine Zhang <zhangqing@rock-chips.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, khilman@kernel.org, xxx@rock-chips.com, linux-pm@vger.kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, xf@rock-chips.com, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, Finley Xiao <finley.xiao@rock-chips.com>, linux-arm-kernel@lists.infradead.org, wxt@rock-chips.com
+To: Alexander Graf <agraf@suse.de>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@arm.com>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@kernel.org>, boot-architecture@lists.linaro.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, May 9, 2018 at 11:44 AM, Alexander Graf <agraf@suse.de> wrote:
+> On 05/07/2018 08:31 PM, Bjorn Andersson wrote:
 
-Am Sonntag, 13. Mai 2018, 17:18:12 CEST schrieb Tao Huang:
-> Hi Heiko:
-> 
-> On 2018年05月12日 06:11, Heiko Stuebner wrote:
-> > Here I have a naming question. When looking at the vendor kernel
-> > it looks like the px30 is largely related to the rk3326.
-> > (rk3326.dtsi includeing the px30.dtsi)
-> > 
-> > What is the reason for basing the naming on the px30 this time? And could
-> > we possibly keep to rkXXXX names for the basic things in the kernel, thus
-> > keeping the pxXX as second name, like with the other px-variants before?
-> 
-> PX30 and RK3326 are different chips. PX30 has more features. You can simply
-> think that RK3326 is a subset of PX30. The RK3326 is more like a PX30
-> derivative chip. This is not the same as the previous chips. So we use PX30
-> instead of RK3326 for name, and the opening document is only for PX30, we
-> think this is more convenient for developers.
+>> Can you please name platform that has enough support for Alexander to
+>> care about backwards and forwards compatibility but lacks a pinctrl
+>> driver.
+>
+> ZynqMP is one example that immediately comes to my mind. I'm sure there are
+> others too.
 
-ok, sounds reasonable :-) ... So we'll stay with the PX30.
+Why isn't that using drivers/pinctrl/pinctrl-zynq.c?
 
+How is it so very different from (old) Zynq as it is already using
+the same GPIO driver?
 
-Heiko
+Yours,
+Linus Walleij
