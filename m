@@ -1,186 +1,91 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH RESEND net-next v2 5/8] net: stmmac: dwmac-sun8i: Use regmap_field for syscon register access
-Date: Mon, 14 May 2018 03:14:22 +0800
-Message-ID: <20180513191425.9801-6-wens@csie.org>
-References: <20180513191425.9801-1-wens@csie.org>
+Subject: [PATCH RESEND net-next v2 0/8] net: stmmac: dwmac-sun8i: Support R40
+Date: Mon, 14 May 2018 03:14:17 +0800
+Message-ID: <20180513191425.9801-1-wens@csie.org>
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180513191425.9801-1-wens@csie.org>
 Sender: netdev-owner@vger.kernel.org
 To: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, Icenowy Zheng <icenowy@aosc.io>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On the Allwinner R40, the "GMAC clock" register is located in the CCU
-block, at a different register address than the other SoCs that have
-it in the "system control" block.
+This is a resend of the patches for net-next split out from my R40
+Ethernet support v2 series, as requested by David Miller. The arm-soc
+bits will follow, once I rework the A64 system controller compatible.
 
-This patch converts the use of regmap to regmap_field for mapping and
-accessing the syscon register, so we can have the register address in
-the variants data, and not in the actual register manipulation code.
+Patches 1, 2, and 3 clean up the dwmac-sun8i binding.
 
-This patch only converts regmap_read() and regmap_write() calls to
-regmap_field_read() and regmap_field_write() calls. There are some
-places where it might make sense to switch to regmap_field_update_bits(),
-but this is not done here to keep the patch simple.
+Patch 4 adds device tree binding for Allwinner R40's Ethernet
+controller.
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 42 ++++++++++++++-----
- 1 file changed, 31 insertions(+), 11 deletions(-)
+Patch 5 converts regmap access of the syscon region in the dwmac-sun8i
+driver to regmap_field, in anticipation of different field widths on
+the R40.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index a3fa65b1ca8e..bbc051474806 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -42,6 +42,7 @@
-  *				This value is used for disabling properly EMAC
-  *				and used as a good starting value in case of the
-  *				boot process(uboot) leave some stuff.
-+ * @syscon_field		reg_field for the syscon's gmac register
-  * @soc_has_internal_phy:	Does the MAC embed an internal PHY
-  * @support_mii:		Does the MAC handle MII
-  * @support_rmii:		Does the MAC handle RMII
-@@ -49,6 +50,7 @@
-  */
- struct emac_variant {
- 	u32 default_syscon_value;
-+	const struct reg_field *syscon_field;
- 	bool soc_has_internal_phy;
- 	bool support_mii;
- 	bool support_rmii;
-@@ -71,13 +73,21 @@ struct sunxi_priv_data {
- 	struct regulator *regulator;
- 	struct reset_control *rst_ephy;
- 	const struct emac_variant *variant;
--	struct regmap *regmap;
-+	struct regmap_field *regmap_field;
- 	bool internal_phy_powered;
- 	void *mux_handle;
- };
- 
-+/* EMAC clock register @ 0x30 in the "system control" address range */
-+static const struct reg_field sun8i_syscon_reg_field = {
-+	.reg = 0x30,
-+	.lsb = 0,
-+	.msb = 31,
-+};
-+
- static const struct emac_variant emac_variant_h3 = {
- 	.default_syscon_value = 0x58000,
-+	.syscon_field = &sun8i_syscon_reg_field,
- 	.soc_has_internal_phy = true,
- 	.support_mii = true,
- 	.support_rmii = true,
-@@ -86,12 +96,14 @@ static const struct emac_variant emac_variant_h3 = {
- 
- static const struct emac_variant emac_variant_v3s = {
- 	.default_syscon_value = 0x38000,
-+	.syscon_field = &sun8i_syscon_reg_field,
- 	.soc_has_internal_phy = true,
- 	.support_mii = true
- };
- 
- static const struct emac_variant emac_variant_a83t = {
- 	.default_syscon_value = 0,
-+	.syscon_field = &sun8i_syscon_reg_field,
- 	.soc_has_internal_phy = false,
- 	.support_mii = true,
- 	.support_rgmii = true
-@@ -99,6 +111,7 @@ static const struct emac_variant emac_variant_a83t = {
- 
- static const struct emac_variant emac_variant_a64 = {
- 	.default_syscon_value = 0,
-+	.syscon_field = &sun8i_syscon_reg_field,
- 	.soc_has_internal_phy = false,
- 	.support_mii = true,
- 	.support_rmii = true,
-@@ -216,7 +229,6 @@ static const struct emac_variant emac_variant_a64 = {
- #define SYSCON_ETCS_MII		0x0
- #define SYSCON_ETCS_EXT_GMII	0x1
- #define SYSCON_ETCS_INT_GMII	0x2
--#define SYSCON_EMAC_REG		0x30
- 
- /* sun8i_dwmac_dma_reset() - reset the EMAC
-  * Called from stmmac via stmmac_dma_ops->reset
-@@ -745,7 +757,7 @@ static int mdio_mux_syscon_switch_fn(int current_child, int desired_child,
- 	bool need_power_ephy = false;
- 
- 	if (current_child ^ desired_child) {
--		regmap_read(gmac->regmap, SYSCON_EMAC_REG, &reg);
-+		regmap_field_read(gmac->regmap_field, &reg);
- 		switch (desired_child) {
- 		case DWMAC_SUN8I_MDIO_MUX_INTERNAL_ID:
- 			dev_info(priv->device, "Switch mux to internal PHY");
-@@ -763,7 +775,7 @@ static int mdio_mux_syscon_switch_fn(int current_child, int desired_child,
- 				desired_child);
- 			return -EINVAL;
- 		}
--		regmap_write(gmac->regmap, SYSCON_EMAC_REG, val);
-+		regmap_field_write(gmac->regmap_field, val);
- 		if (need_power_ephy) {
- 			ret = sun8i_dwmac_power_internal_phy(priv);
- 			if (ret)
-@@ -801,7 +813,7 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
- 	int ret;
- 	u32 reg, val;
- 
--	regmap_read(gmac->regmap, SYSCON_EMAC_REG, &val);
-+	regmap_field_read(gmac->regmap_field, &val);
- 	reg = gmac->variant->default_syscon_value;
- 	if (reg != val)
- 		dev_warn(priv->device,
-@@ -883,7 +895,7 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
- 		return -EINVAL;
- 	}
- 
--	regmap_write(gmac->regmap, SYSCON_EMAC_REG, reg);
-+	regmap_field_write(gmac->regmap_field, reg);
- 
- 	return 0;
- }
-@@ -892,7 +904,7 @@ static void sun8i_dwmac_unset_syscon(struct sunxi_priv_data *gmac)
- {
- 	u32 reg = gmac->variant->default_syscon_value;
- 
--	regmap_write(gmac->regmap, SYSCON_EMAC_REG, reg);
-+	regmap_field_write(gmac->regmap_field, reg);
- }
- 
- static void sun8i_dwmac_exit(struct platform_device *pdev, void *priv)
-@@ -980,6 +992,7 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
- 	int ret;
- 	struct stmmac_priv *priv;
- 	struct net_device *ndev;
-+	struct regmap *regmap;
- 
- 	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
- 	if (ret)
-@@ -1014,14 +1027,21 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
- 		gmac->regulator = NULL;
- 	}
- 
--	gmac->regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
--						       "syscon");
--	if (IS_ERR(gmac->regmap)) {
--		ret = PTR_ERR(gmac->regmap);
-+	regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "syscon");
-+	if (IS_ERR(regmap)) {
-+		ret = PTR_ERR(regmap);
- 		dev_err(&pdev->dev, "Unable to map syscon: %d\n", ret);
- 		return ret;
- 	}
- 
-+	gmac->regmap_field = devm_regmap_field_alloc(dev, regmap,
-+						     *gmac->variant->syscon_field);
-+	if (IS_ERR(gmac->regmap_field)) {
-+		ret = PTR_ERR(gmac->regmap_field);
-+		dev_err(dev, "Unable to map syscon register: %d\n", ret);
-+		return ret;
-+	}
-+
- 	plat_dat->interface = of_get_phy_mode(dev->of_node);
- 
- 	/* platform data specifying hardware features and callbacks.
+Patch 6 introduces custom plumbing in the dwmac-sun8i driver to fetch
+a regmap from another device, by looking up said device via a phandle,
+then getting the regmap associated with that device.
+
+Patch 7 adds support for different or absent TX/RX delay chain ranges
+to the dwmac-sun8i driver.
+
+Patch 8 adds support for the R40's ethernet controller.
+
+
+Excerpt from original cover letter:
+
+Changes since v1:
+
+  - Default to fetching regmap from device pointed to by syscon phandle,
+    and falling back to syscon API if that fails.
+
+  - Dropped .syscon_from_dev field in device data as a result of the
+    previous change.
+
+  - Added a large comment block explaining the first change.
+
+  - Simplified description of syscon property in sun8i-dwmac binding.
+
+  - Regmap now only exposes the EMAC/GMAC register, but retains the
+    offset within its address space.
+
+  - Added patches for A64, which reuse the same sun8i-dwmac changes.
+
+This series adds support for the DWMAC based Ethernet controller found
+on the Allwinner R40 SoC. The controller is either a DWMAC clone or
+DWMAC core with its registers rearranged. This is already supported by
+the dwmac-sun8i driver. The glue layer control registers, unlike other
+sun8i family SoCs, is not in the system controller region, but in the
+clock control unit, like with the older A20 and A31 SoCs.
+
+While we reuse the bindings for dwmac-sun8i using a syscon phandle
+reference, we need some custom plumbing for the clock driver to export
+a regmap that only allows access to the GMAC register to the dwmac-sun8i
+driver. An alternative would be to allow drivers to register custom
+syscon devices with their own regmap and locking.
+
+
+Please have a look.
+
+Regards
+ChenYu
+
+Chen-Yu Tsai (8):
+  dt-bindings: net: dwmac-sun8i: Clean up clock delay chain descriptions
+  dt-bindings: net: dwmac-sun8i: Sort syscon compatibles by alphabetical
+    order
+  dt-bindings: net: dwmac-sun8i: simplify description of syscon property
+  dt-bindings: net: dwmac-sun8i: Add binding for GMAC on Allwinner R40
+    SoC
+  net: stmmac: dwmac-sun8i: Use regmap_field for syscon register access
+  net: stmmac: dwmac-sun8i: Allow getting syscon regmap from external
+    device
+  net: stmmac: dwmac-sun8i: Support different ranges for TX/RX delay
+    chains
+  net: stmmac: dwmac-sun8i: Add support for GMAC on Allwinner R40 SoC
+
+ .../devicetree/bindings/net/dwmac-sun8i.txt   |  21 +--
+ .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 139 +++++++++++++++---
+ 2 files changed, 130 insertions(+), 30 deletions(-)
+
 -- 
 2.17.0
