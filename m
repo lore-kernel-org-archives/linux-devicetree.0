@@ -1,39 +1,39 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] dt-bindings: net: ravb: Add support for r8a77990 SoC
-Date: Sun, 13 May 2018 09:58:05 +0200
-Message-ID: <20180513075803.plrkbwmzksjnz45u@verge.net.au>
-References: <1526008736-26496-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20180511.155942.16024095909155343.davem@davemloft.net>
+Subject: Re: [PATCH 2/2] arm64: dts: renesas: initial V3HSK board device tree
+Date: Sun, 13 May 2018 10:07:04 +0200
+Message-ID: <20180513080704.yeypjjtv7hdmqajt@verge.net.au>
+References: <3923fc5f-103c-94c9-57ba-cb29e8c55d05@cogentembedded.com>
+ <50de037c-7560-c261-f96a-f86065674c9b@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180511.155942.16024095909155343.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: yoshihiro.shimoda.uh@renesas.com, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org
+In-Reply-To: <50de037c-7560-c261-f96a-f86065674c9b@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 11, 2018 at 03:59:42PM -0400, David Miller wrote:
-> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Date: Fri, 11 May 2018 12:18:56 +0900
+On Thu, May 10, 2018 at 09:12:30PM +0300, Sergei Shtylyov wrote:
+> Add the initial device  tree for  the V3H Starter Kit board.
+> The board has 1 debug serial port (SCIF0); include support for it,
+> so that the serial console can work.
 > 
-> > Add documentation for r8a77990 compatible string to renesas ravb device
-> > tree bindings documentation.
-> > 
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Based on the original (and large) patch by Vladimir Barinov.
 > 
-> I'm assuming this isn't targetted at one of my trees.  Just FYI.
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Hi Dave,
-
-I think this is appropriate for net-next but if not I can take it.
+This looks fine but I will wait to see if there are other reviews before
+applying.
 
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-
-
-Shimoda-san,
-
-please use "[PATCH net-next]" for non-bugfix networking updates which
-are targeted at Dave's net-next tree. Bug fixes should be for "net".
-Patches should of course apply cleanly to whichever tree it is targeted at.
