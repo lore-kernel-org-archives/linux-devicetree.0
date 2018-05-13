@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH RESEND net-next v2 3/8] dt-bindings: net: dwmac-sun8i: simplify description of syscon property
-Date: Mon, 14 May 2018 03:14:20 +0800
-Message-ID: <20180513191425.9801-4-wens@csie.org>
+Subject: [PATCH RESEND net-next v2 4/8] dt-bindings: net: dwmac-sun8i: Add binding for GMAC on Allwinner R40 SoC
+Date: Mon, 14 May 2018 03:14:21 +0800
+Message-ID: <20180513191425.9801-5-wens@csie.org>
 References: <20180513191425.9801-1-wens@csie.org>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20180513191425.9801-1-wens@csie.org>
@@ -10,42 +10,43 @@ To: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, Icenowy Zheng <icenowy@aosc.io>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The syscon property is used to point to the device that holds the glue
-layer control register known as the "EMAC (or GMAC) clock register".
+The Allwinner R40 SoC has the EMAC controller supported by dwmac-sun8i.
+It is named "GMAC", while EMAC refers to the 10/100 Mbps Ethernet
+controller supported by sun4i-emac. The controller is the same, but
+the R40 has the glue layer controls in the clock control unit (CCU),
+with a reduced RX delay chain, and no TX delay chain.
 
-We do not need to explicitly list what compatible strings are needed, as
-this information is readily available in the user manuals. Also the
-"syscon" device type is more of an implementation detail. There are many
-ways to access a register not in a device's address range, the syscon
-interface being the most generic and unrestricted one.
-
-Simplify the description so that it says what it is supposed to
-describe.
+This patch adds the R40 specific bits to the dwmac-sun8i binding.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Reviewed-by: Rob Herring <robh@kernel.org>
 Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- Documentation/devicetree/bindings/net/dwmac-sun8i.txt | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ Documentation/devicetree/bindings/net/dwmac-sun8i.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-index 1b8e33e71651..1c0906a5c02b 100644
+index 1c0906a5c02b..cfe724398a12 100644
 --- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
 +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-@@ -20,12 +20,7 @@ Required properties:
- - phy-handle: See ethernet.txt
- - #address-cells: shall be 1
- - #size-cells: shall be 0
--- syscon: A phandle to the syscon of the SoC with one of the following
-- compatible string:
--  - allwinner,sun8i-a83t-system-controller
--  - allwinner,sun8i-h3-system-controller
--  - allwinner,sun8i-v3s-system-controller
--  - allwinner,sun50i-a64-system-controller
-+- syscon: A phandle to the device containing the EMAC or GMAC clock register
- 
+@@ -7,6 +7,7 @@ Required properties:
+ - compatible: must be one of the following string:
+ 		"allwinner,sun8i-a83t-emac"
+ 		"allwinner,sun8i-h3-emac"
++		"allwinner,sun8i-r40-gmac"
+ 		"allwinner,sun8i-v3s-emac"
+ 		"allwinner,sun50i-a64-emac"
+ - reg: address and length of the register for the device.
+@@ -25,8 +26,10 @@ Required properties:
  Optional properties:
  - allwinner,tx-delay-ps: TX clock delay chain value in ps.
+ 			 Range is 0-700. Default is 0.
++			 Unavailable for allwinner,sun8i-r40-gmac
+ - allwinner,rx-delay-ps: RX clock delay chain value in ps.
+ 			 Range is 0-3100. Default is 0.
++			 Range is 0-700 for allwinner,sun8i-r40-gmac
+ Both delay properties need to be a multiple of 100. They control the
+ clock delay for external RGMII PHY. They do not apply to the internal
+ PHY or external non-RGMII PHYs.
 -- 
 2.17.0
