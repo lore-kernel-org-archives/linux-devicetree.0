@@ -1,101 +1,54 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH RESEND net-next v2 6/8] net: stmmac: dwmac-sun8i: Allow getting syscon regmap from external device
-Date: Mon, 14 May 2018 03:14:23 +0800
-Message-ID: <20180513191425.9801-7-wens@csie.org>
+Subject: [PATCH RESEND net-next v2 2/8] dt-bindings: net: dwmac-sun8i: Sort
+ syscon compatibles by alphabetical order
+Date: Mon, 14 May 2018 03:14:19 +0800
+Message-ID: <20180513191425.9801-3-wens@csie.org>
 References: <20180513191425.9801-1-wens@csie.org>
-Return-path: <netdev-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180513191425.9801-1-wens@csie.org>
-Sender: netdev-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, Icenowy Zheng <icenowy@aosc.io>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, netdev@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On the Allwinner R40 SoC, the "GMAC clock" register is in the CCU
-address space. Using a standard syscon to access it provides no
-coordination with the CCU driver for register access. Neither does
-it prevent this and other drivers from accessing other, maybe critical,
-clock control registers. On other SoCs, the register is in the "system
-control" address space, which might also contain controls for mapping
-SRAM to devices or the CPU. This hardware has the same issues.
+The A83T syscon compatible was appended to the syscon compatibles list,
+instead of inserted in to preserve the ordering.
 
-Instead, for these types of setups, we let the device containing the
-control register create a regmap tied to it. We can then get the device
-from the existing syscon phandle, and retrieve the regmap with
-dev_get_regmap().
+Move it to the proper place to keep the list sorted.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 50 ++++++++++++++++++-
- 1 file changed, 49 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/net/dwmac-sun8i.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index bbc051474806..79e104a20e20 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -983,6 +983,34 @@ static struct mac_device_info *sun8i_dwmac_setup(void *ppriv)
- 	return mac;
- }
+diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+index e04ce75e24a3..1b8e33e71651 100644
+--- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
++++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+@@ -22,10 +22,10 @@ Required properties:
+ - #size-cells: shall be 0
+ - syscon: A phandle to the syscon of the SoC with one of the following
+  compatible string:
++  - allwinner,sun8i-a83t-system-controller
+   - allwinner,sun8i-h3-system-controller
+   - allwinner,sun8i-v3s-system-controller
+   - allwinner,sun50i-a64-system-controller
+-  - allwinner,sun8i-a83t-system-controller
  
-+static struct regmap *sun8i_dwmac_get_syscon_from_dev(struct device_node *node)
-+{
-+	struct device_node *syscon_node;
-+	struct platform_device *syscon_pdev;
-+	struct regmap *regmap = NULL;
-+
-+	syscon_node = of_parse_phandle(node, "syscon", 0);
-+	if (!syscon_node)
-+		return ERR_PTR(-ENODEV);
-+
-+	syscon_pdev = of_find_device_by_node(syscon_node);
-+	if (!syscon_pdev) {
-+		/* platform device might not be probed yet */
-+		regmap = ERR_PTR(-EPROBE_DEFER);
-+		goto out_put_node;
-+	}
-+
-+	/* If no regmap is found then the other device driver is at fault */
-+	regmap = dev_get_regmap(&syscon_pdev->dev, NULL);
-+	if (!regmap)
-+		regmap = ERR_PTR(-EINVAL);
-+
-+	platform_device_put(syscon_pdev);
-+out_put_node:
-+	of_node_put(syscon_node);
-+	return regmap;
-+}
-+
- static int sun8i_dwmac_probe(struct platform_device *pdev)
- {
- 	struct plat_stmmacenet_data *plat_dat;
-@@ -1027,7 +1055,27 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
- 		gmac->regulator = NULL;
- 	}
- 
--	regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "syscon");
-+	/* The "GMAC clock control" register might be located in the
-+	 * CCU address range (on the R40), or the system control address
-+	 * range (on most other sun8i and later SoCs).
-+	 *
-+	 * The former controls most if not all clocks in the SoC. The
-+	 * latter has an SoC identification register, and on some SoCs,
-+	 * controls to map device specific SRAM to either the intended
-+	 * peripheral, or the CPU address space.
-+	 *
-+	 * In either case, there should be a coordinated and restricted
-+	 * method of accessing the register needed here. This is done by
-+	 * having the device export a custom regmap, instead of a generic
-+	 * syscon, which grants all access to all registers.
-+	 *
-+	 * To support old device trees, we fall back to using the syscon
-+	 * interface if possible.
-+	 */
-+	regmap = sun8i_dwmac_get_syscon_from_dev(pdev->dev.of_node);
-+	if (IS_ERR(regmap))
-+		regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-+							 "syscon");
- 	if (IS_ERR(regmap)) {
- 		ret = PTR_ERR(regmap);
- 		dev_err(&pdev->dev, "Unable to map syscon: %d\n", ret);
+ Optional properties:
+ - allwinner,tx-delay-ps: TX clock delay chain value in ps.
 -- 
 2.17.0
