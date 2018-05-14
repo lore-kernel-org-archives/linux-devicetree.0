@@ -1,42 +1,68 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v4 6/6] devfreq: rk3399_dmc: fix spelling mistakes.
-Date: Tue, 15 May 2018 06:57:42 +0900
-Message-ID: <5AFA0656.6040701@samsung.com>
-References: <20180509125749.31318-7-enric.balletbo@collabora.com>
-        <20180509125749.31318-1-enric.balletbo@collabora.com>
-        <CGME20180509125806epcas3p42927285eece7f031ad7c9e422ee0a43c@epcms1p5>
-        <20180514102355epcms1p5baf3df2741827f9b9bf3e1de37e27880@epcms1p5>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+From: Thomas Hebb <tommyhebb@gmail.com>
+Subject: [PATCH 2/2] ARM: dts: chromecast: use PWM for LEDs
+Date: Mon, 14 May 2018 17:58:15 -0400
+Message-ID: <90316a6c92204399a4fecfe7cd2a2b808548fa48.1526334654.git.tommyhebb@gmail.com>
+References: <da60a97a0c6f754faa1f996334b3568ddb2f5ed0.1526334654.git.tommyhebb@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180514102355epcms1p5baf3df2741827f9b9bf3e1de37e27880@epcms1p5>
+In-Reply-To: <da60a97a0c6f754faa1f996334b3568ddb2f5ed0.1526334654.git.tommyhebb@gmail.com>
+In-Reply-To: <da60a97a0c6f754faa1f996334b3568ddb2f5ed0.1526334654.git.tommyhebb@gmail.com>
+References: <da60a97a0c6f754faa1f996334b3568ddb2f5ed0.1526334654.git.tommyhebb@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Kyungmin Park <kyungmin.park@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "dbasehore@chromium.org" <dbasehore@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "groeck@chromium.org" <groeck@chromium.org>, "kernel@collabora.com" <kernel@collabora.com>, "hl@rock-chips.com" <hl@rock-chips.com>
+To: linux-kernel@vger.kernel.org
+Cc: Thomas Hebb <tommyhebb@gmail.com>, Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/Synaptics
+        Berlin SoC support" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018년 05월 14일 19:23, MyungJoo Ham wrote:
->> Fix some spelling mistakes in error and debug messages.
->>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> ---
->>
->> Changes in v4:
->> - [6/6] Introduce this new patch that fixes some spelling.
->>
->> Changes in v3: None
->> Changes in v2: None
->>
->> drivers/devfreq/rk3399_dmc.c | 12 ++++++------
->> 1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Control the Chromecast's two LEDs using PWM instead of GPIO pins. This
+allows for variable brightness.
 
-Maybe, when you apply this patch on devfreq.git,
-you are missing the my reviewed-by tag.
+Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+---
+ .../boot/dts/berlin2cd-google-chromecast.dts  | 20 ++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
+diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+index 54221f55bfa2..fb71e5436420 100644
+--- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
++++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+@@ -66,18 +66,21 @@
+ 	};
+ 
+ 	leds {
+-		compatible = "gpio-leds";
++		compatible = "pwm-leds";
++		pinctrl-0 = <&ledpwm_pmux>;
++		pinctrl-names = "default";
+ 
+ 		white {
+ 			label = "white";
+-			gpios = <&portc 1 GPIO_ACTIVE_HIGH>;
+-			default-state = "keep";
++			pwms = <&pwm 0 600000 0>;
++			max-brightness = <255>;
++			linux,default-trigger = "default-on";
+ 		};
+ 
+ 		red {
+ 			label = "red";
+-			gpios = <&portc 2 GPIO_ACTIVE_HIGH>;
+-			default-state = "keep";
++			pwms = <&pwm 1 600000 0>;
++			max-brightness = <255>;
+ 		};
+ 	};
+ };
+@@ -96,3 +99,10 @@
+ &usb_phy1 { status = "okay"; };
+ 
+ &usb1 { status = "okay"; };
++
++&soc_pinctrl {
++	ledpwm_pmux: ledpwm-pmux {
++		groups = "G0";
++		function = "pwm";
++	};
++};
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.17.0
