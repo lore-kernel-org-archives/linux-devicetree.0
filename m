@@ -1,155 +1,55 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH 2/2] media: i2c: mt9t112: Add device tree support
-Date: Tue, 15 May 2018 00:50:04 +0300
-Message-ID: <20180514215004.5oy6jr7f32jpfhx2@valkosipuli.retiisi.org.uk>
-References: <1524654014-17852-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524654014-17852-3-git-send-email-jacopo+renesas@jmondi.org>
- <20180507093219.hrhaliadccaytenj@valkosipuli.retiisi.org.uk>
- <20180514143044.GK5956@w540>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thomas Hebb <tommyhebb@gmail.com>
+Subject: [PATCH] ARM: dts: chromecast: override bad bootloader memory info
+Date: Mon, 14 May 2018 17:56:45 -0400
+Message-ID: <20180514215645.17592-2-tommyhebb@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180514143044.GK5956@w540>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, hans.verkuil@cisco.com, mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Thomas Hebb <tommyhebb@gmail.com>, Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/Synaptics
+        Berlin SoC support" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+On the Chromecast, the bootloader provides us with an ATAG_MEM of
+start=0x01000000 and size=0x3eff8000. This is clearly incorrect, as the
+range given encompasses nearly a GiB but the Chromecast only has 512MiB
+of RAM! Additionally, this causes the kernel to be decompressed at
+0x00008000, below the claimed beginning of RAM, and so the boot fails.
 
-On Mon, May 14, 2018 at 04:30:44PM +0200, jacopo mondi wrote:
-> Hi Sakari,
-> 
-> On Mon, May 07, 2018 at 12:32:19PM +0300, Sakari Ailus wrote:
-> > Hi Jacopo,
-> >
-> > On Wed, Apr 25, 2018 at 01:00:14PM +0200, Jacopo Mondi wrote:
-> 
-> [snip]
-> 
-> > >  static int mt9t112_probe(struct i2c_client *client,
-> > >  			 const struct i2c_device_id *did)
-> > >  {
-> > >  	struct mt9t112_priv *priv;
-> > >  	int ret;
-> > >
-> > > -	if (!client->dev.platform_data) {
-> > > +	if (!client->dev.of_node && !client->dev.platform_data) {
-> > >  		dev_err(&client->dev, "mt9t112: missing platform data!\n");
-> > >  		return -EINVAL;
-> > >  	}
-> > > @@ -1081,23 +1118,39 @@ static int mt9t112_probe(struct i2c_client *client,
-> > >  	if (!priv)
-> > >  		return -ENOMEM;
-> > >
-> > > -	priv->info = client->dev.platform_data;
-> > >  	priv->init_done = false;
-> > > -
-> > > -	v4l2_i2c_subdev_init(&priv->subdev, client, &mt9t112_subdev_ops);
-> > > -
-> > > -	priv->clk = devm_clk_get(&client->dev, "extclk");
-> > > -	if (PTR_ERR(priv->clk) == -ENOENT) {
-> > > +	priv->dev = &client->dev;
-> > > +
-> > > +	if (client->dev.platform_data) {
-> > > +		priv->info = client->dev.platform_data;
-> > > +
-> > > +		priv->clk = devm_clk_get(&client->dev, "extclk");
-> >
-> > extclk needs to be documented in DT binding documentation.
-> >
-> > > +		if (PTR_ERR(priv->clk) == -ENOENT) {
-> > > +			priv->clk = NULL;
-> > > +		} else if (IS_ERR(priv->clk)) {
-> > > +			dev_err(&client->dev,
-> > > +				"Unable to get clock \"extclk\"\n");
-> > > +			return PTR_ERR(priv->clk);
-> > > +		}
-> > > +	} else {
-> > > +		/*
-> > > +		 * External clock frequencies != 24MHz are only supported
-> > > +		 * for non-OF systems.
-> > > +		 */
-> >
-> > Shouldn't you actually set the frequency? Or perhaps even better to check
-> > it, and use assigned-clocks and assigned-clock-rates properties?
-> >
-> 
-> I might be confused, but my intention was to use an external clock
-> reference, with a configurable frequency only in the platform data use
-> case. As you can see in this 'else' branch, in OF case, the priv->clk
-> field is null, and all the PLL and clock computations are performed
-> assuming a 24MHz input clock.
-> 
-> In my opinion, as the driver when running on OF systems does not
-> get any reference to 'extclk' clock, it should not be documented in
-> bindings. Do you agree?
+Since the existing ATAG parsing code runs before the kernel is even
+decompressed and irrevocably patches the device tree, don't even try
+to bypass it. Instead, use the "linux,usable-memory" property instead
+of the "reg" property to define the real range. The ATAG code only
+overwrites reg, but linux,usable-memory is checked first in the OF
+driver, so the fact that reg gets changed makes no difference.
 
-Uh, isn't the clock generally controlled by the driver on OF-based systems?
-You could assign the frequency in DT though, and not in the driver, but
-that should be documented in binding documentation.
+Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+---
+ arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-The register configuration the driver does not appear to be dependent on
-the clock frequency, which suggests that it is only applicable to a
-particular frequency --- 24 MHz?
-
-> 
-> Thanks
->    j
-> 
-> > >  		priv->clk = NULL;
-> > > -	} else if (IS_ERR(priv->clk)) {
-> > > -		dev_err(&client->dev, "Unable to get clock \"extclk\"\n");
-> > > -		return PTR_ERR(priv->clk);
-> > > +		priv->info = &mt9t112_default_pdata_24MHz;
-> > > +
-> > > +		ret = mt9t112_parse_dt(priv);
-> > > +		if (ret)
-> > > +			return ret;
-> > >  	}
-> > >
-> > > -	priv->standby_gpio = devm_gpiod_get_optional(&client->dev, "standby",
-> > > +	v4l2_i2c_subdev_init(&priv->subdev, client, &mt9t112_subdev_ops);
-> > > +
-> > > +	priv->standby_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
-> > >  						     GPIOD_OUT_HIGH);
-> > >  	if (IS_ERR(priv->standby_gpio)) {
-> > > -		dev_err(&client->dev, "Unable to get gpio \"standby\"\n");
-> > > +		dev_err(&client->dev, "Unable to get gpio \"powerdown\"\n");
-> > >  		return PTR_ERR(priv->standby_gpio);
-> > >  	}
-> > >
-> > > @@ -1124,9 +1177,19 @@ static const struct i2c_device_id mt9t112_id[] = {
-> > >  };
-> > >  MODULE_DEVICE_TABLE(i2c, mt9t112_id);
-> > >
-> > > +#if IS_ENABLED(CONFIG_OF)
-> > > +static const struct of_device_id mt9t112_of_match[] = {
-> > > +	{ .compatible = "micron,mt9t111", },
-> > > +	{ .compatible = "micron,mt9t112", },
-> > > +	{ /* sentinel */ },
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, mt9t112_of_match);
-> > > +#endif
-> > > +
-> > >  static struct i2c_driver mt9t112_i2c_driver = {
-> > >  	.driver = {
-> > >  		.name = "mt9t112",
-> > > +		.of_match_table = of_match_ptr(mt9t112_of_match),
-> >
-> > No need to use of_match_ptr().
-> >
-> > >  	},
-> > >  	.probe    = mt9t112_probe,
-> > >  	.remove   = mt9t112_remove,
-> >
-> > --
-> > Sakari Ailus
-> > e-mail: sakari.ailus@iki.fi
-
-
-
+diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+index 20f31cdeaf38..54221f55bfa2 100644
+--- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
++++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+@@ -52,7 +52,17 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x00000000 0x20000000>; /* 512 MB */
++
++		/*
++		 * We're using "linux,usable-memory" instead of "reg" here
++		 * because the (signed and encrypted) bootloader that shipped
++		 * with this device provides an incorrect memory range in
++		 * ATAG_MEM. Linux helpfully overrides the "reg" property with
++		 * data from the ATAG, so we can't specify the proper range
++		 * normally. Fortunately, this alternate property is checked
++		 * first by the OF driver, so we can (ab)use it instead.
++		 */
++		linux,usable-memory = <0x00000000 0x20000000>; /* 512 MB */
+ 	};
+ 
+ 	leds {
 -- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+2.17.0
