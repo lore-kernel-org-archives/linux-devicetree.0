@@ -1,83 +1,52 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: qcom: Collapse usb support into one node
-Date: Mon, 14 May 2018 15:10:04 -0700
-Message-ID: <152633580491.34267.3508281594437081335@swboyd.mtv.corp.google.com>
-References: <1523973390-2387-1-git-send-email-yossim@codeaurora.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [RFC PATCH 02/10] dt-bindings: devfreq: rk3399_dmc: Add
+ rockchip,pmu phandle.
+Date: Tue, 15 May 2018 07:20:29 +0900
+Message-ID: <5AFA0BAD.1050005@samsung.com>
+References: <20180514211610.26618-1-enric.balletbo@collabora.com>
+        <CGME20180514211906epcas4p2a4f34ce55a219a102e11de32be23e511@epcas4p2.samsung.com>
+        <20180514211610.26618-3-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523973390-2387-1-git-send-email-yossim@codeaurora.org>
+In-reply-to: <20180514211610.26618-3-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "moderated list:ARM64 PORT AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>
-Cc: Yossi Mansharoff <yossim@codeaurora.org>
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Heiko Stuebner <heiko@sntech.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Sandy Huang <hjc@rock-chips.com>, David Airlie <airlied@linux.ie>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Derek Basehore <dbasehore@chromium.org>, linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org, dri-devel@lists.freedesktop.org, Lin Huang <hl@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Yossi Mansharoff (2018-04-17 06:56:30)
-> We currently have three device nodes for the same USB hardware
-> block, as evident by the reuse of the same reg address multiple
-> times. Now that the chipidea driver fully supports OTG with the
-> MSM wrapper we can collapse all these nodes into one USB device
-> node, reflecting the true nature of the hardware.
+Hi,
 
-None of this makes sense. Commit text is totally bogus now.
+On 2018년 05월 15일 06:16, Enric Balletbo i Serra wrote:
+> The Rockchip DMC (Dynamic Memory Interface) needs to access to the PMU
+> general register files to know the DRAM type, so add a phandle to the
+> syscon that manages these registers.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> 
+>  Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
+> index 0ec68141f85a..951789c0cdd6 100644
+> --- a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
+> +++ b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
+> @@ -12,6 +12,8 @@ Required properties:
+>  			 for details.
+>  - center-supply:	 DMC supply node.
+>  - status:		 Marks the node enabled/disabled.
+> +- rockchip,pmu:		 Phandle to the syscon managing the "PMU general register
+> +			 files".
+>  
+>  Optional properties:
+>  - interrupts:		 The CPU interrupt number. The interrupt specifier
+> 
 
-> =
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/=
-dts/qcom/apq8016-sbc.dtsi
-> index 9ff8487..1505921 100644
-> --- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> @@ -371,18 +372,18 @@
->                         adp-disable;
->                         hnp-disable;
->                         srp-disable;
-> -                       dr_mode =3D "host";
-> -                       pinctrl-names =3D "default";
-> -                       pinctrl-0 =3D <&usb_sw_sel_pm>;
-> +                       mux-controls =3D <&usb_switch>;
-> +                       mux-control-names =3D "usb_switch";
-> +
->                         ulpi {
->                                 phy {
->                                         v1p8-supply =3D <&pm8916_l7>;
->                                         v3p3-supply =3D <&pm8916_l13>;
-> -                                       extcon =3D <&usb_id>;
->                                 };
->                         };
->                 };
->  =
-
-> +
-
-Why the newline?
-
->                 lpass@7708000 {
->                         status =3D "okay";
->                 };
-> @@ -512,11 +513,17 @@
->  =
-
->         usb_id: usb-id {
->                 compatible =3D "linux,extcon-usb-gpio";
-> -               vbus-gpio =3D <&msmgpio 121 GPIO_ACTIVE_HIGH>;
-> +               id-gpio =3D <&msmgpio 121 GPIO_ACTIVE_HIGH>;
-
-Hmm?
-
->                 pinctrl-names =3D "default";
->                 pinctrl-0 =3D <&usb_id_default>;
->         };
->  =
-
-> +       usb_switch: usb-switch {
-> +               compatible =3D "gpio-mux";
-
-Needs a better compatible string for the actual mux part. The gpio-mux
-can come after that because it's generic, but it's good to record the
-actual mux part too.
-
-> +               mux-gpios =3D <&pm8916_gpios 4 GPIO_ACTIVE_HIGH>;
-> +               #mux-control-cells =3D <0>;
-> +       };
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
