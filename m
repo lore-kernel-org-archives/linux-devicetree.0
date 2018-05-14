@@ -1,171 +1,56 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH 07/11] irqchip: stm32: add stm32mp1 support with hierarchy
- domain
-Date: Mon, 14 May 2018 14:40:57 +0200
-Message-ID: <56bc18fc-b941-0121-0805-399cb6979792@st.com>
-References: <1524759514-12392-1-git-send-email-ludovic.Barre@st.com>
- <1524759514-12392-8-git-send-email-ludovic.Barre@st.com>
- <20180501145611.GA6842@rob-hp-laptop>
- <6fdb652b-e7f9-7035-3eda-39f763ed7ea3@st.com>
- <CAL_JsqLvbGdPC9ifPZ5+tVxznHbsDuWGRg4R47st8Y9BtnNYUQ@mail.gmail.com>
- <26de0a75-e4e1-7c43-e31d-599d3c7de0ff@st.com>
- <CAL_JsqLh4+vs-hQceg3bZ-ALWKE182vKbL90xxLwdgb09OtZ7Q@mail.gmail.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [RFC PATCH] driver core: make deferring probe forever optional
+Date: Mon, 14 May 2018 14:44:50 +0200
+Message-ID: <45eca00d-57f5-21b5-1f6e-b5f3f60ad276@xilinx.com>
+References: <20180501213114.20183-1-robh@kernel.org>
+ <20180507183106.GF2259@tuxbook-pro>
+ <91dad272-e07d-2ab6-2afa-538294e9cefa@suse.de>
+ <CACRpkdaYN-wKErERP_65T2NH6L-+8O_ugSgg7pXfkaLkn1A2KQ@mail.gmail.com>
+ <c6655f84-747f-c08b-7b9c-f76ff8857567@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqLh4+vs-hQceg3bZ-ALWKE182vKbL90xxLwdgb09OtZ7Q@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c6655f84-747f-c08b-7b9c-f76ff8857567@suse.de>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Loic PALLARDY <loic.pallardy@st.com>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald BAEZA <gerald.baeza@st.com>, Thomas Gleixner <tglx@linutronix.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Alexandre Torgue <alexandre.torgue@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexander Graf <agraf@suse.de>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@arm.com>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@kernel.org>, boot-architecture@lists.linaro.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Michal Simek <michal.simek@xilinx.com>, Jan Kiszka <jan.kiszka@siemens.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 05/04/2018 10:38 PM, Rob Herring wrote:
-> On Thu, May 3, 2018 at 4:55 AM, Ludovic BARRE <ludovic.barre@st.com> wrote:
+On 14.5.2018 09:37, Alexander Graf wrote:
+> 
+> On 05/14/2018 12:01 AM, Linus Walleij wrote:
+>> On Wed, May 9, 2018 at 11:44 AM, Alexander Graf <agraf@suse.de> wrote:
+>>> On 05/07/2018 08:31 PM, Bjorn Andersson wrote:
+>>>> Can you please name platform that has enough support for Alexander to
+>>>> care about backwards and forwards compatibility but lacks a pinctrl
+>>>> driver.
+>>> ZynqMP is one example that immediately comes to my mind. I'm sure
+>>> there are
+>>> others too.
+>> Why isn't that using drivers/pinctrl/pinctrl-zynq.c?
 >>
->>
->> On 05/02/2018 07:45 PM, Rob Herring wrote:
->>>
->>> On Wed, May 2, 2018 at 11:03 AM, Ludovic BARRE <ludovic.barre@st.com>
->>> wrote:
->>>>
->>>> Hi Rob
->>>>
->>>>
->>>>
->>>> On 05/01/2018 04:56 PM, Rob Herring wrote:
->>>>>
->>>>>
->>>>> On Thu, Apr 26, 2018 at 06:18:30PM +0200, Ludovic Barre wrote:
->>>>>>
->>>>>>
->>>>>> From: Ludovic Barre <ludovic.barre@st.com>
->>>>>>
->>>>>> Exti controller has been differently integrated on stm32mp1 SoC.
->>>>>> A parent irq has only one external interrupt. A hierachy domain could
->>>>>> be used. Handlers are call by parent, each parent interrupt could be
->>>>>> masked and unmasked according to the needs.
->>>>>>
->>>>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->>>>>> ---
->>>>>>     .../interrupt-controller/st,stm32-exti.txt         |   3 +
->>>>>>     drivers/irqchip/irq-stm32-exti.c                   | 322
->>>>>> +++++++++++++++++++++
->>>>>>     2 files changed, 325 insertions(+)
->>>>>>
->>>>>> diff --git
->>>>>>
->>>>>> a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
->>>>>>
->>>>>> b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
->>>>>> index edf03f0..136bd61 100644
->>>>>> ---
->>>>>>
->>>>>> a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
->>>>>> +++
->>>>>>
->>>>>> b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
->>>>>> @@ -5,11 +5,14 @@ Required properties:
->>>>>>     - compatible: Should be:
->>>>>>         "st,stm32-exti"
->>>>>>         "st,stm32h7-exti"
->>>>>> +    "st,stm32mp1-exti"
->>>>>>     - reg: Specifies base physical address and size of the registers
->>>>>>     - interrupt-controller: Indentifies the node as an interrupt
->>>>>> controller
->>>>>>     - #interrupt-cells: Specifies the number of cells to encode an
->>>>>> interrupt
->>>>>>       specifier, shall be 2
->>>>>>     - interrupts: interrupts references to primary interrupt controller
->>>>>> +  (only needed for exti controller with multiple exti under
->>>>>> +  same parent interrupt: st,stm32-exti and st,stm32h7-exti")
->>>>>>       Example:
->>>>>>     diff --git a/drivers/irqchip/irq-stm32-exti.c
->>>>>> b/drivers/irqchip/irq-stm32-exti.c
->>>>>> index b38c655..ebf7146 100644
->>>>>> --- a/drivers/irqchip/irq-stm32-exti.c
->>>>>> +++ b/drivers/irqchip/irq-stm32-exti.c
->>>>>
->>>>>
->>>>>
->>>>> [...]
->>>>>
->>>>>> +static const struct stm32_desc_irq stm32mp1_desc_irq[] = {
->>>>>> +       { .exti = 1, .irq_parent = 7 },
->>>>>> +       { .exti = 2, .irq_parent = 8 },
->>>>>> +       { .exti = 3, .irq_parent = 9 },
->>>>>> +       { .exti = 4, .irq_parent = 10 },
->>>>>> +       { .exti = 5, .irq_parent = 23 },
->>>>>> +       { .exti = 6, .irq_parent = 64 },
->>>>>> +       { .exti = 7, .irq_parent = 65 },
->>>>>> +       { .exti = 8, .irq_parent = 66 },
->>>>>> +       { .exti = 9, .irq_parent = 67 },
->>>>>> +       { .exti = 10, .irq_parent = 40 },
->>>>>> +       { .exti = 11, .irq_parent = 42 },
->>>>>> +       { .exti = 12, .irq_parent = 76 },
->>>>>> +       { .exti = 13, .irq_parent = 77 },
->>>>>> +       { .exti = 14, .irq_parent = 121 },
->>>>>> +       { .exti = 15, .irq_parent = 127 },
->>>>>> +       { .exti = 16, .irq_parent = 1 },
->>>>>> +       { .exti = 65, .irq_parent = 144 },
->>>>>> +       { .exti = 68, .irq_parent = 143 },
->>>>>> +       { .exti = 73, .irq_parent = 129 },
->>>>>> +};
->>>>>
->>>>>
->>>>>
->>>>> You can use an interrupt-map property rather than put this into the
->>>>> driver.
->>>>
->>>>
->>>>
->>>> interrupt-map seemed interesting and promising like used in pci host.
->>>> At first sight this property can't be used into node with
->>>> "interrupt-controller" property (see in drivers/of/irq.c function:
->>>> of_irq_parse_raw) because "of_irq_parse_raw" checks if node got
->>>> it first, and after lookup the interrupt-map.
->>>>
->>>> Rob, Thomas, Jason, Marc what do you prefers or the right ways...?
->>>
->>>
->>> I believe the correct thing to do is simply drop "interrupt-controller".
->>
+>> How is it so very different from (old) Zynq as it is already using
+>> the same GPIO driver?
 > 
-> Actually, that's not right.
-> 
->> if I drop "interrupt-controller" of my node, my driver will not be
->> initialized by "of_irq_init"
->> (start_kernel->init_IRQ->irqchip_init->of_irq_init).
->> Probably, we could replace "IRQCHIP_DECLARE" by a
->> "module_platform_driver" or "postcore_initcall" but I'm not a big fan of
->> this solution. what do you think ?
-> 
-> You'd have to parse 'interrupt-map' yourself to extract the data for
-> this to work because interrupt-map currently only works when the
-> translation is transparent (i.e. doesn't need s/w handling). So I
-> guess leave this in the driver. Sorry for the noise.
-> 
+> That one is very simple: ZynqMP is usually an AMP system where Linux
+> doesn't have full knowledge of the overall system. IIUC they have a tiny
+> microblaze (PMU) that does the actual full system configuration for
+> peripherals that may interfere with each other. This architecture also
+> allows for safety critical code to run alongside a (less safe) Linux
+> system.
 
-Sorry, I don't know if I've correctly understand the answer.
-I hesitate between:
-- keep the code like this, with stm32mp1_desc_irq tab.
-- parse interrupt-map property into stm32 exti driver.
+Linux is running in non secure world that's why Linux can't have full
+system visibility and Linux should ask firmware. It doesn't matter if
+firmware is running on specific unit or just secure SW in EL3/EL1-S, EL0-S.
+You can also configure ZynqMP to protect these address ranges not to be
+accessible from NS sw.
+If you don't care about security you can use normal read/write accesses
+at least for gpio case. Pinctrl/clk will be driven via firmware interface.
 
-Just to be sure, and avoid misunderstand.
+On Zynq we have never finished running Linux in NS and having firmware
+to handle it that's why only read/write is used there.
 
-BR
-Ludo
-
-> Rob
-> 
+Thanks,
+Michal
