@@ -1,122 +1,118 @@
-From: Bastian Stender <bst@pengutronix.de>
-Subject: Re: [PATCH 1/3] thermal: imx: remove cpufreq cooling registration
-Date: Mon, 14 May 2018 10:37:21 +0200
-Message-ID: <5a449fc0-4d3e-c7c7-0e9a-43efb4b909cf@pengutronix.de>
-References: <1526285359-17978-1-git-send-email-Anson.Huang@nxp.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 1/2] USB: dwc3: get extcon device by OF graph bindings
+Date: Mon, 14 May 2018 10:38:55 +0200
+Message-ID: <1080506a-adaa-193b-24d5-a779486dacc8@samsung.com>
+References: <20180131155718.5237-1-a.hajda@samsung.com>
+        <CGME20180131155734eucas1p2b55ad1aab1d5086566dad7a79b25ccf3@eucas1p2.samsung.com>
+        <20180131155718.5237-2-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526285359-17978-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20180131155718.5237-2-a.hajda@samsung.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, rui.zhang@intel.com, edubezval@gmail.com
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 31.01.2018 16:57, Andrzej Hajda wrote:
+> extcon device is used to detect host/device connection. Since extcon
+> OF property is deprecated, alternative method should be added.
+> This method uses OF graph bindings to locate extcon.
+>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
 
-On 05/14/2018 10:09 AM, Anson Huang wrote:
-> This patch removes cpufreq cooling registration in
-> thermal .probe function, cpufreq cooling should be
-> done in cpufreq driver when it is ready.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Ping, 3.5 months passed.
 
-It seems you are trying to achieve something similar to a patch I sent a
-couple of month ago. Unfortunately I did not have the time to rework it yet:
-
-   https://patchwork.kernel.org/patch/10059085/
-
-Some of the comments might apply here too.
-
-Regards,
-Bastian
+Regards
+Andrzej
 
 > ---
->   drivers/thermal/imx_thermal.c | 16 ----------------
->   1 file changed, 16 deletions(-)
-> 
-> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
-> index c30dc21..8eedb97 100644
-> --- a/drivers/thermal/imx_thermal.c
-> +++ b/drivers/thermal/imx_thermal.c
-> @@ -9,7 +9,6 @@
->   
->   #include <linux/clk.h>
->   #include <linux/cpufreq.h>
-> -#include <linux/cpu_cooling.h>
->   #include <linux/delay.h>
->   #include <linux/device.h>
->   #include <linux/init.h>
-> @@ -207,7 +206,6 @@ static struct thermal_soc_data thermal_imx7d_data = {
->   struct imx_thermal_data {
->   	struct cpufreq_policy *policy;
->   	struct thermal_zone_device *tz;
-> -	struct thermal_cooling_device *cdev;
->   	enum thermal_device_mode mode;
->   	struct regmap *tempmon;
->   	u32 c1, c2; /* See formula in imx_init_calib() */
-> @@ -729,22 +727,12 @@ static int imx_thermal_probe(struct platform_device *pdev)
->   		return -EPROBE_DEFER;
->   	}
->   
-> -	data->cdev = cpufreq_cooling_register(data->policy);
-> -	if (IS_ERR(data->cdev)) {
-> -		ret = PTR_ERR(data->cdev);
-> -		dev_err(&pdev->dev,
-> -			"failed to register cpufreq cooling device: %d\n", ret);
-> -		cpufreq_cpu_put(data->policy);
-> -		return ret;
-> -	}
+> Hi all,
+>
+> This patch implements alternative method to get extcon from DWC3.
+> The code works but is hacky, as DWC3 must traverse different DT nodes
+> to get extcon, in case of TM2 it is USB-PHY and MUIC, but other
+> platforms can have different paths.
+> I would be glad if it can be merged as is for now, but additional work
+> must be done to make it generic.
+> I guess on DT binding side it is OK. So the problem should be addressed
+> in the code.
+> My rough idea is to implement kind of extcon aliases/forwarder mechanism,
+> ie. USB-PHY will expect on its output remote port extcon, and it should register
+> extcon-forwarder pointing to this extcon. This way DWC3 can look for the extcon
+> on its PHY phandle, and it will receive via forwarding mechanism extcon
+> exposed by MUIC.
+> As I said this is rough idea for discussion, other propositions are welcome.
+>
+> Regards
+> Andrzej
+> ---
+>  drivers/usb/dwc3/drd.c | 41 ++++++++++++++++++++++++++++-------------
+>  1 file changed, 28 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
+> index cc8ab9a8e9d2..eee2eca3d513 100644
+> --- a/drivers/usb/dwc3/drd.c
+> +++ b/drivers/usb/dwc3/drd.c
+> @@ -8,6 +8,7 @@
+>   */
+>  
+>  #include <linux/extcon.h>
+> +#include <linux/of_graph.h>
+>  
+>  #include "debug.h"
+>  #include "core.h"
+> @@ -38,24 +39,38 @@ static int dwc3_drd_notifier(struct notifier_block *nb,
+>  	return NOTIFY_DONE;
+>  }
+>  
+> +struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
+> +{
+> +	struct device *dev = dwc->dev;
+> +	struct device_node *np_phy, *np_conn;
+> +	struct extcon_dev *edev;
+> +
+> +	if (of_property_read_bool(dev->of_node, "extcon"))
+> +		return extcon_get_edev_by_phandle(dwc->dev, 0);
+> +
+> +	np_phy = of_parse_phandle(dev->of_node, "phys", 0);
+> +	np_conn = of_graph_get_remote_node(np_phy, -1, -1);
+> +	edev = extcon_get_edev_by_of_node(np_conn);
+> +	of_node_put(np_conn);
+> +	of_node_put(np_phy);
+> +
+> +	return edev;
+> +}
+> +
+>  int dwc3_drd_init(struct dwc3 *dwc)
+>  {
+>  	int ret;
+>  
+> -	if (dwc->dev->of_node) {
+> -		if (of_property_read_bool(dwc->dev->of_node, "extcon"))
+> -			dwc->edev = extcon_get_edev_by_phandle(dwc->dev, 0);
 > -
->   	data->thermal_clk = devm_clk_get(&pdev->dev, NULL);
->   	if (IS_ERR(data->thermal_clk)) {
->   		ret = PTR_ERR(data->thermal_clk);
->   		if (ret != -EPROBE_DEFER)
->   			dev_err(&pdev->dev,
->   				"failed to get thermal clk: %d\n", ret);
-> -		cpufreq_cooling_unregister(data->cdev);
->   		cpufreq_cpu_put(data->policy);
->   		return ret;
->   	}
-> @@ -759,7 +747,6 @@ static int imx_thermal_probe(struct platform_device *pdev)
->   	ret = clk_prepare_enable(data->thermal_clk);
->   	if (ret) {
->   		dev_err(&pdev->dev, "failed to enable thermal clk: %d\n", ret);
-> -		cpufreq_cooling_unregister(data->cdev);
->   		cpufreq_cpu_put(data->policy);
->   		return ret;
->   	}
-> @@ -775,7 +762,6 @@ static int imx_thermal_probe(struct platform_device *pdev)
->   		dev_err(&pdev->dev,
->   			"failed to register thermal zone device %d\n", ret);
->   		clk_disable_unprepare(data->thermal_clk);
-> -		cpufreq_cooling_unregister(data->cdev);
->   		cpufreq_cpu_put(data->policy);
->   		return ret;
->   	}
-> @@ -811,7 +797,6 @@ static int imx_thermal_probe(struct platform_device *pdev)
->   		dev_err(&pdev->dev, "failed to request alarm irq: %d\n", ret);
->   		clk_disable_unprepare(data->thermal_clk);
->   		thermal_zone_device_unregister(data->tz);
-> -		cpufreq_cooling_unregister(data->cdev);
->   		cpufreq_cpu_put(data->policy);
->   		return ret;
->   	}
-> @@ -831,7 +816,6 @@ static int imx_thermal_remove(struct platform_device *pdev)
->   		clk_disable_unprepare(data->thermal_clk);
->   
->   	thermal_zone_device_unregister(data->tz);
-> -	cpufreq_cooling_unregister(data->cdev);
->   	cpufreq_cpu_put(data->policy);
->   
->   	return 0;
-> 
-
--- 
-Pengutronix e.K.
-Industrial Linux Solutions
-http://www.pengutronix.de/
-Peiner Str. 6-8, 31137 Hildesheim, Germany
-Amtsgericht Hildesheim, HRA 2686
+> -		if (IS_ERR(dwc->edev))
+> -			return PTR_ERR(dwc->edev);
+> +	dwc->edev = dwc3_get_extcon(dwc);
+> +	if (IS_ERR(dwc->edev))
+> +		return PTR_ERR(dwc->edev);
+>  
+> -		dwc->edev_nb.notifier_call = dwc3_drd_notifier;
+> -		ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
+> -					       &dwc->edev_nb);
+> -		if (ret < 0) {
+> -			dev_err(dwc->dev, "couldn't register cable notifier\n");
+> -			return ret;
+> -		}
+> +	dwc->edev_nb.notifier_call = dwc3_drd_notifier;
+> +	ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
+> +				       &dwc->edev_nb);
+> +	if (ret < 0) {
+> +		dev_err(dwc->dev, "couldn't register cable notifier\n");
+> +		return ret;
+>  	}
+>  
+>  	dwc3_drd_update(dwc);
