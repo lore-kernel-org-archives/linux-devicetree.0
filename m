@@ -1,110 +1,68 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 1/3] thermal: imx: remove cpufreq cooling registration
-Date: Mon, 14 May 2018 09:10:56 +0000
-Message-ID: <AM3PR04MB1315B6320421800346313075F59C0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+From: Bastian Stender <bst@pengutronix.de>
+Subject: Re: [PATCH 1/3] thermal: imx: remove cpufreq cooling registration
+Date: Mon, 14 May 2018 11:18:12 +0200
+Message-ID: <1c485c97-f667-7cbd-a6a0-bc74d8aa0918@pengutronix.de>
 References: <1526285359-17978-1-git-send-email-Anson.Huang@nxp.com>
  <5a449fc0-4d3e-c7c7-0e9a-43efb4b909cf@pengutronix.de>
+ <AM3PR04MB1315B6320421800346313075F59C0@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5a449fc0-4d3e-c7c7-0e9a-43efb4b909cf@pengutronix.de>
+In-Reply-To: <AM3PR04MB1315B6320421800346313075F59C0@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bastian Stender <bst@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Anson Huang <anson.huang@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
-Z2UtLS0tLQ0KPiBGcm9tOiBCYXN0aWFuIFN0ZW5kZXIgW21haWx0bzpic3RAcGVuZ3V0cm9uaXgu
-ZGVdDQo+IFNlbnQ6IE1vbmRheSwgTWF5IDE0LCAyMDE4IDQ6MzcgUE0NCj4gVG86IEFuc29uIEh1
-YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsgc2hhd25ndW9Aa2VybmVsLm9yZzsNCj4gcy5oYXVl
-ckBwZW5ndXRyb25peC5kZTsga2VybmVsQHBlbmd1dHJvbml4LmRlOyBGYWJpbyBFc3RldmFtDQo+
-IDxmYWJpby5lc3RldmFtQG54cC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFu
-ZEBhcm0uY29tOw0KPiByandAcmp3eXNvY2tpLm5ldDsgdmlyZXNoLmt1bWFyQGxpbmFyby5vcmc7
-IHJ1aS56aGFuZ0BpbnRlbC5jb207DQo+IGVkdWJlenZhbEBnbWFpbC5jb20NCj4gQ2M6IGRldmlj
-ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4
-LWlteA0KPiA8bGludXgtaW14QG54cC5jb20+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6
-IFtQQVRDSCAxLzNdIHRoZXJtYWw6IGlteDogcmVtb3ZlIGNwdWZyZXEgY29vbGluZyByZWdpc3Ry
-YXRpb24NCj4gDQo+IEhpLA0KPiANCj4gT24gMDUvMTQvMjAxOCAxMDowOSBBTSwgQW5zb24gSHVh
-bmcgd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCByZW1vdmVzIGNwdWZyZXEgY29vbGluZyByZWdpc3Ry
-YXRpb24gaW4gdGhlcm1hbCAucHJvYmUNCj4gPiBmdW5jdGlvbiwgY3B1ZnJlcSBjb29saW5nIHNo
-b3VsZCBiZSBkb25lIGluIGNwdWZyZXEgZHJpdmVyIHdoZW4gaXQgaXMNCj4gPiByZWFkeS4NCj4g
-Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0K
-PiANCj4gSXQgc2VlbXMgeW91IGFyZSB0cnlpbmcgdG8gYWNoaWV2ZSBzb21ldGhpbmcgc2ltaWxh
-ciB0byBhIHBhdGNoIEkgc2VudCBhIGNvdXBsZQ0KPiBvZiBtb250aCBhZ28uIFVuZm9ydHVuYXRl
-bHkgSSBkaWQgbm90IGhhdmUgdGhlIHRpbWUgdG8gcmV3b3JrIGl0IHlldDoNCj4gDQo+IA0KPiBo
-dHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBz
-JTNBJTJGJTJGcGF0Y2gNCj4gd29yay5rZXJuZWwub3JnJTJGcGF0Y2glMkYxMDA1OTA4NSUyRiZk
-YXRhPTAyJTdDMDElN0NhbnNvbi5odWFuZw0KPiAlNDBueHAuY29tJTdDMTc5ZGEzNjM1Y2FiNGEx
-NGRlZWYwOGQ1Yjk3NWVjYjYlN0M2ODZlYTFkM2JjMmI0YzZmDQo+IGE5MmNkOTljNWMzMDE2MzUl
-N0MwJTdDMCU3QzYzNjYxODgzODUwODk3ODYyOSZzZGF0YT1CY1E5dGMlMkJFDQo+IENaJTJGazRB
-c1pGeHNoZ212U3NQZzdlUk4wQVN6UDhMTzh5QkklM0QmcmVzZXJ2ZWQ9MA0KPiANCj4gU29tZSBv
-ZiB0aGUgY29tbWVudHMgbWlnaHQgYXBwbHkgaGVyZSB0b28uDQogDQpBaCwgSSBkaWQgTk9UIG5v
-dGljZSB0aGlzIHRocmVhZCwgc28gaG93IHRvIHByb2NlZWQsIHdpbGwgeW91IGNvbnRpbnVlIHRv
-IGZpbmlzaCB5b3VyIHBhdGNoPw0KSWYgeWVzLCB0aGVuIHlvdSBjYW4ganVzdCBpZ25vcmUvc2tp
-cCBteSBwYXRjaCwgdGhhbmtzLg0KDQpBbnNvbi4NCg0KPiANCj4gUmVnYXJkcywNCj4gQmFzdGlh
-bg0KPiANCj4gPiAtLS0NCj4gPiAgIGRyaXZlcnMvdGhlcm1hbC9pbXhfdGhlcm1hbC5jIHwgMTYg
-LS0tLS0tLS0tLS0tLS0tLQ0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDE2IGRlbGV0aW9ucygtKQ0K
-PiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdGhlcm1hbC9pbXhfdGhlcm1hbC5jDQo+ID4g
-Yi9kcml2ZXJzL3RoZXJtYWwvaW14X3RoZXJtYWwuYyBpbmRleCBjMzBkYzIxLi44ZWVkYjk3IDEw
-MDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvdGhlcm1hbC9pbXhfdGhlcm1hbC5jDQo+ID4gKysrIGIv
-ZHJpdmVycy90aGVybWFsL2lteF90aGVybWFsLmMNCj4gPiBAQCAtOSw3ICs5LDYgQEANCj4gPg0K
-PiA+ICAgI2luY2x1ZGUgPGxpbnV4L2Nsay5oPg0KPiA+ICAgI2luY2x1ZGUgPGxpbnV4L2NwdWZy
-ZXEuaD4NCj4gPiAtI2luY2x1ZGUgPGxpbnV4L2NwdV9jb29saW5nLmg+DQo+ID4gICAjaW5jbHVk
-ZSA8bGludXgvZGVsYXkuaD4NCj4gPiAgICNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4NCj4gPiAg
-ICNpbmNsdWRlIDxsaW51eC9pbml0Lmg+DQo+ID4gQEAgLTIwNyw3ICsyMDYsNiBAQCBzdGF0aWMg
-c3RydWN0IHRoZXJtYWxfc29jX2RhdGEgdGhlcm1hbF9pbXg3ZF9kYXRhDQo+ID0gew0KPiA+ICAg
-c3RydWN0IGlteF90aGVybWFsX2RhdGEgew0KPiA+ICAgCXN0cnVjdCBjcHVmcmVxX3BvbGljeSAq
-cG9saWN5Ow0KPiA+ICAgCXN0cnVjdCB0aGVybWFsX3pvbmVfZGV2aWNlICp0ejsNCj4gPiAtCXN0
-cnVjdCB0aGVybWFsX2Nvb2xpbmdfZGV2aWNlICpjZGV2Ow0KPiA+ICAgCWVudW0gdGhlcm1hbF9k
-ZXZpY2VfbW9kZSBtb2RlOw0KPiA+ICAgCXN0cnVjdCByZWdtYXAgKnRlbXBtb247DQo+ID4gICAJ
-dTMyIGMxLCBjMjsgLyogU2VlIGZvcm11bGEgaW4gaW14X2luaXRfY2FsaWIoKSAqLyBAQCAtNzI5
-LDIyDQo+ID4gKzcyNywxMiBAQCBzdGF0aWMgaW50IGlteF90aGVybWFsX3Byb2JlKHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gICAJCXJldHVybiAtRVBST0JFX0RFRkVSOw0KPiA+
-ICAgCX0NCj4gPg0KPiA+IC0JZGF0YS0+Y2RldiA9IGNwdWZyZXFfY29vbGluZ19yZWdpc3Rlcihk
-YXRhLT5wb2xpY3kpOw0KPiA+IC0JaWYgKElTX0VSUihkYXRhLT5jZGV2KSkgew0KPiA+IC0JCXJl
-dCA9IFBUUl9FUlIoZGF0YS0+Y2Rldik7DQo+ID4gLQkJZGV2X2VycigmcGRldi0+ZGV2LA0KPiA+
-IC0JCQkiZmFpbGVkIHRvIHJlZ2lzdGVyIGNwdWZyZXEgY29vbGluZyBkZXZpY2U6ICVkXG4iLCBy
-ZXQpOw0KPiA+IC0JCWNwdWZyZXFfY3B1X3B1dChkYXRhLT5wb2xpY3kpOw0KPiA+IC0JCXJldHVy
-biByZXQ7DQo+ID4gLQl9DQo+ID4gLQ0KPiA+ICAgCWRhdGEtPnRoZXJtYWxfY2xrID0gZGV2bV9j
-bGtfZ2V0KCZwZGV2LT5kZXYsIE5VTEwpOw0KPiA+ICAgCWlmIChJU19FUlIoZGF0YS0+dGhlcm1h
-bF9jbGspKSB7DQo+ID4gICAJCXJldCA9IFBUUl9FUlIoZGF0YS0+dGhlcm1hbF9jbGspOw0KPiA+
-ICAgCQlpZiAocmV0ICE9IC1FUFJPQkVfREVGRVIpDQo+ID4gICAJCQlkZXZfZXJyKCZwZGV2LT5k
-ZXYsDQo+ID4gICAJCQkJImZhaWxlZCB0byBnZXQgdGhlcm1hbCBjbGs6ICVkXG4iLCByZXQpOw0K
-PiA+IC0JCWNwdWZyZXFfY29vbGluZ191bnJlZ2lzdGVyKGRhdGEtPmNkZXYpOw0KPiA+ICAgCQlj
-cHVmcmVxX2NwdV9wdXQoZGF0YS0+cG9saWN5KTsNCj4gPiAgIAkJcmV0dXJuIHJldDsNCj4gPiAg
-IAl9DQo+ID4gQEAgLTc1OSw3ICs3NDcsNiBAQCBzdGF0aWMgaW50IGlteF90aGVybWFsX3Byb2Jl
-KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4gKnBkZXYpDQo+ID4gICAJcmV0ID0gY2xrX3ByZXBh
-cmVfZW5hYmxlKGRhdGEtPnRoZXJtYWxfY2xrKTsNCj4gPiAgIAlpZiAocmV0KSB7DQo+ID4gICAJ
-CWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byBlbmFibGUgdGhlcm1hbCBjbGs6ICVkXG4i
-LCByZXQpOw0KPiA+IC0JCWNwdWZyZXFfY29vbGluZ191bnJlZ2lzdGVyKGRhdGEtPmNkZXYpOw0K
-PiA+ICAgCQljcHVmcmVxX2NwdV9wdXQoZGF0YS0+cG9saWN5KTsNCj4gPiAgIAkJcmV0dXJuIHJl
-dDsNCj4gPiAgIAl9DQo+ID4gQEAgLTc3NSw3ICs3NjIsNiBAQCBzdGF0aWMgaW50IGlteF90aGVy
-bWFsX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4gKnBkZXYpDQo+ID4gICAJCWRldl9l
-cnIoJnBkZXYtPmRldiwNCj4gPiAgIAkJCSJmYWlsZWQgdG8gcmVnaXN0ZXIgdGhlcm1hbCB6b25l
-IGRldmljZSAlZFxuIiwgcmV0KTsNCj4gPiAgIAkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRhdGEt
-PnRoZXJtYWxfY2xrKTsNCj4gPiAtCQljcHVmcmVxX2Nvb2xpbmdfdW5yZWdpc3RlcihkYXRhLT5j
-ZGV2KTsNCj4gPiAgIAkJY3B1ZnJlcV9jcHVfcHV0KGRhdGEtPnBvbGljeSk7DQo+ID4gICAJCXJl
-dHVybiByZXQ7DQo+ID4gICAJfQ0KPiA+IEBAIC04MTEsNyArNzk3LDYgQEAgc3RhdGljIGludCBp
-bXhfdGhlcm1hbF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlDQo+ICpwZGV2KQ0KPiA+ICAg
-CQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gcmVxdWVzdCBhbGFybSBpcnE6ICVkXG4i
-LCByZXQpOw0KPiA+ICAgCQljbGtfZGlzYWJsZV91bnByZXBhcmUoZGF0YS0+dGhlcm1hbF9jbGsp
-Ow0KPiA+ICAgCQl0aGVybWFsX3pvbmVfZGV2aWNlX3VucmVnaXN0ZXIoZGF0YS0+dHopOw0KPiA+
-IC0JCWNwdWZyZXFfY29vbGluZ191bnJlZ2lzdGVyKGRhdGEtPmNkZXYpOw0KPiA+ICAgCQljcHVm
-cmVxX2NwdV9wdXQoZGF0YS0+cG9saWN5KTsNCj4gPiAgIAkJcmV0dXJuIHJldDsNCj4gPiAgIAl9
-DQo+ID4gQEAgLTgzMSw3ICs4MTYsNiBAQCBzdGF0aWMgaW50IGlteF90aGVybWFsX3JlbW92ZShz
-dHJ1Y3QNCj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICAgCQljbGtfZGlzYWJsZV91bnBy
-ZXBhcmUoZGF0YS0+dGhlcm1hbF9jbGspOw0KPiA+DQo+ID4gICAJdGhlcm1hbF96b25lX2Rldmlj
-ZV91bnJlZ2lzdGVyKGRhdGEtPnR6KTsNCj4gPiAtCWNwdWZyZXFfY29vbGluZ191bnJlZ2lzdGVy
-KGRhdGEtPmNkZXYpOw0KPiA+ICAgCWNwdWZyZXFfY3B1X3B1dChkYXRhLT5wb2xpY3kpOw0KPiA+
-DQo+ID4gICAJcmV0dXJuIDA7DQo+ID4NCj4gDQo+IC0tDQo+IFBlbmd1dHJvbml4IGUuSy4NCj4g
-SW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMNCj4gaHR0cHM6Ly9lbWVhMDEuc2FmZWxpbmtzLnBy
-b3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGd3d3Lg0KPiBwZW5ndXRyb25p
-eC5kZSUyRiZkYXRhPTAyJTdDMDElN0NhbnNvbi5odWFuZyU0MG54cC5jb20lN0MxNzlkYTM2DQo+
-IDM1Y2FiNGExNGRlZWYwOGQ1Yjk3NWVjYjYlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMw
-MTYzNSU3QzANCj4gJTdDMCU3QzYzNjYxODgzODUwODk3ODYyOSZzZGF0YT1rSEhqbmJtajJrVjBh
-UGxBdlVMWFVoJTJGbSUyRnANCj4gZ2J1MjFsdU1RNmpmSVVnTG8lM0QmcmVzZXJ2ZWQ9MA0KPiBQ
-ZWluZXIgU3RyLiA2LTgsIDMxMTM3IEhpbGRlc2hlaW0sIEdlcm1hbnkgQW10c2dlcmljaHQgSGls
-ZGVzaGVpbSwgSFJBIDI2ODYNCg==
+On 05/14/2018 11:10 AM, Anson Huang wrote:
+>> -----Original Message-----
+>> From: Bastian Stender [mailto:bst@pengutronix.de]
+>> Sent: Monday, May 14, 2018 4:37 PM
+>> To: Anson Huang <anson.huang@nxp.com>; shawnguo@kernel.org;
+>> s.hauer@pengutronix.de; kernel@pengutronix.de; Fabio Estevam
+>> <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
+>> rjw@rjwysocki.net; viresh.kumar@linaro.org; rui.zhang@intel.com;
+>> edubezval@gmail.com
+>> Cc: devicetree@vger.kernel.org; linux-pm@vger.kernel.org; dl-linux-imx
+>> <linux-imx@nxp.com>; linux-arm-kernel@lists.infradead.org;
+>> linux-kernel@vger.kernel.org
+>> Subject: Re: [PATCH 1/3] thermal: imx: remove cpufreq cooling registration
+>>
+>> Hi,
+>>
+>> On 05/14/2018 10:09 AM, Anson Huang wrote:
+>>> This patch removes cpufreq cooling registration in thermal .probe
+>>> function, cpufreq cooling should be done in cpufreq driver when it is
+>>> ready.
+>>>
+>>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+>>
+>> It seems you are trying to achieve something similar to a patch I sent a couple
+>> of month ago. Unfortunately I did not have the time to rework it yet:
+>>
+>>
+>> https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatch
+>> work.kernel.org%2Fpatch%2F10059085%2F&data=02%7C01%7Canson.huang
+>> %40nxp.com%7C179da3635cab4a14deef08d5b975ecb6%7C686ea1d3bc2b4c6f
+>> a92cd99c5c301635%7C0%7C0%7C636618838508978629&sdata=BcQ9tc%2BE
+>> CZ%2Fk4AsZFxshgmvSsPg7eRN0ASzP8LO8yBI%3D&reserved=0
+>>
+>> Some of the comments might apply here too.
+> 
+> Ah, I did NOT notice this thread, so how to proceed, will you 
+> continue to finish your patch? If yes, then you can just ignore/skip
+> my patch, thanks.
+Yes, I will revisit the patch in a couple of weeks. It would be nice to
+get your feedback then.
+
+Regards,
+Bastian	
+
+-- 
+Pengutronix e.K.
+Industrial Linux Solutions
+http://www.pengutronix.de/
+Peiner Str. 6-8, 31137 Hildesheim, Germany
+Amtsgericht Hildesheim, HRA 2686
