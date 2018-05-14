@@ -1,120 +1,49 @@
-Return-Path: <SRS0=jfmr=HZ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pg0-f67.google.com ([74.125.83.67]:43293 "EHLO
-        mail-pg0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751822AbeEFOUX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 6 May 2018 10:20:23 -0400
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v5 13/14] media: ov772x: make set_fmt() and s_frame_interval() return -EBUSY while streaming
-Date: Sun,  6 May 2018 23:19:28 +0900
-Message-Id: <1525616369-8843-14-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
-References: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC v3 0/4] usb: role: rcar-usb3-role-switch: add support for R-Car SoCs
+Date: Mon, 14 May 2018 18:15:56 +0900
+Message-Id: <1526289360-3997-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The ov772x driver is going to offer a V4L2 sub-device interface, so
-changing the output data format and the frame interval on this sub-device
-can be made anytime.  However, these requests are preferred to fail while
-the video stream on the device is active.
+This patch set is based on Felipe's usb.git / testing/next branch
+(commit id = 5d1332a8eabd8bd5b8c322d45542968ee6f113be).
 
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* v5:
-- Make s_frame_interval() return -EBUSY while streaming
+I still marked this patch set as "RFC". I would like to know whether
+this way is good or not.
 
- drivers/media/i2c/ov772x.c | 43 +++++++++++++++++++++++++++++++++----------
- 1 file changed, 33 insertions(+), 10 deletions(-)
+Changes from RFC v2:
+ - Add registering usb role switch into drivers/usb/gadget/udc/renesas_usb3
+   because hardware resource (a register) is shared and remove individual
+   usb role switch driver/dt-bindings for R-Car.
+ - Remove "usb_role_switch_get_by_graph" API because the renesas_usb3 driver
+   doesn't need such API now.
 
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 262a7e5..4b479f9 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -424,9 +424,10 @@ struct ov772x_priv {
- 	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
- 	struct v4l2_ctrl		 *band_filter_ctrl;
- 	unsigned int			  fps;
--	/* lock to protect power_count */
-+	/* lock to protect power_count and streaming */
- 	struct mutex			  lock;
- 	int				  power_count;
-+	int				  streaming;
- #ifdef CONFIG_MEDIA_CONTROLLER
- 	struct media_pad pad;
- #endif
-@@ -603,18 +604,28 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
- {
- 	struct i2c_client *client = v4l2_get_subdevdata(sd);
- 	struct ov772x_priv *priv = to_ov772x(sd);
-+	int ret = 0;
- 
--	if (!enable) {
--		ov772x_mask_set(client, COM2, SOFT_SLEEP_MODE, SOFT_SLEEP_MODE);
--		return 0;
--	}
-+	mutex_lock(&priv->lock);
- 
--	ov772x_mask_set(client, COM2, SOFT_SLEEP_MODE, 0);
-+	if (priv->streaming == enable)
-+		goto done;
- 
--	dev_dbg(&client->dev, "format %d, win %s\n",
--		priv->cfmt->code, priv->win->name);
-+	ret = ov772x_mask_set(client, COM2, SOFT_SLEEP_MODE,
-+			      enable ? 0 : SOFT_SLEEP_MODE);
-+	if (ret)
-+		goto done;
- 
--	return 0;
-+	if (enable) {
-+		dev_dbg(&client->dev, "format %d, win %s\n",
-+			priv->cfmt->code, priv->win->name);
-+	}
-+	priv->streaming = enable;
-+
-+done:
-+	mutex_unlock(&priv->lock);
-+
-+	return ret;
- }
- 
- static unsigned int ov772x_select_fps(struct ov772x_priv *priv,
-@@ -743,9 +754,15 @@ static int ov772x_s_frame_interval(struct v4l2_subdev *sd,
- 	unsigned int fps;
- 	int ret = 0;
- 
-+	mutex_lock(&priv->lock);
-+
-+	if (priv->streaming) {
-+		ret = -EBUSY;
-+		goto error;
-+	}
-+
- 	fps = ov772x_select_fps(priv, tpf);
- 
--	mutex_lock(&priv->lock);
- 	/*
- 	 * If the device is not powered up by the host driver do
- 	 * not apply any changes to H/W at this time. Instead
-@@ -1222,6 +1239,12 @@ static int ov772x_set_fmt(struct v4l2_subdev *sd,
- 	}
- 
- 	mutex_lock(&priv->lock);
-+
-+	if (priv->streaming) {
-+		ret = -EBUSY;
-+		goto error;
-+	}
-+
- 	/*
- 	 * If the device is not powered up by the host driver do
- 	 * not apply any changes to H/W at this time. Instead
+Changes from RFC:
+ - Remove "device-connection-id" and "usb role switch driver" dt-bingings.
+ - Remove drivers/of code.
+ - Add a new API for find the connection by using graph on devcon.c and roles.c.
+ - Use each new API on the rcar usb role switch and renesas_usb3 drivers.
+ - Update the dtsi file for r8a7795.
+
+
+Yoshihiro Shimoda (4):
+  base: devcon: add a new API to find the graph
+  usb: gadget: udc: renesas_usb3: Add register of usb role switch
+  usb: gadget: udc: renesas_usb3: use usb role switch API
+  arm64: dts: renesas: r8a7795: add OF graph for usb role switch
+
+ .../devicetree/bindings/usb/renesas_usb3.txt       | 15 +++++
+ Documentation/driver-api/device_connection.rst     |  4 +-
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi           | 12 ++++
+ drivers/base/devcon.c                              | 43 +++++++++++++
+ drivers/usb/gadget/udc/Kconfig                     |  1 +
+ drivers/usb/gadget/udc/renesas_usb3.c              | 74 +++++++++++++++++++++-
+ include/linux/device.h                             |  2 +
+ 7 files changed, 147 insertions(+), 4 deletions(-)
+
 -- 
-2.7.4
-
+1.9.1
