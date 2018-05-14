@@ -1,63 +1,77 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 03/21] clk: sunxi-ng: Enable DE2_CCU for
- Allwinner 64-bit SoCs
-Date: Mon, 14 May 2018 13:50:12 +0530
-Message-ID: <CAMty3ZAOVg6EZoMi=LRuKEcrnDM_tzYfK1WnBN-_d-pmjNS6Nw@mail.gmail.com>
-References: <20180430114058.5061-1-jagan@amarulasolutions.com>
- <20180430114058.5061-4-jagan@amarulasolutions.com> <CAGb2v66MKooAAroCzYdsXZDY0Oh66Dydpy59xj80QfiY+5mz_A@mail.gmail.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBPMN4XLQKGQEU4KQS3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v66MKooAAroCzYdsXZDY0Oh66Dydpy59xj80QfiY+5mz_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH] net: phy: micrel: workaround for errata #2 for KSZ9031
+Date: Mon, 14 May 2018 10:22:18 +0200
+Message-ID: <20180514082218.29158-1-m.felsch@pengutronix.de>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Markus Niebel <Markus.Niebel@tqs.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 1, 2018 at 9:53 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> On Mon, Apr 30, 2018 at 7:40 PM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
->> Allwinner 64-bit SoC like H5/A64 has DE2 CCU so enable them
->> as default.
->>
->> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->> ---
->>  drivers/clk/sunxi-ng/Kconfig | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
->> index 79dfd296c3d1..1fffd3bf6ff3 100644
->> --- a/drivers/clk/sunxi-ng/Kconfig
->> +++ b/drivers/clk/sunxi-ng/Kconfig
->> @@ -58,6 +58,8 @@ config SUN8I_V3S_CCU
->>
->>  config SUN8I_DE2_CCU
->>         bool "Support for the Allwinner SoCs DE2 CCU"
->> +       default ARM64 && ARCH_SUNXI
->> +       depends on (DRM_SUN4I && (ARM64 && ARCH_SUNXI)) || COMPILE_TEST
->
-> There is no reason to depend on DRM_SUN4I. There is no compile dependency.
+From: Markus Niebel <Markus.Niebel@tqs.de>
 
-Since this CCU is for DE2 I've make DRM_SUN4I for that matter, any problem?
+handle errata #2 for KSZ9031: force 1000Base-T master
 
->
-> Also, this is needed on SUN8I as well, pretty much anything with DE 2.0.
-> So you shouldn't limit it to ARM64. That pretty much breaks things for
-> people with A83T's or H3's. In fact you should enable it by default for
-> these as well.
+Attention: enabling the workaround will cause no link to
+other GIGE master.
 
-True, I've skipped SUN8I since this series for A64.
+Signed-off-by: Markus Niebel <Markus.Niebel@tqs.de>
+[m.felsch@pengutronix.de: move dt binding to the KSZ9031 entry]
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ .../devicetree/bindings/net/micrel-ksz90x1.txt |  3 +++
+ drivers/net/phy/micrel.c                       | 18 ++++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-Jagan.
-
+diff --git a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+index 42a248301615..e2465fbbbcef 100644
+--- a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
++++ b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+@@ -57,6 +57,9 @@ KSZ9031:
+       - txd2-skew-ps : Skew control of TX data 2 pad
+       - txd3-skew-ps : Skew control of TX data 3 pad
+ 
++    - force-master: Boolean, force phy to master mode. This is a
++                    workaround at least for KSZ9031 errata #2.
++
+ Examples:
+ 
+ 	mdio {
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index f41b224a9cdb..3e4243e4f7a7 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -528,6 +528,8 @@ static int ksz9031_enable_edpd(struct phy_device *phydev)
+ 
+ static int ksz9031_config_init(struct phy_device *phydev)
+ {
++	int rc;
++	u16 val;
+ 	const struct device *dev = &phydev->mdio.dev;
+ 	const struct device_node *of_node = dev->of_node;
+ 	static const char *clk_skews[2] = {"rxc-skew-ps", "txc-skew-ps"};
+@@ -573,6 +575,22 @@ static int ksz9031_config_init(struct phy_device *phydev)
+ 		ksz9031_of_load_skew_values(phydev, of_node,
+ 				MII_KSZ9031RN_TX_DATA_PAD_SKEW, 4,
+ 				tx_data_skews, 4);
++
++		/* force master mode -> errata #2
++		 * attention: Master <-> Master will not work
++		 */
++		if (of_property_read_bool(of_node, "force-master")) {
++			rc = phy_read(phydev, MII_CTRL1000);
++			if (rc >= 0) {
++				val = (u16)rc;
++				/* enable master mode, config &
++				 * prefer master
++				 */
++				val |= (CTL1000_ENABLE_MASTER |
++					CTL1000_AS_MASTER);
++				phy_write(phydev, MII_CTRL1000, val);
++			}
++		}
+ 	}
+ 
+ 	return ksz9031_center_flp_timing(phydev);
 -- 
-Jagan Teki
-Senior Linux Kernel Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
+2.17.0
