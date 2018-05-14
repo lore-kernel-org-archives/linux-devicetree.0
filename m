@@ -1,96 +1,60 @@
-From: Philippe CORNU <philippe.cornu@st.com>
-Subject: Re: [PATCH v2 2/2] drm/bridge: sii902x: add optional power supplies
-Date: Mon, 14 May 2018 09:38:58 +0000
-Message-ID: <f299c615-d884-341c-e1da-2fe030e411ba@st.com>
-References: <20180425075314.19137-1-philippe.cornu@st.com>
- <20180425075314.19137-3-philippe.cornu@st.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] net: phy: micrel: workaround for errata #2 for KSZ9031
+Date: Mon, 14 May 2018 12:41:39 +0300
+Message-ID: <58661916-1a0a-b6cb-ed47-d98499116441@cogentembedded.com>
+References: <20180514082218.29158-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180425075314.19137-3-philippe.cornu@st.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180514082218.29158-1-m.felsch@pengutronix.de>
 Content-Language: en-US
-Content-ID: <EB48E7AB1F163848A6A2A19EBDCDEFF9@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Yannick FERTRE <yannick.fertre@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>
+Sender: netdev-owner@vger.kernel.org
+To: Marco Felsch <m.felsch@pengutronix.de>, robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Markus Niebel <Markus.Niebel@tqs.de>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwgQXJjaGl0LCBBbmRyemVqICYgWWFubmljaywNCg0KRG8geW91IGhhdmUgYW55
-IGNvbW1lbnRzIG9uIHRoaXMgdjIgZHJpdmVyIHBhcnQ/DQoobW9yZSBkZXRhaWxzIHJlZ2FyZGlu
-ZyB2MS92MiBkaWZmZXJlbmNlcyBpbiB0aGUgY292ZXIgbGV0dGVyIA0KaHR0cHM6Ly93d3cuc3Bp
-bmljcy5uZXQvbGlzdHMvZHJpLWRldmVsL21zZzE3NDEzNy5odG1sKQ0KDQpUaGFuayB5b3UsDQpQ
-aGlsaXBwZSA6LSkNCg0KDQpPbiAwNC8yNS8yMDE4IDA5OjUzIEFNLCBQaGlsaXBwZSBDb3JudSB3
-cm90ZToNCj4gQWRkIHRoZSBvcHRpb25hbCBwb3dlciBzdXBwbGllcyB1c2luZyB0aGUgZGVzY3Jp
-cHRpb24gZm91bmQgaW4NCj4gIlNpSTkwMjJBL1NpSTkwMjRBIEhETUkgVHJhbnNtaXR0ZXIgRGF0
-YSBTaGVldCAoQXVndXN0IDIwMTYpIi4NCj4gDQo+IFRoZSBzaWk5MDJ4IGlucHV0IElPcyBhcmUg
-bm90ICJpbyBzYWZlIiBzbyBpdCBpcyBpbXBvcnRhbnQgdG8NCj4gZW5hYmxlL2Rpc2FibGUgdm9s
-dGFnZSByZWd1bGF0b3JzIGR1cmluZyBwcm9iZS9yZW1vdmUgcGhhc2VzIHRvDQo+IGF2b2lkIGRh
-bWFnZXMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29y
-bnVAc3QuY29tPg0KPiAtLS0NCj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYyB8
-IDM4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tDQo+ICAgMSBmaWxlIGNo
-YW5nZWQsIDM0IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJp
-ZGdlL3NpaTkwMnguYw0KPiBpbmRleCA2MDM3M2Q3ZWIyMjAuLmMzNjdkN2I5MWFkZSAxMDA2NDQN
-Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMNCj4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMNCj4gQEAgLTI0LDYgKzI0LDcgQEANCj4gICAjaW5j
-bHVkZSA8bGludXgvaTJjLmg+DQo+ICAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiAgICNp
-bmNsdWRlIDxsaW51eC9yZWdtYXAuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3IvY29u
-c3VtZXIuaD4NCj4gICANCj4gICAjaW5jbHVkZSA8ZHJtL2RybVAuaD4NCj4gICAjaW5jbHVkZSA8
-ZHJtL2RybV9hdG9taWNfaGVscGVyLmg+DQo+IEBAIC04Niw2ICs4Nyw3IEBAIHN0cnVjdCBzaWk5
-MDJ4IHsNCj4gICAJc3RydWN0IGRybV9icmlkZ2UgYnJpZGdlOw0KPiAgIAlzdHJ1Y3QgZHJtX2Nv
-bm5lY3RvciBjb25uZWN0b3I7DQo+ICAgCXN0cnVjdCBncGlvX2Rlc2MgKnJlc2V0X2dwaW87DQo+
-ICsJc3RydWN0IHJlZ3VsYXRvcl9idWxrX2RhdGEgc3VwcGxpZXNbMl07DQo+ICAgfTsNCj4gICAN
-Cj4gICBzdGF0aWMgaW5saW5lIHN0cnVjdCBzaWk5MDJ4ICpicmlkZ2VfdG9fc2lpOTAyeChzdHJ1
-Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQ0KPiBAQCAtMzkyLDIzICszOTQsNDIgQEAgc3RhdGljIGlu
-dCBzaWk5MDJ4X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQo+ICAgCQlyZXR1cm4g
-UFRSX0VSUihzaWk5MDJ4LT5yZXNldF9ncGlvKTsNCj4gICAJfQ0KPiAgIA0KPiArCXNpaTkwMngt
-PnN1cHBsaWVzWzBdLnN1cHBseSA9ICJpb3ZjYyI7DQo+ICsJc2lpOTAyeC0+c3VwcGxpZXNbMV0u
-c3VwcGx5ID0gInZjYzEyIjsNCj4gKwlyZXQgPSBkZXZtX3JlZ3VsYXRvcl9idWxrX2dldChkZXYs
-IEFSUkFZX1NJWkUoc2lpOTAyeC0+c3VwcGxpZXMpLA0KPiArCQkJCSAgICAgIHNpaTkwMngtPnN1
-cHBsaWVzKTsNCj4gKwlpZiAocmV0KSB7DQo+ICsJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdl
-dCBwb3dlciBzdXBwbGllczogJWRcbiIsIHJldCk7DQo+ICsJCXJldHVybiByZXQ7DQo+ICsJfQ0K
-PiArDQo+ICsJcmV0ID0gcmVndWxhdG9yX2J1bGtfZW5hYmxlKEFSUkFZX1NJWkUoc2lpOTAyeC0+
-c3VwcGxpZXMpLA0KPiArCQkJCSAgICBzaWk5MDJ4LT5zdXBwbGllcyk7DQo+ICsJaWYgKHJldCkg
-ew0KPiArCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBlbmFibGUgcG93ZXIgc3VwcGxpZXM6ICVk
-XG4iLCByZXQpOw0KPiArCQlyZXR1cm4gcmV0Ow0KPiArCX0NCj4gKw0KPiArCXVzbGVlcF9yYW5n
-ZSgxMDAwMCwgMjAwMDApOw0KPiArDQo+ICAgCXNpaTkwMnhfcmVzZXQoc2lpOTAyeCk7DQo+ICAg
-DQo+ICAgCXJldCA9IHJlZ21hcF93cml0ZShzaWk5MDJ4LT5yZWdtYXAsIFNJSTkwMlhfUkVHX1RQ
-SV9SUUIsIDB4MCk7DQo+ICAgCWlmIChyZXQpDQo+IC0JCXJldHVybiByZXQ7DQo+ICsJCWdvdG8g
-ZXJyX2Rpc2FibGVfcmVndWxhdG9yOw0KPiAgIA0KPiAgIAlyZXQgPSByZWdtYXBfYnVsa19yZWFk
-KHNpaTkwMngtPnJlZ21hcCwgU0lJOTAyWF9SRUdfQ0hJUElEKDApLA0KPiAgIAkJCSAgICAgICAm
-Y2hpcGlkLCA0KTsNCj4gICAJaWYgKHJldCkgew0KPiAgIAkJZGV2X2VycihkZXYsICJyZWdtYXBf
-cmVhZCBmYWlsZWQgJWRcbiIsIHJldCk7DQo+IC0JCXJldHVybiByZXQ7DQo+ICsJCWdvdG8gZXJy
-X2Rpc2FibGVfcmVndWxhdG9yOw0KPiAgIAl9DQo+ICAgDQo+ICAgCWlmIChjaGlwaWRbMF0gIT0g
-MHhiMCkgew0KPiAgIAkJZGV2X2VycihkZXYsICJJbnZhbGlkIGNoaXBpZDogJTAyeCAoZXhwZWN0
-aW5nIDB4YjApXG4iLA0KPiAgIAkJCWNoaXBpZFswXSk7DQo+IC0JCXJldHVybiAtRUlOVkFMOw0K
-PiArCQlyZXQgPSAtRUlOVkFMOw0KPiArCQlnb3RvIGVycl9kaXNhYmxlX3JlZ3VsYXRvcjsNCj4g
-ICAJfQ0KPiAgIA0KPiAgIAkvKiBDbGVhciBhbGwgcGVuZGluZyBpbnRlcnJ1cHRzICovDQo+IEBA
-IC00MjQsNyArNDQ1LDcgQEAgc3RhdGljIGludCBzaWk5MDJ4X3Byb2JlKHN0cnVjdCBpMmNfY2xp
-ZW50ICpjbGllbnQsDQo+ICAgCQkJCQkJSVJRRl9PTkVTSE9ULCBkZXZfbmFtZShkZXYpLA0KPiAg
-IAkJCQkJCXNpaTkwMngpOw0KPiAgIAkJaWYgKHJldCkNCj4gLQkJCXJldHVybiByZXQ7DQo+ICsJ
-CQlnb3RvIGVycl9kaXNhYmxlX3JlZ3VsYXRvcjsNCj4gICAJfQ0KPiAgIA0KPiAgIAlzaWk5MDJ4
-LT5icmlkZ2UuZnVuY3MgPSAmc2lpOTAyeF9icmlkZ2VfZnVuY3M7DQo+IEBAIC00MzQsNiArNDU1
-LDEyIEBAIHN0YXRpYyBpbnQgc2lpOTAyeF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50
-LA0KPiAgIAlpMmNfc2V0X2NsaWVudGRhdGEoY2xpZW50LCBzaWk5MDJ4KTsNCj4gICANCj4gICAJ
-cmV0dXJuIDA7DQo+ICsNCj4gK2Vycl9kaXNhYmxlX3JlZ3VsYXRvcjoNCj4gKwlyZWd1bGF0b3Jf
-YnVsa19kaXNhYmxlKEFSUkFZX1NJWkUoc2lpOTAyeC0+c3VwcGxpZXMpLA0KPiArCQkJICAgICAg
-IHNpaTkwMngtPnN1cHBsaWVzKTsNCj4gKw0KPiArCXJldHVybiByZXQ7DQo+ICAgfQ0KPiAgIA0K
-PiAgIHN0YXRpYyBpbnQgc2lpOTAyeF9yZW1vdmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkN
-Cj4gQEAgLTQ0Myw2ICs0NzAsOSBAQCBzdGF0aWMgaW50IHNpaTkwMnhfcmVtb3ZlKHN0cnVjdCBp
-MmNfY2xpZW50ICpjbGllbnQpDQo+ICAgDQo+ICAgCWRybV9icmlkZ2VfcmVtb3ZlKCZzaWk5MDJ4
-LT5icmlkZ2UpOw0KPiAgIA0KPiArCXJlZ3VsYXRvcl9idWxrX2Rpc2FibGUoQVJSQVlfU0laRShz
-aWk5MDJ4LT5zdXBwbGllcyksDQo+ICsJCQkgICAgICAgc2lpOTAyeC0+c3VwcGxpZXMpOw0KPiAr
-DQo+ICAgCXJldHVybiAwOw0KPiAgIH0NCj4gICANCj4gCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hello!
+
+On 5/14/2018 11:22 AM, Marco Felsch wrote:
+
+> From: Markus Niebel <Markus.Niebel@tqs.de>
+> 
+> handle errata #2 for KSZ9031: force 1000Base-T master
+> 
+> Attention: enabling the workaround will cause no link to
+> other GIGE master.
+> 
+> Signed-off-by: Markus Niebel <Markus.Niebel@tqs.de>
+> [m.felsch@pengutronix.de: move dt binding to the KSZ9031 entry]
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+[...]
+> @@ -573,6 +575,22 @@ static int ksz9031_config_init(struct phy_device *phydev)
+>   		ksz9031_of_load_skew_values(phydev, of_node,
+>   				MII_KSZ9031RN_TX_DATA_PAD_SKEW, 4,
+>   				tx_data_skews, 4);
+> +
+> +		/* force master mode -> errata #2
+> +		 * attention: Master <-> Master will not work
+> +		 */
+> +		if (of_property_read_bool(of_node, "force-master")) {
+> +			rc = phy_read(phydev, MII_CTRL1000);
+> +			if (rc >= 0) {
+> +				val = (u16)rc;
+> +				/* enable master mode, config &
+> +				 * prefer master
+> +				 */
+> +				val |= (CTL1000_ENABLE_MASTER |
+> +					CTL1000_AS_MASTER);
+
+   Parens not needed.
+
+> +				phy_write(phydev, MII_CTRL1000, val);
+> +			}
+> +		}
+>   	}
+>   
+>   	return ksz9031_center_flp_timing(phydev);
+> 
+
+MBR, Sergei
