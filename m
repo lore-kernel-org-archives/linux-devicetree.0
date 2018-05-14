@@ -1,77 +1,83 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH v6 09/11] firmware: xilinx: Add debugfs for clock control
- APIs
-Date: Mon, 14 May 2018 19:18:44 +0000
-Message-ID: <SN1PR02MB3758191654612CFC261A38BEB89C0@SN1PR02MB3758.namprd02.prod.outlook.com>
-References: <1523389127-14243-1-git-send-email-jollys@xilinx.com>
- <1523389127-14243-10-git-send-email-jollys@xilinx.com>
- <5bcc47f7-3352-f0e6-29c5-78d5be96c1d1@arm.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v5 2/2] leds: lm3601x: Introduce the lm3601x LED driver
+Date: Mon, 14 May 2018 14:40:29 -0500
+Message-ID: <86c2bc2f-e622-9447-e4bb-b4ee37e2d44a@ti.com>
+References: <20180510174717.26540-1-dmurphy@ti.com>
+ <20180510174717.26540-2-dmurphy@ti.com>
+ <41267191-1308-6b9b-78fa-2893a525b49a@gmail.com>
+ <17630aca-1225-df61-7a5d-a921ecd9c78c@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5bcc47f7-3352-f0e6-29c5-78d5be96c1d1@arm.com>
+In-Reply-To: <17630aca-1225-df61-7a5d-a921ecd9c78c@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Cc: Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, pavel@ucw.cz, afd@ti.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3VkZWVwLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFN1ZGVl
-cCBIb2xsYSBbbWFpbHRvOnN1ZGVlcC5ob2xsYUBhcm0uY29tXQ0KPiBTZW50OiBUaHVyc2RheSwg
-TWF5IDEwLCAyMDE4IDc6MzEgQU0NCj4gVG86IEpvbGx5IFNoYWggPEpPTExZU0B4aWxpbnguY29t
-PjsgYXJkLmJpZXNoZXV2ZWxAbGluYXJvLm9yZzsNCj4gbWluZ29Aa2VybmVsLm9yZzsgZ3JlZ2to
-QGxpbnV4Zm91bmRhdGlvbi5vcmc7IG1hdHRAY29kZWJsdWVwcmludC5jby51azsNCj4gaGthbGx3
-ZWl0MUBnbWFpbC5jb207IGtlZXNjb29rQGNocm9taXVtLm9yZzsNCj4gZG1pdHJ5LnRvcm9raG92
-QGdtYWlsLmNvbTsgbXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb207DQo+IHNib3lkQGNvZGVhdXJvcmEu
-b3JnOyBtaWNoYWwuc2ltZWtAeGlsaW54LmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJr
-LnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtY2xrQHZnZXIua2VybmVsLm9yZw0KPiBDYzogU3VkZWVw
-IEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT47IFJhamFuIFZhamEgPFJBSkFOVkB4aWxpbngu
-Y29tPjsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJu
-ZWxAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgSm9sbHkg
-U2hhaCA8Sk9MTFlTQHhpbGlueC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgMDkvMTFd
-IGZpcm13YXJlOiB4aWxpbng6IEFkZCBkZWJ1Z2ZzIGZvciBjbG9jayBjb250cm9sDQo+IEFQSXMN
-Cj4gDQo+IA0KPiANCj4gT24gMTAvMDQvMTggMjA6MzgsIEpvbGx5IFNoYWggd3JvdGU6DQo+ID4g
-RnJvbTogUmFqYW4gVmFqYSA8cmFqYW52QHhpbGlueC5jb20+DQo+ID4NCj4gPiBBZGQgZGVidWdm
-cyBmaWxlIHRvIGNvbnRyb2wgY2xvY2tzIHVzaW5nIGZpcm13YXJlIEFQSXMgdGhyb3VnaCBkZWJ1
-Z2ZzDQo+ID4gaW50ZXJmYWNlLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUmFqYW4gVmFqYSA8
-cmFqYW52QHhpbGlueC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogSm9sbHkgU2hhaCA8am9sbHlz
-QHhpbGlueC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvZmlybXdhcmUveGlsaW54L3p5bnFt
-cC1kZWJ1Zy5jIHwgNDgNCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+
-ID4gIDEgZmlsZSBjaGFuZ2VkLCA0OCBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9maXJtd2FyZS94aWxpbngvenlucW1wLWRlYnVnLmMNCj4gPiBiL2RyaXZlcnMv
-ZmlybXdhcmUveGlsaW54L3p5bnFtcC1kZWJ1Zy5jDQo+ID4gaW5kZXggMWNiNjlmNy4uODM3ZmNk
-MSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2Zpcm13YXJlL3hpbGlueC96eW5xbXAtZGVidWcu
-Yw0KPiA+ICsrKyBiL2RyaXZlcnMvZmlybXdhcmUveGlsaW54L3p5bnFtcC1kZWJ1Zy5jDQo+ID4g
-QEAgLTM0LDYgKzM0LDE1IEBAIHN0YXRpYyBzdHJ1Y3QgcG1fYXBpX2luZm8gcG1fYXBpX2xpc3Rb
-XSA9IHsNCj4gPiAgCVBNX0FQSShQTV9HRVRfQVBJX1ZFUlNJT04pLA0KPiA+ICAJUE1fQVBJKFBN
-X0lPQ1RMKSwNCj4gPiAgCVBNX0FQSShQTV9RVUVSWV9EQVRBKSwNCj4gPiArCVBNX0FQSShQTV9D
-TE9DS19FTkFCTEUpLA0KPiA+ICsJUE1fQVBJKFBNX0NMT0NLX0RJU0FCTEUpLA0KPiA+ICsJUE1f
-QVBJKFBNX0NMT0NLX0dFVFNUQVRFKSwNCj4gPiArCVBNX0FQSShQTV9DTE9DS19TRVRESVZJREVS
-KSwNCj4gPiArCVBNX0FQSShQTV9DTE9DS19HRVRESVZJREVSKSwNCj4gPiArCVBNX0FQSShQTV9D
-TE9DS19TRVRSQVRFKSwNCj4gPiArCVBNX0FQSShQTV9DTE9DS19HRVRSQVRFKSwNCj4gPiArCVBN
-X0FQSShQTV9DTE9DS19TRVRQQVJFTlQpLA0KPiA+ICsJUE1fQVBJKFBNX0NMT0NLX0dFVFBBUkVO
-VCksDQo+ID4gIH07DQo+ID4NCj4gPiAgLyoqDQo+ID4gQEAgLTg3LDYgKzk2LDcgQEAgc3RhdGlj
-IGludCBwcm9jZXNzX2FwaV9yZXF1ZXN0KHUzMiBwbV9pZCwgdTY0DQo+ICpwbV9hcGlfYXJnLCB1
-MzIgKnBtX2FwaV9yZXQpDQo+ID4gIAljb25zdCBzdHJ1Y3QgenlucW1wX2VlbWlfb3BzICplZW1p
-X29wcyA9DQo+IHp5bnFtcF9wbV9nZXRfZWVtaV9vcHMoKTsNCj4gPiAgCXUzMiBwbV9hcGlfdmVy
-c2lvbjsNCj4gPiAgCWludCByZXQ7DQo+ID4gKwl1NjQgcmF0ZTsNCj4gPg0KPiA+ICAJaWYgKCFl
-ZW1pX29wcykNCj4gPiAgCQlyZXR1cm4gLUVOWElPOw0KPiA+IEBAIC0xMzIsNiArMTQyLDQ0IEBA
-IHN0YXRpYyBpbnQgcHJvY2Vzc19hcGlfcmVxdWVzdCh1MzIgcG1faWQsIHU2NA0KPiAqcG1fYXBp
-X2FyZywgdTMyICpwbV9hcGlfcmV0KQ0KPiA+ICAJCQkJcG1fYXBpX3JldFsyXSwgcG1fYXBpX3Jl
-dFszXSk7DQo+ID4gIAkJYnJlYWs7DQo+ID4gIAl9DQo+ID4gKwljYXNlIFBNX0NMT0NLX0VOQUJM
-RToNCj4gPiArCQlyZXQgPSBlZW1pX29wcy0+Y2xvY2tfZW5hYmxlKHBtX2FwaV9hcmdbMF0pOw0K
-PiA+ICsJCWJyZWFrOw0KPiANCj4gQXMgSSBtZW50aW9uZWQgaW4gZWFybGllciBwYXRjaCwgSSBk
-b24ndCBzZWUgdGhlIG5lZWQgZm9yIHRoaXMgZGVidWdmcyBpbnRlcmZhY2UuDQo+IENsb2NrIGxh
-eSBoYXMgcmVhZC1vbmx5IGludGVyZmFjZSBpbiBkZWJ1Z2ZzIGFscmVhZHkuIEFsc28gaWYgeW91
-IHdhbnQgdG8gZGVidWcNCj4gY2xvY2tzLCB5b3UgY2FuIGRvIHNvIHVzaW5nIHRoZSBkcml2ZXIg
-d2hpY2ggdXNlcyB0aGVzZSBjbG9ja3MuIERvIHlvdSByZWFsbHkNCj4gd2FudCB0byBtYW5hZ2Ug
-Y2xvY2tzIGluIHVzZXItc3BhY2UgPw0KPiBUaGUgd2hvbGUgaWRlYSBvZiBFRU1JIGtpbmQgb2Yg
-aW50ZXJmYWNlIGlzIHRvIGFic3RyYWN0IGFuZCBoaWRlIHRoZSBmaW5lIGRldGFpbHMNCj4gZXZl
-biBmcm9tIG5vbi10cnVzdGVkIHJpY2ggT1MgbGlrZSBMaW51eCBrZXJuZWwsIGJ1dCBieSBwcm92
-aWRpbmcgdGhpcyB5b3UgYXJlDQo+IGRvaW5nIGV4YWN0bHkgb3Bwb3NpdGUuDQo+IA0KPiAtLQ0K
-PiBSZWdhcmRzLA0KPiBTdWRlZXANCg0KTm8gd2UgZG9uJ3Qgd2FudCB0byBtYW5hZ2UgY2xvY2tz
-IGluIHVzZXItc3BhY2UuIFRoaXMgZGVidWdmcyBpcyBtZWFudCBmb3IgZGV2ZWxvcGVyIHdobyB3
-YW50cyB0byBkZWJ1ZyBBUElzIGJlaGF2aW9yIGluIGNhc2Ugc29tZXRoaW5nIGRvZXNuJ3Qgd29y
-ayBhcyBleHBlY3RlZC4gRGVidWdmcyBzaG91bGQgYmUgb2ZmIGJ5IGRlZmF1bHQgaW4gcHJvZHVj
-dGlvbiBpbWFnZXMuDQoNClRoYW5rcywNCkpvbGx5IFNoYWgNCg0K
+Jacek
+
+On 05/11/2018 06:56 AM, Dan Murphy wrote:
+<snip>
+
+>>> +    }
+>>> +
+>>> +    if (led->strobe_node) {
+>>> +        ret = of_property_read_string(led->strobe_node, "label", &name);
+>>> +        if (!ret)
+>>> +            snprintf(led->strobe, sizeof(led->strobe),
+>>> +                "%s:%s", led->strobe_node->name, name);
+>>> +        else
+>>> +            snprintf(led->strobe, sizeof(led->strobe),
+>>> +                "%s::strobe", led->strobe_node->name);
+>>> +
+>>> +        ret = of_property_read_u32(led->strobe_node,
+>>> +                    "flash-max-microamp",
+>>> +                    &led->strobe_current_max);
+>>> +        if (ret < 0) {
+>>> +            led->strobe_current_max = LM3601X_MIN_STROBE_I_MA;
+>>> +            dev_warn(&led->client->dev,
+>>> +                 "flash-max-microamp DT property missing\n");
+>>> +        }
+>>> +
+>>> +        ret = of_property_read_u32(led->strobe_node,
+>>> +                    "flash-max-timeout-us",
+>>> +                    &led->max_strobe_timeout);
+>>> +        if (ret < 0) {
+>>> +            led->max_strobe_timeout = strobe_timeouts[0].reg_val;
+>>> +            dev_warn(&led->client->dev,
+>>> +                 "flash-max-timeout-us DT property missing\n");
+>>> +        }
+>>
+>> Common LED bindings state that flash-max-microamp and
+>> flash-max-timeout-us properties are mandatory.
+> 
+> OK.
+
+OK I looked at the max776973 driver and well if the flash-max-microamp and
+flash-max-timeout-us nodes are missing it sets a default value for each if the
+node is not present.
+
+So should we remove this code from the Max77693 driver too and fail probe as being asked
+in this driver?
+
+Dan
+
+> 
+>>
+>>> +
+>>> +        lm3601x_init_flash_timeout(led);
+
+<snip>
+
+>>>
+>>
+> 
+> 
+
+
+-- 
+------------------
+Dan Murphy
