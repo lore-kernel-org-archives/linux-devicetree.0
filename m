@@ -1,116 +1,86 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v6 3/6] kernel/reboot.c: export pm_power_off_prepare
-Date: Mon, 14 May 2018 07:10:42 +0200
-Message-ID: <091ccf85-ae4c-f6fd-0455-1a70e973c85c@pengutronix.de>
-References: <20180305102524.5905-1-o.rempel@pengutronix.de>
- <20180305102524.5905-4-o.rempel@pengutronix.de>
- <20180504185052.bjhfkvpgrblc7tfc@pengutronix.de>
- <1937901.oyadCYFYNo@aspire.rjw.lan>
- <a431b0e1-f4f4-1439-f0bf-736018c6ab0c@pengutronix.de>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH RESEND net-next v2 1/8] dt-bindings: net: dwmac-sun8i: Clean up clock delay chain descriptions
+Date: Mon, 14 May 2018 13:18:30 +0800
+Message-ID: <AC88E7D0-DDC9-4EB9-91EE-441C1C017BDB@aosc.io>
+References: <20180513191425.9801-1-wens@csie.org> <20180513191425.9801-2-wens@csie.org> <20180513194919.GE12738@lunn.ch> <CAGb2v66nqWnioS1pwfWFtMZFZSWvf4SwXr_ExnnGvYsK9RU_LA@mail.gmail.com> <20180513200529.GF12738@lunn.ch> <CAGb2v64ACc1tQRhy4LhnvCC7VJ3nVM-wMbgUgzviGMWKPFsSuQ@mail.gmail.com> <20180513202938.GH12738@lunn.ch> <CAGb2v66F_Ho2OZdrF3p6xe9mQ=zJZ_KjE9MnW1VmWs9jw65eEg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="RtB0pzA4sEIikWDKYFSjABFlnFe6ToT2P"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a431b0e1-f4f4-1439-f0bf-736018c6ab0c@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v66F_Ho2OZdrF3p6xe9mQ=zJZ_KjE9MnW1VmWs9jw65eEg@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>, Andrew Lunn <andrew@lunn.ch>
+Cc: devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---RtB0pzA4sEIikWDKYFSjABFlnFe6ToT2P
-Content-Type: multipart/mixed; boundary="CRLiw7b3SfKPy3MVyt35HefVydl0PKi0x";
- protected-headers="v1"
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>, kernel@pengutronix.de,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
- Liam Girdwood <lgirdwood@gmail.com>,
- Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>,
- Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>,
- Mark Brown <broonie@kernel.org>
-Message-ID: <091ccf85-ae4c-f6fd-0455-1a70e973c85c@pengutronix.de>
-Subject: Re: [PATCH v6 3/6] kernel/reboot.c: export pm_power_off_prepare
-References: <20180305102524.5905-1-o.rempel@pengutronix.de>
- <20180305102524.5905-4-o.rempel@pengutronix.de>
- <20180504185052.bjhfkvpgrblc7tfc@pengutronix.de>
- <1937901.oyadCYFYNo@aspire.rjw.lan>
- <a431b0e1-f4f4-1439-f0bf-736018c6ab0c@pengutronix.de>
-In-Reply-To: <a431b0e1-f4f4-1439-f0bf-736018c6ab0c@pengutronix.de>
-
---CRLiw7b3SfKPy3MVyt35HefVydl0PKi0x
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
 
 
-
-On 14.05.2018 06:33, Oleksij Rempel wrote:
->=20
->=20
-> On 12.05.2018 13:13, Rafael J. Wysocki wrote:
->> On Friday, May 4, 2018 8:50:52 PM CEST Oleksij Rempel wrote:
->>> Hallo Andrew,
->>> I need your ACK or NACK for this patch.
+于 2018年5月14日 GMT+08:00 下午12:59:22, Chen-Yu Tsai <wens@csie.org> 写到:
+>On Sun, May 13, 2018 at 1:29 PM, Andrew Lunn <andrew@lunn.ch> wrote:
+>> On Sun, May 13, 2018 at 01:11:08PM -0700, Chen-Yu Tsai wrote:
+>>> On Sun, May 13, 2018 at 1:05 PM, Andrew Lunn <andrew@lunn.ch> wrote:
+>>> >> > Hi Chen-Yu
+>>> >> >
+>>> >> > Are these delays the MAC applies? Not the PHY. It would be good
+>to
+>>> >> > make it clear here these are MAC imposed delays.
+>>> >>
+>>> >> Yes these are applied on the MAC side. Being described in the
+>device
+>>> >> tree bindings for the MAC, I thought this was implied to be the
+>case?
+>>> >> Are there known exceptions?
+>>> >
+>>> > There is frequent confusion with this. Most of the time, the PHY
+>does
+>>> > the delay, not the MAC, based on the phy-mode. So the MAC doing it
+>is
+>>> > an exception in itself.
+>>> >
+>>> > Do you actually need these delays for the board you adding support
+>>> > for? Does the PHY not support adding the needed delays? If you
+>don't
+>>> > need the delays, i would not even implement them.
 >>>
->>> This function is used to configure external PMIC to interpret
->>> signal which will be triggered by pm_power_off as power off.
->>> Since same signal can be used for stand by, I linked PMIC configurati=
-on
->>> with pm_power_off_prepare to avoid possible conflicts.
->>>
->>> On Mon, Mar 05, 2018 at 11:25:20AM +0100, Oleksij Rempel wrote:
->>>> Export pm_power_off_prepare. It is needed to implement power off on
->>>> Freescale/NXP iMX6 based boards with external power management
->>>> integrated circuit (PMIC).
->>>>
->>>> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
->>>> ---
->>>>  kernel/reboot.c | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/kernel/reboot.c b/kernel/reboot.c
->>>> index e4ced883d8de..350be6baa60d 100644
->>>> --- a/kernel/reboot.c
->>>> +++ b/kernel/reboot.c
->>>> @@ -49,6 +49,7 @@ int reboot_force;
->>>>   */
->>>> =20
->>>>  void (*pm_power_off_prepare)(void);
->>>> +EXPORT_SYMBOL(pm_power_off_prepare);
+>>> Yes this is already used on the Bananapi M3. This patch merely
+>reformats
+>>> the description and adds a note saying this only applies to RGMII
+>mode.
 >>
->> Why not EXPORT_SYMBOL_GPL() ?
->=20
-> No special reason. Fixed.
-> Any other comments?
->=20
+>> Yes, the current code is needed for the Bananapi M3. But you have
+>> another patch which extends the code to support a smaller range. Do
+>> you have a board which actually needs this? If not, i would not add
+>> that new code.
+>
+>IIRC the delay on the PHY side is either 2ns or none. The delay on the
+>MAC side here is an order smaller, likely fine tuning to cope with
+>board
+>design deficiencies.
 
-Or with other words, will it be enough to get your Signed-of-by for this
-patch?
+And the weird thing is that the delay fails to work on some batches
+of RTL8211E, notably many cases are shown on Pine A64+
+board.
 
+P.S. The delay is intended to be set via wires on PCB, other than
+by software. Although Realtek provided some magic numbers
+to Pine64, in order to fix the network problem due to PHY
+delay failure.
 
---CRLiw7b3SfKPy3MVyt35HefVydl0PKi0x--
-
---RtB0pzA4sEIikWDKYFSjABFlnFe6ToT2P
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAlr5GlIACgkQdQOiSHVI
-77Rh4wgAwEu/IcL9h9DDgNxT7+bLULmv3Idsqw2YuCkCPyoqdzZMba4+xNxfzyzt
-fP7Mm0m1yYFfM0ZJ8xYJeSlhcb0Y991+YCRBPWv00zQplUPONo6Z8E5hmnmvqHav
-jmaBw+jLhosfgbdyzRlheDr/HQKgojWe8M2SkFyVnkwgk9tWvV/nEwgxtef177bB
-cDFVV48p8mpEPMcdn7OaAlDrHD2sLC8YmLYdM4PqUdwzrWTuAaOuuNkPOsgrNI29
-C+IHaIB/jG/JvWCTIbU7O0G7wGhAuhFhFqU4NwWjnZIrTfLpCgqMo7zW6E/ktmcy
-Kfqp7JlWNFroTiGOoHzBRbET/uIK1w==
-=Usu/
------END PGP SIGNATURE-----
-
---RtB0pzA4sEIikWDKYFSjABFlnFe6ToT2P--
+>
+>Currently no other board requires this, but this is already part of the
+>binding. The new stuff limits the range for a specific SoC, simply
+>because
+>that is the range supported by the control register. Not implementing,
+>i.e.
+>supporting the whole range from the property, which might get
+>truncated,
+>doesn't make much sense to me.
+>
+>Regards
+>ChenYu
+>
+>_______________________________________________
+>linux-arm-kernel mailing list
+>linux-arm-kernel@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
