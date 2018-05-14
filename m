@@ -1,105 +1,56 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH RESEND net-next v2 1/8] dt-bindings: net: dwmac-sun8i:
- Clean up clock delay chain descriptions
-Date: Mon, 14 May 2018 09:21:13 +0200
-Message-ID: <20180514072113.yts3shbojvbxj4tq@flea>
-References: <20180513191425.9801-1-wens@csie.org>
- <20180513191425.9801-2-wens@csie.org>
- <20180513194919.GE12738@lunn.ch>
- <CAGb2v66nqWnioS1pwfWFtMZFZSWvf4SwXr_ExnnGvYsK9RU_LA@mail.gmail.com>
- <20180513200529.GF12738@lunn.ch>
- <CAGb2v64ACc1tQRhy4LhnvCC7VJ3nVM-wMbgUgzviGMWKPFsSuQ@mail.gmail.com>
- <20180513202938.GH12738@lunn.ch>
- <CAGb2v66F_Ho2OZdrF3p6xe9mQ=zJZ_KjE9MnW1VmWs9jw65eEg@mail.gmail.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v2] usb: chipidea: Hook into mux framework to toggle usb
+ switch
+Date: Mon, 14 May 2018 09:21:36 +0200
+Message-ID: <4abbe781-f488-b876-06a0-5521736c4d6c@axentia.se>
+References: <1523973148-2094-1-git-send-email-yossim@codeaurora.org>
+ <ec1c44d7-45a8-a27e-5c45-717b87d3b252@axentia.se>
+ <e75dff8424debcabd79f36faf3b23aaf@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xneyxwlxyyg7upwe"
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66F_Ho2OZdrF3p6xe9mQ=zJZ_KjE9MnW1VmWs9jw65eEg@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e75dff8424debcabd79f36faf3b23aaf@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: yossim@codeaurora.org
+Cc: Peter Chen <Peter.Chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:CHIPIDEA USB HIGH SPEED DUAL ROLE CONTROLLER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, robh@kernel.org, swboyd@chromium.org, devicetree@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On 2018-04-18 07:48, yossim@codeaurora.org wrote:
+> On 2018-04-17 17:11, Peter Rosin wrote:
+>> On 2018-04-17 15:52, Yossi Mansharoff wrote:
+>>> On the db410c 96boards platform we have a TC7USB40MU on the board
+>>> to mux the D+/D- lines coming from the controller between a micro
+>>> usb "device" port and a USB hub for "host" roles[1]. During a
+>>> role switch, we need to toggle this mux to forward the D+/D-
+>>> lines to either the port or the hub. Add the necessary code to do
+>>> the role switch in chipidea core via the generic mux framework.
+>>> Board configurations like on db410c are expected to change roles
+>>> via the sysfs API described in
+>>> Documentation/ABI/testing/sysfs-platform-chipidea-usb2.
+>>
+>> Ok, so this is v2. Please describe what is different from v1.
+>> I have told you before that this information helps.
+>>
+>>> [1] 
+>>> https://github.com/96boards/documentation/raw/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
+>>
+>> This link returns 404 for me.
+>>
+>> Cheers,
+>> Peter
+> 
+> 
+> Hi,
+> This patch was split apart from the original patch into two patches
+> one for chipidea and the other for bindings.
+> this patch has no other changes two the code.
+> 
+> I will update the link.
 
---xneyxwlxyyg7upwe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Just a note: I will not feed the mux_control_get_optional patch upstream
+until I feel confident that this patch is going also heading upstream.
 
-On Sun, May 13, 2018 at 09:59:22PM -0700, Chen-Yu Tsai wrote:
-> On Sun, May 13, 2018 at 1:29 PM, Andrew Lunn <andrew@lunn.ch> wrote:
-> > On Sun, May 13, 2018 at 01:11:08PM -0700, Chen-Yu Tsai wrote:
-> >> On Sun, May 13, 2018 at 1:05 PM, Andrew Lunn <andrew@lunn.ch> wrote:
-> >> >> > Hi Chen-Yu
-> >> >> >
-> >> >> > Are these delays the MAC applies? Not the PHY. It would be good to
-> >> >> > make it clear here these are MAC imposed delays.
-> >> >>
-> >> >> Yes these are applied on the MAC side. Being described in the device
-> >> >> tree bindings for the MAC, I thought this was implied to be the cas=
-e?
-> >> >> Are there known exceptions?
-> >> >
-> >> > There is frequent confusion with this. Most of the time, the PHY does
-> >> > the delay, not the MAC, based on the phy-mode. So the MAC doing it is
-> >> > an exception in itself.
-> >> >
-> >> > Do you actually need these delays for the board you adding support
-> >> > for? Does the PHY not support adding the needed delays? If you don't
-> >> > need the delays, i would not even implement them.
-> >>
-> >> Yes this is already used on the Bananapi M3. This patch merely reforma=
-ts
-> >> the description and adds a note saying this only applies to RGMII mode.
-> >
-> > Yes, the current code is needed for the Bananapi M3. But you have
-> > another patch which extends the code to support a smaller range. Do
-> > you have a board which actually needs this? If not, i would not add
-> > that new code.
->=20
-> IIRC the delay on the PHY side is either 2ns or none. The delay on the
-> MAC side here is an order smaller, likely fine tuning to cope with board
-> design deficiencies.
->=20
-> Currently no other board requires this, but this is already part of the
-> binding. The new stuff limits the range for a specific SoC, simply because
-> that is the range supported by the control register. Not implementing, i.=
-e.
-> supporting the whole range from the property, which might get truncated,
-> doesn't make much sense to me.
-
-With that driver we don't, but the previous design had the same
-feature and it was used on more boards. It was simply initialized
-statically in U-Boot, and not in Linux through the DT like it is done
-here.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---xneyxwlxyyg7upwe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlr5OOgACgkQ0rTAlCFN
-r3QcpA//cbofU0lucdkRj8N+SeXfwuoUDPTHmHSbEErX9LHdG0vYfXa/ApSH0yhX
-b59LqWWH2cJP1HM448T0UDsi8JOVSWaGlr0Br1NA21xP2cPs3MQH9TFvEoovWIHo
-QUzg/gINoHwMTtkFC0jQXPf8nf+zxlj4kIaK65WEQk/VhXtDGMZsQqpMyk9i+qK8
-wQ95pbMDspd4MafQXx3EF2idyW160Z//AijrdgsE6vu6hJgD2jKFthxZGR1ppOFt
-ogsJ8uVLy1hZOcMZ1TpSDnXrwvpWyV4v539l0QlNQ/zAJpvaYxuc9VYnLP4D5Ghe
-9jv/GsIn9j8zPEAGJBqLn6vWDfoBrVv9OM1oK6EgtQQwffyTx17WO+NPOr7fDN+b
-MCXWMAokxT2A8ATHfY5YzENCiHRK0I5kFBZj9Bs1JKW7RytTtDFcF49a/9zbWtQ5
-bi0kc5Y3x21vE7Hw3klGqsRdO39EVIyiBZcXxwh8RCXPJD/ukeuo1VefN9wGYddO
-ERdASdpPnWbN0Oyj+tSaJtkarScRNVGPpYNkV0HuE6yBqW3wNPiHMsGV/YEk/+iM
-g1M2izznPBgubb1FzG2d/TQDUXPX5I2gcoil2az+MrBqTpKkLvHyhOk+CKVxSZlJ
-rg6D3ME37+GyuooU6OL5qlwRm98CToP0yAHMglXTGTT9hypjLYc=
-=AhnW
------END PGP SIGNATURE-----
-
---xneyxwlxyyg7upwe--
+Cheers,
+Peter
