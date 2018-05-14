@@ -1,187 +1,128 @@
-From: Richard Genoud <richard.genoud@gmail.com>
-Subject: Re: [PATCH v3 6/6] tty/serial: atmel: changed the driver to work
- under at91-usart mfd
-Date: Mon, 14 May 2018 12:57:23 +0200
-Message-ID: <4a75568e-a52e-3872-f465-d707372a5c12@sorico.fr>
-References: <20180511103822.31698-1-radu.pirea@microchip.com>
- <20180511103822.31698-7-radu.pirea@microchip.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Allwinner A64: Issue on external rtc clock to wifi chip
+Date: Mon, 14 May 2018 13:17:26 +0200
+Message-ID: <20180514111726.lnxpegipqklyetmv@flea>
+References: <CAMty3ZCNyuEwmLGdDZLM_9qKJ2NsT33rodug7ZpKAE-OHymVEg@mail.gmail.com>
+ <20180514075727.uxggyhmbahvhestx@flea>
+ <CAMty3ZDew=+zytKUx5+nX27CjCe0UfJpyYOy2s07NoJvbe57mQ@mail.gmail.com>
+ <20180514082744.ydmfg5mzsbol5onu@flea>
+ <CAMty3ZC3ggxkZwirpQ-aRP8Udg=aYypBArb0KcR0_Z0AG8wATA@mail.gmail.com>
+ <20180514090618.r5xc3elzpvfp47f4@flea>
+ <CAMty3ZCAWBHtemeeWcgLy5PoYLn10MwxpHdirqpsxFY3BA7=4g@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180511103822.31698-7-radu.pirea@microchip.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Radu Pirea <radu.pirea@microchip.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
-Cc: mark.rutland@arm.com, alexandre.belloni@bootlin.com, richard.genoud@gmail.com, gregkh@linuxfoundation.org, broonie@kernel.org, robh+dt@kernel.org, jslaby@suse.com, lee.jones@linaro.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rwemxfhk4a6ebnef"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUPA4XLQKGQEVS7SHIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZCAWBHtemeeWcgLy5PoYLn10MwxpHdirqpsxFY3BA7=4g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 11/05/2018 12:38, Radu Pirea wrote:
-> This patch modifies the place where resources and device tree properties
-> are searched.
+--rwemxfhk4a6ebnef
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Mon, May 14, 2018 at 03:12:49PM +0530, Jagan Teki wrote:
+> On Mon, May 14, 2018 at 2:36 PM, Maxime Ripard
+> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > On Mon, May 14, 2018 at 02:34:22PM +0530, Jagan Teki wrote:
+> >> On Mon, May 14, 2018 at 1:57 PM, Maxime Ripard
+> >> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >> > On Mon, May 14, 2018 at 01:34:56PM +0530, Jagan Teki wrote:
+> >> >> On Mon, May 14, 2018 at 1:27 PM, Maxime Ripard
+> >> >> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >> >> > Hi,
+> >> >> >
+> >> >> > On Mon, May 14, 2018 at 12:37:49PM +0530, Jagan Teki wrote:
+> >> >> >> Hi Maxime and All,
+> >> >> >>
+> >> >> >> We are trying to bring-up AP6330 Wifi chip for A64 board. We noticed
+> >> >> >> to have an external rtc clock has driven from wifi chip.
+> >> >> >>
+> >> >> >> So the devicetree is configured according to this as below.
+> >> >> >>
+> >> >> >> / {
+> >> >> >>         wifi_pwrseq: wifi-pwrseq {
+> >> >> >>                 compatible = "mmc-pwrseq-simple";
+> >> >> >>                 clocks = <&rtc 1>;
+> >> >> >>                 clock-names = "ext_clock";
+> >> >> >>                 reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
+> >> >> >>                 post-power-on-delay-ms = <400>;
+> >> >> >>         };
+> >> >> >> };
+> >> >> >>
+> >> >> >> &rtc {
+> >> >> >>         clock-output-names = "rtc-osc32k", "rtc-osc32k-out";
+> >> >> >>         clocks = <&osc32k>;
+> >> >> >>         #clock-cells = <1>;
+> >> >> >> };
+> >> >> >>
+> >> >> >> &mmc1 {
+> >> >> >>         pinctrl-names = "default";
+> >> >> >>         pinctrl-0 = <&mmc1_pins>;
+> >> >> >>         vmmc-supply = <&reg_dcdc1>;
+> >> >> >>         vqmmc-supply = <&reg_eldo1>;
+> >> >> >>         mmc-pwrseq = <&wifi_pwrseq>;
+> >> >> >>         bus-width = <4>;
+> >> >> >>         non-removable;
+> >> >> >>         status = "okay";
+> >> >> >>
+> >> >> >>         brcmf: wifi@1 {
+> >> >> >>                 reg = <1>;
+> >> >> >>                 compatible = "brcm,bcm4329-fmac";
+> >> >> >>                 interrupt-parent = <&r_pio>;
+> >> >> >>                 interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>;  /* WL-WAKE-AP: PL3 */
+> >> >> >>                 interrupt-names = "host-wake";
+> >> >> >>         };
+> >> >> >> };
+> >> >> >>
+> >> >> >> And observed rtc-osc32k-out clock is never enabled[1] and the value of
+> >> >> >> LOSC_OUT_GATING is 0x0 which eventually not enabling
+> >> >> >> LOSC_OUT_GATING_EN
+> >> >> >>
+> >> >> >> Pls. let us know if we miss anything here?
+> >> >> >>
+> >> >> >> [1] https://paste.ubuntu.com/p/X2By4q8kD2/
+> >> >> >
+> >> >> > Could you paste your config and the logs from a boot to?
+> >> >>
+> >> >> .config
+> >> >> https://paste.ubuntu.com/p/w9w2KB7RFc/
+> >> >>
+> >> >> dmesg
+> >> >> https://paste.ubuntu.com/p/mrZGk5bWRR/
+> >> >
+> >> > This is kind of weird. Have you tested with a 4.17 kernel? We have
+> >> > runtime_pm changes lined up in next, so that might be a regression
+> >> > there, even though we tested it with Quentin at some point.
+> >>
+> >> This is 4.17-rc4 do you want to try it on 4.16 ?
+> >
+> > No, this is next-20180503. Please try with 4.17-rc4
 > 
-> Signed-off-by: Radu Pirea <radu.pirea@microchip.com>
-> ---
->  drivers/tty/serial/Kconfig        |  1 +
->  drivers/tty/serial/atmel_serial.c | 29 +++++++++++++++--------------
->  2 files changed, 16 insertions(+), 14 deletions(-)
+> Couldn't find any different in behaviour [2]
 > 
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index 3682fd3e960c..25e55332f8b1 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -119,6 +119,7 @@ config SERIAL_ATMEL
->  	depends on ARCH_AT91 || COMPILE_TEST
->  	select SERIAL_CORE
->  	select SERIAL_MCTRL_GPIO if GPIOLIB
-> +	select MFD_AT91_USART
->  	help
->  	  This enables the driver for the on-chip UARTs of the Atmel
->  	  AT91 processors.
-> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-> index df46a9e88c34..6b4494352853 100644
-> --- a/drivers/tty/serial/atmel_serial.c
-> +++ b/drivers/tty/serial/atmel_serial.c
-> @@ -193,8 +193,8 @@ static struct console atmel_console;
->  
->  #if defined(CONFIG_OF)
->  static const struct of_device_id atmel_serial_dt_ids[] = {
-> -	{ .compatible = "atmel,at91rm9200-usart" },
-> -	{ .compatible = "atmel,at91sam9260-usart" },
-> +	{ .compatible = "atmel,at91rm9200-usart-serial" },
-> +	{ .compatible = "atmel,at91sam9260-usart-serial" },
->  	{ /* sentinel */ }
->  };
->  #endif
-> @@ -1631,7 +1631,7 @@ static void atmel_tasklet_tx_func(unsigned long data)
->  static void atmel_init_property(struct atmel_uart_port *atmel_port,
->  				struct platform_device *pdev)
->  {
-> -	struct device_node *np = pdev->dev.of_node;
-> +	struct device_node *np = pdev->dev.parent->of_node;
->  
->  	/* DMA/PDC usage specification */
->  	if (of_property_read_bool(np, "atmel,use-dma-rx")) {
-> @@ -2223,7 +2223,8 @@ static const char *atmel_type(struct uart_port *port)
->  static void atmel_release_port(struct uart_port *port)
->  {
->  	struct platform_device *pdev = to_platform_device(port->dev);
-> -	int size = pdev->resource[0].end - pdev->resource[0].start + 1;
-> +	int size = to_platform_device(pdev->dev.parent)->resource[0].end -
-> +		to_platform_device(pdev->dev.parent)->resource[0].start + 1;
-I think it may be simpler with something like:
-+	struct platform_device *mfd_pdev = to_platform_device(port->dev->parent);
-+	int size = mfd_pdev->resource[0].end - mfd_pdev->resource[0].start + 1;
+> [2] https://paste.ubuntu.com/p/m3PGBwrv6W/
 
->  
->  	release_mem_region(port->mapbase, size);
->  
-> @@ -2239,7 +2240,8 @@ static void atmel_release_port(struct uart_port *port)
->  static int atmel_request_port(struct uart_port *port)
->  {
->  	struct platform_device *pdev = to_platform_device(port->dev);
-> -	int size = pdev->resource[0].end - pdev->resource[0].start + 1;
-> +	int size = to_platform_device(pdev->dev.parent)->resource[0].end -
-> +		to_platform_device(pdev->dev.parent)->resource[0].start + 1;
->  
-ditto
+It's hard to tell without the board, but have you looked at the return
+value of devm_clk_get in the pwrseq code?
 
->  	if (!request_mem_region(port->mapbase, size, "atmel_serial"))
->  		return -EBUSY;
-> @@ -2345,23 +2347,23 @@ static int atmel_init_port(struct atmel_uart_port *atmel_port,
-Here, we could also add:
-+	struct device *mfd_dev = pdev->dev.parent;
-+	struct platform_device *mfd_pdev = to_platform_device(mfd_dev);
+Enabling the clk ftrace events would also help.
 
->  	atmel_init_property(atmel_port, pdev);
->  	atmel_set_ops(port);
->  
-> -	uart_get_rs485_mode(&pdev->dev, &port->rs485);
-> +	uart_get_rs485_mode(pdev->dev.parent, &port->rs485);
-...and use them here
+Maxime
 
->  
->  	port->iotype		= UPIO_MEM;
->  	port->flags		= UPF_BOOT_AUTOCONF | UPF_IOREMAP;
->  	port->ops		= &atmel_pops;
->  	port->fifosize		= 1;
->  	port->dev		= &pdev->dev;
-> -	port->mapbase	= pdev->resource[0].start;
-> -	port->irq	= pdev->resource[1].start;
-> +	port->mapbase		= to_platform_device(pdev->dev.parent)->resource[0].start;
-> +	port->irq		= to_platform_device(pdev->dev.parent)->resource[1].start;
-and here
-I think it would be easier to read.
-
->  	port->rs485_config	= atmel_config_rs485;
-> -	port->membase	= NULL;
-> +	port->membase		= NULL;
->  
->  	memset(&atmel_port->rx_ring, 0, sizeof(atmel_port->rx_ring));
->  
->  	/* for console, the clock could already be configured */
->  	if (!atmel_port->clk) {
-> -		atmel_port->clk = clk_get(&pdev->dev, "usart");
-> +		atmel_port->clk = clk_get(pdev->dev.parent, "usart");
-and here
-
->  		if (IS_ERR(atmel_port->clk)) {
->  			ret = PTR_ERR(atmel_port->clk);
->  			atmel_port->clk = NULL;
-> @@ -2656,7 +2658,7 @@ static void atmel_serial_probe_fifos(struct atmel_uart_port *atmel_port,
->  	atmel_port->rts_low = 0;
->  	atmel_port->rts_high = 0;
->  
-> -	if (of_property_read_u32(pdev->dev.of_node,
-> +	if (of_property_read_u32(pdev->dev.parent->of_node,
->  				 "atmel,fifo-size",
->  				 &atmel_port->fifo_size))
->  		return;
-> @@ -2694,11 +2696,10 @@ static void atmel_serial_probe_fifos(struct atmel_uart_port *atmel_port,
->  static int atmel_serial_probe(struct platform_device *pdev)
->  {
->  	struct atmel_uart_port *atmel_port;
-> -	struct device_node *np = pdev->dev.of_node;
-> +	struct device_node *np = pdev->dev.parent->of_node;
->  	void *data;
->  	int ret = -ENODEV;
->  	bool rs485_enabled;
-> -
-I think this line feed wasn't so bad.
-
->  	BUILD_BUG_ON(ATMEL_SERIAL_RINGSIZE & (ATMEL_SERIAL_RINGSIZE - 1));
->  
->  	ret = of_alias_get_id(np, "serial");
-> @@ -2845,7 +2846,7 @@ static struct platform_driver atmel_serial_driver = {
->  	.suspend	= atmel_serial_suspend,
->  	.resume		= atmel_serial_resume,
->  	.driver		= {
-> -		.name			= "atmel_usart",
-> +		.name			= "atmel_usart_serial",
->  		.of_match_table		= of_match_ptr(atmel_serial_dt_ids),
->  	},
->  };
-> 
-
-After your patch, the DMA is not selected anymore:
-atmel_usart_serial atmel_usart_serial.0.auto: TX channel not available, switch to pio
-instead of:
-atmel_usart fffff200.serial: using dma1chan2 for tx DMA transfers
-
-And the kernel doesn't log anymore on the serial console, despite the loglevel=8
-(after reverting this series, the kernel logs reappears on the serial console)
-
-(tests done on sam9g35)
-
-regards,
-Richard
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--rwemxfhk4a6ebnef--
