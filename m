@@ -1,260 +1,227 @@
-From: Erin Lo <erin.lo@mediatek.com>
-Subject: [PATCH v2 4/4] arm64: dts: Add Mediatek SoC MT8183 and evaluation board dts and Makefile
-Date: Mon, 14 May 2018 18:22:31 +0800
-Message-ID: <1526293351-32794-5-git-send-email-erin.lo@mediatek.com>
-References: <1526293351-32794-1-git-send-email-erin.lo@mediatek.com>
+From: Niklas =?iso-8859-1?Q?S=F6derlund?=
+        <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH 3/3] arm64: dts: renesas: draak: Describe HDMI input
+Date: Mon, 14 May 2018 12:23:26 +0200
+Message-ID: <20180514102326.GG30519@bigcity.dyn.berto.se>
+References: <1526032802-14376-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1526032802-14376-4-git-send-email-jacopo+renesas@jmondi.org>
+ <20180513125755.GQ18974@bigcity.dyn.berto.se>
+ <20180514073520.GA5956@w540>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526293351-32794-1-git-send-email-erin.lo@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <20180514073520.GA5956@w540>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, erin.lo@mediatek.com, mars.cheng@mediatek.com, Ben Ho <Ben.Ho@mediatek.com>
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, horms@verge.net.au, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ben Ho <Ben.Ho@mediatek.com>
+Hi Jacopo,
 
-Add basic chip support for Mediatek 8183
+On 2018-05-14 09:39:34 +0200, Jacopo Mondi wrote:
+> Hi Niklas,
+> 
+> On Sun, May 13, 2018 at 02:57:55PM +0200, Niklas Söderlund wrote:
+> > Hi Jacopo,
+> >
+> > Thanks for your patch.
+> >
+> > On 2018-05-11 12:00:02 +0200, Jacopo Mondi wrote:
+> > > Describe HDMI input connected to VIN4 interface for R-Car D3 Draak
+> > > development board.
+> > >
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > ---
+> > >  arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 68 ++++++++++++++++++++++++++
+> > >  1 file changed, 68 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+> > > index d03f194..e0ce462 100644
+> > > --- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+> > > +++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+> > > @@ -59,6 +59,17 @@
+> > >  		};
+> > >  	};
+> > >
+> > > +	hdmi-in {
+> > > +		compatible = "hdmi-connector";
+> > > +		type = "a";
+> > > +
+> > > +		port {
+> > > +			hdmi_con_in: endpoint {
+> > > +				remote-endpoint = <&adv7612_in>;
+> > > +			};
+> > > +		};
+> > > +	};
+> > > +
+> > >  	memory@48000000 {
+> > >  		device_type = "memory";
+> > >  		/* first 128MB is reserved for secure area. */
+> > > @@ -142,6 +153,11 @@
+> > >  		groups = "usb0";
+> > >  		function = "usb0";
+> > >  	};
+> > > +
+> > > +	vin4_pins: vin4 {
+> > > +		groups = "vin4_data24", "vin4_sync", "vin4_clk", "vin4_clkenb";
+> > > +		function = "vin4";
+> > > +	};
+> > >  };
+> > >
+> > >  &i2c0 {
+> > > @@ -154,6 +170,35 @@
+> > >  		reg = <0x50>;
+> > >  		pagesize = <8>;
+> > >  	};
+> > > +
+> > > +	hdmi-decoder@4c {
+> > > +		compatible = "adi,adv7612";
+> > > +		reg = <0x4c>;
+> > > +		default-input = <0>;
+> > > +
+> > > +		ports {
+> > > +			#address-cells = <1>;
+> > > +			#size-cells = <0>;
+> > > +
+> > > +			port@0 {
+> > > +				reg = <0>;
+> > > +				adv7612_in: endpoint {
+> > > +					remote-endpoint = <&hdmi_con_in>;
+> > > +				};
+> > > +			};
+> > > +
+> > > +			port@2 {
+> > > +				reg = <2>;
+> > > +				adv7612_out: endpoint {
+> > > +					pclk-sample = <0>;
+> > > +					hsync-active = <0>;
+> > > +					vsync-active = <0>;
+> >
+> > This differs from the Gen2 DT bindings which is a very similar hardware
+> > setup using the same components. Defining these properties will make the
+> > bus marked as V4L2_MBUS_PARALLEL instead of V4L2_MBUS_BT656.
+> 
+> And that's what we want....
+> 
+> >
+> > This will change how the hardware is configured for capture if the media
+> > bus is in a UYVY format, see VNMC_INF register in rvin_setup(). Maybe
+> > this it not an issue here but still I'm curious to why this differ
+> > between Gen2 and Gen3 :-)
+> 
+> Actually this won't impact the VIN configuration as this is the
+> 'remote endpoint' from VIN perspective and the properties used to
+> configure the interface are the ones in the 'local endpoint'.
 
-Signed-off-by: Ben Ho <Ben.Ho@mediatek.com>
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/Makefile       |   1 +
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts |  31 +++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 178 ++++++++++++++++++++++++++++
- 3 files changed, 210 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-evb.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8183.dtsi
+You are right, sorry for the confusion and thanks for educating me :-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index ac17f60..2836261 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -5,3 +5,4 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-evb.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-new file mode 100644
-index 0000000..9a3d6b7
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (c) 2017 MediaTek Inc.
-+ * Author: Ben Ho <ben.ho@mediatek.com>
-+ *	   Erin Lo <erin.lo@mediatek.com>
-+ */
-+
-+/dts-v1/;
-+#include "mt8183.dtsi"
-+
-+/ {
-+	model = "MediaTek MT8183 evaluation board";
-+	compatible = "mediatek,mt8183-evb", "mediatek,mt8183";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0x80000000>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:921600n8";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-new file mode 100644
-index 0000000..8564a26
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (c) 2017 MediaTek Inc.
-+ * Author: Ben Ho <ben.ho@mediatek.com>
-+ *	   Erin Lo <erin.lo@mediatek.com>
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "mediatek,mt8183";
-+	interrupt-parent = <&sysirq>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
-+				core1 {
-+					cpu = <&cpu1>;
-+				};
-+				core2 {
-+					cpu = <&cpu2>;
-+				};
-+				core3 {
-+					cpu = <&cpu3>;
-+				};
-+			};
-+
-+			cluster1 {
-+				core0 {
-+					cpu = <&cpu4>;
-+				};
-+				core1 {
-+					cpu = <&cpu5>;
-+				};
-+				core2 {
-+					cpu = <&cpu6>;
-+				};
-+				core3 {
-+					cpu = <&cpu7>;
-+				};
-+			};
-+		};
-+
-+		cpu0: cpu@000 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x000>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu1: cpu@001 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x001>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu2: cpu@002 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x002>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu3: cpu@003 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x003>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu4: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x100>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu5: cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x101>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu6: cpu@102 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x102>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu7: cpu@103 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x103>;
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	psci {
-+		compatible      = "arm,psci-1.0";
-+		method          = "smc";
-+	};
-+
-+	uart_clk: dummy26m {
-+		compatible = "fixed-clock";
-+		clock-frequency = <26000000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	gic: interrupt-controller@0c000000 {
-+		compatible = "arm,gic-v3";
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		interrupt-controller;
-+		reg = <0 0x0c000000 0 0x40000>,  // CID
-+		      <0 0x0c100000 0 0x200000>; // CIR
-+		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	sysirq: intpol-controller@0c530a80 {
-+		compatible = "mediatek,mt8183-sysirq",
-+			     "mediatek,mt6577-sysirq";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		reg = <0 0x0c530a80 0 0x50>;
-+	};
-+
-+	uart0: serial@11002000 {
-+		compatible = "mediatek,mt8183-uart",
-+			     "mediatek,mt6577-uart";
-+		reg = <0 0x11002000 0 0x1000>;
-+		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&uart_clk>, <&uart_clk>;
-+		clock-names = "baud", "bus";
-+		status = "disabled";
-+	};
-+
-+	uart1: serial@11003000 {
-+		compatible = "mediatek,mt8183-uart",
-+			     "mediatek,mt6577-uart";
-+		reg = <0 0x11003000 0 0x1000>;
-+		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&uart_clk>, <&uart_clk>;
-+		clock-names = "baud", "bus";
-+		status = "disabled";
-+	};
-+
-+	uart2: serial@11004000 {
-+		compatible = "mediatek,mt8183-uart",
-+			     "mediatek,mt6577-uart";
-+		reg = <0 0x11004000 0 0x1000>;
-+		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&uart_clk>, <&uart_clk>;
-+		clock-names = "baud", "bus";
-+		status = "disabled";
-+	};
-+};
+> 
+> >
+> > > +
+> > > +					remote-endpoint = <&vin4_in>;
+> > > +				};
+> > > +			};
+> > > +		};
+> > > +	};
+> > >  };
+> > >
+> > >  &i2c1 {
+> > > @@ -246,3 +291,26 @@
+> > >  	timeout-sec = <60>;
+> > >  	status = "okay";
+> > >  };
+> > > +
+> > > +&vin4 {
+> > > +	pinctrl-0 = <&vin4_pins>;
+> > > +	pinctrl-names = "default";
+> > > +
+> > > +	status = "okay";
+> > > +
+> > > +	ports {
+> > > +		#address-cells = <1>;
+> > > +		#size-cells = <0>;
+> > > +
+> > > +		port@0 {
+> > > +			reg = <0>;
+> > > +
+> > > +			vin4_in: endpoint {
+> > > +				hsync-active = <0>;
+> > > +				vsync-active = <0>;
+> >
+> > Comparing this to the Gen2 bindings some properties are missing,
+> >
+> > bus-width = <24>;
+> > pclk-sample = <1>;
+> > data-active = <1>;
+> 
+> The VIN driver does not parse them, so there is no value in having
+> them there, if not confusing people as it happened to me reading the
+> Gen2 DT.
+
+I have no objection removing them. Trying to understand why the 
+description differed from Gen2.
+
+> 
+> >
+> > This is not a big deal as the VIN driver don't use these properties so
+> > no functional change should come of this but still a difference.
+> 
+> Exactly.
+> 
+> On a side note. I have not seen a way to configure the pixel clock
+> sampling level in the interface datasheet. The register used to
+> configure synchronism signals polarities is VnDMR2, and there I read
+> we can configure HSYNC/VSYNC and CLOCKENB (which is data enable, not
+> pixel clock) polarities. Is it configured through some other
+> register?
+
+I have not seen such a register no.
+
+> >
+> > Over all I'm happy with this change but before I add my tag I would like
+> > to understand why it differs from the Gen2 configuration for the adv7612
+> > properties.
+> >
+> > Also on a side not it is possible with hardware switches on the board
+> > switch the VIN4 source to a completely different pipeline CVBS connector
+> > -> adv7180 -> VIN4. But I think it's best we keep the HDMI as default as
+> > this seems to be how the boards are shipped. But maybe mentioning this
+> > in the commit message would not hurt if you end-up resending the patch.
+> 
+> Oh I see. SW-49 to SW-52 enables the HDMI input, SW53-SW54 CVBS one.
+> And actually, reading the 'initial setting of slide switches' in the
+> Draak board manual, it turns out that the board default configuration
+> is with CVBS input selected... What should we do here? reflect
+> defaults in the DT, or prioritize HDMI?
+
+I feel this is a question for Laurent. My feeling for how we handled 
+this in other cases is to go with the board default settings. I'm 
+however sure there are exceptions to the rule. So maybe we should go 
+with the most useful (what ever that is) configuration?
+
+> 
+> Thanks
+>    j
+> 
+> >
+> > > +
+> > > +				remote-endpoint = <&adv7612_out>;
+> > > +			};
+> > > +		};
+> > > +	};
+> > > +};
+> > > --
+> > > 2.7.4
+> > >
+> >
+> > --
+> > Regards,
+> > Niklas Söderlund
+
+
+
 -- 
-1.9.1
+Regards,
+Niklas Söderlund
