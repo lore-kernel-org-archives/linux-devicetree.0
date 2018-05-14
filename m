@@ -1,129 +1,475 @@
-Return-Path: <SRS0=IKTP=H5=mediatek.com=argus.lin@kernel.org>
-From: <argus.lin@mediatek.com>
-Subject: [PATCH V5 4/4] soc: mediatek: pwrap: add mt6351 driver for mt6797 SoCs
-Date: Thu, 10 May 2018 21:01:59 +0800
-Message-ID: <1525957319-20557-5-git-send-email-argus.lin@mediatek.com>
-In-Reply-To: <1525957319-20557-1-git-send-email-argus.lin@mediatek.com>
-References: <1525957319-20557-1-git-send-email-argus.lin@mediatek.com>
-MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_009_362893062.464246952"
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-Path: <SRS0=v9pK=IB=163.com=sunjg79@kernel.org>
+From: sunjg79@163.com
+Subject: [PATCH v3 2/2] xhci: hisilicon: support HiSilicon STB xHCI host controller
+Date: Mon, 14 May 2018 14:20:42 +0800
+Message-Id: <1526278842-13883-3-git-send-email-sunjg79@163.com>
+In-Reply-To: <1526278842-13883-1-git-send-email-sunjg79@163.com>
+References: <1526278842-13883-1-git-send-email-sunjg79@163.com>
+To: mathias.nyman@intel.com, gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc: shawn.guo@linaro.org, xuejiancheng@hisilicon.com, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Jianguo Sun <sunjianguo1@huawei.com>
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_009_362893062.464246952
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_001_1602877470.665710589"
+From: Jianguo Sun <sunjianguo1@huawei.com>
 
---__=_Part_Boundary_001_1602877470.665710589
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+This commit adds support for HiSilicon STB xHCI host controller.
+There are two xHCI host controllers on HiSilicon STB SoCs. Each
+one requires additional configuration before exposing interface
+compliant with xHCI.
 
-PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
-TVQ2MzUxIGlzIGEgbmV3IHBvd2VyIG1hbmFnZW1lbnQgSUMgYW5kIGl0IGlzIHVzZWQgZm9yIG10
-Njc5NyBTb0NzLiBXZQ0KbmVlZCB0byBhZGQgbXQ2MzUxX3JlZ3MgZm9yIHBtaWMgcmVnaXN0ZXIg
-bWFwcGluZyBhbmQgcG1pY19tdDYzNTEgZm9yDQphY2Nlc3NpbmcgcmVnaXN0ZXIuDQoNCi0tLQ0K
-IGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYyB8IDI5ICsrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKykNCg0KZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYyBiL2RyaXZlcnMv
-c29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYw0KaW5kZXggZDAzZTJkNC4uNGNmOTQ5NiAxMDA2
-NDQNCi0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYw0KKysrIGIvZHJp
-dmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQpAQCAtMTQ2LDYgKzE0NiwyMSBAQCBl
-bnVtIGRld19yZWdzIHsNCiAJW1BXUkFQX0RFV19DSVBIRVJfU1dSU1RdID0JMHhiYzI0LA0KIH07
-DQogDQorc3RhdGljIGNvbnN0IHUzMiBtdDYzNTFfcmVnc1tdID0gew0KKwlbUFdSQVBfREVXX0RJ
-T19FTl0gPQkJMHgwMkYyLA0KKwlbUFdSQVBfREVXX1JFQURfVEVTVF0gPQkJMHgwMkY0LA0KKwlb
-UFdSQVBfREVXX1dSSVRFX1RFU1RdID0JMHgwMkY2LA0KKwlbUFdSQVBfREVXX0NSQ19FTl0gPQkJ
-MHgwMkZBLA0KKwlbUFdSQVBfREVXX0NSQ19WQUxdID0JCTB4MDJGQywNCisJW1BXUkFQX0RFV19D
-SVBIRVJfS0VZX1NFTF0gPQkweDAzMDAsDQorCVtQV1JBUF9ERVdfQ0lQSEVSX0lWX1NFTF0gPQkw
-eDAzMDIsDQorCVtQV1JBUF9ERVdfQ0lQSEVSX0VOXSA9CQkweDAzMDQsDQorCVtQV1JBUF9ERVdf
-Q0lQSEVSX1JEWV0gPQkweDAzMDYsDQorCVtQV1JBUF9ERVdfQ0lQSEVSX01PREVdID0JMHgwMzA4
-LA0KKwlbUFdSQVBfREVXX0NJUEhFUl9TV1JTVF0gPQkweDAzMEEsDQorCVtQV1JBUF9ERVdfUkRE
-TVlfTk9dID0JCTB4MDMwQywNCit9Ow0KKw0KIGVudW0gcHdyYXBfcmVncyB7DQogCVBXUkFQX01V
-WF9TRUwsDQogCVBXUkFQX1dSQVBfRU4sDQpAQCAtNjY4LDYgKzY4Myw3IEBAIGVudW0gcHdyYXBf
-cmVncyB7DQogDQogZW51bSBwbWljX3R5cGUgew0KIAlQTUlDX01UNjMyMywNCisJUE1JQ19NVDYz
-NTEsDQogCVBNSUNfTVQ2MzgwLA0KIAlQTUlDX01UNjM5NywNCiB9Ow0KQEAgLTExMjQsNiArMTE0
-MCw3IEBAIHN0YXRpYyBpbnQgcHdyYXBfaW5pdF9jaXBoZXIoc3RydWN0IHBtaWNfd3JhcHBlciAq
-d3JwKQ0KIAkJCSAgICAweDEpOw0KIAkJYnJlYWs7DQogCWNhc2UgUE1JQ19NVDYzMjM6DQorCWNh
-c2UgUE1JQ19NVDYzNTE6DQogCQlwd3JhcF93cml0ZSh3cnAsIHdycC0mZ3Q7c2xhdmUtJmd0O2Rl
-d19yZWdzW1BXUkFQX0RFV19DSVBIRVJfRU5dLA0KIAkJCSAgICAweDEpOw0KIAkJYnJlYWs7DQpA
-QCAtMTQwMCw2ICsxNDE3LDE1IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBwd3JhcF9pbnRlcnJ1cHQo
-aW50IGlycW5vLCB2b2lkICpkZXZfaWQpDQogCS5wd3JhcF93cml0ZSA9IHB3cmFwX3dyaXRlMTYs
-DQogfTsNCiANCitzdGF0aWMgY29uc3Qgc3RydWN0IHB3cmFwX3Nsdl90eXBlIHBtaWNfbXQ2MzUx
-ID0gew0KKwkuZGV3X3JlZ3MgPSBtdDYzNTFfcmVncywNCisJLnR5cGUgPSBQTUlDX01UNjM1MSwN
-CisJLnJlZ21hcCA9ICZhbXA7cHdyYXBfcmVnbWFwX2NvbmZpZzE2LA0KKwkuY2FwcyA9IDAsDQor
-CS5wd3JhcF9yZWFkID0gcHdyYXBfcmVhZDE2LA0KKwkucHdyYXBfd3JpdGUgPSBwd3JhcF93cml0
-ZTE2LA0KK307DQorDQogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgb2Zfc2xhdmVf
-bWF0Y2hfdGJsW10gPSB7DQogCXsNCiAJCS5jb21wYXRpYmxlID0gJnF1b3Q7bWVkaWF0ZWssbXQ2
-MzIzJnF1b3Q7LA0KQEAgLTE0MTQsNiArMTQ0MCw5IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBwd3Jh
-cF9pbnRlcnJ1cHQoaW50IGlycW5vLCB2b2lkICpkZXZfaWQpDQogCQkuY29tcGF0aWJsZSA9ICZx
-dW90O21lZGlhdGVrLG10NjM5NyZxdW90OywNCiAJCS5kYXRhID0gJmFtcDtwbWljX210NjM5NywN
-CiAJfSwgew0KKwkJLmNvbXBhdGlibGUgPSAmcXVvdDttZWRpYXRlayxtdDYzNTEmcXVvdDssDQor
-CQkuZGF0YSA9ICZhbXA7cG1pY19tdDYzNTEsDQorCX0sIHsNCiAJCS8qIHNlbnRpbmVsICovDQog
-CX0NCiB9Ow0KLS0gDQoxLjguMS4xLmRpcnR5DQoNCjwvcHJlPjwhLS10eXBlOnRleHQtLT48IS0t
-ey0tPjxwcmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxpdHkgTm90aWNlDQogKioq
-KioqKioqKioqKioqKioqKioNClRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaW4gdGhpcyBlLW1h
-aWwgbWVzc2FnZSAoaW5jbHVkaW5nIGFueSANCmF0dGFjaG1lbnRzKSBtYXkgYmUgY29uZmlkZW50
-aWFsLCBwcm9wcmlldGFyeSwgcHJpdmlsZWdlZCwgb3Igb3RoZXJ3aXNlDQpleGVtcHQgZnJvbSBk
-aXNjbG9zdXJlIHVuZGVyIGFwcGxpY2FibGUgbGF3cy4gSXQgaXMgaW50ZW5kZWQgdG8gYmUgDQpj
-b252ZXllZCBvbmx5IHRvIHRoZSBkZXNpZ25hdGVkIHJlY2lwaWVudChzKS4gQW55IHVzZSwgZGlz
-c2VtaW5hdGlvbiwgDQpkaXN0cmlidXRpb24sIHByaW50aW5nLCByZXRhaW5pbmcgb3IgY29weWlu
-ZyBvZiB0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGl0cyANCmF0dGFjaG1lbnRzKSBieSB1bmludGVu
-ZGVkIHJlY2lwaWVudChzKSBpcyBzdHJpY3RseSBwcm9oaWJpdGVkIGFuZCBtYXkgDQpiZSB1bmxh
-d2Z1bC4gSWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQgcmVjaXBpZW50IG9mIHRoaXMgZS1tYWls
-LCBvciBiZWxpZXZlDQogDQp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWlsIGluIGVy
-cm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQppbW1lZGlhdGVseSAoYnkgcmVwbHlpbmcg
-dG8gdGhpcyBlLW1haWwpLCBkZWxldGUgYW55IGFuZCBhbGwgY29waWVzIG9mIA0KdGhpcyBlLW1h
-aWwgKGluY2x1ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBzeXN0ZW0sIGFuZCBkbyBu
-b3QNCmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBvdGhlciBwZXJz
-b24uIFRoYW5rDQogeW91ITwvcHJlPjwhLS19LS0+
+Reviewed-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Signed-off-by: Jianguo Sun <sunjianguo1@huawei.com>
+---
+ drivers/usb/host/Kconfig      |   7 +
+ drivers/usb/host/Makefile     |   1 +
+ drivers/usb/host/xhci-histb.c | 410 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 418 insertions(+)
+ create mode 100644 drivers/usb/host/xhci-histb.c
 
---__=_Part_Boundary_001_1602877470.665710589
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
-
-RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQpNVDYzNTEgaXMgYSBu
-ZXcgcG93ZXIgbWFuYWdlbWVudCBJQyBhbmQgaXQgaXMgdXNlZCBmb3IgbXQ2Nzk3IFNvQ3MuIFdl
-DQpuZWVkIHRvIGFkZCBtdDYzNTFfcmVncyBmb3IgcG1pYyByZWdpc3RlciBtYXBwaW5nIGFuZCBw
-bWljX210NjM1MSBmb3INCmFjY2Vzc2luZyByZWdpc3Rlci4NCg0KLS0tDQogZHJpdmVycy9zb2Mv
-bWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jIHwgMjkgKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysNCiAxIGZpbGUgY2hhbmdlZCwgMjkgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsv
-bXRrLXBtaWMtd3JhcC5jDQppbmRleCBkMDNlMmQ0Li40Y2Y5NDk2IDEwMDY0NA0KLS0tIGEvZHJp
-dmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQorKysgYi9kcml2ZXJzL3NvYy9tZWRp
-YXRlay9tdGstcG1pYy13cmFwLmMNCkBAIC0xNDYsNiArMTQ2LDIxIEBAIGVudW0gZGV3X3JlZ3Mg
-ew0KIAlbUFdSQVBfREVXX0NJUEhFUl9TV1JTVF0gPQkweGJjMjQsDQogfTsNCiANCitzdGF0aWMg
-Y29uc3QgdTMyIG10NjM1MV9yZWdzW10gPSB7DQorCVtQV1JBUF9ERVdfRElPX0VOXSA9CQkweDAy
-RjIsDQorCVtQV1JBUF9ERVdfUkVBRF9URVNUXSA9CQkweDAyRjQsDQorCVtQV1JBUF9ERVdfV1JJ
-VEVfVEVTVF0gPQkweDAyRjYsDQorCVtQV1JBUF9ERVdfQ1JDX0VOXSA9CQkweDAyRkEsDQorCVtQ
-V1JBUF9ERVdfQ1JDX1ZBTF0gPQkJMHgwMkZDLA0KKwlbUFdSQVBfREVXX0NJUEhFUl9LRVlfU0VM
-XSA9CTB4MDMwMCwNCisJW1BXUkFQX0RFV19DSVBIRVJfSVZfU0VMXSA9CTB4MDMwMiwNCisJW1BX
-UkFQX0RFV19DSVBIRVJfRU5dID0JCTB4MDMwNCwNCisJW1BXUkFQX0RFV19DSVBIRVJfUkRZXSA9
-CTB4MDMwNiwNCisJW1BXUkFQX0RFV19DSVBIRVJfTU9ERV0gPQkweDAzMDgsDQorCVtQV1JBUF9E
-RVdfQ0lQSEVSX1NXUlNUXSA9CTB4MDMwQSwNCisJW1BXUkFQX0RFV19SRERNWV9OT10gPQkJMHgw
-MzBDLA0KK307DQorDQogZW51bSBwd3JhcF9yZWdzIHsNCiAJUFdSQVBfTVVYX1NFTCwNCiAJUFdS
-QVBfV1JBUF9FTiwNCkBAIC02NjgsNiArNjgzLDcgQEAgZW51bSBwd3JhcF9yZWdzIHsNCiANCiBl
-bnVtIHBtaWNfdHlwZSB7DQogCVBNSUNfTVQ2MzIzLA0KKwlQTUlDX01UNjM1MSwNCiAJUE1JQ19N
-VDYzODAsDQogCVBNSUNfTVQ2Mzk3LA0KIH07DQpAQCAtMTEyNCw2ICsxMTQwLDcgQEAgc3RhdGlj
-IGludCBwd3JhcF9pbml0X2NpcGhlcihzdHJ1Y3QgcG1pY193cmFwcGVyICp3cnApDQogCQkJICAg
-IDB4MSk7DQogCQlicmVhazsNCiAJY2FzZSBQTUlDX01UNjMyMzoNCisJY2FzZSBQTUlDX01UNjM1
-MToNCiAJCXB3cmFwX3dyaXRlKHdycCwgd3JwLT5zbGF2ZS0+ZGV3X3JlZ3NbUFdSQVBfREVXX0NJ
-UEhFUl9FTl0sDQogCQkJICAgIDB4MSk7DQogCQlicmVhazsNCkBAIC0xNDAwLDYgKzE0MTcsMTUg
-QEAgc3RhdGljIGlycXJldHVybl90IHB3cmFwX2ludGVycnVwdChpbnQgaXJxbm8sIHZvaWQgKmRl
-dl9pZCkNCiAJLnB3cmFwX3dyaXRlID0gcHdyYXBfd3JpdGUxNiwNCiB9Ow0KIA0KK3N0YXRpYyBj
-b25zdCBzdHJ1Y3QgcHdyYXBfc2x2X3R5cGUgcG1pY19tdDYzNTEgPSB7DQorCS5kZXdfcmVncyA9
-IG10NjM1MV9yZWdzLA0KKwkudHlwZSA9IFBNSUNfTVQ2MzUxLA0KKwkucmVnbWFwID0gJnB3cmFw
-X3JlZ21hcF9jb25maWcxNiwNCisJLmNhcHMgPSAwLA0KKwkucHdyYXBfcmVhZCA9IHB3cmFwX3Jl
-YWQxNiwNCisJLnB3cmFwX3dyaXRlID0gcHdyYXBfd3JpdGUxNiwNCit9Ow0KKw0KIHN0YXRpYyBj
-b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG9mX3NsYXZlX21hdGNoX3RibFtdID0gew0KIAl7DQog
-CQkuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDYzMjMiLA0KQEAgLTE0MTQsNiArMTQ0MCw5IEBA
-IHN0YXRpYyBpcnFyZXR1cm5fdCBwd3JhcF9pbnRlcnJ1cHQoaW50IGlycW5vLCB2b2lkICpkZXZf
-aWQpDQogCQkuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDYzOTciLA0KIAkJLmRhdGEgPSAmcG1p
-Y19tdDYzOTcsDQogCX0sIHsNCisJCS5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10NjM1MSIsDQor
-CQkuZGF0YSA9ICZwbWljX210NjM1MSwNCisJfSwgew0KIAkJLyogc2VudGluZWwgKi8NCiAJfQ0K
-IH07DQotLSANCjEuOC4xLjEuZGlydHkNCg==
-
---__=_Part_Boundary_001_1602877470.665710589--
-
---__=_Part_Boundary_009_362893062.464246952--
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 5d958da..c813fc4 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -52,6 +52,13 @@ config USB_XHCI_PLATFORM
+ 
+ 	  If unsure, say N.
+ 
++config USB_XHCI_HISTB
++	tristate "xHCI support for HiSilicon STB SoCs"
++	depends on USB_XHCI_PLATFORM && (ARCH_HISI || COMPILE_TEST)
++	help
++	  Say 'Y' to enable the support for the xHCI host controller
++	  found in HiSilicon STB SoCs.
++
+ config USB_XHCI_MTK
+ 	tristate "xHCI support for MediaTek SoCs"
+ 	select MFD_SYSCON
+diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+index 8a8cffe..9b669c9 100644
+--- a/drivers/usb/host/Makefile
++++ b/drivers/usb/host/Makefile
+@@ -74,6 +74,7 @@ obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
+ obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
+ obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
+ obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
++obj-$(CONFIG_USB_XHCI_HISTB)	+= xhci-histb.o
+ obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
+ obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
+ obj-$(CONFIG_USB_SL811_HCD)	+= sl811-hcd.o
+diff --git a/drivers/usb/host/xhci-histb.c b/drivers/usb/host/xhci-histb.c
+new file mode 100644
+index 0000000..27f0016
+--- /dev/null
++++ b/drivers/usb/host/xhci-histb.c
+@@ -0,0 +1,410 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * xHCI host controller driver for HiSilicon STB SoCs
++ *
++ * Copyright (C) 2017-2018 HiSilicon Co., Ltd. http://www.hisilicon.com
++ *
++ * Authors: Jianguo Sun <sunjianguo1@huawei.com>
++ */
++
++#include <linux/clk.h>
++#include <linux/dma-mapping.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/reset.h>
++
++#include "xhci.h"
++
++#define GTXTHRCFG		0xc108
++#define GRXTHRCFG		0xc10c
++#define REG_GUSB2PHYCFG0	0xc200
++#define BIT_UTMI_8_16		BIT(3)
++#define BIT_UTMI_ULPI		BIT(4)
++#define BIT_FREECLK_EXIST	BIT(30)
++
++#define REG_GUSB3PIPECTL0	0xc2c0
++#define USB3_DEEMPHASIS_MASK	GENMASK(2, 1)
++#define USB3_DEEMPHASIS0	BIT(1)
++#define USB3_TX_MARGIN1		BIT(4)
++
++struct xhci_hcd_histb {
++	struct device		*dev;
++	struct usb_hcd		*hcd;
++	void __iomem		*ctrl;
++	struct clk		*bus_clk;
++	struct clk		*utmi_clk;
++	struct clk		*pipe_clk;
++	struct clk		*suspend_clk;
++	struct reset_control	*soft_reset;
++};
++
++static inline struct xhci_hcd_histb *hcd_to_histb(struct usb_hcd *hcd)
++{
++	return dev_get_drvdata(hcd->self.controller);
++}
++
++static int xhci_histb_config(struct xhci_hcd_histb *histb)
++{
++	struct device_node *np = histb->dev->of_node;
++	u32 regval;
++
++	if (of_property_match_string(np, "phys-names", "inno") >= 0) {
++		/* USB2 PHY chose ulpi 8bit interface */
++		regval = readl(histb->ctrl + REG_GUSB2PHYCFG0);
++		regval &= ~BIT_UTMI_ULPI;
++		regval &= ~(BIT_UTMI_8_16);
++		regval &= ~BIT_FREECLK_EXIST;
++		writel(regval, histb->ctrl + REG_GUSB2PHYCFG0);
++	}
++
++	if (of_property_match_string(np, "phys-names", "combo") >= 0) {
++		/*
++		 * write 0x010c0012 to GUSB3PIPECTL0
++		 * GUSB3PIPECTL0[5:3] = 010 : Tx Margin = 900mV ,
++		 * decrease TX voltage
++		 * GUSB3PIPECTL0[2:1] = 01 : Tx Deemphasis = -3.5dB,
++		 * refer to xHCI spec
++		 */
++		regval = readl(histb->ctrl + REG_GUSB3PIPECTL0);
++		regval &= ~USB3_DEEMPHASIS_MASK;
++		regval |= USB3_DEEMPHASIS0;
++		regval |= USB3_TX_MARGIN1;
++		writel(regval, histb->ctrl + REG_GUSB3PIPECTL0);
++	}
++
++	writel(0x23100000, histb->ctrl + GTXTHRCFG);
++	writel(0x23100000, histb->ctrl + GRXTHRCFG);
++
++	return 0;
++}
++
++static int xhci_histb_clks_get(struct xhci_hcd_histb *histb)
++{
++	struct device *dev = histb->dev;
++
++	histb->bus_clk = devm_clk_get(dev, "bus");
++	if (IS_ERR(histb->bus_clk)) {
++		dev_err(dev, "fail to get bus clk\n");
++		return PTR_ERR(histb->bus_clk);
++	}
++
++	histb->utmi_clk = devm_clk_get(dev, "utmi");
++	if (IS_ERR(histb->utmi_clk)) {
++		dev_err(dev, "fail to get utmi clk\n");
++		return PTR_ERR(histb->utmi_clk);
++	}
++
++	histb->pipe_clk = devm_clk_get(dev, "pipe");
++	if (IS_ERR(histb->pipe_clk)) {
++		dev_err(dev, "fail to get pipe clk\n");
++		return PTR_ERR(histb->pipe_clk);
++	}
++
++	histb->suspend_clk = devm_clk_get(dev, "suspend");
++	if (IS_ERR(histb->suspend_clk)) {
++		dev_err(dev, "fail to get suspend clk\n");
++		return PTR_ERR(histb->suspend_clk);
++	}
++
++	return 0;
++}
++
++static int xhci_histb_host_enable(struct xhci_hcd_histb *histb)
++{
++	int ret;
++
++	ret = clk_prepare_enable(histb->bus_clk);
++	if (ret) {
++		dev_err(histb->dev, "failed to enable bus clk\n");
++		return ret;
++	}
++
++	ret = clk_prepare_enable(histb->utmi_clk);
++	if (ret) {
++		dev_err(histb->dev, "failed to enable utmi clk\n");
++		goto err_utmi_clk;
++	}
++
++	ret = clk_prepare_enable(histb->pipe_clk);
++	if (ret) {
++		dev_err(histb->dev, "failed to enable pipe clk\n");
++		goto err_pipe_clk;
++	}
++
++	ret = clk_prepare_enable(histb->suspend_clk);
++	if (ret) {
++		dev_err(histb->dev, "failed to enable suspend clk\n");
++		goto err_suspend_clk;
++	}
++
++	reset_control_deassert(histb->soft_reset);
++
++	return 0;
++
++err_suspend_clk:
++	clk_disable_unprepare(histb->pipe_clk);
++err_pipe_clk:
++	clk_disable_unprepare(histb->utmi_clk);
++err_utmi_clk:
++	clk_disable_unprepare(histb->bus_clk);
++
++	return ret;
++}
++
++static void xhci_histb_host_disable(struct xhci_hcd_histb *histb)
++{
++	reset_control_assert(histb->soft_reset);
++
++	clk_disable_unprepare(histb->suspend_clk);
++	clk_disable_unprepare(histb->pipe_clk);
++	clk_disable_unprepare(histb->utmi_clk);
++	clk_disable_unprepare(histb->bus_clk);
++}
++
++static void xhci_histb_quirks(struct device *dev, struct xhci_hcd *xhci)
++{
++	/*
++	 * As of now platform drivers don't provide MSI support so we ensure
++	 * here that the generic code does not try to make a pci_dev from our
++	 * dev struct in order to setup MSI
++	 */
++	xhci->quirks |= XHCI_PLAT;
++}
++
++/* called during probe() after chip reset completes */
++static int xhci_histb_setup(struct usb_hcd *hcd)
++{
++	struct xhci_hcd_histb *histb = hcd_to_histb(hcd);
++	int ret;
++
++	if (usb_hcd_is_primary_hcd(hcd)) {
++		ret = xhci_histb_config(histb);
++		if (ret)
++			return ret;
++	}
++
++	return xhci_gen_setup(hcd, xhci_histb_quirks);
++}
++
++static const struct xhci_driver_overrides xhci_histb_overrides __initconst = {
++	.reset = xhci_histb_setup,
++};
++
++static struct hc_driver __read_mostly xhci_histb_hc_driver;
++static int xhci_histb_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct xhci_hcd_histb *histb;
++	const struct hc_driver *driver;
++	struct usb_hcd *hcd;
++	struct xhci_hcd *xhci;
++	struct resource *res;
++	int irq;
++	int ret = -ENODEV;
++
++	if (usb_disabled())
++		return -ENODEV;
++
++	driver = &xhci_histb_hc_driver;
++	histb = devm_kzalloc(dev, sizeof(*histb), GFP_KERNEL);
++	if (!histb)
++		return -ENOMEM;
++
++	histb->dev = dev;
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
++		return irq;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	histb->ctrl = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(histb->ctrl))
++		return PTR_ERR(histb->ctrl);
++
++	ret = xhci_histb_clks_get(histb);
++	if (ret)
++		return ret;
++
++	histb->soft_reset = devm_reset_control_get(dev, "soft");
++	if (IS_ERR(histb->soft_reset)) {
++		dev_err(dev, "failed to get soft reset\n");
++		return PTR_ERR(histb->soft_reset);
++	}
++
++	pm_runtime_enable(dev);
++	pm_runtime_get_sync(dev);
++	device_enable_async_suspend(dev);
++
++	/* Initialize dma_mask and coherent_dma_mask to 32-bits */
++	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
++	if (ret)
++		return ret;
++
++	hcd = usb_create_hcd(driver, dev, dev_name(dev));
++	if (!hcd) {
++		ret = -ENOMEM;
++		goto disable_pm;
++	}
++
++	hcd->regs = histb->ctrl;
++	hcd->rsrc_start = res->start;
++	hcd->rsrc_len = resource_size(res);
++
++	histb->hcd = hcd;
++	dev_set_drvdata(hcd->self.controller, histb);
++
++	ret = xhci_histb_host_enable(histb);
++	if (ret)
++		goto put_hcd;
++
++	xhci = hcd_to_xhci(hcd);
++
++	device_wakeup_enable(hcd->self.controller);
++
++	xhci->main_hcd = hcd;
++	xhci->shared_hcd = usb_create_shared_hcd(driver, dev, dev_name(dev),
++						 hcd);
++	if (!xhci->shared_hcd) {
++		ret = -ENOMEM;
++		goto disable_host;
++	}
++
++	if (device_property_read_bool(dev, "usb2-lpm-disable"))
++		xhci->quirks |= XHCI_HW_LPM_DISABLE;
++
++	if (device_property_read_bool(dev, "usb3-lpm-capable"))
++		xhci->quirks |= XHCI_LPM_SUPPORT;
++
++	/* imod_interval is the interrupt moderation value in nanoseconds. */
++	xhci->imod_interval = 40000;
++	device_property_read_u32(dev, "imod-interval-ns",
++				 &xhci->imod_interval);
++
++	ret = usb_add_hcd(hcd, irq, IRQF_SHARED);
++	if (ret)
++		goto put_usb3_hcd;
++
++	if (HCC_MAX_PSA(xhci->hcc_params) >= 4)
++		xhci->shared_hcd->can_do_streams = 1;
++
++	ret = usb_add_hcd(xhci->shared_hcd, irq, IRQF_SHARED);
++	if (ret)
++		goto dealloc_usb2_hcd;
++
++	device_enable_async_suspend(dev);
++	pm_runtime_put_noidle(dev);
++
++	/*
++	 * Prevent runtime pm from being on as default, users should enable
++	 * runtime pm using power/control in sysfs.
++	 */
++	pm_runtime_forbid(dev);
++
++	return 0;
++
++dealloc_usb2_hcd:
++	usb_remove_hcd(hcd);
++put_usb3_hcd:
++	usb_put_hcd(xhci->shared_hcd);
++disable_host:
++	xhci_histb_host_disable(histb);
++put_hcd:
++	usb_put_hcd(hcd);
++disable_pm:
++	pm_runtime_put_sync(dev);
++	pm_runtime_disable(dev);
++
++	return ret;
++}
++
++static int xhci_histb_remove(struct platform_device *dev)
++{
++	struct xhci_hcd_histb *histb = platform_get_drvdata(dev);
++	struct usb_hcd *hcd = histb->hcd;
++	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
++
++	xhci->xhc_state |= XHCI_STATE_REMOVING;
++
++	usb_remove_hcd(xhci->shared_hcd);
++	device_wakeup_disable(&dev->dev);
++
++	usb_remove_hcd(hcd);
++	usb_put_hcd(xhci->shared_hcd);
++
++	xhci_histb_host_disable(histb);
++	usb_put_hcd(hcd);
++	pm_runtime_put_sync(&dev->dev);
++	pm_runtime_disable(&dev->dev);
++
++	return 0;
++}
++
++static int __maybe_unused xhci_histb_suspend(struct device *dev)
++{
++	struct xhci_hcd_histb *histb = dev_get_drvdata(dev);
++	struct usb_hcd *hcd = histb->hcd;
++	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
++	int ret;
++
++	ret = xhci_suspend(xhci, device_may_wakeup(dev));
++
++	if (!device_may_wakeup(dev))
++		xhci_histb_host_disable(histb);
++
++	return ret;
++}
++
++static int __maybe_unused xhci_histb_resume(struct device *dev)
++{
++	struct xhci_hcd_histb *histb = dev_get_drvdata(dev);
++	struct usb_hcd *hcd = histb->hcd;
++	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
++
++	if (!device_may_wakeup(dev))
++		xhci_histb_host_enable(histb);
++
++	return xhci_resume(xhci, 0);
++}
++
++static const struct dev_pm_ops xhci_histb_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(xhci_histb_suspend, xhci_histb_resume)
++};
++#define DEV_PM_OPS (IS_ENABLED(CONFIG_PM) ? &xhci_histb_pm_ops : NULL)
++
++#ifdef CONFIG_OF
++static const struct of_device_id histb_xhci_of_match[] = {
++	{ .compatible = "hisilicon,hi3798cv200-xhci"},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, histb_xhci_of_match);
++#endif
++
++static struct platform_driver histb_xhci_driver = {
++	.probe	= xhci_histb_probe,
++	.remove	= xhci_histb_remove,
++	.driver	= {
++		.name = "xhci-histb",
++		.pm = DEV_PM_OPS,
++		.of_match_table = of_match_ptr(histb_xhci_of_match),
++	},
++};
++MODULE_ALIAS("platform:xhci-histb");
++
++static int __init xhci_histb_init(void)
++{
++	xhci_init_driver(&xhci_histb_hc_driver, &xhci_histb_overrides);
++	return platform_driver_register(&histb_xhci_driver);
++}
++module_init(xhci_histb_init);
++
++static void __exit xhci_histb_exit(void)
++{
++	platform_driver_unregister(&histb_xhci_driver);
++}
++module_exit(xhci_histb_exit);
++
++MODULE_DESCRIPTION("HiSilicon STB xHCI Host Controller Driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
