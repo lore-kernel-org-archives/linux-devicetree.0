@@ -1,143 +1,102 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v2 05/27] dts: bindings: Document device tree binding for
- CATU
-Date: Mon, 14 May 2018 08:42:27 -0600
-Message-ID: <20180514144227.GA23293@xps15>
-References: <1525165857-11096-1-git-send-email-suzuki.poulose@arm.com>
- <1525165857-11096-6-git-send-email-suzuki.poulose@arm.com>
- <20180501131057.GA15706@rob-hp-laptop>
- <CANLsYkwzD0gpAo9be5ii4=+tn8GOL6psHcRA24=EMq=MRAzBoQ@mail.gmail.com>
- <8725a726-0733-b0bc-fcf8-4e22399c0e22@arm.com>
- <CAL_JsqJsZDPHxWA5tax4_ecBtR7Yvhi+DzxQkyh4bpnu1Za0yg@mail.gmail.com>
+From: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] ARM: PWM: add allwinner sun8i pwm support.
+Date: Mon, 14 May 2018 22:45:44 +0800
+Message-ID: <CAJeuY7-Dz1u9J8GMu=OdzJ2cJUnE3wEobJoQz6RV-ibjBjoW4A@mail.gmail.com>
+References: <20180225135308.GA14561@arx-s1> <20180226090038.etk5q4pd4rl5dvf6@flea.lan>
+Reply-To: hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJsZDPHxWA5tax4_ecBtR7Yvhi+DzxQkyh4bpnu1Za0yg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Suzuki K Poulose <Suzuki.Poulose@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Leach <mike.leach@linaro.org>, Robert Walker <robert.walker@arm.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Frank Rowand <frowand.list@gmail.com>, John Horley <john.horley@arm.com>, devicetree@vger.kernel.org, Mathieu Poirier <mathieu.poirier@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDKITZOARQMBBGOC43LQKGQE6SH62YQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180226090038.etk5q4pd4rl5dvf6-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Claudiu Beznea <Claudiu.Beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 11, 2018 at 11:05:56AM -0500, Rob Herring wrote:
-> On Tue, May 8, 2018 at 10:40 AM, Suzuki K Poulose
-> <Suzuki.Poulose@arm.com> wrote:
-> >
-> >
-> > Rob, Mathieu,
-> >
-> >
-> > On 03/05/18 18:42, Mathieu Poirier wrote:
-> >>
-> >> On 1 May 2018 at 07:10, Rob Herring <robh@kernel.org> wrote:
-> >>>
-> >>> On Tue, May 01, 2018 at 10:10:35AM +0100, Suzuki K Poulose wrote:
-> >>>>
-> >>>> Document CATU device-tree bindings. CATU augments the TMC-ETR
-> >>>> by providing an improved Scatter Gather mechanism for streaming
-> >>>> trace data to non-contiguous system RAM pages.
-> >>>>
-> >>>> Cc: devicetree@vger.kernel.org
-> >>>> Cc: frowand.list@gmail.com
-> >>>> Cc: Rob Herring <robh@kernel.org>
-> >>>> Cc: Mark Rutland <mark.rutland@arm.com>
-> >>>> Cc: Mathieu Poirier <mathieu.poirier@arm.com>
-> >>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> >>>> ---
-> >>>>   .../devicetree/bindings/arm/coresight.txt          | 52
-> >>>> ++++++++++++++++++++++
-> >>>>   1 file changed, 52 insertions(+)
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt
-> >>>> b/Documentation/devicetree/bindings/arm/coresight.txt
-> >>>> index 15ac8e8..cdd84d0 100644
-> >>>> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> >>>> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> >>>> @@ -39,6 +39,8 @@ its hardware characteristcs.
-> >>>>
-> >>>>                - System Trace Macrocell:
-> >>>>                        "arm,coresight-stm", "arm,primecell"; [1]
-> >>>> +             - Coresight Address Translation Unit (CATU)
-> >>>> +                     "arm, coresight-catu", "arm,primecell";
-> >>>
-> >>>
-> >>> spurious space               ^
-> >
-> >
-> > Thanks for spotting, will fix it.
-> >
-> >>>
-> >>>>
-> >>>>        * reg: physical base address and length of the register
-> >>>>          set(s) of the component.
-> >>>> @@ -86,6 +88,9 @@ its hardware characteristcs.
-> >>>>        * arm,buffer-size: size of contiguous buffer space for TMC ETR
-> >>>>         (embedded trace router)
-> >>>>
-> >>>> +* Optional property for CATU :
-> >>>> +     * interrupts : Exactly one SPI may be listed for reporting the
-> >>>> address
-> >>>> +       error
-> >>>
-> >>>
-> >>> Somewhere you need to define the ports for the CATU.
-> >
-> >
-> > The ports are defined common to all the coresight components. Would you
-> > like it to be added just for the CATU ?
-> 
-> Yeah, that's probably how we got into this problem with the port
-> numbering in the first place.
-> 
-> 
-> >>>>   Example:
-> >>>>
-> >>>> @@ -118,6 +123,35 @@ Example:
-> >>>>                };
-> >>>>        };
-> >>>>
-> >>>> +     etr@20070000 {
-> >>>> +             compatible = "arm,coresight-tmc", "arm,primecell";
-> >>>> +             reg = <0 0x20070000 0 0x1000>;
-> >>>> +
-> >>>> +                     /* input port */
-> >>>> +                     port@0 {
-> >>>> +                             reg =  <0>;
-> >>>> +                             etr_in_port: endpoint {
-> >>>> +                                     slave-mode;
-> >>>> +                                     remote-endpoint =
-> >>>> <&replicator2_out_port0>;
-> >>>> +                             };
-> >>>> +                     };
-> >>>> +
-> >>>> +                     /* CATU link represented by output port */
-> >>>> +                     port@1 {
-> >>>> +                             reg = <0>;
-> >>>
-> >>>
-> >>> While common in the Coresight bindings, having unit-address and reg not
-> >>> match is an error. Mathieu and I discussed this a bit as dtc now warns
-> >>> on these.
-> >>>
-> >>> Either reg should be 1 here, or 'ports' needs to be split into input and
-> >>> output ports. My preference would be the former, but Mathieu objected to
-> >>> this not reflecting the the h/w numbering.
-> >>
-> >>
-> >> Suzuki, as we discuss this is related to your work on revamping CS
-> >> bindings for ACPI.  Until that gets done and to move forward with this
-> >> set I suggest you abide to Rob's request.
-> >
-> >
-> > Ok, I can change it to <1>, as we don't expect any other output port for an
-> > ETR.
-> 
-> Better let Mathieu confirm he's okay with the first option because he
-> wasn't okay with changing the port reg when we discussed. But maybe
-> that was just on existing things like TPIU.
+2018-02-26 17:00 GMT+08:00 Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>:
+> Hi,
+>
+> Thanks for respinning this serie. It looks mostly good, but you still
+> have a quite significant number of checkpatch (--strict) warnings that
+> you should address.
 
-I'm good with this one as it is a new component and doesn't change anything
-that people could be relying on.
+Thanks for reviews :) ,i'm sorry for that, it will be fixed next time.
+and, besides, in what situation were the checkpatch warning can be ignore=
+=EF=BC=9F
 
-> 
-> Rob
+>
+> On Sun, Feb 25, 2018 at 09:53:08PM +0800, hao_zhang wrote:
+>> +#define CAPTURE_IRQ_ENABLE_REG       0x0010
+>> +#define CFIE(ch)     BIT(ch << 1 + 1)
+>> +#define CRIE(ch)     BIT(ch << 1)
+>
+> You should also put your argument between parentheses here (and in all
+> your other macros).
+
+Do you mean like this ?
+#define CFIE(ch)     BIT((ch) << 1 + 1)
+#define CRIE(ch)     BIT((ch) << 1)
+
+>
+>> +static const u16 div_m_table[] =3D {
+>> +     1,
+>> +     2,
+>> +     4,
+>> +     8,
+>> +     16,
+>> +     32,
+>> +     64,
+>> +     128,
+>> +     256
+>> +};
+>
+> If this is just a power of two, you can use either the power of two /
+> ilog2 to switch back and forth, instead of using that table.
+
+I think using table is more explicit and extended...
+
+>
+>> +static int sun8i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+>> +             struct pwm_state *state)
+>> +{
+>> +     int ret;
+>> +     struct sun8i_pwm_chip *sun8i_pwm =3D to_sun8i_pwm_chip(chip);
+>> +     struct pwm_state cstate;
+>> +
+>> +     pwm_get_state(pwm, &cstate);
+>> +     if (!cstate.enabled) {
+>> +             ret =3D clk_prepare_enable(sun8i_pwm->clk);
+>> +             if (ret) {
+>> +                     dev_err(chip->dev, "Failed to enable PWM clock\n")=
+;
+>> +                     return ret;
+>> +             }
+>> +     }
+>> +
+>> +     spin_lock(&sun8i_pwm->ctrl_lock);
+>
+> What do you need that spinlock for? Can you use a mutex instead?
+It should be remove.
+>
+> Thanks!
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin (formerly Free Electrons)
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
