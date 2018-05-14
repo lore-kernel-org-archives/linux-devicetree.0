@@ -1,66 +1,103 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 03/21] clk: sunxi-ng: Enable DE2_CCU for
- Allwinner 64-bit SoCs
-Date: Mon, 14 May 2018 09:43:51 -0700
-Message-ID: <CAGb2v64tGLyYTG63VvHiXfhif0wiDCNKoBKbjEs+Jm5-6CNxXw@mail.gmail.com>
-References: <20180430114058.5061-1-jagan@amarulasolutions.com>
- <20180430114058.5061-4-jagan@amarulasolutions.com> <CAGb2v66MKooAAroCzYdsXZDY0Oh66Dydpy59xj80QfiY+5mz_A@mail.gmail.com>
- <CAMty3ZAOVg6EZoMi=LRuKEcrnDM_tzYfK1WnBN-_d-pmjNS6Nw@mail.gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 3/3] arm64: dts: renesas: draak: Describe HDMI input
+Date: Mon, 14 May 2018 19:52:07 +0300
+Message-ID: <3200357.ZFfGXgsVol@avalon>
+References: <1526032802-14376-1-git-send-email-jacopo+renesas@jmondi.org> <26780153.JLo9OE30iv@avalon> <20180514094900.GF30519@bigcity.dyn.berto.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBX7Z43LQKGQE6JXMFQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAMty3ZAOVg6EZoMi=LRuKEcrnDM_tzYfK1WnBN-_d-pmjNS6Nw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180514094900.GF30519@bigcity.dyn.berto.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, horms@verge.net.au, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 14, 2018 at 1:20 AM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
-> On Tue, May 1, 2018 at 9:53 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->> On Mon, Apr 30, 2018 at 7:40 PM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
->>> Allwinner 64-bit SoC like H5/A64 has DE2 CCU so enable them
->>> as default.
->>>
->>> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->>> ---
->>>  drivers/clk/sunxi-ng/Kconfig | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
->>> index 79dfd296c3d1..1fffd3bf6ff3 100644
->>> --- a/drivers/clk/sunxi-ng/Kconfig
->>> +++ b/drivers/clk/sunxi-ng/Kconfig
->>> @@ -58,6 +58,8 @@ config SUN8I_V3S_CCU
->>>
->>>  config SUN8I_DE2_CCU
->>>         bool "Support for the Allwinner SoCs DE2 CCU"
->>> +       default ARM64 && ARCH_SUNXI
->>> +       depends on (DRM_SUN4I && (ARM64 && ARCH_SUNXI)) || COMPILE_TEST
->>
->> There is no reason to depend on DRM_SUN4I. There is no compile dependency.
->
-> Since this CCU is for DE2 I've make DRM_SUN4I for that matter, any problem?
+Hi Niklas,
 
-Users may very well be just using simplefb, but with all the clock drivers
-enabled. That is a valid, if very limited, use case. So again, you should
-not limit this driver based on DRM_SUN4I. There is no compile dependency.
+On Monday, 14 May 2018 12:49:00 EEST Niklas S=F6derlund wrote:
+> On 2018-05-14 05:49:41 +0300, Laurent Pinchart wrote:
+>=20
+> [snip]
+>=20
+> >>> +&vin4 {
+> >>> +	pinctrl-0 =3D <&vin4_pins>;
+> >>> +	pinctrl-names =3D "default";
+> >>> +
+> >>> +	status =3D "okay";
+> >>> +
+> >>> +	ports {
+> >>> +		#address-cells =3D <1>;
+> >>> +		#size-cells =3D <0>;
+> >>> +
+> >>> +		port@0 {
+> >>> +			reg =3D <0>;
+> >>> +			vin4_in: endpoint {
+> >>> +				hsync-active =3D <0>;
+> >>> +				vsync-active =3D <0>;
+> >>=20
+> >> Comparing this to the Gen2 bindings some properties are missing,
+> >>=20
+> >> bus-width =3D <24>;
+> >> pclk-sample =3D <1>;
+> >> data-active =3D <1>;
+> >>=20
+> >> This is not a big deal as the VIN driver don't use these properties so
+> >> no functional change should come of this but still a difference.
+> >=20
+> > I think the VIN DT bindings should be updated to explicitly list the
+> > endpoint properties that are mandatory, optional, or not allowed.
+>=20
+> I think it's documented as it reference video-interfaces.txt which lists
+> all these properties as optional. And in deed they are all optional.
 
->
->>
->> Also, this is needed on SUN8I as well, pretty much anything with DE 2.0.
->> So you shouldn't limit it to ARM64. That pretty much breaks things for
->> people with A83T's or H3's. In fact you should enable it by default for
->> these as well.
->
-> True, I've skipped SUN8I since this series for A64.
+I don't think that's good enough. They're all listed as optional in video-
+interfaces.txt as the generic documentation can't know whether a particular=
+=20
+device will require a particular property or not. It's the responsibility o=
+f=20
+device DT bindings to refine the bindings description. The VIN DT bindings=
+=20
+should explicitly list the properties that apply to the VIN and tell whethe=
+r=20
+they're optional or mandatory for the VIN. For optional properties, the=20
+default behaviour when the property is not specified should be documented t=
+oo.
 
-And yet you are breaking existing users, which is a big no-no.
+=46or instance, does VIN support selecting which pixel clock edge to sample=
+ data=20
+on ? If so the pclk-sample property should listed as either mandatory or=20
+optional with a documented default, even if not used by the driver today.
 
-ChenYu
+> If the VIN driver makes use of all the optional ones is another matter. H=
+ow
+> do we know that the remote subdevice is not looking at its remote
+> endpoint for bus parameters not considered by the rcar-vin driver?
+
+No driver should parse properties of remote nodes, as those properties are =
+to=20
+be interpreted in the context of the remote node's DT bindings, which the=20
+driver doesn't know about. Parsing OF graph properties (ports and endpoints=
+)=20
+is an exception, as by connecting a remote node to the local node with OF=20
+graph properties you imply that the remote node uses OF graph DT bindings, =
+so=20
+those properties (and only those properties) can be parsed.
+
+> The thing is that the rcar-vin driver only looks at the remote endpoint
+> for these properties and ignores the on its local endpoint. Maybe some
+> v4l2 framework change is needed here to make sure the bus properties are
+> the same on both endpoints of a link. But I fear such a change would
+> break a lot of stuff.
+
+Properties are specified on both endpoints to account for components such a=
+s=20
+inverter gates between the two devices. They can thus be different on the t=
+wo=20
+sides, that's perfectly valid. The VIN driver should parse its local=20
+properties, not the remote properties.
+
+=2D-=20
+Regards,
+
+Laurent Pinchart
