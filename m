@@ -1,35 +1,118 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v4 5/6] bus: fsl-mc: supoprt dma configure for devices on
-	fsl-mc bus
-Date: Mon, 14 May 2018 13:24:48 +0200
-Message-ID: <20180514112448.GA26428@kroah.com>
-References: <1524824826-29473-1-git-send-email-nipun.gupta@nxp.com>
-	<1525069641-8523-1-git-send-email-nipun.gupta@nxp.com>
-	<1525069641-8523-6-git-send-email-nipun.gupta@nxp.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH 00/12] introduce support for early platform drivers
+Date: Mon, 14 May 2018 13:38:16 +0200
+Message-ID: <CAMRc=McDNYQ5uk8EyRkDf8eh9q7tyF=t7PcUd6DBLqXcseJ3AQ@mail.gmail.com>
+References: <20180511162028.20616-1-brgl@bgdev.pl> <CAL_JsqL3CWFSpKEGoGwQDxCQ04g4uT1hiDTxXzjz4XTjPbfsoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1525069641-8523-6-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqL3CWFSpKEGoGwQDxCQ04g4uT1hiDTxXzjz4XTjPbfsoQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Peter Rosin <peda@axentia.se>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 30, 2018 at 11:57:20AM +0530, Nipun Gupta wrote:
-> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-> ---
+2018-05-11 22:13 GMT+02:00 Rob Herring <robh+dt@kernel.org>:
+> On Fri, May 11, 2018 at 11:20 AM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>> This series is a follow-up to the RFC[1] posted a couple days ago.
+>>
+>> NOTE: this series applies on top of my recent patches[2] that move the previous
+>> implementation of early platform devices to arch/sh.
+>>
+>> Problem:
+>>
+>> Certain class of devices, such as timers, certain clock drivers and irq chip
+>> drivers need to be probed early in the boot sequence. The currently preferred
+>> approach is using one of the OF_DECLARE() macros. This however does not create
+>> a platform device which has many drawbacks - such as not being able to use
+>> devres routines, dev_ log functions or no way of deferring the init OF function
+>> if some other resources are missing.
+>
+> I skimmed though this and it doesn't look horrible (how's that for
+> positive feedback? ;) ). But before going into the details, I think
+> first there needs to be agreement this is the right direction.
+>
+> The question does remain though as to whether this class of devices
+> should be platform drivers. They can't be modules. They can't be
+> hotplugged. Can they be runtime-pm enabled? So the advantage is ...
+>
 
-I can't take patches without any changelog text at all, sorry.  Please
-fix up and resend.
+The main (but not the only) advantage for drivers that can both be
+platform drivers and OF_DECLARE drivers is that we get a single entry
+point and can reuse code without resorting to checking if (!dev). It
+results in more consistent code base. Another big advantage is
+consolidation of device tree and machine code for SoC drivers used in
+different boards of which some are still using board files and others
+are defined in DT (see: DaVinci).
 
-greg k-h
+> I assume that the clock maintainers had some reason to move clocks to
+> be platform drivers. It's just not clear to me what that was.
+>
+>> For drivers that use both platform drivers and OF_DECLARE the situation is even
+>> more complicated as the code needs to take into account that there can possibly
+>> be no struct device present. For a specific use case that we're having problems
+>> with, please refer to the recent DaVinci common-clock conversion patches and
+>> the nasty workaround that this problem implies[3].
+>
+> So devm_kzalloc will work with this solution? Why did we need
+> devm_kzalloc in the first place? The clocks can never be removed and
+> cleaning up on error paths is kind of pointless. The system would be
+> hosed, right?
+>
+
+It depends - not all clocks are necessary for system to boot.
+
+>> We also used to have an early platform drivers implementation but they were not
+>> integrated with the linux device model at all - they merely used the same data
+>> structures. The users could not use devres, defer probe and the early devices
+>> never became actual platform devices later on.
+>>
+>> Proposed solution:
+>>
+>> This series aims at solving this problem by (re-)introducing the concept of
+>> early platform drivers and devices - this time however in a way that seamlessly
+>> integrates with the existing platform drivers and also offers device-tree
+>> support.
+>>
+>> The idea is to provide a way for users to probe devices early, while already
+>> being able to use devres, devices resources and properties and also deferred
+>> probing.
+>>
+>> New structures are introduced: the early platform driver contains the
+>> early_probe callback which has the same signature as regular platform_device
+>> probe. This callback is called early on. The user can have both the early and
+>> regular probe speficied or only one of them and they both receive the same
+>> platform device object as argument. Any device data allocated early will be
+>> carried over to the normal probe.
+>>
+>> The architecture code is responsible for calling early_platform_start() in
+>> which the early drivers will be registered and devices populated from DT.
+>
+> Can we really do this in one spot for different devices (clk, timers,
+> irq). The sequence is all very carefully crafted. Platform specific
+> hooks is another thing to consider.
+>
+
+This is why I added support for early probe deferral - so that we can
+stop caring for the order as long as the drivers are aware of other
+resources they need and we call early_platform_start() the moment the
+earliest of the early devices is needed.
+
+>> Once the device and kobject mechanisms are ready, all early drivers and devices
+>> will be converted into real platform drivers and devices. Also: if any of the
+>> early platform registration functions will be called once early initialization
+>> is done, these functions will work like regular platform_device/driver ones.
+>
+> This could leave devices in a weird state. They've successfully probed
+> early, but then are on the deferred list for normal probe for example.
+>
+
+It's not really a weird state - once we're past the 'early' stage, the
+drivers' "earlyness" no longer plays any role. An early deferred
+device wouldn't be any different from other deferred devices. It's
+possible that we enabled some crucial resources in the early stage and
+then failed to fully probe the device later. I don't see a problem
+with that.
+
+Best regards,
+Bartosz Golaszewski
