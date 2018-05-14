@@ -1,68 +1,94 @@
-From: Bastian Stender <bst@pengutronix.de>
-Subject: Re: [PATCH 1/3] thermal: imx: remove cpufreq cooling registration
-Date: Mon, 14 May 2018 11:18:12 +0200
-Message-ID: <1c485c97-f667-7cbd-a6a0-bc74d8aa0918@pengutronix.de>
-References: <1526285359-17978-1-git-send-email-Anson.Huang@nxp.com>
- <5a449fc0-4d3e-c7c7-0e9a-43efb4b909cf@pengutronix.de>
- <AM3PR04MB1315B6320421800346313075F59C0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings/display/bridge: sii902x: add optional
+ power supplies
+Date: Mon, 14 May 2018 09:22:16 +0000
+Message-ID: <7fe8e766-56f5-38a3-b4dd-b44d4a5bdcf8@st.com>
+References: <20180425075314.19137-1-philippe.cornu@st.com>
+ <1559016.ZjzeSVB84W@avalon> <20180425171123.xhyoay3nu463btoq@rob-hp-laptop>
+ <3518575.OAoTTXDygq@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM3PR04MB1315B6320421800346313075F59C0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <3518575.OAoTTXDygq@avalon>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-ID: <E3FA63A0D7F76045BDE4D3964FB1FCFF@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Yannick FERTRE <yannick.fertre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/14/2018 11:10 AM, Anson Huang wrote:
->> -----Original Message-----
->> From: Bastian Stender [mailto:bst@pengutronix.de]
->> Sent: Monday, May 14, 2018 4:37 PM
->> To: Anson Huang <anson.huang@nxp.com>; shawnguo@kernel.org;
->> s.hauer@pengutronix.de; kernel@pengutronix.de; Fabio Estevam
->> <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
->> rjw@rjwysocki.net; viresh.kumar@linaro.org; rui.zhang@intel.com;
->> edubezval@gmail.com
->> Cc: devicetree@vger.kernel.org; linux-pm@vger.kernel.org; dl-linux-imx
->> <linux-imx@nxp.com>; linux-arm-kernel@lists.infradead.org;
->> linux-kernel@vger.kernel.org
->> Subject: Re: [PATCH 1/3] thermal: imx: remove cpufreq cooling registration
->>
->> Hi,
->>
->> On 05/14/2018 10:09 AM, Anson Huang wrote:
->>> This patch removes cpufreq cooling registration in thermal .probe
->>> function, cpufreq cooling should be done in cpufreq driver when it is
->>> ready.
->>>
->>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
->>
->> It seems you are trying to achieve something similar to a patch I sent a couple
->> of month ago. Unfortunately I did not have the time to rework it yet:
->>
->>
->> https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatch
->> work.kernel.org%2Fpatch%2F10059085%2F&data=02%7C01%7Canson.huang
->> %40nxp.com%7C179da3635cab4a14deef08d5b975ecb6%7C686ea1d3bc2b4c6f
->> a92cd99c5c301635%7C0%7C0%7C636618838508978629&sdata=BcQ9tc%2BE
->> CZ%2Fk4AsZFxshgmvSsPg7eRN0ASzP8LO8yBI%3D&reserved=0
->>
->> Some of the comments might apply here too.
-> 
-> Ah, I did NOT notice this thread, so how to proceed, will you 
-> continue to finish your patch? If yes, then you can just ignore/skip
-> my patch, thanks.
-Yes, I will revisit the patch in a couple of weeks. It would be nice to
-get your feedback then.
-
-Regards,
-Bastian	
-
--- 
-Pengutronix e.K.
-Industrial Linux Solutions
-http://www.pengutronix.de/
-Peiner Str. 6-8, 31137 Hildesheim, Germany
-Amtsgericht Hildesheim, HRA 2686
+SGkgUm9iICYgTGF1cmVudCA6KQ0KDQpPbiAwNC8yNi8yMDE4IDEyOjA1IEFNLCBMYXVyZW50IFBp
+bmNoYXJ0IHdyb3RlOg0KPiBIaSBSb2IsDQo+IA0KPiBPbiBXZWRuZXNkYXksIDI1IEFwcmlsIDIw
+MTggMjA6MTE6MjMgRUVTVCBSb2IgSGVycmluZyB3cm90ZToNCj4+IE9uIFdlZCwgQXByIDI1LCAy
+MDE4IGF0IDA0OjE3OjI1UE0gKzAzMDAsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6DQo+Pj4gT24g
+V2VkbmVzZGF5LCAyNSBBcHJpbCAyMDE4IDE1OjIwOjA0IEVFU1QgUGhpbGlwcGUgQ09STlUgd3Jv
+dGU6DQo+Pj4+IE9uIDA0LzI1LzIwMTggMTE6MDEgQU0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6
+DQo+Pj4+PiBPbiBXZWRuZXNkYXksIDI1IEFwcmlsIDIwMTggMTA6NTM6MTMgRUVTVCBQaGlsaXBw
+ZSBDb3JudSB3cm90ZToNCj4+Pj4+PiBBZGQgb3B0aW9uYWwgcG93ZXIgc3VwcGxpZXMgdXNpbmcg
+dGhlIGRlc2NyaXB0aW9uIGZvdW5kIGluDQo+Pj4+Pj4gIlNpSTkwMjJBL1NpSTkwMjRBIEhETUkg
+VHJhbnNtaXR0ZXIgRGF0YSBTaGVldCAoQXVndXN0IDIwMTYpIi4NCj4+Pj4+Pg0KPj4+Pj4+IFRo
+ZXJlIGlzIGEgc2luZ2xlIDF2MiBzdXBwbHkgdm9sdGFnZSBuYW1lZCB2Y2MxMiBmcm9tIHdoaWNo
+IGN2Y2MxMg0KPj4+Pj4+IChkaWdpdGFsIGNvcmUpIGFuZCBhdmNjMTIgKFRNRFMgYW5hbG9nKSBh
+cmUgZGVyaXZlZCBiZWNhdXNlIGFjY29yZGluZw0KPj4+Pj4+IHRvIHRoaXMgZGF0YSBzaGVldDoN
+Cj4+Pj4+PiAiY3ZjYzEyIGFuZCBhdmNjMTIgY2FuIGJlIGRlcml2ZWQgZnJvbSB0aGUgc2FtZSBw
+b3dlciBzb3VyY2UiDQo+Pj4+Pg0KPj4+Pj4gU2hvdWxkbid0IHRoZSBwb3dlciBzdXBwbGllcyBi
+ZSBtYW5kYXRvcnksIGFzIGV4cGxhaW5lZCBieSBNYXJrIGluDQo+Pj4+PiBodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxOC1BcHJpbC8xNzI0MDAuaHRt
+bA0KPj4+Pj4gPw0KPj4+Pg0KPj4+PiBMYXVyZW50LA0KPj4+PiBNYW55IHRoYW5rcyBMYXVyZW50
+IGZvciB5b3VyIGNvbW1lbnQsIEkgdW5kZXJzdG9vZCB0aGUgbWVyZ2Ugb2YgdGhlIHR3bw0KPj4+
+PiAxdjIgcG93ZXIgc3VwcGxpZXMgYnV0IG1pc3NlZCB0aGUgIm1hbmRhdG9yeSIgcGFydC4uLiBt
+YXliZSBiZWNhdXNlIHRoaXMNCj4+Pj4gcGF0Y2ggKHdpdGggb3B0aW9uYWwgcG93ZXIgc3VwcGxp
+ZXMpIGFscmVhZHkgZ290IHRoZSByZXZpZXdlZC1ieSBmcm9tDQo+Pj4+IFJvYiwgSSB0aG91Z2h0
+IHRoZSBkaXNjdXNzaW9uIHRocmVhZCB5b3UgcG9pbnRlZCBvdXQgd2FzIGFwcGxpY2FibGUNCj4+
+Pj4gIm9ubHkiIHRvIHRvdGFsbHkgbmV3IGRyaXZlciBkb2N1bWVudGF0aW9uLg0KPj4+Pg0KPj4+
+PiBTbywgb24gbXkgc2lkZSwgYXMgYSAibmV3IHVzZXIiIG9mIHNpaTkwMnggSUMsIG5vIHByb2Js
+ZW0gdG8gcHV0IHRoZXNlDQo+Pj4+IHBvd2VyIHN1cHBsaWVzIGFzIG1hbmRhdG9yeSBpbnN0ZWFk
+IG9mIG9wdGlvbmFsIHByb3BlcnRpZXMgYnV0IEkgd291bGQNCj4+Pj4gbGlrZSB0byBiZSBzdXJl
+IHRoaXMgaXMgYXBwbGljYWJsZSB0byBib3RoIG9sZCBhbmQgbmV3IGJpbmRpbmdzIGRvYyA6ICkN
+Cj4+Pg0KPj4+IFdlIG9idmlvdXNseSBuZWVkIHRvIHJldGFpbiBiYWNrd2FyZCBjb21wYXRpYmls
+aXR5LCBzbyBvbiB0aGUgZHJpdmVyIHNpZGUNCj4+PiB5b3UgbmVlZCB0byB0cmVhdCB0aG9zZSBw
+b3dlciBzdXBwbGllcyBhcyBvcHRpb25hbC4gRnJvbSBhIERUIGJpbmRpbmdzDQo+Pj4gcG9pbnQg
+b2YgdmlldywgaG93ZXZlciwgSSB0aGluayB0aGV5IHNob3VsZCBiZSBtYW5kYXRvcnkgZm9yIG5l
+dyBEVC4NCj4+DQo+PiBXZSBkb24ndCByZWFsbHkgaGF2ZSBhIHdheSB0byBkZXNjcmliZSB0aGVz
+ZSAzIGNvbmRpdGlvbnMgKHJlcXVpcmVkIGZvcg0KPj4gYWxsLCBvcHRpb25hbCBmb3IgYWxsLCBh
+bmQgcmVxdWlyZWQgZm9yIG5ldykuIFNvIGdlbmVyYWxseSB3ZSBtYWtlDQo+PiBhZGRpdGlvbnMg
+b3B0aW9uYWwuIFRoZSBleGNlcHRpb24gc29tZXRpbWVzIGlzIGlmIHdlIHVwZGF0ZSBhbGwgdGhl
+IGR0cw0KPj4gZmlsZXMuDQo+IA0KPiBDYW4ndCB3ZSBqdXN0IG1ha2UgaXQgbWFuZGF0b3J5IGlu
+IHRoZSBiaW5kaW5ncywgYXMgbG9uZyBhcyB3ZSB0cmVhdCBpdCBhcw0KPiBvcHRpb25hbCBpbiBk
+cml2ZXJzID8NCj4gDQoNCkhvdyB0byBwcm9ncmVzcyBvbiB0aGlzIHBhdGNoPyBEbyB5b3UgaGF2
+ZSBhbnkgc3VnZ2VzdGlvbnM/DQoNCk1hbnkgdGhhbmtzIGZvciB5b3VyIGhlbHAsDQpQaGlsaXBw
+ZSA6LSkNCg0KPj4+PiBSb2IsDQo+Pj4+IGNvdWxkIHlvdSBwbGVhc2UgY29uZmlybSB0aGVzZSBw
+b3dlciBzdXBwbHkgcHJvcGVydGllcyBzaG91bGQgYmUNCj4+Pj4gIm1hbmRhdG9yeSI/IGlmIHll
+cywgc2hvdWxkIHdlIHRoZW4gbW9kaWZ5IG90aGVyIG9wdGlvbmFsIHByb3BlcnRpZXMgbGlrZQ0K
+Pj4+PiB0aGUgcmVzZXQtZ3Bpb3MgdG9vIGluIHRoZSBmdXR1cmU/DQo+Pj4NCj4+PiBUaGUgR1BJ
+T3MgcHJvcGVydGllcyBhcmUgZGlmZmVyZW50IGluIG15IG9waW5pb24sIGFzIHRoZXJlJ3Mgbm8N
+Cj4+PiByZXF1aXJlbWVudCB0byBjb25uZWN0IGZvciBpbnN0YW5jZSB0aGUgcmVzZXQgcGluIHRv
+IGEgR1BJTyBjb250cm9sbGFibGUNCj4+PiBieSB0aGUgU29DLiBUaGUgcGluIGNvdWxkIGJlIGhh
+cmR3aXJlZCB0byBWQ0MsIG9yIGNvbm5lY3RlZCB0byBhIHN5c3RlbQ0KPj4+IHJlc2V0IHRoYXQg
+aXMgYXV0b21hdGljYWxseSBtYW5hZ2VkIHdpdGhvdXQgU29DIGludGVydmVudGlvbi4gVGhlIHBv
+d2VyDQo+Pj4gc3VwcGxpZXMsIGhvd2V2ZXIsIGFyZSBtYW5kYXRvcnksIGluIHRoZSBzZW5zZSB0
+aGF0IHRoZSBjaGlwIHdpbGwgbm90IHdvcmsNCj4+PiBpZiB5b3UgbGVhdmUgdGhlIHBvd2VyIHN1
+cHBsaWVzIHVuY29ubmVjdGVkLg0KPj4NCj4+IERUIG9ubHkgbmVlZHMgdG8gZGVzY3JpYmUgd2hh
+dCBtYXR0ZXJzIHRvIHMvdy4gSWYgYSByZWd1bGF0b3IgaXMNCj4+IGZpeGVkIGFuZCB5b3UgZG9u
+J3QgbmVlZCB0byBrbm93IGl0cyB2b2x0YWdlIChvciBvdGhlciByZWFkLW9ubHkNCj4+IHBhcmFt
+ZXRlcnMpLCB0aGVuIHRoZXJlJ3Mgbm90IG11Y2ggcG9pbnQgaW4gcHV0dGluZyBpdCBpbiBEVC4N
+Cj4+DQo+PiBJJ2QgcHJvYmFibHkgYmFzZSB0aGlzIG1vcmUgYXQgYSBwbGF0Zm9ybSBsZXZlbCBh
+bmQgeW91IGVpdGhlciB1c2UNCj4+IHJlZ3VsYXRvciBiaW5kaW5nIG9yIHlvdSBkb24ndC4gSXQn
+cyBwZXJmZWN0bHkgdmFsaWQgdGhhdCB5b3Ugd2FudCB0byBkbw0KPj4gdGhpbmdzIGxpa2UgcmVn
+dWxhdG9yIHNldHVwLCBwaW4gY3RybCBhbmQgbXV4aW5nIHNldHVwLCBldGMuIGFsbCBpbg0KPj4g
+ZmlybXdhcmUgYW5kIHRoZSBPUyBkb2Vzbid0IHRvdWNoIGFueSBvZiB0aGF0Lg0KPj4NCj4+IFRo
+YXQncyBhbGwgYSBiaWcgY2FuIG9mIHdvcm1zIHdoaWNoIHdlIHNob3VsZG4ndCBzb2x2ZSBvbiB0
+aGlzIDIgbGluZQ0KPj4gY2hhbmdlLiBJIHRoaW5rIHRoaXMgY2hhbmdlIGlzIGZpbmUgYXMtaXMs
+IHNvOg0KPj4NCj4+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0K
+PiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
