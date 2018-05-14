@@ -1,113 +1,91 @@
-From: Yinbo Zhu <yinbo.zhu@nxp.com>
-Subject: RE: [PATCH 3/9] soc: fsl: set rcpm bit for FTM
-Date: Mon, 14 May 2018 07:47:45 +0000
-Message-ID: <HE1PR0401MB1945EAD443377803A9F9EA5CE99C0@HE1PR0401MB1945.eurprd04.prod.outlook.com>
-References: <20180511033530.7931-1-yinbo.zhu@nxp.com>
- <20180511033530.7931-3-yinbo.zhu@nxp.com>
- <AM4PR0401MB16995DFED0376ACE0DD5E7A78F9F0@AM4PR0401MB1699.eurprd04.prod.outlook.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Allwinner A64: Issue on external rtc clock to wifi chip
+Date: Mon, 14 May 2018 09:57:27 +0200
+Message-ID: <20180514075727.uxggyhmbahvhestx@flea>
+References: <CAMty3ZCNyuEwmLGdDZLM_9qKJ2NsT33rodug7ZpKAE-OHymVEg@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM4PR0401MB16995DFED0376ACE0DD5E7A78F9F0@AM4PR0401MB1699.eurprd04.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Catalin Marinas )" <catalin.marinas@arm.com>, "Will Deacon )" <will.deacon@arm.com>, "Lorenzo Pieralisi )" <lorenzo.pieralisi@arm.com>
-Cc: Xiaobo Xie <xiaobo.xie@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>, Jerry Huang <jerry.huang@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Qiang Zhao <qiang.zhao@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>, Po Liu <po.liu@nxp.com>, Nipun Gupta <nipun.gupta@nxp.com>, =?utf-8?B?SG9yaWEgR2VhbnTEgw==?= <horia.geanta@nxp.com>, Priyanka Jain <priyanka.jain@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, costi <constantin.tudor@freescale.com>, Bogdan Purcareata <bogdan.purcareata@nxp.com>, open list:CLOCKSOURCE, CLOCKEVENT DRIVERS
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="kx3hdnajnzxhcs2n"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2UC4XLQKGQEUE4XGPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZCNyuEwmLGdDZLM_9qKJ2NsT33rodug7ZpKAE-OHymVEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBMZW8gTGkgDQpTZW50OiAyMDE4
-5bm0NeaciDEy5pelIDE6MDANClRvOiBZaW5ibyBaaHUgPHlpbmJvLnpodUBueHAuY29tPjsgWWlu
-Ym8gWmh1IDx5aW5iby56aHVAbnhwLmNvbT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5v
-cmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgQ2F0YWxpbiBNYXJpbmFz
-ICkgPGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tPjsgV2lsbCBEZWFjb24gKSA8d2lsbC5kZWFjb25A
-YXJtLmNvbT47IExvcmVuem8gUGllcmFsaXNpICkgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+
-DQpDYzogWGlhb2JvIFhpZSA8eGlhb2JvLnhpZUBueHAuY29tPjsgUmFuIFdhbmcgPHJhbi53YW5n
-XzFAbnhwLmNvbT47IERhbmllbCBMZXpjYW5vIDxkYW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnPjsg
-VGhvbWFzIEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+OyBTaGF3biBHdW8gPHNoYXduZ3Vv
-QGtlcm5lbC5vcmc+OyBNYWRhbGluLWNyaXN0aWFuIEJ1Y3VyIDxtYWRhbGluLmJ1Y3VyQG54cC5j
-b20+OyBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+OyBKZXJyeSBIdWFuZyA8amVycnku
-aHVhbmdAbnhwLmNvbT47IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgUWlhbmcg
-WmhhbyA8cWlhbmcuemhhb0BueHAuY29tPjsgRmFiaW8gRXN0ZXZhbSA8ZmFiaW8uZXN0ZXZhbUBu
-eHAuY29tPjsgSmlhaGVuZyBGYW4gPGppYWhlbmcuZmFuQG54cC5jb20+OyBQbyBMaXUgPHBvLmxp
-dUBueHAuY29tPjsgTmlwdW4gR3VwdGEgPG5pcHVuLmd1cHRhQG54cC5jb20+OyBIb3JpYSBHZWFu
-dMSDIDxob3JpYS5nZWFudGFAbnhwLmNvbT47IFByaXlhbmthIEphaW4gPHByaXlhbmthLmphaW5A
-bnhwLmNvbT47IFN1bWl0IEdhcmcgPHN1bWl0LmdhcmdAbnhwLmNvbT47IGNvc3RpIDxjb25zdGFu
-dGluLnR1ZG9yQGZyZWVzY2FsZS5jb20+OyBCb2dkYW4gUHVyY2FyZWF0YSA8Ym9nZGFuLnB1cmNh
-cmVhdGFAbnhwLmNvbT47IG9wZW4gbGlzdDpDTE9DS1NPVVJDRSwgQ0xPQ0tFVkVOVCBEUklWRVJT
-IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUg
-QU5EIEZMQVRURU5FRCBERVZJQ0UgVFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IG9wZW4gbGlzdDpG
-UkVFU0NBTEUgU09DIERSSVZFUlMgPGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnPjsgQW5k
-eSBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT47IFlpbmcgWmhhbmcgPHlpbmcuemhhbmcyMjQ1NUBu
-eHAuY29tPg0KU3ViamVjdDogUkU6IFtQQVRDSCAzLzldIHNvYzogZnNsOiBzZXQgcmNwbSBiaXQg
-Zm9yIEZUTQ0KDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBZaW5i
-byBaaHUgW21haWx0bzp5aW5iby56aHVAbnhwLmNvbV0NCj4gU2VudDogVGh1cnNkYXksIE1heSAx
-MCwgMjAxOCAxMDozNSBQTQ0KPiBUbzogWWluYm8gWmh1IDx5aW5iby56aHVAbnhwLmNvbT47IFJv
-YiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyANCj4gTWFyayBSdXRsYW5kIDxtYXJrLnJ1
-dGxhbmRAYXJtLmNvbT47IENhdGFsaW4gTWFyaW5hcyApIA0KPiA8Y2F0YWxpbi5tYXJpbmFzQGFy
-bS5jb20+OyBXaWxsIERlYWNvbiApIDx3aWxsLmRlYWNvbkBhcm0uY29tPjsgDQo+IExvcmVuem8g
-UGllcmFsaXNpICkgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+OyBMZW8gTGkgDQo+IDxsZW95
-YW5nLmxpQG54cC5jb20+DQo+IENjOiBYaWFvYm8gWGllIDx4aWFvYm8ueGllQG54cC5jb20+OyBS
-YW4gV2FuZyA8cmFuLndhbmdfMUBueHAuY29tPjsgDQo+IERhbmllbCBMZXpjYW5vIDxkYW5pZWwu
-bGV6Y2Fub0BsaW5hcm8ub3JnPjsgVGhvbWFzIEdsZWl4bmVyIA0KPiA8dGdseEBsaW51dHJvbml4
-LmRlPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgDQo+IE1hZGFsaW4tY3Jpc3Rp
-YW4gQnVjdXIgPG1hZGFsaW4uYnVjdXJAbnhwLmNvbT47IFoucS4gSG91IA0KPiA8emhpcWlhbmcu
-aG91QG54cC5jb20+OyBKZXJyeSBIdWFuZyA8amVycnkuaHVhbmdAbnhwLmNvbT47IE0uaC4gTGlh
-biANCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IFFpYW5nIFpoYW8gPHFpYW5nLnpoYW9Abnhw
-LmNvbT47IEZhYmlvIA0KPiBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBKaWFoZW5n
-IEZhbiA8amlhaGVuZy5mYW5AbnhwLmNvbT47IFBvIA0KPiBMaXUgPHBvLmxpdUBueHAuY29tPjsg
-TmlwdW4gR3VwdGEgPG5pcHVuLmd1cHRhQG54cC5jb20+OyBIb3JpYSBHZWFudMSDIA0KPiA8aG9y
-aWEuZ2VhbnRhQG54cC5jb20+OyBQcml5YW5rYSBKYWluIDxwcml5YW5rYS5qYWluQG54cC5jb20+
-OyBTdW1pdCANCj4gR2FyZyA8c3VtaXQuZ2FyZ0BueHAuY29tPjsgY29zdGkgPGNvbnN0YW50aW4u
-dHVkb3JAZnJlZXNjYWxlLmNvbT47IA0KPiBCb2dkYW4gUHVyY2FyZWF0YSA8Ym9nZGFuLnB1cmNh
-cmVhdGFAbnhwLmNvbT47IE1lbmcgWWkgDQo+IDxtZW5nLnlpQG54cC5jb20+OyBXYW5nIERvbmdz
-aGVuZyA8ZG9uZ3NoZW5nLndhbmdAbnhwLmNvbT47IG9wZW4gDQo+IGxpc3Q6Q0xPQ0tTT1VSQ0Us
-IENMT0NLRVZFTlQgRFJJVkVSUyA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IA0KPiBv
-cGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxBVFRFTkVEIERFVklDRSBUUkVFIEJJTkRJTkdT
-IA0KPiA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmc7IA0KPiBvcGVuIGxpc3Q6RlJFRVNDQUxFIFNPQyBEUklWRVJTIDxsaW51
-eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZz47IEFuZHkgDQo+IFRhbmcgPGFuZHkudGFuZ0BueHAu
-Y29tPjsgWWluZyBaaGFuZyA8eWluZy56aGFuZzIyNDU1QG54cC5jb20+DQo+IFN1YmplY3Q6IFtQ
-QVRDSCAzLzldIHNvYzogZnNsOiBzZXQgcmNwbSBiaXQgZm9yIEZUTQ0KPiANCj4gRnJvbTogWmhh
-bmcgWWluZy0yMjQ1NSA8eWluZy56aGFuZzIyNDU1QG54cC5jb20+DQo+IA0KPiBTZXQgUkNQTSBm
-b3IgRlRNIHdoZW4gdXNpbmcgRlRNIGFzIHdha2V1cCBzb3VyY2UuIEJlY2F1c2UgdGhlIFJDUE0g
-DQo+IG1vZHVsZSBvZiBlYWNoIHBsYXRmb3JtIGhhcyBkaWZmZXJlbnQgYmlnLWVuZCBhbmQgbGl0
-dGxlLWVuZCBtb2RlLCANCj4gdGhlcmUgbmVlZCB0byBzZXQgUkNQTSBkZXBlbmRpbmcgb24gdGhl
-IHBsYXRmb3JtLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogWmhhbmcgWWluZy0yMjQ1NSA8eWluZy56
-aGFuZzIyNDU1QG54cC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFlpbmJvIFpodSA8eWluYm8uemh1
-QG54cC5jb20+DQo+IC0tLQ0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvZnNsLGZ0
-bS10aW1lci50eHQgICAgfCAgICA3ICsrDQo+ICBkcml2ZXJzL3NvYy9mc2wvbGF5ZXJzY2FwZS9m
-dG1fYWxhcm0uYyAgICAgICAgICAgICB8ICAgOTIgKysrKysrKysrKysrKysrKysrLQ0KPiAgMiBm
-aWxlcyBjaGFuZ2VkLCA5NCBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlm
-ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9mc2wsZnRt
-LXRpbWVyLnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9m
-c2wsZnRtLXRpbWVyLnR4dA0KPiBpbmRleCBhYThjNDAyLi4xNWVhZDU4IDEwMDY0NA0KPiAtLS0g
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvZnNsLGZ0bS10aW1lci50
-eHQNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL2ZzbCxm
-dG0tdGltZXIudHh0DQo+IEBAIC0zLDYgKzMsMTMgQEAgRnJlZXNjYWxlIEZsZXhUaW1lciBNb2R1
-bGUgKEZUTSkgVGltZXIgIFJlcXVpcmVkDQo+IHByb3BlcnRpZXM6DQo+IA0KPiAgLSBjb21wYXRp
-YmxlIDogc2hvdWxkIGJlICJmc2wsZnRtLXRpbWVyIg0KDQo+SGkgWWluZ2JvLA0KDQo+VGhpcyBp
-cyBhIGNoYW5nZSB0aGF0IGJyZWFrcyBiYWNrd2FyZCBjb21wYXRpYmlsaXR5IGFuZCBub3QgYWNj
-ZXB0YWJsZS4NCkhpIGxlbywNCg0KVGhpcyBwYXRjaCBpZiBJIGtlZXAgdGhlIGNoYW5nZSBhcyBp
-bm5lciBwYXRjaCBhbmQgcHVzaCBpdCB0byBkYXNoLWxpbm51eCBidXQgSSB3aWxsIG5vdCBwdXNo
-IGl0IHRvIHVwc3RyZWFtLCBJdCdzIG9rYXk/DQpBcyBmYXIgYXMgSSBrbm93LCB0aGVyZSB3YXMg
-YSBvdGhlciBwYXRjaCBhbmQgZmlsZSBmb3IgcmVwbGFjZSB0aGUgZmlsZSBhbmQgdGhhdCB0aGUg
-cGF0Y2ggaXMgYWxyZWFkeSBvbiB0aGUgdXBzdHJlYW0gDQpodHRwczovL3BhdGNod29yay5rZXJu
-ZWwub3JnL3BhdGNoLzkzOTEyOTMvDQoNCj4gKyBQb3NzaWJsZSBjb21wYXRpYmxlcyBmb3IgQVJN
-Og0KPiArICAgICAiZnNsLGxzMTAxMmEtZnRtIg0KPiArICAgICAiZnNsLGxzMTAyMWEtZnRtIg0K
-PiArICAgICAiZnNsLGxzMTA0M2EtZnRtIg0KPiArICAgICAiZnNsLGxzMTA0NmEtZnRtIg0KPiAr
-ICAgICAiZnNsLGxzMTA4OGEtZnRtIg0KPiArICAgICAiZnNsLGxzMjA4eGEtZnRtIg0KPiAgLSBy
-ZWcgOiBTcGVjaWZpZXMgYmFzZSBwaHlzaWNhbCBhZGRyZXNzIGFuZCBzaXplIG9mIHRoZSByZWdp
-c3RlciBzZXRzIGZvciB0aGUNCj4gICAgY2xvY2sgZXZlbnQgZGV2aWNlIGFuZCBjbG9jayBzb3Vy
-Y2UgZGV2aWNlLg0KPiAgLSBpbnRlcnJ1cHRzIDogU2hvdWxkIGJlIHRoZSBjbG9jayBldmVudCBk
-ZXZpY2UgaW50ZXJydXB0Lg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvZnNsL2xheWVyc2Nh
-cGUvZnRtX2FsYXJtLmMNCj4gYi9kcml2ZXJzL3NvYy9mc2wvbGF5ZXJzY2FwZS9mdG1fYWxhcm0u
-Yw0KPiBpbmRleCA2Zjk4ODJmLi44MTFkY2ZhIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NvYy9m
-c2wvbGF5ZXJzY2FwZS9mdG1fYWxhcm0uYw0KPiArKysgYi9kcml2ZXJzL3NvYy9mc2wvbGF5ZXJz
-Y2FwZS9mdG1fYWxhcm0uYw0KDQo+VGhlcmUgaXMgbm8gc3VjaCBmaWxlIGluIHRoZSBtYWlubGlu
-ZSBrZXJuZWwuICBTbyBpdCBsb29rcyBsaWtlIHRoZSBwYXRjaCBzZXQgaXMNCg0KPiBiYXNlZCBv
-biBzb21lIGludGVybmFsIGdpdCByZXBvIGluc3RlYWQgb2YgdGhlIHVwc3RyZWFtIExpbnV4IGtl
-cm5lbC4gIFRoaXMga2luZCBvZiBwYXRjaGVzDQoNCj4gc2hvdWxkbid0IGJlIHNlbnQgdG8gdGhl
-IHVwc3RyZWFtIG1haWxpbmcgbGlzdCBmb3IgcmV2aWV3Lg0KDQo+UmVnYXJkcywNCg0KPkxlbw0K
-VGhpcyBwYXRjaCB3aWxsIG5vdCB0byB1cHN0cmVhbS4NCg0KUmVnYXJkcywNCg0KWWluYm8uDQo=
+
+--kx3hdnajnzxhcs2n
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+Hi,
+
+On Mon, May 14, 2018 at 12:37:49PM +0530, Jagan Teki wrote:
+> Hi Maxime and All,
+> 
+> We are trying to bring-up AP6330 Wifi chip for A64 board. We noticed
+> to have an external rtc clock has driven from wifi chip.
+> 
+> So the devicetree is configured according to this as below.
+> 
+> / {
+>         wifi_pwrseq: wifi-pwrseq {
+>                 compatible = "mmc-pwrseq-simple";
+>                 clocks = <&rtc 1>;
+>                 clock-names = "ext_clock";
+>                 reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
+>                 post-power-on-delay-ms = <400>;
+>         };
+> };
+> 
+> &rtc {
+>         clock-output-names = "rtc-osc32k", "rtc-osc32k-out";
+>         clocks = <&osc32k>;
+>         #clock-cells = <1>;
+> };
+> 
+> &mmc1 {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&mmc1_pins>;
+>         vmmc-supply = <&reg_dcdc1>;
+>         vqmmc-supply = <&reg_eldo1>;
+>         mmc-pwrseq = <&wifi_pwrseq>;
+>         bus-width = <4>;
+>         non-removable;
+>         status = "okay";
+> 
+>         brcmf: wifi@1 {
+>                 reg = <1>;
+>                 compatible = "brcm,bcm4329-fmac";
+>                 interrupt-parent = <&r_pio>;
+>                 interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>;  /* WL-WAKE-AP: PL3 */
+>                 interrupt-names = "host-wake";
+>         };
+> };
+> 
+> And observed rtc-osc32k-out clock is never enabled[1] and the value of
+> LOSC_OUT_GATING is 0x0 which eventually not enabling
+> LOSC_OUT_GATING_EN
+> 
+> Pls. let us know if we miss anything here?
+> 
+> [1] https://paste.ubuntu.com/p/X2By4q8kD2/
+
+Could you paste your config and the logs from a boot to?
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--kx3hdnajnzxhcs2n--
