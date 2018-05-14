@@ -1,92 +1,98 @@
-Return-Path: <SRS0=ApHA=H7=crapouillou.net=paul@kernel.org>
-Message-Id: <5af6d649.1c69fb81.1cb2d.7f5bSMTPIN_ADDED_MISSING@mx.google.com>
-Date: Sat, 12 May 2018 08:55:40 -0300
-Subject: Re: [PATCH] mtd: nand: Add support for reading ooblayout from
- device tree
-From: Paul Cercueil <paul@crapouillou.net>
+Return-Path: <SRS0=ePA5=IB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-he1eur01on0135.outbound.protection.outlook.com ([104.47.0.135]:13392
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S932307AbeENNQl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 14 May 2018 09:16:41 -0400
+Subject: Re: [PATCH v2 1/3] dt: bindings: i2c-mux-pca954x: add mux-locked
+ property
+References: <20180504130449.13730-1-bst@pengutronix.de>
+ <43e5cb0f-c76b-186d-6174-73dee92aef8e@pengutronix.de>
+ <7e2ae8a2-3e6a-9c1f-5437-9e775cef719e@axentia.se>
+ <a4402498-f318-2753-4220-fde6b1d372a0@pengutronix.de>
+From: Peter Rosin <peda@axentia.se>
+Message-ID: <d954dcd1-9fe4-6a97-61c7-48f2c6a65da2@axentia.se>
+Date: Mon, 14 May 2018 15:16:34 +0200
 MIME-Version: 1.0
+In-Reply-To: <a4402498-f318-2753-4220-fde6b1d372a0@pengutronix.de>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Boris Brezillon <boris.brezillon@bolin.com>, Marek Vasut <marek.vasut@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Bastian Stender <bst@pengutronix.de>, Wolfram Sang <wsa@the-dreams.de>
+Cc: devicetree@vger.kernel.org, Michael Lawnick <ml.lawnick@gmx.de>, linux-i2c@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgQm9yaXMsCgpMZSAxMiBtYWkgMjAxOCAwMjo1NSwgQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5i
-cmV6aWxsb25AYm9vdGxpbi5jb20+IGEgw6ljcml0IDoKPgo+IEhpIFBhdWwsIAo+Cj4gT24gRnJp
-LCAxMSBNYXkgMjAxOCAyMzoyOToxMiArMDIwMCAKPiBQYXVsIENlcmN1ZWlsIDxwYXVsQGNyYXBv
-dWlsbG91Lm5ldD4gd3JvdGU6IAo+Cj4gPiBCeSBzcGVjaWZ5aW5nIHRoZSBwcm9wZXJ0aWVzICJt
-dGQtb29iLWVjYyIgYW5kICJtdGQtb29iLWZyZWUiLCBpdCBpcyAKPiA+IG5vdyBwb3NzaWJsZSB0
-byBzcGVjaWZ5IGZyb20gZGV2aWNldHJlZSB3aGVyZSB0aGUgRUNDIGRhdGEgaXMgbG9jYXRlZCAK
-PiA+IGluc2lkZSB0aGUgT09CIHJlZ2lvbi4gCj4KPiBXaHkgd291bGQgd2Ugd2FudCB0byBkbyB0
-aGF0PyBJIG1lYW4sIEVDQy9mcmVlIHJlZ2lvbnMgYXJlIEVDQyAKPiBjb250cm9sbGVyIGRlcGVu
-ZGVudCAoYW5kIE5BTkQgY2hpcCBkZXBlbmRlbnQgZm9yIHRoZSBPT0Igc2l6ZSBwYXJ0KSwgCj4g
-c28gdGhlcmUncyBubyByZWFzb24gdG8gZGVzY3JpYmUgaXQgaW4gdGhlIERULiBBbmQgbW9yZSBp
-bXBvcnRhbnRseSwgCj4gcGVvcGxlIGFyZSBsaWtlbHkgdG8gZ2V0IGl0IHdyb25nLiAKPgo+IEkn
-bSBjdXJpb3VzLCB3aHkgZG8geW91IG5lZWQgdGhhdD8gCgpHb29kIHF1ZXN0aW9uLgoKVGhlIHJl
-YXNvbiBpcyB0aGF0IHNvbWUgU29DcyBoYXZlIG5vIEVDQyBjb250cm9sbGVyLgpUaGUgdmFyaW91
-cyBib2FyZHMgZm9yIHRoZXNlIFNvQ3MgdGhlbiBhbGwgdXNlIGEgZGlmZmVyZW50IGxheW91dC4K
-Ck15IG1vdGl2YXRpb24gaXMgdG8gZ2V0IHJpZCBvZiB0aGlzIChtb3ZlIGl0IHRvIGRldmljZXRy
-ZWUpOgpodHRwczovL2VsaXhpci5ib290bGluLmNvbS9saW51eC9sYXRlc3Qvc291cmNlL2FyY2gv
-bWlwcy9qejQ3NDAvYm9hcmQtcWlfbGI2MC5jI0w5MwpBbmQgZW5hYmxlIHRoZSBzdXBwb3J0IG9m
-IG90aGVyIGJvYXJkcyB3aXRoIGN1c3RvbSBPT0IgbGF5b3V0cy4KCj4gUmVnYXJkcywgCj4KPiBC
-b3JpcyAKClRoYW5rcywKLVBhdWwKCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IFBhdWwgQ2VyY3Vl
-aWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PiAKPiA+IC0tLSAKPiA+wqAgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9uYW5kLnR4dCB8wqAgNyArKysrKyAKPiA+wqAgZHJpdmVy
-cy9tdGQvbmFuZC9yYXcvbmFuZF9iYXNlLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwg
-NDIgKysrKysrKysrKysrKysrKysrKysrKysrKysgCj4gPsKgIDIgZmlsZXMgY2hhbmdlZCwgNDkg
-aW5zZXJ0aW9ucygrKSAKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tdGQvbmFuZC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbXRkL25hbmQudHh0IAo+ID4gaW5kZXggOGJiMTFkODA5NDI5Li4xMThlYTkyNzg3Y2Ig
-MTAwNjQ0IAo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9u
-YW5kLnR4dCAKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQv
-bmFuZC50eHQgCj4gPiBAQCAtNDUsNiArNDUsMTMgQEAgT3B0aW9uYWwgTkFORCBjaGlwIHByb3Bl
-cnRpZXM6IAo+ID7CoCDCoMKgwqDCoCBhcyByZWxpYWJsZSBhcyBwb3NzaWJsZS4gCj4gPsKgIC0g
-bmFuZC1yYjogc2hhbGwgY29udGFpbiB0aGUgbmF0aXZlIFJlYWR5L0J1c3kgaWRzLiAKPiA+wqAg
-Cj4gPiArLSBuYW5kLW9vYi1lY2M6IDxvZmZzZXQsIGxlbmd0aD4gY291cGxlcyBvZiBpbnRlZ2Vy
-cywgc3BlY2lmeWluZyB0aGUgb2Zmc2V0IAo+ID4gKyDCoMKgwqDCoCBhbmQgbGVuZ3RoIG9mIHRo
-ZSBFQ0MgZGF0YSBpbiB0aGUgT09CIHJlZ2lvbi4gVGhlcmUgY2FuIGJlIG1vcmUgCj4gPiArIMKg
-wqDCoMKgIHRoYW4gb25lIGNvdXBsZS4gCj4gPiArLSBuYW5kLW9vYi1mcmVlOiA8b2Zmc2V0LCBs
-ZW5ndGg+IGNvdXBsZXMgb2YgaW50ZWdlcnMsIHNwZWNpZnlpbmcgdGhlIG9mZnNldCAKPiA+ICsg
-wqDCoMKgwqAgYW5kIGxlbmd0aCBvZiBhIGZyZWUtdG8tdXNlIGFyZWEgaW4gdGhlIE9PQiByZWdp
-b24uIFRoZXJlIGNhbiBiZSAKPiA+ICsgwqDCoMKgwqAgbW9yZSB0aGFuIG9uZSBjb3VwbGUuIAo+
-ID4gKyAKPiA+wqAgVGhlIEVDQyBzdHJlbmd0aCBhbmQgRUNDIHN0ZXAgc2l6ZSBwcm9wZXJ0aWVz
-IGRlZmluZSB0aGUgY29ycmVjdGlvbiBjYXBhYmlsaXR5IAo+ID7CoCBvZiBhIGNvbnRyb2xsZXIu
-IFRvZ2V0aGVyLCB0aGV5IHNheSBhIGNvbnRyb2xsZXIgY2FuIGNvcnJlY3QgIntzdHJlbmd0aH0g
-Yml0IAo+ID7CoCBlcnJvcnMgcGVyIHtzaXplfSBieXRlcyIuIAo+ID4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvbXRkL25hbmQvcmF3L25hbmRfYmFzZS5jIGIvZHJpdmVycy9tdGQvbmFuZC9yYXcvbmFu
-ZF9iYXNlLmMgCj4gPiBpbmRleCA3MmYzYTg5ZGE1MTMuLmM5MDU1MzFlZmZiMCAxMDA2NDQgCj4g
-PiAtLS0gYS9kcml2ZXJzL210ZC9uYW5kL3Jhdy9uYW5kX2Jhc2UuYyAKPiA+ICsrKyBiL2RyaXZl
-cnMvbXRkL25hbmQvcmF3L25hbmRfYmFzZS5jIAo+ID4gQEAgLTIxMyw2ICsyMTMsNDMgQEAgc3Rh
-dGljIGNvbnN0IHN0cnVjdCBtdGRfb29ibGF5b3V0X29wcyBuYW5kX29vYmxheW91dF9scF9oYW1t
-aW5nX29wcyA9IHsgCj4gPsKgIC5mcmVlID0gbmFuZF9vb2JsYXlvdXRfZnJlZV9scF9oYW1taW5n
-LCAKPiA+wqAgfTsgCj4gPsKgIAo+ID4gK3N0YXRpYyBpbnQgbmFuZF9vb2Jfb2Yoc3RydWN0IGRl
-dmljZV9ub2RlICpucCwgaW50IHNlY3Rpb24sIAo+ID4gKyDCoMKgwqDCoMKgwqAgc3RydWN0IG10
-ZF9vb2JfcmVnaW9uICpvb2JyZWdpb24sIGNvbnN0IGNoYXIgKnByb3ApIAo+ID4gK3sgCj4gPiAr
-IGludCByZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMl9pbmRleChucCwgcHJvcCwgCj4gPiArIHNl
-Y3Rpb24gKiAyLCAmb29icmVnaW9uLT5vZmZzZXQpOyAKPiA+ICsgaWYgKHJldCA9PSAtRU9WRVJG
-TE9XKSAKPiA+ICsgcmV0dXJuIC1FUkFOR0U7IC8qIFdlJ3JlIGRvbmUgKi8gCj4gPiArIGlmIChy
-ZXQpIAo+ID4gKyByZXR1cm4gcmV0OyAKPiA+ICsgCj4gPiArIHJldCA9IG9mX3Byb3BlcnR5X3Jl
-YWRfdTMyX2luZGV4KG5wLCBwcm9wLCAKPiA+ICsgc2VjdGlvbiAqIDIgKyAxLCAmb29icmVnaW9u
-LT5sZW5ndGgpOyAKPiA+ICsgaWYgKHJldCA9PSAtRU9WRVJGTE9XKSAKPiA+ICsgcmV0dXJuIC1F
-SU5WQUw7IC8qIFdlIG11c3QgaGF2ZSBhbiBldmVuIG51bWJlciBvZiBpbnRlZ2VycyAqLyAKPiA+
-ICsgCj4gPiArIHJldHVybiByZXQ7IAo+ID4gK30gCj4gPiArIAo+ID4gK3N0YXRpYyBpbnQgbmFu
-ZF9vb2JsYXlvdXRfZWNjX29mKHN0cnVjdCBtdGRfaW5mbyAqbXRkLCBpbnQgc2VjdGlvbiwgCj4g
-PiArIHN0cnVjdCBtdGRfb29iX3JlZ2lvbiAqb29icmVnaW9uKSAKPiA+ICt7IAo+ID4gKyByZXR1
-cm4gbmFuZF9vb2Jfb2YobXRkLT5kZXYub2Zfbm9kZSwgc2VjdGlvbiwgCj4gPiArIG9vYnJlZ2lv
-biwgIm5hbmQtb29iLWVjYyIpOyAKPiA+ICt9IAo+ID4gKyAKPiA+ICtzdGF0aWMgaW50IG5hbmRf
-b29ibGF5b3V0X2ZyZWVfb2Yoc3RydWN0IG10ZF9pbmZvICptdGQsIGludCBzZWN0aW9uLCAKPiA+
-ICsgc3RydWN0IG10ZF9vb2JfcmVnaW9uICpvb2JyZWdpb24pIAo+ID4gK3sgCj4gPiArIHJldHVy
-biBuYW5kX29vYl9vZihtdGQtPmRldi5vZl9ub2RlLCBzZWN0aW9uLCAKPiA+ICsgb29icmVnaW9u
-LCAibmFuZC1vb2ItZnJlZSIpOyAKPiA+ICt9IAo+ID4gKyAKPiA+ICtzdGF0aWMgY29uc3Qgc3Ry
-dWN0IG10ZF9vb2JsYXlvdXRfb3BzIG5hbmRfb29ibGF5b3V0X29mX29wcyA9IHsgCj4gPiArIC5l
-Y2MgPSBuYW5kX29vYmxheW91dF9lY2Nfb2YsIAo+ID4gKyAuZnJlZSA9IG5hbmRfb29ibGF5b3V0
-X2ZyZWVfb2YsIAo+ID4gK307IAo+ID4gKyAKPiA+wqAgc3RhdGljIGludCBjaGVja19vZmZzX2xl
-bihzdHJ1Y3QgbXRkX2luZm8gKm10ZCwgCj4gPsKgIGxvZmZfdCBvZnMsIHVpbnQ2NF90IGxlbikg
-Cj4gPsKgIHsgCj4gPiBAQCAtNTg0Myw2ICs1ODgwLDExIEBAIHN0YXRpYyBpbnQgbmFuZF9kdF9p
-bml0KHN0cnVjdCBuYW5kX2NoaXAgKmNoaXApIAo+ID7CoCBpZiAob2ZfcHJvcGVydHlfcmVhZF9i
-b29sKGRuLCAibmFuZC1lY2MtbWF4aW1pemUiKSkgCj4gPsKgIGNoaXAtPmVjYy5vcHRpb25zIHw9
-IE5BTkRfRUNDX01BWElNSVpFOyAKPiA+wqAgCj4gPiArIGlmICghY2hpcC0+bXRkLm9vYmxheW91
-dCAmJiAKPiA+ICsgb2ZfcHJvcGVydHlfcmVhZF9ib29sKGRuLCAibmFuZC1vb2ItZWNjIikgJiYg
-Cj4gPiArIG9mX3Byb3BlcnR5X3JlYWRfYm9vbChkbiwgIm5hbmQtb29iLWZyZWUiKSkgCj4gPiAr
-IGNoaXAtPm10ZC5vb2JsYXlvdXQgPSAmbmFuZF9vb2JsYXlvdXRfb2Zfb3BzOyAKPiA+ICsgCj4g
-PsKgIHJldHVybiAwOyAKPiA+wqAgfSAKPiA+wqAgCj4K
+On 2018-05-14 14:26, Bastian Stender wrote:
+> Hi Peter,
+> 
+> On 05/07/2018 11:07 AM, Peter Rosin wrote:
+>> On 2018-05-04 15:10, Bastian Stender wrote:
+>>> On 05/04/2018 03:04 PM, Bastian Stender wrote:
+>>>> Signed-off-by: Bastian Stender <bst@pengutronix.de>
+>>>> ---
+>>>>    .../devicetree/bindings/i2c/i2c-mux-pca954x.txt  | 16 ++++++++++++++++
+>>>>    1 file changed, 16 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+>>>> index 34d91501342e..864ac91f8c1c 100644
+>>>> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+>>>> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+>>>> @@ -36,6 +36,22 @@ Optional Properties:
+>>>>        - first cell is the pin number
+>>>>        - second cell is used to specify flags.
+>>>>        See also Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>>>> +  - mux-locked: If present, explicitly allow unrelated I2C transactions on the
+>>>> +    parent I2C adapter at these times:
+>>>> +    + during setup of the multiplexer
+>>>> +    + between setup of the multiplexer and the child bus I2C transaction
+>>>> +    + between the child bus I2C transaction and releasing of the multiplexer
+>>>> +    + during releasing of the multiplexer
+>>>> +
+>>>> +    However, I2C transactions to devices behind all I2C multiplexers connected
+>>>> +    to the same parent adapter that this multiplexer is connected to are blocked
+>>>> +    for the full duration of the complete multiplexed I2C transaction (i.e.
+>>>> +    including the times covered by the above list).
+>>>> +    If mux-locked is not present, the multiplexer is assumed to be parent-locked.
+>>>> +    This means that no unrelated I2C transactions are allowed on the parent I2C
+>>>> +    adapter for the complete multiplexed I2C transaction.
+>>>> +    The properties of mux-locked and parent-locked multiplexers are discussed
+>>>> +    in more detail in Documentation/i2c/i2c-topology.
+>>>
+>>> I am not sure about this. I think it will act like the gpmux driver here
+>>> so I copied it from
+>>> Documentation/devicetree/bindings/i2c/i2c-mux-gpmux.txt. Is this correct?
+>>
+>> I don't think it's wrong, but it might be a little bit too generic. The gpmux
+>> binding cannot assume too much about the actual mux, but in this case we
+>> know exactly how the mux operates. I.e. the initial 4-point list can drop
+>> the points "during setup/releasing of the multiplexer" because those actions
+>> happen as i2c transactions that are locking the parent adapter meaning that
+>> nothing can disturb them.
+>>
+>> However, it would be very good to know what the actual deadlock is that this
+>> mux-locked is fixing. And a description of that deadlock would fit nicely in
+>> the commit message. I understood it as if you could trigger it quite easily?
+>> Any chance that you could make another attempt to pinpoint it with some
+>> printk-debugging or something, given that lockdep wasn't helpful?
+> 
+> The root cause was now identified by a colleague of mine. The following
+> patch set was used along with the proposed patches:
+> 
+>    https://www.spinics.net/lists/linux-i2c/msg32324.html
+> 
+> As a result __i2c_transfer() ends up without enabled clocks. The problem
+> is solved in our case by switching to the mainline solution:
+> 
+>    https://www.spinics.net/lists/linux-i2c/msg33890.html
+
+Nice, thanks for keeping me in the loop!
+
+> The question remains whether the proposed patch (along with the
+> suggested modifications) should be applied nonetheless?
+
+Maybe? I will not block it because there certainly are cases where it is
+needed, but someone<tm> needs to make the adjustments.
+
+Cheers,
+Peter
