@@ -1,128 +1,44 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v6 3/6] kernel/reboot.c: export pm_power_off_prepare
-Date: Mon, 14 May 2018 12:12:19 +0200
-Message-ID: <12a60556-deaf-1b2a-e073-ba2a70389141@pengutronix.de>
-References: <20180305102524.5905-1-o.rempel@pengutronix.de>
- <20180305102524.5905-4-o.rempel@pengutronix.de>
- <20180504185052.bjhfkvpgrblc7tfc@pengutronix.de>
- <1937901.oyadCYFYNo@aspire.rjw.lan>
- <a431b0e1-f4f4-1439-f0bf-736018c6ab0c@pengutronix.de>
- <091ccf85-ae4c-f6fd-0455-1a70e973c85c@pengutronix.de>
+From: Erin Lo <erin.lo@mediatek.com>
+Subject: [PATCH v2 0/4] Add basic support for Mediatek MT8183 SoC
+Date: Mon, 14 May 2018 18:22:27 +0800
+Message-ID: <1526293351-32794-1-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="gAYFsmZs7qnQXrg9TsiHuZ0dEDFJoFZz3"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <091ccf85-ae4c-f6fd-0455-1a70e973c85c@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, erin.lo@mediatek.com, mars.cheng@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---gAYFsmZs7qnQXrg9TsiHuZ0dEDFJoFZz3
-Content-Type: multipart/mixed; boundary="2ofMOmFf4n6AQ4iFh7cCAVd4ChFcJMSD2";
- protected-headers="v1"
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>, kernel@pengutronix.de,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
- Liam Girdwood <lgirdwood@gmail.com>,
- Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>,
- Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>,
- Mark Brown <broonie@kernel.org>
-Message-ID: <12a60556-deaf-1b2a-e073-ba2a70389141@pengutronix.de>
-Subject: Re: [PATCH v6 3/6] kernel/reboot.c: export pm_power_off_prepare
-References: <20180305102524.5905-1-o.rempel@pengutronix.de>
- <20180305102524.5905-4-o.rempel@pengutronix.de>
- <20180504185052.bjhfkvpgrblc7tfc@pengutronix.de>
- <1937901.oyadCYFYNo@aspire.rjw.lan>
- <a431b0e1-f4f4-1439-f0bf-736018c6ab0c@pengutronix.de>
- <091ccf85-ae4c-f6fd-0455-1a70e973c85c@pengutronix.de>
-In-Reply-To: <091ccf85-ae4c-f6fd-0455-1a70e973c85c@pengutronix.de>
+MT8183 is a SoC based on 64bit ARMv8 architecture.
+It contains 4 CA53 and 4 CA73 cores.
+MT8183 share many HW IP with MT65xx series.
+This patchset was tested on MT8183 evaluation board, and boot to shell ok.
 
---2ofMOmFf4n6AQ4iFh7cCAVd4ChFcJMSD2
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+This series contains document bindings, device tree including interrupt, uart.
 
+Change in v2:
+1. Split dt-bindings into different patches
+2. Correct bindings for supported SoCs (mtk-uart.txt)
 
+Ben Ho (1):
+  arm64: dts: Add Mediatek SoC MT8183 and evaluation board dts and
+    Makefile
 
-On 14.05.2018 07:10, Oleksij Rempel wrote:
->=20
->=20
-> On 14.05.2018 06:33, Oleksij Rempel wrote:
->>
->>
->> On 12.05.2018 13:13, Rafael J. Wysocki wrote:
->>> On Friday, May 4, 2018 8:50:52 PM CEST Oleksij Rempel wrote:
->>>> Hallo Andrew,
->>>> I need your ACK or NACK for this patch.
->>>>
->>>> This function is used to configure external PMIC to interpret
->>>> signal which will be triggered by pm_power_off as power off.
->>>> Since same signal can be used for stand by, I linked PMIC configurat=
-ion
->>>> with pm_power_off_prepare to avoid possible conflicts.
->>>>
->>>> On Mon, Mar 05, 2018 at 11:25:20AM +0100, Oleksij Rempel wrote:
->>>>> Export pm_power_off_prepare. It is needed to implement power off on=
+Erin Lo (3):
+  dt-bindings: arm: Add bindings for Mediatek MT8183 SoC Platform
+  dt-bindings: mtk-sysirq: Add compatible for Mediatek MT8183
+  dt-bindings: serial: Add compatible for Mediatek MT8183
 
->>>>> Freescale/NXP iMX6 based boards with external power management
->>>>> integrated circuit (PMIC).
->>>>>
->>>>> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
->>>>> ---
->>>>>  kernel/reboot.c | 1 +
->>>>>  1 file changed, 1 insertion(+)
->>>>>
->>>>> diff --git a/kernel/reboot.c b/kernel/reboot.c
->>>>> index e4ced883d8de..350be6baa60d 100644
->>>>> --- a/kernel/reboot.c
->>>>> +++ b/kernel/reboot.c
->>>>> @@ -49,6 +49,7 @@ int reboot_force;
->>>>>   */
->>>>> =20
->>>>>  void (*pm_power_off_prepare)(void);
->>>>> +EXPORT_SYMBOL(pm_power_off_prepare);
->>>
->>> Why not EXPORT_SYMBOL_GPL() ?
->>
->> No special reason. Fixed.
->> Any other comments?
->>
->=20
-> Or with other words, will it be enough to get your Signed-of-by for thi=
-s
-> patch?
+ Documentation/devicetree/bindings/arm/mediatek.txt |   4 +
+ .../interrupt-controller/mediatek,sysirq.txt       |   1 +
+ .../devicetree/bindings/serial/mtk-uart.txt        |   1 +
+ arch/arm64/boot/dts/mediatek/Makefile              |   1 +
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts        |  31 ++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi           | 178 +++++++++++++++++++++
+ 6 files changed, 216 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183.dtsi
 
-Hi again,
-
-i was punished by my colleagues and actually by Russel for asking
-"Signed-of-by". So, I correct my self, is it enough for a Reviewed-by?
-
-
---2ofMOmFf4n6AQ4iFh7cCAVd4ChFcJMSD2--
-
---gAYFsmZs7qnQXrg9TsiHuZ0dEDFJoFZz3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAlr5YQMACgkQdQOiSHVI
-77TgxQgAuCnYkS1JEWYbZQegzl5HQLClkc3ycFmZxXyPOCAh5LK+14N6VwZVpi3P
-WLA5sMSy8T3pAwmFmNu2jskeepgAF96oN3R9rJ1gzbkLKVs5NXugm+T2Uo0ynpw0
-7L57u/CgqertRfbBrGFxlelXecXSP+QucPjmW6qlEAUum0gNVH13PBv9ZitLq42z
-tm4I+OZdiFDVge0FNzUPO65DVHJ2HxfEDMBGhSDLVd5HOtx8076dG8prTFckhVzy
-GBIJNrsHeaDnu9IYXBxTowjdtATw4JxDOdMNLH4yN+5B/H7hKGCRnEDK58z0+f/R
-gC72P2P9XKQ6ionAlqiTA8hakLIJGg==
-=+/u4
------END PGP SIGNATURE-----
-
---gAYFsmZs7qnQXrg9TsiHuZ0dEDFJoFZz3--
+--
+1.9.1
