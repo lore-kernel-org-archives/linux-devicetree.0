@@ -1,150 +1,97 @@
-Return-Path: <SRS0=jfmr=HZ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pg0-f67.google.com ([74.125.83.67]:46614 "EHLO
-        mail-pg0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751777AbeEFOUO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 6 May 2018 10:20:14 -0400
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v5 10/14] media: ov772x: reconstruct s_frame_interval()
-Date: Sun,  6 May 2018 23:19:25 +0900
-Message-Id: <1525616369-8843-11-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
-References: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
+Return-Path: <SRS0=ePA5=IB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr00059.outbound.protection.outlook.com ([40.107.0.59]:36960
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1752039AbeENJiq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 14 May 2018 05:38:46 -0400
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v5 14/14] staging: typec: tcpci: move tcpci driver out of
+ staging
+Date: Mon, 14 May 2018 09:38:42 +0000
+Message-ID: <VI1PR0402MB39177BBE3639158AEE77FCE6899C0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
+ <1525307094-27402-15-git-send-email-jun.li@nxp.com>
+ <d29927f6-0481-8fee-fdc8-0eef81a56f9c@gmail.com>
+In-Reply-To: <d29927f6-0481-8fee-fdc8-0eef81a56f9c@gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+To: Mats Karrman <mats.dev.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>
+Cc: "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, Peter Chen <peter.chen@nxp.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This splits the s_frame_interval() in subdev video ops into selecting the
-frame interval and setting up the registers.
-
-This is a preparatory change to avoid accessing registers under power
-saving mode.
-
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* v5
-- Align arguments to open parenthesis
-- Sort variable declarations
-
- drivers/media/i2c/ov772x.c | 56 +++++++++++++++++++++++++++++-----------------
- 1 file changed, 35 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 6c0c792..92ad13f 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -617,25 +617,16 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
- 	return 0;
- }
- 
--static int ov772x_set_frame_rate(struct ov772x_priv *priv,
--				 struct v4l2_fract *tpf,
--				 const struct ov772x_color_format *cfmt,
--				 const struct ov772x_win_size *win)
-+static unsigned int ov772x_select_fps(struct ov772x_priv *priv,
-+				      struct v4l2_fract *tpf)
- {
--	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
--	unsigned long fin = clk_get_rate(priv->clk);
- 	unsigned int fps = tpf->numerator ?
- 			   tpf->denominator / tpf->numerator :
- 			   tpf->denominator;
- 	unsigned int best_diff;
--	unsigned int fsize;
--	unsigned int pclk;
- 	unsigned int diff;
- 	unsigned int idx;
- 	unsigned int i;
--	u8 clkrc = 0;
--	u8 com4 = 0;
--	int ret;
- 
- 	/* Approximate to the closest supported frame interval. */
- 	best_diff = ~0L;
-@@ -646,7 +637,25 @@ static int ov772x_set_frame_rate(struct ov772x_priv *priv,
- 			best_diff = diff;
- 		}
- 	}
--	fps = ov772x_frame_intervals[idx];
-+
-+	return ov772x_frame_intervals[idx];
-+}
-+
-+static int ov772x_set_frame_rate(struct ov772x_priv *priv,
-+				 unsigned int fps,
-+				 const struct ov772x_color_format *cfmt,
-+				 const struct ov772x_win_size *win)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
-+	unsigned long fin = clk_get_rate(priv->clk);
-+	unsigned int best_diff;
-+	unsigned int fsize;
-+	unsigned int pclk;
-+	unsigned int diff;
-+	unsigned int i;
-+	u8 clkrc = 0;
-+	u8 com4 = 0;
-+	int ret;
- 
- 	/* Use image size (with blankings) to calculate desired pixel clock. */
- 	switch (cfmt->com7 & OFMT_MASK) {
-@@ -711,10 +720,6 @@ static int ov772x_set_frame_rate(struct ov772x_priv *priv,
- 	if (ret < 0)
- 		return ret;
- 
--	tpf->numerator = 1;
--	tpf->denominator = fps;
--	priv->fps = tpf->denominator;
--
- 	return 0;
- }
- 
-@@ -735,8 +740,20 @@ static int ov772x_s_frame_interval(struct v4l2_subdev *sd,
- {
- 	struct ov772x_priv *priv = to_ov772x(sd);
- 	struct v4l2_fract *tpf = &ival->interval;
-+	unsigned int fps;
-+	int ret;
-+
-+	fps = ov772x_select_fps(priv, tpf);
-+
-+	ret = ov772x_set_frame_rate(priv, fps, priv->cfmt, priv->win);
-+	if (ret)
-+		return ret;
- 
--	return ov772x_set_frame_rate(priv, tpf, priv->cfmt, priv->win);
-+	tpf->numerator = 1;
-+	tpf->denominator = fps;
-+	priv->fps = fps;
-+
-+	return 0;
- }
- 
- static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
-@@ -993,7 +1010,6 @@ static int ov772x_set_params(struct ov772x_priv *priv,
- 			     const struct ov772x_win_size *win)
- {
- 	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
--	struct v4l2_fract tpf;
- 	int ret;
- 	u8  val;
- 
-@@ -1075,9 +1091,7 @@ static int ov772x_set_params(struct ov772x_priv *priv,
- 		goto ov772x_set_fmt_error;
- 
- 	/* COM4, CLKRC: Set pixel clock and framerate. */
--	tpf.numerator = 1;
--	tpf.denominator = priv->fps;
--	ret = ov772x_set_frame_rate(priv, &tpf, cfmt, win);
-+	ret = ov772x_set_frame_rate(priv, priv->fps, cfmt, win);
- 	if (ret < 0)
- 		goto ov772x_set_fmt_error;
- 
--- 
-2.7.4
-
+SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWF0cyBLYXJybWFuIFtt
+YWlsdG86bWF0cy5kZXYubGlzdEBnbWFpbC5jb21dDQo+IFNlbnQ6IDIwMTjlubQ15pyIMTLml6Ug
+NTozNw0KPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsg
+Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+IGhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRl
+bC5jb207IGxpbnV4QHJvZWNrLXVzLm5ldA0KPiBDYzogYS5oYWpkYUBzYW1zdW5nLmNvbTsgY3cw
+MC5jaG9pQHNhbXN1bmcuY29tOw0KPiBzaHVmYW5fbGVlQHJpY2h0ZWsuY29tOyBQZXRlciBDaGVu
+IDxwZXRlci5jaGVuQG54cC5jb20+Ow0KPiBnc29tbG9AZ21haWwuY29tOyBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZzsgbGludXgtdXNiQHZnZXIua2VybmVsLm9yZzsNCj4gZGwtbGludXgtaW14
+IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NSAxNC8xNF0gc3Rh
+Z2luZzogdHlwZWM6IHRjcGNpOiBtb3ZlIHRjcGNpIGRyaXZlciBvdXQgb2YNCj4gc3RhZ2luZw0K
+PiANCj4gSGkgTGkgSnVuLA0KPiANCj4gVGhpcyBwYXRjaCB0YWtlcyBhd2F5IGJ1aWxkaW5nIHRo
+ZSBlbnRpcmUgc3RhZ2luZy90eXBlYyB0cmVlIGJ1dCB0aGlzIGlzIHN0aWxsIG5vdA0KPiBlbXB0
+eSBhZnRlciB5b3VyIHBhdGNoLCBhbm90aGVyIGRyaXZlciAidGNwY2lfcnQxNzExaCIgaXMgdGhl
+cmUuDQo+IEJldHRlciBqdXN0IHJlbW92ZSB0Y3BjaSBmcm9tIHN0YWdpbmcvdHlwZWMve0tjb25m
+aWcsTWFrZWZpbGV9DQoNCk9oLCB5ZXMsIEkgc2hvdWxkIGFsc28gbW92ZSBvdXQgdGNwY2lfcnQx
+NzExaCBkcml2ZXIsIHdpbGwgdXBkYXRlIGluIG5leHQgdmVyc2lvbi4NCg0KVGhhbmtzDQpMaSBK
+dW4NCj4gDQo+IC8vIE1hdHMNCj4gDQo+IE9uIDIwMTgtMDUtMDMgMDI6MjQsIExpIEp1biB3cm90
+ZToNCj4gDQo+ID4gTW92ZSBUQ1BDSShUeXBlYyBwb3J0IGNvbnRyb2xsZXIgaW50ZXJmYWNlKSBk
+cml2ZXIgb3V0IG9mIHN0YWdpbmcuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBMaSBKdW4gPGp1
+bi5saUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICAgZHJpdmVycy9zdGFnaW5nL0tjb25maWcgICAg
+ICAgICAgICAgICAgfCAyIC0tDQo+ID4gICBkcml2ZXJzL3N0YWdpbmcvTWFrZWZpbGUgICAgICAg
+ICAgICAgICB8IDEgLQ0KPiA+ICAgZHJpdmVycy9zdGFnaW5nL3R5cGVjL1RPRE8gICAgICAgICAg
+ICAgfCA1IC0tLS0tDQo+ID4gICBkcml2ZXJzL3VzYi90eXBlYy9LY29uZmlnICAgICAgICAgICAg
+ICB8IDcgKysrKysrKw0KPiA+ICAgZHJpdmVycy91c2IvdHlwZWMvTWFrZWZpbGUgICAgICAgICAg
+ICAgfCAxICsNCj4gPiAgIGRyaXZlcnMve3N0YWdpbmcgPT4gdXNifS90eXBlYy90Y3BjaS5jIHwg
+MA0KPiA+ICAgZHJpdmVycy97c3RhZ2luZyA9PiB1c2J9L3R5cGVjL3RjcGNpLmggfCAwDQo+ID4g
+ICA3IGZpbGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCj4gPg0K
+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvS2NvbmZpZyBiL2RyaXZlcnMvc3RhZ2lu
+Zy9LY29uZmlnIGluZGV4DQo+ID4gZDU5MjZmMC4uZDgzZmY2NiAxMDA2NDQNCj4gPiAtLS0gYS9k
+cml2ZXJzL3N0YWdpbmcvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMvc3RhZ2luZy9LY29uZmln
+DQo+ID4gQEAgLTExMiw4ICsxMTIsNiBAQCBzb3VyY2UgImRyaXZlcnMvc3RhZ2luZy9ncmV5YnVz
+L0tjb25maWciDQo+ID4NCj4gPiAgIHNvdXJjZSAiZHJpdmVycy9zdGFnaW5nL3ZjMDRfc2Vydmlj
+ZXMvS2NvbmZpZyINCj4gPg0KPiA+IC1zb3VyY2UgImRyaXZlcnMvc3RhZ2luZy90eXBlYy9LY29u
+ZmlnIg0KPiA+IC0NCj4gPiAgIHNvdXJjZSAiZHJpdmVycy9zdGFnaW5nL3Zib3h2aWRlby9LY29u
+ZmlnIg0KPiA+DQo+ID4gICBzb3VyY2UgImRyaXZlcnMvc3RhZ2luZy9waTQzMy9LY29uZmlnIg0K
+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvTWFrZWZpbGUgYi9kcml2ZXJzL3N0YWdp
+bmcvTWFrZWZpbGUgaW5kZXgNCj4gPiA5MTk3NTNjLi5hNzFlYzFmIDEwMDY0NA0KPiA+IC0tLSBh
+L2RyaXZlcnMvc3RhZ2luZy9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZlcnMvc3RhZ2luZy9NYWtl
+ZmlsZQ0KPiA+IEBAIC0yLDcgKzIsNiBAQA0KPiA+ICAgIyBNYWtlZmlsZSBmb3Igc3RhZ2luZyBk
+aXJlY3RvcnkNCj4gPg0KPiA+ICAgb2JqLXkJCQkJKz0gbWVkaWEvDQo+ID4gLW9iai15CQkJCSs9
+IHR5cGVjLw0KPiA+ICAgb2JqLSQoQ09ORklHX0lQWCkJCSs9IGlweC8NCj4gPiAgIG9iai0kKENP
+TkZJR19OQ1BfRlMpCQkrPSBuY3Bmcy8NCj4gPiAgIG9iai0kKENPTkZJR19QUklTTTJfVVNCKQkr
+PSB3bGFuLW5nLw0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvdHlwZWMvVE9ETyBi
+L2RyaXZlcnMvc3RhZ2luZy90eXBlYy9UT0RPDQo+ID4gZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0
+IGluZGV4IDUzZmUyZjcuLjAwMDAwMDANCj4gPiAtLS0gYS9kcml2ZXJzL3N0YWdpbmcvdHlwZWMv
+VE9ETw0KPiA+ICsrKyAvZGV2L251bGwNCj4gPiBAQCAtMSw1ICswLDAgQEANCj4gPiAtdGNwY2k6
+DQo+ID4gLS0gVGVzdCB3aXRoIHJlYWwgaGFyZHdhcmUNCj4gPiAtDQo+ID4gLVBsZWFzZSBzZW5k
+IHBhdGNoZXMgdG8gR3VlbnRlciBSb2VjayA8bGludXhAcm9lY2stdXMubmV0PiBhbmQgY29weQ0K
+PiA+IC1IZWlra2kgS3JvZ2VydXMgPGhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRlbC5jb20+Lg0K
+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi90eXBlYy9LY29uZmlnIGIvZHJpdmVycy91c2Iv
+dHlwZWMvS2NvbmZpZw0KPiA+IGluZGV4IDJjOGVhYjEuLjBhODYyZmMgMTAwNjQ0DQo+ID4gLS0t
+IGEvZHJpdmVycy91c2IvdHlwZWMvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMvdXNiL3R5cGVj
+L0tjb25maWcNCj4gPiBAQCAtNTYsNiArNTYsMTMgQEAgY29uZmlnIFRZUEVDX1RDUE0NCj4gPg0K
+PiA+ICAgaWYgVFlQRUNfVENQTQ0KPiA+DQo+ID4gK2NvbmZpZyBUWVBFQ19UQ1BDSQ0KPiA+ICsJ
+dHJpc3RhdGUgIlR5cGUtQyBQb3J0IENvbnRyb2xsZXIgSW50ZXJmYWNlIGRyaXZlciINCj4gPiAr
+CWRlcGVuZHMgb24gSTJDDQo+ID4gKwlzZWxlY3QgUkVHTUFQX0kyQw0KPiA+ICsJaGVscA0KPiA+
+ICsJICBUeXBlLUMgUG9ydCBDb250cm9sbGVyIGRyaXZlciBmb3IgVENQQ0ktY29tcGxpYW50IGNv
+bnRyb2xsZXIuDQo+ID4gKw0KPiA+ICAgc291cmNlICJkcml2ZXJzL3VzYi90eXBlYy9mdXNiMzAy
+L0tjb25maWciDQo+ID4NCj4gPiAgIGNvbmZpZyBUWVBFQ19XQ09WRQ0KPiA+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL3VzYi90eXBlYy9NYWtlZmlsZSBiL2RyaXZlcnMvdXNiL3R5cGVjL01ha2VmaWxl
+DQo+ID4gaW5kZXggMWY1OTlhNi4uMDI3NThhMSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3Vz
+Yi90eXBlYy9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZlcnMvdXNiL3R5cGVjL01ha2VmaWxlDQo+
+ID4gQEAgLTcsMyArNyw0IEBAIG9iai0kKENPTkZJR19UWVBFQ19XQ09WRSkJKz0gdHlwZWNfd2Nv
+dmUubw0KPiA+ICAgb2JqLSQoQ09ORklHX1RZUEVDX1VDU0kpCSs9IHVjc2kvDQo+ID4gICBvYmot
+JChDT05GSUdfVFlQRUNfVFBTNjU5OFgpCSs9IHRwczY1OTh4Lm8NCj4gPiAgIG9iai0kKENPTkZJ
+R19UWVBFQykJCSs9IG11eC8NCj4gPiArb2JqLSQoQ09ORklHX1RZUEVDX1RDUENJKQkrPSB0Y3Bj
+aS5vDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy90eXBlYy90Y3BjaS5jIGIvZHJp
+dmVycy91c2IvdHlwZWMvdGNwY2kuYw0KPiA+IHNpbWlsYXJpdHkgaW5kZXggMTAwJSByZW5hbWUg
+ZnJvbSBkcml2ZXJzL3N0YWdpbmcvdHlwZWMvdGNwY2kuYyByZW5hbWUNCj4gPiB0byBkcml2ZXJz
+L3VzYi90eXBlYy90Y3BjaS5jIGRpZmYgLS1naXQNCj4gPiBhL2RyaXZlcnMvc3RhZ2luZy90eXBl
+Yy90Y3BjaS5oIGIvZHJpdmVycy91c2IvdHlwZWMvdGNwY2kuaCBzaW1pbGFyaXR5DQo+ID4gaW5k
+ZXggMTAwJSByZW5hbWUgZnJvbSBkcml2ZXJzL3N0YWdpbmcvdHlwZWMvdGNwY2kuaCByZW5hbWUg
+dG8NCj4gPiBkcml2ZXJzL3VzYi90eXBlYy90Y3BjaS5oDQoNCg==
