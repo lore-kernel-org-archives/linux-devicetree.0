@@ -1,87 +1,53 @@
-Return-Path: <SRS0=jfmr=HZ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pg0-f67.google.com ([74.125.83.67]:34336 "EHLO
-        mail-pg0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751777AbeEFOUD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 6 May 2018 10:20:03 -0400
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v5 06/14] media: ov772x: use generic names for reset and powerdown gpios
-Date: Sun,  6 May 2018 23:19:21 +0900
-Message-Id: <1525616369-8843-7-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
-References: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
+Return-Path: <SRS0=ePA5=IB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-ot0-f194.google.com ([74.125.82.194]:42864 "EHLO
+        mail-ot0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751978AbeENU4B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 14 May 2018 16:56:01 -0400
+Received: by mail-ot0-f194.google.com with SMTP id l13-v6so15937887otk.9
+        for <devicetree@vger.kernel.org>; Mon, 14 May 2018 13:56:01 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <7h603v115k.fsf@baylibre.com>
+References: <20180509235037.5876-1-martin.blumenstingl@googlemail.com> <7h603v115k.fsf@baylibre.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Mon, 14 May 2018 22:55:40 +0200
+Message-ID: <CAFBinCDcDJXJb8=Ap6gUSOfkFewUf4s7FMFuS37fv5J3Vy_7YA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] Meson8m2 (32-bit ARM) SoC support
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, carlo@caione.org, devicetree@vger.kernel.org, balbes-150@yandex.ru
 List-ID: <devicetree@vger.kernel.org>
 
-The ov772x driver uses "rstb-gpios" and "pwdn-gpios" for reset and
-powerdown pins.  However, using generic names for these gpios is
-preferred.  ("reset-gpios" and "powerdown-gpios" respectively)
+On Fri, May 11, 2018 at 2:33 AM, Kevin Hilman <khilman@baylibre.com> wrote:
+> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+>
+>> This series adds support for the Meson8m2 SoC. This SoC is mostly
+>> compatible with Meson8 while using some peripherals from Meson8b. Patch
+>> #4 contains a list of (known) differences between the Meson8 and Meson8m2
+>> SoCs.
+>>
+>> The first supported board with Meson8m2 SoC is the "Tronsmart MXIII Plus"
+>> where Oleg contributed the initial .dts and heavily tested it (many
+>> thanks!). His testing also confirmed that the Meson8m2 SoC uses the same
+>> register layout for the Ethernet "glue registers (supported by the
+>> dwmac-meson8b driver) as Meson8b.
+>>
+>> changes since v1 at [0]:
+>> - do not create a new MACH_MESON8M2 Kconfig entry as suggested by Kevin
+>>   (MACH_MESON8 is re-used instead). This affects patch #1 (which was
+>>   patch #3 in v1) and patch #4 (which was patch #6 in v1)
+>> - dropped patches #1 and #2 from v1 because Kevin already applied these
+>>   ("dt-bindings: arm: amlogic: add support for the Meson8m2 SoC" and
+>>   "dt-bindings: arm: amlogic: add support for the Tronsmart MXIII Plus")
+>
+> Applied to v4.18/dt.
+thank you!
 
-There is only one mainline user for these gpios, so rename to generic
-names.
+> One more request: Could you send one more patch (on top of my v4.18/dt)
+> that gets rid of the Kconfig for the 8B also?
+I put that on my TODO-list, I'll send a patch before my next batch of
+32-bit dt updates
 
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* v5
-- No changes
 
- arch/sh/boards/mach-migor/setup.c | 5 +++--
- drivers/media/i2c/ov772x.c        | 8 ++++----
- 2 files changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/arch/sh/boards/mach-migor/setup.c b/arch/sh/boards/mach-migor/setup.c
-index 271dfc2..73b9ee4 100644
---- a/arch/sh/boards/mach-migor/setup.c
-+++ b/arch/sh/boards/mach-migor/setup.c
-@@ -351,8 +351,9 @@ static struct platform_device migor_ceu_device = {
- static struct gpiod_lookup_table ov7725_gpios = {
- 	.dev_id		= "0-0021",
- 	.table		= {
--		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT0, "pwdn", GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT3, "rstb", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT0, "powerdown",
-+			    GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT3, "reset", GPIO_ACTIVE_LOW),
- 	},
- };
- 
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index bb5327f..97a65ce 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -837,10 +837,10 @@ static int ov772x_power_on(struct ov772x_priv *priv)
- 	 * available to handle this cleanly, request the GPIO temporarily
- 	 * to avoid conflicts.
- 	 */
--	priv->rstb_gpio = gpiod_get_optional(&client->dev, "rstb",
-+	priv->rstb_gpio = gpiod_get_optional(&client->dev, "reset",
- 					     GPIOD_OUT_LOW);
- 	if (IS_ERR(priv->rstb_gpio)) {
--		dev_info(&client->dev, "Unable to get GPIO \"rstb\"");
-+		dev_info(&client->dev, "Unable to get GPIO \"reset\"");
- 		return PTR_ERR(priv->rstb_gpio);
- 	}
- 
-@@ -1307,10 +1307,10 @@ static int ov772x_probe(struct i2c_client *client,
- 		goto error_ctrl_free;
- 	}
- 
--	priv->pwdn_gpio = gpiod_get_optional(&client->dev, "pwdn",
-+	priv->pwdn_gpio = gpiod_get_optional(&client->dev, "powerdown",
- 					     GPIOD_OUT_LOW);
- 	if (IS_ERR(priv->pwdn_gpio)) {
--		dev_info(&client->dev, "Unable to get GPIO \"pwdn\"");
-+		dev_info(&client->dev, "Unable to get GPIO \"powerdown\"");
- 		ret = PTR_ERR(priv->pwdn_gpio);
- 		goto error_clk_put;
- 	}
--- 
-2.7.4
-
+Regards
+Martin
