@@ -1,90 +1,112 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 5/6] bus: fsl-mc: supoprt dma configure for devices on
-	fsl-mc bus
-Date: Mon, 14 May 2018 07:47:57 -0500
-Message-ID: <20180514124757.GA253589@bhelgaas-glaptop.roam.corp.google.com>
-References: <1524824826-29473-1-git-send-email-nipun.gupta@nxp.com>
-	<1525069641-8523-1-git-send-email-nipun.gupta@nxp.com>
-	<1525069641-8523-6-git-send-email-nipun.gupta@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1525069641-8523-6-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Ilia Lin <ilialin@codeaurora.org>
+Subject: [PATCH v6 00/14] CPU scaling support for msm8996
+Date: Mon, 14 May 2018 16:11:46 +0300
+Message-ID: <1526303520-5843-1-git-send-email-ilialin@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, viresh.kumar@linaro.org, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, ilialin@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-When you add the changleog, please also fix the subject typo:
+[v6]
+ * Addressed comments from Viresh about:
+ ** Comments style
+ ** Kconfig bool instead of tristate
+ ** DT and documentation style
+ ** Resourses deallocation on an error
+ ** Typos
 
-- bus: fsl-mc: supoprt dma configure for devices on fsl-mc bus
-               ^^^^^^^
-+ bus: fsl-mc: support dma configure for devices on fsl-mc bus
+[v5]
+ * Rebased
+ * Addressed comments from Bjorn about SPDX style,
+   functions and parameters naming
+ * Addressed comments from Viresh DT properties and style, comments style,
+   resourses deallocation, documentation placement
+ * Addressed comments from Sricharan about unnessesary include
+ * Addressed comments from Nicolas
+ * Addressed comments from Rob about the commit messages and acks
+ * Addressed comments from Mark
 
-On Mon, Apr 30, 2018 at 11:57:20AM +0530, Nipun Gupta wrote:
-> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-> ---
->  drivers/bus/fsl-mc/fsl-mc-bus.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
-> index 5d8266c..624828b 100644
-> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
-> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
-> @@ -127,6 +127,16 @@ static int fsl_mc_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
->  	return 0;
->  }
->  
-> +static int fsl_mc_dma_configure(struct device *dev)
-> +{
-> +	struct device *dma_dev = dev;
-> +
-> +	while (dev_is_fsl_mc(dma_dev))
-> +		dma_dev = dma_dev->parent;
-> +
-> +	return of_dma_configure(dev, dma_dev->of_node, 0);
-> +}
-> +
->  static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
->  			     char *buf)
->  {
-> @@ -148,6 +158,7 @@ struct bus_type fsl_mc_bus_type = {
->  	.name = "fsl-mc",
->  	.match = fsl_mc_bus_match,
->  	.uevent = fsl_mc_bus_uevent,
-> +	.dma_configure  = fsl_mc_dma_configure,
->  	.dev_groups = fsl_mc_dev_groups,
->  };
->  EXPORT_SYMBOL_GPL(fsl_mc_bus_type);
-> @@ -616,6 +627,7 @@ int fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
->  		mc_dev->icid = parent_mc_dev->icid;
->  		mc_dev->dma_mask = FSL_MC_DEFAULT_DMA_MASK;
->  		mc_dev->dev.dma_mask = &mc_dev->dma_mask;
-> +		mc_dev->dev.coherent_dma_mask = mc_dev->dma_mask;
->  		dev_set_msi_domain(&mc_dev->dev,
->  				   dev_get_msi_domain(&parent_mc_dev->dev));
->  	}
-> @@ -633,10 +645,6 @@ int fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
->  			goto error_cleanup_dev;
->  	}
->  
-> -	/* Objects are coherent, unless 'no shareability' flag set. */
-> -	if (!(obj_desc->flags & FSL_MC_OBJ_FLAG_NO_MEM_SHAREABILITY))
-> -		arch_setup_dma_ops(&mc_dev->dev, 0, 0, NULL, true);
-> -
->  	/*
->  	 * The device-specific probe callback will get invoked by device_add()
->  	 */
-> -- 
-> 1.9.1
-> 
+[v4]
+ * Adressed all comments from Stephen
+ * Added CPU regulator support
+ * Added qcom-cpufreq-kryo driver
+
+[v3]
+ * Rebased on top of the latest PLL driver changes
+ * Addressed comment from Rob Herring for bindings
+
+[v2]
+ * Addressed comments from Rob Herring for bindings
+ * Addressed comments from Mark Rutland for memory barrier
+ * Addressed comments from Julien Thierry for clock reenabling condition
+ * Tuned the HW configuration for clock frequencies below 600MHz
+
+Clocks:
+This series adds support for the CPU clocks on msm8996 devices.
+The driver uses the existing PLL drivers and is required to control
+the CPU frequency scaling on the MSM8996.
+
+Regulators:
+Added SAW regulator support to the SPMI regulator driver. The SAW regulators
+will be controlled through special CPU registers instead of direct
+SPMI accesses.
+
+Cpufreq:
+The qcom-cpufreq-kryo driver is aimed to support different SOC versions.
+The driver reads eFuse information and chooses the required OPP subset
+by passing the OPP supported-hw parameter.
+
+A previous post of RFC can be found here:
+https://patchwork.kernel.org/patch/10377887/
+
+Ilia Lin (11):
+  soc: qcom: Separate kryo l2 accessors from PMU driver
+  clk: qcom: Add CPU clock driver for msm8996
+  clk: qcom: Add DT bindings for CPU clock driver for msm8996
+  clk: qcom: Add ACD path to CPU clock driver for msm8996
+  dt: qcom: Add opp and thermal to the msm8996
+  regulator: qcom_spmi: Add support for SAW
+  dt-bindings: qcom_spmi: Add support for SAW documentation
+  dt: qcom: Add SAW regulator for 8x96 CPUs
+  cpufreq: Add Kryo CPU scaling driver
+  dt-bindings: cpufreq: Document operating-points-v2-kryo-cpu
+  dt: qcom: Add qcom-cpufreq-kryo driver configuration
+
+Rajendra Nayak (3):
+  clk: qcom: Make clk_alpha_pll_configure available to modules
+  clk: qcom: cpu-8996: Add support to switch to alternate PLL
+  clk: qcom: cpu-8996: Add support to switch below 600Mhz
+
+ .../devicetree/bindings/clock/qcom,kryocc.txt      |  17 +
+ .../devicetree/bindings/opp/kryo-cpufreq.txt       | 680 +++++++++++++++++++++
+ .../bindings/regulator/qcom,spmi-regulator.txt     |  45 ++
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dts        |   2 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              | 650 +++++++++++++++++++-
+ drivers/clk/clk-fixed-factor.c                     |   2 +-
+ drivers/clk/qcom/Kconfig                           |   9 +
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/clk-alpha-pll.c                   |   1 +
+ drivers/clk/qcom/clk-alpha-pll.h                   |   6 +
+ drivers/clk/qcom/clk-cpu-8996.c                    | 519 ++++++++++++++++
+ drivers/cpufreq/Kconfig.arm                        |  11 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/cpufreq-dt-platdev.c               |   3 +
+ drivers/cpufreq/qcom-cpufreq-kryo.c                | 148 +++++
+ drivers/perf/Kconfig                               |   1 +
+ drivers/perf/qcom_l2_pmu.c                         |  90 +--
+ drivers/regulator/qcom_spmi-regulator.c            | 133 +++-
+ drivers/soc/qcom/Kconfig                           |   3 +
+ drivers/soc/qcom/Makefile                          |   1 +
+ drivers/soc/qcom/kryo-l2-accessors.c               |  65 ++
+ include/soc/qcom/kryo-l2-accessors.h               |  21 +
+ 22 files changed, 2329 insertions(+), 80 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,kryocc.txt
+ create mode 100644 Documentation/devicetree/bindings/opp/kryo-cpufreq.txt
+ create mode 100644 drivers/clk/qcom/clk-cpu-8996.c
+ create mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
+ create mode 100644 drivers/soc/qcom/kryo-l2-accessors.c
+ create mode 100644 include/soc/qcom/kryo-l2-accessors.h
+
+-- 
+1.9.1
