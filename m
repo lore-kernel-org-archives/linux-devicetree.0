@@ -1,39 +1,30 @@
 From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH RESEND net-next v2 1/8] dt-bindings: net: dwmac-sun8i:
- Clean up clock delay chain descriptions
-Date: Mon, 14 May 2018 14:03:30 +0200
-Message-ID: <20180514120330.GA25241@lunn.ch>
-References: <20180513191425.9801-1-wens@csie.org>
- <20180513191425.9801-2-wens@csie.org>
- <20180513194919.GE12738@lunn.ch>
- <CAGb2v66nqWnioS1pwfWFtMZFZSWvf4SwXr_ExnnGvYsK9RU_LA@mail.gmail.com>
- <20180513200529.GF12738@lunn.ch>
- <CAGb2v64ACc1tQRhy4LhnvCC7VJ3nVM-wMbgUgzviGMWKPFsSuQ@mail.gmail.com>
- <20180513202938.GH12738@lunn.ch>
- <CAGb2v66F_Ho2OZdrF3p6xe9mQ=zJZ_KjE9MnW1VmWs9jw65eEg@mail.gmail.com>
- <20180514072113.yts3shbojvbxj4tq@flea>
+Subject: Re: [PATCH] net: phy: micrel: workaround for errata #2 for KSZ9031
+Date: Mon, 14 May 2018 14:11:35 +0200
+Message-ID: <20180514121135.GB25241@lunn.ch>
+References: <20180514082218.29158-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180514072113.yts3shbojvbxj4tq@flea>
+In-Reply-To: <20180514082218.29158-1-m.felsch@pengutronix.de>
 Sender: netdev-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Markus Niebel <Markus.Niebel@tqs.de>
 List-Id: devicetree@vger.kernel.org
 
-> > Currently no other board requires this, but this is already part of the
-> > binding. The new stuff limits the range for a specific SoC, simply because
-> > that is the range supported by the control register. Not implementing, i.e.
-> > supporting the whole range from the property, which might get truncated,
-> > doesn't make much sense to me.
+On Mon, May 14, 2018 at 10:22:18AM +0200, Marco Felsch wrote:
+> From: Markus Niebel <Markus.Niebel@tqs.de>
 > 
-> With that driver we don't, but the previous design had the same
-> feature and it was used on more boards. It was simply initialized
-> statically in U-Boot, and not in Linux through the DT like it is done
-> here.
+> handle errata #2 for KSZ9031: force 1000Base-T master
+> 
+> Attention: enabling the workaround will cause no link to
+> other GIGE master.
 
-If there are boards which do need it, then i'm fine with it. I would
-also prefer that Linux does set it, and don't rely on U-boot.
+Hi Marco
+
+It would be good to document why this is needed, when to use it, what
+problems it fixes, etc. At the moment, there is not enough information
+to decide if you should turn it on.
 
    Andrew
