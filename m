@@ -1,93 +1,107 @@
-From: Elaine Zhang <zhangqing@rock-chips.com>
-Subject: [PATCH v2 13/13] soc: rockchip: power-domain: add power domain support for px30
-Date: Mon, 14 May 2018 11:32:44 +0800
-Message-ID: <1526268764-26141-1-git-send-email-zhangqing@rock-chips.com>
-References: <1526268455-9133-1-git-send-email-zhangqing@rock-chips.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH v6 3/6] kernel/reboot.c: export pm_power_off_prepare
+Date: Mon, 14 May 2018 06:33:19 +0200
+Message-ID: <a431b0e1-f4f4-1439-f0bf-736018c6ab0c@pengutronix.de>
+References: <20180305102524.5905-1-o.rempel@pengutronix.de>
+ <20180305102524.5905-4-o.rempel@pengutronix.de>
+ <20180504185052.bjhfkvpgrblc7tfc@pengutronix.de>
+ <1937901.oyadCYFYNo@aspire.rjw.lan>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="guq0sp4rSU1SNUAcQxYjs9jesGI0bByNP"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526268455-9133-1-git-send-email-zhangqing@rock-chips.com>
+In-Reply-To: <1937901.oyadCYFYNo@aspire.rjw.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, rjw@rjwysocki.net, khilman@kernel.org, ulf.hansson@linaro.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, wxt@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com, Finley Xiao <finley.xiao@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Finley Xiao <finley.xiao@rock-chips.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--guq0sp4rSU1SNUAcQxYjs9jesGI0bByNP
+Content-Type: multipart/mixed; boundary="H2u0RczUq28YJQFfyQp017tZrWHiIKswr";
+ protected-headers="v1"
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>, kernel@pengutronix.de,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Liam Girdwood <lgirdwood@gmail.com>,
+ Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>,
+ Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>,
+ Mark Brown <broonie@kernel.org>
+Message-ID: <a431b0e1-f4f4-1439-f0bf-736018c6ab0c@pengutronix.de>
+Subject: Re: [PATCH v6 3/6] kernel/reboot.c: export pm_power_off_prepare
+References: <20180305102524.5905-1-o.rempel@pengutronix.de>
+ <20180305102524.5905-4-o.rempel@pengutronix.de>
+ <20180504185052.bjhfkvpgrblc7tfc@pengutronix.de>
+ <1937901.oyadCYFYNo@aspire.rjw.lan>
+In-Reply-To: <1937901.oyadCYFYNo@aspire.rjw.lan>
 
-This driver is modified to support PX30 SoC.
+--H2u0RczUq28YJQFfyQp017tZrWHiIKswr
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
----
- drivers/soc/rockchip/pm_domains.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
 
-diff --git a/drivers/soc/rockchip/pm_domains.c b/drivers/soc/rockchip/pm_domains.c
-index 90dcd5e21ae6..d0c5615132e3 100644
---- a/drivers/soc/rockchip/pm_domains.c
-+++ b/drivers/soc/rockchip/pm_domains.c
-@@ -18,6 +18,7 @@
- #include <linux/clk.h>
- #include <linux/regmap.h>
- #include <linux/mfd/syscon.h>
-+#include <dt-bindings/power/px30-power.h>
- #include <dt-bindings/power/rk3036-power.h>
- #include <dt-bindings/power/rk3128-power.h>
- #include <dt-bindings/power/rk3228-power.h>
-@@ -114,6 +115,9 @@ struct rockchip_pmu {
- 	.active_wakeup = wakeup,			\
- }
- 
-+#define DOMAIN_PX30(pwr, status, req, wakeup)		\
-+	DOMAIN_M(pwr, status, req, (req) + 16, req, wakeup)
-+
- #define DOMAIN_RK3288(pwr, status, req, wakeup)		\
- 	DOMAIN(pwr, status, req, req, (req) + 16, wakeup)
- 
-@@ -712,6 +716,17 @@ static int rockchip_pm_domain_probe(struct platform_device *pdev)
- 	return error;
- }
- 
-+static const struct rockchip_domain_info px30_pm_domains[] = {
-+	[PX30_PD_USB]		= DOMAIN_PX30(5, 5, 10, false),
-+	[PX30_PD_SDCARD]	= DOMAIN_PX30(8, 8, 9, false),
-+	[PX30_PD_GMAC]		= DOMAIN_PX30(10, 10, 6, false),
-+	[PX30_PD_MMC_NAND]	= DOMAIN_PX30(11, 11, 5, false),
-+	[PX30_PD_VPU]		= DOMAIN_PX30(12, 12, 14, false),
-+	[PX30_PD_VO]		= DOMAIN_PX30(13, 13, 7, false),
-+	[PX30_PD_VI]		= DOMAIN_PX30(14, 14, 8, false),
-+	[PX30_PD_GPU]		= DOMAIN_PX30(15, 15, 2, false),
-+};
-+
- static const struct rockchip_domain_info rk3036_pm_domains[] = {
- 	[RK3036_PD_MSCH]	= DOMAIN_RK3036(14, 23, 30, true),
- 	[RK3036_PD_CORE]	= DOMAIN_RK3036(13, 17, 24, false),
-@@ -811,6 +826,17 @@ static int rockchip_pm_domain_probe(struct platform_device *pdev)
- 	[RK3399_PD_SDIOAUDIO]	= DOMAIN_RK3399(31, 31, 29, true),
- };
- 
-+static const struct rockchip_pmu_info px30_pmu = {
-+	.pwr_offset = 0x18,
-+	.status_offset = 0x20,
-+	.req_offset = 0x64,
-+	.idle_offset = 0x6c,
-+	.ack_offset = 0x6c,
-+
-+	.num_domains = ARRAY_SIZE(px30_pm_domains),
-+	.domain_info = px30_pm_domains,
-+};
-+
- static const struct rockchip_pmu_info rk3036_pmu = {
- 	.req_offset = 0x148,
- 	.idle_offset = 0x14c,
-@@ -915,6 +941,10 @@ static int rockchip_pm_domain_probe(struct platform_device *pdev)
- 
- static const struct of_device_id rockchip_pm_domain_dt_match[] = {
- 	{
-+		.compatible = "rockchip,px30-power-controller",
-+		.data = (void *)&px30_pmu,
-+	},
-+	{
- 		.compatible = "rockchip,rk3036-power-controller",
- 		.data = (void *)&rk3036_pmu,
- 	},
--- 
-1.9.1
+
+On 12.05.2018 13:13, Rafael J. Wysocki wrote:
+> On Friday, May 4, 2018 8:50:52 PM CEST Oleksij Rempel wrote:
+>> Hallo Andrew,
+>> I need your ACK or NACK for this patch.
+>>
+>> This function is used to configure external PMIC to interpret
+>> signal which will be triggered by pm_power_off as power off.
+>> Since same signal can be used for stand by, I linked PMIC configuratio=
+n
+>> with pm_power_off_prepare to avoid possible conflicts.
+>>
+>> On Mon, Mar 05, 2018 at 11:25:20AM +0100, Oleksij Rempel wrote:
+>>> Export pm_power_off_prepare. It is needed to implement power off on
+>>> Freescale/NXP iMX6 based boards with external power management
+>>> integrated circuit (PMIC).
+>>>
+>>> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+>>> ---
+>>>  kernel/reboot.c | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/kernel/reboot.c b/kernel/reboot.c
+>>> index e4ced883d8de..350be6baa60d 100644
+>>> --- a/kernel/reboot.c
+>>> +++ b/kernel/reboot.c
+>>> @@ -49,6 +49,7 @@ int reboot_force;
+>>>   */
+>>> =20
+>>>  void (*pm_power_off_prepare)(void);
+>>> +EXPORT_SYMBOL(pm_power_off_prepare);
+>=20
+> Why not EXPORT_SYMBOL_GPL() ?
+
+No special reason. Fixed.
+Any other comments?
+
+
+--H2u0RczUq28YJQFfyQp017tZrWHiIKswr--
+
+--guq0sp4rSU1SNUAcQxYjs9jesGI0bByNP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAlr5EY8ACgkQdQOiSHVI
+77Romwf+Oud20PXLIhkk9kB9S1hdjhqEs/O32pH5DS8/+iBA4q85Icq2u6welZLQ
+rEZvCD8HVefVmmB1+nHLOK/0h1KHZX/IR6+92KE5icdaLYESTLCw3/gtDyT1hRv2
+rlH4B4CZIM/vYUn0C9mmfX3T8GZyTclbjpkwrbHetMse8z/hYL5upz0PyiCvBLw6
+YQQ8F9DS+OVjnHmFBooCI9itH6LAVkpCf3d8AmNAtHSNq66yTEENTQiPrRghLcb1
+fcQj9nEpa4uE1XDKT+F+AQ2QwC2gY0ET1tGfLeUSk3we4y5UNxa4rESC9CZKJScF
+nvzvgIAEwGP9A19o/P9fq7Kak3NTWA==
+=a7B0
+-----END PGP SIGNATURE-----
+
+--guq0sp4rSU1SNUAcQxYjs9jesGI0bByNP--
