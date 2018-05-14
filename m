@@ -1,100 +1,63 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 2/2] drm/bridge: sii902x: add optional power supplies
-Date: Mon, 14 May 2018 12:33:48 +0200
-Message-ID: <69a9da79-63df-6d0a-52e3-729ec8937484@samsung.com>
-References: <20180425075314.19137-1-philippe.cornu@st.com>
- <20180425075314.19137-3-philippe.cornu@st.com>
- <CGME20180514093922epcas2p4090c2d4819b470f2618ba4a333cecb2c@epcas2p4.samsung.com>
- <f299c615-d884-341c-e1da-2fe030e411ba@st.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v2 4/4] arm64: dts: Add Mediatek SoC MT8183 and evaluation
+ board dts and Makefile
+Date: Mon, 14 May 2018 11:35:45 +0100
+Message-ID: <efa91778-e81f-9ba4-22a6-43ff0f94af4f@arm.com>
+References: <1526293351-32794-1-git-send-email-erin.lo@mediatek.com>
+ <1526293351-32794-5-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <f299c615-d884-341c-e1da-2fe030e411ba@st.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philippe CORNU <philippe.cornu@st.com>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Yannick FERTRE <yannick.fertre@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1526293351-32794-5-git-send-email-erin.lo@mediatek.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Erin Lo <erin.lo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, Ben Ho <Ben.Ho@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTQuMDUuMjAxOCAxMTozOCwgUGhpbGlwcGUgQ09STlUgd3JvdGU6Cj4gSGkgTGF1cmVudCwg
-QXJjaGl0LCBBbmRyemVqICYgWWFubmljaywKPgo+IERvIHlvdSBoYXZlIGFueSBjb21tZW50cyBv
-biB0aGlzIHYyIGRyaXZlciBwYXJ0Pwo+IChtb3JlIGRldGFpbHMgcmVnYXJkaW5nIHYxL3YyIGRp
-ZmZlcmVuY2VzIGluIHRoZSBjb3ZlciBsZXR0ZXIgCj4gaHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQv
-bGlzdHMvZHJpLWRldmVsL21zZzE3NDEzNy5odG1sKQo+Cj4gVGhhbmsgeW91LAo+IFBoaWxpcHBl
-IDotKQo+Cj4KPiBPbiAwNC8yNS8yMDE4IDA5OjUzIEFNLCBQaGlsaXBwZSBDb3JudSB3cm90ZToK
-Pj4gQWRkIHRoZSBvcHRpb25hbCBwb3dlciBzdXBwbGllcyB1c2luZyB0aGUgZGVzY3JpcHRpb24g
-Zm91bmQgaW4KPj4gIlNpSTkwMjJBL1NpSTkwMjRBIEhETUkgVHJhbnNtaXR0ZXIgRGF0YSBTaGVl
-dCAoQXVndXN0IDIwMTYpIi4KPj4KPj4gVGhlIHNpaTkwMnggaW5wdXQgSU9zIGFyZSBub3QgImlv
-IHNhZmUiIHNvIGl0IGlzIGltcG9ydGFudCB0bwo+PiBlbmFibGUvZGlzYWJsZSB2b2x0YWdlIHJl
-Z3VsYXRvcnMgZHVyaW5nIHByb2JlL3JlbW92ZSBwaGFzZXMgdG8KPj4gYXZvaWQgZGFtYWdlcy4K
-CldoYXQgZXhhY3RseSBkb2VzIGl0IG1lYW4/IEllIEkgdW5kZXJzdGFuZCB0aGF0IHRoZSBjaGlw
-IGhhcyBzb21lCmxpbWl0YXRpb25zLCBidXQgd2h5IGVuYWJsaW5nL2Rpc2FibGluZyByZWd1bGF0
-b3JzIGluIHByb2JlL3JlbW92ZQpzaG91bGQgc29sdmUgaXQ/CgpSZWdhcmRzCkFuZHJ6ZWoKCj4+
-Cj4+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5jb3JudUBzdC5jb20+
-Cj4+IC0tLQo+PiAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jIHwgMzggKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMzQg
-aW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4
-LmMKPj4gaW5kZXggNjAzNzNkN2ViMjIwLi5jMzY3ZDdiOTFhZGUgMTAwNjQ0Cj4+IC0tLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9i
-cmlkZ2Uvc2lpOTAyeC5jCj4+IEBAIC0yNCw2ICsyNCw3IEBACj4+ICAgI2luY2x1ZGUgPGxpbnV4
-L2kyYy5oPgo+PiAgICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPj4gICAjaW5jbHVkZSA8bGlu
-dXgvcmVnbWFwLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2NvbnN1bWVyLmg+Cj4+
-ICAgCj4+ICAgI2luY2x1ZGUgPGRybS9kcm1QLmg+Cj4+ICAgI2luY2x1ZGUgPGRybS9kcm1fYXRv
-bWljX2hlbHBlci5oPgo+PiBAQCAtODYsNiArODcsNyBAQCBzdHJ1Y3Qgc2lpOTAyeCB7Cj4+ICAg
-CXN0cnVjdCBkcm1fYnJpZGdlIGJyaWRnZTsKPj4gICAJc3RydWN0IGRybV9jb25uZWN0b3IgY29u
-bmVjdG9yOwo+PiAgIAlzdHJ1Y3QgZ3Bpb19kZXNjICpyZXNldF9ncGlvOwo+PiArCXN0cnVjdCBy
-ZWd1bGF0b3JfYnVsa19kYXRhIHN1cHBsaWVzWzJdOwo+PiAgIH07Cj4+ICAgCj4+ICAgc3RhdGlj
-IGlubGluZSBzdHJ1Y3Qgc2lpOTAyeCAqYnJpZGdlX3RvX3NpaTkwMngoc3RydWN0IGRybV9icmlk
-Z2UgKmJyaWRnZSkKPj4gQEAgLTM5MiwyMyArMzk0LDQyIEBAIHN0YXRpYyBpbnQgc2lpOTAyeF9w
-cm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LAo+PiAgIAkJcmV0dXJuIFBUUl9FUlIoc2lp
-OTAyeC0+cmVzZXRfZ3Bpbyk7Cj4+ICAgCX0KPj4gICAKPj4gKwlzaWk5MDJ4LT5zdXBwbGllc1sw
-XS5zdXBwbHkgPSAiaW92Y2MiOwo+PiArCXNpaTkwMngtPnN1cHBsaWVzWzFdLnN1cHBseSA9ICJ2
-Y2MxMiI7Cj4+ICsJcmV0ID0gZGV2bV9yZWd1bGF0b3JfYnVsa19nZXQoZGV2LCBBUlJBWV9TSVpF
-KHNpaTkwMngtPnN1cHBsaWVzKSwKPj4gKwkJCQkgICAgICBzaWk5MDJ4LT5zdXBwbGllcyk7Cj4+
-ICsJaWYgKHJldCkgewo+PiArCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBnZXQgcG93ZXIgc3Vw
-cGxpZXM6ICVkXG4iLCByZXQpOwo+PiArCQlyZXR1cm4gcmV0Owo+PiArCX0KPj4gKwo+PiArCXJl
-dCA9IHJlZ3VsYXRvcl9idWxrX2VuYWJsZShBUlJBWV9TSVpFKHNpaTkwMngtPnN1cHBsaWVzKSwK
-Pj4gKwkJCQkgICAgc2lpOTAyeC0+c3VwcGxpZXMpOwo+PiArCWlmIChyZXQpIHsKPj4gKwkJZGV2
-X2VycihkZXYsICJGYWlsZWQgdG8gZW5hYmxlIHBvd2VyIHN1cHBsaWVzOiAlZFxuIiwgcmV0KTsK
-Pj4gKwkJcmV0dXJuIHJldDsKPj4gKwl9Cj4+ICsKPj4gKwl1c2xlZXBfcmFuZ2UoMTAwMDAsIDIw
-MDAwKTsKPj4gKwo+PiAgIAlzaWk5MDJ4X3Jlc2V0KHNpaTkwMngpOwo+PiAgIAo+PiAgIAlyZXQg
-PSByZWdtYXBfd3JpdGUoc2lpOTAyeC0+cmVnbWFwLCBTSUk5MDJYX1JFR19UUElfUlFCLCAweDAp
-Owo+PiAgIAlpZiAocmV0KQo+PiAtCQlyZXR1cm4gcmV0Owo+PiArCQlnb3RvIGVycl9kaXNhYmxl
-X3JlZ3VsYXRvcjsKPj4gICAKPj4gICAJcmV0ID0gcmVnbWFwX2J1bGtfcmVhZChzaWk5MDJ4LT5y
-ZWdtYXAsIFNJSTkwMlhfUkVHX0NISVBJRCgwKSwKPj4gICAJCQkgICAgICAgJmNoaXBpZCwgNCk7
-Cj4+ICAgCWlmIChyZXQpIHsKPj4gICAJCWRldl9lcnIoZGV2LCAicmVnbWFwX3JlYWQgZmFpbGVk
-ICVkXG4iLCByZXQpOwo+PiAtCQlyZXR1cm4gcmV0Owo+PiArCQlnb3RvIGVycl9kaXNhYmxlX3Jl
-Z3VsYXRvcjsKPj4gICAJfQo+PiAgIAo+PiAgIAlpZiAoY2hpcGlkWzBdICE9IDB4YjApIHsKPj4g
-ICAJCWRldl9lcnIoZGV2LCAiSW52YWxpZCBjaGlwaWQ6ICUwMnggKGV4cGVjdGluZyAweGIwKVxu
-IiwKPj4gICAJCQljaGlwaWRbMF0pOwo+PiAtCQlyZXR1cm4gLUVJTlZBTDsKPj4gKwkJcmV0ID0g
-LUVJTlZBTDsKPj4gKwkJZ290byBlcnJfZGlzYWJsZV9yZWd1bGF0b3I7Cj4+ICAgCX0KPj4gICAK
-Pj4gICAJLyogQ2xlYXIgYWxsIHBlbmRpbmcgaW50ZXJydXB0cyAqLwo+PiBAQCAtNDI0LDcgKzQ0
-NSw3IEBAIHN0YXRpYyBpbnQgc2lpOTAyeF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50
-LAo+PiAgIAkJCQkJCUlSUUZfT05FU0hPVCwgZGV2X25hbWUoZGV2KSwKPj4gICAJCQkJCQlzaWk5
-MDJ4KTsKPj4gICAJCWlmIChyZXQpCj4+IC0JCQlyZXR1cm4gcmV0Owo+PiArCQkJZ290byBlcnJf
-ZGlzYWJsZV9yZWd1bGF0b3I7Cj4+ICAgCX0KPj4gICAKPj4gICAJc2lpOTAyeC0+YnJpZGdlLmZ1
-bmNzID0gJnNpaTkwMnhfYnJpZGdlX2Z1bmNzOwo+PiBAQCAtNDM0LDYgKzQ1NSwxMiBAQCBzdGF0
-aWMgaW50IHNpaTkwMnhfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwKPj4gICAJaTJj
-X3NldF9jbGllbnRkYXRhKGNsaWVudCwgc2lpOTAyeCk7Cj4+ICAgCj4+ICAgCXJldHVybiAwOwo+
-PiArCj4+ICtlcnJfZGlzYWJsZV9yZWd1bGF0b3I6Cj4+ICsJcmVndWxhdG9yX2J1bGtfZGlzYWJs
-ZShBUlJBWV9TSVpFKHNpaTkwMngtPnN1cHBsaWVzKSwKPj4gKwkJCSAgICAgICBzaWk5MDJ4LT5z
-dXBwbGllcyk7Cj4+ICsKPj4gKwlyZXR1cm4gcmV0Owo+PiAgIH0KPj4gICAKPj4gICBzdGF0aWMg
-aW50IHNpaTkwMnhfcmVtb3ZlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpCj4+IEBAIC00NDMs
-NiArNDcwLDkgQEAgc3RhdGljIGludCBzaWk5MDJ4X3JlbW92ZShzdHJ1Y3QgaTJjX2NsaWVudCAq
-Y2xpZW50KQo+PiAgIAo+PiAgIAlkcm1fYnJpZGdlX3JlbW92ZSgmc2lpOTAyeC0+YnJpZGdlKTsK
-Pj4gICAKPj4gKwlyZWd1bGF0b3JfYnVsa19kaXNhYmxlKEFSUkFZX1NJWkUoc2lpOTAyeC0+c3Vw
-cGxpZXMpLAo+PiArCQkJICAgICAgIHNpaTkwMngtPnN1cHBsaWVzKTsKPj4gKwo+PiAgIAlyZXR1
-cm4gMDsKPj4gICB9Cj4+ICAgCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVsCg==
+On 14/05/18 11:22, Erin Lo wrote:
+> From: Ben Ho <Ben.Ho@mediatek.com>
+> 
+> Add basic chip support for Mediatek 8183
+> 
+> Signed-off-by: Ben Ho <Ben.Ho@mediatek.com>
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/Makefile       |   1 +
+>  arch/arm64/boot/dts/mediatek/mt8183-evb.dts |  31 +++++
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 178 ++++++++++++++++++++++++++++
+>  3 files changed, 210 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> 
+
+[...]
+
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> new file mode 100644
+> index 0000000..8564a26
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+
+[...]
+
+> +	gic: interrupt-controller@0c000000 {
+> +		compatible = "arm,gic-v3";
+> +		#interrupt-cells = <3>;
+> +		interrupt-parent = <&gic>;
+> +		interrupt-controller;
+> +		reg = <0 0x0c000000 0 0x40000>,  // CID
+> +		      <0 0x0c100000 0 0x200000>; // CIR
+
+You're missing the GICV and GICH regions that are present on both A53
+and A73 at an offset from PERIPHBASE.
+
+> +		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
