@@ -1,47 +1,177 @@
-Return-Path: <SRS0=jfmr=HZ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf0-f196.google.com ([209.85.192.196]:43508 "EHLO
-        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751822AbeEFOU0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 6 May 2018 10:20:26 -0400
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v5 14/14] media: ov772x: create subdevice device node
-Date: Sun,  6 May 2018 23:19:29 +0900
-Message-Id: <1525616369-8843-15-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
-References: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
+Return-Path: <SRS0=ePA5=IB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-bn3nam01on0094.outbound.protection.outlook.com ([104.47.33.94]:28224
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1752935AbeENMET (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 14 May 2018 08:04:19 -0400
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v4 1/6] dmaengine: fsldma: Replace DMA_IN/OUT by FSL_DMA_IN/OUT
+Date: Mon, 14 May 2018 20:03:02 +0800
+Message-ID: <20180514120307.15592-1-wen.he_1@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+To: vinod.koul@intel.com, dmaengine@vger.kernel.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, Wen He <wen.he_1@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Set the V4L2_SUBDEV_FL_HAS_DEVNODE flag for the subdevice so that the
-subdevice device node is created.
+This patch implenment a standard macro call functions is
+used to NXP dma drivers.
 
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+Signed-off-by: Wen He <wen.he_1@nxp.com>
 ---
-* v5
-- No changes
+change in v4:
+	- no
 
- drivers/media/i2c/ov772x.c | 1 +
- 1 file changed, 1 insertion(+)
+change in v3:
+	- no change
 
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 4b479f9..f7f4fe6 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -1409,6 +1409,7 @@ static int ov772x_probe(struct i2c_client *client,
- 	mutex_init(&priv->lock);
+change in v2:
+	- Replace 'ioread##width##be(addr) : ioread##width(addr)'
+	  by 'fsl_ioread##width##be(addr) : fsl_ioread##width(addr)'
+	- Fix macro FSL_DMA_IN/OUT build issues in powerpc
+					   
+ drivers/dma/fsldma.c |   16 +++++++-------
+ drivers/dma/fsldma.h |   57 +++++++++++++++++++++++++++++++++----------------
+ 2 files changed, 46 insertions(+), 27 deletions(-)
+
+diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
+index 3eaece8..75479d6 100644
+--- a/drivers/dma/fsldma.c
++++ b/drivers/dma/fsldma.c
+@@ -53,42 +53,42 @@
  
- 	v4l2_i2c_subdev_init(&priv->subdev, client, &ov772x_subdev_ops);
-+	priv->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
- 	v4l2_ctrl_handler_init(&priv->hdl, 3);
- 	/* Use our mutex for the controls */
- 	priv->hdl.lock = &priv->lock;
+ static void set_sr(struct fsldma_chan *chan, u32 val)
+ {
+-	DMA_OUT(chan, &chan->regs->sr, val, 32);
++	FSL_DMA_OUT(chan, &chan->regs->sr, val, 32);
+ }
+ 
+ static u32 get_sr(struct fsldma_chan *chan)
+ {
+-	return DMA_IN(chan, &chan->regs->sr, 32);
++	return FSL_DMA_IN(chan, &chan->regs->sr, 32);
+ }
+ 
+ static void set_mr(struct fsldma_chan *chan, u32 val)
+ {
+-	DMA_OUT(chan, &chan->regs->mr, val, 32);
++	FSL_DMA_OUT(chan, &chan->regs->mr, val, 32);
+ }
+ 
+ static u32 get_mr(struct fsldma_chan *chan)
+ {
+-	return DMA_IN(chan, &chan->regs->mr, 32);
++	return FSL_DMA_IN(chan, &chan->regs->mr, 32);
+ }
+ 
+ static void set_cdar(struct fsldma_chan *chan, dma_addr_t addr)
+ {
+-	DMA_OUT(chan, &chan->regs->cdar, addr | FSL_DMA_SNEN, 64);
++	FSL_DMA_OUT(chan, &chan->regs->cdar, addr | FSL_DMA_SNEN, 64);
+ }
+ 
+ static dma_addr_t get_cdar(struct fsldma_chan *chan)
+ {
+-	return DMA_IN(chan, &chan->regs->cdar, 64) & ~FSL_DMA_SNEN;
++	return FSL_DMA_IN(chan, &chan->regs->cdar, 64) & ~FSL_DMA_SNEN;
+ }
+ 
+ static void set_bcr(struct fsldma_chan *chan, u32 val)
+ {
+-	DMA_OUT(chan, &chan->regs->bcr, val, 32);
++	FSL_DMA_OUT(chan, &chan->regs->bcr, val, 32);
+ }
+ 
+ static u32 get_bcr(struct fsldma_chan *chan)
+ {
+-	return DMA_IN(chan, &chan->regs->bcr, 32);
++	return FSL_DMA_IN(chan, &chan->regs->bcr, 32);
+ }
+ 
+ /*
+diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
+index 4787d48..4c33a53 100644
+--- a/drivers/dma/fsldma.h
++++ b/drivers/dma/fsldma.h
+@@ -196,39 +196,58 @@ struct fsldma_chan {
+ #define to_fsl_desc(lh) container_of(lh, struct fsl_desc_sw, node)
+ #define tx_to_fsl_desc(tx) container_of(tx, struct fsl_desc_sw, async_tx)
+ 
++#ifdef	CONFIG_PPC
++#define fsl_ioread32(p)		in_le32(p)
++#define fsl_ioread32be(p)	in_be32(p)
++#define fsl_iowrite32(v, p)	out_le32(p, v)
++#define fsl_iowrite32be(v, p)	out_be32(p, v)
++
+ #ifndef __powerpc64__
+-static u64 in_be64(const u64 __iomem *addr)
++static u64 fsl_ioread64(const u64 __iomem *addr)
+ {
+-	return ((u64)in_be32((u32 __iomem *)addr) << 32) |
+-		(in_be32((u32 __iomem *)addr + 1));
++	return ((u64)in_le32((u32 __iomem *)addr + 1) << 32) |
++		(in_le32((u32 __iomem *)addr));
+ }
+ 
+-static void out_be64(u64 __iomem *addr, u64 val)
++static void fsl_iowrite64(u64 val, u64 __iomem *addr)
+ {
+-	out_be32((u32 __iomem *)addr, val >> 32);
+-	out_be32((u32 __iomem *)addr + 1, (u32)val);
++	out_le32((u32 __iomem *)addr + 1, val >> 32);
++	out_le32((u32 __iomem *)addr, (u32)val);
+ }
+ 
+-/* There is no asm instructions for 64 bits reverse loads and stores */
+-static u64 in_le64(const u64 __iomem *addr)
++static u64 fsl_ioread64be(const u64 __iomem *addr)
+ {
+-	return ((u64)in_le32((u32 __iomem *)addr + 1) << 32) |
+-		(in_le32((u32 __iomem *)addr));
++	return ((u64)in_be32((u32 __iomem *)addr) << 32) |
++		(in_be32((u32 __iomem *)addr + 1));
+ }
+ 
+-static void out_le64(u64 __iomem *addr, u64 val)
++static void fsl_iowrite64be(u64 val, u64 __iomem *addr)
+ {
+-	out_le32((u32 __iomem *)addr + 1, val >> 32);
+-	out_le32((u32 __iomem *)addr, (u32)val);
++	out_be32((u32 __iomem *)addr, val >> 32);
++	out_be32((u32 __iomem *)addr + 1, (u32)val);
+ }
+ #endif
++#endif
+ 
+-#define DMA_IN(fsl_chan, addr, width)					\
+-		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
+-			in_be##width(addr) : in_le##width(addr))
+-#define DMA_OUT(fsl_chan, addr, val, width)				\
+-		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
+-			out_be##width(addr, val) : out_le##width(addr, val))
++#if defined(CONFIG_ARM64) || defined(CONFIG_ARM)
++#define fsl_ioread32(p)		ioread32(p)
++#define fsl_ioread32be(p)	ioread32be(p)
++#define fsl_iowrite32(v, p)	iowrite32(v, p)
++#define fsl_iowrite32be(v, p)	iowrite32be(v, p)
++#define fsl_ioread64(p)		ioread64(p)
++#define fsl_ioread64be(p)	ioread64be(p)
++#define fsl_iowrite64(v, p)	iowrite64(v, p)
++#define fsl_iowrite64be(v, p)	iowrite64be(v, p)
++#endif
++
++#define FSL_DMA_IN(fsl_dma, addr, width)				\
++		(((fsl_dma)->feature & FSL_DMA_BIG_ENDIAN) ?		\
++			fsl_ioread##width##be(addr) : fsl_ioread##width(addr))
++
++#define FSL_DMA_OUT(fsl_dma, addr, val, width)				\
++		(((fsl_dma)->feature & FSL_DMA_BIG_ENDIAN) ?		\
++			fsl_iowrite##width##be(val, addr) : fsl_iowrite	\
++		##width(val, addr))
+ 
+ #define DMA_TO_CPU(fsl_chan, d, width)					\
+ 		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
 -- 
-2.7.4
+1.7.1
 
