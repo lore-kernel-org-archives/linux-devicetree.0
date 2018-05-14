@@ -1,87 +1,98 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 16/19 v3] regulator: fixed/gpio: Update device tree bindings
-Date: Mon, 14 May 2018 10:06:37 +0200
-Message-ID: <20180514080640.12515-17-linus.walleij@linaro.org>
-References: <20180514080640.12515-1-linus.walleij@linaro.org>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH 1/3] thermal: imx: remove cpufreq cooling registration
+Date: Mon, 14 May 2018 16:09:17 +0800
+Message-ID: <1526285359-17978-1-git-send-email-Anson.Huang@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180514080640.12515-1-linus.walleij@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, rui.zhang@intel.com, edubezval@gmail.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Deprecate the open drain binding for fixed regulator and indicate
-that we prefer this to be passed in the GPIO phandle flags.
+This patch removes cpufreq cooling registration in
+thermal .probe function, cpufreq cooling should be
+done in cpufreq driver when it is ready.
 
-Clarify that the line inversion semantics for fixed and GPIO
-regulators completely overrides the active low flags in the
-phandle flags.
-
-Unfortunately this can not be changed to prefer that we pass
-the flags in the phandle: the bindings have been specified and
-deployed such that the presence/absence of this flag and only
-that controls the line inversion semantics. The crucial semantic
-is that the absence of the flag means the core will assume
-the line is active low, which in GPIO terms is an exception,
-as GPIO lines are normally assumed to be active high.
-
-This special device tree semantic cannot be changed without
-introducing a whole new compatible string for the fixed and
-GPIO regulators, so we just contain the situation.
-
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-ChangeLog v2->v3:
-- Resending.
-ChangeLog v1->v2:
-- Collect Rob's ACK.
----
- .../bindings/regulator/fixed-regulator.txt          | 13 +++++++++++--
- .../bindings/regulator/gpio-regulator.txt           |  4 ++++
- 2 files changed, 15 insertions(+), 2 deletions(-)
+ drivers/thermal/imx_thermal.c | 16 ----------------
+ 1 file changed, 16 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-index 0c2a6c8a1536..a7a1cd0dfa6e 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-@@ -8,10 +8,19 @@ Optional properties:
- - gpio: gpio to use for enable control
- - startup-delay-us: startup time in microseconds
- - enable-active-high: Polarity of GPIO is Active high
--If this property is missing, the default assumed is Active low.
-+  If this property is missing, the default assumed is Active low.
-+  If the phandle flags to the GPIO handle also flag the line as active
-+  low or high, that will be ignored for fixed regulators and the
-+  presence or absence of this flag solely controls the inversion
-+  semantics.
-+-vin-supply: Input supply name.
-+
-+Deprecated properties:
- - gpio-open-drain: GPIO is open drain type.
-   If this property is missing then default assumption is false.
---vin-supply: Input supply name.
-+  Do not use this property in new device trees: instead use the
-+  phandle flag to indicate to the GPIO provider that the line
-+  should be handled as open drain.
+diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+index c30dc21..8eedb97 100644
+--- a/drivers/thermal/imx_thermal.c
++++ b/drivers/thermal/imx_thermal.c
+@@ -9,7 +9,6 @@
  
- Any property defined as part of the core regulator
- binding, defined in regulator.txt, can also be used.
-diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-index 1f496159e2bb..8fef3e5358a2 100644
---- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-@@ -14,6 +14,10 @@ Optional properties:
- 			  defualt is LOW if nothing is specified.
- - startup-delay-us	: Startup time in microseconds.
- - enable-active-high	: Polarity of GPIO is active high (default is low).
-+			  If the phandle flags to the GPIO handle also flag the line as
-+			  active low or high, that will be ignored for fixed regulators
-+			  and the presence or absence of this flag solely controls the
-+			  inversion semantics.
- - regulator-type	: Specifies what is being regulated, must be either
- 			  "voltage" or "current", defaults to voltage.
+ #include <linux/clk.h>
+ #include <linux/cpufreq.h>
+-#include <linux/cpu_cooling.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/init.h>
+@@ -207,7 +206,6 @@ static struct thermal_soc_data thermal_imx7d_data = {
+ struct imx_thermal_data {
+ 	struct cpufreq_policy *policy;
+ 	struct thermal_zone_device *tz;
+-	struct thermal_cooling_device *cdev;
+ 	enum thermal_device_mode mode;
+ 	struct regmap *tempmon;
+ 	u32 c1, c2; /* See formula in imx_init_calib() */
+@@ -729,22 +727,12 @@ static int imx_thermal_probe(struct platform_device *pdev)
+ 		return -EPROBE_DEFER;
+ 	}
  
+-	data->cdev = cpufreq_cooling_register(data->policy);
+-	if (IS_ERR(data->cdev)) {
+-		ret = PTR_ERR(data->cdev);
+-		dev_err(&pdev->dev,
+-			"failed to register cpufreq cooling device: %d\n", ret);
+-		cpufreq_cpu_put(data->policy);
+-		return ret;
+-	}
+-
+ 	data->thermal_clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(data->thermal_clk)) {
+ 		ret = PTR_ERR(data->thermal_clk);
+ 		if (ret != -EPROBE_DEFER)
+ 			dev_err(&pdev->dev,
+ 				"failed to get thermal clk: %d\n", ret);
+-		cpufreq_cooling_unregister(data->cdev);
+ 		cpufreq_cpu_put(data->policy);
+ 		return ret;
+ 	}
+@@ -759,7 +747,6 @@ static int imx_thermal_probe(struct platform_device *pdev)
+ 	ret = clk_prepare_enable(data->thermal_clk);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to enable thermal clk: %d\n", ret);
+-		cpufreq_cooling_unregister(data->cdev);
+ 		cpufreq_cpu_put(data->policy);
+ 		return ret;
+ 	}
+@@ -775,7 +762,6 @@ static int imx_thermal_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev,
+ 			"failed to register thermal zone device %d\n", ret);
+ 		clk_disable_unprepare(data->thermal_clk);
+-		cpufreq_cooling_unregister(data->cdev);
+ 		cpufreq_cpu_put(data->policy);
+ 		return ret;
+ 	}
+@@ -811,7 +797,6 @@ static int imx_thermal_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "failed to request alarm irq: %d\n", ret);
+ 		clk_disable_unprepare(data->thermal_clk);
+ 		thermal_zone_device_unregister(data->tz);
+-		cpufreq_cooling_unregister(data->cdev);
+ 		cpufreq_cpu_put(data->policy);
+ 		return ret;
+ 	}
+@@ -831,7 +816,6 @@ static int imx_thermal_remove(struct platform_device *pdev)
+ 		clk_disable_unprepare(data->thermal_clk);
+ 
+ 	thermal_zone_device_unregister(data->tz);
+-	cpufreq_cooling_unregister(data->cdev);
+ 	cpufreq_cpu_put(data->policy);
+ 
+ 	return 0;
 -- 
-2.17.0
+2.7.4
