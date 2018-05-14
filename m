@@ -1,14 +1,16 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH V3] ARM: dts: da850-evm: Enable LCD and Backlight
-Date: Mon, 14 May 2018 05:52:39 -0500
-Message-ID: <CAHCN7xJgTBGHL_VzhXGz1HEmEn-LW8pcG0BWJDysx0pkHXT-Mg@mail.gmail.com>
-References: <20180513232033.22571-1-aford173@gmail.com>
- <aba13450-1e8f-4aed-6248-16b71abcc0dd@ti.com>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: Re: [PATCH v3 6/6] tty/serial: atmel: changed the driver to work
+ under at91-usart mfd
+Date: Mon, 14 May 2018 12:57:23 +0200
+Message-ID: <4a75568e-a52e-3872-f465-d707372a5c12@sorico.fr>
+References: <20180511103822.31698-1-radu.pirea@microchip.com>
+ <20180511103822.31698-7-radu.pirea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <aba13450-1e8f-4aed-6248-16b71abcc0dd@ti.com>
+In-Reply-To: <20180511103822.31698-7-radu.pirea@microchip.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,102 +20,168 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Kevin Hilman <khilman@kernel.org>
+To: Radu Pirea <radu.pirea@microchip.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+Cc: mark.rutland@arm.com, alexandre.belloni@bootlin.com, richard.genoud@gmail.com, gregkh@linuxfoundation.org, broonie@kernel.org, robh+dt@kernel.org, jslaby@suse.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 14, 2018 at 12:29 AM, Sekhar Nori <nsekhar@ti.com> wrote:
-> Hi Adam,
->
-> On Monday 14 May 2018 04:50 AM, Adam Ford wrote:
->> When using the board files the LCD works, but not with the DT.
->> This adds enables the original da850-evm to work with the same
->> LCD in device tree mode.
->>
->> The EVM has a gpio for the regulator and a gpio enable.  The LCD and
->> the vpif display pins are mutually exclusive, so if using the LCD,
->> do not load the vpif driver.
->
-> Its not sufficient just note this in patch description.
->
-> a) Disable (status = "disabled") the VPIF node which clashes for pins
-> with LCD.
-> b) Add a comment on top of the status = "disabled" giving information on
-> how user can enable it (disable lcdc node and then change to status =
-> "okay").
->
->>
->> Signed-off-by: Adam Ford <aford173@gmail.com>
->> ---
->> V3:  Fix errant GPIO, label GPIO pins, and rename the regulator to be more explict to
->>      backlight which better matches the schematic.  Updated the description to explain
->>      that it cannot be used at the same time as the vpif driver.
->>
->> V2:  Add regulator and GPIO enable pins. Remove PWM backlight and replace with GPIO
->>
->> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
->> index 2e817da37fdb..3f1c8be07efe 100644
->> --- a/arch/arm/boot/dts/da850-evm.dts
->> +++ b/arch/arm/boot/dts/da850-evm.dts
->> @@ -27,6 +27,50 @@
->>               spi0 = &spi1;
->>       };
->>
->> +     backlight {
->> +             compatible = "gpio-backlight";
->> +             enable-gpios = <&gpio 7 GPIO_ACTIVE_HIGH>; /* GP0[7] */
->
-> The gpio-backlight binding does not describe a property called
-> enable-gpios. It should just be gpios.
+Hi,
 
-I will fix that.
+On 11/05/2018 12:38, Radu Pirea wrote:
+> This patch modifies the place where resources and device tree properties
+> are searched.
+> 
+> Signed-off-by: Radu Pirea <radu.pirea@microchip.com>
+> ---
+>  drivers/tty/serial/Kconfig        |  1 +
+>  drivers/tty/serial/atmel_serial.c | 29 +++++++++++++++--------------
+>  2 files changed, 16 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 3682fd3e960c..25e55332f8b1 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -119,6 +119,7 @@ config SERIAL_ATMEL
+>  	depends on ARCH_AT91 || COMPILE_TEST
+>  	select SERIAL_CORE
+>  	select SERIAL_MCTRL_GPIO if GPIOLIB
+> +	select MFD_AT91_USART
+>  	help
+>  	  This enables the driver for the on-chip UARTs of the Atmel
+>  	  AT91 processors.
+> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+> index df46a9e88c34..6b4494352853 100644
+> --- a/drivers/tty/serial/atmel_serial.c
+> +++ b/drivers/tty/serial/atmel_serial.c
+> @@ -193,8 +193,8 @@ static struct console atmel_console;
+>  
+>  #if defined(CONFIG_OF)
+>  static const struct of_device_id atmel_serial_dt_ids[] = {
+> -	{ .compatible = "atmel,at91rm9200-usart" },
+> -	{ .compatible = "atmel,at91sam9260-usart" },
+> +	{ .compatible = "atmel,at91rm9200-usart-serial" },
+> +	{ .compatible = "atmel,at91sam9260-usart-serial" },
+>  	{ /* sentinel */ }
+>  };
+>  #endif
+> @@ -1631,7 +1631,7 @@ static void atmel_tasklet_tx_func(unsigned long data)
+>  static void atmel_init_property(struct atmel_uart_port *atmel_port,
+>  				struct platform_device *pdev)
+>  {
+> -	struct device_node *np = pdev->dev.of_node;
+> +	struct device_node *np = pdev->dev.parent->of_node;
+>  
+>  	/* DMA/PDC usage specification */
+>  	if (of_property_read_bool(np, "atmel,use-dma-rx")) {
+> @@ -2223,7 +2223,8 @@ static const char *atmel_type(struct uart_port *port)
+>  static void atmel_release_port(struct uart_port *port)
+>  {
+>  	struct platform_device *pdev = to_platform_device(port->dev);
+> -	int size = pdev->resource[0].end - pdev->resource[0].start + 1;
+> +	int size = to_platform_device(pdev->dev.parent)->resource[0].end -
+> +		to_platform_device(pdev->dev.parent)->resource[0].start + 1;
+I think it may be simpler with something like:
++	struct platform_device *mfd_pdev = to_platform_device(port->dev->parent);
++	int size = mfd_pdev->resource[0].end - mfd_pdev->resource[0].start + 1;
 
->
-> a) Are you using gpio-backlight because you are not able to get the PWM
-> to work?
->
-Yes,  You told me not to worry about doing a PWM backlight because the
-legacy board does not PWM either.
+>  
+>  	release_mem_region(port->mapbase, size);
+>  
+> @@ -2239,7 +2240,8 @@ static void atmel_release_port(struct uart_port *port)
+>  static int atmel_request_port(struct uart_port *port)
+>  {
+>  	struct platform_device *pdev = to_platform_device(port->dev);
+> -	int size = pdev->resource[0].end - pdev->resource[0].start + 1;
+> +	int size = to_platform_device(pdev->dev.parent)->resource[0].end -
+> +		to_platform_device(pdev->dev.parent)->resource[0].start + 1;
+>  
+ditto
 
-> b) What is GP0[7] connected to in the schematic you have? In the
-> schematic I have I see LCD_PWM0 is connected to
-> SPI1_SCS[0]/EPWM1B/GP2[14]/TM64P3_IN12.
+>  	if (!request_mem_region(port->mapbase, size, "atmel_serial"))
+>  		return -EBUSY;
+> @@ -2345,23 +2347,23 @@ static int atmel_init_port(struct atmel_uart_port *atmel_port,
+Here, we could also add:
++	struct device *mfd_dev = pdev->dev.parent;
++	struct platform_device *mfd_pdev = to_platform_device(mfd_dev);
 
-I have schematic 1016572 dated Wednesday, August 18, 2010.  According
-to it, AXR15 / EPWMN0_TZ[0] / ECAP2_APWM2 / GPIO0[7] connects to U25,
-Pin 46 to generate M_LCD_PWM0.  You might have one of the early,
-pre-release versions.
+>  	atmel_init_property(atmel_port, pdev);
+>  	atmel_set_ops(port);
+>  
+> -	uart_get_rs485_mode(&pdev->dev, &port->rs485);
+> +	uart_get_rs485_mode(pdev->dev.parent, &port->rs485);
+...and use them here
 
->
-> c) The /* GP0[7] */ comment is not really useful on its own as it can be
-> computed. What I wanted to see is the schematic symbol like "LCD_PWM0".
-> Same for other places like this below.
+>  
+>  	port->iotype		= UPIO_MEM;
+>  	port->flags		= UPF_BOOT_AUTOCONF | UPF_IOREMAP;
+>  	port->ops		= &atmel_pops;
+>  	port->fifosize		= 1;
+>  	port->dev		= &pdev->dev;
+> -	port->mapbase	= pdev->resource[0].start;
+> -	port->irq	= pdev->resource[1].start;
+> +	port->mapbase		= to_platform_device(pdev->dev.parent)->resource[0].start;
+> +	port->irq		= to_platform_device(pdev->dev.parent)->resource[1].start;
+and here
+I think it would be easier to read.
 
-I can do that.
->
->> @@ -35,6 +79,16 @@
->>               regulator-boot-on;
->>       };
->>
->> +     backlight_reg: backlight-regulator {
->> +             compatible = "regulator-fixed";
->> +             regulator-name = "lcd_backlight_pwr";
->> +             regulator-min-microvolt = <3300000>;
->> +             regulator-max-microvolt = <3300000>;
->> +             gpio = <&gpio 47 GPIO_ACTIVE_HIGH>; /* GP2[15] */
->> +             regulator-always-on;
->
-> Why should this regulator never be disabled?
+>  	port->rs485_config	= atmel_config_rs485;
+> -	port->membase	= NULL;
+> +	port->membase		= NULL;
+>  
+>  	memset(&atmel_port->rx_ring, 0, sizeof(atmel_port->rx_ring));
+>  
+>  	/* for console, the clock could already be configured */
+>  	if (!atmel_port->clk) {
+> -		atmel_port->clk = clk_get(&pdev->dev, "usart");
+> +		atmel_port->clk = clk_get(pdev->dev.parent, "usart");
+and here
 
-The gpio-backlight does not have a way that I can see to associate the
-regulator to it.  I read through the bindings, but I didn't see an
-option to associate a regulator it.  I use this regulator to drive
-lcd_backlight_pwr and the backlight driver to write lcd_pwm0.  Without
-this option, the system disables lcd_backlight_pwr and the screen is
-blank
+>  		if (IS_ERR(atmel_port->clk)) {
+>  			ret = PTR_ERR(atmel_port->clk);
+>  			atmel_port->clk = NULL;
+> @@ -2656,7 +2658,7 @@ static void atmel_serial_probe_fifos(struct atmel_uart_port *atmel_port,
+>  	atmel_port->rts_low = 0;
+>  	atmel_port->rts_high = 0;
+>  
+> -	if (of_property_read_u32(pdev->dev.of_node,
+> +	if (of_property_read_u32(pdev->dev.parent->of_node,
+>  				 "atmel,fifo-size",
+>  				 &atmel_port->fifo_size))
+>  		return;
+> @@ -2694,11 +2696,10 @@ static void atmel_serial_probe_fifos(struct atmel_uart_port *atmel_port,
+>  static int atmel_serial_probe(struct platform_device *pdev)
+>  {
+>  	struct atmel_uart_port *atmel_port;
+> -	struct device_node *np = pdev->dev.of_node;
+> +	struct device_node *np = pdev->dev.parent->of_node;
+>  	void *data;
+>  	int ret = -ENODEV;
+>  	bool rs485_enabled;
+> -
+I think this line feed wasn't so bad.
 
+>  	BUILD_BUG_ON(ATMEL_SERIAL_RINGSIZE & (ATMEL_SERIAL_RINGSIZE - 1));
+>  
+>  	ret = of_alias_get_id(np, "serial");
+> @@ -2845,7 +2846,7 @@ static struct platform_driver atmel_serial_driver = {
+>  	.suspend	= atmel_serial_suspend,
+>  	.resume		= atmel_serial_resume,
+>  	.driver		= {
+> -		.name			= "atmel_usart",
+> +		.name			= "atmel_usart_serial",
+>  		.of_match_table		= of_match_ptr(atmel_serial_dt_ids),
+>  	},
+>  };
+> 
 
-adam
->
-> Thanks,
-> Sekhar
+After your patch, the DMA is not selected anymore:
+atmel_usart_serial atmel_usart_serial.0.auto: TX channel not available, switch to pio
+instead of:
+atmel_usart fffff200.serial: using dma1chan2 for tx DMA transfers
+
+And the kernel doesn't log anymore on the serial console, despite the loglevel=8
+(after reverting this series, the kernel logs reappears on the serial console)
+
+(tests done on sam9g35)
+
+regards,
+Richard
