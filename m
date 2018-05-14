@@ -1,67 +1,75 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 10/12] platform/early: implement support for early
- platform drivers
-Date: Mon, 14 May 2018 08:37:24 -0500
-Message-ID: <CAL_JsqJw8UXktcLK8ADUfo1P+1un+omJ31sGcq7GFbNwJMsHKg@mail.gmail.com>
-References: <20180511162028.20616-1-brgl@bgdev.pl> <20180511162028.20616-11-brgl@bgdev.pl>
+From: Laurentiu Tudor <laurentiu.tudor-3arQi8VN3Tc@public.gmane.org>
+Subject: Re: [PATCH 5/6 v3] bus: fsl-mc: supoprt dma configure for devices on
+	fsl-mc bus
+Date: Mon, 14 May 2018 13:39:50 +0000
+Message-ID: <5AF9916E.8000504@nxp.com>
+References: <1524824826-29473-1-git-send-email-nipun.gupta@nxp.com>
+	<1524824826-29473-6-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180511162028.20616-11-brgl@bgdev.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Peter Rosin <peda@axentia.se>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Johan Hovold <johan@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1524824826-29473-6-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Content-Language: en-US
+Content-ID: <03F01C290B624D4B87A4DE017A3CA11B-jdb/QiT5osKcE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>, "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "hch-jcswGhMUV9g@public.gmane.org" <hch-jcswGhMUV9g@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 11, 2018 at 11:20 AM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi Nipun,
+
+On 04/27/2018 01:27 PM, Nipun Gupta wrote:
+> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+> ---
+>   drivers/bus/fsl-mc/fsl-mc-bus.c | 16 ++++++++++++----
+>   1 file changed, 12 insertions(+), 4 deletions(-)
 >
-> This introduces the core part of support for early platform drivers
-> and devices.
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> index 5d8266c..624828b 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
+> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> @@ -127,6 +127,16 @@ static int fsl_mc_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
+>   	return 0;
+>   }
 >
-
-It looks like most of your prep patches are to separate the alloc and
-init of platform devices because you are essentially making early
-devices/drivers a sub-class. Maybe you could avoid doing that and
-simplify things a bit. Comments below based on doing that...
-
-> +/**
-> + * struct early_platform_driver
-> + *
-> + * @pdrv: real platform driver associated with this early platform driver
-> + * @list: list head for the list of early platform drivers
-> + * @early_probe: early probe callback
-> + */
-> +struct early_platform_driver {
-> +       struct platform_driver pdrv;
-> +       struct list_head list;
-
-Couldn't you use an existing list in driver_private until you move
-over to the normal bus infra.
-
-> +       int (*early_probe)(struct platform_device *);
-
-Just add this to platform_driver.
-
-> +};
+> +static int fsl_mc_dma_configure(struct device *dev)
+> +{
+> +	struct device *dma_dev = dev;
 > +
-> +/**
-> + * struct early_platform_device
-> + *
-> + * @pdev: real platform device associated with this early platform device
-> + * @list: list head for the list of early platform devices
-> + * @deferred: true if this device's early probe was deferred
-> + * @deferred_drv: early platform driver with which this device was matched
-> + */
-> +struct early_platform_device {
-> +       struct platform_device pdev;
-> +       struct list_head list;
+> +	while (dev_is_fsl_mc(dma_dev))
+> +		dma_dev = dma_dev->parent;
+> +
+> +	return of_dma_configure(dev, dma_dev->of_node, 0);
+> +}
+> +
+>   static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+>   			     char *buf)
+>   {
+> @@ -148,6 +158,7 @@ struct bus_type fsl_mc_bus_type = {
+>   	.name = "fsl-mc",
+>   	.match = fsl_mc_bus_match,
+>   	.uevent = fsl_mc_bus_uevent,
+> +	.dma_configure  = fsl_mc_dma_configure,
+>   	.dev_groups = fsl_mc_dev_groups,
+>   };
+>   EXPORT_SYMBOL_GPL(fsl_mc_bus_type);
+> @@ -616,6 +627,7 @@ int fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
+>   		mc_dev->icid = parent_mc_dev->icid;
+>   		mc_dev->dma_mask = FSL_MC_DEFAULT_DMA_MASK;
+>   		mc_dev->dev.dma_mask = &mc_dev->dma_mask;
+> +		mc_dev->dev.coherent_dma_mask = mc_dev->dma_mask;
 
-Use a list in device_private?
+This change seems a bit unrelated to the patch subject. I wonder if it 
+makes sense to split it it in a distinct patch.
 
-> +       bool deferred;
-> +       struct early_platform_driver *deferred_drv;
-
-Can't you use the existing deferred probe list?
-
-Rob
+---
+Best Regards, Laurentiu
