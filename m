@@ -1,64 +1,27 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH v6 02/11] firmware: xilinx: Add Zynqmp firmware driver
-Date: Mon, 14 May 2018 19:06:19 +0000
-Message-ID: <SN1PR02MB37580153B7BD4C229AA0AAEFB89C0@SN1PR02MB3758.namprd02.prod.outlook.com>
-References: <1523389127-14243-1-git-send-email-jollys@xilinx.com>
- <1523389127-14243-3-git-send-email-jollys@xilinx.com>
- <9cbfb3cd-daa3-f145-c6f2-f15f61d1bea0@arm.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH RESEND net-next v2 0/8] net: stmmac: dwmac-sun8i:
+ Support R40
+Date: Mon, 14 May 2018 15:07:28 -0400 (EDT)
+Message-ID: <20180514.150728.169655566450818502.davem@davemloft.net>
+References: <20180513191425.9801-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9cbfb3cd-daa3-f145-c6f2-f15f61d1bea0@arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Cc: Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180513191425.9801-1-wens@csie.org>
+Sender: netdev-owner@vger.kernel.org
+To: wens@csie.org
+Cc: peppe.cavallaro@st.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, clabbe.montjoie@gmail.com, icenowy@aosc.io, maxime.ripard@bootlin.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3VkZWVwLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFN1ZGVl
-cCBIb2xsYSBbbWFpbHRvOnN1ZGVlcC5ob2xsYUBhcm0uY29tXQ0KPiBTZW50OiBUaHVyc2RheSwg
-TWF5IDEwLCAyMDE4IDc6MDUgQU0NCj4gVG86IEpvbGx5IFNoYWggPEpPTExZU0B4aWxpbnguY29t
-PjsgYXJkLmJpZXNoZXV2ZWxAbGluYXJvLm9yZzsNCj4gbWluZ29Aa2VybmVsLm9yZzsgZ3JlZ2to
-QGxpbnV4Zm91bmRhdGlvbi5vcmc7IG1hdHRAY29kZWJsdWVwcmludC5jby51azsNCj4gaGthbGx3
-ZWl0MUBnbWFpbC5jb207IGtlZXNjb29rQGNocm9taXVtLm9yZzsNCj4gZG1pdHJ5LnRvcm9raG92
-QGdtYWlsLmNvbTsgbXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb207DQo+IHNib3lkQGNvZGVhdXJvcmEu
-b3JnOyBtaWNoYWwuc2ltZWtAeGlsaW54LmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJr
-LnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtY2xrQHZnZXIua2VybmVsLm9yZw0KPiBDYzogU3VkZWVw
-IEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT47IFJhamFuIFZhamEgPFJBSkFOVkB4aWxpbngu
-Y29tPjsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJu
-ZWxAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgSm9sbHkg
-U2hhaCA8Sk9MTFlTQHhpbGlueC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgMDIvMTFd
-IGZpcm13YXJlOiB4aWxpbng6IEFkZCBaeW5xbXAgZmlybXdhcmUgZHJpdmVyDQo+IA0KPiANCj4g
-DQo+IE9uIDEwLzA0LzE4IDIwOjM4LCBKb2xseSBTaGFoIHdyb3RlOg0KPiA+IEZyb206IFJhamFu
-IFZhamEgPHJhamFudkB4aWxpbnguY29tPg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBpcyBhZGRpbmcg
-Y29tbXVuaWNhdGlvbiBsYXllciB3aXRoIGZpcm13YXJlLg0KPiA+IEZpcm13YXJlIGRyaXZlciBw
-cm92aWRlcyBhbiBpbnRlcmZhY2UgdG8gZmlybXdhcmUgQVBJcy4NCj4gPiBJbnRlcmZhY2UgQVBJ
-cyBjYW4gYmUgdXNlZCBieSBhbnkgZHJpdmVyIHRvIGNvbW11bmljYXRlIHRvDQo+ID4gUE1VRlco
-UGxhdGZvcm0gTWFuYWdlbWVudCBVbml0KS4gQWxsIHJlcXVlc3RzIGdvIHRocm91Z2ggQVRGLg0K
-PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUmFqYW4gVmFqYSA8cmFqYW52QHhpbGlueC5jb20+DQo+
-ID4gU2lnbmVkLW9mZi1ieTogSm9sbHkgU2hhaCA8am9sbHlzQHhpbGlueC5jb20+DQo+ID4gLS0t
-DQo+IA0KPiBbLi4uXQ0KPiANCj4gPiArDQo+ID4gKy8qKg0KPiA+ICsgKiBnZXRfc2V0X2NvbmR1
-aXRfbWV0aG9kKCkgLSBDaG9vc2UgU01DIG9yIEhWQyBiYXNlZCBjb21tdW5pY2F0aW9uDQo+ID4g
-KyAqIEBucDoJCVBvaW50ZXIgdG8gdGhlIGRldmljZV9ub2RlIHN0cnVjdHVyZQ0KPiA+ICsgKg0K
-PiA+ICsgKiBVc2UgU01DIG9yIEhWQy1iYXNlZCBmdW5jdGlvbnMgdG8gY29tbXVuaWNhdGUgd2l0
-aCBFTDIvRUwzLg0KPiA+ICsgKg0KPiA+ICsgKiBSZXR1cm46IFJldHVybnMgMCBvbiBzdWNjZXNz
-IG9yIGVycm9yIGNvZGUgICovIHN0YXRpYyBpbnQNCj4gPiArZ2V0X3NldF9jb25kdWl0X21ldGhv
-ZChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKSB7DQo+ID4gKwljb25zdCBjaGFyICptZXRob2Q7DQo+
-ID4gKw0KPiA+ICsJaWYgKG9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nKG5wLCAibWV0aG9kIiwgJm1l
-dGhvZCkpIHsNCj4gPiArCQlwcl93YXJuKCIlcyBtaXNzaW5nIFwibWV0aG9kXCIgcHJvcGVydHlc
-biIsIF9fZnVuY19fKTsNCj4gPiArCQlyZXR1cm4gLUVOWElPOw0KPiA+ICsJfQ0KPiA+ICsNCj4g
-PiArCWlmICghc3RyY21wKCJodmMiLCBtZXRob2QpKSB7DQo+ID4gKwkJZG9fZndfY2FsbCA9IGRv
-X2Z3X2NhbGxfaHZjOw0KPiA+ICsJfSBlbHNlIGlmICghc3RyY21wKCJzbWMiLCBtZXRob2QpKSB7
-DQo+ID4gKwkJZG9fZndfY2FsbCA9IGRvX2Z3X2NhbGxfc21jOw0KPiA+ICsJfSBlbHNlIHsNCj4g
-PiArCQlwcl93YXJuKCIlcyBJbnZhbGlkIFwibWV0aG9kXCIgcHJvcGVydHk6ICVzXG4iLA0KPiA+
-ICsJCQlfX2Z1bmNfXywgbWV0aG9kKTsNCj4gPiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiArCX0N
-Cj4gPiArDQo+IA0KPiBNYXJrIFIgZGlkIHNvbWUgY2xlYW51cCBhcm91bmQgU01DQ0MgY29uZHVp
-dHNbMV0uIEl0IG1ha2VzIHNlbnNlIHRvIGJhc2UgdGhpcw0KPiBvbiB0b3AgdGhhdC4gQnV0IGlm
-IHlvdSBtYW5hZ2UgdG8gcHVzaCB0aGlzIGZvciB2NC4xOCwgdGhlbiB5b3UgbWF5IG5lZWQgdG8g
-d2FpdA0KPiBmb3IgdGhhdCB0byBiZSBtZXJnZWQgYW5kIGNsZWFuIGl0IHVwIGFmdGVyIHY0LjE4
-DQo+IA0KPiAtLQ0KPiBSZWdhcmRzLA0KPiBTdWRlZXANCg0KTWFyayBSIGRpZCBjaGFuZ2UgZm9y
-IFNNQ0NDIGVudW1zIGFuZCB3ZSBhcmUgbm90IHVzaW5nIGFueSBTTUNDQyBlbnVtcyBzbyB3ZSBk
-b24ndCBoYXZlIGFueSBkZXBlbmRlbmN5IG9uIHRoYXQuDQoNClRoYW5rcywNCkpvbGx5IFNoYWgN
-Cg0KPiANCj4gWzFdIGh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2FybS1rZXJuZWwvbXNn
-NjUwMzA1Lmh0bWwNCg==
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Mon, 14 May 2018 03:14:17 +0800
+
+> This is a resend of the patches for net-next split out from my R40
+> Ethernet support v2 series, as requested by David Miller. The arm-soc
+> bits will follow, once I rework the A64 system controller compatible.
+
+Series applied, but please continue to follow-up with Andrew Lunn about
+how best to handle these RX and TX delays.
+
+Thank you.
