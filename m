@@ -1,88 +1,58 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH] thermal: qcom: tsens: Allow number of sensors to come
- from DT
-Date: Mon, 14 May 2018 17:45:56 +0300
-Message-ID: <CAHLCerN9zQEJK4WoV6BY6hga2BxwzMsyScWnTdYcLgEk0Bjg4w@mail.gmail.com>
-References: <20180507235339.8836-1-bjorn.andersson@linaro.org>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH v3 3/4] phy: rockchip-typec: support variable phy config
+ value
+Date: Mon, 14 May 2018 10:58:21 -0400
+Message-ID: <20180514145821.GB3373@art_vandelay>
+References: <1526291635-31122-1-git-send-email-hl@rock-chips.com>
+ <1526291635-31122-3-git-send-email-hl@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180507235339.8836-1-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Linux PM list <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1526291635-31122-3-git-send-email-hl@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lin Huang <hl@rock-chips.com>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, briannorris@chromium.org, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, dri-devel@lists.freedesktop.org, zyw@rock-chips.com, daniel.vetter@intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 8, 2018 at 2:53 AM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> For platforms that has multiple copies of the TSENS hardware block it's
-> necessary to be able to specify the number of sensors per block in DeviceTree.
-
-I assume you want to replace the hardcoded num_sensors values in the
-tsens-xxxx.c files with values in device tree atleast on platforms
-that use devicetree?
-
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  .../devicetree/bindings/thermal/qcom-tsens.txt       |  1 +
->  drivers/thermal/qcom/tsens.c                         | 12 +++++++++---
->  2 files changed, 10 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> index 292ed89d900b..06195e8f35e2 100644
-> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> @@ -8,6 +8,7 @@ Required properties:
->
->  - reg: Address range of the thermal registers
->  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
-> +- #qcom,sensors: Number of sensors in tsens block
->  - Refer to Documentation/devicetree/bindings/nvmem/nvmem.txt to know how to specify
->  nvmem cells
->
-> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-> index 3f9fe6aa51cc..20f3b87d7667 100644
-> --- a/drivers/thermal/qcom/tsens.c
-> +++ b/drivers/thermal/qcom/tsens.c
-> @@ -116,6 +116,7 @@ static int tsens_probe(struct platform_device *pdev)
->         struct tsens_device *tmdev;
->         const struct tsens_data *data;
->         const struct of_device_id *id;
-> +       u32 num_sensors;
->
->         if (pdev->dev.of_node)
->                 dev = &pdev->dev;
-> @@ -130,18 +131,23 @@ static int tsens_probe(struct platform_device *pdev)
->         else
->                 data = &data_8960;
->
-> -       if (data->num_sensors <= 0) {
-> +       num_sensors = data->num_sensors;
-> +
-> +       if (np)
-> +               of_property_read_u32(np, "#qcom,sensors", &num_sensors);
-> +
-> +       if (num_sensors <= 0) {
->                 dev_err(dev, "invalid number of sensors\n");
->                 return -EINVAL;
->         }
->
->         tmdev = devm_kzalloc(dev, sizeof(*tmdev) +
-> -                            data->num_sensors * sizeof(*s), GFP_KERNEL);
-> +                            num_sensors * sizeof(*s), GFP_KERNEL);
->         if (!tmdev)
->                 return -ENOMEM;
->
->         tmdev->dev = dev;
-> -       tmdev->num_sensors = data->num_sensors;
-> +       tmdev->num_sensors = num_sensors;
->         tmdev->ops = data->ops;
->         for (i = 0;  i < tmdev->num_sensors; i++) {
->                 if (data->hw_ids)
-> --
-> 2.17.0
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBNYXkgMTQsIDIwMTggYXQgMDU6NTM6NTRQTSArMDgwMCwgTGluIEh1YW5nIHdyb3Rl
+Ogo+IHRoZSBwaHkgY29uZmlnIHZhbHVlcyB1c2VkIHRvIGZpeCBpbiBkcCBmaXJtd2FyZSwgYnV0
+IHNvbWUgYm9hcmRzCj4gbmVlZCBjaGFuZ2UgdGhlc2UgdmFsdWVzIHRvIGRvIHRyYWluaW5nIGFu
+ZCBnZXQgdGhlIGJldHRlciBleWUgZGlhZ3JhbQo+IHJlc3VsdC4gU28gc3VwcG9ydCB0aGF0IGlu
+IHBoeSBkcml2ZXIuCj4gCj4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgWmhvbmcgPHp5d0Byb2NrLWNo
+aXBzLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBMaW4gSHVhbmcgPGhsQHJvY2stY2hpcHMuY29tPgo+
+IC0tLQo+IENoYW5nZXMgaW4gdjI6Cj4gLSB1cGRhdGUgcGF0Y2ggZm9sbG93aW5nIEVucmljIHN1
+Z2dlc3QKPiBDaGFuZ2VzIGluIHYzOgo+IC0gZGVsZXRlIG5lZWRfc29mdHdhcmVfdHJhaW5pbmcg
+dmFyaWFibGUKPiAtIGFkZCBkZWZhdWx0IHBoeSBjb25maWcgdmFsdWUsIGlmIGR0cyBkbyBub3Qg
+ZGVmaW5lIHBoeSBjb25maWcgdmFsdWUsIHVzZSB0aGVzZSB2YWx1ZQo+IAo+ICBkcml2ZXJzL3Bo
+eS9yb2NrY2hpcC9waHktcm9ja2NoaXAtdHlwZWMuYyB8IDMwNSArKysrKysrKysrKysrKysrKysr
+Ky0tLS0tLS0tLS0KPiAgaW5jbHVkZS9zb2Mvcm9ja2NoaXAvcm9ja2NoaXBfcGh5X3R5cGVjLmgg
+fCAgNjMgKysrKysrCj4gIDIgZmlsZXMgY2hhbmdlZCwgMjcwIGluc2VydGlvbnMoKyksIDk4IGRl
+bGV0aW9ucygtKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9zb2Mvcm9ja2NoaXAvcm9j
+a2NoaXBfcGh5X3R5cGVjLmgKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waHkvcm9ja2NoaXAv
+cGh5LXJvY2tjaGlwLXR5cGVjLmMgYi9kcml2ZXJzL3BoeS9yb2NrY2hpcC9waHktcm9ja2NoaXAt
+dHlwZWMuYwo+IGluZGV4IDc2YTRiNTguLjEwMjUzYWQgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9w
+aHkvcm9ja2NoaXAvcGh5LXJvY2tjaGlwLXR5cGVjLmMKPiArKysgYi9kcml2ZXJzL3BoeS9yb2Nr
+Y2hpcC9waHktcm9ja2NoaXAtdHlwZWMuYwoKL3NuaXAKCj4gIAo+ICsvKiBkZWZhdWx0IHBoeSBj
+b25maWcgKi8KPiArc3RydWN0IHBoeV9jb25maWcgY29uZmlnc1szXVs0XSA9IHsKCnN0YXRpYyBj
+b25zdAoKQWxzbywgY29uZmlncyBpc24ndCBhIGdvb2QgbmFtZS4gSG93IGFib3V0IHRjcGh5X2Rl
+ZmF1bHRfY29uZmlnPwoKCj4gKwl7eyAweDJhLCAweDAwIH0sCgpDYW4geW91IHBsZWFzZSBleHBh
+bmQgdGhlIGFzc2lnbm1lbnQgZm9yIGFsbCBvZiB0aGVzZSwgaWU6CgogICAgICAgICB7IC5zd2lu
+ZyA9IDB4MmEsIC5wZSA9IDB4MDAgfSwKCj4gKwkgeyAweDFmLCAweDE1IH0sCj4gKwkgeyAweDE0
+LCAweDIyIH0sCj4gKwkgeyAweDAyLCAweDJiIH0gfSwKPiArCj4gKwl7eyAweDIxLCAweDAwIH0s
+Cj4gKwkgeyAweDEyLCAweDE1IH0sCj4gKwkgeyAweDAyLCAweDIyIH0sCj4gKwkgeyAgICAwLCAg
+ICAwIH0gfSwKPiArCj4gKwl7eyAweDE1LCAweDAwIH0sCj4gKwkgeyAweDAwLCAweDE1IH0sCj4g
+KwkgeyAgICAwLCAgICAwIH0sCj4gKwkgeyAgICAwLCAgICAwIH0gfSwKPiArfTsKPiArCgovc25p
+cAoKLS0gClNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5lZXIsIEdvb2dsZSAvIENocm9taXVtIE9T
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
