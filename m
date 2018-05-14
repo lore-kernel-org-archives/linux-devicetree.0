@@ -1,182 +1,113 @@
-Return-Path: <SRS0=ZccN=IC=gmail.com=mats.dev.list@kernel.org>
-Subject: Re: [PATCH v5 05/14] usb: typec: add API to get typec basic port
+Return-Path: <SRS0=ePA5=IB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-he1eur01on0070.outbound.protection.outlook.com ([104.47.0.70]:46976
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751941AbeENJg0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 14 May 2018 05:36:26 -0400
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v5 05/14] usb: typec: add API to get typec basic port
  power and data config
+Date: Mon, 14 May 2018 09:36:21 +0000
+Message-ID: <VI1PR0402MB3917CE86B45CBC1B6F7F576B899C0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
 References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
  <1525307094-27402-6-git-send-email-jun.li@nxp.com>
  <c28a8352-e960-449b-e7c1-7965d340536e@gmail.com>
- <VI1PR0402MB3917CE86B45CBC1B6F7F576B899C0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-From: Mats Karrman <mats.dev.list@gmail.com>
-Message-ID: <74e1c164-1652-75f4-409c-bd1c214bda4d@gmail.com>
-Date: Tue, 15 May 2018 22:52:57 +0200
-MIME-Version: 1.0
-In-Reply-To: <VI1PR0402MB3917CE86B45CBC1B6F7F576B899C0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c28a8352-e960-449b-e7c1-7965d340536e@gmail.com>
 Content-Language: en-US
-To: Jun Li <jun.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Mats Karrman <mats.dev.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>
 Cc: "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, Peter Chen <peter.chen@nxp.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
-
-On 05/14/2018 11:36 AM, Jun Li wrote:
-
-> Hi
->> -----Original Message-----
->> From: Mats Karrman [mailto:mats.dev.list@gmail.com]
->> Sent: 2018=E5=B9=B45=E6=9C=8812=E6=97=A5 3:56
->> To: Jun Li <jun.li@nxp.com>; robh+dt@kernel.org; gregkh@linuxfoundatio=
-n.org;
->> heikki.krogerus@linux.intel.com; linux@roeck-us.net
->> Cc: a.hajda@samsung.com; cw00.choi@samsung.com;
->> shufan_lee@richtek.com; Peter Chen <peter.chen@nxp.com>;
->> gsomlo@gmail.com; devicetree@vger.kernel.org; linux-usb@vger.kernel.or=
-g;
->> dl-linux-imx <linux-imx@nxp.com>
->> Subject: Re: [PATCH v5 05/14] usb: typec: add API to get typec basic p=
-ort power
->> and data config
->>
->> Hi Li Jun,
->>
->> On 2018-05-03 02:24, Li Jun wrote:
->>
->>> This patch adds 3 APIs to get the typec port power and data type, and=
-
->>> preferred power role by its name string.
->>>
->>> Signed-off-by: Li Jun <jun.li@nxp.com>
->>> ---
->>>   drivers/usb/typec/class.c | 52
->> +++++++++++++++++++++++++++++++++++++++++++++++
->>>   include/linux/usb/typec.h |  3 +++
->>>   2 files changed, 55 insertions(+)
->>>
->>> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
->>> index 53df10d..5981e18 100644
->>> --- a/drivers/usb/typec/class.c
->>> +++ b/drivers/usb/typec/class.c
->>> @@ -9,6 +9,7 @@
->>>   #include <linux/device.h>
->>>   #include <linux/module.h>
->>>   #include <linux/mutex.h>
->>> +#include <linux/property.h>
->>>   #include <linux/slab.h>
->>>   #include <linux/usb/typec.h>
->>>   #include <linux/usb/typec_mux.h>
->>> @@ -802,6 +803,12 @@ static const char * const typec_port_types[] =3D=
- {
->>>   	[TYPEC_PORT_DRP] =3D "dual",
->>>   };
->>>
->>> +static const char * const typec_data_types[] =3D {
->>> +	[TYPEC_PORT_DFP] =3D "host",
->>> +	[TYPEC_PORT_UFP] =3D "device",
->>> +	[TYPEC_PORT_DRD] =3D "dual",
->>> +};
->>> +
->>>   static const char * const typec_port_types_drp[] =3D {
->>>   	[TYPEC_PORT_SRC] =3D "dual [source] sink",
->>>   	[TYPEC_PORT_SNK] =3D "dual source [sink]", @@ -1252,6 +1259,51
->> @@
->>> void typec_set_pwr_opmode(struct typec_port *port,
->>>   }
->>>   EXPORT_SYMBOL_GPL(typec_set_pwr_opmode);
->>>
->>> +/**
->>> + * typec_find_power_type - Get the typec port power type
->> Why is this function called typec_find_power_type() and not
->> typec_find_port_type()?
->> It's called port_type in sysfs, having different names just adds confu=
-sion.
->> (Otherwise I agree power_type is a better name but...)
-> We have "port type" before the power and data role separation,
-> this API name's intention is to reflect the power cap, anyway I
-> leave this to be decided by Heikki then.
->>> + * @name: port type string
->>> + *
->>> + * This routine is used to find the typec_port_type by its string na=
-me.
->>> + *
->>> + * Returns typec_port_type if success, otherwise negative error code=
-=2E
->>> + */
->>> +int typec_find_power_type(const char *name) {
->>> +	return match_string(typec_port_types, ARRAY_SIZE(typec_port_types),=
-
->>> +			    name);
->>> +}
->>> +EXPORT_SYMBOL_GPL(typec_find_power_type);
->>> +
->>> +/**
->>> + * typec_find_preferred_role - Find the typec drp port preferred
->>> +power role
->> Why typec_find_preferred_role()? Could be used for any power_role so w=
-hy not
->> typec_find_power_role()?
-> I am not sure if I catch your point of this comment.
-> For preferred role(if support try.sink or try.src) the only allowed pow=
-er roles are=20
-> "sink"
-> "source"
-> But for power role, the allowed type are=20
-> "sink"
-> "source"
-> "dual"
-
-Uhm, typing too fast again, I am. A better name would be just typec_find_=
-role().
-What I mean is that the function could be used for any situation when
-someone wants to map a string to a TYPEC_{SOURCE,SINK} constant so it
-is unnecessary to limit its usage to just preferred role.
-// Mats
-
-> Thanks
-> Li Jun
->> BR // Mats
->>
->>> + * @name: power role string
->>> + *
->>> + * This routine is used to find the typec_role by its string name of=
-
->>> + * preferred power role(Try.SRC or Try.SNK).
->>> + *
->>> + * Returns typec_role if success, otherwise negative error code.
->>> + */
->>> +int typec_find_preferred_role(const char *name) {
->>> +	return match_string(typec_roles, ARRAY_SIZE(typec_roles), name); }
->>> +EXPORT_SYMBOL_GPL(typec_find_preferred_role);
->>> +
->>> +/**
->>> + * typec_find_data_type - Get the typec port data capability
->>> + * @name: data type string
->>> + *
->>> + * This routine is used to find the typec_port_data by its string na=
-me.
->>> + *
->>> + * Returns typec_port_data if success, otherwise negative error code=
-=2E
->>> + */
->>> +int typec_find_data_type(const char *name) {
->>> +	return match_string(typec_data_types, ARRAY_SIZE(typec_data_types),=
-
->>> +			    name);
->>> +}
->>> +EXPORT_SYMBOL_GPL(typec_find_data_type);
->>> +
->>>   /* ------------------------------------------ */
->>>   /* API for Multiplexer/DeMultiplexer Switches */
->>>
->>> diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
->>> index 672b39b..00c93e7 100644
->>> --- a/include/linux/usb/typec.h
->>> +++ b/include/linux/usb/typec.h
->>> @@ -267,4 +267,7 @@ int typec_set_orientation(struct typec_port *port=
-,
->>>   			  enum typec_orientation orientation);
->>>   int typec_set_mode(struct typec_port *port, int mode);
->>>
->>> +int typec_find_power_type(const char *name); int
->>> +typec_find_preferred_role(const char *name); int
->>> +typec_find_data_type(const char *name);
->>>   #endif /* __LINUX_USB_TYPEC_H */
+SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWF0cyBLYXJybWFuIFtt
+YWlsdG86bWF0cy5kZXYubGlzdEBnbWFpbC5jb21dDQo+IFNlbnQ6IDIwMTjlubQ15pyIMTLml6Ug
+Mzo1Ng0KPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsg
+Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+IGhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRl
+bC5jb207IGxpbnV4QHJvZWNrLXVzLm5ldA0KPiBDYzogYS5oYWpkYUBzYW1zdW5nLmNvbTsgY3cw
+MC5jaG9pQHNhbXN1bmcuY29tOw0KPiBzaHVmYW5fbGVlQHJpY2h0ZWsuY29tOyBQZXRlciBDaGVu
+IDxwZXRlci5jaGVuQG54cC5jb20+Ow0KPiBnc29tbG9AZ21haWwuY29tOyBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZzsgbGludXgtdXNiQHZnZXIua2VybmVsLm9yZzsNCj4gZGwtbGludXgtaW14
+IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NSAwNS8xNF0gdXNi
+OiB0eXBlYzogYWRkIEFQSSB0byBnZXQgdHlwZWMgYmFzaWMgcG9ydCBwb3dlcg0KPiBhbmQgZGF0
+YSBjb25maWcNCj4gDQo+IEhpIExpIEp1biwNCj4gDQo+IE9uIDIwMTgtMDUtMDMgMDI6MjQsIExp
+IEp1biB3cm90ZToNCj4gDQo+ID4gVGhpcyBwYXRjaCBhZGRzIDMgQVBJcyB0byBnZXQgdGhlIHR5
+cGVjIHBvcnQgcG93ZXIgYW5kIGRhdGEgdHlwZSwgYW5kDQo+ID4gcHJlZmVycmVkIHBvd2VyIHJv
+bGUgYnkgaXRzIG5hbWUgc3RyaW5nLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTGkgSnVuIDxq
+dW4ubGlAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgIGRyaXZlcnMvdXNiL3R5cGVjL2NsYXNzLmMg
+fCA1Mg0KPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0K
+PiA+ICAgaW5jbHVkZS9saW51eC91c2IvdHlwZWMuaCB8ICAzICsrKw0KPiA+ICAgMiBmaWxlcyBj
+aGFuZ2VkLCA1NSBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91
+c2IvdHlwZWMvY2xhc3MuYyBiL2RyaXZlcnMvdXNiL3R5cGVjL2NsYXNzLmMNCj4gPiBpbmRleCA1
+M2RmMTBkLi41OTgxZTE4IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvdXNiL3R5cGVjL2NsYXNz
+LmMNCj4gPiArKysgYi9kcml2ZXJzL3VzYi90eXBlYy9jbGFzcy5jDQo+ID4gQEAgLTksNiArOSw3
+IEBADQo+ID4gICAjaW5jbHVkZSA8bGludXgvZGV2aWNlLmg+DQo+ID4gICAjaW5jbHVkZSA8bGlu
+dXgvbW9kdWxlLmg+DQo+ID4gICAjaW5jbHVkZSA8bGludXgvbXV0ZXguaD4NCj4gPiArI2luY2x1
+ZGUgPGxpbnV4L3Byb3BlcnR5Lmg+DQo+ID4gICAjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KPiA+
+ICAgI2luY2x1ZGUgPGxpbnV4L3VzYi90eXBlYy5oPg0KPiA+ICAgI2luY2x1ZGUgPGxpbnV4L3Vz
+Yi90eXBlY19tdXguaD4NCj4gPiBAQCAtODAyLDYgKzgwMywxMiBAQCBzdGF0aWMgY29uc3QgY2hh
+ciAqIGNvbnN0IHR5cGVjX3BvcnRfdHlwZXNbXSA9IHsNCj4gPiAgIAlbVFlQRUNfUE9SVF9EUlBd
+ID0gImR1YWwiLA0KPiA+ICAgfTsNCj4gPg0KPiA+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0
+IHR5cGVjX2RhdGFfdHlwZXNbXSA9IHsNCj4gPiArCVtUWVBFQ19QT1JUX0RGUF0gPSAiaG9zdCIs
+DQo+ID4gKwlbVFlQRUNfUE9SVF9VRlBdID0gImRldmljZSIsDQo+ID4gKwlbVFlQRUNfUE9SVF9E
+UkRdID0gImR1YWwiLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAgIHN0YXRpYyBjb25zdCBjaGFyICog
+Y29uc3QgdHlwZWNfcG9ydF90eXBlc19kcnBbXSA9IHsNCj4gPiAgIAlbVFlQRUNfUE9SVF9TUkNd
+ID0gImR1YWwgW3NvdXJjZV0gc2luayIsDQo+ID4gICAJW1RZUEVDX1BPUlRfU05LXSA9ICJkdWFs
+IHNvdXJjZSBbc2lua10iLCBAQCAtMTI1Miw2ICsxMjU5LDUxDQo+IEBADQo+ID4gdm9pZCB0eXBl
+Y19zZXRfcHdyX29wbW9kZShzdHJ1Y3QgdHlwZWNfcG9ydCAqcG9ydCwNCj4gPiAgIH0NCj4gPiAg
+IEVYUE9SVF9TWU1CT0xfR1BMKHR5cGVjX3NldF9wd3Jfb3Btb2RlKTsNCj4gPg0KPiA+ICsvKioN
+Cj4gPiArICogdHlwZWNfZmluZF9wb3dlcl90eXBlIC0gR2V0IHRoZSB0eXBlYyBwb3J0IHBvd2Vy
+IHR5cGUNCj4gDQo+IFdoeSBpcyB0aGlzIGZ1bmN0aW9uIGNhbGxlZCB0eXBlY19maW5kX3Bvd2Vy
+X3R5cGUoKSBhbmQgbm90DQo+IHR5cGVjX2ZpbmRfcG9ydF90eXBlKCk/DQo+IEl0J3MgY2FsbGVk
+IHBvcnRfdHlwZSBpbiBzeXNmcywgaGF2aW5nIGRpZmZlcmVudCBuYW1lcyBqdXN0IGFkZHMgY29u
+ZnVzaW9uLg0KPiAoT3RoZXJ3aXNlIEkgYWdyZWUgcG93ZXJfdHlwZSBpcyBhIGJldHRlciBuYW1l
+IGJ1dC4uLikNCg0KV2UgaGF2ZSAicG9ydCB0eXBlIiBiZWZvcmUgdGhlIHBvd2VyIGFuZCBkYXRh
+IHJvbGUgc2VwYXJhdGlvbiwNCnRoaXMgQVBJIG5hbWUncyBpbnRlbnRpb24gaXMgdG8gcmVmbGVj
+dCB0aGUgcG93ZXIgY2FwLCBhbnl3YXkgSQ0KbGVhdmUgdGhpcyB0byBiZSBkZWNpZGVkIGJ5IEhl
+aWtraSB0aGVuLg0KDQo+IA0KPiA+ICsgKiBAbmFtZTogcG9ydCB0eXBlIHN0cmluZw0KPiA+ICsg
+Kg0KPiA+ICsgKiBUaGlzIHJvdXRpbmUgaXMgdXNlZCB0byBmaW5kIHRoZSB0eXBlY19wb3J0X3R5
+cGUgYnkgaXRzIHN0cmluZyBuYW1lLg0KPiA+ICsgKg0KPiA+ICsgKiBSZXR1cm5zIHR5cGVjX3Bv
+cnRfdHlwZSBpZiBzdWNjZXNzLCBvdGhlcndpc2UgbmVnYXRpdmUgZXJyb3IgY29kZS4NCj4gPiAr
+ICovDQo+ID4gK2ludCB0eXBlY19maW5kX3Bvd2VyX3R5cGUoY29uc3QgY2hhciAqbmFtZSkgew0K
+PiA+ICsJcmV0dXJuIG1hdGNoX3N0cmluZyh0eXBlY19wb3J0X3R5cGVzLCBBUlJBWV9TSVpFKHR5
+cGVjX3BvcnRfdHlwZXMpLA0KPiA+ICsJCQkgICAgbmFtZSk7DQo+ID4gK30NCj4gPiArRVhQT1JU
+X1NZTUJPTF9HUEwodHlwZWNfZmluZF9wb3dlcl90eXBlKTsNCj4gPiArDQo+ID4gKy8qKg0KPiA+
+ICsgKiB0eXBlY19maW5kX3ByZWZlcnJlZF9yb2xlIC0gRmluZCB0aGUgdHlwZWMgZHJwIHBvcnQg
+cHJlZmVycmVkDQo+ID4gK3Bvd2VyIHJvbGUNCj4gDQo+IFdoeSB0eXBlY19maW5kX3ByZWZlcnJl
+ZF9yb2xlKCk/IENvdWxkIGJlIHVzZWQgZm9yIGFueSBwb3dlcl9yb2xlIHNvIHdoeSBub3QNCj4g
+dHlwZWNfZmluZF9wb3dlcl9yb2xlKCk/DQoNCkkgYW0gbm90IHN1cmUgaWYgSSBjYXRjaCB5b3Vy
+IHBvaW50IG9mIHRoaXMgY29tbWVudC4NCkZvciBwcmVmZXJyZWQgcm9sZShpZiBzdXBwb3J0IHRy
+eS5zaW5rIG9yIHRyeS5zcmMpIHRoZSBvbmx5IGFsbG93ZWQgcG93ZXIgcm9sZXMgYXJlIA0KInNp
+bmsiDQoic291cmNlIg0KQnV0IGZvciBwb3dlciByb2xlLCB0aGUgYWxsb3dlZCB0eXBlIGFyZSAN
+CiJzaW5rIg0KInNvdXJjZSINCiJkdWFsIg0KDQpUaGFua3MNCkxpIEp1bg0KPiANCj4gQlIgLy8g
+TWF0cw0KPiANCj4gPiArICogQG5hbWU6IHBvd2VyIHJvbGUgc3RyaW5nDQo+ID4gKyAqDQo+ID4g
+KyAqIFRoaXMgcm91dGluZSBpcyB1c2VkIHRvIGZpbmQgdGhlIHR5cGVjX3JvbGUgYnkgaXRzIHN0
+cmluZyBuYW1lIG9mDQo+ID4gKyAqIHByZWZlcnJlZCBwb3dlciByb2xlKFRyeS5TUkMgb3IgVHJ5
+LlNOSykuDQo+ID4gKyAqDQo+ID4gKyAqIFJldHVybnMgdHlwZWNfcm9sZSBpZiBzdWNjZXNzLCBv
+dGhlcndpc2UgbmVnYXRpdmUgZXJyb3IgY29kZS4NCj4gPiArICovDQo+ID4gK2ludCB0eXBlY19m
+aW5kX3ByZWZlcnJlZF9yb2xlKGNvbnN0IGNoYXIgKm5hbWUpIHsNCj4gPiArCXJldHVybiBtYXRj
+aF9zdHJpbmcodHlwZWNfcm9sZXMsIEFSUkFZX1NJWkUodHlwZWNfcm9sZXMpLCBuYW1lKTsgfQ0K
+PiA+ICtFWFBPUlRfU1lNQk9MX0dQTCh0eXBlY19maW5kX3ByZWZlcnJlZF9yb2xlKTsNCj4gPiAr
+DQo+ID4gKy8qKg0KPiA+ICsgKiB0eXBlY19maW5kX2RhdGFfdHlwZSAtIEdldCB0aGUgdHlwZWMg
+cG9ydCBkYXRhIGNhcGFiaWxpdHkNCj4gPiArICogQG5hbWU6IGRhdGEgdHlwZSBzdHJpbmcNCj4g
+PiArICoNCj4gPiArICogVGhpcyByb3V0aW5lIGlzIHVzZWQgdG8gZmluZCB0aGUgdHlwZWNfcG9y
+dF9kYXRhIGJ5IGl0cyBzdHJpbmcgbmFtZS4NCj4gPiArICoNCj4gPiArICogUmV0dXJucyB0eXBl
+Y19wb3J0X2RhdGEgaWYgc3VjY2Vzcywgb3RoZXJ3aXNlIG5lZ2F0aXZlIGVycm9yIGNvZGUuDQo+
+ID4gKyAqLw0KPiA+ICtpbnQgdHlwZWNfZmluZF9kYXRhX3R5cGUoY29uc3QgY2hhciAqbmFtZSkg
+ew0KPiA+ICsJcmV0dXJuIG1hdGNoX3N0cmluZyh0eXBlY19kYXRhX3R5cGVzLCBBUlJBWV9TSVpF
+KHR5cGVjX2RhdGFfdHlwZXMpLA0KPiA+ICsJCQkgICAgbmFtZSk7DQo+ID4gK30NCj4gPiArRVhQ
+T1JUX1NZTUJPTF9HUEwodHlwZWNfZmluZF9kYXRhX3R5cGUpOw0KPiA+ICsNCj4gPiAgIC8qIC0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSAqLw0KPiA+ICAgLyogQVBJ
+IGZvciBNdWx0aXBsZXhlci9EZU11bHRpcGxleGVyIFN3aXRjaGVzICovDQo+ID4NCj4gPiBkaWZm
+IC0tZ2l0IGEvaW5jbHVkZS9saW51eC91c2IvdHlwZWMuaCBiL2luY2x1ZGUvbGludXgvdXNiL3R5
+cGVjLmgNCj4gPiBpbmRleCA2NzJiMzliLi4wMGM5M2U3IDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1
+ZGUvbGludXgvdXNiL3R5cGVjLmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3VzYi90eXBlYy5o
+DQo+ID4gQEAgLTI2Nyw0ICsyNjcsNyBAQCBpbnQgdHlwZWNfc2V0X29yaWVudGF0aW9uKHN0cnVj
+dCB0eXBlY19wb3J0ICpwb3J0LA0KPiA+ICAgCQkJICBlbnVtIHR5cGVjX29yaWVudGF0aW9uIG9y
+aWVudGF0aW9uKTsNCj4gPiAgIGludCB0eXBlY19zZXRfbW9kZShzdHJ1Y3QgdHlwZWNfcG9ydCAq
+cG9ydCwgaW50IG1vZGUpOw0KPiA+DQo+ID4gK2ludCB0eXBlY19maW5kX3Bvd2VyX3R5cGUoY29u
+c3QgY2hhciAqbmFtZSk7IGludA0KPiA+ICt0eXBlY19maW5kX3ByZWZlcnJlZF9yb2xlKGNvbnN0
+IGNoYXIgKm5hbWUpOyBpbnQNCj4gPiArdHlwZWNfZmluZF9kYXRhX3R5cGUoY29uc3QgY2hhciAq
+bmFtZSk7DQo+ID4gICAjZW5kaWYgLyogX19MSU5VWF9VU0JfVFlQRUNfSCAqLw0KPiA+DQo=
