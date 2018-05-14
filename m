@@ -1,91 +1,49 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Allwinner A64: Issue on external rtc clock to wifi chip
-Date: Mon, 14 May 2018 09:57:27 +0200
-Message-ID: <20180514075727.uxggyhmbahvhestx@flea>
-References: <CAMty3ZCNyuEwmLGdDZLM_9qKJ2NsT33rodug7ZpKAE-OHymVEg@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos: Use dedicated DT bindings for Odroid
+ X/X2, U3
+Date: Mon, 14 May 2018 10:01:55 +0200
+Message-ID: <1ac92405-897a-d16b-13a2-e968c687b07d@samsung.com>
+References: <CGME20180511081032epcas2p30f381cf699cb7524d9a143390e9c74b5@epcas2p3.samsung.com>
+        <20180511080947.3057-1-s.nawrocki@samsung.com>
+        <20180513122412.shxdxtxt2phb46l5@kozik-lap>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kx3hdnajnzxhcs2n"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2UC4XLQKGQEUE4XGPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZCNyuEwmLGdDZLM_9qKJ2NsT33rodug7ZpKAE-OHymVEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20180513122412.shxdxtxt2phb46l5@kozik-lap>
+Content-language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+On 05/13/2018 02:24 PM, Krzysztof Kozlowski wrote:
+> On Fri, May 11, 2018 at 10:09:47AM +0200, Sylwester Nawrocki wrote:
+>> Use dedicated Odroid audio subsystem DT bindings instead of the simple-card.
+>> This adds support for audio on the HDMI interface.
 
---kx3hdnajnzxhcs2n
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+> How about changing the subject to "Add suppor for audio over HDMI for
+> Odroid X/X2/U3"?
 
-Hi,
+Sure, I don't mind.
 
-On Mon, May 14, 2018 at 12:37:49PM +0530, Jagan Teki wrote:
-> Hi Maxime and All,
-> 
-> We are trying to bring-up AP6330 Wifi chip for A64 board. We noticed
-> to have an external rtc clock has driven from wifi chip.
-> 
-> So the devicetree is configured according to this as below.
-> 
-> / {
->         wifi_pwrseq: wifi-pwrseq {
->                 compatible = "mmc-pwrseq-simple";
->                 clocks = <&rtc 1>;
->                 clock-names = "ext_clock";
->                 reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
->                 post-power-on-delay-ms = <400>;
->         };
-> };
-> 
-> &rtc {
->         clock-output-names = "rtc-osc32k", "rtc-osc32k-out";
->         clocks = <&osc32k>;
->         #clock-cells = <1>;
-> };
-> 
-> &mmc1 {
->         pinctrl-names = "default";
->         pinctrl-0 = <&mmc1_pins>;
->         vmmc-supply = <&reg_dcdc1>;
->         vqmmc-supply = <&reg_eldo1>;
->         mmc-pwrseq = <&wifi_pwrseq>;
->         bus-width = <4>;
->         non-removable;
->         status = "okay";
-> 
->         brcmf: wifi@1 {
->                 reg = <1>;
->                 compatible = "brcm,bcm4329-fmac";
->                 interrupt-parent = <&r_pio>;
->                 interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>;  /* WL-WAKE-AP: PL3 */
->                 interrupt-names = "host-wake";
->         };
-> };
-> 
-> And observed rtc-osc32k-out clock is never enabled[1] and the value of
-> LOSC_OUT_GATING is 0x0 which eventually not enabling
-> LOSC_OUT_GATING_EN
-> 
-> Pls. let us know if we miss anything here?
-> 
-> [1] https://paste.ubuntu.com/p/X2By4q8kD2/
+>> diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
+>> index bdcd4523cc1c..7a94a423097d 100644
+>> --- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
+>> +++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
+>> @@ -113,11 +113,12 @@
+>>  };
+>>  
+>>  &sound {
+>> -	simple-audio-card,name = "Odroid-U3";
+>> -	simple-audio-card,widgets =
+>> +	compatible = "hardkernel,odroid-xu4-audio";
 
-Could you paste your config and the logs from a boot to?
+> The compatible is the same for all users using DTSI so it could be moved
+> to the exynos4412-odroid-common.dtsi itself.
 
-Thanks!
-Maxime
+Corrected.
 
 -- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---kx3hdnajnzxhcs2n--
+Regards,
+Sylwester
