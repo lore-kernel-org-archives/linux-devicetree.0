@@ -1,84 +1,87 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: Allwinner A64: Issue on external rtc clock to wifi chip
-Date: Mon, 14 May 2018 13:34:56 +0530
-Message-ID: <CAMty3ZDew=+zytKUx5+nX27CjCe0UfJpyYOy2s07NoJvbe57mQ@mail.gmail.com>
-References: <CAMty3ZCNyuEwmLGdDZLM_9qKJ2NsT33rodug7ZpKAE-OHymVEg@mail.gmail.com>
- <20180514075727.uxggyhmbahvhestx@flea>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBKUG4XLQKGQEAENN4CA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180514075727.uxggyhmbahvhestx@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 16/19 v3] regulator: fixed/gpio: Update device tree bindings
+Date: Mon, 14 May 2018 10:06:37 +0200
+Message-ID: <20180514080640.12515-17-linus.walleij@linaro.org>
+References: <20180514080640.12515-1-linus.walleij@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180514080640.12515-1-linus.walleij@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 14, 2018 at 1:27 PM, Maxime Ripard
-<maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> Hi,
->
-> On Mon, May 14, 2018 at 12:37:49PM +0530, Jagan Teki wrote:
->> Hi Maxime and All,
->>
->> We are trying to bring-up AP6330 Wifi chip for A64 board. We noticed
->> to have an external rtc clock has driven from wifi chip.
->>
->> So the devicetree is configured according to this as below.
->>
->> / {
->>         wifi_pwrseq: wifi-pwrseq {
->>                 compatible = "mmc-pwrseq-simple";
->>                 clocks = <&rtc 1>;
->>                 clock-names = "ext_clock";
->>                 reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
->>                 post-power-on-delay-ms = <400>;
->>         };
->> };
->>
->> &rtc {
->>         clock-output-names = "rtc-osc32k", "rtc-osc32k-out";
->>         clocks = <&osc32k>;
->>         #clock-cells = <1>;
->> };
->>
->> &mmc1 {
->>         pinctrl-names = "default";
->>         pinctrl-0 = <&mmc1_pins>;
->>         vmmc-supply = <&reg_dcdc1>;
->>         vqmmc-supply = <&reg_eldo1>;
->>         mmc-pwrseq = <&wifi_pwrseq>;
->>         bus-width = <4>;
->>         non-removable;
->>         status = "okay";
->>
->>         brcmf: wifi@1 {
->>                 reg = <1>;
->>                 compatible = "brcm,bcm4329-fmac";
->>                 interrupt-parent = <&r_pio>;
->>                 interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>;  /* WL-WAKE-AP: PL3 */
->>                 interrupt-names = "host-wake";
->>         };
->> };
->>
->> And observed rtc-osc32k-out clock is never enabled[1] and the value of
->> LOSC_OUT_GATING is 0x0 which eventually not enabling
->> LOSC_OUT_GATING_EN
->>
->> Pls. let us know if we miss anything here?
->>
->> [1] https://paste.ubuntu.com/p/X2By4q8kD2/
->
-> Could you paste your config and the logs from a boot to?
+Deprecate the open drain binding for fixed regulator and indicate
+that we prefer this to be passed in the GPIO phandle flags.
 
-.config
-https://paste.ubuntu.com/p/w9w2KB7RFc/
+Clarify that the line inversion semantics for fixed and GPIO
+regulators completely overrides the active low flags in the
+phandle flags.
 
-dmesg
-https://paste.ubuntu.com/p/mrZGk5bWRR/
+Unfortunately this can not be changed to prefer that we pass
+the flags in the phandle: the bindings have been specified and
+deployed such that the presence/absence of this flag and only
+that controls the line inversion semantics. The crucial semantic
+is that the absence of the flag means the core will assume
+the line is active low, which in GPIO terms is an exception,
+as GPIO lines are normally assumed to be active high.
+
+This special device tree semantic cannot be changed without
+introducing a whole new compatible string for the fixed and
+GPIO regulators, so we just contain the situation.
+
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v2->v3:
+- Resending.
+ChangeLog v1->v2:
+- Collect Rob's ACK.
+---
+ .../bindings/regulator/fixed-regulator.txt          | 13 +++++++++++--
+ .../bindings/regulator/gpio-regulator.txt           |  4 ++++
+ 2 files changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+index 0c2a6c8a1536..a7a1cd0dfa6e 100644
+--- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+@@ -8,10 +8,19 @@ Optional properties:
+ - gpio: gpio to use for enable control
+ - startup-delay-us: startup time in microseconds
+ - enable-active-high: Polarity of GPIO is Active high
+-If this property is missing, the default assumed is Active low.
++  If this property is missing, the default assumed is Active low.
++  If the phandle flags to the GPIO handle also flag the line as active
++  low or high, that will be ignored for fixed regulators and the
++  presence or absence of this flag solely controls the inversion
++  semantics.
++-vin-supply: Input supply name.
++
++Deprecated properties:
+ - gpio-open-drain: GPIO is open drain type.
+   If this property is missing then default assumption is false.
+--vin-supply: Input supply name.
++  Do not use this property in new device trees: instead use the
++  phandle flag to indicate to the GPIO provider that the line
++  should be handled as open drain.
+ 
+ Any property defined as part of the core regulator
+ binding, defined in regulator.txt, can also be used.
+diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+index 1f496159e2bb..8fef3e5358a2 100644
+--- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+@@ -14,6 +14,10 @@ Optional properties:
+ 			  defualt is LOW if nothing is specified.
+ - startup-delay-us	: Startup time in microseconds.
+ - enable-active-high	: Polarity of GPIO is active high (default is low).
++			  If the phandle flags to the GPIO handle also flag the line as
++			  active low or high, that will be ignored for fixed regulators
++			  and the presence or absence of this flag solely controls the
++			  inversion semantics.
+ - regulator-type	: Specifies what is being regulated, must be either
+ 			  "voltage" or "current", defaults to voltage.
+ 
+-- 
+2.17.0
