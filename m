@@ -1,144 +1,269 @@
-Return-Path: <SRS0=9rWN=H5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pl0-f66.google.com ([209.85.160.66]:37407 "EHLO
-        mail-pl0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750854AbeEJEfB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 10 May 2018 00:35:01 -0400
-Received: by mail-pl0-f66.google.com with SMTP id f7-v6so551767plr.4
-        for <devicetree@vger.kernel.org>; Wed, 09 May 2018 21:35:01 -0700 (PDT)
-From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Subject: [PATCH v11 1/3] PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver DT bindings
-Date: Thu, 10 May 2018 00:34:53 -0400
-Message-Id: <1525926893-29135-1-git-send-email-l.subrahmanya@mobiveil.co.in>
+Return-Path: <SRS0=ePA5=IB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relay10.mail.gandi.net ([217.70.178.230]:44531 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751387AbeENKDY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 14 May 2018 06:03:24 -0400
+Date: Mon, 14 May 2018 12:03:17 +0200
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v5 12/14] media: ov772x: avoid accessing registers under
+ power saving mode
+Message-ID: <20180514100317.GH5956@w540>
+References: <1525616369-8843-1-git-send-email-akinobu.mita@gmail.com>
+ <1525616369-8843-13-git-send-email-akinobu.mita@gmail.com>
+ <20180514090646.GD5956@w540>
+ <20180514094918.2xot5l2frkckfequ@paasikivi.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="9s922KAXlWjPfK/Q"
+Content-Disposition: inline
+In-Reply-To: <20180514094918.2xot5l2frkckfequ@paasikivi.fi.intel.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, marc.zyngier@arm.com
-Cc: mingkai.hu@nxp.com, peter.newton@nxp.com, minghuan.lian@nxp.com, rajesh.raina@nxp.com, rajan.kapoor@nxp.com, prabhjot.singh@nxp.com, Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>, devicetree@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the DT bindings for Mobiveil PCIe Host Bridge
-IP driver and updates the vendor prefixes file.
 
-Signed-off-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/pci/mobiveil-pcie.txt      | 73 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- MAINTAINERS                                        |  7 +++
- 3 files changed, 81 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+--9s922KAXlWjPfK/Q
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-new file mode 100644
-index 0000000..65038aa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-@@ -0,0 +1,73 @@
-+* Mobiveil AXI PCIe Root Port Bridge DT description
-+
-+Mobiveil's GPEX 4.0 is a PCIe Gen4 root port bridge IP. This configurable IP
-+has up to 8 outbound and inbound windows for the address translation.
-+
-+Required properties:
-+- #address-cells: Address representation for root ports, set to <3>
-+- #size-cells: Size representation for root ports, set to <2>
-+- #interrupt-cells: specifies the number of cells needed to encode an
-+	interrupt source. The value must be 1.
-+- compatible: Should contain "mbvl,gpex40-pcie"
-+- reg: Should contain PCIe registers location and length
-+	"config_axi_slave": PCIe controller registers
-+	"csr_axi_slave"	  : Bridge config registers
-+	"gpio_slave"	  : GPIO registers to control slot power
-+	"apb_csr"	  : MSI registers
-+
-+- device_type: must be "pci"
-+- apio-wins : number of requested apio outbound windows
-+		default 2 outbound windows are configured -
-+		1. Config window
-+		2. Memory window
-+- ppio-wins : number of requested ppio inbound windows
-+		default 1 inbound memory window is configured.
-+- bus-range: PCI bus numbers covered
-+- interrupt-controller: identifies the node as an interrupt controller
-+- #interrupt-cells: specifies the number of cells needed to encode an
-+	interrupt source. The value must be 1.
-+- interrupt-parent : phandle to the interrupt controller that
-+		it is attached to, it should be set to gic to point to
-+		ARM's Generic Interrupt Controller node in system DT.
-+- interrupts: The interrupt line of the PCIe controller
-+		last cell of this field is set to 4 to
-+		denote it as IRQ_TYPE_LEVEL_HIGH type interrupt.
-+- interrupt-map-mask,
-+	interrupt-map: standard PCI properties to define the mapping of the
-+	PCI interface to interrupt numbers.
-+- ranges: ranges for the PCI memory regions (I/O space region is not
-+	supported by hardware)
-+	Please refer to the standard PCI bus binding document for a more
-+	detailed explanation
-+
-+
-+Example:
-+++++++++
-+	pcie0: pcie@a0000000 {
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		compatible = "mbvl,gpex40-pcie";
-+		reg =	<0xa0000000 0x00001000>,
-+			<0xb0000000 0x00010000>,
-+			<0xff000000 0x00200000>,
-+			<0xb0010000 0x00001000>;
-+		reg-names =	"config_axi_slave",
-+				"csr_axi_slave",
-+				"gpio_slave",
-+				"apb_csr";
-+		device_type = "pci";
-+		apio-wins = <2>;
-+		ppio-wins = <1>;
-+		bus-range = <0x00000000 0x000000ff>;
-+		interrupt-controller;
-+		interrupt-parent = <&gic>;
-+		#interrupt-cells = <1>;
-+		interrupts = < 0 89 4 >;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 0 &pci_express 0>,
-+				<0 0 0 1 &pci_express 1>,
-+				<0 0 0 2 &pci_express 2>,
-+				<0 0 0 3 &pci_express 3>;
-+		ranges = < 0x83000000 0 0x00000000 0xa8000000 0 0x8000000>;
-+
-+	};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 0994bdd..8263cc7 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -197,6 +197,7 @@ lwn	Liebherr-Werk Nenzing GmbH
- macnica	Macnica Americas
- marvell	Marvell Technology Group Ltd.
- maxim	Maxim Integrated Products
-+mbvl	Mobiveil Inc.
- mcube	mCube
- meas	Measurement Specialties
- mediatek	MediaTek Inc.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 44512c3..b295080 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9162,6 +9162,13 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
- S:	Maintained
- F:	drivers/media/dvb-frontends/mn88473*
- 
-+PCI DRIVER FOR MOBIVEIL PCIE IP
-+M:	Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-+L:	linux-pci@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-+F:	drivers/pci/host/pcie-mobiveil.c
-+
- MODULE SUPPORT
- M:	Jessica Yu <jeyu@kernel.org>
- M:	Rusty Russell <rusty@rustcorp.com.au>
--- 
-1.8.3.1
+Hi Sakari,
+   thanks for the clarification, please ignore my comment then.
 
+Thanks
+   j
+
+On Mon, May 14, 2018 at 12:49:19PM +0300, Sakari Ailus wrote:
+> Hi Jacopo,
+>
+> On Mon, May 14, 2018 at 11:06:46AM +0200, jacopo mondi wrote:
+> > Hi Akinobu,
+> >
+> >    a small nit below
+> >
+> > On Sun, May 06, 2018 at 11:19:27PM +0900, Akinobu Mita wrote:
+> > > The set_fmt() in subdev pad ops, the s_ctrl() for subdev control handler,
+> > > and the s_frame_interval() in subdev video ops could be called when the
+> > > device is under power saving mode.  These callbacks for ov772x driver
+> > > cause updating H/W registers that will fail under power saving mode.
+> > >
+> > > This avoids it by not apply any changes to H/W if the device is not powered
+> > > up.  Instead the changes will be restored right after power-up.
+> > >
+> > > Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > Cc: Hans Verkuil <hans.verkuil@cisco.com>
+> > > Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+> > > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> > > ---
+> > > * v5
+> > > - No changes
+> > >
+> > >  drivers/media/i2c/ov772x.c | 79 +++++++++++++++++++++++++++++++++++++---------
+> > >  1 file changed, 64 insertions(+), 15 deletions(-)
+> > >
+> > > diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> > > index 9292a18..262a7e5 100644
+> > > --- a/drivers/media/i2c/ov772x.c
+> > > +++ b/drivers/media/i2c/ov772x.c
+> > > @@ -741,19 +741,30 @@ static int ov772x_s_frame_interval(struct v4l2_subdev *sd,
+> > >  	struct ov772x_priv *priv = to_ov772x(sd);
+> > >  	struct v4l2_fract *tpf = &ival->interval;
+> > >  	unsigned int fps;
+> > > -	int ret;
+> > > +	int ret = 0;
+> > >
+> > >  	fps = ov772x_select_fps(priv, tpf);
+> > >
+> > > -	ret = ov772x_set_frame_rate(priv, fps, priv->cfmt, priv->win);
+> > > -	if (ret)
+> > > -		return ret;
+> > > +	mutex_lock(&priv->lock);
+> > > +	/*
+> > > +	 * If the device is not powered up by the host driver do
+> > > +	 * not apply any changes to H/W at this time. Instead
+> > > +	 * the frame rate will be restored right after power-up.
+> > > +	 */
+> > > +	if (priv->power_count > 0) {
+> > > +		ret = ov772x_set_frame_rate(priv, fps, priv->cfmt, priv->win);
+> > > +		if (ret)
+> > > +			goto error;
+> > > +	}
+> > >
+> > >  	tpf->numerator = 1;
+> > >  	tpf->denominator = fps;
+> > >  	priv->fps = fps;
+> > >
+> > > -	return 0;
+> > > +error:
+> > > +	mutex_unlock(&priv->lock);
+> > > +
+> > > +	return ret;
+> > >  }
+> > >
+> > >  static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
+> > > @@ -765,6 +776,16 @@ static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
+> > >  	int ret = 0;
+> > >  	u8 val;
+> > >
+> > > +	/* v4l2_ctrl_lock() locks our own mutex */
+> > > +
+> > > +	/*
+> > > +	 * If the device is not powered up by the host driver do
+> > > +	 * not apply any controls to H/W at this time. Instead
+> > > +	 * the controls will be restored right after power-up.
+> > > +	 */
+> > > +	if (priv->power_count == 0)
+> > > +		return 0;
+> > > +
+> > >  	switch (ctrl->id) {
+> > >  	case V4L2_CID_VFLIP:
+> > >  		val = ctrl->val ? VFLIP_IMG : 0x00;
+> > > @@ -885,6 +906,10 @@ static int ov772x_power_off(struct ov772x_priv *priv)
+> > >  	return 0;
+> > >  }
+> > >
+> > > +static int ov772x_set_params(struct ov772x_priv *priv,
+> > > +			     const struct ov772x_color_format *cfmt,
+> > > +			     const struct ov772x_win_size *win);
+> > > +
+> > >  static int ov772x_s_power(struct v4l2_subdev *sd, int on)
+> > >  {
+> > >  	struct ov772x_priv *priv = to_ov772x(sd);
+> > > @@ -895,8 +920,20 @@ static int ov772x_s_power(struct v4l2_subdev *sd, int on)
+> > >  	/* If the power count is modified from 0 to != 0 or from != 0 to 0,
+> > >  	 * update the power state.
+> > >  	 */
+> > > -	if (priv->power_count == !on)
+> > > -		ret = on ? ov772x_power_on(priv) : ov772x_power_off(priv);
+> > > +	if (priv->power_count == !on) {
+> > > +		if (on) {
+> > > +			ret = ov772x_power_on(priv);
+> > > +			/*
+> > > +			 * Restore the format, the frame rate, and
+> > > +			 * the controls
+> > > +			 */
+> > > +			if (!ret)
+> > > +				ret = ov772x_set_params(priv, priv->cfmt,
+> > > +							priv->win);
+> > > +		} else {
+> > > +			ret = ov772x_power_off(priv);
+> > > +		}
+> > > +	}
+> > >
+> > >  	if (!ret) {
+> > >  		/* Update the power count. */
+> > > @@ -1163,7 +1200,7 @@ static int ov772x_set_fmt(struct v4l2_subdev *sd,
+> > >  	struct v4l2_mbus_framefmt *mf = &format->format;
+> > >  	const struct ov772x_color_format *cfmt;
+> > >  	const struct ov772x_win_size *win;
+> > > -	int ret;
+> > > +	int ret = 0;
+> > >
+> > >  	if (format->pad)
+> > >  		return -EINVAL;
+> > > @@ -1184,14 +1221,24 @@ static int ov772x_set_fmt(struct v4l2_subdev *sd,
+> > >  		return 0;
+> > >  	}
+> > >
+> > > -	ret = ov772x_set_params(priv, cfmt, win);
+> > > -	if (ret < 0)
+> > > -		return ret;
+> > > -
+> > > +	mutex_lock(&priv->lock);
+> > > +	/*
+> > > +	 * If the device is not powered up by the host driver do
+> > > +	 * not apply any changes to H/W at this time. Instead
+> > > +	 * the format will be restored right after power-up.
+> > > +	 */
+> > > +	if (priv->power_count > 0) {
+> > > +		ret = ov772x_set_params(priv, cfmt, win);
+> > > +		if (ret < 0)
+> > > +			goto error;
+> > > +	}
+> > >  	priv->win = win;
+> > >  	priv->cfmt = cfmt;
+> > >
+> > > -	return 0;
+> > > +error:
+> > > +	mutex_unlock(&priv->lock);
+> > > +
+> > > +	return ret;
+> > >  }
+> > >
+> > >  static int ov772x_video_probe(struct ov772x_priv *priv)
+> > > @@ -1201,7 +1248,7 @@ static int ov772x_video_probe(struct ov772x_priv *priv)
+> > >  	const char         *devname;
+> > >  	int		    ret;
+> > >
+> > > -	ret = ov772x_s_power(&priv->subdev, 1);
+> > > +	ret = ov772x_power_on(priv);
+> > >  	if (ret < 0)
+> > >  		return ret;
+> > >
+> > > @@ -1241,7 +1288,7 @@ static int ov772x_video_probe(struct ov772x_priv *priv)
+> > >  	ret = v4l2_ctrl_handler_setup(&priv->hdl);
+> > >
+> > >  done:
+> > > -	ov772x_s_power(&priv->subdev, 0);
+> > > +	ov772x_power_off(priv);
+> > >
+> > >  	return ret;
+> > >  }
+> > > @@ -1340,6 +1387,8 @@ static int ov772x_probe(struct i2c_client *client,
+> > >
+> > >  	v4l2_i2c_subdev_init(&priv->subdev, client, &ov772x_subdev_ops);
+> > >  	v4l2_ctrl_handler_init(&priv->hdl, 3);
+> > > +	/* Use our mutex for the controls */
+> > > +	priv->hdl.lock = &priv->lock;
+> >
+> > Isn't this unrelated?
+>
+> AFAICT not, since the access to power count is serialised using the
+> driver's mutex. The power count is used in the s_ctrl callback as well.
+>
+> >
+> > Apart from that,
+> >
+> > Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >
+> > Thanks
+> >   j
+> >
+> >
+> > >  	priv->vflip_ctrl = v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
+> > >  					     V4L2_CID_VFLIP, 0, 1, 1, 0);
+> > >  	priv->hflip_ctrl = v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
+> > > --
+> > > 2.7.4
+> > >
+>
+>
+>
+> --
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
+
+--9s922KAXlWjPfK/Q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJa+V7lAAoJEHI0Bo8WoVY82UwP/0A5/KvZwFHMoZySjUQIkku1
+QKyUW1Ee4v04zQmM2PTuu2o1an39GsgsAdvB/i8qHK6BhiMFIvwYnW+EmCjT+emO
+tdbUqIAtP3osGC5u/iukbzTU7ppUsnopfHQjSC8CcTEWzGJ2chDmYT1KKpvTRQUX
+1ZO20SrTHA/PQtZcmSbZwPLVAX1Washxas7IKEEPaxyeKHsd7JJJmuMMIkFR1L7k
+vP2rxvdgzyCLx9fR5buLd8SHIWJN5qIojM0dMzibsZzpqCKfpK8sDJY5xp+fAcq+
+WQbJEAH65+qDwNMcBvdzZ5Bccv6v+Z4PJsPGaxbq0zGE9+nMZFxrd0Q8t0glS0Qs
+orOILa7xuA9EuWo/6MOPqrK+UIHv4nzLgLvFEO0WRj1IDh5crhZ1G19EcPeqoruk
+Ccd2uY+gx4eFY//2W/3vKOxdFM9EkY1x9hhX1cAhWHt9KS2DOR9rTH2Nm5bmw4fF
+7vnSxqpli+AVA4ZNOxJ/IgkYgOExlkRNQC8ot3YZA4ORyBzcE2ndgwOhmCoRRjlX
+vy7X8uVv9PpB8lhUYN7ZeuSB9vJES4/IjrUu6vuS+s+UK0mOIL9tuB1cNdxNj1p/
++IyMOu9BqrY78+lCXnAzAB5XjD4KfBa3liEQN2mvcHpyZJtDzfRaRlOzGFdbyn/r
+PmrqFHe617/Pmb5tu6ik
+=EGmj
+-----END PGP SIGNATURE-----
+
+--9s922KAXlWjPfK/Q--
