@@ -1,56 +1,90 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [RFC PATCH] driver core: make deferring probe forever optional
-Date: Mon, 14 May 2018 14:44:50 +0200
-Message-ID: <45eca00d-57f5-21b5-1f6e-b5f3f60ad276@xilinx.com>
-References: <20180501213114.20183-1-robh@kernel.org>
- <20180507183106.GF2259@tuxbook-pro>
- <91dad272-e07d-2ab6-2afa-538294e9cefa@suse.de>
- <CACRpkdaYN-wKErERP_65T2NH6L-+8O_ugSgg7pXfkaLkn1A2KQ@mail.gmail.com>
- <c6655f84-747f-c08b-7b9c-f76ff8857567@suse.de>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] bus: fsl-mc: supoprt dma configure for devices on
+	fsl-mc bus
+Date: Mon, 14 May 2018 07:47:57 -0500
+Message-ID: <20180514124757.GA253589@bhelgaas-glaptop.roam.corp.google.com>
+References: <1524824826-29473-1-git-send-email-nipun.gupta@nxp.com>
+	<1525069641-8523-1-git-send-email-nipun.gupta@nxp.com>
+	<1525069641-8523-6-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c6655f84-747f-c08b-7b9c-f76ff8857567@suse.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Graf <agraf@suse.de>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@arm.com>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@kernel.org>, boot-architecture@lists.linaro.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Michal Simek <michal.simek@xilinx.com>, Jan Kiszka <jan.kiszka@siemens.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1525069641-8523-6-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14.5.2018 09:37, Alexander Graf wrote:
+When you add the changleog, please also fix the subject typo:
+
+- bus: fsl-mc: supoprt dma configure for devices on fsl-mc bus
+               ^^^^^^^
++ bus: fsl-mc: support dma configure for devices on fsl-mc bus
+
+On Mon, Apr 30, 2018 at 11:57:20AM +0530, Nipun Gupta wrote:
+> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  drivers/bus/fsl-mc/fsl-mc-bus.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
 > 
-> On 05/14/2018 12:01 AM, Linus Walleij wrote:
->> On Wed, May 9, 2018 at 11:44 AM, Alexander Graf <agraf@suse.de> wrote:
->>> On 05/07/2018 08:31 PM, Bjorn Andersson wrote:
->>>> Can you please name platform that has enough support for Alexander to
->>>> care about backwards and forwards compatibility but lacks a pinctrl
->>>> driver.
->>> ZynqMP is one example that immediately comes to my mind. I'm sure
->>> there are
->>> others too.
->> Why isn't that using drivers/pinctrl/pinctrl-zynq.c?
->>
->> How is it so very different from (old) Zynq as it is already using
->> the same GPIO driver?
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> index 5d8266c..624828b 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
+> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> @@ -127,6 +127,16 @@ static int fsl_mc_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
+>  	return 0;
+>  }
+>  
+> +static int fsl_mc_dma_configure(struct device *dev)
+> +{
+> +	struct device *dma_dev = dev;
+> +
+> +	while (dev_is_fsl_mc(dma_dev))
+> +		dma_dev = dma_dev->parent;
+> +
+> +	return of_dma_configure(dev, dma_dev->of_node, 0);
+> +}
+> +
+>  static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+>  			     char *buf)
+>  {
+> @@ -148,6 +158,7 @@ struct bus_type fsl_mc_bus_type = {
+>  	.name = "fsl-mc",
+>  	.match = fsl_mc_bus_match,
+>  	.uevent = fsl_mc_bus_uevent,
+> +	.dma_configure  = fsl_mc_dma_configure,
+>  	.dev_groups = fsl_mc_dev_groups,
+>  };
+>  EXPORT_SYMBOL_GPL(fsl_mc_bus_type);
+> @@ -616,6 +627,7 @@ int fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
+>  		mc_dev->icid = parent_mc_dev->icid;
+>  		mc_dev->dma_mask = FSL_MC_DEFAULT_DMA_MASK;
+>  		mc_dev->dev.dma_mask = &mc_dev->dma_mask;
+> +		mc_dev->dev.coherent_dma_mask = mc_dev->dma_mask;
+>  		dev_set_msi_domain(&mc_dev->dev,
+>  				   dev_get_msi_domain(&parent_mc_dev->dev));
+>  	}
+> @@ -633,10 +645,6 @@ int fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
+>  			goto error_cleanup_dev;
+>  	}
+>  
+> -	/* Objects are coherent, unless 'no shareability' flag set. */
+> -	if (!(obj_desc->flags & FSL_MC_OBJ_FLAG_NO_MEM_SHAREABILITY))
+> -		arch_setup_dma_ops(&mc_dev->dev, 0, 0, NULL, true);
+> -
+>  	/*
+>  	 * The device-specific probe callback will get invoked by device_add()
+>  	 */
+> -- 
+> 1.9.1
 > 
-> That one is very simple: ZynqMP is usually an AMP system where Linux
-> doesn't have full knowledge of the overall system. IIUC they have a tiny
-> microblaze (PMU) that does the actual full system configuration for
-> peripherals that may interfere with each other. This architecture also
-> allows for safety critical code to run alongside a (less safe) Linux
-> system.
-
-Linux is running in non secure world that's why Linux can't have full
-system visibility and Linux should ask firmware. It doesn't matter if
-firmware is running on specific unit or just secure SW in EL3/EL1-S, EL0-S.
-You can also configure ZynqMP to protect these address ranges not to be
-accessible from NS sw.
-If you don't care about security you can use normal read/write accesses
-at least for gpio case. Pinctrl/clk will be driven via firmware interface.
-
-On Zynq we have never finished running Linux in NS and having firmware
-to handle it that's why only read/write is used there.
-
-Thanks,
-Michal
