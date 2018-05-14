@@ -1,131 +1,141 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v2] ARM: dts: exynos: Add support for audio over HDMI for
- Odroid X/X2/U3
-Date: Mon, 14 May 2018 10:01:48 +0200
-Message-ID: <20180514080148.10150-1-s.nawrocki@samsung.com>
-References: <CGME20180514080220epcas2p110497f1deca1e9c10db9b9edb890d76b@epcas2p1.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: krzk@kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH net-next v2 15/15] arm64: dts: allwinner: a64: add SRAM
+ controller device tree node
+Date: Mon, 14 May 2018 10:03:10 +0200
+Message-ID: <20180514080310.ngev5h6cqe4taedl@flea>
+References: <20180501161227.2110-1-wens@csie.org>
+ <20180501161227.2110-16-wens@csie.org>
+ <20180502095118.rqnfwy576xh6ercm@flea>
+ <CAGb2v67pvL58Pes1ZFDZtPu_nL2+m6dgf_XOOymG9nVAkXVpEw@mail.gmail.com>
+ <29E5670C-9D17-4EC1-AAAC-0CF33DD0534C@aosc.io>
+ <20180502115437.zlu2rafrguufutvp@flea>
+ <CAGb2v64xTNqQQSppw2NZoLn+ViQNQLytn1EukLqw+HJzf1=5ig@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lywb4puwbhjfxjby"
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64xTNqQQSppw2NZoLn+ViQNQLytn1EukLqw+HJzf1=5ig@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Icenowy Zheng <icenowy@aosc.io>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, netdev <netdev@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, Mark Brown <broonie@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch switches Odroid X/X2/U3 to use dedicated Odroid audio subsystem
-DT bindings instead of the simple-card in order to add support for audio
-over HDMI.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 33 +++++++++++++++----------
- arch/arm/boot/dts/exynos4412-odroidu3.dts       |  6 ++---
- arch/arm/boot/dts/exynos4412-odroidx.dts        |  6 ++---
- 3 files changed, 26 insertions(+), 19 deletions(-)
+--lywb4puwbhjfxjby
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index d7ad07fd48f9..a09e46c9dbc0 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -37,20 +37,14 @@
- 	};
- 
- 	sound: sound {
--		compatible = "simple-audio-card";
-+		compatible = "hardkernel,odroid-xu4-audio";
- 
--		simple-audio-card,format = "i2s";
--		simple-audio-card,bitclock-master = <&link0_codec>;
--		simple-audio-card,frame-master = <&link0_codec>;
--
--		simple-audio-card,cpu {
-+		cpu {
- 			sound-dai = <&i2s0 0>;
--			system-clock-frequency = <19200000>;
- 		};
- 
--		link0_codec: simple-audio-card,codec {
--			sound-dai = <&max98090>;
--			clocks = <&i2s0 CLK_I2S_CDCLK>;
-+		codec {
-+			sound-dai = <&hdmi>, <&max98090>;
- 		};
- 	};
- 
-@@ -142,14 +136,25 @@
- 	pinctrl-0 = <>;
- };
- 
-+&clock {
-+	assigned-clocks = <&clock CLK_FOUT_EPLL>;
-+	assigned-clock-rates = <45158401>;
-+};
-+
- &clock_audss {
- 	assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>,
- 			<&clock_audss EXYNOS_MOUT_I2S>,
- 			<&clock_audss EXYNOS_DOUT_SRP>,
--			<&clock_audss EXYNOS_DOUT_AUD_BUS>;
-+			<&clock_audss EXYNOS_DOUT_AUD_BUS>,
-+			<&clock_audss EXYNOS_DOUT_I2S>;
-+
- 	assigned-clock-parents = <&clock CLK_FOUT_EPLL>,
--			<&clock_audss EXYNOS_MOUT_AUDSS>;
--	assigned-clock-rates = <0>, <0>, <192000000>, <19200000>;
-+			  <&clock_audss EXYNOS_MOUT_AUDSS>;
-+
-+	assigned-clock-rates = <0>, <0>,
-+			<196608001>,
-+			<(196608001 / 2)>,
-+			<(196608001 / 8)>;
- };
- 
- &cpu0 {
-@@ -498,6 +503,8 @@
- 	pinctrl-0 = <&i2s0_bus>;
- 	pinctrl-names = "default";
- 	status = "okay";
-+	assigned-clocks = <&i2s0 CLK_I2S_RCLK_SRC>;
-+	assigned-clock-parents = <&clock_audss EXYNOS_SCLK_I2S>;
- };
- 
- &mixer {
-diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-index bdcd4523cc1c..459919b65df8 100644
---- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
-+++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-@@ -113,11 +113,11 @@
- };
- 
- &sound {
--	simple-audio-card,name = "Odroid-U3";
--	simple-audio-card,widgets =
-+	model = "Odroid-U3";
-+	samsung,audio-widgets =
- 		"Headphone", "Headphone Jack",
- 		"Speakers", "Speakers";
--	simple-audio-card,routing =
-+	samsung,audio-routing =
- 		"Headphone Jack", "HPL",
- 		"Headphone Jack", "HPR",
- 		"Headphone Jack", "MICBIAS",
-diff --git a/arch/arm/boot/dts/exynos4412-odroidx.dts b/arch/arm/boot/dts/exynos4412-odroidx.dts
-index 2dff129bc2ad..348556fcdd9d 100644
---- a/arch/arm/boot/dts/exynos4412-odroidx.dts
-+++ b/arch/arm/boot/dts/exynos4412-odroidx.dts
-@@ -97,12 +97,12 @@
- };
- 
- &sound {
--	simple-audio-card,name = "Odroid-X";
--	simple-audio-card,widgets =
-+	model = "Odroid-X";
-+	samsung,audio-widgets =
- 		"Headphone", "Headphone Jack",
- 		"Microphone", "Mic Jack",
- 		"Microphone", "DMIC";
--	simple-audio-card,routing =
-+	samsung,audio-routing =
- 		"Headphone Jack", "HPL",
- 		"Headphone Jack", "HPR",
- 		"IN1", "Mic Jack",
--- 
-2.14.2
+1;5201;0c
+On Sun, May 13, 2018 at 12:37:49PM -0700, Chen-Yu Tsai wrote:
+> On Wed, May 2, 2018 at 4:54 AM, Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
+> > On Wed, May 02, 2018 at 06:19:51PM +0800, Icenowy Zheng wrote:
+> >>
+> >>
+> >> =E4=BA=8E 2018=E5=B9=B45=E6=9C=882=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
+=885:53:21, Chen-Yu Tsai <wens@csie.org> =E5=86=99=E5=88=B0:
+> >> >On Wed, May 2, 2018 at 5:51 PM, Maxime Ripard
+> >> ><maxime.ripard@bootlin.com> wrote:
+> >> >> Hi,
+> >> >>
+> >> >> On Wed, May 02, 2018 at 12:12:27AM +0800, Chen-Yu Tsai wrote:
+> >> >>> From: Icenowy Zheng <icenowy@aosc.io>
+> >> >>>
+> >> >>> Allwinner A64 has a SRAM controller, and in the device tree
+> >> >currently
+> >> >>> we have a syscon node to enable EMAC driver to access the EMAC clo=
+ck
+> >> >>> register. As SRAM controller driver can now export regmap for this
+> >> >>> register, replace the syscon node to the SRAM controller device
+> >> >node,
+> >> >>> and let EMAC driver to acquire its EMAC clock regmap.
+> >> >>>
+> >> >>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> >> >>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> >> >>> ---
+> >> >>>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 23
+> >> >+++++++++++++++----
+> >> >>>  1 file changed, 19 insertions(+), 4 deletions(-)
+> >> >>>
+> >> >>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> >b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> >>> index 1b2ef28c42bd..1c37659d9d41 100644
+> >> >>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> >>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> >>> @@ -168,10 +168,25 @@
+> >> >>>               #size-cells =3D <1>;
+> >> >>>               ranges;
+> >> >>>
+> >> >>> -             syscon: syscon@1c00000 {
+> >> >>> -                     compatible =3D
+> >> >"allwinner,sun50i-a64-system-controller",
+> >> >>> -                             "syscon";
+> >> >>> +             sram_controller: sram-controller@1c00000 {
+> >> >>> +                     compatible =3D
+> >> >"allwinner,sun50i-a64-sram-controller";
+> >> >>
+> >> >> I don't think there's anything preventing us from keeping the
+> >> >> -system-controller compatible. It's what was in the DT before, and
+> >> >> it's how it's called in the datasheet.
+> >> >
+> >> >I actually meant to ask you about this. The -system-controller
+> >> >compatible matches the datasheet better. Maybe we should just
+> >> >switch to that one?
+> >>
+> >> No, if we do the switch the system-controller compatible,
+> >> the device will be probed on the same memory region with
+> >> a syscon on old DTs.
+> >
+> > The device hasn't magically changed either. Maybe we just need to add
+> > a check to make sure we don't have the syscon compatible in the SRAM
+> > driver probe so that the double driver issue doesn't happen?
+>=20
+> The syscon interface (which is not even a full blown device driver)
+> only looks at the "syscon" compatible. Either way we're removing that
+> part from the device tree so things should be ok for new device trees.
+> As Maxime mentioned we can do a check for the syscon compatible and
+> either give a warning to the user asking them to update their device
+> tree, or not register our custom regmap, or not probe the SRAM driver.
+> Personally I prefer the first option. The system controller block is
+> probed before any syscon users, so we should be fine, given the dwmac
+> driver goes the custom regmap path first.
+>=20
+> BTW, I still might end up changing the compatible. The manual uses
+> "system control", not "system controller", which I think makes sense,
+> since it is just a bunch of register files, kind of like the GRF
+> (General Register Files) block found in Rockchip SoCs [1], and not an
+> actual "controller".
+
+I'm not really fond of that, but we should at least make it consistent
+on the other patches Paul sent then.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--lywb4puwbhjfxjby
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlr5Qr0ACgkQ0rTAlCFN
+r3TUVw/8Cjrz+V7g4x+C3jJHO/10qrQRxixDyoOgejxLOlviTlbBSxs1d8zewB4g
+6Vw+J4pQ61U9w2zosdAM1Z50ocMHjOrJvJH49G4+t/+eKgJz4+36J7NEEdkQv0ph
+AI27QAn3if3BMCbtW2SqYDBf0kNEEHRx4oUw4pImA/2w+g0QZDf0VdzGypxam4jY
+EUYGxeYwSosteFyP9qctmwYK6KCDkd3g0rRjaFFwKrTgRzdv5UFJegCThlnN3PWb
+sPyOoCbkI7qsm1UdCI9G05dSDtt116H8/TFY/emq09J6gdzJsIWImrL0qkPPg+6m
+VO54W20UT2P8hyQD6UYejpoeUFCekb5bpupJQukc/E41kuVF3DnmAkTJj/yMTqeb
+23/tFACw6bTQn4y0GaJQ9jGvD1dYY7xKFFjz5Fu+yibYyh/gD9A89RuMbt58ykdO
+hFpjse7Cholm4x72r3eOuvY1/ba15PFU0BII/Xo6a4gN9FePh7vmYaLdYdbg1qRa
+sUf2Ye9Ug953X88fpdpDPwKpCb+1Lic9ErYV3cupi+aT5fGKWmA+x8K1yif3wvL4
+wny1MeJYDAYhZAyB431oBAUCuvtBihq/zR6ib6A4lhwEJn5f64pVpqP2kQxSU8EH
+GWQiqG6GrM5b0vUcBfMMHY1jtSmVl8RYjT8nMrhrAy38mASKjEw=
+=3DUt
+-----END PGP SIGNATURE-----
+
+--lywb4puwbhjfxjby--
