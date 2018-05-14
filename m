@@ -1,94 +1,52 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings/display/bridge: sii902x: add optional
- power supplies
-Date: Mon, 14 May 2018 20:06:38 +0300
-Message-ID: <1617167.qDJKxXFJBi@avalon>
-References: <20180425075314.19137-1-philippe.cornu@st.com>
- <3518575.OAoTTXDygq@avalon> <7fe8e766-56f5-38a3-b4dd-b44d4a5bdcf8@st.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 5/6] spi: at91-usart: add driver for at91-usart as spi
+Date: Mon, 14 May 2018 20:38:15 +0300
+Message-ID: <CAHp75VdRrL25Jgnbk64Qqc5RY3uJdcntJ3xwRdp3F+rRFeTHBA@mail.gmail.com>
+References: <20180511103822.31698-1-radu.pirea@microchip.com>
+ <20180511103822.31698-6-radu.pirea@microchip.com> <CAHp75Ve3Ugnjjm8EZkPQTZSvH1qad1e5SqjOn8zz5syHSQea_g@mail.gmail.com>
+ <5a3930b867cf8c279953d08c5d5dd1d93113a43b.camel@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <7fe8e766-56f5-38a3-b4dd-b44d4a5bdcf8@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philippe CORNU <philippe.cornu@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Yannick FERTRE <yannick.fertre@st.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5a3930b867cf8c279953d08c5d5dd1d93113a43b.camel@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Radu Pirea <radu.pirea@microchip.com>, devicetree <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Richard Genoud <richard.genoud@gmail.com>, alexandre.belloni@bootlin.com, Nicolas Ferre <nicolas.ferre@microchip.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcGUsCgpPbiBNb25kYXksIDE0IE1heSAyMDE4IDEyOjIyOjE2IEVFU1QgUGhpbGlw
-cGUgQ09STlUgd3JvdGU6Cj4gT24gMDQvMjYvMjAxOCAxMjowNSBBTSwgTGF1cmVudCBQaW5jaGFy
-dCB3cm90ZToKPiA+IE9uIFdlZG5lc2RheSwgMjUgQXByaWwgMjAxOCAyMDoxMToyMyBFRVNUIFJv
-YiBIZXJyaW5nIHdyb3RlOgo+ID4+IE9uIFdlZCwgQXByIDI1LCAyMDE4IGF0IDA0OjE3OjI1UE0g
-KzAzMDAsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPj4+IE9uIFdlZG5lc2RheSwgMjUgQXBy
-aWwgMjAxOCAxNToyMDowNCBFRVNUIFBoaWxpcHBlIENPUk5VIHdyb3RlOgo+ID4+Pj4gT24gMDQv
-MjUvMjAxOCAxMTowMSBBTSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiA+Pj4+PiBPbiBXZWRu
-ZXNkYXksIDI1IEFwcmlsIDIwMTggMTA6NTM6MTMgRUVTVCBQaGlsaXBwZSBDb3JudSB3cm90ZToK
-PiA+Pj4+Pj4gQWRkIG9wdGlvbmFsIHBvd2VyIHN1cHBsaWVzIHVzaW5nIHRoZSBkZXNjcmlwdGlv
-biBmb3VuZCBpbgo+ID4+Pj4+PiAiU2lJOTAyMkEvU2lJOTAyNEEgSERNSSBUcmFuc21pdHRlciBE
-YXRhIFNoZWV0IChBdWd1c3QgMjAxNikiLgo+ID4+Pj4+Pgo+ID4+Pj4+PiBUaGVyZSBpcyBhIHNp
-bmdsZSAxdjIgc3VwcGx5IHZvbHRhZ2UgbmFtZWQgdmNjMTIgZnJvbSB3aGljaCBjdmNjMTIKPiA+
-Pj4+Pj4gKGRpZ2l0YWwgY29yZSkgYW5kIGF2Y2MxMiAoVE1EUyBhbmFsb2cpIGFyZSBkZXJpdmVk
-IGJlY2F1c2UKPiA+Pj4+Pj4gYWNjb3JkaW5nIHRvIHRoaXMgZGF0YSBzaGVldDoKPiA+Pj4+Pj4g
-ImN2Y2MxMiBhbmQgYXZjYzEyIGNhbiBiZSBkZXJpdmVkIGZyb20gdGhlIHNhbWUgcG93ZXIgc291
-cmNlIgo+ID4+Pj4+Cj4gPj4+Pj4gU2hvdWxkbid0IHRoZSBwb3dlciBzdXBwbGllcyBiZSBtYW5k
-YXRvcnksIGFzIGV4cGxhaW5lZCBieSBNYXJrIGluCj4gPj4+Pj4gaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTgtQXByaWwvCj4gPj4+Pj4gMTcyNDAw
-Lmh0bWwgPwo+ID4+Pj4KPiA+Pj4+IExhdXJlbnQsCj4gPj4+PiBNYW55IHRoYW5rcyBMYXVyZW50
-IGZvciB5b3VyIGNvbW1lbnQsIEkgdW5kZXJzdG9vZCB0aGUgbWVyZ2Ugb2YgdGhlCj4gPj4+PiB0
-d28gMXYyIHBvd2VyIHN1cHBsaWVzIGJ1dCBtaXNzZWQgdGhlICJtYW5kYXRvcnkiIHBhcnQuLi4g
-bWF5YmUgYmVjYXVzZQo+ID4+Pj4gdGhpcyBwYXRjaCAod2l0aCBvcHRpb25hbCBwb3dlciBzdXBw
-bGllcykgYWxyZWFkeSBnb3QgdGhlIHJldmlld2VkLWJ5Cj4gPj4+PiBmcm9tIFJvYiwgSSB0aG91
-Z2h0IHRoZSBkaXNjdXNzaW9uIHRocmVhZCB5b3UgcG9pbnRlZCBvdXQgd2FzCj4gPj4+PiBhcHBs
-aWNhYmxlICJvbmx5IiB0byB0b3RhbGx5IG5ldyBkcml2ZXIgZG9jdW1lbnRhdGlvbi4KPiA+Pj4+
-Cj4gPj4+PiBTbywgb24gbXkgc2lkZSwgYXMgYSAibmV3IHVzZXIiIG9mIHNpaTkwMnggSUMsIG5v
-IHByb2JsZW0gdG8gcHV0IHRoZXNlCj4gPj4+PiBwb3dlciBzdXBwbGllcyBhcyBtYW5kYXRvcnkg
-aW5zdGVhZCBvZiBvcHRpb25hbCBwcm9wZXJ0aWVzIGJ1dCBJIHdvdWxkCj4gPj4+PiBsaWtlIHRv
-IGJlIHN1cmUgdGhpcyBpcyBhcHBsaWNhYmxlIHRvIGJvdGggb2xkIGFuZCBuZXcgYmluZGluZ3Mg
-ZG9jIDoKPiA+Pj4+ICkKPiA+Pj4KPiA+Pj4gV2Ugb2J2aW91c2x5IG5lZWQgdG8gcmV0YWluIGJh
-Y2t3YXJkIGNvbXBhdGliaWxpdHksIHNvIG9uIHRoZSBkcml2ZXIKPiA+Pj4gc2lkZSB5b3UgbmVl
-ZCB0byB0cmVhdCB0aG9zZSBwb3dlciBzdXBwbGllcyBhcyBvcHRpb25hbC4gRnJvbSBhIERUCj4g
-Pj4+IGJpbmRpbmdzIHBvaW50IG9mIHZpZXcsIGhvd2V2ZXIsIEkgdGhpbmsgdGhleSBzaG91bGQg
-YmUgbWFuZGF0b3J5IGZvcgo+ID4+PiBuZXcgRFQuCj4gPj4KPiA+PiBXZSBkb24ndCByZWFsbHkg
-aGF2ZSBhIHdheSB0byBkZXNjcmliZSB0aGVzZSAzIGNvbmRpdGlvbnMgKHJlcXVpcmVkIGZvcgo+
-ID4+IGFsbCwgb3B0aW9uYWwgZm9yIGFsbCwgYW5kIHJlcXVpcmVkIGZvciBuZXcpLiBTbyBnZW5l
-cmFsbHkgd2UgbWFrZQo+ID4+IGFkZGl0aW9ucyBvcHRpb25hbC4gVGhlIGV4Y2VwdGlvbiBzb21l
-dGltZXMgaXMgaWYgd2UgdXBkYXRlIGFsbCB0aGUgZHRzCj4gPj4gZmlsZXMuCj4gPiAKPiA+IENh
-bid0IHdlIGp1c3QgbWFrZSBpdCBtYW5kYXRvcnkgaW4gdGhlIGJpbmRpbmdzLCBhcyBsb25nIGFz
-IHdlIHRyZWF0IGl0Cj4gPiBhcyBvcHRpb25hbCBpbiBkcml2ZXJzID8KPiAKPiBIb3cgdG8gcHJv
-Z3Jlc3Mgb24gdGhpcyBwYXRjaD8gRG8geW91IGhhdmUgYW55IHN1Z2dlc3Rpb25zPwoKQnkgc2Vl
-aW5nIHdoYXQgUm9iIHRoaW5rcyBhYm91dCBteSBwcm9wb3NhbCBhYm92ZSA/IDotKQoKPiA+Pj4+
-IFJvYiwKPiA+Pj4+IGNvdWxkIHlvdSBwbGVhc2UgY29uZmlybSB0aGVzZSBwb3dlciBzdXBwbHkg
-cHJvcGVydGllcyBzaG91bGQgYmUKPiA+Pj4+ICJtYW5kYXRvcnkiPyBpZiB5ZXMsIHNob3VsZCB3
-ZSB0aGVuIG1vZGlmeSBvdGhlciBvcHRpb25hbCBwcm9wZXJ0aWVzCj4gPj4+PiBsaWtlIHRoZSBy
-ZXNldC1ncGlvcyB0b28gaW4gdGhlIGZ1dHVyZT8KPiA+Pj4KPiA+Pj4gVGhlIEdQSU9zIHByb3Bl
-cnRpZXMgYXJlIGRpZmZlcmVudCBpbiBteSBvcGluaW9uLCBhcyB0aGVyZSdzIG5vCj4gPj4+IHJl
-cXVpcmVtZW50IHRvIGNvbm5lY3QgZm9yIGluc3RhbmNlIHRoZSByZXNldCBwaW4gdG8gYSBHUElP
-IGNvbnRyb2xsYWJsZQo+ID4+PiBieSB0aGUgU29DLiBUaGUgcGluIGNvdWxkIGJlIGhhcmR3aXJl
-ZCB0byBWQ0MsIG9yIGNvbm5lY3RlZCB0byBhIHN5c3RlbQo+ID4+PiByZXNldCB0aGF0IGlzIGF1
-dG9tYXRpY2FsbHkgbWFuYWdlZCB3aXRob3V0IFNvQyBpbnRlcnZlbnRpb24uIFRoZSBwb3dlcgo+
-ID4+PiBzdXBwbGllcywgaG93ZXZlciwgYXJlIG1hbmRhdG9yeSwgaW4gdGhlIHNlbnNlIHRoYXQg
-dGhlIGNoaXAgd2lsbCBub3QKPiA+Pj4gd29yayBpZiB5b3UgbGVhdmUgdGhlIHBvd2VyIHN1cHBs
-aWVzIHVuY29ubmVjdGVkLgo+ID4+Cj4gPj4gRFQgb25seSBuZWVkcyB0byBkZXNjcmliZSB3aGF0
-IG1hdHRlcnMgdG8gcy93LiBJZiBhIHJlZ3VsYXRvciBpcwo+ID4+IGZpeGVkIGFuZCB5b3UgZG9u
-J3QgbmVlZCB0byBrbm93IGl0cyB2b2x0YWdlIChvciBvdGhlciByZWFkLW9ubHkKPiA+PiBwYXJh
-bWV0ZXJzKSwgdGhlbiB0aGVyZSdzIG5vdCBtdWNoIHBvaW50IGluIHB1dHRpbmcgaXQgaW4gRFQu
-Cj4gPj4KPiA+PiBJJ2QgcHJvYmFibHkgYmFzZSB0aGlzIG1vcmUgYXQgYSBwbGF0Zm9ybSBsZXZl
-bCBhbmQgeW91IGVpdGhlciB1c2UKPiA+PiByZWd1bGF0b3IgYmluZGluZyBvciB5b3UgZG9uJ3Qu
-IEl0J3MgcGVyZmVjdGx5IHZhbGlkIHRoYXQgeW91IHdhbnQgdG8gZG8KPiA+PiB0aGluZ3MgbGlr
-ZSByZWd1bGF0b3Igc2V0dXAsIHBpbiBjdHJsIGFuZCBtdXhpbmcgc2V0dXAsIGV0Yy4gYWxsIGlu
-Cj4gPj4gZmlybXdhcmUgYW5kIHRoZSBPUyBkb2Vzbid0IHRvdWNoIGFueSBvZiB0aGF0Lgo+ID4+
-Cj4gPj4gVGhhdCdzIGFsbCBhIGJpZyBjYW4gb2Ygd29ybXMgd2hpY2ggd2Ugc2hvdWxkbid0IHNv
-bHZlIG9uIHRoaXMgMiBsaW5lCj4gPj4gY2hhbmdlLiBJIHRoaW5rIHRoaXMgY2hhbmdlIGlzIGZp
-bmUgYXMtaXMsIHNvOgo+ID4+Cj4gPj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtl
-cm5lbC5vcmc+CgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+First of all, do not remove mailing lists from Cc and people if you
+are not sure they do not need your stuff.
+
+On Mon, May 14, 2018 at 11:11 AM, Radu Pirea <radu.pirea@microchip.com> wrote:
+> On Sun, 2018-05-13 at 16:33 +0300, Andy Shevchenko wrote:
+>> On Fri, May 11, 2018 at 1:38 PM, Radu Pirea <radu.pirea@microchip.com
+>> > wrote:
+
+>> > +static void at91_usart_spi_cleanup(struct spi_device *spi)
+>> > +{
+>> > +       struct at91_usart_spi_device *ausd = spi->controller_state;
+>> > +
+>> > +       if (!ausd)
+>> > +               return;
+>>
+>> Is it even possible?
+> Theoretically yes.
+
+I would like to know real circumstances when it might happen.
+
+>>
+>> Anyway the code below will work fine even if it's the case.
+>>
+>> > +
+>> > +       spi->controller_state = NULL;
+>> > +       kfree(ausd);
+>> > +}
+
+>> The question is, why you didn't utilize what SPI core provides you?
+> I tried, but it did not work the way I expected.
+
+So, what is not going as expected in "SPI core takes care of CSs" case?
+Did you use oscilloscope for that?
+
+-- 
+With Best Regards,
+Andy Shevchenko
