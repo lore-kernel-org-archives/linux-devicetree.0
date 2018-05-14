@@ -1,56 +1,135 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2] usb: chipidea: Hook into mux framework to toggle usb
- switch
-Date: Mon, 14 May 2018 09:21:36 +0200
-Message-ID: <4abbe781-f488-b876-06a0-5521736c4d6c@axentia.se>
-References: <1523973148-2094-1-git-send-email-yossim@codeaurora.org>
- <ec1c44d7-45a8-a27e-5c45-717b87d3b252@axentia.se>
- <e75dff8424debcabd79f36faf3b23aaf@codeaurora.org>
+From: Mikko Perttunen <cyndis@kapsi.fi>
+Subject: Re: [PATCH 6/8] serial: Add Tegra Combined UART driver
+Date: Mon, 14 May 2018 10:36:35 +0300
+Message-ID: <513a6287-9bb3-1441-b3ea-6866f2e74c99@kapsi.fi>
+References: <20180508114403.14499-1-mperttunen@nvidia.com>
+ <20180508114403.14499-7-mperttunen@nvidia.com>
+ <CAHp75VfYF_u2bZ+temGbReEB9K-t3A75aUNYwffyv9-=zEi0Lw@mail.gmail.com>
+ <662ce972-56a9-9daa-d332-faa08b89c05a@kapsi.fi>
+ <CAHp75VeJcqaiWUVr=oXEH5YurY3yCDdE1eeoWumo6jCa_4PWEQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e75dff8424debcabd79f36faf3b23aaf@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <CAHp75VeJcqaiWUVr=oXEH5YurY3yCDdE1eeoWumo6jCa_4PWEQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: yossim@codeaurora.org
-Cc: Peter Chen <Peter.Chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:CHIPIDEA USB HIGH SPEED DUAL ROLE CONTROLLER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, robh@kernel.org, swboyd@chromium.org, devicetree@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mikko Perttunen <mperttunen@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, araza@nvidia.com, devicetree <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, linux-tegra@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-18 07:48, yossim@codeaurora.org wrote:
-> On 2018-04-17 17:11, Peter Rosin wrote:
->> On 2018-04-17 15:52, Yossi Mansharoff wrote:
->>> On the db410c 96boards platform we have a TC7USB40MU on the board
->>> to mux the D+/D- lines coming from the controller between a micro
->>> usb "device" port and a USB hub for "host" roles[1]. During a
->>> role switch, we need to toggle this mux to forward the D+/D-
->>> lines to either the port or the hub. Add the necessary code to do
->>> the role switch in chipidea core via the generic mux framework.
->>> Board configurations like on db410c are expected to change roles
->>> via the sysfs API described in
->>> Documentation/ABI/testing/sysfs-platform-chipidea-usb2.
+On 14.05.2018 01:20, Andy Shevchenko wrote:
+> On Sun, May 13, 2018 at 9:04 PM, Mikko Perttunen <cyndis@kapsi.fi> wrote:
+>> On 05/13/2018 05:16 PM, Andy Shevchenko wrote:
+>>>
+>>> On Tue, May 8, 2018 at 2:44 PM, Mikko Perttunen <mperttunen@nvidia.com>
+>>> wrote:
+>>>>
+>>>> The Tegra Combined UART (TCU) is a mailbox-based mechanism that allows
+>>>> multiplexing multiple "virtual UARTs" into a single hardware serial
+>>>> port. The TCU is the primary serial port on Tegra194 devices.
+>>>>
+>>>> Add a TCU driver utilizing the mailbox framework, as the used mailboxes
+>>>> are part of Tegra HSP blocks that are already controlled by the Tegra
+>>>> HSP mailbox driver.
+>
+>>>> +static void tegra_tcu_uart_set_mctrl(struct uart_port *port, unsigned
+>>>> int mctrl)
+>>>> +{
+>>>
+>>>
+>>>> +       (void)port;
+>>>> +       (void)mctrl;
+>>>
+>>>
+>>> Huh?
 >>
->> Ok, so this is v2. Please describe what is different from v1.
->> I have told you before that this information helps.
 >>
->>> [1] 
->>> https://github.com/96boards/documentation/raw/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
->>
->> This link returns 404 for me.
->>
->> Cheers,
->> Peter
-> 
-> 
-> Hi,
-> This patch was split apart from the original patch into two patches
-> one for chipidea and the other for bindings.
-> this patch has no other changes two the code.
-> 
-> I will update the link.
+>> The serial core calls these callbacks without checking if they are set. They
+>> don't make sense for this driver so they are stubbed out.
+>
+> My question why do you need these ugly lines? I'm pretty sure no other
+> driver with stubs using such style.
 
-Just a note: I will not feed the mux_control_get_optional patch upstream
-until I feel confident that this patch is going also heading upstream.
+It's my personal style, being explicit about unused variables in this 
+way - I don't consider them ugly. But I can certainly remove them for 
+the next version.
 
-Cheers,
-Peter
+>
+>>>> +}
+>
+>>>> +               if (written == 3) {
+>>>> +                       value |= 3 << 24;
+>>>> +                       value |= BIT(26);
+>>>> +                       mbox_send_message(tcu->tx, &value);
+>>>
+>>>
+>>>> +               }
+>>>
+>>>
+>>> (1)
+>>>
+>>>> +       }
+>>>> +
+>>>> +       if (written) {
+>>>> +               value |= written << 24;
+>>>> +               value |= BIT(26);
+>>>> +               mbox_send_message(tcu->tx, &value);
+>>>> +       }
+>>>
+>>>
+>>> (2)
+>>>
+>>> These are code duplications.
+>>
+>>
+>> Indeed - the length of the duplicated code is so short, and the instances
+>> are so close to each other, that I don't find it necessary (or clearer) to
+>> have an extra function.
+>
+> It makes sense. Consider to refactor other way w/o duplication then.
+
+I'll see if I can refactor it out.
+
+>
+>>>> +static void tegra_tcu_uart_set_termios(struct uart_port *port,
+>>>> +                                      struct ktermios *new,
+>>>> +                                      struct ktermios *old)
+>>>> +{
+>>>> +       (void)port;
+>>>> +       (void)new;
+>>>> +       (void)old;
+>>>> +}
+>>>
+>>>
+>>> Remove those unused stub contents.
+>>
+>>
+>> Sure. I had these here so that we don't get unused parameter warnings, but I
+>> can just as well remove the parameter names.
+>
+> What warnings? How did you get them? We have them disabled as far as I
+> know even with W=1.
+
+May be - it's just a habit, maybe from other projects where the warning 
+is enabled.
+
+>
+>>
+>>>
+>>>> +       return uart_set_options(&tegra_tcu_uart_port, cons,
+>>>> +                               115200, 'n', 8, 'n');
+>>>
+>>>
+>>> Can't it be one line?
+>>
+>>
+>> It would be a total of 81 characters in length on one line, so no.
+>
+> So, yes. 1 character doesn't prevent us make the readability better.
+> Please, put to one line.
+>
+
+Ok, I'll change this.
+
+Thanks,
+Mikko
