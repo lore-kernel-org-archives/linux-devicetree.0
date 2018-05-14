@@ -1,55 +1,42 @@
-From: Thomas Hebb <tommyhebb@gmail.com>
-Subject: [PATCH] ARM: dts: chromecast: override bad bootloader memory info
-Date: Mon, 14 May 2018 17:56:45 -0400
-Message-ID: <20180514215645.17592-2-tommyhebb@gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v4 6/6] devfreq: rk3399_dmc: fix spelling mistakes.
+Date: Tue, 15 May 2018 06:57:42 +0900
+Message-ID: <5AFA0656.6040701@samsung.com>
+References: <20180509125749.31318-7-enric.balletbo@collabora.com>
+        <20180509125749.31318-1-enric.balletbo@collabora.com>
+        <CGME20180509125806epcas3p42927285eece7f031ad7c9e422ee0a43c@epcms1p5>
+        <20180514102355epcms1p5baf3df2741827f9b9bf3e1de37e27880@epcms1p5>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20180514102355epcms1p5baf3df2741827f9b9bf3e1de37e27880@epcms1p5>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Thomas Hebb <tommyhebb@gmail.com>, Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/Synaptics
-        Berlin SoC support" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: myungjoo.ham@samsung.com, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Kyungmin Park <kyungmin.park@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "dbasehore@chromium.org" <dbasehore@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "groeck@chromium.org" <groeck@chromium.org>, "kernel@collabora.com" <kernel@collabora.com>, "hl@rock-chips.com" <hl@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On the Chromecast, the bootloader provides us with an ATAG_MEM of
-start=0x01000000 and size=0x3eff8000. This is clearly incorrect, as the
-range given encompasses nearly a GiB but the Chromecast only has 512MiB
-of RAM! Additionally, this causes the kernel to be decompressed at
-0x00008000, below the claimed beginning of RAM, and so the boot fails.
+On 2018년 05월 14일 19:23, MyungJoo Ham wrote:
+>> Fix some spelling mistakes in error and debug messages.
+>>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> ---
+>>
+>> Changes in v4:
+>> - [6/6] Introduce this new patch that fixes some spelling.
+>>
+>> Changes in v3: None
+>> Changes in v2: None
+>>
+>> drivers/devfreq/rk3399_dmc.c | 12 ++++++------
+>> 1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 
-Since the existing ATAG parsing code runs before the kernel is even
-decompressed and irrevocably patches the device tree, don't even try
-to bypass it. Instead, use the "linux,usable-memory" property instead
-of the "reg" property to define the real range. The ATAG code only
-overwrites reg, but linux,usable-memory is checked first in the OF
-driver, so the fact that reg gets changed makes no difference.
+Maybe, when you apply this patch on devfreq.git,
+you are missing the my reviewed-by tag.
 
-Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
----
- arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-index 20f31cdeaf38..54221f55bfa2 100644
---- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-+++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-@@ -52,7 +52,17 @@
- 
- 	memory@0 {
- 		device_type = "memory";
--		reg = <0x00000000 0x20000000>; /* 512 MB */
-+
-+		/*
-+		 * We're using "linux,usable-memory" instead of "reg" here
-+		 * because the (signed and encrypted) bootloader that shipped
-+		 * with this device provides an incorrect memory range in
-+		 * ATAG_MEM. Linux helpfully overrides the "reg" property with
-+		 * data from the ATAG, so we can't specify the proper range
-+		 * normally. Fortunately, this alternate property is checked
-+		 * first by the OF driver, so we can (ab)use it instead.
-+		 */
-+		linux,usable-memory = <0x00000000 0x20000000>; /* 512 MB */
- 	};
- 
- 	leds {
 -- 
-2.17.0
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
