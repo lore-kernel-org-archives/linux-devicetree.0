@@ -1,102 +1,88 @@
-From: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] ARM: PWM: add allwinner sun8i pwm support.
-Date: Mon, 14 May 2018 22:45:44 +0800
-Message-ID: <CAJeuY7-Dz1u9J8GMu=OdzJ2cJUnE3wEobJoQz6RV-ibjBjoW4A@mail.gmail.com>
-References: <20180225135308.GA14561@arx-s1> <20180226090038.etk5q4pd4rl5dvf6@flea.lan>
-Reply-To: hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH] thermal: qcom: tsens: Allow number of sensors to come
+ from DT
+Date: Mon, 14 May 2018 17:45:56 +0300
+Message-ID: <CAHLCerN9zQEJK4WoV6BY6hga2BxwzMsyScWnTdYcLgEk0Bjg4w@mail.gmail.com>
+References: <20180507235339.8836-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDKITZOARQMBBGOC43LQKGQE6SH62YQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180226090038.etk5q4pd4rl5dvf6-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Claudiu Beznea <Claudiu.Beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180507235339.8836-1-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Linux PM list <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2018-02-26 17:00 GMT+08:00 Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>:
-> Hi,
->
-> Thanks for respinning this serie. It looks mostly good, but you still
-> have a quite significant number of checkpatch (--strict) warnings that
-> you should address.
+On Tue, May 8, 2018 at 2:53 AM, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> For platforms that has multiple copies of the TSENS hardware block it's
+> necessary to be able to specify the number of sensors per block in DeviceTree.
 
-Thanks for reviews :) ,i'm sorry for that, it will be fixed next time.
-and, besides, in what situation were the checkpatch warning can be ignore=
-=EF=BC=9F
+I assume you want to replace the hardcoded num_sensors values in the
+tsens-xxxx.c files with values in device tree atleast on platforms
+that use devicetree?
 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  .../devicetree/bindings/thermal/qcom-tsens.txt       |  1 +
+>  drivers/thermal/qcom/tsens.c                         | 12 +++++++++---
+>  2 files changed, 10 insertions(+), 3 deletions(-)
 >
-> On Sun, Feb 25, 2018 at 09:53:08PM +0800, hao_zhang wrote:
->> +#define CAPTURE_IRQ_ENABLE_REG       0x0010
->> +#define CFIE(ch)     BIT(ch << 1 + 1)
->> +#define CRIE(ch)     BIT(ch << 1)
+> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> index 292ed89d900b..06195e8f35e2 100644
+> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> @@ -8,6 +8,7 @@ Required properties:
 >
-> You should also put your argument between parentheses here (and in all
-> your other macros).
-
-Do you mean like this ?
-#define CFIE(ch)     BIT((ch) << 1 + 1)
-#define CRIE(ch)     BIT((ch) << 1)
-
+>  - reg: Address range of the thermal registers
+>  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
+> +- #qcom,sensors: Number of sensors in tsens block
+>  - Refer to Documentation/devicetree/bindings/nvmem/nvmem.txt to know how to specify
+>  nvmem cells
 >
->> +static const u16 div_m_table[] =3D {
->> +     1,
->> +     2,
->> +     4,
->> +     8,
->> +     16,
->> +     32,
->> +     64,
->> +     128,
->> +     256
->> +};
+> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> index 3f9fe6aa51cc..20f3b87d7667 100644
+> --- a/drivers/thermal/qcom/tsens.c
+> +++ b/drivers/thermal/qcom/tsens.c
+> @@ -116,6 +116,7 @@ static int tsens_probe(struct platform_device *pdev)
+>         struct tsens_device *tmdev;
+>         const struct tsens_data *data;
+>         const struct of_device_id *id;
+> +       u32 num_sensors;
 >
-> If this is just a power of two, you can use either the power of two /
-> ilog2 to switch back and forth, instead of using that table.
-
-I think using table is more explicit and extended...
-
+>         if (pdev->dev.of_node)
+>                 dev = &pdev->dev;
+> @@ -130,18 +131,23 @@ static int tsens_probe(struct platform_device *pdev)
+>         else
+>                 data = &data_8960;
 >
->> +static int sun8i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pw=
-m,
->> +             struct pwm_state *state)
->> +{
->> +     int ret;
->> +     struct sun8i_pwm_chip *sun8i_pwm =3D to_sun8i_pwm_chip(chip);
->> +     struct pwm_state cstate;
->> +
->> +     pwm_get_state(pwm, &cstate);
->> +     if (!cstate.enabled) {
->> +             ret =3D clk_prepare_enable(sun8i_pwm->clk);
->> +             if (ret) {
->> +                     dev_err(chip->dev, "Failed to enable PWM clock\n")=
-;
->> +                     return ret;
->> +             }
->> +     }
->> +
->> +     spin_lock(&sun8i_pwm->ctrl_lock);
+> -       if (data->num_sensors <= 0) {
+> +       num_sensors = data->num_sensors;
+> +
+> +       if (np)
+> +               of_property_read_u32(np, "#qcom,sensors", &num_sensors);
+> +
+> +       if (num_sensors <= 0) {
+>                 dev_err(dev, "invalid number of sensors\n");
+>                 return -EINVAL;
+>         }
 >
-> What do you need that spinlock for? Can you use a mutex instead?
-It should be remove.
+>         tmdev = devm_kzalloc(dev, sizeof(*tmdev) +
+> -                            data->num_sensors * sizeof(*s), GFP_KERNEL);
+> +                            num_sensors * sizeof(*s), GFP_KERNEL);
+>         if (!tmdev)
+>                 return -ENOMEM;
 >
-> Thanks!
-> Maxime
+>         tmdev->dev = dev;
+> -       tmdev->num_sensors = data->num_sensors;
+> +       tmdev->num_sensors = num_sensors;
+>         tmdev->ops = data->ops;
+>         for (i = 0;  i < tmdev->num_sensors; i++) {
+>                 if (data->hw_ids)
+> --
+> 2.17.0
 >
 > --
-> Maxime Ripard, Bootlin (formerly Free Electrons)
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
