@@ -1,70 +1,61 @@
-From: Niklas =?iso-8859-1?Q?S=F6derlund?=
-        <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH 3/3] arm64: dts: renesas: draak: Describe HDMI input
-Date: Mon, 14 May 2018 11:49:00 +0200
-Message-ID: <20180514094900.GF30519@bigcity.dyn.berto.se>
-References: <1526032802-14376-1-git-send-email-jacopo+renesas@jmondi.org>
- <1526032802-14376-4-git-send-email-jacopo+renesas@jmondi.org>
- <20180513125755.GQ18974@bigcity.dyn.berto.se>
- <26780153.JLo9OE30iv@avalon>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 00/13] add power domain support for Rockchip Socs
+Date: Mon, 14 May 2018 11:51:59 +0200
+Message-ID: <CAPDyKFqJvMt2A1ayAVRQC-gQxzu2+cmTU+chgSK0SvEXgyC2Wg@mail.gmail.com>
+References: <1526268455-9133-1-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <26780153.JLo9OE30iv@avalon>
+In-Reply-To: <1526268455-9133-1-git-send-email-zhangqing@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, horms@verge.net.au, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Caesar Wang <wxt@rock-chips.com>, xxx@rock-chips.com, Feng Xiao <xf@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+On 14 May 2018 at 05:27, Elaine Zhang <zhangqing@rock-chips.com> wrote:
+> add power domain support for RK3036/RK3128/RK3228/PX30 Soc.
+> fix up the wrong value when set power domain up.
+>
+> Change in V2:
+> Fix up the commit message description and Assign author.
+>
+> Caesar Wang (3):
+>   dt-bindings: power: add RK3036 SoCs header for power-domain
+>   dt-bindings: add binding for rk3036 power domains
+>   Soc: rockchip: power-domain: add power domain support for rk3036
+>
+> Elaine Zhang (6):
+>   dt-bindings: power: add RK3128 SoCs header for power-domain
+>   dt-bindings: add binding for rk3128 power domains
+>   soc: rockchip: power-domain: add power domain support for rk3128
+>   dt-bindings: power: add RK3228 SoCs header for power-domain
+>   dt-bindings: add binding for rk3228 power domains
+>   soc: rockchip: power-domain: add power domain support for rk3228
+>
+> Finley Xiao (4):
+>   soc: rockchip: power-domain: Fix wrong value when power up pd
+>   dt-bindings: power: add PX30 SoCs header for power-domain
+>   dt-bindings: add binding for px30 power domains
+>   soc: rockchip: power-domain: add power domain support for px30
+>
+>  .../bindings/soc/rockchip/power_domain.txt         |  12 +++
+>  drivers/soc/rockchip/pm_domains.c                  | 116 ++++++++++++++++++++-
+>  include/dt-bindings/power/px30-power.h             |  32 ++++++
+>  include/dt-bindings/power/rk3036-power.h           |  27 +++++
+>  include/dt-bindings/power/rk3128-power.h           |  28 +++++
+>  include/dt-bindings/power/rk3228-power.h           |  26 +++++
+>  6 files changed, 240 insertions(+), 1 deletion(-)
+>  create mode 100644 include/dt-bindings/power/px30-power.h
+>  create mode 100644 include/dt-bindings/power/rk3036-power.h
+>  create mode 100644 include/dt-bindings/power/rk3128-power.h
+>  create mode 100644 include/dt-bindings/power/rk3228-power.h
+>
+> --
+> 1.9.1
 
-On 2018-05-14 05:49:41 +0300, Laurent Pinchart wrote:
+FWIW, for the series:
 
-[snip]
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org
 
-> > > +&vin4 {
-> > > +	pinctrl-0 = <&vin4_pins>;
-> > > +	pinctrl-names = "default";
-> > > +
-> > > +	status = "okay";
-> > > +
-> > > +	ports {
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <0>;
-> > > +
-> > > +		port@0 {
-> > > +			reg = <0>;
-> > > +
-> > > +			vin4_in: endpoint {
-> > > +				hsync-active = <0>;
-> > > +				vsync-active = <0>;
-> > 
-> > Comparing this to the Gen2 bindings some properties are missing,
-> > 
-> > bus-width = <24>;
-> > pclk-sample = <1>;
-> > data-active = <1>;
-> > 
-> > This is not a big deal as the VIN driver don't use these properties so
-> > no functional change should come of this but still a difference.
-> 
-> I think the VIN DT bindings should be updated to explicitly list the endpoint 
-> properties that are mandatory, optional, or not allowed.
-
-I think it's documented as it reference video-interfaces.txt which lists 
-all these properties as optional. And in deed they are all optional.  If 
-the VIN driver makes use of all the optional ones is another matter. How 
-do we know that the remote subdevice is not looking at its remote 
-endpoint for bus parameters not considered by the rcar-vin driver?
-
-The thing is that the rcar-vin driver only looks at the remote endpoint 
-for these properties and ignores the on its local endpoint. Maybe some 
-v4l2 framework change is needed here to make sure the bus properties are 
-the same on both endpoints of a link. But I fear such a change would 
-break a lot of stuff.
-
--- 
-Regards,
-Niklas Söderlund
+Kind regards
+Uffe
