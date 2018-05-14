@@ -1,77 +1,105 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH] net: phy: micrel: workaround for errata #2 for KSZ9031
-Date: Mon, 14 May 2018 10:22:18 +0200
-Message-ID: <20180514082218.29158-1-m.felsch@pengutronix.de>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Markus Niebel <Markus.Niebel@tqs.de>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Allwinner A64: Issue on external rtc clock to wifi chip
+Date: Mon, 14 May 2018 10:27:45 +0200
+Message-ID: <20180514082744.ydmfg5mzsbol5onu@flea>
+References: <CAMty3ZCNyuEwmLGdDZLM_9qKJ2NsT33rodug7ZpKAE-OHymVEg@mail.gmail.com>
+ <20180514075727.uxggyhmbahvhestx@flea>
+ <CAMty3ZDew=+zytKUx5+nX27CjCe0UfJpyYOy2s07NoJvbe57mQ@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ko2m32o4savwftrl"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBAUR4XLQKGQEP4RQGNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZDew=+zytKUx5+nX27CjCe0UfJpyYOy2s07NoJvbe57mQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Markus Niebel <Markus.Niebel@tqs.de>
 
-handle errata #2 for KSZ9031: force 1000Base-T master
+--ko2m32o4savwftrl
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Attention: enabling the workaround will cause no link to
-other GIGE master.
+On Mon, May 14, 2018 at 01:34:56PM +0530, Jagan Teki wrote:
+> On Mon, May 14, 2018 at 1:27 PM, Maxime Ripard
+> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Mon, May 14, 2018 at 12:37:49PM +0530, Jagan Teki wrote:
+> >> Hi Maxime and All,
+> >>
+> >> We are trying to bring-up AP6330 Wifi chip for A64 board. We noticed
+> >> to have an external rtc clock has driven from wifi chip.
+> >>
+> >> So the devicetree is configured according to this as below.
+> >>
+> >> / {
+> >>         wifi_pwrseq: wifi-pwrseq {
+> >>                 compatible = "mmc-pwrseq-simple";
+> >>                 clocks = <&rtc 1>;
+> >>                 clock-names = "ext_clock";
+> >>                 reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
+> >>                 post-power-on-delay-ms = <400>;
+> >>         };
+> >> };
+> >>
+> >> &rtc {
+> >>         clock-output-names = "rtc-osc32k", "rtc-osc32k-out";
+> >>         clocks = <&osc32k>;
+> >>         #clock-cells = <1>;
+> >> };
+> >>
+> >> &mmc1 {
+> >>         pinctrl-names = "default";
+> >>         pinctrl-0 = <&mmc1_pins>;
+> >>         vmmc-supply = <&reg_dcdc1>;
+> >>         vqmmc-supply = <&reg_eldo1>;
+> >>         mmc-pwrseq = <&wifi_pwrseq>;
+> >>         bus-width = <4>;
+> >>         non-removable;
+> >>         status = "okay";
+> >>
+> >>         brcmf: wifi@1 {
+> >>                 reg = <1>;
+> >>                 compatible = "brcm,bcm4329-fmac";
+> >>                 interrupt-parent = <&r_pio>;
+> >>                 interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>;  /* WL-WAKE-AP: PL3 */
+> >>                 interrupt-names = "host-wake";
+> >>         };
+> >> };
+> >>
+> >> And observed rtc-osc32k-out clock is never enabled[1] and the value of
+> >> LOSC_OUT_GATING is 0x0 which eventually not enabling
+> >> LOSC_OUT_GATING_EN
+> >>
+> >> Pls. let us know if we miss anything here?
+> >>
+> >> [1] https://paste.ubuntu.com/p/X2By4q8kD2/
+> >
+> > Could you paste your config and the logs from a boot to?
+> 
+> .config
+> https://paste.ubuntu.com/p/w9w2KB7RFc/
+> 
+> dmesg
+> https://paste.ubuntu.com/p/mrZGk5bWRR/
 
-Signed-off-by: Markus Niebel <Markus.Niebel@tqs.de>
-[m.felsch@pengutronix.de: move dt binding to the KSZ9031 entry]
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- .../devicetree/bindings/net/micrel-ksz90x1.txt |  3 +++
- drivers/net/phy/micrel.c                       | 18 ++++++++++++++++++
- 2 files changed, 21 insertions(+)
+This is kind of weird. Have you tested with a 4.17 kernel? We have
+runtime_pm changes lined up in next, so that might be a regression
+there, even though we tested it with Quentin at some point.
 
-diff --git a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-index 42a248301615..e2465fbbbcef 100644
---- a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-+++ b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-@@ -57,6 +57,9 @@ KSZ9031:
-       - txd2-skew-ps : Skew control of TX data 2 pad
-       - txd3-skew-ps : Skew control of TX data 3 pad
- 
-+    - force-master: Boolean, force phy to master mode. This is a
-+                    workaround at least for KSZ9031 errata #2.
-+
- Examples:
- 
- 	mdio {
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index f41b224a9cdb..3e4243e4f7a7 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -528,6 +528,8 @@ static int ksz9031_enable_edpd(struct phy_device *phydev)
- 
- static int ksz9031_config_init(struct phy_device *phydev)
- {
-+	int rc;
-+	u16 val;
- 	const struct device *dev = &phydev->mdio.dev;
- 	const struct device_node *of_node = dev->of_node;
- 	static const char *clk_skews[2] = {"rxc-skew-ps", "txc-skew-ps"};
-@@ -573,6 +575,22 @@ static int ksz9031_config_init(struct phy_device *phydev)
- 		ksz9031_of_load_skew_values(phydev, of_node,
- 				MII_KSZ9031RN_TX_DATA_PAD_SKEW, 4,
- 				tx_data_skews, 4);
-+
-+		/* force master mode -> errata #2
-+		 * attention: Master <-> Master will not work
-+		 */
-+		if (of_property_read_bool(of_node, "force-master")) {
-+			rc = phy_read(phydev, MII_CTRL1000);
-+			if (rc >= 0) {
-+				val = (u16)rc;
-+				/* enable master mode, config &
-+				 * prefer master
-+				 */
-+				val |= (CTL1000_ENABLE_MASTER |
-+					CTL1000_AS_MASTER);
-+				phy_write(phydev, MII_CTRL1000, val);
-+			}
-+		}
- 	}
- 
- 	return ksz9031_center_flp_timing(phydev);
+Maxime
+
 -- 
-2.17.0
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--ko2m32o4savwftrl--
