@@ -1,146 +1,35 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: [PATCH V4] ARM: dts: da850-evm: Enable LCD and Backlight
-Date: Mon, 14 May 2018 06:19:28 -0500
-Message-ID: <20180514111928.28172-1-aford173@gmail.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] bus: fsl-mc: supoprt dma configure for devices on
+	fsl-mc bus
+Date: Mon, 14 May 2018 13:24:48 +0200
+Message-ID: <20180514112448.GA26428@kroah.com>
+References: <1524824826-29473-1-git-send-email-nipun.gupta@nxp.com>
+	<1525069641-8523-1-git-send-email-nipun.gupta@nxp.com>
+	<1525069641-8523-6-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@kernel.org, Adam Ford <aford173@gmail.com>, nsekhar@ti.com, adam.ford@logicpd.com
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1525069641-8523-6-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When using the board files the LCD works, but not with the DT.
-This adds enables the original da850-evm to work with the same
-LCD in device tree mode.
+On Mon, Apr 30, 2018 at 11:57:20AM +0530, Nipun Gupta wrote:
+> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+> ---
 
-The EVM has a gpios for the lcd_panel_pwr, lcd_backlight_pwr,
-and lcd_pwm0.  Both lcd_backlight_pwr and lcd_pwm0 must be driven
-to enable the backlight, so a gpio-regulator is used to drive
-lcd_backlight_prw.
+I can't take patches without any changelog text at all, sorry.  Please
+fix up and resend.
 
-The LCD and the vpif display pins are mutually exclusive, so if
-using the LCD, disable the vpif.  If using the vpif, disable panel.
-Extra code comments are inserted to further explain this
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
----
-V4:  Add comments into the code explaining the LCD and VPIF are mutually
-     exclusive with instructions on how to enable/disable each.  Rename 
-     GPIO pins based on schematic net name. Fix gpio enable in backlight
-
-V3:  Fix errant GPIO, label GPIO pins, and rename the regulator to be 
-     more explict to backlight which better matches the schematic.
-     Updated the description to explain that it cannot be used at the 
-     same time as the vpif driver.
-
-V2:  Add regulator and GPIO enable pins. Remove PWM backlight and 
-     replace with GPIO  
-
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 2e817da37fdb..f6a5497d9c97 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -27,6 +27,53 @@
- 		spi0 = &spi1;
- 	};
- 
-+	backlight {
-+		compatible = "gpio-backlight";
-+		gpios = <&gpio 7 GPIO_ACTIVE_HIGH>; /* lcd_pwm0 */
-+	};
-+
-+	panel {
-+		compatible = "ti,tilcdc,panel";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&lcd_pins>;
-+		/* The vpif and the LCD are mutually exclusive.
-+		 * To enable VPIF, change the status below to 'disabled' then
-+		 * then change the status of the vpif below to 'okay' */
-+		status = "okay";
-+		enable-gpios = <&gpio 40 GPIO_ACTIVE_HIGH>; /* lcd_panel_pwr */
-+
-+		panel-info {
-+			ac-bias		= <255>;
-+			ac-bias-intrpt	= <0>;
-+			dma-burst-sz	= <16>;
-+			bpp		= <16>;
-+			fdd		= <0x80>;
-+			sync-edge	= <0>;
-+			sync-ctrl	= <1>;
-+			raster-order	= <0>;
-+			fifo-th		= <0>;
-+		};
-+
-+		display-timings {
-+			native-mode = <&timing0>;
-+			timing0: 480x272 {
-+				clock-frequency = <9000000>;
-+				hactive = <480>;
-+				vactive = <272>;
-+				hfront-porch = <3>;
-+				hback-porch = <2>;
-+				hsync-len = <42>;
-+				vback-porch = <3>;
-+				vfront-porch = <4>;
-+				vsync-len = <11>;
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+				de-active = <1>;
-+				pixelclk-active = <1>;
-+			};
-+		};
-+	};
-+
- 	vbat: fixedregulator0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vbat";
-@@ -35,6 +82,16 @@
- 		regulator-boot-on;
- 	};
- 
-+	backlight_reg: backlight-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "lcd_backlight_pwr";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio 47 GPIO_ACTIVE_HIGH>; /* lcd_backlight_pwr */
-+		regulator-always-on;
-+		enable-active-high;
-+	};
-+
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "DA850/OMAP-L138 EVM";
-@@ -109,6 +166,10 @@
- 	status = "okay";
- };
- 
-+&lcdc {
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 	clock-frequency = <100000>;
-@@ -339,5 +400,8 @@
- &vpif {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&vpif_capture_pins>, <&vpif_display_pins>;
--	status = "okay";
-+	/* The vpif and the LCD are mutually exclusive.
-+	 * To enable VPIF, disable the ti,tilcdc,panel then
-+	 * changed the status below to 'okay' */
-+	status = "disabled";
- };
--- 
-2.17.0
+greg k-h
