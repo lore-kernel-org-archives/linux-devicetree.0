@@ -1,15 +1,20 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH V3] ARM: dts: da850-evm: Enable LCD and Backlight
-Date: Mon, 14 May 2018 18:05:14 +0530
-Message-ID: <825847d0-c29c-859b-43fd-0987f94e28a5@ti.com>
-References: <20180513232033.22571-1-aford173@gmail.com>
- <aba13450-1e8f-4aed-6248-16b71abcc0dd@ti.com>
- <CAHCN7xJgTBGHL_VzhXGz1HEmEn-LW8pcG0BWJDysx0pkHXT-Mg@mail.gmail.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH 07/11] irqchip: stm32: add stm32mp1 support with hierarchy
+ domain
+Date: Mon, 14 May 2018 14:40:57 +0200
+Message-ID: <56bc18fc-b941-0121-0805-399cb6979792@st.com>
+References: <1524759514-12392-1-git-send-email-ludovic.Barre@st.com>
+ <1524759514-12392-8-git-send-email-ludovic.Barre@st.com>
+ <20180501145611.GA6842@rob-hp-laptop>
+ <6fdb652b-e7f9-7035-3eda-39f763ed7ea3@st.com>
+ <CAL_JsqLvbGdPC9ifPZ5+tVxznHbsDuWGRg4R47st8Y9BtnNYUQ@mail.gmail.com>
+ <26de0a75-e4e1-7c43-e31d-599d3c7de0ff@st.com>
+ <CAL_JsqLh4+vs-hQceg3bZ-ALWKE182vKbL90xxLwdgb09OtZ7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAHCN7xJgTBGHL_VzhXGz1HEmEn-LW8pcG0BWJDysx0pkHXT-Mg@mail.gmail.com>
+In-Reply-To: <CAL_JsqLh4+vs-hQceg3bZ-ALWKE182vKbL90xxLwdgb09OtZ7Q@mail.gmail.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -20,116 +25,147 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Adam Ford <aford173@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Kevin Hilman <khilman@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Loic PALLARDY <loic.pallardy@st.com>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald BAEZA <gerald.baeza@st.com>, Thomas Gleixner <tglx@linutronix.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Alexandre Torgue <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 14 May 2018 04:22 PM, Adam Ford wrote:
-> On Mon, May 14, 2018 at 12:29 AM, Sekhar Nori <nsekhar@ti.com> wrote:
->> Hi Adam,
->>
->> On Monday 14 May 2018 04:50 AM, Adam Ford wrote:
->>> When using the board files the LCD works, but not with the DT.
->>> This adds enables the original da850-evm to work with the same
->>> LCD in device tree mode.
->>>
->>> The EVM has a gpio for the regulator and a gpio enable.  The LCD and
->>> the vpif display pins are mutually exclusive, so if using the LCD,
->>> do not load the vpif driver.
->>
->> Its not sufficient just note this in patch description.
->>
->> a) Disable (status = "disabled") the VPIF node which clashes for pins
->> with LCD.
->> b) Add a comment on top of the status = "disabled" giving information on
->> how user can enable it (disable lcdc node and then change to status =
->> "okay").
->>
->>>
->>> Signed-off-by: Adam Ford <aford173@gmail.com>
->>> ---
->>> V3:  Fix errant GPIO, label GPIO pins, and rename the regulator to be more explict to
->>>      backlight which better matches the schematic.  Updated the description to explain
->>>      that it cannot be used at the same time as the vpif driver.
->>>
->>> V2:  Add regulator and GPIO enable pins. Remove PWM backlight and replace with GPIO
->>>
->>> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
->>> index 2e817da37fdb..3f1c8be07efe 100644
->>> --- a/arch/arm/boot/dts/da850-evm.dts
->>> +++ b/arch/arm/boot/dts/da850-evm.dts
->>> @@ -27,6 +27,50 @@
->>>               spi0 = &spi1;
->>>       };
->>>
->>> +     backlight {
->>> +             compatible = "gpio-backlight";
->>> +             enable-gpios = <&gpio 7 GPIO_ACTIVE_HIGH>; /* GP0[7] */
->>
->> The gpio-backlight binding does not describe a property called
->> enable-gpios. It should just be gpios.
-> 
-> I will fix that.
-> 
->>
->> a) Are you using gpio-backlight because you are not able to get the PWM
->> to work?
->>
-> Yes,  You told me not to worry about doing a PWM backlight because the
-> legacy board does not PWM either.
 
-Yeah, I meant not to add backlight control till the time we are able to
-get it working using PWM. Is this needed for the basic LCD functionality
-to work? I would like to avoid the churn of adding it using GPIO now and
-changing to PWM later, if possible.
 
-> 
->> b) What is GP0[7] connected to in the schematic you have? In the
->> schematic I have I see LCD_PWM0 is connected to
->> SPI1_SCS[0]/EPWM1B/GP2[14]/TM64P3_IN12.
-> 
-> I have schematic 1016572 dated Wednesday, August 18, 2010.  According
-> to it, AXR15 / EPWMN0_TZ[0] / ECAP2_APWM2 / GPIO0[7] connects to U25,
-> Pin 46 to generate M_LCD_PWM0.  You might have one of the early,
-> pre-release versions.
-
-Ah, okay. In your schematic, is GP2[14] connected to anything?
-
-> 
+On 05/04/2018 10:38 PM, Rob Herring wrote:
+> On Thu, May 3, 2018 at 4:55 AM, Ludovic BARRE <ludovic.barre@st.com> wrote:
 >>
->> c) The /* GP0[7] */ comment is not really useful on its own as it can be
->> computed. What I wanted to see is the schematic symbol like "LCD_PWM0".
->> Same for other places like this below.
-> 
-> I can do that.
 >>
->>> @@ -35,6 +79,16 @@
->>>               regulator-boot-on;
->>>       };
+>> On 05/02/2018 07:45 PM, Rob Herring wrote:
 >>>
->>> +     backlight_reg: backlight-regulator {
->>> +             compatible = "regulator-fixed";
->>> +             regulator-name = "lcd_backlight_pwr";
->>> +             regulator-min-microvolt = <3300000>;
->>> +             regulator-max-microvolt = <3300000>;
->>> +             gpio = <&gpio 47 GPIO_ACTIVE_HIGH>; /* GP2[15] */
->>> +             regulator-always-on;
+>>> On Wed, May 2, 2018 at 11:03 AM, Ludovic BARRE <ludovic.barre@st.com>
+>>> wrote:
+>>>>
+>>>> Hi Rob
+>>>>
+>>>>
+>>>>
+>>>> On 05/01/2018 04:56 PM, Rob Herring wrote:
+>>>>>
+>>>>>
+>>>>> On Thu, Apr 26, 2018 at 06:18:30PM +0200, Ludovic Barre wrote:
+>>>>>>
+>>>>>>
+>>>>>> From: Ludovic Barre <ludovic.barre@st.com>
+>>>>>>
+>>>>>> Exti controller has been differently integrated on stm32mp1 SoC.
+>>>>>> A parent irq has only one external interrupt. A hierachy domain could
+>>>>>> be used. Handlers are call by parent, each parent interrupt could be
+>>>>>> masked and unmasked according to the needs.
+>>>>>>
+>>>>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>>>>>> ---
+>>>>>>     .../interrupt-controller/st,stm32-exti.txt         |   3 +
+>>>>>>     drivers/irqchip/irq-stm32-exti.c                   | 322
+>>>>>> +++++++++++++++++++++
+>>>>>>     2 files changed, 325 insertions(+)
+>>>>>>
+>>>>>> diff --git
+>>>>>>
+>>>>>> a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+>>>>>>
+>>>>>> b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+>>>>>> index edf03f0..136bd61 100644
+>>>>>> ---
+>>>>>>
+>>>>>> a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+>>>>>> +++
+>>>>>>
+>>>>>> b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+>>>>>> @@ -5,11 +5,14 @@ Required properties:
+>>>>>>     - compatible: Should be:
+>>>>>>         "st,stm32-exti"
+>>>>>>         "st,stm32h7-exti"
+>>>>>> +    "st,stm32mp1-exti"
+>>>>>>     - reg: Specifies base physical address and size of the registers
+>>>>>>     - interrupt-controller: Indentifies the node as an interrupt
+>>>>>> controller
+>>>>>>     - #interrupt-cells: Specifies the number of cells to encode an
+>>>>>> interrupt
+>>>>>>       specifier, shall be 2
+>>>>>>     - interrupts: interrupts references to primary interrupt controller
+>>>>>> +  (only needed for exti controller with multiple exti under
+>>>>>> +  same parent interrupt: st,stm32-exti and st,stm32h7-exti")
+>>>>>>       Example:
+>>>>>>     diff --git a/drivers/irqchip/irq-stm32-exti.c
+>>>>>> b/drivers/irqchip/irq-stm32-exti.c
+>>>>>> index b38c655..ebf7146 100644
+>>>>>> --- a/drivers/irqchip/irq-stm32-exti.c
+>>>>>> +++ b/drivers/irqchip/irq-stm32-exti.c
+>>>>>
+>>>>>
+>>>>>
+>>>>> [...]
+>>>>>
+>>>>>> +static const struct stm32_desc_irq stm32mp1_desc_irq[] = {
+>>>>>> +       { .exti = 1, .irq_parent = 7 },
+>>>>>> +       { .exti = 2, .irq_parent = 8 },
+>>>>>> +       { .exti = 3, .irq_parent = 9 },
+>>>>>> +       { .exti = 4, .irq_parent = 10 },
+>>>>>> +       { .exti = 5, .irq_parent = 23 },
+>>>>>> +       { .exti = 6, .irq_parent = 64 },
+>>>>>> +       { .exti = 7, .irq_parent = 65 },
+>>>>>> +       { .exti = 8, .irq_parent = 66 },
+>>>>>> +       { .exti = 9, .irq_parent = 67 },
+>>>>>> +       { .exti = 10, .irq_parent = 40 },
+>>>>>> +       { .exti = 11, .irq_parent = 42 },
+>>>>>> +       { .exti = 12, .irq_parent = 76 },
+>>>>>> +       { .exti = 13, .irq_parent = 77 },
+>>>>>> +       { .exti = 14, .irq_parent = 121 },
+>>>>>> +       { .exti = 15, .irq_parent = 127 },
+>>>>>> +       { .exti = 16, .irq_parent = 1 },
+>>>>>> +       { .exti = 65, .irq_parent = 144 },
+>>>>>> +       { .exti = 68, .irq_parent = 143 },
+>>>>>> +       { .exti = 73, .irq_parent = 129 },
+>>>>>> +};
+>>>>>
+>>>>>
+>>>>>
+>>>>> You can use an interrupt-map property rather than put this into the
+>>>>> driver.
+>>>>
+>>>>
+>>>>
+>>>> interrupt-map seemed interesting and promising like used in pci host.
+>>>> At first sight this property can't be used into node with
+>>>> "interrupt-controller" property (see in drivers/of/irq.c function:
+>>>> of_irq_parse_raw) because "of_irq_parse_raw" checks if node got
+>>>> it first, and after lookup the interrupt-map.
+>>>>
+>>>> Rob, Thomas, Jason, Marc what do you prefers or the right ways...?
+>>>
+>>>
+>>> I believe the correct thing to do is simply drop "interrupt-controller".
 >>
->> Why should this regulator never be disabled?
 > 
-> The gpio-backlight does not have a way that I can see to associate the
-> regulator to it.  I read through the bindings, but I didn't see an
-> option to associate a regulator it.  I use this regulator to drive
-> lcd_backlight_pwr and the backlight driver to write lcd_pwm0.  Without
-> this option, the system disables lcd_backlight_pwr and the screen is
-> blank
+> Actually, that's not right.
+> 
+>> if I drop "interrupt-controller" of my node, my driver will not be
+>> initialized by "of_irq_init"
+>> (start_kernel->init_IRQ->irqchip_init->of_irq_init).
+>> Probably, we could replace "IRQCHIP_DECLARE" by a
+>> "module_platform_driver" or "postcore_initcall" but I'm not a big fan of
+>> this solution. what do you think ?
+> 
+> You'd have to parse 'interrupt-map' yourself to extract the data for
+> this to work because interrupt-map currently only works when the
+> translation is transparent (i.e. doesn't need s/w handling). So I
+> guess leave this in the driver. Sorry for the noise.
+> 
 
-It sounds like this is a hack to enable backlight on this board. I think
-either the backlight driver needs to gain functionality to enable the
-GPIO. Or backlight could be treated as part of the panel and enabled
-using enable-gpios property in the panel. TBH, I will be okay either
-way. Can you check with Jyri, Tomi and rest of the DRM folks on what
-should be right way of dealing with this?
+Sorry, I don't know if I've correctly understand the answer.
+I hesitate between:
+- keep the code like this, with stm32mp1_desc_irq tab.
+- parse interrupt-map property into stm32 exti driver.
 
-Thanks,
-Sekhar
+Just to be sure, and avoid misunderstand.
+
+BR
+Ludo
+
+> Rob
+> 
