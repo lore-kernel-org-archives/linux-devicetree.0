@@ -1,165 +1,143 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 2/2] media: i2c: mt9t112: Add device tree support
-Date: Mon, 14 May 2018 16:30:44 +0200
-Message-ID: <20180514143044.GK5956@w540>
-References: <1524654014-17852-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524654014-17852-3-git-send-email-jacopo+renesas@jmondi.org>
- <20180507093219.hrhaliadccaytenj@valkosipuli.retiisi.org.uk>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v2 05/27] dts: bindings: Document device tree binding for
+ CATU
+Date: Mon, 14 May 2018 08:42:27 -0600
+Message-ID: <20180514144227.GA23293@xps15>
+References: <1525165857-11096-1-git-send-email-suzuki.poulose@arm.com>
+ <1525165857-11096-6-git-send-email-suzuki.poulose@arm.com>
+ <20180501131057.GA15706@rob-hp-laptop>
+ <CANLsYkwzD0gpAo9be5ii4=+tn8GOL6psHcRA24=EMq=MRAzBoQ@mail.gmail.com>
+ <8725a726-0733-b0bc-fcf8-4e22399c0e22@arm.com>
+ <CAL_JsqJsZDPHxWA5tax4_ecBtR7Yvhi+DzxQkyh4bpnu1Za0yg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="TdMwOTenGjBWB1uY"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180507093219.hrhaliadccaytenj@valkosipuli.retiisi.org.uk>
+In-Reply-To: <CAL_JsqJsZDPHxWA5tax4_ecBtR7Yvhi+DzxQkyh4bpnu1Za0yg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, hans.verkuil@cisco.com, mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Suzuki K Poulose <Suzuki.Poulose@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Leach <mike.leach@linaro.org>, Robert Walker <robert.walker@arm.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Frank Rowand <frowand.list@gmail.com>, John Horley <john.horley@arm.com>, devicetree@vger.kernel.org, Mathieu Poirier <mathieu.poirier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-
---TdMwOTenGjBWB1uY
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Sakari,
-
-On Mon, May 07, 2018 at 12:32:19PM +0300, Sakari Ailus wrote:
-> Hi Jacopo,
->
-> On Wed, Apr 25, 2018 at 01:00:14PM +0200, Jacopo Mondi wrote:
-
-[snip]
-
-> >  static int mt9t112_probe(struct i2c_client *client,
-> >  			 const struct i2c_device_id *did)
-> >  {
-> >  	struct mt9t112_priv *priv;
-> >  	int ret;
+On Fri, May 11, 2018 at 11:05:56AM -0500, Rob Herring wrote:
+> On Tue, May 8, 2018 at 10:40 AM, Suzuki K Poulose
+> <Suzuki.Poulose@arm.com> wrote:
 > >
-> > -	if (!client->dev.platform_data) {
-> > +	if (!client->dev.of_node && !client->dev.platform_data) {
-> >  		dev_err(&client->dev, "mt9t112: missing platform data!\n");
-> >  		return -EINVAL;
-> >  	}
-> > @@ -1081,23 +1118,39 @@ static int mt9t112_probe(struct i2c_client *client,
-> >  	if (!priv)
-> >  		return -ENOMEM;
 > >
-> > -	priv->info = client->dev.platform_data;
-> >  	priv->init_done = false;
-> > -
-> > -	v4l2_i2c_subdev_init(&priv->subdev, client, &mt9t112_subdev_ops);
-> > -
-> > -	priv->clk = devm_clk_get(&client->dev, "extclk");
-> > -	if (PTR_ERR(priv->clk) == -ENOENT) {
-> > +	priv->dev = &client->dev;
-> > +
-> > +	if (client->dev.platform_data) {
-> > +		priv->info = client->dev.platform_data;
-> > +
-> > +		priv->clk = devm_clk_get(&client->dev, "extclk");
->
-> extclk needs to be documented in DT binding documentation.
->
-> > +		if (PTR_ERR(priv->clk) == -ENOENT) {
-> > +			priv->clk = NULL;
-> > +		} else if (IS_ERR(priv->clk)) {
-> > +			dev_err(&client->dev,
-> > +				"Unable to get clock \"extclk\"\n");
-> > +			return PTR_ERR(priv->clk);
-> > +		}
-> > +	} else {
-> > +		/*
-> > +		 * External clock frequencies != 24MHz are only supported
-> > +		 * for non-OF systems.
-> > +		 */
->
-> Shouldn't you actually set the frequency? Or perhaps even better to check
-> it, and use assigned-clocks and assigned-clock-rates properties?
->
-
-I might be confused, but my intention was to use an external clock
-reference, with a configurable frequency only in the platform data use
-case. As you can see in this 'else' branch, in OF case, the priv->clk
-field is null, and all the PLL and clock computations are performed
-assuming a 24MHz input clock.
-
-In my opinion, as the driver when running on OF systems does not
-get any reference to 'extclk' clock, it should not be documented in
-bindings. Do you agree?
-
-Thanks
-   j
-
-> >  		priv->clk = NULL;
-> > -	} else if (IS_ERR(priv->clk)) {
-> > -		dev_err(&client->dev, "Unable to get clock \"extclk\"\n");
-> > -		return PTR_ERR(priv->clk);
-> > +		priv->info = &mt9t112_default_pdata_24MHz;
-> > +
-> > +		ret = mt9t112_parse_dt(priv);
-> > +		if (ret)
-> > +			return ret;
-> >  	}
+> > Rob, Mathieu,
 > >
-> > -	priv->standby_gpio = devm_gpiod_get_optional(&client->dev, "standby",
-> > +	v4l2_i2c_subdev_init(&priv->subdev, client, &mt9t112_subdev_ops);
-> > +
-> > +	priv->standby_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
-> >  						     GPIOD_OUT_HIGH);
-> >  	if (IS_ERR(priv->standby_gpio)) {
-> > -		dev_err(&client->dev, "Unable to get gpio \"standby\"\n");
-> > +		dev_err(&client->dev, "Unable to get gpio \"powerdown\"\n");
-> >  		return PTR_ERR(priv->standby_gpio);
-> >  	}
 > >
-> > @@ -1124,9 +1177,19 @@ static const struct i2c_device_id mt9t112_id[] = {
-> >  };
-> >  MODULE_DEVICE_TABLE(i2c, mt9t112_id);
+> > On 03/05/18 18:42, Mathieu Poirier wrote:
+> >>
+> >> On 1 May 2018 at 07:10, Rob Herring <robh@kernel.org> wrote:
+> >>>
+> >>> On Tue, May 01, 2018 at 10:10:35AM +0100, Suzuki K Poulose wrote:
+> >>>>
+> >>>> Document CATU device-tree bindings. CATU augments the TMC-ETR
+> >>>> by providing an improved Scatter Gather mechanism for streaming
+> >>>> trace data to non-contiguous system RAM pages.
+> >>>>
+> >>>> Cc: devicetree@vger.kernel.org
+> >>>> Cc: frowand.list@gmail.com
+> >>>> Cc: Rob Herring <robh@kernel.org>
+> >>>> Cc: Mark Rutland <mark.rutland@arm.com>
+> >>>> Cc: Mathieu Poirier <mathieu.poirier@arm.com>
+> >>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> >>>> ---
+> >>>>   .../devicetree/bindings/arm/coresight.txt          | 52
+> >>>> ++++++++++++++++++++++
+> >>>>   1 file changed, 52 insertions(+)
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt
+> >>>> b/Documentation/devicetree/bindings/arm/coresight.txt
+> >>>> index 15ac8e8..cdd84d0 100644
+> >>>> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> >>>> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> >>>> @@ -39,6 +39,8 @@ its hardware characteristcs.
+> >>>>
+> >>>>                - System Trace Macrocell:
+> >>>>                        "arm,coresight-stm", "arm,primecell"; [1]
+> >>>> +             - Coresight Address Translation Unit (CATU)
+> >>>> +                     "arm, coresight-catu", "arm,primecell";
+> >>>
+> >>>
+> >>> spurious space               ^
 > >
-> > +#if IS_ENABLED(CONFIG_OF)
-> > +static const struct of_device_id mt9t112_of_match[] = {
-> > +	{ .compatible = "micron,mt9t111", },
-> > +	{ .compatible = "micron,mt9t112", },
-> > +	{ /* sentinel */ },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, mt9t112_of_match);
-> > +#endif
-> > +
-> >  static struct i2c_driver mt9t112_i2c_driver = {
-> >  	.driver = {
-> >  		.name = "mt9t112",
-> > +		.of_match_table = of_match_ptr(mt9t112_of_match),
->
-> No need to use of_match_ptr().
->
-> >  	},
-> >  	.probe    = mt9t112_probe,
-> >  	.remove   = mt9t112_remove,
->
-> --
-> Sakari Ailus
-> e-mail: sakari.ailus@iki.fi
+> >
+> > Thanks for spotting, will fix it.
+> >
+> >>>
+> >>>>
+> >>>>        * reg: physical base address and length of the register
+> >>>>          set(s) of the component.
+> >>>> @@ -86,6 +88,9 @@ its hardware characteristcs.
+> >>>>        * arm,buffer-size: size of contiguous buffer space for TMC ETR
+> >>>>         (embedded trace router)
+> >>>>
+> >>>> +* Optional property for CATU :
+> >>>> +     * interrupts : Exactly one SPI may be listed for reporting the
+> >>>> address
+> >>>> +       error
+> >>>
+> >>>
+> >>> Somewhere you need to define the ports for the CATU.
+> >
+> >
+> > The ports are defined common to all the coresight components. Would you
+> > like it to be added just for the CATU ?
+> 
+> Yeah, that's probably how we got into this problem with the port
+> numbering in the first place.
+> 
+> 
+> >>>>   Example:
+> >>>>
+> >>>> @@ -118,6 +123,35 @@ Example:
+> >>>>                };
+> >>>>        };
+> >>>>
+> >>>> +     etr@20070000 {
+> >>>> +             compatible = "arm,coresight-tmc", "arm,primecell";
+> >>>> +             reg = <0 0x20070000 0 0x1000>;
+> >>>> +
+> >>>> +                     /* input port */
+> >>>> +                     port@0 {
+> >>>> +                             reg =  <0>;
+> >>>> +                             etr_in_port: endpoint {
+> >>>> +                                     slave-mode;
+> >>>> +                                     remote-endpoint =
+> >>>> <&replicator2_out_port0>;
+> >>>> +                             };
+> >>>> +                     };
+> >>>> +
+> >>>> +                     /* CATU link represented by output port */
+> >>>> +                     port@1 {
+> >>>> +                             reg = <0>;
+> >>>
+> >>>
+> >>> While common in the Coresight bindings, having unit-address and reg not
+> >>> match is an error. Mathieu and I discussed this a bit as dtc now warns
+> >>> on these.
+> >>>
+> >>> Either reg should be 1 here, or 'ports' needs to be split into input and
+> >>> output ports. My preference would be the former, but Mathieu objected to
+> >>> this not reflecting the the h/w numbering.
+> >>
+> >>
+> >> Suzuki, as we discuss this is related to your work on revamping CS
+> >> bindings for ACPI.  Until that gets done and to move forward with this
+> >> set I suggest you abide to Rob's request.
+> >
+> >
+> > Ok, I can change it to <1>, as we don't expect any other output port for an
+> > ETR.
+> 
+> Better let Mathieu confirm he's okay with the first option because he
+> wasn't okay with changing the port reg when we discussed. But maybe
+> that was just on existing things like TPIU.
 
---TdMwOTenGjBWB1uY
-Content-Type: application/pgp-signature; name="signature.asc"
+I'm good with this one as it is a new component and doesn't change anything
+that people could be relying on.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJa+Z2UAAoJEHI0Bo8WoVY8/Z4P/35XLRg9kU6iyZjc0Jt/Dwyg
-ynWBgR4jJRbb8ZG8V+XugpgDxRwbntMwnqRdGEwBY53lp+27+l6HqGJDnHJtEiSV
-4j1r10H5KOiqE3OmHCfH5dnuW6wFBbzjPmkRluOuiC6T4XgiDN54Mow70dvecpiw
-AP72j+FZraF1940RZn1i480VzztsStWx5I4qTgORXHKqqvt0ynk5+Dt8Q7Ty0vn6
-gys1uRKQ4/6c+lzYIrl4hkkfIZs7bvOZ1xUGwe+O7GvqaZqNxb8UlpWJm4930J0t
-TQQHVhZ0YpAXm4oBTc/x0EfSZNQuy+rSnpn+agIdPL6xUcEDjQ2AjBeVGf/Q3P9U
-vwLwYsrG0lKw9SaCKCoC6GGEiudheH2LpnxrZkDLiYjeSNy4mAYGwxVjdGVl6++J
-URBliqSxJ4MImbj9dPtQvYI62/KTVSUrtcYHagahWmuioqjn9WkkTmhQ5W7PJEai
-yUb0v+Mc1K16v0/aepu2It7Q2M/YCFDHZN30+ZIp5Tu3Gxgt/Ax15b2+6xI9BRnj
-hPELTaOqZaLquiM+dlDTvTvQOeowsj0W8ABd6YTxkO511K8bKR2vp/bB2k4shfNt
-U2FIZRTjNTvPH4npAlflHVrPKsV+jsQCINHAx6doIopcxn19CkyDAw7uR0t22sXX
-qvVEnJ5+FsVJa0So1Xgl
-=dxbg
------END PGP SIGNATURE-----
-
---TdMwOTenGjBWB1uY--
+> 
+> Rob
