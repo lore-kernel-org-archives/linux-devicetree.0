@@ -1,373 +1,66 @@
-From: Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH 2/4] PCI: dwc: Add support for EP mode
-Date: Mon, 14 May 2018 17:23:48 +0100
-Message-ID: <6a0efa0b-a724-4617-439c-f9f876c1db6a@synopsys.com>
-References: <cover.1526314398.git.gustavo.pimentel@synopsys.com>
- <dbfaccc9902e43b659584e4638a26549a363292a.1526314398.git.gustavo.pimentel@synopsys.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 03/21] clk: sunxi-ng: Enable DE2_CCU for
+ Allwinner 64-bit SoCs
+Date: Mon, 14 May 2018 09:43:51 -0700
+Message-ID: <CAGb2v64tGLyYTG63VvHiXfhif0wiDCNKoBKbjEs+Jm5-6CNxXw@mail.gmail.com>
+References: <20180430114058.5061-1-jagan@amarulasolutions.com>
+ <20180430114058.5061-4-jagan@amarulasolutions.com> <CAGb2v66MKooAAroCzYdsXZDY0Oh66Dydpy59xj80QfiY+5mz_A@mail.gmail.com>
+ <CAMty3ZAOVg6EZoMi=LRuKEcrnDM_tzYfK1WnBN-_d-pmjNS6Nw@mail.gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <dbfaccc9902e43b659584e4638a26549a363292a.1526314398.git.gustavo.pimentel@synopsys.com>
-Content-Language: pt-PT
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBX7Z43LQKGQE6JXMFQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAMty3ZAOVg6EZoMi=LRuKEcrnDM_tzYfK1WnBN-_d-pmjNS6Nw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Às 5:17 PM de 5/14/2018, Gustavo Pimentel escreveu:
-> The PCIe controller dual mode is capable of operating in RC mode as well
-> as EP mode by configuration option. Till now only RC mode was supported,
-> with this patch is add EP support to the DesignWare driver.
-> 
-> Add new property on pci_epc structure which allow to configure
-> pci_epf_test driver accordingly to the controller specific requirements.
-> 
-> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/dwc/Kconfig                       |  41 +++++--
->  drivers/pci/dwc/pcie-designware-ep.c          |   3 +
->  drivers/pci/dwc/pcie-designware-plat.c        | 149 ++++++++++++++++++++++++--
->  drivers/pci/endpoint/functions/pci-epf-test.c |   7 ++
->  include/linux/pci-epc.h                       |   8 ++
->  5 files changed, 187 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
-> index 2f3f5c5..62f7cdf 100644
-> --- a/drivers/pci/dwc/Kconfig
-> +++ b/drivers/pci/dwc/Kconfig
-> @@ -7,8 +7,7 @@ config PCIE_DW
->  
->  config PCIE_DW_HOST
->          bool
-> -	depends on PCI
-> -	depends on PCI_MSI_IRQ_DOMAIN
-> +	depends on PCI && PCI_MSI_IRQ_DOMAIN
->          select PCIE_DW
->  
->  config PCIE_DW_EP
-> @@ -51,17 +50,37 @@ config PCI_DRA7XX_EP
->  	  This uses the DesignWare core.
->  
->  config PCIE_DW_PLAT
-> -	bool "Platform bus based DesignWare PCIe Controller"
-> -	depends on PCI
-> -	depends on PCI_MSI_IRQ_DOMAIN
-> -	select PCIE_DW_HOST
-> -	---help---
-> -	 This selects the DesignWare PCIe controller support. Select this if
-> -	 you have a PCIe controller on Platform bus.
-> +	bool
->  
-> -	 If you have a controller with this interface, say Y or M here.
-> +config PCIE_DW_PLAT_HOST
-> +	bool "Platform bus based DesignWare PCIe Controller - Host mode"
-> +	depends on PCI && PCI_MSI_IRQ_DOMAIN
-> +	select PCIE_DW_HOST
-> +	select PCIE_DW_PLAT
-> +	default y
-> +	help
-> +	  Enables support for the PCIe controller in the Designware IP to
-> +	  work in host mode. There are two instances of PCIe controller in
-> +	  Designware IP.
-> +	  This controller can work either as EP or RC. In order to enable
-> +	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
-> +	  order to enable device-specific features PCI_DW_PLAT_EP must be
-> +	  selected.
->  
-> -	 If unsure, say N.
-> +config PCIE_DW_PLAT_EP
-> +	bool "Platform bus based DesignWare PCIe Controller - Endpoint mode"
-> +	depends on PCI && PCI_MSI_IRQ_DOMAIN
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_DW_EP
-> +	select PCIE_DW_PLAT
-> +	help
-> +	  Enables support for the PCIe controller in the Designware IP to
-> +	  work in endpoint mode. There are two instances of PCIe controller
-> +	  in Designware IP.
-> +	  This controller can work either as EP or RC. In order to enable
-> +	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
-> +	  order to enable device-specific features PCI_DW_PLAT_EP must be
-> +	  selected.
->  
->  config PCI_EXYNOS
->  	bool "Samsung Exynos PCIe controller"
-> diff --git a/drivers/pci/dwc/pcie-designware-ep.c b/drivers/pci/dwc/pcie-designware-ep.c
-> index f07678b..2c05a08 100644
-> --- a/drivers/pci/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/dwc/pcie-designware-ep.c
-> @@ -411,6 +411,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  		return -ENOMEM;
->  	}
->  
-> +	epc->features = EPC_FEATURE_NO_LINKUP_NOTIFIER;
-> +	EPC_FEATURE_SET_BAR(epc->features, BAR0);
-> +
->  	ep->epc = epc;
->  	epc_set_drvdata(epc, ep);
->  	dw_pcie_setup(pci);
-> diff --git a/drivers/pci/dwc/pcie-designware-plat.c b/drivers/pci/dwc/pcie-designware-plat.c
-> index 5416aa8..efc315c 100644
-> --- a/drivers/pci/dwc/pcie-designware-plat.c
-> +++ b/drivers/pci/dwc/pcie-designware-plat.c
-> @@ -12,19 +12,29 @@
->  #include <linux/interrupt.h>
->  #include <linux/kernel.h>
->  #include <linux/init.h>
-> +#include <linux/of_device.h>
->  #include <linux/of_gpio.h>
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
->  #include <linux/resource.h>
->  #include <linux/signal.h>
->  #include <linux/types.h>
-> +#include <linux/regmap.h>
->  
->  #include "pcie-designware.h"
->  
->  struct dw_plat_pcie {
-> -	struct dw_pcie		*pci;
-> +	struct dw_pcie			*pci;
-> +	struct regmap			*regmap;
-> +	enum dw_pcie_device_mode	mode;
->  };
->  
-> +struct dw_plat_pcie_of_data {
-> +	enum dw_pcie_device_mode	mode;
-> +};
-> +
-> +static const struct of_device_id dw_plat_pcie_of_match[];
-> +
->  static int dw_plat_pcie_host_init(struct pcie_port *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> @@ -42,9 +52,53 @@ static const struct dw_pcie_host_ops dw_plat_pcie_host_ops = {
->  	.host_init = dw_plat_pcie_host_init,
->  };
->  
-> -static int dw_plat_add_pcie_port(struct pcie_port *pp,
-> +static int dw_plat_pcie_establish_link(struct dw_pcie *pci)
-> +{
-> +	return 0;
-> +}
-> +
-> +static const struct dw_pcie_ops dw_pcie_ops = {
-> +	.start_link = dw_plat_pcie_establish_link,
-> +};
-> +
-> +static void dw_plat_pcie_ep_init(struct dw_pcie_ep *ep)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	enum pci_barno bar;
-> +
-> +	for (bar = BAR_0; bar <= BAR_5; bar++)
-> +		dw_pcie_ep_reset_bar(pci, bar);
-> +}
-> +
-> +static int dw_plat_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> +				     enum pci_epc_irq_type type,
-> +				     u8 interrupt_num)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +
-> +	switch (type) {
-> +	case PCI_EPC_IRQ_LEGACY:
-> +		dev_err(pci->dev, "EP cannot trigger legacy IRQs\n");
-> +		return -EINVAL;
-> +	case PCI_EPC_IRQ_MSI:
-> +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-> +	default:
-> +		dev_err(pci->dev, "UNKNOWN IRQ type\n");
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct dw_pcie_ep_ops pcie_ep_ops = {
-> +	.ep_init = dw_plat_pcie_ep_init,
-> +	.raise_irq = dw_plat_pcie_ep_raise_irq,
-> +};
-> +
-> +static int dw_plat_add_pcie_port(struct dw_plat_pcie *dw_plat_pcie,
->  				 struct platform_device *pdev)
->  {
-> +	struct dw_pcie *pci = dw_plat_pcie->pci;
-> +	struct pcie_port *pp = &pci->pp;
->  	struct device *dev = &pdev->dev;
->  	int ret;
->  
-> @@ -63,15 +117,44 @@ static int dw_plat_add_pcie_port(struct pcie_port *pp,
->  
->  	ret = dw_pcie_host_init(pp);
->  	if (ret) {
-> -		dev_err(dev, "failed to initialize host\n");
-> +		dev_err(dev, "Failed to initialize host\n");
->  		return ret;
->  	}
->  
->  	return 0;
->  }
->  
-> -static const struct dw_pcie_ops dw_pcie_ops = {
-> -};
-> +static int dw_plat_add_pcie_ep(struct dw_plat_pcie *dw_plat_pcie,
-> +			       struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	struct dw_pcie_ep *ep;
-> +	struct resource *res;
-> +	struct device *dev = &pdev->dev;
-> +	struct dw_pcie *pci = dw_plat_pcie->pci;
-> +
-> +	ep = &pci->ep;
-> +	ep->ops = &pcie_ep_ops;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
-> +	pci->dbi_base2 = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(pci->dbi_base2))
-> +		return PTR_ERR(pci->dbi_base2);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
-> +	if (!res)
-> +		return -EINVAL;
-> +
-> +	ep->phys_base = res->start;
-> +	ep->addr_size = resource_size(res);
-> +
-> +	ret = dw_pcie_ep_init(ep);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to initialize endpoint\n");
-> +		return ret;
-> +	}
-> +	return 0;
-> +}
->  
->  static int dw_plat_pcie_probe(struct platform_device *pdev)
->  {
-> @@ -80,6 +163,16 @@ static int dw_plat_pcie_probe(struct platform_device *pdev)
->  	struct dw_pcie *pci;
->  	struct resource *res;  /* Resource from DT */
->  	int ret;
-> +	const struct of_device_id *match;
-> +	const struct dw_plat_pcie_of_data *data;
-> +	enum dw_pcie_device_mode mode;
-> +
-> +	match = of_match_device(dw_plat_pcie_of_match, dev);
-> +	if (!match)
-> +		return -EINVAL;
-> +
-> +	data = (struct dw_plat_pcie_of_data *)match->data;
-> +	mode = (enum dw_pcie_device_mode)data->mode;
->  
->  	dw_plat_pcie = devm_kzalloc(dev, sizeof(*dw_plat_pcie), GFP_KERNEL);
->  	if (!dw_plat_pcie)
-> @@ -93,23 +186,59 @@ static int dw_plat_pcie_probe(struct platform_device *pdev)
->  	pci->ops = &dw_pcie_ops;
->  
->  	dw_plat_pcie->pci = pci;
-> +	dw_plat_pcie->mode = mode;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-> +	if (!res)
-> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	pci->dbi_base = devm_ioremap_resource(dev, res);
->  	if (IS_ERR(pci->dbi_base))
->  		return PTR_ERR(pci->dbi_base);
->  
->  	platform_set_drvdata(pdev, dw_plat_pcie);
->  
-> -	ret = dw_plat_add_pcie_port(&pci->pp, pdev);
-> -	if (ret < 0)
-> -		return ret;
-> +	switch (dw_plat_pcie->mode) {
-> +	case DW_PCIE_RC_TYPE:
-> +		if (!IS_ENABLED(CONFIG_PCIE_DW_PLAT_HOST))
-> +			return -ENODEV;
-> +
-> +		ret = dw_plat_add_pcie_port(dw_plat_pcie, pdev);
-> +		if (ret < 0)
-> +			return ret;
-> +		break;
-> +	case DW_PCIE_EP_TYPE:
-> +		if (!IS_ENABLED(CONFIG_PCIE_DW_PLAT_EP))
-> +			return -ENODEV;
-> +
-> +		ret = dw_plat_add_pcie_ep(dw_plat_pcie, pdev);
-> +		if (ret < 0)
-> +			return ret;
-> +		break;
-> +	default:
-> +		dev_err(dev, "INVALID device type %d\n", dw_plat_pcie->mode);
-> +	}
->  
->  	return 0;
->  }
->  
-> +static const struct dw_plat_pcie_of_data dw_plat_pcie_rc_of_data = {
-> +	.mode = DW_PCIE_RC_TYPE,
-> +};
-> +
-> +static const struct dw_plat_pcie_of_data dw_plat_pcie_ep_of_data = {
-> +	.mode = DW_PCIE_EP_TYPE,
-> +};
-> +
->  static const struct of_device_id dw_plat_pcie_of_match[] = {
-> -	{ .compatible = "snps,dw-pcie", },
-> +	{
-> +		.compatible = "snps,dw-pcie",
-> +		.data = &dw_plat_pcie_rc_of_data,
-> +	},
-> +	{
-> +		.compatible = "snps,dw-pcie-ep",
-> +		.data = &dw_plat_pcie_ep_of_data,
-> +	},
->  	{},
->  };
->  
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 7cef851..bee401d 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -435,6 +435,13 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  	if (WARN_ON_ONCE(!epc))
->  		return -EINVAL;
->  
-> +	if (epc->features & EPC_FEATURE_NO_LINKUP_NOTIFIER)
-> +		epf_test->linkup_notifier = false;
-> +	else
-> +		epf_test->linkup_notifier = true;
-> +
-> +	epf_test->test_reg_bar = EPC_FEATURE_GET_BAR(epc->features);
-> +
->  	ret = pci_epc_write_header(epc, epf->func_no, header);
->  	if (ret) {
->  		dev_err(dev, "configuration header write failed\n");
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index af657ca..243eaa5 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -90,8 +90,16 @@ struct pci_epc {
->  	struct config_group		*group;
->  	/* spinlock to protect against concurrent access of EP controller */
->  	spinlock_t			lock;
-> +	unsigned int			features;
->  };
->  
-> +#define EPC_FEATURE_NO_LINKUP_NOTIFIER		BIT(0)
-> +#define EPC_FEATURE_BAR_MASK			(BIT(1) | BIT(2) | BIT(3))
-> +#define EPC_FEATURE_SET_BAR(features, bar)	\
-> +		(features |= (EPC_FEATURE_BAR_MASK & (bar << 1)))
-> +#define EPC_FEATURE_GET_BAR(features)		\
-> +		((features & EPC_FEATURE_BAR_MASK) >> 1)
-> +
->  #define to_pci_epc(device) container_of((device), struct pci_epc, dev)
->  
->  #define pci_epc_create(dev, ops)    \
-> 
+On Mon, May 14, 2018 at 1:20 AM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> On Tue, May 1, 2018 at 9:53 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>> On Mon, Apr 30, 2018 at 7:40 PM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>>> Allwinner 64-bit SoC like H5/A64 has DE2 CCU so enable them
+>>> as default.
+>>>
+>>> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>>> ---
+>>>  drivers/clk/sunxi-ng/Kconfig | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
+>>> index 79dfd296c3d1..1fffd3bf6ff3 100644
+>>> --- a/drivers/clk/sunxi-ng/Kconfig
+>>> +++ b/drivers/clk/sunxi-ng/Kconfig
+>>> @@ -58,6 +58,8 @@ config SUN8I_V3S_CCU
+>>>
+>>>  config SUN8I_DE2_CCU
+>>>         bool "Support for the Allwinner SoCs DE2 CCU"
+>>> +       default ARM64 && ARCH_SUNXI
+>>> +       depends on (DRM_SUN4I && (ARM64 && ARCH_SUNXI)) || COMPILE_TEST
+>>
+>> There is no reason to depend on DRM_SUN4I. There is no compile dependency.
+>
+> Since this CCU is for DE2 I've make DRM_SUN4I for that matter, any problem?
 
+Users may very well be just using simplefb, but with all the clock drivers
+enabled. That is a valid, if very limited, use case. So again, you should
+not limit this driver based on DRM_SUN4I. There is no compile dependency.
 
-Acked-by: Joao Pinto <jpinto@synopsys.com>
+>
+>>
+>> Also, this is needed on SUN8I as well, pretty much anything with DE 2.0.
+>> So you shouldn't limit it to ARM64. That pretty much breaks things for
+>> people with A83T's or H3's. In fact you should enable it by default for
+>> these as well.
+>
+> True, I've skipped SUN8I since this series for A64.
+
+And yet you are breaking existing users, which is a big no-no.
+
+ChenYu
