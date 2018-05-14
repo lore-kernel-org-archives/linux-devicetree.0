@@ -1,68 +1,66 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v5 2/2] leds: lm3601x: Introduce the lm3601x LED driver
-Date: Mon, 14 May 2018 15:31:04 -0500
-Message-ID: <fedc86a5-35ad-03f4-9739-8f995c96b097@ti.com>
-References: <20180510174717.26540-1-dmurphy@ti.com>
- <20180510174717.26540-2-dmurphy@ti.com>
- <41267191-1308-6b9b-78fa-2893a525b49a@gmail.com>
- <17630aca-1225-df61-7a5d-a921ecd9c78c@ti.com>
- <86c2bc2f-e622-9447-e4bb-b4ee37e2d44a@ti.com> <20180514200503.GB3276@amd>
- <4a631a8e-18ba-0886-039e-004980ae0cc3@ti.com> <20180514201631.GC3276@amd>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 0/3] arm64: dts: Draak: Enable HDMI input and VIN4
+Date: Mon, 14 May 2018 22:33:44 +0200
+Message-ID: <CAMuHMdXdDZdbrpLTogyR=djwtQYMf1dgAA_z+8HaFZBG6R+e6g@mail.gmail.com>
+References: <1526032802-14376-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180514201631.GC3276@amd>
-Content-Language: en-US
+In-Reply-To: <1526032802-14376-1-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, afd@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/14/2018 03:16 PM, Pavel Machek wrote:
-> On Mon 2018-05-14 15:13:34, Dan Murphy wrote:
->> Pavel
->>
->> On 05/14/2018 03:05 PM, Pavel Machek wrote:
->>> Hi!
->>>
->>>>> OK.
->>>>
->>>> OK I looked at the max776973 driver and well if the flash-max-microamp and
->>>> flash-max-timeout-us nodes are missing it sets a default value for each if the
->>>> node is not present.
->>>>
->>>> So should we remove this code from the Max77693 driver too and fail probe as being asked
->>>> in this driver?
->>>
->>> Well, modifying driver without access to the hardware is tricky
->>> :-(. If it does something stupid (like using other than minimum values
->>> for the flash-max-microamp/flash-max-timeout-us), it needs to be
->>> fixed.
->>
->> Well we should be able to test the probe/parse dt node and reject the probe if the node is not
->> present.  That can be done without HW the setup is done pretty early in the probe without even attempting to communicate
->> with the hardware.
->>
-> 
-> Well, yes, you can do that.
-> 
-> But if someone is actively using board with DT w/o flash-max-microamp,
-> you'll make them unhappy.
-> 
+Hi Jacopo,
 
-I grepped the dt directories and I did not find any upstream dt files configuring the max77693
-with a flash led source.  Unless Jacek can point out an upstream file I may have over looked.
+On Fri, May 11, 2018 at 11:59 AM, Jacopo Mondi
+<jacopo+renesas@jmondi.org> wrote:
+>    this series enables HDMI input and VIN4 on R-Car D3 Draak board.
+>
+> The Draak board has an HDMI input connected to an HDMI decoder that feeds
+> the VIN capture interface through its parallel video interface.
+>
+> The series requires the just sent:
+> [PATCH 0/5] rcar-vin: Add support for digital input on Gen3
+>
+> and enables image capture operations on D3 Draak board.
+>
+> The series has been developed on top of media-master tree but applies cleanly
+> on top of latest renesas-driver.
+>
+> Geert: would you like a topic branch for this series to be included in
+> renesas-drivers?
 
-Unhappiness will come from not upstreaming your code ;)
+It seems patch 2 has been applied by Simon already, but there is some
+discussion pending on patch 3?
 
-Dan
+> Patches for testing are available at:
+> git://jmondi.org/linux d3/media-master/driver
+> git://jmondi.org/linux d3/media-master/dts
+> git://jmondi.org/linux d3/media-master/test
+> git://jmondi.org/vin-tests d3
+>
+> Thanks
+>     j
+>
+> Jacopo Mondi (3):
+>   dt-bindings: media: rcar-vin: Add R8A77995 support
+>   arm64: dts: renesas: r8a77995: Add VIN4
+>   arm64: dts: renesas: draak: Describe HDMI input
+>
+>  .../devicetree/bindings/media/rcar_vin.txt         |  1 +
+>  arch/arm64/boot/dts/renesas/r8a77995-draak.dts     | 68 ++++++++++++++++++++++
+>  arch/arm64/boot/dts/renesas/r8a77995.dtsi          | 11 ++++
+>  3 files changed, 80 insertions(+)
 
-> Best regards,
-> 									Pavel
-> 
+Gr{oetje,eeting}s,
 
+                        Geert
 
 -- 
-------------------
-Dan Murphy
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
