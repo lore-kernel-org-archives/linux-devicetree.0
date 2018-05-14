@@ -1,118 +1,61 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 1/2] USB: dwc3: get extcon device by OF graph bindings
-Date: Mon, 14 May 2018 10:38:55 +0200
-Message-ID: <1080506a-adaa-193b-24d5-a779486dacc8@samsung.com>
-References: <20180131155718.5237-1-a.hajda@samsung.com>
-        <CGME20180131155734eucas1p2b55ad1aab1d5086566dad7a79b25ccf3@eucas1p2.samsung.com>
-        <20180131155718.5237-2-a.hajda@samsung.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 09/21] arm64: dts: allwinner: a64: Add HDMI support
+Date: Mon, 14 May 2018 10:40:50 +0200
+Message-ID: <20180514084050.ix5corfuvx33gsyn@flea>
+References: <20180430114058.5061-1-jagan@amarulasolutions.com>
+ <20180430114058.5061-10-jagan@amarulasolutions.com>
+ <20180502113413.vv2r3ubfoh7gm3ms@flea>
+ <CAMty3ZBheurXewQ8R53G_0gNLgv1jQkZbjAbaN30JQ6_ZVn7Eg@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180131155718.5237-2-a.hajda@samsung.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jyer2q7sajz2ea4p"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFEX4XLQKGQELPP3O7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZBheurXewQ8R53G_0gNLgv1jQkZbjAbaN30JQ6_ZVn7Eg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31.01.2018 16:57, Andrzej Hajda wrote:
-> extcon device is used to detect host/device connection. Since extcon
-> OF property is deprecated, alternative method should be added.
-> This method uses OF graph bindings to locate extcon.
->
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
 
-Ping, 3.5 months passed.
+--jyer2q7sajz2ea4p
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Regards
-Andrzej
+On Mon, May 14, 2018 at 02:03:36PM +0530, Jagan Teki wrote:
+> On Wed, May 2, 2018 at 5:04 PM, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Mon, Apr 30, 2018 at 05:10:46PM +0530, Jagan Teki wrote:
+> >> +             hdmi_phy: hdmi-phy@1ef0000 {
+> >> +                     compatible = "allwinner,sun50i-a64-hdmi-phy",
+> >> +                                  "allwinner,sun8i-h3-hdmi-phy";
+> >> +                     reg = <0x01ef0000 0x10000>;
+> >> +                     clocks = <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI_DDC>,
+> >> +                              <&ccu CLK_PLL_VIDEO1>;
+> >
+> > You were discussing that the PLL0 could also be used to clock the PHY,
+> > has that been figured out?
+> 
+> This is what I understand from Fig: 3-3. Module Clock Diagram, both
+> tcon0 and tcon1 are using HDMI. I'm thinking based on the tcon
+> configuration we need use proper PLL or some logic to get common PLL
+> don't know yet. Since this series adding tcon1 I've attached PLL1.
 
-> ---
-> Hi all,
->
-> This patch implements alternative method to get extcon from DWC3.
-> The code works but is hacky, as DWC3 must traverse different DT nodes
-> to get extcon, in case of TM2 it is USB-PHY and MUIC, but other
-> platforms can have different paths.
-> I would be glad if it can be merged as is for now, but additional work
-> must be done to make it generic.
-> I guess on DT binding side it is OK. So the problem should be addressed
-> in the code.
-> My rough idea is to implement kind of extcon aliases/forwarder mechanism,
-> ie. USB-PHY will expect on its output remote port extcon, and it should register
-> extcon-forwarder pointing to this extcon. This way DWC3 can look for the extcon
-> on its PHY phandle, and it will receive via forwarding mechanism extcon
-> exposed by MUIC.
-> As I said this is rough idea for discussion, other propositions are welcome.
->
-> Regards
-> Andrzej
-> ---
->  drivers/usb/dwc3/drd.c | 41 ++++++++++++++++++++++++++++-------------
->  1 file changed, 28 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-> index cc8ab9a8e9d2..eee2eca3d513 100644
-> --- a/drivers/usb/dwc3/drd.c
-> +++ b/drivers/usb/dwc3/drd.c
-> @@ -8,6 +8,7 @@
->   */
->  
->  #include <linux/extcon.h>
-> +#include <linux/of_graph.h>
->  
->  #include "debug.h"
->  #include "core.h"
-> @@ -38,24 +39,38 @@ static int dwc3_drd_notifier(struct notifier_block *nb,
->  	return NOTIFY_DONE;
->  }
->  
-> +struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
-> +{
-> +	struct device *dev = dwc->dev;
-> +	struct device_node *np_phy, *np_conn;
-> +	struct extcon_dev *edev;
-> +
-> +	if (of_property_read_bool(dev->of_node, "extcon"))
-> +		return extcon_get_edev_by_phandle(dwc->dev, 0);
-> +
-> +	np_phy = of_parse_phandle(dev->of_node, "phys", 0);
-> +	np_conn = of_graph_get_remote_node(np_phy, -1, -1);
-> +	edev = extcon_get_edev_by_of_node(np_conn);
-> +	of_node_put(np_conn);
-> +	of_node_put(np_phy);
-> +
-> +	return edev;
-> +}
-> +
->  int dwc3_drd_init(struct dwc3 *dwc)
->  {
->  	int ret;
->  
-> -	if (dwc->dev->of_node) {
-> -		if (of_property_read_bool(dwc->dev->of_node, "extcon"))
-> -			dwc->edev = extcon_get_edev_by_phandle(dwc->dev, 0);
-> -
-> -		if (IS_ERR(dwc->edev))
-> -			return PTR_ERR(dwc->edev);
-> +	dwc->edev = dwc3_get_extcon(dwc);
-> +	if (IS_ERR(dwc->edev))
-> +		return PTR_ERR(dwc->edev);
->  
-> -		dwc->edev_nb.notifier_call = dwc3_drd_notifier;
-> -		ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
-> -					       &dwc->edev_nb);
-> -		if (ret < 0) {
-> -			dev_err(dwc->dev, "couldn't register cable notifier\n");
-> -			return ret;
-> -		}
-> +	dwc->edev_nb.notifier_call = dwc3_drd_notifier;
-> +	ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
-> +				       &dwc->edev_nb);
-> +	if (ret < 0) {
-> +		dev_err(dwc->dev, "couldn't register cable notifier\n");
-> +		return ret;
->  	}
->  
->  	dwc3_drd_update(dwc);
+You're not describing the TCON node here though, but the HDMI one, and
+the HDMI block is listed in both the PLL video 0 and 1.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--jyer2q7sajz2ea4p--
