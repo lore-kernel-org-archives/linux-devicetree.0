@@ -1,53 +1,54 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] net: phy: micrel: workaround for errata #2 for KSZ9031
-Date: Mon, 14 May 2018 12:42:58 +0300
-Message-ID: <e7952210-b57a-a6d0-afaf-b4a3f95e0f2e@cogentembedded.com>
-References: <20180514082218.29158-1-m.felsch@pengutronix.de>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 04/13] soc: rockchip: power-domain: Fix wrong value when power up pd
+Date: Mon, 14 May 2018 11:45:05 +0200
+Message-ID: <1861053.XlXe5vHN1s@phil>
+References: <1526268455-9133-1-git-send-email-zhangqing@rock-chips.com> <1526268578-9361-1-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180514082218.29158-1-m.felsch@pengutronix.de>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>, robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Markus Niebel <Markus.Niebel@tqs.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1526268578-9361-1-git-send-email-zhangqing@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Elaine Zhang <zhangqing@rock-chips.com>, linux-pm@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, rjw@rjwysocki.net, khilman@kernel.org, ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, wxt@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com, Finley Xiao <finley.xiao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On 5/14/2018 11:22 AM, Marco Felsch wrote:
+Hi Elaine,
 
-> From: Markus Niebel <Markus.Niebel@tqs.de>
+Am Montag, 14. Mai 2018, 05:29:38 CEST schrieb Elaine Zhang:
+> From: Finley Xiao <finley.xiao@rock-chips.com>
 > 
-> handle errata #2 for KSZ9031: force 1000Base-T master
+> Solve the pd could only ever turn off but never turn them on again,
+> If the pd registers have the writemask bits.
 > 
-> Attention: enabling the workaround will cause no link to
-> other GIGE master.
+> Fix up the code error for commit:
+> 	commit 79bb17ce8edb3141339b5882e372d0ec7346217c
+> 	Author: Elaine Zhang <zhangqing@rock-chips.com>
+> 	Date:   Fri Dec 23 11:47:52 2016 +0800
 > 
-> Signed-off-by: Markus Niebel <Markus.Niebel@tqs.de>
-> [m.felsch@pengutronix.de: move dt binding to the KSZ9031 entry]
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
->   .../devicetree/bindings/net/micrel-ksz90x1.txt |  3 +++
->   drivers/net/phy/micrel.c                       | 18 ++++++++++++++++++
->   2 files changed, 21 insertions(+)
+> 	soc: rockchip: power-domain: Support domain control in hiword-registers
 > 
-> diff --git a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-> index 42a248301615..e2465fbbbcef 100644
-> --- a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-> +++ b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-> @@ -57,6 +57,9 @@ KSZ9031:
->         - txd2-skew-ps : Skew control of TX data 2 pad
->         - txd3-skew-ps : Skew control of TX data 3 pad
->   
-> +    - force-master: Boolean, force phy to master mode. This is a
+> 	New Rockchips SoCs may have their power-domain control in registers
+> 	using a writemask-based access scheme (upper 16bit being the write
+> 	mask). So add a DOMAIN_M type and handle this case accordingly.
+> 	Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> 	Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> 
+> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
 
-    Not "micrel,force-master"?
+As Gregs automated mail noted, the stable-notice needed some changes.
 
-> +                    workaround at least for KSZ9031 errata #2.
-> +
->   Examples:
->   
->   	mdio {
-[...]
+I've done these changes and applied the result for 4.18.
 
-MBR, Sergei
+When you look at [0] you'll see  the two lines "Fixes:..." and "Cc:..."
+in the commit message. Greg then has automated scripts running that
+extract so marked patches from Linus' tree and queue them for possible
+stable-inclusion.
+
+[The other patches need to wait a bit to give Rob a chance to Ack them]
+
+Heiko
+
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/commit/?id=ed726894761c056b3513ce15915af74ce5d7d57b
