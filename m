@@ -1,200 +1,304 @@
-Return-Path: <SRS0=IvYd=IC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:36203 "EHLO
-        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752059AbeEOUON (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 15 May 2018 16:14:13 -0400
-Message-ID: <1526415250.32235.17.camel@gmail.com>
-Subject: [PATCH v2] Add support for external reference voltage through the
- regulator framework
-From: Silvan Murer <silvan.murer@gmail.com>
-Date: Tue, 15 May 2018 22:14:10 +0200
+MIME-Version: 1.0
+In-Reply-To: <1526304714-23821-1-git-send-email-festevam@gmail.com>
+References: <1526304714-23821-1-git-send-email-festevam@gmail.com>
+Date: Mon, 14 May 2018 13:15:40 -0500
+Message-ID: <CAL_JsqLOfQ6b=QP4joAB7ceb6QV0n8AGgV9yGYwicb3xEud=YQ@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: imx6/7: Remove unit-address from anatop regulators
+From: Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: lars@metafoo.de, jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for external reference voltage through the regulator framework.
+On Mon, May 14, 2018 at 8:31 AM, Fabio Estevam <festevam@gmail.com> wrote:
+> From: Fabio Estevam <fabio.estevam@nxp.com>
+>
+> Remove unit-address and reg property from anatop regulators to fix
+> the following DTC warnings with W=1:
+>
+> arch/arm/boot/dts/imx6dl-apf6dev.dtb: Warning (unique_unit_address): /soc/aips-bus@2000000/anatop@20c8000/regulator-vddcore@20c8140: duplicate unit-address (also used in node /soc/aips-bus@2000000/anatop@20c8000/regulator-vddpu@20c8140)
+> arch/arm/boot/dts/imx6dl-apf6dev.dtb: Warning (unique_unit_address): /soc/aips-bus@2000000/anatop@20c8000/regulator-vddcore@20c8140: duplicate unit-address (also used in node /soc/aips-bus@2000000/anatop@20c8000/regulator-vddsoc@20c8140)
+> arch/arm/boot/dts/imx6dl-apf6dev.dtb: Warning (unique_unit_address): /soc/aips-bus@2000000/anatop@20c8000/regulator-vddpu@20c8140: duplicate unit-address (also used in node /soc/aips-bus@2000000/anatop@20c8000/regulator-vddsoc@20c8140)
+>
+> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+> ---
+> Changes since v1:
+> - Send it is a standalone patch instead of a patch series.
+>
+>  arch/arm/boot/dts/imx6qdl.dtsi | 20 ++++++--------------
+>  arch/arm/boot/dts/imx6sl.dtsi  | 20 ++++++--------------
+>  arch/arm/boot/dts/imx6sx.dtsi  | 20 ++++++--------------
+>  arch/arm/boot/dts/imx6ul.dtsi  | 11 +++--------
+>  arch/arm/boot/dts/imx7s.dtsi   |  8 ++------
+>  5 files changed, 23 insertions(+), 56 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> index 69648e2..22942dd 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -692,11 +692,8 @@
+>                                 interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>,
+>                                              <0 54 IRQ_TYPE_LEVEL_HIGH>,
+>                                              <0 127 IRQ_TYPE_LEVEL_HIGH>;
+> -                               #address-cells = <1>;
+> -                               #size-cells = <0>;
+>
+> -                               regulator-1p1@20c8110 {
+> -                                       reg = <0x20c8110>;
+> +                               regulator-1p1 {
 
-Signed-off-by: Silvan Murer <silvan.murer@gmail.com>
----
-Changes in v2:
-	- Add 'optional properties' documentation
-	- Return an error when a regulator is specified
-	- Use internal reference when no regulator is specified
-	- Use iio_device_register instead of devm_iio_device_register
-
- .../devicetree/bindings/iio/dac/ltc2632.txt        | 14 +++++
- drivers/iio/dac/ltc2632.c                          | 70 +++++++++++++++++++---
- 2 files changed, 75 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-index eb911e5..e0d5fea 100644
---- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-+++ b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-@@ -12,12 +12,26 @@ Required properties:
- Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
- apply. In particular, "reg" and "spi-max-frequency" properties must be given.
- 
-+Optional properties:
-+	- vref-supply: Phandle to the external reference voltage supply. This should
-+	  only be set if there is an external reference voltage connected to the VREF
-+	  pin. If the property is not set the internal reference is used.
-+
- Example:
- 
-+	vref: regulator-vref {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vref-ltc2632";
-+		regulator-min-microvolt = <1250000>;
-+		regulator-max-microvolt = <1250000>;
-+		regulator-always-on;
-+	};
-+
- 	spi_master {
- 		dac: ltc2632@0 {
- 			compatible = "lltc,ltc2632-l12";
- 			reg = <0>; /* CS0 */
- 			spi-max-frequency = <1000000>;
-+			vref-supply = <&vref>; /* optional */
- 		};
- 	};
-diff --git a/drivers/iio/dac/ltc2632.c b/drivers/iio/dac/ltc2632.c
-index d322b78..7127cf6 100644
---- a/drivers/iio/dac/ltc2632.c
-+++ b/drivers/iio/dac/ltc2632.c
-@@ -2,6 +2,7 @@
-  * LTC2632 Digital to analog convertors spi driver
-  *
-  * Copyright 2017 Maxime Roussin-Bélanger
-+ * expanded by Silvan Murer <silvan.murer@gmail.com>
-  *
-  * Licensed under the GPL-2.
-  */
-@@ -10,6 +11,7 @@
- #include <linux/spi/spi.h>
- #include <linux/module.h>
- #include <linux/iio/iio.h>
-+#include <linux/regulator/consumer.h>
- 
- #define LTC2632_DAC_CHANNELS                    2
- 
-@@ -28,7 +30,7 @@
- /**
-  * struct ltc2632_chip_info - chip specific information
-  * @channels:		channel spec for the DAC
-- * @vref_mv:		reference voltage
-+ * @vref_mv:		internal reference voltage
-  */
- struct ltc2632_chip_info {
- 	const struct iio_chan_spec *channels;
-@@ -39,10 +41,14 @@ struct ltc2632_chip_info {
-  * struct ltc2632_state - driver instance specific data
-  * @spi_dev:			pointer to the spi_device struct
-  * @powerdown_cache_mask	used to show current channel powerdown state
-+ * @vref_mv			used reference voltage (internal or external)
-+ * @vref_reg		regulator for the reference voltage
-  */
- struct ltc2632_state {
- 	struct spi_device *spi_dev;
- 	unsigned int powerdown_cache_mask;
-+	int vref_mv;
-+	struct regulator *vref_reg;
- };
- 
- enum ltc2632_supported_device_ids {
-@@ -90,7 +96,7 @@ static int ltc2632_read_raw(struct iio_dev *indio_dev,
- 
- 	switch (m) {
- 	case IIO_CHAN_INFO_SCALE:
--		*val = chip_info->vref_mv;
-+		*val =  st->vref_mv;
- 		*val2 = chan->scan_type.realbits;
- 		return IIO_VAL_FRACTIONAL_LOG2;
- 	}
-@@ -247,6 +253,45 @@ static int ltc2632_probe(struct spi_device *spi)
- 	chip_info = (struct ltc2632_chip_info *)
- 			spi_get_device_id(spi)->driver_data;
- 
-+	st->vref_reg = devm_regulator_get_optional(&spi->dev, "vref");
-+	if (PTR_ERR(st->vref_reg) == -ENODEV) {
-+		/* use internal reference voltage */
-+		st->vref_reg = NULL;
-+		st->vref_mv = chip_info->vref_mv;
-+
-+		ret = ltc2632_spi_write(spi, LTC2632_CMD_INTERNAL_REFER,
-+				0, 0, 0);
-+		if (ret) {
-+			dev_err(&spi->dev,
-+				"Set internal reference command failed, %d\n",
-+				ret);
-+			return ret;
-+		}
-+	} else if (IS_ERR(st->vref_reg)) {
-+		dev_err(&spi->dev,
-+				"Error getting voltage reference regulator\n");
-+			return PTR_ERR(st->vref_reg);
-+	} else {
-+		/* use external reference voltage */
-+		ret = regulator_enable(st->vref_reg);
-+		if (ret) {
-+			dev_err(&spi->dev,
-+				"enable reference regulator failed, %d\n",
-+				ret);
-+			return ret;
-+		}
-+		st->vref_mv = regulator_get_voltage(st->vref_reg) / 1000;
-+
-+		ret = ltc2632_spi_write(spi, LTC2632_CMD_EXTERNAL_REFER,
-+				0, 0, 0);
-+		if (ret) {
-+			dev_err(&spi->dev,
-+				"Set external reference command failed, %d\n",
-+				ret);
-+			return ret;
-+		}
-+	}
-+
- 	indio_dev->dev.parent = &spi->dev;
- 	indio_dev->name = dev_of_node(&spi->dev) ? dev_of_node(&spi->dev)->name
- 						 : spi_get_device_id(spi)->name;
-@@ -255,14 +300,20 @@ static int ltc2632_probe(struct spi_device *spi)
- 	indio_dev->channels = chip_info->channels;
- 	indio_dev->num_channels = LTC2632_DAC_CHANNELS;
- 
--	ret = ltc2632_spi_write(spi, LTC2632_CMD_INTERNAL_REFER, 0, 0, 0);
--	if (ret) {
--		dev_err(&spi->dev,
--			"Set internal reference command failed, %d\n", ret);
--		return ret;
--	}
-+	return iio_device_register(indio_dev);
-+}
-+
-+static int ltc2632_remove(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-+	struct ltc2632_state *st = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+
-+	if (st->vref_reg)
-+		regulator_disable(st->vref_reg);
- 
--	return devm_iio_device_register(&spi->dev, indio_dev);
-+	return 0;
- }
- 
- static const struct spi_device_id ltc2632_id[] = {
-@@ -306,6 +357,7 @@ static struct spi_driver ltc2632_driver = {
- 		.of_match_table = of_match_ptr(ltc2632_of_match),
- 	},
- 	.probe		= ltc2632_probe,
-+	.remove		= ltc2632_remove,
- 	.id_table	= ltc2632_id,
- };
- module_spi_driver(ltc2632_driver);
--- 
-2.7.4
+This could break any users dependent on 
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vdd1p1";
+>                                         regulator-min-microvolt = <1000000>;
+> @@ -711,8 +708,7 @@
+>                                         anatop-enable-bit = <0>;
+>                                 };
+>
+> -                               regulator-3p0@20c8120 {
+> -                                       reg = <0x20c8120>;
+> +                               regulator-3p0 {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vdd3p0";
+>                                         regulator-min-microvolt = <2800000>;
+> @@ -727,8 +723,7 @@
+>                                         anatop-enable-bit = <0>;
+>                                 };
+>
+> -                               regulator-2p5@20c8130 {
+> -                                       reg = <0x20c8130>;
+> +                               regulator-2p5 {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vdd2p5";
+>                                         regulator-min-microvolt = <2250000>;
+> @@ -743,8 +738,7 @@
+>                                         anatop-enable-bit = <0>;
+>                                 };
+>
+> -                               reg_arm: regulator-vddcore@20c8140 {
+> -                                       reg = <0x20c8140>;
+> +                               reg_arm: regulator-vddcore {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vddarm";
+>                                         regulator-min-microvolt = <725000>;
+> @@ -761,8 +755,7 @@
+>                                         anatop-max-voltage = <1450000>;
+>                                 };
+>
+> -                               reg_pu: regulator-vddpu@20c8140 {
+> -                                       reg = <0x20c8140>;
+> +                               reg_pu: regulator-vddpu {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vddpu";
+>                                         regulator-min-microvolt = <725000>;
+> @@ -779,8 +772,7 @@
+>                                         anatop-max-voltage = <1450000>;
+>                                 };
+>
+> -                               reg_soc: regulator-vddsoc@20c8140 {
+> -                                       reg = <0x20c8140>;
+> +                               reg_soc: regulator-vddsoc {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vddsoc";
+>                                         regulator-min-microvolt = <725000>;
+> diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+> index 2002db2..8c838ba 100644
+> --- a/arch/arm/boot/dts/imx6sl.dtsi
+> +++ b/arch/arm/boot/dts/imx6sl.dtsi
+> @@ -524,11 +524,8 @@
+>                                 interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>,
+>                                              <0 54 IRQ_TYPE_LEVEL_HIGH>,
+>                                              <0 127 IRQ_TYPE_LEVEL_HIGH>;
+> -                               #address-cells = <1>;
+> -                               #size-cells = <0>;
+>
+> -                               regulator-1p1@20c8110 {
+> -                                       reg = <0x20c8110>;
+> +                               regulator-1p1 {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vdd1p1";
+>                                         regulator-min-microvolt = <800000>;
+> @@ -543,8 +540,7 @@
+>                                         anatop-enable-bit = <0>;
+>                                 };
+>
+> -                               regulator-3p0@20c8120 {
+> -                                       reg = <0x20c8120>;
+> +                               regulator-3p0 {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vdd3p0";
+>                                         regulator-min-microvolt = <2800000>;
+> @@ -559,8 +555,7 @@
+>                                         anatop-enable-bit = <0>;
+>                                 };
+>
+> -                               regulator-2p5@20c8130 {
+> -                                       reg = <0x20c8130>;
+> +                               regulator-2p5 {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vdd2p5";
+>                                         regulator-min-microvolt = <2100000>;
+> @@ -575,8 +570,7 @@
+>                                         anatop-enable-bit = <0>;
+>                                 };
+>
+> -                               reg_arm: regulator-vddcore@20c8140 {
+> -                                       reg = <0x20c8140>;
+> +                               reg_arm: regulator-vddcore {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vddarm";
+>                                         regulator-min-microvolt = <725000>;
+> @@ -593,8 +587,7 @@
+>                                         anatop-max-voltage = <1450000>;
+>                                 };
+>
+> -                               reg_pu: regulator-vddpu@20c8140 {
+> -                                       reg = <0x20c8140>;
+> +                               reg_pu: regulator-vddpu {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vddpu";
+>                                         regulator-min-microvolt = <725000>;
+> @@ -611,8 +604,7 @@
+>                                         anatop-max-voltage = <1450000>;
+>                                 };
+>
+> -                               reg_soc: regulator-vddsoc@20c8140 {
+> -                                       reg = <0x20c8140>;
+> +                               reg_soc: regulator-vddsoc {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vddsoc";
+>                                         regulator-min-microvolt = <725000>;
+> diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+> index 7e463d2..4a97513 100644
+> --- a/arch/arm/boot/dts/imx6sx.dtsi
+> +++ b/arch/arm/boot/dts/imx6sx.dtsi
+> @@ -591,11 +591,8 @@
+>                                 interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
+>                                              <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
+>                                              <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
+> -                               #address-cells = <1>;
+> -                               #size-cells = <0>;
+>
+> -                               regulator-1p1@20c8110 {
+> -                                       reg = <0x20c8110>;
+> +                               regulator-1p1 {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vdd1p1";
+>                                         regulator-min-microvolt = <800000>;
+> @@ -610,8 +607,7 @@
+>                                         anatop-enable-bit = <0>;
+>                                 };
+>
+> -                               regulator-3p0@20c8120 {
+> -                                       reg = <0x20c8120>;
+> +                               regulator-3p0 {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vdd3p0";
+>                                         regulator-min-microvolt = <2800000>;
+> @@ -626,8 +622,7 @@
+>                                         anatop-enable-bit = <0>;
+>                                 };
+>
+> -                               regulator-2p5@20c8130 {
+> -                                       reg = <0x20c8130>;
+> +                               regulator-2p5 {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vdd2p5";
+>                                         regulator-min-microvolt = <2100000>;
+> @@ -642,8 +637,7 @@
+>                                         anatop-enable-bit = <0>;
+>                                 };
+>
+> -                               reg_arm: regulator-vddcore@20c8140 {
+> -                                       reg = <0x20c8140>;
+> +                               reg_arm: regulator-vddcore {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vddarm";
+>                                         regulator-min-microvolt = <725000>;
+> @@ -660,8 +654,7 @@
+>                                         anatop-max-voltage = <1450000>;
+>                                 };
+>
+> -                               reg_pcie: regulator-vddpcie@20c8140 {
+> -                                       reg = <0x20c8140>;
+> +                               reg_pcie: regulator-vddpcie {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vddpcie";
+>                                         regulator-min-microvolt = <725000>;
+> @@ -677,8 +670,7 @@
+>                                         anatop-max-voltage = <1450000>;
+>                                 };
+>
+> -                               reg_soc: regulator-vddsoc@20c8140 {
+> -                                       reg = <0x20c8140>;
+> +                               reg_soc: regulator-vddsoc {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vddsoc";
+>                                         regulator-min-microvolt = <725000>;
+> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+> index 2b854d1..1818b6c 100644
+> --- a/arch/arm/boot/dts/imx6ul.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul.dtsi
+> @@ -551,11 +551,8 @@
+>                                 interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
+>                                              <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
+>                                              <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
+> -                               #address-cells = <1>;
+> -                               #size-cells = <0>;
+>
+> -                               reg_3p0: regulator-3p0@20c8110 {
+> -                                       reg = <0x20c8110>;
+> +                               reg_3p0: regulator-3p0 {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vdd3p0";
+>                                         regulator-min-microvolt = <2625000>;
+> @@ -569,8 +566,7 @@
+>                                         anatop-enable-bit = <0>;
+>                                 };
+>
+> -                               reg_arm: regulator-vddcore@20c8140 {
+> -                                       reg = <0x20c8140>;
+> +                               reg_arm: regulator-vddcore {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "cpu";
+>                                         regulator-min-microvolt = <725000>;
+> @@ -587,8 +583,7 @@
+>                                         anatop-max-voltage = <1450000>;
+>                                 };
+>
+> -                               reg_soc: regulator-vddsoc@20c8140 {
+> -                                       reg = <0x20c8140>;
+> +                               reg_soc: regulator-vddsoc {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vddsoc";
+>                                         regulator-min-microvolt = <725000>;
+> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+> index b416d2b..99f92ec 100644
+> --- a/arch/arm/boot/dts/imx7s.dtsi
+> +++ b/arch/arm/boot/dts/imx7s.dtsi
+> @@ -557,11 +557,8 @@
+>                                 reg = <0x30360000 0x10000>;
+>                                 interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
+>                                         <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
+> -                               #address-cells = <1>;
+> -                               #size-cells = <0>;
+>
+> -                               reg_1p0d: regulator-vdd1p0d@30360210 {
+> -                                       reg = <0x30360210>;
+> +                               reg_1p0d: regulator-vdd1p0d {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vdd1p0d";
+>                                         regulator-min-microvolt = <800000>;
+> @@ -575,8 +572,7 @@
+>                                         anatop-enable-bit = <0>;
+>                                 };
+>
+> -                               reg_1p2: regulator-vdd1p2@30360220 {
+> -                                       reg = <0x30360220>;
+> +                               reg_1p2: regulator-vdd1p2 {
+>                                         compatible = "fsl,anatop-regulator";
+>                                         regulator-name = "vdd1p2";
+>                                         regulator-min-microvolt = <1100000>;
+> --
+> 2.7.4
+>
