@@ -1,31 +1,85 @@
-Return-Path: <SRS0=lpWp=ID=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr20047.outbound.protection.outlook.com ([40.107.2.47]:29184
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+Return-Path: <SRS0=ePA5=IB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-ve1eur01on0066.outbound.protection.outlook.com ([104.47.1.66]:51520
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751510AbeEPHVj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 16 May 2018 03:21:39 -0400
-From: Peter Chen <peter.chen@nxp.com>
+        id S1752590AbeENJGV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 14 May 2018 05:06:21 -0400
+From: Jun Li <jun.li@nxp.com>
 Subject: RE: [PATCH v5 01/14] dt-bindings: connector: add properties for typec
-Date: Wed, 16 May 2018 07:21:31 +0000
-Message-ID: <HE1PR04MB14507D63BCDD9DCA37545C098B920@HE1PR04MB1450.eurprd04.prod.outlook.com>
+Date: Mon, 14 May 2018 09:06:17 +0000
+Message-ID: <VI1PR0402MB3917E0B90009EDABB6B21382899C0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
 References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
  <1525307094-27402-2-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1525307094-27402-2-git-send-email-jun.li@nxp.com>
+ <deb2502c-4ffc-c7ef-ec6f-4fb5b7685bf6@gmail.com>
+In-Reply-To: <deb2502c-4ffc-c7ef-ec6f-4fb5b7685bf6@gmail.com>
 Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: Jun Li <jun.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>
-Cc: "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Mats Karrman <mats.dev.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>
+Cc: "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, Peter Chen <peter.chen@nxp.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
- =20
-> Add bingdings supported by current typec driver, so user can pass all tho=
-se
-> properties via dt.
->=20
-
-%s/bingdings/bindings
-
-Peter
+SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWF0cyBLYXJybWFuIFtt
+YWlsdG86bWF0cy5kZXYubGlzdEBnbWFpbC5jb21dDQo+IFNlbnQ6IDIwMTjlubQ15pyIMTLml6Ug
+Mzo0OQ0KPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsg
+Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+IGhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRl
+bC5jb207IGxpbnV4QHJvZWNrLXVzLm5ldA0KPiBDYzogYS5oYWpkYUBzYW1zdW5nLmNvbTsgY3cw
+MC5jaG9pQHNhbXN1bmcuY29tOw0KPiBzaHVmYW5fbGVlQHJpY2h0ZWsuY29tOyBQZXRlciBDaGVu
+IDxwZXRlci5jaGVuQG54cC5jb20+Ow0KPiBnc29tbG9AZ21haWwuY29tOyBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZzsgbGludXgtdXNiQHZnZXIua2VybmVsLm9yZzsNCj4gZGwtbGludXgtaW14
+IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NSAwMS8xNF0gZHQt
+YmluZGluZ3M6IGNvbm5lY3RvcjogYWRkIHByb3BlcnRpZXMgZm9yIHR5cGVjDQo+IA0KPiBIaSBM
+aSBKdW4sDQo+IA0KPiBPbiAyMDE4LTA1LTAzIDAyOjI0LCBMaSBKdW4gd3JvdGU6DQo+IA0KPiA+
+IEFkZCBiaW5nZGluZ3Mgc3VwcG9ydGVkIGJ5IGN1cnJlbnQgdHlwZWMgZHJpdmVyLCBzbyB1c2Vy
+IGNhbiBwYXNzIGFsbA0KPiA+IHRob3NlIHByb3BlcnRpZXMgdmlhIGR0Lg0KPiA+DQo+ID4gU2ln
+bmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgIC4uLi9i
+aW5kaW5ncy9jb25uZWN0b3IvdXNiLWNvbm5lY3Rvci50eHQgICAgICAgICAgIHwgNDQNCj4gKysr
+KysrKysrKysrKysrDQo+ID4gICBpbmNsdWRlL2R0LWJpbmRpbmdzL3VzYi9wZC5oICAgICAgICAg
+ICAgICAgICAgICAgICB8IDYyDQo+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgIDIgZmls
+ZXMgY2hhbmdlZCwgMTA2IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQNCj4gPiBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jb25uZWN0b3IvdXNiLWNvbm5lY3Rv
+ci50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jb25uZWN0b3Iv
+dXNiLWNvbm5lY3Rvci50eHQNCj4gPiBpbmRleCBlMTQ2M2YxLi40YjE5ZGU2ZDAgMTAwNjQ0DQo+
+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nvbm5lY3Rvci91c2It
+Y29ubmVjdG9yLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9jb25uZWN0b3IvdXNiLWNvbm5lY3Rvci50eHQNCj4gPiBAQCAtMTUsNiArMTUsMzMgQEAgT3B0
+aW9uYWwgcHJvcGVydGllczoNCj4gPiAgIC0gdHlwZTogc2l6ZSBvZiB0aGUgY29ubmVjdG9yLCBz
+aG91bGQgYmUgc3BlY2lmaWVkIGluIGNhc2Ugb2YgVVNCLUEsIFVTQi1CDQo+ID4gICAgIG5vbi1m
+dWxsc2l6ZSBjb25uZWN0b3JzOiAibWluaSIsICJtaWNybyIuDQo+ID4NCj4gPiArT3B0aW9uYWwg
+cHJvcGVydGllcyBmb3IgdXNiLWMtY29ubmVjdG9yOg0KPiA+ICstIHBvd2VyLXJvbGU6IHNob3Vs
+ZCBiZSBvbmUgb2YgInNvdXJjZSIsICJzaW5rIiBvciAiZHVhbCIoRFJQKSBpZg0KPiA+ICt0eXBl
+Yw0KPiA+ICsgIGNvbm5lY3RvciBoYXMgcG93ZXIgc3VwcG9ydC4NCj4gPiArLSB0cnktcG93ZXIt
+cm9sZTogcHJlZmVycmVkIHBvd2VyIHJvbGUgaWYgImR1YWwiKERSUCkgY2FuIHN1cHBvcnQNCj4g
+PiArVHJ5LlNOSw0KPiA+ICsgIG9yIFRyeS5TUkMsIHNob3VsZCBiZSAic2luayIgZm9yIFRyeS5T
+Tksgb3IgInNvdXJjZSIgZm9yIFRyeS5TUkMuDQo+ID4gKy0gZGF0YS1yb2xlOiBzaG91bGQgYmUg
+b25lIG9mICJob3N0IiwgImRldmljZSIsICJkdWFsIihEUkQpIGlmIHR5cGVjDQo+ID4gKyAgY29u
+bmVjdG9yIHN1cHBvcnRzIFVTQiBkYXRhLg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGll
+cyBmb3IgdXNiLWMtY29ubmVjdG9yIHdpdGggcG93ZXIgZGVsaXZlcnkgc3VwcG9ydDoNCj4gPiAr
+LSBzb3VyY2UtcGRvczogQW4gYXJyYXkgb2YgdTMyIHdpdGggZWFjaCBlbnRyeSBwcm92aWRpbmcg
+c3VwcG9ydGVkDQo+ID4gK3Bvd2VyDQo+ID4gKyAgc291cmNlIGRhdGEgb2JqZWN0KFBETyksIHRo
+ZSBkZXRhaWxlZCBiaXQgZGVmaW5pdGlvbnMgb2YgUERPIGNhbiBiZQ0KPiA+ICtmb3VuZA0KPiA+
+ICsgIGluICJVbml2ZXJzYWwgU2VyaWFsIEJ1cyBQb3dlciBEZWxpdmVyeSBTcGVjaWZpY2F0aW9u
+IiBjaGFwdGVyDQo+ID4gKzYuNC4xLjINCj4gPiArICBTb3VyY2VfQ2FwYWJpbGl0aWVzIE1lc3Nh
+Z2UsIHRoZSBvcmRlciBvZiBlYWNoIGVudHJ5KFBETykgc2hvdWxkDQo+ID4gK2ZvbGxvdw0KPiA+
+ICsgIHRoZSBQRCBzcGVjIGNoYXB0ZXIgNi40LjEuIFJlcXVpcmVkIGZvciBwb3dlciBzb3VyY2Ug
+YW5kIHBvd2VyIGR1YWwNCj4gcm9sZS4NCj4gPiArICBVc2VyIGNhbiBzcGVjaWZ5IHRoZSBzb3Vy
+Y2UgUERPIGFycmF5IHZpYSBQRE9fRklYRUQvQkFUVC9WQVIoKQ0KPiA+ICtkZWZpbmVkIGluDQo+
+ID4gKyAgZHQtYmluZGluZ3MvdXNiL3BkLmguDQo+ID4gKy0gc2luay1wZG9zOiBBbiBhcnJheSBv
+ZiB1MzIgd2l0aCBlYWNoIGVudHJ5IHByb3ZpZGluZyBzdXBwb3J0ZWQNCj4gPiArcG93ZXINCj4g
+PiArICBzaW5rIGRhdGEgb2JqZWN0KFBETyksIHRoZSBkZXRhaWxlZCBiaXQgZGVmaW5pdGlvbnMg
+b2YgUERPIGNhbiBiZQ0KPiA+ICtmb3VuZA0KPiA+ICsgIGluICJVbml2ZXJzYWwgU2VyaWFsIEJ1
+cyBQb3dlciBEZWxpdmVyeSBTcGVjaWZpY2F0aW9uIiBjaGFwdGVyDQo+ID4gKzYuNC4xLjMNCj4g
+PiArICBTaW5rIENhcGFiaWxpdGllcyBNZXNzYWdlLCB0aGUgb3JkZXIgb2YgZWFjaCBlbnRyeShQ
+RE8pIHNob3VsZA0KPiA+ICtmb2xsb3cNCj4gPiArICB0aGUgUEQgc3BlYyBjaGFwdGVyIDYuNC4x
+LiBSZXF1aXJlZCBmb3IgcG93ZXIgc2luayBhbmQgcG93ZXIgZHVhbCByb2xlLg0KPiA+ICsgIFVz
+ZXIgY2FuIHNwZWNpZnkgdGhlIHNpbmsgUERPIGFycmF5IHZpYSBQRE9fRklYRUQvQkFUVC9WQVIo
+KQ0KPiA+ICtkZWZpbmVkIGluDQo+ID4gKyAgZHQtYmluZGluZ3MvdXNiL3BkLmguDQo+ID4gKy0g
+b3Atc2luay1taWNyb3dhdHQ6IFNpbmsgcmVxdWlyZWQgb3BlcmF0aW5nIHBvd2VyIGluIG1pY3Jv
+d2F0dCwgaWYNCj4gPiArc291cmNlDQo+ID4gKyAgY2FuJ3Qgb2ZmZXIgdGhlIHBvd2VyLCBDYXBh
+YmlsaXR5IE1pc21hdGNoIGlzIHNldCwgcmVxdWlyZWQgZm9yDQo+ID4gK3Bvd2VyDQo+IA0KPiAu
+Li5zZXQuIFJlcXVpcmVkLi4uDQo+IChuZXcgc2VudGVuY2UsIG90aGVyd2lzZSBpdCdzIHVuY2xl
+YXIgd2hhdCBpcyByZXF1aXJlZDsgb3Atc2luay1taWNyb3dhdHQgb3INCj4gQ2FwYWJpbGl0eSBN
+aXNtYXRjaCBzZXQpDQoNCk9LLCB3aWxsIHVwZGF0ZSBhcyB5b3Ugc3VnZ2VzdGVkLg0KDQpUaGFu
+a3MNCkxpIEp1bg0K
