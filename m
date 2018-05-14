@@ -1,129 +1,165 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 6/7] clk: meson: axg: document bindings for the audio
- clock controller
-Date: Mon, 14 May 2018 16:16:45 +0200
-Message-ID: <1526307405.2897.29.camel@baylibre.com>
-References: <20180425163304.10852-1-jbrunet@baylibre.com>
-         <20180425163304.10852-7-jbrunet@baylibre.com>
-         <20180501143715.GA20023@rob-hp-laptop>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH 2/2] media: i2c: mt9t112: Add device tree support
+Date: Mon, 14 May 2018 16:30:44 +0200
+Message-ID: <20180514143044.GK5956@w540>
+References: <1524654014-17852-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1524654014-17852-3-git-send-email-jacopo+renesas@jmondi.org>
+ <20180507093219.hrhaliadccaytenj@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="TdMwOTenGjBWB1uY"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501143715.GA20023@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20180507093219.hrhaliadccaytenj@valkosipuli.retiisi.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, hans.verkuil@cisco.com, mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-05-01 at 09:37 -0500, Rob Herring wrote:
-> On Wed, Apr 25, 2018 at 06:33:03PM +0200, Jerome Brunet wrote:
-> > Add documentation for the device tree bindings of the audio clock
-> > controller of the A113 based SoCs
-> > 
-> 
-> The preferred subject prefix for bindings is 'dt/bindings: clock: ...'
 
-Noted, I suppose meant 'dt-bindings: clocks: ..." which seems to used half of
-the times
-The rest use 'clk: {platform}: ...'
+--TdMwOTenGjBWB1uY
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-> 
-> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> > ---
-> >  .../bindings/clock/amlogic,axg-audio-clkc.txt      | 56 ++++++++++++++++++++++
-> >  1 file changed, 56 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
-> > new file mode 100644
-> > index 000000000000..1b989ceda567
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
-> > @@ -0,0 +1,56 @@
-> > +* Amlogic AXG Audio Clock Controllers
-> > +
-> > +The Amlogic AXG audio clock controller generates and supplies clock to the
-> > +other elements of the audio subsystem, such as fifos, i2s, spdif and pdm
-> > +devices.
-> > +
-> > +Required Properties:
-> > +
-> > +- compatible	: should be "amlogic,axg-audio-clkc" for the A113X and A113D
-> > +- reg		: physical base address of the clock controller and length of
-> > +		  memory mapped region.
-> > +- clocks	: a list of phandle + clock-specifier pairs for the clocks listed
-> > +		  in clock-names.
-> > +- clock-names	: must contain the following:
-> > +		  * "pclk" - Main peripheral bus clock
-> > +		  may contain the following:
-> > +		  * "mst_in[0-7]" - 8 input plls to generate clock signals
-> 
-> Unless the sources don't exist, then you should always have the clocks. 
-> It should not be based on whether you are using them or not.
+Hi Sakari,
 
-This is not really the point. The parent controller may or may not provide some
-of the PLL. This was the case during the development of the controller when the
-HIFI pll was not available simply because there was no driver for it.
+On Mon, May 07, 2018 at 12:32:19PM +0300, Sakari Ailus wrote:
+> Hi Jacopo,
+>
+> On Wed, Apr 25, 2018 at 01:00:14PM +0200, Jacopo Mondi wrote:
 
-Whatever the reason for an input clock to be missing, this clock controller may
-continue to serve its purpose even if some input plls are not provided/available
-which is why these are not "mandatory"
+[snip]
 
-> 
-> > +		  * "slv_sclk[0-9]" - 10 slave bit clocks provided by external
-> > +				      components.
-> > +		  * "slv_lrclk[0-9]" - 10 slave sample clocks provided by external
-> > +				       components.
-> 
-> I'm guessing these may come from pins that aren't connected, so being 
-> optional is fine.
-> 
-> > +- reset		: phandle of the internal reset line
-> 
-> resets
-> 
-> > +- #clock-cells	: should be 1.
+> >  static int mt9t112_probe(struct i2c_client *client,
+> >  			 const struct i2c_device_id *did)
+> >  {
+> >  	struct mt9t112_priv *priv;
+> >  	int ret;
+> >
+> > -	if (!client->dev.platform_data) {
+> > +	if (!client->dev.of_node && !client->dev.platform_data) {
+> >  		dev_err(&client->dev, "mt9t112: missing platform data!\n");
+> >  		return -EINVAL;
+> >  	}
+> > @@ -1081,23 +1118,39 @@ static int mt9t112_probe(struct i2c_client *client,
+> >  	if (!priv)
+> >  		return -ENOMEM;
+> >
+> > -	priv->info = client->dev.platform_data;
+> >  	priv->init_done = false;
+> > -
+> > -	v4l2_i2c_subdev_init(&priv->subdev, client, &mt9t112_subdev_ops);
+> > -
+> > -	priv->clk = devm_clk_get(&client->dev, "extclk");
+> > -	if (PTR_ERR(priv->clk) == -ENOENT) {
+> > +	priv->dev = &client->dev;
 > > +
-> > +Each clock is assigned an identifier and client nodes can use this identifier
-> > +to specify the clock which they consume. All available clocks are defined as
-> > +preprocessor macros in the dt-bindings/clock/axg-audio-clkc.h header and can be
-> > +used in device tree sources.
+> > +	if (client->dev.platform_data) {
+> > +		priv->info = client->dev.platform_data;
 > > +
-> > +Example:
+> > +		priv->clk = devm_clk_get(&client->dev, "extclk");
+>
+> extclk needs to be documented in DT binding documentation.
+>
+> > +		if (PTR_ERR(priv->clk) == -ENOENT) {
+> > +			priv->clk = NULL;
+> > +		} else if (IS_ERR(priv->clk)) {
+> > +			dev_err(&client->dev,
+> > +				"Unable to get clock \"extclk\"\n");
+> > +			return PTR_ERR(priv->clk);
+> > +		}
+> > +	} else {
+> > +		/*
+> > +		 * External clock frequencies != 24MHz are only supported
+> > +		 * for non-OF systems.
+> > +		 */
+>
+> Shouldn't you actually set the frequency? Or perhaps even better to check
+> it, and use assigned-clocks and assigned-clock-rates properties?
+>
+
+I might be confused, but my intention was to use an external clock
+reference, with a configurable frequency only in the platform data use
+case. As you can see in this 'else' branch, in OF case, the priv->clk
+field is null, and all the PLL and clock computations are performed
+assuming a 24MHz input clock.
+
+In my opinion, as the driver when running on OF systems does not
+get any reference to 'extclk' clock, it should not be documented in
+bindings. Do you agree?
+
+Thanks
+   j
+
+> >  		priv->clk = NULL;
+> > -	} else if (IS_ERR(priv->clk)) {
+> > -		dev_err(&client->dev, "Unable to get clock \"extclk\"\n");
+> > -		return PTR_ERR(priv->clk);
+> > +		priv->info = &mt9t112_default_pdata_24MHz;
 > > +
-> > +clkc_audio: clock-controller {
-> 
-> Needs a unit address.
-> 
-> > +	compatible = "amlogic,axg-audio-clkc";
-> > +	reg = <0x0 0x0 0x0 0xb4>;
-> > +	#clock-cells = <1>;
+> > +		ret = mt9t112_parse_dt(priv);
+> > +		if (ret)
+> > +			return ret;
+> >  	}
+> >
+> > -	priv->standby_gpio = devm_gpiod_get_optional(&client->dev, "standby",
+> > +	v4l2_i2c_subdev_init(&priv->subdev, client, &mt9t112_subdev_ops);
 > > +
-> > +	clocks = <&clkc CLKID_AUDIO>,
-> > +		 <&clkc CLKID_MPLL0>,
-> > +		 <&clkc CLKID_MPLL1>,
-> > +		 <&clkc CLKID_MPLL2>,
-> > +		 <&clkc CLKID_MPLL3>,
-> > +		 <&clkc CLKID_HIFI_PLL>,
-> > +		 <&clkc CLKID_FCLK_DIV3>,
-> > +		 <&clkc CLKID_FCLK_DIV4>,
-> > +		 <&clkc CLKID_GP0_PLL>;
-> > +	clock-names = "pclk",
-> > +		      "mst_in0",
-> > +		      "mst_in1",
-> > +		      "mst_in2",
-> > +		      "mst_in3",
-> > +		      "mst_in4",
-> > +		      "mst_in5",
-> > +		      "mst_in6",
-> > +		      "mst_in7";
-> > +	resets = <&reset RESET_AUDIO>;
+> > +	priv->standby_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
+> >  						     GPIOD_OUT_HIGH);
+> >  	if (IS_ERR(priv->standby_gpio)) {
+> > -		dev_err(&client->dev, "Unable to get gpio \"standby\"\n");
+> > +		dev_err(&client->dev, "Unable to get gpio \"powerdown\"\n");
+> >  		return PTR_ERR(priv->standby_gpio);
+> >  	}
+> >
+> > @@ -1124,9 +1177,19 @@ static const struct i2c_device_id mt9t112_id[] = {
+> >  };
+> >  MODULE_DEVICE_TABLE(i2c, mt9t112_id);
+> >
+> > +#if IS_ENABLED(CONFIG_OF)
+> > +static const struct of_device_id mt9t112_of_match[] = {
+> > +	{ .compatible = "micron,mt9t111", },
+> > +	{ .compatible = "micron,mt9t112", },
+> > +	{ /* sentinel */ },
 > > +};
-> > -- 
-> > 2.14.3
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +MODULE_DEVICE_TABLE(of, mt9t112_of_match);
+> > +#endif
+> > +
+> >  static struct i2c_driver mt9t112_i2c_driver = {
+> >  	.driver = {
+> >  		.name = "mt9t112",
+> > +		.of_match_table = of_match_ptr(mt9t112_of_match),
+>
+> No need to use of_match_ptr().
+>
+> >  	},
+> >  	.probe    = mt9t112_probe,
+> >  	.remove   = mt9t112_remove,
+>
+> --
+> Sakari Ailus
+> e-mail: sakari.ailus@iki.fi
+
+--TdMwOTenGjBWB1uY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJa+Z2UAAoJEHI0Bo8WoVY8/Z4P/35XLRg9kU6iyZjc0Jt/Dwyg
+ynWBgR4jJRbb8ZG8V+XugpgDxRwbntMwnqRdGEwBY53lp+27+l6HqGJDnHJtEiSV
+4j1r10H5KOiqE3OmHCfH5dnuW6wFBbzjPmkRluOuiC6T4XgiDN54Mow70dvecpiw
+AP72j+FZraF1940RZn1i480VzztsStWx5I4qTgORXHKqqvt0ynk5+Dt8Q7Ty0vn6
+gys1uRKQ4/6c+lzYIrl4hkkfIZs7bvOZ1xUGwe+O7GvqaZqNxb8UlpWJm4930J0t
+TQQHVhZ0YpAXm4oBTc/x0EfSZNQuy+rSnpn+agIdPL6xUcEDjQ2AjBeVGf/Q3P9U
+vwLwYsrG0lKw9SaCKCoC6GGEiudheH2LpnxrZkDLiYjeSNy4mAYGwxVjdGVl6++J
+URBliqSxJ4MImbj9dPtQvYI62/KTVSUrtcYHagahWmuioqjn9WkkTmhQ5W7PJEai
+yUb0v+Mc1K16v0/aepu2It7Q2M/YCFDHZN30+ZIp5Tu3Gxgt/Ax15b2+6xI9BRnj
+hPELTaOqZaLquiM+dlDTvTvQOeowsj0W8ABd6YTxkO511K8bKR2vp/bB2k4shfNt
+U2FIZRTjNTvPH4npAlflHVrPKsV+jsQCINHAx6doIopcxn19CkyDAw7uR0t22sXX
+qvVEnJ5+FsVJa0So1Xgl
+=dxbg
+-----END PGP SIGNATURE-----
+
+--TdMwOTenGjBWB1uY--
