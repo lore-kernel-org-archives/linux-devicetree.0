@@ -1,105 +1,48 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Allwinner A64: Issue on external rtc clock to wifi chip
-Date: Mon, 14 May 2018 10:27:45 +0200
-Message-ID: <20180514082744.ydmfg5mzsbol5onu@flea>
-References: <CAMty3ZCNyuEwmLGdDZLM_9qKJ2NsT33rodug7ZpKAE-OHymVEg@mail.gmail.com>
- <20180514075727.uxggyhmbahvhestx@flea>
- <CAMty3ZDew=+zytKUx5+nX27CjCe0UfJpyYOy2s07NoJvbe57mQ@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 09/21] arm64: dts: allwinner: a64: Add HDMI support
+Date: Mon, 14 May 2018 14:03:36 +0530
+Message-ID: <CAMty3ZBheurXewQ8R53G_0gNLgv1jQkZbjAbaN30JQ6_ZVn7Eg@mail.gmail.com>
+References: <20180430114058.5061-1-jagan@amarulasolutions.com>
+ <20180430114058.5061-10-jagan@amarulasolutions.com> <20180502113413.vv2r3ubfoh7gm3ms@flea>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ko2m32o4savwftrl"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBAUR4XLQKGQEP4RQGNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBYMT4XLQKGQEPA5PPXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZDew=+zytKUx5+nX27CjCe0UfJpyYOy2s07NoJvbe57mQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20180502113413.vv2r3ubfoh7gm3ms@flea>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, May 2, 2018 at 5:04 PM, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi,
+>
+> On Mon, Apr 30, 2018 at 05:10:46PM +0530, Jagan Teki wrote:
+>> +             hdmi_phy: hdmi-phy@1ef0000 {
+>> +                     compatible = "allwinner,sun50i-a64-hdmi-phy",
+>> +                                  "allwinner,sun8i-h3-hdmi-phy";
+>> +                     reg = <0x01ef0000 0x10000>;
+>> +                     clocks = <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI_DDC>,
+>> +                              <&ccu CLK_PLL_VIDEO1>;
+>
+> You were discussing that the PLL0 could also be used to clock the PHY,
+> has that been figured out?
 
---ko2m32o4savwftrl
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+This is what I understand from Fig: 3-3. Module Clock Diagram, both
+tcon0 and tcon1 are using HDMI. I'm thinking based on the tcon
+configuration we need use proper PLL or some logic to get common PLL
+don't know yet. Since this series adding tcon1 I've attached PLL1.
 
-On Mon, May 14, 2018 at 01:34:56PM +0530, Jagan Teki wrote:
-> On Mon, May 14, 2018 at 1:27 PM, Maxime Ripard
-> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > Hi,
-> >
-> > On Mon, May 14, 2018 at 12:37:49PM +0530, Jagan Teki wrote:
-> >> Hi Maxime and All,
-> >>
-> >> We are trying to bring-up AP6330 Wifi chip for A64 board. We noticed
-> >> to have an external rtc clock has driven from wifi chip.
-> >>
-> >> So the devicetree is configured according to this as below.
-> >>
-> >> / {
-> >>         wifi_pwrseq: wifi-pwrseq {
-> >>                 compatible = "mmc-pwrseq-simple";
-> >>                 clocks = <&rtc 1>;
-> >>                 clock-names = "ext_clock";
-> >>                 reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
-> >>                 post-power-on-delay-ms = <400>;
-> >>         };
-> >> };
-> >>
-> >> &rtc {
-> >>         clock-output-names = "rtc-osc32k", "rtc-osc32k-out";
-> >>         clocks = <&osc32k>;
-> >>         #clock-cells = <1>;
-> >> };
-> >>
-> >> &mmc1 {
-> >>         pinctrl-names = "default";
-> >>         pinctrl-0 = <&mmc1_pins>;
-> >>         vmmc-supply = <&reg_dcdc1>;
-> >>         vqmmc-supply = <&reg_eldo1>;
-> >>         mmc-pwrseq = <&wifi_pwrseq>;
-> >>         bus-width = <4>;
-> >>         non-removable;
-> >>         status = "okay";
-> >>
-> >>         brcmf: wifi@1 {
-> >>                 reg = <1>;
-> >>                 compatible = "brcm,bcm4329-fmac";
-> >>                 interrupt-parent = <&r_pio>;
-> >>                 interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>;  /* WL-WAKE-AP: PL3 */
-> >>                 interrupt-names = "host-wake";
-> >>         };
-> >> };
-> >>
-> >> And observed rtc-osc32k-out clock is never enabled[1] and the value of
-> >> LOSC_OUT_GATING is 0x0 which eventually not enabling
-> >> LOSC_OUT_GATING_EN
-> >>
-> >> Pls. let us know if we miss anything here?
-> >>
-> >> [1] https://paste.ubuntu.com/p/X2By4q8kD2/
-> >
-> > Could you paste your config and the logs from a boot to?
-> 
-> .config
-> https://paste.ubuntu.com/p/w9w2KB7RFc/
-> 
-> dmesg
-> https://paste.ubuntu.com/p/mrZGk5bWRR/
-
-This is kind of weird. Have you tested with a 4.17 kernel? We have
-runtime_pm changes lined up in next, so that might be a regression
-there, even though we tested it with Quentin at some point.
-
-Maxime
+Jagan.
 
 -- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---ko2m32o4savwftrl--
+Jagan Teki
+Senior Linux Kernel Engineer | Amarula Solutions
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
