@@ -1,177 +1,216 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] drm/panel: Add RGB666 variant of
- Innolux AT070TN90
-Date: Mon, 14 May 2018 22:40:15 +0200
-Message-ID: <abeac1ee792b8f063001c4c280ca7f0167ac59be.camel@paulk.fr>
-References: <20180507220413.21990-1-contact@paulk.fr>
-	 <20180509071226.ivh4s3wtczg2u7zw@flea>
-	 <c8ab5f472881063b90abe9461933baf6ee325dcd.camel@paulk.fr>
-	 <20180511085938.wjmdsdjfvdxd4shk@flea>
-Reply-To: contact-W9ppeneeCTY@public.gmane.org
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v5 1/2] dt: bindings: lm3601x: Introduce the lm3601x
+ driver
+Date: Mon, 14 May 2018 22:48:21 +0200
+Message-ID: <ec33ac83-ff26-4b11-82a2-7ce700504a3c@gmail.com>
+References: <20180510174717.26540-1-dmurphy@ti.com>
+ <20180510185401.GB12846@amd> <80e7346f-e8cd-79d2-6d4e-d638c2be01eb@ti.com>
+ <dc3dfb5b-92a9-54bc-b93b-804e64bd8a66@ti.com>
+ <fd68c674-f842-5877-698a-3a74922cb384@gmail.com>
+ <10ab412f-7206-2a01-9876-2a8beeec2287@ti.com>
+ <2dd155f5-ce82-88b2-699e-897ef7d55fee@gmail.com>
+ <7d399662-9806-7bb2-e27f-de66557d043c@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-viS6L8A31GZMGGCmnqJq"
-Return-path: <linux-sunxi+bncBC75HK6WUAEBBOPI47LQKGQEYC2RZ4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180511085938.wjmdsdjfvdxd4shk@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7d399662-9806-7bb2-e27f-de66557d043c@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, afd@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Dan,
 
---=-viS6L8A31GZMGGCmnqJq
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 05/14/2018 10:07 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 05/11/2018 03:27 PM, Jacek Anaszewski wrote:
+>> Dan,
+>>
+>> On 05/11/2018 02:12 PM, Dan Murphy wrote:
+>>> Jacek
+>>>
+>>> Thanks for the review
+>>>
+>>> On 05/10/2018 03:17 PM, Jacek Anaszewski wrote:
+>>>> Hi Dan,
+>>>>
+>>>> On 05/10/2018 09:10 PM, Dan Murphy wrote:
+>>>>> On 05/10/2018 02:06 PM, Dan Murphy wrote:
+>>>>>> Pavel
+>>>>>>
+>>>>>> On 05/10/2018 01:54 PM, Pavel Machek wrote:
+>>>>>>> Hi!
+>>>>>>>
+>>>>>>>> Introduce the device tree bindings for the lm3601x
+>>>>>>>> family of LED torch, flash and IR drivers.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>>>>
+>>>>>>> Better, thanks.
+>>>>>>>> +++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+>>>>>>>> @@ -0,0 +1,50 @@
+>>>>>>>> +* Texas Instruments - lm3601x Single-LED Flash Driver
+>>>>>>>
+>>>>>>> Ok, so is it single-LED driver, or can it driver ir & white LEDs at
+>>>>>>> the same time?
+>>>>>>
+>>>>>> It is a single LED driver.  It can drive a Torch white LED or IR LED indefinitely or if the driver
+>>>>>> is programmed to strobe mode the driver will drive the configured LED for the flash timeout specified.
+>>>>>>
+>>>>>> Basically a flash and a flash light. IR or White LED.
+>>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>>> +Example:
+>>>>>>>> +led-controller@64 {
+>>>>>>>> +    compatible = "ti,lm36010";
+>>>>>>>> +    #address-cells = <1>;
+>>>>>>>> +    #size-cells = <0>;
+>>>>>>>> +    reg = <0x64>;
+>>>>>>>> +
+>>>>>>>> +    led@0 {
+>>>>>>>> +        reg = <0>;
+>>>>>>>> +        label = "white:torch";
+>>>>>>>> +        led-max-microamp = <10000>;
+>>>>>>>> +    };
+>>>>>>>> +
+>>>>>>>> +    led@1 {
+>>>>>>>> +        reg = <1>;
+>>>>>>>> +        label = "white:flash";
+>>>>>>>> +        flash-max-microamp = <10000>;
+>>>>>>>> +        flash-max-timeout-us = <800>;
+>>>>>>>> +    };
+>>>>>>>
+>>>>>>> Is this realistic config? I'd expect flash to use more power than
+>>>>>>> torch, and would expect longer timeout than 0.8msec.
+>>>>>>
+>>>>>> Timeout in the spreadsheet is ms I will update this example and code
+>>>>>> Current in the spreadsheet is mA I will update this example and code
+>>>>>>
+>>>>>>>
+>>>>>>> Also.. if this is physically one white LED, it should not be
+>>>>>>> spread over reg = <0> and reg = <1>...
+>>>>>>
+>>>>>> If the torch LED and strobe LED are the same LED how do I expose them both to the user.
+>>>>>> It is up to consumer to configure the required interfaces they want to expose to the filesystem.
+>>>>
+>>>> LED flash class interface is prepared for it.
+>>>> led_clasdev_flash_register() internally calls led_classdev_register(),
+>>>> so there is brightness file available for torch related operations.
+>>>
+>>> Yes the flash class may handle this and expose the brightness node but the HW has two different registers to set the
+>>> corresponding brightness so one set brightness node does not work.
+>>> There is no way to differentiate between the strobe brightness (register 4) and the torch brightness (register 3).
+>>
+>> Hmm? There is brightness file (with brightness_set{_blocking} op) from
+>> LED class and flash_brightness file (with flash_brightness_set op) from
+>> LED class flash.
+>>
+>> I've only now realized that you're not using flash_brightness_set op for
+>> the "strobe_node" in your driver. I assume that you overlooked it.
+>> Please don't introduce "strobe_brightness" naming convention - we
+>> already have "flash_brightness" for that.
+>>
+>>> When the enable register is written the driver will read the corresponding register and set
+>>> the current for the LED.
+>>>
+>>> This is why I separated out the strobe from the torch into 2 different LED nodes.
+>>>
+>>> I cannot seem to find the data sheet on line for the max77693 so I cannot verify that the device only has
+>>> a single brightness register for both torch and strobe.
+>>
+>> It wasn't openly available at least at the time when I had an access
+>> to it.
+>>
+>> But - please look at the functions max77693_set_torch_current() and
+>> max77693_set_flash_current(). The device has separate registers
+>> for torch and flash brightnesses.
+> 
+> 
+> I have looked at these functions and the parse dt function that dictates if there is 1 fled or 2 fled.
+> I am having trouble associating what these mean because the led-sources is being used to define how many LEDs.
+> 
+> In the common.txt it says
+> "- led-sources : List of device current outputs the LED is connected to. The
+> 		outputs are identified by the numbers that must be defined
+> 		in the LED device binding documentation."
+> 
+> I cannot find the max77693 dt documentation or even a dt file that defines what the led-sources could be defined as.
+> In addition, per the common.txt, the led sources should define the current outputs the LED is connected to.
 
-Hi,
+You can find more details in 
+Documentation/devicetree/bindings/mfd/max77693.txt.
 
-Le vendredi 11 mai 2018 =C3=A0 10:59 +0200, Maxime Ripard a =C3=A9crit :
-> On Wed, May 09, 2018 at 01:31:23PM +0200, Paul Kocialkowski wrote:
-> > On Wed, 2018-05-09 at 09:12 +0200, Maxime Ripard wrote:
-> > > On Tue, May 08, 2018 at 12:04:11AM +0200, Paul Kocialkowski wrote:
-> > > > This adds timings for the RGB666 variant of the Innolux AT070TN90 p=
-anel,
-> > > > as found on the Ainol AW1 tablet.
-> > > >=20
-> > > > The panel also supports RGB888 output. When RGB666 mode is used ins=
-tead,
-> > > > the two extra lanes per component are grounded.
-> > > >=20
-> > > > In the future, it might become necessary to introduce a dedicated
-> > > > device-tree property to specify the bus format to use instead of th=
-e
-> > > > default one for the panel. This will allow supporting different bus
-> > > > formats for the same panel modes.
-> > > >=20
-> > > > Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-> > > > ---
-> > > >  drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++++++++++++=
-++
-> > > >  1 file changed, 26 insertions(+)
-> > > >=20
-> > > > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm=
-/panel/panel-simple.c
-> > > > index cbf1ab404ee7..32e30d5a8f08 100644
-> > > > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > > > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > > > @@ -1063,6 +1063,29 @@ static const struct panel_desc innolux_at043=
-tn24 =3D {
-> > > >  	.bus_flags =3D DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDG=
-E,
-> > > >  };
-> > > > =20
-> > > > +static const struct drm_display_mode innolux_at070tn90_mode =3D {
-> > > > +	.clock =3D 40000,
-> > > > +	.hdisplay =3D 800,
-> > > > +	.hsync_start =3D 800 + 112,
-> > > > +	.hsync_end =3D 800 + 112 + 1,
-> > > > +	.htotal =3D 800 + 112 + 1 + 87,
-> > > > +	.vdisplay =3D 480,
-> > > > +	.vsync_start =3D 480 + 141,
-> > > > +	.vsync_end =3D 480 + 141 + 1,
-> > > > +	.vtotal =3D 480 + 141 + 1 + 38,
-> > > > +	.vrefresh =3D 60,
-> > > > +};
-> > > > +
-> > > > +static const struct panel_desc innolux_at070tn90 =3D {
-> > > > +	.modes =3D &innolux_at070tn90_mode,
-> > > > +	.num_modes =3D 1,
-> > > > +	.size =3D {
-> > > > +		.width =3D 154,
-> > > > +		.height =3D 86,
-> > > > +	},
-> > > > +	.bus_format =3D MEDIA_BUS_FMT_RGB666_1X18,
-> > > > +};
-> > > > +
-> > >=20
-> > > I'm not really convinced this is the right approach. You said it
-> > > yourself, the panel is using a 24-bits interface, and you just happen
-> > > to have a tablet that routed it using a 18-bits interface instead.
-> > >=20
-> > > That doesn't belong in the driver, especially associated to the
-> > > compatible, but where the routing is described: in the device
-> > > tree. And given that the panel interface is a 24 bits panel, if we
-> > > were to have a default, we should have this one, and not the one
-> > > fitting your use case.
-> >=20
-> > I fully agree, this is why I suggested introducing a dedicated dt
-> > property for selecting the bus format (in the commit message). I still
-> > proposed this patch as a temporary solution, but I'm definitely willing
-> > to craft a proper solution as well.
-> >=20
-> > Here is an initial proposition:
-> > 1. Making bus_format an array in struct panel_desc and listing all the
-> > relevant bus formats that the panel can support there;
->=20
-> I'm not sure this is needed, the input format is always the same in
-> your case, the panel will always take a 24 bits RGB value. What you
-> want to change is the encoder output format (and I guess you want that
-> to be meaningful to enable or not the dithering).
+Generally the led-sources property was introduced to solve this
+particular case when there are two IOUTS that can have connected
+two LEDs or a single LED which allows to feed it with greater current.
 
-Isn't the panel format supposed to match what the encoder's output
-should be aiming for? In my case, that would be RGB666, so the idea
-would be specifying both MEDIA_BUS_FMT_RGB666_1X18 and
-MEDIA_BUS_FMT_RGB888_1X24 in a list of supported bus formats for the
-panel. This way, both my setup and RGB888 setups can be supported.
+> 
+> Is one to assume that it is referring to the physical current pin connection or the devices internal current routing?
+> 
+> When I first referenced this driver as template driver it was misleading to say fled1 and fled2 as I took it to mean, and I still do, that the
+> driver supports 2 LED connections and not a single output pin with different internal current routing.
+> 
+> Without the data sheet or the dt documentation it makes understanding a little difficult.
 
-> > 2. Introducing an optional "bus-format" dt property that indicates whic=
-h
-> > bus format to use, and using the first index of the bus formats array i=
-f
-> > the property is not present;
->=20
-> I guess the width would be enough, and that way we can take the
-> bus-width format that is already defined (but used in the v4l2
-> framework, not in DRM yet).
+There are more straightforward LED flash class drivers, e.g. 
+drivers/leds/leds-aat1290, you can refer to.
 
-Well, we already have bus-format defines on the DRM side and it feels
-like mapping these directly in device-tree would be more useful as a
-description of the hardware than just having the bus width.
+> I will fix it up how ever you would like it to be but I am thinking we need to fix up the max77693 as well so we can have 2 reference
+> drivers.  
 
-Cheers,
+There is also drivers/leds/leds-as3645a.c and one greybus driver.
+So we have in fact four LED flash class drivers in the tree :-)
 
-Paul
+> It is very difficult to derive the driver without a public version of the data sheet.
 
---=20
-Developer of free digital technology and hardware support.
+I agree, but mfd documentation I pointed should be enough to
+increase your comprehension of the subject, I hope. If not, then
+we can extend it basing on your remarks and my memory.
 
-Website: https://www.paulk.fr/
-Coding blog: https://code.paulk.fr/
-Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+>>>>>> Maybe they don't want the strobe feature and just want LED on/off and switch between IR and White.
+>>>>>>
+>>>>>> The IR is driven via a different output pin.
+>>>>>
+>>>>> Correction.  There is only one LED drive pin.  The mode selected determines how the device will drive the
+>>>>> LED.  So you may have one device to drive a Torch and another device to drive the LED.
+>>>>
+>>>> But only one type of LED can be soldered on the board at a time, right?
+>>>> If yes, then this is clearly a DT related configuration, and only
+>>>> one child DT node should be defined for given board.
+>>>
+>>> But see above.  There is not a clean way to expose the torch/ir and strobe separately.
+>>>
+>>> Dan
+>>>
+>>>
+>>>>
+>>>>> Strobe is available in either case but not always required if strobe is not desired by the customer hence
+>>>>> why I have a separate DT node for it.
+>>>>>
+>>>>> Dan
+>>>>>
+>>>>>>
+>>>>>> Dan
+>>>>>>
+>>>>>>>
+>>>>>>> Best regards,
+>>>>>>>                                       Pavel
+>>>>>>>
+>>>>>>
+>>>>>>
+>>>>>
+>>>>>
+>>>>
+>>>
+>>>
+>>
+> 
+> 
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---=-viS6L8A31GZMGGCmnqJq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlr59C8ACgkQhP3B6o/u
-lQw8rA/+O1nbscogyRVKWs96j8i+PkNZYCFqCTiffAvqmsTA5uIVMgEZnePoGEJn
-3QQ+aBMcsNku7CeQSx3pnfjD87is4g1f/XCMHrtS1Q3R4zb6W9hUS5KqLxSClPd2
-ehqOh9lgueEpYrvy2tvO2RE1J9kOIlvsexfdainyfXUrpeGLenTPMJ/81gtJIH2t
-zoo7FKlNvwrv4POEivip/CpvK3GuzZRZ3VVXNOcjWjjyjlL698RRCSagclwwxpI4
-k3EvEOS9CoV7lK69eXWqMTKAqn/WtTv8o4oJWxaGf83nafI0Sp8SQhDjmuuK/QLZ
-eNfELyCB2rn543qAEjUV2oyjMF9MMHts+B3hbMnBHdZbDl5e19pe8wvPQlX8cjXa
-ZZPcHgjVyzsVGyFUsodbPcMpZ8zCzzgHHVwlWtbg0NZWhqp6giSLwsWElYgY2uli
-aqvOjEYZKyl7YKT47Y0qGK2zVd7t0TmVFp6Szin/pYcFo8rh6KLJdQZeBO9k3t7n
-VWCyTmVMNHdL1eGTo+zTVtDFmX5UMEv4Muj54Ma3I5NkPYtc2criVExADk19bqRX
-O6JkEsDKxNNEDHm2F8UjYg8zVyOUYL220dtRTQvUxuU8Bwpe77gfCSoVfM0hm9Vi
-LnQEwRW28SmheCaxeR2yX1/NZFvOAXPypuvVlacS+HIVXIwi30A=
-=q9Ob
------END PGP SIGNATURE-----
-
---=-viS6L8A31GZMGGCmnqJq--
+-- 
+Best regards,
+Jacek Anaszewski
