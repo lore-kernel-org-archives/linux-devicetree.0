@@ -1,66 +1,48 @@
-From: David Lechner <david@lechnology.com>
-Subject: =?UTF-8?Q?Re:_[PATCH_v10_00/27]_ARM:_davinci:_convert_to_common_clo?=
- =?UTF-8?B?Y2sgZnJhbWV3b3Jr4oCL?=
-Date: Sun, 13 May 2018 20:50:04 -0500
-Message-ID: <ba7da252-20be-590b-74fb-0ca4a04beba7@lechnology.com>
-References: <20180509172606.29387-1-david@lechnology.com>
- <CAHCN7xJ6+vmyrTQGYH=pKz5GRf7rLT4otreNgu6TJi_3UAEX5w@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/3] dt-bindings: media: rcar-vin: Add R8A77995 support
+Date: Mon, 14 May 2018 05:31:42 +0300
+Message-ID: <69379240.MQavQczkOG@avalon>
+References: <1526032802-14376-1-git-send-email-jacopo+renesas@jmondi.org> <1526032802-14376-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHCN7xJ6+vmyrTQGYH=pKz5GRf7rLT4otreNgu6TJi_3UAEX5w@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1526032802-14376-2-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>
-Cc: linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: niklas.soderlund@ragnatech.se, horms@verge.net.au, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/13/2018 07:40 PM, Adam Ford wrote:
-> On Wed, May 9, 2018 at 12:25 PM, David Lechner <david@lechnology.com> wrote:
->> This series converts mach-davinci to use the common clock framework.
->>
->> The series works like this, the first 3 patches fix some issues with the clock
->> drivers that have already been accepted into the mainline kernel.
->>
->> Then, starting with "ARM: davinci: pass clock as parameter to
->> davinci_timer_init()", we get the mach code ready for the switch by adding the
->> code needed for the new clock drivers and adding #ifndef CONFIG_COMMON_CLK
->> around the legacy clocks so that we can switch easily between the old and the
->> new.
->>
->> "ARM: davinci: switch to common clock framework" actually flips the switch
->> to start using the new clock drivers. Then the next 8 patches remove all
->> of the old clock code.
->>
->> The final four patches add device tree clock support to the one SoC that
->> supports it.
->>
->> This series has been tested on TI OMAP-L138 LCDK (both device tree and legacy
->> board file).
->>
-> 
-> I am not sure if I did something wrong, but I attempted to build and I
-> wasn't able to boot the da850-evm.dtb your repo common-clk-v11,
-> however the legacy board file boot was OK.
-> 
-> make davinci_all_defconfig ARCH=arm
-> make zImage modules da850-evm.dtb ARCH=arm CROSS_COMPILE=arm-linux- -j8
-> 
-> 3140416 bytes read in 1464 ms (2 MiB/s)
-> 20353 bytes read in 15 ms (1.3 MiB/s)
-> ## Flattened Device Tree blob at c0600000
->     Booting using the fdt blob at 0xc0600000
->     Loading Device Tree to c7e57000, end c7e5ef80 ... OK
-> 
-> Starting kernel ...
-> 
-> Uncompressing Linux... done, booting the kernel.
-> 
-> (and hang)
-> 
-> If you have some suggestions, I am try them as I get time.
-> 
+Hi Jacopo,
 
-As with each revision of this series, I have included debugging tips
-in the cover letter, e.g. earlyprink and not disabling unused clocks.
+Thank you for the patch.
+
+On Friday, 11 May 2018 13:00:00 EEST Jacopo Mondi wrote:
+> Add compatible string for R-Car D3 R8A7795 to list of SoCs supported by
+> rcar-vin driver.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  Documentation/devicetree/bindings/media/rcar_vin.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> b/Documentation/devicetree/bindings/media/rcar_vin.txt index
+> a19517e1..5c6f2a7 100644
+> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> @@ -22,6 +22,7 @@ on Gen3 platforms to a CSI-2 receiver.
+>     - "renesas,vin-r8a7795" for the R8A7795 device
+>     - "renesas,vin-r8a7796" for the R8A7796 device
+>     - "renesas,vin-r8a77970" for the R8A77970 device
+> +   - "renesas,vin-r8a77995" for the R8A77995 device
+>     - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 or RZ/G1 compatible
+>       device.
+
+-- 
+Regards,
+
+Laurent Pinchart
