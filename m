@@ -1,115 +1,80 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v3 RESEND] display: panel: Add AUO g070vvn01 display support (800x480)
-Date: Mon, 14 May 2018 21:08:49 +0200
-Message-ID: <20180514190849.18723-1-lukma@denx.de>
-References: <20180410102927.17787-1-lukma@denx.de>
+From: Jolly Shah <JOLLYS@xilinx.com>
+Subject: RE: [PATCH v6 03/11] firmware: xilinx: Add zynqmp IOCTL API for
+ device control
+Date: Mon, 14 May 2018 19:11:56 +0000
+Message-ID: <SN1PR02MB3758F635BA420721B0EB8A2FB89C0@SN1PR02MB3758.namprd02.prod.outlook.com>
+References: <1523389127-14243-1-git-send-email-jollys@xilinx.com>
+ <1523389127-14243-4-git-send-email-jollys@xilinx.com>
+ <c351b9a3-5f26-7202-7171-0dcc7adef7c0@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180410102927.17787-1-lukma@denx.de>
+In-Reply-To: <c351b9a3-5f26-7202-7171-0dcc7adef7c0@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
+To: Sudeep Holla <sudeep.holla@arm.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds support for AUO's 7.0" display.
-
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
-
----
-Changes for v3:
-- Remove not used 'bus-format-override = "rgb565";' property
-
-Changes for v2:
-- Add *.txt suffix to the auo,g070wn01 file
----
- .../bindings/display/panel/auo,g070vvn01.txt       | 29 ++++++++++++++++++++
- drivers/gpu/drm/panel/panel-simple.c               | 31 ++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt
-
-diff --git a/Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt b/Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt
-new file mode 100644
-index 000000000000..49e4105378f6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt
-@@ -0,0 +1,29 @@
-+AU Optronics Corporation 7.0" FHD (800 x 480) TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "auo,g070vvn01"
-+- backlight: phandle of the backlight device attached to the panel
-+- power-supply: single regulator to provide the supply voltage
-+
-+Required nodes:
-+- port: Parallel port mapping to connect this display
-+
-+This panel needs single power supply voltage. Its backlight is conntrolled
-+via PWM signal.
-+
-+Example:
-+--------
-+
-+Example device-tree definition when connected to iMX6Q based board
-+
-+	lcd_panel: lcd-panel {
-+		compatible = "auo,g070vvn01";
-+		backlight = <&backlight_lcd>;
-+		power-supply = <&reg_display>;
-+
-+		port {
-+			lcd_panel_in: endpoint {
-+				remote-endpoint = <&lcd_display_out>;
-+			};
-+		};
-+	};
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index cbf1ab404ee7..d9984bdb5bb5 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -581,6 +581,34 @@ static const struct panel_desc auo_b133htn01 = {
- 	},
- };
- 
-+static const struct display_timing auo_g070vvn01_timings = {
-+	.pixelclock = { 33300000, 34209000, 45000000 },
-+	.hactive = { 800, 800, 800 },
-+	.hfront_porch = { 20, 40, 200 },
-+	.hback_porch = { 87, 40, 1 },
-+	.hsync_len = { 1, 48, 87 },
-+	.vactive = { 480, 480, 480 },
-+	.vfront_porch = { 5, 13, 200 },
-+	.vback_porch = { 31, 31, 29 },
-+	.vsync_len = { 1, 1, 3 },
-+};
-+
-+static const struct panel_desc auo_g070vvn01 = {
-+	.timings = &auo_g070vvn01_timings,
-+	.num_timings = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 152,
-+		.height = 91,
-+	},
-+	.delay = {
-+		.prepare = 200,
-+		.enable = 50,
-+		.disable = 50,
-+		.unprepare = 1000,
-+	},
-+};
-+
- static const struct drm_display_mode auo_g104sn02_mode = {
- 	.clock = 40000,
- 	.hdisplay = 800,
-@@ -2095,6 +2123,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "auo,b133xtn01",
- 		.data = &auo_b133xtn01,
- 	}, {
-+		.compatible = "auo,g070vvn01",
-+		.data = &auo_g070vvn01,
-+	}, {
- 		.compatible = "auo,g104sn02",
- 		.data = &auo_g104sn02,
- 	}, {
--- 
-2.11.0
+SGkgU3VkZWVwLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFN1ZGVl
+cCBIb2xsYSBbbWFpbHRvOnN1ZGVlcC5ob2xsYUBhcm0uY29tXQ0KPiBTZW50OiBUaHVyc2RheSwg
+TWF5IDEwLCAyMDE4IDc6MDkgQU0NCj4gVG86IEpvbGx5IFNoYWggPEpPTExZU0B4aWxpbnguY29t
+PjsgYXJkLmJpZXNoZXV2ZWxAbGluYXJvLm9yZzsNCj4gbWluZ29Aa2VybmVsLm9yZzsgZ3JlZ2to
+QGxpbnV4Zm91bmRhdGlvbi5vcmc7IG1hdHRAY29kZWJsdWVwcmludC5jby51azsNCj4gaGthbGx3
+ZWl0MUBnbWFpbC5jb207IGtlZXNjb29rQGNocm9taXVtLm9yZzsNCj4gZG1pdHJ5LnRvcm9raG92
+QGdtYWlsLmNvbTsgbXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb207DQo+IHNib3lkQGNvZGVhdXJvcmEu
+b3JnOyBtaWNoYWwuc2ltZWtAeGlsaW54LmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJr
+LnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtY2xrQHZnZXIua2VybmVsLm9yZw0KPiBDYzogU3VkZWVw
+IEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT47IFJhamFuIFZhamEgPFJBSkFOVkB4aWxpbngu
+Y29tPjsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJu
+ZWxAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgSm9sbHkg
+U2hhaCA8Sk9MTFlTQHhpbGlueC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgMDMvMTFd
+IGZpcm13YXJlOiB4aWxpbng6IEFkZCB6eW5xbXAgSU9DVEwgQVBJIGZvciBkZXZpY2UNCj4gY29u
+dHJvbA0KPiANCj4gDQo+IA0KPiBPbiAxMC8wNC8xOCAyMDozOCwgSm9sbHkgU2hhaCB3cm90ZToN
+Cj4gPiBGcm9tOiBSYWphbiBWYWphIDxyYWphbnZAeGlsaW54LmNvbT4NCj4gPg0KPiA+IEFkZCBa
+eW5xTVAgZmlybXdhcmUgSU9DVEwgQVBJIHRvIGNvbnRyb2wgYW5kIGNvbmZpZ3VyZSBkZXZpY2Vz
+IGxpa2UNCj4gPiBQTExzLCBTRCwgR2VtLCBldGMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBS
+YWphbiBWYWphIDxyYWphbnZAeGlsaW54LmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBKb2xseSBT
+aGFoIDxqb2xseXNAeGlsaW54LmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9maXJtd2FyZS94
+aWxpbngvenlucW1wLmMgICAgIHwgMjAgKysrKysrKysrKysrKysrKysrKysNCj4gPiAgaW5jbHVk
+ZS9saW51eC9maXJtd2FyZS94bG54LXp5bnFtcC5oIHwgIDIgKysNCj4gPiAgMiBmaWxlcyBjaGFu
+Z2VkLCAyMiBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9maXJt
+d2FyZS94aWxpbngvenlucW1wLmMNCj4gPiBiL2RyaXZlcnMvZmlybXdhcmUveGlsaW54L3p5bnFt
+cC5jDQo+ID4gaW5kZXggNDkwNTYxYS4uNDRiNDNmYSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJz
+L2Zpcm13YXJlL3hpbGlueC96eW5xbXAuYw0KPiA+ICsrKyBiL2RyaXZlcnMvZmlybXdhcmUveGls
+aW54L3p5bnFtcC5jDQo+ID4gQEAgLTIzOSw4ICsyMzksMjggQEAgc3RhdGljIGludCBnZXRfc2V0
+X2NvbmR1aXRfbWV0aG9kKHN0cnVjdA0KPiBkZXZpY2Vfbm9kZSAqbnApDQo+ID4gIAlyZXR1cm4g
+MDsNCj4gPiAgfQ0KPiA+DQo+ID4gKy8qKg0KPiA+ICsgKiB6eW5xbXBfcG1faW9jdGwoKSAtIFBN
+IElPQ1RMIEFQSSBmb3IgZGV2aWNlIGNvbnRyb2wgYW5kIGNvbmZpZ3MNCj4gPiArICogQG5vZGVf
+aWQ6CU5vZGUgSUQgb2YgdGhlIGRldmljZQ0KPiA+ICsgKiBAaW9jdGxfaWQ6CUlEIG9mIHRoZSBy
+ZXF1ZXN0ZWQgSU9DVEwNCj4gPiArICogQGFyZzE6CUFyZ3VtZW50IDEgdG8gcmVxdWVzdGVkIElP
+Q1RMIGNhbGwNCj4gPiArICogQGFyZzI6CUFyZ3VtZW50IDIgdG8gcmVxdWVzdGVkIElPQ1RMIGNh
+bGwNCj4gPiArICogQG91dDoJUmV0dXJuZWQgb3V0cHV0IHZhbHVlDQo+ID4gKyAqDQo+ID4gKyAq
+IFRoaXMgZnVuY3Rpb24gY2FsbHMgSU9DVEwgdG8gZmlybXdhcmUgZm9yIGRldmljZSBjb250cm9s
+IGFuZCBjb25maWd1cmF0aW9uLg0KPiA+ICsgKg0KPiA+ICsgKiBSZXR1cm46IFJldHVybnMgc3Rh
+dHVzLCBlaXRoZXIgc3VjY2VzcyBvciBlcnJvcityZWFzb24gICovIHN0YXRpYw0KPiA+ICtpbnQg
+enlucW1wX3BtX2lvY3RsKHUzMiBub2RlX2lkLCB1MzIgaW9jdGxfaWQsIHUzMiBhcmcxLCB1MzIg
+YXJnMiwNCj4gPiArCQkJICAgdTMyICpvdXQpDQo+ID4gK3sNCj4gPiArCXJldHVybiB6eW5xbXBf
+cG1faW52b2tlX2ZuKFBNX0lPQ1RMLCBub2RlX2lkLCBpb2N0bF9pZCwNCj4gPiArCQkJCSAgIGFy
+ZzEsIGFyZzIsIG91dCk7DQo+ID4gK30NCj4gPiArDQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+enlucW1wX2VlbWlfb3BzIGVlbWlfb3BzID0gew0KPiA+ICAJLmdldF9hcGlfdmVyc2lvbiA9IHp5
+bnFtcF9wbV9nZXRfYXBpX3ZlcnNpb24sDQo+ID4gKwkuaW9jdGwgPSB6eW5xbXBfcG1faW9jdGws
+DQo+ID4gIH07DQo+ID4NCj4gPiAgLyoqDQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgv
+ZmlybXdhcmUveGxueC16eW5xbXAuaA0KPiA+IGIvaW5jbHVkZS9saW51eC9maXJtd2FyZS94bG54
+LXp5bnFtcC5oDQo+ID4gaW5kZXggY2I2M2JlZC4uMmVlYzZlNyAxMDA2NDQNCj4gPiAtLS0gYS9p
+bmNsdWRlL2xpbnV4L2Zpcm13YXJlL3hsbngtenlucW1wLmgNCj4gPiArKysgYi9pbmNsdWRlL2xp
+bnV4L2Zpcm13YXJlL3hsbngtenlucW1wLmgNCj4gPiBAQCAtMzQsNiArMzQsNyBAQA0KPiA+DQo+
+ID4gIGVudW0gcG1fYXBpX2lkIHsNCj4gPiAgCVBNX0dFVF9BUElfVkVSU0lPTiA9IDEsDQo+ID4g
+KwlQTV9JT0NUTCA9IDM0LA0KPiANCj4gSSBhbSBub3QgZm9yIHRoaXMgQVBJLiBJSVVDIHRoZXJl
+IGFyZSBtb3JlIGZpbmVkIGdyYWluZWQgd2VsbCBkZWZpbmVkIEFQSXMoaWYgSSBhbQ0KPiBub3Qg
+d3JvbmcgZnJvbSBlbnVtIDIgdXB0byAzMykuIFRoaXMgaXMgb3BlbiBlbmRlZCBBUEkgd2hpY2gg
+YWxsb3dzIHVzZXIgdG8gZG8NCj4gd2hhdGV2ZXIgc2V0dGluZyBpdCBuZWVkcy4gQW5kIHRoYXQg
+ZGVmZWF0cyB0aGUgcHVycG9zZSBvZiBvdGhlciBBUElzLg0KPiANCj4gSSB3aWxsIGxvb2sgdGhy
+b3VnaCB0aGUgc2VyaWVzIGZvciB0aGUgdXNhZ2Ugb2YgdGhpcyB0byB1bmRlcnN0YW5kIHRoaXMg
+YmV0dGVyLCBidXQgSQ0KPiBhbSBndWVzc2luZyBob3cgaXQgY2FuIGJlIChhYil1c2VkLg0KPiAN
+Cj4gLS0NCj4gUmVnYXJkcywNCj4gU3VkZWVwDQoNClRoZXJlIGFyZSB3ZWxsIGRlZmluZWQgQVBJ
+cyBmb3IgZ2VuZXJhbCBjbG9jayBjb250cm9scy4gSW9jdGwgaXMgZm9yIHNvbWUgc3BlY2lmaWMg
+b3BlcmF0aW9ucyB3aGljaCBtYXkgbm90IGFwcGx5IHRvIGFsbCBwbGF0Zm9ybXMuDQpGb3IgY2xv
+Y2sgZHJpdmVyLCBpb2N0bCBpcyB1c2VkIHRvIGdldC9zZXQgUGxsIGZyYWN0aW9uL2ludGVnZXIg
+bW9kZSBhbmQgZGF0YS4gDQoNClRoYW5rcywNCkpvbGx5IFNoYWgNCg==
