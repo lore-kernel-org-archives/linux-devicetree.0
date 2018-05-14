@@ -1,82 +1,129 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [RFC] ARM: dts: imx7s: Fix the port reg properties
-Date: Mon, 14 May 2018 11:09:56 -0300
-Message-ID: <1526306996-25045-1-git-send-email-festevam@gmail.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 6/7] clk: meson: axg: document bindings for the audio
+ clock controller
+Date: Mon, 14 May 2018 16:16:45 +0200
+Message-ID: <1526307405.2897.29.camel@baylibre.com>
+References: <20180425163304.10852-1-jbrunet@baylibre.com>
+         <20180425163304.10852-7-jbrunet@baylibre.com>
+         <20180501143715.GA20023@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180501143715.GA20023@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+On Tue, 2018-05-01 at 09:37 -0500, Rob Herring wrote:
+> On Wed, Apr 25, 2018 at 06:33:03PM +0200, Jerome Brunet wrote:
+> > Add documentation for the device tree bindings of the audio clock
+> > controller of the A113 based SoCs
+> > 
+> 
+> The preferred subject prefix for bindings is 'dt/bindings: clock: ...'
 
-The 'reg' property must match the unit address, so fix them
-to avoid the following DTC warnings with W=1:
+Noted, I suppose meant 'dt-bindings: clocks: ..." which seems to used half of
+the times
+The rest use 'clk: {platform}: ...'
 
-arch/arm/boot/dts/imx7d-cl-som-imx7.dtb: Warning (graph_port): /replicator/ports/port@2: graph node unit address error, expected "0"
-arch/arm/boot/dts/imx7d-cl-som-imx7.dtb: Warning (graph_port): /soc/funnel@30041000/ports/port@2: graph node unit address error, expected "0"
-arch/arm/boot/dts/imx7d-cl-som-imx7.dtb: Warning (graph_port): /soc/funnel@30083000/ports/port@2: graph node unit address error, expected "0"
-arch/arm/boot/dts/imx7d-cl-som-imx7.dtb: Warning (graph_port): /soc/etf@30084000/ports/port@1: graph node unit address error, expected "0"
+> 
+> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > ---
+> >  .../bindings/clock/amlogic,axg-audio-clkc.txt      | 56 ++++++++++++++++++++++
+> >  1 file changed, 56 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
+> > new file mode 100644
+> > index 000000000000..1b989ceda567
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
+> > @@ -0,0 +1,56 @@
+> > +* Amlogic AXG Audio Clock Controllers
+> > +
+> > +The Amlogic AXG audio clock controller generates and supplies clock to the
+> > +other elements of the audio subsystem, such as fifos, i2s, spdif and pdm
+> > +devices.
+> > +
+> > +Required Properties:
+> > +
+> > +- compatible	: should be "amlogic,axg-audio-clkc" for the A113X and A113D
+> > +- reg		: physical base address of the clock controller and length of
+> > +		  memory mapped region.
+> > +- clocks	: a list of phandle + clock-specifier pairs for the clocks listed
+> > +		  in clock-names.
+> > +- clock-names	: must contain the following:
+> > +		  * "pclk" - Main peripheral bus clock
+> > +		  may contain the following:
+> > +		  * "mst_in[0-7]" - 8 input plls to generate clock signals
+> 
+> Unless the sources don't exist, then you should always have the clocks. 
+> It should not be based on whether you are using them or not.
 
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
----
-Hi Rob,
+This is not really the point. The parent controller may or may not provide some
+of the PLL. This was the case during the development of the controller when the
+HIFI pll was not available simply because there was no driver for it.
 
-Is this the correct way to fix these warnings?
+Whatever the reason for an input clock to be missing, this clock controller may
+continue to serve its purpose even if some input plls are not provided/available
+which is why these are not "mandatory"
 
- arch/arm/boot/dts/imx7s.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 7d33993..55b6241 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -126,7 +126,7 @@
- 
- 			/* replicator input port */
- 			port@2 {
--				reg = <0>;
-+				reg = <2>;
- 				replicator_in_port0: endpoint {
- 					slave-mode;
- 					remote-endpoint = <&etf_out_port>;
-@@ -183,7 +183,7 @@
- 
- 				/* funnel output port */
- 				port@2 {
--					reg = <0>;
-+					reg = <2>;
- 					ca_funnel_out_port0: endpoint {
- 						remote-endpoint = <&hugo_funnel_in_port0>;
- 					};
-@@ -234,7 +234,7 @@
- 				};
- 
- 				port@2 {
--					reg = <0>;
-+					reg = <2>;
- 					hugo_funnel_out_port0: endpoint {
- 						remote-endpoint = <&etf_in_port>;
- 					};
-@@ -263,7 +263,7 @@
- 				};
- 
- 				port@1 {
--					reg = <0>;
-+					reg = <1>;
- 					etf_out_port: endpoint {
- 						remote-endpoint = <&replicator_in_port0>;
- 					};
--- 
-2.7.4
+> 
+> > +		  * "slv_sclk[0-9]" - 10 slave bit clocks provided by external
+> > +				      components.
+> > +		  * "slv_lrclk[0-9]" - 10 slave sample clocks provided by external
+> > +				       components.
+> 
+> I'm guessing these may come from pins that aren't connected, so being 
+> optional is fine.
+> 
+> > +- reset		: phandle of the internal reset line
+> 
+> resets
+> 
+> > +- #clock-cells	: should be 1.
+> > +
+> > +Each clock is assigned an identifier and client nodes can use this identifier
+> > +to specify the clock which they consume. All available clocks are defined as
+> > +preprocessor macros in the dt-bindings/clock/axg-audio-clkc.h header and can be
+> > +used in device tree sources.
+> > +
+> > +Example:
+> > +
+> > +clkc_audio: clock-controller {
+> 
+> Needs a unit address.
+> 
+> > +	compatible = "amlogic,axg-audio-clkc";
+> > +	reg = <0x0 0x0 0x0 0xb4>;
+> > +	#clock-cells = <1>;
+> > +
+> > +	clocks = <&clkc CLKID_AUDIO>,
+> > +		 <&clkc CLKID_MPLL0>,
+> > +		 <&clkc CLKID_MPLL1>,
+> > +		 <&clkc CLKID_MPLL2>,
+> > +		 <&clkc CLKID_MPLL3>,
+> > +		 <&clkc CLKID_HIFI_PLL>,
+> > +		 <&clkc CLKID_FCLK_DIV3>,
+> > +		 <&clkc CLKID_FCLK_DIV4>,
+> > +		 <&clkc CLKID_GP0_PLL>;
+> > +	clock-names = "pclk",
+> > +		      "mst_in0",
+> > +		      "mst_in1",
+> > +		      "mst_in2",
+> > +		      "mst_in3",
+> > +		      "mst_in4",
+> > +		      "mst_in5",
+> > +		      "mst_in6",
+> > +		      "mst_in7";
+> > +	resets = <&reset RESET_AUDIO>;
+> > +};
+> > -- 
+> > 2.14.3
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
