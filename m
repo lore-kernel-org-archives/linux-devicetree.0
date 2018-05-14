@@ -1,75 +1,104 @@
-From: Laurentiu Tudor <laurentiu.tudor-3arQi8VN3Tc@public.gmane.org>
-Subject: Re: [PATCH 5/6 v3] bus: fsl-mc: supoprt dma configure for devices on
-	fsl-mc bus
-Date: Mon, 14 May 2018 13:39:50 +0000
-Message-ID: <5AF9916E.8000504@nxp.com>
-References: <1524824826-29473-1-git-send-email-nipun.gupta@nxp.com>
-	<1524824826-29473-6-git-send-email-nipun.gupta@nxp.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 1/2] ARM64: dts: meson-gxbb: odroidc2: enable sdcard UHS
+ modes
+Date: Mon, 14 May 2018 15:48:13 +0200
+Message-ID: <1526305693.2897.16.camel@baylibre.com>
+References: <20180501185902.3556-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1524824826-29473-6-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-Content-Language: en-US
-Content-ID: <03F01C290B624D4B87A4DE017A3CA11B-jdb/QiT5osKcE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>, "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "hch-jcswGhMUV9g@public.gmane.org" <hch-jcswGhMUV9g@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180501185902.3556-1-linux.amoon@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nipun,
-
-On 04/27/2018 01:27 PM, Nipun Gupta wrote:
-> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+On Wed, 2018-05-02 at 00:29 +0530, Anand Moon wrote:
+> Enable UHS modes for sdcard, on odroidc2.
+> 
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > ---
->   drivers/bus/fsl-mc/fsl-mc-bus.c | 16 ++++++++++++----
->   1 file changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
-> index 5d8266c..624828b 100644
-> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
-> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
-> @@ -127,6 +127,16 @@ static int fsl_mc_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
->   	return 0;
->   }
->
-> +static int fsl_mc_dma_configure(struct device *dev)
-> +{
-> +	struct device *dma_dev = dev;
-> +
-> +	while (dev_is_fsl_mc(dma_dev))
-> +		dma_dev = dma_dev->parent;
-> +
-> +	return of_dma_configure(dev, dma_dev->of_node, 0);
-> +}
-> +
->   static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
->   			     char *buf)
->   {
-> @@ -148,6 +158,7 @@ struct bus_type fsl_mc_bus_type = {
->   	.name = "fsl-mc",
->   	.match = fsl_mc_bus_match,
->   	.uevent = fsl_mc_bus_uevent,
-> +	.dma_configure  = fsl_mc_dma_configure,
->   	.dev_groups = fsl_mc_dev_groups,
->   };
->   EXPORT_SYMBOL_GPL(fsl_mc_bus_type);
-> @@ -616,6 +627,7 @@ int fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
->   		mc_dev->icid = parent_mc_dev->icid;
->   		mc_dev->dma_mask = FSL_MC_DEFAULT_DMA_MASK;
->   		mc_dev->dev.dma_mask = &mc_dev->dma_mask;
-> +		mc_dev->dev.coherent_dma_mask = mc_dev->dma_mask;
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> index 54954b314a45..c90f8b46c60c 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> @@ -258,6 +258,11 @@
+>  	cap-sd-highspeed;
+>  	max-frequency = <100000000>;
+>  	disable-wp;
+> +	sd-uhs-sdr12;
+> +	sd-uhs-sdr25;
+> +	sd-uhs-sdr50;
+> +	sd-uhs-sdr104;
+> +	sd-uhs-ddr50;
+>  
+>  	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+>  	cd-inverted;
 
-This change seems a bit unrelated to the patch subject. I wonder if it 
-makes sense to split it it in a distinct patch.
+Hi Anand,
 
----
-Best Regards, Laurentiu
+I tried a few sdcards on the OC2 with your 2 patches.
+Like with the libretech-cc, sdr104@200Mhz works "mostly", but, with some
+sdcards, it does not - please see below. The same sdcards appear to be working
+fine on my laptop.
+
+This is something I have not been able to crack yet on the libretech-cc.
+
+I'd suggest dropping sdr104 and keeping the max frequency at 100Mhz until we can
+figure out the problem here.
+
+With this changed:
+
+Tested-by: Jerome Brunet <jbrunet@baylibre.com>
+
+dd if=/dev/mmcblk1 of=/dev/zero bs=4M                                   
+[  446.925817] mmc1: tuning execution failed: -5                               
+[  446.956597] mmc1: tuning execution failed: -5                               
+[  489.957810] print_req_error: I/O error, dev mmcblk1, sector 6654424         
+[  490.141975] print_req_error: I/O error, dev mmcblk1, sector 6656440         
+[  490.148304] print_req_error: I/O error, dev mmcblk1, sector 6656944         
+[  490.349650] print_req_error: I/O error, dev mmcblk1, sector 6658456         
+[  491.804382] print_req_error: I/O error, dev mmcblk1, sector 6747688         
+[  492.281246] print_req_error: I/O error, dev mmcblk1, sector 6784992         
+[  492.419034] print_req_error: I/O error, dev mmcblk1, sector 6785496         
+[  492.865878] print_req_error: I/O error, dev mmcblk1, sector 6791800         
+[  493.023809] print_req_error: I/O error, dev mmcblk1, sector 6792192         
+[  493.024435] Buffer I/O error on dev mmcblk1, logical block 849024, async page
+read                                                                         
+[  493.217751] print_req_error: I/O error, dev mmcblk1, sector 6792808         
+[  494.891779] mmc1: tuning execution failed: -5                               
+[  495.374186] print_req_error: 3 callbacks suppressed                         
+[  495.374193] print_req_error: I/O error, dev mmcblk1, sector 6854576         
+[  495.767498] print_req_error: I/O error, dev mmcblk1, sector 6860000         
+[  496.013104] print_req_error: I/O error, dev mmcblk1, sector 6863024         
+[  496.223042] print_req_error: I/O error, dev mmcblk1, sector 6864032         
+[  496.227003] print_req_error: I/O error, dev mmcblk1, sector 6864536         
+[  496.375175] print_req_error: I/O error, dev mmcblk1, sector 6864176         
+[  496.375806] Buffer I/O error on dev mmcblk1, logical block 858022, async page
+read                                                                         
+[  496.521229] print_req_error: I/O error, dev mmcblk1, sector 6864184         
+[  496.521852] Buffer I/O error on dev mmcblk1, logical block 858023, async page
+read                                                                         
+[  503.596978] print_req_error: I/O error, dev mmcblk1, sector 6983312         
+[  503.597606] Buffer I/O error on dev mmcblk1, logical block 872914, async page
+read                                                                         
+[  505.280621] print_req_error: I/O error, dev mmcblk1, sector 7004536         
+[  505.281249] Buffer I/O error on dev mmcblk1, logical block 875567, async page
+read                                                                         
+[  507.372560] print_req_error: I/O error, dev mmcblk1, sector 7048696         
+[  507.373192] Buffer I/O error on dev mmcblk1, logical block 881087, async page
+read                                                                         
+[  511.355248] print_req_error: I/O error, dev mmcblk1, sector 7131352         
+[  511.355883] Buffer I/O error on dev mmcblk1, logical block 891419, async page
+read                                                                         
+[  511.369076] print_req_error: I/O error, dev mmcblk1, sector 7131352         
+[  511.369694] Buffer I/O error on dev mmcblk1, logical block 891419, async page
+read                                                                         
+dd: error reading '/dev/mmcblk1': Input/output error                           
+868+7 records in                       
+868+7 records out                      
+3651252224 bytes (3.7 GB, 3.4 GiB) copied, 66.7736 s, 54.7 MB/s   
