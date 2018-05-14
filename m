@@ -1,88 +1,55 @@
-Return-Path: <SRS0=XrYI=H3=renesas.com=yoshihiro.shimoda.uh@kernel.org>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH/RFC v2 1/6] dt-bindings: usb: add Renesas R-Car USB 3.0
- role switch
-Date: Tue, 8 May 2018 02:43:25 +0000
-Message-ID: <OSBPR01MB2293BDDB3DDEF46D6EDA8F20D89A0@OSBPR01MB2293.jpnprd01.prod.outlook.com>
-References: <1524742006-17984-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1524742006-17984-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20180427200559.5kxgetsjzpjlrm2m@rob-hp-laptop>
-In-Reply-To: <20180427200559.5kxgetsjzpjlrm2m@rob-hp-laptop>
-Content-Language: ja-JP
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=ePA5=IB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-ve1eur01on0055.outbound.protection.outlook.com ([104.47.1.55]:9940
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751617AbeENJPe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 14 May 2018 05:15:34 -0400
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v5 03/14] staging: typec: tcpci: add compatible string for
+ nxp ptn5110
+Date: Mon, 14 May 2018 09:15:31 +0000
+Message-ID: <VI1PR0402MB391708A076A3473742C69634899C0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
+ <1525307094-27402-4-git-send-email-jun.li@nxp.com>
+ <b5a8eb68-c4dc-ee6e-5e3c-f2a49577e4c0@gmail.com>
+In-Reply-To: <b5a8eb68-c4dc-ee6e-5e3c-f2a49577e4c0@gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-To: Rob Herring <robh@kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Sender: devicetree-owner@vger.kernel.org
+To: Mats Karrman <mats.dev.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>
+Cc: "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, Peter Chen <peter.chen@nxp.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Rob,
-
-Sorry for the delayed response. I had a vacation in last week.
-
-> From: Rob Herring, Sent: Saturday, April 28, 2018 5:06 AM
->=20
-> On Thu, Apr 26, 2018 at 08:26:41PM +0900, Yoshihiro Shimoda wrote:
-> > This patch adds a new documentation for Renesas R-Car USB 3.0 role
-> > switch that can change the USB 3.0 role to either host or peripheral
-> > by a hardware register that is included in USB3.0 peripheral module.
-> >
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > ---
-> >  .../bindings/usb/renesas,rcar-usb3-role-sw.txt     | 47 ++++++++++++++=
-++++++++
-> >  1 file changed, 47 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/usb/renesas,rcar-=
-usb3-role-sw.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/renesas,rcar-usb3-ro=
-le-sw.txt
-> b/Documentation/devicetree/bindings/usb/renesas,rcar-usb3-role-sw.txt
-> > new file mode 100644
-> > index 0000000..e074c03
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/renesas,rcar-usb3-role-sw.t=
-xt
-> > @@ -0,0 +1,47 @@
-> > +Renesas Electronics R-Car USB 3.0 role switch
-> > +
-> > +A renesas_usb3's node can contain this node.
-> > +
-> > +Required properties:
-> > + - compatible: Must contain "renesas,rcar-usb3-role-switch".
-> > +
-> > +Required nodes:
-> > + - The connection to a usb3.0 host node needs by using OF graph bindin=
-gs.
-> > +  - port@0 =3D USB 3.0 host port
-> > +  - port@1 =3D USB 3.0 peripheral port
-> > +
-> > +Example of R-Car H3 ES2.0:
-> > +	usb3_peri0: usb@ee020000 {
-> > +		compatible =3D "renesas,r8a7795-usb3-peri",
-> > +			     "renesas,rcar-gen3-usb3-peri";
-> > +		reg =3D <0 0xee020000 0 0x400>;
-> > +		interrupts =3D <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
-> > +		clocks =3D <&cpg CPG_MOD 328>;
-> > +		power-domains =3D <&sysc R8A7795_PD_ALWAYS_ON>;
-> > +		resets =3D <&cpg 328>;
-> > +
-> > +		usb3-role-sw {
-> > +			compatible =3D "renesas,rcar-usb3-role-switch";
->=20
-> You don't define any h/w resources. How is this device accessed?
-
-This device accesses one of registers in the usb3_peri0.
-In the detail, the usb3-role-sw uses 0xee020218 (32-bit register) only.
-(Unfortunately, the hardware design is not good...)
-
-In this case, should I describe the following in the usb3-role-sw node?
-
-	reg =3D <0 0xee020218 0 4>;
-
-Or, shouldn't I add the usb3-role-sw node and a driver for usb3_peri0 shoul=
-d
-take care for it?
-
-Best regards,
-Yoshihiro Shimoda
+SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWF0cyBLYXJybWFuIFtt
+YWlsdG86bWF0cy5kZXYubGlzdEBnbWFpbC5jb21dDQo+IFNlbnQ6IDIwMTjlubQ15pyIMTLml6Ug
+Mzo1Mg0KPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsg
+Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+IGhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRl
+bC5jb207IGxpbnV4QHJvZWNrLXVzLm5ldA0KPiBDYzogYS5oYWpkYUBzYW1zdW5nLmNvbTsgY3cw
+MC5jaG9pQHNhbXN1bmcuY29tOw0KPiBzaHVmYW5fbGVlQHJpY2h0ZWsuY29tOyBQZXRlciBDaGVu
+IDxwZXRlci5jaGVuQG54cC5jb20+Ow0KPiBnc29tbG9AZ21haWwuY29tOyBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZzsgbGludXgtdXNiQHZnZXIua2VybmVsLm9yZzsNCj4gZGwtbGludXgtaW14
+IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NSAwMy8xNF0gc3Rh
+Z2luZzogdHlwZWM6IHRjcGNpOiBhZGQgY29tcGF0aWJsZSBzdHJpbmcgZm9yDQo+IG54cCBwdG41
+MTEwDQo+IA0KPiBIaSBMaSBKdW4sDQo+IA0KPiBPbiAyMDE4LTA1LTAzIDAyOjI0LCBMaSBKdW4g
+d3JvdGU6DQo+IA0KPiA+IEFkZCBueHAgcHRuNTExMCB0eXBlYyBjb250cm9sbGVyIGNvbXBhdGli
+bGUgc3RyaW5nOiB1c2ItdGNwY2kscHRuNTExMCwNCj4gPiB3aGljaCBpcyBhIHN0YW5kYXJkIHRj
+cGNpIGNoaXAgd2l0aCBwb3dlciBkZWxpdmVyeSBzdXBwb3J0Lg0KPiA+DQo+ID4gU2lnbmVkLW9m
+Zi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgIGRyaXZlcnMvc3Rh
+Z2luZy90eXBlYy90Y3BjaS5jIHwgMSArDQo+ID4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRp
+b24oKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvdHlwZWMvdGNwY2ku
+Yw0KPiA+IGIvZHJpdmVycy9zdGFnaW5nL3R5cGVjL3RjcGNpLmMgaW5kZXggMDc2ZDk3ZS4uNzQx
+YTgwYSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3N0YWdpbmcvdHlwZWMvdGNwY2kuYw0KPiA+
+ICsrKyBiL2RyaXZlcnMvc3RhZ2luZy90eXBlYy90Y3BjaS5jDQo+ID4gQEAgLTU3Niw2ICs1NzYs
+NyBAQCBNT0RVTEVfREVWSUNFX1RBQkxFKGkyYywgdGNwY2lfaWQpOw0KPiA+ICAgI2lmZGVmIENP
+TkZJR19PRg0KPiA+ICAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgdGNwY2lfb2Zf
+bWF0Y2hbXSA9IHsNCj4gPiAgIAl7IC5jb21wYXRpYmxlID0gInVzYix0Y3BjaSIsIH0sDQo+IA0K
+PiBFaXRoZXIgdGhpcyBsaW5lIHNob3VsZCBnbyBhd2F5LCBvciBhICJnZW5lcmljIFRDUENJIGNv
+bnRyb2xsZXIiIGxpbmUgc2hvdWxkIGJlDQo+IGFkZGVkIHRvIHRoZSBEVCBkb2N1bWVudGF0aW9u
+Lg0KDQpUaGlzIGJpbmRpbmcgbmFtZSBkaWRuJ3QgZm9sbG93IHRoZSBydWxlICI8dmVuZGVyIHBy
+ZWZpeD4sIDxjaGlwIHNwZWNpZmljPiIsDQpBRkFJSyB0aGVyZSBpcyBubyB1c2VyIG9uIHVwc3Ry
+ZWFtIGtlcm5lbCwgaWYgbm8gb2JqZWN0aW9uLCBJIGNhbiByZW1vdmUgaXQuDQoNCkxpIEp1bg0K
+PiANCj4gQlIgLy8gTWF0cw0KPiANCj4gPiArCXsgLmNvbXBhdGlibGUgPSAibnhwLHB0bjUxMTAi
+LCB9LA0KPiA+ICAgCXt9LA0KPiA+ICAgfTsNCj4gPiAgIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2Ys
+IHRjcGNpX29mX21hdGNoKTsNCj4gPg0K
