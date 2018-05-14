@@ -1,36 +1,35 @@
-Return-Path: <SRS0=qowN=HZ=googlemail.com=martin.blumenstingl@kernel.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/6] dt-bindings: arm: amlogic: add support for the Meson8m2 SoC
-Date: Sun,  6 May 2018 11:21:14 +0200
-Message-Id: <20180506092119.467-2-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20180506092119.467-1-martin.blumenstingl@googlemail.com>
-References: <20180506092119.467-1-martin.blumenstingl@googlemail.com>
-To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com, carlo@caione.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: balbes-150@yandex.ru, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Return-Path: <SRS0=kRwt=IB=bootlin.com=alexandre.belloni@kernel.org>
+Date: Mon, 14 May 2018 15:28:42 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH] dt-bindings: rtc-2123: Make the node name generic
+Message-ID: <20180514132842.GX10960@piout.net>
+References: <1525489831-23871-1-git-send-email-festevam@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1525489831-23871-1-git-send-email-festevam@gmail.com>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: robh+dt@kernel.org, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The Meson8m2 SoC is an updated version of the Meson8 SoC. Some of the
-peripherals are updated to be register-compatible with Meson8b.
+On 05/05/2018 00:10:31-0300, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam@nxp.com>
+> 
+> According to Devicetree Specification v0.2 document:
+> 
+> "The name of a node should be somewhat generic, reflecting the function
+> of the device and not its precise programming model."
+> 
+> Do as suggested in the binding example.
+> 
+> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/rtc/nxp,rtc-2123.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+Applied, thanks.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- Documentation/devicetree/bindings/arm/amlogic.txt | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
-index f747f47922c5..6c6642c69de3 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.txt
-+++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-@@ -25,6 +25,10 @@ Boards with the Amlogic Meson8b SoC shall have the following properties:
-   Required root node property:
-     compatible: "amlogic,meson8b";
- 
-+Boards with the Amlogic Meson8m2 SoC shall have the following properties:
-+  Required root node property:
-+    compatible: "amlogic,meson8m2";
-+
- Boards with the Amlogic Meson GXBaby SoC shall have the following properties:
-   Required root node property:
-     compatible: "amlogic,meson-gxbb";
 -- 
-2.17.0
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
