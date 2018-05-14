@@ -1,58 +1,66 @@
-From: songxiaowei <songxiaowei@hisilicon.com>
-Subject: reply: [PATCH v3 1/2] PCI: kirin: Add MSI support
-Date: Mon, 14 May 2018 01:11:10 +0000
-Message-ID: <99B4C6BADD9E3241B25E52B02BA737C54127E3BF@DGGEMA505-MBS.china.huawei.com>
+From: Levin Du <djw@t-chip.com.cn>
+Subject: Re: [PATCH v1 3/5] arm64: dts: rockchip: Add gpio-syscon10 to rk3328
+Date: Mon, 14 May 2018 09:22:35 +0800
+Message-ID: <5218da3c-40d3-a44f-2b82-13cd4c522a1f@t-chip.com.cn>
+References: <1525943800-14095-1-git-send-email-djw@t-chip.com.cn>
+ <1525943800-14095-4-git-send-email-djw@t-chip.com.cn>
+ <CAL_JsqLK6S0iA=K1o=gpuJAxD6HxCSzHaJ6ZchuCz=GZ-Zb=Dg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: zh-CN
+In-Reply-To: <CAL_JsqLK6S0iA=K1o=gpuJAxD6HxCSzHaJ6ZchuCz=GZ-Zb=Dg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, "chenyao (F)" <chenyao11@huawei.com>
-Cc: Wangbinghui <wangbinghui@hisilicon.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "xuwei (O)" <xuwei5@huawei.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, "dimitrysh@google.com" <dimitrysh@google.com>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Wayne Chou <zxf@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, David Wu <david.wu@rock-chips.com>, Arnd Bergmann <arnd@arndb.de>, Finley Xiao <finley.xiao@rock-chips.com>, William Wu <william.wu@rock-chips.com>, Sugar Zhang <sugar.zhang@rock-chips.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robin Murphy <robin.murphy@arm.com>, Rocky Hao <rocky.hao@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEFuZHkgU2hldmNoZW5rbw0KDQpZYW8gaXMgb24gbWF0ZXJuaXR5IGxlYXZlLCBhbmQgSSds
-bCB0YWtlIG92ZXIgdGhlIGpvYiBhZnRlciBkaXNjdXNzaW5nIHdpdGggaGVyLg0KDQo+IC0tLS0t
-6YKu5Lu25Y6f5Lu2LS0tLS0NCj4g5Y+R5Lu25Lq6OiBBbmR5IFNoZXZjaGVua28gW21haWx0bzph
-bmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiDlj5HpgIHml7bpl7Q6IDIwMTjlubQ15pyIMTTm
-l6UgNzoxNg0KPiDmlLbku7bkuro6IGNoZW55YW8gKEYpIDxjaGVueWFvMTFAaHVhd2VpLmNvbT4N
-Cj4g5oqE6YCBOiBzb25neGlhb3dlaSA8c29uZ3hpYW93ZWlAaGlzaWxpY29uLmNvbT47IFdhbmdi
-aW5naHVpDQo+IDx3YW5nYmluZ2h1aUBoaXNpbGljb24uY29tPjsgTG9yZW56byBQaWVyYWxpc2kg
-PGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+Ow0KPiBCam9ybiBIZWxnYWFzIDxiaGVsZ2Fhc0Bn
-b29nbGUuY29tPjsgeHV3ZWkgKE8pIDx4dXdlaTVAaHVhd2VpLmNvbT47DQo+IFJvYiBIZXJyaW5n
-IDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29t
-PjsNCj4gQ2F0YWxpbiBNYXJpbmFzIDxjYXRhbGluLm1hcmluYXNAYXJtLmNvbT47IFdpbGwgRGVh
-Y29uDQo+IDx3aWxsLmRlYWNvbkBhcm0uY29tPjsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsg
-TGludXggS2VybmVsIE1haWxpbmcgTGlzdA0KPiA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
-Zz47IGxpbnV4LWFybSBNYWlsaW5nIExpc3QNCj4gPGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZz47IGRldmljZXRyZWUNCj4gPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsg
-ZGltaXRyeXNoQGdvb2dsZS5jb207DQo+IGd1b2RvbmcueHVAbGluYXJvLm9yZzsgU3V6aHVhbmds
-dWFuIDxzdXpodWFuZ2x1YW5AaGlzaWxpY29uLmNvbT47IEtvbmdmZWkNCj4gPGtvbmdmZWlAaGlz
-aWxpY29uLmNvbT4NCj4g5Li76aKYOiBSZTogW1BBVENIIHYzIDEvMl0gUENJOiBraXJpbjogQWRk
-IE1TSSBzdXBwb3J0DQo+IA0KPiBPbiBGcmksIE1heSAxMSwgMjAxOCBhdCAxMjoxNSBQTSwgWWFv
-IENoZW4gPGNoZW55YW8xMUBodWF3ZWkuY29tPiB3cm90ZToNCj4gPiBBZGQgc3VwcG9ydCBmb3Ig
-TVNJLg0KPiANCj4gDQo+ID4gKyAgICAgICBpbnQgcmV0Ow0KPiA+ICsNCj4gPiArICAgICAgIGlm
-IChJU19FTkFCTEVEKENPTkZJR19QQ0lfTVNJKSkgew0KPiANCj4gPiArICAgICAgICAgICAgICAg
-cGNpLT5wcC5tc2lfaXJxID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2LCAwKTsNCj4gPiArICAgICAg
-ICAgICAgICAgaWYgKHBjaS0+cHAubXNpX2lycSA8IDApIHsNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICBkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gZ2V0IE1TSSBJUlENCj4gKCVk
-KVxuIiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBjaS0+cHAubXNpX2ly
-cSk7DQo+IA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAtRU5PREVWOw0KPiAN
-Cj4gV2h5IHNoYWRvd2luZyBhY3R1YWwgZXJyb3IgY29kZT8NCltzb25neGlhb3dlaV0gIFNvcnJ5
-LCBJIGNhbid0IGdldCB5b3VyIHBvaW50IGFib3V0IHRoaXMsIHdvdWxkIHlvdSBleHBsYWluIGl0
-IGZvciBtZS4NCj4gDQo+ID4gKyAgICAgICAgICAgICAgIH0NCj4gPiArICAgICAgICAgICAgICAg
-cmV0ID0gZGV2bV9yZXF1ZXN0X2lycSgmcGRldi0+ZGV2LCBwY2ktPnBwLm1zaV9pcnEsDQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2lyaW5fcGNpZV9tc2lfaXJx
-X2hhbmRsZXIsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgSVJR
-Rl9TSEFSRUQgfA0KPiBJUlFGX05PX1RIUkVBRCwNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAia2lyaW5fcGNpZV9tc2kiLCAmcGNpLT5wcCk7DQo+ID4gKyAgICAg
-ICAgICAgICAgIGlmIChyZXQpIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZfZXJy
-KCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gcmVxdWVzdCBNU0kNCj4gSVJRICVkXG4iLA0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGNpLT5wcC5tc2lfaXJxKTsNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICsgICAgICAgICAgICAgICB9DQo+
-IA0KPiBJdCB3b3VsZCBiZSBlYXN5IHRvIHJlYWQgYW5kIG1haW50YWluIGlmIHRoaXMgd291bGQg
-YmUgYSBzZXBhcmF0ZSBmdW5jdGlvbi4NCltzb25neGlhb3dlaV0gWWVzLCBhIHNlcGFyYXRlIGZ1
-bmN0aW9uIHdpbGwgYmUgYmV0dGVyLCBhbmQgSSdsbCBmaXggaXQuDQo+IA0KPiA+ICsgICAgICAg
-fQ0KPiANCj4gDQo+IA0KPiAtLQ0KPiBXaXRoIEJlc3QgUmVnYXJkcywNCj4gQW5keSBTaGV2Y2hl
-bmtvDQoNClRoYW5rcyBhIGxvdCwNCg0KQmVzdCBSZWdhcmRzLA0KWGlhb3dlaSBTb25nDQo=
+
+
+On 2018-05-11 8:22 PM, Rob Herring wrote:
+> On Thu, May 10, 2018 at 4:16 AM,  <djw@t-chip.com.cn> wrote:
+>> From: Levin Du <djw@t-chip.com.cn>
+>>
+>> Adding a new gpio controller named "gpio-syscon10" to rk3328, providing
+>> access to the pins defined in the syscon GRF_SOC_CON10.
+>>
+>> Boards using these special pins to control regulators or LEDs, can now
+>> utilize existing drivers like gpio-regulator and leds-gpio.
+>>
+>> Signed-off-by: Levin Du <djw@t-chip.com.cn>
+>>
+>> ---
+>>
+>> Changes in v1:
+>> - Split from V0 and add to rk3328.dtsi for general use.
+>>
+>>   arch/arm64/boot/dts/rockchip/rk3328.dtsi | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+>> index b8e9da1..73a822d 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+>> @@ -309,6 +309,12 @@
+>>                          mode-loader = <BOOT_BL_DOWNLOAD>;
+>>                  };
+>>
+>> +               gpio_syscon10: gpio-syscon10 {
+> GPIO controller nodes should be named just 'gpio'.
+
+'gpio' is a general name, and there're already gpio0~gpio3 for pinctrl 
+GPIOs.
+
+>> +                       compatible = "rockchip,gpio-syscon";
+>> +                       gpio-controller;
+>> +                       #gpio-cells = <2>;
+>> +                       gpio,syscon-dev = <0 0x0428 0>;
+> This property is not documented and takes a phandle.
+See PATCH1 which allows fetching syscon from parent node .
+This is also documented in 
+Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
+in PATCH2.
+
+Thanks
+Levin
