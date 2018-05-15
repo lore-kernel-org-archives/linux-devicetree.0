@@ -1,41 +1,40 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk: qcom: Add some missing gcc clks for msm8996
-Date: Tue, 15 May 2018 11:05:44 -0700
-Message-ID: <152640754443.34267.2752714761157535255@swboyd.mtv.corp.google.com>
-References: <20180418000926.4998-1-bjorn.andersson@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] arm: dts: omap: fix OF graph in omap3-devkit8000
+Date: Tue, 15 May 2018 11:11:02 -0700
+Message-ID: <20180515181102.GT98604@atomide.com>
+References: <20180508135930.5768-1-robh@kernel.org>
+ <20180508135930.5768-5-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180418000926.4998-1-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180508135930.5768-5-robh@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2018-04-17 17:09:26)
-> @@ -3350,6 +3522,7 @@ static struct clk_regmap *gcc_msm8996_clocks[] =3D {
->         [GCC_AGGRE0_CNOC_AHB_CLK] =3D &gcc_aggre0_cnoc_ahb_clk.clkr,
->         [GCC_SMMU_AGGRE0_AXI_CLK] =3D &gcc_smmu_aggre0_axi_clk.clkr,
->         [GCC_SMMU_AGGRE0_AHB_CLK] =3D &gcc_smmu_aggre0_ahb_clk.clkr,
-> +       [GCC_AGGRE1_PNOC_AHB_CLK] =3D &gcc_aggre1_pnoc_ahb_clk.clkr,
->         [GCC_AGGRE2_UFS_AXI_CLK] =3D &gcc_aggre2_ufs_axi_clk.clkr,
->         [GCC_AGGRE2_USB3_AXI_CLK] =3D &gcc_aggre2_usb3_axi_clk.clkr,
->         [GCC_QSPI_AHB_CLK] =3D &gcc_qspi_ahb_clk.clkr,
-> @@ -3360,6 +3533,19 @@ static struct clk_regmap *gcc_msm8996_clocks[] =3D=
- {
->         [GCC_PCIE_CLKREF_CLK] =3D &gcc_pcie_clkref_clk.clkr,
->         [GCC_RX2_USB2_CLKREF_CLK] =3D &gcc_rx2_usb2_clkref_clk.clkr,
->         [GCC_RX1_USB2_CLKREF_CLK] =3D &gcc_rx1_usb2_clkref_clk.clkr,
-> +       [GCC_HLOS1_VOTE_LPASS_CORE_SMMU_CLK] =3D
-> +                                       &hlos1_vote_lpass_core_smmu_clk.c=
-lkr,
+* Rob Herring <robh@kernel.org> [180508 07:01]:
+> omap3-devkit8000-common.dtsi defines a graph connection for DVI, but
+> then omap3-devkit8000-lcd-common.dtsi overrides that with a graph
+> connection for the LCD as the same output signals are used. This
+> leaves an incomplete graph as the TFP410 output has only half a
+> connection. The result is the following warning:
+> 
+> arch/arm/boot/dts/omap3-devkit8000-lcd70.dtb: Warning (graph_endpoint): /encoder0/ports/port@0/endpoint: graph connection to node '/ocp@68000000/dss@48050000/port/endpoint' is not bidirectional
+> 
+> Fix this by defining multiple endpoints which is the correct way to show
+> a 1 to many connection.
 
-drivers/clk/qcom/gcc-msm8996.c:3512:10: warning: Initializer entry defined =
-twice
-drivers/clk/qcom/gcc-msm8996.c:3536:10: also defined here
+Applying into omap-for-v4.18/dt-fixes thanks.
 
-Resend please, or at least let me know what to do here. It looks like
-the one you sent has the parent chain setup properly so that the bus
-rcgs are in the chain of clks, while the one that is already there
-doesn't have the chain setup.
+Tony
