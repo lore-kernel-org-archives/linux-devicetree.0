@@ -1,40 +1,46 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [RESEND PATCH v2 1/1] net: phy: micrel: add 125MHz reference
- clock workaround
-Date: Tue, 15 May 2018 18:33:44 +0200
-Message-ID: <20180515163344.GL27867@lunn.ch>
-References: <20180515081856.23322-1-m.felsch@pengutronix.de>
- <20180515081856.23322-2-m.felsch@pengutronix.de>
+From: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] clk: rockchip: remove deprecated gate-clk code and
+ dt-binding
+Date: Tue, 15 May 2018 09:57:08 -0700
+Message-ID: <152640342836.34267.18008728966241252616@swboyd.mtv.corp.google.com>
+References: <20180512143038.30447-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180515081856.23322-2-m.felsch@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, niebelm@tqsc.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180512143038.30447-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 15, 2018 at 10:18:56AM +0200, Marco Felsch wrote:
-> From: Markus Niebel <Markus.Niebel@tqs.de>
+Quoting Heiko Stuebner (2018-05-12 07:30:38)
+> Initially we tried modeling clocks via the devicetree before switching
+> to clocks declared in the clock drivers and only exporting specific
+> ids to the devicetree.
 > 
-> The micrel KSZ9031 phy has a optional clock pin (CLK125_NDO) which can be
-> used as reference clock for the MAC unit. The clock signal must meet the
-> RGMII requirements to ensure the correct data transmission between the
-> MAC and the PHY. The KSZ9031 phy does not fulfill the duty cycle
-> requirement if the phy is configured as slave. For a complete
-> describtion look at the errata sheets: DS80000691D or DS80000692D.
+> As the old code was in the kernel for 1-2 releases when the new mode
+> of operation was added we kept it for backwards compatibility.
 > 
-> The errata sheet recommends to force the phy into master mode whenever
-> there is a 1000Base-T link-up as work around. Only set the
-> "micrel,force-master" property if you use the phy reference clock provided
-> by CLK125_NDO pin as MAC reference clock in your application.
+> That deprecation notice is in the binding since july 2014, so nearly
+> 4 years now and I think it's time to drop the old cruft.
 > 
-> Attenation, this workaround is only usable if the link partner can
-> be configured to slave mode for 1000Base-T.
+> Especially as at the time using the mainline kernel on Rockchip devices
+> was not really possible, except for experiments on the really old socs of
+> the rk3066 + rk3188 line, so there shouldn't be any devicetrees still
+> around that rely on that code.
+> 
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
 
-Thanks for adding all the documentation.
+Alright, let's see how things go.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+Acked-by: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
