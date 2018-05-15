@@ -1,42 +1,100 @@
-From: Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH 0/4] Add DesignWare EP support
-Date: Tue, 15 May 2018 15:32:13 +0100
-Message-ID: <bd7d0219-e70a-df60-2b9f-5e74d6c282f4@synopsys.com>
-References: <cover.1526368368.git.gustavo.pimentel@synopsys.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v8 0/5] clk: meson-axg: Add AO Cloclk and Reset driver
+Date: Tue, 15 May 2018 16:40:38 +0200
+Message-ID: <1526395238.2897.45.camel@baylibre.com>
+References: <20180503132624.78453-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1526368368.git.gustavo.pimentel@synopsys.com>
-Content-Language: pt-PT
+In-Reply-To: <20180503132624.78453-1-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gustavo,
-
-Às 8:13 AM de 5/15/2018, Gustavo Pimentel escreveu:
-> The PCIe controller dual mode is capable of operating in RC mode as well
-> as EP mode by configuration option. Till now only RC mode was supported,
-> with this patch is add EP support to the DesignWare driver.
+On Thu, 2018-05-03 at 21:26 +0800, Yixun Lan wrote:
+>   This patch try to add AO clock and Reset driver for Amlogic's
+> Meson-AXG SoC.
 > 
-> Gustavo Pimentel (4):
->   bindings: PCI: designware: Example update
->   PCI: dwc: Add support for EP mode
->   bindings: PCI: designware: Add support for EP in DesignWare driver
->   misc: pci_endpoint_test: Add DesignWare EP entry
+>  patch 1: factor the common code into a dedicated file
+>  patch 2-4: add the aoclk driver for AXG SoC
+>  patch 5: drop unnecessary clock flags
 > 
->  .../devicetree/bindings/pci/designware-pcie.txt    |  24 +++-
->  drivers/misc/pci_endpoint_test.c                   |   1 +
->  drivers/pci/dwc/Kconfig                            |  41 ++++--
->  drivers/pci/dwc/pcie-designware-ep.c               |   3 +
->  drivers/pci/dwc/pcie-designware-plat.c             | 149 +++++++++++++++++++--
->  drivers/pci/endpoint/functions/pci-epf-test.c      |   7 +
->  include/linux/pci-epc.h                            |   8 ++
->  7 files changed, 206 insertions(+), 27 deletions(-)
+> changes since v7 at [8]: 
+>  - drop the 'drop CLK_IGNORE_UNUSED flag' patch
+>    to avoid circle dependencies
+>  - fix Philip's Ack on patch 3
 > 
+> changes since v6 at [7]: 
+>  - fix over 80 chars chechpatch error
+>  - add Philip's Ack on patch 5
+>  - drop extra end of newline
+> 
+> changes since v5 at [6]: 
+>  - drop unnecessary header files
+>  - add 'axg_aoclk' prefix to clk driver, make them more consistent
+>  - add missing end new line..
+> 
+> changes since v4 at [5]: 
+>  - fix return err
+>  - introduce CONFIG_COMMON_CLK_MESON_AO
+>  - format/style minor fix
+> 
+> changes since v3 at [4]: 
+>  - add 'const' contraint to the read-only data
+>  - switch to devm_of_clk_add_hw_provider API
+>  - check return value of devm_reset_controller_register
+> 
+> changes since v2 at [2]: 
+>  - rework meson_aoclkc_probe() which leverage the of_match_data
+>  - merge patch 5-6 into this series
+>  - seperate DTS patch, will send to Kevin Hilman independently
+>  
+> changes since v1 at [0]: 
+>  - rebase to clk-meson's branch 'next/drivers' [1]
+>  - fix license, update to BSD-3-Clause
+>  - drop un-used include header file
+> 
+> [0] https://lkml.kernel.org/r/20180209070026.193879-1-yixun.lan@amlogic.com
+> [1] git://github.com/BayLibre/clk-meson.git branch: next-drivers
+> [2] https://lkml.kernel.org/r/20180323143816.200573-1-yixun.lan@amlogic.com
+> [3] https://lkml.kernel.org/r/20180326081809.49493-4-yixun.lan@amlogic.com
+> [4] https://lkml.kernel.org/r/20180328025050.221585-1-yixun.lan@amlogic.com
+> [5] https://lkml.kernel.org/r/20180408031938.153474-1-yixun.lan@amlogic.com
+> [6] https://lkml.kernel.org/r/20180409143749.71197-1-yixun.lan@amlogic.com
+> [7] https://lkml.kernel.org/r/20180419135426.155794-1-yixun.lan@amlogic.com
+> [8] https://lkml.kernel.org/r/20180426084437.192394-1-yixun.lan@amlogic.com
+> 
+> 
+> Qiufang Dai (1):
+>   clk: meson-axg: Add AO Clock and Reset controller driver
+> 
+> Yixun Lan (4):
+>   clk: meson: aoclk: refactor common code into dedicated file
+>   dt-bindings: clock: axg-aoclkc: New binding for Meson-AXG SoC
+>   dt-bindings: clock: reset: Add AXG AO Clock and Reset Bindings
+>   clk: meson: drop CLK_SET_RATE_PARENT flag
 
-Thanks for this patch-set.
+Applied
 
-Reviewed-by: Joao Pinto <jpinto@synopsys.com>
+> 
+>  .../bindings/clock/amlogic,gxbb-aoclkc.txt    |   1 +
+>  drivers/clk/meson/Kconfig                     |   8 +
+>  drivers/clk/meson/Makefile                    |   3 +-
+>  drivers/clk/meson/axg-aoclk.c                 | 164 ++++++++++++++++++
+>  drivers/clk/meson/axg-aoclk.h                 |  29 ++++
+>  drivers/clk/meson/gxbb-aoclk.c                |  96 ++++------
+>  drivers/clk/meson/gxbb-aoclk.h                |   5 +
+>  drivers/clk/meson/meson-aoclk.c               |  81 +++++++++
+>  drivers/clk/meson/meson-aoclk.h               |  34 ++++
+>  include/dt-bindings/clock/axg-aoclkc.h        |  26 +++
+>  include/dt-bindings/reset/axg-aoclkc.h        |  20 +++
+>  11 files changed, 403 insertions(+), 64 deletions(-)
+>  create mode 100644 drivers/clk/meson/axg-aoclk.c
+>  create mode 100644 drivers/clk/meson/axg-aoclk.h
+>  create mode 100644 drivers/clk/meson/meson-aoclk.c
+>  create mode 100644 drivers/clk/meson/meson-aoclk.h
+>  create mode 100644 include/dt-bindings/clock/axg-aoclkc.h
+>  create mode 100644 include/dt-bindings/reset/axg-aoclkc.h
+> 
