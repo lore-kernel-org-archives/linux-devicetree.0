@@ -1,59 +1,87 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v10 02/27] clk: davinci: da850-pll: change PLL0 to
- CLK_OF_DECLARE
-Date: Tue, 15 May 2018 10:42:54 -0500
-Message-ID: <88dec9b1-5f4d-a1ac-2b63-b30ae7665851@lechnology.com>
-References: <20180509172606.29387-1-david@lechnology.com>
- <20180509172606.29387-3-david@lechnology.com>
- <9203489d-0a5a-103a-67ea-d3e89bb7ebc4@ti.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v6 1/2] dt: bindings: lm3601x: Introduce the lm3601x driver
+Date: Tue, 15 May 2018 10:43:51 -0500
+Message-ID: <20180515154352.20263-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9203489d-0a5a-103a-67ea-d3e89bb7ebc4@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, jacek.anaszewski@gmail.com, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/15/2018 08:31 AM, Sekhar Nori wrote:
-> On Wednesday 09 May 2018 10:55 PM, David Lechner wrote:
->> +void of_da850_pll0_init(struct device_node *node)
->>   {
->> -	return of_davinci_pll_init(dev, dev->of_node, &da850_pll0_info,
->> -				   &da850_pll0_obsclk_info,
->> -				   da850_pll0_sysclk_info, 7, base, cfgchip);
->> +	void __iomem *base;
->> +	struct regmap *cfgchip;
->> +
->> +	base = of_iomap(node, 0);
->> +	if (!base) {
->> +		pr_err("%s: ioremap failed\n", __func__);
->> +		return;
->> +	}
->> +
->> +	cfgchip = syscon_regmap_lookup_by_compatible("ti,da830-cfgchip");
+Introduce the device tree bindings for the lm3601x
+family of LED torch, flash and IR drivers.
 
-In your previous review, you pointed out that the error did not need to
-be handled here because it is handled later in davinci_pll_clk_register().
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
 
-We get a warning there because cfgchip is only needed for unlocking the
-PLL for CPU frequency scaling and is not critical for operation of the
-clocks.
+v6 - Removed multiple led child nodes, fixed example to display micro ranges
+for corresponding child nodes and added led-sources to define the current driver -
+https://patchwork.kernel.org/patch/10392121/
 
-> 
-> It will be nice to handle the error case here.
-> 
->> +
->> +	of_davinci_pll_init(NULL, node, &da850_pll0_info,
->> +			    &da850_pll0_obsclk_info,
->> +			    da850_pll0_sysclk_info, 7, base, cfgchip);
-> 
-> Apart from that, it looks good to me.
-> 
-> Reviewed-by: Sekhar Nori <nsekhar@ti.com>
-> 
-> Thanks,
-> Sekhar
-> 
+v5 - No changes - https://patchwork.kernel.org/patch/10391743/
+v4 - Added " " around "=", changed strobe to flash on label, removed "support and
+register" comment and change ir lable to ir:torch - See v2 patchworks for comments
+v3 - Removed wildcard compatible - https://patchwork.kernel.org/patch/10386241/
+v2 - No changes - https://patchwork.kernel.org/patch/10384587/
+
+ .../devicetree/bindings/leds/leds-lm3601x.txt | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+new file mode 100644
+index 000000000000..27930a89e9a5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+@@ -0,0 +1,47 @@
++* Texas Instruments - lm3601x Single-LED Flash Driver
++
++The LM3601X are ultra-small LED flash drivers that
++provide a high level of adjustability.
++
++Required properties:
++	- compatible : Can be one of the following
++		"ti,lm36010"
++		"ti,lm36011"
++	- reg : I2C slave address
++	- #address-cells : 1
++	- #size-cells : 0
++
++Required child properties:
++	- reg : 0
++	- led-sources:	0 - Indicates a IR mode
++			1 - Indicates a Torch (white LED) mode
++
++Required properties for flash LED child nodes:
++	See Documentation/devicetree/bindings/leds/common.txt
++	- flash-max-microamp : Range from 11mA -> 1.5A
++	- flash-max-timeout-us : Range from 40ms -> 1600ms
++	- led-max-microamp : Range from 2.4mA -> 376mA
++
++Optional child properties:
++	- label : see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++led-controller@64 {
++	compatible = "ti,lm36010";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = <0x64>;
++
++	led@0 {
++		reg = <0>;
++		label = "white:torch";
++		led-max-microamp = <376000>;
++		flash-max-microamp = <1500000>;
++		flash-max-timeout-us = <1600000>;
++		led-sources = <1>;
++	};
++}
++
++For more product information please see the links below:
++http://www.ti.com/product/LM36010
++http://www.ti.com/product/LM36011
+-- 
+2.17.0.582.gccdcbd54c
