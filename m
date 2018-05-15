@@ -1,57 +1,37 @@
-Return-Path: <SRS0=ePA5=IB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-sn1nam02on0139.outbound.protection.outlook.com ([104.47.36.139]:21760
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1752340AbeENMFA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 14 May 2018 08:05:00 -0400
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v4 6/6] arm: dts: ls1021a: add qdma device tree nodes
-Date: Mon, 14 May 2018 20:03:07 +0800
-Message-ID: <20180514120307.15592-6-wen.he_1@nxp.com>
-In-Reply-To: <20180514120307.15592-1-wen.he_1@nxp.com>
-References: <20180514120307.15592-1-wen.he_1@nxp.com>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 0/2] soc: renesas: r8a77990-sysc: Add support for R-Car E3
+Date: Tue, 15 May 2018 21:07:37 +0900
+Message-Id: <1526386059-6173-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: vinod.koul@intel.com, dmaengine@vger.kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, Wen He <wen.he_1@nxp.com>
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-add the qDMA device tree nodes for LS1021A devices.
-Signed-off-by: Wen He <wen.he_1@nxp.com>
----
-chang in v4:
-	- no 
+This patch is based on the renesas-devel-20180515-v4.17-rc5 tag of
+renesas.git.
 
- arch/arm/boot/dts/ls1021a.dtsi |   15 +++++++++++++++
- 1 files changed, 15 insertions(+), 0 deletions(-)
+Changes from v1:
+ - Rebase the latest kernel.
+ - Modify r8a77990_areas[] as the specification in patch 1.
+ - Use // instead of /* */ at the SPDX-License-Identifier line in patch 1.
+ - Add workaround patch for 3DG-{A,B} of R-Car E3 ES1.0 as patch 2.
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index c55d479..8125cee 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -571,6 +571,21 @@
- 				 <&clockgen 4 1>;
- 		};
- 
-+		qdma: dma-controller@8390000 {
-+			compatible = "fsl,ls1021a-qdma";
-+			reg = <0x0 0x8398000 0x0 0x1000>, /* Controller regs */
-+				<0x0 0x8399000 0x0 0x1000>, /* Status regs */
-+				<0x0 0x839a000 0x0 0x2000>; /* Block regs */
-+			interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "qdma-error", "qdma-queue";
-+			dma-channels = <8>;
-+			queues = <2>;
-+			status-sizes = <64>;
-+			queue-sizes = <64 64>;
-+			big-endian;
-+		};
-+
- 		dcu: dcu@2ce0000 {
- 			compatible = "fsl,ls1021a-dcu";
- 			reg = <0x0 0x2ce0000 0x0 0x10000>;
+Takeshi Kihara (1):
+  soc: renesas: rcar-sysc: Add support for R-Car E3 power areas
+
+Yoshihiro Shimoda (1):
+  soc: renesas: r8a77990-sysc: Add workaround for 3DG-{A,B}
+
+ .../bindings/power/renesas,rcar-sysc.txt           |  1 +
+ drivers/soc/renesas/Kconfig                        |  5 ++
+ drivers/soc/renesas/Makefile                       |  1 +
+ drivers/soc/renesas/r8a77990-sysc.c                | 68 ++++++++++++++++++++++
+ drivers/soc/renesas/rcar-sysc.c                    |  3 +
+ drivers/soc/renesas/rcar-sysc.h                    |  1 +
+ 6 files changed, 79 insertions(+)
+ create mode 100644 drivers/soc/renesas/r8a77990-sysc.c
+
 -- 
-1.7.1
-
+1.9.1
