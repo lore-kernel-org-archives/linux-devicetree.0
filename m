@@ -1,37 +1,36 @@
-From: Colin King <colin.king@canonical.com>
-Subject: [PATCH][next] scripts/dtc: fix spelling mistake: "endpont" -> "endpoint"
-Date: Tue, 15 May 2018 10:02:09 +0100
-Message-ID: <20180515090209.9165-1-colin.king@canonical.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: [PATCH] ARM: dts: berlin2: fix irq type for arm twd timer
+Date: Tue, 15 May 2018 17:12:08 +0800
+Message-ID: <20180515171208.4f1c0b21@xhacker.debian>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+fix below warning about PPI interrupts configuration:
+"GIC: PPI13 is secure or misconfigured"
 
-Trivial fix to spelling mistake in FAIL message.
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 ---
- scripts/dtc/checks.c | 2 +-
+ arch/arm/boot/dts/berlin2.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-index a2cc1036c915..9d253819e12c 100644
---- a/scripts/dtc/checks.c
-+++ b/scripts/dtc/checks.c
-@@ -1536,7 +1536,7 @@ static void check_graph_endpoint(struct check *c, struct dt_info *dti,
- 		return;
- 
- 	if (!strprefixeq(node->name, node->basenamelen, "endpoint"))
--		FAIL(c, dti, node, "graph endpont node name should be 'endpoint'");
-+		FAIL(c, dti, node, "graph endpoint node name should be 'endpoint'");
- 
- 	check_graph_reg(c, dti, node);
+diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
+index d575823c5750..787a9d042ad9 100644
+--- a/arch/arm/boot/dts/berlin2.dtsi
++++ b/arch/arm/boot/dts/berlin2.dtsi
+@@ -149,7 +149,7 @@
+ 		local-timer@ad0600 {
+ 			compatible = "arm,cortex-a9-twd-timer";
+ 			reg = <0xad0600 0x20>;
+-			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
++			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_EDGE_RISING)>;
+ 			clocks = <&chip_clk CLKID_TWD>;
+ 		};
  
 -- 
 2.17.0
