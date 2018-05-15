@@ -1,53 +1,37 @@
-From: Thor Thayer <thor.thayer@linux.intel.com>
-Subject: Re: [PATCHv2] arm64: dts: stratix10: Add QSPI support for Stratix10
-Date: Tue, 15 May 2018 15:10:41 -0500
-Message-ID: <a61cbfaf-86e9-ec89-5d05-4d6f210aeec8@linux.intel.com>
-References: <1526055052-11371-1-git-send-email-thor.thayer@linux.intel.com>
- <20b33e1d-0609-78dd-dc9c-922658a11f18@kernel.org>
-Reply-To: thor.thayer@linux.intel.com
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 09/11] docs: Fix some broken references
+Date: Tue, 15 May 2018 13:26:04 -0700
+Message-ID: <152641596420.237094.12177504626636253047@swboyd.mtv.corp.google.com>
+References: <cover.1525870886.git.mchehab+samsung@kernel.org>
+ <e959f23d6f6905ee606fadfda13e2bb37deed017.1525870886.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20b33e1d-0609-78dd-dc9c-922658a11f18@kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@kernel.org>, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <e959f23d6f6905ee606fadfda13e2bb37deed017.1525870886.git.mchehab+samsung@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Jaroslav Kysela <perex@perex.cz>, Eric Paris <eparis@parisplace.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-clk@vger.kernel.org, James Morris <jmorris@namei.org>, Alan Stern <stern@rowland.harvard.edu>, xen-devel@lists.xenproject.org, Boqun Feng <boqun.feng@gmail.com>, Nicholas Piggin <npiggin@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Antoine Jacquet <royale@zerezo.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>, linux-crypto@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, David Airlie <airlied@linux.ie>, Max Filippov <jcmvbkbc@gmail.com>, Harry Wei <harryxiyou@gmail.com>, selinux@tycho.nsa.gov
 List-Id: devicetree@vger.kernel.org
 
-On 05/15/2018 10:11 AM, Dinh Nguyen wrote:
-> 
-> On 05/11/2018 11:10 AM, thor.thayer@linux.intel.com wrote:
->> From: Thor Thayer <thor.thayer@linux.intel.com>
->>
->> Add qspi_clock
->>     The qspi_clk frequency is updated by U-Boot before starting Linux.
->> Add QSPI interface node.
->> Add QSPI flash memory child node.
->>     Setup the QSPI memory in 2 partitions.
->>
->> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
->> ---
->> v2  s/_/-/ in qspi-clk
->>      rename flash node.
->>      use partition child node notation<snip>>> +		qspi: spi@ff8d2000 {
->> +			compatible = "cdns,qspi-nor";
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <0xff8d2000 0x100>,
->> +			      <0xff900000 0x100000>;
->> +			interrupts = <0 3 4>;
->> +			cdns,fifo-depth = <128>;
->> +			cdns,fifo-width = <4>;
->> +			cdns,trigger-address = <0x00000000>;
->> +			clocks = <&qspi_clk>;
->> +			bus-num = <1>;
-> 
-> I don't you need "bus-num" anymore right? I don't see it getting used
-> anywhere in the driver.
-> 
-> Dinh
-> 
-
-Yes, I missed that holdover. Thanks, I'll correct that.
+UXVvdGluZyBNYXVybyBDYXJ2YWxobyBDaGVoYWIgKDIwMTgtMDUtMDkgMDY6MTg6NTIpCj4gQXMg
+d2UgbW92ZSBzdHVmZiBhcm91bmQsIHNvbWUgZG9jIHJlZmVyZW5jZXMgYXJlIGJyb2tlbi4gRml4
+IHNvbWUgb2YKPiB0aGVtIHZpYSB0aGlzIHNjcmlwdDoKPiAgICAgICAgIC4vc2NyaXB0cy9kb2N1
+bWVudGF0aW9uLWZpbGUtcmVmLWNoZWNrIC0tZml4LXJzdAo+IAo+IE1hbnVhbGx5IGNoZWNrZWQg
+aWYgdGhlIHByb2R1Y2VkIHJlc3VsdCBpcyB2YWxpZCwgcmVtb3ZpbmcgYSBmZXcKPiBmYWxzZS1w
+b3NpdGl2ZXMuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWF1cm8gQ2FydmFsaG8gQ2hlaGFiIDxtY2hl
+aGFiK3NhbXN1bmdAa2VybmVsLm9yZz4KPiAtLS0KCj4gIGRyaXZlcnMvY2xrL2Nsay5jICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICB8ICA0ICsrLS0KPiAgZHJpdmVycy9jbGsvaW5nZW5pYy9j
+Z3UuaCAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KCkFja2VkLWJ5OiBTdGVwaGVuIEJveWQg
+PHNib3lkQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
