@@ -1,37 +1,22 @@
-Return-Path: <SRS0=RXWw=ID=gmail.com=ulrich.hecht@kernel.org>
+Return-Path: <SRS0=k3cm=IC=atomide.com=tony@kernel.org>
+Date: Tue, 15 May 2018 11:18:20 -0700
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am335x-baltos-ir3220: Use IRQ_TYPE specifier
+Message-ID: <20180515181820.GX98604@atomide.com>
+References: <1526253393-3247-1-git-send-email-hernan@vanguardiasur.com.ar>
 MIME-Version: 1.0
-In-Reply-To: <20180411090122.GK6436@w540>
-References: <1522759385-17661-1-git-send-email-ykaneko0929@gmail.com> <20180411090122.GK6436@w540>
-From: Ulrich Hecht <ulrich.hecht@gmail.com>
-Date: Wed, 16 May 2018 15:07:01 +0200
-Message-ID: <CAO3366w6jfL4W5i_ezoL0s6_1Rrc0RssHyc0p2zhKQcicpzNqQ@mail.gmail.com>
-Subject: Re: [PATCH/RFT v3 0/3] thermal: add support for r8a77995
-Content-Type: text/plain; charset="UTF-8"
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Yoshihiro Kaneko <ykaneko0929@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1526253393-3247-1-git-send-email-hernan@vanguardiasur.com.ar>
+To: =?utf-8?Q?Hern=C3=A1n?= Gonzalez <hernan@vanguardiasur.com.ar>
+Cc: bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Apr 11, 2018 at 11:01 AM, jacopo mondi <jacopo@jmondi.org> wrote:
-> Hello Kaneko-san,
->
-> On Tue, Apr 03, 2018 at 09:43:02PM +0900, Yoshihiro Kaneko wrote:
->> This series adds thermal support for r8a77995.
->> R-Car D3 (r8a77995) have a thermal sensor module which is similar to Gen2.
->> Therefore this series adds r8a77995 support to rcar_thermal driver not
->> rcar_gen3_thermal driver.
->
-> I tested this on D3 Draak.
->
-> I generated load expecting the detected temperature to rise.
->
-> It took a while, and I only see a slight increase of the temperature
-> reported by the 'temp' attribute.
+* Hernán Gonzalez <hernan@vanguardiasur.com.ar> [180513 23:19]:
+> GPIO_ACTIVE_LOW was being used to specify an interrupt, use
+> IRQ_TYPE_EDGE_RISING instead. This improves DT readability.
 
-Pointing a heat gun at the SoC, I managed to get the temperature up to
-80000, and it went back to 40000 when I removed it. I'd say this
-works.
+Thanks applying all five similar patchs into omap-for-v4.18/dt.
 
-Tested-By: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-
-CU
-Uli
+Tony
