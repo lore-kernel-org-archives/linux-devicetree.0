@@ -1,35 +1,38 @@
-Return-Path: <SRS0=Thvr=IA=vanguardiasur.com.ar=hernan@kernel.org>
-From: =?UTF-8?q?Hern=C3=A1n=20Gonzalez?= <hernan@vanguardiasur.com.ar>
-Subject: [PATCH] ARM: dts: am335x-baltos-ir3220: Use IRQ_TYPE specifier
-Date: Sun, 13 May 2018 20:16:33 -0300
-Message-Id: <1526253393-3247-1-git-send-email-hernan@vanguardiasur.com.ar>
+Return-Path: <SRS0=ibFM=IC=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: bcousson@baylibre.com
-Cc: tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Hern=C3=A1n=20Gonzalez?= <hernan@vanguardiasur.com.ar>
+Sender: geert.uytterhoeven@gmail.com
+In-Reply-To: <1526008947-26667-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1526008947-26667-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1526008947-26667-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 15 May 2018 10:55:53 +0200
+Message-ID: <CAMuHMdXaiYi=vZPijaO+OjQRLUWN_wK6w71S+1tDbBFDmX4B8Q@mail.gmail.com>
+Subject: Re: [PATCH 4/6] pinctrl: sh-pfc: r8a77990: Add SCIF pins, groups and functions
+Content-Type: text/plain; charset="UTF-8"
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-GPIO_ACTIVE_LOW was being used to specify an interrupt, use
-IRQ_TYPE_EDGE_RISING instead. This improves DT readability.
+On Fri, May 11, 2018 at 5:22 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>
+> This patch adds SCIF{0,1,2,3,4,5} pins, groups and functions to R8A77990
+> SoC.
+>
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Signed-off-by: Hernán Gonzalez <hernan@vanguardiasur.com.ar>
----
- arch/arm/boot/dts/am335x-baltos-ir3220.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in sh-pfc-for-v4.18...
 
-diff --git a/arch/arm/boot/dts/am335x-baltos-ir3220.dts b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
-index 46df1b2..1b215c4 100644
---- a/arch/arm/boot/dts/am335x-baltos-ir3220.dts
-+++ b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
-@@ -85,7 +85,7 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&gpio0>;
--		interrupts = <20 GPIO_ACTIVE_LOW>;
-+		interrupts = <20 IRQ_TYPE_EDGE_RISING>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&tca6416_pins>;
- 	};
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
