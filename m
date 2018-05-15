@@ -1,70 +1,45 @@
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: Re: [PATCH] ARM: dts: chromecast: override bad bootloader memory
- info
-Date: Tue, 15 May 2018 10:29:39 +0800
-Message-ID: <20180515102939.3ab8797c@xhacker.debian>
-References: <20180514215645.17592-2-tommyhebb@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 0/5] Hi3660: enable power management features
+Date: Tue, 15 May 2018 10:53:10 +0800
+Message-ID: <1526352795-6991-1-git-send-email-leo.yan@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180514215645.17592-2-tommyhebb@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Hebb <tommyhebb@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/Synaptics
-        Berlin SoC support" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Since hi3660 drivers have been merged into Linux kernel (mailbox driver is in
+Linux-next branch and other drivers are existed in Linux mainline kernel), so
+this patch series is to enable power management features on hi3660.
 
-On Mon, 14 May 2018 17:56:45 -0400 Thomas Hebb  wrote:
+This patch series includes device tree binding for mailbox, stub clock and CPU
+OPPs, and has one patch to consolidate the Kconfigs for driver modules.
 
-> On the Chromecast, the bootloader provides us with an ATAG_MEM of
-> start=0x01000000 and size=0x3eff8000. This is clearly incorrect, as the
-> range given encompasses nearly a GiB but the Chromecast only has 512MiB
-> of RAM! Additionally, this causes the kernel to be decompressed at
-> 0x00008000, below the claimed beginning of RAM, and so the boot fails.
-> 
-> Since the existing ATAG parsing code runs before the kernel is even
-> decompressed and irrevocably patches the device tree, don't even try
+This patch set have been tested on Hikey960 and also verified the patch 'hisi:
+Consolidate the Kconfigs for the CLOCK_STUB and the MAILBOX' for Hikey620.
 
-This means you enabled ARM_ATAG_DTB_COMPAT. could we disable it instead?
-The ATAG is useless when we provide dtb. And IIRC, the ATAG is provided due
-to legacy history code.
+Changes from v1:
+* Changed patch subject from "dts: arm64: hi3660" to "arm64: dts: hi3660".
 
-Thanks
 
-> to bypass it. Instead, use the "linux,usable-memory" property instead
-> of the "reg" property to define the real range. The ATAG code only
-> overwrites reg, but linux,usable-memory is checked first in the OF
-> driver, so the fact that reg gets changed makes no difference.
-> 
-> Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
-> ---
->  arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-> index 20f31cdeaf38..54221f55bfa2 100644
-> --- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-> +++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-> @@ -52,7 +52,17 @@
->  
->  	memory@0 {
->  		device_type = "memory";
-> -		reg = <0x00000000 0x20000000>; /* 512 MB */
-> +
-> +		/*
-> +		 * We're using "linux,usable-memory" instead of "reg" here
-> +		 * because the (signed and encrypted) bootloader that shipped
-> +		 * with this device provides an incorrect memory range in
-> +		 * ATAG_MEM. Linux helpfully overrides the "reg" property with
-> +		 * data from the ATAG, so we can't specify the proper range
-> +		 * normally. Fortunately, this alternate property is checked
-> +		 * first by the OF driver, so we can (ab)use it instead.
-> +		 */
-> +		linux,usable-memory = <0x00000000 0x20000000>; /* 512 MB */
->  	};
->  
->  	leds {
+Daniel Lezcano (1):
+  hisi: Consolidate the Kconfigs for the CLOCK_STUB and the MAILBOX
+
+Kaihua Zhong (2):
+  arm64: dts: hi3660: Add mailbox node
+  arm64: dts: hi3660: Add stub clock node
+
+Leo Yan (1):
+  arm64: dts: hi3660: Add CPU frequency scaling support
+
+Tao Wang (1):
+  arm64: dts: hi3660: Add thermal cooling management
+
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 145 ++++++++++++++++++++++++++++++
+ arch/arm64/configs/defconfig              |   1 -
+ drivers/clk/hisilicon/Kconfig             |  13 +--
+ drivers/mailbox/Kconfig                   |  12 ++-
+ 4 files changed, 161 insertions(+), 10 deletions(-)
+
+-- 
+1.9.1
