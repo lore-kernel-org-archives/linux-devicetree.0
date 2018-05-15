@@ -1,52 +1,51 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v6 14/14] dt: qcom: Add qcom-cpufreq-kryo driver
- configuration
-Date: Tue, 15 May 2018 09:41:24 +0530
-Message-ID: <20180515041124.7e7qkzqd2jkokqhz@vireshk-i7>
-References: <1526303520-5843-1-git-send-email-ilialin@codeaurora.org>
- <1526303520-5843-15-git-send-email-ilialin@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH] arm64: dts: qcom: sdm845: Sort nodes in the reserved mem by address
+Date: Mon, 14 May 2018 21:37:13 -0700
+Message-ID: <20180515043714.39011-1-dianders@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1526303520-5843-15-git-send-email-ilialin@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ilia Lin <ilialin@codeaurora.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
+To: andy.gross@linaro.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 14-05-18, 16:12, Ilia Lin wrote:
-> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/apq8096-db820c.dts |   2 +-
->  arch/arm64/boot/dts/qcom/msm8996.dtsi       | 310 +++++++++++++++++++++++++++-
->  2 files changed, 309 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-> index 230e9c8..da23bda 100644
-> --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-> +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-> @@ -17,5 +17,5 @@
->  
->  / {
->  	model = "Qualcomm Technologies, Inc. DB820c";
-> -	compatible = "arrow,apq8096-db820c", "qcom,apq8096-sbc";
-> +	compatible = "arrow,apq8096-db820c", "qcom,apq8096-sbc", "qcom,apq8096";
->  };
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index d7adef9..fbf92f6 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -174,218 +174,519 @@
->  	};
->  
->  	cluster0_opp: opp_table0 {
-> -		compatible = "operating-points-v2";
-> +		compatible = "operating-points-v2-kryo-cpu";
+Let's keep the reserved-memory node tidy and neat and keep it sorted
+by address.  This should have no functional change.
 
-I think you need to mention both the above compatible strings here
-with the kyro one mentioned first.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 7c85e7c596db..63026133feab 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -31,6 +31,12 @@
+ 			no-map;
+ 		};
+ 
++		reserved-memory@85fe0000 {
++			compatible = "qcom,cmd-db";
++			reg = <0x0 0x85fe0000 0x0 0x20000>;
++			no-map;
++		};
++
+ 		smem_mem: memory@86000000 {
+ 			reg = <0x0 0x86000000 0x0 0x200000>;
+ 			no-map;
+@@ -40,12 +46,6 @@
+ 			reg = <0 0x86200000 0 0x2d00000>;
+ 			no-map;
+ 		};
+-
+-		memory@85fe0000 {
+-			compatible = "qcom,cmd-db";
+-			reg = <0x0 0x85fe0000 0x0 0x20000>;
+-			no-map;
+-		};
+ 	};
+ 
+ 	cpus {
 -- 
-viresh
+2.17.0.441.gb46fe60e1d-goog
