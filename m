@@ -1,51 +1,52 @@
-Return-Path: <SRS0=A7Xe=IP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00071.outbound.protection.outlook.com ([40.107.0.71]:26304
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1753050AbeE1DKf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 May 2018 23:10:35 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v6 14/15] staging: typec: tcpci: Only touch target bit when enable vconn
-Date: Mon, 28 May 2018 10:52:46 +0800
-Message-Id: <1527475967-15201-15-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
-References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=+0LH=IC=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH v2 1/3] dt-bindings: timer: renesas, cmt: Document
+ r8a774[35] CMT support
+Date: Tue, 15 May 2018 09:35:57 +0000
+Message-ID: <TY1PR01MB177024E60A454389C064C87DC0930@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1513618743-4773-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1513618743-4773-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <TY1PR01MB1770621EC40038C4237B1BAAC0BE0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <20180513074656.5rkkp4trtpozvxhv@verge.net.au>
+In-Reply-To: <20180513074656.5rkkp4trtpozvxhv@verge.net.au>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, jun.li@nxp.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+To: Simon Horman <horms@verge.net.au>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob
 List-ID: <devicetree@vger.kernel.org>
 
-We need regmap_update_bits to avoid touch any other bits when
-enable or disable vconn.
+Thank you Simon.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- drivers/staging/typec/tcpci.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Fab
 
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index 11c2d37..ac6b418 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -218,12 +218,9 @@ static int tcpci_set_vconn(struct tcpc_dev *tcpc, bool enable)
- 			return ret;
- 	}
- 
--	ret = regmap_write(tcpci->regmap, TCPC_POWER_CTRL,
--			   enable ? TCPC_POWER_CTRL_VCONN_ENABLE : 0);
--	if (ret < 0)
--		return ret;
--
--	return 0;
-+	return regmap_update_bits(tcpci->regmap, TCPC_POWER_CTRL,
-+				TCPC_POWER_CTRL_VCONN_ENABLE,
-+				enable ? TCPC_POWER_CTRL_VCONN_ENABLE : 0);
- }
- 
- static int tcpci_set_roles(struct tcpc_dev *tcpc, bool attached,
--- 
-2.7.4
+> -----Original Message-----
+> From: Simon Horman [mailto:horms@verge.net.au]
+> Sent: 13 May 2018 08:47
+> To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>; Daniel Lezcano <daniel.lezcano@=
+linaro.org>; Geert Uytterhoeven
+> <geert+renesas@glider.be>; devicetree@vger.kernel.org; Chris Paterson <Ch=
+ris.Paterson2@renesas.com>; Biju Das
+> <biju.das@bp.renesas.com>; linux-renesas-soc@vger.kernel.org; Rob Herring=
+ <robh+dt@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>
+> Subject: Re: [PATCH v2 1/3] dt-bindings: timer: renesas, cmt: Document r8=
+a774[35] CMT support
+>
+> On Tue, Apr 10, 2018 at 09:36:39AM +0000, Fabrizio Castro wrote:
+> > Good morning gentlemen,
+> >
+> > I am very sorry to bother you again, but it seems this patch has no
+> > master. Is anybody willing to take it?
+>
+> Patchwork tells me this has been Acked by Daniel Lezcano.
+> So I have decided to take this one in from the cold and apply it to the
+> renesas tree.
 
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
