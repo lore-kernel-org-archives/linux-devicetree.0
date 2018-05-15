@@ -1,52 +1,39 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/4] ARM: dts: am437x boards: Correct (again) tps65218
- irq type
-Date: Tue, 15 May 2018 11:15:43 -0700
-Message-ID: <20180515181543.GW98604@atomide.com>
-References: <20180508132053.5471-1-peter.ujfalusi@ti.com>
- <20180508141600.GT98604@atomide.com>
- <4b4100d0-85e1-659b-8f7e-b3d4b3925e82@ti.com>
+From: Markus Niebel <niebelm@tqsc.de>
+Subject: Re: [RESEND PATCH v2 1/1] net: phy: micrel: add 125MHz reference
+ clock workaround
+Date: Tue, 15 May 2018 20:11:13 +0200
+Message-ID: <1526407873.17254.8.camel@tqsc.de>
+References: <20180515081856.23322-1-m.felsch@pengutronix.de>
+         <20180515081856.23322-2-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4b4100d0-85e1-659b-8f7e-b3d4b3925e82@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180515081856.23322-2-m.felsch@pengutronix.de>
+Sender: netdev-owner@vger.kernel.org
+To: Marco Felsch <m.felsch@pengutronix.de>, robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Markus.Niebel@tq-group.com
 List-Id: devicetree@vger.kernel.org
 
-* Keerthy <j-keerthy@ti.com> [180509 04:03]:
+Am Dienstag, den 15.05.2018, 10:18 +0200 schrieb Marco Felsch:
+> From: Markus Niebel <Markus.Niebel@tqs.de>
 > 
+> The micrel KSZ9031 phy has a optional clock pin (CLK125_NDO) which can be
+> used as reference clock for the MAC unit. The clock signal must meet the
+> RGMII requirements to ensure the correct data transmission between the
+> MAC and the PHY. The KSZ9031 phy does not fulfill the duty cycle
+> requirement if the phy is configured as slave. For a complete
+> describtion look at the errata sheets: DS80000691D or DS80000692D.
 > 
-> On Tuesday 08 May 2018 07:46 PM, Tony Lindgren wrote:
-> > * Peter Ujfalusi <peter.ujfalusi@ti.com> [180508 13:22]:
-> >> Hi,
-> >>
-> >> While based on the datasheet of tps65218 the INT is low active, the GIC_SPI
-> >> does not support anythin but IRQ_TYPE_LEVEL_HIGH or IRQ_TYPE_EDGE_RISING:
-> >>
-> >> [    2.761814] genirq: Setting trigger mode 8 for irq 102 failed (irq_chip_set_type_parent+0x0/0x30)
-> >> [    2.770913] tps65218 0-0024: Failed to request IRQ 102 for tps65218: -22
-> >> [    2.777854] tps65218: probe of 0-0024 failed with error -22
-> > 
-> > So does the tps65218 have some register to control the interrupt
-> > direction or is it's datasheet wrong?
-> > 
-> > BTW, ADC might be a good test case for PMIC interrupt if it has one.
+> The errata sheet recommends to force the phy into master mode whenever
+> there is a 1000Base-T link-up as work around. Only set the
+> "micrel,force-master" property if you use the phy reference clock provided
+> by CLK125_NDO pin as MAC reference clock in your application.
 > 
-> There is no ADC on this PMIC.
+> Attenation, this workaround is only usable if the link partner can
+> be configured to slave mode for 1000Base-T.
 > 
-> > 
-> >> Use LEVEL_HIGH for the interrupt as it looks to be the correct setting:
-> >> INTn of tps65218 is connected to NMIn of the SoC.
-> >>
-> >> The offending patches are only in linux-next.
-> > 
-> > OK
+Thank you for documenting and bringing it mainline, should be clear enough what the
+modification is meant for.
 
-Applying these all into omap-for-v4.18/dt.
-
-Regards,
-
-Tony
+Markus
