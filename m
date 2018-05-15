@@ -1,68 +1,65 @@
-From: Erin Lo <erin.lo@mediatek.com>
-Subject: Re: [PATCH v2 4/4] arm64: dts: Add Mediatek SoC MT8183 and
- evaluation board dts and Makefile
-Date: Tue, 15 May 2018 16:39:31 +0800
-Message-ID: <1526373571.3345.3.camel@mtksdaap41>
-References: <1526293351-32794-1-git-send-email-erin.lo@mediatek.com>
-         <1526293351-32794-5-git-send-email-erin.lo@mediatek.com>
-         <efa91778-e81f-9ba4-22a6-43ff0f94af4f@arm.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH 09/12] platform/early: add an init section for early
+ driver data
+Date: Tue, 15 May 2018 10:41:42 +0200
+Message-ID: <CAMRc=MfF=OxvC=pcVvu2BmEceHytPZUOMrALf=CHxngPdAXpUA@mail.gmail.com>
+References: <20180511162028.20616-1-brgl@bgdev.pl> <20180511162028.20616-10-brgl@bgdev.pl>
+ <CAMuHMdUnG0YLg=HXMrUVJ34sZEDuuZRYxnrPPC45-KpAkO3bcw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <efa91778-e81f-9ba4-22a6-43ff0f94af4f@arm.com>
+In-Reply-To: <CAMuHMdUnG0YLg=HXMrUVJ34sZEDuuZRYxnrPPC45-KpAkO3bcw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, Ben Ho <Ben.Ho@mediatek.com>, Hailong Fan <Hailong.Fan@mediatek.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Peter Rosin <peda@axentia.se>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-05-14 at 11:35 +0100, Marc Zyngier wrote:
-> On 14/05/18 11:22, Erin Lo wrote:
-> > From: Ben Ho <Ben.Ho@mediatek.com>
-> > 
-> > Add basic chip support for Mediatek 8183
-> > 
-> > Signed-off-by: Ben Ho <Ben.Ho@mediatek.com>
-> > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/Makefile       |   1 +
-> >  arch/arm64/boot/dts/mediatek/mt8183-evb.dts |  31 +++++
-> >  arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 178 ++++++++++++++++++++++++++++
-> >  3 files changed, 210 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > 
-> 
-> [...]
-> 
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > new file mode 100644
-> > index 0000000..8564a26
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> 
-> [...]
-> 
-> > +	gic: interrupt-controller@0c000000 {
-> > +		compatible = "arm,gic-v3";
-> > +		#interrupt-cells = <3>;
-> > +		interrupt-parent = <&gic>;
-> > +		interrupt-controller;
-> > +		reg = <0 0x0c000000 0 0x40000>,  // CID
-> > +		      <0 0x0c100000 0 0x200000>; // CIR
-> 
-> You're missing the GICV and GICH regions that are present on both A53
-> and A73 at an offset from PERIPHBASE.
-> 
-> > +		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> > +	};
-> 
-> Thanks,
-> 
-> 	M.
+2018-05-14 23:29 GMT+02:00 Geert Uytterhoeven <geert@linux-m68k.org>:
+> Hi Bartosz,
+>
+> On Fri, May 11, 2018 at 6:20 PM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>
+>> Provide a separate section in which pointers to early platform driver
+>> structs will be stored.
+>>
+>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Thanks for your patch!
+>
+>> --- a/include/asm-generic/vmlinux.lds.h
+>> +++ b/include/asm-generic/vmlinux.lds.h
+>> @@ -214,6 +214,16 @@
+>>  #define CPU_METHOD_OF_TABLES() OF_TABLE(CONFIG_SMP, cpu_method)
+>>  #define CPUIDLE_METHOD_OF_TABLES() OF_TABLE(CONFIG_CPU_IDLE, cpuidle_method)
+>>
+>> +#ifdef CONFIG_EARLY_PLATFORM
+>> +#define EARLY_PLATFORM_DRIVERS_TABLE()                                 \
+>> +       . = ALIGN(8);                                                   \
+>
+> Should this use STRUCT_ALIGN() instead?
+>
 
-I will fill out the GICV and GICH in next round.
-Thanks.
+No, we're only using it to store pointers to structs, not the actual
+struct early_platform_driver objects.
 
-Regards,
-Erin
+>> +       VMLINUX_SYMBOL(__early_platform_drivers_table) = .;             \
+>> +       KEEP(*(__early_platform_drivers_table))                         \
+>> +       VMLINUX_SYMBOL(__early_platform_drivers_table_end) = .;
+>> +#else
+>> +#define EARLY_PLATFORM_DRIVERS_TABLE()
+>> +#endif
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+Thanks,
+Bartosz
