@@ -1,12 +1,14 @@
 From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: [PATCH 1/2] ARM: dts: berlin*.dtsi: use SPDX-License-Identifier for
- berlin SoCs
-Date: Tue, 15 May 2018 18:12:16 +0800
-Message-ID: <20180515181216.6d82f7fc@xhacker.debian>
+Subject: [PATCH 2/2] ARM: dts: berlin*-dts: use SPDX-License-Identifier for
+ berlin based board
+Date: Tue, 15 May 2018 18:14:07 +0800
+Message-ID: <20180515181407.1848452b@xhacker.debian>
+References: <20180515181216.6d82f7fc@xhacker.debian>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180515181216.6d82f7fc@xhacker.debian>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -24,24 +26,22 @@ license text [2] is actually what the current DT files claim.
 
 Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 ---
- arch/arm/boot/dts/berlin2.dtsi   | 33 +-------------------------------
- arch/arm/boot/dts/berlin2cd.dtsi | 33 +-------------------------------
- arch/arm/boot/dts/berlin2q.dtsi  | 33 +-------------------------------
+ arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts    | 33 +------------------
+ .../boot/dts/berlin2cd-google-chromecast.dts  | 33 +------------------
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts    | 33 +------------------
  3 files changed, 3 insertions(+), 96 deletions(-)
 
-diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
-index 787a9d042ad9..db67377af266 100644
---- a/arch/arm/boot/dts/berlin2.dtsi
-+++ b/arch/arm/boot/dts/berlin2.dtsi
-@@ -1,3 +1,4 @@
+diff --git a/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts b/arch/arm/boot/dts=
+/berlin2-sony-nsz-gs7.dts
+index 1c475796d17f..64a297759eb9 100644
+--- a/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
++++ b/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
+@@ -1,39 +1,8 @@
 +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
  /*
-  * Device Tree Include file for Marvell Armada 1500 (Berlin BG2) SoC
+  * Device Tree file for Sony NSZ-GS7
   *
-@@ -5,38 +6,6 @@
-  *
-  * based on GPL'ed 2.6 kernel sources
-  *  (c) Marvell International Ltd.
+  * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 - *
 - * This file is dual-licensed: you can use it either under the terms
 - * of the GPL or the X11 license, at your option. Note that this dual
@@ -76,21 +76,18 @@ index 787a9d042ad9..db67377af266 100644
 - *     OTHER DEALINGS IN THE SOFTWARE.
   */
 =20
- #include <dt-bindings/clock/berlin2.h>
-diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berlin2cd=
-.dtsi
-index 501c59d97eae..387d02803690 100644
---- a/arch/arm/boot/dts/berlin2cd.dtsi
-+++ b/arch/arm/boot/dts/berlin2cd.dtsi
-@@ -1,3 +1,4 @@
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/b=
+oot/dts/berlin2cd-google-chromecast.dts
+index ca24def0ce13..540115172d3a 100644
+--- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
++++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+@@ -1,39 +1,8 @@
 +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
  /*
-  * Device Tree Include file for Marvell Armada 1500-mini (Berlin BG2CD) SoC
+  * Device Tree file for Google Chromecast
   *
-@@ -5,38 +6,6 @@
-  *
-  * based on GPL'ed 2.6 kernel sources
-  *  (c) Marvell International Ltd.
+  * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 - *
 - * This file is dual-licensed: you can use it either under the terms
 - * of the GPL or the X11 license, at your option. Note that this dual
@@ -125,12 +122,12 @@ index 501c59d97eae..387d02803690 100644
 - *     OTHER DEALINGS IN THE SOFTWARE.
   */
 =20
- #include <dt-bindings/clock/berlin2.h>
-diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.d=
-tsi
-index f11254e70f57..82e176011d36 100644
---- a/arch/arm/boot/dts/berlin2q.dtsi
-+++ b/arch/arm/boot/dts/berlin2q.dtsi
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot/dts=
+/berlin2q-marvell-dmp.dts
+index 57aa5f8a7c77..c162f98cb8e8 100644
+--- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
++++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
 @@ -1,37 +1,6 @@
 +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
  /*
@@ -170,6 +167,6 @@ om>
 - *     OTHER DEALINGS IN THE SOFTWARE.
   */
 =20
- #include <dt-bindings/clock/berlin2q.h>
+ /dts-v1/;
 --=20
 2.17.0
