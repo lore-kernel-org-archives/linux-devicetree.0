@@ -1,122 +1,63 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH v2 5/5] hisi: Consolidate the Kconfigs for the CLOCK_STUB
- and the MAILBOX
-Date: Tue, 15 May 2018 09:23:03 +0100
-Message-ID: <5AFA98E7.9050609@hisilicon.com>
-References: <1526352795-6991-1-git-send-email-leo.yan@linaro.org>
- <1526352795-6991-6-git-send-email-leo.yan@linaro.org>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH 1/3] dt-bindings: media: rcar-vin: Add R8A77995 support
+Date: Tue, 15 May 2018 10:36:27 +0200
+Message-ID: <20180515083627.GR5956@w540>
+References: <1526032802-14376-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1526032802-14376-2-git-send-email-jacopo+renesas@jmondi.org>
+ <20180511133513.25dldevvnlnxl7y6@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ixDgnS8AC6zwmyK0"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526352795-6991-6-git-send-email-leo.yan@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20180511133513.25dldevvnlnxl7y6@verge.net.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Leo, Daniel,
 
-On 2018/5/15 3:53, Leo Yan wrote:
-> From: Daniel Lezcano <daniel.lezcano@linaro.org>
-> 
-> The current defconfig is inconsistent as it selects the mailbox and
-> the clock for the hi6220 and the hi3660 without having their Kconfigs
-> making sure the dependencies are correct. It ends up when selecting
-> different versions for the kernel (for example when git bisecting)
-> those options disappear and they don't get back, leading to unexpected
-> behaviors. In our case, the cpufreq driver does no longer work because
-> the clock fails to initialize due to the clock stub and the mailbox
-> missing.
-> 
-> In order to have the dependencies correctly set when defaulting, let's
-> do the same as commit 3a49afb84ca074e ("clk: enable hi655x common clk
-> automatically") where we select automatically the driver when the
-> parent driver is selected. With sensible defaults in place, we can leave
-> other choices for EXPERT.
-> 
-> Acked-by: Stephen Boyd <sboyd@kernel.org>
-> Acked-by: Jassi Brar <jaswinder.singh@linaro.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  arch/arm64/configs/defconfig  |  1 -
->  drivers/clk/hisilicon/Kconfig | 13 ++++++++-----
->  drivers/mailbox/Kconfig       | 12 ++++++++----
->  3 files changed, 16 insertions(+), 10 deletions(-)
+--ixDgnS8AC6zwmyK0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Could you separate this patch into clk, mailbox and defconfig 3 parts?
-Thanks!
+Hi Simon,
 
-Best Regards,
-Wei
+On Fri, May 11, 2018 at 03:35:14PM +0200, Simon Horman wrote:
+> On Fri, May 11, 2018 at 12:00:00PM +0200, Jacopo Mondi wrote:
+> > Add compatible string for R-Car D3 R8A7795 to list of SoCs supported by
+> > rcar-vin driver.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+>
 
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index ecf6137..1d9d8b9 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -549,7 +549,6 @@ CONFIG_HWSPINLOCK_QCOM=y
->  CONFIG_ARM_MHU=y
->  CONFIG_PLATFORM_MHU=y
->  CONFIG_BCM2835_MBOX=y
-> -CONFIG_HI6220_MBOX=y
->  CONFIG_QCOM_APCS_IPC=y
->  CONFIG_ROCKCHIP_IOMMU=y
->  CONFIG_TEGRA_IOMMU_SMMU=y
-> diff --git a/drivers/clk/hisilicon/Kconfig b/drivers/clk/hisilicon/Kconfig
-> index 1bd4355..becdb1d 100644
-> --- a/drivers/clk/hisilicon/Kconfig
-> +++ b/drivers/clk/hisilicon/Kconfig
-> @@ -44,14 +44,17 @@ config RESET_HISI
->  	  Build reset controller driver for HiSilicon device chipsets.
->  
->  config STUB_CLK_HI6220
-> -	bool "Hi6220 Stub Clock Driver"
-> -	depends on COMMON_CLK_HI6220 && MAILBOX
-> -	default ARCH_HISI
-> +	bool "Hi6220 Stub Clock Driver" if EXPERT
-> +	depends on (COMMON_CLK_HI6220 || COMPILE_TEST)
-> +	depends on MAILBOX
-> +	default COMMON_CLK_HI6220
->  	help
->  	  Build the Hisilicon Hi6220 stub clock driver.
->  
->  config STUB_CLK_HI3660
-> -	bool "Hi3660 Stub Clock Driver"
-> -	depends on COMMON_CLK_HI3660 && MAILBOX
-> +	bool "Hi3660 Stub Clock Driver" if EXPERT
-> +	depends on (COMMON_CLK_HI3660 || COMPILE_TEST)
-> +	depends on MAILBOX
-> +	default COMMON_CLK_HI3660
->  	help
->  	  Build the Hisilicon Hi3660 stub clock driver.
-> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> index a2bb274..567cd02 100644
-> --- a/drivers/mailbox/Kconfig
-> +++ b/drivers/mailbox/Kconfig
-> @@ -109,16 +109,20 @@ config TI_MESSAGE_MANAGER
->  	  platform has support for the hardware block.
->  
->  config HI3660_MBOX
-> -	tristate "Hi3660 Mailbox"
-> -	depends on ARCH_HISI && OF
-> +	tristate "Hi3660 Mailbox" if EXPERT
-> +	depends on (ARCH_HISI || COMPILE_TEST)
-> +	depends on OF
-> +	default ARCH_HISI
->  	help
->  	  An implementation of the hi3660 mailbox. It is used to send message
->  	  between application processors and other processors/MCU/DSP. Select
->  	  Y here if you want to use Hi3660 mailbox controller.
->  
->  config HI6220_MBOX
-> -	tristate "Hi6220 Mailbox"
-> -	depends on ARCH_HISI
-> +	tristate "Hi6220 Mailbox" if EXPERT
-> +	depends on (ARCH_HISI || COMPILE_TEST)
-> +	depends on OF
-> +	default ARCH_HISI
->  	help
->  	  An implementation of the hi6220 mailbox. It is used to send message
->  	  between application processors and MCU. Say Y here if you want to
-> 
+Does this goes in through your tree? I will send a v2, should I
+include this one or you have collected it already?
+
+Thanks
+   j
+
+--ixDgnS8AC6zwmyK0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJa+pwLAAoJEHI0Bo8WoVY8LG4P/0nuw6sjuNxQnavZIOtt8bfE
+iMBM9TgavUi3E9CiDhGW3nvCuw718BptpasbZguGWOyiP6tZwXcsGnH7OAVyk8f/
+cpaWe5MP4jlamY++6J9+wWn1yhIUV6EE4JltqBr2+o69ZQIsiNwD8jA6fL/fZF2q
+6iRPPtyeqlRnD+kMVQMXxN77rHNTRqB4wmOKWvaPwvGC+e45jedaGAIcSzKxqlTZ
+20wurTndgZtNGC5eWtIEqXr1FE2SLBV2T5B5bxN2YmeMSC0nhnyKkzp6hcFAJs3z
+7xUagYKbg0Wg4ibQ3xrEVhYlOgX47Zi/b0VTsHETR5HPcPhSRGg7sDvEvkitIs1+
+pxvfNfA+QQp7UZM+qNIPDc+Zrb62OUZ0H5rpUAVKGkuFSnCQK73ooWTT32SYAEMf
+A/k+YlLsT1789G5IDyVfmP4y2gX0ovycwP16Vl604lB8CCqKFvX2G8Vde+PKfbDq
+15Bvi2jCjGwCjQ5HJ/ip/X9JDq6EjBQxF5dsY0sFRm78gtu+vPKpOB7N0M/X1A2a
+583uHp6j80WnmgHHRVOvTo8imSG/xG38g2DtxPNbO0qMjwE6ZPzOhjUzDd48nvLU
+UKxu4n9r/PaGGyGNVipTtm01QAKEpvAxgYmLQyr+Hnv81t1tglMzkeOC4dbx5Fph
+vTag1EMaE1V3apcGMsut
+=CtKZ
+-----END PGP SIGNATURE-----
+
+--ixDgnS8AC6zwmyK0--
