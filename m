@@ -1,50 +1,37 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v6 09/11] firmware: xilinx: Add debugfs for clock control
- APIs
-Date: Tue, 15 May 2018 09:57:49 +0100
-Message-ID: <6579fdce-6845-70d5-1dc1-64d52debef19@arm.com>
-References: <1523389127-14243-1-git-send-email-jollys@xilinx.com>
- <1523389127-14243-10-git-send-email-jollys@xilinx.com>
- <5bcc47f7-3352-f0e6-29c5-78d5be96c1d1@arm.com>
- <SN1PR02MB3758191654612CFC261A38BEB89C0@SN1PR02MB3758.namprd02.prod.outlook.com>
+From: Colin King <colin.king@canonical.com>
+Subject: [PATCH][next] scripts/dtc: fix spelling mistake: "endpont" -> "endpoint"
+Date: Tue, 15 May 2018 10:02:09 +0100
+Message-ID: <20180515090209.9165-1-colin.king@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <SN1PR02MB3758191654612CFC261A38BEB89C0@SN1PR02MB3758.namprd02.prod.outlook.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <JOLLYS@xilinx.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
+Trivial fix to spelling mistake in FAIL message.
 
-On 14/05/18 20:18, Jolly Shah wrote:
-> Hi Sudeep,
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ scripts/dtc/checks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[..]
-
->> 
->> As I mentioned in earlier patch, I don't see the need for this
->> debugfs interface. Clock lay has read-only interface in debugfs
->> already. Also if you want to debug clocks, you can do so using the
->> driver which uses these clocks. Do you really want to manage clocks
->> in user-space ? The whole idea of EEMI kind of interface is to
->> abstract and hide the fine details even from non-trusted rich OS
->> like Linux kernel, but by providing this you are doing exactly
->> opposite.
-> 
-> No we don't want to manage clocks in user-space. This debugfs is
-> meant for developer who wants to debug APIs behavior in case
-> something doesn't work as expected. Debugfs should be off by default
-> in production images.
-> 
-
-Good that it's not used in production image. The clock layer has
-*sufficient* debugfs support that will *help in debugging*. So please
-drop this Xilinx specific clock debugfs.
-
+diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
+index a2cc1036c915..9d253819e12c 100644
+--- a/scripts/dtc/checks.c
++++ b/scripts/dtc/checks.c
+@@ -1536,7 +1536,7 @@ static void check_graph_endpoint(struct check *c, struct dt_info *dti,
+ 		return;
+ 
+ 	if (!strprefixeq(node->name, node->basenamelen, "endpoint"))
+-		FAIL(c, dti, node, "graph endpont node name should be 'endpoint'");
++		FAIL(c, dti, node, "graph endpoint node name should be 'endpoint'");
+ 
+ 	check_graph_reg(c, dti, node);
+ 
 -- 
-Regards,
-Sudeep
+2.17.0
