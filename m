@@ -1,7 +1,7 @@
 From: Marco Felsch <m.felsch@pengutronix.de>
 Subject: [PATCH v2 1/1] net: phy: micrel: add 125MHz reference clock workaround
-Date: Tue, 15 May 2018 09:45:27 +0200
-Message-ID: <20180515074527.22546-2-m.felsch@pengutronix.de>
+Date: Tue, 15 May 2018 09:47:55 +0200
+Message-ID: <20180515074755.26160-2-m.felsch@pengutronix.de>
 Return-path: <netdev-owner@vger.kernel.org>
 Sender: netdev-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com
