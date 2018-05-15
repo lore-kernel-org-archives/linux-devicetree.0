@@ -1,65 +1,36 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH 09/12] platform/early: add an init section for early
- driver data
-Date: Tue, 15 May 2018 10:41:42 +0200
-Message-ID: <CAMRc=MfF=OxvC=pcVvu2BmEceHytPZUOMrALf=CHxngPdAXpUA@mail.gmail.com>
-References: <20180511162028.20616-1-brgl@bgdev.pl> <20180511162028.20616-10-brgl@bgdev.pl>
- <CAMuHMdUnG0YLg=HXMrUVJ34sZEDuuZRYxnrPPC45-KpAkO3bcw@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] dt-bindings: net: ravb: Add support for r8a77990 SoC
+Date: Tue, 15 May 2018 11:43:39 +0300
+Message-ID: <19e43b97-9235-a752-7cf9-56a5e3bb281a@cogentembedded.com>
+References: <1526008736-26496-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20180511.155942.16024095909155343.davem@davemloft.net>
+ <20180513075803.plrkbwmzksjnz45u@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUnG0YLg=HXMrUVJ34sZEDuuZRYxnrPPC45-KpAkO3bcw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Peter Rosin <peda@axentia.se>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180513075803.plrkbwmzksjnz45u@verge.net.au>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, David Miller <davem@davemloft.net>
+Cc: yoshihiro.shimoda.uh@renesas.com, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2018-05-14 23:29 GMT+02:00 Geert Uytterhoeven <geert@linux-m68k.org>:
-> Hi Bartosz,
->
-> On Fri, May 11, 2018 at 6:20 PM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>
->> Provide a separate section in which pointers to early platform driver
->> structs will be stored.
->>
->> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Thanks for your patch!
->
->> --- a/include/asm-generic/vmlinux.lds.h
->> +++ b/include/asm-generic/vmlinux.lds.h
->> @@ -214,6 +214,16 @@
->>  #define CPU_METHOD_OF_TABLES() OF_TABLE(CONFIG_SMP, cpu_method)
->>  #define CPUIDLE_METHOD_OF_TABLES() OF_TABLE(CONFIG_CPU_IDLE, cpuidle_method)
->>
->> +#ifdef CONFIG_EARLY_PLATFORM
->> +#define EARLY_PLATFORM_DRIVERS_TABLE()                                 \
->> +       . = ALIGN(8);                                                   \
->
-> Should this use STRUCT_ALIGN() instead?
->
+On 5/13/2018 10:58 AM, Simon Horman wrote:
 
-No, we're only using it to store pointers to structs, not the actual
-struct early_platform_driver objects.
+>>> Add documentation for r8a77990 compatible string to renesas ravb device
+>>> tree bindings documentation.
+>>>
+>>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>>
+>> I'm assuming this isn't targetted at one of my trees.  Just FYI.
+> 
+> Hi Dave,
+> 
+> I think this is appropriate for net-next but if not I can take it.
 
->> +       VMLINUX_SYMBOL(__early_platform_drivers_table) = .;             \
->> +       KEEP(*(__early_platform_drivers_table))                         \
->> +       VMLINUX_SYMBOL(__early_platform_drivers_table_end) = .;
->> +#else
->> +#define EARLY_PLATFORM_DRIVERS_TABLE()
->> +#endif
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+    There's also Rob, and IIRC he has taken alike patch recently...
 
-Thanks,
-Bartosz
+[...]
+
+MBR, Sergei
