@@ -1,41 +1,76 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2 0/4] Add DesignWare EP support
-Date: Tue, 15 May 2018 16:10:50 +0100
-Message-ID: <20180515151050.GA31726@e107981-ln.cambridge.arm.com>
-References: <cover.1526395185.git.gustavo.pimentel@synopsys.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCHv2] arm64: dts: stratix10: Add QSPI support for Stratix10
+Date: Tue, 15 May 2018 10:11:02 -0500
+Message-ID: <20b33e1d-0609-78dd-dc9c-922658a11f18@kernel.org>
+References: <1526055052-11371-1-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1526395185.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <1526055052-11371-1-git-send-email-thor.thayer@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: bhelgaas@google.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: thor.thayer@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 15, 2018 at 03:41:40PM +0100, Gustavo Pimentel wrote:
-> Patch set was made against the Lorenzo's pci/dwc branch.
-> 
-> The PCIe controller dual mode is capable of operating in RC mode as well
-> as EP mode by configuration option. Till now only RC mode was supported,
-> with this patch is add EP support to the DesignWare driver.
-> 
-> Gustavo Pimentel (4):
->   bindings: PCI: designware: Example update
->   PCI: dwc: Add support for EP mode
->   bindings: PCI: designware: Add support for EP in DesignWare driver
->   misc: pci_endpoint_test: Add DesignWare EP entry
-> 
->  .../devicetree/bindings/pci/designware-pcie.txt    |  24 +++-
->  drivers/misc/pci_endpoint_test.c                   |   1 +
->  drivers/pci/dwc/Kconfig                            |  37 +++--
->  drivers/pci/dwc/pcie-designware-ep.c               |   3 +
->  drivers/pci/dwc/pcie-designware-plat.c             | 149 +++++++++++++++++++--
->  drivers/pci/endpoint/functions/pci-epf-test.c      |   7 +
->  include/linux/pci-epc.h                            |   8 ++
->  7 files changed, 205 insertions(+), 24 deletions(-)
 
-Applied to pci/dwc for v4.18 with some small commit log tweaks.
 
-Thanks,
-Lorenzo
+On 05/11/2018 11:10 AM, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> Add qspi_clock
+>    The qspi_clk frequency is updated by U-Boot before starting Linux.
+> Add QSPI interface node.
+> Add QSPI flash memory child node.
+>    Setup the QSPI memory in 2 partitions.
+> 
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> ---
+> v2  s/_/-/ in qspi-clk
+>     rename flash node.
+>     use partition child node notation
+> ---
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 22 ++++++++++++++
+>  .../boot/dts/altera/socfpga_stratix10_socdk.dts    | 35 ++++++++++++++++++++++
+>  2 files changed, 57 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> index e6b059378dc0..bac01b0b7907 100644
+> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> @@ -119,6 +119,12 @@
+>  				#clock-cells = <0>;
+>  				compatible = "fixed-clock";
+>  			};
+> +
+> +			qspi_clk: qspi-clk {
+> +				#clock-cells = <0>;
+> +				compatible = "fixed-clock";
+> +				clock-frequency = <200000000>;
+> +			};
+>  		};
+>  
+>  		gmac0: ethernet@ff800000 {
+> @@ -466,5 +472,21 @@
+>  				interrupts = <16 4>, <48 4>;
+>  			};
+>  		};
+> +
+> +		qspi: spi@ff8d2000 {
+> +			compatible = "cdns,qspi-nor";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0xff8d2000 0x100>,
+> +			      <0xff900000 0x100000>;
+> +			interrupts = <0 3 4>;
+> +			cdns,fifo-depth = <128>;
+> +			cdns,fifo-width = <4>;
+> +			cdns,trigger-address = <0x00000000>;
+> +			clocks = <&qspi_clk>;
+> +			bus-num = <1>;
+
+I don't you need "bus-num" anymore right? I don't see it getting used
+anywhere in the driver.
+
+Dinh
