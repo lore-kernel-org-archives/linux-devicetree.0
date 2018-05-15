@@ -1,54 +1,74 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v2] arm64: dts: qcom: sdm845: Sort nodes in the reserved mem by address
-Date: Mon, 14 May 2018 21:43:06 -0700
-Message-ID: <20180515044306.40735-1-dianders@chromium.org>
+From: kgunda@codeaurora.org
+Subject: Re: [PATCH V1 2/5] backlight: qcom-wled: Add support for WLED4
+ peripheral
+Date: Tue, 15 May 2018 10:25:55 +0530
+Message-ID: <e7e26e85a7b95d1d0cb67e0d6197e897@codeaurora.org>
+References: <1525341432-15818-1-git-send-email-kgunda@codeaurora.org>
+ <1525341432-15818-3-git-send-email-kgunda@codeaurora.org>
+ <20180514165755.GB27984@xo-6d-61-c0.localdomain>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180514165755.GB27984@xo-6d-61-c0.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: bjorn.andersson@linaro.org, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Let's keep the reserved-memory node tidy and neat and keep it sorted
-by address.  This should have no functional change.
+On 2018-05-14 22:27, Pavel Machek wrote:
+> Hi!
+> 
+>> WLED4 peripheral is present on some PMICs like pmi8998
+>> and pm660l. It has a different register map and also
+>> configurations are different. Add support for it.
+>> 
+>> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> ---
+>>  .../bindings/leds/backlight/qcom-wled.txt          | 172 ++++-
+>>  drivers/video/backlight/qcom-wled.c                | 749 
+>> +++++++++++++++------
+>>  2 files changed, 696 insertions(+), 225 deletions(-)
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt 
+>> b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>> index fb39e32..0ceffa1 100644
+>> --- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>> @@ -1,30 +1,129 @@
+>>  Binding for Qualcomm Technologies, Inc. WLED driver
+>> 
+>> -Required properties:
+>> -- compatible: should be "qcom,pm8941-wled"
+>> -- reg: slave address
+>> -
+>> -Optional properties:
+>> -- default-brightness: brightness value on boot, value from: 0-4095
+>> -	default: 2048
+>> +- compatible
+>> +	Usage:        required
+>> +	Value type:   <string>
+>> +	Definition:   should be "qcom,pm8941-wled" or "qcom,pmi8998-wled".
+>> +		      or "qcom,pm660l-wled".
+>> +
+>> +- reg
+>> +	Usage:        required
+>> +	Value type:   <prop encoded array>
+>> +	Definition:   Base address of the WLED modules.
+> 
+> I'm not sure if this change of format is good idea here...
+> 
+> 									Pavel
+> --
+This format is clean and easily readable. That's why I have moved to 
+this format.
+To avoid confusion, I will move out the existing properties 
+(pm8941-wled.c) to other
+patch. So that it will be easy to review.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-Changes in v2:
-- Oops!  v1 accidentally changed the node name.  Fixed.
-
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 7c85e7c596db..73f71061fef8 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -31,6 +31,12 @@
- 			no-map;
- 		};
- 
-+		memory@85fe0000 {
-+			compatible = "qcom,cmd-db";
-+			reg = <0x0 0x85fe0000 0x0 0x20000>;
-+			no-map;
-+		};
-+
- 		smem_mem: memory@86000000 {
- 			reg = <0x0 0x86000000 0x0 0x200000>;
- 			no-map;
-@@ -40,12 +46,6 @@
- 			reg = <0 0x86200000 0 0x2d00000>;
- 			no-map;
- 		};
--
--		memory@85fe0000 {
--			compatible = "qcom,cmd-db";
--			reg = <0x0 0x85fe0000 0x0 0x20000>;
--			no-map;
--		};
- 	};
- 
- 	cpus {
--- 
-2.17.0.441.gb46fe60e1d-goog
+> To unsubscribe from this list: send the line "unsubscribe 
+> linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
