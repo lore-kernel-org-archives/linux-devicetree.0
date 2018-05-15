@@ -1,258 +1,71 @@
-MIME-Version: 1.0
-In-Reply-To: <20180507223438.GB14924@minitux>
-References: <20180501213114.20183-1-robh@kernel.org>
-	<20180507183106.GF2259@tuxbook-pro>
-	<CAL_Jsq+PRUR5rCeV820XZuQmQH3gD-X=6a5fNuF-9qVbq5dqFg@mail.gmail.com>
-	<20180507223438.GB14924@minitux>
-Date: Wed, 9 May 2018 17:30:00 -0500
-Message-ID: <CAL_JsqJeT=_0JsPgtTfR27cbOvS3QKOHeREciYO=M83M9eFKmg@mail.gmail.com>
-Subject: Re: [RFC PATCH] driver core: make deferring probe forever optional
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Return-Path: <SRS0=7rgC=IC=renesas.com=yoshihiro.shimoda.uh@kernel.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH/RFC v3 3/4] usb: gadget: udc: renesas_usb3: use usb role
+ switch API
+Date: Tue, 15 May 2018 08:32:04 +0000
+Message-ID: <OSBPR01MB229381ADBD47012167FEF5DBD8930@OSBPR01MB2293.jpnprd01.prod.outlook.com>
+References: <1526289360-3997-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1526289360-3997-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20180515075428.6fvkwv2tz6v7cnyj@verge.net.au>
+ <OSBPR01MB2293EFC5FD518ECDD612ABDFD8930@OSBPR01MB2293.jpnprd01.prod.outlook.com>
+ <20180515080342.wksfk5qpazv4l3rs@verge.net.au>
+In-Reply-To: <20180515080342.wksfk5qpazv4l3rs@verge.net.au>
+Content-Language: ja-JP
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Architecture Mailman List <boot-architecture@lists.linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Alexander Graf <agraf@suse.de>
+MIME-Version: 1.0
+To: Simon Horman <horms@verge.net.au>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, May 7, 2018 at 5:34 PM, Bjorn Andersson <bjorn.andersson@linaro.org=
-> wrote:
-> On Mon 07 May 12:55 PDT 2018, Rob Herring wrote:
->
->> On Mon, May 7, 2018 at 1:31 PM, Bjorn Andersson
->> <bjorn.andersson@linaro.org> wrote:
->> > On Tue 01 May 14:31 PDT 2018, Rob Herring wrote:
->> >
->> >> Deferred probe will currently wait forever on dependent devices to pr=
-obe,
->> >> but sometimes a driver will never exist. It's also not always critica=
-l for
->> >> a driver to exist. Platforms can rely on default configuration from t=
-he
->> >> bootloader or reset defaults for things such as pinctrl and power dom=
-ains.
->> >
->> > But how do you know if this is the case?
->>
->> Because the platform worked before adding the dependency in the dts.
->>
->
-> I'm worried about how to write dts files and drivers to support all
-> permutation of forward and backward dependencies. And you most
-> definitely have the same case with bootloader-enabled clocks,
-> regulators and interconnects.
->
->> >> This is often the case with initial platform support until various dr=
-ivers
->> >> get enabled.
->> >
->> > Can you please name platform that has enough support for Alexander to
->> > care about backwards and forwards compatibility but lacks a pinctrl
->> > driver.
->>
->> Alex will have to answer that. I do agree pinctrl drivers shouldn't be
->> that hard because it is all just translating a bunch of pin data into
->> one-time (mostly) register writes, so it shouldn't take that long to
->> implement support. OTOH, maybe a pinctrl driver is low priority
->> because nothing needs it yet. Either a given board works with the
->> defaults and only some new board needs to change things or you don't
->> need pinctrl until low power modes are implemented. However, power
->> domains have the same problem and it can take years for those to get
->> proper support.
->>
->> Alex proposed declaring dts files stable and then enforcing
->> compatibility after that point. If anyone believes that will work,
->> then please send a patch marking all the platforms in the kernel tree
->> that are stable.
->>
->
-> That might be a reasonable idea, but at least in our corner the current
-> decision that devicetree should be backwards compatible does make it
-> quite cumbersome to break this assumption - and in the cases we have had
-> to do it it's really been necessary.
+Hi Simon-san,
 
+> From: Simon Horman, Sent: Tuesday, May 15, 2018 5:04 PM
+>=20
+> On Tue, May 15, 2018 at 08:02:00AM +0000, Yoshihiro Shimoda wrote:
+> > Hi Simon-san,
+> >
+> > Thank you for your review!
+> >
+> > > From: Simon Horman, Sent: Tuesday, May 15, 2018 4:54 PM
+> > > On Mon, May 14, 2018 at 06:15:59PM +0900, Yoshihiro Shimoda wrote:
+> > <snip>
+> > > >  static void usb3_set_mode(struct renesas_usb3 *usb3, bool host)
+> > > >  {
+> > > > -	_usb3_set_mode(usb3, host);
+> > > > +	if (usb3->role_sw)
+> > > > +		usb_role_switch_set_role(usb3->role_sw, host ?
+> > > > +					 USB_ROLE_HOST : USB_ROLE_DEVICE);
+> > > > +	else
+> > > > +		_usb3_set_mode(usb3, host);
+> > > >  }
+> > > >
+> > > >  static void usb3_vbus_out(struct renesas_usb3 *usb3, bool enable)
+> > > > @@ -672,8 +676,8 @@ static void usb3_mode_config(struct renesas_usb=
+3 *usb3, bool host, bool a_dev)
+> > > >  {
+> > > >  	unsigned long flags;
+> > > >
+> > > > -	spin_lock_irqsave(&usb3->lock, flags);
+> > > >  	usb3_set_mode(usb3, host);
+> > > > +	spin_lock_irqsave(&usb3->lock, flags);
+> > >
+> > > Hi Shimoda-san,
+> > >
+> > > could you clarify why moving this lock is safe?
+> >
+> > The usb3_set_mode() is possible to call usb_role_switch_set_role() API
+> > and usb_role_switch_set_role() calls mutex_lock().
+> > So, this moving this lock (especially avoiding irqsave) needs.
+>=20
+> Thanks, that make sense.
+>=20
+> But usb3_set_mode() may also call _usb3_set_mode().
+> It is safe to call _usb3_set_mode() without holding the lock?
 
->
->> >> There's at least 2 scenarios where deferred probe can render
->> >> a platform broken. Both involve using a DT which has more devices and
->> >> dependencies than the kernel supports. The 1st case is a driver may b=
-e
->> >> disabled in the kernel config.
->> >
->> > I agree that there is a chance that you _might_ get some parts of the
->> > system working by relying on the boot loader configuration, but
->> > misconfiguration issues applies to any other fundamental providers, su=
-ch
->> > as clocks, regulators, power domains and gpios as well.
->>
->> If it is only a chance, then perhaps we shouldn't allow things
->> upstream without proper drivers for all these things. That will only
->> give users the wrong impression.
->>
->
-> It's not as much the drivers that's the problem here as it is the
-> composition of the drivers. For this particular case it would be
-> convenient not to ship the partial dtb, or at least not ship it with the
-> promise that it's stable.
->
->> >> The 2nd case is the kernel version may
->> >> simply not have the dependent driver. This can happen if using a newe=
-r DT
->> >> (provided by firmware perhaps) with a stable kernel version.
->> >>
->> >
->> > As above, this is in no way limited to pinctrl drivers.
->>
->> Yes, I wasn't trying to imply that with this patch. I was just
->> starting with 1 example. IOMMUs (which essentially is already doing
->> what this patch does) and power domains are the main other 2.
->
-> qcom,iommu-v1 is bool, but depends on e.g. CONFIG_MSM_GCC_8916 which is
-> tristate. So you would need to s/tristate/bool/ everything in
-> drivers/clk/qcom/Kconfig as well. Not to mention that there are
-> interconnects and power domains actually involved here as well...
+Thank you for the pointed out. I am thinking it is possible to be
+unsafe without holding the lock. So, I'd like to improve this patch somehow
+(for example: Add new usb role switch APIs without mutex).
 
-This would be part of the fun in configuring QCom platforms.
-
->> Clocks is an obvious one too, but from the discussion I referenced
->> that problem is a bit different as platforms change from dummy
->> fixed-clocks to a real clock controller driver. That will need a
->> different solution.
->
-> So how are you going to deal with the case when a vendor decides to ship
-> their firmware package with all clocks enabled and only fixed clocks
-> described in DT and as they upstream a clock driver and patch their
-> firmware to do the right thing?
-
-That's exactly the problem for clocks. For that, I think we have to say no =
-and require a driver from the start. Now perhaps we just need to define clo=
-ck ids and every clock id just maps to some fixed clock. We could have a co=
-mmon driver with tables of id and freq for devices. There's probably some c=
-ases like platforms that are being reverse engineered where even coming up =
-with the blocks and clock ids is a problem, but I think that is the excepti=
-on.
-
-> (Or the much less extreme case where this happens for a single clock,
-> regulator, pinctrl, interconnect, etc to fix some bug/power management
-> behavior)
->
-> And is this really a problem that does not exists in the ACPI world?
-
-It's a problem that doesn't exist in some of the DT world. The part that do=
-esn't doesn't expose all these low-level details to the kernel.
-
-ACPI only exposes a higher level interface and the kernel doesn't know the =
-details
-
->>
->> >> Unfortunately, this change breaks with modules as we have no way of
->> >> knowing when modules are done loading. One possibility is to make thi=
-s
->> >> opt in or out based on compatible strings rather than at a subsystem =
-level.
->> >> Ideally this information could be extracted automatically somehow. OT=
-OH,
->> >> maybe the lists are pretty small. There's only a handful of subsystem=
-s
->> >> that can be optional, and then only so many drivers in those that can=
- be
->> >> modules (at least for pinctrl, many drivers are built-in only).
->> >>
->> >
->> > On the Qualcomm platform most drivers are tristate and on most platfor=
-ms
->> > there are size restrictions in the proprietary boot loader preventing =
-us
->> > from boot the kernel after switching all these frameworks from tristat=
-e
->> > to bool (which feels like a more appropriate solution than your hack).
->>
->> BTW, QCom platforms are almost the only ones with pinctrl drivers as
->> modules. They are also happen to be PIA to configure correctly for a
->> board.
->>
->
-> There are a few pinctrl drivers for chips sitting on i2c busses, as such
-> changing this requirement would trickle down to a number of possible i2c
-> masters as well.
->
-> Sorry to hear that you find it so difficult to configure the pinctrl,
-> it's (almost) entirely using the common pinctrl bindings. Perhaps we
-> need to add some documentation of the hardware in the binding?
-
-I didn't mean pinctrl specifically. That one is a bit easier because it is =
-very much 1:1 with part numbers. It's just the combination of all the diffe=
-rent QCom buses, which options apply to which SoC and options getting hidde=
-n behind depends that make it hard. Perhaps I should just give up using men=
-uconfig. However, it's also a problem when drivers get added but folks forg=
-et to update the defconfig. I recall hitting that on DB410c some.
-
-Basically, config options for each SoC with a bunch of selects would solve =
-the problem.
-
->
->> However, I would like a solution that works with modules. It would be
->> nice to know when userspace finished processing all the coldplug
->> uevents. That would be sufficient to support modules. I researched
->> that a bit and it doesn't seem the kernel can tell when that has
->> happened.
->>
->
-> It's not that far from the issue I have in remoteproc, where I would
-> like to boot a DSP as soon as the firmware is available - which might be
-> probed at any time after boot.
->
-> [..]
->> >> I tested this on a RPi3 B with the pinctrl driver forced off. With th=
-is
->> >> change, the MMC/SD and UART drivers can function without the pinctrl
->> >> driver.
->> >>
->> >
->> > Cool, so what about graphics, audio, networking, usb and all the other
->> > things that people actually expect when they _use_ a distro?
->>
->> I often care about none of those things. When I do, I'd rather boot to
->> a working console with those broken than have to debug why the kernel
->> panicked.
->>
->
-> But that's developer-you speaking, developer-me totally agree.
->
-> But when I take the role of being a user of a distro I most definitely
-> do expect functionality beyond the basics used by the boot loader (UART
-> and dependencies of the primary storage device).
->
-> My argument is simply that in neither of these cases this patch is
-> helpful.
->
-> [..]
->> >> +int driver_deferred_probe_optional(void)
->> >> +{
->> >> +     if (initcalls_done)
->> >> +             return -ENODEV;
->> >
->> > You forgot the humongous printout here that tells the users that we do
->> > not want any bug reports related hardware not working as expected afte=
-r
->> > this point.
->>
->> I assume you were joking, but I would happily add a WARN here.
->
-> About the print yes, but I most definitely do not want to debug issues
-> related to this!
->
-> The crazy issues you get from having electrical properties slightly off
-> (e.g. drive-strength of the SD-card pins) or the fact that any driver
-> using pinmuxing will depend on the modprobe ordering.
->
->> Spewing new warnings while still booting is a better UX than just
->> panicking.  Ideally, it would be once per missing dependency.
->>
->
-> Having a convenient way of listing all unmatched devices or devices
-> sitting in probe deferral would be quite convenient, as a development
-> tool. I know this hassle was the starting point of some of Frank's
-> tools.
->
-> Regards,
-> Bjorn
+Best regards,
+Yoshihiro Shimoda
