@@ -1,62 +1,41 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v2 0/5] Hi3660: enable power management features
-Date: Tue, 15 May 2018 22:54:57 +0800
-Message-ID: <20180515145457.GA9678@leoy-ThinkPad-X240s>
-References: <1526352795-6991-1-git-send-email-leo.yan@linaro.org>
- <5AFAF3CE.70601@hisilicon.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2 0/4] Add DesignWare EP support
+Date: Tue, 15 May 2018 16:10:50 +0100
+Message-ID: <20180515151050.GA31726@e107981-ln.cambridge.arm.com>
+References: <cover.1526395185.git.gustavo.pimentel@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5AFAF3CE.70601@hisilicon.com>
+In-Reply-To: <cover.1526395185.git.gustavo.pimentel@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Xu <xuwei5@hisilicon.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: bhelgaas@google.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 15, 2018 at 03:50:54PM +0100, Wei Xu wrote:
-> Hi Leo,
+On Tue, May 15, 2018 at 03:41:40PM +0100, Gustavo Pimentel wrote:
+> Patch set was made against the Lorenzo's pci/dwc branch.
 > 
-> On 2018/5/15 3:53, Leo Yan wrote:
-> > Since hi3660 drivers have been merged into Linux kernel (mailbox driver is in
-> > Linux-next branch and other drivers are existed in Linux mainline kernel), so
-> > this patch series is to enable power management features on hi3660.
-> > 
-> > This patch series includes device tree binding for mailbox, stub clock and CPU
-> > OPPs, and has one patch to consolidate the Kconfigs for driver modules.
-> > 
-> > This patch set have been tested on Hikey960 and also verified the patch 'hisi:
-> > Consolidate the Kconfigs for the CLOCK_STUB and the MAILBOX' for Hikey620.
-> > 
-> > Changes from v1:
-> > * Changed patch subject from "dts: arm64: hi3660" to "arm64: dts: hi3660".
-> > 
-> > 
-> > Daniel Lezcano (1):
-> >   hisi: Consolidate the Kconfigs for the CLOCK_STUB and the MAILBOX
-> > 
-> > Kaihua Zhong (2):
-> >   arm64: dts: hi3660: Add mailbox node
-> >   arm64: dts: hi3660: Add stub clock node
-> > 
-> > Leo Yan (1):
-> >   arm64: dts: hi3660: Add CPU frequency scaling support
-> > 
-> > Tao Wang (1):
-> >   arm64: dts: hi3660: Add thermal cooling management
-> > 
-> >  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 145 ++++++++++++++++++++++++++++++
-> >  arch/arm64/configs/defconfig              |   1 -
-> >  drivers/clk/hisilicon/Kconfig             |  13 +--
-> >  drivers/mailbox/Kconfig                   |  12 ++-
-> >  4 files changed, 161 insertions(+), 10 deletions(-)
-> > 
+> The PCIe controller dual mode is capable of operating in RC mode as well
+> as EP mode by configuration option. Till now only RC mode was supported,
+> with this patch is add EP support to the DesignWare driver.
 > 
-> Applied patch 1 to 4.
-> Thanks!
+> Gustavo Pimentel (4):
+>   bindings: PCI: designware: Example update
+>   PCI: dwc: Add support for EP mode
+>   bindings: PCI: designware: Add support for EP in DesignWare driver
+>   misc: pci_endpoint_test: Add DesignWare EP entry
+> 
+>  .../devicetree/bindings/pci/designware-pcie.txt    |  24 +++-
+>  drivers/misc/pci_endpoint_test.c                   |   1 +
+>  drivers/pci/dwc/Kconfig                            |  37 +++--
+>  drivers/pci/dwc/pcie-designware-ep.c               |   3 +
+>  drivers/pci/dwc/pcie-designware-plat.c             | 149 +++++++++++++++++++--
+>  drivers/pci/endpoint/functions/pci-epf-test.c      |   7 +
+>  include/linux/pci-epc.h                            |   8 ++
+>  7 files changed, 205 insertions(+), 24 deletions(-)
 
-Thanks a lot, Wei.
+Applied to pci/dwc for v4.18 with some small commit log tweaks.
 
-> Best Regards,
-> Wei
-> 
+Thanks,
+Lorenzo
