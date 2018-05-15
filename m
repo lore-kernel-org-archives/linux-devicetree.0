@@ -1,51 +1,81 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/2] mmc: meson-gx: add device reset
-Date: Tue, 15 May 2018 11:57:48 +0200
-Message-ID: <20180515095748.6794-3-jbrunet@baylibre.com>
-References: <20180515095748.6794-1-jbrunet@baylibre.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: [PATCH 1/2] arm64: dts: berlin4ct: use SPDX-License-Identifier
+Date: Tue, 15 May 2018 18:08:26 +0800
+Message-ID: <20180515180826.2ab39f0c@xhacker.debian>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180515095748.6794-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Trigger the reset line of the mmc controller while probing, if available.
-The reset should be optional for now, at least until all related DT nodes
-have the reset property.
+Follow the recent trend for the license description, and also fix the
+wrongly stated X11 to MIT.
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+As already pointed on the DT ML, the X11 license text [1] is explicitly
+for the X Consortium and has a couple of extra clauses. The MIT
+license text [2] is actually what the current DT files claim.
+
+[1] https://spdx.org/licenses/X11.html
+[2] https://spdx.org/licenses/MIT.html
+
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 ---
- drivers/mmc/host/meson-gx-mmc.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 39 +---------------------
+ 1 file changed, 1 insertion(+), 38 deletions(-)
 
-diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
-index 4f972b879fe6..9bca359f7936 100644
---- a/drivers/mmc/host/meson-gx-mmc.c
-+++ b/drivers/mmc/host/meson-gx-mmc.c
-@@ -35,6 +35,7 @@
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/reset.h>
- #include <linux/interrupt.h>
- #include <linux/bitfield.h>
- #include <linux/pinctrl/consumer.h>
-@@ -1184,6 +1185,14 @@ static int meson_mmc_probe(struct platform_device *pdev)
- 		goto free_host;
- 	}
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+index d2f88b92d8e2..216767e2edf6 100644
+--- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
++++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+@@ -1,45 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ /*
+  * Copyright (C) 2015 Marvell Technology Group Ltd.
+  *
+  * Author: Jisheng Zhang <jszhang@marvell.com>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPLv2 or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This library is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This library is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
  
-+	ret = device_reset_optional(&pdev->dev);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "device reset failed: %d\n", ret);
-+
-+		return ret;
-+	}
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	host->regs = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(host->regs)) {
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
 -- 
-2.14.3
+2.17.0
