@@ -1,36 +1,35 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] dt-bindings: net: ravb: Add support for r8a77990 SoC
-Date: Tue, 15 May 2018 11:43:39 +0300
-Message-ID: <19e43b97-9235-a752-7cf9-56a5e3bb281a@cogentembedded.com>
-References: <1526008736-26496-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20180511.155942.16024095909155343.davem@davemloft.net>
- <20180513075803.plrkbwmzksjnz45u@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180513075803.plrkbwmzksjnz45u@verge.net.au>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, David Miller <davem@davemloft.net>
-Cc: yoshihiro.shimoda.uh@renesas.com, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Subject: [PATCH] ARM: dts: imx51-zii-rdu1: limit usbh1 to full-speed
+Date: Tue, 15 May 2018 11:45:02 +0300
+Message-ID: <20180515084502.17148-1-nikita.yoush@cogentembedded.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lucas Stach <l.stach@pengutronix.de>, Chris Healy <cphealy@gmail.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Marco Franchi <marcofrk@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nikita Yushchenko <nikita.yoush@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On 5/13/2018 10:58 AM, Simon Horman wrote:
+On RDU1, imx51 usbh1 interface is either not used, or used via external
+block that breaks USB2 signalling.
 
->>> Add documentation for r8a77990 compatible string to renesas ravb device
->>> tree bindings documentation.
->>>
->>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->>
->> I'm assuming this isn't targetted at one of my trees.  Just FYI.
-> 
-> Hi Dave,
-> 
-> I think this is appropriate for net-next but if not I can take it.
+To keep things working if high-speed device gets connected to that
+block, use ChipIdea feature to limit port to full speed.
 
-    There's also Rob, and IIRC he has taken alike patch recently...
+Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+---
+ arch/arm/boot/dts/imx51-zii-rdu1.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-[...]
-
-MBR, Sergei
+diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+index 36a63ae52e48..c26f053f29b0 100644
+--- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
++++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+@@ -603,6 +603,7 @@
+ 	phy_type = "ulpi";
+ 	fsl,usbphy = <&usbh1phy>;
+ 	disable-over-current;
++	maximum-speed = "full-speed";
+ 	vbus-supply = <&reg_5p0v_main>;
+ 	status = "okay";
+ };
+-- 
+2.11.0
