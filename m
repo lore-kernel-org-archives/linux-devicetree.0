@@ -1,36 +1,31 @@
-Return-Path: <SRS0=Xnq8=HX=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from m12-12.163.com ([220.181.12.12]:35571 "EHLO m12-12.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751519AbeEDJVQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 4 May 2018 05:21:16 -0400
-From: sunjg79@163.com
-Subject: [PATCH 0/2] add support for HiSilicon STB xHCI host controller
-Date: Fri,  4 May 2018 17:20:43 +0800
-Message-Id: <1525425645-17246-1-git-send-email-sunjg79@163.com>
-Sender: devicetree-owner@vger.kernel.org
-To: mathias.nyman@intel.com, gregkh@linuxfoundation.org, robh+dt@kernel.org
-Cc: shawn.guo@linaro.org, xuejiancheng@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Jianguo Sun <sunjianguo1@huawei.com>
+Return-Path: <SRS0=t5sx=IC=verge.net.au=horms@kernel.org>
+Date: Tue, 15 May 2018 09:18:21 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: document Renesas V3HSK board
+ bindings
+Message-ID: <20180515071820.n3juuxhnj2srcpij@verge.net.au>
+References: <3923fc5f-103c-94c9-57ba-cb29e8c55d05@cogentembedded.com>
+ <24039c74-d6d3-cac3-6c68-5dcd88ef8ecc@cogentembedded.com>
+ <CAMuHMdV6HtW7L4HVbi=RSC-nmb4SDuNaY3-iVH0YYERBg3tToA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV6HtW7L4HVbi=RSC-nmb4SDuNaY3-iVH0YYERBg3tToA@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Jianguo Sun <sunjianguo1@huawei.com>
+On Mon, May 14, 2018 at 10:28:34PM +0200, Geert Uytterhoeven wrote:
+> On Thu, May 10, 2018 at 8:09 PM, Sergei Shtylyov
+> <sergei.shtylyov@cogentembedded.com> wrote:
+> > Document the V3H Starter Kit device tree bindings, listing it as
+> > a supported board.
+> >
+> > This allows to use checkpatch.pl to validate .dts files referring to
+> > the V3HSK board.
+> >
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This patch set adds bindings doc and xhci driver for xHCI host controller
-on HiSilicon STB SoCs.
-
-Jianguo Sun (2):
-  dt-bindings: usb: add bindings doc for HiSilicon STB xHCI host
-    controller
-  xhci: hisilicon: support HiSilicon STB xHCI host controller
-
- .../bindings/usb/hisilicon,histb-xhci.txt          |  40 ++
- drivers/usb/host/Kconfig                           |   7 +
- drivers/usb/host/Makefile                          |   1 +
- drivers/usb/host/xhci-histb.c                      | 409 +++++++++++++++++++++
- 4 files changed, 457 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/hisilicon,histb-xhci.txt
- create mode 100644 drivers/usb/host/xhci-histb.c
-
--- 
-2.7.4
-
-
+Thanks, applied.
