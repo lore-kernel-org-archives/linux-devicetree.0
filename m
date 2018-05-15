@@ -1,105 +1,122 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [RESEND PATCH v2 1/1] net: phy: micrel: add 125MHz reference clock workaround
-Date: Tue, 15 May 2018 10:18:56 +0200
-Message-ID: <20180515081856.23322-2-m.felsch@pengutronix.de>
-References: <20180515081856.23322-1-m.felsch@pengutronix.de>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180515081856.23322-1-m.felsch@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, niebelm@tqsc.de
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH v2 5/5] hisi: Consolidate the Kconfigs for the CLOCK_STUB
+ and the MAILBOX
+Date: Tue, 15 May 2018 09:23:03 +0100
+Message-ID: <5AFA98E7.9050609@hisilicon.com>
+References: <1526352795-6991-1-git-send-email-leo.yan@linaro.org>
+ <1526352795-6991-6-git-send-email-leo.yan@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1526352795-6991-6-git-send-email-leo.yan@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Markus Niebel <Markus.Niebel@tqs.de>
+Hi Leo, Daniel,
 
-The micrel KSZ9031 phy has a optional clock pin (CLK125_NDO) which can be
-used as reference clock for the MAC unit. The clock signal must meet the
-RGMII requirements to ensure the correct data transmission between the
-MAC and the PHY. The KSZ9031 phy does not fulfill the duty cycle
-requirement if the phy is configured as slave. For a complete
-describtion look at the errata sheets: DS80000691D or DS80000692D.
+On 2018/5/15 3:53, Leo Yan wrote:
+> From: Daniel Lezcano <daniel.lezcano@linaro.org>
+> 
+> The current defconfig is inconsistent as it selects the mailbox and
+> the clock for the hi6220 and the hi3660 without having their Kconfigs
+> making sure the dependencies are correct. It ends up when selecting
+> different versions for the kernel (for example when git bisecting)
+> those options disappear and they don't get back, leading to unexpected
+> behaviors. In our case, the cpufreq driver does no longer work because
+> the clock fails to initialize due to the clock stub and the mailbox
+> missing.
+> 
+> In order to have the dependencies correctly set when defaulting, let's
+> do the same as commit 3a49afb84ca074e ("clk: enable hi655x common clk
+> automatically") where we select automatically the driver when the
+> parent driver is selected. With sensible defaults in place, we can leave
+> other choices for EXPERT.
+> 
+> Acked-by: Stephen Boyd <sboyd@kernel.org>
+> Acked-by: Jassi Brar <jaswinder.singh@linaro.org>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  arch/arm64/configs/defconfig  |  1 -
+>  drivers/clk/hisilicon/Kconfig | 13 ++++++++-----
+>  drivers/mailbox/Kconfig       | 12 ++++++++----
+>  3 files changed, 16 insertions(+), 10 deletions(-)
 
-The errata sheet recommends to force the phy into master mode whenever
-there is a 1000Base-T link-up as work around. Only set the
-"micrel,force-master" property if you use the phy reference clock provided
-by CLK125_NDO pin as MAC reference clock in your application.
+Could you separate this patch into clk, mailbox and defconfig 3 parts?
+Thanks!
 
-Attenation, this workaround is only usable if the link partner can
-be configured to slave mode for 1000Base-T.
+Best Regards,
+Wei
 
-Signed-off-by: Markus Niebel <Markus.Niebel@tqs.de>
-[m.felsch@pengutronix.de: fix dt-binding documentation]
-[m.felsch@pengutronix.de: use already existing result var for read/write]
-[m.felsch@pengutronix.de: add error handling]
-[m.felsch@pengutronix.de: add more comments]
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- .../bindings/net/micrel-ksz90x1.txt           |  7 +++++
- drivers/net/phy/micrel.c                      | 31 +++++++++++++++++++
- 2 files changed, 38 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-index 42a248301615..e22d8cfea687 100644
---- a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-+++ b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-@@ -57,6 +57,13 @@ KSZ9031:
-       - txd2-skew-ps : Skew control of TX data 2 pad
-       - txd3-skew-ps : Skew control of TX data 3 pad
- 
-+    - micrel,force-master:
-+        Boolean, force phy to master mode. Only set this option if the phy
-+        reference clock provided at CLK125_NDO pin is used as MAC reference
-+        clock because the clock jitter in slave mode is to high (errata#2).
-+        Attention: The link partner must be configurable as slave otherwise
-+        no link will be established.
-+
- Examples:
- 
- 	mdio {
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index f41b224a9cdb..ab195f0916d6 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -573,9 +573,40 @@ static int ksz9031_config_init(struct phy_device *phydev)
- 		ksz9031_of_load_skew_values(phydev, of_node,
- 				MII_KSZ9031RN_TX_DATA_PAD_SKEW, 4,
- 				tx_data_skews, 4);
-+
-+		/* Silicon Errata Sheet (DS80000691D or DS80000692D):
-+		 * When the device links in the 1000BASE-T slave mode only,
-+		 * the optional 125MHz reference output clock (CLK125_NDO)
-+		 * has wide duty cycle variation.
-+		 *
-+		 * The optional CLK125_NDO clock does not meet the RGMII
-+		 * 45/55 percent (min/max) duty cycle requirement and therefore
-+		 * cannot be used directly by the MAC side for clocking
-+		 * applications that have setup/hold time requirements on
-+		 * rising and falling clock edges.
-+		 *
-+		 * Workaround:
-+		 * Force the phy to be the master to receive a stable clock
-+		 * which meets the duty cycle requirement.
-+		 */
-+		if (of_property_read_bool(of_node, "micrel,force-master")) {
-+			result = phy_read(phydev, MII_CTRL1000);
-+			if (result < 0)
-+				goto err_force_master;
-+
-+			/* enable master mode, config & prefer master */
-+			result |= CTL1000_ENABLE_MASTER | CTL1000_AS_MASTER;
-+			result = phy_write(phydev, MII_CTRL1000, result);
-+			if (result < 0)
-+				goto err_force_master;
-+		}
- 	}
- 
- 	return ksz9031_center_flp_timing(phydev);
-+
-+err_force_master:
-+	phydev_err(phydev, "failed to force the phy to master mode\n");
-+	return result;
- }
- 
- #define KSZ8873MLL_GLOBAL_CONTROL_4	0x06
--- 
-2.17.0
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index ecf6137..1d9d8b9 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -549,7 +549,6 @@ CONFIG_HWSPINLOCK_QCOM=y
+>  CONFIG_ARM_MHU=y
+>  CONFIG_PLATFORM_MHU=y
+>  CONFIG_BCM2835_MBOX=y
+> -CONFIG_HI6220_MBOX=y
+>  CONFIG_QCOM_APCS_IPC=y
+>  CONFIG_ROCKCHIP_IOMMU=y
+>  CONFIG_TEGRA_IOMMU_SMMU=y
+> diff --git a/drivers/clk/hisilicon/Kconfig b/drivers/clk/hisilicon/Kconfig
+> index 1bd4355..becdb1d 100644
+> --- a/drivers/clk/hisilicon/Kconfig
+> +++ b/drivers/clk/hisilicon/Kconfig
+> @@ -44,14 +44,17 @@ config RESET_HISI
+>  	  Build reset controller driver for HiSilicon device chipsets.
+>  
+>  config STUB_CLK_HI6220
+> -	bool "Hi6220 Stub Clock Driver"
+> -	depends on COMMON_CLK_HI6220 && MAILBOX
+> -	default ARCH_HISI
+> +	bool "Hi6220 Stub Clock Driver" if EXPERT
+> +	depends on (COMMON_CLK_HI6220 || COMPILE_TEST)
+> +	depends on MAILBOX
+> +	default COMMON_CLK_HI6220
+>  	help
+>  	  Build the Hisilicon Hi6220 stub clock driver.
+>  
+>  config STUB_CLK_HI3660
+> -	bool "Hi3660 Stub Clock Driver"
+> -	depends on COMMON_CLK_HI3660 && MAILBOX
+> +	bool "Hi3660 Stub Clock Driver" if EXPERT
+> +	depends on (COMMON_CLK_HI3660 || COMPILE_TEST)
+> +	depends on MAILBOX
+> +	default COMMON_CLK_HI3660
+>  	help
+>  	  Build the Hisilicon Hi3660 stub clock driver.
+> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> index a2bb274..567cd02 100644
+> --- a/drivers/mailbox/Kconfig
+> +++ b/drivers/mailbox/Kconfig
+> @@ -109,16 +109,20 @@ config TI_MESSAGE_MANAGER
+>  	  platform has support for the hardware block.
+>  
+>  config HI3660_MBOX
+> -	tristate "Hi3660 Mailbox"
+> -	depends on ARCH_HISI && OF
+> +	tristate "Hi3660 Mailbox" if EXPERT
+> +	depends on (ARCH_HISI || COMPILE_TEST)
+> +	depends on OF
+> +	default ARCH_HISI
+>  	help
+>  	  An implementation of the hi3660 mailbox. It is used to send message
+>  	  between application processors and other processors/MCU/DSP. Select
+>  	  Y here if you want to use Hi3660 mailbox controller.
+>  
+>  config HI6220_MBOX
+> -	tristate "Hi6220 Mailbox"
+> -	depends on ARCH_HISI
+> +	tristate "Hi6220 Mailbox" if EXPERT
+> +	depends on (ARCH_HISI || COMPILE_TEST)
+> +	depends on OF
+> +	default ARCH_HISI
+>  	help
+>  	  An implementation of the hi6220 mailbox. It is used to send message
+>  	  between application processors and MCU. Say Y here if you want to
+> 
