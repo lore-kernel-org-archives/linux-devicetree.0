@@ -1,89 +1,79 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH 10/12] platform/early: implement support for early
- platform drivers
-Date: Tue, 15 May 2018 16:06:15 +0200
-Message-ID: <CAMRc=MdsDWb0Ve29_d=30nc1F0aVhTrG74GX=sv0iB5WycWwLw@mail.gmail.com>
-References: <20180511162028.20616-1-brgl@bgdev.pl> <20180511162028.20616-11-brgl@bgdev.pl>
- <CAL_JsqJw8UXktcLK8ADUfo1P+1un+omJ31sGcq7GFbNwJMsHKg@mail.gmail.com>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 16/40] arm64: mm: Pin down ASIDs for sharing mm with
+	devices
+Date: Tue, 15 May 2018 15:16:58 +0100
+Message-ID: <20180515141658.vivrgcyww2pxumye@armageddon.cambridge.arm.com>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+	<20180511190641.23008-17-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJw8UXktcLK8ADUfo1P+1un+omJ31sGcq7GFbNwJMsHKg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Peter Rosin <peda@axentia.se>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Johan Hovold <johan@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180511190641.23008-17-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2018-05-14 15:37 GMT+02:00 Rob Herring <robh+dt@kernel.org>:
-> On Fri, May 11, 2018 at 11:20 AM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>
->> This introduces the core part of support for early platform drivers
->> and devices.
->>
->
-> It looks like most of your prep patches are to separate the alloc and
-> init of platform devices because you are essentially making early
-> devices/drivers a sub-class. Maybe you could avoid doing that and
-> simplify things a bit. Comments below based on doing that...
->
+Hi Jean-Philippe,
 
-My aim was to change as little as possible for everybody else while
-fixing our problem. These changes are already controversial enough
-without risky reusing of existing fields in common structures. I was
-just afraid that there are too many intricacies for it to be safe.
+On Fri, May 11, 2018 at 08:06:17PM +0100, Jean-Philippe Brucker wrote:
+> +unsigned long mm_context_get(struct mm_struct *mm)
+> +{
+> +	unsigned long flags;
+> +	u64 asid;
+> +
+> +	raw_spin_lock_irqsave(&cpu_asid_lock, flags);
+> +
+> +	asid = atomic64_read(&mm->context.id);
+> +
+> +	if (mm->context.pinned) {
+> +		mm->context.pinned++;
+> +		asid &= ~ASID_MASK;
+> +		goto out_unlock;
+> +	}
+> +
+> +	if (nr_pinned_asids >= max_pinned_asids) {
+> +		asid = 0;
+> +		goto out_unlock;
+> +	}
+> +
+> +	if (!asid_gen_match(asid)) {
+> +		/*
+> +		 * We went through one or more rollover since that ASID was
+> +		 * used. Ensure that it is still valid, or generate a new one.
+> +		 * The cpu argument isn't used by new_context.
+> +		 */
+> +		asid = new_context(mm, 0);
+> +		atomic64_set(&mm->context.id, asid);
+> +	}
+> +
+> +	asid &= ~ASID_MASK;
+> +
+> +	nr_pinned_asids++;
+> +	__set_bit(asid2idx(asid), pinned_asid_map);
+> +	mm->context.pinned++;
+> +
+> +out_unlock:
+> +	raw_spin_unlock_irqrestore(&cpu_asid_lock, flags);
+> +
+> +	return asid;
+> +}
 
->> +/**
->> + * struct early_platform_driver
->> + *
->> + * @pdrv: real platform driver associated with this early platform driver
->> + * @list: list head for the list of early platform drivers
->> + * @early_probe: early probe callback
->> + */
->> +struct early_platform_driver {
->> +       struct platform_driver pdrv;
->> +       struct list_head list;
->
-> Couldn't you use an existing list in driver_private until you move
-> over to the normal bus infra.
->
+With CONFIG_UNMAP_KERNEL_AT_EL0 (a.k.a. KPTI), the hardware ASID has bit
+0 set automatically when entering user space (and cleared when getting
+back to the kernel). If the returned asid value here is going to be used
+as is in the calling code, you should probably set bit 0 when KPTI is
+enabled.
 
-This is something that the previous implementation did. It was quite
-unreadable, so I decided to go with a separate list.
-
->> +       int (*early_probe)(struct platform_device *);
->
-> Just add this to platform_driver.
->
-
-This would extend the structure for everybody else while there'll be
-very few such devices and not all systems would even require it.
-
->> +};
->> +
->> +/**
->> + * struct early_platform_device
->> + *
->> + * @pdev: real platform device associated with this early platform device
->> + * @list: list head for the list of early platform devices
->> + * @deferred: true if this device's early probe was deferred
->> + * @deferred_drv: early platform driver with which this device was matched
->> + */
->> +struct early_platform_device {
->> +       struct platform_device pdev;
->> +       struct list_head list;
->
-> Use a list in device_private?
->
->> +       bool deferred;
->> +       struct early_platform_driver *deferred_drv;
->
-> Can't you use the existing deferred probe list?
->
-
-I thought about it, but I was afraid there could be some timing issues
-with that and decided against it. The early deferral also doesn't work
-in a workque, but is synchronous instead.
-
-Best regards,
-Bartosz Golaszewski
+-- 
+Catalin
