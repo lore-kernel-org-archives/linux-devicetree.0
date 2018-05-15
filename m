@@ -1,7 +1,7 @@
 From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] arm64: dts: qcom: sdm845: Sort nodes in the reserved mem by address
-Date: Mon, 14 May 2018 21:37:13 -0700
-Message-ID: <20180515043714.39011-1-dianders@chromium.org>
+Subject: [PATCH v2] arm64: dts: qcom: sdm845: Sort nodes in the reserved mem by address
+Date: Mon, 14 May 2018 21:43:06 -0700
+Message-ID: <20180515044306.40735-1-dianders@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: andy.gross@linaro.org
@@ -14,18 +14,21 @@ by address.  This should have no functional change.
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
+Changes in v2:
+- Oops!  v1 accidentally changed the node name.  Fixed.
+
  arch/arm64/boot/dts/qcom/sdm845.dtsi | 12 ++++++------
  1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 7c85e7c596db..63026133feab 100644
+index 7c85e7c596db..73f71061fef8 100644
 --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
 @@ -31,6 +31,12 @@
  			no-map;
  		};
  
-+		reserved-memory@85fe0000 {
++		memory@85fe0000 {
 +			compatible = "qcom,cmd-db";
 +			reg = <0x0 0x85fe0000 0x0 0x20000>;
 +			no-map;
