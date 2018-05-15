@@ -1,112 +1,107 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v6 1/2] dt: bindings: lm3601x: Introduce the lm3601x
- driver
-Date: Tue, 15 May 2018 23:13:38 +0200
-Message-ID: <98319f30-2abe-158c-1b51-33d1df80e185@gmail.com>
-References: <20180515154352.20263-1-dmurphy@ti.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v4 3/3] ARM: dts: tegra: Work safely with 256 MB
+ Colibri-T20 modules
+Date: Tue, 15 May 2018 23:20:46 +0200
+Message-ID: <fce1d8c51fc3fd74fe61933fe9b59654@agner.ch>
+References: <1526395285-19006-1-git-send-email-krzk@kernel.org>
+ <1526395285-19006-4-git-send-email-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180515154352.20263-1-dmurphy@ti.com>
-Content-Language: en-US
+In-Reply-To: <1526395285-19006-4-git-send-email-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, mark.rutland@arm.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Lucas Stach <dev@lynxeye.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
-
-Thanks for the update.
-
-On 05/15/2018 05:43 PM, Dan Murphy wrote:
-> Introduce the device tree bindings for the lm3601x
-> family of LED torch, flash and IR drivers.
+On 15.05.2018 16:41, Krzysztof Kozlowski wrote:
+> Colibri-T20 can come in 256 MB RAM (with 512 MB NAND) or 512 MB RAM
+> (with 1024 MB NAND) flavors.  Both of them will use the same DTSI
+> expecting the bootloader to do the fixup of /memory node.  However in
+> case it does not happen, let's stay on safe side by limiting the memory
+> to 256 MB for both versions of Colibri-T20.
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
 > ---
 > 
-> v6 - Removed multiple led child nodes, fixed example to display micro ranges
-> for corresponding child nodes and added led-sources to define the current driver -
-> https://patchwork.kernel.org/patch/10392121/
+> RFT:
+> Not tested on 512 MB module as I have only the 256 MB one.
 > 
-> v5 - No changes - https://patchwork.kernel.org/patch/10391743/
-> v4 - Added " " around "=", changed strobe to flash on label, removed "support and
-> register" comment and change ir lable to ir:torch - See v2 patchworks for comments
-> v3 - Removed wildcard compatible - https://patchwork.kernel.org/patch/10386241/
-> v2 - No changes - https://patchwork.kernel.org/patch/10384587/
+> Changes since v3:
+> 1. Reduce the memory in existing DTSI instead of creating a new one
+>    (suggested by Marcel).
 > 
->   .../devicetree/bindings/leds/leds-lm3601x.txt | 47 +++++++++++++++++++
->   1 file changed, 47 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+> Changes since v2:
+> 1. Do not add new compatible but use everywhere existing
+>    "toradex,colibri_t20-512" (suggested by Rob).
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
-> new file mode 100644
-> index 000000000000..27930a89e9a5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
-> @@ -0,0 +1,47 @@
-> +* Texas Instruments - lm3601x Single-LED Flash Driver
-> +
-> +The LM3601X are ultra-small LED flash drivers that
-> +provide a high level of adjustability.
-> +
-> +Required properties:
-> +	- compatible : Can be one of the following
-> +		"ti,lm36010"
-> +		"ti,lm36011"
-> +	- reg : I2C slave address
-> +	- #address-cells : 1
-> +	- #size-cells : 0
-> +
-> +Required child properties:
-> +	- reg : 0
-> +	- led-sources:	0 - Indicates a IR mode
-> +			1 - Indicates a Torch (white LED) mode
+> Changes since v1:
+> 1. Fix memory size in tegra20-colibri-256.dtsi (was working fine because
+>    my bootloader uses mem= argument).
+> ---
+>  arch/arm/boot/dts/tegra20-colibri-512.dtsi | 9 +++++++--
+>  arch/arm/boot/dts/tegra20-iris-512.dts     | 2 +-
 
-You don't need led-sources at all. Please use reg as in
-the previous version. led-sources is useful for describing
-more complex arrangements. Here reg will do.
+I don't like this variant too much.
 
-> +
-> +Required properties for flash LED child nodes:
-> +	See Documentation/devicetree/bindings/leds/common.txt
-> +	- flash-max-microamp : Range from 11mA -> 1.5A
-> +	- flash-max-timeout-us : Range from 40ms -> 1600ms
-> +	- led-max-microamp : Range from 2.4mA -> 376mA
+Can we not just drop the 512? And while at it, I would prefer to see the
+usual $soc-$module-$carrier schema, as we use with all the other modules
+of the Colibri and Apalis family.
 
-Please give also a step in the format like below
-(taken from max77693):
+e.g.
+tegra20-colibri-512.dtsi -> tegra20-colibri.dtsi
+tegra20-iris-512.dts -> tegra20-colibri-iris.dts
 
-	Valid values: 62500 - 1000000, step by 62500 (rounded down)
+Yes, it is somewhat churn, but I would prefer it for the sake of clarity
+and consistency...
+
+--
+Stefan
 
 
-> +
-> +Optional child properties:
-> +	- label : see Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Example:
-> +led-controller@64 {
-> +	compatible = "ti,lm36010";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	reg = <0x64>;
-> +
-> +	led@0 {
-> +		reg = <0>;
-> +		label = "white:torch";
-> +		led-max-microamp = <376000>;
-> +		flash-max-microamp = <1500000>;
-> +		flash-max-timeout-us = <1600000>;
-> +		led-sources = <1>;
-> +	};
-> +}
-> +
-> +For more product information please see the links below:
-> +http://www.ti.com/product/LM36010
-> +http://www.ti.com/product/LM36011
+>  2 files changed, 8 insertions(+), 3 deletions(-)
 > 
-
--- 
-Best regards,
-Jacek Anaszewski
+> diff --git a/arch/arm/boot/dts/tegra20-colibri-512.dtsi
+> b/arch/arm/boot/dts/tegra20-colibri-512.dtsi
+> index 305efb275b48..b9387c540450 100644
+> --- a/arch/arm/boot/dts/tegra20-colibri-512.dtsi
+> +++ b/arch/arm/boot/dts/tegra20-colibri-512.dtsi
+> @@ -2,7 +2,7 @@
+>  #include "tegra20.dtsi"
+>  
+>  / {
+> -	model = "Toradex Colibri T20 512MB";
+> +	model = "Toradex Colibri T20 256/512 MB";
+>  	compatible = "toradex,colibri_t20-512", "nvidia,tegra20";
+>  
+>  	aliases {
+> @@ -12,7 +12,12 @@
+>  
+>  	memory@0 {
+>  		device_type = "memory";
+> -		reg = <0x00000000 0x20000000>;
+> +		/*
+> +		 * Set memory to 256 MB to be safe as this could be used on
+> +		 * 256 or 512 MB module. It is expected from bootloader
+> +		 * to fix this up for 512 MB version.
+> +		 */
+> +		reg = <0x00000000 0x10000000>;
+>  	};
+>  
+>  	host1x@50000000 {
+> diff --git a/arch/arm/boot/dts/tegra20-iris-512.dts
+> b/arch/arm/boot/dts/tegra20-iris-512.dts
+> index 40126388946d..efaa96228722 100644
+> --- a/arch/arm/boot/dts/tegra20-iris-512.dts
+> +++ b/arch/arm/boot/dts/tegra20-iris-512.dts
+> @@ -4,7 +4,7 @@
+>  #include "tegra20-colibri-512.dtsi"
+>  
+>  / {
+> -	model = "Toradex Colibri T20 512MB on Iris";
+> +	model = "Toradex Colibri T20 256/512 MB on Iris";
+>  	compatible = "toradex,iris", "toradex,colibri_t20-512", "nvidia,tegra20";
+>  
+>  	aliases {
