@@ -1,36 +1,116 @@
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: [PATCH] ARM: dts: berlin2: fix irq type for arm twd timer
-Date: Tue, 15 May 2018 17:12:08 +0800
-Message-ID: <20180515171208.4f1c0b21@xhacker.debian>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Ilia Lin <ilialin@codeaurora.org>
+Subject: [PATCH v7 00/14] CPU scaling support for msm8996
+Date: Tue, 15 May 2018 12:13:22 +0300
+Message-ID: <1526375616-16904-1-git-send-email-ilialin@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, viresh.kumar@linaro.org, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, ilialin@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-fix below warning about PPI interrupts configuration:
-"GIC: PPI13 is secure or misconfigured"
+[v7]
+ * Addressed comments from Viresh about resourses deallocation
+   and DT compatible
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- arch/arm/boot/dts/berlin2.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[v6]
+ * Addressed comments from Viresh about:
+ ** Comments style
+ ** Kconfig bool instead of tristate
+ ** DT and documentation style
+ ** Resourses deallocation on an error
+ ** Typos
 
-diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
-index d575823c5750..787a9d042ad9 100644
---- a/arch/arm/boot/dts/berlin2.dtsi
-+++ b/arch/arm/boot/dts/berlin2.dtsi
-@@ -149,7 +149,7 @@
- 		local-timer@ad0600 {
- 			compatible = "arm,cortex-a9-twd-timer";
- 			reg = <0xad0600 0x20>;
--			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-+			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_EDGE_RISING)>;
- 			clocks = <&chip_clk CLKID_TWD>;
- 		};
- 
+[v5]
+ * Rebased
+ * Addressed comments from Bjorn about SPDX style,
+   functions and parameters naming
+ * Addressed comments from Viresh DT properties and style, comments style,
+   resourses deallocation, documentation placement
+ * Addressed comments from Sricharan about unnessesary include
+ * Addressed comments from Nicolas
+ * Addressed comments from Rob about the commit messages and acks
+ * Addressed comments from Mark
+
+[v4]
+ * Adressed all comments from Stephen
+ * Added CPU regulator support
+ * Added qcom-cpufreq-kryo driver
+
+[v3]
+ * Rebased on top of the latest PLL driver changes
+ * Addressed comment from Rob Herring for bindings
+
+[v2]
+ * Addressed comments from Rob Herring for bindings
+ * Addressed comments from Mark Rutland for memory barrier
+ * Addressed comments from Julien Thierry for clock reenabling condition
+ * Tuned the HW configuration for clock frequencies below 600MHz
+
+Clocks:
+This series adds support for the CPU clocks on msm8996 devices.
+The driver uses the existing PLL drivers and is required to control
+the CPU frequency scaling on the MSM8996.
+
+Regulators:
+Added SAW regulator support to the SPMI regulator driver. The SAW regulators
+will be controlled through special CPU registers instead of direct
+SPMI accesses.
+
+Cpufreq:
+The qcom-cpufreq-kryo driver is aimed to support different SOC versions.
+The driver reads eFuse information and chooses the required OPP subset
+by passing the OPP supported-hw parameter.
+
+A previous post of RFC can be found here:
+https://patchwork.kernel.org/patch/10398455/
+
+Ilia Lin (11):
+  soc: qcom: Separate kryo l2 accessors from PMU driver
+  clk: qcom: Add CPU clock driver for msm8996
+  clk: qcom: Add DT bindings for CPU clock driver for msm8996
+  clk: qcom: Add ACD path to CPU clock driver for msm8996
+  dt: qcom: Add opp and thermal to the msm8996
+  regulator: qcom_spmi: Add support for SAW
+  dt-bindings: qcom_spmi: Add support for SAW documentation
+  dt: qcom: Add SAW regulator for 8x96 CPUs
+  cpufreq: Add Kryo CPU scaling driver
+  dt-bindings: cpufreq: Document operating-points-v2-kryo-cpu
+  dt: qcom: Add qcom-cpufreq-kryo driver configuration
+
+Rajendra Nayak (3):
+  clk: qcom: Make clk_alpha_pll_configure available to modules
+  clk: qcom: cpu-8996: Add support to switch to alternate PLL
+  clk: qcom: cpu-8996: Add support to switch below 600Mhz
+
+ .../devicetree/bindings/clock/qcom,kryocc.txt      |  17 +
+ .../devicetree/bindings/opp/kryo-cpufreq.txt       | 680 +++++++++++++++++++++
+ .../bindings/regulator/qcom,spmi-regulator.txt     |  45 ++
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dts        |   2 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              | 651 +++++++++++++++++++-
+ drivers/clk/clk-fixed-factor.c                     |   2 +-
+ drivers/clk/qcom/Kconfig                           |   9 +
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/clk-alpha-pll.c                   |   1 +
+ drivers/clk/qcom/clk-alpha-pll.h                   |   6 +
+ drivers/clk/qcom/clk-cpu-8996.c                    | 519 ++++++++++++++++
+ drivers/cpufreq/Kconfig.arm                        |  11 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/cpufreq-dt-platdev.c               |   3 +
+ drivers/cpufreq/qcom-cpufreq-kryo.c                | 150 +++++
+ drivers/perf/Kconfig                               |   1 +
+ drivers/perf/qcom_l2_pmu.c                         |  90 +--
+ drivers/regulator/qcom_spmi-regulator.c            | 133 +++-
+ drivers/soc/qcom/Kconfig                           |   3 +
+ drivers/soc/qcom/Makefile                          |   1 +
+ drivers/soc/qcom/kryo-l2-accessors.c               |  65 ++
+ include/soc/qcom/kryo-l2-accessors.h               |  21 +
+ 22 files changed, 2332 insertions(+), 80 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,kryocc.txt
+ create mode 100644 Documentation/devicetree/bindings/opp/kryo-cpufreq.txt
+ create mode 100644 drivers/clk/qcom/clk-cpu-8996.c
+ create mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
+ create mode 100644 drivers/soc/qcom/kryo-l2-accessors.c
+ create mode 100644 include/soc/qcom/kryo-l2-accessors.h
+
 -- 
-2.17.0
+1.9.1
