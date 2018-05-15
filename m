@@ -1,40 +1,20 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 22 May 2018 17:34:23 -0500
-From: Rob Herring <robh@kernel.org>
+Return-Path: <SRS0=t5sx=IC=verge.net.au=horms@kernel.org>
+Date: Tue, 15 May 2018 09:16:24 +0200
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH] media: dt-bindings: media: rcar_vin: add support for
  r8a77965
-Message-ID: <20180522223423.GA14893@rob-hp-laptop>
+Message-ID: <20180515071623.45ynnlu7z454pysd@verge.net.au>
 References: <20180513185818.15359-1-niklas.soderlund+renesas@ragnatech.se>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 In-Reply-To: <20180513185818.15359-1-niklas.soderlund+renesas@ragnatech.se>
-To: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Sun, May 13, 2018 at 08:58:18PM +0200, Niklas S�derlund wrote:
-> Signed-off-by: Niklas S�derlund <niklas.soderlund+renesas@ragnatech.se>
-> ---
->  Documentation/devicetree/bindings/media/rcar_vin.txt | 1 +
->  1 file changed, 1 insertion(+)
+On Sun, May 13, 2018 at 08:58:18PM +0200, Niklas Söderlund wrote:
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-Acked-by: Rob Herring <robh@kernel.org>
-
-> 
-> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> index a19517e1c669eb35..c2c57dcf73f4851b 100644
-> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> @@ -21,6 +21,7 @@ on Gen3 platforms to a CSI-2 receiver.
->     - "renesas,vin-r8a7794" for the R8A7794 device
->     - "renesas,vin-r8a7795" for the R8A7795 device
->     - "renesas,vin-r8a7796" for the R8A7796 device
-> +   - "renesas,vin-r8a77965" for the R8A77965 device
->     - "renesas,vin-r8a77970" for the R8A77970 device
->     - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 or RZ/G1 compatible
->       device.
-> -- 
-> 2.17.0
-> 
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
