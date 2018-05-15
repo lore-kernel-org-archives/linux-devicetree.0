@@ -1,19 +1,39 @@
-Return-Path: <SRS0=pLbj=IK=codeaurora.org=ilialin@kernel.org>
-Date: Wed, 23 May 2018 18:34:06 +0300
-Subject: Re: [PATCH v11 0/2] Kryo CPU scaling driver
-Message-ID: <f53d6035-d409-4535-9dd0-03baedc9b4a8@email.android.com>
-In-Reply-To: <b4c28b51-ecd5-649b-e8fa-e5ce1bbb3139@arm.com>
-From: Ilia Lin <ilialin@codeaurora.org>
+Return-Path: <SRS0=ibFM=IC=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: base64
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Sender: geert.uytterhoeven@gmail.com
+In-Reply-To: <1526008947-26667-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1526008947-26667-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1526008947-26667-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 15 May 2018 11:18:31 +0200
+Message-ID: <CAMuHMdUW9-7XuC0HMdQ-1N5z3cZUS7vsSu38r15UWPPkxh16cA@mail.gmail.com>
+Subject: Re: [PATCH 6/6] pinctrl: sh-pfc: r8a77990: Add EthernetAVB pins,
+ groups and functions
+Content-Type: text/plain; charset="UTF-8"
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-PGRpdiBkaXI9J2F1dG8nPkl0IG1heSBiZSBtZXJnZWQgYWxvbmUgc2FmZWx5LiBIb3dldmVyIHRv
-IGFjdHVhbGx5IHdvcmssIGl0IG5lZWRzIGEgY2xvY2sgZHJpdmVyIGFzIHdlbGwsIGFuZCB0aGUg
-T1BQIHRhYmxlcyBpbiB0dWUgZGV2aWNlIHRyZWUuIFRob3NlIGFyZSBzdWJtaXR0ZWQgbm93IDhu
-IDIgc2VwYXJhdGUgc2VyaWVzLiBUaGlzIGlzIGluIG9yZGVyIHRvIHByb3ZpZGUgZWFjaCBtYWlu
-dGFpbmVyIHdpdGggZG9tYWluIHNwZWNpZmljIHNlcmllcywgYXMgcGVyIFZpcmVzaCdzIHN1Z2dl
-c3Rpb24uPC9kaXY+
+On Fri, May 11, 2018 at 5:22 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>
+> This patch adds group and function of AVB PHY, LINK, MAGIC, MII and PTP
+> pins for the R8A77990 SoC.
+>
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in sh-pfc-for-v4.18...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
