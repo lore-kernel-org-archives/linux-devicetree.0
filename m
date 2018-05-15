@@ -1,50 +1,224 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk:aspeed: Fix reset bits for PCI/VGA and PECI
-Date: Tue, 15 May 2018 15:02:14 -0700
-Message-ID: <152642173468.237094.11026813184254392663@swboyd.mtv.corp.google.com>
-References: <20180426172232.12535-1-jae.hyun.yoo@linux.intel.com>
- <20180501150236.GA15330@rob-hp-laptop>
- <5a449d93-eef0-4243-9889-bd13786edde1@linux.intel.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v6 2/2] leds: lm3601x: Introduce the lm3601x LED driver
+Date: Tue, 15 May 2018 17:08:22 -0500
+Message-ID: <08dda10d-f865-9cf2-b9a5-c79cbab5da98@ti.com>
+References: <20180515154352.20263-1-dmurphy@ti.com>
+ <20180515154352.20263-2-dmurphy@ti.com>
+ <CAHp75VegjkiiD1qTGpi9rr6cg=72t9kSwDrG=sUpUWFVO58M4A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <5a449d93-eef0-4243-9889-bd13786edde1@linux.intel.com>
-Sender: stable-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Rob Herring <robh@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, stable <stable@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VegjkiiD1qTGpi9rr6cg=72t9kSwDrG=sUpUWFVO58M4A@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jae Hyun Yoo (2018-05-01 09:27:32)
-> On 5/1/2018 8:02 AM, Rob Herring wrote:
-> > On Thu, Apr 26, 2018 at 10:22:32AM -0700, Jae Hyun Yoo wrote:
-> >> diff --git a/include/dt-bindings/clock/aspeed-clock.h b/include/dt-bin=
-dings/clock/aspeed-clock.h
-> >> index d3558d897a4d..8d69b9134bef 100644
-> >> --- a/include/dt-bindings/clock/aspeed-clock.h
-> >> +++ b/include/dt-bindings/clock/aspeed-clock.h
-> >> @@ -45,7 +45,7 @@
-> >>   #define ASPEED_RESET_JTAG_MASTER   3
-> >>   #define ASPEED_RESET_MIC           4
-> >>   #define ASPEED_RESET_PWM           5
-> >> -#define ASPEED_RESET_PCIVGA         6
-> >> +#define ASPEED_RESET_PECI           6
-> > =
+Andy
 
-> > You can't really be changing these as they represent an ABI.
-> > =
+Thanks for the review
 
-> > Is there no PCIVGA reset?
-> > =
+On 05/15/2018 04:56 PM, Andy Shevchenko wrote:
+> On Tue, May 15, 2018 at 6:43 PM, Dan Murphy <dmurphy@ti.com> wrote:
+>> Introduce the family of LED devices that can
+>> drive a torch, strobe or IR LED.
+>>
+>> The LED driver can be configured with a strobe
+>> timer to execute a strobe flash.  The IR LED
+>> brightness is controlled via the torch brightness
+>> register.
+>>
+>> The data sheet for each the LM36010 and LM36011
+>> LED drivers can be found here:
+>> http://www.ti.com/product/LM36010
+>> http://www.ti.com/product/LM36011
+> 
+>> +       depends on LEDS_CLASS && I2C && OF
+> 
+> What is OF specific in this driver?
 
-> =
+as3645a_led_class_setup has a "of" dependency
 
-> This is a bug fixing. Previously, PCI/VGA used PECI reset bit so this
-> patch corrects the reset bit for PCI/VGA from bit '10' to bit '8', and
-> it adds PECI reset bit '10' here as it can't be combined with a clock
-> gate bit.
-> =
+> 
+> 
+>> +#define LM3601X_STRB_LVL_TRIG  ~BIT(3)
+> 
+>> +#define LM36010_BOOST_LIMIT_19 ~BIT(5)
+> 
+>> +#define LM36010_BOOST_FREQ_2MHZ        ~BIT(6)
+> 
+>> +#define LM36010_BOOST_MODE_NORM        ~BIT(7)
+> 
+> These looks rather strange. Shouldn't be just 0:s?
+
+I don't actually use these so I can just remove them
+
+> 
+>> +struct lm3601x_led {
+>> +       struct mutex lock;
+>> +       struct regmap *regmap;
+>> +       struct i2c_client *client;
+> 
+>> +       struct device_node *led_node;
+> 
+> Why do you need this?
+
+I don't but I can store it locally.  I was using the nodes in the register
+functions in previous versions.
+
+> 
+>> +};
+> 
+>> +static const struct lm3601x_max_timeouts strobe_timeouts[] = {
+>> +       { 40000, 0x00 },
+>> +       { 80000, 0x01 },
+>> +       { 120000, 0x02 },
+>> +       { 160000, 0x03 },
+>> +       { 200000, 0x04 },
+>> +       { 240000, 0x05 },
+>> +       { 280000, 0x06 },
+>> +       { 320000, 0x07 },
+>> +       { 360000, 0x08 },
+>> +       { 400000, 0x09 },
+>> +       { 600000, 0x0a },
+>> +       { 800000, 0x0b },
+>> +       { 1000000, 0x0c },
+>> +       { 1200000, 0x0d },
+>> +       { 1400000, 0x0e },
+>> +       { 1600000, 0x0f },
+> 
+> Huh?!
+
+Please give comments that actually mean something other wise I will opt to ignore them.
+
+> 
+> strobe_timeout = (x + 1) * 40 * MSECS_IN_SEC;
+
+Not sure what equation you are trying to point out here.  But if you are trying to apply
+a timeout step you cannot do this with this part.  As pointed out in the DT doc the timeout
+step is not linear.
+
+> 
+>> +};
+> 
+>> +       struct lm3601x_led *led = fled_cdev_to_led(fled_cdev);
+>> +       int ret;
+>> +       int current_timeout;
+>> +       int reg_count;
+>> +       int i;
+>> +       int timeout_reg_val = 0;
+> 
+> Better to put lines here in reversed xmas tree order (longest first).
+
+I can do that, again this is a preference.
+
+> 
+>> +       reg_count = ARRAY_SIZE(strobe_timeouts);
+>> +       for (i = 0; i < reg_count; i++) {
+>> +               if (led->strobe_timeout > strobe_timeouts[i].timeout)
+>> +                       continue;
+> 
+> binary search?
+> 
+> Check lib/bsearch.c (IIRC).
+> 
+> But! See above the formula.
+> 
+>> +               brightness_val = (brightness/2);
+> 
+> Spaces.
+
+Not sure what this means checkpatch was clean
+
+> 
+>> +static int lm3601x_register_leds(struct lm3601x_led *led)
+>> +{
+> 
+> 
+>> +       int err = -ENODEV;
+> 
+> Useless assignment.
+
+This is an artifact from prior versions I can remove it
+
+> 
+>> +       err = led_classdev_flash_register(&led->client->dev,
+>> +                       fled_cdev);
+>> +
+>> +       return err;
+> 
+> This is return led_...();
+
+That is a preference.  It does not have to be that way.
+
+> 
+>> +}
+> 
+>> +               ret = of_property_read_string(led->led_node, "label", &name);
+> 
+> device_property_...();
+
+It can be if the maintainer is requesting this.
+
+Is the trend to move to these functions?
+Most drivers use the "of" calls.
+
+> 
+>> +               if (!ret)
+> 
+> if (ret) sounds more natural. And better just to split
+> 
+>> +                       snprintf(led->led_name, sizeof(led->led_name),
+>> +                               "%s:%s", led->led_node->name, name);
+>> +               else
+>> +                       snprintf(led->led_name, sizeof(led->led_name),
+>> +                               "%s:torch", led->led_node->name);
+> 
+> const char *tmp;
+> 
+> ret = device_property_read_...(&tmp);
+> if (ret)
+>  tmp = ...
+> sprintf(...);
+> 
+>> +       led = devm_kzalloc(&client->dev,
+>> +                           sizeof(struct lm3601x_led), GFP_KERNEL);
+> 
+> sizeof(*led) and one line in the result
+> 
+>> +static const struct i2c_device_id lm3601x_id[] = {
+>> +       { "LM36010", CHIP_LM36010 },
+>> +       { "LM36011", CHIP_LM36011 },
+>> +       { },
+> 
+> Terminators better w/o comma.
+
+Looking at other drivers adding comma's on the sentinel is accepted.  See the as3645a driver
+
+> 
+>> +};
+>> +MODULE_DEVICE_TABLE(i2c, lm3601x_id);
+>> +
+>> +static const struct of_device_id of_lm3601x_leds_match[] = {
+>> +       { .compatible = "ti,lm36010", },
+>> +       { .compatible = "ti,lm36011", },
+>> +       {},
+> 
+> Ditto.
+
+See above
+
+> 
+>> +};
+>> +MODULE_DEVICE_TABLE(of, of_lm3601x_leds_match);
+> 
+> 
+> 
+> 
 
 
-Presumably nobody is using the #define because it's wrong, so this is OK
-for me. I'll apply to clk-next and yank it if Rob objects.
+-- 
+------------------
+Dan Murphy
