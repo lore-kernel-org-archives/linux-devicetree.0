@@ -1,23 +1,53 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2] ARM: dts: am437x-sk-evm: add wilink8 support
-Date: Tue, 15 May 2018 11:32:19 -0700
-Message-ID: <20180515183219.GA98604@atomide.com>
-References: <1525593486-13028-1-git-send-email-eyalr@ti.com>
+From: Thor Thayer <thor.thayer@linux.intel.com>
+Subject: Re: [PATCHv2] arm64: dts: stratix10: Add QSPI support for Stratix10
+Date: Tue, 15 May 2018 15:10:41 -0500
+Message-ID: <a61cbfaf-86e9-ec89-5d05-4d6f210aeec8@linux.intel.com>
+References: <1526055052-11371-1-git-send-email-thor.thayer@linux.intel.com>
+ <20b33e1d-0609-78dd-dc9c-922658a11f18@kernel.org>
+Reply-To: thor.thayer@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1525593486-13028-1-git-send-email-eyalr@ti.com>
+In-Reply-To: <20b33e1d-0609-78dd-dc9c-922658a11f18@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eyal Reizer <eyalreizer@gmail.com>
-Cc: bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, Eyal Reizer <eyalr@ti.com>
+To: Dinh Nguyen <dinguyen@kernel.org>, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Eyal Reizer <eyalreizer@gmail.com> [180506 01:00]:
-> enable mmc3 used for wlan and uart1 used for bluetooth
-> configure the gpios used for wlan and bluetooth controls
-> add fixed voltage regulator used for wlan power control
+On 05/15/2018 10:11 AM, Dinh Nguyen wrote:
+> 
+> On 05/11/2018 11:10 AM, thor.thayer@linux.intel.com wrote:
+>> From: Thor Thayer <thor.thayer@linux.intel.com>
+>>
+>> Add qspi_clock
+>>     The qspi_clk frequency is updated by U-Boot before starting Linux.
+>> Add QSPI interface node.
+>> Add QSPI flash memory child node.
+>>     Setup the QSPI memory in 2 partitions.
+>>
+>> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+>> ---
+>> v2  s/_/-/ in qspi-clk
+>>      rename flash node.
+>>      use partition child node notation<snip>>> +		qspi: spi@ff8d2000 {
+>> +			compatible = "cdns,qspi-nor";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0xff8d2000 0x100>,
+>> +			      <0xff900000 0x100000>;
+>> +			interrupts = <0 3 4>;
+>> +			cdns,fifo-depth = <128>;
+>> +			cdns,fifo-width = <4>;
+>> +			cdns,trigger-address = <0x00000000>;
+>> +			clocks = <&qspi_clk>;
+>> +			bus-num = <1>;
+> 
+> I don't you need "bus-num" anymore right? I don't see it getting used
+> anywhere in the driver.
+> 
+> Dinh
+> 
 
-Applying into omap-for-v4.18/dt thanks.
-
-Tony
+Yes, I missed that holdover. Thanks, I'll correct that.
