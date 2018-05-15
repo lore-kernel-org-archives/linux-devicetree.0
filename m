@@ -1,186 +1,67 @@
-From: Radu Pirea <radu.pirea@microchip.com>
-Subject: Re: [PATCH v3 5/6] spi: at91-usart: add driver for at91-usart as spi
-Date: Tue, 15 May 2018 12:25:10 +0300
-Message-ID: <49c13a964f517c9c90e61beda327d4174fd1358c.camel@microchip.com>
-References: <20180511103822.31698-1-radu.pirea@microchip.com>
-         <20180511103822.31698-6-radu.pirea@microchip.com>
-         <CAHp75Ve3Ugnjjm8EZkPQTZSvH1qad1e5SqjOn8zz5syHSQea_g@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v10_00=2F27=5D_ARM=3A_davinci=3A_convert_to_commo?=
+        =?UTF-8?Q?n_clock_framework=E2=80=8B?=
+Date: Tue, 15 May 2018 11:25:38 +0200
+Message-ID: <CAMRc=MdO0EtzDHp3RF4ym3umWM_KfhvpWHV2+Y3270ygKz9iGw@mail.gmail.com>
+References: <20180509172606.29387-1-david@lechnology.com> <CAHCN7xJ6+vmyrTQGYH=pKz5GRf7rLT4otreNgu6TJi_3UAEX5w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Ve3Ugnjjm8EZkPQTZSvH1qad1e5SqjOn8zz5syHSQea_g@mail.gmail.com>
+In-Reply-To: <CAHCN7xJ6+vmyrTQGYH=pKz5GRf7rLT4otreNgu6TJi_3UAEX5w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Richard Genoud <richard.genoud@gmail.com>, alexandre.belloni@bootlin.com, Nicolas Ferre <nicolas.ferre@microchip.com>, Mark Brown <broonie@kernel.org>
+To: Adam Ford <aford173@gmail.com>
+Cc: David Lechner <david@lechnology.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2018-05-13 at 16:33 +0300, Andy Shevchenko wrote:
-> On Fri, May 11, 2018 at 1:38 PM, Radu Pirea <radu.pirea@microchip.com
-> > wrote:
-> > This is the driver for at91-usart in spi mode. The USART IP can be
-> > configured
-> > to work in many modes and one of them is SPI.
-> > +#include <linux/gpio.h>
-> > +#include <linux/gpio/consumer.h>
-> 
-> Here is something wrong. You need to use latter one in new code.
-> 
-> > +#include <linux/interrupt.h>
-> > +#include <linux/io.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/of_gpio.h>
-> 
-> Hmm... Do you need all of them?
-> 
-> > +static inline void at91_usart_spi_cs_activate(struct spi_device
-> > *spi)
-> > +{
-> 
-> ...
-> > +       gpiod_set_value(ausd->npcs_pin, active);
-> > +       aus->cs_active = true;
-> > +}
-> > +
-> > +static inline void at91_usart_spi_cs_deactivate(struct spi_device
-> > *spi)
-> > +{
-> 
-> ...
-> > +       gpiod_set_value(ausd->npcs_pin, !active);
-> > +       aus->cs_active = false;
-> > +}
-> 
-> ...
-> > +       if (!ausd) {
-> > +               if (gpio_is_valid(spi->cs_gpio)) {
-> > +                       npcs_pin = gpio_to_desc(spi->cs_gpio);
-> 
-> ...
-> > +               }
-> 
-> ...
-> > +               gpiod_direction_output(npcs_pin, !(spi->mode &
-> > SPI_CS_HIGH));
-> > +
-> > +               ausd->npcs_pin = npcs_pin;
-> 
-> ...
-> > +       }
-> 
-> I will refer to above as (1) later on.
-> 
-> > +       dev_dbg(&spi->dev, "new message %p submitted for %s\n",
-> > +               msg, dev_name(&spi->dev));
-> 
-> %p does make a very little sense.
-> 
-> > +       list_for_each_entry(xfer, &msg->transfers, transfer_list) {
-> > +               ret = at91_usart_spi_one_transfer(controller, msg,
-> > xfer);
-> > +               if (ret)
-> > +                       goto msg_done;
-> > +       }
-> 
-> Cant SPI core do this for your?
-> 
-> > +static void at91_usart_spi_cleanup(struct spi_device *spi)
-> > +{
-> > +       struct at91_usart_spi_device *ausd = spi->controller_state;
-> > +
-> > +       if (!ausd)
-> > +               return;
-> 
-> Is it even possible?
-> 
-> Anyway the code below will work fine even if it's the case.
-> 
-> > +
-> > +       spi->controller_state = NULL;
-> > +       kfree(ausd);
-> > +}
-> > +static int at91_usart_spi_gpio_cs(struct platform_device *pdev)
-> > +{
-> > +       struct spi_controller *controller =
-> > platform_get_drvdata(pdev);
-> > +       struct device_node *np = controller->dev.parent->of_node;
-> > +       struct gpio_desc *cs_gpio;
-> > +       int nb;
-> > +       int i;
-> > +
-> > +       if (!np)
-> > +               return 0;
-> > +
-> > +       nb = of_gpio_named_count(np, "cs-gpios");
-> > +       for (i = 0; i < nb; i++) {
-> > +               cs_gpio = devm_gpiod_get_from_of_node(&pdev->dev,
-> > +                                                     pdev-
-> > >dev.parent->of_node,
-> > +                                                     "cs-gpios",
-> > +                                                     i,
-> > GPIOD_OUT_HIGH,
-> > +                                                     dev_name(&pde
-> > v->dev));
-> > +               if (IS_ERR(cs_gpio))
-> > +                       return PTR_ERR(cs_gpio);
-> > +       }
-> > +
-> > +       controller->num_chipselect = nb;
-> > +
-> > +       return 0;
-> > +}
-> 
-> The question is, why you didn't utilize what SPI core provides you?
-> 
-> > +       spi_writel(aus, MR, US_MR_SPI_MASTER | US_MR_CHRL |
-> > US_MR_CLKO |
-> > +                       US_MR_WRDBT);
-> > +       spi_writel(aus, CR, US_CR_RXDIS | US_CR_TXDIS | US_CR_RSTRX
-> > |
-> > +                       US_CR_RSTTX);
-> 
-> I didn't check over, but it seems like you might have duplication in
-> these bitwise ORs. Consider to unify them into another (shorter)
-> definitions and reuse all over the code.
-> 
-> > +       regs = platform_get_resource(to_platform_device(pdev-
-> > >dev.parent),
-> > +                                    IORESOURCE_MEM, 0);
-> > +       if (!regs)
-> > +               return -ENXIO;
-> 
-> Strange error code for getting MMIO resource. ENOMEM sounds better.
-> 
-> > +       dev_info(&pdev->dev,
-> > +                "Atmel USART SPI Controller version 0x%x at
-> > 0x%08lx (irq %d)\n",
-> > +                spi_readl(aus, VERSION),
-> > +                (unsigned long)regs->start, irq);
-> 
-> If you do explicit casting when printing something you are doing
-> wrong.
-> Please use %pR or %pr in this case.
-> 
-> > +static struct platform_driver at91_usart_spi_driver = {
-> > +       .driver = {
-> > +               .name = "at91_usart_spi",
-> > +               .of_match_table =
-> > of_match_ptr(at91_usart_spi_dt_ids),
-> 
-> Can it work as pure platform driver? If no, of_match_ptr() is
-> redundant.
+2018-05-14 2:40 GMT+02:00 Adam Ford <aford173@gmail.com>:
+> On Wed, May 9, 2018 at 12:25 PM, David Lechner <david@lechnology.com> wrote:
+>> This series converts mach-davinci to use the common clock framework.
+>>
+>> The series works like this, the first 3 patches fix some issues with the clock
+>> drivers that have already been accepted into the mainline kernel.
+>>
+>> Then, starting with "ARM: davinci: pass clock as parameter to
+>> davinci_timer_init()", we get the mach code ready for the switch by adding the
+>> code needed for the new clock drivers and adding #ifndef CONFIG_COMMON_CLK
+>> around the legacy clocks so that we can switch easily between the old and the
+>> new.
+>>
+>> "ARM: davinci: switch to common clock framework" actually flips the switch
+>> to start using the new clock drivers. Then the next 8 patches remove all
+>> of the old clock code.
+>>
+>> The final four patches add device tree clock support to the one SoC that
+>> supports it.
+>>
+>> This series has been tested on TI OMAP-L138 LCDK (both device tree and legacy
+>> board file).
+>>
+>
+> I am not sure if I did something wrong, but I attempted to build and I
+> wasn't able to boot the da850-evm.dtb your repo common-clk-v11,
+> however the legacy board file boot was OK.
+>
+> make davinci_all_defconfig ARCH=arm
+> make zImage modules da850-evm.dtb ARCH=arm CROSS_COMPILE=arm-linux- -j8
+>
+> 3140416 bytes read in 1464 ms (2 MiB/s)
+> 20353 bytes read in 15 ms (1.3 MiB/s)
+> ## Flattened Device Tree blob at c0600000
+>    Booting using the fdt blob at 0xc0600000
+>    Loading Device Tree to c7e57000, end c7e5ef80 ... OK
+>
+> Starting kernel ...
+>
+> Uncompressing Linux... done, booting the kernel.
+>
+> (and hang)
+>
+> If you have some suggestions, I am try them as I get time.
+>
+> adam
+>
 
-This driver can not work as pure platform driver, but I the way I used
-to probe it from MFD(by compatbile string).
-Do you know another way?
+Runs fine on da850-lcdk and dm365-evm. I'll test the da850-evm
+tomorrow when I'll have access to it.
 
-> 
-> > +       },
-> > +       .probe = at91_usart_spi_probe,
-> > +       .remove = at91_usart_spi_remove, };
-> 
-> Two lines at one. Split.
-> 
+Bart
