@@ -1,75 +1,51 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v10 03/27] clk: davinci: psc: allow for dev == NULL
-Date: Tue, 15 May 2018 19:12:35 +0530
-Message-ID: <2f1056b3-6d29-0651-1d7d-9c74cd50861c@ti.com>
-References: <20180509172606.29387-1-david@lechnology.com>
- <20180509172606.29387-4-david@lechnology.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v3 0/6] drm/rockchip: hdmi support for rk3328
+Date: Tue, 15 May 2018 15:47:30 +0200
+Message-ID: <20180515134736.5824-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180509172606.29387-4-david@lechnology.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: architt@codeaurora.org, a.hajda@samsung.com
+Cc: mark.rutland@arm.com, Jose.Abreu@synopsys.com, algea.cao@rock-chips.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 09 May 2018 10:55 PM, David Lechner wrote:
-> @@ -261,10 +263,14 @@ davinci_lpsc_clk_register(struct device *dev, const char *name,
->  	lpsc->pd = pd;
->  	lpsc->flags = flags;
->  
-> -	ret = devm_clk_hw_register(dev, &lpsc->hw);
-> +	ret = clk_hw_register(dev, &lpsc->hw);
->  	if (ret < 0)
->  		return ERR_PTR(ret);
->  
-> +	/* for now, genpd is only registered when using device-tree */
-> +	if (!dev || !dev->of_node)
-> +		return lpsc;
-> +
->  	/* genpd attach needs a way to look up this clock */
->  	ret = clk_hw_register_clkdev(&lpsc->hw, name, best_dev_name(dev));
->  
-> @@ -378,11 +384,11 @@ __davinci_psc_register_clocks(struct device *dev,
->  	struct regmap *regmap;
->  	int i, ret;
->  
-> -	psc = devm_kzalloc(dev, sizeof(*psc), GFP_KERNEL);
-> +	psc = kzalloc(sizeof(*psc), GFP_KERNEL);
->  	if (!psc)
->  		return ERR_PTR(-ENOMEM);
->  
-> -	clks = devm_kmalloc_array(dev, num_clks, sizeof(*clks), GFP_KERNEL);
-> +	clks = kmalloc_array(num_clks, sizeof(*clks), GFP_KERNEL);
->  	if (!clks)
->  		return ERR_PTR(-ENOMEM);
->  
-> @@ -396,14 +402,14 @@ __davinci_psc_register_clocks(struct device *dev,
->  	for (i = 0; i < num_clks; i++)
->  		clks[i] = ERR_PTR(-ENOENT);
->  
-> -	pm_domains = devm_kcalloc(dev, num_clks, sizeof(*pm_domains), GFP_KERNEL);
-> +	pm_domains = kcalloc(num_clks, sizeof(*pm_domains), GFP_KERNEL);
->  	if (!pm_domains)
->  		return ERR_PTR(-ENOMEM);
->  
->  	psc->pm_data.domains = pm_domains;
->  	psc->pm_data.num_domains = num_clks;
->  
-> -	regmap = devm_regmap_init_mmio(dev, base, &davinci_psc_regmap_config);
-> +	regmap = regmap_init_mmio(dev, base, &davinci_psc_regmap_config);
->  	if (IS_ERR(regmap))
->  		return ERR_CAST(regmap);
-
-Here and in the PLL driver, you have dropped the devm_* variants (like
-agreed upon), but not added any error path handling. For the clocks
-needed for boot, its probably fine, but the same code path is used for
-non-essential clocks too. Just from a code completeness perspective, it
-will be nice to see the error path correctly handled.
-
-Apart from that both 1/27 and 3/27 look good to me.
-
-Thanks,
-Sekhar
+VGhlIHJrMzIyOC9yazMyMjkgYW5kIHJrMzMyOCBzb2NzIHN0YXJ0ZWQgdXNpbmcgYSBuZXcgdHlw
+ZSBvZiBoZG1pLXBoeQpmcm9tIElubm9zaWxpY29uIHRoYXQgcmVzaWRlcyBjb21wbGV0ZWx5IHNl
+cGFyYXRlIGZyb20gdGhlIGR3LWhkbWkgYmxvY2sKYW5kIGdldHMgYWNjZXNzZWQgdmlhIG1taW8u
+CgpBZGRpdGlvbmFsbHkgdGhlIHJrMzMyOCBkdy1oZG1pIGRvZXMgbm90IHJlcG9ydCB0aGUgdmVu
+ZG9yLXBoeSB0eXBlCmJ1dCBhIGRpZmZlcmVudCBvbmUgaW5zdGVhZCwgc28gYWRkIHRoZSBwb3Nz
+aWJpbGl0eSB0byBvdmVycmlkZSB0aGUKcGh5IHR5cGUgd2hlbiB0aGUgZ2x1ZSBkcml2ZXIga25v
+d3MgYmV0dGVyIHRoYW4gdGhlIGlwIGJsb2NrIGl0c2VsZi4KCmNoYW5nZXMgaW4gdjM6Ci0gc3Bs
+aXQgb2ZmIHBoeSBkcml2ZXIgaW50byBhIHNlcGFyYXRlIHNlcmllcwotIG9ubHkgYWxsb3cgZm9y
+Y2luZyB2ZW5kb3IgcGh5IHR5cGUKLSB3b3JkaW5nIGZpeGVzIGFuZCBvdGhlciBuaXRzCgpjaGFu
+Z2VzIGluIHYyOgotIHBoeTogcHJldmVudCBvdmVyZmxvdyBpbiB0bWRzY2xrIGNhbGN1bGF0aW9u
+CiAgYXMgcmVwb3J0ZWQgYnkgTWFydGluIENlcnZlbnkKLSBwaHk6IHVzZSB1bnNpZ25lZCBsb25n
+IGZvciBhbGwgdG1kc2NsayByYXRlIHVzZXMKLSBwaHk6IHNpbXBsaWZ5IHRtZHMgcmF0ZSBjYWxj
+dWxhdGlvbgotIGRyb3BwZWQgcGF0Y2ggZXhwb3J0aW5nIHNvbWUgZHctaGRtaSBwaHkgZnVuY3Rp
+b25zCiAgYXMgYSBzaW1pbGFyIHBhdGNoIGVudGVyZWQgZHJtLW1pc2MgYWxyZWFkeQoKSGVpa28g
+U3R1ZWJuZXIgKDYpOgogIGRybS9icmlkZ2U6IGR3LWhkbWk6IGFsbG93IGZvcmNpbmcgdmVuZG9y
+IHBoeS10eXBlCiAgZHJtL3JvY2tjaGlwOiBkd19oZG1pOiBBbGxvdyBvdXRwdXRzIHRoYXQgZG9u
+J3QgbmVlZCBvdXRwdXQgc3dpdGNoaW5nCiAgZHQtYmluZGluZ3M6IGFsbG93IG9wdGlvbmFsIHBo
+eXMgaW4gUm9ja2NoaXAgZHdfaGRtaSBiaW5kaW5nCiAgZHJtL3JvY2tjaGlwOiBkd19oZG1pOiBh
+bGxvdyBpbmNsdWRpbmcgZXh0ZXJuYWwgcGh5cwogIGRybS9yb2NrY2hpcDogZHdfaGRtaTogc3Rv
+cmUgcm9ja2NoaXBfaGRtaSByZWZlcmVuY2UgaW4gcGh5X2RhdGEKICAgIG9iamVjdAogIGRybS9y
+b2NrY2hpcDogZHdfaGRtaTogYWRkIGR3LWhkbWkgc3VwcG9ydCBmb3IgdGhlIHJrMzMyOAoKIC4u
+Li9kaXNwbGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0ICAgICB8ICAgMyArCiBkcml2
+ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWkuYyAgICAgfCAgIDQgKy0KIGRyaXZl
+cnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMgICB8IDEzMCArKysrKysrKysr
+KysrKysrKy0KIGluY2x1ZGUvZHJtL2JyaWRnZS9kd19oZG1pLmggICAgICAgICAgICAgICAgICB8
+ICAgMSArCiA0IGZpbGVzIGNoYW5nZWQsIDEzNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygt
+KQoKLS0gCjIuMTcuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
