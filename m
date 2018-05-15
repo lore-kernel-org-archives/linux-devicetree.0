@@ -1,76 +1,65 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCHv2] arm64: dts: stratix10: Add QSPI support for Stratix10
-Date: Tue, 15 May 2018 10:11:02 -0500
-Message-ID: <20b33e1d-0609-78dd-dc9c-922658a11f18@kernel.org>
-References: <1526055052-11371-1-git-send-email-thor.thayer@linux.intel.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH] iio: adc: stm32-dfsdm: Add support for stm32mp1
+Date: Tue, 15 May 2018 17:23:35 +0200
+Message-ID: <781b346a-e457-9c67-2e11-6f6edba88d63@st.com>
+References: <1525266323-4922-1-git-send-email-fabrice.gasnier@st.com>
+ <20180507205151.GA25321@rob-hp-laptop> <20180512103324.5068c893@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526055052-11371-1-git-send-email-thor.thayer@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180512103324.5068c893@archlinux>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: thor.thayer@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: mark.rutland@arm.com, Rob Herring <robh@kernel.org>, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, arnaud.pouliquen@st.com, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 05/11/2018 11:10 AM, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
+On 05/12/2018 11:33 AM, Jonathan Cameron wrote:
+> On Mon, 7 May 2018 15:51:51 -0500
+> Rob Herring <robh@kernel.org> wrote:
 > 
-> Add qspi_clock
->    The qspi_clk frequency is updated by U-Boot before starting Linux.
-> Add QSPI interface node.
-> Add QSPI flash memory child node.
->    Setup the QSPI memory in 2 partitions.
+>> On Wed, May 02, 2018 at 03:05:23PM +0200, Fabrice Gasnier wrote:
+>>> Add support for DFSDM (Digital Filter For Sigma Delta Modulators)
+>>> to STM32MP1. This variant is close to STM32H7 DFSDM, it implements
+>>> 6 filter instances. Registers map is also increased.
+>>>
+>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>>> ---
+>>>  .../bindings/iio/adc/st,stm32-dfsdm-adc.txt         |  7 +++++--
+>>>  drivers/iio/adc/stm32-dfsdm-core.c                  | 21 +++++++++++++++++++++
+>>>  2 files changed, 26 insertions(+), 2 deletions(-)  
+>>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+> Applied.   Whilst doing this I note that I'm getting a few sparse
+> warnings for this driver that would be nice to clean up...
 > 
-> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-> ---
-> v2  s/_/-/ in qspi-clk
->     rename flash node.
->     use partition child node notation
-> ---
->  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 22 ++++++++++++++
->  .../boot/dts/altera/socfpga_stratix10_socdk.dts    | 35 ++++++++++++++++++++++
->  2 files changed, 57 insertions(+)
+>   CHECK   drivers/iio/adc/stm32-dfsdm-adc.c
+> drivers/iio/adc/stm32-dfsdm-adc.c:503:21: warning: expression using sizeof(void)
+> drivers/iio/adc/stm32-dfsdm-adc.c:503:21: warning: expression using sizeof(void)
 > 
-> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> index e6b059378dc0..bac01b0b7907 100644
-> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> @@ -119,6 +119,12 @@
->  				#clock-cells = <0>;
->  				compatible = "fixed-clock";
->  			};
-> +
-> +			qspi_clk: qspi-clk {
-> +				#clock-cells = <0>;
-> +				compatible = "fixed-clock";
-> +				clock-frequency = <200000000>;
-> +			};
->  		};
->  
->  		gmac0: ethernet@ff800000 {
-> @@ -466,5 +472,21 @@
->  				interrupts = <16 4>, <48 4>;
->  			};
->  		};
-> +
-> +		qspi: spi@ff8d2000 {
-> +			compatible = "cdns,qspi-nor";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0xff8d2000 0x100>,
-> +			      <0xff900000 0x100000>;
-> +			interrupts = <0 3 4>;
-> +			cdns,fifo-depth = <128>;
-> +			cdns,fifo-width = <4>;
-> +			cdns,trigger-address = <0x00000000>;
-> +			clocks = <&qspi_clk>;
-> +			bus-num = <1>;
+> Which is mystifying at first glance... Something deep and dirty in the min macro
+> but I can't see what..
 
-I don't you need "bus-num" anymore right? I don't see it getting used
-anywhere in the driver.
+Hi Jonathan,
 
-Dinh
+I just sent a patch to clean bellow warning. But this is more obscure
+regarding min macro...
+
+Many thanks,
+Fabrice
+
+> 
+> drivers/iio/adc/stm32-dfsdm-adc.c:680:5: warning: symbol 'stm32_dfsdm_get_buff_cb' was not declared. Should it be static?
+> drivers/iio/adc/stm32-dfsdm-adc.c:703:5: warning: symbol 'stm32_dfsdm_release_buff_cb' was not declared. Should it be static?
+> 
+> Are rather more obvious
+> 
