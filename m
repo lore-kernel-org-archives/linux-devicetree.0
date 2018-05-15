@@ -1,48 +1,63 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v6 04/11] firmware: xilinx: Add query data API
-Date: Tue, 15 May 2018 10:34:18 +0100
-Message-ID: <ab9632f5-882d-462d-d830-0316cad56baf@arm.com>
-References: <1523389127-14243-1-git-send-email-jollys@xilinx.com>
- <1523389127-14243-5-git-send-email-jollys@xilinx.com>
- <85f8f8c5-a177-dad8-e095-a9dd1c513e8d@arm.com>
- <SN1PR02MB37587E3AB2718E1DB510E35AB89C0@SN1PR02MB3758.namprd02.prod.outlook.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH V5 2/4] soc: mediatek: pwrap: fix cipher init setting
+ error
+Date: Tue, 15 May 2018 11:50:12 +0200
+Message-ID: <d754bbdd-93ee-fadd-e4e7-439032f8b173@gmail.com>
+References: <1525957319-20557-1-git-send-email-argus.lin@mediatek.com>
+ <1525957319-20557-3-git-send-email-argus.lin@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <SN1PR02MB37587E3AB2718E1DB510E35AB89C0@SN1PR02MB3758.namprd02.prod.outlook.com>
+In-Reply-To: <1525957319-20557-3-git-send-email-argus.lin@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <JOLLYS@xilinx.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: argus.lin@mediatek.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 14/05/18 20:16, Jolly Shah wrote:
-> HI Sudeep,
+On 05/10/2018 03:01 PM, argus.lin@mediatek.com wrote:
+> From: Argus Lin <argus.lin@mediatek.com>
 > 
-
-[...]
-
->> 
->> Can you give more insight into this ? How will be this used ? How
->> this aligns with data we get from DT ? I am just trying to
->> understand how is this information split between this API and DT
->> for example.
->> 
+> PWRAP_DEW_CIPHER_LOAD and PWRAP_DEW_CIPHER_START only exist at
+> PMIC_mt6397 datasheet. We fix it before merge PMIC_mt6351 driver.
 > 
-> This API is used to get clock information from firmware and register
-> clocks accordingly in driver. In our case, firmware maintains
-> database of all clocks available on chip. DT will provide information
-> for off chip reference clocks only. This is to avoid duplication of
-> clocks data in DT and firmware both as firmware anyways need clock
-> data to manage them.
+> Fixes: 5ae48040aa47 ("soc: mediatek: PMIC wrap: add mt6323 slave support")
+
+Same here, you forgot Signed-off-by tag.
+
+> ---
+>  drivers/soc/mediatek/mtk-pmic-wrap.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-
-I wanted to understand the difference with example. What kind of
-information you get from DT and what you get from firmware ?
-
--- 
-Regards,
-Sudeep
+> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> index e9e054a..9a01e30 100644
+> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
+> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> @@ -1080,8 +1080,6 @@ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
+>  	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_SWRST], 0x0);
+>  	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_KEY_SEL], 0x1);
+>  	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_IV_SEL], 0x2);
+> -	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_LOAD], 0x1);
+> -	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_START], 0x1);
+>  
+>  	switch (wrp->slave->type) {
+>  	case PMIC_MT6397:
+> -- 
+> 1.8.1.1.dirty
+> 
+> ************* Email Confidentiality Notice ********************
+> The information contained in this e-mail message (including any 
+> attachments) may be confidential, proprietary, privileged, or otherwise
+> exempt from disclosure under applicable laws. It is intended to be 
+> conveyed only to the designated recipient(s). Any use, dissemination, 
+> distribution, printing, retaining or copying of this e-mail (including its 
+> attachments) by unintended recipient(s) is strictly prohibited and may 
+> be unlawful. If you are not an intended recipient of this e-mail, or believe 
+> that you have received this e-mail in error, please notify the sender 
+> immediately (by replying to this e-mail), delete any and all copies of 
+> this e-mail (including any attachments) from your system, and do not
+> disclose the content of this e-mail to any other person. Thank you!
+> 
