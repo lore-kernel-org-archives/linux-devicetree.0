@@ -1,7 +1,7 @@
 From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: [PATCH v2 1/4] bindings: PCI: designware: Example update
-Date: Tue, 15 May 2018 15:41:41 +0100
-Message-ID: <56306a10c8db9a520bf9e915daf1c38d754db494.1526395185.git.gustavo.pimentel@synopsys.com>
+Subject: [PATCH v2 3/4] bindings: PCI: designware: Add support for EP in DesignWare driver
+Date: Tue, 15 May 2018 15:41:43 +0100
+Message-ID: <46ba656013d1493e87b32a2e1dca125cb63dcc2a.1526395185.git.gustavo.pimentel@synopsys.com>
 References: <cover.1526395185.git.gustavo.pimentel@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1526395185.git.gustavo.pimentel@synopsys.com>
@@ -12,53 +12,40 @@ To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jin
 Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-Replace "ctrlreg" reg-name by "dbi" to be coherent with similar drivers,
-however it still be compatible with any previous DT that uses the old
-reg-name.
-
-Replace the PCIe base address example by a real PCIe base address in use.
+Add device tree binding documentation for the EP in PCIe DesignWare driver.
 
 Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/pci/designware-pcie.txt | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/pci/designware-pcie.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-index 1da7ade..7f9804d 100644
+index 7f9804d..c124f9b 100644
 --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
 +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-@@ -1,7 +1,8 @@
- * Synopsys DesignWare PCIe interface
- 
+@@ -3,6 +3,7 @@
  Required properties:
--- compatible: should contain "snps,dw-pcie" to identify the core.
-+- compatible:
-+	"snps,dw-pcie" for RC mode;
+ - compatible:
+ 	"snps,dw-pcie" for RC mode;
++	"snps,dw-pcie-ep" for EP mode;
  - reg: Should contain the configuration address space.
  - reg-names: Must be "config" for the PCIe configuration space.
      (The old way of getting the configuration address space from "ranges"
-@@ -41,11 +42,11 @@ EP mode:
- 
- Example configuration:
- 
--	pcie: pcie@dffff000 {
-+	pcie: pcie@dfc00000 {
- 		compatible = "snps,dw-pcie";
--		reg = <0xdffff000 0x1000>, /* Controller registers */
--		      <0xd0000000 0x2000>; /* PCI config space */
--		reg-names = "ctrlreg", "config";
-+		reg = <0xdfc00000 0x0001000>, /* IP registers */
-+		      <0xd0000000 0x0002000>; /* Configuration space */
-+		reg-names = "dbi", "config";
- 		#address-cells = <3>;
- 		#size-cells = <2>;
- 		device_type = "pci";
-@@ -54,5 +55,4 @@ Example configuration:
- 		interrupts = <25>, <24>;
+@@ -56,3 +57,14 @@ Example configuration:
  		#interrupt-cells = <1>;
  		num-lanes = <1>;
--		num-viewport = <3>;
  	};
++or
++	pcie: pcie@dfc00000 {
++		compatible = "snps,dw-pcie-ep";
++		reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
++		      <0xdfc01000 0x0001000>, /* IP registers 2 */
++		      <0xd0000000 0x2000000>; /* Configuration space */
++		reg-names = "dbi", "dbi2", "addr_space";
++		num-ib-windows = <6>;
++		num-ob-windows = <2>;
++		num-lanes = <1>;
++	};
 -- 
 2.7.4
